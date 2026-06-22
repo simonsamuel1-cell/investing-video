@@ -8,7 +8,7 @@
  * the spec's own measured values and are kept verbatim. Any sub-frame gap/overlap
  * is masked by the persistent silver background + per-scene fade-in.
  */
-export type Layout = "A" | "B";
+export type Layout = "A" | "B" | "C";
 
 export interface SceneDef {
   n: number; // scene number (1-based)
@@ -29,24 +29,25 @@ export const TIMELINE: SceneDef[] = [
   { n: 8, from: 1500, dur: 194, layout: "A", gist: "legendary-investor holdings" },
   { n: 9, from: 1694, dur: 187, layout: "A", gist: "themes drive groups, not reverse" },
   { n: 10, from: 1881, dur: 272, layout: "A", gist: "which theme / which stocks lead" },
-  { n: 11, from: 2153, dur: 63, layout: "B", gist: "this is Concept Sector" },
-  { n: 12, from: 2216, dur: 198, layout: "B", gist: "three layers" },
-  { n: 13, from: 2414, dur: 342, layout: "B", gist: "Sectors → sub-sectors" },
-  { n: 14, from: 2756, dur: 398, layout: "B", gist: "Concepts" },
-  { n: 15, from: 3154, dur: 206, layout: "B", gist: "Groups / conglomerate families" },
-  { n: 16, from: 3360, dur: 98, layout: "B", gist: "one screen, every angle" },
-  { n: 17, from: 3458, dur: 203, layout: "B", gist: "start at homepage, Hot Themes" },
-  { n: 18, from: 3662, dur: 119, layout: "A", gist: "don't start from a stock" },
-  { n: 19, from: 3780, dur: 334, layout: "B", gist: "open a theme: broad/leading/sub/foreign" },
-  { n: 20, from: 4114, dur: 271, layout: "B", gist: "Research: catalyst/narrative/risk" },
-  { n: 21, from: 4384, dur: 325, layout: "B", gist: "Stock tab: filter chips" },
-  { n: 22, from: 4710, dur: 90, layout: "A", gist: "Theme → Story → Stock lockup" },
-  { n: 23, from: 4800, dur: 107, layout: "B", gist: "candidate, two things to check" },
-  { n: 24, from: 4906, dur: 373, layout: "B", gist: "Company Quality + Reference Fair Value" },
-  { n: 25, from: 5280, dur: 150, layout: "B", gist: "curated by Tuntun research" },
-  { n: 26, from: 5430, dur: 391, layout: "B", gist: "Technical, MA5 signal, Chart Pro" },
-  { n: 27, from: 5821, dur: 97, layout: "B", gist: "Company tab: all memberships" },
-  { n: 28, from: 5918, dur: 210, layout: "B", gist: "multiple themes = conviction" },
+  { n: 11, from: 2153, dur: 63, layout: "C", gist: "this is Concept Sector (Layout C: title + dual phones)" },
+  { n: 12, from: 2216, dur: 198, layout: "B", gist: "three layers (B-top + lift-up popup; combo @00:00)" },
+  { n: 13, from: 2414, dur: 342, layout: "B", gist: "Sectors → sub-sectors (B-side; S1 combo @00:07 → S2 Scene_13.mp4 @00:02 ~1:1)" },
+  { n: 14, from: 2756, dur: 398, layout: "B", gist: "Concepts (B-side; combo @00:19)" },
+  { n: 15, from: 3154, dur: 206, layout: "B", gist: "Groups (B-top centred phone; combo @00:31)" },
+  { n: 16, from: 3360, dur: 98, layout: "B", gist: "one screen, every angle (B-top triple phone)" },
+  { n: 17, from: 3458, dur: 203, layout: "B", gist: "Hot Themes (B-top centred; Hot_Themes.mp4 ~1:1 rate 0.988)" },
+  { n: 18, from: 3662, dur: 119, layout: "A", gist: "don't start from a stock (text card, unchanged)" },
+  { n: 19, from: 3780, dur: 334, layout: "B", gist: "open a theme: 4 reads (B-side; combo17_21 @00:00–11 ~1:1)" },
+  { n: 20, from: 4114, dur: 271, layout: "B", gist: "Research: catalyst/narrative/risk (B-side; combo17_21 @00:11–19 slow ×1.13)" },
+  { n: 21, from: 4384, dur: 325, layout: "B", gist: "Stock tab filters (B-side; combo17_21 @00:19, trimmed to 325f)" },
+  { n: 22, from: 4710, dur: 90, layout: "C", gist: "Theme→Story→Stock (B-top 3 phones + cyan arrows)" },
+  // S23–27 = ONE continuous take: combo23_27 played 1:1 from 0, fade=0 between them.
+  { n: 23, from: 4800, dur: 107, layout: "B", gist: "candidate (B-top; continuous take @00:00, 1:1)" },
+  { n: 24, from: 4906, dur: 373, layout: "B", gist: "Quality→Fair Value (B-top; continuous @00:03.5; traveling cyan box)" },
+  { n: 25, from: 5280, dur: 150, layout: "B", gist: "Tuntun research (B-top; continuous @00:16)" },
+  { n: 26, from: 5430, dur: 391, layout: "B", gist: "Technical/MA5 + disclaimer (B-top; continuous @00:21; box f75–275)" },
+  { n: 27, from: 5821, dur: 97, layout: "B", gist: "Company tab Concept Sector (B-top; continuous @00:34)" },
+  { n: 28, from: 5918, dur: 210, layout: "B", gist: "multiple themes = conviction (B-side; reuse @00:35)" },
   { n: 29, from: 6128, dur: 82, layout: "A", gist: "how many forces push one way" },
   { n: 30, from: 6210, dur: 515, layout: "A", gist: "they look at a different level (recap)" },
   { n: 31, from: 6725, dur: 113, layout: "A", gist: "start with the theme" },
@@ -63,8 +64,14 @@ export const ASSETS = {
   combo17_21: "Scene_17__19__20__21.mp4", // 30.3s
   combo23_27: "Scene_23__24__25__26__27.mp4", // 44.3s
   // Stills
-  concept1: "Scene_11_-_Concept_Sector_1.jpg",
-  concept2: "Scene_11_-_Concept_Sector_2.jpg",
+  concept1: "Scene_11_-_Concept_Sector_1.jpg", // screen-only (used by RecapMontage S30)
+  concept2: "Scene_11_-_Concept_Sector_2.jpg", // screen-only
+  // Pre-framed phone mockups (black device bodies, 1925×3890, RGBA/transparent
+  // background so they sit cleanly on silver) — S11 Layout C.
+  conceptFramed1: "Concept_Sector_1.png", // Trading / Concept Sector home → S11 LEFT
+  conceptFramed2: "Concept_Sector_2.png", // IHSG / Investing home → S11 RIGHT
+  // Device body for wrapping raw recordings/screenshots (S12–16, Layout B).
+  deviceFrame: "Placeholder-02.png", // 1924×3890 RGBA, transparent screen cutout
   tabs3: "Scene_12_-_3_Tabs.png",
   tab1: "Scene_16_-_Tab_1.jpg",
   tab2: "Scene_16_-_Tab_2.jpg",

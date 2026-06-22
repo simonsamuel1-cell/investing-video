@@ -1,35 +1,41 @@
 /**
- * S14 (B) — Concepts. Phone shows the Concept tab (combined clip 29–37s). Right
- * zone: 4 concept-type chips matching the real UI list. (spec §7)
+ * S14 (Layout B-side) — "Concepts cover market themes that don't fit neatly into
+ * a sector — stocks held by legendary investors, government-linked companies,
+ * political ownership, or specific narratives like 'gentengisasi.'"
+ * Phone on the Concept tab (Scene_12__13__14__15.mp4 @00:19); right zone: four
+ * NUMBERED category chips. No grey panel (G2). Ref: Scene_14.png (layout only).
+ * Chips are generalized category labels, not the literal VO words. (spec §14)
  */
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneClip } from "../components/DeviceFrame";
+import { PhoneFrame } from "../components/PhoneFrame";
 import { Heading } from "../components/Heading";
 import { Chip } from "../components/Chip";
 import { ASSETS } from "../timeline";
 
 const CONCEPTS = [
-  "Investor Legendaris",
-  "Terafiliasi Pemerintah",
-  "Kepemilikan",
-  "Gentengisasi",
+  "Legendary Investors",
+  "Government-Affiliated",
+  "Common Ownership",
+  "Special Situations",
 ];
 
 export const Scene14 = () => (
   <SceneWrap>
-    <PhoneClip src={ASSETS.combo12_15} startSec={29} />
-    <Heading x={640} y={110} width={800} size={46} delay={4}>
+    <PhoneFrame x={108} y={80} w={428} video={ASSETS.combo12_15} startSec={19} />
+
+    <Heading x={648} y={242} width={1128} size={42} delay={4}>
       Concepts: the stories tying stocks together.
     </Heading>
+
     {CONCEPTS.map((label, i) => (
       <Chip
         key={label}
-        x={640}
-        y={262 + i * 116}
-        width={760}
+        x={648}
+        y={362 + i * 80}
+        width={1128}
         variant={i % 2 === 0 ? "purple" : "cyan"}
-        size={34}
-        delay={20 + i * 14}
+        size={32}
+        delay={18 + i * 16}
         badge={i + 1}
       >
         {label}

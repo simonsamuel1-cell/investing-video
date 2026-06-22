@@ -1,11 +1,12 @@
 /**
  * RecapMontage — S30 (the longest scene: 515f / 17s, no internal pause). A calm
- * filmstrip of the four-step flow (Hot Themes → Theme → Stock → Validate). One
- * step is foregrounded at a time, cycling across the full duration with a slow
- * Ken-Burns drift so it is never static. Heading: "They look at a different level."
+ * filmstrip of the four-step flow (Hot Themes → Theme → Stock → Validate), each
+ * shown INSIDE a device frame (Placeholder-02) for consistency with the other
+ * scenes. One step is foregrounded at a time, cycling across the full duration with
+ * a slow Ken-Burns drift. Heading: "They look at a different level."
  */
 import { Img, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
-import { COLORS, RADII, USABLE } from "../theme";
+import { COLORS, USABLE } from "../theme";
 import { ASSETS } from "../timeline";
 import { fadeIn, ease } from "../util/anim";
 
@@ -16,7 +17,9 @@ const STEPS = [
   { label: "Validate", src: ASSETS.tab2 },
 ];
 
-const CARD = { w: 224, h: 448, gap: 96, top: 286 };
+// Card aspect = device-frame aspect (0.4946) so the screenshot fills the cutout.
+const CARD = { w: 224, h: 453, gap: 96, top: 280 };
+const CUT = { left: 0.0665, top: 0.0308, w: 0.867, h: 0.9381 };
 
 export const RecapMontage = () => {
   const frame = useCurrentFrame();
@@ -50,9 +53,7 @@ export const RecapMontage = () => {
       </div>
 
       {/* flow arrows between cards */}
-      <svg
-        style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, pointerEvents: "none", opacity: enter }}
-      >
+      <svg style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, pointerEvents: "none", opacity: enter }}>
         {STEPS.slice(0, -1).map((_, i) => {
           const ax = startX + (i + 1) * CARD.w + i * CARD.gap + 18;
           const ay = CARD.top + CARD.h / 2;
@@ -69,7 +70,7 @@ export const RecapMontage = () => {
         })}
       </svg>
 
-      {/* step cards */}
+      {/* step cards — each composited inside the device frame */}
       {STEPS.map((s, i) => {
         const x = startX + i * (CARD.w + CARD.gap);
         const elev = interpolateBump(frame, i * seg, (i + 1) * seg);
@@ -87,24 +88,30 @@ export const RecapMontage = () => {
                 top: CARD.top,
                 width: CARD.w,
                 height: CARD.h,
-                borderRadius: RADII.device,
-                border: `2px solid ${elev > 0.5 ? COLORS.purple : COLORS.hairline}`,
-                overflow: "hidden",
-                background: "#000",
                 opacity: op,
                 transform: `translateY(${lift}px) scale(${scale})`,
-                boxShadow: `0 ${18 + 24 * elev}px ${40 + 30 * elev}px rgba(70,54,184,${0.12 + 0.16 * elev})`,
+                filter: `drop-shadow(0 ${10 + 22 * elev}px ${20 + 24 * elev}px rgba(70,54,184,${0.1 + 0.18 * elev}))`,
               }}
             >
-              <Img
-                src={staticFile(s.src)}
+              {/* device body underneath (its screen area is opaque white) */}
+              <Img src={staticFile(ASSETS.deviceFrame)} style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%" }} />
+              {/* screen content on TOP, clipped to the cutout */}
+              <div
                 style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  transform: `scale(${kb})`,
+                  position: "absolute",
+                  left: CARD.w * CUT.left,
+                  top: CARD.h * CUT.top,
+                  width: CARD.w * CUT.w,
+                  height: CARD.h * CUT.h,
+                  overflow: "hidden",
+                  borderRadius: CARD.w * 0.085,
                 }}
-              />
+              >
+                <Img
+                  src={staticFile(s.src)}
+                  style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${kb})` }}
+                />
+              </div>
             </div>
             {/* label */}
             <div
@@ -140,14 +147,7 @@ export const RecapMontage = () => {
           opacity: enter,
         }}
       >
-        <div
-          style={{
-            width: `${progress * 100}%`,
-            height: "100%",
-            borderRadius: 3,
-            background: COLORS.purple,
-          }}
-        />
+        <div style={{ width: `${progress * 100}%`, height: "100%", borderRadius: 3, background: COLORS.purple }} />
       </div>
     </>
   );

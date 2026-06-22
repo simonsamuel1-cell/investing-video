@@ -1,86 +1,82 @@
 /**
- * S16 (B) — "one screen, every angle". The phone slides out to the left and the
- * three tab views appear side by side as small framed thumbnails. Mid-flow —
- * animate continuously. (spec §7)
+ * S16 (Layout B-top, triple phone) — "One screen. Every angle the market moves in."
+ * Title + cyan underline; three phones (Sector / Concept / Group) centred about
+ * x=960; labels beneath on silver (no grey band, G2). Mid-flow & short (98f).
+ * Ref: Scene_16.png (layout only).
+ *
+ * NB the Scene_16_-_Tab_*.jpg assets are screen-only (1080×2340, not pre-framed),
+ * so they are wrapped in <PhoneFrame> (via PhoneCenter `img`) to read as phones.
+ * (spec §16)
  */
-import { Img, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneStill, PHONE } from "../components/DeviceFrame";
-import { Heading } from "../components/Heading";
+import { PhoneCenter } from "../components/PhoneCenter";
 import { ASSETS } from "../timeline";
-import { COLORS, RADII } from "../theme";
-import { fadeIn, ease, springUp } from "../util/anim";
+import { COLORS } from "../theme";
+import { fadeIn, ease } from "../util/anim";
 
-const THUMBS = [
-  { src: ASSETS.tab1, label: "Sektor" },
-  { src: ASSETS.tab2, label: "Konsep" },
-  { src: ASSETS.tab3, label: "Grup" },
+// GR4 (no-crop, 3-phone row): smaller phones centered about x=960 so the ROW
+// (~x461–1459) clears the logo reserve x-range (1464) entirely; vertically centred
+// so nothing is cropped top/bottom. Equal size + top.
+const PHONES = [
+  { src: ASSETS.tab1, cx: 606, label: "Sector" },
+  { src: ASSETS.tab2, cx: 960, label: "Concept" },
+  { src: ASSETS.tab3, cx: 1314, label: "Group" },
 ];
-const TW = 286;
-const TH = 572;
-const GAP = 92;
+const PHONE_TOP = 266;
+const PHONE_H = 576;
+const LABEL_Y = 872;
 
 export const Scene16 = () => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const phoneX = ease(frame, [4, 32], [PHONE.x, -540]);
-
-  const total = THUMBS.length * TW + (THUMBS.length - 1) * GAP;
-  const startX = (1920 - total) / 2;
-  const top = 286;
-
+  const lineW = ease(frame, [8, 24], [0, 440]);
   return (
     <SceneWrap>
-      <div style={{ opacity: fadeIn(frame, 0, 1) }}>
-        <PhoneStill src={ASSETS.tab3} x={phoneX} />
+      {/* title + cyan underline */}
+      <div
+        style={{
+          position: "absolute",
+          left: 96,
+          top: 56,
+          width: 1728,
+          textAlign: "center",
+          fontSize: 56,
+          fontWeight: 800,
+          letterSpacing: -0.5,
+          color: COLORS.black,
+          opacity: fadeIn(frame, 2, 12),
+        }}
+      >
+        One screen, Every angle
+      </div>
+      <div style={{ position: "absolute", left: 0, top: 138, width: 1920, display: "flex", justifyContent: "center" }}>
+        <div style={{ height: 6, width: lineW, background: COLORS.cyan, borderRadius: 3 }} />
       </div>
 
-      <Heading x={96} y={130} width={1728} align="center" size={54} delay={20}>
-        One screen, every angle.
-      </Heading>
+      {/* three framed phones */}
+      {PHONES.map((p, i) => (
+        <PhoneCenter key={p.label} img={p.src} cx={p.cx} top={PHONE_TOP} height={PHONE_H} delay={2 + i * 4} />
+      ))}
 
-      {THUMBS.map((t, i) => {
-        const d = 24 + i * 7;
-        const op = fadeIn(frame, d, 12);
-        const s = 0.92 + 0.08 * springUp(frame, fps, d);
-        return (
-          <div key={t.label}>
-            <div
-              style={{
-                position: "absolute",
-                left: startX + i * (TW + GAP),
-                top,
-                width: TW,
-                height: TH,
-                borderRadius: RADII.device,
-                border: `2px solid ${COLORS.purple}`,
-                overflow: "hidden",
-                background: "#000",
-                opacity: op,
-                transform: `scale(${s})`,
-                boxShadow: "0 20px 48px rgba(70,54,184,0.16)",
-              }}
-            >
-              <Img src={staticFile(t.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                left: startX + i * (TW + GAP),
-                top: top + TH + 22,
-                width: TW,
-                textAlign: "center",
-                fontSize: 30,
-                fontWeight: 700,
-                color: COLORS.black,
-                opacity: op,
-              }}
-            >
-              {t.label}
-            </div>
-          </div>
-        );
-      })}
+      {/* labels on silver */}
+      {PHONES.map((p, i) => (
+        <div
+          key={p.label}
+          style={{
+            position: "absolute",
+            left: p.cx - 130,
+            top: LABEL_Y,
+            width: 260,
+            textAlign: "center",
+            fontSize: 32,
+            fontWeight: 800,
+            color: COLORS.black,
+            opacity: fadeIn(frame, 14 + i * 4, 10),
+          }}
+        >
+          {p.label}
+        </div>
+      ))}
     </SceneWrap>
   );
 };

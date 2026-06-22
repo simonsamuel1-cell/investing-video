@@ -19,7 +19,8 @@ export const SceneWrap = ({
   fade?: number;
 }) => {
   const frame = useCurrentFrame();
-  const opacity = sceneIn(frame, fade);
+  // fade <= 0 → no fade (used for the continuous S23–27 block to avoid cut flicker)
+  const opacity = fade > 0 ? sceneIn(frame, fade) : 1;
   return (
     <SafeArea allowLogoSlot={allowLogoSlot}>
       <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>

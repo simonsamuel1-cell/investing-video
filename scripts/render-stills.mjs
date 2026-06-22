@@ -14,12 +14,12 @@ fs.mkdirSync(outDir, { recursive: true });
 const FRAMES = [
   [100, "s1-tickergrid"], [430, "s2-noise"], [650, "s3-cards"], [905, "s4-sparklines"],
   [1010, "s5-bridge"], [1180, "s6-diagram"], [1420, "s7-policy"], [1600, "s8-holdings"],
-  [1815, "s9-reversex"], [2050, "s10-bridge"], [2190, "s11-phonetitle"], [2360, "s12-tabs"],
-  [2520, "s13-phoneclip"], [2950, "s14-concepts"], [3250, "s15-group"], [3432, "s16-thumbs"],
-  [3550, "s17-hotthemes"], [3720, "s18-stocktheme"], [3950, "s19-callouts"], [4250, "s20-research"],
-  [4520, "s21-filters"], [4750, "s22-lockup"], [4850, "s23-twochecks"], [5050, "s24-validation"],
-  [5350, "s25-research"], [5655, "s26-technical"], [5870, "s27-memberships"], [6020, "s28-conviction"],
-  [6175, "s29-arrows"], [6450, "s30-recap"], [6770, "s31-theme"], [6880, "s32-endcard"],
+  [1815, "s9-reversex"], [2050, "s10-bridge"], [2200, "s11-dualphone"], [2360, "s12-popup"],
+  [2514, "s13-state1"], [2700, "s13-state2"], [2876, "s14"], [3254, "s15"],
+  [3420, "s16"], [3558, "s17"], [3722, "s18"], [4030, "s19"],
+  [4264, "s20"], [4534, "s21"], [4780, "s22"], [4850, "s23"],
+  [5050, "s24"], [5350, "s25"], [5655, "s26"], [5870, "s27"],
+  [6020, "s28"], [6175, "s29"], [6450, "s30"], [6770, "s31"], [6880, "s32"],
 ];
 
 const entryPoint = path.join(root, "src", "index.ts");

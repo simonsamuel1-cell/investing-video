@@ -22,10 +22,10 @@ export const Scene08 = () => (
       Or follow where the legends hold.
     </Heading>
     <ThemeStocksDiagram
-      nodeLabel="Portofolio"
+      nodeLabel="Portfolio"
       nodeIcon={<PortfolioIcon />}
       accent={COLORS.purpleDark}
-      chips={["Perbankan", "Energi", "Konsumer", "Telko", "Properti"]}
+      chips={["Banking", "Energy", "Consumer", "Telco", "Property"]}
     />
   </SceneWrap>
 );

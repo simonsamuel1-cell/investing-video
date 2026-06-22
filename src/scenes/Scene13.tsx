@@ -1,16 +1,34 @@
 /**
- * S13 (B) — Sectors → sub-sectors. Phone scrolls the Sector list. Right zone:
- * 4 icon-chips appear on cue + a small nested bar showing sector → sub-sector.
- * (spec §7)
+ * S13 (Layout B-side, TWO states; phone FIXED) — "Sectors cover real business
+ * categories — Agriculture, Consumer, Mining, Infrastructure — broken down further
+ * into Tuntun's own sub-sectors for deeper precision."
+ *
+ * One fixed <PhoneFrame> on the left; only the recording inside cross-fades:
+ *  State 1: Scene_12__13__14__15.mp4 @00:07 (Sector list).
+ *  State 2: Scene_13.mp4 (Tuntun Sub-Sectors) + bottom strip appears.
+ * Chips pop sequentially as the VO names each. No grey panels (G2). Ref:
+ * Scene_13.png / Scene_13_2.png (layout only). (spec §13)
  */
-import { useCurrentFrame } from "remotion";
+import { OffthreadVideo, staticFile, useCurrentFrame } from "remotion";
+import type { CSSProperties } from "react";
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneClip } from "../components/DeviceFrame";
+import { PhoneFrame } from "../components/PhoneFrame";
 import { Heading } from "../components/Heading";
 import { Chip } from "../components/Chip";
 import { ASSETS } from "../timeline";
 import { COLORS } from "../theme";
 import { fadeIn } from "../util/anim";
+
+const SPLIT = 206; // VO: "further into Tuntun's own sub-sectors"
+const screen = (opacity: number): CSSProperties => ({
+  position: "absolute",
+  left: 0,
+  top: 0,
+  width: "100%",
+  height: "100%",
+  objectFit: "contain",
+  opacity,
+});
 
 const Leaf = () => (
   <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round">
@@ -54,45 +72,55 @@ const SUBS = [
 
 export const Scene13 = () => {
   const frame = useCurrentFrame();
+  const s2 = fadeIn(frame, SPLIT, 12); // 0 → State 1, 1 → State 2
+  const showS1 = frame < SPLIT + 16;
+  const showS2 = frame >= SPLIT - 2;
+
   return (
     <SceneWrap>
-      <PhoneClip src={ASSETS.combo12_15} startSec={0} />
-      <Heading x={640} y={110} width={800} size={46} delay={4}>
+      {/* fixed phone; inner recording cross-fades */}
+      <PhoneFrame x={108} y={80} w={428}>
+        {showS1 && <OffthreadVideo src={staticFile(ASSETS.combo12_15)} trimBefore={7 * 30} muted style={screen(1 - s2)} />}
+        {/* Scene_13.mp4 00:02–00:05 played ~1:1 (slight slow ×1.11) per v2; the
+            State-2 tail beyond ~3s holds the last frame. */}
+        {showS2 && (
+          <OffthreadVideo
+            src={staticFile(ASSETS.sectorScroll)}
+            trimBefore={60}
+            playbackRate={0.9}
+            muted
+            style={screen(s2)}
+          />
+        )}
+      </PhoneFrame>
+
+      <Heading x={648} y={170} width={800} size={44} delay={4}>
         Every sector splits into sub-sectors.
       </Heading>
 
       {CHIPS.map((c, i) => (
         <Chip
           key={c.label}
-          x={640}
-          y={236 + i * 96}
-          width={560}
+          x={648}
+          y={290 + i * 82}
+          width={1128}
           variant={c.variant}
-          size={32}
-          delay={18 + i * 12}
+          size={30}
+          delay={20 + i * 16}
           badge={c.icon}
         >
           {c.label}
         </Chip>
       ))}
 
-      {/* nested bar: one sector → several sub-sectors */}
-      <div style={{ position: "absolute", left: 640, top: 700, width: 1120, opacity: fadeIn(frame, 70, 14) }}>
-        <div style={{ fontSize: 26, fontWeight: 700, color: COLORS.black, marginBottom: 14 }}>
+      {/* State-2 bottom strip */}
+      <div style={{ position: "absolute", left: 648, top: 638, width: 1128, opacity: s2 }}>
+        <div style={{ fontSize: 24, fontWeight: 700, color: COLORS.black, marginBottom: 12 }}>
           One sector → several sub-sectors
         </div>
         <div style={{ display: "flex", gap: 10 }}>
           {SUBS.map((s, i) => (
-            <div
-              key={i}
-              style={{
-                width: s.w,
-                height: 64,
-                borderRadius: 14,
-                background: s.c,
-                opacity: fadeIn(frame, 78 + i * 8, 10),
-              }}
-            />
+            <div key={i} style={{ width: s.w, height: 48, borderRadius: 12, background: s.c }} />
           ))}
         </div>
       </div>

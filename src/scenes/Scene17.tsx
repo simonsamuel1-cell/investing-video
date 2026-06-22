@@ -1,25 +1,40 @@
 /**
- * S17 (B) — start at the homepage, Hot Themes. Phone plays the Hot Themes clip.
- * Right zone: "Step 1 · Hot Themes" + a cyan chip "Momentum today." (spec §7)
+ * S17 (Layout B-top) — "Start from the homepage. Hot Themes shows you which
+ * sectors and concepts are gaining momentum today." Centred phone playing the
+ * Hot Themes recording (~1:1, playbackRate 0.988). Minimal label on silver,
+ * no grey panel (G2). (spec §17)
  */
+import { useCurrentFrame } from "remotion";
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneClip } from "../components/DeviceFrame";
+import { PhoneCenter } from "../components/PhoneCenter";
 import { Heading } from "../components/Heading";
-import { Chip } from "../components/Chip";
 import { ASSETS } from "../timeline";
 import { COLORS } from "../theme";
+import { fadeIn } from "../util/anim";
 
-export const Scene17 = () => (
-  <SceneWrap>
-    <PhoneClip src={ASSETS.hotThemes} startSec={0} />
-    <div style={{ position: "absolute", left: 640, top: 300, fontSize: 32, fontWeight: 700, color: COLORS.purple }}>
-      Step 1
-    </div>
-    <Heading x={640} y={344} width={800} size={64} delay={6}>
-      Hot Themes
-    </Heading>
-    <Chip x={640} y={480} width={620} variant="cyan" size={34} delay={22}>
-      What has momentum today.
-    </Chip>
-  </SceneWrap>
-);
+export const Scene17 = () => {
+  const frame = useCurrentFrame();
+  return (
+    <SceneWrap>
+      <Heading x={96} y={70} width={1728} align="center" size={56} delay={2}>
+        Step 1 · Hot Themes
+      </Heading>
+      <div
+        style={{
+          position: "absolute",
+          left: 96,
+          top: 146,
+          width: 1728,
+          textAlign: "center",
+          fontSize: 30,
+          fontWeight: 600,
+          color: COLORS.black,
+          opacity: fadeIn(frame, 12, 12),
+        }}
+      >
+        What's gaining momentum today.
+      </div>
+      <PhoneCenter video={ASSETS.hotThemes} startSec={0} playbackRate={0.988} top={210} height={730} delay={4} />
+    </SceneWrap>
+  );
+};

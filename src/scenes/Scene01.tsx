@@ -14,7 +14,9 @@ export const Scene01 = () => {
   const op = fadeIn(frame, 8, 16);
   const ty = rise(frame, 8, 18, 22);
   return (
-    <SceneWrap>
+    // allowLogoSlot: no logo-reserve mask — the abstract ticker grid is full-bleed
+    // (no silver cut in the top-right corner).
+    <SceneWrap allowLogoSlot>
       <TickerGrid />
       {/* heading on a silver backing panel so it stays legible over the grid */}
       <div

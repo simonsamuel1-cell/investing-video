@@ -5,12 +5,17 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneClip } from "../components/DeviceFrame";
+import { PhoneFrame } from "../components/PhoneFrame";
 import { Heading } from "../components/Heading";
-import { MEMBERSHIPS } from "./Scene27";
 import { ASSETS } from "../timeline";
 import { COLORS, RADII } from "../theme";
 import { fadeIn, rise, ease } from "../util/anim";
+
+const MEMBERSHIPS = [
+  { name: "Infrastructure", pct: "+4.2%", c: COLORS.purple },
+  { name: "Government Projects", pct: "+2.6%", c: COLORS.cyan },
+  { name: "Basic Materials", pct: "+1.4%", c: COLORS.purpleLight },
+];
 
 const Check = () => (
   <svg width={26} height={26} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
@@ -23,7 +28,7 @@ export const Scene28 = () => {
   const meter = ease(frame, [70, 130], [0, 1]); // builds conviction
   return (
     <SceneWrap>
-      <PhoneClip src={ASSETS.combo23_27} startSec={35} />
+      <PhoneFrame x={108} y={80} w={428} video={ASSETS.combo23_27} startSec={35} />
       <Heading x={640} y={108} width={800} size={46} delay={4}>
         In several themes at once? That's conviction.
       </Heading>

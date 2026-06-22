@@ -1,5 +1,5 @@
 /**
- * S7 (A) — government policy → infrastructure. Theme node "Kebijakan" with chips
+ * S7 (A) — government policy → infrastructure. Theme node "Policy" with chips
  * that light on cue (highlightStagger). ILLUSTRATIVE diagram. (spec §7)
  */
 import { SceneWrap } from "../components/SceneWrap";
@@ -13,9 +13,9 @@ export const Scene07 = () => (
       One policy lifts a whole sector.
     </Heading>
     <ThemeStocksDiagram
-      nodeLabel="Kebijakan"
+      nodeLabel="Policy"
       accent={COLORS.purple}
-      chips={["Konstruksi", "Semen", "Baja", "Jalan tol", "Logistik"]}
+      chips={["Construction", "Cement", "Steel", "Toll Roads", "Logistics"]}
       highlightStagger
     />
   </SceneWrap>

@@ -1,7 +1,7 @@
 /**
  * DisclaimerChip — compliance chip (spec §7 S26). Sits at the bottom of the
  * right zone, above the subtitle margin (y stays < 972). Cyan-tinted pill with
- * an info dot. Default copy: "Edukasi, bukan saran investasi."
+ * an info dot. Default copy: "Educational, not investment advice."
  *
  * ⚠️ Wording must be confirmed against Tuntun/OJK compliance before publishing
  * (see TODO.md item 3).
@@ -13,7 +13,7 @@ import { fadeIn, rise } from "../util/anim";
 export const DisclaimerChip = ({
   x = 600,
   y = 904,
-  text = "Edukasi, bukan saran investasi.",
+  text = "Educational, not investment advice.",
   delay = 14,
 }: {
   x?: number;

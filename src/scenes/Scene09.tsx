@@ -13,9 +13,9 @@ export const Scene09 = () => (
       Themes lead — groups follow.
     </Heading>
     <ThemeStocksDiagram
-      nodeLabel="Tema"
+      nodeLabel="Theme"
       accent={COLORS.purple}
-      chips={["Saham A", "Saham B", "Saham C", "Saham D", "Saham E"]}
+      chips={["Stock A", "Stock B", "Stock C", "Stock D", "Stock E"]}
       showReverseX
     />
   </SceneWrap>

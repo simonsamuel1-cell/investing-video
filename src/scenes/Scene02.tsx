@@ -13,7 +13,8 @@ export const Scene02 = () => {
   const frame = useCurrentFrame();
   const scrim = fadeIn(frame, 0, 10);
   return (
-    <SceneWrap>
+    // allowLogoSlot: no logo-reserve mask — full-bleed frozen grid.
+    <SceneWrap allowLogoSlot>
       <TickerGrid frozen />
       {/* soft silver scrim to lift the word off the frozen grid */}
       <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", opacity: scrim }}>

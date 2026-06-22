@@ -1,16 +1,16 @@
 /**
- * S21 (B) — Stock tab. Phone shows the stock list with filters (combined clip
- * 20–30s). Right zone: 3 filter chips (Technical / Accumulation / Valuation) and
- * purple boxes on the IFSH / AMMN tags. (spec §7)
- *
- * TODO(studio): tune TAG_BOXES to the real IFSH/AMMN tag positions in the clip.
+ * S21 (Layout B-side) — "Finally, the Stock tab. Filter by technical condition,
+ * accumulation signals, and valuation and shortlist only the strongest candidates
+ * inside the theme."
+ * Phone plays Scene_17__19__20__21.mp4 00:19–00:30 at 1:1; the clip is 0.17s
+ * LONGER than the VO so it is simply TRIMMED by the 325-frame scene length (no
+ * slow-down). The live Research→Stock switch near the start is kept. Three filter
+ * chips on silver, no grey panel (G2). (spec §21)
  */
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneClip } from "../components/DeviceFrame";
+import { PhoneFrame } from "../components/PhoneFrame";
 import { Heading } from "../components/Heading";
 import { Chip } from "../components/Chip";
-import { Callout } from "../components/Callout";
-import type { Box } from "../components/Callout";
 import { ASSETS } from "../timeline";
 
 const FILTERS = [
@@ -19,24 +19,18 @@ const FILTERS = [
   { label: "Valuation", variant: "purple" as const },
 ];
 
-const TAGS: { label: string; box: Box; y: number }[] = [
-  { label: "IFSH", box: { x: 360, y: 520, w: 150, h: 58 }, y: 612 },
-  { label: "AMMN", box: { x: 360, y: 640, w: 150, h: 58 }, y: 742 },
-];
-
 export const Scene21 = () => (
   <SceneWrap>
-    <PhoneClip src={ASSETS.combo17_21} startSec={20} />
-    <Heading x={640} y={108} width={800} size={46} delay={4}>
-      Filter the list to the leaders.
+    <PhoneFrame x={108} y={80} w={428} video={ASSETS.combo17_21} startSec={19} />
+
+    <Heading x={648} y={140} width={800} size={48} delay={4}>
+      Filter to the strongest candidates.
     </Heading>
+
     {FILTERS.map((f, i) => (
-      <Chip key={f.label} x={640} y={222 + i * 110} width={520} variant={f.variant} size={32} delay={16 + i * 12} badge={i + 1}>
+      <Chip key={f.label} x={648} y={300 + i * 124} width={620} variant={f.variant} size={34} delay={20 + i * 36} badge={i + 1}>
         {f.label}
       </Chip>
-    ))}
-    {TAGS.map((t, i) => (
-      <Callout key={t.label} box={t.box} chip={{ x: 720, y: t.y, w: 360 }} label={t.label} delay={60 + i * 20} />
     ))}
   </SceneWrap>
 );
