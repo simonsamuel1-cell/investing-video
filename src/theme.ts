@@ -34,7 +34,7 @@ export const COLORS = {
 
 export const FRAME = { width: 1920, height: 1080 } as const;
 export const FPS = 30;
-export const DURATION = 6902; // VO is exactly 230.064s — do not round.
+export const DURATION = 6928; // 6902 + 26 hold-frames inserted in S14–16 (VO padded to match, 23 Jun).
 
 // Margins kept clear of content (§4).
 export const MARGIN = { left: 96, right: 96, top: 54, bottom: 108 } as const;

@@ -17,9 +17,8 @@ const POPUP_AT = 96; // VO reaches "Sectors, Concepts, and Groups."
 // scale 1.05 overshoot) clears both the y=54 top and y=972 bottom margins.
 // Visual ≈ y67–959; the lifted card overlaps its top tab area.
 const PHONE = { top: 88, height: 850 };
-// Card lifts to the very top (size + position measured from Scene_12_2.png:
-// centred at x=960, ≈540×122 at y≈66).
-const CARD = { left: 690, top: 66, width: 540, height: 122 };
+// 3-Tabs card: centred horizontally (x=960) AND vertically (frame centre y=540).
+const CARD = { left: 690, top: 540 - 122 / 2, width: 540, height: 122 };
 
 export const Scene12 = () => {
   const frame = useCurrentFrame();
@@ -31,12 +30,13 @@ export const Scene12 = () => {
 
   return (
     <SceneWrap>
+      {/* combo12_15 plays from 0, centred horizontally, no edits — fits the
+          template 1:1 (clip is 980×1920, matching the screen cutout aspect). */}
       <PhoneCenter
         video={ASSETS.combo12_15}
         startSec={0}
         top={PHONE.top}
         height={PHONE.height}
-        screenScale={1.1}
       />
       {/* tab card that lifts up and out of the phone */}
       <div

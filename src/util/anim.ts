@@ -12,6 +12,10 @@ const CLAMP = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 export const fadeIn = (frame: number, start: number, dur: number) =>
   interpolate(frame, [start, start + dur], [0, 1], { ...CLAMP, easing: EASE });
 
+/** Opacity 1→0 starting at `start`, over `dur` frames. */
+export const fadeOut = (frame: number, start: number, dur: number) =>
+  interpolate(frame, [start, start + dur], [1, 0], { ...CLAMP, easing: EASE });
+
 /** Opacity that eases in at the head and (optionally) out at the tail of a clip. */
 export const fadeInOut = (
   frame: number,

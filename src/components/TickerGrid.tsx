@@ -14,18 +14,24 @@ const ROW_PITCH = 150; // gridAutoRows 138 + rowGap 12
 const PERIOD = BLOCK_ROWS * ROW_PITCH; // 1200 — scroll loop length
 const SPEED = 7; // px/frame
 
-const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+// Real IDX (Indonesia Stock Exchange) tickers — one per tile so the wall reads as
+// the Indonesian index. There are exactly BLOCK_ROWS×COLS (48) data tiles, so this
+// list is sized to give every tile a distinct code. Prices/%s remain placeholder.
+const TICKERS = [
+  "BBCA", "BBRI", "BMRI", "BBNI", "TLKM", "ASII", "UNVR", "ICBP",
+  "INDF", "KLBF", "GOTO", "ANTM", "ADRO", "PTBA", "PGAS", "SMGR",
+  "INTP", "UNTR", "ACES", "AMRT", "MAPI", "EXCL", "ISAT", "TOWR",
+  "MEDC", "ITMG", "INKP", "CPIN", "JPFA", "BRPT", "TPIA", "ARTO",
+  "BUKA", "AKRA", "CTRA", "BSDE", "PWON", "MNCN", "SCMA", "HMSP",
+  "GGRM", "MYOR", "SIDO", "TKIM", "BRIS", "MDKA", "INCO", "EMTK",
+];
 const hash = (i: number, seed: number) => {
   const x = Math.sin(i * 12.9898 + seed * 78.233) * 43758.5453;
   return x - Math.floor(x);
 };
 
 const tile = (i: number) => {
-  const code =
-    LETTERS[Math.floor(hash(i, 1) * LETTERS.length)] +
-    LETTERS[Math.floor(hash(i, 2) * LETTERS.length)] +
-    LETTERS[Math.floor(hash(i, 3) * LETTERS.length)] +
-    LETTERS[Math.floor(hash(i, 4) * LETTERS.length)];
+  const code = TICKERS[i % TICKERS.length];
   const price = Math.floor(80 + hash(i, 5) * 4200);
   const pctRaw = (hash(i, 6) - 0.5) * 16;
   const pct = `${pctRaw >= 0 ? "+" : "−"}${Math.abs(pctRaw).toFixed(1)}%`;

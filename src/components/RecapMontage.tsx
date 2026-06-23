@@ -17,9 +17,10 @@ const STEPS = [
   { label: "Validate", src: ASSETS.tab2 },
 ];
 
-// Card aspect = device-frame aspect (0.4946) so the screenshot fills the cutout.
+// Card aspect = device-frame aspect (0.4946); the screen rect matches the screen
+// content aspect (≈0.5104), centred, so it fits with no letterbox (same as PhoneFrame).
 const CARD = { w: 224, h: 453, gap: 96, top: 280 };
-const CUT = { left: 0.0665, top: 0.0308, w: 0.867, h: 0.9381 };
+const CUT = { left: 0.0665, top: 0.0798, w: 0.867, h: 0.8402 };
 
 export const RecapMontage = () => {
   const frame = useCurrentFrame();
@@ -93,9 +94,7 @@ export const RecapMontage = () => {
                 filter: `drop-shadow(0 ${10 + 22 * elev}px ${20 + 24 * elev}px rgba(70,54,184,${0.1 + 0.18 * elev}))`,
               }}
             >
-              {/* device body underneath (its screen area is opaque white) */}
-              <Img src={staticFile(ASSETS.deviceFrame)} style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%" }} />
-              {/* screen content on TOP, clipped to the cutout */}
+              {/* screen content inside a thin-border phone template (matches S11+) */}
               <div
                 style={{
                   position: "absolute",
@@ -105,6 +104,8 @@ export const RecapMontage = () => {
                   height: CARD.h * CUT.h,
                   overflow: "hidden",
                   borderRadius: CARD.w * 0.085,
+                  border: `${Math.max(2, CARD.w * CUT.w * 0.011)}px solid ${COLORS.ink}`,
+                  background: COLORS.black,
                 }}
               >
                 <Img

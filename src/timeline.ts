@@ -2,7 +2,9 @@
  * Frame-exact scene timeline (spec §6). DO NOT CHANGE any frame value.
  * `from`/`dur` are taken verbatim from the spec table — they were derived from
  * measured pauses in the real VO, not estimated. The last scene ends at
- * 6838 + 64 = 6902, which equals durationInFrames exactly.
+ * 6864 + 64 = 6928, which equals durationInFrames exactly. (S17→S32 were shifted
+ * +26f on 23 Jun when 26 hold-frames were inserted into the S14–16 block and the
+ * VO was padded with matching silence — see ASSETS.audio.)
  *
  * Note: a few adjacent rows in §6 differ by ±1 frame (e.g. S17→S18); these are
  * the spec's own measured values and are kept verbatim. Any sub-frame gap/overlap
@@ -35,28 +37,30 @@ export const TIMELINE: SceneDef[] = [
   { n: 14, from: 2756, dur: 398, layout: "B", gist: "Concepts (B-side; combo @00:19)" },
   { n: 15, from: 3154, dur: 206, layout: "B", gist: "Groups (B-top centred phone; combo @00:31)" },
   { n: 16, from: 3360, dur: 98, layout: "B", gist: "one screen, every angle (B-top triple phone)" },
-  { n: 17, from: 3458, dur: 203, layout: "B", gist: "Hot Themes (B-top centred; Hot_Themes.mp4 ~1:1 rate 0.988)" },
-  { n: 18, from: 3662, dur: 119, layout: "A", gist: "don't start from a stock (text card, unchanged)" },
-  { n: 19, from: 3780, dur: 334, layout: "B", gist: "open a theme: 4 reads (B-side; combo17_21 @00:00–11 ~1:1)" },
-  { n: 20, from: 4114, dur: 271, layout: "B", gist: "Research: catalyst/narrative/risk (B-side; combo17_21 @00:11–19 slow ×1.13)" },
-  { n: 21, from: 4384, dur: 325, layout: "B", gist: "Stock tab filters (B-side; combo17_21 @00:19, trimmed to 325f)" },
-  { n: 22, from: 4710, dur: 90, layout: "C", gist: "Theme→Story→Stock (B-top 3 phones + cyan arrows)" },
+  { n: 17, from: 3484, dur: 203, layout: "B", gist: "Hot Themes (B-top centred; Hot_Themes.mp4 ~1:1 rate 0.988)" },
+  { n: 18, from: 3688, dur: 119, layout: "A", gist: "don't start from a stock (text card, unchanged)" },
+  { n: 19, from: 3806, dur: 334, layout: "B", gist: "open a theme: 4 reads (B-side; combo17_21 @00:00–11 ~1:1)" },
+  { n: 20, from: 4140, dur: 271, layout: "B", gist: "Research: catalyst/narrative/risk (B-side; combo17_21 @00:11–19 slow ×1.13)" },
+  { n: 21, from: 4410, dur: 325, layout: "B", gist: "Stock tab filters (B-side; combo17_21 @00:19, trimmed to 325f)" },
+  { n: 22, from: 4736, dur: 90, layout: "C", gist: "Theme→Story→Stock (B-top 3 phones + cyan arrows)" },
   // S23–27 = ONE continuous take: combo23_27 played 1:1 from 0, fade=0 between them.
-  { n: 23, from: 4800, dur: 107, layout: "B", gist: "candidate (B-top; continuous take @00:00, 1:1)" },
-  { n: 24, from: 4906, dur: 373, layout: "B", gist: "Quality→Fair Value (B-top; continuous @00:03.5; traveling cyan box)" },
-  { n: 25, from: 5280, dur: 150, layout: "B", gist: "Tuntun research (B-top; continuous @00:16)" },
-  { n: 26, from: 5430, dur: 391, layout: "B", gist: "Technical/MA5 + disclaimer (B-top; continuous @00:21; box f75–275)" },
-  { n: 27, from: 5821, dur: 97, layout: "B", gist: "Company tab Concept Sector (B-top; continuous @00:34)" },
-  { n: 28, from: 5918, dur: 210, layout: "B", gist: "multiple themes = conviction (B-side; reuse @00:35)" },
-  { n: 29, from: 6128, dur: 82, layout: "A", gist: "how many forces push one way" },
-  { n: 30, from: 6210, dur: 515, layout: "A", gist: "they look at a different level (recap)" },
-  { n: 31, from: 6725, dur: 113, layout: "A", gist: "start with the theme" },
-  { n: 32, from: 6838, dur: 64, layout: "A", gist: "what Concept Sector is built for (end card)" },
+  { n: 23, from: 4826, dur: 107, layout: "B", gist: "candidate (B-top; continuous take @00:00, 1:1)" },
+  { n: 24, from: 4932, dur: 373, layout: "B", gist: "Quality→Fair Value (B-top; continuous @00:03.5; traveling cyan box)" },
+  { n: 25, from: 5306, dur: 150, layout: "B", gist: "Tuntun research (B-top; continuous @00:16)" },
+  { n: 26, from: 5456, dur: 391, layout: "B", gist: "Technical/MA5 + disclaimer (B-top; continuous @00:21; box f75–275)" },
+  { n: 27, from: 5847, dur: 97, layout: "B", gist: "Company tab Concept Sector (B-top; continuous @00:34)" },
+  { n: 28, from: 5944, dur: 210, layout: "B", gist: "multiple themes = conviction (B-side; reuse @00:35)" },
+  { n: 29, from: 6154, dur: 82, layout: "A", gist: "how many forces push one way" },
+  { n: 30, from: 6236, dur: 515, layout: "A", gist: "they look at a different level (recap)" },
+  { n: 31, from: 6751, dur: 113, layout: "A", gist: "start with the theme" },
+  { n: 32, from: 6864, dur: 64, layout: "A", gist: "what Concept Sector is built for (end card)" },
 ];
 
 // Asset filenames (verified, in public/). Centralised so scenes never typo a path.
 export const ASSETS = {
-  audio: "Most_traders_start__1_.mp3",
+  // Padded VO: +16f silence @111.533s (frame 3346) and +10f @115.0s (frame 3450)
+  // inserted in silent gaps so visuals stay in sync after the S14–16 holds (23 Jun).
+  audio: "Most_traders_start__1__padded.mp3",
   // Video (all 980×1920, 30fps)
   hotThemes: "Scene_17_-_Hot_Themes.mp4",
   sectorScroll: "Scene_13.mp4",

@@ -1,128 +1,100 @@
 /**
- * S13 (Layout B-side, TWO states; phone FIXED) — "Sectors cover real business
- * categories — Agriculture, Consumer, Mining, Infrastructure — broken down further
- * into Tuntun's own sub-sectors for deeper precision."
+ * S13 (TWO continuous parts; per Simon's hand layout + 23 Jun revision) —
+ * "Sectors cover real business categories … broken down further into Tuntun's own
+ * sub-sectors."
  *
- * One fixed <PhoneFrame> on the left; only the recording inside cross-fades:
- *  State 1: Scene_12__13__14__15.mp4 @00:07 (Sector list).
- *  State 2: Scene_13.mp4 (Tuntun Sub-Sectors) + bottom strip appears.
- * Chips pop sequentially as the VO names each. No grey panels (G2). Ref:
- * Scene_13.png / Scene_13_2.png (layout only). (spec §13)
+ * The combo clip is kept at S12's EXACT size (top 88, height 850, centred) so it
+ * is continuous from S12 with no size jump. Because that phone fills the active
+ * area, the title sits in the thin top margin and the 4×1 tag row in the thin
+ * bottom margin (both shrunk, per Simon's allowance).
+ *
+ * Part 1 (local 0–196 ≈ 01:20–01:27): title (top), combo phone (centred, clock
+ *   continues S12 at 6.6s), 4 tags in ONE row below; tags stagger at f76/106/136/
+ *   166 (01:23–01:26).
+ * Part 2 (local 196–342 ≈ 01:27–01:32): the whole page scrolls UP fast — combo
+ *   exits the top, the tag row lands where the title was, and Scene_13.mp4 (same
+ *   850 size) scrolls in from below, playing from its first frame (1×, no edits).
+ *   Everything fades out before S14.
+ *
+ * Bottom band is reserved for burned-in subtitles (project-wide) — nothing drawn.
  */
-import { OffthreadVideo, staticFile, useCurrentFrame } from "remotion";
-import type { CSSProperties } from "react";
+import { Sequence, useCurrentFrame } from "remotion";
 import { SceneWrap } from "../components/SceneWrap";
-import { PhoneFrame } from "../components/PhoneFrame";
+import { PhoneCenter } from "../components/PhoneCenter";
 import { Heading } from "../components/Heading";
 import { Chip } from "../components/Chip";
 import { ASSETS } from "../timeline";
-import { COLORS } from "../theme";
-import { fadeIn } from "../util/anim";
+import { ease, fadeOut } from "../util/anim";
 
-const SPLIT = 206; // VO: "further into Tuntun's own sub-sectors"
-const screen = (opacity: number): CSSProperties => ({
-  position: "absolute",
-  left: 0,
-  top: 0,
-  width: "100%",
-  height: "100%",
-  objectFit: "contain",
-  opacity,
-});
+// ── timing (local frames; scene from=2414) ──────────────────────────────────
+const PART2 = 196; // 01:27 — Part 1 → Part 2 split (continuous)
+const SCROLL_DUR = 16; // fast
+const SCROLL = 880; // page lift: tag row (y936) → top band (y56)
+const FADE_OUT = 322;
+const FADE_DUR = 20;
+const T_TAGS = [76, 106, 136, 166]; // 01:23 / 01:24 / 01:25 / 01:26
 
-const Leaf = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round">
-    <path d="M12 21V9" />
-    <path d="M12 12c0-4 3-7 8-7 0 4-3 7-8 7Z" />
-    <path d="M12 15c0-3-2-5-6-5 0 3 2 5 6 5Z" />
-  </svg>
-);
-const Cart = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 5h2l2 10h9l2-7H7" />
-    <circle cx="9" cy="19" r="1.4" />
-    <circle cx="17" cy="19" r="1.4" />
-  </svg>
-);
-const Mountain = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinejoin="round">
-    <path d="M3 19 10 7l4 6 2-3 5 9z" />
-  </svg>
-);
-const Building = () => (
-  <svg width={22} height={22} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={2} strokeLinejoin="round">
-    <rect x="5" y="4" width="14" height="16" rx="1" />
-    <path d="M9 8h2M13 8h2M9 12h2M13 12h2M9 16h2M13 16h2" />
-  </svg>
-);
+// ── layout (page coordinates; the whole page scrolls in Part 2) ──────────────
+const COMBO = { top: 88, height: 850 }; // == S12 exactly → continuous, no size jump
+const S13V = { top: 995, height: 850 }; // page-y; lands at ~115 (below tags) after scroll
+const TITLE_Y = 56;
+const TAGS_Y = 936; // thin bottom margin, just under the phone
+const TAG_W = 224;
+const TAG_PITCH = 242; // 224 + 18 gap
+const TAG_X0 = 485; // 960 − (4·224 + 3·18)/2
 
-const CHIPS = [
-  { label: "Agriculture", icon: <Leaf />, variant: "purple" as const },
-  { label: "Consumer", icon: <Cart />, variant: "cyan" as const },
-  { label: "Mining", icon: <Mountain />, variant: "purple" as const },
-  { label: "Infrastructure", icon: <Building />, variant: "cyan" as const },
+const TAG_DEFS = [
+  { label: "Agriculture", variant: "purple" as const },
+  { label: "Consumer", variant: "cyan" as const },
+  { label: "Mining", variant: "purple" as const },
+  { label: "Infrastructure", variant: "cyan" as const },
 ];
 
-const SUBS = [
-  { w: 300, c: COLORS.purple },
-  { w: 220, c: COLORS.cyan },
-  { w: 260, c: COLORS.purpleLight },
-  { w: 280, c: COLORS.cyanDark },
-];
+// Scene_13.mp4 below the tags in the page; mounted in its own Sequence so it plays
+// from its first frame as it scrolls in.
+const Video2 = () => (
+  <PhoneCenter video={ASSETS.sectorScroll} startSec={0} top={S13V.top} height={S13V.height} />
+);
 
 export const Scene13 = () => {
   const frame = useCurrentFrame();
-  const s2 = fadeIn(frame, SPLIT, 12); // 0 → State 1, 1 → State 2
-  const showS1 = frame < SPLIT + 16;
-  const showS2 = frame >= SPLIT - 2;
+  const scrollY = ease(frame, [PART2, PART2 + SCROLL_DUR], [0, -SCROLL]);
+  const out = fadeOut(frame, FADE_OUT, FADE_DUR);
 
   return (
     <SceneWrap>
-      {/* fixed phone; inner recording cross-fades */}
-      <PhoneFrame x={108} y={80} w={428}>
-        {showS1 && <OffthreadVideo src={staticFile(ASSETS.combo12_15)} trimBefore={7 * 30} muted style={screen(1 - s2)} />}
-        {/* Scene_13.mp4 00:02–00:05 played ~1:1 (slight slow ×1.11) per v2; the
-            State-2 tail beyond ~3s holds the last frame. */}
-        {showS2 && (
-          <OffthreadVideo
-            src={staticFile(ASSETS.sectorScroll)}
-            trimBefore={60}
-            playbackRate={0.9}
-            muted
-            style={screen(s2)}
-          />
-        )}
-      </PhoneFrame>
+      {/* the page: title + combo + tags + Scene_13 stacked; transform scrolls it
+          (and makes it the containing block for the absolute children). */}
+      <div style={{ position: "absolute", inset: 0, transform: `translateY(${scrollY}px)`, opacity: out }}>
+        {/* combo12_15 — S12's size, clock continues at 6.6s = (2414−2216)/30 */}
+        <PhoneCenter video={ASSETS.combo12_15} startSec={(2414 - 2216) / 30} top={COMBO.top} height={COMBO.height} />
 
-      <Heading x={648} y={170} width={800} size={44} delay={4}>
-        Every sector splits into sub-sectors.
-      </Heading>
+        {/* Scene_13.mp4 scrolls up into view from below the tags */}
+        <Sequence from={PART2} durationInFrames={342 - PART2} name="S13b · Scene_13.mp4 (sub-sectors)">
+          <Video2 />
+        </Sequence>
 
-      {CHIPS.map((c, i) => (
-        <Chip
-          key={c.label}
-          x={648}
-          y={290 + i * 82}
-          width={1128}
-          variant={c.variant}
-          size={30}
-          delay={20 + i * 16}
-          badge={c.icon}
-        >
-          {c.label}
-        </Chip>
-      ))}
+        {/* 4×1 tag row (in front), staggered */}
+        {TAG_DEFS.map((t, i) => (
+          <Chip
+            key={t.label}
+            x={TAG_X0 + i * TAG_PITCH}
+            y={TAGS_Y}
+            width={TAG_W}
+            variant={t.variant}
+            size={18}
+            padding="6px 14px"
+            align="center"
+            delay={T_TAGS[i]}
+          >
+            {t.label}
+          </Chip>
+        ))}
 
-      {/* State-2 bottom strip */}
-      <div style={{ position: "absolute", left: 648, top: 638, width: 1128, opacity: s2 }}>
-        <div style={{ fontSize: 24, fontWeight: 700, color: COLORS.black, marginBottom: 12 }}>
-          One sector → several sub-sectors
-        </div>
-        <div style={{ display: "flex", gap: 10 }}>
-          {SUBS.map((s, i) => (
-            <div key={i} style={{ width: s.w, height: 48, borderRadius: 12, background: s.c }} />
-          ))}
-        </div>
+        {/* title (in front, top margin) */}
+        <Heading x={96} y={TITLE_Y} width={1728} align="center" size={28} delay={0}>
+          Sectors cover real business categories
+        </Heading>
       </div>
     </SceneWrap>
   );
