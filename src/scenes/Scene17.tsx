@@ -15,7 +15,7 @@ import { fadeIn } from "../util/anim";
 const CLAMP = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 // Highlight over the on-phone "Concept Sector" section (header + 6 cards). Wider
 // than the phone template (phone ≈361px; box 470px), centred on x=960.
-const HL = { x: 725, y: 390, w: 470, h: 265 };
+const HL = { x: 755, y: 390, w: 410, h: 265 };
 
 export const Scene17 = () => {
   const frame = useCurrentFrame();

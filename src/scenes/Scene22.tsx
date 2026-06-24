@@ -20,9 +20,9 @@ const PH_TOP = 266;
 const PH_H = 576;
 const HALF = 150; // visual half-width (incl. scale 1.05) for arrow clearance
 const STEPS = [
-  { src: ASSETS.theme22, cx: 606 },
-  { src: ASSETS.story22, cx: 960 },
-  { src: ASSETS.stock22, cx: 1314 },
+  { src: ASSETS.theme22, cx: 606, label: "Theme" },
+  { src: ASSETS.story22, cx: 960, label: "Story" },
+  { src: ASSETS.stock22, cx: 1314, label: "Stock" },
 ];
 const ARROWS = [
   { x0: 606 + HALF, x1: 960 - HALF, delay: 18 },
@@ -36,6 +36,27 @@ export const Scene22 = () => {
     <SceneWrap>
       {STEPS.map((s, i) => (
         <PhoneCenter key={i} img={s.src} cx={s.cx} top={PH_TOP} height={PH_H} delay={4 + i * 14} />
+      ))}
+
+      {/* Theme / Story / Stock labels centred above each phone, 30px gap to the image */}
+      {STEPS.map((s, i) => (
+        <div
+          key={s.label}
+          style={{
+            position: "absolute",
+            left: s.cx - 150,
+            top: PH_TOP - 30 - 46, // 30px gap above the phone (label height ≈46)
+            width: 300,
+            textAlign: "center",
+            fontSize: 38,
+            fontWeight: 800,
+            letterSpacing: -0.4,
+            color: COLORS.black,
+            opacity: fadeIn(frame, 6 + i * 14, 10),
+          }}
+        >
+          {s.label}
+        </div>
       ))}
 
       <svg style={{ position: "absolute", left: 0, top: 0, width: 1920, height: 1080, pointerEvents: "none" }}>

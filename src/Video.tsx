@@ -9,6 +9,7 @@ import { TIMELINE, ASSETS } from "./timeline";
 import { SCENES } from "./scenes";
 import { Scene12to13 } from "./scenes/Scene12to13";
 import { Scene14to16 } from "./scenes/Scene14to16";
+import { Scene19to21 } from "./scenes/Scene19to21";
 import { Scene23to27 } from "./scenes/Scene23to27";
 import { COLORS, MOUNT_VO } from "./theme";
 
@@ -20,10 +21,11 @@ import { COLORS, MOUNT_VO } from "./theme";
 //   • S23–27 (4800→5918) — combo23_27 continuous (existing).
 const G1213 = { from: 2216, to: 2756 };
 const G1416 = { from: 2756, to: 3484 }; // +26 hold-frames inserted in S14–16 (23 Jun)
+const G1921 = { from: 3806, to: 4736 }; // S19–S21 continuous block
 const MERGE_FROM = 4826; // S23 from (shifted +26)
-const MERGE_TO = 5944; // S28 from (shifted +26)
+const MERGE_TO = 6154; // S29 from — S28 folded into the continuous block (phone keeps playing)
 
-const MERGED = new Set([12, 13, 14, 15, 16, 23, 24, 25, 26, 27]);
+const MERGED = new Set([12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 27, 28]);
 
 export const ConceptSectorVideo = () => {
   return (
@@ -47,6 +49,11 @@ export const ConceptSectorVideo = () => {
       {/* S14–S16 continuous block */}
       <Sequence from={G1416.from} durationInFrames={G1416.to - G1416.from} name="S14–16 · Concepts → Groups → every angle (continuous)">
         <Scene14to16 />
+      </Sequence>
+
+      {/* S19–S21 continuous block */}
+      <Sequence from={G1921.from} durationInFrames={G1921.to - G1921.from} name="S19–21 · open theme → research → filter (continuous)">
+        <Scene19to21 />
       </Sequence>
 
       {/* S23–27 continuous block */}

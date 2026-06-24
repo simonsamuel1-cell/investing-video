@@ -34,8 +34,10 @@ export const Scene31 = () => {
         </div>
       </div>
 
-      {/* theme screen inside a device frame, right (clear of logo reserve) */}
-      <PhoneFrame x={1230} y={240} w={326} img={ASSETS.theme22} delay={14} />
+      {/* theme screen inside a device frame, +30% (326→424). At this size it's ~857
+          tall, so it's moved left/up to fit the active area AND keep its right edge
+          clear of the top-right logo reserve (x<1464). */}
+      <PhoneFrame x={1030} y={86} w={424} img={ASSETS.theme22} delay={14} />
     </SceneWrap>
   );
 };

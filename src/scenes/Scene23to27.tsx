@@ -12,46 +12,70 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { SceneWrap } from "../components/SceneWrap";
 import { PhoneCenter } from "../components/PhoneCenter";
-import { DisclaimerChip } from "../components/DisclaimerChip";
 import { ASSETS } from "../timeline";
 import { COLORS } from "../theme";
 
 const CLAMP = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const APP_GREEN = "#16A34A";
 
-// Reference Fair Value — section lifted out into a centred opaque card (per Scene_24_2.png),
-// same lift-out approach as the MA5 card.
-const RFV = { x: 730, y: 630, w: 460, h: 222 };
+// S24 lifted cards sit BESIDE the centred phone (body edges 746/1174), vertically
+// centred (cy≈512), scaled 0.72 with a 50px gap to the phone. y = 512 − h/2.
+const CARD_SCALE = 0.72;
+const CQ = { x: 376, y: 405, w: 372, h: 214 };
+const RFV = { x: 1160, y: 401, w: 460, h: 222 };
 
-// Company Quality — section lifted out into an opaque card pulled to the bottom-left
-// (per Scene_24.png), same lift-out approach as the MA5 card.
-const CQ = { x: 540, y: 632, w: 372, h: 214 };
-
-// MA5 lifted card (wider than the phone, at the MA5 row's y).
-const MA5 = { x: 640, y: 586, w: 640, h: 92 };
+// MA5 lifted card (wider than the phone). Scaled 40% bigger (0.84) and vertical-centred.
+const MA5 = { x: 640, y: 466, w: 640, h: 92 };
+const MA5_SCALE = 0.84;
 
 export const Scene23to27 = () => {
   const frame = useCurrentFrame();
 
-  // Company Quality — lifted card (state 1).
-  const cqOp = interpolate(frame, [95, 110, 256, 271], [0, 1, 1, 0], CLAMP);
+  // Company Quality + Reference Fair Value — both BESIDE the phone; both DISAPPEAR
+  // at 02:56.08 (local 462). CQ appears first (local 95), RFV later (local 300).
+  const cqOp = interpolate(frame, [95, 110, 448, 462], [0, 1, 1, 0], CLAMP);
   const cqTy = interpolate(frame, [95, 113], [20, 0], CLAMP);
-
-  // Reference Fair Value — lifted card (state 2).
-  const rfvOp = interpolate(frame, [300, 312, 446, 458], [0, 1, 1, 0], CLAMP);
+  const rfvOp = interpolate(frame, [300, 312, 448, 462], [0, 1, 1, 0], CLAMP);
   const rfvTy = interpolate(frame, [300, 318], [20, 0], CLAMP);
 
   // MA5 lifted card.
   const ma5Op = interpolate(frame, [750, 762, 893, 905], [0, 1, 1, 0], CLAMP);
   const ma5Ty = interpolate(frame, [750, 768], [18, 0], CLAMP);
 
-  // Compliance chip during the Technical section.
-  const discOp = interpolate(frame, [620, 635, 893, 905], [0, 1, 1, 0], CLAMP);
+  // S25: phone slides LEFT ~200px (local ~480–617), then back to centre at 03:01.13
+  // (local 617) for S26. The lifted cards only show while the phone is centred.
+  const phoneShift = interpolate(frame, [470, 490, 617, 637], [0, -200, -200, 0], CLAMP);
+  // "Curated by Tuntun Research Institute" — appears right-beside the shifted phone.
+  const curatedOp = interpolate(frame, [495, 510, 605, 620], [0, 1, 1, 0], CLAMP);
+
+  // S26: "validate on chart pro" beside the (centred) phone @ 03:11.27 (local 931).
+  const validateOp = interpolate(frame, [931, 943, 1008, 1020], [0, 1, 1, 0], CLAMP);
+  // S27/S28 (block now folds in S28): highlight over IDX Sectors / Tuntun Sector /
+  // Concept, 03:21.02–03:25.02 (local 1206–1326). Width = phone (428) + 25px each side.
+  const hl27Op = interpolate(frame, [1206, 1216, 1314, 1326], [0, 1, 1, 0], CLAMP);
 
   return (
     <SceneWrap>
       {/* one continuous recording — never remounts across the block */}
-      <PhoneCenter video={ASSETS.combo23_27} startSec={0} top={80} height={865} />
+      <PhoneCenter video={ASSETS.combo23_27} startSec={0} top={80} height={865} cx={960 + phoneShift} />
+
+      {/* S25 — Curated-by label right-beside the left-shifted phone, vertically centred */}
+      <div
+        style={{
+          position: "absolute",
+          left: 990,
+          top: 435,
+          width: 834,
+          fontSize: 64,
+          fontWeight: 800,
+          lineHeight: 1.18,
+          letterSpacing: -0.5,
+          color: COLORS.black,
+          opacity: curatedOp,
+        }}
+      >
+        Curated by<br />Tuntun Research Institute
+      </div>
 
       {/* Company Quality — section lifted out into an opaque card, bottom-left (per Scene_24.png) */}
       <div
@@ -66,7 +90,7 @@ export const Scene23to27 = () => {
           border: `4px solid ${COLORS.cyan}`,
           boxShadow: "0 18px 44px rgba(0,0,0,0.16)",
           opacity: cqOp,
-          transform: `translateY(${cqTy}px) scale(0.6)`,
+          transform: `translateY(${cqTy}px) scale(${CARD_SCALE})`,
           transformOrigin: "center",
           padding: "26px 32px",
           display: "flex",
@@ -99,7 +123,7 @@ export const Scene23to27 = () => {
           border: `4px solid ${COLORS.cyan}`,
           boxShadow: "0 18px 44px rgba(0,0,0,0.16)",
           opacity: rfvOp,
-          transform: `translateY(${rfvTy}px) scale(0.6)`,
+          transform: `translateY(${rfvTy}px) scale(${CARD_SCALE})`,
           transformOrigin: "center",
           padding: "24px 36px",
           display: "flex",
@@ -147,7 +171,7 @@ export const Scene23to27 = () => {
           border: `4px solid ${COLORS.cyan}`,
           boxShadow: "0 18px 44px rgba(0,0,0,0.16)",
           opacity: ma5Op,
-          transform: `translateY(${ma5Ty}px) scale(0.6)`,
+          transform: `translateY(${ma5Ty}px) scale(${MA5_SCALE})`,
           transformOrigin: "center",
           display: "flex",
           alignItems: "center",
@@ -166,10 +190,39 @@ export const Scene23to27 = () => {
         </span>
       </div>
 
-      {/* compliance chip, bottom-left, clear of the phone */}
-      <div style={{ opacity: discOp }}>
-        <DisclaimerChip x={110} y={906} delay={0} />
+      {/* S26 — "validate on chart pro" right-beside the centred phone (20px gap) */}
+      <div
+        style={{
+          position: "absolute",
+          left: 1194,
+          top: 440,
+          width: 600,
+          fontSize: 60,
+          fontWeight: 800,
+          lineHeight: 1.2,
+          letterSpacing: -0.5,
+          color: COLORS.black,
+          opacity: validateOp,
+        }}
+      >
+        validate on<br />chart pro
       </div>
+
+      {/* S27/S28 — highlight over IDX Sectors / Tuntun Sector / Concept */}
+      <div
+        style={{
+          position: "absolute",
+          left: 721,
+          top: 305,
+          width: 478,
+          height: 288,
+          borderRadius: 18,
+          border: `3px solid ${COLORS.cyan}`,
+          background: COLORS.cyanWash,
+          boxShadow: "0 0 0 4px rgba(92,200,227,0.16)",
+          opacity: hl27Op,
+        }}
+      />
     </SceneWrap>
   );
 };

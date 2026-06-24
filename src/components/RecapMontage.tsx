@@ -19,7 +19,8 @@ const STEPS = [
 
 // Card aspect = device-frame aspect (0.4946); the screen rect matches the screen
 // content aspect (≈0.5104), centred, so it fits with no letterbox (same as PhoneFrame).
-const CARD = { w: 224, h: 453, gap: 96, top: 280 };
+// Enlarged from 224×453 (Simon: bigger templates + contents).
+const CARD = { w: 268, h: 542, gap: 96, top: 220 };
 const CUT = { left: 0.0665, top: 0.0798, w: 0.867, h: 0.8402 };
 
 export const RecapMontage = () => {
@@ -40,7 +41,7 @@ export const RecapMontage = () => {
         style={{
           position: "absolute",
           left: 96,
-          top: 120,
+          top: 104,
           width: 1280,
           textAlign: "center",
           fontSize: 60,
@@ -75,9 +76,7 @@ export const RecapMontage = () => {
       {STEPS.map((s, i) => {
         const x = startX + i * (CARD.w + CARD.gap);
         const elev = interpolateBump(frame, i * seg, (i + 1) * seg);
-        const within = ease(frame, [i * seg, (i + 1) * seg], [0, 1]);
-        const kb = 1.05 + 0.07 * within; // slow Ken-Burns zoom
-        const scale = 1 + 0.12 * elev;
+        const scale = 1 + 0.1 * elev;
         const lift = -20 * elev;
         const op = (0.5 + 0.5 * elev) * enter;
         return (
@@ -110,7 +109,7 @@ export const RecapMontage = () => {
               >
                 <Img
                   src={staticFile(s.src)}
-                  style={{ width: "100%", height: "100%", objectFit: "cover", transform: `scale(${kb})` }}
+                  style={{ width: "100%", height: "100%", objectFit: "contain" }}
                 />
               </div>
             </div>
@@ -122,7 +121,7 @@ export const RecapMontage = () => {
                 top: CARD.top + CARD.h + 26,
                 width: CARD.w,
                 textAlign: "center",
-                fontSize: 28,
+                fontSize: 32,
                 fontWeight: elev > 0.5 ? 800 : 600,
                 color: COLORS.black,
                 opacity: op,
@@ -140,7 +139,7 @@ export const RecapMontage = () => {
         style={{
           position: "absolute",
           left: startX,
-          top: 812,
+          top: 860,
           width: totalW,
           height: 6,
           borderRadius: 3,
