@@ -24,7 +24,7 @@ export const TIMELINE: SceneDef[] = [
   { n: 7, from: 4844, dur: 968, gist: "how it fits your workflow" },
   { n: 8, from: 5812, dur: 594, gist: "confirm with Market Radar" },
   { n: 9, from: 6406, dur: 418, gist: "validate further — Chart Pro / TradingView" },
-  { n: 10, from: 6824, dur: 498, gist: "closing principle — condition first" },
+  { n: 10, from: 6844, dur: 498, gist: "closing principle — condition first" }, // +20 (VO pad @1594)
 ];
 
 /** Asset filenames (verified in public/technicalTab/). Centralised so scenes
@@ -39,6 +39,12 @@ export const ASSETS = {
   rec3to6: "technicalTab/Scene_3-6.mp4", // 110.85s → S3,S4,S5,S6
   rec7to8: "technicalTab/Scene_7-8.mp4", // 39.98s → S7,S8
   rec9: "technicalTab/Scene_9.mp4", // 13.37s → S9
+
+  // S1 opening — three "where you heard about the stock" phone screenshots
+  // (supplied by Simon; thin-bordered). Shown left→right at frames 65–230.
+  s1HotSector: "technicalTab/s1-hot-sector.jpg", // Scene 01 - 1.jpg
+  s1WordOfMouth: "technicalTab/s1-word-of-mouth.jpg", // Scene 01 - 2.jpg
+  s1Watchlist: "technicalTab/s1-watchlist.jpg", // Scene 01 - 3.jpg
 
   // Raw phone screenshots (1080×2340) — bordered by <FramedShot>.
   shotEsip: "technicalTab/shot-esip.png", // ESIP — bullish example

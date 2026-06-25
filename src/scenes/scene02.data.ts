@@ -1,25 +1,22 @@
 /**
- * Scene 2 (v2) — One Theme. The only on-screen number is a reported quarterly
- * earnings fact with a visible source + date (compliance). Catalysts are stated
- * public-policy facts. No price, no signal, no recommendation.
- *
- * ⚠ DATA VERIFICATION: the JPFA Q1-2026 +167% YoY figure was web-verified at
- * build (2026-06-24) against multiple independent sources — eFeedLink
- * (m.efeedlink.com, 2026-05-20: net profit IDR 1.816T vs IDR 680.4B, +167% YoY)
- * and IDNFinancials (idnfinancials.com news/63859). Re-confirm before final
- * render if the VO or claims change. Catalysts per Samuel Sekuritas (Apr 2026).
+ * Scene 2 (v4) — The Real Question (Simon's beat list, 25 Jun). The S1 chart
+ * (with indicators) returns, the indicators strip away leaving the price chart
+ * centred, then the two real condition-questions appear; the two indicator
+ * "detail" questions appear struck-through below; everything fades to the
+ * Montserrat resolve line. No data/ticker/numbers beyond the fictional chart.
  */
-export const S2_TICKERS = ["JPFA", "CPIN", "MAIN"] as const;
-
-export const S2_THEME = "Poultry Sector";
-
-export const S2_CATALYSTS = [
-  "Free Meals Program (MBG)",
-  "GPS Import Cut → Tighter Supply",
+export const S2_CONDITION_QS = [
+  "What is the condition of this stock?",
+  "Is now a good time to act?",
 ] as const;
 
-export const S2_PROOF = {
-  label: "JPFA Q1 2026 Net Profit",
-  value: "+167% YoY",
-  source: "Source: Japfa Comfeed Q1-2026 report · via eFeedLink, May 2026",
-} as const;
+// Demoted "detail" questions — appear struck-through, below the chart.
+export const S2_DETAIL_QS = [
+  "What does the RSI say?",
+  "Is the MACD crossed?",
+] as const;
+
+// Resolve: condition line (kept as it was — indigo, brand font) over the
+// details line (Montserrat, per Simon).
+export const S2_CONDITION_FIRST = "The condition comes first.";
+export const S2_RESOLVE = "The details come after — only if needed.";

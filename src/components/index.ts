@@ -11,3 +11,4 @@ export * from "./IndicatorChip";
 export * from "./SchematicChart";
 export * from "./IndicatorOverlays";
 export * from "./ClutterChart";
+export * from "./TradingChart";

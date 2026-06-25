@@ -1,16 +1,17 @@
 /**
- * PhoneSvg — the centre device for the Scenes 3–9 walkthrough. A clean LIGHT
- * device frame (soft-grey bezel, large rounded corners, no notch/buttons) that
- * matches the supplied mockup — it replaces the earlier dark Untitled-2.svg
- * chrome. NO shadow (flat on #F5F5F5). The screen content (`children`, or a
- * convenience `video`) is masked into the inner screen; recordings are 980×1920
- * so the screen uses that aspect (objectFit "fill" → no distortion, no crop).
+ * PhoneSvg — the centre device for the Scenes 3–9 walkthrough. Now matches the
+ * S1 phone treatment (per Simon, 25 Jun): a thin 5px dark-grey (slate) rounded
+ * border around the screen — NO thick device bezel. NO shadow (flat on #F5F5F5).
+ * The screen content (`children`, or a convenience `video`) fills the bordered
+ * area; recordings are 980×1920 so the screen uses that aspect (objectFit "fill"
+ * → no distortion, no crop).
  */
 import { OffthreadVideo, staticFile } from "remotion";
 import type { ReactNode } from "react";
-import { COLORS } from "../theme";
+import { COLORS, RADII } from "../theme";
 
 const SCREEN_ASPECT = 980 / 1920; // 0.5104 (w:h) — recording aspect
+const BORDER_W = 5; // same 5px dark-grey border as the S1 phones
 const screenFill = { width: "100%", height: "100%", objectFit: "fill" } as const;
 
 export const PhoneSvg = ({
@@ -28,11 +29,9 @@ export const PhoneSvg = ({
   startSec?: number;
   children?: ReactNode;
 }) => {
-  const bezel = Math.round(h * 0.018);
-  const innerH = h - bezel * 2;
+  const innerH = h - BORDER_W * 2;
   const innerW = Math.round(innerH * SCREEN_ASPECT);
-  const w = innerW + bezel * 2;
-  const radius = Math.round(w * 0.12);
+  const w = innerW + BORDER_W * 2;
 
   const media: ReactNode =
     children ??
@@ -54,23 +53,13 @@ export const PhoneSvg = ({
         width: w,
         height: h,
         boxSizing: "border-box",
-        borderRadius: radius,
-        backgroundColor: COLORS.deviceFrame,
-        border: `2px solid ${COLORS.deviceEdge}`,
+        borderRadius: RADII.card,
+        border: `${BORDER_W}px solid ${COLORS.slate}`, // 5px dark-grey, like S1
+        backgroundColor: COLORS.surface,
+        overflow: "hidden",
       }}
     >
-      {/* inner screen — content masked here, under the bezel */}
-      <div
-        style={{
-          position: "absolute",
-          inset: bezel,
-          borderRadius: radius - bezel,
-          overflow: "hidden",
-          backgroundColor: COLORS.white,
-        }}
-      >
-        {media}
-      </div>
+      {media}
     </div>
   );
 };

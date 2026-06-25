@@ -16,6 +16,7 @@ export const PopAsset = ({
   h,
   inAt,
   outAt,
+  frame: frameProp,
 }: {
   src: string;
   cx: number;
@@ -25,8 +26,10 @@ export const PopAsset = ({
   h?: number;
   inAt: number;
   outAt?: number;
+  frame?: number; // optional clock override (e.g. the S3–9 held/padded clock)
 }) => {
-  const frame = useCurrentFrame();
+  const localFrame = useCurrentFrame();
+  const frame = frameProp ?? localFrame;
   const width = w ?? (h as number) * aspect;
   const height = h ?? (w as number) / aspect;
   const life = popLife(frame, inAt, outAt);

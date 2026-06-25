@@ -41,6 +41,36 @@ export const COLORS = {
   // Directional colours — candles + Appendix engine ONLY (never drawn native).
   candleGreen: "#22B573",
   candleRed: "#E5475D",
+
+  // Status word colour — the app's "Sideways"/"Neutral" orange-yellow (S3 recap).
+  amber: "#F5A623",
+} as const;
+
+/**
+ * TradingView-style indicator palette — Scene 1's "$ABCD" chart only.
+ * Intentionally OFF-brand (per Simon, 25 Jun): the chart should read as a
+ * familiar real charting tool, so these mirror TradingView defaults rather than
+ * the indigo/cyan brand. Never use TV.* outside the Scene 1 chart.
+ */
+export const TV = {
+  candleUp: "#26A69A",
+  candleDown: "#EF5350",
+  ma5: "#2962FF", // blue
+  ma20: "#FF9800", // orange
+  rsi: "#7E57C2", // purple
+  rsiSignal: "#FFB74D", // amber signal
+  rsiBand: "rgba(126,87,194,0.07)",
+  macdLine: "#2962FF",
+  macdSignal: "#FF6D00",
+  stochK: "#26A69A",
+  stochD: "#EF5350",
+  stochBand: "rgba(41,98,255,0.05)",
+  psarUp: "#2962FF", // dots below price (uptrend)
+  psarDown: "#FF9800", // dots above price (downtrend)
+  buy: "#26A69A",
+  sell: "#EF5350",
+  axis: "#9598A1", // axis labels
+  grid: "rgba(0,0,0,0.06)",
 } as const;
 
 // Named border tints (no inline hex in scenes).
@@ -52,8 +82,11 @@ export const STROKES = {
 
 export const FRAME = { width: 1920, height: 1080 } as const;
 export const FPS = 30;
-// VO "You found a.mp3" = 244.08s. durationInFrames is frame-exact, do not round.
-export const DURATION = 7322;
+// VO "You found a.mp3" = 244.08s → 7322f, + a 20f silent pad inserted at frame
+// 1594 (Simon, 25 Jun) = 7342. durationInFrames is frame-exact, do not round.
+export const DURATION = 7342;
+export const VO_CUT = 1594; // VO is cut here and 20f of silence inserted
+export const VO_PAD = 20; // length of the inserted silence / video freeze
 
 // Fixed safe-area margins (build prompt §0).
 export const MARGIN = { left: 96, right: 96, top: 54, bottom: 108 } as const;
@@ -91,10 +124,12 @@ export const BORDER = { thin: 1, regular: 2, bold: 3 } as const;
 export const TYPE = {
   hero: 84, // S10 lockup
   display: 72, // S2 main question
+  lead: 64, // S1 opening hero line ("You found a stock…")
   principle: 56, // S10 two-line principle
   title: 48, // scene titles
   headline: 40, // closing strips, callout headlines
   body: 34, // body / captions
+  sub: 36, // sub-labels under a big heading (S3 recap "tells direction" etc.)
   chip: 30, // chip labels
   label: 26, // small labels
   micro: 22, // dated tags, fine print

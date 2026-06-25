@@ -164,6 +164,47 @@ export const genSeries = (
   return raw.map((x) => (x - min) / span);
 };
 
+export interface Candle {
+  o: number;
+  c: number;
+  hi: number;
+  lo: number;
+  up: boolean;
+}
+
+/**
+ * genCandles — a deterministic OHLC candle series (normalised 0..1). Pure shape
+ * resembling a real daily chart: a run-up to a mid peak, then a decline. NOT
+ * real data — used for the fictional "$ABCD" chart in Scene 1. Seeded so it is
+ * stable across renders.
+ */
+export const genCandles = (n: number, seed: number): Candle[] => {
+  const rnd = mulberry32(seed);
+  const closes: number[] = [];
+  let v = 0.5;
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    v += Math.cos(t * Math.PI) * 0.02 + (rnd() - 0.5) * 0.05; // up then down + jitter
+    closes.push(v);
+  }
+  const raw = closes.map((c, i) => {
+    const o = i === 0 ? c - (rnd() - 0.5) * 0.02 : closes[i - 1];
+    const hi = Math.max(o, c) + rnd() * 0.03;
+    const lo = Math.min(o, c) - rnd() * 0.03;
+    return { o, c, hi, lo };
+  });
+  const min = Math.min(...raw.map((b) => b.lo));
+  const max = Math.max(...raw.map((b) => b.hi));
+  const span = max - min || 1;
+  return raw.map((b) => ({
+    o: (b.o - min) / span,
+    c: (b.c - min) / span,
+    hi: (b.hi - min) / span,
+    lo: (b.lo - min) / span,
+    up: b.c >= b.o,
+  }));
+};
+
 /** Trailing simple moving average of a normalised series (same length). */
 export const movingAvg = (series: number[], window: number): number[] =>
   series.map((_, i) => {

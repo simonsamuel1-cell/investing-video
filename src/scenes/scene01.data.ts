@@ -1,27 +1,24 @@
 /**
- * Scene 1 (v2) — Thematic Blindness. Three traders each fixate on a separate
- * poultry ticker, all unknowingly reacting to one theme. Real IDX poultry names,
- * used as labels only. Per-ticker data option (b) [DEFAULT]: NO per-stock figures
- * anywhere in Scene 1 — ticker + the six indicator NAMES only (no readings, no
- * prices, no intraday %). The single verified figure lives in Scene 2.
+ * Scene 1 (v5) — Problem Setup. The hero chart is a FICTIONAL ticker "$ABCD"
+ * (the reference was a Bitcoin chart; the name is hidden on purpose). The chart
+ * shape and axis values are illustrative, not real data.
+ *
+ * The "ten stocks to check" beat lists ten real IDX tickers as plain labels
+ * (per Simon, 25 Jun) — names only, no prices/signals/recommendation, just the
+ * workload of having many to review.
  */
-export interface TraderColumn {
-  symbol: string; // real IDX poultry ticker
-  trader: string; // the "trader" fixated on it
-}
+export const S1_TICKER = "$ABCD";
 
-export const TICKERS: TraderColumn[] = [
-  { symbol: "JPFA", trader: "Trader A" },
-  { symbol: "CPIN", trader: "Trader B" },
-  { symbol: "MAIN", trader: "Trader C" },
-];
-
-// The six indicator names straight from the VO — NAMES ONLY (overwhelm, not data).
-export const INDICATOR_NOISE: string[] = [
-  "MA5",
-  "MA20",
-  "RSI",
-  "MACD",
-  "Stochastic",
-  "Parabolic SAR",
-];
+// Ten real IDX tickers — labels only (workload illustration, no data).
+export const S1_TEN = [
+  "BBCA",
+  "BBRI",
+  "BMRI",
+  "TLKM",
+  "ASII",
+  "ANTM",
+  "ADRO",
+  "GOTO",
+  "UNVR",
+  "ICBP",
+] as const;
