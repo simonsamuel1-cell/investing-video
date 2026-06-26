@@ -12,7 +12,20 @@ import { COLORS, MOUNT_VO, VO_CUT, VO_PAD } from "./theme";
 
 // Scenes 3–9 are ONE shared phone mount (Overall Summary → … → TradingView).
 const WALK_FROM = 1532; // S3 from
-const WALK_TO = 6844; // S10 from (+20: 20f VO pad inserted at 1594)
+const WALK_TO = 7387; // S10 from (+20 pad, +907 insert, −443 delete, +79 S9 freeze-extend)
+
+// S5–6 VO revision (Simon, 26 Jun): the new VO is INSERTED at frame 3703 (907f).
+// No old narration is deleted — the old VO after 3703 is pushed +907f later and
+// resumes from where it left off (source 3683). Everything downstream ripples
+// +907f (DURATION, S10, and the phone video — see PhoneWalkthrough).
+const NEW_VO_AT = 3703;
+const NEW_VO_LEN = 907; // ≈30.25s
+// Deletion (Simon, 26 Jun): remove audio [4609, 5052] (443f) and ripple the rest.
+const DEL_FROM = 4609; // 2.33.19
+const DEL_TO = 5052; // 2.48.12
+// source frame the old VO resumes from after the deletion (old clip-C source at
+// timeline DEL_TO = DEL_TO − VO_PAD − NEW_VO_LEN).
+const RESUME_SRC = DEL_TO - VO_PAD - NEW_VO_LEN; // 4125
 
 export const TechnicalTabEp = () => {
   return (
@@ -24,9 +37,20 @@ export const TechnicalTabEp = () => {
           MOUNT_VO can be flipped off to render silent. */}
       {MOUNT_VO && (
         <>
+          {/* old VO, part 1: 0 → 1594 */}
           <Audio src={staticFile(ASSETS.audio)} trimAfter={VO_CUT} />
-          <Sequence from={VO_CUT + VO_PAD}>
-            <Audio src={staticFile(ASSETS.audio)} trimBefore={VO_CUT} />
+          {/* old VO, part 2: 1614 → 3703 (source 1594 → 3683) */}
+          <Sequence from={VO_CUT + VO_PAD} durationInFrames={NEW_VO_AT - (VO_CUT + VO_PAD)}>
+            <Audio src={staticFile(ASSETS.audio)} trimBefore={VO_CUT} trimAfter={NEW_VO_AT - VO_PAD} />
+          </Sequence>
+          {/* NEW VO inserted: 3703 → 4609 (ends at the deletion point) */}
+          <Sequence from={NEW_VO_AT} durationInFrames={DEL_FROM - NEW_VO_AT}>
+            <Audio src={staticFile(ASSETS.newVo3703)} />
+          </Sequence>
+          {/* old VO resumes AFTER the deleted [4609,5052] stretch: from frame
+              DEL_FROM, source RESUME_SRC → end (the [3683,4125] old VO is removed). */}
+          <Sequence from={DEL_FROM}>
+            <Audio src={staticFile(ASSETS.audio)} trimBefore={RESUME_SRC} />
           </Sequence>
         </>
       )}

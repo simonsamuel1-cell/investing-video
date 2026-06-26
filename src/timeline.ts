@@ -24,13 +24,25 @@ export const TIMELINE: SceneDef[] = [
   { n: 7, from: 4844, dur: 968, gist: "how it fits your workflow" },
   { n: 8, from: 5812, dur: 594, gist: "confirm with Market Radar" },
   { n: 9, from: 6406, dur: 418, gist: "validate further — Chart Pro / TradingView" },
-  { n: 10, from: 6844, dur: 498, gist: "closing principle — condition first" }, // +20 (VO pad @1594)
+  { n: 10, from: 7387, dur: 498, gist: "closing — Scene-1 chart returns + the question" }, // S9 freeze-extended to 7387
 ];
 
 /** Asset filenames (verified in public/technicalTab/). Centralised so scenes
  * never typo a path. All names are space-free for staticFile(). */
 export const ASSETS = {
   audio: "vo.mp3",
+  // S5–6 revision (Simon, 26 Jun): new VO at frame 3703 (907f) + new screen
+  // recording covering abs 3703–5431 (1728f, exact same-length swap).
+  newVo3703: "technicalTab/new-vo-3703.mp3",
+  newScene56: "technicalTab/New_Scene_5-6.mp4",
+  // S5 three-up recap (Simon, 26 Jun): Bullish / Bearish / Mix examples.
+  newScene5Bull: "technicalTab/New_Scene_5-Bullish.mp4",
+  newScene5Bear: "technicalTab/New_Scene_5-Bearish.mp4",
+  newScene5Mix: "technicalTab/New_Scene_5-Mix.mp4",
+  // S6 two-up examples (Simon, 26 Jun): full-screen captures (4083×8000, screen
+  // aspect) shown side-by-side — LAJU (better risk-reward) + RGAS (exit zone).
+  newScene6Laju: "technicalTab/new-scene6-laju.jpg",
+  newScene6Rgas: "technicalTab/new-scene6-rgas.jpg",
 
   // Device chrome SVG (frame only, no screen rect — recording is masked in).
   phoneSvg: "technicalTab/Phone.svg", // ≡ Untitled-2.svg, viewBox 461.6×933.4

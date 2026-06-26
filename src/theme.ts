@@ -84,7 +84,7 @@ export const FRAME = { width: 1920, height: 1080 } as const;
 export const FPS = 30;
 // VO "You found a.mp3" = 244.08s → 7322f, + a 20f silent pad inserted at frame
 // 1594 (Simon, 25 Jun) = 7342. durationInFrames is frame-exact, do not round.
-export const DURATION = 7342;
+export const DURATION = 7885; // 7322 +20 (pad) +907 (insert) −443 (delete) +79 (S9 freeze-extend to 7387)
 export const VO_CUT = 1594; // VO is cut here and 20f of silence inserted
 export const VO_PAD = 20; // length of the inserted silence / video freeze
 
