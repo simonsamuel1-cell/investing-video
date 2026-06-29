@@ -22,9 +22,10 @@ import { ASSETS } from "../timeline";
 
 // ─── Opening: three "where you heard about it" phones ────────────────────────
 const PHONES = [
-  { src: ASSETS.s1HotSector, label: "hot sector", popAt: 65 },
-  { src: ASSETS.s1WordOfMouth, label: "word of mouth", popAt: 118 },
-  { src: ASSETS.s1Watchlist, label: "watchlist", popAt: 166 },
+  // Image order reshuffled (Simon 26 Jun); labels keep their positions.
+  { src: ASSETS.s1WordOfMouth, label: "hot sector", popAt: 65 },
+  { src: ASSETS.s1Community, label: "word of mouth", popAt: 118 },
+  { src: ASSETS.s1HotSector, label: "watchlist", popAt: 166 },
 ] as const;
 const PHONE = { h: 660, gap: 96, top: 200 } as const;
 const PHONE_W = Math.round(PHONE.h * SHOT_ASPECT); // ≈305

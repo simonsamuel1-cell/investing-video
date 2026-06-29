@@ -57,6 +57,7 @@ export const ASSETS = {
   s1HotSector: "technicalTab/s1-hot-sector.jpg", // Scene 01 - 1.jpg
   s1WordOfMouth: "technicalTab/s1-word-of-mouth.jpg", // Scene 01 - 2.jpg
   s1Watchlist: "technicalTab/s1-watchlist.jpg", // Scene 01 - 3.jpg
+  s1Community: "technicalTab/s1-community-1.jpg", // Community_1.jpg (forum feed)
 
   // Raw phone screenshots (1080×2340) — bordered by <FramedShot>.
   shotEsip: "technicalTab/shot-esip.png", // ESIP — bullish example

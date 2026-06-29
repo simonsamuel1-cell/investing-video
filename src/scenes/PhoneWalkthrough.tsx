@@ -209,6 +209,14 @@ export const PhoneWalkthrough = () => {
   const read2 = Math.min(fadeIn(cf, 2232, 12), fadeOut(cf, 2298, 8)); // "Read the pattern" abs 3764–3836
   // Three-up recap (abs 3836–4609): Bullish / Bearish / Mix + heading at 4416.
   const aggOp = Math.min(fadeIn(cf, 2884, 14), fadeOut(cf, 3055, 12)); // "The Overall Summary aggregates this" — out @4587
+  // Per-phone verdict labels (persist to 4587) + Condition-column highlights that
+  // blink twice on each phone's appearance, then end before the next (Simon 26 Jun).
+  const bullLbl = Math.min(fadeIn(cf, 2304, 12), fadeOut(cf, 3055, 12)); // "Bullish" 3836→4587
+  const bearLbl = Math.min(fadeIn(cf, 2508, 12), fadeOut(cf, 3055, 12)); // "Bearish" 4040→4587
+  const mixLbl = Math.min(fadeIn(cf, 2630, 12), fadeOut(cf, 3055, 12)); // "Mixed" 4163→4587
+  const bullBox = interpolate(cf, [2304, 2310, 2316, 2322, 2328, 2334, 2496, 2508], [0, 1, 0, 1, 0, 1, 1, 0], LINCLAMP); // ends 4040
+  const bearBox = interpolate(cf, [2508, 2514, 2520, 2526, 2532, 2538, 2619, 2631], [0, 1, 0, 1, 0, 1, 1, 0], LINCLAMP); // ends 4163
+  const mixBox = interpolate(cf, [2630, 2636, 2642, 2648, 2654, 2660, 2713, 2725], [0, 1, 0, 1, 0, 1, 1, 0], LINCLAMP); // ends 4257
   // Support & Resistance section box: in @4609, ends @4753 (abs).
   const srOp = Math.min(fadeIn(cf, 3083, 14), fadeOut(cf, 3209, 12));
   // Left pair — "If want to enter" + Support box (S1/S2/S3, indigo): abs 4753–4953.
@@ -251,6 +259,7 @@ export const PhoneWalkthrough = () => {
   const radarBox = interpolate(cf, [5121, 5127, 5133, 5139, 5145, 5151, 5340, 5354], [0, 1, 0, 1, 0, 1, 1, 0], LINCLAMP);
   const twoSysOp = Math.min(fadeIn(cf, 5354, 14), fadeOut(cf, 5447, 12)); // "two independent systems…" abs 6886 → 6991
   const validateOp = Math.min(fadeIn(cf, 5459, 14), fadeOut(cf, 5843, 12)); // "If you want to validate further" abs 6991 → 7387 (beside phone once it returns @7053)
+  const forFilterOp = Math.min(fadeIn(cf, 5770, 14), fadeOut(cf, 5843, 12)); // "For filtering… the Technical Tab already did the work." beside-RIGHT phone, abs 7302 → 7387
 
   return (
     <SceneWrap fade={10}>
@@ -361,6 +370,14 @@ export const PhoneWalkthrough = () => {
       <VideoPhone video={ASSETS.newScene5Bull} cx={554} top={240} h={600} inAt={2304} outAt={3055} />
       <VideoPhone video={ASSETS.newScene5Bear} cx={960} top={240} h={600} inAt={2508} outAt={3055} />
       <VideoPhone video={ASSETS.newScene5Mix} cx={1366} top={240} h={600} inAt={2630} outAt={3055} />
+      {/* per-phone Condition-column highlights (blink twice, sequential) */}
+      <FreeBox left={616} top={348} width={84} height={362} op={bullBox} color={COLORS.primary} wash={COLORS.primaryWash} />
+      <FreeBox left={1022} top={348} width={84} height={362} op={bearBox} color={COLORS.primary} wash={COLORS.primaryWash} />
+      <FreeBox left={1428} top={348} width={84} height={362} op={mixBox} color={COLORS.primary} wash={COLORS.primaryWash} />
+      {/* per-phone verdict labels below each phone (indigo, 40px) */}
+      <div style={{ position: "absolute", left: 404, top: 856, width: 300, textAlign: "center", opacity: bullLbl, fontSize: TYPE.headline, fontWeight: WEIGHT.bold, color: COLORS.primary }}>Bullish</div>
+      <div style={{ position: "absolute", left: 810, top: 856, width: 300, textAlign: "center", opacity: bearLbl, fontSize: TYPE.headline, fontWeight: WEIGHT.bold, color: COLORS.primary }}>Bearish</div>
+      <div style={{ position: "absolute", left: 1216, top: 856, width: 300, textAlign: "center", opacity: mixLbl, fontSize: TYPE.headline, fontWeight: WEIGHT.bold, color: COLORS.primary }}>Mixed</div>
       {/* heading above the 3 phones (abs 4416–4609) */}
       <div style={{ position: "absolute", left: 96, top: 120, width: 1728, textAlign: "center", opacity: aggOp, fontSize: TYPE.lead, fontWeight: WEIGHT.bold, color: COLORS.text }}>
         The <span style={{ color: COLORS.primary }}>Overall Summary</span> aggregates this
@@ -452,6 +469,14 @@ export const PhoneWalkthrough = () => {
         If you want to
         <br />
         <span style={{ color: COLORS.primary }}>validate further</span>
+      </div>
+      {/* "For filtering, the Technical Tab already did the work." — beside-RIGHT the phone (abs 7302–7387) */}
+      <div style={{ position: "absolute", left: 1226, top: 370, width: 598, opacity: forFilterOp, fontSize: TYPE.title, fontWeight: WEIGHT.bold, color: COLORS.text, lineHeight: 1.25 }}>
+        For filtering,
+        <br />
+        the <span style={{ color: COLORS.primary }}>Technical Tab</span> already
+        <br />
+        did the work.
       </div>
     </SceneWrap>
   );
