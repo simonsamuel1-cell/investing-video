@@ -44,9 +44,8 @@ import { Scene34 } from "./scenes/Scene34";
 import { WyckoffStage } from "./continuity/WyckoffStage";
 import { WorkflowStage } from "./continuity/WorkflowStage";
 
-// Flip true once public/bandarmology-vo.mp3 is in place. Kept false so Studio
-// previews the visuals before the VO is delivered (a missing staticFile throws).
-const MOUNT_VO = false;
+// VO delivered — public/bandarmology-vo.mp3 is in place.
+const MOUNT_VO = true;
 
 const INDEPENDENT_SCENES: Array<{ from: number; duration: number; Component: FC }> = [
   { from: 0, duration: 207, Component: Scene01 }, // wholesale market metaphor
