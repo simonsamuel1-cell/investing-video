@@ -1,68 +1,56 @@
 /**
- * Scene 02 — The Super-Wholesalers (224, dur 334). One stall scales up into a
- * large indigo warehouse block (~f30–80); oversized crates flow out in bulk;
- * a cyan lens/spotlight sweeps over it (~f150); chip "Super-Wholesaler" (~f200).
+ * Scene 02 — Big order vs small order (224, dur 334). Same OrderBook; two order
+ * tickets side by side with proportional volume bars + labeled numbers: Retail
+ * Qty 100 · Rp 0.13 Mn vs Super-Wholesaler Qty 5,000,000 · Rp 6.25 Bn. A cyan
+ * row-highlight sweeps (~f150) to the large resting bid deep in the book.
+ * Chip "Super-Wholesaler". Numerics right-aligned.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, Chip } from "../components";
+import { SafeArea, OrderBook, Chip, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal } from "../helpers";
+import { textReveal, fadeIn } from "../helpers";
+import { ASKS, BIDS } from "../stockA";
 
-const { colors, font, type } = theme;
+const { colors, font, type, radius } = theme;
+
+const TICKETS = [
+  { label: "Retail", qty: "100", value: "Rp 0.13 Mn", bar: 0.04 },
+  { label: "Super-Wholesaler", qty: "5,000,000", value: "Rp 6.25 Bn", bar: 1 },
+];
 
 export const Scene02 = () => {
   const f = useCurrentFrame();
-  const grow = tween(f, [30, 80], [0.4, 1]);
-  const sweep = tween(f, [150, 210], [-260, 1180]);
+  const swept = f >= 150;
+  const bids = BIDS.map((b) => ({ ...b, highlight: swept && b.price === "1,180" }));
+  const asks = ASKS.map((a) => ({ ...a, highlight: false }));
 
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          left: 96,
-          top: 96,
-          width: 1272,
-          fontSize: type.header,
-          fontWeight: font.weights.extrabold,
-          ...textReveal(f, 8, 18),
-        }}
-      >
-        Some Buy In Bulk
+      <div style={{ position: "absolute", left: 96, top: 96, width: 1272, fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Some buyers move in sizes the rest of us never do.
       </div>
 
-      <svg width={1728} height={720} viewBox="0 0 1728 720" style={{ position: "absolute", left: 96, top: 220, overflow: "visible" }}>
-        {/* warehouse */}
-        <g transform={`translate(420,360) scale(${grow})`} style={{ transformBox: "fill-box" }} stroke={colors.indigo} strokeWidth={4} fill={colors.indigoTint}>
-          <rect x={-260} y={-200} width={520} height={400} rx={12} />
-          <path d="M -260 -200 L 0 -300 L 260 -200 Z" fill={colors.indigo} />
-          <rect x={-70} y={40} width={140} height={160} fill={colors.white} />
-        </g>
+      <OrderBook left={150} top={210} width={680} bids={bids} asks={asks} last="Rp 1,205" op={fadeIn(f, 10, 18)} />
 
-        {/* bulk crates flowing out to the right */}
-        {Array.from({ length: 5 }).map((_, i) => {
-          const t = tween(f, [120 + i * 18, 200 + i * 18], [0, 1]);
-          return (
-            <rect
-              key={i}
-              x={760 + t * (560 + i * 30)}
-              y={300 + (i % 2) * 70}
-              width={84}
-              height={84}
-              rx={8}
-              fill={colors.indigo}
-              opacity={fadeIn(f, 120 + i * 18, 14) * (1 - t * 0.2)}
-            />
-          );
-        })}
-
-        {/* cyan lens sweep */}
-        <rect x={sweep} y={0} width={120} height={720} fill={colors.cyan} opacity={0.18} />
-      </svg>
-
-      <div style={{ position: "absolute", left: 96, top: 760 }}>
-        <Chip label="Super-Wholesaler" variant="indigo" bounce delay={200} />
+      {/* two proportional tickets */}
+      <div style={{ position: "absolute", left: 920, top: 280, width: 720, display: "flex", flexDirection: "column", gap: 40 }}>
+        {TICKETS.map((t, i) => (
+          <div key={t.label} style={{ opacity: fadeIn(f, 30 + i * 30, 18) }}>
+            <div style={{ display: "flex", justifyContent: "space-between", fontSize: type.descriptor, fontWeight: font.weights.bold, marginBottom: 12 }}>
+              <span>{t.label}</span>
+              <span style={{ color: colors.slate, fontVariantNumeric: "tabular-nums" }}>Qty {t.qty} · {t.value}</span>
+            </div>
+            <div style={{ height: 56, borderRadius: radius.md, background: colors.divider, overflow: "hidden" }}>
+              <div style={{ width: `${Math.max(0.02, t.bar) * 100}%`, height: "100%", background: i === 1 ? colors.indigo : colors.cyan, borderRadius: radius.md }} />
+            </div>
+          </div>
+        ))}
+        <div style={{ marginTop: 10 }}>
+          <Chip label="Super-Wholesaler" variant="indigo" bounce delay={200} />
+        </div>
       </div>
+
+      <IllustrationTag left={1620} top={910} />
     </SafeArea>
   );
 };

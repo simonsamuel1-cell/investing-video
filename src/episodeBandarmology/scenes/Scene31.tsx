@@ -1,54 +1,46 @@
 /**
- * Scene 31 — Market Radar (8205, dur 274). [NEEDS DATA]. Header "Market Radar".
- * A radar/sweep motif (cyan sweep on an indigo grid) pings three aggression
- * chips: Big Orders · Fast Orders · Push To New Highs. The PhoneFrame (owned by
- * WorkflowStage) shows the Market Radar capture centered; this scene arranges the
- * radar motif + chips around it.
+ * Scene 31 — Market Radar (8205, dur 274). [NEEDS DATA]. Rail → Monitor. Header
+ * "Market Radar". The PhoneFrame (WorkflowStage) shows the Market Radar capture
+ * centered; beside it three alert cards light up: Big Orders (4.2 M lot) · Fast
+ * Orders (12 prints/sec) · Push To New Highs (New High Rp 1,340). Arranged clear
+ * of the centered phone.
  *
  * TODO[NEEDS DATA]: real Market Radar capture lives in WorkflowStage's PhoneFrame
- * placeholder; swap there + add on-screen data date.
+ * placeholder; swap there + add data date.
  */
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { SafeArea } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal, popIn } from "../helpers";
+import { textReveal, fadeIn, popIn } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
-const PINGS = [
-  { label: "Big Orders", at: 60 },
-  { label: "Fast Orders", at: 110 },
-  { label: "Push To New Highs", at: 160 },
+const ALERTS = [
+  { label: "Big Orders", metric: "Order 4.2 M lot", at: 60 },
+  { label: "Fast Orders", metric: "12 prints/sec", at: 110 },
+  { label: "Push To New Highs", metric: "New High Rp 1,340", at: 160 },
 ];
 
 export const Scene31 = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
-  const sweep = tween(f, [0, 274], [0, 360 * 3]); // continuous rotation
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 210, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
+      <div style={{ position: "absolute", left: 96, top: 210, width: 600, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
         Market Radar
       </div>
+      <div style={{ position: "absolute", left: 96, top: 320, width: 600, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 40, 18) }}>
+        Live aggression on STOCK A.
+      </div>
 
-      {/* radar motif (left of the centered phone) */}
-      <svg width={420} height={420} viewBox="-210 -210 420 420" style={{ position: "absolute", left: 150, top: 360, opacity: fadeIn(f, 10, 18) }}>
-        {[60, 120, 180].map((r) => (
-          <circle key={r} cx={0} cy={0} r={r} fill="none" stroke={colors.indigoTint} strokeWidth={2} />
-        ))}
-        <line x1={-180} y1={0} x2={180} y2={0} stroke={colors.indigoTint} strokeWidth={2} />
-        <line x1={0} y1={-180} x2={0} y2={180} stroke={colors.indigoTint} strokeWidth={2} />
-        <g transform={`rotate(${sweep})`}>
-          <path d="M 0 0 L 180 0 A 180 180 0 0 1 140 110 Z" fill={colors.cyan} opacity={0.28} />
-          <line x1={0} y1={0} x2={180} y2={0} stroke={colors.cyanDeep} strokeWidth={3} />
-        </g>
-      </svg>
-
-      {/* aggression ping chips (right of the centered phone) */}
-      <div style={{ position: "absolute", left: 1180, top: 400, width: 540, display: "flex", flexDirection: "column", gap: 26 }}>
-        {PINGS.map((p) => (
-          <div key={p.label} style={{ transform: `scale(${popIn(f, fps, p.at, true)})`, transformOrigin: "left center", padding: "16px 28px", borderRadius: radius.pill, background: colors.cyanTint, border: `2px solid ${colors.cyan}`, color: colors.cyanDeep, fontSize: type.descriptor, fontWeight: font.weights.bold, opacity: fadeIn(f, p.at, 12) }}>{p.label}</div>
+      {/* alert cards right of the centered phone */}
+      <div style={{ position: "absolute", left: 1190, top: 320, width: 530, display: "flex", flexDirection: "column", gap: 24 }}>
+        {ALERTS.map((a) => (
+          <div key={a.label} style={{ transform: `scale(${popIn(f, fps, a.at, true)})`, transformOrigin: "left center", padding: "22px 28px", borderRadius: radius.md, background: colors.cyanTint, border: `2px solid ${colors.cyan}`, opacity: fadeIn(f, a.at, 12) }}>
+            <div style={{ fontSize: type.descriptor, fontWeight: font.weights.extrabold, color: colors.cyanDeep }}>{a.label}</div>
+            <div style={{ fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, marginTop: 6, fontVariantNumeric: "tabular-nums" }}>{a.metric}</div>
+          </div>
         ))}
       </div>
     </SafeArea>

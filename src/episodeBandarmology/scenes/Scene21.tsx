@@ -1,38 +1,29 @@
 /**
- * Scene 21 — The Honest Caveat (5232, dur 368). DISCLAIMER beat (key compliance
- * mitigant). Five mistake slots recede (~0–60); a calm card "Better Odds, Not A
- * Guarantee" centers (~f80); a probability gauge nudges from low toward higher
- * but is capped well short of 100% (indigo fill, cyan track); a small
- * "Heavy Buying → Sell-Off Still Possible" mini-sequence (~f200). No red.
+ * Scene 21 — Honest caveat: gauge + counter-example (5232, dur 368). DISCLAIMER.
+ * The five mistake slots recede (~0–60); a Gauge fills low→higher but is capped
+ * ~70% (indigo on cyan track), labeled "Better Odds, Not A Guarantee". Beside it a
+ * small CandlestickChart shows heavy net-buy → then a sell-off anyway; tag
+ * (sentence case). Candle red is allowed in the down-move.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, Gauge, CandlestickChart, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, fadeOut, tween, textReveal } from "../helpers";
+import { tween, fadeOut, fadeIn, textReveal, genCandles } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
-// semicircle gauge geometry (local to a 760×420 svg)
-const R = 240;
-const CXp = 380;
-const CYp = 340;
-const polar = (frac: number) => {
-  const a = Math.PI * (1 - frac); // 0→π from right to left along the top
-  return { x: CXp + R * Math.cos(a), y: CYp - R * Math.sin(a) };
-};
-const arcPath = (frac: number) => {
-  const s = polar(0);
-  const e = polar(frac);
-  // never exceeds a semicircle (180°), so large-arc-flag is always 0; sweep 1
-  // walks left → top → right along the upper arc.
-  return `M ${s.x} ${s.y} A ${R} ${R} 0 0 1 ${e.x} ${e.y}`;
-};
+// rise then sell-off
+const LEVELS = Array.from({ length: 36 }, (_, i) => {
+  const x = i / 35;
+  return x < 0.6 ? 0.35 + x * 0.7 : 0.77 - (x - 0.6) * 1.1;
+});
+const CANDLES = genCandles(LEVELS, 2121);
 
 export const Scene21 = () => {
   const f = useCurrentFrame();
   const slotsOut = fadeOut(f, 0, 60);
-  const fill = tween(f, [90, 200], [0.12, 0.62]); // capped well short of 1
-  const needle = polar(fill);
+  const val = tween(f, [90, 220], [0.12, 0.7]);
+  const prog = tween(f, [120, 250], [0, 1]);
 
   return (
     <SafeArea>
@@ -43,28 +34,22 @@ export const Scene21 = () => {
         ))}
       </div>
 
-      {/* calm statement card */}
-      <div style={{ position: "absolute", left: 760, top: 250, width: 800, height: 200, background: colors.card, border: `2px solid ${colors.indigo}`, borderRadius: radius.lg, display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: 24, ...textReveal(f, 80, 20) }}>
-        <span style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text }}>Better Odds, Not A Guarantee</span>
+      {/* gauge */}
+      <div style={{ position: "absolute", left: 96, top: 340, width: 800, opacity: fadeIn(f, 70, 18) }}>
+        <Gauge left={0} top={0} width={760} value={val} cap={0.7} label="Better Odds, Not A Guarantee" />
       </div>
 
-      {/* probability gauge */}
-      <svg width={760} height={420} viewBox="0 0 760 420" style={{ position: "absolute", left: 150, top: 500, overflow: "visible", opacity: fadeIn(f, 90, 18) }}>
-        <path d={arcPath(1)} fill="none" stroke={colors.cyanTint} strokeWidth={26} strokeLinecap="round" />
-        <path d={arcPath(fill)} fill="none" stroke={colors.indigo} strokeWidth={26} strokeLinecap="round" />
-        <line x1={CXp} y1={CYp} x2={needle.x} y2={needle.y} stroke={colors.indigoDeep} strokeWidth={6} strokeLinecap="round" />
-        <circle cx={CXp} cy={CYp} r={14} fill={colors.indigoDeep} />
-        <text x={CXp} y={CYp + 56} textAnchor="middle" fill={colors.slate} fontSize={type.chip} fontWeight={font.weights.bold} fontFamily={font.family}>Capped Short Of Certainty</text>
-      </svg>
-
-      {/* mini caveat sequence */}
-      <div style={{ position: "absolute", left: 1080, top: 620, width: 640, opacity: fadeIn(f, 200, 18) }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 18, fontSize: type.descriptor, fontWeight: font.weights.bold }}>
-          <span style={{ color: colors.indigoDeep }}>Heavy Buying</span>
-          <span style={{ color: colors.slateMute }}>→</span>
-          <span style={{ color: colors.slate }}>Sell-Off Still Possible</span>
-        </div>
+      {/* counter-example chart */}
+      <div style={{ position: "absolute", left: 980, top: 300, width: 700, height: 440, background: colors.cardWhite, border: `2px solid ${colors.divider}`, borderRadius: radius.lg, padding: 22, boxSizing: "border-box", opacity: fadeIn(f, 110, 18) }}>
+        <div style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate, marginBottom: 8 }}>Heavy net-buy, then…</div>
+        <CandlestickChart width={656} height={340} candles={CANDLES} progress={prog} />
       </div>
+
+      <div style={{ position: "absolute", left: 96, top: 640, width: 800, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 240, 18) }}>
+        Even a clean read can still be followed by a sell-off.
+      </div>
+
+      <IllustrationTag left={1620} top={270} />
     </SafeArea>
   );
 };

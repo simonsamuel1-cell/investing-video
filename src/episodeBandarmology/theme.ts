@@ -43,14 +43,20 @@ export const theme = {
 
     // Tuntun neutral greys (achromatic — allowed as neutrals).
     slate: "#626266", // T2 secondary text/ink
-    slateMute: "#949499", // muted
-    slateFaint: "#B9B9BD", // faint
+    slateMute: "#949499", // muted (a.k.a. neutral3)
+    neutral3: "#949499",
+    slateFaint: "#B9B9BD", // faint (a.k.a. neutral4)
+    neutral4: "#B9B9BD",
     divider: "#EDEEF0", // hairline / card border
+    cardWhite: "#FFFFFF",
 
-    // Fixed brand constants — declared, NOT used by drawn elements this episode.
-    danger: "#E53E3E",
+    // Candlestick green/red — the ONE place red/green enters drawn content,
+    // INSIDE candle bodies/wicks only (§0.4). Everything else stays brand/neutral.
     candleGreen: "#22B573",
     candleRed: "#E5475D",
+
+    // Fixed brand constant — declared, NOT used by drawn elements this episode.
+    danger: "#E53E3E",
   },
 
   font: {

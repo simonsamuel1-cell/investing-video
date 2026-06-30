@@ -1,52 +1,39 @@
 /**
- * Scene 25 — Big-Picture Question (6552, dur 200). Before→after toggle. Left:
- * scattered dots "Nobody In Charge" → arrow → right: consolidated indigo node
- * "Serious Money Building". One clean state change.
+ * Scene 25 — Big-picture before/after (6552, dur 200). A before→after metric swap
+ * on one Card: Before "Nobody In Charge" top broker 11%, scattered → After
+ * "Serious Money Building" top broker 46%, net-buy 14 days. Numbers count up with
+ * a connecting arrow. Header sentence case.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal, mulberry32 } from "../helpers";
+import { tween, textReveal, fadeIn } from "../helpers";
 
-const { colors, font, type } = theme;
-
-const DOTS = (() => {
-  const rng = mulberry32(2552);
-  return Array.from({ length: 16 }).map(() => ({ x: rng() * 440, y: rng() * 300 }));
-})();
+const { colors, font, type, radius } = theme;
 
 export const Scene25 = () => {
   const f = useCurrentFrame();
-  const merge = tween(f, [70, 150], [0, 1]);
+  const topPct = Math.round(tween(f, [70, 150], [11, 46]));
+  const days = Math.round(tween(f, [70, 150], [0, 14]));
+
+  const Panel = ({ left, title, lines, accent }: { left: number; title: string; lines: string[]; accent: string }) => (
+    <div style={{ position: "absolute", left, top: 360, width: 620, height: 360, background: colors.cardWhite, border: `2px solid ${accent}`, borderRadius: radius.lg, padding: 32, boxSizing: "border-box" }}>
+      <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: accent }}>{title}</div>
+      {lines.map((l, i) => (
+        <div key={i} style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.text, marginTop: 22, fontVariantNumeric: "tabular-nums" }}>{l}</div>
+      ))}
+    </div>
+  );
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 210, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
-        The Big-Picture Question
+      <div style={{ position: "absolute", left: 96, top: 210, width: 1272, fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Is ownership shifting from nobody in charge to serious money building?
       </div>
 
-      {/* before: scattered */}
-      <div style={{ position: "absolute", left: 150, top: 360, width: 560 }}>
-        <svg width={500} height={340} viewBox="0 0 500 340">
-          {DOTS.map((d, i) => {
-            const cx = d.x + 30 + (250 - (d.x + 30)) * merge;
-            const cy = d.y + 20 + (170 - (d.y + 20)) * merge;
-            return <circle key={i} cx={cx} cy={cy} r={10} fill={colors.slateFaint} />;
-          })}
-        </svg>
-        <div style={{ textAlign: "center", fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate }}>Nobody In Charge</div>
-      </div>
-
-      {/* arrow */}
-      <div style={{ position: "absolute", left: 760, top: 500, fontSize: 72, color: colors.slateMute, opacity: fadeIn(f, 60, 16) }}>→</div>
-
-      {/* after: consolidated node */}
-      <div style={{ position: "absolute", left: 1010, top: 360, width: 560 }}>
-        <svg width={500} height={340} viewBox="0 0 500 340">
-          <circle cx={250} cy={170} r={20 + 80 * merge} fill={colors.indigo} opacity={merge} />
-        </svg>
-        <div style={{ textAlign: "center", fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.indigoDeep, opacity: fadeIn(f, 120, 16) }}>Serious Money Building</div>
-      </div>
+      <Panel left={150} title="Before — Nobody In Charge" lines={["Top broker: 11%", "Holding: scattered"]} accent={colors.slate} />
+      <div style={{ position: "absolute", left: 800, top: 510, fontSize: 80, color: colors.slateMute, opacity: fadeIn(f, 60, 16) }}>→</div>
+      <Panel left={950} title="After — Serious Money Building" lines={[`Top broker: ${topPct}%`, `Net-buy: ${days} days`]} accent={colors.indigo} />
     </SafeArea>
   );
 };

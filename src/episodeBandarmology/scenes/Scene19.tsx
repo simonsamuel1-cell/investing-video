@@ -1,56 +1,55 @@
 /**
- * Scene 19 — Mistake 4: Average Cost (4784, dur 214). Callback to Scene 14's
- * chart: the avg-cost line is hidden/greyed first and the price floats with a "?"
- * (~0–90); then the line snaps in resolving "Cheap" (near) vs "Stretched" (far)
- * as a neutral gauge (~f110). Label "4 · Ignoring Average Cost".
+ * Scene 19 — Mistake 4: ignoring avg cost (4784, dur 214). The same chart twice:
+ * left has no avg-cost line + "?" (can't judge); right adds the avg-cost line
+ * (Rp 1,180) → "+2% — still near cost", with a stretched counter-example
+ * "+41% — extended". Neutral gauge. Title (callback Sc14).
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, SchematicChart } from "../components";
+import { SafeArea, CandlestickChart, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal } from "../helpers";
+import { tween, textReveal, fadeIn, genCandles } from "../helpers";
 
 const { colors, font, type } = theme;
 
-const CW = 1500;
-const CH = 460;
-const CX = 210;
-const CY = 280;
-
-const PRICE = Array.from({ length: 60 }).map((_, i) => {
-  const x = i / 59;
-  const y = 0.4 + x * 0.34 + Math.sin(x * 6) * 0.03;
-  return { x, y };
-});
-const AVG_Y = 0.46;
+const LEVELS = Array.from({ length: 40 }, (_, i) => 0.4 + (i / 39) * 0.12 + Math.sin(i * 0.5) * 0.03);
+const CANDLES = genCandles(LEVELS, 1919);
+const AVG = 0.44;
 
 export const Scene19 = () => {
   const f = useCurrentFrame();
   const prog = tween(f, [10, 90], [0, 1]);
-  const lineSnap = fadeIn(f, 110, 12);
-  const qOp = fadeIn(f, 40, 14) * (1 - lineSnap);
-  const priceY = (1 - 0.74) * CH;
+  const lineOp = fadeIn(f, 110, 14);
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 96, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
-        Don't Ignore Average Cost
+      <div style={{ position: "absolute", left: 96, top: 110, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Don't ignore average cost
       </div>
 
-      <div style={{ position: "absolute", left: CX, top: CY, width: CW, height: CH }}>
-        <SchematicChart width={CW} height={CH} points={PRICE} progress={prog} refLines={lineSnap > 0.01 ? [{ y: AVG_Y, label: "Average Cost" }] : []} />
-        <svg width={CW} height={CH} viewBox={`0 0 ${CW} ${CH}`} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-          <text x={CW - 60} y={priceY - 24} textAnchor="middle" fill={colors.slateMute} fontSize={72} fontWeight={font.weights.extrabold} fontFamily={font.family} opacity={qOp}>?</text>
+      {/* left: no avg line */}
+      <div style={{ position: "absolute", left: 96, top: 300, width: 760, height: 420 }}>
+        <CandlestickChart width={760} height={420} candles={CANDLES} progress={prog} />
+        <svg width={760} height={420} viewBox="0 0 760 420" style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+          <text x={620} y={120} textAnchor="middle" fill={colors.slateMute} fontSize={72} fontWeight={font.weights.extrabold} fontFamily={font.family} opacity={fadeIn(f, 40, 14) * (1 - lineOp)}>?</text>
         </svg>
+        <div style={{ textAlign: "center", fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate, marginTop: 8 }}>No avg cost — can't judge</div>
       </div>
 
-      <div style={{ position: "absolute", left: CX, top: CY + CH + 24, width: CW, display: "flex", justifyContent: "space-between", opacity: lineSnap }}>
-        <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.cyanDeep }}>Cheap (Near)</span>
-        <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate }}>Stretched (Far)</span>
+      {/* right: avg line added */}
+      <div style={{ position: "absolute", left: 940, top: 300, width: 760, height: 420 }}>
+        <CandlestickChart width={760} height={420} candles={CANDLES} progress={prog} refLines={lineOp > 0.02 ? [{ y: AVG, label: "Avg Cost Rp 1,180" }] : []} />
+        <div style={{ position: "absolute", left: 20, top: 0, opacity: lineOp, display: "flex", gap: 14 }}>
+          <span style={{ padding: "8px 18px", borderRadius: 8, background: colors.cyanTint, color: colors.cyanDeep, fontSize: type.chip, fontWeight: font.weights.bold }}>+2% — still near cost</span>
+          <span style={{ padding: "8px 18px", borderRadius: 8, background: colors.divider, color: colors.slate, fontSize: type.chip, fontWeight: font.weights.bold }}>vs +41% — extended</span>
+        </div>
+        <div style={{ textAlign: "center", fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.indigoDeep, marginTop: 8 }}>With avg cost — readable</div>
       </div>
 
-      <div style={{ position: "absolute", left: 96, top: 880, ...textReveal(f, 8, 18) }}>
-        <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold }}>4 · Ignoring Average Cost</div>
+      <div style={{ position: "absolute", left: 96, top: 840, fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text }}>
+        4 · Ignoring Average Cost
       </div>
+
+      <IllustrationTag left={1620} top={270} />
     </SafeArea>
   );
 };

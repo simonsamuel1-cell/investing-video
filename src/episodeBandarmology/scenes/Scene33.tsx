@@ -1,23 +1,24 @@
 /**
- * Scene 33 — For Short-Term Traders (8670, dur 350). ⚠️ STRONGEST compliance
- * flag. Visuals are about RISK DISCIPLINE, not entry encouragement. Lead with the
- * caveat half "Signals Can Fail" (~f0–120). Three discipline chips: Size Carefully
- * · Know Your Exit · Manage Risk (cyan). NO "enter here" arrow, NO instrument with
- * an entry marker. The "more efficient" clause stays audio-only.
+ * Scene 33 — Short-term traders: risk panel (8670, dur 350). ⚠️ STRONGEST
+ * compliance flag. Leads with risk discipline; NO entry marker on any chart. A
+ * "Risk Discipline" Card with a "Signals can fail" banner + three fields:
+ * Position Size = "size to your risk tolerance" (non-numeric, decision #3) ·
+ * Exit Plan = "predefined stop" · Manage Risk. The "more efficient" clause stays
+ * audio-only.
  *
- * Recommend reviewing against the OJK advice-line before lock.
+ * NOTE: recommend OJK advice-line review before lock.
  */
 import { useCurrentFrame, useVideoConfig } from "remotion";
 import { SafeArea } from "../components";
 import { theme } from "../theme";
-import { fadeIn, textReveal, popIn } from "../helpers";
+import { textReveal, fadeIn, popIn } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
-const DISCIPLINE = [
-  { label: "Size Carefully", at: 150 },
-  { label: "Know Your Exit", at: 200 },
-  { label: "Manage Risk", at: 250 },
+const FIELDS = [
+  { k: "Position Size", v: "Size to your risk tolerance", at: 150 },
+  { k: "Exit Plan", v: "Predefined stop", at: 200 },
+  { k: "Manage Risk", v: "Decide before you act", at: 250 },
 ];
 
 export const Scene33 = () => {
@@ -26,19 +27,20 @@ export const Scene33 = () => {
 
   return (
     <SafeArea>
-      {/* caveat half leads */}
-      <div style={{ position: "absolute", left: 96, top: 280, width: 1728, textAlign: "center", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.indigoDeep, ...textReveal(f, 8, 20) }}>
-        Signals Can Fail
-      </div>
-      <div style={{ position: "absolute", left: 96, top: 380, width: 1728, textAlign: "center", fontSize: type.subhead, fontWeight: font.weights.medium, color: colors.slate, opacity: fadeIn(f, 60, 18) }}>
-        For Short-Term Traders, Discipline Comes First
-      </div>
-
-      {/* discipline chips */}
-      <div style={{ position: "absolute", left: 96, top: 520, width: 1728, display: "flex", justifyContent: "center", gap: 40 }}>
-        {DISCIPLINE.map((d) => (
-          <div key={d.label} style={{ transform: `scale(${popIn(f, fps, d.at, true)})`, padding: "22px 40px", borderRadius: radius.pill, background: colors.cyanTint, border: `2px solid ${colors.cyan}`, color: colors.cyanDeep, fontSize: type.subhead, fontWeight: font.weights.bold, opacity: fadeIn(f, d.at, 12) }}>{d.label}</div>
-        ))}
+      <div style={{ position: "absolute", left: 360, top: 240, width: 1200, boxSizing: "border-box", background: colors.cardWhite, border: `2px solid ${colors.indigo}`, borderRadius: radius.lg, overflow: "hidden", opacity: fadeIn(f, 8, 18) }}>
+        {/* caveat banner */}
+        <div style={{ background: colors.indigo, color: colors.white, padding: "22px 32px", fontSize: type.subhead, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
+          Signals can fail
+        </div>
+        <div style={{ padding: 32 }}>
+          <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text, marginBottom: 20 }}>Risk Discipline</div>
+          {FIELDS.map((fl) => (
+            <div key={fl.k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "22px 0", borderBottom: `1px solid ${colors.divider}`, transform: `scale(${popIn(f, fps, fl.at, false)})`, transformOrigin: "left center", opacity: fadeIn(f, fl.at, 14) }}>
+              <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate }}>{fl.k}</span>
+              <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.cyanDeep }}>{fl.v}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </SafeArea>
   );

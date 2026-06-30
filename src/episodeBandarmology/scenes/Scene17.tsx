@@ -1,53 +1,54 @@
 /**
- * Scene 17 — Mistake 2: Rank Without Value (4246, dur 290). A generic net-buy
- * ranking list (Broker A/B/C) with #1 highlighted; a second column "Value
- * Deployed" reveals where #1's bar is tiny and a lower rank's value bar is large
- * (~f130). Lesson: rank ≠ size. Label "2 · Rank Without Value".
+ * Scene 17 — Mistake 2: rank vs value (4246, dur 290). A BrokerTable (Rank ·
+ * Broker · Net Lot · Value), #1 highlighted by rank; then the Value column reads
+ * out and the table re-sorts by value (~f130): rank #1's value is small
+ * (Rp 0.4 Bn) while rank #4 deployed Rp 9.8 Bn. Caption + title.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, BrokerTable, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal } from "../helpers";
+import { textReveal, fadeIn, tween } from "../helpers";
 
-const { colors, font, type, radius } = theme;
+const { colors, font, type } = theme;
 
-const ROWS = [
-  { broker: "Broker A", rank: 1, value: 0.18 },
-  { broker: "Broker B", rank: 2, value: 0.42 },
-  { broker: "Broker C", rank: 3, value: 0.9 },
+const COLS = [
+  { key: "rank", label: "Rank", flex: 0.7 },
+  { key: "broker", label: "Broker", flex: 1.4 },
+  { key: "net", label: "Net Lot", align: "right" as const, flex: 1 },
+  { key: "value", label: "Value", align: "right" as const, flex: 1 },
 ];
+
+// base order by rank; value leader is row index 3
+const ROWS = [
+  { cells: { rank: "1", broker: "Broker 05", net: "+640", value: "Rp 0.4 Bn" } },
+  { cells: { rank: "2", broker: "Broker 02", net: "+520", value: "Rp 1.2 Bn" } },
+  { cells: { rank: "3", broker: "Broker 07", net: "+480", value: "Rp 2.1 Bn" } },
+  { cells: { rank: "4", broker: "Broker 01", net: "+410", value: "Rp 9.8 Bn" }, highlight: true },
+  { cells: { rank: "5", broker: "Broker 03", net: "+360", value: "Rp 0.7 Bn" } },
+];
+const VALUE_ORDER = [3, 2, 1, 4, 0]; // by value desc
 
 export const Scene17 = () => {
   const f = useCurrentFrame();
-  const valReveal = tween(f, [130, 200], [0, 1]);
+  const t = tween(f, [130, 200], [0, 1]);
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 110, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
-        Rank Is Not Size
+      <div style={{ position: "absolute", left: 96, top: 110, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Rank is not size
       </div>
 
-      {/* column headers */}
-      <div style={{ position: "absolute", left: 200, top: 250, width: 1450, display: "flex", color: colors.slateMute, fontSize: type.chip, fontWeight: font.weights.bold }}>
-        <span style={{ width: 360 }}>Net-Buy Rank</span>
-        <span style={{ opacity: fadeIn(f, 130, 16) }}>Value Deployed</span>
+      <BrokerTable left={300} top={250} width={1320} columns={COLS} rows={ROWS} rowH={80} sort={{ order: VALUE_ORDER, t }} op={fadeIn(f, 10, 18)} />
+
+      <div style={{ position: "absolute", left: 300, top: 760, width: 1320, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, opacity: fadeIn(f, 200, 18) }}>
+        Topping the list with a small position isn't conviction.
       </div>
 
-      {ROWS.map((r, i) => (
-        <div key={r.broker} style={{ position: "absolute", left: 200, top: 320 + i * 150, width: 1450, height: 120, display: "flex", alignItems: "center", opacity: fadeIn(f, 20 + i * 18, 16) }}>
-          <div style={{ width: 360, display: "flex", alignItems: "center", gap: 20 }}>
-            <span style={{ width: 64, height: 64, borderRadius: radius.pill, background: r.rank === 1 ? colors.indigo : colors.divider, color: r.rank === 1 ? colors.white : colors.slateMute, fontSize: type.subhead, fontWeight: font.weights.extrabold, display: "flex", alignItems: "center", justifyContent: "center" }}>{r.rank}</span>
-            <span style={{ fontSize: type.subhead, fontWeight: font.weights.bold }}>{r.broker}</span>
-          </div>
-          <div style={{ flex: 1, height: 44 }}>
-            <div style={{ height: "100%", width: `${r.value * valReveal * 100}%`, background: r.value > 0.8 ? colors.cyan : colors.cyanTint, borderRadius: 8 }} />
-          </div>
-        </div>
-      ))}
-
-      <div style={{ position: "absolute", left: 96, top: 800, ...textReveal(f, 8, 18) }}>
-        <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold }}>2 · Rank Without Value</div>
+      <div style={{ position: "absolute", left: 96, top: 850, fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text }}>
+        2 · Rank Without Value
       </div>
+
+      <IllustrationTag left={1620} top={220} />
     </SafeArea>
   );
 };

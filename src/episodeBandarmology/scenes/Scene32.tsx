@@ -1,25 +1,25 @@
 /**
- * Scene 32 — The Story Changes (8498, dur 167). A centered two-state caption
- * swap: "Someone Is Quietly Buying" dissolves into "Someone Is Making Their
- * Move" (textReveal both). Paired with a price line transitioning flat → lift
- * (callback to Scene 30).
+ * Scene 32 — Story changes (8498, dur 167). A centered caption swap (sentence
+ * case): "Someone is quietly buying" dissolves to "Someone is making their move."
+ * Paired with the chart transitioning a flat cost-area → a volume-driven lift
+ * (callback Sc30), with indigo emphasis on the lift region. textReveal both.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, SchematicChart } from "../components";
+import { SafeArea, CandlestickChart } from "../components";
 import { theme } from "../theme";
-import { fadeIn, fadeOut, tween } from "../helpers";
+import { tween, fadeIn, fadeOut, genCandles } from "../helpers";
 
 const { colors, font, type } = theme;
 
 const CW = 1400;
-const CH = 320;
-
-const PRICE = Array.from({ length: 70 }).map((_, i) => {
-  const x = i / 69;
-  let y = 0.35 + Math.sin(x * 20) * 0.02;
-  if (x > 0.6) y = 0.35 + (x - 0.6) / 0.4 * 0.34;
-  return { x, y };
+const CH = 360;
+const N = 56;
+const LEVELS = Array.from({ length: N }, (_, i) => {
+  const x = i / (N - 1);
+  return x < 0.6 ? 0.4 + Math.sin(x * 22) * 0.02 : 0.4 + (x - 0.6) / 0.4 * 0.34;
 });
+const CANDLES = genCandles(LEVELS, 3232);
+const VOL = Array.from({ length: N }, (_, i) => (i / (N - 1) > 0.58 ? 0.9 : 0.25));
 
 export const Scene32 = () => {
   const f = useCurrentFrame();
@@ -29,13 +29,17 @@ export const Scene32 = () => {
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 250, width: 1728, textAlign: "center", height: 90 }}>
-        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.slate, opacity: firstOp }}>Someone Is Quietly Buying</div>
-        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.indigo, opacity: secondOp }}>Someone Is Making Their Move</div>
+      <div style={{ position: "absolute", left: 96, top: 240, width: 1728, textAlign: "center", height: 80 }}>
+        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.slate, opacity: firstOp }}>Someone is quietly buying</div>
+        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.indigo, opacity: secondOp }}>Someone is making their move</div>
       </div>
 
-      <div style={{ position: "absolute", left: 260, top: 440, width: CW, height: CH }}>
-        <SchematicChart width={CW} height={CH} points={PRICE} progress={prog} />
+      <div style={{ position: "absolute", left: 260, top: 420, width: CW, height: CH }}>
+        <CandlestickChart width={CW} height={CH} candles={CANDLES} progress={prog} volume={VOL} />
+        {/* indigo emphasis on the lift region */}
+        <svg width={CW} height={CH} viewBox={`0 0 ${CW} ${CH}`} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: secondOp }}>
+          <rect x={0.6 * CW} y={0} width={0.4 * CW} height={CH * 0.72} fill="none" stroke={colors.indigo} strokeWidth={2} strokeDasharray="8 8" rx={8} />
+        </svg>
       </div>
     </SafeArea>
   );

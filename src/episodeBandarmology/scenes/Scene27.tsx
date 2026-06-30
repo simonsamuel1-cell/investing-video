@@ -1,55 +1,60 @@
 /**
- * Scene 27 — Verify: Insider + Foreign (7058, dur 271). Two stacked clue cards:
- * "Insider Buying" (building icon, people leaning the same way) and "Foreign
- * Buying — Large Caps" (globe → inflow arrows into a big-cap block). The "tends
- * to" qualifier is a SOFT/probabilistic treatment (dashed, lower-opacity
- * certainty), not a guarantee.
+ * Scene 27 — Verify: insider + foreign (7058, dur 271). Two cards: "Insider
+ * Buying" filings (Director · Buy · 1.2 M · Rp 1,210) and "Foreign Net Buy (Large
+ * Cap)" — a 10-day all-positive bar series, +Rp 312 Bn cumulative. The "tends to"
+ * qualifier is a soft "Reliability: Moderate" sub-tag, not a guarantee.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, Card } from "../components";
+import { SafeArea, Card, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, textReveal } from "../helpers";
+import { textReveal, fadeIn } from "../helpers";
 
-const { colors, font, type } = theme;
+const { colors, font, type, radius } = theme;
+
+const FOREIGN = [0.3, 0.42, 0.38, 0.55, 0.6, 0.52, 0.7, 0.78, 0.72, 0.9];
+
+const Reliability = () => (
+  <span style={{ position: "absolute", right: 28, top: 28, padding: "8px 18px", borderRadius: radius.sm, border: `2px dashed ${colors.cyan}`, color: colors.cyanDeep, fontSize: type.chip, fontWeight: font.weights.bold, opacity: 0.8 }}>Reliability: Moderate</span>
+);
 
 export const Scene27 = () => {
   const f = useCurrentFrame();
-
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 210, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
-        Two More Clues
+      <div style={{ position: "absolute", left: 96, top: 210, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Two more clues
       </div>
 
-      {/* Insider Buying */}
-      <div style={{ opacity: fadeIn(f, 20, 18) }}>
-        <Card left={150} top={330} width={1450} height={200} title="Insider Buying">
-          <div style={{ display: "flex", alignItems: "center", gap: 30 }}>
-            <svg width={90} height={90} viewBox="-45 -45 90 90" stroke={colors.indigo} strokeWidth={5} fill="none">
-              <rect x={-30} y={-34} width={60} height={68} rx={6} />
-              <line x1={-12} y1={-16} x2={-12} y2={20} />
-              <line x1={12} y1={-16} x2={12} y2={20} />
-            </svg>
-            <span style={{ fontSize: type.descriptor, color: colors.slate, fontWeight: font.weights.medium }}>People Inside Leaning The Same Direction</span>
-            {/* soft 'tends to' certainty */}
-            <span style={{ marginLeft: "auto", padding: "10px 20px", borderRadius: 999, border: `2px dashed ${colors.cyan}`, color: colors.cyanDeep, fontSize: type.chip, fontWeight: font.weights.bold, opacity: 0.7 }}>Tends To</span>
+      {/* insider buying */}
+      <div style={{ position: "absolute", left: 96, top: 320, opacity: fadeIn(f, 20, 18) }}>
+        <Card width={740} height={420} title="Insider Buying">
+          <Reliability />
+          <div style={{ marginTop: 12 }}>
+            {[["Filing", "Director · Buy"], ["Volume", "1.2 M lot"], ["Price", "Rp 1,210"], ["Date", "Last filing"]].map(([k, v]) => (
+              <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "16px 0", borderBottom: `1px solid ${colors.divider}`, fontSize: type.descriptor }}>
+                <span style={{ color: colors.slate }}>{k}</span>
+                <span style={{ fontWeight: font.weights.bold, color: colors.text, fontVariantNumeric: "tabular-nums" }}>{v}</span>
+              </div>
+            ))}
           </div>
         </Card>
       </div>
 
-      {/* Foreign Buying — Large Caps */}
-      <div style={{ opacity: fadeIn(f, 110, 18) }}>
-        <Card left={150} top={560} width={1450} height={200} title="Foreign Buying — Large Caps">
-          <div style={{ display: "flex", alignItems: "center", gap: 30 }}>
-            <svg width={90} height={90} viewBox="-45 -45 90 90" stroke={colors.indigo} strokeWidth={5} fill="none">
-              <circle cx={0} cy={0} r={36} />
-              <path d="M -36 0 L 36 0 M 0 -36 L 0 36 M -26 -22 Q 0 -8 26 -22 M -26 22 Q 0 8 26 22" />
-            </svg>
-            <span style={{ fontSize: type.descriptor, color: colors.slate, fontWeight: font.weights.medium }}>Inflows Into A Big-Cap Block</span>
-            <span style={{ marginLeft: "auto", padding: "10px 20px", borderRadius: 999, border: `2px dashed ${colors.cyan}`, color: colors.cyanDeep, fontSize: type.chip, fontWeight: font.weights.bold, opacity: 0.7 }}>Tends To</span>
-          </div>
+      {/* foreign net buy */}
+      <div style={{ position: "absolute", left: 900, top: 320, opacity: fadeIn(f, 90, 18) }}>
+        <Card width={780} height={420} title="Foreign Net Buy (Large Cap)">
+          <Reliability />
+          <svg width={720} height={240} viewBox="0 0 720 240" style={{ marginTop: 20 }}>
+            <line x1={0} y1={220} x2={720} y2={220} stroke={colors.slateFaint} strokeWidth={2} />
+            {FOREIGN.map((v, i) => (
+              <rect key={i} x={20 + i * 68} y={220 - v * 190} width={44} height={v * 190} rx={4} fill={colors.cyan} opacity={fadeIn(f, 100 + i * 8, 12)} />
+            ))}
+          </svg>
+          <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.cyanDeep, marginTop: 12, fontVariantNumeric: "tabular-nums" }}>+Rp 312 Bn cumulative</div>
         </Card>
       </div>
+
+      <IllustrationTag left={1620} top={250} />
     </SafeArea>
   );
 };

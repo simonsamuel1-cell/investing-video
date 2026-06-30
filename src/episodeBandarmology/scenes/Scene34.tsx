@@ -1,34 +1,39 @@
 /**
- * Scene 34 — Bottom Line (9035, dur 306). DISCLAIMER beat / close. Reuses the
- * Scene 04 FootprintTrail, now resolved across the frame. Final centered statement
- * "A Probability, Never A Promise" (~f80); sub-line "Read The Public Tracks
- * Honestly" (~f140); calm fade-out over the last ~30f.
+ * Scene 34 — Bottom line recap (9035, dur 306). DISCLAIMER / close. The Scene 11
+ * public-data StatCards briefly re-tile, then resolve to a centered statement
+ * "A Probability, Never A Promise" (textReveal ~f80) + sub (sentence case). Calm
+ * fadeOut over the last ~30f.
  *
- * NOTE: if house/OJK style needs a formal disclaimer card after this, it is NOT
- * in the script — Simon must supply that VO/text; do not author it here.
+ * NOTE: no formal disclaimer card is in the script; Simon supplies VO/text if
+ * house/OJK style needs one after this.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, FootprintTrail } from "../components";
+import { SafeArea, StatCard } from "../components";
 import { theme } from "../theme";
-import { fadeOut, textReveal } from "../helpers";
+import { fadeOut, fadeIn, textReveal } from "../helpers";
 
 const { colors, font, type } = theme;
 
 export const Scene34 = () => {
   const f = useCurrentFrame();
   const out = fadeOut(f, 276, 30);
+  const tilesOut = fadeOut(f, 70, 20); // recede as the statement resolves
 
   return (
     <SafeArea>
       <div style={{ opacity: out }}>
-        <FootprintTrail left={150} top={250} width={1480} count={11} nowIndex={10} revealStart={0} revealEnd={120} showQuestion={false} />
+        {/* recap tiles */}
+        <div style={{ opacity: tilesOut }}>
+          <StatCard left={150} top={240} width={480} height={170} label="Foreign Flow" value="+Rp 84 Bn" op={fadeIn(f, 0, 16)} />
+          <StatCard left={720} top={240} width={480} height={170} label="Insider Trades" value="3 filings" op={fadeIn(f, 12, 16)} />
+          <StatCard left={1290} top={240} width={480} height={170} label="Shareholders" value="14,905" op={fadeIn(f, 24, 16)} />
+        </div>
 
         <div style={{ position: "absolute", left: 96, top: 470, width: 1728, textAlign: "center", fontSize: type.display, fontWeight: font.weights.extrabold, color: colors.indigo, letterSpacing: -1, ...textReveal(f, 80, 22) }}>
           A Probability, Never A Promise
         </div>
-
         <div style={{ position: "absolute", left: 96, top: 640, width: 1728, textAlign: "center", fontSize: type.subhead, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 140, 20) }}>
-          Read The Public Tracks Honestly
+          The tracks are public — the skill is reading them honestly.
         </div>
       </div>
     </SafeArea>

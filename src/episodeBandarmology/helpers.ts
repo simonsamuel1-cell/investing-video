@@ -76,3 +76,22 @@ export const mulberry32 = (seed: number) => {
     return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
   };
 };
+
+/**
+ * genCandles — deterministic OHLC series (normalised [0,1]) from a price path.
+ * `levels[i]` is the target close for candle i; open = previous close, wicks and
+ * body noise are seeded. Returns {o,h,l,c}[] for CandlestickChart.
+ */
+export const genCandles = (levels: number[], seed: number, wick = 0.04) => {
+  const rng = mulberry32(seed);
+  const clamp = (v: number) => Math.max(0.04, Math.min(0.96, v));
+  let prev = levels[0];
+  return levels.map((lvl) => {
+    const o = clamp(prev + (rng() - 0.5) * 0.02);
+    const c = clamp(lvl + (rng() - 0.5) * 0.02);
+    const hi = clamp(Math.max(o, c) + rng() * wick);
+    const lo = clamp(Math.min(o, c) - rng() * wick);
+    prev = c;
+    return { o, h: hi, l: lo, c };
+  });
+};

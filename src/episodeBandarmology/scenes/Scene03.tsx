@@ -1,61 +1,38 @@
 /**
- * Scene 03 — Bandarmology (571, dur 175). Warehouse shrinks to a node (~0–40);
- * the word "Bandarmology" lands center at 96px indigo via textReveal (~f50);
- * subtitle "Following The Big Players" (~f90). Term kept verbatim (not translated).
+ * Scene 03 — BANDARMOLOGY on the Order Book — worked example #1 (571, dur 175).
+ * "Bandarmology" (96px indigo, textReveal) resolves upper-left; a realistic
+ * OrderBook (STOCK A, Last Rp 1,205) fills the rest. The big-resting-bid tell is
+ * annotated: the Rp 1,180 · 48,500 lot bid is highlighted (cyan) with a Callout,
+ * plus a forward-link chip to broker data. Bid/ask neutral. "bandarmology" verbatim.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, OrderBook, Callout, Chip, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { tween, textReveal } from "../helpers";
+import { textReveal, fadeIn } from "../helpers";
+import { ASKS, BIDS } from "../stockA";
 
 const { colors, font, type } = theme;
 
 export const Scene03 = () => {
   const f = useCurrentFrame();
-  const shrink = tween(f, [0, 40], [1, 0.16]);
-  const nodeOp = tween(f, [30, 46], [1, 0]);
 
   return (
     <SafeArea>
-      <svg width={1728} height={300} viewBox="0 0 1728 300" style={{ position: "absolute", left: 96, top: 250, overflow: "visible" }}>
-        <g transform={`translate(864,150) scale(${shrink})`} opacity={nodeOp} fill={colors.indigoTint} stroke={colors.indigo} strokeWidth={4}>
-          <rect x={-120} y={-90} width={240} height={180} rx={10} />
-        </g>
-        <circle cx={864} cy={150} r={16} fill={colors.indigo} opacity={tween(f, [38, 50], [0, 1])} />
-      </svg>
-
-      <div
-        style={{
-          position: "absolute",
-          left: 96,
-          top: 420,
-          width: 1728,
-          textAlign: "center",
-          fontSize: type.display,
-          fontWeight: font.weights.extrabold,
-          color: colors.indigo,
-          letterSpacing: -1,
-          ...textReveal(f, 50, 20),
-        }}
-      >
+      <div style={{ position: "absolute", left: 96, top: 96, width: 700, fontSize: type.display, fontWeight: font.weights.extrabold, color: colors.indigo, letterSpacing: -1, ...textReveal(f, 8, 20) }}>
         Bandarmology
       </div>
-
-      <div
-        style={{
-          position: "absolute",
-          left: 96,
-          top: 560,
-          width: 1728,
-          textAlign: "center",
-          fontSize: type.subhead,
-          fontWeight: font.weights.bold,
-          color: colors.slate,
-          ...textReveal(f, 90, 18),
-        }}
-      >
-        Following The Big Players
+      <div style={{ position: "absolute", left: 96, top: 220, width: 760, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 40, 18) }}>
+        Bandarmology is reading the footprints big players leave — starting in the order book.
       </div>
+
+      <OrderBook left={96} top={324} width={680} rowH={48} bids={BIDS} asks={ASKS} last="Rp 1,205" op={fadeIn(f, 20, 18)} />
+
+      {/* big resting bid tell — the 1,180 row (4th bid) sits low in the book */}
+      <Callout ax={776} ay={836} dx={120} dy={-40} width={520} body="A large resting bid sits well below the last price." op={fadeIn(f, 70, 16)} variant="cyan" />
+
+      {f >= 120 && <Chip label="Who Placed It Shows In Broker Data" variant="outline" left={900} top={620} delay={120} />}
+
+      <IllustrationTag left={1620} top={910} />
     </SafeArea>
   );
 };

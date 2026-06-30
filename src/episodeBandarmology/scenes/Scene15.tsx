@@ -1,60 +1,57 @@
 /**
- * Scene 15 — Five Classic Mistakes Intro (3797, dur 157). A generic "Broker
- * Summary" panel (no real brokers/tickers) appears; a translucent surface line
- * cuts across (~f40); title "Five Classic Mistakes" resolves (~f70); five empty
- * numbered slots 1–5 fade in as a roadmap (~f100–150), cyan-outlined.
+ * Scene 15 — Broker Summary annotated — worked example #3 + 5-mistakes roadmap
+ * (3797, dur 157). A realistic BrokerTable "Broker Summary" (STOCK A, brokers
+ * 01–09) sorted by net lot. All three tells annotated (sequential Callouts):
+ * dominant net buyer, low avg price, and the cross-link back to Sc3's resting bid.
+ * Then a translucent surface line sweeps the top rows and five numbered "Five
+ * Classic Mistakes" slots resolve on the right — the roadmap for Sc16–20.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, BrokerTable, Callout, Chip, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal } from "../helpers";
+import { textReveal, fadeIn, tween } from "../helpers";
+import { BROKER_SUMMARY } from "../stockA";
 
 const { colors, font, type, radius } = theme;
 
+const COLS = [
+  { key: "broker", label: "Broker", flex: 1.3 },
+  { key: "net", label: "Net Lot", align: "right" as const, flex: 1 },
+  { key: "avg", label: "Avg Price", align: "right" as const, flex: 1 },
+  { key: "value", label: "Value", align: "right" as const, flex: 1 },
+  { key: "pct", label: "% of Volume", align: "right" as const, flex: 1.1 },
+];
+
+const MISTAKES = ["One Day", "Rank vs Value", "Concentration", "Average Cost", "Nego Blind Spot"];
+
 export const Scene15 = () => {
   const f = useCurrentFrame();
-  const surface = tween(f, [40, 90], [0, 1]);
+  const sweep = tween(f, [60, 120], [0, 1]);
 
   return (
     <SafeArea>
-      {/* generic Broker Summary panel */}
-      <div style={{ position: "absolute", left: 96, top: 110, width: 760, height: 320, background: colors.card, border: `2px solid ${colors.divider}`, borderRadius: radius.lg, padding: 28, opacity: fadeIn(f, 0, 18) }}>
-        <div style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate, marginBottom: 18 }}>Broker Summary</div>
-        {["Broker A", "Broker B", "Broker C"].map((b, i) => (
-          <div key={b} style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 16 }}>
-            <span style={{ width: 130, fontSize: type.chip, color: colors.slateMute }}>{b}</span>
-            <div style={{ height: 18, width: 360 - i * 90, background: colors.indigoTint, borderRadius: 6 }} />
-          </div>
-        ))}
-        {/* translucent surface line */}
-        <div style={{ position: "absolute", left: 0, top: 40 + surface * 220, width: "100%", height: 3, background: colors.cyan, opacity: 0.5 * surface }} />
-      </div>
+      <BrokerTable left={96} top={170} width={1000} title="Broker Summary" columns={COLS} rows={BROKER_SUMMARY} rowH={52} op={fadeIn(f, 0, 16)} />
 
-      <div style={{ position: "absolute", left: 920, top: 150, width: 800, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 70, 18) }}>
-        Five Classic Mistakes
-      </div>
+      {/* translucent surface line sweeping the top rows */}
+      <div style={{ position: "absolute", left: 96, top: 266 + sweep * 160, width: 1000, height: 3, background: colors.cyan, opacity: 0.45 * sweep }} />
 
-      {/* five empty numbered slots */}
-      <div style={{ position: "absolute", left: 920, top: 300, width: 800, display: "flex", flexDirection: "column", gap: 18 }}>
-        {[1, 2, 3, 4, 5].map((n, i) => (
-          <div
-            key={n}
-            style={{
-              height: 96,
-              borderRadius: radius.md,
-              border: `2px solid ${colors.cyan}`,
-              display: "flex",
-              alignItems: "center",
-              paddingLeft: 26,
-              gap: 20,
-              opacity: fadeIn(f, 100 + i * 12, 16),
-            }}
-          >
-            <span style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.cyanDeep }}>{n}</span>
-            <span style={{ fontSize: type.chip, color: colors.slateMute }}>—</span>
+      {/* three tells — boxes stacked in the right column, clear of table + roadmap */}
+      <Callout ax={700} ay={300} dx={440} dy={-90} width={470} body="One broker is doing most of the net buying." op={fadeIn(f, 20, 14)} variant="indigo" />
+      <Callout ax={620} ay={320} dx={510} dy={60} width={470} body="Their average price is low — they loaded up cheap." op={fadeIn(f, 50, 14)} variant="cyan" />
+      {f >= 90 && <Chip label="Placed The Rp 1,180 Bid In Scene 3" variant="outline" left={96} top={774} delay={90} />}
+
+      {/* five-mistakes roadmap */}
+      <div style={{ position: "absolute", left: 1180, top: 520, width: 640 }}>
+        <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text, marginBottom: 14, ...textReveal(f, 70, 16) }}>Five Classic Mistakes</div>
+        {MISTAKES.map((m, i) => (
+          <div key={m} style={{ height: 56, marginBottom: 8, borderRadius: radius.md, border: `2px solid ${colors.cyan}`, display: "flex", alignItems: "center", gap: 18, paddingLeft: 22, opacity: fadeIn(f, 90 + i * 10, 14) }}>
+            <span style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.cyanDeep }}>{i + 1}</span>
+            <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.text }}>{m}</span>
           </div>
         ))}
       </div>
+
+      <IllustrationTag left={900} top={140} />
     </SafeArea>
   );
 };

@@ -1,63 +1,55 @@
 /**
- * Scene 12 — The Nego Market (2849, dur 249). A fifth dashed-border card "Nego
- * Market" slides in, set apart/offset behind a central "Screen" panel; two large
- * blocks move directly between two private nodes, bypassing the central screen.
- * "Nego Market" kept verbatim.
+ * Scene 12 — Nego market table (2849, dur 249). Left: a small live CandlestickChart
+ * ticking. Right: a dashed-border "Nego / Negotiated Deals" BrokerTable set apart
+ * (Vol · Price · Type, all Cross). A connector shows deals happening beside the
+ * visible price. Chip "Nego Market" (verbatim). Sentence-case note.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, CandlestickChart, BrokerTable, Chip, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, tween, textReveal } from "../helpers";
+import { tween, textReveal, fadeIn, genCandles } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
+const LEVELS = Array.from({ length: 40 }, (_, i) => 0.45 + Math.sin(i * 0.4) * 0.06 + (i / 39) * 0.04);
+const CANDLES = genCandles(LEVELS, 1212);
+
+const NEGO = [
+  { cells: { vol: "10 M", price: "Rp 1,300", type: "Cross" } },
+  { cells: { vol: "7.5 M", price: "Rp 1,290", type: "Cross" } },
+];
+const COLS = [
+  { key: "vol", label: "Vol", flex: 1 },
+  { key: "price", label: "Price", align: "right" as const, flex: 1 },
+  { key: "type", label: "Type", align: "right" as const, flex: 1 },
+];
+
 export const Scene12 = () => {
   const f = useCurrentFrame();
-  const negoX = tween(f, [30, 80], [1500, 1180]);
-  const block = tween(f, [110, 200], [0, 1]);
-
-  // two private nodes (left, right) with a bypass arc around the central screen
-  const ax = 320;
-  const bx = 1600;
-  const ay = 720;
-  const bxPos = ax + (bx - ax) * block;
-  const byPos = ay + Math.sin(block * Math.PI) * 150; // arc dips below the screen
+  const prog = tween(f, [10, 120], [0, 1]);
 
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          left: 96,
-          top: 110,
-          width: 1272,
-          fontSize: type.header,
-          fontWeight: font.weights.extrabold,
-          ...textReveal(f, 8, 18),
-        }}
-      >
-        Off The Normal Screen
+      <div style={{ position: "absolute", left: 96, top: 96, width: 1272, fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.text, ...textReveal(f, 8, 18) }}>
+        Big deals arranged off the normal screen still leave a record.
       </div>
 
-      {/* central Screen panel */}
-      <div style={{ position: "absolute", left: 660, top: 300, width: 600, height: 360, background: colors.card, border: `2px solid ${colors.divider}`, borderRadius: radius.lg, opacity: fadeIn(f, 10, 18), display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 16 }}>
-        <div style={{ fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.slate }}>Normal Screen</div>
-        <svg width={420} height={140} viewBox="0 0 420 140" stroke={colors.indigo} strokeWidth={3} fill="none">
-          <path d="M 10 110 L 90 70 L 160 90 L 240 40 L 320 60 L 410 30" />
-        </svg>
+      {/* normal screen */}
+      <div style={{ position: "absolute", left: 96, top: 280, width: 800, height: 480, background: colors.cardWhite, border: `2px solid ${colors.divider}`, borderRadius: radius.lg, padding: 24, boxSizing: "border-box", opacity: fadeIn(f, 10, 18) }}>
+        <div style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate, marginBottom: 10 }}>Normal Screen</div>
+        <CandlestickChart width={740} height={380} candles={CANDLES} progress={prog} />
       </div>
 
-      {/* dashed Nego Market card offset behind-right */}
-      <div style={{ position: "absolute", left: negoX, top: 250, width: 560, height: 320, background: colors.indigoSoft, border: `2px dashed ${colors.indigo}`, borderRadius: radius.lg, opacity: fadeIn(f, 30, 18), display: "flex", alignItems: "flex-start", padding: 28 }}>
-        <div style={{ fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.indigoDeep }}>Nego Market</div>
+      {/* nego deals table */}
+      <div style={{ position: "absolute", left: 980, top: 300, width: 700, height: 420, border: `2px dashed ${colors.indigo}`, borderRadius: radius.lg, padding: 18, boxSizing: "border-box", opacity: fadeIn(f, 60, 18) }}>
+        <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.indigoDeep, marginBottom: 12 }}>Nego / Negotiated Deals</div>
+        <BrokerTable left={0} top={70} width={660} columns={COLS} rows={NEGO} rowH={64} op={fadeIn(f, 80, 18)} />
+        <div style={{ position: "absolute", left: 18, top: 300, width: 660 }}>
+          <Chip label="Nego Market" variant="indigo" bounce delay={120} />
+        </div>
       </div>
 
-      {/* two private nodes + bypass blocks */}
-      <svg width={1728} height={500} viewBox="0 0 1728 500" style={{ position: "absolute", left: 96, top: 470, overflow: "visible" }}>
-        <circle cx={ax - 96} cy={ay - 470} r={40} fill={colors.indigo} opacity={fadeIn(f, 90, 14)} />
-        <circle cx={bx - 96} cy={ay - 470} r={40} fill={colors.indigo} opacity={fadeIn(f, 90, 14)} />
-        <rect x={bxPos - 96 - 36} y={byPos - 470 - 36} width={72} height={72} rx={8} fill={colors.cyan} opacity={block > 0 && block < 1 ? 1 : 0} />
-      </svg>
+      <IllustrationTag left={1620} top={250} />
     </SafeArea>
   );
 };

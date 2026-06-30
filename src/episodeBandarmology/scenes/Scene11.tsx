@@ -1,75 +1,53 @@
 /**
- * Scene 11 — Public Data Tracks (2502, dur 327). Header + four white icon-cards
- * fading in as the VO names each (stagger ~30,110,190,260): Broker Net Buying,
- * Foreign Flows, Insider Trades, Shareholder Count. Indigo icons, cyan accent.
+ * Scene 11 — Broker Flow + Trade Flow — worked example #2 (2502, dur 327).
+ * Header "Public Data Tracks". Left: BrokerTable "Broker Flow" sorted by net buy,
+ * top row Broker 01 highlighted, two Callouts (the broker tell + the low-avg
+ * tell). Right: TradeFlow with large prints (ties back to Sc3's big bid). Three
+ * StatCards reveal as the VO names each source. Indigo/cyan + neutral, no red/green.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, BrokerTable, TradeFlow, StatCard, Callout, IllustrationTag } from "../components";
 import { theme } from "../theme";
-import { fadeIn, textReveal } from "../helpers";
+import { textReveal, fadeIn } from "../helpers";
+import { BROKER_SUMMARY } from "../stockA";
 
-const { colors, font, type, radius, border } = theme;
+const { colors, font, type } = theme;
 
-const ICONS: Record<string, React.ReactNode> = {
-  broker: <path d="M -34 26 L -12 -6 L 8 14 L 34 -28" />,
-  foreign: <circle cx={0} cy={0} r={30} />,
-  insider: <rect x={-26} y={-30} width={52} height={60} rx={6} />,
-  holders: <g><circle cx={-18} cy={-6} r={14} /><circle cx={18} cy={-6} r={14} /><circle cx={0} cy={20} r={14} /></g>,
-};
+const COLS = [
+  { key: "broker", label: "Broker", flex: 1.4 },
+  { key: "net", label: "Net Lot", align: "right" as const, flex: 1 },
+  { key: "avg", label: "Avg", align: "right" as const, flex: 1 },
+  { key: "value", label: "Value", align: "right" as const, flex: 1 },
+];
 
-const CARDS = [
-  { key: "broker", label: "Broker Net Buying", at: 30 },
-  { key: "foreign", label: "Foreign Flows", at: 110 },
-  { key: "insider", label: "Insider Trades", at: 190 },
-  { key: "holders", label: "Shareholder Count", at: 260 },
+const PRINTS = [
+  { time: "10:14:02", price: "1,180", lot: "48,500", buyer: "YP", seller: "CC", big: true },
+  { time: "10:13:51", price: "1,182", lot: "3,200", buyer: "YP", seller: "PD" },
+  { time: "10:13:40", price: "1,181", lot: "12,900", buyer: "YP", seller: "KK", big: true },
+  { time: "10:13:22", price: "1,184", lot: "1,400", buyer: "NI", seller: "YP" },
+  { time: "10:13:05", price: "1,182", lot: "9,800", buyer: "YP", seller: "CC", big: true },
 ];
 
 export const Scene11 = () => {
   const f = useCurrentFrame();
-  const W = 396;
-  const GAP = 28;
-
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          left: 96,
-          top: 110,
-          width: 1272,
-          fontSize: type.header,
-          fontWeight: font.weights.extrabold,
-          ...textReveal(f, 8, 18),
-        }}
-      >
+      <div style={{ position: "absolute", left: 96, top: 96, width: 1272, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
         Public Data Tracks
       </div>
 
-      {CARDS.map((c, i) => (
-        <div
-          key={c.key}
-          style={{
-            position: "absolute",
-            left: 96 + i * (W + GAP),
-            top: 300,
-            width: W,
-            height: 420,
-            boxSizing: "border-box",
-            background: colors.card,
-            border: `${border.regular}px solid ${colors.divider}`,
-            borderRadius: radius.lg,
-            padding: 32,
-            opacity: fadeIn(f, c.at, 18),
-            transform: `translateY(${(1 - fadeIn(f, c.at, 18)) * 14}px)`,
-          }}
-        >
-          <div style={{ height: 6, width: 64, background: colors.cyan, borderRadius: 3, marginBottom: 28 }} />
-          <svg width={120} height={120} viewBox="-60 -60 120 120" stroke={colors.indigo} strokeWidth={5} fill="none" strokeLinecap="round" strokeLinejoin="round">
-            {ICONS[c.key]}
-          </svg>
-          <div style={{ marginTop: 36, fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.text, lineHeight: 1.2 }}>{c.label}</div>
-        </div>
-      ))}
+      <BrokerTable left={96} top={210} width={840} title="Broker Flow" columns={COLS} rows={BROKER_SUMMARY.slice(0, 5)} rowH={58} op={fadeIn(f, 20, 18)} revealCount={Math.floor(fadeIn(f, 20, 60) * 5 + 0.5)} />
+      <TradeFlow left={988} top={210} width={680} title="Trade Flow" rows={PRINTS} rowH={54} op={fadeIn(f, 60, 18)} revealCount={Math.floor(fadeIn(f, 60, 70) * 5 + 0.5)} />
+
+      <Callout ax={520} ay={300} dx={-40} dy={-150} width={460} body="One broker is doing most of the net buying." op={fadeIn(f, 120, 16)} variant="indigo" />
+      <Callout ax={700} ay={300} dx={120} dy={250} width={420} body="Their average price sits low — they're accumulating cheap." op={fadeIn(f, 180, 16)} variant="cyan" />
+
+      {/* public-data stat cards */}
+      <StatCard left={96} top={730} width={510} height={170} label="Foreign Flow" value="+Rp 84 Bn" sub="Net buy, 10 days" op={fadeIn(f, 90, 18)} />
+      <StatCard left={628} top={730} width={510} height={170} label="Insider Trades" value="3 filings" sub="Directors buying" op={fadeIn(f, 150, 18)} />
+      <StatCard left={1160} top={730} width={510} height={170} label="Shareholders" value="18,420 → 14,905" sub="Concentrating" op={fadeIn(f, 210, 18)} />
+
+      <IllustrationTag left={1620} top={170} />
     </SafeArea>
   );
 };
