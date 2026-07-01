@@ -8,10 +8,10 @@
  * INDEPENDENT_SCENES); Scenes 22–33 content ARE independent and the WorkflowStage
  * chrome (rail + phone) spans the same range on top.
  */
-import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
+import { AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, interpolate } from "remotion";
 import type { FC } from "react";
 import { theme } from "./theme";
-
+import { CapturePhone } from "./components";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
 import { Scene03 } from "./scenes/Scene03";
@@ -40,14 +40,30 @@ import { Scene31 } from "./scenes/Scene31";
 import { Scene32 } from "./scenes/Scene32";
 import { Scene33 } from "./scenes/Scene33";
 import { Scene34 } from "./scenes/Scene34";
-
 import { WyckoffStage } from "./continuity/WyckoffStage";
 import { WorkflowStage } from "./continuity/WorkflowStage";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
 
-const INDEPENDENT_SCENES: Array<{ from: number; duration: number; Component: FC }> = [
+// Real app-capture phone recordings that span multiple scenes — mounted ONCE so
+// the video never remounts/restarts across the scene boundaries, layered in
+// FRONT of the (opaque-background) scenes with their captions kept to the side.
+const VideoCapture: FC<{ video: string }> = ({ video }) => {
+  const f = useCurrentFrame();
+  const op = interpolate(f, [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return (
+    <AbsoluteFill style={{ pointerEvents: "none" }}>
+      <CapturePhone video={video} cx={960} top={150} height={806} op={op} />
+    </AbsoluteFill>
+  );
+};
+
+const INDEPENDENT_SCENES: Array<{
+  from: number;
+  duration: number;
+  Component: FC;
+}> = [
   { from: 0, duration: 207, Component: Scene01 }, // wholesale market metaphor
   { from: 224, duration: 334, Component: Scene02 }, // super-wholesalers
   { from: 571, duration: 175, Component: Scene03 }, // bandarmology term
@@ -85,10 +101,24 @@ export const Bandarmology: FC = () => (
     {MOUNT_VO && <Audio src={staticFile("bandarmology-vo.mp3")} />}
 
     {INDEPENDENT_SCENES.map(({ from, duration, Component }, i) => (
-      <Sequence key={i} from={from} durationInFrames={duration}>
+      <Sequence
+        key={i}
+        from={from}
+        durationInFrames={duration}
+        showInTimeline={false}
+      >
         <Component />
       </Sequence>
     ))}
+
+    {/* Real app-capture videos (portrait phone), mounted once across their scene
+        spans and layered in front of the scene captions. */}
+    <Sequence durationInFrames={558} name="S01–02 capture">
+      <VideoCapture video="bandarmology/scene01-02.mp4" />
+    </Sequence>
+    <Sequence from={3962} durationInFrames={1264} name="S16–20 capture">
+      <VideoCapture video="bandarmology/scene16-20.mp4" />
+    </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
     <Sequence from={1055} durationInFrames={1427}>

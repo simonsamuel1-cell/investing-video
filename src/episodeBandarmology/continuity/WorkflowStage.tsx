@@ -19,7 +19,7 @@
  * (verbatim, no redraw) + on-screen data date when supplied.
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { StepRail, PhoneFrame } from "../components";
+import { StepRail, PhoneFrame, CapturePhone } from "../components";
 import { fadeIn, fadeOut } from "../helpers";
 
 // Boundaries in LOCAL frames (comp − 5609).
@@ -67,8 +67,8 @@ export const WorkflowStage = () => {
           </>
         )}
         {win31 > 0 && (
-          /* [NEEDS DATA: Market Radar capture] */
-          <PhoneFrame placeholder="Market Radar capture" op={win31} />
+          /* Real Market Radar capture (portrait phone recording). */
+          <CapturePhone video="bandarmology/scene31.mp4" cx={960} top={214} height={728} op={win31} />
         )}
       </div>
 

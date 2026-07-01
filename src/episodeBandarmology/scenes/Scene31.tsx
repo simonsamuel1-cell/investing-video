@@ -31,7 +31,7 @@ export const Scene31 = () => {
         Market Radar
       </div>
       <div style={{ position: "absolute", left: 96, top: 320, width: 600, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 40, 18) }}>
-        Live aggression on STOCK A.
+        Live aggression on the stock.
       </div>
 
       {/* alert cards right of the centered phone */}
