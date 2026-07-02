@@ -26,10 +26,10 @@ const box = (sl: number, fx0: number, fx1: number, fy0: number, fy1: number) => 
 
 // B.Avg column — the two captures have different table layouts, so per-image fy.
 const AVG_BOXES = [
-  box(LEFTS[0], 0.6, 0.82, 0.395, 0.87), // MARK (table high)
-  box(LEFTS[1], 0.6, 0.82, 0.44, 0.76), // MIDI (table lower)
+  box(LEFTS[0], 0.62, 0.82, 0.38, 0.87), // MARK (table high)
+  box(LEFTS[1], 0.62, 0.82, 0.5, 0.82), // MIDI (table lower)
 ];
-const CODE_BOXES = LEFTS.map((sl) => box(sl, 0.12, 0.47, 0.012, 0.08)); // code + price
+const CODE_BOXES = LEFTS.map((sl) => box(sl, 0.12, 0.47, 0.007, 0.08)); // code + price
 
 export const Scene14 = () => {
   const f = useCurrentFrame();

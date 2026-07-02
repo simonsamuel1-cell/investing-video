@@ -89,7 +89,7 @@ const INDEPENDENT_SCENES: Array<{
   // AnswerTitle card runs 3110–3187 (see continuity below); questions follow.
   { from: 3199, duration: 251, Component: Scene13 }, // four questions (end 3450)
   { from: 3453, duration: 336, Component: Scene14 }, // average cost matters most
-  { from: 3797, duration: 157, Component: Scene15 }, // five mistakes intro
+  { from: 3805, duration: 155, Component: Scene15 }, // five mistakes intro (image + highlight + title, ends 3960)
   { from: 3962, duration: 271, Component: Scene16 }, // mistake 1 one day
   { from: 4246, duration: 290, Component: Scene17 }, // mistake 2 rank w/o value
   { from: 4544, duration: 226, Component: Scene18 }, // mistake 3 concentration
