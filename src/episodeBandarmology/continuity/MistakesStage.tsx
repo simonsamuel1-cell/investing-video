@@ -10,7 +10,7 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { SafeArea, CapturePhone } from "../components";
 import { theme } from "../theme";
-import { fadeIn, fadeOut, tween } from "../helpers";
+import { fadeIn, fadeOut, tween, blinkTwice } from "../helpers";
 
 const { colors, font, radius } = theme;
 
@@ -44,15 +44,15 @@ export const MistakesStage = () => {
   const f = useCurrentFrame();
   const stageOut = fadeOut(f, 5231 - OFF - 14, 14);
 
-  const h1 = winOp(f, 3970 - OFF, 4256 - OFF); // timeframe row
-  const h2 = winOp(f, 4256 - OFF, 4553 - OFF); // Net switch
-  const h3 = winOp(f, 4553 - OFF, 4793 - OFF); // rows
+  const h1 = blinkTwice(f, 3970 - OFF, 4256 - OFF); // timeframe row
+  const h2 = blinkTwice(f, 4256 - OFF, 4553 - OFF); // Net switch
+  const h3 = blinkTwice(f, 4553 - OFF, 4793 - OFF); // rows
   const h3grow = tween(f, [4687 - OFF, 4707 - OFF], [0, 1]); // expand down at 4687
-  const h4a = winOp(f, 4821 - OFF, 4878 - OFF); // B.Avg column
-  const h4b = winOp(f, 4918 - OFF, 5012 - OFF); // S.Avg column
+  const h4a = blinkTwice(f, 4821 - OFF, 4878 - OFF); // B.Avg column
+  const h4b = blinkTwice(f, 4918 - OFF, 5012 - OFF); // S.Avg column
 
-  const rowTop = fy(0.445); // top of the ZP row (video scrolled up by 4553)
-  const rowH = 0.12 * SH + (0.24 - 0.12) * SH * h3grow; // 2 rows → expand through YU
+  const rowTop = fy(0.445) - 3; // top of the ZP row, nudged up 3px
+  const rowH = 0.12 * SH + (0.12 * SH + 10) * h3grow; // 2 rows → expand through YU (+10px)
 
   return (
     <SafeArea>
@@ -67,11 +67,11 @@ export const MistakesStage = () => {
         <CapturePhone video="bandarmology/scene16-20.mp4" cx={CX} top={PTOP} height={PH} op={fadeIn(f, 0, 14)} />
 
         {/* highlights */}
-        <Box left={fx(0.04)} top={fy(0.27)} width={0.92 * SW} height={0.065 * SH} op={h1} />
-        <Box left={fx(0.82)} top={fy(0.215)} width={0.16 * SW} height={0.05 * SH} op={h2} />
+        <Box left={fx(0.04)} top={fy(0.27) - 10} width={0.92 * SW} height={0.065 * SH} op={h1} />
+        <Box left={fx(0.82)} top={fy(0.215) - 3} width={0.16 * SW} height={0.05 * SH} op={h2} />
         <Box left={fx(0.03)} top={rowTop} width={0.94 * SW} height={rowH} op={h3} />
-        <Box left={fx(0.62)} top={fy(0.42)} width={0.19 * SW} height={0.5 * SH} op={h4a} />
-        <Box left={fx(0.85)} top={fy(0.42)} width={0.14 * SW} height={0.5 * SH} op={h4b} />
+        <Box left={fx(0.62) + 3} top={fy(0.42)} width={0.19 * SW} height={0.5 * SH - 10} op={h4a} />
+        <Box left={fx(0.85) - 6} top={fy(0.42)} width={0.14 * SW} height={0.5 * SH - 10} op={h4b} />
       </AbsoluteFill>
     </SafeArea>
   );

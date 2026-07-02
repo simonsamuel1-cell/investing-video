@@ -35,6 +35,18 @@ export const tween = (frame: number, range: [number, number], out: [number, numb
   interpolate(frame, range, out, { ...CLAMP, easing: ease });
 
 /**
+ * blinkTwice — opacity that flashes on-off-on-off then holds at 1 to `end`,
+ * fading out over the last 12f. Used for highlight boxes appearing.
+ */
+export const blinkTwice = (frame: number, start: number, end: number) =>
+  interpolate(
+    frame,
+    [start, start + 6, start + 12, start + 18, start + 24, start + 30, end - 12, end],
+    [0, 1, 0, 1, 0, 1, 1, 0],
+    CLAMP,
+  );
+
+/**
  * textReveal — subtle fade + slight upward slide for type. NO pop/bounce.
  * Returns style props to spread onto the text element.
  */
