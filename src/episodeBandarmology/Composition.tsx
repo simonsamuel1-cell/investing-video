@@ -8,17 +8,9 @@
  * INDEPENDENT_SCENES); Scenes 22–33 content ARE independent and the WorkflowStage
  * chrome (rail + phone) spans the same range on top.
  */
-import {
-  AbsoluteFill,
-  Sequence,
-  Audio,
-  staticFile,
-  useCurrentFrame,
-  interpolate,
-} from "remotion";
+import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import type { FC } from "react";
 import { theme } from "./theme";
-import { CapturePhone } from "./components";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
 import { Scene03 } from "./scenes/Scene03";
@@ -53,25 +45,10 @@ import { S0102Stage } from "./continuity/S0102Stage";
 import { BandarTitle } from "./continuity/BandarTitle";
 import { DataTitle } from "./continuity/DataTitle";
 import { AnswerTitle } from "./continuity/AnswerTitle";
+import { MistakesStage } from "./continuity/MistakesStage";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
-
-// Real app-capture phone recordings that span multiple scenes — mounted ONCE so
-// the video never remounts/restarts across the scene boundaries, layered in
-// FRONT of the (opaque-background) scenes with their captions kept to the side.
-const VideoCapture: FC<{ video: string }> = ({ video }) => {
-  const f = useCurrentFrame();
-  const op = interpolate(f, [0, 12], [0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  return (
-    <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <CapturePhone video={video} cx={960} top={150} height={806} op={op} />
-    </AbsoluteFill>
-  );
-};
 
 const INDEPENDENT_SCENES: Array<{
   from: number;
@@ -152,9 +129,9 @@ export const Bandarmology: FC = () => (
     <Sequence from={3110} durationInFrames={77} name="All of these answer">
       <AnswerTitle />
     </Sequence>
-    {/* full 1270-frame recording — lands exactly on Scene 21's start (5232). */}
-    <Sequence from={3962} durationInFrames={1270} name="S16–20 capture">
-      <VideoCapture video="bandarmology/scene16-20.mp4" />
+    {/* Scenes 16–20: phone + point titles + highlights, mounted once. */}
+    <Sequence from={3962} durationInFrames={1270} name="Mistakes (16–20)">
+      <MistakesStage />
     </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
