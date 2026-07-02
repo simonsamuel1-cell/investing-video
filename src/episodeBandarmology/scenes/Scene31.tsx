@@ -1,17 +1,13 @@
 /**
- * Scene 31 — Market Radar (8205, dur 274). [NEEDS DATA]. Rail → Monitor. Header
- * "Market Radar". The PhoneFrame (WorkflowStage) shows the Market Radar capture
- * centered; beside it three alert cards light up: Big Orders (4.2 M lot) · Fast
- * Orders (12 prints/sec) · Push To New Highs (New High Rp 1,340). Arranged clear
- * of the centered phone.
- *
- * TODO[NEEDS DATA]: real Market Radar capture lives in WorkflowStage's PhoneFrame
- * placeholder; swap there + add data date.
+ * Scene 31 — Market Radar (8205, dur 274). Rail → Monitor (WorkflowStage). The
+ * real Market Radar capture (scene31.mp4) plays in a centered phone — mounted
+ * HERE (not in WorkflowStage) so the video plays from its own frame 0. Beside it
+ * three alert cards light up: Big Orders · Fast Orders · Push To New Highs.
  */
 import { useCurrentFrame, useVideoConfig } from "remotion";
-import { SafeArea } from "../components";
+import { SafeArea, CapturePhone } from "../components";
 import { theme } from "../theme";
-import { textReveal, fadeIn, popIn } from "../helpers";
+import { textReveal, fadeIn, fadeOut, popIn } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
@@ -24,9 +20,12 @@ const ALERTS = [
 export const Scene31 = () => {
   const f = useCurrentFrame();
   const { fps } = useVideoConfig();
+  const phoneOp = Math.min(fadeIn(f, 6, 12), fadeOut(f, 262, 12));
 
   return (
     <SafeArea>
+      <CapturePhone video="bandarmology/scene31.mp4" cx={960} top={214} height={728} op={phoneOp} />
+
       <div style={{ position: "absolute", left: 96, top: 210, width: 600, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
         Market Radar
       </div>

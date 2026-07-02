@@ -19,19 +19,18 @@
  * (verbatim, no redraw) + on-screen data date when supplied.
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { StepRail, PhoneFrame, CapturePhone } from "../components";
+import { StepRail, PhoneFrame } from "../components";
 import { fadeIn, fadeOut } from "../helpers";
 
 // Boundaries in LOCAL frames (comp − 5609).
 const B_VERIFY = 6776 - 5609; // 1167
 const B_MONITOR = 7839 - 5609; // 2230
 
-// Phone windows in LOCAL frames.
+// Scene 23 phone window in LOCAL frames. (Scene 31's Market Radar video lives in
+// Scene31.tsx so it plays from its own start, not this 3411-frame span.)
 const S23_IN = 5806 - 5609; // 197
 const S23_OUT = 6165 - 5609; // 556
 const S23_DISSOLVE = 5806 - 5609 + 190; // ~387, Bandar Tracker → Dominant Brokers
-const S31_IN = 8205 - 5609; // 2596
-const S31_OUT = 8479 - 5609; // 2870
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
 
@@ -48,7 +47,6 @@ export const WorkflowStage = () => {
     clamp01(Math.min(fadeIn(f, inAt, 12), fadeOut(f, outAt - 12, 12)));
 
   const win23 = phoneWin(S23_IN, S23_OUT);
-  const win31 = phoneWin(S31_IN, S31_OUT);
 
   // Within Scene 23, cross-dissolve Bandar Tracker → Dominant Brokers.
   const bandarOp = win23 * clamp01(fadeOut(f, S23_DISSOLVE, 16));
@@ -65,10 +63,6 @@ export const WorkflowStage = () => {
             {/* [NEEDS DATA: Dominant Brokers Analysis capture] */}
             <PhoneFrame placeholder="Dominant Brokers Analysis capture" op={brokersOp} />
           </>
-        )}
-        {win31 > 0 && (
-          /* Real Market Radar capture (portrait phone recording). */
-          <CapturePhone video="bandarmology/scene31.mp4" cx={960} top={214} height={728} op={win31} />
         )}
       </div>
 

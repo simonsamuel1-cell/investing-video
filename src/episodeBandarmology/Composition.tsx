@@ -113,10 +113,12 @@ export const Bandarmology: FC = () => (
 
     {/* Real app-capture videos (portrait phone), mounted once across their scene
         spans and layered in front of the scene captions. */}
-    <Sequence durationInFrames={558} name="S01–02 capture">
+    {/* full 571-frame recording — lands exactly on Scene 03's start (571). */}
+    <Sequence durationInFrames={571} name="S01–02 capture">
       <VideoCapture video="bandarmology/scene01-02.mp4" />
     </Sequence>
-    <Sequence from={3962} durationInFrames={1264} name="S16–20 capture">
+    {/* full 1270-frame recording — lands exactly on Scene 21's start (5232). */}
+    <Sequence from={3962} durationInFrames={1270} name="S16–20 capture">
       <VideoCapture video="bandarmology/scene16-20.mp4" />
     </Sequence>
 
