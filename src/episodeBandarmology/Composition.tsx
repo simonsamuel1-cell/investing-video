@@ -126,7 +126,11 @@ export const Bandarmology: FC = () => (
     {/* Real app-capture videos (portrait phone), mounted once across their scene
         spans and layered in front of the scene captions. */}
     {/* S01-02 phone ends at 570, where the title card takes over. */}
-    <Sequence durationInFrames={570} name="S01–02 capture" showInTimeline={false}>
+    <Sequence
+      durationInFrames={570}
+      name="S01–02 capture"
+      showInTimeline={false}
+    >
       <S0102Stage />
     </Sequence>
 
@@ -140,7 +144,7 @@ export const Bandarmology: FC = () => (
     </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
-    <Sequence from={1055} durationInFrames={1427} hidden>
+    <Sequence from={1055} durationInFrames={1427}>
       <WyckoffStage />
     </Sequence>
 
