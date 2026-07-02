@@ -14,7 +14,7 @@
  * comes from the capture; everything we draw is indigo/cyan/neutral. No buy/sell
  * arrows (compliance).
  */
-import { Img, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import { SafeArea, Chip } from "../components";
 import { theme } from "../theme";
 import { fadeIn, fadeOut, textReveal } from "../helpers";
@@ -57,9 +57,11 @@ export const WyckoffStage = () => {
   const progress = progressAt(frame);
   const baselineOp = fadeIn(frame, 10, 26);
   const bands10 = fadeIn(frame, 1122, 24);
+  const outOp = fadeOut(frame, 1407, 20); // fade the whole stage out by comp ~2482
 
   return (
     <SafeArea>
+     <AbsoluteFill style={{ opacity: outOp }}>
       {/* header */}
       <div style={{ position: "absolute", left: 96, top: 96, width: 1728, textAlign: "center", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(frame, 20, 18) }}>
         Wyckoff — Four Phases
@@ -127,6 +129,7 @@ export const WyckoffStage = () => {
       {/* phase annotations */}
       {frame >= 300 && frame < 560 && <Chip label="Shakeout" variant="cyan" left={fx(0.34)} top={DOT_Y + 60} delay={300} />}
       {frame >= 1122 && <Chip label="A zone of interest, not a signal." variant="outline" left={CLEFT} top={CTOP + CH + 6} delay={1122} />}
+     </AbsoluteFill>
     </SafeArea>
   );
 };
