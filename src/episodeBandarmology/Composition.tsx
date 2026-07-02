@@ -52,6 +52,7 @@ import { WorkflowStage } from "./continuity/WorkflowStage";
 import { S0102Stage } from "./continuity/S0102Stage";
 import { BandarTitle } from "./continuity/BandarTitle";
 import { DataTitle } from "./continuity/DataTitle";
+import { AnswerTitle } from "./continuity/AnswerTitle";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
@@ -84,8 +85,9 @@ const INDEPENDENT_SCENES: Array<{
   // 1055–2482 — Scenes 5–10 rendered by WyckoffStage (see below). Gap intentional.
   // DataTitle card runs 2514–2618 (see continuity below); Scene 11 phone follows.
   { from: 2618, duration: 228, Component: Scene11 }, // public data tracks (phone + 4 points)
-  { from: 2849, duration: 249, Component: Scene12 }, // nego market
-  { from: 3098, duration: 339, Component: Scene13 }, // four questions
+  { from: 2849, duration: 251, Component: Scene12 }, // nego market (ends 3100)
+  // AnswerTitle card runs 3110–3187 (see continuity below); questions follow.
+  { from: 3199, duration: 251, Component: Scene13 }, // four questions (end 3450)
   { from: 3453, duration: 336, Component: Scene14 }, // average cost matters most
   { from: 3797, duration: 157, Component: Scene15 }, // five mistakes intro
   { from: 3962, duration: 271, Component: Scene16 }, // mistake 1 one day
@@ -144,6 +146,11 @@ export const Bandarmology: FC = () => (
     {/* Title card between Wyckoff and the public-data scene (2514–2618). */}
     <Sequence from={2514} durationInFrames={104} name="Public data title">
       <DataTitle />
+    </Sequence>
+
+    {/* Title card before the four questions (3110–3187). */}
+    <Sequence from={3110} durationInFrames={77} name="All of these answer">
+      <AnswerTitle />
     </Sequence>
     {/* full 1270-frame recording — lands exactly on Scene 21's start (5232). */}
     <Sequence from={3962} durationInFrames={1270} name="S16–20 capture">
