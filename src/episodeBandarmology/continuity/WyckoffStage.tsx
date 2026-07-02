@@ -115,17 +115,17 @@ export const WyckoffStage = () => {
         <>
           <div style={{ position: "absolute", left: fx(0.36), top: CTOP, width: (0.48 - 0.36) * CW, height: CH, background: colors.indigoTint, opacity: 0.55 * bands10 }} />
           <div style={{ position: "absolute", left: fx(0.76), top: CTOP, width: (0.87 - 0.76) * CW, height: CH, background: colors.indigoTint, opacity: 0.55 * bands10 }} />
-          <div style={{ position: "absolute", left: fx(0.3), top: CTOP - 46, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10 }}>
+          <div style={{ position: "absolute", left: fx(0.3), top: CTOP - 16, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10 }}>
             Late accumulation, as price begins to move
           </div>
-          <div style={{ position: "absolute", left: fx(0.72), top: CTOP - 46, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10, textAlign: "right" }}>
+          <div style={{ position: "absolute", left: fx(0.72), top: CTOP - 16, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10, textAlign: "right" }}>
             Before distribution turns to markdown
           </div>
         </>
       )}
 
       {/* phase annotations */}
-      {frame >= 300 && frame < 560 && <Chip label="Shakeout" variant="cyan" left={fx(0.34)} top={DOT_Y + 30} delay={300} />}
+      {frame >= 300 && frame < 560 && <Chip label="Shakeout" variant="cyan" left={fx(0.34)} top={DOT_Y + 60} delay={300} />}
       {frame >= 1122 && <Chip label="A zone of interest, not a signal." variant="outline" left={CLEFT} top={CTOP + CH + 24} delay={1122} />}
     </SafeArea>
   );
