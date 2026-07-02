@@ -19,7 +19,7 @@ import { fadeIn, fadeOut } from "../helpers";
 const { colors, font, type } = theme;
 
 // phone: scaled ~30% up from the previous 806px; centered, may exceed margins.
-const PHONE = { cx: 960, top: 16, height: 1048 };
+const PHONE = { cx: 960, top: 116, height: 1048 };
 const SCREEN_TOP = PHONE.top; // screen top (abs); CapturePhone body top = top − bezel
 const SCREEN_H = PHONE.height;
 const SCREEN_W = Math.round(PHONE.height * (980 / 1920));
