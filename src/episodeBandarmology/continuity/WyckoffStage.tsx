@@ -126,7 +126,7 @@ export const WyckoffStage = () => {
 
       {/* phase annotations */}
       {frame >= 300 && frame < 560 && <Chip label="Shakeout" variant="cyan" left={fx(0.34)} top={DOT_Y + 60} delay={300} />}
-      {frame >= 1122 && <Chip label="A zone of interest, not a signal." variant="outline" left={CLEFT} top={CTOP + CH + 24} delay={1122} />}
+      {frame >= 1122 && <Chip label="A zone of interest, not a signal." variant="outline" left={CLEFT} top={CTOP + CH + 6} delay={1122} />}
     </SafeArea>
   );
 };
