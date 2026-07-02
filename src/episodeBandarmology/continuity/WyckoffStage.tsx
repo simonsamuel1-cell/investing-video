@@ -21,12 +21,12 @@ import { fadeIn, fadeOut, textReveal } from "../helpers";
 
 const { colors, font, type, radius } = theme;
 
-// chart box (matches capture aspect 1252/930 ≈ 1.346 → no distortion)
-const CW = 808;
+// chart box — spans the phase-chip row (left edge of chip 1 → right edge of chip 4).
+// Width-stretched (objectFit: fill); height unchanged so the vertical mapping holds.
+const CW = 1500;
 const CH = 600;
 const CTOP = 285;
-const CX = 960;
-const CLEFT = CX - CW / 2; // 556
+const CLEFT = 210;
 const fx = (frac: number) => CLEFT + frac * CW;
 const DOT_Y = CTOP + 0.52 * CH; // the capture's dotted support line
 
@@ -78,8 +78,8 @@ export const WyckoffStage = () => {
         })}
       </div>
 
-      {/* chart capture — white blended out, revealed left→right */}
-      <div style={{ position: "absolute", left: CLEFT, top: CTOP, width: CW, height: CH, background: colors.background, opacity: baselineOp }}>
+      {/* chart capture in a rounded card (spans the chip row), revealed left→right */}
+      <div style={{ position: "absolute", left: CLEFT, top: CTOP, width: CW, height: CH, background: colors.cardWhite, border: `2px solid ${colors.divider}`, borderRadius: radius.lg, overflow: "hidden", boxSizing: "border-box", opacity: baselineOp }}>
         <Img
           src={staticFile("bandarmology/scene5-10.png")}
           style={{
