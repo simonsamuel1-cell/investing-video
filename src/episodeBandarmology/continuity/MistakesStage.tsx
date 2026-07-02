@@ -50,9 +50,10 @@ export const MistakesStage = () => {
   const h3grow = tween(f, [4687 - OFF, 4707 - OFF], [0, 1]); // expand down at 4687
   const h4a = blinkTwice(f, 4821 - OFF, 4878 - OFF); // B.Avg column
   const h4b = blinkTwice(f, 4918 - OFF, 5012 - OFF); // S.Avg column
+  const h5 = blinkTwice(f, 5070 - OFF, 5231 - OFF); // "Nego" dropdown
 
-  const rowTop = fy(0.445) - 3; // top of the ZP row, nudged up 3px
-  const rowH = 0.12 * SH + (0.12 * SH + 10) * h3grow; // 2 rows → expand through YU (+10px)
+  const rowTop = fy(0.435) - 3; // top of the ZP row, nudged up 3px
+  const rowH = 0.12 * SH + (0.15 * SH + 10) * h3grow; // 2 rows → expand through YU (+10px)
 
   return (
     <SafeArea>
@@ -67,11 +68,12 @@ export const MistakesStage = () => {
         <CapturePhone video="bandarmology/scene16-20.mp4" cx={CX} top={PTOP} height={PH} op={fadeIn(f, 0, 14)} />
 
         {/* highlights */}
-        <Box left={fx(0.04)} top={fy(0.27) - 10} width={0.92 * SW} height={0.065 * SH} op={h1} />
+        <Box left={fx(-0.05)} top={fy(0.26) - 10} width={1.1 * SW} height={0.065 * SH} op={h1} />
         <Box left={fx(0.82)} top={fy(0.215) - 3} width={0.16 * SW} height={0.05 * SH} op={h2} />
-        <Box left={fx(0.03)} top={rowTop} width={0.94 * SW} height={rowH} op={h3} />
-        <Box left={fx(0.62) + 3} top={fy(0.42)} width={0.19 * SW} height={0.5 * SH - 10} op={h4a} />
-        <Box left={fx(0.85) - 6} top={fy(0.42)} width={0.14 * SW} height={0.5 * SH - 10} op={h4b} />
+        <Box left={fx(-0.05)} top={rowTop} width={1.1 * SW} height={rowH} op={h3} />
+        <Box left={fx(0.625) + 3} top={fy(0.42)} width={0.19 * SW} height={0.47 * SH - 10} op={h4a} />
+        <Box left={fx(0.84) - 6} top={fy(0.42)} width={0.14 * SW} height={0.47 * SH - 10} op={h4b} />
+        <Box left={fx(0.53)} top={fy(0.316)} width={0.43 * SW} height={0.056 * SH} op={h5} />
       </AbsoluteFill>
     </SafeArea>
   );
