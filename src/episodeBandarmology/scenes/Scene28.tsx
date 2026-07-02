@@ -5,7 +5,7 @@
  * Vol −62%". Candle bodies carry candle colors; bounds/labels brand.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, CandlestickChart, Chip, IllustrationTag } from "../components";
+import { SafeArea, CandlestickChart, Chip } from "../components";
 import { theme } from "../theme";
 import { tween, textReveal, fadeIn, genCandles } from "../helpers";
 
@@ -48,7 +48,6 @@ export const Scene28 = () => {
         <Chip label="Range 1.8% · Vol −62%" variant="cyan" delay={150} />
       </div>
 
-      <IllustrationTag left={1620} top={270} />
     </SafeArea>
   );
 };

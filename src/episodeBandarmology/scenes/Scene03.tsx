@@ -6,7 +6,7 @@
  * plus a forward-link chip to broker data. Bid/ask neutral. "bandarmology" verbatim.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, OrderBook, Callout, Chip, IllustrationTag } from "../components";
+import { SafeArea, OrderBook, Callout, Chip } from "../components";
 import { theme } from "../theme";
 import { textReveal, fadeIn } from "../helpers";
 import { ASKS, BIDS } from "../stockA";
@@ -32,7 +32,6 @@ export const Scene03 = () => {
 
       {f >= 120 && <Chip label="Who Placed It Shows In Broker Data" variant="outline" left={900} top={620} delay={120} />}
 
-      <IllustrationTag left={1620} top={910} />
     </SafeArea>
   );
 };

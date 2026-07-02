@@ -7,7 +7,7 @@
  * Classic Mistakes" slots resolve on the right — the roadmap for Sc16–20.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, BrokerTable, Callout, Chip, IllustrationTag } from "../components";
+import { SafeArea, BrokerTable, Callout, Chip } from "../components";
 import { theme } from "../theme";
 import { textReveal, fadeIn, tween } from "../helpers";
 import { BROKER_SUMMARY } from "../stockA";
@@ -51,7 +51,6 @@ export const Scene15 = () => {
         ))}
       </div>
 
-      <IllustrationTag left={900} top={140} />
     </SafeArea>
   );
 };

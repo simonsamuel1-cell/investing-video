@@ -18,5 +18,4 @@ export type { Seg } from "./Donut";
 export { StatCard } from "./StatCard";
 export { Gauge } from "./Gauge";
 export { Callout } from "./Callout";
-export { IllustrationTag } from "./IllustrationTag";
 export { CapturePhone } from "./CapturePhone";

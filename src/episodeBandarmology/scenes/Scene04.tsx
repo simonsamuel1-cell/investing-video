@@ -3,12 +3,12 @@
  * draws up to a vertical "Now" marker (solid indigo = history); right of "Now"
  * stays blank — NO forecast line/arrow. Tooltip on the last point (sentence
  * case): "We can read the past, not the next tick." Pinned chip "Clues, Not
- * Predictions". "Illustration" tag.
+ * Predictions".
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, LineChart, Chip, IllustrationTag } from "../components";
+import { SafeArea, LineChart, Chip } from "../components";
 import { theme } from "../theme";
-import { tween, textReveal, fadeIn, mulberry32 } from "../helpers";
+import { tween, textReveal, mulberry32 } from "../helpers";
 
 const { colors, font, type } = theme;
 
@@ -45,7 +45,6 @@ export const Scene04 = () => {
         <Chip label="Clues, Not Predictions" variant="outline" bounce delay={200} />
       </div>
 
-      <IllustrationTag left={1620} top={300} op={fadeIn(f, 20, 16)} />
     </SafeArea>
   );
 };

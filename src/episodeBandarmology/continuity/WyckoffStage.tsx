@@ -12,7 +12,7 @@
  * buy/sell arrows (compliance).
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, Chip, CandlestickChart, Callout, IllustrationTag } from "../components";
+import { SafeArea, Chip, CandlestickChart, Callout } from "../components";
 import { theme } from "../theme";
 import { fadeIn, textReveal, genCandles } from "../helpers";
 
@@ -146,7 +146,6 @@ export const WyckoffStage = () => {
           </svg>
         )}
 
-        <IllustrationTag left={CW - 150} top={-6} op={baselineOp} />
       </div>
 
       {/* segment labels (below the volume sub-panel) */}

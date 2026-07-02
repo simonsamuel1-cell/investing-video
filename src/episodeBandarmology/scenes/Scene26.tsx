@@ -5,7 +5,7 @@
  * cluster shrinking. Note (sentence case). Indigo line, neutral chrome. Illustrative.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, LineChart, IllustrationTag } from "../components";
+import { SafeArea, LineChart } from "../components";
 import { theme } from "../theme";
 import { tween, textReveal, fadeIn } from "../helpers";
 
@@ -52,7 +52,6 @@ export const Scene26 = () => {
         Fewer holders can mean shares concentrating into fewer hands.
       </div>
 
-      <IllustrationTag left={1620} top={290} />
     </SafeArea>
   );
 };

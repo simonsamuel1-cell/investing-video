@@ -5,7 +5,7 @@
  * qualifier is a soft "Reliability: Moderate" sub-tag, not a guarantee.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, Card, IllustrationTag } from "../components";
+import { SafeArea, Card } from "../components";
 import { theme } from "../theme";
 import { textReveal, fadeIn } from "../helpers";
 
@@ -54,7 +54,6 @@ export const Scene27 = () => {
         </Card>
       </div>
 
-      <IllustrationTag left={1620} top={250} />
     </SafeArea>
   );
 };
