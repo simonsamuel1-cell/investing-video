@@ -73,7 +73,7 @@ export const theme = {
     chip: 30,
   },
 
-  radius: { sm: 8, md: 16, lg: 24, pill: 999 },
+  radius: { sm: 8, md: 16, lg: 24, screen: 20, pill: 999 },
   border: { thin: 1, regular: 2 },
 
   motion: { ease },

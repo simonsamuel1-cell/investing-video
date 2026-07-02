@@ -43,7 +43,7 @@ export const PhoneFrame = ({
         width: bodyW,
         height: bodyH,
         background: colors.text,
-        borderRadius: radius.lg + 10,
+        borderRadius: radius.lg,
         padding: bezel,
         boxSizing: "border-box",
         opacity: op,
@@ -53,7 +53,7 @@ export const PhoneFrame = ({
         style={{
           width: "100%",
           height: "100%",
-          borderRadius: radius.md,
+          borderRadius: radius.screen,
           overflow: "hidden",
           background: placeholder ? colors.divider : colors.white,
           display: "flex",

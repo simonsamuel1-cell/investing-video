@@ -39,13 +39,13 @@ export const CapturePhone = ({
         width: bodyW,
         height: bodyH,
         background: colors.text,
-        borderRadius: radius.lg + 10,
+        borderRadius: radius.lg,
         padding: bezel,
         boxSizing: "border-box",
         opacity: op,
       }}
     >
-      <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: radius.md, overflow: "hidden", background: colors.cardWhite }}>
+      <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: radius.screen, overflow: "hidden", background: colors.cardWhite }}>
         {video && <OffthreadVideo src={staticFile(video)} muted style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
         {imageLayers?.map((l, i) => (
           <Img key={i} src={staticFile(l.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", opacity: l.op }} />
