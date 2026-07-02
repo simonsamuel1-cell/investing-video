@@ -8,7 +8,14 @@
  * INDEPENDENT_SCENES); Scenes 22–33 content ARE independent and the WorkflowStage
  * chrome (rail + phone) spans the same range on top.
  */
-import { AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame, interpolate } from "remotion";
+import {
+  AbsoluteFill,
+  Sequence,
+  Audio,
+  staticFile,
+  useCurrentFrame,
+  interpolate,
+} from "remotion";
 import type { FC } from "react";
 import { theme } from "./theme";
 import { CapturePhone } from "./components";
@@ -42,6 +49,7 @@ import { Scene33 } from "./scenes/Scene33";
 import { Scene34 } from "./scenes/Scene34";
 import { WyckoffStage } from "./continuity/WyckoffStage";
 import { WorkflowStage } from "./continuity/WorkflowStage";
+import { S0102Stage } from "./continuity/S0102Stage";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
@@ -51,7 +59,10 @@ const MOUNT_VO = true;
 // FRONT of the (opaque-background) scenes with their captions kept to the side.
 const VideoCapture: FC<{ video: string }> = ({ video }) => {
   const f = useCurrentFrame();
-  const op = interpolate(f, [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const op = interpolate(f, [0, 12], [0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
       <CapturePhone video={video} cx={960} top={150} height={806} op={op} />
@@ -114,8 +125,12 @@ export const Bandarmology: FC = () => (
     {/* Real app-capture videos (portrait phone), mounted once across their scene
         spans and layered in front of the scene captions. */}
     {/* full 571-frame recording — lands exactly on Scene 03's start (571). */}
-    <Sequence durationInFrames={571} name="S01–02 capture">
-      <VideoCapture video="bandarmology/scene01-02.mp4" />
+    <Sequence
+      durationInFrames={571}
+      name="S01–02 capture"
+      showInTimeline={false}
+    >
+      <S0102Stage />
     </Sequence>
     {/* full 1270-frame recording — lands exactly on Scene 21's start (5232). */}
     <Sequence from={3962} durationInFrames={1270} name="S16–20 capture">
@@ -123,7 +138,7 @@ export const Bandarmology: FC = () => (
     </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
-    <Sequence from={1055} durationInFrames={1427}>
+    <Sequence from={1055} durationInFrames={1427} hidden>
       <WyckoffStage />
     </Sequence>
 
