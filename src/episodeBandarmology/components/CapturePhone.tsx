@@ -25,7 +25,7 @@ export const CapturePhone = ({
   imageLayers?: { src: string; op: number }[];
   op?: number;
 }) => {
-  const bezel = 14;
+  const bezel = 3;
   const screenW = Math.round(height * ASPECT);
   const bodyW = screenW + bezel * 2;
   const bodyH = height + bezel * 2;

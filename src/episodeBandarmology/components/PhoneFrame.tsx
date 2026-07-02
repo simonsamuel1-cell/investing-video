@@ -28,7 +28,7 @@ export const PhoneFrame = ({
   placeholder?: string;
   op?: number;
 }) => {
-  const bezel = 14;
+  const bezel = 3;
   const screenH = height;
   const screenW = Math.round(screenH * ASPECT);
   const bodyW = screenW + bezel * 2;
