@@ -61,7 +61,7 @@ export const WyckoffStage = () => {
   return (
     <SafeArea>
       {/* header */}
-      <div style={{ position: "absolute", left: 96, top: 96, width: 1272, textAlign: "center", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(frame, 20, 18) }}>
+      <div style={{ position: "absolute", left: 96, top: 96, width: 1728, textAlign: "center", fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(frame, 20, 18) }}>
         Wyckoff — Four Phases
       </div>
 
