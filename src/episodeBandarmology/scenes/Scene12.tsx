@@ -18,9 +18,9 @@ const HL_WIDTH = 460;
 
 // row highlights (abs y, mapped from the 980×1920 capture → screen y = 150 + f·800)
 const HILITES = [
-  { top: 492, height: 123, at: 65 }, // DEWA + PRIM  (all appear at comp 2914)
+  { top: 487, height: 123, at: 65 }, // DEWA + PRIM  (all appear at comp 2914)
   { top: 620, height: 124, at: 65 }, // ISAT + ISAT
-  { top: 427, height: 58, at: 65 }, // SMMA
+  { top: 417, height: 58, at: 65 }, // SMMA
 ];
 
 export const Scene12 = () => {

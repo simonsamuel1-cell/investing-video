@@ -1,37 +1,54 @@
 /**
- * Scene 14 — Avg cost vs price (3453, dur 336). Real app captures (portrait
- * phone) cross-dissolving two views of the average-cost read. Header + caption
- * beside the phone. Figures/date are in the capture.
+ * Scene 14 — Average cost (3453, dur 336). Two real captures shown SIDE-BY-SIDE
+ * from 3453. Highlight sets: B.Avg column on both (3534), then the top-left stock
+ * code + price on both (3678). All fade out by 3788. Frame = comp − 3453.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea, CapturePhone } from "../components";
 import { theme } from "../theme";
-import { fadeIn, textReveal } from "../helpers";
+import { fadeIn, fadeOut } from "../helpers";
 
-const { colors, font, type } = theme;
+const { colors, radius } = theme;
+
+// two phones side by side
+const SW = 398; // screen width at height 780
+const STOP = 120;
+const SH = 780;
+const LEFTS = [481, 1041]; // screen-left of the left / right phones
+
+// image-fraction → screen box, per phone
+const box = (sl: number, fx0: number, fx1: number, fy0: number, fy1: number) => ({
+  left: sl + fx0 * SW,
+  width: (fx1 - fx0) * SW,
+  top: STOP + fy0 * SH,
+  height: (fy1 - fy0) * SH,
+});
+
+// B.Avg column — the two captures have different table layouts, so per-image fy.
+const AVG_BOXES = [
+  box(LEFTS[0], 0.6, 0.82, 0.395, 0.87), // MARK (table high)
+  box(LEFTS[1], 0.6, 0.82, 0.44, 0.76), // MIDI (table lower)
+];
+const CODE_BOXES = LEFTS.map((sl) => box(sl, 0.12, 0.47, 0.012, 0.08)); // code + price
 
 export const Scene14 = () => {
   const f = useCurrentFrame();
-  const secondOp = fadeIn(f, 160, 18);
+  const out = fadeOut(f, 321, 14); // all end at 3788
+  const phoneOp = Math.min(fadeIn(f, 0, 16), out);
+  const avgOp = Math.min(fadeIn(f, 81, 12), out); // 3534
+  const codeOp = Math.min(fadeIn(f, 225, 12), out); // 3678
+
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 1060, top: 240, width: 720, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
-        Average cost vs price
-      </div>
-      <div style={{ position: "absolute", left: 1060, top: 360, width: 720, fontSize: type.subhead, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 40, 18) }}>
-        How far is price from what they paid — early, or late?
-      </div>
+      <CapturePhone cx={680} top={STOP} height={SH} op={phoneOp} imageLayers={[{ src: "bandarmology/scene14-06.jpg", op: 1 }]} />
+      <CapturePhone cx={1240} top={STOP} height={SH} op={phoneOp} imageLayers={[{ src: "bandarmology/scene14-08.jpg", op: 1 }]} />
 
-      <CapturePhone
-        cx={620}
-        top={150}
-        height={800}
-        op={fadeIn(f, 10, 18)}
-        imageLayers={[
-          { src: "bandarmology/scene14-06.jpg", op: 1 },
-          { src: "bandarmology/scene14-08.jpg", op: secondOp },
-        ]}
-      />
+      {AVG_BOXES.map((b, i) => (
+        <div key={`avg-${i}`} style={{ position: "absolute", left: b.left, top: b.top, width: b.width, height: b.height, border: `3px solid ${colors.indigo}`, borderRadius: radius.sm, opacity: avgOp, boxSizing: "border-box" }} />
+      ))}
+      {CODE_BOXES.map((b, i) => (
+        <div key={`code-${i}`} style={{ position: "absolute", left: b.left, top: b.top, width: b.width, height: b.height, border: `3px solid ${colors.cyan}`, borderRadius: radius.sm, opacity: codeOp, boxSizing: "border-box" }} />
+      ))}
     </SafeArea>
   );
 };
