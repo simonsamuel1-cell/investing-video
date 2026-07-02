@@ -115,10 +115,10 @@ export const WyckoffStage = () => {
         <>
           <div style={{ position: "absolute", left: fx(0.36), top: CTOP, width: (0.48 - 0.36) * CW, height: CH, background: colors.indigoTint, opacity: 0.55 * bands10 }} />
           <div style={{ position: "absolute", left: fx(0.76), top: CTOP, width: (0.87 - 0.76) * CW, height: CH, background: colors.indigoTint, opacity: 0.55 * bands10 }} />
-          <div style={{ position: "absolute", left: fx(0.3), top: CTOP - 16, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10 }}>
+          <div style={{ position: "absolute", left: fx(0.3), top: CTOP + 4, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10 }}>
             Late accumulation, as price begins to move
           </div>
-          <div style={{ position: "absolute", left: fx(0.72), top: CTOP - 16, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10, textAlign: "right" }}>
+          <div style={{ position: "absolute", left: fx(0.72), top: CTOP + 4, width: 360, fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, opacity: bands10, textAlign: "right" }}>
             Before distribution turns to markdown
           </div>
         </>
