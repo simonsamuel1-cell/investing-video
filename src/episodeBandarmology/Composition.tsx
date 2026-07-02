@@ -50,6 +50,7 @@ import { Scene34 } from "./scenes/Scene34";
 import { WyckoffStage } from "./continuity/WyckoffStage";
 import { WorkflowStage } from "./continuity/WorkflowStage";
 import { S0102Stage } from "./continuity/S0102Stage";
+import { BandarTitle } from "./continuity/BandarTitle";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
@@ -124,13 +125,14 @@ export const Bandarmology: FC = () => (
 
     {/* Real app-capture videos (portrait phone), mounted once across their scene
         spans and layered in front of the scene captions. */}
-    {/* full 571-frame recording — lands exactly on Scene 03's start (571). */}
-    <Sequence
-      durationInFrames={571}
-      name="S01–02 capture"
-      showInTimeline={false}
-    >
+    {/* S01-02 phone ends at 570, where the title card takes over. */}
+    <Sequence durationInFrames={570} name="S01–02 capture" showInTimeline={false}>
       <S0102Stage />
+    </Sequence>
+
+    {/* Title card: clears all visuals 570–750. */}
+    <Sequence from={570} durationInFrames={180} name="Bandarmology title">
+      <BandarTitle />
     </Sequence>
     {/* full 1270-frame recording — lands exactly on Scene 21's start (5232). */}
     <Sequence from={3962} durationInFrames={1270} name="S16–20 capture">
