@@ -144,7 +144,13 @@ export const Bandarmology: FC = () => (
     </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
-    <Sequence from={1055} durationInFrames={1427}>
+    <Sequence
+      from={1055}
+      durationInFrames={1427}
+      style={{
+        translate: "-1px 0px",
+      }}
+    >
       <WyckoffStage />
     </Sequence>
 
