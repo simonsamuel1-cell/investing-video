@@ -1,47 +1,57 @@
 /**
- * Scene 33 — Short-term traders: risk panel (8670, dur 350). ⚠️ STRONGEST
- * compliance flag. Leads with risk discipline; NO entry marker on any chart. A
- * "Risk Discipline" Card with a "Signals can fail" banner + three fields:
- * Position Size = "size to your risk tolerance" (non-numeric, decision #3) ·
- * Exit Plan = "predefined stop" · Manage Risk. The "more efficient" clause stays
- * audio-only.
- *
- * NOTE: recommend OJK advice-line review before lock.
+ * Scene 33 — Pro / Cons / Takeaway summary (8690, ends 9020). A 2-column × 3-row
+ * table; each row builds in at its cue: Pro·Efficient (8722), Cons·Not fail-proof
+ * (8870), Takeaway·Manage risk & know your exit (8928). Left cells are brand-tinted
+ * labels, right cells the plain-text value; the Takeaway row is indigo-filled for
+ * emphasis. Frame = comp − 8690.
  */
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { SafeArea } from "../components";
 import { theme } from "../theme";
-import { textReveal, fadeIn, popIn } from "../helpers";
+import { fadeIn, fadeOut, tween } from "../helpers";
 
-const { colors, font, type, radius } = theme;
+const { colors, font, radius } = theme;
 
-const FIELDS = [
-  { k: "Position Size", v: "Size to your risk tolerance", at: 150 },
-  { k: "Exit Plan", v: "Predefined stop", at: 200 },
-  { k: "Manage Risk", v: "Decide before you act", at: 250 },
+const ROWS = [
+  { label: "Pro", value: "Efficient", at: 32, bg: colors.cyanTint, fg: colors.cyanDeep }, // 8722
+  { label: "Cons", value: "Not fail-proof", at: 180, bg: colors.indigoTint, fg: colors.indigoDeep }, // 8870
+  { label: "Takeaway", value: "Manage risk & know your exit", at: 238, bg: colors.indigo, fg: colors.white }, // 8928
 ];
+
+const TABLE_W = 1200;
+const TABLE_L = (1920 - TABLE_W) / 2; // 360
+const COL1_W = 380;
+const ROW_H = 150;
+const GAP = 20;
+const TOP = 300;
 
 export const Scene33 = () => {
   const f = useCurrentFrame();
-  const { fps } = useVideoConfig();
+  const stageOut = fadeOut(f, 316, 14); // end 9020
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 360, top: 240, width: 1200, boxSizing: "border-box", background: colors.cardWhite, border: `2px solid ${colors.indigo}`, borderRadius: radius.lg, overflow: "hidden", opacity: fadeIn(f, 8, 18) }}>
-        {/* caveat banner */}
-        <div style={{ background: colors.indigo, color: colors.white, padding: "22px 32px", fontSize: type.subhead, fontWeight: font.weights.extrabold, ...textReveal(f, 8, 18) }}>
-          Signals can fail
+      <AbsoluteFill style={{ opacity: stageOut }}>
+        <div style={{ position: "absolute", left: 96, top: 188, width: 1728, textAlign: "center", fontSize: 56, fontWeight: font.weights.extrabold, color: colors.text, opacity: fadeIn(f, 32, 16), transform: `translateY(${tween(f, [32, 48], [18, 0])}px)` }}>
+          For short-term traders
         </div>
-        <div style={{ padding: 32 }}>
-          <div style={{ fontSize: type.subhead, fontWeight: font.weights.extrabold, color: colors.text, marginBottom: 20 }}>Risk Discipline</div>
-          {FIELDS.map((fl) => (
-            <div key={fl.k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "22px 0", borderBottom: `1px solid ${colors.divider}`, transform: `scale(${popIn(f, fps, fl.at, false)})`, transformOrigin: "left center", opacity: fadeIn(f, fl.at, 14) }}>
-              <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.slate }}>{fl.k}</span>
-              <span style={{ fontSize: type.descriptor, fontWeight: font.weights.bold, color: colors.cyanDeep }}>{fl.v}</span>
+
+        {ROWS.map((r, i) => {
+          const op = fadeIn(f, r.at, 16);
+          const ty = tween(f, [r.at, r.at + 16], [18, 0]);
+          const top = TOP + i * (ROW_H + GAP);
+          return (
+            <div key={r.label} style={{ position: "absolute", left: TABLE_L, top, width: TABLE_W, height: ROW_H, display: "flex", borderRadius: radius.md, overflow: "hidden", border: `2px solid ${colors.divider}`, background: colors.white, boxShadow: "0 10px 30px rgba(15,23,42,0.06)", opacity: op, transform: `translateY(${ty}px)` }}>
+              <div style={{ width: COL1_W, display: "flex", alignItems: "center", justifyContent: "center", background: r.bg, color: r.fg, fontSize: 46, fontWeight: font.weights.extrabold }}>
+                {r.label}
+              </div>
+              <div style={{ flex: 1, display: "flex", alignItems: "center", padding: "0 44px", color: colors.text, fontSize: 42, fontWeight: font.weights.bold }}>
+                {r.value}
+              </div>
             </div>
-          ))}
-        </div>
-      </div>
+          );
+        })}
+      </AbsoluteFill>
     </SafeArea>
   );
 };

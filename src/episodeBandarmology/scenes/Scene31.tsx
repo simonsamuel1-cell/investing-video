@@ -1,47 +1,36 @@
 /**
- * Scene 31 — Market Radar (8205, dur 274). Rail → Monitor (WorkflowStage). The
- * real Market Radar capture (scene31.mp4) plays in a centered phone — mounted
- * HERE (not in WorkflowStage) so the video plays from its own frame 0. Beside it
- * three alert cards light up: Big Orders · Fast Orders · Push To New Highs.
+ * Scene 31 — Market Radar (8205, ends 8479). Just the Market Radar capture
+ * (scene31.mp4) in a centred phone, same height as Scene 30 (811). The
+ * "3. Monitor" title is owned by MonitorStage. A highlight box (wider than the
+ * phone) frames the Market Radar section from 8324. The phone does NOT fade at the
+ * end — Scene 32 freezes its last frame and continues seamlessly. Frame = comp − 8205.
  */
-import { useCurrentFrame, useVideoConfig } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { SafeArea, CapturePhone } from "../components";
 import { theme } from "../theme";
-import { textReveal, fadeIn, fadeOut, popIn } from "../helpers";
+import { fadeIn, blinkTwice } from "../helpers";
 
-const { colors, font, type, radius } = theme;
+const { colors, radius } = theme;
 
-const ALERTS = [
-  { label: "Big Orders", metric: "Order 4.2 M lot", at: 60 },
-  { label: "Fast Orders", metric: "12 prints/sec", at: 110 },
-  { label: "Push To New Highs", metric: "New High Rp 1,340", at: 160 },
-];
+const PH = 811; // same height as Scene 30
+const PT = 124;
+const my = (iy: number) => PT + (iy / 1920) * PH; // image-y (0..1920) → screen
+// Market Radar section (heading + alert card); box runs 20px past the phone body
+// (426px, centred on 960) on each side.
+const RADAR = { left: 747 - 20, top: my(900), width: 426 + 40, height: my(1165) - my(900) };
 
 export const Scene31 = () => {
   const f = useCurrentFrame();
-  const { fps } = useVideoConfig();
-  const phoneOp = Math.min(fadeIn(f, 6, 12), fadeOut(f, 262, 12));
+  const phoneOp = fadeIn(f, 6, 12); // stays full → continuous into Scene 32
+  const radarBox = blinkTwice(f, 119, 274); // 8324, two blinks then hold (fades by 8479)
 
   return (
     <SafeArea>
-      <CapturePhone video="bandarmology/scene31.mp4" cx={960} top={214} height={728} op={phoneOp} />
+      <CapturePhone video="bandarmology/scene31.mp4" cx={960} top={PT} height={PH} op={phoneOp} />
 
-      <div style={{ position: "absolute", left: 96, top: 210, width: 600, fontSize: type.header, fontWeight: font.weights.extrabold, color: colors.text, ...textReveal(f, 8, 18) }}>
-        Market Radar
-      </div>
-      <div style={{ position: "absolute", left: 96, top: 320, width: 600, fontSize: type.descriptor, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 40, 18) }}>
-        Live aggression on the stock.
-      </div>
-
-      {/* alert cards right of the centered phone */}
-      <div style={{ position: "absolute", left: 1190, top: 320, width: 530, display: "flex", flexDirection: "column", gap: 24 }}>
-        {ALERTS.map((a) => (
-          <div key={a.label} style={{ transform: `scale(${popIn(f, fps, a.at, true)})`, transformOrigin: "left center", padding: "22px 28px", borderRadius: radius.md, background: colors.cyanTint, border: `2px solid ${colors.cyan}`, opacity: fadeIn(f, a.at, 12) }}>
-            <div style={{ fontSize: type.descriptor, fontWeight: font.weights.extrabold, color: colors.cyanDeep }}>{a.label}</div>
-            <div style={{ fontSize: type.chip, fontWeight: font.weights.bold, color: colors.slate, marginTop: 6, fontVariantNumeric: "tabular-nums" }}>{a.metric}</div>
-          </div>
-        ))}
-      </div>
+      {radarBox > 0 && (
+        <div style={{ position: "absolute", left: RADAR.left, top: RADAR.top, width: RADAR.width, height: RADAR.height, border: `3px solid ${colors.indigo}`, borderRadius: radius.sm, opacity: radarBox, boxSizing: "border-box" }} />
+      )}
     </SafeArea>
   );
 };

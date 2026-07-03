@@ -28,8 +28,6 @@ import { Scene20 } from "./scenes/Scene20";
 import { Scene21 } from "./scenes/Scene21";
 import { Scene22 } from "./scenes/Scene22";
 import { Scene23 } from "./scenes/Scene23";
-import { Scene24 } from "./scenes/Scene24";
-import { Scene25 } from "./scenes/Scene25";
 import { Scene26 } from "./scenes/Scene26";
 import { Scene27 } from "./scenes/Scene27";
 import { Scene28 } from "./scenes/Scene28";
@@ -46,6 +44,8 @@ import { BandarTitle } from "./continuity/BandarTitle";
 import { DataTitle } from "./continuity/DataTitle";
 import { AnswerTitle } from "./continuity/AnswerTitle";
 import { MistakesStage } from "./continuity/MistakesStage";
+import { VerifyStage } from "./continuity/VerifyStage";
+import { MonitorStage } from "./continuity/MonitorStage";
 
 // VO delivered — public/bandarmology-vo.mp3 is in place.
 const MOUNT_VO = true;
@@ -74,18 +74,18 @@ const INDEPENDENT_SCENES: Array<{
   { from: 5010, duration: 216, Component: Scene20 }, // mistake 5 nego
   { from: 5232, duration: 368, Component: Scene21 }, // honest caveat (DISCLAIMER)
   // 5609–9020 — Scenes 22–33 content; WorkflowStage chrome spans same range.
-  { from: 5609, duration: 180, Component: Scene22 }, // three steps intro
-  { from: 5806, duration: 359, Component: Scene23 }, // step1 screen (PHONE [NEEDS DATA])
-  { from: 6173, duration: 363, Component: Scene24 }, // screen: three checks
-  { from: 6552, duration: 200, Component: Scene25 }, // big-picture question
-  { from: 6776, duration: 259, Component: Scene26 }, // step2 verify: shareholder count
-  { from: 7058, duration: 271, Component: Scene27 }, // verify: insider+foreign
-  { from: 7342, duration: 261, Component: Scene28 }, // verify: volume dry-up squeeze
-  { from: 7616, duration: 178, Component: Scene29 }, // clues line up
+  { from: 5609, duration: 191, Component: Scene22 }, // 3-steps intro (ends 5800)
+  { from: 5800, duration: 952, Component: Scene23 }, // step1 screen held: phone + "1. Screen" (ends 6752)
+  // Scenes 24–25 (three checks / big-picture question) folded into the extended Step-1 screen above (5800–6752).
+  // Scenes 26–28 (verify) content owned by VerifyStage (6776–7615); these render background only.
+  { from: 6776, duration: 259, Component: Scene26 },
+  { from: 7058, duration: 271, Component: Scene27 },
+  { from: 7342, duration: 261, Component: Scene28 },
+  { from: 7615, duration: 191, Component: Scene29 }, // verify takeaway: 3 lines (ends 7806)
   { from: 7839, duration: 352, Component: Scene30 }, // step3 monitor: the trigger
   { from: 8205, duration: 274, Component: Scene31 }, // market radar (PHONE [NEEDS DATA])
-  { from: 8498, duration: 167, Component: Scene32 }, // story changes
-  { from: 8670, duration: 350, Component: Scene33 }, // short-term traders (compliance)
+  { from: 8479, duration: 211, Component: Scene32 }, // frozen radar + crossed texts (continuous, ends 8690)
+  { from: 8690, duration: 330, Component: Scene33 }, // Pro/Cons/Takeaway table (ends 9020)
   { from: 9035, duration: 306, Component: Scene34 }, // bottom line (DISCLAIMER / close)
 ];
 
@@ -132,6 +132,16 @@ export const Bandarmology: FC = () => (
     {/* Scenes 16–20: phone + point titles + highlights, mounted once. */}
     <Sequence from={3962} durationInFrames={1270} name="Mistakes (16–20)">
       <MistakesStage />
+    </Sequence>
+
+    {/* Step 2 Verify (26–28): "2. Verify" title + captures + highlights, mounted once. */}
+    <Sequence from={6776} durationInFrames={839} name="Verify (26–28)">
+      <VerifyStage />
+    </Sequence>
+
+    {/* Step 3 Monitor (30–31): continuous "3. Monitor" title, mounted once. */}
+    <Sequence from={7839} durationInFrames={640} name="Monitor title (30–31)">
+      <MonitorStage />
     </Sequence>
 
     {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}

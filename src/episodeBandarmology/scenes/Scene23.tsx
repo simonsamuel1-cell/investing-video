@@ -1,38 +1,32 @@
 /**
- * Scene 23 — Step 1 Screen (5806, dur 359). [NEEDS DATA]. UI path chips (Title
- * Case): Bullish Signals → Bandar Tracker → Flow → Dominant Brokers Analysis.
- * The PhoneFrame (owned by WorkflowStage) shows the Bandar Tracker capture, then
- * cross-dissolves to Dominant Brokers Analysis. This scene renders a left caption
- * + the path as a vertical stack, arranged clear of the centered phone.
+ * Scene 23 — Step 1 Screen (5800, ends 6752). [NEEDS DATA]. A "1. Screen" label
+ * above a centred phone template placeholder (real Screen capture drops in here).
+ * Frame = comp − 5800.
  *
- * TODO[NEEDS DATA]: real Bandar Tracker + Dominant Brokers Analysis captures live
- * in WorkflowStage's PhoneFrame placeholders; swap there + add data date.
+ * TODO[NEEDS DATA]: swap the PhoneFrame placeholder for the real Screen-step
+ * capture (verbatim, no redraw) + on-screen data date.
  */
-import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { SafeArea, PhoneFrame } from "../components";
 import { theme } from "../theme";
-import { fadeIn, textReveal } from "../helpers";
+import { fadeIn, fadeOut } from "../helpers";
 
-const { colors, font, type, radius } = theme;
-
-const PATH = ["Bullish Signals", "Bandar Tracker", "Flow", "Dominant Brokers Analysis"];
+const { colors, font } = theme;
 
 export const Scene23 = () => {
   const f = useCurrentFrame();
+  const stageOut = fadeOut(f, 938, 14); // end 6752
+  const inOp = fadeIn(f, 0, 16);
+
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 96, top: 230, width: 600, fontSize: type.subhead, fontWeight: font.weights.bold, color: colors.text, ...textReveal(f, 8, 18) }}>
-        Open the track that shows who is buying.
-      </div>
+      <AbsoluteFill style={{ opacity: stageOut }}>
+        <div style={{ position: "absolute", left: 96, top: 66, textAlign: "left", fontSize: 56, fontWeight: font.weights.extrabold, color: colors.text, opacity: inOp }}>
+          1. Screen
+        </div>
 
-      <div style={{ position: "absolute", left: 96, top: 400, width: 600, display: "flex", flexDirection: "column", gap: 16 }}>
-        {PATH.map((p, i) => (
-          <div key={p} style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 12 }}>
-            <div style={{ padding: "12px 24px", borderRadius: radius.pill, background: i === PATH.length - 1 ? colors.indigo : colors.cardWhite, border: `2px solid ${colors.indigo}`, color: i === PATH.length - 1 ? colors.white : colors.indigo, fontSize: type.chip, fontWeight: font.weights.bold, opacity: fadeIn(f, 10 + i * 22, 14) }}>{p}</div>
-            {i < PATH.length - 1 && <span style={{ color: colors.slateMute, fontSize: type.chip, opacity: fadeIn(f, 20 + i * 22, 14) }}>↓</span>}
-          </div>
-        ))}
-      </div>
+        <PhoneFrame placeholder="Step 1 · Screen capture" op={inOp} />
+      </AbsoluteFill>
     </SafeArea>
   );
 };

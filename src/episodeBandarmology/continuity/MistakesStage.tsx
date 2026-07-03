@@ -16,22 +16,22 @@ const { colors, font, radius } = theme;
 
 const OFF = 3962;
 
-// phone (centered) + screen mapping at height 740
+// phone (centered) + screen mapping at height 811
 const CX = 960;
-const PTOP = 220;
-const PH = 740;
-const SW = 378;
-const SH = 740;
-const SLEFT = 771;
+const PTOP = 130;
+const PH = 811;
+const SW = 414;
+const SH = 811;
+const SLEFT = CX - (SW + 12) / 2 + 6; // 753
 const fx = (v: number) => SLEFT + v * SW;
 const fy = (v: number) => PTOP + v * SH;
 
 const POINTS = [
   { t: "1. Judging by a single day", a: 3970 - OFF, b: 4256 - OFF },
-  { t: "2. Staring at the net-buy ranking", a: 4256 - OFF, b: 4553 - OFF },
-  { t: "3. Obsessing over who's number one", a: 4553 - OFF, b: 4793 - OFF },
+  { t: "2. Staring at the\nnet-buy ranking", a: 4256 - OFF, b: 4553 - OFF },
+  { t: "3. Obsessing over\nwho's number one", a: 4553 - OFF, b: 4793 - OFF },
   { t: "4. Ignoring the average cost", a: 4793 - OFF, b: 5021 - OFF },
-  { t: "5. Forgetting the nego market", a: 5021 - OFF, b: 5231 - OFF },
+  { t: "5. Forgetting the\nnego market", a: 5021 - OFF, b: 5231 - OFF },
 ];
 
 const clamp01 = (n: number) => Math.max(0, Math.min(1, n));
@@ -51,6 +51,7 @@ export const MistakesStage = () => {
   const h4a = blinkTwice(f, 4821 - OFF, 4878 - OFF); // B.Avg column
   const h4b = blinkTwice(f, 4918 - OFF, 5012 - OFF); // S.Avg column
   const h5 = blinkTwice(f, 5070 - OFF, 5231 - OFF); // "Nego" dropdown
+  const hTable = blinkTwice(f, 4255 - OFF, 4431 - OFF); // broker table ZP,KZ,BB,AK,YU rows
 
   const rowTop = fy(0.435) - 3; // top of the ZP row, nudged up 3px
   const rowH = 0.12 * SH + (0.15 * SH + 10) * h3grow; // 2 rows → expand through YU (+10px)
@@ -58,9 +59,9 @@ export const MistakesStage = () => {
   return (
     <SafeArea>
       <AbsoluteFill style={{ opacity: stageOut }}>
-        {/* point titles above the phone */}
+        {/* point titles — top-left corner */}
         {POINTS.map((p, i) => (
-          <div key={i} style={{ position: "absolute", left: 96, top: 120, width: 1728, textAlign: "center", fontSize: 52, fontWeight: font.weights.extrabold, color: colors.text, opacity: winOp(f, p.a, p.b) }}>
+          <div key={i} style={{ position: "absolute", left: 96, top: 66, textAlign: "left", whiteSpace: "pre-line", lineHeight: 1.15, fontSize: 48, fontWeight: font.weights.extrabold, color: colors.text, opacity: winOp(f, p.a, p.b) }}>
             {p.t}
           </div>
         ))}
@@ -74,6 +75,7 @@ export const MistakesStage = () => {
         <Box left={fx(0.625) + 3} top={fy(0.42)} width={0.19 * SW} height={0.47 * SH - 10} op={h4a} />
         <Box left={fx(0.84) - 6} top={fy(0.42)} width={0.14 * SW} height={0.47 * SH - 10} op={h4b} />
         <Box left={fx(0.53)} top={fy(0.316)} width={0.43 * SW} height={0.056 * SH} op={h5} />
+        <Box left={fx(-0.05)} top={fy(0.599)} width={1.1 * SW} height={0.266 * SH} op={hTable} />
       </AbsoluteFill>
     </SafeArea>
   );

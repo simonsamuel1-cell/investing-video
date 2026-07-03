@@ -11,10 +11,10 @@ import { fadeIn, fadeOut } from "../helpers";
 const { colors, radius } = theme;
 
 // two phones side by side
-const SW = 398; // screen width at height 780
+const SW = 414; // screen width at height 811
 const STOP = 120;
-const SH = 780;
-const LEFTS = [481, 1041]; // screen-left of the left / right phones
+const SH = 811;
+const LEFTS = [680 - SW / 2, 1240 - SW / 2]; // screen-left of the left / right phones (cx 680 / 1240)
 
 // image-fraction → screen box, per phone
 const box = (sl: number, fx0: number, fx1: number, fy0: number, fy1: number) => ({

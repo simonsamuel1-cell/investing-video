@@ -1,39 +1,47 @@
 /**
- * Scene 34 — Bottom line recap (9035, dur 306). DISCLAIMER / close. The Scene 11
- * public-data StatCards briefly re-tile, then resolve to a centered statement
- * "A Probability, Never A Promise" (textReveal ~f80) + sub (sentence case). Calm
- * fadeOut over the last ~30f.
- *
- * NOTE: no formal disclaimer card is in the script; Simon supplies VO/text if
- * house/OJK style needs one after this.
+ * Scene 34 — Closing quote (9035, dur 306). DISCLAIMER / close. A large indigo
+ * quotation mark, then the quote builds in line by line: 9074 / 9131 / 9194 /
+ * 9255 / 9309. The disclaimer clause ("a probability, never a promise") is
+ * emphasised in indigo. Frame = comp − 9035.
  */
 import { useCurrentFrame } from "remotion";
-import { SafeArea, StatCard } from "../components";
+import { SafeArea } from "../components";
 import { theme } from "../theme";
-import { fadeOut, fadeIn, textReveal } from "../helpers";
+import { fadeIn, fadeOut, tween } from "../helpers";
 
-const { colors, font, type } = theme;
+const { colors, font } = theme;
+
+const LINES = [
+  { node: "The tracks are public.", at: 39 }, // 9074
+  { node: "The skill is reading them honestly,", at: 96 }, // 9131
+  { node: "and remembering that even the", at: 159 }, // 9194
+  { node: (
+    <>
+      clearest trail is <span style={{ color: colors.indigo }}>a probability,</span>
+    </>
+  ), at: 220 }, // 9255
+  { node: <span style={{ color: colors.indigo }}>never a promise.</span>, at: 274 }, // 9309
+];
 
 export const Scene34 = () => {
   const f = useCurrentFrame();
-  const out = fadeOut(f, 276, 30);
-  const tilesOut = fadeOut(f, 70, 20); // recede as the statement resolves
+  const out = fadeOut(f, 292, 14);
 
   return (
     <SafeArea>
       <div style={{ opacity: out }}>
-        {/* recap tiles */}
-        <div style={{ opacity: tilesOut }}>
-          <StatCard left={150} top={240} width={480} height={170} label="Foreign Flow" value="+Rp 84 Bn" op={fadeIn(f, 0, 16)} />
-          <StatCard left={720} top={240} width={480} height={170} label="Insider Trades" value="3 filings" op={fadeIn(f, 12, 16)} />
-          <StatCard left={1290} top={240} width={480} height={170} label="Shareholders" value="14,905" op={fadeIn(f, 24, 16)} />
+        {/* decorative opening quote mark */}
+        <div style={{ position: "absolute", left: 96, top: 180, width: 1728, textAlign: "center", fontSize: 150, lineHeight: 1, fontWeight: font.weights.extrabold, color: colors.indigo, opacity: fadeIn(f, 20, 18) }}>
+          &ldquo;
         </div>
 
-        <div style={{ position: "absolute", left: 96, top: 470, width: 1728, textAlign: "center", fontSize: type.display, fontWeight: font.weights.extrabold, color: colors.indigo, letterSpacing: -1, ...textReveal(f, 80, 22) }}>
-          A Probability, Never A Promise
-        </div>
-        <div style={{ position: "absolute", left: 96, top: 640, width: 1728, textAlign: "center", fontSize: type.subhead, fontWeight: font.weights.medium, color: colors.slate, ...textReveal(f, 140, 20) }}>
-          The tracks are public — the skill is reading them honestly.
+        {/* pull-quote, line by line */}
+        <div style={{ position: "absolute", left: 96, top: 380, width: 1728, textAlign: "center", fontSize: 54, lineHeight: 1.42, fontWeight: font.weights.bold, color: colors.text }}>
+          {LINES.map((l, i) => (
+            <div key={i} style={{ opacity: fadeIn(f, l.at, 14), transform: `translateY(${tween(f, [l.at, l.at + 14], [14, 0])}px)` }}>
+              {l.node}
+            </div>
+          ))}
         </div>
       </div>
     </SafeArea>
