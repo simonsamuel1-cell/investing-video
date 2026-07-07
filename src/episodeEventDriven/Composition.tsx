@@ -18,14 +18,14 @@ import { Step3Frame } from "./continuity/Step3Frame";
 import { RecapFrame } from "./continuity/RecapFrame";
 import { Scene08 } from "./scenes/Scene08";
 
-// VO is supplied later (spec §7). Until assets/voiceover.mp3 exists, keep this
-// false so Studio/render don't fail on a missing file. Flip to true once added.
-const MOUNT_VO = false;
-const VO = "eventDriven/voiceover.mp3";
+// VO delivered 7 Jul ("Video 15 - Trading 1 Video 4 (2).wav", 212.18s — matches
+// the 6370-frame / 212.33s timeline). Lives in public/eventDriven/voiceover.wav.
+const MOUNT_VO = true;
+const VO = "eventDriven/voiceover.wav";
 
 // { from, durationInFrames, Component } — one spanning sequence per continuity group.
 const GROUPS = [
-  { from: 0, duration: 621, Component: HookFrame },
+  { from: 0, duration: 629, Component: HookFrame },
   { from: 638, duration: 437, Component: RateChart },
   { from: 1082, duration: 782, Component: QuestionCards },
   { from: 2077, duration: 1305, Component: Step1Frame },
@@ -34,7 +34,7 @@ const GROUPS = [
   { from: 5823, duration: 547, Component: RecapFrame },
 ];
 
-const INDEPENDENT_SCENES = [{ from: 1872, duration: 187, Component: Scene08 }];
+const INDEPENDENT_SCENES = [{ from: 1872, duration: 192, Component: Scene08 }];
 
 export const EventDrivenVideo = () => (
   <AbsoluteFill style={{ backgroundColor: theme.bg }}>
