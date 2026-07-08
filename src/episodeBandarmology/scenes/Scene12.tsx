@@ -1,8 +1,8 @@
 /**
- * Scene 12 — Nego market (2849, dur 249). Real Market-Radar capture in the phone;
- * "Nego Market" title + subtitle beside-right. Three row highlights over the
- * phone (each 20px wider than the phone on each side, per [[highlight-box-width]]):
- * DEWA+PRIM, then ISAT+ISAT, then SMMA. Subtitle fades in at 2927.
+ * Scene 12 — Nego market (2849, dur 249). Real Market-Radar capture in the phone
+ * (Screenshot_20260708 — taller than the template, so it's cover-cropped top &
+ * bottom, intentionally). "Nego Market" title + subtitle beside-right. ONE
+ * highlight box over the green "Nego Spike/Active (IDR)" column on the right.
  * Frame = comp − 2849.
  */
 import { useCurrentFrame } from "remotion";
@@ -16,28 +16,26 @@ const { colors, font, type, radius } = theme;
 const CX = 620;
 const PH = 811;
 const PTOP = 950 - PH; // 139
-const BODYW = Math.round((PH * 980) / 1920) + 12; // 426
-const HL_LEFT = CX - BODYW / 2 - 20; // +20px each side, per [[highlight-box-width]]
-const HL_WIDTH = BODYW + 40;
-const fy = (v: number) => PTOP + v * PH; // image-fraction (0..1) → screen y
+const SW = Math.round((PH * 980) / 1920); // 414 — screen width
+const SL = CX - SW / 2; // 413 — screen left
+// screen-fraction (0..1) → box on the phone screen
+const sbox = (fx0: number, fx1: number, fy0: number, fy1: number) => ({
+  left: SL + fx0 * SW,
+  top: PTOP + fy0 * PH,
+  width: (fx1 - fx0) * SW,
+  height: (fy1 - fy0) * PH,
+});
 
-// row highlights (image-y fractions of the 980×1920 capture)
-const HILITES = [
-  { fy0: 0.421, fy1: 0.575, at: 65 }, // DEWA + PRIM  (all appear at comp 2914)
-  { fy0: 0.5875, fy1: 0.7425, at: 65 }, // ISAT + ISAT
-  { fy0: 0.334, fy1: 0.4065, at: 65 }, // SMMA
-];
+// the green "Nego Spike/Active (IDR)" column on the right
+const GREEN = sbox(0.53, 0.97, 0.225, 0.925);
 
 export const Scene12 = () => {
   const f = useCurrentFrame();
   return (
     <SafeArea>
-      <CapturePhone cx={CX} top={PTOP} height={PH} op={fadeIn(f, 10, 18)} imageLayers={[{ src: "bandarmology/scene12.jpg", op: 1 }]} />
+      <CapturePhone cx={CX} top={PTOP} height={PH} op={fadeIn(f, 10, 18)} imageLayers={[{ src: "bandarmology/scene12b.jpg", op: 1 }]} />
 
-      {/* row highlights */}
-      {HILITES.map((h, i) => (
-        <div key={i} style={{ position: "absolute", left: HL_LEFT, top: fy(h.fy0), width: HL_WIDTH, height: fy(h.fy1) - fy(h.fy0), border: `3px solid ${colors.indigo}`, borderRadius: radius.sm, opacity: fadeIn(f, h.at, 12), boxSizing: "border-box" }} />
-      ))}
+      <div style={{ position: "absolute", ...GREEN, border: `3px solid ${colors.indigo}`, borderRadius: radius.sm, opacity: fadeIn(f, 65, 12), boxSizing: "border-box" }} />
 
       {/* title + subtitle beside-right */}
       <div style={{ position: "absolute", left: 900, top: 400, width: 860, fontSize: 84, fontWeight: font.weights.extrabold, color: colors.indigo, letterSpacing: -1, ...textReveal(f, 8, 18) }}>
