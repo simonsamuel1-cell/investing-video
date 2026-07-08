@@ -13,7 +13,7 @@ import { theme } from "../theme";
 import { fadeIn, blinkTwice } from "../helpers";
 
 const H = 730;
-const TOP = 224;
+const TOP = 204; // phones (+ their boxes) sit 20px higher
 const SCREEN_W = 366; // round((H-12) * 980/1920)
 const SCREEN_H = H - 12; // 718
 const SCREEN_T = TOP + 6; // 230
@@ -54,12 +54,23 @@ export const Scene10 = () => {
         <PhoneClip cx={1388} img="eventDriven/s10-conceptsector.jpg" />
       </Sequence>
 
+      {/* labels above each phone */}
+      {[
+        { cx: 532, at: 0, text: "wishlist" },
+        { cx: 960, at: 216, text: "event-driven tab" },
+        { cx: 1388, at: 369, text: "concept sector" },
+      ].map((l) => (
+        <div key={l.text} style={{ position: "absolute", left: l.cx - 300, top: 151, width: 600, textAlign: "center", fontSize: 36, fontWeight: theme.font.weights.regular, color: theme.colors.indigo, fontFamily: theme.font.family, opacity: fadeIn(f, l.at, 16) }}>
+          {l.text}
+        </div>
+      ))}
+
       {/* phone 1 — middle top-bar icon */}
       <Box b={fbox(532, 0.77, 0.89, 0.01, 0.065)} op={blinkTwice(f, 30, 524)} />
       {/* phone 2 — tab row, wider than phone */}
       <Box b={wideBox(960, 0.2, 0.25)} op={blinkTwice(f, 250, 524)} />
       {/* phone 3 — Concept Sector section, wider than phone */}
-      <Box b={wideBox(1388, 0.24, 0.63)} op={blinkTwice(f, 400, 524)} />
+      <Box b={wideBox(1388, 0.22, 0.63)} op={blinkTwice(f, 400, 524)} />
     </AbsoluteFill>
   );
 };

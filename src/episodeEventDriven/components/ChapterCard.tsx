@@ -24,12 +24,11 @@ export const ChapterCard = ({
   const a = textReveal(frame, start, 18);
   const b = textReveal(frame, start + 6, 18);
   return (
-    <div style={{ position: "absolute", left: x, top: y, display: "flex", alignItems: "baseline", gap: 22 }}>
-      <span style={{ fontSize: 96, fontWeight: theme.font.weights.extrabold, color: theme.colors.indigo, letterSpacing: -1, ...a }}>
+    <div style={{ position: "absolute", left: x, top: y, display: "flex", alignItems: "baseline", gap: 10 }}>
+      <span style={{ fontSize: 40, fontWeight: theme.font.weights.extrabold, color: theme.colors.indigo, letterSpacing: -0.5, ...a }}>
         {index}
       </span>
-      <span style={{ fontSize: 40, fontWeight: theme.font.weights.bold, color: theme.colors.grey, ...a }}>·</span>
-      <span style={{ fontSize: 72, fontWeight: theme.font.weights.extrabold, color: theme.colors.text, letterSpacing: -0.5, ...b }}>
+      <span style={{ fontSize: 40, fontWeight: theme.font.weights.extrabold, color: theme.colors.text, letterSpacing: -0.5, ...b }}>
         {title}
       </span>
     </div>

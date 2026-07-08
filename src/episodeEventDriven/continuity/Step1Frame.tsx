@@ -11,7 +11,6 @@ import { Scene09 } from "../scenes/Scene09";
 import { Scene10 } from "../scenes/Scene10";
 import { Scene11 } from "../scenes/Scene11";
 import { Scene12 } from "../scenes/Scene12";
-import { Scene13 } from "../scenes/Scene13";
 
 export const Step1Frame = () => {
   const f = useCurrentFrame();
@@ -21,9 +20,9 @@ export const Step1Frame = () => {
 
       <Sequence durationInFrames={183} layout="none"><Scene09 /></Sequence>
       <Sequence from={200} durationInFrames={524} layout="none"><Scene10 /></Sequence>
-      <Sequence from={724} durationInFrames={221} layout="none"><Scene11 /></Sequence>
-      <Sequence from={955} durationInFrames={152} layout="none"><Scene12 /></Sequence>
-      <Sequence from={1110} durationInFrames={195} layout="none"><Scene13 /></Sequence>
+      <Sequence from={724} durationInFrames={231} layout="none"><Scene11 /></Sequence>
+      {/* Scenes 12–13 — one continuous video (comp 3032–3382) */}
+      <Sequence from={955} durationInFrames={350} layout="none"><Scene12 /></Sequence>
     </SafeArea>
   );
 };

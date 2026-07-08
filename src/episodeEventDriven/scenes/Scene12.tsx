@@ -1,39 +1,45 @@
 /**
- * Scene 12 — Already ran (comp 3032–3184, dur 152). A steep LineChart that has
- * already run up; a grey "Already Ran" label sits at the peak as the cursor
- * recoils, and a name-only "Jesse Livermore" credit card sits in the corner (no
- * portrait). Illustration. Frame = scene-local.
+ * Scene 12–13 — one continuous app capture (comp 3032–3382) in a phone template,
+ * centred, with highlight boxes (blink twice), 25px wider than the phone each side:
+ *   SINI + SULI (one box)  @ 3123 → 3226
+ *   FWCT                   @ 3291 → 3378
+ * Boxes are calibrated to where the scrolling capture shows each element.
+ * Header owned by Step1Frame. Frame = scene-local (0 at comp 3032).
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { PhoneFrame } from "../components";
 import { theme } from "../theme";
-import { LineChart, CursorPing, Illustration } from "../components";
-import type { Line } from "../components";
-import { clamp01, textReveal } from "../helpers";
+import { fadeIn, fadeOut, blinkTwice } from "../helpers";
 
-const DRAW = 0; // @0.0s
-const LABEL = Math.round(2.0 * 30); // @2.0s
-const CREDIT = Math.round(3.5 * 30); // @3.5s
+const H = 780;
+const TOP = 160;
+const CX = 960;
+const END = 350; // comp 3382
+const SCREEN_H = H - 12; // 768
+const SCREEN_T = TOP + 6; // 166
+const BODY_W = 404; // round((H-12)*980/1920) + 12
 
-const LINES: Line[] = [{ pts: [[0, 0.16], [0.3, 0.3], [0.55, 0.56], [0.8, 0.86], [1, 0.92]], tone: "indigo" }];
+const wideBox = (fy0: number, fy1: number) => ({
+  left: CX - BODY_W / 2 - 25,
+  top: SCREEN_T + fy0 * SCREEN_H,
+  width: BODY_W + 50,
+  height: (fy1 - fy0) * SCREEN_H,
+});
+
+const Box = ({ b, op }: { b: { left: number; top: number; width: number; height: number }; op: number }) =>
+  op > 0 ? <div style={{ position: "absolute", ...b, border: `3px solid ${theme.colors.indigo}`, borderRadius: 8, opacity: op, boxSizing: "border-box" }} /> : null;
 
 export const Scene12 = () => {
   const f = useCurrentFrame();
-  const label = textReveal(f, LABEL, 14);
-  const credit = textReveal(f, CREDIT, 16);
+  const op = Math.min(fadeIn(f, 0, 14), fadeOut(f, END - 14, 14));
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
-      <LineChart x={200} y={260} w={1120} h={560} lines={LINES} frame={f} drawStart={DRAW} drawDur={40} />
-      <div style={{ position: "absolute", left: 1230, top: 300, fontSize: 30, fontWeight: theme.font.weights.bold, color: theme.colors.grey, ...label }}>
-        Already Ran
-      </div>
-      <CursorPing x={1230} y={360} frame={f} start={LABEL} mode="recoil" />
+      <PhoneFrame cx={CX} top={TOP} height={H} op={op} video="eventDriven/s12-13.mp4" />
 
-      {/* name-only credit card */}
-      <div style={{ position: "absolute", left: 1360, top: 760, padding: "16px 24px", borderRadius: theme.radius.card, background: theme.colors.cardBg, border: `1px solid ${theme.colors.cardBorder}`, ...credit }}>
-        <div style={{ fontSize: 16, color: theme.colors.grey, fontWeight: theme.font.weights.semibold }}>Attributed to</div>
-        <div style={{ fontSize: 30, color: theme.colors.text, fontWeight: theme.font.weights.extrabold }}>Jesse Livermore</div>
-      </div>
-      <Illustration op={clamp01((f - DRAW) / 16)} />
+      {/* box 3 — SINI + SULI (one box), comp 3123→3226 */}
+      <Box b={wideBox(0.174, 0.539)} op={blinkTwice(f, 91, 194)} />
+      {/* box 4 — FWCT, comp 3291→3378 */}
+      <Box b={wideBox(0.663, 0.758)} op={blinkTwice(f, 259, 346)} />
     </AbsoluteFill>
   );
 };

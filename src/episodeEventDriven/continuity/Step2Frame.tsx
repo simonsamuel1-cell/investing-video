@@ -19,7 +19,7 @@ export const Step2Frame = () => {
     <SafeArea>
       <ChapterCard index="02" title="Analysis" frame={f} start={0} x={96} y={64} />
 
-      <Sequence durationInFrames={136} layout="none"><Scene14 /></Sequence>
+      <Sequence durationInFrames={140} layout="none"><Scene14 /></Sequence>
       <Sequence from={144} durationInFrames={597} layout="none"><Scene15 /></Sequence>
       <Sequence from={750} durationInFrames={316} layout="none"><Scene16 /></Sequence>
       <Sequence from={1069} durationInFrames={200} layout="none"><Scene17 /></Sequence>
