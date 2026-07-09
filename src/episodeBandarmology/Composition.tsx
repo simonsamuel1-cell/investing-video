@@ -75,8 +75,8 @@ const INDEPENDENT_SCENES: Array<{
   { from: 5232, duration: 368, Component: Scene21 }, // honest caveat (DISCLAIMER)
   // 5609–9020 — Scenes 22–33 content; WorkflowStage chrome spans same range.
   { from: 5609, duration: 191, Component: Scene22 }, // 3-steps intro (ends 5800)
-  { from: 5800, duration: 952, Component: Scene23 }, // step1 screen held: phone + "1. Screen" (ends 6752)
-  // Scenes 24–25 (three checks / big-picture question) folded into the extended Step-1 screen above (5800–6752).
+  { from: 5800, duration: 976, Component: Scene23 }, // step1 screen: phone (scene23-flow.mp4) + "1. Screen" (ends 6776)
+  // Scenes 24–25 (three checks / big-picture question) folded into the extended Step-1 screen above (5800–6776).
   // Scenes 26–28 (verify) content owned by VerifyStage (6776–7615); these render background only.
   { from: 6776, duration: 259, Component: Scene26 },
   { from: 7058, duration: 271, Component: Scene27 },

@@ -8,7 +8,7 @@ import { Img, OffthreadVideo, staticFile } from "remotion";
 import { theme } from "../theme";
 
 const { colors, radius } = theme;
-const ASPECT = 980 / 1920;
+const ASPECT = 980 / 1920; // default app-screen aspect (portrait)
 
 export const CapturePhone = ({
   cx = 960,
@@ -17,6 +17,7 @@ export const CapturePhone = ({
   video,
   imageLayers,
   op = 1,
+  aspect = ASPECT,
 }: {
   cx?: number;
   top?: number;
@@ -24,9 +25,11 @@ export const CapturePhone = ({
   video?: string;
   imageLayers?: { src: string; op: number }[];
   op?: number;
+  // width/height ratio of the capture; override when a clip isn't 980×1920
+  aspect?: number;
 }) => {
   const bezel = 6;
-  const screenW = Math.round(height * ASPECT);
+  const screenW = Math.round(height * aspect);
   const bodyW = screenW + bezel * 2;
   const bodyH = height + bezel * 2;
 
