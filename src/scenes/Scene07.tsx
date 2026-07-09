@@ -38,8 +38,8 @@ const cam = (x: number, y: number, w: number, h: number) => ({
 // Investment Thesis is a tall/narrow left-column block; frame it to fill the
 // column (shifted left) so the right column doesn't peek into the wide window.
 const REG_IT = { s: 1.83, cx: 295, cy: 572 };
-const REG_TV = cam(605, 452, 318, 140); // Tuntun Valuation table (right column)
-const REG_CH = cam(605, 598, 318, 182); // Company Highlight table (right column)
+const REG_TV = cam(550, 430, 422.5, 175); // Tuntun Valuation table (right column)
+const REG_CH = cam(550, 565, 422.5, 227.5); // Company Highlight table (right column)
 // State A = whole page in the small 376-wide box (aspect-matched → shows full page)
 const CAM_A = { s: 376 / RES_IMG_W, cx: RES_IMG_W / 2, cy: RES_IMG_H / 2 };
 
@@ -62,6 +62,9 @@ export const Scene07: React.FC = () => {
   );
   // Highlight 2 — "Deep Research" + "View BBCA Deep Research": two blinks, ends. (4397)
   const drOp = interpolate(frame, [148, 154, 160, 166, 172], [0, 1, 0, 1, 0], clamp);
+  // Highlight 3 — "Tuntun P/E" + "Tuntun P/B" rows during the Tuntun Valuation
+  // hold: two blinks then ends. (4677 = local 428)
+  const peOp = interpolate(frame, [428, 434, 440, 446, 452], [0, 1, 0, 1, 0], clamp);
 
   // Research.jpg (right side) appears as the phone slides back left (205→223).
   const researchOp = interpolate(frame, [205, 223], [0, 1], { ...clamp, easing: EASE });
@@ -141,6 +144,11 @@ export const Scene07: React.FC = () => {
       {/* Highlights (rendered above the phone) */}
       {rfvOp > 0.01 && band(672, 82, rfvOp)}
       {drOp > 0.01 && band(616, 86, drOp)}
+
+      {/* Tuntun P/E + P/B rows (over the zoomed Research window, 4677) */}
+      {peOp > 0.01 && (
+        <div style={{ position: "absolute", left: 595, top: 545, width: 750, height: 168, border: "3px solid #5F4DEE", borderRadius: 10, background: "rgba(95,77,238,0.10)", opacity: peOp, boxSizing: "border-box" }} />
+      )}
     </div>
   );
 };
