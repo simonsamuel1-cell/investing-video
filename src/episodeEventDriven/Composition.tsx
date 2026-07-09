@@ -29,7 +29,7 @@ const GROUPS = [
   { from: 638, duration: 437, Component: RateChart },
   { from: 1082, duration: 782, Component: QuestionCards },
   { from: 2077, duration: 1305, Component: Step1Frame },
-  { from: 3391, duration: 1493, Component: Step2Frame },
+  { from: 3391, duration: 1512, Component: Step2Frame }, // Scene 15 video runs continuously to 4903
   { from: 4903, duration: 911, Component: Step3Frame },
   { from: 5823, duration: 547, Component: RecapFrame },
 ];
