@@ -9,7 +9,7 @@
  * fade back to the continuous video, which plays out to 4903.
  * Frame = scene-local (0 at comp 3535).
  */
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
 import { PhoneFrame } from "../components";
 import { fadeIn, fadeOut, blinkTwice } from "../helpers";
@@ -51,6 +51,17 @@ const SEGS = [
   { t: ", price & volume", at: PV_AT },
 ];
 
+// Source-types bullet list (right of the phone), then "Decide Faster" (left).
+// Scene-local frames (comp − 3535).
+const SOURCES = [
+  { t: "Announcements", at: 683 }, // 4218
+  { t: "News", at: 717 }, // 4252
+  { t: "Sentiments", at: 738 }, // 4273
+  { t: "Research", at: 761 }, // 4296
+  { t: "Financials", at: 785 }, // 4320
+];
+const SRC_END = 915; // 4450 — all fade out
+
 export const Scene15 = () => {
   const f = useCurrentFrame();
   const phoneOp = Math.min(fadeIn(f, 0, 14), fadeOut(f, END - 14, 14));
@@ -58,6 +69,20 @@ export const Scene15 = () => {
   const finOp = Math.min(fadeIn(f, VAL_AT, 14), fadeOut(f, FADE_BACK, 14));
   const pvOp = Math.min(fadeIn(f, PV_AT, 14), fadeOut(f, FADE_BACK, 14));
   const textOut = fadeOut(f, FADE_BACK, 14);
+
+  // "Key Events" card highlight (3648→3846). The capture scrolls up quickly early
+  // (local 113→137) then holds, so the box top tracks that scroll then settles.
+  const keTop = interpolate(f, [113, 130], [462, 388], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const keOp = blinkTwice(f, 113, 311);
+
+  // 4218–4450: source-types list (right) + "Decide Faster" (left), on the video.
+  const srcOut = fadeOut(f, SRC_END - 14, 14);
+  const decideOp = Math.min(fadeIn(f, 864, 14), srcOut); // "Decide Faster" from 4399
+
+  // 4676 / 4763: two-line prompts flanking the phone, all end 4898.
+  const moveOut = fadeOut(f, 1349, 14);
+  const q1Op = Math.min(fadeIn(f, 1141, 14), moveOut); // "Is the move / spreading" (left)
+  const q2Op = Math.min(fadeIn(f, 1228, 14), moveOut); // "if yes, means / stronger signal" (right)
 
   return (
     <AbsoluteFill style={{ pointerEvents: "none" }}>
@@ -75,6 +100,42 @@ export const Scene15 = () => {
       <Box b={hlBox(CX, 0.572, 0.905)} op={blinkTwice(f, VAL_AT, VAL_AT + 46)} />
       <Box b={hlBox(CX_L, 0.228, 0.5)} op={blinkTwice(f, FIN_AT, FIN_AT + 46)} />
       <Box b={hlBox(CX_R, 0.155, 0.755)} op={blinkTwice(f, PV_AT, PV_AT + 46)} />
+
+      {/* "Key Events" card (on the video) — 3648→3846, tracks the early scroll;
+          width runs 25px past the phone each side */}
+      {keOp > 0 && <div style={{ position: "absolute", left: CX - BODY_W / 2 - 25, top: keTop, width: BODY_W + 50, height: 186, border: `3px solid ${theme.colors.indigo}`, borderRadius: 12, opacity: keOp, boxSizing: "border-box" }} />}
+
+      {/* Concept Sector section (IDX Sectors → Group) on the video — 4549 */}
+      <Box b={hlBox(CX, 0.263, 0.778)} op={blinkTwice(f, 1014, 1160)} />
+
+      {/* source types — bullet list right of the phone (4218→…), all end 4450 */}
+      <div style={{ position: "absolute", left: 1240, top: 385, width: 560, display: "flex", flexDirection: "column", gap: 22, opacity: srcOut }}>
+        {SOURCES.map((s) => (
+          <div key={s.t} style={{ display: "flex", alignItems: "center", gap: 18, fontSize: 40, fontWeight: theme.font.weights.bold, color: theme.colors.text, opacity: fadeIn(f, s.at, 12) }}>
+            <span style={{ width: 14, height: 14, borderRadius: 999, background: theme.colors.indigo, flex: "0 0 auto" }} />
+            {s.t}
+          </div>
+        ))}
+      </div>
+
+      {/* "Decide Faster" — left of the phone (4399→4450) */}
+      <div style={{ position: "absolute", left: 96, top: 490, width: 640, textAlign: "center", fontSize: 60, fontWeight: theme.font.weights.extrabold, color: theme.colors.indigo, opacity: decideOp }}>
+        Decide Faster
+      </div>
+
+      {/* "Is the move / spreading" — left of the phone (4676→4898) */}
+      <div style={{ position: "absolute", left: 96, top: 485, width: 662, textAlign: "center", fontSize: 52, fontWeight: theme.font.weights.extrabold, color: theme.colors.text, lineHeight: 1.22, opacity: q1Op }}>
+        Is the move
+        <br />
+        <span style={{ color: theme.colors.indigo }}>spreading</span>
+      </div>
+
+      {/* "if yes, means / stronger signal" — right of the phone (4763→4898) */}
+      <div style={{ position: "absolute", left: 1162, top: 485, width: 662, textAlign: "center", fontSize: 52, fontWeight: theme.font.weights.extrabold, color: theme.colors.text, lineHeight: 1.22, opacity: q2Op }}>
+        if yes, means
+        <br />
+        <span style={{ color: theme.colors.indigo }}>stronger signal</span>
+      </div>
 
       {/* caption above the phones — grows into the full list */}
       <div style={{ position: "absolute", left: 96, right: 96, top: 104, textAlign: "center", fontSize: 30, lineHeight: 1.25, fontWeight: theme.font.weights.extrabold, color: theme.colors.text, opacity: textOut }}>
