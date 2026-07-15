@@ -59,7 +59,7 @@ const Video2 = () => (
   <PhoneCenter video={ASSETS.sectorScroll} startSec={0} top={S13V.top} height={S13V.height} />
 );
 
-export const Scene12to13 = () => {
+export const Scene12to13 = ({ hideTags = false }: { hideTags?: boolean }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -85,12 +85,13 @@ export const Scene12to13 = () => {
           <Video2 />
         </Sequence>
 
-        {/* 4×1 tag row, staggered */}
-        {TAG_DEFS.map((t, i) => (
-          <Chip key={t.label} x={TAG_X0 + i * TAG_PITCH} y={TAGS_Y} width={TAG_W} variant={t.variant} size={18} padding="6px 14px" align="center" delay={T_TAGS[i]}>
-            {t.label}
-          </Chip>
-        ))}
+        {/* 4×1 tag row, staggered (hidden in the NV re-slot) */}
+        {!hideTags &&
+          TAG_DEFS.map((t, i) => (
+            <Chip key={t.label} x={TAG_X0 + i * TAG_PITCH} y={TAGS_Y} width={TAG_W} variant={t.variant} size={18} padding="6px 14px" align="center" delay={T_TAGS[i]}>
+              {t.label}
+            </Chip>
+          ))}
 
         {/* S13 title (top margin) */}
         <Heading x={96} y={TITLE_Y} width={1728} align="center" size={28} delay={S13_TITLE}>

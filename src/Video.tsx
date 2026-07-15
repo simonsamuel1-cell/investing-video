@@ -11,13 +11,15 @@
  * (continuous blocks therefore cut precisely at the pointed frames).
  */
 import type { FC } from "react";
-import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
+import { AbsoluteFill, Audio, Freeze, Sequence, staticFile } from "remotion";
 import { TIMELINE, ASSETS } from "./timeline";
 import { SCENES } from "./scenes";
 import { Scene12to13 } from "./scenes/Scene12to13";
 import { Scene14to16 } from "./scenes/Scene14to16";
 import { Scene19to21 } from "./scenes/Scene19to21";
 import { Scene23to27 } from "./scenes/Scene23to27";
+import { Scene01Focus } from "./scenes/Scene01Focus";
+import { SceneThemeGrid } from "./scenes/SceneThemeGrid";
 import { COLORS, MOUNT_VO } from "./theme";
 
 // The old cut expressed as clips (OLD from/dur + component). Merged scenes are
@@ -35,12 +37,16 @@ const OLD_CLIPS: Clip[] = [
 // Reused chunks moved to new frame slots (timecodes mm.ss.ff @30fps from Simon;
 // before-length == after-length, so each is a pure move). src = OLD [A,B); dst = NEW start.
 const MOVES: { src: [number, number]; dst: number; label: string }[] = [
-  { src: [339, 450], dst: 583, label: "1" }, // 0:11.09–0:15.00 → 0:19.13
-  { src: [2150, 2486], dst: 1350, label: "2" }, // 1:11.20–1:22.26 → 0:45.00
-  { src: [2486, 2620], dst: 1686, label: "3" }, // continues #2 (S12–13 block) → 0:56.06
+  { src: [0, 352], dst: 0, label: "0" }, // PrC 0–351 → NV 0 (full S1 opening)
+  // move "1" (PrC 339–450 → 583, the "NOISE" scene) disabled — the new Scene01Focus
+  // sequence now owns 351→595. Re-enable if the NOISE beat is wanted elsewhere.
+  // { src: [339, 450], dst: 583, label: "1" },
+  { src: [2153, 2486], dst: 1353, label: "2" }, // 1:11.20–1:22.26 → 0:45; skips S10-tail flash 1350–1352
+  // move "3" (S12–13 continuation) is custom-mounted below (tags removed + freeze at 1794).
   { src: [3147, 3345], dst: 2137, label: "4" }, // 1:44.27–1:51.15 → 1:11.07
   { src: [4790, 5814], dst: 6004, label: "5" }, // 2:39.20–3:13.24 → 3:20.04
   { src: [6523, 6902], dst: 7047, label: "6" }, // 3:37.13–3:50.02 → 3:54.27
+  { src: [2756, 3131], dst: 1820, label: "A" }, // PrC 2756–3131 (S14–16) → 1820; rough, may overlap move 4
 ];
 
 // Reference-only: the FULL previous cut (all clips at their ORIGINAL frames + the
@@ -83,5 +89,29 @@ export const ConceptSectorVideo = () => (
         ];
       });
     })}
+
+    {/* New content — freeze S1 @351, isolate EXCL, buy, floating loss; dims to a 20%
+        frozen bg + "NOISE" at 595, then fades out to end scene 1 at 693. */}
+    <Sequence from={351} durationInFrames={342} name="Scene01Focus · EXCL freeze → buy → loss → NOISE (ends 693)">
+      <Scene01Focus />
+    </Sequence>
+
+    {/* Theme grid → ABCD → "????" scan → ABCD highlight (700→1349). */}
+    <Sequence from={700} durationInFrames={650} name="SceneThemeGrid · grid → ABCD → ???? scan → ABCD (ends 1349)">
+      <SceneThemeGrid />
+    </Sequence>
+
+    {/* move 3 — S12–13 continuation (tags removed). Plays block-local 270→378 over
+        1686→1794, then FREEZES at 378 (kills the page-scroll) and holds to 1819. */}
+    <Sequence from={1686} durationInFrames={108} name="move 3 · S12–13 (no tags)">
+      <Sequence from={-270} durationInFrames={540} layout="none">
+        <Scene12to13 hideTags />
+      </Sequence>
+    </Sequence>
+    <Sequence from={1794} durationInFrames={26} name="move 3 freeze · S12–13 @378 (no scroll)">
+      <Freeze frame={378}>
+        <Scene12to13 hideTags />
+      </Freeze>
+    </Sequence>
   </AbsoluteFill>
 );
