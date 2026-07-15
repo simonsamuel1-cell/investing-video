@@ -58,9 +58,10 @@ export const TIMELINE: SceneDef[] = [
 
 // Asset filenames (verified, in public/). Centralised so scenes never typo a path.
 export const ASSETS = {
-  // Padded VO: +16f silence @111.533s (frame 3346) and +10f @115.0s (frame 3450)
-  // inserted in silent gaps so visuals stay in sync after the S14–16 holds (23 Jun).
-  audio: "Most_traders_start__1__padded.mp3",
+  // NEW VOICE (15 Jul revision) — full take, 4:07:17 (247.56s). Visuals are NOT yet
+  // re-timed to it; scene timings below still match the OLD padded VO and will be
+  // re-synced step by step. Old file kept: Most_traders_start__1__padded.mp3.
+  audio: "New_Voice_2.mp3",
   // Video (all 980×1920, 30fps)
   hotThemes: "Scene_17_-_Hot_Themes.mp4",
   sectorScroll: "Scene_13.mp4",

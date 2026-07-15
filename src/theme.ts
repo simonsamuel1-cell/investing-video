@@ -34,7 +34,7 @@ export const COLORS = {
 
 export const FRAME = { width: 1920, height: 1080 } as const;
 export const FPS = 30;
-export const DURATION = 6928; // 6902 + 26 hold-frames inserted in S14–16 (VO padded to match, 23 Jun).
+export const DURATION = 7470; // 4:09:00 (mm:ss:ff @30fps). New voice should be 4:07:16 once full file is uploaded; scenes not yet re-timed.
 
 // Margins kept clear of content (§4).
 export const MARGIN = { left: 96, right: 96, top: 54, bottom: 108 } as const;
