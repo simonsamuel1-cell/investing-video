@@ -10,8 +10,8 @@
  * the clip's local frame so it renders exactly the frames it showed in the old cut
  * (continuous blocks therefore cut precisely at the pointed frames).
  */
-import type { FC } from "react";
-import { AbsoluteFill, Audio, Freeze, Sequence, staticFile } from "remotion";
+import type { FC, ReactNode } from "react";
+import { AbsoluteFill, Audio, Freeze, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { TIMELINE, ASSETS } from "./timeline";
 import { SCENES } from "./scenes";
 import { Scene12to13 } from "./scenes/Scene12to13";
@@ -46,7 +46,7 @@ const MOVES: { src: [number, number]; dst: number; label: string }[] = [
   { src: [3147, 3345], dst: 2137, label: "4" }, // 1:44.27–1:51.15 → 1:11.07
   { src: [4790, 5814], dst: 6004, label: "5" }, // 2:39.20–3:13.24 → 3:20.04
   { src: [6523, 6902], dst: 7047, label: "6" }, // 3:37.13–3:50.02 → 3:54.27
-  { src: [2756, 3131], dst: 1820, label: "A" }, // PrC 2756–3131 (S14–16) → 1820; rough, may overlap move 4
+  // move "A" (PrC 2756–3131 S14–16 → 1820) is custom-mounted below with a 3-item Concept list.
 ];
 
 // Reference-only: the FULL previous cut (all clips at their ORIGINAL frames + the
@@ -65,6 +65,13 @@ export const PreviousCut = () => (
     })}
   </AbsoluteFill>
 );
+
+// Fades its children out starting at scene-local frame `fadeOutAt` (for crossfades).
+const FadeBox = ({ fadeOutAt, fadeOutDur = 14, children }: { fadeOutAt: number; fadeOutDur?: number; children: ReactNode }) => {
+  const f = useCurrentFrame();
+  const op = interpolate(f, [fadeOutAt, fadeOutAt + fadeOutDur], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  return <AbsoluteFill style={{ opacity: op }}>{children}</AbsoluteFill>;
+};
 
 export const ConceptSectorVideo = () => (
   <AbsoluteFill style={{ backgroundColor: COLORS.silver }}>
@@ -112,6 +119,14 @@ export const ConceptSectorVideo = () => (
       <Freeze frame={378}>
         <Scene12to13 hideTags />
       </Freeze>
+    </Sequence>
+
+    {/* move A — S14–16 (3-item Concept list) at NV 1820; content ends 2136 then
+        crossfades out over 2137→2151, revealing move 4 behind it. */}
+    <Sequence from={1820} durationInFrames={331} name="move A · S14–16 (3 concepts) → crossfade @2137">
+      <FadeBox fadeOutAt={317}>
+        <Scene14to16 concepts={["Legendary investors", "Government-affiliated", "Special situations"]} />
+      </FadeBox>
     </Sequence>
   </AbsoluteFill>
 );

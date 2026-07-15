@@ -80,7 +80,7 @@ const Scene16Extras = () => {
   );
 };
 
-export const Scene14to16 = () => {
+export const Scene14to16 = ({ concepts = CONCEPTS }: { concepts?: string[] }) => {
   const frame = useCurrentFrame();
 
   // continuous phone pose: pose14 → pose15 (move1) → pose16 (move2). Nested eases
@@ -102,7 +102,7 @@ export const Scene14to16 = () => {
         <Heading x={648} y={242} width={1128} size={42} delay={4}>
           Concepts: the stories tying stocks together.
         </Heading>
-        {CONCEPTS.map((label, i) => (
+        {concepts.map((label, i) => (
           <Chip key={label} x={648} y={362 + i * 80} width={1128} variant={i % 2 === 0 ? "purple" : "cyan"} size={32} delay={18 + i * 16} badge={i + 1}>
             {label}
           </Chip>
