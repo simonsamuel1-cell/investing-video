@@ -22,6 +22,7 @@ import { Scene01Focus } from "./scenes/Scene01Focus";
 import { SceneThemeGrid } from "./scenes/SceneThemeGrid";
 import { SceneEntryPoints } from "./scenes/SceneEntryPoints";
 import { SceneEntryPhones } from "./scenes/SceneEntryPhones";
+import { SceneFramePhone } from "./scenes/SceneFramePhone";
 import { COLORS, MOUNT_VO } from "./theme";
 
 // The old cut expressed as clips (OLD from/dur + component). Merged scenes are
@@ -148,6 +149,21 @@ export const ConceptSectorVideo = () => (
     {/* TikTok/X entry-point phones + five "????" stock labels (2608→2863). */}
     <Sequence from={2608} durationInFrames={255} name="SceneEntryPhones · TikTok/X + ???? labels">
       <SceneEntryPhones />
+    </Sequence>
+
+    {/* Four centred phone clips (same size/pos as the entry-point phones), each
+        fading out at its end. Placed at the frame ranges in their filenames. */}
+    <Sequence from={2868} durationInFrames={310} name="frame 2868–3178 (phone)">
+      <SceneFramePhone video="frame-2868-3178.mp4" dur={310} />
+    </Sequence>
+    <Sequence from={3354} durationInFrames={785} name="frame 3354–4139 (phone)">
+      <SceneFramePhone video="frame-3354-4139.mp4" dur={785} />
+    </Sequence>
+    <Sequence from={4139} durationInFrames={895} name="frame 4139–5034 (phone)">
+      <SceneFramePhone video="frame-4139-5034.mp4" dur={895} />
+    </Sequence>
+    <Sequence from={5049} durationInFrames={951} name="frame 5049–6000 (phone)">
+      <SceneFramePhone video="frame-5049-6000.mp4" dur={951} />
     </Sequence>
 
     {/* move A — S14–16 (3-item Concept list) at NV 1820; content ends 2136 then

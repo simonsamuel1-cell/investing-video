@@ -31,13 +31,14 @@ export const FRAME_ASPECT = 1924 / 3890; // ≈ 0.4946 (w:h) — unchanged so sc
 const CUT = { left: 0.0665, top: 0.0798, w: 0.867, h: 0.8402 };
 const BORDER_RATIO = 0.011; // thin bezel as a fraction of phone width
 
+// images/videos are always 980×1920 = the screen aspect, so cover fills it exactly.
 const SCREEN: CSSProperties = {
   position: "absolute",
   left: 0,
   top: 0,
   width: "100%",
   height: "100%",
-  objectFit: "contain",
+  objectFit: "cover",
 };
 
 export const PhoneFrame = ({
@@ -49,6 +50,7 @@ export const PhoneFrame = ({
   startSec = 0,
   playbackRate = 1,
   screenScale = 1,
+  screenShift = { x: 0, y: 0 },
   children,
   delay = 0,
   enterDur = 12,
@@ -62,6 +64,9 @@ export const PhoneFrame = ({
   startSec?: number;
   playbackRate?: number;
   screenScale?: number;
+  // pan the screen content inside the mask (px). Pair with screenScale>1 to avoid
+  // exposing black edges. +y = shift the image DOWN, +x = RIGHT.
+  screenShift?: { x?: number; y?: number };
   children?: ReactNode;
   delay?: number;
   enterDur?: number;
@@ -110,8 +115,8 @@ export const PhoneFrame = ({
         transform: `translateY(${ty}px) scale(${scale})`,
       }}
     >
-      {/* screen content, clipped to the screen rect — identical geometry to the
-          old cutout (×1.03) so calibrated callouts stay aligned. */}
+      {/* screen (same rect/geometry as before → calibrated callouts hold). The bezel
+          is a single box-shadow ring that grows OUTWARD from the screen edge. */}
       <div
         style={{
           position: "absolute",
@@ -123,28 +128,14 @@ export const PhoneFrame = ({
           borderRadius: radius,
           background: COLORS.black,
           scale: 1.03,
+          boxShadow: `0 0 0 ${border}px ${COLORS.ink}, 0 18px 45px rgba(0,0,0,0.16)`,
         }}
       >
-        {/* per-scene zoom of the screen content (default 1) */}
-        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", scale: screenScale }}>
+        {/* per-scene zoom + pan of the screen content (default 1 / no shift) */}
+        <div style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", transform: `translate(${screenShift.x ?? 0}px, ${screenShift.y ?? 0}px) scale(${screenScale})` }}>
           {content}
         </div>
       </div>
-      {/* thin bezel traced around the screen */}
-      <div
-        style={{
-          position: "absolute",
-          left: cl,
-          top: ct,
-          width: cw,
-          height: ch,
-          borderRadius: radius,
-          border: `${border}px solid ${COLORS.ink}`,
-          boxShadow: "0 18px 45px rgba(0,0,0,0.16)",
-          pointerEvents: "none",
-          scale: 1.03,
-        }}
-      />
     </div>
   );
 };

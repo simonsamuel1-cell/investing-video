@@ -18,6 +18,7 @@ export const PhoneCenter = ({
   startSec = 0,
   playbackRate = 1,
   screenScale = 1,
+  screenShift,
   children,
   delay = 0,
 }: {
@@ -29,13 +30,14 @@ export const PhoneCenter = ({
   startSec?: number;
   playbackRate?: number;
   screenScale?: number;
+  screenShift?: { x?: number; y?: number };
   children?: ReactNode;
   delay?: number;
 }) => {
   const w = Math.round(height * FRAME_ASPECT);
   const x = Math.round(cx - w / 2);
   return (
-    <PhoneFrame x={x} y={top} w={w} video={video} img={img} startSec={startSec} playbackRate={playbackRate} screenScale={screenScale} delay={delay}>
+    <PhoneFrame x={x} y={top} w={w} video={video} img={img} startSec={startSec} playbackRate={playbackRate} screenScale={screenScale} screenShift={screenShift} delay={delay}>
       {children}
     </PhoneFrame>
   );
