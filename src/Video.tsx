@@ -20,6 +20,8 @@ import { Scene19to21 } from "./scenes/Scene19to21";
 import { Scene23to27 } from "./scenes/Scene23to27";
 import { Scene01Focus } from "./scenes/Scene01Focus";
 import { SceneThemeGrid } from "./scenes/SceneThemeGrid";
+import { SceneEntryPoints } from "./scenes/SceneEntryPoints";
+import { SceneEntryPhones } from "./scenes/SceneEntryPhones";
 import { COLORS, MOUNT_VO } from "./theme";
 
 // The old cut expressed as clips (OLD from/dur + component). Merged scenes are
@@ -43,7 +45,7 @@ const MOVES: { src: [number, number]; dst: number; label: string }[] = [
   // { src: [339, 450], dst: 583, label: "1" },
   { src: [2153, 2486], dst: 1353, label: "2" }, // 1:11.20–1:22.26 → 0:45; skips S10-tail flash 1350–1352
   // move "3" (S12–13 continuation) is custom-mounted below (tags removed + freeze at 1794).
-  { src: [3147, 3345], dst: 2137, label: "4" }, // 1:44.27–1:51.15 → 1:11.07
+  // moves "4"+"B" are custom-mounted below as ONE continuous S14–16 playback (no cut).
   { src: [4790, 5814], dst: 6004, label: "5" }, // 2:39.20–3:13.24 → 3:20.04
   { src: [6523, 6902], dst: 7047, label: "6" }, // 3:37.13–3:50.02 → 3:54.27
   // move "A" (PrC 2756–3131 S14–16 → 1820) is custom-mounted below with a 3-item Concept list.
@@ -119,6 +121,33 @@ export const ConceptSectorVideo = () => (
       <Freeze frame={378}>
         <Scene12to13 hideTags />
       </Freeze>
+    </Sequence>
+
+    {/* moves 4+B — ONE continuous S14–16 playback from block-local 424 (phone already
+        CENTRED, so no entry slide). The video keeps rolling — no freeze, no cut — and
+        flows straight into the "one screen, every angle" beat. NV 2137→2440, then the
+        last S16 frame holds and fades out, ending at 2454. Revealed by move A's crossfade. */}
+    <Sequence from={2137} durationInFrames={303} name="moves 4+B · One owner → every angle (continuous)">
+      <Sequence from={-424} durationInFrames={728} layout="none">
+        <Scene14to16 />
+      </Sequence>
+    </Sequence>
+    <Sequence from={2440} durationInFrames={14} name="moves 4+B tail · hold + fade out (ends 2454)">
+      <FadeBox fadeOutAt={0} fadeOutDur={14}>
+        <Freeze frame={726}>
+          <Scene14to16 />
+        </Freeze>
+      </FadeBox>
+    </Sequence>
+
+    {/* text beat — "Different entry points" (2467) → "Same tool" (2537); out by 2595. */}
+    <Sequence from={2455} durationInFrames={140} name="SceneEntryPoints · different entry points → same tool">
+      <SceneEntryPoints />
+    </Sequence>
+
+    {/* TikTok/X entry-point phones + five "????" stock labels (2608→2863). */}
+    <Sequence from={2608} durationInFrames={255} name="SceneEntryPhones · TikTok/X + ???? labels">
+      <SceneEntryPhones />
     </Sequence>
 
     {/* move A — S14–16 (3-item Concept list) at NV 1820; content ends 2136 then
