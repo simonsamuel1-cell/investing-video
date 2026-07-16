@@ -22,8 +22,10 @@ import { Scene01Focus } from "./scenes/Scene01Focus";
 import { SceneThemeGrid } from "./scenes/SceneThemeGrid";
 import { SceneEntryPoints } from "./scenes/SceneEntryPoints";
 import { SceneEntryPhones } from "./scenes/SceneEntryPhones";
+import { SceneEntryTags } from "./scenes/SceneEntryTags";
 import { SceneFramePhone } from "./scenes/SceneFramePhone";
 import { COLORS, MOUNT_VO } from "./theme";
+import { fontFamily } from "./fonts";
 
 // The old cut expressed as clips (OLD from/dur + component). Merged scenes are
 // represented by their continuity block, not individually.
@@ -56,7 +58,7 @@ const MOVES: { src: [number, number]; dst: number; label: string }[] = [
 // OLD padded VO). Registered as its own composition so Simon can scrub it and read
 // off timestamps to copy into MOVES. Old duration was 6928.
 export const PreviousCut = () => (
-  <AbsoluteFill style={{ backgroundColor: COLORS.silver }}>
+  <AbsoluteFill style={{ backgroundColor: COLORS.silver, fontFamily }}>
     <Audio src={staticFile("Most_traders_start__1__padded.mp3")} />
     {OLD_CLIPS.map((c) => {
       const { Comp } = c;
@@ -77,7 +79,7 @@ const FadeBox = ({ fadeOutAt, fadeOutDur = 14, children }: { fadeOutAt: number; 
 };
 
 export const ConceptSectorVideo = () => (
-  <AbsoluteFill style={{ backgroundColor: COLORS.silver }}>
+  <AbsoluteFill style={{ backgroundColor: COLORS.silver, fontFamily }}>
     {MOUNT_VO && <Audio src={staticFile(ASSETS.audio)} />}
 
     {MOVES.flatMap((m) => {
@@ -149,6 +151,12 @@ export const ConceptSectorVideo = () => (
     {/* TikTok/X entry-point phones + five "????" stock labels (2608→2863). */}
     <Sequence from={2608} durationInFrames={255} name="SceneEntryPhones · TikTok/X + ???? labels">
       <SceneEntryPhones />
+    </Sequence>
+
+    {/* Four entry-point tags as a persistent step-highlight row above the phones
+        (2598→6000). Highlights #1 @2598, #2 @3178, #3 @4139, #4 @5049 — one at a time. */}
+    <Sequence from={2598} durationInFrames={3402} name="SceneEntryTags · 4 tags step-highlight (2598→6000)">
+      <SceneEntryTags total={3402} />
     </Sequence>
 
     {/* Four centred phone clips (same size/pos as the entry-point phones), each
