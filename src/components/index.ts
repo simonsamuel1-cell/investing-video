@@ -1,6 +1,7 @@
 export * from "./SafeArea";
 export * from "./SceneWrap";
 export * from "./DeviceFrame";
+export * from "./phoneGeometry";
 export * from "./PhoneFrame";
 export * from "./PhoneCenter";
 export * from "./Heading";

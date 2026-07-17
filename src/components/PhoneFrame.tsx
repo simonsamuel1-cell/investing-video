@@ -23,9 +23,11 @@ import {
 } from "remotion";
 import type { ReactNode, CSSProperties } from "react";
 import { COLORS } from "../theme";
+import { FRAME_ASPECT } from "./phoneGeometry";
 import { fadeIn, rise, springUp, ease } from "../util/anim";
 
-export const FRAME_ASPECT = 1924 / 3890; // ≈ 0.4946 (w:h) — unchanged so scene geometry holds
+// NOTE: FRAME_ASPECT now lives in ./phoneGeometry — this file must export ONLY
+// components to stay a valid React Fast Refresh boundary (see that file's comment).
 // top/h tightened from the old {0.0308, 0.9381} so the rect aspect = content aspect
 // (cw/ch = 0.867·0.4946/0.8402 ≈ 0.5104); centre stays at ≈0.5h so content doesn't move.
 const CUT = { left: 0.0665, top: 0.0798, w: 0.867, h: 0.8402 };
@@ -55,6 +57,7 @@ export const PhoneFrame = ({
   delay = 0,
   enterDur = 12,
   springScale = true,
+  noEnter = false,
 }: {
   x: number;
   y: number;
@@ -73,6 +76,9 @@ export const PhoneFrame = ({
   // springScale: true → springy scale settle (default); false → linear ease that
   // finishes exactly at delay+enterDur (used when an entrance must end on a frame).
   springScale?: boolean;
+  // noEnter: skip the entrance entirely — the phone is fully visible at its final
+  // size from frame 0 (used when a clip must hard-start on an exact frame).
+  noEnter?: boolean;
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -84,10 +90,10 @@ export const PhoneFrame = ({
   const border = Math.max(2, cw * BORDER_RATIO);
   const radius = cw * 0.085;
 
-  const opacity = fadeIn(frame, delay, enterDur);
+  const opacity = noEnter ? 1 : fadeIn(frame, delay, enterDur);
   const sp = springScale ? springUp(frame, fps, delay) : ease(frame, [delay, delay + enterDur], [0, 1]);
-  const scale = 0.96 + 0.04 * sp;
-  const ty = rise(frame, delay, enterDur, 12);
+  const scale = noEnter ? 1 : 0.96 + 0.04 * sp;
+  const ty = noEnter ? 0 : rise(frame, delay, enterDur, 12);
 
   const content =
     children ??

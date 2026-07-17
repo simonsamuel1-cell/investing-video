@@ -7,7 +7,8 @@
  * for custom screen content (e.g. a cross-fade) pass `children`.
  */
 import type { ReactNode } from "react";
-import { PhoneFrame, FRAME_ASPECT } from "./PhoneFrame";
+import { PhoneFrame } from "./PhoneFrame";
+import { FRAME_ASPECT } from "./phoneGeometry";
 
 export const PhoneCenter = ({
   cx = 960,
@@ -21,6 +22,7 @@ export const PhoneCenter = ({
   screenShift,
   children,
   delay = 0,
+  noEnter = false,
 }: {
   cx?: number;
   top: number;
@@ -33,11 +35,12 @@ export const PhoneCenter = ({
   screenShift?: { x?: number; y?: number };
   children?: ReactNode;
   delay?: number;
+  noEnter?: boolean;
 }) => {
   const w = Math.round(height * FRAME_ASPECT);
   const x = Math.round(cx - w / 2);
   return (
-    <PhoneFrame x={x} y={top} w={w} video={video} img={img} startSec={startSec} playbackRate={playbackRate} screenScale={screenScale} screenShift={screenShift} delay={delay}>
+    <PhoneFrame x={x} y={top} w={w} video={video} img={img} startSec={startSec} playbackRate={playbackRate} screenScale={screenScale} screenShift={screenShift} delay={delay} noEnter={noEnter}>
       {children}
     </PhoneFrame>
   );

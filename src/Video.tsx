@@ -11,7 +11,15 @@
  * (continuous blocks therefore cut precisely at the pointed frames).
  */
 import type { FC, ReactNode } from "react";
-import { AbsoluteFill, Audio, Freeze, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
+import {
+  AbsoluteFill,
+  Audio,
+  Freeze,
+  Sequence,
+  staticFile,
+  useCurrentFrame,
+  interpolate,
+} from "remotion";
 import { TIMELINE, ASSETS } from "./timeline";
 import { SCENES } from "./scenes";
 import { Scene12to13 } from "./scenes/Scene12to13";
@@ -24,15 +32,28 @@ import { SceneEntryPoints } from "./scenes/SceneEntryPoints";
 import { SceneEntryPhones } from "./scenes/SceneEntryPhones";
 import { SceneEntryTags } from "./scenes/SceneEntryTags";
 import { SceneFramePhone } from "./scenes/SceneFramePhone";
+import { SceneClipNotes } from "./scenes/SceneClipNotes";
+import { SceneCatalyst } from "./scenes/SceneCatalyst";
+import { SceneWhichSectors } from "./scenes/SceneWhichSectors";
+import { SceneGoldHighlight } from "./scenes/SceneGoldHighlight";
+import { SceneFilterNote } from "./scenes/SceneFilterNote";
+import { SceneStocksHighlight } from "./scenes/SceneStocksHighlight";
 import { COLORS, MOUNT_VO } from "./theme";
 import { fontFamily } from "./fonts";
 
 // The old cut expressed as clips (OLD from/dur + component). Merged scenes are
 // represented by their continuity block, not individually.
-const MERGED = new Set([12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 27, 28]);
+const MERGED = new Set([
+  12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 27, 28,
+]);
 type Clip = { from: number; dur: number; Comp: FC; name: string };
 const OLD_CLIPS: Clip[] = [
-  ...TIMELINE.filter((s) => !MERGED.has(s.n)).map((s) => ({ from: s.from, dur: s.dur, Comp: SCENES[s.n - 1] as FC, name: `S${s.n}` })),
+  ...TIMELINE.filter((s) => !MERGED.has(s.n)).map((s) => ({
+    from: s.from,
+    dur: s.dur,
+    Comp: SCENES[s.n - 1] as FC,
+    name: `S${s.n}`,
+  })),
   { from: 2216, dur: 540, Comp: Scene12to13, name: "S12-13" },
   { from: 2756, dur: 728, Comp: Scene14to16, name: "S14-16" },
   { from: 3806, dur: 930, Comp: Scene19to21, name: "S19-21" },
@@ -63,7 +84,12 @@ export const PreviousCut = () => (
     {OLD_CLIPS.map((c) => {
       const { Comp } = c;
       return (
-        <Sequence key={c.name} from={c.from} durationInFrames={c.dur} name={c.name}>
+        <Sequence
+          key={c.name}
+          from={c.from}
+          durationInFrames={c.dur}
+          name={c.name}
+        >
           <Comp />
         </Sequence>
       );
@@ -72,9 +98,20 @@ export const PreviousCut = () => (
 );
 
 // Fades its children out starting at scene-local frame `fadeOutAt` (for crossfades).
-const FadeBox = ({ fadeOutAt, fadeOutDur = 14, children }: { fadeOutAt: number; fadeOutDur?: number; children: ReactNode }) => {
+const FadeBox = ({
+  fadeOutAt,
+  fadeOutDur = 14,
+  children,
+}: {
+  fadeOutAt: number;
+  fadeOutDur?: number;
+  children: ReactNode;
+}) => {
   const f = useCurrentFrame();
-  const op = interpolate(f, [fadeOutAt, fadeOutAt + fadeOutDur], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const op = interpolate(f, [fadeOutAt, fadeOutAt + fadeOutDur], [1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
   return <AbsoluteFill style={{ opacity: op }}>{children}</AbsoluteFill>;
 };
 
@@ -93,7 +130,12 @@ export const ConceptSectorVideo = () => (
         const len = end - start;
         const { Comp } = c;
         return [
-          <Sequence key={`m${m.label}-${c.name}`} from={start + offset} durationInFrames={len} name={`move ${m.label} · ${c.name}`}>
+          <Sequence
+            key={`m${m.label}-${c.name}`}
+            from={start + offset}
+            durationInFrames={len}
+            name={`move ${m.label} · ${c.name}`}
+          >
             <Sequence from={-L0} durationInFrames={c.dur}>
               <Comp />
             </Sequence>
@@ -104,23 +146,39 @@ export const ConceptSectorVideo = () => (
 
     {/* New content — freeze S1 @351, isolate EXCL, buy, floating loss; dims to a 20%
         frozen bg + "NOISE" at 595, then fades out to end scene 1 at 693. */}
-    <Sequence from={351} durationInFrames={342} name="Scene01Focus · EXCL freeze → buy → loss → NOISE (ends 693)">
+    <Sequence
+      from={351}
+      durationInFrames={342}
+      name="Scene01Focus · EXCL freeze → buy → loss → NOISE (ends 693)"
+    >
       <Scene01Focus />
     </Sequence>
 
     {/* Theme grid → ABCD → "????" scan → ABCD highlight (700→1349). */}
-    <Sequence from={700} durationInFrames={650} name="SceneThemeGrid · grid → ABCD → ???? scan → ABCD (ends 1349)">
+    <Sequence
+      from={700}
+      durationInFrames={650}
+      name="SceneThemeGrid · grid → ABCD → ???? scan → ABCD (ends 1349)"
+    >
       <SceneThemeGrid />
     </Sequence>
 
     {/* move 3 — S12–13 continuation (tags removed). Plays block-local 270→378 over
         1686→1794, then FREEZES at 378 (kills the page-scroll) and holds to 1819. */}
-    <Sequence from={1686} durationInFrames={108} name="move 3 · S12–13 (no tags)">
+    <Sequence
+      from={1686}
+      durationInFrames={108}
+      name="move 3 · S12–13 (no tags)"
+    >
       <Sequence from={-270} durationInFrames={540} layout="none">
         <Scene12to13 hideTags />
       </Sequence>
     </Sequence>
-    <Sequence from={1794} durationInFrames={26} name="move 3 freeze · S12–13 @378 (no scroll)">
+    <Sequence
+      from={1794}
+      durationInFrames={26}
+      name="move 3 freeze · S12–13 @378 (no scroll)"
+    >
       <Freeze frame={378}>
         <Scene12to13 hideTags />
       </Freeze>
@@ -130,12 +188,20 @@ export const ConceptSectorVideo = () => (
         CENTRED, so no entry slide). The video keeps rolling — no freeze, no cut — and
         flows straight into the "one screen, every angle" beat. NV 2137→2440, then the
         last S16 frame holds and fades out, ending at 2454. Revealed by move A's crossfade. */}
-    <Sequence from={2137} durationInFrames={303} name="moves 4+B · One owner → every angle (continuous)">
+    <Sequence
+      from={2137}
+      durationInFrames={303}
+      name="moves 4+B · One owner → every angle (continuous)"
+    >
       <Sequence from={-424} durationInFrames={728} layout="none">
         <Scene14to16 />
       </Sequence>
     </Sequence>
-    <Sequence from={2440} durationInFrames={14} name="moves 4+B tail · hold + fade out (ends 2454)">
+    <Sequence
+      from={2440}
+      durationInFrames={14}
+      name="moves 4+B tail · hold + fade out (ends 2454)"
+    >
       <FadeBox fadeOutAt={0} fadeOutDur={14}>
         <Freeze frame={726}>
           <Scene14to16 />
@@ -144,18 +210,30 @@ export const ConceptSectorVideo = () => (
     </Sequence>
 
     {/* text beat — "Different entry points" (2467) → "Same tool" (2537); out by 2595. */}
-    <Sequence from={2455} durationInFrames={140} name="SceneEntryPoints · different entry points → same tool">
+    <Sequence
+      from={2455}
+      durationInFrames={140}
+      name="SceneEntryPoints · different entry points → same tool"
+    >
       <SceneEntryPoints />
     </Sequence>
 
     {/* TikTok/X entry-point phones + five "????" stock labels (2608→2863). */}
-    <Sequence from={2608} durationInFrames={255} name="SceneEntryPhones · TikTok/X + ???? labels">
+    <Sequence
+      from={2608}
+      durationInFrames={255}
+      name="SceneEntryPhones · TikTok/X + ???? labels"
+    >
       <SceneEntryPhones />
     </Sequence>
 
     {/* Four entry-point tags as a persistent step-highlight row above the phones
         (2598→6000). Highlights #1 @2598, #2 @3178, #3 @4139, #4 @5049 — one at a time. */}
-    <Sequence from={2598} durationInFrames={3402} name="SceneEntryTags · 4 tags step-highlight (2598→6000)">
+    <Sequence
+      from={2598}
+      durationInFrames={3402}
+      name="SceneEntryTags · 4 tags step-highlight (2598→6000)"
+    >
       <SceneEntryTags total={3402} />
     </Sequence>
 
@@ -164,9 +242,39 @@ export const ConceptSectorVideo = () => (
     <Sequence from={2868} durationInFrames={310} name="frame 2868–3178 (phone)">
       <SceneFramePhone video="frame-2868-3178.mp4" dur={310} />
     </Sequence>
+
+    {/* Three text notes beside that phone: "Search at Concept Sector" @2876,
+        "…worth checking" @2931, "…probably noise." @3088; all out with the clip @3178. */}
+    <Sequence from={2876} durationInFrames={302} name="SceneClipNotes · worth checking / probably noise (2876→3178)">
+      <SceneClipNotes />
+    </Sequence>
+
+    {/* Between the phone clips: "A catalyst hits" @3183 → "US-Iran tensions escalate"
+        @3232; both out by 3291 (the tag row above keeps running). */}
+    <Sequence from={3183} durationInFrames={108} name="SceneCatalyst · A catalyst hits → US-Iran tensions escalate (3183→3291)">
+      <SceneCatalyst />
+    </Sequence>
+
+    {/* "Which sectors benefit?" — bridges the catalyst text to the chat clip. */}
+    <Sequence from={3294} durationInFrames={60} name="SceneWhichSectors · Which sectors benefit? (3294→3354)">
+      <SceneWhichSectors />
+    </Sequence>
     <Sequence from={3354} durationInFrames={785} name="frame 3354–4139 (phone)">
       <SceneFramePhone video="frame-3354-4139.mp4" dur={785} />
     </Sequence>
+
+    {/* Overlays ON TOP of the chat clip (mounted after it so they sit above the
+        phone): highlight the Gold block (3600→3690), then the "Filter by …" note. */}
+    <Sequence from={3600} durationInFrames={90} name="SceneGoldHighlight · Gold Ecosystem → Gold Sector (3600→3690)">
+      <SceneGoldHighlight />
+    </Sequence>
+    <Sequence from={3824} durationInFrames={296} name="SceneFilterNote · Filter by … (3824→4120)">
+      <SceneFilterNote />
+    </Sequence>
+    <Sequence from={3978} durationInFrames={142} name="SceneStocksHighlight · cyan box around stocks list (3978→4120)">
+      <SceneStocksHighlight />
+    </Sequence>
+
     <Sequence from={4139} durationInFrames={895} name="frame 4139–5034 (phone)">
       <SceneFramePhone video="frame-4139-5034.mp4" dur={895} />
     </Sequence>
@@ -176,9 +284,19 @@ export const ConceptSectorVideo = () => (
 
     {/* move A — S14–16 (3-item Concept list) at NV 1820; content ends 2136 then
         crossfades out over 2137→2151, revealing move 4 behind it. */}
-    <Sequence from={1820} durationInFrames={331} name="move A · S14–16 (3 concepts) → crossfade @2137">
+    <Sequence
+      from={1820}
+      durationInFrames={331}
+      name="move A · S14–16 (3 concepts) → crossfade @2137"
+    >
       <FadeBox fadeOutAt={317}>
-        <Scene14to16 concepts={["Legendary investors", "Government-affiliated", "Special situations"]} />
+        <Scene14to16
+          concepts={[
+            "Legendary investors",
+            "Government-affiliated",
+            "Special situations",
+          ]}
+        />
       </FadeBox>
     </Sequence>
   </AbsoluteFill>

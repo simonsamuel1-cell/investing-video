@@ -3,6 +3,9 @@
  * SAME size/position as the entry-point phones (PH_TOP 137, PH_H 806, cx 960), with
  * a fade-out over the final `fadeDur` frames. `dur` = the sequence length (frames).
  * Frame = scene-local.
+ *
+ * noEnter: the clip must HARD-START on its exact frame — no fade/scale entrance —
+ * so frame 0 of the video is visible on the sequence's very first frame.
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { PhoneCenter } from "../components/PhoneCenter";
@@ -15,7 +18,7 @@ export const SceneFramePhone = ({ video, dur, fadeDur = 14 }: { video: string; d
   const out = f < dur - fadeDur ? 1 : Math.max(0, (dur - f) / fadeDur);
   return (
     <AbsoluteFill style={{ opacity: out }}>
-      <PhoneCenter video={video} cx={960} top={PH_TOP} height={PH_H} delay={0} />
+      <PhoneCenter video={video} cx={960} top={PH_TOP} height={PH_H} delay={0} noEnter />
     </AbsoluteFill>
   );
 };
