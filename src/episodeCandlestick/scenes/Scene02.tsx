@@ -5,7 +5,7 @@
  * "Open → close", plus "Small wick" ticks top and bottom. At 7.6s the wick
  * labels dim while the body measurement brightens; chip "Conviction" pops
  * beneath the candle.
- * Compliance: fictional SAHAM A, illustrative data only — no arrows, entry
+ * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets.
  */
 import { useCurrentFrame, interpolateColors } from "remotion";

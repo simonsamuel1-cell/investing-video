@@ -10,7 +10,7 @@
  *                    ("Paragraph") → full chart ("Full Story");
  *   SC16 (540–629) — chart dims to 15%, "Learn to read." / "Not to recognize."
  *                    word by word + indigo rule.
- * The chart never remounts. Compliance: fictional SAHAM A, illustrative data
+ * The chart never remounts. Compliance: fictional $ABCD, illustrative data
  * only — no arrows, entry markers, or price targets.
  */
 import { useCurrentFrame } from "remotion";

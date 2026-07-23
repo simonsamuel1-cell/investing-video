@@ -1,7 +1,7 @@
 /**
  * PricePanel — chart chrome only: white rounded panel, neutral gridlines, right
  * Rp axis (slate 36px). Composed with CandleSeries or SessionView content.
- * Also exports Ticker — the fictional "SAHAM A" label for chart panels.
+ * Also exports Ticker — the fictional "$ABCD" label for chart panels.
  */
 import { theme } from "../theme";
 import { fmtRp } from "../helpers";
@@ -13,13 +13,13 @@ export const Ticker = ({ x = 130, y = 148 }: { x?: number; y?: number }) => (
       left: x,
       top: y,
       zIndex: 10, // stays above panel chrome regardless of mount order
-      fontSize: theme.type.label.size,
-      fontWeight: theme.type.label.weight,
+      fontSize: theme.type.label.size + 4,
+      fontWeight: theme.type.headline.weight, // bold
       color: theme.colors.slate,
       whiteSpace: "nowrap",
     }}
   >
-    SAHAM A
+    $ABCD
   </div>
 );
 

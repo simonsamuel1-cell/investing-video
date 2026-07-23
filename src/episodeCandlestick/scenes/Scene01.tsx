@@ -4,7 +4,7 @@
  * session (index 22) with the chip "One Session", then eases out to enclose the
  * 18–25 sequence while the dim releases and the chip cross-fades to
  * "The Sequence".
- * Compliance: fictional SAHAM A, illustrative data only — no arrows, entry
+ * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets.
  */
 import { useCurrentFrame } from "remotion";
@@ -31,7 +31,7 @@ const FOCUS_W_SINGLE = 90; // Target A frame width
 const FOCUS_PAD_Y = 30; // vertical padding above/below hi–lo span
 const CHIP_GAP_X = 14; // chip left edge past the frame's right edge
 const CHIP_RISE = 82; // chip top sits this far above the frame top
-const TICKER_Y = 140;
+const TICKER_Y = 120; // matches Scene02/Scene03 ticker position
 const T = {
   chartIn: 0.0, // chart fades in fully formed
   focus: 1.0, // FocusFrame draws at Target A, outside dims to 15%

@@ -22,8 +22,8 @@ const VIEW_Y = 200; // SessionView top
 const VIEW_W = 1536; // full active width
 const VIEW_H = 520;
 const SPLIT = 0.62; // intraday : candle panel ratio
-const TICKER_X = 130; // "SAHAM A" top-left of the chart panel
-const TICKER_Y = 100; // kept ≥24px clear of the marker chip below
+const TICKER_X = 130; // "$ABCD" top-left of the chart panel
+const TICKER_Y = 120; // matches Scene01/Scene02 ticker position
 const MARKER_PRICE = 1358; // session high — "Sellers Were Here" level
 const T = {
   viewIn: 0.0, // panels + clock fade in

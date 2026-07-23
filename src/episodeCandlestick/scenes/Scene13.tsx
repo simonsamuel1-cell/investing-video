@@ -5,7 +5,7 @@
  * restore; the matrix compresses to the left half and a 12-candle mini chart
  * contrasts a Weak (mid-range low) vs Strong (low on support) Hammer with
  * neutralMuted / indigo rings and chips.
- * Compliance: fictional SAHAM A, illustrative data only — no arrows, entry
+ * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets. Ticker skipped on the mini chart (the 1330
  * reference line crosses the only clean label band — it would crowd).
  */
