@@ -37,7 +37,10 @@ export const ReferenceLine = ({
   if (constructFrom) {
     segX1 = constructFrom.xa;
     segX2 = constructFrom.xa + (constructFrom.xb - constructFrom.xa) * constructProgress;
-    if (extendProgress > 0) segX2 = constructFrom.xb + (x2 - constructFrom.xb) * extendProgress;
+    if (extendProgress > 0) {
+      segX2 = constructFrom.xb + (x2 - constructFrom.xb) * extendProgress; // extend right to x2
+      segX1 = constructFrom.xa + (x1 - constructFrom.xa) * extendProgress; // extend left to x1
+    }
   }
   if (segX2 <= segX1) return null;
   const labelX = anchor === "left" ? x1 : x2;

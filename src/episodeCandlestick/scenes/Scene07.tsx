@@ -38,14 +38,17 @@ const CHART_BOTTOM = 760; // chart bottom y
 const N_CANDLES = 24;
 const CANDLE_W = 36; // candle body width
 const TALLY_XEND = 1360; // right edge of the TallyStrip (≤ 1368 logo rule)
-const TALLY_Y = 190; // TallyStrip top
+const TALLY_Y = 150; // TallyStrip top → tags sit 20px above the white panel (rect top 236)
 const CHIP_X = 110; // "Support" chip, left-anchored at line's left end
 const CHIP_GAP = 18; // chip top offset below the support line
 const CAPTION_Y = 840; // caption top (clear of subtitle zone at 972+)
+const PANEL_L = CHART_X0 - 24; // panel rounded-rect left edge
+const PANEL_R = CHART_X1 + 24; // panel rounded-rect right edge
 // Price domain
 const PRICE_MIN = 1215;
 const PRICE_MAX = 1340;
 const SUPPORT_PRICE = 1215;
+const RESISTANCE_PRICE = 1295;
 // Timings (seconds, scene-local)
 const T = {
   panelIn: 0.0, // chart panel fades in
@@ -65,6 +68,7 @@ const T = {
   finalWick: 6.1, // index 23 lower wick descends to the line
   finalWickDur: 0.5,
   ping3: 6.6, // Ping "3" at index 23 low → slot 3 fills
+  resistance: 7.933, // resistance line at 1295 + "Resistance" label (frame 3391)
   caption: 11.5, // "Three signals, one direction."
 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -106,11 +110,17 @@ const buildSeries = (): OHLC[] => {
 };
 
 const SERIES = buildSeries();
+const MIN_LOW = Math.min(...SERIES.map((c) => c.low));
+const MAX_HIGH = Math.max(...SERIES.map((c) => c.high));
+const RECT_CENTER_Y = (CHART_TOP - 24 + CHART_BOTTOM + 24) / 2; // vertical center of the white panel
 
 export const Scene07 = () => {
   const f = useCurrentFrame();
   const scale = priceScale(PRICE_MIN, PRICE_MAX, CHART_TOP, CHART_BOTTOM);
   const lineY = scale(SUPPORT_PRICE);
+  const resY = scale(RESISTANCE_PRICE);
+  // Center the candle band (candles + pings + lines + their chips) in the panel.
+  const GROUP_DY = RECT_CENTER_Y - (scale(MIN_LOW) + scale(MAX_HIGH)) / 2;
 
   const panelOpacity = fadeIn(f, sec(T.panelIn));
   const constructQ = progress(f, sec(T.construct), sec(T.constructDur));
@@ -130,57 +140,79 @@ export const Scene07 = () => {
         opacity={panelOpacity}
       />
 
-      {/* Support line: constructed between the two touches, then extended right. */}
-      {f >= sec(T.construct) && (
-        <ReferenceLine
-          y={lineY}
-          x1={CHART_X0}
-          x2={CHART_X1}
-          constructFrom={{ xa: cx(4), xb: cx(13) }}
-          constructProgress={constructQ}
-          extendProgress={extendQ}
-        />
-      )}
-
-      {/* Candles — own full-canvas svg over the panel. */}
-      <svg
-        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      >
-        {SERIES.slice(0, 23).map((c, i) => {
-          const start = sec(T.wipeStart + i * T.wipeStagger);
-          if (f < start) return null;
-          return (
-            <Candle
-              key={i}
-              x={cx(i)}
-              width={CANDLE_W}
-              open={c.open}
-              high={c.high}
-              low={c.low}
-              close={c.close}
-              scale={scale}
-              buildProgress={progress(f, start, sec(T.wipeBodyDur))}
-              wickProgress={progress(f, start + Math.round(sec(T.wipeBodyDur) / 2), sec(T.wipeWickDur))}
-            />
-          );
-        })}
-        {/* Index 23 — NOT part of the wipe; body first, then the long lower wick. */}
-        {f >= sec(T.finalBody) && (
-          <Candle
-            x={cx(23)}
-            width={CANDLE_W}
-            open={SERIES[23].open}
-            high={SERIES[23].high}
-            low={SERIES[23].low}
-            close={SERIES[23].close}
-            scale={scale}
-            buildProgress={progress(f, sec(T.finalBody), sec(T.finalBodyDur))}
-            wickProgress={progress(f, sec(T.finalWick), sec(T.finalWickDur))}
+      {/* Everything below (candles, pings, support/resistance lines + chips) is
+          grouped and shifted so the candle band centers vertically in the panel.
+          The lines move with the candles so the support/resistance touches hold. */}
+      <div style={{ position: "absolute", left: 0, top: 0, transform: `translateY(${GROUP_DY}px)` }}>
+        {/* Support line: constructed between the two touches, then extended to both panel edges. */}
+        {f >= sec(T.construct) && (
+          <ReferenceLine
+            y={lineY}
+            x1={PANEL_L}
+            x2={PANEL_R}
+            constructFrom={{ xa: cx(4), xb: cx(13) }}
+            constructProgress={constructQ}
+            extendProgress={extendQ}
           />
         )}
-      </svg>
+
+        {/* Resistance line at 1295 — same design as Support, drawn at frame 3391. */}
+        {f >= sec(T.resistance) && (
+          <ReferenceLine
+            y={resY}
+            x1={PANEL_L}
+            x2={PANEL_R}
+            drawProgress={progress(f, sec(T.resistance), sec(0.6))}
+          />
+        )}
+        <Chip label="Resistance" x={CHIP_X} y={resY - 80} anchor="left" startFrame={sec(T.resistance) + 8} />
+
+        {/* Candles — own full-canvas svg over the panel. */}
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
+          {SERIES.slice(0, 23).map((c, i) => {
+            const start = sec(T.wipeStart + i * T.wipeStagger);
+            if (f < start) return null;
+            return (
+              <Candle
+                key={i}
+                x={cx(i)}
+                width={CANDLE_W}
+                open={c.open}
+                high={c.high}
+                low={c.low}
+                close={c.close}
+                scale={scale}
+                buildProgress={progress(f, start, sec(T.wipeBodyDur))}
+                wickProgress={progress(f, start + Math.round(sec(T.wipeBodyDur) / 2), sec(T.wipeWickDur))}
+              />
+            );
+          })}
+          {/* Index 23 — NOT part of the wipe; body first, then the long lower wick. */}
+          {f >= sec(T.finalBody) && (
+            <Candle
+              x={cx(23)}
+              width={CANDLE_W}
+              open={SERIES[23].open}
+              high={SERIES[23].high}
+              low={SERIES[23].low}
+              close={SERIES[23].close}
+              scale={scale}
+              buildProgress={progress(f, sec(T.finalBody), sec(T.finalBodyDur))}
+              wickProgress={progress(f, sec(T.finalWick), sec(T.finalWickDur))}
+            />
+          )}
+        </svg>
+
+        <Ping cx={cx(4)} cy={scale(SERIES[4].low)} startFrame={sec(T.ping1)} numberLabel="1" labelBelow />
+        <Ping cx={cx(13)} cy={scale(SERIES[13].low)} startFrame={sec(T.ping2)} numberLabel="2" labelBelow />
+        <Ping cx={cx(23)} cy={scale(SERIES[23].low)} startFrame={sec(T.ping3)} numberLabel="3" labelBelow />
+
+        <Chip label="Support" x={CHIP_X} y={lineY + CHIP_GAP} anchor="left" startFrame={sec(T.chip)} />
+      </div>
 
       {/* Tally — right-aligned, ends at x 1360 (≤ 1368). */}
       <TallyStrip
@@ -189,15 +221,9 @@ export const Scene07 = () => {
         slots={[
           { label: "Touch 1", fillFrame: sec(T.ping1) },
           { label: "Touch 2", fillFrame: sec(T.ping2) },
-          { label: "Wick Rejection", fillFrame: sec(T.ping3) },
+          { label: "Wick rejection", fillFrame: sec(T.ping3) },
         ]}
       />
-
-      <Ping cx={cx(4)} cy={scale(SERIES[4].low)} startFrame={sec(T.ping1)} numberLabel="1" />
-      <Ping cx={cx(13)} cy={scale(SERIES[13].low)} startFrame={sec(T.ping2)} numberLabel="2" />
-      <Ping cx={cx(23)} cy={scale(SERIES[23].low)} startFrame={sec(T.ping3)} numberLabel="3" />
-
-      <Chip label="Support" x={CHIP_X} y={lineY + CHIP_GAP} anchor="left" startFrame={sec(T.chip)} />
 
       {/* Caption — sentence case, 40px, centered. */}
       <div

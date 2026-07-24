@@ -1,28 +1,29 @@
 /**
  * TallyStrip — N slots along the top of a chart; each fills with a chip +
- * small indigo check when its fillFrame passes. Right-aligned so it stays
- * clear of the logo zone (end at x ≤ 1368 when in the top 150px).
+ * small indigo check when its fillFrame passes. Right-aligned (right edge at
+ * xEnd) so it stays clear of the logo zone. Slots fit their text with
+ * 15px horizontal / 10px vertical padding.
  */
 import { useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
+
+const PAD_X = 15;
+const PAD_Y = 10;
 
 export const TallyStrip = ({
   slots,
   xEnd,
   y,
-  slotWidth = 300,
   gap = 20,
 }: {
   slots: { label: string; fillFrame: number }[];
   xEnd: number; // right edge of the strip
   y: number; // top edge
-  slotWidth?: number;
   gap?: number;
 }) => {
   const f = useCurrentFrame();
-  const total = slots.length * slotWidth + (slots.length - 1) * gap;
   return (
-    <div style={{ position: "absolute", left: xEnd - total, top: y, display: "flex", gap }}>
+    <div style={{ position: "absolute", right: theme.canvas.width - xEnd, top: y, display: "flex", gap }}>
       {slots.map((s) => {
         const filled = f >= s.fillFrame;
         const pop = interpolate(f, [s.fillFrame, s.fillFrame + 9], [0.85, 1], {
@@ -34,8 +35,7 @@ export const TallyStrip = ({
           <div
             key={s.label}
             style={{
-              width: slotWidth,
-              height: 62,
+              padding: `${PAD_Y}px ${PAD_X}px`,
               borderRadius: theme.radius.chip,
               border: filled
                 ? `${theme.stroke.hairline}px solid ${theme.colors.indigo}`

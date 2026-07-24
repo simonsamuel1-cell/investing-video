@@ -1,59 +1,14 @@
 /**
- * Scene12 — from 6926, duration 840 frames.
- * Bearish Engulfing (two-day SessionView mirror): day 1 rallies into a green
- * candle, marker at day 1's open (1296, "Day 1 Open"), clock resets, day 2
- * sells off and crosses below the open — day 1's candle dims and "Reversed"
- * pops above it. Caption "Everything buyers gained, given back.", then the
- * ContextStrip reveals six rising green candles, resistance at 1410, the pair
- * docks, and the chips "Top Of Uptrend" / "Near Resistance" land.
- * Compliance: theme tokens only (no raw hex/sizes/easings), safe margins
- * 96/96/54/108, bottom 108px empty, deterministic (no Math.random),
- * IllustrationTag + Ticker mounted, textReveal for type, clampProgress drives
- * session playback.
+ * Scene12 — Bearish Engulfing case study. From frame 6926.
+ * Uses the shared CaseStudyScene choreography (the "Hammer" design): a two-day
+ * session forms the engulfing pair (green day 1, red day 2), then the view
+ * collapses and a crowded uptrend ContextStrip opens beside the shrunk candle
+ * panel — the pair docks at resistance under "Sellers taking control".
  */
-import { useCurrentFrame } from "remotion";
-import { theme } from "../theme";
-import { sec, fadeIn, fadeOut, textReveal, progress, clampProgress } from "../helpers";
+import { CaseStudyScene } from "../components/CaseStudyScene";
+import type { CaseStudyConfig } from "../components/CaseStudyScene";
+import { mulberry32 } from "../helpers";
 import type { OHLC, SessionPoint } from "../helpers";
-import { SafeArea } from "../components/SafeArea";
-import { CaseStudyLayout } from "../components/CaseStudyLayout";
-import { SessionView, sessionScale, sessionGeom } from "../components/SessionView";
-import { ContextStrip } from "../components/ContextStrip";
-import { Chip } from "../components/Chip";
-import { IllustrationTag } from "../components/IllustrationTag";
-
-// ═══ EDIT ═══
-const VIEW_X = 96; // SessionView left
-const VIEW_Y = 240; // SessionView top (benchmark = SC03)
-const VIEW_W = 1536; // full active width
-const VIEW_H = 440; // → 480px rect
-const MARKER_PRICE = 1296; // day 1's open — the level day 2 breaks below
-const REVERSED_RISE = 90; // px the "Reversed" chip sits above day 1's high
-const CAPTION_Y = 840; // sentence-case caption (before the ContextStrip)
-const PANEL_GAP = 20; // benchmark chart design (matches SC03)
-const CENTER_NUDGE = 30;
-const TIME_FONT = 30;
-const T = {
-  header: 0.0, // title + signal chip reveal
-  viewIn: 1.2, // SessionView fades in
-  day1From: 1.2, // day 1 playback starts
-  day1Dur: 3.0, // → green candle resolves at 4.2s
-  marker: 4.6, // dashed line at 1296 + "Day 1 Open" chip
-  reset: 5.8, // clock playhead wipes back to 09:00
-  day2From: 5.8, // day 2 playback starts
-  day2Dur: 4.2, // → closes at 10.0s
-  cross: 8.6, // live close crosses below 1296 → day 1 dims + "Reversed"
-  close: 10.0, // day 2 closes → intraday half dims
-  caption: 13.0, // caption reveals
-  captionOut: 18.0, // caption fades out
-  strip: 18.0, // ContextStrip reveals
-  line: 18.8, // resistance line draws
-  dock: 19.8, // the pair docks
-  dockDur: 0.8,
-  chip1: 21.2, // "Top Of Uptrend"
-  chip2: 22.0, // "Near Resistance"
-};
-// ═══════════
 
 const DAY1_PATH: SessionPoint[] = [
   { t: 0, price: 1296 },
@@ -76,99 +31,50 @@ const DAY2_PATH: SessionPoint[] = [
   { t: 1, price: 1281 },
 ];
 
-const DAY1_HIGH = 1392; // "Reversed" chip anchors above this level
+// Dense uptrend context (crowded, 20px gaps) rising into resistance.
+const CONTEXT_DATA: OHLC[] = (() => {
+  const rnd = mulberry32(23);
+  const out: OHLC[] = [];
+  const N = 18;
+  let prev = 1100;
+  for (let i = 0; i < N; i++) {
+    const drift = 1100 + ((1400 - 1100) * i) / (N - 1);
+    const open = prev;
+    const close = Math.round(drift + (rnd() - 0.5) * 22);
+    const high = Math.round(Math.max(open, close) + 4 + rnd() * 12);
+    const low = Math.round(Math.min(open, close) - (4 + rnd() * 12));
+    out.push({ open, high, low, close });
+    prev = close;
+  }
+  return out;
+})();
 
-// six green candles rising into the pattern
-const CONTEXT_DATA: OHLC[] = [
-  { open: 1042, high: 1092, low: 1036, close: 1084 },
-  { open: 1087, high: 1138, low: 1080, close: 1130 },
-  { open: 1133, high: 1186, low: 1126, close: 1178 },
-  { open: 1181, high: 1228, low: 1174, close: 1220 },
-  { open: 1223, high: 1268, low: 1216, close: 1260 },
-  { open: 1263, high: 1302, low: 1256, close: 1296 },
-];
-
-const DOCK_CANDLES: OHLC[] = [
-  { open: 1296, high: 1392, low: 1288, close: 1384 },
-  { open: 1402, high: 1410, low: 1272, close: 1281 },
-];
-
-export const Scene12 = () => {
-  const f = useCurrentFrame();
-
-  const viewOpacity = fadeIn(f, sec(T.viewIn));
-  const day1Progress = clampProgress(f, sec(T.day1From), sec(T.day1Dur));
-  const day2Progress = clampProgress(f, sec(T.day2From), sec(T.day2Dur));
-  const dimStrength = progress(f, sec(T.cross), 12);
-
-  // same geometry SessionView uses (incl. the centered offset) — for the "Reversed" chip
-  const { rightX, rightW, centerOffset } = sessionGeom({ x: VIEW_X, width: VIEW_W, panelGap: PANEL_GAP, centered: true, centerNudge: CENTER_NUDGE });
-  const c1x = rightX + rightW * 0.34 + centerOffset; // day-1 candle center in the centered group
-  const scale = sessionScale([DAY1_PATH, DAY2_PATH], VIEW_Y, VIEW_Y + VIEW_H - 72, [MARKER_PRICE]);
-  const reversedY = scale(DAY1_HIGH) - REVERSED_RISE; // above day 1's high
-
-  const cap = textReveal(f, sec(T.caption));
-  const captionOpacity = cap.opacity * fadeOut(f, sec(T.captionOut));
-
-  return (
-    <SafeArea>
-      <CaseStudyLayout title="Bearish Engulfing" signalChip={{ label: "Bearish", variant: "neutral" }} headerFrame={sec(T.header)}>
-        <SessionView
-          path={DAY1_PATH}
-          progress={day1Progress}
-          day2Path={DAY2_PATH}
-          day2Progress={day2Progress}
-          resetFrame={sec(T.reset)}
-          day1DimStrength={dimStrength}
-          x={VIEW_X}
-          y={VIEW_Y}
-          width={VIEW_W}
-          height={VIEW_H}
-          closeFrame={sec(T.close)}
-          markerPrice={MARKER_PRICE}
-          markerChipLabel="Day 1 Open"
-          markerStartFrame={sec(T.marker)}
-          opacity={viewOpacity}
-          centered
-          centerNudge={CENTER_NUDGE}
-          panelGap={PANEL_GAP}
-          timeFontSize={TIME_FONT}
-        />
-
-        <Chip label="Reversed" x={c1x} y={reversedY} variant="indigo" startFrame={sec(T.cross)} anchor="center" />
-
-        <div
-          style={{
-            position: "absolute",
-            left: theme.layout.safeLeft,
-            top: CAPTION_Y,
-            width: theme.layout.activeWidth,
-            textAlign: "center",
-            fontSize: theme.type.body.size,
-            fontWeight: theme.type.body.weight,
-            color: theme.colors.ink,
-            opacity: captionOpacity,
-            transform: `translateY(${cap.y}px)`,
-          }}
-        >
-          Everything buyers gained, given back.
-        </div>
-
-        <ContextStrip
-          data={CONTEXT_DATA}
-          refLine={{ price: 1410, label: "Resistance", position: "above" }}
-          dockCandles={DOCK_CANDLES}
-          dockProgress={progress(f, sec(T.dock), sec(T.dockDur))}
-          chips={[
-            { label: "Top Of Uptrend", variant: "indigo", startFrame: sec(T.chip1) },
-            { label: "Near Resistance", variant: "indigo", startFrame: sec(T.chip2) },
-          ]}
-          revealFrame={sec(T.strip)}
-          lineFrame={sec(T.line)}
-        />
-      </CaseStudyLayout>
-
-      <IllustrationTag />
-    </SafeArea>
-  );
+const config: CaseStudyConfig = {
+  path: DAY1_PATH,
+  day2Path: DAY2_PATH,
+  contextData: CONTEXT_DATA,
+  refLine: { price: 1416, label: "Resistance", position: "above" },
+  dockCandles: [
+    { open: 1372, high: 1408, low: 1366, close: 1404 }, // green day 1
+    { open: 1410, high: 1416, low: 1364, close: 1370 }, // red day 2 engulfs it
+  ],
+  dockLabel: ["Sellers taking", "control"],
+  T: {
+    header: 0.0,
+    svIn: 1.2,
+    day1From: 1.2,
+    day1Dur: 3.0,
+    reset: 5.8,
+    day2From: 5.8,
+    day2Dur: 4.2,
+    close: 10.0,
+    collapse: 21.433,
+    collapseDur: 0.6,
+    ctxLine: 22.5,
+    dock: 23.2,
+    dockDur: 0.8,
+    label: 25.533,
+  },
 };
+
+export const Scene12 = () => <CaseStudyScene config={config} />;

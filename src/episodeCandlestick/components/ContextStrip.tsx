@@ -22,6 +22,8 @@ export const ContextStrip = ({
   refLine,
   dockCandles = [],
   dockProgress = 0,
+  dockInline = false,
+  dockLabel,
   chips = [],
   revealFrame,
   lineFrame,
@@ -30,11 +32,14 @@ export const ContextStrip = ({
   width = 1536,
   height = 190,
   opacity = 1,
+  candleGap,
 }: {
   data: OHLC[];
   refLine?: { price: number; label: string; position: "below" | "above" };
   dockCandles?: OHLC[];
   dockProgress?: number;
+  dockInline?: boolean; // dock right after the last data candle (context width) instead of the far slot
+  dockLabel?: { lines: string[]; startFrame: number; below?: boolean }; // multi-line indigo label (above the dock candle, or below when the dock sits high)
   chips?: { label: string; variant: ChipVariant; startFrame: number }[];
   revealFrame: number; // strip fade + candle wipe start
   lineFrame?: number; // reference line draw start
@@ -43,6 +48,7 @@ export const ContextStrip = ({
   width?: number;
   height?: number;
   opacity?: number;
+  candleGap?: number; // when set → crowded: fixed gap between candles (packed from the left)
 }) => {
   const f = useCurrentFrame();
   if (f < revealFrame) return null;
@@ -61,9 +67,15 @@ export const ContextStrip = ({
   const slotW = 150; // docking slot at the end
   const areaX = x + 34;
   const areaW = width - 34 - slotW - 60;
-  const slot = areaW / data.length;
-  const bw = Math.min(26, slot * 0.5);
+  // Crowded (candleGap set): fixed body width + fixed gap, packed from the left.
+  // Otherwise: spread evenly across the candle area.
+  const bw = candleGap !== undefined ? 26 : Math.min(26, (areaW / data.length) * 0.5);
+  const slot = candleGap !== undefined ? bw + candleGap : areaW / data.length;
   const dockX = x + width - slotW - 24;
+  // Dock candle horizontal position: inline (right after the last data candle) or centered in the far slot.
+  const dockCandleX = (i: number) =>
+    dockInline ? areaX + slot * (data.length + i + 0.5) : dockX + (slotW / (dockCandles.length + 1)) * (i + 1);
+  const dockCandleW = dockInline ? bw : 30;
 
   const lineDraw = lineFrame !== undefined && f >= lineFrame ? easedProgress(f, lineFrame, 16) : 0;
 
@@ -81,18 +93,20 @@ export const ContextStrip = ({
           borderRadius: theme.radius.panel,
         }}
       />
-      {/* docking slot outline */}
-      <div
-        style={{
-          position: "absolute",
-          left: dockX,
-          top: y + 16,
-          width: slotW,
-          height: height - 32,
-          border: `${theme.stroke.hairline}px dashed ${theme.colors.neutralLine}`,
-          borderRadius: theme.radius.chip,
-        }}
-      />
+      {/* docking slot outline — only when docking into the far slot (not inline) */}
+      {!dockInline && (
+        <div
+          style={{
+            position: "absolute",
+            left: dockX,
+            top: y + 16,
+            width: slotW,
+            height: height - 32,
+            border: `${theme.stroke.hairline}px dashed ${theme.colors.neutralLine}`,
+            borderRadius: theme.radius.chip,
+          }}
+        />
+      )}
       <svg
         style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
         width={theme.canvas.width}
@@ -140,18 +154,59 @@ export const ContextStrip = ({
             </text>
           </>
         )}
-        {/* finished pattern candle(s) slide into the docking slot */}
+        {/* finished pattern candle(s) slide into place */}
         {dockProgress > 0.001 &&
           dockCandles.map((d, i) => {
-            const cxI = dockX + (slotW / (dockCandles.length + 1)) * (i + 1);
+            const cxI = dockCandleX(i);
             const dy = (1 - dockProgress) * -90;
             return (
               <g key={i} opacity={dockProgress} transform={`translate(0 ${dy})`}>
-                <Candle x={cxI} width={30} open={d.open} high={d.high} low={d.low} close={d.close} scale={scale} />
+                <Candle x={cxI} width={dockCandleW} open={d.open} high={d.high} low={d.low} close={d.close} scale={scale} />
               </g>
             );
           })}
       </svg>
+
+      {/* multi-line indigo label above the dock candle */}
+      {dockLabel && dockCandles.length > 0 && f >= dockLabel.startFrame && (() => {
+        const pop = interpolate(f, [dockLabel.startFrame, dockLabel.startFrame + 9], [0.82, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+          easing: theme.motion.ease,
+        });
+        const op = interpolate(f, [dockLabel.startFrame, dockLabel.startFrame + 8], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        });
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: (dockCandleX(0) + dockCandleX(dockCandles.length - 1)) / 2,
+              top: dockLabel.below
+                ? scale(Math.min(...dockCandles.map((d) => d.low))) + 24
+                : scale(Math.max(...dockCandles.map((d) => d.high))) - 24,
+              transform: `translate(-50%, ${dockLabel.below ? "0" : "-100%"}) scale(${pop})`,
+              padding: "10px 22px",
+              borderRadius: theme.radius.chip,
+              background: theme.colors.neutralFill,
+              border: `${theme.stroke.hairline}px solid ${theme.colors.indigo}`,
+              boxShadow: `inset 0 0 0 1px ${theme.colors.indigo}`,
+              fontSize: theme.type.label.size,
+              fontWeight: theme.type.label.weight,
+              lineHeight: 1.15,
+              color: theme.colors.indigo,
+              textAlign: "center",
+              whiteSpace: "nowrap",
+              opacity: op,
+            }}
+          >
+            {dockLabel.lines.map((ln) => (
+              <div key={ln}>{ln}</div>
+            ))}
+          </div>
+        );
+      })()}
       {/* chips beneath the strip (still above the subtitle zone) */}
       <div style={{ position: "absolute", left: x + 20, top: y + height + 12, display: "flex", gap: 20 }}>
         {chips.map((c) => {

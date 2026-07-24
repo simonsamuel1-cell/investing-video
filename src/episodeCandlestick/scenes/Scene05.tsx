@@ -63,7 +63,6 @@ const T = {
   sessionDur: 4.6,
   ping: 8.4, // pingT 0.5 → price 1108, both panels
   close: 11.0, // session closes → intraday dims to 25%
-  wick: 12.0, // candle 4's wick strokes cyan
   refLine: 19.0,
   caption: 20.2,
   msgSwap: 10.633, // frame 1900 (scene-local): "Sellers in control" → "Buyers absorb everything"
@@ -193,7 +192,6 @@ export const Scene05 = () => {
               x={cx(3)}
               width={CANDLE_W}
               scale={dScale}
-              wickStroke={f >= sec(T.wick) ? theme.colors.cyan : undefined}
             />
           )}
         </svg>

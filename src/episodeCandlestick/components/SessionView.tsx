@@ -39,6 +39,9 @@ export type SessionViewProps = {
   candleWidth?: number;
   wickStroke?: string; // highlight the finished candle's wick (e.g. cyan)
   wickStrokeFrame?: number;
+  lateWickStroke?: string; // recolor the highlighted wick from lateWickStrokeFrame (e.g. green)
+  lateWickStrokeFrame?: number;
+  pingOpacity?: number; // fade the low-of-day pings out (default 1)
   // ── two-day mode ──
   day2Path?: SessionPoint[];
   day2Progress?: number; // 0–1 for day 2
@@ -51,6 +54,12 @@ export type SessionViewProps = {
   centerNudge?: number; // extra px added to the centered offset (+ = right)
   panelGap?: number; // visible gap between the two panel rects (px); default keeps legacy spacing
   timeFontSize?: number; // clock-label size (09:00 / 12:00 / 15:50)
+  // ── collapse (SC09): fade the intraday half + prices, shrink/shift the candle half ──
+  intradayOpacity?: number; // multiplies the left (intraday) panel opacity; default 1
+  axisOpacity?: number; // multiplies the right Rp price-axis opacity; default 1
+  rightScale?: number; // scale the right (candle) panel about its top-left; default 1
+  rightDX?: number; // translate the right panel horizontally (px, panel space); default 0
+  rightDY?: number; // translate the right panel vertically (px); default 0
 };
 
 const RESET_FRAMES = 12; // 0.4s playhead wipe
@@ -208,6 +217,9 @@ export const SessionView = ({
   candleWidth = 64,
   wickStroke,
   wickStrokeFrame,
+  lateWickStroke,
+  lateWickStrokeFrame,
+  pingOpacity = 1,
   day2Path,
   day2Progress = 0,
   resetFrame,
@@ -218,13 +230,32 @@ export const SessionView = ({
   centerNudge = 0,
   panelGap,
   timeFontSize,
+  intradayOpacity = 1,
+  axisOpacity = 1,
+  rightScale = 1,
+  rightDX = 0,
+  rightDY = 0,
 }: SessionViewProps) => {
   const f = useCurrentFrame();
   // Horizontal geometry (incl. the centered-group offset) from the shared helper.
   const { axisW, leftW, rightX, rightW, centerOffset } = sessionGeom({ x, width, splitRatio, panelGap, centered, centerNudge });
 
+  // Right-panel collapse transform (identity when the defaults are used).
+  const rPivotX = rightX - 20; // right panel rect's top-left corner
+  const rPivotY = y - 20;
+  const rightGroupSvgTransform = `translate(${rightDX} ${rightDY}) translate(${rPivotX} ${rPivotY}) scale(${rightScale}) translate(${-rPivotX} ${-rPivotY})`;
+  const rightGroupCssTransform = `translate(${rightDX}px, ${rightDY}px) scale(${rightScale})`;
+
   const twoDay = !!day2Path;
   const inDay2 = twoDay && resetFrame !== undefined && f >= resetFrame;
+
+  // Highlighted-wick color, optionally switching to a late color (e.g. cyan → green).
+  const effWickStroke =
+    !twoDay && wickStroke && wickStrokeFrame !== undefined && f >= wickStrokeFrame
+      ? lateWickStroke && lateWickStrokeFrame !== undefined && f >= lateWickStrokeFrame
+        ? lateWickStroke
+        : wickStroke
+      : undefined;
 
   const scale = sessionScale(
     twoDay ? [path, day2Path] : [path],
@@ -279,21 +310,23 @@ export const SessionView = ({
 
   return (
     <div style={{ position: "absolute", left: 0, top: 0, opacity, transform: `translateX(${centerOffset}px)` }}>
-      <IntradayPanel
-        path={activePath!}
-        progress={activeProgress}
-        x={x}
-        y={y}
-        width={leftW}
-        height={height}
-        scale={scale}
-        opacity={dimOp}
-        traceOpacity={traceOpacity}
-        clockProgress={clockProgress}
-        timeFontSize={timeFontSize}
-      />
+      <div style={{ opacity: intradayOpacity }}>
+        <IntradayPanel
+          path={activePath!}
+          progress={activeProgress}
+          x={x}
+          y={y}
+          width={leftW}
+          height={height}
+          scale={scale}
+          opacity={dimOp}
+          traceOpacity={traceOpacity}
+          clockProgress={clockProgress}
+          timeFontSize={timeFontSize}
+        />
+      </div>
 
-      {/* right panel — the live daily candle(s) */}
+      {/* right panel — the live daily candle(s); shrinks/shifts on collapse */}
       <div
         style={{
           position: "absolute",
@@ -304,6 +337,8 @@ export const SessionView = ({
           background: theme.colors.neutralFill,
           border: `${theme.stroke.hairline}px solid ${theme.colors.neutralLine}`,
           borderRadius: theme.radius.panel,
+          transformOrigin: "top left",
+          transform: rightGroupCssTransform,
         }}
       />
       <svg
@@ -311,47 +346,52 @@ export const SessionView = ({
         width={theme.canvas.width}
         height={theme.canvas.height}
       >
-        {[0.25, 0.5, 0.75].map((q) => (
-          <line
-            key={q}
-            x1={rightX}
-            y1={y + (height - 72) * q}
-            x2={rightX + rightW}
-            y2={y + (height - 72) * q}
-            stroke={theme.colors.neutralLine}
-            strokeWidth={theme.stroke.hairline}
-          />
-        ))}
-        {/* day 1 candle (live during day 1; persists — possibly dimmed — in day 2) */}
-        {progress > 0.001 && (
-          <LiveCandle
-            path={path}
-            progress={progress}
-            x={c1x}
-            width={candleWidth}
-            scale={scale}
-            opacity={1 - 0.7 * day1DimStrength}
-            wickStroke={!twoDay && wickStroke && wickStrokeFrame !== undefined && f >= wickStrokeFrame ? wickStroke : undefined}
-          />
-        )}
-        {/* day 2 candle forms beside it */}
-        {twoDay && inDay2 && day2Progress > 0.001 && (
-          <LiveCandle path={day2Path!} progress={day2Progress} x={c2x} width={candleWidth} scale={scale} />
-        )}
+        {/* right-panel gridlines + candle(s) — transformed together with the rect */}
+        <g transform={rightGroupSvgTransform}>
+          {[0.25, 0.5, 0.75].map((q) => (
+            <line
+              key={q}
+              x1={rightX}
+              y1={y + (height - 72) * q}
+              x2={rightX + rightW}
+              y2={y + (height - 72) * q}
+              stroke={theme.colors.neutralLine}
+              strokeWidth={theme.stroke.hairline}
+            />
+          ))}
+          {/* day 1 candle (live during day 1; persists — possibly dimmed — in day 2) */}
+          {progress > 0.001 && (
+            <LiveCandle
+              path={path}
+              progress={progress}
+              x={c1x}
+              width={candleWidth}
+              scale={scale}
+              opacity={1 - 0.7 * day1DimStrength}
+              wickStroke={effWickStroke}
+            />
+          )}
+          {/* day 2 candle forms beside it */}
+          {twoDay && inDay2 && day2Progress > 0.001 && (
+            <LiveCandle path={day2Path!} progress={day2Progress} x={c2x} width={candleWidth} scale={scale} />
+          )}
+        </g>
         {/* shared Rp axis at the far right of the whole component */}
-        {tickPrices.map((p) => (
-          <text
-            key={p}
-            x={rightX + rightW + 40} // 20px past the right panel's edge (rightX+rightW+20)
-            y={scale(p) + 8}
-            fontFamily={theme.type.family}
-            fontSize={24}
-            fontWeight={500}
-            fill={theme.colors.slate}
-          >
-            {fmtRp(p)}
-          </text>
-        ))}
+        {axisOpacity > 0.001 &&
+          tickPrices.map((p) => (
+            <text
+              key={p}
+              x={rightX + rightW + 40} // 20px past the right panel's edge (rightX+rightW+20)
+              y={scale(p) + 8}
+              fontFamily={theme.type.family}
+              fontSize={24}
+              fontWeight={500}
+              fill={theme.colors.slate}
+              opacity={axisOpacity}
+            >
+              {fmtRp(p)}
+            </text>
+          ))}
         {/* dashed marker line across BOTH panels — lands at identical y (shared scale) */}
         {markerPrice !== undefined && markerStartFrame !== undefined && f >= markerStartFrame && (
           <line
@@ -370,12 +410,12 @@ export const SessionView = ({
         <Chip label={markerChipLabel} x={x + 8} y={scale(markerPrice) - 74} variant="indigo" startFrame={markerStartFrame + 8} anchor="left" />
       )}
 
-      {/* ping fires simultaneously at the same price on both panels */}
+      {/* ping fires simultaneously at the same price on both panels (fades via pingOpacity) */}
       {pingT !== undefined && pingStartFrame !== undefined && (
-        <>
+        <div style={{ opacity: pingOpacity }}>
           <Ping cx={pingLeftX} cy={scale(pingPrice)} startFrame={pingStartFrame} />
           <Ping cx={pingCandleX} cy={scale(pingPrice)} startFrame={pingStartFrame} />
-        </>
+        </div>
       )}
     </div>
   );

@@ -10,11 +10,13 @@ export const Ping = ({
   cy,
   startFrame,
   numberLabel,
+  labelBelow = false,
 }: {
   cx: number;
   cy: number;
   startFrame: number;
   numberLabel?: string;
+  labelBelow?: boolean; // place the number below the point instead of above
 }) => {
   const f = useCurrentFrame();
   if (f < startFrame) return null;
@@ -40,7 +42,7 @@ export const Ping = ({
       {numberLabel !== undefined && (
         <text
           x={cx}
-          y={cy - 24}
+          y={labelBelow ? cy + 24 + theme.type.label.size : cy - 24}
           textAnchor="middle"
           fontFamily={theme.type.family}
           fontSize={theme.type.label.size}

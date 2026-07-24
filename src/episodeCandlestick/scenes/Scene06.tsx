@@ -42,7 +42,7 @@ const CHIP_GAP = 70; // chip top edge above the lens top edge
 const HL_IDX = 15; // the trough candle the highlight box marks
 const HL_HALF_W = 22; // highlight box half-width — wraps the single trough candle only
 const HL_PAD_Y = 22; // highlight box reach beyond the candle hi–lo span
-const REV_LABEL_RISE = 46; // "Reversal signal" sits this far above the box top
+const REV_LABEL_DROP = 14; // "Reversal signal" sits this far below the box bottom
 const LINE1_Y = 392; // display line top (center ≈ y 440)
 const LINE2_Y = 556; // secondary line top (center ≈ y 580)
 const T = {
@@ -202,8 +202,8 @@ export const Scene06 = () => {
           style={{
             position: "absolute",
             left: cx(HL_IDX),
-            top: boxTop - REV_LABEL_RISE,
-            transform: `translate(-50%, -100%) translateY(${revLabel.y}px)`,
+            top: boxTop + boxH + REV_LABEL_DROP,
+            transform: `translate(-50%, 0) translateY(${revLabel.y}px)`,
             fontSize: theme.type.label.size,
             fontWeight: theme.type.label.weight,
             color: theme.colors.indigo,

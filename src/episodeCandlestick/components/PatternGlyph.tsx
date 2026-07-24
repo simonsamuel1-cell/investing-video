@@ -20,7 +20,13 @@ export type PatternName =
   | "marubozu"
   | "hangingMan"
   | "piercingLine"
-  | "tweezerTop";
+  | "tweezerTop"
+  | "invertedHammer"
+  | "threeWhiteSoldiers"
+  | "darkCloudCover"
+  | "threeBlackCrows"
+  | "spinningTop"
+  | "gravestoneDoji";
 
 type G = { o: number; h: number; l: number; c: number };
 type Def = { candles: G[]; paths?: [number, number][][] }; // paths: per-candle [t, price]
@@ -89,6 +95,29 @@ const DEFS: Record<PatternName, Def> = {
       { o: 0.8, h: 0.9, l: 0.3, c: 0.38 },
     ],
   },
+  invertedHammer: { candles: [{ o: 0.28, h: 0.9, l: 0.22, c: 0.4 }] },
+  threeWhiteSoldiers: {
+    candles: [
+      { o: 0.12, h: 0.42, l: 0.08, c: 0.38 },
+      { o: 0.32, h: 0.62, l: 0.28, c: 0.58 },
+      { o: 0.52, h: 0.82, l: 0.48, c: 0.78 },
+    ],
+  },
+  darkCloudCover: {
+    candles: [
+      { o: 0.28, h: 0.72, l: 0.24, c: 0.68 },
+      { o: 0.82, h: 0.86, l: 0.4, c: 0.46 },
+    ],
+  },
+  threeBlackCrows: {
+    candles: [
+      { o: 0.88, h: 0.92, l: 0.58, c: 0.62 },
+      { o: 0.66, h: 0.7, l: 0.36, c: 0.4 },
+      { o: 0.44, h: 0.48, l: 0.14, c: 0.18 },
+    ],
+  },
+  spinningTop: { candles: [{ o: 0.44, h: 0.86, l: 0.14, c: 0.56 }] },
+  gravestoneDoji: { candles: [{ o: 0.22, h: 0.9, l: 0.18, c: 0.24 }] },
 };
 
 export const PatternGlyph = ({
@@ -133,23 +162,25 @@ export const PatternGlyph = ({
           <Candle key={i} x={size * centers[i]} width={bw} open={g.o} high={g.h} low={g.l} close={g.c} scale={yOf} />
         ))}
       </g>
-      {showPathLine &&
-        def.paths?.map((path, i) => {
-          const bandX = size * centers[i] - bw * 0.95;
-          const bandW = bw * 1.9;
-          return (
-            <polyline
-              key={i}
-              points={path.map(([t, p]) => `${bandX + bandW * t},${yOf(p)}`).join(" ")}
-              fill="none"
-              stroke={theme.colors.indigo}
-              strokeWidth={2.5}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-              opacity={pathLineOpacity}
-            />
-          );
-        })}
+      {/* Path line — one CONNECTED polyline across every candle band (two-candle
+          patterns previously drew two disconnected segments). */}
+      {showPathLine && def.paths && (
+        <polyline
+          points={def.paths
+            .flatMap((path, i) => {
+              const bandX = size * centers[i] - bw * 0.95;
+              const bandW = bw * 1.9;
+              return path.map(([t, p]) => `${bandX + bandW * t},${yOf(p)}`);
+            })
+            .join(" ")}
+          fill="none"
+          stroke={theme.colors.indigo}
+          strokeWidth={2.5}
+          strokeLinejoin="round"
+          strokeLinecap="round"
+          opacity={pathLineOpacity}
+        />
+      )}
     </svg>
   );
 };

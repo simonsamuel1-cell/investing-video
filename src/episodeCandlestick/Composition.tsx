@@ -20,6 +20,7 @@ import { Scene11 } from "./scenes/Scene11";
 import { Scene12 } from "./scenes/Scene12";
 import { Scene13 } from "./scenes/Scene13";
 import { ClosingChart } from "./continuity/ClosingChart";
+import { CaseStudyTabs } from "./components/CaseStudyTabs";
 
 const EXTEND_FRAMES = 10; // hold extended from the final frame (user request)
 export const TOTAL_FRAMES = 8986 + EXTEND_FRAMES; // 8996
@@ -58,7 +59,7 @@ const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC 
 ];
 
 export const CandlestickComposition = () => (
-  <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
+  <AbsoluteFill style={{ backgroundColor: theme.colors.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
         <SceneFade durationInFrames={duration}>
@@ -66,6 +67,10 @@ export const CandlestickComposition = () => (
         </SceneFade>
       </Sequence>
     ))}
+    {/* Persistent case-study tab header across SC09–SC12 (outside the scene fades). */}
+    <Sequence from={4158} durationInFrames={7766 - 4158}>
+      <CaseStudyTabs />
+    </Sequence>
     <Sequence from={8367} durationInFrames={619 + EXTEND_FRAMES}>
       <SceneFade durationInFrames={619 + EXTEND_FRAMES}>
         <ClosingChart />

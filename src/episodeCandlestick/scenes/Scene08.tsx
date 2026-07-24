@@ -1,138 +1,135 @@
 /**
  * Scene08 — from 3657, duration 501 frames (16.7s).
- * Pattern-card shelf: 12-card loop auto-scrolls left, decelerates to a stop,
- * the four studied cards shuffle to display positions (354/774/1194/1614),
- * non-studied cards dim while the four lift, names fade out, then each studied
- * glyph gains its faint intraday path line with a stagger.
+ * Pattern-card grid: 12 cards fade into a 4×3 grid (0–3810). At 3811 the four
+ * studied patterns (Hammer, Bullish Engulfing, Shooting Star, Bearish Engulfing)
+ * sort out of the scattered grid into a single row at full size while the others
+ * fade away. At 4022 the four names fade and each glyph re-centers vertically in
+ * its card.
  * No price chart → NO IllustrationTag, NO Ticker.
- * Compliance: theme-only colors/type/easing, frame-driven deterministic scroll
- * (no Math.random), shelf clipped to the safe area (x 96–1824), cards at
- * cy 480 clear of the logo zone and the bottom 108px subtitle zone.
+ * Compliance: theme-only type/easing, frame-driven deterministic (no Math.random),
+ * cards clear of the logo zone and the bottom 108px subtitle zone.
  */
-import { useCurrentFrame } from "remotion";
-import { theme } from "../theme";
+import { useCurrentFrame, interpolate } from "remotion";
 import { sec, fadeIn, fadeOut, progress } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
-import { PatternCard } from "../components/PatternCard";
+import { PatternCard, GLYPH_TOP_DEFAULT, GLYPH_TOP_CENTER } from "../components/PatternCard";
 import type { PatternName } from "../components/PatternGlyph";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-// Layout (px, absolute canvas coords)
-const CLIP_X = 96; // overflow-hidden shelf window = safe area width
-const CLIP_W = 1728;
-const SHELF_CY = 480; // card centers y
-const PITCH = 336; // card pitch (300 card + 36 gap)
-const LOOP_N = 12; // cards in the loop
-const LOOP_W = PITCH * LOOP_N; // 4032
-const HAMMER_X = 354; // landed grid: Hammer card center
-const WRAP_MIN = HAMMER_X - PITCH * 2; // leftmost wrapped grid center (−318)
-// Studied-card display targets after the shuffle
+// Grid (6 cols × 3 rows), cards scaled down to fit.
+const GRID_SCALE = 0.62;
+const GRID_COL_X = [345, 591, 837, 1083, 1329, 1575]; // column centers (spacing 246, centered on 960)
+const GRID_ROW_Y = [278, 539, 800]; // row centers
+// Studied-pattern one-row targets (full size).
+const ROW_CY = 480;
 const TARGET_X: Partial<Record<PatternName, number>> = {
   hammer: 354,
   bullishEngulfing: 774,
   shootingStar: 1194,
   bearishEngulfing: 1614,
 };
-// Timings (seconds, scene-local)
+// Timings (seconds, scene-local). 3811 = 5.13s · 4022 = 12.17s · 4049 = 13.07s · 4126 = 15.63s.
 const T = {
-  shelfIn: 0.0, // shelf fades in mid-scroll, already moving
-  scrollSecPerPitch: 0.5, // one pitch (336px) per 0.5s
-  decel: 5.2, // deceleration begins
-  decelDur: 0.8, // full stop at 6.0s
-  shuffle: 6.0, // studied cards ease to display targets
-  shuffleDur: 0.6,
-  dimLift: 6.4, // non-studied dim to 15%; the four lift
-  nameFade: 11.5, // studied names fade to 0
-  pathLine: 13.0, // faint intraday path lines appear
-  pathStagger: 0.15, // stagger in display order
+  gridIn: 0.0, // cards fade into the grid
+  sort: 5.133, // studied → single row; others fade out (frame 3811)
+  sortDur: 0.8,
+  nameFade: 12.167, // studied names fade (frame 4022)
+  glyphCenter: 12.167, // glyphs re-center vertically
+  glyphCenterDur: 0.6,
+  pathIn: 13.067, // thin indigo path lines fade in on the 4 studied glyphs (frame 4049)
+  pathOut: 15.633, // path lines fade out (frame 4126)
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-type Card = { pattern: PatternName; name: string };
+type Card = { pattern: PatternName; name: string; row: number; col: number };
 
+// Grid placement — the four studied patterns are scattered across the grid.
+// Cols 0–3 keep the original 12 cards; cols 4–5 add six more (cheat-sheet
+// patterns + two common singles).
 const CARDS: Card[] = [
-  { pattern: "hammer", name: "Hammer" },
-  { pattern: "shootingStar", name: "Shooting Star" },
-  { pattern: "bullishEngulfing", name: "Bullish Engulfing" },
-  { pattern: "bearishEngulfing", name: "Bearish Engulfing" },
-  { pattern: "doji", name: "Doji" },
-  { pattern: "morningStar", name: "Morning Star" },
-  { pattern: "eveningStar", name: "Evening Star" },
-  { pattern: "harami", name: "Harami" },
-  { pattern: "marubozu", name: "Marubozu" },
-  { pattern: "hangingMan", name: "Hanging Man" },
-  { pattern: "piercingLine", name: "Piercing Line" },
-  { pattern: "tweezerTop", name: "Tweezer Top" },
+  { pattern: "hammer", name: "Hammer", row: 0, col: 0 },
+  { pattern: "doji", name: "Doji", row: 0, col: 1 },
+  { pattern: "shootingStar", name: "Shooting Star", row: 0, col: 2 },
+  { pattern: "morningStar", name: "Morning Star", row: 0, col: 3 },
+  { pattern: "invertedHammer", name: "Inverted Hammer", row: 0, col: 4 },
+  { pattern: "threeWhiteSoldiers", name: "Three White Soldiers", row: 0, col: 5 },
+  { pattern: "eveningStar", name: "Evening Star", row: 1, col: 0 },
+  { pattern: "bullishEngulfing", name: "Bullish Engulfing", row: 1, col: 1 },
+  { pattern: "harami", name: "Harami", row: 1, col: 2 },
+  { pattern: "marubozu", name: "Marubozu", row: 1, col: 3 },
+  { pattern: "darkCloudCover", name: "Dark Cloud Cover", row: 1, col: 4 },
+  { pattern: "threeBlackCrows", name: "Three Black Crows", row: 1, col: 5 },
+  { pattern: "hangingMan", name: "Hanging Man", row: 2, col: 0 },
+  { pattern: "piercingLine", name: "Piercing Line", row: 2, col: 1 },
+  { pattern: "bearishEngulfing", name: "Bearish Engulfing", row: 2, col: 2 },
+  { pattern: "tweezerTop", name: "Tweezer Top", row: 2, col: 3 },
+  { pattern: "spinningTop", name: "Spinning Top", row: 2, col: 4 },
+  { pattern: "gravestoneDoji", name: "Gravestone Doji", row: 2, col: 5 },
 ];
 
-// Path-line stagger order = display order.
-const PATH_ORDER: PatternName[] = ["hammer", "bullishEngulfing", "shootingStar", "bearishEngulfing"];
-
-/** Wrap a raw grid x into the loop band [WRAP_MIN, WRAP_MIN + LOOP_W). */
-const wrapX = (x: number) => ((((x - WRAP_MIN) % LOOP_W) + LOOP_W) % LOOP_W) + WRAP_MIN;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export const Scene08 = () => {
   const f = useCurrentFrame();
 
-  // Scroll offset: constant velocity, then eased deceleration landing exactly
-  // one full loop (4032px) so Hammer stops at x 354. Frame-driven, deterministic.
-  const speed = PITCH / sec(T.scrollSecPerPitch); // px per frame
-  const offsetAtDecel = speed * sec(T.decel);
-  const decelDist = LOOP_W - offsetAtDecel;
-  const offset =
-    f < sec(T.decel)
-      ? speed * f
-      : offsetAtDecel + decelDist * progress(f, sec(T.decel), sec(T.decelDur));
-
-  const shuffleQ = f >= sec(T.shuffle) ? progress(f, sec(T.shuffle), sec(T.shuffleDur)) : 0;
-  const shelfOpacity = fadeIn(f, sec(T.shelfIn));
+  const gridOpacity = fadeIn(f, sec(T.gridIn));
+  const sortQ = f >= sec(T.sort) ? progress(f, sec(T.sort), sec(T.sortDur)) : 0;
+  const glyphTop = interpolate(
+    f,
+    [sec(T.glyphCenter), sec(T.glyphCenter) + sec(T.glyphCenterDur)],
+    [GLYPH_TOP_DEFAULT, GLYPH_TOP_CENTER],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+  // Thin indigo path line on the 4 studied glyphs: fade in 4049, fade out 4126.
+  const pathOpacity = interpolate(
+    f,
+    [sec(T.pathIn), sec(T.pathIn) + 8, sec(T.pathOut) - 8, sec(T.pathOut)],
+    [0, 0.42, 0.42, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
 
   return (
     <SafeArea>
-      {/* Clip to the safe area — no card fragments in the 96px margins. */}
-      <div
-        style={{
-          position: "absolute",
-          left: CLIP_X,
-          top: 0,
-          width: CLIP_W,
-          height: theme.canvas.height,
-          overflow: "hidden",
-          opacity: shelfOpacity,
-        }}
-      >
-        {CARDS.map((card, i) => {
-          const gridX = HAMMER_X + PITCH * i; // landed grid position
-          const scrollX = wrapX(gridX - offset);
-          const target = TARGET_X[card.pattern];
-          const studied = target !== undefined;
-          // Shuffle: studied cards ease grid → display target; non-studied cards
-          // right of Bearish Engulfing's grid slot (1362) slide out by the same
-          // +252 so none of them ends up underneath a lifted studied card.
-          const x = studied
-            ? scrollX + (target - gridX) * shuffleQ
-            : scrollX + (scrollX > 1362 ? 252 * shuffleQ : 0);
+      {CARDS.map((card) => {
+        const gridX = GRID_COL_X[card.col];
+        const gridY = GRID_ROW_Y[card.row];
+        const target = TARGET_X[card.pattern];
+        const studied = target !== undefined;
 
-          const pathIdx = studied ? PATH_ORDER.indexOf(card.pattern) : -1;
-          const pathStart = sec(T.pathLine + Math.max(0, pathIdx) * T.pathStagger);
-          const showPath = studied && f >= pathStart;
-
+        if (studied) {
+          // Grid slot → single row, scaling up to full size.
+          const cx = lerp(gridX, target, sortQ);
+          const cy = lerp(gridY, ROW_CY, sortQ);
+          const scale = lerp(GRID_SCALE, 1, sortQ);
           return (
             <PatternCard
               key={card.pattern}
               pattern={card.pattern}
               name={card.name}
-              cx={x - CLIP_X}
-              cy={SHELF_CY}
-              dimmed={!studied && f >= sec(T.dimLift)}
-              lifted={studied && f >= sec(T.dimLift)}
-              nameOpacity={studied ? fadeOut(f, sec(T.nameFade)) : 1}
-              showPathLine={showPath}
-              pathLineOpacity={showPath ? 0.35 * fadeIn(f, pathStart) : 0.35}
+              cx={cx}
+              cy={cy}
+              scale={scale}
+              opacity={gridOpacity}
+              nameOpacity={fadeOut(f, sec(T.nameFade))}
+              glyphTop={glyphTop}
+              showPathLine={pathOpacity > 0.001}
+              pathLineOpacity={pathOpacity}
             />
           );
-        })}
-      </div>
+        }
+        // Non-studied — hold in the grid, then fade out during the sort.
+        return (
+          <PatternCard
+            key={card.pattern}
+            pattern={card.pattern}
+            name={card.name}
+            cx={gridX}
+            cy={gridY}
+            scale={GRID_SCALE}
+            opacity={gridOpacity * fadeOut(f, sec(T.sort))}
+          />
+        );
+      })}
     </SafeArea>
   );
 };
