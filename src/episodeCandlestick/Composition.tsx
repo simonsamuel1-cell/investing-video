@@ -21,6 +21,7 @@ import { Scene12 } from "./scenes/Scene12";
 import { Scene13 } from "./scenes/Scene13";
 import { ClosingChart } from "./continuity/ClosingChart";
 import { CaseStudyTabs } from "./components/CaseStudyTabs";
+import { Subtitles } from "./components/Subtitles";
 
 const EXTEND_FRAMES = 10; // hold extended from the final frame (user request)
 export const TOTAL_FRAMES = 8986 + EXTEND_FRAMES; // 8996
@@ -76,6 +77,8 @@ export const CandlestickComposition = () => (
         <ClosingChart />
       </SceneFade>
     </Sequence>
+    {/* Burned-in subtitles — active SRT cue in the bottom band, whole episode. */}
+    <Subtitles />
     <Audio src={staticFile("vo.mp3")} />
   </AbsoluteFill>
 );
