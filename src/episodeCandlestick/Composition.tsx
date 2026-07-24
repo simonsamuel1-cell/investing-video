@@ -4,7 +4,7 @@
  * Spec length 8986 frames + 10 frames extended from the last frame = 8996.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
+import { AbsoluteFill, Audio, Img, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
@@ -77,6 +77,21 @@ export const CandlestickComposition = () => (
         <ClosingChart />
       </SceneFade>
     </Sequence>
+    {/* Brand logo — fit into the top-right logo zone, whole episode. */}
+    <div
+      style={{
+        position: "absolute",
+        top: theme.layout.safeTop,
+        right: theme.layout.safeRight,
+        width: 300,
+        height: 96,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "flex-end",
+      }}
+    >
+      <Img src={staticFile("logo.png")} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+    </div>
     {/* Burned-in subtitles — active SRT cue in the bottom band, whole episode. */}
     <Subtitles />
     <Audio src={staticFile("vo.mp3")} />

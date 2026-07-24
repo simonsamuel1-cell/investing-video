@@ -48,7 +48,7 @@ export const CaseStudyTabs = () => {
   });
 
   return (
-    <div style={{ position: "absolute", inset: 0, opacity }}>
+    <div style={{ position: "absolute", inset: 0, opacity, transform: "translate(178px, 29px) scale(0.805)", transformOrigin: "0 0" }}>
       {/* tab row — centered over the chart */}
       <div
         style={{
