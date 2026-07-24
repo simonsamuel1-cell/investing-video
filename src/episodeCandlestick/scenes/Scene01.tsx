@@ -18,8 +18,8 @@ import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══
-const CHART_LEFT = 130; // chart box, px
-const CHART_RIGHT = 1630;
+const CHART_LEFT = 150; // chart box, px (whole group shifted +20px right)
+const CHART_RIGHT = 1650;
 const CHART_TOP = 200;
 const CHART_BOTTOM = 780;
 const N_CANDLES = 40;
@@ -121,7 +121,7 @@ export const Scene01 = () => {
           max={P_MAX}
           scale={yOf}
         />
-        <Ticker x={130} y={TICKER_Y} />
+        <Ticker x={CHART_LEFT} y={TICKER_Y} />
         <svg
           style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
           width={theme.canvas.width}
@@ -149,7 +149,7 @@ export const Scene01 = () => {
       />
       <Chip
         label="The Sequence"
-        x={RECT_B.x + RECT_B.w + CHIP_GAP_X}
+        x={RECT_B.x}
         y={RECT_B.y - CHIP_RISE}
         anchor="left"
         startFrame={sec(T.move)}

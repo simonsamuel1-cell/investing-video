@@ -14,7 +14,6 @@ import { CaseStudyLayout } from "../components/CaseStudyLayout";
 import { SessionView } from "../components/SessionView";
 import { ContextStrip } from "../components/ContextStrip";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { Ticker } from "../components/PricePanel";
 import { theme } from "../theme";
 import { sec, fadeIn, clampProgress, progress as easedProgress } from "../helpers";
 import type { OHLC, SessionPoint } from "../helpers";
@@ -22,11 +21,9 @@ import type { OHLC, SessionPoint } from "../helpers";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Layout (px, absolute canvas coords)
 const SV_X = 96; // SessionView left
-const SV_Y = 210; // SessionView top
+const SV_Y = 240; // SessionView top (benchmark = SC03)
 const SV_W = 1536; // SessionView width
-const SV_H = 430; // SessionView height (incl. clock strip)
-const TICKER_X = 130; // ticker inside intraday panel, top-left
-const TICKER_Y = 176; // ≥24px clear of header above and panel content below
+const SV_H = 440; // SessionView height → 480px rect
 // Timings (seconds, scene-local)
 const T = {
   header: 0.0, // title + signal chip reveal
@@ -86,8 +83,6 @@ export const Scene09 = () => {
         signalChip={{ label: "Bullish", variant: "indigo" }}
         headerFrame={sec(T.header)}
       >
-        <Ticker x={TICKER_X} y={TICKER_Y} />
-
         <SessionView
           path={HAMMER_PATH}
           progress={sessionProgress}
@@ -101,6 +96,10 @@ export const Scene09 = () => {
           wickStroke={theme.colors.cyan}
           wickStrokeFrame={sec(T.close)}
           opacity={fadeIn(f, sec(T.svIn))}
+          centered
+          centerNudge={30}
+          panelGap={20}
+          timeFontSize={30}
         />
 
         <ContextStrip

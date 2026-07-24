@@ -4,7 +4,7 @@
  * Spec length 8986 frames + 10 frames extended from the last frame = 8996.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
@@ -24,12 +24,29 @@ import { ClosingChart } from "./continuity/ClosingChart";
 const EXTEND_FRAMES = 10; // hold extended from the final frame (user request)
 export const TOTAL_FRAMES = 8986 + EXTEND_FRAMES; // 8996
 
+const FADE = 12; // every scene fades in at its start and out at its end
+
+/** Fades its scene in over the first FADE frames and out over the last FADE frames. */
+const SceneFade: React.FC<{ durationInFrames: number; children: React.ReactNode }> = ({
+  durationInFrames,
+  children,
+}) => {
+  const f = useCurrentFrame();
+  const opacity = interpolate(
+    f,
+    [0, FADE, durationInFrames - FADE, durationInFrames],
+    [0, 1, 1, 0],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+  );
+  return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
+};
+
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
   { from: 0, duration: 240, Component: Scene01 },
   { from: 240, duration: 374, Component: Scene02 },
   { from: 614, duration: 460, Component: Scene03 },
-  { from: 1074, duration: 483, Component: Scene04 },
-  { from: 1557, duration: 788, Component: Scene05 },
+  { from: 1074, duration: 507, Component: Scene04 }, // extended to frame 1580
+  { from: 1581, duration: 764, Component: Scene05 },
   { from: 2345, duration: 808, Component: Scene06 },
   { from: 3153, duration: 504, Component: Scene07 },
   { from: 3657, duration: 501, Component: Scene08 },
@@ -44,11 +61,15 @@ export const CandlestickComposition = () => (
   <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
-        <Component />
+        <SceneFade durationInFrames={duration}>
+          <Component />
+        </SceneFade>
       </Sequence>
     ))}
     <Sequence from={8367} durationInFrames={619 + EXTEND_FRAMES}>
-      <ClosingChart />
+      <SceneFade durationInFrames={619 + EXTEND_FRAMES}>
+        <ClosingChart />
+      </SceneFade>
     </Sequence>
     <Audio src={staticFile("vo.mp3")} />
   </AbsoluteFill>

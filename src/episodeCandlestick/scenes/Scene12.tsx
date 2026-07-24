@@ -17,22 +17,22 @@ import { sec, fadeIn, fadeOut, textReveal, progress, clampProgress } from "../he
 import type { OHLC, SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { CaseStudyLayout } from "../components/CaseStudyLayout";
-import { SessionView, sessionScale } from "../components/SessionView";
+import { SessionView, sessionScale, sessionGeom } from "../components/SessionView";
 import { ContextStrip } from "../components/ContextStrip";
 import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { Ticker } from "../components/PricePanel";
 
 // ═══ EDIT ═══
 const VIEW_X = 96; // SessionView left
-const VIEW_Y = 210; // SessionView top (under the CaseStudyLayout header)
+const VIEW_Y = 240; // SessionView top (benchmark = SC03)
 const VIEW_W = 1536; // full active width
-const VIEW_H = 430;
-const TICKER_X = 130; // "$ABCD" top-left of the intraday panel area
-const TICKER_Y = 176;
+const VIEW_H = 440; // → 480px rect
 const MARKER_PRICE = 1296; // day 1's open — the level day 2 breaks below
 const REVERSED_RISE = 90; // px the "Reversed" chip sits above day 1's high
 const CAPTION_Y = 840; // sentence-case caption (before the ContextStrip)
+const PANEL_GAP = 20; // benchmark chart design (matches SC03)
+const CENTER_NUDGE = 30;
+const TIME_FONT = 30;
 const T = {
   header: 0.0, // title + signal chip reveal
   viewIn: 1.2, // SessionView fades in
@@ -101,14 +101,11 @@ export const Scene12 = () => {
   const day2Progress = clampProgress(f, sec(T.day2From), sec(T.day2Dur));
   const dimStrength = progress(f, sec(T.cross), 12);
 
-  // same geometry SessionView uses — for placing the "Reversed" chip
-  const innerW = VIEW_W - 148; // width − axisW(120) − gap(28)
-  const leftW = innerW * 0.62;
-  const rightX = VIEW_X + leftW + 28;
-  const rightW = innerW - leftW;
-  const c1x = rightX + rightW * 0.34; // day-1 candle center ≈ 1164 — well clear
+  // same geometry SessionView uses (incl. the centered offset) — for the "Reversed" chip
+  const { rightX, rightW, centerOffset } = sessionGeom({ x: VIEW_X, width: VIEW_W, panelGap: PANEL_GAP, centered: true, centerNudge: CENTER_NUDGE });
+  const c1x = rightX + rightW * 0.34 + centerOffset; // day-1 candle center in the centered group
   const scale = sessionScale([DAY1_PATH, DAY2_PATH], VIEW_Y, VIEW_Y + VIEW_H - 72, [MARKER_PRICE]);
-  const reversedY = scale(DAY1_HIGH) - REVERSED_RISE; // ≈ 189 — ≥24px from the "Day 1 Open" chip at x 104
+  const reversedY = scale(DAY1_HIGH) - REVERSED_RISE; // above day 1's high
 
   const cap = textReveal(f, sec(T.caption));
   const captionOpacity = cap.opacity * fadeOut(f, sec(T.captionOut));
@@ -116,10 +113,6 @@ export const Scene12 = () => {
   return (
     <SafeArea>
       <CaseStudyLayout title="Bearish Engulfing" signalChip={{ label: "Bearish", variant: "neutral" }} headerFrame={sec(T.header)}>
-        <div style={{ position: "absolute", left: 0, top: 0, opacity: viewOpacity }}>
-          <Ticker x={TICKER_X} y={TICKER_Y} />
-        </div>
-
         <SessionView
           path={DAY1_PATH}
           progress={day1Progress}
@@ -136,6 +129,10 @@ export const Scene12 = () => {
           markerChipLabel="Day 1 Open"
           markerStartFrame={sec(T.marker)}
           opacity={viewOpacity}
+          centered
+          centerNudge={CENTER_NUDGE}
+          panelGap={PANEL_GAP}
+          timeFontSize={TIME_FONT}
         />
 
         <Chip label="Reversed" x={c1x} y={reversedY} variant="indigo" startFrame={sec(T.cross)} anchor="center" />

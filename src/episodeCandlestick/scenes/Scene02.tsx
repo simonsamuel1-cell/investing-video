@@ -13,7 +13,6 @@ import { theme } from "../theme";
 import { sec, progress, textReveal, priceScale } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
-import { Ticker } from "../components/PricePanel";
 import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
 
@@ -30,7 +29,8 @@ const LABEL_X = 800; // labels right of the measurement lines
 const TICK_HALF = 8; // half-width of the horizontal end ticks
 const TICK_GAP = 6; // gap between body line ends and wick ticks
 const CHIP_Y = 890; // "Conviction" top edge (bottom stays above y 972)
-const TICKER_Y = 120;
+const GROUP_DX = 190; // shift the whole group right to horizontally center it
+const GROUP_DY = -30; // move up 30px (candle top stays clear of the 54px margin)
 const T = {
   build: 0.0, // body wipes in bottom-up
   buildDur: 0.9,
@@ -93,8 +93,7 @@ export const Scene02 = () => {
 
   return (
     <SafeArea>
-      <Ticker x={130} y={TICKER_Y} />
-
+      <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(${GROUP_DX}px, ${GROUP_DY}px)` }}>
       <svg
         style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
         width={theme.canvas.width}
@@ -180,6 +179,7 @@ export const Scene02 = () => {
       )}
 
       <Chip label="Conviction" x={CANDLE_X} y={CHIP_Y} variant="indigo" startFrame={sec(T.chip)} />
+      </div>
 
       <IllustrationTag />
     </SafeArea>

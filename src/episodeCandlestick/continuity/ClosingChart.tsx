@@ -26,14 +26,14 @@ import { Ping } from "../components/Ping";
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══
-const CHART_LEFT = 130; // chart box, px
-const CHART_RIGHT = 1630;
+const CHART_LEFT = 150; // chart box, px (matches SC01 — group shifted +20px right)
+const CHART_RIGHT = 1650;
 const CHART_TOP = 200;
 const CHART_BOTTOM = 780;
 const N_CANDLES = 50;
 const SUPPORT = 1200; // Rp levels
 const RESISTANCE = 1610;
-const TICKER_Y = 140;
+const TICKER_Y = 120; // matches SC01
 const HAMMER_IDX = 14; // studied-pattern indices
 const BULL_FIRST = 17;
 const BULL_LAST = 18;
@@ -177,7 +177,7 @@ const RECT_FULL = {
   // the PricePanel chrome bounds — the stroke fades as it meets this edge
   x: CHART_LEFT - 24,
   y: CHART_TOP - 24,
-  w: CHART_RIGHT - CHART_LEFT + 148,
+  w: CHART_RIGHT - CHART_LEFT + 48,
   h: CHART_BOTTOM - CHART_TOP + 48,
 };
 
@@ -252,7 +252,7 @@ export const ClosingChart = () => {
           revealStagger={sec(T.wipeStagger)}
           scaleOverride={yOf}
         />
-        <Ticker x={130} y={TICKER_Y} />
+        <Ticker x={CHART_LEFT} y={TICKER_Y} />
         {f >= sec(T.support) && (
           <ReferenceLine
             y={yOf(SUPPORT)}

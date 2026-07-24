@@ -1,6 +1,6 @@
 /**
- * IllustrationTag — compliance tag, bottom-right of the active area, above the
- * subtitle zone. Mounted in every chart-bearing scene (SC01–07, SC09–16).
+ * IllustrationTag — compliance tag, flush in the bottom-left corner (margin
+ * intentionally ignored). Mounted in every chart-bearing scene (SC01–07, SC09–16).
  */
 import { theme } from "../theme";
 
@@ -8,13 +8,13 @@ export const IllustrationTag = () => (
   <div
     style={{
       position: "absolute",
-      right: theme.layout.safeRight,
-      top: 922, // above the 108px subtitle zone (972+)
-      fontSize: theme.type.label.size,
+      left: 24,
+      bottom: 20, // bottom-left corner — outside the safe margin by design
+      fontSize: 24,
       fontWeight: 500,
       color: theme.colors.neutralMuted,
     }}
   >
-    Illustration — fictional data
+    only illustration
   </div>
 );

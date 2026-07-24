@@ -14,6 +14,7 @@ import { theme } from "../theme";
 import {
   sec,
   fadeIn,
+  fadeOut,
   progress,
   clampProgress,
   textReveal,
@@ -23,29 +24,34 @@ import type { OHLC, SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
 import { LiveCandle } from "../components/LiveCandle";
-import { PricePanel, Ticker } from "../components/PricePanel";
+import { PricePanel } from "../components/PricePanel";
 import { ReferenceLine } from "../components/ReferenceLine";
 import { Chip } from "../components/Chip";
 import { Ping } from "../components/Ping";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { IntradayPanel, sessionScale } from "../components/SessionView";
+import { IntradayPanel, sessionScale, sessionGeom } from "../components/SessionView";
 
 // ═══ EDIT ═══
-const DAILY_X = 96; // daily chart drawing area (Rp axis extends panel to x 1010)
-const DAILY_W = 790;
-const DAILY_TOP = 200;
-const DAILY_BOTTOM = 780;
-const SESSION_X = 1060; // intraday session panel (trace area)
-const SESSION_W = 572;
-const SESSION_Y = 200;
-const SESSION_H = 580; // includes the ~60px clock strip
-const CANDLE_W = 64;
-const TICK_W = 32; // open-tick line width at candle 4's slot
-const CHIP_X = 1030; // "Sellers In Control" — centered between the panels
-const CHIP_Y = 104;
-const CAPTION_Y = 840;
-const TICKER_X = 130;
-const TICKER_Y = 140;
+// Benchmark chart design (matches SC03): centered group + 20px gap + 30px time.
+// Panels SWAPPED so this matches the benchmark orientation — the intraday
+// session drives the candle: session (trace) LEFT, daily candles RIGHT.
+const BENCH_GAP = 20;
+const BENCH_NUDGE = 30;
+const TIME_FONT = 30;
+const BENCH = sessionGeom({ x: 96, width: 1536, panelGap: BENCH_GAP, centered: true, centerNudge: BENCH_NUDGE });
+const SESSION_X = 96 + BENCH.centerOffset; // left panel (intraday trace)
+const SESSION_W = BENCH.leftW;
+const SESSION_Y = 240; // benchmark top (= SC03)
+const SESSION_H = 440; // → 480px rect (incl. the ~60px clock strip)
+const DAILY_X = BENCH.rightX + BENCH.centerOffset; // right panel (4 daily candles)
+const DAILY_W = BENCH.rightW;
+const DAILY_TOP = 244; // aligns the PricePanel rect (top −24) with the session rect at 220
+const DAILY_BOTTOM = 676; // PricePanel rect bottom (+24) lands at 700 → 480px rect
+const CANDLE_W = 52;
+const TICK_W = 30; // open-tick line width at candle 4's slot
+const CHIP_X = DAILY_X - 24; // chip left edge aligned with the daily chart's left edge
+const CHIP_Y = 150; // just below the logo-zone height, above the panel
+const CAPTION_Y = 720; // 20px below the charts (rect bottom ≈ 700)
 const REF_OFFSET = 12; // reference line sits just below the four-candle low
 const T = {
   panelIn: 0.0, // daily panel fades in
@@ -60,6 +66,7 @@ const T = {
   wick: 12.0, // candle 4's wick strokes cyan
   refLine: 19.0,
   caption: 20.2,
+  msgSwap: 10.633, // frame 1900 (scene-local): "Sellers in control" → "Buyers absorb everything"
 };
 // ═══════════
 
@@ -203,16 +210,27 @@ export const Scene05 = () => {
           height={SESSION_H}
           scale={sScale}
           opacity={sessionOp}
+          timeFontSize={TIME_FONT}
         />
       )}
 
-      {/* chip above the daily panel, between the panels */}
+      {/* chip aligned to the daily chart's left edge — swaps message at frame 1900 */}
       <Chip
-        label="Sellers In Control"
+        label="Sellers in control"
         x={CHIP_X}
         y={CHIP_Y}
         variant="indigo"
+        anchor="left"
         startFrame={sec(T.guide)}
+        opacity={fadeOut(f, sec(T.msgSwap))}
+      />
+      <Chip
+        label="Buyers absorb everything"
+        x={CHIP_X}
+        y={CHIP_Y}
+        variant="indigo"
+        anchor="left"
+        startFrame={sec(T.msgSwap)}
       />
 
       {/* synced ping at the session low (1108) on BOTH panels */}
@@ -249,7 +267,6 @@ export const Scene05 = () => {
         Demand is starting to outweigh supply.
       </div>
 
-      <Ticker x={TICKER_X} y={TICKER_Y} />
       <IllustrationTag />
     </SafeArea>
   );

@@ -11,12 +11,14 @@ export const SessionClockAxis = ({
   width,
   progress,
   opacity = 1,
+  fontSize = theme.type.label.size,
 }: {
   x: number;
   y: number; // axis baseline
   width: number;
   progress: number; // 0–1 session playback
   opacity?: number;
+  fontSize?: number; // time-label size (09:00 / 12:00 / 15:50)
 }) => {
   const labels: { t: number; text: string }[] = [
     { t: 0, text: "09:00" },
@@ -37,10 +39,10 @@ export const SessionClockAxis = ({
           <line x1={x + width * l.t} y1={y} x2={x + width * l.t} y2={y + 8} stroke={theme.colors.neutralLine} strokeWidth={theme.stroke.hairline} />
           <text
             x={x + width * l.t}
-            y={y + 44}
+            y={y + 8 + fontSize}
             textAnchor={l.t === 0 ? "start" : l.t === 1 ? "end" : "middle"}
             fontFamily={theme.type.family}
-            fontSize={theme.type.label.size}
+            fontSize={fontSize}
             fontWeight={500}
             fill={theme.colors.slate}
           >

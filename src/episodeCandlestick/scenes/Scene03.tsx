@@ -9,21 +9,23 @@
  * IllustrationTag + Ticker mounted, clampProgress drives session playback.
  */
 import { useCurrentFrame } from "remotion";
+import { theme } from "../theme";
 import { sec, fadeIn, clampProgress } from "../helpers";
 import type { SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
-import { SessionView } from "../components/SessionView";
+import { SessionView, sessionScale } from "../components/SessionView";
+import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { Ticker } from "../components/PricePanel";
 
 // ═══ EDIT ═══
 const VIEW_X = 96; // SessionView left
-const VIEW_Y = 200; // SessionView top
+const VIEW_Y = 240; // SessionView top (moved down 40px from 200)
 const VIEW_W = 1536; // full active width
-const VIEW_H = 520;
+const VIEW_H = 440; // white panel rect = VIEW_H + 40 = 480px tall
 const SPLIT = 0.62; // intraday : candle panel ratio
-const TICKER_X = 130; // "$ABCD" top-left of the chart panel
-const TICKER_Y = 120; // matches Scene01/Scene02 ticker position
+const PANEL_GAP = 20; // visible gap between the left + right charts (benchmark)
+const CENTER_NUDGE = 30; // shift the centered group right by this many px
+const TIME_FONT = 30; // clock label size (09:00 / 12:00 / 15:50)
 const MARKER_PRICE = 1358; // session high — "Sellers Were Here" level
 const T = {
   viewIn: 0.0, // panels + clock fade in
@@ -48,6 +50,9 @@ const PATH: SessionPoint[] = [
   { t: 1, price: 1252 },
 ];
 
+// marker line y (shared scale) — the "Sellers were here" chip sits above it
+const markerY = sessionScale([PATH], VIEW_Y, VIEW_Y + VIEW_H - 72, [MARKER_PRICE])(MARKER_PRICE);
+
 export const Scene03 = () => {
   const f = useCurrentFrame();
 
@@ -57,10 +62,6 @@ export const Scene03 = () => {
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 0, top: 0, opacity: viewOpacity }}>
-        <Ticker x={TICKER_X} y={TICKER_Y} />
-      </div>
-
       <SessionView
         path={PATH}
         progress={playback}
@@ -73,9 +74,22 @@ export const Scene03 = () => {
         pingStartFrame={pingStartFrame}
         closeFrame={sec(T.close)}
         markerPrice={MARKER_PRICE}
-        markerChipLabel="Sellers Were Here"
         markerStartFrame={sec(T.marker)}
         opacity={viewOpacity}
+        centered
+        centerNudge={CENTER_NUDGE}
+        panelGap={PANEL_GAP}
+        timeFontSize={TIME_FONT}
+      />
+
+      {/* "Sellers were here" — horizontally centered, 20px above the marker chip's old spot */}
+      <Chip
+        label="Sellers were here"
+        x={theme.canvas.width / 2}
+        y={markerY - 94}
+        variant="indigo"
+        anchor="center"
+        startFrame={sec(T.marker) + 8}
       />
 
       <IllustrationTag />

@@ -46,6 +46,11 @@ export type SessionViewProps = {
   day1DimStrength?: number; // 0–1 → day-1 candle fades toward 30% ("Erased")
   extraScalePrices?: number[]; // extend the shared scale domain
   opacity?: number;
+  // ── benchmark layout (SC03 reference) ──
+  centered?: boolean; // horizontally center the whole group (both panels + price labels) on the canvas
+  centerNudge?: number; // extra px added to the centered offset (+ = right)
+  panelGap?: number; // visible gap between the two panel rects (px); default keeps legacy spacing
+  timeFontSize?: number; // clock-label size (09:00 / 12:00 / 15:50)
 };
 
 const RESET_FRAMES = 12; // 0.4s playhead wipe
@@ -59,6 +64,42 @@ export const sessionScale = (
 ) => {
   const prices = [...paths.flat().map((p) => p.price), ...extras];
   return priceScale(Math.min(...prices), Math.max(...prices), top, bottom, 0.1);
+};
+
+/**
+ * sessionGeom — the horizontal layout of a SessionView. Exported so scenes can
+ * place overlays (candle chips, ghosts) that must track the panels exactly,
+ * including the centered-group offset. Single source of truth for the geometry.
+ *   panelGap = visible gap between the two panel rects (px); omit for legacy 28px gridline gap.
+ *   centered = shift the whole group (panels + price labels) onto the canvas center.
+ */
+export const sessionGeom = ({
+  x,
+  width,
+  splitRatio = 0.62,
+  panelGap,
+  centered = false,
+  centerNudge = 0,
+}: {
+  x: number;
+  width: number;
+  splitRatio?: number;
+  panelGap?: number;
+  centered?: boolean;
+  centerNudge?: number;
+}) => {
+  const axisW = 120; // right gutter reserved (within width) for the price labels
+  const RECT_PAD = 20; // each panel rect extends this far past its gridlines
+  const gap = panelGap !== undefined ? panelGap + 2 * RECT_PAD : 28;
+  const innerW = width - axisW - gap;
+  const leftW = innerW * splitRatio;
+  const rightX = x + leftW + gap;
+  const rightW = innerW - leftW;
+  const LABEL_GUTTER = 116; // ≈ width of "Rp X,XXX" at the price-label size
+  const groupLeft = x - RECT_PAD;
+  const groupRight = rightX + rightW + RECT_PAD + 20 + LABEL_GUTTER;
+  const centerOffset = centered ? theme.canvas.width / 2 - (groupLeft + groupRight) / 2 + centerNudge : 0;
+  return { axisW, gap, innerW, leftW, rightX, rightW, centerOffset };
 };
 
 /**
@@ -78,6 +119,7 @@ export const IntradayPanel = ({
   traceOpacity = 1,
   showPanel = true,
   clockProgress,
+  timeFontSize,
 }: {
   path: SessionPoint[];
   progress: number;
@@ -90,6 +132,7 @@ export const IntradayPanel = ({
   traceOpacity?: number;
   showPanel?: boolean;
   clockProgress?: number; // override (two-day playhead choreography)
+  timeFontSize?: number; // clock-label size
 }) => {
   const clockY = y + height - 52;
   const pts: string[] = [];
@@ -142,7 +185,7 @@ export const IntradayPanel = ({
           />
         )}
       </svg>
-      <SessionClockAxis x={x} y={clockY} width={width} progress={clockProgress ?? progress} />
+      <SessionClockAxis x={x} y={clockY} width={width} progress={clockProgress ?? progress} fontSize={timeFontSize} />
     </div>
   );
 };
@@ -171,14 +214,14 @@ export const SessionView = ({
   day1DimStrength = 0,
   extraScalePrices = [],
   opacity = 1,
+  centered = false,
+  centerNudge = 0,
+  panelGap,
+  timeFontSize,
 }: SessionViewProps) => {
   const f = useCurrentFrame();
-  const axisW = 120;
-  const gap = 28;
-  const innerW = width - axisW - gap;
-  const leftW = innerW * splitRatio;
-  const rightX = x + leftW + gap;
-  const rightW = innerW - leftW;
+  // Horizontal geometry (incl. the centered-group offset) from the shared helper.
+  const { axisW, leftW, rightX, rightW, centerOffset } = sessionGeom({ x, width, splitRatio, panelGap, centered, centerNudge });
 
   const twoDay = !!day2Path;
   const inDay2 = twoDay && resetFrame !== undefined && f >= resetFrame;
@@ -235,7 +278,7 @@ export const SessionView = ({
   const tickPrices = [0.15, 0.5, 0.85].map((q) => Math.round(minP + (maxP - minP) * q));
 
   return (
-    <div style={{ position: "absolute", left: 0, top: 0, opacity }}>
+    <div style={{ position: "absolute", left: 0, top: 0, opacity, transform: `translateX(${centerOffset}px)` }}>
       <IntradayPanel
         path={activePath!}
         progress={activeProgress}
@@ -247,6 +290,7 @@ export const SessionView = ({
         opacity={dimOp}
         traceOpacity={traceOpacity}
         clockProgress={clockProgress}
+        timeFontSize={timeFontSize}
       />
 
       {/* right panel — the live daily candle(s) */}
@@ -298,10 +342,10 @@ export const SessionView = ({
         {tickPrices.map((p) => (
           <text
             key={p}
-            x={x + width - axisW + 20}
-            y={scale(p) + 12}
+            x={rightX + rightW + 40} // 20px past the right panel's edge (rightX+rightW+20)
+            y={scale(p) + 8}
             fontFamily={theme.type.family}
-            fontSize={theme.type.label.size}
+            fontSize={24}
             fontWeight={500}
             fill={theme.colors.slate}
           >

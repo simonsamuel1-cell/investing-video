@@ -14,10 +14,9 @@
 import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CaseStudyLayout } from "../components/CaseStudyLayout";
-import { SessionView } from "../components/SessionView";
+import { SessionView, sessionGeom } from "../components/SessionView";
 import { ContextStrip } from "../components/ContextStrip";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { Ticker } from "../components/PricePanel";
 import { theme } from "../theme";
 import { sec, clampProgress, progress as easedProgress, pathPriceAt, priceScale } from "../helpers";
 import type { OHLC, SessionPoint } from "../helpers";
@@ -25,15 +24,18 @@ import type { OHLC, SessionPoint } from "../helpers";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Layout (px, absolute canvas coords)
 const SV_X = 96; // SessionView left
-const SV_Y = 210; // SessionView top
+const SV_Y = 240; // SessionView top (benchmark = SC03)
 const SV_W = 1536; // SessionView width
-const SV_H = 430; // SessionView height (incl. clock strip)
-const TICKER_X = 130; // ticker inside intraday panel, top-left
-const TICKER_Y = 176; // ≥24px clear of header above and panel content below
-// Ghost overlay — intraday panel geometry (matches SessionView splitRatio 0.62:
-// axisW 120 + gap 28 → innerW 1388, leftW 1388 × 0.62 = 860.56)
-const GHOST_X = SV_X; // intraday area left
-const GHOST_W = 860.56; // intraday area width
+const SV_H = 440; // SessionView height → 480px rect
+// Benchmark chart design (matches SC03)
+const PANEL_GAP = 20; // visible gap between the two panel rects
+const CENTER_NUDGE = 30; // shift the centered group right
+const TIME_FONT = 30; // clock-label size
+// Ghost overlay — intraday panel geometry pulled from the shared helper so it
+// tracks the centered group exactly (left panel left edge + width).
+const G = sessionGeom({ x: SV_X, width: SV_W, panelGap: PANEL_GAP, centered: true, centerNudge: CENTER_NUDGE });
+const GHOST_X = SV_X + G.centerOffset; // intraday area left (centered)
+const GHOST_W = G.leftW; // intraday area width
 const GHOST_TOP = SV_Y; // trace y-range top
 const GHOST_BOT = SV_Y + SV_H - 72; // trace y-range bottom (above clock strip)
 const GHOST_OPACITY = 0.2; // ghost polyline opacity
@@ -161,8 +163,6 @@ export const Scene11 = () => {
         signalChip={{ label: "Bearish", variant: "neutral" }}
         headerFrame={sec(T.header)}
       >
-        <Ticker x={TICKER_X} y={TICKER_Y} />
-
         <SessionView
           path={STAR_PATH}
           progress={sessionProgress}
@@ -175,6 +175,10 @@ export const Scene11 = () => {
           closeFrame={sec(T.close)}
           wickStroke={theme.colors.cyan}
           wickStrokeFrame={sec(T.close)}
+          centered
+          centerNudge={CENTER_NUDGE}
+          panelGap={PANEL_GAP}
+          timeFontSize={TIME_FONT}
         />
 
         <GhostEcho />

@@ -22,7 +22,7 @@ import {
 } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
-import { PricePanel, Ticker } from "../components/PricePanel";
+import { PricePanel } from "../components/PricePanel";
 import { ReferenceLine } from "../components/ReferenceLine";
 import { TallyStrip } from "../components/TallyStrip";
 import { Ping } from "../components/Ping";
@@ -39,8 +39,6 @@ const N_CANDLES = 24;
 const CANDLE_W = 36; // candle body width
 const TALLY_XEND = 1360; // right edge of the TallyStrip (≤ 1368 logo rule)
 const TALLY_Y = 190; // TallyStrip top
-const TICKER_X = 130; // "$ABCD" ticker
-const TICKER_Y = 196;
 const CHIP_X = 110; // "Support" chip, left-anchored at line's left end
 const CHIP_GAP = 18; // chip top offset below the support line
 const CAPTION_Y = 840; // caption top (clear of subtitle zone at 972+)
@@ -131,7 +129,6 @@ export const Scene07 = () => {
         scale={scale}
         opacity={panelOpacity}
       />
-      <Ticker x={TICKER_X} y={TICKER_Y} />
 
       {/* Support line: constructed between the two touches, then extended right. */}
       {f >= sec(T.construct) && (
