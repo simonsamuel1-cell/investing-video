@@ -271,6 +271,7 @@ export const ClosingChart = () => {
             x2={CHART_RIGHT}
             label="Resistance"
             anchor="left"
+            labelPosition="above"
             drawProgress={progress(f, sec(T.resistance), sec(T.lineDur))}
             labelOpacity={fadeIn(f, sec(T.resistance) + 8, 10)}
           />
@@ -302,9 +303,35 @@ export const ClosingChart = () => {
               )
           )}
         </svg>
-        {RINGS.map((r) => (
-          <Ping key={r.ping.n} cx={r.ping.x} cy={r.ping.y()} startFrame={sec(r.t)} numberLabel={r.ping.n} />
+        {/* Pings 1 & 2 (bottom patterns) show their number 20px below the box; 3 & 4 keep it on the ping. */}
+        {RINGS.map((r, i) => (
+          <Ping key={r.ping.n} cx={r.ping.x} cy={r.ping.y()} startFrame={sec(r.t)} numberLabel={i < 2 ? undefined : r.ping.n} />
         ))}
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
+          {RINGS.map(
+            (r, i) =>
+              i < 2 &&
+              f >= sec(r.t) && (
+                <text
+                  key={r.ping.n}
+                  x={r.ping.x}
+                  y={r.rect.y + r.rect.h + 20 + theme.type.label.size}
+                  textAnchor="middle"
+                  fontFamily={theme.type.family}
+                  fontSize={theme.type.label.size}
+                  fontWeight={theme.type.label.weight}
+                  fill={theme.colors.slate}
+                  opacity={fadeIn(f, sec(r.t), 8)}
+                >
+                  {r.ping.n}
+                </text>
+              )
+          )}
+        </svg>
       </div>
 
       {/* SC15 — the FocusFrame returns. */}

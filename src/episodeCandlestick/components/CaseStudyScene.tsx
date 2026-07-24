@@ -73,6 +73,7 @@ export type CaseStudyConfig = {
   refLine: { price: number; label: string; position: "below" | "above" };
   dockCandles: OHLC[];
   dockLabel: string[];
+  dockDY?: number; // vertical nudge for the docked candle(s)
   T: CaseStudyTimings;
 };
 
@@ -178,6 +179,7 @@ export const CaseStudyScene = ({ config: c }: { config: CaseStudyConfig }) => {
         dockCandles={c.dockCandles}
         dockProgress={dockProgress}
         dockInline
+        dockDY={c.dockDY}
         dockLabel={{ lines: c.dockLabel, startFrame: sec(c.T.label), below: c.refLine.position === "above" }}
         revealFrame={sec(c.T.collapse)}
         lineFrame={sec(c.T.ctxLine)}

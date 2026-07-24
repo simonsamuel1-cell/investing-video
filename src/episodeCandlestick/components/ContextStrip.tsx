@@ -24,6 +24,7 @@ export const ContextStrip = ({
   dockProgress = 0,
   dockInline = false,
   dockLabel,
+  dockDY = 0,
   chips = [],
   revealFrame,
   lineFrame,
@@ -40,6 +41,7 @@ export const ContextStrip = ({
   dockProgress?: number;
   dockInline?: boolean; // dock right after the last data candle (context width) instead of the far slot
   dockLabel?: { lines: string[]; startFrame: number; below?: boolean }; // multi-line indigo label (above the dock candle, or below when the dock sits high)
+  dockDY?: number; // vertical nudge (px) for the docked candle(s) + label
   chips?: { label: string; variant: ChipVariant; startFrame: number }[];
   revealFrame: number; // strip fade + candle wipe start
   lineFrame?: number; // reference line draw start
@@ -158,7 +160,7 @@ export const ContextStrip = ({
         {dockProgress > 0.001 &&
           dockCandles.map((d, i) => {
             const cxI = dockCandleX(i);
-            const dy = (1 - dockProgress) * -90;
+            const dy = (1 - dockProgress) * -90 + dockDY;
             return (
               <g key={i} opacity={dockProgress} transform={`translate(0 ${dy})`}>
                 <Candle x={cxI} width={dockCandleW} open={d.open} high={d.high} low={d.low} close={d.close} scale={scale} />
@@ -183,9 +185,11 @@ export const ContextStrip = ({
             style={{
               position: "absolute",
               left: (dockCandleX(0) + dockCandleX(dockCandles.length - 1)) / 2,
-              top: dockLabel.below
-                ? scale(Math.min(...dockCandles.map((d) => d.low))) + 24
-                : scale(Math.max(...dockCandles.map((d) => d.high))) - 24,
+              top:
+                dockDY +
+                (dockLabel.below
+                  ? scale(Math.min(...dockCandles.map((d) => d.low))) + 24
+                  : scale(Math.max(...dockCandles.map((d) => d.high))) - 24),
               transform: `translate(-50%, ${dockLabel.below ? "0" : "-100%"}) scale(${pop})`,
               padding: "10px 22px",
               borderRadius: theme.radius.chip,

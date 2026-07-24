@@ -46,7 +46,9 @@ const CONTEXT_DATA: OHLC[] = (() => {
     out.push({ open, high, low, close });
     prev = close;
   }
-  return out;
+  // Erase the 2 trend candles just left of the engulfing; the inline dock then
+  // shifts left to sit against the shortened downtrend.
+  return out.slice(0, 16);
 })();
 
 const config: CaseStudyConfig = {

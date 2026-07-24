@@ -31,17 +31,21 @@ const ROW_LABEL_X = 96; // row labels: horizontal two-line block, left edge
 const CARD_FLY_PAD = 80; // extra off-frame travel, px
 const COMPRESS_SCALE = 0.8;
 const COMPRESS_CX = 480; // matrix center x after compression
+// Pre-compression: center the grid group on the canvas, then nudge 20px left / 20px up.
+const GROUP_DX = 160; // (canvas center 960 − cards center 780) − 20 left
+const GROUP_DY = -20; // 20px up
 const MINI_LEFT = 960; // mini chart box, px
 const MINI_RIGHT = 1600;
-const MINI_TOP = 280;
-const MINI_BOTTOM = 720;
+// Mini chart vertically centered to the compressed 4-card grid (center = GRID_CY = 574).
+const MINI_TOP = 354;
+const MINI_BOTTOM = 794;
 const N_MINI = 12;
 const WEAK_IDX = 5; // mid-range Hammer
 const STRONG_IDX = 11; // Hammer low on the 1205 line
 const REF_LO = 1205; // dashed reference levels, Rp
 const REF_HI = 1330;
 const RING_PAD = 14; // ring radius beyond the candle half-span
-const CHIP_Y = 830; // Weak / Strong chip tops (below the mini panel)
+const CHIP_Y = 884; // Weak / Strong chip tops (below the mini panel)
 const T = {
   labels: 0.0, // axis labels reveal
   cards: 0.8, // first card flies in
@@ -165,7 +169,7 @@ export const Scene13 = () => {
           top: 0,
           width: theme.canvas.width,
           height: theme.canvas.height,
-          transform: `translateX(${(COMPRESS_CX - GRID_CX) * pc}px) scale(${1 - (1 - COMPRESS_SCALE) * pc})`,
+          transform: `translateX(${GROUP_DX * (1 - pc) + (COMPRESS_CX - GRID_CX) * pc}px) translateY(${GROUP_DY * (1 - pc)}px) scale(${1 - (1 - COMPRESS_SCALE) * pc})`,
           transformOrigin: `${GRID_CX}px ${GRID_CY}px`,
         }}
       >

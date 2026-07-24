@@ -13,6 +13,7 @@ export const ReferenceLine = ({
   x2,
   label,
   anchor = "left",
+  labelPosition = "below",
   drawProgress = 1,
   constructFrom,
   constructProgress = 0,
@@ -25,6 +26,7 @@ export const ReferenceLine = ({
   x2: number;
   label?: string;
   anchor?: "left" | "right";
+  labelPosition?: "below" | "above"; // 20px below the line (default) or above it
   drawProgress?: number;
   constructFrom?: { xa: number; xb: number };
   constructProgress?: number;
@@ -55,7 +57,7 @@ export const ReferenceLine = ({
       {label && (
         <text
           x={labelX}
-          y={y + 46}
+          y={labelPosition === "above" ? y - 24 : y + 46}
           textAnchor={anchor === "left" ? "start" : "end"}
           fontFamily={theme.type.family}
           fontSize={theme.type.label.size}

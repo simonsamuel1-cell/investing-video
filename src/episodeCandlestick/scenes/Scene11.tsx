@@ -12,17 +12,18 @@ import { theme } from "../theme";
 import { mulberry32 } from "../helpers";
 import type { OHLC, SessionPoint } from "../helpers";
 
-// Intraday shooting-star path → open 1252, high 1436, low 1244, close 1258
+// Intraday shooting-star path → open 1252, high 1436, low 1240, close 1240 (red:
+// the price spikes to the high then closes LOWER than it opened).
 const STAR_PATH: SessionPoint[] = [
   { t: 0, price: 1252 },
-  { t: 0.05, price: 1244 },
+  { t: 0.05, price: 1246 },
   { t: 0.16, price: 1298 },
   { t: 0.3, price: 1362 },
   { t: 0.45, price: 1436 },
-  { t: 0.56, price: 1392 },
-  { t: 0.72, price: 1330 },
-  { t: 0.88, price: 1281 },
-  { t: 1, price: 1258 },
+  { t: 0.56, price: 1388 },
+  { t: 0.72, price: 1320 },
+  { t: 0.88, price: 1272 },
+  { t: 1, price: 1240 },
 ];
 
 // Dense uptrend context (crowded, 20px gaps) rising into resistance.
@@ -48,11 +49,12 @@ const config: CaseStudyConfig = {
   pingT: 0.45, // ping at the high-of-day
   wickStroke: theme.colors.cyan,
   lateWickStroke: theme.colors.candleRed,
-  highlight: { topPrice: 1436, lowPrice: 1258, label: "Long wick" }, // long UPPER wick
+  highlight: { topPrice: 1436, lowPrice: 1252, label: "Long wick" }, // long UPPER wick (body top = open 1252)
   contextData: CONTEXT_DATA,
   refLine: { price: 1416, label: "Resistance", position: "above" },
   dockCandles: [{ open: 1406, high: 1424, low: 1400, close: 1402 }], // star at resistance
   dockLabel: ["Sellers taking", "control"],
+  dockDY: 5, // nudge the docked star 5px down
   T: {
     header: 0.0,
     svIn: 1.2,
