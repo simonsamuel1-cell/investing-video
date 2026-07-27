@@ -35,6 +35,11 @@ export const theme = {
     // Candle bodies and their wicks ONLY.
     candleGreen: "#22B573",
     candleRed: "#E5475D",
+    // Scoped exception (like bookBid/bookOffer): the case-study active-tab rule
+    // segment. Hue-locked to the candle tokens but named so tab code never
+    // references candleGreen/candleRed directly.
+    tabRuleBullish: "#22B573",
+    tabRuleBearish: "#E5475D",
   },
   type: {
     family: "Plus Jakarta Sans",

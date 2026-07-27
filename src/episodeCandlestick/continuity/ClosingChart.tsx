@@ -22,7 +22,6 @@ import { Ticker } from "../components/PricePanel";
 import { ReferenceLine } from "../components/ReferenceLine";
 import { FocusFrame } from "../components/FocusFrame";
 import { Chip } from "../components/Chip";
-import { Ping } from "../components/Ping";
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══
@@ -34,14 +33,7 @@ const N_CANDLES = 50;
 const SUPPORT = 1200; // Rp levels
 const RESISTANCE = 1610;
 const TICKER_Y = 120; // matches SC01
-const HAMMER_IDX = 14; // studied-pattern indices
-const BULL_FIRST = 17;
-const BULL_LAST = 18;
-const STAR_IDX = 37;
-const BEAR_FIRST = 44;
-const BEAR_LAST = 45;
-const RING_PAD_X = 2; // ring inset inside the candle slot
-const RING_PAD_Y = 12; // ring reach beyond hi–lo span
+const HAMMER_IDX = 14; // Hammer index — SC15 FocusFrame target
 const PARA_FIRST = 12; // SC15 "Paragraph" candle range (inclusive)
 const PARA_LAST = 17;
 const FOCUS_W_SINGLE = 90; // "Sentence" frame width
@@ -53,27 +45,22 @@ const LINE2_Y = 590;
 const WORD_GAP = 28;
 const RULE_W = 560; // indigo rule beneath line 2
 const RULE_Y = 676;
+// Rebased for the two-window group (SC15 0–193, SC16 193–277). The old SC14
+// window (candle-by-candle wipe + four pattern rings/pings) is CUT — the chart
+// now renders fully formed and fades in over 0.3s at group start.
 const T = {
-  wipe: 0.0, // series wipes in left→right
-  wipeStagger: 0.04,
-  support: 1.4, // support line draws
-  resistance: 1.9,
-  lineDur: 0.6,
-  ring1: 3.6, // Hammer ring + Ping "1"
-  ring2: 5.0, // Bullish Engulfing pair + "2"
-  ring3: 6.8, // Shooting Star + "3"
-  ring4: 8.2, // Bearish Engulfing pair + "4"
-  focus: 11.5, // FocusFrame on the Hammer; SC14 rings/pings fade out
-  chipA: 11.7, // "Sentence" pops
-  toParagraph: 13.2, // frame widens to indices 12–17
+  fadeIn: 0.0, // chart (+ support/resistance) fades in fully formed, 0.3s
+  focus: 0.3, // FocusFrame on the Hammer
+  chipA: 0.3, // "Sentence"
+  toParagraph: 2.2, // frame widens to indices 12–17 → "Paragraph"
   paragraphDur: 0.7,
-  toFull: 15.0, // frame expands to the panel, stroke + dim release
+  toFull: 4.2, // frame expands to the panel → "Full Story"
   fullDur: 0.8,
-  dimChart: 18.1, // chart to 15%, chip clears
-  line1: 18.4, // "Learn to read." word by word
-  line2: 19.4, // "Not to recognize."
+  dimChart: 6.53, // SC16: chart to 15%, chip clears
+  line1: 6.83, // "Learn to read." word by word
+  line2: 7.83, // "Not to recognize."
   wordStagger: 0.25,
-  rule: 20.2, // indigo rule draws
+  rule: 8.63, // indigo rule draws
   ruleDur: 0.6,
 };
 // ═══════════
@@ -156,14 +143,6 @@ const spanRect = (i0: number, i1: number, padX: number, padY: number) => {
   };
 };
 
-// SC14 rings + numbered pings
-const RINGS = [
-  { rect: spanRect(HAMMER_IDX, HAMMER_IDX, RING_PAD_X, RING_PAD_Y), t: T.ring1, ping: { x: cxOf(HAMMER_IDX), y: () => yOf(SERIES[HAMMER_IDX].low), n: "1" } },
-  { rect: spanRect(BULL_FIRST, BULL_LAST, RING_PAD_X, RING_PAD_Y), t: T.ring2, ping: { x: (cxOf(BULL_FIRST) + cxOf(BULL_LAST)) / 2, y: () => yOf(Math.min(SERIES[BULL_FIRST].low, SERIES[BULL_LAST].low)), n: "2" } },
-  { rect: spanRect(STAR_IDX, STAR_IDX, RING_PAD_X, RING_PAD_Y), t: T.ring3, ping: { x: cxOf(STAR_IDX), y: () => yOf(SERIES[STAR_IDX].high), n: "3" } },
-  { rect: spanRect(BEAR_FIRST, BEAR_LAST, RING_PAD_X, RING_PAD_Y), t: T.ring4, ping: { x: (cxOf(BEAR_FIRST) + cxOf(BEAR_LAST)) / 2, y: () => yOf(Math.max(SERIES[BEAR_FIRST].high, SERIES[BEAR_LAST].high)), n: "4" } },
-];
-
 // SC15 focus targets
 const hammer = SERIES[HAMMER_IDX];
 const RECT_A = {
@@ -235,8 +214,7 @@ export const ClosingChart = () => {
   const dimStrength = progress(f, sec(T.focus), 12) * (1 - m2);
   const strokeOpacity = fadeIn(f, sec(T.focus), 10) * (1 - m2);
 
-  const overlayOut = fadeOut(f, sec(T.focus), 10); // SC14 rings/pings hand off to SC15
-  const chartOp = 1 - 0.85 * progress(f, sec(T.dimChart), 10); // SC16 cross-fade to 15%
+  const chartOp = fadeIn(f, sec(T.fadeIn), sec(0.3)) * (1 - 0.85 * progress(f, sec(T.dimChart), 10)); // fully formed → SC16 15%
 
   return (
     <SafeArea>
@@ -248,93 +226,14 @@ export const ClosingChart = () => {
           y={CHART_TOP}
           width={CHART_RIGHT - CHART_LEFT}
           height={CHART_BOTTOM - CHART_TOP}
-          revealFrom={sec(T.wipe)}
-          revealStagger={sec(T.wipeStagger)}
           scaleOverride={yOf}
         />
         <Ticker x={CHART_LEFT} y={TICKER_Y} />
-        {f >= sec(T.support) && (
-          <ReferenceLine
-            y={yOf(SUPPORT)}
-            x1={CHART_LEFT}
-            x2={CHART_RIGHT}
-            label="Support"
-            anchor="left"
-            drawProgress={progress(f, sec(T.support), sec(T.lineDur))}
-            labelOpacity={fadeIn(f, sec(T.support) + 8, 10)}
-          />
-        )}
-        {f >= sec(T.resistance) && (
-          <ReferenceLine
-            y={yOf(RESISTANCE)}
-            x1={CHART_LEFT}
-            x2={CHART_RIGHT}
-            label="Resistance"
-            anchor="left"
-            labelPosition="above"
-            drawProgress={progress(f, sec(T.resistance), sec(T.lineDur))}
-            labelOpacity={fadeIn(f, sec(T.resistance) + 8, 10)}
-          />
-        )}
+        <ReferenceLine y={yOf(SUPPORT)} x1={CHART_LEFT} x2={CHART_RIGHT} label="Support" anchor="left" drawProgress={1} labelOpacity={1} />
+        <ReferenceLine y={yOf(RESISTANCE)} x1={CHART_LEFT} x2={CHART_RIGHT} label="Resistance" anchor="left" labelPosition="above" drawProgress={1} labelOpacity={1} />
       </div>
 
-      {/* SC14 — rings + numbered pings (fade out as the FocusFrame takes over). */}
-      <div style={{ position: "absolute", left: 0, top: 0, opacity: overlayOut }}>
-        <svg
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-          width={theme.canvas.width}
-          height={theme.canvas.height}
-        >
-          {RINGS.map(
-            (r) =>
-              f >= sec(r.t) && (
-                <rect
-                  key={r.ping.n}
-                  x={r.rect.x}
-                  y={r.rect.y}
-                  width={r.rect.w}
-                  height={r.rect.h}
-                  rx={10}
-                  fill="none"
-                  stroke={theme.colors.indigo}
-                  strokeWidth={theme.stroke.standard}
-                  opacity={fadeIn(f, sec(r.t), 8)}
-                />
-              )
-          )}
-        </svg>
-        {/* Pings 1 & 2 (bottom patterns) show their number 20px below the box; 3 & 4 keep it on the ping. */}
-        {RINGS.map((r, i) => (
-          <Ping key={r.ping.n} cx={r.ping.x} cy={r.ping.y()} startFrame={sec(r.t)} numberLabel={i < 2 ? undefined : r.ping.n} />
-        ))}
-        <svg
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-          width={theme.canvas.width}
-          height={theme.canvas.height}
-        >
-          {RINGS.map(
-            (r, i) =>
-              i < 2 &&
-              f >= sec(r.t) && (
-                <text
-                  key={r.ping.n}
-                  x={r.ping.x}
-                  y={r.rect.y + r.rect.h + 20 + theme.type.label.size}
-                  textAnchor="middle"
-                  fontFamily={theme.type.family}
-                  fontSize={theme.type.label.size}
-                  fontWeight={theme.type.label.weight}
-                  fill={theme.colors.slate}
-                  opacity={fadeIn(f, sec(r.t), 8)}
-                >
-                  {r.ping.n}
-                </text>
-              )
-          )}
-        </svg>
-      </div>
-
-      {/* SC15 — the FocusFrame returns. */}
+      {/* SC15 — the FocusFrame. */}
       {f >= sec(T.focus) && (
         <FocusFrame rect={rect} dimOpacity={0.15} dimStrength={dimStrength} strokeOpacity={strokeOpacity} />
       )}
