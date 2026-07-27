@@ -26,9 +26,10 @@ export const PatternCard = ({
   opacity = 1,
   scale = 1,
   glyphTop = GLYPH_TOP_DEFAULT,
+  contentOpacity = 1,
 }: {
-  pattern: PatternName;
-  name: string;
+  pattern?: PatternName;
+  name?: string;
   cx: number;
   cy: number;
   lifted?: boolean;
@@ -39,6 +40,8 @@ export const PatternCard = ({
   opacity?: number;
   scale?: number;
   glyphTop?: number;
+  // Fades the glyph + name together while the card rectangle stays visible.
+  contentOpacity?: number;
 }) => (
   <div
     style={{
@@ -56,29 +59,35 @@ export const PatternCard = ({
       opacity: opacity * (dimmed ? 0.15 : 1),
     }}
   >
-    <PatternGlyph
-      pattern={pattern}
-      cx={CARD_W / 2}
-      top={glyphTop}
-      size={GLYPH_SIZE}
-      showPathLine={showPathLine}
-      pathLineOpacity={pathLineOpacity}
-    />
-    <div
-      style={{
-        position: "absolute",
-        left: 16,
-        right: 16,
-        top: 226,
-        textAlign: "center",
-        fontSize: theme.type.label.size,
-        fontWeight: theme.type.label.weight,
-        lineHeight: 1.15,
-        color: theme.colors.ink,
-        opacity: nameOpacity,
-      }}
-    >
-      {name}
+    <div style={{ position: "absolute", inset: 0, opacity: contentOpacity }}>
+      {pattern && (
+        <PatternGlyph
+          pattern={pattern}
+          cx={CARD_W / 2}
+          top={glyphTop}
+          size={GLYPH_SIZE}
+          showPathLine={showPathLine}
+          pathLineOpacity={pathLineOpacity}
+        />
+      )}
+      {name && (
+        <div
+          style={{
+            position: "absolute",
+            left: 16,
+            right: 16,
+            top: 226,
+            textAlign: "center",
+            fontSize: theme.type.label.size,
+            fontWeight: theme.type.label.weight,
+            lineHeight: 1.15,
+            color: theme.colors.ink,
+            opacity: nameOpacity,
+          }}
+        >
+          {name}
+        </div>
+      )}
     </div>
   </div>
 );
