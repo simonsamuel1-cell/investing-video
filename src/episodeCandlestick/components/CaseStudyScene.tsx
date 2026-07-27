@@ -36,6 +36,9 @@ const CTX_W = 1650 - CTX_X;
 const CTX_GAP = 20;
 const TICK_HALF = 8;
 
+// Right (context) panel rect — exported so a static end-card can overlay/empty it.
+export const CTX_RECT = { x: CTX_X, y: CTX_Y, w: CTX_W, h: CTX_H };
+
 export type CaseStudyTimings = {
   header: number;
   svIn: number;
