@@ -8,7 +8,6 @@ import {
   AbsoluteFill,
   Audio,
   Img,
-  OffthreadVideo,
   Sequence,
   staticFile,
   useCurrentFrame,
@@ -31,6 +30,7 @@ import { Scene13A } from "./scenes/Scene13A";
 import { Scene13B } from "./scenes/Scene13B";
 import { Scene13C } from "./scenes/Scene13C";
 import { Scene13D } from "./scenes/Scene13D";
+import { Scene14Bbri } from "./scenes/Scene14Bbri";
 import { ClosingChart } from "./continuity/ClosingChart";
 import { CaseStudyTabs } from "./components/CaseStudyTabs";
 import { CaseStudyTabsPair } from "./components/CaseStudyTabsPair";
@@ -109,10 +109,10 @@ export const CandlestickComposition = () => {
       <Sequence from={8015} durationInFrames={819}>
         <CaseStudyTabsPair />
       </Sequence>
-      {/* SC14 — BBRI real footage (portrait 980×1920, centered) replaces the built SC14A–C. */}
+      {/* SC14 — BBRI real footage with choreographed treatment + overlays. */}
       <Sequence from={9044} durationInFrames={10386 - 9044}>
-        <AbsoluteFill style={{ backgroundColor: theme.colors.bg, alignItems: "center", justifyContent: "center" }}>
-          <OffthreadVideo src={staticFile("bbri.mp4")} muted style={{ height: "100%", width: "auto" }} />
+        <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
+          <Scene14Bbri />
         </AbsoluteFill>
       </Sequence>
       {/* Continuity group — SC15 (0–193) + SC16 (193–277). */}
