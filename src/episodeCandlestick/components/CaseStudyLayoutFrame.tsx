@@ -1,13 +1,14 @@
 /**
  * CaseStudyLayoutFrame — static geometry wrapper for the case-study format
- * (docs/layout-4980.md). Renders the chrome (tab row + rule, left panel, left
- * sub-zone, right panel) and exposes slots. NO timings/animation of its own —
- * the slot content drives its own reveal. Division of labour: left panel is a
- * static reference, ALL beat-driven work is in the right panel.
+ * (docs/layout-4980.md). Renders the panel chrome (left panel, left sub-zone,
+ * right panel) and exposes slots. The tab header + rule are NOT drawn here — for
+ * SC13B–C they are the Composition-level CaseStudyTabsPair (persistent across
+ * the two scenes). NO timings/animation of its own — the slot content drives its
+ * own reveal. Division of labour: left panel is a static reference, ALL
+ * beat-driven work is in the right panel.
  */
 import React from "react";
 import { theme } from "../theme";
-import { PatternTabRow, type PatternTab } from "./PatternTabRow";
 import { LEFT_PANEL } from "./ReferenceCard";
 import { RIGHT_PANEL } from "./DemoChart";
 
@@ -26,16 +27,12 @@ const panelChrome = (r: { x: number; y: number; w: number; h: number }): React.C
 });
 
 export const CaseStudyLayoutFrame = ({
-  tabs,
-  ruleDraw = 1,
   leftPanel,
   leftSubZone,
   rightPanel,
   titleVariant = false,
   title,
 }: {
-  tabs: PatternTab[];
-  ruleDraw?: number;
   leftPanel?: React.ReactNode;
   leftSubZone?: React.ReactNode;
   rightPanel?: React.ReactNode;
@@ -49,8 +46,6 @@ export const CaseStudyLayoutFrame = ({
     {leftPanel}
     {leftSubZone}
     {rightPanel}
-    {/* Tabs + rule on top (separate band, y104–176). */}
-    <PatternTabRow tabs={tabs} ruleDraw={ruleDraw} />
     {title && (
       <div
         style={{

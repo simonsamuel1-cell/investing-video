@@ -7,7 +7,7 @@
 import { theme } from "../theme";
 import { fmtRp } from "../helpers";
 
-export const Ticker = ({ x = 130, y = 148 }: { x?: number; y?: number }) => (
+export const Ticker = ({ x = 130, y = 148, label = "$ABCD" }: { x?: number; y?: number; label?: string }) => (
   <div
     style={{
       position: "absolute",
@@ -20,7 +20,7 @@ export const Ticker = ({ x = 130, y = 148 }: { x?: number; y?: number }) => (
       whiteSpace: "nowrap",
     }}
   >
-    $ABCD
+    {label}
   </div>
 );
 

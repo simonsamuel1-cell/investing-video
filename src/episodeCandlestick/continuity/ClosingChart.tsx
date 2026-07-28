@@ -228,7 +228,7 @@ export const ClosingChart = () => {
           height={CHART_BOTTOM - CHART_TOP}
           scaleOverride={yOf}
         />
-        <Ticker x={CHART_LEFT} y={TICKER_Y} />
+        <Ticker x={CHART_LEFT} y={TICKER_Y} label="$BBRI" />
         <ReferenceLine y={yOf(SUPPORT)} x1={CHART_LEFT} x2={CHART_RIGHT} label="Support" anchor="left" drawProgress={1} labelOpacity={1} />
         <ReferenceLine y={yOf(RESISTANCE)} x1={CHART_LEFT} x2={CHART_RIGHT} label="Resistance" anchor="left" labelPosition="above" drawProgress={1} labelOpacity={1} />
       </div>

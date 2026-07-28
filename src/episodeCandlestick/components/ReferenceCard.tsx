@@ -11,6 +11,28 @@ import { priceScale } from "../helpers";
 import { Candle } from "./Candle";
 
 export const LEFT_PANEL = { x: 194, y: 220, w: 389, h: 315 };
+export type PanelRect = { x: number; y: number; w: number; h: number };
+
+// Shared candle geometry for a reference card — single source of truth so
+// overlays (highlight rings) can position themselves on the same candles.
+export const referenceCandleGeom = (candles: OHLC[], panel: PanelRect = LEFT_PANEL) => {
+  const P = panel;
+  const chartTop = P.y + 34;
+  const chartBottom = P.y + P.h - 96; // leave room for the caption
+  const min = Math.min(...candles.map((c) => c.low));
+  const max = Math.max(...candles.map((c) => c.high));
+  const scale = priceScale(min, max, chartTop, chartBottom, 0.12);
+  const bodyW = 46;
+  const gap = 40;
+  const totalW = candles.length * bodyW + (candles.length - 1) * gap;
+  const startX = P.x + P.w / 2 - totalW / 2 + bodyW / 2;
+  const centers = candles.map((c, i) => {
+    const top = scale(c.high);
+    const bottom = scale(c.low);
+    return { cx: startX + i * (bodyW + gap), top, bottom, midY: (top + bottom) / 2 };
+  });
+  return { scale, centers, bodyW };
+};
 
 export const ReferenceCard = ({
   candles,
@@ -18,25 +40,17 @@ export const ReferenceCard = ({
   reveal = 1,
   flip = 0,
   dim = 0,
+  panel = LEFT_PANEL,
 }: {
   candles: OHLC[];
   caption: string;
   reveal?: number; // 0–1 wipe reveal
   flip?: number; // 0–1 vertical flip progress (1 = fully inverted)
   dim?: number; // 0–1 dim strength (dims to 30%)
+  panel?: PanelRect; // geometry override (default top-left panel)
 }) => {
-  const P = LEFT_PANEL;
-  const chartTop = P.y + 34;
-  const chartBottom = P.y + P.h - 96; // leave room for the caption
-  const min = Math.min(...candles.map((c) => c.low));
-  const max = Math.max(...candles.map((c) => c.high));
-  const scale = priceScale(min, max, chartTop, chartBottom, 0.12);
-
-  const bodyW = 46;
-  const gap = 40;
-  const totalW = candles.length * bodyW + (candles.length - 1) * gap;
-  const startX = P.x + P.w / 2 - totalW / 2 + bodyW / 2;
-  const cx = (i: number) => startX + i * (bodyW + gap);
+  const P = panel;
+  const { scale, centers, bodyW } = referenceCandleGeom(candles, P);
 
   const scaleY = 1 - 2 * flip; // 1 → −1
   const midY = P.y + P.h / 2;
@@ -47,7 +61,7 @@ export const ReferenceCard = ({
       <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
         <g transform={`translate(0 ${midY}) scale(1 ${scaleY}) translate(0 ${-midY})`}>
           {candles.map((c, i) => (
-            <Candle key={i} x={cx(i)} width={bodyW} open={c.open} high={c.high} low={c.low} close={c.close} scale={scale} buildProgress={reveal} wickProgress={reveal} />
+            <Candle key={i} x={centers[i].cx} width={bodyW} open={c.open} high={c.high} low={c.low} close={c.close} scale={scale} buildProgress={reveal} wickProgress={reveal} />
           ))}
         </g>
       </svg>

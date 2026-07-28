@@ -16,6 +16,20 @@ export const RIGHT_PANEL = { x: 603, y: 220, w: 1047, h: 680 };
 
 export type Annotation = { index: number; text: string; atFrame: number };
 
+// Shared chart geometry (no-volume layout) so overlays (highlight boxes) can
+// position themselves on the same candles the chart draws.
+export const demoChartGeom = (data: OHLC[]) => {
+  const P = RIGHT_PANEL;
+  const chartTop = P.y + 26;
+  const chartBottom = P.y + P.h - 30;
+  const min = Math.min(...data.map((d) => d.low));
+  const max = Math.max(...data.map((d) => d.high));
+  const scale = priceScale(min, max, chartTop, chartBottom, 0.08);
+  const slot = (P.w - 60) / data.length;
+  const cx = (i: number) => P.x + 30 + slot * (i + 0.5);
+  return { scale, slot, cx };
+};
+
 export const DemoChart = ({
   data,
   buildFrom,
