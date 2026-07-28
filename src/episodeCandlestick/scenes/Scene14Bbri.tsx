@@ -1,60 +1,19 @@
 /**
- * Scene14Bbri — from 9044, duration 1342 (9044–10385). Real BBRI footage
- * (portrait 980×1920) with a choreographed treatment + overlays.
- *
- * Video states (scene-local frames; abs − 9044):
- *   0–572   upscaled 130% (anchored top, cropped at the subtitle margin)
- *   572–636 scales back down to the saved base (safe-margin fit, centered)
- *   636–974 base
- *   974–1006 slides to the left side
- *   1006–1133 held left (bullish-engulfing pattern + caveats beside it)
- *   1133–1162 slides back to center
- * Rounded corners throughout; everything fades out by 10385 (logo excepted).
+ * Scene14Bbri — from 9044, duration 1342 (9044–10385). Real BBRI footage with a
+ * choreographed treatment + overlays. The video scale/position lives in
+ * components/BbriVideo.tsx; the recovery highlight in components/HighlightBox.tsx.
  *
  * Overlays (abs frames): 9200–9300 arrow at the rightmost red candle · 9360–9546
  * highlight the reversal (engulfing) candle · 9740–9778 "What happens next?" ·
  * 9779–9865 3-2-1 countdown · 9903–10017 highlight the recovery + "+10%" ·
  * 10018–10176 slide left, bullish-engulfing pattern + caveats · 10177–10206
- * fade the caveats and return to center.
+ * fade the caveats and return to center. Everything fades out by 10385.
  */
-import { useCurrentFrame, interpolate, OffthreadVideo, staticFile } from "remotion";
+import { useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
-import { PatternGlyph } from "../components/PatternGlyph";
-
-// ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const SAFE_TOP = 54;
-const SUBTITLE_Y = 972; // subtitle-margin top (1080 − 108); video never crosses it
-const BASE_H = SUBTITLE_Y - SAFE_TOP; // 918 — saved base height
-const BASE_W = (BASE_H * 980) / 1920; // 468.5625 — saved base width (fit to height)
-const BASE_CX = 960; // saved base center-x
-const UPSCALE = 1.3;
-const LEFT_CX = 96 + BASE_W / 2; // video hugs the safe-left when moved aside
-const EC = 3; // edge crop px — hides a black source-edge line
-const RADIUS = 28; // rounded corners
-const END = 10385 - 9044; // 1341
-
-const K = {
-  downFrom: 572,
-  downTo: 636, // 9616–9680 scale back to base
-  leftFrom: 974,
-  leftTo: 1006, // 10018 → slide left
-  backFrom: 1133,
-  backTo: 1162, // 10177–10206 slide back to center
-};
-// ═══════════════════════════════════════════════════════════════════════════
-
-export const videoScale = (f: number) =>
-  interpolate(f, [0, K.downFrom, K.downTo], [UPSCALE, UPSCALE, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-export const videoCx = (f: number) =>
-  interpolate(f, [0, K.leftFrom, K.leftTo, K.backFrom, K.backTo], [BASE_CX, BASE_CX, LEFT_CX, LEFT_CX, BASE_CX], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-export const videoBox = (f: number) => {
-  const s = videoScale(f);
-  const w = BASE_W * s;
-  return { left: videoCx(f) - w / 2, top: SAFE_TOP, width: w, height: BASE_H, right: videoCx(f) + w / 2, scale: s };
-};
+import { PatternCard } from "../components/PatternCard";
+import { BbriVideo, videoBox, END } from "../components/BbriVideo";
+import { HighlightBox } from "../components/HighlightBox";
 
 const ramp = (f: number, a: number, b: number, c: number, d: number) =>
   interpolate(f, [a, b, c, d], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -76,10 +35,6 @@ const Arrow = ({ x1, y1, x2, y2, opacity }: { x1: number; y1: number; x2: number
   );
 };
 
-const HLBox = ({ x, y, w, h, opacity }: { x: number; y: number; w: number; h: number; opacity: number }) => (
-  <rect x={x} y={y} width={w} height={h} rx={12} fill="none" stroke={theme.colors.indigo} strokeWidth={theme.stroke.standard} opacity={opacity} />
-);
-
 export const Scene14Bbri = () => {
   const f = useCurrentFrame();
   const box = videoBox(f);
@@ -94,53 +49,28 @@ export const Scene14Bbri = () => {
   const c2 = ramp(f, 772, 778, 795, 801);
   const c1 = ramp(f, 801, 807, 815, 821);
   const box10Op = ramp(f, 859, 871, 961, 973); // 9903–10017
-  const asideOp = ramp(f, 1006, 1030, 1120, 1150); // pattern + caveats beside the moved video
+  const asideOp = ramp(f, 1019, 1031, 1120, 1150); // pattern + caveats appear at 10075
 
-  // Recovery highlight box (base geometry).
-  const B10 = { x: 1020, y: 415, w: 172, h: 216 };
-  // Pattern + caveats sit to the right of the left-parked video.
-  const asideCx = box.right + 285;
+  const B10 = { x: 980, y: 415, w: 220, h: 216 }; // recovery highlight (base geometry)
+  const asideLeft = box.right + 50; // 50px gap between the video and the pattern/caveats
 
   return (
     <div style={{ position: "absolute", inset: 0, opacity }}>
-      {/* Rounded clip window: crops the edge line, the upscale overflow, and the bottom. */}
-      <div style={{ position: "absolute", left: box.left, top: box.top, width: box.width, height: box.height, overflow: "hidden", borderRadius: RADIUS }}>
-        <OffthreadVideo
-          src={staticFile("bbri.mp4")}
-          muted
-          style={{ position: "absolute", left: -EC, top: -EC, width: box.width + 2 * EC, height: BASE_H * box.scale + 2 * EC, objectFit: "fill" }}
-        />
-      </div>
+      <BbriVideo />
 
       {/* Scrim behind the "What happens next?" text + countdown, for readability. */}
       {scrimOp > 0.001 && <div style={{ position: "absolute", inset: 0, background: theme.colors.bg, opacity: scrimOp }} />}
 
-      {/* Vector overlays. */}
+      {/* Arrow at the rightmost red candle. */}
       <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-        {arrowOp > 0.001 && <Arrow x1={1320} y1={632} x2={1196} y2={732} opacity={arrowOp} />}
-        {hl2Op > 0.001 && <HLBox x={1186} y={512} w={68} h={250} opacity={hl2Op} />}
-        {box10Op > 0.001 && <HLBox x={B10.x} y={B10.y} w={B10.w} h={B10.h} opacity={box10Op} />}
+        {arrowOp > 0.001 && <Arrow x1={1112} y1={835} x2={1225} y2={835} opacity={arrowOp} />}
       </svg>
 
-      {/* "+10%" beside-left of the recovery box, bottom-aligned. */}
-      {box10Op > 0.001 && (
-        <div
-          style={{
-            position: "absolute",
-            left: B10.x - 190,
-            top: B10.y + B10.h - 48,
-            width: 170,
-            textAlign: "right",
-            fontFamily: theme.type.family,
-            fontSize: 44,
-            fontWeight: theme.type.headline.weight,
-            color: theme.colors.indigo,
-            opacity: box10Op,
-          }}
-        >
-          +10%
-        </div>
-      )}
+      {/* Highlight the Open / Close readout (top-left of the chart). */}
+      {hl2Op > 0.001 && <HighlightBox x={604} y={573} w={202} h={57} opacity={hl2Op} />}
+
+      {/* Recovery highlight + "+10%" (the frame-9990 box). */}
+      {box10Op > 0.001 && <HighlightBox x={B10.x} y={B10.y} w={B10.w} h={B10.h} opacity={box10Op} label="+10%" />}
 
       {/* "What happens next?" — as big as the closing-scene text. */}
       {whatOp > 0.001 && (
@@ -192,21 +122,22 @@ export const Scene14Bbri = () => {
           ) : null,
         )}
 
-      {/* Bullish-engulfing pattern + caveats beside the left-parked video. */}
+      {/* Bullish-engulfing pattern + caveats beside the moved video, left-aligned to the chart. */}
       {asideOp > 0.001 && (
         <div style={{ position: "absolute", left: 0, top: 0, opacity: asideOp }}>
-          <PatternGlyph pattern="bullishEngulfing" cx={asideCx} top={300} size={260} />
+          {/* white pattern card (same as frame 3887) */}
+          <PatternCard pattern="bullishEngulfing" name="Bullish Engulfing" cx={asideLeft + 150} cy={380} />
           <div
             style={{
               position: "absolute",
-              left: asideCx - 300,
+              left: asideLeft,
               top: 600,
-              width: 600,
-              textAlign: "center",
+              width: 680,
+              textAlign: "left",
               fontFamily: theme.type.family,
               fontSize: 48,
               fontWeight: theme.type.headline.weight,
-              color: theme.colors.ink,
+              color: theme.colors.indigo,
             }}
           >
             No guarantee
@@ -214,10 +145,10 @@ export const Scene14Bbri = () => {
           <div
             style={{
               position: "absolute",
-              left: asideCx - 320,
+              left: asideLeft,
               top: 668,
-              width: 640,
-              textAlign: "center",
+              width: 520,
+              textAlign: "left",
               fontFamily: theme.type.family,
               fontSize: 36,
               fontWeight: theme.type.body.weight,
