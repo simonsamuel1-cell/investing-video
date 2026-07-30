@@ -35,6 +35,7 @@ import { ClosingChart } from "./continuity/ClosingChart";
 import { CaseStudyTabs } from "./components/CaseStudyTabs";
 import { CaseStudyTabsPair } from "./components/CaseStudyTabsPair";
 import { Subtitles } from "./components/Subtitles";
+import type { SubtitleCue } from "./subtitles";
 
 export const TOTAL_FRAMES = 10663; // 05:55.13 @30fps
 
@@ -78,7 +79,9 @@ const INDEPENDENT_SCENES: {
   // 9044–10385 is the BBRI real-footage insert (see the video Sequence below).
 ];
 
-export const CandlestickComposition = () => {
+export type CandlestickProps = { subtitles?: SubtitleCue[]; audioSrc?: string };
+
+export const CandlestickComposition = ({ subtitles, audioSrc = "vo.mp3" }: CandlestickProps) => {
   const f = useCurrentFrame();
   const watermarkFade = interpolate(
     f,
@@ -121,8 +124,8 @@ export const CandlestickComposition = () => {
           <ClosingChart />
         </SceneFade>
       </Sequence>
-      {/* Burned-in subtitles (SRT covers SC01–12 only; extended SRT needed for SC13A+). */}
-      <Subtitles />
+      {/* Burned-in subtitles — per-composition language track. */}
+      <Subtitles cues={subtitles} />
       {/* Full-frame brand watermark — always on top; fades in at the start, out at the very end. */}
       <AbsoluteFill
         style={{
@@ -134,7 +137,7 @@ export const CandlestickComposition = () => {
       >
         <Img src={staticFile("watermark.png")} style={{ maxWidth: "100%", maxHeight: "100%" }} />
       </AbsoluteFill>
-      <Audio src={staticFile("vo.mp3")} />
+      <Audio src={staticFile(audioSrc)} />
     </AbsoluteFill>
   );
 };
