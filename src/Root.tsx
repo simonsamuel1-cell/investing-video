@@ -24,7 +24,7 @@ export const Root = () => (
       fps={theme.canvas.fps}
       width={theme.canvas.width}
       height={theme.canvas.height}
-      defaultProps={{ subtitles: SUBTITLES_INDO, audioSrc: "vo-indo.mp3" }}
+      defaultProps={{ subtitles: SUBTITLES_INDO, audioSrc: "vo-indo.mp3", showSubtitles: false, muted: true }}
     />
   </>
 );

@@ -79,9 +79,9 @@ const INDEPENDENT_SCENES: {
   // 9044–10385 is the BBRI real-footage insert (see the video Sequence below).
 ];
 
-export type CandlestickProps = { subtitles?: SubtitleCue[]; audioSrc?: string };
+export type CandlestickProps = { subtitles?: SubtitleCue[]; audioSrc?: string; showSubtitles?: boolean; muted?: boolean };
 
-export const CandlestickComposition = ({ subtitles, audioSrc = "vo.mp3" }: CandlestickProps) => {
+export const CandlestickComposition = ({ subtitles, audioSrc = "vo.mp3", showSubtitles = true, muted = false }: CandlestickProps) => {
   const f = useCurrentFrame();
   const watermarkFade = interpolate(
     f,
@@ -124,8 +124,8 @@ export const CandlestickComposition = ({ subtitles, audioSrc = "vo.mp3" }: Candl
           <ClosingChart />
         </SceneFade>
       </Sequence>
-      {/* Burned-in subtitles — per-composition language track. */}
-      <Subtitles cues={subtitles} />
+      {/* Burned-in subtitles — per-composition language track (toggle via showSubtitles). */}
+      {showSubtitles && <Subtitles cues={subtitles} />}
       {/* Full-frame brand watermark — always on top; fades in at the start, out at the very end. */}
       <AbsoluteFill
         style={{
@@ -137,7 +137,7 @@ export const CandlestickComposition = ({ subtitles, audioSrc = "vo.mp3" }: Candl
       >
         <Img src={staticFile("watermark.png")} style={{ maxWidth: "100%", maxHeight: "100%" }} />
       </AbsoluteFill>
-      <Audio src={staticFile(audioSrc)} />
+      <Audio src={staticFile(audioSrc)} muted={muted} />
     </AbsoluteFill>
   );
 };
