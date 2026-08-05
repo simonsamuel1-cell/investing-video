@@ -45,9 +45,28 @@ const T = {
 // One frame per phrase: "apa yang sudah terjadi" / "pola yang sering
 // berulang" / "posisi pembeli serta penjual saat ini".
 const CHIP_AT = [225, 286, 330];
-const CHIPS = ["Yang Sudah Terjadi", "Pola Berulang", "Posisi Saat Ini"];
+const CHIPS = ["yang sudah terjadi", "pola berulang", "posisi saat ini"];
 const CHIP_Y = 636;
+// The three labels are different lengths, so fixed centres give uneven gaps.
+// These are their MEASURED rendered widths at 36px/600; the row is laid out
+// from them so the gap between chips is exactly CHIP_GAP. Re-measure if a label
+// or the chip type changes.
+const CHIP_W = [358, 281, 270];
+const CHIP_GAP = 20;
 // ═══════════════════════════════════════════════════════════════════════════
+
+/** Centre-x per chip, packed CHIP_GAP apart and centred on the canvas. */
+const chipXs = (() => {
+  const total = CHIP_W.reduce((a, b) => a + b, 0) + CHIP_GAP * (CHIP_W.length - 1);
+  // rounded so every chip edge lands on a whole pixel — a fractional origin
+  // makes the rendered gaps read 19/21 instead of 20/20
+  let left = Math.round((theme.canvas.width - total) / 2);
+  return CHIP_W.map((w) => {
+    const cx = left + w / 2;
+    left += w + CHIP_GAP;
+    return cx;
+  });
+})();
 
 const GROUP_DY = theme.layout.safeTop - GROUP_TOP + BLOCK_DROP;
 
@@ -76,7 +95,6 @@ export const Scene09 = () => {
   // the chips are read off the chart, so it brightens a step behind them
   const texturePlus = texture * (1 + 0.9 * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
 
-  const chipXs = [560, 960, 1360];
   const ruleW = 900;
 
   return (
@@ -102,7 +120,7 @@ export const Scene09 = () => {
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
       <StatementText text="Probabilitas." y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
-      <StatementText text="Bukan Prediksi." y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
+      <StatementText text="Bukan prediksi." y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
 
       {CHIPS.map((c, i) => (
         <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
