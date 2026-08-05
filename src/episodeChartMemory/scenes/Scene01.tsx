@@ -13,7 +13,7 @@ import { IndicatorOverlays } from "../components/IndicatorOverlays";
 import { SubPane } from "../components/SubPane";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn } from "../helpers";
+import { progress, fadeIn, fadeOut } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -26,6 +26,7 @@ const T = {
   look: 58, // "banyak orang langsung berpikir" — the frame eases back, as if studied
   thought: 106, // "Ini pasti cuma bisa dibaca"
   thoughtDim: 149, // "Bukan buat saya"
+  thoughtOut: 203, // the doubt clears before the clutter starts
   trend: 208, // "Garis di mana-mana"
   pulse: 241, // "Candlestick"
   ma20: 272, // "Indikator bertumpuk"
@@ -34,7 +35,7 @@ const T = {
   rsi: 315, // "sampai chart-nya sendiri"
   macd: 345,
   legend: 315, // 5 chips across f315–f395
-  dim: 380, // "hampir tidak terlihat"
+  // (no brightness dim on this beat — the density alone carries it)
   caption: 405, // "Rasanya rumit"
 };
 const LEGEND_STEP = 20;
@@ -87,8 +88,8 @@ export const Scene01 = () => {
   const trendDraw = f >= T.trend ? progress(f, T.trend, 34) : 0;
   // one-cycle brightness pulse on the candle series
   const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
-  const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
   const thoughtDim = f >= T.thoughtDim ? progress(f, T.thoughtDim, 24) : 0;
+  const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
@@ -107,6 +108,11 @@ export const Scene01 = () => {
     const k = dx === 0 ? 0 : (INNER.x + INNER.w - x1) / dx;
     return { x1, y1, x2: x1 + dx * k, y2: y1 + dy * k };
   };
+  // the price gridlines CandlestickChart draws; the doubt chip sits above the
+  // 4.997 line (index 2 counting up from the bottom).
+  const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
+  const thoughtY = g.scale(tickPrices[2]) - 42;
+
   const tLow = trendLine(P.loA, P.loB, true);
   const tHigh = trendLine(P.hiA, P.hiB, false);
 
@@ -116,7 +122,6 @@ export const Scene01 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          filter: `brightness(${1 - 0.2 * dim})`,
           transform: `scale(${cardScale})`,
           transformOrigin: "960px 566px",
         }}
@@ -197,12 +202,12 @@ export const Scene01 = () => {
       {/* the doubt the VO names, before the clutter piles on */}
       <Chip
         label="Cuma buat profesional?"
-        x={CARD.x + 64}
-        y={912}
+        x={INNER.x}
+        y={thoughtY}
         variant="slate"
         anchor="left"
         startFrame={T.thought}
-        opacity={1 - 0.45 * thoughtDim}
+        opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
       />
 
       {/* closing caption, above the subtitle zone */}
