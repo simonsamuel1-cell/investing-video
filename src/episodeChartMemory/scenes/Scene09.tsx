@@ -22,10 +22,15 @@ const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
 const HANDOFF_BOX: Box = { x: 200, y: 230, w: 1500, h: 590 };
 const HANDOFF_WIN = WIN.sc08;
 const TEXTURE = 0.15;
-// Everything except the chart is grouped and lifted so the block sits just
-// under the safe-top margin. GROUP_TOP is the topmost pixel of that block as
-// laid out below: "Bukan Prediksi." centre-y 392 minus half its 72px line.
-const GROUP_TOP = 349;
+// The statement lines and the three chips are one block, lifted to just under
+// the safe-top margin and then dropped 30px. GROUP_TOP is that block's topmost
+// pixel as laid out below: "Probabilitas." centre-y 392 minus half its 96px line.
+const GROUP_TOP = 344;
+const BLOCK_DROP = 30;
+// "Informasi" / "Harapan · Tebakan" sit BELOW the chart, so they are not part
+// of that block — chart bottom is CHART.y + CHART.h = 800.
+const INFO_TOP = 826;
+const HOPE_TOP = 890;
 const T = {
   texture: 0, // "Jadi, anggap"
   carryDur: 50, // the carried series eases into this scene's framing
@@ -44,7 +49,7 @@ const CHIPS = ["Yang Sudah Terjadi", "Pola Berulang", "Posisi Saat Ini"];
 const CHIP_Y = 636;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const GROUP_DY = theme.layout.safeTop - GROUP_TOP;
+const GROUP_DY = theme.layout.safeTop - GROUP_TOP + BLOCK_DROP;
 
 export const Scene09 = () => {
   const f = useCurrentFrame();
@@ -93,11 +98,11 @@ export const Scene09 = () => {
         />
       )}
 
-      {/* Everything that is not the chart, as one block lifted to the top. */}
+      {/* The statement and the chips, as one block near the top.
+          "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
-      {/* the headline the VO leads with, then the correction above it */}
-      <StatementText text="Bukan Prediksi." y={392} startFrame={T.notPred} size={72} weight={700} color={theme.colors.slate} />
-      <StatementText text="Probabilitas." y={496} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
+      <StatementText text="Probabilitas." y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
+      <StatementText text="Bukan Prediksi." y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
 
       {CHIPS.map((c, i) => (
         <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
@@ -116,13 +121,15 @@ export const Scene09 = () => {
           />
         </svg>
       )}
+      </div>
 
-      {/* what the chart actually buys you, set against what it replaces */}
+      {/* what the chart actually buys you, set against what it replaces —
+          below the chart, not part of the block above */}
       <div
         style={{
           position: "absolute",
           left: 0,
-          top: 772,
+          top: INFO_TOP,
           width: theme.canvas.width,
           textAlign: "center",
           fontFamily: theme.type.family,
@@ -139,7 +146,7 @@ export const Scene09 = () => {
         style={{
           position: "absolute",
           left: 0,
-          top: 840,
+          top: HOPE_TOP,
           width: theme.canvas.width,
           textAlign: "center",
           fontFamily: theme.type.family,
@@ -153,7 +160,6 @@ export const Scene09 = () => {
         }}
       >
         Harapan · Tebakan
-      </div>
       </div>
     </SafeArea>
   );
