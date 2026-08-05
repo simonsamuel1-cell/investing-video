@@ -26,6 +26,7 @@ export const Chip = ({
   size = theme.type.chip.size,
   opacity = 1,
   width,
+  bare = false,
 }: {
   label: string;
   x: number;
@@ -38,6 +39,8 @@ export const Chip = ({
   opacity?: number;
   /** Fixed outer width — lets a set of chips align or balance to a common size. */
   width?: number;
+  /** Drop the pill: no background, no border — just the label in the variant colour. */
+  bare?: boolean;
 }) => {
   const f = useCurrentFrame();
   const p = interpolate(f, [startFrame, startFrame + 10], [0, 1], {
@@ -76,8 +79,8 @@ export const Chip = ({
           textAlign: "center",
           padding: "8px 20px",
           borderRadius: theme.radius.chip,
-          background: c.bg,
-          border: `${theme.stroke.hair}px solid ${c.fg}`,
+          background: bare ? "transparent" : c.bg,
+          border: bare ? "none" : `${theme.stroke.hair}px solid ${c.fg}`,
           color: c.fg,
           fontFamily: theme.type.family,
           fontSize: size,

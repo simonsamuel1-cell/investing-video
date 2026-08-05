@@ -19,7 +19,7 @@ export type SwingLine = { x1: number; y1: number; x2: number; y2: number };
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const LINES: SwingLine[] = [
-  { x1: 390, y1: 671, x2: 790, y2: 655 }, // garis kiri
+  { x1: 240, y1: 550, x2: 890, y2: 525 }, // garis kiri
 ];
 const OPACITY = 0.55;
 // ═══════════════════════════════════════════════════════════════════════════

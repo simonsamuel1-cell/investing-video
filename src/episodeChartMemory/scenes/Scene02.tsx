@@ -129,8 +129,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
         Kamu sudah membaca chart seumur hidup.
       </div>
 
-      {/* right-aligned so it never collides with the opener line on the left */}
-      <Chip label="Harga Cabai" x={box.x + box.w} y={224} variant="indigo" anchor="right" startFrame={T.header} opacity={1 - pairIn} />
+      {/* plain text, centred on the canvas */}
+      <Chip label="Harga Cabai" x={theme.canvas.width / 2} y={224} variant="indigo" anchor="center" bare startFrame={T.header} opacity={1 - pairIn} />
 
       {/* the three spoken figures */}
       {SPOKEN.map(({ idx, start, rise }, i) => {

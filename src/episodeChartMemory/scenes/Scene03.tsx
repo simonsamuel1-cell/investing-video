@@ -92,8 +92,8 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
         startFrame={T.underline + 30}
         opacity={1 - underlineDim}
       />
-      {/* above the line chart, centred on it */}
-      <Chip label="Apa pesannya?" x={box.x + box.w / 2} y={224} variant="indigo" anchor="center" startFrame={T.question} />
+      {/* plain text above the line chart, centred on the canvas */}
+      <Chip label="Apa pesannya?" x={theme.canvas.width / 2} y={224} variant="indigo" anchor="center" bare startFrame={T.question} />
 
       {/* every session point is one recorded decision */}
       {ticks > 0.001 && (
