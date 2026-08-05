@@ -119,8 +119,8 @@ export const Scene09 = () => {
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
-      <StatementText text="Probabilitas." y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
-      <StatementText text="Bukan prediksi." y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
+      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
+      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
 
       {CHIPS.map((c, i) => (
         <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
