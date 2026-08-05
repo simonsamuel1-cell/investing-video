@@ -32,7 +32,7 @@ import { textReveal } from "../helpers";
 export const CAPTION = {
   text: "Ingatan pasar",
   x: theme.canvas.width / 2, // 960
-  y: 124,
+  y: 204,
   size: theme.type.header.size, // 48
   weight: theme.type.header.weight, // 700
   color: theme.colors.indigo,

@@ -206,6 +206,7 @@ export const Scene01 = () => {
         y={thoughtY}
         variant="slate"
         anchor="center"
+        bare
         startFrame={T.thought}
         opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
       />
