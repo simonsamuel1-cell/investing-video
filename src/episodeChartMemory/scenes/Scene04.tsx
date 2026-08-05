@@ -11,7 +11,7 @@ import { Chip } from "../components/Chip";
 import { AnatomyCandle } from "../components/AnatomyCandle";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { fadeIn, progress, textReveal, mulberry32, type Box } from "../helpers";
+import { fadeIn, progress, mulberry32, type Box } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
@@ -19,9 +19,8 @@ import type { ContGeom } from "../continuity/ChartContinuity";
 const T = {
   selector: 0, // "beberapa bentuk"
   closeChip: 86, // "menghubungkan harga penutupan"
-  cleanCap: 164, // "bersih dan mudah dipahami"
   ghosts: 238, // "tetapi banyak cerita"
-  hiddenCap: 278, // "tidak terlihat"
+  hiddenCap: 278, // "tidak terlihat" — timing beat only; the caption itself is gone
   wipe: 313, // "Candlestick memberi gambaran lebih lengkap"
   cardIn: 370, // one candle scales out of the series
   open: 382,
@@ -88,8 +87,6 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
     return [0.2, 0.42, 0.63, 0.84].map((q) => a + Math.floor((b - a) * (q + (rnd() - 0.5) * 0.04)));
   })();
 
-  const cleanCap = textReveal(local, T.cleanCap);
-  const hiddenCap = textReveal(local, T.hiddenCap);
   const detail = local >= T.zoom ? progress(local, T.zoom, 40) : 0;
 
   return (
@@ -146,42 +143,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
         />
       )}
 
-      {/* what a line does well… */}
-      {local >= T.cleanCap && local < T.hiddenCap && (
-        <div
-          style={{
-            position: "absolute",
-            left: SEG.x,
-            top: 880,
-            fontFamily: theme.type.family,
-            fontSize: theme.type.label.size,
-            fontWeight: theme.type.label.weight,
-            color: theme.colors.slate,
-            opacity: cleanCap.opacity,
-            transform: `translateY(${cleanCap.y}px)`,
-          }}
-        >
-          Bersih, mudah dibaca
-        </div>
-      )}
-      {/* …and what it quietly drops */}
-      {local >= T.hiddenCap && local < T.wipe + 60 && (
-        <div
-          style={{
-            position: "absolute",
-            left: SEG.x,
-            top: 880,
-            fontFamily: theme.type.family,
-            fontSize: theme.type.label.size,
-            fontWeight: theme.type.label.weight,
-            color: theme.colors.slate,
-            opacity: hiddenCap.opacity,
-            transform: `translateY(${hiddenCap.y}px)`,
-          }}
-        >
-          Tapi banyak yang tersembunyi
-        </div>
-      )}
+      {/* what a line quietly drops — carried by the ghost wicks alone, no caption */}
 
       {/* ghost wicks — the high/low a line never shows */}
       {ghostOn && (

@@ -15,7 +15,6 @@ import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  ticker: 0, // the morph completes; the series identifies itself
   underline: 86, // "membentuk pola tertentu"
   question: 182, // "membaca pesan di baliknya"
   lift: 268, // "bukan sekadar catatan masa lalu"
@@ -99,9 +98,6 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
           })}
         </svg>
       )}
-
-      {/* the series names itself once the morph resolves */}
-      <Chip label="BMRI · Harian" x={box.x} y={224} variant="slate" anchor="left" startFrame={T.ticker + 40} />
 
       {/* the repeating structure, then the question it raises */}
       <Chip

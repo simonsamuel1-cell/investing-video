@@ -36,7 +36,7 @@ const T = {
   macd: 345,
   legend: 315, // 5 chips across f315–f395
   // (no brightness dim on this beat — the density alone carries it)
-  caption: 405, // "Rasanya rumit"
+  // (no closing caption either — the stacked indicators say "rumit" on their own)
 };
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
@@ -209,9 +209,6 @@ export const Scene01 = () => {
         startFrame={T.thought}
         opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
       />
-
-      {/* closing caption, above the subtitle zone */}
-      <Chip label="Rumit?" x={1500} y={912} variant="slate" anchor="center" startFrame={T.caption} />
     </SafeArea>
   );
 };

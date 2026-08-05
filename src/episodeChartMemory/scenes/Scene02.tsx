@@ -17,7 +17,7 @@ import type { ContGeom } from "../continuity/ChartContinuity";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
   opener: 0, // "Padahal, kamu sudah membaca chart"
-  shrink: 60, // opener retreats to a header slot
+  openerOut: 59, // global 548 — the line clears outright; it does NOT retreat to a header
   header: 90, // "Coba lihat harga cabai"
   c1: 141, // "40.000 per kilogram"
   c2: 196, // "turun ke 20.000"
@@ -30,11 +30,13 @@ const T = {
   crowd: 527, // "hanya lebih cepat dan melibatkan lebih banyak orang"
   pairOut: 578, // clear before the SC03 morph
 };
-const CARD_START = [
-  { cx: 560, cy: 430 },
-  { cx: 960, cy: 430 },
-  { cx: 1360, cy: 430 },
-];
+// The three figures sit in one row, 10px apart. A uniform card width is what
+// makes that gap exact — natural widths differ per figure, so the pitch is
+// CARD_W + 10 and every card is centred inside its own box.
+const CARD_W = 450;
+const CARD_GAP = 10;
+const CARD_CY = 430;
+const CARD_START = [0, 1, 2].map((i) => ({ cx: theme.canvas.width / 2 + (i - 1) * (CARD_W + CARD_GAP), cy: CARD_CY }));
 const SPOKEN = [
   { idx: CHILI_SPOKEN.high, start: T.c1, rise: false },
   { idx: CHILI_SPOKEN.low, start: T.c2, rise: false },
@@ -55,12 +57,9 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const dots = f >= T.dots ? progress(f, T.dots, 20) : 0;
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
-  // opener line: centre stage, then retreats to a quiet header
+  // opener line: centre stage, then simply clears
   const op = textReveal(f, T.opener, 20);
-  const toHeader = f >= T.shrink ? progress(f, T.shrink, 30) : 0;
-  const openerSize = interpolate(toHeader, [0, 1], [48, 30]);
-  const openerY = interpolate(toHeader, [0, 1], [520, 206]);
-  const openerOp = op.opacity * (1 - 0.4 * toHeader);
+  const openerOp = op.opacity * (f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1);
 
   const target = (idx: number) => ({
     cx: box.x + (box.w * idx) / (chiliMonthly.length - 1),
@@ -110,18 +109,17 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
       {/* one-cycle glow on the connected line */}
       {glow > 0.001 && <div style={{ position: "absolute", inset: 0, filter: `brightness(${1 + 0.25 * glow})`, pointerEvents: "none" }} />}
 
-      {/* opening reframe, then a quiet header */}
+      {/* opening reframe — one centred line, then gone */}
       <div
         style={{
           position: "absolute",
           left: 0,
-          top: openerY,
+          top: 520,
           width: theme.canvas.width,
-          textAlign: toHeader > 0.5 ? "left" : "center",
-          paddingLeft: toHeader > 0.5 ? box.x : 0,
+          textAlign: "center",
           boxSizing: "border-box",
           fontFamily: theme.type.family,
-          fontSize: openerSize,
+          fontSize: 48,
           fontWeight: 600,
           color: theme.colors.slate,
           opacity: openerOp,
@@ -147,6 +145,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
             cx={cx}
             cy={cy}
             startFrame={start}
+            width={CARD_W}
             scale={scale}
             opacity={1 - dots}
             rise={rise}

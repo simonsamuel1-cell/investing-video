@@ -15,6 +15,7 @@ export const PriceCard = ({
   scale = 1,
   opacity = 1,
   rise = false,
+  width,
 }: {
   value: string; // pre-formatted, e.g. "Rp40.000/kg"
   caption?: string;
@@ -24,6 +25,8 @@ export const PriceCard = ({
   scale?: number;
   opacity?: number;
   rise?: boolean; // cyan ↑ glyph
+  /** Fixed outer width — lets a row of cards keep an exact gap between them. */
+  width?: number;
 }) => {
   const f = useCurrentFrame();
   if (f < startFrame) return null;
@@ -42,6 +45,8 @@ export const PriceCard = ({
         top: cy,
         transform: `translate(-50%, -50%) scale(${s})`,
         transformOrigin: "center center",
+        width,
+        boxSizing: "border-box",
         padding: "22px 34px",
         borderRadius: theme.radius.card,
         background: theme.colors.cardBg,

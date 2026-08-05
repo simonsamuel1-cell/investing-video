@@ -25,6 +25,7 @@ export const Chip = ({
   connectorTo,
   size = theme.type.chip.size,
   opacity = 1,
+  width,
 }: {
   label: string;
   x: number;
@@ -35,6 +36,8 @@ export const Chip = ({
   connectorTo?: { x: number; y: number }; // draws a 1px connector to this point
   size?: number;
   opacity?: number;
+  /** Fixed outer width — lets a set of chips align or balance to a common size. */
+  width?: number;
 }) => {
   const f = useCurrentFrame();
   const p = interpolate(f, [startFrame, startFrame + 10], [0, 1], {
@@ -68,6 +71,9 @@ export const Chip = ({
           left: x,
           top: y,
           transform: `${translate} scale(${scale})`,
+          width,
+          boxSizing: "border-box",
+          textAlign: "center",
           padding: "8px 20px",
           borderRadius: theme.radius.chip,
           background: c.bg,

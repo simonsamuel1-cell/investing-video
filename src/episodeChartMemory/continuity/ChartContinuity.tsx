@@ -35,7 +35,7 @@ const K = {
   narrow: 1530, // chart narrows for the anatomy card
   wipe: 1503, // "Candlestick memberi gambaran lebih lengkap"
   wipeDur: 60,
-  widen: 1997, // anatomy card leaves; chart returns to full width
+  widen: 1836, // global 2325 — the anatomy card has cleared; chart returns to the full width it had at global 1997
   dimCandles: 1997, // SC05 f0
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
   // SC02 sets the chili shape beside a busier one; the full-size line and its
