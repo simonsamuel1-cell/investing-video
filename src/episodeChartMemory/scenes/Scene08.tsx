@@ -1,5 +1,5 @@
 /**
- * SC08 — The Market Remembers a Price Area (from 3750, dur 600) — INDEPENDENT.
+ * SC08 — The Market Remembers a Price Area (from 4472, dur 720) — INDEPENDENT.
  * The playhead reveals the daily series left→right; a zone band is drawn across
  * an area the price genuinely revisits, and each of the three real touches is
  * pinged as it arrives. Ends WITHOUT a fourth touch — the chips describe past
@@ -21,8 +21,8 @@ import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
 // Card top clears the 150px logo zone.
 const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 230, w: 1500, h: 590 };
-const T = { band: 120, t1: 210, t2: 330, t3: 390, deepen: 450 };
-const REVEAL_END = 462; // calibrated so each touch lands on its beat
+const T = { band: 90, t1: 148, t2: 229, t3: 301, deepen: 429 };
+const REVEAL_END = 320; // calibrated so each touch is revealed just before its ping
 // ═══════════════════════════════════════════════════════════════════════════
 
 const WINDOW = WIN.sc08;

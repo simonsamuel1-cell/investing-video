@@ -1,7 +1,6 @@
 import { useCurrentFrame } from "remotion";
 /**
- * SC03 — The Chart Records Decisions (ChartContinuity Phase B, local 510–1050;
- * scene-local passed in as `local`). The chili line has morphed into BMRI; an
+ * SC03 — The Chart Records Decisions (ChartContinuity Phase B, local 608–1190). The chili line has morphed into BMRI; an
  * underline traces a repeating swing structure, the card lifts, and three chips
  * mark real decisions already recorded in the series.
  * Compliance: these describe PAST recorded behaviour — no arrows, no entry
@@ -15,7 +14,7 @@ import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = { underline: 120, lift: 255, brave: 375, doubt: 435, exit: 495 };
+const T = { underline: 86, lift: 268, brave: 441, doubt: 487, exit: 517 };
 const CARD_LIFT_PX = 6;
 // ═══════════════════════════════════════════════════════════════════════════
 

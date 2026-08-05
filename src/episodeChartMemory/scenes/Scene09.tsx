@@ -1,5 +1,5 @@
 /**
- * SC09 — Probability, Not Prediction (from 4350, dur 600) — INDEPENDENT.
+ * SC09 — Probability, Not Prediction (from 5192, dur 754) — INDEPENDENT.
  * The chart drops to texture; the statement resolves in two lines, then the
  * three things a chart can actually show, then the honest limit.
  */
@@ -14,7 +14,10 @@ import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
-const T = { texture: 0, line1: 75, line2: 120, chips: 210, rule: 360, caption: 480 };
+const T = { texture: 0, line1: 36, line2: 155, rule: 419, caption: 558 };
+// One frame per phrase: "apa yang sudah terjadi" / "pola yang sering
+// berulang" / "posisi pembeli serta penjual saat ini".
+const CHIP_AT = [225, 286, 330];
 const CHIPS = ["Yang Sudah Terjadi", "Pola Berulang", "Posisi Saat Ini"];
 const CHIP_Y = 636;
 // ═══════════════════════════════════════════════════════════════════════════
@@ -37,7 +40,7 @@ export const Scene09 = () => {
       <StatementText text="Probabilitas." y={496} startFrame={T.line2} size={96} weight={800} color={theme.colors.indigo} />
 
       {CHIPS.map((c, i) => (
-        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y} variant="indigo" anchor="center" startFrame={T.chips + i * 12} opacity={1 - 0.45 * dim} />
+        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
       ))}
 
       {rule > 0.001 && (

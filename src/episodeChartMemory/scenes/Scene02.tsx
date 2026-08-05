@@ -1,5 +1,5 @@
 /**
- * SC02 — Chili Prices Become a Chart (ChartContinuity Phase A, local 0–510).
+ * SC02 — Chili Prices Become a Chart (ChartContinuity Phase A, local 0–608).
  * Three price cards pop in, shrink onto the chart baseline, collapse into dots,
  * and the indigo line connects them (the line itself lives in ChartContinuity).
  * The three figures are from the VO and are final.
@@ -14,7 +14,7 @@ import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = { c1: 105, c2: 150, c3: 195, settle: 240, dots: 300, glow: 345, stream: 405 };
+const T = { c1: 141, c2: 196, c3: 238, settle: 273, dots: 337, glow: 393, stream: 444 };
 const CARD_START = [
   { cx: 560, cy: 430 },
   { cx: 960, cy: 430 },

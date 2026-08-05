@@ -1,7 +1,6 @@
 import { useCurrentFrame } from "remotion";
 /**
- * SC05 — Two Axes, Two Questions (Phase D, local 1710–2100; scene-local passed
- * in as `local`). The candles fade to 30% in ChartContinuity; here the two axis
+ * SC05 — Two Axes, Two Questions (Phase D, local 1997–2519). The candles fade to 30% in ChartContinuity; here the two axis
  * arrows sweep in and a crosshair locks onto a real candle with its real date
  * and price.
  */
@@ -13,7 +12,7 @@ import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = { xAxis: 60, yAxis: 150, cross: 240, questions: 315 };
+const T = { xAxis: 61, yAxis: 211, cross: 316, questions: 401 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {

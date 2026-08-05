@@ -1,5 +1,5 @@
 /**
- * SC01 — The Overloaded Chart (from 0, dur 390) — INDEPENDENT.
+ * SC01 — The Overloaded Chart (from 0, dur 489) — INDEPENDENT.
  * A clean BMRI daily chart eases in, then accumulates real indicators until it
  * is almost unreadable: two trendlines anchored to genuine pivots, MA20, MA50,
  * Bollinger, RSI and MACD sub-panes (price pane compressing 100% → 62% → 45%).
@@ -21,8 +21,8 @@ import { bmriDaily, WIN } from "../data/bmri";
 // lands on card chrome.
 const CARD = { x: 96, y: 160, w: 1728, h: 812 };
 const INNER = { x: 160, y: 250, w: 1500, h: 620 };
-const T = { chartIn: 0, trend: 165, pulse: 195, stack: 225, dim: 300, caption: 330 };
-const STACK_STEP = 20; // frames between each indicator entering
+const T = { chartIn: 0, trend: 208, pulse: 241, stack: 272, dim: 372, caption: 405 };
+const STACK_STEP = 24; // frames between each indicator entering
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 const LEGEND_OPACITY = [1, 0.85, 0.7, 0.55, 0.4];
 // ═══════════════════════════════════════════════════════════════════════════

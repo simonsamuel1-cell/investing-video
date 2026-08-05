@@ -1,5 +1,5 @@
 /**
- * SC06 — One Stock, Three Timeframes (from 2490, dur 660) — INDEPENDENT.
+ * SC06 — One Stock, Three Timeframes (from 3008, dur 712) — INDEPENDENT.
  * A TimeframeSelector drives the same stock through 5M → 1D → 1W with a
  * mask-wipe between each, then the three views resolve into a triptych so the
  * differing silhouettes read side by side.
@@ -20,7 +20,7 @@ import { bmriDaily, bmri5m, bmriWeekly } from "../data/bmri";
 const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 370, w: 1520, h: 430 };
 const SEL = { x: 160, y: 196 };
-const T = { tf5m: 90, tf1d: 180, tf1w: 255, triptych: 420, nearFar: 540 };
+const T = { tf5m: 107, tf1d: 195, tf1w: 274, triptych: 373, nearFar: 534 };
 const WIPE = 44;
 const TRI = { y: 330, w: 520, h: 380, gap: 24 };
 // ═══════════════════════════════════════════════════════════════════════════

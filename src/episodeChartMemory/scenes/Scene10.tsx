@@ -1,5 +1,5 @@
 /**
- * SC10 — Zoom Out: The Market's Memory (from 4950, dur 450) — INDEPENDENT.
+ * SC10 — Zoom Out: The Market's Memory (from 5946, dur 664) — INDEPENDENT.
  * Opens tight on ~20 candles with five emotion chips pinned to distinct
  * sessions, then pulls back continuously to the full series until the chart
  * reads as texture and the closing line resolves.
@@ -15,8 +15,8 @@ import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
-const T = { fear: 90, conviction: 115, patience: 140, euphoria: 165, panic: 190, release: 210, caption: 300 };
-const ZOOM_DUR = 258; // 210 → 468, then the frame holds
+const T = { fear: 142, conviction: 170, patience: 192, euphoria: 222, panic: 246, release: 278, caption: 548 };
+const ZOOM_DUR = 270; // 278 → 548, then the frame holds
 const CHIP_MIN_Y = 180; // chip top stays clear of the 150px logo band
 const CHIP_MAX_Y = 840; // chip bottom stays clear of the 108px subtitle band
 // ═══════════════════════════════════════════════════════════════════════════

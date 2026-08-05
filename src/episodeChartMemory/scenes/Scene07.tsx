@@ -1,5 +1,5 @@
 /**
- * SC07 — Noise vs Direction (from 3150, dur 600) — INDEPENDENT.
+ * SC07 — Noise vs Direction (from 3720, dur 752) — INDEPENDENT.
  * Two cards, same stock: 5-minute noise on the left, weekly direction on the
  * right. Slate pings tick real reversals; one indigo trim-path arrow traces the
  * broad trend on the right. Descriptive only — no entry/exit markers.
@@ -21,7 +21,7 @@ const RIGHT: Box = { x: 96 + CARD_W + GAP, y: 250, w: CARD_W, h: 490 };
 // Header chips sit clear of the top-150px logo band (the right chip runs past
 // x = 1368, so it must not be inside that band).
 const HEADER_Y = 200;
-const T = { p1: 90, p2: 135, p3: 180, arrow: 240, captions: 360, pulse: 540 };
+const T = { p1: 105, p2: 173, p3: 210, arrow: 278, captions: 354, captions2: 446, pulse: 667 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 // Right-hand inset leaves room for the price axis labels INSIDE the card, so the
@@ -130,7 +130,7 @@ export const Scene07 = () => {
 
       {/* the question each timeframe answers */}
       <Chip label="Kapan bertindak" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.captions} />
-      <Chip label="Arah besar" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 52} variant="indigo" anchor="center" startFrame={T.captions + 12} />
+      <Chip label="Arah besar" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 52} variant="indigo" anchor="center" startFrame={T.captions2} />
     </SafeArea>
   );
 };

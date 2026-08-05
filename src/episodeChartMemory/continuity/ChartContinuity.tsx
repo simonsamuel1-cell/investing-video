@@ -1,13 +1,13 @@
 /**
  * ChartContinuity — the ONE spanning chart element for SC02 → SC05
- * (global frames 390–2490, continuity-local 0–2100). The chart NEVER remounts:
+ * (global frames 489–3008, continuity-local 0–2519). The chart NEVER remounts:
  * a single geometry + mode timeline drives it through four phases, and each
  * phase's overlays live in scenes/Scene02–Scene05 which receive that geometry.
  *
- *   Phase A (local 0–510)     SC02  price cards → chili line chart
- *   Phase B (local 510–1050)  SC03  chili line morphs into the BMRI closes line
- *   Phase C (local 1050–1710) SC04  line mask-wipes into candlesticks + anatomy
- *   Phase D (local 1710–2100) SC05  candles de-emphasize; axes + crosshair
+ *   Phase A (local 0–608)     SC02  price cards → chili line chart
+ *   Phase B (local 608–1190)  SC03  chili line morphs into the BMRI closes line
+ *   Phase C (local 1190–1997) SC04  line mask-wipes into candlesticks + anatomy
+ *   Phase D (local 1997–2519) SC05  candles de-emphasize; axes + crosshair
  */
 import { useCurrentFrame, interpolate, Sequence } from "remotion";
 import { SafeArea } from "../components/SafeArea";
@@ -23,18 +23,21 @@ import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-export const PHASE = { a: 0, b: 510, c: 1050, d: 1710, end: 2100 };
+export const PHASE = { a: 0, b: 608, c: 1190, d: 1997, end: 2519 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
+// Continuity-local frames, all VO-derived (see each scene's T block).
 const K = {
-  lineDraw: 300, // chili line trim-path (SC02 f300)
-  morph: 510, // chili → BMRI (SC03 phase start)
+  lineDraw: 337, // "dan hubungkan titiknya"
+  morph: 608, // chili → BMRI (SC03 phase start)
   morphDur: 90,
-  narrow: 1350, // chart narrows for the anatomy card
-  wipe: 1305, // line → candles (SC04 f255)
+  lineDim: 1428, // "tetapi banyak cerita tidak terlihat"
+  narrow: 1530, // chart narrows for the anatomy card
+  wipe: 1503, // "Candlestick memberi gambaran lebih lengkap"
   wipeDur: 60,
-  widen: 1710, // anatomy card leaves; chart returns to full width
-  dimCandles: 1710, // SC05 f0
+  widen: 1997, // anatomy card leaves; chart returns to full width
+  dimCandles: 1997, // SC05 f0
+  axisDraw: 273, // "Susun angka itu berdasarkan waktu"
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -102,11 +105,11 @@ export const ChartContinuity = () => {
 
   const linePts = xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
   // SC04 dims the line one step before the wipe begins
-  const lineDim = f >= 1260 && f < K.wipe ? interpolate(progress(f, 1260, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
+  const lineDim = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
   const wipeX = box.x + box.w * wipe;
 
   // ── axis furniture: months (chili) crossfading into dates + prices (BMRI) ──
-  const axisDraw = f >= 240 ? progress(f, 240, 50) : 0;
+  const axisDraw = f >= K.axisDraw ? progress(f, K.axisDraw, 50) : 0;
   const chiliAxisOp = f < K.morph ? 1 : 1 - progress(f, K.morph, 60);
   const bmriAxisOp = f >= K.morph ? progress(f, K.morph, 60) : 0;
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);

@@ -19,22 +19,21 @@ import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
 
-export const TOTAL_FRAMES = 5400; // 03:00.00 @30fps (provisional — see §8)
+export const TOTAL_FRAMES = 6610; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
 
-// Recorded VO: public/vo/chart-memory.mp3 ("The first time.wav"), 170.02s =
-// ~5101 frames. NOTE: that is ~299 frames SHORT of TOTAL_FRAMES, and the scene
-// from/duration values below are still 160 wpm estimates — the §8 recalibration
-// pass is what aligns the beats to this audio.
+// Recorded VO: public/vo/chart-memory.mp3 ("VIDEO 01 - Chart.MP3"), 220.32s =
+// 6610 frames. Every from/duration below and every scene-local beat is now
+// derived from VIDEO_01_-_Chart_fixed.srt (106 cues) — not a wpm estimate.
 const HAS_VO = true;
 
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
-  { from: 0, duration: 390, Component: Scene01 },
-  // SC02–SC05 → ChartContinuity (spanning Sequence below)
-  { from: 2490, duration: 660, Component: Scene06 },
-  { from: 3150, duration: 600, Component: Scene07 },
-  { from: 3750, duration: 600, Component: Scene08 },
-  { from: 4350, duration: 600, Component: Scene09 },
-  { from: 4950, duration: 450, Component: Scene10 },
+  { from: 0, duration: 489, Component: Scene01 },
+  // SC02–SC05 → ChartContinuity (spanning Sequence below), 489–3008
+  { from: 3008, duration: 712, Component: Scene06 },
+  { from: 3720, duration: 752, Component: Scene07 },
+  { from: 4472, duration: 720, Component: Scene08 },
+  { from: 5192, duration: 754, Component: Scene09 },
+  { from: 5946, duration: 664, Component: Scene10 },
 ];
 
 export const ChartMemoryComposition = () => (
@@ -46,7 +45,7 @@ export const ChartMemoryComposition = () => (
     ))}
 
     {/* SC02 → SC05: ONE chart element, four phases, zero remounts. */}
-    <Sequence from={390} durationInFrames={2100}>
+    <Sequence from={489} durationInFrames={2519}>
       <ChartContinuity />
     </Sequence>
 

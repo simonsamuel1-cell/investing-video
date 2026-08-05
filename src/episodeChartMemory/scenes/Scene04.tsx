@@ -1,7 +1,6 @@
 import { useCurrentFrame } from "remotion";
 /**
- * SC04 — Line Becomes Candles + Anatomy (Phase C, local 1050–1710; scene-local
- * passed in as `local`). The line→candle mask-wipe lives in ChartContinuity;
+ * SC04 — Line Becomes Candles + Anatomy (Phase C, local 1190–1997). The line→candle mask-wipe lives in ChartContinuity;
  * this overlay carries the closing-price chip, the AnatomyCandle card on the
  * right third, and the 4-info counter.
  */
@@ -12,7 +11,7 @@ import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = { closeChip: 60, cardIn: 300, open: 345, high: 375, low: 405, close: 435, counter: 465 };
+const T = { closeChip: 86, cardIn: 340, open: 382, high: 415, low: 445, close: 477, counter: 536 };
 const CARD = { x: 1250, y: 250, w: 520, h: 540 };
 // ═══════════════════════════════════════════════════════════════════════════
 
