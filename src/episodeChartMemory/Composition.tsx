@@ -10,7 +10,8 @@
 import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { theme } from "./theme";
-import { ChartContinuity } from "./continuity/ChartContinuity";
+import { ChartContinuity, CONTINUITY_FROM } from "./continuity/ChartContinuity";
+import { PanelWipe } from "./transitions/PanelWipe";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene06 } from "./scenes/Scene06";
 import { Scene07 } from "./scenes/Scene07";
@@ -45,9 +46,13 @@ export const ChartMemoryComposition = () => (
     ))}
 
     {/* SC02 → SC05: ONE chart element, four phases, zero remounts. */}
-    <Sequence from={489} durationInFrames={2519}>
+    <Sequence from={CONTINUITY_FROM} durationInFrames={2519}>
       <ChartContinuity />
     </Sequence>
+
+    {/* The SC01 → SC02 transition. NOT wrapped in a Sequence: it belongs to
+        neither scene, and it needs global frames to span the boundary. */}
+    <PanelWipe />
 
     {/* Burned-in subtitles live in the reserved bottom band. */}
     <Subtitles />

@@ -15,6 +15,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
+import { clipOutgoing } from "../transitions/PanelWipe";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Card top sits BELOW the 150px logo clear-zone so the brand mark never
@@ -118,6 +119,9 @@ export const Scene01 = () => {
 
   return (
     <SafeArea>
+      {/* Everything here is erased by the PanelWipe's leading edge — by f488,
+          this scene's last frame, the clip has taken all of it. */}
+      <div style={{ position: "absolute", inset: 0, clipPath: clipOutgoing(f) }}>
       <div
         style={{
           position: "absolute",
@@ -209,6 +213,7 @@ export const Scene01 = () => {
         startFrame={T.thought}
         opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
       />
+      </div>
     </SafeArea>
   );
 };
