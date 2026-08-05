@@ -33,7 +33,9 @@ const N_Y_TICKS = 5;
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   const local = useCurrentFrame();
   const { box, win, cx, scale } = geom;
-  const [a, b] = win;
+  // Window bounds can be fractional mid-camera-move — round for array indexing.
+  const a = Math.ceil(win[0]);
+  const b = Math.floor(win[1]);
   const idx = a + Math.floor((b - a) * 0.62); // a real session, mid-right of the window
   const d = bmriDaily[idx];
   const px = cx(idx);

@@ -9,9 +9,8 @@ import { useCurrentFrame } from "remotion";
  */
 import { Chip } from "../components/Chip";
 import { AnatomyCandle } from "../components/AnatomyCandle";
-import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { fadeIn, progress, mulberry32, type Box } from "../helpers";
+import { fadeIn, fadeOut, progress, mulberry32 } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
@@ -29,11 +28,13 @@ const T = {
   close: 477,
   counter: 536, // "Empat informasi dalam satu candle"
   back: 600, // "Karena itulah"
-  zoom: 709, // "membaca pergerakan harga dengan lebih detail"
+  // "membaca pergerakan harga dengan lebih detail" — the push-in and its
+  // cut-on-action live in ChartContinuity (K.push / K.cut); these are just the
+  // label beats that hang off it.
+  label: 736, // global 2415 — the camera has come to rest
+  labelOut: 767, // global 2446 — it backs out again
 };
 const CARD = { x: 1250, y: 250, w: 520, h: 540 };
-const DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
-const N_DETAIL = 12;
 const FORMS = ["Line", "Candlestick"] as const;
 const SEG = { x: 260, y: 196, w: 250, h: 56, gap: 8 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -57,8 +58,11 @@ const pickAnatomy = (a: number, b: number) => {
 
 export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   const local = useCurrentFrame();
-  const { win, cx, scale } = geom;
-  const [a, b] = win;
+  const { box, win, cx, scale, camera } = geom;
+  // The window bounds go FRACTIONAL while the camera moves (that is what keeps
+  // the move smooth) — round before using them as array indices.
+  const a = Math.ceil(win[0]);
+  const b = Math.floor(win[1]);
   const idx = pickAnatomy(a, b);
   const candle = bmriDaily[idx];
 
@@ -86,7 +90,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
     return [0.2, 0.42, 0.63, 0.84].map((q) => a + Math.floor((b - a) * (q + (rnd() - 0.5) * 0.04)));
   })();
 
-  const detail = local >= T.zoom ? progress(local, T.zoom, 40) : 0;
+  const labelOp = local >= T.labelOut ? fadeOut(local, T.labelOut, 20) : 1;
 
   return (
     <>
@@ -94,7 +98,16 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
       {FORMS.map((lab, i) => {
         const active = i === 0 ? 1 - toCandle : toCandle;
         return (
-          <div key={lab} style={{ position: "absolute", left: SEG.x + i * (SEG.w + SEG.gap), top: SEG.y, opacity: fadeIn(local, T.selector, 18) }}>
+          <div
+            key={lab}
+            style={{
+              position: "absolute",
+              left: SEG.x + i * (SEG.w + SEG.gap),
+              top: SEG.y,
+              // wide-view chrome: steps aside with the axes while the camera moves in
+              opacity: fadeIn(local, T.selector, 18) * Math.max(0, 1 - camera * 3),
+            }}
+          >
             <div
               style={{
                 width: SEG.w,
@@ -183,32 +196,8 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
         </div>
       )}
 
-      {/* up close, so individual bodies and wicks read */}
-      {detail > 0.001 && (
-        <div style={{ opacity: detail }}>
-          <div
-            style={{
-              position: "absolute",
-              left: DETAIL.x,
-              top: DETAIL.y,
-              width: DETAIL.w,
-              height: DETAIL.h,
-              borderRadius: theme.radius.cardLg,
-              background: theme.colors.cardBg,
-              border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
-              boxShadow: theme.shadow.lift,
-            }}
-          />
-          <CandlestickChart
-            data={bmriDaily}
-            window={[b - N_DETAIL + 1, b]}
-            box={{ x: DETAIL.x + 40, y: DETAIL.y + 56, w: DETAIL.w - 150, h: DETAIL.h - 110 }}
-            showAxes={false}
-            revealProgress={detail}
-          />
-          <Chip label="Detail" x={DETAIL.x + DETAIL.w - 20} y={DETAIL.y + 34} variant="slate" anchor="right" startFrame={T.zoom + 14} />
-        </div>
-      )}
+      {/* the camera has landed; label what it landed on */}
+      <Chip label="Detail" x={box.x + box.w} y={box.y - 34} variant="slate" anchor="right" startFrame={T.label} opacity={labelOp} />
     </>
   );
 };

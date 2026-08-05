@@ -14,7 +14,7 @@ import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fmtPrice, type Box } from "../helpers";
+import { progress, progressInOut, fmtPrice, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { chiliMonthly } from "../data/chili";
 import { Scene02 } from "../scenes/Scene02";
@@ -26,6 +26,9 @@ import { Scene05 } from "../scenes/Scene05";
 export const PHASE = { a: 0, b: 608, c: 1190, d: 1997, end: 2519 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
+// Where the camera pushes in to, and how many sessions it lands on.
+const BOX_DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
+const N_DETAIL = 12;
 // Continuity-local frames, all VO-derived (see each scene's T block).
 const K = {
   lineDraw: 337, // "dan hubungkan titiknya"
@@ -36,6 +39,17 @@ const K = {
   wipe: 1503, // "Candlestick memberi gambaran lebih lengkap"
   wipeDur: 60,
   widen: 1836, // global 2325 — the anatomy card has cleared; chart returns to the full width it had at global 1997
+  widenDur: 30, // …and settles by global 2355, clear of the camera move below
+  // ── CUT ON ACTION (global 2355 → 2415) ──────────────────────────────────
+  // ONE ease-in-out camera move carries the chart from full frame into the
+  // detail framing. Halfway through — at K.cut, the frame where the move is
+  // FASTEST — the content swaps hard from 70 sessions to 12. The motion never
+  // breaks across that frame, so the swap reads as continuous, not as a cut.
+  push: 1866, // global 2355 — camera starts moving
+  pushDur: 60, // global 2415 — camera rests
+  cut: 1896, // global 2385 — exact midpoint = peak velocity
+  pull: 1957, // global 2446 — camera backs out again…
+  pullDur: 40, // …landing on full frame exactly at phase D
   dimCandles: 1997, // SC05 f0
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
   // SC02 sets the chili shape beside a busier one; the full-size line and its
@@ -46,6 +60,8 @@ const K = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 const WINDOW = WIN.sc03;
+/** The last N_DETAIL sessions — what the camera lands on after the cut. */
+const WINDOW_DETAIL: [number, number] = [WINDOW[1] - N_DETAIL + 1, WINDOW[1]];
 
 export type ContGeom = {
   box: Box;
@@ -56,6 +72,8 @@ export type ContGeom = {
   bmriY: number[];
   chiliY: number[];
   chiliScaleY: (price: number) => number;
+  /** 0 = wide view, 1 = pushed into the detail framing. */
+  camera: number;
 };
 
 /** Chili price at normalized position t (0–1) across the monthly series. */
@@ -71,14 +89,32 @@ export const ChartContinuity = () => {
 
   // ── geometry (recomputed each frame; the ELEMENT never remounts) ──
   const narrow = f >= K.narrow ? progress(f, K.narrow, 60) : 0;
-  const widen = f >= K.widen ? progress(f, K.widen, 60) : 0;
+  const widen = f >= K.widen ? progress(f, K.widen, K.widenDur) : 0;
   const boxW = interpolate(narrow - widen, [0, 1], [BOX_FULL.w, BOX_NARROW_W], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
   });
-  const box: Box = { ...BOX_FULL, w: boxW };
+  const baseBox: Box = { ...BOX_FULL, w: boxW };
 
-  const g = chartGeom(bmriDaily, WINDOW, box);
+  // ── the camera: ONE eased move in, then back out ──
+  const pushIn = f >= K.push ? progressInOut(f, K.push, K.pushDur) : 0;
+  const pullOut = f >= K.pull ? progressInOut(f, K.pull, K.pullDur) : 0;
+  const camera = Math.max(0, pushIn - pullOut);
+  const lerp = (from: number, to: number) => from + (to - from) * camera;
+  const box: Box = {
+    x: lerp(baseBox.x, BOX_DETAIL.x),
+    y: lerp(baseBox.y, BOX_DETAIL.y),
+    w: lerp(baseBox.w, BOX_DETAIL.w),
+    h: lerp(baseBox.h, BOX_DETAIL.h),
+  };
+
+  // The CUT: one frame, 70 sessions → 12. No interpolation — that is the point.
+  // On the way back out the window widens continuously (fractional bounds), so
+  // the return is a move, not a second cut.
+  const win: [number, number] =
+    f < K.cut ? WINDOW : [interpolate(pullOut, [0, 1], [WINDOW_DETAIL[0], WINDOW[0]]), WINDOW[1]];
+
+  const g = chartGeom(bmriDaily, win, box);
   const [a, b] = WINDOW;
   const n = b - a + 1;
 
@@ -99,7 +135,7 @@ export const ChartContinuity = () => {
   const chiliY: number[] = [];
   for (let k = 0; k < n; k++) chiliY.push(chiliScaleY(chiliAt(k / (n - 1))));
 
-  const geom: ContGeom = { box, win: WINDOW, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY };
+  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera };
 
   // ── chart mode timeline ──
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
@@ -123,7 +159,10 @@ export const ChartContinuity = () => {
   const bmriAxisOp = f >= K.morph ? progress(f, K.morph, 60) : 0;
   // SC05 re-populates both rails one tick at a time, so continuity's own tick
   // labels step aside at phase D to avoid a doubled axis.
-  const tickLabelOp = bmriAxisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
+  // The rails belong to the wide view — they clear out early in the move rather
+  // than lingering at half opacity underneath the detail card.
+  const axisOp = Math.max(0, 1 - camera * 3);
+  const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
 
@@ -139,10 +178,11 @@ export const ChartContinuity = () => {
             y2={box.y + box.h}
             stroke={theme.colors.border}
             strokeWidth={theme.stroke.rule}
+            opacity={axisOp}
           />
           {bmriAxisOp > 0.001 &&
             tickPrices.map((p) => (
-              <g key={p} opacity={bmriAxisOp}>
+              <g key={p} opacity={bmriAxisOp * axisOp}>
                 <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />
                 <text
                   x={box.x + box.w + 16}
@@ -201,6 +241,25 @@ export const ChartContinuity = () => {
           </div>
         ))}
 
+      {/* The detail card belongs to the AFTER side of the cut, so it appears on
+          the cut frame — no fade. It rides the same moving box as the chart. */}
+      {f >= K.cut && (
+        <div
+          style={{
+            position: "absolute",
+            left: box.x - 40,
+            top: box.y - 56,
+            width: box.w + 80,
+            height: box.h + 112,
+            borderRadius: theme.radius.cardLg,
+            background: theme.colors.cardBg,
+            border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+            boxShadow: theme.shadow.lift,
+            opacity: 1 - pullOut,
+          }}
+        />
+      )}
+
       {/* ── THE chart element — one line/candle surface across all four phases ── */}
       {lineDraw > 0.001 && wipe < 1 && (
         <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px 0px ${Math.max(0, wipeX)}px)` }}>
@@ -208,7 +267,7 @@ export const ChartContinuity = () => {
         </div>
       )}
       {wipe > 0.001 && (
-        <CandlestickChart data={bmriDaily} window={WINDOW} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
+        <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
       )}
 
       {/* ── per-phase overlays ──

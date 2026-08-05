@@ -61,6 +61,9 @@ export const theme = {
   },
   motion: {
     ease: Easing.bezier(0.22, 1, 0.36, 1), // no overshoot
+    // Symmetric ease-in-out: slow, fast, slow. Its peak velocity sits exactly at
+    // the midpoint, which is where a cut-on-action wants to land.
+    easeInOut: Easing.bezier(0.65, 0, 0.35, 1),
     revealFrames: 12,
     fadeFrames: 10,
   },

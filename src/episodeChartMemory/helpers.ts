@@ -33,6 +33,13 @@ export const textReveal = (f: number, start: number, dur: number = theme.motion.
 export const progress = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], { ...CLAMP, easing: ease });
 
+/**
+ * Eased 0→1 with a SYMMETRIC ease-in-out — camera moves that a cut lands inside.
+ * Fastest at the midpoint, so `start + dur / 2` is the frame to cut on.
+ */
+export const progressInOut = (f: number, start: number, dur: number) =>
+  interpolate(f, [start, start + dur], [0, 1], { ...CLAMP, easing: theme.motion.easeInOut });
+
 /** Linear (un-eased) 0→1 — pings, playback, strict-timing wipes. */
 export const linear = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], CLAMP);
