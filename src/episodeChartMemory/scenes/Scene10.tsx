@@ -122,8 +122,8 @@ export const Scene10 = () => {
         style={{
           position: "absolute",
           left: 0,
-          // lifted to the top of the frame, just under the safe margin
-          top: theme.layout.safeTop + 20,
+          // near the top of the frame, 50px below where it first landed
+          top: theme.layout.safeTop + 70,
           width: theme.canvas.width,
           textAlign: "center",
           fontFamily: theme.type.family,
@@ -134,7 +134,7 @@ export const Scene10 = () => {
           transform: `translateY(${cap.y}px)`,
         }}
       >
-        Ingatan pasar.
+        Ingatan pasar
       </div>
     </SafeArea>
   );
