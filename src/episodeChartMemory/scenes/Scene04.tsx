@@ -36,7 +36,8 @@ const T = {
 };
 const CARD = { x: 1250, y: 250, w: 520, h: 540 };
 const FORMS = ["Line", "Candlestick"] as const;
-const SEG = { x: 260, y: 196, w: 250, h: 56, gap: 8 };
+// Two segments + one gap, centred on the canvas.
+const SEG = { y: 196, w: 250, h: 56, gap: 8, x: (theme.canvas.width - (250 * 2 + 8)) / 2 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 /** A real candle from the window with a readable body — the anatomy subject. */
@@ -184,6 +185,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
             cardY={CARD.y}
             cardW={CARD.w}
             cardH={CARD.h}
+            nudgeX={20}
             showAt={{ open: T.open, high: T.high, low: T.low, close: T.close }}
           />
         </div>

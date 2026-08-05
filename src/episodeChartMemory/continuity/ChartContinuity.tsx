@@ -56,6 +56,11 @@ const K = {
   // month axis step aside while those comparison cards hold the stage.
   pairIn: 444,
   pairOut: 578,
+  // The gridlines and baseline clear before global 3007 too, so the ONLY thing
+  // left at the boundary is the dimmed candle series — the element SC06 picks
+  // up and carries on with.
+  exit: 2478,
+  exitDur: 40,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -161,7 +166,7 @@ export const ChartContinuity = () => {
   // labels step aside at phase D to avoid a doubled axis.
   // The rails belong to the wide view — they clear out early in the move rather
   // than lingering at half opacity underneath the detail card.
-  const axisOp = Math.max(0, 1 - camera * 3);
+  const axisOp = Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
   const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];

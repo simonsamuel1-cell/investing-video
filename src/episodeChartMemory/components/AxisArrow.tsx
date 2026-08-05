@@ -15,6 +15,8 @@ export const AxisArrow = ({
   color,
   label,
   labelOffset = 46,
+  labelDx = 0,
+  labelDy = 0,
 }: {
   orientation: "x" | "y";
   x1: number;
@@ -25,6 +27,9 @@ export const AxisArrow = ({
   color: string;
   label: string;
   labelOffset?: number;
+  /** Nudges the label only, leaving the rail and arrowhead untouched. */
+  labelDx?: number;
+  labelDy?: number;
 }) => {
   const hx = x1 + (x2 - x1) * progress;
   const hy = y1 + (y2 - y1) * progress;
@@ -46,8 +51,8 @@ export const AxisArrow = ({
       <div
         style={{
           position: "absolute",
-          left: orientation === "x" ? x2 : x1 + 18,
-          top: orientation === "x" ? y1 + labelOffset : y2 - labelOffset,
+          left: (orientation === "x" ? x2 : x1 + 18) + labelDx,
+          top: (orientation === "x" ? y1 + labelOffset : y2 - labelOffset) + labelDy,
           transform: orientation === "x" ? "translate(-100%, 0)" : "translate(0, -100%)",
           fontFamily: theme.type.family,
           fontSize: theme.type.header.size,

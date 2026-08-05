@@ -8,7 +8,7 @@ import { useCurrentFrame } from "remotion";
 import { AxisArrow } from "../components/AxisArrow";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, fmtPrice } from "../helpers";
+import { progress, fadeIn, fadeOut, fmtPrice } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
@@ -24,6 +24,10 @@ const T = {
   cross: 316, // "menjawab dua pertanyaan"
   priceTag: 401, // "harganya berapa"
   dateTag: 455, // "dan kapan harga itu terbentuk"
+  // Everything this scene drew clears before the boundary, so that at global
+  // 3007 only the dimmed candle series is left — that is what SC06 picks up.
+  clear: 480,
+  clearDur: 38, // done by local 518 (global 3005)
 };
 const TICK_STEP = 8; // frames between each tick label appearing
 const N_X_TICKS = 6;
@@ -42,6 +46,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   const py = scale(d.c);
 
   const axisP = local >= T.axes ? progress(local, T.axes, T.axesDur) : 0;
+  const clearOp = local >= T.clear ? fadeOut(local, T.clear, T.clearDur) : 1;
   const crossP = local >= T.cross ? progress(local, T.cross, 24) : 0;
 
   // real sessions and real price levels, spread across each rail
@@ -54,7 +59,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
     <>
       {/* both rails draw together */}
       {axisP > 0.001 && (
-        <>
+        <div style={{ opacity: clearOp }}>
           <AxisArrow
             orientation="x"
             x1={box.x}
@@ -64,9 +69,11 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
             progress={axisP}
             color={theme.colors.indigo}
             label="Waktu"
+            labelDx={20}
+            labelDy={20}
           />
           <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={axisP} color={theme.colors.cyan} label="Harga" />
-        </>
+        </div>
       )}
 
       {/* "kapan?" — the time rail fills in, one session at a time */}
@@ -83,7 +90,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
               color: theme.colors.slate,
-              opacity: fadeIn(local, T.xTicks + k * TICK_STEP, 12),
+              opacity: fadeIn(local, T.xTicks + k * TICK_STEP, 12) * clearOp,
               whiteSpace: "nowrap",
             }}
           >
@@ -104,7 +111,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
               color: theme.colors.slate,
-              opacity: fadeIn(local, T.yTicks + k * TICK_STEP, 12),
+              opacity: fadeIn(local, T.yTicks + k * TICK_STEP, 12) * clearOp,
               whiteSpace: "nowrap",
             }}
           >
@@ -113,7 +120,11 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
         ))}
 
       {crossP > 0.001 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
           <line x1={px} y1={py} x2={px} y2={box.y + box.h} stroke={theme.colors.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
           <line x1={box.x} y1={py} x2={px} y2={py} stroke={theme.colors.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
           <circle cx={px} cy={py} r={8} fill={theme.colors.indigo} opacity={crossP} />
@@ -122,10 +133,10 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
 
       {/* the price answer lands on the Y rail… */}
       {/* pulled in from box.x − 24: at that offset the chip crossed the safe-left margin */}
-      <Chip label={fmtPrice(d.c)} x={box.x - 2} y={py} variant="cyan" anchor="right" startFrame={T.priceTag} />
+      <Chip label={fmtPrice(d.c)} x={box.x - 2} y={py} variant="cyan" anchor="right" startFrame={T.priceTag} opacity={clearOp} />
 
       {/* …and the time answer on the X rail, dropped below the tick row */}
-      <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.dateTag} />
+      <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.dateTag} opacity={clearOp} />
     </>
   );
 };

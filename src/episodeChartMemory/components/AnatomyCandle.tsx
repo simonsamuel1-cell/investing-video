@@ -22,6 +22,7 @@ export const AnatomyCandle = ({
   cardH,
   showAt,
   opacity = 1,
+  nudgeX = 0,
 }: {
   candle: OHLC;
   cardX: number;
@@ -31,11 +32,13 @@ export const AnatomyCandle = ({
   /** Frames at which Open / High / Low / Close chips appear. */
   showAt: { open: number; high: number; low: number; close: number };
   opacity?: number;
+  /** Shifts the candle AND its four chips together, leaving the card in place. */
+  nudgeX?: number;
 }) => {
   const padTop = cardY + 96;
   const padBottom = cardY + cardH - 96;
   const scale = priceScale(candle.l, candle.h, padTop, padBottom, 0.05);
-  const cx = cardX + cardW / 2;
+  const cx = cardX + cardW / 2 + nudgeX;
   const bodyW = 92;
   const LABEL_W = 150; // fixed, so Open and Close balance either side of the wick
   const LABEL_GAP = 28; // connector length from the body edge to the chip

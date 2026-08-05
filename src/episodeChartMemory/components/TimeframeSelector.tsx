@@ -6,7 +6,7 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 
-export const TF_LABELS = ["5M", "1D", "1W"] as const;
+export const TF_LABELS = ["5m", "1D", "1W"] as const;
 export type TfIndex = 0 | 1 | 2;
 
 export const TimeframeSelector = ({
@@ -16,6 +16,7 @@ export const TimeframeSelector = ({
   segW = 108,
   segH = 56,
   gap = 8,
+  fillOpacity = 1,
 }: {
   x: number; // left edge
   y: number; // top edge
@@ -23,6 +24,8 @@ export const TimeframeSelector = ({
   segW?: number;
   segH?: number;
   gap?: number;
+  /** 0 hides the active fill — for when the track is up but no timeframe is chosen yet. */
+  fillOpacity?: number;
 }) => {
   const f = useCurrentFrame();
   const fillX = x + activeIndex * (segW + gap);
@@ -54,11 +57,11 @@ export const TimeframeSelector = ({
           height: segH,
           borderRadius: theme.radius.chip,
           background: theme.colors.indigo,
-          opacity: appear,
+          opacity: appear * fillOpacity,
         }}
       />
       {TF_LABELS.map((lab, i) => {
-        const isActive = Math.abs(activeIndex - i) < 0.5;
+        const isActive = Math.abs(activeIndex - i) < 0.5 && fillOpacity > 0.5;
         return (
           <div
             key={lab}
