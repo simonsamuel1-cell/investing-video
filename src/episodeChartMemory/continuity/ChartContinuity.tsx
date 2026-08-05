@@ -23,9 +23,6 @@ import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-/** Global frame the continuity Sequence starts at — scenes inside it add this
- *  to their local frame when they need to line up with a global event. */
-export const CONTINUITY_FROM = 489;
 export const PHASE = { a: 0, b: 608, c: 1190, d: 1997, end: 2519 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third

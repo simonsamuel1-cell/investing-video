@@ -10,10 +10,9 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, fmtRp, mulberry32 } from "../helpers";
+import { progress, fadeIn, fadeOut, textReveal, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
-import { CONTINUITY_FROM, type ContGeom } from "../continuity/ChartContinuity";
-import { clipIncoming } from "../transitions/PanelWipe";
+import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -58,10 +57,9 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const dots = f >= T.dots ? progress(f, T.dots, 20) : 0;
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
-  // Opener line: the PanelWipe's trailing edge uncovers it (that IS its
-  // entrance — no second fade on top), then it simply clears.
-  const openerOp = f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1;
-  const openerClip = clipIncoming(f + CONTINUITY_FROM);
+  // opener line: centre stage, then simply clears
+  const op = textReveal(f, T.opener, 20);
+  const openerOp = op.opacity * (f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1);
 
   const target = (idx: number) => ({
     cx: box.x + (box.w * idx) / (chiliMonthly.length - 1),
@@ -125,7 +123,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           fontWeight: 600,
           color: theme.colors.slate,
           opacity: openerOp,
-          clipPath: openerClip,
+          transform: `translateY(${op.y}px)`,
         }}
       >
         Kamu sudah membaca chart seumur hidup.
