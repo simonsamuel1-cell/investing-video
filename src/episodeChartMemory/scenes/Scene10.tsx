@@ -9,8 +9,9 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { Chip } from "../components/Chip";
+import { ClosingCaption } from "../components/ClosingCaption";
 import { theme } from "../theme";
-import { progress, priceScale, textReveal, type Box } from "../helpers";
+import { progress, priceScale, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -63,7 +64,6 @@ export const Scene10 = () => {
   const drift = f >= T.release ? progress(f, T.release, 34) * 22 : 0;
   const chipPulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const tickIn = f >= T.ticks ? progress(f, T.ticks, 60) : 0;
-  const cap = textReveal(f, T.caption, 20);
 
   return (
     <SafeArea>
@@ -118,24 +118,8 @@ export const Scene10 = () => {
           );
         })}
 
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          // near the top of the frame, 50px below where it first landed
-          top: theme.layout.safeTop + 70,
-          width: theme.canvas.width,
-          textAlign: "center",
-          fontFamily: theme.type.family,
-          fontSize: theme.type.header.size,
-          fontWeight: theme.type.header.weight,
-          color: theme.colors.indigo,
-          opacity: cap.opacity,
-          transform: `translateY(${cap.y}px)`,
-        }}
-      >
-        Ingatan pasar
-      </div>
+      {/* position and type live in ClosingCaption.tsx */}
+      <ClosingCaption startFrame={T.caption} />
     </SafeArea>
   );
 };
