@@ -1,5 +1,5 @@
 /**
- * helpers.ts — shared animation, path, and formatting utilities.
+ * helpers.ts — shared animation, scale, and formatting utilities.
  * All easing pulls theme.motion.ease; no raw curves anywhere else.
  * Determinism: mulberry32 only — NEVER Math.random().
  */
@@ -33,16 +33,22 @@ export const textReveal = (f: number, start: number, dur: number = theme.motion.
 export const progress = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], { ...CLAMP, easing: ease });
 
-/** Linear (un-eased) 0→1 — pings, session playback, strict-timing wipes. */
+/** Linear (un-eased) 0→1 — pings, playback, strict-timing wipes. */
 export const linear = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], CLAMP);
 
-/** Session/playback progress 0→1 over [start, start+dur], clamped, un-eased. */
+/** Clamped 0→1 with no easing. */
 export const clampProgress = (f: number, start: number, dur: number) =>
   Math.min(1, Math.max(0, (f - start) / Math.max(1, dur)));
 
-/** Rp currency label, e.g. 1305 → "Rp 1,305". */
-export const fmtRp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
+/** IDX price format — dot thousands separator, e.g. 4570 → "4.570". */
+export const fmtPrice = (n: number) => Math.round(n).toLocaleString("de-DE");
+
+/** Rupiah label, e.g. 40000 → "Rp40.000". */
+export const fmtRp = (n: number) => `Rp${fmtPrice(n)}`;
+
+/** Percentage with comma decimal, e.g. 2.7 → "+2,7%". */
+export const fmtPct = (n: number) => `${n >= 0 ? "+" : "−"}${Math.abs(n).toFixed(1).replace(".", ",")}%`;
 
 /** Deterministic seeded PRNG — renders must be frame-stable. */
 export const mulberry32 = (seed: number) => {
@@ -56,42 +62,6 @@ export const mulberry32 = (seed: number) => {
   };
 };
 
-export type OHLC = { open: number; high: number; low: number; close: number };
-
-export type SessionPoint = { t: number; price: number }; // t 0–1 across the session
-
-/** Price along an intraday path at session-time t (linear between points). */
-export const pathPriceAt = (path: SessionPoint[], t: number) => {
-  if (t <= path[0].t) return path[0].price;
-  for (let i = 1; i < path.length; i++) {
-    if (t <= path[i].t) {
-      const a = path[i - 1];
-      const b = path[i];
-      const q = (t - a.t) / Math.max(1e-6, b.t - a.t);
-      return a.price + (b.price - a.price) * q;
-    }
-  }
-  return path[path.length - 1].price;
-};
-
-/**
- * Live OHLC derived from the path up to session-time t — the LiveCandle contract.
- * open fixed at path[0]; high/low/close update live. Never duplicated by hand.
- */
-export const pathOHLC = (path: SessionPoint[], t: number): OHLC => {
-  const open = path[0].price;
-  const close = pathPriceAt(path, t);
-  let high = Math.max(open, close);
-  let low = Math.min(open, close);
-  for (const p of path) {
-    if (p.t <= t) {
-      high = Math.max(high, p.price);
-      low = Math.min(low, p.price);
-    }
-  }
-  return { open, high, low, close };
-};
-
 /**
  * priceScale — price→y mapping for a chart box (higher price → smaller y),
  * padded by `pad` fraction so extremes don't touch the panel edges.
@@ -102,3 +72,6 @@ export const priceScale = (min: number, max: number, top: number, bottom: number
   const hi = max + span * pad;
   return (price: number) => interpolate(price, [lo, hi], [bottom, top], CLAMP);
 };
+
+/** Chart box rectangle used by every chart component. */
+export type Box = { x: number; y: number; w: number; h: number };

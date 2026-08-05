@@ -8,13 +8,7 @@ import React from "react";
 import { AbsoluteFill } from "remotion";
 import { theme } from "../theme";
 
-export const SafeArea = ({
-  children,
-  transparent = false,
-}: {
-  children: React.ReactNode;
-  transparent?: boolean; // overlay stages inside continuity groups
-}) => (
+export const SafeArea = ({ children, transparent = false }: { children: React.ReactNode; transparent?: boolean }) => (
   <AbsoluteFill
     style={{
       backgroundColor: transparent ? undefined : theme.colors.bg,

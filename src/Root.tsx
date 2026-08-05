@@ -1,14 +1,13 @@
 import { Composition } from "remotion";
-import { ChartComposition, TOTAL_FRAMES } from "./episodeChart/Composition";
-import { theme } from "./episodeChart/theme";
+import { ChartMemoryComposition, TOTAL_FRAMES } from "./episodeChartMemory/Composition";
 
 export const Root = () => (
   <Composition
-    id="chart"
-    component={ChartComposition}
+    id="ChartMemory"
+    component={ChartMemoryComposition}
     durationInFrames={TOTAL_FRAMES}
-    fps={theme.canvas.fps}
-    width={theme.canvas.width}
-    height={theme.canvas.height}
+    fps={30}
+    width={1920}
+    height={1080}
   />
 );
