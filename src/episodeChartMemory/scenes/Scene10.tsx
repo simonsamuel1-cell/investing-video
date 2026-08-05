@@ -17,6 +17,8 @@ import { bmriDaily, WIN } from "../data/bmri";
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
 const T = { fear: 90, conviction: 115, patience: 140, euphoria: 165, panic: 190, release: 210, caption: 300 };
 const ZOOM_DUR = 258; // 210 → 468, then the frame holds
+const CHIP_MIN_Y = 180; // chip top stays clear of the 150px logo band
+const CHIP_MAX_Y = 840; // chip bottom stays clear of the 108px subtitle band
 // ═══════════════════════════════════════════════════════════════════════════
 
 const TIGHT = WIN.sc10Tight;
@@ -66,12 +68,15 @@ export const Scene10 = () => {
           const idx = TIGHT[0] + e.k;
           const d = bmriDaily[idx];
           const anchorY = e.above ? scale(d.h) : scale(d.l);
+          // Clamped so a chip on an extreme candle can never reach the top-150
+          // logo band or the bottom-108 subtitle band.
+          const chipY = e.above ? Math.max(CHIP_MIN_Y, anchorY - 72) : Math.min(CHIP_MAX_Y, anchorY + 72);
           return (
             <div key={e.label} style={{ opacity: chipsOp, transform: `translateY(${e.above ? -drift : drift}px)` }}>
               <Chip
                 label={e.label}
                 x={g.cx(idx)}
-                y={anchorY + (e.above ? -72 : 72)}
+                y={chipY}
                 variant="slate"
                 anchor="center"
                 startFrame={e.at}

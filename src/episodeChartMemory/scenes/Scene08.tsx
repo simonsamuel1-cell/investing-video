@@ -18,7 +18,8 @@ import { progress, type Box } from "../helpers";
 import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const CARD: Box = { x: 96, y: 54, w: 1728, h: 918 };
+// Card top clears the 150px logo zone.
+const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 230, w: 1500, h: 590 };
 const T = { band: 120, t1: 210, t2: 330, t3: 390, deepen: 450 };
 const REVEAL_END = 462; // calibrated so each touch lands on its beat

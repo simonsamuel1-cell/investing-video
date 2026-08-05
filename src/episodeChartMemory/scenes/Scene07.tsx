@@ -16,12 +16,17 @@ import { bmri5m, bmriWeekly } from "../data/bmri";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const GAP = 24;
 const CARD_W = (1728 - GAP) / 2;
-const LEFT: Box = { x: 96, y: 220, w: CARD_W, h: 520 };
-const RIGHT: Box = { x: 96 + CARD_W + GAP, y: 220, w: CARD_W, h: 520 };
+const LEFT: Box = { x: 96, y: 250, w: CARD_W, h: 490 };
+const RIGHT: Box = { x: 96 + CARD_W + GAP, y: 250, w: CARD_W, h: 490 };
+// Header chips sit clear of the top-150px logo band (the right chip runs past
+// x = 1368, so it must not be inside that band).
+const HEADER_Y = 200;
 const T = { p1: 90, p2: 135, p3: 180, arrow: 240, captions: 360, pulse: 540 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-const inner = (c: Box): Box => ({ x: c.x + 44, y: c.y + 56, w: c.w - 130, h: c.h - 110 });
+// Right-hand inset leaves room for the price axis labels INSIDE the card, so the
+// right card's labels never run up against the safe-right margin.
+const inner = (c: Box): Box => ({ x: c.x + 44, y: c.y + 56, w: c.w - 170, h: c.h - 110 });
 
 const W5 = [0, bmri5m.length - 1] as [number, number];
 const WW = [bmriWeekly.length - 30, bmriWeekly.length - 1] as [number, number];
@@ -90,11 +95,11 @@ export const Scene07 = () => {
       <CandlestickChart data={bmriWeekly} window={WW} box={ri} />
 
       {/* header chips — kept below the 150px logo band */}
-      <div style={{ transform: `scale(${1 + 0.04 * pulseL})`, transformOrigin: `${LEFT.x + 20}px 180px` }}>
-        <Chip label="5 Menit — Noise" x={LEFT.x + 20} y={180} variant="slate" anchor="left" startFrame={0} />
+      <div style={{ transform: `scale(${1 + 0.04 * pulseL})`, transformOrigin: `${LEFT.x + 20}px ${HEADER_Y}px` }}>
+        <Chip label="5 Menit — Noise" x={LEFT.x + 20} y={HEADER_Y} variant="slate" anchor="left" startFrame={0} />
       </div>
-      <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${RIGHT.x + 20}px 180px` }}>
-        <Chip label="Mingguan — Arah Besar" x={RIGHT.x + 20} y={180} variant="indigo" anchor="left" startFrame={0} />
+      <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${RIGHT.x + 20}px ${HEADER_Y}px` }}>
+        <Chip label="Mingguan — Arah Besar" x={RIGHT.x + 20} y={HEADER_Y} variant="indigo" anchor="left" startFrame={0} />
       </div>
 
       {/* three real reversals on the noisy side */}

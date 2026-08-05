@@ -17,8 +17,10 @@ import { progress, fadeIn } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const CARD = { x: 96, y: 54, w: 1728, h: 918 };
-const INNER = { x: 160, y: 190, w: 1500, h: 680 };
+// Card top sits BELOW the 150px logo clear-zone so the brand mark never
+// lands on card chrome.
+const CARD = { x: 96, y: 160, w: 1728, h: 812 };
+const INNER = { x: 160, y: 250, w: 1500, h: 620 };
 const T = { chartIn: 0, trend: 165, pulse: 195, stack: 225, dim: 300, caption: 330 };
 const STACK_STEP = 20; // frames between each indicator entering
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
@@ -157,7 +159,7 @@ export const Scene01 = () => {
             key={lab}
             label={lab}
             x={INNER.x + i * 168}
-            y={124}
+            y={210}
             variant="indigo"
             anchor="left"
             startFrame={T.stack + STACK_STEP * i}

@@ -16,12 +16,13 @@ import { progress, fadeIn, type Box } from "../helpers";
 import { bmriDaily, bmri5m, bmriWeekly } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const CARD: Box = { x: 96, y: 54, w: 1728, h: 918 };
-const CHART: Box = { x: 200, y: 300, w: 1520, h: 500 };
-const SEL = { x: 160, y: 106 };
+// Card top clears the 150px logo zone.
+const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
+const CHART: Box = { x: 200, y: 370, w: 1520, h: 430 };
+const SEL = { x: 160, y: 196 };
 const T = { tf5m: 90, tf1d: 180, tf1w: 255, triptych: 420, nearFar: 540 };
 const WIPE = 44;
-const TRI = { y: 300, w: 520, h: 380, gap: 24 };
+const TRI = { y: 330, w: 520, h: 380, gap: 24 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const VIEWS = [
@@ -82,7 +83,7 @@ export const Scene06 = () => {
       {[T.tf5m, T.tf1d, T.tf1w].map((start, i) => {
         const next = [T.tf1d, T.tf1w, T.triptych][i];
         if (f < start || f >= next) return null;
-        return <Chip key={i} label={VIEWS[i].chip} x={SEL.x} y={SEL.y + 118} variant="indigo" anchor="left" startFrame={start} opacity={bigOp} />;
+        return <Chip key={i} label={VIEWS[i].chip} x={SEL.x} y={SEL.y + 110} variant="indigo" anchor="left" startFrame={start} opacity={bigOp} />;
       })}
 
       {/* triptych — the three silhouettes side by side */}

@@ -41,12 +41,14 @@ export const AxisArrow = ({
         <line x1={x1} y1={y1} x2={hx} y2={hy} stroke={color} strokeWidth={theme.stroke.rule} />
         <polygon points={head} fill={color} />
       </svg>
+      {/* The Y label sits ABOVE the arrow tip, not left of the rail — placing it
+          outside the rail pushes it past the safe-left margin. */}
       <div
         style={{
           position: "absolute",
-          left: orientation === "x" ? x2 : x1 - labelOffset,
-          top: orientation === "x" ? y1 + labelOffset : y2,
-          transform: orientation === "x" ? "translate(-100%, 0)" : "translate(-100%, -50%)",
+          left: orientation === "x" ? x2 : x1 + 18,
+          top: orientation === "x" ? y1 + labelOffset : y2 - labelOffset,
+          transform: orientation === "x" ? "translate(-100%, 0)" : "translate(0, -100%)",
           fontFamily: theme.type.family,
           fontSize: theme.type.header.size,
           fontWeight: theme.type.header.weight,

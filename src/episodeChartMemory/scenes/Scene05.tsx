@@ -60,7 +60,8 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
         <>
           {/* dropped below the date-tick row so it never collides with an axis label */}
           <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.cross + 12} />
-          <Chip label={fmtPrice(d.c)} x={box.x - 24} y={py} variant="cyan" anchor="right" startFrame={T.cross + 12} />
+          {/* pulled in from box.x − 24: at that offset the chip crossed the safe-left margin */}
+          <Chip label={fmtPrice(d.c)} x={box.x - 2} y={py} variant="cyan" anchor="right" startFrame={T.cross + 12} />
         </>
       )}
 
