@@ -23,7 +23,6 @@ const CHART: Box = { x: 200, y: 370, w: 1520, h: 430 };
 // first segment, which is why "5m" was invisible.
 const BMRI = { x: 160, y: 224, w: 150 };
 const SEL = { x: BMRI.x + BMRI.w + 12, y: 196 };
-const SEL_W = 3 * 108 + 2 * 8;
 // ── HANDOFF from SC05 ───────────────────────────────────────────────────────
 // At global 3007 the only thing on screen is ChartContinuity's candle series:
 // BMRI daily over WIN.sc03, in this box, dimmed to this opacity. This scene
@@ -41,7 +40,6 @@ const T = {
   tf1d: 195,
   tf1w: 274,
   weekSpan: 339, // "perdagangan" — one weekly swallows five dailies
-  same: 373, // "Sahamnya sama dan sejarahnya juga sama"
   triptych: 443, // "bisa terasa sangat berbeda"
   near: 534, // "seberapa dekat"
   far: 599, // "atau seberapa jauh"
@@ -52,9 +50,9 @@ const TRI = { y: 330, w: 520, h: 380, gap: 24 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const VIEWS = [
-  { label: "5M", data: bmri5m, win: [0, bmri5m.length - 1] as [number, number], chip: "1 Candle = 5 Menit" },
-  { label: "1D", data: bmriDaily, win: [bmriDaily.length - 60, bmriDaily.length - 1] as [number, number], chip: "1 Candle = 1 Hari" },
-  { label: "1W", data: bmriWeekly, win: [bmriWeekly.length - 30, bmriWeekly.length - 1] as [number, number], chip: "1 Candle = 1 Minggu" },
+  { label: "5M", data: bmri5m, win: [0, bmri5m.length - 1] as [number, number] },
+  { label: "1D", data: bmriDaily, win: [bmriDaily.length - 60, bmriDaily.length - 1] as [number, number] },
+  { label: "1W", data: bmriWeekly, win: [bmriWeekly.length - 30, bmriWeekly.length - 1] as [number, number] },
 ];
 
 export const Scene06 = () => {
@@ -78,7 +76,6 @@ export const Scene06 = () => {
   const tri = f >= T.triptych ? progress(f, T.triptych, 40) : 0;
   const near = f >= T.near && f < T.far ? progress(f, T.near, 26) * (1 - progress(f, T.far - 20, 20)) : 0;
   const far = f >= T.far && f < T.settle ? progress(f, T.far, 26) * (1 - progress(f, T.settle - 20, 20)) : 0;
-  const tickerPulse = f >= T.same && f < T.same + 26 ? Math.sin(((f - T.same) / 26) * Math.PI) : 0;
 
   const bigOp = 1 - tri;
 
@@ -109,11 +106,8 @@ export const Scene06 = () => {
         </div>
       )}
 
-      {/* the constant across every timeframe */}
-      <div style={{ transform: `scale(${1 + 0.05 * tickerPulse})`, transformOrigin: `${BMRI.x}px ${BMRI.y}px` }}>
-        <Chip label="BMRI" x={BMRI.x} y={BMRI.y} variant="slate" anchor="left" width={BMRI.w} startFrame={T.ticker + 10} />
-      </div>
-      <Chip label="Periode Sama" x={SEL.x + SEL_W + 24} y={BMRI.y} variant="indigo" anchor="left" startFrame={T.same} opacity={1 - tri} />
+      {/* the constant across every timeframe — sits still; no pulse */}
+      <Chip label="BMRI" x={BMRI.x} y={BMRI.y} variant="slate" anchor="left" width={BMRI.w} startFrame={T.ticker + 10} />
 
       {/* the active chart — each timeframe wipes over the previous one */}
       {bigOp > 0.001 && (
@@ -137,13 +131,6 @@ export const Scene06 = () => {
           {to1w > 0.001 && <CandlestickChart data={VIEWS[2].data} window={VIEWS[2].win} box={CHART} revealProgress={to1w} />}
         </div>
       )}
-
-      {/* one summary chip per timeframe, swapped on the beat */}
-      {[T.tf5m, T.tf1d, T.tf1w].map((start, i) => {
-        const next = [T.tf1d, T.tf1w, T.triptych][i];
-        if (f < start || f >= next) return null;
-        return <Chip key={i} label={VIEWS[i].chip} x={BMRI.x} y={SEL.y + 110} variant="indigo" anchor="left" startFrame={start} opacity={bigOp} />;
-      })}
 
       {/* triptych — the three silhouettes side by side */}
       {tri > 0.001 &&

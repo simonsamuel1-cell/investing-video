@@ -28,11 +28,9 @@ const T = {
   rightIn: 241, // "Semakin panjang timeframe"
   arrow: 278, // "arah besarnya semakin jelas"
   capLeft: 354, // "kapan harus bertindak"
-  monthly: 446, // "chart mingguan dan bulanan"
   capRight: 548, // "arah besar tempat keputusan itu diambil"
   pulse: 631, // "Keduanya berguna"
   rule: 667, // "tetapi menjawab"
-  questions: 698, // "pertanyaan yang berbeda"
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -147,9 +145,6 @@ export const Scene07 = () => {
       <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${RIGHT.x + 20}px ${HEADER_Y}px` }}>
         <Chip label="Mingguan — Arah Besar" x={RIGHT.x + 20} y={HEADER_Y} variant="indigo" anchor="left" startFrame={T.rightIn} />
       </div>
-      {/* monthly acknowledged alongside weekly */}
-      <Chip label="1M" x={RIGHT.x + RIGHT.w - 20} y={HEADER_Y} variant="slate" anchor="right" startFrame={T.monthly} />
-
       {/* three real reversals on the noisy side */}
       {REV.map((idx, i) => (
         <Ping key={idx} x={gL.cx(idx)} y={gL.scale(bmri5m[idx].c)} startFrame={[T.p1, T.p2, T.p3][i]} variant="slate" />
@@ -176,13 +171,9 @@ export const Scene07 = () => {
         </svg>
       )}
 
-      {/* the question each timeframe answers */}
-      <Chip label="Kapan bertindak" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.capLeft} />
-      <Chip label="Arah besar" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 52} variant="indigo" anchor="center" startFrame={T.capRight} />
-
-      {/* the different question each side answers */}
-      <Chip label="Kapan?" x={LEFT.x + LEFT.w / 2} y={RIGHT.y + RIGHT.h + 130} variant="slate" anchor="center" startFrame={T.questions} />
-      <Chip label="Ke mana?" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 130} variant="indigo" anchor="center" startFrame={T.questions + 12} />
+      {/* the different question each side answers — one chip per card */}
+      <Chip label="Kapan" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.capLeft} />
+      <Chip label="Kemana?" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 52} variant="indigo" anchor="center" startFrame={T.capRight} />
     </SafeArea>
   );
 };
