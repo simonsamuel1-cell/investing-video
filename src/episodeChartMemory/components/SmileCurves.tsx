@@ -21,8 +21,8 @@ export type SmileCurve = { x1: number; x2: number; y: number; depth: number };
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const CURVES: SmileCurve[] = [
-  { x1: 390, x2: 790, y: 700, depth: 60 }, // kurva pertama
-  { x1: 950, x2: 1350, y: 700, depth: 60 }, // kurva kedua
+  { x1: 920, x2: 1170, y: 700, depth: 60 }, // kurva pertama
+  { x1: 1210, x2: 1460, y: 700, depth: 60 }, // kurva kedua
 ];
 const STAGGER = 0.5; // kurva kedua mulai saat kurva pertama sudah sejauh ini
 const OPACITY = 0.7;

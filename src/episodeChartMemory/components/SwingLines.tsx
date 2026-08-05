@@ -1,14 +1,17 @@
 /**
- * SwingLines — the two straight underlines SC03 draws beneath the price line to
- * mark a repeating swing structure. Global frames 1183–1227.
+ * SwingLines — garis lurus yang digambar SC03 di bawah line chart untuk menandai
+ * struktur swing. Global frames 1183–1227.
  *
  * ── POSISI ──────────────────────────────────────────────────────────────────
  * Koordinat di bawah ini adalah koordinat kanvas biasa (1920×1080), bukan
  * koordinat chart. Ubah LINES saja untuk memindahkan garisnya:
  *   x1, y1 = ujung kiri   ·   x2, y2 = ujung kanan
- * Angka default = posisi garis versi lama yang dihitung dari data. Kalau CSV
- * BMRI asli nanti menggantikan data placeholder, cek ulang angka ini terhadap
- * bentuk harga yang baru.
+ * Kalau CSV BMRI asli nanti menggantikan data placeholder, cek ulang angka ini
+ * terhadap bentuk harga yang baru.
+ *
+ * Sekarang tinggal SATU garis (yang kiri) — garis kanan sudah dihapus. Kalau
+ * mau menambah garis lagi, cukup tambahkan entri baru ke LINES; garis kedua dan
+ * seterusnya akan digambar bergiliran mengikuti STAGGER.
  */
 import { theme } from "../theme";
 
@@ -16,10 +19,8 @@ export type SwingLine = { x1: number; y1: number; x2: number; y2: number };
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const LINES: SwingLine[] = [
-  { x1: 390, y1: 671, x2: 790, y2: 655 }, // garis pertama
-  { x1: 950, y1: 680, x2: 1350, y2: 776 }, // garis kedua
+  { x1: 390, y1: 671, x2: 790, y2: 655 }, // garis kiri
 ];
-const STAGGER = 0.5; // garis kedua mulai saat garis pertama sudah sejauh ini
 const OPACITY = 0.55;
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -29,7 +30,10 @@ export const SwingLines = ({ progress, opacity = 1 }: { progress: number; opacit
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
       {LINES.map((l, i) => {
-        const q = Math.max(0, Math.min(1, (progress - i * STAGGER) / (1 - STAGGER)));
+        // Each line owns an equal slice of the draw, so they trace one after the
+        // other however many there are (one line = the whole window).
+        const slice = 1 / LINES.length;
+        const q = Math.max(0, Math.min(1, (progress - i * slice) / slice));
         if (q <= 0) return null;
         const len = Math.hypot(l.x2 - l.x1, l.y2 - l.y1);
         return (
