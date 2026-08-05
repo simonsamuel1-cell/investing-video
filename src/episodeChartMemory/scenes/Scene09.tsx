@@ -9,13 +9,26 @@ import { CandlestickChart } from "../components/CandlestickChart";
 import { StatementText } from "../components/StatementText";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, textReveal, type Box } from "../helpers";
+import { progress, textReveal, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
+// ── HANDOFF from SC08 ───────────────────────────────────────────────────────
+// At global 5191 the only thing on screen is SC08's candle series: BMRI daily
+// over WIN.sc08, in this box, at full opacity. This scene opens by drawing
+// exactly that, then eases it into its own framing and down to texture. Match
+// these to SC08's CHART and window or the seam will show.
+const HANDOFF_BOX: Box = { x: 200, y: 230, w: 1500, h: 590 };
+const HANDOFF_WIN = WIN.sc08;
+const TEXTURE = 0.15;
+// Everything except the chart is grouped and lifted so the block sits just
+// under the safe-top margin. GROUP_TOP is the topmost pixel of that block as
+// laid out below: "Bukan Prediksi." centre-y 392 minus half its 72px line.
+const GROUP_TOP = 349;
 const T = {
   texture: 0, // "Jadi, anggap"
+  carryDur: 50, // the carried series eases into this scene's framing
   prob: 36, // "alat membaca probabilitas" — the headline lands first
   notPred: 155, // "bukan alat meramal masa depan"
   future: 419, // "tidak menjamin apa yang terjadi berikutnya"
@@ -31,9 +44,24 @@ const CHIPS = ["Yang Sudah Terjadi", "Pola Berulang", "Posisi Saat Ini"];
 const CHIP_Y = 636;
 // ═══════════════════════════════════════════════════════════════════════════
 
+const GROUP_DY = theme.layout.safeTop - GROUP_TOP;
+
 export const Scene09 = () => {
   const f = useCurrentFrame();
-  const texture = fadeIn(f, T.texture, 60) * 0.15;
+
+  // the series carried over from SC08: eases into this scene's box and window
+  // and settles down to texture
+  const carry = progress(f, T.texture, T.carryDur);
+  const lerp = (from: number, to: number) => from + (to - from) * carry;
+  const box: Box = {
+    x: lerp(HANDOFF_BOX.x, CHART.x),
+    y: lerp(HANDOFF_BOX.y, CHART.y),
+    w: lerp(HANDOFF_BOX.w, CHART.w),
+    h: lerp(HANDOFF_BOX.h, CHART.h),
+  };
+  // both windows end on the same session, so only the left edge travels
+  const win: [number, number] = [lerp(HANDOFF_WIN[0], WIN.sc01[0]), WIN.sc01[1]];
+  const texture = lerp(1, TEXTURE);
   const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
   const rule = f >= T.dim ? progress(f, T.dim, 40) : 0;
   const future = f >= T.future ? progress(f, T.future, 34) : 0;
@@ -48,23 +76,25 @@ export const Scene09 = () => {
 
   return (
     <SafeArea>
-      <CandlestickChart data={bmriDaily} window={WIN.sc01} box={CHART} showAxes={false} dimOpacity={texturePlus} />
+      <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} dimOpacity={texturePlus} />
 
       {/* what comes next is left blank — no projected path, ever */}
       {future > 0.001 && (
         <div
           style={{
             position: "absolute",
-            left: CHART.x + CHART.w * 0.82,
-            top: CHART.y,
-            width: CHART.w * 0.18 + 40,
-            height: CHART.h,
+            left: box.x + box.w * 0.82,
+            top: box.y,
+            width: box.w * 0.18 + 40,
+            height: box.h,
             background: theme.colors.bg,
             opacity: 0.92 * future,
           }}
         />
       )}
 
+      {/* Everything that is not the chart, as one block lifted to the top. */}
+      <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
       {/* the headline the VO leads with, then the correction above it */}
       <StatementText text="Bukan Prediksi." y={392} startFrame={T.notPred} size={72} weight={700} color={theme.colors.slate} />
       <StatementText text="Probabilitas." y={496} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
@@ -123,6 +153,7 @@ export const Scene09 = () => {
         }}
       >
         Harapan · Tebakan
+      </div>
       </div>
     </SafeArea>
   );

@@ -36,6 +36,7 @@ export const CandlestickChart = ({
   window: win,
   box,
   showAxes = true,
+  axesOpacity = 1,
   dimOpacity = 1,
   revealProgress = 1,
   pad = 0.08,
@@ -46,6 +47,8 @@ export const CandlestickChart = ({
   window: [number, number];
   box: Box;
   showAxes?: boolean;
+  /** Fades gridlines + price labels WITHOUT touching the candles. */
+  axesOpacity?: number;
   dimOpacity?: number;
   revealProgress?: number; // 0–1 left→right reveal of the candle series
   pad?: number;
@@ -63,8 +66,8 @@ export const CandlestickChart = ({
       width={theme.canvas.width}
       height={theme.canvas.height}
     >
-      {showAxes && (
-        <g>
+      {showAxes && axesOpacity > 0.001 && (
+        <g opacity={axesOpacity}>
           {tickPrices.map((p) => (
             <g key={p}>
               <line x1={box.x} y1={scale(p)} x2={box.x + box.w} y2={scale(p)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />

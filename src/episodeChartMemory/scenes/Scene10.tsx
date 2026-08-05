@@ -122,7 +122,8 @@ export const Scene10 = () => {
         style={{
           position: "absolute",
           left: 0,
-          top: 880,
+          // lifted to the top of the frame, just under the safe margin
+          top: theme.layout.safeTop + 20,
           width: theme.canvas.width,
           textAlign: "center",
           fontFamily: theme.type.family,

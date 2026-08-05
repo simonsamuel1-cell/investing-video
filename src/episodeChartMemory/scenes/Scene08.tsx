@@ -14,7 +14,7 @@ import { ZoneBand } from "../components/ZoneBand";
 import { Ping } from "../components/Ping";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, type Box } from "../helpers";
+import { progress, fadeOut, type Box } from "../helpers";
 import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -31,6 +31,10 @@ const T = {
   deepen: 500,
   trace: 564, // "Karena manusia mengingat harga"
   ghosts: 623, // "perilaku yang mirip"
+  // Everything but the candle series clears before the boundary, so that at
+  // global 5191 only the chart is left — that is what SC09 picks up.
+  clear: 660,
+  clearDur: 40, // done by local 700 (global 5172)
 };
 const REVEAL_END = 325; // calibrated so each touch is revealed just before its ping
 // ═══════════════════════════════════════════════════════════════════════════
@@ -47,6 +51,7 @@ export const Scene08 = () => {
   const trace = f >= T.trace ? progress(f, T.trace, 46) : 0;
   const ghosts = f >= T.ghosts && f < T.ghosts + 60 ? Math.sin(((f - T.ghosts) / 60) * Math.PI) : 0;
   const fill = interpolate(deepen, [0, 1], [0.08, 0.14]);
+  const clearOp = f >= T.clear ? fadeOut(f, T.clear, T.clearDur) : 1;
 
   const yTop = g.scale(ZONE.hi);
   const yBot = g.scale(ZONE.lo);
@@ -63,12 +68,18 @@ export const Scene08 = () => {
           borderRadius: theme.radius.cardLg,
           background: theme.colors.cardBg,
           border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+          opacity: clearOp,
         }}
       />
 
-      {bandDraw > 0.001 && <ZoneBand x={CHART.x} w={CHART.w} yTop={yTop} yBottom={yBot} fillOpacity={fill} drawProgress={bandDraw} />}
+      {bandDraw > 0.001 && (
+        <div style={{ opacity: clearOp }}>
+          <ZoneBand x={CHART.x} w={CHART.w} yTop={yTop} yBottom={yBot} fillOpacity={fill} drawProgress={bandDraw} />
+        </div>
+      )}
 
-      <CandlestickChart data={bmriDaily} window={WINDOW} box={CHART} revealProgress={reveal} />
+      {/* the candles stay to the last frame — only their axes clear */}
+      <CandlestickChart data={bmriDaily} window={WINDOW} box={CHART} revealProgress={reveal} axesOpacity={clearOp} />
 
       {/* the moment the memory is named */}
       <div
@@ -80,7 +91,7 @@ export const Scene08 = () => {
           fontSize: theme.type.header.size,
           fontWeight: theme.type.header.weight,
           color: theme.colors.ink,
-          opacity: progress(f, T.header, 24),
+          opacity: progress(f, T.header, 24) * clearOp,
           transform: `translateY(${(1 - progress(f, T.header, 24)) * 14}px)`,
         }}
       >
@@ -89,7 +100,11 @@ export const Scene08 = () => {
 
       {/* the trace the area leaves, and the shape the three bounces share */}
       {(trace > 0.001 || ghosts > 0.001) && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
           {/* the trace the three touches leave along the band */}
           {trace > 0.001 && (
             <line
@@ -123,9 +138,11 @@ export const Scene08 = () => {
       )}
 
       {/* the three genuine touches */}
-      {ZONE_TOUCH_IDX.map((idx, i) => (
-        <Ping key={idx} x={g.cx(idx)} y={g.scale(bmriDaily[idx].l)} startFrame={[T.t1, T.t2, T.t3][i]} variant="cyan" />
-      ))}
+      <div style={{ opacity: clearOp }}>
+        {ZONE_TOUCH_IDX.map((idx, i) => (
+          <Ping key={idx} x={g.cx(idx)} y={g.scale(bmriDaily[idx].l)} startFrame={[T.t1, T.t2, T.t3][i]} variant="cyan" />
+        ))}
+      </div>
 
       {/* the one chip on the band — below it, hanging off the first touch */}
       <Chip
@@ -135,6 +152,7 @@ export const Scene08 = () => {
         variant="cyan"
         anchor="center"
         startFrame={T.t1 + 8}
+        opacity={clearOp}
         connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yBot + 8 }}
       />
     </SafeArea>
