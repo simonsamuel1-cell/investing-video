@@ -17,12 +17,15 @@ import { Scene07 } from "./scenes/Scene07";
 import { Scene08 } from "./scenes/Scene08";
 import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
+import { Subtitles } from "./components/Subtitles";
 
 export const TOTAL_FRAMES = 5400; // 03:00.00 @30fps (provisional — see §8)
 
-// TODO [NEEDS ASSET: final VO file] — drop the recorded VO at
-// public/vo/chart-memory.mp3 and flip this to true to mount the root <Audio>.
-const HAS_VO = false;
+// Recorded VO: public/vo/chart-memory.mp3 ("The first time.wav"), 170.02s =
+// ~5101 frames. NOTE: that is ~299 frames SHORT of TOTAL_FRAMES, and the scene
+// from/duration values below are still 160 wpm estimates — the §8 recalibration
+// pass is what aligns the beats to this audio.
+const HAS_VO = true;
 
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
   { from: 0, duration: 390, Component: Scene01 },
@@ -46,6 +49,9 @@ export const ChartMemoryComposition = () => (
     <Sequence from={390} durationInFrames={2100}>
       <ChartContinuity />
     </Sequence>
+
+    {/* Burned-in subtitles live in the reserved bottom band. */}
+    <Subtitles />
 
     {HAS_VO && <Audio src={staticFile("vo/chart-memory.mp3")} />}
   </AbsoluteFill>
