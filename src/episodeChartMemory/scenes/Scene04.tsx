@@ -29,7 +29,6 @@ const T = {
   close: 477,
   counter: 536, // "Empat informasi dalam satu candle"
   back: 600, // "Karena itulah"
-  standard: 630, // "pilihan utama trader"
   zoom: 709, // "membaca pergerakan harga dengan lebih detail"
 };
 const CARD = { x: 1250, y: 250, w: 520, h: 540 };
@@ -183,8 +182,6 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
           <Chip label="4 Info · 1 Candle" x={CARD.x + CARD.w / 2} y={CARD.y - 34} variant="indigo" anchor="center" startFrame={T.counter} />
         </div>
       )}
-
-      <Chip label="Standar Trader" x={SEG.x} y={880} variant="indigo" anchor="left" startFrame={T.standard} opacity={detail > 0.5 ? 1 - detail : 1} />
 
       {/* up close, so individual bodies and wicks read */}
       {detail > 0.001 && (

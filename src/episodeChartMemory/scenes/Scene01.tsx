@@ -202,10 +202,10 @@ export const Scene01 = () => {
       {/* the doubt the VO names, before the clutter piles on */}
       <Chip
         label="Cuma buat profesional?"
-        x={INNER.x}
+        x={theme.canvas.width / 2}
         y={thoughtY}
         variant="slate"
-        anchor="left"
+        anchor="center"
         startFrame={T.thought}
         opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
       />

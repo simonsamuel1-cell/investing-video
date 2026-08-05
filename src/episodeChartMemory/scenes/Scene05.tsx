@@ -14,10 +14,12 @@ import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  counter: 0, // "punya dua sumbu"
-  xAxis: 61, // "Sumbu mendatar menunjukkan waktu"
+  // Both rails now draw TOGETHER over global 2501–2571 (scene-local 15–85).
+  // Their tick labels keep their own later beats — the dates and the price
+  // levels are deliberately not part of this.
+  axes: 15, // global 2501
+  axesDur: 70, // both rails complete at global 2571
   xTicks: 148, // "kapan pergerakan itu terjadi?"
-  yAxis: 211, // "Sumbu tegak menunjukkan harga"
   yTicks: 260, // "di level berapa?"
   cross: 316, // "menjawab dua pertanyaan"
   priceTag: 401, // "harganya berapa"
@@ -37,8 +39,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   const px = cx(idx);
   const py = scale(d.c);
 
-  const xP = local >= T.xAxis ? progress(local, T.xAxis, 46) : 0;
-  const yP = local >= T.yAxis ? progress(local, T.yAxis, 46) : 0;
+  const axisP = local >= T.axes ? progress(local, T.axes, T.axesDur) : 0;
   const crossP = local >= T.cross ? progress(local, T.cross, 24) : 0;
 
   // real sessions and real price levels, spread across each rail
@@ -49,23 +50,21 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
 
   return (
     <>
-      {/* right-aligned: the "Harga" axis label owns the top-left corner */}
-      <Chip label="2 Sumbu" x={box.x + box.w} y={224} variant="slate" anchor="right" startFrame={T.counter + 12} />
-
-      {xP > 0.001 && (
-        <AxisArrow
-          orientation="x"
-          x1={box.x}
-          y1={box.y + box.h}
-          x2={box.x + box.w}
-          y2={box.y + box.h}
-          progress={xP}
-          color={theme.colors.indigo}
-          label="Waktu"
-        />
-      )}
-      {yP > 0.001 && (
-        <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={yP} color={theme.colors.cyan} label="Harga" />
+      {/* both rails draw together */}
+      {axisP > 0.001 && (
+        <>
+          <AxisArrow
+            orientation="x"
+            x1={box.x}
+            y1={box.y + box.h}
+            x2={box.x + box.w}
+            y2={box.y + box.h}
+            progress={axisP}
+            color={theme.colors.indigo}
+            label="Waktu"
+          />
+          <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={axisP} color={theme.colors.cyan} label="Harga" />
+        </>
       )}
 
       {/* "kapan?" — the time rail fills in, one session at a time */}
@@ -122,11 +121,9 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
       {/* the price answer lands on the Y rail… */}
       {/* pulled in from box.x − 24: at that offset the chip crossed the safe-left margin */}
       <Chip label={fmtPrice(d.c)} x={box.x - 2} y={py} variant="cyan" anchor="right" startFrame={T.priceTag} />
-      <Chip label="Harga berapa?" x={px + 46} y={py - 34} variant="cyan" anchor="left" startFrame={T.priceTag + 12} />
 
       {/* …and the time answer on the X rail, dropped below the tick row */}
       <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.dateTag} />
-      <Chip label="Kapan?" x={px + 46} y={py + 34} variant="indigo" anchor="left" startFrame={T.dateTag + 12} />
     </>
   );
 };

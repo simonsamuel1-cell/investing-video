@@ -8,6 +8,8 @@ import { useCurrentFrame } from "remotion";
  */
 import { Ping } from "../components/Ping";
 import { Chip } from "../components/Chip";
+import { SwingLines } from "../components/SwingLines";
+import { SmileCurves } from "../components/SmileCurves";
 import { theme } from "../theme";
 import { progress } from "../helpers";
 import { bmriDaily } from "../data/bmri";
@@ -15,7 +17,9 @@ import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  underline: 86, // "membentuk pola tertentu"
+  underline: 86, // "membentuk pola tertentu" — global 1183
+  underlineDur: 44, // straight swing lines finish at global 1227
+  smileDur: 56, // smile curves finish at global 1239
   question: 182, // "membaca pesan di baliknya"
   lift: 268, // "bukan sekadar catatan masa lalu"
   ticks: 366, // "setiap keputusan pembeli dan penjual"
@@ -44,13 +48,10 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
   const P = pickPivots(a, b);
 
   const lift = local >= T.lift ? progress(local, T.lift, 30) : 0;
-  const underline = local >= T.underline ? progress(local, T.underline, 44) : 0;
+  const underline = local >= T.underline ? progress(local, T.underline, T.underlineDur) : 0;
+  const smile = local >= T.underline ? progress(local, T.underline, T.smileDur) : 0;
   const underlineDim = local >= T.question ? progress(local, T.question, 24) : 0;
   const ticks = local >= T.ticks ? progress(local, T.ticks, 60) : 0;
-
-  // Two similar swings, traced beneath the line as a repeating structure.
-  const seg = (i0: number, i1: number) => ({ x1: cx(i0), y1: scale(bmriDaily[i0].l) + 26, x2: cx(i1), y2: scale(bmriDaily[i1].l) + 26 });
-  const swings = [seg(a + 6, a + 26), seg(a + 34, a + 54)];
 
   return (
     <>
@@ -76,28 +77,10 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
         />
       ))}
 
-      {underline > 0.001 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-          {swings.map((s, i) => {
-            const len = Math.hypot(s.x2 - s.x1, s.y2 - s.y1);
-            const p = Math.max(0, Math.min(1, underline * 2 - i));
-            return (
-              <line
-                key={i}
-                x1={s.x1}
-                y1={s.y1}
-                x2={s.x2}
-                y2={s.y2}
-                stroke={theme.colors.indigo}
-                strokeWidth={theme.stroke.rule}
-                strokeDasharray={len}
-                strokeDashoffset={len * (1 - p)}
-                opacity={0.55 * (1 - 0.6 * underlineDim)}
-              />
-            );
-          })}
-        </svg>
-      )}
+      {/* the repeating structure: two straight underlines and two smile curves.
+          Both carry their own geometry — see SwingLines.tsx / SmileCurves.tsx. */}
+      <SwingLines progress={underline} opacity={1 - 0.6 * underlineDim} />
+      <SmileCurves progress={smile} opacity={1 - 0.6 * underlineDim} />
 
       {/* the repeating structure, then the question it raises */}
       <Chip
@@ -109,7 +92,8 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
         startFrame={T.underline + 30}
         opacity={1 - underlineDim}
       />
-      <Chip label="Apa pesannya?" x={box.x} y={880} variant="slate" anchor="left" startFrame={T.question} />
+      {/* above the line chart, centred on it */}
+      <Chip label="Apa pesannya?" x={box.x + box.w / 2} y={224} variant="indigo" anchor="center" startFrame={T.question} />
 
       {/* every session point is one recorded decision */}
       {ticks > 0.001 && (
