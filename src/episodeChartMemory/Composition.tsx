@@ -19,10 +19,10 @@ import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
 
-export const TOTAL_FRAMES = 6610; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
+export const TOTAL_FRAMES = 6606; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
 
 // Recorded VO: public/vo/chart-memory.mp3 ("VIDEO 01 - Chart.MP3"), 220.32s =
-// 6610 frames. Every from/duration below and every scene-local beat is now
+// 6606 frames. Every from/duration below and every scene-local beat is now
 // derived from VIDEO_01_-_Chart_fixed.srt (106 cues) — not a wpm estimate.
 const HAS_VO = true;
 
@@ -33,7 +33,7 @@ const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC 
   { from: 3720, duration: 752, Component: Scene07 },
   { from: 4472, duration: 720, Component: Scene08 },
   { from: 5192, duration: 754, Component: Scene09 },
-  { from: 5946, duration: 664, Component: Scene10 },
+  { from: 5946, duration: 660, Component: Scene10 },
 ];
 
 export const ChartMemoryComposition = () => (

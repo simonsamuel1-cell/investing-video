@@ -1,7 +1,7 @@
 /**
  * data/chili.ts — the everyday price series SC02 uses to show that a chart is
  * just numbers arranged over time. The three spoken figures (40.000 → 20.000 →
- * 32.000 per kg) are FINAL — they come from the VO. The intermediate months
+ * 35.000 per kg) are FINAL — they come from the VO. The intermediate months
  * exist so the drawn line is a real price path rather than three dots.
  */
 export type ChiliPoint = { month: string; price: number };
@@ -17,9 +17,9 @@ export const chiliMonthly: ChiliPoint[] = [
   { month: "Jul", price: 23500 },
   { month: "Agu", price: 26000 },
   { month: "Sep", price: 28500 },
-  { month: "Okt", price: 30000 },
-  { month: "Nov", price: 31000 },
-  { month: "Des", price: 32000 },
+  { month: "Okt", price: 31000 },
+  { month: "Nov", price: 33000 },
+  { month: "Des", price: 35000 },
 ];
 
 /** Indices of the three figures the VO names. */

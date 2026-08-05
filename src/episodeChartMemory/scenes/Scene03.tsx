@@ -14,7 +14,16 @@ import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = { underline: 86, lift: 268, brave: 441, doubt: 487, exit: 517 };
+const T = {
+  ticker: 0, // the morph completes; the series identifies itself
+  underline: 86, // "membentuk pola tertentu"
+  question: 182, // "membaca pesan di baliknya"
+  lift: 268, // "bukan sekadar catatan masa lalu"
+  ticks: 366, // "setiap keputusan pembeli dan penjual"
+  brave: 441,
+  doubt: 487,
+  exit: 517,
+};
 const CARD_LIFT_PX = 6;
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -37,6 +46,8 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
 
   const lift = local >= T.lift ? progress(local, T.lift, 30) : 0;
   const underline = local >= T.underline ? progress(local, T.underline, 44) : 0;
+  const underlineDim = local >= T.question ? progress(local, T.question, 24) : 0;
+  const ticks = local >= T.ticks ? progress(local, T.ticks, 60) : 0;
 
   // Two similar swings, traced beneath the line as a repeating structure.
   const seg = (i0: number, i1: number) => ({ x1: cx(i0), y1: scale(bmriDaily[i0].l) + 26, x2: cx(i1), y2: scale(bmriDaily[i1].l) + 26 });
@@ -82,9 +93,36 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
                 strokeWidth={theme.stroke.rule}
                 strokeDasharray={len}
                 strokeDashoffset={len * (1 - p)}
-                opacity={0.55}
+                opacity={0.55 * (1 - 0.6 * underlineDim)}
               />
             );
+          })}
+        </svg>
+      )}
+
+      {/* the series names itself once the morph resolves */}
+      <Chip label="BMRI · Harian" x={box.x} y={224} variant="slate" anchor="left" startFrame={T.ticker + 40} />
+
+      {/* the repeating structure, then the question it raises */}
+      <Chip
+        label="?"
+        x={cx(a + 44)}
+        y={scale(bmriDaily[a + 44].h) - 74}
+        variant="indigo"
+        anchor="center"
+        startFrame={T.underline + 30}
+        opacity={1 - underlineDim}
+      />
+      <Chip label="Apa pesannya?" x={box.x} y={880} variant="slate" anchor="left" startFrame={T.question} />
+
+      {/* every session point is one recorded decision */}
+      {ticks > 0.001 && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+          {Array.from({ length: b - a + 1 }, (_, k) => {
+            const i = a + k;
+            const q = Math.max(0, Math.min(1, ticks * (b - a + 1) - k));
+            if (q <= 0) return null;
+            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3.2} fill={theme.colors.indigo} opacity={0.55 * q} />;
           })}
         </svg>
       )}

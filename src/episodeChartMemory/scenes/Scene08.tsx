@@ -21,8 +21,20 @@ import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
 // Card top clears the 150px logo zone.
 const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 230, w: 1500, h: 590 };
-const T = { band: 90, t1: 148, t2: 229, t3: 301, deepen: 429 };
-const REVEAL_END = 320; // calibrated so each touch is revealed just before its ping
+const T = {
+  playhead: 43, // the chart settles; the playhead sits at the right edge
+  header: 90, // "pasar punya ingatan"
+  band: 148, // "suatu area harga pernah membuat pembeli masuk"
+  t1: 190,
+  t2: 229, // "sering kembali menarik perhatian"
+  cluster1: 301, // "Ada trader yang pernah membeli di sana"
+  cluster2: 372, // "yang menunggu kesempatan"
+  t3: 429, // "kedua. Ingatan kolektif itu meninggalkan jejak"
+  deepen: 500,
+  trace: 564, // "Karena manusia mengingat harga"
+  ghosts: 623, // "perilaku yang mirip"
+};
+const REVEAL_END = 325; // calibrated so each touch is revealed just before its ping
 // ═══════════════════════════════════════════════════════════════════════════
 
 const WINDOW = WIN.sc08;
@@ -34,6 +46,11 @@ export const Scene08 = () => {
   const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const bandDraw = f >= T.band ? progress(f, T.band, 46) : 0;
   const deepen = f >= T.deepen ? progress(f, T.deepen, 30) : 0;
+  const cluster1 = f >= T.cluster1 ? progress(f, T.cluster1, 26) : 0;
+  const cluster2 = f >= T.cluster2 ? progress(f, T.cluster2, 26) : 0;
+  const drop = f >= T.t3 ? progress(f, T.t3, 30) : 0; // the waiting cluster steps in
+  const trace = f >= T.trace ? progress(f, T.trace, 46) : 0;
+  const ghosts = f >= T.ghosts && f < T.ghosts + 60 ? Math.sin(((f - T.ghosts) / 60) * Math.PI) : 0;
   const fill = interpolate(deepen, [0, 1], [0.08, 0.14]);
 
   const yTop = g.scale(ZONE.hi);
@@ -58,6 +75,80 @@ export const Scene08 = () => {
 
       <CandlestickChart data={bmriDaily} window={WINDOW} box={CHART} revealProgress={reveal} />
 
+      {/* the moment the memory is named */}
+      <div
+        style={{
+          position: "absolute",
+          left: CHART.x,
+          top: 200,
+          fontFamily: theme.type.family,
+          fontSize: theme.type.header.size,
+          fontWeight: theme.type.header.weight,
+          color: theme.colors.ink,
+          opacity: progress(f, T.header, 24),
+          transform: `translateY(${(1 - progress(f, T.header, 24)) * 14}px)`,
+        }}
+      >
+        Pasar punya ingatan.
+      </div>
+
+      {/* who is already in, and who is still waiting */}
+      {(cluster1 > 0.001 || cluster2 > 0.001) && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+          {cluster1 > 0.001 &&
+            [0, 1, 2, 3].map((k) => (
+              <circle
+                key={`a${k}`}
+                cx={g.cx(ZONE_TOUCH_IDX[0]) - 30 + k * 20}
+                cy={g.scale(bmriDaily[ZONE_TOUCH_IDX[0]].l) + 34}
+                r={5}
+                fill={theme.colors.indigo}
+                opacity={0.85 * Math.max(0, Math.min(1, cluster1 * 4 - k))}
+              />
+            ))}
+          {cluster2 > 0.001 &&
+            [0, 1, 2].map((k) => (
+              <circle
+                key={`b${k}`}
+                cx={g.cx(ZONE_TOUCH_IDX[2]) - 20 + k * 20}
+                cy={yTop - 46 + drop * (yTop - 46 - (yBot - 10)) * -1}
+                r={5}
+                fill={theme.colors.cyan}
+                opacity={0.85 * Math.max(0, Math.min(1, cluster2 * 3 - k))}
+              />
+            ))}
+          {/* the trace the three touches leave along the band */}
+          {trace > 0.001 && (
+            <line
+              x1={g.cx(ZONE_TOUCH_IDX[0])}
+              y1={(yTop + yBot) / 2}
+              x2={g.cx(ZONE_TOUCH_IDX[0]) + (g.cx(ZONE_TOUCH_IDX[2]) - g.cx(ZONE_TOUCH_IDX[0])) * trace}
+              y2={(yTop + yBot) / 2}
+              stroke={theme.colors.indigo}
+              strokeWidth={theme.stroke.rule}
+              strokeDasharray="10 8"
+              opacity={0.8}
+            />
+          )}
+          {/* the three bounces, outlined so their similarity reads */}
+          {ghosts > 0.001 &&
+            ZONE_TOUCH_IDX.map((idx) => (
+              <rect
+                key={`g${idx}`}
+                x={g.cx(idx) - g.slot * 2.5}
+                y={yTop - 30}
+                width={g.slot * 5}
+                height={yBot - yTop + 60}
+                rx={10}
+                fill="none"
+                stroke={theme.colors.indigo}
+                strokeWidth={theme.stroke.hair}
+                opacity={0.7 * ghosts}
+              />
+            ))}
+        </svg>
+      )}
+
       {/* the three genuine touches */}
       {ZONE_TOUCH_IDX.map((idx, i) => (
         <Ping key={idx} x={g.cx(idx)} y={g.scale(bmriDaily[idx].l)} startFrame={[T.t1, T.t2, T.t3][i]} variant="cyan" />
@@ -74,13 +165,13 @@ export const Scene08 = () => {
         connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yTop - 8 }}
       />
       <Chip
-        label="Menunggu kesempatan kedua"
-        x={g.cx(ZONE_TOUCH_IDX[1])}
+        label="Kesempatan kedua"
+        x={g.cx(ZONE_TOUCH_IDX[2])}
         y={yBot + 76}
         variant="indigo"
         anchor="center"
-        startFrame={T.t2 + 8}
-        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[1]), y: yBot + 8 }}
+        startFrame={T.t3 + 8}
+        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[2]), y: yBot + 8 }}
       />
 
       {/* the trace the area leaves behind */}

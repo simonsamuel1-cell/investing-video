@@ -15,8 +15,19 @@ import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
-const T = { fear: 142, conviction: 170, patience: 192, euphoria: 222, panic: 246, release: 278, caption: 548 };
-const ZOOM_DUR = 270; // 278 → 548, then the frame holds
+const T = {
+  ticks: 74, // "mengambil keputusan nyata" — each candle ticks once
+  fear: 142,
+  conviction: 170,
+  patience: 195,
+  euphoria: 222,
+  panic: 250,
+  pulse: 278, // "semuanya terekam di sana"
+  release: 328, // "Chart bukanlah saham itu sendiri"
+  zoom: 408, // "Chart adalah ingatan pasar"
+  caption: 548, // "Belajarlah membaca ingatan itu"
+};
+const ZOOM_DUR = 140; // 408 → 548, then the frame holds
 const CHIP_MIN_Y = 180; // chip top stays clear of the 150px logo band
 const CHIP_MAX_Y = 840; // chip bottom stays clear of the 108px subtitle band
 // ═══════════════════════════════════════════════════════════════════════════
@@ -36,7 +47,7 @@ const EMOTIONS = [
 export const Scene10 = () => {
   const f = useCurrentFrame();
 
-  const zoom = f >= T.release ? progress(f, T.release, ZOOM_DUR) : 0;
+  const zoom = f >= T.zoom ? progress(f, T.zoom, ZOOM_DUR) : 0;
   const win: [number, number] = [interpolate(zoom, [0, 1], [TIGHT[0], WIDE[0]]), TIGHT[1]];
   const g = chartGeom(bmriDaily, win, CHART);
 
@@ -50,6 +61,8 @@ export const Scene10 = () => {
 
   const chipsOp = f >= T.release ? 1 - progress(f, T.release, 34) : 1;
   const drift = f >= T.release ? progress(f, T.release, 34) * 22 : 0;
+  const chipPulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
+  const tickIn = f >= T.ticks ? progress(f, T.ticks, 60) : 0;
   const cap = textReveal(f, T.caption, 20);
 
   return (
@@ -63,6 +76,18 @@ export const Scene10 = () => {
         dimOpacity={interpolate(zoom, [0, 1], [1, 0.55])}
       />
 
+      {/* each visible candle ticks once — one decision at a time */}
+      {tickIn > 0.001 && chipsOp > 0.001 && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+          {Array.from({ length: TIGHT[1] - TIGHT[0] + 1 }, (_, k) => {
+            const i = TIGHT[0] + k;
+            const q = Math.max(0, Math.min(1, tickIn * (TIGHT[1] - TIGHT[0] + 1) - k));
+            if (q <= 0) return null;
+            return <circle key={i} cx={g.cx(i)} cy={scale(bmriDaily[i].c)} r={3.4} fill={theme.colors.indigo} opacity={0.5 * q * chipsOp} />;
+          })}
+        </svg>
+      )}
+
       {chipsOp > 0.001 &&
         EMOTIONS.map((e) => {
           const idx = TIGHT[0] + e.k;
@@ -72,7 +97,14 @@ export const Scene10 = () => {
           // logo band or the bottom-108 subtitle band.
           const chipY = e.above ? Math.max(CHIP_MIN_Y, anchorY - 72) : Math.min(CHIP_MAX_Y, anchorY + 72);
           return (
-            <div key={e.label} style={{ opacity: chipsOp, transform: `translateY(${e.above ? -drift : drift}px)` }}>
+            <div
+              key={e.label}
+              style={{
+                opacity: chipsOp,
+                transform: `translateY(${e.above ? -drift : drift}px) scale(${1 + 0.05 * chipPulse})`,
+                transformOrigin: `${g.cx(idx)}px ${chipY}px`,
+              }}
+            >
               <Chip
                 label={e.label}
                 x={g.cx(idx)}

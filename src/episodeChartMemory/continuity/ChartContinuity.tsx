@@ -38,6 +38,10 @@ const K = {
   widen: 1997, // anatomy card leaves; chart returns to full width
   dimCandles: 1997, // SC05 f0
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
+  // SC02 sets the chili shape beside a busier one; the full-size line and its
+  // month axis step aside while those comparison cards hold the stage.
+  pairIn: 444,
+  pairOut: 578,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -105,13 +109,21 @@ export const ChartContinuity = () => {
 
   const linePts = xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
   // SC04 dims the line one step before the wipe begins
-  const lineDim = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
+  const lineDimRaw = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
+  const pairMask = interpolate(f, [K.pairIn, K.pairIn + 34, K.pairOut, K.pairOut + 26], [1, 0, 0, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
+  const lineDim = lineDimRaw * pairMask;
   const wipeX = box.x + box.w * wipe;
 
   // ── axis furniture: months (chili) crossfading into dates + prices (BMRI) ──
   const axisDraw = f >= K.axisDraw ? progress(f, K.axisDraw, 50) : 0;
-  const chiliAxisOp = f < K.morph ? 1 : 1 - progress(f, K.morph, 60);
+  const chiliAxisOp = (f < K.morph ? 1 : 1 - progress(f, K.morph, 60)) * pairMask;
   const bmriAxisOp = f >= K.morph ? progress(f, K.morph, 60) : 0;
+  // SC05 re-populates both rails one tick at a time, so continuity's own tick
+  // labels step aside at phase D to avoid a doubled axis.
+  const tickLabelOp = bmriAxisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
 
@@ -139,6 +151,7 @@ export const ChartContinuity = () => {
                   fontSize={theme.type.axis.size}
                   fontWeight={theme.type.axis.weight}
                   fill={theme.colors.slate}
+                  opacity={tickLabelOp}
                 >
                   {fmtPrice(p)}
                 </text>
@@ -180,7 +193,7 @@ export const ChartContinuity = () => {
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
               color: theme.colors.slate,
-              opacity: bmriAxisOp,
+              opacity: tickLabelOp,
               whiteSpace: "nowrap",
             }}
           >

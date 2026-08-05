@@ -20,7 +20,20 @@ import { bmriDaily, bmri5m, bmriWeekly } from "../data/bmri";
 const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 370, w: 1520, h: 430 };
 const SEL = { x: 160, y: 196 };
-const T = { tf5m: 107, tf1d: 195, tf1w: 274, triptych: 373, nearFar: 534 };
+const T = {
+  ticker: 0, // "saham yang sama" — the constant, pinned all scene
+  selector: 51, // "dalam timeframe berbeda"
+  tf5m: 107,
+  span5m: 150, // "merangkum 5 menit transaksi"
+  tf1d: 195,
+  tf1w: 274,
+  weekSpan: 339, // "perdagangan" — one weekly swallows five dailies
+  same: 373, // "Sahamnya sama dan sejarahnya juga sama"
+  triptych: 443, // "bisa terasa sangat berbeda"
+  near: 534, // "seberapa dekat"
+  far: 599, // "atau seberapa jauh"
+  settle: 643, // "kamu memilih untuk melihatnya"
+};
 const WIPE = 44;
 const TRI = { y: 330, w: 520, h: 380, gap: 24 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -38,10 +51,11 @@ export const Scene06 = () => {
   const to1w = f >= T.tf1w ? progress(f, T.tf1w, WIPE) : 0;
   const activeIndex = to1d + to1w; // 0 → 1 → 2, slides with the wipes
   const tri = f >= T.triptych ? progress(f, T.triptych, 40) : 0;
+  const near = f >= T.near && f < T.far ? progress(f, T.near, 26) * (1 - progress(f, T.far - 20, 20)) : 0;
+  const far = f >= T.far && f < T.settle ? progress(f, T.far, 26) * (1 - progress(f, T.settle - 20, 20)) : 0;
+  const tickerPulse = f >= T.same && f < T.same + 26 ? Math.sin(((f - T.same) / 26) * Math.PI) : 0;
 
   const bigOp = 1 - tri;
-  const nearFar =
-    f >= T.nearFar && f < T.nearFar + 90 ? Math.sin(((f - T.nearFar) / 90) * Math.PI) : 0;
 
   const triX = (i: number) => (theme.canvas.width - (TRI.w * 3 + TRI.gap * 2)) / 2 + i * (TRI.w + TRI.gap);
 
@@ -60,7 +74,17 @@ export const Scene06 = () => {
         }}
       />
 
-      <TimeframeSelector x={SEL.x} y={SEL.y} activeIndex={activeIndex} />
+      {f >= T.selector && (
+        <div style={{ opacity: fadeIn(f, T.selector, 20) }}>
+          <TimeframeSelector x={SEL.x} y={SEL.y} activeIndex={activeIndex} />
+        </div>
+      )}
+
+      {/* the constant across every timeframe */}
+      <div style={{ transform: `scale(${1 + 0.05 * tickerPulse})`, transformOrigin: `${SEL.x}px 224px` }}>
+        <Chip label="BMRI" x={SEL.x} y={224} variant="slate" anchor="left" startFrame={T.ticker + 10} />
+      </div>
+      <Chip label="Periode Sama" x={SEL.x + 190} y={224} variant="indigo" anchor="left" startFrame={T.same} opacity={1 - tri} />
 
       {/* the active chart — each timeframe wipes over the previous one */}
       {bigOp > 0.001 && (
@@ -89,8 +113,7 @@ export const Scene06 = () => {
       {/* triptych — the three silhouettes side by side */}
       {tri > 0.001 &&
         VIEWS.map((v, i) => {
-          const isMid = i === 1;
-          const s = isMid ? 1 + 0.04 * nearFar : 1;
+          const s = 1 + 0.05 * (i === 0 ? near : i === 2 ? far : 0);
           const box: Box = { x: triX(i) + 34, y: TRI.y + 96, w: TRI.w - 68, h: TRI.h - 150 };
           return (
             <div key={v.label} style={{ opacity: tri, transform: `scale(${s})`, transformOrigin: `${triX(i) + TRI.w / 2}px ${TRI.y + TRI.h / 2}px` }}>
@@ -125,6 +148,25 @@ export const Scene06 = () => {
             </div>
           );
         })}
+
+      {tri > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: TRI.y + TRI.h + 56,
+            width: theme.canvas.width,
+            textAlign: "center",
+            fontFamily: theme.type.family,
+            fontSize: theme.type.header.size,
+            fontWeight: theme.type.header.weight,
+            color: theme.colors.slate,
+            opacity: fadeIn(f, T.settle, 24),
+          }}
+        >
+          Jarak pandang yang kamu pilih
+        </div>
+      )}
     </SafeArea>
   );
 };

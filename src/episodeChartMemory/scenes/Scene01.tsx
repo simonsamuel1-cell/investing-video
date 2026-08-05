@@ -21,8 +21,23 @@ import { bmriDaily, WIN } from "../data/bmri";
 // lands on card chrome.
 const CARD = { x: 96, y: 160, w: 1728, h: 812 };
 const INNER = { x: 160, y: 250, w: 1500, h: 620 };
-const T = { chartIn: 0, trend: 208, pulse: 241, stack: 272, dim: 372, caption: 405 };
-const STACK_STEP = 24; // frames between each indicator entering
+const T = {
+  chartIn: 3, // "Pertama kali melihat chart saham"
+  look: 58, // "banyak orang langsung berpikir" — the frame eases back, as if studied
+  thought: 106, // "Ini pasti cuma bisa dibaca"
+  thoughtDim: 149, // "Bukan buat saya"
+  trend: 208, // "Garis di mana-mana"
+  pulse: 241, // "Candlestick"
+  ma20: 272, // "Indikator bertumpuk"
+  ma50: 288,
+  bb: 290,
+  rsi: 315, // "sampai chart-nya sendiri"
+  macd: 345,
+  legend: 315, // 5 chips across f315–f395
+  dim: 380, // "hampir tidak terlihat"
+  caption: 405, // "Rasanya rumit"
+};
+const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 const LEGEND_OPACITY = [1, 0.85, 0.7, 0.55, 0.4];
 // ═══════════════════════════════════════════════════════════════════════════
@@ -53,8 +68,8 @@ export const Scene01 = () => {
   const f = useCurrentFrame();
 
   // price pane compresses as the sub-panes arrive
-  const rsiIn = progress(f, T.stack + STACK_STEP * 3, 26);
-  const macdIn = progress(f, T.stack + STACK_STEP * 4, 26);
+  const rsiIn = progress(f, T.rsi, 26);
+  const macdIn = progress(f, T.macd, 26);
   const priceH = INNER.h * (1 - 0.38 * rsiIn - 0.17 * macdIn);
   const priceBox = { ...INNER, h: priceH };
   const g = chartGeom(bmriDaily, WINDOW, priceBox);
@@ -73,10 +88,13 @@ export const Scene01 = () => {
   // one-cycle brightness pulse on the candle series
   const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
+  const thoughtDim = f >= T.thoughtDim ? progress(f, T.thoughtDim, 24) : 0;
+  const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
+  const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
-  const ma20 = f >= T.stack ? progress(f, T.stack, 30) : 0;
-  const ma50 = f >= T.stack + STACK_STEP ? progress(f, T.stack + STACK_STEP, 30) : 0;
-  const bb = f >= T.stack + STACK_STEP * 2 ? progress(f, T.stack + STACK_STEP * 2, 30) : 0;
+  const ma20 = f >= T.ma20 ? progress(f, T.ma20, 30) : 0;
+  const ma50 = f >= T.ma50 ? progress(f, T.ma50, 30) : 0;
+  const bb = f >= T.bb ? progress(f, T.bb, 30) : 0;
 
   const trendLine = (ia: number, ib: number, useLow: boolean) => {
     const x1 = g.cx(ia);
@@ -94,7 +112,15 @@ export const Scene01 = () => {
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", inset: 0, filter: `brightness(${1 - 0.2 * dim})` }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          filter: `brightness(${1 - 0.2 * dim})`,
+          transform: `scale(${cardScale})`,
+          transformOrigin: "960px 566px",
+        }}
+      >
         {/* chart card */}
         <div
           style={{
@@ -162,14 +188,25 @@ export const Scene01 = () => {
             y={210}
             variant="indigo"
             anchor="left"
-            startFrame={T.stack + STACK_STEP * i}
+            startFrame={T.legend + LEGEND_STEP * i}
             opacity={LEGEND_OPACITY[i]}
           />
         ))}
       </div>
 
+      {/* the doubt the VO names, before the clutter piles on */}
+      <Chip
+        label="Cuma buat profesional?"
+        x={CARD.x + 64}
+        y={912}
+        variant="slate"
+        anchor="left"
+        startFrame={T.thought}
+        opacity={1 - 0.45 * thoughtDim}
+      />
+
       {/* closing caption, above the subtitle zone */}
-      <Chip label="Rumit?" x={960} y={912} variant="slate" anchor="center" startFrame={T.caption} />
+      <Chip label="Rumit?" x={1500} y={912} variant="slate" anchor="center" startFrame={T.caption} />
     </SafeArea>
   );
 };
