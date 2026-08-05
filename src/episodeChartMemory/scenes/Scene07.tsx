@@ -10,7 +10,7 @@ import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { Ping } from "../components/Ping";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, type Box } from "../helpers";
+import { progress, fadeOut, type Box } from "../helpers";
 import { bmri5m, bmriWeekly } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -31,6 +31,11 @@ const T = {
   capRight: 548, // "arah besar tempat keputusan itu diambil"
   pulse: 631, // "Keduanya berguna"
   rule: 667, // "tetapi menjawab"
+  // "pertanyaan yang berbeda" — the two captions become the questions
+  // themselves. Global 4418; this scene ends at 4471, so this is as late as the
+  // swap can land and still be readable.
+  questions: 698,
+  swapDur: 8, // old label clears before the new one arrives — they never overlap
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -68,6 +73,7 @@ export const Scene07 = () => {
   // the noisy side steps back while the trend side is introduced, then returns
   const leftDim = 1 - 0.35 * rightIn * (1 - (f >= T.capLeft ? progress(f, T.capLeft, 26) : 0));
   const ruleP = f >= T.rule ? progress(f, T.rule, 30) : 0;
+  const swapOut = f >= T.questions ? fadeOut(f, T.questions, T.swapDur) : 1;
   const pulseL = f >= T.pulse && f < T.pulse + 26 ? Math.sin(((f - T.pulse) / 26) * Math.PI) : 0;
   const pulseR = pulseL;
 
@@ -171,9 +177,39 @@ export const Scene07 = () => {
         </svg>
       )}
 
-      {/* the different question each side answers — one chip per card */}
-      <Chip label="Kapan" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.capLeft} />
-      <Chip label="Kemana?" x={RIGHT.x + RIGHT.w / 2} y={RIGHT.y + RIGHT.h + 52} variant="indigo" anchor="center" startFrame={T.capRight} />
+      {/* One caption per card. On the "pertanyaan yang berbeda" beat each one
+          is replaced, in place, by the question it stands for. */}
+      {f < T.questions + T.swapDur && (
+        <>
+          <Chip
+            label="Kapan bertindak"
+            x={LEFT.x + LEFT.w / 2}
+            y={LEFT.y + LEFT.h + 52}
+            variant="slate"
+            anchor="center"
+            startFrame={T.capLeft}
+            opacity={swapOut}
+          />
+          <Chip
+            label="Arah besar"
+            x={RIGHT.x + RIGHT.w / 2}
+            y={RIGHT.y + RIGHT.h + 52}
+            variant="indigo"
+            anchor="center"
+            startFrame={T.capRight}
+            opacity={swapOut}
+          />
+        </>
+      )}
+      <Chip label="Kapan?" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.questions + T.swapDur} />
+      <Chip
+        label="Kemana?"
+        x={RIGHT.x + RIGHT.w / 2}
+        y={RIGHT.y + RIGHT.h + 52}
+        variant="indigo"
+        anchor="center"
+        startFrame={T.questions + T.swapDur}
+      />
     </SafeArea>
   );
 };
