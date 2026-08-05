@@ -148,9 +148,13 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
         <Chip
           label="Harga Penutupan"
           x={cx(b) - 22}
-          y={scale(bmriDaily[b].c) - 74}
+          // y sits just below the Line/Candlestick selector; x is unchanged, so
+          // the connector still runs down to the last close.
+          y={SEG.y + SEG.h + 40}
           variant="indigo"
           anchor="right"
+          bare
+          size={theme.type.chip.size - 4}
           startFrame={T.closeChip}
           connectorTo={{ x: cx(b), y: scale(bmriDaily[b].c) - 10 }}
         />

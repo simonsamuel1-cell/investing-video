@@ -27,8 +27,6 @@ const T = {
   band: 148, // "suatu area harga pernah membuat pembeli masuk"
   t1: 190,
   t2: 229, // "sering kembali menarik perhatian"
-  cluster1: 301, // "Ada trader yang pernah membeli di sana"
-  cluster2: 372, // "yang menunggu kesempatan"
   t3: 429, // "kedua. Ingatan kolektif itu meninggalkan jejak"
   deepen: 500,
   trace: 564, // "Karena manusia mengingat harga"
@@ -46,9 +44,6 @@ export const Scene08 = () => {
   const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const bandDraw = f >= T.band ? progress(f, T.band, 46) : 0;
   const deepen = f >= T.deepen ? progress(f, T.deepen, 30) : 0;
-  const cluster1 = f >= T.cluster1 ? progress(f, T.cluster1, 26) : 0;
-  const cluster2 = f >= T.cluster2 ? progress(f, T.cluster2, 26) : 0;
-  const drop = f >= T.t3 ? progress(f, T.t3, 30) : 0; // the waiting cluster steps in
   const trace = f >= T.trace ? progress(f, T.trace, 46) : 0;
   const ghosts = f >= T.ghosts && f < T.ghosts + 60 ? Math.sin(((f - T.ghosts) / 60) * Math.PI) : 0;
   const fill = interpolate(deepen, [0, 1], [0.08, 0.14]);
@@ -92,31 +87,9 @@ export const Scene08 = () => {
         Pasar punya ingatan.
       </div>
 
-      {/* who is already in, and who is still waiting */}
-      {(cluster1 > 0.001 || cluster2 > 0.001) && (
+      {/* the trace the area leaves, and the shape the three bounces share */}
+      {(trace > 0.001 || ghosts > 0.001) && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-          {cluster1 > 0.001 &&
-            [0, 1, 2, 3].map((k) => (
-              <circle
-                key={`a${k}`}
-                cx={g.cx(ZONE_TOUCH_IDX[0]) - 30 + k * 20}
-                cy={g.scale(bmriDaily[ZONE_TOUCH_IDX[0]].l) + 34}
-                r={5}
-                fill={theme.colors.indigo}
-                opacity={0.85 * Math.max(0, Math.min(1, cluster1 * 4 - k))}
-              />
-            ))}
-          {cluster2 > 0.001 &&
-            [0, 1, 2].map((k) => (
-              <circle
-                key={`b${k}`}
-                cx={g.cx(ZONE_TOUCH_IDX[2]) - 20 + k * 20}
-                cy={yTop - 46 + drop * (yTop - 46 - (yBot - 10)) * -1}
-                r={5}
-                fill={theme.colors.cyan}
-                opacity={0.85 * Math.max(0, Math.min(1, cluster2 * 3 - k))}
-              />
-            ))}
           {/* the trace the three touches leave along the band */}
           {trace > 0.001 && (
             <line
@@ -154,29 +127,16 @@ export const Scene08 = () => {
         <Ping key={idx} x={g.cx(idx)} y={g.scale(bmriDaily[idx].l)} startFrame={[T.t1, T.t2, T.t3][i]} variant="cyan" />
       ))}
 
-      {/* chips alternate sides of the band so they never stack */}
+      {/* the one chip on the band — below it, hanging off the first touch */}
       <Chip
         label="Pembeli masuk"
         x={g.cx(ZONE_TOUCH_IDX[0])}
-        y={yTop - 76}
+        y={yBot + 76}
         variant="cyan"
         anchor="center"
         startFrame={T.t1 + 8}
-        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yTop - 8 }}
+        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yBot + 8 }}
       />
-      <Chip
-        label="Kesempatan kedua"
-        x={g.cx(ZONE_TOUCH_IDX[2])}
-        y={yBot + 76}
-        variant="indigo"
-        anchor="center"
-        startFrame={T.t3 + 8}
-        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[2]), y: yBot + 8 }}
-      />
-
-      {/* the trace the area leaves behind */}
-      {/* inside the band's right end — the price axis owns the margin outside it */}
-      <Chip label="3× Disentuh" x={CHART.x + CHART.w - 20} y={(yTop + yBot) / 2} variant="indigo" anchor="right" startFrame={T.deepen} />
     </SafeArea>
   );
 };
