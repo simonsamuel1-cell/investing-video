@@ -30,11 +30,15 @@ import { PALETTES, type Palette, type PaletteName } from "./theme";
 type Segment = { from: number; palette: PaletteName; fade: number };
 
 export const SEGMENTS: Segment[] = [
+  // Satu palet untuk seluruh episode — warnanya sama persis dengan ChartMemory2.
+  // Percobaan ungu di bagian contoh dicabut: dua bagian itu terasa janggal.
+  //
+  // Kalau mau dicoba lagi, pembagiannya begini (dan mesinnya masih utuh):
+  //   { from: 489,  palette: "ungu",   fade: 0  },  // SC02 — harga cabai
+  //   { from: 1097, palette: "terang", fade: 90 },  // luntur sepanjang morph
+  //   { from: 4472, palette: "ungu",   fade: 0  },  // SC08 — ingatan pasar
+  //   { from: 5192, palette: "terang", fade: 30 },
   { from: 0, palette: "terang", fade: 0 },
-  { from: 489, palette: "ungu", fade: 0 }, // SC02 — contoh harga cabai
-  { from: 1097, palette: "terang", fade: 90 }, // luntur sepanjang morph
-  { from: 4472, palette: "ungu", fade: 0 }, // SC08 — contoh ingatan pasar
-  { from: 5192, palette: "terang", fade: 30 },
 ];
 // ═══════════════════════════════════════════════════════════════════════════
 
