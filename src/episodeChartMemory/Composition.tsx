@@ -8,7 +8,7 @@
  * retime these against the recorded VO and cascade the downstream values.
  */
 import React from "react";
-import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
+import { AbsoluteFill, Sequence, Audio, Img, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "./theme";
 import { ChartContinuity } from "./continuity/ChartContinuity";
 import { Scene01 } from "./scenes/Scene01";
@@ -27,6 +27,14 @@ export const TOTAL_FRAMES = 6606; // 03:40.10 @30fps — VO-LOCKED (§8 recalibr
 // 6606 frames. Every from/duration below and every scene-local beat is now
 // derived from VIDEO_01_-_Chart_fixed.srt (106 cues) — not a wpm estimate.
 const HAS_VO = true;
+
+/**
+ * Brand watermark — a full-frame transparent PNG whose mark sits at
+ * x 1538–1853, y 45–142, i.e. inside the 360×150 top-right clear zone every
+ * scene already keeps empty. Held at half opacity so it never competes with
+ * the chart, and faded at both ends so it doesn't pop on the first frame.
+ */
+const WATERMARK = { fade: 12, opacity: 0.5 };
 
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
   { from: 0, duration: 489, Component: Scene01 },
@@ -64,6 +72,14 @@ const Episode = ({
   muted = false,
 }: ChartMemoryProps) => {
   const pal = usePalette();
+  const f = useCurrentFrame();
+  const watermarkOpacity =
+    interpolate(
+      f,
+      [0, WATERMARK.fade, TOTAL_FRAMES - WATERMARK.fade, TOTAL_FRAMES],
+      [0, 1, 1, 0],
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+    ) * WATERMARK.opacity;
   return (
   <AbsoluteFill style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
@@ -79,6 +95,11 @@ const Episode = ({
 
     {/* Burned-in subtitles live in the reserved bottom band. */}
     {showSubtitles && <Subtitles cues={subtitles} />}
+
+    {/* Brand watermark — above everything, present for the whole episode. */}
+    <AbsoluteFill style={{ opacity: watermarkOpacity, zIndex: 100 }}>
+      <Img src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
+    </AbsoluteFill>
 
     {HAS_VO && <Audio src={staticFile(audioSrc)} muted={muted} />}
   </AbsoluteFill>
