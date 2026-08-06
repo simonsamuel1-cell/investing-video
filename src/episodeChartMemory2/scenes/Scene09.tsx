@@ -10,9 +10,12 @@ import { StatementText } from "../components/StatementText";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, textReveal, type Box } from "../helpers";
+import { ADV, follow, voiceEmphasis } from "../advanced";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
+/** This scene's `from` in Composition.tsx — the voice-over table is global. */
+const SCENE_FROM = 5192;
 const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
 // ── HANDOFF from SC08 ───────────────────────────────────────────────────────
 // At global 5191 the only thing on screen is SC08's candle series: BMRI daily
@@ -97,6 +100,11 @@ export const Scene09 = () => {
 
   const ruleW = 900;
 
+  // ── voice-driven emphasis ──
+  // The statement is the one line in this episode the narrator leans on, so it
+  // takes its weight from the recording rather than from a number I picked.
+  const emph = ADV.audio ? voiceEmphasis(SCENE_FROM + f).scale : 1;
+
   return (
     <SafeArea>
       <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} dimOpacity={texturePlus} />
@@ -119,12 +127,19 @@ export const Scene09 = () => {
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
-      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
-      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
+      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} emphasis={emph} />
+      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} emphasis={emph} />
 
-      {CHIPS.map((c, i) => (
-        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
-      ))}
+      {CHIPS.map((c, i) => {
+        // OVERLAPPING ACTION — the row used to rise as one block. Each chip now
+        // starts a few frames after the one to its left and settles past its
+        // mark before coming back. Chips are UI, so the overshoot is allowed;
+        // the type above gets no such thing.
+        const rise = ADV.overlap ? follow(f, T.lift, 26, i, { lag: 5, overshoot: 0.7 }) : lift;
+        return (
+          <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * rise} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
+        );
+      })}
 
       {rule > 0.001 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>

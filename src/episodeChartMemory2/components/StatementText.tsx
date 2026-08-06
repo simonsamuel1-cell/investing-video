@@ -15,6 +15,7 @@ export const StatementText = ({
   weight,
   color,
   wordStagger = 6,
+  emphasis = 1,
 }: {
   text: string;
   y: number; // centre-y of the line
@@ -23,6 +24,8 @@ export const StatementText = ({
   weight: number;
   color: string;
   wordStagger?: number;
+  /** Whole-line scale, driven by the voice-over. 1 = untouched. */
+  emphasis?: number;
 }) => {
   const f = useCurrentFrame();
   if (f < startFrame) return null;
@@ -33,7 +36,7 @@ export const StatementText = ({
         left: 0,
         top: y,
         width: theme.canvas.width,
-        transform: "translateY(-50%)",
+        transform: emphasis === 1 ? "translateY(-50%)" : `translateY(-50%) scale(${emphasis})`,
         display: "flex",
         justifyContent: "center",
         gap: 18,

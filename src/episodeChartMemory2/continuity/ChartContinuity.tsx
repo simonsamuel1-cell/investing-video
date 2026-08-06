@@ -8,13 +8,19 @@
  *   Phase B (local 608–1190)  SC03  chili line morphs into the BMRI closes line
  *   Phase C (local 1190–1997) SC04  line mask-wipes into candlesticks + anatomy
  *   Phase D (local 1997–2519) SC05  candles de-emphasize; axes + crosshair
+ *
+ * The chart group is written as `chartGroupAt(f)` — a PURE function from a
+ * frame (fractional allowed) to its picture. Rendering it once gives the normal
+ * frame; rendering it at several instants inside one frame's exposure and
+ * averaging gives true sub-frame motion blur. See advanced.ts §2.
  */
-import { useCurrentFrame, interpolate, Sequence } from "remotion";
+import { AbsoluteFill, useCurrentFrame, interpolate, Sequence } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
 import { progress, progressInOut, fmtPrice, type Box } from "../helpers";
+import { ADV, SUBFRAME_SAMPLES, subframeAlpha, subframeTimes, morphPolyline } from "../advanced";
 import { bmriDaily, WIN } from "../data/bmri";
 import { chiliMonthly } from "../data/chili";
 import { Scene02 } from "../scenes/Scene02";
@@ -89,10 +95,17 @@ const chiliAt = (t: number) => {
   return chiliMonthly[i].price + (chiliMonthly[i + 1].price - chiliMonthly[i].price) * q;
 };
 
-export const ChartContinuity = () => {
-  const f = useCurrentFrame();
+const [A_IDX, B_IDX] = WINDOW;
+const N_PTS = B_IDX - A_IDX + 1;
+const CHILI_LO = Math.min(...chiliMonthly.map((c) => c.price));
+const CHILI_HI = Math.max(...chiliMonthly.map((c) => c.price));
 
-  // ── geometry (recomputed each frame; the ELEMENT never remounts) ──
+/**
+ * Everything geometric, as a pure function of the (possibly fractional) local
+ * frame. Nothing here reads useCurrentFrame, which is what lets the same code
+ * serve both the real frame and the sub-frame exposure samples.
+ */
+const geomAt = (f: number) => {
   const narrow = f >= K.narrow ? progress(f, K.narrow, 60) : 0;
   const widen = f >= K.widen ? progress(f, K.widen, K.widenDur) : 0;
   const boxW = interpolate(narrow - widen, [0, 1], [BOX_FULL.w, BOX_NARROW_W], {
@@ -120,35 +133,48 @@ export const ChartContinuity = () => {
     f < K.cut ? WINDOW : [interpolate(pullOut, [0, 1], [WINDOW_DETAIL[0], WINDOW[0]]), WINDOW[1]];
 
   const g = chartGeom(bmriDaily, win, box);
-  const [a, b] = WINDOW;
-  const n = b - a + 1;
 
   const xs: number[] = [];
   const bmriY: number[] = [];
-  for (let k = 0; k < n; k++) {
-    xs.push(g.cx(a + k));
-    bmriY.push(g.scale(bmriDaily[a + k].c));
+  for (let k = 0; k < N_PTS; k++) {
+    xs.push(g.cx(A_IDX + k));
+    bmriY.push(g.scale(bmriDaily[A_IDX + k].c));
   }
   // chili silhouette resampled onto the same x positions
-  const chiliLo = Math.min(...chiliMonthly.map((c) => c.price));
-  const chiliHi = Math.max(...chiliMonthly.map((c) => c.price));
   const chiliScaleY = (p: number) =>
-    interpolate(p, [chiliLo - (chiliHi - chiliLo) * 0.12, chiliHi + (chiliHi - chiliLo) * 0.12], [box.y + box.h, box.y], {
+    interpolate(p, [CHILI_LO - (CHILI_HI - CHILI_LO) * 0.12, CHILI_HI + (CHILI_HI - CHILI_LO) * 0.12], [box.y + box.h, box.y], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
   const chiliY: number[] = [];
-  for (let k = 0; k < n; k++) chiliY.push(chiliScaleY(chiliAt(k / (n - 1))));
+  for (let k = 0; k < N_PTS; k++) chiliY.push(chiliScaleY(chiliAt(k / (N_PTS - 1))));
 
-  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera };
+  return { box, win, camera, pullOut, g, xs, bmriY, chiliY, chiliScaleY };
+};
 
-  // ── chart mode timeline ──
+/**
+ * The chart group — axis furniture, detail card, line and candles — at one
+ * instant. Rendered once per frame normally; rendered SUBFRAME_SAMPLES times
+ * and averaged while the camera is moving.
+ */
+const chartGroupAt = (f: number) => {
+  const { box, win, camera, pullOut, g, xs, bmriY, chiliY } = geomAt(f);
+
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
   const lineDraw = f >= K.lineDraw ? progress(f, K.lineDraw, 46) : 0;
   const wipe = f >= K.wipe ? progress(f, K.wipe, K.wipeDur) : 0;
   const candleDim = f >= K.dimCandles ? interpolate(progress(f, K.dimCandles, 45), [0, 1], [1, 0.3]) : 1;
 
-  const linePts = xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
+  // The chili curve becoming the BMRI curve. Index-paired lerp slides every
+  // point straight up or down and the shape sags through the middle;
+  // arc-length pairing sends feature to feature. Endpoints are untouched — at
+  // t = 0 and t = 1 both routes return the identical arrays.
+  const chiliPts = xs.map((x, k) => ({ x, y: chiliY[k] }));
+  const bmriPts = xs.map((x, k) => ({ x, y: bmriY[k] }));
+  const linePts = ADV.arcMorph
+    ? morphPolyline(chiliPts, bmriPts, morphT, 120)
+    : xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
+
   // SC04 dims the line one step before the wipe begins
   const lineDimRaw = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
   const pairMask = interpolate(f, [K.pairIn, K.pairIn + 34, K.pairOut, K.pairOut + 26], [1, 0, 0, 1], {
@@ -169,10 +195,10 @@ export const ChartContinuity = () => {
   const axisOp = Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
   const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
-  const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
+  const dateIdx = [A_IDX, A_IDX + Math.floor(N_PTS * 0.33), A_IDX + Math.floor(N_PTS * 0.66), B_IDX];
 
   return (
-    <SafeArea>
+    <>
       {/* ── axis furniture ── */}
       {axisDraw > 0.001 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
@@ -273,6 +299,37 @@ export const ChartContinuity = () => {
       )}
       {wipe > 0.001 && (
         <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
+      )}
+    </>
+  );
+};
+
+export const ChartContinuity = () => {
+  const f = useCurrentFrame();
+
+  // geometry handed to the phase overlays — always the REAL frame
+  const { box, win, camera, g, xs, bmriY, chiliY, chiliScaleY } = geomAt(f);
+  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera };
+
+  // ── sub-frame motion blur across the camera move ──
+  // The exposure window is exactly the move. Because the move eases in and out,
+  // the samples collapse onto each other at both ends: the blur arrives and
+  // leaves at zero, so there is no frame where it switches on.
+  const blurring = ADV.subframeBlur && f >= K.push && f <= K.pull + K.pullDur;
+
+  return (
+    <SafeArea>
+      {blurring ? (
+        // Running mean: layer i at alpha 1/(i+1). Each layer carries its own
+        // opaque ground, which is what makes that identity hold.
+        subframeTimes(f, SUBFRAME_SAMPLES, 0.5, K.cut).map((ti, i) => (
+          <AbsoluteFill key={i} style={{ opacity: subframeAlpha(i) }}>
+            <AbsoluteFill style={{ backgroundColor: theme.colors.bg }} />
+            {chartGroupAt(ti)}
+          </AbsoluteFill>
+        ))
+      ) : (
+        chartGroupAt(f)
       )}
 
       {/* ── per-phase overlays ──

@@ -41,7 +41,7 @@ export const CAPTION = {
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const ClosingCaption = ({ startFrame }: { startFrame: number }) => {
+export const ClosingCaption = ({ startFrame, emphasis = 1 }: { startFrame: number; emphasis?: number }) => {
   const f = useCurrentFrame();
   if (f < startFrame) return null;
   const r = textReveal(f, startFrame, CAPTION.revealDur, CAPTION.rise);
@@ -52,7 +52,7 @@ export const ClosingCaption = ({ startFrame }: { startFrame: number }) => {
         position: "absolute",
         left: CAPTION.x,
         top: CAPTION.y,
-        transform: `translate(-50%, ${r.y}px)`,
+        transform: emphasis === 1 ? `translate(-50%, ${r.y}px)` : `translate(-50%, ${r.y}px) scale(${emphasis})`,
         fontFamily: theme.type.family,
         fontSize: CAPTION.size,
         fontWeight: CAPTION.weight,

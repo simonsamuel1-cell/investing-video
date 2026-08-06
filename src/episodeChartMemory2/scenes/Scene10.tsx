@@ -12,10 +12,18 @@ import { Chip } from "../components/Chip";
 import { ClosingCaption } from "../components/ClosingCaption";
 import { theme } from "../theme";
 import { progress, priceScale, type Box } from "../helpers";
+import { ADV, follow, memoryParticles, voiceEmphasis, window01 } from "../advanced";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
+/** This scene's `from` in Composition.tsx — the voice-over table is global. */
+const SCENE_FROM = 5946;
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
+// ── the memory field ────────────────────────────────────────────────────────
+// Released as the camera starts pulling back, converging onto the closing-price
+// line, gone again before the last frame. See advanced.ts §4 for why every
+// position is solved rather than integrated.
+const FIELD = { count: 240, start: 428, settle: 118, out: 600, outDur: 46, spread: 190 };
 const T = {
   ticks: 74, // "mengambil keputusan nyata" — each candle ticks once
   fear: 142,
@@ -65,6 +73,32 @@ export const Scene10 = () => {
   const chipPulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const tickIn = f >= T.ticks ? progress(f, T.ticks, 60) : 0;
 
+  const globalF = SCENE_FROM + f;
+  const voice = voiceEmphasis(globalF);
+
+  // ── the memory field ──
+  // Targets are read off the LIVE geometry, so as the camera pulls back the
+  // particles track the line they are settling onto instead of drifting off it.
+  const fieldOp = ADV.particles ? window01(f, FIELD.start, FIELD.out + FIELD.outDur, FIELD.outDur) : 0;
+  const particles =
+    fieldOp > 0.001
+      ? memoryParticles({
+          count: FIELD.count,
+          frame: f,
+          start: FIELD.start,
+          settle: FIELD.settle,
+          spread: FIELD.spread,
+          energy: ADV.audio ? voice.above : 0,
+          targetAt: (q) => {
+            const idx = win[0] + (win[1] - win[0]) * q;
+            const lo = Math.max(0, Math.min(bmriDaily.length - 1, Math.floor(idx)));
+            const hi = Math.min(bmriDaily.length - 1, lo + 1);
+            const t = idx - lo;
+            return { x: g.cx(idx), y: scale(bmriDaily[lo].c + (bmriDaily[hi].c - bmriDaily[lo].c) * t) };
+          },
+        })
+      : [];
+
   return (
     <SafeArea>
       <CandlestickChart
@@ -75,6 +109,15 @@ export const Scene10 = () => {
         scaleOverride={scale}
         dimOpacity={interpolate(zoom, [0, 1], [1, 0.55])}
       />
+
+      {/* the market's memory, assembling — every position solved, never integrated */}
+      {particles.length > 0 && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+          {particles.map((p, i) => (
+            <circle key={i} cx={p.x} cy={p.y} r={p.r} fill={theme.colors.indigo} opacity={p.opacity * fieldOp} />
+          ))}
+        </svg>
+      )}
 
       {/* each visible candle ticks once — one decision at a time */}
       {tickIn > 0.001 && chipsOp > 0.001 && (
@@ -89,19 +132,25 @@ export const Scene10 = () => {
       )}
 
       {chipsOp > 0.001 &&
-        EMOTIONS.map((e) => {
+        EMOTIONS.map((e, i) => {
           const idx = TIGHT[0] + e.k;
           const d = bmriDaily[idx];
           const anchorY = e.above ? scale(d.h) : scale(d.l);
           // Clamped so a chip on an extreme candle can never reach the top-150
           // logo band or the bottom-108 subtitle band.
           const chipY = e.above ? Math.max(CHIP_MIN_Y, anchorY - 72) : Math.min(CHIP_MAX_Y, anchorY + 72);
+          // OVERLAPPING ACTION — the five chips used to leave in lockstep. They
+          // now let go one after another, so the release reads as five things
+          // departing rather than one object with five labels.
+          const rel = ADV.overlap ? follow(f, T.release, 34, i, { lag: 6 }) : 0;
+          const op = ADV.overlap ? 1 - rel : chipsOp;
+          const dy = ADV.overlap ? rel * 22 : drift;
           return (
             <div
               key={e.label}
               style={{
-                opacity: chipsOp,
-                transform: `translateY(${e.above ? -drift : drift}px) scale(${1 + 0.05 * chipPulse})`,
+                opacity: op,
+                transform: `translateY(${e.above ? -dy : dy}px) scale(${1 + 0.05 * chipPulse})`,
                 transformOrigin: `${g.cx(idx)}px ${chipY}px`,
               }}
             >
@@ -119,7 +168,7 @@ export const Scene10 = () => {
         })}
 
       {/* position and type live in ClosingCaption.tsx */}
-      <ClosingCaption startFrame={T.caption} />
+      <ClosingCaption startFrame={T.caption} emphasis={ADV.audio ? voice.scale : 1} />
     </SafeArea>
   );
 };
