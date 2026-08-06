@@ -49,7 +49,7 @@ const T = {
   far: 599, // "atau seberapa jauh"
   settle: 643, // "kamu memilih untuk melihatnya"
 };
-const WIPE = 44;
+const WIPE = 24; // pergantian timeframe — dipercepat dari 44
 const TRI = { y: 330, w: 520, h: 380, gap: 24 };
 // ── HANDOFF to SC07 ─────────────────────────────────────────────────────────
 // The 5M triptych card IS SC07's left card, only smaller. Over these frames the
@@ -89,6 +89,12 @@ export const Scene06 = () => {
   const tri = f >= T.triptych ? progress(f, T.triptych, 40) : 0;
   const near = f >= T.near && f < T.far ? progress(f, T.near, 26) * (1 - progress(f, T.far - 20, 20)) : 0;
   const far = f >= T.far && f < T.settle ? progress(f, T.far, 26) * (1 - progress(f, T.settle - 20, 20)) : 0;
+
+  // Price labels sit to the RIGHT of the box, outside the wipe's clip, so during
+  // a changeover BOTH charts' labels were on screen at once and stacked. Each
+  // chart's axes now leave early and arrive late, so only one set is ever up.
+  const axesIn = (t: number) => Math.max(0, Math.min(1, t * 3 - 2));
+  const axesOut = (t: number) => Math.max(0, 1 - t * 3);
 
   const bigOp = 1 - tri;
 
@@ -139,15 +145,17 @@ export const Scene06 = () => {
           )}
           {f >= T.tf5m && to1d < 1 && (
             <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px 0px ${CHART.x + CHART.w * to1d}px)` }}>
-              <CandlestickChart data={VIEWS[0].data} window={VIEWS[0].win} box={CHART} revealProgress={to5m} />
+              <CandlestickChart data={VIEWS[0].data} window={VIEWS[0].win} box={CHART} revealProgress={to5m} axesOpacity={axesIn(to5m) * axesOut(to1d)} />
             </div>
           )}
           {to1d > 0.001 && to1w < 1 && (
             <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px 0px ${CHART.x + CHART.w * to1w}px)` }}>
-              <CandlestickChart data={VIEWS[1].data} window={VIEWS[1].win} box={CHART} revealProgress={to1d} />
+              <CandlestickChart data={VIEWS[1].data} window={VIEWS[1].win} box={CHART} revealProgress={to1d} axesOpacity={axesIn(to1d) * axesOut(to1w)} />
             </div>
           )}
-          {to1w > 0.001 && <CandlestickChart data={VIEWS[2].data} window={VIEWS[2].win} box={CHART} revealProgress={to1w} />}
+          {to1w > 0.001 && (
+            <CandlestickChart data={VIEWS[2].data} window={VIEWS[2].win} box={CHART} revealProgress={to1w} axesOpacity={axesIn(to1w)} />
+          )}
         </div>
       )}
 
