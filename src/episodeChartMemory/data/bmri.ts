@@ -3,7 +3,7 @@
  *
  * TODO [NEEDS DATA]: replace ALL placeholder series with real BMRI CSVs when supplied:
  *  - bmriDaily:   daily OHLC, longest available history (min ~1yr; more preferred for SC10)
- *  - bmri5m:      one full session of 5-minute OHLC (SC06, SC07)
+ *  - bmri5m:      two sessions of 5-minute OHLC (SC06, SC07)
  *  - bmriWeekly:  weekly OHLC (derive from bmriDaily once real data lands)
  * Placeholders below are seeded (mulberry32) and shaped like plausible BMRI ranges
  * so layouts/motion are reviewable. They are NOT real data — the render is not
@@ -77,26 +77,39 @@ const buildDaily = (): OHLC[] => {
 
 export const bmriDaily: OHLC[] = buildDaily();
 
-// ─── 5-MINUTE (placeholder) — one session, 78 bars ──────────────────────────
+// ─── 5-MINUTE (placeholder) — two sessions, 156 bars ───────────────────────
+// Denser than one session on purpose: the 5m view exists to SHOW NOISE, and
+// noise needs enough bars to read as noise. The VO never states how long the
+// window is — only that one candle covers five minutes — so the count is free.
+// Waypoints stay roughly one per eight bars so the jitter PER BAR is unchanged;
+// stretching the old path over more bars would have made it smoother, not
+// denser.
+const BARS_5M = 156;
+const BARS_PER_SESSION = 78;
+
 const build5m = (): OHLC[] => {
   const rnd = mulberry32(5150731);
   const out: OHLC[] = [];
   const base = bmriDaily[bmriDaily.length - 1].c;
-  // intraday shape: open drift, midday chop, late push — jittery on purpose
+  // session 1: open drift, midday chop, late push — session 2 drifts up
   const PATH = [
     [0, base - 60], [10, base - 10], [18, base - 70], [26, base - 30],
     [34, base - 90], [42, base - 40], [52, base + 10], [60, base - 20],
     [70, base + 50], [77, base + 30],
+    [86, base + 70], [94, base + 20], [102, base + 90], [110, base + 40],
+    [120, base + 110], [130, base + 60], [140, base + 130], [148, base + 90],
+    [155, base + 120],
   ] as const;
   let prev = PATH[0][1];
-  for (let i = 0; i < 78; i++) {
+  for (let i = 0; i < BARS_5M; i++) {
     const target = alongPath(PATH, i);
     const c = Math.round((target + (rnd() - 0.5) * 34) / 5) * 5;
     const o = prev;
     const hi = Math.max(o, c) + Math.round((2 + rnd() * 16) / 5) * 5;
     const lo = Math.min(o, c) - Math.round((2 + rnd() * 16) / 5) * 5;
-    const mins = 9 * 60 + i * 5;
-    out.push({ date: `${pad2(Math.floor(mins / 60))}:${pad2(mins % 60)}`, o, h: hi, l: lo, c });
+    const session = Math.floor(i / BARS_PER_SESSION) + 1;
+    const mins = 9 * 60 + (i % BARS_PER_SESSION) * 5;
+    out.push({ date: `S${session} ${pad2(Math.floor(mins / 60))}:${pad2(mins % 60)}`, o, h: hi, l: lo, c });
     prev = c;
   }
   return out;

@@ -3,7 +3,7 @@
  * A TimeframeSelector drives the same stock through 5M → 1D → 1W with a
  * mask-wipe between each, then the three views resolve into a triptych so the
  * differing silhouettes read side by side.
- * TODO [NEEDS DATA: BMRI 5-minute intraday (one session) + weekly OHLC;
+ * TODO [NEEDS DATA: 5-minute intraday (two sessions) + weekly OHLC;
  * weekly may be derived from daily]
  */
 import { useCurrentFrame } from "remotion";
