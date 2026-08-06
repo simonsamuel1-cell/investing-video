@@ -1,13 +1,118 @@
 /**
  * theme.ts — SINGLE SOURCE OF TRUTH for the "Chart is the Market's Memory" episode.
  * No raw hex, font size/weight, easing curve, or layout number in scene files —
- * everything imports from here. Hues locked: indigo 247 / cyan 192.
- * candleGreen / candleRed appear ONLY inside candle bodies and their wicks.
+ * everything imports from here.
+ *
+ * ── GANTI PALET ─────────────────────────────────────────────────────────────
+ * Ubah SATU baris — `PALETTE` di bawah — untuk mengganti warna seluruh episode:
+ *
+ *   "terang"  latar abu terang, indigo + cyan   (palet asli)
+ *   "gelap"   latar hitam, chart jadi cahaya    (arah 1)
+ *   "kertas"  latar kertas hangat, aksen terakota (arah 2)
+ *
+ * Nama kuncinya adalah PERAN, bukan rona. Di palet "kertas", `cyan` memegang
+ * warna terakota — dia tetap "aksen kedua" di setiap scene yang memakainya.
+ *
+ * candleGreen / candleRed hanya boleh muncul di badan candle dan sumbunya.
  */
 import { Easing } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
+
+// ═══ EDIT ═══════════════════════════════════════════════════════════════════
+const PALETTE: PaletteName = "terang";
+// ═══════════════════════════════════════════════════════════════════════════
+
+type PaletteName = "terang" | "gelap" | "kertas";
+
+type Palette = {
+  bg: string;
+  ink: string;
+  slate: string;
+  indigo: string;
+  cyan: string;
+  candleGreen: string;
+  candleRed: string;
+  indigoTint8: string;
+  indigoTint14: string;
+  indigoTintMA1: string;
+  indigoTintMA2: string;
+  indigoSoft: string;
+  cyanSoft: string;
+  cardBg: string;
+  border: string;
+  muted: string;
+};
+
+const PALETTES: Record<PaletteName, Palette> = {
+  // Asli: hue terkunci indigo 247 / cyan 192.
+  terang: {
+    bg: "#F5F5F5",
+    ink: "#000000",
+    slate: "#626266",
+    indigo: "#5F4DEE",
+    cyan: "#5CC8E3",
+    candleGreen: "#22B573",
+    candleRed: "#E5475D",
+    indigoTint8: "rgba(95, 77, 238, 0.08)",
+    indigoTint14: "rgba(95, 77, 238, 0.14)",
+    indigoTintMA1: "#8F82F4",
+    indigoTintMA2: "#BDB4F9",
+    indigoSoft: "#EFEDFE",
+    cyanSoft: "#EDFDFE",
+    cardBg: "#FFFFFF",
+    border: "#DEDEE0",
+    muted: "#B9B9BD",
+  },
+  // Arah 1 — tanahnya dibalik. Rona merek dipertahankan, hanya diangkat
+  // terangnya supaya tetap terbaca di atas hitam. Candle jadi jauh lebih kuat.
+  gelap: {
+    bg: "#171717",
+    ink: "#F2F2F2",
+    slate: "#9A9AA2",
+    indigo: "#8B7AF7",
+    cyan: "#6FD4EC",
+    candleGreen: "#2ED18A",
+    candleRed: "#FF5E72",
+    indigoTint8: "rgba(139, 122, 247, 0.14)",
+    indigoTint14: "rgba(139, 122, 247, 0.24)",
+    indigoTintMA1: "#9E92F7",
+    indigoTintMA2: "#7268CF",
+    indigoSoft: "#262041",
+    cyanSoft: "#17303A",
+    cardBg: "#1F1F21",
+    border: "#34343A",
+    muted: "#5A5A62",
+  },
+  // Arah 2 — tanah kertas hangat. Indigo merek dipertahankan; cyan diganti
+  // terakota, satu-satunya tempat aturan rona sengaja dilanggar.
+  kertas: {
+    bg: "#F4EFE7",
+    ink: "#1C1917",
+    slate: "#6E6358",
+    indigo: "#5F4DEE",
+    cyan: "#C4622F",
+    candleGreen: "#1E9A63",
+    candleRed: "#CB4A3C",
+    indigoTint8: "rgba(95, 77, 238, 0.08)",
+    indigoTint14: "rgba(95, 77, 238, 0.14)",
+    indigoTintMA1: "#8F82F4",
+    indigoTintMA2: "#BDB4F9",
+    indigoSoft: "#ECE9FC",
+    cyanSoft: "#F8E7DA",
+    cardBg: "#FBF7F0",
+    border: "#E3D9CA",
+    muted: "#B9AB98",
+  },
+};
+
+// Elevasi ikut palet: bayangan hitam tidak terbaca di atas latar hitam.
+const SHADOWS: Record<PaletteName, { rest: string; lift: string }> = {
+  terang: { rest: "0 10px 24px rgba(0, 0, 0, 0.05)", lift: "0 24px 42px rgba(0, 0, 0, 0.10)" },
+  gelap: { rest: "0 10px 24px rgba(0, 0, 0, 0.45)", lift: "0 24px 42px rgba(0, 0, 0, 0.65)" },
+  kertas: { rest: "0 10px 24px rgba(60, 45, 30, 0.06)", lift: "0 24px 42px rgba(60, 45, 30, 0.12)" },
+};
 
 export const theme = {
   canvas: { width: 1920, height: 1080, fps: 30 },
@@ -22,26 +127,7 @@ export const theme = {
     logoZoneH: 150,
     logoMaxContentX: 1368, // content in the top 150px must end at x <= this
   },
-  colors: {
-    bg: "#F5F5F5",
-    ink: "#000000",
-    slate: "#626266",
-    indigo: "#5F4DEE",
-    cyan: "#5CC8E3",
-    // Candle bodies and their wicks ONLY.
-    candleGreen: "#22B573",
-    candleRed: "#E5475D",
-    // Decorative tints — hue-locked to indigo 247.
-    indigoTint8: "rgba(95, 77, 238, 0.08)", // Bollinger band fill
-    indigoTint14: "rgba(95, 77, 238, 0.14)", // deepened zone-band fill
-    indigoTintMA1: "#8F82F4", // MA20
-    indigoTintMA2: "#BDB4F9", // MA50
-    indigoSoft: "#EFEDFE",
-    cyanSoft: "#EDFDFE",
-    cardBg: "#FFFFFF",
-    border: "#DEDEE0",
-    muted: "#B9B9BD",
-  },
+  colors: PALETTES[PALETTE],
   type: {
     family: "Plus Jakarta Sans",
     display: { size: 96, weight: 800 },
@@ -55,10 +141,7 @@ export const theme = {
   stroke: { hair: 1, rule: 2 },
   // Two card elevations; scenes crossfade between them rather than authoring
   // shadow values inline.
-  shadow: {
-    rest: "0 10px 24px rgba(0, 0, 0, 0.05)",
-    lift: "0 24px 42px rgba(0, 0, 0, 0.10)",
-  },
+  shadow: SHADOWS[PALETTE],
   motion: {
     ease: Easing.bezier(0.22, 1, 0.36, 1), // no overshoot
     // Symmetric ease-in-out: slow, fast, slow. Its peak velocity sits exactly at
