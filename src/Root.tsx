@@ -1,10 +1,11 @@
 import { Composition } from "remotion";
 import { ChartMemoryComposition, TOTAL_FRAMES } from "./episodeChartMemory/Composition";
+import { ChartMemoryComposition as ChartMemory2Composition, TOTAL_FRAMES as TOTAL_FRAMES_2 } from "./episodeChartMemory2/Composition";
 
 /**
- * Two compositions, ONE component. The copy shares every scene file — editing a
- * visual changes both. Only the props below (subtitle track, voice-over, and
- * whether either is on) belong to one composition and not the other.
+ * Two INDEPENDENT episodes. ChartMemory2 has its own copy of every scene,
+ * component and data file under src/episodeChartMemory2/ — editing one never
+ * touches the other. Composition ids cannot contain underscores.
  */
 export const Root = () => (
   <>
@@ -18,19 +19,11 @@ export const Root = () => (
     />
     <Composition
       id="ChartMemory2"
-      component={ChartMemoryComposition}
-      durationInFrames={TOTAL_FRAMES}
+      component={ChartMemory2Composition}
+      durationInFrames={TOTAL_FRAMES_2}
       fps={30}
       width={1920}
       height={1080}
-      // Same subtitle track and VO as the original for now — swap these when
-      // the copy gets its own. Composition ids cannot contain underscores.
-      defaultProps={{
-        subtitles: undefined,
-        audioSrc: "vo/chart-memory.mp3",
-        showSubtitles: true,
-        muted: false,
-      }}
     />
   </>
 );
