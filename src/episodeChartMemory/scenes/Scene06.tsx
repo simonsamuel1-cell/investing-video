@@ -19,10 +19,13 @@ import { bmriDaily, bmri5m, bmriWeekly, WIN } from "../data/bmri";
 // Card top clears the 150px logo zone.
 const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
 const CHART: Box = { x: 200, y: 370, w: 1520, h: 430 };
-// One row: [BMRI] [5m][1D][1W]. The ticker chip used to sit ON the selector's
+// One row: [ABCD] [5m][1D][1W]. The ticker chip used to sit ON the selector's
 // first segment, which is why "5m" was invisible.
-const BMRI = { x: 160, y: 224, w: 150 };
-const SEL = { x: BMRI.x + BMRI.w + 12, y: 196 };
+// The ticker is FICTIONAL: the VO never names a stock (0 hits for "BMRI" in
+// the subtitle track) and the series is still a seeded placeholder, so a made
+// -up code is the honest label until real data lands.
+const TICKER = { x: 160, y: 224, w: 150 };
+const SEL = { x: TICKER.x + TICKER.w + 12, y: 196 };
 // ── HANDOFF from SC05 ───────────────────────────────────────────────────────
 // At global 3007 the only thing on screen is ChartContinuity's candle series:
 // BMRI daily over WIN.sc03, in this box, dimmed to this opacity. This scene
@@ -58,7 +61,7 @@ const SC07_CHART: Box = { x: 140, y: 306, w: 682, h: 380 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const VIEWS = [
-  { label: "5M", data: bmri5m, win: [0, bmri5m.length - 1] as [number, number] },
+  { label: "5m", data: bmri5m, win: [0, bmri5m.length - 1] as [number, number] },
   { label: "1D", data: bmriDaily, win: [bmriDaily.length - 60, bmriDaily.length - 1] as [number, number] },
   { label: "1W", data: bmriWeekly, win: [bmriWeekly.length - 30, bmriWeekly.length - 1] as [number, number] },
 ];
@@ -121,7 +124,7 @@ export const Scene06 = () => {
       )}
 
       {/* the constant across every timeframe — sits still; no pulse */}
-      <Chip label="BMRI" x={BMRI.x} y={BMRI.y} variant="slate" anchor="left" width={BMRI.w} startFrame={T.ticker + 10} opacity={clearing} />
+      <Chip label="ABCD" x={TICKER.x} y={TICKER.y} variant="slate" anchor="left" width={TICKER.w} startFrame={T.ticker + 10} opacity={clearing} />
 
       {/* the active chart — each timeframe wipes over the previous one */}
       {bigOp > 0.001 && (

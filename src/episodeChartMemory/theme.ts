@@ -21,7 +21,7 @@ import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const PALETTE: PaletteName = "terang";
+const PALETTE: PaletteName = "gelap";
 // ═══════════════════════════════════════════════════════════════════════════
 
 type PaletteName = "terang" | "gelap" | "kertas";
