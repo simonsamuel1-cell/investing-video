@@ -12,6 +12,10 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeOut, type Box } from "../helpers";
 import { bmri5m, bmriWeekly } from "../data/bmri";
+import { expandT, expandCard, expandChart, expandBlur } from "../transitions/CardExpand";
+
+/** This scene's `from` in Composition — needed to read the shared global curve. */
+const SCENE_FROM = 3720;
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const GAP = 24;
@@ -63,10 +67,18 @@ const REV = reversals();
 
 export const Scene07 = () => {
   const f = useCurrentFrame();
+  const g = f + SCENE_FROM; // the CardExpand curve is defined in global frames
+  // The right card starts growing into SC08's card before this scene ends; the
+  // rest of the scene clears out of its way.
+  const expand = expandT(g);
+  const rightCard = expandCard(g);
   const li = inner(LEFT);
-  const ri = inner(RIGHT);
+  const ri = expand > 0 ? expandChart(g) : inner(RIGHT);
   const gL = chartGeom(bmri5m, W5, li);
   const gR = chartGeom(bmriWeekly, WW, ri);
+  // Everything but the travelling card must be GONE before the boundary, not
+  // half-faded on it — so it clears in the move's first 40%.
+  const clearing = Math.max(0, 1 - expand * 2.5);
 
   const arrow = f >= T.arrow ? progress(f, T.arrow, 56) : 0;
   const rightIn = f >= T.rightIn ? progress(f, T.rightIn, 34) : 0;
@@ -96,7 +108,7 @@ export const Scene07 = () => {
   return (
     <SafeArea>
       {/* the noisy side leads, then steps back while the trend side arrives */}
-      <div style={{ opacity: leftDim }}>
+      <div style={{ opacity: leftDim * clearing }}>
         <div
           style={{
             position: "absolute",
@@ -113,14 +125,20 @@ export const Scene07 = () => {
       </div>
 
       {rightIn > 0.001 && (
-        <div style={{ opacity: rightIn, transform: `translateX(${(1 - rightIn) * 60}px)` }}>
+        <div
+          style={{
+            opacity: rightIn,
+            transform: `translateX(${(1 - rightIn) * 60}px)`,
+            filter: expandBlur(g) > 0.05 ? `blur(${expandBlur(g)}px)` : undefined,
+          }}
+        >
           <div
             style={{
               position: "absolute",
-              left: RIGHT.x,
-              top: RIGHT.y,
-              width: RIGHT.w,
-              height: RIGHT.h,
+              left: rightCard.x,
+              top: rightCard.y,
+              width: rightCard.w,
+              height: rightCard.h,
               borderRadius: theme.radius.cardLg,
               background: theme.colors.cardBg,
               border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
@@ -132,7 +150,11 @@ export const Scene07 = () => {
 
       {/* the 1px divider that sets the two questions apart */}
       {ruleP > 0.001 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearing }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
           <line
             x1={LEFT.x + LEFT.w + GAP / 2}
             y1={LEFT.y}
@@ -146,19 +168,25 @@ export const Scene07 = () => {
 
       {/* header chips — kept below the 150px logo band */}
       <div style={{ transform: `scale(${1 + 0.04 * pulseL})`, transformOrigin: `${LEFT.x + 20}px ${HEADER_Y}px` }}>
-        <Chip label="5 Menit — Noise" x={LEFT.x + 20} y={HEADER_Y} variant="slate" anchor="left" startFrame={0} />
+        <Chip label="5 Menit — Noise" x={LEFT.x + 20} y={HEADER_Y} variant="slate" anchor="left" startFrame={0} opacity={clearing} />
       </div>
       <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${RIGHT.x + 20}px ${HEADER_Y}px` }}>
-        <Chip label="Mingguan — Arah Besar" x={RIGHT.x + 20} y={HEADER_Y} variant="indigo" anchor="left" startFrame={T.rightIn} />
+        <Chip label="Mingguan — Arah Besar" x={RIGHT.x + 20} y={HEADER_Y} variant="indigo" anchor="left" startFrame={T.rightIn} opacity={clearing} />
       </div>
       {/* three real reversals on the noisy side */}
-      {REV.map((idx, i) => (
-        <Ping key={idx} x={gL.cx(idx)} y={gL.scale(bmri5m[idx].c)} startFrame={[T.p1, T.p2, T.p3][i]} variant="slate" />
-      ))}
+      <div style={{ opacity: clearing }}>
+        {REV.map((idx, i) => (
+          <Ping key={idx} x={gL.cx(idx)} y={gL.scale(bmri5m[idx].c)} startFrame={[T.p1, T.p2, T.p3][i]} variant="slate" />
+        ))}
+      </div>
 
       {/* one trim-path arrow along the weekly trend */}
       {arrow > 0.001 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearing }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
           <line
             x1={ax1}
             y1={ay1}
@@ -188,7 +216,7 @@ export const Scene07 = () => {
             variant="slate"
             anchor="center"
             startFrame={T.capLeft}
-            opacity={swapOut}
+            opacity={swapOut * clearing}
           />
           <Chip
             label="Arah besar"
@@ -197,11 +225,19 @@ export const Scene07 = () => {
             variant="indigo"
             anchor="center"
             startFrame={T.capRight}
-            opacity={swapOut}
+            opacity={swapOut * clearing}
           />
         </>
       )}
-      <Chip label="Kapan?" x={LEFT.x + LEFT.w / 2} y={LEFT.y + LEFT.h + 52} variant="slate" anchor="center" startFrame={T.questions + T.swapDur} />
+      <Chip
+        label="Kapan?"
+        x={LEFT.x + LEFT.w / 2}
+        y={LEFT.y + LEFT.h + 52}
+        variant="slate"
+        anchor="center"
+        startFrame={T.questions + T.swapDur}
+        opacity={clearing}
+      />
       <Chip
         label="Kemana?"
         x={RIGHT.x + RIGHT.w / 2}
@@ -209,6 +245,7 @@ export const Scene07 = () => {
         variant="indigo"
         anchor="center"
         startFrame={T.questions + T.swapDur}
+        opacity={clearing}
       />
     </SafeArea>
   );

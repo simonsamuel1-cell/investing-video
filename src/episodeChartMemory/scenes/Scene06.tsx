@@ -47,6 +47,14 @@ const T = {
 };
 const WIPE = 44;
 const TRI = { y: 330, w: 520, h: 380, gap: 24 };
+// ── HANDOFF to SC07 ─────────────────────────────────────────────────────────
+// The 5M triptych card IS SC07's left card, only smaller. Over these frames the
+// other two cards and all the chrome clear, and this one grows into SC07's
+// geometry — so global 3719 and 3720 are the same picture. Match SC07's LEFT
+// box and its inner() inset, or the seam will show.
+const HAND = { start: 660, dur: 51 }; // ends on this scene's last frame (711)
+const SC07_CARD: Box = { x: 96, y: 250, w: 852, h: 490 };
+const SC07_CHART: Box = { x: 140, y: 306, w: 682, h: 380 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const VIEWS = [
@@ -81,6 +89,12 @@ export const Scene06 = () => {
 
   const triX = (i: number) => (theme.canvas.width - (TRI.w * 3 + TRI.gap * 2)) / 2 + i * (TRI.w + TRI.gap);
 
+  // ── handoff to SC07: the 5M card grows into SC07's left card ──
+  const hand = f >= HAND.start ? progress(f, HAND.start, HAND.dur) : 0;
+  const lerp = (a: number, b: number) => a + (b - a) * hand;
+  const lerpBox = (a: Box, b: Box): Box => ({ x: lerp(a.x, b.x), y: lerp(a.y, b.y), w: lerp(a.w, b.w), h: lerp(a.h, b.h) });
+  const clearing = 1 - hand; // everything except that one card steps aside
+
   return (
     <SafeArea>
       <div
@@ -94,12 +108,12 @@ export const Scene06 = () => {
           background: theme.colors.cardBg,
           border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
           // arrives behind the carried series rather than popping in on frame 0
-          opacity: carry,
+          opacity: carry * clearing,
         }}
       />
 
       {f >= T.selector && (
-        <div style={{ opacity: fadeIn(f, T.selector, 20) }}>
+        <div style={{ opacity: fadeIn(f, T.selector, 20) * clearing }}>
           {/* the track is up before any timeframe is chosen — the fill only
               lands once the 5m view actually arrives */}
           <TimeframeSelector x={SEL.x} y={SEL.y} activeIndex={activeIndex} fillOpacity={f >= T.tf5m ? fadeIn(f, T.tf5m, 14) : 0} />
@@ -107,7 +121,7 @@ export const Scene06 = () => {
       )}
 
       {/* the constant across every timeframe — sits still; no pulse */}
-      <Chip label="BMRI" x={BMRI.x} y={BMRI.y} variant="slate" anchor="left" width={BMRI.w} startFrame={T.ticker + 10} />
+      <Chip label="BMRI" x={BMRI.x} y={BMRI.y} variant="slate" anchor="left" width={BMRI.w} startFrame={T.ticker + 10} opacity={clearing} />
 
       {/* the active chart — each timeframe wipes over the previous one */}
       {bigOp > 0.001 && (
@@ -136,17 +150,30 @@ export const Scene06 = () => {
       {tri > 0.001 &&
         VIEWS.map((v, i) => {
           const s = 1 + 0.05 * (i === 0 ? near : i === 2 ? far : 0);
-          const box: Box = { x: triX(i) + 34, y: TRI.y + 96, w: TRI.w - 68, h: TRI.h - 150 };
+          const lead = i === 0; // the card that carries over into SC07
+          const card: Box = lead
+            ? lerpBox({ x: triX(0), y: TRI.y, w: TRI.w, h: TRI.h }, SC07_CARD)
+            : { x: triX(i), y: TRI.y, w: TRI.w, h: TRI.h };
+          const box: Box = lead
+            ? lerpBox({ x: triX(0) + 34, y: TRI.y + 96, w: TRI.w - 68, h: TRI.h - 150 }, SC07_CHART)
+            : { x: triX(i) + 34, y: TRI.y + 96, w: TRI.w - 68, h: TRI.h - 150 };
           return (
-            <div key={v.label} style={{ opacity: tri, transform: `scale(${s})`, transformOrigin: `${triX(i) + TRI.w / 2}px ${TRI.y + TRI.h / 2}px` }}>
+            <div
+              key={v.label}
+              style={{
+                opacity: tri * (lead ? 1 : clearing),
+                transform: `scale(${s})`,
+                transformOrigin: `${triX(i) + TRI.w / 2}px ${TRI.y + TRI.h / 2}px`,
+              }}
+            >
               <div
                 style={{
                   position: "absolute",
-                  left: triX(i),
-                  top: TRI.y,
-                  width: TRI.w,
-                  height: TRI.h,
-                  borderRadius: theme.radius.card,
+                  left: card.x,
+                  top: card.y,
+                  width: card.w,
+                  height: card.h,
+                  borderRadius: lead ? lerp(theme.radius.card, theme.radius.cardLg) : theme.radius.card,
                   background: theme.colors.cardBg,
                   border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
                 }}
@@ -162,11 +189,13 @@ export const Scene06 = () => {
                   fontSize: theme.type.label.size,
                   fontWeight: theme.type.label.weight,
                   color: theme.colors.slate,
+                  opacity: lead ? clearing : 1,
                 }}
               >
                 {v.label}
               </div>
-              <CandlestickChart data={v.data} window={v.win} box={box} showAxes={false} />
+              {/* the lead card's axes fade in as it grows — SC07 draws them */}
+              <CandlestickChart data={v.data} window={v.win} box={box} showAxes={lead} axesOpacity={lead ? hand : 0} />
             </div>
           );
         })}
@@ -183,7 +212,7 @@ export const Scene06 = () => {
             fontSize: theme.type.header.size,
             fontWeight: theme.type.header.weight,
             color: theme.colors.slate,
-            opacity: fadeIn(f, T.settle, 24),
+            opacity: fadeIn(f, T.settle, 24) * clearing,
           }}
         >
           Jarak pandang yang kamu pilih

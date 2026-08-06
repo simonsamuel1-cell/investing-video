@@ -14,7 +14,7 @@ import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, progressInOut, fmtPrice, type Box } from "../helpers";
+import { progress, progressInOut, velocityBlur, fmtPrice, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { chiliMonthly } from "../data/chili";
 import { Scene02 } from "../scenes/Scene02";
@@ -29,6 +29,7 @@ const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right thir
 // Where the camera pushes in to, and how many sessions it lands on.
 const BOX_DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
 const N_DETAIL = 12;
+const CAMERA_BLUR = 7; // px at the camera's fastest frame
 // Continuity-local frames, all VO-derived (see each scene's T block).
 const K = {
   lineDraw: 337, // "dan hubungkan titiknya"
@@ -105,6 +106,11 @@ export const ChartContinuity = () => {
   const pushIn = f >= K.push ? progressInOut(f, K.push, K.pushDur) : 0;
   const pullOut = f >= K.pull ? progressInOut(f, K.pull, K.pullDur) : 0;
   const camera = Math.max(0, pushIn - pullOut);
+  // Motion blur tied to the camera's own speed: nothing at rest, most at the
+  // cut frame. Only this move and SC10's zoom-out get it, so it stays special.
+  const cameraAt = (x: number) =>
+    (x >= K.push ? progressInOut(x, K.push, K.pushDur) : 0) - (x >= K.pull ? progressInOut(x, K.pull, K.pullDur) : 0);
+  const blurPx = velocityBlur(cameraAt, f, K.push, K.pull + K.pullDur - K.push, CAMERA_BLUR);
   const lerp = (from: number, to: number) => from + (to - from) * camera;
   const box: Box = {
     x: lerp(baseBox.x, BOX_DETAIL.x),
@@ -246,6 +252,8 @@ export const ChartContinuity = () => {
           </div>
         ))}
 
+      {/* The chart and its card share one blur, so they smear together. */}
+      <div style={{ filter: blurPx > 0.05 ? `blur(${blurPx}px)` : undefined }}>
       {/* The detail card belongs to the AFTER side of the cut, so it appears on
           the cut frame — no fade. It rides the same moving box as the chart. */}
       {f >= K.cut && (
@@ -274,6 +282,7 @@ export const ChartContinuity = () => {
       {wipe > 0.001 && (
         <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
       )}
+      </div>
 
       {/* ── per-phase overlays ──
           Each phase is wrapped in its own Sequence purely so its children read

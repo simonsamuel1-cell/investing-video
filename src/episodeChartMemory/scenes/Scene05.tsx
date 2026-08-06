@@ -8,7 +8,7 @@ import { useCurrentFrame } from "remotion";
 import { AxisArrow } from "../components/AxisArrow";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, fmtPrice } from "../helpers";
+import { progress, fadeIn, fadeOut, countTo, fmtPrice } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
@@ -23,6 +23,7 @@ const T = {
   yTicks: 260, // "di level berapa?"
   cross: 316, // "menjawab dua pertanyaan"
   priceTag: 401, // "harganya berapa"
+  priceCount: 24, // frames the readout spends counting up the rail
   dateTag: 455, // "dan kapan harga itu terbentuk"
   // Everything this scene drew clears before the boundary, so that at global
   // 3007 only the dimmed candle series is left — that is what SC06 picks up.
@@ -133,7 +134,18 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
 
       {/* the price answer lands on the Y rail… */}
       {/* pulled in from box.x − 24: at that offset the chip crossed the safe-left margin */}
-      <Chip label={fmtPrice(d.c)} x={box.x - 2} y={py} variant="cyan" anchor="right" startFrame={T.priceTag} opacity={clearOp} />
+      {/* the readout counts UP THE RAIL, from the bottom of the price axis to
+          the candle's close — the scene is literally about reading a value off
+          that axis, so the number earns the count */}
+      <Chip
+        label={fmtPrice(countTo(local, T.priceTag, T.priceCount, lo, d.c))}
+        x={box.x - 2}
+        y={py}
+        variant="cyan"
+        anchor="right"
+        startFrame={T.priceTag}
+        opacity={clearOp}
+      />
 
       {/* …and the time answer on the X rail, dropped below the tick row */}
       <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.dateTag} opacity={clearOp} />

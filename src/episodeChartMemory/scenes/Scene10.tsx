@@ -11,8 +11,9 @@ import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { Chip } from "../components/Chip";
 import { ClosingCaption } from "../components/ClosingCaption";
 import { theme } from "../theme";
-import { progress, priceScale, type Box } from "../helpers";
+import { progress, priceScale, velocityBlur, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
+import { SC09_EXIT } from "./Scene09";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
@@ -29,6 +30,11 @@ const T = {
   caption: 548, // "Belajarlah membaca ingatan itu"
 };
 const ZOOM_DUR = 140; // 408 → 548, then the frame holds
+const ZOOM_BLUR = 5; // px at the pull-back's fastest frame
+// ── HANDOFF from SC09 ───────────────────────────────────────────────────────
+// SC09 leaves its texture series on screen; this scene opens by drawing
+// exactly that and then eases into its own tight framing and full brightness.
+const CARRY_DUR = 50;
 const CHIP_MIN_Y = 180; // chip top stays clear of the 150px logo band
 const CHIP_MAX_Y = 840; // chip bottom stays clear of the 108px subtitle band
 // ═══════════════════════════════════════════════════════════════════════════
@@ -49,32 +55,52 @@ export const Scene10 = () => {
   const f = useCurrentFrame();
 
   const zoom = f >= T.zoom ? progress(f, T.zoom, ZOOM_DUR) : 0;
-  const win: [number, number] = [interpolate(zoom, [0, 1], [TIGHT[0], WIDE[0]]), TIGHT[1]];
-  const g = chartGeom(bmriDaily, win, CHART);
 
   // Blend the price range toward the full-series range so the pull-back never
   // snaps when a new extreme enters the frame.
   const tightSlice = bmriDaily.slice(TIGHT[0], TIGHT[1] + 1);
   const wideSlice = bmriDaily.slice(WIDE[0], WIDE[1] + 1);
-  const min = interpolate(zoom, [0, 1], [Math.min(...tightSlice.map((d) => d.l)), Math.min(...wideSlice.map((d) => d.l))]);
-  const max = interpolate(zoom, [0, 1], [Math.max(...tightSlice.map((d) => d.h)), Math.max(...wideSlice.map((d) => d.h))]);
-  const scale = priceScale(min, max, CHART.y, CHART.y + CHART.h, 0.08);
+  const zoomMin = interpolate(zoom, [0, 1], [Math.min(...tightSlice.map((d) => d.l)), Math.min(...wideSlice.map((d) => d.l))]);
+  const zoomMax = interpolate(zoom, [0, 1], [Math.max(...tightSlice.map((d) => d.h)), Math.max(...wideSlice.map((d) => d.h))]);
+  const zoomWin: [number, number] = [interpolate(zoom, [0, 1], [TIGHT[0], WIDE[0]]), TIGHT[1]];
+
+  // ── handoff: start on SC09's exact frame, then ease into this scene's ──
+  const carry = progress(f, 0, CARRY_DUR);
+  const c = (from: number, to: number) => from + (to - from) * carry;
+  const exitSlice = bmriDaily.slice(SC09_EXIT.win[0], SC09_EXIT.win[1] + 1);
+  const box: Box = {
+    x: c(SC09_EXIT.box.x, CHART.x),
+    y: c(SC09_EXIT.box.y, CHART.y),
+    w: c(SC09_EXIT.box.w, CHART.w),
+    h: c(SC09_EXIT.box.h, CHART.h),
+  };
+  const win: [number, number] = [c(SC09_EXIT.win[0], zoomWin[0]), c(SC09_EXIT.win[1], zoomWin[1])];
+  const min = c(Math.min(...exitSlice.map((d) => d.l)), zoomMin);
+  const max = c(Math.max(...exitSlice.map((d) => d.h)), zoomMax);
+  const scale = priceScale(min, max, box.y, box.y + box.h, 0.08);
+  const g = chartGeom(bmriDaily, win, box);
 
   const chipsOp = f >= T.release ? 1 - progress(f, T.release, 34) : 1;
   const drift = f >= T.release ? progress(f, T.release, 34) * 22 : 0;
   const chipPulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const tickIn = f >= T.ticks ? progress(f, T.ticks, 60) : 0;
+  const zoomBlur = velocityBlur((x) => progress(x, T.zoom, ZOOM_DUR), f, T.zoom, ZOOM_DUR, ZOOM_BLUR);
 
   return (
     <SafeArea>
-      <CandlestickChart
-        data={bmriDaily}
-        window={win}
-        box={CHART}
-        showAxes={zoom < 0.5}
-        scaleOverride={scale}
-        dimOpacity={interpolate(zoom, [0, 1], [1, 0.55])}
-      />
+      {/* the pull-back smears at its fastest — the episode's other blurred
+          move is the SC04 camera cut, and nothing else gets it */}
+      <div style={{ filter: zoomBlur > 0.05 ? `blur(${zoomBlur}px)` : undefined }}>
+        <CandlestickChart
+          data={bmriDaily}
+          window={win}
+          box={box}
+          showAxes={zoom < 0.5}
+          axesOpacity={carry}
+          scaleOverride={scale}
+          dimOpacity={c(SC09_EXIT.dim, interpolate(zoom, [0, 1], [1, 0.55]))}
+        />
+      </div>
 
       {/* each visible candle ticks once — one decision at a time */}
       {tickIn > 0.001 && chipsOp > 0.001 && (

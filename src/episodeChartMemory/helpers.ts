@@ -40,6 +40,27 @@ export const progress = (f: number, start: number, dur: number) =>
 export const progressInOut = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], { ...CLAMP, easing: theme.motion.easeInOut });
 
+/**
+ * velocityBlur — blur radius derived from how fast an eased progress is moving
+ * at this frame. Zero at rest, maximum at the curve's fastest frame, so a
+ * camera move blurs exactly where the eye cannot resolve detail anyway.
+ * `progressAt` is the same curve the move itself uses; `start`/`dur` bound the
+ * window the peak speed is measured over.
+ */
+export const velocityBlur = (progressAt: (x: number) => number, f: number, start: number, dur: number, maxPx: number) => {
+  const speed = (x: number) => Math.abs(progressAt(x + 0.5) - progressAt(x - 0.5));
+  let peak = 0;
+  for (let k = 0; k <= dur; k++) peak = Math.max(peak, speed(start + k));
+  return peak > 0 ? (speed(f) / peak) * maxPx : 0;
+};
+
+/**
+ * countTo — the number itself animates from `from` to `to`. Use where a figure
+ * is the subject (a price being read off an axis, a headline stat), never for
+ * axis tick labels: a scale that counts reads as broken.
+ */
+export const countTo = (f: number, start: number, dur: number, from: number, to: number) => from + (to - from) * progress(f, start, dur);
+
 /** Linear (un-eased) 0→1 — pings, playback, strict-timing wipes. */
 export const linear = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], CLAMP);

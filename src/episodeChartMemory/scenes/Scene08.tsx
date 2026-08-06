@@ -14,13 +14,17 @@ import { ZoneBand } from "../components/ZoneBand";
 import { Ping } from "../components/Ping";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeOut, type Box } from "../helpers";
+import { progress, fadeOut } from "../helpers";
 import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
+import { expandCard, expandChart, expandBlur } from "../transitions/CardExpand";
+
+/** This scene's `from` in Composition — the CardExpand curve is global. */
+const SCENE_FROM = 4472;
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-// Card top clears the 150px logo zone.
-const CARD: Box = { x: 96, y: 160, w: 1728, h: 812 };
-const CHART: Box = { x: 200, y: 230, w: 1500, h: 590 };
+// This scene's card and chart geometry lives in transitions/CardExpand.tsx —
+// it is the resting end of the move that starts back in SC07, and the two must
+// not drift apart.
 const T = {
   playhead: 43, // the chart settles; the playhead sits at the right edge
   header: 90, // "pasar punya ingatan"
@@ -43,7 +47,14 @@ const WINDOW = WIN.sc08;
 
 export const Scene08 = () => {
   const f = useCurrentFrame();
-  const g = chartGeom(bmriDaily, WINDOW, CHART);
+  // This scene opens MID-MOVE: SC07's right card is still growing into this
+  // one's card, on the shared CardExpand curve. The content cut already
+  // happened on frame 0 — weekly series out, daily series in.
+  const gf = f + SCENE_FROM;
+  const card = expandCard(gf);
+  const chart = expandChart(gf);
+  const blurPx = expandBlur(gf);
+  const g = chartGeom(bmriDaily, WINDOW, chart);
 
   const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const bandDraw = f >= T.band ? progress(f, T.band, 46) : 0;
@@ -58,13 +69,15 @@ export const Scene08 = () => {
 
   return (
     <SafeArea>
+      {/* card and candles smear together while the move finishes */}
+      <div style={{ filter: blurPx > 0.05 ? `blur(${blurPx}px)` : undefined }}>
       <div
         style={{
           position: "absolute",
-          left: CARD.x,
-          top: CARD.y,
-          width: CARD.w,
-          height: CARD.h,
+          left: card.x,
+          top: card.y,
+          width: card.w,
+          height: card.h,
           borderRadius: theme.radius.cardLg,
           background: theme.colors.cardBg,
           border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
@@ -74,18 +87,19 @@ export const Scene08 = () => {
 
       {bandDraw > 0.001 && (
         <div style={{ opacity: clearOp }}>
-          <ZoneBand x={CHART.x} w={CHART.w} yTop={yTop} yBottom={yBot} fillOpacity={fill} drawProgress={bandDraw} />
+          <ZoneBand x={chart.x} w={chart.w} yTop={yTop} yBottom={yBot} fillOpacity={fill} drawProgress={bandDraw} />
         </div>
       )}
 
       {/* the candles stay to the last frame — only their axes clear */}
-      <CandlestickChart data={bmriDaily} window={WINDOW} box={CHART} revealProgress={reveal} axesOpacity={clearOp} />
+      <CandlestickChart data={bmriDaily} window={WINDOW} box={chart} revealProgress={reveal} axesOpacity={clearOp} />
+      </div>
 
       {/* the moment the memory is named */}
       <div
         style={{
           position: "absolute",
-          left: CHART.x,
+          left: chart.x,
           top: 200,
           fontFamily: theme.type.family,
           fontSize: theme.type.header.size,

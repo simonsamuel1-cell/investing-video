@@ -10,7 +10,7 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, textReveal, fmtRp, mulberry32 } from "../helpers";
+import { progress, fadeIn, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
 
@@ -35,6 +35,7 @@ const T = {
 // CARD_W + 10 and every card is centred inside its own box.
 const CARD_W = 450;
 const CARD_GAP = 10;
+const CARD_COUNT = 16; // frames the figure spends counting up to its price
 const CARD_CY = 430;
 const CARD_START = [0, 1, 2].map((i) => ({ cx: theme.canvas.width / 2 + (i - 1) * (CARD_W + CARD_GAP), cy: CARD_CY }));
 const SPOKEN = [
@@ -141,7 +142,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
         return (
           <PriceCard
             key={idx}
-            value={`${fmtRp(chiliMonthly[idx].price)}/kg`}
+            // the figure counts up to its price — here the number IS the subject
+            value={`${fmtRp(countTo(f, start, CARD_COUNT, 0, chiliMonthly[idx].price))}/kg`}
             cx={cx}
             cy={cy}
             startFrame={start}

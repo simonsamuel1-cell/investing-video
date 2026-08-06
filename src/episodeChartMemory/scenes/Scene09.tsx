@@ -9,7 +9,7 @@ import { CandlestickChart } from "../components/CandlestickChart";
 import { StatementText } from "../components/StatementText";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, textReveal, type Box } from "../helpers";
+import { progress, fadeOut, textReveal, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -22,6 +22,8 @@ const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
 const HANDOFF_BOX: Box = { x: 200, y: 230, w: 1500, h: 590 };
 const HANDOFF_WIN = WIN.sc08;
 const TEXTURE = 0.15;
+// the chips are read off the chart, so it brightens a step behind them
+const TEXTURE_LIFT = 1.9;
 // The statement lines and the three chips are one block, lifted to just under
 // the safe-top margin and then dropped 30px. GROUP_TOP is that block's topmost
 // pixel as laid out below: "Probabilitas." centre-y 392 minus half its 96px line.
@@ -41,6 +43,10 @@ const T = {
   lift: 558, // "chart memberimu keunggulan"
   info: 623, // "keputusan dengan informasi"
   hope: 673, // "bukan sekadar harapan atau tebakan"
+  // Everything but the chart clears before the boundary, so that at global
+  // 5945 only the texture series is left — that is what SC10 picks up.
+  clear: 700,
+  clearDur: 40, // done by local 740 (global 5932)
 };
 // One frame per phrase: "apa yang sudah terjadi" / "pola yang sering
 // berulang" / "posisi pembeli serta penjual saat ini".
@@ -70,6 +76,13 @@ const chipXs = (() => {
 
 const GROUP_DY = theme.layout.safeTop - GROUP_TOP + BLOCK_DROP;
 
+/**
+ * What this scene leaves on screen at its last frame. SC10 opens by drawing
+ * exactly this, then eases into its own framing — keep the two in sync by
+ * importing from here rather than copying the numbers.
+ */
+export const SC09_EXIT = { box: CHART, win: WIN.sc01, dim: TEXTURE * TEXTURE_LIFT };
+
 export const Scene09 = () => {
   const f = useCurrentFrame();
 
@@ -92,8 +105,8 @@ export const Scene09 = () => {
   const lift = f >= T.lift ? progress(f, T.lift, 26) : 0;
   const info = textReveal(f, T.info);
   const hope = textReveal(f, T.hope);
-  // the chips are read off the chart, so it brightens a step behind them
-  const texturePlus = texture * (1 + 0.9 * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
+  const texturePlus = texture * (1 + (TEXTURE_LIFT - 1) * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
+  const clearOp = f >= T.clear ? fadeOut(f, T.clear, T.clearDur) : 1;
 
   const ruleW = 900;
 
@@ -111,14 +124,14 @@ export const Scene09 = () => {
             width: box.w * 0.18 + 40,
             height: box.h,
             background: theme.colors.bg,
-            opacity: 0.92 * future,
+            opacity: 0.92 * future * clearOp,
           }}
         />
       )}
 
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
-      <div style={{ transform: `translateY(${GROUP_DY}px)` }}>
+      <div style={{ transform: `translateY(${GROUP_DY}px)`, opacity: clearOp }}>
       <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
       <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
 
@@ -154,7 +167,7 @@ export const Scene09 = () => {
           fontSize: theme.type.header.size,
           fontWeight: theme.type.header.weight,
           color: theme.colors.indigo,
-          opacity: info.opacity,
+          opacity: info.opacity * clearOp,
           transform: `translateY(${info.y}px)`,
         }}
       >
@@ -171,7 +184,7 @@ export const Scene09 = () => {
           fontSize: theme.type.label.size,
           fontWeight: theme.type.label.weight,
           color: theme.colors.slate,
-          opacity: hope.opacity * 0.75,
+          opacity: hope.opacity * 0.75 * clearOp,
           transform: `translateY(${hope.y}px)`,
           textDecoration: "line-through",
           textDecorationThickness: `${theme.stroke.hair}px`,
