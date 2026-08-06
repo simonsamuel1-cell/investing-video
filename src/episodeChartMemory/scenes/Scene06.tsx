@@ -12,7 +12,7 @@ import { CandlestickChart } from "../components/CandlestickChart";
 import { TimeframeSelector } from "../components/TimeframeSelector";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, cardBreath, type Box } from "../helpers";
+import { progress, fadeIn, type Box } from "../helpers";
 import { bmriDaily, bmri5m, bmriWeekly, WIN } from "../data/bmri";
 import { usePalette } from "../palette";
 
@@ -105,13 +105,9 @@ export const Scene06 = () => {
   const lerp = (a: number, b: number) => a + (b - a) * hand;
   const lerpBox = (a: Box, b: Box): Box => ({ x: lerp(a.x, b.x), y: lerp(a.y, b.y), w: lerp(a.w, b.w), h: lerp(a.h, b.h) });
   const clearing = 1 - hand; // everything except that one card steps aside
-  // panel #4 — mengecil; berhenti sebelum triptych mengambil alih
-  const cardScale = cardBreath(4, f, 0, T.triptych);
 
   return (
     <SafeArea>
-      {/* the panel and the chart it backs drift together */}
-      <div style={{ transform: `scale(${cardScale})`, transformOrigin: `${CARD.x + CARD.w / 2}px ${CARD.y + CARD.h / 2}px` }}>
       <div
         style={{
           position: "absolute",
@@ -162,7 +158,6 @@ export const Scene06 = () => {
           )}
         </div>
       )}
-      </div>
 
       {/* triptych — the three silhouettes side by side */}
       {tri > 0.001 &&
