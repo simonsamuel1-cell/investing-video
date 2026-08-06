@@ -14,7 +14,7 @@ export const SafeArea = ({ children, transparent = false }: { children: React.Re
   return (
     <AbsoluteFill
       style={{
-        backgroundColor: transparent ? undefined : pal.bg,
+        background: transparent ? undefined : `linear-gradient(180deg, ${pal.bgFrom}, ${pal.bgTo})`,
         fontFamily: theme.type.family,
         color: pal.ink,
       }}
