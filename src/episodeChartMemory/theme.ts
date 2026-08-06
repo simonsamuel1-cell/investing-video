@@ -110,7 +110,9 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // sengaja dijauhkan dari indigo merek: rona 282° vs 247°, dan lebih condong
   // ke merah, supaya terbaca sebagai ruang lain — bukan indigo yang meleset.
   ungu: {
-    bg: "#DCC6EC",
+    // Latarnya sengaja SAMA dengan bagian penjelasan. Yang menandai bagian
+    // contoh adalah aksen, teks dan kartunya — bukan warna tanahnya.
+    bg: "#F5F5F5",
     ink: "#2E1A3D",
     slate: "#6B5580",
     indigo: "#7A2FB0",
