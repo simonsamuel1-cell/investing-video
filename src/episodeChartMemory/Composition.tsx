@@ -18,6 +18,7 @@ import { Scene08 } from "./scenes/Scene08";
 import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
+import { SUBTITLES, type SubtitleCue } from "./subtitles";
 
 export const TOTAL_FRAMES = 6606; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
 
@@ -36,7 +37,24 @@ const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC 
   { from: 5946, duration: 660, Component: Scene10 },
 ];
 
-export const ChartMemoryComposition = () => (
+/**
+ * Props exist so a SECOND composition can reuse this same component with its
+ * own subtitle track and voice-over. Every scene is shared — editing a visual
+ * changes both compositions.
+ */
+export type ChartMemoryProps = {
+  subtitles?: SubtitleCue[];
+  audioSrc?: string;
+  showSubtitles?: boolean;
+  muted?: boolean;
+};
+
+export const ChartMemoryComposition = ({
+  subtitles = SUBTITLES,
+  audioSrc = "vo/chart-memory.mp3",
+  showSubtitles = true,
+  muted = false,
+}: ChartMemoryProps) => (
   <AbsoluteFill style={{ backgroundColor: theme.colors.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
@@ -50,8 +68,8 @@ export const ChartMemoryComposition = () => (
     </Sequence>
 
     {/* Burned-in subtitles live in the reserved bottom band. */}
-    <Subtitles />
+    {showSubtitles && <Subtitles cues={subtitles} />}
 
-    {HAS_VO && <Audio src={staticFile("vo/chart-memory.mp3")} />}
+    {HAS_VO && <Audio src={staticFile(audioSrc)} muted={muted} />}
   </AbsoluteFill>
 );

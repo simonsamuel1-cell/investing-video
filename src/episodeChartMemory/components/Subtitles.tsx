@@ -6,11 +6,12 @@
  */
 import { useCurrentFrame } from "remotion";
 import { theme } from "../theme";
-import { SUBTITLES } from "../subtitles";
+import { SUBTITLES, type SubtitleCue } from "../subtitles";
 
-export const Subtitles = () => {
+/** `cues` lets a second composition burn in a different track. */
+export const Subtitles = ({ cues = SUBTITLES }: { cues?: SubtitleCue[] }) => {
   const f = useCurrentFrame();
-  const cue = SUBTITLES.find((c) => f >= c.start && f < c.end);
+  const cue = cues.find((c) => f >= c.start && f < c.end);
   if (!cue) return null;
   return (
     <div
