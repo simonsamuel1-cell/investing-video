@@ -26,14 +26,14 @@
  * Nilai sekarang: y = 124, yaitu 50px di bawah posisi pertamanya (74).
  */
 import { useCurrentFrame } from "remotion";
-import { theme, type ColorKey } from "../theme";
+import { theme, type Palette } from "../theme";
 import { textReveal } from "../helpers";
 import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const CAPTION: {
   text: string; x: number; y: number; size: number; weight: number;
-  color: ColorKey; rise: number; revealDur: number;
+  color: keyof Palette; rise: number; revealDur: number;
 } = {
   text: "Ingatan pasar",
   x: theme.canvas.width / 2, // 960

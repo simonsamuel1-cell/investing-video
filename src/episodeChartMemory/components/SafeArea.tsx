@@ -7,14 +7,14 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { theme } from "../theme";
-import { usePalette, bgCss } from "../palette";
+import { usePalette } from "../palette";
 
 export const SafeArea = ({ children, transparent = false }: { children: React.ReactNode; transparent?: boolean }) => {
   const pal = usePalette();
   return (
     <AbsoluteFill
       style={{
-        background: transparent ? undefined : bgCss(pal),
+        background: transparent ? undefined : `linear-gradient(180deg, ${pal.bgFrom}, ${pal.bgTo})`,
         fontFamily: theme.type.family,
         color: pal.ink,
       }}

@@ -24,7 +24,7 @@
  */
 import React, { createContext, useContext } from "react";
 import { useCurrentFrame } from "remotion";
-import { PALETTES, theme, type Palette, type PaletteName } from "./theme";
+import { PALETTES, type Palette, type PaletteName } from "./theme";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 type Segment = { from: number; palette: PaletteName; fade: number };
@@ -56,23 +56,12 @@ const mix = (a: string, b: string, t: number) => {
 };
 
 const mixPalette = (a: Palette, b: Palette, t: number): Palette => {
-  const out = { ...a };
+  const out = {} as Palette;
   (Object.keys(a) as (keyof Palette)[]).forEach((k) => {
-    const av = a[k];
-    const bv = b[k];
-    if (Array.isArray(av) && Array.isArray(bv)) {
-      // gradient stops blend one by one
-      (out as Record<string, unknown>)[k] = av.map((v, i) => mix(v, bv[i], t));
-    } else if (typeof av === "string" && typeof bv === "string") {
-      (out as Record<string, unknown>)[k] = mix(av, bv, t);
-    }
+    out[k] = mix(a[k], b[k], t);
   });
   return out;
 };
-
-/** The ground, as one CSS value. Horizontal; stop positions live in theme. */
-export const bgCss = (pal: Palette) =>
-  `linear-gradient(90deg, ${pal.bgStops.map((c, i) => `${c} ${theme.bgStopsAt[i]}%`).join(", ")})`;
 
 /** The palette at a GLOBAL frame, blended across any fade in progress. */
 export const paletteAt = (f: number): Palette => {
