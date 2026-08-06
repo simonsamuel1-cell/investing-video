@@ -30,9 +30,13 @@ export type PaletteName = "terang" | "gelap" | "kertas" | "ungu";
 export type Palette = {
   /** Warna PADAT latar — dipakai kalau ada yang perlu menutup, bukan menghias. */
   bg: string;
-  /** Dua ujung gradien latar. Kalau sama, latarnya rata. */
-  bgFrom: string;
-  bgTo: string;
+  /**
+   * Empat titik henti gradien latar, mendatar, di posisi BG_STOPS_AT.
+   * Disimpan terpisah (bukan satu string gradien) supaya tiap titik bisa
+   * dicampur sendiri saat palet berganti — string gradien tidak bisa.
+   * Kalau keempatnya sama, latarnya rata.
+   */
+  bgStops: [string, string, string, string];
   ink: string;
   slate: string;
   indigo: string;
@@ -50,12 +54,14 @@ export type Palette = {
   muted: string;
 };
 
+/** Kunci palet yang isinya SATU warna — bukan daftar titik henti gradien. */
+export type ColorKey = { [K in keyof Palette]: Palette[K] extends string ? K : never }[keyof Palette];
+
 export const PALETTES: Record<PaletteName, Palette> = {
   // Asli: hue terkunci indigo 247 / cyan 192.
   terang: {
     bg: "#F5F5F5",
-    bgFrom: "#F5F5F5",
-    bgTo: "#F5F5F5",
+    bgStops: ["#F5F5F5", "#F5F5F5", "#F5F5F5", "#F5F5F5"],
     ink: "#000000",
     slate: "#626266",
     indigo: "#5F4DEE",
@@ -76,8 +82,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // terangnya supaya tetap terbaca di atas hitam. Candle jadi jauh lebih kuat.
   gelap: {
     bg: "#171717",
-    bgFrom: "#171717",
-    bgTo: "#171717",
+    bgStops: ["#171717", "#171717", "#171717", "#171717"],
     ink: "#F2F2F2",
     slate: "#9A9AA2",
     indigo: "#8B7AF7",
@@ -98,8 +103,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // terakota, satu-satunya tempat aturan rona sengaja dilanggar.
   kertas: {
     bg: "#F4EFE7",
-    bgFrom: "#F4EFE7",
-    bgTo: "#F4EFE7",
+    bgStops: ["#F4EFE7", "#F4EFE7", "#F4EFE7", "#F4EFE7"],
     ink: "#1C1917",
     slate: "#6E6358",
     indigo: "#5F4DEE",
@@ -121,8 +125,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // ke merah, supaya terbaca sebagai ruang lain — bukan indigo yang meleset.
   ungu: {
     bg: "#C9B5DA", // padat, kira-kira di tengah gradiennya
-    bgFrom: "#FBF8FF",
-    bgTo: "#AA97C3",
+    // violet menepi di kiri & kanan, meleleh ke terang di tengah
+    bgStops: ["#AA97C3", "#F5F5F5", "#F5F5F5", "#AA97C3"],
     ink: "#2E1A3D",
     slate: "#6B5580",
     indigo: "#7A2FB0",
@@ -172,6 +176,8 @@ export const theme = {
     numeral: { size: 48, weight: 700 },
     axis: { size: 26, weight: 500 },
   },
+  /** Posisi keempat titik henti latar, dalam persen. */
+  bgStopsAt: [0, 5, 95, 100],
   radius: { card: 16, cardLg: 24, chip: 16 },
   stroke: { hair: 1, rule: 2 },
   // Two card elevations; scenes crossfade between them rather than authoring

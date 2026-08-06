@@ -18,7 +18,7 @@ import { Scene08 } from "./scenes/Scene08";
 import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
-import { PaletteProvider, usePalette } from "./palette";
+import { PaletteProvider, usePalette, bgCss } from "./palette";
 import { SUBTITLES, type SubtitleCue } from "./subtitles";
 
 export const TOTAL_FRAMES = 6606; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
@@ -65,7 +65,7 @@ const Episode = ({
 }: ChartMemoryProps) => {
   const pal = usePalette();
   return (
-  <AbsoluteFill style={{ background: `linear-gradient(180deg, ${pal.bgFrom}, ${pal.bgTo})`, fontFamily: theme.type.family }}>
+  <AbsoluteFill style={{ background: bgCss(pal), fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
         <Component />
