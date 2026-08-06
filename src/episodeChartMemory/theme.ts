@@ -9,6 +9,7 @@
  *   "terang"  latar abu terang, indigo + cyan   (palet asli)
  *   "gelap"   latar hitam, chart jadi cahaya    (arah 1)
  *   "kertas"  latar kertas hangat, aksen terakota (arah 2)
+ *   "ungu"    latar ungu — penanda BAGIAN CONTOH, bukan babak
  *
  * Nama kuncinya adalah PERAN, bukan rona. Di palet "kertas", `cyan` memegang
  * warna terakota — dia tetap "aksen kedua" di setiap scene yang memakainya.
@@ -21,10 +22,10 @@ import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const PALETTE: PaletteName = "gelap";
+const PALETTE: PaletteName = "terang";
 // ═══════════════════════════════════════════════════════════════════════════
 
-type PaletteName = "terang" | "gelap" | "kertas";
+type PaletteName = "terang" | "gelap" | "kertas" | "ungu";
 
 type Palette = {
   bg: string;
@@ -105,6 +106,27 @@ const PALETTES: Record<PaletteName, Palette> = {
     border: "#E3D9CA",
     muted: "#B9AB98",
   },
+  // Penanda bagian CONTOH (SC02 harga cabai, SC08 ingatan pasar). Ungunya
+  // sengaja dijauhkan dari indigo merek: rona 282° vs 247°, dan lebih condong
+  // ke merah, supaya terbaca sebagai ruang lain — bukan indigo yang meleset.
+  ungu: {
+    bg: "#DCC6EC",
+    ink: "#2E1A3D",
+    slate: "#6B5580",
+    indigo: "#7A2FB0",
+    cyan: "#1F8FA8",
+    candleGreen: "#1B8F5A",
+    candleRed: "#C93A50",
+    indigoTint8: "rgba(122, 47, 176, 0.10)",
+    indigoTint14: "rgba(122, 47, 176, 0.18)",
+    indigoTintMA1: "#9E6CC8",
+    indigoTintMA2: "#C3A5DE",
+    indigoSoft: "#F0E4FA",
+    cyanSoft: "#DFF1F5",
+    cardBg: "#FBF6FE",
+    border: "#C9B3DC",
+    muted: "#A38CB8",
+  },
 };
 
 // Elevasi ikut palet: bayangan hitam tidak terbaca di atas latar hitam.
@@ -112,6 +134,7 @@ const SHADOWS: Record<PaletteName, { rest: string; lift: string }> = {
   terang: { rest: "0 10px 24px rgba(0, 0, 0, 0.05)", lift: "0 24px 42px rgba(0, 0, 0, 0.10)" },
   gelap: { rest: "0 10px 24px rgba(0, 0, 0, 0.45)", lift: "0 24px 42px rgba(0, 0, 0, 0.65)" },
   kertas: { rest: "0 10px 24px rgba(60, 45, 30, 0.06)", lift: "0 24px 42px rgba(60, 45, 30, 0.12)" },
+  ungu: { rest: "0 10px 24px rgba(52, 24, 78, 0.10)", lift: "0 24px 42px rgba(52, 24, 78, 0.18)" },
 };
 
 export const theme = {
