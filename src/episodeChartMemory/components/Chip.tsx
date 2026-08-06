@@ -4,16 +4,18 @@
  * allowed; the label text itself never rotates and never overlaps other text.
  */
 import { useCurrentFrame, interpolate } from "remotion";
-import { theme } from "../theme";
+import { theme, type Palette } from "../theme";
+import { usePalette } from "../palette";
 
 export type ChipVariant = "indigo" | "slate" | "cyan";
 
-const palette = (v: ChipVariant) =>
+/** Variant → colours, resolved against whichever palette is live this frame. */
+const chipColors = (v: ChipVariant, pal: Palette) =>
   v === "indigo"
-    ? { fg: theme.colors.indigo, bg: theme.colors.indigoSoft, line: theme.colors.indigo }
+    ? { fg: pal.indigo, bg: pal.indigoSoft, line: pal.indigo }
     : v === "cyan"
-      ? { fg: theme.colors.cyan, bg: theme.colors.cyanSoft, line: theme.colors.cyan }
-      : { fg: theme.colors.slate, bg: theme.colors.cardBg, line: theme.colors.muted };
+      ? { fg: pal.cyan, bg: pal.cyanSoft, line: pal.cyan }
+      : { fg: pal.slate, bg: pal.cardBg, line: pal.muted };
 
 export const Chip = ({
   label,
@@ -42,6 +44,7 @@ export const Chip = ({
   /** Drop the pill: no background, no border — just the label in the variant colour. */
   bare?: boolean;
 }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const p = interpolate(f, [startFrame, startFrame + 10], [0, 1], {
     extrapolateLeft: "clamp",
@@ -49,7 +52,7 @@ export const Chip = ({
     easing: theme.motion.ease,
   });
   if (f < startFrame) return null;
-  const c = palette(variant);
+  const c = chipColors(variant, pal);
   const scale = 0.92 + 0.08 * p; // pop is allowed on UI elements
   const translate = anchor === "center" ? "translate(-50%, -50%)" : anchor === "right" ? "translate(-100%, -50%)" : "translate(0, -50%)";
 

@@ -14,6 +14,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, type Box } from "../helpers";
 import { bmriDaily, bmri5m, bmriWeekly, WIN } from "../data/bmri";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Card top clears the 150px logo zone.
@@ -67,6 +68,7 @@ const VIEWS = [
 ];
 
 export const Scene06 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
 
   // the series carried over from SC05: eases into the card, comes back up to
@@ -108,8 +110,8 @@ export const Scene06 = () => {
           width: CARD.w,
           height: CARD.h,
           borderRadius: theme.radius.cardLg,
-          background: theme.colors.cardBg,
-          border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+          background: pal.cardBg,
+          border: `${theme.stroke.hair}px solid ${pal.border}`,
           // arrives behind the carried series rather than popping in on frame 0
           opacity: carry * clearing,
         }}
@@ -177,8 +179,8 @@ export const Scene06 = () => {
                   width: card.w,
                   height: card.h,
                   borderRadius: lead ? lerp(theme.radius.card, theme.radius.cardLg) : theme.radius.card,
-                  background: theme.colors.cardBg,
-                  border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+                  background: pal.cardBg,
+                  border: `${theme.stroke.hair}px solid ${pal.border}`,
                 }}
               />
               <div
@@ -191,7 +193,7 @@ export const Scene06 = () => {
                   fontFamily: theme.type.family,
                   fontSize: theme.type.label.size,
                   fontWeight: theme.type.label.weight,
-                  color: theme.colors.slate,
+                  color: pal.slate,
                   opacity: lead ? clearing : 1,
                 }}
               >
@@ -214,7 +216,7 @@ export const Scene06 = () => {
             fontFamily: theme.type.family,
             fontSize: theme.type.header.size,
             fontWeight: theme.type.header.weight,
-            color: theme.colors.slate,
+            color: pal.slate,
             opacity: fadeIn(f, T.settle, 24) * clearing,
           }}
         >

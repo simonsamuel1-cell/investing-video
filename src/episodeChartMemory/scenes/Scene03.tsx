@@ -14,6 +14,7 @@ import { theme } from "../theme";
 import { progress } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -42,6 +43,7 @@ const pickPivots = (a: number, b: number) => {
 };
 
 export const Scene03 = ({ geom }: { geom: ContGeom }) => {
+  const pal = usePalette();
   const local = useCurrentFrame();
   const { box, win, cx, scale } = geom;
   const [a, b] = win;
@@ -67,8 +69,8 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
             width: box.w + 120,
             height: box.h + 150,
             borderRadius: theme.radius.cardLg,
-            background: theme.colors.cardBg,
-            border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+            background: pal.cardBg,
+            border: `${theme.stroke.hair}px solid ${pal.border}`,
             boxShadow: sh,
             opacity: i === 0 ? 1 : lift,
             transform: `translateY(${-CARD_LIFT_PX * lift}px)`,
@@ -102,7 +104,7 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
             const i = a + k;
             const q = Math.max(0, Math.min(1, ticks * (b - a + 1) - k));
             if (q <= 0) return null;
-            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3.2} fill={theme.colors.indigo} opacity={0.55 * q} />;
+            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3.2} fill={pal.indigo} opacity={0.55 * q} />;
           })}
         </svg>
       )}

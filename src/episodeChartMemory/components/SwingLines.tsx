@@ -14,6 +14,7 @@
  * seterusnya akan digambar bergiliran mengikuti STAGGER.
  */
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export type SwingLine = { x1: number; y1: number; x2: number; y2: number };
 
@@ -25,6 +26,7 @@ const OPACITY = 0.55;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const SwingLines = ({ progress, opacity = 1 }: { progress: number; opacity?: number }) => {
+  const pal = usePalette();
   if (progress <= 0.001) return null;
 
   return (
@@ -43,7 +45,7 @@ export const SwingLines = ({ progress, opacity = 1 }: { progress: number; opacit
             y1={l.y1}
             x2={l.x2}
             y2={l.y2}
-            stroke={theme.colors.indigo}
+            stroke={pal.indigo}
             strokeWidth={theme.stroke.rule}
             strokeDasharray={len}
             strokeDashoffset={len * (1 - q)}

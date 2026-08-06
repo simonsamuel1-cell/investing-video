@@ -17,6 +17,7 @@ import { theme } from "../theme";
 import { progress, fadeOut } from "../helpers";
 import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
 import { expandCard, expandChart, expandBlur } from "../transitions/CardExpand";
+import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — the CardExpand curve is global. */
 const SCENE_FROM = 4472;
@@ -46,6 +47,7 @@ const REVEAL_END = 325; // calibrated so each touch is revealed just before its 
 const WINDOW = WIN.sc08;
 
 export const Scene08 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   // This scene opens MID-MOVE: SC07's right card is still growing into this
   // one's card, on the shared CardExpand curve. The content cut already
@@ -79,8 +81,8 @@ export const Scene08 = () => {
           width: card.w,
           height: card.h,
           borderRadius: theme.radius.cardLg,
-          background: theme.colors.cardBg,
-          border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+          background: pal.cardBg,
+          border: `${theme.stroke.hair}px solid ${pal.border}`,
           opacity: clearOp,
         }}
       />
@@ -104,7 +106,7 @@ export const Scene08 = () => {
           fontFamily: theme.type.family,
           fontSize: theme.type.header.size,
           fontWeight: theme.type.header.weight,
-          color: theme.colors.ink,
+          color: pal.ink,
           opacity: progress(f, T.header, 24) * clearOp,
           transform: `translateY(${(1 - progress(f, T.header, 24)) * 14}px)`,
         }}
@@ -126,7 +128,7 @@ export const Scene08 = () => {
               y1={(yTop + yBot) / 2}
               x2={g.cx(ZONE_TOUCH_IDX[0]) + (g.cx(ZONE_TOUCH_IDX[2]) - g.cx(ZONE_TOUCH_IDX[0])) * trace}
               y2={(yTop + yBot) / 2}
-              stroke={theme.colors.indigo}
+              stroke={pal.indigo}
               strokeWidth={theme.stroke.rule}
               strokeDasharray="10 8"
               opacity={0.8}
@@ -143,7 +145,7 @@ export const Scene08 = () => {
                 height={yBot - yTop + 60}
                 rx={10}
                 fill="none"
-                stroke={theme.colors.indigo}
+                stroke={pal.indigo}
                 strokeWidth={theme.stroke.hair}
                 opacity={0.7 * ghosts}
               />

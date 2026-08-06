@@ -9,6 +9,7 @@
 import { theme } from "../theme";
 import { priceScale, fmtPrice, type Box } from "../helpers";
 import type { OHLC } from "../data/bmri";
+import { usePalette } from "../palette";
 
 /**
  * chartGeom — window bounds may be FRACTIONAL so a zoom-out (SC10) can move
@@ -55,6 +56,7 @@ export const CandlestickChart = ({
   scaleOverride?: (p: number) => number;
   ticks?: number;
 }) => {
+  const pal = usePalette();
   const g = chartGeom(data, win, box, pad);
   const scale = scaleOverride ?? g.scale;
   const shown = Math.ceil(g.slice.length * Math.max(0, Math.min(1, revealProgress)));
@@ -70,27 +72,27 @@ export const CandlestickChart = ({
         <g opacity={axesOpacity}>
           {tickPrices.map((p) => (
             <g key={p}>
-              <line x1={box.x} y1={scale(p)} x2={box.x + box.w} y2={scale(p)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />
+              <line x1={box.x} y1={scale(p)} x2={box.x + box.w} y2={scale(p)} stroke={pal.border} strokeWidth={theme.stroke.hair} />
               <text
                 x={box.x + box.w + 14}
                 y={scale(p) + 8}
                 fontFamily={theme.type.family}
                 fontSize={theme.type.axis.size}
                 fontWeight={theme.type.axis.weight}
-                fill={theme.colors.slate}
+                fill={pal.slate}
               >
                 {fmtPrice(p)}
               </text>
             </g>
           ))}
-          <line x1={box.x} y1={box.y + box.h} x2={box.x + box.w} y2={box.y + box.h} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />
+          <line x1={box.x} y1={box.y + box.h} x2={box.x + box.w} y2={box.y + box.h} stroke={pal.border} strokeWidth={theme.stroke.hair} />
         </g>
       )}
       {g.slice.slice(0, shown).map((d, i) => {
         const gi = g.a + i;
         const x = g.cx(gi);
         const up = d.c >= d.o;
-        const color = up ? theme.colors.candleGreen : theme.colors.candleRed;
+        const color = up ? pal.candleGreen : pal.candleRed;
         const yO = scale(d.o);
         const yC = scale(d.c);
         const top = Math.min(yO, yC);

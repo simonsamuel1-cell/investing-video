@@ -5,6 +5,7 @@
  */
 import { interpolate, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export const TF_LABELS = ["5m", "1D", "1W"] as const;
 export type TfIndex = 0 | 1 | 2;
@@ -27,6 +28,7 @@ export const TimeframeSelector = ({
   /** 0 hides the active fill — for when the track is up but no timeframe is chosen yet. */
   fillOpacity?: number;
 }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const fillX = x + activeIndex * (segW + gap);
   const appear = interpolate(f, [0, 12], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: theme.motion.ease });
@@ -42,8 +44,8 @@ export const TimeframeSelector = ({
           width: TF_LABELS.length * segW + (TF_LABELS.length - 1) * gap + 12,
           height: segH + 12,
           borderRadius: theme.radius.chip + 4,
-          background: theme.colors.cardBg,
-          border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+          background: pal.cardBg,
+          border: `${theme.stroke.hair}px solid ${pal.border}`,
           opacity: appear,
         }}
       />
@@ -56,7 +58,7 @@ export const TimeframeSelector = ({
           width: segW,
           height: segH,
           borderRadius: theme.radius.chip,
-          background: theme.colors.indigo,
+          background: pal.indigo,
           opacity: appear * fillOpacity,
         }}
       />
@@ -77,7 +79,7 @@ export const TimeframeSelector = ({
               fontFamily: theme.type.family,
               fontSize: theme.type.label.size,
               fontWeight: theme.type.label.weight,
-              color: isActive ? theme.colors.cardBg : theme.colors.slate,
+              color: isActive ? pal.cardBg : pal.slate,
               opacity: appear,
             }}
           >

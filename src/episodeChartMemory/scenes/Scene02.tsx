@@ -13,6 +13,7 @@ import { theme } from "../theme";
 import { progress, fadeIn, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -51,6 +52,7 @@ const PRICE_RANGE: [number, number] = [18000, 42000];
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene02 = ({ geom }: { geom: ContGeom }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const { box, chiliScaleY } = geom;
 
@@ -122,7 +124,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           fontFamily: theme.type.family,
           fontSize: 48,
           fontWeight: 600,
-          color: theme.colors.slate,
+          color: pal.slate,
           opacity: openerOp,
           transform: `translateY(${op.y}px)`,
         }}
@@ -163,7 +165,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
             y1={CARD_START[0].cy + 56}
             x2={CARD_START[1].cx}
             y2={CARD_START[1].cy + 56}
-            stroke={theme.colors.muted}
+            stroke={pal.muted}
             strokeWidth={theme.stroke.hair}
             opacity={fadeIn(f, T.c2, 14) * (1 - settle)}
           />
@@ -175,7 +177,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
           {SPOKEN.map(({ idx }) => {
             const tgt = target(idx);
-            return <circle key={idx} cx={tgt.cx} cy={tgt.cy} r={8 * dots} fill={theme.colors.indigo} opacity={1 - pairIn} />;
+            return <circle key={idx} cx={tgt.cx} cy={tgt.cy} r={8 * dots} fill={pal.indigo} opacity={1 - pairIn} />;
           })}
         </svg>
       )}
@@ -203,8 +205,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
                 width: PAIR.w,
                 height: PAIR.h,
                 borderRadius: theme.radius.card,
-                background: theme.colors.cardBg,
-                border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+                background: pal.cardBg,
+                border: `${theme.stroke.hair}px solid ${pal.border}`,
               }}
             />
           ))}
@@ -220,18 +222,18 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
                 fontFamily: theme.type.family,
                 fontSize: theme.type.label.size,
                 fontWeight: theme.type.label.weight,
-                color: theme.colors.slate,
+                color: pal.slate,
               }}
             >
               {lab}
             </div>
           ))}
-          <LineChart points={chiliMini} progress={1} color={theme.colors.indigo} />
-          {denseDraw > 0.001 && <LineChart points={denseMini} progress={denseDraw} color={theme.colors.cyan} width={theme.stroke.hair} />}
+          <LineChart points={chiliMini} progress={1} color={pal.indigo} />
+          {denseDraw > 0.001 && <LineChart points={denseMini} progress={denseDraw} color={pal.cyan} width={theme.stroke.hair} />}
           {crowdDots.length > 0 && (
             <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
               {crowdDots.map((d, k) => (
-                <circle key={k} cx={d.x} cy={d.y} r={4} fill={theme.colors.cyan} opacity={d.o * 0.9} />
+                <circle key={k} cx={d.x} cy={d.y} r={4} fill={pal.cyan} opacity={d.o * 0.9} />
               ))}
             </svg>
           )}

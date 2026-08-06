@@ -8,6 +8,7 @@ import { theme } from "../theme";
 import type { Box } from "../helpers";
 import type { OHLC } from "../data/bmri";
 import { sma, bollinger } from "../data/bmri";
+import { usePalette } from "../palette";
 
 const pathFrom = (vals: (number | null)[], a: number, b: number, cx: (i: number) => number, scale: (p: number) => number) => {
   const pts: string[] = [];
@@ -38,6 +39,7 @@ export const IndicatorOverlays = ({
   ma50Progress?: number;
   bbProgress?: number;
 }) => {
+  const pal = usePalette();
   const [a, b] = win;
   const ma20 = sma(data, 20);
   const ma50 = sma(data, 50);
@@ -62,12 +64,12 @@ export const IndicatorOverlays = ({
 
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-      {bbProgress > 0.001 && up.length > 1 && <polygon points={bbPoly} fill={theme.colors.indigo} opacity={0.08 * bbProgress} />}
+      {bbProgress > 0.001 && up.length > 1 && <polygon points={bbPoly} fill={pal.indigo} opacity={0.08 * bbProgress} />}
       {ma50Progress > 0.001 && d50 && (
         <path
           d={d50}
           fill="none"
-          stroke={theme.colors.indigoTintMA2}
+          stroke={pal.indigoTintMA2}
           strokeWidth={theme.stroke.rule}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma50Progress)}
@@ -77,7 +79,7 @@ export const IndicatorOverlays = ({
         <path
           d={d20}
           fill="none"
-          stroke={theme.colors.indigoTintMA1}
+          stroke={pal.indigoTintMA1}
           strokeWidth={theme.stroke.rule}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma20Progress)}

@@ -8,6 +8,7 @@ import { interpolate } from "remotion";
 import type { Box } from "../helpers";
 import type { OHLC } from "../data/bmri";
 import { rsi, macd } from "../data/bmri";
+import { usePalette } from "../palette";
 
 export const SubPane = ({
   kind,
@@ -26,6 +27,7 @@ export const SubPane = ({
   slideProgress: number; // 0–1
   title: string;
 }) => {
+  const pal = usePalette();
   if (slideProgress <= 0.001) return null;
   const [a, b] = win;
   const dy = interpolate(slideProgress, [0, 1], [box.h + 24, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -44,9 +46,9 @@ export const SubPane = ({
     }
     body = (
       <>
-        <line x1={box.x} y1={yOf(70)} x2={box.x + box.w} y2={yOf(70)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
-        <line x1={box.x} y1={yOf(30)} x2={box.x + box.w} y2={yOf(30)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
-        <path d={pts.join(" ")} fill="none" stroke={theme.colors.indigo} strokeWidth={theme.stroke.rule} />
+        <line x1={box.x} y1={yOf(70)} x2={box.x + box.w} y2={yOf(70)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
+        <line x1={box.x} y1={yOf(30)} x2={box.x + box.w} y2={yOf(30)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
+        <path d={pts.join(" ")} fill="none" stroke={pal.indigo} strokeWidth={theme.stroke.rule} />
       </>
     );
   } else {
@@ -58,7 +60,7 @@ export const SubPane = ({
     const barW = Math.max(1.5, (box.w / Math.max(1, b - a + 1)) * 0.55);
     body = (
       <>
-        <line x1={box.x} y1={mid} x2={box.x + box.w} y2={mid} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />
+        <line x1={box.x} y1={mid} x2={box.x + box.w} y2={mid} stroke={pal.border} strokeWidth={theme.stroke.hair} />
         {Array.from({ length: b - a + 1 }, (_, k) => {
           const i = a + k;
           const v = m.hist[i];
@@ -70,7 +72,7 @@ export const SubPane = ({
               y={v >= 0 ? mid - hh : mid}
               width={barW}
               height={Math.max(1, hh)}
-              fill={v >= 0 ? theme.colors.indigo : theme.colors.indigoTintMA2}
+              fill={v >= 0 ? pal.indigo : pal.indigoTintMA2}
               opacity={0.85}
             />
           );
@@ -92,7 +94,7 @@ export const SubPane = ({
           fontFamily: theme.type.family,
           fontSize: theme.type.axis.size,
           fontWeight: 600,
-          color: theme.colors.slate,
+          color: pal.slate,
           opacity: slideProgress,
         }}
       >

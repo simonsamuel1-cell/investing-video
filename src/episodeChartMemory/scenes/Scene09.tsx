@@ -11,6 +11,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeOut, textReveal, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
@@ -84,6 +85,7 @@ const GROUP_DY = theme.layout.safeTop - GROUP_TOP + BLOCK_DROP;
 export const SC09_EXIT = { box: CHART, win: WIN.sc01, dim: TEXTURE * TEXTURE_LIFT };
 
 export const Scene09 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
 
   // the series carried over from SC08: eases into this scene's box and window
@@ -123,7 +125,7 @@ export const Scene09 = () => {
             top: box.y,
             width: box.w * 0.18 + 40,
             height: box.h,
-            background: theme.colors.bg,
+            background: pal.bg,
             opacity: 0.92 * future * clearOp,
           }}
         />
@@ -132,8 +134,8 @@ export const Scene09 = () => {
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)`, opacity: clearOp }}>
-      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={theme.colors.indigo} />
-      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={theme.colors.slate} />
+      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={pal.indigo} />
+      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={pal.slate} />
 
       {CHIPS.map((c, i) => (
         <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
@@ -146,7 +148,7 @@ export const Scene09 = () => {
             y1={CHIP_Y + 54}
             x2={960 - ruleW / 2 + ruleW * rule}
             y2={CHIP_Y + 54}
-            stroke={lift > 0.5 ? theme.colors.indigo : theme.colors.slate}
+            stroke={lift > 0.5 ? pal.indigo : pal.slate}
             strokeWidth={theme.stroke.hair}
             opacity={0.6 + 0.4 * lift}
           />
@@ -166,7 +168,7 @@ export const Scene09 = () => {
           fontFamily: theme.type.family,
           fontSize: theme.type.header.size,
           fontWeight: theme.type.header.weight,
-          color: theme.colors.indigo,
+          color: pal.indigo,
           opacity: info.opacity * clearOp,
           transform: `translateY(${info.y}px)`,
         }}
@@ -183,7 +185,7 @@ export const Scene09 = () => {
           fontFamily: theme.type.family,
           fontSize: theme.type.label.size,
           fontWeight: theme.type.label.weight,
-          color: theme.colors.slate,
+          color: pal.slate,
           opacity: hope.opacity * 0.75 * clearOp,
           transform: `translateY(${hope.y}px)`,
           textDecoration: "line-through",

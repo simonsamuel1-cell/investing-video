@@ -4,6 +4,7 @@
  */
 import { useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export const Ping = ({
   x,
@@ -24,9 +25,10 @@ export const Ping = ({
   dur?: number;
   holdDot?: boolean;
 }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   if (f < startFrame) return null;
-  const color = variant === "indigo" ? theme.colors.indigo : variant === "cyan" ? theme.colors.cyan : theme.colors.slate;
+  const color = variant === "indigo" ? pal.indigo : variant === "cyan" ? pal.cyan : pal.slate;
   const CL = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const r = interpolate(f, [startFrame, startFrame + dur], [r0, r1], { ...CL, easing: theme.motion.ease });
   const ringOp = interpolate(f, [startFrame, startFrame + dur], [0.85, 0], CL);

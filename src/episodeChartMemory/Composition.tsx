@@ -18,6 +18,7 @@ import { Scene08 } from "./scenes/Scene08";
 import { Scene09 } from "./scenes/Scene09";
 import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
+import { PaletteProvider, usePalette } from "./palette";
 import { SUBTITLES, type SubtitleCue } from "./subtitles";
 
 export const TOTAL_FRAMES = 6606; // 03:40.10 @30fps — VO-LOCKED (§8 recalibration applied)
@@ -49,13 +50,22 @@ export type ChartMemoryProps = {
   muted?: boolean;
 };
 
-export const ChartMemoryComposition = ({
+/** Wraps the tree so every component can read the frame's palette. */
+export const ChartMemoryComposition = (props: ChartMemoryProps) => (
+  <PaletteProvider>
+    <Episode {...props} />
+  </PaletteProvider>
+);
+
+const Episode = ({
   subtitles = SUBTITLES,
   audioSrc = "vo/chart-memory.mp3",
   showSubtitles = true,
   muted = false,
-}: ChartMemoryProps) => (
-  <AbsoluteFill style={{ backgroundColor: theme.colors.bg, fontFamily: theme.type.family }}>
+}: ChartMemoryProps) => {
+  const pal = usePalette();
+  return (
+  <AbsoluteFill style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
         <Component />
@@ -72,4 +82,5 @@ export const ChartMemoryComposition = ({
 
     {HAS_VO && <Audio src={staticFile(audioSrc)} muted={muted} />}
   </AbsoluteFill>
-);
+  );
+};

@@ -5,6 +5,7 @@
  */
 import { useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export const PriceCard = ({
   value,
@@ -28,6 +29,7 @@ export const PriceCard = ({
   /** Fixed outer width — lets a row of cards keep an exact gap between them. */
   width?: number;
 }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   if (f < startFrame) return null;
   const p = interpolate(f, [startFrame, startFrame + 12], [0, 1], {
@@ -49,19 +51,19 @@ export const PriceCard = ({
         boxSizing: "border-box",
         padding: "22px 34px",
         borderRadius: theme.radius.card,
-        background: theme.colors.cardBg,
-        border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+        background: pal.cardBg,
+        border: `${theme.stroke.hair}px solid ${pal.border}`,
         textAlign: "center",
         opacity: p * opacity,
         whiteSpace: "nowrap",
       }}
     >
       {caption && (
-        <div style={{ fontFamily: theme.type.family, fontSize: 28, fontWeight: 500, color: theme.colors.slate, marginBottom: 6 }}>{caption}</div>
+        <div style={{ fontFamily: theme.type.family, fontSize: 28, fontWeight: 500, color: pal.slate, marginBottom: 6 }}>{caption}</div>
       )}
-      <div style={{ fontFamily: theme.type.family, fontSize: theme.type.numeral.size, fontWeight: theme.type.numeral.weight, color: theme.colors.ink }}>
+      <div style={{ fontFamily: theme.type.family, fontSize: theme.type.numeral.size, fontWeight: theme.type.numeral.weight, color: pal.ink }}>
         {value}
-        {rise && <span style={{ color: theme.colors.cyan, marginLeft: 10 }}>↑</span>}
+        {rise && <span style={{ color: pal.cyan, marginLeft: 10 }}>↑</span>}
       </div>
     </div>
   );

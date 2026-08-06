@@ -14,6 +14,7 @@ import { theme } from "../theme";
 import { progress, priceScale, velocityBlur, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { SC09_EXIT } from "./Scene09";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 230, w: 1520, h: 600 };
@@ -52,6 +53,7 @@ const EMOTIONS = [
 ];
 
 export const Scene10 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
 
   const zoom = f >= T.zoom ? progress(f, T.zoom, ZOOM_DUR) : 0;
@@ -109,7 +111,7 @@ export const Scene10 = () => {
             const i = TIGHT[0] + k;
             const q = Math.max(0, Math.min(1, tickIn * (TIGHT[1] - TIGHT[0] + 1) - k));
             if (q <= 0) return null;
-            return <circle key={i} cx={g.cx(i)} cy={scale(bmriDaily[i].c)} r={3.4} fill={theme.colors.indigo} opacity={0.5 * q * chipsOp} />;
+            return <circle key={i} cx={g.cx(i)} cy={scale(bmriDaily[i].c)} r={3.4} fill={pal.indigo} opacity={0.5 * q * chipsOp} />;
           })}
         </svg>
       )}

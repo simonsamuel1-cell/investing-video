@@ -13,6 +13,7 @@ import { theme } from "../theme";
 import { fadeIn, fadeOut, progress, mulberry32 } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -61,6 +62,7 @@ const pickAnatomy = (a: number, b: number) => {
 };
 
 export const Scene04 = ({ geom }: { geom: ContGeom }) => {
+  const pal = usePalette();
   const local = useCurrentFrame();
   const { box, win, cx, scale, camera } = geom;
   // The window bounds go FRACTIONAL while the camera moves (that is what keeps
@@ -117,15 +119,15 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
                 width: SEG.w,
                 height: SEG.h,
                 borderRadius: theme.radius.chip,
-                background: active > 0.5 ? theme.colors.indigo : theme.colors.cardBg,
-                border: `${theme.stroke.hair}px solid ${active > 0.5 ? theme.colors.indigo : theme.colors.border}`,
+                background: active > 0.5 ? pal.indigo : pal.cardBg,
+                border: `${theme.stroke.hair}px solid ${active > 0.5 ? pal.indigo : pal.border}`,
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 fontFamily: theme.type.family,
                 fontSize: theme.type.label.size,
                 fontWeight: theme.type.label.weight,
-                color: active > 0.5 ? theme.colors.cardBg : theme.colors.slate,
+                color: active > 0.5 ? pal.cardBg : pal.slate,
               }}
             >
               {lab}
@@ -141,7 +143,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
             const i = a + k;
             const q = closePulse(i);
             if (q <= 0.01) return null;
-            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3 + 4 * q} fill={theme.colors.indigo} opacity={0.9 * q} />;
+            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3 + 4 * q} fill={pal.indigo} opacity={0.9 * q} />;
           })}
         </svg>
       )}
@@ -175,7 +177,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
               y1={scale(bmriDaily[i].h)}
               x2={cx(i)}
               y2={scale(bmriDaily[i].l)}
-              stroke={theme.colors.muted}
+              stroke={pal.muted}
               strokeWidth={theme.stroke.rule}
               strokeDasharray="6 6"
               opacity={0.75 * ghostFade}

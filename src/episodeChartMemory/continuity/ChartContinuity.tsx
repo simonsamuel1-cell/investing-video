@@ -21,6 +21,7 @@ import { Scene02 } from "../scenes/Scene02";
 import { Scene03 } from "../scenes/Scene03";
 import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const PHASE = { a: 0, b: 608, c: 1190, d: 1997, end: 2519 };
@@ -91,6 +92,7 @@ const chiliAt = (t: number) => {
 };
 
 export const ChartContinuity = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
 
   // ── geometry (recomputed each frame; the ELEMENT never remounts) ──
@@ -187,21 +189,21 @@ export const ChartContinuity = () => {
             y1={box.y + box.h}
             x2={box.x + box.w * axisDraw}
             y2={box.y + box.h}
-            stroke={theme.colors.border}
+            stroke={pal.border}
             strokeWidth={theme.stroke.rule}
             opacity={axisOp}
           />
           {bmriAxisOp > 0.001 &&
             tickPrices.map((p) => (
               <g key={p} opacity={bmriAxisOp * axisOp}>
-                <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={theme.colors.border} strokeWidth={theme.stroke.hair} />
+                <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={pal.border} strokeWidth={theme.stroke.hair} />
                 <text
                   x={box.x + box.w + 16}
                   y={g.scale(p) + 8}
                   fontFamily={theme.type.family}
                   fontSize={theme.type.axis.size}
                   fontWeight={theme.type.axis.weight}
-                  fill={theme.colors.slate}
+                  fill={pal.slate}
                   opacity={tickLabelOp}
                 >
                   {fmtPrice(p)}
@@ -223,7 +225,7 @@ export const ChartContinuity = () => {
               fontFamily: theme.type.family,
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
-              color: theme.colors.slate,
+              color: pal.slate,
               opacity: chiliAxisOp * axisDraw,
             }}
           >
@@ -243,7 +245,7 @@ export const ChartContinuity = () => {
               fontFamily: theme.type.family,
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
-              color: theme.colors.slate,
+              color: pal.slate,
               opacity: tickLabelOp,
               whiteSpace: "nowrap",
             }}
@@ -265,8 +267,8 @@ export const ChartContinuity = () => {
             width: box.w + 80,
             height: box.h + 112,
             borderRadius: theme.radius.cardLg,
-            background: theme.colors.cardBg,
-            border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+            background: pal.cardBg,
+            border: `${theme.stroke.hair}px solid ${pal.border}`,
             boxShadow: theme.shadow.lift,
             opacity: 1 - pullOut,
           }}
@@ -276,7 +278,7 @@ export const ChartContinuity = () => {
       {/* ── THE chart element — one line/candle surface across all four phases ── */}
       {lineDraw > 0.001 && wipe < 1 && (
         <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px 0px ${Math.max(0, wipeX)}px)` }}>
-          <LineChart points={linePts} progress={lineDraw} color={theme.colors.indigo} opacity={lineDim} />
+          <LineChart points={linePts} progress={lineDraw} color={pal.indigo} opacity={lineDim} />
         </div>
       )}
       {wipe > 0.001 && (

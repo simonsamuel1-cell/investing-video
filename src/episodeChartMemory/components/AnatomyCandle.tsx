@@ -13,6 +13,7 @@ import { theme } from "../theme";
 import { priceScale } from "../helpers";
 import { Chip } from "./Chip";
 import type { OHLC } from "../data/bmri";
+import { usePalette } from "../palette";
 
 export const AnatomyCandle = ({
   candle,
@@ -35,6 +36,7 @@ export const AnatomyCandle = ({
   /** Shifts the candle AND its four chips together, leaving the card in place. */
   nudgeX?: number;
 }) => {
+  const pal = usePalette();
   const padTop = cardY + 96;
   const padBottom = cardY + cardH - 96;
   const scale = priceScale(candle.l, candle.h, padTop, padBottom, 0.05);
@@ -43,7 +45,7 @@ export const AnatomyCandle = ({
   const LABEL_W = 150; // fixed, so Open and Close balance either side of the wick
   const LABEL_GAP = 28; // connector length from the body edge to the chip
   const up = candle.c >= candle.o;
-  const color = up ? theme.colors.candleGreen : theme.colors.candleRed;
+  const color = up ? pal.candleGreen : pal.candleRed;
   const yO = scale(candle.o);
   const yC = scale(candle.c);
   const top = Math.min(yO, yC);
@@ -61,8 +63,8 @@ export const AnatomyCandle = ({
           width: cardW,
           height: cardH,
           borderRadius: theme.radius.cardLg,
-          background: theme.colors.cardBg,
-          border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+          background: pal.cardBg,
+          border: `${theme.stroke.hair}px solid ${pal.border}`,
           opacity,
         }}
       />

@@ -15,6 +15,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Card top sits BELOW the 150px logo clear-zone so the brand mark never
@@ -66,6 +67,7 @@ const pivots = () => {
 const P = pivots();
 
 export const Scene01 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
 
   // price pane compresses as the sub-panes arrive
@@ -135,8 +137,8 @@ export const Scene01 = () => {
             width: CARD.w,
             height: CARD.h,
             borderRadius: theme.radius.cardLg,
-            background: theme.colors.cardBg,
-            border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+            background: pal.cardBg,
+            border: `${theme.stroke.hair}px solid ${pal.border}`,
             opacity: chartOp,
           }}
         />
@@ -169,7 +171,7 @@ export const Scene01 = () => {
                     y1={t.y1}
                     x2={t.x2}
                     y2={t.y2}
-                    stroke={theme.colors.indigo}
+                    stroke={pal.indigo}
                     strokeWidth={theme.stroke.rule}
                     strokeDasharray={len}
                     strokeDashoffset={len * (1 - trendDraw)}

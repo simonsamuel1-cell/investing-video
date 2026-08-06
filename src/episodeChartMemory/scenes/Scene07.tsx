@@ -13,6 +13,7 @@ import { theme } from "../theme";
 import { progress, fadeOut, type Box } from "../helpers";
 import { bmri5m, bmriWeekly } from "../data/bmri";
 import { expandT, expandCard, expandChart, expandBlur } from "../transitions/CardExpand";
+import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
 const SCENE_FROM = 3720;
@@ -66,6 +67,7 @@ const reversals = () => {
 const REV = reversals();
 
 export const Scene07 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const g = f + SCENE_FROM; // the CardExpand curve is defined in global frames
   // The right card starts growing into SC08's card before this scene ends; the
@@ -117,8 +119,8 @@ export const Scene07 = () => {
             width: LEFT.w,
             height: LEFT.h,
             borderRadius: theme.radius.cardLg,
-            background: theme.colors.cardBg,
-            border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+            background: pal.cardBg,
+            border: `${theme.stroke.hair}px solid ${pal.border}`,
           }}
         />
         <CandlestickChart data={bmri5m} window={W5} box={li} />
@@ -140,8 +142,8 @@ export const Scene07 = () => {
               width: rightCard.w,
               height: rightCard.h,
               borderRadius: theme.radius.cardLg,
-              background: theme.colors.cardBg,
-              border: `${theme.stroke.hair}px solid ${theme.colors.border}`,
+              background: pal.cardBg,
+              border: `${theme.stroke.hair}px solid ${pal.border}`,
             }}
           />
           <CandlestickChart data={bmriWeekly} window={WW} box={ri} />
@@ -160,7 +162,7 @@ export const Scene07 = () => {
             y1={LEFT.y}
             x2={LEFT.x + LEFT.w + GAP / 2}
             y2={LEFT.y + LEFT.h * ruleP}
-            stroke={theme.colors.muted}
+            stroke={pal.muted}
             strokeWidth={theme.stroke.hair}
           />
         </svg>
@@ -192,14 +194,14 @@ export const Scene07 = () => {
             y1={ay1}
             x2={ax2}
             y2={ay2}
-            stroke={theme.colors.indigo}
+            stroke={pal.indigo}
             strokeWidth={theme.stroke.rule}
             strokeDasharray={alen}
             strokeDashoffset={alen * (1 - arrow)}
           />
           <polygon
             points={`${hx},${hy} ${hx - 16 * Math.cos(ang - 0.4)},${hy - 16 * Math.sin(ang - 0.4)} ${hx - 16 * Math.cos(ang + 0.4)},${hy - 16 * Math.sin(ang + 0.4)}`}
-            fill={theme.colors.indigo}
+            fill={pal.indigo}
             opacity={arrow}
           />
         </svg>

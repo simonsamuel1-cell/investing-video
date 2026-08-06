@@ -21,13 +21,13 @@ import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
 
-// ═══ EDIT ═══════════════════════════════════════════════════════════════════
+// Palet DASAR. Bagian yang berpindah warna di tengah episode diatur di
+// palette.tsx (SEGMENTS) — bukan di sini.
 const PALETTE: PaletteName = "terang";
-// ═══════════════════════════════════════════════════════════════════════════
 
-type PaletteName = "terang" | "gelap" | "kertas" | "ungu";
+export type PaletteName = "terang" | "gelap" | "kertas" | "ungu";
 
-type Palette = {
+export type Palette = {
   bg: string;
   ink: string;
   slate: string;
@@ -46,7 +46,7 @@ type Palette = {
   muted: string;
 };
 
-const PALETTES: Record<PaletteName, Palette> = {
+export const PALETTES: Record<PaletteName, Palette> = {
   // Asli: hue terkunci indigo 247 / cyan 192.
   terang: {
     bg: "#F5F5F5",

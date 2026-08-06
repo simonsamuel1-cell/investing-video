@@ -4,11 +4,12 @@
  * flashes on frame 0.
  */
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export const LineChart = ({
   points,
   progress = 1,
-  color = theme.colors.indigo,
+  color,
   width = theme.stroke.rule,
   opacity = 1,
   showDots = false,
@@ -16,12 +17,15 @@ export const LineChart = ({
 }: {
   points: { x: number; y: number }[];
   progress?: number; // 0–1 trim path
+  /** Defaults to the live palette's indigo. */
   color?: string;
   width?: number;
   opacity?: number;
   showDots?: boolean;
   dotRadius?: number;
 }) => {
+  const pal = usePalette();
+  const stroke = color ?? pal.indigo;
   if (points.length < 2) return null;
   // Path length approximation drives the dash offset.
   let len = 0;
@@ -37,7 +41,7 @@ export const LineChart = ({
       <path
         d={d}
         fill="none"
-        stroke={color}
+        stroke={stroke}
         strokeWidth={width}
         strokeLinejoin="round"
         strokeLinecap="round"
@@ -46,7 +50,7 @@ export const LineChart = ({
         opacity={opacity}
       />
       {showDots &&
-        points.slice(0, shownDots).map((pt, i) => <circle key={i} cx={pt.x} cy={pt.y} r={dotRadius} fill={color} opacity={opacity} />)}
+        points.slice(0, shownDots).map((pt, i) => <circle key={i} cx={pt.x} cy={pt.y} r={dotRadius} fill={stroke} opacity={opacity} />)}
     </svg>
   );
 };

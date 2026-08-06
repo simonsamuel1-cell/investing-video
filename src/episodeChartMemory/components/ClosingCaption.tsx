@@ -11,7 +11,8 @@
  *   y        tepi ATAS teks
  *   size     ukuran font, px
  *   weight   ketebalan font (400–800)
- *   color    ambil dari theme.colors — jangan tulis hex mentah di sini
+ *   color    NAMA PERAN dari palet ("indigo", "cyan", "slate", "ink"),
+ *            bukan hex. Warnanya ikut palet yang aktif di frame itu.
  *   rise     jarak teks naik saat muncul, px (bagian dari textReveal)
  *   revealDur  lama kemunculan, frame
  *
@@ -25,23 +26,28 @@
  * Nilai sekarang: y = 124, yaitu 50px di bawah posisi pertamanya (74).
  */
 import { useCurrentFrame } from "remotion";
-import { theme } from "../theme";
+import { theme, type Palette } from "../theme";
 import { textReveal } from "../helpers";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-export const CAPTION = {
+export const CAPTION: {
+  text: string; x: number; y: number; size: number; weight: number;
+  color: keyof Palette; rise: number; revealDur: number;
+} = {
   text: "Ingatan pasar",
   x: theme.canvas.width / 2, // 960
   y: 204,
   size: theme.type.header.size, // 48
   weight: theme.type.header.weight, // 700
-  color: theme.colors.indigo,
+  color: "indigo",
   rise: 18,
   revealDur: 20,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const ClosingCaption = ({ startFrame }: { startFrame: number }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   if (f < startFrame) return null;
   const r = textReveal(f, startFrame, CAPTION.revealDur, CAPTION.rise);
@@ -56,7 +62,7 @@ export const ClosingCaption = ({ startFrame }: { startFrame: number }) => {
         fontFamily: theme.type.family,
         fontSize: CAPTION.size,
         fontWeight: CAPTION.weight,
-        color: CAPTION.color,
+        color: pal[CAPTION.color],
         opacity: r.opacity,
         whiteSpace: "nowrap",
       }}

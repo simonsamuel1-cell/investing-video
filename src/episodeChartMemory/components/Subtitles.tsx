@@ -7,9 +7,11 @@
 import { useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 import { SUBTITLES, type SubtitleCue } from "../subtitles";
+import { usePalette } from "../palette";
 
 /** `cues` lets a second composition burn in a different track. */
 export const Subtitles = ({ cues = SUBTITLES }: { cues?: SubtitleCue[] }) => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const cue = cues.find((c) => f >= c.start && f < c.end);
   if (!cue) return null;
@@ -34,7 +36,7 @@ export const Subtitles = ({ cues = SUBTITLES }: { cues?: SubtitleCue[] }) => {
           fontSize: theme.type.label.size,
           fontWeight: 500,
           lineHeight: 1.2,
-          color: theme.colors.indigo,
+          color: pal.indigo,
           textAlign: "center",
           maxWidth: theme.layout.activeW,
         }}

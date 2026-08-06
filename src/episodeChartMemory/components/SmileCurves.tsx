@@ -16,6 +16,7 @@
  * kurvanya tidak menabrak baris tanggal.
  */
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 export type SmileCurve = { x1: number; x2: number; y: number; depth: number };
 
@@ -32,6 +33,7 @@ const OPACITY = 0.7;
 const pathOf = (c: SmileCurve) => `M ${c.x1} ${c.y} Q ${(c.x1 + c.x2) / 2} ${c.y + c.depth * 2} ${c.x2} ${c.y}`;
 
 export const SmileCurves = ({ progress, opacity = 1 }: { progress: number; opacity?: number }) => {
+  const pal = usePalette();
   if (progress <= 0.001) return null;
 
   return (
@@ -44,7 +46,7 @@ export const SmileCurves = ({ progress, opacity = 1 }: { progress: number; opaci
             key={i}
             d={pathOf(c)}
             fill="none"
-            stroke={theme.colors.indigo}
+            stroke={pal.indigo}
             strokeWidth={theme.stroke.rule}
             strokeLinecap="round"
             // pathLength normalises the path to 1 so the draw-on works without

@@ -7,15 +7,19 @@
 import React from "react";
 import { AbsoluteFill } from "remotion";
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
-export const SafeArea = ({ children, transparent = false }: { children: React.ReactNode; transparent?: boolean }) => (
-  <AbsoluteFill
-    style={{
-      backgroundColor: transparent ? undefined : theme.colors.bg,
-      fontFamily: theme.type.family,
-      color: theme.colors.ink,
-    }}
-  >
-    {children}
-  </AbsoluteFill>
-);
+export const SafeArea = ({ children, transparent = false }: { children: React.ReactNode; transparent?: boolean }) => {
+  const pal = usePalette();
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: transparent ? undefined : pal.bg,
+        fontFamily: theme.type.family,
+        color: pal.ink,
+      }}
+    >
+      {children}
+    </AbsoluteFill>
+  );
+};

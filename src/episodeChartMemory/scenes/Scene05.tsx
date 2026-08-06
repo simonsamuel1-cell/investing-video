@@ -11,6 +11,7 @@ import { theme } from "../theme";
 import { progress, fadeIn, fadeOut, countTo, fmtPrice } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -36,6 +37,7 @@ const N_Y_TICKS = 5;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {
+  const pal = usePalette();
   const local = useCurrentFrame();
   const { box, win, cx, scale } = geom;
   // Window bounds can be fractional mid-camera-move — round for array indexing.
@@ -68,12 +70,12 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
             x2={box.x + box.w}
             y2={box.y + box.h}
             progress={axisP}
-            color={theme.colors.indigo}
+            color={pal.indigo}
             label="Waktu"
             labelDx={20}
             labelDy={20}
           />
-          <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={axisP} color={theme.colors.cyan} label="Harga" />
+          <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={axisP} color={pal.cyan} label="Harga" />
         </div>
       )}
 
@@ -90,7 +92,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               fontFamily: theme.type.family,
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
-              color: theme.colors.slate,
+              color: pal.slate,
               opacity: fadeIn(local, T.xTicks + k * TICK_STEP, 12) * clearOp,
               whiteSpace: "nowrap",
             }}
@@ -111,7 +113,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               fontFamily: theme.type.family,
               fontSize: theme.type.axis.size,
               fontWeight: theme.type.axis.weight,
-              color: theme.colors.slate,
+              color: pal.slate,
               opacity: fadeIn(local, T.yTicks + k * TICK_STEP, 12) * clearOp,
               whiteSpace: "nowrap",
             }}
@@ -126,9 +128,9 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
           width={theme.canvas.width}
           height={theme.canvas.height}
         >
-          <line x1={px} y1={py} x2={px} y2={box.y + box.h} stroke={theme.colors.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
-          <line x1={box.x} y1={py} x2={px} y2={py} stroke={theme.colors.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
-          <circle cx={px} cy={py} r={8} fill={theme.colors.indigo} opacity={crossP} />
+          <line x1={px} y1={py} x2={px} y2={box.y + box.h} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
+          <line x1={box.x} y1={py} x2={px} y2={py} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
+          <circle cx={px} cy={py} r={8} fill={pal.indigo} opacity={crossP} />
         </svg>
       )}
 
