@@ -28,11 +28,7 @@ const PALETTE: PaletteName = "terang";
 export type PaletteName = "terang" | "gelap" | "kertas" | "ungu";
 
 export type Palette = {
-  /** Warna PADAT latar — dipakai kalau ada yang perlu menutup, bukan menghias. */
   bg: string;
-  /** Dua ujung gradien latar. Kalau sama, latarnya rata. */
-  bgFrom: string;
-  bgTo: string;
   ink: string;
   slate: string;
   indigo: string;
@@ -54,8 +50,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // Asli: hue terkunci indigo 247 / cyan 192.
   terang: {
     bg: "#F5F5F5",
-    bgFrom: "#F5F5F5",
-    bgTo: "#F5F5F5",
     ink: "#000000",
     slate: "#626266",
     indigo: "#5F4DEE",
@@ -76,8 +70,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // terangnya supaya tetap terbaca di atas hitam. Candle jadi jauh lebih kuat.
   gelap: {
     bg: "#171717",
-    bgFrom: "#171717",
-    bgTo: "#171717",
     ink: "#F2F2F2",
     slate: "#9A9AA2",
     indigo: "#8B7AF7",
@@ -98,8 +90,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // terakota, satu-satunya tempat aturan rona sengaja dilanggar.
   kertas: {
     bg: "#F4EFE7",
-    bgFrom: "#F4EFE7",
-    bgTo: "#F4EFE7",
     ink: "#1C1917",
     slate: "#6E6358",
     indigo: "#5F4DEE",
@@ -120,9 +110,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
   // sengaja dijauhkan dari indigo merek: rona 282° vs 247°, dan lebih condong
   // ke merah, supaya terbaca sebagai ruang lain — bukan indigo yang meleset.
   ungu: {
-    bg: "#C9B5DA", // padat, kira-kira di tengah gradiennya
-    bgFrom: "#FBF8FF",
-    bgTo: "#AA97C3",
+    bg: "#DCC6EC",
     ink: "#2E1A3D",
     slate: "#6B5580",
     indigo: "#7A2FB0",

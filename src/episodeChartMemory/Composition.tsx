@@ -65,7 +65,7 @@ const Episode = ({
 }: ChartMemoryProps) => {
   const pal = usePalette();
   return (
-  <AbsoluteFill style={{ background: `linear-gradient(180deg, ${pal.bgFrom}, ${pal.bgTo})`, fontFamily: theme.type.family }}>
+  <AbsoluteFill style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
         <Component />
