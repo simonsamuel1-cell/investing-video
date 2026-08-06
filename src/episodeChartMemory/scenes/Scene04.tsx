@@ -34,7 +34,10 @@ const T = {
   label: 736, // global 2415 — the camera has come to rest
   labelOut: 767, // global 2446 — it backs out again
 };
-const CARD = { x: 1250, y: 250, w: 520, h: 540 };
+// Moved right 20px: at x=1250 the card's left edge sat 10px off the chart's
+// price labels and read as touching them. The candle and its four chips are
+// positioned FROM this box, so they travel with it as one group.
+const CARD = { x: 1270, y: 250, w: 520, h: 540 };
 const FORMS = ["Line", "Candlestick"] as const;
 // Two segments + one gap, centred on the canvas.
 const SEG = { y: 196, w: 250, h: 56, gap: 8, x: (theme.canvas.width - (250 * 2 + 8)) / 2 };
