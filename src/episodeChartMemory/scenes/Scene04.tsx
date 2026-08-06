@@ -10,7 +10,7 @@ import { useCurrentFrame } from "remotion";
 import { Chip } from "../components/Chip";
 import { AnatomyCandle } from "../components/AnatomyCandle";
 import { theme } from "../theme";
-import { fadeIn, fadeOut, progress, mulberry32 } from "../helpers";
+import { fadeIn, fadeOut, progress, cardBreath, mulberry32 } from "../helpers";
 import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
@@ -195,6 +195,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
             cardW={CARD.w}
             cardH={CARD.h}
             nudgeX={20}
+            breath={cardBreath(3, local, T.cardIn, T.back + 40 - T.cardIn)}
             showAt={{ open: T.open, high: T.high, low: T.low, close: T.close }}
           />
         </div>

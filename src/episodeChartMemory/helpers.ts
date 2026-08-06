@@ -61,6 +61,19 @@ export const velocityBlur = (progressAt: (x: number) => number, f: number, start
  */
 export const countTo = (f: number, start: number, dur: number, from: number, to: number) => from + (to - from) * progress(f, start, dur);
 
+/**
+ * cardBreath — pergerakan 5% yang lambat pada panel putih, arahnya BERGANTIAN
+ * antar panel berurutan (`order` 1, 2, 3, …).
+ *
+ * Dikunci supaya tidak pernah melewati ukuran aslinya: panel yang "membesar"
+ * mulai dari 95% lalu berhenti di 100%. Beberapa panel di episode ini lebarnya
+ * persis seluruh area aman, jadi membesar melewati 100% akan menembus margin.
+ */
+export const cardBreath = (order: number, f: number, from: number, dur: number) => {
+  const t = clampProgress(f, from, dur);
+  return order % 2 === 1 ? 0.95 + 0.05 * t : 1 - 0.05 * t;
+};
+
 /** Linear (un-eased) 0→1 — pings, playback, strict-timing wipes. */
 export const linear = (f: number, start: number, dur: number) =>
   interpolate(f, [start, start + dur], [0, 1], CLAMP);

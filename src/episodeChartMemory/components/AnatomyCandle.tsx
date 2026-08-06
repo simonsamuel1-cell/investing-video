@@ -24,6 +24,7 @@ export const AnatomyCandle = ({
   showAt,
   opacity = 1,
   nudgeX = 0,
+  breath = 1,
 }: {
   candle: OHLC;
   cardX: number;
@@ -35,6 +36,8 @@ export const AnatomyCandle = ({
   opacity?: number;
   /** Shifts the candle AND its four chips together, leaving the card in place. */
   nudgeX?: number;
+  /** Slow 5% drift on the card AND everything on it. */
+  breath?: number;
 }) => {
   const pal = usePalette();
   const padTop = cardY + 96;
@@ -54,7 +57,7 @@ export const AnatomyCandle = ({
   const rightX = cx + bodyW / 2;
 
   return (
-    <>
+    <div style={{ transform: `scale(${breath})`, transformOrigin: `${cardX + cardW / 2}px ${cardY + cardH / 2}px` }}>
       <div
         style={{
           position: "absolute",
@@ -99,6 +102,6 @@ export const AnatomyCandle = ({
         width={LABEL_W}
         connectorTo={{ x: rightX, y: yC }}
       />
-    </>
+    </div>
   );
 };

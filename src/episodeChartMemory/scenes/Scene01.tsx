@@ -13,7 +13,7 @@ import { IndicatorOverlays } from "../components/IndicatorOverlays";
 import { SubPane } from "../components/SubPane";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut } from "../helpers";
+import { progress, fadeIn, fadeOut, cardBreath } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { usePalette } from "../palette";
 
@@ -94,6 +94,7 @@ export const Scene01 = () => {
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
+  const breath = cardBreath(1, f, 0, 489); // panel #1 — membesar
 
   const ma20 = f >= T.ma20 ? progress(f, T.ma20, 30) : 0;
   const ma50 = f >= T.ma50 ? progress(f, T.ma50, 30) : 0;
@@ -124,7 +125,7 @@ export const Scene01 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `scale(${cardScale})`,
+          transform: `scale(${cardScale * breath})`,
           transformOrigin: "960px 566px",
         }}
       >

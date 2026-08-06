@@ -10,7 +10,7 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, fadeIn, fadeOut, textReveal, countTo, cardBreath, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
@@ -92,6 +92,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
     });
   })();
   const denseDraw = f >= T.pairB ? progress(f, T.pairB, 60) : 0;
+  const pairBreath = cardBreath(2, f, T.pairA, T.pairOut + 26 - T.pairA); // panel #2 — mengecil
 
   // participants streaming into the busier line
   const crowd = f >= T.crowd ? progress(f, T.crowd, 44) : 0;
@@ -194,7 +195,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
 
       {/* ── the same shape, beside a busier one ── */}
       {pairOp > 0.001 && (
-        <div style={{ opacity: pairOp }}>
+        <div style={{ opacity: pairOp, transform: `scale(${pairBreath})`, transformOrigin: `${theme.canvas.width / 2}px ${PAIR.y + PAIR.h / 2}px` }}>
           {[0, 1].map((i) => (
             <div
               key={i}
