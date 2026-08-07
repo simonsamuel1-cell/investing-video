@@ -99,22 +99,27 @@ export const Scene06 = () => {
       {/* `i` is the SLOT. The timing below is indexed by slot, so swapping which
           file sits where (ROW_IMAGE) moves the pictures and leaves the
           highlight order exactly as it was. */}
-      {[0, 1, 2].map((i) => {
-        const op = holdEase(f, OPACITY[i].keys, OPACITY[i].vals);
-        return (
-          <BbcaImage
-            key={i}
-            index={ROW_IMAGE[i]}
-            slot={rowSlot(i)}
-            opacity={op}
-            scale={holdEase(f, SCALE[i].keys, SCALE[i].vals)}
-          />
-        );
-      })}
-
-      {/* the timeframe each screenshot is showing — dims with its own image */}
       {[0, 1, 2].map((i) => (
-        <BbcaLabel key={i} text={ROW_LABEL[i]} slot={rowSlot(i)} opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)} />
+        <BbcaImage
+          key={i}
+          index={ROW_IMAGE[i]}
+          slot={rowSlot(i)}
+          opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)}
+          scale={holdEase(f, SCALE[i].keys, SCALE[i].vals)}
+        />
+      ))}
+
+      {/* The timeframe each screenshot is showing. It dims with its own image,
+          and fills indigo exactly while that image is the one being lit —
+          `active` is read off the grow itself, so the two can never disagree. */}
+      {[0, 1, 2].map((i) => (
+        <BbcaLabel
+          key={i}
+          text={ROW_LABEL[i]}
+          slot={rowSlot(i)}
+          opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)}
+          active={(holdEase(f, SCALE[i].keys, SCALE[i].vals) - 1) / (GROW - 1)}
+        />
       ))}
     </SafeArea>
   );

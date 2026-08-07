@@ -13,6 +13,7 @@
  */
 import { Img, staticFile } from "remotion";
 import { theme } from "../theme";
+import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const BBCA = ["bbca/timeframe-1.jpg", "bbca/timeframe-2.jpg", "bbca/timeframe-3.jpg"];
@@ -56,15 +57,34 @@ export const IMG_RADIUS = 24;
 export const ROW_LABEL = ["5m", "1D", "1W"];
 
 /**
- * Labels do NOT scale with the highlight. They are parked above the image's
- * GROWN top rather than its resting top, so the gap closes to `gapAboveGrown`
- * when an image is lit instead of the label being pushed into it.
+ * The label above each image.
  *
- * That also keeps them out of the top-right logo zone: at the row's current
- * size the label box starts at y ≈ 148 and the ink at ≈ 153, and the rightmost
- * label ends near x 1509 against a watermark that begins at x 1538.
+ * Two states: at rest it is an outline — 2px indigo border, no fill, indigo
+ * text. While its image is the one being highlighted it fills indigo and the
+ * text turns white. The crossfade is driven by the image's own grow, so the
+ * two always move together.
+ *
+ * Labels do NOT scale with the highlight, and they are parked above the
+ * image's GROWN top rather than its resting top — so a lit image closes the
+ * gap instead of running into its own label.
+ *
+ * They are LEFT-ALIGNED to their image, which is also what keeps them legal:
+ * the rightmost one now starts at x 1252 and ends near 1320, inside the
+ * x ≤ 1368 limit that applies to anything in the top 150px. Centred, it sat at
+ * x 1476–1514 and had to stay below that band.
  */
-export const LABEL = { size: 28, lineH: 34, gapAboveGrown: 14, grow: 1.05 };
+export const LABEL = {
+  size: 26,
+  lineH: 30,
+  padY: 6,
+  padX: 16,
+  border: 2,
+  radius: 16,
+  gapAboveGrown: 12,
+  grow: 1.05,
+};
+
+const LABEL_H = LABEL.lineH + LABEL.padY * 2 + LABEL.border * 2;
 
 /**
  * The two-up framing in SC07 (global 3720 → 4471). Taller than a row slot, so
@@ -134,23 +154,53 @@ export const BbcaImage = ({
   );
 };
 
-/** The small timeframe label parked above an image. */
-export const BbcaLabel = ({ text, slot, opacity = 1 }: { text: string; slot: Slot; opacity?: number }) => {
+const rgb = (hex: string) => {
+  const n = parseInt(hex.slice(1), 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+};
+
+/**
+ * The timeframe label above an image, left-aligned to it.
+ *
+ * `active` 0 → outline, 1 → filled indigo with white text. Pass the image's own
+ * highlight amount and the two stay in step.
+ */
+export const BbcaLabel = ({
+  text,
+  slot,
+  opacity = 1,
+  active = 0,
+}: {
+  text: string;
+  slot: Slot;
+  opacity?: number;
+  active?: number;
+}) => {
+  const pal = usePalette();
   if (opacity <= 0.001) return null;
-  const top = slot.cy - (slot.h * LABEL.grow) / 2 - LABEL.gapAboveGrown - LABEL.lineH;
+  const a = Math.max(0, Math.min(1, active));
+  const [r, g, b] = rgb(pal.indigo);
+  // text travels indigo → white as the fill comes up
+  const fg = `rgb(${[r, g, b].map((c) => Math.round(c + (255 - c) * a)).join(",")})`;
+
   return (
     <div
       style={{
         position: "absolute",
-        left: slot.cx - 200,
-        top,
-        width: 400,
-        textAlign: "center",
+        left: slot.cx - (slot.h * ASPECT) / 2, // the image's left edge
+        top: slot.cy - (slot.h * LABEL.grow) / 2 - LABEL.gapAboveGrown - LABEL_H,
+        boxSizing: "border-box",
+        height: LABEL_H,
+        padding: `${LABEL.padY}px ${LABEL.padX}px`,
+        borderRadius: LABEL.radius,
+        border: `${LABEL.border}px solid ${pal.indigo}`,
+        background: `rgba(${r},${g},${b},${a})`,
         fontFamily: theme.type.family,
         fontSize: LABEL.size,
         fontWeight: 600,
         lineHeight: `${LABEL.lineH}px`,
-        color: theme.colors.slate,
+        color: fg,
+        whiteSpace: "nowrap",
         opacity,
       }}
     >
