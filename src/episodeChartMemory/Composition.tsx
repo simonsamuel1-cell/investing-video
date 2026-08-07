@@ -31,10 +31,10 @@ const HAS_VO = true;
 /**
  * Brand watermark — a full-frame transparent PNG whose mark sits at
  * x 1538–1853, y 45–142, i.e. inside the 360×150 top-right clear zone every
- * scene already keeps empty. Held at half opacity so it never competes with
- * the chart, and faded at both ends so it doesn't pop on the first frame.
+ * scene already keeps empty. Drawn at full strength, and faded at both ends so
+ * it doesn't pop on the first frame.
  */
-const WATERMARK = { fade: 12, opacity: 0.5 };
+const WATERMARK = { fade: 12, opacity: 1 };
 
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
   { from: 0, duration: 489, Component: Scene01 },
