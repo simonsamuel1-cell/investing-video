@@ -9,19 +9,23 @@
  * Frame numbers below are GLOBAL, as briefed; `S` converts them to this scene's
  * local clock by subtracting SCENE_FROM.
  *
+ * Slots are left / middle / right. ROW_IMAGE decides which file sits in each,
+ * so the timing below never has to change when the pictures are reordered.
+ *
  *   3008 – 3109   all three at 50%
- *   3110 – 3200   #1 lit: 100%, +5%
- *   3201 – 3277   #2 lit; #1 back to 50% and its own size
- *   3278 – 3374   #3 lit; #2 back to 50% and its own size
+ *   3110 – 3200   left lit: 100%, +5%
+ *   3201 – 3277   middle lit; left back to 50% and its own size
+ *   3278 – 3374   right lit; middle back to 50% and its own size
  *   3375 – 3534   all three at 100%
- *   3535 – 3596   #1 +5%
- *   3597 – 3646   #2 +5%; #1 back down
- *   3647 – 3719   #2 back down — the row rests, and SC07 picks #1 up from here
+ *   3535 – 3596   left +5%          ("seberapa dekat")
+ *   3597 – 3646   right +5%; left back down   ("atau seberapa jauh")
+ *   3647 – 3719   right back down — the row rests, and SC07 picks the left one
+ *                 up from here
  *
  * Two readings the brief left open, resolved here:
- *   · at 3375 #3 also returns to its own size. The brief only names opacity for
- *     that stretch, but 3535 asks for "#1 grows 5%", which only means anything
- *     if nothing is grown going in.
+ *   · at 3375 the right image also returns to its own size. The brief only
+ *     names opacity for that stretch, but 3535 asks for a 5% grow, which only
+ *     means anything if nothing is grown going in.
  *   · each change is eased over CHANGE frames rather than switching on the
  *     frame itself — a hard step would be the only cut of its kind in the
  *     episode.
@@ -29,7 +33,7 @@
 import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { theme } from "../theme";
-import { BbcaImage, rowSlot, ROW_IMAGE } from "../components/TimeframeImages";
+import { BbcaImage, BbcaLabel, rowSlot, ROW_IMAGE, ROW_LABEL } from "../components/TimeframeImages";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const SCENE_FROM = 3008;
@@ -71,10 +75,20 @@ const OPACITY = [
   { keys: [S.base, S.hi3], vals: [DIM, 1] },
 ];
 
+/**
+ * The second pass, 3535 → 3719, follows the voice-over rather than the order
+ * the first pass used:
+ *
+ *   3542–3602  "Semuanya bergantung pada seberapa DEKAT"  → slot 0, the 5m
+ *   3607–3635  "atau seberapa JAUH"                       → slot 2, the weekly
+ *
+ * So the middle image (1D) is not part of it — close and far are the two ends,
+ * and lighting the daily chart on "jauh" would say the wrong thing.
+ */
 const SCALE = [
   { keys: [S.base, S.hi1, S.hi2, S.up1, S.up2], vals: [1, GROW, 1, GROW, 1] },
-  { keys: [S.base, S.hi2, S.hi3, S.up2, S.down2], vals: [1, GROW, 1, GROW, 1] },
-  { keys: [S.base, S.hi3, S.allOn], vals: [1, GROW, 1] },
+  { keys: [S.base, S.hi2, S.hi3], vals: [1, GROW, 1] },
+  { keys: [S.base, S.hi3, S.allOn, S.up2, S.down2], vals: [1, GROW, 1, GROW, 1] },
 ];
 
 export const Scene06 = () => {
@@ -85,14 +99,22 @@ export const Scene06 = () => {
       {/* `i` is the SLOT. The timing below is indexed by slot, so swapping which
           file sits where (ROW_IMAGE) moves the pictures and leaves the
           highlight order exactly as it was. */}
+      {[0, 1, 2].map((i) => {
+        const op = holdEase(f, OPACITY[i].keys, OPACITY[i].vals);
+        return (
+          <BbcaImage
+            key={i}
+            index={ROW_IMAGE[i]}
+            slot={rowSlot(i)}
+            opacity={op}
+            scale={holdEase(f, SCALE[i].keys, SCALE[i].vals)}
+          />
+        );
+      })}
+
+      {/* the timeframe each screenshot is showing — dims with its own image */}
       {[0, 1, 2].map((i) => (
-        <BbcaImage
-          key={i}
-          index={ROW_IMAGE[i]}
-          slot={rowSlot(i)}
-          opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)}
-          scale={holdEase(f, SCALE[i].keys, SCALE[i].vals)}
-        />
+        <BbcaLabel key={i} text={ROW_LABEL[i]} slot={rowSlot(i)} opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)} />
       ))}
     </SafeArea>
   );

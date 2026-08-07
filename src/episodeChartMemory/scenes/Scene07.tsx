@@ -24,7 +24,7 @@ import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { Chip } from "../components/Chip";
 import { progress, fadeOut, type Box } from "../helpers";
-import { BbcaImage, rowSlot, paneSlot, lerpSlot, ROW_IMAGE } from "../components/TimeframeImages";
+import { BbcaImage, BbcaLabel, rowSlot, paneSlot, lerpSlot, ROW_IMAGE, ROW_LABEL } from "../components/TimeframeImages";
 import { expandT, expandCard, expandBlur } from "../transitions/CardExpand";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
@@ -111,6 +111,13 @@ export const Scene07 = () => {
       {/* the other two, still where SC06 left them, on their way out */}
       <BbcaImage index={ROW_IMAGE[1]} slot={rowSlot(1)} opacity={leaving} />
       {rightIn <= 0.001 && <BbcaImage index={PANE_IMAGE[1]} slot={rowSlot(2)} opacity={leaving} />}
+
+      {/* SC06's three small labels, carried across the boundary and cleared
+          with the row they belong to. The left one rides its image as it grows,
+          then hands the job to the "5 Menit — Noise" chip. */}
+      <BbcaLabel text={ROW_LABEL[0]} slot={slotL} opacity={leaving} />
+      <BbcaLabel text={ROW_LABEL[1]} slot={rowSlot(1)} opacity={leaving} />
+      <BbcaLabel text={ROW_LABEL[2]} slot={rowSlot(2)} opacity={leaving} />
 
       {/* the broad-direction side, arriving on its own beat */}
       {rightIn > 0.001 && (

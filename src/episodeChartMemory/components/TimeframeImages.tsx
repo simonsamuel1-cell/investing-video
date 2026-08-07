@@ -12,6 +12,7 @@
  * "VIDEO 18 - Chart" into public/bbca/.
  */
 import { Img, staticFile } from "remotion";
+import { theme } from "../theme";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const BBCA = ["bbca/timeframe-1.jpg", "bbca/timeframe-2.jpg", "bbca/timeframe-3.jpg"];
@@ -46,6 +47,24 @@ export const ROW_IMAGE = [2, 1, 0];
 
 /** Corner rounding on each screenshot. */
 export const IMG_RADIUS = 24;
+
+/**
+ * The small label above each image. Indexed by SLOT, like the timing — so it
+ * describes the position, and reordering ROW_IMAGE keeps each label paired
+ * with whatever now sits under it.
+ */
+export const ROW_LABEL = ["5m", "1D", "1W"];
+
+/**
+ * Labels do NOT scale with the highlight. They are parked above the image's
+ * GROWN top rather than its resting top, so the gap closes to `gapAboveGrown`
+ * when an image is lit instead of the label being pushed into it.
+ *
+ * That also keeps them out of the top-right logo zone: at the row's current
+ * size the label box starts at y ≈ 148 and the ink at ≈ 153, and the rightmost
+ * label ends near x 1509 against a watermark that begins at x 1538.
+ */
+export const LABEL = { size: 28, lineH: 34, gapAboveGrown: 14, grow: 1.05 };
 
 /**
  * The two-up framing in SC07 (global 3720 → 4471). Taller than a row slot, so
@@ -112,5 +131,30 @@ export const BbcaImage = ({
         filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
       }}
     />
+  );
+};
+
+/** The small timeframe label parked above an image. */
+export const BbcaLabel = ({ text, slot, opacity = 1 }: { text: string; slot: Slot; opacity?: number }) => {
+  if (opacity <= 0.001) return null;
+  const top = slot.cy - (slot.h * LABEL.grow) / 2 - LABEL.gapAboveGrown - LABEL.lineH;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: slot.cx - 200,
+        top,
+        width: 400,
+        textAlign: "center",
+        fontFamily: theme.type.family,
+        fontSize: LABEL.size,
+        fontWeight: 600,
+        lineHeight: `${LABEL.lineH}px`,
+        color: theme.colors.slate,
+        opacity,
+      }}
+    >
+      {text}
+    </div>
   );
 };
