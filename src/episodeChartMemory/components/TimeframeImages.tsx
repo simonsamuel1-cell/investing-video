@@ -22,12 +22,30 @@ export const ASPECT = 980 / 1406;
 /**
  * The row of three (global 3008 → 3720).
  *
- * Sized by WIDTH, not height: the three images plus their two gaps span the
- * full safe area, 96 → 1824. Height follows from the aspect ratio and works out
- * at ~742, which sits inside the band between the 150px logo zone and the 108px
- * subtitle zone — so the row is centred on 561 and clears both.
+ * Sized by WIDTH, not height: `total` is the width of the whole group, gaps
+ * included, and each image's height follows from the aspect ratio. 1555 is the
+ * full safe area (1728) less 10%.
+ *
+ * At this size the 5% highlight finally stays inside the margins — the outer
+ * images reach x 170 and 1750 against a 96 / 1824 safe area, where at full
+ * width they overshot by 13px.
  */
-export const ROW = { total: 1728, gap: 88, cy: 561 };
+export const ROW = { total: 1555, gap: 50, cy: 561 };
+
+/**
+ * Which image file sits in each row slot, left to right.
+ *
+ * The ANIMATION is keyed to the slot, not the file — slot 0 always lights
+ * first, slot 1 second, slot 2 third. Reordering here moves the pictures
+ * without moving the timing.
+ *
+ * [2, 1, 0] puts Timeframe_3 (5-minute) on the left and Timeframe_1 (weekly)
+ * on the right, so the row reads 5m → 1D → 1W, zooming out left to right.
+ */
+export const ROW_IMAGE = [2, 1, 0];
+
+/** Corner rounding on each screenshot. */
+export const IMG_RADIUS = 24;
 
 /**
  * The two-up framing in SC07 (global 3720 → 4471). Taller than a row slot, so
@@ -88,6 +106,7 @@ export const BbcaImage = ({
         top: slot.cy - slot.h / 2,
         width: w,
         height: slot.h,
+        borderRadius: IMG_RADIUS,
         opacity,
         transform: scale === 1 ? undefined : `scale(${scale})`,
         filter: blur > 0.05 ? `blur(${blur}px)` : undefined,

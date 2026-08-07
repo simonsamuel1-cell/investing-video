@@ -29,7 +29,7 @@
 import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { theme } from "../theme";
-import { BbcaImage, rowSlot } from "../components/TimeframeImages";
+import { BbcaImage, rowSlot, ROW_IMAGE } from "../components/TimeframeImages";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const SCENE_FROM = 3008;
@@ -82,10 +82,13 @@ export const Scene06 = () => {
 
   return (
     <SafeArea>
+      {/* `i` is the SLOT. The timing below is indexed by slot, so swapping which
+          file sits where (ROW_IMAGE) moves the pictures and leaves the
+          highlight order exactly as it was. */}
       {[0, 1, 2].map((i) => (
         <BbcaImage
           key={i}
-          index={i}
+          index={ROW_IMAGE[i]}
           slot={rowSlot(i)}
           opacity={holdEase(f, OPACITY[i].keys, OPACITY[i].vals)}
           scale={holdEase(f, SCALE[i].keys, SCALE[i].vals)}

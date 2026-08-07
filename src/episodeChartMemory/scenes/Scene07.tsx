@@ -2,8 +2,10 @@
  * SC07 — Noise vs Direction (from 3720, dur 752) — INDEPENDENT.
  *
  * Same two-sided argument as before and the same beats, but the two candlestick
- * charts are now the BBCA screenshots: Timeframe_1 on the left (the noisy
- * side), Timeframe_3 on the right (the broad direction).
+ * charts are now the BBCA screenshots. Which file lands in which pane is not
+ * decided here — it follows ROW_IMAGE, so the row SC06 leaves behind carries
+ * straight through. Today that means Timeframe_3 (5m) on the left and
+ * Timeframe_1 (weekly) on the right.
  *
  * Kept, as briefed: "5 Menit — Noise", "Mingguan — Arah Besar", "Kapan
  * bertindak", "Arah besar", and the swap to "Kapan?" / "Kemana?".
@@ -13,16 +15,16 @@
  * pinned to candle coordinates, so they had nothing left to point at.
  *
  * The opening is a continuation, not a cut: SC06 leaves three images in a row,
- * and this scene's first frame draws exactly that row. Timeframe_1 then grows
- * out of its row slot into the left pane while the other two clear;
- * Timeframe_3 comes back on the "Semakin panjang timeframe" beat, with the
- * same slide-in the right card always had.
+ * and this scene's first frame draws exactly that row. The left one then grows
+ * out of its row slot into the left pane while the other two clear; the one
+ * from the right end comes back on the "Semakin panjang timeframe" beat, with
+ * the same slide-in the right card always had.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { Chip } from "../components/Chip";
 import { progress, fadeOut, type Box } from "../helpers";
-import { BbcaImage, rowSlot, paneSlot, lerpSlot } from "../components/TimeframeImages";
+import { BbcaImage, rowSlot, paneSlot, lerpSlot, ROW_IMAGE } from "../components/TimeframeImages";
 import { expandT, expandCard, expandBlur } from "../transitions/CardExpand";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
@@ -40,7 +42,7 @@ const RIGHT: Box = { x: 96 + CARD_W + GAP, y: 250, w: CARD_W, h: 490 };
 const HEADER_Y = 200;
 // ── HANDOFF from SC06 ───────────────────────────────────────────────────────
 // This scene opens on SC06's row of three and resolves it. CARRY is how long
-// Timeframe_1 takes to grow into the left pane; CLEAR is how long the other two
+// the left image takes to grow into its pane; CLEAR is how long the other two
 // take to leave. Both start on frame 0, so global 3719 and 3720 are the same
 // picture.
 const CARRY = 44;
@@ -48,17 +50,17 @@ const CLEAR = 26;
 /**
  * Which screenshot fills which pane: [left, right].
  *
- * ⚠ As briefed — left ("5 Menit — Noise") = Timeframe_1, right ("Mingguan —
- * Arah Besar") = Timeframe_3. But the screenshots are the other way round:
- * Timeframe_1 has W selected and runs Jan–Aug 2026 (weekly), Timeframe_3 has
- * 5m selected and runs 8/4–8/6 (five-minute intraday). So each label currently
- * sits over the opposite chart.
+ * NOT a free choice — it is forced by the row. The left pane grows out of row
+ * slot 0 and the right pane is the one that left from row slot 2, so both must
+ * be whatever ROW_IMAGE put there. Hard-coding different files here would make
+ * the picture change on the frame the scene starts.
  *
- * Change this to [2, 0] and the labels match the images. One edit, nothing
- * else moves.
+ * With ROW_IMAGE = [2, 1, 0] this resolves to [Timeframe_3, Timeframe_1] —
+ * which is also the pairing that makes the labels true: "5 Menit — Noise" now
+ * sits over the 5m screenshot and "Mingguan — Arah Besar" over the weekly one.
  */
-const PANE_IMAGE = [0, 2];
-/** Height Timeframe_3 reaches at the end of the CardExpand move. */
+const PANE_IMAGE = [ROW_IMAGE[0], ROW_IMAGE[2]];
+/** Height the right image reaches at the end of the CardExpand move. */
 const EXPAND_H = 812;
 const T = {
   rightIn: 241, // "Semakin panjang timeframe"
@@ -107,7 +109,7 @@ export const Scene07 = () => {
       <BbcaImage index={PANE_IMAGE[0]} slot={slotL} opacity={leftDim * clearing} />
 
       {/* the other two, still where SC06 left them, on their way out */}
-      <BbcaImage index={1} slot={rowSlot(1)} opacity={leaving} />
+      <BbcaImage index={ROW_IMAGE[1]} slot={rowSlot(1)} opacity={leaving} />
       {rightIn <= 0.001 && <BbcaImage index={PANE_IMAGE[1]} slot={rowSlot(2)} opacity={leaving} />}
 
       {/* the broad-direction side, arriving on its own beat */}
