@@ -87,12 +87,21 @@ export const LABEL = {
 const LABEL_H = LABEL.lineH + LABEL.padY * 2 + LABEL.border * 2;
 
 /**
- * The two-up framing in SC07 (global 3720 → 4471). Taller than a row slot, so
- * the carried image reads as growing when it takes the left position. Bounded
- * by the header chips above (centre-y 200) and the caption chips below
- * (centre-y 792).
+ * The two-up framing in SC07 (global 3720 → 4471).
+ *
+ * Defined RELATIVE to the row: `shrink` is how much the carried image loses on
+ * its way in, so 0.9 is the 10% the brief asks for. Both panes take that same
+ * height, and `gap` is the space between them.
+ *
+ * That works out at 626.2 × 436.5 each, sitting at x 423.5–860.0 and
+ * 1060.0–1496.5. cy 532 leaves room for the header chip above (centre-y 180,
+ * so its top is 154.5 — clear of the 150px logo band) and the caption below
+ * (centre-y 884, bottom 908.5 — clear of the 972 subtitle band).
  */
-export const PANE = { h: 520, cy: 495, cx: [522, 1398] };
+export const PANE = { shrink: 0.9, gap: 200, cy: 532 };
+/** Where SC07's header chip and caption sit, now that the panes have moved. */
+export const PANE_HEADER_Y = 180;
+export const PANE_CAPTION_Y = 884;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export type Slot = { cx: number; cy: number; h: number };
@@ -108,8 +117,16 @@ export const rowSlot = (i: number): Slot => ({
   h: ROW_H,
 });
 
+const PANE_H = ROW_H * PANE.shrink;
+const PANE_W = PANE_H * ASPECT;
+const PANE_LEFT = (1920 - (PANE_W * 2 + PANE.gap)) / 2;
+
 /** Centre of the left (0) or right (1) pane in SC07. */
-export const paneSlot = (i: number): Slot => ({ cx: PANE.cx[i], cy: PANE.cy, h: PANE.h });
+export const paneSlot = (i: number): Slot => ({
+  cx: PANE_LEFT + PANE_W / 2 + i * (PANE_W + PANE.gap),
+  cy: PANE.cy,
+  h: PANE_H,
+});
 
 export const lerpSlot = (a: Slot, b: Slot, t: number): Slot => ({
   cx: a.cx + (b.cx - a.cx) * t,
