@@ -16,16 +16,19 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeOut } from "../helpers";
 import { bmriDaily, WIN, ZONE, ZONE_TOUCH_IDX } from "../data/bmri";
-import { expandCard, expandChart, expandBlur } from "../transitions/CardExpand";
+import { SLIDES, slideIn, slideBlur } from "../transitions/SlideCut";
 import { usePalette } from "../palette";
 
-/** This scene's `from` in Composition — the CardExpand curve is global. */
+/** This scene's `from` in Composition — the SlideCut curve is global. */
 const SCENE_FROM = 4472;
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-// This scene's card and chart geometry lives in transitions/CardExpand.tsx —
-// it is the resting end of the move that starts back in SC07, and the two must
-// not drift apart.
+// This scene used to open mid-move, its card still growing out of SC07's. That
+// only worked while both sides were the same object; SC07 now holds a
+// screenshot, so the boundary is a SlideCut instead and this geometry is simply
+// where the scene sits.
+const CARD = { x: 96, y: 160, w: 1728, h: 812 };
+const CHART = { x: 200, y: 230, w: 1500, h: 590 };
 const T = {
   playhead: 43, // the chart settles; the playhead sits at the right edge
   header: 90, // "pasar punya ingatan"
@@ -49,13 +52,14 @@ const WINDOW = WIN.sc08;
 export const Scene08 = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
-  // This scene opens MID-MOVE: SC07's right card is still growing into this
-  // one's card, on the shared CardExpand curve. The content cut already
-  // happened on frame 0 — weekly series out, daily series in.
+  // ── the incoming half of the SlideCut at 4472 ──
+  // The content cut already happened on frame 0 — weekly screenshot out, daily
+  // series in. This half arrives displaced and pans home on the same curve.
   const gf = f + SCENE_FROM;
-  const card = expandCard(gf);
-  const chart = expandChart(gf);
-  const blurPx = expandBlur(gf);
+  const card = CARD;
+  const chart = CHART;
+  const dx = slideIn(gf, SLIDES.toSupport);
+  const slideFx = slideBlur(gf, SLIDES.toSupport);
   const g = chartGeom(bmriDaily, WINDOW, chart);
 
   const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
@@ -71,8 +75,8 @@ export const Scene08 = () => {
 
   return (
     <SafeArea>
-      {/* card and candles smear together while the move finishes */}
-      <div style={{ filter: blurPx > 0.05 ? `blur(${blurPx}px)` : undefined }}>
+      <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
+      <div>
       <div
         style={{
           position: "absolute",
@@ -171,6 +175,7 @@ export const Scene08 = () => {
         opacity={clearOp}
         connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yBot + 8 }}
       />
-    </SafeArea>
+      </div>
+        </SafeArea>
   );
 };

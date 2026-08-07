@@ -11,6 +11,7 @@
  */
 import { useCurrentFrame, interpolate, Sequence } from "remotion";
 import { SafeArea } from "../components/SafeArea";
+import { SLIDES, slideOut, slideBlur } from "../transitions/SlideCut";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
@@ -94,6 +95,14 @@ const chiliAt = (t: number) => {
 export const ChartContinuity = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
+
+  // ── the outgoing half of the SlideCut at 3008 ──
+  // This group is mounted from global 489, so add that back to read the shared
+  // curve. The pan starts at 2996 and the cut lands on this group's last frame
+  // + 1, which is SC06's first.
+  const gf = f + 489;
+  const dx = slideOut(gf, SLIDES.toImages);
+  const slideFx = slideBlur(gf, SLIDES.toImages);
 
   // ── geometry (recomputed each frame; the ELEMENT never remounts) ──
   const narrow = f >= K.narrow ? progress(f, K.narrow, 60) : 0;
@@ -181,6 +190,7 @@ export const ChartContinuity = () => {
 
   return (
     <SafeArea>
+      <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
       {/* ── axis furniture ── */}
       {axisDraw > 0.001 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
@@ -302,6 +312,7 @@ export const ChartContinuity = () => {
       <Sequence from={PHASE.d} durationInFrames={PHASE.end - PHASE.d} layout="none">
         <Scene05 geom={geom} />
       </Sequence>
-    </SafeArea>
+      </div>
+        </SafeArea>
   );
 };

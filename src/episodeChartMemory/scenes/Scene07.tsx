@@ -28,7 +28,7 @@ import { Ping } from "../components/Ping";
 import { theme } from "../theme";
 import { progress, fadeOut } from "../helpers";
 import { BbcaImage, BbcaLabel, rowSlot, paneSlot, lerpSlot, ROW_IMAGE, ROW_LABEL, LABEL, PANE_HEADER_Y, PANE_CAPTION_Y, ASPECT, type Slot } from "../components/TimeframeImages";
-import { expandT, expandBlur } from "../transitions/CardExpand";
+import { SLIDES, slideOut, slideBlur } from "../transitions/SlideCut";
 import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
@@ -58,9 +58,6 @@ const CLEAR = 26;
  * sits over the 5m screenshot and "Mingguan — Arah Besar" over the weekly one.
  */
 const PANE_IMAGE = [ROW_IMAGE[0], ROW_IMAGE[2]];
-/** Where the right image lands at the end of the CardExpand move — the centre
- *  and height of SC08's full-width card. */
-const EXPAND_TO = { cx: 960, cy: 566, h: 812 };
 /**
  * The overlay marks, in NORMALIZED screenshot coordinates — nx is a fraction of
  * the image's width, ny of its height, so they stay on the same candles
@@ -110,13 +107,12 @@ const at = (slot: Slot, n: { nx: number; ny: number }) => ({
 export const Scene07 = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
-  const g = f + SCENE_FROM; // the CardExpand curve is defined in global frames
-  // The right image starts growing into SC08's card before this scene ends; the
-  // rest of the scene clears out of its way.
-  const expand = expandT(g);
-  // Everything but the travelling image must be GONE before the boundary, not
-  // half-faded on it — so it clears in the move's first 40%.
-  const clearing = Math.max(0, 1 - expand * 2.5);
+  // ── the outgoing half of the SlideCut at 4472 ──
+  // Nothing has to fade out any more: the whole frame pans off and the cut
+  // lands at peak velocity.
+  const g = f + SCENE_FROM;
+  const dx = slideOut(g, SLIDES.toSupport);
+  const slideFx = slideBlur(g, SLIDES.toSupport);
 
   const rightIn = f >= T.rightIn ? progress(f, T.rightIn, 34) : 0;
   // the noisy side steps back while the trend side is introduced, then returns
@@ -130,10 +126,7 @@ export const Scene07 = () => {
   const leaving = 1 - progress(f, 0, CLEAR);
   const slotL = lerpSlot(rowSlot(0), paneSlot(0), carry);
 
-  // ── the right image, and the move it makes into SC08 ──
-  // Driven off the shared CardExpand curve but interpolated from THIS pane, so
-  // moving the panes never leaves the move starting somewhere else.
-  const slotR = lerpSlot(paneSlot(1), EXPAND_TO, expand);
+  const slotR = paneSlot(1);
 
   // ── the broad-direction line, drawn on with a trim path ──
   const arrow = f >= T.arrow ? progress(f, T.arrow, 56) : 0;
@@ -146,8 +139,9 @@ export const Scene07 = () => {
 
   return (
     <SafeArea>
+      <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
       {/* the noisy side leads, then steps back while the trend side arrives */}
-      <BbcaImage index={PANE_IMAGE[0]} slot={slotL} opacity={leftDim * clearing} />
+      <BbcaImage index={PANE_IMAGE[0]} slot={slotL} opacity={leftDim} />
 
       {/* the other two, still where SC06 left them, on their way out */}
       <BbcaImage index={ROW_IMAGE[1]} slot={rowSlot(1)} opacity={leaving} />
@@ -163,12 +157,12 @@ export const Scene07 = () => {
       {/* the broad-direction side, arriving on its own beat */}
       {rightIn > 0.001 && (
         <div style={{ transform: `translateX(${(1 - rightIn) * 60}px)` }}>
-          <BbcaImage index={PANE_IMAGE[1]} slot={slotR} opacity={rightIn} blur={expandBlur(g)} />
+          <BbcaImage index={PANE_IMAGE[1]} slot={slotR} opacity={rightIn} />
         </div>
       )}
 
       {/* three checkpoints on the noisy side — descriptive, never entry markers */}
-      <div style={{ opacity: clearing }}>
+      <div>
         {CHECKPOINTS.map((c, i) => {
           const p = at(slotL, c);
           return <Ping key={i} x={p.x} y={p.y} startFrame={[T.p1, T.p2, T.p3][i]} variant="slate" />;
@@ -178,7 +172,7 @@ export const Scene07 = () => {
       {/* one line along the weekly's broad direction */}
       {arrow > 0.001 && (
         <svg
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearing }}
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
           width={theme.canvas.width}
           height={theme.canvas.height}
         >
@@ -210,8 +204,7 @@ export const Scene07 = () => {
           variant="slate"
           anchor="center"
           startFrame={0}
-          opacity={clearing}
-        />
+          />
       </div>
       <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${paneSlot(1).cx}px ${PANE_HEADER_Y}px` }}>
         <Chip
@@ -222,8 +215,7 @@ export const Scene07 = () => {
           variant="indigo"
           anchor="center"
           startFrame={T.rightIn}
-          opacity={clearing}
-        />
+          />
       </div>
 
       {/* One caption per pane, centred under its image. On the "pertanyaan yang
@@ -240,7 +232,7 @@ export const Scene07 = () => {
             bare
             anchor="center"
             startFrame={T.capLeft}
-            opacity={swapOut * clearing}
+            opacity={swapOut}
           />
           <Chip
             label="Arah besar"
@@ -251,7 +243,7 @@ export const Scene07 = () => {
             bare
             anchor="center"
             startFrame={T.capRight}
-            opacity={swapOut * clearing}
+            opacity={swapOut}
           />
         </>
       )}
@@ -264,7 +256,6 @@ export const Scene07 = () => {
         bare
         anchor="center"
         startFrame={T.questions + T.swapDur}
-        opacity={clearing}
       />
       <Chip
         label="Kemana?"
@@ -275,8 +266,8 @@ export const Scene07 = () => {
         bare
         anchor="center"
         startFrame={T.questions + T.swapDur}
-        opacity={clearing}
       />
-    </SafeArea>
+      </div>
+        </SafeArea>
   );
 };

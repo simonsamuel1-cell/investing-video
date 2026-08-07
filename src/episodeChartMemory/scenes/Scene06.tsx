@@ -32,6 +32,7 @@
  */
 import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
+import { SLIDES, slideIn, slideBlur } from "../transitions/SlideCut";
 import { theme } from "../theme";
 import { BbcaImage, BbcaLabel, rowSlot, ROW_IMAGE, ROW_LABEL } from "../components/TimeframeImages";
 
@@ -94,8 +95,15 @@ const SCALE = [
 export const Scene06 = () => {
   const f = useCurrentFrame();
 
+  // ── the incoming half of the SlideCut at 3008 ──
+  // The row arrives already displaced and rides the same curve home.
+  const gf = f + SCENE_FROM;
+  const dx = slideIn(gf, SLIDES.toImages);
+  const slideFx = slideBlur(gf, SLIDES.toImages);
+
   return (
     <SafeArea>
+      <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
       {/* `i` is the SLOT. The timing below is indexed by slot, so swapping which
           file sits where (ROW_IMAGE) moves the pictures and leaves the
           highlight order exactly as it was. */}
@@ -121,6 +129,7 @@ export const Scene06 = () => {
           active={(holdEase(f, SCALE[i].keys, SCALE[i].vals) - 1) / (GROW - 1)}
         />
       ))}
-    </SafeArea>
+      </div>
+        </SafeArea>
   );
 };
