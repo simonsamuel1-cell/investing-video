@@ -22,11 +22,12 @@ export const ASPECT = 980 / 1406;
 /**
  * The row of three (global 3008 → 3720).
  *
- * `h` is capped so that a 5% grow still clears the margins: the row sits on the
- * canvas centre-line between the 150px logo band and the 108px subtitle band,
- * and at 1.05 the outer images stop well inside the safe left/right edges.
+ * Sized by WIDTH, not height: the three images plus their two gaps span the
+ * full safe area, 96 → 1824. Height follows from the aspect ratio and works out
+ * at ~742, which sits inside the band between the 150px logo zone and the 108px
+ * subtitle zone — so the row is centred on 561 and clears both.
  */
-export const ROW = { h: 470, gap: 56, cy: 561 };
+export const ROW = { total: 1728, gap: 88, cy: 561 };
 
 /**
  * The two-up framing in SC07 (global 3720 → 4471). Taller than a row slot, so
@@ -39,14 +40,15 @@ export const PANE = { h: 520, cy: 495, cx: [522, 1398] };
 
 export type Slot = { cx: number; cy: number; h: number };
 
-const ROW_W = ROW.h * ASPECT;
-const ROW_LEFT = (1920 - (ROW_W * 3 + ROW.gap * 2)) / 2;
+const ROW_W = (ROW.total - ROW.gap * 2) / 3;
+const ROW_H = ROW_W / ASPECT;
+const ROW_LEFT = (1920 - ROW.total) / 2;
 
 /** Centre of image `i` in the row of three. */
 export const rowSlot = (i: number): Slot => ({
   cx: ROW_LEFT + ROW_W / 2 + i * (ROW_W + ROW.gap),
   cy: ROW.cy,
-  h: ROW.h,
+  h: ROW_H,
 });
 
 /** Centre of the left (0) or right (1) pane in SC07. */
