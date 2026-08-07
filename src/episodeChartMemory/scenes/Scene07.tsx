@@ -10,9 +10,10 @@
  * Kept, as briefed: "5 Menit — Noise", "Mingguan — Arah Besar", "Kapan
  * bertindak", "Arah besar", and the swap to "Kapan?" / "Kemana?".
  *
- * Removed with everything else in 3008–4471: the two cards, the divider rule,
- * the three reversal pings and the trend arrow. The pings and the arrow were
- * pinned to candle coordinates, so they had nothing left to point at.
+ * Removed with everything else in 3008–4471: the two cards and the divider
+ * rule. The three checkpoints and the broad-direction line are BACK — they used
+ * to be computed from the series, so with a JPEG under them they are now placed
+ * in normalized screenshot coordinates (see CHECKPOINTS and TREND).
  *
  * The opening is a continuation, not a cut: SC06 leaves three images in a row,
  * and this scene's first frame draws exactly that row. The left one then grows
@@ -23,9 +24,12 @@
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { Chip } from "../components/Chip";
+import { Ping } from "../components/Ping";
+import { theme } from "../theme";
 import { progress, fadeOut } from "../helpers";
-import { BbcaImage, BbcaLabel, rowSlot, paneSlot, lerpSlot, ROW_IMAGE, ROW_LABEL, LABEL, PANE_HEADER_Y, PANE_CAPTION_Y } from "../components/TimeframeImages";
+import { BbcaImage, BbcaLabel, rowSlot, paneSlot, lerpSlot, ROW_IMAGE, ROW_LABEL, LABEL, PANE_HEADER_Y, PANE_CAPTION_Y, ASPECT, type Slot } from "../components/TimeframeImages";
 import { expandT, expandBlur } from "../transitions/CardExpand";
+import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
 const SCENE_FROM = 3720;
@@ -57,8 +61,35 @@ const PANE_IMAGE = [ROW_IMAGE[0], ROW_IMAGE[2]];
 /** Where the right image lands at the end of the CardExpand move — the centre
  *  and height of SC08's full-width card. */
 const EXPAND_TO = { cx: 960, cy: 566, h: 812 };
+/**
+ * The overlay marks, in NORMALIZED screenshot coordinates — nx is a fraction of
+ * the image's width, ny of its height, so they stay on the same candles
+ * whatever size the pane is.
+ *
+ * The originals were computed from the series: three local extrema on the 5m
+ * data, and a line from an early swing to a late one on the weekly. A JPEG has
+ * no series, so these were read off the screenshots by eye and are the one
+ * thing here that is hand-placed. Nudge them freely.
+ */
+const CHECKPOINTS = [
+  { nx: 0.15, ny: 0.397 }, // the spike to 6,500 early in 8/5
+  { nx: 0.591, ny: 0.546 }, // the step down mid-session
+  { nx: 0.885, ny: 0.672 }, // the drop into the 6,350 close
+];
+/**
+ * The broad direction on the weekly. Same construction as the original — an
+ * extreme near the START of the window to one near the END — which on this
+ * chart runs DOWNHILL: 7,925 in January to 6,350 in August. The old arrow rose
+ * because the placeholder series rose; this one follows what BBCA actually did.
+ */
+const TREND = { from: { nx: 0.08, ny: 0.412 }, to: { nx: 0.911, ny: 0.554 } };
+
 const T = {
+  p1: 105, // "setiap reaksi kecil"
+  p2: 140, // "keraguan"
+  p3: 173, // "sesaat, dan kepanikan pasar"
   rightIn: 241, // "Semakin panjang timeframe"
+  arrow: 278, // "arah besarnya semakin jelas"
   capLeft: 354, // "kapan harus bertindak"
   capRight: 548, // "arah besar tempat keputusan itu diambil"
   pulse: 631, // "Keduanya berguna"
@@ -70,7 +101,14 @@ const T = {
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
+/** A normalized mark → canvas coordinates inside a slot. */
+const at = (slot: Slot, n: { nx: number; ny: number }) => ({
+  x: slot.cx - (slot.h * ASPECT) / 2 + n.nx * slot.h * ASPECT,
+  y: slot.cy - slot.h / 2 + n.ny * slot.h,
+});
+
 export const Scene07 = () => {
+  const pal = usePalette();
   const f = useCurrentFrame();
   const g = f + SCENE_FROM; // the CardExpand curve is defined in global frames
   // The right image starts growing into SC08's card before this scene ends; the
@@ -97,6 +135,15 @@ export const Scene07 = () => {
   // moving the panes never leaves the move starting somewhere else.
   const slotR = lerpSlot(paneSlot(1), EXPAND_TO, expand);
 
+  // ── the broad-direction line, drawn on with a trim path ──
+  const arrow = f >= T.arrow ? progress(f, T.arrow, 56) : 0;
+  const a1 = at(slotR, TREND.from);
+  const a2 = at(slotR, TREND.to);
+  const alen = Math.hypot(a2.x - a1.x, a2.y - a1.y);
+  const ang = Math.atan2(a2.y - a1.y, a2.x - a1.x);
+  const hx = a1.x + (a2.x - a1.x) * arrow;
+  const hy = a1.y + (a2.y - a1.y) * arrow;
+
   return (
     <SafeArea>
       {/* the noisy side leads, then steps back while the trend side arrives */}
@@ -118,6 +165,39 @@ export const Scene07 = () => {
         <div style={{ transform: `translateX(${(1 - rightIn) * 60}px)` }}>
           <BbcaImage index={PANE_IMAGE[1]} slot={slotR} opacity={rightIn} blur={expandBlur(g)} />
         </div>
+      )}
+
+      {/* three checkpoints on the noisy side — descriptive, never entry markers */}
+      <div style={{ opacity: clearing }}>
+        {CHECKPOINTS.map((c, i) => {
+          const p = at(slotL, c);
+          return <Ping key={i} x={p.x} y={p.y} startFrame={[T.p1, T.p2, T.p3][i]} variant="slate" />;
+        })}
+      </div>
+
+      {/* one line along the weekly's broad direction */}
+      {arrow > 0.001 && (
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearing }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
+          <line
+            x1={a1.x}
+            y1={a1.y}
+            x2={a2.x}
+            y2={a2.y}
+            stroke={pal.indigo}
+            strokeWidth={theme.stroke.rule}
+            strokeDasharray={alen}
+            strokeDashoffset={alen * (1 - arrow)}
+          />
+          <polygon
+            points={`${hx},${hy} ${hx - 16 * Math.cos(ang - 0.4)},${hy - 16 * Math.sin(ang - 0.4)} ${hx - 16 * Math.cos(ang + 0.4)},${hy - 16 * Math.sin(ang + 0.4)}`}
+            fill={pal.indigo}
+            opacity={arrow}
+          />
+        </svg>
       )}
 
       {/* Header chips, centred over their own image. */}
