@@ -16,11 +16,11 @@
  * which is the argument: it was there the whole time.
  */
 import { useCurrentFrame, interpolate } from "remotion";
-import { Stage, Card, Layer } from "../components/Stage";
-import { CandleChart, barGrid } from "../components/CandleChart";
+import { Stage, Card } from "../components/Stage";
+import { CandleChart } from "../components/CandleChart";
 import { Overlays, SubPane } from "../components/Studies";
 import { theme } from "../theme";
-import { progress, beat, textReveal } from "../helpers";
+import { progress, ramp, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
 import { rsi, macdHistogram } from "../data/studies";
 import { BARS } from "./Scene01";
@@ -40,8 +40,10 @@ const T = {
 };
 const MOVE_OVER = 30; // frames the pair takes to travel and shrink
 /**
- * The wipe starts on its word but runs long, finishing at global 925 — the
- * tools stay on screen right up to that frame rather than vanishing early.
+ * The wipe starts on its word and clears at an even rate, finishing exactly on
+ * global 925. It is deliberately linear: the episode's easing is fast at the
+ * front, so an eased wipe of the same length is visually done a third of the
+ * way in and the tools disappear long before the frame they should last to.
  */
 const CLEAR_OVER = 80;
 /** How far the price is squeezed to make room for the panes underneath. */
@@ -93,8 +95,9 @@ export const Scene02 = () => {
   const chartIn = f >= T.chart ? progress(f, T.chart, 30) : 0;
 
   const tool = (i: number) => progress(f, T.clutter + i * STAGGER, 30);
-  const wipe = f >= T.clear ? progress(f, T.clear, CLEAR_OVER) : 0;
-  const pulse = beat(f, T.clear + CLEAR_OVER - 24, 30);
+  // linear: an eased wipe is all but finished a third of the way in, which
+  // took the tools off screen long before the frame they are meant to last to
+  const wipe = f >= T.clear ? ramp(f, T.clear, CLEAR_OVER) : 0;
 
   /**
    * The price gives up height as the tools arrive and takes it back as they
@@ -103,7 +106,6 @@ export const Scene02 = () => {
    */
   const squeeze = (f >= T.clutter ? progress(f, T.clutter, 40) : 0) * (1 - wipe);
   const plot = { ...BOX, h: BOX.h * (1 - SQUEEZE * squeeze) };
-  const grid = barGrid(BARS, plot);
 
   return (
     <Stage>
@@ -123,17 +125,6 @@ export const Scene02 = () => {
             <Card>
               <CandleChart bars={BARS} box={plot} axisOpacity={1 - wipe * 0.15} ticks={[4400, 4800, 5200, 5600, 6000]} tickLabels={false} />
 
-              {/* the price, restated in indigo for exactly one beat */}
-              {pulse > 0.001 && (
-                <Layer opacity={pulse}>
-                  <path
-                    d={BARS.map((b, i) => `${i === 0 ? "M" : "L"}${grid.x(i)},${grid.scale(b.c)}`).join(" ")}
-                    fill="none"
-                    stroke={theme.color.indigo}
-                    strokeWidth={theme.shape.line}
-                  />
-                </Layer>
-              )}
 
               {/* EVERY tool lives in this one group, so a single clip clears them all */}
               <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 0 ${wipe * 100}%)` }}>
