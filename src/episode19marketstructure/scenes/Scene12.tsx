@@ -34,6 +34,8 @@ const BAND_HALF = 55;
 const BOX = { x: theme.frame.plot.x, y: theme.frame.plot.y + 40, w: theme.frame.plot.w, h: theme.frame.plot.h - 120 };
 const RECALL_X = [700, 1000];
 const PIERCE_T = 0.52;
+/** Clear of the band itself — a chip on the boundary is unreadable. */
+const LABEL_DY = 74;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const G = geom(BREAK_UP, BOX, { pad: 0.12 });
@@ -64,8 +66,8 @@ export const Scene12 = () => {
           pierce={{ x: G.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
         />
         {/* the label is the only thing that swaps outright */}
-        <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - 44} variant="cyan" anchor="left" startFrame={46} opacity={1 - retint} />
-        <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + 44} variant="indigo" anchor="left" startFrame={T.retint} opacity={retint} />
+        <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - LABEL_DY} variant="cyan" anchor="left" startFrame={46} opacity={1 - retint} />
+        <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + LABEL_DY} variant="indigo" anchor="left" startFrame={T.retint} opacity={retint} />
 
         <StructureLine
           g={G}

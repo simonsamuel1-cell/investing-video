@@ -31,6 +31,8 @@ const DRAW_VALS = [0, 0.5, 0.62, 0.72, 1];
 const BAND_HALF = 55;
 const BOX = { x: theme.frame.plot.x, y: theme.frame.plot.y + 40, w: theme.frame.plot.w, h: theme.frame.plot.h - 120 };
 const PIERCE_T = 0.52;
+/** Clear of the band itself — a chip on the boundary is unreadable. */
+const LABEL_DY = 74;
 /** Centre-y of the closing pair, over the dimmed chart. */
 const PAIRED = { y: 510, dx: 300 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -65,8 +67,8 @@ export const Scene13 = () => {
             draw={f >= 10 ? progress(f, 10, 26) : 0}
             pierce={{ x: G.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
           />
-          <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + 44} variant="indigo" anchor="left" startFrame={26} opacity={1 - retint} />
-          <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - 44} variant="cyan" anchor="left" startFrame={T.retint} opacity={retint} />
+          <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + LABEL_DY} variant="indigo" anchor="left" startFrame={26} opacity={1 - retint} />
+          <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - LABEL_DY} variant="cyan" anchor="left" startFrame={T.retint} opacity={retint} />
 
           <StructureLine
             g={G}
