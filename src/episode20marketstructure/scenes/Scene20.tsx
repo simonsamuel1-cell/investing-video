@@ -22,7 +22,7 @@ const T = {
   pulse: 167, // "arah dan bentuk pergerakannya"
   stack: 284, // "indikator atau alat bantu"
 };
-const TOOLS = ["Indikator", "Volume", "Momentum", "Alat Bantu Lain"];
+const TOOLS = ["Indikator", "Volume", "Momentum", "Alat bantu lain"];
 /** The row of tools, the rule they rest on, and the line that carries them. */
 const ROW_Y = 556;
 const RULE_Y = 626;
@@ -99,7 +99,7 @@ export const Scene20 = () => {
           whiteSpace: "nowrap",
         }}
       >
-        Struktur Pergerakan Harga
+        Struktur pergerakan harga
       </div>
 
       {/* the tools' job, named once */}

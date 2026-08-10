@@ -50,20 +50,20 @@ export const Scene17 = () => {
         <Card rect={PANES[0]} radius={theme.shape.panelRadius}>
           <StructureLine plot={P} draw={draw} marks={MARKS.map((turn, i) => ({ turn, at: 30 + i * 9 }))} />
           <Guide from={P.turn(2)} to={P.turn(6)} draw={guide} dy={20} />
-          <Chip label="Analisis Sendiri" x={PANES[0].x + PANES[0].w / 2} y={PANES[0].y + 58} tone="indigo" at={0} />
+          <Chip label="Analisis sendiri" x={PANES[0].x + PANES[0].w / 2} y={PANES[0].y + 58} tone="indigo" at={0} />
         </Card>
       </div>
 
       {/* the app's summary, arriving second and staying second */}
       <div style={{ position: "absolute", inset: 0, opacity: right * panel, transform: `translateX(${(1 - panel) * 70}px)` }}>
         <Card rect={PANES[1]} radius={theme.shape.panelRadius} opacity={fadeIn(f, T.panel, 24)}>
-          <Chip label="Tren & Momentum" x={PANES[1].x + PANES[1].w / 2} y={PANES[1].y + 58} tone="cyan" at={T.panel} />
+          <Chip label="Tren & momentum" x={PANES[1].x + PANES[1].w / 2} y={PANES[1].y + 58} tone="cyan" at={T.panel} />
           <AppSummaryPanel rect={PANES[1]} reveal={panel} />
         </Card>
       </div>
 
-      <Chip label="1. Baca Sendiri" x={PANES[0].x + PANES[0].w / 2} y={theme.stage.caption.y} tone="indigo" at={T.badges} />
-      <Chip label="2. Second Opinion" x={PANES[1].x + PANES[1].w / 2} y={theme.stage.caption.y} tone="cyan" at={T.badges + 18} />
+      <Chip label="1. Baca sendiri" x={PANES[0].x + PANES[0].w / 2} y={theme.stage.caption.y} tone="indigo" at={T.badges} />
+      <Chip label="2. Second opinion" x={PANES[1].x + PANES[1].w / 2} y={theme.stage.caption.y} tone="cyan" at={T.badges + 18} />
     </Stage>
   );
 };

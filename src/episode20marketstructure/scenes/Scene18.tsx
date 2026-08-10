@@ -100,7 +100,7 @@ export const Scene18 = () => {
         <CandleChart bars={ASII_BARS} box={BOX} reveal={reveal} ticks={ASII_TICKS} />
 
         {/* the peak the next push has to clear, tagged on the peak itself.
-            The Lower High label is pushed right and tied back with a leader,
+            The Lower high label is pushed right and tied back with a leader,
             which is what keeps the two apart without moving either dot. */}
         {bar >= ASII.peakBar && <Chip label={price(ASII.peakPrice)} x={peak.x} y={peak.y - 52} tone="indigo" at={T.peak} />}
         {bar >= ASII.peakBar && (
@@ -122,10 +122,10 @@ export const Scene18 = () => {
         )}
 
         {bar >= ASII.lowerHighBar + 4 && (
-          <PivotLabel x={G.x(ASII.lowerHighBar)} y={G.scale(ASII_BARS[ASII.lowerHighBar].h)} label="Lower High" tone="indigo" dx={168} at={T.lowerHigh} />
+          <PivotLabel x={G.x(ASII.lowerHighBar)} y={G.scale(ASII_BARS[ASII.lowerHighBar].h)} label="Lower high" tone="indigo" dx={168} at={T.lowerHigh} />
         )}
         {bar >= ASII.lowerLowBar + 4 && (
-          <PivotLabel x={G.x(ASII.lowerLowBar)} y={G.scale(ASII_BARS[ASII.lowerLowBar].l)} label="Lower Low" tone="cyan" side="below" at={T.lowerLow} />
+          <PivotLabel x={G.x(ASII.lowerLowBar)} y={G.scale(ASII_BARS[ASII.lowerLowBar].l)} label="Lower low" tone="cyan" side="below" at={T.lowerLow} />
         )}
 
         {/* tension about something that already happened */}
@@ -134,7 +134,7 @@ export const Scene18 = () => {
         <CountdownNumeral value="1" x={theme.canvas.width / 2} y={COUNTDOWN_Y} at={T.one} />
       </Card>
 
-      {f >= T.back + 40 && <Chip label="Struktur Berubah" x={theme.canvas.width / 2} y={theme.stage.caption.y} tone="cyan" at={T.back + 40} />}
+      {f >= T.back + 40 && <Chip label="Struktur berubah" x={theme.canvas.width / 2} y={theme.stage.caption.y} tone="cyan" at={T.back + 40} />}
     </Stage>
   );
 };

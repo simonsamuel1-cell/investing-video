@@ -77,7 +77,7 @@ export const Scene05 = ({ f, p, names = 1 }: { f: number; p: Plot; names?: numbe
         const at = Math.max(SC05.highs + k * STEP, arrives(t.t));
         return (
           <React.Fragment key={`hh${idx}`}>
-            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher High" tone="indigo" at={at} opacity={(1 - shorten) * names} />}
+            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher high" tone="indigo" at={at} opacity={(1 - shorten) * names} />}
             <PivotLabel x={t.x} y={t.y} label="HH" tone="indigo" at={k === 0 ? SC05.shorten : at} opacity={(k === 0 ? shorten : 1) * names} />
           </React.Fragment>
         );
@@ -87,14 +87,14 @@ export const Scene05 = ({ f, p, names = 1 }: { f: number; p: Plot; names?: numbe
         const at = Math.max(SC05.lows + k * STEP, arrives(t.t));
         return (
           <React.Fragment key={`hl${idx}`}>
-            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher Low" tone="cyan" side="below" at={at} opacity={(1 - shorten) * names} />}
+            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher low" tone="cyan" side="below" at={at} opacity={(1 - shorten) * names} />}
             <PivotLabel x={t.x} y={t.y} label="HL" tone="cyan" side="below" at={k === 0 ? SC05.shorten : at} opacity={(k === 0 ? shorten : 1) * names} />
           </React.Fragment>
         );
       })}
 
       {/* clears the peak's own chip, which sits 46px above the turn */}
-      {breath > 0.5 && <Chip label="Ambil Napas" x={(from.x + to.x) / 2} y={from.y - 128} tone="indigo" at={SC05.breathChip} />}
+      {breath > 0.5 && <Chip label="Ambil napas" x={(from.x + to.x) / 2} y={from.y - 128} tone="indigo" at={SC05.breathChip} />}
     </>
   );
 };

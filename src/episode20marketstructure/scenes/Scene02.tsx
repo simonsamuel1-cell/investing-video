@@ -1,7 +1,7 @@
 /**
  * SC02 — Indicators before direction (from 462, dur 466).
  *
- * The scene opens with NO chart. "Market Structure" arrives alone in the middle
+ * The scene opens with NO chart. "Market structure" arrives alone in the middle
  * of the frame, the sub-line joins it, and only then does the pair travel up to
  * the title strip and shrink to their working size — and the chart comes back
  * underneath them. The words earn the top of the frame instead of starting
@@ -19,6 +19,7 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { Stage, Card } from "../components/Stage";
 import { CandleChart } from "../components/CandleChart";
 import { Overlays, SubPane } from "../components/Studies";
+import { TitleBlock, TITLE_BIG, TITLE_REST, TITLE_BIG_CY, TITLE_REST_CY } from "../components/TitleBlock";
 import { theme } from "../theme";
 import { progress, progressInOut, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
@@ -51,20 +52,12 @@ const CLEAR_OVER = 30;
 const SQUEEZE = 0.38;
 
 /**
- * The two states of the title block. `rest` matches the episode's standard
- * header exactly — same centre, same sizes — so the block simply becomes the
- * header once it lands.
+ * The chart's box and gridlines, EXPORTED: SC03 opens on this exact geometry so
+ * frame 928 is identical to frame 927 and the cut between them is invisible.
  */
-const SUB_TRIM = 4; // the sub-line reads 4px smaller than the body size
-const BIG = { title: 96, sub: 48 - SUB_TRIM };
-const REST = { title: theme.text.title.size, sub: theme.text.body.size - SUB_TRIM };
-/** Reserved sub-line height at each size, so the block's height is stable. */
-const subBlock = (size: number) => 8 + size * 1.2;
-/** Centre placed so the TITLE line itself sits on the canvas centre at L0. */
-const BIG_CY = theme.canvas.height / 2 + subBlock(BIG.sub) / 2;
-const REST_CY = theme.stage.title.y;
-
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 40, w: theme.stage.plot.w, h: theme.stage.plot.h - 40 };
+export const CHART_BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 40, w: theme.stage.plot.w, h: theme.stage.plot.h - 40 };
+export const CHART_TICKS = [4400, 4800, 5200, 5600, 6000];
+const BOX = CHART_BOX;
 /** The two sub-panes rise over the lower third. The price gets buried. */
 const RSI_BOX = { x: theme.stage.plot.x, y: 662, w: theme.stage.plot.w, h: 84 };
 const MACD_BOX = { x: theme.stage.plot.x, y: 758, w: theme.stage.plot.w, h: 84 };
@@ -86,9 +79,9 @@ export const Scene02 = () => {
 
   // ── the title block: centre frame, then up to the strip ──
   const travel = interpolate(f, [T.settle, T.settle + MOVE_OVER], [0, 1], { ...HOLD, easing: theme.motion.settle });
-  const cy = interpolate(travel, [0, 1], [BIG_CY, REST_CY]);
-  const titleSize = interpolate(travel, [0, 1], [BIG.title, REST.title]);
-  const subSize = interpolate(travel, [0, 1], [BIG.sub, REST.sub]);
+  const cy = interpolate(travel, [0, 1], [TITLE_BIG_CY, TITLE_REST_CY]);
+  const titleSize = interpolate(travel, [0, 1], [TITLE_BIG.title, TITLE_REST.title]);
+  const subSize = interpolate(travel, [0, 1], [TITLE_BIG.sub, TITLE_REST.sub]);
   const head = textReveal(f, T.title);
   const tail = textReveal(f, T.sub);
 
@@ -124,7 +117,8 @@ export const Scene02 = () => {
         {chartIn > 0.001 && (
           <div style={{ position: "absolute", inset: 0, opacity: chartIn, transform: `translateY(${(1 - chartIn) * 40}px)` }}>
             <Card>
-              <CandleChart bars={BARS} box={plot} axisOpacity={1 - wipe * 0.15} ticks={[4400, 4800, 5200, 5600, 6000]} tickLabels={false} />
+              {/* the axis stays at full strength: it has to hand over to SC03 */}
+              <CandleChart bars={BARS} box={plot} ticks={CHART_TICKS} tickLabels={false} />
 
 
               {/* EVERY tool lives in this one group, so a single clip clears them all */}
@@ -138,41 +132,7 @@ export const Scene02 = () => {
         )}
 
         {/* the words: centre frame at first, then the header they become */}
-        <div
-          style={{
-            position: "absolute",
-            left: theme.canvas.width / 2,
-            top: cy,
-            transform: "translate(-50%, -50%)",
-            textAlign: "center",
-            whiteSpace: "nowrap",
-          }}
-        >
-          <div
-            style={{
-              fontSize: titleSize,
-              fontWeight: theme.text.title.weight,
-              color: theme.color.indigo,
-              opacity: head.opacity,
-              transform: `translateY(${head.dy}px)`,
-            }}
-          >
-            Market Structure
-          </div>
-          {/* rendered from the start so the block's height never changes */}
-          <div
-            style={{
-              marginTop: 8,
-              fontSize: subSize,
-              fontWeight: theme.text.body.weight,
-              color: theme.color.slate,
-              opacity: tail.opacity,
-              transform: `translateY(${tail.dy}px)`,
-            }}
-          >
-            Struktur pergerakan harga
-          </div>
-        </div>
+        <TitleBlock cy={cy} titleSize={titleSize} subSize={subSize} head={head} tail={tail} />
       </div>
     </Stage>
   );

@@ -61,7 +61,7 @@ export const Scene04 = () => {
 
         {/* parked ABOVE the descent — the pullback runs through the space
             directly under the peak, and a chip there would sit on the line */}
-        {draw >= 0.6 && <Chip label="Ambil Untung" x={(PEAK.x + TROUGH.x) / 2 + 40} y={PEAK.y - 46} tone="slate" at={T.pullback + 70} />}
+        {draw >= 0.6 && <Chip label="Ambil untung" x={(PEAK.x + TROUGH.x) / 2 + 40} y={PEAK.y - 46} tone="slate" at={T.pullback + 70} />}
 
         {/* the gap the pullback left — measured, not asserted */}
         {bracket > 0.001 && (
@@ -86,7 +86,7 @@ export const Scene04 = () => {
           </Layer>
         )}
         {/* below the prior-low line, never across it */}
-        {arrows > 0.4 && <Chip label="Pembeli Masuk" x={TROUGH.x} y={LOW.y + 74} tone="indigo" at={T.floor + 44} />}
+        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 74} tone="indigo" at={T.floor + 44} />}
       </Card>
     </Stage>
   );

@@ -71,10 +71,10 @@ export const Scene16 = () => {
         <StructureLine plot={p} draw={draw} />
 
         {/* close up it looks like the end of something */}
-        <Chip label="Akhir Tren?" x={BOX.x + BOX.w * 0.5} y={BOX.y + 60} tone="slate" at={T.worry} opacity={f >= T.out ? fadeOut(f, T.out, 26) : 1} />
+        <Chip label="Akhir tren?" x={BOX.x + BOX.w * 0.5} y={BOX.y + 60} tone="slate" at={T.worry} opacity={f >= T.out ? fadeOut(f, T.out, 26) : 1} />
 
         {/* from further back it is a higher low inside a climb */}
-        {out > 0.7 && <PivotLabel x={hl.x} y={hl.y} label="Higher Low" tone="cyan" side="below" at={T.higherLow} />}
+        {out > 0.7 && <PivotLabel x={hl.x} y={hl.y} label="Higher low" tone="cyan" side="below" at={T.higherLow} />}
       </Card>
 
       {/* the tab the card is showing */}

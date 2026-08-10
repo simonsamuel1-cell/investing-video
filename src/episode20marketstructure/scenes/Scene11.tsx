@@ -78,8 +78,8 @@ export const Scene11 = () => {
             {swings > 0.001 && <StructureLine plot={P_SWINGS} draw={swings} color={theme.color.ink} width={2} opacity={0.9} />}
 
             {/* kept left of the lens card, which opens over the right half */}
-            {trend > 0.5 && <Chip label="Major Trend" x={P_TREND.along(0.45).x} y={P_TREND.along(0.45).y + 96} tone="indigo" at={T.major} />}
-            {swings > 0.4 && <Chip label="Minor Swing" x={P_SWINGS.along(0.2).x} y={P_SWINGS.along(0.2).y - 76} tone="slate" at={T.minor + 24} />}
+            {trend > 0.5 && <Chip label="Major trend" x={P_TREND.along(0.45).x} y={P_TREND.along(0.45).y + 96} tone="indigo" at={T.major} />}
+            {swings > 0.4 && <Chip label="Minor swing" x={P_SWINGS.along(0.2).x} y={P_SWINGS.along(0.2).y - 76} tone="slate" at={T.minor + 24} />}
 
             {lens > 0.001 && (
               <Layer>
@@ -119,8 +119,8 @@ export const Scene11 = () => {
       <ComparePanels
         opacity={second}
         panels={[
-          { title: "Bertahap", tone: "indigo", plot: P_GRADUAL, draw: left, titleAt: T.swap + 20, note: { label: "Lebih Stabil", at: T.spike } },
-          { title: "Hampir Vertikal", tone: "cyan", plot: P_STEEP, draw: right, titleAt: T.swap + 20 },
+          { title: "Bertahap", tone: "indigo", plot: P_GRADUAL, draw: left, titleAt: T.swap + 20, note: { label: "Lebih stabil", at: T.spike } },
+          { title: "Hampir vertikal", tone: "cyan", plot: P_STEEP, draw: right, titleAt: T.swap + 20 },
         ]}
       />
     </Stage>

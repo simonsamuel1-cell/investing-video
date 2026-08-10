@@ -77,7 +77,7 @@ export const Scene06 = ({ f, p, plotRight }: { f: number; p: Plot; plotRight: nu
 
       {/* the guide under the lows — the pattern, as one straight idea */}
       <Guide from={p.turn(2)} to={p.turn(6)} draw={guide} dy={20} />
-      {guide > 0.2 && <Chip label="Tren: Naik" x={theme.stage.card.x + 56} y={theme.stage.card.y + 56} tone="indigo" anchor="left" at={SC06.guide + 10} />}
+      {guide > 0.2 && <Chip label="Tren: naik" x={theme.stage.card.x + 56} y={theme.stage.card.y + 56} tone="indigo" anchor="left" at={SC06.guide + 10} />}
     </>
   );
 };

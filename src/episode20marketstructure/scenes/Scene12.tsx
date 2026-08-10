@@ -76,7 +76,7 @@ export const Scene12 = () => {
           plot={P}
           draw={draw}
           head
-          marks={draw >= 0.71 ? [{ turn: CEILING_HL, label: "Higher Low", tone: "cyan", side: "below", at: T.higherLow }] : []}
+          marks={draw >= 0.71 ? [{ turn: CEILING_HL, label: "Higher low", tone: "cyan", side: "below", at: T.higherLow }] : []}
         />
       </Card>
 
@@ -84,7 +84,7 @@ export const Scene12 = () => {
       <Chip label="Support" x={RECALL_X[0]} y={theme.stage.caption.y} tone="indigo" at={T.recall} opacity={fadeOut(f, 92, 24)} />
       <Chip label="Resistance" x={RECALL_X[1]} y={theme.stage.caption.y} tone="cyan" at={T.recall + 14} opacity={fadeOut(f, 100, 24)} />
 
-      <Line text="Level Sama, Dua Cerita" x={1540} y={theme.stage.caption.y} at={T.retint + 40} size={theme.text.tag.size} color={theme.color.slate} />
+      <Line text="Level sama, dua cerita" x={1540} y={theme.stage.caption.y} at={T.retint + 40} size={theme.text.tag.size} color={theme.color.slate} />
     </Stage>
   );
 };

@@ -18,7 +18,7 @@ export type Panel = {
   plot: Plot;
   draw: number;
   titleAt: number;
-  /** Optional chip in the caption row — SC11's "Lebih Stabil". */
+  /** Optional chip in the caption row — SC11's "Lebih stabil". */
   note?: { label: string; at: number };
 };
 

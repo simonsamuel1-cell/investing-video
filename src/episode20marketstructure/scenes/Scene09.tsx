@@ -65,7 +65,7 @@ export const Scene09 = () => {
         <ForceBars cx={FORCE.cx} cy={FORCE.cy} width={FORCE.width} reveal={forces} frame={f} />
       </Card>
 
-      {f >= T.chip && <Chip label="Belum Ada Kendali" x={FORCE.cx} y={FORCE.cy + 190} tone="slate" at={T.chip} />}
+      {f >= T.chip && <Chip label="Belum ada kendali" x={FORCE.cx} y={FORCE.cy + 190} tone="slate" at={T.chip} />}
     </Stage>
   );
 };

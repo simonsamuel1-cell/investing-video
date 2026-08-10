@@ -9,17 +9,25 @@
  * One reading resolved here: the spec asks for a cross-fade at L0 and a
  * trim-path re-draw at L58. Drawing it twice would stutter, so the line traces
  * itself across both beats and completes on the second.
+ *
+ * FRAME 928 IS FRAME 927. The scene opens on exactly what SC02 ended on — the
+ * same candles in the same box, the same gridlines, the same header — so the
+ * scene boundary is invisible and only then does anything start to move. The
+ * geometry and the header are imported rather than re-typed, so they cannot
+ * drift apart later.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
 import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
+import { TitleBlock } from "../components/TitleBlock";
 import { theme } from "../theme";
 import { fadeOut, progress } from "../helpers";
 import { majorTurns } from "../data/shape";
-import { HOOK, HOOK_TICKS } from "../data/shapes";
+import { HOOK } from "../data/shapes";
 import { BARS } from "./Scene01";
+import { CHART_BOX, CHART_TICKS } from "./Scene02";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -41,8 +49,11 @@ const TURN_STEP = 11;
 const MIN_MOVE = 130;
 /** However many survive, only the first few are worth landing on screen. */
 const MAX_MARKS = 9;
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 50, w: theme.stage.plot.w, h: theme.stage.plot.h - 120 };
+/** SC02's box, unchanged — this is what makes 928 identical to 927. */
+const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
+/** The questions sit ABOVE the chart, on the same row the strike-outs use. */
+const QUESTION_Y = BOX.y - 26;
 const NOT_THIS_X = [740, 1080];
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -82,7 +93,7 @@ export const Scene03 = () => {
   return (
     <Stage>
       <Card>
-        {dissolving > 0.001 && <CandleChart bars={BARS} box={BOX} opacity={dissolving} ticks={HOOK_TICKS} />}
+        {dissolving > 0.001 && <CandleChart bars={BARS} box={BOX} opacity={dissolving} ticks={CHART_TICKS} tickLabels={false} />}
 
         {/* the shape price leaves behind */}
         {drawn > 0.001 && (
@@ -117,14 +128,17 @@ export const Scene03 = () => {
         ))}
       </Card>
 
+      {/* the header SC02 built, held exactly where it was left */}
+      <TitleBlock />
+
       {/* not this, and not this */}
-      <Chip label="Indikator" x={NOT_THIS_X[0]} y={theme.stage.plot.y + 16} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0)} />
-      <Chip label="Berita" x={NOT_THIS_X[1]} y={theme.stage.plot.y + 16} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26)} />
+      <Chip label="Indikator" x={NOT_THIS_X[0]} y={QUESTION_Y} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0)} />
+      <Chip label="Berita" x={NOT_THIS_X[1]} y={QUESTION_Y} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26)} />
 
       {/* SC01's three questions, now anchored to real turning points */}
-      <Chip label="Terus Naik?" x={QUESTION_X[0]} y={theme.stage.caption.y} tone="indigo" at={T.q1} />
-      <Chip label="Terus Turun?" x={QUESTION_X[1]} y={theme.stage.caption.y} tone="indigo" at={T.q2} />
-      <Chip label="Area Sama?" x={QUESTION_X[2]} y={theme.stage.caption.y} tone="cyan" at={T.q3} />
+      <Chip label="Terus naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.q1} />
+      <Chip label="Terus turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.q2} />
+      <Chip label="Area sama?" x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.q3} />
     </Stage>
   );
 };

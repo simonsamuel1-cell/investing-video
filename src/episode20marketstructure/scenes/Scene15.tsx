@@ -51,7 +51,7 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
       {/* one lower high is a reason to watch, not to conclude */}
       {f >= SC15.wary && f < SC15.flip + 30 && <Chip label="Waspada" x={stalled.x - 154} y={stalled.y - 48} tone="slate" at={SC15.wary} />}
 
-      {draw >= 0.79 && <PivotLabel x={p.turn(FAIL_LOWER_LOW).x} y={p.turn(FAIL_LOWER_LOW).y} label="Lower Low" tone="cyan" side="below" at={SC15.breakLow + 50} />}
+      {draw >= 0.79 && <PivotLabel x={p.turn(FAIL_LOWER_LOW).x} y={p.turn(FAIL_LOWER_LOW).y} label="Lower low" tone="cyan" side="below" at={SC15.breakLow + 50} />}
 
       {/* the state, turned over on the word that changes it */}
       <div

@@ -62,7 +62,7 @@ export const Scene07 = () => {
           const at = Math.max(T.highs + k * STEP, arrives(t.t));
           return (
             <React.Fragment key={`lh${idx}`}>
-              {k === 0 && <PivotLabel x={t.x} y={t.y} label="Lower High" tone="indigo" at={at} opacity={1 - shorten} />}
+              {k === 0 && <PivotLabel x={t.x} y={t.y} label="Lower high" tone="indigo" at={at} opacity={1 - shorten} />}
               <PivotLabel x={t.x} y={t.y} label="LH" tone="indigo" at={k === 0 ? T.shorten : at} opacity={k === 0 ? shorten : 1} />
             </React.Fragment>
           );
@@ -74,7 +74,7 @@ export const Scene07 = () => {
           if (k === 0) return <PivotLabel key={`ll${idx}`} x={t.x} y={t.y} tone="cyan" at={at} />;
           return (
             <React.Fragment key={`ll${idx}`}>
-              {k === 1 && <PivotLabel x={t.x} y={t.y} label="Lower Low" tone="cyan" side="below" at={at} opacity={1 - shorten} />}
+              {k === 1 && <PivotLabel x={t.x} y={t.y} label="Lower low" tone="cyan" side="below" at={at} opacity={1 - shorten} />}
               <PivotLabel x={t.x} y={t.y} label="LL" tone="cyan" side="below" at={k === 1 ? T.shorten : at} opacity={k === 1 ? shorten : 1} />
             </React.Fragment>
           );
@@ -92,9 +92,9 @@ export const Scene07 = () => {
           </Layer>
         )}
         {/* tied back with a hairline: directly above the trough is where the
-            Lower High label already sits */}
+            Lower high label already sits */}
         {press > 0.4 && (
-          <Chip label="Penjual Menekan" x={newLow.x + 300} y={newLow.y - 250} tone="slate" at={T.lows + 12} leaderTo={{ x: newLow.x, y: newLow.y - 30 }} />
+          <Chip label="Penjual menekan" x={newLow.x + 300} y={newLow.y - 250} tone="slate" at={T.lows + 12} leaderTo={{ x: newLow.x, y: newLow.y - 30 }} />
         )}
       </Card>
     </Stage>

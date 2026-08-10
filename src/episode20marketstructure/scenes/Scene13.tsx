@@ -6,7 +6,7 @@
  * it is REJECTED, and that rejection is what makes the turn a lower high.
  *
  * The closing pair says the two readings are one event — `Breakout` and
- * `Perubahan Struktur` joined by an equals. The chart dims almost out beneath
+ * `Perubahan struktur` joined by an equals. The chart dims almost out beneath
  * it so the pairing is the only thing being read.
  */
 import { useCurrentFrame } from "remotion";
@@ -66,7 +66,7 @@ export const Scene13 = () => {
           <Chip label="Support" x={BOX.x + BOX.w - 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="right" at={26} opacity={1 - retint} />
           <Chip label="Resistance" x={BOX.x + BOX.w - 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="right" at={T.retint} opacity={retint} />
 
-          <StructureLine plot={P} draw={draw} head marks={draw >= 0.71 ? [{ turn: FLOOR_LH, label: "Lower High", tone: "indigo", at: T.lowerHigh }] : []} />
+          <StructureLine plot={P} draw={draw} head marks={draw >= 0.71 ? [{ turn: FLOOR_LH, label: "Lower high", tone: "indigo", at: T.lowerHigh }] : []} />
 
           {/* a small tick, not an alarm: the structure is being read, not traded */}
           {draw >= 0.71 && f >= T.lowerHigh + 12 && (
@@ -81,7 +81,7 @@ export const Scene13 = () => {
       {paired > 0.001 && (
         <div style={{ position: "absolute", inset: 0, opacity: paired }}>
           <Chip label="Breakout" x={theme.canvas.width / 2 - PAIR.dx} y={PAIR.y} tone="cyan" size={theme.text.title.size} at={T.paired} />
-          <Chip label="Perubahan Struktur" x={theme.canvas.width / 2 + PAIR.dx} y={PAIR.y} tone="indigo" size={theme.text.title.size} at={T.paired + 12} />
+          <Chip label="Perubahan struktur" x={theme.canvas.width / 2 + PAIR.dx} y={PAIR.y} tone="indigo" size={theme.text.title.size} at={T.paired + 12} />
           <Layer>
             <line x1={theme.canvas.width / 2 - 26} y1={PAIR.y - 10} x2={theme.canvas.width / 2 + 26} y2={PAIR.y - 10} stroke={theme.color.slate} strokeWidth={theme.shape.line} />
             <line x1={theme.canvas.width / 2 - 26} y1={PAIR.y + 10} x2={theme.canvas.width / 2 + 26} y2={PAIR.y + 10} stroke={theme.color.slate} strokeWidth={theme.shape.line} />
