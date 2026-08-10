@@ -1,13 +1,17 @@
 /**
- * Chip.tsx — the episode's one label primitive. Title Case, rounded, optional
- * hairline leader to whatever it annotates.
+ * Chip.tsx — the episode's one label primitive: Title Case type in a tone
+ * colour, with an optional hairline leader to whatever it annotates.
  *
- * A chip is a UI element, so it may pop on arrival — that and the pivot dots
- * are the only places pop is allowed. The glyphs inside never move.
+ * NO PILL. No fill, no border, no padding — a label is the word itself. The
+ * tone carries the meaning (indigo for peaks and primary labels, cyan for
+ * troughs and accents, slate for muted ones), and the colour alone is enough
+ * to say which is which.
  *
- * Variants: indigo / cyan / slate carry a soft fill; `outline` drops the fill;
- * `bare` drops the pill entirely. `strike` sweeps a line through the label
- * (SC03, SC08) and `check` prefixes a tick (SC08, SC20).
+ * A chip is still a UI element, so it may pop on arrival — that and the pivot
+ * dots are the only places pop is allowed. The glyphs never move once placed.
+ *
+ * `strike` sweeps a line through the label (SC03, SC08); `check` prefixes a
+ * tick (SC08, SC20).
  */
 import { useCurrentFrame } from "remotion";
 import { theme } from "../theme";
@@ -16,14 +20,8 @@ import { Layer } from "./Stage";
 
 export type Tone = "indigo" | "cyan" | "slate" | "outline";
 
-const toneOf = (t: Tone) =>
-  t === "indigo"
-    ? { fg: theme.color.indigo, bg: theme.color.indigoPale }
-    : t === "cyan"
-      ? { fg: theme.color.cyan, bg: theme.color.cyanPale }
-      : t === "slate"
-        ? { fg: theme.color.slate, bg: theme.color.surface }
-        : { fg: theme.color.indigo, bg: "transparent" };
+/** `outline` is kept as a name for callers; with no pill it reads as indigo. */
+const inkOf = (t: Tone) => (t === "cyan" ? theme.color.cyan : t === "slate" ? theme.color.slate : theme.color.indigo);
 
 export const Chip = ({
   label,
@@ -35,22 +33,20 @@ export const Chip = ({
   leaderTo,
   size = theme.text.chip.size,
   opacity = 1,
-  bare = false,
   strike = 0,
   check = false,
 }: {
   label: string;
   x: number;
-  /** Centre-y of the chip. */
+  /** Centre-y of the label. */
   y: number;
   tone?: Tone;
   at?: number;
   anchor?: "center" | "left" | "right";
-  /** Draws a hairline from the chip to this point. */
+  /** Draws a hairline from the label to this point. */
   leaderTo?: { x: number; y: number };
   size?: number;
   opacity?: number;
-  bare?: boolean;
   /** 0→1 strikethrough sweep. */
   strike?: number;
   check?: boolean;
@@ -58,14 +54,14 @@ export const Chip = ({
   const f = useCurrentFrame();
   if (f < at || opacity <= 0.001) return null;
   const p = progress(f, at, theme.motion.pop);
-  const c = toneOf(tone);
+  const ink = inkOf(tone);
   const shift = anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
 
   return (
     <>
       {leaderTo && (
         <Layer opacity={p * 0.85 * opacity}>
-          <line x1={x} y1={y} x2={leaderTo.x} y2={leaderTo.y} stroke={c.fg} strokeWidth={theme.shape.hairline} />
+          <line x1={x} y1={y} x2={leaderTo.x} y2={leaderTo.y} stroke={ink} strokeWidth={theme.shape.hairline} />
         </Layer>
       )}
       <div
@@ -73,12 +69,8 @@ export const Chip = ({
           position: "absolute",
           left: x,
           top: y,
-          transform: `translate(${shift}, -50%) scale(${0.92 + 0.08 * p})`,
-          padding: bare ? 0 : "8px 20px",
-          borderRadius: theme.shape.chipRadius,
-          background: bare || tone === "outline" ? "transparent" : c.bg,
-          border: bare ? "none" : `${theme.shape.hairline}px solid ${c.fg}`,
-          color: c.fg,
+          transform: `translate(${shift}, -50%) scale(${0.94 + 0.06 * p})`,
+          color: ink,
           fontFamily: theme.text.family,
           fontSize: size,
           fontWeight: theme.text.chip.weight,
@@ -89,16 +81,7 @@ export const Chip = ({
         {check && <span style={{ marginRight: 10 }}>✓</span>}
         {label}
         {strike > 0.001 && (
-          <div
-            style={{
-              position: "absolute",
-              left: bare ? 0 : 16,
-              top: "50%",
-              width: `calc((100% - ${bare ? 0 : 32}px) * ${Math.min(1, strike)})`,
-              height: theme.shape.rule,
-              background: c.fg,
-            }}
-          />
+          <div style={{ position: "absolute", left: 0, top: "50%", width: `calc(100% * ${Math.min(1, strike)})`, height: theme.shape.rule, background: ink }} />
         )}
       </div>
     </>

@@ -1,21 +1,20 @@
 /**
  * SC20 — Foundation stack, the closer (from 10122, dur 464).
  *
- * The one conceptual visual in the episode. Everything before this earns its
- * place by being a real chart; a closing hierarchy has no chart to be, so it is
- * drawn as plain blocks.
- *
- * The base is exactly as wide as the four tools together — deliberately, so the
- * picture says the tools cannot stand on anything narrower.
+ * The spec draws this as filled blocks. Nothing in this episode puts a fill or
+ * a border around type, so the stack is built out of TYPE ALONE: the base line
+ * is large and indigo, the four tools sit above it small and in a row, and one
+ * hairline rule separates them. Size, position and that single rule carry the
+ * hierarchy the blocks used to carry.
  *
  * The last 60 frames are the outro hold: the voice ends at 10.526 and the
  * finished stack simply stays on screen, still.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage } from "../components/Stage";
+import { Stage, Layer } from "../components/Stage";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { textReveal, beat } from "../helpers";
+import { textReveal, beat, progress } from "../helpers";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -24,22 +23,28 @@ const T = {
   stack: 284, // "indikator atau alat bantu"
 };
 const TOOLS = ["Indikator", "Volume", "Momentum", "Alat Bantu Lain"];
-const TOOL = { w: 280, h: 104, gap: 20, cy: 556 };
-const BASE = { w: TOOL.w * 4 + TOOL.gap * 3, h: 118, cy: 708 };
-const TAG_Y = 424;
-const STEP = 16; // frames between one block landing and the next
+/** The row of tools, the rule they rest on, and the line that carries them. */
+const ROW_Y = 556;
+const RULE_Y = 626;
+const BASE_Y = 704;
+const TAG_Y = 430;
+const SPAN = 1180; // width the row and the rule share
+const STEP = 16; // frames between one tool landing and the next
 // ═══════════════════════════════════════════════════════════════════════════
 
 const CX = theme.canvas.width / 2;
+/** Evenly spaced across the span, so the row reads as one shelf. */
+const toolX = (i: number) => CX - SPAN / 2 + (SPAN / TOOLS.length) * (i + 0.5);
 
 export const Scene20 = () => {
   const f = useCurrentFrame();
   const base = textReveal(f, T.base, 22, 40);
   const breath = beat(f, T.pulse, 30); // one breath, no bounce
+  const rule = f >= T.stack - 20 ? progress(f, T.stack - 20, 30) : 0;
 
   return (
     <Stage>
-      {/* the tools, each settling onto the base in turn */}
+      {/* the tools, each settling onto the shelf in turn */}
       {TOOLS.map((tool, i) => {
         const r = textReveal(f, T.stack + i * STEP, 20, 26);
         return (
@@ -47,24 +52,15 @@ export const Scene20 = () => {
             key={tool}
             style={{
               position: "absolute",
-              left: CX - BASE.w / 2 + i * (TOOL.w + TOOL.gap),
-              top: TOOL.cy - TOOL.h / 2 + r.dy,
-              width: TOOL.w,
-              height: TOOL.h,
-              borderRadius: theme.shape.panelRadius,
-              background: theme.color.surface,
-              border: `${theme.shape.hairline}px solid ${theme.color.indigo}`,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
+              left: toolX(i),
+              top: ROW_Y + r.dy,
+              transform: "translate(-50%, -50%)",
               fontFamily: theme.text.family,
               fontSize: theme.text.chip.size,
               fontWeight: theme.text.chip.weight,
               color: theme.color.indigo,
               opacity: r.opacity,
-              boxSizing: "border-box",
-              textAlign: "center",
-              padding: "0 12px",
+              whiteSpace: "nowrap",
             }}
           >
             {tool}
@@ -72,26 +68,35 @@ export const Scene20 = () => {
         );
       })}
 
+      {/* the one rule in the scene: what the tools are standing on */}
+      {rule > 0.001 && (
+        <Layer>
+          <line
+            x1={CX - (SPAN / 2) * rule}
+            y1={RULE_Y}
+            x2={CX + (SPAN / 2) * rule}
+            y2={RULE_Y}
+            stroke={theme.color.indigo}
+            strokeWidth={theme.shape.rule}
+            strokeLinecap="round"
+            opacity={0.5}
+          />
+        </Layer>
+      )}
+
       {/* what everything else stands on */}
       <div
         style={{
           position: "absolute",
-          left: CX - BASE.w / 2,
-          top: BASE.cy - BASE.h / 2 + base.dy,
-          width: BASE.w,
-          height: BASE.h,
-          borderRadius: theme.shape.panelRadius,
-          background: theme.color.indigo,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
+          left: CX,
+          top: BASE_Y + base.dy,
+          transform: `translate(-50%, -50%) scale(${1 + 0.015 * breath})`,
           fontFamily: theme.text.family,
           fontSize: theme.text.title.size,
           fontWeight: theme.text.title.weight,
-          color: theme.color.onIndigo,
+          color: theme.color.indigo,
           opacity: base.opacity,
-          transform: `scale(${1 + 0.012 * breath})`,
-          boxShadow: theme.shape.shadow,
+          whiteSpace: "nowrap",
         }}
       >
         Struktur Pergerakan Harga

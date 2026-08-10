@@ -1,9 +1,12 @@
 /**
- * PrincipleCard.tsx — a centred card whose sentence arrives word by word.
+ * PrincipleCard.tsx — the centred sentence, arriving word by word.
+ *
+ * No surface behind it: no fill, no border, no shadow. The rect is only the box
+ * the words wrap inside. Nothing in this episode puts a panel around type.
  *
  * Each word uses textReveal, so the line assembles rather than appears. This is
- * the one sentence in the episode a viewer might write down; it is allowed to
- * take its time, and it is never animated like a UI element.
+ * the one sentence a viewer might write down; it is allowed to take its time,
+ * and it is never animated like a UI element.
  */
 import { useCurrentFrame } from "remotion";
 import { theme } from "../theme";
@@ -33,10 +36,6 @@ export const PrincipleCard = ({
         top: rect.y,
         width: rect.w,
         height: rect.h,
-        borderRadius: theme.shape.cardRadius,
-        background: theme.color.surface,
-        border: `${theme.shape.hairline}px solid ${theme.color.hairline}`,
-        boxShadow: theme.shape.shadow,
         opacity: card.opacity,
         transform: `translateY(${card.dy}px)`,
         display: "flex",
