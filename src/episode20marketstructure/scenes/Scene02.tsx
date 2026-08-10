@@ -35,17 +35,18 @@ const T = {
   settle: 165, // global 627 — the pair travels to the title strip
   chart: 178, // the chart returns under them
   clutter: 317, // global 779 — the tools start piling on
-  clear: 383, // "harga sebenarnya bergerak" — global 845
+  clear: 428, // global 890 — the tools start clearing
 
 };
 const MOVE_OVER = 30; // frames the pair takes to travel and shrink
 /**
- * The wipe starts on its word and clears at an even rate, finishing exactly on
- * global 925. It is deliberately linear: the episode's easing is fast at the
- * front, so an eased wipe of the same length is visually done a third of the
- * way in and the tools disappear long before the frame they should last to.
+ * 890 → 920. The tools hold, fully on screen, and only then clear.
+ *
+ * Linear on purpose: the episode's easing is fast at the front, so an eased
+ * wipe of the same length is visually finished a third of the way in and the
+ * tools would disappear well before 920.
  */
-const CLEAR_OVER = 80;
+const CLEAR_OVER = 30;
 /** How far the price is squeezed to make room for the panes underneath. */
 const SQUEEZE = 0.38;
 
