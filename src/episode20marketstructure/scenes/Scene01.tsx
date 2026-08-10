@@ -5,10 +5,13 @@
  * and the ambiguity is in the DATA — the three questions the narration asks
  * genuinely have no easy answer, and the viewer can check that themselves.
  *
- * The scene opens with a camera move, not a fade: the whole chart rides up from
- * below on ONE ease-in-out and settles. The blur peaks at that curve's midpoint,
- * where the move is fastest and the eye cannot resolve detail anyway — which is
- * what makes it read as a camera arriving rather than a graphic sliding.
+ * The scene opens ON a camera move already in flight: the move starts at frame
+ * −10 and the cut lands on frame 0, at the curve's midpoint, where the chart is
+ * fastest and most blurred. That is what makes it a cut on action rather than
+ * an entrance animation.
+ *
+ * It leaves the same way it arrived. The camera keeps rising into SC02, and the
+ * swap lands at frame 461 — the midpoint of that move.
  *
  * Then one slow breath across the scene: the chart scales up and back down
  * exactly once. Card, candles and gridlines ride it TOGETHER, because they are
@@ -20,6 +23,7 @@ import { CandleChart } from "../components/CandleChart";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, progressInOut } from "../helpers";
+import { CUTS, cutOut, cutBlur } from "../transitions/CameraCut";
 import { candles } from "../data/shape";
 import { HOOK } from "../data/shapes";
 
@@ -33,8 +37,18 @@ const T = {
   habit: 353, // "kebiasaan penting"
 };
 
-/** The entrance: how far below it starts, how long the move takes, peak blur. */
-const ENTER = { from: 180, over: 26, blur: 9 };
+/**
+ * The entrance is a CUT ON ACTION, not a slide.
+ *
+ * The move begins at frame −10, ten frames BEFORE the episode does, and the
+ * cut lands on frame 0 — the exact midpoint of the curve, where the chart is
+ * travelling fastest and the blur is at its peak. The viewer never sees the
+ * move start; they cut into the middle of it and watch it settle. Starting the
+ * move at frame 0 instead would read as a graphic sliding into place.
+ */
+const ENTER = { at: -10, over: 20, from: 180, blur: 9 };
+/** This scene's `from` in the Composition — needed to read the shared curve. */
+const SCENE_FROM = 0;
 /** The single breath. One rise and one fall — never a loop. */
 const BREATH = { at: 60, over: 360, amount: 0.03 };
 
@@ -69,10 +83,12 @@ const CENTRE = `${theme.stage.card.x + theme.stage.card.w / 2}px ${theme.stage.c
 export const Scene01 = () => {
   const f = useCurrentFrame();
 
-  // ── the entrance ──
-  const arrive = progressInOut(f, T.chart, ENTER.over);
-  const dy = ENTER.from * (1 - arrive);
-  const blur = Math.sin(Math.PI * arrive) * ENTER.blur;
+  // ── the entrance: cut into a move already in flight ──
+  const arrive = progressInOut(f, ENTER.at, ENTER.over);
+  // ── the exit: the same camera carries on up into SC02 ──
+  const g = f + SCENE_FROM;
+  const dy = ENTER.from * (1 - arrive) + cutOut(g, CUTS.toTitle);
+  const blur = Math.max(Math.sin(Math.PI * arrive) * ENTER.blur, cutBlur(g, CUTS.toTitle));
 
   // ── one slow breath, up and back down ──
   const breath = f >= BREATH.at && f < BREATH.at + BREATH.over ? Math.sin(Math.PI * ((f - BREATH.at) / BREATH.over)) : 0;
@@ -83,24 +99,27 @@ export const Scene01 = () => {
 
   return (
     <Stage>
-      {/* card, candles and gridlines are ONE object and move as one */}
+      {/* THE CAMERA. Everything in frame rides it — a camera move that left the
+          questions behind would read as the chart sliding, not as a camera. */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translateY(${dy}px) scale(${1 + BREATH.amount * breath})`,
-          transformOrigin: CENTRE,
+          transform: `translateY(${dy}px)`,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >
-        <Card>
-          <CandleChart bars={BARS} box={BOX} reveal={plotted} ticks={GRID} tickLabels={false} />
-        </Card>
-      </div>
+        {/* the breath is the CHART's alone — type in this episode never scales */}
+        <div style={{ position: "absolute", inset: 0, transform: `scale(${1 + BREATH.amount * breath})`, transformOrigin: CENTRE }}>
+          <Card>
+            <CandleChart bars={BARS} box={BOX} reveal={plotted} ticks={GRID} tickLabels={false} />
+          </Card>
+        </div>
 
-      <Chip label="Naik?" size={QUESTION.size} x={QUESTION_X[0]} y={QUESTION.y} tone="indigo" at={T.naik} opacity={dim} />
-      <Chip label="Turun?" size={QUESTION.size} x={QUESTION_X[1]} y={QUESTION.y} tone="indigo" at={T.turun} opacity={dim} />
-      <Chip label="Sideways?" size={QUESTION.size} x={QUESTION_X[2]} y={QUESTION.y} tone="indigo" at={T.sideways} opacity={dim} />
+        <Chip label="Naik?" size={QUESTION.size} x={QUESTION_X[0]} y={QUESTION.y} tone="indigo" at={T.naik} opacity={dim} />
+        <Chip label="Turun?" size={QUESTION.size} x={QUESTION_X[1]} y={QUESTION.y} tone="indigo" at={T.turun} opacity={dim} />
+        <Chip label="Sideways?" size={QUESTION.size} x={QUESTION_X[2]} y={QUESTION.y} tone="indigo" at={T.sideways} opacity={dim} />
+      </div>
     </Stage>
   );
 };
