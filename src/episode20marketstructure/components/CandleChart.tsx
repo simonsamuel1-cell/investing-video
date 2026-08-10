@@ -46,6 +46,7 @@ export const CandleChart = ({
   axisOpacity = 1,
   opacity = 1,
   ticks,
+  tickLabels = true,
   pad = 0.08,
 }: {
   bars: Bar[];
@@ -57,6 +58,8 @@ export const CandleChart = ({
   opacity?: number;
   /** Explicit gridline prices — an axis should read in round numbers. */
   ticks?: number[];
+  /** Draw the gridlines without their prices. */
+  tickLabels?: boolean;
   pad?: number;
 }) => {
   const g = barGrid(bars, box, pad);
@@ -70,16 +73,18 @@ export const CandleChart = ({
           {lines.map((p) => (
             <g key={p}>
               <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
-              <text
-                x={box.x + box.w + 16}
-                y={g.scale(p) + 8}
-                fontFamily={theme.text.family}
-                fontSize={theme.text.axis.size}
-                fontWeight={theme.text.axis.weight}
-                fill={theme.color.slate}
-              >
-                {fmt(p)}
-              </text>
+              {tickLabels && (
+                <text
+                  x={box.x + box.w + 16}
+                  y={g.scale(p) + 8}
+                  fontFamily={theme.text.family}
+                  fontSize={theme.text.axis.size}
+                  fontWeight={theme.text.axis.weight}
+                  fill={theme.color.slate}
+                >
+                  {fmt(p)}
+                </text>
+              )}
             </g>
           ))}
           <line x1={box.x} y1={box.y + box.h} x2={box.x + box.w} y2={box.y + box.h} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
