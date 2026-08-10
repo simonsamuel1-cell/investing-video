@@ -20,7 +20,7 @@ import { Stage, Card } from "../components/Stage";
 import { CandleChart } from "../components/CandleChart";
 import { Overlays, SubPane } from "../components/Studies";
 import { theme } from "../theme";
-import { progress, ramp, textReveal } from "../helpers";
+import { progress, progressInOut, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
 import { rsi, macdHistogram } from "../data/studies";
 import { BARS } from "./Scene01";
@@ -42,9 +42,9 @@ const MOVE_OVER = 30; // frames the pair takes to travel and shrink
 /**
  * 890 → 920. The tools hold, fully on screen, and only then clear.
  *
- * Linear on purpose: the episode's easing is fast at the front, so an eased
- * wipe of the same length is visually finished a third of the way in and the
- * tools would disappear well before 920.
+ * Eased in and out, symmetrically. The episode's `settle` curve is front-loaded
+ * and would have the tools gone a third of the way in; a symmetric ease starts
+ * and stops softly and still finishes on the frame it should.
  */
 const CLEAR_OVER = 30;
 /** How far the price is squeezed to make room for the panes underneath. */
@@ -96,9 +96,9 @@ export const Scene02 = () => {
   const chartIn = f >= T.chart ? progress(f, T.chart, 30) : 0;
 
   const tool = (i: number) => progress(f, T.clutter + i * STAGGER, 30);
-  // linear: an eased wipe is all but finished a third of the way in, which
-  // took the tools off screen long before the frame they are meant to last to
-  const wipe = f >= T.clear ? ramp(f, T.clear, CLEAR_OVER) : 0;
+  // easy ease — symmetric, so it starts and stops softly and still lands
+  // exactly on 920, unlike the episode's front-loaded settle curve
+  const wipe = f >= T.clear ? progressInOut(f, T.clear, CLEAR_OVER) : 0;
 
   /**
    * The price gives up height as the tools arrive and takes it back as they
