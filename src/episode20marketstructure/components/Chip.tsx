@@ -2,10 +2,15 @@
  * Chip.tsx — the episode's one label primitive: Title Case type in a tone
  * colour, with an optional hairline leader to whatever it annotates.
  *
- * NO PILL. No fill, no border, no padding — a label is the word itself. The
- * tone carries the meaning (indigo for peaks and primary labels, cyan for
- * troughs and accents, slate for muted ones), and the colour alone is enough
- * to say which is which.
+ * NO PILL BY DEFAULT. No fill, no border, no padding — a label is the word
+ * itself. The tone carries the meaning (indigo for peaks and primary labels,
+ * cyan for troughs and accents, slate for muted ones), and the colour alone is
+ * enough to say which is which.
+ *
+ * `pill` opts a label back into a fill and a border. Use it for labels that are
+ * their own object rather than an annotation on something else — SC03's three
+ * questions, which sit on the card but are not pointing at any part of it.
+ * A pill on an annotation would fight the thing it annotates.
  *
  * A chip is still a UI element, so it may pop on arrival — that and the pivot
  * dots are the only places pop is allowed. The glyphs never move once placed.
@@ -22,6 +27,10 @@ export type Tone = "indigo" | "cyan" | "slate" | "outline";
 
 /** `outline` is kept as a name for callers; with no pill it reads as indigo. */
 const inkOf = (t: Tone) => (t === "cyan" ? theme.color.cyan : t === "slate" ? theme.color.slate : theme.color.indigo);
+/** The pill's fill — the same hue as its ink, at wash strength. */
+const washOf = (t: Tone) => (t === "cyan" ? theme.color.cyanWash : t === "slate" ? "rgba(98, 98, 102, 0.08)" : theme.color.indigoWash);
+/** Breathing room inside a pill, proportional so it holds at any type size. */
+const PILL_PAD = { x: 0.62, y: 0.3 };
 
 export const Chip = ({
   label,
@@ -35,6 +44,7 @@ export const Chip = ({
   opacity = 1,
   strike = 0,
   check = false,
+  pill = false,
 }: {
   label: string;
   x: number;
@@ -50,6 +60,8 @@ export const Chip = ({
   /** 0→1 strikethrough sweep. */
   strike?: number;
   check?: boolean;
+  /** Wraps the label in a tinted, outlined pill. Off everywhere else. */
+  pill?: boolean;
 }) => {
   const f = useCurrentFrame();
   if (f < at || opacity <= 0.001) return null;
@@ -76,6 +88,14 @@ export const Chip = ({
           fontWeight: theme.text.chip.weight,
           whiteSpace: "nowrap",
           opacity: p * opacity,
+          ...(pill
+            ? {
+                padding: `${Math.round(size * PILL_PAD.y)}px ${Math.round(size * PILL_PAD.x)}px`,
+                background: washOf(tone),
+                border: `${theme.shape.rule}px solid ${ink}`,
+                borderRadius: 999,
+              }
+            : null),
         }}
       >
         {check && <span style={{ marginRight: 10 }}>✓</span>}

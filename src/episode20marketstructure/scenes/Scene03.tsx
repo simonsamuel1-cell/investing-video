@@ -180,10 +180,12 @@ export const Scene03 = () => {
       <Chip label="Indikator" x={NOT_THIS_X[0]} y={QUESTION_Y} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0) * stay} />
       <Chip label="Berita" x={NOT_THIS_X[1]} y={QUESTION_Y} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26) * stay} />
 
-      {/* SC01's three questions, now anchored to real turning points */}
-      <Chip label="Terus naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.q1} opacity={stay} />
-      <Chip label="Terus turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.q2} opacity={stay} />
-      <Chip label="Area sama?" x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.q3} opacity={stay} />
+      {/* SC01's three questions, now anchored to real turning points. These
+          three are the episode's only pills: they are objects sitting on the
+          card, not annotations pointing into it. */}
+      <Chip label="Terus naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.q1} opacity={stay} pill />
+      <Chip label="Terus turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.q2} opacity={stay} pill />
+      <Chip label="Area sama?" x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.q3} opacity={stay} pill />
     </Stage>
   );
 };
