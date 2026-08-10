@@ -34,7 +34,7 @@ const T = {
   sub: 102, // global 564 — the sub-line joins it
   settle: 165, // global 627 — the pair travels to the title strip
   chart: 178, // the chart returns under them
-  clutter: 290, // "mencari indikator"
+  clutter: 317, // global 779 — the tools start piling on
   clear: 383, // "harga sebenarnya bergerak"
 };
 const MOVE_OVER = 30; // frames the pair takes to travel and shrink
@@ -44,8 +44,9 @@ const MOVE_OVER = 30; // frames the pair takes to travel and shrink
  * header exactly — same centre, same sizes — so the block simply becomes the
  * header once it lands.
  */
-const BIG = { title: 96, sub: 48 };
-const REST = { title: theme.text.title.size, sub: theme.text.body.size };
+const SUB_TRIM = 4; // the sub-line reads 4px smaller than the body size
+const BIG = { title: 96, sub: 48 - SUB_TRIM };
+const REST = { title: theme.text.title.size, sub: theme.text.body.size - SUB_TRIM };
 /** Reserved sub-line height at each size, so the block's height is stable. */
 const subBlock = (size: number) => 8 + size * 1.2;
 /** Centre placed so the TITLE line itself sits on the canvas centre at L0. */
@@ -56,7 +57,8 @@ const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 40, w: theme.stage.
 /** The two sub-panes rise over the lower third. The price gets buried. */
 const RSI_BOX = { x: theme.stage.plot.x, y: 662, w: theme.stage.plot.w, h: 84 };
 const MACD_BOX = { x: theme.stage.plot.x, y: 758, w: theme.stage.plot.w, h: 84 };
-const STAGGER = 14; // frames between one tool arriving and the next
+/** Tight, so the last tool is on screen before the wipe starts clearing. */
+const STAGGER = 6;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const RSI = rsi(BARS);
@@ -97,8 +99,11 @@ export const Scene02 = () => {
           filter: enterBlur > 0.05 ? `blur(${enterBlur}px)` : undefined,
         }}
       >
+        {/* absolute + inset so the clip further down has a box to clip INSIDE.
+            A static wrapper collapses to zero height and takes the overlays with
+            it, because the transform on it makes it their containing block. */}
         {chartIn > 0.001 && (
-          <div style={{ opacity: chartIn, transform: `translateY(${(1 - chartIn) * 40}px)` }}>
+          <div style={{ position: "absolute", inset: 0, opacity: chartIn, transform: `translateY(${(1 - chartIn) * 40}px)` }}>
             <Card>
               <CandleChart bars={BARS} box={BOX} axisOpacity={1 - wipe * 0.15} ticks={[4400, 4800, 5200, 5600, 6000]} tickLabels={false} />
 
