@@ -11,18 +11,40 @@ import { curve, type Shape } from "./shape";
 const make = (s: Shape) => curve(s);
 
 /**
- * SC01 → SC03. Deliberately unreadable: the peaks land at nearly one height and
- * the troughs at another, so "naik? turun? sideways?" genuinely has no answer.
- * SC03 then puts Puncak / Lembah markers on these same turns.
+ * SC01 → SC03. Traced point by point off Simon's reference screenshot — 58
+ * legs, because the density IS the picture: a real chart is mostly small
+ * indecisive turns with a few big ones inside them, and a shape written from a
+ * handful of legs reads as a diagram of a chart rather than a chart.
+ *
+ * Drawn rather than embedded, so SC03 can dissolve the candles into the line
+ * and put Puncak / Lembah markers on the shape's own turning points. With this
+ * many turns, SC03 marks only the MAJOR ones — see majorTurns().
  */
 export const HOOK = make({
-  from: 4820,
-  legs: [{ to: 5180 }, { to: 4790 }, { to: 5230 }, { to: 4760 }, { to: 5150 }, { to: 4820 }, { to: 5120 }, { to: 4950 }],
-  jitter: 0.03,
+  from: 4344,
+  legs: [
+    { to: 4434, weight: 1.0 }, { to: 4926, weight: 2.25 }, { to: 4948, weight: 1.0 }, { to: 4836, weight: 1.25 },
+    { to: 4792, weight: 1.5 }, { to: 4948, weight: 1.75 }, { to: 4904, weight: 0.75 }, { to: 4703, weight: 1.5 },
+    { to: 4881, weight: 1.0 }, { to: 4725, weight: 1.0 }, { to: 4681, weight: 1.0 }, { to: 4836, weight: 1.0 },
+    { to: 4881, weight: 1.0 }, { to: 4792, weight: 0.75 }, { to: 4904, weight: 1.25 }, { to: 5463, weight: 1.0 },
+    { to: 5597, weight: 1.5 }, { to: 5485, weight: 1.25 }, { to: 5575, weight: 1.0 }, { to: 5440, weight: 1.25 },
+    { to: 5396, weight: 1.0 }, { to: 5150, weight: 0.75 }, { to: 5127, weight: 1.0 }, { to: 5195, weight: 0.75 },
+    { to: 5060, weight: 0.75 }, { to: 5306, weight: 0.75 }, { to: 5620, weight: 1.0 }, { to: 5687, weight: 1.0 },
+    { to: 5597, weight: 1.0 }, { to: 5642, weight: 0.75 }, { to: 5888, weight: 1.0 }, { to: 5866, weight: 0.75 },
+    { to: 5821, weight: 0.75 }, { to: 5933, weight: 0.75 }, { to: 5642, weight: 1.0 }, { to: 5776, weight: 1.0 },
+    { to: 6000, weight: 0.75 }, { to: 5843, weight: 0.75 }, { to: 5687, weight: 1.0 }, { to: 5374, weight: 1.0 },
+    { to: 5329, weight: 0.75 }, { to: 5351, weight: 1.0 }, { to: 5306, weight: 1.0 }, { to: 5418, weight: 1.0 },
+    { to: 5015, weight: 1.0 }, { to: 4926, weight: 0.75 }, { to: 4881, weight: 0.75 }, { to: 4948, weight: 1.0 },
+    { to: 4881, weight: 0.75 }, { to: 4970, weight: 1.0 }, { to: 5171, weight: 1.25 }, { to: 5150, weight: 0.75 },
+    { to: 4970, weight: 1.0 }, { to: 4792, weight: 1.0 }, { to: 4747, weight: 1.0 }, { to: 4814, weight: 1.0 },
+    { to: 4836, weight: 1.0 }, { to: 4845, weight: 1.0 },
+  ],
+  jitter: 0.008,
   seed: 31,
+  steps: 760,
 });
 /** Round gridlines. A price axis should read in steps a viewer recognises. */
-export const HOOK_TICKS = [4800, 5000, 5200];
+export const HOOK_TICKS = [4600, 5200, 5800];
 
 /**
  * SC04 — the mechanism. Rise, a pullback that stops ABOVE the starting low,

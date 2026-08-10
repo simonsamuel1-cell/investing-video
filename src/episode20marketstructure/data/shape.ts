@@ -91,22 +91,44 @@ export const curve = ({ from, legs, jitter = 0.02, seed = 7, steps = 340 }: Shap
     samples.push({ t, p: base + wobble(t) * range * jitter * Math.sin(Math.PI * u) });
   }
 
-  // A junction is a peak when the leg before it rose and the leg after it fell.
+  /**
+   * A junction is a TURN only when direction actually reverses: up-then-down is
+   * a peak, down-then-up is a trough. Two legs going the same way are one move
+   * described in two steps, and recording that as a turn would let a scene put
+   * a "peak" marker in the middle of a climb.
+   */
   const turns: Turn[] = [{ t: 0, p: from, kind: "start" }];
   for (let i = 0; i < spans.length; i++) {
-    const rose = spans[i].to > spans[i].from;
     const next = spans[i + 1];
     if (!next) {
       turns.push({ t: 1, p: spans[i].to, kind: "end" });
       break;
     }
+    const rose = spans[i].to > spans[i].from;
     const fallsNext = next.to < next.from;
-    turns.push({ t: spans[i].t1, p: spans[i].to, kind: rose && fallsNext ? "peak" : !rose && !fallsNext ? "trough" : rose ? "peak" : "trough" });
+    if (rose === fallsNext) turns.push({ t: spans[i].t1, p: spans[i].to, kind: rose ? "peak" : "trough" });
   }
 
   const ps = samples.map((s) => s.p);
   return { samples, turns, lo: Math.min(...ps), hi: Math.max(...ps) };
 };
+
+/**
+ * The turns worth naming: those whose price stands at least `minMove` clear of
+ * BOTH neighbouring turns. A dense series has dozens of small wiggles; this is
+ * what lets a scene mark the handful a viewer would actually call a peak.
+ */
+export const majorTurns = (c: Curve, minMove: number) =>
+  c.turns
+    .map((t, i) => i)
+    .filter((i) => {
+      const t = c.turns[i];
+      if (t.kind !== "peak" && t.kind !== "trough") return false;
+      const prev = c.turns[i - 1];
+      const next = c.turns[i + 1];
+      if (!prev || !next) return false;
+      return Math.min(Math.abs(t.p - prev.p), Math.abs(t.p - next.p)) >= minMove;
+    });
 
 /** Indices of every peak (or trough) in draw order. */
 export const peaksOf = (c: Curve) => c.turns.map((t, i) => (t.kind === "peak" ? i : -1)).filter((i) => i >= 0);
@@ -197,16 +219,26 @@ export type Bar = { o: number; h: number; l: number; c: number; date?: string };
  * curve, that dissolve is a fact about a single series rather than two drawings
  * that were made to look alike.
  */
-export const candles = (c: Curve, count: number, seed = 5): Bar[] => {
+export const candles = (c: Curve, count: number, seed = 5, rough = 0): Bar[] => {
   const rnd = seeded(seed);
   const range = c.hi - c.lo;
   const at = (i: number) => c.samples[Math.round((i / count) * (c.samples.length - 1))].p;
   const out: Bar[] = [];
   for (let i = 0; i < count; i++) {
-    const close = at(i + 1);
+    /**
+     * `rough` lets a close sit slightly off the curve. Without it every body
+     * marches in the same direction as the line and the series reads as a
+     * smooth ribbon; a real chart alternates, prints the odd doji, and pushes
+     * the occasional long wick. The curve is still what the closes describe —
+     * the deviation is a fraction of the shape's own range.
+     */
+    const close = at(i + 1) + (rnd() - 0.5) * range * rough;
     const open = i === 0 ? at(0) : out[i - 1].c;
-    const wick = range * (0.008 + rnd() * 0.018);
-    out.push({ o: open, c: close, h: Math.max(open, close) + wick, l: Math.min(open, close) - wick });
+    // most wicks are short; one bar in six or so reaches much further
+    const stretch = rnd() < 0.16 ? 2.6 + rnd() * 2.2 : 1;
+    const up = range * (0.005 + rnd() * 0.012) * stretch;
+    const down = range * (0.005 + rnd() * 0.012) * (rnd() < 0.16 ? 2.6 + rnd() * 2.2 : 1);
+    out.push({ o: open, c: close, h: Math.max(open, close) + up, l: Math.min(open, close) - down });
   }
   return out;
 };

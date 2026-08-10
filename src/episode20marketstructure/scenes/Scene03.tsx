@@ -17,6 +17,7 @@ import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { fadeOut, progress } from "../helpers";
+import { majorTurns } from "../data/shape";
 import { HOOK, HOOK_TICKS } from "../data/shapes";
 import { BARS } from "./Scene01";
 
@@ -32,6 +33,14 @@ const T = {
   q3: 451, // "area yang sama"
 };
 const TURN_STEP = 11;
+/**
+ * How far a turn has to stand clear of its neighbours to be worth naming. The
+ * series has ~57 turns; at this threshold about eight survive, which is the
+ * number a viewer would point at unprompted.
+ */
+const MIN_MOVE = 130;
+/** However many survive, only the first few are worth landing on screen. */
+const MAX_MARKS = 9;
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 50, w: theme.stage.plot.w, h: theme.stage.plot.h - 120 };
 const QUESTION_X = [500, 960, 1420];
 const NOT_THIS_X = [740, 1080];
@@ -47,8 +56,8 @@ const LENGTH = CLOSES.reduce((a, p, i) => (i === 0 ? 0 : a + Math.hypot(p.x - CL
  * local extreme within a few bars. The dot then sits ON the drawn line rather
  * than near it.
  */
-const TURN_BARS = HOOK.turns
-  .filter((t) => t.kind === "peak" || t.kind === "trough")
+const TURN_BARS = majorTurns(HOOK, MIN_MOVE)
+  .map((i) => HOOK.turns[i])
   .map((t) => {
     const peak = t.kind === "peak";
     const guess = Math.round(t.t * (BARS.length - 1));
@@ -57,7 +66,11 @@ const TURN_BARS = HOOK.turns
       if (peak ? BARS[i].c > BARS[best].c : BARS[i].c < BARS[best].c) best = i;
     }
     return { bar: best, peak };
-  });
+  })
+  .slice(0, MAX_MARKS);
+
+const FIRST_PEAK = TURN_BARS.findIndex((t) => t.peak);
+const FIRST_TROUGH = TURN_BARS.findIndex((t) => !t.peak);
 
 export const Scene03 = () => {
   const f = useCurrentFrame();
@@ -87,15 +100,16 @@ export const Scene03 = () => {
           </Layer>
         )}
 
-        {/* Peaks indigo, troughs cyan — the pairing holds for the whole episode.
-            The SECOND trough carries the name: the first sits on the left edge
-            and a chip centred there would cross the safe margin. */}
+        {/* Peaks indigo, troughs cyan — the pairing holds for the whole
+            episode. The names go to the first of each KIND, not to the first
+            two markers: which comes first depends on the shape, and naming by
+            position would sooner or later call a trough a peak. */}
         {TURN_BARS.map((t, i) => (
           <PivotLabel
             key={i}
             x={G.x(t.bar)}
             y={G.scale(BARS[t.bar].c)}
-            label={i === 0 ? "Puncak" : i === 1 ? "Lembah" : undefined}
+            label={i === FIRST_PEAK ? "Puncak" : i === FIRST_TROUGH ? "Lembah" : undefined}
             tone={t.peak ? "indigo" : "cyan"}
             side={t.peak ? "above" : "below"}
             at={T.turns + i * TURN_STEP}

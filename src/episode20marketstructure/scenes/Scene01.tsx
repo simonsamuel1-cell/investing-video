@@ -26,12 +26,17 @@ const T = {
 };
 const QUESTION_Y = theme.stage.plot.y + 26;
 const QUESTION_X = [560, 960, 1364];
+const QUESTION_SIZE = theme.text.tag.size; // 30px
 /** Candles start below the question row, so the two can never overlap. */
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 96, w: theme.stage.plot.w, h: theme.stage.plot.h - 96 };
-const SWEEP = { y: theme.stage.caption.y, halfWidth: 310 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const BARS = candles(HOOK, 46, 17);
+/**
+ * 92 bars, matching the reference's density. `rough` lets closes sit slightly
+ * off the curve so the bodies alternate and the odd doji prints — without it a
+ * dense series reads as a smooth ribbon rather than a chart.
+ */
+export const BARS = candles(HOOK, 92, 17, 0.012);
 
 /**
  * The reading cursor. It drifts across the candles and stops on "Bukan berarti
@@ -66,7 +71,6 @@ export const Scene01 = () => {
   const plotted = progress(f, T.chart + 8, 96);
   // on the last line the questions step back — asked, not answered
   const dim = 1 - 0.55 * progress(f, T.habit, 20);
-  const sweep = f >= T.habit ? progress(f, T.habit, 34) : 0;
 
   return (
     <Stage>
@@ -76,24 +80,10 @@ export const Scene01 = () => {
 
       <Cursor f={f} />
 
-      <Chip label="Naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="outline" at={T.naik} opacity={dim} />
-      <Chip label="Turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="outline" at={T.turun} opacity={dim} />
-      <Chip label="Sideways?" x={QUESTION_X[2]} y={QUESTION_Y} tone="cyan" at={T.sideways} opacity={dim} />
+      <Chip label="Naik?" size={QUESTION_SIZE} x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.naik} opacity={dim} />
+      <Chip label="Turun?" size={QUESTION_SIZE} x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.turun} opacity={dim} />
+      <Chip label="Sideways?" size={QUESTION_SIZE} x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.sideways} opacity={dim} />
 
-      {/* one indigo rule sweeps in under the card — the habit, not yet named */}
-      {sweep > 0.001 && (
-        <Layer>
-          <line
-            x1={theme.canvas.width / 2 - SWEEP.halfWidth}
-            y1={SWEEP.y}
-            x2={theme.canvas.width / 2 - SWEEP.halfWidth + SWEEP.halfWidth * 2 * sweep}
-            y2={SWEEP.y}
-            stroke={theme.color.indigo}
-            strokeWidth={4}
-            strokeLinecap="round"
-          />
-        </Layer>
-      )}
     </Stage>
   );
 };
