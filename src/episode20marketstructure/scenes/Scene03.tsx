@@ -36,7 +36,7 @@ const T = {
   line: 58, // "bentuk yang ditinggalkan harga"
   notThis: 180, // "Bukan indikator" / "bukan juga berita"
   strike: 226,
-  turns: 266, // "puncak dan lembahnya"
+  turns: 268, // global 1196 — "puncak dan lembahnya"
   q1: 371, // "terus naik"
   q2: 422, // "terus turun"
   q3: 451, // "area yang sama"
@@ -56,15 +56,24 @@ const SCENE_FROM = 928;
  * still and alone when the cut lands.
  */
 const EXIT_OVER = 30;
-const TURN_STEP = 11;
 /**
- * How far a turn has to stand clear of its neighbours to be worth naming. The
- * series has ~57 turns; at this threshold about eight survive, which is the
- * number a viewer would point at unprompted.
+ * The marks run from global 1196 to global 1422 — the whole stretch where the
+ * narration is naming peaks and troughs — and the step is DERIVED from that
+ * window rather than fixed, so changing how many survive re-spaces them instead
+ * of running them off the end.
+ *
+ * The last one finishes popping ON 1422, not starting there: a marker arriving
+ * as the line begins to wind back out would read as a mistake.
  */
-const MIN_MOVE = 130;
-/** However many survive, only the first few are worth landing on screen. */
-const MAX_MARKS = 9;
+const TURN_WINDOW = { from: T.turns, to: 494 - theme.motion.pop };
+/**
+ * How far a turn has to stand clear of its neighbours to be worth marking. The
+ * series has ~57 turns; at this threshold twenty survive — enough that the
+ * staircase reads as a rhythm rather than a handful of examples, and still only
+ * the turns a viewer would point at unprompted.
+ */
+const MIN_MOVE = 70;
+const MAX_MARKS = 20;
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
@@ -106,7 +115,13 @@ const TURN_BARS = majorTurns(HOOK, MIN_MOVE)
     }
     return { bar: best, peak };
   })
+  // two turns can resolve to the same candle; one dot per bar, or they stack
+  .filter((t, i, all) => all.findIndex((o) => o.bar === t.bar) === i)
   .slice(0, MAX_MARKS);
+
+/** Spread evenly across the window, however many survived the filter. */
+const TURN_AT = (i: number) =>
+  TURN_BARS.length < 2 ? TURN_WINDOW.from : TURN_WINDOW.from + ((TURN_WINDOW.to - TURN_WINDOW.from) * i) / (TURN_BARS.length - 1);
 
 const FIRST_PEAK = TURN_BARS.findIndex((t) => t.peak);
 const FIRST_TROUGH = TURN_BARS.findIndex((t) => !t.peak);
@@ -175,7 +190,7 @@ export const Scene03 = () => {
             label={i === FIRST_PEAK ? "Puncak" : i === FIRST_TROUGH ? "Lembah" : undefined}
             tone={t.peak ? "indigo" : "cyan"}
             side={t.peak ? "above" : "below"}
-            at={T.turns + i * TURN_STEP}
+            at={TURN_AT(i)}
             opacity={stay}
           />
         );
