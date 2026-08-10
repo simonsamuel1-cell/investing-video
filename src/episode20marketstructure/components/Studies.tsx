@@ -107,7 +107,7 @@ export const SubPane = ({
         )
       )}
       {label && (
-        <text x={box.x + 14} y={box.y + 26} fontFamily={theme.text.family} fontSize={theme.text.axis.size} fontWeight={theme.text.axis.weight} fill={theme.color.slate}>
+        <text x={box.x + 4} y={box.y - 8} fontFamily={theme.text.family} fontSize={theme.text.axis.size} fontWeight={theme.text.axis.weight} fill={theme.color.slate}>
           {label}
         </text>
       )}

@@ -35,9 +35,17 @@ const T = {
   settle: 165, // global 627 — the pair travels to the title strip
   chart: 178, // the chart returns under them
   clutter: 317, // global 779 — the tools start piling on
-  clear: 383, // "harga sebenarnya bergerak"
+  clear: 383, // "harga sebenarnya bergerak" — global 845
+
 };
 const MOVE_OVER = 30; // frames the pair takes to travel and shrink
+/**
+ * The wipe starts on its word but runs long, finishing at global 925 — the
+ * tools stay on screen right up to that frame rather than vanishing early.
+ */
+const CLEAR_OVER = 80;
+/** How far the price is squeezed to make room for the panes underneath. */
+const SQUEEZE = 0.38;
 
 /**
  * The two states of the title block. `rest` matches the episode's standard
@@ -68,7 +76,6 @@ const HOLD = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 export const Scene02 = () => {
   const f = useCurrentFrame();
   const g = f + SCENE_FROM;
-  const grid = barGrid(BARS, BOX);
 
   // ── arriving on the same camera move SC01 left on ──
   const enterDy = cutIn(g, CUTS.toTitle);
@@ -86,8 +93,17 @@ export const Scene02 = () => {
   const chartIn = f >= T.chart ? progress(f, T.chart, 30) : 0;
 
   const tool = (i: number) => progress(f, T.clutter + i * STAGGER, 30);
-  const wipe = f >= T.clear ? progress(f, T.clear, 30) : 0;
-  const pulse = beat(f, T.clear + 18, 30);
+  const wipe = f >= T.clear ? progress(f, T.clear, CLEAR_OVER) : 0;
+  const pulse = beat(f, T.clear + CLEAR_OVER - 24, 30);
+
+  /**
+   * The price gives up height as the tools arrive and takes it back as they
+   * are cleared — which is the scene's argument in one move: the tools crowded
+   * it out, and it was there the whole time.
+   */
+  const squeeze = (f >= T.clutter ? progress(f, T.clutter, 40) : 0) * (1 - wipe);
+  const plot = { ...BOX, h: BOX.h * (1 - SQUEEZE * squeeze) };
+  const grid = barGrid(BARS, plot);
 
   return (
     <Stage>
@@ -105,7 +121,7 @@ export const Scene02 = () => {
         {chartIn > 0.001 && (
           <div style={{ position: "absolute", inset: 0, opacity: chartIn, transform: `translateY(${(1 - chartIn) * 40}px)` }}>
             <Card>
-              <CandleChart bars={BARS} box={BOX} axisOpacity={1 - wipe * 0.15} ticks={[4400, 4800, 5200, 5600, 6000]} tickLabels={false} />
+              <CandleChart bars={BARS} box={plot} axisOpacity={1 - wipe * 0.15} ticks={[4400, 4800, 5200, 5600, 6000]} tickLabels={false} />
 
               {/* the price, restated in indigo for exactly one beat */}
               {pulse > 0.001 && (
@@ -121,7 +137,7 @@ export const Scene02 = () => {
 
               {/* EVERY tool lives in this one group, so a single clip clears them all */}
               <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 0 ${wipe * 100}%)` }}>
-                <Overlays bars={BARS} box={BOX} envelope={tool(0)} slow={tool(1)} fast={tool(2)} />
+                <Overlays bars={BARS} box={plot} envelope={tool(0)} slow={tool(1)} fast={tool(2)} />
                 <SubPane box={RSI_BOX} values={RSI} kind="line" rise={tool(3)} label="RSI (14)" bounds={[0, 100]} />
                 <SubPane box={MACD_BOX} values={MACD} kind="bars" rise={tool(4)} label="MACD" />
               </div>
@@ -144,7 +160,7 @@ export const Scene02 = () => {
             style={{
               fontSize: titleSize,
               fontWeight: theme.text.title.weight,
-              color: theme.color.ink,
+              color: theme.color.indigo,
               opacity: head.opacity,
               transform: `translateY(${head.dy}px)`,
             }}
