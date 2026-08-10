@@ -23,6 +23,7 @@ import { TitleBlock, TITLE_BIG, TITLE_REST, TITLE_BIG_CY, TITLE_REST_CY } from "
 import { theme } from "../theme";
 import { progress, progressInOut, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
+import { breathScale, BREATH_ORIGIN } from "../transitions/Breath";
 import { rsi, macdHistogram } from "../data/studies";
 import { BARS } from "./Scene01";
 
@@ -115,7 +116,17 @@ export const Scene02 = () => {
             A static wrapper collapses to zero height and takes the overlays with
             it, because the transform on it makes it their containing block. */}
         {chartIn > 0.001 && (
-          <div style={{ position: "absolute", inset: 0, opacity: chartIn, transform: `translateY(${(1 - chartIn) * 40}px)` }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: chartIn,
+              /* the long breath starts here and only releases at the end of
+                 SC03 — the chart, its tools and the card ride it together */
+              transform: `translateY(${(1 - chartIn) * 40}px) scale(${breathScale(g)})`,
+              transformOrigin: BREATH_ORIGIN,
+            }}
+          >
             <Card>
               {/* the axis stays at full strength: it has to hand over to SC03 */}
               <CandleChart bars={BARS} box={plot} ticks={CHART_TICKS} tickLabels={false} />

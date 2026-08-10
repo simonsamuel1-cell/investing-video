@@ -8,15 +8,21 @@
  *
  * The line pauses between legs rather than running at one speed. Each leg is a
  * different decision, and the pause is where the narration explains it.
+ *
+ * It does not start from nothing. SC03's line wound itself back into a single
+ * dot; that dot is still on screen on frame 0, travels to where THIS line
+ * begins, and the line grows out of it. The card never left, so the only thing
+ * that changes across the cut is the one element being handed over.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { StructureLine, Reference } from "../components/StructureLine";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { hold, progress } from "../helpers";
+import { hold, progress, progressInOut, fadeOut } from "../helpers";
 import { plot } from "../data/shape";
 import { MECHANISM } from "../data/shapes";
+import { HANDOFF_FROM } from "./Scene03";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -30,9 +36,17 @@ const DRAW_AT = [T.rise, T.rise + 96, T.pullback, T.pullback + 92, T.newHigh, T.
 const DRAW_TO = [0, 0.36, 0.36, 0.62, 0.62, 1];
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 const BRACKET_DX = 58;
+/**
+ * The handed-over dot travels for these frames and then waits, still, until the
+ * line starts drawing at T.rise. The wait matters: it is what makes the line
+ * look like it came OUT of the dot rather than past it.
+ */
+const HANDOFF_OVER = 40;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(MECHANISM, BOX, { pad: 0.12 });
+/** Where this line begins — the dot's destination. */
+const START = P.points[0];
 const LOW = P.turn(0); // the prior low the pullback must respect
 const PEAK = P.turn(1);
 const TROUGH = P.turn(2); // where the pullback actually stopped
@@ -44,9 +58,21 @@ export const Scene04 = () => {
   const bracket = f >= T.floor + 20 ? progress(f, T.floor + 20, 24) : 0;
   const arrows = f >= T.floor + 34 ? progress(f, T.floor + 34, 30) : 0;
 
+  // ── the element handed over from SC03 ──
+  const travel = progressInOut(f, 0, HANDOFF_OVER);
+  const seed = { x: HANDOFF_FROM.x + (START.x - HANDOFF_FROM.x) * travel, y: HANDOFF_FROM.y + (START.y - HANDOFF_FROM.y) * travel };
+  // it hands over to the line, so it leaves as the line leaves it
+  const seedOut = f >= T.rise ? fadeOut(f, T.rise, 22) : 1;
+
   return (
     <Stage>
       <Card>
+        {seedOut > 0.001 && (
+          <Layer opacity={seedOut}>
+            <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
+          </Layer>
+        )}
+
         <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor} label="Titik terendah sebelumnya" />
 
         <StructureLine
@@ -55,7 +81,7 @@ export const Scene04 = () => {
           head
           marks={[
             ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86 }] : []),
-            ...(draw >= 0.99 ? [{ turn: 3, label: "Puncak Baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 54 }] : []),
+            ...(draw >= 0.99 ? [{ turn: 3, label: "Puncak baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 54 }] : []),
           ]}
         />
 

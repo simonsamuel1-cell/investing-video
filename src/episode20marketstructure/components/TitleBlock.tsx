@@ -34,16 +34,20 @@ export const TitleBlock = ({
   subSize = TITLE_REST.sub,
   head = { opacity: 1, dy: 0 },
   tail = { opacity: 1, dy: 0 },
+  opacity = 1,
 }: {
   cy?: number;
   titleSize?: number;
   subSize?: number;
   head?: { opacity: number; dy: number };
   tail?: { opacity: number; dy: number };
+  /** Fades the whole block — SC03 clears it on its way out. */
+  opacity?: number;
 }) => (
   <div
     style={{
       position: "absolute",
+      opacity,
       left: theme.canvas.width / 2,
       top: cy,
       transform: "translate(-50%, -50%)",

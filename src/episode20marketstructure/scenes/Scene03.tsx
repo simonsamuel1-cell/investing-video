@@ -23,7 +23,8 @@ import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { TitleBlock } from "../components/TitleBlock";
 import { theme } from "../theme";
-import { fadeOut, progress } from "../helpers";
+import { fadeOut, progress, progressInOut } from "../helpers";
+import { breathScale, breathPoint, BREATH_ORIGIN } from "../transitions/Breath";
 import { majorTurns } from "../data/shape";
 import { HOOK } from "../data/shapes";
 import { BARS } from "./Scene01";
@@ -39,7 +40,22 @@ const T = {
   q1: 371, // "terus naik"
   q2: 422, // "terus turun"
   q3: 451, // "area yang sama"
+  exit: 490, // global 1418 — the line starts winding itself back up
 };
+/** This scene's `from` in the Composition — needed to read the shared breath. */
+const SCENE_FROM = 928;
+/**
+ * THE HANDOFF INTO SC04.
+ *
+ * The line does not fade; it UN-DRAWS, right to left, back into the single
+ * point it grew out of. Everything named on it clears at the same time, so what
+ * survives the cut is one dot on an unchanged card — and SC04's line grows out
+ * of that same dot. The element is genuinely shared, not matched by eye.
+ *
+ * Ends on 520, two frames before the scene does, so the seed is unmistakably
+ * still and alone when the cut lands.
+ */
+const EXIT_OVER = 30;
 const TURN_STEP = 11;
 /**
  * How far a turn has to stand clear of its neighbours to be worth naming. The
@@ -83,62 +99,91 @@ const TURN_BARS = majorTurns(HOOK, MIN_MOVE)
 const FIRST_PEAK = TURN_BARS.findIndex((t) => t.peak);
 const FIRST_TROUGH = TURN_BARS.findIndex((t) => !t.peak);
 
+/** The point the line grows out of — and the one SC04 picks up. */
+export const HANDOFF_FROM = CLOSES[0];
+
 export const Scene03 = () => {
   const f = useCurrentFrame();
+  const g = f + SCENE_FROM;
+  const s = breathScale(g);
+
   const dissolving = fadeOut(f, T.dissolve, 50);
-  const drawn = progress(f, T.dissolve, T.line + 60);
+  // the exit rewinds the same trim path the entrance drew
+  const gone = f >= T.exit ? progressInOut(f, T.exit, EXIT_OVER) : 0;
+  const drawn = progress(f, T.dissolve, T.line + 60) * (1 - gone);
+  const stay = 1 - gone;
   const strike = (offset: number) => (f >= T.strike + offset ? progress(f, T.strike + offset, 14) : 0);
   const leave = (offset: number) => (f >= T.strike + offset + 20 ? fadeOut(f, T.strike + offset + 20, 16) : 1);
 
+  const seed = breathPoint(HANDOFF_FROM, s);
+
   return (
     <Stage>
-      <Card>
-        {dissolving > 0.001 && <CandleChart bars={BARS} box={BOX} opacity={dissolving} ticks={CHART_TICKS} tickLabels={false} />}
+      {/* the breath: card, candles and line move as one object */}
+      <div style={{ position: "absolute", inset: 0, transform: `scale(${s})`, transformOrigin: BREATH_ORIGIN }}>
+        <Card>
+          {dissolving > 0.001 && <CandleChart bars={BARS} box={BOX} opacity={dissolving} ticks={CHART_TICKS} tickLabels={false} />}
 
-        {/* the shape price leaves behind */}
-        {drawn > 0.001 && (
-          <Layer>
-            <path
-              d={PATH}
-              fill="none"
-              stroke={theme.color.ink}
-              strokeWidth={theme.shape.line}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeDasharray={LENGTH}
-              strokeDashoffset={LENGTH * (1 - drawn)}
-            />
-          </Layer>
-        )}
+          {/* the shape price leaves behind */}
+          {drawn > 0.001 && (
+            <Layer>
+              <path
+                d={PATH}
+                fill="none"
+                stroke={theme.color.ink}
+                strokeWidth={theme.shape.line}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeDasharray={LENGTH}
+                strokeDashoffset={LENGTH * (1 - drawn)}
+              />
+            </Layer>
+          )}
+        </Card>
+      </div>
 
-        {/* Peaks indigo, troughs cyan — the pairing holds for the whole
-            episode. The names go to the first of each KIND, not to the first
-            two markers: which comes first depends on the shape, and naming by
-            position would sooner or later call a trough a peak. */}
-        {TURN_BARS.map((t, i) => (
+      {/* Peaks indigo, troughs cyan — the pairing holds for the whole
+          episode. The names go to the first of each KIND, not to the first
+          two markers: which comes first depends on the shape, and naming by
+          position would sooner or later call a trough a peak.
+
+          They live OUTSIDE the breathing group and have their coordinates run
+          through it instead, so the dots stay on the line while the two names
+          keep their type size. */}
+      {TURN_BARS.map((t, i) => {
+        const p = breathPoint({ x: G.x(t.bar), y: G.scale(BARS[t.bar].c) }, s);
+        return (
           <PivotLabel
             key={i}
-            x={G.x(t.bar)}
-            y={G.scale(BARS[t.bar].c)}
+            x={p.x}
+            y={p.y}
             label={i === FIRST_PEAK ? "Puncak" : i === FIRST_TROUGH ? "Lembah" : undefined}
             tone={t.peak ? "indigo" : "cyan"}
             side={t.peak ? "above" : "below"}
             at={T.turns + i * TURN_STEP}
+            opacity={stay}
           />
-        ))}
-      </Card>
+        );
+      })}
+
+      {/* what the line winds back into, and what SC04 starts from */}
+      {gone > 0.001 && (
+        <Layer opacity={gone}>
+          <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
+        </Layer>
+      )}
 
       {/* the header SC02 built, held exactly where it was left */}
-      <TitleBlock />
+      <TitleBlock opacity={stay} />
 
       {/* not this, and not this */}
-      <Chip label="Indikator" x={NOT_THIS_X[0]} y={QUESTION_Y} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0)} />
-      <Chip label="Berita" x={NOT_THIS_X[1]} y={QUESTION_Y} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26)} />
+      <Chip label="Indikator" x={NOT_THIS_X[0]} y={QUESTION_Y} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0) * stay} />
+      <Chip label="Berita" x={NOT_THIS_X[1]} y={QUESTION_Y} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26) * stay} />
 
       {/* SC01's three questions, now anchored to real turning points */}
-      <Chip label="Terus naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.q1} />
-      <Chip label="Terus turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.q2} />
-      <Chip label="Area sama?" x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.q3} />
+      <Chip label="Terus naik?" x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.q1} opacity={stay} />
+      <Chip label="Terus turun?" x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.q2} opacity={stay} />
+      <Chip label="Area sama?" x={QUESTION_X[2]} y={QUESTION_Y} tone="indigo" at={T.q3} opacity={stay} />
     </Stage>
   );
 };
