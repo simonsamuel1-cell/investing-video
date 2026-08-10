@@ -18,7 +18,10 @@ export type Cut = {
   at: number;
   /** Frames the whole move takes, half before the cut and half after. */
   over: number;
-  /** How far the camera travels, in px. */
+  /**
+   * How far the camera travels, in px. Short: the blur and the timing do the
+   * work, and a long throw reads as a slide rather than a cut.
+   */
   distance: number;
   /** Blur at the fastest frame. This is what sells the swap; do not drop it. */
   blur: number;
@@ -26,7 +29,7 @@ export type Cut = {
 
 export const CUTS: Record<string, Cut> = {
   /** SC01 → SC02: the chart hands over to the title. */
-  toTitle: { at: 461, over: 24, distance: 200, blur: 9 },
+  toTitle: { at: 461, over: 24, distance: 80, blur: 9 },
 };
 
 const curve = (c: Cut) => (global: number) => progressInOut(global, c.at - c.over / 2, c.over);
