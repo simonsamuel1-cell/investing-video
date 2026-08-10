@@ -43,6 +43,7 @@ export const Chip = ({
   size = theme.text.chip.size,
   opacity = 1,
   strike = 0,
+  strikeInk,
   check = false,
   pill = false,
 }: {
@@ -59,6 +60,8 @@ export const Chip = ({
   opacity?: number;
   /** 0→1 strikethrough sweep. */
   strike?: number;
+  /** Colour of that sweep. Defaults to the label's own ink. */
+  strikeInk?: string;
   check?: boolean;
   /** Wraps the label in a tinted, outlined pill. Off everywhere else. */
   pill?: boolean;
@@ -101,7 +104,16 @@ export const Chip = ({
         {check && <span style={{ marginRight: 10 }}>✓</span>}
         {label}
         {strike > 0.001 && (
-          <div style={{ position: "absolute", left: 0, top: "50%", width: `calc(100% * ${Math.min(1, strike)})`, height: theme.shape.rule, background: ink }} />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: "50%",
+              width: `calc(100% * ${Math.min(1, strike)})`,
+              height: theme.shape.rule,
+              background: strikeInk ?? ink,
+            }}
+          />
         )}
       </div>
     </>

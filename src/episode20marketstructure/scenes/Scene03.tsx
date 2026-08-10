@@ -21,7 +21,7 @@ import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
 import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
-import { TitleBlock } from "../components/TitleBlock";
+import { TitleBlock, TITLE_REST_CY } from "../components/TitleBlock";
 import { theme } from "../theme";
 import { fadeOut, progress, progressInOut } from "../helpers";
 import { breathScale, breathPoint, BREATH_ORIGIN } from "../transitions/Breath";
@@ -68,9 +68,21 @@ const MAX_MARKS = 9;
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
-/** The questions sit ABOVE the chart, on the same row the strike-outs use. */
+/** The questions sit ABOVE the chart, inside the card. */
 const QUESTION_Y = BOX.y - 26;
+/**
+ * "Indikator" and "Berita" sit OFF the card entirely, in the strip the title
+ * vacates as it leaves. They are things the scene is ruling out, so keeping
+ * them off the white surface says so before the strike does.
+ */
 const NOT_THIS_X = [740, 1080];
+const NOT_THIS_Y = theme.stage.title.y;
+/**
+ * The title leaves the moment the scene starts — but frame 928 still has to be
+ * frame 927, so the exit begins AT 0 rather than before it. It rises as it
+ * goes, which is the direction it arrived from in SC02.
+ */
+const TITLE_OUT = { over: 30, rise: 26 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const G = barGrid(BARS, BOX);
@@ -116,6 +128,9 @@ export const Scene03 = () => {
   const leave = (offset: number) => (f >= T.strike + offset + 20 ? fadeOut(f, T.strike + offset + 20, 16) : 1);
 
   const seed = breathPoint(HANDOFF_FROM, s);
+
+  // the header hands the top strip over to whatever this scene puts there
+  const titleOut = progressInOut(f, 0, TITLE_OUT.over);
 
   return (
     <Stage>
@@ -173,12 +188,30 @@ export const Scene03 = () => {
         </Layer>
       )}
 
-      {/* the header SC02 built, held exactly where it was left */}
-      <TitleBlock opacity={stay} />
+      {/* the header SC02 built, leaving from the frame this scene opens on */}
+      {titleOut < 0.999 && <TitleBlock cy={TITLE_REST_CY - TITLE_OUT.rise * titleOut} opacity={1 - titleOut} />}
 
       {/* not this, and not this */}
-      <Chip label="Indikator" x={NOT_THIS_X[0]} y={QUESTION_Y} tone="slate" at={T.notThis} strike={strike(0)} opacity={leave(0) * stay} />
-      <Chip label="Berita" x={NOT_THIS_X[1]} y={QUESTION_Y} tone="slate" at={T.notThis + 26} strike={strike(26)} opacity={leave(26) * stay} />
+      <Chip
+        label="Indikator"
+        x={NOT_THIS_X[0]}
+        y={NOT_THIS_Y}
+        tone="slate"
+        at={T.notThis}
+        strike={strike(0)}
+        strikeInk={theme.color.indigo}
+        opacity={leave(0) * stay}
+      />
+      <Chip
+        label="Berita"
+        x={NOT_THIS_X[1]}
+        y={NOT_THIS_Y}
+        tone="slate"
+        at={T.notThis + 26}
+        strike={strike(26)}
+        strikeInk={theme.color.indigo}
+        opacity={leave(26) * stay}
+      />
 
       {/* SC01's three questions, now anchored to real turning points. These
           three are the episode's only pills: they are objects sitting on the
