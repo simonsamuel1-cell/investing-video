@@ -1,13 +1,14 @@
 /**
  * SC01 — Hook: three possible directions (from 0, dur 462).
  *
- * A chart that refuses to answer. HOOK's peaks land at nearly one height and
- * its troughs at another, so the ambiguity is in the DATA — the three questions
- * the narration asks genuinely have no easy answer, and the viewer can check
- * that for themselves.
+ * A chart that refuses to answer. The shape is traced from Simon's reference,
+ * and the ambiguity is in the DATA — the three questions the narration asks
+ * genuinely have no easy answer, and the viewer can check that themselves.
+ *
+ * No cursor: the candles and the three questions carry the scene on their own.
  */
-import { useCurrentFrame, interpolate } from "remotion";
-import { Stage, Card, Layer } from "../components/Stage";
+import { useCurrentFrame } from "remotion";
+import { Stage, Card } from "../components/Stage";
 import { CandleChart } from "../components/CandleChart";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
@@ -38,33 +39,6 @@ const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 96, w: theme.stage.
  */
 export const BARS = candles(HOOK, 92, 17, 0.012);
 
-/**
- * The reading cursor. It drifts across the candles and stops on "Bukan berarti
- * kamu nggak bisa membaca chart" — the moment the narration stops describing
- * confusion and starts addressing the viewer.
- */
-const Cursor = ({ f }: { f: number }) => {
-  const travel = interpolate(f, [T.chart + 20, T.settle], [0.12, 0.74], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: theme.motion.settle,
-  });
-  const x = BOX.x + BOX.w * travel;
-  const y = BOX.y + BOX.h * (0.34 + 0.06 * Math.sin(f / 26));
-  const blink = f < T.settle ? 0.45 + 0.55 * (Math.sin(f / 9) > 0 ? 1 : 0) : 1;
-  const o = fadeIn(f, T.chart + 14, 16) * blink;
-  if (o <= 0.001) return null;
-  return (
-    <Layer>
-      <polygon
-        points={`${x},${y} ${x},${y + 26} ${x + 7},${y + 19} ${x + 15},${y + 30} ${x + 20},${y + 27} ${x + 12},${y + 17} ${x + 20},${y + 15}`}
-        fill={theme.color.slate}
-        opacity={o}
-      />
-    </Layer>
-  );
-};
-
 export const Scene01 = () => {
   const f = useCurrentFrame();
   const card = fadeIn(f, T.chart, 16);
@@ -77,8 +51,6 @@ export const Scene01 = () => {
       <Card opacity={card}>
         <CandleChart bars={BARS} box={BOX} reveal={plotted} opacity={card} axisOpacity={card * 0.9} ticks={HOOK_TICKS} />
       </Card>
-
-      <Cursor f={f} />
 
       <Chip label="Naik?" size={QUESTION_SIZE} x={QUESTION_X[0]} y={QUESTION_Y} tone="indigo" at={T.naik} opacity={dim} />
       <Chip label="Turun?" size={QUESTION_SIZE} x={QUESTION_X[1]} y={QUESTION_Y} tone="indigo" at={T.turun} opacity={dim} />
