@@ -74,6 +74,20 @@ const TURN_WINDOW = { from: T.turns, to: 494 - theme.motion.pop };
  */
 const MIN_MOVE = 70;
 const MAX_MARKS = 20;
+/**
+ * MOVING AN INDIVIDUAL MARKER.
+ *
+ * Key = the marker's index, counting from 0 at the left. Value = how many
+ * CANDLES to shift it, negative left and positive right. The dot's height is
+ * read from whichever candle it lands on, so it stays welded to the line — a
+ * marker can never be nudged off the shape it is marking.
+ *
+ * Example: { 3: -2, 11: 1 } moves the fourth dot two candles left and the
+ * twelfth one candle right.
+ */
+const TURN_NUDGE: Record<number, number> = {};
+/** Marker indices to drop entirely, same numbering as TURN_NUDGE. */
+const TURN_SKIP: number[] = [];
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
@@ -117,7 +131,14 @@ const TURN_BARS = majorTurns(HOOK, MIN_MOVE)
   })
   // two turns can resolve to the same candle; one dot per bar, or they stack
   .filter((t, i, all) => all.findIndex((o) => o.bar === t.bar) === i)
-  .slice(0, MAX_MARKS);
+  .slice(0, MAX_MARKS)
+  // Snapping to the nearest extreme can push a turn past its neighbour, so the
+  // list is not left-to-right by construction. Sorting fixes both the reveal
+  // order and the numbering the nudge map below is written against.
+  .sort((a, b) => a.bar - b.bar)
+  // hand adjustments last, so the indices above match what is on screen
+  .map((t, i) => ({ ...t, bar: Math.max(0, Math.min(BARS.length - 1, t.bar + (TURN_NUDGE[i] ?? 0))) }))
+  .filter((_, i) => !TURN_SKIP.includes(i));
 
 /** Spread evenly across the window, however many survived the filter. */
 const TURN_AT = (i: number) =>
