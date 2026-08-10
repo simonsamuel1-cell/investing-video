@@ -87,7 +87,7 @@ const MAX_MARKS = 20;
  */
 const TURN_NUDGE: Record<number, number> = {};
 /** Marker indices to drop entirely, same numbering as TURN_NUDGE. */
-const TURN_SKIP: number[] = [];
+const TURN_SKIP: number[] = [7];
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
