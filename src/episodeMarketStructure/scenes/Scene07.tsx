@@ -91,7 +91,18 @@ export const Scene07 = () => {
             })}
           </svg>
         )}
-        {press > 0.4 && <Chip label="Penjual Menekan" x={firstLow.x} y={firstLow.y - 150} variant="slate" startFrame={T.ll + 12} />}
+        {/* parked in clear space and tied back with a hairline: directly above
+            the trough is where the Lower High chip already sits */}
+        {press > 0.4 && (
+          <Chip
+            label="Penjual Menekan"
+            x={firstLow.x + 300}
+            y={firstLow.y - 250}
+            variant="slate"
+            startFrame={T.ll + 12}
+            connectorTo={{ x: firstLow.x, y: firstLow.y - 30 }}
+          />
+        )}
       </ChartCard>
     </SafeArea>
   );

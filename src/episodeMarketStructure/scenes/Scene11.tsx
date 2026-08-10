@@ -44,7 +44,9 @@ const G_MAJOR = geom(MAJOR, BOX, { pad: 0.12 });
 const G_SMOOTH = geom(SMOOTH, BOX, { pad: 0.12, range: [MAJOR.min, MAJOR.max] });
 
 const LENS_CANDLES = candlesFrom(zoom(MAJOR, MAJOR_LENS), 9, 91);
-const LENS_BOX = { x: LENS_CARD.x + 30, y: LENS_CARD.y + 30, w: LENS_CARD.w - 130, h: LENS_CARD.h - 60 };
+const LENS_BOX = { x: LENS_CARD.x + 30, y: LENS_CARD.y + 30, w: LENS_CARD.w - 60, h: LENS_CARD.h - 60 };
+/** The rectangle on the chart hugs the swing's own price range, not a guess. */
+const LENS_YS = MAJOR.pts.filter((p) => p.t >= MAJOR_LENS[0] && p.t <= MAJOR_LENS[1]).map((p) => p.p);
 
 const PANE_L = paneBox(0);
 const PANE_R = paneBox(1);
@@ -85,8 +87,10 @@ export const Scene11 = () => {
   const drawR = f >= T.swap + 45 ? progress(f, T.swap + 45, T.spike - T.swap - 45) : 0;
 
   const lensRect = {
-    x: G_MAJOR.x(MAJOR_LENS[0]),
-    w: G_MAJOR.x(MAJOR_LENS[1]) - G_MAJOR.x(MAJOR_LENS[0]),
+    x: G_MAJOR.x(MAJOR_LENS[0]) - 14,
+    w: G_MAJOR.x(MAJOR_LENS[1]) - G_MAJOR.x(MAJOR_LENS[0]) + 28,
+    top: G_MAJOR.y(Math.max(...LENS_YS)) - 34,
+    bottom: G_MAJOR.y(Math.min(...LENS_YS)) + 34,
   };
 
   return (
@@ -94,12 +98,12 @@ export const Scene11 = () => {
       {mod1 > 0.001 && (
         <div style={{ position: "absolute", inset: 0, opacity: mod1 }}>
           <ChartCard box={CARD}>
-            {/* the swings, riding the trend */}
-            {minorIn > 0.001 && <PriceLine g={G_MAJOR} draw={minorIn} color={pal.slate} width={2} opacity={0.75} />}
-            {/* the trend itself */}
-            <PriceLine g={G_SMOOTH} draw={majorDraw} color={pal.indigo} width={7} />
+            {/* the trend first, as a band; the swings ride ON it */}
+            <PriceLine g={G_SMOOTH} draw={majorDraw} color={pal.indigo} width={9} opacity={0.5} />
+            {minorIn > 0.001 && <PriceLine g={G_MAJOR} draw={minorIn} color={pal.ink} width={2} opacity={0.9} />}
 
-            {majorDraw > 0.5 && <Chip label="Major Trend" x={G_SMOOTH.headAt(0.62).x} y={G_SMOOTH.headAt(0.62).y + 70} variant="indigo" startFrame={T.major} />}
+            {/* kept left of x 1090 — the lens card opens over the right half */}
+            {majorDraw > 0.5 && <Chip label="Major Trend" x={G_SMOOTH.headAt(0.45).x} y={G_SMOOTH.headAt(0.45).y + 96} variant="indigo" startFrame={T.major} />}
             {minorIn > 0.4 && <Chip label="Minor Swing" x={G_MAJOR.headAt(0.2).x} y={G_MAJOR.headAt(0.2).y - 74} variant="slate" startFrame={T.minor + 24} />}
 
             {/* the lens: a rectangle on the chart, opened into a card */}
@@ -107,9 +111,9 @@ export const Scene11 = () => {
               <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
                 <rect
                   x={lensRect.x}
-                  y={BOX.y + BOX.h * 0.18}
+                  y={lensRect.top}
                   width={lensRect.w}
-                  height={BOX.h * 0.5}
+                  height={lensRect.bottom - lensRect.top}
                   fill="none"
                   stroke={pal.slate}
                   strokeWidth={theme.stroke.rule}
@@ -118,7 +122,7 @@ export const Scene11 = () => {
                 />
                 <line
                   x1={lensRect.x + lensRect.w}
-                  y1={BOX.y + BOX.h * 0.3}
+                  y1={(lensRect.top + lensRect.bottom) / 2}
                   x2={LENS_CARD.x}
                   y2={LENS_CARD.y + LENS_CARD.h / 2}
                   stroke={pal.slate}

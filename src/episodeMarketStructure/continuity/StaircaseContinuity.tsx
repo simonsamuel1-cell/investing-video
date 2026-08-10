@@ -55,6 +55,8 @@ const BOX = { x: PLOT.x, y: PLOT.y + 40, w: PLOT.w, h: PLOT.h - 110 };
 /** The pullback re-framed as a pause: peak 3 → trough 4. */
 const BREATH: [number, number] = [0.45, 0.59];
 const AXIS_TICKS = [4400, 4800, 5200, 5600];
+/** How far right of a pivot the delta riser is drawn — clear of its price chip. */
+const DELTA_DX = 116;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const G = geom(UPTREND, BOX, { pad: 0.12 });
@@ -156,7 +158,8 @@ export const StaircaseContinuity = () => {
           );
         })}
 
-        {breath > 0.5 && <Chip label="Ambil Napas" x={(G.x(BREATH[0]) + G.x(BREATH[1])) / 2} y={at(3).y - 74} variant="indigo" startFrame={T.breathChip} />}
+        {/* clears the peak's own chip, which sits 34px above the pivot */}
+        {breath > 0.5 && <Chip label="Ambil Napas" x={(G.x(BREATH[0]) + G.x(BREATH[1])) / 2} y={at(3).y - 116} variant="indigo" startFrame={T.breathChip} />}
 
         {/* ── SC06: the same four turns, now as numbers ── */}
         {f >= PHASE && (
@@ -168,19 +171,23 @@ export const StaircaseContinuity = () => {
           </>
         )}
 
-        {/* 4.900 sits above 4.600, and 5.400 above 5.000 — shown, not claimed */}
+        {/* 4.900 sits above 4.600, and 5.400 above 5.000 — shown, not claimed.
+            The riser is offset past the price chip so the two never overlap. */}
         {compare > 0.001 && (
           <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height} opacity={compare}>
             {[
               [p1, p3],
               [p2, p4],
-            ].map(([a, b], i) => (
-              <g key={i}>
-                <line x1={a.x} y1={a.y} x2={b.x} y2={a.y} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="10 8" />
-                <line x1={b.x} y1={a.y} x2={b.x} y2={b.y} stroke={pal.indigo} strokeWidth={theme.stroke.rule} />
-                <polygon points={`${b.x},${b.y} ${b.x - 8},${b.y + 14} ${b.x + 8},${b.y + 14}`} fill={pal.indigo} />
-              </g>
-            ))}
+            ].map(([a, b], i) => {
+              const rx = b.x + DELTA_DX;
+              return (
+                <g key={i}>
+                  <line x1={a.x} y1={a.y} x2={rx} y2={a.y} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="10 8" />
+                  <line x1={rx} y1={a.y} x2={rx} y2={b.y} stroke={pal.indigo} strokeWidth={theme.stroke.rule} />
+                  <polygon points={`${rx},${b.y} ${rx - 8},${b.y + 14} ${rx + 8},${b.y + 14}`} fill={pal.indigo} />
+                </g>
+              );
+            })}
           </svg>
         )}
 

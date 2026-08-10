@@ -19,7 +19,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { fadeOut, progress } from "../helpers";
-import { AMBIGUOUS, AMBIGUOUS_CANDLES } from "../data/structures";
+import { AMBIGUOUS, AMBIGUOUS_CANDLES, AMBIGUOUS_TICKS } from "../data/structures";
 import { CARD, PLOT, CAPTION_Y } from "../layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -111,7 +111,7 @@ export const Scene03 = () => {
     <SafeArea>
       <ChartCard box={CARD}>
         {candles > 0.001 && (
-          <CandlestickChart data={AMBIGUOUS_CANDLES} window={WIN} box={BOX} dimOpacity={candles} axesOpacity={1} ticks={4} />
+          <CandlestickChart data={AMBIGUOUS_CANDLES} window={WIN} box={BOX} dimOpacity={candles} axesOpacity={1} tickValues={AMBIGUOUS_TICKS} />
         )}
 
         {/* the shape price leaves behind */}
@@ -136,7 +136,10 @@ export const Scene03 = () => {
             key={i}
             x={G.cx(pv.bar)}
             y={G.scale(AMBIGUOUS_CANDLES[pv.bar].c)}
-            label={i === 1 ? "Puncak" : i === 0 ? "Lembah" : undefined}
+            /* The SECOND trough carries the label, not the first: pivot 0 sits
+               on the left edge and a chip centred there would cross the safe
+               margin. */
+            label={i === 1 ? "Puncak" : i === 2 ? "Lembah" : undefined}
             variant={pv.peak ? "indigo" : "cyan"}
             side={pv.peak ? "above" : "below"}
             startFrame={T.pivots + i * PIVOT_STEP}

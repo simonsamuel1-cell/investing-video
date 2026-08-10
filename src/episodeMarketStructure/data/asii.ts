@@ -112,3 +112,6 @@ export const ASII = {
   lowerLow: 330,
   lastBar: BARS - 1,
 };
+
+/** Round gridlines spanning the whole move, 4.500 → 7.500. */
+export const ASII_TICKS = [4500, 5500, 6500, 7500];

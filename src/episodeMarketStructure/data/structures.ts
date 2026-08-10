@@ -87,8 +87,16 @@ export type Geom = {
   path: string;
   /** Polyline length — feeds strokeDasharray for a trim-path draw. */
   len: number;
-  /** The point the line has reached at `t` — for a dot that rides the draw. */
+  /** The point at parameter `t` — for parking a label somewhere along the line. */
   headAt: (t: number) => Pt;
+  /**
+   * The point at DRAW progress `p`, measured along the line's length.
+   *
+   * This is the one a head dot must use. A trim path advances by arc length, so
+   * on a steep leg the parameter and the drawn end diverge — sampling by `t`
+   * leaves the dot floating off the end of the line.
+   */
+  atArc: (p: number) => Pt;
   /**
    * The DRAW progress at which the trim path passes `t`.
    *
@@ -130,6 +138,15 @@ export const geom = (s: Structure, box: Box, { pad = 0.1, range }: { pad?: numbe
     return { x: pts[i].x + (pts[i + 1].x - pts[i].x) * u, y: pts[i].y + (pts[i + 1].y - pts[i].y) * u };
   };
 
+  const atArc = (p: number) => {
+    const target = Math.max(0, Math.min(1, p)) * len;
+    let i = 1;
+    while (i < cum.length - 1 && cum[i] < target) i++;
+    const seg = cum[i] - cum[i - 1];
+    const u = seg > 0 ? (target - cum[i - 1]) / seg : 0;
+    return { x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * u, y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * u };
+  };
+
   return {
     x,
     y,
@@ -138,6 +155,7 @@ export const geom = (s: Structure, box: Box, { pad = 0.1, range }: { pad?: numbe
     path: pts.map((p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" "),
     len,
     headAt,
+    atArc,
     arcAt,
   };
 };
@@ -189,6 +207,8 @@ export const AMBIGUOUS = structure(
 );
 
 export const AMBIGUOUS_CANDLES = candlesFrom(AMBIGUOUS, 46, 17);
+/** Round gridlines for that chart — a price axis should read in familiar steps. */
+export const AMBIGUOUS_TICKS = [4800, 5000, 5200];
 
 /**
  * SC04 — why the shape forms. Rise, profit-taking pullback that stops ABOVE the
@@ -334,7 +354,7 @@ export const MAJOR = structure(
     { t: 0.88, p: 6100 },
     { t: 1, p: 6700 },
   ],
-  { seed: 19, wiggle: 0.028 },
+  { seed: 19, wiggle: 0.045 },
 );
 /** The swing the zoom lens opens on — one red candle inside a rising trend. */
 export const MAJOR_LENS: [number, number] = [0.4, 0.47];

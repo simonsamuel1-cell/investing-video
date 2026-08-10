@@ -34,7 +34,8 @@ export const PriceLine = ({
   if (draw <= 0.001 || opacity <= 0.001) return null;
   const stroke = color ?? pal.ink;
   const p = Math.max(0, Math.min(1, draw));
-  const tip = g.headAt(p);
+  // measured along the line, so the dot sits exactly on the drawn end
+  const tip = g.atArc(p);
 
   return (
     <svg

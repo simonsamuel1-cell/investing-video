@@ -23,7 +23,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { progress, fadeIn, fmtPrice } from "../helpers";
-import { asiiDaily, ASII } from "../data/asii";
+import { asiiDaily, ASII, ASII_TICKS } from "../data/asii";
 import { CARD, PLOT, CAPTION_Y } from "../layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -128,10 +128,11 @@ export const Scene18 = () => {
           />
         )}
 
-        <CandlestickChart data={asiiDaily} window={WIN} box={BOX} revealProgress={reveal} ticks={5} />
+        <CandlestickChart data={asiiDaily} window={WIN} box={BOX} revealProgress={reveal} tickValues={ASII_TICKS} />
 
         {/* the peak the next push has to clear */}
-        {bar >= ASII.peakBar && <Chip label={fmtPrice(ASII.peak)} x={peakPt.x} y={peakPt.y - 44} variant="indigo" startFrame={T.peak} />}
+        {/* to the LEFT of the peak — the Lower High chip lands to its right */}
+        {bar >= ASII.peakBar && <Chip label={fmtPrice(ASII.peak)} x={peakPt.x - 120} y={peakPt.y - 48} variant="indigo" startFrame={T.peak} />}
         <Level x1={peakPt.x} x2={BOX.x + BOX.w} y={peakPt.y} draw={ref} variant="slate" />
 
         {/* the swings on the way up */}

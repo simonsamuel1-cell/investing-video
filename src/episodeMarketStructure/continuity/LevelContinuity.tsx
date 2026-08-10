@@ -88,7 +88,7 @@ export const LevelContinuity = () => {
     <SafeArea>
       {/* ── SC12: the ceiling that becomes a floor ── */}
       {sc12 > 0.001 && (
-        <div style={{ position: "absolute", inset: 0, opacity: sc12 * (1 - paired * 0.75) }}>
+        <div style={{ position: "absolute", inset: 0, opacity: sc12 * (1 - paired * 0.9) }}>
           <ChartCard box={CARD}>
             <Band
               x={BOX.x}
@@ -147,7 +147,7 @@ export const LevelContinuity = () => {
 
       {/* ── SC13: the floor that becomes a ceiling ── */}
       {sc13 > 0.001 && (
-        <div style={{ position: "absolute", inset: 0, opacity: sc13 * (1 - paired * 0.75) }}>
+        <div style={{ position: "absolute", inset: 0, opacity: sc13 * (1 - paired * 0.9) }}>
           <ChartCard box={CARD}>
             <Band
               x={BOX.x}

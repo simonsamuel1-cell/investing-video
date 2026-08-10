@@ -19,7 +19,7 @@ import { Header } from "../components/Header";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { progress } from "../helpers";
-import { AMBIGUOUS_CANDLES } from "../data/structures";
+import { AMBIGUOUS_CANDLES, AMBIGUOUS_TICKS } from "../data/structures";
 import { rsi, macd } from "../data/indicators";
 import { CARD, PLOT } from "../layout";
 
@@ -63,7 +63,7 @@ export const Scene02 = () => {
       <Header title="Market Structure" sub="Struktur pergerakan harga" startFrame={T.title} subFrame={T.sub} />
 
       <ChartCard box={CARD} scale={settle}>
-        <CandlestickChart data={AMBIGUOUS_CANDLES} window={WIN} box={BOX} axesOpacity={1 - wipe * 0.15} ticks={4} />
+        <CandlestickChart data={AMBIGUOUS_CANDLES} window={WIN} box={BOX} axesOpacity={1 - wipe * 0.15} tickValues={AMBIGUOUS_TICKS} />
 
         {/* The price, restated in indigo for one beat. */}
         {pulse > 0.001 && (

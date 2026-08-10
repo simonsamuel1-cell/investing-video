@@ -13,7 +13,6 @@ import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { textReveal, progress, fadeIn, fadeOut } from "../helpers";
 import { DRIFT, geom } from "../data/structures";
-import { PLOT } from "../layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -23,9 +22,14 @@ const T = {
 };
 const WORD_STEP = 7; // frames between one word landing and the next
 const LINE = "Tren berlanjut sampai chart membuktikan sebaliknya.";
-const CARD_BOX = { x: 300, y: 336, w: 1320, h: 268 };
-const CHIP_Y = 720;
-const BOX = { x: PLOT.x, y: PLOT.y + 20, w: PLOT.w, h: PLOT.h - 40 };
+const CARD_BOX = { x: 300, y: 300, w: 1320, h: 268 };
+const CHIP_Y = 880;
+/**
+ * The drift runs edge to edge and passes BEHIND the card. Full-bleed is the
+ * point: a line that stopped at the safe margin would read as two stray marks
+ * either side of the card rather than one market still moving.
+ */
+const BOX = { x: 0, y: 360, w: theme.canvas.width, h: 440 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const G = geom(DRIFT, BOX, { pad: 0.14 });
@@ -129,7 +133,8 @@ export const Scene08 = () => {
           whiteSpace: "nowrap",
         }}
       >
-        ✓ Mengenali
+        <span style={{ marginRight: 10 }}>✓</span>
+        Mengenali
       </div>
     </SafeArea>
   );

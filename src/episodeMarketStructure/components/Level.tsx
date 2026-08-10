@@ -18,7 +18,7 @@ export const Level = ({
   draw = 1,
   variant = "slate",
   label,
-  labelSide = "right",
+  labelSide = "inside",
   opacity = 1,
   dashed = true,
   pierce,
@@ -29,7 +29,13 @@ export const Level = ({
   draw?: number;
   variant?: "slate" | "indigo" | "cyan";
   label?: string;
-  labelSide?: "right" | "left";
+  /**
+   * "inside" parks the label just above the line's right end, which is the only
+   * placement that cannot run past the safe margin — these lines usually reach
+   * the edge of the plot. "right"/"left" hang it off the end and are for short
+   * labels on short lines.
+   */
+  labelSide?: "right" | "left" | "inside";
   opacity?: number;
   dashed?: boolean;
   /** { x, amount } — a soft ring at the crossing point, 0→1. */
@@ -69,9 +75,10 @@ export const Level = ({
         <div
           style={{
             position: "absolute",
-            left: labelSide === "right" ? x1 + w + 14 : x1 - 14,
-            top: y,
-            transform: labelSide === "right" ? "translate(0, -50%)" : "translate(-100%, -50%)",
+            left: labelSide === "right" ? x1 + w + 14 : labelSide === "left" ? x1 - 14 : x1 + w - 8,
+            top: labelSide === "inside" ? y - 12 : y,
+            transform:
+              labelSide === "right" ? "translate(0, -50%)" : labelSide === "left" ? "translate(-100%, -50%)" : "translate(-100%, -100%)",
             fontFamily: theme.type.family,
             fontSize: theme.type.axis.size,
             fontWeight: theme.type.axis.weight,

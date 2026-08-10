@@ -118,7 +118,8 @@ export const Scene20 = () => {
           whiteSpace: "nowrap",
         }}
       >
-        ✓ Konfirmasi
+        <span style={{ marginRight: 10 }}>✓</span>
+        Konfirmasi
       </div>
     </SafeArea>
   );

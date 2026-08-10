@@ -17,7 +17,7 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { fadeIn, progress } from "../helpers";
-import { AMBIGUOUS_CANDLES } from "../data/structures";
+import { AMBIGUOUS_CANDLES, AMBIGUOUS_TICKS } from "../data/structures";
 import { CARD, PLOT } from "../layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -83,7 +83,7 @@ export const Scene01 = () => {
           revealProgress={draw}
           dimOpacity={cardIn}
           axesOpacity={cardIn * 0.9}
-          ticks={4}
+          tickValues={AMBIGUOUS_TICKS}
         />
       </ChartCard>
 

@@ -67,7 +67,9 @@ export const Scene04 = () => {
         <PriceLine g={G} draw={draw} color={pal.ink} width={3} head />
 
         {draw >= 0.34 && <PivotMarker x={P1.x} y={P1.y} label="Puncak 1" variant="indigo" startFrame={T.rise + 86} />}
-        {draw >= 0.6 && <Chip label="Ambil Untung" x={(P1.x + TROUGH.x) / 2 + 40} y={P1.y + 96} variant="slate" startFrame={T.pullback + 70} />}
+        {/* parked ABOVE the descent — the pullback itself runs through the
+            space directly under the peak, and a chip there sits on the line */}
+        {draw >= 0.6 && <Chip label="Ambil Untung" x={(P1.x + TROUGH.x) / 2 + 40} y={P1.y - 44} variant="slate" startFrame={T.pullback + 70} />}
         {draw >= 0.99 && <PivotMarker x={P3.x} y={P3.y} label="Puncak Baru" variant="indigo" startFrame={T.newHigh + 54} />}
 
         {/* the gap the pullback left — measured, not asserted */}
@@ -92,7 +94,8 @@ export const Scene04 = () => {
             })}
           </svg>
         )}
-        {arrows > 0.4 && <Chip label="Pembeli Masuk" x={TROUGH.x} y={TROUGH.y + 138} variant="indigo" startFrame={T.floor + 44} />}
+        {/* below the prior-low line, not across it */}
+        {arrows > 0.4 && <Chip label="Pembeli Masuk" x={TROUGH.x} y={LOW.y + 72} variant="indigo" startFrame={T.floor + 44} />}
       </ChartCard>
     </SafeArea>
   );

@@ -43,6 +43,7 @@ export const CandlestickChart = ({
   pad = 0.08,
   scaleOverride,
   ticks = 4,
+  tickValues,
 }: {
   data: OHLC[];
   window: [number, number];
@@ -55,12 +56,18 @@ export const CandlestickChart = ({
   pad?: number;
   scaleOverride?: (p: number) => number;
   ticks?: number;
+  /**
+   * Explicit gridline prices. Without this the ticks are evenly spaced inside
+   * the data's own range, which lands on values like 5.175 — a price axis
+   * should read in round numbers a viewer recognises.
+   */
+  tickValues?: number[];
 }) => {
   const pal = usePalette();
   const g = chartGeom(data, win, box, pad);
   const scale = scaleOverride ?? g.scale;
   const shown = Math.ceil(g.slice.length * Math.max(0, Math.min(1, revealProgress)));
-  const tickPrices = Array.from({ length: ticks }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / ticks);
+  const tickPrices = tickValues ?? Array.from({ length: ticks }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / ticks);
 
   return (
     <svg
