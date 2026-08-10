@@ -85,9 +85,9 @@ const MAX_MARKS = 20;
  * Example: { 3: -2, 11: 1 } moves the fourth dot two candles left and the
  * twelfth one candle right.
  */
-const TURN_NUDGE: Record<number, number> = {};
+const TURN_NUDGE: Record<number, number> = {10: 3};
 /** Marker indices to drop entirely, same numbering as TURN_NUDGE. */
-const TURN_SKIP: number[] = [7];
+const TURN_SKIP: number[] = [];
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
