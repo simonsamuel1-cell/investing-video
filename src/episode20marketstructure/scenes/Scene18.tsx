@@ -22,7 +22,7 @@ import { RangeBand } from "../components/RangeBand";
 import { Reference } from "../components/StructureLine";
 import { CountdownNumeral } from "../components/CountdownNumeral";
 import { Chip } from "../components/Chip";
-import { Title } from "../components/Text";
+import { Title, Line } from "../components/Text";
 import { theme } from "../theme";
 import { hold, progress, price, clamp01 } from "../helpers";
 import { ASII_BARS, ASII, ASII_TICKS } from "../data/asii";
@@ -99,9 +99,13 @@ export const Scene18 = () => {
 
         <CandleChart bars={ASII_BARS} box={BOX} reveal={reveal} ticks={ASII_TICKS} />
 
-        {/* the peak the next push has to clear. The tag sits LEFT of it so the
-            Lower High label, which lands to its right, can never collide. */}
-        {bar >= ASII.peakBar && <Chip label={price(ASII.peakPrice)} x={peak.x - 124} y={peak.y - 50} tone="indigo" at={T.peak} />}
+        {/* the peak the next push has to clear, tagged on the peak itself.
+            The Lower High label is pushed right and tied back with a leader,
+            which is what keeps the two apart without moving either dot. */}
+        {bar >= ASII.peakBar && <Chip label={price(ASII.peakPrice)} x={peak.x} y={peak.y - 52} tone="indigo" at={T.peak} />}
+        {bar >= ASII.peakBar && (
+          <Line text="Awal 2026" x={peak.x} y={BOX.y + BOX.h + 34} at={T.peak + 14} size={theme.text.axis.size} color={theme.color.slate} weight={500} />
+        )}
         <Reference x1={peak.x} x2={BOX.x + BOX.w} y={peak.y} draw={ref} />
 
         {ASII.climb.map((c, i) =>
@@ -118,7 +122,7 @@ export const Scene18 = () => {
         )}
 
         {bar >= ASII.lowerHighBar + 4 && (
-          <PivotLabel x={G.x(ASII.lowerHighBar)} y={G.scale(ASII_BARS[ASII.lowerHighBar].h)} label="Lower High" tone="indigo" at={T.lowerHigh} />
+          <PivotLabel x={G.x(ASII.lowerHighBar)} y={G.scale(ASII_BARS[ASII.lowerHighBar].h)} label="Lower High" tone="indigo" dx={168} at={T.lowerHigh} />
         )}
         {bar >= ASII.lowerLowBar + 4 && (
           <PivotLabel x={G.x(ASII.lowerLowBar)} y={G.scale(ASII_BARS[ASII.lowerLowBar].l)} label="Lower Low" tone="cyan" side="below" at={T.lowerLow} />

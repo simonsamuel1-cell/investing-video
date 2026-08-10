@@ -113,8 +113,13 @@ const MAJOR_LEGS: Shape = {
 };
 export const MAJOR = make({ ...MAJOR_LEGS, jitter: 0.045 });
 export const MAJOR_TREND = make({ ...MAJOR_LEGS, jitter: 0 });
-/** The swing the lens opens on. */
-export const MAJOR_LENS: [number, number] = [0.4, 0.47];
+/**
+ * The swing the lens opens on. Placed just AFTER the trough, so the window is a
+ * rising stretch with a red bar or two inside it — "satu candle merah di tengah
+ * major uptrend". Centred on the fall it would show a decline, which is a
+ * different claim from the one the narration makes.
+ */
+export const MAJOR_LENS: [number, number] = [0.44, 0.52];
 
 /** SC11 module 2 — the same climb at two speeds. */
 export const GRADUAL = make({

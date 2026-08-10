@@ -63,8 +63,8 @@ export const Scene13 = () => {
             draw={f >= 10 ? progress(f, 10, 26) : 0}
             pierce={{ x: P.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
           />
-          <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="left" at={26} opacity={1 - retint} />
-          <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="left" at={T.retint} opacity={retint} />
+          <Chip label="Support" x={BOX.x + BOX.w - 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="right" at={26} opacity={1 - retint} />
+          <Chip label="Resistance" x={BOX.x + BOX.w - 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="right" at={T.retint} opacity={retint} />
 
           <StructureLine plot={P} draw={draw} head marks={draw >= 0.71 ? [{ turn: FLOOR_LH, label: "Lower High", tone: "indigo", at: T.lowerHigh }] : []} />
 

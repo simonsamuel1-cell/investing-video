@@ -31,7 +31,14 @@ const DRAW_AT = [40, T.breakout, T.breakout + 64, T.retest, T.retest + 104];
 const DRAW_TO = [0, 0.5, 0.62, 0.72, 1];
 /** How thick the level reads on screen, in price units either side. */
 const HALF = 55;
-/** Clear of the band itself — a label on the boundary is unreadable. */
+/**
+ * Clear of the band, and anchored to its RIGHT end.
+ *
+ * The left end is where the line enters the frame, so a label there is drawn
+ * through by the price. The right end is empty on the side each label sits:
+ * before the break the line is on one side of the level, after it the other,
+ * and each label lives on the side the line has left.
+ */
 const LABEL_DY = 78;
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 const RECALL_X = [700, 1000];
@@ -62,8 +69,8 @@ export const Scene12 = () => {
           pierce={{ x: P.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
         />
         {/* the label is the only thing that swaps outright */}
-        <Chip label="Resistance" x={BOX.x + 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="left" at={46} opacity={1 - retint} />
-        <Chip label="Support" x={BOX.x + 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="left" at={T.retint} opacity={retint} />
+        <Chip label="Resistance" x={BOX.x + BOX.w - 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="right" at={46} opacity={1 - retint} />
+        <Chip label="Support" x={BOX.x + BOX.w - 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="right" at={T.retint} opacity={retint} />
 
         <StructureLine
           plot={P}
