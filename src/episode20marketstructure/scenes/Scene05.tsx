@@ -12,14 +12,13 @@
  */
 import React from "react";
 import { Layer } from "../components/Stage";
-import { StructureLine } from "../components/StructureLine";
 import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { Title } from "../components/Text";
 import { theme } from "../theme";
 import { progress } from "../helpers";
 import { peaksOf, troughsOf, type Plot } from "../data/shape";
-import { morphAll, pathOf, type Morph } from "../transitions/Morph";
+import { STAIR, zoomed, clipRight, pathOf, CLIP_X } from "../data/staircaseView";
 import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -32,14 +31,14 @@ export const SC05 = {
   breathChip: 421, // "mengambil napas"
 };
 /**
- * The staircase is not traced on. SC04's chart shrinks into step one, and the
- * rest of the climb is simply THERE — the point of this scene is the repetition,
- * and a viewer cannot see a repetition one leg at a time.
+ * The staircase is not traced on. SC04 was this same chart cropped to its first
+ * step; the scene opens on that crop and DOLLIES BACK until the whole climb is
+ * in frame, the further steps sliding in from off-card as the camera pulls out.
  *
- * The remaining steps fade up rather than snapping in, quickly enough to read
- * as "the whole thing" and not as a second drawing animation.
+ * Nothing is drawn and nothing is morphed. The chart was always whole — only
+ * the framing changes, which is the honest picture: the point of this scene is
+ * the repetition, and a repetition cannot be seen one leg at a time.
  */
-const REST_IN = 10;
 const STEP = 40; // frames between one label and the next
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -50,30 +49,9 @@ const TROUGHS = troughsOf(STAIRCASE);
  * `names` lets CG-A fade the HH/HL labels out as SC06's numbers take their
  * place — both want the same spot beside each turn.
  */
-export const Scene05 = ({
-  f,
-  p,
-  shrink,
-  stepEnd,
-  zoomOver,
-  names = 1,
-}: {
-  f: number;
-  p: Plot;
-  /** SC04's line paired with this staircase's first step. */
-  shrink: Morph;
-  /** How far along this line that first step reaches. */
-  stepEnd: number;
-  zoomOver: number;
-  names?: number;
-}) => {
-  /**
-   * The scene opens on SC04's chart and pulls the camera back until that chart
-   * is step one of this staircase. The moment it lands, the rest of the climb
-   * comes up around it.
-   */
+export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoomOver: number; names?: number }) => {
+  /** 0 = SC04's framing, 1 = this scene's. The only thing that animates here. */
   const zoom = f < zoomOver ? progress(f, 0, zoomOver) : 1;
-  const rest = f >= zoomOver ? progress(f, zoomOver, REST_IN) : 0;
   const shorten = f >= SC05.shorten ? progress(f, SC05.shorten, 14) : 0;
   const breath = f >= SC05.breath ? progress(f, SC05.breath, 26) : 0;
 
@@ -98,24 +76,17 @@ export const Scene05 = ({
         </Layer>
       )}
 
-      {/* SC04's chart, shrinking down onto step one and staying there */}
-      {f < zoomOver ? (
-        <Layer>
-          <path
-            d={pathOf(morphAll(shrink, zoom))}
-            fill="none"
-            stroke={theme.color.ink}
-            strokeWidth={theme.shape.line}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Layer>
-      ) : (
-        <StructureLine plot={p} draw={stepEnd} />
-      )}
-
-      {/* and the rest of the climb, whole — never a partial staircase */}
-      {rest > 0.001 && <StructureLine plot={p} draw={1} opacity={rest} />}
+      {/* the same whole staircase throughout — only the framing moves */}
+      <Layer clip={theme.stage.card}>
+        <path
+          d={pathOf(clipRight(STAIR.points.map((pt) => zoomed(pt, zoom)), CLIP_X))}
+          fill="none"
+          stroke={theme.color.ink}
+          strokeWidth={theme.shape.line}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </Layer>
 
       {PEAKS.map((idx, k) => {
         const t = p.turn(idx);

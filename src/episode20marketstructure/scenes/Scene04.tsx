@@ -16,12 +16,12 @@
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
-import { StructureLine, Reference } from "../components/StructureLine";
+import { Reference } from "../components/StructureLine";
+import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { hold, progress, progressInOut, fadeOut } from "../helpers";
-import { plot } from "../data/shape";
-import { MECHANISM } from "../data/shapes";
+import { STAIR, STAIR_BOX, STEP_TURN, zoomIn, clipRight, measure, pathOf, CLIP_X } from "../data/staircaseView";
 import { HANDOFF_FROM } from "./Scene03";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -31,15 +31,14 @@ const T = {
   floor: 332, // "pembeli masuk sebelum harga"
   newHigh: 442, // "puncak baru"
 };
-/** Keyed to the turns, so the line is always where the narration says it is. */
 /**
+ * Keyed to the turns, so the line is always where the narration says it is.
  * The last leg lands 44 frames after "puncak baru" rather than 62, which frees
- * the tail of the scene for the handoff below. The beat itself is unchanged —
- * it is still keyed to the word, just less padded after it.
+ * the tail of the scene for the annotations to clear. The beat is unchanged —
+ * still keyed to the word, just less padded after it.
  */
 const DRAW_AT = [T.rise, T.rise + 96, T.pullback, T.pullback + 92, T.newHigh, T.newHigh + 44];
-const DRAW_TO = [0, 0.36, 0.36, 0.62, 0.62, 1];
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
+const BOX = STAIR_BOX;
 const BRACKET_DX = 58;
 /**
  * The handed-over dot travels for these frames and then waits, still, until the
@@ -58,14 +57,22 @@ const HANDOFF_OVER = 40;
 const EXIT = { at: 494, over: 20 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-const P = plot(MECHANISM, BOX, { pad: 0.12 });
-/** Where this line begins — the dot's destination. */
-const START = P.points[0];
-/** The finished shape, in canvas coordinates — CG-A morphs out of exactly it. */
-export const MECH_LINE = P.points;
-const LOW = P.turn(0); // the prior low the pullback must respect
-const PEAK = P.turn(1);
-const TROUGH = P.turn(2); // where the pullback actually stopped
+/**
+ * THIS SCENE IS A CROP. The line is CG-A's staircase, magnified until its first
+ * step fills the card and cut off at the card's right edge — so the mechanism
+ * being explained here is literally the same drawing SC05 pulls back to show,
+ * not a second shape that resembles it.
+ */
+const CURVE = clipRight(STAIR.points.map(zoomIn), CLIP_X);
+const M = measure(CURVE);
+/** Where this line begins — the incoming dot's destination. */
+const START = CURVE[0];
+const LOW = zoomIn(STAIR.turn(0)); // the prior low the pullback must respect
+const PEAK = zoomIn(STAIR.turn(1));
+const TROUGH = zoomIn(STAIR.turn(2)); // where the pullback actually stopped
+const NEW_PEAK = zoomIn(STAIR.turn(STEP_TURN));
+/** The trim targets, read off the crop rather than typed as round numbers. */
+const DRAW_TO = [0, M.fractionAtX(PEAK.x), M.fractionAtX(PEAK.x), M.fractionAtX(TROUGH.x), M.fractionAtX(TROUGH.x), 1];
 
 export const Scene04 = () => {
   const f = useCurrentFrame();
@@ -95,18 +102,26 @@ export const Scene04 = () => {
 
         <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor * stay} label="Titik terendah sebelumnya" />
 
-        {/* the line does NOT fade with the annotations — SC05 needs it whole */}
-        <StructureLine
-          plot={P}
-          draw={draw}
-          head
-          marks={[
-            ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86, opacity: stay }] : []),
-            ...(draw >= 0.99
-              ? [{ turn: 3, label: "Puncak baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 38, opacity: stay }]
-              : []),
-          ]}
-        />
+        {/* The line does NOT fade with the annotations — SC05 pulls back from
+            it. Clipped to the card, because a crop runs off the edge. */}
+        <Layer clip={theme.stage.card}>
+          <path
+            d={pathOf(CURVE)}
+            fill="none"
+            stroke={theme.color.ink}
+            strokeWidth={theme.shape.line}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeDasharray={M.length}
+            strokeDashoffset={M.length * (1 - draw)}
+          />
+          {draw > 0.001 && draw < 0.999 && <circle cx={M.at(draw).x} cy={M.at(draw).y} r={theme.shape.line + 2} fill={theme.color.ink} />}
+        </Layer>
+
+        {draw >= DRAW_TO[1] - 0.01 && <PivotLabel x={PEAK.x} y={PEAK.y} label="Puncak 1" tone="indigo" at={T.rise + 86} opacity={stay} />}
+        {draw >= 0.99 && (
+          <PivotLabel x={NEW_PEAK.x} y={NEW_PEAK.y} label="Puncak baru" tone="indigo" side="above" at={T.newHigh + 38} opacity={stay} />
+        )}
 
         {/* Parked over the DESCENT, not over the peak. Reading its height from
             the peak put it level with "Puncak 1", and the two ran together into
@@ -146,7 +161,7 @@ export const Scene04 = () => {
           </Layer>
         )}
         {/* below the prior-low line, never across it */}
-        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 74} tone="indigo" at={T.floor + 44} opacity={stay} />}
+        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 52} tone="indigo" at={T.floor + 44} opacity={stay} />}
       </Card>
     </Stage>
   );

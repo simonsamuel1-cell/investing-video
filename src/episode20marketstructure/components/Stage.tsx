@@ -56,7 +56,9 @@ export const Card = ({
   );
 };
 
-export const Layer = ({ children, opacity = 1 }: { children: React.ReactNode; opacity?: number }) => {
+export const Layer = ({ children, opacity = 1, clip }: { children: React.ReactNode; opacity?: number; clip?: Rect }) => {
+  // one id per mounted Layer, so two clipped Layers cannot reference each other
+  const id = React.useId();
   if (opacity <= 0.001) return null;
   return (
     <svg
@@ -65,7 +67,18 @@ export const Layer = ({ children, opacity = 1 }: { children: React.ReactNode; op
       height={theme.canvas.height}
       opacity={opacity}
     >
-      {children}
+      {clip ? (
+        <>
+          <defs>
+            <clipPath id={id}>
+              <rect x={clip.x} y={clip.y} width={clip.w} height={clip.h} />
+            </clipPath>
+          </defs>
+          <g clipPath={`url(#${id})`}>{children}</g>
+        </>
+      ) : (
+        children
+      )}
     </svg>
   );
 };
