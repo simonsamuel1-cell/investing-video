@@ -24,12 +24,32 @@ import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const SC05 = {
   title: 0, // "uptrend"
-  highs: 61, // "puncak terbentuk lebih tinggi"
-  lows: 151, // "lembah juga berhenti lebih tinggi"
-  shorten: 227, // "higher high dan higher low"
+  highs: 65, // global 2030 — "puncak terbentuk lebih tinggi"
+  lows: 152, // global 2117 — "lembah juga berhenti lebih tinggi"
+  shorten: 224, // global 2189 — the names give way to the short forms
   breath: 300, // "penurunan kecil"
   breathChip: 421, // "mengambil napas"
 };
+/**
+ * Every mark has to be on screen by global 2160 — local 195. The peaks have
+ * room to breathe; the troughs start late and have to keep up, so they step
+ * faster. The last trough pops at 182 and is settled by 192.
+ */
+const PEAK_STEP = 40;
+const TROUGH_STEP = 15;
+/**
+ * The first of each kind is just the level. Only the SECOND one can be called
+ * higher — there is nothing to be higher than until then, and naming the first
+ * "Higher high" is the mistake the whole scene exists to correct.
+ */
+const PEAK_NAMES = ["High", "Higher high", "Higher high"];
+const PEAK_SHORT = ["H", "HH", "HH"];
+const TROUGH_NAMES = ["Low", "Higher low", "Higher low"];
+const TROUGH_SHORT = ["L", "HL", "HL"];
+/** Distance from a turn to its label — PivotLabel's own default, matched. */
+const LABEL_GAP = 46;
+/** Frames a connector takes to appear alongside the mark it arrives with. */
+const LINK_IN = 14;
 /**
  * The staircase is not traced on. SC04 was this same chart cropped to its first
  * step; the scene opens on that crop and DOLLIES BACK until the whole climb is
@@ -39,11 +59,19 @@ export const SC05 = {
  * the framing changes, which is the honest picture: the point of this scene is
  * the repetition, and a repetition cannot be seen one leg at a time.
  */
-const STEP = 40; // frames between one label and the next
+
 // ═══════════════════════════════════════════════════════════════════════════
 
 const PEAKS = peaksOf(STAIRCASE);
 const TROUGHS = troughsOf(STAIRCASE);
+
+/**
+ * The connector between one mark and the next, drawn as a STEP rather than a
+ * diagonal: straight up to the next level, then across to it. A diagonal would
+ * only say "these two are joined"; the step says HOW MUCH higher, because the
+ * vertical leg is the rise itself and you can read its length off the chart.
+ */
+const stepPath = (a: { x: number; y: number }, b: { x: number; y: number }) => `M${a.x},${a.y} L${a.x},${b.y} L${b.x},${b.y}`;
 
 /**
  * `names` lets CG-A fade the HH/HL labels out as SC06's numbers take their
@@ -88,23 +116,47 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
         />
       </Layer>
 
+      {/* the steps between marks, arriving with the mark they lead TO and
+          leaving the moment the names give way to the short forms */}
+      <Layer opacity={(1 - shorten) * names}>
+        {[
+          ...PEAKS.map((idx, k) => ({ idx, k, at: SC05.highs + k * PEAK_STEP, prev: PEAKS[k - 1], tone: theme.color.indigo })),
+          ...TROUGHS.map((idx, k) => ({ idx, k, at: SC05.lows + k * TROUGH_STEP, prev: TROUGHS[k - 1], tone: theme.color.cyan })),
+        ]
+          .filter((l) => l.k > 0 && f >= l.at)
+          .map((l) => (
+            <path
+              key={`link${l.tone}${l.idx}`}
+              d={stepPath(p.turn(l.prev), p.turn(l.idx))}
+              fill="none"
+              stroke={l.tone}
+              strokeWidth={theme.shape.rule}
+              strokeDasharray="9 9"
+              opacity={progress(f, l.at, LINK_IN)}
+            />
+          ))}
+      </Layer>
+
       {PEAKS.map((idx, k) => {
         const t = p.turn(idx);
-        const at = SC05.highs + k * STEP;
+        const at = SC05.highs + k * PEAK_STEP;
         return (
           <React.Fragment key={`hh${idx}`}>
-            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher high" tone="indigo" at={at} opacity={(1 - shorten) * names} />}
-            <PivotLabel x={t.x} y={t.y} label="HH" tone="indigo" at={k === 0 ? SC05.shorten : at} opacity={(k === 0 ? shorten : 1) * names} />
+            {/* the dot is drawn once and stays; only the WORD crossfades */}
+            <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} opacity={names} />
+            <Chip label={PEAK_NAMES[k]} x={t.x} y={t.y - LABEL_GAP} tone="indigo" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={PEAK_SHORT[k]} x={t.x} y={t.y - LABEL_GAP} tone="indigo" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
       {TROUGHS.map((idx, k) => {
         const t = p.turn(idx);
-        const at = SC05.lows + k * STEP;
+        const at = SC05.lows + k * TROUGH_STEP;
         return (
           <React.Fragment key={`hl${idx}`}>
-            {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher low" tone="cyan" side="below" at={at} opacity={(1 - shorten) * names} />}
-            <PivotLabel x={t.x} y={t.y} label="HL" tone="cyan" side="below" at={k === 0 ? SC05.shorten : at} opacity={(k === 0 ? shorten : 1) * names} />
+            <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} opacity={names} />
+            <Chip label={TROUGH_NAMES[k]} x={t.x} y={t.y + LABEL_GAP} tone="cyan" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={TROUGH_SHORT[k]} x={t.x} y={t.y + LABEL_GAP} tone="cyan" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
