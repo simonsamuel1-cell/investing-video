@@ -36,6 +36,13 @@ export const CUTS: Record<string, Cut> = {
    * different things — one states a rule, the other rejects a habit.
    */
   toGuess: { at: 3746, over: 24, distance: 80, blur: 9 },
+  /**
+   * SC08 → SC09, applied to X rather than Y: the frame slides LEFT and the new
+   * scene arrives from the right. Sideways is the third case in a row of cases,
+   * so moving along reads as "and the next one" — a rise would read as "and
+   * now something bigger".
+   */
+  toSideways: { at: 3913, over: 24, distance: 110, blur: 9 },
 };
 
 const curve = (c: Cut) => (global: number) => progressInOut(global, c.at - c.over / 2, c.over);

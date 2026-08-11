@@ -124,6 +124,9 @@ export const Scene08 = () => {
   const before = g < CUTS.toGuess.at;
   const dy = before ? cutOut(g, CUTS.toGuess) : cutIn(g, CUTS.toGuess);
   const blur = cutBlur(g, CUTS.toGuess);
+  /** …and the scene leaves sideways, on the same shared curve. */
+  const dx = cutOut(g, CUTS.toSideways);
+  const exitBlur = cutBlur(g, CUTS.toSideways);
 
   const guessed = f >= T.guess ? progress(f, T.guess, 22) : 0;
   const strike = f >= T.strike ? progress(f, T.strike, 18) : 0;
@@ -137,8 +140,8 @@ export const Scene08 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translateY(${dy}px)`,
-          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
+          transform: `translate(${dx}px, ${dy}px)`,
+          filter: Math.max(blur, exitBlur) > 0.05 ? `blur(${Math.max(blur, exitBlur)}px)` : undefined,
         }}
       >
         <Card>
