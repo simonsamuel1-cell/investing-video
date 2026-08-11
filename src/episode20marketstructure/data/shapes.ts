@@ -134,13 +134,14 @@ export const CYCLE_PHASES = {
 export const MAJOR_FROM = { month: 5, year: 2024 }; // 0 = January
 export const MAJOR_MONTHS = [0, 6, 12, 18, 24];
 /**
- * The stretch SC11 zooms into: months 12 to 15, so the window lands on whole
- * month boundaries and the daily axis can be labelled Jun–Sep 2025 rather than
- * on some arbitrary fraction. Eleven coarse bars, rising 385 points overall,
- * four of them red — which is the claim the shot is there to make.
+ * The stretch SC11 zooms into, as a fraction of the DISPLAYED span: months 10
+ * to 13, so the window lands on whole month boundaries and the daily axis reads
+ * Apr–Jul 2025 rather than falling mid-month. Nine coarse bars, rising 591
+ * points overall, three of them red — which is the claim the shot is there to
+ * make.
  */
-export const MAJOR_LENS: [number, number] = [0.5, 0.625];
-export const MAJOR_LENS_MONTHS = [12, 13, 14, 15];
+export const MAJOR_LENS: [number, number] = [10 / 24, 13 / 24];
+export const MAJOR_LENS_MONTHS = [10, 11, 12, 13];
 
 /** SC11 module 2 — the same climb at two speeds. */
 export const GRADUAL = make({
