@@ -56,7 +56,7 @@ const BAND = {
   h: 200,
 };
 /** The balance, centred in what the chart gives back. */
-const FORCE = { cx: theme.canvas.width / 2, cy: 600, width: 880 };
+const FORCE = { cx: theme.canvas.width / 2, cy: 650, width: 880 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const TURNS = [...peaksOf(CHANNEL), ...troughsOf(CHANNEL)].sort(
