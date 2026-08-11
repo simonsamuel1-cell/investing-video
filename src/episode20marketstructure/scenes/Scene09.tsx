@@ -26,6 +26,7 @@ import { Title } from "../components/Text";
 import { theme } from "../theme";
 import { progress, ramp } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
+import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { peaksOf, troughsOf, plot } from "../data/shape";
 import { CHANNEL, CHANNEL_EDGES } from "../data/shapes";
 
@@ -92,7 +93,8 @@ export const Scene09 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translateX(${dx}px)`,
+          transform: `translateX(${dx}px) scale(${longBreath(g)})`,
+          transformOrigin: LONG_ORIGIN,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >

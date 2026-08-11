@@ -37,6 +37,28 @@ export const BREATH_CENTRE = {
 };
 export const BREATH_ORIGIN = `${BREATH_CENTRE.x}px ${BREATH_CENTRE.y}px`;
 
+/**
+ * THE LONG BREATH — 1450 → 4401, picking up exactly where the first one ends.
+ *
+ * Unlike the short one this is applied to the WHOLE FRAME: card, chart, titles
+ * and captions together, about the centre of the canvas. Nothing inside a scene
+ * moves relative to anything else, so it reads as the camera easing in and back
+ * out over a minute and a half rather than as an element animating.
+ *
+ * It composes with everything already in these scenes — the crop, the dolly,
+ * the pan, the cuts — because it is the outermost transform and none of them
+ * depend on absolute screen position.
+ */
+export const LONG = { from: 1450, to: 4401, amount: 0.03 };
+
+export const longBreath = (global: number) => {
+  if (global <= LONG.from || global >= LONG.to) return 1;
+  return 1 + LONG.amount * Math.sin(Math.PI * ((global - LONG.from) / (LONG.to - LONG.from)));
+};
+
+/** The canvas centre — a whole-frame breath has to be about the frame. */
+export const LONG_ORIGIN = `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`;
+
 /** Moves a point the way the scaled group moves it, for un-scaled overlays. */
 export const breathPoint = (p: { x: number; y: number }, s: number) => ({
   x: BREATH_CENTRE.x + (p.x - BREATH_CENTRE.x) * s,

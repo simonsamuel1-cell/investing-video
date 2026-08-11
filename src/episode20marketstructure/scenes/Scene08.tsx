@@ -20,6 +20,7 @@ import { theme } from "../theme";
 import { progress, fadeOut, textReveal } from "../helpers";
 import { plot, candles } from "../data/shape";
 import { CUTS, cutOut, cutIn, cutBlur } from "../transitions/CameraCut";
+import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { STAIR_BOX, pathOf } from "../data/staircaseView";
 import { DESCENT } from "../data/shapes";
 import { BARS } from "./Scene01";
@@ -156,7 +157,8 @@ export const Scene08 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translate(${dx}px, ${dy}px)`,
+          transform: `translate(${dx}px, ${dy}px) scale(${longBreath(g)})`,
+          transformOrigin: LONG_ORIGIN,
           filter:
             Math.max(blur, exitBlur) > 0.05
               ? `blur(${Math.max(blur, exitBlur)}px)`

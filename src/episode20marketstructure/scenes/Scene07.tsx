@@ -27,6 +27,7 @@ import { StepLinks } from "../components/StepLink";
 import { Chip } from "../components/Chip";
 import { Title } from "../components/Text";
 import { theme } from "../theme";
+import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { progress } from "../helpers";
 import { peaksOf, troughsOf, plot } from "../data/shape";
 import { STAIR, STAIR_BOX, pathOf } from "../data/staircaseView";
@@ -67,7 +68,12 @@ const PAN = { over: 45, dx: STAIR_BOX.w };
  * card is wider than the plot, so clipping to it would leave a stub of the
  * staircase showing past the left edge once the descent is in place.
  */
-const VIEWPORT = { x: STAIR_BOX.x, y: theme.stage.card.y, w: STAIR_BOX.w, h: theme.stage.card.h };
+const VIEWPORT = {
+  x: STAIR_BOX.x,
+  y: theme.stage.card.y,
+  w: STAIR_BOX.w,
+  h: theme.stage.card.h,
+};
 /** The first of each kind is the level; the rest are lower than it. */
 const PEAK_NAMES = ["High", "Lower high", "Lower high"];
 const PEAK_SHORT = ["H", "LH", "LH"];
@@ -114,102 +120,157 @@ export const Scene07 = () => {
   const camX = -PAN.dx * pan;
   const shorten = f >= T.shorten ? progress(f, T.shorten, 14) : 0;
   const press = f >= T.press ? progress(f, T.press, 28) : 0;
-  const stay = f >= MARKS_OUT.at ? 1 - progress(f, MARKS_OUT.at, MARKS_OUT.over) : 1;
-  const titleStay = f >= TITLE_OUT.at ? 1 - progress(f, TITLE_OUT.at, TITLE_OUT.over) : 1;
+  const stay =
+    f >= MARKS_OUT.at ? 1 - progress(f, MARKS_OUT.at, MARKS_OUT.over) : 1;
+  const titleStay =
+    f >= TITLE_OUT.at ? 1 - progress(f, TITLE_OUT.at, TITLE_OUT.over) : 1;
 
   return (
     <Stage>
-      <Title text="Downtrend" at={T.title} opacity={titleStay} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${longBreath(f + 3042)})`,
+          transformOrigin: LONG_ORIGIN,
+        }}
+      >
+        <Title text="Downtrend" at={T.title} opacity={titleStay} />
 
-      <Card>
-        {/* ONE line, laid end to end; the camera travels along it */}
-        <Layer clip={VIEWPORT}>
-          <g transform={`translate(${camX},0)`}>
-            {pan < 0.999 && (
-              <path
-                d={pathOf(STAIR_LINE)}
-                fill="none"
-                stroke={theme.color.ink}
-                strokeWidth={theme.shape.line}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            )}
-            <g transform={`translate(${PAN.dx},0)`}>
-              <path
-                d={pathOf(P.points)}
-                fill="none"
-                stroke={theme.color.ink}
-                strokeWidth={theme.shape.line}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
+        <Card>
+          {/* ONE line, laid end to end; the camera travels along it */}
+          <Layer clip={VIEWPORT}>
+            <g transform={`translate(${camX},0)`}>
+              {pan < 0.999 && (
+                <path
+                  d={pathOf(STAIR_LINE)}
+                  fill="none"
+                  stroke={theme.color.ink}
+                  strokeWidth={theme.shape.line}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+              <g transform={`translate(${PAN.dx},0)`}>
+                <path
+                  d={pathOf(P.points)}
+                  fill="none"
+                  stroke={theme.color.ink}
+                  strokeWidth={theme.shape.line}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </g>
             </g>
-          </g>
-        </Layer>
+          </Layer>
 
-        <StepLinks
-          f={f}
-          opacity={(1 - shorten) * stay}
-          links={[
-            ...PEAKS.slice(1).map((idx, k) => ({
-              at: peakAt(k + 1),
-              from: P.turn(PEAKS[k]),
-              to: P.turn(idx),
-              tone: theme.color.indigo,
-              // right first, then down — the mirror of SC05's rising peaks
-              riseFirst: false,
-            })),
-            ...TROUGHS.slice(1).map((idx, k) => ({
-              at: troughAt(k + 1),
-              from: P.turn(TROUGHS[k]),
-              to: P.turn(idx),
-              tone: theme.color.cyan,
-              // down first, then right
-              riseFirst: true,
-            })),
-          ]}
-        />
+          <StepLinks
+            f={f}
+            opacity={(1 - shorten) * stay}
+            links={[
+              ...PEAKS.slice(1).map((idx, k) => ({
+                at: peakAt(k + 1),
+                from: P.turn(PEAKS[k]),
+                to: P.turn(idx),
+                tone: theme.color.indigo,
+                // right first, then down — the mirror of SC05's rising peaks
+                riseFirst: false,
+              })),
+              ...TROUGHS.slice(1).map((idx, k) => ({
+                at: troughAt(k + 1),
+                from: P.turn(TROUGHS[k]),
+                to: P.turn(idx),
+                tone: theme.color.cyan,
+                // down first, then right
+                riseFirst: true,
+              })),
+            ]}
+          />
 
-        {PEAKS.map((idx, k) => {
-          const t = P.turn(idx);
-          const at = peakAt(k);
-          return (
-            <React.Fragment key={`lh${idx}`}>
-              {/* the dot is drawn once and stays; only the WORD crossfades */}
-              <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} opacity={stay} />
-              <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={at + 4} opacity={(1 - shorten) * stay} />
-              <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={T.shorten} opacity={shorten * stay} />
-            </React.Fragment>
-          );
-        })}
+          {PEAKS.map((idx, k) => {
+            const t = P.turn(idx);
+            const at = peakAt(k);
+            return (
+              <React.Fragment key={`lh${idx}`}>
+                {/* the dot is drawn once and stays; only the WORD crossfades */}
+                <PivotLabel
+                  x={t.x}
+                  y={t.y}
+                  tone="indigo"
+                  at={at}
+                  opacity={stay}
+                />
+                <Chip
+                  label={PEAK_NAMES[k]}
+                  x={t.x + LABEL_DX}
+                  y={t.y - LABEL_GAP}
+                  anchor={LABEL_ANCHOR}
+                  tone="indigo"
+                  at={at + 4}
+                  opacity={(1 - shorten) * stay}
+                />
+                <Chip
+                  label={PEAK_SHORT[k]}
+                  x={t.x + LABEL_DX}
+                  y={t.y - LABEL_GAP}
+                  anchor={LABEL_ANCHOR}
+                  tone="indigo"
+                  at={T.shorten}
+                  opacity={shorten * stay}
+                />
+              </React.Fragment>
+            );
+          })}
 
-        {TROUGHS.map((idx, k) => {
-          const t = P.turn(idx);
-          const at = troughAt(k);
-          return (
-            <React.Fragment key={`ll${idx}`}>
-              <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} opacity={stay} />
-              <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={(1 - shorten) * stay} />
-              <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={T.shorten} opacity={shorten * stay} />
-            </React.Fragment>
-          );
-        })}
+          {TROUGHS.map((idx, k) => {
+            const t = P.turn(idx);
+            const at = troughAt(k);
+            return (
+              <React.Fragment key={`ll${idx}`}>
+                <PivotLabel
+                  x={t.x}
+                  y={t.y}
+                  tone="cyan"
+                  at={at}
+                  opacity={stay}
+                />
+                <Chip
+                  label={TROUGH_NAMES[k]}
+                  x={t.x + LABEL_DX}
+                  y={t.y + LABEL_GAP + TROUGH_DY[k]}
+                  anchor={LABEL_ANCHOR}
+                  tone="cyan"
+                  at={at + 4}
+                  opacity={(1 - shorten) * stay}
+                />
+                <Chip
+                  label={TROUGH_SHORT[k]}
+                  x={t.x + LABEL_DX}
+                  y={t.y + LABEL_GAP + TROUGH_DY[k]}
+                  anchor={LABEL_ANCHOR}
+                  tone="cyan"
+                  at={T.shorten}
+                  opacity={shorten * stay}
+                />
+              </React.Fragment>
+            );
+          })}
 
-        {/* At the foot of the card and centred on it. The pressure it names is
+          {/* At the foot of the card and centred on it. The pressure it names is
             not local to one turn — it is what the whole descent is made of —
             so anchoring it to a single low would say something narrower. */}
-        {press > 0.4 && (
-          <Chip
-            label="Penjual menekan"
-            x={theme.stage.card.x + theme.stage.card.w / 2}
-            y={theme.stage.card.y + theme.stage.card.h - 50}
-            tone="slate"
-            at={T.press + 12}
-            opacity={stay}
-          />
-        )}
-      </Card>
+          {press > 0.4 && (
+            <Chip
+              label="Penjual menekan"
+              x={theme.stage.card.x + theme.stage.card.w / 2}
+              y={theme.stage.card.y + theme.stage.card.h - 50}
+              tone="slate"
+              at={T.press + 12}
+              opacity={stay}
+            />
+          )}
+        </Card>
+      </div>
     </Stage>
   );
 };

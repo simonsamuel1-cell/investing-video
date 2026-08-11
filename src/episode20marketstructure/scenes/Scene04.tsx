@@ -20,8 +20,18 @@ import { Reference } from "../components/StructureLine";
 import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
+import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { hold, progress, progressInOut, fadeOut } from "../helpers";
-import { STAIR, STAIR_BOX, STEP_TURN, zoomIn, clipRight, measure, pathOf, CLIP_X } from "../data/staircaseView";
+import {
+  STAIR,
+  STAIR_BOX,
+  STEP_TURN,
+  zoomIn,
+  clipRight,
+  measure,
+  pathOf,
+  CLIP_X,
+} from "../data/staircaseView";
 import { HANDOFF_FROM } from "./Scene03";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -37,7 +47,14 @@ const T = {
  * the tail of the scene for the annotations to clear. The beat is unchanged —
  * still keyed to the word, just less padded after it.
  */
-const DRAW_AT = [T.rise, T.rise + 96, T.pullback, T.pullback + 92, T.newHigh, T.newHigh + 44];
+const DRAW_AT = [
+  T.rise,
+  T.rise + 96,
+  T.pullback,
+  T.pullback + 92,
+  T.newHigh,
+  T.newHigh + 44,
+];
 const BOX = STAIR_BOX;
 const BRACKET_DX = 58;
 /**
@@ -72,7 +89,14 @@ const PEAK = zoomIn(STAIR.turn(1));
 const TROUGH = zoomIn(STAIR.turn(2)); // where the pullback actually stopped
 const NEW_PEAK = zoomIn(STAIR.turn(STEP_TURN));
 /** The trim targets, read off the crop rather than typed as round numbers. */
-const DRAW_TO = [0, M.fractionAtX(PEAK.x), M.fractionAtX(PEAK.x), M.fractionAtX(TROUGH.x), M.fractionAtX(TROUGH.x), 1];
+const DRAW_TO = [
+  0,
+  M.fractionAtX(PEAK.x),
+  M.fractionAtX(PEAK.x),
+  M.fractionAtX(TROUGH.x),
+  M.fractionAtX(TROUGH.x),
+  1,
+];
 
 export const Scene04 = () => {
   const f = useCurrentFrame();
@@ -83,7 +107,10 @@ export const Scene04 = () => {
 
   // ── the element handed over from SC03 ──
   const travel = progressInOut(f, 0, HANDOFF_OVER);
-  const seed = { x: HANDOFF_FROM.x + (START.x - HANDOFF_FROM.x) * travel, y: HANDOFF_FROM.y + (START.y - HANDOFF_FROM.y) * travel };
+  const seed = {
+    x: HANDOFF_FROM.x + (START.x - HANDOFF_FROM.x) * travel,
+    y: HANDOFF_FROM.y + (START.y - HANDOFF_FROM.y) * travel,
+  };
   // it hands over to the line, so it leaves as the line leaves it
   const seedOut = f >= T.rise ? fadeOut(f, T.rise, 22) : 1;
 
@@ -93,76 +120,150 @@ export const Scene04 = () => {
 
   return (
     <Stage>
-      <Card>
-        {seedOut > 0.001 && (
-          <Layer opacity={seedOut}>
-            <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
-          </Layer>
-        )}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${longBreath(f + 1450)})`,
+          transformOrigin: LONG_ORIGIN,
+        }}
+      >
+        <Card>
+          {seedOut > 0.001 && (
+            <Layer opacity={seedOut}>
+              <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
+            </Layer>
+          )}
 
-        <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor * stay} label="Titik terendah sebelumnya" />
-
-        {/* The line does NOT fade with the annotations — SC05 pulls back from
-            it. Clipped to the card, because a crop runs off the edge. */}
-        <Layer clip={theme.stage.card}>
-          <path
-            d={pathOf(CURVE)}
-            fill="none"
-            stroke={theme.color.ink}
-            strokeWidth={theme.shape.line}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeDasharray={M.length}
-            strokeDashoffset={M.length * (1 - draw)}
+          <Reference
+            x1={LOW.x}
+            x2={BOX.x + BOX.w}
+            y={LOW.y}
+            draw={floor * stay}
+            label="Titik terendah sebelumnya"
           />
-          {draw > 0.001 && draw < 0.999 && <circle cx={M.at(draw).x} cy={M.at(draw).y} r={theme.shape.line + 2} fill={theme.color.ink} />}
-        </Layer>
 
-        {draw >= DRAW_TO[1] - 0.01 && <PivotLabel x={PEAK.x} y={PEAK.y} label="Puncak 1" tone="indigo" at={T.rise + 86} opacity={stay} />}
-        {draw >= 0.99 && (
-          <PivotLabel x={NEW_PEAK.x} y={NEW_PEAK.y} label="Puncak baru" tone="indigo" side="above" at={T.newHigh + 38} opacity={stay} />
-        )}
+          {/* The line does NOT fade with the annotations — SC05 pulls back from
+            it. Clipped to the card, because a crop runs off the edge. */}
+          <Layer clip={theme.stage.card}>
+            <path
+              d={pathOf(CURVE)}
+              fill="none"
+              stroke={theme.color.ink}
+              strokeWidth={theme.shape.line}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeDasharray={M.length}
+              strokeDashoffset={M.length * (1 - draw)}
+            />
+            {draw > 0.001 && draw < 0.999 && (
+              <circle
+                cx={M.at(draw).x}
+                cy={M.at(draw).y}
+                r={theme.shape.line + 2}
+                fill={theme.color.ink}
+              />
+            )}
+          </Layer>
 
-        {/* Parked over the DESCENT, not over the peak. Reading its height from
+          {draw >= DRAW_TO[1] - 0.01 && (
+            <PivotLabel
+              x={PEAK.x}
+              y={PEAK.y}
+              label="Puncak 1"
+              tone="indigo"
+              at={T.rise + 86}
+              opacity={stay}
+            />
+          )}
+          {draw >= 0.99 && (
+            <PivotLabel
+              x={NEW_PEAK.x}
+              y={NEW_PEAK.y}
+              label="Puncak baru"
+              tone="indigo"
+              side="above"
+              at={T.newHigh + 38}
+              opacity={stay}
+            />
+          )}
+
+          {/* Parked over the DESCENT, not over the peak. Reading its height from
             the peak put it level with "Puncak 1", and the two ran together into
             one phrase; halfway down the pullback it is unmistakably its own
             label, and still clear of the line it describes. */}
-        {draw >= 0.6 && (
-          <Chip
-            label="Ambil untung"
-            x={(PEAK.x + TROUGH.x) / 2 + 40}
-            y={(PEAK.y + TROUGH.y) / 2 - 46}
-            tone="slate"
-            at={T.pullback + 70}
-            opacity={stay}
-          />
-        )}
+          {draw >= 0.6 && (
+            <Chip
+              label="Ambil untung"
+              x={(PEAK.x + TROUGH.x) / 2 + 40}
+              y={(PEAK.y + TROUGH.y) / 2 - 46}
+              tone="slate"
+              at={T.pullback + 70}
+              opacity={stay}
+            />
+          )}
 
-        {/* the gap the pullback left — measured, not asserted */}
-        {bracket * stay > 0.001 && (
-          <Layer opacity={bracket * stay}>
-            <g stroke={theme.color.cyan} strokeWidth={theme.shape.rule} fill="none">
-              <line x1={TROUGH.x + BRACKET_DX} y1={TROUGH.y} x2={TROUGH.x + BRACKET_DX} y2={LOW.y} />
-              <line x1={TROUGH.x + BRACKET_DX - 12} y1={TROUGH.y} x2={TROUGH.x + BRACKET_DX + 12} y2={TROUGH.y} />
-              <line x1={TROUGH.x + BRACKET_DX - 12} y1={LOW.y} x2={TROUGH.x + BRACKET_DX + 12} y2={LOW.y} />
-            </g>
-          </Layer>
-        )}
+          {/* the gap the pullback left — measured, not asserted */}
+          {bracket * stay > 0.001 && (
+            <Layer opacity={bracket * stay}>
+              <g
+                stroke={theme.color.cyan}
+                strokeWidth={theme.shape.rule}
+                fill="none"
+              >
+                <line
+                  x1={TROUGH.x + BRACKET_DX}
+                  y1={TROUGH.y}
+                  x2={TROUGH.x + BRACKET_DX}
+                  y2={LOW.y}
+                />
+                <line
+                  x1={TROUGH.x + BRACKET_DX - 12}
+                  y1={TROUGH.y}
+                  x2={TROUGH.x + BRACKET_DX + 12}
+                  y2={TROUGH.y}
+                />
+                <line
+                  x1={TROUGH.x + BRACKET_DX - 12}
+                  y1={LOW.y}
+                  x2={TROUGH.x + BRACKET_DX + 12}
+                  y2={LOW.y}
+                />
+              </g>
+            </Layer>
+          )}
 
-        {/* buyers stepping in under the trough — descriptive, never an entry */}
-        {arrows * stay > 0.001 && (
-          <Layer opacity={stay}>
-            {[0, 1, 2].map((i) => {
-              const a = Math.max(0, Math.min(1, arrows * 3 - i));
-              const y = TROUGH.y + 80 - 22 * a;
-              const x = TROUGH.x - 34 + i * 34;
-              return <polygon key={i} points={`${x},${y} ${x - 11},${y + 18} ${x + 11},${y + 18}`} fill={theme.color.indigo} opacity={a * 0.9} />;
-            })}
-          </Layer>
-        )}
-        {/* below the prior-low line, never across it */}
-        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 52} tone="indigo" at={T.floor + 44} opacity={stay} />}
-      </Card>
+          {/* buyers stepping in under the trough — descriptive, never an entry */}
+          {arrows * stay > 0.001 && (
+            <Layer opacity={stay}>
+              {[0, 1, 2].map((i) => {
+                const a = Math.max(0, Math.min(1, arrows * 3 - i));
+                const y = TROUGH.y + 80 - 22 * a;
+                const x = TROUGH.x - 34 + i * 34;
+                return (
+                  <polygon
+                    key={i}
+                    points={`${x},${y} ${x - 11},${y + 18} ${x + 11},${y + 18}`}
+                    fill={theme.color.indigo}
+                    opacity={a * 0.9}
+                  />
+                );
+              })}
+            </Layer>
+          )}
+          {/* below the prior-low line, never across it */}
+          {arrows > 0.4 && (
+            <Chip
+              label="Pembeli masuk"
+              x={TROUGH.x}
+              y={LOW.y + 52}
+              tone="indigo"
+              at={T.floor + 44}
+              opacity={stay}
+            />
+          )}
+        </Card>
+      </div>
     </Stage>
   );
 };

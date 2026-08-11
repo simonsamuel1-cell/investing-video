@@ -15,6 +15,7 @@ import { Stage, Card } from "../components/Stage";
 import { Scene05 } from "../scenes/Scene05";
 import { Scene06, SC06_FROM } from "../scenes/Scene06";
 import { fadeOut, progressInOut } from "../helpers";
+import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { STAIR, STAIR_BOX } from "../data/staircaseView";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -46,16 +47,31 @@ export const StaircaseGroup = () => {
 
   return (
     <Stage>
-      <Card>
-        <Scene05 f={f} p={P} zoomOver={ZOOM_OVER} names={names * stay} extras={stay} />
-        {/* opacity only — a transform here would become the containing block
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${longBreath(f + 1965)})`,
+          transformOrigin: LONG_ORIGIN,
+        }}
+      >
+        <Card>
+          <Scene05
+            f={f}
+            p={P}
+            zoomOver={ZOOM_OVER}
+            names={names * stay}
+            extras={stay}
+          />
+          {/* opacity only — a transform here would become the containing block
             for every absolutely-positioned child and collapse the layout */}
-        {f >= SC06_FROM - 20 && stay > 0.001 && (
-          <div style={{ opacity: stay }}>
-            <Scene06 f={f} p={P} plotRight={BOX.x + BOX.w} />
-          </div>
-        )}
-      </Card>
+          {f >= SC06_FROM - 20 && stay > 0.001 && (
+            <div style={{ opacity: stay }}>
+              <Scene06 f={f} p={P} plotRight={BOX.x + BOX.w} />
+            </div>
+          )}
+        </Card>
+      </div>
     </Stage>
   );
 };
