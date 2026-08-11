@@ -177,9 +177,17 @@ export const Scene07 = () => {
           );
         })}
 
-        {/* down at the foot of the card, matching SC05's caption */}
+        {/* At the foot of the card and centred on it. The pressure it names is
+            not local to one turn — it is what the whole descent is made of —
+            so anchoring it to a single low would say something narrower. */}
         {press > 0.4 && (
-          <Chip label="Penjual menekan" x={newLow.x} y={theme.stage.card.y + theme.stage.card.h - 50} tone="slate" at={T.lows + 12} />
+          <Chip
+            label="Penjual menekan"
+            x={theme.stage.card.x + theme.stage.card.w / 2}
+            y={theme.stage.card.y + theme.stage.card.h - 50}
+            tone="slate"
+            at={T.lows + 12}
+          />
         )}
       </Card>
     </Stage>
