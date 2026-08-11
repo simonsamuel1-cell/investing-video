@@ -25,6 +25,7 @@ import { RangeBand } from "../components/RangeBand";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { hold, progress, fadeOut } from "../helpers";
+import { CUTS, cutPushOut, cutBlur } from "../transitions/CameraCut";
 import { candles } from "../data/shape";
 import { CYCLE, CYCLE_PHASES } from "../data/shapes";
 
@@ -78,6 +79,10 @@ const CHIP_Y = theme.stage.card.y + theme.stage.card.h - 50;
  * somewhere for the next candles to go.
  */
 const HEAD_AT = 0.82;
+/** This scene's `from` in the Composition — needed to read the shared cut. */
+const SCENE_FROM = 4402;
+/** How far the dolly closes across the cut into SC11. */
+const PUSH = 0.18;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BARS = candles(CYCLE, COUNT, 53, 0.012);
@@ -221,114 +226,129 @@ export const Scene10 = () => {
   const G = barGrid(BARS, view, 0.12);
   const xAt = (t: number) => G.x(barAt(t));
 
+  // ── and on the last frames, the camera starts closing on SC11 ──
+  const g = f + SCENE_FROM;
+  const push = cutPushOut(g, CUTS.toSize, PUSH);
+  const blur = cutBlur(g, CUTS.toSize);
+
   return (
     <Stage>
-      <Card>
-        {/* the card is the window; the chart moves behind it */}
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            clipPath: `inset(0px ${theme.canvas.width - WINDOW.right}px 0px ${WINDOW.left}px)`,
-          }}
-        >
-          {/* the stretch being named, right now */}
-          <Layer>
-            {PHASES.map((p, i) => {
-              const next = PHASES[i + 1];
-              const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
-              const outAt =
-                next && f >= next.at ? progress(f, next.at, SPOT) : 0;
-              const on = inAt * (1 - outAt);
-              if (on <= 0.001) return null;
-              return (
-                <rect
-                  key={`${p.label}${i}`}
-                  x={xAt(p.win[0])}
-                  y={BOX.y}
-                  width={xAt(p.win[1]) - xAt(p.win[0])}
-                  height={BOX.h}
-                  fill={WASH[p.tone]}
-                  opacity={on}
-                />
-              );
-            })}
-          </Layer>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${push})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
+          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
+        }}
+      >
+        <Card>
+          {/* the card is the window; the chart moves behind it */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              clipPath: `inset(0px ${theme.canvas.width - WINDOW.right}px 0px ${WINDOW.left}px)`,
+            }}
+          >
+            {/* the stretch being named, right now */}
+            <Layer>
+              {PHASES.map((p, i) => {
+                const next = PHASES[i + 1];
+                const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
+                const outAt =
+                  next && f >= next.at ? progress(f, next.at, SPOT) : 0;
+                const on = inAt * (1 - outAt);
+                if (on <= 0.001) return null;
+                return (
+                  <rect
+                    key={`${p.label}${i}`}
+                    x={xAt(p.win[0])}
+                    y={BOX.y}
+                    width={xAt(p.win[1]) - xAt(p.win[0])}
+                    height={BOX.h}
+                    fill={WASH[p.tone]}
+                    opacity={on}
+                  />
+                );
+              })}
+            </Layer>
 
-          {/* the base: a floor being built, so indigo */}
-          <RangeBand
-            x={xAt(CYCLE_PHASES.accumulation[0])}
-            w={
-              xAt(CYCLE_PHASES.accumulation[1]) -
-              xAt(CYCLE_PHASES.accumulation[0])
+            {/* the base: a floor being built, so indigo */}
+            <RangeBand
+              x={xAt(CYCLE_PHASES.accumulation[0])}
+              w={
+                xAt(CYCLE_PHASES.accumulation[1]) -
+                xAt(CYCLE_PHASES.accumulation[0])
+              }
+              top={BASE.top}
+              bottom={BASE.bottom}
+              tone="indigo"
+              draw={base}
+              label="Accumulation"
+            />
+            {/* the top: a ceiling forming, so cyan */}
+            <RangeBand
+              x={xAt(CYCLE_PHASES.distribution[0])}
+              w={
+                xAt(CYCLE_PHASES.distribution[1]) -
+                xAt(CYCLE_PHASES.distribution[0])
+              }
+              top={TOP.top}
+              bottom={TOP.bottom}
+              tone="cyan"
+              draw={top}
+              label="Distribution"
+            />
+
+            <CandleChart
+              bars={BARS}
+              box={view}
+              reveal={draw}
+              axis={false}
+              pad={0.12}
+            />
+
+            {/* what the camera leaves behind: the divisions it travelled past */}
+            <Layer>
+              {DIVIDERS.map((t) => {
+                const on = clamp((draw - t) / 0.03, 0, 1);
+                if (on <= 0.001) return null;
+                return (
+                  <line
+                    key={t}
+                    x1={xAt(t)}
+                    y1={BOX.y}
+                    x2={xAt(t)}
+                    y2={BOX.y + BOX.h}
+                    stroke={theme.color.slate}
+                    strokeWidth={theme.shape.hairline}
+                    strokeDasharray="8 8"
+                    opacity={on * 0.55}
+                  />
+                );
+              })}
+            </Layer>
+          </div>
+        </Card>
+
+        {/* one chip per phase, under the stretch of line it names */}
+        {PHASES.map((p, i) => (
+          <Chip
+            key={`${p.label}${i}`}
+            label={p.label}
+            x={
+              p.anchor === "left"
+                ? xAt(p.win[0]) + 20
+                : (xAt(p.win[0]) + xAt(p.win[1])) / 2
             }
-            top={BASE.top}
-            bottom={BASE.bottom}
-            tone="indigo"
-            draw={base}
-            label="Accumulation"
+            y={CHIP_Y}
+            anchor={p.anchor ?? "center"}
+            tone={p.tone}
+            at={p.at}
           />
-          {/* the top: a ceiling forming, so cyan */}
-          <RangeBand
-            x={xAt(CYCLE_PHASES.distribution[0])}
-            w={
-              xAt(CYCLE_PHASES.distribution[1]) -
-              xAt(CYCLE_PHASES.distribution[0])
-            }
-            top={TOP.top}
-            bottom={TOP.bottom}
-            tone="cyan"
-            draw={top}
-            label="Distribution"
-          />
-
-          <CandleChart
-            bars={BARS}
-            box={view}
-            reveal={draw}
-            axis={false}
-            pad={0.12}
-          />
-
-          {/* what the camera leaves behind: the divisions it travelled past */}
-          <Layer>
-            {DIVIDERS.map((t) => {
-              const on = clamp((draw - t) / 0.03, 0, 1);
-              if (on <= 0.001) return null;
-              return (
-                <line
-                  key={t}
-                  x1={xAt(t)}
-                  y1={BOX.y}
-                  x2={xAt(t)}
-                  y2={BOX.y + BOX.h}
-                  stroke={theme.color.slate}
-                  strokeWidth={theme.shape.hairline}
-                  strokeDasharray="8 8"
-                  opacity={on * 0.55}
-                />
-              );
-            })}
-          </Layer>
-        </div>
-      </Card>
-
-      {/* one chip per phase, under the stretch of line it names */}
-      {PHASES.map((p, i) => (
-        <Chip
-          key={`${p.label}${i}`}
-          label={p.label}
-          x={
-            p.anchor === "left"
-              ? xAt(p.win[0]) + 20
-              : (xAt(p.win[0]) + xAt(p.win[1])) / 2
-          }
-          y={CHIP_Y}
-          anchor={p.anchor ?? "center"}
-          tone={p.tone}
-          at={p.at}
-        />
-      ))}
+        ))}
+      </div>
     </Stage>
   );
 };

@@ -43,7 +43,26 @@ export const CUTS: Record<string, Cut> = {
    * now something bigger".
    */
   toSideways: { at: 3913, over: 24, distance: 110, blur: 9 },
+  /**
+   * SC10 → SC11, as a PUSH IN rather than a slide. The line straight after the
+   * cut is "Tren juga punya ukuran dan kecepatan", and the previous scene has
+   * just finished pulling back to show a whole cycle — so moving closer is the
+   * sentence itself: you have seen the whole thing, now stand nearer to it.
+   *
+   * `distance` is unused here; the zoom carries the move.
+   */
+  toSize: { at: 5211, over: 24, distance: 0, blur: 9 },
 };
+
+/**
+ * A dolly instead of a track. The camera keeps closing the whole way through:
+ * the outgoing frame grows as the camera approaches it, and the incoming one
+ * starts SMALLER than its rest size and grows into it. Scale is discontinuous
+ * across the cut by design — that discontinuity is the cut, and it lands on the
+ * frame where the move is fastest and the blur is deepest.
+ */
+export const cutPushOut = (global: number, c: Cut, amount: number) => 1 + amount * clamp01(curve(c)(global) * 2);
+export const cutPushIn = (global: number, c: Cut, amount: number) => 1 - amount * clamp01(1 - (curve(c)(global) - 0.5) * 2);
 
 const curve = (c: Cut) => (global: number) => progressInOut(global, c.at - c.over / 2, c.over);
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
