@@ -48,6 +48,12 @@ const TROUGH_NAMES = ["Low", "Higher low", "Higher low"];
 const TROUGH_SHORT = ["L", "HL", "HL"];
 /** Distance from a turn to its label — PivotLabel's own default, matched. */
 const LABEL_GAP = 46;
+/**
+ * The label starts this far to the RIGHT of its dot instead of sitting centred
+ * over it. Its height is unchanged; only the horizontal anchor moves, so the
+ * dot itself is never covered and the eye finds the turn before the word.
+ */
+const LABEL_DX = 10;
 /** Frames a connector takes to appear alongside the mark it arrives with. */
 const LINK_IN = 14;
 /**
@@ -65,13 +71,19 @@ const LINK_IN = 14;
 const PEAKS = peaksOf(STAIRCASE);
 const TROUGHS = troughsOf(STAIRCASE);
 
+type Pt = { x: number; y: number };
 /**
  * The connector between one mark and the next, drawn as a STEP rather than a
- * diagonal: straight up to the next level, then across to it. A diagonal would
- * only say "these two are joined"; the step says HOW MUCH higher, because the
- * vertical leg is the rise itself and you can read its length off the chart.
+ * diagonal: a vertical leg and a horizontal one. A diagonal would only say
+ * "these two are joined"; the step says HOW MUCH higher, because the vertical
+ * leg is the rise itself and you can read its length off the chart.
+ *
+ * Peaks rise first and then reach across; troughs reach across first and then
+ * rise. Either way the corner lands in open space rather than on the price
+ * line, which is what makes the two families readable on the same chart.
  */
-const stepPath = (a: { x: number; y: number }, b: { x: number; y: number }) => `M${a.x},${a.y} L${a.x},${b.y} L${b.x},${b.y}`;
+const stepPath = (a: Pt, b: Pt, riseFirst: boolean) =>
+  riseFirst ? `M${a.x},${a.y} L${a.x},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${b.x},${a.y} L${b.x},${b.y}`;
 
 /**
  * `names` lets CG-A fade the HH/HL labels out as SC06's numbers take their
@@ -120,14 +132,14 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
           leaving the moment the names give way to the short forms */}
       <Layer opacity={(1 - shorten) * names}>
         {[
-          ...PEAKS.map((idx, k) => ({ idx, k, at: SC05.highs + k * PEAK_STEP, prev: PEAKS[k - 1], tone: theme.color.indigo })),
-          ...TROUGHS.map((idx, k) => ({ idx, k, at: SC05.lows + k * TROUGH_STEP, prev: TROUGHS[k - 1], tone: theme.color.cyan })),
+          ...PEAKS.map((idx, k) => ({ idx, k, at: SC05.highs + k * PEAK_STEP, prev: PEAKS[k - 1], tone: theme.color.indigo, riseFirst: true })),
+          ...TROUGHS.map((idx, k) => ({ idx, k, at: SC05.lows + k * TROUGH_STEP, prev: TROUGHS[k - 1], tone: theme.color.cyan, riseFirst: false })),
         ]
           .filter((l) => l.k > 0 && f >= l.at)
           .map((l) => (
             <path
               key={`link${l.tone}${l.idx}`}
-              d={stepPath(p.turn(l.prev), p.turn(l.idx))}
+              d={stepPath(p.turn(l.prev), p.turn(l.idx), l.riseFirst)}
               fill="none"
               stroke={l.tone}
               strokeWidth={theme.shape.rule}
@@ -144,8 +156,8 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
           <React.Fragment key={`hh${idx}`}>
             {/* the dot is drawn once and stays; only the WORD crossfades */}
             <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} opacity={names} />
-            <Chip label={PEAK_NAMES[k]} x={t.x} y={t.y - LABEL_GAP} tone="indigo" at={at + 4} opacity={(1 - shorten) * names} />
-            <Chip label={PEAK_SHORT[k]} x={t.x} y={t.y - LABEL_GAP} tone="indigo" at={SC05.shorten} opacity={shorten * names} />
+            <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor="left" tone="indigo" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor="left" tone="indigo" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
@@ -155,8 +167,8 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
         return (
           <React.Fragment key={`hl${idx}`}>
             <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} opacity={names} />
-            <Chip label={TROUGH_NAMES[k]} x={t.x} y={t.y + LABEL_GAP} tone="cyan" at={at + 4} opacity={(1 - shorten) * names} />
-            <Chip label={TROUGH_SHORT[k]} x={t.x} y={t.y + LABEL_GAP} tone="cyan" at={SC05.shorten} opacity={shorten * names} />
+            <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor="left" tone="cyan" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor="left" tone="cyan" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
