@@ -87,6 +87,16 @@ const LABEL_ANCHOR = "left" as const;
  * passes straight under the word.
  */
 const TROUGH_DY = [0, -10, 0];
+/**
+ * THE HANDOFF INTO SC08, at 3507/3508.
+ *
+ * The marks and the caption clear first, while "Inilah downtrend." is still
+ * being said and the title is holding the frame; the title itself goes last,
+ * after that line has finished. What survives the cut is the bare line, which
+ * SC08 opens on and converts into candles.
+ */
+const MARKS_OUT = { at: 415, over: 30 };
+const TITLE_OUT = { at: 452, over: 13 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(DESCENT, BOX, { pad: 0.12 });
@@ -104,10 +114,12 @@ export const Scene07 = () => {
   const camX = -PAN.dx * pan;
   const shorten = f >= T.shorten ? progress(f, T.shorten, 14) : 0;
   const press = f >= T.press ? progress(f, T.press, 28) : 0;
+  const stay = f >= MARKS_OUT.at ? 1 - progress(f, MARKS_OUT.at, MARKS_OUT.over) : 1;
+  const titleStay = f >= TITLE_OUT.at ? 1 - progress(f, TITLE_OUT.at, TITLE_OUT.over) : 1;
 
   return (
     <Stage>
-      <Title text="Downtrend" at={T.title} />
+      <Title text="Downtrend" at={T.title} opacity={titleStay} />
 
       <Card>
         {/* ONE line, laid end to end; the camera travels along it */}
@@ -138,7 +150,7 @@ export const Scene07 = () => {
 
         <StepLinks
           f={f}
-          opacity={1 - shorten}
+          opacity={(1 - shorten) * stay}
           links={[
             ...PEAKS.slice(1).map((idx, k) => ({
               at: peakAt(k + 1),
@@ -165,9 +177,9 @@ export const Scene07 = () => {
           return (
             <React.Fragment key={`lh${idx}`}>
               {/* the dot is drawn once and stays; only the WORD crossfades */}
-              <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} />
-              <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={at + 4} opacity={1 - shorten} />
-              <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={T.shorten} opacity={shorten} />
+              <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} opacity={stay} />
+              <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={at + 4} opacity={(1 - shorten) * stay} />
+              <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={T.shorten} opacity={shorten * stay} />
             </React.Fragment>
           );
         })}
@@ -177,9 +189,9 @@ export const Scene07 = () => {
           const at = troughAt(k);
           return (
             <React.Fragment key={`ll${idx}`}>
-              <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} />
-              <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={1 - shorten} />
-              <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={T.shorten} opacity={shorten} />
+              <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} opacity={stay} />
+              <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={(1 - shorten) * stay} />
+              <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={T.shorten} opacity={shorten * stay} />
             </React.Fragment>
           );
         })}
@@ -194,6 +206,7 @@ export const Scene07 = () => {
             y={theme.stage.card.y + theme.stage.card.h - 50}
             tone="slate"
             at={T.press + 12}
+            opacity={stay}
           />
         )}
       </Card>
