@@ -23,6 +23,7 @@ import { hold, progress, progressInOut, fadeOut } from "../helpers";
 import { plot } from "../data/shape";
 import { MECHANISM } from "../data/shapes";
 import { HANDOFF_FROM } from "./Scene03";
+import { STAIR_START } from "../continuity/StaircaseGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -32,7 +33,12 @@ const T = {
   newHigh: 442, // "puncak baru"
 };
 /** Keyed to the turns, so the line is always where the narration says it is. */
-const DRAW_AT = [T.rise, T.rise + 96, T.pullback, T.pullback + 92, T.newHigh, T.newHigh + 62];
+/**
+ * The last leg lands 44 frames after "puncak baru" rather than 62, which frees
+ * the tail of the scene for the handoff below. The beat itself is unchanged —
+ * it is still keyed to the word, just less padded after it.
+ */
+const DRAW_AT = [T.rise, T.rise + 96, T.pullback, T.pullback + 92, T.newHigh, T.newHigh + 44];
 const DRAW_TO = [0, 0.36, 0.36, 0.62, 0.62, 1];
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 const BRACKET_DX = 58;
@@ -42,6 +48,17 @@ const BRACKET_DX = 58;
  * look like it came OUT of the dot rather than past it.
  */
 const HANDOFF_OVER = 40;
+/**
+ * THE HANDOFF INTO SC05, at 1964/1965.
+ *
+ * CG-A's staircase is drawn in the SAME box as this line, so both lines begin
+ * at the same point on the card. That point is the element: everything else
+ * here clears over these frames, the origin dot is left alone on the card, and
+ * on the very next frame the staircase's head dot IS that dot, growing away
+ * from it. Nothing moves across the cut, which is what makes it read as one
+ * continuous drawing rather than two scenes that happen to share a card.
+ */
+const EXIT = { at: 494, over: 20 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(MECHANISM, BOX, { pad: 0.12 });
@@ -64,6 +81,10 @@ export const Scene04 = () => {
   // it hands over to the line, so it leaves as the line leaves it
   const seedOut = f >= T.rise ? fadeOut(f, T.rise, 22) : 1;
 
+  // ── clearing the card for the element SC05 picks up ──
+  const gone = f >= EXIT.at ? progressInOut(f, EXIT.at, EXIT.over) : 0;
+  const stay = 1 - gone;
+
   return (
     <Stage>
       <Card>
@@ -73,25 +94,46 @@ export const Scene04 = () => {
           </Layer>
         )}
 
-        <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor} label="Titik terendah sebelumnya" />
+        {/* the one thing that survives into SC05 — and it never moves */}
+        {gone > 0.001 && (
+          <Layer>
+            <circle cx={STAIR_START.x} cy={STAIR_START.y} r={theme.shape.line + 2} fill={theme.color.ink} />
+          </Layer>
+        )}
+
+        <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor * stay} label="Titik terendah sebelumnya" />
 
         <StructureLine
           plot={P}
           draw={draw}
           head
+          opacity={stay}
           marks={[
-            ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86 }] : []),
-            ...(draw >= 0.99 ? [{ turn: 3, label: "Puncak baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 54 }] : []),
+            ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86, opacity: stay }] : []),
+            ...(draw >= 0.99
+              ? [{ turn: 3, label: "Puncak baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 38, opacity: stay }]
+              : []),
           ]}
         />
 
-        {/* parked ABOVE the descent — the pullback runs through the space
-            directly under the peak, and a chip there would sit on the line */}
-        {draw >= 0.6 && <Chip label="Ambil untung" x={(PEAK.x + TROUGH.x) / 2 + 40} y={PEAK.y - 46} tone="slate" at={T.pullback + 70} />}
+        {/* Parked over the DESCENT, not over the peak. Reading its height from
+            the peak put it level with "Puncak 1", and the two ran together into
+            one phrase; halfway down the pullback it is unmistakably its own
+            label, and still clear of the line it describes. */}
+        {draw >= 0.6 && (
+          <Chip
+            label="Ambil untung"
+            x={(PEAK.x + TROUGH.x) / 2 + 40}
+            y={(PEAK.y + TROUGH.y) / 2 - 46}
+            tone="slate"
+            at={T.pullback + 70}
+            opacity={stay}
+          />
+        )}
 
         {/* the gap the pullback left — measured, not asserted */}
-        {bracket > 0.001 && (
-          <Layer opacity={bracket}>
+        {bracket * stay > 0.001 && (
+          <Layer opacity={bracket * stay}>
             <g stroke={theme.color.cyan} strokeWidth={theme.shape.rule} fill="none">
               <line x1={TROUGH.x + BRACKET_DX} y1={TROUGH.y} x2={TROUGH.x + BRACKET_DX} y2={LOW.y} />
               <line x1={TROUGH.x + BRACKET_DX - 12} y1={TROUGH.y} x2={TROUGH.x + BRACKET_DX + 12} y2={TROUGH.y} />
@@ -101,8 +143,8 @@ export const Scene04 = () => {
         )}
 
         {/* buyers stepping in under the trough — descriptive, never an entry */}
-        {arrows > 0.001 && (
-          <Layer>
+        {arrows * stay > 0.001 && (
+          <Layer opacity={stay}>
             {[0, 1, 2].map((i) => {
               const a = Math.max(0, Math.min(1, arrows * 3 - i));
               const y = TROUGH.y + 80 - 22 * a;
@@ -112,7 +154,7 @@ export const Scene04 = () => {
           </Layer>
         )}
         {/* below the prior-low line, never across it */}
-        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 74} tone="indigo" at={T.floor + 44} />}
+        {arrows > 0.4 && <Chip label="Pembeli masuk" x={TROUGH.x} y={LOW.y + 74} tone="indigo" at={T.floor + 44} opacity={stay} />}
       </Card>
     </Stage>
   );
