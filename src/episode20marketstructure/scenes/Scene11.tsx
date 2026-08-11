@@ -22,13 +22,13 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut } from "../helpers";
 import { CUTS, cutPushIn, cutBlur } from "../transitions/CameraCut";
-import { plot, window as cut, candles } from "../data/shape";
+import { plot, candles } from "../data/shape";
 import {
-  HOOK,
   MAJOR_FROM,
   MAJOR_MONTHS,
   MAJOR_LENS,
   MAJOR_LENS_MONTHS,
+  MINOR,
   GRADUAL,
   STEEP,
 } from "../data/shapes";
@@ -68,7 +68,7 @@ const BOX = {
 const SHOWN = 61;
 const TICKS = [4400, 4800, 5200, 5600, 6000];
 /** Bars across the three months inside the ring. Roughly one per day. */
-const FINE_N = 63;
+const FINE_N = 88;
 /** The move that changes the timeframe, and the swap that lands inside it. */
 const ZOOM_OVER = 46;
 const SWAP = { at: T.zoom + 26, over: 20 };
@@ -94,23 +94,15 @@ const TITLE_Y = 130;
 
 const COARSE = BARS.slice(0, SHOWN);
 const CG = barGrid(COARSE, BOX, 0.12);
-/**
- * MAJOR_LENS is a fraction of what is DISPLAYED, not of the whole hook curve —
- * so the sub-curve has to be rescaled by how much of the curve is on screen, or
- * the ring and the zoomed view would show different stretches of price.
- */
-const HOOK_WIN: [number, number] = [
-  (MAJOR_LENS[0] * SHOWN) / BARS.length,
-  (MAJOR_LENS[1] * SHOWN) / BARS.length,
-];
-const FINE = candles(cut(HOOK, HOOK_WIN), FINE_N, 61, 0.016);
+const FINE = candles(MINOR, FINE_N, 47, 0.014);
 const FG = barGrid(FINE, BOX, 0.12);
 
 /** Month `m` after the start of the series, as a label. */
 const monthLabel = (m: number, withYear: boolean) => {
   const i = MAJOR_FROM.month + m;
   const name = MONTHS[((i % 12) + 12) % 12];
-  return withYear ? `${name} ${MAJOR_FROM.year + Math.floor(i / 12)}` : name;
+  const year = MAJOR_FROM.year + Math.floor(i / 12);
+  return withYear ? `${name} '${String(year).slice(2)}` : name;
 };
 
 const coarseAt = (t: number) => Math.round(t * (COARSE.length - 1));
@@ -176,7 +168,9 @@ const TimeAxis = ({
             <text
               x={x}
               y={BOX.y + BOX.h + AXIS_Y}
-              textAnchor="middle"
+              textAnchor={
+                i === 0 ? "start" : i === marks.length - 1 ? "end" : "middle"
+              }
               fontFamily={theme.text.family}
               fontSize={theme.text.axis.size}
               fontWeight={theme.text.axis.weight}
