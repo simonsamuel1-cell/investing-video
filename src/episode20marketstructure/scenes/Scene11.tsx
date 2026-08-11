@@ -40,7 +40,7 @@ const T = {
   ring: 169, // "minor swing yang terjadi dari hari ke hari"
   zoom: 205, // the camera closes on what the ring marked
   red: 274, // "satu candle merah"
-  noise: 316, // "bisa saja cuma noise"
+  // 316 — "bisa saja cuma noise" is said, not written: the ring is already there
   swap: 425, // "kecepatannya"
   spike: 571, // "hampir vertikal"
 };
@@ -90,6 +90,14 @@ const MONTHS = [
 ];
 /** Above the card, centred — the name of the whole picture, not of a stretch. */
 const TITLE_Y = 130;
+/**
+ * THE NOISE RING — the circle drawn around the one red candle.
+ *
+ * `r` is its radius; `dy` slides it down from the candle's HIGH, so raising dy
+ * moves the ring lower on the bar and lowering it lifts the ring. Both are in
+ * canvas pixels.
+ */
+const RING_DOT = { r: 34, dy: 26 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COARSE = BARS.slice(0, SHOWN);
@@ -338,27 +346,20 @@ export const Scene11 = () => {
                 />
               )}
 
-              {/* one red bar, ringed, then named for what it is */}
+              {/* one red bar, ringed. The narration is already saying the word
+                  "noise" over it, so writing it on the chart as well would be
+                  the picture repeating the voice instead of showing it. */}
               {f >= T.red && fine > 0.5 && (
                 <Layer opacity={progress(f, T.red, 20)}>
                   <circle
                     cx={redX}
-                    cy={redY + 26}
-                    r={34}
+                    cy={redY + RING_DOT.dy}
+                    r={RING_DOT.r}
                     fill="none"
                     stroke={theme.color.slate}
                     strokeWidth={theme.shape.rule}
                   />
                 </Layer>
-              )}
-              {f >= T.noise && (
-                <Chip
-                  label="Noise"
-                  x={redX}
-                  y={redY - 60}
-                  tone="slate"
-                  at={T.noise}
-                />
               )}
             </Card>
           </div>
