@@ -128,20 +128,44 @@ export const CYCLE_PHASES = {
  * and once without it (the trend). That is the claim the scene makes, so it is
  * built rather than illustrated.
  */
+/**
+ * A STEEP climb. The rises are given little horizontal room and a lot of price;
+ * the pullbacks get the opposite. Weight is what controls slope here — the plot
+ * normalises every curve to its own box, so raising the prices alone would
+ * change nothing on screen. Narrow risers and wide treads is what "curam" looks
+ * like once the chart is fitted to the card.
+ */
 const MAJOR_LEGS: Shape = {
   from: 4400,
-  legs: [{ to: 4950 }, { to: 4720 }, { to: 5350 }, { to: 5120 }, { to: 5850 }, { to: 5600 }, { to: 6350 }, { to: 6100 }, { to: 6700 }],
+  legs: [
+    { to: 5020, weight: 0.65 },
+    { to: 4780, weight: 1.25 },
+    { to: 5400, weight: 0.65 },
+    { to: 5160, weight: 1.25 },
+    { to: 5780, weight: 0.65 },
+    { to: 5540, weight: 1.25 },
+    { to: 6160, weight: 0.65 },
+    { to: 5920, weight: 1.25 },
+    { to: 6540, weight: 0.65 },
+  ],
   seed: 19,
 };
 export const MAJOR = make({ ...MAJOR_LEGS, jitter: 0.045 });
 export const MAJOR_TREND = make({ ...MAJOR_LEGS, jitter: 0 });
 /**
- * The swing the lens opens on. Placed just AFTER the trough, so the window is a
+ * The swing the lens opens on. Placed just AFTER a trough, so the window is a
  * rising stretch with a red bar or two inside it — "satu candle merah di tengah
  * major uptrend". Centred on the fall it would show a decline, which is a
  * different claim from the one the narration makes.
+ *
+ * Read off the leg weights above: the fourth turn (a trough) lands at t 0.461
+ * and the peak after it at 0.539. The window spans both, so the twelve bars
+ * inside it climb 549 points overall and five of them are still red — which is
+ * the whole point of the shot.
  */
-export const MAJOR_LENS: [number, number] = [0.44, 0.52];
+export const MAJOR_LENS: [number, number] = [0.44, 0.56];
+/** The climb spans two years. Ticks every six months, in months. */
+export const MAJOR_MONTHS = [0, 6, 12, 18, 24];
 
 /** SC11 module 2 — the same climb at two speeds. */
 export const GRADUAL = make({

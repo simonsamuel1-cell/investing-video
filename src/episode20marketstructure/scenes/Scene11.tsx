@@ -15,15 +15,22 @@
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
-import { CandleChart } from "../components/CandleChart";
+import { CandleChart, barGrid } from "../components/CandleChart";
 import { StructureLine } from "../components/StructureLine";
 import { ComparePanels, panelRects } from "../components/ComparePanels";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut, inset } from "../helpers";
 import { CUTS, cutPushIn, cutBlur } from "../transitions/CameraCut";
-import { plot, window as cut, candles } from "../data/shape";
-import { MAJOR, MAJOR_TREND, MAJOR_LENS, GRADUAL, STEEP } from "../data/shapes";
+import { plot, candles } from "../data/shape";
+import {
+  MAJOR,
+  MAJOR_TREND,
+  MAJOR_LENS,
+  MAJOR_MONTHS,
+  GRADUAL,
+  STEEP,
+} from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -50,25 +57,56 @@ const BOX = {
 };
 /** The magnified card that opens over the swing. */
 const LENS_CARD = { x: 1090, y: 300, w: 470, h: 300 };
+/** Candles across the two-year climb. */
+const COUNT = 90;
+/**
+ * The trend band is wide and pale — the candles have to read THROUGH it, since
+ * the scene's claim is that they are the same series at two sizes.
+ */
+const BAND_W = 26;
+/** The time axis sits under the plot, inside the card. */
+const AXIS_Y = 30;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const P_SWINGS = plot(MAJOR, BOX, { pad: 0.12 });
-const P_TREND = plot(MAJOR_TREND, BOX, {
-  pad: 0.12,
-  range: [MAJOR.lo, MAJOR.hi],
-});
+/**
+ * The swings are CANDLES; the trend is the band behind them. Both are fitted to
+ * the CANDLES' price range and to the candles' own x positions — plot() and
+ * barGrid() share a vertical formula, so passing the bars' lo/hi and insetting
+ * the trend box by half a slot makes the two line up exactly rather than
+ * approximately.
+ */
+const MAJOR_BARS = candles(MAJOR, COUNT, 19, 0.012);
+const G = barGrid(MAJOR_BARS, BOX, 0.12);
+const B_LO = Math.min(...MAJOR_BARS.map((b) => b.l));
+const B_HI = Math.max(...MAJOR_BARS.map((b) => b.h));
+const SLOT = BOX.w / COUNT;
+const P_TREND = plot(
+  MAJOR_TREND,
+  { ...BOX, x: BOX.x + SLOT / 2, w: BOX.w - SLOT },
+  { pad: 0.12, range: [B_LO, B_HI] },
+);
+const barOf = (t: number) => Math.round(t * (COUNT - 1));
 
-const LENS_BARS = candles(cut(MAJOR, MAJOR_LENS), 9, 91);
+/**
+ * The lens shows the SAME bars, not a fresh series drawn from the same window.
+ * The claim is "nothing about the trend changed, only how close we stood", and
+ * a separately generated set of candles would quietly make that false.
+ */
+const LENS_BARS = MAJOR_BARS.slice(
+  barOf(MAJOR_LENS[0]),
+  barOf(MAJOR_LENS[1]) + 1,
+);
 const LENS_BOX = inset(LENS_CARD, 30);
-/** The rectangle on the chart hugs the swing's own price range, not a guess. */
-const LENS_PRICES = MAJOR.samples
-  .filter((s) => s.t >= MAJOR_LENS[0] && s.t <= MAJOR_LENS[1])
-  .map((s) => s.p);
+/** The rectangle hugs the CANDLES it contains — wicks included, not just closes. */
+const LENS_IN = MAJOR_BARS.slice(
+  barOf(MAJOR_LENS[0]),
+  barOf(MAJOR_LENS[1]) + 1,
+);
 const LENS_RECT = {
-  x: P_SWINGS.x(MAJOR_LENS[0]) - 14,
-  w: P_SWINGS.x(MAJOR_LENS[1]) - P_SWINGS.x(MAJOR_LENS[0]) + 28,
-  top: P_SWINGS.y(Math.max(...LENS_PRICES)) - 34,
-  bottom: P_SWINGS.y(Math.min(...LENS_PRICES)) + 34,
+  x: G.x(barOf(MAJOR_LENS[0])) - 18,
+  w: G.x(barOf(MAJOR_LENS[1])) - G.x(barOf(MAJOR_LENS[0])) + 36,
+  top: G.scale(Math.max(...LENS_IN.map((b) => b.h))) - 30,
+  bottom: G.scale(Math.min(...LENS_IN.map((b) => b.l))) + 30,
 };
 
 const PANELS = panelRects(2);
@@ -120,17 +158,57 @@ export const Scene11 = () => {
                 plot={P_TREND}
                 draw={trend}
                 color={theme.color.indigo}
-                width={theme.shape.heavy}
-                opacity={0.5}
+                width={BAND_W}
+                opacity={0.3}
               />
               {swings > 0.001 && (
-                <StructureLine
-                  plot={P_SWINGS}
-                  draw={swings}
-                  color={theme.color.ink}
-                  width={2}
-                  opacity={0.9}
+                <CandleChart
+                  bars={MAJOR_BARS}
+                  box={BOX}
+                  reveal={swings}
+                  axis={false}
+                  pad={0.12}
                 />
+              )}
+
+              {/* two years, in months — the span the narration is claiming */}
+              {trend > 0.4 && (
+                <Layer opacity={progress(f, T.major - 20, 30)}>
+                  <line
+                    x1={BOX.x}
+                    y1={BOX.y + BOX.h}
+                    x2={BOX.x + BOX.w}
+                    y2={BOX.y + BOX.h}
+                    stroke={theme.color.hairline}
+                    strokeWidth={theme.shape.hairline}
+                  />
+                  {MAJOR_MONTHS.map((m, i) => {
+                    const x = BOX.x + (BOX.w * i) / (MAJOR_MONTHS.length - 1);
+                    return (
+                      <g key={m}>
+                        <line
+                          x1={x}
+                          y1={BOX.y + BOX.h}
+                          x2={x}
+                          y2={BOX.y + BOX.h + 10}
+                          stroke={theme.color.hairline}
+                          strokeWidth={theme.shape.hairline}
+                        />
+                        <text
+                          x={x}
+                          y={BOX.y + BOX.h + AXIS_Y}
+                          textAnchor="middle"
+                          fontFamily={theme.text.family}
+                          fontSize={theme.text.axis.size}
+                          fontWeight={theme.text.axis.weight}
+                          fill={theme.color.slate}
+                        >
+                          {m === 0 ? "0" : `${m} bln`}
+                        </text>
+                      </g>
+                    );
+                  })}
+                </Layer>
               )}
 
               {/* kept left of the lens card, which opens over the right half */}
@@ -146,8 +224,8 @@ export const Scene11 = () => {
               {swings > 0.4 && (
                 <Chip
                   label="Minor swing"
-                  x={P_SWINGS.along(0.2).x}
-                  y={P_SWINGS.along(0.2).y - 76}
+                  x={G.x(barOf(0.2))}
+                  y={G.scale(MAJOR_BARS[barOf(0.2)].h) - 76}
                   tone="slate"
                   at={T.minor + 24}
                 />
