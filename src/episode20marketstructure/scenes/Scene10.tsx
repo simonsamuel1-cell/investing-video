@@ -10,17 +10,21 @@
  * top tints CYAN (a ceiling is forming). SC12 and SC13 then trade on exactly
  * that association.
  *
- * Drawn as CANDLES, and each phase is marked in ONE way only — the spotlight
- * column behind it and the chip beneath it. There used to be a second, tighter
- * box around the base and the top with its own label; two boxes around the same
- * stretch made the viewer look for a difference between them that was not there.
+ * Drawn as CANDLES. The two tight boxes belong to the CLOSE-UP: while the
+ * camera is in among the candles they name what is being built, measured off
+ * the candles' own highs and lows so nothing pokes out of the floor or ceiling
+ * they claim. They leave on 5050, the frame the camera finishes pulling back —
+ * from there the dashed dividers and the chips carry the same information at
+ * the scale of the whole cycle, and keeping both would put two boxes around one
+ * stretch and invite the viewer to look for a difference that is not there.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
+import { RangeBand } from "../components/RangeBand";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { hold, progress } from "../helpers";
+import { hold, progress, fadeOut } from "../helpers";
 import { candles } from "../data/shape";
 import { CYCLE, CYCLE_PHASES } from "../data/shapes";
 
@@ -57,6 +61,10 @@ const BOX = {
 };
 /** Bars across the whole cycle. Dense enough to read as a chart, not a diagram. */
 const COUNT = 120;
+/** Half-height of a phase box beyond the prices it covers. */
+const BAND_PAD = 26;
+/** The two boxes leave on 5050, as the camera lands on the wide framing. */
+const BOX_OUT = { at: 648, over: 16 };
 /**
  * Where in the window the newest candle sits — not the middle. Centring the
  * head leaves half the card empty ahead of a chart that has not happened yet;
@@ -69,6 +77,17 @@ const HEAD_AT = 0.82;
 const BARS = candles(CYCLE, COUNT, 53, 0.012);
 /** A phase window, in bars. */
 const barAt = (t: number) => Math.round(t * (BARS.length - 1));
+/** Prices never move, so the vertical scale is fixed at load. */
+const SCALE = barGrid(BARS, BOX, 0.12).scale;
+const bandFor = (win: [number, number]) => {
+  const inside = BARS.slice(barAt(win[0]), barAt(win[1]) + 1);
+  return {
+    top: SCALE(Math.max(...inside.map((b) => b.h))) - BAND_PAD,
+    bottom: SCALE(Math.min(...inside.map((b) => b.l))) + BAND_PAD,
+  };
+};
+const BASE = bandFor(CYCLE_PHASES.accumulation);
+const TOP = bandFor(CYCLE_PHASES.distribution);
 
 /**
  * Each phase is named AND pointed at: the chip says which stretch, the column
@@ -172,6 +191,11 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 export const Scene10 = () => {
   const f = useCurrentFrame();
   const draw = hold(f, DRAW_AT, DRAW_TO);
+  const boxOut = f >= BOX_OUT.at ? fadeOut(f, BOX_OUT.at, BOX_OUT.over) : 1;
+  const base =
+    (f >= T.accumulation ? progress(f, T.accumulation, 30) : 0) * boxOut;
+  const top =
+    (f >= T.distribution ? progress(f, T.distribution, 30) : 0) * boxOut;
 
   /**
    * Close in and follow, then ease back to the plain framing. Both the zoom and
@@ -224,6 +248,33 @@ export const Scene10 = () => {
               );
             })}
           </Layer>
+
+          {/* the base: a floor being built, so indigo */}
+          <RangeBand
+            x={xAt(CYCLE_PHASES.accumulation[0])}
+            w={
+              xAt(CYCLE_PHASES.accumulation[1]) -
+              xAt(CYCLE_PHASES.accumulation[0])
+            }
+            top={BASE.top}
+            bottom={BASE.bottom}
+            tone="indigo"
+            draw={base}
+            label="Accumulation"
+          />
+          {/* the top: a ceiling forming, so cyan */}
+          <RangeBand
+            x={xAt(CYCLE_PHASES.distribution[0])}
+            w={
+              xAt(CYCLE_PHASES.distribution[1]) -
+              xAt(CYCLE_PHASES.distribution[0])
+            }
+            top={TOP.top}
+            bottom={TOP.bottom}
+            tone="cyan"
+            draw={top}
+            label="Distribution"
+          />
 
           <CandleChart
             bars={BARS}
