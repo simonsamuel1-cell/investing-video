@@ -93,11 +93,11 @@ const TITLE_Y = 130;
 /**
  * THE NOISE RING — the circle drawn around the one red candle.
  *
- * `r` is its radius; `dy` slides it down from the candle's HIGH, so raising dy
- * moves the ring lower on the bar and lowering it lifts the ring. Both are in
- * canvas pixels.
+ * `r` is its radius. `dx` and `dy` nudge it off that candle in canvas pixels:
+ * dx positive moves it right, dy positive moves it DOWN from the candle's high.
+ * Which candle it starts from is RED, further down.
  */
-const RING_DOT = { r: 34, dy: 26 };
+const RING_DOT = { r: 34, dx: 0, dy: 26 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COARSE = BARS.slice(0, SHOWN);
@@ -352,7 +352,7 @@ export const Scene11 = () => {
               {f >= T.red && fine > 0.5 && (
                 <Layer opacity={progress(f, T.red, 20)}>
                   <circle
-                    cx={redX}
+                    cx={redX + RING_DOT.dx}
                     cy={redY + RING_DOT.dy}
                     r={RING_DOT.r}
                     fill="none"
