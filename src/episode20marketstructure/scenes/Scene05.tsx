@@ -17,7 +17,7 @@ import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { Title } from "../components/Text";
 import { theme } from "../theme";
-import { progress, ramp } from "../helpers";
+import { progress } from "../helpers";
 import { peaksOf, troughsOf, type Plot } from "../data/shape";
 import { morphAll, pathOf, type Morph } from "../transitions/Morph";
 import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
@@ -31,8 +31,15 @@ export const SC05 = {
   breath: 300, // "penurunan kecil"
   breathChip: 421, // "mengambil napas"
 };
-/** Un-eased, so `reaches` maps a turn to the exact frame the line arrives. */
-export const DRAW = { at: 0, over: 200 };
+/**
+ * The staircase is not traced on. SC04's chart shrinks into step one, and the
+ * rest of the climb is simply THERE — the point of this scene is the repetition,
+ * and a viewer cannot see a repetition one leg at a time.
+ *
+ * The remaining steps fade up rather than snapping in, quickly enough to read
+ * as "the whole thing" and not as a second drawing animation.
+ */
+const REST_IN = 10;
 const STEP = 40; // frames between one label and the next
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -62,16 +69,13 @@ export const Scene05 = ({
 }) => {
   /**
    * The scene opens on SC04's chart and pulls the camera back until that chart
-   * is step one of this staircase. The trim path then carries on from exactly
-   * there — never backwards — so the drawing that follows is the same drawing,
-   * on the same beats, just no longer starting from an empty card.
+   * is step one of this staircase. The moment it lands, the rest of the climb
+   * comes up around it.
    */
   const zoom = f < zoomOver ? progress(f, 0, zoomOver) : 1;
-  const draw = Math.max(ramp(f, DRAW.at, DRAW.over), stepEnd);
+  const rest = f >= zoomOver ? progress(f, zoomOver, REST_IN) : 0;
   const shorten = f >= SC05.shorten ? progress(f, SC05.shorten, 14) : 0;
   const breath = f >= SC05.breath ? progress(f, SC05.breath, 26) : 0;
-  /** A label never precedes the line: it waits for the trim path to arrive. */
-  const arrives = (t: number) => DRAW.at + p.reaches(t) * DRAW.over + 6;
 
   const from = p.turn(STAIR_BREATH[0]);
   const to = p.turn(STAIR_BREATH[1]);
@@ -94,7 +98,7 @@ export const Scene05 = ({
         </Layer>
       )}
 
-      {/* the pull-back, then the ordinary trim path continuing from step one */}
+      {/* SC04's chart, shrinking down onto step one and staying there */}
       {f < zoomOver ? (
         <Layer>
           <path
@@ -107,12 +111,15 @@ export const Scene05 = ({
           />
         </Layer>
       ) : (
-        <StructureLine plot={p} draw={draw} head={draw > stepEnd + 0.001} />
+        <StructureLine plot={p} draw={stepEnd} />
       )}
+
+      {/* and the rest of the climb, whole — never a partial staircase */}
+      {rest > 0.001 && <StructureLine plot={p} draw={1} opacity={rest} />}
 
       {PEAKS.map((idx, k) => {
         const t = p.turn(idx);
-        const at = Math.max(SC05.highs + k * STEP, arrives(t.t));
+        const at = SC05.highs + k * STEP;
         return (
           <React.Fragment key={`hh${idx}`}>
             {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher high" tone="indigo" at={at} opacity={(1 - shorten) * names} />}
@@ -122,7 +129,7 @@ export const Scene05 = ({
       })}
       {TROUGHS.map((idx, k) => {
         const t = p.turn(idx);
-        const at = Math.max(SC05.lows + k * STEP, arrives(t.t));
+        const at = SC05.lows + k * STEP;
         return (
           <React.Fragment key={`hl${idx}`}>
             {k === 0 && <PivotLabel x={t.x} y={t.y} label="Higher low" tone="cyan" side="below" at={at} opacity={(1 - shorten) * names} />}
