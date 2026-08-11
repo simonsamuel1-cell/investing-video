@@ -29,7 +29,7 @@ import { Title } from "../components/Text";
 import { theme } from "../theme";
 import { progress } from "../helpers";
 import { peaksOf, troughsOf, plot } from "../data/shape";
-import { STAIR, STAIR_BOX, clipRight, pathOf, CLIP_X } from "../data/staircaseView";
+import { STAIR, STAIR_BOX, pathOf } from "../data/staircaseView";
 import { DESCENT } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -43,11 +43,24 @@ const T = {
 const BOX = STAIR_BOX;
 const STEP = 46;
 /**
- * THE PAN. One screen width, so the climb is completely off the card by the
- * time the descent is centred and the two are never both readable at once —
- * this is a move to another chart, not a comparison of two.
+ * THE PAN, across ONE CONTINUOUS LINE.
+ *
+ * The two curves are laid end to end: the staircase finishes at the top of its
+ * range and the descent begins at the top of its own, so at exactly one plot
+ * width apart the last point of one IS the first point of the other — same x,
+ * same y, to the pixel. The camera then travels along a single unbroken line
+ * that climbs, tops out, and rolls over.
+ *
+ * Any other gap would show two charts with white space between them, which
+ * reads as the graph being cut in half rather than as a camera moving.
  */
-const PAN = { over: 45, dx: theme.canvas.width };
+const PAN = { over: 45, dx: STAIR_BOX.w };
+/**
+ * The window the pan looks through: the plot's own width, not the card's. The
+ * card is wider than the plot, so clipping to it would leave a stub of the
+ * staircase showing past the left edge once the descent is in place.
+ */
+const VIEWPORT = { x: STAIR_BOX.x, y: theme.stage.card.y, w: STAIR_BOX.w, h: theme.stage.card.h };
 /** The first of each kind is the level; the rest are lower than it. */
 const PEAK_NAMES = ["High", "Lower high", "Lower high"];
 const PEAK_SHORT = ["H", "LH", "LH"];
@@ -62,8 +75,8 @@ const LABEL_ANCHOR = "right" as const;
 const P = plot(DESCENT, BOX, { pad: 0.12 });
 const PEAKS = peaksOf(DESCENT);
 const TROUGHS = troughsOf(DESCENT);
-/** The staircase, in the framing CG-A left it in — the pan's starting view. */
-const STAIR_LINE = clipRight(STAIR.points, CLIP_X);
+/** The staircase, exactly as CG-A left it — the pan's starting view. */
+const STAIR_LINE = STAIR.points;
 const peakAt = (k: number) => T.highs + k * STEP;
 const troughAt = (k: number) => (k === 0 ? T.firstLow : T.lows + (k - 1) * STEP);
 
@@ -80,8 +93,8 @@ export const Scene07 = () => {
       <Title text="Downtrend" at={T.title} />
 
       <Card>
-        {/* both charts live in one world; the camera moves across it */}
-        <Layer clip={theme.stage.card}>
+        {/* ONE line, laid end to end; the camera travels along it */}
+        <Layer clip={VIEWPORT}>
           <g transform={`translate(${camX},0)`}>
             {pan < 0.999 && (
               <path
