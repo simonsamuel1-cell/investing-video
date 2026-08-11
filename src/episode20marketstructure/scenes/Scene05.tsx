@@ -12,13 +12,14 @@
  */
 import React from "react";
 import { Layer } from "../components/Stage";
+import { StructureLine } from "../components/StructureLine";
 import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { Title } from "../components/Text";
 import { theme } from "../theme";
 import { progress, ramp } from "../helpers";
 import { peaksOf, troughsOf, type Plot } from "../data/shape";
-import { morphPoints, morphFront, pathOf, type Morph } from "../transitions/Morph";
+import { morphAll, pathOf, type Morph } from "../transitions/Morph";
 import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -42,14 +43,31 @@ const TROUGHS = troughsOf(STAIRCASE);
  * `names` lets CG-A fade the HH/HL labels out as SC06's numbers take their
  * place — both want the same spot beside each turn.
  */
-export const Scene05 = ({ f, p, shape, names = 1 }: { f: number; p: Plot; shape: Morph; names?: number }) => {
-  const draw = ramp(f, DRAW.at, DRAW.over);
+export const Scene05 = ({
+  f,
+  p,
+  shrink,
+  stepEnd,
+  zoomOver,
+  names = 1,
+}: {
+  f: number;
+  p: Plot;
+  /** SC04's line paired with this staircase's first step. */
+  shrink: Morph;
+  /** How far along this line that first step reaches. */
+  stepEnd: number;
+  zoomOver: number;
+  names?: number;
+}) => {
   /**
-   * `draw` no longer trims a path onto an empty card — it advances the
-   * transformation of SC04's line into this one. At 0 the picture is SC04's
-   * final frame exactly; at 1 it is the staircase.
+   * The scene opens on SC04's chart and pulls the camera back until that chart
+   * is step one of this staircase. The trim path then carries on from exactly
+   * there — never backwards — so the drawing that follows is the same drawing,
+   * on the same beats, just no longer starting from an empty card.
    */
-  const front = morphFront(shape, draw);
+  const zoom = f < zoomOver ? progress(f, 0, zoomOver) : 1;
+  const draw = Math.max(ramp(f, DRAW.at, DRAW.over), stepEnd);
   const shorten = f >= SC05.shorten ? progress(f, SC05.shorten, 14) : 0;
   const breath = f >= SC05.breath ? progress(f, SC05.breath, 26) : 0;
   /** A label never precedes the line: it waits for the trim path to arrive. */
@@ -76,18 +94,21 @@ export const Scene05 = ({ f, p, shape, names = 1 }: { f: number; p: Plot; shape:
         </Layer>
       )}
 
-      {/* always a whole line; what advances is the transformation, not a trim */}
-      <Layer>
-        <path
-          d={pathOf(morphPoints(shape, draw))}
-          fill="none"
-          stroke={theme.color.ink}
-          strokeWidth={theme.shape.line}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {draw > 0.001 && draw < 0.999 && <circle cx={front.x} cy={front.y} r={theme.shape.line + 2} fill={theme.color.ink} />}
-      </Layer>
+      {/* the pull-back, then the ordinary trim path continuing from step one */}
+      {f < zoomOver ? (
+        <Layer>
+          <path
+            d={pathOf(morphAll(shrink, zoom))}
+            fill="none"
+            stroke={theme.color.ink}
+            strokeWidth={theme.shape.line}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </Layer>
+      ) : (
+        <StructureLine plot={p} draw={draw} head={draw > stepEnd + 0.001} />
+      )}
 
       {PEAKS.map((idx, k) => {
         const t = p.turn(idx);

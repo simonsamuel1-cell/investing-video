@@ -26,20 +26,28 @@ const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.
 /** Frames the HH/HL names take to step aside for SC06's numbers. */
 const HANDOVER = 30;
 /**
- * How soft the transformation front is, as a fraction of the line's width.
- * Too sharp and it reads as a wipe passing over the chart; too soft and the
- * whole line squirms at once and the left-to-right reading is lost.
+ * ONE STEP of this staircase is what SC04 spent its whole scene drawing: up,
+ * pull back, up to a higher high. So the join at 1964/1965 is a pull-back of
+ * the camera — SC04's chart is the same picture, closer in.
+ *
+ * The step ends at the SECOND peak, turn 3. Ending at the trough instead would
+ * shrink away the higher high, which is the only part of SC04 that mattered.
  */
-const MORPH_FRONT = 0.12;
+const STEP_TURN = 3;
+/** Frames the pull-back takes. The rest of the staircase draws on as usual. */
+const ZOOM_OVER = 45;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(STAIRCASE, BOX, { pad: 0.12 });
+/** How far along this line one step reaches — where the normal drawing resumes. */
+const STEP_END = P.reaches(P.turn(STEP_TURN).t);
 /**
- * SC04's finished line paired point-for-point with this one. SC04 draws in the
- * SAME box, so frame 1965 IS frame 1964 and the staircase then grows out of the
- * mechanism instead of being drawn onto an emptied card. Built once, at load.
+ * SC04's finished line paired point-for-point with that first step, so every
+ * point of the big shape knows which point of the small one it is heading for.
+ * At blend 0 this is SC04's last frame exactly; at 1 it is step one, and the
+ * trim path takes over from there without a seam. Built once, at load.
  */
-const MORPH = morph(MECH_LINE, P.points, 260, MORPH_FRONT);
+const SHRINK = morph(MECH_LINE, P.points.filter((pt) => pt.x <= P.turn(STEP_TURN).x));
 
 export const StaircaseGroup = () => {
   const f = useCurrentFrame();
@@ -48,7 +56,7 @@ export const StaircaseGroup = () => {
   return (
     <Stage>
       <Card>
-        <Scene05 f={f} p={P} shape={MORPH} names={names} />
+        <Scene05 f={f} p={P} shrink={SHRINK} stepEnd={STEP_END} zoomOver={ZOOM_OVER} names={names} />
         {f >= SC06_FROM - 20 && <Scene06 f={f} p={P} plotRight={BOX.x + BOX.w} />}
       </Card>
     </Stage>

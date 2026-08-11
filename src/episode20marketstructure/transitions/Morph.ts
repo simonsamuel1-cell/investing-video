@@ -60,6 +60,17 @@ export const morph = (from: Pt[], to: Pt[], samples = 260, front = 0.1): Morph =
   };
 };
 
+/**
+ * Every point moves together, by the same amount.
+ *
+ * This is what a shape SHRINKING into another looks like. The sweeping version
+ * below transforms the line left to right, which reads as something passing
+ * over the chart; when the new shape is the old one at a smaller size, that
+ * sweep fights the eye. A uniform blend just looks like the camera pulling out.
+ */
+export const morphAll = (m: Morph, a: number): Pt[] =>
+  m.pairs.map((p) => ({ x: p.from.x + (p.to.x - p.from.x) * a, y: p.from.y + (p.to.y - p.from.y) * a }));
+
 /** The blended points at a given sweep position. 0 = old shape, 1 = new one. */
 export const morphPoints = (m: Morph, amount: number): Pt[] => {
   const head = amount * (1 + m.front); // so amount 1 clears the right-hand tail
