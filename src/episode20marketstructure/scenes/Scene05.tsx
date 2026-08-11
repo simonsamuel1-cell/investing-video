@@ -49,11 +49,18 @@ const TROUGH_SHORT = ["L", "HL", "HL"];
 /** Distance from a turn to its label — PivotLabel's own default, matched. */
 const LABEL_GAP = 46;
 /**
- * The label starts this far to the RIGHT of its dot instead of sitting centred
- * over it. Its height is unchanged; only the horizontal anchor moves, so the
- * dot itself is never covered and the eye finds the turn before the word.
+ * The label sits this far to the LEFT of its dot instead of centred over it —
+ * its right edge lands 10px short of the turn. The height is unchanged; only
+ * the horizontal anchor moves, so the dot itself is never covered.
  */
-const LABEL_DX = 10;
+const LABEL_DX = -10;
+const LABEL_ANCHOR = "right" as const;
+/**
+ * Per-mark vertical nudge, negative = up. The middle trough's label sat right
+ * on the horizontal leg of its own connector, which runs at the PREVIOUS
+ * trough's height — 10px of clearance is enough to separate the two.
+ */
+const TROUGH_DY = [0, -10, 0];
 /** Frames a connector takes to appear alongside the mark it arrives with. */
 const LINK_IN = 14;
 /**
@@ -156,8 +163,8 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
           <React.Fragment key={`hh${idx}`}>
             {/* the dot is drawn once and stays; only the WORD crossfades */}
             <PivotLabel x={t.x} y={t.y} tone="indigo" at={at} opacity={names} />
-            <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor="left" tone="indigo" at={at + 4} opacity={(1 - shorten) * names} />
-            <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor="left" tone="indigo" at={SC05.shorten} opacity={shorten * names} />
+            <Chip label={PEAK_NAMES[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={PEAK_SHORT[k]} x={t.x + LABEL_DX} y={t.y - LABEL_GAP} anchor={LABEL_ANCHOR} tone="indigo" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
@@ -167,8 +174,8 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
         return (
           <React.Fragment key={`hl${idx}`}>
             <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} opacity={names} />
-            <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor="left" tone="cyan" at={at + 4} opacity={(1 - shorten) * names} />
-            <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor="left" tone="cyan" at={SC05.shorten} opacity={shorten * names} />
+            <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={(1 - shorten) * names} />
+            <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={SC05.shorten} opacity={shorten * names} />
           </React.Fragment>
         );
       })}
