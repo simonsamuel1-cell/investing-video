@@ -23,7 +23,6 @@ import { hold, progress, progressInOut, fadeOut } from "../helpers";
 import { plot } from "../data/shape";
 import { MECHANISM } from "../data/shapes";
 import { HANDOFF_FROM } from "./Scene03";
-import { STAIR_START } from "../continuity/StaircaseGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -51,12 +50,10 @@ const HANDOFF_OVER = 40;
 /**
  * THE HANDOFF INTO SC05, at 1964/1965.
  *
- * CG-A's staircase is drawn in the SAME box as this line, so both lines begin
- * at the same point on the card. That point is the element: everything else
- * here clears over these frames, the origin dot is left alone on the card, and
- * on the very next frame the staircase's head dot IS that dot, growing away
- * from it. Nothing moves across the cut, which is what makes it read as one
- * continuous drawing rather than two scenes that happen to share a card.
+ * Only the ANNOTATIONS clear here — the measurements, the arrows, the names.
+ * The line itself stays whole to the last frame, because CG-A opens on it and
+ * transforms it into the staircase. SC05's picture is this one repeated, so a
+ * card that emptied and started over would be arguing against the script.
  */
 const EXIT = { at: 494, over: 20 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -64,6 +61,8 @@ const EXIT = { at: 494, over: 20 };
 const P = plot(MECHANISM, BOX, { pad: 0.12 });
 /** Where this line begins — the dot's destination. */
 const START = P.points[0];
+/** The finished shape, in canvas coordinates — CG-A morphs out of exactly it. */
+export const MECH_LINE = P.points;
 const LOW = P.turn(0); // the prior low the pullback must respect
 const PEAK = P.turn(1);
 const TROUGH = P.turn(2); // where the pullback actually stopped
@@ -94,20 +93,13 @@ export const Scene04 = () => {
           </Layer>
         )}
 
-        {/* the one thing that survives into SC05 — and it never moves */}
-        {gone > 0.001 && (
-          <Layer>
-            <circle cx={STAIR_START.x} cy={STAIR_START.y} r={theme.shape.line + 2} fill={theme.color.ink} />
-          </Layer>
-        )}
-
         <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor * stay} label="Titik terendah sebelumnya" />
 
+        {/* the line does NOT fade with the annotations — SC05 needs it whole */}
         <StructureLine
           plot={P}
           draw={draw}
           head
-          opacity={stay}
           marks={[
             ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86, opacity: stay }] : []),
             ...(draw >= 0.99

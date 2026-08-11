@@ -11,27 +11,35 @@
  * four numbers, the comparisons and the guide.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, Card, Layer } from "../components/Stage";
+import { Stage, Card } from "../components/Stage";
 import { Scene05 } from "../scenes/Scene05";
 import { Scene06, SC06_FROM } from "../scenes/Scene06";
 import { theme } from "../theme";
 import { fadeOut } from "../helpers";
 import { plot } from "../data/shape";
 import { STAIRCASE } from "../data/shapes";
+import { morph } from "../transitions/Morph";
+import { MECH_LINE } from "../scenes/Scene04";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 /** Frames the HH/HL names take to step aside for SC06's numbers. */
 const HANDOVER = 30;
+/**
+ * How soft the transformation front is, as a fraction of the line's width.
+ * Too sharp and it reads as a wipe passing over the chart; too soft and the
+ * whole line squirms at once and the left-to-right reading is lost.
+ */
+const MORPH_FRONT = 0.12;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(STAIRCASE, BOX, { pad: 0.12 });
 /**
- * Where this group's line begins — and, because SC04 uses the same box, the
- * same point SC04's line begins at. That is what the handoff at 1964/1965
- * rests on: not two dots that look alike, one dot that never moves.
+ * SC04's finished line paired point-for-point with this one. SC04 draws in the
+ * SAME box, so frame 1965 IS frame 1964 and the staircase then grows out of the
+ * mechanism instead of being drawn onto an emptied card. Built once, at load.
  */
-export const STAIR_START = P.points[0];
+const MORPH = morph(MECH_LINE, P.points, 260, MORPH_FRONT);
 
 export const StaircaseGroup = () => {
   const f = useCurrentFrame();
@@ -40,15 +48,7 @@ export const StaircaseGroup = () => {
   return (
     <Stage>
       <Card>
-        {/* On frame 0 the trim path is still zero-length, so StructureLine has
-            nothing to mount and its head dot does not exist yet. Without this
-            the handed-over dot would blink out for exactly one frame. */}
-        {f === 0 && (
-          <Layer>
-            <circle cx={STAIR_START.x} cy={STAIR_START.y} r={theme.shape.line + 2} fill={theme.color.ink} />
-          </Layer>
-        )}
-        <Scene05 f={f} p={P} names={names} />
+        <Scene05 f={f} p={P} shape={MORPH} names={names} />
         {f >= SC06_FROM - 20 && <Scene06 f={f} p={P} plotRight={BOX.x + BOX.w} />}
       </Card>
     </Stage>
