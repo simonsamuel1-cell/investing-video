@@ -26,9 +26,19 @@ import { Layer } from "./Stage";
 export type Tone = "indigo" | "cyan" | "slate" | "outline";
 
 /** `outline` is kept as a name for callers; with no pill it reads as indigo. */
-const inkOf = (t: Tone) => (t === "cyan" ? theme.color.cyan : t === "slate" ? theme.color.slate : theme.color.indigo);
+const inkOf = (t: Tone) =>
+  t === "cyan"
+    ? theme.color.cyan
+    : t === "slate"
+      ? theme.color.slate
+      : theme.color.indigo;
 /** The pill's fill — the same hue as its ink, at wash strength. */
-const washOf = (t: Tone) => (t === "cyan" ? theme.color.cyanWash : t === "slate" ? "rgba(98, 98, 102, 0.08)" : theme.color.indigoWash);
+const washOf = (t: Tone) =>
+  t === "cyan"
+    ? theme.color.cyanWash
+    : t === "slate"
+      ? "rgba(98, 98, 102, 0.08)"
+      : theme.color.indigoWash;
 /** Breathing room inside a pill, proportional so it holds at any type size. */
 const PILL_PAD = { x: 0.62, y: 0.3 };
 
@@ -41,6 +51,7 @@ export const Chip = ({
   anchor = "center",
   leaderTo,
   size = theme.text.chip.size,
+  weight = theme.text.chip.weight,
   opacity = 1,
   strike = 0,
   strikeInk,
@@ -57,6 +68,8 @@ export const Chip = ({
   /** Draws a hairline from the label to this point. */
   leaderTo?: { x: number; y: number };
   size?: number;
+  /** Overrides the chip weight — SC08 sets its four lines bold. */
+  weight?: number;
   opacity?: number;
   /** 0→1 strikethrough sweep. */
   strike?: number;
@@ -70,13 +83,21 @@ export const Chip = ({
   if (f < at || opacity <= 0.001) return null;
   const p = progress(f, at, theme.motion.pop);
   const ink = inkOf(tone);
-  const shift = anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
+  const shift =
+    anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
 
   return (
     <>
       {leaderTo && (
         <Layer opacity={p * 0.85 * opacity}>
-          <line x1={x} y1={y} x2={leaderTo.x} y2={leaderTo.y} stroke={ink} strokeWidth={theme.shape.hairline} />
+          <line
+            x1={x}
+            y1={y}
+            x2={leaderTo.x}
+            y2={leaderTo.y}
+            stroke={ink}
+            strokeWidth={theme.shape.hairline}
+          />
         </Layer>
       )}
       <div
@@ -88,7 +109,7 @@ export const Chip = ({
           color: ink,
           fontFamily: theme.text.family,
           fontSize: size,
-          fontWeight: theme.text.chip.weight,
+          fontWeight: weight,
           whiteSpace: "nowrap",
           opacity: p * opacity,
           ...(pill

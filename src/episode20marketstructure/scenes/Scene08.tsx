@@ -65,6 +65,8 @@ const HOOK_ROOM = 330;
  * and both lines clear the logo zone's x limit at this width.
  */
 const LINE_Y = [100, 156];
+/** All four of this scene's lines are set bold — they are statements, not notes. */
+const BOLD = theme.text.title.weight;
 const BIG = { one: 210, word: 96 };
 /** One shared style for both sentence lines, so they cannot drift apart. */
 const LINE_STYLE = {
@@ -74,7 +76,7 @@ const LINE_STYLE = {
   textAlign: "center" as const,
   whiteSpace: "nowrap" as const,
   fontSize: theme.text.body.size,
-  fontWeight: theme.text.body.weight,
+  fontWeight: BOLD,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -299,12 +301,14 @@ export const Scene08 = () => {
                 x={theme.canvas.width / 2}
                 y={LINE_Y[0]}
                 tone="slate"
+                weight={BOLD}
                 at={T.guess}
                 strike={strike}
                 strikeInk={theme.color.indigo}
               />
               <Chip
                 label="Kenali perubahan"
+                weight={BOLD}
                 x={theme.canvas.width / 2}
                 y={LINE_Y[1]}
                 tone="indigo"
