@@ -1,16 +1,15 @@
 /**
  * 5212 → 5854 — Trend size & speed.
  *
- * Module 1 separates SIZE, and it does it by changing TIMEFRAME rather than by
- * drawing two shapes. The major trend is a handful of fat candles across two
- * years; on "minor swing yang terjadi dari hari ke hari" the camera closes on
- * one stretch of it and those fat candles resolve into many small ones. Same
- * price, same two years — a different bar size. That is what the sentence says,
+ * Module 1 separates SIZE by changing TIMEFRAME, not by drawing two shapes.
+ * The major trend is the HOOK — the very chart the episode opened on, two years
+ * of it. On "minor swing yang terjadi dari hari ke hari" one stretch is ringed,
+ * the camera closes on it, and those bars resolve into many smaller ones. Same
+ * price, same two years; a different bar size. That is what the sentence says,
  * so it is what the picture does.
  *
- * There is no separate "trend line" drawn over the candles. A second smoothed
- * curve would be a second claim; the coarse candles ARE the trend, because a
- * coarse bar is a summary of everything inside it.
+ * The window is picked on MONTH boundaries so both axes can be read: months
+ * across the two years, then days across the three months inside the ring.
  *
  * Module 2 compares SPEED. The spec asks for a cross-wipe between the modules;
  * wipes are not used here, so the handover is a cross-fade.
@@ -24,12 +23,14 @@ import { theme } from "../theme";
 import { progress, fadeIn, fadeOut } from "../helpers";
 import { CUTS, cutPushIn, cutBlur } from "../transitions/CameraCut";
 import { plot, window as cut, candles } from "../data/shape";
-import { MAJOR, MAJOR_LENS, MAJOR_MONTHS, GRADUAL, STEEP } from "../data/shapes";
+import { HOOK, MAJOR_FROM, MAJOR_MONTHS, MAJOR_LENS, MAJOR_LENS_MONTHS, GRADUAL, STEEP } from "../data/shapes";
+import { BARS } from "./Scene01";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
   major: 79, // "major trend yang berlangsung berbulan-bulan"
-  minor: 169, // "minor swing yang terjadi dari hari ke hari"
+  ring: 169, // "minor swing yang terjadi dari hari ke hari"
+  zoom: 205, // the camera closes on what the ring marked
   red: 274, // "satu candle merah"
   noise: 316, // "bisa saja cuma noise"
   swap: 425, // "kecepatannya"
@@ -41,46 +42,58 @@ const SCENE_FROM = 5212;
 const PUSH = 0.18;
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 /**
- * Two bar sizes for one series. Twenty-four fat bars across two years is a
- * summary; sixty-three small ones across three months is the same price seen
- * one day at a time.
+ * The last eleven bars are dropped, exactly as at 3868 — this is the same cut
+ * of the hook's chart, so the two moments in the episode are the same picture.
  */
-const COARSE_N = 24;
+const TRIM = 11;
+const TICKS = [4400, 4800, 5200, 5600, 6000];
+/** Bars across the three months inside the ring. Roughly one per day. */
 const FINE_N = 63;
-/** Days across the zoomed window — MAJOR_LENS is 12% of two years. */
-const FINE_DAYS = [0, 30, 60, 90];
-/** The move that changes the timeframe. */
-const ZOOM = { at: T.minor, over: 50, to: 3 };
-/** The small bars arrive over the tail of it. */
-const SWAP = { at: T.minor + 30, over: 20 };
+/** The move that changes the timeframe, and the swap that lands inside it. */
+const ZOOM_OVER = 46;
+const SWAP = { at: T.zoom + 26, over: 20 };
 /** Where the axis labels sit under the plot. */
 const AXIS_Y = 30;
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 // ═══════════════════════════════════════════════════════════════════════════
 
-const COARSE = candles(MAJOR, COARSE_N, 19, 0.02);
-const FINE = candles(cut(MAJOR, MAJOR_LENS), FINE_N, 61, 0.016);
+const COARSE = BARS.slice(0, BARS.length - TRIM);
 const CG = barGrid(COARSE, BOX, 0.12);
+const FINE = candles(cut(HOOK, MAJOR_LENS), FINE_N, 61, 0.016);
 const FG = barGrid(FINE, BOX, 0.12);
 
+/** Month `m` after the start of the series, as a label. */
+const monthLabel = (m: number, withYear: boolean) => {
+  const i = MAJOR_FROM.month + m;
+  const name = MONTHS[((i % 12) + 12) % 12];
+  return withYear ? `${name} ${MAJOR_FROM.year + Math.floor(i / 12)}` : name;
+};
+
+const coarseAt = (t: number) => Math.round(t * (COARSE.length - 1));
+const WIN = { i0: coarseAt(MAJOR_LENS[0]), i1: coarseAt(MAJOR_LENS[1]) };
+const WIN_BARS = COARSE.slice(WIN.i0, WIN.i1 + 1);
+const RING = {
+  x: CG.x(WIN.i0) - 16,
+  w: CG.x(WIN.i1) - CG.x(WIN.i0) + 32,
+  top: CG.scale(Math.max(...WIN_BARS.map((b) => b.h))) - 22,
+  bottom: CG.scale(Math.min(...WIN_BARS.map((b) => b.l))) + 22,
+};
 /**
- * The zoom is centred on MAJOR_LENS, which spans a trough and the peak after
- * it — so the window climbs overall and still has red bars inside it, which is
- * exactly the claim "satu candle merah ... bisa saja cuma noise".
+ * Zoom to FIT the ring, not by a round number: x so the ring fills the plot's
+ * width, y so its price range fills the plot's height. That is what a charting
+ * app does when you drag a box, and it is why the bars appear to split rather
+ * than merely grow.
  */
-const WIN_MID = (MAJOR_LENS[0] + MAJOR_LENS[1]) / 2;
-const coarseAt = (t: number) => Math.round(t * (COARSE_N - 1));
-const WIN_BARS = COARSE.slice(coarseAt(MAJOR_LENS[0]), coarseAt(MAJOR_LENS[1]) + 1);
-const WIN_Y = (CG.scale(Math.max(...WIN_BARS.map((b) => b.h))) + CG.scale(Math.min(...WIN_BARS.map((b) => b.l)))) / 2;
-const WIN_X = BOX.x + BOX.w * WIN_MID;
+const KX = BOX.w / RING.w;
+const KY = (BOX.h * 0.76) / (RING.bottom - RING.top);
+const RING_MID = { x: RING.x + RING.w / 2, y: (RING.top + RING.bottom) / 2 };
 const CARD_MID = { x: theme.canvas.width / 2, y: BOX.y + BOX.h / 2 };
 
-/** The reddest bar in the middle of the climb — what "satu candle merah" points at. */
+/** The reddest bar in the middle of the climb — what "satu candle merah" rings. */
 const RED = (() => {
   const mid = Math.round(FINE_N * 0.55);
   for (let d = 0; d < FINE_N; d++) {
-    for (const i of [mid + d, mid - d]) {
-      if (i >= 0 && i < FINE_N && FINE[i].c < FINE[i].o) return i;
-    }
+    for (const i of [mid + d, mid - d]) if (i >= 0 && i < FINE_N && FINE[i].c < FINE[i].o) return i;
   }
   return mid;
 })();
@@ -91,7 +104,7 @@ const P_GRADUAL = plot(GRADUAL, paneBox(0), { pad: 0.14 });
 const P_STEEP = plot(STEEP, paneBox(1), { pad: 0.14, range: [GRADUAL.lo, GRADUAL.hi] });
 
 /** One time axis, drawn under the plot in whatever unit the timeframe is in. */
-const TimeAxis = ({ marks, unit, opacity }: { marks: number[]; unit: string; opacity: number }) => {
+const TimeAxis = ({ marks, year, opacity }: { marks: number[]; year: boolean; opacity: number }) => {
   if (opacity <= 0.001) return null;
   return (
     <Layer opacity={opacity}>
@@ -110,7 +123,7 @@ const TimeAxis = ({ marks, unit, opacity }: { marks: number[]; unit: string; opa
               fontWeight={theme.text.axis.weight}
               fill={theme.color.slate}
             >
-              {m === 0 ? "0" : `${m} ${unit}`}
+              {monthLabel(m, year || i === 0)}
             </text>
           </g>
         );
@@ -123,7 +136,8 @@ export const Scene11 = () => {
   const f = useCurrentFrame();
 
   const coarseDraw = progress(f, T.major - 40, 90);
-  const zoom = f >= ZOOM.at ? progress(f, ZOOM.at, ZOOM.over) : 0;
+  const ring = f >= T.ring ? progress(f, T.ring, 22) : 0;
+  const zoom = f >= T.zoom ? progress(f, T.zoom, ZOOM_OVER) : 0;
   const fine = f >= SWAP.at ? progress(f, SWAP.at, SWAP.over) : 0;
   const first = f >= T.swap ? fadeOut(f, T.swap, 30) : 1;
 
@@ -136,11 +150,11 @@ export const Scene11 = () => {
   const push = cutPushIn(g, CUTS.toSize, PUSH);
   const blur = cutBlur(g, CUTS.toSize);
 
-  /** The coarse chart closes on the window while the fine one takes over. */
-  const k = 1 + (ZOOM.to - 1) * zoom;
-  const coarseTx = `translate(${CARD_MID.x - k * WIN_X}px, ${CARD_MID.y - k * WIN_Y}px) scale(${k})`;
-  /** The fine chart meets it coming the other way, so the two sizes converge. */
-  const fineK = 0.88 + 0.12 * fine;
+  const kx = 1 + (KX - 1) * zoom;
+  const ky = 1 + (KY - 1) * zoom;
+  const coarseTx = `translate(${CARD_MID.x - kx * RING_MID.x}px, ${CARD_MID.y - ky * RING_MID.y}px) scale(${kx}, ${ky})`;
+  /** The small bars meet it coming the other way, so the two sizes converge. */
+  const fineK = 0.9 + 0.1 * fine;
 
   const redX = FG.x(RED);
   const redY = FG.scale(FINE[RED].h);
@@ -169,7 +183,22 @@ export const Scene11 = () => {
               >
                 {fine < 0.999 && (
                   <div style={{ position: "absolute", inset: 0, transform: coarseTx, transformOrigin: "0px 0px", opacity: 1 - fine }}>
-                    <CandleChart bars={COARSE} box={BOX} reveal={coarseDraw} axis={false} pad={0.12} />
+                    <CandleChart bars={COARSE} box={BOX} reveal={coarseDraw} ticks={TICKS} tickLabels={false} pad={0.12} />
+                    {/* the ring travels with the chart it marks */}
+                    {ring > 0.001 && (
+                      <Layer opacity={ring * (1 - zoom)}>
+                        <rect
+                          x={RING.x}
+                          y={RING.top}
+                          width={RING.w}
+                          height={RING.bottom - RING.top}
+                          rx={12}
+                          fill="none"
+                          stroke={theme.color.slate}
+                          strokeWidth={theme.shape.rule}
+                        />
+                      </Layer>
+                    )}
                   </div>
                 )}
                 {fine > 0.001 && (
@@ -187,18 +216,13 @@ export const Scene11 = () => {
                 )}
               </div>
 
-              {/* the months leave with the ZOOM, not with the swap: an axis that
-                  held still while the bars grew would be measuring nothing */}
-              <TimeAxis marks={MAJOR_MONTHS} unit="bln" opacity={progress(f, T.major - 20, 30) * (1 - zoom)} />
-              <TimeAxis marks={FINE_DAYS} unit="hari" opacity={fine} />
+              {/* the months leave with the ZOOM: an axis that held still while
+                  the bars grew would be measuring something off screen */}
+              <TimeAxis marks={MAJOR_MONTHS} year={false} opacity={progress(f, T.major - 20, 30) * (1 - zoom)} />
+              <TimeAxis marks={MAJOR_LENS_MONTHS} year={false} opacity={fine} />
 
-              {/* what the fat bars are: months of price, summarised */}
-              {coarseDraw > 0.5 && zoom < 0.4 && (
-                <Chip label="Major trend" x={BOX.x + BOX.w * 0.28} y={CG.scale(COARSE[coarseAt(0.28)].h) - 86} tone="indigo" at={T.major} />
-              )}
-
-              {/* and what the small ones are: the same price, day by day */}
-              {fine > 0.5 && <Chip label="Minor swing" x={FG.x(Math.round(FINE_N * 0.2))} y={FG.scale(FINE[Math.round(FINE_N * 0.2)].h) - 86} tone="slate" at={SWAP.at + SWAP.over} />}
+              {coarseDraw > 0.5 && zoom < 0.3 && <Chip label="Major trend" x={BOX.x + BOX.w * 0.22} y={BOX.y + 40} tone="indigo" at={T.major} />}
+              {ring > 0.4 && zoom < 0.3 && <Chip label="Minor swing" x={RING.x + RING.w / 2} y={RING.top - 46} tone="slate" at={T.ring + 10} />}
 
               {/* one red bar, ringed, then named for what it is */}
               {f >= T.red && fine > 0.5 && (

@@ -124,48 +124,23 @@ export const CYCLE_PHASES = {
 };
 
 /**
- * SC11 module 1. Drawn twice from ONE shape: once with the jitter (the swings)
- * and once without it (the trend). That is the claim the scene makes, so it is
- * built rather than illustrated.
- */
-/**
- * A STEEP climb. The rises are given little horizontal room and a lot of price;
- * the pullbacks get the opposite. Weight is what controls slope here — the plot
- * normalises every curve to its own box, so raising the prices alone would
- * change nothing on screen. Narrow risers and wide treads is what "curam" looks
- * like once the chart is fitted to the card.
- */
-const MAJOR_LEGS: Shape = {
-  from: 4400,
-  legs: [
-    { to: 5020, weight: 0.65 },
-    { to: 4780, weight: 1.25 },
-    { to: 5400, weight: 0.65 },
-    { to: 5160, weight: 1.25 },
-    { to: 5780, weight: 0.65 },
-    { to: 5540, weight: 1.25 },
-    { to: 6160, weight: 0.65 },
-    { to: 5920, weight: 1.25 },
-    { to: 6540, weight: 0.65 },
-  ],
-  seed: 19,
-};
-export const MAJOR = make({ ...MAJOR_LEGS, jitter: 0.045 });
-export const MAJOR_TREND = make({ ...MAJOR_LEGS, jitter: 0 });
-/**
- * The swing the lens opens on. Placed just AFTER a trough, so the window is a
- * rising stretch with a red bar or two inside it — "satu candle merah di tengah
- * major uptrend". Centred on the fall it would show a decline, which is a
- * different claim from the one the narration makes.
+ * SC11 module 1 reuses the HOOK — the very chart the episode opened on. The
+ * major trend is not a new shape drawn for the occasion; it is the same two
+ * years the viewer has already been looking at, which is what makes "major"
+ * mean something.
  *
- * Read off the leg weights above: the fourth turn (a trough) lands at t 0.461
- * and the peak after it at 0.539. The window spans both, so the twelve bars
- * inside it climb 549 points overall and five of them are still red — which is
- * the whole point of the shot.
+ * The timeframe starts in June 2024 and runs two years.
  */
-export const MAJOR_LENS: [number, number] = [0.44, 0.56];
-/** The climb spans two years. Ticks every six months, in months. */
+export const MAJOR_FROM = { month: 5, year: 2024 }; // 0 = January
 export const MAJOR_MONTHS = [0, 6, 12, 18, 24];
+/**
+ * The stretch SC11 zooms into: months 12 to 15, so the window lands on whole
+ * month boundaries and the daily axis can be labelled Jun–Sep 2025 rather than
+ * on some arbitrary fraction. Eleven coarse bars, rising 385 points overall,
+ * four of them red — which is the claim the shot is there to make.
+ */
+export const MAJOR_LENS: [number, number] = [0.5, 0.625];
+export const MAJOR_LENS_MONTHS = [12, 13, 14, 15];
 
 /** SC11 module 2 — the same climb at two speeds. */
 export const GRADUAL = make({
