@@ -41,15 +41,25 @@ const T = {
  * says it is: at the base when accumulation is named, at the top when
  * distribution is.
  */
-const DRAW_AT = [T.decline, T.accumulation, T.markup, T.distribution, T.cycle, T.cycle + 90];
+const DRAW_AT = [
+  T.decline,
+  T.accumulation,
+  T.markup,
+  T.distribution,
+  T.cycle,
+  T.cycle + 90,
+];
 const DRAW_TO = [0, 0.28, 0.36, 0.78, 0.93, 1];
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 20, w: theme.stage.plot.w, h: theme.stage.plot.h - 90 };
+const BOX = {
+  x: theme.stage.plot.x,
+  y: theme.stage.plot.y + 20,
+  w: theme.stage.plot.w,
+  h: theme.stage.plot.h - 90,
+};
 /** Half-height of a phase band beyond the prices it covers. */
 const BAND_PAD = 26;
 /** Bars across the whole cycle. Dense enough to read as a chart, not a diagram. */
 const COUNT = 120;
-/** Well below the top 150px, so it can never crowd the logo zone. */
-const LOOP = { x: 1620, y: 300 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BARS = candles(CYCLE, COUNT, 53, 0.012);
@@ -68,27 +78,107 @@ const bandFor = (win: [number, number]) => {
 const BASE = bandFor(CYCLE_PHASES.accumulation);
 const TOP = bandFor(CYCLE_PHASES.distribution);
 
-const PHASES = [
-  { label: "Markdown", win: CYCLE_PHASES.markdown, tone: "slate" as const, wave: 0 },
-  { label: "Accumulation", win: CYCLE_PHASES.accumulation, tone: "indigo" as const, wave: 0 },
-  { label: "Markup", win: CYCLE_PHASES.markup, tone: "slate" as const, wave: 1 },
-  { label: "Distribution", win: CYCLE_PHASES.distribution, tone: "cyan" as const, wave: 1 },
+/**
+ * Each phase is named AND pointed at: the chip says which stretch, the column
+ * behind it shows which stretch. The highlight is a spotlight, not a legend —
+ * it hands over to the next phase rather than accumulating, so at any moment
+ * exactly one part of the chart is the one being talked about.
+ *
+ * The fifth entry is the point of the whole scene: the cycle closes back into
+ * markdown. That used to be a loop icon in the corner, which asked the viewer
+ * to take the repetition on trust; naming the last stretch shows it instead.
+ */
+const PHASES: {
+  label: string;
+  win: [number, number];
+  tone: "slate" | "indigo" | "cyan";
+  at: number;
+  anchor?: "left";
+}[] = [
+  {
+    label: "Markdown",
+    win: CYCLE_PHASES.markdown,
+    tone: "slate" as const,
+    at: T.chipsA,
+  },
+  {
+    label: "Accumulation",
+    win: CYCLE_PHASES.accumulation,
+    tone: "indigo" as const,
+    at: T.chipsA + 22,
+  },
+  {
+    label: "Markup",
+    win: CYCLE_PHASES.markup,
+    tone: "slate" as const,
+    at: T.chipsB,
+  },
+  {
+    label: "Distribution",
+    win: CYCLE_PHASES.distribution,
+    tone: "cyan" as const,
+    at: T.chipsB + 22,
+  },
+  /**
+   * Flush LEFT against its own stretch rather than centred on it. The repeat
+   * window is narrow and butts straight up against distribution's, so a centred
+   * chip runs into the word beside it.
+   */
+  {
+    label: "Markdown",
+    win: CYCLE_PHASES.repeat,
+    tone: "slate" as const,
+    at: T.loop,
+    anchor: "left" as const,
+  },
 ];
+/** Wash fills, one per tone — the same hues, at the strength a tint should be. */
+const WASH: Record<string, string> = {
+  slate: "rgba(98, 98, 102, 0.10)",
+  indigo: theme.color.indigoWash,
+  cyan: theme.color.cyanWash,
+};
+/** Frames a spotlight takes to arrive, and to hand over to the next one. */
+const SPOT = 18;
 
 export const Scene10 = () => {
   const f = useCurrentFrame();
   const draw = hold(f, DRAW_AT, DRAW_TO);
   const base = f >= T.accumulation ? progress(f, T.accumulation, 30) : 0;
   const top = f >= T.distribution ? progress(f, T.distribution, 30) : 0;
-  const loop = f >= T.loop ? progress(f, T.loop, 36) : 0;
 
   return (
     <Stage>
       <Card>
+        {/* the stretch being named, right now */}
+        <Layer>
+          {PHASES.map((p, i) => {
+            const next = PHASES[i + 1];
+            const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
+            const outAt = next && f >= next.at ? progress(f, next.at, SPOT) : 0;
+            const on = inAt * (1 - outAt);
+            if (on <= 0.001) return null;
+            return (
+              <rect
+                key={`${p.label}${i}`}
+                x={xAt(p.win[0])}
+                y={BOX.y}
+                width={xAt(p.win[1]) - xAt(p.win[0])}
+                height={BOX.h}
+                fill={WASH[p.tone]}
+                opacity={on}
+              />
+            );
+          })}
+        </Layer>
+
         {/* the base: a floor being built, so indigo */}
         <RangeBand
           x={xAt(CYCLE_PHASES.accumulation[0])}
-          w={xAt(CYCLE_PHASES.accumulation[1]) - xAt(CYCLE_PHASES.accumulation[0])}
+          w={
+            xAt(CYCLE_PHASES.accumulation[1]) -
+            xAt(CYCLE_PHASES.accumulation[0])
+          }
           top={BASE.top}
           bottom={BASE.bottom}
           tone="indigo"
@@ -98,7 +188,10 @@ export const Scene10 = () => {
         {/* the top: a ceiling forming, so cyan */}
         <RangeBand
           x={xAt(CYCLE_PHASES.distribution[0])}
-          w={xAt(CYCLE_PHASES.distribution[1]) - xAt(CYCLE_PHASES.distribution[0])}
+          w={
+            xAt(CYCLE_PHASES.distribution[1]) -
+            xAt(CYCLE_PHASES.distribution[0])
+          }
           top={TOP.top}
           bottom={TOP.bottom}
           tone="cyan"
@@ -106,26 +199,29 @@ export const Scene10 = () => {
           label="Distribution"
         />
 
-        <CandleChart bars={BARS} box={BOX} reveal={draw} axis={false} pad={0.12} />
-
-        {/* the cycle repeats — said quietly, once, in the corner */}
-        {loop > 0.001 && (
-          <Layer opacity={loop}>
-            <path d={`M ${LOOP.x} ${LOOP.y} a 34 34 0 1 1 -24 -32`} fill="none" stroke={theme.color.slate} strokeWidth={theme.shape.rule} strokeLinecap="round" />
-            <polygon points={`${LOOP.x - 24},${LOOP.y - 44} ${LOOP.x - 32},${LOOP.y - 22} ${LOOP.x - 8},${LOOP.y - 26}`} fill={theme.color.slate} />
-          </Layer>
-        )}
+        <CandleChart
+          bars={BARS}
+          box={BOX}
+          reveal={draw}
+          axis={false}
+          pad={0.12}
+        />
       </Card>
 
       {/* one chip per phase, under the stretch of line it names */}
       {PHASES.map((p, i) => (
         <Chip
-          key={p.label}
+          key={`${p.label}${i}`}
           label={p.label}
-          x={(xAt(p.win[0]) + xAt(p.win[1])) / 2}
+          x={
+            p.anchor === "left"
+              ? xAt(p.win[0]) + 20
+              : (xAt(p.win[0]) + xAt(p.win[1])) / 2
+          }
           y={theme.stage.caption.y}
+          anchor={p.anchor ?? "center"}
           tone={p.tone}
-          at={(p.wave === 0 ? T.chipsA : T.chipsB) + (i % 2) * 22}
+          at={p.at}
         />
       ))}
     </Stage>
