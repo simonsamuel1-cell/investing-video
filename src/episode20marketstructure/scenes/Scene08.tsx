@@ -59,9 +59,23 @@ const TRIM = 11;
  */
 const GUESS = { len: 230, rise: 140, gap: 30 };
 const HOOK_ROOM = 330;
-/** Two lines under the chart, inside the card. */
-const LINE_Y = [786, 842];
+/**
+ * Two lines ABOVE the card, in the strip between the safe top and the white
+ * surface. Off the chart entirely, so nothing has to be read through candles —
+ * and both lines clear the logo zone's x limit at this width.
+ */
+const LINE_Y = [100, 156];
 const BIG = { one: 210, word: 96 };
+/** One shared style for both sentence lines, so they cannot drift apart. */
+const LINE_STYLE = {
+  position: "absolute" as const,
+  left: theme.canvas.width / 2,
+  transform: "translate(-50%, -50%)",
+  textAlign: "center" as const,
+  whiteSpace: "nowrap" as const,
+  fontSize: theme.text.body.size,
+  fontWeight: theme.text.body.weight,
+};
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(DESCENT, BOX, { pad: 0.12 });
@@ -141,7 +155,10 @@ export const Scene08 = () => {
           position: "absolute",
           inset: 0,
           transform: `translate(${dx}px, ${dy}px)`,
-          filter: Math.max(blur, exitBlur) > 0.05 ? `blur(${Math.max(blur, exitBlur)}px)` : undefined,
+          filter:
+            Math.max(blur, exitBlur) > 0.05
+              ? `blur(${Math.max(blur, exitBlur)}px)`
+              : undefined,
         }}
       >
         <Card>
@@ -246,43 +263,32 @@ export const Scene08 = () => {
             </div>
           )}
 
-          {/* and then under it, where it can be read against the chart */}
+          {/* and then above it, where it is read without the chart in the way */}
           {before && sentenceOut > 0.001 && f >= T.line1 && (
-            <div
-              style={{
-                position: "absolute",
-                left: theme.canvas.width / 2,
-                top: LINE_Y[0],
-                transform: "translate(-50%, -50%)",
-                textAlign: "center",
-                whiteSpace: "nowrap",
-                fontSize: theme.text.body.size,
-                fontWeight: theme.text.body.weight,
-                opacity: sentenceOut,
-              }}
-            >
+            <>
               <div
                 style={{
+                  ...LINE_STYLE,
+                  top: LINE_Y[0],
                   color: theme.color.ink,
-                  opacity: l1.opacity,
-                  transform: `translateY(${l1.dy}px)`,
+                  opacity: sentenceOut * l1.opacity,
+                  marginTop: l1.dy,
                 }}
               >
                 Anggap tren berlanjut sampai
               </div>
               <div
                 style={{
-                  marginTop: LINE_Y[1] - LINE_Y[0] - theme.text.body.size,
+                  ...LINE_STYLE,
+                  top: LINE_Y[1],
                   color: theme.color.indigo,
-                  textDecoration: "underline",
-                  textUnderlineOffset: 8,
-                  opacity: l2.opacity,
-                  transform: `translateY(${l2.dy}px)`,
+                  opacity: sentenceOut * l2.opacity,
+                  marginTop: l2.dy,
                 }}
               >
                 chart membuktikan sebaliknya
               </div>
-            </div>
+            </>
           )}
 
           {/* the job, as a contrast: not guessing — recognising */}
@@ -298,7 +304,7 @@ export const Scene08 = () => {
                 strikeInk={theme.color.indigo}
               />
               <Chip
-                label="Mengenali perubahan"
+                label="Kenali perubahan"
                 x={theme.canvas.width / 2}
                 y={LINE_Y[1]}
                 tone="indigo"
