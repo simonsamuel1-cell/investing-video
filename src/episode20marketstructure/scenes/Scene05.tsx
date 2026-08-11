@@ -63,6 +63,8 @@ const LABEL_ANCHOR = "right" as const;
 const TROUGH_DY = [0, -10, 0];
 /** Frames a connector takes to appear alongside the mark it arrives with. */
 const LINK_IN = 14;
+/** The pullback's caption sits at the foot of the card, out of the chart. */
+const BREATH_CHIP_Y = theme.stage.card.y + theme.stage.card.h - 50;
 /**
  * The staircase is not traced on. SC04 was this same chart cropped to its first
  * step; the scene opens on that crop and DOLLIES BACK until the whole climb is
@@ -180,8 +182,10 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
         );
       })}
 
-      {/* clears the peak's own chip, which sits 46px above the turn */}
-      {breath > 0.5 && <Chip label="Ambil napas" x={(from.x + to.x) / 2} y={from.y - 128} tone="indigo" at={SC05.breathChip} />}
+      {/* Down at the foot of the card, clear of the line and of every mark.
+          Still centred on the pullback it names, so it reads as a caption for
+          that stretch rather than for the chart as a whole. */}
+      {breath > 0.5 && <Chip label="Pembeli ambil napas" x={(from.x + to.x) / 2} y={BREATH_CHIP_Y} tone="indigo" at={SC05.breathChip} />}
     </>
   );
 };
