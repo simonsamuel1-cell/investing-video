@@ -302,22 +302,39 @@ export const Scene11 = () => {
               />
               <TimeAxis marks={MAJOR_LENS_MONTHS} year={false} opacity={fine} />
 
-              {coarseDraw > 0.5 && zoom < 0.3 && (
+              {/* The title names the TIMEFRAME on screen, so it changes with
+                  it: the same slot says what you are looking at, rather than
+                  two labels arguing about which chart this is. */}
+              {coarseDraw > 0.5 && zoom < 0.999 && (
                 <Chip
                   label="Major Trend: Uptrend"
                   x={theme.canvas.width / 2}
                   y={TITLE_Y}
                   tone="indigo"
                   at={T.major}
+                  opacity={1 - zoom}
                 />
               )}
-              {ring > 0.4 && zoom < 0.3 && (
+              {zoom > 0.001 && (
+                <Chip
+                  label="Minor Swing"
+                  x={theme.canvas.width / 2}
+                  y={TITLE_Y}
+                  tone="indigo"
+                  at={T.zoom}
+                  opacity={zoom}
+                />
+              )}
+
+              {/* the pointer on the ring, which the title then takes over from */}
+              {ring > 0.4 && zoom < 0.999 && (
                 <Chip
                   label="Minor swing"
                   x={RING.x + RING.w / 2}
                   y={RING.top - 46}
                   tone="slate"
                   at={T.ring + 10}
+                  opacity={1 - zoom}
                 />
               )}
 
