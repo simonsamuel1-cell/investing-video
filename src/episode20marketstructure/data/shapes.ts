@@ -146,37 +146,40 @@ export const MAJOR_LENS_MONTHS = [10, 11, 12, 13];
 /**
  * What those three months look like day by day — traced off Simon's reference.
  *
- * The character is what matters and it rhymes with the stretch the ring marks:
- * a long, choppy base that goes nowhere for more than half the window, then one
- * decisive rally, a top, and a pullback. That shape is why the scene works —
- * inside it there are plenty of red bars, and none of them ended the climb.
+ * A climb the whole way, but a rough one: the first half is chop that gains
+ * almost nothing, then one decisive leg, then a top that is fought over. That
+ * shape is why the scene works — there are red bars all through it, and none of
+ * them ended the climb.
  */
 export const MINOR = make({
-  from: 5000,
+  from: 4960,
   legs: [
-    { to: 4830, weight: 0.5 },
-    { to: 4965, weight: 0.4 },
-    { to: 4870, weight: 0.6 },
-    { to: 4930, weight: 0.35 },
-    { to: 4815, weight: 0.9 },
-    { to: 4905, weight: 0.5 },
-    { to: 4855, weight: 0.4 },
-    { to: 4960, weight: 0.6 },
-    { to: 4870, weight: 0.4 },
-    { to: 4955, weight: 0.6 },
-    { to: 5035, weight: 0.5 },
-    { to: 4990, weight: 0.3 },
-    { to: 5065, weight: 0.4 },
-    { to: 5010, weight: 0.3 },
-    { to: 5330, weight: 0.7 },
-    { to: 5430, weight: 0.45 },
-    { to: 5380, weight: 0.3 },
-    { to: 5600, weight: 0.7 },
-    { to: 5470, weight: 0.5 },
-    { to: 5520, weight: 0.35 },
+    { to: 4880, weight: 0.35 },
+    { to: 5010, weight: 0.35 },
+    { to: 4950, weight: 0.4 },
+    { to: 5030, weight: 0.4 },
+    { to: 4940, weight: 0.45 },
+    { to: 5020, weight: 0.4 },
+    { to: 5090, weight: 0.45 },
+    { to: 5040, weight: 0.3 },
+    { to: 5130, weight: 0.4 },
+    { to: 5075, weight: 0.3 },
+    { to: 5160, weight: 0.35 },
+    { to: 5100, weight: 0.3 },
+    { to: 5420, weight: 0.55 },
+    { to: 5350, weight: 0.3 },
+    { to: 5560, weight: 0.45 },
+    { to: 5470, weight: 0.35 },
+    { to: 5640, weight: 0.4 },
+    { to: 5560, weight: 0.3 },
+    { to: 5780, weight: 0.45 },
+    { to: 5590, weight: 0.35 },
+    { to: 5690, weight: 0.4 },
+    { to: 5580, weight: 0.35 },
+    { to: 5660, weight: 0.3 },
   ],
-  jitter: 0.03,
-  seed: 47,
+  jitter: 0.028,
+  seed: 53,
 });
 
 /** SC11 module 2 — the same climb at two speeds. */

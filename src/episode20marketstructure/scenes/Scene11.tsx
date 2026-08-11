@@ -94,7 +94,7 @@ const TITLE_Y = 130;
 
 const COARSE = BARS.slice(0, SHOWN);
 const CG = barGrid(COARSE, BOX, 0.12);
-const FINE = candles(MINOR, FINE_N, 47, 0.014);
+const FINE = candles(MINOR, FINE_N, 53, 0.014);
 const FG = barGrid(FINE, BOX, 0.12);
 
 /** Month `m` after the start of the series, as a label. */
@@ -204,9 +204,17 @@ export const Scene11 = () => {
   const push = cutPushIn(g, CUTS.toSize, PUSH);
   const blur = cutBlur(g, CUTS.toSize);
 
+  /**
+   * Interpolated from IDENTITY, not from the framing that puts the ring in the
+   * middle. Solving `t = centre − k·ring` gives a non-zero offset even at k = 1,
+   * which quietly slid the untouched chart a whole bar-width to the right and
+   * left the card's white margins uneven.
+   */
   const kx = 1 + (KX - 1) * zoom;
   const ky = 1 + (KY - 1) * zoom;
-  const coarseTx = `translate(${CARD_MID.x - kx * RING_MID.x}px, ${CARD_MID.y - ky * RING_MID.y}px) scale(${kx}, ${ky})`;
+  const tx = zoom * (CARD_MID.x - KX * RING_MID.x);
+  const ty = zoom * (CARD_MID.y - KY * RING_MID.y);
+  const coarseTx = `translate(${tx}px, ${ty}px) scale(${kx}, ${ky})`;
   /** The small bars meet it coming the other way, so the two sizes converge. */
   const fineK = 0.9 + 0.1 * fine;
 
