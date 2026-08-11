@@ -96,7 +96,6 @@ export const Scene07 = () => {
   const camX = -PAN.dx * pan;
   const shorten = f >= T.shorten ? progress(f, T.shorten, 14) : 0;
   const press = f >= T.lows ? progress(f, T.lows, 28) : 0;
-  const newLow = P.turn(TROUGHS[1]); // the low the sellers force
 
   return (
     <Stage>
