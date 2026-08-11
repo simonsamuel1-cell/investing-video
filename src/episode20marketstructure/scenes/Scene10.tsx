@@ -66,6 +66,12 @@ const BAND_PAD = 26;
 /** The two boxes leave on 5050, as the camera lands on the wide framing. */
 const BOX_OUT = { at: 648, over: 16 };
 /**
+ * The phase names sit INSIDE the card, along its foot. Below it they read as a
+ * caption for the whole picture; on the white, under the stretch each one
+ * names, they read as part of the chart — which is what they are.
+ */
+const CHIP_Y = theme.stage.card.y + theme.stage.card.h - 50;
+/**
  * Where in the window the newest candle sits — not the middle. Centring the
  * head leaves half the card empty ahead of a chart that has not happened yet;
  * four fifths across keeps the history just drawn on screen and still leaves
@@ -317,7 +323,7 @@ export const Scene10 = () => {
               ? xAt(p.win[0]) + 20
               : (xAt(p.win[0]) + xAt(p.win[1])) / 2
           }
-          y={theme.stage.caption.y}
+          y={CHIP_Y}
           anchor={p.anchor ?? "center"}
           tone={p.tone}
           at={p.at}
