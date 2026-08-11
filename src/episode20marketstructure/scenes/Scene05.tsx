@@ -19,6 +19,7 @@ import { theme } from "../theme";
 import { fadeOut, progress } from "../helpers";
 import { peaksOf, troughsOf, type Plot } from "../data/shape";
 import { STAIR, zoomed, clipRight, pathOf, CLIP_X } from "../data/staircaseView";
+import { StepLinks } from "../components/StepLink";
 import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -61,8 +62,6 @@ const LABEL_ANCHOR = "right" as const;
  * trough's height — 10px of clearance is enough to separate the two.
  */
 const TROUGH_DY = [0, -10, 0];
-/** Frames a connector takes to appear alongside the mark it arrives with. */
-const LINK_IN = 14;
 /** The pullback's caption sits at the foot of the card, out of the chart. */
 const BREATH_CHIP_Y = theme.stage.card.y + theme.stage.card.h - 50;
 /**
@@ -86,25 +85,11 @@ const BREATH_CHIP_OUT = { at: 514, over: 14 };
 const PEAKS = peaksOf(STAIRCASE);
 const TROUGHS = troughsOf(STAIRCASE);
 
-type Pt = { x: number; y: number };
-/**
- * The connector between one mark and the next, drawn as a STEP rather than a
- * diagonal: a vertical leg and a horizontal one. A diagonal would only say
- * "these two are joined"; the step says HOW MUCH higher, because the vertical
- * leg is the rise itself and you can read its length off the chart.
- *
- * Peaks rise first and then reach across; troughs reach across first and then
- * rise. Either way the corner lands in open space rather than on the price
- * line, which is what makes the two families readable on the same chart.
- */
-const stepPath = (a: Pt, b: Pt, riseFirst: boolean) =>
-  riseFirst ? `M${a.x},${a.y} L${a.x},${b.y} L${b.x},${b.y}` : `M${a.x},${a.y} L${b.x},${a.y} L${b.x},${b.y}`;
-
 /**
  * `names` lets CG-A fade the HH/HL labels out as SC06's numbers take their
  * place — both want the same spot beside each turn.
  */
-export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoomOver: number; names?: number }) => {
+export const Scene05 = ({ f, p, zoomOver, names = 1, extras = 1 }: { f: number; p: Plot; zoomOver: number; names?: number; extras?: number }) => {
   /** 0 = SC04's framing, 1 = this scene's. The only thing that animates here. */
   const zoom = f < zoomOver ? progress(f, 0, zoomOver) : 1;
   const shorten = f >= SC05.shorten ? progress(f, SC05.shorten, 14) : 0;
@@ -116,11 +101,11 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
 
   return (
     <>
-      <Title text="Uptrend" at={SC05.title} />
+      <Title text="Uptrend" at={SC05.title} opacity={extras} />
 
       {/* the pullback, re-framed: a pause inside the climb, not a warning */}
-      {breath > 0.001 && (
-        <Layer>
+      {breath * extras > 0.001 && (
+        <Layer opacity={extras}>
           <rect
             x={from.x}
             y={from.y - 26}
@@ -146,24 +131,26 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
 
       {/* the steps between marks, arriving with the mark they lead TO and
           leaving the moment the names give way to the short forms */}
-      <Layer opacity={(1 - shorten) * names}>
-        {[
-          ...PEAKS.map((idx, k) => ({ idx, k, at: SC05.highs + k * PEAK_STEP, prev: PEAKS[k - 1], tone: theme.color.indigo, riseFirst: true })),
-          ...TROUGHS.map((idx, k) => ({ idx, k, at: SC05.lows + k * TROUGH_STEP, prev: TROUGHS[k - 1], tone: theme.color.cyan, riseFirst: false })),
-        ]
-          .filter((l) => l.k > 0 && f >= l.at)
-          .map((l) => (
-            <path
-              key={`link${l.tone}${l.idx}`}
-              d={stepPath(p.turn(l.prev), p.turn(l.idx), l.riseFirst)}
-              fill="none"
-              stroke={l.tone}
-              strokeWidth={theme.shape.rule}
-              strokeDasharray="9 9"
-              opacity={progress(f, l.at, LINK_IN)}
-            />
-          ))}
-      </Layer>
+      <StepLinks
+        f={f}
+        opacity={(1 - shorten) * names}
+        links={[
+          ...PEAKS.slice(1).map((idx, k) => ({
+            at: SC05.highs + (k + 1) * PEAK_STEP,
+            from: p.turn(PEAKS[k]),
+            to: p.turn(idx),
+            tone: theme.color.indigo,
+            riseFirst: true,
+          })),
+          ...TROUGHS.slice(1).map((idx, k) => ({
+            at: SC05.lows + (k + 1) * TROUGH_STEP,
+            from: p.turn(TROUGHS[k]),
+            to: p.turn(idx),
+            tone: theme.color.cyan,
+            riseFirst: false,
+          })),
+        ]}
+      />
 
       {PEAKS.map((idx, k) => {
         const t = p.turn(idx);
@@ -193,7 +180,7 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
           Still centred on the pullback it names, so it reads as a caption for
           that stretch rather than for the chart as a whole. */}
       {breath > 0.5 && (
-        <Chip label="Pembeli ambil napas" x={(from.x + to.x) / 2} y={BREATH_CHIP_Y} tone="indigo" at={SC05.breathChip} opacity={breathChipOut} />
+        <Chip label="Pembeli ambil napas" x={(from.x + to.x) / 2} y={BREATH_CHIP_Y} tone="indigo" at={SC05.breathChip} opacity={breathChipOut * extras} />
       )}
     </>
   );
