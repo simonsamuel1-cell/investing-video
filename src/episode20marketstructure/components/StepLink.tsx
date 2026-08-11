@@ -6,10 +6,12 @@
  * higher or lower, because the vertical leg IS the difference and its length
  * can be read straight off the chart.
  *
- * Peaks take their vertical leg first and then reach across; troughs reach
- * across first and then take the vertical. That keeps every corner in open
- * space instead of on the price line, which is what lets the two families sit
- * on one chart without tangling.
+ * Which leg comes first is the CALLER's choice, because the right answer flips
+ * with the trend: in a climb the peaks take their vertical leg first and the
+ * troughs reach across first, and in a descent it is the other way round. What
+ * matters either way is that the corner lands in open space rather than on the
+ * price line — that is what lets the two families sit on one chart without
+ * tangling.
  *
  * SC05 and SC07 both draw from here so the uptrend and the downtrend cannot
  * drift apart — SC19 puts the two pictures side by side and compares them.

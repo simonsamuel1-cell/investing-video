@@ -128,14 +128,16 @@ export const Scene07 = () => {
               from: P.turn(PEAKS[k]),
               to: P.turn(idx),
               tone: theme.color.indigo,
-              riseFirst: true,
+              // right first, then down — the mirror of SC05's rising peaks
+              riseFirst: false,
             })),
             ...TROUGHS.slice(1).map((idx, k) => ({
               at: troughAt(k + 1),
               from: P.turn(TROUGHS[k]),
               to: P.turn(idx),
               tone: theme.color.cyan,
-              riseFirst: false,
+              // down first, then right
+              riseFirst: true,
             })),
           ]}
         />
