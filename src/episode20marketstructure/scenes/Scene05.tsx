@@ -16,7 +16,7 @@ import { PivotLabel } from "../components/PivotLabel";
 import { Chip } from "../components/Chip";
 import { Title } from "../components/Text";
 import { theme } from "../theme";
-import { progress } from "../helpers";
+import { fadeOut, progress } from "../helpers";
 import { peaksOf, troughsOf, type Plot } from "../data/shape";
 import { STAIR, zoomed, clipRight, pathOf, CLIP_X } from "../data/staircaseView";
 import { STAIRCASE, STAIR_BREATH } from "../data/shapes";
@@ -66,6 +66,12 @@ const LINK_IN = 14;
 /** The pullback's caption sits at the foot of the card, out of the chart. */
 const BREATH_CHIP_Y = theme.stage.card.y + theme.stage.card.h - 50;
 /**
+ * It leaves at global 2479 — local 514, one frame after SC06 takes over. The
+ * caption belongs to SC05's reading of the pullback, and SC06 is about to put
+ * numbers on the same chart; two captions at once would be two arguments.
+ */
+const BREATH_CHIP_OUT = { at: 514, over: 14 };
+/**
  * The staircase is not traced on. SC04 was this same chart cropped to its first
  * step; the scene opens on that crop and DOLLIES BACK until the whole climb is
  * in frame, the further steps sliding in from off-card as the camera pulls out.
@@ -103,6 +109,7 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
   const zoom = f < zoomOver ? progress(f, 0, zoomOver) : 1;
   const shorten = f >= SC05.shorten ? progress(f, SC05.shorten, 14) : 0;
   const breath = f >= SC05.breath ? progress(f, SC05.breath, 26) : 0;
+  const breathChipOut = f >= BREATH_CHIP_OUT.at ? fadeOut(f, BREATH_CHIP_OUT.at, BREATH_CHIP_OUT.over) : 1;
 
   const from = p.turn(STAIR_BREATH[0]);
   const to = p.turn(STAIR_BREATH[1]);
@@ -185,7 +192,9 @@ export const Scene05 = ({ f, p, zoomOver, names = 1 }: { f: number; p: Plot; zoo
       {/* Down at the foot of the card, clear of the line and of every mark.
           Still centred on the pullback it names, so it reads as a caption for
           that stretch rather than for the chart as a whole. */}
-      {breath > 0.5 && <Chip label="Pembeli ambil napas" x={(from.x + to.x) / 2} y={BREATH_CHIP_Y} tone="indigo" at={SC05.breathChip} />}
+      {breath > 0.5 && (
+        <Chip label="Pembeli ambil napas" x={(from.x + to.x) / 2} y={BREATH_CHIP_Y} tone="indigo" at={SC05.breathChip} opacity={breathChipOut} />
+      )}
     </>
   );
 };
