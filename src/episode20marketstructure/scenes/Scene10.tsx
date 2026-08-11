@@ -9,15 +9,20 @@
  * Room grammar holds: the base tints INDIGO (a floor is being built) and the
  * top tints CYAN (a ceiling is forming). SC12 and SC13 then trade on exactly
  * that association.
+ *
+ * Drawn as CANDLES. The two phase bands are measured off the candles' own highs
+ * and lows rather than off the closes, so a band always covers everything that
+ * actually happened inside its window — a base drawn to the closes would leave
+ * wicks hanging outside the floor it claims to describe.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
-import { StructureLine } from "../components/StructureLine";
+import { CandleChart, barGrid } from "../components/CandleChart";
 import { RangeBand } from "../components/RangeBand";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { hold, progress } from "../helpers";
-import { plot } from "../data/shape";
+import { candles } from "../data/shape";
 import { CYCLE, CYCLE_PHASES } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -41,15 +46,24 @@ const DRAW_TO = [0, 0.28, 0.36, 0.78, 0.93, 1];
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 20, w: theme.stage.plot.w, h: theme.stage.plot.h - 90 };
 /** Half-height of a phase band beyond the prices it covers. */
 const BAND_PAD = 26;
+/** Bars across the whole cycle. Dense enough to read as a chart, not a diagram. */
+const COUNT = 120;
 /** Well below the top 150px, so it can never crowd the logo zone. */
 const LOOP = { x: 1620, y: 300 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-const P = plot(CYCLE, BOX, { pad: 0.12 });
+const BARS = candles(CYCLE, COUNT, 53, 0.012);
+const G = barGrid(BARS, BOX, 0.12);
+/** A phase window, in bars. */
+const barAt = (t: number) => Math.round(t * (BARS.length - 1));
+const xAt = (t: number) => G.x(barAt(t));
 
 const bandFor = (win: [number, number]) => {
-  const inside = CYCLE.samples.filter((s) => s.t >= win[0] && s.t <= win[1]).map((s) => s.p);
-  return { top: P.y(Math.max(...inside)) - BAND_PAD, bottom: P.y(Math.min(...inside)) + BAND_PAD };
+  const inside = BARS.slice(barAt(win[0]), barAt(win[1]) + 1);
+  return {
+    top: G.scale(Math.max(...inside.map((b) => b.h))) - BAND_PAD,
+    bottom: G.scale(Math.min(...inside.map((b) => b.l))) + BAND_PAD,
+  };
 };
 const BASE = bandFor(CYCLE_PHASES.accumulation);
 const TOP = bandFor(CYCLE_PHASES.distribution);
@@ -73,8 +87,8 @@ export const Scene10 = () => {
       <Card>
         {/* the base: a floor being built, so indigo */}
         <RangeBand
-          x={P.x(CYCLE_PHASES.accumulation[0])}
-          w={P.x(CYCLE_PHASES.accumulation[1]) - P.x(CYCLE_PHASES.accumulation[0])}
+          x={xAt(CYCLE_PHASES.accumulation[0])}
+          w={xAt(CYCLE_PHASES.accumulation[1]) - xAt(CYCLE_PHASES.accumulation[0])}
           top={BASE.top}
           bottom={BASE.bottom}
           tone="indigo"
@@ -83,8 +97,8 @@ export const Scene10 = () => {
         />
         {/* the top: a ceiling forming, so cyan */}
         <RangeBand
-          x={P.x(CYCLE_PHASES.distribution[0])}
-          w={P.x(CYCLE_PHASES.distribution[1]) - P.x(CYCLE_PHASES.distribution[0])}
+          x={xAt(CYCLE_PHASES.distribution[0])}
+          w={xAt(CYCLE_PHASES.distribution[1]) - xAt(CYCLE_PHASES.distribution[0])}
           top={TOP.top}
           bottom={TOP.bottom}
           tone="cyan"
@@ -92,7 +106,7 @@ export const Scene10 = () => {
           label="Distribution"
         />
 
-        <StructureLine plot={P} draw={draw} head />
+        <CandleChart bars={BARS} box={BOX} reveal={draw} axis={false} pad={0.12} />
 
         {/* the cycle repeats — said quietly, once, in the corner */}
         {loop > 0.001 && (
@@ -108,7 +122,7 @@ export const Scene10 = () => {
         <Chip
           key={p.label}
           label={p.label}
-          x={(P.x(p.win[0]) + P.x(p.win[1])) / 2}
+          x={(xAt(p.win[0]) + xAt(p.win[1])) / 2}
           y={theme.stage.caption.y}
           tone={p.tone}
           at={(p.wave === 0 ? T.chipsA : T.chipsB) + (i % 2) * 22}
