@@ -9,23 +9,20 @@
  * The line pauses between legs rather than running at one speed. Each leg is a
  * different decision, and the pause is where the narration explains it.
  *
- * IT DOES NOT START FROM NOTHING. Frame 1450 is SC03's chart, unchanged and
- * whole. The mechanism is not drawn onto an empty card — SC03's line TRANSFORMS
- * into it, left to right, on the same beats the drawing used to run on. That is
- * the honest picture: the mechanism is not a new shape, it is the shape the
- * previous scene was pointing at, seen close up.
+ * It does not start from nothing. SC03's line wound itself back into a single
+ * dot; that dot is still on screen on frame 0, travels to where THIS line
+ * begins, and the line grows out of it. The card never left, so the only thing
+ * that changes across the cut is the one element being handed over.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
-import { Reference } from "../components/StructureLine";
-import { PivotLabel } from "../components/PivotLabel";
+import { StructureLine, Reference } from "../components/StructureLine";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { hold, progress, progressInOut } from "../helpers";
+import { hold, progress, progressInOut, fadeOut } from "../helpers";
 import { plot } from "../data/shape";
 import { MECHANISM } from "../data/shapes";
-import { morph, morphPoints, morphFront, pathOf } from "../transitions/Morph";
-import { HOOK_LINE } from "./Scene03";
+import { HANDOFF_FROM } from "./Scene03";
 import { STAIR_START } from "../continuity/StaircaseGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -46,11 +43,11 @@ const DRAW_TO = [0, 0.36, 0.36, 0.62, 0.62, 1];
 const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
 const BRACKET_DX = 58;
 /**
- * How soft the transformation front is, as a fraction of the line's width.
- * Too sharp and it reads as a wipe passing over the chart; too soft and the
- * whole line squirms at once and the left-to-right reading is lost.
+ * The handed-over dot travels for these frames and then waits, still, until the
+ * line starts drawing at T.rise. The wait matters: it is what makes the line
+ * look like it came OUT of the dot rather than past it.
  */
-const MORPH_FRONT = 0.12;
+const HANDOFF_OVER = 40;
 /**
  * THE HANDOFF INTO SC05, at 1964/1965.
  *
@@ -65,8 +62,8 @@ const EXIT = { at: 494, over: 20 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(MECHANISM, BOX, { pad: 0.12 });
-/** SC03's shape paired point-for-point with this one. Built once, at load. */
-const MORPH = morph(HOOK_LINE, P.points, 260, MORPH_FRONT);
+/** Where this line begins — the dot's destination. */
+const START = P.points[0];
 const LOW = P.turn(0); // the prior low the pullback must respect
 const PEAK = P.turn(1);
 const TROUGH = P.turn(2); // where the pullback actually stopped
@@ -78,17 +75,25 @@ export const Scene04 = () => {
   const bracket = f >= T.floor + 20 ? progress(f, T.floor + 20, 24) : 0;
   const arrows = f >= T.floor + 34 ? progress(f, T.floor + 34, 30) : 0;
 
+  // ── the element handed over from SC03 ──
+  const travel = progressInOut(f, 0, HANDOFF_OVER);
+  const seed = { x: HANDOFF_FROM.x + (START.x - HANDOFF_FROM.x) * travel, y: HANDOFF_FROM.y + (START.y - HANDOFF_FROM.y) * travel };
+  // it hands over to the line, so it leaves as the line leaves it
+  const seedOut = f >= T.rise ? fadeOut(f, T.rise, 22) : 1;
+
   // ── clearing the card for the element SC05 picks up ──
   const gone = f >= EXIT.at ? progressInOut(f, EXIT.at, EXIT.over) : 0;
   const stay = 1 - gone;
 
-  // ── SC03's shape becoming this one, on the same beats the drawing used ──
-  const shape = morphPoints(MORPH, draw);
-  const front = morphFront(MORPH, draw);
-
   return (
     <Stage>
       <Card>
+        {seedOut > 0.001 && (
+          <Layer opacity={seedOut}>
+            <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
+          </Layer>
+        )}
+
         {/* the one thing that survives into SC05 — and it never moves */}
         {gone > 0.001 && (
           <Layer>
@@ -98,18 +103,18 @@ export const Scene04 = () => {
 
         <Reference x1={LOW.x} x2={BOX.x + BOX.w} y={LOW.y} draw={floor * stay} label="Titik terendah sebelumnya" />
 
-        {/* The line is ALWAYS whole — what advances is the transformation, not a
-            trim path. At draw 0 this is SC03's chart down to the pixel. */}
-        <Layer opacity={stay}>
-          <path d={pathOf(shape)} fill="none" stroke={theme.color.ink} strokeWidth={theme.shape.line} strokeLinecap="round" strokeLinejoin="round" />
-          {draw > 0.001 && draw < 0.999 && <circle cx={front.x} cy={front.y} r={theme.shape.line + 2} fill={theme.color.ink} />}
-        </Layer>
-
-        {/* the turns are only real once the front has passed them */}
-        {draw >= 0.34 && <PivotLabel x={PEAK.x} y={PEAK.y} label="Puncak 1" tone="indigo" at={T.rise + 86} opacity={stay} />}
-        {draw >= 0.99 && (
-          <PivotLabel x={P.turn(3).x} y={P.turn(3).y} label="Puncak baru" tone="indigo" side="above" at={T.newHigh + 38} opacity={stay} />
-        )}
+        <StructureLine
+          plot={P}
+          draw={draw}
+          head
+          opacity={stay}
+          marks={[
+            ...(draw >= 0.34 ? [{ turn: 1, label: "Puncak 1", at: T.rise + 86, opacity: stay }] : []),
+            ...(draw >= 0.99
+              ? [{ turn: 3, label: "Puncak baru", tone: "indigo" as const, side: "above" as const, at: T.newHigh + 38, opacity: stay }]
+              : []),
+          ]}
+        />
 
         {/* Parked over the DESCENT, not over the peak. Reading its height from
             the peak put it level with "Puncak 1", and the two ran together into

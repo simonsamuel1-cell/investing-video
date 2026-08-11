@@ -47,13 +47,13 @@ const SCENE_FROM = 928;
 /**
  * THE HANDOFF INTO SC04.
  *
- * The LINE ITSELF is what carries over, whole. Only the things written on it —
- * the pivot dots, the two names, the three questions — clear over these frames,
- * leaving the bare shape on the card. SC04 opens on that exact shape and
- * transforms it into the mechanism rather than starting from an empty card.
+ * The line does not fade; it UN-DRAWS, right to left, back into the single
+ * point it grew out of. Everything named on it clears at the same time, so what
+ * survives the cut is one dot on an unchanged card — and SC04's line grows out
+ * of that same dot. The element is genuinely shared, not matched by eye.
  *
- * Clearing ends on 520, two frames before the scene does, so the shape is
- * unmistakably alone when the cut lands.
+ * Ends on 520, two frames before the scene does, so the seed is unmistakably
+ * still and alone when the cut lands.
  */
 const EXIT_OVER = 30;
 /**
@@ -147,8 +147,8 @@ const TURN_AT = (i: number) =>
 const FIRST_PEAK = TURN_BARS.findIndex((t) => t.peak);
 const FIRST_TROUGH = TURN_BARS.findIndex((t) => !t.peak);
 
-/** The shape itself, in canvas coordinates — SC04 morphs out of exactly this. */
-export const HOOK_LINE = CLOSES;
+/** The point the line grows out of — and the one SC04 picks up. */
+export const HANDOFF_FROM = CLOSES[0];
 
 export const Scene03 = () => {
   const f = useCurrentFrame();
@@ -156,12 +156,14 @@ export const Scene03 = () => {
   const s = breathScale(g);
 
   const dissolving = fadeOut(f, T.dissolve, 50);
-  // the annotations clear; the line does not — SC04 needs it
+  // the exit rewinds the same trim path the entrance drew
   const gone = f >= T.exit ? progressInOut(f, T.exit, EXIT_OVER) : 0;
-  const drawn = progress(f, T.dissolve, T.line + 60);
+  const drawn = progress(f, T.dissolve, T.line + 60) * (1 - gone);
   const stay = 1 - gone;
   const strike = (offset: number) => (f >= T.strike + offset ? progress(f, T.strike + offset, 14) : 0);
   const leave = (offset: number) => (f >= T.strike + offset + 20 ? fadeOut(f, T.strike + offset + 20, 16) : 1);
+
+  const seed = breathPoint(HANDOFF_FROM, s);
 
   // the header hands the top strip over to whatever this scene puts there
   const titleOut = progressInOut(f, 0, TITLE_OUT.over);
@@ -214,6 +216,13 @@ export const Scene03 = () => {
           />
         );
       })}
+
+      {/* what the line winds back into, and what SC04 starts from */}
+      {gone > 0.001 && (
+        <Layer opacity={gone}>
+          <circle cx={seed.x} cy={seed.y} r={9} fill={theme.color.indigo} />
+        </Layer>
+      )}
 
       {/* the header SC02 built, leaving from the frame this scene opens on */}
       {titleOut < 0.999 && <TitleBlock cy={TITLE_REST_CY - TITLE_OUT.rise * titleOut} opacity={1 - titleOut} />}
