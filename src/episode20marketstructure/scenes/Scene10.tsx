@@ -10,15 +10,14 @@
  * top tints CYAN (a ceiling is forming). SC12 and SC13 then trade on exactly
  * that association.
  *
- * Drawn as CANDLES. The two phase bands are measured off the candles' own highs
- * and lows rather than off the closes, so a band always covers everything that
- * actually happened inside its window — a base drawn to the closes would leave
- * wicks hanging outside the floor it claims to describe.
+ * Drawn as CANDLES, and each phase is marked in ONE way only — the spotlight
+ * column behind it and the chip beneath it. There used to be a second, tighter
+ * box around the base and the top with its own label; two boxes around the same
+ * stretch made the viewer look for a difference between them that was not there.
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
-import { RangeBand } from "../components/RangeBand";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { hold, progress } from "../helpers";
@@ -56,27 +55,20 @@ const BOX = {
   w: theme.stage.plot.w,
   h: theme.stage.plot.h - 90,
 };
-/** Half-height of a phase band beyond the prices it covers. */
-const BAND_PAD = 26;
 /** Bars across the whole cycle. Dense enough to read as a chart, not a diagram. */
 const COUNT = 120;
+/**
+ * Where in the window the newest candle sits — not the middle. Centring the
+ * head leaves half the card empty ahead of a chart that has not happened yet;
+ * four fifths across keeps the history just drawn on screen and still leaves
+ * somewhere for the next candles to go.
+ */
+const HEAD_AT = 0.82;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BARS = candles(CYCLE, COUNT, 53, 0.012);
-const G = barGrid(BARS, BOX, 0.12);
 /** A phase window, in bars. */
 const barAt = (t: number) => Math.round(t * (BARS.length - 1));
-const xAt = (t: number) => G.x(barAt(t));
-
-const bandFor = (win: [number, number]) => {
-  const inside = BARS.slice(barAt(win[0]), barAt(win[1]) + 1);
-  return {
-    top: G.scale(Math.max(...inside.map((b) => b.h))) - BAND_PAD,
-    bottom: G.scale(Math.min(...inside.map((b) => b.l))) + BAND_PAD,
-  };
-};
-const BASE = bandFor(CYCLE_PHASES.accumulation);
-const TOP = bandFor(CYCLE_PHASES.distribution);
 
 /**
  * Each phase is named AND pointed at: the chip says which stretch, the column
@@ -140,72 +132,128 @@ const WASH: Record<string, string> = {
 };
 /** Frames a spotlight takes to arrive, and to hand over to the next one. */
 const SPOT = 18;
+/**
+ * THE FOLLOWING CAMERA.
+ *
+ * The cycle is the one thing in this episode a viewer must NOT be shown all at
+ * once: seeing the whole shape from frame one gives away that it is a cycle
+ * before the narration has walked through a single phase. So the camera sits in
+ * close and travels right with the drawing, and only pulls back at 4985 — by
+ * which point the viewer has watched each phase happen rather than been handed
+ * a diagram of them.
+ *
+ * It moves on X ONLY. The zoom widens the time axis and leaves prices exactly
+ * where they are, which is what a charting app does and what keeps the four
+ * phase heights comparable while the camera is moving.
+ */
+const ZOOM = 2.4;
+/** Local frames the pull-back takes — global 4985 → 5050. */
+const PULL_BACK = { at: 583, over: 65 };
+/** The window the camera looks through: the card, edge to edge. */
+const WINDOW = {
+  left: theme.stage.card.x,
+  right: theme.stage.card.x + theme.stage.card.w,
+};
+/**
+ * The internal phase boundaries. Each leaves a dashed vertical behind as the
+ * drawing passes it, so that when the camera finally pulls back the whole cycle
+ * is already divided into the parts the viewer just watched being built.
+ */
+const DIVIDERS = [
+  CYCLE_PHASES.markdown[1],
+  CYCLE_PHASES.accumulation[1],
+  CYCLE_PHASES.markup[1],
+  CYCLE_PHASES.distribution[1],
+];
+const clamp = (v: number, lo: number, hi: number) =>
+  v < lo ? lo : v > hi ? hi : v;
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export const Scene10 = () => {
   const f = useCurrentFrame();
   const draw = hold(f, DRAW_AT, DRAW_TO);
-  const base = f >= T.accumulation ? progress(f, T.accumulation, 30) : 0;
-  const top = f >= T.distribution ? progress(f, T.distribution, 30) : 0;
+
+  /**
+   * Close in and follow, then ease back to the plain framing. Both the zoom and
+   * the position are blended toward rest independently, so the widening and the
+   * sliding finish together and there is no seam where a clamp lets go.
+   */
+  const back =
+    f >= PULL_BACK.at ? progress(f, PULL_BACK.at, PULL_BACK.over) : 0;
+  const wide = BOX.w * ZOOM;
+  const focus = WINDOW.left + (WINDOW.right - WINDOW.left) * HEAD_AT;
+  const follow = clamp(focus - wide * draw, WINDOW.right - wide, WINDOW.left);
+  const view = {
+    ...BOX,
+    x: lerp(follow, BOX.x, back),
+    w: BOX.w * lerp(ZOOM, 1, back),
+  };
+  const G = barGrid(BARS, view, 0.12);
+  const xAt = (t: number) => G.x(barAt(t));
 
   return (
     <Stage>
       <Card>
-        {/* the stretch being named, right now */}
-        <Layer>
-          {PHASES.map((p, i) => {
-            const next = PHASES[i + 1];
-            const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
-            const outAt = next && f >= next.at ? progress(f, next.at, SPOT) : 0;
-            const on = inAt * (1 - outAt);
-            if (on <= 0.001) return null;
-            return (
-              <rect
-                key={`${p.label}${i}`}
-                x={xAt(p.win[0])}
-                y={BOX.y}
-                width={xAt(p.win[1]) - xAt(p.win[0])}
-                height={BOX.h}
-                fill={WASH[p.tone]}
-                opacity={on}
-              />
-            );
-          })}
-        </Layer>
+        {/* the card is the window; the chart moves behind it */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: `inset(0px ${theme.canvas.width - WINDOW.right}px 0px ${WINDOW.left}px)`,
+          }}
+        >
+          {/* the stretch being named, right now */}
+          <Layer>
+            {PHASES.map((p, i) => {
+              const next = PHASES[i + 1];
+              const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
+              const outAt =
+                next && f >= next.at ? progress(f, next.at, SPOT) : 0;
+              const on = inAt * (1 - outAt);
+              if (on <= 0.001) return null;
+              return (
+                <rect
+                  key={`${p.label}${i}`}
+                  x={xAt(p.win[0])}
+                  y={BOX.y}
+                  width={xAt(p.win[1]) - xAt(p.win[0])}
+                  height={BOX.h}
+                  fill={WASH[p.tone]}
+                  opacity={on}
+                />
+              );
+            })}
+          </Layer>
 
-        {/* the base: a floor being built, so indigo */}
-        <RangeBand
-          x={xAt(CYCLE_PHASES.accumulation[0])}
-          w={
-            xAt(CYCLE_PHASES.accumulation[1]) -
-            xAt(CYCLE_PHASES.accumulation[0])
-          }
-          top={BASE.top}
-          bottom={BASE.bottom}
-          tone="indigo"
-          draw={base}
-          label="Accumulation"
-        />
-        {/* the top: a ceiling forming, so cyan */}
-        <RangeBand
-          x={xAt(CYCLE_PHASES.distribution[0])}
-          w={
-            xAt(CYCLE_PHASES.distribution[1]) -
-            xAt(CYCLE_PHASES.distribution[0])
-          }
-          top={TOP.top}
-          bottom={TOP.bottom}
-          tone="cyan"
-          draw={top}
-          label="Distribution"
-        />
+          <CandleChart
+            bars={BARS}
+            box={view}
+            reveal={draw}
+            axis={false}
+            pad={0.12}
+          />
 
-        <CandleChart
-          bars={BARS}
-          box={BOX}
-          reveal={draw}
-          axis={false}
-          pad={0.12}
-        />
+          {/* what the camera leaves behind: the divisions it travelled past */}
+          <Layer>
+            {DIVIDERS.map((t) => {
+              const on = clamp((draw - t) / 0.03, 0, 1);
+              if (on <= 0.001) return null;
+              return (
+                <line
+                  key={t}
+                  x1={xAt(t)}
+                  y1={BOX.y}
+                  x2={xAt(t)}
+                  y2={BOX.y + BOX.h}
+                  stroke={theme.color.slate}
+                  strokeWidth={theme.shape.hairline}
+                  strokeDasharray="8 8"
+                  opacity={on * 0.55}
+                />
+              );
+            })}
+          </Layer>
+        </div>
       </Card>
 
       {/* one chip per phase, under the stretch of line it names */}
