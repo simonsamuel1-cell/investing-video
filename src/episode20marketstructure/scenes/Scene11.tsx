@@ -97,7 +97,7 @@ const TITLE_Y = 130;
  * dx positive moves it right, dy positive moves it DOWN from the candle's high.
  * Which candle it starts from is RED, further down.
  */
-const RING_DOT = { r: 34, dx: 0, dy: 26 };
+const RING_DOT = { r: 34, dx: 10, dy: 10};
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COARSE = BARS.slice(0, SHOWN);
@@ -352,7 +352,7 @@ export const Scene11 = () => {
               {f >= T.red && fine > 0.5 && (
                 <Layer opacity={progress(f, T.red, 20)}>
                   <circle
-                    cx={redX + RING_DOT.dx}
+                    cx={redX}
                     cy={redY + RING_DOT.dy}
                     r={RING_DOT.r}
                     fill="none"
