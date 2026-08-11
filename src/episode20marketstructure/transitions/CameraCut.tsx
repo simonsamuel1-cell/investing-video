@@ -30,6 +30,12 @@ export type Cut = {
 export const CUTS: Record<string, Cut> = {
   /** SC01 → SC02: the chart hands over to the title. */
   toTitle: { at: 461, over: 24, distance: 80, blur: 9 },
+  /**
+   * Inside SC08: the principle hands over to the question about what comes
+   * next. A cut rather than a dissolve because the two halves are arguing
+   * different things — one states a rule, the other rejects a habit.
+   */
+  toGuess: { at: 3746, over: 24, distance: 80, blur: 9 },
 };
 
 const curve = (c: Cut) => (global: number) => progressInOut(global, c.at - c.over / 2, c.over);
