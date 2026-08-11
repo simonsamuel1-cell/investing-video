@@ -66,10 +66,20 @@ const PEAK_NAMES = ["High", "Lower high", "Lower high"];
 const PEAK_SHORT = ["H", "LH", "LH"];
 const TROUGH_NAMES = ["Low", "Lower low", "Lower low"];
 const TROUGH_SHORT = ["L", "LL", "LL"];
-/** Matching SC05: the label sits to the LEFT of its dot, height unchanged. */
+/**
+ * The label starts 10px to the RIGHT of its dot; its height is untouched. The
+ * connectors here leave from the LEFT of every mark, so the right-hand side is
+ * the clear one — the mirror of SC05, where it is the other way round.
+ */
 const LABEL_GAP = 46;
-const LABEL_DX = -10;
-const LABEL_ANCHOR = "right" as const;
+const LABEL_DX = 10;
+const LABEL_ANCHOR = "left" as const;
+/**
+ * Per-mark vertical nudge, negative = up. The middle trough's label sat on the
+ * horizontal leg of its own connector, which runs at that trough's height and
+ * passes straight under the word.
+ */
+const TROUGH_DY = [0, -10, 0];
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(DESCENT, BOX, { pad: 0.12 });
@@ -161,23 +171,12 @@ export const Scene07 = () => {
           return (
             <React.Fragment key={`ll${idx}`}>
               <PivotLabel x={t.x} y={t.y} tone="cyan" at={at} />
-              <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={1 - shorten} />
-              <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP} anchor={LABEL_ANCHOR} tone="cyan" at={T.shorten} opacity={shorten} />
+              <Chip label={TROUGH_NAMES[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={at + 4} opacity={1 - shorten} />
+              <Chip label={TROUGH_SHORT[k]} x={t.x + LABEL_DX} y={t.y + LABEL_GAP + TROUGH_DY[k]} anchor={LABEL_ANCHOR} tone="cyan" at={T.shorten} opacity={shorten} />
             </React.Fragment>
           );
         })}
 
-        {/* sellers leaning on it — descriptive pressure, never an exit marker */}
-        {press > 0.001 && (
-          <Layer>
-            {[0, 1, 2].map((i) => {
-              const a = Math.max(0, Math.min(1, press * 3 - i));
-              const y = newLow.y - 98 + 22 * a;
-              const x = newLow.x - 34 + i * 34;
-              return <polygon key={i} points={`${x},${y} ${x - 11},${y - 18} ${x + 11},${y - 18}`} fill={theme.color.slate} opacity={a * 0.9} />;
-            })}
-          </Layer>
-        )}
         {/* down at the foot of the card, matching SC05's caption */}
         {press > 0.4 && (
           <Chip label="Penjual menekan" x={newLow.x} y={theme.stage.card.y + theme.stage.card.h - 50} tone="slate" at={T.lows + 12} />
