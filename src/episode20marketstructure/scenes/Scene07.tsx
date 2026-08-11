@@ -34,14 +34,21 @@ import { DESCENT } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  firstLow: 66, // the level everything after is measured against
-  highs: 84, // "berhenti lebih rendah"
-  lows: 206, // "titik terendah baru"
+  marks: 70, // global 3112 — the first mark lands here
+  press: 206, // "titik terendah baru"
   shorten: 336, // "lower high dan lower low"
   title: 422, // "downtrend"
 };
 const BOX = STAIR_BOX;
-const STEP = 46;
+/**
+ * Every mark and every connector between global 3112 and 3200 — six of them at
+ * 15 frames apart, the last settled by 3197.
+ *
+ * They run in ONE left-to-right sequence rather than as a wave of peaks
+ * followed by a wave of troughs: at this speed two interleaved cadences read as
+ * marks landing at random, and the eye can only follow the shape one way.
+ */
+const STEP = 15;
 /**
  * THE PAN, across ONE CONTINUOUS LINE.
  *
@@ -87,15 +94,16 @@ const PEAKS = peaksOf(DESCENT);
 const TROUGHS = troughsOf(DESCENT);
 /** The staircase, exactly as CG-A left it — the pan's starting view. */
 const STAIR_LINE = STAIR.points;
-const peakAt = (k: number) => T.highs + k * STEP;
-const troughAt = (k: number) => (k === 0 ? T.firstLow : T.lows + (k - 1) * STEP);
+/** Alternating along the line: trough, peak, trough, peak … */
+const troughAt = (k: number) => T.marks + 2 * k * STEP;
+const peakAt = (k: number) => T.marks + (2 * k + 1) * STEP;
 
 export const Scene07 = () => {
   const f = useCurrentFrame();
   const pan = progress(f, 0, PAN.over);
   const camX = -PAN.dx * pan;
   const shorten = f >= T.shorten ? progress(f, T.shorten, 14) : 0;
-  const press = f >= T.lows ? progress(f, T.lows, 28) : 0;
+  const press = f >= T.press ? progress(f, T.press, 28) : 0;
 
   return (
     <Stage>
@@ -185,7 +193,7 @@ export const Scene07 = () => {
             x={theme.stage.card.x + theme.stage.card.w / 2}
             y={theme.stage.card.y + theme.stage.card.h - 50}
             tone="slate"
-            at={T.lows + 12}
+            at={T.press + 12}
           />
         )}
       </Card>
