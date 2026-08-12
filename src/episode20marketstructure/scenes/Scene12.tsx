@@ -13,15 +13,16 @@ import { Stage, Card } from "../components/Stage";
 import { StructureLine } from "../components/StructureLine";
 import { RangeBand } from "../components/RangeBand";
 import { Chip } from "../components/Chip";
-import { Line } from "../components/Text";
 import { theme } from "../theme";
-import { hold, progress, fadeOut, clamp01 } from "../helpers";
+import { hold, progress, clamp01 } from "../helpers";
+import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
 import { plot } from "../data/shape";
 import { CEILING, CEILING_LEVEL, CEILING_HL } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
+/** This scene's `from` in the Composition — needed to read the shared cut. */
+const SCENE_FROM = 5855;
 const T = {
-  recall: 0, // "support dan resistance"
   breakout: 226, // "menembus resistance"
   retint: 280, // "lantai baru"
   retest: 366, // "kembali lalu memantul"
@@ -40,13 +41,32 @@ const HALF = 55;
  * and each label lives on the side the line has left.
  */
 const LABEL_DY = 78;
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 30, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
-const RECALL_X = [700, 1000];
+const BOX = {
+  x: theme.stage.plot.x,
+  y: theme.stage.plot.y + 30,
+  w: theme.stage.plot.w,
+  h: theme.stage.plot.h - 100,
+};
 const PIERCE_T = 0.52;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(CEILING, BOX, { pad: 0.12 });
 const LEVEL_Y = P.y(CEILING_LEVEL);
+
+/**
+ * WHAT SC13 OPENS ON, at 6351.
+ *
+ * There is no transition between the two scenes because there is nothing to
+ * transition: it is one band, and the next scene inherits it in place rather
+ * than drawing a second one. Exported as pixels so the two cannot drift — move
+ * this level and SC13's chart moves with it.
+ */
+export const HANDOFF = {
+  plot: P,
+  level: LEVEL_Y,
+  top: P.y(CEILING_LEVEL + HALF),
+  bottom: P.y(CEILING_LEVEL - HALF),
+};
 
 export const Scene12 = () => {
   const f = useCurrentFrame();
@@ -54,37 +74,73 @@ export const Scene12 = () => {
   const retint = f >= T.retint ? progress(f, T.retint, 26) : 0;
   const pierce = f >= T.breakout ? clamp01((f - T.breakout) / 34) : 0;
 
+  // ── arriving on the rise SC11 left in flight ──
+  const g = f + SCENE_FROM;
+  const dy = cutIn(g, CUTS.toLevel);
+  const blur = cutBlur(g, CUTS.toLevel);
+
   return (
     <Stage>
-      <Card>
-        <RangeBand
-          x={BOX.x}
-          w={BOX.w}
-          top={P.y(CEILING_LEVEL + HALF)}
-          bottom={P.y(CEILING_LEVEL - HALF)}
-          tone="cyan"
-          becomes="indigo"
-          blend={retint}
-          draw={f >= 30 ? progress(f, 30, 26) : 0}
-          pierce={{ x: P.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
-        />
-        {/* the label is the only thing that swaps outright */}
-        <Chip label="Resistance" x={BOX.x + BOX.w - 24} y={LEVEL_Y - LABEL_DY} tone="cyan" anchor="right" at={46} opacity={1 - retint} />
-        <Chip label="Support" x={BOX.x + BOX.w - 24} y={LEVEL_Y + LABEL_DY} tone="indigo" anchor="right" at={T.retint} opacity={retint} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: dy === 0 ? undefined : `translateY(${dy}px)`,
+          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
+        }}
+      >
+        <Card>
+          <RangeBand
+            x={BOX.x}
+            w={BOX.w}
+            top={P.y(CEILING_LEVEL + HALF)}
+            bottom={P.y(CEILING_LEVEL - HALF)}
+            tone="cyan"
+            becomes="indigo"
+            blend={retint}
+            draw={f >= 30 ? progress(f, 30, 26) : 0}
+            pierce={{ x: P.x(PIERCE_T), y: LEVEL_Y, amount: pierce }}
+          />
+          {/* the label is the only thing that swaps outright */}
+          <Chip
+            label="Resistance"
+            x={BOX.x + BOX.w - 24}
+            y={LEVEL_Y - LABEL_DY}
+            tone="cyan"
+            anchor="right"
+            at={46}
+            opacity={1 - retint}
+          />
+          <Chip
+            label="Support"
+            x={BOX.x + BOX.w - 24}
+            y={LEVEL_Y + LABEL_DY}
+            tone="indigo"
+            anchor="right"
+            at={T.retint}
+            opacity={retint}
+          />
 
-        <StructureLine
-          plot={P}
-          draw={draw}
-          head
-          marks={draw >= 0.71 ? [{ turn: CEILING_HL, label: "Higher low", tone: "cyan", side: "below", at: T.higherLow }] : []}
-        />
-      </Card>
-
-      {/* the recall, flashed once at the top of the scene */}
-      <Chip label="Support" x={RECALL_X[0]} y={theme.stage.caption.y} tone="indigo" at={T.recall} opacity={fadeOut(f, 92, 24)} />
-      <Chip label="Resistance" x={RECALL_X[1]} y={theme.stage.caption.y} tone="cyan" at={T.recall + 14} opacity={fadeOut(f, 100, 24)} />
-
-      <Line text="Level sama, dua cerita" x={1540} y={theme.stage.caption.y} at={T.retint + 40} size={theme.text.tag.size} color={theme.color.slate} />
+          <StructureLine
+            plot={P}
+            draw={draw}
+            head
+            marks={
+              draw >= 0.71
+                ? [
+                    {
+                      turn: CEILING_HL,
+                      label: "Higher low",
+                      tone: "cyan",
+                      side: "below",
+                      at: T.higherLow,
+                    },
+                  ]
+                : []
+            }
+          />
+        </Card>
+      </div>
     </Stage>
   );
 };

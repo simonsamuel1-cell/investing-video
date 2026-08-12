@@ -52,6 +52,25 @@ export const CUTS: Record<string, Cut> = {
    * `distance` is unused here; the zoom carries the move.
    */
   toSize: { at: 5211, over: 24, distance: 0, blur: 9 },
+  /**
+   * SC11 → SC12. The comparison of two speeds is finished and the next line is
+   * "Masih ingat support dan resistance?" — a different subject entirely, and a
+   * callback to another episode. A rise is the plainest way to say "and now
+   * this": the two panels leave upward and one full-width card arrives.
+   */
+  toLevel: { at: 5854, over: 24, distance: 80, blur: 9 },
+  /**
+   * SC13 → CG-B. Both sides are a block of centred type — a conclusion, then
+   * the question that opens the next section — so the move is what separates
+   * them: the answer rises out of frame and the question comes up behind it.
+   */
+  toQuestion: { at: 6850, over: 24, distance: 80, blur: 9 },
+  /**
+   * CG-B → SC16. The failing-uptrend chart is finished with and the next thing
+   * is a flat statement about how people read charts — a different kind of
+   * frame entirely, so the move up is what marks the change of register.
+   */
+  toMistake: { at: 7665, over: 24, distance: 80, blur: 9 },
 };
 
 /**

@@ -19,12 +19,15 @@ import type { Bar } from "../data/shape";
 /**
  * Where each bar lands. Exported so a scene can place a marker on bar N
  * without knowing how the chart is drawn.
+ *
+ * `range` overrides the price scale. Two charts shown side by side must be
+ * measured against the SAME axis, or the comparison the viewer is asked to make
+ * is one the picture has already rigged.
  */
-export const barGrid = (bars: Bar[], box: Rect, pad = 0.08) => {
+export const barGrid = (bars: Bar[], box: Rect, pad = 0.08, range?: [number, number]) => {
   const lows = bars.map((b) => b.l);
   const highs = bars.map((b) => b.h);
-  const lo = Math.min(...lows);
-  const hi = Math.max(...highs);
+  const [lo, hi] = range ?? [Math.min(...lows), Math.max(...highs)];
   const span = Math.max(1, hi - lo);
   const scale = (p: number) => box.y + box.h * (1 - pad) - ((p - lo) / span) * box.h * (1 - pad * 2);
   const slot = box.w / bars.length;
@@ -48,6 +51,7 @@ export const CandleChart = ({
   ticks,
   tickLabels = true,
   pad = 0.08,
+  range,
 }: {
   bars: Bar[];
   box: Rect;
@@ -61,8 +65,10 @@ export const CandleChart = ({
   /** Draw the gridlines without their prices. */
   tickLabels?: boolean;
   pad?: number;
+  /** Force the price scale, so two panels can be read against one axis. */
+  range?: [number, number];
 }) => {
-  const g = barGrid(bars, box, pad);
+  const g = barGrid(bars, box, pad, range);
   const shown = Math.ceil(bars.length * Math.max(0, Math.min(1, reveal)));
   const lines = ticks ?? [];
 

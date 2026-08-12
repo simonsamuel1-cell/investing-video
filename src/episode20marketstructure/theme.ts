@@ -73,6 +73,12 @@ export const theme = {
     cyan: "#5CC8E3",
     candleGreen: "#22B573",
     candleRed: "#E5475D",
+    /**
+     * The ONE red that is allowed outside a candle body, and only in words:
+     * naming a mistake. It is the same red the candles use, so the episode
+     * still has exactly one red — never put it on drawn chart content.
+     */
+    warn: "#E5475D",
     // hue-locked tints
     indigoWash: "rgba(95, 77, 238, 0.09)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",

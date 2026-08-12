@@ -1,61 +1,77 @@
 /**
- * ComparePanels.tsx — two side-by-side mini charts (SC11 module 2).
+ * ComparePanels.tsx — the side-by-side comparison in SC11 module 2.
  *
- * The angle arc at each base is what makes the comparison a measurement rather
- * than an assertion: both panels climb the same distance, and the only thing
- * the viewer is asked to read is the opening slope.
+ * The LEFT panel is not built here. Module 1's card closes down to a panel's
+ * width and keeps its own chart, so the gradual climb the comparison opens on is
+ * literally the chart the viewer was just looking at — see Scene11. This renders
+ * whatever panels a scene still has to introduce, which in SC11 is the steep one
+ * arriving beside it; `rect` is therefore explicit rather than derived from how
+ * many panels are passed.
+ *
+ * The old line version carried an angle arc at each base. It is gone: an arc
+ * sized to a line reads as a stray mark once there are candle bodies around it,
+ * and the opening angle is the wrong measurement for a shape whose whole point
+ * is where the steep part sits.
  */
 import { theme } from "../theme";
 import { columns, type Rect } from "../helpers";
-import { Card, Layer } from "./Stage";
-import { StructureLine } from "./StructureLine";
+import { Card } from "./Stage";
+import { CandleChart } from "./CandleChart";
 import { Chip } from "./Chip";
-import type { Plot } from "../data/shape";
+import type { Bar } from "../data/shape";
+
+/** Matches the pad the panels' CandleChart is drawn with. */
+export const PANEL_PAD = 0.12;
+/** Where a panel's name sits inside its card. */
+export const PANEL_TITLE_DY = 58;
 
 export type Panel = {
   title: string;
   tone: "indigo" | "cyan";
-  plot: Plot;
+  bars: Bar[];
+  /** The rect the candles are plotted in, inside the panel card. */
+  box: Rect;
   draw: number;
   titleAt: number;
-  /** Optional chip in the caption row — SC11's "Lebih stabil". */
-  note?: { label: string; at: number };
+  /** Which slot this panel occupies. Defaults to its index. */
+  rect?: Rect;
 };
 
-export const panelRects = (n = 2, gap = 48): Rect[] => columns(theme.stage.card, n, gap);
+export const panelRects = (n = 2, gap = 48): Rect[] =>
+  columns(theme.stage.card, n, gap);
 
-const SlopeArc = ({ plot, opacity }: { plot: Plot; opacity: number }) => {
+export const ComparePanels = ({
+  panels,
+  opacity = 1,
+}: {
+  panels: Panel[];
+  opacity?: number;
+}) => {
   if (opacity <= 0.001) return null;
-  const a = plot.points[0];
-  const b = plot.along(0.45);
-  const r = 74;
-  const angle = Math.atan2(b.y - a.y, b.x - a.x);
-  return (
-    <Layer opacity={opacity}>
-      <line x1={a.x} y1={a.y} x2={a.x + r + 30} y2={a.y} stroke={theme.color.slate} strokeWidth={theme.shape.hairline} strokeDasharray="8 8" />
-      <path
-        d={`M ${a.x + r},${a.y} A ${r} ${r} 0 0 0 ${a.x + r * Math.cos(angle)},${a.y + r * Math.sin(angle)}`}
-        fill="none"
-        stroke={theme.color.cyan}
-        strokeWidth={theme.shape.rule}
-      />
-    </Layer>
-  );
-};
-
-export const ComparePanels = ({ panels, opacity = 1 }: { panels: Panel[]; opacity?: number }) => {
-  if (opacity <= 0.001) return null;
-  const rects = panelRects(panels.length);
+  const fallback = panelRects(panels.length);
   return (
     <div style={{ position: "absolute", inset: 0, opacity }}>
-      {panels.map((p, i) => (
-        <Card key={p.title} rect={rects[i]} radius={theme.shape.panelRadius}>
-          <StructureLine plot={p.plot} draw={p.draw} color={theme.color.indigo} width={4} />
-          <SlopeArc plot={p.plot} opacity={p.draw} />
-          <Chip label={p.title} x={rects[i].x + rects[i].w / 2} y={rects[i].y + 58} tone={p.tone} at={p.titleAt} />
-          {p.note && <Chip label={p.note.label} x={rects[i].x + rects[i].w / 2} y={theme.stage.caption.y} tone="indigo" at={p.note.at} />}
-        </Card>
-      ))}
+      {panels.map((p, i) => {
+        const rect = p.rect ?? fallback[i];
+        return (
+          <Card key={p.title} rect={rect} radius={theme.shape.panelRadius}>
+            <CandleChart
+              bars={p.bars}
+              box={p.box}
+              reveal={p.draw}
+              axis={false}
+              pad={PANEL_PAD}
+            />
+            <Chip
+              label={p.title}
+              x={rect.x + rect.w / 2}
+              y={rect.y + PANEL_TITLE_DY}
+              tone={p.tone}
+              at={p.titleAt}
+            />
+          </Card>
+        );
+      })}
     </div>
   );
 };
