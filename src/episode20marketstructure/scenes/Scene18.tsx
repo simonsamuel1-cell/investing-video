@@ -1,140 +1,264 @@
 /**
- * SC18 — ASII case study (from 8555, dur 1055).
+ * SC18 — ASII, on film (from 8555, dur 1055).
  *
- * The only real instrument in the episode, and therefore the only scene where
- * the numbers on screen are claims about the world. Every bar is currently a
- * PLACEHOLDER behind a typed interface — see data/asii.ts. This scene cannot
- * ship until the real CSV is in and all four narrated figures are checked
- * against it. If the data disagrees, the SCRIPT is what gets revised.
+ * This slot carried a `[NEEDS DATA]` placeholder: real ASII daily OHLC, which
+ * must never be drawn from invented numbers. The recording of the real chart
+ * has arrived, so everything drawn here is gone and the frame is the recording.
  *
- * The price scale is fixed to the FULL series rather than the revealed part, so
- * the chart never rescales under the viewer while the story is being told, and
- * a reference can be extended before the candles reach it.
+ * `asii.mp4` is 1048 frames at 30fps, so it runs 8555 → 9602 and the scene's
+ * last SEVEN frames hold on its final picture.
  *
- * The countdown dramatises a moment that has already happened. No marker here
- * is an entry, and nothing on screen projects forward.
+ * Two highlights walk the narration along the chart: the sideways stretch it
+ * opens on, then the climb that breaks out of it. The first is fully gone on
+ * the frame the second starts, so the frame is only ever making one claim.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, Card } from "../components/Stage";
-import { CandleChart, barGrid } from "../components/CandleChart";
-import { PivotLabel } from "../components/PivotLabel";
-import { RangeBand } from "../components/RangeBand";
-import { Reference } from "../components/StructureLine";
-import { CountdownNumeral } from "../components/CountdownNumeral";
-import { Chip } from "../components/Chip";
-import { Title, Line } from "../components/Text";
+import { Stage } from "../components/Stage";
+import { ScreenClip } from "../components/ScreenClip";
+import { HighlightBox, type HLRect } from "../components/HighlightBox";
 import { theme } from "../theme";
-import { hold, progress, price, clamp01 } from "../helpers";
-import { ASII_BARS, ASII, ASII_TICKS } from "../data/asii";
+import { progress, progressInOut, clamp01, textReveal } from "../helpers";
+import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const T = {
-  open: 87, // "awal 2025"
-  range: 123, // "bergerak sideways"
-  rangeLabel: 172, // "4.400 sampai 5.000"
-  breakout: 330, // "menembus area itu"
-  peak: 451, // "7.300"
-  freeze: 562, // "lihat puncak berikutnya"
-  three: 695, // "tiga, dua"
-  two: 714,
-  one: 733, // "satu"
-  failed: 769, // "ternyata gagal"
-  lowerHigh: 795, // "lower high"
-  lowerLow: 835, // "lower low"
-  back: 924, // "menuju area 4.400"
-};
-const BOX = { x: theme.stage.plot.x, y: theme.stage.plot.y + 34, w: theme.stage.plot.w, h: theme.stage.plot.h - 100 };
+/** This scene's `from` in the Composition — needed to read the shared cut. */
+const SCENE_FROM = 8555;
 /**
- * How far the plot has advanced, IN BARS, at each beat. The flat stretch from
- * `freeze` to `failed` is the hold the countdown plays over.
+ * The recording is portrait, so HEIGHT is what is set and the width follows
+ * from its own 980 × 1450. It fills the active area top to bottom and stops
+ * clear of the subtitle band, which owns the bottom 108px of every frame.
+ *
+ * `inset` is trimmed off EACH side.
  */
-const BAR_AT = [T.open, T.range, T.rangeLabel, T.breakout, T.peak, T.freeze, T.failed, T.failed + 24, T.lowerLow, T.lowerLow + 40, T.back, T.back + 96];
-const BAR_TO = [0, 70, 100, 126, ASII.peakBar, ASII.priorLowBar + 8, ASII.priorLowBar + 8, ASII.lowerHighBar + 6, ASII.lowerHighBar + 18, ASII.lowerLowBar + 6, 350, ASII.lastBar];
-const COUNTDOWN_Y = 480;
+const CLIP = {
+  src: "asii.mp4",
+  h: theme.stage.active.h,
+  aspect: 980 / 1450,
+  inset: 10,
+};
+/** Where the footage sits once masked — the boxes are measured against this. */
+const CLIP_W = CLIP.h * CLIP.aspect - CLIP.inset * 2;
+const CLIP_X = (theme.canvas.width - CLIP_W) / 2;
+/** How far a box reaches past the footage on the side it starts or ends on. */
+const PAD = 20;
+/**
+ * ═══ THE TWO HIGHLIGHTS — EDIT THESE ═══
+ *
+ * Canvas pixels, because what they point at is a place on a recording and
+ * there is nothing else to measure against. `x1` is the LEFT edge and `x2` the
+ * RIGHT, so the width of a box is x2 − x1; `y1` is its top and `y2` its
+ * bottom. The footage itself runs from CLIP_X to CLIP_X + CLIP_W.
+ *
+ * The first begins OUTSIDE the footage on the left and stops where the
+ * sideways range does, so its right edge is the claim: this far and no
+ * further. The second picks up where that one stopped and runs off the right,
+ * which is the breakout it is naming.
+ *
+ * Each opens by DRAWING rightwards out of its left edge and closes the same
+ * way in reverse, so the edge that anchors the reading is the one that never
+ * moves. `over` is how long that takes at each end.
+ *
+ * `at` is the frame it STARTS opening; `gone` is the frame it has FINISHED
+ * closing — so the close begins at `gone − over`. Written that way because the
+ * two boxes hand over back to back: the first is required to be off the screen
+ * on the frame the second starts, and with `gone` meaning "starts leaving" it
+ * was still shrinking while the next one grew.
+ */
+const MARKS: { at: number; gone: number; over: number; rect: HLRect }[] = [
+  {
+    at: 142, // 8697 — "harga bergerak sideways"
+    gone: 284, // 8839
+    over: 22,
+    rect: { x1: CLIP_X - PAD, x2: 960, y1: 618, y2: 728 },
+  },
+  {
+    // ── THE SECOND BOX. Its width is x2 − x1; change either to resize it. ──
+    at: 285, // 8840
+    gone: 551, // 9106
+    over: 22,
+    rect: { x1: 930, x2: CLIP_X + CLIP_W + PAD, y1: 415, y2: 700 },
+  },
+];
+/**
+ * The box is at full width before it is fully opaque on the way in, and fully
+ * closed before it is invisible on the way out — so the eye follows the EDGE
+ * travelling, not a rectangle dissolving in place.
+ */
+const FADE_IN_BY = 0.45;
+const FADE_OUT_FROM = 0.6;
+/**
+ * THE QUIZ, from 9112. The recording steps aside and the question is put in
+ * words beside it — the chart stays on screen because the answer is IN it.
+ *
+ * `shift` is how far the footage moves left; the text column starts clear of
+ * where it lands. Everything in the column shares `x`, so the question, the
+ * count and the verdict all hang off one left edge.
+ */
+const QUIZ = {
+  slide: { at: 557, shift: 450, over: 26 },
+  x: 880,
+  /** TOP of the question, not its centre — the answer stacks below it. */
+  y: 396,
+  size: theme.text.title.size,
+  weight: theme.text.title.weight,
+  at: 563,
+  /** From the top of the question down to the top of the answer. */
+  gap: 150,
+  countSize: 120,
+};
+/**
+ * One line, so "Quiz:" is a coloured label inside the sentence rather than a
+ * heading over it.
+ *
+ * The question and the answer share ONE inline-block column, which is why the
+ * numerals can be centred on the question without anyone measuring the text:
+ * the column shrinks to the question's own width and the count is centred
+ * inside it. Change the wording and the centring follows by itself.
+ */
+const QUIZ_LEAD = "Quiz:";
+const QUIZ_TEXT = " Mampukah melewati 7300?";
+/**
+ * The countdown. Numerals are the one kind of type in this episode allowed to
+ * POP — see Chip — because a number that faded in would still be arriving when
+ * the next one is due.
+ */
+const COUNT = [
+  { label: "3", at: 692 }, // 9247
+  { label: "2", at: 710 }, // 9265
+  { label: "1", at: 731 }, // 9286
+];
+/** The answer, in the one red this episode allows outside a candle body. */
+const RESULT = { text: "Ternyata gagal", at: 771 }; // 9326
 // ═══════════════════════════════════════════════════════════════════════════
-
-const G = barGrid(ASII_BARS, BOX);
 
 export const Scene18 = () => {
   const f = useCurrentFrame();
-  const bar = hold(f, BAR_AT, BAR_TO);
-  const reveal = bar / (ASII_BARS.length - 1);
-  const band = f >= T.range ? progress(f, T.range, 34) : 0;
-  const ref = f >= T.freeze ? progress(f, T.freeze, 30) : 0;
-  const faint = f >= T.back ? progress(f, T.back, 40) : 0;
 
-  const peak = { x: G.x(ASII.peakBar), y: G.scale(ASII.peakPrice) };
-  const bandTop = G.scale(ASII.rangeHigh);
+  // ── arriving on the slide SC17 left in flight ──
+  const g = f + SCENE_FROM;
+  const dx = cutIn(g, CUTS.toChart);
+  const blur = cutBlur(g, CUTS.toChart);
+
+  const slide =
+    f >= QUIZ.slide.at
+      ? progressInOut(f, QUIZ.slide.at, QUIZ.slide.over) * -QUIZ.slide.shift
+      : 0;
+  const ask = textReveal(f, QUIZ.at);
+  /** The last numeral that has arrived, and only until the verdict lands. */
+  const counting = f < RESULT.at ? COUNT.filter((c) => f >= c.at).pop() : null;
+  const pop = counting ? progress(f, counting.at, theme.motion.pop) : 0;
+  const result = f >= RESULT.at ? textReveal(f, RESULT.at) : null;
 
   return (
     <Stage>
-      {/* identity strip — what this chart IS, stated plainly */}
-      <Title text={ASII.ticker} at={0} />
-
-      <Card>
-        {/* the early-2025 range */}
-        <RangeBand
-          x={G.x(0) - G.slot / 2}
-          w={G.x(ASII.rangeEndBar) - G.x(0) + G.slot}
-          top={bandTop}
-          bottom={G.scale(ASII.rangeLow)}
-          tone="indigo"
-          draw={band}
-          label={f >= T.rangeLabel ? `${price(ASII.rangeLow)} – ${price(ASII.rangeHigh)}` : undefined}
-          pierce={{ x: G.x(ASII.breakoutBar), y: bandTop, amount: f >= T.breakout ? clamp01((f - T.breakout) / 34) : 0 }}
-        />
-        {/* the same area, faint, as price heads back toward it */}
-        {faint > 0.001 && (
-          <RangeBand
-            x={G.x(ASII.returnBar)}
-            w={G.x(ASII.lastBar) - G.x(ASII.returnBar)}
-            top={bandTop}
-            bottom={G.scale(ASII.rangeLow)}
-            tone="indigo"
-            draw={faint}
-            fill={0.06}
-            opacity={0.7}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: dx === 0 ? undefined : `translateX(${dx}px)`,
+          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: slide === 0 ? undefined : `translateX(${slide}px)`,
+          }}
+        >
+          <ScreenClip
+            src={CLIP.src}
+            height={CLIP.h}
+            aspect={CLIP.aspect}
+            inset={CLIP.inset}
           />
+          {MARKS.map((m) => {
+            const shutAt = m.gone - m.over;
+            const open = f >= m.at ? progressInOut(f, m.at, m.over) : 0;
+            const shut = f >= shutAt ? progressInOut(f, shutAt, m.over) : 0;
+            return (
+              <HighlightBox
+                key={m.at}
+                rect={m.rect}
+                grow={open * (1 - shut)}
+                opacity={
+                  clamp01(open / FADE_IN_BY) *
+                  (1 - clamp01((shut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
+                }
+              />
+            );
+          })}
+        </div>
+
+        {/* the question, beside the chart that answers it. Inline-block, so
+          the column is exactly as wide as the question and the count below
+          can centre on it without anyone measuring the type. */}
+        {f >= QUIZ.at && (
+          <div
+            style={{
+              position: "absolute",
+              left: QUIZ.x,
+              top: QUIZ.y,
+              display: "inline-block",
+              fontFamily: theme.text.family,
+            }}
+          >
+            <div
+              style={{
+                fontSize: QUIZ.size,
+                fontWeight: QUIZ.weight,
+                color: theme.color.ink,
+                whiteSpace: "nowrap",
+                opacity: ask.opacity,
+                transform: `translateY(${ask.dy}px)`,
+              }}
+            >
+              <span style={{ color: theme.color.indigo }}>{QUIZ_LEAD}</span>
+              {QUIZ_TEXT}
+            </div>
+
+            {/* numerals POP — see Chip. A number that faded in would still be
+              arriving when the next one is due. */}
+            {counting && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: QUIZ.gap,
+                  textAlign: "center",
+                  fontSize: QUIZ.countSize,
+                  fontWeight: QUIZ.weight,
+                  color: theme.color.indigo,
+                  opacity: pop,
+                  transform: `scale(${0.94 + 0.06 * pop})`,
+                }}
+              >
+                {counting.label}
+              </div>
+            )}
+
+            {/* left-aligned on the question, so the answer reads as its reply */}
+            {result && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: QUIZ.gap,
+                  fontSize: QUIZ.size,
+                  fontWeight: QUIZ.weight,
+                  color: theme.color.warn,
+                  whiteSpace: "nowrap",
+                  opacity: result.opacity,
+                  transform: `translateY(${result.dy}px)`,
+                }}
+              >
+                {RESULT.text}
+              </div>
+            )}
+          </div>
         )}
-
-        <CandleChart bars={ASII_BARS} box={BOX} reveal={reveal} ticks={ASII_TICKS} />
-
-        {/* the peak the next push has to clear, tagged on the peak itself.
-            The Lower high label is pushed right and tied back with a leader,
-            which is what keeps the two apart without moving either dot. */}
-        {bar >= ASII.peakBar && <Chip label={price(ASII.peakPrice)} x={peak.x} y={peak.y - 52} tone="indigo" at={T.peak} />}
-        {bar >= ASII.peakBar && (
-          <Line text="Awal 2026" x={peak.x} y={BOX.y + BOX.h + 34} at={T.peak + 14} size={theme.text.axis.size} color={theme.color.slate} weight={500} />
-        )}
-        <Reference x1={peak.x} x2={BOX.x + BOX.w} y={peak.y} draw={ref} />
-
-        {ASII.climb.map((c, i) =>
-          bar >= c.bar ? (
-            <PivotLabel
-              key={c.bar}
-              x={G.x(c.bar)}
-              y={G.scale(c.peak ? ASII_BARS[c.bar].h : ASII_BARS[c.bar].l)}
-              tone={c.peak ? "indigo" : "cyan"}
-              side={c.peak ? "above" : "below"}
-              at={T.breakout + 30 + i * 18}
-            />
-          ) : null,
-        )}
-
-        {bar >= ASII.lowerHighBar + 4 && (
-          <PivotLabel x={G.x(ASII.lowerHighBar)} y={G.scale(ASII_BARS[ASII.lowerHighBar].h)} label="Lower high" tone="indigo" dx={168} at={T.lowerHigh} />
-        )}
-        {bar >= ASII.lowerLowBar + 4 && (
-          <PivotLabel x={G.x(ASII.lowerLowBar)} y={G.scale(ASII_BARS[ASII.lowerLowBar].l)} label="Lower low" tone="cyan" side="below" at={T.lowerLow} />
-        )}
-
-        {/* tension about something that already happened */}
-        <CountdownNumeral value="3" x={theme.canvas.width / 2} y={COUNTDOWN_Y} at={T.three} />
-        <CountdownNumeral value="2" x={theme.canvas.width / 2} y={COUNTDOWN_Y} at={T.two} />
-        <CountdownNumeral value="1" x={theme.canvas.width / 2} y={COUNTDOWN_Y} at={T.one} />
-      </Card>
-
-      {f >= T.back + 40 && <Chip label="Struktur berubah" x={theme.canvas.width / 2} y={theme.stage.caption.y} tone="cyan" at={T.back + 40} />}
+      </div>
     </Stage>
   );
 };

@@ -71,6 +71,19 @@ export const CUTS: Record<string, Cut> = {
    * frame entirely, so the move up is what marks the change of register.
    */
   toMistake: { at: 7665, over: 24, distance: 80, blur: 9 },
+  /**
+   * SC16 → SC17, as a PUSH IN. The line is "Di aplikasi," and the frame is
+   * about to become a phone screen — moving closer is the sentence itself, the
+   * same reasoning as `toSize`. `distance` is unused; the zoom carries it.
+   */
+  toApp: { at: 8207, over: 24, distance: 0, blur: 9 },
+  /**
+   * SC17 → SC18, applied to X. Two recordings of the same app, one after the
+   * other, so sideways reads as "and now this screen" — a rise would promise
+   * something bigger and a push would promise something closer, and it is
+   * neither.
+   */
+  toChart: { at: 8554, over: 24, distance: 110, blur: 9 },
 };
 
 /**
