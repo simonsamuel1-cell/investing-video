@@ -1,15 +1,20 @@
 /**
  * 5212 → 5854 — Trend size & speed.
  *
- * Module 1 separates SIZE by changing TIMEFRAME, not by drawing two shapes.
- * The major trend is the HOOK — the very chart the episode opened on, two years
- * of it. On "minor swing yang terjadi dari hari ke hari" one stretch is ringed,
- * the camera closes on it, and those bars resolve into many smaller ones. Same
- * price, same two years; a different bar size. That is what the sentence says,
- * so it is what the picture does.
+ * Module 1 separates SIZE on ONE CHART. The major trend is the HOOK — the very
+ * chart the episode opened on, two years of it — and it is the only chart the
+ * module ever shows. On "minor swing yang terjadi dari hari ke hari" one stretch
+ * of it is ringed, and on "satu candle merah" a single red bar ELSEWHERE on the
+ * same chart is circled. Two marks, one picture: a swing is a stretch of the
+ * trend, noise is one bar of it, and neither is an example of the other.
  *
- * The window is picked on MONTH boundaries so both axes can be read: months
- * across the two years, then days across the three months inside the ring.
+ * THERE IS NO ZOOM AND NO SECOND TIMEFRAME. An earlier cut closed the camera on
+ * the ring and resolved those bars into many smaller ones; that transition is
+ * gone, and the minor-swing chart with it. The picture stops changing at 5395
+ * and the major trend holds the card until the close into module 2.
+ *
+ * The window is picked on MONTH boundaries so the axis reads cleanly: months
+ * across the two years, under the one chart.
  *
  * Module 2 compares SPEED, and there is no handover between the modules at all:
  * module 1's card CLOSES to a panel's width, keeps its chart, and is what the
@@ -28,28 +33,35 @@ import { theme } from "../theme";
 import { progress, progressInOut, fadeIn, fadeOut } from "../helpers";
 import { CUTS, cutPushIn, cutOut, cutBlur } from "../transitions/CameraCut";
 import { candles } from "../data/shape";
-import {
-  MAJOR_FROM,
-  MAJOR_MONTHS,
-  MAJOR_LENS,
-  MAJOR_LENS_MONTHS,
-  MINOR,
-  STEEP,
-} from "../data/shapes";
+import { MAJOR_FROM, MAJOR_MONTHS, MAJOR_LENS, STEEP } from "../data/shapes";
 import { BARS } from "./Scene01";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
   major: 79, // "major trend yang berlangsung berbulan-bulan"
   ring: 169, // "minor swing yang terjadi dari hari ke hari"
-  zoom: 205, // the camera closes on what the ring marked
-  red: 274, // "satu candle merah"
+  red: 274, // "satu candle merah" — one bar of this same chart, outside the ring
   // 316 — "bisa saja cuma noise" is said, not written: the ring is already there
   shrink: 434, // inside "Begitu juga dengan kecepatannya:" — the card closes
   gradual: 473, // "tren yang naik bertahap" — the card it closed to gets its name
   steep: 560, // the second panel arrives beside it
   spike: 571, // "hampir vertikal"
 };
+/**
+ * The ring is fully drawn on 5395 and NOTHING follows it. That frame is where
+ * module 1's picture stops moving: no camera close, no timeframe change, no
+ * second chart. The scene from here to the shrink is the major trend plus two
+ * marks on it.
+ */
+const RING_OVER = 14;
+/**
+ * …and it is GONE by 5478, eight frames before the noise circle arrives. The
+ * two marks never share the frame: the swing is shown and put away, then one
+ * red candle is picked out of the trend on its own. Overlapping them would ask
+ * the viewer to read the circle as something inside the rectangle, which is the
+ * one thing it is not.
+ */
+const RING_OUT = { at: 252, over: 14 };
 /**
  * THE CLOSE INTO MODULE 2, at 5646. This IS the transition — there is no fade
  * and no second chart on the left.
@@ -62,6 +74,22 @@ const T = {
  * slice would be labelling months that are no longer on screen.
  */
 const SHRINK_OVER = 32;
+/**
+ * THE PANEL'S TILT — how far the LEFT edge of the closed panel drops, in pixels.
+ *
+ * "Bertahap" has to look like a climb, and the stretch of the trend left under
+ * the panel opens level with where it ends. So as the card closes, the series is
+ * leaned: the right-hand end is the PIVOT and does not move at all, and every
+ * bar to its left is carried down in proportion to how far left it is.
+ *
+ * Each candle keeps its own body, wick and colour — only its LEVEL moves — so
+ * what is tilted is the trend, not the bars. The price scale is pinned while it
+ * happens, or the whole chart would rescale to follow its own tilt.
+ *
+ * It rides `shrink`, so it arrives with the close and never as a move of its
+ * own: by the time the panel is a panel, the lean is already in it.
+ */
+const TILT = { px: 170 };
 /** This scene's `from` in the Composition — needed to read the shared cut. */
 const SCENE_FROM = 5212;
 /** The dolly SC10 started is still closing on the first frames of this one. */
@@ -85,11 +113,6 @@ const BOX = {
  */
 const SHOWN = 61;
 const TICKS = [4400, 4800, 5200, 5600, 6000];
-/** Bars across the three months inside the ring. Roughly one per day. */
-const FINE_N = 88;
-/** The move that changes the timeframe, and the swap that lands inside it. */
-const ZOOM_OVER = 46;
-const SWAP = { at: T.zoom + 26, over: 20 };
 /** Clear of the chart's own bottom rule — the timeline reads under the lines. */
 const AXIS_Y = 46;
 const MONTHS = [
@@ -113,15 +136,28 @@ const TITLE_Y = 130;
  *
  * `r` is its radius. `dx` and `dy` nudge it off that candle in canvas pixels:
  * dx positive moves it right, dy positive moves it DOWN from the candle's high.
- * Which candle it starts from is RED, further down.
+ * Which candle it sits on is RED, further down.
+ *
+ * It is drawn on the MAJOR chart, on a red bar OUTSIDE the swing rectangle — so
+ * the viewer never has to carry a mark from one picture across to another, and
+ * the two marks never read as one containing the other.
  */
-const RING_DOT = { r: 34, dx: 10, dy: 10 };
+const RING_DOT = { r: 36, dx: 0, dy: 0 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const COARSE = BARS.slice(0, SHOWN);
 const CG = barGrid(COARSE, BOX, 0.12);
-const FINE = candles(MINOR, FINE_N, 53, 0.014);
-const FG = barGrid(FINE, BOX, 0.12);
+/**
+ * The price scale, pinned. Identical to what `barGrid` derives from COARSE, so
+ * nothing moves — but stated explicitly, because once the bars are leaned they
+ * no longer describe the scale they are drawn against.
+ */
+const RANGE: [number, number] = [
+  Math.min(...COARSE.map((b) => b.l)),
+  Math.max(...COARSE.map((b) => b.h)),
+];
+/** Price units per pixel, so the tilt can be set in pixels and read in price. */
+const PX = (RANGE[1] - RANGE[0]) / (BOX.h * (1 - 0.12 * 2));
 
 /** Month `m` after the start of the series, as a label. */
 const monthLabel = (m: number, withYear: boolean) => {
@@ -141,27 +177,68 @@ const RING = {
   bottom: CG.scale(Math.min(...WIN_BARS.map((b) => b.l))) + 22,
 };
 /**
- * Zoom to FIT the ring, not by a round number: x so the ring fills the plot's
- * width, y so its price range fills the plot's height. That is what a charting
- * app does when you drag a box, and it is why the bars appear to split rather
- * than merely grow.
+ * The bar "satu candle merah" points at: the BIGGEST down bar OUTSIDE the swing
+ * rectangle, with enough room either side for the circle to sit inside the plot.
+ *
+ * Outside, so the two marks are two separate observations about the same chart
+ * rather than one nested in the other — the swing is a stretch, the noise is a
+ * single bar anywhere on the trend, and neither is an example of the other.
+ *
+ * Biggest, not nearest-anything, because the line is about one red candle being
+ * readable and dismissible at a glance — a doji with a red tint is neither.
+ * Picking it by rule rather than by index also means the mark still lands on a
+ * red candle if the hook's series is ever re-seeded; a circle round a green bar
+ * would illustrate the opposite of the sentence.
  */
-const KX = BOX.w / RING.w;
-const KY = (BOX.h * 0.76) / (RING.bottom - RING.top);
-const RING_MID = { x: RING.x + RING.w / 2, y: (RING.top + RING.bottom) / 2 };
-const CARD_MID = { x: theme.canvas.width / 2, y: BOX.y + BOX.h / 2 };
-
-/** The reddest bar in the middle of the climb — what "satu candle merah" rings. */
 const RED = (() => {
-  const mid = Math.round(FINE_N * 0.55);
-  for (let d = 0; d < FINE_N; d++) {
-    for (const i of [mid + d, mid - d])
-      if (i >= 0 && i < FINE_N && FINE[i].c < FINE[i].o) return i;
+  let best = 0;
+  let size = -1;
+  for (let i = 0; i < COARSE.length; i++) {
+    if (i >= WIN.i0 && i <= WIN.i1) continue;
+    const x = CG.x(i);
+    if (x - RING_DOT.r < BOX.x || x + RING_DOT.r > BOX.x + BOX.w) continue;
+    const drop = COARSE[i].o - COARSE[i].c;
+    if (drop > size) {
+      size = drop;
+      best = i;
+    }
   }
-  return mid;
+  return best;
 })();
+/** Centred on the body, so the circle sits ON the candle, not above it. */
+const RED_AT = {
+  x: CG.x(RED) + RING_DOT.dx,
+  y: (CG.scale(COARSE[RED].o) + CG.scale(COARSE[RED].c)) / 2 + RING_DOT.dy,
+};
 
 const PANELS = panelRects(2);
+/**
+ * The first bar still on the card once it has closed to a panel — the tilt's
+ * far end. Derived, so a change to the panel width moves it automatically.
+ */
+const FIRST_SHOWN = (() => {
+  const slide = PANELS[0].w - theme.stage.card.w;
+  for (let i = 0; i < COARSE.length; i++)
+    if (CG.x(i) + slide >= theme.stage.card.x) return i;
+  return 0;
+})();
+const LAST_BAR = COARSE.length - 1;
+/**
+ * The series leaned about its right-hand end. `k` is 0 at the pivot and 1 at
+ * the panel's left edge, held at 1 for everything further left so the bars that
+ * are off the card cannot run away below it.
+ */
+const leaned = (amount: number) =>
+  amount <= 0.001
+    ? COARSE
+    : COARSE.map((b, i) => {
+        const k = Math.min(
+          1,
+          Math.max(0, (LAST_BAR - i) / (LAST_BAR - FIRST_SHOWN)),
+        );
+        const d = -TILT.px * PX * k * amount;
+        return { o: b.o + d, c: b.c + d, h: b.h + d, l: b.l + d };
+      });
 const paneBox = (i: number) => ({
   x: PANELS[i].x + 70,
   y: PANELS[i].y + 100,
@@ -213,13 +290,15 @@ export const Scene11 = () => {
   const f = useCurrentFrame();
 
   const coarseDraw = progress(f, T.major - 40, 90);
-  const ring = f >= T.ring ? progress(f, T.ring, 22) : 0;
-  const zoom = f >= T.zoom ? progress(f, T.zoom, ZOOM_OVER) : 0;
-  const fine = f >= SWAP.at ? progress(f, SWAP.at, SWAP.over) : 0;
+  const ring =
+    (f >= T.ring ? progress(f, T.ring, RING_OVER) : 0) *
+    (f >= RING_OUT.at ? 1 - progress(f, RING_OUT.at, RING_OUT.over) : 1);
 
   // ── the card closing onto the left panel's slot, and keeping its chart ──
   const shrink = f >= T.shrink ? progressInOut(f, T.shrink, SHRINK_OVER) : 0;
   const open = 1 - shrink;
+  /** Everything under the chart leaves AS the card closes, not across it. */
+  const axis = f >= T.shrink ? fadeOut(f, T.shrink, 10) : 1;
   const winW = theme.stage.card.w + (PANELS[0].w - theme.stage.card.w) * shrink;
   /** Exactly how far the right edge travelled, so the chart's end stays put. */
   const slide = winW - theme.stage.card.w;
@@ -233,23 +312,6 @@ export const Scene11 = () => {
   const dy = cutOut(g, CUTS.toLevel);
   /** The two moves never overlap, so the deeper one is always the live one. */
   const blur = Math.max(cutBlur(g, CUTS.toSize), cutBlur(g, CUTS.toLevel));
-
-  /**
-   * Interpolated from IDENTITY, not from the framing that puts the ring in the
-   * middle. Solving `t = centre − k·ring` gives a non-zero offset even at k = 1,
-   * which quietly slid the untouched chart a whole bar-width to the right and
-   * left the card's white margins uneven.
-   */
-  const kx = 1 + (KX - 1) * zoom;
-  const ky = 1 + (KY - 1) * zoom;
-  const tx = zoom * (CARD_MID.x - KX * RING_MID.x);
-  const ty = zoom * (CARD_MID.y - KY * RING_MID.y);
-  const coarseTx = `translate(${tx}px, ${ty}px) scale(${kx}, ${ky})`;
-  /** The small bars meet it coming the other way, so the two sizes converge. */
-  const fineK = 0.9 + 0.1 * fine;
-
-  const redX = FG.x(RED);
-  const redY = FG.scale(FINE[RED].h);
 
   return (
     <Stage>
@@ -288,68 +350,41 @@ export const Scene11 = () => {
                 transform: slide === 0 ? undefined : `translateX(${slide}px)`,
               }}
             >
-              {fine < 0.999 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    transform: coarseTx,
-                    transformOrigin: "0px 0px",
-                    opacity: 1 - fine,
-                  }}
-                >
-                  <CandleChart
-                    bars={COARSE}
-                    box={BOX}
-                    reveal={coarseDraw}
-                    ticks={TICKS}
-                    tickLabels={false}
-                    pad={0.12}
+              {/* ONE chart for the whole module. The baseline and gridlines
+                  leave with the month labels: once the card is a panel there
+                  is no time axis left to rule off, and the steep panel beside
+                  it has none either. */}
+              <CandleChart
+                bars={leaned(shrink)}
+                box={BOX}
+                range={RANGE}
+                reveal={coarseDraw}
+                ticks={TICKS}
+                tickLabels={false}
+                pad={0.12}
+                axisOpacity={axis}
+              />
+              {/* the swing: a stretch of this same chart */}
+              {ring > 0.001 && (
+                <Layer opacity={ring * open}>
+                  <rect
+                    x={RING.x}
+                    y={RING.top}
+                    width={RING.w}
+                    height={RING.bottom - RING.top}
+                    rx={12}
+                    fill="none"
+                    stroke={theme.color.slate}
+                    strokeWidth={theme.shape.rule}
                   />
-                  {/* the ring travels with the chart it marks */}
-                  {ring > 0.001 && (
-                    <Layer opacity={ring * (1 - zoom)}>
-                      <rect
-                        x={RING.x}
-                        y={RING.top}
-                        width={RING.w}
-                        height={RING.bottom - RING.top}
-                        rx={12}
-                        fill="none"
-                        stroke={theme.color.slate}
-                        strokeWidth={theme.shape.rule}
-                      />
-                    </Layer>
-                  )}
-                </div>
+                </Layer>
               )}
-              {fine > 0.001 && (
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    transform: `translate(${CARD_MID.x * (1 - fineK)}px, ${CARD_MID.y * (1 - fineK)}px) scale(${fineK})`,
-                    transformOrigin: "0px 0px",
-                    opacity: fine,
-                  }}
-                >
-                  {/* the baseline leaves with the month labels: once the card
-                    is a panel there is no time axis left to rule off, and the
-                    steep panel beside it has none either */}
-                  <CandleChart
-                    bars={FINE}
-                    box={BOX}
-                    pad={0.12}
-                    axisOpacity={f >= T.shrink ? fadeOut(f, T.shrink, 10) : 1}
-                  />
-                </div>
-              )}
-              {/* the noise ring is pinned to a bar, so it rides along */}
-              {f >= T.red && fine > 0.5 && (
+              {/* …and the noise: one red bar of that stretch */}
+              {f >= T.red && (
                 <Layer opacity={progress(f, T.red, 20) * open}>
                   <circle
-                    cx={redX}
-                    cy={redY + RING_DOT.dy}
+                    cx={RED_AT.x}
+                    cy={RED_AT.y}
                     r={RING_DOT.r}
                     fill="none"
                     stroke={theme.color.slate}
@@ -360,55 +395,38 @@ export const Scene11 = () => {
             </div>
           </div>
 
-          {/* the months leave with the ZOOM: an axis that held still while
-                  the bars grew would be measuring something off screen */}
-          <TimeAxis
-            marks={MAJOR_MONTHS}
-            year={false}
-            opacity={progress(f, T.major - 20, 30) * (1 - zoom)}
-          />
           {/* Out AS the close starts, not across it: the labels sit under
                   the chart but outside the window, so a slow fade leaves the
                   last month hanging past the card's new right edge. */}
           <TimeAxis
-            marks={MAJOR_LENS_MONTHS}
+            marks={MAJOR_MONTHS}
             year={false}
-            opacity={fine * (f >= T.shrink ? fadeOut(f, T.shrink, 10) : 1)}
+            opacity={progress(f, T.major - 20, 30) * axis}
           />
 
-          {/* The title names the TIMEFRAME on screen, so it changes with
-                  it: the same slot says what you are looking at, rather than
-                  two labels arguing about which chart this is. */}
-          {coarseDraw > 0.5 && zoom < 0.999 && (
+          {/* One title for the whole module, because there is one chart. It
+                  holds until the card closes and "Bertahap" takes the slot. */}
+          {coarseDraw > 0.5 && (
             <Chip
               label="Major Trend: Uptrend"
               x={theme.canvas.width / 2}
               y={TITLE_Y}
               tone="indigo"
               at={T.major}
-              opacity={1 - zoom}
-            />
-          )}
-          {zoom > 0.001 && (
-            <Chip
-              label="Minor Swing"
-              x={theme.canvas.width / 2}
-              y={TITLE_Y}
-              tone="indigo"
-              at={T.zoom}
-              opacity={zoom * open}
+              opacity={open}
             />
           )}
 
-          {/* the pointer on the ring, which the title then takes over from */}
-          {ring > 0.4 && zoom < 0.999 && (
+          {/* the pointer on the ring — it names the stretch, not the chart, and
+                  it leaves exactly when the rectangle does */}
+          {ring > 0.001 && (
             <Chip
               label="Minor swing"
               x={RING.x + RING.w / 2}
               y={RING.top - 46}
               tone="slate"
-              at={T.ring + 10}
-              opacity={1 - zoom}
+              at={T.ring + 4}
+              opacity={open * Math.min(1, ring / 0.4)}
             />
           )}
 

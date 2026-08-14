@@ -57,15 +57,20 @@ const SCENE_FROM = 928;
  */
 const EXIT_OVER = 30;
 /**
- * The marks run from global 1196 to global 1422 — the whole stretch where the
- * narration is naming peaks and troughs — and the step is DERIVED from that
- * window rather than fixed, so changing how many survive re-spaces them instead
- * of running them off the end.
+ * The marks run from global 1196 to global 1299 — and the step is DERIVED from
+ * that window rather than fixed, so changing how many survive re-spaces them
+ * instead of running them off the end.
  *
- * The last one finishes popping ON 1422, not starting there: a marker arriving
- * as the line begins to wind back out would read as a mistake.
+ * THE LAST ONE FINISHES POPPING ON 1299, the frame before "Terus naik?" arrives.
+ * The three questions are anchored to these turns, so every turn has to be on
+ * the chart before the first one is asked — a question pointing at a stretch of
+ * line that is still being marked up is a question about nothing yet.
+ *
+ * That is also what sets the pace: 21 marks across 93 frames is roughly one
+ * every four, fast enough to read as a rhythm running along the line rather
+ * than as items being listed one at a time.
  */
-const TURN_WINDOW = { from: T.turns, to: 494 - theme.motion.pop };
+const TURN_WINDOW = { from: T.turns, to: T.q1 - 1 - theme.motion.pop };
 /**
  * How far a turn has to stand clear of its neighbours to be worth marking. The
  * series has ~57 turns; at this threshold twenty survive — enough that the
@@ -85,9 +90,27 @@ const MAX_MARKS = 20;
  * Example: { 3: -2, 11: 1 } moves the fourth dot two candles left and the
  * twelfth one candle right.
  */
-const TURN_NUDGE: Record<number, number> = {10: 3};
+const TURN_NUDGE: Record<number, number> = { 10: 3, 13: 1 };
 /** Marker indices to drop entirely, same numbering as TURN_NUDGE. */
-const TURN_SKIP: number[] = [];
+const TURN_SKIP: number[] = [7];
+/**
+ * MARKERS ADDED BY HAND.
+ *
+ * `bar` is the candle to sit on, `peak` picks the colour and the side the dot
+ * takes: true = indigo above the line, false = cyan below it.
+ *
+ * These are merged in AFTER the two maps above have run, so adding one never
+ * renumbers a nudge or a skip. The list is re-sorted afterwards, so an added
+ * marker still pops in its proper left-to-right turn.
+ *
+ * Every entry here is a turn the derived filter passed over because it did not
+ * move far enough to clear `MIN_MOVE` — a shelf, or a broad flat bottom. They
+ * are still turns a viewer would point at, which is the only test that matters.
+ */
+const TURN_ADD: { bar: number; peak: boolean }[] = [
+  { bar: 66, peak: false }, // the notch in the shelf after the tall peak
+  { bar: 74, peak: false }, // the low of the wide bottom before the last climb
+];
 /** SC02's box, unchanged — this is what makes 928 identical to 927. */
 const BOX = CHART_BOX;
 const QUESTION_X = [500, 960, 1420];
@@ -138,7 +161,10 @@ const TURN_BARS = majorTurns(HOOK, MIN_MOVE)
   .sort((a, b) => a.bar - b.bar)
   // hand adjustments last, so the indices above match what is on screen
   .map((t, i) => ({ ...t, bar: Math.max(0, Math.min(BARS.length - 1, t.bar + (TURN_NUDGE[i] ?? 0))) }))
-  .filter((_, i) => !TURN_SKIP.includes(i));
+  .filter((_, i) => !TURN_SKIP.includes(i))
+  // hand-added last of all, then re-sorted, so the numbering above survives
+  .concat(TURN_ADD)
+  .sort((a, b) => a.bar - b.bar);
 
 /** Spread evenly across the window, however many survived the filter. */
 const TURN_AT = (i: number) =>
