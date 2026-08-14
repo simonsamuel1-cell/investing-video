@@ -52,6 +52,8 @@ export const CandleChart = ({
   tickLabels = true,
   pad = 0.08,
   range,
+  hollowFrom,
+  hollow = 0,
 }: {
   bars: Bar[];
   box: Rect;
@@ -67,6 +69,16 @@ export const CandleChart = ({
   pad?: number;
   /** Force the price scale, so two panels can be read against one axis. */
   range?: [number, number];
+  /**
+   * HOLLOW BARS — bars from this index on may be drawn outlined instead of
+   * filled. A hollow candle still has an open, a close and a direction, but it
+   * has no candle colour, so it reads as price that has not been confirmed
+   * rather than as price that happened. This is the ONE place the episode draws
+   * a candle without its colour, and the outline is ink, never red or green.
+   */
+  hollowFrom?: number;
+  /** 0→1 for those bars: 1 = white body, ink outline; 0 = candle colour. */
+  hollow?: number;
 }) => {
   const g = barGrid(bars, box, pad, range);
   const shown = Math.ceil(bars.length * Math.max(0, Math.min(1, reveal)));
@@ -101,10 +113,32 @@ export const CandleChart = ({
         const color = b.c >= b.o ? theme.color.candleGreen : theme.color.candleRed;
         const top = Math.min(g.scale(b.o), g.scale(b.c));
         const h = Math.max(1.5, Math.abs(g.scale(b.c) - g.scale(b.o)));
+        const wick = Math.max(1, g.body * 0.14);
+        /* The two versions are crossfaded rather than switched, so a bar can
+           fill in over time without the body jumping. */
+        const out = hollowFrom !== undefined && i >= hollowFrom ? hollow : 0;
         return (
           <g key={i}>
-            <line x1={x} y1={g.scale(b.h)} x2={x} y2={g.scale(b.l)} stroke={color} strokeWidth={Math.max(1, g.body * 0.14)} />
-            <rect x={x - g.body / 2} y={top} width={g.body} height={h} fill={color} />
+            {out < 0.999 && (
+              <g opacity={1 - out}>
+                <line x1={x} y1={g.scale(b.h)} x2={x} y2={g.scale(b.l)} stroke={color} strokeWidth={wick} />
+                <rect x={x - g.body / 2} y={top} width={g.body} height={h} fill={color} />
+              </g>
+            )}
+            {out > 0.001 && (
+              <g opacity={out}>
+                <line x1={x} y1={g.scale(b.h)} x2={x} y2={g.scale(b.l)} stroke={theme.color.ink} strokeWidth={wick} />
+                <rect
+                  x={x - g.body / 2}
+                  y={top}
+                  width={g.body}
+                  height={h}
+                  fill={theme.color.surface}
+                  stroke={theme.color.ink}
+                  strokeWidth={theme.shape.rule}
+                />
+              </g>
+            )}
           </g>
         );
       })}

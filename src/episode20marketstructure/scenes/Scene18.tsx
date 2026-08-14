@@ -13,9 +13,13 @@
  * the frame the second starts, so the frame is only ever making one claim.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage } from "../components/Stage";
+import { Stage, Layer } from "../components/Stage";
 import { ScreenClip } from "../components/ScreenClip";
-import { HighlightBox, type HLRect } from "../components/HighlightBox";
+import {
+  HighlightBox,
+  HighlightCircle,
+  type HLRect,
+} from "../components/HighlightBox";
 import { theme } from "../theme";
 import { progress, progressInOut, clamp01, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
@@ -78,6 +82,21 @@ const MARKS: { at: number; gone: number; over: number; rect: HLRect }[] = [
     over: 22,
     rect: { x1: 930, x2: CLIP_X + CLIP_W + PAD, y1: 415, y2: 700 },
   },
+  {
+    /**
+     * The tail: where the fall stops and price steadies along the level it
+     * broke down from. Starts just past the end of the trend line, so the two
+     * read as one sentence — the fall, then what it ran into.
+     *
+     * `gone` is 9690, which this scene never reaches: it ends at 9609. The
+     * close therefore never runs and the box holds to the last frame, which is
+     * as far as the request can be honoured while the footage is on screen.
+     */
+    at: 918, // 9473
+    gone: 1135, // 9690 — past this scene's last frame
+    over: 22,
+    rect: { x1: 1100, x2: CLIP_X + CLIP_W + PAD, y1: 596, y2: 700 },
+  },
 ];
 /**
  * The box is at full width before it is fully opaque on the way in, and fully
@@ -129,20 +148,104 @@ const COUNT = [
 ];
 /** The answer, in the one red this episode allows outside a candle body. */
 const RESULT = { text: "Ternyata gagal", at: 771 }; // 9326
+/**
+ * THE RING on the peak the quiz is about — 7.475, the high that has to be
+ * beaten. Round rather than boxed because it marks ONE bar, and a box across a
+ * single peak would imply a range the question is not asking about.
+ *
+ * `cx`/`cy` are in the footage's UN-SLID coordinates: it sits inside the same
+ * wrapper as the recording, so it travels with it and its numbers are read off
+ * the chart before the slide, not after.
+ */
+const RING = { cx: 1207, cy: 468, r: 80, at: 591, gone: 724, over: 22 }; // 9146 → 9279
+/**
+ * ═══ THE TREND LINE — EDIT THESE ═══
+ *
+ * The two points it rests on, NOT the two ends of the line: the low, then the
+ * lower low that confirms the fall. The ends are derived, so moving a low moves
+ * the line without anyone recomputing a slope.
+ *
+ * UN-SLID coordinates, like the ring, so it rides with the footage. The values
+ * are the WICK bottoms, not the candle bodies — this app draws its wicks grey,
+ * and a line fitted to the bodies runs straight through them. Each is then
+ * carried ~7px lower so the 3px stroke rests under the low rather than on it.
+ *
+ * `before` and `after` run the line on past each low, because a line that
+ * stops exactly on its anchors reads as a measurement rather than a direction.
+ *
+ * It is TRACED rather than placed, like every other line in this episode.
+ */
+const TREND = {
+  low: { x: 1027, y: 583 },
+  lowerLow: { x: 1145, y: 695 },
+  before: 35,
+  after: 12,
+  at: 804, // 9359
+  over: 26,
+};
+const TREND_LEN = Math.hypot(
+  TREND.lowerLow.x - TREND.low.x,
+  TREND.lowerLow.y - TREND.low.y,
+);
+/** Unit vector along the two lows, so the ends extend on the same bearing. */
+const TREND_U = {
+  x: (TREND.lowerLow.x - TREND.low.x) / TREND_LEN,
+  y: (TREND.lowerLow.y - TREND.low.y) / TREND_LEN,
+};
+const TREND_A = {
+  x: TREND.low.x - TREND_U.x * TREND.before,
+  y: TREND.low.y - TREND_U.y * TREND.before,
+};
+const TREND_B = {
+  x: TREND.lowerLow.x + TREND_U.x * TREND.after,
+  y: TREND.lowerLow.y + TREND_U.y * TREND.after,
+};
+const TREND_DRAW = TREND_LEN + TREND.before + TREND.after;
+/**
+ * THE EXIT, landing on 9609 — this scene's last frame.
+ *
+ * Everything leaves the way it arrived, reversed, and all on one clock: the
+ * box shuts like a lid on its own centre, the trend line un-draws back to
+ * where it started, the words rise and fade, and the camera whips off the
+ * footage behind them. One curve drives all four, so nothing can drift out of
+ * step with the rest.
+ *
+ * It is a whip-out rather than a true camera CUT, and it has to be: SC19 draws
+ * nothing until 9692, so there is no incoming half for a cut to hand over to.
+ * The move therefore has to finish the job itself — push, blur and fade all
+ * land together on 9609 and the frame is empty when SC19 takes over.
+ */
+const EXIT = { at: 1024, over: 30, lift: 70, push: 0.14, blur: 9 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene18 = () => {
   const f = useCurrentFrame();
 
-  // ── arriving on the slide SC17 left in flight ──
+  /** One curve for the whole exit — see EXIT. */
+  const leave = f >= EXIT.at ? progressInOut(f, EXIT.at, EXIT.over) : 0;
+  /** Nothing fades until it has already moved, so the motion is what reads. */
+  const held = 1 - clamp01((leave - 0.5) / 0.5);
+
+  // ── arriving on the slide SC17 left in flight, and pulling off at the end ──
   const g = f + SCENE_FROM;
   const dx = cutIn(g, CUTS.toChart);
-  const blur = cutBlur(g, CUTS.toChart);
+  /**
+   * The exit blur RISES to its maximum on 9609 rather than peaking halfway.
+   * A cut hides under speed, and the fastest frame here is the last one — a
+   * blur that had already resolved would leave the boundary bare.
+   */
+  const blur = Math.max(cutBlur(g, CUTS.toChart), leave * EXIT.blur);
 
   const slide =
     f >= QUIZ.slide.at
       ? progressInOut(f, QUIZ.slide.at, QUIZ.slide.over) * -QUIZ.slide.shift
       : 0;
+  const ringIn = f >= RING.at ? progressInOut(f, RING.at, RING.over) : 0;
+  const ringOut =
+    f >= RING.gone - RING.over
+      ? progressInOut(f, RING.gone - RING.over, RING.over)
+      : 0;
+  const trend = f >= TREND.at ? progress(f, TREND.at, TREND.over) : 0;
   const ask = textReveal(f, QUIZ.at);
   /** The last numeral that has arrived, and only until the verdict lands. */
   const counting = f < RESULT.at ? COUNT.filter((c) => f >= c.at).pop() : null;
@@ -155,7 +258,8 @@ export const Scene18 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: dx === 0 ? undefined : `translateX(${dx}px)`,
+          transform: `translateX(${dx}px) scale(${1 + EXIT.push * leave})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >
@@ -164,6 +268,9 @@ export const Scene18 = () => {
             position: "absolute",
             inset: 0,
             transform: slide === 0 ? undefined : `translateX(${slide}px)`,
+            /* goes with the whip, not before it: the footage is still fully
+               there while the camera is still slow enough to read */
+            opacity: held,
           }}
         >
           <ScreenClip
@@ -181,19 +288,48 @@ export const Scene18 = () => {
                 key={m.at}
                 rect={m.rect}
                 grow={open * (1 - shut)}
+                collapse={1 - leave}
                 opacity={
                   clamp01(open / FADE_IN_BY) *
-                  (1 - clamp01((shut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
+                  (1 - clamp01((shut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM))) *
+                  held
                 }
               />
             );
           })}
+
+          {trend * (1 - leave) > 0.001 && (
+            <Layer>
+              <line
+                x1={TREND_A.x}
+                y1={TREND_A.y}
+                x2={TREND_B.x}
+                y2={TREND_B.y}
+                stroke={theme.color.indigo}
+                strokeWidth={theme.shape.line}
+                strokeLinecap="round"
+                strokeDasharray={TREND_DRAW}
+                strokeDashoffset={TREND_DRAW * (1 - trend * (1 - leave))}
+              />
+            </Layer>
+          )}
+
+          <HighlightCircle
+            cx={RING.cx}
+            cy={RING.cy}
+            r={RING.r}
+            settle={ringIn}
+            opacity={
+              clamp01(ringIn / FADE_IN_BY) *
+              (1 - clamp01((ringOut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
+            }
+          />
         </div>
 
         {/* the question, beside the chart that answers it. Inline-block, so
           the column is exactly as wide as the question and the count below
           can centre on it without anyone measuring the type. */}
-        {f >= QUIZ.at && (
+        {f >= QUIZ.at && held > 0.001 && (
           <div
             style={{
               position: "absolute",
@@ -201,6 +337,10 @@ export const Scene18 = () => {
               top: QUIZ.y,
               display: "inline-block",
               fontFamily: theme.text.family,
+              /* the whole column rises and goes as one — the question and its
+                 answer are one statement, so they cannot leave separately */
+              transform: `translateY(${-EXIT.lift * leave}px)`,
+              opacity: held,
             }}
           >
             <div

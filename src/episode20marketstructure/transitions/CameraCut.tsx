@@ -84,6 +84,17 @@ export const CUTS: Record<string, Cut> = {
    * neither.
    */
   toChart: { at: 8554, over: 24, distance: 110, blur: 9 },
+  /**
+   * SC19 → SC20, as a PULL BACK — the only cut in the episode that moves away
+   * rather than closer. SC19 has narrowed to one card about one condition;
+   * SC20 is the whole chart the episode opened on. Stepping back is the
+   * sentence: you have been shown the parts, here is the thing again.
+   *
+   * Driven by a NEGATIVE amount through `cutPushOut`/`cutPushIn`, which inverts
+   * both halves — the outgoing card shrinks away and the incoming chart arrives
+   * oversized and settles. `distance` is unused; the zoom carries it.
+   */
+  toWhole: { at: 10121, over: 24, distance: 0, blur: 9 },
 };
 
 /**

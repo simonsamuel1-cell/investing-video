@@ -19,6 +19,7 @@ export const HighlightBox = ({
   rect,
   opacity = 1,
   grow = 1,
+  collapse = 1,
   radius = 14,
 }: {
   rect: HLRect;
@@ -29,18 +30,60 @@ export const HighlightBox = ({
    * where the thing being pointed at starts — never moves.
    */
   grow?: number;
+  /**
+   * 0 → 1 of the box's height, measured from its own CENTRE. Width closes from
+   * an edge because the edge is the claim; height has no such edge, so it shuts
+   * like a lid and the thing inside stays in the middle of it while it goes.
+   */
+  collapse?: number;
   radius?: number;
 }) => {
   const width = (rect.x2 - rect.x1) * Math.max(0, Math.min(1, grow));
-  if (opacity <= 0.001 || width < 1) return null;
+  const height = (rect.y2 - rect.y1) * Math.max(0, Math.min(1, collapse));
+  if (opacity <= 0.001 || width < 1 || height < 1) return null;
   return (
     <Layer opacity={opacity}>
       <rect
         x={rect.x1}
-        y={rect.y1}
+        y={(rect.y1 + rect.y2) / 2 - height / 2}
         width={width}
-        height={rect.y2 - rect.y1}
-        rx={radius}
+        height={height}
+        rx={Math.min(radius, height / 2)}
+        fill={theme.color.indigoWash}
+        stroke={theme.color.indigo}
+        strokeWidth={theme.shape.rule}
+      />
+    </Layer>
+  );
+};
+
+/**
+ * The same mark, drawn round. For a thing on a chart that has no width worth
+ * bracketing — a single peak — where a box would imply a range it does not
+ * mean. It lands rather than opens: a ring cannot draw sideways out of an
+ * edge, so it settles in from slightly large instead.
+ */
+export const HighlightCircle = ({
+  cx,
+  cy,
+  r,
+  opacity = 1,
+  settle = 1,
+}: {
+  cx: number;
+  cy: number;
+  r: number;
+  opacity?: number;
+  /** 0 → 1. Below 1 the ring is oversized, so it closes onto its target. */
+  settle?: number;
+}) => {
+  if (opacity <= 0.001) return null;
+  return (
+    <Layer opacity={opacity}>
+      <circle
+        cx={cx}
+        cy={cy}
+        r={r * (1.18 - 0.18 * Math.max(0, Math.min(1, settle)))}
         fill={theme.color.indigoWash}
         stroke={theme.color.indigo}
         strokeWidth={theme.shape.rule}

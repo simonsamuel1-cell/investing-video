@@ -23,6 +23,7 @@ import { Scene15, SC15 } from "../scenes/Scene15";
 import { theme } from "../theme";
 import { hold, progressInOut } from "../helpers";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
+import { sceneBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { plot } from "../data/shape";
 import { FAILURE, FAIL_STOP_T } from "../data/shapes";
 
@@ -54,6 +55,8 @@ const CHART_IN = { at: 92, over: 16 };
 const TRACE_FROM = 100;
 /** This group's `from` in the Composition — needed to read the shared cut. */
 const GROUP_FROM = 6851;
+/** One slow breath over the card, starting once the title has cleared. */
+const BREATH = { at: 120, over: 620 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(FAILURE, BOX, { pad: 0.12 });
@@ -83,6 +86,7 @@ export const FailedPeakGroup = () => {
   const g = f + GROUP_FROM;
   /** The two moves are 800 frames apart, so only one is ever non-zero. */
   const dy = cutIn(g, CUTS.toQuestion) + cutOut(g, CUTS.toMistake);
+  const breath = sceneBreath(f, BREATH.at, BREATH.over);
   const blur = Math.max(cutBlur(g, CUTS.toQuestion), cutBlur(g, CUTS.toMistake));
 
   return (
@@ -91,7 +95,8 @@ export const FailedPeakGroup = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: dy === 0 ? undefined : `translateY(${dy}px)`,
+          transform: `translateY(${dy}px) scale(${breath})`,
+          transformOrigin: LONG_ORIGIN,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >

@@ -18,7 +18,8 @@ import { CandleChart, barGrid } from "../components/CandleChart";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeOut, textReveal } from "../helpers";
-import { plot, candles } from "../data/shape";
+import { plot, candles, type Bar } from "../data/shape";
+import { seeded } from "../helpers";
 import { CUTS, cutOut, cutIn, cutBlur } from "../transitions/CameraCut";
 import { longBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { STAIR_BOX, pathOf } from "../data/staircaseView";
@@ -27,11 +28,12 @@ import { BARS } from "./Scene01";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  convert: 0, // the line becomes candles, left to right
+  convert: 0, // the line becomes candles, left to right — HALFWAY only
   one: 4, // "Pegang satu"
   words: 20, // global 3528 — "prinsip sederhana:"
   dim: 16, // the chart steps back behind the principle
   bigOut: 50, // clears exactly on 3566
+  extend: 56, // global 3564 — the series carries on, hollow, to the card's edge
   restore: 58, // global 3566 — the chart comes back to full
   line1: 68, // global 3576 — "anggap tren masih berlanjut"
   line2: 115, // global 3623 — "sampai chart benar-benar menunjukkan"
@@ -47,6 +49,40 @@ const BOX = STAIR_BOX;
 const DIMMED = 0.2;
 /** Frames the left-to-right conversion takes. */
 const CONVERT_OVER = 34;
+/**
+ * THE HANDOVER ONLY GOES HALFWAY.
+ *
+ * The candles take over the left half of the descent and stop; the line keeps
+ * retiring to the right with nothing following it, so the sweep ends on half a
+ * chart and half an empty card. The line is FULLY gone — what is missing on the
+ * right is not the old notation still hanging on, it is the series not drawn
+ * yet. That empty right half is what the rest of the scene fills.
+ *
+ * The candle front and the line's edge move together over that first half, so
+ * the handover looks like one edge, not two racing each other.
+ */
+const HALF = 0.5;
+/**
+ * The unconfirmed continuation, from 3564: the rest of the descent plus enough
+ * bars to reach the card's right border, all drawn HOLLOW. Hollow because the
+ * narration at this point is an assumption — "anggap tren berlanjut" — and an
+ * assumption drawn in candle colour would be claiming it already happened.
+ */
+const EXTEND_OVER = 46;
+/**
+ * From 3631 the chart SCROLLS, which is what a chart does when it runs out of
+ * room on the right. The white card does not move — only what is drawn on it —
+ * so the card stays the frame and the price moves through it.
+ */
+const SHIFT = { at: 123, over: 34, px: 400 };
+/** The hollow bars take their colour: the assumption is now what happened. */
+const FILL_OVER = 24;
+/**
+ * …and the series carries on UP, into the room the scroll opened. `to` is well
+ * inside the descent's own high, so the price scale never has to change — a
+ * chart that rescales under the viewer moves everything they were reading.
+ */
+const RISE = { at: 147, over: 80, bars: 16, to: 5700 };
 /**
  * The hook's chart, minus its last eleven candles: the series stops before the
  * answer, which is the only honest way to draw a question about what comes next.
@@ -84,6 +120,67 @@ const LINE_STYLE = {
 const P = plot(DESCENT, BOX, { pad: 0.12 });
 /** The descent as candles — same curve, same box, the other notation. */
 const DESC_BARS = candles(DESCENT, 64, 41, 0.012);
+/**
+ * ONE PRICE SCALE FOR THE WHOLE SCENE, taken from the descent alone.
+ *
+ * Everything drawn after it — the hollow tail, the rise — is measured against
+ * this, so bars that are already on screen never move when new ones arrive.
+ * `barGrid` would otherwise refit to whatever is in the array, and the viewer
+ * would see the chart they are reading slide under the bars being added to it.
+ */
+const RANGE: [number, number] = [
+  Math.min(...DESC_BARS.map((b) => b.l)),
+  Math.max(...DESC_BARS.map((b) => b.h)),
+];
+const SPAN = RANGE[1] - RANGE[0];
+/** One bar's width, fixed. Every box below is sized from it, never the reverse. */
+const SLOT = BOX.w / DESC_BARS.length;
+/**
+ * Carries the series on from where it stopped, bar by bar, to a target close.
+ *
+ * `candles()` needs a whole curve up front, but this continuation has to START
+ * on the last close already on screen — so it is generated forward instead,
+ * each open inheriting the previous close. Seeded, like everything else here;
+ * a render is the same every time.
+ */
+const carry = (prev: Bar[], count: number, to: number, seed: number): Bar[] => {
+  const rnd = seeded(seed);
+  const from = prev[prev.length - 1].c;
+  const out: Bar[] = [];
+  let open = from;
+  for (let i = 0; i < count; i++) {
+    const close =
+      from + (to - from) * ((i + 1) / count) + (rnd() - 0.5) * SPAN * 0.05;
+    const up = SPAN * (0.005 + rnd() * 0.012) * (rnd() < 0.16 ? 3.2 : 1);
+    const down = SPAN * (0.005 + rnd() * 0.012) * (rnd() < 0.16 ? 3.2 : 1);
+    out.push({
+      o: open,
+      c: close,
+      h: Math.max(open, close) + up,
+      l: Math.min(open, close) - down,
+    });
+    open = close;
+  }
+  return out;
+};
+/** Exactly enough bars to carry the series from the plot's inset to the card's edge. */
+const TAIL_N = Math.round(
+  (theme.stage.card.x + theme.stage.card.w - (BOX.x + BOX.w)) / SLOT,
+);
+const TAIL = carry(DESC_BARS, TAIL_N, DESC_BARS[DESC_BARS.length - 1].c, 77);
+const RISE_BARS = carry([...DESC_BARS, ...TAIL], RISE.bars, RISE.to, 93);
+const SERIES = [...DESC_BARS, ...TAIL, ...RISE_BARS];
+/** Where the hollow bars start: the exact bar the handover stopped on. */
+const HOLLOW_FROM = Math.round(DESC_BARS.length * HALF);
+/** How many bars the scroll has to reveal past the card's right border. */
+const AFTER_HALF = SERIES.length - HOLLOW_FROM;
+/** The box the whole series is measured in — `x` slides, the slot never does. */
+const seriesBox = (dx: number) => ({
+  x: BOX.x - dx,
+  y: BOX.y,
+  w: SLOT * SERIES.length,
+  h: BOX.h,
+});
 /** The hook's own bars, cut short — the same series SC01 and SC02 drew. */
 const HOOK_BARS = BARS.slice(0, BARS.length - TRIM);
 const HOOK_TICKS = [4400, 4800, 5200, 5600, 6000];
@@ -122,8 +219,19 @@ const bigWord = (
 export const Scene08 = () => {
   const f = useCurrentFrame();
 
-  // ── the line hands over to the candles ──
+  // ── the line hands over to the candles, and only gets halfway ──
   const convert = progress(f, T.convert, CONVERT_OVER);
+  /** The candle front stops at the halfway mark; the line keeps going. */
+  const front = Math.min(convert, HALF);
+  const extended = f >= T.extend ? progress(f, T.extend, EXTEND_OVER) : 0;
+  const risen = f >= RISE.at ? progress(f, RISE.at, RISE.over) : 0;
+  const shown =
+    Math.round(DESC_BARS.length * front) +
+    Math.round((AFTER_HALF - RISE.bars) * extended) +
+    Math.round(RISE.bars * risen);
+  const scroll = f >= SHIFT.at ? SHIFT.px * progress(f, SHIFT.at, SHIFT.over) : 0;
+  const hollow = 1 - (f >= SHIFT.at ? progress(f, SHIFT.at, FILL_OVER) : 0);
+
   const dim = f >= T.dim ? progress(f, T.dim, 20) : 0;
   const restore = f >= T.restore ? progress(f, T.restore, 16) : 0;
   const chartOpacity = 1 - dim * (1 - DIMMED) * (1 - restore);
@@ -188,14 +296,29 @@ export const Scene08 = () => {
             </Layer>
           )}
 
+          {/* the series itself — clipped to the card, because once it scrolls
+            the bars behind the left edge are off the surface they are drawn on */}
           {before && (
-            <CandleChart
-              bars={DESC_BARS}
-              box={BOX}
-              reveal={convert}
-              axis={false}
-              opacity={chartOpacity}
-            />
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                clipPath: `inset(0px ${theme.canvas.width - (theme.stage.card.x + theme.stage.card.w)}px 0px ${theme.stage.card.x}px)`,
+              }}
+            >
+              <CandleChart
+                bars={SERIES}
+                box={seriesBox(scroll)}
+                range={RANGE}
+                /* half a bar back, so `ceil` inside the chart lands on exactly
+                   `shown` and float error can never add a phantom candle */
+                reveal={Math.max(0, shown - 0.5) / SERIES.length}
+                axis={false}
+                opacity={chartOpacity}
+                hollowFrom={HOLLOW_FROM}
+                hollow={hollow}
+              />
+            </div>
           )}
           {!before && (
             <CandleChart

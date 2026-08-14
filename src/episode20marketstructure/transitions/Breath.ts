@@ -59,6 +59,20 @@ export const longBreath = (global: number) => {
 /** The canvas centre — a whole-frame breath has to be about the frame. */
 export const LONG_ORIGIN = `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`;
 
+/**
+ * A breath scoped to ONE scene, in that scene's own local frames.
+ *
+ * Same shape as the two named breaths above — one rise, one fall, never a loop
+ * — but a scene that owns its card from start to finish has no neighbour to
+ * co-ordinate with, so it does not need a global window. `at` and `over` are
+ * chosen to cover the card's life and nothing else: a breath still running when
+ * the card has gone would be scaling an empty frame.
+ */
+export const sceneBreath = (f: number, at: number, over: number, amount = LONG.amount) => {
+  if (f <= at || f >= at + over) return 1;
+  return 1 + amount * Math.sin(Math.PI * ((f - at) / over));
+};
+
 /** Moves a point the way the scaled group moves it, for un-scaled overlays. */
 export const breathPoint = (p: { x: number; y: number }, s: number) => ({
   x: BREATH_CENTRE.x + (p.x - BREATH_CENTRE.x) * s,

@@ -19,12 +19,15 @@ import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut, textReveal, clamp01 } from "../helpers";
 import { CUTS, cutIn, cutPushOut, cutBlur } from "../transitions/CameraCut";
+import { sceneBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { candles, window as cut } from "../data/shape";
 import { TIMEFRAME, TF_WINDOW, TF_HIGHER_LOW } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /** This scene's `from` in the Composition — needed to read the shared cut. */
 const SCENE_FROM = 7666;
+/** One slow breath over the card, starting once the statement has cleared. */
+const BREATH = { at: 120, over: 400 };
 const T = {
   /**
    * 7762. Held back from 60 so the opening statement owns the frame to 7760;
@@ -228,6 +231,7 @@ export const Scene16 = () => {
   const dy = cutIn(g, CUTS.toMistake);
   /** ...and leaving on the push into the app. */
   const push = cutPushOut(g, CUTS.toApp, 0.18);
+  const breath = sceneBreath(f, BREATH.at, BREATH.over);
   const blur = Math.max(cutBlur(g, CUTS.toMistake), cutBlur(g, CUTS.toApp));
 
   /** The window's t mapped into the view, then onto the bar that holds it. */
@@ -248,8 +252,8 @@ export const Scene16 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translateY(${dy}px) scale(${push})`,
-          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
+          transform: `translateY(${dy}px) scale(${push * breath})`,
+          transformOrigin: LONG_ORIGIN,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >

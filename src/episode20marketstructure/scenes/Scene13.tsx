@@ -25,6 +25,7 @@ import { TuntunMark } from "../components/TuntunMark";
 import { theme } from "../theme";
 import { hold, progress, progressInOut, clamp01, textReveal } from "../helpers";
 import { CUTS, cutOut, cutBlur } from "../transitions/CameraCut";
+import { sceneBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { plot } from "../data/shape";
 import { FLOOR, FLOOR_LEVEL, FLOOR_LH } from "../data/shapes";
 import { HANDOFF } from "./Scene12";
@@ -74,6 +75,11 @@ const QUOTE_LINES = [
 const MARK_FLOAT = { amount: 12, period: 96 };
 /** This scene's `from` in the Composition — needed to read the shared cut. */
 const SCENE_FROM = 6351;
+/**
+ * One slow breath over the card, ending well before the quote takes the frame
+ * — there is no white background left to breathe after that.
+ */
+const BREATH = { at: 30, over: 300 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BOX0 = {
@@ -109,6 +115,7 @@ export const Scene13 = () => {
   // ── leaving on the rise CG-B arrives on ──
   const g = f + SCENE_FROM;
   const dy = cutOut(g, CUTS.toQuestion);
+  const breath = sceneBreath(f, BREATH.at, BREATH.over);
   const blur = cutBlur(g, CUTS.toQuestion);
 
   return (
@@ -117,7 +124,8 @@ export const Scene13 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: dy === 0 ? undefined : `translateY(${dy}px)`,
+          transform: `translateY(${dy}px) scale(${breath})`,
+          transformOrigin: LONG_ORIGIN,
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >
