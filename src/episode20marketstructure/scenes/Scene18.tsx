@@ -46,6 +46,202 @@ const CLIP_X = (theme.canvas.width - CLIP_W) / 2;
 /** How far a box reaches past the footage on the side it starts or ends on. */
 const PAD = 20;
 /**
+ * THE TRADINGVIEW RECORDING, on from this scene's first frame.
+ *
+ * Landscape, unlike the ASII capture, so its height follows from its own
+ * 1500 × 776 — nothing is stretched. 1054 frames at 30fps, which covers
+ * 8555 → 9608 and leaves this scene's last frame holding on its last picture.
+ */
+const TV = { src: "tradingview.mp4", aspect: 1500 / 776 };
+/**
+ * ═══ THE SPLIT, ON 8639 ═══
+ *
+ * 8555 → 8638 is the ASII capture ALONE, centred and at full size. The
+ * TradingView clip is mounted for all of it but drawn at zero opacity, so it
+ * is running the whole time and arrives already at the right moment in its own
+ * footage — it is not started on 8639, it is revealed on 8639.
+ *
+ * On 8639 the ASII clip loses 30% and the TradingView clip comes up beside it,
+ * sized to whatever is left of the active width once that 30% is gone. Every
+ * number below is derived from `SHRINK`, so changing it re-solves both columns.
+ */
+const SPLIT = { at: 84, over: 20 };
+const SHRINK = 0.3;
+const GAP = 32;
+const ASII_W = (CLIP.h * CLIP.aspect - CLIP.inset * 2) * (1 - SHRINK);
+const TV_W = theme.stage.active.w - ASII_W - GAP;
+const TV_H = TV_W / TV.aspect;
+const HALF = theme.canvas.width / 2;
+/** The ASII clip's centre while it is alone — what it scales about. */
+const CENTRE_Y = theme.margin.top + CLIP.h / 2;
+const ASII_DX = theme.stage.active.x + ASII_W / 2 - HALF;
+const TV_DX = theme.stage.active.x + ASII_W + GAP + TV_W / 2 - HALF;
+/** Centred in the active area, on the same middle the ASII clip scales about. */
+const TV_TOP = CENTRE_Y - TV_H / 2;
+/**
+ * ═══ THE TRADINGVIEW TREND LINE — EDIT THESE ═══
+ *
+ * A zigzag along the swing highs and lows of the TradingView chart, in TWO
+ * stages: 8778 → 8783 draws the opening stretch, then 8838 → 8918 carries the
+ * same line on to the right-hand end. It is one path traced in two passes, not
+ * two lines — so the second stage continues exactly where the first stopped.
+ *
+ * Points are FRACTIONS of the clip's own rect: `u` 0 is its left edge and 1 its
+ * right, `v` 0 its top and 1 its bottom. Written that way because the clip's
+ * size is derived from SHRINK, and a line in canvas pixels would come off the
+ * chart the moment either changes.
+ *
+ * `STAGE1_END` is the index of the last point the first pass draws. That point
+ * sits ON the segment between its neighbours, so moving where the first stage
+ * stops does not bend the line.
+ *
+ * The vertices were read off the recording's own swing highs and lows, so each
+ * one rests on a wick rather than near it.
+ */
+const TV_TREND = {
+  at: 223, // 8778
+  over: 5,
+  resume: 283, // 8838
+  resumeOver: 80, // lands on 8918
+  /**
+   * IT LEAVES WHEN THE QUESTION ARRIVES. By 9118 the recording has scrolled on
+   * to a later window and the line is floating over candles it was never fitted
+   * to, so it un-draws right to left — retracing its own trim backwards, which
+   * is the only honest way for a traced line to go.
+   */
+  out: { at: 563, over: 24 },
+  points: [
+    { u: 0.009, v: 0.659 },
+    { u: 0.158, v: 0.614 },
+    { u: 0.252, v: 0.718 },
+    { u: 0.344, v: 0.594 }, // ← where the first stage stops
+    { u: 0.448, v: 0.453 },
+    { u: 0.477, v: 0.565 },
+    { u: 0.618, v: 0.402 },
+    { u: 0.637, v: 0.48 },
+    { u: 0.661, v: 0.261 },
+    { u: 0.68, v: 0.377 },
+    { u: 0.796, v: 0.227 },
+    { u: 0.815, v: 0.333 },
+    { u: 0.923, v: 0.155 },
+    { u: 0.929, v: 0.347 },
+    { u: 0.938, v: 0.227 },
+    { u: 0.957, v: 0.435 },
+  ],
+  stage1End: 3,
+};
+/**
+ * The trend line, resolved against the clip in its UN-TRANSLATED place — it
+ * lives inside the same wrapper as the footage, so it is measured where
+ * `ScreenClip` puts it (centred) and carried into the column by that wrapper.
+ */
+const TV_LEFT = HALF - TV_W / 2;
+const TV_PTS = TV_TREND.points.map((p) => ({
+  x: TV_LEFT + p.u * TV_W,
+  y: TV_TOP + p.v * TV_H,
+}));
+const TV_PATH = TV_PTS.map(
+  (p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`,
+).join(" ");
+/** Arc length, and how much of it the first stage is responsible for. */
+const TV_RUN = TV_PTS.reduce<number[]>(
+  (a, p, i) => [
+    ...a,
+    i === 0
+      ? 0
+      : a[i - 1] + Math.hypot(p.x - TV_PTS[i - 1].x, p.y - TV_PTS[i - 1].y),
+  ],
+  [],
+);
+const TV_LEN = TV_RUN[TV_RUN.length - 1];
+const TV_STAGE1 = TV_RUN[TV_TREND.stage1End] / TV_LEN;
+/**
+ * ═══ THE DOWNTREND — EDIT THESE ═══
+ *
+ * Drawn once "Ternyata gagal" is on screen: the answer to the quiz, stated on
+ * the chart rather than only in words.
+ *
+ * IT IS A ZIGZAG, NOT A STRAIGHT LINE. A single sloped line would be one claim
+ * about a ceiling; what the fall actually consists of is lower high after lower
+ * high, and the only way to show that is to walk the swings. It reads as the
+ * mirror of the zigzag that climbed — same notation, opposite direction.
+ *
+ * Fractions of the clip rect, like the climb above, and the vertices were read
+ * off the recording's own swing highs and lows so each rests on a wick.
+ *
+ * The recording is STILL between 9360 and 9575, which is the whole life of this
+ * line — a path pinned to a chart that is panning would come off it at once.
+ */
+const TV_DOWN = {
+  at: 781, // 9336 — ten frames after the verdict lands
+  over: 54,
+  points: [
+    { u: 0.268, v: 0.155 },
+    { u: 0.322, v: 0.455 },
+    { u: 0.345, v: 0.214 },
+    { u: 0.467, v: 0.447 },
+    { u: 0.471, v: 0.283 },
+    { u: 0.51, v: 0.429 },
+    { u: 0.56, v: 0.283 },
+    { u: 0.695, v: 0.718 },
+    { u: 0.745, v: 0.614 },
+    { u: 0.764, v: 0.702 },
+    { u: 0.834, v: 0.545 },
+    { u: 0.862, v: 0.627 },
+    { u: 0.873, v: 0.548 },
+    { u: 0.929, v: 0.659 },
+  ],
+};
+const DOWN_PTS = TV_DOWN.points.map((p) => ({
+  x: TV_LEFT + p.u * TV_W,
+  y: TV_TOP + p.v * TV_H,
+}));
+const DOWN_PATH = DOWN_PTS.map(
+  (p, i) => `${i === 0 ? "M" : "L"}${p.x.toFixed(1)},${p.y.toFixed(1)}`,
+).join(" ");
+const DOWN_DRAW = DOWN_PTS.reduce(
+  (a, p, i) =>
+    i === 0
+      ? 0
+      : a + Math.hypot(p.x - DOWN_PTS[i - 1].x, p.y - DOWN_PTS[i - 1].y),
+  0,
+);
+/**
+ * ═══ THE TWO MARKS ON THE TREND LINE ═══
+ *
+ * The higher low and the higher high at its right-hand end — the pair that
+ * makes the last leg a continuation rather than merely a rise.
+ *
+ * They are given as INDICES INTO `TV_TREND.points`, never as coordinates of
+ * their own, so a ring cannot drift off the vertex it marks when the line is
+ * edited. `hl` is the low, `hh` the high; `r` is shared, because the two are
+ * one observation and a pair of different-sized rings would rank them.
+ *
+ * The second arrives a beat after the first: a higher low is only readable as
+ * one once the high that follows it has cleared the last, so the order the
+ * rings appear in is the order the reading is made in.
+ */
+const TV_MARKS = {
+  hl: 11,
+  hh: 12,
+  r: 46,
+  at: 375,
+  stagger: 12,
+  gone: 464,
+  over: 18,
+};
+/**
+ * The three highlight boxes are back ON.
+ *
+ * Their rects below are still written against the ASII capture at FULL size and
+ * centred, and they do not need rewriting: all three live inside the ASII
+ * wrapper, so the same `SHRINK` that takes 30% off the footage takes 30% off
+ * them, and the same translate carries them into its column. A box therefore
+ * cannot come off the chart it was measured against, whatever the layout does
+ * next.
+ */
+const SHOW_MARKS = true;
+/**
  * ═══ THE TWO HIGHLIGHTS — EDIT THESE ═══
  *
  * Canvas pixels, because what they point at is a place on a recording and
@@ -106,33 +302,33 @@ const MARKS: { at: number; gone: number; over: number; rect: HLRect }[] = [
 const FADE_IN_BY = 0.45;
 const FADE_OUT_FROM = 0.6;
 /**
- * THE QUIZ, from 9112. The recording steps aside and the question is put in
- * words beside it — the chart stays on screen because the answer is IN it.
+ * THE QUIZ, from 9112. NOTHING MOVES for it — the pair of recordings holds
+ * exactly where it is and the words are placed around it instead.
  *
- * `shift` is how far the footage moves left; the text column starts clear of
- * where it lands. Everything in the column shares `x`, so the question, the
- * count and the verdict all hang off one left edge.
+ * The three parts take the three places the frame has left: the question in the
+ * strip above the clips, the countdown dead centre over them, the verdict in
+ * the strip below. All three are centred on the canvas, so the question, the
+ * count and the answer share one vertical axis and read top to bottom.
+ *
+ * `y` values are CENTRES. The two strips are what is left of the active area
+ * once the clips have taken their band, and the count sits on the canvas's own
+ * middle rather than on either clip's.
  */
 const QUIZ = {
-  slide: { at: 557, shift: 450, over: 26 },
-  x: 880,
-  /** TOP of the question, not its centre — the answer stacks below it. */
-  y: 396,
+  /** Between the safe top and the top of the clips. */
+  y: 118,
   size: theme.text.title.size,
   weight: theme.text.title.weight,
   at: 563,
-  /** From the top of the question down to the top of the answer. */
-  gap: 150,
+  /** Dead centre of the frame. */
+  countY: 540,
   countSize: 120,
+  /** Between the bottom of the clips and the subtitle band. */
+  resultY: 908,
 };
 /**
  * One line, so "Quiz:" is a coloured label inside the sentence rather than a
  * heading over it.
- *
- * The question and the answer share ONE inline-block column, which is why the
- * numerals can be centred on the question without anyone measuring the text:
- * the column shrinks to the question's own width and the count is centred
- * inside it. Change the wording and the centring follows by itself.
  */
 const QUIZ_LEAD = "Quiz:";
 const QUIZ_TEXT = " Mampukah melewati 7300?";
@@ -236,10 +432,39 @@ export const Scene18 = () => {
    */
   const blur = Math.max(cutBlur(g, CUTS.toChart), leave * EXIT.blur);
 
-  const slide =
-    f >= QUIZ.slide.at
-      ? progressInOut(f, QUIZ.slide.at, QUIZ.slide.over) * -QUIZ.slide.shift
+  /**
+   * The trend line's trim, in ONE number: the first stage takes it to
+   * `TV_STAGE1`, the second carries it the rest of the way. Between the two it
+   * simply holds, which is what makes them read as one line pausing rather than
+   * two lines being drawn.
+   */
+  const tvTrend =
+    f >= TV_TREND.resume
+      ? TV_STAGE1 +
+        (1 - TV_STAGE1) * progress(f, TV_TREND.resume, TV_TREND.resumeOver)
+      : f >= TV_TREND.at
+        ? TV_STAGE1 * progress(f, TV_TREND.at, TV_TREND.over)
+        : 0;
+  /** …and it retracts when the question arrives — see TV_TREND.out. */
+  const tvGone =
+    f >= TV_TREND.out.at
+      ? progressInOut(f, TV_TREND.out.at, TV_TREND.out.over)
       : 0;
+  const tvDrawn = tvTrend * (1 - tvGone);
+  /** The downtrend that answers the quiz, traced like every other line here. */
+  const down = f >= TV_DOWN.at ? progress(f, TV_DOWN.at, TV_DOWN.over) : 0;
+
+  /** Each ring closes onto its vertex, then both leave together on 9019. */
+  const markOut =
+    f >= TV_MARKS.gone - TV_MARKS.over
+      ? progressInOut(f, TV_MARKS.gone - TV_MARKS.over, TV_MARKS.over)
+      : 0;
+  const markIn = (at: number) =>
+    f >= at ? progressInOut(f, at, TV_MARKS.over) : 0;
+
+  /** 0 before 8639, 1 once the pair has settled — see SPLIT. */
+  const split = f >= SPLIT.at ? progressInOut(f, SPLIT.at, SPLIT.over) : 0;
+
   const ringIn = f >= RING.at ? progressInOut(f, RING.at, RING.over) : 0;
   const ringOut =
     f >= RING.gone - RING.over
@@ -267,130 +492,215 @@ export const Scene18 = () => {
           style={{
             position: "absolute",
             inset: 0,
-            transform: slide === 0 ? undefined : `translateX(${slide}px)`,
             /* goes with the whip, not before it: the footage is still fully
                there while the camera is still slow enough to read */
             opacity: held,
           }}
         >
-          <ScreenClip
-            src={CLIP.src}
-            height={CLIP.h}
-            aspect={CLIP.aspect}
-            inset={CLIP.inset}
-          />
-          {MARKS.map((m) => {
-            const shutAt = m.gone - m.over;
-            const open = f >= m.at ? progressInOut(f, m.at, m.over) : 0;
-            const shut = f >= shutAt ? progressInOut(f, shutAt, m.over) : 0;
-            return (
-              <HighlightBox
-                key={m.at}
-                rect={m.rect}
-                grow={open * (1 - shut)}
-                collapse={1 - leave}
-                opacity={
-                  clamp01(open / FADE_IN_BY) *
-                  (1 - clamp01((shut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM))) *
-                  held
-                }
-              />
-            );
-          })}
+          {/* the ASII column: footage, boxes, trend and ring in ONE wrapper, so
+            every mark stays welded to the chart it was measured against */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translateX(${ASII_DX * split}px) scale(${1 - SHRINK * split})`,
+              transformOrigin: `${HALF}px ${CENTRE_Y}px`,
+            }}
+          >
+            <ScreenClip
+              src={CLIP.src}
+              height={CLIP.h}
+              aspect={CLIP.aspect}
+              inset={CLIP.inset}
+            />
+            {SHOW_MARKS &&
+              MARKS.map((m) => {
+                const shutAt = m.gone - m.over;
+                const open = f >= m.at ? progressInOut(f, m.at, m.over) : 0;
+                const shut = f >= shutAt ? progressInOut(f, shutAt, m.over) : 0;
+                return (
+                  <HighlightBox
+                    key={m.at}
+                    rect={m.rect}
+                    grow={open * (1 - shut)}
+                    collapse={1 - leave}
+                    opacity={
+                      clamp01(open / FADE_IN_BY) *
+                      (1 -
+                        clamp01((shut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM))) *
+                      held
+                    }
+                  />
+                );
+              })}
 
-          {trend * (1 - leave) > 0.001 && (
-            <Layer>
-              <line
-                x1={TREND_A.x}
-                y1={TREND_A.y}
-                x2={TREND_B.x}
-                y2={TREND_B.y}
-                stroke={theme.color.indigo}
-                strokeWidth={theme.shape.line}
-                strokeLinecap="round"
-                strokeDasharray={TREND_DRAW}
-                strokeDashoffset={TREND_DRAW * (1 - trend * (1 - leave))}
-              />
-            </Layer>
-          )}
+            {trend * (1 - leave) > 0.001 && (
+              <Layer>
+                <line
+                  x1={TREND_A.x}
+                  y1={TREND_A.y}
+                  x2={TREND_B.x}
+                  y2={TREND_B.y}
+                  stroke={theme.color.indigo}
+                  strokeWidth={theme.shape.line}
+                  strokeLinecap="round"
+                  strokeDasharray={TREND_DRAW}
+                  strokeDashoffset={TREND_DRAW * (1 - trend * (1 - leave))}
+                />
+              </Layer>
+            )}
 
-          <HighlightCircle
-            cx={RING.cx}
-            cy={RING.cy}
-            r={RING.r}
-            settle={ringIn}
-            opacity={
-              clamp01(ringIn / FADE_IN_BY) *
-              (1 - clamp01((ringOut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
-            }
-          />
+            <HighlightCircle
+              cx={RING.cx}
+              cy={RING.cy}
+              r={RING.r}
+              settle={ringIn}
+              opacity={
+                clamp01(ringIn / FADE_IN_BY) *
+                (1 - clamp01((ringOut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
+              }
+            />
+          </div>
+
+          {/* the TradingView column, beside it and inside the same wrapper —
+            the two are one picture and have to travel together. Mounted from
+            frame 0 and merely INVISIBLE before the split, so its own footage
+            is already where it should be when it is revealed. */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translateX(${TV_DX}px)`,
+              opacity: split,
+            }}
+          >
+            <ScreenClip
+              src={TV.src}
+              height={TV_H}
+              aspect={TV.aspect}
+              top={TV_TOP}
+            />
+            {tvDrawn > 0.001 && (
+              <Layer>
+                <path
+                  d={TV_PATH}
+                  fill="none"
+                  stroke={theme.color.indigo}
+                  strokeWidth={theme.shape.line}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray={TV_LEN}
+                  strokeDashoffset={TV_LEN * (1 - tvDrawn)}
+                />
+              </Layer>
+            )}
+
+            {/* lower high after lower high — what the failed push became */}
+            {down * (1 - leave) > 0.001 && (
+              <Layer>
+                <path
+                  d={DOWN_PATH}
+                  fill="none"
+                  stroke={theme.color.indigo}
+                  strokeWidth={theme.shape.line}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray={DOWN_DRAW}
+                  strokeDashoffset={DOWN_DRAW * (1 - down * (1 - leave))}
+                />
+              </Layer>
+            )}
+
+            {/* the higher low, then the higher high it is read against */}
+            {[TV_MARKS.hl, TV_MARKS.hh].map((i, n) => {
+              const on = markIn(TV_MARKS.at + n * TV_MARKS.stagger);
+              return (
+                <HighlightCircle
+                  key={i}
+                  cx={TV_PTS[i].x}
+                  cy={TV_PTS[i].y}
+                  r={TV_MARKS.r}
+                  settle={on}
+                  opacity={
+                    clamp01(on / FADE_IN_BY) *
+                    (1 -
+                      clamp01((markOut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
+                  }
+                />
+              );
+            })}
+          </div>
         </div>
 
-        {/* the question, beside the chart that answers it. Inline-block, so
-          the column is exactly as wide as the question and the count below
-          can centre on it without anyone measuring the type. */}
+        {/* THREE PLACES, NOT ONE COLUMN. Each is centred on the canvas and
+          rises with the same exit, so the question, the count and the answer
+          still leave as one statement even though they no longer touch. */}
         {f >= QUIZ.at && held > 0.001 && (
           <div
             style={{
               position: "absolute",
-              left: QUIZ.x,
-              top: QUIZ.y,
-              display: "inline-block",
+              inset: 0,
               fontFamily: theme.text.family,
-              /* the whole column rises and goes as one — the question and its
-                 answer are one statement, so they cannot leave separately */
               transform: `translateY(${-EXIT.lift * leave}px)`,
               opacity: held,
             }}
           >
+            {/* the question, in the strip above the clips */}
             <div
               style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: QUIZ.y,
+                transform: `translateY(calc(-50% + ${ask.dy}px))`,
+                textAlign: "center",
                 fontSize: QUIZ.size,
                 fontWeight: QUIZ.weight,
                 color: theme.color.ink,
                 whiteSpace: "nowrap",
                 opacity: ask.opacity,
-                transform: `translateY(${ask.dy}px)`,
               }}
             >
               <span style={{ color: theme.color.indigo }}>{QUIZ_LEAD}</span>
               {QUIZ_TEXT}
             </div>
 
-            {/* numerals POP — see Chip. A number that faded in would still be
-              arriving when the next one is due. */}
+            {/* the count, dead centre. Numerals POP — see Chip. A number that
+              faded in would still be arriving when the next one is due. */}
             {counting && (
               <div
                 style={{
                   position: "absolute",
                   left: 0,
                   right: 0,
-                  top: QUIZ.gap,
+                  top: QUIZ.countY,
+                  transform: `translateY(-50%) scale(${0.94 + 0.06 * pop})`,
                   textAlign: "center",
                   fontSize: QUIZ.countSize,
                   fontWeight: QUIZ.weight,
                   color: theme.color.indigo,
                   opacity: pop,
-                  transform: `scale(${0.94 + 0.06 * pop})`,
                 }}
               >
                 {counting.label}
               </div>
             )}
 
-            {/* left-aligned on the question, so the answer reads as its reply */}
+            {/* the verdict, in the strip below the clips */}
             {result && (
               <div
                 style={{
                   position: "absolute",
                   left: 0,
-                  top: QUIZ.gap,
+                  right: 0,
+                  top: QUIZ.resultY,
+                  transform: `translateY(calc(-50% + ${result.dy}px))`,
+                  textAlign: "center",
                   fontSize: QUIZ.size,
                   fontWeight: QUIZ.weight,
                   color: theme.color.warn,
                   whiteSpace: "nowrap",
                   opacity: result.opacity,
-                  transform: `translateY(${result.dy}px)`,
                 }}
               >
                 {RESULT.text}
