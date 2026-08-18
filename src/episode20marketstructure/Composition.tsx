@@ -44,6 +44,7 @@ import { Scene18 } from "./scenes/Scene18";
 import { Scene19 } from "./scenes/Scene19";
 import { Scene20 } from "./scenes/Scene20";
 import { Captions } from "./components/Captions";
+import { Watermark } from "./components/Watermark";
 import { CUES, type Cue } from "./subtitles";
 
 export const TOTAL_FRAMES = 10586;
@@ -97,6 +98,9 @@ export const MarketStructureComposition = ({
 
     {/* Burned-in captions, inside the reserved band and nowhere else. */}
     {showCaptions && <Captions cues={cues} />}
+
+    {/* Brand watermark — above everything, including the captions. */}
+    <Watermark />
 
     {/* ONE root Audio for the whole episode, aligned at frame 0. */}
     <Audio src={staticFile(audioSrc)} muted={muted} />
