@@ -33,7 +33,15 @@ import { Ping } from "../components/Ping";
 import { RevealMask } from "../components/RevealMask";
 import { Countdown } from "../components/Countdown";
 import { theme } from "../theme";
-import { sec, sma, bollinger, progress, textReveal, fadeOut, price } from "../helpers";
+import {
+  sec,
+  sma,
+  bollinger,
+  progress,
+  textReveal,
+  fadeOut,
+  price,
+} from "../helpers";
 import { GGRM, READY, CLOSES, PEAK } from "../data/ggrm";
 import { CUTS, cutPushIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
@@ -60,13 +68,20 @@ const HIDE_AT = 0.66;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const SLOW = READY ? sma(CLOSES, SLOW_P) : [];
-const BB = READY ? bollinger(CLOSES, BB_P, 2) : { mid: [], upper: [], lower: [], width: [] };
+const BB = READY
+  ? bollinger(CLOSES, BB_P, 2)
+  : { mid: [], upper: [], lower: [], width: [] };
 const DOMAIN: [number, number] = READY
-  ? [Math.min(...GGRM.bars.map((b) => b.l)), Math.max(...GGRM.bars.map((b) => b.h))]
+  ? [
+      Math.min(...GGRM.bars.map((b) => b.l)),
+      Math.max(...GGRM.bars.map((b) => b.h)),
+    ]
   : [0, 1];
 const G = gridOf(READY ? CLOSES : [0, 1], DOMAIN, CHART);
 /** The pullback low the VO calls the bounce — read from the bars, not chosen. */
-const BOUNCE = READY ? GGRM.bars.reduce((b, x, i) => (x.l < GGRM.bars[b].l ? i : b), 0) : 0;
+const BOUNCE = READY
+  ? GGRM.bars.reduce((b, x, i) => (x.l < GGRM.bars[b].l ? i : b), 0)
+  : 0;
 const HIDE_FROM = READY ? Math.round(GGRM.bars.length * HIDE_AT) : 0;
 
 export const GgrmGroup = () => {
@@ -112,30 +127,57 @@ export const GgrmGroup = () => {
                 midTone={theme.color.indigo70}
                 opacity={progress(f, T.chart + sec(1), sec(2))}
               />
-              <MALine values={SLOW} grid={G} f={f} drawFrom={T.chart} drawDur={sec(4)} variant="slow" />
+              <MALine
+                values={SLOW}
+                grid={G}
+                f={f}
+                drawFrom={T.chart}
+                drawDur={sec(4)}
+                variant="slow"
+              />
             </>
           ) : (
             <>
-              <ChartFrame closes={[0, 1]} grid={G} mode="line" f={f} drawFrom={1e9} drawDur={1} tickLabels={false} />
-              <div
-                style={{
-                  position: "absolute",
-                  left: CHART.x + CHART.w / 2,
-                  top: CHART.y + CHART.h / 2,
-                  transform: "translate(-50%, -50%)",
-                  fontFamily: theme.text.family,
-                  fontSize: theme.text.h2.size,
-                  fontWeight: theme.text.h2.weight,
-                  color: theme.color.faint,
-                }}
-              >
-                Menunggu data
-              </div>
+              <ChartFrame
+                closes={[0, 1]}
+                grid={G}
+                mode="line"
+                f={f}
+                drawFrom={1e9}
+                drawDur={1}
+                tickLabels={false}
+              />
+              {/* the placeholder yields the frame to the countdown and to the
+                closing lines — otherwise three texts stack on one another */}
+              {f < T.mask && f < T.honest && (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: CHART.x + CHART.w / 2,
+                    top: CHART.y + CHART.h / 2,
+                    transform: "translate(-50%, -50%)",
+                    fontFamily: theme.text.family,
+                    fontSize: theme.text.h2.size,
+                    fontWeight: theme.text.h2.weight,
+                    color: theme.color.faint,
+                  }}
+                >
+                  Menunggu data
+                </div>
+              )}
             </>
           )}
 
           {/* the bounce off the rising SMA100 — the VO's "garis ungu" */}
-          {READY && <Ping x={G.x(BOUNCE)} y={G.y(CLOSES[BOUNCE])} f={f} at={T.bounce} r={38} />}
+          {READY && (
+            <Ping
+              x={G.x(BOUNCE)}
+              y={G.y(CLOSES[BOUNCE])}
+              f={f}
+              at={T.bounce}
+              r={38}
+            />
+          )}
 
           {/* the squeeze, boxed */}
           {READY && (
@@ -165,7 +207,12 @@ export const GgrmGroup = () => {
 
           {/* the future, genuinely hidden — solid fill, not a scrim */}
           {READY && f >= T.mask && (
-            <RevealMask x={G.x(HIDE_FROM)} f={f} wipeFrom={T.wipe} wipeDur={150} />
+            <RevealMask
+              x={G.x(HIDE_FROM)}
+              f={f}
+              wipeFrom={T.wipe}
+              wipeDur={150}
+            />
           )}
         </div>
 
@@ -178,7 +225,12 @@ export const GgrmGroup = () => {
           />
         )}
 
-        <TitleChip text="Kuis" f={f} at={T.title} opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1} />
+        <TitleChip
+          text="Kuis"
+          f={f}
+          at={T.title}
+          opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1}
+        />
 
         {/* the ticker, and then one label at a time on the chart */}
         <LabelChip
@@ -202,7 +254,13 @@ export const GgrmGroup = () => {
               f={f}
               at={T.bounce + 10}
               anchor="below"
-              opacity={f >= T.squeeze ? (f >= T.ticks ? 1 : fadeOut(f, T.squeeze, 14)) : 1}
+              opacity={
+                f >= T.squeeze
+                  ? f >= T.ticks
+                    ? 1
+                    : fadeOut(f, T.squeeze, 14)
+                  : 1
+              }
             />
             <LabelChip
               text={f >= T.ticks ? "Squeeze  ✓" : "Squeeze"}

@@ -12,7 +12,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, Layer, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, Layer, clearAbove, CHART } from "../components/ChartFrame";
 import { SplitDivider } from "../components/SplitDivider";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
@@ -169,13 +169,15 @@ export const Scene01 = () => {
           weight={theme.text.labelSm.weight}
           opacity={f >= T.label ? fadeOut(f, T.label, 12) : 1}
         />
+        {/* clear of the line AND the candles — see clearAbove */}
         <LabelChip
           text="Trend: Up"
-          x={RG.x(CLOSES.length - 1)}
-          y={RG.y(MA[MA.length - 1] ?? CLOSES[CLOSES.length - 1])}
+          x={RG.x(CLOSES.length - 10)}
+          y={clearAbove(RG, CLOSES.length - 10, 8, [MA], BARS)}
           f={f}
           at={T.label}
-          anchor="left"
+          anchor="above"
+          gap={30}
         />
       </div>
     </SafeArea>

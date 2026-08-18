@@ -13,13 +13,13 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, CHART } from "../components/ChartFrame";
 import { BollingerBands } from "../components/BollingerBands";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { theme } from "../theme";
 import { sec, bollinger, progress, progressInOut, fadeOut, clamp01 } from "../helpers";
-import { SERIES_UPTREND, toBars } from "../series";
+import { SERIES_UPTREND, BARS_UPTREND as BARS } from "../series";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -28,7 +28,6 @@ const T = { title: sec(0.2), chart: sec(0.4), sell: sec(4.2), strike: sec(11.0),
 const PERIOD = 20;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const BARS = toBars(SERIES_UPTREND, 1010);
 const BB = bollinger(SERIES_UPTREND, PERIOD, 2);
 const DOMAIN: [number, number] = [
   Math.min(...BB.lower.filter((v): v is number => v !== null), ...BARS.map((b) => b.l)),
@@ -103,20 +102,22 @@ export const Scene10 = () => {
         <LabelChip
           text="Sell?"
           x={G.x(FIRST_TOUCH)}
-          y={G.y(BB.upper[FIRST_TOUCH] ?? SERIES_UPTREND[FIRST_TOUCH])}
+          y={clearAbove(G, FIRST_TOUCH, 6, [BB.upper], BARS)}
           f={f}
           at={T.sell}
           anchor="above"
+          gap={28}
           tone={theme.color.textMuted}
           strike={f >= T.strike ? progress(f, T.strike, 16) : 0}
         />
         <LabelChip
           text="Walking the Band"
           x={G.x(WALK_AT)}
-          y={G.y(BB.upper[WALK_AT] ?? SERIES_UPTREND[WALK_AT])}
+          y={clearAbove(G, WALK_AT, 10, [BB.upper], BARS)}
           f={f}
           at={T.walk}
           anchor="above"
+          gap={28}
           opacity={shown > 0.01 ? 1 : 0}
         />
       </div>

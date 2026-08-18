@@ -12,7 +12,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, clearBelow, CHART } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
@@ -135,19 +135,21 @@ export const Scene07 = () => {
         <LabelChip
           text="Golden Cross"
           x={G.x(CROSS.up)}
-          y={G.y(F[CROSS.up]!)}
+          y={clearAbove(G, CROSS.up, 8, [F, S], BARS_CROSS)}
           f={f}
           at={T.golden + 8}
           anchor="above"
+          gap={28}
           opacity={f >= T.death ? fadeOut(f, T.death, 12) : 1}
         />
         <LabelChip
           text="Death Cross"
           x={G.x(CROSS.down)}
-          y={G.y(F[CROSS.down]!)}
+          y={clearBelow(G, CROSS.down, 8, [F, S], BARS_CROSS)}
           f={f}
           at={T.death + 8}
           anchor="below"
+          gap={28}
           opacity={f >= T.lag ? fadeOut(f, T.lag, 12) : 1}
         />
 

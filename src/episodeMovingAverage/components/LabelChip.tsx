@@ -29,6 +29,7 @@ export const LabelChip = ({
   size = theme.text.label.size,
   weight = theme.text.label.weight,
   strike = 0,
+  gap = 22,
   opacity = 1,
 }: {
   text: string;
@@ -42,11 +43,12 @@ export const LabelChip = ({
   weight?: number;
   /** 0 → 1 sweeps a rule through the text. */
   strike?: number;
+  /** How far off the anchor point the text sits. */
+  gap?: number;
   opacity?: number;
 }) => {
   if (f < at || opacity <= 0.001) return null;
   const r = textReveal(f, at);
-  const gap = 22;
   const dx = anchor === "left" ? -gap : anchor === "right" ? gap : 0;
   const dy = anchor === "above" ? -gap : anchor === "below" ? gap : 0;
   const tx = anchor === "left" ? "-100%" : anchor === "right" ? "0" : "-50%";

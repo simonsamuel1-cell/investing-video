@@ -11,13 +11,13 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, clearBelow, CHART } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { Ping } from "../components/Ping";
 import { sec, sma, clamp01 } from "../helpers";
-import { SERIES_UPTREND, SERIES_DOWN, toBars } from "../series";
+import { SERIES_UPTREND, SERIES_DOWN, BARS_UPTREND, BARS_DOWN } from "../series";
 import { CUTS, cutIn, cutPushOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -33,8 +33,8 @@ const TOUCH_DOWN = [24, 48];
 const RIDE_AT = 60;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const UP_BARS = toBars(SERIES_UPTREND, 611);
-const DOWN_BARS = toBars(SERIES_DOWN, 612);
+const UP_BARS = BARS_UPTREND;
+const DOWN_BARS = BARS_DOWN;
 const UP_DOMAIN: [number, number] = [
   Math.min(...UP_BARS.map((b) => b.l)),
   Math.max(...UP_BARS.map((b) => b.h)),
@@ -86,13 +86,16 @@ export const Scene06 = () => {
               <Ping key={i} x={UG.x(i)} y={UG.y(UMA[i] ?? SERIES_UPTREND[i])} f={f} at={T.up + sec(3.4) + k * sec(2.2)} />
             ))}
             {/* anchored to the LINE, so it rides upward as the line slopes */}
+            {/* below the rising line: in an uptrend that side is empty, and
+              the line slopes AWAY from the text rather than through it */}
             <LabelChip
               text="Support"
               x={UG.x(RIDE_AT)}
-              y={UG.y(UMA[RIDE_AT] ?? SERIES_UPTREND[RIDE_AT])}
+              y={clearBelow(UG, RIDE_AT, 6, [UMA])}
               f={f}
               at={T.up + sec(4)}
               anchor="below"
+              gap={30}
               opacity={1 - down}
             />
           </div>
@@ -117,10 +120,11 @@ export const Scene06 = () => {
             <LabelChip
               text="Resistance"
               x={DG.x(RIDE_AT)}
-              y={DG.y(DMA[RIDE_AT] ?? SERIES_DOWN[RIDE_AT])}
+              y={clearAbove(DG, RIDE_AT, 6, [DMA])}
               f={f}
               at={T.down + sec(3)}
               anchor="above"
+              gap={30}
               opacity={down}
             />
           </div>

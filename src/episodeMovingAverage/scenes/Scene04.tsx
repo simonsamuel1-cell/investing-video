@@ -16,7 +16,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, clearBelow, CHART } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
@@ -118,20 +118,22 @@ export const Scene04 = () => {
         <LabelChip
           text="SMA"
           x={G.x(APART)}
-          y={G.y(SMA[APART] ?? SERIES_REVERSAL[APART])}
+          y={clearAbove(G, APART, 4, [SMA, EMA], BARS_REVERSAL)}
           f={f}
           at={T.mas + sec(2.6)}
           anchor="above"
+          gap={28}
           size={theme.text.labelSm.size}
           weight={theme.text.labelSm.weight}
         />
         <LabelChip
           text="EMA"
           x={G.x(APART)}
-          y={G.y(EMA[APART] ?? SERIES_REVERSAL[APART])}
+          y={clearBelow(G, APART, 4, [SMA, EMA], BARS_REVERSAL)}
           f={f}
           at={T.mas + sec(2.6)}
           anchor="below"
+          gap={28}
           tone={theme.color.cyan}
           size={theme.text.labelSm.size}
           weight={theme.text.labelSm.weight}

@@ -10,14 +10,14 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, Layer, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, Layer, clearAbove, clearBelow, CHART } from "../components/ChartFrame";
 import { BollingerBands } from "../components/BollingerBands";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { theme } from "../theme";
 import { sec, sma, bollinger, progress, progressInOut, fadeOut, textReveal } from "../helpers";
-import { SERIES_UPTREND, toBars } from "../series";
+import { SERIES_UPTREND, BARS_UPTREND as BARS } from "../series";
 import { CUTS, cutIn, cutPushOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -38,7 +38,6 @@ const BREAK = 52;
 const LEVEL_AT = 30;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const BARS = toBars(SERIES_UPTREND, 1111);
 const BB = bollinger(SERIES_UPTREND, PERIOD, 2);
 const DOMAIN: [number, number] = [
   Math.min(...BB.lower.filter((v): v is number => v !== null), ...BARS.map((b) => b.l)),
@@ -132,10 +131,10 @@ export const Scene11 = () => {
 
         <TitleChip text="Your Analysis" f={f} at={T.title} />
 
-        <LabelChip text="Trend" x={G.x(TREND.b)} y={G.y(SERIES_UPTREND[TREND.b])} f={f} at={T.trend + 8} anchor="above" opacity={until(T.pattern)} />
-        <LabelChip text="Pattern" x={G.x(BREAK)} y={G.y(SERIES_UPTREND[BREAK]) - 38} f={f} at={T.pattern + 8} anchor="above" opacity={until(T.level)} />
-        <LabelChip text="Level" x={CHART.x + 20} y={G.y(SERIES_UPTREND[LEVEL_AT])} f={f} at={T.level + 8} anchor="right" opacity={until(T.indicators)} />
-        <LabelChip text="Trend: Up" x={G.x(SERIES_UPTREND.length - 1)} y={G.y(MA[MA.length - 1] ?? SERIES_UPTREND[SERIES_UPTREND.length - 1])} f={f} at={T.indicators + sec(2.4)} anchor="left" opacity={until(T.caption)} />
+        <LabelChip text="Trend" x={G.x(TREND.b)} y={clearAbove(G, TREND.b, 8, [], BARS)} f={f} at={T.trend + 8} anchor="above" gap={28} opacity={until(T.pattern)} />
+        <LabelChip text="Pattern" x={G.x(BREAK)} y={clearAbove(G, BREAK, 8, [], BARS) - 34} f={f} at={T.pattern + 8} anchor="above" gap={28} opacity={until(T.level)} />
+        <LabelChip text="Level" x={G.x(6)} y={clearBelow(G, 6, 8, [], BARS)} f={f} at={T.level + 8} anchor="below" gap={28} opacity={until(T.indicators)} />
+        <LabelChip text="Trend: Up" x={G.x(SERIES_UPTREND.length - 11)} y={clearAbove(G, SERIES_UPTREND.length - 11, 9, [BB.upper, MA], BARS)} f={f} at={T.indicators + sec(2.4)} anchor="above" gap={28} opacity={until(T.caption)} />
 
         {f >= T.caption && (
           <div

@@ -19,7 +19,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, CHART } from "../components/ChartFrame";
 import { BollingerBands } from "../components/BollingerBands";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
@@ -164,19 +164,21 @@ export const BandsGroup = () => {
         <LabelChip
           text="Middle = Moving Average"
           x={G.x(30)}
-          y={G.y(BB.mid[30] ?? SERIES_BREATH[30])}
+          y={clearAbove(G, 30, 12, [BB.upper], BARS_BREATH)}
           f={f}
           at={T.mid + sec(1)}
           anchor="above"
+          gap={28}
           opacity={f >= T.bands ? fadeOut(f, T.bands, 14) : 1}
         />
         <LabelChip
           text="Volatility"
           x={G.x(56)}
-          y={G.y(BB.upper[56] ?? SERIES_BREATH[56])}
+          y={clearAbove(G, 56, 8, [BB.upper], BARS_BREATH)}
           f={f}
           at={T.bands + sec(2)}
           anchor="above"
+          gap={28}
           tone={theme.color.cyan}
           opacity={f >= SC09 ? fadeOut(f, SC09 - sec(1), 14) : 1}
         />

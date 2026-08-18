@@ -99,6 +99,58 @@ export const lengthOf = (values: (number | null)[], g: Grid) => {
   return len;
 };
 
+/**
+ * ═══ WHERE A LABEL MAY SIT ═══
+ *
+ * A label pinned to a point on a line gets CROSSED by that line at its own
+ * horizontal extremes: the text is ~180px wide and the line keeps sloping
+ * through it. Anchoring 22px off the point is not enough, and no fixed gap is,
+ * because the clearance needed depends on the slope.
+ *
+ * So a label does not clear the thing it names — it clears EVERYTHING drawn
+ * near it. These return the topmost / bottommost y of every layer within
+ * `span` bars of `i`, which is the y an "above" / "below" anchor must use.
+ *
+ * `span` should cover half the label's width in bars: `textPx / 2 / grid.slot`.
+ */
+export const clearAbove = (
+  grid: Grid,
+  i: number,
+  span: number,
+  layers: (number | null)[][],
+  bars?: Bar[],
+) => {
+  let top = Infinity;
+  for (let k = Math.max(0, i - span); k <= i + span; k++) {
+    layers.forEach((v) => {
+      const val = v[k];
+      if (val !== undefined && val !== null) top = Math.min(top, grid.y(val));
+    });
+    const b = bars?.[k];
+    if (b) top = Math.min(top, grid.y(b.h));
+  }
+  return Number.isFinite(top) ? top : grid.y(grid.hi);
+};
+
+export const clearBelow = (
+  grid: Grid,
+  i: number,
+  span: number,
+  layers: (number | null)[][],
+  bars?: Bar[],
+) => {
+  let bottom = -Infinity;
+  for (let k = Math.max(0, i - span); k <= i + span; k++) {
+    layers.forEach((v) => {
+      const val = v[k];
+      if (val !== undefined && val !== null) bottom = Math.max(bottom, grid.y(val));
+    });
+    const b = bars?.[k];
+    if (b) bottom = Math.max(bottom, grid.y(b.l));
+  }
+  return Number.isFinite(bottom) ? bottom : grid.y(grid.lo);
+};
+
 /** A full-box SVG. Every drawn primitive in the episode goes through one. */
 export const Layer = ({
   children,

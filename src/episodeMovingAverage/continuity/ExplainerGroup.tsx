@@ -13,7 +13,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf, clearAbove, clearBelow, CHART } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
@@ -51,7 +51,8 @@ const G = gridOf(SERIES, DOMAIN, CHART, 0.12, AXIS_GUTTER);
 const MA_MID = sma(SERIES, MID);
 const MA_FAST = sma(SERIES, FAST);
 const MA_SLOW = sma(SERIES, SLOW);
-const LAST = SERIES.length - 1;
+/** Far enough from the right edge that a 12-bar-wide label still fits. */
+const LABEL_AT = SERIES.length - 14;
 
 export const ExplainerGroup = () => {
   const f = useCurrentFrame();
@@ -116,23 +117,26 @@ export const ExplainerGroup = () => {
         <TitleChip text="Moving Average" f={f} at={T.title} />
 
         {/* one label at a time — the title is already the second text element */}
+        {/* one above everything drawn, one below it — they cannot meet either */}
         <LabelChip
           text="Short = Fast"
-          x={G.x(LAST)}
-          y={G.y(MA_FAST[LAST] ?? SERIES[LAST])}
+          x={G.x(LABEL_AT)}
+          y={clearAbove(G, LABEL_AT, 12, [MA_FAST, MA_SLOW], BARS)}
           f={f}
           at={T.fast + sec(3)}
-          anchor="left"
+          anchor="above"
+          gap={30}
           tone={theme.color.cyan}
           opacity={f >= T.slow ? fadeOut(f, T.slow + sec(4), 14) : 1}
         />
         <LabelChip
           text="Long = Big Picture"
-          x={G.x(LAST)}
-          y={G.y(MA_SLOW[LAST] ?? SERIES[LAST])}
+          x={G.x(LABEL_AT)}
+          y={clearBelow(G, LABEL_AT, 12, [MA_FAST, MA_SLOW], BARS)}
           f={f}
           at={T.slow + sec(5)}
-          anchor="left"
+          anchor="below"
+          gap={30}
         />
       </div>
     </SafeArea>
