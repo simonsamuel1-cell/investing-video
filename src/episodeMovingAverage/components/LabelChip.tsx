@@ -26,8 +26,9 @@ export const LabelChip = ({
   at,
   anchor = "above",
   tone = theme.color.indigo,
-  size = theme.text.label.size,
-  weight = theme.text.label.weight,
+  /* on the chart, so it takes the in-chart size — see the scale in theme */
+  size = theme.text.tag.size,
+  weight = theme.text.tag.weight,
   strike = 0,
   gap = 22,
   opacity = 1,

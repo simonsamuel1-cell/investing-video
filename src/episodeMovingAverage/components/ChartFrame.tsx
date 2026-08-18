@@ -274,8 +274,8 @@ export const ChartFrame = ({
               top: grid.y(p),
               transform: "translate(-100%, -50%)",
               fontFamily: theme.text.family,
-              fontSize: theme.text.labelSm.size,
-              fontWeight: theme.text.labelSm.weight,
+              fontSize: theme.text.tag.size,
+              fontWeight: theme.text.tag.weight,
               color: theme.color.textMuted,
               opacity,
             }}

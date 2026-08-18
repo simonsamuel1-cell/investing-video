@@ -157,8 +157,9 @@ export const GgrmGroup = () => {
                     top: CHART.y + CHART.h / 2,
                     transform: "translate(-50%, -50%)",
                     fontFamily: theme.text.family,
-                    fontSize: theme.text.h2.size,
-                    fontWeight: theme.text.h2.weight,
+                    /* a state message on the card, not a heading — 36 */
+                    fontSize: theme.text.body.size,
+                    fontWeight: theme.text.body.weight,
                     color: theme.color.faint,
                   }}
                 >
@@ -241,8 +242,8 @@ export const GgrmGroup = () => {
           at={T.title + 8}
           anchor="right"
           tone={theme.color.textMuted}
-          size={theme.text.labelSm.size}
-          weight={theme.text.labelSm.weight}
+          size={theme.text.tag.size}
+          weight={theme.text.tag.weight}
           opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1}
         />
         {READY && (
@@ -295,8 +296,8 @@ export const GgrmGroup = () => {
                 top: 430 + honest.dy,
                 transform: "translate(-50%, -50%)",
                 fontFamily: theme.text.family,
-                fontSize: theme.text.h1.size,
-                fontWeight: theme.text.h1.weight,
+                fontSize: theme.text.title.size,
+                fontWeight: theme.text.title.weight,
                 color: theme.color.ink,
                 opacity: honest.opacity,
               }}
@@ -310,8 +311,8 @@ export const GgrmGroup = () => {
                 top: 540 + result.dy,
                 transform: "translate(-50%, -50%)",
                 fontFamily: theme.text.family,
-                fontSize: theme.text.label.size,
-                fontWeight: theme.text.label.weight,
+                fontSize: theme.text.body.size,
+                fontWeight: theme.text.body.weight,
                 color: theme.color.textMuted,
                 opacity: result.opacity,
               }}

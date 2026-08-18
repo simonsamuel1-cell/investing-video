@@ -153,8 +153,8 @@ export const Scene01 = () => {
           at={T.left}
           anchor="right"
           tone={theme.color.textMuted}
-          size={theme.text.labelSm.size}
-          weight={theme.text.labelSm.weight}
+          size={theme.text.body.size}
+          weight={theme.text.chip.weight}
           opacity={f >= T.right ? fadeOut(f, T.right, 12) : 1}
         />
         <LabelChip
@@ -165,8 +165,8 @@ export const Scene01 = () => {
           at={T.right}
           anchor="right"
           tone={theme.color.textMuted}
-          size={theme.text.labelSm.size}
-          weight={theme.text.labelSm.weight}
+          size={theme.text.body.size}
+          weight={theme.text.chip.weight}
           opacity={f >= T.label ? fadeOut(f, T.label, 12) : 1}
         />
         {/* clear of the line AND the candles — see clearAbove */}

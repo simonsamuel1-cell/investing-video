@@ -130,22 +130,41 @@ export const theme = {
     onIndigo: "#FFFFFF",
   },
 
+  /**
+   * ═══ THE TYPE SCALE — FOUR SIZES, AND ONLY FOUR ═══
+   *
+   * Every size in the episode is one of these, and which one is decided by the
+   * ROLE the type is playing, never by how it looks in a given frame.
+   *
+   *   96  display   A title that owns the frame. Use it only when the screen is
+   *                 showing the title and nothing else — no chart under it, no
+   *                 second statement beside it. Also the countdown numeral,
+   *                 which owns the frame the same way.
+   *
+   *   48  title     The sub-title, one step down. A heading sitting ABOVE a
+   *                 visual object — a chart's name, a section head — or a
+   *                 CONCLUSION drawn from what is on screen.
+   *
+   *   36  body      A sentence, a quote, a phrase. Also the title-label of a
+   *                 white card, where the card is the object and the words name
+   *                 it rather than heading the frame.
+   *
+   *   30  tag       A label INSIDE a chart: a line's name, a marked point, a
+   *                 price on the axis. Small because it sits among the data and
+   *                 must not compete with it.
+   *
+   * A fifth size is a decision that has not been made yet. Pick the role first.
+   */
   text: {
     family: "Plus Jakarta Sans",
     display: { size: 96, weight: 800 },
     title: { size: 48, weight: 700 },
     body: { size: 36, weight: 500 },
+    /** 36 at chip weight — the same size, saying a phrase rather than prose. */
     chip: { size: 36, weight: 600 },
-    tag: { size: 36, weight: 600 },
-    axis: { size: 36, weight: 500 },
-    /** Price readouts. Tabular so a counting number does not jitter. */
-    mono: { size: 40, weight: 600 },
-    /** Between title and display — section heads that own the whole frame. */
-    h1: { size: 64, weight: 700 },
-    h2: { size: 48, weight: 700 },
-    label: { size: 40, weight: 600 },
-    /** The absolute minimum size anywhere in the episode. */
-    labelSm: { size: 36, weight: 500 },
+    tag: { size: 30, weight: 600 },
+    /** The price axis is an in-chart label, so it takes the in-chart size. */
+    axis: { size: 30, weight: 500 },
   },
 
   shape: {

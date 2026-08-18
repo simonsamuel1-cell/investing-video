@@ -161,8 +161,9 @@ export const Scene07 = () => {
               top: theme.stage.captionY + cap.dy,
               transform: "translate(-50%, -50%)",
               fontFamily: theme.text.family,
-              fontSize: theme.text.label.size,
-              fontWeight: theme.text.label.weight,
+              /* a conclusion drawn from the chart above it — see the scale */
+              fontSize: theme.text.title.size,
+              fontWeight: theme.text.title.weight,
               color: theme.color.ink,
               opacity: cap.opacity,
               whiteSpace: "nowrap",

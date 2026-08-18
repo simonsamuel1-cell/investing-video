@@ -101,8 +101,10 @@ export const Scene13 = () => {
                 top: MID_Y + (i - 1) * STACK.lead + r.dy,
                 transform: "translateY(-50%)",
                 fontFamily: theme.text.family,
-                fontSize: theme.text.h1.size,
-                fontWeight: theme.text.h1.weight,
+                /* a conclusion drawn from the chart behind it — 48, not 96:
+                   the frame is not showing the words alone */
+                fontSize: theme.text.title.size,
+                fontWeight: theme.text.title.weight,
                 color: i === 2 ? theme.color.indigo : theme.color.ink,
                 opacity: r.opacity,
                 whiteSpace: "nowrap",

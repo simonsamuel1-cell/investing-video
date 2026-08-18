@@ -123,8 +123,8 @@ export const Scene04 = () => {
           at={T.mas + sec(2.6)}
           anchor="above"
           gap={28}
-          size={theme.text.labelSm.size}
-          weight={theme.text.labelSm.weight}
+          size={theme.text.tag.size}
+          weight={theme.text.tag.weight}
         />
         <LabelChip
           text="EMA"
@@ -135,8 +135,8 @@ export const Scene04 = () => {
           anchor="below"
           gap={28}
           tone={theme.color.cyan}
-          size={theme.text.labelSm.size}
-          weight={theme.text.labelSm.weight}
+          size={theme.text.tag.size}
+          weight={theme.text.tag.weight}
         />
 
         {f >= T.caption && (
@@ -147,8 +147,9 @@ export const Scene04 = () => {
               top: theme.stage.captionY + cap.dy,
               transform: "translate(-50%, -50%)",
               fontFamily: theme.text.family,
-              fontSize: theme.text.label.size,
-              fontWeight: theme.text.label.weight,
+              /* a conclusion drawn from the chart above it — see the scale */
+              fontSize: theme.text.title.size,
+              fontWeight: theme.text.title.weight,
               color: theme.color.ink,
               opacity: cap.opacity,
               whiteSpace: "nowrap",
