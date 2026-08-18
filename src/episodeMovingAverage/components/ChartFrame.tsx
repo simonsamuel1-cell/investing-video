@@ -2,6 +2,13 @@
  * ChartFrame.tsx — THE chart. There is one, it lives at `theme.stage.chart`,
  * and it does not move for the whole episode.
  *
+ * IT SITS ON A WHITE SURFACE. The card is drawn by this component, underneath
+ * everything else it renders, so a chart can never end up floating on the
+ * silver background. That separation is what makes a thin gridline, a 2px band
+ * and a grey price line legible at all — on silver they sit at almost the same
+ * value as the ground they are drawn on. It also gives every annotation one
+ * consistent surface to be read against, whatever scene it is in.
+ *
  * Between scenes only the annotation changes: a line draws, a label swaps, a
  * box highlights. The chart itself staying put is what lets the viewer keep
  * their bearings across fourteen scenes, and it is a hard constraint rather
@@ -117,7 +124,7 @@ export const ChartFrame = ({
   closes,
   bars,
   grid,
-  mode = "line",
+  mode = "candle",
   f,
   drawFrom,
   drawDur,
@@ -125,9 +132,14 @@ export const ChartFrame = ({
   ticks,
   tickLabels = true,
   box = CHART,
+  surface = true,
 }: {
   closes: number[];
-  /** Candle mode needs these; they must describe the same series as `closes`. */
+  /**
+   * CANDLES ARE THE DEFAULT. A line chart is the exception — use it only where
+   * the scene is about the shape of an average rather than about price, and say
+   * so at the call site.
+   */
   bars?: Bar[];
   grid: Grid;
   mode?: "line" | "candle";
@@ -138,6 +150,8 @@ export const ChartFrame = ({
   ticks?: number[];
   tickLabels?: boolean;
   box?: Box;
+  /** Off only where a scene stacks two frames on ONE shared card. */
+  surface?: boolean;
 }) => {
   if (opacity <= 0.001) return null;
   const shown = progress(f, drawFrom, Math.max(1, drawDur));
@@ -152,6 +166,25 @@ export const ChartFrame = ({
   });
   return (
     <>
+      {/* THE SURFACE, under everything. See the header note. */}
+      {surface && (
+        <div
+          style={{
+            position: "absolute",
+            left: box.x,
+            top: box.y,
+            width: box.w,
+            height: box.h,
+            borderRadius: theme.shape.cardRadius,
+            background: theme.color.surface,
+            border: `${theme.shape.hairline}px solid ${theme.color.hairline}`,
+            /* no shadow: a 24px blur bleeds ~16px past the card and puts
+               something — however faint — outside the safe margins */
+            opacity,
+          }}
+        />
+      )}
+
       {/* the axes are always present — they are the room, not the content */}
       <Layer opacity={opacity}>
         {inBox.map((p) => (

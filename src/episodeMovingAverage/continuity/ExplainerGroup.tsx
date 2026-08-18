@@ -20,7 +20,7 @@ import { TitleChip } from "../components/TitleChip";
 import { Arrow } from "../components/Arrow";
 import { theme } from "../theme";
 import { sec, sma, fadeOut, clamp01 } from "../helpers";
-import { SERIES } from "../series";
+import { SERIES, BARS, domainOf } from "../series";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -46,7 +46,8 @@ const SLOW = 70;
 const AXIS_GUTTER = 150;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const G = gridOf(SERIES, undefined, CHART, 0.12, AXIS_GUTTER);
+const DOMAIN = domainOf(BARS);
+const G = gridOf(SERIES, DOMAIN, CHART, 0.12, AXIS_GUTTER);
 const MA_MID = sma(SERIES, MID);
 const MA_FAST = sma(SERIES, FAST);
 const MA_SLOW = sma(SERIES, SLOW);
@@ -77,8 +78,8 @@ export const ExplainerGroup = () => {
       >
         <ChartFrame
           closes={SERIES}
+          bars={BARS}
           grid={G}
-          mode="line"
           f={f}
           drawFrom={T.price}
           drawDur={sec(5)}

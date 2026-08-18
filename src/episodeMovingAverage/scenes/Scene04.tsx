@@ -23,7 +23,7 @@ import { TitleChip } from "../components/TitleChip";
 import { HighlightBox } from "../components/HighlightBox";
 import { theme } from "../theme";
 import { sec, sma, ema, textReveal } from "../helpers";
-import { SERIES_REVERSAL } from "../series";
+import { SERIES_REVERSAL, BARS_REVERSAL, domainOf } from "../series";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -35,7 +35,8 @@ const TICKS = [4600, 5000, 5400, 5800];
 const AXIS_GUTTER = 150;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const G = gridOf(SERIES_REVERSAL, undefined, CHART, 0.12, AXIS_GUTTER);
+const DOMAIN = domainOf(BARS_REVERSAL);
+const G = gridOf(SERIES_REVERSAL, DOMAIN, CHART, 0.12, AXIS_GUTTER);
 /** SAME array, both averages. The method is the only variable. */
 const SMA = sma(SERIES_REVERSAL, PERIOD);
 const EMA = ema(SERIES_REVERSAL, PERIOD);
@@ -90,8 +91,8 @@ export const Scene04 = () => {
       >
         <ChartFrame
           closes={SERIES_REVERSAL}
+          bars={BARS_REVERSAL}
           grid={G}
-          mode="line"
           f={f}
           drawFrom={T.price}
           drawDur={sec(2.4)}

@@ -19,16 +19,16 @@ import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { Arrow } from "../components/Arrow";
 import { sec, sma, clamp01 } from "../helpers";
-import { SERIES_UP, SERIES_DOWN, SERIES_FLAT } from "../series";
+import { SERIES_UP, SERIES_DOWN, SERIES_FLAT, BARS_UP, BARS_DOWN, BARS_FLAT, domainOf } from "../series";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const SCENE_FROM = 2306;
 /** Each state owns the frame outright; they cross-fade over 15. */
 const STATES = [
-  { at: sec(0.4), series: SERIES_UP, label: "Trend: Up", steep: -1 },
-  { at: sec(6.0), series: SERIES_DOWN, label: "Trend: Down", steep: 1 },
-  { at: sec(12.0), series: SERIES_FLAT, label: "No Trend", steep: 0 },
+  { at: sec(0.4), series: SERIES_UP, bars: BARS_UP, label: "Trend: Up", steep: -1 },
+  { at: sec(6.0), series: SERIES_DOWN, bars: BARS_DOWN, label: "Trend: Down", steep: 1 },
+  { at: sec(12.0), series: SERIES_FLAT, bars: BARS_FLAT, label: "No Trend", steep: 0 },
 ];
 const FADE = 15;
 const PERIOD = 16;
@@ -37,7 +37,7 @@ const ARROW = { x: CHART.x + 520, y: CHART.y + CHART.h / 2, run: 420, rise: 150 
 // ═══════════════════════════════════════════════════════════════════════════
 
 const PLOTS = STATES.map((s) => {
-  const grid = gridOf(s.series, undefined, CHART);
+  const grid = gridOf(s.series, domainOf(s.bars), CHART);
   return { grid, ma: sma(s.series, PERIOD) };
 });
 
@@ -72,8 +72,8 @@ export const Scene05 = () => {
             <div key={s.label}>
               <ChartFrame
                 closes={s.series}
+                bars={s.bars}
                 grid={grid}
-                mode="line"
                 f={f}
                 drawFrom={s.at}
                 drawDur={sec(2.2)}

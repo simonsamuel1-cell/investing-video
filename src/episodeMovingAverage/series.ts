@@ -82,7 +82,13 @@ export const toBars = (closes: number[], seed: number): Bar[] => {
 };
 
 /** The episode's default series — noisy on purpose. Scenes 01, 02, 03, 07, 13. */
-export const SERIES = makeSeries({ seed: 2024, n: 140, drift: 9, noise: 1.35 });
+/**
+ * The episode's default series. 100 bars, because CANDLES are the default
+ * notation and a body needs width: at 140 bars a body is 7px in a 1692px plot.
+ */
+export const SERIES = makeSeries({ seed: 2024, n: 100, drift: 13, noise: 1.35 });
+/** Scene 07 — a rise then a fall, so both crossings are guaranteed to exist. */
+export const SERIES_CROSS = makeSeries({ seed: 707, n: 110, shape: "reversal", noise: 0.9 });
 /** Scene 04 — one clear turn, so SMA and EMA can disagree about when it happened. */
 export const SERIES_REVERSAL = makeSeries({ seed: 77, n: 120, shape: "reversal", noise: 0.75 });
 /** Scenes 06, 10, 11 — a climb with pullbacks in it. */
@@ -111,3 +117,36 @@ export const SERIES_BREATH = (() => {
   }
   return out;
 })();
+
+/**
+ * ═══ CANDLES ═══
+ *
+ * Candlestick is the DEFAULT notation for this episode — a line chart is the
+ * exception, used only where the scene is about the shape of an average rather
+ * than about price itself. Every series therefore ships its bars alongside it,
+ * generated once at module scope from the same closes, so the two notations
+ * always describe one series.
+ */
+export const BARS = toBars(SERIES, 2101);
+export const BARS_CROSS = toBars(SERIES_CROSS, 2107);
+export const BARS_REVERSAL = toBars(SERIES_REVERSAL, 2104);
+export const BARS_UPTREND = toBars(SERIES_UPTREND, 2106);
+export const BARS_DOWN = toBars(SERIES_DOWN, 2102);
+export const BARS_FLAT = toBars(SERIES_FLAT, 2105);
+export const BARS_UP = toBars(SERIES_UP, 2103);
+export const BARS_BREATH = toBars(SERIES_BREATH, 2108);
+
+/** The price range a chart must cover to show these bars whole. */
+export const domainOf = (bars: Bar[], extra: (number | null)[][] = []): [number, number] => {
+  const lows = bars.map((b) => b.l);
+  const highs = bars.map((b) => b.h);
+  extra.forEach((series) =>
+    series.forEach((v) => {
+      if (v !== null) {
+        lows.push(v);
+        highs.push(v);
+      }
+    }),
+  );
+  return [Math.min(...lows), Math.max(...highs)];
+};

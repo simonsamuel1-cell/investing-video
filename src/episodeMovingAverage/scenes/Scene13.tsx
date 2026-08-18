@@ -17,7 +17,7 @@ import { BollingerBands } from "../components/BollingerBands";
 import { MALine } from "../components/MALine";
 import { theme } from "../theme";
 import { sec, sma, bollinger, progress, progressInOut, textReveal } from "../helpers";
-import { SERIES } from "../series";
+import { SERIES, BARS, domainOf } from "../series";
 import { CUTS, cutPushIn, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -30,12 +30,18 @@ const LINES = [
 ];
 const PERIOD = 20;
 /** Left-aligned at the safe margin, stacked about the chart box's middle. */
-const STACK = { x: 96, lead: 96 };
+/**
+ * Inset from the card's own left edge, not flush to it. The lines are read
+ * against the white surface now, so they need the same breathing room any
+ * other content on that surface gets.
+ */
+const STACK = { x: 96 + 56, lead: 96 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-const G = gridOf(SERIES, undefined, CHART);
 const MA = sma(SERIES, PERIOD);
 const BB = bollinger(SERIES, PERIOD, 2);
+/** The domain has to hold the candles AND the bands, or one of them is cropped. */
+const G = gridOf(SERIES, domainOf(BARS, [BB.lower, BB.upper]), CHART);
 const MID_Y = CHART.y + CHART.h / 2;
 
 export const Scene13 = () => {
@@ -44,7 +50,12 @@ export const Scene13 = () => {
   /** Arrives on the pull-back CG-C left in flight. */
   const push = cutPushIn(g, CUTS.toClose, -0.14);
   const blur = cutBlur(g, CUTS.toClose);
-  const back = f >= T.back ? 1 - progress(f, T.back, sec(1)) * 0.6 : 1;
+  /**
+   * The chart steps well back — the three lines are read ON it, and at 0.4 a
+   * price line still crossed the type. The card stays; only what is drawn on
+   * it recedes.
+   */
+  const back = f >= T.back ? 1 - progress(f, T.back, sec(1)) * 0.75 : 1;
 
   return (
     <SafeArea>
@@ -60,8 +71,8 @@ export const Scene13 = () => {
         <div style={{ opacity: back }}>
           <ChartFrame
             closes={SERIES}
+            bars={BARS}
             grid={G}
-            mode="line"
             f={f}
             drawFrom={T.chart}
             drawDur={sec(3.4)}

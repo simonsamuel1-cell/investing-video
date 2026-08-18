@@ -21,7 +21,7 @@ import { Ping } from "../components/Ping";
 import { Arrow } from "../components/Arrow";
 import { theme } from "../theme";
 import { sec, sma, textReveal, fadeOut } from "../helpers";
-import { SERIES } from "../series";
+import { SERIES_CROSS, BARS_CROSS, domainOf } from "../series";
 import { CUTS, cutPushIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -41,15 +41,16 @@ const TICKS = [4400, 4800, 5200, 5600, 6000, 6400];
 const AXIS_GUTTER = 150;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const G = gridOf(SERIES, undefined, CHART, 0.12, AXIS_GUTTER);
-const F = sma(SERIES, FAST);
-const S = sma(SERIES, SLOW);
+const DOMAIN = domainOf(BARS_CROSS);
+const G = gridOf(SERIES_CROSS, DOMAIN, CHART, 0.12, AXIS_GUTTER);
+const F = sma(SERIES_CROSS, FAST);
+const S = sma(SERIES_CROSS, SLOW);
 
 /** Both crossings, found in the data rather than chosen by eye. */
 const CROSS = (() => {
   let up = -1;
   let down = -1;
-  for (let i = 1; i < SERIES.length; i++) {
+  for (let i = 1; i < SERIES_CROSS.length; i++) {
     const a = F[i - 1];
     const b = F[i];
     const c = S[i - 1];
@@ -58,14 +59,20 @@ const CROSS = (() => {
     if (up < 0 && a <= c && b > d) up = i;
     else if (up > 0 && down < 0 && a >= c && b < d) down = i;
   }
-  return { up: up < 0 ? 70 : up, down: down < 0 ? 110 : down };
+  /* fallbacks clamped INTO the series — an out-of-range index put a label at
+     an undefined price, which is how "Death Cross" ended up over the logo */
+  const n = SERIES_CROSS.length;
+  return {
+    up: up < 0 ? Math.round(n * 0.35) : up,
+    down: down < 0 ? Math.round(n * 0.75) : down,
+  };
 })();
 
 /** Where price actually turned, before the crossing confirmed anything. */
 const LOW = (() => {
   const from = Math.max(0, CROSS.up - 40);
   let best = from;
-  for (let i = from; i < CROSS.up; i++) if (SERIES[i] < SERIES[best]) best = i;
+  for (let i = from; i < CROSS.up; i++) if (SERIES_CROSS[i] < SERIES_CROSS[best]) best = i;
   return best;
 })();
 
@@ -89,9 +96,9 @@ export const Scene07 = () => {
         }}
       >
         <ChartFrame
-          closes={SERIES}
+          closes={SERIES_CROSS}
+          bars={BARS_CROSS}
           grid={G}
-          mode="line"
           f={f}
           drawFrom={T.chart}
           drawDur={sec(3)}
@@ -115,8 +122,8 @@ export const Scene07 = () => {
         />
         {f >= T.lag + sec(1) && (
           <Arrow
-            from={{ x: G.x(LOW), y: G.y(SERIES[LOW]) }}
-            to={{ x: G.x(CROSS.up), y: G.y(SERIES[CROSS.up]) }}
+            from={{ x: G.x(LOW), y: G.y(SERIES_CROSS[LOW]) }}
+            to={{ x: G.x(CROSS.up), y: G.y(SERIES_CROSS[CROSS.up]) }}
             f={f}
             at={T.lag + sec(1)}
             width={theme.shape.band}

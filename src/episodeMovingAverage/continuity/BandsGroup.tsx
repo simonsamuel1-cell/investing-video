@@ -27,7 +27,7 @@ import { HighlightBox } from "../components/HighlightBox";
 import { Arrow } from "../components/Arrow";
 import { theme } from "../theme";
 import { sec, bollinger, progressInOut, fadeOut, textReveal, clamp01 } from "../helpers";
-import { SERIES_BREATH } from "../series";
+import { SERIES_BREATH, BARS_BREATH, domainOf } from "../series";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -56,10 +56,7 @@ const AXIS_GUTTER = 150;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BB = bollinger(SERIES_BREATH, PERIOD, 2);
-const DOMAIN: [number, number] = [
-  Math.min(...BB.lower.filter((v): v is number => v !== null)),
-  Math.max(...BB.upper.filter((v): v is number => v !== null)),
-];
+const DOMAIN = domainOf(BARS_BREATH, [BB.lower, BB.upper]);
 const G = gridOf(SERIES_BREATH, DOMAIN, CHART, 0.12, AXIS_GUTTER);
 const MID_X = Math.round((SQUEEZE.from + SQUEEZE.to) / 2);
 
@@ -92,8 +89,8 @@ export const BandsGroup = () => {
         <div style={{ opacity: back }}>
           <ChartFrame
             closes={SERIES_BREATH}
+            bars={BARS_BREATH}
             grid={G}
-            mode="line"
             f={f}
             drawFrom={T.price}
             drawDur={sec(2.4)}
