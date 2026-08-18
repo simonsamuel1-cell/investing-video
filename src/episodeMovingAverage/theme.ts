@@ -80,6 +80,22 @@ export const theme = {
      */
     warn: "#E5475D",
     // hue-locked tints
+    /**
+     * The build prompt's tint ladder, hue-locked: indigo stays at 247 and cyan
+     * at 192, and only saturation and lightness move. A scene that needs a
+     * lighter indigo reaches for one of these, never for a new hex.
+     */
+    indigo90: "#7160F1",
+    indigo70: "#9A8EF5",
+    indigo40: "#CFC8FB",
+    indigo12: "#EDEAFE",
+    cyan70: "#8EDAEB",
+    cyan40: "#C2ECF5",
+    cyan12: "#E7F7FB",
+    /** The explainer charts' price line — neutral, so the MAs carry the colour. */
+    priceLine: "#3A3A3A",
+    /** Uniform weight bars, and any bar that must read as "no emphasis". */
+    neutralBar: "#9AA0A6",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     indigoPale: "#EFEDFE",
@@ -98,8 +114,12 @@ export const theme = {
     title: { size: 48, weight: 700 },
     body: { size: 36, weight: 500 },
     chip: { size: 36, weight: 600 },
-    tag: { size: 30, weight: 600 },
-    axis: { size: 26, weight: 500 },
+    tag: { size: 36, weight: 600 },
+    axis: { size: 36, weight: 500 },
+    /** Price readouts. Tabular so a counting number does not jitter. */
+    mono: { size: 40, weight: 600 },
+    /** Between title and display — section heads that own the whole frame. */
+    h1: { size: 64, weight: 700 },
   },
 
   shape: {

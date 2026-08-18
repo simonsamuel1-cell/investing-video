@@ -1,10 +1,10 @@
 import { Composition } from "remotion";
-import { MovingAverageComposition, TOTAL_FRAMES } from "./episode21movingaverage/Composition";
+import { MovingAverageComposition, TOTAL_FRAMES } from "./episodeMovingAverage/Composition";
 
 /** One episode on this branch. Composition ids cannot contain underscores. */
 export const Root = () => (
   <Composition
-    id="MovingAverage"
+    id="MovingAverageBollingerBands"
     component={MovingAverageComposition}
     durationInFrames={TOTAL_FRAMES}
     fps={30}

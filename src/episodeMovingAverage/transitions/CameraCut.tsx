@@ -39,7 +39,40 @@ export type Cut = {
  * A cut needs content on BOTH sides. If the incoming scene is blank on `at`,
  * the outgoing move has to finish the job itself as a whip-out.
  */
-export const CUTS: Record<string, Cut> = {};
+export const CUTS = {
+  /** SC01 → SC02. The screener is put down and the teaching starts: a rise. */
+  toAverage: { at: 659, over: 24, distance: 90, blur: 9 },
+  /** CG-A → SC04. Same subject, next question — sideways, not up. */
+  toTypes: { at: 1839, over: 24, distance: 110, blur: 9 },
+  /** SC04 → SC05. "Cara sederhana membacanya begini" — a new instruction. */
+  toReading: { at: 2306, over: 24, distance: 90, blur: 9 },
+  /** SC05 → SC06. Another property of the same line: sideways again. */
+  toSupport: { at: 2882, over: 24, distance: 110, blur: 9 },
+  /**
+   * SC06 → SC07. A PUSH IN: the scene is about one specific event on one
+   * chart, so the camera closes on it rather than travelling to it.
+   */
+  toCross: { at: 3444, over: 24, distance: 0, blur: 9 },
+  /**
+   * SC07 → CG-B. The episode's halfway hinge — moving averages are finished
+   * and Bollinger Bands begin. It gets the longest DURATION rather than the
+   * longest throw: 90px is the ceiling for any vertical cut in this episode,
+   * because the card's bottom sits at 876 and the subtitle band starts at 972.
+   * A 150px throw pushed the card 54px into a band that must never be entered.
+   */
+  toBands: { at: 4134, over: 30, distance: 90, blur: 10 },
+  /** CG-B → SC10. From what the bands are to how they are misread. */
+  toTrap: { at: 5439, over: 24, distance: 110, blur: 9 },
+  /** SC10 → SC11. Out of the charts and into the process: a rise. */
+  toProcess: { at: 6034, over: 24, distance: 90, blur: 9 },
+  /** SC11 → CG-C. "Sekarang giliran kamu" — the camera closes on one chart. */
+  toCase: { at: 6670, over: 24, distance: 0, blur: 9 },
+  /**
+   * CG-C → SC13. A PULL BACK, driven by a negative amount: the case study is
+   * released and the episode widens out to its conclusion.
+   */
+  toClose: { at: 8318, over: 26, distance: 0, blur: 9 },
+} as const satisfies Record<string, Cut>;
 
 /**
  * A dolly instead of a track. The camera keeps closing the whole way through:

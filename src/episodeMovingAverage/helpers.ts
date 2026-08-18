@@ -86,3 +86,91 @@ export const columns = (r: Rect, n: number, gap: number): Rect[] => {
   const w = (r.w - gap * (n - 1)) / n;
   return Array.from({ length: n }, (_, i) => ({ x: r.x + i * (w + gap), y: r.y, w, h: r.h }));
 };
+
+/**
+ * ═══ INDICATOR MATHS ═══
+ *
+ * All three take and return plain arrays, and all three return `null` for the
+ * warm-up bars rather than a number. A moving average that starts on day 1 is
+ * not a moving average — it is a lie about how much history it had, and a chart
+ * that draws it makes the indicator look like it leads price.
+ */
+export const sma = (v: number[], period: number): (number | null)[] =>
+  v.map((_, i) => {
+    if (i < period - 1) return null;
+    let sum = 0;
+    for (let k = 0; k < period; k++) sum += v[i - k];
+    return sum / period;
+  });
+
+/** Seeded by the SMA of its first window, so it does not start from thin air. */
+export const ema = (v: number[], period: number): (number | null)[] => {
+  const k = 2 / (period + 1);
+  const out: (number | null)[] = [];
+  let prev: number | null = null;
+  for (let i = 0; i < v.length; i++) {
+    if (i < period - 1) {
+      out.push(null);
+      continue;
+    }
+    if (prev === null) {
+      let sum = 0;
+      for (let j = 0; j < period; j++) sum += v[i - j];
+      prev = sum / period;
+    } else {
+      prev = v[i] * k + prev * (1 - k);
+    }
+    out.push(prev);
+  }
+  return out;
+};
+
+/** Middle, upper, lower — and the width, which is what a squeeze is measured in. */
+export const bollinger = (v: number[], period = 20, mult = 2) => {
+  const mid = sma(v, period);
+  const upper: (number | null)[] = [];
+  const lower: (number | null)[] = [];
+  const width: (number | null)[] = [];
+  for (let i = 0; i < v.length; i++) {
+    const m = mid[i];
+    if (m === null) {
+      upper.push(null);
+      lower.push(null);
+      width.push(null);
+      continue;
+    }
+    let sq = 0;
+    for (let k = 0; k < period; k++) sq += (v[i - k] - m) ** 2;
+    const sd = Math.sqrt(sq / period);
+    upper.push(m + mult * sd);
+    lower.push(m - mult * sd);
+    /** Normalised, so a squeeze is comparable across price levels. */
+    width.push((2 * mult * sd) / m);
+  }
+  return { mid, upper, lower, width };
+};
+
+/**
+ * ═══ FORMATTING ═══
+ * IDX convention throughout: dot thousands, comma decimals. `fmtRp` is above,
+ * with `price`.
+ */
+export const fmtPct = (n: number) =>
+  `${n >= 0 ? "+" : "−"}${Math.abs(n).toFixed(1).replace(".", ",")}%`;
+export const fmtVol = (n: number) =>
+  n >= 1e9
+    ? `${(n / 1e9).toFixed(1).replace(".", ",")} B`
+    : `${(n / 1e6).toFixed(1).replace(".", ",")} M`;
+
+/**
+ * A trim path, as the two attributes an SVG needs. `length` is the path's own
+ * measured length — pass a straight-line approximation only for lines.
+ */
+export const drawPath = (f: number, at: number, over: number, length: number) => {
+  const p = progress(f, at, over);
+  return { strokeDasharray: length, strokeDashoffset: length * (1 - p) };
+};
+
+/** An eased playhead between two x positions — for scrubbing a chart. */
+export const scrub = (f: number, at: number, over: number, fromX: number, toX: number) =>
+  fromX + (toX - fromX) * progressInOut(f, at, over);
