@@ -1,11 +1,11 @@
 import { Composition } from "remotion";
-import { MarketStructureComposition, TOTAL_FRAMES } from "./episode20marketstructure/Composition";
+import { MovingAverageComposition, TOTAL_FRAMES } from "./episode21movingaverage/Composition";
 
 /** One episode on this branch. Composition ids cannot contain underscores. */
 export const Root = () => (
   <Composition
-    id="MarketStructure2"
-    component={MarketStructureComposition}
+    id="MovingAverage"
+    component={MovingAverageComposition}
     durationInFrames={TOTAL_FRAMES}
     fps={30}
     width={1920}

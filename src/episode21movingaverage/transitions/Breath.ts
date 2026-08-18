@@ -17,10 +17,10 @@
 import { theme } from "../theme";
 
 export const BREATH = {
-  /** GLOBAL frame the breath starts on — SC02, once the chart is fully in. */
-  from: 667,
-  /** GLOBAL frame it returns to rest on — the last frame of SC03. */
-  to: 1449,
+  /** GLOBAL frame the breath starts on. Set once the scenes are timed. */
+  from: 0,
+  /** GLOBAL frame it returns to rest on. `to <= from` disables it. */
+  to: 0,
   /** Peak scale, at the exact midpoint. Small enough to feel, not to notice. */
   amount: 0.03,
 };
@@ -49,7 +49,7 @@ export const BREATH_ORIGIN = `${BREATH_CENTRE.x}px ${BREATH_CENTRE.y}px`;
  * the pan, the cuts — because it is the outermost transform and none of them
  * depend on absolute screen position.
  */
-export const LONG = { from: 1450, to: 4401, amount: 0.03 };
+export const LONG = { from: 0, to: 0, amount: 0.03 };
 
 export const longBreath = (global: number) => {
   if (global <= LONG.from || global >= LONG.to) return 1;

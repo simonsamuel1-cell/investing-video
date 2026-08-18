@@ -1,20 +1,23 @@
 /**
- * TitleBlock.tsx — the episode's header pair, "Market structure" over
- * "Struktur pergerakan harga".
+ * TitleBlock.tsx — the episode's header pair: the title over its sub-line.
  *
- * SC02 builds it in the middle of the frame and travels it up to the title
- * strip; SC03 simply holds it where SC02 left it. Both read the SAME component
- * and the SAME rest constants, which is the only way the last frame of one and
- * the first frame of the other can be identical — matching two hand-written
- * copies by eye survives exactly until the next edit.
+ * [NEEDS COPY] SUBTITLE is empty until the script names it. The block reserves
+ * the sub-line's height either way, so filling it in later moves nothing.
+ *
+ * Two states, both here: TITLE_BIG in the middle of the frame, TITLE_REST up
+ * in the title strip. A scene that travels the block between them and the scene
+ * that then holds it must read the SAME component and the SAME rest constants —
+ * that is the only way the last frame of one and the first frame of the other
+ * can be identical. Matching two hand-written copies by eye survives exactly
+ * until the next edit.
  *
  * The sub-line's space is RESERVED even while it is invisible, so the title
  * never jumps as the sub fades in: the block is anchored by its centre.
  */
 import { theme } from "../theme";
 
-export const TITLE = "Market structure";
-export const SUBTITLE = "Struktur pergerakan harga";
+export const TITLE = "Moving average";
+export const SUBTITLE = "";
 
 /** The sub-line reads 4px smaller than the body size. */
 const SUB_TRIM = 4;
