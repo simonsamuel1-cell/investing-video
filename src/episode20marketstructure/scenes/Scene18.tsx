@@ -20,6 +20,7 @@ import {
   HighlightCircle,
   type HLRect,
 } from "../components/HighlightBox";
+import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, progressInOut, clamp01, textReveal } from "../helpers";
 import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
@@ -183,6 +184,12 @@ const TV_DOWN = {
     { u: 0.471, v: 0.283 },
     { u: 0.51, v: 0.429 },
     { u: 0.56, v: 0.283 },
+    // Lower high di tengah penurunan besar. Tanpa dua titik ini, satu
+    // garis lurus panjang menyatakan harga jatuh dalam satu tarikan -
+    // padahal ada rally yang gagal di tengahnya, dan justru rally yang
+    // berhenti di bawah puncak sebelumnya itulah bukti trend-nya turun.
+    { u: 0.604, v: 0.45 },
+    { u: 0.642, v: 0.383 },
     { u: 0.695, v: 0.718 },
     { u: 0.745, v: 0.614 },
     { u: 0.764, v: 0.702 },
@@ -221,6 +228,51 @@ const DOWN_DRAW = DOWN_PTS.reduce(
  * one once the high that follows it has cleared the last, so the order the
  * rings appear in is the order the reading is made in.
  */
+/**
+ * ═══ TANDA LL / LH DI ZIGZAG TURUN — EDIT DI SINI ═══
+ *
+ * Lingkaran plus label pada titik belok yang membuktikan trend-nya turun:
+ * tiap puncak berhenti lebih rendah dari puncak sebelumnya (LH), dan tiap
+ * lembah jatuh lebih dalam dari lembah sebelumnya (LL).
+ *
+ * `i` adalah INDEKS ke TV_DOWN.points di atas — bukan koordinat. Jadi
+ * memindahkan sebuah tanda cukup dengan mengganti angkanya, dan tandanya
+ * otomatis tetap menempel persis di titik belok garisnya. Tidak ada
+ * koordinat kedua yang bisa diam-diam melenceng dari garis.
+ *
+ * Urutan dalam daftar menentukan urutan munculnya, jadi tulis dari kiri ke
+ * kanan supaya tandanya datang mengikuti arah harga bergerak.
+ *
+ * Indeks yang tersedia (v kecil = harga tinggi):
+ *   0 .155  1 .455  2 .214  3 .447  4 .283  5 .429  6 .283  7 .450
+ *   8 .383  9 .718 10 .614 11 .702 12 .545 13 .627 14 .548 15 .659
+ *
+ * CATATAN: pasangan LL pertama (3) dan kedua (7) hampir sama dalamnya —
+ * .447 lawan .450. Secara angka memang lebih rendah, tapi selisihnya tipis
+ * sekali di layar. Kalau terbaca ragu, geser yang pertama ke 1 (.455).
+ */
+const TV_LOWER = {
+  marks: [
+    { i: 2, label: "LH" },
+    { i: 3, label: "LL" },
+    { i: 6, label: "LH" },
+    { i: 7, label: "LL" },
+    { i: 8, label: "LH" },
+    { i: 9, label: "LL" },
+  ],
+  /** Kecil karena tiga tanda terakhir berdekatan - lihat catatan di bawah. */
+  r: 24,
+  at: 804, // 9359
+  stagger: 6,
+  over: 16,
+  /**
+   * Jarak label dari TEPI lingkaran. Menambahnya mendorong LH naik dan LL
+   * turun - keduanya menjauh dari garis, bukan bergeser searah.
+   */
+  gap: 26,
+  /** 10 lebih kecil dari chip biasa (36): ini penanda, bukan judul. */
+  size: 26,
+};
 const TV_MARKS = {
   hl: 11,
   hh: 12,
@@ -462,6 +514,10 @@ export const Scene18 = () => {
   const markIn = (at: number) =>
     f >= at ? progressInOut(f, at, TV_MARKS.over) : 0;
 
+  /** Tanda LL/LH datang satu per satu dan pergi bersama scene-nya. */
+  const lowerIn = (at: number) =>
+    f >= at ? progressInOut(f, at, TV_LOWER.over) : 0;
+
   /** 0 before 8639, 1 once the pair has settled — see SPLIT. */
   const split = f >= SPLIT.at ? progressInOut(f, SPLIT.at, SPLIT.over) : 0;
 
@@ -626,6 +682,49 @@ export const Scene18 = () => {
                     (1 -
                       clamp01((markOut - FADE_OUT_FROM) / (1 - FADE_OUT_FROM)))
                   }
+                />
+              );
+            })}
+
+            {/* LL demi LL, LH demi LH — struktur yang menamai penurunan ini.
+              Lingkaran dan labelnya digambar dalam dua lintasan supaya
+              seluruh cincin berada di bawah seluruh teks; kalau berpasangan,
+              cincin tetangga bisa menutupi label sebelahnya. */}
+            {TV_LOWER.marks.map((m, n) => {
+              const p = DOWN_PTS[m.i];
+              const on = lowerIn(TV_LOWER.at + n * TV_LOWER.stagger);
+              return (
+                <HighlightCircle
+                  key={`ring${m.label}${m.i}`}
+                  cx={p.x}
+                  cy={p.y}
+                  r={TV_LOWER.r}
+                  settle={on}
+                  opacity={clamp01(on / FADE_IN_BY) * (1 - leave)}
+                />
+              );
+            })}
+            {TV_LOWER.marks.map((m, n) => {
+              const p = DOWN_PTS[m.i];
+              const on = lowerIn(TV_LOWER.at + n * TV_LOWER.stagger);
+              const naik = m.label === "LH";
+              return (
+                <Chip
+                  key={`tag${m.label}${m.i}`}
+                  label={m.label}
+                  x={p.x}
+                  /* LH ke atas, LL ke bawah - menjauh dari garisnya, bukan
+                     menimpanya, dan arahnya sendiri sudah menyatakan mana
+                     puncak dan mana lembah. */
+                  y={
+                    naik
+                      ? p.y - TV_LOWER.r - TV_LOWER.gap
+                      : p.y + TV_LOWER.r + TV_LOWER.gap
+                  }
+                  tone={naik ? "indigo" : "cyan"}
+                  size={TV_LOWER.size}
+                  at={TV_LOWER.at + n * TV_LOWER.stagger}
+                  opacity={clamp01(on / FADE_IN_BY) * (1 - leave)}
                 />
               );
             })}
