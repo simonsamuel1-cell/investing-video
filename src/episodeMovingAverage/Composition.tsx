@@ -31,15 +31,15 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
-import { ExplainerChartGroup } from "./continuity/ExplainerChartGroup";
+import { ExplainerGroup } from "./continuity/ExplainerGroup";
 import { Scene04 } from "./scenes/Scene04";
 import { Scene05 } from "./scenes/Scene05";
 import { Scene06 } from "./scenes/Scene06";
 import { Scene07 } from "./scenes/Scene07";
-import { BollingerChartGroup } from "./continuity/BollingerChartGroup";
+import { BandsGroup } from "./continuity/BandsGroup";
 import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
-import { GgrmCaseGroup } from "./continuity/GgrmCaseGroup";
+import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
@@ -62,9 +62,9 @@ const INDEPENDENT_SCENES: Mounted[] = [
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
-  { from: 659, duration: 1180, Component: ExplainerChartGroup },
-  { from: 4134, duration: 1305, Component: BollingerChartGroup },
-  { from: 6670, duration: 1648, Component: GgrmCaseGroup },
+  { from: 659, duration: 1180, Component: ExplainerGroup },
+  { from: 4134, duration: 1305, Component: BandsGroup },
+  { from: 6670, duration: 1648, Component: GgrmGroup },
 ];
 
 export const MovingAverageComposition = () => (

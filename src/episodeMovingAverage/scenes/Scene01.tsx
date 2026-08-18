@@ -1,68 +1,69 @@
 /**
- * SC01 — Indicators as a filter, not a replacement (from 0, dur 659).
+ * SC01 — Manual is slow, indicators are fast (from 0, dur 659).
  *
- * THE ARGUMENT IS THE COUNTER, not the words. A cursor opens four stocks one at
- * a time and the counter crawls to 4 / 847; then two indicator columns arrive
- * and it flips to 847 / 847 in ONE CUT, with no count-up. The gap between those
- * two readings is the whole scene, and it is made of time rather than claims.
+ * THE CONTRAST IS THE WHOLE SCENE: four laboured marks on the left, one instant
+ * line on the right, over IDENTICAL price data. Both halves plot the same
+ * array, so the only difference on screen is how long the reading took.
  *
- * The counter chip sits top-LEFT. The top-right 360 x 150 belongs to the logo
- * and nothing may enter it.
+ * This is the one scene that splits the chart box. Every other scene uses it
+ * whole.
+ *
+ * No human figure anywhere — the marks appear on their own.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage } from "../components/Stage";
-import { ScreenerTable, SCREENER_ROWS, HEAD_H, ROW_H } from "../components/ScreenerTable";
-import { Panel } from "../components/Panels";
-import { Chip } from "../components/Chip";
+import { SafeArea } from "../components/SafeArea";
+import { ChartFrame, gridOf, Layer, CHART } from "../components/ChartFrame";
+import { SplitDivider } from "../components/SplitDivider";
+import { MALine } from "../components/MALine";
+import { LabelChip } from "../components/LabelChip";
 import { theme } from "../theme";
-import { progress, fadeOut, textReveal, sec } from "../helpers";
+import { sec, sma, progress, fadeOut } from "../helpers";
+import { SERIES, toBars } from "../series";
 import { CUTS, cutOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const SCENE_FROM = 0;
-/** Beats, in seconds from this scene's own start — see the ideation. */
 const T = {
-  step: sec(0.4), // the cursor starts working
-  freeze: sec(9.6), // four rows checked, and the table steps back
-  indicators: sec(10.5), // "indikator membantu kita bekerja lebih cepat"
-  columns: sec(12.0),
-  flip: sec(14.2), // the counter flips in one cut — no count-up
-  filter: sec(16.5), // rows that fail the filter leave
-  caption: sec(18.2),
+  left: sec(0.4),
+  mark2: sec(2.9),
+  mark3: sec(5.4),
+  dim: sec(8.0),
+  right: sec(14.0),
+  label: sec(17.5),
 };
-/** One row inspected per this many frames, four in all. */
-const STEP = sec(1.6);
-const ROWS_CHECKED = 4;
-const TOTAL_STOCKS = 847;
-/** Table top clears the logo zone; bottom leaves room for the caption card. */
-const TABLE = { x: theme.stage.active.x, y: 120, w: theme.stage.active.w, h: HEAD_H + ROW_H * SCREENER_ROWS.length };
-const POPOVER = { w: 320, h: 180 };
-/** Rows the indicator filter keeps, and the ones it drops. */
-const KEEP = [0, 3, 6];
-const DROP = [1, 2, 4, 5, 7];
-const CAPTION = { y: 828, h: 128 };
+/** Each hand mark is drawn slowly — that slowness is the argument. */
+const MARK_OVER = sec(0.7);
+/** The two halves of the split box, 840 wide each. */
+const LEFT = { x: 96, y: CHART.y, w: 840, h: CHART.h };
+const RIGHT = { x: 984, y: CHART.y, w: 840, h: CHART.h };
+const PERIOD = 18;
 // ═══════════════════════════════════════════════════════════════════════════
+
+/** IDENTICAL data both sides — the reading differs, the price does not. */
+const CLOSES = SERIES.slice(0, 90);
+const BARS = toBars(CLOSES, 101);
+const DOMAIN: [number, number] = [
+  Math.min(...BARS.map((b) => b.l)),
+  Math.max(...BARS.map((b) => b.h)),
+];
+const LG = gridOf(CLOSES, DOMAIN, LEFT);
+const RG = gridOf(CLOSES, DOMAIN, RIGHT);
+const MA = sma(CLOSES, PERIOD);
+/** Where the three hand marks land, in bar indices. */
+const TREND = { a: 12, b: 62 };
+const RING_AT = 44;
+const LEVEL = CLOSES[70];
 
 export const Scene01 = () => {
   const f = useCurrentFrame();
   const g = f + SCENE_FROM;
-
-  /** Which row the cursor is on, and whether its popover is open. */
-  const stepIndex = Math.floor((f - T.step) / STEP);
-  const onRow = f >= T.step && stepIndex >= 0 && stepIndex < ROWS_CHECKED ? stepIndex : null;
-  const inStep = f >= T.step ? (f - T.step) % STEP : 0;
-  const popOpen = onRow !== null && inStep > sec(0.2) && inStep < sec(1.2);
-  const checked = Math.min(ROWS_CHECKED, Math.max(0, Math.floor((f - T.step) / STEP) + (inStep > sec(1.2) ? 1 : 0)));
-
-  const dim = f >= T.freeze ? 1 - progress(f, T.freeze, 10) * 0.65 : 1;
-  const flipped = f >= T.flip;
-  const cap = textReveal(f, T.caption);
-
   const dy = cutOut(g, CUTS.toAverage);
   const blur = cutBlur(g, CUTS.toAverage);
+  /** The left half steps back once its slow reading is finished. */
+  const left = f >= T.dim ? 1 - progress(f, T.dim, 14) * 0.65 : 1;
 
   return (
-    <Stage>
+    <SafeArea>
       <div
         style={{
           position: "absolute",
@@ -71,99 +72,112 @@ export const Scene01 = () => {
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >
-        {/* the count, top-LEFT — the logo owns the other corner */}
-        <Chip
-          label={flipped ? `${TOTAL_STOCKS} / ${TOTAL_STOCKS}` : `Dicek: ${checked} / ${TOTAL_STOCKS}`}
-          x={TABLE.x}
-          y={72}
-          tone={flipped ? "indigo" : "slate"}
-          anchor="left"
-          at={0}
-          pill
-        />
+        <SplitDivider f={f} at={T.left} />
 
-        <div style={{ opacity: dim }}>
-          <ScreenerTable
-            rect={TABLE}
+        {/* ── left: read by hand ── */}
+        <div style={{ opacity: left }}>
+          <ChartFrame
+            closes={CLOSES}
+            bars={BARS}
+            grid={LG}
+            mode="candle"
             f={f}
-            cursorRow={onRow}
-            extraColumns={f >= T.columns}
-            extraAt={T.columns}
-            dimRows={f >= T.filter ? DROP : []}
-            keepRows={f >= T.filter ? KEEP : []}
+            drawFrom={T.left}
+            drawDur={sec(1.6)}
+            tickLabels={false}
+            box={LEFT}
           />
+          {f >= T.left + sec(1.6) && (
+            <Layer opacity={progress(f, T.left + sec(1.6), MARK_OVER)}>
+              <line
+                x1={LG.x(TREND.a)}
+                y1={LG.y(CLOSES[TREND.a])}
+                x2={LG.x(TREND.b)}
+                y2={LG.y(CLOSES[TREND.b])}
+                stroke={theme.color.indigo}
+                strokeWidth={theme.shape.band}
+              />
+            </Layer>
+          )}
+          {f >= T.mark2 && (
+            <Layer opacity={progress(f, T.mark2, MARK_OVER)}>
+              <circle
+                cx={LG.x(RING_AT)}
+                cy={LG.y(CLOSES[RING_AT])}
+                r={34}
+                fill="none"
+                stroke={theme.color.indigo}
+                strokeWidth={theme.shape.band}
+              />
+            </Layer>
+          )}
+          {f >= T.mark3 && (
+            <Layer opacity={progress(f, T.mark3, MARK_OVER)}>
+              <line
+                x1={LEFT.x + 20}
+                y1={LG.y(LEVEL)}
+                x2={LEFT.x + LEFT.w - 20}
+                y2={LG.y(LEVEL)}
+                stroke={theme.color.indigo}
+                strokeWidth={theme.shape.band}
+                strokeDasharray="10 8"
+              />
+            </Layer>
+          )}
         </div>
 
-        {/* the popover — a UI element, so it may pop */}
-        {popOpen && onRow !== null && (
-          <Panel
-            rect={{
-              x: TABLE.x + TABLE.w - POPOVER.w - 40,
-              y: TABLE.y + HEAD_H + onRow * ROW_H - POPOVER.h / 2 + ROW_H / 2,
-              w: POPOVER.w,
-              h: POPOVER.h,
-            }}
-            opacity={progress(f, T.step + onRow * STEP + sec(0.2), theme.motion.pop)}
-          />
+        {/* ── right: read by an indicator ── */}
+        {f >= T.right && (
+          <>
+            <ChartFrame
+              closes={CLOSES}
+              bars={BARS}
+              grid={RG}
+              mode="candle"
+              f={f}
+              drawFrom={T.right}
+              drawDur={sec(1.2)}
+              tickLabels={false}
+              box={RIGHT}
+            />
+            <MALine values={MA} grid={RG} f={f} drawFrom={T.right + sec(1.2)} drawDur={30} variant="slow" />
+          </>
         )}
 
-        {/* what the columns are: the word, before the columns themselves */}
-        {f >= T.indicators && (
-          <div
-            style={{
-              position: "absolute",
-              left: TABLE.x,
-              top: 72 + textReveal(f, T.indicators).dy,
-              fontFamily: theme.text.family,
-              fontSize: theme.text.h1.size,
-              fontWeight: theme.text.h1.weight,
-              color: theme.color.indigo,
-              opacity: textReveal(f, T.indicators).opacity * (f >= T.columns ? fadeOut(f, T.columns, 10) : 1),
-              transform: "translateY(-50%)",
-            }}
-          >
-            Indikator
-          </div>
-        )}
-
-        {/* the conclusion, under the table it is about */}
-        {f >= T.caption && (
-          <Panel
-            rect={{ x: TABLE.x, y: CAPTION.y + cap.dy, w: TABLE.w, h: CAPTION.h }}
-            opacity={cap.opacity}
-            radius={theme.shape.cardRadius}
-          >
-            <div
-              style={{
-                position: "absolute",
-                left: TABLE.x + 32,
-                top: CAPTION.y + 30 + cap.dy,
-                fontFamily: theme.text.family,
-                fontSize: theme.text.title.size,
-                fontWeight: theme.text.title.weight,
-                color: theme.color.ink,
-                opacity: cap.opacity,
-              }}
-            >
-              Menyaring, bukan menggantikan.
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                left: TABLE.x + 32,
-                top: CAPTION.y + 30 + theme.text.title.size + 14 + cap.dy,
-                fontFamily: theme.text.family,
-                fontSize: theme.text.tag.size,
-                fontWeight: theme.text.body.weight,
-                color: theme.color.slate,
-                opacity: cap.opacity,
-              }}
-            >
-              Indikator hanya mengolah data harga yang sudah ada.
-            </div>
-          </Panel>
-        )}
+        {/* the two panel names, and then the one label — never three at once */}
+        <LabelChip
+          text="Manual"
+          x={LEFT.x}
+          y={CHART.y - 16}
+          f={f}
+          at={T.left}
+          anchor="right"
+          tone={theme.color.textMuted}
+          size={theme.text.labelSm.size}
+          weight={theme.text.labelSm.weight}
+          opacity={f >= T.right ? fadeOut(f, T.right, 12) : 1}
+        />
+        <LabelChip
+          text="Indikator"
+          x={RIGHT.x}
+          y={CHART.y - 16}
+          f={f}
+          at={T.right}
+          anchor="right"
+          tone={theme.color.textMuted}
+          size={theme.text.labelSm.size}
+          weight={theme.text.labelSm.weight}
+          opacity={f >= T.label ? fadeOut(f, T.label, 12) : 1}
+        />
+        <LabelChip
+          text="Trend: Up"
+          x={RG.x(CLOSES.length - 1)}
+          y={RG.y(MA[MA.length - 1] ?? CLOSES[CLOSES.length - 1])}
+          f={f}
+          at={T.label}
+          anchor="left"
+        />
       </div>
-    </Stage>
+    </SafeArea>
   );
 };

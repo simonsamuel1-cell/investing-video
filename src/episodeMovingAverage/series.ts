@@ -1,0 +1,113 @@
+/**
+ * series.ts — the ONE synthetic price generator for the whole episode.
+ *
+ * Every explainer chart comes out of here, generated at MODULE SCOPE so a
+ * series is the same array on every frame and in every scene. A series built
+ * inside a component is regenerated per frame and the chart boils.
+ *
+ * Seeded `mulberry32` only — never `Math.random()`. Renders must be
+ * frame-deterministic.
+ *
+ * These are illustrative by design and the episode never presents them as a
+ * market. The one chart that IS a market — GGRM in 12A/12B — comes from
+ * `data/ggrm.json` and refuses to draw at all while that file is empty.
+ */
+import { seeded } from "./helpers";
+
+export type Bar = { o: number; h: number; l: number; c: number };
+
+export type Shape = "drift" | "reversal" | "uptrend" | "downtrend" | "flat";
+
+/**
+ * `drift` is the per-bar trend and `noise` scales the per-bar jitter. Scene 02
+ * needs the noise HIGH — the whole scene is about a smooth line appearing
+ * through it, and a tidy series would prove nothing.
+ */
+export const makeSeries = ({
+  seed,
+  n,
+  drift = 0,
+  noise = 1,
+  shape = "drift",
+}: {
+  seed: number;
+  n: number;
+  drift?: number;
+  noise?: number;
+  shape?: Shape;
+}): number[] => {
+  const rnd = seeded(seed);
+  const out: number[] = [];
+  let p = 5000;
+  for (let i = 0; i < n; i++) {
+    const t = i / (n - 1);
+    let bias = drift;
+    if (shape === "reversal") {
+      /* one obvious turn at 60% across — Scene 04 needs a single moment where
+         one line can visibly turn before the other */
+      bias = t < 0.6 ? 26 : -34;
+    } else if (shape === "uptrend") {
+      /* a climb with real pullbacks in it, so price can come back down onto a
+         rising average and bounce */
+      bias = 22 + Math.sin(t * Math.PI * 3.2) * 30;
+    } else if (shape === "downtrend") {
+      /* the mirror of `uptrend` — a fall with real rallies in it, so price can
+         come back UP into a falling average and be turned away */
+      bias = -22 - Math.sin(t * Math.PI * 3.2) * 30;
+    } else if (shape === "flat") {
+      bias = Math.sin(t * Math.PI * 5) * 16;
+    }
+    p += bias + (rnd() - 0.5) * 2 * 34 * noise;
+    out.push(p);
+  }
+  return out;
+};
+
+/**
+ * Closes → candles. Each bar opens on the previous close, so a line through the
+ * closes lands on the bodies and the two notations describe one series.
+ */
+export const toBars = (closes: number[], seed: number): Bar[] => {
+  const rnd = seeded(seed);
+  return closes.map((c, i) => {
+    const o = i === 0 ? c - (rnd() - 0.5) * 20 : closes[i - 1];
+    const stretch = rnd() < 0.16 ? 2.4 + rnd() * 2 : 1;
+    return {
+      o,
+      c,
+      h: Math.max(o, c) + (6 + rnd() * 16) * stretch,
+      l: Math.min(o, c) - (6 + rnd() * 16) * (rnd() < 0.16 ? 2.4 + rnd() * 2 : 1),
+    };
+  });
+};
+
+/** The episode's default series — noisy on purpose. Scenes 01, 02, 03, 07, 13. */
+export const SERIES = makeSeries({ seed: 2024, n: 140, drift: 9, noise: 1.35 });
+/** Scene 04 — one clear turn, so SMA and EMA can disagree about when it happened. */
+export const SERIES_REVERSAL = makeSeries({ seed: 77, n: 120, shape: "reversal", noise: 0.75 });
+/** Scenes 06, 10, 11 — a climb with pullbacks in it. */
+/**
+ * The candle scenes get FEWER bars on purpose. At 120 bars a body is 9px in a
+ * 1692px plot and the chart reads as a dotted line; at 70 it reads as candles.
+ */
+export const SERIES_UPTREND = makeSeries({ seed: 91, n: 70, shape: "uptrend", noise: 1.1 });
+/** Scene 05 state 3 — no opinion. */
+export const SERIES_FLAT = makeSeries({ seed: 55, n: 120, shape: "flat", noise: 0.7 });
+/** Scene 05 states 1 and 2 — a clean climb and its mirror. */
+export const SERIES_UP = makeSeries({ seed: 31, n: 120, drift: 26, noise: 0.6 });
+export const SERIES_DOWN = makeSeries({ seed: 32, n: 70, shape: "downtrend", noise: 1.1 });
+/**
+ * Scenes 08/09 — volatility itself is what varies here, not direction. Calm,
+ * then active, then a long tight stretch, then the release.
+ */
+export const SERIES_BREATH = (() => {
+  const rnd = seeded(808);
+  const out: number[] = [];
+  let p = 5000;
+  for (let i = 0; i < 150; i++) {
+    const calm = i < 40 || (i >= 78 && i < 120);
+    p += 4 + (rnd() - 0.5) * 2 * (calm ? 12 : 62);
+    out.push(p);
+  }
+  return out;
+})();

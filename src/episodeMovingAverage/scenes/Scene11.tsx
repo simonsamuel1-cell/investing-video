@@ -1,45 +1,51 @@
 /**
- * SC11 — Where indicators sit in your process (from 6034, dur 636).
+ * SC11 — Where indicators fit (from 6034, dur 636).
  *
- * THE STACK BUILDS BOTTOM-UP, and the foundation is built first and alone: your
- * own analysis exists before any indicator is added to it. Building downward
- * from the tools, or revealing all three at once, would say the opposite.
+ * ORDER OF ARRIVAL IS THE ARGUMENT. Your own marks go on the chart first — a
+ * trendline, a breakout, a level — and the indicators fade in over them
+ * afterwards, visibly agreeing with what is already there. Foundation, then
+ * confirmation, said by sequence rather than by a stacked diagram.
  *
- * "Analisismu sendiri" is shown as an ACTUAL CHART on the right — a trend line
- * and two marked levels, drawn by hand-ish — not as the word in a box. A word
- * in a box would make the foundation the most abstract thing on screen, when it
- * is meant to be the most concrete.
+ * No layer stack. A schematic of the idea would replace the demonstration of it.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage } from "../components/Stage";
-import { Panel, LayerStack } from "../components/Panels";
-import { PriceLine } from "../components/PriceLine";
-import { Chip } from "../components/Chip";
-import { Layer } from "../components/Stage";
+import { SafeArea } from "../components/SafeArea";
+import { ChartFrame, gridOf, Layer, CHART } from "../components/ChartFrame";
+import { BollingerBands } from "../components/BollingerBands";
+import { MALine } from "../components/MALine";
+import { LabelChip } from "../components/LabelChip";
+import { TitleChip } from "../components/TitleChip";
 import { theme } from "../theme";
-import { sec, progress, textReveal, clamp01 } from "../helpers";
-import { seriesGrid } from "../components/plot";
-import { PULLBACKS } from "../data/series";
+import { sec, sma, bollinger, progress, progressInOut, fadeOut, textReveal } from "../helpers";
+import { SERIES_UPTREND, toBars } from "../series";
 import { CUTS, cutIn, cutPushOut, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const SCENE_FROM = 6034;
 const T = {
-  head: sec(0.2),
-  base: sec(3.0),
-  ma: sec(9.0),
-  bb: sec(13.0),
-  close: sec(17.5),
+  title: sec(0.2),
+  chart: sec(0.4),
+  trend: sec(4.0),
+  pattern: sec(6.3),
+  level: sec(8.6),
+  indicators: sec(11.0),
+  caption: sec(17.5),
 };
-const STACK = { x: theme.stage.active.x, y: 200, w: 940, h: 480 };
-const THUMB = { x: 1080, y: 200, w: theme.stage.active.x + theme.stage.active.w - 1080, h: 300 };
-const CLOSE_CARD = { x: 1080, y: 540, w: theme.stage.active.x + theme.stage.active.w - 1080, h: 180 };
-/** Two levels marked on the thumbnail — the "level yang kamu tandai". */
-const LEVELS = [0.32, 0.68];
+const PERIOD = 20;
+/** The three marks, in bar indices — your own reading, drawn by hand. */
+const TREND = { a: 6, b: 44 };
+const BREAK = 52;
+const LEVEL_AT = 30;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const TBOX = { x: THUMB.x + 32, y: THUMB.y + 40, w: THUMB.w - 64, h: THUMB.h - 80 };
-const TG = seriesGrid(PULLBACKS, TBOX, 0.16);
+const BARS = toBars(SERIES_UPTREND, 1111);
+const BB = bollinger(SERIES_UPTREND, PERIOD, 2);
+const DOMAIN: [number, number] = [
+  Math.min(...BB.lower.filter((v): v is number => v !== null), ...BARS.map((b) => b.l)),
+  Math.max(...BB.upper.filter((v): v is number => v !== null), ...BARS.map((b) => b.h)),
+];
+const G = gridOf(SERIES_UPTREND, DOMAIN, CHART);
+const MA = sma(SERIES_UPTREND, PERIOD);
 
 export const Scene11 = () => {
   const f = useCurrentFrame();
@@ -47,13 +53,12 @@ export const Scene11 = () => {
   const dy = cutIn(g, CUTS.toProcess);
   const push = cutPushOut(g, CUTS.toCase, 0.16);
   const blur = Math.max(cutBlur(g, CUTS.toProcess), cutBlur(g, CUTS.toCase));
-  const head = textReveal(f, T.head);
-  const closing = textReveal(f, T.close);
-  /** The base pulses once at the end: the foundation is what matters. */
-  const pulse = f >= T.close ? Math.sin(Math.PI * clamp01((f - T.close) / 26)) : 0;
+  const cap = textReveal(f, T.caption);
+  /** Each mark's own label leaves as the next one arrives — never three at once. */
+  const until = (next: number) => (f >= next ? fadeOut(f, next, 12) : 1);
 
   return (
-    <Stage>
+    <SafeArea>
       <div
         style={{
           position: "absolute",
@@ -63,92 +68,93 @@ export const Scene11 = () => {
           filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
         }}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: theme.stage.active.x,
-            top: 108 + head.dy,
-            transform: "translateY(-50%)",
-            fontFamily: theme.text.family,
-            fontSize: theme.text.h1.size,
-            fontWeight: theme.text.h1.weight,
-            color: theme.color.ink,
-            opacity: head.opacity,
-          }}
-        >
-          Di mana indikator dipakai?
-        </div>
+        <ChartFrame
+          closes={SERIES_UPTREND}
+          bars={BARS}
+          grid={G}
+          mode="candle"
+          f={f}
+          drawFrom={T.chart}
+          drawDur={sec(3.2)}
+          tickLabels={false}
+        />
 
-        <div style={{ transform: `scale(${1 + pulse * 0.012})`, transformOrigin: `${STACK.x + STACK.w / 2}px ${STACK.y + STACK.h}px` }}>
-          <LayerStack
-            rect={STACK}
-            f={f}
-            layers={[
-              { label: "Analisismu Sendiri", at: T.base, tone: "solid", chips: ["Trend", "Pattern", "Level"] },
-              { label: "Moving Average", note: "Mengonfirmasi trend", at: T.ma, tone: "outline" },
-              { label: "Bollinger Bands", note: "Mengencang  /  Sudah bergerak kuat", at: T.bb, tone: "outline" },
-            ]}
-          />
-        </div>
-
-        {/* your own analysis, as an actual chart */}
-        <Panel rect={THUMB} opacity={progress(f, T.base, sec(1))}>
-          <PriceLine values={PULLBACKS} grid={TG} f={f} at={T.base} over={sec(2.5)} />
-          {f >= T.base + sec(1.5) && (
-            <Layer opacity={progress(f, T.base + sec(1.5), 14)}>
-              {LEVELS.map((p) => {
-                const y = TBOX.y + TBOX.h * p;
-                return <line key={p} x1={TBOX.x} y1={y} x2={TBOX.x + TBOX.w} y2={y} stroke={theme.color.indigo40} strokeWidth={theme.shape.rule} strokeDasharray="10 8" />;
-              })}
-              <line
-                x1={TG.x(6)}
-                y1={TG.y(PULLBACKS[6])}
-                x2={TG.x(PULLBACKS.length - 6)}
-                y2={TG.y(PULLBACKS[PULLBACKS.length - 6])}
-                stroke={theme.color.indigo}
-                strokeWidth={theme.shape.rule}
-              />
-            </Layer>
-          )}
-        </Panel>
-
-        {/* the closing reading, and what it is not */}
-        {f >= T.close && (
-          <Panel rect={CLOSE_CARD} opacity={closing.opacity}>
-            <div
-              style={{
-                position: "absolute",
-                left: CLOSE_CARD.x + 32,
-                top: CLOSE_CARD.y + 54 + closing.dy,
-                fontFamily: theme.text.family,
-                fontSize: theme.text.title.size,
-                fontWeight: theme.text.title.weight,
-                color: theme.color.indigo,
-                opacity: closing.opacity,
-              }}
-            >
-              Second opinion.
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                left: CLOSE_CARD.x + 32,
-                top: CLOSE_CARD.y + 54 + theme.text.title.size + 18 + closing.dy,
-                fontFamily: theme.text.family,
-                fontSize: theme.text.tag.size,
-                fontWeight: theme.text.body.weight,
-                color: theme.color.slate,
-                opacity: closing.opacity,
-                textDecoration: "line-through",
-              }}
-            >
-              Pengambil keputusan
-            </div>
-          </Panel>
+        {/* your marks, first */}
+        {f >= T.trend && (
+          <Layer opacity={progress(f, T.trend, 16)}>
+            <line
+              x1={G.x(TREND.a)}
+              y1={G.y(SERIES_UPTREND[TREND.a])}
+              x2={G.x(TREND.b)}
+              y2={G.y(SERIES_UPTREND[TREND.b])}
+              stroke={theme.color.indigo}
+              strokeWidth={theme.shape.band}
+            />
+          </Layer>
+        )}
+        {f >= T.pattern && (
+          <Layer opacity={progress(f, T.pattern, 16)}>
+            <circle
+              cx={G.x(BREAK)}
+              cy={G.y(SERIES_UPTREND[BREAK])}
+              r={38}
+              fill="none"
+              stroke={theme.color.indigo}
+              strokeWidth={theme.shape.band}
+            />
+          </Layer>
+        )}
+        {f >= T.level && (
+          <Layer opacity={progress(f, T.level, 16)}>
+            <line
+              x1={CHART.x + 20}
+              y1={G.y(SERIES_UPTREND[LEVEL_AT])}
+              x2={CHART.x + CHART.w - 20}
+              y2={G.y(SERIES_UPTREND[LEVEL_AT])}
+              stroke={theme.color.indigo}
+              strokeWidth={theme.shape.band}
+              strokeDasharray="10 8"
+            />
+          </Layer>
         )}
 
-        <Chip label="Fondasinya tetap analisismu sendiri" x={theme.stage.active.x} y={760} tone="slate" anchor="left" at={T.base + sec(1)} />
+        {/* the indicators, second, agreeing with what is already there */}
+        <MALine values={MA} grid={G} f={f} drawFrom={T.indicators} drawDur={sec(3)} variant="slow" />
+        {f >= T.indicators && (
+          <BollingerBands
+            mid={BB.mid}
+            upper={BB.upper}
+            lower={BB.lower}
+            grid={G}
+            opacity={progressInOut(f, T.indicators + sec(1), sec(2)) * 0.9}
+          />
+        )}
+
+        <TitleChip text="Your Analysis" f={f} at={T.title} />
+
+        <LabelChip text="Trend" x={G.x(TREND.b)} y={G.y(SERIES_UPTREND[TREND.b])} f={f} at={T.trend + 8} anchor="above" opacity={until(T.pattern)} />
+        <LabelChip text="Pattern" x={G.x(BREAK)} y={G.y(SERIES_UPTREND[BREAK]) - 38} f={f} at={T.pattern + 8} anchor="above" opacity={until(T.level)} />
+        <LabelChip text="Level" x={CHART.x + 20} y={G.y(SERIES_UPTREND[LEVEL_AT])} f={f} at={T.level + 8} anchor="right" opacity={until(T.indicators)} />
+        <LabelChip text="Trend: Up" x={G.x(SERIES_UPTREND.length - 1)} y={G.y(MA[MA.length - 1] ?? SERIES_UPTREND[SERIES_UPTREND.length - 1])} f={f} at={T.indicators + sec(2.4)} anchor="left" opacity={until(T.caption)} />
+
+        {f >= T.caption && (
+          <div
+            style={{
+              position: "absolute",
+              left: theme.canvas.width / 2,
+              top: theme.stage.captionY + cap.dy,
+              transform: "translate(-50%, -50%)",
+              fontFamily: theme.text.family,
+              fontSize: theme.text.label.size,
+              fontWeight: theme.text.label.weight,
+              color: theme.color.ink,
+              opacity: cap.opacity,
+            }}
+          >
+            Second Opinion
+          </div>
+        )}
       </div>
-    </Stage>
+    </SafeArea>
   );
 };

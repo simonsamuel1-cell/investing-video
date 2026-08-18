@@ -63,6 +63,18 @@ export const theme = {
     title: { x: W / 2, y: active.y + TITLE_H / 2 },
     /** The single row of chips between the card and the subtitle band. */
     caption: { y: card.y + card.h + CAPTION_H / 2 },
+    /**
+     * THE SHARED CHART BOX — identical in every scene, never overridden.
+     *
+     * One chart sits here for the whole episode and does not move. Between
+     * scenes only the annotation changes. Its bottom edge is 850, which leaves
+     * `captionY` clear of it and both clear of the 108px subtitle band.
+     */
+    chart: { x: 96, y: 170, w: 1728, h: 680 },
+    /** The one optional caption line, under the chart. */
+    captionY: 880,
+    /** The TitleChip's anchor — always top-LEFT, because the logo owns the right. */
+    titleChip: { x: 96, y: 92 },
   },
 
   color: {
@@ -86,7 +98,6 @@ export const theme = {
      * lighter indigo reaches for one of these, never for a new hex.
      */
     indigo90: "#7160F1",
-    indigo70: "#9A8EF5",
     indigo40: "#CFC8FB",
     indigo12: "#EDEAFE",
     cyan70: "#8EDAEB",
@@ -94,8 +105,19 @@ export const theme = {
     cyan12: "#E7F7FB",
     /** The explainer charts' price line — neutral, so the MAs carry the colour. */
     priceLine: "#3A3A3A",
-    /** Uniform weight bars, and any bar that must read as "no emphasis". */
-    neutralBar: "#9AA0A6",
+    /**
+     * The Bollinger middle band ON THE GGRM CHART ONLY.
+     *
+     * There the SMA100 (solid indigo) and the middle band (dashed) are on
+     * screen together, and the VO calls the SMA100 "garis ungu". Same hue at
+     * the same lightness would make that ambiguous, so the band steps back a
+     * tint — still hue-locked to 247, just lighter.
+     */
+    indigo70: "#9A8EF5",
+    /** Gridlines and panel borders. */
+    gridline: "#DDE0E5",
+    border: "#D8DBE0",
+    textMuted: "#6B7076",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     indigoPale: "#EFEDFE",
@@ -120,6 +142,10 @@ export const theme = {
     mono: { size: 40, weight: 600 },
     /** Between title and display — section heads that own the whole frame. */
     h1: { size: 64, weight: 700 },
+    h2: { size: 48, weight: 700 },
+    label: { size: 40, weight: 600 },
+    /** The absolute minimum size anywhere in the episode. */
+    labelSm: { size: 36, weight: 500 },
   },
 
   shape: {
@@ -129,6 +155,11 @@ export const theme = {
     hairline: 1,
     rule: 2,
     line: 3,
+    /** The strokes v2 names: MA, band, price line, candle wick. */
+    ma: 3,
+    band: 2,
+    price: 2.5,
+    wick: 1.5,
     heavy: 9,
     shadow: "0 10px 24px rgba(0, 0, 0, 0.05)",
   },
@@ -142,5 +173,7 @@ export const theme = {
     fade: 10,
     /** UI elements may pop over this many frames. Type never does. */
     pop: 10,
+    /** A Ping's whole lifetime — expand and fade, then gone. */
+    pingF: 20,
   },
 } as const;
