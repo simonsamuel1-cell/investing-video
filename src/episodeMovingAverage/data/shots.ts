@@ -70,6 +70,58 @@ export const BMRI_1H: Anchor[] = [
   [0.82, 4200], [0.86, 4180], [0.92, 4160], [1.0, 4150],
 ];
 
+
+/**
+ * SC02/SC03's explainer chart — Apr → Aug, 72.000 to 124.000, closing 112.472.
+ *
+ * ⚠ The crop Simon sent has its symbol header cut off, so the instrument is
+ * NOT known here and this series is deliberately not attributed to one. The
+ * explainer chart carries no ticker on screen either, which is what makes that
+ * safe: the scene is about what a smoothed line does to a noisy one, and this
+ * supplies a real market's shape to do it on.
+ *
+ * If it is ever labelled, the label has to come with an export — not with a
+ * ticker typed over a traced path.
+ */
+export const EXPLAINER: Anchor[] = [
+  [0.0, 86000], [0.02, 88000], [0.05, 84000], [0.07, 88500], [0.09, 85000],
+  [0.11, 78000], [0.13, 84000], [0.16, 85000], [0.18, 87000], [0.2, 94000],
+  [0.23, 96500], [0.25, 94000], [0.27, 97000], [0.3, 104000], [0.33, 104500],
+  [0.35, 103000], [0.38, 106000], [0.4, 110000], [0.42, 106000], [0.44, 108500],
+  [0.46, 105000], [0.48, 103500], [0.5, 104500], [0.53, 110000], [0.55, 106000],
+  [0.57, 105500], [0.59, 103000], [0.61, 106000], [0.63, 100000], [0.65, 106000],
+  [0.67, 108000], [0.7, 107000], [0.72, 108500], [0.74, 108000], [0.76, 118000],
+  [0.78, 120000], [0.8, 118000], [0.82, 119500], [0.84, 117500], [0.86, 118000],
+  [0.88, 115000], [0.9, 113500], [0.92, 117000], [0.94, 119000], [0.96, 123000],
+  [0.98, 117000], [1.0, 112472],
+];
+
+
+/**
+ * SC04's chart — SMA vs EMA. Traced from the candles Simon supplied; that crop
+ * carries no axis and no symbol, so only the SHAPE is taken and the levels are
+ * written straight into the band the axis is read on.
+ *
+ * The run that matters to the scene is the peak near two fifths across and the
+ * long decline after it: that is the one turn both averages have to react to,
+ * and the whole scene is about which of them reacts first.
+ */
+export const SMA_EMA: Anchor[] = [
+  [0.0, 830], [0.02, 840], [0.04, 860], [0.06, 856], [0.08, 876],
+  [0.1, 890], [0.12, 904], [0.14, 928], [0.155, 940], [0.17, 924],
+  [0.19, 934], [0.21, 920], [0.23, 904], [0.25, 896], [0.27, 908],
+  [0.29, 912], [0.31, 920], [0.33, 930], [0.35, 948], [0.37, 940],
+  [0.39, 956], [0.41, 972], [0.425, 980], [0.44, 968], [0.46, 974],
+  [0.47, 964], [0.49, 940], [0.51, 920], [0.52, 928], [0.53, 944],
+  [0.55, 934], [0.57, 924], [0.58, 916], [0.6, 920], [0.62, 908],
+  [0.64, 890], [0.66, 880], [0.67, 884], [0.68, 872], [0.7, 890],
+  [0.71, 876], [0.72, 856], [0.73, 868], [0.74, 860], [0.75, 880],
+  [0.77, 890], [0.78, 896], [0.79, 884], [0.81, 892], [0.82, 900],
+  [0.83, 890], [0.85, 896], [0.86, 884], [0.87, 874], [0.88, 896],
+  [0.9, 920], [0.92, 936], [0.93, 948], [0.95, 940], [0.97, 932],
+  [1.0, 924],
+];
+
 /**
  * Anchors → a series of `n` closes.
  *

@@ -66,18 +66,38 @@ export const makeSeries = ({
 /**
  * Closes → candles. Each bar opens on the previous close, so a line through the
  * closes lands on the bodies and the two notations describe one series.
+ *
+ * ═══ WICKS ARE A FRACTION OF THE CHART'S OWN RANGE ═══
+ *
+ * NEVER an absolute amount. This used to add six to twenty-two units to every
+ * bar and multiply one in six of them by up to 4.4 — which is invisible on a
+ * chart that runs from 76.000 to 124.000 and grotesque on one that runs from
+ * 800 to 1.000. The same function drew both, so the same numbers produced
+ * hairlines in one scene and spikes in the next.
+ *
+ * Sizing the wick off the series' own span makes it scale-free: a candle looks
+ * like a candle whatever the instrument is priced at, and no scene has to know
+ * what units it is working in.
  */
+const WICK = {
+  /** Shortest wick, as a fraction of the series' full range. */
+  min: 0.003,
+  /** Extra length on top of it, at random. */
+  vary: 0.009,
+  /** How often a bar gets a longer one, and how much longer. Kept modest —
+      a spike that dwarfs the bodies stops reading as price and starts reading
+      as an error. */
+  spike: 0.08,
+  stretch: 1.8,
+};
+
 export const toBars = (closes: number[], seed: number): Bar[] => {
   const rnd = seeded(seed);
+  const span = Math.max(1e-9, Math.max(...closes) - Math.min(...closes));
+  const wick = () => (WICK.min + rnd() * WICK.vary) * span * (rnd() < WICK.spike ? WICK.stretch : 1);
   return closes.map((c, i) => {
-    const o = i === 0 ? c - (rnd() - 0.5) * 20 : closes[i - 1];
-    const stretch = rnd() < 0.16 ? 2.4 + rnd() * 2 : 1;
-    return {
-      o,
-      c,
-      h: Math.max(o, c) + (6 + rnd() * 16) * stretch,
-      l: Math.min(o, c) - (6 + rnd() * 16) * (rnd() < 0.16 ? 2.4 + rnd() * 2 : 1),
-    };
+    const o = i === 0 ? c - (rnd() - 0.5) * span * 0.004 : closes[i - 1];
+    return { o, c, h: Math.max(o, c) + wick(), l: Math.min(o, c) - wick() };
   });
 };
 

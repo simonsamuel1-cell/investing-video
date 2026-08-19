@@ -40,10 +40,24 @@ export type Cut = {
  * the outgoing move has to finish the job itself as a whip-out.
  */
 export const CUTS = {
-  /** SC01 → SC02. The screener is put down and the teaching starts: a rise. */
-  toAverage: { at: 659, over: 24, distance: 90, blur: 9 },
-  /** CG-A → SC04. Same subject, next question — sideways, not up. */
-  toTypes: { at: 1839, over: 24, distance: 110, blur: 9 },
+  /**
+   * SC01 → SC02. The screener is put down and the teaching starts: a rise.
+   *
+   * At 718, not 659: SC01 holds past the VO's "Kita mulai dari moving average"
+   * so the two indicator pills can move to the middle of the frame and the
+   * Moving Average one can light up ON that line. The cut comes after.
+   */
+  toAverage: { at: 718, over: 24, distance: 90, blur: 9 },
+  /**
+   * CG-A → SC04. NOT A CUT.
+   *
+   * The two scenes share a heading and a white card, and the run does not stop
+   * at this boundary — so nothing is thrown and nothing is blurred. CG-A
+   * simply fades its contents off the card, and SC04 draws the next ones onto
+   * the same card. Distance and blur are zero so both sides read this entry
+   * and neither moves.
+   */
+  toTypes: { at: 1839, over: 24, distance: 0, blur: 0 },
   /** SC04 → SC05. "Cara sederhana membacanya begini" — a new instruction. */
   toReading: { at: 2306, over: 24, distance: 90, blur: 9 },
   /** SC05 → SC06. Another property of the same line: sideways again. */

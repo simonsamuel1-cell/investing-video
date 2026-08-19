@@ -274,8 +274,10 @@ export const ChartFrame = ({
               top: grid.y(p),
               transform: "translate(-100%, -50%)",
               fontFamily: theme.text.family,
-              fontSize: theme.text.tag.size,
-              fontWeight: theme.text.tag.weight,
+              /* the price axis has its own size in the theme — it was reading
+                 `tag` here, and the two only ever agreed by coincidence */
+              fontSize: theme.text.axis.size,
+              fontWeight: theme.text.axis.weight,
               color: theme.color.textMuted,
               opacity,
             }}

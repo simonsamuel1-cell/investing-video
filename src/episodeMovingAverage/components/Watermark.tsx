@@ -15,7 +15,13 @@
  * fade-nya butuh useCurrentFrame - dan Composition sengaja dibiarkan
  * berupa satu ekspresi tanpa hook.
  */
-import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import {
+  AbsoluteFill,
+  Img,
+  interpolate,
+  staticFile,
+  useCurrentFrame,
+} from "remotion";
 import { TOTAL_FRAMES } from "../Composition";
 
 /** Sama dengan fade antar-scene, supaya kedatangannya tidak terasa lain. */
@@ -36,7 +42,10 @@ export const Watermark = () => {
           sisa yang perlu dipusatkan. */}
       <Img
         src={staticFile("watermark.png")}
-        style={{ width: "100%", height: "100%" }}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
       />
     </AbsoluteFill>
   );

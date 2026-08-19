@@ -120,10 +120,30 @@ export const theme = {
      * so the pill reads as sitting ON the background rather than cut out of it.
      * Its border is `border`, one step darker.
      */
+    /**
+     * THE AVERAGE LINE, on Simon's direction. It is the only hue in the
+     * episode outside the indigo/cyan contract, and it is deliberate: in the
+     * explainer the line has to separate itself from every annotation drawn
+     * around it, and a third indigo would not.
+     *
+     * It does NOT replace the fast/slow binding — cyan stays fast and indigo
+     * stays slow, because the voice-over calls the slow one "garis ungu" in
+     * Scene 12A and that is a caption the viewer is asked to follow.
+     */
+    average: "#F5871F",
     pillFill: "#FAFAFB",
+    /**
+     * The one glow in the episode: the halo on a selected indicator pill. It
+     * is the same indigo, softened — and it is safe here where the shadow rule
+     * would normally forbid it, because the pill it sits on is in the middle
+     * of the frame, nowhere near a safe margin to bleed past.
+     */
+    glow: "rgba(95, 77, 238, 0.45)",
     gridline: "#DDE0E5",
     border: "#D8DBE0",
     textMuted: "#6B7076",
+    /** A soft black — darker than `slate`, quieter than `ink`. The quote box. */
+    inkSoft: "#4D4D4D",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     indigoPale: "#EFEDFE",

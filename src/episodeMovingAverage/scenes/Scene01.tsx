@@ -40,7 +40,11 @@ const SCENE_FROM = 0;
  *             their place
  * 407         the Moving Average pill lights up, and its line draws
  * 543         the Bollinger Bands pill lights up, and the bands unfold
- * 658         everything is on screen; the cut to SC02 takes it from here
+ * 658         the two pills rise to the middle of the frame while the chart
+ *             blurs and fades away behind them
+ * 700         the Moving Average pill grows and glows — the VO is saying
+ *             "Kita mulai dari moving average" over exactly this
+ * 718         the cut to SC02 takes it from here
  */
 const T = {
   reveal: 8,
@@ -54,6 +58,18 @@ const T = {
   pills: 320,
   maOn: 407,
   bbOn: 543,
+  /** The pills leave the watchlist's row and take the middle of the frame. */
+  centre: 658,
+  centreOver: 34,
+  /**
+   * The Moving Average one is then singled out, on the line that names it.
+   *
+   * It starts the frame the rise lands (658 + 34) and is fully up by 704 —
+   * the cut's blur begins at 706, so the highlight gets its own clean beat
+   * instead of arriving inside the blur.
+   */
+  glow: 692,
+  glowOver: 12,
 };
 /** Frames per candle. The whole series has to land before the camera does. */
 const PER_BAR = 1.2;
@@ -68,7 +84,9 @@ const ISO = { yaw: -26, pitch: 6, roll: 5 };
 /** How far in the camera pushes while it travels. */
 const DOLLY = { from: 2.6, to: 3.4 };
 /** The indicator pills. */
-const PILL = { gap: 30, y: 856, padX: 40, padY: 18 };
+/** `h` is the pill's own height, needed to centre it on the canvas by its
+    middle rather than by its top edge. */
+const PILL = { gap: 30, y: 856, h: 84, padX: 40, padY: 18 };
 const MA_PERIOD = 20;
 
 /** The panel, and the plot inside it. The axis is on the LEFT, as in the ref. */
@@ -283,6 +301,19 @@ export const Scene01 = () => {
   const maLive = f >= T.maOn;
   const bbLive = f >= T.bbOn;
 
+  /**
+   * The closing beat. The pills rise to the middle of the frame and the chart
+   * BLURS AWAY behind them on the same curve — it does not dim and stay, it
+   * leaves. By the time the pills land, the frame is the two of them and
+   * nothing else, which is what the cut then carries into SC02.
+   */
+  const rise = progressInOut(f, T.centre, T.centreOver);
+  const pillY = PILL.y + (theme.canvas.height / 2 - PILL.h / 2 - PILL.y) * rise;
+  const behind = 1 - rise;
+  const behindBlur = rise * 16;
+  /** Only the Moving Average is singled out. */
+  const lit = progress(f, T.glow, T.glowOver);
+
   return (
     <SafeArea>
       <div
@@ -309,6 +340,8 @@ export const Scene01 = () => {
             inset: 0,
             transformOrigin: `${at.x}px ${at.y}px`,
             transform: plate,
+            opacity: behind,
+            filter: behindBlur > 0.05 ? `blur(${behindBlur.toFixed(1)}px)` : undefined,
           }}
         >
         {/* ── the panel ──────────────────────────────────────────────── */}
@@ -683,16 +716,18 @@ export const Scene01 = () => {
             style={{
               position: "absolute",
               left: 0,
-              top: PILL.y,
+              top: pillY,
               width: theme.canvas.width,
+              height: PILL.h,
               display: "flex",
+              alignItems: "center",
               justifyContent: "center",
               gap: PILL.gap,
             }}
           >
             {[
-              { label: "Moving Average", on: maLive, at: T.maOn },
-              { label: "Bollinger Bands", on: bbLive, at: T.bbOn },
+              { label: "Moving Average", on: maLive, at: T.maOn, single: true },
+              { label: "Bollinger Bands", on: bbLive, at: T.bbOn, single: false },
             ].map((pill, i) => {
               const r = textReveal(f, T.pills + i * 8, T.cardIn);
               /* the selection is a cross-fade between the two skins, so the
@@ -703,8 +738,9 @@ export const Scene01 = () => {
                 <div
                   key={pill.label}
                   style={{
-                    transform: `translateY(${r.dy}px)`,
+                    transform: `translateY(${r.dy}px) scale(${(1 + (pill.single ? 0.1 * lit : 0)).toFixed(3)})`,
                     opacity: r.opacity,
+                    boxShadow: pill.single && lit > 0.01 ? `0 0 ${(46 * lit).toFixed(0)}px ${theme.color.glow}` : undefined,
                     padding: `${PILL.padY}px ${PILL.padX}px`,
                     borderRadius: theme.shape.chipRadius,
                     background: mix(theme.color.pillFill, theme.color.indigo12),

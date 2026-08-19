@@ -80,16 +80,21 @@ export const makeSeries = ({ seed, n, drift = 0, noise = 1, shape = "drift" }) =
   return out;
 };
 
+/**
+ * WICKS ARE A FRACTION OF THE SERIES' OWN RANGE, never an absolute amount —
+ * the same rule as `series.ts`, and the reason is the same: the identical
+ * numbers drew hairlines on a 124.000-level chart and spikes on an 1.000-level
+ * one. Keep this in step with the episode's copy.
+ */
+const WICK = { min: 0.003, vary: 0.009, spike: 0.08, stretch: 1.8 };
+
 export const toBars = (closes, seed) => {
   const rnd = seeded(seed);
+  const span = Math.max(1e-9, Math.max(...closes) - Math.min(...closes));
+  const wick = () => (WICK.min + rnd() * WICK.vary) * span * (rnd() < WICK.spike ? WICK.stretch : 1);
   return closes.map((c, i) => {
-    const o = i === 0 ? c - (rnd() - 0.5) * 20 : closes[i - 1];
-    const stretch = rnd() < 0.16 ? 2.4 + rnd() * 2 : 1;
-    return {
-      o, c,
-      h: Math.max(o, c) + (6 + rnd() * 16) * stretch,
-      l: Math.min(o, c) - (6 + rnd() * 16) * (rnd() < 0.16 ? 2.4 + rnd() * 2 : 1),
-    };
+    const o = i === 0 ? c - (rnd() - 0.5) * span * 0.004 : closes[i - 1];
+    return { o, c, h: Math.max(o, c) + wick(), l: Math.min(o, c) - wick() };
   });
 };
 

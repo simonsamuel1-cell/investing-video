@@ -13,7 +13,7 @@
  * scenes rendering INSIDE them and never also at top level. In all three cases
  * one element has to survive a boundary the script runs straight through:
  *
- *   CG-A   659 → 1839   SC02 + SC03   the line SC02 builds out of a window is
+ *   CG-A   718 → 1839   SC02 + SC03   the line SC02 builds out of a window is
  *                                     the same line SC03 renames MA20
  *   CG-B  4134 → 5439   SC08 + SC09   the bands keep breathing; SC09's squeeze
  *                                     is a stretch of SC08's own demonstration
@@ -41,6 +41,8 @@ import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
 import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
+import { SectionTitle } from "./components/SectionTitle";
+import { CUTS } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
@@ -50,7 +52,7 @@ type Mounted = { from: number; duration: number; Component: React.FC };
 
 /** Everything that is not inside a continuity group. */
 const INDEPENDENT_SCENES: Mounted[] = [
-  { from: 0, duration: 659, Component: Scene01 },
+  { from: 0, duration: 718, Component: Scene01 },
   { from: 1839, duration: 467, Component: Scene04 },
   { from: 2306, duration: 576, Component: Scene05 },
   { from: 2882, duration: 562, Component: Scene06 },
@@ -62,7 +64,7 @@ const INDEPENDENT_SCENES: Mounted[] = [
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
-  { from: 659, duration: 1180, Component: ExplainerGroup },
+  { from: 718, duration: 1121, Component: ExplainerGroup },
   { from: 4134, duration: 1305, Component: BandsGroup },
   { from: 6670, duration: 1648, Component: GgrmGroup },
 ];
@@ -74,6 +76,16 @@ export const MovingAverageComposition = () => (
         <Component />
       </Sequence>
     ))}
+
+    {/**
+      * The heading for the whole moving-average run — CG-A and SC04 both sit
+      * under it. Mounted here rather than in either scene so the cut at 1839
+      * passes beneath it: the chart is swept out, the word is not, and the
+      * viewer never watches the same title leave and come back.
+      */}
+    <Sequence from={718} durationInFrames={2306 - 718}>
+      <SectionTitle text="Moving Average" from={718} exit={CUTS.toReading} />
+    </Sequence>
 
     <Captions />
     <Watermark />
