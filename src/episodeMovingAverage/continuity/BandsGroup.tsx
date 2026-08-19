@@ -73,8 +73,15 @@ export const BandsGroup = () => {
   /** The chart steps back a little while the question owns the frame. */
   const back = 1 - 0.35 * clamp01(asking);
 
-  /** Centred on the squeeze, above the band it is asking about. */
-  const askAt = { x: G.x(MID_X), y: CHART.y + 96 };
+  /**
+   * Centred on the squeeze, above the band it is asking about.
+   *
+   * NOT at `CHART.y + 96`: from there the up-arrow's tip lands at y = 136,
+   * x ~ 1464 — inside the 360 x 150 logo zone, the one region nothing may
+   * enter. LabelChip refuses that zone on its own; Arrow has no such guard, so
+   * the anchor sits low enough that the mirrored pair clears it.
+   */
+  const askAt = { x: G.x(MID_X), y: CHART.y + 156 };
 
   return (
     <SafeArea>

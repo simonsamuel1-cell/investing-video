@@ -115,6 +115,12 @@ export const theme = {
      */
     indigo70: "#9A8EF5",
     /** Gridlines and panel borders. */
+    /**
+     * The unselected indicator pill: a neutral a shade lighter than the ground,
+     * so the pill reads as sitting ON the background rather than cut out of it.
+     * Its border is `border`, one step darker.
+     */
+    pillFill: "#FAFAFB",
     gridline: "#DDE0E5",
     border: "#D8DBE0",
     textMuted: "#6B7076",

@@ -53,6 +53,12 @@ const MA_FAST = sma(SERIES, FAST);
 const MA_SLOW = sma(SERIES, SLOW);
 /** Far enough from the right edge that a 12-bar-wide label still fits. */
 const LABEL_AT = SERIES.length - 14;
+/**
+ * The far end of Scene 02's arrow, clamped INTO the series. It used to be a
+ * literal 122, from when this series was 140 bars long; at 100 bars that index
+ * is undefined, `G.y(undefined)` is NaN, and the arrow silently never drew.
+ */
+const ARROW_TO = Math.min(SERIES.length - 1, 122);
 
 export const ExplainerGroup = () => {
   const f = useCurrentFrame();
@@ -107,7 +113,7 @@ export const ExplainerGroup = () => {
         {f >= T.quiet && f < T.clear && (
           <Arrow
             from={{ x: G.x(78), y: G.y(MA_MID[78] ?? SERIES[78]) }}
-            to={{ x: G.x(122), y: G.y(MA_MID[122] ?? SERIES[122]) }}
+            to={{ x: G.x(ARROW_TO), y: G.y(MA_MID[ARROW_TO] ?? SERIES[ARROW_TO]) }}
             f={f}
             at={T.quiet}
             opacity={midOut}

@@ -5,3 +5,10 @@ dist
 
 # Ignore the output video from Git but not videos you import into src/.
 out
+
+# The After Effects project is GENERATED — `node tools/ae/export.mjs`, then run
+# tools/ae/build.jsx through the bridge rebuilds it from the same maths. It is
+# 8MB of binary that changes wholesale on every rebuild, so the recipe is
+# versioned and the output is not. The Illustrator file IS kept: it is small,
+# and it is where hand edits would land.
+adobe/*.aep
