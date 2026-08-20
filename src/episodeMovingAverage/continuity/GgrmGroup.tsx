@@ -1,327 +1,312 @@
 /**
- * CG-C — Scenes 12A + 12B as ONE spanning Sequence (global 6670 → 8318).
+ * CG-C — Scenes 12A + 12B as ONE spanning Sequence (global 6645 → 8271).
  *
- * NOT OPTIONAL. The reveal mask lifts ACROSS the internal boundary at local 839:
- * the question is asked on one side of it and answered on the other, on the same
- * chart, at the same scales, with no remount and no re-fit. A cut here would let
- * the chart re-frame itself between the question and the answer.
+ * MUST be one Sequence. The reveal mask lifts ACROSS the internal boundary —
+ * the question is asked on one side of it and answered on the other, same
+ * chart, same scales, no re-fit. A cut here destroys the quiz payoff.
  *
- * [NEEDS DATA] `ggrm.json` ships empty. While `bars.length < 120` this draws the
- * chart frame, the axes and the legend with a visible "Menunggu data" and
- * NOTHING else. Required range is 2026-02-01 → 2026-08-08: SMA100 needs 100
- * sessions of warm-up before the July action, so a July-only export cannot
- * compute it at all. There is deliberately no fallback generator — a synthetic
- * candle labelled GGRM is a fabricated record.
+ * [NEEDS DATA] `ggrm.json` ships with `bars: []`. Required range is
+ * 2026-02-01 → 2026-08-08: the February start is mandatory because SMA100
+ * needs 100 sessions of warm-up before the July action, so a July-only export
+ * cannot compute the line the voice-over calls "garis ungu" at all.
  *
- * ⚠ COMPLIANCE 12A. Nothing directional renders before local frame 839 — no
- * arrow, no target price, no probability, no colour bias. The VO's two
- * questions are NOT put on screen; they are already in the narration.
- *
- * ⚠ COMPLIANCE 12B. The probability line gets no number, bar, gauge or
- * percentage. `Bukan jaminan.` renders at h1 and `Kali ini, sesuai.` at label
- * size, so the caveat carries more weight than the result.
+ * THE GUARD IS THE POINT. Below 120 bars this renders the frame, the axes and
+ * the legend with a visible placeholder and NOTHING else. It does not fall
+ * back to the synthetic generator: every other series here illustrates a
+ * mechanic, but this one is named, dated and priced, and a generated candle
+ * labelled GGRM is a fabricated record.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, Layer, CHART } from "../components/ChartFrame";
-import { BollingerBands } from "../components/BollingerBands";
+import { ChartFrame, gridOf, Layer } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
+import { BollingerBands } from "../components/BollingerBands";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { HighlightBox } from "../components/HighlightBox";
 import { Ping } from "../components/Ping";
 import { RevealMask } from "../components/RevealMask";
 import { Countdown } from "../components/Countdown";
+import { TextBlock, assertBlocks } from "../components/TextBlock";
 import { theme } from "../theme";
-import {
-  sec,
-  sma,
-  bollinger,
-  progress,
-  textReveal,
-  fadeOut,
-  price,
-} from "../helpers";
-import { GGRM, READY, CLOSES, PEAK } from "../data/ggrm";
-import { CUTS, cutPushIn, cutOut, cutBlur } from "../transitions/CameraCut";
+import { sec, sma, bollinger, layoutMode, fmtRp, progress } from "../helpers";
+import raw from "../data/ggrm.json";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const GROUP_FROM = 6670;
 /** Scene 12B begins here, in the group's own local frames. */
-const SC12B = 839;
+const SC12B = 858;
 const T = {
-  title: sec(0.2),
-  chart: sec(3.0),
-  bounce: sec(9.0),
-  squeeze: sec(15.0),
-  mask: sec(21.0),
+  title: sec(0.0),
+  chart: sec(1.6),
+  bounce: sec(6.4),
+  squeeze: sec(12.2),
+  modeB: sec(17.9),
+  q1: sec(17.9),
+  q2: sec(21.2),
+  mask: sec(24.6),
   // ── Scene 12B ──
-  wipe: SC12B + sec(0.2),
-  ticks: SC12B + sec(5.0),
-  level: SC12B + sec(11.0),
-  honest: SC12B + sec(19.0),
+  wipe: SC12B + sec(0.0),
+  level: SC12B + sec(8.6),
+  modeB2: SC12B + sec(14.1),
+  trend: SC12B + sec(14.3),
+  vol: SC12B + sec(17.7),
+  modeC: SC12B + sec(21.8),
+  combine: SC12B + sec(22.0),
 };
 const SLOW_P = 100;
 const BB_P = 20;
 /** Where the mask sits — the last bar 12A lets the viewer see. */
 const HIDE_AT = 0.66;
+const MIN_BARS = 120;
 // ═══════════════════════════════════════════════════════════════════════════
 
+type GgrmBar = { date: string; o: number; h: number; l: number; c: number; v: number };
+const GGRM = raw as { ticker: string; name: string; bars: GgrmBar[] };
+
+/** False until Simon's export lands. Every consumer branches on this. */
+const READY = GGRM.bars.length >= MIN_BARS;
+const CLOSES = GGRM.bars.map((b) => b.c);
 const SLOW = READY ? sma(CLOSES, SLOW_P) : [];
-const BB = READY
-  ? bollinger(CLOSES, BB_P, 2)
-  : { mid: [], upper: [], lower: [], width: [] };
+const BB = READY ? bollinger(CLOSES, BB_P, 2) : { mid: [], upper: [], lower: [] };
 const DOMAIN: [number, number] = READY
-  ? [
-      Math.min(...GGRM.bars.map((b) => b.l)),
-      Math.max(...GGRM.bars.map((b) => b.h)),
-    ]
+  ? [Math.min(...GGRM.bars.map((b) => b.l)), Math.max(...GGRM.bars.map((b) => b.h))]
   : [0, 1];
-const G = gridOf(READY ? CLOSES : [0, 1], DOMAIN, CHART);
+/** The level the VO names — read OUT of the data, never typed as a string. */
+const PEAK = READY ? Math.max(...GGRM.bars.map((b) => b.h)) : null;
 /** The pullback low the VO calls the bounce — read from the bars, not chosen. */
-const BOUNCE = READY
-  ? GGRM.bars.reduce((b, x, i) => (x.l < GGRM.bars[b].l ? i : b), 0)
-  : 0;
+const BOUNCE = READY ? GGRM.bars.reduce((b, x, i) => (x.l < GGRM.bars[b].l ? i : b), 0) : 0;
 const HIDE_FROM = READY ? Math.round(GGRM.bars.length * HIDE_AT) : 0;
+
+assertBlocks("GgrmGroup", [
+  { from: T.bounce, until: T.squeeze },
+  { from: T.squeeze, until: T.modeB },
+  { from: T.q1, until: T.q2 },
+  { from: T.q2, until: T.mask },
+  { from: T.trend, until: T.vol },
+  { from: T.vol, until: T.modeC },
+  { from: T.combine, until: 1626 },
+]);
 
 export const GgrmGroup = () => {
   const f = useCurrentFrame();
-  const g = f + GROUP_FROM;
-  const push = cutPushIn(g, CUTS.toCase, 0.16);
-  const dy = cutOut(g, CUTS.toClose);
-  const blur = Math.max(cutBlur(g, CUTS.toCase), cutBlur(g, CUTS.toClose));
-  const honest = textReveal(f, T.honest);
-  const result = textReveal(f, T.honest + sec(3));
-  /** The chart steps back for the honesty beat and stays as a backdrop. */
-  const back = f >= T.honest ? 1 - progress(f, T.honest, sec(1)) * 0.5 : 1;
+  const box = layoutMode(f, [
+    { at: 0, mode: "A" },
+    { at: T.modeB, mode: "B" },
+    { at: T.modeC, mode: "C" },
+  ]);
+  const G = gridOf(READY ? CLOSES : [0, 1], DOMAIN, box);
 
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          transform: `translateY(${dy}px) scale(${push})`,
-          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
-          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
-        }}
-      >
-        <div style={{ opacity: back }}>
-          {READY ? (
-            <>
-              <ChartFrame
-                closes={CLOSES}
-                bars={GGRM.bars}
-                grid={G}
-                mode="candle"
-                f={f}
-                drawFrom={T.chart}
-                drawDur={sec(5)}
-                tickLabels={false}
-              />
-              <BollingerBands
-                mid={BB.mid}
-                upper={BB.upper}
-                lower={BB.lower}
-                grid={G}
-                midTone={theme.color.indigo70}
-                opacity={progress(f, T.chart + sec(1), sec(2))}
-              />
-              <MALine
-                values={SLOW}
-                grid={G}
-                f={f}
-                drawFrom={T.chart}
-                drawDur={sec(4)}
-                variant="slow"
-              />
-            </>
-          ) : (
-            <>
-              <ChartFrame
-                closes={[0, 1]}
-                grid={G}
-                mode="line"
-                f={f}
-                drawFrom={1e9}
-                drawDur={1}
-                tickLabels={false}
-              />
-              {/* the placeholder yields the frame to the countdown and to the
-                closing lines — otherwise three texts stack on one another */}
-              {f < T.mask && f < T.honest && (
-                <div
-                  style={{
-                    position: "absolute",
-                    left: CHART.x + CHART.w / 2,
-                    top: CHART.y + CHART.h / 2,
-                    transform: "translate(-50%, -50%)",
-                    fontFamily: theme.text.family,
-                    /* a state message on the card, not a heading — 36 */
-                    fontSize: theme.text.body.size,
-                    fontWeight: theme.text.body.weight,
-                    color: theme.color.faint,
-                  }}
-                >
-                  Menunggu data
-                </div>
-              )}
-            </>
-          )}
+      <ChartFrame
+        closes={READY ? CLOSES : [0, 1]}
+        bars={READY ? GGRM.bars : []}
+        grid={G}
+        mode={READY ? "candle" : "line"}
+        f={f}
+        drawFrom={READY ? T.chart : 1e9}
+        drawDur={sec(3.2)}
+        opacity={box.dim}
+      />
 
-          {/* the bounce off the rising SMA100 — the VO's "garis ungu" */}
-          {READY && (
-            <Ping
-              x={G.x(BOUNCE)}
-              y={G.y(CLOSES[BOUNCE])}
-              f={f}
-              at={T.bounce}
-              r={38}
-            />
-          )}
-
-          {/* the squeeze, boxed */}
-          {READY && (
-            <HighlightBox
-              x1={G.x(HIDE_FROM - 22)}
-              x2={G.x(HIDE_FROM)}
-              y1={CHART.y + 30}
-              y2={CHART.y + CHART.h - 30}
-              f={f}
-              at={T.squeeze}
-            />
-          )}
-
-          {/* the level the VO names — read out of the data, never typed */}
-          {READY && PEAK !== null && f >= T.level && (
-            <Layer opacity={progress(f, T.level, 14)}>
+      {READY && (
+        <>
+          {/* midTone steps back a tint: a solid indigo SMA100 is on screen at
+              the same time and the VO's "garis ungu" must stay unambiguous */}
+          <BollingerBands
+            mid={BB.mid}
+            upper={BB.upper}
+            lower={BB.lower}
+            grid={G}
+            midTone={theme.colors.indigo70}
+            opacity={progress(f, T.chart + sec(1), sec(2)) * box.dim}
+          />
+          <MALine
+            values={SLOW}
+            grid={G}
+            f={f}
+            drawFrom={T.chart}
+            drawDur={sec(3.2)}
+            variant="slow"
+            opacity={box.dim}
+          />
+          <Ping x={G.x(BOUNCE)} y={G.y(CLOSES[BOUNCE])} f={f} at={T.bounce} r={38} />
+          <HighlightBox
+            x1={G.x(Math.max(0, HIDE_FROM - 22))}
+            x2={G.x(HIDE_FROM)}
+            y1={box.y + 30}
+            y2={box.y + box.h - 30}
+            f={f}
+            at={T.squeeze}
+            opacity={box.dim}
+          />
+          {PEAK !== null && f >= T.level && (
+            <Layer opacity={progress(f, T.level, 14) * box.dim}>
               <line
-                x1={CHART.x}
+                x1={box.x}
                 y1={G.y(PEAK)}
-                x2={CHART.x + CHART.w}
+                x2={box.x + box.w}
                 y2={G.y(PEAK)}
-                stroke={theme.color.indigo}
-                strokeWidth={theme.shape.band}
+                stroke={theme.colors.indigo}
+                strokeWidth={theme.layout.stroke.band}
               />
             </Layer>
           )}
-
-          {/* the future, genuinely hidden — solid fill, not a scrim */}
-          {READY && f >= T.mask && (
+          {PEAK !== null && (
+            <LabelChip
+              text={fmtRp(PEAK)}
+              x={box.x + box.w}
+              y={G.y(PEAK)}
+              f={f}
+              at={T.level + 10}
+              anchor="left"
+              opacity={box.dim}
+            />
+          )}
+          {/* the future, genuinely hidden — solid fill, never a scrim */}
+          {f >= T.mask && (
             <RevealMask
               x={G.x(HIDE_FROM)}
               f={f}
               wipeFrom={T.wipe}
-              wipeDur={150}
+              wipeDur={66}
+              box={box}
             />
           )}
+        </>
+      )}
+
+      {!READY && (
+        <div
+          style={{
+            position: "absolute",
+            left: box.x + box.w / 2,
+            top: box.y + box.h / 2,
+            transform: "translate(-50%, -50%)",
+            fontFamily: theme.type.family,
+            fontSize: theme.type.labelSm.size,
+            fontWeight: theme.type.labelSm.weight,
+            color: theme.colors.textMuted,
+          }}
+        >
+          Menunggu data
         </div>
+      )}
 
-        {f >= T.mask && f < SC12B && (
-          <Countdown
-            x={(G.x(HIDE_FROM) + CHART.x + CHART.w) / 2}
-            y={CHART.y + CHART.h / 2}
-            f={f}
-            at={T.mask}
-          />
-        )}
-
-        <TitleChip
-          text="Kuis"
+      {f >= T.mask && f < SC12B && (
+        <Countdown
+          x={(G.x(HIDE_FROM) + box.x + box.w) / 2}
+          y={box.y + box.h / 2}
           f={f}
-          at={T.title}
-          opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1}
+          at={T.mask}
         />
+      )}
 
-        {/* the ticker, and then one label at a time on the chart */}
-        <LabelChip
-          text={`${GGRM.ticker} · Daily`}
-          x={theme.stage.titleChip.x}
-          y={CHART.y - 22}
-          f={f}
-          at={T.title + 8}
-          anchor="right"
-          tone={theme.color.textMuted}
-          size={theme.text.tag.size}
-          weight={theme.text.tag.weight}
-          opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1}
-        />
-        {READY && (
-          <>
-            <LabelChip
-              text={f >= T.ticks ? "Bounce  ✓" : "Bounce"}
-              x={G.x(BOUNCE)}
-              y={G.y(CLOSES[BOUNCE])}
-              f={f}
-              at={T.bounce + 10}
-              anchor="below"
-              opacity={
-                f >= T.squeeze
-                  ? f >= T.ticks
-                    ? 1
-                    : fadeOut(f, T.squeeze, 14)
-                  : 1
-              }
-            />
-            <LabelChip
-              text={f >= T.ticks ? "Squeeze  ✓" : "Squeeze"}
-              x={G.x(HIDE_FROM - 11)}
-              y={CHART.y + 40}
-              f={f}
-              at={T.squeeze + 10}
-              anchor="below"
-              opacity={f >= T.mask && f < T.ticks ? fadeOut(f, T.mask, 14) : 1}
-            />
-            {PEAK !== null && (
-              <LabelChip
-                text={price(PEAK)}
-                x={CHART.x + CHART.w}
-                y={G.y(PEAK)}
-                f={f}
-                at={T.level + 10}
-                anchor="left"
-                opacity={f >= T.honest ? fadeOut(f, T.honest, 14) : 1}
-              />
-            )}
-          </>
-        )}
+      <TitleChip text="Kuis" f={f} at={T.title} opacity={f >= SC12B ? 0 : 1} />
+      <LabelChip
+        text={`${GGRM.ticker} · Daily`}
+        x={theme.layout.titleChip.x}
+        y={box.y - 22}
+        f={f}
+        at={T.title + 8}
+        anchor="right"
+        tone={theme.colors.textMuted}
+      />
 
-        {/* the honesty beat — two plain lines, the caveat set larger */}
-        {f >= T.honest && (
-          <>
-            <div
-              style={{
-                position: "absolute",
-                left: theme.canvas.width / 2,
-                top: 430 + honest.dy,
-                transform: "translate(-50%, -50%)",
-                fontFamily: theme.text.family,
-                fontSize: theme.text.title.size,
-                fontWeight: theme.text.title.weight,
-                color: theme.color.ink,
-                opacity: honest.opacity,
-              }}
-            >
-              Bukan jaminan.
-            </div>
-            <div
-              style={{
-                position: "absolute",
-                left: theme.canvas.width / 2,
-                top: 540 + result.dy,
-                transform: "translate(-50%, -50%)",
-                fontFamily: theme.text.family,
-                fontSize: theme.text.body.size,
-                fontWeight: theme.text.body.weight,
-                color: theme.color.textMuted,
-                opacity: result.opacity,
-              }}
-            >
-              Kali ini, sesuai.
-            </div>
-          </>
-        )}
-      </div>
+      <TextBlock
+        mode="A"
+        localFrame={f}
+        from={T.bounce}
+        until={T.squeeze}
+        x={theme.layout.panelB.x}
+        y={theme.layout.chartA.y + 100}
+        lines={[
+          { text: "RISING SMA100", size: "h2", color: "indigo" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "PRICE BOUNCES ✓", size: "h2", color: "text" },
+          { text: "DYNAMIC SUPPORT HOLDS", size: "label", color: "muted" },
+        ]}
+      />
+      <TextBlock
+        mode="A"
+        localFrame={f}
+        from={T.squeeze}
+        until={T.modeB}
+        x={theme.layout.panelB.x}
+        y={theme.layout.chartA.y + 100}
+        lines={[
+          { text: "BAND WIDTH ↓ → SQUEEZE", size: "h2", color: "indigo" },
+          { text: "PRICE > MIDDLE BAND", size: "label", color: "muted" },
+        ]}
+      />
+
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.q1}
+        until={T.q2}
+        lines={[
+          { text: "1. IS THE UPTREND\n     STILL INTACT?", size: "h2", color: "indigo" },
+          { text: "YES / NO", size: "label", color: "muted" },
+        ]}
+      />
+      {/* COMPLIANCE: struck misconception, never a statement — and struck
+          BEFORE the countdown, so the wrong answer is cancelled without the
+          outcome being revealed. Nothing directional renders before 12B. */}
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.q2}
+        until={T.mask}
+        lines={[
+          { text: "2. WHAT DOES THE\n     SQUEEZE TELL US?", size: "h2", color: "indigo" },
+          { text: "A. BIGGER MOVE MAY COME", size: "labelSm", color: "text" },
+          { text: "B. PRICE MUST GO UP", size: "labelSm", color: "muted", struck: T.q2 + sec(2.4) },
+        ]}
+      />
+
+      {/* ── Scene 12B ── the two clues return separately, then combine */}
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.trend}
+        until={T.vol}
+        lines={[
+          { text: "TREND CONTEXT", size: "h2", color: "indigo" },
+          { text: "Rising MA + Support Holds", size: "labelSm", color: "muted" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "Bullish Bias ↑", size: "h2", color: "text" },
+        ]}
+      />
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.vol}
+        until={T.modeC}
+        lines={[
+          { text: "VOLATILITY CONTEXT", size: "h2", color: "cyan" },
+          { text: "Bollinger Squeeze", size: "labelSm", color: "muted" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "Big Move May Come ↕", size: "h2", color: "text" },
+        ]}
+      />
+      {/* COMPLIANCE — highest risk in the episode. The voice-over no longer
+          says "bukan jaminan", so `Confirmation, Not Certainty` is the ONLY
+          caveat left in the whole video. It mounts at T.combine and the group
+          runs to 1626, which holds it far past the required 60 frames, at
+          labelSm. Do not shorten this block. */}
+      <TextBlock
+        mode="C"
+        localFrame={f}
+        from={T.combine}
+        until={1626}
+        lines={[
+          { text: "TREND GAVE THE BIAS", size: "h2", color: "indigo" },
+          { text: "SQUEEZE GAVE THE SETUP", size: "h2", color: "cyan" },
+          { text: "RESULT: BREAKOUT ↑", size: "h2", color: "text" },
+          { text: "Confirmation, Not Certainty", size: "labelSm", color: "muted" },
+        ]}
+      />
     </SafeArea>
   );
 };

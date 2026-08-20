@@ -5,13 +5,13 @@
  * readout. A steep arrow and a flat one are the whole of "semakin curam,
  * semakin kuat".
  *
- * `mirror` draws the same shape with its vertical component flipped. Scene 09
- * needs two arrows that cannot possibly differ in opacity, length or stroke —
- * so they come from ONE call site with a sign flip rather than two objects that
- * are free to drift apart. See the compliance note there.
+ * `mirror` draws the same shape with its vertical component flipped about
+ * `from`. Scene 09 needs two arrows that cannot possibly differ in opacity,
+ * length or stroke — so they come from ONE call site with a sign flip rather
+ * than two objects free to drift apart. See the compliance note there.
  */
 import { theme } from "../theme";
-import { progressInOut, progress } from "../helpers";
+import { progress, progressInOut } from "../helpers";
 import { Layer } from "./ChartFrame";
 
 export const Arrow = ({
@@ -20,8 +20,8 @@ export const Arrow = ({
   f,
   at,
   over = 18,
-  tone = theme.color.indigo,
-  width = theme.shape.ma,
+  tone = theme.colors.indigo,
+  width = theme.layout.stroke.ma,
   opacity = 1,
   mirror = false,
 }: {
@@ -33,7 +33,6 @@ export const Arrow = ({
   tone?: string;
   width?: number;
   opacity?: number;
-  /** Flips the vertical component about `from` — the sign-flip twin. */
   mirror?: boolean;
 }) => {
   if (f < at || opacity <= 0.001) return null;

@@ -25,13 +25,13 @@ export const TitleChip = ({
     <div
       style={{
         position: "absolute",
-        left: theme.stage.titleChip.x,
-        top: theme.stage.titleChip.y + r.dy,
-        transform: "translateY(-50%)",
-        fontFamily: theme.text.family,
-        fontSize: theme.text.title.size,
-        fontWeight: theme.text.title.weight,
-        color: theme.color.indigo,
+        left: theme.layout.titleChip.x,
+        top: theme.layout.titleChip.y,
+        transform: r.transform,
+        fontFamily: theme.type.family,
+        fontSize: theme.type.h2.size,
+        fontWeight: theme.type.h2.weight,
+        color: theme.colors.indigo,
         opacity: r.opacity * opacity,
         whiteSpace: "nowrap",
       }}

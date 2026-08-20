@@ -1,31 +1,26 @@
 /**
- * Composition — "Technical Analysis: Moving Averages & Bollinger Bands".
+ * Composition — "Moving Averages & Bollinger Bands".
  *
- * 14 scenes, 8900 frames (04:56.67). Every `from` and `duration` below is
- * VO-LOCKED: it comes from the corrected SRT of the actual recording, verbatim
- * from the build spec's master table, and is never recomputed from word count.
- * The scenes TILE — each runs until the next one starts — so there is no frame
- * the episode does not own.
+ * 14 scenes, 8895 frames (04:56.50). Every `from` and `duration` below is
+ * VO-LOCKED: it comes from the corrected SRT of the actual recording and is
+ * never recomputed from word count. The scenes TILE — each runs until the next
+ * begins — so there is no frame the episode does not own.
  *
- *   8318 + 582 = 8900. That equality is the whole timing contract.
+ *   8271 + 624 = 8895. That equality is the whole timing contract.
  *
  * THREE CONTINUITY GROUPS, each a single spanning Sequence, with their member
- * scenes rendering INSIDE them and never also at top level. In all three cases
- * one element has to survive a boundary the script runs straight through:
+ * scenes rendering INSIDE them and never also at top level. In all three one
+ * element has to survive a boundary the script runs straight through:
  *
- *   CG-A   718 → 1839   SC02 + SC03   the line SC02 builds out of a window is
+ *   CG-A   607 → 1765   SC02 + SC03   the line SC02 builds out of the noise is
  *                                     the same line SC03 renames MA20
- *   CG-B  4134 → 5439   SC08 + SC09   the bands keep breathing; SC09's squeeze
- *                                     is a stretch of SC08's own demonstration
- *   CG-C  6670 → 8318   SC12A + 12B   the reveal mask lifts across the join —
- *                                     the question is asked on one side of it
- *                                     and answered on the other, same chart,
- *                                     same scales, no re-fit
+ *   CG-B  4140 → 5366   SC08 + SC09   the bands keep breathing; SC09's squeeze
+ *                                     is a stretch of SC08's demonstration
+ *   CG-C  6645 → 8271   SC12A + 12B   the reveal mask lifts across the join —
+ *                                     the question is asked on one side and
+ *                                     answered on the other, same chart
  *
  * ONE ROOT <Audio>. The VO is a single file mounted here; no scene has audio.
- *
- * The subtitle band is the bottom 108px and every scene keeps it clear;
- * `Captions` is the only thing that renders there.
  */
 import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
@@ -41,51 +36,39 @@ import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
 import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
-import { SectionTitle } from "./components/SectionTitle";
-import { CUTS } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
-export const TOTAL_FRAMES = 8900;
+export const TOTAL_FRAMES = 8895;
 
 type Mounted = { from: number; duration: number; Component: React.FC };
 
 /** Everything that is not inside a continuity group. */
 const INDEPENDENT_SCENES: Mounted[] = [
-  { from: 0, duration: 718, Component: Scene01 },
-  { from: 1839, duration: 467, Component: Scene04 },
-  { from: 2306, duration: 576, Component: Scene05 },
-  { from: 2882, duration: 562, Component: Scene06 },
-  { from: 3444, duration: 690, Component: Scene07 },
-  { from: 5439, duration: 595, Component: Scene10 },
-  { from: 6034, duration: 636, Component: Scene11 },
-  { from: 8318, duration: 582, Component: Scene13 },
+  { from: 0, duration: 607, Component: Scene01 },
+  { from: 1765, duration: 559, Component: Scene04 },
+  { from: 2324, duration: 579, Component: Scene05 },
+  { from: 2903, duration: 587, Component: Scene06 },
+  { from: 3490, duration: 650, Component: Scene07 },
+  { from: 5366, duration: 633, Component: Scene10 },
+  { from: 5999, duration: 646, Component: Scene11 },
+  { from: 8271, duration: 624, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
-  { from: 718, duration: 1121, Component: ExplainerGroup },
-  { from: 4134, duration: 1305, Component: BandsGroup },
-  { from: 6670, duration: 1648, Component: GgrmGroup },
+  { from: 607, duration: 1158, Component: ExplainerGroup },
+  { from: 4140, duration: 1226, Component: BandsGroup },
+  { from: 6645, duration: 1626, Component: GgrmGroup },
 ];
 
 export const MovingAverageComposition = () => (
-  <AbsoluteFill style={{ backgroundColor: theme.color.bg }}>
+  <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
     {[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(({ from, duration, Component }) => (
       <Sequence key={`${from}-${Component.name}`} from={from} durationInFrames={duration}>
         <Component />
       </Sequence>
     ))}
-
-    {/**
-      * The heading for the whole moving-average run — CG-A and SC04 both sit
-      * under it. Mounted here rather than in either scene so the cut at 1839
-      * passes beneath it: the chart is swept out, the word is not, and the
-      * viewer never watches the same title leave and come back.
-      */}
-    <Sequence from={718} durationInFrames={2306 - 718}>
-      <SectionTitle text="Moving Average" from={718} exit={CUTS.toReading} />
-    </Sequence>
 
     <Captions />
     <Watermark />

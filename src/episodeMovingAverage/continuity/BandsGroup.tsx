@@ -1,204 +1,242 @@
 /**
- * CG-B — Scenes 08 + 09 as ONE spanning Sequence (global 4134 → 5439).
+ * CG-B — Scenes 08 + 09 as ONE spanning Sequence (global 4140 → 5366).
  *
- * The chart and the bands mount once and persist. The bands keep breathing
- * across the internal boundary at local 604, which is the whole reason this is
- * a group: Scene 09's squeeze is a stretch of the same breathing Scene 08 just
- * demonstrated, and a remount would present it as a different chart that
- * happens to look similar.
+ * The chart and its bands mount once and persist. The bands keep breathing
+ * across the internal boundary: Scene 09's squeeze is a stretch of Scene 08's
+ * own demonstration, not a new chart, and a remount would restart the breath
+ * the viewer has just been taught to read.
  *
- * NO CALIPER, NO WIDTH READOUT, NO SUB-PANEL. The bands opening and closing is
- * legible on its own; a measurement under it would be a second graphic
- * explaining the first.
- *
- * ⚠ COMPLIANCE (Scene 09, local 14–19s). The two direction arrows come from ONE
- * `Arrow` call rendered twice, the second with `mirror`, which flips the
- * vertical component about the same origin. They cannot differ in opacity,
- * stroke or length because there is only one set of numbers. Any asymmetry
- * would turn a volatility explainer into a directional call.
+ * ⚠ COMPLIANCE (Scene 09). `BREAKOUT ↑ ?` and `BREAKDOWN ↓ ?` are generated
+ * from ONE shared style object with a mirrored sign flip — identical size,
+ * weight and colour, enforced by construction rather than by eye. If one read
+ * as more prominent, a volatility explainer would become a directional call.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, clearAbove, CHART } from "../components/ChartFrame";
+import { ChartFrame, gridOf } from "../components/ChartFrame";
 import { BollingerBands } from "../components/BollingerBands";
 import { LabelChip } from "../components/LabelChip";
 import { TitleChip } from "../components/TitleChip";
 import { HighlightBox } from "../components/HighlightBox";
-import { Arrow } from "../components/Arrow";
+import { TextBlock, assertBlocks, type Line } from "../components/TextBlock";
 import { theme } from "../theme";
-import { sec, bollinger, progressInOut, fadeOut, textReveal, clamp01 } from "../helpers";
-import { SERIES_BREATH, BARS_BREATH, domainOf } from "../series";
-import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
+import { sec, bollinger, layoutMode, progressInOut } from "../helpers";
+import { SERIES, domainOf } from "../series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const GROUP_FROM = 4134;
 /** Scene 09 begins here, in the group's own local frames. */
-const SC09 = 604;
+const SC09 = 591;
 const T = {
-  title: sec(0.2),
-  price: sec(0.6),
-  mid: sec(3.0),
-  bands: sec(7.0),
+  title: sec(0.0),
+  price: sec(0.4),
+  mid: sec(2.2),
+  bands: sec(5.0),
+  calm: sec(11.8),
+  active: sec(13.7),
   // ── Scene 09 ──
-  squeeze: SC09 + sec(0.4),
-  hold: SC09 + sec(8.0),
-  ask: SC09 + sec(14.0),
-  resolve: SC09 + sec(19.0),
+  squeeze: SC09 + sec(0.0),
+  pulseText: SC09 + sec(3.5),
+  hold: SC09 + sec(8.3),
+  modeB: SC09 + sec(11.7),
+  both: SC09 + sec(11.9),
+  coming: SC09 + sec(14.3),
+  close: SC09 + sec(17.1),
+  strikeA: SC09 + sec(18.2),
+  strikeB: SC09 + sec(19.0),
 };
 const PERIOD = 20;
-const TICKS = [4600, 5000, 5400, 5800];
-/** The long tight stretch in SERIES_BREATH — what Scene 09 calls the squeeze. */
-const SQUEEZE = { from: 80, to: 118 };
-/** The two mirrored arrows: ONE set of numbers, drawn twice. */
-const ASK = { run: 230, rise: 130 };
-/** Room on the right for the price axis, so no label lands on the data. */
-const AXIS_GUTTER = 150;
+const TICKS = [4400, 4800, 5200, 5600, 6000, 6400];
 // ═══════════════════════════════════════════════════════════════════════════
 
-const BB = bollinger(SERIES_BREATH, PERIOD, 2);
-const DOMAIN = domainOf(BARS_BREATH, [BB.lower, BB.upper]);
-const G = gridOf(SERIES_BREATH, DOMAIN, CHART, 0.12, AXIS_GUTTER);
-const MID_X = Math.round((SQUEEZE.from + SQUEEZE.to) / 2);
+const BB = bollinger(SERIES, PERIOD, 2);
+const DOMAIN = domainOf([...SERIES, ...BB.lower, ...BB.upper]);
+
+/**
+ * The calmest and most active stretches, FOUND in the data. Pointing at a
+ * pinch that was staged would teach a shape rather than a reading.
+ */
+const WIDTH = BB.upper.map((u, i) =>
+  u === null || BB.lower[i] === null ? null : u - (BB.lower[i] as number),
+);
+const pick = (want: "min" | "max") => {
+  let best = PERIOD;
+  WIDTH.forEach((w, i) => {
+    if (w === null) return;
+    const b = WIDTH[best];
+    if (b === null) best = i;
+    else if (want === "min" ? w < b : w > b) best = i;
+  });
+  return best;
+};
+const CALM = pick("min");
+const ACTIVE = pick("max");
+
+assertBlocks("BandsGroup", [
+  { from: T.pulseText, until: T.hold },
+  { from: T.both, until: T.coming },
+  { from: T.coming, until: T.close },
+  { from: T.close, until: 1226 },
+]);
+
+/** ONE style, two directions. See the compliance note above. */
+const POSSIBILITY: Omit<Line, "text"> = { size: "h2", color: "text" };
 
 export const BandsGroup = () => {
   const f = useCurrentFrame();
-  const g = f + GROUP_FROM;
-  const dy = cutIn(g, CUTS.toBands);
-  const dx = cutOut(g, CUTS.toTrap);
-  const blur = Math.max(cutBlur(g, CUTS.toBands), cutBlur(g, CUTS.toTrap));
-
-  const unfold = f >= T.bands ? progressInOut(f, T.bands, sec(4)) : 0;
-  const asking = f >= T.ask ? progressInOut(f, T.ask, sec(1)) * (f >= T.resolve ? fadeOut(f, T.resolve, sec(1)) : 1) : 0;
-  const ask = textReveal(f, T.ask);
-  /** The chart steps back a little while the question owns the frame. */
-  const back = 1 - 0.35 * clamp01(asking);
-
-  /**
-   * Centred on the squeeze, above the band it is asking about.
-   *
-   * NOT at `CHART.y + 96`: from there the up-arrow's tip lands at y = 136,
-   * x ~ 1464 — inside the 360 x 150 logo zone, the one region nothing may
-   * enter. LabelChip refuses that zone on its own; Arrow has no such guard, so
-   * the anchor sits low enough that the mirrored pair clears it.
-   */
-  const askAt = { x: G.x(MID_X), y: CHART.y + 156 };
+  const box = layoutMode(f, [
+    { at: 0, mode: "A" },
+    { at: T.modeB, mode: "B" },
+  ]);
+  const G = gridOf(SERIES, DOMAIN, box, 0.12, 150);
+  const unfold = progressInOut(f, T.bands, sec(3.8));
 
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          transform: `translate(${dx}px, ${dy}px)`,
-          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
-        }}
-      >
-        <div style={{ opacity: back }}>
-          <ChartFrame
-            closes={SERIES_BREATH}
-            bars={BARS_BREATH}
-            grid={G}
-            f={f}
-            drawFrom={T.price}
-            drawDur={sec(2.4)}
-            ticks={TICKS}
-            opacity={0.5}
-          />
-          {f >= T.mid && (
-            <BollingerBands
-              mid={BB.mid}
-              upper={BB.upper}
-              lower={BB.lower}
-              grid={G}
-              unfold={unfold}
-              opacity={progressInOut(f, T.mid, sec(1.4))}
-            />
-          )}
-        </div>
-
-        {/* the squeeze, boxed on the chart it happens on, breathing gently */}
-        <HighlightBox
-          x1={G.x(SQUEEZE.from)}
-          x2={G.x(SQUEEZE.to)}
-          y1={CHART.y + 30}
-          y2={CHART.y + CHART.h - 30}
-          f={f}
-          at={T.squeeze}
-          pulse
-          opacity={back}
+      <ChartFrame
+        closes={SERIES}
+        grid={G}
+        mode="line"
+        f={f}
+        drawFrom={T.price}
+        drawDur={sec(2.4)}
+        ticks={TICKS}
+        tickLabels
+        opacity={0.5}
+      />
+      {f >= T.mid && (
+        <BollingerBands
+          mid={BB.mid}
+          upper={BB.upper}
+          lower={BB.lower}
+          grid={G}
+          unfold={unfold}
+          opacity={progressInOut(f, T.mid, sec(1.4))}
         />
+      )}
 
-        {/* ⚠ ONE arrow, drawn twice — the second is the sign-flipped mirror */}
-        {asking > 0.001 &&
-          [false, true].map((mirror) => (
-            <Arrow
-              key={String(mirror)}
-              from={{ x: askAt.x + 96, y: askAt.y }}
-              to={{ x: askAt.x + 96 + ASK.run, y: askAt.y - ASK.rise }}
-              mirror={mirror}
-              f={f}
-              at={T.ask}
-              opacity={asking * 0.4}
-            />
-          ))}
+      <TitleChip text="Bollinger Bands" f={f} at={T.title} />
 
-        {/* the question itself — a single glyph, so the count stays at two */}
-        {asking > 0.001 && (
-          <div
-            style={{
-              position: "absolute",
-              left: askAt.x - 110,
-              top: askAt.y + ask.dy,
-              transform: "translate(-50%, -50%)",
-              fontFamily: theme.text.family,
-              fontSize: theme.text.display.size,
-              fontWeight: theme.text.display.weight,
-              color: theme.color.indigo,
-              opacity: asking,
-            }}
-          >
-            ?
-          </div>
-        )}
+      {/* the three band names are LINE labels, not a text block — they name
+          parts of one object and may coexist */}
+      <LabelChip
+        text="MIDDLE BAND — Moving Average"
+        x={G.x(28)}
+        y={G.y(BB.mid[28] ?? SERIES[28])}
+        f={f}
+        at={T.mid + sec(1)}
+        anchor="below"
+        gap={26}
+        opacity={f >= T.calm ? 0 : 1}
+      />
+      <LabelChip
+        text="UPPER BAND"
+        x={G.x(58)}
+        y={G.y(BB.upper[58] ?? SERIES[58])}
+        f={f}
+        at={T.bands + sec(2)}
+        anchor="above"
+        gap={26}
+        tone={theme.colors.cyan}
+        opacity={f >= T.calm ? 0 : 1}
+      />
+      <LabelChip
+        text="LOWER BAND"
+        x={G.x(58)}
+        y={G.y(BB.lower[58] ?? SERIES[58])}
+        f={f}
+        at={T.bands + sec(2)}
+        anchor="below"
+        gap={26}
+        tone={theme.colors.cyan}
+        opacity={f >= T.calm ? 0 : 1}
+      />
 
-        <TitleChip
-          text={f >= SC09 ? "Squeeze" : "Bollinger Bands"}
-          f={f}
-          at={f >= SC09 ? SC09 : T.title}
-        />
+      <LabelChip
+        text="LOW VOLATILITY → BANDS CONTRACT"
+        x={G.x(CALM)}
+        y={G.y(BB.upper[CALM] ?? SERIES[CALM])}
+        f={f}
+        at={T.calm}
+        anchor="above"
+        gap={30}
+        opacity={f >= T.active ? 0 : 1}
+      />
+      <LabelChip
+        text="HIGH VOLATILITY → BANDS EXPAND"
+        x={G.x(ACTIVE)}
+        y={G.y(BB.upper[ACTIVE] ?? SERIES[ACTIVE])}
+        f={f}
+        at={T.active}
+        anchor="above"
+        gap={30}
+        opacity={f >= T.squeeze ? 0 : 1}
+      />
 
-        {/* one label at a time, and never at the same moment as another */}
-        <LabelChip
-          text="Middle = Moving Average"
-          x={G.x(30)}
-          y={clearAbove(G, 30, 12, [BB.upper], BARS_BREATH)}
-          f={f}
-          at={T.mid + sec(1)}
-          anchor="above"
-          gap={28}
-          opacity={f >= T.bands ? fadeOut(f, T.bands, 14) : 1}
-        />
-        <LabelChip
-          text="Volatility"
-          x={G.x(56)}
-          y={clearAbove(G, 56, 8, [BB.upper], BARS_BREATH)}
-          f={f}
-          at={T.bands + sec(2)}
-          anchor="above"
-          gap={28}
-          tone={theme.color.cyan}
-          opacity={f >= SC09 ? fadeOut(f, SC09 - sec(1), 14) : 1}
-        />
-        <LabelChip
-          text="Squeeze"
-          x={G.x(MID_X)}
-          y={CHART.y + 40}
-          f={f}
-          at={T.squeeze + sec(1)}
-          anchor="below"
-          opacity={f >= T.ask ? fadeOut(f, T.ask, 14) : 1}
-        />
-      </div>
+      {/* ── Scene 09 ── the squeeze, boxed on the chart it happens on */}
+      <HighlightBox
+        x1={G.x(Math.max(0, CALM - 14))}
+        x2={G.x(CALM + 14)}
+        y1={box.y + 30}
+        y2={box.y + box.h - 30}
+        f={f}
+        at={T.squeeze}
+        pulse
+      />
+      <LabelChip
+        text="Squeeze"
+        x={G.x(CALM)}
+        y={box.y + 40}
+        f={f}
+        at={T.squeeze + sec(0.6)}
+        anchor="below"
+        opacity={f >= T.modeB ? 0 : 1}
+      />
+
+      <TextBlock
+        mode="A"
+        localFrame={f}
+        from={T.pulseText}
+        until={T.hold}
+        x={theme.layout.panelB.x}
+        y={theme.layout.chartA.y + 120}
+        lines={[
+          { text: "BAND WIDTH ↓", size: "h2", color: "indigo" },
+          { text: "VOLATILITY ↓", size: "h2", color: "indigo" },
+        ]}
+      />
+
+      {/* COMPLIANCE: identical weight, one style, mirrored sign */}
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.both}
+        until={T.coming}
+        lines={[
+          { ...POSSIBILITY, text: "BREAKOUT ↑ ?" },
+          { ...POSSIBILITY, text: "BREAKDOWN ↓ ?" },
+        ]}
+      />
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.coming}
+        until={T.close}
+        lines={[{ text: "SQUEEZE =\nMOVE MAY BE COMING", size: "h2", color: "indigo" }]}
+      />
+
+      {/* COMPLIANCE: struck misconceptions, never statements */}
+      <TextBlock
+        mode="B"
+        localFrame={f}
+        from={T.close}
+        until={1226}
+        lines={[
+          { text: "SQUEEZE = BULLISH", size: "h2", color: "muted", struck: T.strikeA },
+          { text: "SQUEEZE = BEARISH", size: "h2", color: "muted", struck: T.strikeB },
+          { text: "DIRECTION = UNKNOWN", size: "h2", color: "indigo" },
+          { text: "Check Trend + Key Levels", size: "labelSm", color: "muted" },
+        ]}
+      />
     </SafeArea>
   );
 };

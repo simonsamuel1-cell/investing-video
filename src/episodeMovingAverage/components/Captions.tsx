@@ -4,11 +4,9 @@
  * That band is the one region every scene keeps visually empty, which is what
  * makes burning them in safe. Mounted at the composition root, OUTSIDE every
  * Sequence, so the frame it reads is the global one.
- *
- * Pass `show={false}` on the composition for a clean plate.
  */
 import { useCurrentFrame } from "remotion";
-import { theme } from "../theme";
+import { theme, CAPTION_BAND } from "../theme";
 import { CUES, type Cue } from "../subtitles";
 
 export const Captions = ({ cues = CUES }: { cues?: Cue[] }) => {
@@ -20,23 +18,23 @@ export const Captions = ({ cues = CUES }: { cues?: Cue[] }) => {
       style={{
         position: "absolute",
         left: 0,
-        top: theme.captionBand.top,
-        width: theme.canvas.width,
-        height: theme.captionBand.height,
+        top: CAPTION_BAND.top,
+        width: theme.layout.width,
+        height: CAPTION_BAND.height,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: `0 ${theme.margin.left}px`,
+        padding: `0 ${theme.layout.safeLeft}px`,
         boxSizing: "border-box",
       }}
     >
       <span
         style={{
-          fontFamily: theme.text.family,
-          fontSize: theme.text.body.size,
-          fontWeight: 500,
+          fontFamily: theme.type.family,
+          fontSize: theme.type.labelSm.size,
+          fontWeight: theme.type.labelSm.weight,
           lineHeight: 1.2,
-          color: theme.color.indigo,
+          color: theme.colors.indigo,
           textAlign: "center",
         }}
       >

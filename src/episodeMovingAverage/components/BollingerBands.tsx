@@ -4,12 +4,12 @@
  * THE OUTER BANDS UNFOLD OUT OF THE MIDDLE ONE. `unfold` scales each band's
  * DISTANCE from the middle, 0 → its real value, so they start lying exactly on
  * the average and separate outward together. That is the definition the scene
- * is teaching: a band is a distance from the mean, not a line that happens to
- * sit beside it.
+ * teaches: a band is a distance from the mean, not a line that happens to sit
+ * beside it.
  *
  * The middle band is dashed because it IS a moving average — the same one the
- * first half of the episode spent five scenes on. Solid would make it look like
- * a third, different thing.
+ * first half of the episode spent five scenes on. Solid would make it look
+ * like a third, different thing.
  *
  * `midTone` steps the middle band back to `indigo70` on the GGRM chart only,
  * where a solid indigo SMA100 is on screen at the same time and the VO's
@@ -26,7 +26,7 @@ export const BollingerBands = ({
   grid,
   unfold = 1,
   opacity = 1,
-  midTone = theme.color.indigo,
+  midTone = theme.colors.indigo,
 }: {
   mid: (number | null)[];
   upper: (number | null)[];
@@ -59,12 +59,14 @@ export const BollingerBands = ({
 
   return (
     <Layer opacity={opacity}>
-      {fill !== "" && <path d={fill} fill={theme.color.cyan} fillOpacity={0.1} stroke="none" />}
+      {fill !== "" && (
+        <path d={fill} fill={theme.colors.cyan12} fillOpacity={0.6} stroke="none" />
+      )}
       <path
         d={pathOf(mid, grid)}
         fill="none"
         stroke={midTone}
-        strokeWidth={theme.shape.band}
+        strokeWidth={theme.layout.stroke.band}
         strokeDasharray="6 6"
         strokeLinecap="round"
       />
@@ -73,8 +75,8 @@ export const BollingerBands = ({
           key={n}
           d={pathOf(band, grid)}
           fill="none"
-          stroke={theme.color.cyan}
-          strokeWidth={theme.shape.band}
+          stroke={theme.colors.cyan}
+          strokeWidth={theme.layout.stroke.band}
           strokeLinecap="round"
           strokeLinejoin="round"
         />

@@ -1,120 +1,145 @@
 /**
- * SC13 — Close (from 8318, dur 582).
+ * SCENE 13 — Close. `from 8271 · dur 624` · Mode A → C at t=8.8
  *
- * ONE CLEAN CHART, THREE LINES OF TEXT. The chart settles, steps back to 0.4,
- * and stays as a backdrop for the rest of the episode — it is the thing all
- * three lines are about, so removing it would leave the words floating.
+ * PRICE MOVES FIRST AND THE INDICATORS FOLLOW, and the drawing order has to
+ * say so: the price line is given a head start and both overlays begin after
+ * it. A follower that is ever ahead of its leader contradicts the only line
+ * the scene is making.
  *
- * The lines are left-aligned at x = 96 and stack in the chart box's own middle.
- * They arrive one at a time and then hold together to the end.
- *
- * Does NOT fade to black. The silver background carries out.
+ * The final screen holds to the last frame. Do NOT fade to black — the silver
+ * background carries out.
  */
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
-import { ChartFrame, gridOf, CHART } from "../components/ChartFrame";
-import { BollingerBands } from "../components/BollingerBands";
+import { ChartFrame, gridOf } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
-import { theme } from "../theme";
-import { sec, sma, bollinger, progress, progressInOut, textReveal } from "../helpers";
-import { SERIES, BARS, domainOf } from "../series";
-import { CUTS, cutPushIn, cutBlur } from "../transitions/CameraCut";
+import { BollingerBands } from "../components/BollingerBands";
+import { TextBlock, assertBlocks } from "../components/TextBlock";
+import { sec, sma, bollinger, layoutMode, progressInOut } from "../helpers";
+import { SERIES, domainOf } from "../series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const SCENE_FROM = 8318;
-const T = { chart: sec(0.2), back: sec(4.4) };
-const LINES = [
-  { text: "Confirm the Trend", at: sec(5.0) },
-  { text: "Spot the Squeeze", at: sec(9.0) },
-  { text: "Never Use It Alone", at: sec(13.0) },
-];
+const T = {
+  price: sec(0.0),
+  /** The overlays start only after price has drawn — see the header note. */
+  overlays: sec(1.6),
+  block1: sec(0.6),
+  block1End: sec(4.9),
+  modeC: sec(8.8),
+  l1: sec(8.8),
+  l2: sec(11.6),
+  l3: sec(14.8),
+  linesEnd: sec(17.2),
+  hier: sec(17.2),
+  hierEnd: sec(19.2),
+  final: sec(19.2),
+};
 const PERIOD = 20;
-/** Left-aligned at the safe margin, stacked about the chart box's middle. */
-/**
- * Inset from the card's own left edge, not flush to it. The lines are read
- * against the white surface now, so they need the same breathing room any
- * other content on that surface gets.
- */
-const STACK = { x: 96 + 56, lead: 96 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const MA = sma(SERIES, PERIOD);
 const BB = bollinger(SERIES, PERIOD, 2);
-/** The domain has to hold the candles AND the bands, or one of them is cropped. */
-const G = gridOf(SERIES, domainOf(BARS, [BB.lower, BB.upper]), CHART);
-const MID_Y = CHART.y + CHART.h / 2;
+const DOMAIN = domainOf([...SERIES, ...BB.lower, ...BB.upper]);
+
+assertBlocks("Scene13", [
+  { from: T.block1, until: T.block1End },
+  { from: T.l1, until: T.linesEnd },
+  { from: T.hier, until: T.hierEnd },
+  { from: T.final, until: 624 },
+]);
 
 export const Scene13 = () => {
   const f = useCurrentFrame();
-  const g = f + SCENE_FROM;
-  /** Arrives on the pull-back CG-C left in flight. */
-  const push = cutPushIn(g, CUTS.toClose, -0.14);
-  const blur = cutBlur(g, CUTS.toClose);
-  /**
-   * The chart steps well back — the three lines are read ON it, and at 0.4 a
-   * price line still crossed the type. The card stays; only what is drawn on
-   * it recedes.
-   */
-  const back = f >= T.back ? 1 - progress(f, T.back, sec(1)) * 0.75 : 1;
+  const box = layoutMode(f, [
+    { at: 0, mode: "A" },
+    { at: T.modeC, mode: "C" },
+  ]);
+  const G = gridOf(SERIES, DOMAIN, box);
 
   return (
     <SafeArea>
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          transform: `scale(${push})`,
-          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
-          filter: blur > 0.05 ? `blur(${blur}px)` : undefined,
-        }}
-      >
-        <div style={{ opacity: back }}>
-          <ChartFrame
-            closes={SERIES}
-            bars={BARS}
-            grid={G}
-            f={f}
-            drawFrom={T.chart}
-            drawDur={sec(3.4)}
-            tickLabels={false}
-            opacity={0.55}
-          />
-          <MALine values={MA} grid={G} f={f} drawFrom={T.chart} drawDur={sec(3.4)} variant="slow" />
-          <BollingerBands
-            mid={BB.mid}
-            upper={BB.upper}
-            lower={BB.lower}
-            grid={G}
-            opacity={progressInOut(f, T.chart + sec(1), sec(2)) * 0.85}
-          />
-        </div>
+      <ChartFrame
+        closes={SERIES}
+        grid={G}
+        mode="line"
+        f={f}
+        drawFrom={T.price}
+        drawDur={sec(3.4)}
+        opacity={box.dim * 0.55}
+      />
+      <MALine
+        values={MA}
+        grid={G}
+        f={f}
+        drawFrom={T.overlays}
+        drawDur={sec(3.4)}
+        variant="slow"
+        opacity={box.dim}
+      />
+      <BollingerBands
+        mid={BB.mid}
+        upper={BB.upper}
+        lower={BB.lower}
+        grid={G}
+        opacity={progressInOut(f, T.overlays + sec(1), sec(2)) * 0.85 * box.dim}
+      />
 
-        {LINES.map((l, i) => {
-          const r = textReveal(f, l.at);
-          if (f < l.at) return null;
-          return (
-            <div
-              key={l.text}
-              style={{
-                position: "absolute",
-                left: STACK.x,
-                top: MID_Y + (i - 1) * STACK.lead + r.dy,
-                transform: "translateY(-50%)",
-                fontFamily: theme.text.family,
-                /* a conclusion drawn from the chart behind it — 48, not 96:
-                   the frame is not showing the words alone */
-                fontSize: theme.text.title.size,
-                fontWeight: theme.text.title.weight,
-                color: i === 2 ? theme.color.indigo : theme.color.ink,
-                opacity: r.opacity,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {l.text}
-            </div>
-          );
-        })}
-      </div>
+      <TextBlock
+        mode="A"
+        localFrame={f}
+        from={T.block1}
+        until={T.block1End}
+        x={1128}
+        y={260}
+        lines={[
+          { text: "PRICE MOVES FIRST", size: "h2", color: "indigo" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "INDICATORS FOLLOW", size: "h2", color: "text" },
+        ]}
+      />
+
+      {/* one element that grows: each line lands on its own voice-over line */}
+      <TextBlock
+        mode="C"
+        localFrame={f}
+        from={T.l1}
+        until={T.linesEnd}
+        lines={[
+          { text: "MA → Confirm the Trend", size: "h2", color: "indigo", at: T.l1 },
+          { text: "Bollinger Bands → Read Volatility", size: "h2", color: "cyan", at: T.l2 },
+          { text: "Price Action First", size: "h2", color: "text", at: T.l3 },
+        ]}
+      />
+
+      <TextBlock
+        mode="C"
+        localFrame={f}
+        from={T.hier}
+        until={T.hierEnd}
+        gap={8}
+        lines={[
+          { text: "PRICE ACTION", size: "h2", color: "indigo" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "TREND & KEY LEVELS", size: "h2", color: "text" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "INDICATORS", size: "h2", color: "cyan" },
+          { text: "↓", size: "label", color: "muted" },
+          { text: "CONFIRMATION", size: "h2", color: "indigo" },
+        ]}
+      />
+
+      {/* the largest type in the episode, held to the last frame */}
+      <TextBlock
+        mode="C"
+        localFrame={f}
+        from={T.final}
+        until={624}
+        y={360}
+        lines={[
+          { text: "USE INDICATORS TO CONFIRM", size: "display", color: "indigo" },
+          { text: "NOT TO DECIDE FOR YOU", size: "display", color: "text" },
+        ]}
+      />
     </SafeArea>
   );
 };

@@ -1,11 +1,7 @@
 /**
- * helpers.ts — the shared timing, easing and formatting utilities.
+ * helpers.ts — the shared timing, easing, layout and indicator utilities.
  *
- * The spec asks for these to come from `episode2new/helpers`; that module is
- * not on this branch, so they are defined here with the same names and this
- * file becomes the single re-export point when it lands.
- *
- * DETERMINISM. `seeded` is the only source of randomness in the episode.
+ * DETERMINISM. `mulberry32` is the only source of randomness in the episode.
  * Remotion renders frames in parallel processes, so Math.random() would make
  * two renders of the same frame differ.
  */
@@ -13,59 +9,41 @@ import { interpolate } from "remotion";
 import { theme } from "./theme";
 
 const HOLD = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const settle = theme.motion.settle;
-
-/** Seconds → frames. */
-export const sec = (s: number) => Math.round(s * theme.canvas.fps);
+const { ease, easeInOut, revealF, slidePx } = theme.motion;
 
 export const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+/** Seconds → frames. Every sub-timing in the build prompt is in seconds. */
+export const sec = (s: number) => Math.round(s * theme.layout.fps);
 
-/** Eased 0→1 across [at, at+over]. The workhorse for draws, wipes and moves. */
+export const fadeIn = (f: number, start: number, dur = revealF) =>
+  interpolate(f, [start, start + dur], [0, 1], { ...HOLD, easing: ease });
+export const fadeOut = (f: number, start: number, dur = revealF) =>
+  1 - interpolate(f, [start, start + dur], [0, 1], { ...HOLD, easing: ease });
+
+/** Eased 0→1. The workhorse for draws, wipes and moves. */
 export const progress = (f: number, at: number, over: number) =>
-  interpolate(f, [at, at + over], [0, 1], { ...HOLD, easing: settle });
-
-/** Eased 0→1 with a symmetric curve — fastest exactly at its midpoint. */
+  interpolate(f, [at, at + over], [0, 1], { ...HOLD, easing: ease });
+/** Eased 0→1 on a symmetric curve — fastest exactly at its midpoint. */
 export const progressInOut = (f: number, at: number, over: number) =>
-  interpolate(f, [at, at + over], [0, 1], { ...HOLD, easing: theme.motion.inOut });
-
-/** Un-eased 0→1. Use where a frame must map to a position exactly. */
-export const ramp = (f: number, at: number, over: number) => interpolate(f, [at, at + over], [0, 1], HOLD);
-
-export const fadeIn = (f: number, at: number, over: number = theme.motion.fade) => progress(f, at, over);
-export const fadeOut = (f: number, at: number, over: number = theme.motion.fade) => 1 - progress(f, at, over);
+  interpolate(f, [at, at + over], [0, 1], { ...HOLD, easing: easeInOut });
 
 /**
- * textReveal — the ONLY entrance for words: they fade and rise. Never a pop,
- * never a bounce, never a rotation.
+ * textReveal — the ONLY entrance for words: they fade and rise 12px. Never a
+ * pop, never a bounce, never a scale.
  */
-export const textReveal = (f: number, at: number, over: number = theme.motion.reveal, rise = 18) => ({
-  opacity: progress(f, at, over),
-  dy: interpolate(f, [at, at + over], [rise, 0], { ...HOLD, easing: settle }),
+export const textReveal = (f: number, start: number) => ({
+  opacity: fadeIn(f, start),
+  transform: `translateY(${interpolate(f, [start, start + revealF], [slidePx, 0], {
+    ...HOLD,
+    easing: ease,
+  }).toFixed(2)}px)`,
 });
 
-/** One half-sine, 0→1→0. Emphasis on a UI element; never on type. */
-export const beat = (f: number, at: number, over: number) => (f >= at && f < at + over ? Math.sin(((f - at) / over) * Math.PI) : 0);
-
-/**
- * hold — a value that steps between keyframes and STAYS PUT in between.
- *
- * This is what a freeze is built from: give it two keyframes with the same
- * value and the picture genuinely stops rather than creeping.
- */
-export const hold = (f: number, keys: number[], vals: number[]) =>
-  interpolate(f, keys, vals, { ...HOLD, easing: settle });
-
-/** IDX price format — dot thousands, e.g. 4400 → "4.400". */
-export const price = (n: number) => Math.round(n).toLocaleString("de-DE");
-
-/** Rupiah, e.g. 40000 → "Rp40.000". */
-export const fmtRp = (n: number) => `Rp${price(n)}`;
-
-/** Percent with a comma decimal, e.g. 2.7 → "+2,7%". */
-export const pct = (n: number) => `${n >= 0 ? "+" : "−"}${Math.abs(n).toFixed(1).replace(".", ",")}%`;
+/** IDX convention: dot thousands. 20350 → "20.350". */
+export const fmtRp = (n: number) => Math.round(n).toLocaleString("de-DE");
 
 /** mulberry32. The episode's only PRNG. */
-export const seeded = (seed: number) => {
+export const mulberry32 = (seed: number) => {
   let a = seed >>> 0;
   return () => {
     a |= 0;
@@ -76,24 +54,67 @@ export const seeded = (seed: number) => {
   };
 };
 
-export type Rect = { x: number; y: number; w: number; h: number };
-
-/** Shrink a rect by equal insets — used to place a plot inside a panel. */
-export const inset = (r: Rect, dx: number, dy = dx): Rect => ({ x: r.x + dx, y: r.y + dy, w: r.w - dx * 2, h: r.h - dy * 2 });
-
-/** Split a rect into `n` columns with a gap between them. */
-export const columns = (r: Rect, n: number, gap: number): Rect[] => {
-  const w = (r.w - gap * (n - 1)) / n;
-  return Array.from({ length: n }, (_, i) => ({ x: r.x + i * (w + gap), y: r.y, w, h: r.h }));
+/** A trim path, as the two attributes an SVG needs. */
+export const drawPath = (f: number, start: number, dur: number, pathLength: number) => {
+  const p = progress(f, start, dur);
+  return { strokeDasharray: pathLength, strokeDashoffset: pathLength * (1 - p) };
 };
 
+/** An eased playhead between two x positions — for scrubbing a chart. */
+export const scrub = (f: number, start: number, dur: number, fromX: number, toX: number) =>
+  fromX + (toX - fromX) * progressInOut(f, start, dur);
+
+/* ── layout modes ─────────────────────────────────────────────────────────── */
+
+export type Mode = "A" | "B" | "C";
+export type ChartBox = { x: number; y: number; w: number; h: number; dim: number };
+
 /**
- * ═══ INDICATOR MATHS ═══
+ * The chart box at this frame, interpolated between mode stops.
  *
- * All three take and return plain arrays, and all three return `null` for the
- * warm-up bars rather than a number. A moving average that starts on day 1 is
- * not a moving average — it is a lie about how much history it had, and a chart
- * that draws it makes the indicator look like it leads price.
+ * The build prompt writes this as `(f, switchAt, from, to)`, which covers a
+ * single switch. Scene 12B moves A → B → C, so it takes a LIST of stops
+ * instead — the same idea, one more stop. Modes never cut: every change is a
+ * `modeTransitionF` ease, and the chart slides and scales through it.
+ *
+ * `dim` is the opacity the chart's own content should carry: 1 in A and B,
+ * 0.35 in C, eased across the transition like everything else.
+ */
+export const layoutMode = (f: number, stops: { at: number; mode: Mode }[]): ChartBox => {
+  const { chartA, chartB, modeTransitionF } = theme.layout;
+  const boxOf = (m: Mode) => (m === "B" ? chartB : chartA);
+  const dimOf = (m: Mode) => (m === "C" ? 0.35 : 1);
+
+  let cur = stops[0];
+  let next: { at: number; mode: Mode } | null = null;
+  for (const s of stops) {
+    if (f >= s.at) cur = s;
+    else {
+      next = next ?? s;
+    }
+  }
+  /* between two stops, `t` is how far the transition has run */
+  const t =
+    next && f >= next.at - 0 ? 0 : next ? progressInOut(f, next.at, modeTransitionF) : 0;
+  const to = next ?? cur;
+  const a = boxOf(cur.mode);
+  const b = boxOf(to.mode);
+  const mix = (x: number, y: number) => x + (y - x) * t;
+  return {
+    x: mix(a.x, b.x),
+    y: mix(a.y, b.y),
+    w: mix(a.w, b.w),
+    h: mix(a.h, b.h),
+    dim: mix(dimOf(cur.mode), dimOf(to.mode)),
+  };
+};
+
+/* ── indicator maths ──────────────────────────────────────────────────────── */
+
+/**
+ * All three return `null` through the warm-up rather than a number. A moving
+ * average that starts on day one is a lie about how much history it had, and a
+ * chart that draws it makes the indicator look like it leads price.
  */
 export const sma = (v: number[], period: number): (number | null)[] =>
   v.map((_, i) => {
@@ -117,26 +138,21 @@ export const ema = (v: number[], period: number): (number | null)[] => {
       let sum = 0;
       for (let j = 0; j < period; j++) sum += v[i - j];
       prev = sum / period;
-    } else {
-      prev = v[i] * k + prev * (1 - k);
-    }
+    } else prev = v[i] * k + prev * (1 - k);
     out.push(prev);
   }
   return out;
 };
 
-/** Middle, upper, lower — and the width, which is what a squeeze is measured in. */
 export const bollinger = (v: number[], period = 20, mult = 2) => {
   const mid = sma(v, period);
   const upper: (number | null)[] = [];
   const lower: (number | null)[] = [];
-  const width: (number | null)[] = [];
   for (let i = 0; i < v.length; i++) {
     const m = mid[i];
     if (m === null) {
       upper.push(null);
       lower.push(null);
-      width.push(null);
       continue;
     }
     let sq = 0;
@@ -144,33 +160,6 @@ export const bollinger = (v: number[], period = 20, mult = 2) => {
     const sd = Math.sqrt(sq / period);
     upper.push(m + mult * sd);
     lower.push(m - mult * sd);
-    /** Normalised, so a squeeze is comparable across price levels. */
-    width.push((2 * mult * sd) / m);
   }
-  return { mid, upper, lower, width };
+  return { mid, upper, lower };
 };
-
-/**
- * ═══ FORMATTING ═══
- * IDX convention throughout: dot thousands, comma decimals. `fmtRp` is above,
- * with `price`.
- */
-export const fmtPct = (n: number) =>
-  `${n >= 0 ? "+" : "−"}${Math.abs(n).toFixed(1).replace(".", ",")}%`;
-export const fmtVol = (n: number) =>
-  n >= 1e9
-    ? `${(n / 1e9).toFixed(1).replace(".", ",")} B`
-    : `${(n / 1e6).toFixed(1).replace(".", ",")} M`;
-
-/**
- * A trim path, as the two attributes an SVG needs. `length` is the path's own
- * measured length — pass a straight-line approximation only for lines.
- */
-export const drawPath = (f: number, at: number, over: number, length: number) => {
-  const p = progress(f, at, over);
-  return { strokeDasharray: length, strokeDashoffset: length * (1 - p) };
-};
-
-/** An eased playhead between two x positions — for scrubbing a chart. */
-export const scrub = (f: number, at: number, over: number, fromX: number, toX: number) =>
-  fromX + (toX - fromX) * progressInOut(f, at, over);

@@ -32,8 +32,8 @@ export const Ping = ({
         cy={y}
         r={r * (0.4 + 0.9 * t)}
         fill="none"
-        stroke={theme.color.cyan}
-        strokeWidth={theme.shape.band}
+        stroke={theme.colors.cyan}
+        strokeWidth={theme.layout.stroke.band}
       />
     </Layer>
   );

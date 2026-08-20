@@ -3,25 +3,24 @@
  *
  * Nothing but the background lives here. The margins are honoured by the
  * geometry in `theme.layout`, not by a wrapper that clips: a clip would hide a
- * violation instead of showing it, and the whole point of the reserved bands is
- * that they stay visibly empty.
+ * violation instead of showing it, and the whole point of the reserved bands
+ * is that they stay visibly empty.
  *
  * `Guides` outlines the logo zone and the subtitle band for eyeballing in
  * Studio. It is OFF by default and must never ship on.
  */
 import React from "react";
 import { AbsoluteFill } from "remotion";
-import { theme } from "../theme";
+import { theme, CAPTION_BAND } from "../theme";
 
-/** Flip to true only while checking a layout in Studio. */
 const SHOW_GUIDES = false;
 
 export const SafeArea = ({ children }: { children: React.ReactNode }) => (
   <AbsoluteFill
     style={{
-      backgroundColor: theme.color.bg,
-      fontFamily: theme.text.family,
-      color: theme.color.ink,
+      backgroundColor: theme.colors.bg,
+      fontFamily: theme.type.family,
+      color: theme.colors.text,
     }}
   >
     {children}
@@ -36,19 +35,19 @@ const Guides = () => (
         position: "absolute",
         right: 0,
         top: 0,
-        width: theme.logoZone.width,
-        height: theme.logoZone.height,
-        outline: `1px dashed ${theme.color.warn}`,
+        width: theme.layout.logoZoneW,
+        height: theme.layout.logoZoneH,
+        outline: `1px dashed ${theme.colors.candleRed}`,
       }}
     />
     <div
       style={{
         position: "absolute",
         left: 0,
-        top: theme.captionBand.top,
-        width: theme.canvas.width,
-        height: theme.captionBand.height,
-        outline: `1px dashed ${theme.color.warn}`,
+        top: CAPTION_BAND.top,
+        width: theme.layout.width,
+        height: CAPTION_BAND.height,
+        outline: `1px dashed ${theme.colors.candleRed}`,
       }}
     />
   </>

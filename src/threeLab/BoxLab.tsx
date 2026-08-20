@@ -68,7 +68,7 @@ const DRIFT = { yaw: 4.5, yawT: 190, pitch: 1.8, pitchT: 145 };
  */
 const CLOSE = { from: 3.4, to: 2.1, lift: 0.12, lead: 0.34 };
 /** The card is the ACTIVE AREA — the full margin box, nothing outside it. */
-const CARD = theme.stage.active;
+const CARD = theme.layout.chartA;
 /** The plot, inset inside the card so a body cannot touch the card's edge. */
 const PLOT = { x: CARD.x + 64, y: CARD.y + 64, w: CARD.w - 128, h: CARD.h - 128 };
 const TICKS = 5;
@@ -78,9 +78,9 @@ const hold = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 const U = 100;
 const rad = (deg: number) => (deg * Math.PI) / 180;
 /** Canvas px -> world units. The only place the two systems meet. */
-const wx = (px: number) => (px - theme.canvas.width / 2) / U;
-const wy = (py: number) => (theme.canvas.height / 2 - py) / U;
-const FRONT = { z: (theme.canvas.height / 2 / U) / Math.tan(rad(45 / 2)), y: 0 };
+const wx = (px: number) => (px - theme.layout.width / 2) / U;
+const wy = (py: number) => (theme.layout.height / 2 - py) / U;
+const FRONT = { z: (theme.layout.height / 2 / U) / Math.tan(rad(45 / 2)), y: 0 };
 
 /** The episode's own grid, over the plot — same maths, same seeded series. */
 const DOMAIN: [number, number] = [
@@ -146,7 +146,7 @@ const along = (p: number) => {
 /** The plate's angle at a frame — the isometric pose, drifting, then unwinding. */
 const leanAt = (f: number) => {
   const go = interpolate(f, [T.home, T.home + T.homeOver], [0, 1], { ...hold, easing: Easing.inOut(Easing.ease) });
-  const on = interpolate(f, [0, 26], [0, 1], { ...hold, easing: theme.motion.settle }) * (1 - go);
+  const on = interpolate(f, [0, 26], [0, 1], { ...hold, easing: theme.motion.ease }) * (1 - go);
   const yaw = ISO.yaw + Math.sin((f / DRIFT.yawT) * Math.PI * 2) * DRIFT.yaw;
   const pitch = ISO.pitch + Math.cos((f / DRIFT.pitchT) * Math.PI * 2) * DRIFT.pitch;
   /* YXZ so the numbers read the way they are named: yaw, then pitch, then roll */
@@ -198,13 +198,13 @@ const Rig: React.FC<{ f: number; lean: Euler }> = ({ f, lean }) => {
 const Candle: React.FC<{ c: (typeof CANDLES)[number]; f: number }> = ({ c, f }) => {
   const o = interpolate(f, [c.at, c.at + IN.fade], [0, 1], hold);
   if (o <= 0.001) return null;
-  const trim = interpolate(f, [c.at, c.at + IN.trim], [0, 1], { ...hold, easing: theme.motion.settle });
-  const tone = c.up ? theme.color.candleGreen : theme.color.candleRed;
+  const trim = interpolate(f, [c.at, c.at + IN.trim], [0, 1], { ...hold, easing: theme.motion.ease });
+  const tone = c.up ? theme.colors.candleGreen : theme.colors.candleRed;
   return (
     <group position={[c.x, 0, 0]}>
       <mesh position={[0, c.wickY, 0.001]} scale={[1, trim, 1]}>
         <planeGeometry args={[0.015, c.wickH]} />
-        <meshBasicMaterial color={theme.color.priceLine} side={DoubleSide} transparent opacity={o} />
+        <meshBasicMaterial color={theme.colors.price} side={DoubleSide} transparent opacity={o} />
       </mesh>
       <mesh position={[0, c.bodyY, 0.002]} scale={[1, trim, 1]}>
         <planeGeometry args={[BODY_W, c.bodyH]} />
@@ -221,13 +221,13 @@ const Plate: React.FC = () => {
     <>
       <mesh position={[wx(CARD.x + CARD.w / 2), wy(CARD.y + CARD.h / 2), 0]}>
         <planeGeometry args={[CARD.w / U, CARD.h / U]} />
-        <meshBasicMaterial color={theme.color.surface} side={DoubleSide} />
+        <meshBasicMaterial color={theme.colors.surface} side={DoubleSide} />
       </mesh>
       {lines.map((py, i) => (
         <mesh key={i} position={[wx(CARD.x + CARD.w / 2), wy(py), 0.0005]}>
           <planeGeometry args={[(CARD.w - 128) / U, 0.01]} />
           <meshBasicMaterial
-            color={i === lines.length - 1 ? theme.color.border : theme.color.gridline}
+            color={i === lines.length - 1 ? theme.colors.border : theme.colors.gridline}
             side={DoubleSide}
           />
         </mesh>
@@ -242,7 +242,7 @@ export const BoxLab: React.FC = () => {
   const lean = leanAt(f);
 
   return (
-    <AbsoluteFill style={{ backgroundColor: theme.color.bg }}>
+    <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
       {/*
         `flat` turns OFF the ACES tone mapping R3F applies by default. With it
         on, #FFFFFF comes out around #E0E0E0 and the white card reads grey.
@@ -270,13 +270,13 @@ export const BoxLab: React.FC = () => {
       <div
         style={{
           position: "absolute",
-          left: theme.stage.titleChip.x,
-          top: theme.stage.titleChip.y,
+          left: theme.layout.titleChip.x,
+          top: theme.layout.titleChip.y,
           transform: "translateY(-50%)",
-          fontFamily: theme.text.family,
-          fontSize: theme.text.title.size,
-          fontWeight: theme.text.title.weight,
-          color: theme.color.indigo,
+          fontFamily: theme.type.family,
+          fontSize: theme.type.h2.size,
+          fontWeight: theme.type.h2.weight,
+          color: theme.colors.indigo,
         }}
       >
         {f < T.home ? "Isometric · follow" : "Front view"}

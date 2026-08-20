@@ -9,20 +9,20 @@
 import { theme } from "../theme";
 import { progressInOut } from "../helpers";
 import { Layer } from "./ChartFrame";
-import { CHART, type Box } from "./ChartFrame";
+import type { Box } from "./ChartFrame";
 
 export const RevealMask = ({
   x,
   f,
   wipeFrom,
   wipeDur,
-  box = CHART,
+  box,
 }: {
   x: number;
   f: number;
   wipeFrom: number;
   wipeDur: number;
-  box?: Box;
+  box: Box;
 }) => {
   const wiped = f >= wipeFrom ? progressInOut(f, wipeFrom, wipeDur) : 0;
   const edge = x + (box.x + box.w - x) * wiped;
@@ -37,15 +37,15 @@ export const RevealMask = ({
         y={box.y - pad}
         width={box.x + box.w - edge + pad}
         height={box.h + pad * 2}
-        fill={theme.color.bg}
+        fill={theme.colors.bg}
       />
       <line
         x1={edge}
         y1={box.y - pad}
         x2={edge}
         y2={box.y + box.h + pad}
-        stroke={theme.color.indigo}
-        strokeWidth={theme.shape.band}
+        stroke={theme.colors.indigo}
+        strokeWidth={theme.layout.stroke.band}
       />
     </Layer>
   );
