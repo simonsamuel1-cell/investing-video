@@ -199,6 +199,133 @@ export const SMA_EMA: Anchor[] = [
 ];
 
 /**
+ * SC04's chart — the crop Simon supplied for SMA vs EMA, traced.
+ *
+ * ⚠ THE INSTRUMENT IS NOT KNOWN. Like EXPLAINER_2 this crop carries no symbol
+ * header and no price axis, so the series is NOT attributed and the scene
+ * shows neither ticker nor price labels. Only the SHAPE is taken; the band it
+ * is written into is arbitrary and exists so the arithmetic has numbers to run
+ * on, not because those numbers mean anything.
+ *
+ * The run that matters is the long climb into the double top and the decline
+ * after it: that is the one turn both averages have to react to, and the whole
+ * scene is about which of them reacts first.
+ */
+export const SMA_EMA_2: Anchor[] = [
+  [0.0, 5000], [0.03, 5040], [0.05, 5020], [0.07, 5060], [0.09, 5100],
+  [0.1, 5180], [0.12, 5410], [0.13, 5450], [0.14, 5510], [0.15, 5610],
+  [0.16, 5750], [0.18, 5920], [0.19, 6040], [0.2, 6100], [0.21, 6060],
+  [0.22, 6140], [0.23, 6180], [0.24, 6160], [0.25, 5970], [0.26, 5850],
+  [0.27, 6000], [0.29, 6080], [0.3, 6200], [0.31, 6510], [0.32, 6670],
+  [0.33, 6760], [0.34, 6630], [0.35, 6510], [0.36, 6350], [0.37, 6900],
+  [0.38, 7000], [0.4, 6900], [0.41, 6740], [0.42, 6660], [0.43, 6680],
+  [0.44, 6620], [0.45, 6580], [0.46, 6550], [0.47, 6530], [0.48, 6550],
+  [0.49, 6630], [0.51, 6880], [0.52, 6820], [0.53, 6740], [0.54, 6680],
+  [0.55, 6620], [0.56, 6510], [0.57, 6370], [0.58, 6290], [0.59, 6330],
+  [0.6, 6430], [0.61, 6550], [0.63, 6670], [0.64, 6710], [0.65, 6860],
+  [0.66, 6880], [0.67, 6660], [0.68, 6160], [0.69, 6240], [0.7, 6350],
+  [0.71, 6220], [0.72, 6160], [0.73, 6240], [0.74, 6180], [0.75, 6280],
+  [0.77, 6380], [0.78, 6420], [0.79, 6200], [0.8, 6160], [0.81, 6180],
+  [0.82, 5960], [0.83, 5800], [0.84, 5840], [0.85, 5920], [0.86, 5960],
+  [0.87, 5760], [0.89, 5650], [0.9, 5570], [0.91, 5490], [0.92, 5410],
+  [0.93, 5290], [0.94, 5370], [0.95, 5450], [0.96, 5490], [0.97, 5450],
+  [0.98, 5570], [1.0, 5610],
+];
+
+
+/**
+ * SC05's chart — the crop Simon supplied for "how to read it", traced.
+ *
+ * ⚠ THE INSTRUMENT IS NOT KNOWN: no symbol header, no price axis. Not
+ * attributed, and the scene shows neither ticker nor price labels.
+ *
+ * ONLY THE CANDLES ARE TRACED. The crop has no average drawn on it, and the
+ * line the scene draws is computed FROM these closes — an average traced as a
+ * shape would be a curve that merely looks like the mean of the bars under it.
+ *
+ * The shape is a steady climb with shallow pauses in it, which is what the
+ * scene needs: price spends the whole run above a rising line and comes back
+ * to touch it without ever breaking through.
+ *
+ * ⚠ Its LAST anchor is READ_2's FIRST. The scene runs the two as one series
+ * and scrolls from one into the other, so a mismatch there would print as a
+ * gap bar at the join. Change one end and change the other with it.
+ */
+export const READ_1: Anchor[] = [
+  [0.0, 5000], [0.03, 5060], [0.05, 5190], [0.07, 5340], [0.09, 5400],
+  [0.11, 5410], [0.13, 5430], [0.15, 5650], [0.17, 6050], [0.19, 5990],
+  [0.2, 6080], [0.22, 6050], [0.24, 6020], [0.26, 6080], [0.28, 6140],
+  [0.3, 6170], [0.32, 6200], [0.34, 6260], [0.36, 6380], [0.38, 6540],
+  [0.4, 6570], [0.42, 6540], [0.44, 6510], [0.46, 6410], [0.48, 6260],
+  [0.5, 6290], [0.52, 6380], [0.53, 6440], [0.55, 6480], [0.57, 6460],
+  [0.59, 6480], [0.61, 6450], [0.63, 6450], [0.65, 6480], [0.67, 6510],
+  [0.69, 6570], [0.71, 6540], [0.73, 6600], [0.75, 6630], [0.77, 6570],
+  [0.79, 6510], [0.81, 6480], [0.83, 6570], [0.85, 6600], [0.87, 6660],
+  [0.88, 6690], [0.9, 6780], [0.92, 6940], [0.94, 7000], [0.96, 6940],
+  [0.98, 6790], [1.0, 6850],
+];
+
+
+/**
+ * SC05's SECOND chart — the downtrend crop, traced. Same rules as READ_1: no
+ * symbol, no axis, not attributed, and ONLY the candles are traced.
+ *
+ * It is the mirror of the lesson: price spends this run BELOW a falling line,
+ * rallying back to it twice without getting through.
+ *
+ * ⚠ Its FIRST anchor is READ_1's LAST and its LAST is READ_3's FIRST — see
+ * the notes there. It also spans the SAME 5.000–7.000 band as READ_1, which is
+ * what lets one fixed scale hold them without either being squashed to make
+ * room for the other.
+ */
+export const READ_2: Anchor[] = [
+  [0.0, 6850], [0.01, 6910], [0.03, 6790], [0.05, 6940], [0.07, 7000],
+  [0.08, 6970], [0.1, 6940], [0.12, 6880], [0.14, 6820], [0.15, 6760],
+  [0.17, 6380], [0.19, 6290], [0.2, 6440], [0.22, 6470], [0.24, 6380],
+  [0.25, 6290], [0.27, 6230], [0.29, 6150], [0.3, 6060], [0.32, 6120],
+  [0.34, 6180], [0.35, 6210], [0.37, 6260], [0.39, 6180], [0.41, 6230],
+  [0.42, 6290], [0.44, 6350], [0.46, 6410], [0.47, 6470], [0.49, 6440],
+  [0.51, 6350], [0.52, 6290], [0.54, 6260], [0.56, 6200], [0.57, 6230],
+  [0.59, 6260], [0.61, 6230], [0.62, 6060], [0.64, 5910], [0.66, 5850],
+  [0.68, 5820], [0.69, 5880], [0.71, 5910], [0.73, 5880], [0.74, 5940],
+  [0.76, 6030], [0.78, 6000], [0.79, 5910], [0.81, 5820], [0.83, 5730],
+  [0.84, 5590], [0.86, 5560], [0.88, 5530], [0.89, 5440], [0.91, 5350],
+  [0.93, 5290], [0.95, 5200], [0.96, 5110], [0.98, 5030], [1.0, 5000],
+];
+
+
+/**
+ * SC05's THIRD chart — the sideways crop, traced. Same rules as the other two:
+ * no symbol, no axis, not attributed, and ONLY the candles are traced.
+ *
+ * ⚠ Its FIRST anchor is READ_2's LAST, so the three run as one series without
+ * a gap bar at either seam.
+ *
+ * It sits in a NARROW band at the bottom of the same 5.000–7.000 scale —
+ * 5.000 to 5.600, a range that forms where the decline stopped. That band is
+ * the whole point: an average through a range has nowhere to slope, and a flat
+ * line is what the scene needs to show. Widening the band would also widen the
+ * shared domain and squash the two charts before it.
+ */
+export const READ_3: Anchor[] = [
+  [0.0, 5000], [0.01, 5150], [0.03, 5250], [0.04, 5320], [0.06, 5230],
+  [0.07, 5140], [0.09, 5120], [0.1, 5020], [0.12, 5090], [0.13, 5140],
+  [0.15, 5160], [0.16, 5230], [0.18, 5350], [0.19, 5390], [0.21, 5460],
+  [0.22, 5550], [0.24, 5510], [0.25, 5550], [0.27, 5530], [0.28, 5460],
+  [0.3, 5530], [0.31, 5490], [0.33, 5550], [0.34, 5600], [0.36, 5530],
+  [0.37, 5460], [0.39, 5420], [0.4, 5350], [0.42, 5250], [0.43, 5140],
+  [0.45, 5000], [0.46, 5090], [0.48, 5190], [0.49, 5300], [0.51, 5280],
+  [0.52, 5320], [0.54, 5230], [0.55, 5300], [0.57, 5250], [0.58, 5320],
+  [0.6, 5280], [0.61, 5370], [0.63, 5320], [0.64, 5350], [0.66, 5320],
+  [0.67, 5250], [0.69, 5210], [0.7, 5230], [0.72, 5190], [0.73, 5160],
+  [0.75, 5210], [0.76, 5140], [0.78, 5070], [0.79, 5000], [0.81, 5050],
+  [0.82, 5120], [0.84, 5210], [0.85, 5140], [0.87, 5250], [0.88, 5300],
+  [0.9, 5230], [0.91, 5320], [0.93, 5370], [0.94, 5420], [0.96, 5490],
+  [0.97, 5580], [0.99, 5550], [1.0, 5490],
+];
+
+
+/**
  * Anchors → a series of `n` closes.
  *
  * Straight lines between anchors would read as a polyline, so a little seeded

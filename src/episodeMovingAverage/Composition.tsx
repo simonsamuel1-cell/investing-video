@@ -23,7 +23,7 @@
  * ONE ROOT <Audio>. The VO is a single file mounted here; no scene has audio.
  */
 import React from "react";
-import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
+import { AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { ExplainerGroup } from "./continuity/ExplainerGroup";
@@ -36,6 +36,8 @@ import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
 import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
+import { TitleChip } from "./components/TitleChip";
+import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
@@ -62,6 +64,22 @@ const CONTINUITY_GROUPS: Mounted[] = [
   { from: 6645, duration: 1626, Component: GgrmGroup },
 ];
 
+/**
+ * The hoisted heading. It reads its OWN frames, which start at 607, and it
+ * leaves on the cut at 2324 rather than simply unmounting there — the heading
+ * changes at that boundary, so it has to be carried out by the same move that
+ * carries everything else, not blink off while the rest of the frame slides.
+ */
+const TITLE_FROM = 607;
+const RunTitle = () => {
+  const f = useCurrentFrame();
+  return (
+    <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + TITLE_FROM, CUTS.toReading) }}>
+      <TitleChip text="Moving Average" f={f} at={0} />
+    </div>
+  );
+};
+
 export const MovingAverageComposition = () => (
   <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
     {[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(({ from, duration, Component }) => (
@@ -69,6 +87,17 @@ export const MovingAverageComposition = () => (
         <Component />
       </Sequence>
     ))}
+
+    {/*
+      THE HOISTED HEADING. "Moving Average" belongs to CG-A *and* to SC04, and
+      the boundary between them at 1765 is a camera cut — so if each scene
+      mounted its own, the viewer would watch one heading leave and an
+      identical one arrive. Mounted here it simply stays put while the cut
+      moves everything else.
+    */}
+    <Sequence from={TITLE_FROM} durationInFrames={2324 - TITLE_FROM}>
+      <RunTitle />
+    </Sequence>
 
     <Captions />
     <Watermark />

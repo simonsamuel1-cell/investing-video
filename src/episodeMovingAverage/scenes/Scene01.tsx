@@ -22,7 +22,7 @@ import { theme } from "../theme";
 import { progress, progressInOut, clamp01, drawPath, fmtRp, sma, bollinger, mulberry32 } from "../helpers";
 import { toBars } from "../series";
 import { BBCA_1D, BBRI_1D, BMRI_1D, fromAnchors, type Anchor } from "../data/shots";
-import { CUTS, cutOut, cutBlur } from "../transitions/CameraCut";
+import { CUTS, cutOutStyle } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /**
@@ -354,8 +354,7 @@ export const Scene01 = () => {
    * the global one and nothing has to be added back here — every other scene
    * in the episode has to add its own `from`.
    */
-  const dy = cutOut(f, CUTS.toAverage);
-  const blur = cutBlur(f, CUTS.toAverage);
+  const cut = cutOutStyle(f, CUTS.toAverage);
 
   return (
     <SafeArea>
@@ -363,8 +362,7 @@ export const Scene01 = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `translateY(${dy.toFixed(1)}px)`,
-          filter: blur > 0.05 ? `blur(${blur.toFixed(1)}px)` : undefined,
+          ...cut,
         }}
       >
         {/* ── the panel ────────────────────────────────────────────── */}

@@ -22,13 +22,16 @@ export type Cut = {
    * How far the camera travels, in px. Short: the blur and the timing do the
    * work, and a long throw reads as a slide rather than a cut.
    *
-   * 90px is the episode's ceiling for a vertical cut. The panel's lower edge
+   * 90px is the episode's ceiling for a VERTICAL cut. The panel's lower edge
    * sits at 900 and the subtitle band starts at 972 — a longer throw would
-   * push it into a band that must never be entered.
+   * push it into a band that must never be entered. A horizontal cut has no
+   * such neighbour and can afford more.
    */
   distance: number;
   /** Blur at the fastest frame. This is what sells the swap; do not drop it. */
   blur: number;
+  /** Which way the camera travels. "y" rises, "x" tracks left. */
+  axis: "x" | "y";
 };
 
 /**
@@ -44,7 +47,21 @@ export const CUTS = {
    * the teaching starts, so the camera RISES: the panel is carried up out of
    * frame and the explainer comes up into it on the same curve.
    */
-  toAverage: { at: 607, over: 24, distance: 90, blur: 9 },
+  toAverage: { at: 607, over: 24, distance: 90, blur: 9, axis: "y" },
+  /**
+   * CG-A → SC04, on the 1764/1765 boundary. Moving averages are done and the
+   * two KINDS of them begin, so the camera TRACKS LEFT rather than rising:
+   * a sideways move says "next, along the same subject", where a rise says
+   * "and now something else".
+   */
+  toTypes: { at: 1765, over: 24, distance: 140, blur: 9, axis: "x" },
+  /**
+   * SC04 → SC05, on the 2323/2324 boundary. What a moving average IS is
+   * finished and how to READ one begins — a new instruction, not the next step
+   * along the same one — so the camera RISES rather than tracking sideways.
+   * It is also where the heading changes, and the cut is what carries it out.
+   */
+  toReading: { at: 2324, over: 24, distance: 90, blur: 9, axis: "y" },
 } as const satisfies Record<string, Cut>;
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -58,3 +75,21 @@ export const cutIn = (global: number, c: Cut) => c.distance * clamp01(1 - (curve
 
 /** Blur from the move's own speed — zero at both ends, maximum on the cut. */
 export const cutBlur = (global: number, c: Cut) => Math.sin(Math.PI * curve(c)(global)) * c.blur;
+
+/**
+ * The style a scene puts on its root. Both halves of a cut ask for one of
+ * these, so neither has to know which axis the cut travels on — get that wrong
+ * in one of them and the two halves move at right angles to each other.
+ */
+const styleOf = (d: number, blur: number, axis: Cut["axis"]) => ({
+  transform: axis === "x" ? `translateX(${d.toFixed(1)}px)` : `translateY(${d.toFixed(1)}px)`,
+  filter: blur > 0.05 ? `blur(${blur.toFixed(1)}px)` : undefined,
+});
+
+/** For the scene the cut takes AWAY. Pass the GLOBAL frame. */
+export const cutOutStyle = (global: number, c: Cut) =>
+  styleOf(cutOut(global, c), cutBlur(global, c), c.axis);
+
+/** For the scene the cut BRINGS IN. Pass the GLOBAL frame. */
+export const cutInStyle = (global: number, c: Cut) =>
+  styleOf(cutIn(global, c), cutBlur(global, c), c.axis);

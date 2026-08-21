@@ -40,6 +40,12 @@ export const theme = {
     indigo12: "#EDEAFE",
     cyan12: "#E7F7FB",
     price: "#3A3A3A",
+    /**
+     * The aside grey. Simon picked it for the quote box and it is now the ink
+     * for anything that comments ON the chart rather than being part of it —
+     * darker than textMuted, lighter than black, and never used for a heading.
+     */
+    ink: "#4D4D4D",
     candleGreen: "#22B573",
     candleRed: "#E5475D",
     /**
