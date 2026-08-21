@@ -42,6 +42,21 @@ export const theme = {
     price: "#3A3A3A",
     candleGreen: "#22B573",
     candleRed: "#E5475D",
+    /**
+     * THE TWO INDICATOR LINES, and the only colours in the episode outside the
+     * indigo/cyan pair and the candle bodies.
+     *
+     * They are here at Simon's explicit direction, and they earn the exception:
+     * these lines are drawn ON a panel that is already indigo-tinted, over
+     * green and red bodies, and an indigo average on an indigo wash is a line
+     * you have to hunt for. Orange and tosca are the two hues that are not
+     * already spoken for.
+     *
+     * They name INDICATORS, nothing else. Chrome, axes, annotations and text
+     * stay indigo / cyan / neutral.
+     */
+    maOrange: "#F59E0B",
+    bbTosca: "#2EC4B6",
   },
 
   layout: {

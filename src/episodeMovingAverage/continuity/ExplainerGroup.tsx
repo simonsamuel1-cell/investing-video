@@ -19,9 +19,13 @@ import { TitleChip } from "../components/TitleChip";
 import { TextBlock, assertBlocks } from "../components/TextBlock";
 import { theme } from "../theme";
 import { sec, sma, mulberry32, layoutMode, clamp01, progress } from "../helpers";
-import { SERIES, domainOf } from "../series";
+import { toBars, domainOf } from "../series";
+import { EXPLAINER_2, fromAnchors } from "../data/shots";
+import { CUTS, cutIn, cutBlur } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
+/** Where this group is mounted, needed to read the cut from global frames. */
+const FROM = 607;
 /** Scene 03 begins here, in the group's own local frames. */
 const SC03 = 499;
 const T = {
@@ -29,8 +33,6 @@ const T = {
   price: sec(2.4),
   ma: sec(5.0),
   quiet: sec(11.8),
-  block1: sec(13.5),
-  block2: sec(14.9),
   // ── Scene 03 ──
   clear: SC03,
   fast: SC03 + sec(2.5),
@@ -41,7 +43,21 @@ const T = {
 };
 const FAST_P = 20;
 const SLOW_P = 200;
-const TICKS = [4400, 4800, 5200, 5600, 6000, 6400];
+/** Scene 02's single average. One line, so it takes the orange. */
+const MID_P = 40;
+const TICKS = [73000, 74000, 75000, 76000, 77000];
+/** Bars in the window. 120 over the mode-A box gives ~8px bodies. */
+const N = 120;
+/**
+ * The indicator buttons under the title. Light grey at 35% until their line is
+ * drawn, then indigo — the same switch the broker panel in SC01 uses.
+ */
+const MA_BTN = { top: 118, gap: 10, padX: 16, padY: 6, size: 30, off: 0.35 };
+/**
+ * How far the card sits below its layout box. 170 + 30 + 680 = 880, and the
+ * subtitle band starts at 972 — the drop has 92px to spend and takes 30.
+ */
+const DROP = 30;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -53,39 +69,62 @@ const TICKS = [4400, 4800, 5200, 5600, 6000, 6400];
  * of prior ones, and only the visible part is drawn. The prior bars are never
  * shown; they exist so the arithmetic on screen is the arithmetic it claims.
  */
+const CLOSES = fromAnchors(EXPLAINER_2, N, 3702);
+const BARS = toBars(CLOSES, 3703);
+/**
+ * A FLAT random walk, not a drifting one. The first visible bar is the lowest
+ * of the window, so a prior history that trends anywhere drags MA200 far below
+ * the box — and since the domain has to contain it, the candles get squashed
+ * into a strip to make room for a line nobody is looking at.
+ */
 const PRIOR = (() => {
   const rnd = mulberry32(2301);
+  const step = CLOSES[0] * 0.0025;
   const out: number[] = [];
-  let p = SERIES[0];
+  let p = CLOSES[0];
   for (let i = 0; i < SLOW_P + 10; i++) {
-    p -= (rnd() - 0.46) * 2 * 18;
+    p += (rnd() - 0.5) * 2 * step;
     out.unshift(p);
   }
   return out;
 })();
-const WITH_HISTORY = [...PRIOR, ...SERIES];
+const WITH_HISTORY = [...PRIOR, ...CLOSES];
 const maOf = (period: number) => sma(WITH_HISTORY, period).slice(PRIOR.length);
 const MA_FAST = maOf(FAST_P);
 const MA_SLOW = maOf(SLOW_P);
 /** Scene 02's single line — the one that appears through the noise. */
-const MA_MID = maOf(40);
+const MA_MID = maOf(MID_P);
 
-const DOMAIN = domainOf([...SERIES, ...MA_SLOW]);
-const LABEL_AT = SERIES.length - 16;
+const DOMAIN = domainOf([...MA_SLOW], BARS);
+const LABEL_AT = CLOSES.length - 16;
 
-assertBlocks("ExplainerGroup", [
-  { from: T.block1, until: T.block2 },
-  { from: T.block2, until: SC03 },
-  { from: T.panel, until: 1158 },
-]);
+assertBlocks("ExplainerGroup", [{ from: T.panel, until: 1158 }]);
 
 export const ExplainerGroup = () => {
   const f = useCurrentFrame();
-  const box = layoutMode(f, [
+  /**
+   * The other half of SC01's cut. This group is mounted at global 607, so its
+   * own frames are rebased and the cut's curve has to be read from the GLOBAL
+   * frame — `f + FROM` — or the two halves would evaluate different points of
+   * the same move and the join would read as two separate slides.
+   */
+  const dy = cutIn(f + FROM, CUTS.toAverage);
+  const cut = cutBlur(f + FROM, CUTS.toAverage);
+  /**
+   * The card and everything on it sit DROP px below the layout box. The chart
+   * and its white ground are one object here, so the offset is applied once,
+   * to the box — move the card alone and every annotation reads the old grid.
+   */
+  const raw = layoutMode(f, [
     { at: 0, mode: "A" },
     { at: T.modeB, mode: "B" },
   ]);
-  const G = gridOf(SERIES, DOMAIN, box, 0.12, 150);
+  const box = { ...raw, y: raw.y + DROP };
+  /**
+   * No right-hand gutter any more. It existed to keep a price label off the
+   * line it was measuring; with the labels gone it is 150px of empty card.
+   */
+  const G = gridOf(CLOSES, DOMAIN, box, 0.12, 0);
 
   /** Scene 02 quietens the price; Scene 03 keeps it quiet. */
   const price =
@@ -96,16 +135,37 @@ export const ExplainerGroup = () => {
 
   return (
     <SafeArea>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${dy.toFixed(1)}px)`,
+          filter: cut > 0.05 ? `blur(${cut.toFixed(1)}px)` : undefined,
+        }}
+      >
+      {/* the white card every chart in this episode is drawn on */}
+      <div
+        style={{
+          position: "absolute",
+          left: box.x,
+          top: box.y,
+          width: box.w,
+          height: box.h,
+          borderRadius: theme.layout.radius.lg,
+          background: theme.colors.surface,
+          border: `${theme.layout.border.thin}px solid ${theme.colors.border}`,
+        }}
+      />
+
       <ChartFrame
-        closes={SERIES}
-        bars={[]}
+        closes={CLOSES}
+        bars={BARS}
         grid={G}
-        mode="line"
+        mode="candle"
         f={f}
         drawFrom={T.price}
         drawDur={sec(2.3)}
         ticks={TICKS}
-        tickLabels
         opacity={price}
       />
 
@@ -117,6 +177,7 @@ export const ExplainerGroup = () => {
         drawFrom={T.ma}
         drawDur={sec(6.1)}
         variant="slow"
+        color={theme.colors.maOrange}
         opacity={midOut}
       />
 
@@ -142,10 +203,53 @@ export const ExplainerGroup = () => {
 
       <TitleChip text="Moving Average" f={f} at={T.title} />
 
+      {/* ── MA20 / MA200, under the title ── */}
+      {f >= T.title + 12 && (
+        <div
+          style={{
+            position: "absolute",
+            left: theme.layout.titleChip.x,
+            top: MA_BTN.top,
+            display: "flex",
+            gap: MA_BTN.gap,
+            opacity: progress(f, T.title + 12, theme.motion.revealF),
+          }}
+        >
+          {[
+            { label: "MA20", at: T.fast },
+            { label: "MA200", at: T.slow },
+          ].map((b) => {
+            /* the switch is a cross-fade between the two skins, so fill, border
+               and label arrive together instead of snapping */
+            const sel = f >= b.at ? progress(f, b.at, 10) : 0;
+            const on = sel > 0.5;
+            return (
+              <span
+                key={b.label}
+                style={{
+                  fontFamily: theme.type.family,
+                  fontSize: MA_BTN.size,
+                  fontWeight: theme.type.label.weight,
+                  color: on ? theme.colors.surface : theme.colors.textMuted,
+                  background: on ? theme.colors.indigo : theme.colors.surface,
+                  border: `${theme.layout.border.thin}px solid ${on ? theme.colors.indigo : theme.colors.border}`,
+                  borderRadius: theme.layout.radius.sm,
+                  padding: `${MA_BTN.padY}px ${MA_BTN.padX}px`,
+                  /* unselected sits back at 35% — present, but plainly off */
+                  opacity: on ? 1 : MA_BTN.off,
+                }}
+              >
+                {b.label}
+              </span>
+            );
+          })}
+        </div>
+      )}
+
       <LabelChip
         text="MA20 — Faster • Closer to Price"
         x={G.x(LABEL_AT)}
-        y={G.y(MA_FAST[LABEL_AT] ?? SERIES[LABEL_AT])}
+        y={G.y(MA_FAST[LABEL_AT] ?? CLOSES[LABEL_AT])}
         f={f}
         at={T.fast + sec(3.4)}
         anchor="above"
@@ -156,7 +260,7 @@ export const ExplainerGroup = () => {
       <LabelChip
         text="MA200 — Slower • Big Picture"
         x={G.x(LABEL_AT)}
-        y={G.y(MA_SLOW[LABEL_AT] ?? SERIES[LABEL_AT])}
+        y={G.y(MA_SLOW[LABEL_AT] ?? CLOSES[LABEL_AT])}
         f={f}
         at={T.slow + sec(3.2)}
         anchor="below"
@@ -164,31 +268,13 @@ export const ExplainerGroup = () => {
         opacity={f >= T.modeB ? 1 - progress(f, T.modeB, 14) : 1}
       />
 
-      {/* Scene 02's two blocks, one replacing the other in place */}
-      <TextBlock
-        mode="A"
-        localFrame={f}
-        from={T.block1}
-        until={T.block2}
-        x={theme.layout.panelB.x}
-        y={theme.layout.chartA.y + 140}
-        lines={[
-          { text: "PRICE:   ↑ ↓ ↑ ↓ ↑ ↓", size: "label", color: "muted" },
-          { text: "MOVING AVERAGE:   ↗", size: "label", color: "indigo" },
-        ]}
-      />
-      <TextBlock
-        mode="A"
-        localFrame={f}
-        from={T.block2}
-        until={SC03}
-        x={theme.layout.panelB.x}
-        y={theme.layout.chartA.y + 140}
-        lines={[
-          { text: "MOVING AVERAGE", size: "h2", color: "indigo" },
-          { text: "Smooths Price → Reveals Trend", size: "label", color: "muted" },
-        ]}
-      />
+      {/*
+        SCENE 02 CARRIES NO TEXT ON THE CHART. The two blocks that used to run
+        here — "PRICE ↑↓↑↓ / MOVING AVERAGE ↗", then "MOVING AVERAGE / Smooths
+        Price → Reveals Trend" — are gone at Simon's direction. The line
+        appearing through the noise is the idea; captioning it in the same
+        frame says it twice. The heading and the MA20 / MA200 buttons stay.
+      */}
 
       {/* Scene 03's Mode-B panel */}
       <TextBlock
@@ -203,6 +289,7 @@ export const ExplainerGroup = () => {
           { text: "Slow Reaction / Big Picture", size: "label", color: "muted" },
         ]}
       />
+      </div>
     </SafeArea>
   );
 };
