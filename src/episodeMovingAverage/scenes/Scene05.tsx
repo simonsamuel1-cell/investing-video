@@ -35,6 +35,8 @@ import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { Layer, gridOf, pathOf, lengthOf } from "../components/ChartFrame";
 import { TitleChip } from "../components/TitleChip";
+import { HighlightBox } from "../components/HighlightBox";
+import { QuoteBox } from "../components/QuoteBox";
 import { theme } from "../theme";
 import {
   sma,
@@ -150,6 +152,22 @@ const T = {
    */
   full: at(3780),
   fullOver: 85,
+  /**
+   * THE RINGS HAND OVER TO BOXES. A ring says "this point"; by here the point
+   * is not the claim any more. "Saat crossing muncul, sebagian pergerakan
+   * biasanya sudah terjadi" (3942–4043) is about the RUN either side of the
+   * crossing, so the mark has to enclose the bars that made that run — the
+   * ones sitting above the golden cross and below the death cross.
+   */
+  ringsGone: at(3938),
+  box: at(3938),
+  /**
+   * The line the whole scene lands on, and it goes exactly where the voice
+   * says it: "Gunakan sebagai konfirmasi trend," starts at 4061 and "bukan
+   * untuk meramal" at 4118. The box rises, snaps open and types in about 25
+   * frames, so it is finished well inside the first of those two lines.
+   */
+  quote: at(4061),
   /** Each scroll, and the growth that follows it. They never overlap. */
   steps: [
     { scroll: at(2546), scrollDur: 27, grow: at(2573), growDur: 110, bars: 54 },
@@ -210,6 +228,28 @@ const SHOW_MID = false;
  * symmetric on purpose.
  */
 const CROSS_MARK = { r: 38, gap: 10, size: 30, padX: 22, padY: 10 };
+/**
+ * The box that replaces the ring at 3938. `bars` either side of the crossing,
+ * and it reaches from the crossing itself out to the FURTHEST candle in that
+ * span — up at the golden cross, down at the death cross, because that is
+ * where price is relative to the lines in each case. `pad` keeps the far edge
+ * off the wicks so the box does not look like it is cutting them.
+ *
+ * `trimX` pulls BOTH vertical edges 15px inward and `overCross` pushes the
+ * CROSS-side edge 15px further out — Simon's numbers, and they pull the same
+ * way: a box that is narrower than its span and hangs a little past the
+ * crossing reads as sitting behind the run rather than boxing it in.
+ *
+ * `overCross` is always measured from the crossing, so it goes DOWN at the
+ * golden cross and UP at the death cross without needing a second constant.
+ */
+const CROSS_BOX = { bars: 9, pad: 14, fill: 0.3, trimX: 15, overCross: 15 };
+/**
+ * Two lines, so 118 tall — the same box CG-A leaves you with, and it rides the
+ * card's bottom edge the same way. Its lower edge lands at 909; the subtitle
+ * band starts at 972.
+ */
+const QUOTE = { w: 640, h: 118 };
 /**
  * 60 bars in the window, not 100. The crops are chunky, low-count charts and
  * the count is what gives them that: across this card 60 bars are 28px apart,
@@ -791,7 +831,9 @@ export const Scene05 = () => {
               {/* the ring on each crossing — same reveal as the bounce rings:
                   it grows the last 40% of the way in as it fades up */}
               {CROSS_SET.map((c) => {
-                const a = progress(f, c.at, theme.motion.revealF);
+                const a =
+                  progress(f, c.at, theme.motion.revealF) *
+                  (1 - progress(f, T.ringsGone, theme.motion.revealF));
                 if (a <= 0.001) return null;
                 const cx = GZ.x(c.i);
                 const cy = GZ.y(MA_FAST[c.i] as number);
@@ -931,6 +973,49 @@ export const Scene05 = () => {
         )}
 
         {/*
+          ── THE BOXES ──
+          They take over from the rings at 3938. Found from the bars, not
+          drawn by eye: the span is the crossing ± CROSS_BOX.bars, and the far
+          edge is the highest high (or lowest low) inside it, so the box always
+          contains the candles it is claiming and never merely floats near
+          them. Drawn in canvas coordinates, which is safe here because the
+          tape has finished travelling by 3865.
+        */}
+        {CROSS_SET.map((c) => {
+          /* candles sit ABOVE the golden cross and BELOW the death cross —
+             the opposite side to the pill, which is why the pill went there */
+          const up = !c.above;
+          const lo = Math.max(0, c.i - CROSS_BOX.bars);
+          const hi = Math.min(BARS.length - 1, c.i + CROSS_BOX.bars);
+          const yCross = GZ.y(MA_FAST[c.i] as number);
+          let far = yCross;
+          for (let i = lo; i <= hi; i++) {
+            const v = up ? GZ.y(BARS[i].h) : GZ.y(BARS[i].l);
+            far = up ? Math.min(far, v) : Math.max(far, v);
+          }
+          return (
+            <HighlightBox
+              key={c.text}
+              x1={GZ.x(lo) - shiftNow - CROSS_BOX.pad + CROSS_BOX.trimX}
+              x2={GZ.x(hi) - shiftNow + CROSS_BOX.pad - CROSS_BOX.trimX}
+              y1={
+                up
+                  ? far - CROSS_BOX.pad
+                  : yCross - CROSS_BOX.pad - CROSS_BOX.overCross
+              }
+              y2={
+                up
+                  ? yCross + CROSS_BOX.pad + CROSS_BOX.overCross
+                  : far + CROSS_BOX.pad
+              }
+              f={f}
+              at={T.box}
+              fill={CROSS_BOX.fill}
+            />
+          );
+        })}
+
+        {/*
           ── THE TWO CROSSINGS ──
           The PILLS live out here, in canvas coordinates; the RINGS are drawn
           inside the clipped group with the tape (see above) so they are cut
@@ -973,6 +1058,31 @@ export const Scene05 = () => {
             </div>
           );
         })}
+
+        {/* ── the line the scene leaves you with ── */}
+        <QuoteBox
+          f={f}
+          at={T.quote}
+          w={QUOTE.w}
+          h={QUOTE.h}
+          y={BOX.y + BOX.h - 30}
+          /* Marked by CLAUSE, tint only, ink left dark — the treatment Simon
+             settled on for SC03's quote. The comma stays INSIDE the mark: it
+             belongs to the clause, and a comma stranded outside the band reads
+             as a stray mark rather than punctuation. */
+          lines={[
+            {
+              segments: [
+                {
+                  text: "Indikator untuk konfirmasi,",
+                  tone: "indigo",
+                  ink: true,
+                },
+              ],
+            },
+            { segments: [{ text: "bukan meramal" }] },
+          ]}
+        />
 
         {/* THE HEADING DOES NOT CHANGE. Simon: it stays "Cara Baca Moving
             Average" through the crossing beat too — reading a crossing is
