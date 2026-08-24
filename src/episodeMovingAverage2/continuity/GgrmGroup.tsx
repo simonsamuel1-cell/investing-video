@@ -29,7 +29,7 @@ import { RevealMask } from "../components/RevealMask";
 import { Countdown } from "../components/Countdown";
 import { TextBlock, assertBlocks } from "../components/TextBlock";
 import { theme } from "../theme";
-import { sec, sma, bollinger, layoutMode, fmtRp, progress, fadeOut } from "../helpers";
+import { sec, sma, bollinger, layoutMode, fmtRp, progress } from "../helpers";
 import raw from "../data/ggrm.json";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -202,7 +202,7 @@ export const GgrmGroup = () => {
         />
       )}
 
-      <TitleChip text="Kuis" f={f} at={T.title} opacity={fadeOut(f, SC12B)} />
+      <TitleChip text="Kuis" f={f} at={T.title} opacity={f >= SC12B ? 0 : 1} />
       <LabelChip
         text={`${GGRM.ticker} · Daily`}
         x={theme.layout.titleChip.x}

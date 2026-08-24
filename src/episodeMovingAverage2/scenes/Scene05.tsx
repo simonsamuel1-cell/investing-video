@@ -1,13 +1,6 @@
 /**
- * SCENE 05 — How to read it, the average as a moving level, and the tape the
- * CROSSING scene is read off. `from 2381 · dur 1816`
- *
- * IT RUNS THROUGH SC07. Simon: scene 4 to scene 5 is continuous — technically
- * no transition at all. So there is no cut at 3547 and no second chart: the
- * candles simply ZOOM OUT until the whole tape spans the card, and SC07 mounts
- * on top of them for its heading and its text. A chart that is replaced at a
- * boundary asks to be trusted again from scratch; this one is the same tape
- * the viewer has spent forty seconds learning to read, seen whole.
+ * SCENE 05 — How to read it, and the average as a moving level.
+ * `from 2324 · dur 1166`
  *
  * SC06 used to start at 2903 with a chart of its own. It does not any more:
  * support and resistance are read off the SAME series this scene has been
@@ -36,22 +29,14 @@ import { SafeArea } from "../components/SafeArea";
 import { Layer, gridOf, pathOf, lengthOf } from "../components/ChartFrame";
 import { TitleChip } from "../components/TitleChip";
 import { theme } from "../theme";
-import {
-  sma,
-  mulberry32,
-  drawPath,
-  progress,
-  progressInOut,
-  clamp01,
-  textReveal,
-} from "../helpers";
+import { sma, mulberry32, drawPath, progress, progressInOut, clamp01, textReveal } from "../helpers";
 import { toBars, domainOf } from "../series";
 import { READ_1, READ_2, READ_3, fromAnchors } from "../data/shots";
-import { CUTS, cutInStyle } from "../transitions/CameraCut";
+import { CUTS, cutInStyle, cutOutStyle } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /** Where this scene is mounted, needed to read the cut from global frames. */
-const FROM = 2381;
+const FROM = 2324;
 /** Global → local. Every beat below is quoted in Simon's global frames. */
 const at = (global: number) => global - FROM;
 
@@ -74,75 +59,22 @@ const at = (global: number) => global - FROM;
  */
 const T = {
   title: 0,
-  ma: at(2446),
-  maOver: at(2544) - at(2446),
+  ma: at(2389),
+  maOver: at(2487) - at(2389),
   /** When the summary and the chips leave. */
-  clear: at(2960),
+  clear: at(2903),
   /** The rings on the bars that came back to the line. */
-  ring: at(3091),
+  ring: at(3034),
   ringStep: 16,
   /** The bounce path drawn through them — ring, high, ring, high, ring, high. */
-  path: at(3147),
+  path: at(3090),
   pathDur: 100,
   /** The same reading, mirrored, on the decline. */
-  ringDown: at(3312),
-  pathDown: at(3357),
-  /**
-   * And then they go. The rings and the trend line have said what they had to
-   * say by here, and the tape underneath is about to be handed to the crossing
-   * scene — carrying four circles and a zigzag into it would have the next
-   * beat annotating a chart that is still annotated for the last one.
-   */
-  ringsOut: at(3470),
-  ringsOutOver: 30,
-  /**
-   * ═══ THE ZOOM OUT ═══
-   *
-   * The window has been sixty bars wide all scene. Here it opens by a fifth,
-   * to about seventy-four, and travels back to the very start of the tape —
-   * the crossings the next beat is about are not inside the sixty it has been
-   * parked on.
-   *
-   * It rides the voice: "Saat moving average pendek" starts at 3514, so the
-   * move is already under way as the sentence begins and settled well before
-   * the crossing is named.
-   */
-  wide: at(3505),
-  wideOver: 60,
-  /**
-   * THE TWO LONG AVERAGES, traced in from the LEFT edge — 3537 to 3597, over
-   * "menembus moving average panjang dari bawah" (3560–3612). They arrive
-   * AFTER the zoom out has settled, which is the only order that works: a line
-   * drawn across a chart whose pitch is still closing would be redrawn under
-   * itself every frame.
-   */
-  long: at(3537),
-  longOver: 60,
-  /**
-   * The two crossings, each on the frame the voice names it: "ini disebut
-   * golden cross" starts at 3619, "disebut death cross" at 3719. Both stay up
-   * afterwards — they sit at opposite ends of the tape and never crowd each
-   * other, and the next beat is about the gap BETWEEN them.
-   */
-  golden: at(3580),
-  /**
-   * THE CHASE. The window travels right to the SECOND crossing — it runs under
-   * "Kalau menembus dari atas ke bawah," (3669–3714) and lands just before
-   * "disebut death cross." (3719). 71 bars puts the crossing 56% across the
-   * card, with the tail of the decline behind it and the start of the range
-   * ahead, so it is read in context rather than arriving at an edge.
-   *
-   * It is its OWN travel, not another entry in `T.steps`. Those are unwound by
-   * the zoom out — `shift * (1 - wide)` — which is right for the sixty-bar
-   * window they belong to and would cancel this one to nothing.
-   */
-  chase: at(3675),
-  chaseDur: 40,
-  chaseBars: 71,
-  death: at(3719),
+  ringDown: at(3255),
+  pathDown: at(3300),
   /** Each scroll, and the growth that follows it. They never overlap. */
   steps: [
-    { scroll: at(2546), scrollDur: 27, grow: at(2573), growDur: 110, bars: 54 },
+    { scroll: at(2489), scrollDur: 27, grow: at(2516), growDur: 110, bars: 54 },
     /**
      * 75. The range leg is fifteen bars LONGER than the window, and the scroll
      * travels the whole of it — so the window lands on the LAST sixty, not the
@@ -152,54 +84,18 @@ const T = {
      * the average has nothing but the range in it, and it is flat all the way
      * across.
      */
-    { scroll: at(2748), scrollDur: 25, grow: at(2773), growDur: 38, bars: 75 },
+    { scroll: at(2691), scrollDur: 25, grow: at(2716), growDur: 38, bars: 75 },
     /**
      * BACK to the start, and no growth: the line is already drawn end to end,
      * so this step moves the window and nothing else. A negative travel is the
      * whole of it — 54 + 75 returned.
      */
-    { scroll: at(2960), scrollDur: 34, bars: -(54 + 75) },
+    { scroll: at(2903), scrollDur: 34, bars: -(54 + 75) },
     /** Forward again to the decline — the window step 1 already framed. */
-    { scroll: at(3270), scrollDur: 34, bars: 54 },
-  ] as {
-    scroll: number;
-    scrollDur: number;
-    bars: number;
-    grow?: number;
-    growDur?: number;
-  }[],
+    { scroll: at(3213), scrollDur: 34, bars: 54 },
+  ] as { scroll: number; scrollDur: number; bars: number; grow?: number; growDur?: number }[],
 };
 const PERIOD = 20;
-/**
- * The long pair the crossing beat is about. MA100 is the FAST one here — fast
- * and slow are relative, and against 200 a hundred sessions is the quick one —
- * so it takes cyan and MA200 takes indigo, the episode's binding everywhere.
- */
-const MID_P = 100;
-const SLOW_P = 200;
-/** How far above the tape's open the invented history starts. See PRIOR. */
-const LIFT = 0.22;
-/**
- * ═══ THE SWITCH ═══
- *
- * MA100 on or off. It is ONE flag and not two, because hiding the line alone
- * would leave the two crossing marks pinned to a line nobody can see — a
- * "Golden Cross" label floating over a single unbroken MA200. So the flag
- * moves the CROSSING PAIR with it: with MA100 up, the crossings are MA100 ×
- * MA200; with it hidden, they are MA20 × MA200, the two lines actually on
- * screen. Either way the marks sit on a crossing the viewer can see.
- */
-const SHOW_MID = false;
-/**
- * The crossing mark: a ring on the crossing itself, and a pill 10px clear of
- * that ring — measured from the ring's EDGE, not its centre, so the gap is the
- * gap you actually see. Same radius as the bounce rings earlier in the scene,
- * because it is the same gesture: this bar, here, is the one to look at.
- *
- * Each pill picks its own vertical side (see CROSS_SET), and they are not
- * symmetric on purpose.
- */
-const CROSS_MARK = { r: 38, gap: 10, size: 30, padX: 22, padY: 10 };
 /**
  * 60 bars in the window, not 100. The crops are chunky, low-count charts and
  * the count is what gives them that: across this card 60 bars are 28px apart,
@@ -256,81 +152,9 @@ const PRIOR = (() => {
     p += (rnd() - 0.5) * 2 * step;
     out.unshift(p);
   }
-  /**
-   * ═══ DEEPER HISTORY — AND IT DECLINES INTO THE TAPE ═══
-   *
-   * This is what makes a GOLDEN CROSS exist at all, and it is worth spelling
-   * out because it looks like an arbitrary knob and is not.
-   *
-   * A golden cross is the fast average coming UP through the slow one. For
-   * that to happen inside the visible tape, the fast one has to start BELOW
-   * the slow one — which means price must have been FALLING into bar 0. With a
-   * flat prior history both averages start on top of each other and the climb
-   * separates them on bar 5, before anyone can see it: technically a crossing,
-   * visually the left-hand edge.
-   *
-   * So the invented history is a decline: LIFT above the tape's open, walked
-   * down into it over 180 sessions. That is not a trick to manufacture a
-   * signal — it is the setup a golden cross NEEDS. Price falls, bases, then
-   * rallies; the slow average is still above the fast one when the rally
-   * starts, and the rally is what pulls the fast one through it.
-   *
-   * LIFT is the one number that moves the crossing. 22% puts it at bar 36,
-   * three fifths of the way up the climb, with price at 6446 against a peak of
-   * 6971 — so most of the move had already happened when the cross printed,
-   * which is exactly what this scene goes on to say.
-   *
-   * PREPENDED, never inserted. The thirty bars above are untouched and stay
-   * nearest the tape, so MA20 comes out BIT-IDENTICAL to what it was before
-   * any of this existed — a 20-period average can only see the last nineteen
-   * of them. Checked by comparing the arrays, not assumed. The price DOMAIN is
-   * unchanged too: both long averages land inside the range the candles
-   * already set.
-   */
-  const anchor = out[0];
-  const n = SLOW_P + 10 - (PERIOD + 10);
-  const rnd2 = mulberry32(8804);
-  let q = anchor;
-  for (let i = 0; i < n; i++) {
-    /* built backwards in time, so each OLDER bar sits a little higher */
-    q += (anchor * LIFT) / n + (rnd2() - 0.5) * 2 * step * 0.5;
-    out.unshift(q);
-  }
   return out;
 })();
-const WITH_HISTORY = [...PRIOR, ...CLOSES];
-const maOf = (period: number) => sma(WITH_HISTORY, period).slice(PRIOR.length);
-const MA = maOf(PERIOD);
-/**
- * Neither of these carries a null: PRIOR is 210 deep, so even MA200 has its
- * two hundred sessions by the first visible bar. That is why they can start at
- * the LEFT EDGE — the chart did not begin the day it was opened.
- */
-const MA_MID = maOf(MID_P);
-const MA_SLOW = maOf(SLOW_P);
-
-/**
- * ⚠ FOUND, NOT PLACED — the same rule the rings follow. The two crossings are
- * searched for in the arrays; nothing here says WHERE they should be. Change
- * LIFT and these move on their own, which is the point: a mark that has to be
- * kept in step with the data by hand will eventually drift off it.
- */
-/** Whichever of the two is the FAST side of the crossing on screen. */
-const MA_FAST = SHOW_MID ? MA_MID : MA;
-const CROSS = (() => {
-  let up = -1;
-  let down = -1;
-  for (let i = 1; i < CLOSES.length; i++) {
-    const a = MA_FAST[i - 1];
-    const b = MA_FAST[i];
-    const c = MA_SLOW[i - 1];
-    const d = MA_SLOW[i];
-    if (a === null || b === null || c === null || d === null) continue;
-    if (up < 0 && a <= c && b > d) up = i;
-    else if (up > 0 && down < 0 && a >= c && b < d) down = i;
-  }
-  return { up, down };
-})();
+const MA = sma([...PRIOR, ...CLOSES], PERIOD).slice(PRIOR.length);
 
 /**
  * ONE SCALE, FIXED, over the whole series.
@@ -342,7 +166,7 @@ const CROSS = (() => {
  * Held on the trends' own scale, the line through the range is visibly, plainly
  * flat, which is the whole lesson. It also means nothing stretches mid-scroll.
  */
-const DOMAIN = domainOf([...CLOSES, ...MA, ...MA_MID, ...MA_SLOW], BARS);
+const DOMAIN = domainOf([...CLOSES, ...MA], BARS);
 
 /**
  * The grid is built from the RESTING window — the first 60 bars across the
@@ -352,26 +176,6 @@ const DOMAIN = domainOf([...CLOSES, ...MA, ...MA_MID, ...MA_SLOW], BARS);
 const G = gridOf(CLOSES.slice(0, WINDOW), DOMAIN, PLOT, 0.12, 0);
 const PITCH = G.x(1) - G.x(0);
 const BODY_W = Math.max(2, Math.min(20, PITCH * 0.62));
-/**
- * How far the pitch closes at 3505–3565. NOT a fit-to-width: Simon's call is
- * that the bars only come in 20%, so the tape still runs off the right-hand
- * edge of the card and the window sits at the FAR LEFT of it. About 74 of the
- * 189 bars are in shot — the whole climb and the first dozen bars of the
- * decline after it.
- *
- * It was briefly a true fit (59/188, every bar in the card at once). That put
- * the entire tape on screen but at a fifth of the pitch, and candles that
- * narrow stop reading as candles.
- *
- * X ONLY. The vertical mapping does not change by a pixel, and it must not:
- * DOMAIN is already fitted over the WHOLE series, so every price is already in
- * its final place. A uniform scale would have shrunk the candles vertically
- * too and, worse, thinned every wick with them. Closing the pitch in code
- * instead leaves strokes alone — which is what a real chart does when you zoom
- * it out.
- */
-const WIDE = 0.8;
-const X0 = G.x(0);
 
 /**
  * ═══ THE CHIPS ═══
@@ -412,20 +216,12 @@ const ROWS = [
  * chart because it is the answer to what the chart has been showing — the
  * heading outside the card names the lesson, this names the two things to do.
  */
-const SUM = {
-  at: at(2875),
-  top: 250,
-  gap: 20,
-  size: 30,
-  padX: 22,
-  padY: 10,
-  step: 8,
-};
+const SUM = { at: at(2818), top: 250, gap: 20, size: 30, padX: 22, padY: 10, step: 8 };
 const CHIPS = [
-  { at: at(2444), w: 419, text: "Harga di atas MA = uptrend" },
-  { at: at(2552), w: 500, text: "Harga di bawah MA = downtrend" },
-  { at: at(2651), w: 460, text: "Makin curam = trend menguat" },
-  { at: at(2746), w: 413, text: "Datar = market belum jelas" },
+  { at: at(2387), w: 419, text: "Harga di atas MA = uptrend" },
+  { at: at(2495), w: 500, text: "Harga di bawah MA = downtrend" },
+  { at: at(2594), w: 460, text: "Makin curam = trend menguat" },
+  { at: at(2689), w: 413, text: "Datar = market belum jelas" },
 ];
 
 /**
@@ -485,10 +281,7 @@ const ringY = (b: Bounce, i: number) => (b.up ? BARS[i].l : BARS[i].h);
 const verticesOf = (b: Bounce, g: ReturnType<typeof gridOf>) =>
   b.rings.flatMap((r, n) => [
     { x: g.x(r), y: g.y(ringY(b, r)) },
-    {
-      x: g.x(b.pivots[n]),
-      y: b.up ? g.y(BARS[b.pivots[n]].h) : g.y(BARS[b.pivots[n]].l),
-    },
+    { x: g.x(b.pivots[n]), y: b.up ? g.y(BARS[b.pivots[n]].h) : g.y(BARS[b.pivots[n]].l) },
   ]);
 const pathOfBounce = (b: Bounce, g: ReturnType<typeof gridOf>) =>
   verticesOf(b, g)
@@ -497,97 +290,38 @@ const pathOfBounce = (b: Bounce, g: ReturnType<typeof gridOf>) =>
 const lenOfBounce = (b: Bounce, g: ReturnType<typeof gridOf>) => {
   const v = verticesOf(b, g);
   let len = 0;
-  for (let i = 1; i < v.length; i++)
-    len += Math.hypot(v[i].x - v[i - 1].x, v[i].y - v[i - 1].y);
+  for (let i = 1; i < v.length; i++) len += Math.hypot(v[i].x - v[i - 1].x, v[i].y - v[i - 1].y);
   return len;
 };
-
-/**
- * The two marks, in the order the voice names them. The RINGS are both indigo
- * — they are the same gesture, "this point here" — and only the pills are told
- * apart by colour, which is Simon's call and the right one: the ring says
- * where to look, the pill says what it is.
- */
-const CROSS_SET = [
-  {
-    i: CROSS.up,
-    at: T.golden,
-    text: "Golden Cross",
-    fill: theme.colors.indigo,
-    /* below the ring: the crossing is heading UP out of it */
-    above: false,
-  },
-  {
-    i: CROSS.down,
-    at: T.death,
-    text: "Death Cross",
-    fill: theme.colors.crossRed,
-    /* above the ring: the crossing is heading DOWN out of it */
-    above: true,
-  },
-];
 
 export const Scene05 = () => {
   const f = useCurrentFrame();
   const g = f + FROM;
   /**
-   * ONE cut, at the way in. CG-A rises this scene in at 2381 and it is read
-   * from the GLOBAL frame, because the other half reads the same curve from
-   * its own position. There is nothing at the way OUT: SC07 runs on this
-   * chart, so the scene does not end, it opens up.
+   * This scene sits BETWEEN two cuts: SC04 rises it in at 2324, and it rises
+   * out at 3490. Both are read from the GLOBAL frame, because the other half
+   * of each reads the same curve from its own position. The windows never
+   * overlap, and away from both each returns a zero offset and no blur.
    */
-  const cut = cutInStyle(g, CUTS.toReading);
+  const cut = g < CUTS.toCross.at - CUTS.toCross.over
+    ? cutInStyle(g, CUTS.toReading)
+    : cutOutStyle(g, CUTS.toCross);
 
   /** Every step contributes its own travel, and its own length of line. */
   const shift =
-    PITCH *
-    T.steps.reduce(
-      (a, s) => a + s.bars * progressInOut(f, s.scroll, s.scrollDur),
-      0,
-    );
+    PITCH * T.steps.reduce((a, s) => a + s.bars * progressInOut(f, s.scroll, s.scrollDur), 0);
   const upto =
     WINDOW +
     Math.round(
       T.steps.reduce(
         (a, s) =>
-          a +
-          (s.grow === undefined
-            ? 0
-            : s.bars * clamp01((f - s.grow) / (s.growDur ?? 1))),
+          a + (s.grow === undefined ? 0 : s.bars * clamp01((f - s.grow) / (s.growDur ?? 1))),
         0,
       ),
     );
   /** The dash only animates the FIRST draw; after that the line just grows. */
   const drawing = f < (T.steps[0].grow ?? 0);
   const line = MA.slice(0, upto);
-
-  /**
-   * THE ZOOM OUT. `spread` closes the pitch from a sixty-bar window to the
-   * whole tape, and the travel unwinds to nothing over the same curve — the
-   * window cannot both open to bar 0 and still be parked fifty-four bars along
-   * it. `GZ` is the grid every mark on the chart is drawn through, so nothing
-   * can be left behind at the old pitch.
-   */
-  const wide = progressInOut(f, T.wide, T.wideOver);
-  const spread = 1 - (1 - WIDE) * wide;
-  const shiftNow =
-    shift * (1 - wide) +
-    PITCH * spread * T.chaseBars * progressInOut(f, T.chase, T.chaseDur);
-  const GZ = { ...G, x: (i: number) => X0 + (G.x(i) - X0) * spread };
-  const bodyW = Math.max(1.5, BODY_W * spread);
-  /**
-   * SC07's text sits over this chart — it used to have a faint line chart of
-   * its own to sit on. The tape steps back under each of its two blocks and
-   * comes back between them.
-   */
-  const chartDim =
-    f >= at(4085)
-      ? 1 - 0.7 * progress(f, at(4085), 20)
-      : f >= at(3898)
-        ? 0.45 + 0.55 * progress(f, at(3898), 20)
-        : f >= at(3790)
-          ? 1 - 0.55 * progress(f, at(3790), 20)
-          : 1;
 
   return (
     <SafeArea>
@@ -620,18 +354,15 @@ export const Scene05 = () => {
             </clipPath>
           </defs>
 
-          <g clipPath="url(#sc05Card)" opacity={chartDim}>
-            <g transform={`translate(${-shiftNow.toFixed(1)},0)`}>
+          <g clipPath="url(#sc05Card)">
+            <g transform={`translate(${-shift.toFixed(1)},0)`}>
               {/* the tape is simply THERE — the cut is its entrance */}
               {BARS.map((b, i) => {
-                const x = GZ.x(i);
+                const x = G.x(i);
                 const top = Math.min(G.y(b.o), G.y(b.c));
                 const h = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
                 /* candle bodies are the ONLY place green and red appear */
-                const fill =
-                  b.c >= b.o
-                    ? theme.colors.candleGreen
-                    : theme.colors.candleRed;
+                const fill = b.c >= b.o ? theme.colors.candleGreen : theme.colors.candleRed;
                 return (
                   <g key={i}>
                     <line
@@ -642,13 +373,7 @@ export const Scene05 = () => {
                       stroke={theme.colors.price}
                       strokeWidth={theme.layout.stroke.wick}
                     />
-                    <rect
-                      x={x - bodyW / 2}
-                      y={top}
-                      width={bodyW}
-                      height={h}
-                      fill={fill}
-                    />
+                    <rect x={x - BODY_W / 2} y={top} width={BODY_W} height={h} fill={fill} />
                   </g>
                 );
               })}
@@ -662,49 +387,28 @@ export const Scene05 = () => {
               */}
               {[
                 { b: UP, ring: T.ring, path: T.path, fade: T.steps[3].scroll },
-                {
-                  b: DOWN,
-                  ring: T.ringDown,
-                  path: T.pathDown,
-                  fade: T.ringsOut,
-                },
+                { b: DOWN, ring: T.ringDown, path: T.pathDown, fade: Infinity },
               ].map((set, k) => {
                 const o =
-                  1 -
-                  progress(
-                    f,
-                    set.fade,
-                    set.fade === T.ringsOut
-                      ? T.ringsOutOver
-                      : theme.motion.revealF,
-                  );
+                  set.fade === Infinity ? 1 : 1 - progress(f, set.fade, theme.motion.revealF);
                 if (f < set.ring || o <= 0.001) return null;
                 return (
                   <g key={k} opacity={o}>
                     {f >= set.path && (
                       <path
-                        d={pathOfBounce(set.b, GZ)}
+                        d={pathOfBounce(set.b, G)}
                         fill="none"
                         stroke={theme.colors.indigo}
                         strokeWidth={theme.layout.stroke.ma}
                         strokeLinecap="round"
                         strokeLinejoin="round"
-                        {...drawPath(
-                          f,
-                          set.path,
-                          T.pathDur,
-                          lenOfBounce(set.b, GZ),
-                        )}
+                        {...drawPath(f, set.path, T.pathDur, lenOfBounce(set.b, G))}
                       />
                     )}
                     {set.b.rings.map((i, n) => {
-                      const a = progress(
-                        f,
-                        set.ring + n * T.ringStep,
-                        theme.motion.revealF,
-                      );
+                      const a = progress(f, set.ring + n * T.ringStep, theme.motion.revealF);
                       if (a <= 0.001) return null;
-                      const cx = GZ.x(i);
+                      const cx = G.x(i);
                       /* the circle rides the same point the trend line does,
                          so the two can never come apart */
                       const cy = G.y(ringY(set.b, i));
@@ -728,7 +432,7 @@ export const Scene05 = () => {
 
               {f >= T.ma && (
                 <path
-                  d={pathOf(line, GZ)}
+                  d={pathOf(line, G)}
                   fill="none"
                   /* ONE average on screen, so it takes the orange — the
                      cyan/indigo binding is for a fast/slow PAIR, where the two
@@ -737,57 +441,9 @@ export const Scene05 = () => {
                   strokeWidth={theme.layout.stroke.ma}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  {...(drawing
-                    ? drawPath(f, T.ma, T.maOver, lengthOf(line, GZ))
-                    : {})}
+                  {...(drawing ? drawPath(f, T.ma, T.maOver, lengthOf(line, G)) : {})}
                 />
               )}
-
-              {/*
-                ── THE LONG PAIR ──
-                Traced in from the LEFT edge at 3537. Drawn AFTER the orange
-                twenty so the slow lines sit over it: the crossing beat is
-                about these two, and the line that has been the subject for the
-                last forty seconds steps behind them.
-              */}
-              {f >= T.long &&
-                [
-                  { v: MA_SLOW, c: theme.colors.indigo },
-                  ...(SHOW_MID ? [{ v: MA_MID, c: theme.colors.cyan }] : []),
-                ].map((l) => (
-                  <path
-                    key={l.c}
-                    d={pathOf(l.v, GZ)}
-                    fill="none"
-                    stroke={l.c}
-                    strokeWidth={theme.layout.stroke.ma}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    {...drawPath(f, T.long, T.longOver, lengthOf(l.v, GZ))}
-                  />
-                ))}
-
-              {/* the ring on each crossing — same reveal as the bounce rings:
-                  it grows the last 40% of the way in as it fades up */}
-              {CROSS_SET.map((c) => {
-                const a = progress(f, c.at, theme.motion.revealF);
-                if (a <= 0.001) return null;
-                const cx = GZ.x(c.i);
-                const cy = GZ.y(MA_FAST[c.i] as number);
-                return (
-                  <circle
-                    key={c.text}
-                    cx={cx}
-                    cy={cy}
-                    r={CROSS_MARK.r}
-                    fill="none"
-                    stroke={theme.colors.indigo}
-                    strokeWidth={theme.layout.stroke.ma}
-                    opacity={a}
-                    transform={`translate(${cx} ${cy}) scale(${(0.6 + 0.4 * a).toFixed(3)}) translate(${-cx} ${-cy})`}
-                  />
-                );
-              })}
             </g>
           </g>
         </Layer>
@@ -797,10 +453,7 @@ export const Scene05 = () => {
           <div
             style={{
               position: "absolute",
-              opacity:
-                f >= T.clear
-                  ? 1 - progress(f, T.clear, theme.motion.revealF)
-                  : 1,
+              opacity: f >= T.clear ? 1 - progress(f, T.clear, theme.motion.revealF) : 1,
               left: BOX.x,
               top: SUM.top,
               width: BOX.w,
@@ -855,26 +508,17 @@ export const Scene05 = () => {
              * mounts — so the one beside it eases left instead of jumping.
              */
             const grown = row.map((k) =>
-              f < CHIPS[k].at
-                ? 0
-                : progress(f, CHIPS[k].at, theme.motion.revealF),
+              f < CHIPS[k].at ? 0 : progress(f, CHIPS[k].at, theme.motion.revealF),
             );
             const width = row.reduce(
-              (a, k, n) =>
-                a + grown[n] * (CHIPS[k].w + (n === 0 ? 0 : CHIP.gap)),
+              (a, k, n) => a + grown[n] * (CHIPS[k].w + (n === 0 ? 0 : CHIP.gap)),
               0,
             );
             const before = row
               .slice(0, col)
-              .reduce(
-                (a, k, n) =>
-                  a + grown[n] * (CHIPS[k].w + (n === 0 ? 0 : CHIP.gap)),
-                0,
-              );
+              .reduce((a, k, n) => a + grown[n] * (CHIPS[k].w + (n === 0 ? 0 : CHIP.gap)), 0);
             const left =
-              (theme.layout.width - width) / 2 +
-              before +
-              (col === 0 ? 0 : CHIP.gap * grown[col]);
+              (theme.layout.width - width) / 2 + before + (col === 0 ? 0 : CHIP.gap * grown[col]);
             const rv = textReveal(f, c.at);
             return (
               <div
@@ -886,11 +530,7 @@ export const Scene05 = () => {
                   width: c.w,
                   boxSizing: "border-box",
                   textAlign: "center",
-                  opacity:
-                    rv.opacity *
-                    (f >= T.clear
-                      ? 1 - progress(f, T.clear, theme.motion.revealF)
-                      : 1),
+                  opacity: rv.opacity * (f >= T.clear ? 1 - progress(f, T.clear, theme.motion.revealF) : 1),
                   background: theme.colors.surface,
                   border: `${theme.layout.border.thin}px solid ${theme.colors.ink}`,
                   borderRadius: theme.layout.radius.sm,
@@ -909,54 +549,6 @@ export const Scene05 = () => {
           }),
         )}
 
-        {/*
-          ── THE TWO CROSSINGS ──
-          The PILLS live out here, in canvas coordinates; the RINGS are drawn
-          inside the clipped group with the tape (see above) so they are cut
-          off with it rather than floating over the card's edge. Both read the
-          same GZ.x, minus the tape's travel, so they cannot come apart.
-        */}
-        {CROSS_SET.map((c) => {
-          const a = progress(f, c.at, theme.motion.revealF);
-          if (a <= 0.001) return null;
-          const rv = textReveal(f, c.at);
-          return (
-            <div
-              key={c.text}
-              style={{
-                ...rv,
-                /* ABOVE is done with translateY(-100%), not by guessing the
-                   pill's height: it is one line of 30px type inside padding
-                   the browser resolves, and a hard-coded height would drift
-                   the moment any of that changes. */
-                transform: `${rv.transform}${c.above ? " translateY(-100%)" : ""}`,
-                position: "absolute",
-                left: GZ.x(c.i) - shiftNow + CROSS_MARK.r + CROSS_MARK.gap,
-                top:
-                  GZ.y(MA_FAST[c.i] as number) +
-                  (c.above
-                    ? -CROSS_MARK.r - CROSS_MARK.gap
-                    : CROSS_MARK.r + CROSS_MARK.gap),
-                background: c.fill,
-                color: theme.colors.surface,
-                borderRadius: theme.layout.radius.sm,
-                padding: `${CROSS_MARK.padY}px ${CROSS_MARK.padX}px`,
-                fontFamily: theme.type.family,
-                fontSize: CROSS_MARK.size,
-                fontWeight: theme.type.label.weight,
-                whiteSpace: "nowrap",
-                opacity: rv.opacity * chartDim,
-              }}
-            >
-              {c.text}
-            </div>
-          );
-        })}
-
-        {/* THE HEADING DOES NOT CHANGE. Simon: it stays "Cara Baca Moving
-            Average" through the crossing beat too — reading a crossing is
-            still reading a moving average, and a new heading there would say
-            the subject had changed when it has not. */}
         <TitleChip text="Cara Baca Moving Average" f={f} at={T.title} />
       </div>
     </SafeArea>

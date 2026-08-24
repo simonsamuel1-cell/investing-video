@@ -20,7 +20,7 @@ import { TitleChip } from "../components/TitleChip";
 import { HighlightBox } from "../components/HighlightBox";
 import { TextBlock, assertBlocks, type Line } from "../components/TextBlock";
 import { theme } from "../theme";
-import { sec, bollinger, layoutMode, progressInOut, fadeOut } from "../helpers";
+import { sec, bollinger, layoutMode, progressInOut } from "../helpers";
 import { SERIES, domainOf } from "../series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -126,7 +126,7 @@ export const BandsGroup = () => {
         at={T.mid + sec(1)}
         anchor="below"
         gap={26}
-        opacity={fadeOut(f, T.calm)}
+        opacity={f >= T.calm ? 0 : 1}
       />
       <LabelChip
         text="UPPER BAND"
@@ -137,7 +137,7 @@ export const BandsGroup = () => {
         anchor="above"
         gap={26}
         tone={theme.colors.cyan}
-        opacity={fadeOut(f, T.calm)}
+        opacity={f >= T.calm ? 0 : 1}
       />
       <LabelChip
         text="LOWER BAND"
@@ -148,7 +148,7 @@ export const BandsGroup = () => {
         anchor="below"
         gap={26}
         tone={theme.colors.cyan}
-        opacity={fadeOut(f, T.calm)}
+        opacity={f >= T.calm ? 0 : 1}
       />
 
       <LabelChip
@@ -159,7 +159,7 @@ export const BandsGroup = () => {
         at={T.calm}
         anchor="above"
         gap={30}
-        opacity={fadeOut(f, T.active)}
+        opacity={f >= T.active ? 0 : 1}
       />
       <LabelChip
         text="HIGH VOLATILITY → BANDS EXPAND"
@@ -169,7 +169,7 @@ export const BandsGroup = () => {
         at={T.active}
         anchor="above"
         gap={30}
-        opacity={fadeOut(f, T.squeeze)}
+        opacity={f >= T.squeeze ? 0 : 1}
       />
 
       {/* ── Scene 09 ── the squeeze, boxed on the chart it happens on */}
@@ -189,7 +189,7 @@ export const BandsGroup = () => {
         f={f}
         at={T.squeeze + sec(0.6)}
         anchor="below"
-        opacity={fadeOut(f, T.modeB)}
+        opacity={f >= T.modeB ? 0 : 1}
       />
 
       <TextBlock

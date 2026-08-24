@@ -20,9 +20,7 @@ loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
 
 export const theme = {
   colors: {
-    /* Flat white across the whole episode, root AND every scene's SafeArea —
-       one token, so there is nowhere left it could still read as off-white. */
-    bg: "#FFFFFF",
+    bg: "#F5F5F5",
     text: "#000000",
     textMuted: "#6B7076",
     gridline: "#DDE0E5",
@@ -65,13 +63,6 @@ export const theme = {
      */
     maOrange: "#F59E0B",
     bbTosca: "#2EC4B6",
-    /**
-     * The Death Cross pill, and nothing else. Simon asked for "merah sedikit
-     * muda" — a shade up from `candleRed`, which is the only other red in
-     * drawn content. It is a shade and not a wash: any lighter and 30px white
-     * on it drops under 3:1, which is the floor for large text.
-     */
-    crossRed: "#E95D71",
   },
 
   layout: {

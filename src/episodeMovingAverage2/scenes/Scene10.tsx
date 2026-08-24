@@ -16,7 +16,7 @@ import { TitleChip } from "../components/TitleChip";
 import { Strike } from "../components/Strike";
 import { TextBlock, assertBlocks } from "../components/TextBlock";
 import { theme } from "../theme";
-import { sec, bollinger, layoutMode, textReveal, progressInOut, fadeOut } from "../helpers";
+import { sec, bollinger, layoutMode, textReveal, progressInOut } from "../helpers";
 import { SERIES_UPTREND, BARS_UPTREND, domainOf } from "../series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -86,7 +86,7 @@ export const Scene10 = () => {
         text="Beginner Trap"
         f={f}
         at={T.title}
-        opacity={fadeOut(f, T.modeC)}
+        opacity={f >= T.modeC ? 0 : 1}
       />
 
       {/* COMPLIANCE: struck misconception, never a statement.
@@ -120,7 +120,7 @@ export const Scene10 = () => {
         at={T.walk}
         anchor="above"
         gap={34}
-        opacity={box.dim * fadeOut(f, T.modeC)}
+        opacity={f >= T.modeC ? 0 : box.dim}
       />
 
       {/* COMPLIANCE: struck misconception, never a statement */}

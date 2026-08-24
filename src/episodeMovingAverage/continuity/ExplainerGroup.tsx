@@ -1,5 +1,5 @@
 /**
- * CG-A — Scenes 02 + 03 as ONE spanning Sequence (global 607 → 1765).
+ * CG-A — Scenes 02 + 03 + 04 as ONE spanning Sequence (global 715 → 2381).
  *
  * The chart mounts once, here, and never unmounts. The candles drawn in Scene
  * 02 are the same objects Scene 03 keeps annotating — a remount would redraw
@@ -17,19 +17,29 @@
  * do not — they belong to the card, not to the tape, and translating them
  * would open a gap at the right edge as the chart slid away from it.
  */
+import React from "react";
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { Layer, gridOf, pathOf, lengthOf } from "../components/ChartFrame";
 import { QuoteBox } from "../components/QuoteBox";
 import { theme } from "../theme";
-import { sec, sma, mulberry32, clamp01, progress, progressInOut, drawPath } from "../helpers";
+import {
+  sec,
+  sma,
+  ema,
+  mulberry32,
+  clamp01,
+  progress,
+  progressInOut,
+  drawPath,
+} from "../helpers";
 import { toBars, domainOf } from "../series";
 import { EXPLAINER_2, fromAnchors } from "../data/shots";
 import { CUTS, cutInStyle, cutOutStyle } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /** Where this group is mounted, needed to read the cut from global frames. */
-const FROM = 607;
+const FROM = 715;
 /** Global → local. Every beat below is quoted in Simon's global frames. */
 const at = (global: number) => global - FROM;
 
@@ -50,11 +60,34 @@ const at = (global: number) => global - FROM;
  * 1498   the camera backs off onto the whole series — the forty-five bars the
  *        slide pushed off the left come back into the card
  * 1575   the quote box opens on the card's bottom edge
+ *
+ * ─── and then SCENE 04, on the same candles ───
+ *
+ * 1788   MA20, MA200, both their lines and the quote box RISE AWAY and are
+ *        gone. The chart does not move. This is the whole reason SC04 stopped
+ *        being its own scene: the two KINDS of average have to be drawn on the
+ *        average the viewer already knows, and a cut to a fresh chart would
+ *        have thrown that away and asked them to trust a new one.
+ * 1840   SMA and EMA arrive at title size in the middle of the screen
+ * 1925   they shrink into the row and the frame comes back to full
+ * 1959   SMA lights indigo, and the simple average is traced
+ * 2075   EMA lights indigo, and the exponential one is traced over it
+ * 2240   the second quote box opens
  */
 const T = {
-  title: at(607),
-  price: at(679),
-  ma: at(757),
+  title: at(667),
+  /**
+   * DONE BY THE CUT, not started by it. 646 + 2.3s = 715 exactly.
+   *
+   * A camera cut has to land on a shot that already exists. This draw used to
+   * start at 739 — well after the boundary — so the cut arrived on an empty
+   * white frame and then watched a chart assemble itself, which is not a cut,
+   * it is a reveal with a blur in front of it. SC01 owns the screen until 715,
+   * so running the draw underneath it costs nothing: it is finished and
+   * waiting at the moment the camera gets here.
+   */
+  price: at(646),
+  ma: at(817),
   /**
    * TWO BEATS, not one. The window SLIDES first and leaves the right-hand
    * third of the card empty; only then do the new sessions print into it, one
@@ -62,26 +95,68 @@ const T = {
    * hid the move — candles arriving at the edge is exactly what a scrolling
    * chart looks like, so nothing appeared to have happened.
    */
-  slide: at(955),
+  slide: at(1015),
   slideDur: 45,
-  print: at(1000),
-  printDur: 105,
-  /** Everything from here belongs to Scene 03. */
-  clear: at(1106),
-  centre: at(1106),
-  fast: at(1177),
-  slow: at(1387),
+  print: at(1060),
+  /* 70, not 105: the print has to be DONE by 1130 — "Angkanya menunjukkan
+     berapa periode yang dihitung" starts right there, about the number on a
+     button that has to already be a finished chart's button, not one still
+     being drawn. */
+  printDur: 70,
+  /** Scene 02's orange average steps aside for Scene 03's named pair. */
+  clear: at(1166),
+  fast: at(1237),
+  slow: at(1447),
   /** The pull-back onto the whole series, under the MA200 line. */
-  zoom: at(1498),
+  zoom: at(1558),
   zoomOver: 24,
-  quote: at(1575),
-  pulse: at(1688),
+  quote: at(1635),
+  pulse: at(1748),
+  /**
+   * MA20 / MA200 do not exist before this. They arrive together, in their OFF
+   * skin, exactly on "Angkanya menunjukkan berapa periode yang dihitung" — the
+   * line the number is the subject of.
+   *
+   * THE CAMERA DOES NOT MOVE HERE. An earlier cut pushed the whole frame in on
+   * the button row; Simon rejected it as disorienting, and he was right — a
+   * lens move on a static chart has nothing to track, so the picture just
+   * swells. The buttons carry the emphasis themselves instead: they land at
+   * TITLE SIZE in the middle of the screen with the rest of the frame at half
+   * strength, then shrink and rise into their row. Same emphasis, but the
+   * thing being emphasised is the thing that moves.
+   */
+  numberAppear: at(1131),
+  numberSettle: at(1201),
+  numberOut: at(1250),
+
+  /* ─── SCENE 04 ─── the two kinds, on the same candles ─── */
+  /**
+   * MA20, MA200, their two lines and the quote box BLUR AWAY together —
+   * Simon's revision, and the better read: they used to rise off the top, and
+   * a rise is a CAMERA move, which says the frame went somewhere. The frame
+   * does not go anywhere here. Losing focus says only that these four things
+   * stopped being what is being looked at, which is exactly what happens.
+   */
+  clearTypes: at(1788),
+  clearOver: 24,
+  typesAppear: at(1840),
+  typesSettle: at(1925),
+  /**
+   * The shrink lands ON `smaOn`, not before it. The pair has to be seated in
+   * the row at the exact frame the first of them lights up — a button still
+   * drifting when it is switched on reads as the switch having missed.
+   */
+  typesOut: at(1959),
+  smaOn: at(1959),
+  emaOn: at(2075),
+  quoteTypes: at(2240),
+  /** How long each of SC04's averages takes to draw across the series. */
+  typesDraw: 90,
 };
 const FAST_P = 20;
 const SLOW_P = 200;
 /** Scene 02's single average. One line, so it takes the orange. */
 const MID_P = 40;
-const TICKS = [73000, 74000, 75000, 76000, 77000];
 /**
  * Bars in the window at rest, and the ones that print while it runs. 45 bars
  * is 639px — better than a third of the card, so the empty space the slide
@@ -91,11 +166,36 @@ const BASE = 120;
 const EXTRA = 45;
 /**
  * The indicator buttons: light grey at 35% until their line is drawn, then
- * indigo. `rowW` is the pair's own width, needed to centre them — it is
- * measured, not computed, because a browser measurement is only available
- * after layout and this has to be known before it.
+ * indigo. `h` is the row's resting height at `size` 30 — declared rather than
+ * measured, because the shrink-and-rise has to know where the row's centre is
+ * BEFORE layout, and a browser measurement is only available after it.
  */
-const MA_BTN = { top: 118, gap: 10, padX: 16, padY: 6, size: 30, off: 0.35, rowW: 248 };
+const MA_BTN = {
+  top: 118,
+  gap: 10,
+  padX: 16,
+  padY: 6,
+  size: 30,
+  off: 0.35,
+  h: 52,
+};
+/**
+ * The entrance size, as a multiple of the resting one: h1, the episode's
+ * heading size. "Ukuran judul" is literal — these two words are the title of
+ * this beat, so they arrive at the size a title would.
+ */
+const BTN_BIG = theme.type.h1.size / MA_BTN.size;
+/** Where they land on arrival: the middle of the screen, not the row. */
+const BTN_BIG_Y = theme.layout.height / 2;
+/**
+ * How far the rest of the frame steps back while a pair is the subject. 0.75
+ * leaves it at 25% — Simon's second call on this. At 50% the chart was still
+ * competing; at 25% it is unmistakably background, and it comes all the way
+ * back to full the moment the pair takes its row.
+ */
+const BTN_DIM = 0.75;
+/** The radius the outgoing pair defocuses to at 1788. */
+const BLUR_OUT = 14;
 /**
  * How far the card sits below its layout box. 170 + 30 + 680 = 880, and the
  * subtitle band starts at 972 — the drop has 92px to spend and takes 30.
@@ -109,6 +209,11 @@ const BOX = {
 };
 /** The quote box rides the card's bottom edge. */
 const QUOTE = { w: 640, h: 118 };
+/**
+ * SC04's is three lines, so it is 150 tall: centred on 880 that puts its lower
+ * edge at 955, and the subtitle band starts at 972. No room for a fourth.
+ */
+const QUOTE_TYPES = { w: 760, h: 150 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const SEEDED = fromAnchors(EXPLAINER_2, BASE, 3702);
@@ -165,6 +270,14 @@ const MA_FAST = maOf(FAST_P);
 const MA_SLOW = maOf(SLOW_P);
 /** Scene 02's single line — the one that appears through the noise. */
 const MA_MID = maOf(MID_P);
+/**
+ * SCENE 04's exponential twin. Same PERIOD as MA_FAST, which is the whole
+ * point of the comparison: two ways of weighting the SAME twenty closes, not
+ * two different lengths. And MA_FAST *is* the SMA — the line the viewer has
+ * been calling MA20 for six hundred frames — so SC04 does not introduce a
+ * simple average, it renames one they already trust.
+ */
+const MA_EXP = ema(WITH_HISTORY, FAST_P).slice(PRIOR.length);
 
 const DOMAIN = domainOf([...MA_SLOW], BARS);
 /**
@@ -198,35 +311,37 @@ const ANCHOR = { x: BOX.x + BOX.w - 18, y: BOX.y + BOX.h / 2 };
 
 export const ExplainerGroup = () => {
   const f = useCurrentFrame();
-  /**
-   * The other half of SC01's cut. This group is mounted at global 607, so its
-   * own frames are rebased and the cut's curve has to be read from the GLOBAL
-   * frame — `f + FROM` — or the two halves would evaluate different points of
-   * the same move and the join would read as two separate slides.
-   */
   const g = f + FROM;
   /**
-   * This group sits BETWEEN two cuts: SC01 hands it in on a rise at 607, and
-   * it hands SC04 on with a track left at 1765. Both are read from the GLOBAL
-   * frame, because the other half of each reads the same curve from its own
-   * position — evaluate one of them locally and the two halves move apart.
+   * TWO cuts, and this group is one half of each: SC01 pushes IN on the Moving
+   * Average card at 700 and this group catches the push and settles out of it,
+   * and at 2381 it RISES away and SC05 catches that. Both are read from the
+   * GLOBAL frame, because the other half of each reads the same curve from its
+   * own position; evaluate either locally and the two halves move apart.
    *
-   * The windows never overlap, so whichever is live wins; away from both, each
-   * returns a zero offset and no blur.
+   * There is nothing at 1788. SC04 lives inside this group now.
    */
-  const cut = g < CUTS.toTypes.at - CUTS.toTypes.over
-    ? cutInStyle(g, CUTS.toAverage)
-    : cutOutStyle(g, CUTS.toTypes);
+  const cut =
+    g < CUTS.toReading.at - CUTS.toReading.over
+      ? cutInStyle(g, CUTS.toAverage)
+      : cutOutStyle(g, CUTS.toReading);
 
   /** The slide, then the printing. They do not overlap. */
   const shift = SHIFT_MAX * progressInOut(f, T.slide, T.slideDur);
-  const printed = BASE + Math.floor(clamp01((f - T.print) / T.printDur) * EXTRA);
+  const printed =
+    BASE + Math.floor(clamp01((f - T.print) / T.printDur) * EXTRA);
 
-  /** Scene 02 quietens the price when Scene 03 takes over the card. */
-  const price = f >= T.clear ? 0.4 : 1;
+  /**
+   * Scene 02's orange average fades out as Scene 03's named pair arrives. The
+   * CANDLES no longer fade with it: they used to sit at 40% for the rest of
+   * the group, and Simon's call is that the frame returns to full strength the
+   * moment a spotlight ends. The only thing that dims here now is a spotlight,
+   * and every spotlight gives it back.
+   */
   const midOut = f >= T.clear ? 1 - progress(f, T.clear, sec(2.2)) : 1;
   /** Both lines thicken once, together — "trader sering melihat keduanya". */
-  const pulse = f >= T.pulse ? Math.sin(Math.PI * clamp01((f - T.pulse) / 30)) : 0;
+  const pulse =
+    f >= T.pulse ? Math.sin(Math.PI * clamp01((f - T.pulse) / 30)) : 0;
   /**
    * The averages hold their ON-SCREEN weight through the pull-back. Everything
    * in the scaled group thins with it, and these two lines are what the scene
@@ -236,11 +351,67 @@ export const ExplainerGroup = () => {
   const zoom = 1 - (1 - ZOOM) * progressInOut(f, T.zoom, T.zoomOver);
   const width = (theme.layout.stroke.ma + pulse * 1.5) / zoom;
 
-  /** The buttons leave the title and take the middle of the frame. */
-  const centred = progressInOut(f, T.centre, 20);
-  const btnLeft =
-    theme.layout.titleChip.x +
-    ((theme.layout.width - MA_BTN.rowW) / 2 - theme.layout.titleChip.x) * centred;
+  /**
+   * ═══ A SPOTLIGHT ═══
+   *
+   * The episode's one way of introducing a pair of indicator buttons, used
+   * TWICE — MA20 / MA200 at 1131 and SMA / EMA at 1840. They land at title
+   * size in the middle of the screen with the rest of the frame at a quarter
+   * strength, hold, then shrink into their row as the frame comes back.
+   *
+   * `big` is 1 while the pair owns the screen and 0 once it is seated; the
+   * shrink and the rise are the SAME number, so they cannot drift apart. It
+   * falls on the symmetric curve — this move has a start and a finish that
+   * both need settling, unlike a fade-in, which only has a finish.
+   *
+   * `dim` is what the rest of the frame is multiplied by. It is eased in as
+   * well as out: this is the same gesture as a camera pull, and a step change
+   * in brightness reads as a light being switched, not as attention moving.
+   */
+  const spotlight = (appear: number, settle: number, out: number) => {
+    const big = 1 - progressInOut(f, settle, out - settle);
+    const on = f < settle ? progressInOut(f, appear, 24) : big;
+    return {
+      big,
+      dim: 1 - BTN_DIM * on,
+      /* Laid out at its FINAL position and transformed away from it, never the
+         reverse. Animating `top` and `fontSize` would relayout the pair every
+         frame, and a flex row that reflows while it scales jitters — each
+         frame rounds its own text metrics. */
+      style: {
+        transform:
+          `translateY(${((BTN_BIG_Y - (MA_BTN.top + MA_BTN.h / 2)) * big).toFixed(2)}px) ` +
+          `scale(${(1 + (BTN_BIG - 1) * big).toFixed(4)})`,
+        transformOrigin: "center center",
+      },
+    };
+  };
+  const nums = spotlight(T.numberAppear, T.numberSettle, T.numberOut);
+  const types = spotlight(T.typesAppear, T.typesSettle, T.typesOut);
+  /**
+   * PRODUCT, and it is safe: the two spotlights never overlap, so at any frame
+   * at most one of these is below 1. If they ever did overlap this would have
+   * to become a min — two reasons to recede must not compound into invisible.
+   */
+  const chartO = nums.dim * types.dim;
+
+  /**
+   * SCENE 04 CLEARS THE DECK. MA20, MA200, their lines and the quote box all
+   * ride this one number out of focus and out of the frame.
+   *
+   * `k` scales the blur radius: 1 in screen space, 1/zoom inside the chart's
+   * pulled-back group, so the lines defocus at the same rate the buttons do.
+   */
+  const gone = progressInOut(f, T.clearTypes, T.clearOver);
+  const goneStyle = (k = 1) => ({
+    filter:
+      gone > 0.001 ? `blur(${(BLUR_OUT * k * gone).toFixed(1)}px)` : undefined,
+    opacity: 1 - gone,
+  });
+
+  /** Grey → indigo on the digits alone. rgb: textMuted (107,112,118), indigo (95,77,238). */
+  const numGlow = f >= T.numberAppear ? progress(f, T.numberAppear, 24) : 0;
+  const numColor = `rgb(${Math.round(107 - 12 * numGlow)}, ${Math.round(112 - 35 * numGlow)}, ${Math.round(118 + 120 * numGlow)})`;
 
   /** A trace of one average, clipped to what has printed. */
   const trace = (
@@ -266,6 +437,100 @@ export const ExplainerGroup = () => {
     );
   };
 
+  /**
+   * ONE ROW BUILDER, used by both pairs. `spot` is the entrance; `leave` is
+   * the rise-away at 1788, which only the MA pair has; `mount` is the frame
+   * before which the row does not exist at all.
+   */
+  const row = (
+    spot: ReturnType<typeof spotlight>,
+    leave: React.CSSProperties | undefined,
+    mount: number,
+    items: { label: string; digits?: string; on: number }[],
+  ) => {
+    if (f < mount) return null;
+    return (
+      <div style={{ position: "absolute", inset: 0, ...leave }}>
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: MA_BTN.top,
+            width: theme.layout.width,
+            height: MA_BTN.h,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: MA_BTN.gap,
+            opacity: progress(f, mount, theme.motion.revealF),
+            ...spot.style,
+          }}
+        >
+          {items.map((b) => {
+            /**
+             * The two skins CROSS-FADE. Swapping them on a threshold made the
+             * fill, the border and the label all change on one frame, which
+             * reads as a flicker rather than a control being switched on. Both
+             * are rendered, one over the other.
+             */
+            const sel = f >= b.on ? progress(f, b.on, 16) : 0;
+            const skin = (on: boolean) => ({
+              fontFamily: theme.type.family,
+              fontSize: MA_BTN.size,
+              fontWeight: theme.type.label.weight,
+              color: on ? theme.colors.surface : theme.colors.textMuted,
+              background: on ? theme.colors.indigo : theme.colors.surface,
+              border: `${theme.layout.border.thin}px solid ${on ? theme.colors.indigo : theme.colors.border}`,
+              borderRadius: theme.layout.radius.sm,
+              padding: `${MA_BTN.padY}px ${MA_BTN.padX}px`,
+            });
+            return (
+              <span
+                key={b.label + b.digits}
+                style={{ position: "relative", display: "inline-block" }}
+              >
+                {/* off — sits back at 35%, present but plainly not chosen.
+                    Full strength while the pair owns the middle of the screen
+                    though: 35% is the weight of a control nobody has chosen
+                    yet, which is right for a chip in a row and wrong for two
+                    words that are the title of the beat. */}
+                <span
+                  style={{
+                    ...skin(false),
+                    display: "inline-block",
+                    opacity:
+                      (1 - sel) * (MA_BTN.off + (1 - MA_BTN.off) * spot.big),
+                  }}
+                >
+                  {b.label}
+                  {/* the DIGITS run indigo from the entrance while the "MA"
+                      stays grey: the VO there is about the number, not the
+                      label. SMA / EMA have no digits and take none of this. */}
+                  {b.digits && (
+                    <span style={{ color: numColor }}>{b.digits}</span>
+                  )}
+                </span>
+                {/* on — laid exactly over it, so nothing shifts as it lands */}
+                <span
+                  style={{
+                    ...skin(true),
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    opacity: sel,
+                  }}
+                >
+                  {b.label}
+                  {b.digits}
+                </span>
+              </span>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <SafeArea>
       <div
@@ -275,19 +540,11 @@ export const ExplainerGroup = () => {
           ...cut,
         }}
       >
-        {/* the white card every chart in this episode is drawn on */}
-        <div
-          style={{
-            position: "absolute",
-            left: BOX.x,
-            top: BOX.y,
-            width: BOX.w,
-            height: BOX.h,
-            borderRadius: theme.layout.radius.lg,
-            background: theme.colors.surface,
-            border: `${theme.layout.border.thin}px solid ${theme.colors.border}`,
-          }}
-        />
+        {/*
+          NO CARD HERE. Simon: drop the white ground and the price gridlines
+          from this chart — it reads directly on the episode's own white
+          background instead of sitting on its own surface.
+        */}
 
         <Layer>
           <defs>
@@ -303,21 +560,6 @@ export const ExplainerGroup = () => {
             </clipPath>
           </defs>
 
-          {/* gridlines belong to the CARD, not to the tape: they do not move */}
-          <g opacity={price}>
-            {TICKS.filter((p) => G.y(p) >= BOX.y && G.y(p) <= BOX.y + BOX.h).map((p) => (
-              <line
-                key={p}
-                x1={BOX.x}
-                y1={G.y(p)}
-                x2={BOX.x + BOX.w}
-                y2={G.y(p)}
-                stroke={theme.colors.gridline}
-                strokeWidth={theme.layout.border.thin}
-              />
-            ))}
-          </g>
-
           <g clipPath="url(#cgaCard)">
             <g
               transform={
@@ -326,7 +568,7 @@ export const ExplainerGroup = () => {
               }
             >
               {/* the tape */}
-              <g opacity={price}>
+              <g opacity={chartO}>
                 {BARS.map((b, i) => {
                   if (i >= printed) return null;
                   /* the resting window draws in; the new sessions fade on as
@@ -336,13 +578,16 @@ export const ExplainerGroup = () => {
                       ? progress(f, T.price, sec(2.3)) >= (i + 1) / BASE
                         ? 1
                         : 0
-                      : clamp01((f - arrivalOf(i - BASE)) / 6);
+                      : progress(f, arrivalOf(i - BASE), 8);
                   if (o <= 0.001) return null;
                   const x = G.x(i);
                   const top = Math.min(G.y(b.o), G.y(b.c));
                   const h = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
                   /* candle bodies are the ONLY place green and red appear */
-                  const fill = b.c >= b.o ? theme.colors.candleGreen : theme.colors.candleRed;
+                  const fill =
+                    b.c >= b.o
+                      ? theme.colors.candleGreen
+                      : theme.colors.candleRed;
                   return (
                     <g key={i} opacity={o}>
                       <line
@@ -353,16 +598,47 @@ export const ExplainerGroup = () => {
                         stroke={theme.colors.price}
                         strokeWidth={theme.layout.stroke.wick}
                       />
-                      <rect x={x - BODY_W / 2} y={top} width={BODY_W} height={h} fill={fill} />
+                      <rect
+                        x={x - BODY_W / 2}
+                        y={top}
+                        width={BODY_W}
+                        height={h}
+                        fill={fill}
+                      />
                     </g>
                   );
                 })}
               </g>
 
-              {/* Scene 02's single average, and Scene 03's pair */}
-              {trace(MA_MID, theme.colors.maOrange, T.ma, sec(6.1), midOut)}
-              {trace(MA_FAST, theme.colors.cyan, T.fast, sec(4.0))}
-              {trace(MA_SLOW, theme.colors.indigo, T.slow, sec(4.0))}
+              {/* Scene 02's single average — the line that came out of the
+                  noise, before it had a name */}
+              {trace(
+                MA_MID,
+                theme.colors.maOrange,
+                T.ma,
+                sec(6.1),
+                midOut * chartO,
+              )}
+
+              {/* Scene 03's named pair, and the blur that takes them away at
+                  1788 */}
+              <g style={goneStyle(1 / zoom)}>
+                {trace(MA_FAST, theme.colors.cyan, T.fast, sec(4.0), chartO)}
+                {trace(MA_SLOW, theme.colors.indigo, T.slow, sec(4.0), chartO)}
+              </g>
+
+              {/* Scene 04's pair, on those same candles. SMA is MA_FAST again
+                  — the identical twenty-period line, now under the name that
+                  says HOW it is weighted — and EMA is drawn over it, so the
+                  gap between them IS the lesson. */}
+              {trace(
+                MA_FAST,
+                theme.colors.indigo,
+                T.smaOn,
+                T.typesDraw,
+                chartO,
+              )}
+              {trace(MA_EXP, theme.colors.cyan, T.emaOn, T.typesDraw, chartO)}
             </g>
           </g>
         </Layer>
@@ -372,73 +648,77 @@ export const ExplainerGroup = () => {
             through the cut at 1765 — the subject does not change there, and a
             heading that left and came back would say that it did. */}
 
-        {/* ── MA20 / MA200 — under the title, then in the middle ── */}
-        {f >= T.title + 12 && (
-          <div
-            style={{
-              position: "absolute",
-              left: btnLeft,
-              top: MA_BTN.top,
-              display: "flex",
-              gap: MA_BTN.gap,
-              opacity: progress(f, T.title + 12, theme.motion.revealF),
-            }}
-          >
-            {[
-              { label: "MA20", at: T.fast },
-              { label: "MA200", at: T.slow },
-            ].map((b) => {
-              /**
-               * The two skins CROSS-FADE. Swapping them on a threshold made
-               * the fill, the border and the label all change on one frame,
-               * which reads as a flicker rather than a control being switched
-               * on. Both are rendered, one over the other.
-               */
-              const sel = f >= b.at ? progress(f, b.at, 16) : 0;
-              const skin = (on: boolean) => ({
-                fontFamily: theme.type.family,
-                fontSize: MA_BTN.size,
-                fontWeight: theme.type.label.weight,
-                color: on ? theme.colors.surface : theme.colors.textMuted,
-                background: on ? theme.colors.indigo : theme.colors.surface,
-                border: `${theme.layout.border.thin}px solid ${on ? theme.colors.indigo : theme.colors.border}`,
-                borderRadius: theme.layout.radius.sm,
-                padding: `${MA_BTN.padY}px ${MA_BTN.padX}px`,
-              });
-              return (
-                <span key={b.label} style={{ position: "relative", display: "inline-block" }}>
-                  {/* off — sits back at 35%, present but plainly not chosen */}
-                  <span style={{ ...skin(false), display: "inline-block", opacity: (1 - sel) * MA_BTN.off }}>
-                    {b.label}
-                  </span>
-                  {/* on — laid exactly over it, so nothing shifts as it lands */}
-                  <span
-                    style={{
-                      ...skin(true),
-                      position: "absolute",
-                      left: 0,
-                      top: 0,
-                      opacity: sel,
-                    }}
-                  >
-                    {b.label}
-                  </span>
-                </span>
-              );
-            })}
-          </div>
-        )}
+        {/*
+          ── the indicator buttons ──
+          MA20 / MA200 from 1131, then SMA / EMA from 1840. Both rows are the
+          same object: nothing before their frame, then a spotlight entrance,
+          then a seat in the row at the top of the card.
+        */}
+        {row(nums, goneStyle(), T.numberAppear, [
+          { label: "MA", digits: "20", on: T.fast },
+          { label: "MA", digits: "200", on: T.slow },
+        ])}
+        {row(types, undefined, T.typesAppear, [
+          { label: "SMA", on: T.smaOn },
+          { label: "EMA", on: T.emaOn },
+        ])}
 
-        {/* ── the line the run leaves you with ── */}
+        {/* ── the line the MA20 / MA200 run leaves you with. It rises away
+               at 1788 with everything else that belonged to that pair. ── */}
+        <div style={{ position: "absolute", inset: 0, ...goneStyle() }}>
+          <QuoteBox
+            f={f}
+            at={T.quote}
+            w={QUOTE.w}
+            h={QUOTE.h}
+            /* 30px higher than the card's own edge — Simon's call, no
+               geometric reason it has to sit exactly on that line */
+            y={BOX.y + BOX.h - 30}
+            lines={[
+              {
+                segments: [
+                  { text: "Pendek", tone: "cyan" },
+                  { text: " lebih responsif." },
+                ],
+              },
+              {
+                segments: [
+                  { text: "Panjang", tone: "indigo" },
+                  { text: " untuk big picture." },
+                ],
+              },
+            ]}
+          />
+        </div>
+
+        {/* ── and the line SC04 leaves you with ── */}
         <QuoteBox
           f={f}
-          at={T.quote}
-          w={QUOTE.w}
-          h={QUOTE.h}
-          y={BOX.y + BOX.h}
+          at={T.quoteTypes}
+          w={QUOTE_TYPES.w}
+          h={QUOTE_TYPES.h}
+          /* 60px above the card's own edge — Simon's call. */
+          y={BOX.y + BOX.h - 60}
+          /* Marked by SENTENCE — the tint alone, with the ink left dark. The
+             mark lands on the clause that NAMES each average; the qualifier
+             that follows is left plain, because marking it too would say the
+             warning is a third thing rather than part of the EMA line. */
           lines={[
-            { segments: [{ text: "Pendek", tone: "cyan" }, { text: " lebih responsif." }] },
-            { segments: [{ text: "Panjang", tone: "indigo" }, { text: " untuk big picture." }] },
+            {
+              segments: [
+                { text: "SMA berbobot sama rata.", tone: "indigo", ink: true },
+              ],
+            },
+            {
+              segments: [
+                {
+                  text: "EMA berbobot lebih besar, maka lebih reaktif,",
+                  tone: "cyan",
+                  ink: true,
+                },
+              ],
+            },
+            { segments: [{ text: "tapi jadi lebih banyak false signal." }] },
           ]}
         />
       </div>

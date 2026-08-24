@@ -12,14 +12,8 @@
  * scenes rendering INSIDE them and never also at top level. In all three one
  * element has to survive a boundary the script runs straight through:
  *
- *   CG-A   715 → 2381   SC02 + SC03 + SC04   the line SC02 builds out of the
- *                                     noise is the same line SC03 renames
- *                                     MA20 — and the same CANDLES SC04 then
- *                                     draws SMA and EMA on. SC04 used to be a
- *                                     separate scene with its own chart behind
- *                                     a camera cut; folding it in is what lets
- *                                     the two KINDS of average be shown on the
- *                                     average the viewer already knows.
+ *   CG-A   607 → 1765   SC02 + SC03   the line SC02 builds out of the noise is
+ *                                     the same line SC03 renames MA20
  *   CG-B  4140 → 5366   SC08 + SC09   the bands keep breathing; SC09's squeeze
  *                                     is a stretch of SC08's demonstration
  *   CG-C  6645 → 8271   SC12A + 12B   the reveal mask lifts across the join —
@@ -29,16 +23,11 @@
  * ONE ROOT <Audio>. The VO is a single file mounted here; no scene has audio.
  */
 import React from "react";
-import {
-  AbsoluteFill,
-  Sequence,
-  Audio,
-  staticFile,
-  useCurrentFrame,
-} from "remotion";
+import { AbsoluteFill, Sequence, Audio, staticFile, useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { ExplainerGroup } from "./continuity/ExplainerGroup";
+import { Scene04 } from "./scenes/Scene04";
 import { Scene05 } from "./scenes/Scene05";
 import { Scene07 } from "./scenes/Scene07";
 import { BandsGroup } from "./continuity/BandsGroup";
@@ -51,32 +40,29 @@ import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
-export const TOTAL_FRAMES = 8952;
+export const TOTAL_FRAMES = 8895;
 
 type Mounted = { from: number; duration: number; Component: React.FC };
 
 /** Everything that is not inside a continuity group. */
 const INDEPENDENT_SCENES: Mounted[] = [
-  { from: 0, duration: 715, Component: Scene01 },
+  { from: 0, duration: 607, Component: Scene01 },
+  { from: 1765, duration: 559, Component: Scene04 },
   /* SC05 runs through what used to be SC06: support and resistance are read
      off the same series it has been scrolling, so the chart stays mounted and
      the window travels back to the uptrend rather than a new chart arriving. */
-  /* SC05 runs THROUGH SC07's span: the crossing scene is drawn on SC05's own
-     candles, so the chart is mounted once, here, and zooms out at 3547 rather
-     than being replaced. SC07 is mounted on top of it for its heading and its
-     text, and owns no chart of its own any more. */
-  { from: 2381, duration: 1816, Component: Scene05 },
-  { from: 3547, duration: 650, Component: Scene07 },
-  { from: 5423, duration: 633, Component: Scene10 },
-  { from: 6056, duration: 646, Component: Scene11 },
-  { from: 8328, duration: 624, Component: Scene13 },
+  { from: 2324, duration: 1166, Component: Scene05 },
+  { from: 3490, duration: 650, Component: Scene07 },
+  { from: 5366, duration: 633, Component: Scene10 },
+  { from: 5999, duration: 646, Component: Scene11 },
+  { from: 8271, duration: 624, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
-  { from: 715, duration: 1666, Component: ExplainerGroup },
-  { from: 4197, duration: 1226, Component: BandsGroup },
-  { from: 6702, duration: 1626, Component: GgrmGroup },
+  { from: 607, duration: 1158, Component: ExplainerGroup },
+  { from: 4140, duration: 1226, Component: BandsGroup },
+  { from: 6645, duration: 1626, Component: GgrmGroup },
 ];
 
 /**
@@ -85,17 +71,11 @@ const CONTINUITY_GROUPS: Mounted[] = [
  * changes at that boundary, so it has to be carried out by the same move that
  * carries everything else, not blink off while the rest of the frame slides.
  */
-const TITLE_FROM = 715;
+const TITLE_FROM = 607;
 const RunTitle = () => {
   const f = useCurrentFrame();
   return (
-    <div
-      style={{
-        position: "absolute",
-        inset: 0,
-        ...cutOutStyle(f + TITLE_FROM, CUTS.toReading),
-      }}
-    >
+    <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + TITLE_FROM, CUTS.toReading) }}>
       <TitleChip text="Moving Average" f={f} at={0} />
     </div>
   );
@@ -103,17 +83,11 @@ const RunTitle = () => {
 
 export const MovingAverageComposition = () => (
   <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
-    {[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(
-      ({ from, duration, Component }) => (
-        <Sequence
-          key={`${from}-${Component.name}`}
-          from={from}
-          durationInFrames={duration}
-        >
-          <Component />
-        </Sequence>
-      ),
-    )}
+    {[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(({ from, duration, Component }) => (
+      <Sequence key={`${from}-${Component.name}`} from={from} durationInFrames={duration}>
+        <Component />
+      </Sequence>
+    ))}
 
     {/*
       THE HOISTED HEADING. "Moving Average" belongs to CG-A *and* to SC04, and
@@ -122,7 +96,7 @@ export const MovingAverageComposition = () => (
       identical one arrive. Mounted here it simply stays put while the cut
       moves everything else.
     */}
-    <Sequence from={TITLE_FROM} durationInFrames={2384 - TITLE_FROM}>
+    <Sequence from={TITLE_FROM} durationInFrames={2324 - TITLE_FROM}>
       <RunTitle />
     </Sequence>
 
