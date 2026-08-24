@@ -40,7 +40,6 @@ import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { ExplainerGroup } from "./continuity/ExplainerGroup";
 import { Scene05 } from "./scenes/Scene05";
-import { Scene07 } from "./scenes/Scene07";
 import { BandsGroup } from "./continuity/BandsGroup";
 import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
@@ -66,7 +65,6 @@ const INDEPENDENT_SCENES: Mounted[] = [
      than being replaced. SC07 is mounted on top of it for its heading and its
      text, and owns no chart of its own any more. */
   { from: 2381, duration: 1816, Component: Scene05 },
-  { from: 3547, duration: 650, Component: Scene07 },
   { from: 5423, duration: 633, Component: Scene10 },
   { from: 6056, duration: 646, Component: Scene11 },
   { from: 8328, duration: 624, Component: Scene13 },

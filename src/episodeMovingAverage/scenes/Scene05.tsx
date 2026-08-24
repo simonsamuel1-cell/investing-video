@@ -140,6 +140,16 @@ const T = {
   chaseDur: 40,
   chaseBars: 71,
   death: at(3719),
+  /**
+   * AND THEN THE WHOLE TAPE. The pitch closes the rest of the way — every one
+   * of the 189 bars across the card — and the travel unwinds to nothing, so
+   * both crossings end up on screen together. It runs under "Tapi jangan
+   * anggap crossing sebagai aba-aba entry atau exit" (3773–3866), which is the
+   * one line in the scene that asks you to stop reading a point and look at
+   * the whole run.
+   */
+  full: at(3780),
+  fullOver: 85,
   /** Each scroll, and the growth that follows it. They never overlap. */
   steps: [
     { scroll: at(2546), scrollDur: 27, grow: at(2573), growDur: 110, bars: 54 },
@@ -371,6 +381,8 @@ const BODY_W = Math.max(2, Math.min(20, PITCH * 0.62));
  * it out.
  */
 const WIDE = 0.8;
+/** And the rest of the way at 3780: every bar in the card at once. */
+const FIT = (WINDOW - 1) / (CLOSES.length - 1);
 const X0 = G.x(0);
 
 /**
@@ -569,25 +581,34 @@ export const Scene05 = () => {
    * can be left behind at the old pitch.
    */
   const wide = progressInOut(f, T.wide, T.wideOver);
-  const spread = 1 - (1 - WIDE) * wide;
+  const full = progressInOut(f, T.full, T.fullOver);
+  /**
+   * TWO STOPS, one number. 1 → WIDE at 3505, then WIDE → FIT at 3780. The
+   * terms simply add because the windows never overlap: `wide` is finished at
+   * 3565, long before `full` starts.
+   */
+  const spread = 1 + (WIDE - 1) * wide + (FIT - WIDE) * full;
+  /**
+   * The travel unwinds TWICE, for the same reason each time: a window cannot
+   * both open to bar 0 and still be parked partway along the tape. `shift` is
+   * the sixty-bar window's own travel, undone by the first zoom; the chase is
+   * the run out to the death cross, undone by the second.
+   */
   const shiftNow =
     shift * (1 - wide) +
-    PITCH * spread * T.chaseBars * progressInOut(f, T.chase, T.chaseDur);
+    PITCH *
+      spread *
+      T.chaseBars *
+      progressInOut(f, T.chase, T.chaseDur) *
+      (1 - full);
   const GZ = { ...G, x: (i: number) => X0 + (G.x(i) - X0) * spread };
   const bodyW = Math.max(1.5, BODY_W * spread);
   /**
-   * SC07's text sits over this chart — it used to have a faint line chart of
-   * its own to sit on. The tape steps back under each of its two blocks and
-   * comes back between them.
+   * FULL STRENGTH THROUGHOUT. This used to dip twice, once under each of
+   * SC07's text blocks. Both blocks are gone at Simon's direction, and a chart
+   * that fades with nothing arriving over it reads as a fault.
    */
-  const chartDim =
-    f >= at(4085)
-      ? 1 - 0.7 * progress(f, at(4085), 20)
-      : f >= at(3898)
-        ? 0.45 + 0.55 * progress(f, at(3898), 20)
-        : f >= at(3790)
-          ? 1 - 0.55 * progress(f, at(3790), 20)
-          : 1;
+  const chartDim = 1;
 
   return (
     <SafeArea>
