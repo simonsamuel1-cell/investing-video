@@ -194,12 +194,12 @@ const AXIS_CX = 84;
  * size centred — the sketch draws them equal, and equal cards say the four
  * chapters weigh the same.
  */
-const CARD = { w: 536, h: 302, gap: 60, label: 44 };
+export const CARD = { w: 536, h: 302, gap: 60, label: 44 };
 const MAP = {
   top: { x: 960 - CARD.w / 2, y: 126 },
   row: 570,
 };
-const CARDS = [
+export const CARDS = [
   { x: MAP.top.x, y: MAP.top.y, text: "Introduction" },
   { x: 96, y: MAP.row, text: "Moving Average" },
   { x: 96 + CARD.w + CARD.gap, y: MAP.row, text: "Bollinger Bands" },
@@ -490,6 +490,326 @@ const spanOf = (
   return [Math.min(...all), Math.max(...all)] as const;
 };
 
+/**
+ * ═══ THE ROADMAP, AS TWO PIECES ═══
+ *
+ * SC01 shrinks the broker panel into the FIRST card; the closing scene shrinks
+ * the reading chart into the SECOND. Same ground, same four cards, same
+ * captions — only which card catches the shrink differs, so it is a parameter
+ * and not a second copy of two hundred lines.
+ *
+ * The card that catches the shrink draws NO thumbnail of its own: the thing
+ * arriving in it IS the picture. Every other card draws the one bound to its
+ * own meaning — card 1 is Moving Average and gets the two averages, whichever
+ * scene is showing the roadmap.
+ *
+ * ── the white ground the roadmap sits on ──
+ * Full strength as soon as the shrink begins, not fading in with it: a partial
+ * fade let SafeArea's own #F5F5F5 show through underneath, so the screen
+ * behind the roadmap was grey, not the flat white of Simon's reference. Only
+ * the GRID on top of it still fades in.
+ */
+export const RoadmapGround = ({ f, reveal }: { f: number; reveal: number }) => {
+  /** One cell of drift per loop — see GRID. */
+  const drift = ((f % GRID.loop) / GRID.loop) * GRID.cell;
+  const shrink = reveal;
+  if (shrink <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: shrink,
+          backgroundImage:
+            `linear-gradient(${GRID.line} 1px, transparent 1px),` +
+            `linear-gradient(90deg, ${GRID.line} 1px, transparent 1px)`,
+          backgroundSize: `${GRID.cell}px ${GRID.cell}px`,
+          backgroundPosition: `${drift.toFixed(2)}px ${drift.toFixed(2)}px`,
+          /* strongest in the middle, gone at the edges, as in the
+               reference — the grid is a ground, not a subject */
+          maskImage:
+            "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
+          WebkitMaskImage:
+            "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
+        }}
+      />
+    </div>
+  );
+};
+
+/** The four cards, their captions and their thumbnails. */
+export const RoadmapCards = ({
+  f,
+  reveal,
+  cardsAt,
+  cardDur,
+  landing,
+  glow = 0,
+}: {
+  f: number;
+  reveal: number;
+  /** One frame per card that is NOT the landing one, in card order. */
+  cardsAt: readonly number[];
+  cardDur: number;
+  landing: number;
+  glow?: number;
+}) => {
+  const shrink = reveal;
+  if (shrink <= 0.001) return null;
+  /** The cards that open on their own, in the order they open. */
+  const others = CARDS.map((_, i) => i).filter((i) => i !== landing);
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {CARDS.map((c, n) => {
+        /* the LANDING card is the picture itself arriving, so its frame
+             and caption ride the shrink; the rest open one after another */
+        const a =
+          n === landing
+            ? shrink
+            : progress(f, cardsAt[others.indexOf(n)], cardDur);
+        if (a <= 0.001) return null;
+        const ch = CHARTS[n === 0 ? 0 : n - 1];
+        return (
+          <div key={c.text} style={{ opacity: a }}>
+            <div
+              style={{
+                position: "absolute",
+                left: c.x,
+                top: c.y,
+                width: CARD.w,
+                height: CARD.h,
+                borderRadius: theme.layout.radius.md,
+                /* white on every card, including the first: the panel
+                     lands letterboxed inside it, and the strips above and
+                     below it are part of the card, not a hole in it */
+                background: C.surface,
+                border: `${theme.layout.border.thin}px solid ${C.border}`,
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: c.x,
+                top: c.y + CARD.h + 14,
+                width: CARD.w,
+                textAlign: "center",
+                fontFamily: font,
+                /* 6px under the episode's smallest role — this label
+                     names a card, it does not compete with what is on it */
+                fontSize: 30,
+                fontWeight: 700,
+                color: C.ink,
+                letterSpacing: 0.5,
+              }}
+            >
+              {c.text}
+            </div>
+
+            {n !== landing && (
+              <svg
+                style={{ position: "absolute", left: 0, top: 0 }}
+                width={theme.layout.width}
+                height={theme.layout.height}
+              >
+                {/* INTRODUCTION — the session itself, as candles. Only
+                        ever drawn when this card is NOT the landing one; in
+                        SC01 the broker panel arrives here instead. */}
+                {n === 0 &&
+                  (() => {
+                    const [lo, hi] = spanOf([], ch.bars);
+                    const w = Math.max(
+                      1.5,
+                      ((CARD.w - pad * 2) / ch.bars.length) * 0.6,
+                    );
+                    return ch.bars.map((b, i) => {
+                      const x = mx(i, ch.bars.length, c);
+                      const top = Math.min(
+                        my(b.o, lo, hi, c),
+                        my(b.c, lo, hi, c),
+                      );
+                      const h = Math.max(
+                        1,
+                        Math.abs(my(b.c, lo, hi, c) - my(b.o, lo, hi, c)),
+                      );
+                      return (
+                        <rect
+                          key={i}
+                          x={x - w / 2}
+                          y={top}
+                          width={w}
+                          height={h}
+                          fill={b.c >= b.o ? C.candleGreen : C.candleRed}
+                        />
+                      );
+                    });
+                  })()}
+
+                {/* MOVING AVERAGE — the two averages, and nothing else */}
+                {n === 1 &&
+                  (() => {
+                    const [lo, hi] = spanOf([ch.ma, ch.maSlow]);
+                    return (
+                      <>
+                        <path
+                          d={thumbPath(ch.maSlow, lo, hi, c)}
+                          fill="none"
+                          stroke={C.indigo}
+                          strokeWidth={theme.layout.stroke.band}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                        <path
+                          d={thumbPath(ch.ma, lo, hi, c)}
+                          fill="none"
+                          stroke={C.cyan}
+                          strokeWidth={theme.layout.stroke.band}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </>
+                    );
+                  })()}
+
+                {/* BOLLINGER BANDS — the envelope and its middle */}
+                {n === 2 &&
+                  (() => {
+                    const [lo, hi] = spanOf([ch.bb.upper, ch.bb.lower, ch.ma]);
+                    const back = ch.bb.lower
+                      .map((v, i) =>
+                        v === null
+                          ? ""
+                          : `L${mx(i, ch.bb.lower.length, c).toFixed(1)},${my(v, lo, hi, c).toFixed(1)}`,
+                      )
+                      .reverse()
+                      .join(" ");
+                    return (
+                      <>
+                        <path
+                          d={`${thumbPath(ch.bb.upper, lo, hi, c)} ${back} Z`}
+                          fill={C.bbTosca}
+                          fillOpacity={0.12}
+                          stroke="none"
+                        />
+                        {[ch.bb.upper, ch.bb.lower].map((band, k) => (
+                          <path
+                            key={k}
+                            d={thumbPath(band, lo, hi, c)}
+                            fill="none"
+                            stroke={C.bbTosca}
+                            strokeWidth={theme.layout.stroke.band}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        ))}
+                        <path
+                          d={thumbPath(ch.ma, lo, hi, c)}
+                          fill="none"
+                          stroke={C.bbTosca}
+                          strokeWidth={theme.layout.border.thin}
+                          strokeDasharray="5 5"
+                        />
+                      </>
+                    );
+                  })()}
+
+                {/* CARA PAKAI INDIKATOR — all three at once */}
+                {n === 3 &&
+                  (() => {
+                    const [lo, hi] = spanOf(
+                      [ch.bb.upper, ch.bb.lower, ch.ma],
+                      ch.bars,
+                    );
+                    const w = Math.max(
+                      1.5,
+                      ((CARD.w - pad * 2) / ch.bars.length) * 0.6,
+                    );
+                    const back = ch.bb.lower
+                      .map((v, i) =>
+                        v === null
+                          ? ""
+                          : `L${mx(i, ch.bb.lower.length, c).toFixed(1)},${my(v, lo, hi, c).toFixed(1)}`,
+                      )
+                      .reverse()
+                      .join(" ");
+                    return (
+                      <>
+                        <path
+                          d={`${thumbPath(ch.bb.upper, lo, hi, c)} ${back} Z`}
+                          fill={C.bbTosca}
+                          fillOpacity={0.12}
+                          stroke="none"
+                        />
+                        {ch.bars.map((b, i) => {
+                          const x = mx(i, ch.bars.length, c);
+                          const top = Math.min(
+                            my(b.o, lo, hi, c),
+                            my(b.c, lo, hi, c),
+                          );
+                          const h = Math.max(
+                            1,
+                            Math.abs(my(b.c, lo, hi, c) - my(b.o, lo, hi, c)),
+                          );
+                          const up = b.c >= b.o;
+                          return (
+                            <rect
+                              key={i}
+                              x={x - w / 2}
+                              y={top}
+                              width={w}
+                              height={h}
+                              fill={up ? C.candleGreen : C.candleRed}
+                            />
+                          );
+                        })}
+                        {[ch.bb.upper, ch.bb.lower].map((band, k) => (
+                          <path
+                            key={k}
+                            d={thumbPath(band, lo, hi, c)}
+                            fill="none"
+                            stroke={C.bbTosca}
+                            strokeWidth={theme.layout.border.thin}
+                            strokeLinecap="round"
+                          />
+                        ))}
+                        <path
+                          d={thumbPath(ch.ma, lo, hi, c)}
+                          fill="none"
+                          stroke={C.maOrange}
+                          strokeWidth={theme.layout.stroke.band}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </>
+                    );
+                  })()}
+              </svg>
+            )}
+          </div>
+        );
+      })}
+
+      {/* ── the Moving Average card's extra border + glow ── */}
+      {glow > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: CARDS[1].x - 3,
+            top: CARDS[1].y - 3,
+            width: CARD.w + 6,
+            height: CARD.h + 6,
+            borderRadius: theme.layout.radius.md + 3,
+            border: `${theme.layout.border.thick}px solid ${C.indigo}`,
+            boxShadow: `0 0 ${(28 * glow).toFixed(0)}px ${(6 * glow).toFixed(0)}px rgba(95, 77, 238, ${(0.55 * glow).toFixed(2)})`,
+            opacity: glow,
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
 export const Scene01 = () => {
   const f = useCurrentFrame();
 
@@ -576,9 +896,6 @@ export const Scene01 = () => {
         `${lerp(0, theme.layout.width - CARDS[0].x - CARD.w).toFixed(1)}px ` +
         `${lerp(0, theme.layout.height - CARDS[0].y - CARD.h).toFixed(1)}px ` +
         `${lerp(0, CARDS[0].x).toFixed(1)}px round ${(theme.layout.radius.md * shrink).toFixed(1)}px)`;
-  /** One cell of drift per loop — see GRID. */
-  const drift = ((f % GRID.loop) / GRID.loop) * GRID.cell;
-
   return (
     <SafeArea>
       {/*
@@ -588,257 +905,16 @@ export const Scene01 = () => {
         growing inside a frame that stays still.
       */}
       <div style={{ position: "absolute", inset: 0, ...cut }}>
-        {/* ── the white ground the roadmap sits on ──
-          Full strength as soon as the shrink begins, not fading in with it:
-          a partial fade let SafeArea's own #F5F5F5 show through underneath,
-          so the screen behind the roadmap was grey, not the flat white of
-          Simon's reference. Only the GRID on top of it still fades in. */}
-        {shrink > 0.001 && (
-          <div style={{ position: "absolute", inset: 0 }}>
-            <div
-              style={{ position: "absolute", inset: 0, background: "#FFFFFF" }}
-            />
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                opacity: shrink,
-                backgroundImage:
-                  `linear-gradient(${GRID.line} 1px, transparent 1px),` +
-                  `linear-gradient(90deg, ${GRID.line} 1px, transparent 1px)`,
-                backgroundSize: `${GRID.cell}px ${GRID.cell}px`,
-                backgroundPosition: `${drift.toFixed(2)}px ${drift.toFixed(2)}px`,
-                /* strongest in the middle, gone at the edges, as in the
-                 reference — the grid is a ground, not a subject */
-                maskImage:
-                  "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
-                WebkitMaskImage:
-                  "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
-              }}
-            />
-          </div>
-        )}
+        <RoadmapGround f={f} reveal={shrink} />
 
-        {/* ── the other three cards, and every caption ── */}
-        {shrink > 0.001 && (
-          <div style={{ position: "absolute", inset: 0 }}>
-            {CARDS.map((c, n) => {
-              /* the first card is the panel itself arriving, so its frame and
-               caption ride the shrink; the rest open one after another */
-              const a =
-                n === 0 ? shrink : progress(f, T.cards[n - 1], T.cardDur);
-              if (a <= 0.001) return null;
-              const ch = CHARTS[n === 0 ? 0 : n - 1];
-              return (
-                <div key={c.text} style={{ opacity: a }}>
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: c.x,
-                      top: c.y,
-                      width: CARD.w,
-                      height: CARD.h,
-                      borderRadius: theme.layout.radius.md,
-                      /* white on every card, including the first: the panel
-                       lands letterboxed inside it, and the strips above and
-                       below it are part of the card, not a hole in it */
-                      background: C.surface,
-                      border: `${theme.layout.border.thin}px solid ${C.border}`,
-                    }}
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: c.x,
-                      top: c.y + CARD.h + 14,
-                      width: CARD.w,
-                      textAlign: "center",
-                      fontFamily: font,
-                      /* 6px under the episode's smallest role — this label
-                       names a card, it does not compete with what is on it */
-                      fontSize: 30,
-                      fontWeight: 700,
-                      color: C.ink,
-                      letterSpacing: 0.5,
-                    }}
-                  >
-                    {c.text}
-                  </div>
-
-                  {n > 0 && (
-                    <svg
-                      style={{ position: "absolute", left: 0, top: 0 }}
-                      width={theme.layout.width}
-                      height={theme.layout.height}
-                    >
-                      {/* MOVING AVERAGE — the two averages, and nothing else */}
-                      {n === 1 &&
-                        (() => {
-                          const [lo, hi] = spanOf([ch.ma, ch.maSlow]);
-                          return (
-                            <>
-                              <path
-                                d={thumbPath(ch.maSlow, lo, hi, c)}
-                                fill="none"
-                                stroke={C.indigo}
-                                strokeWidth={theme.layout.stroke.band}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                              <path
-                                d={thumbPath(ch.ma, lo, hi, c)}
-                                fill="none"
-                                stroke={C.cyan}
-                                strokeWidth={theme.layout.stroke.band}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </>
-                          );
-                        })()}
-
-                      {/* BOLLINGER BANDS — the envelope and its middle */}
-                      {n === 2 &&
-                        (() => {
-                          const [lo, hi] = spanOf([
-                            ch.bb.upper,
-                            ch.bb.lower,
-                            ch.ma,
-                          ]);
-                          const back = ch.bb.lower
-                            .map((v, i) =>
-                              v === null
-                                ? ""
-                                : `L${mx(i, ch.bb.lower.length, c).toFixed(1)},${my(v, lo, hi, c).toFixed(1)}`,
-                            )
-                            .reverse()
-                            .join(" ");
-                          return (
-                            <>
-                              <path
-                                d={`${thumbPath(ch.bb.upper, lo, hi, c)} ${back} Z`}
-                                fill={C.bbTosca}
-                                fillOpacity={0.12}
-                                stroke="none"
-                              />
-                              {[ch.bb.upper, ch.bb.lower].map((band, k) => (
-                                <path
-                                  key={k}
-                                  d={thumbPath(band, lo, hi, c)}
-                                  fill="none"
-                                  stroke={C.bbTosca}
-                                  strokeWidth={theme.layout.stroke.band}
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                />
-                              ))}
-                              <path
-                                d={thumbPath(ch.ma, lo, hi, c)}
-                                fill="none"
-                                stroke={C.bbTosca}
-                                strokeWidth={theme.layout.border.thin}
-                                strokeDasharray="5 5"
-                              />
-                            </>
-                          );
-                        })()}
-
-                      {/* CARA PAKAI INDIKATOR — all three at once */}
-                      {n === 3 &&
-                        (() => {
-                          const [lo, hi] = spanOf(
-                            [ch.bb.upper, ch.bb.lower, ch.ma],
-                            ch.bars,
-                          );
-                          const w = Math.max(
-                            1.5,
-                            ((CARD.w - pad * 2) / ch.bars.length) * 0.6,
-                          );
-                          const back = ch.bb.lower
-                            .map((v, i) =>
-                              v === null
-                                ? ""
-                                : `L${mx(i, ch.bb.lower.length, c).toFixed(1)},${my(v, lo, hi, c).toFixed(1)}`,
-                            )
-                            .reverse()
-                            .join(" ");
-                          return (
-                            <>
-                              <path
-                                d={`${thumbPath(ch.bb.upper, lo, hi, c)} ${back} Z`}
-                                fill={C.bbTosca}
-                                fillOpacity={0.12}
-                                stroke="none"
-                              />
-                              {ch.bars.map((b, i) => {
-                                const x = mx(i, ch.bars.length, c);
-                                const top = Math.min(
-                                  my(b.o, lo, hi, c),
-                                  my(b.c, lo, hi, c),
-                                );
-                                const h = Math.max(
-                                  1,
-                                  Math.abs(
-                                    my(b.c, lo, hi, c) - my(b.o, lo, hi, c),
-                                  ),
-                                );
-                                const up = b.c >= b.o;
-                                return (
-                                  <rect
-                                    key={i}
-                                    x={x - w / 2}
-                                    y={top}
-                                    width={w}
-                                    height={h}
-                                    fill={up ? C.candleGreen : C.candleRed}
-                                  />
-                                );
-                              })}
-                              {[ch.bb.upper, ch.bb.lower].map((band, k) => (
-                                <path
-                                  key={k}
-                                  d={thumbPath(band, lo, hi, c)}
-                                  fill="none"
-                                  stroke={C.bbTosca}
-                                  strokeWidth={theme.layout.border.thin}
-                                  strokeLinecap="round"
-                                />
-                              ))}
-                              <path
-                                d={thumbPath(ch.ma, lo, hi, c)}
-                                fill="none"
-                                stroke={C.maOrange}
-                                strokeWidth={theme.layout.stroke.band}
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                              />
-                            </>
-                          );
-                        })()}
-                    </svg>
-                  )}
-                </div>
-              );
-            })}
-
-            {/* ── the Moving Average card's extra border + glow ── */}
-            {glow > 0.001 && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: CARDS[1].x - 3,
-                  top: CARDS[1].y - 3,
-                  width: CARD.w + 6,
-                  height: CARD.h + 6,
-                  borderRadius: theme.layout.radius.md + 3,
-                  border: `${theme.layout.border.thick}px solid ${C.indigo}`,
-                  boxShadow: `0 0 ${(28 * glow).toFixed(0)}px ${(6 * glow).toFixed(0)}px rgba(95, 77, 238, ${(0.55 * glow).toFixed(2)})`,
-                  opacity: glow,
-                }}
-              />
-            )}
-          </div>
-        )}
+        <RoadmapCards
+          f={f}
+          reveal={shrink}
+          cardsAt={T.cards}
+          cardDur={T.cardDur}
+          landing={0}
+          glow={glow}
+        />
 
         <div
           style={{

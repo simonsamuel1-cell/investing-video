@@ -45,6 +45,7 @@ import { Scene10 } from "./scenes/Scene10";
 import { Scene11 } from "./scenes/Scene11";
 import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
+import { SceneRoadmap } from "./scenes/SceneRoadmap";
 import { TitleChip } from "./components/TitleChip";
 import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
@@ -122,6 +123,18 @@ export const MovingAverageComposition = () => (
     */}
     <Sequence from={TITLE_FROM} durationInFrames={2384 - TITLE_FROM}>
       <RunTitle />
+    </Sequence>
+
+    {/*
+      ⚠ TEMPORARY, AND MOUNTED LAST ON PURPOSE. The closing roadmap overlaps
+      SC05 (which runs to 4197) and CG-B (which starts there) rather than being
+      tiled between them — Simon: "biarkan scene overlapping dulu." Last in the
+      tree means it sits OVER both; anywhere else and CG-B would cover it from
+      4197 and only the first 37 frames would ever be seen. It comes out of
+      here and into the tiling once the shape is agreed.
+    */}
+    <Sequence from={4160} durationInFrames={230}>
+      <SceneRoadmap />
     </Sequence>
 
     <Captions />

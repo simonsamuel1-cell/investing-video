@@ -579,6 +579,35 @@ const CROSS_SET = [
   },
 ];
 
+/**
+ * ═══ WHAT THE CLOSING ROADMAP SHRINKS ═══
+ *
+ * The scene after this one takes this finished picture and closes it into the
+ * roadmap's Moving Average card. It therefore has to draw the SAME chart — so
+ * the data and the final grid are exported rather than reproduced.
+ *
+ * DATA, not a component. This scene's own render is a function of forty
+ * timeline beats; the roadmap needs one static frame of it, and asking a
+ * forty-beat component for its last frame is a much better way to get a subtle
+ * difference than to get the same picture.
+ */
+export const READING_FINAL = {
+  box: BOX,
+  bars: BARS,
+  /** The orange twenty, and the indigo two hundred under it. */
+  ma: MA,
+  slow: MA_SLOW,
+  fast: MA_FAST,
+  marks: CROSS_SET,
+  mark: CROSS_MARK,
+  markBox: CROSS_BOX,
+  quote: QUOTE,
+  /** The grid at its final pitch — every bar across the card, travel at zero. */
+  x: (i: number) => X0 + (G.x(i) - X0) * FIT,
+  y: (v: number) => G.y(v),
+  bodyW: Math.max(1.5, BODY_W * FIT),
+};
+
 export const Scene05 = () => {
   const f = useCurrentFrame();
   const g = f + FROM;
