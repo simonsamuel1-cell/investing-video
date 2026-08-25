@@ -51,13 +51,18 @@ import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
-export const TOTAL_FRAMES = 8952;
+export const TOTAL_FRAMES = 8982;
 
-type Mounted = { from: number; duration: number; Component: React.FC };
+type Mounted = {
+  from: number;
+  duration: number;
+  Component: React.FC;
+  /** Timeline label in Studio. Only where the component name is not enough. */
+  name?: string;
+};
 
 /** Everything that is not inside a continuity group. */
 const INDEPENDENT_SCENES: Mounted[] = [
-  { from: 0, duration: 715, Component: Scene01 },
   /* SC05 runs through what used to be SC06: support and resistance are read
      off the same series it has been scrolling, so the chart stays mounted and
      the window travels back to the uptrend rather than a new chart arriving. */
@@ -65,17 +70,38 @@ const INDEPENDENT_SCENES: Mounted[] = [
      candles, so the chart is mounted once, here, and zooms out at 3547 rather
      than being replaced. SC07 is mounted on top of it for its heading and its
      text, and owns no chart of its own any more. */
-  { from: 2381, duration: 1816, Component: Scene05 },
-  { from: 5423, duration: 633, Component: Scene10 },
-  { from: 6056, duration: 646, Component: Scene11 },
-  { from: 8328, duration: 624, Component: Scene13 },
+  { from: 2381, duration: 1846, Component: Scene05 },
+  { from: 5453, duration: 633, Component: Scene10 },
+  { from: 6086, duration: 646, Component: Scene11 },
+  { from: 8358, duration: 624, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
-  { from: 715, duration: 1666, Component: ExplainerGroup },
-  { from: 4197, duration: 1226, Component: BandsGroup },
-  { from: 6702, duration: 1626, Component: GgrmGroup },
+  { from: 626, duration: 1755, Component: ExplainerGroup },
+  { from: 4227, duration: 1226, Component: BandsGroup },
+  { from: 6732, duration: 1626, Component: GgrmGroup },
+];
+
+/**
+ * ═══ THE TWO THAT DISSOLVE ═══
+ *
+ * The roadmap opens the episode and closes the moving-average chapter, and
+ * both times it leaves the same way: the camera pushes into one of its cards
+ * and the whole frame FADES, revealing the scene that has already started
+ * drawing underneath.
+ *
+ * That only works if these two are ABOVE the tiling. Mounted in their natural
+ * place, the incoming scene would be over them — there would be nothing for
+ * the fade to reveal and each hand-off would be a hard cut. So they are
+ * rendered last, and they overlap the scene they hand to on purpose:
+ *
+ *   SC01     0 → 681    dissolves onto CG-A, which opens at 626
+ *   Daftar Isi  4160 → 4251   dissolves onto CG-B, which opens at 4227
+ */
+const DISSOLVE_OVER: Mounted[] = [
+  { from: 0, duration: 681, Component: Scene01 },
+  { from: 4160, duration: 91, Component: SceneRoadmap, name: "Daftar Isi" },
 ];
 
 /**
@@ -84,7 +110,7 @@ const CONTINUITY_GROUPS: Mounted[] = [
  * changes at that boundary, so it has to be carried out by the same move that
  * carries everything else, not blink off while the rest of the frame slides.
  */
-const TITLE_FROM = 715;
+const TITLE_FROM = 626;
 const RunTitle = () => {
   const f = useCurrentFrame();
   return (
@@ -125,17 +151,17 @@ export const MovingAverageComposition = () => (
       <RunTitle />
     </Sequence>
 
-    {/*
-      ⚠ TEMPORARY, AND MOUNTED LAST ON PURPOSE. The closing roadmap overlaps
-      SC05 (which runs to 4197) and CG-B (which starts there) rather than being
-      tiled between them — Simon: "biarkan scene overlapping dulu." Last in the
-      tree means it sits OVER both; anywhere else and CG-B would cover it from
-      4197 and only the first 37 frames would ever be seen. It comes out of
-      here and into the tiling once the shape is agreed.
-    */}
-    <Sequence from={4160} durationInFrames={230}>
-      <SceneRoadmap />
-    </Sequence>
+    {/* the two that dissolve, over everything — see DISSOLVE_OVER */}
+    {DISSOLVE_OVER.map(({ from, duration, Component, name }) => (
+      <Sequence
+        key={`${from}-${Component.name}`}
+        from={from}
+        durationInFrames={duration}
+        name={name}
+      >
+        <Component />
+      </Sequence>
+    ))}
 
     <Captions />
     <Watermark />

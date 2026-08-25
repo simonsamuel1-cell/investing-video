@@ -55,27 +55,14 @@ export type Cut =
  * rather than two that happen to meet.
  */
 export const CUTS = {
-  /**
-   * SC01 → CG-A, on the 715 boundary.
-   *
-   * THE PUSH IS NOT THIS. SC01 closes on its own MOVING AVERAGE card at
-   * 610–630 and then HOLDS there — that move belongs to the roadmap and lives
-   * in Scene01 (see `T.push`), because the voice names the card at 631 and the
-   * camera has to have arrived before it is spoken about, not still be
-   * travelling. This entry is only the CUT that follows the hold, 85 frames
-   * later: a short further push, landing on 715, that CG-A catches and settles
-   * out of. Same origin as SC01's push, so the two are one continuous move
-   * toward one point rather than two closes on different things.
+  /*
+   * THERE IS NO CUT AT 715 ANY MORE. SC01 used to push into its MOVING AVERAGE
+   * card and hand over mid-travel; it now pushes into the same card and
+   * DISSOLVES off it at 640 → 660, which is the gesture the closing roadmap
+   * uses at the other end of the episode. A dissolve can arrive on a chart
+   * that is still drawing, so the hand-off moved 55 frames earlier and CG-A
+   * simply mounts sooner. `toAverage` went with the cut.
    */
-  toAverage: {
-    at: 715,
-    over: 24,
-    blur: 9,
-    axis: "zoom",
-    /* the Moving Average card's own centre — see CARDS[1] in Scene01 */
-    origin: { x: 364, y: 721 },
-    amount: 0.3,
-  },
   /*
    * THERE IS NO CUT AT 1788. SC04 used to be its own scene with its own chart
    * and the camera tracked left into it; Simon folded it into CG-A instead, so

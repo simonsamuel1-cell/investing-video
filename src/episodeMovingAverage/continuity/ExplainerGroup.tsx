@@ -1,5 +1,5 @@
 /**
- * CG-A — Scenes 02 + 03 + 04 as ONE spanning Sequence (global 715 → 2381).
+ * CG-A — Scenes 02 + 03 + 04 as ONE spanning Sequence (global 626 → 2381).
  *
  * The chart mounts once, here, and never unmounts. The candles drawn in Scene
  * 02 are the same objects Scene 03 keeps annotating — a remount would redraw
@@ -35,11 +35,18 @@ import {
 } from "../helpers";
 import { toBars, domainOf } from "../series";
 import { EXPLAINER_2, fromAnchors } from "../data/shots";
-import { CUTS, cutInStyle, cutOutStyle } from "../transitions/CameraCut";
+import { CUTS, cutOutStyle } from "../transitions/CameraCut";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /** Where this group is mounted, needed to read the cut from global frames. */
-const FROM = 715;
+/**
+ * 626, not 715. SC01 no longer CUTS here — it dissolves off the top of this
+ * group over 660 → 680, so the group has to be mounted underneath before the
+ * fade starts. Nothing else moved: every beat below is quoted as a GLOBAL
+ * frame through `at()`, so lowering FROM shifts the local frames and leaves
+ * the timeline where it was.
+ */
+const FROM = 626;
 /** Global → local. Every beat below is quoted in Simon's global frames. */
 const at = (global: number) => global - FROM;
 
@@ -77,16 +84,16 @@ const at = (global: number) => global - FROM;
 const T = {
   title: at(667),
   /**
-   * DONE BY THE CUT, not started by it. 646 + 2.3s = 715 exactly.
+   * ON THE LINE THAT DESCRIBES IT. 700 + 2.3s = 769, and "Harga bergerak
+   * naik-turun dan penuh noise" runs 703 → 773 — the draw and the sentence
+   * start and finish together.
    *
-   * A camera cut has to land on a shot that already exists. This draw used to
-   * start at 739 — well after the boundary — so the cut arrived on an empty
-   * white frame and then watched a chart assemble itself, which is not a cut,
-   * it is a reveal with a blur in front of it. SC01 owns the screen until 715,
-   * so running the draw underneath it costs nothing: it is finished and
-   * waiting at the moment the camera gets here.
+   * The dissolve finishes at 680, so twenty frames pass on a clean white frame
+   * with only the heading on it before anything is drawn. That gap is the
+   * point rather than a hole: "Kita mulai dari moving average" ends at 691, so
+   * the roadmap leaves, the sentence lands, and only then does the chart begin.
    */
-  price: at(646),
+  price: at(700),
   ma: at(817),
   /**
    * TWO BEATS, not one. The window SLIDES first and leaves the right-hand
@@ -313,18 +320,15 @@ export const ExplainerGroup = () => {
   const f = useCurrentFrame();
   const g = f + FROM;
   /**
-   * TWO cuts, and this group is one half of each: SC01 pushes IN on the Moving
-   * Average card at 700 and this group catches the push and settles out of it,
-   * and at 2381 it RISES away and SC05 catches that. Both are read from the
-   * GLOBAL frame, because the other half of each reads the same curve from its
-   * own position; evaluate either locally and the two halves move apart.
+   * ONE cut, at the way OUT: at 2381 this group RISES away and SC05 catches it.
+   * It is read from the GLOBAL frame, because the other half reads the same
+   * curve from its own position; evaluate it locally and the two halves move
+   * apart.
    *
-   * There is nothing at 1788. SC04 lives inside this group now.
+   * Nothing at the way IN — SC01 dissolves off the top of this rather than
+   * cutting to it — and nothing at 1788, where SC04 lives inside this group.
    */
-  const cut =
-    g < CUTS.toReading.at - CUTS.toReading.over
-      ? cutInStyle(g, CUTS.toAverage)
-      : cutOutStyle(g, CUTS.toReading);
+  const cut = cutOutStyle(g, CUTS.toReading);
 
   /** The slide, then the printing. They do not overlap. */
   const shift = SHIFT_MAX * progressInOut(f, T.slide, T.slideDur);

@@ -16,10 +16,8 @@
  * is why the panel carries a visible "Ilustrasi" tag. The tag comes off when
  * real OHLC exports land; nothing else in the scene has to change.
  */
-import { useCurrentFrame } from "remotion";
-import { SafeArea } from "../components/SafeArea";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
-import { CUTS, zoomOut, cutBlur } from "../transitions/CameraCut";
 import {
   progress,
   progressInOut,
@@ -94,21 +92,27 @@ const T = {
   cards: [555, 570, 585],
   cardDur: 15,
   /** The Moving Average card is called out, then the camera pushes into it. */
-  glow: 620,
-  glowOver: 20,
+  glow: 600,
+  glowOver: 25,
   /**
-   * THE PUSH IN, and it is FAST — twenty frames, then a hold that lasts until
-   * the cut at 715. Simon's call, and it is the right shape: "Kita mulai dari
-   * moving average" runs 631–691, so the camera has to have ARRIVED before the
-   * voice names the card. A push still travelling under that line is a camera
-   * hunting for the subject the voice has already found.
+   * THE PUSH INTO THE CARD, THEN THE DISSOLVE OFF IT. The push runs 626 → 660
+   * and the fade follows it, 660 → 680 — Simon's call, and it separates the
+   * two beats: the camera arrives at the card, holds on it for the frame the
+   * fade begins, and only then lets go. A fade that starts mid-push overlaps
+   * the two and the arrival never quite registers.
+   *
+   * This replaced a camera CUT at 715. A cut has to land on a shot that
+   * already exists; a dissolve is free to land on an empty card and let the
+   * chart draw into it, which is what it does here.
    */
-  push: 610,
-  pushOver: 20,
+  push: 626,
+  pushOver: 34,
+  fade: 660,
+  fadeOver: 20,
   /** How long each indicator takes to draw across the series. */
   drawOver: 40,
 };
-/** How far the push closes on the card. The cut at 715 adds its own on top. */
+/** How far the push closes on the card before the dissolve takes over. */
 const PUSH_AMOUNT = 0.55;
 
 const PANEL = { x: 96, y: 150, w: 1728, h: 750 };
@@ -491,6 +495,35 @@ const spanOf = (
 };
 
 /**
+ * ═══ THE PUSH ONTO ONE CARD ═══
+ *
+ * It is a DOLLY, not a zoom: the card grows AND travels to the middle of the
+ * frame, and the two are the same number so they cannot come apart.
+ *
+ * A plain scale about the card's own centre was wrong, and visibly so. The
+ * Moving Average card sits at x=364, 596px left of centre, so scaling about it
+ * grows it straight off the left edge — at 1.55 the card's left side lands at
+ * −51 and the frame closes on something already half out of shot. Carrying the
+ * centre to the middle as it grows fixes it for every card at once, and it is
+ * also what a camera actually does when it approaches a subject.
+ *
+ * At `amount` 0.55 the card ends 831 × 468 in the middle of a 1920 × 1080
+ * frame — with room to spare on all four sides, whichever of the four it is.
+ */
+export const cardPush = (p: number, card: number, amount: number) => {
+  const cx = CARDS[card].x + CARD.w / 2;
+  const cy = CARDS[card].y + CARD.h / 2;
+  const tx = (theme.layout.width / 2 - cx) * p;
+  const ty = (theme.layout.height / 2 - cy) * p;
+  return {
+    transform:
+      `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) ` +
+      `scale(${(1 + amount * p).toFixed(4)})`,
+    transformOrigin: `${cx}px ${cy}px`,
+  };
+};
+
+/**
  * ═══ THE ROADMAP, AS TWO PIECES ═══
  *
  * SC01 shrinks the broker panel into the FIRST card; the closing scene shrinks
@@ -547,6 +580,7 @@ export const RoadmapCards = ({
   cardDur,
   landing,
   glow = 0,
+  glowOn = 1,
 }: {
   f: number;
   reveal: number;
@@ -555,6 +589,13 @@ export const RoadmapCards = ({
   cardDur: number;
   landing: number;
   glow?: number;
+  /**
+   * Which card the extra border and glow belong to. SC01 calls out the card it
+   * is about to push into — Moving Average — and the closing roadmap calls out
+   * the one it hands the episode to, Bollinger Bands. Same gesture, so the
+   * card is a parameter rather than a second block.
+   */
+  glowOn?: number;
 }) => {
   const shrink = reveal;
   if (shrink <= 0.001) return null;
@@ -790,13 +831,13 @@ export const RoadmapCards = ({
         );
       })}
 
-      {/* ── the Moving Average card's extra border + glow ── */}
+      {/* ── the called-out card's extra border + glow ── */}
       {glow > 0.001 && (
         <div
           style={{
             position: "absolute",
-            left: CARDS[1].x - 3,
-            top: CARDS[1].y - 3,
+            left: CARDS[glowOn].x - 3,
+            top: CARDS[glowOn].y - 3,
             width: CARD.w + 6,
             height: CARD.h + 6,
             borderRadius: theme.layout.radius.md + 3,
@@ -848,12 +889,11 @@ export const Scene01 = () => {
    * point compose into one scale about that point — give them separate origins
    * and the hold would drift between the two moves.
    */
-  const push = 1 + PUSH_AMOUNT * progress(f, T.push, T.pushOver);
-  const blur = cutBlur(f, CUTS.toAverage);
+  const push = progressInOut(f, T.push, T.pushOver);
   const cut = {
-    transform: `scale(${(push * zoomOut(f, CUTS.toAverage)).toFixed(4)})`,
-    transformOrigin: `${CUTS.toAverage.origin.x}px ${CUTS.toAverage.origin.y}px`,
-    filter: blur > 0.05 ? `blur(${blur.toFixed(1)}px)` : undefined,
+    background: C.bg,
+    ...cardPush(push, 1, PUSH_AMOUNT),
+    opacity: 1 - progress(f, T.fade, T.fadeOver),
   };
   /** The card's own extra border+glow: reveals over `glowOver`, then holds. */
   const glow = progress(f, T.glow, T.glowOver);
@@ -897,12 +937,19 @@ export const Scene01 = () => {
         `${lerp(0, theme.layout.height - CARDS[0].y - CARD.h).toFixed(1)}px ` +
         `${lerp(0, CARDS[0].x).toFixed(1)}px round ${(theme.layout.radius.md * shrink).toFixed(1)}px)`;
   return (
-    <SafeArea>
+    /*
+     * A TRANSPARENT fill, NOT SafeArea. The white ground belongs to the wrapper
+     * that FADES; on an outer element that does not fade, the dissolve would
+     * have nothing to reveal and CG-A would stay hidden behind a white sheet.
+     * The composition's own root is white, so nothing shows through early.
+     */
+    <AbsoluteFill style={{ fontFamily: font, color: C.text }}>
       {/*
         EVERYTHING below — ground, cards, panel, watchlist — is one unit for
-        the push-in: a single transform on this wrapper is what makes the
-        whole frame close on the Moving Average card, rather than the card
-        growing inside a frame that stays still.
+        the push-in AND the dissolve: one transform and one opacity on this
+        wrapper is what makes the whole frame close on the Moving Average card
+        and fade away as one picture, rather than the card growing inside a
+        frame that stays still.
       */}
       <div style={{ position: "absolute", inset: 0, ...cut }}>
         <RoadmapGround f={f} reveal={shrink} />
@@ -1552,6 +1599,6 @@ export const Scene01 = () => {
           </div>
         </div>
       </div>
-    </SafeArea>
+    </AbsoluteFill>
   );
 };
