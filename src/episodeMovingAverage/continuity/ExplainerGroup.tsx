@@ -587,7 +587,7 @@ export const ExplainerGroup = () => {
                   const x = G.x(i);
                   const top = Math.min(G.y(b.o), G.y(b.c));
                   const h = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
-                  /* candle bodies are the ONLY place green and red appear */
+                  /* one bar, one colour — see ChartFrame */
                   const fill =
                     b.c >= b.o
                       ? theme.colors.candleGreen
@@ -599,7 +599,7 @@ export const ExplainerGroup = () => {
                         y1={G.y(b.h)}
                         x2={x}
                         y2={G.y(b.l)}
-                        stroke={theme.colors.price}
+                        stroke={fill}
                         strokeWidth={theme.layout.stroke.wick}
                       />
                       <rect

@@ -17,7 +17,7 @@
  */
 import { theme } from "../theme";
 import { clamp01 } from "../helpers";
-import { Layer, pathOf, type Grid } from "./ChartFrame";
+import { Layer, pathOf, lengthOf, type Grid } from "./ChartFrame";
 
 export const BollingerBands = ({
   mid,
@@ -25,6 +25,10 @@ export const BollingerBands = ({
   lower,
   grid,
   unfold = 1,
+  bandsIn = 1,
+  midTrace = 1,
+  bandTrace = 1,
+  fill: fillStrength,
   opacity = 1,
   midTone = theme.colors.indigo,
 }: {
@@ -34,6 +38,29 @@ export const BollingerBands = ({
   grid: Grid;
   /** 0 = both bands on the middle line; 1 = their true distance. */
   unfold?: number;
+  /**
+   * How far the OUTER pair and their channel have arrived, separately from
+   * `unfold`. They still emerge out of the average — that is the definition
+   * the scene teaches — but a scene that gives the middle band its own beat
+   * needs them absent until theirs, not sitting invisible on top of it.
+   */
+  bandsIn?: number;
+  /** 0 → 1 traces the middle band in from the left, as every other average
+      in the episode is drawn. 1 is simply there. */
+  midTrace?: number;
+  /**
+   * 0 → 1 traces the OUTER pair and their channel in from the left, the same
+   * way. It is an alternative to `unfold`, not a companion: a band can arrive
+   * by growing out of the average or by travelling across the chart, and doing
+   * both at once reads as neither.
+   */
+  bandTrace?: number;
+  /**
+   * Channel strength as a fraction of solid cyan. Left undefined, the channel
+   * keeps the pale wash every other scene draws it with — so this is a
+   * per-scene dial and not a change to all of them.
+   */
+  fill?: number;
   opacity?: number;
   midTone?: string;
 }) => {
@@ -52,15 +79,50 @@ export const BollingerBands = ({
     const back: string[] = [];
     for (let i = dn.length - 1; i >= 0; i--) {
       const v = dn[i];
-      if (v !== null) back.push(`L${grid.x(i).toFixed(1)},${grid.y(v).toFixed(1)}`);
+      if (v !== null)
+        back.push(`L${grid.x(i).toFixed(1)},${grid.y(v).toFixed(1)}`);
     }
     fill = `${pathOf(up, grid)} ${back.join(" ")} Z`;
   }
 
+  const arrived = clamp01(bandsIn);
+  const t = clamp01(midTrace);
+  const bt = clamp01(bandTrace);
+  /* the dashed middle band cannot use a trim path — its own dash pattern is
+     the stroke's — so it is revealed by a clip that opens to the right */
+  const midLen = lengthOf(mid, grid);
+
   return (
     <Layer opacity={opacity}>
-      {fill !== "" && (
-        <path d={fill} fill={theme.colors.cyan12} fillOpacity={0.6} stroke="none" />
+      <defs>
+        <clipPath id="bbMidWipe">
+          <rect
+            x={grid.box.x}
+            y={grid.box.y - 40}
+            width={grid.box.w * t}
+            height={grid.box.h + 80}
+          />
+        </clipPath>
+        <clipPath id="bbBandWipe">
+          <rect
+            x={grid.box.x}
+            y={grid.box.y - 200}
+            width={grid.box.w * bt}
+            height={grid.box.h + 400}
+          />
+        </clipPath>
+      </defs>
+
+      {fill !== "" && arrived > 0.001 && bt > 0.001 && (
+        <path
+          d={fill}
+          fill={
+            fillStrength === undefined ? theme.colors.cyan12 : theme.colors.cyan
+          }
+          fillOpacity={(fillStrength ?? 0.6) * arrived}
+          stroke="none"
+          clipPath={bt < 0.999 ? "url(#bbBandWipe)" : undefined}
+        />
       )}
       <path
         d={pathOf(mid, grid)}
@@ -69,18 +131,24 @@ export const BollingerBands = ({
         strokeWidth={theme.layout.stroke.band}
         strokeDasharray="6 6"
         strokeLinecap="round"
+        clipPath={t < 0.999 ? "url(#bbMidWipe)" : undefined}
+        opacity={midLen > 0 ? 1 : 0}
       />
-      {[up, dn].map((band, n) => (
-        <path
-          key={n}
-          d={pathOf(band, grid)}
-          fill="none"
-          stroke={theme.colors.cyan}
-          strokeWidth={theme.layout.stroke.band}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      ))}
+      {arrived > 0.001 &&
+        bt > 0.001 &&
+        [up, dn].map((band, n) => (
+          <path
+            key={n}
+            d={pathOf(band, grid)}
+            fill="none"
+            stroke={theme.colors.cyan}
+            strokeWidth={theme.layout.stroke.band}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            opacity={arrived}
+            clipPath={bt < 0.999 ? "url(#bbBandWipe)" : undefined}
+          />
+        ))}
     </Layer>
   );
 };

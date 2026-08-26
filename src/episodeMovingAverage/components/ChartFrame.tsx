@@ -107,6 +107,7 @@ export const ChartFrame = ({
   opacity = 1,
   ticks,
   tickLabels = false,
+  gridSpan,
 }: {
   closes: number[];
   bars?: Bar[];
@@ -118,15 +119,32 @@ export const ChartFrame = ({
   opacity?: number;
   ticks?: number[];
   tickLabels?: boolean;
+  /**
+   * The rectangle the gridlines live in, when it is not the plot box.
+   *
+   * A tape that runs on past the card — CG-B's does — leaves its new bars
+   * standing on empty white, because the grid stops where the box stops. Pass
+   * the span the drawn tape actually occupies and the lines follow it: `x2`
+   * carries them across the new bars and `y1` decides which price levels
+   * exist yet, so a level appears as the tape climbs through it rather than
+   * all of them arriving at once.
+   */
+  gridSpan?: { x1: number; x2: number; y1: number; y2: number };
 }) => {
   if (opacity <= 0.001) return null;
   const box = grid.box;
   const shown = progress(f, drawFrom, Math.max(1, drawDur));
+  const span = gridSpan ?? {
+    x1: box.x,
+    x2: box.x + box.w,
+    y1: box.y,
+    y2: box.y + box.h,
+  };
   /* only ticks the chart actually reaches — a gridline for a price outside the
      plot is meaningless, and its LABEL lands outside the box */
   const inBox = (ticks ?? []).filter((p) => {
     const y = grid.y(p);
-    return y >= box.y && y <= box.y + box.h;
+    return y >= span.y1 && y <= span.y2;
   });
 
   return (
@@ -135,18 +153,18 @@ export const ChartFrame = ({
         {inBox.map((p) => (
           <line
             key={p}
-            x1={box.x}
+            x1={span.x1}
             y1={grid.y(p)}
-            x2={box.x + box.w}
+            x2={span.x2}
             y2={grid.y(p)}
             stroke={theme.colors.gridline}
             strokeWidth={theme.layout.border.thin}
           />
         ))}
         <line
-          x1={box.x}
+          x1={span.x1}
           y1={box.y + box.h}
-          x2={box.x + box.w}
+          x2={span.x2}
           y2={box.y + box.h}
           stroke={theme.colors.gridline}
           strokeWidth={theme.layout.border.thin}
@@ -159,7 +177,7 @@ export const ChartFrame = ({
             key={p}
             style={{
               position: "absolute",
-              left: box.x + box.w - 8,
+              left: span.x2 - 8,
               top: grid.y(p),
               transform: "translate(-100%, -50%)",
               fontFamily: theme.type.family,
@@ -195,7 +213,11 @@ export const ChartFrame = ({
               const w = Math.max(2, Math.min(20, grid.slot * 0.62));
               const top = Math.min(grid.y(b.o), grid.y(b.c));
               const h = Math.max(1.5, Math.abs(grid.y(b.c) - grid.y(b.o)));
-              /* candle bodies are the ONLY place green and red appear */
+              /* THE CANDLE — body AND wick — is the only place green and red
+                 appear. The wick used to be drawn in the price ink, which made
+                 a tall wick read as a separate mark crossing its own candle.
+                 Simon's call: one bar, one colour. Everything OUTSIDE a candle
+                 stays indigo/cyan/neutral — the rule that actually matters. */
               const fill = b.c >= b.o ? theme.colors.candleGreen : theme.colors.candleRed;
               return (
                 <g key={i}>
@@ -204,7 +226,7 @@ export const ChartFrame = ({
                     y1={grid.y(b.h)}
                     x2={x}
                     y2={grid.y(b.l)}
-                    stroke={theme.colors.price}
+                    stroke={fill}
                     strokeWidth={theme.layout.stroke.wick}
                   />
                   <rect x={x - w / 2} y={top} width={w} height={h} fill={fill} />

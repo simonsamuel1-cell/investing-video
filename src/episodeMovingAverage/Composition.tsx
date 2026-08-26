@@ -46,12 +46,29 @@ import { Scene11 } from "./scenes/Scene11";
 import { GgrmGroup } from "./continuity/GgrmGroup";
 import { Scene13 } from "./scenes/Scene13";
 import { SceneRoadmap } from "./scenes/SceneRoadmap";
+import { SceneRoadmap2 } from "./scenes/SceneRoadmap2";
 import { TitleChip } from "./components/TitleChip";
 import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
-export const TOTAL_FRAMES = 8982;
+export const TOTAL_FRAMES = 9012;
+
+/**
+ * ═══ ⚠ TEMPORARY A/B LEVER — SCENE 10'S CHART ═══
+ *
+ *   true  → Scene 10 CONTINUES Scene 09's chart, from inside CG-B. The tape,
+ *           its bands and its average are drawn once at 4227 and never unmount,
+ *           so 5453 is not a boundary. CG-B runs 4227 → 6086 and the standalone
+ *           `Scene10` is not mounted at all.
+ *   false → the original: CG-B stops at 5453 and `Scene10` mounts there with a
+ *           chart of its own, drawn from a different tape (`SERIES_UPTREND`).
+ *
+ * BOTH ARE KEPT while Simon compares. `scenes/Scene10.tsx` is untouched and
+ * still builds either way — flipping this one word is the whole switch.
+ * Delete the loser, this lever and this comment once he has chosen.
+ */
+const SCENE10_CONTINUOUS = true;
 
 type Mounted = {
   from: number;
@@ -71,16 +88,29 @@ const INDEPENDENT_SCENES: Mounted[] = [
      than being replaced. SC07 is mounted on top of it for its heading and its
      text, and owns no chart of its own any more. */
   { from: 2381, duration: 1846, Component: Scene05 },
-  { from: 5453, duration: 633, Component: Scene10 },
-  { from: 6086, duration: 646, Component: Scene11 },
-  { from: 8358, duration: 624, Component: Scene13 },
+  ...(SCENE10_CONTINUOUS
+    ? []
+    : [{ from: 5453, duration: 633, Component: Scene10 }]),
+  { from: 6116, duration: 646, Component: Scene11 },
+  { from: 8388, duration: 624, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
 const CONTINUITY_GROUPS: Mounted[] = [
   { from: 626, duration: 1755, Component: ExplainerGroup },
-  { from: 4227, duration: 1226, Component: BandsGroup },
-  { from: 6732, duration: 1626, Component: GgrmGroup },
+  {
+    from: 4227,
+    /* 1226 ends at 5453, where Scene 10 used to take over; 1889 carries the
+       chart through Scene 10 to 6116, where Scene 11 begins either way.
+       ⚠ 1889, not 1859: the 30 frames inserted at 6040 landed INSIDE this
+       group. Simon's rule for that insert was that Scene 10 does not move, so
+       the group keeps its `from` and holds its last picture 30 frames longer
+       instead — which is also what keeps the tiling closed under "Daftar Isi
+       2" rather than relying on that scene to cover a hole. */
+    duration: SCENE10_CONTINUOUS ? 1889 : 1226,
+    Component: BandsGroup,
+  },
+  { from: 6762, duration: 1626, Component: GgrmGroup },
 ];
 
 /**
@@ -102,6 +132,11 @@ const CONTINUITY_GROUPS: Mounted[] = [
 const DISSOLVE_OVER: Mounted[] = [
   { from: 0, duration: 681, Component: Scene01 },
   { from: 4160, duration: 91, Component: SceneRoadmap, name: "Daftar Isi" },
+  /* ⚠ NO TRANSITION AND DELIBERATELY OVERLAPPING. Simon's instruction: build
+     the shrink and the push, leave the hand-off for later, and do not move the
+     VO or any scene after it. So this runs 6040 → 6130 and simply covers SC11,
+     which has been running underneath since 6086, for its last 44 frames. */
+  { from: 6040, duration: 91, Component: SceneRoadmap2, name: "Daftar Isi 2" },
 ];
 
 /**

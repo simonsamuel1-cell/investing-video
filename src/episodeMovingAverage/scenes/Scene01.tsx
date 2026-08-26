@@ -495,6 +495,696 @@ const spanOf = (
 };
 
 /**
+ * ═══ THE BROKER PANEL ═══
+ *
+ * The session SC01 opens on, and the picture that lands in the roadmap's
+ * INTRODUCTION card. It is a component rather than markup inside SC01 because
+ * the CLOSING roadmap has to draw that same card, and hand-drawing a likeness
+ * of a panel this dense is how two pictures quietly stop matching.
+ *
+ * Every local it needs comes from `f`, so a caller that wants it FROZEN — the
+ * closing roadmap does — simply passes a constant frame.
+ */
+export const BrokerPanel = ({
+  f,
+  shrink = 1,
+}: {
+  f: number;
+  /**
+   * How far the panel has closed into a card. Only its own outline uses it:
+   * the border fades as the roadmap card's takes over, otherwise it rides the
+   * shrink as a second, nested card border. A caller drawing the panel already
+   * LANDED — the closing roadmap — leaves it at 1 and has no outline of its own.
+   */
+  shrink?: number;
+}) => {
+  /**
+   * The extension opens once and stays. The plot's width is derived from it,
+   * so the candles, the structure and the indicator lines all narrow together
+   * rather than being scaled — text on a scaled group is text that stretches.
+   */
+  const open = progressInOut(f, T.list.in, T.list.over);
+  const plotW = PLOT.w - LIST.take * open;
+
+  /** Which chart the window is on, and therefore which row is selected. */
+  const active = CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0);
+  /** A chart is up from its own frame until the next one takes over. */
+  const alpha = (i: number) => {
+    const inA = i === 0 ? 1 : progress(f, CHARTS[i].at, T.swapOver);
+    const next = CHARTS[i + 1];
+    return inA * (next ? 1 - progress(f, next.at, T.swapOver) : 1);
+  };
+
+  const maOn = f >= T.ma;
+  const bbOn = f >= T.bb;
+
+  return (
+    <>
+      {/* ── the panel ────────────────────────────────────────────── */}
+      <div
+        style={{
+          position: "absolute",
+          left: PANEL.x,
+          top: PANEL.y,
+          width: PANEL.w,
+          height: PANEL.h,
+          borderRadius: theme.layout.radius.lg,
+          background: C.surface,
+          /* the panel's own outline fades as the mask takes over — otherwise
+         it rides the shrink as a second, nested card border. C.border is
+         #D8DBE0; the alpha is what animates */
+          border: `${theme.layout.border.thin}px solid rgba(216, 219, 224, ${(1 - shrink).toFixed(3)})`,
+          overflow: "hidden",
+        }}
+      >
+        {/* the chart's own ground — a wash, hue-locked to the palette */}
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 168,
+            width: PANEL.w,
+            height: PANEL.h - 168,
+            background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
+          }}
+        />
+
+        {/* ── header: it belongs to whichever chart is up ── */}
+        {CHARTS.map((ch, i) => {
+          const o = alpha(i);
+          if (o <= 0.001) return null;
+          return (
+            <div key={ch.t} style={{ opacity: o }}>
+              <div
+                style={{
+                  position: "absolute",
+                  left: HEAD.x,
+                  top: 36,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: HEAD.gap,
+                }}
+              >
+                <div
+                  style={{
+                    width: HEAD.avatar,
+                    height: HEAD.avatar,
+                    borderRadius: HEAD.avatar / 2,
+                    background: C.indigo,
+                    color: C.surface,
+                    fontFamily: font,
+                    fontSize: UI.size,
+                    fontWeight: 800,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  {ch.t[0]}
+                </div>
+                <span
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.name,
+                    fontWeight: UI.weight,
+                    color: C.text,
+                  }}
+                >
+                  {ch.t}
+                </span>
+                <span
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.size,
+                    fontWeight: UI.weight,
+                    color: C.textMuted,
+                  }}
+                >
+                  {ch.name}
+                </span>
+                {/* real ticker, traced candles — see the header note */}
+                <span
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.size,
+                    fontWeight: UI.weight,
+                    color: C.textMuted,
+                    border: `${theme.layout.border.thin}px solid ${C.border}`,
+                    borderRadius: theme.layout.radius.sm,
+                    padding: "4px 14px",
+                  }}
+                >
+                  Ilustrasi
+                </span>
+              </div>
+
+              {/* left edge on the ticker, not on the avatar beside it */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: HEAD.x + HEAD.avatar + HEAD.gap,
+                  top: 92,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 20,
+                }}
+              >
+                <span
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.price,
+                    fontWeight: 800,
+                    color: C.text,
+                    lineHeight: 1,
+                  }}
+                >
+                  {fmtRp(ch.price)}
+                </span>
+                <span
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.size,
+                    fontWeight: UI.weight,
+                    color: ch.up ? C.candleGreen : C.candleRed,
+                    background: ch.up
+                      ? "rgba(34, 181, 115, 0.12)"
+                      : "rgba(229, 71, 93, 0.12)",
+                    borderRadius: theme.layout.radius.sm,
+                    padding: "6px 16px",
+                  }}
+                >
+                  {ch.change}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Timeframe pills. They belong to the CHART WINDOW, not to the
+        panel, so they travel left with its right edge when the extension
+        opens: without that the chart appears to shrink under its own
+        controls instead of making room beside them. */}
+        <div
+          style={{
+            position: "absolute",
+            right: 40 + LIST.take * open,
+            top: 40,
+            display: "flex",
+            gap: 8,
+          }}
+        >
+          {FRAMES.map((t) => {
+            const live = t === ACTIVE;
+            return (
+              <span
+                key={t}
+                style={{
+                  fontFamily: font,
+                  fontSize: UI.size,
+                  fontWeight: UI.weight,
+                  color: live ? C.surface : C.textMuted,
+                  background: live ? C.indigo : C.indigo12,
+                  borderRadius: theme.layout.radius.sm,
+                  padding: "8px 20px",
+                }}
+              >
+                {t}
+              </span>
+            );
+          })}
+        </div>
+
+        {/* ── the two indicator buttons, under the timeframes ── */}
+        {f >= T.buttons && (
+          <div
+            style={{
+              position: "absolute",
+              right: 40 + LIST.take * open,
+              top: BTN.top,
+              display: "flex",
+              gap: BTN.gap,
+              opacity: progress(f, T.buttons, theme.motion.revealF),
+            }}
+          >
+            {[
+              { label: "Moving Average", on: maOn, at: T.ma },
+              { label: "Bollinger Bands", on: bbOn, at: T.bb },
+            ].map((b) => {
+              /* the switch is a cross-fade between the two skins, so fill,
+             border and label arrive together instead of snapping */
+              const sel = b.on ? progress(f, b.at, 10) : 0;
+              const pick = (off: string, onC: string) =>
+                sel > 0.5 ? onC : off;
+              return (
+                <span
+                  key={b.label}
+                  style={{
+                    fontFamily: font,
+                    fontSize: BTN.size,
+                    fontWeight: UI.weight,
+                    color: pick(C.textMuted, C.surface),
+                    background: pick(C.surface, C.indigo),
+                    border: `${theme.layout.border.thin}px solid ${pick(C.border, C.indigo)}`,
+                    borderRadius: theme.layout.radius.sm,
+                    padding: `${BTN.padY}px ${BTN.padX}px`,
+                  }}
+                >
+                  {b.label}
+                </span>
+              );
+            })}
+          </div>
+        )}
+
+        {/* ── the charts ── */}
+        {CHARTS.map((ch: Chart, n) => {
+          const o = alpha(n);
+          if (o <= 0.001) return null;
+          const zt = ZIG[n];
+          const drawn = zt ? progressInOut(f, zt.from, zt.dur) : 0;
+          const isBmri = n === 2;
+          return (
+            <svg
+              key={ch.t}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                overflow: "visible",
+              }}
+              width={PANEL.w}
+              height={PANEL.h}
+              opacity={o}
+            >
+              {ch.levels.map((v) => (
+                <g key={v}>
+                  <line
+                    x1={PLOT.x - PANEL.x}
+                    y1={ch.y(v)}
+                    x2={PLOT.x - PANEL.x + plotW}
+                    y2={ch.y(v)}
+                    stroke={C.gridline}
+                    strokeWidth={theme.layout.border.thin}
+                    strokeDasharray="2 8"
+                  />
+                  <text
+                    x={AXIS_CX}
+                    y={ch.y(v) + 10}
+                    textAnchor="middle"
+                    fontFamily={font}
+                    fontSize={UI.size}
+                    fontWeight={UI.axis}
+                    fill={C.textMuted}
+                  >
+                    {fmtRp(v)}
+                  </text>
+                </g>
+              ))}
+
+              {/* the tape is simply THERE — no entrance */}
+              {ch.bars.map((b, i) => {
+                const x = lx(i, plotW);
+                const top = Math.min(ch.y(b.o), ch.y(b.c));
+                const h = Math.max(2, Math.abs(ch.y(b.c) - ch.y(b.o)));
+                const up = b.c >= b.o;
+                return (
+                  <g key={i}>
+                    <line
+                      x1={x}
+                      y1={ch.y(b.h)}
+                      x2={x}
+                      y2={ch.y(b.l)}
+                      stroke={up ? C.candleGreen : C.candleRed}
+                      strokeWidth={theme.layout.stroke.wick}
+                    />
+                    <rect
+                      x={x - bodyW(plotW) / 2}
+                      y={top}
+                      width={bodyW(plotW)}
+                      height={h}
+                      rx={2}
+                      fill={up ? C.candleGreen : C.candleRed}
+                    />
+                  </g>
+                );
+              })}
+
+              {/* ── the market structure, traced by hand ── */}
+              {zt && f >= zt.from && (
+                <g>
+                  <path
+                    d={ch.pt
+                      .map(
+                        (p, i) =>
+                          `${i === 0 ? "M" : "L"}${lx(p.i, plotW).toFixed(1)},${p.y.toFixed(1)}`,
+                      )
+                      .join(" ")}
+                    fill="none"
+                    stroke={C.indigo}
+                    strokeWidth={theme.layout.stroke.ma}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeDasharray={ch.zigLen}
+                    strokeDashoffset={ch.zigLen * (1 - drawn)}
+                  />
+                  {ch.pt.map((pv, k) => {
+                    /* a point waits for the LINE to reach it, not for a frame
+                   number guessed off the easing curve */
+                    const a = clamp01(
+                      (drawn - (ch.zigAt[k] / ch.zigLen) * ZIG_LEAD) * 9,
+                    );
+                    if (a <= 0.001) return null;
+                    const w = 74;
+                    const cx = lx(pv.i, plotW);
+                    const cy = pv.high ? pv.y - 18 : pv.y + 18;
+                    return (
+                      <g key={pv.i} opacity={a}>
+                        {/* a NAMED swing gets a ring; a turn the line merely
+                        passes through gets a dot */}
+                        <circle
+                          cx={cx}
+                          cy={pv.y}
+                          r={pv.label ? 9 : 5}
+                          fill={pv.label ? C.surface : C.indigo}
+                          stroke={C.indigo}
+                          strokeWidth={theme.layout.border.thick}
+                        />
+                        {pv.label && (
+                          <>
+                            <rect
+                              x={cx - w / 2}
+                              y={pv.high ? cy - 46 : cy}
+                              width={w}
+                              height={46}
+                              rx={theme.layout.radius.sm}
+                              fill={C.indigo12}
+                              stroke={C.indigo}
+                              strokeWidth={theme.layout.border.thin}
+                            />
+                            <text
+                              x={cx}
+                              y={(pv.high ? cy - 46 : cy) + 33}
+                              textAnchor="middle"
+                              fontFamily={font}
+                              fontSize={UI.size}
+                              fontWeight={700}
+                              fill={C.indigo}
+                            >
+                              {pv.label}
+                            </text>
+                          </>
+                        )}
+                      </g>
+                    );
+                  })}
+                </g>
+              )}
+
+              {/* ── the bands, under the average ── */}
+              {isBmri && bbOn && (
+                <g opacity={progress(f, T.bb, theme.motion.revealF)}>
+                  <path
+                    d={`${pathOf(ch.bb.upper, plotW, ch.y)} ${ch.bb.lower
+                      .map((v, i) =>
+                        v === null
+                          ? ""
+                          : `L${lx(i, plotW).toFixed(1)},${ch.y(v).toFixed(1)}`,
+                      )
+                      .reverse()
+                      .join(" ")} Z`}
+                    fill={C.bbTosca}
+                    fillOpacity={0.1}
+                    stroke="none"
+                  />
+                  {[ch.bb.upper, ch.bb.lower].map((band, k) => (
+                    <path
+                      key={k}
+                      d={pathOf(band, plotW, ch.y)}
+                      fill="none"
+                      stroke={C.bbTosca}
+                      strokeWidth={theme.layout.stroke.band}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      {...drawPath(
+                        f,
+                        T.bb,
+                        T.drawOver,
+                        lenOf(band, plotW, ch.y),
+                      )}
+                    />
+                  ))}
+                </g>
+              )}
+
+              {/* ── the average ── */}
+              {isBmri && maOn && (
+                <path
+                  d={pathOf(ch.ma, plotW, ch.y)}
+                  fill="none"
+                  stroke={C.maOrange}
+                  strokeWidth={theme.layout.stroke.ma}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, plotW, ch.y))}
+                />
+              )}
+
+              {/* the last-price line, and nothing else on it — the readout it
+              carries is the pill on the axis */}
+              <line
+                x1={PLOT.x - PANEL.x}
+                y1={ch.y(ch.price)}
+                x2={PLOT.x - PANEL.x + plotW}
+                y2={ch.y(ch.price)}
+                stroke={C.text}
+                strokeWidth={theme.layout.border.thin}
+                strokeDasharray="8 8"
+              />
+
+              {AXIS.map((t, i) => (
+                <text
+                  key={t}
+                  x={
+                    PLOT.x -
+                    PANEL.x +
+                    14 +
+                    ((plotW - 28) * i) / (AXIS.length - 1)
+                  }
+                  /* the panel clips: a baseline below its height is a label
+                 cut in half */
+                  y={PLOT.y + PLOT.h - PANEL.y + 34}
+                  textAnchor="middle"
+                  fontFamily={font}
+                  fontSize={UI.size}
+                  fontWeight={UI.axis}
+                  fill={C.textMuted}
+                >
+                  {t}
+                </text>
+              ))}
+            </svg>
+          );
+        })}
+
+        {/* the price the crosshair sits on, on the axis */}
+        {CHARTS.map((ch, i) => {
+          const o = alpha(i);
+          if (o <= 0.001) return null;
+          return (
+            <div
+              key={ch.t}
+              style={{
+                position: "absolute",
+                left: AXIS_CX,
+                transform: "translateX(-50%)",
+                top: ch.y(ch.price) - 22,
+                opacity: o,
+                background: C.text,
+                color: C.surface,
+                fontFamily: font,
+                fontSize: UI.size,
+                fontWeight: UI.weight,
+                borderRadius: theme.layout.radius.sm,
+                padding: "6px 16px",
+              }}
+            >
+              {fmtRp(ch.price)}
+            </div>
+          );
+        })}
+
+        {/* ── the watchlist, an extension of this same window ── */}
+        {open > 0.001 && (
+          <div
+            style={{
+              position: "absolute",
+              left: LIST.x,
+              top: 0,
+              width: LIST.w,
+              height: PANEL.h,
+              background: C.surface,
+              borderLeft: `${theme.layout.border.thin}px solid ${C.border}`,
+              /* A DRAWER, not a fade: it starts its full width outside the
+             panel — which clips — and slides in opaque. Fading it in
+             showed the chart THROUGH it, and a pill behind it, for the
+             twenty frames it took to arrive. */
+              transform: `translateX(${((1 - open) * LIST.w).toFixed(1)}px)`,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                left: LIST.pad,
+                top: LIST.headTop,
+                fontFamily: font,
+                fontSize: LIST.size,
+                fontWeight: UI.weight,
+                color: C.textMuted,
+              }}
+            >
+              Watchlist
+            </div>
+            {WATCH.map((w, i) => {
+              /* the selected row IS the chart in the window — one source of
+             truth, so the two can never disagree */
+              const on = w.t === CHARTS[active].t;
+              return (
+                <div
+                  key={w.t}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: LIST.rowTop + i * LIST.rowH,
+                    width: LIST.w,
+                    height: LIST.rowH,
+                    boxSizing: "border-box",
+                    display: "flex",
+                    alignItems: "center",
+                    paddingLeft: LIST.pad - (on ? 4 : 0),
+                    paddingRight: LIST.pad,
+                    borderTop: `${theme.layout.border.thin}px solid ${C.border}`,
+                    /* filled, and carrying a bar on the edge it shares with
+                   the chart — it has to hold its own against everything
+                   to its left */
+                    background: on ? C.indigo12 : "transparent",
+                    borderLeft: on ? `4px solid ${C.indigo}` : undefined,
+                    fontFamily: font,
+                    /* one row at a time, so the list reads as a list being
+                   gone through rather than a block that appears */
+                    opacity: progress(
+                      f,
+                      T.list.in + i * T.list.step,
+                      theme.motion.revealF,
+                    ),
+                  }}
+                >
+                  <div
+                    style={{
+                      width: LIST.avatar,
+                      height: LIST.avatar,
+                      borderRadius: LIST.avatar / 2,
+                      flexShrink: 0,
+                      background: on ? C.indigo : C.indigo12,
+                      color: on ? C.surface : C.indigo,
+                      fontSize: 18,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {w.t[0]}
+                  </div>
+                  <span
+                    style={{
+                      flex: 1,
+                      marginLeft: 14,
+                      fontSize: LIST.size,
+                      fontWeight: 700,
+                      color: on ? C.indigo : C.text,
+                    }}
+                  >
+                    {w.t}
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-end",
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontSize: LIST.size,
+                        fontWeight: UI.axis,
+                        color: C.price,
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {fmtRp(w.p)}
+                    </span>
+                    <span
+                      style={{
+                        fontSize: LIST.size,
+                        fontWeight: UI.weight,
+                        lineHeight: 1.2,
+                        color: w.up ? C.candleGreen : C.candleRed,
+                      }}
+                    >
+                      {w.c}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+/**
+ * THE PANEL, LANDED IN A CARD — exactly the geometry SC01's shrink arrives at:
+ * fill the card by width less 10px a side, centre what is left over, and clip
+ * to the card's own rounded rect.
+ *
+ * Frozen at 624, the frame Simon reads the opening roadmap on, so the two
+ * INTRODUCTION cards are the same picture rather than merely similar ones.
+ */
+const PANEL_SETTLED = 624;
+export const PanelInCard = ({ card }: { card: number }) => {
+  const s0 = (CARD.w - 20) / PANEL.w;
+  const c = CARDS[card];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        clipPath:
+          `inset(${c.y}px ${theme.layout.width - c.x - CARD.w}px ` +
+          `${theme.layout.height - c.y - CARD.h}px ${c.x}px ` +
+          `round ${theme.layout.radius.md}px)`,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transformOrigin: `${PANEL.x}px ${PANEL.y}px`,
+          transform:
+            `translate(${(c.x + (CARD.w - PANEL.w * s0) / 2 - PANEL.x).toFixed(1)}px, ` +
+            `${(c.y + (CARD.h - PANEL.h * s0) / 2 - PANEL.y).toFixed(1)}px) ` +
+            `scale(${s0.toFixed(4)})`,
+        }}
+      >
+        <BrokerPanel f={PANEL_SETTLED} />
+      </div>
+    </div>
+  );
+};
+
+/**
  * ═══ THE PUSH ONTO ONE CARD ═══
  *
  * It is a DOLLY, not a zoom: the card grows AND travels to the middle of the
@@ -648,45 +1338,19 @@ export const RoadmapCards = ({
               {c.text}
             </div>
 
+            {/* INTRODUCTION — the broker session itself, landed in its card
+                exactly as SC01's shrink leaves it. HTML, not SVG, so it sits
+                BESIDE the thumbnail layer rather than inside it. Only ever
+                drawn when this card is NOT the landing one; in SC01 the live
+                panel arrives here instead. */}
+            {n === 0 && n !== landing && <PanelInCard card={0} />}
+
             {n !== landing && (
               <svg
                 style={{ position: "absolute", left: 0, top: 0 }}
                 width={theme.layout.width}
                 height={theme.layout.height}
               >
-                {/* INTRODUCTION — the session itself, as candles. Only
-                        ever drawn when this card is NOT the landing one; in
-                        SC01 the broker panel arrives here instead. */}
-                {n === 0 &&
-                  (() => {
-                    const [lo, hi] = spanOf([], ch.bars);
-                    const w = Math.max(
-                      1.5,
-                      ((CARD.w - pad * 2) / ch.bars.length) * 0.6,
-                    );
-                    return ch.bars.map((b, i) => {
-                      const x = mx(i, ch.bars.length, c);
-                      const top = Math.min(
-                        my(b.o, lo, hi, c),
-                        my(b.c, lo, hi, c),
-                      );
-                      const h = Math.max(
-                        1,
-                        Math.abs(my(b.c, lo, hi, c) - my(b.o, lo, hi, c)),
-                      );
-                      return (
-                        <rect
-                          key={i}
-                          x={x - w / 2}
-                          y={top}
-                          width={w}
-                          height={h}
-                          fill={b.c >= b.o ? C.candleGreen : C.candleRed}
-                        />
-                      );
-                    });
-                  })()}
-
                 {/* MOVING AVERAGE — the two averages, and nothing else */}
                 {n === 1 &&
                   (() => {
@@ -855,26 +1519,6 @@ export const Scene01 = () => {
   const f = useCurrentFrame();
 
   /**
-   * The extension opens once and stays. The plot's width is derived from it,
-   * so the candles, the structure and the indicator lines all narrow together
-   * rather than being scaled — text on a scaled group is text that stretches.
-   */
-  const open = progressInOut(f, T.list.in, T.list.over);
-  const plotW = PLOT.w - LIST.take * open;
-
-  /** Which chart the window is on, and therefore which row is selected. */
-  const active = CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0);
-  /** A chart is up from its own frame until the next one takes over. */
-  const alpha = (i: number) => {
-    const inA = i === 0 ? 1 : progress(f, CHARTS[i].at, T.swapOver);
-    const next = CHARTS[i + 1];
-    return inA * (next ? 1 - progress(f, next.at, T.swapOver) : 1);
-  };
-
-  const maOn = f >= T.ma;
-  const bbOn = f >= T.bb;
-
-  /**
    * TWO MOVES ON ONE POINT. SC01 starts at global 0, so its local frame IS the
    * global one and nothing has to be added back here — every other scene in
    * the episode has to add its own `from`.
@@ -987,614 +1631,7 @@ export const Scene01 = () => {
                 transform: `translate(${mapX.toFixed(1)}px, ${mapY.toFixed(1)}px) scale(${scale.toFixed(4)})`,
               }}
             >
-              {/* ── the panel ────────────────────────────────────────────── */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: PANEL.x,
-                  top: PANEL.y,
-                  width: PANEL.w,
-                  height: PANEL.h,
-                  borderRadius: theme.layout.radius.lg,
-                  background: C.surface,
-                  /* the panel's own outline fades as the mask takes over — otherwise
-               it rides the shrink as a second, nested card border. C.border is
-               #D8DBE0; the alpha is what animates */
-                  border: `${theme.layout.border.thin}px solid rgba(216, 219, 224, ${(1 - shrink).toFixed(3)})`,
-                  overflow: "hidden",
-                }}
-              >
-                {/* the chart's own ground — a wash, hue-locked to the palette */}
-                <div
-                  style={{
-                    position: "absolute",
-                    left: 0,
-                    top: 168,
-                    width: PANEL.w,
-                    height: PANEL.h - 168,
-                    background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
-                  }}
-                />
-
-                {/* ── header: it belongs to whichever chart is up ── */}
-                {CHARTS.map((ch, i) => {
-                  const o = alpha(i);
-                  if (o <= 0.001) return null;
-                  return (
-                    <div key={ch.t} style={{ opacity: o }}>
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: HEAD.x,
-                          top: 36,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: HEAD.gap,
-                        }}
-                      >
-                        <div
-                          style={{
-                            width: HEAD.avatar,
-                            height: HEAD.avatar,
-                            borderRadius: HEAD.avatar / 2,
-                            background: C.indigo,
-                            color: C.surface,
-                            fontFamily: font,
-                            fontSize: UI.size,
-                            fontWeight: 800,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          {ch.t[0]}
-                        </div>
-                        <span
-                          style={{
-                            fontFamily: font,
-                            fontSize: UI.name,
-                            fontWeight: UI.weight,
-                            color: C.text,
-                          }}
-                        >
-                          {ch.t}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: font,
-                            fontSize: UI.size,
-                            fontWeight: UI.weight,
-                            color: C.textMuted,
-                          }}
-                        >
-                          {ch.name}
-                        </span>
-                        {/* real ticker, traced candles — see the header note */}
-                        <span
-                          style={{
-                            fontFamily: font,
-                            fontSize: UI.size,
-                            fontWeight: UI.weight,
-                            color: C.textMuted,
-                            border: `${theme.layout.border.thin}px solid ${C.border}`,
-                            borderRadius: theme.layout.radius.sm,
-                            padding: "4px 14px",
-                          }}
-                        >
-                          Ilustrasi
-                        </span>
-                      </div>
-
-                      {/* left edge on the ticker, not on the avatar beside it */}
-                      <div
-                        style={{
-                          position: "absolute",
-                          left: HEAD.x + HEAD.avatar + HEAD.gap,
-                          top: 92,
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 20,
-                        }}
-                      >
-                        <span
-                          style={{
-                            fontFamily: font,
-                            fontSize: UI.price,
-                            fontWeight: 800,
-                            color: C.text,
-                            lineHeight: 1,
-                          }}
-                        >
-                          {fmtRp(ch.price)}
-                        </span>
-                        <span
-                          style={{
-                            fontFamily: font,
-                            fontSize: UI.size,
-                            fontWeight: UI.weight,
-                            color: ch.up ? C.candleGreen : C.candleRed,
-                            background: ch.up
-                              ? "rgba(34, 181, 115, 0.12)"
-                              : "rgba(229, 71, 93, 0.12)",
-                            borderRadius: theme.layout.radius.sm,
-                            padding: "6px 16px",
-                          }}
-                        >
-                          {ch.change}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* Timeframe pills. They belong to the CHART WINDOW, not to the
-              panel, so they travel left with its right edge when the extension
-              opens: without that the chart appears to shrink under its own
-              controls instead of making room beside them. */}
-                <div
-                  style={{
-                    position: "absolute",
-                    right: 40 + LIST.take * open,
-                    top: 40,
-                    display: "flex",
-                    gap: 8,
-                  }}
-                >
-                  {FRAMES.map((t) => {
-                    const live = t === ACTIVE;
-                    return (
-                      <span
-                        key={t}
-                        style={{
-                          fontFamily: font,
-                          fontSize: UI.size,
-                          fontWeight: UI.weight,
-                          color: live ? C.surface : C.textMuted,
-                          background: live ? C.indigo : C.indigo12,
-                          borderRadius: theme.layout.radius.sm,
-                          padding: "8px 20px",
-                        }}
-                      >
-                        {t}
-                      </span>
-                    );
-                  })}
-                </div>
-
-                {/* ── the two indicator buttons, under the timeframes ── */}
-                {f >= T.buttons && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      right: 40 + LIST.take * open,
-                      top: BTN.top,
-                      display: "flex",
-                      gap: BTN.gap,
-                      opacity: progress(f, T.buttons, theme.motion.revealF),
-                    }}
-                  >
-                    {[
-                      { label: "Moving Average", on: maOn, at: T.ma },
-                      { label: "Bollinger Bands", on: bbOn, at: T.bb },
-                    ].map((b) => {
-                      /* the switch is a cross-fade between the two skins, so fill,
-                   border and label arrive together instead of snapping */
-                      const sel = b.on ? progress(f, b.at, 10) : 0;
-                      const pick = (off: string, onC: string) =>
-                        sel > 0.5 ? onC : off;
-                      return (
-                        <span
-                          key={b.label}
-                          style={{
-                            fontFamily: font,
-                            fontSize: BTN.size,
-                            fontWeight: UI.weight,
-                            color: pick(C.textMuted, C.surface),
-                            background: pick(C.surface, C.indigo),
-                            border: `${theme.layout.border.thin}px solid ${pick(C.border, C.indigo)}`,
-                            borderRadius: theme.layout.radius.sm,
-                            padding: `${BTN.padY}px ${BTN.padX}px`,
-                          }}
-                        >
-                          {b.label}
-                        </span>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {/* ── the charts ── */}
-                {CHARTS.map((ch: Chart, n) => {
-                  const o = alpha(n);
-                  if (o <= 0.001) return null;
-                  const zt = ZIG[n];
-                  const drawn = zt ? progressInOut(f, zt.from, zt.dur) : 0;
-                  const isBmri = n === 2;
-                  return (
-                    <svg
-                      key={ch.t}
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        top: 0,
-                        overflow: "visible",
-                      }}
-                      width={PANEL.w}
-                      height={PANEL.h}
-                      opacity={o}
-                    >
-                      {ch.levels.map((v) => (
-                        <g key={v}>
-                          <line
-                            x1={PLOT.x - PANEL.x}
-                            y1={ch.y(v)}
-                            x2={PLOT.x - PANEL.x + plotW}
-                            y2={ch.y(v)}
-                            stroke={C.gridline}
-                            strokeWidth={theme.layout.border.thin}
-                            strokeDasharray="2 8"
-                          />
-                          <text
-                            x={AXIS_CX}
-                            y={ch.y(v) + 10}
-                            textAnchor="middle"
-                            fontFamily={font}
-                            fontSize={UI.size}
-                            fontWeight={UI.axis}
-                            fill={C.textMuted}
-                          >
-                            {fmtRp(v)}
-                          </text>
-                        </g>
-                      ))}
-
-                      {/* the tape is simply THERE — no entrance */}
-                      {ch.bars.map((b, i) => {
-                        const x = lx(i, plotW);
-                        const top = Math.min(ch.y(b.o), ch.y(b.c));
-                        const h = Math.max(2, Math.abs(ch.y(b.c) - ch.y(b.o)));
-                        const up = b.c >= b.o;
-                        return (
-                          <g key={i}>
-                            <line
-                              x1={x}
-                              y1={ch.y(b.h)}
-                              x2={x}
-                              y2={ch.y(b.l)}
-                              stroke={up ? C.candleGreen : C.candleRed}
-                              strokeWidth={theme.layout.stroke.wick}
-                            />
-                            <rect
-                              x={x - bodyW(plotW) / 2}
-                              y={top}
-                              width={bodyW(plotW)}
-                              height={h}
-                              rx={2}
-                              fill={up ? C.candleGreen : C.candleRed}
-                            />
-                          </g>
-                        );
-                      })}
-
-                      {/* ── the market structure, traced by hand ── */}
-                      {zt && f >= zt.from && (
-                        <g>
-                          <path
-                            d={ch.pt
-                              .map(
-                                (p, i) =>
-                                  `${i === 0 ? "M" : "L"}${lx(p.i, plotW).toFixed(1)},${p.y.toFixed(1)}`,
-                              )
-                              .join(" ")}
-                            fill="none"
-                            stroke={C.indigo}
-                            strokeWidth={theme.layout.stroke.ma}
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeDasharray={ch.zigLen}
-                            strokeDashoffset={ch.zigLen * (1 - drawn)}
-                          />
-                          {ch.pt.map((pv, k) => {
-                            /* a point waits for the LINE to reach it, not for a frame
-                         number guessed off the easing curve */
-                            const a = clamp01(
-                              (drawn - (ch.zigAt[k] / ch.zigLen) * ZIG_LEAD) *
-                                9,
-                            );
-                            if (a <= 0.001) return null;
-                            const w = 74;
-                            const cx = lx(pv.i, plotW);
-                            const cy = pv.high ? pv.y - 18 : pv.y + 18;
-                            return (
-                              <g key={pv.i} opacity={a}>
-                                {/* a NAMED swing gets a ring; a turn the line merely
-                              passes through gets a dot */}
-                                <circle
-                                  cx={cx}
-                                  cy={pv.y}
-                                  r={pv.label ? 9 : 5}
-                                  fill={pv.label ? C.surface : C.indigo}
-                                  stroke={C.indigo}
-                                  strokeWidth={theme.layout.border.thick}
-                                />
-                                {pv.label && (
-                                  <>
-                                    <rect
-                                      x={cx - w / 2}
-                                      y={pv.high ? cy - 46 : cy}
-                                      width={w}
-                                      height={46}
-                                      rx={theme.layout.radius.sm}
-                                      fill={C.indigo12}
-                                      stroke={C.indigo}
-                                      strokeWidth={theme.layout.border.thin}
-                                    />
-                                    <text
-                                      x={cx}
-                                      y={(pv.high ? cy - 46 : cy) + 33}
-                                      textAnchor="middle"
-                                      fontFamily={font}
-                                      fontSize={UI.size}
-                                      fontWeight={700}
-                                      fill={C.indigo}
-                                    >
-                                      {pv.label}
-                                    </text>
-                                  </>
-                                )}
-                              </g>
-                            );
-                          })}
-                        </g>
-                      )}
-
-                      {/* ── the bands, under the average ── */}
-                      {isBmri && bbOn && (
-                        <g opacity={progress(f, T.bb, theme.motion.revealF)}>
-                          <path
-                            d={`${pathOf(ch.bb.upper, plotW, ch.y)} ${ch.bb.lower
-                              .map((v, i) =>
-                                v === null
-                                  ? ""
-                                  : `L${lx(i, plotW).toFixed(1)},${ch.y(v).toFixed(1)}`,
-                              )
-                              .reverse()
-                              .join(" ")} Z`}
-                            fill={C.bbTosca}
-                            fillOpacity={0.1}
-                            stroke="none"
-                          />
-                          {[ch.bb.upper, ch.bb.lower].map((band, k) => (
-                            <path
-                              key={k}
-                              d={pathOf(band, plotW, ch.y)}
-                              fill="none"
-                              stroke={C.bbTosca}
-                              strokeWidth={theme.layout.stroke.band}
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              {...drawPath(
-                                f,
-                                T.bb,
-                                T.drawOver,
-                                lenOf(band, plotW, ch.y),
-                              )}
-                            />
-                          ))}
-                        </g>
-                      )}
-
-                      {/* ── the average ── */}
-                      {isBmri && maOn && (
-                        <path
-                          d={pathOf(ch.ma, plotW, ch.y)}
-                          fill="none"
-                          stroke={C.maOrange}
-                          strokeWidth={theme.layout.stroke.ma}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          {...drawPath(
-                            f,
-                            T.ma,
-                            T.drawOver,
-                            lenOf(ch.ma, plotW, ch.y),
-                          )}
-                        />
-                      )}
-
-                      {/* the last-price line, and nothing else on it — the readout it
-                    carries is the pill on the axis */}
-                      <line
-                        x1={PLOT.x - PANEL.x}
-                        y1={ch.y(ch.price)}
-                        x2={PLOT.x - PANEL.x + plotW}
-                        y2={ch.y(ch.price)}
-                        stroke={C.text}
-                        strokeWidth={theme.layout.border.thin}
-                        strokeDasharray="8 8"
-                      />
-
-                      {AXIS.map((t, i) => (
-                        <text
-                          key={t}
-                          x={
-                            PLOT.x -
-                            PANEL.x +
-                            14 +
-                            ((plotW - 28) * i) / (AXIS.length - 1)
-                          }
-                          /* the panel clips: a baseline below its height is a label
-                       cut in half */
-                          y={PLOT.y + PLOT.h - PANEL.y + 34}
-                          textAnchor="middle"
-                          fontFamily={font}
-                          fontSize={UI.size}
-                          fontWeight={UI.axis}
-                          fill={C.textMuted}
-                        >
-                          {t}
-                        </text>
-                      ))}
-                    </svg>
-                  );
-                })}
-
-                {/* the price the crosshair sits on, on the axis */}
-                {CHARTS.map((ch, i) => {
-                  const o = alpha(i);
-                  if (o <= 0.001) return null;
-                  return (
-                    <div
-                      key={ch.t}
-                      style={{
-                        position: "absolute",
-                        left: AXIS_CX,
-                        transform: "translateX(-50%)",
-                        top: ch.y(ch.price) - 22,
-                        opacity: o,
-                        background: C.text,
-                        color: C.surface,
-                        fontFamily: font,
-                        fontSize: UI.size,
-                        fontWeight: UI.weight,
-                        borderRadius: theme.layout.radius.sm,
-                        padding: "6px 16px",
-                      }}
-                    >
-                      {fmtRp(ch.price)}
-                    </div>
-                  );
-                })}
-
-                {/* ── the watchlist, an extension of this same window ── */}
-                {open > 0.001 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: LIST.x,
-                      top: 0,
-                      width: LIST.w,
-                      height: PANEL.h,
-                      background: C.surface,
-                      borderLeft: `${theme.layout.border.thin}px solid ${C.border}`,
-                      /* A DRAWER, not a fade: it starts its full width outside the
-                   panel — which clips — and slides in opaque. Fading it in
-                   showed the chart THROUGH it, and a pill behind it, for the
-                   twenty frames it took to arrive. */
-                      transform: `translateX(${((1 - open) * LIST.w).toFixed(1)}px)`,
-                    }}
-                  >
-                    <div
-                      style={{
-                        position: "absolute",
-                        left: LIST.pad,
-                        top: LIST.headTop,
-                        fontFamily: font,
-                        fontSize: LIST.size,
-                        fontWeight: UI.weight,
-                        color: C.textMuted,
-                      }}
-                    >
-                      Watchlist
-                    </div>
-                    {WATCH.map((w, i) => {
-                      /* the selected row IS the chart in the window — one source of
-                   truth, so the two can never disagree */
-                      const on = w.t === CHARTS[active].t;
-                      return (
-                        <div
-                          key={w.t}
-                          style={{
-                            position: "absolute",
-                            left: 0,
-                            top: LIST.rowTop + i * LIST.rowH,
-                            width: LIST.w,
-                            height: LIST.rowH,
-                            boxSizing: "border-box",
-                            display: "flex",
-                            alignItems: "center",
-                            paddingLeft: LIST.pad - (on ? 4 : 0),
-                            paddingRight: LIST.pad,
-                            borderTop: `${theme.layout.border.thin}px solid ${C.border}`,
-                            /* filled, and carrying a bar on the edge it shares with
-                         the chart — it has to hold its own against everything
-                         to its left */
-                            background: on ? C.indigo12 : "transparent",
-                            borderLeft: on
-                              ? `4px solid ${C.indigo}`
-                              : undefined,
-                            fontFamily: font,
-                            /* one row at a time, so the list reads as a list being
-                         gone through rather than a block that appears */
-                            opacity: progress(
-                              f,
-                              T.list.in + i * T.list.step,
-                              theme.motion.revealF,
-                            ),
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: LIST.avatar,
-                              height: LIST.avatar,
-                              borderRadius: LIST.avatar / 2,
-                              flexShrink: 0,
-                              background: on ? C.indigo : C.indigo12,
-                              color: on ? C.surface : C.indigo,
-                              fontSize: 18,
-                              fontWeight: 800,
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                            }}
-                          >
-                            {w.t[0]}
-                          </div>
-                          <span
-                            style={{
-                              flex: 1,
-                              marginLeft: 14,
-                              fontSize: LIST.size,
-                              fontWeight: 700,
-                              color: on ? C.indigo : C.text,
-                            }}
-                          >
-                            {w.t}
-                          </span>
-                          <div
-                            style={{
-                              display: "flex",
-                              flexDirection: "column",
-                              alignItems: "flex-end",
-                            }}
-                          >
-                            <span
-                              style={{
-                                fontSize: LIST.size,
-                                fontWeight: UI.axis,
-                                color: C.price,
-                                lineHeight: 1.2,
-                              }}
-                            >
-                              {fmtRp(w.p)}
-                            </span>
-                            <span
-                              style={{
-                                fontSize: LIST.size,
-                                fontWeight: UI.weight,
-                                lineHeight: 1.2,
-                                color: w.up ? C.candleGreen : C.candleRed,
-                              }}
-                            >
-                              {w.c}
-                            </span>
-                          </div>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+              <BrokerPanel f={f} shrink={shrink} />
             </div>
           </div>
         </div>

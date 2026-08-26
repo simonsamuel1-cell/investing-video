@@ -246,7 +246,7 @@ export const SceneRoadmap = () => {
                   const x = R.x(i);
                   const top = Math.min(R.y(b.o), R.y(b.c));
                   const h = Math.max(1.5, Math.abs(R.y(b.c) - R.y(b.o)));
-                  /* candle bodies are the ONLY place green and red appear */
+                  /* one bar, one colour — see ChartFrame */
                   const fill =
                     b.c >= b.o
                       ? theme.colors.candleGreen
@@ -258,7 +258,7 @@ export const SceneRoadmap = () => {
                         y1={R.y(b.h)}
                         x2={x}
                         y2={R.y(b.l)}
-                        stroke={theme.colors.price}
+                        stroke={fill}
                         strokeWidth={theme.layout.stroke.wick}
                       />
                       <rect
