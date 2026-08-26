@@ -17,6 +17,7 @@
  * real OHLC exports land; nothing else in the scene has to change.
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { ReadingCard, READING_BOX } from "../components/ReadingCard";
 import { theme } from "../theme";
 import {
   progress,
@@ -1185,6 +1186,51 @@ export const PanelInCard = ({ card }: { card: number }) => {
 };
 
 /**
+ * THE READING CHART, LANDED IN A CARD — the same geometry `PanelInCard` uses,
+ * and for the same reason.
+ *
+ * ⚠ THIS IS WHAT THE MOVING AVERAGE CARD SHOWS. It used to draw two bare
+ * average lines, no candles, stretched to the two lines' OWN range so their
+ * wobble filled the card — the only one of the four that did not look like a
+ * chart, and nothing like what the card actually holds at 4205 when the
+ * closing roadmap shrinks SC05 into it. Simon pointed at that frame; this is
+ * that frame's content, drawn from the same component.
+ *
+ * A card that names a chapter has to show the chapter, and a moving average
+ * drawn without the price it averages leaves out the thing being taught.
+ */
+export const ReadingInCard = ({ card, f }: { card: number; f: number }) => {
+  const s0 = (CARD.w - 20) / READING_BOX.w;
+  const c = CARDS[card];
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        clipPath:
+          `inset(${c.y}px ${theme.layout.width - c.x - CARD.w}px ` +
+          `${theme.layout.height - c.y - CARD.h}px ${c.x}px ` +
+          `round ${theme.layout.radius.md}px)`,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transformOrigin: `${READING_BOX.x}px ${READING_BOX.y}px`,
+          transform:
+            `translate(${(c.x + (CARD.w - READING_BOX.w * s0) / 2 - READING_BOX.x).toFixed(1)}px, ` +
+            `${(c.y + (CARD.h - READING_BOX.h * s0) / 2 - READING_BOX.y).toFixed(1)}px) ` +
+            `scale(${s0.toFixed(4)})`,
+        }}
+      >
+        <ReadingCard f={f} />
+      </div>
+    </div>
+  );
+};
+
+/**
  * ═══ THE PUSH ONTO ONE CARD ═══
  *
  * It is a DOLLY, not a zoom: the card grows AND travels to the middle of the
@@ -1344,6 +1390,7 @@ export const RoadmapCards = ({
                 drawn when this card is NOT the landing one; in SC01 the live
                 panel arrives here instead. */}
             {n === 0 && n !== landing && <PanelInCard card={0} />}
+            {n === 1 && n !== landing && <ReadingInCard card={1} f={f} />}
 
             {n !== landing && (
               <svg
@@ -1351,31 +1398,9 @@ export const RoadmapCards = ({
                 width={theme.layout.width}
                 height={theme.layout.height}
               >
-                {/* MOVING AVERAGE — the two averages, and nothing else */}
-                {n === 1 &&
-                  (() => {
-                    const [lo, hi] = spanOf([ch.ma, ch.maSlow]);
-                    return (
-                      <>
-                        <path
-                          d={thumbPath(ch.maSlow, lo, hi, c)}
-                          fill="none"
-                          stroke={C.indigo}
-                          strokeWidth={theme.layout.stroke.band}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                        <path
-                          d={thumbPath(ch.ma, lo, hi, c)}
-                          fill="none"
-                          stroke={C.cyan}
-                          strokeWidth={theme.layout.stroke.band}
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </>
-                    );
-                  })()}
+                {/* MOVING AVERAGE is drawn OUTSIDE this svg — see
+                    ReadingInCard above. It is SC05's own picture, which is
+                    HTML and SVG both, so it cannot live in here. */}
 
                 {/* BOLLINGER BANDS — the envelope and its middle */}
                 {n === 2 &&
