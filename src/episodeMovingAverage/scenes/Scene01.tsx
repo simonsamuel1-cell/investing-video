@@ -425,6 +425,17 @@ const CHARTS = [
     pivots: [],
   }),
 ];
+/**
+ * SC01's BMRI tape — the third chart in the broker session, and the one the
+ * roadmap's fourth card carries.
+ *
+ * SC11 draws its reading on THIS, not on a series of its own: the scene argues
+ * that indicators sit on top of what you already read on the chart, and it
+ * lands harder on a chart the viewer has already watched for half a minute
+ * than on a fourth synthetic tape they have never seen.
+ */
+export const BMRI_TAPE = { closes: CHARTS[2].closes, bars: CHARTS[2].bars };
+
 /** Each chart's own structure timing. BMRI has none. */
 const ZIG = [T.zig, T.zigBbri, null];
 /**

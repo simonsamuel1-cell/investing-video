@@ -60,16 +60,23 @@ export const theme = {
      * you have to hunt for. Orange and tosca are the two hues that are not
      * already spoken for.
      *
-     * They name INDICATORS, nothing else. Chrome, axes, annotations and text
-     * stay indigo / cyan / neutral.
+     * They name INDICATORS, and ONE other thing: SC11's trendline, at Simon's
+     * direction. That scene draws your own reading first and the indicators
+     * after it, so orange there separates the two layers rather than blurring
+     * them. Chrome, axes, every other annotation and all text stay
+     * indigo / cyan / neutral.
      */
     maOrange: "#F59E0B",
     bbTosca: "#2EC4B6",
     /**
-     * The Death Cross pill, and nothing else. Simon asked for "merah sedikit
-     * muda" — a shade up from `candleRed`, which is the only other red in
-     * drawn content. It is a shade and not a wash: any lighter and 30px white
-     * on it drops under 3:1, which is the floor for large text.
+     * THE EPISODE'S ONE ANNOTATION RED. Simon asked for "merah sedikit muda" —
+     * a shade up from `candleRed`, which is the only other red in drawn
+     * content. It is a shade and not a wash: any lighter and 30px white on it
+     * drops under 3:1, which is the floor for large text.
+     *
+     * Two places use it, both at Simon's direction: SC05's Death Cross pill,
+     * and SC11's support and resistance lines. Nothing else may — a third red
+     * would stop the first two meaning anything.
      */
     crossRed: "#E95D71",
   },
