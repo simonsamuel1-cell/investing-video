@@ -47,6 +47,36 @@ const SWING = 4;
 const MARK_IN = 16;
 
 /**
+ * ═══ THE FOUR LABELS — ONE ROW, UNDER THE CHART ═══
+ *
+ * A pill in the mark's OWN colour with white text. The colour is the whole of
+ * the pairing now that the pills no longer touch their marks, and it has to
+ * be: two of the four are red lines that height alone could not tell apart.
+ *
+ * ⚠ THEY LEFT THE CHART. Hung on their own marks they sat at four different
+ * heights among the candles, and there is no band inside this plot that is
+ * clear across its width — the tape falls from the top left to the bottom
+ * middle and climbs back, so anything level crosses it somewhere. The strip
+ * BETWEEN the chart's baseline at 850 and the subtitle reserve at 972 is the
+ * only place four pills can be level and touch nothing.
+ *
+ * ONE FLEX ROW, and all four are always mounted — invisible ones included.
+ * Centring a row that gains a member would shove the others sideways every
+ * time one arrived; mounting them all and fading each on its own beat keeps
+ * the row still.
+ *
+ * The order is the narration's: "trend, pattern, support dan resistance". So
+ * the row fills left to right exactly as the sentence names them.
+ */
+const PILL = { padX: 16, padY: 8, size: 26, gap: 40, top: 888 };
+const LABELS = [
+  { key: "trend", text: "Trend" },
+  { key: "pattern", text: "Pattern" },
+  { key: "support", text: "Support" },
+  { key: "resistance", text: "Resistance" },
+] as const;
+
+/**
  * ═══ ⚠ MOVING A MARK BY HAND ═══
  *
  * Every mark below is SEARCHED FOR in BMRI's own tape. Fill one of these in
@@ -337,6 +367,55 @@ export const Scene11 = () => {
           </Layer>
         ),
       )}
+
+      {/* ── the four labels, level, under the chart ── */}
+      <div
+        style={{
+          position: "absolute",
+          left: theme.layout.safeLeft,
+          right: theme.layout.safeRight,
+          top: PILL.top,
+          display: "flex",
+          justifyContent: "center",
+          gap: PILL.gap,
+        }}
+      >
+        {LABELS.map((l) => {
+          const at =
+            l.key === "trend"
+              ? T.trend
+              : l.key === "pattern"
+                ? T.pattern
+                : l.key === "support"
+                  ? T.support
+                  : T.resistance;
+          const fill =
+            l.key === "trend"
+              ? theme.colors.maOrange
+              : l.key === "pattern"
+                ? theme.colors.indigo
+                : theme.colors.crossRed;
+          return (
+            <div
+              key={l.key}
+              style={{
+                /* MOUNTED EVEN WHEN INVISIBLE — see the note on PILL */
+                opacity: progress(f, at, MARK_IN),
+                background: fill,
+                color: theme.colors.surface,
+                borderRadius: theme.layout.radius.sm,
+                padding: `${PILL.padY}px ${PILL.padX}px`,
+                fontFamily: theme.type.family,
+                fontSize: PILL.size,
+                fontWeight: theme.type.label.weight,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {l.text}
+            </div>
+          );
+        })}
+      </div>
 
       {/* ── layer 2 and 3: the indicators, agreeing with what is already there ── */}
       <MALine values={MA} grid={G} f={f} drawFrom={T.layer2} drawDur={sec(2)} variant="slow" />
