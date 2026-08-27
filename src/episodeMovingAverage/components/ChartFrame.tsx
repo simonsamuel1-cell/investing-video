@@ -108,6 +108,7 @@ export const ChartFrame = ({
   ticks,
   tickLabels = false,
   gridSpan,
+  baseline = true,
 }: {
   closes: number[];
   bars?: Bar[];
@@ -130,6 +131,15 @@ export const ChartFrame = ({
    * all of them arriving at once.
    */
   gridSpan?: { x1: number; x2: number; y1: number; y2: number };
+  /**
+   * The rule along the bottom of the plot box.
+   *
+   * It is a floor for a chart that has one — a tape sitting ON its axis. A
+   * chart whose price levels are already drawn does not: the rule then sits
+   * below the lowest of them, level with nothing, and reads as a stray line
+   * across the frame rather than as an axis.
+   */
+  baseline?: boolean;
 }) => {
   if (opacity <= 0.001) return null;
   const box = grid.box;
@@ -161,14 +171,16 @@ export const ChartFrame = ({
             strokeWidth={theme.layout.border.thin}
           />
         ))}
-        <line
-          x1={span.x1}
-          y1={box.y + box.h}
-          x2={span.x2}
-          y2={box.y + box.h}
-          stroke={theme.colors.gridline}
-          strokeWidth={theme.layout.border.thin}
-        />
+        {baseline && (
+          <line
+            x1={span.x1}
+            y1={box.y + box.h}
+            x2={span.x2}
+            y2={box.y + box.h}
+            stroke={theme.colors.gridline}
+            strokeWidth={theme.layout.border.thin}
+          />
+        )}
       </Layer>
 
       {tickLabels &&

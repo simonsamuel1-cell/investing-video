@@ -116,8 +116,13 @@ const T = {
 /** How far the push closes on the card before the dissolve takes over. */
 const PUSH_AMOUNT = 0.55;
 
-const PANEL = { x: 96, y: 150, w: 1728, h: 750 };
-const PLOT = {
+/**
+ * ⚠ EXPORTED. CG-C draws GGRM in this same window — Simon: "duplikat saja".
+ * Sharing the numbers is the only way the two panels can stay the same panel;
+ * a second set of constants that started out equal would not end that way.
+ */
+export const PANEL = { x: 96, y: 150, w: 1728, h: 750 };
+export const PLOT = {
   x: PANEL.x + 150,
   y: PANEL.y + 200,
   w: PANEL.w - 150 - 56,
@@ -169,9 +174,9 @@ const LIST = {
   size: 24,
 };
 
-const FRAMES = ["5m", "15m", "1H", "1D", "1W"];
+export const FRAMES = ["5m", "15m", "1H", "1D", "1W"];
 /** Every screenshot is a DAILY chart, so 1D is the live pill throughout. */
-const ACTIVE = "1D";
+export const ACTIVE = "1D";
 /** A daily chart's axis is dates, not session hours. */
 const AXIS = ["Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
 /**
@@ -181,14 +186,14 @@ const AXIS = ["Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
  * these are its readouts — chrome, not headings, sentences or in-chart labels
  * — so they are named here, in the one scene that needs them.
  */
-const UI = { size: 30, weight: 600, axis: 500, name: 36, price: 70 };
-const HEAD = { x: 40, avatar: 52, gap: 16 };
+export const UI = { size: 30, weight: 600, axis: 500, name: 36, price: 70 };
+export const HEAD = { x: 40, avatar: 52, gap: 16 };
 /**
  * The price column's centre line. The axis labels and the last-price pill are
  * BOTH centred on it — right-aligning them lined up their right edges but left
  * their middles apart, because the pill carries padding the labels do not.
  */
-const AXIS_CX = 84;
+export const AXIS_CX = 84;
 /**
  * ═══ THE ROADMAP ═══
  *
@@ -228,7 +233,7 @@ const GRID = { cell: 84, loop: 150, line: "#E2E2E2", paper: "#FAFAFA" };
  * pair ran from the price group all the way to the extension and sat on the
  * chart's wash. The padding is cut with the type so the chip stays a chip.
  */
-const BTN = { top: 108, gap: 10, padX: 16, padY: 8, size: 20 };
+export const BTN = { top: 108, gap: 10, padX: 16, padY: 8, size: 20 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const font = theme.type.family;
@@ -434,7 +439,22 @@ const CHARTS = [
  * lands harder on a chart the viewer has already watched for half a minute
  * than on a fourth synthetic tape they have never seen.
  */
-export const BMRI_TAPE = { closes: CHARTS[2].closes, bars: CHARTS[2].bars };
+export const BMRI_TAPE = {
+  closes: CHARTS[2].closes,
+  bars: CHARTS[2].bars,
+  /**
+   * ⚠ AND ITS INDICATORS, computed HERE with an invented warm-up history so
+   * they have a value on bar 0. SC11 needs them to start at the chart's left
+   * edge — "anggap saja ada chart lagi di luar chart yang ini" — and a 20-bar
+   * average computed from this window alone is null until bar 19, which draws
+   * as a line that begins a fifth of the way in.
+   *
+   * `MA_PERIOD` here is 20, the same period SC11 wants, so these are its
+   * indicators and not merely similar ones.
+   */
+  ma: CHARTS[2].ma,
+  bb: CHARTS[2].bb,
+};
 
 /** Each chart's own structure timing. BMRI has none. */
 const ZIG = [T.zig, T.zigBbri, null];

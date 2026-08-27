@@ -13,8 +13,10 @@ import { ChartFrame, gridOf, Layer } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
 import { BollingerBands } from "../components/BollingerBands";
 import { TitleChip } from "../components/TitleChip";
+import { QuoteBox } from "../components/QuoteBox";
+import { QuizTitle } from "../components/QuizTitle";
 import { theme } from "../theme";
-import { sec, sma, bollinger, progress, progressInOut } from "../helpers";
+import { sec, progress, progressInOut } from "../helpers";
 import { domainOf } from "../series";
 import { BMRI_TAPE } from "./Scene01";
 
@@ -37,10 +39,52 @@ const T = {
   pattern: at(6237),
   support: at(6262),
   resistance: at(6287),
-  layer2: sec(10.3),
-  layer3: sec(12.5),
+  /**
+   * ═══ THE HANDOVER (6390 → 6420) ═══
+   *
+   * All four marks and their labels LEAVE, together. They greyed out here for
+   * a while instead; Simon's call is that they go.
+   *
+   * ⚠ WHAT THIS COSTS. The marks are gone on 6420 and the average arrives on
+   * 6421, so the two never share a frame. The scene can still show the ORDER —
+   * your reading first, the indicators after — but it can no longer show them
+   * AGREEING, because nothing of yours is on the chart when they land. If that
+   * agreement ever has to be visible again, the marks have to outlive 6421.
+   */
+  clear: at(6390),
+  clearOver: at(6420) - at(6390),
+  /** Then the indicators, one at a time, each travelling in from the left. */
+  layer2: at(6421),
+  layer3: at(6491),
+  /**
+   * The line the scene leaves you with, one frame ahead of the voice that says
+   * it: "Anggap indikator sebagai second opinion, bukan alat yang mengambil
+   * keputusan untukmu" runs 6594–6714.
+   *
+   * It goes at 6720, before "Sekarang giliran kamu" at 6729 — that sentence
+   * hands the episode to the GGRM exercise, and a closing line still standing
+   * under it would be answering a question that has already moved on.
+   */
+  quote: at(6593),
+  /**
+   * ═══ THE SCENE CLEARS, AND THE QUIZ OPENS (6724 → 6725) ═══
+   *
+   * EVERYTHING fades at 6724 — chart, indicators, quote, heading — and "Quiz
+   * Time" comes up on the frame after. It is a CROSS-DISSOLVE and not a cut:
+   * the two overlap, so the title is already arriving while the chart is still
+   * leaving, which is what makes the change of subject read as one move.
+   *
+   * The quote's own exit was at 6720, on its sentence's end. It is folded into
+   * this one now: Simon asked for every visual to leave together, and a line
+   * that had already gone four frames earlier would have made the clear look
+   * like it happened twice.
+   */
+  out: at(6724),
+  outOver: 20,
+  quiz: at(6725),
 };
-const PERIOD = 20;
+/** The scene's own last word. One line, so 76 tall. */
+const QUOTE = { w: 860, h: 76, y: 900 };
 /** How far either side a bar must be the extreme to count as a swing. */
 const SWING = 4;
 /** ONE entrance for all four of your marks: a fade, this long. */
@@ -144,8 +188,17 @@ const HAND: Hand = {
  */
 const SERIES = BMRI_TAPE.closes;
 const BARS = BMRI_TAPE.bars;
-const BB = bollinger(SERIES, PERIOD, 2);
-const MA = sma(SERIES, PERIOD);
+/**
+ * ⚠ THE INDICATORS COME FROM SC01 TOO, warm-up and all.
+ *
+ * Computed here from this window alone, a 20-bar average is null until bar 19
+ * and the line would begin a fifth of the way across. SC01 builds BMRI's with
+ * an invented prior history, so they have a value on bar 0 and can travel in
+ * from the very left edge — Simon's note: "anggap saja ada chart lagi di luar
+ * chart yang ini".
+ */
+const MA = BMRI_TAPE.ma;
+const BB = BMRI_TAPE.bb;
 const DOMAIN = domainOf([...BB.lower, ...BB.upper], BARS);
 
 /**
@@ -290,158 +343,248 @@ export const Scene11 = () => {
   /* FULL WIDTH. `chartA` is the safe area itself — 96 to 1824 — so the tape
      reaches both margins and crosses neither. It was `chartB`, half a frame
      wide, only because a text panel used to sit beside it. */
+  /**
+   * HOW FAR YOUR OWN MARKS HAVE GONE. One number drives all four strokes and
+   * the label row, so they cannot come apart — and `mark()` folds it into each
+   * mark's own arrival, so no mark can be left behind by an edit to the other.
+   */
+  const gone = progress(f, T.clear, T.clearOver);
+  const mark = (at: number) => progress(f, at, MARK_IN) * (1 - gone);
   const box = theme.layout.chartA;
   const G = gridOf(SERIES, DOMAIN, box);
 
   return (
     <SafeArea>
-      <ChartFrame
-        closes={SERIES}
-        bars={BARS}
-        grid={G}
-        mode="candle"
-        f={f}
-        drawFrom={T.chart}
-        drawDur={sec(3.2)}
-      />
-
-      {/* ── layer 1: your own reading, first and alone ── */}
-
-      {/* TREND — one straight line, on the descending highs. ORANGE, Simon's
-          call: your own reading is drawn in it and the indicators arrive after
-          in indigo and cyan, so the two layers never share a hue. */}
-      {TREND && f >= T.trend && (
-        <Layer opacity={progress(f, T.trend, MARK_IN)}>
-          <line
-            x1={G.x(TREND.a)}
-            y1={G.y(TREND.at(TREND.a))}
-            x2={G.x(TREND.end)}
-            y2={G.y(TREND.at(TREND.end))}
-            stroke={theme.colors.maOrange}
-            strokeWidth={theme.layout.stroke.band}
-            strokeLinecap="round"
-          />
-        </Layer>
-      )}
-
-      {/* PATTERN — the structure zigzag. It used to draw itself along its own
-          length, the way SC01's charts do; Simon's call is a plain fade, and it
-          is the right one HERE: four marks arriving in a row want one entrance
-          between them, and the one that took a second and a half to travel
-          made the other three look like they had merely blinked on. */}
-      {f >= T.pattern && (
-        <Layer opacity={progress(f, T.pattern, MARK_IN)}>
-          <path
-            d={ZIG.map(
-              (z, i) =>
-                `${i === 0 ? "M" : "L"}${G.x(z.i).toFixed(1)},` +
-                `${G.y(z.high ? BARS[z.i].h : BARS[z.i].l).toFixed(1)}`,
-            ).join(" ")}
-            fill="none"
-            stroke={theme.colors.indigo}
-            strokeWidth={theme.layout.stroke.ma}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </Layer>
-      )}
-
-      {/* SUPPORT and RESISTANCE — the lowest low and the highest high, each
-          run right across: a level is a place, not an event. RED, the episode's
-          one annotation red — see `crossRed` in the theme. */}
-      {[
-        { at: T.support, v: SUPPORT },
-        { at: T.resistance, v: RESISTANCE },
-      ].map((l) =>
-        f < l.at ? null : (
-          <Layer key={l.v} opacity={progress(f, l.at, MARK_IN)}>
-            <line
-              x1={box.x + 20}
-              y1={G.y(l.v)}
-              x2={box.x + box.w - 20}
-              y2={G.y(l.v)}
-              stroke={theme.colors.crossRed}
-              strokeWidth={theme.layout.stroke.band}
-              strokeDasharray="10 8"
-            />
-          </Layer>
-        ),
-      )}
-
-      {/* ── the four labels, level, under the chart ── */}
+      {/*
+        EVERYTHING THE SCENE DREW lives in here, so one opacity clears it —
+        chart, both indicators, the four marks, the quote and the heading. A
+        per-element exit would be six places to keep in step, and the one that
+        was forgotten would be the one left standing under the quiz.
+      */}
       <div
         style={{
           position: "absolute",
-          left: theme.layout.safeLeft,
-          right: theme.layout.safeRight,
-          top: PILL.top,
-          display: "flex",
-          justifyContent: "center",
-          gap: PILL.gap,
+          inset: 0,
+          opacity: 1 - progress(f, T.out, T.outOver),
         }}
       >
-        {LABELS.map((l) => {
-          const at =
-            l.key === "trend"
-              ? T.trend
-              : l.key === "pattern"
-                ? T.pattern
-                : l.key === "support"
-                  ? T.support
-                  : T.resistance;
-          const fill =
-            l.key === "trend"
-              ? theme.colors.maOrange
-              : l.key === "pattern"
-                ? theme.colors.indigo
-                : theme.colors.crossRed;
-          return (
-            <div
-              key={l.key}
-              style={{
-                /* MOUNTED EVEN WHEN INVISIBLE — see the note on PILL */
-                opacity: progress(f, at, MARK_IN),
-                background: fill,
-                color: theme.colors.surface,
-                borderRadius: theme.layout.radius.sm,
-                padding: `${PILL.padY}px ${PILL.padX}px`,
-                fontFamily: theme.type.family,
-                fontSize: PILL.size,
-                fontWeight: theme.type.label.weight,
-                whiteSpace: "nowrap",
-              }}
-            >
-              {l.text}
-            </div>
-          );
-        })}
+        {/* ── layer 2 and 3: the indicators, agreeing with what is already there ── */}
+        {/* Both travel IN FROM THE LEFT rather than fading up in place: the
+            chart is a window onto a tape that runs on past both its edges, and a
+            line that materialises everywhere at once says the opposite. */}
+        <MALine
+          values={MA}
+          grid={G}
+          f={f}
+          drawFrom={T.layer2}
+          drawDur={sec(2)}
+          variant="slow"
+        />
+        <BollingerBands
+          /* the channel's middle band IS the 20-bar average this scene has
+             already drawn — SC01 keeps them as one series, which is correct */
+          mid={MA}
+          upper={BB.upper}
+          lower={BB.lower}
+          grid={G}
+          /* `bandTrace` wipes the pair and the channel left to right; without it
+             `opacity` alone would raise the whole envelope at once */
+          bandTrace={progressInOut(f, T.layer3, sec(2.2))}
+          bandsIn={f >= T.layer3 ? 1 : 0}
+          /* ⚠ NO DASHED MIDDLE BAND. The channel's middle IS the average
+             `MALine` has been drawing solid since 6421, and letting the
+             component draw it too turned that one line dashed wherever the wipe
+             had reached — a rendering artefact, not a choice. The component
+             still needs `mid` for the channel's geometry; it just does not
+             draw it. */
+          midTrace={0}
+          opacity={0.9}
+        />
+
+        {/*
+          THE CANDLES ARE DRAWN LAST OF THE THREE, so they sit ON the indicators.
+          Simon's call and the right one: the channel is a region the price moves
+          through, and a pale wash laid OVER the bars makes them look like they
+          are behind glass. Order in the tree is the only thing that decides it —
+          the same fix CG-B needed.
+
+          The four marks still come after all of it. They are annotation: a
+          reading drawn on top of the picture, not part of it.
+        */}
+        <ChartFrame
+          closes={SERIES}
+          bars={BARS}
+          grid={G}
+          mode="candle"
+          f={f}
+          drawFrom={T.chart}
+          drawDur={sec(3.2)}
+        />
+
+        {/* ── layer 1: your own reading, first and alone ── */}
+
+        {/* TREND — one straight line, on the descending highs. ORANGE, Simon's
+            call: your own reading is drawn in it and the indicators arrive after
+            in indigo and cyan, so the two layers never share a hue. */}
+        {TREND && f >= T.trend && (
+          <Layer opacity={mark(T.trend)}>
+            <line
+              x1={G.x(TREND.a)}
+              y1={G.y(TREND.at(TREND.a))}
+              x2={G.x(TREND.end)}
+              y2={G.y(TREND.at(TREND.end))}
+              stroke={theme.colors.maOrange}
+              strokeWidth={theme.layout.stroke.band}
+              strokeLinecap="round"
+            />
+          </Layer>
+        )}
+
+        {/* PATTERN — the structure zigzag. It used to draw itself along its own
+            length, the way SC01's charts do; Simon's call is a plain fade, and it
+            is the right one HERE: four marks arriving in a row want one entrance
+            between them, and the one that took a second and a half to travel
+            made the other three look like they had merely blinked on. */}
+        {f >= T.pattern && (
+          <Layer opacity={mark(T.pattern)}>
+            <path
+              d={ZIG.map(
+                (z, i) =>
+                  `${i === 0 ? "M" : "L"}${G.x(z.i).toFixed(1)},` +
+                  `${G.y(z.high ? BARS[z.i].h : BARS[z.i].l).toFixed(1)}`,
+              ).join(" ")}
+              fill="none"
+              stroke={theme.colors.indigo}
+              strokeWidth={theme.layout.stroke.ma}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </Layer>
+        )}
+
+        {/* SUPPORT and RESISTANCE — the lowest low and the highest high, each
+            run right across: a level is a place, not an event. RED, the episode's
+            one annotation red — see `crossRed` in the theme. */}
+        {[
+          { at: T.support, v: SUPPORT },
+          { at: T.resistance, v: RESISTANCE },
+        ].map((l) =>
+          f < l.at ? null : (
+            <Layer key={l.v} opacity={mark(l.at)}>
+              <line
+                x1={box.x + 20}
+                y1={G.y(l.v)}
+                x2={box.x + box.w - 20}
+                y2={G.y(l.v)}
+                stroke={theme.colors.crossRed}
+                strokeWidth={theme.layout.stroke.band}
+                strokeDasharray="10 8"
+              />
+            </Layer>
+          ),
+        )}
+
+        {/* ── the four labels, level, under the chart ── */}
+        <div
+          style={{
+            position: "absolute",
+            left: theme.layout.safeLeft,
+            right: theme.layout.safeRight,
+            top: PILL.top,
+            display: "flex",
+            justifyContent: "center",
+            gap: PILL.gap,
+          }}
+        >
+          {LABELS.map((l) => {
+            const at =
+              l.key === "trend"
+                ? T.trend
+                : l.key === "pattern"
+                  ? T.pattern
+                  : l.key === "support"
+                    ? T.support
+                    : T.resistance;
+            const fill =
+              l.key === "trend"
+                ? theme.colors.maOrange
+                : l.key === "pattern"
+                  ? theme.colors.indigo
+                  : theme.colors.crossRed;
+            return (
+              <div
+                key={l.key}
+                style={{
+                  /* MOUNTED EVEN WHEN INVISIBLE — see the note on PILL */
+                  opacity: mark(at),
+                  background: fill,
+                  color: theme.colors.surface,
+                  borderRadius: theme.layout.radius.sm,
+                  padding: `${PILL.padY}px ${PILL.padX}px`,
+                  fontFamily: theme.type.family,
+                  fontSize: PILL.size,
+                  fontWeight: theme.type.label.weight,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {l.text}
+              </div>
+            );
+          })}
+        </div>
+
+        <TitleChip text="Cara Baca Indikator" f={f} at={T.title} />
+
+        {/*
+          ⚠ THE ONLY PLACE THE SCENE STILL SAYS IT. The struck
+          "INDICATOR = DECISION MAKER" went with the right-hand panel, so the
+          marked half of this sentence — "bukan pengambil keputusan" — is now the
+          episode's whole statement of that claim. It is marked and not the
+          catchier half for exactly that reason.
+
+          It sits in the strip under the chart, which the four labels have had to
+          themselves until 6420 and which is empty from then on.
+        */}
+        <QuoteBox
+          f={f}
+          at={T.quote}
+          w={QUOTE.w}
+          h={QUOTE.h}
+          y={QUOTE.y}
+          /* no exit of its own — the whole scene clears at 6724, see T.out */
+          lines={[
+            {
+              segments: [
+                { text: "Indikator itu second opinion, " },
+                { text: "bukan pengambil keputusan", tone: "indigo" },
+              ],
+            },
+          ]}
+        />
+
+        {/*
+          ⚠ NOTHING IN THE RIGHT PANEL ANY MORE. Three blocks stood there — the
+          1/2/3 hierarchy, the PRICE ACTION → CONFIRMATION → CONTEXT flow, and
+          the closing pair. All three are gone at Simon's direction, and the
+          chart takes the full width they were making room for.
+
+          ⚠ COMPLIANCE. The last of them struck "INDICATOR = DECISION MAKER",
+          and it was one of only two struck misconceptions left in the episode.
+          The other is in CG-C. This scene now makes its case entirely by the
+          ORDER OF ARRIVAL — your own marks are drawn first and the indicators
+          arrive afterwards, agreeing with what is already there — which is the
+          argument it was always built on, but it is no longer said in words.
+        */}
       </div>
 
-      {/* ── layer 2 and 3: the indicators, agreeing with what is already there ── */}
-      <MALine values={MA} grid={G} f={f} drawFrom={T.layer2} drawDur={sec(2)} variant="slow" />
-      <BollingerBands
-        mid={BB.mid}
-        upper={BB.upper}
-        lower={BB.lower}
-        grid={G}
-        opacity={progressInOut(f, T.layer3, sec(1.8)) * 0.9}
-      />
-
-      <TitleChip text="Cara Baca Indikator" f={f} at={T.title} />
-
       {/*
-        ⚠ NOTHING IN THE RIGHT PANEL ANY MORE. Three blocks stood there — the
-        1/2/3 hierarchy, the PRICE ACTION → CONFIRMATION → CONTEXT flow, and
-        the closing pair. All three are gone at Simon's direction, and the
-        chart takes the full width they were making room for.
-
-        ⚠ COMPLIANCE. The last of them struck "INDICATOR = DECISION MAKER",
-        and it was one of only two struck misconceptions left in the episode.
-        The other is in CG-C. This scene now makes its case entirely by the
-        ORDER OF ARRIVAL — your own marks are drawn first and the indicators
-        arrive afterwards, agreeing with what is already there — which is the
-        argument it was always built on, but it is no longer said in words.
+        ── QUIZ TIME ──
+        It arrives on the frame AFTER the clear begins, so the two overlap.
+        `t={0}` is its big, centred state; CG-C picks the same component up on
+        6762 and walks it to the heading rail, which is why it is a component
+        and not a div — the seam has to be identical on both sides of it.
       */}
+      <QuizTitle f={f} at={T.quiz} t={0} />
     </SafeArea>
   );
 };
