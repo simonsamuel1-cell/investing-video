@@ -52,7 +52,7 @@ import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Captions } from "./components/Captions";
 import { Watermark } from "./components/Watermark";
 
-export const TOTAL_FRAMES = 9012;
+export const TOTAL_FRAMES = 9009;
 
 /**
  * ═══ ⚠ TEMPORARY A/B LEVER — SCENE 10'S CHART ═══
@@ -92,7 +92,10 @@ const INDEPENDENT_SCENES: Mounted[] = [
     ? []
     : [{ from: 5453, duration: 633, Component: Scene10 }]),
   { from: 6116, duration: 646, Component: Scene11 },
-  { from: 8388, duration: 624, Component: Scene13 },
+  /* the closing card. 426, not 624: the VO's last line ends at 8949 and the
+     card holds 60 frames past it, which is this project's outro. 624 would
+     have left it sitting silent for eight and a half seconds. */
+  { from: 8583, duration: 426, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
@@ -110,7 +113,17 @@ const CONTINUITY_GROUPS: Mounted[] = [
     duration: SCENE10_CONTINUOUS ? 1889 : 1226,
     Component: BandsGroup,
   },
-  { from: 6762, duration: 1626, Component: GgrmGroup },
+  {
+    from: 6762,
+    /* 1596, not 1626: thirty frames of dead air were cut out of the countdown
+       at 7540 and the cut lands inside this group, so it keeps its `from` and
+       loses the length instead. The VO lost the same second at 251.333s —
+       measured silence, -91 dB from end to end. */
+    /* 1821 → the group now runs to 8583, where it hands over to the closing
+       card. Simon's 8400 was superseded by the quote he then asked for. */
+    duration: 1821,
+    Component: GgrmGroup,
+  },
 ];
 
 /**

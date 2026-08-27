@@ -74,9 +74,10 @@ export const theme = {
      * content. It is a shade and not a wash: any lighter and 30px white on it
      * drops under 3:1, which is the floor for large text.
      *
-     * Two places use it, both at Simon's direction: SC05's Death Cross pill,
-     * and SC11's support and resistance lines. Nothing else may — a third red
-     * would stop the first two meaning anything.
+     * Three places use it, all at Simon's direction: SC05's Death Cross pill,
+     * SC11's support and resistance lines, and the one red line on SC13's
+     * closing card. Nothing else may — a second red in drawn content would
+     * stop any of them meaning anything.
      */
     crossRed: "#E95D71",
   },

@@ -223,7 +223,29 @@ export const CARDS = [
  * seamless — at the end of the period the pattern is identical to its start,
  * so there is no frame where it jumps back.
  */
-const GRID = { cell: 84, loop: 150, line: "#E2E2E2", paper: "#FAFAFA" };
+/**
+ * ⚠ IT WAS A 1px RULE AT #E2E2E2, AND THAT WAS THE WHOLE BUG.
+ *
+ * Eight levels of grey on a one-pixel line every 84px. It rendered the entire
+ * time — measured at (234,234,234) against white — and it survived nothing: a
+ * 1px line averaged with its white neighbours the moment anything scaled the
+ * frame down, so at any preview size, and at 720p, and on a phone, it was
+ * literally the same colour as the paper. That is why it looked as though it
+ * "appeared" late: `cardPush` magnifying the frame was the only thing that
+ * ever made it wide enough to survive.
+ *
+ * A darker tone alone does not fix that — a 1px line still averages away. It
+ * needs WIDTH. 2px at #C7CCD6 comes through a 50% downscale still reading as
+ * graph paper, which is the test that matters: nobody watches this at 1:1.
+ */
+const GRID = {
+  cell: 84,
+  loop: 150,
+  line: "#C7CCD6",
+  /** ⚠ 2px, not 1. See the note above. */
+  w: 2,
+  paper: "#FAFAFA",
+};
 
 /**
  * The indicator buttons, floating under the timeframe row.
@@ -1305,15 +1327,62 @@ export const cardPush = (p: number, card: number, amount: number) => {
  *
  * ── the white ground the roadmap sits on ──
  * Full strength as soon as the shrink begins, not fading in with it: a partial
- * fade let SafeArea's own #F5F5F5 show through underneath, so the screen
- * behind the roadmap was grey, not the flat white of Simon's reference. Only
- * the GRID on top of it still fades in.
+ * fade let SafeArea's own ground show through underneath, so the screen behind
+ * the roadmap was grey, not the flat white of Simon's reference.
+ *
+ * ⚠ AND SO IS THE GRID, now. It used to fade in over the shrink and Simon
+ * caught it at 644, 4173 and 6077 — the background arriving late.
+ *
+ * It was late by construction: the shrinking picture COVERS the whole frame at
+ * `reveal = 0`, so nothing of this ground is visible until the clip starts
+ * closing, and the first sliver it uncovers is the frame's own edge. A grid
+ * ramping up over the same move means that sliver shows a half-drawn ground.
+ * There is nothing for a fade to ease in FROM.
  */
-export const RoadmapGround = ({ f, reveal }: { f: number; reveal: number }) => {
+/**
+ * ⚠ IT MOUNTS ON THE TRANSITION'S FIRST FRAME. The guard used to be
+ * `reveal <= 0.001`, and `reveal` is an ease-in-out curve — dead flat at its
+ * start, so it does not clear 0.001 until fourteen frames in. The ground was
+ * therefore absent at 531, 4160 and 6040 and arrived a beat after the move it
+ * belongs to had already begun. Simon caught all three.
+ *
+ * `> 0` is the right test: the ground is the transition's own floor, so it is
+ * there for every frame the transition exists and no frames before it.
+ */
+export const RoadmapGround = ({
+  f,
+  reveal,
+  vignette = true,
+  tone,
+}: {
+  f: number;
+  reveal: number;
+  /**
+   * The radial mask that keeps the grid strongest in the middle and gone at
+   * the edges. Right for the ROADMAP, where four cards sit spread across the
+   * frame and the ground shows between them.
+   *
+   * ⚠ WRONG for SC13, and invisibly so: that scene is one card in the middle,
+   * which covers exactly the part of the grid the mask keeps. The ground was
+   * there and drew nothing anyone could see. Off, the grid is even across the
+   * frame and reads around the card, which is what Simon asked for.
+   */
+  vignette?: boolean;
+  /**
+   * The grid's own line colour, when the default is too quiet for the scene.
+   *
+   * ⚠ THE DEFAULT IS NEARLY INVISIBLE, and that is deliberate here: on the
+   * roadmap the grid is a texture under four cards, and anything stronger
+   * competes with them. On SC13 there is one card and a lot of empty paper, so
+   * the same tone reads as nothing at all — measured at (235,235,235) against
+   * white, which is eight levels of grey on a 1px line every 84px.
+   */
+  tone?: string;
+}) => {
   /** One cell of drift per loop — see GRID. */
   const drift = ((f % GRID.loop) / GRID.loop) * GRID.cell;
   const shrink = reveal;
-  if (shrink <= 0.001) return null;
+  if (shrink <= 0) return null;
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: "#FFFFFF" }} />
@@ -1321,18 +1390,23 @@ export const RoadmapGround = ({ f, reveal }: { f: number; reveal: number }) => {
         style={{
           position: "absolute",
           inset: 0,
-          opacity: shrink,
+          /* NOT `shrink` — see the note above */
+          opacity: 1,
           backgroundImage:
-            `linear-gradient(${GRID.line} 1px, transparent 1px),` +
-            `linear-gradient(90deg, ${GRID.line} 1px, transparent 1px)`,
+            `linear-gradient(${tone ?? GRID.line} ${GRID.w}px, transparent ${GRID.w}px),` +
+            `linear-gradient(90deg, ${tone ?? GRID.line} ${GRID.w}px, transparent ${GRID.w}px)`,
           backgroundSize: `${GRID.cell}px ${GRID.cell}px`,
           backgroundPosition: `${drift.toFixed(2)}px ${drift.toFixed(2)}px`,
           /* strongest in the middle, gone at the edges, as in the
                reference — the grid is a ground, not a subject */
-          maskImage:
-            "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
-          WebkitMaskImage:
-            "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
+          ...(vignette
+            ? {
+                maskImage:
+                  "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
+                WebkitMaskImage:
+                  "radial-gradient(ellipse at 50% 48%, #000 34%, transparent 82%)",
+              }
+            : null),
         }}
       />
     </div>

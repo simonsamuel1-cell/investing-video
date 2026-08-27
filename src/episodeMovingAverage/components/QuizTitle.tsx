@@ -14,17 +14,21 @@
  * other thirteen scenes' headings, and that is the state the viewer looks at
  * for the next fifty seconds.
  */
+import React from "react";
 import { theme } from "../theme";
 import { textReveal } from "../helpers";
 
 /** How much bigger the centred state is than the heading. 48 × 2.5 = 120. */
 export const BIG = 2.5;
+/** How far anything set beside the heading stands off it. */
+const GAP = 30;
 
 export const QuizTitle = ({
   f,
   at,
   t,
   opacity = 1,
+  after,
 }: {
   f: number;
   /** The frame the words first appear — their own reveal reads from it. */
@@ -32,6 +36,19 @@ export const QuizTitle = ({
   /** 0 = big and centred, 1 = settled in the heading rail. */
   t: number;
   opacity?: number;
+  /**
+   * Anything that belongs BESIDE the heading — CG-C hangs its question there.
+   *
+   * ⚠ IT GOES IN THE ROW, not at a measured offset. "Quiz Time" is whatever
+   * width the browser makes of that string at that weight, so a left: value
+   * chosen to sit 30px past it is a guess that stops being true the moment the
+   * type changes.
+   *
+   * Adding it cannot move the heading: the settled state lands the ROW's
+   * top-left on `titleChip` (see the percentage translate below), and that is
+   * where the words are however wide the row gets.
+   */
+  after?: React.ReactNode;
 }) => {
   if (f < at || opacity <= 0.001) return null;
   const r = textReveal(f, at);
@@ -78,9 +95,13 @@ export const QuizTitle = ({
           color: theme.colors.indigo,
           opacity: r.opacity * opacity,
           whiteSpace: "nowrap",
+          display: "flex",
+          alignItems: "baseline",
+          gap: GAP,
         }}
       >
-        Quiz Time
+        <span>Quiz Time</span>
+        {after}
       </div>
     </div>
   );
