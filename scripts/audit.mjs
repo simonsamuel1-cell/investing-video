@@ -21,6 +21,14 @@ import { join, relative, basename } from "node:path";
 const SRC = process.argv[2] ?? "src";
 const isCorePath = (f) => /(^|[\\/])core[\\/]/.test(f);
 const isThemePath = (f) => /(^|[\\/])core[\\/]theme\.ts$/.test(f);
+/**
+ * The one file whose colours are NOT the palette's. A supplied brand mark is
+ * reproduced, never re-tinted: a logo that follows a theme swap has stopped
+ * being the logo. Matched by FILENAME, the same mechanism that confines
+ * candleGreen/candleRed to Candles.tsx — an exemption you can see from the
+ * file listing rather than one buried in a pragma.
+ */
+const isBrandAsset = (f) => /(^|[\\/])TuntunMark\.tsx$/.test(f);
 
 /** Names an episode must never define for itself. */
 const CORE_EXPORTS = [
@@ -57,8 +65,9 @@ for (const file of files) {
   lines.forEach((ln, i) => {
     const n = i + 1;
 
-    // 1 — palette is closed. Hex literals live in core/theme.ts and nowhere else.
-    if (!isTheme) {
+    // 1 — palette is closed. Hex literals live in core/theme.ts and nowhere
+    //     else, with one named exception: the brand mark. See isBrandAsset.
+    if (!isTheme && !isBrandAsset(file)) {
       const hex = ln.match(/#[0-9A-Fa-f]{6}\b/);
       if (hex) add(file, n, "palette", `hex literal ${hex[0]} — use a theme/palette slot`);
       const rgba = ln.match(/rgba?\(\s*\d+\s*,/);
