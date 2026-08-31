@@ -105,6 +105,9 @@ export const COUNTDOWN = [BEAT.three, BEAT.two, BEAT.one];
  */
 export const CUTS = {
   intoSC01: { at: 0, over: 30, distance: 90, blur: 12, axis: "y" as const },
+  /** SC01 → the "Satu hal yang perlu dicek" mascot card. A real cut: SC01 is
+   *  carried out and the card carried in on one move at f892. */
+  toMascot: { at: 892, over: 30, distance: 90, blur: 10, axis: "y" as const },
 };
 
 /** A global beat, in a scene mounted at `from`. */

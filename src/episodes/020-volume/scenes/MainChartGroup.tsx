@@ -30,7 +30,8 @@ import {
   Stage, Card, Chart, Candles, VolumeBars, Level, PriceTag, Zone, HighlightCircle,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, Crosshair,
   SplitDivider, SplitLabels,
-  gridOf, useMotion, progress, progressInOut, price as fmtPrice, theme, cutInStyle,
+  gridOf, useMotion, progress, progressInOut, price as fmtPrice, theme,
+  cutInStyle, cutOutStyle, TuntunMark,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, local } from "../data/timing";
 import { PRICE, VOL, TAG_Y, GAP, halves, panes } from "../data/layout";
@@ -87,12 +88,14 @@ const T = {
  * burned-in subtitles are NOT here — they are mounted at the Composition root,
  * above every scene — so they carry on untouched.
  *
+ * ⚠ SC01 ENDS ON A CAMERA CUT AT f892, not on a frame count. What used to be
+ * SC02's split screen is gone at Simon's direction: the cut hands straight to
+ * the mascot card, which then holds to f1460. `CUTS.toMascot` is the only place
+ * that boundary is written down.
+ *
  * ⚠ THE GROUP STAYS MOUNTED throughout. It draws nothing rather than being
  * unmounted, because the tape it carries has to survive all the way to SC13.
- * Blanking is a drawing decision; unmounting would be a timing one and would
- * rebuild the chart.
  */
-const BLANK_UNTIL = 900;
 /** ⚠ EDIT HERE — font size of the "Apakah langsung beli?" question, in px. */
 const ASK_SIZE = 70;
 /** ⚠ EDIT HERE — font size of the "Belum tentu" answer, in px. */
@@ -195,7 +198,13 @@ export const MainChartGroup = () => {
      ⚠ f + FROM is a no-op here (FROM is 0) and is written anyway, because the
      cut reads GLOBAL frames and the day this group moves, a bare `f` would be
      silently wrong. */
-  if (f < BLANK_UNTIL) {
+  /* ⚠ SC01 + the mascot card share this block, [0, 1460). SC01 is drawn only
+     up to the cut and cut OUT of; the mascot is cut IN at f892 and HOLDS through
+     what used to be SC02 — Simon removed the split screen there. The old
+     [900,1460) single/split code below is now unreachable and stays only as the
+     SC11–13 path for f >= 8154. */
+  if (f < BLOCK.SC03 - FROM) {
+    const g = f + FROM;
     const shrink = interpolate(
       progressInOut(f, SHRINK.at, SHRINK.over),
       [0, 1],
@@ -216,7 +225,16 @@ export const MainChartGroup = () => {
 
     return (
       <Stage>
-        <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.intoSC01) }}>
+        {/* ── SC01, carried OUT on the cut at 892 ───────────────────────────
+             ⚠ THE SWAP IS ON THE CUT FRAME, NOT A WINDOW AROUND IT. This used
+             to render both halves for the whole 30-frame move, so the two
+             pictures sat on top of each other and the "cut" read as a blurry
+             cross-fade. A camera cut is ONE move with the content exchanged at
+             its midpoint: the outgoing half is drawn strictly BEFORE `at`, the
+             incoming half strictly FROM `at`. Never both. */}
+        {f < CUTS.toMascot.at && (
+        <div style={{ position: "absolute", inset: 0, ...cutOutStyle(g, CUTS.toMascot) }}>
+        <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.intoSC01) }}>
           {born > 0.001 && (
             <Card
               rect={rect}
@@ -349,6 +367,36 @@ export const MainChartGroup = () => {
             }}
           />
         </div>
+        </div>
+        )}
+
+        {/* ── "Satu hal yang perlu dicek" — the mascot card, cut IN at 892 and
+             holding through what used to be SC02. Nothing else renders here:
+             the split screen is gone at Simon's direction. ─────────────────── */}
+        {f >= CUTS.toMascot.at && (
+          <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.toMascot) }}>
+            <TuntunMark
+              x={theme.canvas.width / 2}
+              y={CARD.y + CARD.h * 0.24}
+              height={CARD.h * 0.34}
+            />
+            <div
+              style={{
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: CARD.y + CARD.h * 0.66,
+                textAlign: "center",
+                fontFamily: theme.text.family,
+                fontSize: theme.text.title.size,
+                fontWeight: theme.text.title.weight,
+                color: theme.color.ink,
+              }}
+            >
+              Satu hal yang perlu dicek
+            </div>
+          </div>
+        )}
       </Stage>
     );
   }
