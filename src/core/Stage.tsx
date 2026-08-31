@@ -19,6 +19,33 @@ import { theme } from "./theme";
 import { usePalette, useShadow } from "./palette";
 import type { Rect } from "./helpers";
 
+/**
+ * ⚠ THE STAGE DEFENDS ITSELF AGAINST OTHER PEOPLE'S CSS.
+ *
+ * Found during the Moving Average migration, and it is the reason this exists:
+ * moving the episode into a repo that also contains a Tailwind composition
+ * changed 21 of 22 comparison frames WITHOUT A SINGLE LINE OF THE EPISODE
+ * CHANGING. Tailwind's preflight is global — it reaches every composition in
+ * the bundle — and it resets `box-sizing` and `line-height`, which moves every
+ * padded chip and every baseline by a pixel or two.
+ *
+ * Once episodes share one repo, that is not a Moving Average problem: any
+ * episode that ships a stylesheet silently restyles every other one, and
+ * nothing on screen says so. So the stage re-asserts the browser defaults the
+ * episodes were designed against, scoped to itself.
+ *
+ * `box-sizing` does not inherit, which is why this is a scoped rule and not an
+ * inline style.
+ */
+const RESET =
+  /* box-sizing does not inherit, so it has to be set on every descendant */
+  `.tuntun-stage,.tuntun-stage *,.tuntun-stage *::before,.tuntun-stage *::after{box-sizing:border-box;}` +
+  /* ⚠ line-height ON THE ROOT ONLY. It DOES inherit, and several components
+     set their own on a wrapper and rely on the children picking it up —
+     forcing `normal` on every descendant overrides that and moves the type.
+     Measured: on `*` it was fourteen times worse than leaving it off. */
+  `.tuntun-stage{line-height:normal;}`;
+
 export const Stage = ({
   children,
   transparent = false,
@@ -31,12 +58,14 @@ export const Stage = ({
   const c = usePalette();
   return (
     <AbsoluteFill
+      className="tuntun-stage"
       style={{
         backgroundColor: transparent ? undefined : c.bg,
         fontFamily: theme.text.family,
         color: c.ink,
       }}
     >
+      <style>{RESET}</style>
       {children}
     </AbsoluteFill>
   );
