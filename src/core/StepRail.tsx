@@ -12,6 +12,7 @@
  * scene's last word ends and clears after the incoming scene's first word. The
  * outgoing scene has already made its point by then.
  */
+import React from "react";
 import { useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { usePalette } from "./palette";
@@ -112,13 +113,27 @@ export const ChapterCard = ({
   sub,
   at,
   over,
+  children,
 }: {
-  n: string;
+  n?: string;
   title: string;
   sub?: string;
   at: number;
   /** Total frames the card is on screen, including its fade out. */
   over: number;
+  /**
+   * Absolute-positioned canvas content — a StepRail, a table, a mark.
+   *
+   * ⚠ THIS IS WHY ONE COMPONENT CARRIES ALL SEVEN CARDS. The card is positioned
+   * at the canvas origin, so a rail dropped in here lands exactly where it
+   * would land in a scene. Without it, an episode ends up with a near-copy per
+   * card — which is how four SafeAreas were born.
+   *
+   * With children the header moves to the TOP of the frame instead of its
+   * centre, because the children are then the subject and the header names
+   * them.
+   */
+  children?: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -128,8 +143,12 @@ export const ChapterCard = ({
   const outP = 1 - progress(f, at + over - m.fade, m.fade);
   const op = Math.min(inP, outP);
   const head = textReveal(f, at, m.reveal);
+  const withChildren = children !== undefined && children !== null;
 
   return (
+    /* ⚠ IT STOPS AT THE SUBTITLE BAND — `height` is captionBand.top, not the
+       canvas height — so a card covering a cut never covers the burned-in cue
+       running underneath it. That is what lets these straddle a cut at all. */
     <div
       style={{
         position: "absolute",
@@ -138,30 +157,43 @@ export const ChapterCard = ({
         width: theme.canvas.width,
         height: theme.captionBand.top,
         background: c.bg,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
-        gap: 14,
         fontFamily: theme.text.family,
         opacity: op,
       }}
     >
-      <div style={{ fontSize: theme.text.title.size, fontWeight: 700, color: c.indigo }}>{n}</div>
       <div
         style={{
-          fontSize: theme.text.display.size,
-          fontWeight: theme.text.display.weight,
-          color: c.ink,
-          opacity: head.opacity,
-          transform: `translateY(${head.dy}px)`,
+          position: "absolute",
+          left: 0,
+          top: withChildren ? theme.stage.active.y : 0,
+          width: theme.canvas.width,
+          height: withChildren ? undefined : theme.captionBand.top,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 14,
         }}
       >
-        {title}
+        {n && (
+          <div style={{ fontSize: theme.text.title.size, fontWeight: 700, color: c.indigo }}>{n}</div>
+        )}
+        <div
+          style={{
+            fontSize: withChildren ? theme.text.title.size : theme.text.display.size,
+            fontWeight: theme.text.display.weight,
+            color: c.ink,
+            opacity: head.opacity,
+            transform: `translateY(${head.dy}px)`,
+          }}
+        >
+          {title}
+        </div>
+        {sub && (
+          <div style={{ fontSize: theme.text.body.size, fontWeight: 500, color: c.slate }}>{sub}</div>
+        )}
       </div>
-      {sub && (
-        <div style={{ fontSize: theme.text.body.size, fontWeight: 500, color: c.slate }}>{sub}</div>
-      )}
+      {children}
     </div>
   );
 };

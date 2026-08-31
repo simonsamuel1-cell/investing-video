@@ -15,6 +15,8 @@ export { PaletteProvider, usePalette, useShadow, DEFAULT_SEGMENTS } from "./pale
 export type { Segment } from "./palette";
 
 export { useMotion } from "./useMotion";
+export { cutIn, cutOut, zoomIn, zoomOut, cutBlur, cutInStyle, cutOutStyle } from "./CameraCut";
+export type { Cut } from "./CameraCut";
 
 export * from "./helpers";
 

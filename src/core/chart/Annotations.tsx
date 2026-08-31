@@ -164,6 +164,8 @@ export const Zone = ({
   over,
   label,
   opacity = 1,
+  border = false,
+  borderWidth,
 }: {
   hi: number;
   lo: number;
@@ -172,6 +174,18 @@ export const Zone = ({
   over: number;
   label?: string;
   opacity?: number;
+  /**
+   * ⚠ OFF BY DEFAULT, AND THAT DEFAULT IS THE RULE. A zone is an AREA the price
+   * kept doing something in; an outlined rectangle reads as an OBJECT sitting on
+   * the chart, so the fill normally carries it alone.
+   *
+   * `border` opts back into a stroke for the case where the zone IS meant to
+   * read as a hard level — a resistance the scene is about to watch price
+   * break. Solid indigo at the theme's line weight, stronger than the 18% fill.
+   */
+  border?: boolean;
+  /** Border stroke width when `border` is on. Defaults to the theme's line. */
+  borderWidth?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -182,17 +196,15 @@ export const Zone = ({
   return (
     <>
       <Layer opacity={opacity}>
-        {/* ⚠ NO BORDER. An outlined rectangle reads as an OBJECT sitting on
-            the chart; a zone is an AREA the price kept doing something in, and
-            it has no edge the data actually knows about. The fill carries it
-            alone, which is why it is `zoneFill` at 18% rather than the 9%
-            wash every other overlay uses. */}
         <rect
           x={grid.box.x}
           y={yTop}
-          width={grid.box.w}
-          height={Math.max(1, full * p)}
+          width={grid.box.w * (border ? p : 1)}
+          height={Math.max(1, full * (border ? 1 : p))}
           fill={theme.color.zoneFill}
+          {...(border
+            ? { stroke: c.indigo, strokeWidth: borderWidth ?? theme.shape.line, rx: theme.shape.chipRadius }
+            : null)}
         />
       </Layer>
       {label && (

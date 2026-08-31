@@ -6,6 +6,7 @@ import {
   MovingAverageComposition,
   TOTAL_FRAMES as MA_FRAMES,
 } from "./episodes/019-moving-average/Composition";
+import { VolumeComposition, TOTAL_FRAMES as V20_FRAMES } from "./episodes/020-volume/Composition";
 import { theme } from "./core";
 
 export const RemotionRoot: React.FC = () => {
@@ -27,6 +28,16 @@ export const RemotionRoot: React.FC = () => {
         component={MovingAverageComposition}
         durationInFrames={MA_FRAMES}
         fps={30}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VIDEO 20 — Volume. Built on src/core at 60fps; every frame number
+          comes from the corrected SRT via docs/Video20_Volume_Script_SYNCED.md. */}
+      <Composition
+        id="Volume020"
+        component={VolumeComposition}
+        durationInFrames={V20_FRAMES}
+        fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
