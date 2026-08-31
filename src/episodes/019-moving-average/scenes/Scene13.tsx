@@ -30,7 +30,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { Stage } from "../../../core";
-import { TuntunMark } from "../components/TuntunMark";
+import { TuntunMark } from "../../../core";
 import { RoadmapGround } from "./Scene01";
 import { theme } from "../theme";
 import { textReveal } from "../helpers";
