@@ -225,6 +225,13 @@ export const theme = {
      */
     warn: "#E5475D",
     indigoWash: "rgba(95, 77, 238, 0.09)",
+    /**
+     * A price ZONE's fill, and the only reason it is not `indigoWash`: a zone
+     * carries no border, so the fill alone has to say "this is an area" — see
+     * chart/Annotations.tsx. At 9% it disappeared; at 18% it reads as ground
+     * without competing with the candles standing in it.
+     */
+    zoneFill: "rgba(95, 77, 238, 0.18)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     cyanWash: "rgba(92, 200, 227, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",

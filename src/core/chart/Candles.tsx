@@ -84,6 +84,7 @@ export const VolumeBars = ({
   box,
   shown = 1,
   opacity = 1,
+  peak: peakIn,
 }: {
   bars: Bar[];
   /** Relative heights, 0→~3. See volumeOf in series.ts. */
@@ -94,12 +95,23 @@ export const VolumeBars = ({
   box: { x: number; y: number; w: number; h: number };
   shown?: number;
   opacity?: number;
+  /**
+   * The value that reaches the top of the band. Defaults to this array's own
+   * maximum.
+   *
+   * ⚠ PASS IT WHENEVER TWO HISTOGRAMS ARE COMPARED. Left to itself each one
+   * normalises to its OWN peak, so a stock trading 4 million and a stock
+   * trading 14 million draw identical tallest bars — which is exactly the
+   * misreading the episode about volume exists to correct. It is the same
+   * trap as an unshared price domain, one axis down.
+   */
+  peak?: number;
 }) => {
   const c = usePalette();
   if (opacity <= 0.001) return null;
   const upto = Math.ceil(bars.length * Math.max(0, Math.min(1, shown)));
   const w = candleWidth(grid);
-  const peak = Math.max(1e-9, ...volume);
+  const peak = peakIn ?? Math.max(1e-9, ...volume);
 
   return (
     <Layer opacity={opacity}>

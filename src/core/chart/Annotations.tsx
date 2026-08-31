@@ -73,10 +73,19 @@ export const Level = ({
       {label && (
         <div
           style={{
+            /**
+             * ⚠ AT THE RIGHT-HAND END OF THE LINE, not the left.
+             *
+             * The line DRAWS left to right, so its right end is where the eye
+             * already is when the level finishes arriving — a label at the
+             * start is read before the line that justifies it. It is also the
+             * end nearest the newest bars, which is what a support or
+             * resistance level is a claim about.
+             */
             position: "absolute",
-            left: x1 + 12,
+            left: x2 - 12,
             top: y - 10,
-            transform: "translateY(-100%)",
+            transform: "translate(-100%, -100%)",
             fontFamily: theme.text.family,
             fontSize: theme.text.tag.size,
             fontWeight: theme.text.tag.weight,
@@ -102,13 +111,23 @@ export const PriceTag = ({
   value: number;
   grid: Grid;
   at: number;
-  tone?: "indigo" | "cyan" | "slate";
+  /**
+   * `solid` is the LAST TRADED PRICE, on ink rather than on a brand colour.
+   *
+   * ⚠ IT IS A DIFFERENT KIND OF FACT. Indigo, cyan and slate tags name levels
+   * the episode is arguing about — a support, an average, a target. The last
+   * price is not an argument, it is where the tape currently is, and every
+   * broker screen the viewer has ever seen prints it in near-black. Giving it
+   * a brand colour would put it on the same footing as the claims.
+   */
+  tone?: "indigo" | "cyan" | "slate" | "solid";
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   if (f < at) return null;
   const p = progress(f, at, 8);
-  const ink = tone === "cyan" ? c.cyan : tone === "slate" ? c.slate : c.indigo;
+  const ink =
+    tone === "cyan" ? c.cyan : tone === "slate" ? c.slate : tone === "solid" ? c.ink : c.indigo;
   return (
     <div
       style={{
@@ -163,14 +182,17 @@ export const Zone = ({
   return (
     <>
       <Layer opacity={opacity}>
+        {/* ⚠ NO BORDER. An outlined rectangle reads as an OBJECT sitting on
+            the chart; a zone is an AREA the price kept doing something in, and
+            it has no edge the data actually knows about. The fill carries it
+            alone, which is why it is `zoneFill` at 18% rather than the 9%
+            wash every other overlay uses. */}
         <rect
           x={grid.box.x}
           y={yTop}
           width={grid.box.w}
           height={Math.max(1, full * p)}
-          fill={theme.color.indigoWash}
-          stroke={c.indigo}
-          strokeWidth={theme.shape.hairline}
+          fill={theme.color.zoneFill}
         />
       </Layer>
       {label && (
