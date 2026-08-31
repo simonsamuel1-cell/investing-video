@@ -48,8 +48,8 @@ import { SceneRoadmap2 } from "./scenes/SceneRoadmap2";
 import { TitleChip } from "./components/TitleChip";
 import { CUTS, cutOutStyle } from "./transitions/CameraCut";
 import { Stage } from "../../core";
-import { Captions } from "./components/Captions";
-import { Watermark } from "./components/Watermark";
+import { Captions, Watermark } from "../../core";
+import { CUES } from "./subtitles";
 
 export const TOTAL_FRAMES = 9009;
 
@@ -223,8 +223,8 @@ export const MovingAverageComposition = () => (
       </Sequence>
     ))}
 
-    <Captions />
-    <Watermark />
+    <Captions cues={CUES} />
+    <Watermark totalFrames={TOTAL_FRAMES} />
 
     {/* the episode's one voice */}
     <Audio src={staticFile("vo/moving-average.mp3")} />
