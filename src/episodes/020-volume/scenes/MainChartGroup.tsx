@@ -31,13 +31,14 @@ import {
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, Crosshair,
   SplitDivider, SplitLabels,
   gridOf, useMotion, progress, progressInOut, price as fmtPrice, theme,
-  cutInStyle, cutOutStyle, TuntunMark,
+  cutInStyle, cutOutStyle, TuntunMark, GridGround, fadeOut,
 } from "../../../core";
-import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, BULB, LINE1, TIDY, GROUND, WINDOWS, local } from "../data/timing";
 import { PRICE, VOL, TAG_Y, GAP, halves, panes } from "../data/layout";
 import {
   MAIN, MAIN_DOMAIN, RESISTANCE, TESTS, BREAK_AT, VOL_HIGH, VOL_AVG, mean,
   CHART1, CHART1_ALL, CHART1_DOMAIN2, CHART1_RES, CHART1_BREAK,
+  TWO, TWO_DOMAIN, TWO_VOL_STRONG, TWO_VOL_WEAK, TWO_VOL_PEAK, TWO_RES,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -100,6 +101,70 @@ const T = {
 const ASK_SIZE = 70;
 /** ⚠ EDIT HERE — font size of the "Belum tentu" answer, in px. */
 const ANS_SIZE = 70;
+/**
+ * ⚠ THE MASCOT BREATHES. A sine measured FROM ITS OWN ARRIVAL, so it starts at
+ * rest on the cut frame and returns to rest — a float that begins mid-drift
+ * reads as the card having settled wrong. Slow on purpose: one cycle every four
+ * seconds, which at 60fps is 240 frames.
+ */
+const FLOAT = { amount: 12, period: 240 };
+
+/**
+ * ═══ THE TWO WINDOWS ═══
+ *
+ * Side by side, 20px apart, filling the white space the tidied card leaves in
+ * the middle of the frame. Each holds a price pane over a volume pane on the
+ * SAME x axis, so a volume bar always stands under its own candle.
+ */
+const WIN_GAP = 20;
+/**
+ * ⚠ NARROWER THAN THE CARD, AND CENTRED AS A PAIR. At full card width each
+ * window was 854px for 22 candles — a slot of nearly 40px, so the tape spread
+ * out and read as scattered marks rather than as a chart. 62% of the card puts
+ * the slot back under 25px, which is where candles start reading as a series.
+ */
+const WIN_SPAN = theme.stage.card.w * 0.62;
+const WIN_W = (WIN_SPAN - WIN_GAP) / 2;
+const WIN_X = theme.canvas.width / 2 - WIN_SPAN / 2;
+/* the group sits at the top margin, so the windows take the rest of the card */
+const WIN = { y: theme.stage.card.y + theme.stage.card.h * 0.10, h: theme.stage.card.h * 0.82 };
+const winRect = (i: number) => ({
+  x: WIN_X + i * (WIN_W + WIN_GAP),
+  y: WIN.y,
+  w: WIN_W,
+  h: WIN.h,
+});
+/** The panes inside a window: 66 / 6 / 28, inset from its own edges. */
+const winPanes = (i: number) => {
+  const r = winRect(i);
+  const pad = 26;
+  const box = { x: r.x + pad, w: r.w - pad * 2 };
+  const inner = r.h - pad * 2;
+  return {
+    /**
+     * ⚠ THE PRICE PANE REACHES DOWN TO THE HISTOGRAM, with only the gap
+     * between them. It used to stop at 0.66 and leave a band of empty white
+     * above the volume bars — the window's own size is unchanged, the candles
+     * simply use the height that was already there. The volume pane is
+     * untouched, so the two still share one x axis and one baseline.
+     */
+    /* ⚠ THE VOLUME PANE IS UNTOUCHED — same y, same height, so the bars keep
+       their size. Only the price pane grows down into the gap. */
+    price: { ...box, y: r.y + pad, h: inner * 0.74 },
+    vol: { ...box, y: r.y + pad + inner * 0.76, h: inner * 0.24 },
+  };
+};
+const WIN_PANES = [winPanes(0), winPanes(1)];
+/**
+ * ⚠ pad 0.05, NOT the usual 0.12. `gridOf`'s padding is breathing room above
+ * the highest bar and below the lowest, and at 0.12 it was keeping a quarter of
+ * the pane permanently empty — which is most of the white space the tape was
+ * leaving. The window itself is unchanged; the candles just use the height that
+ * was already inside it.
+ */
+const WIN_GRIDS = WIN_PANES.map((p) => gridOf(TWO.closes, TWO_DOMAIN, p.price, 0.02, 0));
+/** ⚠ EDIT HERE — font size of the "Volume" line under the mascot, in px. */
+const VOL_SIZE = theme.text.title.size + 10;
 
 
 
@@ -275,7 +340,16 @@ export const MainChartGroup = () => {
                     {/* ⚠ RESISTANCE BOX — indigo, edge to edge, CREEPING
                         left→right from f182 to f280, while the candles are still
                         drawing and before the zoom. See RES in the frame table. */}
-                    <Zone hi={RES_HI} lo={RES_LO} grid={G1} at={RES.at} over={RES.over} border borderWidth={theme.shape.rule} />
+                    <Zone
+                      hi={RES_HI}
+                      lo={RES_LO}
+                      grid={G1}
+                      at={RES.at}
+                      over={RES.over}
+                      border
+                      borderWidth={theme.shape.rule}
+                      label="Resistance"
+                    />
                     {/* ⚠ THE BREAKOUT CANDLE CREEPS UP — "menjalar", not a fade.
                         A clip reveals it from its own foot upward, so the green
                         body grows through the resistance to its high rather than
@@ -364,6 +438,10 @@ export const MainChartGroup = () => {
                  to the drawn figure */
               transform: `scale(${shrink.toFixed(4)}) ${FLIP ? "scaleX(-1)" : ""}`,
               transformOrigin: "center bottom",
+              /* ⚠ drop-shadow, NOT box-shadow: it follows the PNG's alpha, so
+                 the shadow is the figure's own silhouette rather than a
+                 rectangle around the image's bounds. */
+              filter: theme.shape.artShadow,
             }}
           />
         </div>
@@ -373,30 +451,206 @@ export const MainChartGroup = () => {
         {/* ── "Satu hal yang perlu dicek" — the mascot card, cut IN at 892 and
              holding through what used to be SC02. Nothing else renders here:
              the split screen is gone at Simon's direction. ─────────────────── */}
-        {f >= CUTS.toMascot.at && (
+        {f >= CUTS.toMascot.at && (() => {
+          const float =
+            Math.sin(((f - CUTS.toMascot.at) / FLOAT.period) * Math.PI * 2) * FLOAT.amount;
+          /* ⚠ THE CARD MAKES ROOM FOR THE WINDOWS. One eased 0→1 drives all
+             three: the mascot halves, the pair rises, and the gap between the
+             mark and the word closes. Deriving them from one number is what
+             keeps them moving together — three separate curves would drift. */
+          const tidy = progressInOut(f, TIDY.at, TIDY.over);
+          const markH = CARD.h * 0.289 * (1 - tidy * (1 - TIDY.to));
+          /**
+           * ⚠ THE MARK AND THE WORD TRAVEL AS ONE GROUP, TO THE TOP MARGIN.
+           * Both are placed from a single `groupTop`, so the space between them
+           * is a constant instead of two curves that have to be kept in step —
+           * closing that gap was half of what was asked for, and deriving the
+           * word's position from the mark's is what guarantees it. Landing on
+           * `theme.margin.top` also means the group follows if a margin moves.
+           */
+          const groupTop = interpolate(
+            tidy,
+            [0, 1],
+            [CARD.y + CARD.h * 0.24, theme.margin.top],
+          );
+          const markY = groupTop + float;
+          /**
+           * ⚠ 30px LOWER UNTIL THE TIDY, and exactly its final place after.
+           * Simon set the resting position from the tidied card (f1199 on), so
+           * the drop has to fade out on the same curve rather than being a
+           * second constant — otherwise the two would have to be kept in step
+           * by hand every time the layout moves.
+           */
+          const lineY = groupTop + markH + theme.text.title.size * 0.2 + (1 - tidy) * 30;
+          /**
+           * ⚠ 12px BIGGER BEFORE THE TIDY, and its settled size after. Like the
+           * 30px drop above, the extra rides `tidy` rather than being a second
+           * constant keyed to its own frames — the word shrinks into place as
+           * the card packs itself away, and the two can never fall out of step.
+           */
+          const lineSize = (n: number) => n + (1 - tidy) * 12;
+          return (
           <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.toMascot) }}>
-            <TuntunMark
-              x={theme.canvas.width / 2}
-              y={CARD.y + CARD.h * 0.24}
-              height={CARD.h * 0.34}
+            {/* ⚠ THE TRANSITION GRID, drifting — the same ground the Moving
+                Average transitions use, ported into core so the two episodes
+                cannot drift apart. It arrives with the cut and leaves before
+                the windows do: a texture under two charts is noise. */}
+            <GridGround
+              f={f}
+              opacity={Math.min(
+                progress(f, GROUND.at, GROUND.over),
+                fadeOut(f, GROUND.gone - GROUND.over, GROUND.over),
+              )}
             />
-            <div
-              style={{
-                position: "absolute",
-                left: 0,
-                right: 0,
-                top: CARD.y + CARD.h * 0.66,
-                textAlign: "center",
-                fontFamily: theme.text.family,
-                fontSize: theme.text.title.size,
-                fontWeight: theme.text.title.weight,
-                color: theme.color.ink,
-              }}
-            >
-              Satu hal yang perlu dicek
-            </div>
+            <TuntunMark x={theme.canvas.width / 2} y={markY} height={markH} />
+            {/* ⚠ SIMON'S LightBulb.svg, USED VERBATIM — a supplied asset is
+                never redrawn. Its artboard is 2200x1466 with the bulb in the
+                middle of a mostly-empty field, so the copy in public/art carries
+                a tightened viewBox (measured off a raster) and nothing else
+                changed: no recolour, no repath.
+
+                ⚠ IT DOES NOT FOLLOW THE MASCOT. Simon's call: it holds still
+                while the mascot breathes under it, so the two read as a lamp
+                over a character rather than one floating object.
+
+                The glow is a warm halo BEHIND it, from a theme slot — the only
+                place in the library that reaches for a warm colour. */}
+            {f < BULB.gone && (() => {
+              const lit = Math.min(
+                progress(f, BULB.at, BULB.over),
+                fadeOut(f, BULB.gone - BULB.over, BULB.over),
+              );
+              const size = CARD.h * 0.22;
+              const top = CARD.y + CARD.h * 0.24 - CARD.h * 0.30;
+              return (
+                <>
+                  {/* ⚠ THE HALO IS SIZED FROM THE BULB, not from the card, so
+                      the two stay in proportion if the glyph is ever resized.
+                      1.43x the bulb's height and lifted 20px. At 2x it read as
+                      a light source of its own rather than as the bulb being
+                      lit. */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: theme.canvas.width / 2 - size * 0.715,
+                      top: top - size * 0.05 - 20,
+                      width: size * 1.43,
+                      height: size * 1.43,
+                      borderRadius: "50%",
+                      background: `radial-gradient(circle, ${theme.color.bulbGlow} 0%, transparent 62%)`,
+                      opacity: lit,
+                    }}
+                  />
+                  <Img
+                    src={staticFile("art/light-bulb.svg")}
+                    style={{
+                      position: "absolute",
+                      left: theme.canvas.width / 2 - (size * 890) / 997 / 2,
+                      top,
+                      width: (size * 890) / 997,
+                      height: size,
+                      opacity: lit,
+                    }}
+                  />
+                </>
+              );
+            })()}
+
+            {/* ⚠ THE LINE ARRIVES LATE (968) AND THEN IS CUT, ALONE, AT 1106.
+                Two halves of one move: "Satu hal yang perlu dicek" is carried
+                out, "Volume" carried in, swapped on the cut frame. Everything
+                else on this card holds still through it — see CUTS.textToVolume
+                for why it carries no blur. */}
+            {f >= LINE1 && f < CUTS.textToVolume.at && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: lineY,
+                  textAlign: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: lineSize(theme.text.title.size),
+                  fontWeight: theme.text.title.weight,
+                  color: theme.color.ink,
+                  opacity: progress(f, LINE1, m.reveal),
+                  ...cutOutStyle(g, CUTS.textToVolume),
+                }}
+              >
+                Satu hal yang perlu dicek
+              </div>
+            )}
+            {f >= CUTS.textToVolume.at && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: lineY,
+                  textAlign: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: lineSize(VOL_SIZE),
+                  fontWeight: theme.text.title.weight,
+                  color: theme.color.indigo,
+                  ...cutInStyle(g, CUTS.textToVolume),
+                }}
+              >
+                Volume
+              </div>
+            )}
+
+            {/* ⚠ TWO WINDOWS, ONE TAPE. Both draw the SAME 22 traced candles —
+                "dua breakout yang kelihatannya sama" — and differ only in the
+                histogram: the right one is the whole tape at 55% with its last
+                five bars cut further still. They share a price domain AND a
+                volume peak, because two charts left to normalise themselves is
+                how a comparison quietly rigs itself. */}
+            {f >= WINDOWS.at &&
+              ([TWO_VOL_STRONG, TWO_VOL_WEAK] as const).map((vol, i) => {
+                const r = winRect(i);
+                const pane = WIN_PANES[i];
+                const grid = WIN_GRIDS[i];
+                const inAt = WINDOWS.at + i * m.sec(0.12);
+                return (
+                  <div key={i} style={{ opacity: progress(f, inAt, m.sec(0.5)) }}>
+                    <Card rect={r} />
+                    <Chart
+                      series={TWO}
+                      grid={grid}
+                      at={inAt + m.sec(0.25)}
+                      over={m.sec(1.1)}
+                      tickLabels={false}
+                      baseline={false}
+                    />
+                    <VolumeBars
+                      bars={TWO.bars}
+                      volume={vol as unknown as number[]}
+                      grid={grid}
+                      box={pane.vol}
+                      peak={TWO_VOL_PEAK}
+                      shown={progress(f, inAt + m.sec(0.25), m.sec(1.1))}
+                    />
+                    {/* ⚠ THE SAME BAND, AND THE SAME LABEL, IN BOTH WINDOWS.
+                        The scene's claim is that the PRICE ACTION is identical,
+                        so a level drawn on one and not the other — or named on
+                        one and not the other — would undo it. Only the
+                        histogram is allowed to differ. */}
+                    <Zone
+                      hi={TWO_RES.hi}
+                      lo={TWO_RES.lo}
+                      grid={grid}
+                      at={inAt + m.sec(1.2)}
+                      over={m.sec(0.9)}
+                      border
+                      borderWidth={theme.shape.rule}
+                      label="Resistance"
+                    />
+                  </div>
+                );
+              })}
           </div>
-        )}
+          );
+        })()}
       </Stage>
     );
   }

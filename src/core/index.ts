@@ -31,6 +31,7 @@ export { Captions } from "./Captions";
 export type { Cue } from "./Captions";
 export { Watermark } from "./Watermark";
 export { TuntunMark } from "./TuntunMark";
+export { GridGround } from "./GridGround";
 export { SourceTag } from "./SourceTag";
 
 /* ── Tier 2 — the chart engine ─────────────────────────────────────────────

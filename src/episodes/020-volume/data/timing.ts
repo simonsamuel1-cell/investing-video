@@ -108,6 +108,13 @@ export const CUTS = {
   /** SC01 → the "Satu hal yang perlu dicek" mascot card. A real cut: SC01 is
    *  carried out and the card carried in on one move at f892. */
   toMascot: { at: 892, over: 30, distance: 90, blur: 10, axis: "y" as const },
+  /**
+   * ⚠ THE LINE UNDER THE MASCOT SWAPS, AND NOTHING ELSE MOVES. A cut with
+   * `blur: 0` at Simon's direction: the mascot and the card are holding still
+   * around it, and a blur on a two-word line with a static frame behind it
+   * reads as a focus error rather than as speed.
+   */
+  textToVolume: { at: 1106, over: 24, distance: 60, blur: 0, axis: "y" as const },
 };
 
 /** A global beat, in a scene mounted at `from`. */
@@ -166,3 +173,21 @@ export const BREAK1 = { at: 405, over: 60 } as const;
 export const ASK1 = 686;
 /** "Belum tentu" — the answer stamping over the question. Simon's frame. */
 export const ANS1 = 825;
+/** The bulb above the mascot: in on the cut, gone at 1089. */
+export const BULB = { at: 892, gone: 1089, over: 20 } as const;
+/** The line under the mascot arrives late — the mascot lands alone first. */
+export const LINE1 = 968;
+/**
+ * ⚠ THE CARD MAKES ROOM. The mascot halves and the pair rises, closing the gap
+ * between the mark and the word under it, so the middle of the frame is free
+ * for the two windows that follow.
+ */
+export const TIDY = { at: 1152, over: 50, to: 0.5 } as const;
+/**
+ * ⚠ THE GRID GROUND runs from the cut to the moment the card tidies up, and
+ * goes as the windows arrive — it is the transition's own texture, and it would
+ * fight two charts for attention.
+ */
+export const GROUND = { at: 892, gone: 1151, over: 20 } as const;
+/** The two side-by-side windows: in at 1203, holding to the end of the card. */
+export const WINDOWS = { at: 1203, over: 34 } as const;

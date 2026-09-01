@@ -68,6 +68,49 @@ export const CHART1_ALL: Bar[] = [...CHART1.bars, CHART1_BREAK];
 /** The domain must already hold the breakout, or its wick clips the plot top. */
 export const CHART1_DOMAIN2 = domainOf(CHART1_ALL.map((b) => b.c), CHART1_ALL);
 
+/* ══ TWO BREAKOUTS — the side-by-side windows ═════════════════════════════
+ *
+ * ⚠ TRACED from Simon's "2 Breakout.png": 22 candles and their volume bars,
+ * read pixel-for-pixel, so the pair can be ANIMATED and re-coloured by the
+ * palette instead of pasted in as a picture. The two clipped part-candles at
+ * the image's own edges are dropped — they are artefacts of the crop, not bars.
+ *
+ * ⚠ ONE TAPE, TWO HISTOGRAMS. Both windows draw the SAME candles: that is the
+ * scene's whole claim — "dua breakout yang kelihatannya sama". If the right
+ * window had its own price series the viewer could explain the difference away
+ * as a different stock, which is exactly the misreading this is here to stop.
+ */
+import TWO_RAW from "./two-breakout.json";
+const TWO_BARS = (TWO_RAW as { bars: Bar[]; vol: number[] }).bars;
+const TWO_VOLS = (TWO_RAW as { bars: Bar[]; vol: number[] }).vol;
+export const TWO: Series = {
+  closes: TWO_BARS.map((x) => x.c),
+  bars: TWO_BARS,
+  kind: "traced",
+  label: "2 Breakout",
+};
+export const TWO_DOMAIN = domainOf(TWO.closes, TWO.bars);
+/** The left window: the traced volume, as it is. */
+export const TWO_VOL_STRONG = TWO_VOLS;
+/**
+ * The right window: the same breakout on thinner participation — the whole tape
+ * at 55%, and the LAST FIVE bars cut further still, so the move that matters
+ * arrives on the quietest activity of all.
+ */
+export const TWO_VOL_WEAK = TWO_VOLS.map((v, i) =>
+  v * 0.55 * (i >= TWO_VOLS.length - 5 ? 0.45 : 1),
+);
+/** ⚠ ONE PEAK FOR BOTH, or the two histograms normalise to themselves and the
+ *  comparison the scene is asking for disappears. */
+export const TWO_VOL_PEAK = Math.max(...TWO_VOL_STRONG);
+/**
+ * ⚠ THE BAND SIMON MARKED, in this tape's own units. It is PLACED, not found —
+ * he drew it on a screenshot — but it is placed against real traced bars: the
+ * tops of bars 9, 10, 13, 14 and 15 sit inside it and bars 16–17 break clear
+ * above, which is what makes it read as a level that held and then failed.
+ */
+export const TWO_RES = { hi: 305, lo: 252 };
+
 export const MAIN: Series = fromShape({
   seed: 2024, n: 120, shape: "drift", drift: 0.35, label: "Breakout",
 });

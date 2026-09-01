@@ -236,6 +236,20 @@ export const theme = {
     cyanWash: "rgba(92, 200, 227, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",
     onIndigo: "#FFFFFF",
+    /** The transition grid — see core/GridGround.tsx. */
+    gridLine: "#C7CCD6",
+    gridPaper: "#FFFFFF",
+    /**
+     * ⚠ THE BULB'S OWN COLOURS, and the one warm pair in the library. A lit
+     * bulb that is indigo does not read as lit — the glyph's whole job is to
+     * say "notice this", and it says it in the colour light actually is. Kept
+     * as named slots so the bulb is the only thing that can reach them: they
+     * are NOT a general accent and must not be used for chart content.
+     */
+    bulb: "#F2A63B",
+    bulbGlass: "rgba(242, 166, 59, 0.16)",
+    /** The halo behind a lit bulb. Warm, and only ever behind that glyph. */
+    bulbGlow: "rgba(247, 188, 94, 0.55)",
   },
 
   text: {
@@ -256,6 +270,28 @@ export const theme = {
     rule: 2,
     line: 3,
     heavy: 9,
+    /**
+     * ⚠ FOR CUT-OUT ARTWORK, not for cards. A PNG figure standing on the ground
+     * has no box to cast from, so it needs `drop-shadow` (which follows the
+     * alpha) rather than `box-shadow` (which would draw a rectangle around the
+     * image's bounds).
+     *
+     * ⚠ THE GRADATION RUNS TOP TO BOTTOM, NOT INNER TO OUTER — Simon's call.
+     * A tight tint plus a wide one is a HALO: the colour changes with distance
+     * from the silhouette, so it rings the head as much as the feet. Stacking
+     * them by VERTICAL OFFSET instead puts violet high on the figure and indigo
+     * pooled beneath it, which reads as light falling from above.
+     *
+     * ⚠ PINK AT THE TOP, CYAN BELOW. Violet-over-indigo was two neighbours on
+     * the same hue and the gradation could not be seen at all; pink-to-indigo
+     * read, but only just. Pink against cyan is the widest separation the brand
+     * allows — cyan is a palette anchor, so only the pink is an outsider, and it
+     * lives here in the one file that may name a colour so no scene can reach
+     * for it as a general accent.
+     */
+    artShadow:
+      "drop-shadow(0 -6px 14px rgba(236, 92, 168, 0.38)) " +
+      "drop-shadow(0 36px 28px rgba(92, 200, 227, 0.46))",
   },
 
   /**

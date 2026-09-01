@@ -28,9 +28,11 @@ export const STEPS: Step[] = [
 
 export const Cards = () => (
   <>
-    <ChapterCard title="Volume Analysis" at={CARDS.roadmap.at} over={CARDS.roadmap.over}>
-      <StepRail steps={STEPS} at={CARDS.roadmap.at} active={0} />
-    </ChapterCard>
+    {/* ⚠ NO LEARNING ROADMAP CARD. It used to land at 1410–1510 and Simon has
+        cut it: the two windows are still on screen there making the episode's
+        opening claim, and a full-frame contents page over them interrupts the
+        one thing the viewer is being asked to compare. The rail still opens
+        every chapter below, and still closes the episode in SC20. */}
 
     <ChapterCard n="02" title="Read Price + Volume" sub="Empat kombinasi dasar" at={CARDS.ch02.at} over={CARDS.ch02.over}>
       <StepRail steps={STEPS} at={CARDS.ch02.at} active={1} done={[0]} />
