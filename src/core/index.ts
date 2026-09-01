@@ -42,6 +42,7 @@ export * from "./chart";
 /* ── Tier 3 — recurring patterns ───────────────────────────────────────── */
 export { Panel, StatCard, KeyPoint } from "./Panel";
 export { StepRail, ChapterCard } from "./StepRail";
+export { RoadmapCards, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip, cardPush } from "./Roadmap";
 export type { Step } from "./StepRail";
 export { Countdown } from "./Countdown";
 export { ColorKey } from "./ColorKey";

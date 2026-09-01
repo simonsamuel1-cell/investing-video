@@ -25,15 +25,17 @@
  * actually is in the narration — a question, in words, with a question mark,
  * on no fill and no border.
  */
-import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import React from "react";
+import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, Candles, VolumeBars, Level, PriceTag, Zone, HighlightCircle,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, Crosshair,
   SplitDivider, SplitLabels,
   gridOf, useMotion, progress, progressInOut, price as fmtPrice, theme,
   cutInStyle, cutOutStyle, TuntunMark, GridGround, fadeOut,
+  RoadmapCards, shrinkClip, cardPush, ROADMAP_SLOTS, ROADMAP_CARD,
 } from "../../../core";
-import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, BULB, LINE1, TIDY, GROUND, WINDOWS, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, BULB, LINE1, TIDY, GROUND, WINDOWS, MAP, MAP_HOLD, MAP_LABELS, CARD2, PUSH, FADE, local } from "../data/timing";
 import { PRICE, VOL, TAG_Y, GAP, halves, panes } from "../data/layout";
 import {
   MAIN, MAIN_DOMAIN, RESISTANCE, TESTS, BREAK_AT, VOL_HIGH, VOL_AVG, mean,
@@ -54,7 +56,8 @@ const T = {
   split: local(BEAT.twoBreakouts, FROM),
   different: local(BEAT.different, FROM),
   /* the eight scenes that own the frame in between */
-  away: local(BLOCK.SC03, FROM),
+  /** ⚠ THE INTRO'S OWN END, not SC03's start — the roadmap holds past it. */
+  away: local(MAP_HOLD, FROM),
   back: local(BLOCK.SC11, FROM),
   zone: local(BEAT.heldItDown, FROM),
   absorb: local(BEAT.absorb, FROM),
@@ -163,6 +166,55 @@ const WIN_PANES = [winPanes(0), winPanes(1)];
  * was already inside it.
  */
 const WIN_GRIDS = WIN_PANES.map((p) => gridOf(TWO.closes, TWO_DOMAIN, p.price, 0.02, 0));
+/**
+ * ═══ THE "MENGENAL VOLUME" CARD ═══
+ *
+ * A volume histogram standing alone inside the second roadmap card — the
+ * indicator with no price chart above it, which is exactly what that chapter is
+ * about. Canvas coordinates, because the bars draw into a full-frame Layer.
+ *
+ * ⚠ NO CANDLES ABOVE IT, AND THAT IS THE POINT. Every other chart in this
+ * episode shows volume UNDER a price pane; here the histogram is the subject,
+ * so it gets the whole card.
+ */
+const CARD2_SLOT = ROADMAP_SLOTS[1];
+const CARD2_BOX = {
+  x: CARD2_SLOT.x + 44,
+  y: CARD2_SLOT.y + 66,
+  w: ROADMAP_CARD.w - 88,
+  h: ROADMAP_CARD.h - 122,
+};
+/** Only the x mapping is read by VolumeBars, so the domain here is nominal. */
+const CARD2_GRID = gridOf(TWO.closes, TWO_DOMAIN, CARD2_BOX, 0.02, 0);
+
+/**
+ * ═══ THE OTHER TWO CARDS ═══
+ *
+ * Price above, volume beneath, sharing one x axis — the ordinary reading layout
+ * this episode spends its middle teaching. The two differ by ONE thing: the
+ * last card carries the resistance band, because using volume means using it
+ * against a level. Same tape in both, so the difference is the only thing that
+ * can be read as a difference.
+ */
+const cardPanes = (slot: { x: number; y: number }) => {
+  const pad = 26;
+  const box = {
+    x: slot.x + pad,
+    y: slot.y + pad,
+    w: ROADMAP_CARD.w - pad * 2,
+    h: ROADMAP_CARD.h - pad * 2,
+  };
+  return {
+    price: { ...box, h: box.h * 0.64 },
+    vol: { ...box, y: box.y + box.h * 0.72, h: box.h * 0.28 },
+  };
+};
+const CARD_PANES = [cardPanes(ROADMAP_SLOTS[2]), cardPanes(ROADMAP_SLOTS[3])];
+/** ⚠ ONE SHARED DOMAIN AND ONE SHARED PEAK across both thumbnails, for the
+ *  reason the two SC01 windows share theirs: side by side, self-normalising
+ *  charts invent differences that are not in the data. */
+const CARD_GRIDS = CARD_PANES.map((q) => gridOf(TWO.closes, TWO_DOMAIN, q.price, 0.04, 0));
+
 /** ⚠ EDIT HERE — font size of the "Volume" line under the mascot, in px. */
 const VOL_SIZE = theme.text.title.size + 10;
 
@@ -268,7 +320,7 @@ export const MainChartGroup = () => {
      what used to be SC02 — Simon removed the split screen there. The old
      [900,1460) single/split code below is now unreachable and stays only as the
      SC11–13 path for f >= 8154. */
-  if (f < BLOCK.SC03 - FROM) {
+  if (f < MAP_HOLD - FROM) {
     const g = f + FROM;
     const shrink = interpolate(
       progressInOut(f, SHRINK.at, SHRINK.over),
@@ -289,7 +341,23 @@ export const MainChartGroup = () => {
     };
 
     return (
-      <Stage>
+      /* ⚠ TRANSPARENT, AND THE GROUND IS DRAWN HERE INSTEAD — because it has to
+         FADE. CG-A is mounted last, so it sits ON TOP of SC03 from f1516; an
+         opaque stage would mean the board dissolves into its own background and
+         SC03 snaps in whole at MAP_HOLD. Fading the ground with the board is
+         what turns that into a cross-fade: the scene underneath is already
+         standing, and the board simply stops covering it.
+
+         Only this branch needs it. The SC11–13 return below keeps the ordinary
+         opaque stage, and the composition paints the same colour behind
+         everything anyway, so nothing else changes tone. */
+      <Stage transparent>
+        <AbsoluteFill
+          style={{
+            backgroundColor: theme.color.bg,
+            opacity: 1 - progress(f, local(FADE.at, FROM), FADE.over),
+          }}
+        />
         {/* ── SC01, carried OUT on the cut at 892 ───────────────────────────
              ⚠ THE SWAP IS ON THE CUT FRAME, NOT A WINDOW AROUND IT. This used
              to render both halves for the whole 30-frame move, so the two
@@ -489,7 +557,138 @@ export const MainChartGroup = () => {
            * the card packs itself away, and the two can never fall out of step.
            */
           const lineSize = (n: number) => n + (1 - tidy) * 12;
+          /* ⚠ THE INTRO SHRINKS INTO THE TOP CARD. `shrinkClip` is on the
+             OUTER element, which is never transformed — a clip-path on the
+             scaling wrapper would scale with it and never match the card. */
+          const map = progressInOut(f, MAP.at, MAP.over);
+          /** The card is 536x302 in a 1920x1080 frame — one ratio, both axes. */
+          const mapScale = 1 - map * (1 - ROADMAP_CARD.w / theme.canvas.width);
+          /**
+           * How far the frame's centre has to travel to reach the card's.
+           *
+           * ⚠ PLUS A CORRECTION FOR THE FRAME'S OWN EMPTY EDGES. What shrinks
+           * is the whole 1920x1080 canvas, but the PICTURE inside it runs only
+           * from the top margin to the bottom of the windows — the subtitle
+           * band below it is empty by design. Centring the canvas therefore
+           * leaves the picture riding high in the card with white under it.
+           * This drops it by the difference between the two centres, scaled.
+           */
+          const seen = { top: theme.margin.top, bottom: WIN.y + WIN.h };
+          const seenOffset = theme.canvas.height / 2 - (seen.top + seen.bottom) / 2;
+          const mapCentre = {
+            x: ROADMAP_SLOTS[0].x + ROADMAP_CARD.w / 2 - theme.canvas.width / 2,
+            y:
+              ROADMAP_SLOTS[0].y +
+              ROADMAP_CARD.h / 2 -
+              theme.canvas.height / 2 +
+              seenOffset * mapScale,
+          };
+          /* ⚠ ONE WRAPPER FOR THE WHOLE BOARD — grid, cards and the shrunken
+             scene together. Pushing the cards without the ground they stand on
+             would slide them across a stationary texture, which reads as the
+             cards moving rather than as the camera closing in. */
+          const push = progress(f, PUSH.at, PUSH.over);
           return (
+          <>
+          {/* ⚠ THE GROUND STAYS PUT — Simon's call. It is OUTSIDE the push
+              wrapper below, so when the camera closes on "mengenal volume" the
+              cards travel and the grid they stand on does not. A background
+              that zooms with the subject reads as the whole picture being
+              scaled up; a background that holds still is what makes the move
+              read as a camera. */}
+          <GridGround f={f} opacity={map} />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: 1 - progress(f, FADE.at, FADE.over),
+              ...cardPush(push, PUSH.card, PUSH.amount),
+            }}
+          >
+          {/* ⚠ THE CARDS ARE DRAWN FIRST, so the shrinking picture lands ON the
+              top card rather than under its white fill. The other three open
+              beside it, empty. */}
+          <RoadmapCards
+            labels={MAP_LABELS}
+            reveal={map}
+            landing={0}
+            cardsAt={[...MAP.cards]}
+            cardDur={MAP.cardDur}
+            glow={{ card: 1, at: CARD2.at, over: CARD2.over }}
+            contents={[
+              null,
+              /* ⚠ A HISTOGRAM WITH NO PRICE PANE ABOVE IT, and that IS the
+                 chapter: volume on its own, before it is read against
+                 anything. Every other chart in the episode buries it under a
+                 candle pane; here it has the card to itself. */
+              <VolumeBars
+                key="c1"
+                bars={TWO.bars}
+                volume={TWO_VOL_STRONG}
+                grid={CARD2_GRID}
+                box={CARD2_BOX}
+                /* ⚠ NO SHARED `peak` HERE, DELIBERATELY. This one stands alone
+                   in its card with nothing beside it to be misread against, so
+                   it normalises to its own maximum and fills the height it has.
+                   The two thumbnails to its right DO share one — they sit side
+                   by side. */
+                shown={progress(f, MAP.cards[0], m.sec(0.9))}
+              />,
+              ...CARD_PANES.map((q, i) => (
+                <React.Fragment key={`c${i + 2}`}>
+                  <Chart
+                    series={TWO}
+                    grid={CARD_GRIDS[i]}
+                    at={MAP.cards[i + 1]}
+                    over={m.sec(0.9)}
+                    tickLabels={false}
+                    baseline={false}
+                  />
+                  <VolumeBars
+                    bars={TWO.bars}
+                    volume={TWO_VOL_STRONG}
+                    grid={CARD_GRIDS[i]}
+                    box={q.vol}
+                    peak={TWO_VOL_PEAK}
+                    shown={progress(f, MAP.cards[i + 1], m.sec(0.9))}
+                  />
+                  {/* only on "cara pakai volume" — see cardPanes */}
+                  {i === 1 ? (
+                    <Zone
+                      hi={TWO_RES.hi}
+                      lo={TWO_RES.lo}
+                      grid={CARD_GRIDS[i]}
+                      at={MAP.cards[i + 1] + m.sec(0.3)}
+                      over={m.sec(0.7)}
+                      border
+                      borderWidth={theme.shape.rule}
+                    />
+                  ) : null}
+                </React.Fragment>
+              )),
+            ]}
+          />
+          {/* ⚠ CLIP OUTSIDE, SCALE INSIDE. The clip must sit on an element that
+              is never transformed — on the scaling wrapper it would scale with
+              it and never match the card it is clipping into. */}
+          <div style={{ position: "absolute", inset: 0, clipPath: shrinkClip(map, 0) }}>
+          {/* ⚠ SCALE ABOUT THE CANVAS CENTRE, THEN CARRY IT TO THE CARD.
+              Scaling about the CARD's centre keeps that point fixed and leaves
+              the picture's own middle wherever it lands — which is why the
+              scene sat low in the card. Shrinking about the frame's centre and
+              then translating that centre onto the card's is what actually
+              centres the content inside it. CSS applies these right to left, so
+              the scale happens first. */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform:
+                `translate(${(mapCentre.x * map).toFixed(1)}px, ${(mapCentre.y * map).toFixed(1)}px) ` +
+                `scale(${mapScale.toFixed(4)})`,
+              transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
+            }}
+          >
           <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.toMascot) }}>
             {/* ⚠ THE TRANSITION GRID, drifting — the same ground the Moving
                 Average transitions use, ported into core so the two episodes
@@ -649,6 +848,10 @@ export const MainChartGroup = () => {
                 );
               })}
           </div>
+          </div>
+          </div>
+          </div>
+          </>
           );
         })()}
       </Stage>

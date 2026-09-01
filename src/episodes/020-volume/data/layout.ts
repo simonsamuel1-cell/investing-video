@@ -54,3 +54,24 @@ export const panes = (half: Rect, top = 0.16) => {
  * to the chart.
  */
 export const TAG_Y = theme.stage.card.y;
+
+/**
+ * ═══ SC03's TWO SCREENSHOTS ═══
+ *
+ * Simon supplied BBCA-02 (5m) and BBCA-03 (D) to paste whole.
+ *
+ * ⚠ MEASURED OFF THE FILES, NOT PLACED BY EYE. The volume band is where the
+ * saturated pixels are below the price plot: the top is the tallest bar, the
+ * bottom is the baseline. Stored as FRACTIONS of the image, so the mark lands
+ * on the bars whatever size the screenshot is drawn at — and if he swaps the
+ * screenshots the numbers can be re-derived the same way instead of nudged.
+ *
+ * The two panels share a top and a baseline, because it is the same app screen;
+ * only the right edge differs, because the 5m tape runs further across.
+ */
+export const BBCA_IMG = { w: 4084, h: 5834 } as const;
+/** The volume histogram inside each shot, as fractions of the image. */
+export const BBCA_VOL: Record<"fiveMin" | "daily", { x1: number; x2: number; y1: number; y2: number }> = {
+  fiveMin: { x1: 0.0318, x2: 0.9550, y1: 0.7953, y2: 0.9291 },
+  daily: { x1: 0.0318, x2: 0.8913, y1: 0.7953, y2: 0.9291 },
+};

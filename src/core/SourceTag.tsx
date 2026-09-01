@@ -1,15 +1,20 @@
 /**
- * core/SourceTag.tsx — the "Ilustrasi" tag, and the ticker credit.
+ * core/SourceTag.tsx — the ticker credit.
  *
- * ⚠ THIS IS COMPLIANCE, NOT DECORATION.
+ * ⚠ STANDING RULE FROM SIMON: THE WORD IS NEVER PUT ON SCREEN.
  *
- * A chart drawn from a traced screenshot or generated from a shape is NOT a
- * market, and the frame must say so. A chart from a real OHLC export is, and
- * must not be tagged as illustrative.
+ * This component used to print an illustrative-source tag over any chart that
+ * was traced or generated. It no longer prints anything for those — his call,
+ * and it is enforced HERE rather than by deleting the tag scene by scene, so a
+ * later scene cannot bring the word back by mounting this again.
  *
- * The kind travels with the Series, so a scene cannot lose the tag by
- * forgetting it — pass `series.kind` and the right thing renders. Swap a traced
- * series for a real export and the tag comes off by itself.
+ * What survives is the half that is a credit rather than a disclaimer: a REAL
+ * OHLC export still prints its ticker and timeframe. `kind` still travels with
+ * the Series and still decides — a generated series simply renders nothing.
+ *
+ * ⚠ SO THIS RENDERS NOTHING UNLESS THE DATA IS REAL. Mounting it is harmless
+ * and still correct; the scenes keep their calls so that swapping a generated
+ * series for a real export brings the credit back by itself.
  */
 import { theme } from "./theme";
 import { usePalette } from "./palette";
@@ -30,12 +35,9 @@ export const SourceTag = ({
   anchor?: "left" | "right";
 }) => {
   const c = usePalette();
-  const text =
-    kind === "market"
-      ? label
-      : label
-        ? `${label} · Ilustrasi`
-        : "Ilustrasi";
+  /* ⚠ ONLY REAL DATA PRINTS. See the header — the illustrative tag is gone by
+     standing instruction, and a generated series draws no text at all. */
+  const text = kind === "market" ? label : undefined;
   if (!text) return null;
   return (
     <div

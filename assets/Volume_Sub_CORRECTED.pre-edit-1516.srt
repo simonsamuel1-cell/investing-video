@@ -1,5 +1,5 @@
 1
-00:00:00,167 --> 00:00:01,667
+00:00:00,166 --> 00:00:01,666
 Bayangin kamu sudah beberapa minggu
 
 2
@@ -7,7 +7,7 @@ Bayangin kamu sudah beberapa minggu
 mantau satu saham yang selalu mentok di resistance.
 
 3
-00:00:05,067 --> 00:00:07,567
+00:00:05,066 --> 00:00:07,566
 Hari ini, akhirnya tembus dan candle ditutup
 
 4
@@ -15,7 +15,7 @@ Hari ini, akhirnya tembus dan candle ditutup
 di atas level itu.
 
 5
-00:00:09,267 --> 00:00:10,333
+00:00:09,266 --> 00:00:10,333
 Kelihatannya valid.
 
 6
@@ -23,7 +23,7 @@ Kelihatannya valid.
 Tapi, apa berarti
 
 7
-00:00:12,467 --> 00:00:13,267
+00:00:12,466 --> 00:00:13,266
 langsung beli?
 
 8
@@ -35,31 +35,31 @@ Belum tentu.
 Sebelum masuk,
 
 10
-00:00:16,167 --> 00:00:18,067
+00:00:16,166 --> 00:00:18,066
 ada satu hal lagi yang perlu kamu cek:
 
 11
-00:00:18,567 --> 00:00:19,567
+00:00:18,566 --> 00:00:19,566
 volume. Karena
 
 12
-00:00:20,100 --> 00:00:21,967
+00:00:20,100 --> 00:00:21,966
 dua breakout yang kelihatannya sama
 
 13
-00:00:22,167 --> 00:00:24,100
+00:00:22,166 --> 00:00:24,100
 bisa punya kekuatan yang sangat berbeda.
 
 14
-00:00:25,267 --> 00:00:26,633
+00:00:25,566 --> 00:00:27,133
 Kita pahami dulu apa itu volume.
 
 15
-00:00:27,467 --> 00:00:28,567
+00:00:27,466 --> 00:00:28,566
 Volume menunjukkan
 
 16
-00:00:28,700 --> 00:00:31,367
+00:00:28,700 --> 00:00:31,366
 berapa banyak lembar saham yang diperdagangkan
 
 17
@@ -67,15 +67,15 @@ berapa banyak lembar saham yang diperdagangkan
 dalam satu periode.
 
 18
-00:00:32,800 --> 00:00:34,167
+00:00:32,800 --> 00:00:34,166
 Kalau kamu pakai chart harian,
 
 19
-00:00:34,267 --> 00:00:36,867
+00:00:34,266 --> 00:00:36,866
 satu volume bar mewakili transaksi selama satu hari.
 
 20
-00:00:37,267 --> 00:00:38,400
+00:00:37,266 --> 00:00:38,400
 Kalau chart-nya lima menit,
 
 21
@@ -83,23 +83,23 @@ Kalau chart-nya lima menit,
 satu bar berarti transaksi selama lima menit.
 
 22
-00:00:41,067 --> 00:00:41,967
+00:00:41,066 --> 00:00:41,966
 Tapi jangan salah baca.
 
 23
-00:00:42,400 --> 00:00:44,867
+00:00:42,400 --> 00:00:44,866
 Volume bukan jumlah orang yang bertransaksi.
 
 24
-00:00:45,100 --> 00:00:45,867
+00:00:45,100 --> 00:00:45,866
 Volume tinggi
 
 25
-00:00:45,867 --> 00:00:47,700
+00:00:45,866 --> 00:00:47,700
 bisa saja datang dari beberapa pemain besar,
 
 26
-00:00:48,267 --> 00:00:50,867
+00:00:48,266 --> 00:00:50,866
 atau dari saham yang sama berpindah tangan berkali-kali.
 
 27
@@ -107,23 +107,23 @@ atau dari saham yang sama berpindah tangan berkali-kali.
 Jadi, volume menunjukkan seberapa
 
 28
-00:00:52,967 --> 00:00:54,400
+00:00:52,966 --> 00:00:54,400
 banyak saham yang diperdagangkan,
 
 29
-00:00:54,567 --> 00:00:56,567
+00:00:54,566 --> 00:00:56,566
 bukan berapa banyak orang yang ikut transaksi.
 
 30
-00:00:56,733 --> 00:00:59,567
+00:00:56,733 --> 00:00:59,566
 Satu volume bar juga nggak bisa dinilai sendirian.
 
 31
-00:01:00,133 --> 00:01:02,667
+00:01:00,133 --> 00:01:02,666
 10 juta lembar bisa sangat besar untuk satu saham,
 
 32
-00:01:03,067 --> 00:01:04,800
+00:01:03,066 --> 00:01:04,800
 tapi biasa saja untuk saham lain.
 
 33
@@ -131,11 +131,11 @@ tapi biasa saja untuk saham lain.
 Karena itu, bandingkan volume
 
 34
-00:01:07,067 --> 00:01:08,600
+00:01:07,066 --> 00:01:08,600
 hari ini dengan periode sebelumnya
 
 35
-00:01:08,867 --> 00:01:09,500
+00:01:08,866 --> 00:01:09,500
 atau dengan
 
 36
@@ -147,27 +147,27 @@ average volume-nya.
 Cara paling gampang mengingatnya begini:
 
 38
-00:01:12,900 --> 00:01:14,967
+00:01:12,900 --> 00:01:14,966
 harga menunjukkan ke mana pasar bergerak.
 
 39
-00:01:15,267 --> 00:01:16,667
+00:01:15,266 --> 00:01:16,666
 Volume menunjukkan seberapa ramai
 
 40
-00:01:16,900 --> 00:01:18,667
+00:01:16,900 --> 00:01:18,666
 transaksi di balik pergerakan itu.
 
 41
-00:01:19,167 --> 00:01:21,267
+00:01:19,166 --> 00:01:21,266
 Jadi, selalu baca volume
 
 42
-00:01:21,567 --> 00:01:22,367
+00:01:21,566 --> 00:01:22,366
 bersama harga.
 
 43
-00:01:22,767 --> 00:01:24,600
+00:01:22,766 --> 00:01:24,600
 Sekarang setelah tahu apa itu volume,
 
 44
@@ -175,11 +175,11 @@ Sekarang setelah tahu apa itu volume,
 kita lihat cara membacanya bersama harga.
 
 45
-00:01:27,700 --> 00:01:30,467
+00:01:27,700 --> 00:01:30,466
 Ada empat kombinasi dasar yang perlu kamu kenali.
 
 46
-00:01:30,867 --> 00:01:33,267
+00:01:30,866 --> 00:01:33,266
 Pertama, harga naik dan volume ikut naik.
 
 47
@@ -187,15 +187,15 @@ Pertama, harga naik dan volume ikut naik.
 Ini biasanya membuat kenaikan lebih meyakinkan,
 
 48
-00:01:36,567 --> 00:01:39,000
+00:01:36,566 --> 00:01:39,000
 karena aktivitas transaksi ikut meningkat.
 
 49
-00:01:39,367 --> 00:01:40,700
+00:01:39,366 --> 00:01:40,700
 Kedua, harga naik
 
 50
-00:01:40,767 --> 00:01:42,400
+00:01:40,766 --> 00:01:42,400
 tapi volumenya justru turun.
 
 51
@@ -203,31 +203,31 @@ tapi volumenya justru turun.
 Harga masih bisa terus naik,
 
 52
-00:01:45,133 --> 00:01:47,067
+00:01:45,133 --> 00:01:47,066
 jadi ini bukan otomatis sinyal jual.
 
 53
-00:01:47,400 --> 00:01:47,667
+00:01:47,400 --> 00:01:47,666
 Tapi,
 
 54
-00:01:47,667 --> 00:01:49,933
+00:01:47,666 --> 00:01:49,933
 aktivitas yang mendukung kenaikannya mulai berkurang.
 
 55
-00:01:50,467 --> 00:01:50,867
+00:01:50,466 --> 00:01:50,866
 Artinya,
 
 56
-00:01:50,867 --> 00:01:53,567
+00:01:50,866 --> 00:01:53,566
 kamu perlu lebih hati-hati dan lebih disiplin mengelola
 
 57
-00:01:53,700 --> 00:01:54,767
+00:01:53,700 --> 00:01:54,766
 posisi. Ketiga,
 
 58
-00:01:54,967 --> 00:01:57,167
+00:01:54,966 --> 00:01:57,166
 harga turun dan volume ikut membesar.
 
 59
@@ -235,11 +235,11 @@ harga turun dan volume ikut membesar.
 Artinya,
 
 60
-00:01:58,167 --> 00:01:59,467
+00:01:58,166 --> 00:01:59,466
 penurunan terjadi dengan aktivitas
 
 61
-00:01:59,567 --> 00:02:00,667
+00:01:59,566 --> 00:02:00,666
 transaksi yang makin tinggi.
 
 62
@@ -255,7 +255,7 @@ dan perlu lebih diwaspadai.
 Keempat, harga turun tapi volumenya mengecil.
 
 65
-00:02:08,667 --> 00:02:10,667
+00:02:08,666 --> 00:02:10,666
 Artinya, tekanan jual mulai mereda.
 
 66
@@ -263,15 +263,15 @@ Artinya, tekanan jual mulai mereda.
 Tapi jangan langsung menganggap harga pasti berbalik
 
 67
-00:02:13,100 --> 00:02:14,667
+00:02:13,100 --> 00:02:14,666
 naik. Seller yang mulai berkurang
 
 68
-00:02:14,867 --> 00:02:17,333
+00:02:14,866 --> 00:02:17,333
 belum tentu berarti buyer sudah datang. Nah,
 
 69
-00:02:17,867 --> 00:02:19,400
+00:02:17,866 --> 00:02:19,400
 setelah tahu kombinasi dasarnya,
 
 70
@@ -287,11 +287,11 @@ breakout dan breakdown.
 Kita kembali ke breakout tadi.
 
 73
-00:02:24,867 --> 00:02:27,100
+00:02:24,866 --> 00:02:27,100
 Resistance adalah area yang sebelumnya berkali-kali
 
 74
-00:02:27,367 --> 00:02:28,333
+00:02:27,366 --> 00:02:28,333
 menahan kenaikan.
 
 75
@@ -299,7 +299,7 @@ menahan kenaikan.
 Supaya harga bisa menembus resistance,
 
 76
-00:02:30,367 --> 00:02:31,567
+00:02:30,366 --> 00:02:31,566
 minat beli harus cukup kuat
 
 77
@@ -311,35 +311,35 @@ untuk menyerap saham yang dijual di area itu.
 Kalau breakout terjadi
 
 79
-00:02:35,100 --> 00:02:36,967
+00:02:35,100 --> 00:02:36,966
 dengan volume jauh lebih tinggi dari biasanya,
 
 80
-00:02:37,267 --> 00:02:39,767
+00:02:37,266 --> 00:02:39,766
 pergerakannya jadi terlihat lebih meyakinkan.
 
 81
-00:02:40,267 --> 00:02:43,000
+00:02:40,266 --> 00:02:43,000
 Sebaliknya, kalau candle sudah close di atas resistance
 
 82
-00:02:43,167 --> 00:02:44,867
+00:02:43,166 --> 00:02:44,866
 tapi volumenya biasa saja,
 
 83
-00:02:45,167 --> 00:02:46,567
+00:02:45,166 --> 00:02:46,566
 breakout-nya belum tentu gagal.
 
 84
-00:02:47,200 --> 00:02:49,367
+00:02:47,200 --> 00:02:49,366
 Hanya saja, konfirmasinya lebih lemah.
 
 85
-00:02:49,767 --> 00:02:51,267
+00:02:49,766 --> 00:02:51,266
 Kamu bisa menunggu candle berikutnya,
 
 86
-00:02:51,467 --> 00:02:54,333
+00:02:51,466 --> 00:02:54,333
 retest, atau sinyal tambahan sebelum mengambil keputusan.
 
 87
@@ -351,7 +351,7 @@ Logika yang sama berlaku pada breakdown.
 Saat harga menembus support dengan volume besar,
 
 89
-00:02:59,067 --> 00:02:59,867
+00:02:59,066 --> 00:02:59,866
 tekanan jual
 
 90
@@ -371,7 +371,7 @@ tetap waspada
 tanpa langsung menyimpulkan penurunannya
 
 94
-00:03:06,567 --> 00:03:07,367
+00:03:06,566 --> 00:03:07,366
 pasti berlanjut.
 
 95
@@ -387,23 +387,23 @@ coba pakai logika tadi
 di chart nyata.
 
 98
-00:03:11,767 --> 00:03:12,567
+00:03:11,766 --> 00:03:12,566
 Aplikasi menandai
 
 99
-00:03:12,667 --> 00:03:15,133
+00:03:12,666 --> 00:03:15,133
 BRPT — harganya baru menembus ke level terendah
 
 100
-00:03:15,267 --> 00:03:16,067
+00:03:15,266 --> 00:03:16,066
 sebulan terakhir.
 
 101
-00:03:16,167 --> 00:03:17,300
+00:03:16,166 --> 00:03:17,300
 Kelihatannya tekanan jual.
 
 102
-00:03:17,733 --> 00:03:19,467
+00:03:17,733 --> 00:03:19,466
 Tapi lihat dua hari terakhir.
 
 103
@@ -411,11 +411,11 @@ Tapi lihat dua hari terakhir.
 Saat breakdown,
 
 104
-00:03:21,100 --> 00:03:21,967
+00:03:21,100 --> 00:03:21,966
 volumenya cukup besar,
 
 105
-00:03:22,167 --> 00:03:24,467
+00:03:22,166 --> 00:03:24,466
 tapi masih kalah dari hari-hari ramai sebelumnya.
 
 106
@@ -423,11 +423,11 @@ tapi masih kalah dari hari-hari ramai sebelumnya.
 Besoknya
 
 107
-00:03:25,867 --> 00:03:27,600
+00:03:25,866 --> 00:03:27,600
 harga malah rebound, dengan volume
 
 108
-00:03:27,767 --> 00:03:29,600
+00:03:27,766 --> 00:03:29,600
 yang lebih besar dari hari breakdown.
 
 109
@@ -435,7 +435,7 @@ yang lebih besar dari hari breakdown.
 Menurutmu, harga akan lanjut turun,
 
 110
-00:03:31,900 --> 00:03:34,567
+00:03:31,900 --> 00:03:34,566
 atau breakdown-nya cuma jebakan? Tiga…
 
 111
@@ -443,11 +443,11 @@ atau breakdown-nya cuma jebakan? Tiga…
 dua… satu.
 
 112
-00:03:37,467 --> 00:03:41,000
+00:03:37,466 --> 00:03:41,000
 Ternyata harga lanjut naik sampai sekitar 1.750.
 
 113
-00:03:41,367 --> 00:03:43,867
+00:03:41,366 --> 00:03:43,866
 Clue-nya sudah terlihat dari dua candle tadi.
 
 114
@@ -463,11 +463,11 @@ tidak terlalu dominan dibanding hari-hari ramai
 sebelumnya. Lalu saat harga rebound,
 
 117
-00:03:49,267 --> 00:03:50,567
+00:03:49,266 --> 00:03:50,566
 volumenya justru lebih besar.
 
 118
-00:03:51,167 --> 00:03:54,000
+00:03:51,166 --> 00:03:54,000
 Artinya, breakdown mulai kehilangan konfirmasi
 
 119
@@ -475,7 +475,7 @@ Artinya, breakdown mulai kehilangan konfirmasi
 dan buyer mulai memberi respons.
 
 120
-00:03:56,600 --> 00:03:57,867
+00:03:56,600 --> 00:03:57,866
 Bukan jaminan harga pasti naik,
 
 121
@@ -483,19 +483,19 @@ Bukan jaminan harga pasti naik,
 tapi volume
 
 122
-00:03:58,767 --> 00:04:01,567
+00:03:58,766 --> 00:04:01,566
 sudah memberi alasan untuk mencurigai breakdown tadi.
 
 123
-00:04:02,067 --> 00:04:04,367
+00:04:02,066 --> 00:04:04,366
 Volume bukan cuma berguna saat breakout.
 
 124
-00:04:04,667 --> 00:04:06,067
+00:04:04,666 --> 00:04:06,066
 Kita juga bisa memakainya
 
 125
-00:04:06,333 --> 00:04:08,067
+00:04:06,333 --> 00:04:08,066
 untuk membaca kesehatan trend.
 
 126
@@ -503,31 +503,31 @@ untuk membaca kesehatan trend.
 Dalam uptrend yang sehat,
 
 127
-00:04:09,700 --> 00:04:10,567
+00:04:09,700 --> 00:04:10,566
 dorongan harga naik
 
 128
-00:04:10,733 --> 00:04:12,467
+00:04:10,733 --> 00:04:12,466
 biasanya datang dengan volume lebih kuat,
 
 129
-00:04:12,700 --> 00:04:14,967
+00:04:12,700 --> 00:04:14,966
 sementara pullback atau koreksi sementaranya
 
 130
-00:04:15,100 --> 00:04:16,667
+00:04:15,100 --> 00:04:16,666
 terjadi dengan volume lebih ringan.
 
 131
-00:04:17,167 --> 00:04:18,167
+00:04:17,166 --> 00:04:18,166
 Tapi besar kecilnya
 
 132
-00:04:18,367 --> 00:04:19,767
+00:04:18,366 --> 00:04:19,766
 volume tetap harus dibaca
 
 133
-00:04:20,100 --> 00:04:21,367
+00:04:20,100 --> 00:04:21,366
 sesuai konteks harga.
 
 134
@@ -539,27 +539,27 @@ Misalnya volume spike,
 yaitu lonjakan volume
 
 136
-00:04:26,267 --> 00:04:27,200
+00:04:26,266 --> 00:04:27,200
 yang jauh lebih tinggi
 
 137
-00:04:27,467 --> 00:04:28,267
+00:04:27,466 --> 00:04:28,266
 dari biasanya.
 
 138
-00:04:28,367 --> 00:04:29,333
+00:04:28,366 --> 00:04:29,333
 Di dekat breakout,
 
 139
-00:04:29,567 --> 00:04:31,400
+00:04:29,566 --> 00:04:31,400
 volume spike bisa menjadi konfirmasi.
 
 140
-00:04:31,733 --> 00:04:32,767
+00:04:31,733 --> 00:04:32,766
 Setelah rally panjang,
 
 141
-00:04:32,933 --> 00:04:34,367
+00:04:32,933 --> 00:04:34,366
 bisa menunjukkan profit taking.
 
 142
@@ -567,7 +567,7 @@ bisa menunjukkan profit taking.
 Saat harga jatuh tajam,
 
 143
-00:04:35,867 --> 00:04:37,400
+00:04:35,866 --> 00:04:37,400
 bisa menunjukkan panic selling.
 
 144
@@ -575,15 +575,15 @@ bisa menunjukkan panic selling.
 Sebelum selesai,
 
 145
-00:04:38,500 --> 00:04:40,167
+00:04:38,500 --> 00:04:40,166
 ada beberapa hal yang sering salah dibaca
 
 146
-00:04:40,500 --> 00:04:42,467
+00:04:40,500 --> 00:04:42,466
 saat menggunakan volume. Pertama,
 
 147
-00:04:43,267 --> 00:04:44,700
+00:04:43,266 --> 00:04:44,700
 warna volume bar.
 
 148
@@ -591,11 +591,11 @@ warna volume bar.
 Volume hijau atau merah
 
 149
-00:04:46,267 --> 00:04:48,367
+00:04:46,266 --> 00:04:48,366
 biasanya hanya mengikuti warna candle.
 
 150
-00:04:48,700 --> 00:04:50,867
+00:04:48,700 --> 00:04:50,866
 Bukan berarti volume hijau cuma pembelian,
 
 151
@@ -607,11 +607,11 @@ atau volume merah cuma penjualan.
 Nah, setiap transaksi tetap punya
 
 153
-00:04:55,867 --> 00:04:56,733
+00:04:55,866 --> 00:04:56,733
 pembeli dan penjual.
 
 154
-00:04:57,267 --> 00:04:59,167
+00:04:57,266 --> 00:04:59,166
 Terakhir, pahami juga batasnya.
 
 155
@@ -619,7 +619,7 @@ Terakhir, pahami juga batasnya.
 Volume membantu mengonfirmasi apa yang sudah terjadi,
 
 156
-00:05:02,067 --> 00:05:04,300
+00:05:02,066 --> 00:05:04,300
 bukan memastikan apa yang akan terjadi berikutnya.
 
 157
@@ -627,11 +627,11 @@ bukan memastikan apa yang akan terjadi berikutnya.
 Karena itu, tetap baca volume bersama trend,
 
 158
-00:05:07,567 --> 00:05:08,767
+00:05:07,566 --> 00:05:08,766
 support dan resistance,
 
 159
-00:05:08,933 --> 00:05:09,867
+00:05:08,933 --> 00:05:09,866
 pola candle,
 
 160
@@ -639,15 +639,15 @@ pola candle,
 serta kondisi market secara keseluruhan.
 
 161
-00:05:12,867 --> 00:05:14,867
+00:05:12,866 --> 00:05:14,866
 Ingatlah bahwa harga menunjukkan arahnya,
 
 162
-00:05:15,000 --> 00:05:16,867
+00:05:15,000 --> 00:05:16,866
 sedangkan volume menunjukkan seberapa ramai
 
 163
-00:05:17,133 --> 00:05:18,367
+00:05:17,133 --> 00:05:18,366
 transaksi di baliknya.
 
 164

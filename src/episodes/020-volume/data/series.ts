@@ -279,6 +279,45 @@ export const BRPT_VOL = lift(volumeOf(BRPT.bars, 0x601), {
   [BRPT_REBOUND]: 2.1,
 });
 
+
+/* ══ 8. TIMEFRAME PAIR — SC03: the same stock at two zooms ════════════════
+ *
+ * ⚠ THE TWO HISTOGRAMS SHARE ONE PEAK, AND THAT IS THE WHOLE SCENE. A
+ * five-minute bar counts what changed hands in five minutes; a daily bar counts
+ * a whole session, so the daily bars MUST stand taller. Left to normalise
+ * themselves the two would draw the SAME picture — the identical trap as an
+ * unshared price domain, and here it would make the frame say the opposite of
+ * the voice.
+ *
+ * ⚠ THE 5m WINDOW HAS MORE BARS AND THE 1D WINDOW FEWER, on purpose. Cutting a
+ * day into five-minute slices produces many small readings; that is why the
+ * left histogram is thin and low, and it is the same fact the heights show.
+ */
+export const TF5: Series = fromShape({ seed: 505, n: 34, label: "5m" });
+export const TF1D: Series = fromShape({ seed: 1440, n: 18, label: "1D" });
+
+/** The three busiest bars in each window. PLACED, spread apart so they read as
+ *  three separate bursts rather than one block at the end. */
+export const TF5_PEAKS = [7, 18, 28];
+export const TF1D_PEAKS = [4, 10, 15];
+
+/** Pull the bars toward their own mean, then scale the lot. `to` is how much of
+ *  the original spread survives — this is what makes the 5m bars sit low and
+ *  even instead of merely small. */
+const flatten = (v: number[], to: number, at: number) => {
+  const mu = mean(v);
+  return v.map((x) => (mu + (x - mu) * to) * at);
+};
+const spike = (v: number[], at: number[], by: number) => {
+  const s = new Set(at);
+  return v.map((x, i) => (s.has(i) ? x * by : x));
+};
+
+export const TF5_VOL = spike(flatten(volumeOf(TF5.bars, 0x505), 0.45, 0.34), TF5_PEAKS, 2.9);
+export const TF1D_VOL = spike(flatten(volumeOf(TF1D.bars, 0x1440), 0.32, 0.82), TF1D_PEAKS, 2.1);
+/** ⚠ ONE PEAK FOR BOTH. See the header — do not let either normalise itself. */
+export const TF_PEAK = Math.max(...TF5_VOL, ...TF1D_VOL);
+
 /* ══ CHECKS ══════════════════════════════════════════════════════════════
  * The scenes make claims ABOUT this data. These assert the data still makes
  * them. They run once per render process; the alternative is a chart that
@@ -314,4 +353,31 @@ export const SPIKE_BASE = mean(SPIKE_VOL.filter((_, i) => i !== SPIKE_AT));
 must(
   SPIKE_VOL[SPIKE_AT] > SPIKE_BASE * 2.2,
   `the volume spike is not far above its own tape (${(SPIKE_VOL[SPIKE_AT] / SPIKE_BASE).toFixed(2)}x)`,
+);
+
+/* ── the timeframe pair: every claim the scene makes about it ────────────── */
+const topThree = (v: number[]) =>
+  v.map((x, i) => [x, i] as const).sort((a, b) => b[0] - a[0]).slice(0, 3).map(([, i]) => i).sort((a, b) => a - b);
+must(
+  mean(TF1D_VOL) > mean(TF5_VOL) * 1.5,
+  `the 1D window is not meaningfully busier than the 5m one (${mean(TF1D_VOL).toFixed(2)} vs ${mean(TF5_VOL).toFixed(2)})`,
+);
+must(
+  String(topThree(TF5_VOL)) === String([...TF5_PEAKS].sort((a, b) => a - b)),
+  "the 5m window's three tallest bars are not the three it is supposed to single out",
+);
+must(
+  String(topThree(TF1D_VOL)) === String([...TF1D_PEAKS].sort((a, b) => a - b)),
+  "the 1D window's three tallest bars are not the three it is supposed to single out",
+);
+/* ⚠ THE SPIKES MUST STAND CLEAR of their own neighbours, or "3 yang paling
+   tinggi" is only true by a hair and reads as noise. */
+const others = (v: number[], at: number[]) => v.filter((_, i) => !at.includes(i));
+must(
+  Math.min(...TF5_PEAKS.map((i) => TF5_VOL[i])) > Math.max(...others(TF5_VOL, TF5_PEAKS)) * 1.4,
+  "the 5m window's three peaks do not stand clear of the rest",
+);
+must(
+  Math.min(...TF1D_PEAKS.map((i) => TF1D_VOL[i])) > Math.max(...others(TF1D_VOL, TF1D_PEAKS)) * 1.6,
+  "the 1D window's three peaks do not stand clear of the rest",
 );

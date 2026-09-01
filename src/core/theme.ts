@@ -170,23 +170,45 @@ export const PALETTES: Record<PaletteName, Palette> = {
   },
 };
 
-/** Elevation follows the palette — a black shadow is invisible on black. */
-export const SHADOWS: Record<PaletteName, { rest: string; lift: string }> = {
+/**
+ * Elevation follows the palette — a black shadow is invisible on black.
+ *
+ * `glow` is the third state: not height, but ATTENTION. It is the brand indigo
+ * spread wide and soft around a card to say "this one, now" — used when one of
+ * several identical cards is the one being spoken about. Two layers: a tight
+ * ring that draws the edge, and a wide bloom that lifts it off the ground.
+ *
+ * ⚠ INDIGO, NOT A NEUTRAL. A grey glow reads as a shadow bug; the hue is what
+ * makes it read as deliberate. Hue-locked to 247 like every other indigo here.
+ *
+ * `bloom` is `glow` WITHOUT the ring — for something that already has a border
+ * of its own. Using the full `glow` there draws a second edge just outside the
+ * first, which reads as a double border rather than as a lit one.
+ */
+export const SHADOWS: Record<PaletteName, { rest: string; lift: string; glow: string; bloom: string }> = {
   terang: {
     rest: "0 10px 24px rgba(0, 0, 0, 0.05)",
     lift: "0 24px 42px rgba(0, 0, 0, 0.10)",
+    glow: "0 0 0 3px rgba(95, 77, 238, 0.55), 0 0 46px 12px rgba(95, 77, 238, 0.34)",
+    bloom: "0 0 46px 12px rgba(95, 77, 238, 0.34)",
   },
   gelap: {
     rest: "0 10px 24px rgba(0, 0, 0, 0.45)",
     lift: "0 24px 42px rgba(0, 0, 0, 0.65)",
+    glow: "0 0 0 3px rgba(139, 122, 247, 0.65), 0 0 46px 12px rgba(139, 122, 247, 0.40)",
+    bloom: "0 0 46px 12px rgba(139, 122, 247, 0.40)",
   },
   kertas: {
     rest: "0 10px 24px rgba(60, 45, 30, 0.06)",
     lift: "0 24px 42px rgba(60, 45, 30, 0.12)",
+    glow: "0 0 0 3px rgba(95, 77, 238, 0.50), 0 0 46px 12px rgba(95, 77, 238, 0.30)",
+    bloom: "0 0 46px 12px rgba(95, 77, 238, 0.30)",
   },
   ungu: {
     rest: "0 10px 24px rgba(52, 24, 78, 0.10)",
     lift: "0 24px 42px rgba(52, 24, 78, 0.18)",
+    glow: "0 0 0 3px rgba(122, 47, 176, 0.55), 0 0 46px 12px rgba(122, 47, 176, 0.34)",
+    bloom: "0 0 46px 12px rgba(122, 47, 176, 0.34)",
   },
 };
 

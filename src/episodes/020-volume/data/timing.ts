@@ -10,12 +10,12 @@
  * from f0 to f19592 and no frame is unowned.
  */
 export const BLOCK = {
-  SC01: 0, SC02: 809, SC03: 1460, SC04: 2388, SC05: 3339, SC06: 4200,
-  SC07: 4894, SC08: 5891, SC09: 6798, SC10: 7473,
-  SC11: 8154, SC12: 8851, SC13: 9541, SC14: 10411,
-  SC15A: 11201, SC15B: 12966,
-  SC16: 14449, SC17: 15355, SC18: 16593, SC19: 17760, SC20: 18704,
-  END: 19592,
+  SC01: 0, SC02: 809, SC03: 1516, SC04: 2448, SC05: 3399, SC06: 4260,
+  SC07: 4954, SC08: 5951, SC09: 6858, SC10: 7533,
+  SC11: 8214, SC12: 8911, SC13: 9601, SC14: 10471,
+  SC15A: 11261, SC15B: 13026,
+  SC16: 14509, SC17: 15415, SC18: 16653, SC19: 17820, SC20: 18764,
+  END: 19652,
 } as const;
 
 /**
@@ -33,12 +33,12 @@ export const BLOCK = {
  */
 export const CARDS = {
   roadmap: { at: 1410, over: 100 },
-  ch02: { at: 4846, over: 96 },
-  ch03: { at: 8118, over: 96 },
-  practice: { at: 11146, over: 110 },
-  ch04: { at: 14398, over: 102 },
-  ch05: { at: 16548, over: 90 },
-  recap: { at: 18660, over: 88 },
+  ch02: { at: 4906, over: 96 },
+  ch03: { at: 8178, over: 96 },
+  practice: { at: 11206, over: 110 },
+  ch04: { at: 14458, over: 102 },
+  ch05: { at: 16608, over: 90 },
+  recap: { at: 18720, over: 88 },
 } as const;
 
 /**
@@ -47,7 +47,7 @@ export const CARDS = {
  * "Ketiga,", f8154 between "sudah datang." and "Nah,". A wipe on a word is a
  * wipe the viewer reads as a mistake.
  */
-export const HARD_CUT = [6798, 8154] as const;
+export const HARD_CUT = [6858, 8214] as const;
 
 /**
  * BEAT ANCHORS — the frame a phrase is spoken on, GLOBAL, from the sync
@@ -58,33 +58,33 @@ export const HARD_CUT = [6798, 8154] as const;
 export const BEAT = {
   resistance: 210, breakout: 372, valid: 556, buy: 748,
   notYet: 822, volumeWord: 1114, twoBreakouts: 1206, different: 1330,
-  whatIsVolume: 1530, onePeriod: 1836, daily: 1908, fiveMin: 2178,
-  notPeople: 2484, bigPlayers: 2694, handToHand: 2838, notHowMany: 3216,
-  alone: 3450, tenMillion: 3548, normalElsewhere: 3724, average: 4110,
-  priceWhere: 4314, volumeHow: 4458, together: 4692,
-  fourCombos: 5202, first: 5394, convincing: 5664,
-  second: 5902, notASellSignal: 6248, weakening: 6450, careful: 6612,
-  third: 6798, volumeGrows: 6930, sellingSerious: 7218,
-  fourth: 7482, easing: 7734, notBuyers: 8058,
-  confirm: 8448, backToBreakout: 8532, heldItDown: 8784,
-  absorb: 9042, muchHigher: 9246, convincing2: 9378,
-  ordinaryVolume: 9732, notFailed: 9852, weaker: 9972, retest: 10230,
-  breakdownToo: 10422, bigVolume: 10644, thinVolume: 10914, notCertain: 11136,
-  brpt: 11500, monthLow: 11656, lastTwoDays: 11804, atBreakdown: 11946,
-  lessThanSpikes: 12070, rebound: 12292, question: 12528,
-  three: 12770, two: 12872, one: 12912,
-  upTo: 13116, twoCandles: 13290, reboundBigger: 13698,
-  losingConfirmation: 13890, noGuarantee: 14136,
-  trendHealth: 14720, healthyUptrend: 14832, strongerVolume: 14984,
-  pullback: 15102, lighterVolume: 15246,
-  context: 15546, spike: 15666, thanUsual: 15990, nearBreakout: 16044,
-  afterRally: 16244, sharpDrop: 16416,
-  misread: 16770, barColour: 16938, followsCandle: 17118,
-  onlyBuying: 17262, buyerAndSeller: 17694,
-  limits: 17776, alreadyHappened: 18000, notCertainty: 18064,
-  trend: 18354, levels: 18396, pattern: 18476, market: 18546,
-  direction: 18780, behindIt: 18968, notAGuess: 19068,
-  convincing3: 19350, watchOut: 19484,
+  whatIsVolume: 1560, onePeriod: 1896, daily: 1968, fiveMin: 2238,
+  notPeople: 2544, bigPlayers: 2754, handToHand: 2898, notHowMany: 3276,
+  alone: 3510, tenMillion: 3608, normalElsewhere: 3784, average: 4170,
+  priceWhere: 4374, volumeHow: 4518, together: 4752,
+  fourCombos: 5262, first: 5454, convincing: 5724,
+  second: 5962, notASellSignal: 6308, weakening: 6510, careful: 6672,
+  third: 6858, volumeGrows: 6990, sellingSerious: 7278,
+  fourth: 7542, easing: 7794, notBuyers: 8118,
+  confirm: 8508, backToBreakout: 8592, heldItDown: 8844,
+  absorb: 9102, muchHigher: 9306, convincing2: 9438,
+  ordinaryVolume: 9792, notFailed: 9912, weaker: 10032, retest: 10290,
+  breakdownToo: 10482, bigVolume: 10704, thinVolume: 10974, notCertain: 11196,
+  brpt: 11560, monthLow: 11716, lastTwoDays: 11864, atBreakdown: 12006,
+  lessThanSpikes: 12130, rebound: 12352, question: 12588,
+  three: 12830, two: 12932, one: 12972,
+  upTo: 13176, twoCandles: 13350, reboundBigger: 13758,
+  losingConfirmation: 13950, noGuarantee: 14196,
+  trendHealth: 14780, healthyUptrend: 14892, strongerVolume: 15044,
+  pullback: 15162, lighterVolume: 15306,
+  context: 15606, spike: 15726, thanUsual: 16050, nearBreakout: 16104,
+  afterRally: 16304, sharpDrop: 16476,
+  misread: 16830, barColour: 16998, followsCandle: 17178,
+  onlyBuying: 17322, buyerAndSeller: 17754,
+  limits: 17836, alreadyHappened: 18060, notCertainty: 18124,
+  trend: 18414, levels: 18456, pattern: 18536, market: 18606,
+  direction: 18840, behindIt: 19028, notAGuess: 19128,
+  convincing3: 19410, watchOut: 19544,
 } as const;
 
 /** ⚠ THE COUNTDOWN IS UNEVEN AND THAT IS CORRECT — 102 frames then 40. Each
@@ -191,3 +191,102 @@ export const TIDY = { at: 1152, over: 50, to: 0.5 } as const;
 export const GROUND = { at: 892, gone: 1151, over: 20 } as const;
 /** The two side-by-side windows: in at 1203, holding to the end of the card. */
 export const WINDOWS = { at: 1203, over: 34 } as const;
+
+/**
+ * ═══ THE FOUR-CARD ROADMAP ═══  (Simon's frames)
+ *
+ * SC01 does not cut away — it SHRINKS INTO the top card, the way Moving
+ * Average's chapter board was built. `MAP.at` starts the shrink; the three
+ * remaining cards land one after another, still empty, and the board holds
+ * until `MAP_HOLD`.
+ *
+ * ⚠ EVERY NUMBER HERE IS ALREADY IN FINAL FRAME SPACE. The roadmap was built
+ * AFTER the 60-frame pad at f1460, so it must never be shifted by that pad
+ * again. It sits entirely before f1516, so the later 30-frame cut does not
+ * touch it either — only `MAP_HOLD`, which sat past the cut, came back by 30.
+ */
+export const MAP = { at: 1400, over: 100, cards: [1450, 1472, 1494], cardDur: 22 } as const;
+/**
+ * The board holds here, then the next scene takes over.
+ *
+ * ⚠ 1691, NOT 1667 — this is the end of the board's own DISSOLVE, not the start
+ * of the next scene. SC03 is mounted underneath from f1516 and is not delayed by
+ * a frame; all that reaches past f1652 is the roadmap fading off the top of it,
+ * which is what makes the hand-over a cross-fade instead of a cut.
+ */
+export const MAP_HOLD = 1691;
+export const MAP_LABELS: [string, string, string, string] = [
+  /* ⚠ LOWER CASE VERBATIM, Simon's call. The case lives in the string, not in
+     a textTransform, so what the file says is what the frame shows. */
+  "intro to volume",
+  "mengenal volume",
+  "cara baca volume",
+  "cara pakai volume",
+];
+
+/**
+ * ⚠ THE SECOND CARD LIGHTS UP — Simon's frame. While the roadmap holds, the
+ * "Mengenal Volume" card takes an indigo halo and a volume histogram appears
+ * inside it, so the board stops being a static contents page and starts
+ * pointing at what comes next.
+ *
+ * `bars` trails `at` on purpose: the halo arrives first and the histogram
+ * builds into the lit card, rather than both landing on the same frame.
+ */
+export const CARD2 = { at: 1537, over: 26 } as const;
+
+/**
+ * ═══ THE BOARD HANDS OVER ═══  (Simon's frames)
+ *
+ * The camera closes on "mengenal volume" — the card the next chapter belongs
+ * to — and the whole board dissolves into the scene behind it.
+ *
+ * ⚠ THE PUSH RUNS ITS FULL LENGTH AND THE FADE STARTS WHERE IT ENDS — Simon's
+ * frames: 1617→1667, then the dissolve. `amount` is unchanged, so the same
+ * distance is covered over 50 frames instead of 30; the move is slower and has
+ * settled by the time the board goes.
+ */
+/**
+ * ⚠ `amount` IS CAPPED BY THE SUBTITLE BAND, not chosen for feel. The card's
+ * caption sits 185px below the card's centre, and the push scales about that
+ * centre: at 1.6 the caption landed at y956+ and ran into the 108px reserve the
+ * burned-in subtitles own. 1.25 puts its lowest pixel at y≈956, clear of it,
+ * and still carries the card to 1206px wide — more than twice its size.
+ */
+export const PUSH = { at: 1617, over: 50, card: 1, amount: 1.25 } as const;
+export const FADE = { at: 1667, over: 24 } as const;
+
+/**
+ * ⚠ A PRODUCTION NOTE ON THE FRAME, NOT SCENE DESIGN. SC03 is blank while it
+ * waits to be directed, and this marks what belongs there. It is meant to be
+ * deleted, so it lives in the frame table with the rest of the temporary
+ * scaffolding rather than as a number buried in a scene.
+ */
+export const NOTE = { from: 1515, to: 1970, text: "Note: Running Trade" } as const;
+
+/**
+ * ⚠ THE TWO TIMEFRAME WINDOWS — Simon's frames, and `gone` sits 7 frames PAST
+ * SC04's start (f2448) because that is the range he gave. SC04 draws nothing
+ * until its own first beat, so the overlap is empty air rather than two scenes
+ * fighting over the frame.
+ */
+export const TFW = { at: 1971, gone: 2455, over: 34, right: 2236 } as const;
+
+/**
+ * ═══ WHICH SCREENSHOT IS BEING TALKED ABOUT ═══  (Simon's frames)
+ *
+ * The narration takes the left one to f2236 and the right one after it, so the
+ * frame says which is being read: the one under discussion lifts and lights,
+ * the other steps back BY FADING — Simon's correction. It keeps its size and
+ * loses 30% of its opacity.
+ *
+ * ⚠ ONLY THE SELECTED ONE IS SCALED, and always FROM THE ORIGINAL. Nothing is
+ * applied on top of anything else, so a picture cannot drift after several
+ * hand-overs.
+ *
+ * ⚠ THE ARROWS BELONG TO THE SELECTION, not to the screenshot. They arrive one
+ * after another when their side takes its turn and leave with it — that is what
+ * makes them read as someone pointing rather than as marks that were always on
+ * the picture.
+ */
+export const TF_PICK = { over: 24, up: 1.1, dim: 0.7, lead: 18, step: 4 } as const;

@@ -36,7 +36,6 @@ import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
 import { BLOCK } from "./data/timing";
-
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -51,22 +50,98 @@ import { Cards } from "./scenes/Cards";
 
 /** The voice ends on the last cue. `VO_END` is computed from the SRT, so a
  *  re-cut recording fails against the wrong number rather than truncating. */
-export const TOTAL_FRAMES = 19592;
+export const TOTAL_FRAMES = 19652;
 
-type Mounted = { from: number; duration: number; Component: React.FC; name?: string };
+type Mounted = {
+  from: number;
+  duration: number;
+  Component: React.FC;
+  name?: string;
+};
 
-/** ⚠ ORDER IS Z-ORDER. CG-A is first because it is underneath. */
+/**
+ * ═══ ⚠ TEMPORARY — MOUNTS LISTED HERE DO NOT RENDER ═══
+ *
+ * By NAME, not by frame: naming the mount says which scene is being held back,
+ * and it cannot drift when the frame table shifts. Empty the list to bring
+ * everything back — nothing below has been deleted, and the frames, the voice
+ * and the subtitles all continue as they are, so the timeline stays in sync.
+ */
+const HIDDEN: string[] = [];
+
+/**
+ * ⚠ ORDER IS Z-ORDER, AND CG-A IS LAST ON PURPOSE — Simon's call: scene 1 sits
+ * ON TOP.
+ *
+ * The two overlap for one stretch only. CG-B opens at f1516 while CG-A is still
+ * holding the four-card roadmap, and CG-A goes dark at `MAP_HOLD` (f1691) —
+ * everywhere else CG-A has already returned null, so painting it last costs
+ * nothing. What it buys is the hand-over: the board dissolves and SC03 is
+ * already standing underneath it, which is what makes the fade a cross-fade
+ * rather than a fade to empty followed by a scene arriving.
+ */
 const SCENES: Mounted[] = [
-  { from: BLOCK.SC01, duration: BLOCK.SC14 - BLOCK.SC01, Component: MainChartGroup, name: "CG-A · SC01·02·11·12·13" },
-  { from: BLOCK.SC03, duration: BLOCK.SC07 - BLOCK.SC03, Component: UnderstandGroup, name: "CG-B · SC03–06" },
-  { from: BLOCK.SC07, duration: BLOCK.SC11 - BLOCK.SC07, Component: CombosGroup, name: "CG-C · SC07–10" },
-  { from: BLOCK.SC14, duration: BLOCK.SC15A - BLOCK.SC14, Component: SC14, name: "SC14 Breakdown" },
-  { from: BLOCK.SC15A, duration: BLOCK.SC16 - BLOCK.SC15A, Component: BrptGroup, name: "CG-D · SC15A+B" },
-  { from: BLOCK.SC16, duration: BLOCK.SC17 - BLOCK.SC16, Component: SC16, name: "SC16 Trend health" },
-  { from: BLOCK.SC17, duration: BLOCK.SC18 - BLOCK.SC17, Component: SC17, name: "SC17 Volume spike" },
-  { from: BLOCK.SC18, duration: BLOCK.SC19 - BLOCK.SC18, Component: SC18, name: "SC18 Colour" },
-  { from: BLOCK.SC19, duration: BLOCK.SC20 - BLOCK.SC19, Component: SC19, name: "SC19 Limits" },
-  { from: BLOCK.SC20, duration: BLOCK.END - BLOCK.SC20, Component: SC20, name: "SC20 Close" },
+  {
+    from: BLOCK.SC03,
+    duration: BLOCK.SC07 - BLOCK.SC03,
+    Component: UnderstandGroup,
+    name: "CG-B · SC03–06",
+  },
+  {
+    from: BLOCK.SC07,
+    duration: BLOCK.SC11 - BLOCK.SC07,
+    Component: CombosGroup,
+    name: "CG-C · SC07–10",
+  },
+  {
+    from: BLOCK.SC14,
+    duration: BLOCK.SC15A - BLOCK.SC14,
+    Component: SC14,
+    name: "SC14 Breakdown",
+  },
+  {
+    from: BLOCK.SC15A,
+    duration: BLOCK.SC16 - BLOCK.SC15A,
+    Component: BrptGroup,
+    name: "CG-D · SC15A+B",
+  },
+  {
+    from: BLOCK.SC16,
+    duration: BLOCK.SC17 - BLOCK.SC16,
+    Component: SC16,
+    name: "SC16 Trend health",
+  },
+  {
+    from: BLOCK.SC17,
+    duration: BLOCK.SC18 - BLOCK.SC17,
+    Component: SC17,
+    name: "SC17 Volume spike",
+  },
+  {
+    from: BLOCK.SC18,
+    duration: BLOCK.SC19 - BLOCK.SC18,
+    Component: SC18,
+    name: "SC18 Colour",
+  },
+  {
+    from: BLOCK.SC19,
+    duration: BLOCK.SC20 - BLOCK.SC19,
+    Component: SC19,
+    name: "SC19 Limits",
+  },
+  {
+    from: BLOCK.SC20,
+    duration: BLOCK.END - BLOCK.SC20,
+    Component: SC20,
+    name: "SC20 Close",
+  },
+  /* ⚠ LAST = ON TOP. See the note above the array. */
+  {
+    from: BLOCK.SC01,
+    duration: BLOCK.SC14 - BLOCK.SC01,
+    Component: MainChartGroup,
+    name: "CG-A · SC01·02·11·12·13",
+  },
 ];
 
 /* ⚠ COVERAGE, ASSERTED. Reading a table is how a one-frame hole survives to the
@@ -77,20 +152,35 @@ const SCENES: Mounted[] = [
   SCENES.forEach(({ from, duration }) => {
     for (let i = from; i < from + duration; i++) owned[i] = true;
   });
+  /* ⚠ CHECKED AGAINST THE FULL TABLE, not against what is currently visible:
+     `HIDDEN` is a review switch, and the tiling has to stay sound underneath it
+     so nothing is quietly lost when a mount comes back. */
   const hole = owned.indexOf(false);
   if (hole !== -1) throw new Error(`020-volume: frame ${hole} is unowned`);
   if (TOTAL_FRAMES < VO_END) {
-    throw new Error(`020-volume: ${TOTAL_FRAMES} frames is shorter than the voice (${VO_END})`);
+    throw new Error(
+      `020-volume: ${TOTAL_FRAMES} frames is shorter than the voice (${VO_END})`,
+    );
   }
 })();
 
 const Body = () => (
   <Stage>
-    {SCENES.map(({ from, duration, Component, name }) => (
-      <Sequence key={name} from={from} durationInFrames={duration} name={name}>
-        <Component />
-      </Sequence>
-    ))}
+    {SCENES.filter((m) => !HIDDEN.includes(m.name ?? "")).map(
+      ({ from, duration, Component, name }) => (
+        <Sequence
+          key={name}
+          from={from}
+          durationInFrames={duration}
+          name={name}
+          style={{
+            translate: "-2px 2px",
+          }}
+        >
+          <Component />
+        </Sequence>
+      ),
+    )}
 
     {/* above the tiling, straddling the cuts — see scenes/Cards.tsx */}
     <Cards />
