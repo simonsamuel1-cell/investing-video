@@ -143,11 +143,27 @@ const railBox = (centre: number, w: number, h: number) => ({
   width: w,
   height: h,
 });
-/** The histogram's pane inside the window, and one bar per third of it. */
+/**
+ * The window, sized BY ITS BARS rather than the other way round.
+ *
+ * ⚠ `gridOf` KEEPS AN 18px GUTTER OF ITS OWN at each end and then spreads the
+ * three bars evenly across what is left, so the spacing is (pane − 36) / 2.
+ * Setting that to bar + gap is what actually produces Simon's 10px, and it is
+ * why the pane — and with it the window — is computed here instead of typed.
+ */
+const RAIL_WIN = (() => {
+  const spacing = RAIL.bars.w + RAIL.bars.gap;
+  const pane = spacing * 2 + 36;
+  return { w: pane + RAIL.win.pad * 2, h: RAIL.win.h, pane };
+})();
 const RAIL_PANE = (() => {
-  const pad = 46;
-  const b = railBox(RAIL_C.win, RAIL.win.w, RAIL.win.h);
-  return { x: b.left + pad, y: b.top + pad, w: b.width - pad * 2, h: b.height - pad * 2 };
+  const b = railBox(RAIL_C.win, RAIL_WIN.w, RAIL_WIN.h);
+  return {
+    x: b.left + RAIL.win.pad,
+    y: b.top + RAIL.win.pad,
+    w: RAIL_WIN.pane,
+    h: b.height - RAIL.win.pad * 2,
+  };
 })();
 /** ⚠ ALL THREE GREEN — they are volume bars, the one place outside a candle
  *  body where this palette is allowed a colour at all. */
@@ -602,7 +618,7 @@ export const UnderstandGroup = () => {
                     <div
                       style={{
                         position: "absolute",
-                        ...railBox(RAIL_C.win, RAIL.win.w, RAIL.win.h),
+                        ...railBox(RAIL_C.win, RAIL_WIN.w, RAIL_WIN.h),
                         border: `2px solid ${theme.color.gridLine}`,
                         borderRadius: theme.shape.panelRadius,
                       }}
@@ -613,7 +629,7 @@ export const UnderstandGroup = () => {
                       grid={RAIL_GRID}
                       box={RAIL_PANE}
                       peak={1}
-                      width={56}
+                      width={RAIL.bars.w}
                     />
 
                     {/* ── p3: in from off-frame right, twice through ────── */}

@@ -444,7 +444,12 @@ export const RAIL = {
   col: { a: 640, b: 1280 },
   /** p2 and p3, at the same size; ratio is the files' own 923:558. */
   clip: { w: 700, h: 423 },
-  win: { w: 440, h: 440 },
+  /**
+   * ⚠ THE WINDOW'S WIDTH IS NOT TYPED — it is derived from the bars, in the
+   * scene, so the 10px gap Simon asked for cannot be broken by nudging the box.
+   * Only its height is a free number.
+   */
+  win: { h: 440, pad: 46 },
   /** Centre-y, shared by all three. */
   midY: 561,
   cam: { at: 2881, over: 40 },
@@ -457,6 +462,9 @@ export const RAIL = {
    * reveal of a single bar would say nothing about that.
    */
   bars: {
+    /** Bar width and the gap between two of them, in canvas pixels. */
+    w: 56,
+    gap: 10,
     short: [0.1, 0.13],
     mid: 0.24,
     tall: 0.62,
