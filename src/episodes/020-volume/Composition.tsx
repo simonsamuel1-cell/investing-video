@@ -35,7 +35,7 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK } from "./data/timing";
+import { BLOCK, RUNNING_LINE } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -185,7 +185,7 @@ const Body = () => (
     {/* above the tiling, straddling the cuts — see scenes/Cards.tsx */}
     <Cards />
 
-    <Captions cues={CUES} />
+    <Captions cues={CUES} mute={RUNNING_LINE.mute} />
     <Watermark totalFrames={TOTAL_FRAMES} />
     <Audio src={staticFile("vo/volume.mp3")} />
   </Stage>

@@ -9,6 +9,12 @@
  *
  * Pass `show={false}` for a clean plate.
  *
+ * `mute` silences a stretch of cues WITHOUT touching the generated file — for a
+ * scene that puts the same words on the frame itself, where the band underneath
+ * would only say them twice. Matched on a cue's START, so a cue is either shown
+ * whole or not at all; matching on overlap would clip a line mid-phrase at the
+ * window's edge.
+ *
  * CUES ARE GENERATED, NEVER HAND-TYPED — from the corrected SRT, at the
  * Composition's fps. See scripts/srt-to-cues.ts.
  */
@@ -21,15 +27,19 @@ export type Cue = { start: number; end: number; text: string };
 export const Captions = ({
   cues,
   show = true,
+  mute,
 }: {
   cues: Cue[];
   show?: boolean;
+  /** Frame ranges whose cues are not drawn. Half-open: `to` is excluded. */
+  mute?: readonly { from: number; to: number }[];
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   if (!show) return null;
   const cue = cues.find((q) => f >= q.start && f < q.end);
   if (!cue) return null;
+  if (mute?.some((r) => cue.start >= r.from && cue.start < r.to)) return null;
   return (
     <div
       style={{

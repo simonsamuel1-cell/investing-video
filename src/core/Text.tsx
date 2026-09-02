@@ -13,6 +13,7 @@
  * TextBlock did that Market-Structure's Text did not, and it is the treatment the
  * brand spec asks for on longer on-screen sentences.
  */
+import React from "react";
 import { useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { usePalette } from "./palette";
@@ -149,7 +150,9 @@ export const Words = ({
   color,
   /** Frames between one word starting and the next. */
   stagger,
+  atEach,
   maxWidth,
+  marks,
 }: {
   text: string;
   x: number;
@@ -160,13 +163,52 @@ export const Words = ({
   weight?: number;
   color?: string;
   stagger?: number;
+  /**
+   * One frame per word, ABSOLUTE, overriding `at` + i × stagger.
+   *
+   * For a line that has to arrive with the voice rather than on a metronome:
+   * the frames come from the subtitle cues, so a word lands as it is spoken.
+   * Shorter than the sentence falls back to the even spacing for the rest.
+   */
+  atEach?: readonly number[];
   maxWidth?: number;
+  /**
+   * Phrases to run under a highlighter, as they appear in `text`.
+   *
+   * ⚠ MATCHED ON THE WORD SEQUENCE, NOT ON THE STRING. Highlighting a substring
+   * would mean wrapping part of a word, and these words are already separate
+   * elements so they can arrive one at a time. A phrase that is not found is
+   * simply not marked — it never silently marks the wrong words.
+   */
+  marks?: readonly { text: string; color: string }[];
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const step = stagger ?? Math.max(1, Math.round(m.reveal / 4));
   const words = text.split(" ");
+  /** colour per word index, from the phrases in `marks` */
+  const marked: (string | undefined)[] = new Array(words.length).fill(undefined);
+  /* ⚠ TRAILING PUNCTUATION IS IGNORED WHEN MATCHING. A phrase that ends a
+     clause carries the comma in the sentence but not in the phrase someone
+     writes down, and a mark that silently does not appear because of a comma is
+     the worst kind of miss — it looks like the feature is broken. */
+  const bare = (w: string) => w.replace(/[.,;:!?]+$/, "");
+  marks?.forEach((mk) => {
+    const want = mk.text.split(" ").map(bare);
+    for (let i = 0; i + want.length <= words.length; i++) {
+      if (want.every((w, k) => bare(words[i + k]) === w)) {
+        for (let k = 0; k < want.length; k++) marked[i + k] = mk.color;
+      }
+    }
+  });
+  /** Runs of neighbouring words that share a mark (or share having none). */
+  const groups: { color?: string; from: number; to: number }[] = [];
+  words.forEach((_, i) => {
+    const last = groups[groups.length - 1];
+    if (last && last.color === marked[i]) last.to = i;
+    else groups.push({ color: marked[i], from: i, to: i });
+  });
   return (
     <div
       style={{
@@ -184,19 +226,64 @@ export const Words = ({
         whiteSpace: maxWidth ? "normal" : "nowrap",
       }}
     >
-      {words.map((w, i) => {
-        const r = textReveal(f, at + i * step, m.reveal);
+      {/* ⚠ CONSECUTIVE MARKED WORDS SHARE ONE WASH. Painting each word
+          separately left a gap of paper between them, so a two-word phrase read
+          as two marks; and padding each word while pulling it back with a
+          negative margin — the first attempt — swallowed the space between
+          words entirely. Grouping the run and washing the group is the only
+          version that keeps both the continuous mark and the word spacing. */}
+      {groups.map((g) => {
+        const run = (
+          <>
+            {words.slice(g.from, g.to + 1).map((w, k) => {
+              const i = g.from + k;
+              const r = textReveal(f, atEach?.[i] ?? at + i * step, m.reveal);
+              return (
+                <span
+                  key={i}
+                  style={{
+                    display: "inline-block",
+                    opacity: r.opacity,
+                    transform: `translateY(${r.dy}px)`,
+                    /* the run's own trailing space belongs OUTSIDE the wash */
+                    marginRight: g.color && i === g.to ? 0 : "0.3em",
+                  }}
+                >
+                  {w}
+                </span>
+              );
+            })}
+          </>
+        );
+        if (!g.color) return <React.Fragment key={g.from}>{run}</React.Fragment>;
+        /* ⚠ THE MARK LANDS AFTER THE WORDS IT MARKS, never with them — Simon's
+           note. It follows the run's LAST word, so a two-word phrase is marked
+           once it is whole rather than being washed while it is still arriving
+           and reading as a highlight of a word that is not there yet. */
+        const mark = textReveal(f, atEach?.[g.to] ?? at + g.to * step, m.reveal).opacity;
         return (
           <span
-            key={i}
+            key={g.from}
             style={{
+              position: "relative",
               display: "inline-block",
-              opacity: r.opacity,
-              transform: `translateY(${r.dy}px)`,
+              padding: "0.04em 0.18em",
               marginRight: "0.3em",
             }}
           >
-            {w}
+            {/* ⚠ THE WASH IS ITS OWN LAYER, BEHIND the words. Fading it by
+                fading the whole span would take the type with it, and the words
+                have already arrived — it is only the mark that is late. */}
+            <span
+              style={{
+                position: "absolute",
+                inset: 0,
+                background: g.color,
+                borderRadius: 6,
+                opacity: mark,
+              }}
+            />
+            <span style={{ position: "relative" }}>{run}</span>
           </span>
         );
       })}

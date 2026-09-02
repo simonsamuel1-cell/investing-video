@@ -115,6 +115,20 @@ export const CUTS = {
    * reads as a focus error rather than as speed.
    */
   textToVolume: { at: 1106, over: 24, distance: 60, blur: 0, axis: "y" as const },
+  /**
+   * The note carried out and the phase clips carried in, on one move — Simon's
+   * frames, "di antara 2460-2461", so the swap lands on f2461.
+   *
+   * ⚠ THE GROUND CHANGES ACROSS THIS CUT, from the episode's #F5F5F5 to white,
+   * because the clips are white to their own edges and anything darker behind
+   * them draws a box around footage that has no box.
+   *
+   * ⚠ blur: 0, AT SIMON'S DIRECTION — the same exception as `textToVolume`. A
+   * blur filter softens the moving layer's EDGES too, and on a white ground
+   * around white footage that soft edge reads as a drop shadow the clip does
+   * not have. The move alone carries it here.
+   */
+  intoFase: { at: 2461, over: 30, distance: 90, blur: 0, axis: "y" as const },
 };
 
 /** A global beat, in a scene mounted at `from`. */
@@ -257,12 +271,75 @@ export const PUSH = { at: 1617, over: 50, card: 1, amount: 1.25 } as const;
 export const FADE = { at: 1667, over: 24 } as const;
 
 /**
- * ⚠ A PRODUCTION NOTE ON THE FRAME, NOT SCENE DESIGN. SC03 is blank while it
- * waits to be directed, and this marks what belongs there. It is meant to be
- * deleted, so it lives in the frame table with the rest of the temporary
- * scaffolding rather than as a number buried in a scene.
+ * ═══ THE RUNNING TRADE CAPTURE ═══  (Simon's frames)
+ *
+ * The screen recording. It starts the frame the roadmap has finished dissolving and runs to the frame
+ * before the two BBCA screenshots arrive, so nothing overlaps and nothing is
+ * spent playing behind the board.
+ *
+ * ⚠ 280 FRAMES OF A 300-FRAME CLIP. The recording is 5.00s at 60fps and this
+ * window is 4.67s, so the last 20 frames are never reached — it is cut short
+ * rather than sped up or looped, because a running trade tape that jumps reads
+ * as a broken feed.
  */
-export const NOTE = { from: 1515, to: 1970, text: "Note: Running Trade" } as const;
+export const RUNNING = { at: 1691, gone: 1971 } as const;
+
+/**
+ * The line beside the capture — the SAME words the voice is speaking, joined
+ * back into the one sentence the SRT had to break into three cues.
+ *
+ * ⚠ IT IS NOT A NEW LINE, IT IS THE SUBTITLE MOVED. So the band below is muted
+ * for exactly the cues it absorbs — 1648, 1722 and 1896 — or the frame would
+ * say the same thing twice. The cue at 1968 is NOT muted: it opens the next
+ * sentence, which belongs to the two screenshots after this.
+ *
+ * ⚠ MATCHED ON CUE START, NOT ON OVERLAP. The first of the three begins at
+ * f1648, before the capture is even on screen; muting by overlap would leave it
+ * on the band for 43 frames and then cut it off mid-phrase.
+ */
+export const RUNNING_LINE = {
+  /** The word being defined, alone and large. */
+  word: "Volume",
+  /**
+   * The definition, in the dashed box under it.
+   *
+   * ⚠ TWO LINES BECAUSE SIMON WROTE TWO, and the break is his. Left to wrap on
+   * its own the box would break wherever the measure happened to run out, and
+   * "berapa lembar" and "satu periode" — the two halves he marks — would not
+   * land one per line.
+   *
+   * ⚠ HIS WORDING, VERBATIM. It is not quite the narration: the voice says
+   * "berapa banyak lembar saham", the card says "berapa lembar saham". The card
+   * is his, and it is not retyped from the SRT.
+   */
+  lines: ["berapa lembar saham yang", "diperdagangkan dalam satu periode"],
+  /**
+   * ⚠ ONE FRAME PER WORD, TAKEN FROM THE SUBTITLE CUES — Simon's instruction:
+   * the words arrive as they are SPOKEN, not on a metronome. Each cue's span is
+   * divided by the number of words the voice says inside it, and every word on
+   * the card is placed at the frame its own word is reached:
+   *
+   *   f1648-1714  "Volume menunjukkan"                              2 words
+   *   f1722-1882  "berapa banyak lembar saham yang diperdagangkan"  6 words
+   *   f1896-1950  "dalam satu periode."                             3 words
+   *
+   * ⚠ MATCHED BY SPOKEN POSITION, NOT BY POSITION ON THE CARD. The card drops
+   * "banyak" — Simon's wording — so "lembar" is the card's second word but the
+   * voice's THIRD, and it lands on the third slot. Counting along the card
+   * instead would run the whole line ahead of the narration.
+   */
+  at: [
+    [1722, 1775, 1802, 1829],
+    [1855, 1896, 1914, 1932],
+  ],
+  /** The two phrases under a highlighter — cyan on the first, amber on the
+   *  second. What is counted, and over what stretch of time. */
+  markCyan: "berapa lembar",
+  markAmber: "satu periode",
+  mute: [{ from: 1648, to: 1897 }],
+  /** Frames between one word landing and the next. */
+  stagger: 9,
+} as const;
 
 /**
  * ⚠ THE TWO TIMEFRAME WINDOWS — Simon's frames, and `gone` sits 7 frames PAST
@@ -289,4 +366,213 @@ export const TFW = { at: 1971, gone: 2455, over: 34, right: 2236 } as const;
  * makes them read as someone pointing rather than as marks that were always on
  * the picture.
  */
+/**
+ * ═══ ⚠ TEMPORARY — SC04's OWN SCENE IS SET ASIDE ═══  (Simon's frames)
+ *
+ * f2455-3408 is given over to the phase clips. The stretches either side of
+ * them draw nothing: the production notes that stood here are gone at his
+ * instruction, so what is left is an empty frame rather than a caption about an
+ * empty frame.
+ *
+ * Nothing has been deleted — SC04's code is untouched below this and comes back
+ * by removing one early return.
+ *
+ * ⚠ THE VOICE AND THE FRAME TABLE ARE UNTOUCHED. SC04 still owns its frames, so
+ * the narration keeps running over an empty stage rather than the block
+ * collapsing and everything after it sliding.
+ */
+export const NOTE = { at: 2455, gone: 4253 } as const;
+
+/**
+ * ═══ THE MASCOT LINE ═══  (Simon's frames)
+ *
+ * The mascot over the sentence the voice is landing: "volume menunjukkan
+ * seberapa banyak saham yang diperdagangkan, bukan berapa banyak orang yang
+ * ikut transaksi". His two lines are the short form of it.
+ *
+ * ⚠ HIS WORDING AND HIS LINE BREAK, VERBATIM — not retyped from the SRT.
+ */
+export const MASCOT = {
+  at: 3067,
+  gone: 3413,
+  lines: ["Volume menghitung lembar saham,", "bukan pelakunya."],
+  mark: "menghitung lembar saham",
+  /** The slow rise and fall, the same pair SC01's mascot breathes on. */
+  float: { amount: 12, period: 240 },
+} as const;
+
+/**
+ * ═══ THE DAILY CHART, AGAIN ═══  (Simon's frames)
+ *
+ * The same BBCA screen SC03 compared against the 5m one, brought back on its
+ * own while the voice explains that one volume bar means nothing alone — "10
+ * juta lembar bisa sangat besar untuk satu saham, tapi biasa saja untuk saham
+ * lain… bandingkan volume hari ini dengan periode sebelumnya".
+ *
+ * ⚠ THE DAILY ONE, NOT THE 5m. Simon pointed at f2010-2351, where the selection
+ * changes hands halfway; the narration here is about comparing today against
+ * previous days and against an average, which is a daily chart's argument.
+ *
+ * ⚠ AT REST: no lift, no halo, no highlight box. It is being referred back to,
+ * not pointed at.
+ */
+/**
+ * ═══ p2, THE VOLUME WINDOW, AND p3 — ONE RAIL ═══  (Simon's frames and columns)
+ *
+ * Three things stand in a row and the CAMERA moves, rather than each of them
+ * being animated to a new place. That is what "p2 dan p3 anchor to window
+ * volume" means in practice: the window never moves in rail space, so nothing
+ * can drift out of register with it however the pan is retimed.
+ *
+ * ⚠ TWO COLUMNS ONLY — x640 and x1280, Simon's numbers, and everything is a
+ * CENTRE on one of them. Before the move: p2 on 640, the window on 1280. After:
+ * the window on 640, p3 on 1280. So the rail spacing IS 640 and the pan is
+ * exactly one column wide; there is no third number to get wrong.
+ *
+ *   rail centres:   p2 = 0        window = 640        p3 = 1280
+ *   camera:         640 before  →  0 after
+ *
+ * ⚠ ONE COLUMN OF TRAVEL LEAVES p2 HALF ON SCREEN. Its centre lands on x0, so
+ * 350px of it would still be showing — the two columns and "p2 tidak terlihat"
+ * cannot both be true by position alone. It fades across the move instead, so
+ * the columns stay exactly as asked and p2 is still gone by the end of it.
+ */
+export const RAIL = {
+  at: 2706,
+  gone: 3067,
+  /** The two columns everything sits on. */
+  col: { a: 640, b: 1280 },
+  /** p2 and p3, at the same size; ratio is the files' own 923:558. */
+  clip: { w: 700, h: 423 },
+  win: { w: 440, h: 440 },
+  /** Centre-y, shared by all three. */
+  midY: 561,
+  cam: { at: 2881, over: 40 },
+  /**
+   * The three bars. The first two are barely there; the third arrives slowly
+   * across the whole of p2's stretch, then keeps growing across p3's.
+   *
+   * ⚠ IT GROWS FROM ITS BASELINE, which is what "wipe in" has to mean for a
+   * bar: the thing being said about it is its HEIGHT, and a left-to-right
+   * reveal of a single bar would say nothing about that.
+   */
+  bars: {
+    short: [0.1, 0.13],
+    mid: 0.24,
+    tall: 0.62,
+    grow1: { at: 2706, over: 174 },
+    grow2: { at: 2881, over: 185 },
+  },
+  /** p3 runs twice inside the pan's stretch — 233 source frames each. */
+  loop: { at: 2881, gone: 3067, times: 2, src: 233 },
+} as const;
+
+export const RECAP = { at: 3413, gone: 4253, art: "art/bbca-1d.png" } as const;
+/**
+ * The stand-in shape, so the pop-in can be judged on something before it goes
+ * on the real footage.
+ *
+ * ⚠ 17 FRAMES, NOT 26 — Simon asked for it 50% faster, so the duration is
+ * divided by 1.5 rather than reduced by half. `from` is where it starts: 30% of
+ * size, growing to 100% and a tenth past on the way.
+ */
+export const NOTE_POP = { at: 2470, over: 17, r: 120, from: 0.3 } as const;
+
+/**
+ * ═══ THE THREE PHASE CLIPS ═══  (Simon's frames)
+ *
+ * Each one pops in on the frame its window opens, using the move settled on the
+ * placeholder circle: 30% of size to 100%, a tenth past on the way, over 17
+ * frames.
+ *
+ * ⚠ EVERY CLIP FREEZES ON ITS LAST FRAME — Simon's instruction — rather than
+ * vanishing when it runs out. `src` is each clip's own length IN THIS
+ * COMPOSITION'S FRAMES (its 8fps frames × 7.5), which is what tells the scene
+ * where playing stops and holding begins.
+ *
+ * That also settles the mismatch between clip and window: p2 is 120 frames in a
+ * 175-frame window and used to leave 55 frames of empty stage; now it holds its
+ * last drawing there instead. p3 is 233 in 186 and is still cut short.
+ *
+ * ⚠ THEY ARE 8fps FILES in a 60fps composition. Every source frame therefore
+ * holds for seven and a half frames — that stepping is in the files, not in the
+ * playback.
+ *
+ * ⚠ 923x558, NOT 16:9. The re-exports Simon sent are 1.657:1, so the frame they
+ * sit in is derived from that rather than from a shape they do not have.
+ *
+ * ⚠ THE SOURCE IS p1-p3.png — Animated PNG out of Procreate, with a REAL alpha
+ * channel. Two earlier attempts had none: .mp4 (H.264) and .mov (HEVC Main)
+ * both flattened the transparency to solid black on the way out, and because
+ * the drawings contain black INK as well, no key could separate the two — it
+ * was tried, by connectivity and by stroke thickness, and both failed.
+ *
+ * The copies under public/art are the same frames re-encoded as VP9 with an
+ * alpha plane, which is what a browser composites. Nothing is keyed and nothing
+ * is guessed; the alpha comes straight from the file.
+ */
+export const FASE = [
+  /* ⚠ p1 IS NOT DRAWN FROM HERE — see FIELD. It keeps its row so the window
+     boundaries stay in one table, but its picture is the field of copies. */
+  { at: 2461, gone: 2706, art: "art/p1.webm", src: 300 },
+  { at: 2706, gone: 2881, art: "art/p2.webm", src: 120 },
+  { at: 2881, gone: 3067, art: "art/p3.webm", src: 233 },
+] as const;
+
+/** The clips' own pixels, so the frame they sit in is measured, not typed. */
+export const FASE_IMG = { w: 923, h: 558 } as const;
+/**
+ * ⚠ SIZED FOR THE POP'S PEAK, NOT ITS RESTING STATE. The clip is drawn at 110%
+ * on the way in, and at the resting size that put its top edge inside the
+ * 360x150 the logo owns. The room here runs from the bottom of that zone to the
+ * top of the caption band; the height is what fits inside it AT 110%, and the
+ * box is centred in that room so the overshoot has the same air above as below.
+ */
+export const FASE_BOX = { h: 730 } as const;
+
+/**
+ * ═══ THE FIELD OF p1 ═══  (Simon's frames and layout)
+ *
+ * One clip at rest in the middle, and ten copies of it racing around the edges.
+ *
+ * ⚠ THE MIDDLE ONE IS SPED UP TO LAND ON f2685, not cut off there. p1 runs 40
+ * frames at 8fps — 300 frames of this composition — and the window Simon wants
+ * it finished in is 224, so it plays at 300/224. Trimming instead would stop
+ * the drawing mid-gesture, which is the one thing a looping field makes obvious.
+ *
+ * ⚠ ONE START AND ONE SPEED FOR ALL THREE — Simon's call after seeing them
+ * staggered and racing: `step: 0`, and `rate` is derived from the middle one's
+ * own window rather than set per copy, so "the same speed" cannot drift apart
+ * later. Three drawings doing the same thing at the same moment read as one
+ * picture; twelve arriving at twelve speeds split the attention.
+ *
+ * ⚠ EVERY ONE OF THEM HOLDS ITS LAST DRAWING TO THE END OF THE WINDOW, f2705 —
+ * Simon's frame. `main.done` is only where the middle one stops PLAYING; it is
+ * not where anything leaves. The whole field stands until p2 replaces it on
+ * f2706, so there is no gap and nothing thins out on its own.
+ *
+ * ⚠ THE SPOTS ARE PROVEN NOT TO TOUCH, here and in the assertion below: no two
+ * rectangles intersect, none enters the 360x150 logo zone or the caption band,
+ * and none crosses the side margins.
+ */
+export const FIELD = {
+  at: 2461,
+  /** p1's own length, in this composition's frames: 40 at 8fps. */
+  srcFrames: 300,
+  /**
+   * ⚠ ALL THREE ARE THE SAME SIZE NOW — Simon's call. The middle one used to be
+   * 604x365 and the flanks 330x200, which read as one picture with two
+   * thumbnails beside it rather than as three of the same thing.
+   *
+   * 548x331 is the largest tile that puts three in a row inside the active area
+   * with a 12px gap, and the ratio is the file's own 923:558.
+   */
+  main: { done: 2685, w: 548, h: 331, x: 686, y: 396 },
+  copy: { step: 0, w: 548, h: 331 },
+  /** ⚠ 12px APART, pulled in three times now — from 218, then 60, then 24. */
+  spots: [
+    { x: 126, y: 396 }, { x: 1246, y: 396 },
+  ],
+} as const;
+
 export const TF_PICK = { over: 24, up: 1.1, dim: 0.7, lead: 18, step: 4 } as const;

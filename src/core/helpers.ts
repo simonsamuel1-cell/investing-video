@@ -44,6 +44,57 @@ export const textReveal = (f: number, at: number, over: number, rise = 18) => ({
 });
 
 /** One half-sine, 0→1→0. Emphasis on a UI element; never on type. */
+/**
+ * ═══ POP IN ═══ — fade on, and grow from small to size with ONE overshoot.
+ *
+ * The thing arrives, goes a little past its size, and settles. One overshoot,
+ * never a wobble: a repeated bounce reads as a toy, while a single overshoot
+ * reads as something landing with weight behind it.
+ *
+ * ⚠ THE SCALE AND THE FADE RUN ON DIFFERENT CURVES ON PURPOSE. The fade is
+ * plain and finishes early, so the thing is solid while it is still settling;
+ * putting the overshoot on the opacity too would flash it brighter than
+ * finished and read as a flicker.
+ *
+ * `back` is how far past 1 it goes at the peak — 1.10 is a tenth over size.
+ */
+export const popIn = (
+  f: number,
+  at: number,
+  over: number,
+  { from = 0.7, back = 1.1 }: { from?: number; back?: number } = {},
+) => {
+  const t = clamp01((f - at) / Math.max(1, over));
+  /**
+   * ease-out-back: one crossing above 1, then home.
+   *
+   * ⚠ `back` IS THE PEAK SCALE, NOT THE CURVE'S CONSTANT. The textbook 1.70158
+   * overshoots by a tenth of the DISTANCE TRAVELLED — growing from 0.7 that is
+   * a tenth of 0.3, so it peaks at 1.03 and the bounce is invisible. The
+   * constant is solved back from the peak instead, so `back: 1.1` really does
+   * reach 1.1 whatever size it started from.
+   *
+   * The curve's peak works out to 4s³ / 27(s+1)² above 1, which does not invert
+   * in closed form; thirty halvings pin it to more decimals than a pixel can
+   * show, and unlike Newton they cannot wander off to a negative root.
+   */
+  const want = (back - 1) / (1 - from);
+  let lo = 0;
+  let hi = 60;
+  for (let i = 0; i < 30; i++) {
+    const mid = (lo + hi) / 2;
+    if ((4 * mid ** 3) / (27 * (mid + 1) ** 2) < want) lo = mid;
+    else hi = mid;
+  }
+  const s = (lo + hi) / 2;
+  const u = t - 1;
+  const eased = 1 + (s + 1) * u * u * u + s * u * u;
+  return {
+    opacity: clamp01((f - at) / Math.max(1, over * 0.55)),
+    scale: from + (1 - from) * eased,
+  };
+};
+
 export const beat = (f: number, at: number, over: number) =>
   f >= at && f < at + over ? Math.sin(((f - at) / over) * Math.PI) : 0;
 

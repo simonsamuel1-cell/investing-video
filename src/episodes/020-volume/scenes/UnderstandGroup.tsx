@@ -14,14 +14,16 @@
  *         y-scale, or the scene argues the opposite of its narration
  *   SC06  so read them together
  */
-import { Img, interpolateColors, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Freeze, Img, Loop, OffthreadVideo, Sequence, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
-  Stage, Card, Chart, VolumeBars, Crosshair, Chip, Title, Line, Words, KeyPoint, HighlightBox,
+  Stage, Card, Chart, VolumeBars, Crosshair, Chip, Title, Line, Words, KeyPoint, HighlightBox, DashedBox, dashOpenAt,
+  cutInStyle, cutOutStyle,
   SourceTag, StatStrip, TimeframeTabs, Panel, splitRects,
-  gridOf, domainOf, useMotion, useShadow, progress, theme,
+  gridOf, domainOf, useMotion, useShadow, usePalette, progress, progressInOut, popIn, theme,
+  TuntunMark,
 } from "../../../core";
-import { BLOCK, BEAT, NOTE, TFW, TF_PICK, local } from "../data/timing";
-import { PRICE, VOL, TAG_Y, GAP, halves, panes, BBCA_IMG, BBCA_VOL } from "../data/layout";
+import { BLOCK, BEAT, CUTS, NOTE, NOTE_POP, MASCOT, RECAP, RAIL, FASE, FIELD, RUNNING, RUNNING_LINE, TFW, TF_PICK, local } from "../data/timing";
+import { PRICE, VOL, TAG_Y, GAP, halves, panes, BBCA_IMG, RUNNING_IMG, RUNNING_CROP, RUNNING_SEEN, BBCA_VOL } from "../data/layout";
 import {
   PAIR, PAIR_VOL, PAIR_AT,
   STOCK_A, STOCK_B, VOL_A, VOL_B, VOL_PEAK, TODAY, AVG_A, AVG_B,
@@ -118,10 +120,124 @@ const TF_WINDOWS = [
  */
 const HL_PAD = 20;
 
+
+/** The mascot block: the mark above, the two lines under it. */
+const MASCOT_RECT = (() => {
+  const markH = 190;
+  const gap = 54;
+  const line = Math.round(theme.text.title.size * 1.35);
+  const total = markH + gap + line * MASCOT.lines.length;
+  const top = (theme.logoZone.height + theme.captionBand.top) / 2 - total / 2;
+  return { markH, top, textTop: top + markH + gap, line };
+})();
+
+/**
+ * The rail p2, the volume window and p3 stand on. Rail coordinates are CENTRES,
+ * one column apart; the camera moves, they do not — see RAIL.
+ */
+const RAIL_C = { p2: 0, win: RAIL.col.b - RAIL.col.a, p3: (RAIL.col.b - RAIL.col.a) * 2 };
+/** Top-left of a box centred on a rail column. */
+const railBox = (centre: number, w: number, h: number) => ({
+  left: centre - w / 2,
+  top: RAIL.midY - h / 2,
+  width: w,
+  height: h,
+});
+/** The histogram's pane inside the window, and one bar per third of it. */
+const RAIL_PANE = (() => {
+  const pad = 46;
+  const b = railBox(RAIL_C.win, RAIL.win.w, RAIL.win.h);
+  return { x: b.left + pad, y: b.top + pad, w: b.width - pad * 2, h: b.height - pad * 2 };
+})();
+/** ⚠ ALL THREE GREEN — they are volume bars, the one place outside a candle
+ *  body where this palette is allowed a colour at all. */
+const RAIL_BARS = [0, 1, 2].map(() => ({ o: 1, h: 2, l: 1, c: 2 }));
+const RAIL_GRID = gridOf([1, 1, 1], [0, 1], RAIL_PANE, 0, 0);
+
+/**
+ * The daily screen on its own, at rest. Same height as the pair in SC03 so it
+ * reads as the same object returning, centred because there is nothing beside
+ * it now.
+ */
+const RECAP_RECT = (() => {
+  const h = SHOT.h;
+  const w = (h * BBCA_IMG.w) / BBCA_IMG.h;
+  return { h, w, x: theme.canvas.width / 2 - w / 2, top: SHOT.top };
+})();
+
+/**
+ * ⚠ THE CAPTURE'S FRAME, DERIVED FROM THE FILE. Portrait off a phone, so height
+ * is what limits it: it runs from the top margin to the caption band and takes
+ * whatever width that leaves. At that width it ends well left of the logo zone,
+ * which is why this one — unlike the two screenshots beside it — can start at
+ * the top margin rather than below the logo.
+ */
+const CLIP_BORDER = 2;
+const CLIP = (() => {
+  const top = theme.margin.top + 20;
+  const h = theme.captionBand.top - top - 20;
+  /**
+   * ⚠ EVERYTHING IS MEASURED AGAINST THE CONTENT BOX, NOT THE OUTER ONE.
+   * core/Stage sets `box-sizing: border-box` on every descendant, so the 2px
+   * border eats INWARDS: a window declared 470 wide holds 466. Scaling the
+   * video against the outer number drew it 4px too big and slid it out from
+   * under its own crop — which is why a black edge survived being cropped.
+   */
+  const inner = { h: h - CLIP_BORDER * 2 };
+  const innerW = (inner.h * RUNNING_SEEN.w) / RUNNING_SEEN.h;
+  const w = innerW + CLIP_BORDER * 2;
+  /** Canvas pixels per file pixel — the video is drawn full size and slid. */
+  const s = innerW / RUNNING_SEEN.w;
+  /**
+   * ⚠ LEFT OF CENTRE, NOT AGAINST THE MARGIN — Simon's call. It sits a clear
+   * 104px inside the left margin so it still reads as placed rather than
+   * pushed, and what it makes room for is the sentence beside it.
+   */
+  const x = theme.margin.left + 104;
+  return {
+    top,
+    h,
+    w,
+    x,
+    /** The column to its right: the word, then the definition under it. */
+    text: (() => {
+      const gap = 88;
+      const left = x + w + gap;
+      const width = Math.min(theme.canvas.width - theme.margin.right - left, 700);
+      /* the box's own numbers, so the block's height is derived rather than
+         guessed and the pair can be centred against the capture */
+      const pad = 32;
+      const line = Math.round(theme.text.body.size * 1.35);
+      const box = { h: pad * 2 + line * 2, w: width };
+      const headH = Math.round(theme.text.display.size * 1.1);
+      const between = 30;
+      const total = headH + between + box.h;
+      const topY = top + h / 2 - total / 2;
+      return {
+        left,
+        width,
+        pad,
+        line,
+        box,
+        /** Centre-y of the big word. */
+        headY: topY + headH / 2,
+        boxTop: topY + headH + between,
+      };
+    })(),
+    video: {
+      left: -RUNNING_CROP.left * s,
+      top: -RUNNING_CROP.top * s,
+      width: RUNNING_IMG.w * s,
+      height: RUNNING_IMG.h * s,
+    },
+  };
+})();
+
 export const UnderstandGroup = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const shadow = useShadow();
+  const c = usePalette();
   const isFive = f >= T.fiveMin;
 
   /**
@@ -242,30 +358,352 @@ export const UnderstandGroup = () => {
   }
 
   if (f < T.sc04) {
-    if (f > local(NOTE.to, FROM)) return null;
+    if (g < RUNNING.at || g >= RUNNING.gone) return null;
     return (
-      /* transparent: CG-B sits UNDER CG-A, and the composition already paints
-         the ground — a second opaque stage here would only fight it */
-      <Stage transparent>
+      /* ⚠ OPAQUE, like the two screenshots after it. The capture is a white app
+         screen, so it needs a ground of its own rather than whatever happens to
+         be behind CG-B. */
+      <Stage>
+        {/* ⚠ FADES ACROSS THE BOUNDARY — Simon's frames. The roadmap has
+            finished dissolving by f1690 and this opens on f1691; without a ramp
+            the two meet as a hard cut in the middle of a sentence. The stage
+            itself is not faded, only what stands on it: the ground either side
+            of the cut is the same #F5F5F5, so there is nothing there to fade. */}
         <div
           style={{
             position: "absolute",
             inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            /* clear of the caption band, which stays empty for the burned-in
-               subtitles */
-            paddingBottom: theme.captionBand.height,
-            fontFamily: theme.text.family,
-            fontSize: theme.text.title.size,
-            fontWeight: theme.text.title.weight,
-            color: theme.color.ink,
+            opacity: progress(f, local(RUNNING.at, FROM), m.fade),
           }}
         >
-          {/* ⚠ VERBATIM, including the capitals — Simon's text */}
-          {NOTE.text}
+        {/* ⚠ A SEQUENCE, NOT A BARE MOUNT. OffthreadVideo reads the frame of the
+            sequence it is in, so without one it would be asked for frame 1691 of
+            a 300-frame clip and draw nothing. This starts the file at its own
+            frame 0 on the frame the window opens. */}
+        <Sequence
+          from={local(RUNNING.at, FROM)}
+          durationInFrames={RUNNING.gone - RUNNING.at}
+          layout="none"
+        >
+          <div
+            style={{
+              position: "absolute",
+              left: CLIP.x,
+              top: CLIP.top,
+              width: CLIP.w,
+              height: CLIP.h,
+              /* the same 2px grey edge the screenshots carry, so the capture and
+                 the stills either side of it read as one family */
+              border: `${CLIP_BORDER}px solid ${theme.color.gridLine}`,
+              borderRadius: theme.shape.panelRadius,
+              overflow: "hidden",
+            }}
+          >
+            {/* ⚠ FULL SIZE AND SLID, not stretched to fit. `objectFit` would
+                rescale the picture to the window; this draws every file pixel at
+                one scale and lets the window hide the edges Simon cut. */}
+            <OffthreadVideo
+              src={staticFile("art/running-trade-bbca.mp4")}
+              /* the encode already dropped the audio track; this is the belt to
+                 that pair of braces, so a re-export with sound cannot leak in */
+              muted
+              style={{ position: "absolute", ...CLIP.video }}
+            />
+          </div>
+        </Sequence>
+        {/* ⚠ OUTSIDE THE SEQUENCE, DELIBERATELY. That Sequence exists to give
+            the video its own time base, and everything inside it reads frame 0
+            at f1691 — a beat written in scene frames would land 1691 frames
+            late. The block below belongs to the scene's clock, not the clip's.
+
+            ⚠ THIS IS THE SUBTITLE, MOVED UP INTO THE FRAME, so the band below
+            is muted for exactly the cues it absorbs — see RUNNING_LINE. */}
+        <Words
+          text={RUNNING_LINE.word}
+          x={CLIP.text.left}
+          y={CLIP.text.headY}
+          at={local(RUNNING.at, FROM) + m.sec(0.35)}
+          anchor="left"
+          size={theme.text.display.size}
+          weight={theme.text.display.weight}
+          color={theme.color.indigo}
+        />
+        {/* ⚠ MOVING AVERAGE'S OWN BOX, ported into core rather than redrawn —
+            a dashed rule with a solid block on each corner, rising into place
+            and then snapping open sideways. Its content waits for the snap:
+            a line that reflows while its container widens gives the trick away,
+            which is what `dashOpenAt` is for. */}
+        <DashedBox
+          x={CLIP.text.left}
+          y={CLIP.text.boxTop}
+          w={CLIP.text.box.w}
+          h={CLIP.text.box.h}
+          at={local(RUNNING.at, FROM) + m.sec(0.5)}
+        >
+          {RUNNING_LINE.lines.map((line, n) => (
+            <Words
+              key={line}
+              text={line}
+              x={CLIP.text.pad}
+              y={CLIP.text.pad + CLIP.text.line * (n + 0.5)}
+              /* every word carries its own frame; `at` is only the floor the
+                 box's snap-open imposes on the first of them */
+              at={dashOpenAt(local(RUNNING.at, FROM) + m.sec(0.5))}
+              atEach={RUNNING_LINE.at[n].map((q) => local(q, FROM))}
+              anchor="left"
+              size={theme.text.body.size}
+              weight={600}
+              marks={[
+                { text: RUNNING_LINE.markCyan, color: theme.color.hlCyan },
+                { text: RUNNING_LINE.markAmber, color: theme.color.hlOrange },
+              ]}
+            />
+          ))}
+        </DashedBox>
         </div>
+      </Stage>
+    );
+  }
+
+  /* ⚠ TEMPORARY — see NOTE. The frame is cleared while Simon draws this
+     stretch himself; deleting this one return brings SC04 back as it was. */
+  if (g >= NOTE.at && g < NOTE.gone) {
+    const fase = FASE.find((q) => g >= q.at && g < q.gone);
+    /**
+     * ⚠ THE HALVES ARE DRAWN STRICTLY EITHER SIDE OF THE CUT FRAME, never both
+     * at once. Mounting them together for the length of the move puts two
+     * pictures on top of each other and the "cut" reads as a blurry cross-fade
+     * — the mistake this pipeline has already made once, at f892.
+     */
+    const after = g >= CUTS.intoFase.at;
+    return (
+      <Stage transparent>
+        {/* ⚠ THE GROUND IS PAINTED HERE, not by the Stage, because it CHANGES
+            across the cut: the episode's paper before it, white after, so the
+            clips — which are white to their own edges — have nothing drawing a
+            box around them. `cardBg` rather than a typed #FFFFFF: it is the
+            same white every card in the library uses. */}
+        <AbsoluteFill
+          style={{ backgroundColor: after ? c.cardBg : theme.color.bg }}
+        />
+        {after ? (
+          <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.intoFase) }}>
+            {fase && fase.at === FIELD.at ? (
+              /* ═══ p1's FIELD — one at rest, ten racing ═══════════════ */
+              <>
+                {/* ⚠ ONE RATE, SHARED. Derived from the middle one's window so
+                    every copy is literally the same number — see FIELD. */}
+                {(() => {
+                  const rate = FIELD.srcFrames / (FIELD.main.done - FIELD.at);
+                  const dur = FIELD.main.done - FIELD.at;
+                  return [
+                  {
+                    key: "main",
+                    box: FIELD.main,
+                    at: FIELD.at,
+                    /* ⚠ SPED UP TO LAND ON f2685, not trimmed there — see FIELD */
+                    rate,
+                    dur,
+                  },
+                  ...FIELD.spots.map((sp, n) => ({
+                    key: `c${n}`,
+                    box: { ...sp, w: FIELD.copy.w, h: FIELD.copy.h },
+                    /* ⚠ step is 0 — they land on the same frame as the middle
+                       one, and at the same rate. See FIELD. */
+                    at: FIELD.at + (n + 1) * FIELD.copy.step,
+                    rate,
+                    dur,
+                  })),
+                  ].map((q) => {
+                  if (g < q.at) return null;
+                  /* the same entrance the whole stretch uses */
+                  const pp = popIn(g, q.at, NOTE_POP.over, { from: NOTE_POP.from });
+                  return (
+                    <Sequence
+                      key={q.key}
+                      from={local(q.at, FROM)}
+                      durationInFrames={fase.gone - q.at}
+                      layout="none"
+                    >
+                      {/* ⚠ IT HOLDS ITS LAST DRAWING, it does not vanish —
+                          Simon's instruction. `Freeze` renders the subtree as
+                          though the clock had stopped, so once the clip has run
+                          its length the picture stays instead of the stage
+                          going empty under it. */}
+                      <Freeze frame={Math.min(g - q.at, q.dur - 1)}>
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: q.box.x,
+                          top: q.box.y,
+                          width: q.box.w,
+                          height: q.box.h,
+                          opacity: pp.opacity,
+                          transform: `scale(${pp.scale.toFixed(4)})`,
+                        }}
+                      >
+                        <OffthreadVideo
+                          src={staticFile(fase.art)}
+                          transparent
+                          muted
+                          playbackRate={q.rate}
+                          style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                        />
+                      </div>
+                      </Freeze>
+                    </Sequence>
+                  );
+                });
+                })()}
+              </>
+            ) : fase ? (
+              /* ═══ p2 · the volume window · p3, on one rail ══════════════ */
+              (() => {
+                const pan = progressInOut(g, RAIL.cam.at, RAIL.cam.over);
+                /* one column of travel, exactly — see RAIL */
+                const camX = RAIL.col.a * (1 - pan);
+                /* the third bar: in slowly across p2, taller again across p3 */
+                const third =
+                  RAIL.bars.mid * progress(g, RAIL.bars.grow1.at, RAIL.bars.grow1.over) +
+                  (RAIL.bars.tall - RAIL.bars.mid) *
+                    progress(g, RAIL.bars.grow2.at, RAIL.bars.grow2.over);
+                const loopLen = Math.round((RAIL.loop.gone - RAIL.loop.at) / RAIL.loop.times);
+                return (
+                  <div style={{ position: "absolute", inset: 0, transform: `translateX(${camX.toFixed(1)}px)` }}>
+                    {/* ── p2: plays, then holds, then is carried off ────── */}
+                    <Sequence
+                      from={local(RAIL.at, FROM)}
+                      durationInFrames={RAIL.gone - RAIL.at}
+                      layout="none"
+                    >
+                      <Freeze frame={Math.min(g - RAIL.at, FASE[1].src - 1)}>
+                        {/* ⚠ IT FADES AS IT GOES. One column of travel leaves
+                            its centre on x0 and 350px of it still showing; the
+                            columns are Simon's and stay, so this is what makes
+                            "p2 tidak terlihat" true as well. */}
+                        <div
+                          style={{
+                            position: "absolute",
+                            ...railBox(RAIL_C.p2, RAIL.clip.w, RAIL.clip.h),
+                            opacity: 1 - pan,
+                          }}
+                        >
+                          <OffthreadVideo
+                            src={staticFile(FASE[1].art)}
+                            transparent
+                            muted
+                            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                          />
+                        </div>
+                      </Freeze>
+                    </Sequence>
+
+                    {/* ── the volume window ─────────────────────────────── */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        ...railBox(RAIL_C.win, RAIL.win.w, RAIL.win.h),
+                        border: `2px solid ${theme.color.gridLine}`,
+                        borderRadius: theme.shape.panelRadius,
+                      }}
+                    />
+                    <VolumeBars
+                      bars={RAIL_BARS}
+                      volume={[RAIL.bars.short[0], RAIL.bars.short[1], third]}
+                      grid={RAIL_GRID}
+                      box={RAIL_PANE}
+                      peak={1}
+                      width={56}
+                    />
+
+                    {/* ── p3: in from off-frame right, twice through ────── */}
+                    {g >= RAIL.loop.at ? (
+                      <Sequence
+                        from={local(RAIL.loop.at, FROM)}
+                        durationInFrames={RAIL.loop.gone - RAIL.loop.at}
+                        layout="none"
+                      >
+                        {/* ⚠ TWO PASSES, TIMED TO END ON f3066. Each pass gets
+                            half the stretch, and the clip is sped up to fill
+                            exactly that — 233 source frames into 93. */}
+                        <Loop durationInFrames={loopLen}>
+                          <div
+                            style={{
+                              position: "absolute",
+                              ...railBox(RAIL_C.p3, RAIL.clip.w, RAIL.clip.h),
+                            }}
+                          >
+                            <OffthreadVideo
+                              src={staticFile(FASE[2].art)}
+                              transparent
+                              muted
+                              playbackRate={RAIL.loop.src / loopLen}
+                              style={{ width: "100%", height: "100%", objectFit: "contain" }}
+                            />
+                          </div>
+                        </Loop>
+                      </Sequence>
+                    ) : null}
+                  </div>
+                );
+              })()
+            ) : null}
+
+            {/* ── the mascot and its line ─────────────────────────────── */}
+            {g >= MASCOT.at && g < MASCOT.gone ? (
+              <>
+                {/* ⚠ THE BOB IS THE SAME PAIR SC01's MASCOT BREATHES ON, so the
+                    two readings of the same character move alike. */}
+                <TuntunMark
+                  x={theme.canvas.width / 2}
+                  y={
+                    MASCOT_RECT.top +
+                    Math.sin(((g - MASCOT.at) / MASCOT.float.period) * Math.PI * 2) *
+                      MASCOT.float.amount
+                  }
+                  height={MASCOT_RECT.markH}
+                />
+                {MASCOT.lines.map((line, n) => (
+                  <Words
+                    key={line}
+                    text={line}
+                    x={theme.canvas.width / 2}
+                    y={MASCOT_RECT.textTop + MASCOT_RECT.line * (n + 0.5)}
+                    at={
+                      local(MASCOT.at, FROM) +
+                      m.sec(0.35) +
+                      n * MASCOT.lines[0].split(" ").length * 6
+                    }
+                    stagger={6}
+                    anchor="center"
+                    size={theme.text.title.size}
+                    weight={600}
+                    marks={[{ text: MASCOT.mark, color: theme.color.hlCyan }]}
+                  />
+                ))}
+              </>
+            ) : null}
+
+            {/* ── the daily screen, brought back at rest ──────────────── */}
+            {g >= RECAP.at && g < RECAP.gone ? (
+              <Img
+                src={staticFile(RECAP.art)}
+                style={{
+                  position: "absolute",
+                  left: RECAP_RECT.x,
+                  top: RECAP_RECT.top,
+                  width: RECAP_RECT.w,
+                  height: RECAP_RECT.h,
+                  border: `2px solid ${theme.color.gridLine}`,
+                  borderRadius: theme.shape.panelRadius,
+                  opacity: progress(f, local(RECAP.at, FROM), m.fade),
+                }}
+              />
+            ) : null}
+          </div>
+        ) : (
+          <div style={{ position: "absolute", inset: 0, ...cutOutStyle(g, CUTS.intoFase) }} />
+        )}
       </Stage>
     );
   }

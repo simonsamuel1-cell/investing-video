@@ -257,6 +257,21 @@ export const theme = {
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     cyanWash: "rgba(92, 200, 227, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",
+    /**
+     * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.
+     *
+     * Stronger than the washes above on purpose: those sit behind a whole panel
+     * and only have to tint it, while these run behind a few words inside a
+     * sentence and have to read as a mark someone made. At 12% they vanished
+     * against the type.
+     *
+     * `hlOrange` is warm, which the locked indigo/cyan palette otherwise does
+     * not allow. It is the same amber as the bulb rather than a second warm
+     * hue, and like the bulb it is a NAMED slot so nothing else can reach for
+     * it: two colours to separate two halves of one definition.
+     */
+    hlCyan: "rgba(92, 200, 227, 0.34)",
+    hlOrange: "rgba(242, 166, 59, 0.34)",
     onIndigo: "#FFFFFF",
     /** The transition grid — see core/GridGround.tsx. */
     gridLine: "#C7CCD6",

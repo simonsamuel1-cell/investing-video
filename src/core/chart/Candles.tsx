@@ -85,6 +85,7 @@ export const VolumeBars = ({
   shown = 1,
   opacity = 1,
   peak: peakIn,
+  width: widthIn,
 }: {
   bars: Bar[];
   /** Relative heights, 0→~3. See volumeOf in series.ts. */
@@ -106,11 +107,20 @@ export const VolumeBars = ({
    * trap as an unshared price domain, one axis down.
    */
   peak?: number;
+  /**
+   * Bar width in canvas pixels, overriding the one derived from the grid.
+   *
+   * ⚠ ONLY FOR A HISTOGRAM THAT IS AN ILLUSTRATION RATHER THAN A TAPE.
+   * `candleWidth` caps at 20px because a real tape has dozens of bars and they
+   * must not fuse; three bars standing alone in a panel need to be read as
+   * objects, and 20px makes them look like leftovers.
+   */
+  width?: number;
 }) => {
   const c = usePalette();
   if (opacity <= 0.001) return null;
   const upto = Math.ceil(bars.length * Math.max(0, Math.min(1, shown)));
-  const w = candleWidth(grid);
+  const w = widthIn ?? candleWidth(grid);
   const peak = peakIn ?? Math.max(1e-9, ...volume);
 
   return (
