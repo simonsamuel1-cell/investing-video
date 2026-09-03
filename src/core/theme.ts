@@ -270,6 +270,14 @@ export const theme = {
      * hue, and like the bulb it is a NAMED slot so nothing else can reach for
      * it: two colours to separate two halves of one definition.
      */
+    /**
+     * ⚠ A HALO, NOT A DISC. Solid at the middle and gone by the rim, so a
+     * drawing standing on the transition grid gets a clear ground under it
+     * without a hard circle edge cutting across the lines. Given as a gradient
+     * rather than a colour because the fade IS the point — a flat white circle
+     * would just be a second shape.
+     */
+    halo: "radial-gradient(circle, rgba(255,255,255,1) 42%, rgba(255,255,255,0) 70%)",
     hlCyan: "rgba(92, 200, 227, 0.34)",
     hlOrange: "rgba(242, 166, 59, 0.34)",
     onIndigo: "#FFFFFF",

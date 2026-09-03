@@ -129,6 +129,16 @@ export const CUTS = {
    * not have. The move alone carries it here.
    */
   intoFase: { at: 2461, over: 30, distance: 90, blur: 0, axis: "y" as const },
+  /**
+   * SC04's drawings carried out and the closing card carried in — Simon's
+   * frames, "3066-3067", so the swap lands on f3067.
+   *
+   * ⚠ blur: 0, like the cut before it. Everything either side of this one is
+   * white to its own edges, and a blur filter softens the moving layer's EDGE
+   * as well as its contents — on white that soft edge reads as a drop shadow
+   * nothing in the frame actually has.
+   */
+  intoQuote: { at: 3067, over: 30, distance: 90, blur: 0, axis: "y" as const },
 };
 
 /** A global beat, in a scene mounted at `from`. */
@@ -394,11 +404,28 @@ export const NOTE = { at: 2455, gone: 4253 } as const;
  */
 export const MASCOT = {
   at: 3067,
+  /**
+   * ⚠ THE GROUND ARRIVES LONG BEFORE THE MASCOT — Simon's call: f2461, the frame
+   * SC04 itself opens on, not f3067. The grid is the room this whole stretch
+   * happens in, not a backdrop the closing card brings with it.
+   */
+  groundAt: 2461,
   gone: 3413,
   lines: ["Volume menghitung lembar saham,", "bukan pelakunya."],
   mark: "menghitung lembar saham",
   /** The slow rise and fall, the same pair SC01's mascot breathes on. */
   float: { amount: 12, period: 240 },
+  /**
+   * ⚠ MOVING AVERAGE'S CLOSING CARD, at Simon's instruction: the mark floating
+   * over a bordered panel that sits on a solid indigo block, quote marks in
+   * opposite corners, on the same drifting grid. Ported into core/QuoteCard so
+   * the two episodes cannot drift apart — see there for the ink measurements
+   * that put the marks 20px off the type.
+   *
+   * The card is sized to its contents rather than chosen: padding, two lines,
+   * the closing mark under them, and a floor.
+   */
+  card: { w: 980, h: 300, size: 48, lead: 66, markH: 120, gap: 54, lift: 50 },
 } as const;
 
 /**
@@ -437,6 +464,44 @@ export const MASCOT = {
  * cannot both be true by position alone. It fades across the move instead, so
  * the columns stay exactly as asked and p2 is still gone by the end of it.
  */
+/**
+ * ═══ THE HEADLINE ═══  (Simon's frames)
+ *
+ * One line, top left, that CORRECTS ITSELF: it states the wrong answer, strikes
+ * it out, then rolls through the two right ones.
+ *
+ *   f2541  "Volume: jumlah orang transaksi"
+ *   +hold  the phrase is struck through and goes grey
+ *   f2706  it ROLLS UP and out; "bisa dari pemain besar, atau..." rolls in
+ *   f2880  that rolls out in turn and the second cause takes its place
+ *
+ * ⚠ THREE PHRASES IN ONE SLOT, not two and then a new line — Simon's revision.
+ * The two causes are alternatives to each other, so they occupy the same place
+ * one after the other rather than stacking up as a list.
+ *
+ * ⚠ THE STRIKE WAITS. `hold` is 30 frames AFTER the words have finished
+ * arriving, not 30 from the frame they start: striking through type that is
+ * still fading in reads as a glitch rather than as a correction.
+ *
+ * ⚠ HIS WORDING VERBATIM, ellipsis included.
+ */
+export const HEAD = {
+  at: 2541,
+  hold: 30,
+  roll: [2706, 2880],
+  gone: 3067,
+  label: "Volume:",
+  phrases: [
+    "jumlah orang transaksi",
+    "bisa dari pemain besar, atau...",
+    "saham sama pindah tangan berkali-kali",
+  ],
+  x: 96,
+  y: 100,
+  size: 48,
+  lead: 66,
+} as const;
+
 export const RAIL = {
   at: 2706,
   gone: 3067,
@@ -466,8 +531,9 @@ export const RAIL = {
     w: 56,
     gap: 10,
     short: [0.1, 0.13],
-    mid: 0.24,
-    tall: 0.62,
+    /** ⚠ TALLER IN BOTH PHASES — Simon's call. Was 0.24 and 0.62. */
+    mid: 0.42,
+    tall: 0.9,
     grow1: { at: 2706, over: 174 },
     grow2: { at: 2881, over: 185 },
   },
@@ -529,6 +595,15 @@ export const FASE = [
 
 /** The clips' own pixels, so the frame they sit in is measured, not typed. */
 export const FASE_IMG = { w: 923, h: 558 } as const;
+/**
+ * The white halo behind each clip — Simon's call, so the drawings sit on
+ * something rather than floating on the grid.
+ *
+ * ⚠ IT IS LARGER THAN THE TILE ON PURPOSE, and the tile therefore cannot clip
+ * it: a feathered edge cut off by a rectangle is just a rectangle. `scale` is
+ * against the longer side of the tile.
+ */
+export const HALO = { scale: 1.22 } as const;
 /**
  * ⚠ SIZED FOR THE POP'S PEAK, NOT ITS RESTING STATE. The clip is drawn at 110%
  * on the way in, and at the resting size that put its top edge inside the

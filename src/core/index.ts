@@ -27,6 +27,7 @@ export type { Tone } from "./Chip";
 export { Ping } from "./Ping";
 export { HighlightBox, HighlightCircle } from "./HighlightBox";
 export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
+export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
 export type { HLRect } from "./HighlightBox";
 export { Captions } from "./Captions";
 export type { Cue } from "./Captions";

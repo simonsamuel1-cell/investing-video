@@ -19,11 +19,11 @@ import {
   Stage, Card, Chart, VolumeBars, Crosshair, Chip, Title, Line, Words, KeyPoint, HighlightBox, DashedBox, dashOpenAt,
   cutInStyle, cutOutStyle,
   SourceTag, StatStrip, TimeframeTabs, Panel, splitRects,
-  gridOf, domainOf, useMotion, useShadow, usePalette, progress, progressInOut, popIn, theme,
-  TuntunMark,
+  gridOf, domainOf, useMotion, useShadow, usePalette, progress, progressInOut, textReveal, popIn, theme,
+  TuntunMark, QuoteCard, quoteListY, GridGround,
 } from "../../../core";
-import { BLOCK, BEAT, CUTS, NOTE, NOTE_POP, MASCOT, RECAP, RAIL, FASE, FIELD, RUNNING, RUNNING_LINE, TFW, TF_PICK, local } from "../data/timing";
-import { PRICE, VOL, TAG_Y, GAP, halves, panes, BBCA_IMG, RUNNING_IMG, RUNNING_CROP, RUNNING_SEEN, BBCA_VOL } from "../data/layout";
+import { BLOCK, BEAT, CUTS, NOTE, NOTE_POP, MASCOT, RECAP, RAIL, HEAD, FASE, FASE_IMG, FIELD, HALO, RUNNING, RUNNING_LINE, TFW, TF_PICK, local } from "../data/timing";
+import { PRICE, VOL, TAG_Y, GAP, halves, panes, BBCA_IMG, RUNNING_IMG, RUNNING_CROP, RUNNING_SEEN, BBCA_VOL, P_CONTENT } from "../data/layout";
 import {
   PAIR, PAIR_VOL, PAIR_AT,
   STOCK_A, STOCK_B, VOL_A, VOL_B, VOL_PEAK, TODAY, AVG_A, AVG_B,
@@ -121,14 +121,26 @@ const TF_WINDOWS = [
 const HL_PAD = 20;
 
 
-/** The mascot block: the mark above, the two lines under it. */
+/**
+ * The mascot block: the mark floating over the quote card, and the two lines
+ * inside it. Laid out as one object and centred between the logo zone and the
+ * caption band, so the pair reads as a single card rather than a mark that
+ * happens to be above a box.
+ */
 const MASCOT_RECT = (() => {
-  const markH = 190;
-  const gap = 54;
-  const line = Math.round(theme.text.title.size * 1.35);
-  const total = markH + gap + line * MASCOT.lines.length;
-  const top = (theme.logoZone.height + theme.captionBand.top) / 2 - total / 2;
-  return { markH, top, textTop: top + markH + gap, line };
+  const { card } = MASCOT;
+  const total = card.markH + card.gap + card.h;
+  /** ⚠ THE MARK AND THE CARD MOVE AS ONE, 50px up — Simon's nudge. Shifting the
+   *  group rather than each piece is what keeps the gap between them fixed. */
+  const top =
+    (theme.logoZone.height + theme.captionBand.top) / 2 - total / 2 - card.lift;
+  const boxY = top + card.markH + card.gap;
+  return {
+    markY: top,
+    box: { x: theme.canvas.width / 2 - card.w / 2, y: boxY, w: card.w, h: card.h },
+    /* centred in the card BY ITS INK, not by its boxes — see quoteListY */
+    listY: quoteListY(boxY, card.h, card.lead, MASCOT.lines.length),
+  };
 })();
 
 /**
@@ -168,6 +180,55 @@ const RAIL_PANE = (() => {
 /** ⚠ ALL THREE GREEN — they are volume bars, the one place outside a candle
  *  body where this palette is allowed a colour at all. */
 const RAIL_BARS = [0, 1, 2].map(() => ({ o: 1, h: 2, l: 1, c: 2 }));
+
+/**
+ * Draw a clip so its DRAWING fills the box, not its canvas.
+ *
+ * ⚠ `objectFit: contain` FITS THE WRONG THING. It fits the exported canvas,
+ * which for these files is mostly empty margin — so the drawing lands at 40-65%
+ * of the tile it was given. This scales by the drawing's own measured box and
+ * slides its centre onto the tile's, which is the whole of why they now read as
+ * big enough. See P_CONTENT.
+ *
+ * ⚠ IT RETURNS A WRAPPER'S STYLE, NOT THE VIDEO'S. OffthreadVideo overrides
+ * `width` and `height` off its own style, so sizing it directly did nothing —
+ * the clip kept coming back at `contain` scale while the offsets moved, which
+ * looked like the drawing being cropped. The wrapper carries the size and the
+ * video fills it.
+ */
+const fillWithDrawing = (art: string, w: number, h: number) => {
+  const c = P_CONTENT[art];
+  const s = Math.min(w / c.w, h / c.h);
+  return {
+    position: "absolute" as const,
+    left: w / 2 - (c.x + c.w / 2) * s,
+    top: h / 2 - (c.y + c.h / 2) * s,
+    width: FASE_IMG.w * s,
+    height: FASE_IMG.h * s,
+  };
+};
+const FILL = { width: "100%", height: "100%" } as const;
+/**
+ * The halo's own box: bigger than the tile, and centred on where the DRAWING
+ * sits rather than on the tile — see P_CONTENT.halo.
+ */
+const haloBox = (art: string, w: number, h: number) => {
+  const c = P_CONTENT[art];
+  const s = Math.min(w / c.w, h / c.h);
+  const d = Math.max(w, h) * HALO.scale;
+  /* the same mapping fillWithDrawing uses, applied to the ink's centroid */
+  const cx = w / 2 + (c.halo.x - (c.x + c.w / 2)) * s;
+  const cy = h / 2 + (c.halo.y - (c.y + c.h / 2)) * s;
+  return {
+    position: "absolute" as const,
+    left: cx - d / 2,
+    top: cy - d / 2,
+    width: d,
+    height: d,
+    borderRadius: "50%",
+    background: theme.color.halo,
+  };
+};
 const RAIL_GRID = gridOf([1, 1, 1], [0, 1], RAIL_PANE, 0, 0);
 
 /**
@@ -248,6 +309,83 @@ const CLIP = (() => {
     },
   };
 })();
+
+/**
+ * The headline that corrects itself — see HEAD.
+ *
+ * ⚠ ALL THREE PHRASES SHARE ONE GRID CELL. The grid sizes that cell to the
+ * widest of them, so a roll cannot make the line jump width halfway through;
+ * and one number — how far along the sequence we are — places every phrase,
+ * so two rolls cannot get out of step with each other.
+ */
+const Headline = ({ g }: { g: number }) => {
+  const m = useMotion();
+  const c = usePalette();
+  if (g < HEAD.at || g >= HEAD.gone) return null;
+  const inn = textReveal(g, HEAD.at, m.reveal);
+  /* ⚠ 30 FRAMES AFTER THE WORDS HAVE LANDED, not after they start — see HEAD */
+  const strikeAt = HEAD.at + m.reveal + HEAD.hold;
+  const struck = progress(g, strikeAt, m.sec(0.35));
+  /** 0 → 1 → 2 as the sequence advances; every phrase is placed off this. */
+  const pos = HEAD.roll.reduce((n, at) => n + progressInOut(g, at, m.sec(0.42)), 0);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: HEAD.x,
+        top: HEAD.y,
+        display: "grid",
+        gridTemplateColumns: "auto auto",
+        columnGap: "0.32em",
+        fontFamily: theme.text.family,
+        fontSize: HEAD.size,
+        fontWeight: theme.text.title.weight,
+        lineHeight: 1.2,
+        whiteSpace: "nowrap",
+        opacity: inn.opacity,
+        transform: `translateY(${inn.dy}px)`,
+      }}
+    >
+      <span style={{ gridColumn: 1, color: c.indigo }}>{HEAD.label}</span>
+      <span style={{ gridColumn: 2, display: "grid", overflow: "hidden", height: HEAD.lead }}>
+        {HEAD.phrases.map((text, i) => (
+          <span
+            key={text}
+            style={{
+              gridArea: "1 / 1",
+              /* ⚠ SHRINK TO ITS OWN WORDS. A grid item fills its cell, and the
+                 cell is as wide as the LONGEST phrase — so the strike, drawn as
+                 a percentage of this span, ran on past the words it crosses. */
+              justifySelf: "start",
+              position: "relative",
+              /* the wrong answer greys out; the two right ones stay indigo */
+              color:
+                i === 0
+                  ? interpolateColors(struck, [0, 1], [theme.color.indigo, c.muted])
+                  : c.indigo,
+              transform: `translateY(${((i - pos) * HEAD.lead).toFixed(1)}px)`,
+            }}
+          >
+            {text}
+            {i === 0 ? (
+              /* the strike, drawn rather than a text-decoration, so it arrives */
+              <span
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: "0.58em",
+                  width: `${(struck * 100).toFixed(1)}%`,
+                  height: theme.shape.rule,
+                  background: c.muted,
+                }}
+              />
+            ) : null}
+          </span>
+        ))}
+      </span>
+    </div>
+  );
+};
 
 export const UnderstandGroup = () => {
   const f = useCurrentFrame();
@@ -504,6 +642,26 @@ export const UnderstandGroup = () => {
         />
         {after ? (
           <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.intoFase) }}>
+          {/* ⚠ A SECOND CUT INSIDE THIS ONE, at f3067. SC04's drawings are
+              carried out and the closing card carried in; both halves are drawn
+              strictly on their own side of the frame, never together, or the
+              cut reads as a blurry cross-fade. */}
+          {/* ⚠ THE GROUND IS OUTSIDE BOTH HALVES OF THE CUT, so it does not
+              travel with them: it is the room this stretch happens in, and a
+              floor that slides with the furniture reads as the picture being
+              scaled rather than as a camera. From f2461 — Simon's frame — not
+              from the closing card. */}
+          <GridGround f={f} opacity={progress(f, local(MASCOT.groundAt, FROM), m.fade)} />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              ...(g < CUTS.intoQuote.at
+                ? cutOutStyle(g, CUTS.intoQuote)
+                : cutInStyle(g, CUTS.intoQuote)),
+            }}
+          >
+            <Headline g={g} />
             {fase && fase.at === FIELD.at ? (
               /* ═══ p1's FIELD — one at rest, ten racing ═══════════════ */
               <>
@@ -558,13 +716,21 @@ export const UnderstandGroup = () => {
                           transform: `scale(${pp.scale.toFixed(4)})`,
                         }}
                       >
-                        <OffthreadVideo
-                          src={staticFile(fase.art)}
-                          transparent
-                          muted
-                          playbackRate={q.rate}
-                          style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                        />
+                        <div style={haloBox(fase.art, q.box.w, q.box.h)} />
+                        {/* the clip is larger than its tile — see
+                            fillWithDrawing — so THIS is what clips it, and the
+                            halo above stays outside so its edge can fade */}
+                        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+                          <div style={fillWithDrawing(fase.art, q.box.w, q.box.h)}>
+                            <OffthreadVideo
+                              src={staticFile(fase.art)}
+                              transparent
+                              muted
+                              playbackRate={q.rate}
+                              style={FILL}
+                            />
+                          </div>
+                        </div>
                       </div>
                       </Freeze>
                     </Sequence>
@@ -604,12 +770,17 @@ export const UnderstandGroup = () => {
                             opacity: 1 - pan,
                           }}
                         >
-                          <OffthreadVideo
-                            src={staticFile(FASE[1].art)}
-                            transparent
-                            muted
-                            style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                          />
+                          <div style={haloBox(FASE[1].art, RAIL.clip.w, RAIL.clip.h)} />
+                          <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+                            <div style={fillWithDrawing(FASE[1].art, RAIL.clip.w, RAIL.clip.h)}>
+                              <OffthreadVideo
+                                src={staticFile(FASE[1].art)}
+                                transparent
+                                muted
+                                style={FILL}
+                              />
+                            </div>
+                          </div>
                         </div>
                       </Freeze>
                     </Sequence>
@@ -619,6 +790,10 @@ export const UnderstandGroup = () => {
                       style={{
                         position: "absolute",
                         ...railBox(RAIL_C.win, RAIL_WIN.w, RAIL_WIN.h),
+                        /* ⚠ FILLED, not just outlined — Simon's call. It stands
+                           on the drifting grid now, and an outline alone left
+                           the lines running straight through the histogram. */
+                        background: c.cardBg,
                         border: `2px solid ${theme.color.gridLine}`,
                         borderRadius: theme.shape.panelRadius,
                       }}
@@ -649,13 +824,18 @@ export const UnderstandGroup = () => {
                               ...railBox(RAIL_C.p3, RAIL.clip.w, RAIL.clip.h),
                             }}
                           >
-                            <OffthreadVideo
-                              src={staticFile(FASE[2].art)}
-                              transparent
-                              muted
-                              playbackRate={RAIL.loop.src / loopLen}
-                              style={{ width: "100%", height: "100%", objectFit: "contain" }}
-                            />
+                            <div style={haloBox(FASE[2].art, RAIL.clip.w, RAIL.clip.h)} />
+                            <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+                              <div style={fillWithDrawing(FASE[2].art, RAIL.clip.w, RAIL.clip.h)}>
+                                <OffthreadVideo
+                                  src={staticFile(FASE[2].art)}
+                                  transparent
+                                  muted
+                                  playbackRate={RAIL.loop.src / loopLen}
+                                  style={FILL}
+                                />
+                              </div>
+                            </div>
                           </div>
                         </Loop>
                       </Sequence>
@@ -673,30 +853,41 @@ export const UnderstandGroup = () => {
                 <TuntunMark
                   x={theme.canvas.width / 2}
                   y={
-                    MASCOT_RECT.top +
+                    MASCOT_RECT.markY +
                     Math.sin(((g - MASCOT.at) / MASCOT.float.period) * Math.PI * 2) *
                       MASCOT.float.amount
                   }
-                  height={MASCOT_RECT.markH}
+                  height={MASCOT.card.markH}
                 />
-                {MASCOT.lines.map((line, n) => (
-                  <Words
-                    key={line}
-                    text={line}
-                    x={theme.canvas.width / 2}
-                    y={MASCOT_RECT.textTop + MASCOT_RECT.line * (n + 0.5)}
-                    at={
-                      local(MASCOT.at, FROM) +
-                      m.sec(0.35) +
-                      n * MASCOT.lines[0].split(" ").length * 6
-                    }
-                    stagger={6}
-                    anchor="center"
-                    size={theme.text.title.size}
-                    weight={600}
-                    marks={[{ text: MASCOT.mark, color: theme.color.hlCyan }]}
-                  />
-                ))}
+                <QuoteCard
+                  x={MASCOT_RECT.box.x}
+                  y={MASCOT_RECT.box.y}
+                  w={MASCOT_RECT.box.w}
+                  h={MASCOT_RECT.box.h}
+                  at={local(MASCOT.at, FROM) + m.sec(0.2)}
+                  listY={MASCOT_RECT.listY}
+                  lead={MASCOT.card.lead}
+                  count={MASCOT.lines.length}
+                >
+                  {MASCOT.lines.map((line, n) => (
+                    <Words
+                      key={line}
+                      text={line}
+                      x={theme.canvas.width / 2}
+                      y={MASCOT_RECT.listY + MASCOT.card.lead * n + MASCOT.card.size * 0.62}
+                      at={
+                        local(MASCOT.at, FROM) +
+                        m.sec(0.45) +
+                        n * MASCOT.lines[0].split(" ").length * 6
+                      }
+                      stagger={6}
+                      anchor="center"
+                      size={MASCOT.card.size}
+                      weight={600}
+                      marks={[{ text: MASCOT.mark, color: theme.color.hlCyan }]}
+                    />
+                  ))}
+                </QuoteCard>
               </>
             ) : null}
 
@@ -716,6 +907,7 @@ export const UnderstandGroup = () => {
                 }}
               />
             ) : null}
+          </div>
           </div>
         ) : (
           <div style={{ position: "absolute", inset: 0, ...cutOutStyle(g, CUTS.intoFase) }} />
