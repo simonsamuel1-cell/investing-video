@@ -34,10 +34,10 @@ export const Cards = () => (
         one thing the viewer is being asked to compare. The rail still opens
         every chapter below, and still closes the episode in SC20. */}
 
-    <ChapterCard n="02" title="Read Price + Volume" sub="Empat kombinasi dasar" at={CARDS.ch02.at} over={CARDS.ch02.over}>
-      <StepRail steps={STEPS} at={CARDS.ch02.at} active={1} done={[0]} />
-    </ChapterCard>
-
+    {/* ⚠ CHAPTER 02'S CARD IS GONE — Simon's call. The Scene Transisi at
+        f4958 already hands the chapter over: the scene shrinks into "mengenal
+        volume" and "cara baca volume" lights up beside it. A full-screen card
+        saying the same thing 50 frames earlier said it twice. */}
     <ChapterCard n="03" title="Confirm the Move" sub="Breakout · Breakdown · Studi kasus" at={CARDS.ch03.at} over={CARDS.ch03.over}>
       <StepRail steps={STEPS} at={CARDS.ch03.at} active={2} done={[0, 1]} />
     </ChapterCard>

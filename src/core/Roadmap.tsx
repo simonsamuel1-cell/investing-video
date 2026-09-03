@@ -75,6 +75,27 @@ export const cardPush = (p: number, card: number, amount: number) => {
   };
 };
 
+/**
+ * Where a card actually IS on screen once `cardPush` has moved it.
+ *
+ * ⚠ THE HAND-OVER NEEDS THIS. When one scene ends on a pushed card and the next
+ * grows that card into something else, the second scene has to start from the
+ * card's PUSHED rect, not its slot — otherwise the size jumps on the frame
+ * between them. Deriving both from here is what makes the two frames match.
+ */
+export const cardPushed = (card: number, amount: number, p = 1) => {
+  const c = ROADMAP_SLOTS[card];
+  const cx = c.x + ROADMAP_CARD.w / 2;
+  const cy = c.y + ROADMAP_CARD.h / 2;
+  const s = 1 + amount * p;
+  return {
+    x: cx + (c.x - cx) * s + (theme.canvas.width / 2 - cx) * p,
+    y: cy + (c.y - cy) * s + (theme.canvas.height / 2 - cy) * p,
+    w: ROADMAP_CARD.w * s,
+    h: ROADMAP_CARD.h * s,
+  };
+};
+
 export const RoadmapCards = ({
   labels,
   reveal,

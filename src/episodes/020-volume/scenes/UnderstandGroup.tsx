@@ -1,3 +1,4 @@
+import React from "react";
 /**
  * CG-B — SC03 · SC04 · SC05 · SC06. `from 1460 · dur 3434`
  *
@@ -21,12 +22,16 @@ import {
   SourceTag, StatStrip, TimeframeTabs, Panel, splitRects,
   gridOf, domainOf, useMotion, useShadow, usePalette, progress, progressInOut, textReveal, popIn, theme,
   TuntunMark, QuoteCard, quoteListY, GridGround,
+  RoadmapCards, shrinkClip, cardPush, ROADMAP_SLOTS, ROADMAP_CARD,
 } from "../../../core";
-import { BLOCK, BEAT, CUTS, NOTE, NOTE_POP, MASCOT, RECAP, RAIL, HEAD, FASE, FASE_IMG, FIELD, HALO, RUNNING, RUNNING_LINE, TFW, TF_PICK, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, NOTE, NOTE_POP, MASCOT, PAIR_SHOTS, SPLIT, TRANS, RAIL, HEAD, FASE, FASE_IMG, FIELD, HALO, RUNNING, RUNNING_LINE, TFW, TF_PICK, local } from "../data/timing";
+import { MAP_LABELS } from "../data/timing";
+import { roadmapContents } from "./MainChartGroup";
 import { PRICE, VOL, TAG_Y, GAP, halves, panes, BBCA_IMG, RUNNING_IMG, RUNNING_CROP, RUNNING_SEEN, BBCA_VOL, P_CONTENT } from "../data/layout";
 import {
   PAIR, PAIR_VOL, PAIR_AT,
   STOCK_A, STOCK_B, VOL_A, VOL_B, VOL_PEAK, TODAY, AVG_A, AVG_B,
+  TWO, TWO_DOMAIN, TWO_VOL_STRONG, TWO_VOL_PEAK,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -179,6 +184,29 @@ const RAIL_PANE = (() => {
 })();
 /** ⚠ ALL THREE GREEN — they are volume bars, the one place outside a candle
  *  body where this palette is allowed a colour at all. */
+/**
+ * SC06's two windows and the panes inside them.
+ *
+ * ⚠ ONE GRID FOR BOTH. The bars have to stand under their own candles, and the
+ * only way that survives a change to either box is for the histogram to read
+ * its x from the PRICE grid — which is what VolumeBars takes a grid for.
+ */
+const SPLIT_RECT = (() => {
+  const cx = theme.canvas.width / 2 - SPLIT.shift;
+  const x = cx - SPLIT.w / 2;
+  const box = (r: { y: number; h: number }) => ({ x, y: r.y, w: SPLIT.w, h: r.h });
+  const pane = (r: { x: number; y: number; w: number; h: number }) => ({
+    x: r.x + SPLIT.pad,
+    y: r.y + SPLIT.pad,
+    w: r.w - SPLIT.pad * 2,
+    h: r.h - SPLIT.pad * 2,
+  });
+  const price = box(SPLIT.price);
+  const vol = box(SPLIT.vol);
+  return { price, vol, pricePane: pane(price), volPane: pane(vol) };
+})();
+const SPLIT_GRID = gridOf(TWO.closes, TWO_DOMAIN, SPLIT_RECT.pricePane, 0.02, 0);
+
 const RAIL_BARS = [0, 1, 2].map(() => ({ o: 1, h: 2, l: 1, c: 2 }));
 
 /**
@@ -232,14 +260,21 @@ const haloBox = (art: string, w: number, h: number) => {
 const RAIL_GRID = gridOf([1, 1, 1], [0, 1], RAIL_PANE, 0, 0);
 
 /**
- * The daily screen on its own, at rest. Same height as the pair in SC03 so it
- * reads as the same object returning, centred because there is nothing beside
- * it now.
+ * The two columns, derived from the files' own ratios and the room between the
+ * logo zone and the caption band — see PAIR_SHOTS.
  */
-const RECAP_RECT = (() => {
-  const h = SHOT.h;
-  const w = (h * BBCA_IMG.w) / BBCA_IMG.h;
-  return { h, w, x: theme.canvas.width / 2 - w / 2, top: SHOT.top };
+const PAIR_RECT = (() => {
+  const { w, gap, between, ratio } = PAIR_SHOTS;
+  const head = w / ratio.head;
+  const chart = w / ratio.chart;
+  const h = head + gap + chart;
+  const top = (theme.logoZone.height + theme.captionBand.top) / 2 - h / 2;
+  const x = [
+    theme.canvas.width / 2 - between / 2 - w,
+    theme.canvas.width / 2 + between / 2,
+  ];
+  const chartTop = top + head + gap;
+  return { w, head, chart, gap, h, top, x, chartTop };
 })();
 
 /**
@@ -641,7 +676,16 @@ export const UnderstandGroup = () => {
           style={{ backgroundColor: after ? c.cardBg : theme.color.bg }}
         />
         {after ? (
-          <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.intoFase) }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              ...cutInStyle(g, CUTS.intoFase),
+              /* ⚠ AND CARRIED OUT AGAIN AT f4253. Before that window opens this
+                 is the identity transform, so it costs nothing here. */
+              ...cutOutStyle(g, CUTS.intoSplit),
+            }}
+          >
           {/* ⚠ A SECOND CUT INSIDE THIS ONE, at f3067. SC04's drawings are
               carried out and the closing card carried in; both halves are drawn
               strictly on their own side of the frame, never together, or the
@@ -651,7 +695,13 @@ export const UnderstandGroup = () => {
               floor that slides with the furniture reads as the picture being
               scaled rather than as a camera. From f2461 — Simon's frame — not
               from the closing card. */}
-          <GridGround f={f} opacity={progress(f, local(MASCOT.groundAt, FROM), m.fade)} />
+          {/* ⚠ IT ENDS ON THE CUT FRAME, not by fading. A ground that dissolves
+              while the picture in front of it is still there reads as the floor
+              failing; on the cut frame everything changes at once, which is
+              what a cut is. */}
+          {g < CUTS.intoPair.at ? (
+            <GridGround f={f} opacity={progress(f, local(MASCOT.groundAt, FROM), m.fade)} />
+          ) : null}
           <div
             style={{
               position: "absolute",
@@ -847,7 +897,13 @@ export const UnderstandGroup = () => {
 
             {/* ── the mascot and its line ─────────────────────────────── */}
             {g >= MASCOT.at && g < MASCOT.gone ? (
-              <>
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  ...cutOutStyle(g, CUTS.intoPair),
+                }}
+              >
                 {/* ⚠ THE BOB IS THE SAME PAIR SC01's MASCOT BREATHES ON, so the
                     two readings of the same character move alike. */}
                 <TuntunMark
@@ -888,30 +944,289 @@ export const UnderstandGroup = () => {
                     />
                   ))}
                 </QuoteCard>
-              </>
+              </div>
             ) : null}
 
             {/* ── the daily screen, brought back at rest ──────────────── */}
-            {g >= RECAP.at && g < RECAP.gone ? (
-              <Img
-                src={staticFile(RECAP.art)}
+            {g >= PAIR_SHOTS.at && g < PAIR_SHOTS.gone ? (
+              <div
                 style={{
                   position: "absolute",
-                  left: RECAP_RECT.x,
-                  top: RECAP_RECT.top,
-                  width: RECAP_RECT.w,
-                  height: RECAP_RECT.h,
-                  border: `2px solid ${theme.color.gridLine}`,
-                  borderRadius: theme.shape.panelRadius,
-                  opacity: progress(f, local(RECAP.at, FROM), m.fade),
+                  inset: 0,
+                  ...cutInStyle(g, CUTS.intoPair),
                 }}
-              />
+              >
+                {PAIR_SHOTS.cols.map((col, i) =>
+                  /* ⚠ EACH IMAGE CARRIES ITS OWN INDIGO EDGE, not one border
+                     round the pair: they are two separate readings of the same
+                     screen, and a single frame round both would say they are
+                     one object. */
+                  [
+                    { art: col.head, y: PAIR_RECT.top, h: PAIR_RECT.head },
+                    {
+                      art: col.chart,
+                      y: PAIR_RECT.top + PAIR_RECT.head + PAIR_RECT.gap,
+                      h: PAIR_RECT.chart,
+                    },
+                  ].map((q, n: number) => {
+                    /* the columns land a beat apart, header before chart */
+                    const at = local(PAIR_SHOTS.at, FROM) + (i * 2 + n) * m.sec(0.1);
+                    const r = textReveal(f, at, m.reveal);
+                    return (
+                      <Img
+                        key={q.art}
+                        src={staticFile(q.art)}
+                        style={{
+                          position: "absolute",
+                          left: PAIR_RECT.x[i],
+                          top: q.y,
+                          width: PAIR_RECT.w,
+                          height: q.h,
+                          /* ⚠ A SHADOW, NOT A BORDER — Simon's call. A drawn
+                             edge round a screenshot reads as part of the app;
+                             lifting it off the paper says it is ours. */
+                          borderRadius: theme.shape.panelRadius,
+                          boxShadow: shadow.lift,
+                          opacity: r.opacity,
+                          transform: `translateY(${r.dy}px)`,
+                        }}
+                      />
+                    );
+                  }),
+                )}
+
+                {/* ── the marked candle, and the readout beside it ─────── */}
+                {PAIR_SHOTS.cols.map((_, i) => {
+                  const at = local(PAIR_SHOTS.hl.at[i], FROM);
+                  const p = progress(f, at, m.sec(0.45));
+                  if (p <= 0.001) return null;
+                  const cx = PAIR_RECT.x[i] + PAIR_SHOTS.hl.x[i] * PAIR_RECT.w;
+                  const half = PAIR_SHOTS.hl.half * PAIR_RECT.w;
+                  const co = PAIR_SHOTS.callout[i];
+                  const cw = PAIR_SHOTS.calloutW;
+                  const ch = cw / co.ratio;
+                  return (
+                    <React.Fragment key={co.art}>
+                      <HighlightBox
+                        rect={{
+                          x1: cx - half,
+                          x2: cx + half,
+                          y1: PAIR_RECT.chartTop + PAIR_SHOTS.hl.y1 * PAIR_RECT.chart,
+                          y2: PAIR_RECT.chartTop + PAIR_SHOTS.hl.y2 * PAIR_RECT.chart,
+                        }}
+                        opacity={p}
+                        /* ⚠ IT OPENS DOWN THE CANDLE, not across it. `grow` runs
+                           from the left edge, which on a band this narrow is a
+                           twitch; `collapse` opens it from its own middle, along
+                           the axis that actually has length. */
+                        collapse={p}
+                        radius={10}
+                      />
+                      <Img
+                        src={staticFile(co.art)}
+                        style={{
+                          position: "absolute",
+                          /* ⚠ IN THE MARGIN BESIDE ITS OWN COLUMN. Left of the
+                             band means inside the chart, over the data it is
+                             explaining; out here it reads as a label ON it. */
+                          /* ⚠ HALF ON THE CHART, HALF OFF — see PAIR_SHOTS. */
+                          left:
+                            i === 0
+                              ? PAIR_RECT.x[0] - cw / 2
+                              : PAIR_RECT.x[1] + PAIR_RECT.w - cw / 2,
+                          top: PAIR_RECT.chartTop + PAIR_RECT.chart / 2 - ch / 2,
+                          width: cw,
+                          height: ch,
+                          borderRadius: theme.shape.chipRadius,
+                          /* it has to lift off the chart it is lying on */
+                          boxShadow: shadow.glow,
+                          opacity: progress(f, at + m.sec(0.15), m.reveal),
+                        }}
+                      />
+                    </React.Fragment>
+                  );
+                })}
+              </div>
             ) : null}
           </div>
           </div>
         ) : (
           <div style={{ position: "absolute", inset: 0, ...cutOutStyle(g, CUTS.intoFase) }} />
         )}
+      </Stage>
+    );
+  }
+
+  /* ═══ SC06 — the reading, split in two, and then the chapter turns ═══ */
+  if (g >= SPLIT.at && g < TRANS.gone) {
+    const priceAt = local(SPLIT.label.at[0], FROM);
+    const volAt = local(SPLIT.label.at[1], FROM);
+    /**
+     * ⚠ ONE CURVE DRIVES THE WHOLE HAND-OVER. `map` shrinks the scene into the
+     * card; the same number reveals the board behind it, so the picture cannot
+     * arrive before the card that catches it exists.
+     */
+    const map = progressInOut(g, TRANS.at, TRANS.over);
+    const scale = 1 - map * (1 - ROADMAP_CARD.w / theme.canvas.width);
+    /**
+     * ⚠ A CORRECTION FOR THE FRAME'S EMPTY EDGES. What shrinks is the whole
+     * 1920x1080 canvas, but the PICTURE runs from the top window to the dashed
+     * box — the caption band below it is empty by design. Centring the canvas
+     * would leave the scene riding high in the card with white under it.
+     */
+    /**
+     * ⚠ CORRECTED ON BOTH AXES. What shrinks is the whole 1920x1080 canvas, but
+     * the PICTURE runs from the windows to the dashed box and, because the pair
+     * was moved 150 left and the labels sit out to the right, it is off-centre
+     * horizontally too. Centring the canvas would leave the scene low-left in
+     * the card with empty paper around it.
+     */
+    const seen = {
+      top: SPLIT.price.y,
+      bottom: SPLIT.quote.y + SPLIT.quote.h,
+      left: SPLIT_RECT.price.x,
+      right: SPLIT.label.x + 470,
+    };
+    const off = theme.canvas.height / 2 - (seen.top + seen.bottom) / 2;
+    const offX = theme.canvas.width / 2 - (seen.left + seen.right) / 2;
+    const slot = ROADMAP_SLOTS[TRANS.landing];
+    const centre = {
+      x: slot.x + ROADMAP_CARD.w / 2 - theme.canvas.width / 2 + offX * scale,
+      y: slot.y + ROADMAP_CARD.h / 2 - theme.canvas.height / 2 + off * scale,
+    };
+    const push = progress(g, TRANS.push.at, TRANS.push.over);
+    return (
+      <Stage>
+      {/* ⚠ WHITE, NOT THE EPISODE'S PAPER — Simon's call, carried on from the
+          stretch before it so the chapter reads as one room. OUTSIDE the shrink
+          AND outside the cut, so neither the page nor the ground travels. It
+          does NOT fade with the board below: CG-C's page is white too, so the
+          two are the same surface and there is nothing to cross-fade. */}
+      <AbsoluteFill style={{ backgroundColor: c.cardBg }} />
+      {/* ⚠ THE BOARD FADES OFF THE CARD, it is not cut away — see TRANS.fade. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          opacity: 1 - progress(g, TRANS.fade.at, TRANS.fade.over),
+        }}
+      >
+      <div style={{ position: "absolute", inset: 0, ...cutInStyle(g, CUTS.intoSplit) }}>
+      {/* the board these cards stand on, and the camera closing on the next
+          chapter once they have all arrived */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...cardPush(push, TRANS.next, TRANS.push.amount),
+        }}
+      >
+      <GridGround f={f} opacity={map} />
+      <RoadmapCards
+        labels={MAP_LABELS}
+        reveal={map}
+        landing={TRANS.landing}
+        /* ⚠ SCENE-LOCAL. RoadmapCards reads the frame of the group it is
+           mounted in, and this group starts at f1516 — global numbers here
+           would put the other three cards 1516 frames late. */
+        cardsAt={TRANS.cards.map((c) => local(c, FROM))}
+        cardDur={TRANS.cardDur}
+        glow={{ card: TRANS.next, at: local(TRANS.push.at, FROM) - 30, over: 26 }}
+        /* ⚠ THE SAME PICTURES AS THE BOARD AT f1400, from one place — see
+           roadmapContents. The landing card draws none of its own: the scene
+           shrinking into it IS its picture. */
+        contents={roadmapContents(
+          f,
+          m,
+          [0, 1, 2, 3].map((i) =>
+            i === TRANS.landing
+              ? 0
+              : local(TRANS.cards[i > TRANS.landing ? i - 1 : i], FROM),
+          ),
+          TRANS.landing,
+        )}
+      />
+      {/* ⚠ CLIP OUTSIDE, SCALE INSIDE — a clip-path on the scaling wrapper
+          scales with it and never matches the card it is clipping into. */}
+      <div style={{ position: "absolute", inset: 0, clipPath: shrinkClip(map, TRANS.landing) }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform:
+            `translate(${(centre.x * map).toFixed(1)}px, ${(centre.y * map).toFixed(1)}px) ` +
+            `scale(${scale.toFixed(4)})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
+        }}
+      >
+        {/* ⚠ EACH WINDOW ARRIVES WITH ITS OWN LABEL — see SPLIT.label. And NO
+            RESISTANCE BAND: it belonged to SC01's argument about a level being
+            broken, and here it is one more thing to explain in a scene that is
+            about reading two panes together. */}
+        <Card rect={SPLIT_RECT.price} opacity={progress(f, priceAt, m.fade)} />
+        <Chart
+          series={TWO}
+          grid={SPLIT_GRID}
+          at={priceAt + m.sec(0.2)}
+          over={m.sec(1.1)}
+          tickLabels={false}
+          baseline={false}
+        />
+        <Card rect={SPLIT_RECT.vol} opacity={progress(f, volAt, m.fade)} />
+        <VolumeBars
+          bars={TWO.bars}
+          volume={TWO_VOL_STRONG}
+          grid={SPLIT_GRID}
+          box={SPLIT_RECT.volPane}
+          peak={TWO_VOL_PEAK}
+          shown={progress(f, volAt + m.sec(0.2), m.sec(1.1))}
+        />
+
+        {/* ⚠ EACH LABEL IS CENTRED ON THE WINDOW IT NAMES, not spaced down the
+            side: "arah pasar" belongs to the candles, "keramaian transaksi" to
+            the bars, and the eye should be able to draw that line itself. */}
+        {SPLIT.label.text.map((text, i) => {
+          const box = i === 0 ? SPLIT_RECT.price : SPLIT_RECT.vol;
+          return (
+            <Words
+              key={text}
+              text={text}
+              x={SPLIT.label.x}
+              y={box.y + box.h / 2}
+              at={local(SPLIT.label.at[i], FROM)}
+              stagger={6}
+              anchor="left"
+              size={SPLIT.label.size}
+              weight={theme.text.title.weight}
+              color={theme.color.indigo}
+            />
+          );
+        })}
+
+        {/* the line the whole scene is for, in the same dashed box SC03 uses */}
+        <DashedBox
+          x={theme.canvas.width / 2 - SPLIT.quote.w / 2}
+          y={SPLIT.quote.y}
+          w={SPLIT.quote.w}
+          h={SPLIT.quote.h}
+          at={local(SPLIT.quote.at, FROM)}
+        >
+          <Words
+            text={SPLIT.quote.text}
+            x={SPLIT.quote.w / 2}
+            y={SPLIT.quote.h / 2}
+            at={dashOpenAt(local(SPLIT.quote.at, FROM))}
+            stagger={6}
+            anchor="center"
+            size={theme.text.title.size}
+            weight={600}
+          />
+        </DashedBox>
+      </div>
+      </div>
+      </div>
+      </div>
+      </div>
       </Stage>
     );
   }

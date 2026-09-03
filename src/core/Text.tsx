@@ -139,6 +139,10 @@ export const Line = ({
  * and rise; only its start is staggered. Identical size and baseline for every
  * word — never a per-word scale, which reads as bouncing type.
  */
+/** The selection's own furniture: how far the band overhangs the type, the
+ *  caret's width, and the grab dot. */
+const SEL = { pad: 10, bar: 3, dot: 18 };
+
 export const Words = ({
   text,
   x,
@@ -153,6 +157,12 @@ export const Words = ({
   atEach,
   maxWidth,
   marks,
+  markAt,
+  markWeight,
+  markStyle = "highlighter",
+  lineHeight = 1.3,
+  family = theme.text.family,
+  vAlign = "center",
 }: {
   text: string;
   x: number;
@@ -181,6 +191,53 @@ export const Words = ({
    * simply not marked — it never silently marks the wrong words.
    */
   marks?: readonly { text: string; color: string }[];
+  /**
+   * The frame the marks arrive on, when that is NOT when their words do.
+   *
+   * By default a mark follows the last word it covers — the phrase is complete,
+   * so it can be marked. Pass this when the sentence is written first and
+   * marked later, as a point being made about something already said.
+   */
+  markAt?: number;
+  /**
+   * The weight a marked run thickens INTO as it is marked. Omit and the run
+   * keeps the block's own weight.
+   *
+   * ⚠ WEIGHT IS CROSS-FADED, NOT INTERPOLATED. 500 to 800 has nothing in
+   * between, so each marked word is drawn twice and the pair trade opacities —
+   * the same trick TabRow uses, and for the same reason: a weight that snaps
+   * while everything around it eases is the only thing anyone sees.
+   *
+   * ⚠ THE HEAVY COPY IS THE ONE IN FLOW, and the light one is laid over it.
+   * The run's box has to be the WIDEST state it will ever have, because the
+   * selection band is sized from that box — size it from the light copy and
+   * the words spill past their own band the moment they thicken.
+   */
+  markWeight?: number;
+  /**
+   * How a mark is drawn.
+   *
+   * `highlighter` — a wash swept across the words, the way a pen marks a book.
+   *
+   * `selection` — the way a mouse drags over text: the same sweep, but with a
+   * caret at each end and a grab dot on opposite corners. The trailing caret
+   * and its dot RIDE the sweep, because that is what a cursor does; a selection
+   * whose right edge is already waiting where the drag will finish is not a
+   * drag, it is a rectangle fading in.
+   */
+  markStyle?: "highlighter" | "selection";
+  /** Leading as a multiple of `size`, for text that wraps. */
+  lineHeight?: number;
+  /** Defaults to the brand face. `theme.text.mono` is the only other one. */
+  family?: string;
+  /**
+   * What `y` means. `center` (the default) is the block's middle — right for a
+   * line whose length is known. `top` is the block's first line, and it is what
+   * a WRAPPING block wants: centre-anchoring makes the top edge move whenever
+   * the text breaks onto another line, so a gap measured above it is only true
+   * for the line count it was measured at.
+   */
+  vAlign?: "center" | "top";
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -215,12 +272,12 @@ export const Words = ({
         position: "absolute",
         left: x,
         top: y,
-        transform: `translate(${shiftOf(anchor)}, -50%)`,
-        fontFamily: theme.text.family,
+        transform: `translate(${shiftOf(anchor)}, ${vAlign === "top" ? "0" : "-50%"})`,
+        fontFamily: family,
         fontSize: size,
         fontWeight: weight,
         color: color ?? c.ink,
-        lineHeight: 1.3,
+        lineHeight,
         maxWidth,
         textAlign: anchor === "center" ? "center" : anchor === "right" ? "right" : "left",
         whiteSpace: maxWidth ? "normal" : "nowrap",
@@ -260,7 +317,7 @@ export const Words = ({
            note. It follows the run's LAST word, so a two-word phrase is marked
            once it is whole rather than being washed while it is still arriving
            and reading as a highlight of a word that is not there yet. */
-        const mark = textReveal(f, atEach?.[g.to] ?? at + g.to * step, m.reveal).opacity;
+        const mark = textReveal(f, markAt ?? atEach?.[g.to] ?? at + g.to * step, m.reveal).opacity;
         return (
           <span
             key={g.from}
@@ -269,21 +326,80 @@ export const Words = ({
               display: "inline-block",
               padding: "0.04em 0.18em",
               marginRight: "0.3em",
+              /* ⚠ A MARKED RUN NEVER WRAPS. Its band, its carets and its dots
+                 are one rectangle; letting the phrase break across lines would
+                 leave a selection with two right-hand ends. */
+              whiteSpace: "nowrap",
             }}
           >
-            {/* ⚠ THE WASH IS ITS OWN LAYER, BEHIND the words. Fading it by
-                fading the whole span would take the type with it, and the words
-                have already arrived — it is only the mark that is late. */}
+            {/* ⚠ THE WASH IS ITS OWN LAYER, BEHIND the words. Fading or
+                wiping the whole span would take the type with it, and the words
+                have already arrived — it is only the mark that is late.
+
+                ⚠ IT WIPES LEFT TO RIGHT, it does not fade in. A highlighter is
+                drawn across words; a wash that appears everywhere at once reads
+                as the words changing colour instead. */}
             <span
               style={{
                 position: "absolute",
-                inset: 0,
+                left: 0,
+                top: markStyle === "selection" ? -SEL.pad : 0,
+                bottom: markStyle === "selection" ? -SEL.pad : 0,
+                width: `${(mark * 100).toFixed(1)}%`,
                 background: g.color,
-                borderRadius: 6,
-                opacity: mark,
+                borderRadius: markStyle === "selection" ? 0 : 6,
               }}
             />
-            <span style={{ position: "relative" }}>{run}</span>
+            {markStyle === "selection" && mark > 0.001 ? (
+              <>
+                {/* the caret the drag started from, and the one it is dragging */}
+                {[0, 1].map((end) => (
+                  <span key={end}>
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: end === 0 ? 0 : `${(mark * 100).toFixed(1)}%`,
+                        top: -SEL.pad,
+                        bottom: -SEL.pad,
+                        width: SEL.bar,
+                        background: c.indigo,
+                      }}
+                    />
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: end === 0 ? -SEL.dot / 2 : `calc(${(mark * 100).toFixed(1)}% - ${SEL.dot / 2 - SEL.bar / 2}px)`,
+                        [end === 0 ? "top" : "bottom"]: -SEL.pad - SEL.dot / 2,
+                        width: SEL.dot,
+                        height: SEL.dot,
+                        borderRadius: "50%",
+                        background: c.indigo,
+                      }}
+                    />
+                  </span>
+                ))}
+              </>
+            ) : null}
+            <span style={{ position: "relative" }}>
+              {markWeight ? (
+                <>
+                  <span style={{ fontWeight: markWeight, opacity: mark }}>{run}</span>
+                  <span
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: 0,
+                      opacity: 1 - mark,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {run}
+                  </span>
+                </>
+              ) : (
+                run
+              )}
+            </span>
           </span>
         );
       })}

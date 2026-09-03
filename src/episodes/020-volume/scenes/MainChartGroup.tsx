@@ -210,6 +210,38 @@ const cardPanes = (slot: { x: number; y: number }) => {
   };
 };
 const CARD_PANES = [cardPanes(ROADMAP_SLOTS[2]), cardPanes(ROADMAP_SLOTS[3])];
+/**
+ * Card 0 holds WHAT SC01 ACTUALLY ENDS ON — the mark, the word under it, and
+ * the two windows below — not a generic thumbnail. At f1543 that card IS the
+ * live scene, so the version drawn at every later Scene Transisi has to be the
+ * same picture or the board changes meaning between showings.
+ */
+const CARD0_HEAD = { mark: 30, word: 15, top: 12 };
+const CARD0_PANES = [0, 1].map((i) => {
+  const slot = ROADMAP_SLOTS[0];
+  const pad = 18;
+  const top = CARD0_HEAD.top + CARD0_HEAD.mark + CARD0_HEAD.word + 14;
+  const half = (ROADMAP_CARD.w - pad * 3) / 2;
+  const box = {
+    x: slot.x + pad + i * (half + pad),
+    y: slot.y + top,
+    w: half,
+    h: ROADMAP_CARD.h - top - pad,
+  };
+  const inset = 8;
+  const pane = {
+    x: box.x + inset,
+    y: box.y + inset,
+    w: box.w - inset * 2,
+    h: box.h - inset * 2,
+  };
+  return {
+    box,
+    price: { ...pane, h: pane.h * 0.62 },
+    vol: { ...pane, y: pane.y + pane.h * 0.70, h: pane.h * 0.28 },
+  };
+});
+const CARD0_GRIDS = CARD0_PANES.map((q) => gridOf(TWO.closes, TWO_DOMAIN, q.price, 0.04, 0));
 /** ⚠ ONE SHARED DOMAIN AND ONE SHARED PEAK across both thumbnails, for the
  *  reason the two SC01 windows share theirs: side by side, self-normalising
  *  charts invent differences that are not in the data. */
@@ -303,6 +335,134 @@ const VOL_TOP = Math.max(...VOL_HIGH);
 /** y for a volume value, agreeing with VolumeBars' own scaling. */
 const volY = (box: { y: number; h: number }, v: number, peak: number) =>
   box.y + box.h - (v / peak) * box.h;
+
+/**
+ * ═══ WHAT STANDS INSIDE THE FOUR ROADMAP CARDS ═══
+ *
+ * Exported because the board is shown TWICE — once when the contents page opens
+ * at f1400, and again at every Scene Transisi. The cards have to hold the same
+ * pictures both times, and the only way that survives an edit to either scene
+ * is for there to be one copy of them.
+ *
+ * ⚠ `at` IS ONE FRAME PER CARD, IN THE CALLER'S OWN CLOCK. MainChartGroup is
+ * mounted at f0 so its globals work directly; CG-B is mounted at f1516 and has
+ * to convert first. Passing the frames in is what stops that being guessable.
+ *
+ * ⚠ THE LANDING CARD DRAWS NOTHING. Whatever scene is shrinking into it IS its
+ * picture; a thumbnail underneath would sit behind the arriving frame.
+ */
+export const roadmapContents = (
+  f: number,
+  m: ReturnType<typeof useMotion>,
+  at: number[],
+  landing: number,
+): React.ReactNode[] =>
+  [
+    /* what SC01 ends on: the mark, the word, and the pair — see CARD0_PANES */
+    <React.Fragment key="c0">
+      <TuntunMark
+        x={ROADMAP_SLOTS[0].x + ROADMAP_CARD.w / 2}
+        y={ROADMAP_SLOTS[0].y + CARD0_HEAD.top}
+        height={CARD0_HEAD.mark}
+        opacity={progress(f, at[0], m.reveal)}
+      />
+      <div
+        style={{
+          position: "absolute",
+          left: ROADMAP_SLOTS[0].x,
+          top: ROADMAP_SLOTS[0].y + CARD0_HEAD.top + CARD0_HEAD.mark + 2,
+          width: ROADMAP_CARD.w,
+          textAlign: "center",
+          fontFamily: theme.text.family,
+          fontSize: CARD0_HEAD.word,
+          fontWeight: theme.text.title.weight,
+          color: theme.color.indigo,
+          opacity: progress(f, at[0], m.reveal),
+        }}
+      >
+        Volume
+      </div>
+      {CARD0_PANES.map((q, i) => (
+        <React.Fragment key={i}>
+          {/* ⚠ EACH MINI WINDOW KEEPS ITS OWN PANEL. In SC01 the two readings
+              sit on separate cards, and that is what makes them read as two
+              windows rather than one chart split down the middle. */}
+          <Card rect={q.box} opacity={progress(f, at[0], m.fade)} />
+          <Chart
+            series={TWO}
+            grid={CARD0_GRIDS[i]}
+            at={at[0]}
+            over={m.sec(0.9)}
+            tickLabels={false}
+            baseline={false}
+          />
+          <VolumeBars
+            bars={TWO.bars}
+            volume={i === 0 ? TWO_VOL_STRONG : TWO_VOL_WEAK}
+            grid={CARD0_GRIDS[i]}
+            box={q.vol}
+            peak={TWO_VOL_PEAK}
+            shown={progress(f, at[0], m.sec(0.9))}
+          />
+          {/* the same band both windows carry in SC01 */}
+          <Zone
+            hi={TWO_RES.hi}
+            lo={TWO_RES.lo}
+            grid={CARD0_GRIDS[i]}
+            at={at[0] + m.sec(0.3)}
+            over={m.sec(0.7)}
+            border
+            borderWidth={theme.shape.hairline}
+          />
+        </React.Fragment>
+      ))}
+    </React.Fragment>,
+    /* ⚠ A HISTOGRAM WITH NO PRICE PANE ABOVE IT, and that IS the chapter:
+       volume on its own, before it is read against anything. */
+    <VolumeBars
+      key="c1"
+      bars={TWO.bars}
+      volume={TWO_VOL_STRONG}
+      grid={CARD2_GRID}
+      box={CARD2_BOX}
+      /* ⚠ NO SHARED `peak` HERE, DELIBERATELY. This one stands alone in its
+         card with nothing beside it to be misread against, so it normalises to
+         its own maximum and fills the height it has. */
+      shown={progress(f, at[1], m.sec(0.9))}
+    />,
+    ...CARD_PANES.map((q, i) => (
+      <React.Fragment key={`c${i + 2}`}>
+        <Chart
+          series={TWO}
+          grid={CARD_GRIDS[i]}
+          at={at[i + 2]}
+          over={m.sec(0.9)}
+          tickLabels={false}
+          baseline={false}
+        />
+        <VolumeBars
+          bars={TWO.bars}
+          volume={TWO_VOL_STRONG}
+          grid={CARD_GRIDS[i]}
+          box={q.vol}
+          peak={TWO_VOL_PEAK}
+          shown={progress(f, at[i + 2], m.sec(0.9))}
+        />
+        {/* only on "cara pakai volume" — see cardPanes */}
+        {i === 1 ? (
+          <Zone
+            hi={TWO_RES.hi}
+            lo={TWO_RES.lo}
+            grid={CARD_GRIDS[i]}
+            at={at[i + 2] + m.sec(0.3)}
+            over={m.sec(0.7)}
+            border
+            borderWidth={theme.shape.rule}
+          />
+        ) : null}
+      </React.Fragment>
+    )),
+  ].map((node, i) => (i === landing ? null : node));
 
 export const MainChartGroup = () => {
   const f = useCurrentFrame();
@@ -615,58 +775,11 @@ export const MainChartGroup = () => {
             cardsAt={[...MAP.cards]}
             cardDur={MAP.cardDur}
             glow={{ card: 1, at: CARD2.at, over: CARD2.over }}
-            contents={[
-              null,
-              /* ⚠ A HISTOGRAM WITH NO PRICE PANE ABOVE IT, and that IS the
-                 chapter: volume on its own, before it is read against
-                 anything. Every other chart in the episode buries it under a
-                 candle pane; here it has the card to itself. */
-              <VolumeBars
-                key="c1"
-                bars={TWO.bars}
-                volume={TWO_VOL_STRONG}
-                grid={CARD2_GRID}
-                box={CARD2_BOX}
-                /* ⚠ NO SHARED `peak` HERE, DELIBERATELY. This one stands alone
-                   in its card with nothing beside it to be misread against, so
-                   it normalises to its own maximum and fills the height it has.
-                   The two thumbnails to its right DO share one — they sit side
-                   by side. */
-                shown={progress(f, MAP.cards[0], m.sec(0.9))}
-              />,
-              ...CARD_PANES.map((q, i) => (
-                <React.Fragment key={`c${i + 2}`}>
-                  <Chart
-                    series={TWO}
-                    grid={CARD_GRIDS[i]}
-                    at={MAP.cards[i + 1]}
-                    over={m.sec(0.9)}
-                    tickLabels={false}
-                    baseline={false}
-                  />
-                  <VolumeBars
-                    bars={TWO.bars}
-                    volume={TWO_VOL_STRONG}
-                    grid={CARD_GRIDS[i]}
-                    box={q.vol}
-                    peak={TWO_VOL_PEAK}
-                    shown={progress(f, MAP.cards[i + 1], m.sec(0.9))}
-                  />
-                  {/* only on "cara pakai volume" — see cardPanes */}
-                  {i === 1 ? (
-                    <Zone
-                      hi={TWO_RES.hi}
-                      lo={TWO_RES.lo}
-                      grid={CARD_GRIDS[i]}
-                      at={MAP.cards[i + 1] + m.sec(0.3)}
-                      over={m.sec(0.7)}
-                      border
-                      borderWidth={theme.shape.rule}
-                    />
-                  ) : null}
-                </React.Fragment>
-              )),
-            ]}
+            /* ⚠ FOUR FRAMES, ONE PER CARD. MAP.cards holds only the three that are
+               NOT the landing, so card 0's slot is filled with a number that is
+               never read — passing the short array left at[3] undefined and
+               interpolate threw on it. */
+            contents={roadmapContents(f, m, [0, ...MAP.cards], 0)}
           />
           {/* ⚠ CLIP OUTSIDE, SCALE INSIDE. The clip must sit on an element that
               is never transformed — on the scaling wrapper it would scale with

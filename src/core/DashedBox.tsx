@@ -45,6 +45,9 @@ export const DashedBox = ({
   dash = "16 11",
   block = 15,
   opacity = 1,
+  solid = false,
+  blocks = true,
+  shadow,
   children,
 }: {
   /** Top-left, in canvas pixels. */
@@ -56,6 +59,18 @@ export const DashedBox = ({
   dash?: string;
   block?: number;
   opacity?: number;
+  /** Draw the frame as an unbroken rule instead of a dashed one. */
+  solid?: boolean;
+  /** The corner blocks. They exist to give a DASH rhythm somewhere to start
+   *  and stop; on a solid frame they are leftovers, so a solid box usually
+   *  wants them off. */
+  blocks?: boolean;
+  /**
+   * A HARD shadow — a second frame offset behind this one, no blur. Not a
+   * drop shadow: this is a printed look, and a blur would turn it into
+   * elevation, which says the box is floating rather than stamped.
+   */
+  shadow?: { x: number; y: number; color: string };
   children?: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
@@ -78,6 +93,19 @@ export const DashedBox = ({
         opacity: rise * opacity,
       }}
     >
+      {shadow ? (
+        <div
+          style={{
+            position: "absolute",
+            left: shadow.x,
+            top: shadow.y,
+            width: wNow,
+            height: h,
+            borderRadius: theme.shape.panelRadius,
+            background: shadow.color,
+          }}
+        />
+      ) : null}
       <div
         style={{
           position: "absolute",
@@ -100,16 +128,19 @@ export const DashedBox = ({
           fill="none"
           stroke={c.ink}
           strokeWidth={theme.shape.rule}
-          strokeDasharray={dash}
+          strokeDasharray={solid ? undefined : dash}
         />
         {/* a solid block on each corner, so the dash rhythm has somewhere to
             start and stop rather than fraying into the curve */}
-        {[
+        {(blocks
+          ? [
           [1, 1],
           [wNow - 1, 1],
           [1, h - 1],
           [wNow - 1, h - 1],
-        ].map(([cx, cy], i) => (
+        ]
+          : []
+        ).map(([cx, cy], i) => (
           <rect
             key={i}
             x={cx - block / 2}

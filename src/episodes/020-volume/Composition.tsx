@@ -35,10 +35,12 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, RUNNING_LINE } from "./data/timing";
+import { BLOCK, TRANS, RUNNING_LINE, COMBOS_VERSION } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
+import { CombosGroupV2 } from "./scenes/CombosGroupV2";
+import { CombosGroupV3 } from "./scenes/CombosGroupV3";
 import { SC14 } from "./scenes/SC14";
 import { BrptGroup } from "./scenes/BrptGroup";
 import { SC16 } from "./scenes/SC16";
@@ -82,16 +84,14 @@ const HIDDEN: string[] = [];
  */
 const SCENES: Mounted[] = [
   {
-    from: BLOCK.SC03,
-    duration: BLOCK.SC07 - BLOCK.SC03,
-    Component: UnderstandGroup,
-    name: "CG-B · SC03–06",
-  },
-  {
     from: BLOCK.SC07,
     duration: BLOCK.SC11 - BLOCK.SC07,
-    Component: CombosGroup,
-    name: "CG-C · SC07–10",
+    /** ⚠ THE LEVER LIVES IN data/timing.ts — `COMBOS_VERSION`. Both builds
+     *  cover the same frames and key off the same stage table; this is the only
+     *  place either of them is mounted. */
+    Component:
+      COMBOS_VERSION === 1 ? CombosGroup : COMBOS_VERSION === 2 ? CombosGroupV2 : CombosGroupV3,
+    name: `CG-C · SC07–10 · v${COMBOS_VERSION}`,
   },
   {
     from: BLOCK.SC14,
@@ -134,6 +134,19 @@ const SCENES: Mounted[] = [
     duration: BLOCK.END - BLOCK.SC20,
     Component: SC20,
     name: "SC20 Close",
+  },
+  /**
+   * ⚠ CG-B RUNS PAST ITS OWN BLOCK AND IS DRAWN OVER CG-C, on purpose. SC06's
+   * scene is what shrinks into the roadmap card at f4958, so the group that
+   * draws SC06 has to still be mounted while it shrinks — and it has to be
+   * ON TOP, because CG-C opens at f4954 with a stage of its own. It returns
+   * null the moment the transition is over.
+   */
+  {
+    from: BLOCK.SC03,
+    duration: TRANS.gone - BLOCK.SC03,
+    Component: UnderstandGroup,
+    name: "CG-B · SC03–06",
   },
   /* ⚠ LAST = ON TOP. See the note above the array. */
   {

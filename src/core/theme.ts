@@ -34,8 +34,16 @@
  */
 import { Easing } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
+import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
 
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
+/**
+ * ⚠ THE MONO IS A LABEL FACE, NOT A SECOND BODY FACE. It is for short lines
+ * that name a thing — a combination, a state, a key — where the fixed pitch and
+ * the terminal look do the separating that a size step would otherwise have to.
+ * A sentence set in it reads as code, and nothing in these videos is code.
+ */
+loadMono("normal", { weights: ["400", "500"] });
 
 const W = 1920;
 const H = 1080;
@@ -278,6 +286,15 @@ export const theme = {
      * would just be a second shape.
      */
     halo: "radial-gradient(circle, rgba(255,255,255,1) 42%, rgba(255,255,255,0) 70%)",
+    /**
+     * ⚠ A TEXT SELECTION, NOT A HIGHLIGHTER. Stronger than `indigoWash` because
+     * it stands for something a cursor has just dragged over — a selection that
+     * whispers reads as a highlight someone forgot to finish.
+     */
+    selectWash: "rgba(95, 77, 238, 0.22)",
+    /** A neutral fill one step darker than white — for a selected row on a
+     *  white board, where a tint would claim a meaning the row does not have. */
+    greyWash: "#ECECEE",
     hlCyan: "rgba(92, 200, 227, 0.34)",
     hlOrange: "rgba(242, 166, 59, 0.34)",
     onIndigo: "#FFFFFF",
@@ -299,6 +316,7 @@ export const theme = {
 
   text: {
     family: "Plus Jakarta Sans",
+    mono: "JetBrains Mono",
     display: { size: 96, weight: 800 },
     title: { size: 48, weight: 700 },
     body: { size: 36, weight: 500 },

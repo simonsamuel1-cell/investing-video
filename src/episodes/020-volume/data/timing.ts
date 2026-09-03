@@ -50,6 +50,222 @@ export const CARDS = {
 export const HARD_CUT = [6858, 8214] as const;
 
 /**
+ * ═══ THE FOUR COMBINATIONS, AS TABS ═══  (Simon's frames)
+ *
+ * The row appears at f5259 with none of them current, and then each takes its
+ * turn as the voice reaches it. Replaces the chapter card that used to say
+ * "Empat kombinasi dasar" — the row says the same thing and keeps saying it,
+ * which a card that comes and goes cannot.
+ *
+ * ⚠ ARROWS, NOT THE WORDS. Simon's call, and it is what lets four labels sit on
+ * one line at 20px: "harga naik, volume naik" four times over is a paragraph.
+ */
+export const COMBO_TABS = {
+  /** ⚠ 5250, and they arrive one at a time — Simon's frame. */
+  at: 5250,
+  stepIn: 10,
+  y: 110,
+  /** ⚠ 30, WAS 20 — it was unreadable at a glance. Selected is 34. */
+  size: 30,
+  lift: 4,
+  /** ⚠ MEASURED AGAINST THE LOGO, not chosen. See the check below the row. */
+  gap: 34,
+  labels: [
+    "harga ↑, volume ↑",
+    "harga ↑, volume ↓",
+    "harga ↓, volume ↑",
+    "harga ↓, volume ↓",
+  ],
+  /** The frame each becomes the current one. */
+  select: [5434, 5949, 6865, 7532],
+} as const;
+
+/**
+ * ═══ THE FOUR COMBINATIONS ═══  (Simon's layout)
+ *
+ * A window on one side holding the tape and its histogram, the reading typed
+ * out on the other — and the two SWAP SIDES for the falling pair, so the
+ * chapter turns over halfway rather than repeating one arrangement four times.
+ *
+ * ⚠ THE WINDOW IS THE ROADMAP CARD, STILL. It grows out of "cara baca volume"
+ * at f5149 and is the same object for the rest of the chapter; it never
+ * reappears or restarts.
+ *
+ * ⚠ THE WORDS ARE MINE, TAKEN FROM THE NARRATION, not supplied. Simon gave the
+ * shape — title, conditions, conclusion, with the caution in red — and the
+ * sentences are lifted from what the voice actually says over each one. They
+ * are the first thing to correct.
+ */
+export const COMBOS = {
+  open: { at: 5149, over: 60 },
+  win: { x: 96, y: 300, w: 780, h: 540 },
+  /**
+   * ⚠ THE TITLE IS THE SMALL ONE. 36 at weight 400 over 46 at weight 800 —
+   * the sentence leads and the title labels it, which is the opposite of the
+   * usual arrangement and is Simon's call. It works because the two are not
+   * competing: the title names the combination, the sentence says what it
+   * means, and only one of them is the point.
+   *
+   * ⚠ `body` IS DELIBERATELY NOT NANGGUNG. 46 is big enough that the sentence
+   * wraps on its own; the rows below hold ONE string each and let it break
+   * where it lands, so nothing has to be re-broken by hand when a word changes.
+   *
+   * ⚠ THE TITLE IS SET IN `theme.text.mono`. The face is what separates it from
+   * the sentence now — there is no rule above it any more, and at 36 against 46
+   * the size step alone was not enough to say "this one is a label".
+   *
+   * ⚠ `lead` IS 76, NOT 46 × 1.3. The marked line carries a selection band that
+   * overhangs its box by 10px top and bottom plus a grab dot; on ordinary
+   * leading the band crowds the line above it.
+   *
+   * ⚠ `gap` IS MEASURED FROM THE TITLE'S BOTTOM TO THE SENTENCE'S FIRST LINE,
+   * which is why the sentence is anchored by its TOP and not its middle. A
+   * centre-anchored block moves its own top edge the moment a row wraps onto a
+   * third line, and the 100 would quietly become something else.
+   */
+  text: { x: 936, w: 888, title: 36, body: 46, lead: 76, gap: 65 },
+  /**
+   * ⚠ THE THREE BEATS ARE SIMON'S, GIVEN FOR THE FIRST COMBINATION: f5438,
+   * f5621, f5781 — 4, 187 and 347 frames after its tab lights at f5434. The
+   * other three carry the same offsets from their own tab, because the voice
+   * paces them alike; if any of them drifts, it is this line to correct.
+   *
+   * The third beat no longer brings a new sentence — the sentence is already
+   * there. It brings the MARK: the second line is highlighted and thickens, so
+   * the point lands on words the viewer has already read.
+   */
+  beats: [4, 187, 347],
+  rows: [
+    /**
+     * ⚠ ONE STRING, NOT TWO LINES. It wraps by itself at `text.w`; a sentence
+     * broken by hand has to be re-broken every time a word changes, and the
+     * hand-break is always the first thing to go stale.
+     *
+     * ⚠ A `mark` NEVER WRAPS — see core/Text.tsx. Keep each one short enough to
+     * sit on a single line at `body`, or its selection band ends up with two
+     * right-hand edges.
+     */
+    {
+      title: "Harga naik, Volume naik",
+      text: "Kenaikan lebih meyakinkan, karna aktivitas transaksi meningkat",
+      mark: "aktivitas transaksi meningkat",
+    },
+    {
+      title: "Harga naik, Volume turun",
+      text: "Bukan otomatis sinyal jual, tapi aktivitas pendukungnya berkurang",
+      mark: "aktivitas pendukungnya berkurang",
+    },
+    {
+      title: "Harga turun, Volume naik",
+      text: "Tekanan jual lebih serius, karna aktivitas transaksi makin tinggi",
+      mark: "aktivitas transaksi makin tinggi",
+    },
+    {
+      title: "Harga turun, Volume turun",
+      text: "Tekanan jual mulai mereda, tapi buyer belum tentu datang",
+      mark: "buyer belum tentu datang",
+    },
+  ],
+} as const;
+
+/**
+ * ═══ THE COMBOS CHAPTER HAS TWO BUILDS ═══
+ *
+ * ⚠ THIS IS THE LEVER. 1 is the tab row with the reading typed beside the
+ * window; 2 is the rolling list with the reading in a dashed box under it;
+ * 3 is the board — a rail of four buttons on the left with one travelling
+ * highlight, and the picture and its reading on the right.
+ * Nothing else selects between them — flip this one number and re-run.
+ *
+ * Both are wired to the same stage frames (`COMBO_TABS.select`) and the same
+ * four series, so switching cannot desynchronise the chapter from the voice.
+ */
+export const COMBOS_VERSION: 1 | 2 | 3 = 2;
+
+/**
+ * ═══ VERSION 2 ═══ f5149–8214.
+ *
+ * ⚠ THE LIST IS ON THE LEFT AND THE PICTURE IS ON THE RIGHT, and neither ever
+ * moves. Version 1 traded sides once and Simon rejected it for the same reason
+ * the roll only ever shows three: the viewer should be comparing this chart
+ * with the one before it, not re-finding it.
+ */
+export const COMBOS_V2 = {
+  /** ⚠ `y` IS THE CURRENT ITEM'S CENTRE, not the top of the list. The list is
+   *  placed by whichever item is current, which is what keeps the reading spot
+   *  still while everything else rolls past it. */
+  list: { x: 96, y: 558, lead: 96, size: 30, grow: 6, dim: 0.5, roll: 22 },
+  /**
+   * ⚠ VERSION 2 HAS ITS OWN LABELS — words, not arrows, and split in two so the
+   * halves can be coloured apart. `COMBO_TABS.labels` still belongs to version
+   * 1's tab row; the two must not be made to share, or a change meant for one
+   * silently rewrites the other.
+   *
+   * ⚠ THE RED IS `warn`, NOT `candleRed`. candleGreen/candleRed are for candle
+   * bodies and wicks only — see the contract at the top of core/theme.ts. `warn`
+   * is the palette's one red for WORDS, which is exactly what this is.
+   */
+  items: [
+    ["Harga naik ", "Volume naik"],
+    ["Harga naik ", "Volume turun"],
+    ["Harga turun ", "Volume naik"],
+    ["Harga turun ", "Volume turun"],
+  ],
+  win: { x: 640, y: 190, w: 1184, h: 500 },
+  box: { x: 640, y: 726, w: 1184, h: 200 },
+  /** ⚠ THE LINE BREAKS ARE SIMON'S, one entry per line — his wording arrived
+   *  already broken, so the break is content here and not a layout decision. */
+  rows: [
+    ["Kenaikan lebih meyakinkan,", "karna aktivitas meningkat"],
+    ["Harga masih bisa naik, tapi harus hati-hati.", "Aktivitas mulai berkurang"],
+    ["Harga turun saat aktivitas tinggi,", "tanda tekanan jual yang serius."],
+    ["Harga belum tentu berbalik,", "tapi tekanan jual mulai mereda."],
+  ],
+  quote: { size: 40, lead: 58, weight: 500 },
+} as const;
+
+/**
+ * ═══ VERSION 3 ═══ the board.
+ *
+ * ⚠ EVERY CHOICE IS ON SCREEN AT ONCE HERE, which is the opposite of version
+ * 2's roll and the whole point of the difference: version 2 hides how many
+ * there are, version 3 shows the shape of the list and moves through it. Both
+ * read the same four labels and the same four readings from COMBOS_V2 — the
+ * words are the chapter's, not a version's.
+ */
+export const COMBOS_V3 = {
+  /** The panel everything sits on. */
+  board: { x: 96, y: 176, w: 1728, h: 768, pad: 40 },
+  /** ⚠ THE PILL IS ONE OBJECT THAT TRAVELS — see core/PickRail.tsx. `move` is
+   *  how long it takes to cross one row, not how long a fade lasts. */
+  /**
+   * ⚠ `y` IS THE CHART WINDOW'S OWN TOP — the rail is aligned to the picture,
+   * not centred in the board. `w` is measured off the longest LINE ("Volume
+   * turun" at 30px, about 186px) plus the dot and both insets; a pill narrower
+   * than its label is the one thing that makes a button rail look broken.
+   */
+  rail: {
+    x: 128, y: 226, w: 300, h: 104, gap: 16, radius: 22,
+    size: 30, lead: 40, move: 22, stepIn: 8, pad: 20, dotSize: 16, dotGap: 16,
+  },
+  /**
+   * ⚠ FOUR COLOURS, ALL OF THEM BETWEEN INDIGO AND CYAN. The brand contract
+   * locks decorative hues to the two anchors (247 and 192) — four unrelated
+   * hues would read as a different product. Walking the ramp between them gives
+   * four that are plainly distinguishable without leaving the family.
+   */
+  dots: ["#5F4DEE", "#4F7BF0", "#45A6DC", "#5CC8E3"],
+  win: { x: 460, y: 226, w: 1324, h: 452 },
+  box: { x: 460, y: 716, w: 1324, h: 176 },
+  /** ⚠ THE BOARD IS DERIVED, NOT TYPED — it is the union of the three above,
+   *  grown by `pad`. Nudge any of them and the board follows; a hardcoded rect
+   *  would quietly stop hugging its contents. */
+  pad: 15,
+  /** A stamped shadow, not a floating one. */
+  shadow: { x: 12, y: 12 },
+} as const;
+
+/**
  * BEAT ANCHORS — the frame a phrase is spoken on, GLOBAL, from the sync
  * document. A scene converts with `local()`. These are the only timing a scene
  * may key off; a beat invented to make a picture feel right is a beat that
@@ -139,6 +355,30 @@ export const CUTS = {
    * nothing in the frame actually has.
    */
   intoQuote: { at: 3067, over: 30, distance: 90, blur: 0, axis: "y" as const },
+  /**
+   * The closing card carried out and the two stocks carried in — Simon's frame.
+   *
+   * ⚠ SIDEWAYS, NOT VERTICAL: `axis: "x"`, and with a positive distance the
+   * outgoing half travels LEFT while the incoming one arrives from the right,
+   * which is the move he asked for. Vertical was right for the cards before
+   * this because each replaced the one above it; here the frame moves ALONG a
+   * comparison, and the eye should be carried across rather than down.
+   *
+   * ⚠ blur: 0, like both cuts before it — same reason: white content to its own
+   * edges, and a blur filter softens the moving layer's edge into a shadow.
+   */
+  intoPair: { at: 3411, over: 30, distance: 90, blur: 0, axis: "x" as const },
+  /**
+   * The two stocks carried out and SC06's split reading carried in — Simon's
+   * frames, "4252-4253", so the swap lands on f4253.
+   *
+   * ⚠ IT ALSO CLOSES A TWO-FRAME HOLE. The pair ended at f4253 and SC06 began
+   * at f4255, so f4253-4254 fell through to SC05's own scene and flashed a
+   * frame of "Volume itu relatif" with its labels colliding. The cut and the
+   * scene now start on the same frame, and there is nothing left to fall
+   * through to.
+   */
+  intoSplit: { at: 4253, over: 30, distance: 90, blur: 0, axis: "y" as const },
 };
 
 /** A global beat, in a scene mounted at `from`. */
@@ -429,42 +669,6 @@ export const MASCOT = {
 } as const;
 
 /**
- * ═══ THE DAILY CHART, AGAIN ═══  (Simon's frames)
- *
- * The same BBCA screen SC03 compared against the 5m one, brought back on its
- * own while the voice explains that one volume bar means nothing alone — "10
- * juta lembar bisa sangat besar untuk satu saham, tapi biasa saja untuk saham
- * lain… bandingkan volume hari ini dengan periode sebelumnya".
- *
- * ⚠ THE DAILY ONE, NOT THE 5m. Simon pointed at f2010-2351, where the selection
- * changes hands halfway; the narration here is about comparing today against
- * previous days and against an average, which is a daily chart's argument.
- *
- * ⚠ AT REST: no lift, no halo, no highlight box. It is being referred back to,
- * not pointed at.
- */
-/**
- * ═══ p2, THE VOLUME WINDOW, AND p3 — ONE RAIL ═══  (Simon's frames and columns)
- *
- * Three things stand in a row and the CAMERA moves, rather than each of them
- * being animated to a new place. That is what "p2 dan p3 anchor to window
- * volume" means in practice: the window never moves in rail space, so nothing
- * can drift out of register with it however the pan is retimed.
- *
- * ⚠ TWO COLUMNS ONLY — x640 and x1280, Simon's numbers, and everything is a
- * CENTRE on one of them. Before the move: p2 on 640, the window on 1280. After:
- * the window on 640, p3 on 1280. So the rail spacing IS 640 and the pan is
- * exactly one column wide; there is no third number to get wrong.
- *
- *   rail centres:   p2 = 0        window = 640        p3 = 1280
- *   camera:         640 before  →  0 after
- *
- * ⚠ ONE COLUMN OF TRAVEL LEAVES p2 HALF ON SCREEN. Its centre lands on x0, so
- * 350px of it would still be showing — the two columns and "p2 tidak terlihat"
- * cannot both be true by position alone. It fades across the move instead, so
- * the columns stay exactly as asked and p2 is still gone by the end of it.
- */
-/**
  * ═══ THE HEADLINE ═══  (Simon's frames)
  *
  * One line, top left, that CORRECTS ITSELF: it states the wrong answer, strikes
@@ -500,6 +704,85 @@ export const HEAD = {
   y: 100,
   size: 48,
   lead: 66,
+} as const;
+
+/**
+ * ═══ SC06 — ONE READING, SPLIT IN TWO ═══  (Simon's frames)
+ *
+ * The left window from f1371 rebuilt, then TAKEN APART: the candles in one
+ * window, the volume bars in another under it. Same tape, same domain, same
+ * band — only the panes are separated, which is the point the voice is making
+ * ("harga menunjukkan ke mana pasar bergerak… volume menunjukkan seberapa ramai
+ * transaksi di balik pergerakan itu").
+ *
+ * ⚠ THE PAIR IS CENTRED AND THEN MOVED 150 LEFT, Simon's number, to open the
+ * right-hand side for the two labels. The labels are placed against the windows
+ * they name, not spaced by eye.
+ *
+ *   f4255  everything else is cleared
+ *   f4371  "arah pasar"           beside the candles
+ *   f4511  "keramaian transaksi"  beside the bars
+ *   f4746  "selalu baca volume bersama harga", in the dashed box, under it all
+ */
+export const SPLIT = {
+  at: 4253,
+  gone: 4958,
+  /** ⚠ 200 — 150, then another 50 at Simon's word. */
+  shift: 200,
+  w: 560,
+  price: { y: 196, h: 360 },
+  vol: { y: 576, h: 180 },
+  pad: 30,
+  /**
+   * ⚠ EACH WINDOW ARRIVES WITH ITS OWN LABEL, not before it — Simon's revision.
+   * The window and the words are one statement; showing the box first and
+   * naming it later makes the viewer hold an unnamed thing in mind.
+   */
+  label: { x: 1150, size: 48, at: [4371, 4511], text: ["arah pasar", "keramaian transaksi"] },
+  quote: { at: 4746, y: 796, h: 130, w: 900, text: "selalu baca volume bersama harga" },
+} as const;
+
+/**
+ * ═══ THE SCENE TRANSITION ═══  (Simon's name for it, and his frames)
+ *
+ * The move the episode uses to change chapter, and it always does the same two
+ * things: the scene that was on screen SHRINKS INTO the card that was already
+ * selected, and the card to its RIGHT is then pushed forward as the preview of
+ * what comes next.
+ *
+ * ⚠ IT LANDS IN CARD 1, NOT CARD 0. The board was last seen with "mengenal
+ * volume" lit — that is the chapter just finished, so that is where this scene
+ * belongs. Card 2, "cara baca volume", is the one that lights and grows.
+ *
+ * ⚠ IT OUTLIVES CG-B's OWN BLOCK. The scene being shrunk is SC06's, so the
+ * group that draws SC06 has to still be mounted while it shrinks — see the
+ * note beside CG-B in Composition.tsx for why it is also drawn last.
+ */
+export const TRANS = {
+  at: 4958,
+  over: 100,
+  landing: 1,
+  next: 2,
+  /** The other three cards open one after another, behind the shrink. */
+  cards: [5010, 5032, 5054],
+  cardDur: 22,
+  /** The camera closing on the next chapter's card. */
+  push: { at: 5100, over: 44, amount: 0.55 },
+  /**
+   * ⚠ THE BOARD LEAVES BEFORE THE HAND-OVER, NOT ON IT. CG-C is already drawing
+   * the same card, in the same place, underneath — so fading CG-B out over the
+   * last frames removes only the grid, the other three cards, their labels and
+   * the glow, and leaves the card standing. On f5149 there is then nothing left
+   * to disappear, which is what makes the join invisible.
+   */
+  fade: { at: 5125, over: 24 },
+  /**
+   * ⚠ THE CARD DOES NOT BECOME THE PAGE — Simon's correction. CG-B simply stops
+   * on f5149 and CG-C picks the same card up and grows it into the chart window
+   * it keeps for the whole chapter. One object, handed between two groups,
+   * rather than a shape that expands and is thrown away.
+   */
+  gone: 5149,
 } as const;
 
 export const RAIL = {
@@ -541,7 +824,72 @@ export const RAIL = {
   loop: { at: 2881, gone: 3067, times: 2, src: 233 },
 } as const;
 
-export const RECAP = { at: 3413, gone: 4253, art: "art/bbca-1d.png" } as const;
+/**
+ * ═══ TWO STOCKS, SIDE BY SIDE ═══  (Simon's frame)
+ *
+ * ULTJ on the left, JELI on the right, each as its own header strip over its
+ * own chart. This is the picture the narration is asking for — "10 juta lembar
+ * bisa sangat besar untuk satu saham, tapi biasa saja untuk saham lain" — and
+ * it REPLACES the single BBCA screen that stood here, which could only show
+ * one stock and so could not make that comparison at all.
+ *
+ * ⚠ THE COLUMN WIDTH IS WHAT THE HEIGHT ALLOWS, not a chosen number. Header and
+ * chart carry their files' own ratios (5.76:1 and 0.946:1), and with the 40px
+ * Simon asked for between them a 600px column stands 778 tall — inside the 822
+ * between the logo zone and the caption band, with the pair centred in it.
+ */
+export const PAIR_SHOTS = {
+  at: 3411,
+  gone: 4253,
+  /** ⚠ 480 — 20% off the 600 it was built at, Simon's second number. */
+  w: 480,
+  gap: 40,
+  /** Between the two columns. */
+  between: 80,
+  cols: [
+    { head: "art/a03.png", chart: "art/a04.png" },
+    { head: "art/a05.png", chart: "art/a06.png" },
+  ],
+  /** Each file's own ratio, so the boxes are derived rather than typed. */
+  ratio: { head: 5.76, chart: 0.946 },
+  /**
+   * ═══ THE MARKED CANDLE, AND ITS READOUT ═══
+   *
+   * Each chart carries a dashed vertical marker over one candle; this bands
+   * that candle from just under the SMA20 line down to the VOL tab, which is
+   * the stretch Simon pointed at.
+   *
+   * ⚠ EVERY NUMBER IS A FRACTION MEASURED OFF THE FILES, not placed by eye. The
+   * marker was found by colour-keying its blue-grey and taking the column it
+   * fills; the top and bottom are the text bands either side of the plot, found
+   * by scanning for rows of dark ink. So the band lands on the candle whatever
+   * size the screenshot is drawn at.
+   *
+   * ⚠ HALF-WIDTH IS ONE CANDLE PLUS AIR. The median candle in these charts is
+   * 15-23px of 1200; 26 brackets it without swallowing its neighbours.
+   */
+  hl: {
+    x: [0.5992, 0.5942],
+    half: 0.0217,
+    y1: 0.1499,
+    y2: 0.9685,
+    /** ULTJ first, then JELI — Simon's frames. */
+    at: [3601, 3774],
+  },
+  /**
+   * The readout that comes with each.
+   *
+   * ⚠ IT OVERLAPS ITS CHART BY HALF ITS OWN WIDTH — Simon's number. Sitting
+   * clear in the margin made it a caption standing next to a picture; hanging
+   * half over the chart makes it a label ON it, which is what it is.
+   */
+  callout: [
+    { art: "art/a09.png", ratio: 2.857 },
+    { art: "art/a10.png", ratio: 2.8 },
+  ],
+  calloutW: 340,
+} as const;
+
 /**
  * The stand-in shape, so the pop-in can be judged on something before it goes
  * on the real footage.

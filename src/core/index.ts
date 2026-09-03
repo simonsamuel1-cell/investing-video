@@ -28,6 +28,9 @@ export { Ping } from "./Ping";
 export { HighlightBox, HighlightCircle } from "./HighlightBox";
 export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
 export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
+export { TabRow } from "./TabRow";
+export { RollList, type RollSeg } from "./RollList";
+export { PickRail } from "./PickRail";
 export type { HLRect } from "./HighlightBox";
 export { Captions } from "./Captions";
 export type { Cue } from "./Captions";
@@ -44,7 +47,7 @@ export * from "./chart";
 /* ── Tier 3 — recurring patterns ───────────────────────────────────────── */
 export { Panel, StatCard, KeyPoint } from "./Panel";
 export { StepRail, ChapterCard } from "./StepRail";
-export { RoadmapCards, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip, cardPush } from "./Roadmap";
+export { RoadmapCards, cardPushed, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip, cardPush } from "./Roadmap";
 export type { Step } from "./StepRail";
 export { Countdown } from "./Countdown";
 export { ColorKey } from "./ColorKey";
