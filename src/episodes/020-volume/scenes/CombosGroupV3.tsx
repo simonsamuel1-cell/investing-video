@@ -43,15 +43,25 @@ const BOX = COMBOS_V3.box;
  * means the gap silently becomes something else the next time a row grows.
  */
 const RAIL_BOTTOM = RAIL.y + 4 * RAIL.h + 3 * RAIL.gap;
-/** ⚠ THE SHADOW COUNTS AS CONTENT. It is a stamped offset, not a soft glow, so
- *  it has a hard edge of its own; leaving it out of the bounds spends the 15px
- *  on the shadow and leaves the box itself touching the board. */
+/**
+ * ⚠ THE READING BOX IS NOT IN THESE BOUNDS, ON PURPOSE — Simon's call. It
+ * stands BELOW the board, centred on the canvas rather than on the board, which
+ * is itself off-centre because the rail is only on one side. Put the box back
+ * in and the board grows to swallow it, and the height comes straight out of
+ * the tape.
+ */
 const EDGE = {
   left: RAIL.x,
   top: Math.min(RAIL.y, WIN.y),
-  right: Math.max(WIN.x + WIN.w, BOX.x + BOX.w + COMBOS_V3.shadow.x),
-  bottom: Math.max(RAIL_BOTTOM, BOX.y + BOX.h + COMBOS_V3.shadow.y),
+  right: WIN.x + WIN.w,
+  bottom: Math.max(RAIL_BOTTOM, WIN.y + WIN.h) + COMBOS_V3.tail,
 };
+/** ⚠ THE BOX MUST CLEAR THE SUBTITLE BAND, shadow included. The band is left
+ *  empty in every episode; a reading that dips into it collides with burned-in
+ *  type that is not in this render. */
+if (COMBOS_V3.box.y + COMBOS_V3.box.h + COMBOS_V3.shadow.y > theme.captionBand.top) {
+  throw new Error("CG-C v3: the reading box enters the subtitle band");
+}
 const BOARD = {
   x: EDGE.left - COMBOS_V3.pad,
   y: EDGE.top - COMBOS_V3.pad,

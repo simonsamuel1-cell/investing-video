@@ -180,7 +180,7 @@ export const COMBOS = {
  * Both are wired to the same stage frames (`COMBO_TABS.select`) and the same
  * four series, so switching cannot desynchronise the chapter from the voice.
  */
-export const COMBOS_VERSION: 1 | 2 | 3 = 2;
+export const COMBOS_VERSION: 1 | 2 | 3 = 3;
 
 /**
  * ═══ VERSION 2 ═══ f5149–8214.
@@ -206,10 +206,10 @@ export const COMBOS_V2 = {
    * is the palette's one red for WORDS, which is exactly what this is.
    */
   items: [
-    ["Harga naik ", "Volume naik"],
-    ["Harga naik ", "Volume turun"],
-    ["Harga turun ", "Volume naik"],
-    ["Harga turun ", "Volume turun"],
+    ["Harga naik ↑ ", "Volume naik ↑"],
+    ["Harga naik ↑ ", "Volume turun ↓"],
+    ["Harga turun ↓ ", "Volume naik ↑"],
+    ["Harga turun ↓ ", "Volume turun ↓"],
   ],
   win: { x: 640, y: 190, w: 1184, h: 500 },
   box: { x: 640, y: 726, w: 1184, h: 200 },
@@ -255,14 +255,30 @@ export const COMBOS_V3 = {
    * four that are plainly distinguishable without leaving the family.
    */
   dots: ["#5F4DEE", "#4F7BF0", "#45A6DC", "#5CC8E3"],
+  /**
+   * ⚠ THE CHART'S SIZE IS FIXED. It is the floor under everything else here:
+   * shortening the board by moving this number shrinks the tape, which is the
+   * one thing that must not get smaller.
+   */
   win: { x: 460, y: 226, w: 1324, h: 452 },
-  box: { x: 460, y: 716, w: 1324, h: 176 },
+  /**
+   * ⚠ THE READING SITS BELOW THE BOARD, CENTRED ON THE CANVAS — not on the
+   * board, which is off-centre because the rail is only on one side. `x` is
+   * (1920 - w) / 2 and must stay that way; the stamped shadow is an ornament
+   * hanging off the right and is deliberately NOT counted in the centring.
+   */
+  box: { x: 298, y: 785, w: 1324, h: 150 },
   /** ⚠ THE BOARD IS DERIVED, NOT TYPED — it is the union of the three above,
    *  grown by `pad`. Nudge any of them and the board follows; a hardcoded rect
    *  would quietly stop hugging its contents. */
   pad: 15,
   /** A stamped shadow, not a floating one. */
   shadow: { x: 12, y: 12 },
+  /** ⚠ EXTRA BOARD BELOW ITS CONTENTS, ADDED DOWNWARD ONLY, at Simon's
+   *  measurement. The board is otherwise the exact union of the rail and the
+   *  chart; this is the one place it is allowed to be taller than what stands
+   *  on it. */
+  tail: 50,
 } as const;
 
 /**
