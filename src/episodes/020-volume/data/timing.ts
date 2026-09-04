@@ -222,6 +222,18 @@ export const COMBOS_V2 = {
     ["Harga belum tentu berbalik,", "tapi tekanan jual mulai mereda."],
   ],
   quote: { size: 40, lead: 58, weight: 500 },
+  /**
+   * ⚠ ONE MARKED PHRASE PER READING, IN THE ROW'S OWN WORDS. A mark is matched
+   * by word sequence against the text it sits in, so a phrase retyped from
+   * memory — "hati hati" for "hati-hati.", "Tanda" for "tanda" — matches
+   * nothing and fails silently, with the sentence simply arriving unmarked.
+   */
+  marks: [
+    "Kenaikan lebih meyakinkan",
+    "Harga masih bisa naik, tapi harus hati-hati.",
+    "tanda tekanan jual yang serius.",
+    "tekanan jual mulai mereda.",
+  ],
 } as const;
 
 /**
@@ -245,7 +257,7 @@ export const COMBOS_V3 = {
    * than its label is the one thing that makes a button rail look broken.
    */
   rail: {
-    x: 128, y: 226, w: 300, h: 104, gap: 16, radius: 22,
+    x: 128, y: 136, w: 300, h: 104, gap: 16, radius: 22,
     size: 30, lead: 40, move: 22, stepIn: 8, pad: 20, dotSize: 16, dotGap: 16,
   },
   /**
@@ -260,14 +272,37 @@ export const COMBOS_V3 = {
    * shortening the board by moving this number shrinks the tape, which is the
    * one thing that must not get smaller.
    */
-  win: { x: 460, y: 226, w: 1324, h: 452 },
+  /** ⚠ THE TAPE REACHES THE BOTTOM OF THE BOARD. The board's own `tail` used
+   *  to be empty white below the histogram; the window now runs down into it,
+   *  so the board is unchanged and the chart is 62px taller. */
+  /**
+   * ⚠ IT GREW UPWARD, NOT BOTH WAYS — Simon's call, "anchor down". The bottom
+   * edge is where the reading box hangs off, so raising the top by 90 and
+   * adding the same 90 to the height leaves everything below it untouched.
+   *
+   * ⚠ THE BOARD NOW ENTERS THE LOGO'S 360x150 ZONE by about 30px, and that is
+   * allowed here at Simon's direction. It is the one place in the episode where
+   * that clearance is deliberately given up.
+   */
+  win: { x: 460, y: 136, w: 1324, h: 604 },
   /**
    * ⚠ THE READING SITS BELOW THE BOARD, CENTRED ON THE CANVAS — not on the
    * board, which is off-centre because the rail is only on one side. `x` is
    * (1920 - w) / 2 and must stay that way; the stamped shadow is an ornament
    * hanging off the right and is deliberately NOT counted in the centring.
    */
-  box: { x: 298, y: 785, w: 1324, h: 150 },
+  box: { x: 270, y: 785, w: 1380, h: 110 },
+  /**
+   * ⚠ 38 AT WEIGHT 700, AND THE BOX IS SIZED TO IT — measured off a render,
+   * not chosen. Set on ONE line, the longest of the four ("Harga masih bisa
+   * naik, tapi harus hati-hati. Aktivitas mulai berkurang") runs 1285px bold,
+   * against 1251 at weight 500. The box at 1380 leaves 47px either side.
+   *
+   * ⚠ RE-MEASURE IF THE WORDS OR THE WEIGHT CHANGE. Nothing in the build can
+   * catch this — there is no `maxWidth` to wrap against, so an overlong line
+   * simply runs past its own frame.
+   */
+  quote: { size: 38, weight: 700 },
   /** ⚠ THE BOARD IS DERIVED, NOT TYPED — it is the union of the three above,
    *  grown by `pad`. Nudge any of them and the board follows; a hardcoded rect
    *  would quietly stop hugging its contents. */
@@ -799,6 +834,211 @@ export const TRANS = {
    * rather than a shape that expands and is thrown away.
    */
   gone: 5149,
+} as const;
+
+/**
+ * ═══ THE SECOND SCENE TRANSISI ═══  (Simon's frame, f8178)
+ *
+ * The same gesture as TRANS, one chapter further along, and it REPLACES the
+ * full-screen CHAPTER 03 card that used to land here. That card was a contents
+ * list dropped over a chart that was still being read; this hands the chapter
+ * over instead — the scene shrinks into the card it belongs to, and the next
+ * chapter's card grows out of the board to take the frame.
+ *
+ * ⚠ IT IS DRAWN OVER SC11, which starts at f8214 and has no silence in front of
+ * it. Everything here is therefore on a budget: 124 frames from first move to
+ * clear, against the old card's 96. Lengthen it and you are covering narration.
+ *
+ * ⚠ landing 2 IS THE CHAPTER THAT JUST ENDED ("cara baca volume") and `next` 3
+ * is the one starting ("cara pakai volume") — the rightmost card, which is why
+ * the frame leaves through the right-hand box.
+ */
+export const TRANS2 = {
+  at: 8178,
+  over: 44,
+  landing: 2,
+  next: 3,
+  /** The other three cards open one after another, behind the shrink. */
+  cards: [8186, 8198, 8210],
+  cardDur: 22,
+  glow: { at: 8214, over: 26 },
+  /**
+   * The camera closing on the next chapter's card.
+   *
+   * ⚠ IT WAITS 30 FRAMES AFTER THE BOARD IS COMPLETE — Simon's number, 8226 to
+   * 8256. The board arriving and the camera immediately leaving on it gave the
+   * viewer no frame in which the four cards were simply THERE; the pause is
+   * what lets the roadmap be read before it is used.
+   */
+  push: { at: 8256, over: 60, amount: 0.55 },
+  /**
+   * ⚠ IT LEAVES ON A FADE, NOT ON A SECOND MOVE — Simon's call. The card used
+   * to keep opening until it was the frame; the gesture worked but the chapter
+   * did not need two moves.
+   *
+   * ⚠ AND ANOTHER 24 FRAMES AFTER THE PUSH SETTLES — Simon's frame, 8340. The card
+   * is what the chapter is being handed to; it has to be LOOKED at before it
+   * goes, and a fade that starts on the frame the move ends reads as the card
+   * being taken away rather than shown.
+   *
+   * ⚠ THE WHOLE HAND-OVER NOW COVERS SC11'S FIRST 138 FRAMES, and SC11 has no
+   * silence in front of it. That is Simon's call, made twice; the cost is
+   * written here so it is a decision rather than a surprise.
+   */
+  clear: { at: 8340, over: 12 },
+  gone: 8352,
+} as const;
+
+/**
+ * ═══ SC11 DRAWS THE TAPE AGAIN, FROM NOTHING ═══  (Simon's frames)
+ *
+ * ⚠ THE SAME TAPE AS SC01, REBUILT — not a second chart. CG-A has carried MAIN
+ * since f0 and simply stopped drawing it between f1691 and here; coming back
+ * with it already complete made SC11 open on a picture the viewer had last seen
+ * six thousand frames ago. Building it again, slowly, is the scene saying "kita
+ * kembali ke breakout tadi" with the picture instead of only with the words.
+ *
+ * ⚠ 226 FRAMES, WHICH IS SLOW ON PURPOSE — Simon's "jangan cepet cepet". SC01
+ * built the same tape in 3.4 seconds; this takes 3.8 and has no other event in
+ * it, so the candles arriving IS the scene for that stretch.
+ */
+export const SC11 = {
+  build: { at: 8352, over: 226 },
+  /**
+   * ⚠ THE RESISTANCE ARRIVES AS AN AREA, WIPED LEFT TO RIGHT — Simon's frame
+   * and his gesture. `Zone`'s `border` mode is exactly this: the fill grows by
+   * WIDTH rather than by height, which is what makes it read as a level being
+   * traced across the chart rather than a box fading up out of it.
+   */
+  zone: 8681,
+  /**
+   * ⚠ SC01'S TWO MOVES, RE-APPLIED — Simon's frame. SC01 pushes in at f345 and
+   * its breakout candle creeps up 60 frames later at f405; the gap is carried
+   * across rather than retyped, so the pair keeps the rhythm it was built with
+   * even if SC01's own frames move.
+   */
+  zoom: { at: 8905, over: ZOOM.over },
+  broke: { at: 8905 + (BREAK1.at - ZOOM.at), over: BREAK1.over },
+  /**
+   * ⚠ THE CARD GIVES UP 150px OF ITS OWN HEIGHT — Simon's number and frame.
+   * The chart, its mask and the zoom all shorten with it; the room that opens
+   * underneath is what the histogram then stands in, so the two numbers are the
+   * same number and cannot drift apart.
+   *
+   * ⚠ AND THE VIEW PULLS BACK ON THE SAME CURVE. The push-in stays at 3x
+   * HORIZONTALLY — that is what "sepertiga chart dari kanan" means — but the
+   * price domain is widened by the same 3x, so the tape's whole height lands
+   * back inside the box. Before this, 3x in both directions threw most of the
+   * candles below the card and left a third of a chart with holes in it.
+   *
+   * `drop` is how far the histogram's window then runs PAST the card's original
+   * bottom edge.
+   */
+  shrink: { at: 9240, over: 36, by: 150, gap: 22, drop: 96 },
+  /**
+   * ⚠ THE CARD ALSO NARROWS TO 65%, AND THE TAPE SHIFTS RATHER THAN SHRINKS —
+   * Simon was explicit. Scaling it down would undo the pull-back that just
+   * happened; the drawing keeps its size and slides left so its newest bar
+   * stays inside the narrower frame, and the oldest bars leave off the left.
+   */
+  narrow: 0.65,
+  /**
+   * ═══ THE READING BESIDE THE CHART ═══  (Simon's frames)
+   *
+   * ⚠ EACH GROUP IS LAID OUT WHOLE FROM ITS FIRST FRAME, kicker and body
+   * together, even though the body lands later. Centring only what has arrived
+   * would shove the kicker upward the moment the body appeared, and the two are
+   * one statement.
+   *
+   * ⚠ 50px BETWEEN KICKER AND BODY — Simon's number, and it holds for the
+   * breakdown groups later in the episode too.
+   */
+  note: {
+    gap: 50,
+    /**
+     * ⚠ THE KICKER IS THE SAME SIZE AS THE BODY, AND BLACK — Simon's call. The
+     * two lines are not a label and its heading; they are one statement in two
+     * parts, and shrinking the first made it read as a caption for the second.
+     * The colour is what separates them now: black states the case, indigo says
+     * what to conclude from it.
+     *
+     * ⚠ THAT MAKES THE LONGEST LINE "Breakout dengan volume tinggi" at 52px,
+     * about 730px, against roughly 605px of room beside a 65%-wide card. The
+     * kicker therefore WRAPS where the body does not — see `kickWidth`.
+     */
+    kickSize: 52,
+    /** The column the reading is set in, beside a 65%-wide card. */
+    width: 560,
+    size: 52,
+    lead: 70,
+    out: 12,
+    groups: [
+      {
+        gone: 9604,
+        kick: { at: 9293, text: "Breakout dengan volume tinggi" },
+        body: { at: 9432, lines: ["Konfirmasi breakout", "meyakinkan"] },
+      },
+      {
+        gone: 10183,
+        kick: { at: 9698, text: "Breakout dengan volume rendah" },
+        body: { at: 9908, lines: ["belum tentu gagal"] },
+      },
+      {
+        /* ⚠ IT LEAVES WHEN THE COLUMN SPLITS — the duplicated layout carries
+           no text at all. */
+        gone: 10471,
+        /** ⚠ ONE STRING, NOT HAND-BROKEN LINES. At 52px it does not fit the
+         *  column on one line and wraps by itself; breaking it by hand means
+         *  re-breaking it every time a word changes.
+         *
+         *  ⚠ AND IT STAYS INDIGO. The black is for the two lines that STATE
+         *  what happened; this one is the conclusion drawn from them, which is
+         *  what indigo means everywhere else in the episode. */
+        body: { at: 10257, lines: ["Saran: wait and see, retest, atau sinyal tambahan"] },
+      },
+    ],
+  },
+  /** ⚠ IT WIPES TOP TO BOTTOM, and finishes 20px BELOW the histogram's window
+   *  — Simon's number. Stopping level with the window would make the band read
+   *  as part of it; overshooting says the band is over both panes. */
+  /**
+   * ⚠ IT LEAVES BEFORE THE TAPE TURNS AND COMES BACK AFTER — Simon's frames.
+   * Going out it wipes BOTTOM TO TOP, the reverse of how it arrived; a band
+   * that stayed put while the candles underneath it changed identity would be
+   * pointing at bars that are no longer the ones it was pointing at.
+   */
+  hl: { at: 9390, over: 20, bars: 7, past: 20, rule: 3, back: 10672 },
+  /**
+   * ═══ THE TWO COLUMNS ARE READ ONE AT A TIME ═══  (Simon's frames)
+   *
+   * ⚠ THE BAND IS WHAT SELECTS, AND THE COLUMN SAYS SO. When a column's band
+   * wipes in, that column lifts 10% and takes a glow; the other one stays where
+   * it is. Two lit columns would be two things being pointed at, which is the
+   * one thing a comparison cannot afford.
+   */
+  picks: [
+    { band: 10672, note: { at: 10748, text: "Tekanan jual, serius" } },
+    { band: 10880, note: { at: 11068, text: "Tetap waspada" } },
+  ],
+  pick: { grow: 0.1, noteSize: 44, noteGap: 56 },
+  /** The second reading: no burst, and 15% quieter throughout. */
+  weak: { at: 9603, over: 30 },
+  /**
+   * ⚠ THE COLUMN DUPLICATES — Simon's frame. What was SC14's own scene is now
+   * this one carrying on: the single column narrows from 65% of the card to
+   * half of it, and a second copy arrives in the room it gives up. Both sides
+   * are identical and carry no text; the difference between them comes later.
+   */
+  split: {
+    at: 10471, over: 42, gap: 60, lag: 16,
+    /** ⚠ THE PAIR IS 150 SHORTER, TOP ANCHORED — the same operation as the
+     *  first shrink: the price panel gives up the height and the histogram's
+     *  window comes up with it, so the tops stay put and only the bottom rises. */
+    raise: 150,
+    /** The two readings, one per column. */
+    labels: ["Breakdown, volume besar", "Breakdown, volume rendah"],
+    labelSize: 34,
+  },
 } as const;
 
 export const RAIL = {

@@ -32,6 +32,9 @@ export const Title = ({
   x = theme.stage.title.x,
   y = theme.stage.title.y,
   opacity = 1,
+  size,
+  color,
+  align = "center",
 }: {
   text: string;
   sub?: string;
@@ -41,6 +44,14 @@ export const Title = ({
   x?: number;
   y?: number;
   opacity?: number;
+  size?: number;
+  color?: string;
+  /**
+   * `center` puts the title's MIDDLE at (x, y) — the stage's own heading.
+   * `left` puts its top-left there, which is where a section heading sits when
+   * it belongs to the margin rather than to the frame.
+   */
+  align?: "center" | "left";
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -54,16 +65,16 @@ export const Title = ({
         position: "absolute",
         left: x,
         top: y,
-        transform: "translate(-50%, -50%)",
-        textAlign: "center",
+        transform: align === "left" ? undefined : "translate(-50%, -50%)",
+        textAlign: align,
         opacity,
       }}
     >
       <div
         style={{
-          fontSize: theme.text.title.size,
+          fontSize: size ?? theme.text.title.size,
           fontWeight: theme.text.title.weight,
-          color: c.ink,
+          color: color ?? c.ink,
           opacity: head.opacity,
           transform: `translateY(${head.dy}px)`,
           whiteSpace: "nowrap",

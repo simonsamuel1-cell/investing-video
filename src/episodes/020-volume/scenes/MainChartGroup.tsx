@@ -29,17 +29,19 @@ import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, Candles, VolumeBars, Level, PriceTag, Zone, HighlightCircle,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, Crosshair,
+  Chip, Title, Line, SourceTag, Crosshair,
   SplitDivider, SplitLabels,
-  gridOf, useMotion, progress, progressInOut, price as fmtPrice, theme,
+  gridOf, domainOf, useMotion, progress, progressInOut, textReveal, price as fmtPrice, theme,
   cutInStyle, cutOutStyle, TuntunMark, GridGround, fadeOut,
   RoadmapCards, shrinkClip, cardPush, ROADMAP_SLOTS, ROADMAP_CARD,
 } from "../../../core";
-import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, BULB, LINE1, TIDY, GROUND, WINDOWS, MAP, MAP_HOLD, MAP_LABELS, CARD2, PUSH, FADE, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, OPEN, SHRINK, RES, ZOOM, BREAK1, ASK1, ANS1, BULB, LINE1, TIDY, GROUND, WINDOWS, MAP, MAP_HOLD, MAP_LABELS, CARD2, PUSH, FADE, SC11, HEAD, local } from "../data/timing";
 import { PRICE, VOL, TAG_Y, GAP, halves, panes } from "../data/layout";
 import {
   MAIN, MAIN_DOMAIN, RESISTANCE, TESTS, BREAK_AT, VOL_HIGH, VOL_AVG, mean,
-  CHART1, CHART1_ALL, CHART1_DOMAIN2, CHART1_RES, CHART1_BREAK,
+  CHART1, CHART1_ALL, CHART1_DOMAIN2, CHART1_RES, CHART1_BREAK, CHART1_VOL, CHART1_VOL_WEAK,
+  BREAKDOWN, BREAKDOWN_DOMAIN, BREAKDOWN_SUPPORT, BREAKDOWN_HL,
+  BREAKDOWN_VOL, BREAKDOWN_VOL_WEAK,
   TWO, TWO_DOMAIN, TWO_VOL_STRONG, TWO_VOL_WEAK, TWO_VOL_PEAK, TWO_RES,
 } from "../data/series";
 
@@ -59,6 +61,8 @@ const T = {
   /** ⚠ THE INTRO'S OWN END, not SC03's start — the roadmap holds past it. */
   away: local(MAP_HOLD, FROM),
   back: local(BLOCK.SC11, FROM),
+  build: local(SC11.build.at, FROM),
+  zone2: local(SC11.zone, FROM),
   zone: local(BEAT.heldItDown, FROM),
   absorb: local(BEAT.absorb, FROM),
   higher: local(BEAT.muchHigher, FROM),
@@ -66,6 +70,16 @@ const T = {
   notFailed: local(BEAT.notFailed, FROM),
   weaker: local(BEAT.weaker, FROM),
   retest: local(BEAT.retest, FROM),
+  /** ⚠ THE PICTURE RUNS TO THE END OF CG-A'S SPAN, f11261 — SC14 no longer
+   *  exists as a scene of its own. */
+  sc14: local(BLOCK.SC15A, FROM),
+  shrink: local(SC11.shrink.at, FROM),
+  twin: local(SC11.split.at, FROM),
+  hl: local(SC11.hl.at, FROM),
+  hlBack: local(SC11.hl.back, FROM),
+  weak: local(SC11.weak.at, FROM),
+  zoom: local(SC11.zoom.at, FROM),
+  broke2: local(SC11.broke.at, FROM),
   sc13: local(BLOCK.SC13, FROM),
 };
 /**
@@ -975,25 +989,736 @@ export const MainChartGroup = () => {
   const toVolume = progress(f, T.notYet, m.sec(0.9));
   const toSplit = opening ? progress(f, T.split, m.sec(0.8)) : 0;
   const single = 1 - toSplit;
+  /**
+   * ═══ ⚠ SC11 IS SC01'S PICTURE, NOT THE LONG TAPE ═══  (Simon: "samain persis")
+   *
+   * SC01 does not show the 120-bar tape at all by the time it ends — it is
+   * zoomed 3x onto CHART1, the short breakout, inside the card. "Kita kembali
+   * ke breakout tadi" means coming back to THAT, and returning to the full tape
+   * was coming back to a picture the scene never showed.
+   *
+   * ⚠ IT RUNS TO THE END OF THE STRETCH — f10471, where CG-A hands over to
+   * SC14 — and not to the end of SC11. Simon: "pake chart ini sampe akhir
+   * scene". SC12 and SC13 read the SAME breakout candle twice, so cutting back
+   * to the long tape at f8911 would have swapped the picture underneath an
+   * argument that is still about the picture.
+   */
+  const sc11 = !opening && f >= T.build && f < T.sc14;
+  /** How much of its own height the card has given up, in pixels. */
+  const shrink =
+    (sc11 ? progress(f, T.shrink, SC11.shrink.over) * SC11.shrink.by : 0) +
+    (sc11 ? progressInOut(f, T.twin, SC11.split.over) * SC11.split.raise : 0);
+  /**
+   * ⚠ THE CARD NARROWS ON THE SAME CURVE AS IT SHORTENS. One number drives
+   * both, so the panel, its mask, the histogram's window and the room that
+   * opens on the right cannot disagree about how far along the move is.
+   */
+  const narrowT = sc11 ? progress(f, T.shrink, SC11.shrink.over) : 0;
+  /**
+   * ⚠ AND THEN IT HALVES. The column narrows to 65% at f9240 and to half at
+   * f10471, where the second copy arrives beside it. One width drives the card,
+   * its mask, the histogram's window and the tape's shift, so nothing in the
+   * column can be left behind by either move.
+   */
+  const splitT = sc11 ? progressInOut(f, T.twin, SC11.split.over) : 0;
+  const COL_W = (CARD.w - SC11.split.gap) / 2;
+  const CARD_NOW = {
+    ...CARD,
+    h: CARD.h - shrink,
+    w: interpolate(splitT, [0, 1], [CARD.w * (1 - (1 - SC11.narrow) * narrowT), COL_W]),
+  };
+  /** ⚠ THE SECOND COLUMN WAITS FOR THE ROOM, then slides in from the right. */
+  const twinIn = sc11 ? progress(f, T.twin + SC11.split.lag, SC11.split.over) : 0;
+  /** The width the card reaches at the 65% step, before the split halves it. */
+  const NARROW_W = CARD.w * (1 - (1 - SC11.narrow) * narrowT);
+  /**
+   * ⚠ THE TWO MOVES ARE NOT THE SAME MOVE. The 65% step is a SHIFT — Simon was
+   * explicit: the drawing keeps its size and slides left by what the card gave
+   * up. The split is a SHRINK: the tape re-fits the narrower column, so the
+   * last third lands exactly inside it and the shift goes back to zero.
+   *
+   * ⚠ WITHOUT THAT, the shift kept growing with the width and dragged an eighth
+   * candle in from the left, sliced by the card's edge.
+   */
+  const shiftX = interpolate(splitT, [0, 1], [-(CARD.w - NARROW_W), 0]);
   /* SC13 swaps the histogram for the ordinary reading, on the same candles */
   const vol = f >= T.sc13 ? VOL_AVG : VOL_HIGH;
 
   return (
     <Stage>
-      <Card />
+      {/* ⚠ NOT DRAWN HERE ONCE SC11 OWNS THE FRAME. The white panel belongs to
+          a COLUMN, and from f10471 there are two of them; leaving it at the
+          stage level gave the second column candles standing on the page with
+          no card behind them. */}
+      {!sc11 && <Card rect={CARD_NOW} />}
       <SourceTag kind={MAIN.kind} label={MAIN.label} y={TAG_Y} />
 
-      {/* ── the single chart ─────────────────────────────────────────────── */}
-      {single > 0.001 && (
+      {/* ── SC11: SC01's own picture, drawn again from nothing ──────────── */}
+      {sc11 && (() => {
+        /* ⚠ SC01'S OWN PUSH-IN, RE-APPLIED AT f8905 — the same maths, origin
+           pinned to the last existing candle so the zoom keeps it fixed while
+           it grows. Until that frame z is 0 and this is the identity, which is
+           what leaves the whole tape readable across the card first. */
+        /* ⚠ THE GRID IS REBUILT PER FRAME while the card is shortening, and
+           the zoom's origin with it. Keeping the static G1 would have left the
+           push-in pinned to where the last candle USED to be, and the picture
+           would have crept off its own card as the box came up. */
+        /** ⚠ 20px LOWER ONCE THE LABEL IS THERE. The reading's name sits in the
+         *  window's top-left corner from the split onwards, and the tape was
+         *  running straight into it; the plot gives up the same 20 off its own
+         *  height so its bottom edge does not move. */
+        const drop = 20 * splitT;
+        const box1 = {
+          ...CHART1_BOX,
+          y: CHART1_BOX.y + drop,
+          w: interpolate(splitT, [0, 1], [CHART1_BOX.w, CARD_NOW.w - 80]),
+          h: CHART1_BOX.h - shrink - drop,
+        };
+        /** 0 while the push-in holds, 1 once the view has pulled back. */
+        const out = shrink / Math.max(1, SC11.shrink.by);
+        const z = progressInOut(f, T.zoom, SC11.zoom.over);
+        const N = CHART1_ALL.length;
+        const PADX = 18;
+        const inner0 = box1.w - PADX * 2;
+
+        /**
+         * ═══ ⚠ THE PULL-BACK IS A CHANGE OF GRID, NOT A SMALLER TRANSFORM ═══
+         *
+         * The push-in is a CSS scale, and a CSS scale magnifies the DRAWING:
+         * bodies get fatter, wicks get thicker, and the picture stays "zoomed
+         * in" however much of the tape is on screen. Zooming out means drawing
+         * MORE BARS AT THEIR OWN SIZE, which is a different grid — a wider
+         * index range and the price range that range actually covers.
+         *
+         * ⚠ BOTH STATES ARE EXPRESSED AS (BOX, DOMAIN) AND INTERPOLATED. A
+         * cross-fade between two charts would ghost every candle; a grid whose
+         * box and domain travel is one tape moving continuously, and it ends
+         * with NO transform on it at all.
+         */
+        /* state A — the push-in, rewritten as a grid. */
+        const gA = gridOf(CHART1_ALL.map((b) => b.c), CHART1_DOMAIN2, box1, 0.1, 0);
+        const oA = { x: gA.x(LAST), y: gA.y(CHART1.closes[LAST]) };
+        const txA = CARD.x + CARD.w / 2 + ZOOM.panX - oA.x;
+        const tyA = CARD.y + CARD_NOW.h * 0.58 - oA.y;
+        const XA = (i: number) => (gA.x(i) - oA.x) * ZOOM.scale + oA.x + txA;
+        const YA = (v: number) => (gA.y(v) - oA.y) * ZOOM.scale + oA.y + tyA;
+        /* the domain that reproduces YA inside box1 — solved, not guessed */
+        const yBot = box1.y + box1.h * 0.9;
+        const yTop = yBot - box1.h * 0.8;
+        const invYA = (yy: number) =>
+          (yy - YA(0)) * (100 - 0) / (YA(100) - YA(0));
+        const boxA = { ...box1, x: XA(0) - PADX, w: XA(N - 1) - XA(0) + PADX * 2 };
+        const domA: [number, number] = [invYA(yBot), invYA(yTop)];
+
+        /* state B — the last third, at its own size and its own price range. */
+        const START = Math.floor(N * (2 / 3));
+        const tail = CHART1_ALL.slice(START);
+        const innerB = (inner0 * (N - 1)) / Math.max(1, N - 1 - START);
+        const boxB = {
+          ...box1,
+          x: box1.x - (innerB * START) / (N - 1),
+          w: innerB + PADX * 2,
+        };
+        const domB = domainOf(tail.map((b) => b.c), tail);
+
+        /**
+         * state C — the breakdown tape, whole, on the column's own plot rect.
+         *
+         * ⚠ THE VIEW OPENS BACK OUT AT THE SPLIT. Up to here the column shows
+         * the last THIRD of the breakout; the shape Simon drew is the whole
+         * tape, so the x-range travels back to all of it and the domain to the
+         * breakdown's own high and low. Without that the new bars were drawn
+         * against the old third's scale and came out flat and tiny.
+         */
+        const boxC = { x: CARD.x + 40, y: box1.y, w: CARD_NOW.w - 80, h: box1.h };
+        const domC = domainOf(BREAKDOWN.closes, BREAKDOWN.bars);
+
+        const mix = (a: number, b: number) => a + (b - a) * out;
+        const mix2 = (a: number, b: number) => a + (b - a) * splitT;
+        const g1 =
+          out > 0.001
+            ? gridOf(
+                CHART1_ALL.map((b) => b.c),
+                [
+                  mix2(mix(domA[0], domB[0]), domC[0]),
+                  mix2(mix(domA[1], domB[1]), domC[1]),
+                ],
+                {
+                  x: mix2(mix(boxA.x, boxB.x), boxC.x),
+                  y: box1.y,
+                  w: mix2(mix(boxA.w, boxB.w), boxC.w),
+                  h: box1.h,
+                },
+                0.1,
+                0,
+              )
+            : gA;
+        /**
+         * ⚠ THE TRANSFORM IS DROPPED THE MOMENT THE GRID TAKES OVER, not faded
+         * out alongside it. `boxA`/`domA` ARE the push-in, rewritten; leaving
+         * the CSS scale on for even part of the pull-back applies the zoom
+         * twice — nine times size on the first frame after f9240, which put the
+         * whole tape off the card and left an empty white panel.
+         *
+         * The switch is seamless because the two describe the same picture: at
+         * out = 0 the grid reproduces the transform exactly.
+         */
+        const byGrid = out > 0.001;
+        const origin = oA;
+        const scale = byGrid ? 1 : 1 + (ZOOM.scale - 1) * z;
+        const tx = byGrid ? 0 : txA * z;
+        const ty = byGrid ? 0 : tyA * z;
+        const xz = (i: number) => (g1.x(i) - origin.x) * scale + origin.x + tx;
+        const yz = (v: number) => (g1.y(v) - origin.y) * scale + origin.y + ty;
+        /**
+         * ⚠ A BAR IS ONLY DRAWN IF ITS CANDLE IS ON SCREEN. While the push-in
+         * still holds, the early candles sit far below the card and are clipped
+         * away; leaving their bars standing would put a histogram under nothing,
+         * which is exactly the misreading this episode exists to correct.
+         */
+        const candleSeen = (i: number) =>
+          yz(CHART1_ALL[i].l) > CARD.y && yz(CHART1_ALL[i].h) < CARD.y + CARD_NOW.h;
+        /** The room the shrink opened, and the histogram that stands in it. */
+        const volBox = {
+          x: CARD.x,
+          y: CARD.y + CARD_NOW.h + SC11.shrink.gap,
+          w: CARD_NOW.w,
+          /**
+           * ⚠ IT RUNS PAST THE CARD'S ORIGINAL BOTTOM — Simon's call. The room
+           * the first shrink opens is only 150 tall; `drop` takes the window
+           * down into the paper below it, which is empty anyway.
+           *
+           * ⚠ AND IT IS TIED TO THE FIRST SHRINK ONLY. The split raises the
+           * pair by another 150, and reading `shrink` raw made the histogram's
+           * window GROW by that much instead — the group got taller when it was
+           * supposed to get shorter, and the bottom ran off the frame.
+           */
+          h:
+            (SC11.shrink.by - SC11.shrink.gap + SC11.shrink.drop) *
+            Math.min(1, shrink / Math.max(1, SC11.shrink.by)),
+        };
+        /**
+         * ⚠ THE SECOND READING IS THE SAME BARS WITH THE BURST TAKEN OUT, and
+         * it TWEENS — the point is that only the volume changed, so anything
+         * that jumped would be claiming more than that.
+         *
+         * ⚠ THE PEAK IS THE STRONG READING'S, HELD. Letting the histogram
+         * renormalise would make the quieter tape draw itself just as tall and
+         * say the opposite of what the scene says about it.
+         */
+        const weak = progress(f, T.weak, SC11.weak.over);
+        const volAt = (i: number) => CHART1_VOL[i] + (CHART1_VOL_WEAK[i] - CHART1_VOL[i]) * weak;
+        const volPeak = Math.max(...CHART1_VOL);
+        /** ⚠ THE SAME FRACTION `candleWidth` USES, so a bar is exactly as wide
+         *  as the candle standing over it. */
+        const barW = Math.max(3, Math.abs(xz(1) - xz(0)) * 0.68);
+        return (
         <>
-          <Chart series={MAIN} grid={G} at={T.chart} over={m.sec(3.4)} opacity={single} />
+        {/* ⚠ THE COLUMN IS DRAWN TWICE, THE SECOND ONE TRANSLATED. Everything
+            inside is laid out at the left column's coordinates and its clip
+            travels with it, so the copy cannot drift out of register with the
+            original — which is the whole reason the two are comparable. */}
+        {[0, CARD_NOW.w + SC11.split.gap].map((dx, twin) => {
+          /**
+           * ⚠ THE BREAKDOWN IS A DIFFERENT TAPE, NOT THIS ONE REFLECTED. Simon
+           * supplied the picture and it was traced candle for candle — 70 bars
+           * against the breakout's 126 — so the two cannot morph bar by bar.
+           * They cross over inside the split's own move instead: the columns
+           * are travelling anyway, and that motion is what carries the change.
+           */
+          const lerpS = (a: number, b: number) => a + (b - a) * splitT;
+          const grid2 = gridOf(
+            BREAKDOWN.closes,
+            BREAKDOWN_DOMAIN,
+            { x: CARD.x + 40, y: box1.y, w: CARD_NOW.w - 80, h: box1.h },
+            0.1,
+            0,
+          );
+          /** ⚠ LEFT LOUD, RIGHT QUIET — the whole reason there are two columns.
+           *  Both start from whatever the single column was showing, so the
+           *  difference opens up with the split rather than arriving with it. */
+          const target = twin === 0 ? CHART1_VOL : CHART1_VOL_WEAK;
+          /**
+           * ⚠ ONLY ONE COLUMN IS LIT AT A TIME. The left is selected when its
+           * band arrives and gives the selection up when the right takes it,
+           * so the pair is never both pointed at.
+           */
+          /** 1 once either column has been chosen — see the filter below. */
+          const anyPick = progress(f, local(SC11.picks[0].band, FROM), m.fade);
+          const picked =
+            twin === 0
+              ? progress(f, local(SC11.picks[0].band, FROM), m.fade) *
+                (1 - progress(f, local(SC11.picks[1].band, FROM), m.fade))
+              : progress(f, local(SC11.picks[1].band, FROM), m.fade);
+          const grey = anyPick * (1 - picked);
+          /** What the drawing fades TO once its column is not the one being
+           *  read — light grey, the weight this episode gives "not this one". */
+          const dim = 1 - 0.58 * grey;
+          /** The 70 bars that travel, and the grid they travel on. */
+          const SRC = CHART1.bars.length - BREAKDOWN.bars.length;
+          const morphBars = BREAKDOWN.bars.map((d, i) => {
+            const a = CHART1.bars[SRC + i] ?? d;
+            const P = (sv: number, dv: number) => -lerpS(g1.y(sv), grid2.y(dv));
+            return { o: P(a.o, d.o), c: P(a.c, d.c), h: P(a.h, d.h), l: P(a.l, d.l) };
+          });
+          const morphGrid = {
+            lo: 0,
+            hi: 1,
+            slot: lerpS(Math.abs(g1.x(1) - g1.x(0)), Math.abs(grid2.x(1) - grid2.x(0))),
+            box: grid2.box,
+            /**
+             * ⚠ NO `shiftX` HERE. These candles are drawn INSIDE the wrapper
+             * that already carries it, so adding it again moved the whole tape
+             * a second time — 605px on the frame the morph began, which is the
+             * break at f10472. The far end has to be un-shifted for the same
+             * reason: `grid2` is in canvas coordinates and the wrapper will
+             * shift it too.
+             */
+            x: (i: number) => lerpS(g1.x(SRC + i), grid2.x(i) - shiftX),
+            y: (v: number) => -v,
+          };
+          /** After the split the histogram belongs to the breakdown tape, and
+           *  stands under ITS bars — 70 of them, on `grid2`. */
+          const downVol = twin === 0 ? BREAKDOWN_VOL : BREAKDOWN_VOL_WEAK;
+          const downPeak = Math.max(...BREAKDOWN_VOL);
+          return (
+          <div
+            key={twin}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: twin === 0 ? 1 : twinIn,
+              transform: `translateX(${(dx + (twin === 0 ? 0 : (1 - twinIn) * 90)).toFixed(1)}px)`,
+            }}
+          >
+        {/* ⚠ THE LIFT IS ON AN INNER WRAPPER, about the LEFT column's centre.
+            Everything in a copy is laid out at the left column's coordinates
+            and the outer wrapper translates it; scaling out there would grow
+            the right copy about the wrong point. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: `scale(${(1 + SC11.pick.grow * picked).toFixed(4)})`,
+            transformOrigin: `${(CARD.x + CARD_NOW.w / 2).toFixed(1)}px ${(
+              CARD.y +
+              (volBox.y + volBox.h - CARD.y) / 2
+            ).toFixed(1)}px`,
+            /**
+             * ⚠ THE UNSELECTED COLUMN GOES GREY, and only once a selection
+             * EXISTS. Before the first pick neither is chosen, and draining the
+             * colour out of both would say the pair is finished with rather
+             * than that one of them is being read.
+             *
+             * ⚠ AND IT IS FADED, NOT JUST DESATURATED — Simon's call. Pure
+             * grayscale keeps every candle at full contrast, so the column is
+             * still as loud as the one being read and only differs in hue.
+             *
+             * ⚠ BUT THE FADE IS ON THE INK, NOT ON THIS WRAPPER. A `contrast()`
+             * or `opacity()` here takes the white PANEL with it and turns the
+             * whole card grey; only the drawing is supposed to recede, and the
+             * panel it stands on has to stay white.
+             */
+            filter: [
+              grey > 0.01 ? `grayscale(${grey.toFixed(2)})` : "",
+              picked > 0.01
+                ? `drop-shadow(0 0 ${(26 * picked).toFixed(1)}px rgba(95, 77, 238, ${(
+                    0.34 * picked
+                  ).toFixed(2)}))`
+                : "",
+            ]
+              .filter(Boolean)
+              .join(" ") || undefined,
+          }}
+        >
+        {/* the column's own white panel — one per copy */}
+        <Card rect={{ x: CARD.x, y: CARD.y, w: CARD_NOW.w, h: CARD_NOW.h }} />
+        {/* ⚠ THE READING'S NAME, INSIDE ITS OWN WINDOW. It belongs to the
+            column, so it is drawn in the copy rather than beside it. */}
+        {splitT > 0.01 && (
+          <div
+            style={{
+              position: "absolute",
+              left: CARD.x + 32,
+              top: CARD.y + 26,
+              fontFamily: theme.text.family,
+              fontSize: SC11.split.labelSize,
+              fontWeight: 700,
+              color: theme.color.ink,
+              opacity: splitT * dim,
+            }}
+          >
+            {SC11.split.labels[twin]}
+          </div>
+        )}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath:
+              `inset(${CARD.y}px ${(theme.canvas.width - (CARD.x + CARD_NOW.w)).toFixed(1)}px ` +
+              `${(theme.canvas.height - (CARD.y + CARD_NOW.h)).toFixed(1)}px ${CARD.x}px ` +
+              `round ${theme.shape.cardRadius}px)`,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translate(${(tx + shiftX).toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`,
+              transformOrigin: `${origin.x.toFixed(1)}px ${origin.y.toFixed(1)}px`,
+            }}
+          >
+            {/* ⚠ `CHART1.bars`, NOT `CHART1_ALL` — the breakout candle is
+                held back. `CHART1_ALL` is that tape PLUS the breakout, and the
+                grid is still built from the full set, so the missing bar keeps
+                its slot: nothing shifts when it is put back.
+
+                ⚠ AND `Candles` RATHER THAN `Chart`, so the bar can be dropped
+                at all — `Chart` draws a series whole. */}
+            {/**
+              * ═══ ⚠ THE FLIP IS IN THE DATA, NOT IN A TRANSFORM ═══
+              *
+              * A breakdown is this breakout upside down, so every value is
+              * reflected about the domain's own midline. Doing it with
+              * `scaleY(-1)` would turn the picture over but leave a rising
+              * green candle pointing down and still green; reflecting o and c
+              * swaps the colours BY ITSELF, because a bar that closed above its
+              * open now closes below it.
+              *
+              * ⚠ AND IT IS INTERPOLATED, so the flip is a move rather than a
+              * cut: at the halfway point every bar has collapsed onto the
+              * midline, which is exactly what a chart edge-on looks like — and
+              * it is also where the colours change, so nothing is seen to swap.
+              */}
+            {/**
+              * ═══ ⚠ THE TAPE TURNS AROUND, IT DOES NOT CROSS-FADE ═══
+              *
+              * The breakout has 126 bars and the traced breakdown 70, so they
+              * cannot be paired one-to-one — but they do not need to be. The
+              * LAST 70 of the breakout are paired with the 70 of the breakdown,
+              * and each one travels: its x from where it stands now to where it
+              * belongs on the new tape, its o/c/h/l from one shape to the other.
+              * The 28 that start off the left edge simply walk in.
+              *
+              * ⚠ THE TRAVEL IS IN PIXELS, NOT IN PRICE. The two tapes have
+              * different domains; interpolating their VALUES would mean mixing
+              * two scales, so each end is converted through its own grid first
+              * and the y positions are what move.
+              *
+              * ⚠ AND THE PIXELS ARE NEGATED. A candle is drawn red when its
+              * close is below its open, and screen y runs the other way — left
+              * as raw pixels every colour in the tape would invert.
+              */}
+            {splitT < 0.001 ? (
+              <Candles
+                bars={CHART1.bars}
+                grid={g1}
+                shown={progress(f, T.build, SC11.build.over)}
+                opacity={dim}
+              />
+            ) : (
+              <Candles bars={morphBars} grid={morphGrid} opacity={dim} />
+            )}
+            {/* the level the tape is now breaking DOWN through */}
+            {splitT > 0.01 && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: grid2.box.x,
+                  top: grid2.y(BREAKDOWN_SUPPORT),
+                  width: grid2.box.w,
+                  height: theme.shape.rule,
+                  background: theme.color.indigo,
+                  opacity: splitT * dim,
+                }}
+              />
+            )}
+            {/* ⚠ `border` IS WHAT WIPES IT LEFT TO RIGHT — in that mode the
+                fill grows by WIDTH instead of by height. The same call SC01
+                makes, on Simon's frame. */}
+            {/* ⚠ IT LEAVES WHEN THE READING BAND ARRIVES. The area says where
+                the level was; the band says which bars are being read, and two
+                areas on screen together say neither. */}
+            <div style={{ position: "absolute", inset: 0, opacity: 1 - progress(f, T.hl, SC11.hl.over) }}>
+              <Zone
+                hi={RES_HI}
+                lo={RES_LO}
+                grid={g1}
+                at={T.zone2}
+                over={m.sec(0.8)}
+                border
+                borderWidth={theme.shape.rule}
+                label="Resistance"
+              />
+            </div>
+            {/* ⚠ THE BREAKOUT CANDLE CREEPS UP — "menjalar", not a fade. A clip
+                reveals it from its own foot upward, so the green body grows
+                through the resistance to its high rather than appearing whole.
+                The same reveal SC01 uses, on Simon's re-applied frame. */}
+            {f >= T.broke2 &&
+              (() => {
+                const foot = g1.y(CHART1_BREAK.l);
+                const head = g1.y(CHART1_BREAK.h);
+                const line = foot - progress(f, T.broke2, SC11.broke.over) * (foot - head);
+                return (
+                  <div style={{ position: "absolute", inset: 0, clipPath: `inset(${line.toFixed(1)}px 0 0 0)` }}>
+                    {/* ⚠ IT LEAVES WITH ITS OWN TAPE. This is the BREAKOUT
+                        candle, drawn separately so it can creep up on its own
+                        beat; it was the one thing still keyed to the old chart
+                        after the split, and it stood alone above the breakdown
+                        with nothing under it. */}
+                    <Candles bars={CHART1_ALL} grid={g1} from={LAST + 1} opacity={1 - splitT} />
+                  </div>
+                );
+              })()}
+          </div>
+        </div>
+
+        {/* ── the histogram, in the room the shrink opened ───────────────── */}
+        {/* ⚠ NOT DRAWN AS A SLIVER. The window's height is the room the shrink
+            has opened so far, which starts at nothing; a 3px white strip under
+            the card reads as a rendering fault rather than as a pane arriving. */}
+        {volBox.h > 24 && (
+          <>
+            <Card rect={volBox} />
+            {/* ⚠ DRAWN IN SCREEN COORDS, POSITIONED THROUGH THE ZOOM. The bars
+                have to stand under the candles the viewer can actually see, and
+                those are 3x magnified; putting the histogram inside the zoomed
+                wrapper instead would magnify the pane itself by three. */}
+            <div style={{ position: "absolute", inset: 0, clipPath: `inset(${volBox.y.toFixed(1)}px ${theme.canvas.width - (volBox.x + volBox.w)}px ${(theme.canvas.height - (volBox.y + volBox.h)).toFixed(1)}px ${volBox.x}px round ${theme.shape.cardRadius}px)` }}>
+              {CHART1_VOL.map((_v, i) => {
+                if (i > LAST && f < T.broke2) return null;
+                if (!candleSeen(i)) return null;
+                const x = xz(i) + shiftX;
+                if (x < volBox.x - barW || x > volBox.x + volBox.w + barW) return null;
+                const v = volAt(i) + (target[i] - volAt(i)) * splitT;
+                const h = (v / volPeak) * (volBox.h - 24) * narrowT;
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      position: "absolute",
+                      left: x - barW / 2,
+                      top: volBox.y + volBox.h - 12 - h,
+                      width: barW,
+                      height: Math.max(1, h),
+                      borderRadius: Math.min(barW * 0.28, 8),
+                      background:
+                        CHART1_ALL[i].c >= CHART1_ALL[i].o
+                          ? theme.color.candleGreen
+                          : theme.color.candleRed,
+                      opacity: 0.72 * (1 - splitT) * dim,
+                    }}
+                  />
+                );
+              })}
+              {/* and the breakdown's histogram, arriving under its own bars */}
+              {splitT > 0.001 &&
+                downVol.map((v, i) => {
+                  const bw = Math.max(3, (grid2.x(1) - grid2.x(0)) * 0.68);
+                  const h = (v / downPeak) * (volBox.h - 24);
+                  return (
+                    <div
+                      key={`d${i}`}
+                      style={{
+                        position: "absolute",
+                        left: grid2.x(i) - bw / 2,
+                        top: volBox.y + volBox.h - 12 - h,
+                        width: bw,
+                        height: Math.max(1, h),
+                        borderRadius: Math.min(bw * 0.28, 8),
+                        opacity: 0.72 * splitT * dim,
+                        background:
+                          BREAKDOWN.bars[i].c >= BREAKDOWN.bars[i].o
+                            ? theme.color.candleGreen
+                            : theme.color.candleRed,
+                      }}
+                    />
+                  );
+                })}
+            </div>
+          </>
+        )}
+        {/* ── the band over the last seven, and the reading beside it ───── */}
+        {(() => {
+          /**
+           * ⚠ THREE WIPES, ONE BAND. It arrives top-to-bottom at f9390, leaves
+           * BOTTOM-TO-TOP as the tape turns at f10471, and returns top-to-bottom
+           * at f10672 on the bars it is now about.
+           */
+          const on1 = progress(f, T.hl, SC11.hl.over);
+          const off = progress(f, T.twin, SC11.hl.over);
+          /* ⚠ EACH COLUMN HAS ITS OWN RETURN FRAME — the left is read first. */
+          const on2 = progress(f, local(SC11.picks[twin].band, FROM), SC11.hl.over);
+          const on = Math.max(on1 * (1 - off), on2);
+          if (on <= 0.001 || volBox.h <= 24) return null;
+          /** ⚠ THE BAND FOLLOWS WHICHEVER TAPE IS ON SCREEN. After the split
+           *  the seven columns are the breakdown's, on its own grid. */
+          const first = CHART1_ALL.length - SC11.hl.bars;
+          const half = Math.abs(xz(1) - xz(0)) * 0.62;
+          const half2 = Math.abs(grid2.x(1) - grid2.x(0)) * 0.62;
+          const dFirst = BREAKDOWN_HL.from;
+          const dLast = BREAKDOWN_HL.from + BREAKDOWN_HL.count - 1;
+          const lerp = (a: number, b: number) => a + (b - a) * splitT;
+          const bandL = lerp(xz(first) + shiftX - half, grid2.x(dFirst) - half2);
+          const bandR = lerp(
+            xz(CHART1_ALL.length - 1) + shiftX + half,
+            grid2.x(dLast) + half2,
+          );
+          return (
+            /* ⚠ ONE BAND ACROSS BOTH PANES, drawn OVER them. It is making a
+               claim about seven COLUMNS — candle and bar together — and two
+               separate rectangles would be two claims. */
+            <div
+              style={{
+                position: "absolute",
+                left: Math.max(CARD.x, bandL),
+                /* ⚠ GOING OUT, THE BOTTOM RISES AND THE TOP STAYS; coming back,
+                   the top stays and the bottom falls. Both are the same
+                   `height`, which is why only one number is animated. */
+                top: CARD.y + 16,
+                width: Math.min(CARD.x + CARD_NOW.w, bandR) - Math.max(CARD.x, bandL),
+                /* ⚠ THE WIPE IS THE HEIGHT, top to bottom. */
+                height: (volBox.y + volBox.h + SC11.hl.past - (CARD.y + 16)) * on,
+                borderRadius: theme.shape.chipRadius,
+                /* ⚠ CYAN, NOT INDIGO — Simon's call. Indigo is the level and the
+                   words; this band is the READING, and giving it the same
+                   colour made the two say the same thing. */
+                background: theme.color.bandCyan,
+                border: `${SC11.hl.rule}px solid ${theme.color.cyan}`,
+              }}
+            />
+          );
+        })()}
+
+        </div>
+        {/* ⚠ THE COLUMN'S OWN READING, UNDER IT — indigo, because it is the
+            conclusion drawn from the picture rather than a name for it. It is
+            OUTSIDE the lift, so the words do not grow with the panel. */}
+        {(() => {
+          const n = SC11.picks[twin].note;
+          const inn = textReveal(f, local(n.at, FROM), m.reveal);
+          if (inn.opacity <= 0.001) return null;
+          return (
+            <div
+              style={{
+                position: "absolute",
+                left: CARD.x,
+                top: volBox.y + volBox.h + SC11.pick.noteGap,
+                width: CARD_NOW.w,
+                textAlign: "center",
+                fontFamily: theme.text.family,
+                fontSize: SC11.pick.noteSize,
+                fontWeight: 700,
+                color: theme.color.indigo,
+                opacity: inn.opacity,
+                transform: `translateY(${inn.dy}px)`,
+              }}
+            >
+              {n.text}
+            </div>
+          );
+        })()}
+          </div>
+          );
+        })}
+
+        {/* ── the reading beside the chart ──────────────────────────────── */}
+        {SC11.note.groups.map((grp, q) => {
+          const kick = "kick" in grp ? grp.kick : undefined;
+          const first = local(kick ? kick.at : grp.body.at, FROM);
+          const away = 1 - progress(f, local(grp.gone, FROM), SC11.note.out);
+          if (f < first || away <= 0.001) return null;
+          const bodyIn = textReveal(f, local(grp.body.at, FROM), m.reveal);
+          const kickIn = kick ? textReveal(f, local(kick.at, FROM), m.reveal) : null;
+          /**
+           * ⚠ LAID OUT BY FLOW, NOT BY ARITHMETIC. Both texts wrap at the
+           * column's width, so how tall the group is depends on where the words
+           * break; a stack centred with `justifyContent` stays centred whatever
+           * they do, and there is no height to keep in step by hand.
+           *
+           * ⚠ THE WHOLE GROUP IS RESERVED FROM ITS FIRST FRAME — the body is
+           * rendered from the start and only its OPACITY waits, so the kicker
+           * does not jump upward when the body lands. They are one statement.
+           */
+          return (
+            <div
+              key={q}
+              style={{
+                position: "absolute",
+                left: CARD.x + CARD_NOW.w,
+                top: 0,
+                width: theme.canvas.width - theme.margin.right - (CARD.x + CARD_NOW.w),
+                height: theme.canvas.height,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: SC11.note.gap,
+                fontFamily: theme.text.family,
+                textAlign: "center",
+                opacity: away * narrowT,
+              }}
+            >
+              {kick && kickIn && (
+                <div
+                  style={{
+                    maxWidth: SC11.note.width,
+                    fontSize: SC11.note.kickSize,
+                    /* ⚠ THE SAME WEIGHT AS THE BODY — "samain stylenya" meant
+                       the whole style, not only the size. At 500 against 700 it
+                       read as a caption for the line under it; the two are one
+                       statement, and only the COLOUR separates them. */
+                    fontWeight: 700,
+                    lineHeight: 1.25,
+                    color: theme.color.ink,
+                    opacity: kickIn.opacity,
+                    transform: `translateY(${kickIn.dy}px)`,
+                  }}
+                >
+                  {kick.text}
+                </div>
+              )}
+              <div
+                style={{
+                  maxWidth: SC11.note.width,
+                  fontSize: SC11.note.size,
+                  fontWeight: 700,
+                  lineHeight: SC11.note.lead / SC11.note.size,
+                  color: theme.color.indigo,
+                  opacity: bodyIn.opacity,
+                  transform: `translateY(${bodyIn.dy}px)`,
+                }}
+              >
+                {grp.body.lines.join(" ")}
+              </div>
+            </div>
+          );
+        })}
+        </>
+        );
+      })()}
+
+      {/* ── the single chart ─────────────────────────────────────────────── */}
+      {single > 0.001 && !sc11 && (
+        <>
+          {/* ⚠ SC11 REBUILDS IT FROM NOTHING — see SC11 in data/timing. The
+              same tape, drawn again slowly, rather than reappearing complete. */}
+          <Chart
+            series={MAIN}
+            grid={G}
+            at={opening ? T.chart : T.build}
+            over={opening ? m.sec(3.4) : SC11.build.over}
+            opacity={single}
+          />
           <VolumeBars
             bars={MAIN.bars}
             volume={vol}
             grid={G}
             box={VOL}
             peak={VOL_TOP}
-            shown={progress(f, T.chart, m.sec(3.4))}
+            shown={progress(f, opening ? T.chart : T.build, opening ? m.sec(3.4) : SC11.build.over)}
             /* ⚠ DIM UNTIL SC02 ASKS FOR IT — the script's "volume masih redup"
                is the hook: it has been on screen the whole time and the viewer
                has not been looking at it. It comes back up for good at SC11. */
@@ -1004,22 +1729,33 @@ export const MainChartGroup = () => {
           <Level
             value={RESISTANCE}
             grid={G}
-            at={opening ? T.resistance : T.back}
+            /* ⚠ IT WAITS FOR THE AREA. The line used to land on f8214, which
+               is now an empty chart being drawn; it arrives with the zone. */
+            at={opening ? T.resistance : T.zone2}
             over={m.sec(0.9)}
             label="Resistance"
             broken={f >= (opening ? T.broke : T.absorb)}
             opacity={single}
           />
-          <PriceTag value={MAIN.closes[MAIN.closes.length - 1]} grid={G} at={T.chart + m.sec(3.4)} tone="solid" />
+          <PriceTag
+            value={MAIN.closes[MAIN.closes.length - 1]}
+            grid={G}
+            at={opening ? T.chart + m.sec(3.4) : T.build + SC11.build.over}
+            tone="solid"
+          />
 
           {/* SC11 — what the level actually is: an area that kept selling */}
-          {!opening && f >= T.zone && (
+          {/* ⚠ `border` IS WHAT WIPES IT. In that mode the fill grows by WIDTH
+              instead of by height, so the area is traced left to right across
+              the chart rather than fading up out of it — Simon's gesture. */}
+          {!opening && f >= T.zone2 && (
             <Zone
               hi={RESISTANCE * 1.012}
               lo={RESISTANCE * 0.988}
               grid={G}
-              at={T.zone}
+              at={T.zone2}
               over={m.sec(0.8)}
+              border
               label="Berkali-kali menahan kenaikan"
             />
           )}
@@ -1030,7 +1766,9 @@ export const MainChartGroup = () => {
                 label={`Test ${k + 1}`}
                 x={G.x(i)}
                 y={G.y(MAIN.closes[i]) - theme.text.chip.size}
-                at={T.back + m.sec(1.2 + 0.5 * k)}
+                /* ⚠ AFTER THE AREA, not after the scene starts — at T.back these
+                   landed on a chart that had not been drawn yet. */
+                at={T.zone2 + m.sec(0.6 + 0.5 * k)}
                 tone="slate"
               />
             ))}
@@ -1112,7 +1850,17 @@ export const MainChartGroup = () => {
       )}
 
       {/* ── the words ───────────────────────────────────────────────────── */}
-      <Title text={opening ? "Breakout" : "Konfirmasi breakout"} at={opening ? T.chart : T.back} />
+      {/* ⚠ SC11'S HEADING IS THE ONE FROM f3013 — Simon's reference: indigo, at
+          the left margin, at HEAD's own size and position, not the stage's
+          centred black title. It is a section heading here, so it belongs to
+          the margin rather than to the frame. */}
+      <Title
+        text={opening ? "Breakout" : "Konfirmasi breakout"}
+        at={opening ? T.chart : T.back}
+        {...(sc11
+          ? { x: HEAD.x, y: HEAD.y, align: "left" as const, size: HEAD.size, color: theme.color.indigo }
+          : null)}
+      />
 
       {opening && f < T.split && (
         <>
@@ -1153,37 +1901,17 @@ export const MainChartGroup = () => {
         />
       )}
 
-      {/* SC12 / SC13 — the same candle, read twice */}
-      {!opening && f >= T.higher && f < T.sc13 && (
-        <StatStrip
-          stats={[
-            { label: "Close", value: "Di atas resistance", tone: "indigo" },
-            { label: "Volume", value: `${(VOL_HIGH[BREAK_AT] / AVG_VOL).toFixed(1)}× rata-rata`, tone: "indigo" },
-            { label: "Konfirmasi", value: "Lebih meyakinkan", tone: "indigo" },
-          ]}
-          rect={{ x: theme.stage.card.x, y: theme.stage.caption.y - theme.text.title.size, w: theme.stage.card.w, h: theme.text.title.size * 2 }}
-          at={T.higher}
-        />
-      )}
-      {!opening && f >= T.sc13 && (
-        <StatStrip
-          stats={[
-            { label: "Close", value: "Di atas resistance", tone: "indigo" },
-            { label: "Volume", value: `${(VOL_AVG[BREAK_AT] / AVG_VOL).toFixed(1)}× rata-rata`, tone: "slate" },
-            { label: "Konfirmasi", value: "Lebih lemah", tone: "slate" },
-          ]}
-          rect={{ x: theme.stage.card.x, y: theme.stage.caption.y - theme.text.title.size, w: theme.stage.card.w, h: theme.text.title.size * 2 }}
-          at={T.ordinary}
-        />
-      )}
-      {!opening && f >= T.retest && (
-        <KeyPoint
-          text="Volume rendah bukan berarti breakout gagal"
-          sub="Tunggu candle berikutnya, retest, atau konfirmasi lain"
-          at={T.retest}
-          rect={{ x: theme.stage.card.x, y: theme.stage.card.y, w: theme.stage.card.w, h: theme.stage.card.h }}
-        />
-      )}
+      {/* ⚠ SC12 AND SC13'S STAT STRIPS ARE GONE, AND SO IS SC13'S KEY POINT —
+          Simon's call. The two strips read the same breakout candle twice, but
+          the picture underneath them is now SC01's chart, which carries no
+          histogram: the "2.3x rata-rata" and "0.8x rata-rata" they printed had
+          nothing on screen to be read off, so they were assertions rather than
+          readings. The KeyPoint went with them because it sat over the chart
+          and covered the very candles it was talking about.
+
+          ⚠ THE NUMBERS THEY USED — VOL_HIGH and VOL_AVG at BREAK_AT — are still
+          asserted in data/series.ts, so bringing the strips back needs no data
+          work; only a place to put them where the histogram is visible. */}
     </Stage>
   );
 };

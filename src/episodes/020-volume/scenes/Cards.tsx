@@ -38,9 +38,11 @@ export const Cards = () => (
         f4958 already hands the chapter over: the scene shrinks into "mengenal
         volume" and "cara baca volume" lights up beside it. A full-screen card
         saying the same thing 50 frames earlier said it twice. */}
-    <ChapterCard n="03" title="Confirm the Move" sub="Breakout · Breakdown · Studi kasus" at={CARDS.ch03.at} over={CARDS.ch03.over}>
-      <StepRail steps={STEPS} at={CARDS.ch03.at} active={2} done={[0, 1]} />
-    </ChapterCard>
+    {/* ⚠ CHAPTER 03'S CARD IS GONE TOO — Simon's call, for the same reason as
+        02's. The Scene Transisi at f8178 hands the chapter over: the combos
+        board shrinks into "cara baca volume" and "cara pakai volume" lights up
+        beside it and opens out into SC11. A full-screen contents list dropped
+        over a chart that was still being read said the same thing worse. */}
 
     {/* ⚠ INTERROGATIVE. Nothing directional, priced or coloured renders on a
         question card — the answer is still two scenes away. */}

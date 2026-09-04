@@ -15,7 +15,25 @@ import { interpolate } from "remotion";
 import { theme } from "./theme";
 
 const HOLD = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
-const settle = theme.motion.settle;
+/**
+ * ═══ ⚠ EASE IN AND OUT, EVERYWHERE ═══  (Simon's call)
+ *
+ * `progress` used `settle` — an ease-OUT: it left at full speed and slowed into
+ * place. Everything in this episode now eases at BOTH ends, so nothing starts
+ * abruptly either.
+ *
+ * ⚠ EASING BELONGS TO THE CURVE, NOT TO A FRAME RANGE. Simon asked for f0-11260
+ * and this is the whole episode, because a helper cannot know which frame it is
+ * serving — and two motion languages in one video would be worse than either.
+ *
+ * ⚠ `popIn` KEEPS ITS OWN CURVE. Its overshoot is a different gesture, settled
+ * separately, and flattening it into this one would remove the landing.
+ *
+ * ⚠ 019 IS UNAFFECTED. That episode has its own `helpers.ts` with its own
+ * curves; its renders stay byte-identical, which is the condition it was
+ * migrated under.
+ */
+const settle = theme.motion.inOut;
 
 export const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
 

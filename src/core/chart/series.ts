@@ -188,9 +188,22 @@ export const fromOHLC = (
 /** 2. Traced off a screenshot. Illustrative — carries the tag. */
 export const fromScreenshot = (
   anchors: Anchor[],
-  { n, seed, label, wickScale }: { n: number; seed: number; label?: string; wickScale?: number },
+  {
+    n,
+    seed,
+    label,
+    wickScale,
+    /**
+     * How far each close may stray from the traced line, as a fraction of the
+     * anchors' own range. The default keeps the turns exactly where the
+     * screenshot's turns are; raise it when the reference reads CHUNKY — a
+     * tape whose closes barely move draws bodies that are hairlines, however
+     * right the overall shape is.
+     */
+    tremor,
+  }: { n: number; seed: number; label?: string; wickScale?: number; tremor?: number },
 ): Series => {
-  const closes = fromAnchors(anchors, n, seed);
+  const closes = fromAnchors(anchors, n, seed, tremor);
   return { closes, bars: toBars(closes, seed ^ 0x5bf0, wickScale), kind: "traced", label };
 };
 

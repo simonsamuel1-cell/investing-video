@@ -296,6 +296,11 @@ export const theme = {
      *  white board, where a tint would claim a meaning the row does not have. */
     greyWash: "#ECECEE",
     hlCyan: "rgba(92, 200, 227, 0.34)",
+    /** ⚠ A READING BAND'S FILL — 20%, and deliberately lighter than `hlCyan`.
+     *  A band stands over CANDLES rather than behind words, and at a
+     *  highlighter's strength it tints the bars it is supposed to be pointing
+     *  at. Simon's number. */
+    bandCyan: "rgba(92, 200, 227, 0.20)",
     hlOrange: "rgba(242, 166, 59, 0.34)",
     onIndigo: "#FFFFFF",
     /** The transition grid — see core/GridGround.tsx. */

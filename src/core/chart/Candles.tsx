@@ -61,7 +61,17 @@ export const Candles = ({
               stroke={fill}
               strokeWidth={theme.shape.rule}
             />
-            <rect x={x - w / 2} y={top} width={w} height={h} fill={fill} />
+            {/* ⚠ ROUNDED, ALWAYS. Square corners are not a neutral default in
+                this project — every chart in it is drawn with soft corners, and
+                a bar that comes back square reads as a different chart. */}
+            <rect
+              x={x - w / 2}
+              y={top}
+              width={w}
+              height={h}
+              rx={Math.min(w * 0.22, 5)}
+              fill={fill}
+            />
           </g>
         );
       })}
@@ -135,6 +145,7 @@ export const VolumeBars = ({
             y={box.y + box.h - h}
             width={w}
             height={Math.max(1, h)}
+            rx={Math.min(w * 0.28, 8)}
             fill={fill}
             opacity={0.72}
           />

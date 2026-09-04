@@ -30,7 +30,7 @@ import {
 } from "../../../core";
 import { BLOCK, COMBO_TABS, COMBOS, COMBOS_V2, TRANS, local } from "../data/timing";
 import { TAG_Y } from "../data/layout";
-import { COMBO, UP_DOMAIN, DOWN_DOMAIN } from "../data/series";
+import { COMBO, COMBO_DOMAIN } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC07;
@@ -46,15 +46,21 @@ const BOX = COMBOS_V2.box;
 const PRICE = { x: WIN.x + 40, y: WIN.y + 36, w: WIN.w - 80, h: WIN.h * 0.56 };
 const VOLBOX = { x: PRICE.x, y: WIN.y + 36 + WIN.h * 0.62, w: PRICE.w, h: WIN.h * 0.24 };
 
-/** One grid per direction — the two tapes never share a frame. */
-const G_UP = gridOf(COMBO.upUp.series.closes, UP_DOMAIN, PRICE, 0.12, 0);
-const G_DOWN = gridOf(COMBO.downUp.series.closes, DOWN_DOMAIN, PRICE, 0.12, 0);
+/** ⚠ ONE GRID PER COMBINATION. The four no longer share two tapes, so they
+ *  cannot share two scales — a shared domain would draw one of them against
+ *  another's high and low. */
+const GRID = {
+  upUp: gridOf(COMBO.upUp.series.closes, COMBO_DOMAIN.upUp, PRICE, 0.12, 0),
+  upDown: gridOf(COMBO.upDown.series.closes, COMBO_DOMAIN.upDown, PRICE, 0.12, 0),
+  downUp: gridOf(COMBO.downUp.series.closes, COMBO_DOMAIN.downUp, PRICE, 0.12, 0),
+  downDown: gridOf(COMBO.downDown.series.closes, COMBO_DOMAIN.downDown, PRICE, 0.12, 0),
+};
 
 const STAGES = [
-  { at: AT[0], combo: COMBO.upUp, grid: G_UP },
-  { at: AT[1], combo: COMBO.upDown, grid: G_UP },
-  { at: AT[2], combo: COMBO.downUp, grid: G_DOWN },
-  { at: AT[3], combo: COMBO.downDown, grid: G_DOWN },
+  { at: AT[0], combo: COMBO.upUp, grid: GRID.upUp },
+  { at: AT[1], combo: COMBO.upDown, grid: GRID.upDown },
+  { at: AT[2], combo: COMBO.downUp, grid: GRID.downUp },
+  { at: AT[3], combo: COMBO.downDown, grid: GRID.downDown },
 ];
 
 export const CombosGroupV2 = () => {

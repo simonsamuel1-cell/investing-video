@@ -35,13 +35,13 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, TRANS, RUNNING_LINE, COMBOS_VERSION } from "./data/timing";
+import { BLOCK, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
 import { CombosGroupV2 } from "./scenes/CombosGroupV2";
 import { CombosGroupV3 } from "./scenes/CombosGroupV3";
-import { SC14 } from "./scenes/SC14";
+import { CombosOutro } from "./scenes/CombosOutro";
 import { BrptGroup } from "./scenes/BrptGroup";
 import { SC16 } from "./scenes/SC16";
 import { SC17 } from "./scenes/SC17";
@@ -94,12 +94,6 @@ const SCENES: Mounted[] = [
     name: `CG-C · SC07–10 · v${COMBOS_VERSION}`,
   },
   {
-    from: BLOCK.SC14,
-    duration: BLOCK.SC15A - BLOCK.SC14,
-    Component: SC14,
-    name: "SC14 Breakdown",
-  },
-  {
     from: BLOCK.SC15A,
     duration: BLOCK.SC16 - BLOCK.SC15A,
     Component: BrptGroup,
@@ -148,12 +142,30 @@ const SCENES: Mounted[] = [
     Component: UnderstandGroup,
     name: "CG-B · SC03–06",
   },
-  /* ⚠ LAST = ON TOP. See the note above the array. */
   {
     from: BLOCK.SC01,
-    duration: BLOCK.SC14 - BLOCK.SC01,
+    /** ⚠ IT RUNS TO f11260 NOW — Simon's call. SC14 had its own scene and its
+     *  own picture; the reading it makes is the same one CG-A is already
+     *  showing, so the group simply carries on and the separate mount is gone. */
+    duration: BLOCK.SC15A - BLOCK.SC01,
     Component: MainChartGroup,
-    name: "CG-A · SC01·02·11·12·13",
+    name: "CG-A · SC01·02·11·12·13·14",
+  },
+  /**
+   * ⚠ LAST = ON TOP, AND IT HAS TO BE ABOVE CG-A. SC11 belongs to CG-A, and
+   * this is the hand-over INTO SC11 — mounted anywhere earlier it would be
+   * transitioning underneath the scene it is transitioning to.
+   *
+   * ⚠ IT IS A SEPARATE MOUNT RATHER THAN AN EXTENSION OF CG-C, because CG-C
+   * has to stay BELOW CG-B: the Scene Transisi at f4958 is CG-B shrinking over
+   * CG-C, and moving CG-C up here to reach f8178 would put it over CG-B and
+   * break the first hand-over to fix the second.
+   */
+  {
+    from: TRANS2.at,
+    duration: TRANS2.gone - TRANS2.at,
+    Component: CombosOutro,
+    name: "Scene Transisi 2 · SC10→SC11",
   },
 ];
 

@@ -89,8 +89,15 @@ export const drawPath = (p: number, length: number) => ({
 });
 
 /** Candle width from the grid's own slot — never a typed pixel value. */
-export const candleWidth = (g: Grid) =>
-  Math.max(2, Math.min(20, g.slot * 0.62));
+/**
+ * ⚠ A CANDLE FILLS ITS SLOT. There is no absolute pixel cap here any more: the
+ * old `min(20, …)` meant that whenever a tape had room — a wide card, few bars,
+ * a zoomed-in view — the candles stayed thin and stood far apart with white
+ * space between them, which is exactly the look Simon has rejected every time
+ * it has appeared. A fraction of the slot cannot fuse two bars however wide the
+ * box gets, so the fraction is the only limit that was ever needed.
+ */
+export const candleWidth = (g: Grid) => Math.max(3, g.slot * 0.68);
 
 /**
  * Round price levels inside a domain, for gridlines and the price scale.

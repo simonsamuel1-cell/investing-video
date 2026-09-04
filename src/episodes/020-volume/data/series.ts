@@ -21,7 +21,8 @@
  * asserted at the bottom of the file.
  */
 import {
-  fromShape, volumeOf, domainOf, seeded, type Series, type Bar,
+  fromShape, fromScreenshot, volumeOf, domainOf, seeded,
+  type Series, type Bar, type Anchor,
 } from "../../../core";
 
 /* ══ 1. MAIN — SC01, SC02, SC11, SC12, SC13 ═══════════════════════════════
@@ -65,6 +66,106 @@ export const CHART1_RES = { hi: 384, lo: 358 };
  */
 export const CHART1_BREAK: Bar = { o: CHART1.closes[CHART1.closes.length - 1], c: 425, h: 438, l: 339 };
 export const CHART1_ALL: Bar[] = [...CHART1.bars, CHART1_BREAK];
+
+/**
+ * ═══ CHART1'S HISTOGRAM ═══  (Simon's description, SC11 from f9240)
+ *
+ * "Random tapi menanjak, lalu melonjak tinggi di beberapa candle terakhir."
+ *
+ * ⚠ GENERATED, NOT DRAWN, and one value per bar of CHART1_ALL. A hand-typed
+ * array stops agreeing with the tape it sits under the moment either changes,
+ * and there is nothing on screen that would show it had.
+ *
+ * ⚠ THE CLIMB AND THE BURST ARE SEPARATE FACTORS. Multiplying one ramp harder
+ * at the end gives a curve that was always heading there; a distinct burst over
+ * the last four bars is what reads as something happening rather than as a
+ * trend continuing.
+ */
+/**
+ * ⚠ ONE BASE, TWO READINGS. SC11 shows this tape's breakout twice — once with
+ * the burst that confirms it and once without — so the two histograms have to
+ * be the SAME bars with one thing changed. Generating them separately would let
+ * the "weaker" version differ everywhere and prove nothing.
+ */
+const CHART1_VOL_BASE = (() => {
+  const rnd = seeded(0x1101);
+  const n = CHART1_ALL.length;
+  return CHART1_ALL.map((_, i) => (0.45 + 0.75 * (i / Math.max(1, n - 1))) * (0.72 + rnd() * 0.56));
+})();
+/** ⚠ THE CLIMB AND THE BURST ARE SEPARATE FACTORS. One ramp pushed harder at
+ *  the end reads as a trend that was always heading there; a distinct burst
+ *  over the last four bars reads as something happening. */
+export const CHART1_VOL = CHART1_VOL_BASE.map((v, i) =>
+  i >= CHART1_VOL_BASE.length - 4 ? v * (1.9 + (i - (CHART1_VOL_BASE.length - 4)) * 0.4) : v,
+);
+/** The same tape with no burst at all, and 15% quieter throughout — Simon's
+ *  numbers for the second reading. */
+export const CHART1_VOL_WEAK = CHART1_VOL_BASE.map((v) => v * 0.85);
+
+/**
+ * ═══ THE BREAKDOWN TAPE ═══
+ *
+ * ⚠ TRACED PIXEL-FOR-PIXEL off Simon's image-1788513854855.png, not drawn from
+ * anchors by eye. Every candle in that picture was found by colour-keying its
+ * body, and its open, close, high and low read off the rows it occupies — 70
+ * candles, 36 green and 34 red. The values are pixel heights, so they carry no
+ * price meaning; nothing in the episode prints them.
+ *
+ * ⚠ ILLUSTRATIVE — kind "traced". The SHAPE is the reference's; no bar here
+ * printed on a market.
+ */
+import BREAKDOWN_BARS from "./breakdown.json";
+export const BREAKDOWN: Series = {
+  closes: (BREAKDOWN_BARS as Bar[]).map((b) => b.c),
+  bars: BREAKDOWN_BARS as Bar[],
+  kind: "traced",
+  label: "Breakdown",
+};
+export const BREAKDOWN_DOMAIN = domainOf(BREAKDOWN.closes, BREAKDOWN.bars);
+
+/**
+ * ⚠ THE SHELF IT LOSES, FOUND IN THE DATA. The lowest low of the tape's first
+ * 55% is the floor the decline holds twice and then breaks; placing the line by
+ * eye would make it a decoration rather than a level the picture supports.
+ */
+export const BREAKDOWN_SUPPORT = Math.min(
+  ...BREAKDOWN.bars.slice(0, Math.floor(BREAKDOWN.bars.length * 0.55)).map((b) => b.l),
+);
+
+/**
+ * ⚠ THE TWELVE BARS THE SCENE IS ABOUT — FOUND, NOT PLACED. They start at the
+ * first close below the shelf after the tape's midpoint, which is the break
+ * itself; counting back from the right instead would have landed on the bounce
+ * at the end, which is the one stretch this reading is NOT about.
+ */
+export const BREAKDOWN_HL = (() => {
+  const half = Math.floor(BREAKDOWN.closes.length * 0.5);
+  const at = BREAKDOWN.closes.findIndex((c, i) => i >= half && c < BREAKDOWN_SUPPORT);
+  /**
+   * ⚠ FIVE BARS FURTHER RIGHT — Simon asked for 50px, and this run is measured
+   * in BARS because the volume burst has to sit on the same columns the band
+   * frames. In a half-width column the pitch is about 10.4px, so five bars is
+   * the 50px he asked for and the band still starts on a candle rather than
+   * halfway through one.
+   */
+  const shift = 5;
+  return { from: (at < 0 ? half : at) + shift, count: 12 };
+})();
+
+/** ⚠ ONE BASE, TWO READINGS — the same construction as CHART1's histogram, so
+ *  the loud and the quiet version differ in exactly one thing. */
+const BREAKDOWN_VOL_BASE = (() => {
+  const rnd = seeded(0xbd77);
+  const n = BREAKDOWN.bars.length;
+  return BREAKDOWN.bars.map((_, i) => (0.5 + 0.6 * (i / Math.max(1, n - 1))) * (0.74 + rnd() * 0.52));
+})();
+/** ⚠ THE BURST SITS ON THE HIGHLIGHTED RUN, not at the end of the tape. The
+ *  band and the loud bars have to be the same twelve columns, or the picture
+ *  points at one thing and the histogram at another. */
+export const BREAKDOWN_VOL = BREAKDOWN_VOL_BASE.map((v, i) =>
+  i >= BREAKDOWN_HL.from && i < BREAKDOWN_HL.from + BREAKDOWN_HL.count ? v * 2.1 : v,
+);
+export const BREAKDOWN_VOL_WEAK = BREAKDOWN_VOL_BASE.map((v) => v * 0.85);
 /** The domain must already hold the breakout, or its wick clips the plot top. */
 export const CHART1_DOMAIN2 = domainOf(CHART1_ALL.map((b) => b.c), CHART1_ALL);
 
@@ -189,10 +290,87 @@ export const UP: Series = fromShape({ shape: "uptrend", seed: 91, n: 60, start: 
 export const DOWN: Series = fromShape({ shape: "downtrend", seed: 12, n: 60, start: 4800, label: "Harga turun" });
 
 /**
+ * ═══ THE FOUR COMBINATIONS ═══
+ *
+ * ⚠ TRACED OFF SIMON'S OWN FOUR REFERENCES, not generated from a shape word.
+ * Each combination is a specific PICTURE, and "uptrend" does not draw it: the
+ * rising pair is a long base that breaks out, and the falling pair carries a
+ * bounce in the middle. Generated tapes gave four charts that all had the same
+ * texture, which is exactly what makes four slides look like one slide.
+ *
+ * ⚠ THEY NO LONGER SHARE UP AND DOWN. Those two are also SC14's, SC16's and
+ * SC17's tape; changing them to fit this chapter would have redrawn three other
+ * scenes that make their own claims about the same bars.
+ *
+ * ⚠ 42 BARS, NOT 60. At 60 across this window the candles are hairlines — the
+ * references read as candles because each body is wide enough to have a colour
+ * and a wick you can see.
+ *
+ * The anchors are [position across the chart, price]. Prices are arbitrary
+ * units: nothing prints them, and each tape is scaled by its own domain.
+ */
+const CB = { n: 42, wick: 1.6, tremor: 0.055 } as const;
+
+/** 1. Price up, and a base that breaks out — volume swells into the move. */
+const A_UP_BASE: Anchor[] = [
+  [0.00, 4105], [0.05, 4155], [0.10, 4170], [0.17, 4155], [0.22, 4125],
+  [0.28, 4135], [0.32, 4165], [0.38, 4145], [0.44, 4100], [0.50, 4080],
+  [0.55, 4120], [0.60, 4100], [0.65, 4065], [0.70, 4105], [0.75, 4125],
+  [0.80, 4155], [0.85, 4165], [0.90, 4255], [0.95, 4355], [1.00, 4410],
+];
+/**
+ * 2. Price up — but a STAIRCASE, with real pullbacks in it.
+ *
+ * ⚠ A TREND IS NOT A RAMP. Simon's reference climbs in steps: a push, a give-
+ * back, a longer push. Anchors that only ever rise draw a ruler line, and four
+ * charts drawn that way are the same chart four times however different their
+ * volume is.
+ */
+const A_UP_STAIR: Anchor[] = [
+  [0.00, 4025], [0.06, 4060], [0.11, 4038], [0.18, 4092], [0.24, 4118],
+  [0.29, 4088], [0.35, 4146], [0.41, 4170], [0.47, 4128], [0.53, 4108],
+  [0.59, 4162], [0.65, 4186], [0.71, 4158], [0.77, 4214], [0.83, 4252],
+  [0.88, 4322], [0.94, 4390], [1.00, 4352],
+];
+/** 3. Price down, one bounce in the middle, then a steeper leg. */
+const A_DOWN_BOUNCE: Anchor[] = [
+  [0.00, 4820], [0.06, 4800], [0.12, 4765], [0.18, 4720], [0.24, 4685],
+  [0.30, 4610], [0.35, 4630], [0.40, 4605], [0.45, 4602], [0.52, 4660],
+  [0.58, 4705], [0.63, 4685], [0.70, 4630], [0.76, 4595], [0.82, 4550],
+  [0.88, 4515], [0.94, 4470], [1.00, 4445],
+];
+/**
+ * 4. Price down through chop — lower highs, but nothing about it is a straight
+ *    line. Two real rallies fail inside it, which is what makes the drift down
+ *    read as pressure rather than as a slope.
+ */
+const A_DOWN_CHOP: Anchor[] = [
+  [0.00, 4800], [0.05, 4832], [0.11, 4744], [0.17, 4796], [0.23, 4712],
+  [0.29, 4768], [0.35, 4688], [0.41, 4742], [0.47, 4664], [0.53, 4706],
+  [0.60, 4636], [0.66, 4688], [0.73, 4612], [0.80, 4658], [0.87, 4596],
+  [0.94, 4640], [1.00, 4584],
+];
+
+/**
+ * ⚠ `tremor` IS WHY THESE READ AS CANDLES. A traced tape follows its anchors
+ * so closely that consecutive closes barely differ, and a body is the distance
+ * between two closes — the shape came out right and every bar was a hairline.
+ * 0.055 of the range per bar is what the references actually show, and the
+ * choppiness it brings is in them too.
+ */
+const traced = (a: Anchor[], seed: number, label: string) =>
+  fromScreenshot(a, { n: CB.n, seed, label, wickScale: CB.wick, tremor: CB.tremor });
+
+export const CUP_BASE = traced(A_UP_BASE, 0x7101, "Harga naik");
+export const CUP_STAIR = traced(A_UP_STAIR, 0x7202, "Harga naik");
+export const CDN_BOUNCE = traced(A_DOWN_BOUNCE, 0x7303, "Harga turun");
+export const CDN_CHOP = traced(A_DOWN_CHOP, 0x7404, "Harga turun");
+
+/**
  * Volume that RAMPS rather than jumping: the four combinations are claims
  * about participation rising or fading across a stretch, not about one loud
  * bar. Built from each tape's own bars so the histogram still sits under its
- * candles.
+ * candles, then lifted where the reference shows a burst.
  */
 const ramp = (bars: Bar[], from: number, to: number, seed: number) => {
   const rnd = seeded(seed);
@@ -201,12 +379,39 @@ const ramp = (bars: Bar[], from: number, to: number, seed: number) => {
     return (from + (to - from) * t) * (0.86 + rnd() * 0.28);
   });
 };
+
 export const COMBO = {
-  upUp: { series: UP, vol: ramp(UP.bars, 0.6, 1.9, 0x71) },
-  upDown: { series: UP, vol: ramp(UP.bars, 1.9, 0.55, 0x72) },
-  downUp: { series: DOWN, vol: ramp(DOWN.bars, 0.6, 1.9, 0x73) },
-  downDown: { series: DOWN, vol: ramp(DOWN.bars, 1.9, 0.55, 0x74) },
+  upUp: {
+    series: CUP_BASE,
+    /** the swell arrives WITH the breakout, at bar 36 of 42 */
+    vol: lift(ramp(CUP_BASE.bars, 0.75, 1.75, 0x71), { 22: 1.5, 35: 1.35, 36: 1.5, 40: 1.3 }),
+  },
+  upDown: {
+    series: CUP_STAIR,
+    /** ⚠ THE LAST BAR IS LIFTED AND THE TREND STILL FALLS. The reference ends
+     *  on one loud bar under a long red candle; a fade that has no bars left
+     *  in it reads as the stock going quiet, not as participation thinning. */
+    vol: lift(ramp(CUP_STAIR.bars, 1.85, 0.5, 0x72), { 3: 1.35, 41: 2.2 }),
+  },
+  downUp: {
+    series: CDN_BOUNCE,
+    vol: lift(ramp(CDN_BOUNCE.bars, 0.7, 1.8, 0x73), { 33: 1.45, 41: 1.7 }),
+  },
+  downDown: {
+    series: CDN_CHOP,
+    vol: lift(ramp(CDN_CHOP.bars, 1.9, 0.55, 0x74), { 1: 1.2, 2: 1.15 }),
+  },
 };
+
+/** One domain per combination — they no longer share a tape, so they cannot
+ *  share a scale either. */
+export const COMBO_DOMAIN = {
+  upUp: domainOf(CUP_BASE.closes, CUP_BASE.bars),
+  upDown: domainOf(CUP_STAIR.closes, CUP_STAIR.bars),
+  downUp: domainOf(CDN_BOUNCE.closes, CDN_BOUNCE.bars),
+  downDown: domainOf(CDN_CHOP.closes, CDN_CHOP.bars),
+};
+
 export const UP_DOMAIN = domainOf(UP.closes, UP.bars);
 export const DOWN_DOMAIN = domainOf(DOWN.closes, DOWN.bars);
 /** SC14's two breakdowns: one tape, heavy volume against thin. */
@@ -334,6 +539,64 @@ must(
   "the ordinary-volume breakout is not actually ordinary",
 );
 must(BREAK_DOWN_AT > 0, "DOWN never closes below its own support");
+/* ── CHART1's histogram: the two things Simon asked it to say ───────────── */
+must(
+  mean(CHART1_VOL.slice(CHART1_VOL.length / 2)) > mean(CHART1_VOL.slice(0, CHART1_VOL.length / 2)) * 1.3,
+  "CHART1_VOL does not climb across the tape",
+);
+must(
+  mean(CHART1_VOL.slice(-4)) > mean(CHART1_VOL.slice(0, -4)) * 2,
+  "CHART1_VOL's last bars do not stand out as a burst",
+);
+/* ⚠ AGAINST ITS OWN NEIGHBOURS, not against the whole tape. The histogram
+   CLIMBS by design, so the last bars are the tallest even with no burst in
+   them; measured against the start of the tape a perfectly ordinary ending
+   still looks like a spike, and the check would fail on correct data. */
+const HL_RUN = (v: number[]) =>
+  v.slice(BREAKDOWN_HL.from, BREAKDOWN_HL.from + BREAKDOWN_HL.count);
+const HL_REST = (v: number[]) =>
+  v.filter((_, i) => i < BREAKDOWN_HL.from || i >= BREAKDOWN_HL.from + BREAKDOWN_HL.count);
+must(
+  BREAKDOWN_HL.from + BREAKDOWN_HL.count <= BREAKDOWN.bars.length,
+  "the highlighted run runs off the end of the breakdown tape",
+);
+must(
+  mean(HL_RUN(BREAKDOWN_VOL)) > mean(HL_REST(BREAKDOWN_VOL)) * 1.6,
+  "the loud breakdown's highlighted bars do not stand clear of the rest",
+);
+must(
+  mean(HL_RUN(BREAKDOWN_VOL_WEAK)) < mean(HL_REST(BREAKDOWN_VOL_WEAK)) * 1.25,
+  "the quiet breakdown's highlighted bars still stand out — the pair says the same thing twice",
+);
+must(
+  BREAKDOWN.closes[BREAKDOWN.closes.length - 1] < BREAKDOWN.closes[0],
+  "the traced breakdown does not end below where it started",
+);
+must(
+  mean(CHART1_VOL_WEAK.slice(-4)) < mean(CHART1_VOL_WEAK.slice(-14, -4)) * 1.3,
+  "CHART1_VOL_WEAK still has a burst in it — the second reading would say the same as the first",
+);
+must(
+  mean(CHART1_VOL.slice(-4)) > mean(CHART1_VOL.slice(-14, -4)) * 1.8,
+  "CHART1_VOL's burst does not stand clear of the bars just before it",
+);
+/* ── the four combinations: each one must actually BE its own combination ── */
+const half = (v: number[]) => [mean(v.slice(0, v.length / 2)), mean(v.slice(v.length / 2))];
+([
+  ["upUp", COMBO.upUp, +1, +1],
+  ["upDown", COMBO.upDown, +1, -1],
+  ["downUp", COMBO.downUp, -1, +1],
+  ["downDown", COMBO.downDown, -1, -1],
+] as const).forEach(([name, combo, price, vol]) => {
+  const c = combo.series.closes;
+  const movedRight = (c[c.length - 1] - c[0]) * price > 0;
+  const [a, b] = half(combo.vol);
+  must(movedRight, `COMBO.${name}: the price does not end where its own label says it should`);
+  /* ⚠ v3 TWEENS ONE HISTOGRAM INTO THE NEXT, bar for bar. Different lengths
+     would silently drop or duplicate bars mid-move. */
+  must(combo.vol.length === CB.n, `COMBO.${name}: its histogram is not ${CB.n} bars, so it cannot tween into the others`);
+  must((b - a) * vol > 0, `COMBO.${name}: the volume does not ${vol > 0 ? "rise" : "fade"} across the tape`);
+});
 must(VOL_A[TODAY] === VOL_B[TODAY], "SC05's two stocks do not trade the same amount today");
 must(AVG_A * 2 < AVG_B, "SC05's two histories are not different enough to make the point");
 must(BRPT_REBOUND < BRPT.closes.length, "BRPT has no bar after its low");
