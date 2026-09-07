@@ -29,7 +29,7 @@ import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, Candles, VolumeBars, Level, PriceTag, Zone, HighlightCircle,
-  Chip, Title, Line, SourceTag, Crosshair, MarkerArrow,
+  Chip, Title, Line, SourceTag, Crosshair, MarkerArrow, markerGeom,
   SplitDivider, SplitLabels,
   gridOf, domainOf, useMotion, progress, progressInOut, textReveal, price as fmtPrice, theme,
   cutInStyle, cutOutStyle, TuntunMark, GridGround, fadeOut,
@@ -1747,12 +1747,32 @@ export const MainChartGroup = () => {
           const away = 1 - progress(f, local(K.gone, FROM), K.out);
           if (!on || away <= 0.001) return null;
           const tx = textReveal(f, local(K.text.at, FROM), m.reveal);
+          /** ⚠ THE TEXT SITS ON THE ARROW'S MEASURED TOP EDGE, not on a typed
+           *  y. Simon asked for 20px above the arrow; after a half-scale, a
+           *  mirror and a 60° turn, where "the top of the arrow" falls is not
+           *  something anyone can type — `markerGeom` runs the same maths the
+           *  component does and reports it. */
+          const G = markerGeom({
+            from: K.tail,
+            to: K.tip,
+            bow: K.bow,
+            scale: K.scale,
+            flipY: K.flipY,
+            rotate: K.rotate,
+            width: K.width,
+            headLen: K.headLen,
+          });
+          const textTop =
+            G.box.top - K.text.gap - K.text.lines.length * K.text.lead + K.text.descent;
           return (
             <>
               <MarkerArrow
                 from={K.tail}
                 to={K.tip}
                 bow={K.bow}
+                scale={K.scale}
+                flipY={K.flipY}
+                rotate={K.rotate}
                 at={local(K.at, FROM)}
                 over={K.over}
                 width={K.width}
@@ -1763,7 +1783,7 @@ export const MainChartGroup = () => {
                 style={{
                   position: "absolute",
                   left: K.text.x,
-                  top: K.text.y,
+                  top: textTop,
                   width: theme.canvas.width - theme.margin.right - K.text.x,
                   fontFamily: theme.text.family,
                   fontSize: K.text.size,
@@ -1884,22 +1904,54 @@ export const MainChartGroup = () => {
                 >
                   {items.map((it, n) => {
                     const inn = textReveal(f, local(it.at, FROM), m.reveal);
+                    const BU = SC11.note.bullet;
                     return (
                       <div
                         key={n}
                         style={{
-                          fontSize: SC11.note.itemSize,
-                          fontWeight: 700,
-                          lineHeight: SC11.note.lead / SC11.note.size,
-                          color: theme.color.indigo,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: BU.gap,
                           opacity: inn.opacity,
-                          /* ⚠ NO `maxWidth`, AND NEVER WRAPS — see `itemSize`.
-                             A point that breaks in two stops being one point. */
-                          whiteSpace: "nowrap",
                           transform: `translateY(${inn.dy}px)`,
                         }}
                       >
-                        {it.text}
+                        {/* ⚠ THE SQUARE SITS IN A WELL OF ITS OWN WIDTH. Turned
+                            45° its box is the diagonal, and a flex row sizes
+                            the child by its untransformed width — without the
+                            well the corners would eat into the gap and the
+                            three points would not line up. */}
+                        <div
+                          style={{
+                            flex: `0 0 ${BU.well}px`,
+                            height: BU.well,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: BU.size,
+                              height: BU.size,
+                              background: theme.color.indigo,
+                              transform: "rotate(45deg)",
+                            }}
+                          />
+                        </div>
+                        <div
+                          style={{
+                            fontSize: SC11.note.itemSize,
+                            fontWeight: 700,
+                            lineHeight: SC11.note.lead / SC11.note.size,
+                            color: theme.color.indigo,
+                            /* ⚠ NO `maxWidth`, AND NEVER WRAPS — see `itemSize`.
+                               A point that breaks in two stops being one point. */
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {it.text}
+                        </div>
                       </div>
                     );
                   })}

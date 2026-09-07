@@ -26,7 +26,7 @@ export { Chip } from "./Chip";
 export type { Tone } from "./Chip";
 export { Ping } from "./Ping";
 export { HighlightBox, HighlightCircle } from "./HighlightBox";
-export { MarkerArrow } from "./MarkerArrow";
+export { MarkerArrow, markerGeom } from "./MarkerArrow";
 export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
 export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
 export { TabRow } from "./TabRow";

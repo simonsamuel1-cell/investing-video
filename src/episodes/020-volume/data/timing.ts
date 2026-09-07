@@ -970,10 +970,34 @@ export const SC11 = {
     bow: -52,
     width: 17,
     headLen: 90,
+    /**
+     * ⚠ SIMON'S THREE OPERATIONS, IN HIS ORDER, AND ABOUT THE TIP. Half size,
+     * mirrored top-to-bottom, then turned 60° to the left. The tip is the pivot
+     * because it is the only part of an arrow that means anything — it must
+     * still be pointing at the same place after all three.
+     */
+    scale: 0.5,
+    flipY: true,
+    rotate: -60,
     text: {
       at: 9088,
       x: 1200,
-      y: 396,
+      /** ⚠ 20px ABOVE THE ARROW, AND `y` IS DERIVED FROM THAT — Simon's number.
+       *  Where the arrow's top edge falls depends on the bow, the turn, the
+       *  head and the stroke width together, so it is measured by `markerGeom`
+       *  in the scene rather than typed here and left to rot. */
+      gap: 20,
+      /**
+       * ⚠ THE 20 IS INK TO INK, NOT BOX TO BOX. A 42px line inside a 56px line
+       * box carries 14px of empty descent under its last letter, so a 20px gap
+       * measured off the BOX renders as 34px of visible air — which is what
+       * anyone looking at the frame would measure. Pulled back by the measured
+       * descent so the gap on screen is the gap Simon asked for.
+       *
+       * ⚠ MEASURED AT size 42 / lead 56. Change either and re-measure: it is
+       * the font's own descent, not a fraction anyone can derive.
+       */
+      descent: 14,
       size: 42,
       lead: 56,
       lines: ["Biar bisa tembus resistance,", "minat beli harus kuat"],
@@ -1078,7 +1102,18 @@ export const SC11 = {
      * one block. Every item is `nowrap` so a future edit fails visibly rather
      * than silently re-breaking a line.
      */
-    itemSize: 46,
+    itemSize: 44,
+    /**
+     * ⚠ A SQUARE TURNED 45° — Simon's shape. Its box is the DIAGONAL, not the
+     * side: a 14px square standing on its corner is 19.8 wide, so the marker
+     * sits in a 20px well of its own and the text starts clear of it whatever
+     * the square does.
+     *
+     * ⚠ AND THE INDENT IS WHY `itemSize` DROPPED FROM 46 TO 44. The well plus
+     * its gap take 42px off the column, and at 46 the longest point ran 13px
+     * past the right margin.
+     */
+    bullet: { size: 14, well: 20, gap: 22 },
     /** The column the reading is set in, beside a 65%-wide card. */
     width: 560,
     size: 52,
