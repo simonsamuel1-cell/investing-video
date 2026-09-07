@@ -20,7 +20,7 @@
 import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -244,6 +244,19 @@ export const BrptGroup = () => {
                 }}
               />
             ))}
+            {/* ── the ring on that same candle ─────────────────────────── */}
+            {/* ⚠ ITS RADIUS TRAVELS WITH THE PICTURE but its STROKE does not:
+                `HighlightCircle` draws a 2px rule whatever the ring's size, and
+                an annotation whose line thickens when the thing it points at is
+                enlarged reads as part of the picture rather than as a mark on
+                it. */}
+            <HighlightCircle
+              cx={X(A.ring.x)}
+              cy={Y(A.ring.y)}
+              r={A.ring.r * k}
+              land={progress(f, local(A.ring.at, FROM), m.pop)}
+            />
+
             {/* ── the support level, on the low of the visible tape ─────── */}
             {line > 0.001 && (
               <div

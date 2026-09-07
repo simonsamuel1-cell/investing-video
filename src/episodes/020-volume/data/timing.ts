@@ -920,6 +920,25 @@ export const SC15_ART = {
   low: 1259,
   supportAt: 11505,
   supportOver: 30,
+  /**
+   * ═══ THE RING ON THE LOWEST RED CANDLE ═══  (Simon's frame)
+   *
+   * ⚠ THE CANDLE WAS FOUND, NOT CHOSEN. Scanning the file for the app's own
+   * candle red — (236, 90, 90), which needs r−g > 110 to tell it apart from the
+   * ORANGE 1.800 line that a looser test happily matched — the column at bar 29
+   * runs y 1187–1252 and x 886–910. It is red for all 1820 of its pixels, and
+   * it is the lowest thing on the tape: the same bar the support level sits
+   * under, and the last one still visible before the cover.
+   *
+   * ⚠ 46 IS BIGGER THAN THE CANDLE ON PURPOSE. The body's half-diagonal is 35,
+   * so 46 clears it with room; a ring drawn tight to a 24px-wide body reads as
+   * a badly-fitting box rather than as something circled. It is wider than the
+   * 29px pitch, which is what circling one bar in a tape looks like.
+   *
+   * ⚠ IN THE FILE'S PIXELS, like everything else here, so it grows with the
+   * picture at f11848 instead of sitting still while the candle moves.
+   */
+  ring: { at: 11628, x: 898, y: 1220, r: 46 },
 } as const;
 
 export const HEAD = {
