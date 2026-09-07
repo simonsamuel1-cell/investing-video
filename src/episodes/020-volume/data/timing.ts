@@ -1014,7 +1014,7 @@ export const SC15_ART = {
    * `theme.color.border` IS the one step darker than `greyWash` — the two are
    * already a pair in the palette, so the shade is named rather than mixed.
    */
-  hatch: { gap: 8, width: 1 },
+  hatch: { gap: 16, width: 1 },
   /**
    * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
    * frame. The distance is DERIVED (`theme.margin.left` minus wherever the
@@ -1058,7 +1058,22 @@ export const SC15_ART = {
      * centred on `midY`, so a numeral added under it would push the question
      * and both answers back up by half its height the moment it appeared.
      */
-    count: { at: [12847, 12922, 12985], y: 640, size: 96 },
+    count: {
+      at: [12847, 12922, 12985],
+      /** ⚠ 670 — 640 plus Simon's 30. */
+      y: 670,
+      /** ⚠ 106 — 96 plus his 10. */
+      size: 106,
+      /**
+       * ⚠ CENTRED ON THE THREE LINES, AND THE CENTRE IS MEASURED, NOT THE
+       * COLUMN'S. The three texts are flush LEFT in a 584px column, so their
+       * ink runs 1238–1717 and its middle is 1478 — centring the numeral in the
+       * column instead would put it at 1532, 54px to the right of everything it
+       * is supposed to sit under. Re-measure if the heading's wording changes:
+       * it is the widest of the three and it is what sets this.
+       */
+      cx: 1478,
+    },
     options: ["harga akan naik", "harga akan turun"],
   },
   /**

@@ -277,7 +277,12 @@ export const BrptGroup = () => {
                      the library's one-step-off-white fill, which reads as paper
                      laid over something instead. The dark-grey question mark
                      still holds against it. */
-                  backgroundColor: theme.color.greyWash,
+                  /* ⚠ WHITE — Simon's call, and it is now the CHART's own
+                     paper. What withholds the answer is the hatch, not the
+                     tone: a panel the same colour as the surface it sits on
+                     reads as a sheet laid over it, which is exactly the
+                     gesture. */
+                  backgroundColor: theme.color.cardBg,
                   /* ⚠ ONE GRADIENT, NOT A STACK OF DIVS. A repeating gradient
                      at 45° measures its stops PERPENDICULAR to the stripes, so
                      "7px of nothing then 1px of grey" is exactly a 1px rule
@@ -421,15 +426,15 @@ export const BrptGroup = () => {
               key={n}
               style={{
                 position: "absolute",
-                left: Q.x,
+                left: Q.count.cx,
                 top: Q.count.y,
+                transform: `translateX(-50%) translateY(${inn.dy}px)`,
                 fontFamily: theme.text.family,
                 fontSize: Q.count.size,
                 fontWeight: theme.text.display.weight,
                 color: theme.color.indigo,
                 lineHeight: 1,
                 opacity: inn.opacity,
-                transform: `translateY(${inn.dy}px)`,
               }}
             >
               {3 - n}
