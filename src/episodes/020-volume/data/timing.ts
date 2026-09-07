@@ -1060,6 +1060,28 @@ export const SC15_ART = {
    * a second, louder voice on a chart that already carries three indigo marks.
    * The marker red stays where it started, at f9019.
    */
+  /**
+   * ═══ THE QUIZ PACKS UP ═══  (Simon's frames)
+   *
+   * f13441 — the question, both answers and the arrow all leave, and the
+   * picture goes back to the middle it came from. The slide back reuses the
+   * SAME derived distance as the slide out, negated: two numbers would be two
+   * chances for the picture to come to rest somewhere other than where it
+   * started. The heading rides it home too, since it rides it out.
+   *
+   * f13520 — the two indigo readings of the histogram come BACK. Same boxes,
+   * same bars, a second entrance; they were put away at f12300 because two more
+   * bars were about to arrive, and now the tape is settled they are true again.
+   *
+   * f13685 — those two close, and the cyan moves up to the PRICE pane, over the
+   * ten candles the cover was hiding. Same tone as the histogram's cyan and the
+   * same 10px of air, because it is the same kind of mark on the same picture.
+   */
+  outro: { at: 13441, over: 30 },
+  unshift: { at: 13441, over: 40 },
+  hlBack: { at: 13520 },
+  hlOut2: { at: 13685, over: 24 },
+  hl3: { at: 13685, from: 30, to: 39 },
   arrow: {
     at: 13103,
     over: 34,

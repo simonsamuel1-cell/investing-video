@@ -83,8 +83,15 @@ export const BrptGroup = () => {
   const artL = (theme.canvas.width - artH * ART.ratio) / 2;
   /** ⚠ DERIVED, NOT TYPED — the margin minus wherever the left edge actually
    *  is, so the picture lands flush whatever size it ended up at. */
+  /**
+   * ⚠ OUT AND BACK ON ONE DISTANCE. The return negates the same derived number
+   * the departure used; two of them would be two chances for the picture to
+   * come to rest somewhere other than where it started.
+   */
   const artDX =
-    (theme.margin.left - artL) * progressInOut(f, local(ART.shift.at, FROM), ART.shift.over);
+    (theme.margin.left - artL) *
+    (progressInOut(f, local(ART.shift.at, FROM), ART.shift.over) -
+      progressInOut(f, local(ART.unshift.at, FROM), ART.unshift.over));
   /* the mask lifts across the join — one move, two scenes */
   const open = progress(f, T.answer, m.sec(1.4));
 
@@ -342,36 +349,57 @@ export const BrptGroup = () => {
 
             {/* ── the two readings of the histogram ────────────────────── */}
             {[
-              ...A.hl.map((q, i) => ({ ...q, half: "half" in q ? q.half : false, i, cyan: false })),
-              { ...A.hl2, half: false, i: 2, cyan: true },
+              ...A.hl.map((q, i) => ({
+                ...q,
+                half: "half" in q ? q.half : false,
+                i,
+                cyan: false,
+                pane: A.vol,
+              })),
+              { ...A.hl2, half: false, i: 2, cyan: true, pane: A.vol },
+              /** ⚠ THE PRICE PANE, NOT THE HISTOGRAM. Every other box here is
+               *  about volume; this one is about the ten candles the cover was
+               *  hiding, so it is the only one that reads its own pane. */
+              { ...A.hl3, half: false, i: 3, cyan: true, pane: A.price },
             ].map((q) => {
               /** ⚠ ONE CURVE OPENS IT AND ANOTHER SHUTS IT, and the shut is the
                *  same `grow` running backwards — the box closes the way it came
                *  rather than fading, so the edge that made the claim is the last
                *  thing to leave. The cyan pair has no exit: it arrives after the
                *  other two have gone and stays. */
-              const out = q.cyan
-                ? 0
-                : progressInOut(f, local(A.hlOut.at, FROM), A.hlOut.over);
-              const g = progress(f, local(q.at, FROM), m.sec(0.5)) * (1 - out);
-              /** ⚠ THE CYAN ONE FADES RATHER THAN CLOSING. It is a reading, and
-               *  a reading is simply no longer being made; the covers travel
-               *  because a cover is a thing being taken OFF. */
-              const alpha = q.cyan ? 1 - said : 1;
+              /**
+               * ⚠ THE TWO INDIGO BOXES HAVE TWO ENTRANCES AND TWO EXITS, and
+               * the terms are ADDED because they never overlap: the first is
+               * already zero by f12300, the second does not start until f13520.
+               * A max() would work too, but the sum says plainly that these are
+               * two separate appearances of the same claim rather than one
+               * appearance that flickered.
+               */
+              const g = q.cyan
+                ? progress(f, local(q.at, FROM), m.sec(0.5))
+                : progress(f, local(q.at, FROM), m.sec(0.5)) *
+                    (1 - progressInOut(f, local(A.hlOut.at, FROM), A.hlOut.over)) +
+                  progress(f, local(A.hlBack.at, FROM), m.sec(0.5)) *
+                    (1 - progressInOut(f, local(A.hlOut2.at, FROM), A.hlOut2.over));
+              /** ⚠ THE CYAN ONES FADE RATHER THAN CLOSING. They are readings,
+               *  and a reading is simply no longer being made; the covers travel
+               *  because a cover is a thing being taken OFF. The one over the
+               *  candles has no exit — it is what the scene ends on. */
+              const alpha = q.i === 2 ? 1 - said : 1;
               if (g <= 0.001 || alpha <= 0.001) return null;
               const half = A.bars.pitch / 2;
               const x1 = A.bars.first + A.bars.pitch * q.from - half;
               const x2 =
                 A.bars.first + A.bars.pitch * q.to + half - (q.i === 1 ? A.hlGap : 0);
               /** Half height, sitting on the baseline — see `hl[0].half`. */
-              const y1 = q.half ? A.vol.y0 + (A.vol.y1 - A.vol.y0) * 0.5 : A.vol.y0;
+              const y1 = q.half ? q.pane.y0 + (q.pane.y1 - q.pane.y0) * 0.5 : q.pane.y0;
               /** ⚠ THE CYAN BOX'S PAD IS ADDED AFTER THE CONVERSION, so it is
                *  10 canvas pixels rather than 10 of the file's — see `hl2Pad`. */
               const pad = q.cyan ? A.hl2Pad : 0;
               return (
                 <HighlightBox
                   key={q.i}
-                  rect={{ x1: X(x1) - pad, y1: Y(y1), x2: X(x2) + pad, y2: Y(A.vol.y1) }}
+                  rect={{ x1: X(x1) - pad, y1: Y(y1), x2: X(x2) + pad, y2: Y(q.pane.y1) }}
                   grow={g}
                   opacity={alpha}
                   width={theme.shape.line}
@@ -393,6 +421,7 @@ export const BrptGroup = () => {
                 width={A.arrow.width}
                 headLen={A.arrow.headLen}
                 color={theme.color.indigo}
+                opacity={1 - progress(f, local(A.outro.at, FROM), A.outro.over)}
               />
             )}
 
@@ -445,7 +474,11 @@ export const BrptGroup = () => {
       {(() => {
         const Q = SC15_ART.ask;
         const head = textReveal(f, local(Q.at, FROM), m.reveal);
-        if (head.opacity <= 0.001) return null;
+        /** ⚠ THE WHOLE COLUMN LEAVES TOGETHER — the question and both answers
+         *  are one statement, and staggering their exit would make the last one
+         *  out look like it was still being considered. */
+        const away = 1 - progress(f, local(SC15_ART.outro.at, FROM), SC15_ART.outro.over);
+        if (head.opacity <= 0.001 || away <= 0.001) return null;
         const period = m.sec(Q.pulse);
         /**
          * ⚠ THE COUNTDOWN IS A SIBLING OF THE BLOCK, NOT A CHILD OF IT.
@@ -502,6 +535,7 @@ export const BrptGroup = () => {
               transform: "translateY(-50%)",
               width: theme.canvas.width - theme.margin.right - Q.x,
               fontFamily: theme.text.family,
+              opacity: away,
             }}
           >
             <div
