@@ -20,7 +20,7 @@
 import { Img, interpolate, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox, MarkerArrow, markerGeom,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, DashedBox, Words, dashOpenAt, HighlightCircle, HighlightBox, MarkerArrow, markerGeom,
   gridOf, useMotion, progress, textReveal, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -520,7 +520,11 @@ export const BrptGroup = () => {
           were clearing. */}
       {SC15_ART.says.lines.map((line, i) => {
         const inn = textReveal(f, local(line.at, FROM), m.reveal);
-        if (inn.opacity <= 0.001) return null;
+        /** ⚠ BOTH GO ON ONE CURVE. They are one sentence; letting the first
+         *  leave before the second would read as it being withdrawn. */
+        const away =
+          1 - progress(f, local(SC15_ART.says.gone.at, FROM), SC15_ART.says.gone.over);
+        if (inn.opacity <= 0.001 || away <= 0.001) return null;
         return (
           <div
             key={i}
@@ -535,7 +539,7 @@ export const BrptGroup = () => {
               fontWeight: 700,
               lineHeight: 1,
               color: theme.color.ink,
-              opacity: inn.opacity,
+              opacity: inn.opacity * away,
               transform: `translateY(${inn.dy}px)`,
             }}
           >
@@ -543,6 +547,40 @@ export const BrptGroup = () => {
           </div>
         );
       })}
+
+      {/* ── the point the whole quiz was building to ─────────────────── */}
+      {(() => {
+        const P = SC15_ART.point;
+        const at = local(P.at, FROM);
+        if (f < at) return null;
+        /** ⚠ NOTHING IS SET UNTIL THE FRAME HAS FINISHED SNAPPING OPEN. A line
+         *  that reflows while its container widens is the one thing that gives
+         *  the trick away — `dashOpenAt` is the component's own answer for the
+         *  frame its content may start on. */
+        const inAt = dashOpenAt(at);
+        return (
+          <DashedBox x={P.x} y={P.y} w={P.w} h={P.h} at={at}>
+            {P.lines.map((line, i) => (
+              <Words
+                key={i}
+                text={line}
+                x={P.w / 2}
+                y={P.h / 2 + (i - (P.lines.length - 1) / 2) * P.lead}
+                at={inAt + i * 6}
+                stagger={4}
+                anchor="center"
+                size={P.size}
+                weight={700}
+                color={theme.color.slate}
+                /* ⚠ THE MARK IS THE WHOLE OF THE SECOND LINE, so the run and
+                   the line are the same string and there is no substring to
+                   match wrongly. */
+                marks={line === P.mark ? [{ text: P.mark, color: theme.color.hlCyan }] : undefined}
+              />
+            ))}
+          </DashedBox>
+        );
+      })()}
 
       {/* ── the two answers, in the room the picture gave up ────────────
           ⚠ OUTSIDE THE PICTURE'S WRAPPER. It does not ride the slide: the

@@ -1098,10 +1098,41 @@ export const SC15_ART = {
    */
   says: {
     size: 44,
+    /** ⚠ 58 APART, WAS 76 — Simon's "kecilin lagi". At 44px a line box is about
+     *  57 tall, so 58 is single-spaced: the two read as one sentence broken in
+     *  two rather than as two statements. */
+    gone: { at: 14190, over: 24 },
     lines: [
       { at: 13914, y: 802, text: "Breakdown kehilangan konfirmasi," },
-      { at: 14047, y: 878, text: "buyer memberi respons" },
+      { at: 14047, y: 860, text: "buyer memberi respons" },
     ],
+  },
+  /**
+   * ═══ WHAT THE WHOLE QUIZ WAS FOR ═══  (Simon's frame)
+   *
+   * The two lines above give way to the point they were building to, in the
+   * episode's dashed marquee.
+   *
+   * ⚠ THE BOX IS A FIXED SIZE, WHICH IS `DashedBox`'s OWN RULE. Its dashes have
+   * to land on known coordinates — that is why the component takes a rect
+   * rather than measuring its text — so the width here is chosen against the
+   * longest line rather than derived from it.
+   *
+   * ⚠ AND IT FITS THE ROOM THE RISE OPENED. The picture's bottom is at 764 and
+   * the subtitle band starts at 972; a 176-tall box at 782 ends at 958.
+   */
+  point: {
+    at: 14190,
+    x: 520,
+    y: 782,
+    w: 880,
+    h: 176,
+    size: 44,
+    lead: 58,
+    lines: ["Volume memberi sinyal kuat untuk", "mewaspadai potensi breakdown"],
+    /** ⚠ THE SECOND LINE IS THE MARK. It is the whole of it, so the run and the
+     *  line are the same string — no substring matching to get wrong. */
+    mark: "mewaspadai potensi breakdown",
   },
   /**
    * ⚠ THE PRICE THE ARROW ARRIVES AT, 20px ABOVE IT — Simon's number, and the
