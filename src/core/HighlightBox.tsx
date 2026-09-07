@@ -25,6 +25,8 @@ export const HighlightBox = ({
   radius = 14,
   stroke,
   fill,
+  width = theme.shape.rule,
+  glow = 0,
 }: {
   rect: HLRect;
   opacity?: number;
@@ -34,6 +36,12 @@ export const HighlightBox = ({
    *  boxes end up with different corner radii. */
   stroke?: string;
   fill?: string;
+  /** ⚠ IN CANVAS PIXELS, AND IT DOES NOT SCALE with whatever the box is drawn
+   *  over — a mark whose line thickens when the picture under it is enlarged
+   *  reads as part of that picture rather than as a mark on it. */
+  width?: number;
+  /** Blur radius of the glow around the box, in px. 0 is none. */
+  glow?: number;
   /**
    * 0 → 1 of the box's width, always measured from its LEFT edge. It opens
    * rightwards and closes back the way it came, so the left edge — where the
@@ -49,20 +57,34 @@ export const HighlightBox = ({
   radius?: number;
 }) => {
   const c = usePalette();
-  const width = (rect.x2 - rect.x1) * Math.max(0, Math.min(1, grow));
+  /** ⚠ `w`, NOT `width` — that name is the STROKE's now. */
+  const w = (rect.x2 - rect.x1) * Math.max(0, Math.min(1, grow));
   const height = (rect.y2 - rect.y1) * Math.max(0, Math.min(1, collapse));
-  if (opacity <= 0.001 || width < 1 || height < 1) return null;
+  if (opacity <= 0.001 || w < 1 || height < 1) return null;
   return (
     <Layer opacity={opacity}>
       <rect
         x={rect.x1}
         y={(rect.y1 + rect.y2) / 2 - height / 2}
-        width={width}
+        width={w}
         height={height}
         rx={Math.min(radius, height / 2)}
         fill={fill ?? theme.color.indigoWash}
         stroke={stroke ?? c.indigo}
-        strokeWidth={theme.shape.rule}
+        strokeWidth={width}
+        /* ⚠ TWO DROP-SHADOWS, NOT ONE. A single pass at this radius is a faint
+           haze; a tight one inside a wide one gives the box a lit edge AND a
+           bloom around it, which is what a glow actually looks like. The glow
+           takes the STROKE's colour, so a cyan box glows cyan. */
+        style={
+          glow > 0
+            ? {
+                filter:
+                  `drop-shadow(0 0 ${(glow * 0.45).toFixed(1)}px ${stroke ?? theme.color.indigoGlow}) ` +
+                  `drop-shadow(0 0 ${glow.toFixed(1)}px ${stroke ?? theme.color.indigoGlow})`,
+              }
+            : undefined
+        }
       />
     </Layer>
   );

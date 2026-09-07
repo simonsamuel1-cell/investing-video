@@ -946,9 +946,13 @@ export const SC15_ART = {
    * left standing is a mark still making its claim.
    */
   marksOut: { at: 11848, over: 83 },
-  /** ⚠ 3px AND LIT — Simon's call, for both. `theme.shape.line` IS 3, so the
-   *  number is named rather than typed. */
-  markGlow: 14,
+  /**
+   * ⚠ 0 — SIMON CANCELLED THE GLOW ("gajadi glow"). The 3px stays; only the
+   * light around it goes. Kept as a lever rather than torn out because the
+   * marks and all three highlight boxes read it, and a number is a cheaper way
+   * back than re-threading a prop through five call sites.
+   */
+  markGlow: 0,
   /**
    * ═══ THE TWO HIGHLIGHTS ON THE HISTOGRAM ═══  (Simon's frames)
    *
@@ -991,6 +995,11 @@ export const SC15_ART = {
    * thing that is NEW, and it gets the one hue that says so.
    */
   hl2: { at: 12420, from: 30, to: 31 },
+  /** ⚠ 10px EITHER SIDE, IN CANVAS PIXELS — Simon's number, and canvas is the
+   *  right unit for it: it is breathing room around a mark, so it should stay
+   *  10 on screen whatever size the picture behind it is. Everything else in
+   *  this block is in the FILE's pixels; this one deliberately is not. */
+  hl2Pad: 10,
   /**
    * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
    * frame. The distance is DERIVED (`theme.margin.left` minus wherever the

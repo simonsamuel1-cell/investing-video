@@ -68,6 +68,23 @@ export const BrptGroup = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const answering = f >= T.answer;
+  /**
+   * ⚠ THE PICTURE'S SIZE AND ITS SLIDE LIVE OUT HERE, not inside the block that
+   * draws it, because the HEADING rides them too — Simon: "judulnya anchor
+   * dengan imagenya, sehingga ketika image bergeser, judul juga ikut bergeser
+   * keluar". Two copies of this arithmetic is two things to keep in step.
+   */
+  const ART = SC15_ART;
+  const artH = interpolate(
+    progressInOut(f, local(ART.zoom.at, FROM), ART.zoom.over),
+    [0, 1],
+    [ART.h, ART.zoom.to],
+  );
+  const artL = (theme.canvas.width - artH * ART.ratio) / 2;
+  /** ⚠ DERIVED, NOT TYPED — the margin minus wherever the left edge actually
+   *  is, so the picture lands flush whatever size it ended up at. */
+  const artDX =
+    (theme.margin.left - artL) * progressInOut(f, local(ART.shift.at, FROM), ART.shift.over);
   /* the mask lifts across the join — one move, two scenes */
   const open = progress(f, T.answer, m.sec(1.4));
 
@@ -186,21 +203,17 @@ export const BrptGroup = () => {
           chart used to start. A section cannot announce itself over its own
           picture. */}
       {(() => {
-        const A = SC15_ART;
+        const A = ART;
         /** ⚠ ONE HEIGHT DRIVES EVERYTHING. The cover and the level are derived
          *  from the picture's rect, so growing it grows them — there is nothing
          *  to keep in step by hand. */
-        const h = interpolate(
-          progressInOut(f, local(A.zoom.at, FROM), A.zoom.over),
-          [0, 1],
-          [A.h, A.zoom.to],
-        );
+        const h = artH;
         const w = h * A.ratio;
         /** ⚠ ONE CONVERSION, USED BY EVERYTHING. The cover and the level are
          *  written in the FILE's pixels and come through here, so moving or
          *  resizing the picture moves them with it — there is no second copy
          *  of these numbers to fall out of step. */
-        const L = (theme.canvas.width - w) / 2;
+        const L = artL;
         /** ⚠ THE BOTTOM EDGE IS THE ANCHOR, so the picture grows upward and
          *  out of the top of the frame rather than off its own baseline. */
         const T0 = A.bottom - h;
@@ -229,13 +242,8 @@ export const BrptGroup = () => {
          * laid out against the picture's rect; sliding the picture alone would
          * leave them behind, and sliding each of them by the same number would
          * be six places to get it wrong.
-         *
-         * ⚠ AND THE DISTANCE IS DERIVED. `theme.margin.left` minus wherever the
-         * left edge actually is, so it lands flush whatever size the picture
-         * ended up at.
          */
-        const dx =
-          (theme.margin.left - L) * progressInOut(f, local(A.shift.at, FROM), A.shift.over);
+        const dx = artDX;
         return (
           <div style={{ position: "absolute", inset: 0, transform: `translateX(${dx.toFixed(1)}px)` }}>
             <Img
@@ -306,11 +314,16 @@ export const BrptGroup = () => {
                 A.bars.first + A.bars.pitch * q.to + half - (q.i === 1 ? A.hlGap : 0);
               /** Half height, sitting on the baseline — see `hl[0].half`. */
               const y1 = q.half ? A.vol.y0 + (A.vol.y1 - A.vol.y0) * 0.5 : A.vol.y0;
+              /** ⚠ THE CYAN BOX'S PAD IS ADDED AFTER THE CONVERSION, so it is
+               *  10 canvas pixels rather than 10 of the file's — see `hl2Pad`. */
+              const pad = q.cyan ? A.hl2Pad : 0;
               return (
                 <HighlightBox
                   key={q.i}
-                  rect={{ x1: X(x1), y1: Y(y1), x2: X(x2), y2: Y(A.vol.y1) }}
+                  rect={{ x1: X(x1) - pad, y1: Y(y1), x2: X(x2) + pad, y2: Y(A.vol.y1) }}
                   grow={g}
+                  width={theme.shape.line}
+                  glow={A.markGlow}
                   {...(q.cyan
                     ? { stroke: theme.color.cyan, fill: theme.color.bandCyan }
                     : null)}
@@ -346,10 +359,11 @@ export const BrptGroup = () => {
                   width: (X(A.plot.x1) - X(A.plot.x0)) * line,
                   height: theme.shape.line,
                   background: theme.color.indigo,
-                  /* ⚠ TIGHT, NOT `SHADOWS.bloom`. That one is 46px of spread
-                     meant to lift a whole card; on a 3px rule it washes out
-                     into a haze with no line left in the middle of it. */
-                  boxShadow: `0 0 ${A.markGlow}px ${theme.color.indigoGlow}`,
+                  /* ⚠ NONE AT 0, not a zero-radius shadow — see `markGlow`. */
+                  boxShadow:
+                    A.markGlow > 0
+                      ? `0 0 ${A.markGlow}px ${theme.color.indigoGlow}`
+                      : undefined,
                   opacity: marks,
                 }}
               />
@@ -476,6 +490,11 @@ export const BrptGroup = () => {
           Quiz Time di pojok kiri atas". It sits on HEAD's own anchor, the same
           rail SC11's heading stood on, so the name does not jump between the
           two sections. */}
+      {/* ⚠ IT RIDES THE PICTURE'S SLIDE — Simon's call. The picture goes flush
+          to the LEFT margin, which is where the heading already stands, so a
+          heading that stayed put would end up printed over the chart. Anchored
+          to the picture it simply leaves with it. */}
+      <div style={{ position: "absolute", inset: 0, transform: `translateX(${artDX.toFixed(1)}px)` }}>
       <Title
         text={QUIZ.text}
         /* ⚠ ALREADY REVEALED ON THE CUT FRAME. `Title` always fades and rises,
@@ -490,6 +509,7 @@ export const BrptGroup = () => {
         align="left"
         color={theme.color.indigo}
       />
+      </div>
       </div>
     </Stage>
   );
