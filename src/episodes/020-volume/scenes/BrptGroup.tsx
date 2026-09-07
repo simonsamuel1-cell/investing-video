@@ -23,7 +23,7 @@ import {
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, QuizTitle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
-import { BLOCK, BEAT, HEAD, QUIZ, local, COUNTDOWN } from "../data/timing";
+import { BLOCK, BEAT, HEAD, QUIZ, SC15_BLANK, local, COUNTDOWN } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
 import {
   BRPT, BRPT_DOMAIN, BRPT_VOL, BRPT_BREAK, BRPT_REBOUND, BRPT_ASK,
@@ -85,10 +85,13 @@ export const BrptGroup = () => {
           announcing. 019 opens on bare paper for the same reason. It arrives
           on the same frame the chart starts drawing, so the heading vacating
           the middle and the picture filling it are one hand-over. */}
+      {/* ⚠ THE PICTURE IS OFF — see SC15_BLANK in data/timing. Everything below
+          is still built and still VO-locked; only the lever decides whether it
+          draws. */}
+      {!SC15_BLANK && (
       <div style={{ position: "absolute", inset: 0, opacity: progress(f, T.chart, m.fade) }}>
       <Card />
       <SourceTag kind={BRPT.kind} label="BRPT · 1D" y={TAG_Y} />
-      <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
 
       <Chart series={BRPT} grid={G} at={T.chart} over={m.sec(2.6)} />
       <VolumeBars bars={BRPT.bars} volume={BRPT_VOL} grid={G} box={VOL} peak={PEAK} shown={progress(f, T.chart, m.sec(2.6))} />
@@ -168,6 +171,13 @@ export const BrptGroup = () => {
         </>
       )}
       </div>
+      )}
+
+      {/* ⚠ OUTSIDE THE PICTURE, so it survives the blanking — Simon kept the
+          titles. It was inside the group that fades in with the chart; a title
+          that is exempt from a blanking cannot be mounted inside the thing
+          being blanked. */}
+      <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
 
       {/* ⚠ LAST, SO IT IS ON TOP. It is the first thing on screen in this
           group and it has to stay legible over the card the chart is drawn on

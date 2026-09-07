@@ -782,6 +782,27 @@ export const MASCOT = {
  */
 export const QUIZ = { at: 11289, hold: 74, walk: 50, text: "Quiz Time" } as const;
 
+/**
+ * ═══ SC15A + SC15B ARE STRIPPED BACK TO THEIR TITLES ═══  (Simon's call)
+ *
+ * "11289-14508 hilangkan visual, kecuali judul" — f11289 to f14508 is exactly
+ * CG-D's span. The BRPT quiz's whole picture goes: the card, the tape, the
+ * histogram, the support level, the reveal mask, both crosshairs, both stat
+ * strips, the question line, the countdown, the price chip and the closing
+ * point. "Quiz Time" and the scene's own heading are all that render.
+ *
+ * ⚠ IT IS A LEVER, NOT A DELETION. Every one of those still compiles and is
+ * still keyed to the same VO-locked beats, so flipping this to `false` brings
+ * the section back exactly as it was. Deleting the code would mean rebuilding
+ * it from the script the day he wants it again — and he has asked for a blank
+ * stretch before, to redesign into.
+ *
+ * ⚠ THE HEADING MOVED OUT OF THE PICTURE WRAPPER TO SURVIVE THIS. It used to
+ * be inside the group that fades in with the chart; a title that is exempt
+ * from a blanking has to be mounted outside the thing being blanked.
+ */
+export const SC15_BLANK: boolean = true;
+
 export const HEAD = {
   at: 2541,
   hold: 30,
