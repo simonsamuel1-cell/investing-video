@@ -1146,7 +1146,7 @@ export const SC11 = {
          */
         items: [
           { at: 10261, text: "Wait and see" },
-          { at: 10290, text: "Tunggu Retest" },
+          { at: 10290, text: "Tunggu retest" },
           { at: 10338, text: "Tunggu sinyal tambahan" },
         ],
       },
