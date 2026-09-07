@@ -1073,15 +1073,44 @@ export const SC15_ART = {
    * same bars, a second entrance; they were put away at f12300 because two more
    * bars were about to arrive, and now the tape is settled they are true again.
    *
-   * f13685 — those two close, and the cyan moves up to the PRICE pane, over the
-   * ten candles the cover was hiding. Same tone as the histogram's cyan and the
-   * same 10px of air, because it is the same kind of mark on the same picture.
+   * f13685 — a third box lands on the ten VOLUME BARS the cover was hiding, and
+   * the two already there STAY. All three hold to the end of the scene: between
+   * them they tile the whole histogram — the old days, the three before the
+   * breakdown, and the ten that answer it — and taking two away to make room
+   * for the third would break the comparison at the moment it is complete.
+   *
+   * f13859 — the picture rises 200 to make room under it. The HEADING does not
+   * go with it: it is anchored to the picture's SLIDE, which is what carries it
+   * off the left edge, and riding a 200px rise as well would take it off the
+   * top of the frame instead.
    */
   outro: { at: 13441, over: 30 },
   unshift: { at: 13441, over: 40 },
   hlBack: { at: 13520 },
-  hlOut2: { at: 13685, over: 24 },
   hl3: { at: 13685, from: 30, to: 39 },
+  rise: { at: 13859, over: 40, by: 200 },
+  /**
+   * ═══ THE TWO CLOSING LINES ═══  (Simon's frames)
+   *
+   * They stand in the room the rise opens: the picture's bottom lands at 764
+   * and the subtitle band starts at 972, so 208px, and two 44px lines sit in it
+   * with air to spare. Centred on the picture, which is centred on the frame.
+   */
+  says: {
+    size: 44,
+    lines: [
+      { at: 13914, y: 802, text: "Breakdown kehilangan konfirmasi," },
+      { at: 14047, y: 878, text: "buyer memberi respons" },
+    ],
+  },
+  /**
+   * ⚠ THE PRICE THE ARROW ARRIVES AT, 20px ABOVE IT — Simon's number, and the
+   * "above" is measured off `markerGeom`, not typed. Where the arrow's top edge
+   * falls depends on its bow, its head and its stroke together; the same
+   * function the component draws from reports it, so the gap stays 20 whatever
+   * the picture is doing.
+   */
+  tag: { at: 13166, text: "1750", size: 40, gap: 20 },
   arrow: {
     at: 13103,
     over: 34,

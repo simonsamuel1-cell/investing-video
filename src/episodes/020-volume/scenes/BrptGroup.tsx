@@ -20,7 +20,7 @@
 import { Img, interpolate, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox, MarkerArrow,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox, MarkerArrow, markerGeom,
   gridOf, useMotion, progress, textReveal, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -92,6 +92,10 @@ export const BrptGroup = () => {
     (theme.margin.left - artL) *
     (progressInOut(f, local(ART.shift.at, FROM), ART.shift.over) -
       progressInOut(f, local(ART.unshift.at, FROM), ART.unshift.over));
+  /** ⚠ THE RISE IS THE PICTURE'S ALONE — see `rise` in data/timing. The heading
+   *  rides `artDX` because that is what carries it off the left edge; riding
+   *  this as well would take it off the TOP of the frame. */
+  const artDY = -ART.rise.by * progressInOut(f, local(ART.rise.at, FROM), ART.rise.over);
   /* the mask lifts across the join — one move, two scenes */
   const open = progress(f, T.answer, m.sec(1.4));
 
@@ -255,7 +259,13 @@ export const BrptGroup = () => {
         const wipe = progressInOut(f, local(A.answer.at, FROM), A.answer.wipe);
         const said = progress(f, local(A.answer.at, FROM), A.answer.over);
         return (
-          <div style={{ position: "absolute", inset: 0, transform: `translateX(${dx.toFixed(1)}px)` }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translate(${dx.toFixed(1)}px, ${artDY.toFixed(1)}px)`,
+            }}
+          >
             <Img
               src={staticFile(A.src)}
               style={{
@@ -357,10 +367,11 @@ export const BrptGroup = () => {
                 pane: A.vol,
               })),
               { ...A.hl2, half: false, i: 2, cyan: true, pane: A.vol },
-              /** ⚠ THE PRICE PANE, NOT THE HISTOGRAM. Every other box here is
-               *  about volume; this one is about the ten candles the cover was
-               *  hiding, so it is the only one that reads its own pane. */
-              { ...A.hl3, half: false, i: 3, cyan: true, pane: A.price },
+              /** ⚠ THE HISTOGRAM, LIKE THE OTHERS. It is about the ten VOLUME
+               *  BARS the cover was hiding — the candles were my misreading of
+               *  "10 candlestick paling kanan", and Simon corrected it. With
+               *  this one the three boxes tile the whole row. */
+              { ...A.hl3, half: false, i: 3, cyan: true, pane: A.vol },
             ].map((q) => {
               /** ⚠ ONE CURVE OPENS IT AND ANOTHER SHUTS IT, and the shut is the
                *  same `grow` running backwards — the box closes the way it came
@@ -368,19 +379,18 @@ export const BrptGroup = () => {
                *  thing to leave. The cyan pair has no exit: it arrives after the
                *  other two have gone and stays. */
               /**
-               * ⚠ THE TWO INDIGO BOXES HAVE TWO ENTRANCES AND TWO EXITS, and
-               * the terms are ADDED because they never overlap: the first is
-               * already zero by f12300, the second does not start until f13520.
-               * A max() would work too, but the sum says plainly that these are
-               * two separate appearances of the same claim rather than one
-               * appearance that flickered.
+               * ⚠ THE TWO INDIGO BOXES HAVE TWO ENTRANCES AND ONE EXIT, and the
+               * terms are ADDED because they never overlap: the first is already
+               * zero by f12300, the second does not start until f13520 and never
+               * closes — Simon: "biarkan saja hingga akhir scene". A max() would
+               * work too, but the sum says plainly that these are two separate
+               * appearances of the same claim rather than one that flickered.
                */
               const g = q.cyan
                 ? progress(f, local(q.at, FROM), m.sec(0.5))
                 : progress(f, local(q.at, FROM), m.sec(0.5)) *
                     (1 - progressInOut(f, local(A.hlOut.at, FROM), A.hlOut.over)) +
-                  progress(f, local(A.hlBack.at, FROM), m.sec(0.5)) *
-                    (1 - progressInOut(f, local(A.hlOut2.at, FROM), A.hlOut2.over));
+                  progress(f, local(A.hlBack.at, FROM), m.sec(0.5));
               /** ⚠ THE CYAN ONES FADE RATHER THAN CLOSING. They are readings,
                *  and a reading is simply no longer being made; the covers travel
                *  because a cover is a thing being taken OFF. The one over the
@@ -410,7 +420,44 @@ export const BrptGroup = () => {
                 />
               );
             })}
-            {/* ── the recovery, marked ─────────────────────────────────── */}
+            {/* ── the recovery, marked, and the price it reached ───────── */}
+            {f >= local(A.tag.at, FROM) &&
+              (() => {
+                /** ⚠ THE 20 IS MEASURED OFF THE ARROW, not typed against it.
+                 *  Where its top edge falls depends on the bow, the head and
+                 *  the stroke together; `markerGeom` is the same function the
+                 *  component draws from, so the gap stays 20 whatever the
+                 *  picture is doing. */
+                const G = markerGeom({
+                  from: { x: X(A.arrow.from.x), y: Y(A.arrow.from.y) },
+                  to: { x: X(A.arrow.to.x), y: Y(A.arrow.to.y) },
+                  bow: A.arrow.bow,
+                  width: A.arrow.width,
+                  headLen: A.arrow.headLen,
+                });
+                const inn = textReveal(f, local(A.tag.at, FROM), m.reveal);
+                const away = 1 - progress(f, local(A.outro.at, FROM), A.outro.over);
+                if (away <= 0.001) return null;
+                return (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: X(A.arrow.to.x),
+                      top: G.box.top - A.tag.gap - A.tag.size,
+                      transform: `translateX(-50%) translateY(${inn.dy}px)`,
+                      fontFamily: theme.text.family,
+                      fontSize: A.tag.size,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      color: theme.color.indigo,
+                      opacity: inn.opacity * away,
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {A.tag.text}
+                  </div>
+                );
+              })()}
             {f >= local(A.arrow.at, FROM) && (
               <MarkerArrow
                 from={{ x: X(A.arrow.from.x), y: Y(A.arrow.from.y) }}
@@ -466,6 +513,36 @@ export const BrptGroup = () => {
           </div>
         );
       })()}
+
+      {/* ── what the picture says, once it has made room ──────────────
+          ⚠ OUTSIDE THE PICTURE'S WRAPPER. The rise is what opens the space
+          these stand in; travelling with it they would arrive in the room they
+          were clearing. */}
+      {SC15_ART.says.lines.map((line, i) => {
+        const inn = textReveal(f, local(line.at, FROM), m.reveal);
+        if (inn.opacity <= 0.001) return null;
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: line.y,
+              width: theme.canvas.width,
+              textAlign: "center",
+              fontFamily: theme.text.family,
+              fontSize: SC15_ART.says.size,
+              fontWeight: 700,
+              lineHeight: 1,
+              color: theme.color.ink,
+              opacity: inn.opacity,
+              transform: `translateY(${inn.dy}px)`,
+            }}
+          >
+            {line.text}
+          </div>
+        );
+      })}
 
       {/* ── the two answers, in the room the picture gave up ────────────
           ⚠ OUTSIDE THE PICTURE'S WRAPPER. It does not ride the slide: the
