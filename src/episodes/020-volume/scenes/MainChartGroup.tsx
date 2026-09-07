@@ -1519,15 +1519,18 @@ export const MainChartGroup = () => {
                     a support is the floor, so its name belongs under it, and
                     the space under this line is empty in both columns anyway.
 
-                    ⚠ AT THE RIGHT-HAND END, like every other level in the
-                    library. That is the end nearest the newest bars, which is
-                    what a support level is a claim about. */}
+                    ⚠ AT THE LEFT-HAND END — Simon's call, and it is the right
+                    one HERE even though `Level` labels at the right. `Level`
+                    puts it at the right because that is where the eye lands as
+                    the line draws and where the newest bars are; on this tape
+                    the newest bars are the breakdown itself, and a caption
+                    sitting in them competes with the thing being read. The
+                    left end is the half the price never came back to. */}
                 <div
                   style={{
                     position: "absolute",
-                    left: grid2.box.x + grid2.box.w - 12,
+                    left: grid2.box.x + 12,
                     top: grid2.y(BREAKDOWN_SUPPORT) + 10,
-                    transform: "translateX(-100%)",
                     fontFamily: theme.text.family,
                     fontSize: theme.text.tag.size,
                     fontWeight: theme.text.tag.weight,
