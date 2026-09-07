@@ -1030,7 +1030,7 @@ export const SC15_ART = {
     dot: 15,
     dotGap: 30,
     pulse: 1.4,
-    head: "Pilih jawabanmu",
+    head: "Apa yang akan terjadi?",
     options: ["harga akan naik", "harga akan turun"],
   },
   /**
