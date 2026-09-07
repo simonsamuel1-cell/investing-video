@@ -938,7 +938,48 @@ export const SC15_ART = {
    * ⚠ IN THE FILE'S PIXELS, like everything else here, so it grows with the
    * picture at f11848 instead of sitting still while the candle moves.
    */
-  ring: { at: 11628, x: 898, y: 1220, r: 46 },
+  ring: { at: 11628, x: 898, y: 1220, r: 69 },
+  /**
+   * ⚠ BOTH MARKS LEAVE AS THE PICTURE GROWS — Simon's frames, and they are the
+   * ZOOM's frames, not a second pair. The level and the ring are about the low;
+   * once the view opens into the volume the reading has moved on, and a mark
+   * left standing is a mark still making its claim.
+   */
+  marksOut: { at: 11848, over: 83 },
+  /** ⚠ 3px AND LIT — Simon's call, for both. `theme.shape.line` IS 3, so the
+   *  number is named rather than typed. */
+  markGlow: 14,
+  /**
+   * ═══ THE TWO HIGHLIGHTS ON THE HISTOGRAM ═══  (Simon's frames)
+   *
+   * ⚠ BAR RANGES, NOT PIXELS. "3 volume bar dari paling kanan setelah ditutup
+   * shape" is bars 27–29: the cover starts at bar 30, so the three still
+   * visible at the right are 27, 28 and 29. The rest — everything from bar 0 to
+   * 26 — is the second box at f12128, and the two of them together are the
+   * comparison the scene is making.
+   *
+   * ⚠ THEY DO NOT TOUCH. Two boxes sharing an edge draw a double stroke down
+   * the middle and read as one box with a line in it; 6 of the file's pixels
+   * between them is enough to say they are two claims.
+   *
+   * ⚠ AND THEY ARE THE COVER'S OWN HEIGHT, so the histogram row reads as one
+   * strip: three bars marked, the rest marked, ten withheld.
+   */
+  hl: [
+    { at: 12006, from: 27, to: 29 },
+    { at: 12128, from: 0, to: 26 },
+  ],
+  hlGap: 6,
+  /**
+   * ⚠ A QUESTION MARK IN EACH COVER — Simon's call, one per shape. 019 puts its
+   * countdown glyph in the same place for the same reason: the question belongs
+   * where the answer is about to appear, not somewhere else on screen.
+   *
+   * ⚠ IN THE FILE'S PIXELS so it grows with the picture. 150 is a little under
+   * half the cover's 306px width — big enough to own the shape, small enough
+   * that the shape still reads as a panel rather than as a letter.
+   */
+  qmSize: 150,
 } as const;
 
 export const HEAD = {

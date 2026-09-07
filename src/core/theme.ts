@@ -351,6 +351,13 @@ export const theme = {
      * in the candles' own red makes the mark read as data; this is a vivid
      * pure red so it reads as ink. ANNOTATION ONLY — never on chart content.
      */
+    /**
+     * ⚠ THE GLOW A MARK CARRIES, and it is NOT `SHADOWS.bloom`. That one is 46px
+     * of spread meant to lift a whole CARD off the ground; on a 3px rule it
+     * washes out into a haze with no line left in the middle of it. This is
+     * tight enough that the mark still reads as a line that is lit.
+     */
+    indigoGlow: "rgba(95, 77, 238, 0.55)",
     marker: "#E8201A",
     onIndigo: "#FFFFFF",
     /** The transition grid — see core/GridGround.tsx. */

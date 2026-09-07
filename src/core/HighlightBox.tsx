@@ -72,6 +72,8 @@ export const HighlightCircle = ({
   r,
   opacity = 1,
   land = 1,
+  width = theme.shape.rule,
+  glow = 0,
 }: {
   cx: number;
   cy: number;
@@ -79,6 +81,12 @@ export const HighlightCircle = ({
   opacity?: number;
   /** 0 → 1. At 0 the ring is 1.35× and invisible; at 1 it is at size. */
   land?: number;
+  /** ⚠ IN CANVAS PIXELS, AND IT DOES NOT SCALE with whatever the ring is drawn
+   *  over. A mark whose line thickens when the picture under it is enlarged
+   *  reads as part of that picture rather than as a mark on it. */
+  width?: number;
+  /** Blur radius of the glow around the ring, in px. 0 is none. */
+  glow?: number;
 }) => {
   const c = usePalette();
   const t = Math.max(0, Math.min(1, land));
@@ -91,7 +99,19 @@ export const HighlightCircle = ({
         r={r * (1.35 - 0.35 * t)}
         fill={theme.color.indigoWash}
         stroke={c.indigo}
-        strokeWidth={theme.shape.rule}
+        strokeWidth={width}
+        /* ⚠ TWO DROP-SHADOWS, NOT ONE. A single pass at this radius is a faint
+           haze; a tight one inside a wide one gives the ring a lit edge AND a
+           bloom around it, which is what a glow actually looks like. */
+        style={
+          glow > 0
+            ? {
+                filter:
+                  `drop-shadow(0 0 ${(glow * 0.45).toFixed(1)}px ${theme.color.indigoGlow}) ` +
+                  `drop-shadow(0 0 ${glow.toFixed(1)}px ${theme.color.indigoGlow})`,
+              }
+            : undefined
+        }
       />
     </Layer>
   );

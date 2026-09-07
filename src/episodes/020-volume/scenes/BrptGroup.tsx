@@ -20,7 +20,7 @@
 import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -213,6 +213,11 @@ export const BrptGroup = () => {
         const cx = X(A.bars.first + A.bars.pitch * (A.bars.n - A.hide) - A.bars.pitch / 2);
         const cw = X(A.plot.x1 + A.padRight) - cx;
         const line = progress(f, local(A.supportAt, FROM), A.supportOver);
+        /** ⚠ THE MARKS LEAVE ON THE ZOOM'S OWN CURVE — see `marksOut`. They are
+         *  about the low; once the view opens into the volume the reading has
+         *  moved on, and a mark left standing is a mark still making its claim. */
+        const marks =
+          1 - progressInOut(f, local(A.marksOut.at, FROM), A.marksOut.over);
         return (
           <>
             <Img
@@ -241,9 +246,39 @@ export const BrptGroup = () => {
                   height: Y(pane.y1) - Y(pane.y0),
                   borderRadius: theme.shape.panelRadius,
                   background: theme.color.border,
+                  /* ⚠ THE QUESTION MARK IS A CHILD OF THE SHAPE, not a third
+                     element placed at its centre. Centred by layout, it stays
+                     in the middle of the panel however the picture is resized
+                     — there is no coordinate to keep in step. */
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: A.qmSize * k,
+                  fontWeight: 800,
+                  color: theme.color.ink,
+                  lineHeight: 1,
                 }}
-              />
+              >
+                ?
+              </div>
             ))}
+
+            {/* ── the two readings of the histogram ────────────────────── */}
+            {A.hl.map((q, i) => {
+              const g = progress(f, local(q.at, FROM), m.sec(0.5));
+              if (g <= 0.001) return null;
+              const half = A.bars.pitch / 2;
+              const x1 = A.bars.first + A.bars.pitch * q.from - half;
+              const x2 = A.bars.first + A.bars.pitch * q.to + half - (i === 1 ? A.hlGap : 0);
+              return (
+                <HighlightBox
+                  key={i}
+                  rect={{ x1: X(x1), y1: Y(A.vol.y0), x2: X(x2), y2: Y(A.vol.y1) }}
+                  grow={g}
+                />
+              );
+            })}
             {/* ── the ring on that same candle ─────────────────────────── */}
             {/* ⚠ ITS RADIUS TRAVELS WITH THE PICTURE but its STROKE does not:
                 `HighlightCircle` draws a 2px rule whatever the ring's size, and
@@ -255,6 +290,9 @@ export const BrptGroup = () => {
               cy={Y(A.ring.y)}
               r={A.ring.r * k}
               land={progress(f, local(A.ring.at, FROM), m.pop)}
+              width={theme.shape.line}
+              glow={A.markGlow}
+              opacity={marks}
             />
 
             {/* ── the support level, on the low of the visible tape ─────── */}
@@ -268,8 +306,13 @@ export const BrptGroup = () => {
                      to it: a level that stops where the answer begins would be
                      telling the viewer where to look. */
                   width: (X(A.plot.x1) - X(A.plot.x0)) * line,
-                  height: theme.shape.rule,
+                  height: theme.shape.line,
                   background: theme.color.indigo,
+                  /* ⚠ TIGHT, NOT `SHADOWS.bloom`. That one is 46px of spread
+                     meant to lift a whole card; on a 3px rule it washes out
+                     into a haze with no line left in the middle of it. */
+                  boxShadow: `0 0 ${A.markGlow}px ${theme.color.indigoGlow}`,
+                  opacity: marks,
                 }}
               />
             )}
