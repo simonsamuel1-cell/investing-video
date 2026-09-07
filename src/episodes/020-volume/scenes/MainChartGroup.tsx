@@ -1789,7 +1789,11 @@ export const MainChartGroup = () => {
                   fontSize: K.text.size,
                   fontWeight: 700,
                   lineHeight: K.text.lead / K.text.size,
-                  color: theme.color.indigo,
+                  /* ⚠ BLACK, NOT INDIGO — Simon's call, and it is consistent
+                     with the readings later in the scene: black STATES what is
+                     happening, indigo says what to conclude from it. This line
+                     is a statement about what a breakout needs. */
+                  color: theme.color.ink,
                   textAlign: "left",
                   opacity: tx.opacity * away,
                   transform: `translateY(${tx.dy}px)`,
