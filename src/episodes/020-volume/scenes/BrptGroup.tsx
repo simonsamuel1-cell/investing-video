@@ -553,13 +553,14 @@ export const BrptGroup = () => {
         const P = SC15_ART.point;
         const at = local(P.at, FROM);
         if (f < at) return null;
-        /** ⚠ NOTHING IS SET UNTIL THE FRAME HAS FINISHED SNAPPING OPEN. A line
-         *  that reflows while its container widens is the one thing that gives
-         *  the trick away — `dashOpenAt` is the component's own answer for the
-         *  frame its content may start on. */
-        const inAt = dashOpenAt(at);
+        /** ⚠ NOTHING IS SET UNTIL THE FRAME HAS FINISHED SNAPPING OPEN, plus a
+         *  beat. A line that reflows while its container widens is the one
+         *  thing that gives the trick away — `dashOpenAt` is the component's own
+         *  answer for when content may start, and it must be asked with the
+         *  SAME `beats` the box was given or the words arrive mid-snap. */
+        const inAt = dashOpenAt(at, m, P.beats) + P.textGap;
         return (
-          <DashedBox x={P.x} y={P.y} w={P.w} h={P.h} at={at}>
+          <DashedBox x={P.x} y={P.y} w={P.w} h={P.h} at={at} beats={P.beats}>
             {P.lines.map((line, i) => (
               <Words
                 key={i}

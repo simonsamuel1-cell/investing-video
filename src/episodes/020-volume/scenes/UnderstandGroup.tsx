@@ -637,7 +637,7 @@ export const UnderstandGroup = () => {
               y={CLIP.text.pad + CLIP.text.line * (n + 0.5)}
               /* every word carries its own frame; `at` is only the floor the
                  box's snap-open imposes on the first of them */
-              at={dashOpenAt(local(RUNNING.at, FROM) + m.sec(0.5))}
+              at={dashOpenAt(local(RUNNING.at, FROM) + m.sec(0.5), m)}
               atEach={RUNNING_LINE.at[n].map((q) => local(q, FROM))}
               anchor="left"
               size={theme.text.body.size}
@@ -1215,7 +1215,7 @@ export const UnderstandGroup = () => {
             text={SPLIT.quote.text}
             x={SPLIT.quote.w / 2}
             y={SPLIT.quote.h / 2}
-            at={dashOpenAt(local(SPLIT.quote.at, FROM))}
+            at={dashOpenAt(local(SPLIT.quote.at, FROM), m)}
             stagger={6}
             anchor="center"
             size={theme.text.title.size}

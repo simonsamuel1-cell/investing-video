@@ -164,7 +164,7 @@ export const CombosGroupV2 = () => {
               text={line}
               x={BOX.w / 2}
               y={BOX.h / 2 + (n - (lines.length - 1) / 2) * COMBOS_V2.quote.lead}
-              at={dashOpenAt(quoteAt) + n * 6}
+              at={dashOpenAt(quoteAt, m) + n * 6}
               stagger={4}
               anchor="center"
               size={COMBOS_V2.quote.size}

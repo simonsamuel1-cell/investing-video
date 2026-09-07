@@ -30,11 +30,35 @@ import { useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { usePalette } from "./palette";
 import { progress, progressInOut } from "./helpers";
+import { useMotion } from "./useMotion";
 
-/** The two beats. Frames. */
-export const DASH_IN = { rise: 8, riseBy: 26, open: 6, sliver: 10 } as const;
+/**
+ * The two beats, IN SECONDS.
+ *
+ * ⚠ THEY USED TO BE FRAME COUNTS, AND THAT WAS A BUG WITH NO SYMPTOM UNTIL A
+ * 60fps EPISODE USED THIS. They came across from 019 as 8 and 6 frames, tuned
+ * against 30fps; in a 60fps composition the same numbers run the whole entrance
+ * in under a quarter of a second, which is what Simon saw ("terlalu cepat").
+ * Seconds are the library's own rule — see theme.ts, rule 1 — and this file was
+ * breaking it.
+ *
+ * `riseBy` and `sliver` stay in PIXELS. They are distances, not durations.
+ */
+/**
+ * ⚠ AND THESE SECONDS REPRODUCE WHAT THE OTHER FOUR CALL SITES ALREADY DO, on
+ * purpose. 8 and 6 frames at 60fps are 0.133s and 0.1s; every dashed box Simon
+ * has already approved in this episode opens at that speed, and fixing the unit
+ * is not a licence to re-time approved work. A box that wants to be slower says
+ * so with `beats`.
+ */
+export const DASH_IN = { rise: 0.133, riseBy: 26, open: 0.1, sliver: 10 } as const;
+export type DashBeats = { rise: number; open: number };
 /** The frame its content may start on, given the frame the box starts on. */
-export const dashOpenAt = (at: number) => at + DASH_IN.rise + DASH_IN.open;
+export const dashOpenAt = (
+  at: number,
+  m: { sec: (s: number) => number },
+  beats: DashBeats = DASH_IN,
+) => at + m.sec(beats.rise) + m.sec(beats.open);
 
 export const DashedBox = ({
   x,
@@ -48,6 +72,7 @@ export const DashedBox = ({
   solid = false,
   blocks = true,
   shadow,
+  beats = DASH_IN,
   children,
 }: {
   /** Top-left, in canvas pixels. */
@@ -71,14 +96,19 @@ export const DashedBox = ({
    * elevation, which says the box is floating rather than stamped.
    */
   shadow?: { x: number; y: number; color: string };
+  /** ⚠ SECONDS, AND THE CALLER MUST PASS THE SAME OBJECT TO `dashOpenAt`. The
+   *  two are one setting: slow the frame down without slowing the answer to
+   *  "when may my content start" and the content arrives mid-snap. */
+  beats?: DashBeats;
   children?: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   if (f < at || opacity <= 0.001) return null;
 
-  const rise = progress(f, at, DASH_IN.rise);
-  const open = progressInOut(f, at + DASH_IN.rise, DASH_IN.open);
+  const rise = progress(f, at, m.sec(beats.rise));
+  const open = progressInOut(f, at + m.sec(beats.rise), m.sec(beats.open));
   /** The frame's width right now — a sliver until the snap. */
   const wNow = DASH_IN.sliver + (w - DASH_IN.sliver) * open;
 

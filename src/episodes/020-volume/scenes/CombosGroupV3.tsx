@@ -294,7 +294,7 @@ export const CombosGroupV3 = () => {
             <Reading
               key={`in-${k}`}
               text={lines.join(" ")}
-              at={dashOpenAt(Math.max(boxAt, quoteAt))}
+              at={dashOpenAt(Math.max(boxAt, quoteAt), m)}
               mark={COMBOS_V2.marks[k]}
               markAt={cur ? cur.at + COMBOS.beats[2] : 0}
             />

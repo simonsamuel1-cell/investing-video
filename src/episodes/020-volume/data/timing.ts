@@ -1101,7 +1101,10 @@ export const SC15_ART = {
     /** ⚠ 58 APART, WAS 76 — Simon's "kecilin lagi". At 44px a line box is about
      *  57 tall, so 58 is single-spaced: the two read as one sentence broken in
      *  two rather than as two statements. */
-    gone: { at: 14190, over: 24 },
+    /** ⚠ IT FINISHES BEFORE ANYTHING ELSE STARTS — Simon: "fade out selesai
+     *  dulu, lalu muncul text box nya". 30 frames from f14190, so the paper is
+     *  clear at f14220. */
+    gone: { at: 14190, over: 30 },
     lines: [
       { at: 13914, y: 802, text: "Breakdown kehilangan konfirmasi," },
       { at: 14047, y: 860, text: "buyer memberi respons" },
@@ -1122,7 +1125,21 @@ export const SC15_ART = {
    * the subtitle band starts at 972; a 176-tall box at 782 ends at 958.
    */
   point: {
-    at: 14190,
+    /**
+     * ⚠ f14232 — TWELVE FRAMES OF EMPTY PAPER AFTER THE FADE ENDS. Simon:
+     * "tidak perlu buru buru… timing tidak harus sama dengan subtitle atau
+     * voice". The three beats are now strictly one after another: the lines
+     * clear at 14220, the frame opens 14232→14270, the words follow at 14282.
+     *
+     * ⚠ AND THE FRAME OPENS AT ITS OWN SPEED, NOT THE LIBRARY'S DEFAULT. That
+     * default reproduces what the four dashed boxes Simon already approved in
+     * this episode do; this one is deliberately slower, and says so with
+     * `beats` rather than by re-timing the others.
+     */
+    at: 14232,
+    beats: { rise: 0.3, open: 0.34 },
+    /** A beat of stillness between the frame landing and the words starting. */
+    textGap: 12,
     x: 520,
     y: 782,
     w: 880,
