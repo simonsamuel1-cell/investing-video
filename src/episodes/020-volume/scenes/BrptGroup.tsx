@@ -17,7 +17,7 @@
  * ⚠ THE COUNTDOWN IS UNEVEN. 102 frames from "tiga" to "dua", 40 from "dua" to
  * "satu". That is the recording. Never space these on a grid.
  */
-import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { Img, interpolate, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox,
@@ -244,6 +244,9 @@ export const BrptGroup = () => {
          * be six places to get it wrong.
          */
         const dx = artDX;
+        /** The answer's own two curves — see `answer` in data/timing. */
+        const wipe = progressInOut(f, local(A.answer.at, FROM), A.answer.wipe);
+        const said = progress(f, local(A.answer.at, FROM), A.answer.over);
         return (
           <div style={{ position: "absolute", inset: 0, transform: `translateX(${dx.toFixed(1)}px)` }}>
             <Img
@@ -270,6 +273,13 @@ export const BrptGroup = () => {
                   top: Y(pane.y0),
                   width: cw,
                   height: Y(pane.y1) - Y(pane.y0),
+                  /* ⚠ THE WIPE IS A CLIP ON THE COVER, so the dashed outline and
+                     the question mark go with it — they are its children, and
+                     three separate exits would be three things to keep in step.
+                     It uncovers LEFT TO RIGHT, the direction the tape is read
+                     in; the other way round the newest bars would appear first
+                     and the answer would be given backwards. */
+                  clipPath: `inset(0 0 0 ${(cw * wipe).toFixed(1)}px)`,
                   borderRadius: theme.shape.panelRadius,
                   /* ⚠ `greyWash`, NOT `border` — Simon's "abu abu terang". The
                      border grey is the colour of an EDGE, and a panel painted
@@ -344,7 +354,11 @@ export const BrptGroup = () => {
                 ? 0
                 : progressInOut(f, local(A.hlOut.at, FROM), A.hlOut.over);
               const g = progress(f, local(q.at, FROM), m.sec(0.5)) * (1 - out);
-              if (g <= 0.001) return null;
+              /** ⚠ THE CYAN ONE FADES RATHER THAN CLOSING. It is a reading, and
+               *  a reading is simply no longer being made; the covers travel
+               *  because a cover is a thing being taken OFF. */
+              const alpha = q.cyan ? 1 - said : 1;
+              if (g <= 0.001 || alpha <= 0.001) return null;
               const half = A.bars.pitch / 2;
               const x1 = A.bars.first + A.bars.pitch * q.from - half;
               const x2 =
@@ -359,6 +373,7 @@ export const BrptGroup = () => {
                   key={q.i}
                   rect={{ x1: X(x1) - pad, y1: Y(y1), x2: X(x2) + pad, y2: Y(A.vol.y1) }}
                   grow={g}
+                  opacity={alpha}
                   width={theme.shape.line}
                   glow={A.markGlow}
                   {...(q.cyan
@@ -438,6 +453,10 @@ export const BrptGroup = () => {
           });
           if (n < 0) return null;
           const inn = textReveal(f, local(Q.count.at[n], FROM), m.reveal);
+          /** ⚠ IT GOES WHEN THE ANSWER LANDS. A countdown still on screen after
+           *  the answer is a clock that never stopped. */
+          const gone = 1 - progress(f, local(SC15_ART.answer.at, FROM), SC15_ART.answer.over);
+          if (gone <= 0.001) return null;
           return (
             <div
               key={n}
@@ -451,7 +470,7 @@ export const BrptGroup = () => {
                 fontWeight: theme.text.display.weight,
                 color: theme.color.indigo,
                 lineHeight: 1,
-                opacity: inn.opacity,
+                opacity: inn.opacity * gone,
               }}
             >
               {3 - n}
@@ -486,6 +505,23 @@ export const BrptGroup = () => {
             {Q.options.map((label, i) => {
               const inn = textReveal(f, local(Q.at, FROM) + m.fade * (i + 1), m.reveal);
               /**
+               * ⚠ ONE CURVE, TWO OPPOSITE ERRANDS. `said` marks the first
+               * option and drains the second; they are the same event seen from
+               * either side, so they cannot fall out of step.
+               */
+              const said = progress(f, local(SC15_ART.answer.at, FROM), SC15_ART.answer.over);
+              const picked = i === 0;
+              const ink = interpolateColors(
+                said,
+                [0, 1],
+                [theme.color.ink, picked ? theme.color.indigo : theme.color.muted],
+              );
+              const bullet = interpolateColors(
+                said,
+                [0, 1],
+                [theme.color.indigo, picked ? theme.color.indigo : theme.color.muted],
+              );
+              /**
                * ⚠ THE PULSE REPEATS, which nothing else in this episode does. A
                * ring that fires once is a mark landing; a ring that keeps going
                * is an invitation still open — and it is open for as long as the
@@ -504,8 +540,24 @@ export const BrptGroup = () => {
                     marginTop: i ? Q.gap : 0,
                     opacity: inn.opacity,
                     transform: `translateY(${inn.dy}px)`,
+                    position: "relative",
                   }}
                 >
+                  {/* ⚠ THE HIGHLIGHT IS AN ABSOLUTE SIBLING, NOT PADDING ON THE
+                      ROW. Padding would move the words the moment it appeared;
+                      a band behind them at a negative inset changes nothing but
+                      what is under the type. */}
+                  {picked && said > 0.001 && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: "-10px -20px",
+                        borderRadius: theme.shape.chipRadius,
+                        background: theme.color.indigoWash,
+                        opacity: said,
+                      }}
+                    />
+                  )}
                   {/* ⚠ THE RING IS A SIBLING IN A FIXED WELL, not a scaled
                       wrapper round the dot. Scaling the dot would move the text
                       beside it every frame; a well the size of the ring's widest
@@ -527,8 +579,12 @@ export const BrptGroup = () => {
                         marginLeft: -Q.dot * (1 + q * 1.1),
                         marginTop: -Q.dot * (1 + q * 1.1),
                         borderRadius: "50%",
-                        border: `${theme.shape.rule}px solid ${theme.color.indigo}`,
-                        opacity: (1 - q) * 0.6,
+                        border: `${theme.shape.rule}px solid ${bullet}`,
+                        /* ⚠ THE PULSE STOPS WHEN THE ANSWER LANDS. A ring that
+                           keeps going is an invitation still open, and this one
+                           has just been closed — leaving it running would ask
+                           for a choice that has already been made. */
+                        opacity: (1 - q) * 0.6 * (1 - said),
                       }}
                     />
                     <div
@@ -541,11 +597,11 @@ export const BrptGroup = () => {
                         marginLeft: -Q.dot,
                         marginTop: -Q.dot,
                         borderRadius: "50%",
-                        background: theme.color.indigo,
+                        background: bullet,
                       }}
                     />
                   </div>
-                  <div style={{ fontSize: Q.size, fontWeight: 700, color: theme.color.ink }}>
+                  <div style={{ fontSize: Q.size, fontWeight: 700, color: ink, position: "relative" }}>
                     {label}
                   </div>
                 </div>

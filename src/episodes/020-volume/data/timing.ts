@@ -1026,6 +1026,22 @@ export const SC15_ART = {
    */
   shift: { at: 12575, over: 40 },
   /**
+   * ═══ THE ANSWER LANDS ═══  (Simon's frame)
+   *
+   * Five things at f13057: the numeral goes, the right answer is marked and the
+   * wrong one drains to grey, both covers wipe away to the RIGHT — question
+   * marks with them — and the cyan highlight fades.
+   *
+   * ⚠ THE COVERS WIPE, THE CYAN FADES, AND THAT IS NOT AN INCONSISTENCY. A
+   * cover is a thing being TAKEN OFF, so it has to travel; the cyan band is a
+   * reading, and a reading is simply no longer being made.
+   *
+   * ⚠ AND THE WIPE UNCOVERS LEFT TO RIGHT, which is the direction the tape is
+   * read in. Going the other way the newest bars — the ones the whole quiz is
+   * about — would appear first and the answer would be given backwards.
+   */
+  answer: { at: 13057, over: 24, wipe: 46 },
+  /**
    * ═══ THE TWO ANSWERS ═══  (Simon's frame)
    *
    * They stand in the room the picture just gave up. The bullets are circles
