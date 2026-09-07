@@ -1348,7 +1348,12 @@ export const MainChartGroup = () => {
               position: "absolute",
               inset: 0,
               opacity: twin === 0 ? 1 : twinIn,
-              transform: `translateX(${(dx + (twin === 0 ? 0 : (1 - twinIn) * 90)).toFixed(1)}px)`,
+              /* ⚠ THE DROP IS ON THE OUTER WRAPPER, so the note under the
+                 column comes down with it. Putting it on the lift wrapper
+                 instead would move the picture and leave its caption behind. */
+              transform:
+                `translate(${(dx + (twin === 0 ? 0 : (1 - twinIn) * 90)).toFixed(1)}px, ` +
+                `${(splitT * SC11.split.down).toFixed(1)}px)`,
             }}
           >
         {/* ⚠ THE LIFT IS ON AN INNER WRAPPER, about the LEFT column's centre.
@@ -1497,17 +1502,43 @@ export const MainChartGroup = () => {
             )}
             {/* the level the tape is now breaking DOWN through */}
             {splitT > 0.01 && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: grid2.box.x,
-                  top: grid2.y(BREAKDOWN_SUPPORT),
-                  width: grid2.box.w,
-                  height: theme.shape.rule,
-                  background: theme.color.indigo,
-                  opacity: splitT * dim,
-                }}
-              />
+              <>
+                <div
+                  style={{
+                    position: "absolute",
+                    left: grid2.box.x,
+                    top: grid2.y(BREAKDOWN_SUPPORT),
+                    width: grid2.box.w,
+                    height: theme.shape.rule,
+                    background: theme.color.indigo,
+                    opacity: splitT * dim,
+                  }}
+                />
+                {/* ⚠ AND IT IS NAMED — Simon's call. BELOW the line, which is
+                    the one thing that separates it from `Level`'s own label:
+                    a support is the floor, so its name belongs under it, and
+                    the space under this line is empty in both columns anyway.
+
+                    ⚠ AT THE RIGHT-HAND END, like every other level in the
+                    library. That is the end nearest the newest bars, which is
+                    what a support level is a claim about. */}
+                <div
+                  style={{
+                    position: "absolute",
+                    left: grid2.box.x + grid2.box.w - 12,
+                    top: grid2.y(BREAKDOWN_SUPPORT) + 10,
+                    transform: "translateX(-100%)",
+                    fontFamily: theme.text.family,
+                    fontSize: theme.text.tag.size,
+                    fontWeight: theme.text.tag.weight,
+                    color: theme.color.indigo,
+                    opacity: splitT * dim,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Support
+                </div>
+              </>
             )}
             {/* ⚠ `border` IS WHAT WIPES IT LEFT TO RIGHT — in that mode the
                 fill grows by WIDTH instead of by height. The same call SC01

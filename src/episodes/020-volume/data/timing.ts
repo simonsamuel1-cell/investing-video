@@ -1189,6 +1189,22 @@ export const SC11 = {
      *  first shrink: the price panel gives up the height and the histogram's
      *  window comes up with it, so the tops stay put and only the bottom rises. */
     raise: 150,
+    /**
+     * ⚠ AND THE WHOLE PAIR SITS 30px LOWER — Simon's number, and it applies to
+     * THIS state only. `raise` takes 150 off the group's height with the top
+     * anchored, which leaves it hanging high with a band of empty paper under
+     * it; 30 down puts it back in the middle of the room it has.
+     *
+     * ⚠ IT CANNOT BE APPLIED TO THE WHOLE OF SC11. Before the split the group
+     * is 150 taller and its histogram already ends level with the subtitle
+     * band at y=972 — 30 more would put the pane, and the cyan band's 20px
+     * overshoot, inside the band the subtitles own. So it rides `splitT`: zero
+     * on the frame the columns divide, and fully down once they have.
+     *
+     * The title, the logo and the subtitles are outside the pair and do not
+     * move — Simon was explicit.
+     */
+    down: 30,
     /** The two readings, one per column. */
     labels: ["Breakdown, volume besar", "Breakdown, volume rendah"],
     labelSize: 34,
