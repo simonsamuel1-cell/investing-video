@@ -20,10 +20,10 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, QuizTitle,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
-import { BLOCK, BEAT, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
+import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
 import {
   BRPT, BRPT_DOMAIN, BRPT_VOL, BRPT_BREAK, BRPT_REBOUND, BRPT_ASK,
@@ -34,16 +34,11 @@ import {
 const FROM = BLOCK.SC15A;
 const T = {
   /**
-   * ⚠ THE CHART WAITS FOR THE QUIZ TITLE TO LEAVE THE MIDDLE. At frame 0 it
-   * would build under "Quiz Time" while the words are still 2.5× size and
-   * centred — 019 opens on an empty stage for exactly this reason. It starts
-   * as the walk starts, so the heading vacates the middle and the tape fills
-   * it: one move handing over to the next rather than two at once.
-   *
-   * There is room. 2.6s of drawing from f11363 finishes at f11519, and the
-   * first VO-locked beat in this group is the ticker at f11560.
+   * ⚠ 0 AGAIN — THE CUT LANDS ON THE FINISHED LAYOUT. This used to wait for
+   * "Quiz Time" to walk out of the middle of the frame; nothing travels through
+   * the middle any more, so there is nothing to wait for.
    */
-  chart: QUIZ.hold,
+  chart: 0,
   ticker: local(BEAT.brpt, FROM),
   low: local(BEAT.monthLow, FROM),
   twoDays: local(BEAT.lastTwoDays, FROM),
@@ -78,6 +73,14 @@ export const BrptGroup = () => {
 
   return (
     <Stage>
+      {/* ⚠ THE WHOLE QUIZ LAYOUT TRAVELS IN AS ONE THING. Both halves of the
+          cut evaluate CUTS.toQuiz from GLOBAL frames — CG-A through
+          `cutOutStyle`, this through `cutInStyle`. Wrapping the layout rather
+          than its pieces is what makes the cover and the picture inseparable:
+          they move together, both fully opaque, so the answer can never show
+          through a half-transparent shape the way it did when this was a
+          fade. */}
+      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toQuiz) }}>
       {/* ⚠ THE WHOLE PICTURE WAITS FOR THE TITLE TO LEAVE THE MIDDLE. Mounted
           from frame 0 the empty card, its gridlines and the reveal mask all
           stood behind "Quiz Time" while it was still 2.5× size and centred —
@@ -185,14 +188,14 @@ export const BrptGroup = () => {
       {(() => {
         const A = SC15_ART;
         const w = A.h * A.ratio;
-        const inn = progress(f, T.chart, m.sec(0.6));
-        if (inn <= 0.001) return null;
         /** ⚠ ONE CONVERSION, USED BY EVERYTHING. The cover and the level are
          *  written in the FILE's pixels and come through here, so moving or
          *  resizing the picture moves them with it — there is no second copy
          *  of these numbers to fall out of step. */
         const L = (theme.canvas.width - w) / 2;
-        const T0 = (A.top + A.bottom - A.h) / 2;
+        /** ⚠ THE BOTTOM EDGE IS THE ANCHOR, so the picture grows upward and
+         *  out of the top of the frame rather than off its own baseline. */
+        const T0 = A.bottom - A.h;
         const k = A.h / A.img.h;
         const X = (ix: number) => L + ix * k;
         const Y = (iy: number) => T0 + iy * k;
@@ -216,7 +219,6 @@ export const BrptGroup = () => {
                    is; a screenshot with square corners reads as a foreign
                    object dropped on the page. */
                 borderRadius: theme.shape.cardRadius,
-                opacity: inn,
               }}
             />
             {/* ── the answer, withheld ─────────────────────────────────── */}
@@ -231,7 +233,6 @@ export const BrptGroup = () => {
                   height: Y(pane.y1) - Y(pane.y0),
                   borderRadius: theme.shape.panelRadius,
                   background: theme.color.border,
-                  opacity: inn,
                 }}
               />
             ))}
@@ -264,23 +265,26 @@ export const BrptGroup = () => {
         <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
       )}
 
-      {/* ⚠ LAST, SO IT IS ON TOP. It is the first thing on screen in this
-          group and it has to stay legible over the card the chart is drawn on
-          — mounted before the card it was simply painted over.
-
-          ⚠ IT IS NOT PART OF THE PICTURE THE CUT CARRIES IN; see CUTS.toQuiz,
-          which is deliberately one-sided. It settles on HEAD's own anchor, the
-          same rail SC11's heading stood on, so the section name does not jump
-          between the two sections. */}
-      <QuizTitle
+      {/* ⚠ LAST, SO IT IS ON TOP, and PART of what the cut carries in — it no
+          longer arrives on its own. Simon: "camera cutnya langsung ke layout
+          Quiz Time di pojok kiri atas". It sits on HEAD's own anchor, the same
+          rail SC11's heading stood on, so the name does not jump between the
+          two sections. */}
+      <Title
         text={QUIZ.text}
-        at={local(QUIZ.at, FROM)}
-        hold={QUIZ.hold}
-        walk={QUIZ.walk}
+        /* ⚠ ALREADY REVEALED ON THE CUT FRAME. `Title` always fades and rises,
+           and at frame 0 that put the heading at zero opacity while the picture
+           beside it arrived solid — the cut is supposed to land on a FINISHED
+           layout. Starting its reveal before the group exists means it is done
+           by the time anyone sees it. */
+        at={-m.reveal}
         x={HEAD.x}
         y={HEAD.y}
         size={HEAD.size}
+        align="left"
+        color={theme.color.indigo}
       />
+      </div>
     </Stage>
   );
 };

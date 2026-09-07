@@ -388,14 +388,21 @@ export const CUTS = {
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
-   * ⚠ AND IT IS ONE-SIDED ON PURPOSE, which is the one time that is right.
-   * The rule is that both halves must evaluate the SAME cut, because two
-   * hand-tuned moves that happen to meet is not a cut. Here there is no second
-   * picture to meet: what follows is an empty stage with a name on it. So the
-   * camera carries the columns out, and the title arrives on its own entrance
-   * — sliding it in as well would animate it twice.
+   * ⚠ IT IS NOW TWO-SIDED, AND THAT IS THE FIX, NOT A TIDY-UP. The quiz used to
+   * arrive by fading up: "Quiz Time" big and centred, then the picture behind
+   * it. But the picture and the shape covering it faded on the SAME opacity, so
+   * at every frame of the fade the cover was half-transparent and the answer
+   * showed straight through it — Simon: "aku maunya tertutup sempurna bahkan
+   * ketika transisi sekalipun". A camera cut has no opacity in it at all. The
+   * layout TRAVELS in, whole and fully opaque, and the cover can never be seen
+   * through because it is never transparent.
+   *
+   * ⚠ HORIZONTAL, NOT VERTICAL. A vertical throw of 90 would start the picture
+   * 90px below its rest position, and its rest position already ends 8px above
+   * the subtitle band — the incoming frames would put it inside a band nothing
+   * may enter. Sideways there is no such neighbour.
    */
-  toQuiz: { at: 11289, over: 24, distance: 90, blur: 10, axis: "y" as const },
+  toQuiz: { at: 11289, over: 24, distance: 90, blur: 10, axis: "x" as const },
   intoSC01: { at: 0, over: 30, distance: 90, blur: 12, axis: "y" as const },
   /** SC01 → the "Satu hal yang perlu dicek" mascot card. A real cut: SC01 is
    *  carried out and the card carried in on one move at f892. */
@@ -766,21 +773,16 @@ export const MASCOT = {
  * ⚠ HIS WORDING VERBATIM, ellipsis included.
  */
 /**
- * ═══ QUIZ TIME ═══  (Simon's frame, and his reference)
+ * ═══ QUIZ TIME ═══  (Simon's frame)
  *
- * "Dari 11289, beri Quiz Time. Sama seperti 6725-6787" — episode 019's own
- * gesture, which is why `QuizTitle` now lives in core rather than in 019.
- *
- * ⚠ 019 IS 30fps AND THIS IS 60. His 62 frames there are 2.07 seconds, which
- * is 124 frames here — 74 big and centred, then 50 walking up to the rail.
- * Copying 62 across would have run the whole move at double speed.
- *
- * ⚠ IT SETTLES ON `HEAD`'s OWN ANCHOR, the same place SC11's heading stood, so
- * the rail does not move between the two sections. CG-D's own title is CENTRED
- * and arrives at f11560; the two sit side by side rather than on top of each
- * other, which is exactly how 019 hangs its question beside the heading.
+ * ⚠ IT NO LONGER ARRIVES BIG AND WALKS UP — Simon changed his mind once he saw
+ * what the fade cost: "camera cutnya langsung ke layout Quiz Time di pojok kiri
+ * atas dan image di tengah". The cut lands on the FINISHED layout. 019's
+ * travelling version is still in core as `QuizTitle` for whoever wants it; this
+ * section is a plain heading now, on `HEAD`'s own anchor — the same rail SC11's
+ * heading stood on, so the name does not jump between the two sections.
  */
-export const QUIZ = { at: 11289, hold: 74, walk: 50, text: "Quiz Time" } as const;
+export const QUIZ = { at: 11289, text: "Quiz Time" } as const;
 
 /**
  * ═══ SC15A + SC15B ARE STRIPPED BACK TO THEIR TITLES ═══  (Simon's call)
@@ -831,9 +833,25 @@ export const SC15_BLANK: boolean = true;
 export const SC15_ART = {
   src: "art/brpt.png",
   ratio: 1230 / 1800,
-  h: 780,
-  top: 176,
-  bottom: 972,
+  /**
+   * ⚠ TWICE THE SIZE, ANCHORED ON ITS BOTTOM EDGE — Simon's "perbesar 100%,
+   * anchor bawah". 780 → 1560, with the bottom left exactly where it was.
+   *
+   * ⚠ WHAT THAT CROPS IS THE POINT. Growing upward from 964 puts the top edge
+   * at −596, which in the file's own pixels is y 688 — within two pixels of
+   * `price.y0`, the top of the price plot. The app's header, its price, the
+   * Prev/Open/High/Low row and the timeframe tabs all leave the frame, and what
+   * is left is the chart and nothing else.
+   *
+   * ⚠ AND IT BREAKS TWO STANDING RULES, WHICH IS SIMON'S CALL TO MAKE. At 1066
+   * wide, centred, it runs 427 → 1493: past the logo zone's `maxX` of 1368 in
+   * the top 150px (though still 47px clear of the mark itself), and it reaches
+   * the frame's top edge rather than stopping at the 54px margin. A picture
+   * that satisfies both can only be 814 tall — a 4% enlargement, not 100%.
+   */
+  h: 1560,
+  /** The bottom edge, which is what stays put. */
+  bottom: 964,
   /**
    * ═══ EVERYTHING BELOW IS IN THE FILE'S OWN PIXELS ═══
    *
