@@ -344,6 +344,14 @@ export const theme = {
      *  at. Simon's number. */
     bandCyan: "rgba(92, 200, 227, 0.20)",
     hlOrange: "rgba(242, 166, 59, 0.34)",
+    /**
+     * ⚠ THE MARKER'S RED, AND IT IS NOT `warn` OR `candleRed`. It belongs to
+     * core/MarkerArrow — a mark someone drew ON the video, which is the one
+     * thing allowed to look like it came from outside it. Pointing at candles
+     * in the candles' own red makes the mark read as data; this is a vivid
+     * pure red so it reads as ink. ANNOTATION ONLY — never on chart content.
+     */
+    marker: "#E8201A",
     onIndigo: "#FFFFFF",
     /** The transition grid — see core/GridGround.tsx. */
     gridLine: "#C7CCD6",

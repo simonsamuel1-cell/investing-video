@@ -29,7 +29,7 @@ import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, Candles, VolumeBars, Level, PriceTag, Zone, HighlightCircle,
-  Chip, Title, Line, SourceTag, Crosshair,
+  Chip, Title, Line, SourceTag, Crosshair, MarkerArrow,
   SplitDivider, SplitLabels,
   gridOf, domainOf, useMotion, progress, progressInOut, textReveal, price as fmtPrice, theme,
   cutInStyle, cutOutStyle, TuntunMark, GridGround, fadeOut,
@@ -1732,13 +1732,70 @@ export const MainChartGroup = () => {
           );
         })}
 
+        {/* ── the marker, and what it is pointing out ────────────────────
+            ⚠ NOT INSIDE THE DRIFT. This is a mark drawn ON the video, not part
+            of the picture; a camera move under it would give it away as
+            rendered. It is also finished before f9240, which is where the
+            drift starts, so the two never overlap.
+
+            ⚠ AND IT IS DRAWN OVER THE COLUMN, after the twin map, because the
+            whole point of a marker is that it sits on top of the thing it is
+            marking. */}
+        {(() => {
+          const K = SC11.mark;
+          const on = f >= local(K.at, FROM);
+          const away = 1 - progress(f, local(K.gone, FROM), K.out);
+          if (!on || away <= 0.001) return null;
+          const tx = textReveal(f, local(K.text.at, FROM), m.reveal);
+          return (
+            <>
+              <MarkerArrow
+                from={K.tail}
+                to={K.tip}
+                bow={K.bow}
+                at={local(K.at, FROM)}
+                over={K.over}
+                width={K.width}
+                headLen={K.headLen}
+                opacity={away}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  left: K.text.x,
+                  top: K.text.y,
+                  width: theme.canvas.width - theme.margin.right - K.text.x,
+                  fontFamily: theme.text.family,
+                  fontSize: K.text.size,
+                  fontWeight: 700,
+                  lineHeight: K.text.lead / K.text.size,
+                  color: theme.color.indigo,
+                  textAlign: "left",
+                  opacity: tx.opacity * away,
+                  transform: `translateY(${tx.dy}px)`,
+                }}
+              >
+                {K.text.lines.map((line, n) => (
+                  <div key={n}>{line}</div>
+                ))}
+              </div>
+            </>
+          );
+        })()}
+
         {/* ── the reading beside the chart ──────────────────────────────── */}
         {SC11.note.groups.map((grp, q) => {
           const kick = "kick" in grp ? grp.kick : undefined;
-          const first = local(kick ? kick.at : grp.body.at, FROM);
+          /** ⚠ A GROUP IS EITHER A STATEMENT OR A LIST. The first two are a
+           *  kicker and the conclusion drawn from it — one thought in two
+           *  parts, laid out whole from the first frame. The third is three
+           *  peers arriving in turn, and they carry their own frames. */
+          const items = "items" in grp ? grp.items : undefined;
+          const body = "body" in grp ? grp.body : undefined;
+          const first = local(kick ? kick.at : items ? items[0].at : body!.at, FROM);
           const away = 1 - progress(f, local(grp.gone, FROM), SC11.note.out);
           if (f < first || away <= 0.001) return null;
-          const bodyIn = textReveal(f, local(grp.body.at, FROM), m.reveal);
+          const bodyIn = body ? textReveal(f, local(body.at, FROM), m.reveal) : null;
           const kickIn = kick ? textReveal(f, local(kick.at, FROM), m.reveal) : null;
           /**
            * ⚠ LAID OUT BY FLOW, NOT BY ARITHMETIC. Both texts wrap at the
@@ -1797,19 +1854,57 @@ export const MainChartGroup = () => {
                   {kick.text}
                 </div>
               )}
-              <div
-                style={{
-                  maxWidth: SC11.note.width,
-                  fontSize: SC11.note.size,
-                  fontWeight: 700,
-                  lineHeight: SC11.note.lead / SC11.note.size,
-                  color: theme.color.indigo,
-                  opacity: bodyIn.opacity,
-                  transform: `translateY(${bodyIn.dy}px)`,
-                }}
-              >
-                {grp.body.lines.join(" ")}
-              </div>
+              {body && bodyIn && (
+                <div
+                  style={{
+                    maxWidth: SC11.note.width,
+                    fontSize: SC11.note.size,
+                    fontWeight: 700,
+                    lineHeight: SC11.note.lead / SC11.note.size,
+                    color: theme.color.indigo,
+                    opacity: bodyIn.opacity,
+                    transform: `translateY(${bodyIn.dy}px)`,
+                  }}
+                >
+                  {body.lines.join(" ")}
+                </div>
+              )}
+              {/* ⚠ THE THREE POINTS ARE ONE BLOCK WITH THEIR OWN GAP, not three
+                  children of the outer stack. The outer gap separates a kicker
+                  from its conclusion; peers in a list want to sit closer than
+                  that or they stop reading as one list. */}
+              {items && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-start",
+                    gap: SC11.note.itemGap,
+                  }}
+                >
+                  {items.map((it, n) => {
+                    const inn = textReveal(f, local(it.at, FROM), m.reveal);
+                    return (
+                      <div
+                        key={n}
+                        style={{
+                          fontSize: SC11.note.itemSize,
+                          fontWeight: 700,
+                          lineHeight: SC11.note.lead / SC11.note.size,
+                          color: theme.color.indigo,
+                          opacity: inn.opacity,
+                          /* ⚠ NO `maxWidth`, AND NEVER WRAPS — see `itemSize`.
+                             A point that breaks in two stops being one point. */
+                          whiteSpace: "nowrap",
+                          transform: `translateY(${inn.dy}px)`,
+                        }}
+                      >
+                        {it.text}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           );
         })}

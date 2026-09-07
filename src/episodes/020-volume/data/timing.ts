@@ -943,6 +943,43 @@ export const SC11 = {
    */
   narrow: 0.65,
   /**
+   * ═══ THE HAND-DRAWN ARROW ═══  (Simon's frame and his reference photo)
+   *
+   * A red marker stroke curving in from the right and pointing at the
+   * resistance area, with the reason written under it. It is the only thing in
+   * the episode that is meant to look like it was drawn ON the video rather
+   * than rendered in it — see core/MarkerArrow.
+   *
+   * ⚠ IT LIVES ENTIRELY IN THE EMPTY RIGHT THIRD. At f9019 the push-in has
+   * pulled the tape to the left of x≈1160 and everything right of that is bare
+   * card; the arrow and its two lines are one callout standing in that room.
+   *
+   * ⚠ AND IT IS GONE BEFORE f9240. That frame narrows the card to 65% and the
+   * column it is standing in BECOMES the reading column — the first kicker
+   * lands there at f9293. Anything still drawn here would be under it.
+   */
+  mark: {
+    at: 9019,
+    over: 34,
+    gone: 9228,
+    out: 12,
+    /** Where the pen lands, and where it stops. The tip sits just outside the
+     *  zone's rounded right end so it points at it without covering it. */
+    tail: { x: 1700, y: 590 },
+    tip: { x: 1190, y: 634 },
+    bow: -52,
+    width: 17,
+    headLen: 90,
+    text: {
+      at: 9088,
+      x: 1200,
+      y: 396,
+      size: 42,
+      lead: 56,
+      lines: ["Biar bisa tembus resistance,", "minat beli harus kuat"],
+    },
+  },
+  /**
    * ═══ THE CAMERA NEVER STOPS ═══  (from the reference folder, 2026-09-07)
    *
    * Every chart clip Simon put in `VIDEO 21 - Volume/Video Reference` has TWO
@@ -1029,6 +1066,19 @@ export const SC11 = {
      * 560 the column ends at 1823, one pixel inside the right margin.
      */
     pad: 44,
+    /** ⚠ TIGHTER THAN `gap`. That one separates the two halves of a single
+     *  statement; these are three peers in a list and want to read as a group. */
+    itemGap: 26,
+    /**
+     * ⚠ SMALLER THAN `size`, AND IT IS MEASURED, NOT CHOSEN. At the group's own
+     * 52px the longest point — "Tunggu sinyal tambahan" — renders 601px wide
+     * against 563px of column, so it wrapped and the third point stood two
+     * lines tall while its peers stood one. 48 is the largest that fits; 46
+     * leaves 31px of air, which is what a list of three needs to still read as
+     * one block. Every item is `nowrap` so a future edit fails visibly rather
+     * than silently re-breaking a line.
+     */
+    itemSize: 46,
     /** The column the reading is set in, beside a 65%-wide card. */
     width: 560,
     size: 52,
@@ -1049,14 +1099,21 @@ export const SC11 = {
         /* ⚠ IT LEAVES WHEN THE COLUMN SPLITS — the duplicated layout carries
            no text at all. */
         gone: 10471,
-        /** ⚠ ONE STRING, NOT HAND-BROKEN LINES. At 52px it does not fit the
-         *  column on one line and wraps by itself; breaking it by hand means
-         *  re-breaking it every time a word changes.
+        /**
+         * ⚠ THREE POINTS, ONE AT A TIME — Simon's frames, and "Saran:" goes
+         * with them. Three options arriving in turn ARE the advice; a word in
+         * front announcing that they are advice says it twice, and it was the
+         * only thing forcing the block to wrap.
          *
-         *  ⚠ AND IT STAYS INDIGO. The black is for the two lines that STATE
-         *  what happened; this one is the conclusion drawn from them, which is
-         *  what indigo means everywhere else in the episode. */
-        body: { at: 10257, lines: ["Saran: wait and see, retest, atau sinyal tambahan"] },
+         * ⚠ AND IT STAYS INDIGO. The black is for the lines that STATE what
+         * happened; these are what to do about it, which is what indigo means
+         * everywhere else in the episode.
+         */
+        items: [
+          { at: 10261, text: "Wait and see" },
+          { at: 10290, text: "Tunggu Retest" },
+          { at: 10338, text: "Tunggu sinyal tambahan" },
+        ],
       },
     ],
   },
