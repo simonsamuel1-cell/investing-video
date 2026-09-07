@@ -24,7 +24,7 @@ export const BLOCK = {
    * further on purpose so it does not draw under the quiz title.
    */
   SC15A: 11289, SC15B: 13026,
-  SC16: 14509, SC17: 15415, SC18: 16653, SC19: 17820, SC20: 18764,
+  SC16: 14518, SC17: 15415, SC18: 16653, SC19: 17820, SC20: 18764,
   END: 19652,
 } as const;
 
@@ -385,6 +385,13 @@ export const COUNTDOWN = [BEAT.three, BEAT.two, BEAT.one];
  * as a slide up from nowhere.
  */
 export const CUTS = {
+  /**
+   * ⚠ THE QUIZ → SC16, ON f14518 — Simon's frame, "14517-14518 beri transisi
+   * camera cut". Horizontal, like `toQuiz` and for the same reason: the picture
+   * either side ends close to the subtitle band, and a vertical throw would put
+   * content inside it for the twelve frames the move lasts.
+   */
+  toSC16: { at: 14518, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
@@ -1241,6 +1248,58 @@ export const SC15_ART = {
    *  this is the FILE's, so it is 14 / 0.4333 = 32 of these. At the size the
    *  picture arrives in that is 51px on screen; doubled it is 102. */
   qmSize: 118,
+} as const;
+
+/**
+ * ═══ SC16 — TWO WINDOWS, IN THE REFERENCE'S OWN LANGUAGE ═══  (Simon's call)
+ *
+ * The chart, the volume and the three captions that used to stand here are
+ * gone: "hilangkan semua visual karna tidak dipakai". What replaces them is the
+ * ConversBank look — a pastel ground and two panes of glass — with one line in
+ * each.
+ *
+ * ⚠ THE GROUND IS NOT THE EPISODE'S. This scene paints its own, so `Stage` is
+ * mounted transparent; every other scene in the episode would be wrong if it
+ * did this, which is why the colours are named `glass*` in the theme rather
+ * than added to the palette.
+ *
+ * ⚠ THE TWO ARE THE SAME SIZE. They are two halves of one answer — what volume
+ * is for — and a pair where one is larger says one of them matters more.
+ */
+export const SC16_UI = {
+  x: 380,
+  w: 1160,
+  h: 300,
+  top: 200,
+  gap: 60,
+  radius: 40,
+  size: 56,
+  /** The second pane follows the first rather than arriving with it. */
+  stagger: 10,
+  lines: ["Untuk konfirmasi breakout", "Membaca performa trend"],
+  /**
+   * ⚠ THE BLURRED PANELS BEHIND — the reference's own depth at 0:06, where a
+   * whole app's worth of cards sits out of focus behind the one in front.
+   *
+   * ⚠ FIXED POSITIONS, NOT RANDOM. `Math.random()` in a Remotion scene is a
+   * different picture every frame; a seeded generator would be deterministic
+   * but would still change the moment anyone touched the seed. Eight rectangles
+   * typed out are eight rectangles that stay put.
+   */
+  ghost: {
+    blur: 14,
+    radius: 28,
+    rects: [
+      { x: -60, y: 70, w: 420, h: 150 },
+      { x: 250, y: 250, w: 330, h: 210 },
+      { x: -40, y: 520, w: 380, h: 260 },
+      { x: 380, y: 700, w: 460, h: 240 },
+      { x: 900, y: 40, w: 520, h: 180 },
+      { x: 1300, y: 300, w: 420, h: 300 },
+      { x: 1560, y: 660, w: 420, h: 220 },
+      { x: 940, y: 820, w: 500, h: 180 },
+    ],
+  },
 } as const;
 
 export const HEAD = {

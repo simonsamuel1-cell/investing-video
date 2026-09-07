@@ -359,6 +359,36 @@ export const theme = {
      */
     indigoGlow: "rgba(95, 77, 238, 0.55)",
     marker: "#E8201A",
+    /**
+     * ═══ THE GLASS SET ═══  (sampled from Simon's ConversBank reference, 0:06)
+     *
+     * ⚠ EVERY VALUE HERE WAS READ OFF THAT FRAME, not invented. The ground runs
+     * #D0DAE9 across the top, #EEF0F4 at the middle-left, #E6E8EC at the
+     * middle-right and #DDE3EC along the bottom — a pale blue-grey that is
+     * LIGHTEST IN THE MIDDLE, which is the opposite of what a single linear
+     * gradient does and is why this is two blooms over a base.
+     *
+     * ⚠ AND IT IS NOT THE BRAND PALETTE. Simon: "tidak perlu memikirkan warna
+     * branding". These names are prefixed so nothing reaches for them by
+     * accident; they belong to a scene that is quoting another video's look.
+     */
+    glassBg:
+      "radial-gradient(85% 62% at 50% -6%, #C9D4E7 0%, rgba(201,212,231,0) 66%)," +
+      "radial-gradient(80% 55% at 50% 106%, #D6DDE9 0%, rgba(214,221,233,0) 64%)," +
+      "linear-gradient(180deg, #E3E9F2 0%, #EFF2F6 44%, #E4E9F1 100%)",
+    /** ⚠ THE FAINT PANELS BEHIND, and they are barely a step off the ground —
+     *  #EFF2F5 against #EEF0F4 in the reference. Any more contrast and they
+     *  stop being out-of-focus depth and start being content. */
+    glassGhost: "#F5F8FB",
+    /** ⚠ NEAR-WHITE, NOT TRANSLUCENT. At 0:06 the card in front is #FDFDFF and
+     *  opaque; the frosted, see-through panels are a LATER part of that video.
+     *  Simon named this second. */
+    glassPanel: "linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 100%)",
+    glassEdge: "rgba(255, 255, 255, 0.9)",
+    glassShadow:
+      "0 30px 70px rgba(96, 110, 140, 0.15), 0 4px 14px rgba(96, 110, 140, 0.07)",
+    /** Not `ink`: the reference sets its type in a dark blue-grey, never black. */
+    glassInk: "#2C3453",
     onIndigo: "#FFFFFF",
     /** The transition grid — see core/GridGround.tsx. */
     gridLine: "#C7CCD6",
