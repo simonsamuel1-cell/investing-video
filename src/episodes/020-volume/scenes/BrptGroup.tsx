@@ -283,15 +283,11 @@ export const BrptGroup = () => {
                      reads as a sheet laid over it, which is exactly the
                      gesture. */
                   backgroundColor: theme.color.cardBg,
-                  /* ⚠ ONE GRADIENT, NOT A STACK OF DIVS. A repeating gradient
-                     at 45° measures its stops PERPENDICULAR to the stripes, so
-                     "7px of nothing then 1px of grey" is exactly a 1px rule
-                     every 8px — and it costs one property rather than forty
-                     elements that would have to be re-laid out every frame the
-                     picture resizes. */
-                  backgroundImage:
-                    `repeating-linear-gradient(45deg, transparent 0 ${A.hatch.gap - A.hatch.width}px, ` +
-                    `${theme.color.border} ${A.hatch.gap - A.hatch.width}px ${A.hatch.gap}px)`,
+                  /* ⚠ THE EDGE IS THE WHOLE SIGNAL NOW. On the chart's own
+                     white, nothing but this outline says a panel is there —
+                     and `box-sizing: border-box` (the stage's own reset) keeps
+                     it INSIDE the rect, so adding it moves nothing. */
+                  border: `${A.edge.width}px dashed ${theme.color.border}`,
                   /* ⚠ THE QUESTION MARK IS A CHILD OF THE SHAPE, not a third
                      element placed at its centre. Centred by layout, it stays
                      in the middle of the panel however the picture is resized

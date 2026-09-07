@@ -1001,20 +1001,16 @@ export const SC15_ART = {
    *  this block is in the FILE's pixels; this one deliberately is not. */
   hl2Pad: 10,
   /**
-   * ⚠ THE COVERS ARE HATCHED — Simon: "garis diagonal, berjarak 8 px, tebalnya
-   * 1 px, abu abu yang sedikit lebih gelap". A flat panel reads as a hole in
-   * the picture; ruled, it reads as something laid OVER the picture, which is
-   * what it is.
+   * ⚠ THE HATCH IS GONE — Simon cancelled it. What separates the cover from the
+   * chart now is a DASHED EDGE: the panel is the chart's own white, so the only
+   * thing saying "something is over this" is its outline, and a dashed one says
+   * it is temporary in a way a solid one does not.
    *
-   * ⚠ IN CANVAS PIXELS, AND DELIBERATELY NOT IN THE FILE'S. Everything else on
-   * these shapes grows when the picture does; a hatch that grew with it would
-   * turn into wide stripes at double size. 8px apart on screen is 8px apart at
-   * every size, which is what a texture has to be.
-   *
-   * `theme.color.border` IS the one step darker than `greyWash` — the two are
-   * already a pair in the palette, so the shade is named rather than mixed.
+   * ⚠ IN CANVAS PIXELS, NOT THE FILE'S, for the same reason the hatch was: the
+   * shapes grow with the picture, and a dash pattern that grew with them would
+   * turn into a row of blocks at double size.
    */
-  hatch: { gap: 16, width: 1 },
+  edge: { width: 2, dash: 10, gap: 8 },
   /**
    * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
    * frame. The distance is DERIVED (`theme.margin.left` minus wherever the
@@ -1043,7 +1039,10 @@ export const SC15_ART = {
     midY: 440,
     lead: 50,
     gap: 42,
-    headSize: 44,
+    /** ⚠ THE SAME AS `size` — Simon spotted them differing. The question and
+     *  the two answers are one block of type; 44 against 48 read as a heading
+     *  and its list, which is not what this is. */
+    headSize: 48,
     size: 48,
     dot: 15,
     dotGap: 30,
@@ -1062,17 +1061,21 @@ export const SC15_ART = {
       at: [12847, 12922, 12985],
       /** ⚠ 670 — 640 plus Simon's 30. */
       y: 670,
-      /** ⚠ 106 — 96 plus his 10. */
-      size: 106,
+      /** ⚠ 120 — 96, plus his 10, plus his 14. */
+      size: 120,
       /**
        * ⚠ CENTRED ON THE THREE LINES, AND THE CENTRE IS MEASURED, NOT THE
        * COLUMN'S. The three texts are flush LEFT in a 584px column, so their
-       * ink runs 1238–1717 and its middle is 1478 — centring the numeral in the
-       * column instead would put it at 1532, 54px to the right of everything it
-       * is supposed to sit under. Re-measure if the heading's wording changes:
-       * it is the widest of the three and it is what sets this.
+       * ink runs 1238–1760 and its middle is 1499 — centring the numeral in the
+       * column instead would put it at 1532, 33px to the right of everything it
+       * is supposed to sit under.
+       *
+       * ⚠ AND IT MOVED WHEN `headSize` DID. At 44 the heading ended at 1717 and
+       * this was 1478; matching it to the answers' 48 widened it to 1760. The
+       * heading is the longest of the three and it is what sets this — change
+       * its wording or its size and re-measure.
        */
-      cx: 1478,
+      cx: 1499,
     },
     options: ["harga akan naik", "harga akan turun"],
   },
