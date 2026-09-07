@@ -23,9 +23,17 @@ export const HighlightBox = ({
   grow = 1,
   collapse = 1,
   radius = 14,
+  stroke,
+  fill,
 }: {
   rect: HLRect;
   opacity?: number;
+  /** ⚠ A SECOND TONE, NOT A SECOND COMPONENT. Indigo is the default because it
+   *  is the marking colour; a box that has to say "and THIS one, differently"
+   *  needs another hue, and duplicating the component to get it is how two
+   *  boxes end up with different corner radii. */
+  stroke?: string;
+  fill?: string;
   /**
    * 0 → 1 of the box's width, always measured from its LEFT edge. It opens
    * rightwards and closes back the way it came, so the left edge — where the
@@ -52,8 +60,8 @@ export const HighlightBox = ({
         width={width}
         height={height}
         rx={Math.min(radius, height / 2)}
-        fill={theme.color.indigoWash}
-        stroke={c.indigo}
+        fill={fill ?? theme.color.indigoWash}
+        stroke={stroke ?? c.indigo}
         strokeWidth={theme.shape.rule}
       />
     </Layer>

@@ -21,7 +21,7 @@ import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox,
-  gridOf, useMotion, progress, price as fmtPrice, theme,
+  gridOf, useMotion, progress, textReveal, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
@@ -210,7 +210,12 @@ export const BrptGroup = () => {
         /** The left edge of the covered block: half a pitch before the first
          *  hidden column's centre, so the cover starts in the gap rather than
          *  through a candle. */
-        const cx = X(A.bars.first + A.bars.pitch * (A.bars.n - A.hide) - A.bars.pitch / 2);
+        /** ⚠ FRACTIONAL ON PURPOSE. `hide` walks 10 → 8 across the reveal, and
+         *  a fractional column count is what makes the edge travel instead of
+         *  jumping two pitches on one frame. */
+        const hide =
+          A.hide - A.reveal.by * progressInOut(f, local(A.reveal.at, FROM), A.reveal.over);
+        const cx = X(A.bars.first + A.bars.pitch * (A.bars.n - hide) - A.bars.pitch / 2);
         const cw = X(A.plot.x1 + A.padRight) - cx;
         const line = progress(f, local(A.supportAt, FROM), A.supportOver);
         /** ⚠ THE MARKS LEAVE ON THE ZOOM'S OWN CURVE — see `marksOut`. They are
@@ -218,8 +223,21 @@ export const BrptGroup = () => {
          *  moved on, and a mark left standing is a mark still making its claim. */
         const marks =
           1 - progressInOut(f, local(A.marksOut.at, FROM), A.marksOut.over);
+        /**
+         * ⚠ EVERY MARK RIDES THIS, WHICH IS WHY IT IS ONE WRAPPER. The covers,
+         * the highlights, the ring, the level and the question marks are all
+         * laid out against the picture's rect; sliding the picture alone would
+         * leave them behind, and sliding each of them by the same number would
+         * be six places to get it wrong.
+         *
+         * ⚠ AND THE DISTANCE IS DERIVED. `theme.margin.left` minus wherever the
+         * left edge actually is, so it lands flush whatever size the picture
+         * ended up at.
+         */
+        const dx =
+          (theme.margin.left - L) * progressInOut(f, local(A.shift.at, FROM), A.shift.over);
         return (
-          <>
+          <div style={{ position: "absolute", inset: 0, transform: `translateX(${dx.toFixed(1)}px)` }}>
             <Img
               src={staticFile(A.src)}
               style={{
@@ -256,7 +274,10 @@ export const BrptGroup = () => {
                   fontFamily: theme.text.family,
                   fontSize: A.qmSize * k,
                   fontWeight: 800,
-                  color: theme.color.ink,
+                  /* ⚠ DARK GREY, NOT BLACK — Simon's call. Black on the
+                     grey panel is the weight of a heading; this is a placeholder
+                     for something not yet said. */
+                  color: theme.color.slate,
                   lineHeight: 1,
                 }}
               >
@@ -265,17 +286,34 @@ export const BrptGroup = () => {
             ))}
 
             {/* ── the two readings of the histogram ────────────────────── */}
-            {A.hl.map((q, i) => {
-              const g = progress(f, local(q.at, FROM), m.sec(0.5));
+            {[
+              ...A.hl.map((q, i) => ({ ...q, half: "half" in q ? q.half : false, i, cyan: false })),
+              { ...A.hl2, half: false, i: 2, cyan: true },
+            ].map((q) => {
+              /** ⚠ ONE CURVE OPENS IT AND ANOTHER SHUTS IT, and the shut is the
+               *  same `grow` running backwards — the box closes the way it came
+               *  rather than fading, so the edge that made the claim is the last
+               *  thing to leave. The cyan pair has no exit: it arrives after the
+               *  other two have gone and stays. */
+              const out = q.cyan
+                ? 0
+                : progressInOut(f, local(A.hlOut.at, FROM), A.hlOut.over);
+              const g = progress(f, local(q.at, FROM), m.sec(0.5)) * (1 - out);
               if (g <= 0.001) return null;
               const half = A.bars.pitch / 2;
               const x1 = A.bars.first + A.bars.pitch * q.from - half;
-              const x2 = A.bars.first + A.bars.pitch * q.to + half - (i === 1 ? A.hlGap : 0);
+              const x2 =
+                A.bars.first + A.bars.pitch * q.to + half - (q.i === 1 ? A.hlGap : 0);
+              /** Half height, sitting on the baseline — see `hl[0].half`. */
+              const y1 = q.half ? A.vol.y0 + (A.vol.y1 - A.vol.y0) * 0.5 : A.vol.y0;
               return (
                 <HighlightBox
-                  key={i}
-                  rect={{ x1: X(x1), y1: Y(A.vol.y0), x2: X(x2), y2: Y(A.vol.y1) }}
+                  key={q.i}
+                  rect={{ x1: X(x1), y1: Y(y1), x2: X(x2), y2: Y(A.vol.y1) }}
                   grow={g}
+                  {...(q.cyan
+                    ? { stroke: theme.color.cyan, fill: theme.color.bandCyan }
+                    : null)}
                 />
               );
             })}
@@ -316,7 +354,111 @@ export const BrptGroup = () => {
                 }}
               />
             )}
-          </>
+          </div>
+        );
+      })()}
+
+      {/* ── the two answers, in the room the picture gave up ────────────
+          ⚠ OUTSIDE THE PICTURE'S WRAPPER. It does not ride the slide: the
+          picture moves left TO MAKE ROOM for this, and something that travelled
+          with it would arrive in the space it was clearing. */}
+      {(() => {
+        const Q = SC15_ART.ask;
+        const head = textReveal(f, local(Q.at, FROM), m.reveal);
+        if (head.opacity <= 0.001) return null;
+        const period = m.sec(Q.pulse);
+        return (
+          <div
+            style={{
+              position: "absolute",
+              left: Q.x,
+              top: Q.midY,
+              transform: "translateY(-50%)",
+              width: theme.canvas.width - theme.margin.right - Q.x,
+              fontFamily: theme.text.family,
+            }}
+          >
+            <div
+              style={{
+                fontSize: Q.headSize,
+                fontWeight: 700,
+                color: theme.color.ink,
+                opacity: head.opacity,
+                transform: `translateY(${head.dy}px)`,
+                marginBottom: Q.lead,
+              }}
+            >
+              {Q.head}
+            </div>
+            {Q.options.map((label, i) => {
+              const inn = textReveal(f, local(Q.at, FROM) + m.fade * (i + 1), m.reveal);
+              /**
+               * ⚠ THE PULSE REPEATS, which nothing else in this episode does. A
+               * ring that fires once is a mark landing; a ring that keeps going
+               * is an invitation still open — and it is open for as long as the
+               * question is. Driven off the frame with a modulo so it is
+               * frame-deterministic: no clock, no randomness.
+               */
+              const t = Math.max(0, f - local(Q.at, FROM));
+              const q = ((t + (i * period) / 2) % period) / period;
+              return (
+                <div
+                  key={i}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: Q.dotGap,
+                    marginTop: i ? Q.gap : 0,
+                    opacity: inn.opacity,
+                    transform: `translateY(${inn.dy}px)`,
+                  }}
+                >
+                  {/* ⚠ THE RING IS A SIBLING IN A FIXED WELL, not a scaled
+                      wrapper round the dot. Scaling the dot would move the text
+                      beside it every frame; a well the size of the ring's widest
+                      state means the row's geometry never changes. */}
+                  <div
+                    style={{
+                      flex: `0 0 ${Q.dot * 4}px`,
+                      height: Q.dot * 4,
+                      position: "relative",
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        width: Q.dot * 2 * (1 + q * 1.1),
+                        height: Q.dot * 2 * (1 + q * 1.1),
+                        marginLeft: -Q.dot * (1 + q * 1.1),
+                        marginTop: -Q.dot * (1 + q * 1.1),
+                        borderRadius: "50%",
+                        border: `${theme.shape.rule}px solid ${theme.color.indigo}`,
+                        opacity: (1 - q) * 0.6,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        width: Q.dot * 2,
+                        height: Q.dot * 2,
+                        marginLeft: -Q.dot,
+                        marginTop: -Q.dot,
+                        borderRadius: "50%",
+                        background: theme.color.indigo,
+                      }}
+                    />
+                  </div>
+                  <div style={{ fontSize: Q.size, fontWeight: 700, color: theme.color.ink }}>
+                    {label}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         );
       })()}
 

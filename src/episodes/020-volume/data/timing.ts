@@ -966,10 +966,64 @@ export const SC15_ART = {
    * strip: three bars marked, the rest marked, ten withheld.
    */
   hl: [
-    { at: 12006, from: 27, to: 29 },
+    /** ⚠ HALF HEIGHT, SITTING ON THE BASELINE — Simon's call, and only this one.
+     *  These three bars are the short ones; a full-height box round them is
+     *  mostly empty paper, and an empty box reads as a box round nothing. */
+    { at: 12006, from: 27, to: 29, half: true },
     { at: 12128, from: 0, to: 26 },
   ],
   hlGap: 6,
+  /**
+   * ⚠ THE COVERS GIVE UP TWO COLUMNS, FROM THE LEFT — Simon's frame, "anchor
+   * kanan". The right edge is pinned and the left edge walks right by two
+   * pitches, so `hide` goes 10 → 8 and bars 30 and 31 come out from under it.
+   * Both shapes move together: they are covering the same two columns of the
+   * same tape.
+   */
+  reveal: { at: 12300, over: 30, by: 2 },
+  /** ⚠ AND BOTH HIGHLIGHTS LEAVE ON THAT SAME FRAME. They are readings of the
+   *  bars that were visible BEFORE; the moment two more arrive they are
+   *  readings of a picture that no longer exists. */
+  hlOut: { at: 12300, over: 24 },
+  /**
+   * ⚠ CYAN, ON THE TWO THAT JUST APPEARED — Simon's frame and his colour. Every
+   * other mark in this section is indigo; the pair being uncovered is the one
+   * thing that is NEW, and it gets the one hue that says so.
+   */
+  hl2: { at: 12420, from: 30, to: 31 },
+  /**
+   * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
+   * frame. The distance is DERIVED (`theme.margin.left` minus wherever the
+   * picture's left edge is), not typed, so it stays flush whatever size the
+   * picture ended up at. Everything stuck to it — covers, highlights, question
+   * marks — rides the same wrapper.
+   */
+  shift: { at: 12575, over: 40 },
+  /**
+   * ═══ THE TWO ANSWERS ═══  (Simon's frame)
+   *
+   * They stand in the room the picture just gave up. The bullets are circles
+   * and deliberately larger than the list markers earlier in the episode —
+   * those name points, these are things to CHOOSE, and a choice wants a target.
+   *
+   * ⚠ THE PULSE REPEATS, which nothing else in this episode does. A ring that
+   * fires once is a mark landing; a ring that keeps going is an invitation
+   * still open, and it is open for as long as the question is.
+   */
+  ask: {
+    at: 12704,
+    x: 1240,
+    midY: 540,
+    lead: 50,
+    gap: 42,
+    headSize: 44,
+    size: 48,
+    dot: 15,
+    dotGap: 30,
+    pulse: 1.4,
+    head: "Pilih jawabanmu",
+    options: ["harga akan naik", "harga akan turun"],
+  },
   /**
    * ⚠ A QUESTION MARK IN EACH COVER — Simon's call, one per shape. 019 puts its
    * countdown glyph in the same place for the same reason: the question belongs
@@ -979,7 +1033,10 @@ export const SC15_ART = {
    * half the cover's 306px width — big enough to own the shape, small enough
    * that the shape still reads as a panel rather than as a letter.
    */
-  qmSize: 150,
+  /** ⚠ 118, WHICH IS 150 LESS SIMON'S 14 — but his 14 is CANVAS pixels and
+   *  this is the FILE's, so it is 14 / 0.4333 = 32 of these. At the size the
+   *  picture arrives in that is 51px on screen; doubled it is 102. */
+  qmSize: 118,
 } as const;
 
 export const HEAD = {
