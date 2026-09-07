@@ -277,7 +277,16 @@ export const BrptGroup = () => {
                      the library's one-step-off-white fill, which reads as paper
                      laid over something instead. The dark-grey question mark
                      still holds against it. */
-                  background: theme.color.greyWash,
+                  backgroundColor: theme.color.greyWash,
+                  /* ⚠ ONE GRADIENT, NOT A STACK OF DIVS. A repeating gradient
+                     at 45° measures its stops PERPENDICULAR to the stripes, so
+                     "7px of nothing then 1px of grey" is exactly a 1px rule
+                     every 8px — and it costs one property rather than forty
+                     elements that would have to be re-laid out every frame the
+                     picture resizes. */
+                  backgroundImage:
+                    `repeating-linear-gradient(45deg, transparent 0 ${A.hatch.gap - A.hatch.width}px, ` +
+                    `${theme.color.border} ${A.hatch.gap - A.hatch.width}px ${A.hatch.gap}px)`,
                   /* ⚠ THE QUESTION MARK IS A CHILD OF THE SHAPE, not a third
                      element placed at its centre. Centred by layout, it stays
                      in the middle of the panel however the picture is resized
@@ -387,7 +396,49 @@ export const BrptGroup = () => {
         const head = textReveal(f, local(Q.at, FROM), m.reveal);
         if (head.opacity <= 0.001) return null;
         const period = m.sec(Q.pulse);
+        /**
+         * ⚠ THE COUNTDOWN IS A SIBLING OF THE BLOCK, NOT A CHILD OF IT.
+         *
+         * The block is centred on `midY` with a −50% translate, so its own
+         * coordinate origin is `midY − height/2` — and its height depends on
+         * how the type wraps. A numeral placed at `count.y − midY` inside it
+         * therefore landed 130px high, on top of the second answer. Out here
+         * `count.y` means what it says.
+         */
+        const count = (() => {
+          /** ⚠ THE LAST ONE WHOSE FRAME HAS PASSED, and `key` is what makes it
+           *  swap rather than cross-fade: a changed key remounts the node, so
+           *  each numeral gets its own entrance from the start instead of
+           *  inheriting the previous one's finished reveal. */
+          let n = -1;
+          Q.count.at.forEach((a, j) => {
+            if (f >= local(a, FROM)) n = j;
+          });
+          if (n < 0) return null;
+          const inn = textReveal(f, local(Q.count.at[n], FROM), m.reveal);
+          return (
+            <div
+              key={n}
+              style={{
+                position: "absolute",
+                left: Q.x,
+                top: Q.count.y,
+                fontFamily: theme.text.family,
+                fontSize: Q.count.size,
+                fontWeight: theme.text.display.weight,
+                color: theme.color.indigo,
+                lineHeight: 1,
+                opacity: inn.opacity,
+                transform: `translateY(${inn.dy}px)`,
+              }}
+            >
+              {3 - n}
+            </div>
+          );
+        })();
         return (
+          <>
+          {count}
           <div
             style={{
               position: "absolute",
@@ -479,6 +530,7 @@ export const BrptGroup = () => {
               );
             })}
           </div>
+          </>
         );
       })()}
 

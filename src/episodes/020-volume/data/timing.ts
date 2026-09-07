@@ -1001,6 +1001,21 @@ export const SC15_ART = {
    *  this block is in the FILE's pixels; this one deliberately is not. */
   hl2Pad: 10,
   /**
+   * ⚠ THE COVERS ARE HATCHED — Simon: "garis diagonal, berjarak 8 px, tebalnya
+   * 1 px, abu abu yang sedikit lebih gelap". A flat panel reads as a hole in
+   * the picture; ruled, it reads as something laid OVER the picture, which is
+   * what it is.
+   *
+   * ⚠ IN CANVAS PIXELS, AND DELIBERATELY NOT IN THE FILE'S. Everything else on
+   * these shapes grows when the picture does; a hatch that grew with it would
+   * turn into wide stripes at double size. 8px apart on screen is 8px apart at
+   * every size, which is what a texture has to be.
+   *
+   * `theme.color.border` IS the one step darker than `greyWash` — the two are
+   * already a pair in the palette, so the shade is named rather than mixed.
+   */
+  hatch: { gap: 8, width: 1 },
+  /**
    * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
    * frame. The distance is DERIVED (`theme.margin.left` minus wherever the
    * picture's left edge is), not typed, so it stays flush whatever size the
@@ -1022,7 +1037,10 @@ export const SC15_ART = {
   ask: {
     at: 12704,
     x: 1240,
-    midY: 540,
+    /** ⚠ 440, WHICH IS 540 LESS SIMON'S 100. A layout number, not a move — he
+     *  said so explicitly: the block simply sits 100 higher, it does not
+     *  travel there. */
+    midY: 440,
     lead: 50,
     gap: 42,
     headSize: 44,
@@ -1031,6 +1049,16 @@ export const SC15_ART = {
     dotGap: 30,
     pulse: 1.4,
     head: "Apa yang akan terjadi?",
+    /**
+     * ⚠ THE COUNTDOWN IS ONE GLYPH, SWAPPED — Simon's three frames. Three
+     * numerals stacked would be a list; a countdown is the same place saying a
+     * different thing, which is also how 019 does it.
+     *
+     * ⚠ AND IT IS ABSOLUTELY PLACED, NOT IN THE BLOCK'S FLOW. That block is
+     * centred on `midY`, so a numeral added under it would push the question
+     * and both answers back up by half its height the moment it appeared.
+     */
+    count: { at: [12847, 12922, 12985], y: 640, size: 96 },
     options: ["harga akan naik", "harga akan turun"],
   },
   /**
