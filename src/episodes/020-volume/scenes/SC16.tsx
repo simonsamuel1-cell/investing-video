@@ -38,6 +38,12 @@ export const SC16 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const U = SC16_UI;
+  /**
+   * ⚠ LINEAR AND UNCLAMPED — see `drift` in data/timing. `progress` would ease
+   * it, and an eased drift reads as a move that is about to finish; this one is
+   * never supposed to arrive.
+   */
+  const d = f / U.drift.over;
 
   return (
     <Stage transparent>
@@ -52,7 +58,19 @@ export const SC16 = () => {
             height to 100%, and 100% of the canvas measured from left:-120 ends
             at x=1800 — which left a strip of the episode's own paper down the
             right edge and along the bottom. Inset alone stretches. */}
-        <div style={{ position: "absolute", inset: -120, background: theme.color.glassBg }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: -120,
+            background: theme.color.glassBg,
+            /* ⚠ THE 120px OF OVERSCAN IS WHAT PAYS FOR THE DRIFT. Moving a
+               ground that stops at the canvas edge uncovers the edge. */
+            transform:
+              `translate(${(d * U.drift.ground.x).toFixed(2)}px, ${(
+                d * U.drift.ground.y
+              ).toFixed(2)}px) scale(${(1 + d * U.drift.ground.zoom).toFixed(4)})`,
+          }}
+        />
 
         {/* ⚠ THE BLURRED PANELS BEHIND — the reference's own depth at 0:06,
             where a whole app's worth of cards sits out of focus behind the one
@@ -65,6 +83,11 @@ export const SC16 = () => {
             inset: 0,
             filter: `blur(${U.ghost.blur}px)`,
             pointerEvents: "none",
+            /* ⚠ FURTHER AND THE OTHER WAY. Two layers at the same speed are one
+               layer; the parallax is what puts these in front of the ground. */
+            transform: `translate(${(d * U.drift.ghost.x).toFixed(2)}px, ${(
+              d * U.drift.ghost.y
+            ).toFixed(2)}px)`,
           }}
         >
           {U.ghost.rects.map((r, i) => (

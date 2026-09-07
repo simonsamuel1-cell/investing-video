@@ -1285,6 +1285,25 @@ export const SC16_UI = {
    * but would still change the moment anyone touched the seed. Eight rectangles
    * typed out are eight rectangles that stay put.
    */
+  /**
+   * ═══ THE GROUND NEVER STOPS ═══  (Simon's call, and the reference's law)
+   *
+   * ⚠ LINEAR AND UNCLAMPED, NOT EASED. This is the one thing the study of
+   * Simon's reference folder settled: a camera drift is CONSTANT VELOCITY,
+   * because it never starts or stops on screen. An eased drift reads as a move
+   * that is about to finish, which is the dead frame it exists to prevent.
+   *
+   * ⚠ TWO LAYERS, OPPOSITE WAYS, DIFFERENT DISTANCES. Two layers at the same
+   * speed are one layer; the parallax IS the depth, and the blurred cards
+   * moving further than the ground behind them is what puts them in front of
+   * it. Quoted over 900 frames, which is roughly the scene's length — nothing
+   * clamps there, it is just where the numbers are readable.
+   */
+  drift: {
+    over: 900,
+    ground: { x: 34, y: 22, zoom: 0.02 },
+    ghost: { x: -78, y: -46 },
+  },
   ghost: {
     blur: 14,
     radius: 28,
