@@ -809,6 +809,33 @@ export const QUIZ = { at: 11289, hold: 74, walk: 50, text: "Quiz Time" } as cons
  */
 export const SC15_BLANK: boolean = true;
 
+/**
+ * ═══ THE BRPT SCREENSHOT ═══  (Simon's file, "align-center")
+ *
+ * `VIDEO 21 - Volume/BRPT.png` — a phone screen showing BRPT's daily chart and
+ * its volume. It stands alone in the blanked section.
+ *
+ * ⚠ THE RATIO IS THE FILE'S OWN, 1230:1800, not a chosen shape. Only the HEIGHT
+ * is a free number here; the width follows, so the screenshot can never be
+ * stretched by someone nudging a box.
+ *
+ * ⚠ AND THE HEIGHT IS WHAT THE ROOM ALLOWS. The heading rail ends at 176 and
+ * the subtitle band starts at 972 — 796 of room, and 780 leaves 8px of air
+ * either side of the picture once it is centred in it. At that height it is
+ * 533 wide and sits between x=693 and x=1226, clear of both the heading on the
+ * left and the logo zone on the right.
+ *
+ * ⚠ IT ARRIVES WHEN THE TITLE LEAVES THE MIDDLE, on the same frame the chart
+ * used to start — the section cannot announce itself over its own picture.
+ */
+export const SC15_ART = {
+  src: "art/brpt.png",
+  ratio: 1230 / 1800,
+  h: 780,
+  top: 176,
+  bottom: 972,
+} as const;
+
 export const HEAD = {
   at: 2541,
   hold: 30,

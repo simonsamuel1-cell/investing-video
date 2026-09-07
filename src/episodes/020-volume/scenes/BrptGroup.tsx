@@ -17,13 +17,13 @@
  * ⚠ THE COUNTDOWN IS UNEVEN. 102 frames from "tiga" to "dua", 40 from "dua" to
  * "satu". That is the recording. Never space these on a grid.
  */
-import { useCurrentFrame } from "remotion";
+import { Img, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, QuizTitle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
-import { BLOCK, BEAT, HEAD, QUIZ, SC15_BLANK, local, COUNTDOWN } from "../data/timing";
+import { BLOCK, BEAT, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
 import {
   BRPT, BRPT_DOMAIN, BRPT_VOL, BRPT_BREAK, BRPT_REBOUND, BRPT_ASK,
@@ -172,6 +172,34 @@ export const BrptGroup = () => {
       )}
       </div>
       )}
+
+      {/* ── Simon's BRPT screenshot, alone in the blanked section ────────
+          ⚠ CENTRED ON BOTH AXES, and the vertical centring is on the ROOM
+          between the heading rail and the subtitle band rather than on the
+          canvas — a picture centred on 540 would sit 20px into the band it is
+          not allowed to enter.
+
+          ⚠ IT WAITS FOR "QUIZ TIME" TO LEAVE THE MIDDLE, on the frame the
+          chart used to start. A section cannot announce itself over its own
+          picture. */}
+      {(() => {
+        const w = SC15_ART.h * SC15_ART.ratio;
+        const inn = progress(f, T.chart, m.sec(0.6));
+        if (inn <= 0.001) return null;
+        return (
+          <Img
+            src={staticFile(SC15_ART.src)}
+            style={{
+              position: "absolute",
+              left: (theme.canvas.width - w) / 2,
+              top: (SC15_ART.top + SC15_ART.bottom - SC15_ART.h) / 2,
+              width: w,
+              height: SC15_ART.h,
+              opacity: inn,
+            }}
+          />
+        );
+      })()}
 
       {/* ⚠ THE CENTRED HEADING GOES WITH THE PICTURE — "textnya juga". The one
           thing left standing is "Quiz Time" below: it is the SECTION's name and
