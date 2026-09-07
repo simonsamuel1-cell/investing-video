@@ -271,7 +271,13 @@ export const BrptGroup = () => {
                   width: cw,
                   height: Y(pane.y1) - Y(pane.y0),
                   borderRadius: theme.shape.panelRadius,
-                  background: theme.color.border,
+                  /* ⚠ `greyWash`, NOT `border` — Simon's "abu abu terang". The
+                     border grey is the colour of an EDGE, and a panel painted
+                     in it reads as a heavy plate dropped on the chart; this is
+                     the library's one-step-off-white fill, which reads as paper
+                     laid over something instead. The dark-grey question mark
+                     still holds against it. */
+                  background: theme.color.greyWash,
                   /* ⚠ THE QUESTION MARK IS A CHILD OF THE SHAPE, not a third
                      element placed at its centre. Centred by layout, it stays
                      in the middle of the panel however the picture is resized
