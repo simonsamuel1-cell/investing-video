@@ -1017,6 +1017,18 @@ export const SC11 = {
      * kicker therefore WRAPS where the body does not — see `kickWidth`.
      */
     kickSize: 52,
+    /**
+     * ⚠ THE READING IS SET FLUSH LEFT — Simon's call, all three groups. Centred
+     * it had two ragged edges and neither line started where the eye was; one
+     * hard left edge is what makes two lines read as one statement.
+     *
+     * ⚠ WHICH IS WHY THERE IS A `pad`. Centred, the block floated in the middle
+     * of the gutter and the 22px either side came for free; flush left it would
+     * stand ON the card's right edge. `pad` + `width` are budgeted against the
+     * 605px of gutter beside a 65%-wide card and must stay inside it — at 44 and
+     * 560 the column ends at 1823, one pixel inside the right margin.
+     */
+    pad: 44,
     /** The column the reading is set in, beside a 65%-wide card. */
     width: 560,
     size: 52,

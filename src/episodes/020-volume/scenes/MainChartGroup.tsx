@@ -1755,17 +1755,26 @@ export const MainChartGroup = () => {
               key={q}
               style={{
                 position: "absolute",
-                left: CARD.x + CARD_NOW.w,
+                left: CARD.x + CARD_NOW.w + SC11.note.pad,
                 top: 0,
-                width: theme.canvas.width - theme.margin.right - (CARD.x + CARD_NOW.w),
+                width:
+                  theme.canvas.width -
+                  theme.margin.right -
+                  (CARD.x + CARD_NOW.w) -
+                  SC11.note.pad,
                 height: theme.canvas.height,
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                alignItems: "center",
+                /* ⚠ BOTH, NOT JUST `textAlign` — Simon's "align left". The
+                   alignment is the BLOCK's as well as the lines': text-align
+                   alone would set each line flush left inside a box that is
+                   still centred in the gutter, which moves nothing the eye can
+                   see when the lines already fill it. */
+                alignItems: "flex-start",
                 gap: SC11.note.gap,
                 fontFamily: theme.text.family,
-                textAlign: "center",
+                textAlign: "left",
                 opacity: away * narrowT,
               }}
             >
