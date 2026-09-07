@@ -17,9 +17,9 @@
  * ⚠ THE COUNTDOWN IS UNEVEN. 102 frames from "tiga" to "dua", 40 from "dua" to
  * "satu". That is the recording. Never space these on a grid.
  */
-import { Img, staticFile, useCurrentFrame } from "remotion";
+import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import {
-  Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown,
+  Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
   Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
@@ -187,7 +187,15 @@ export const BrptGroup = () => {
           picture. */}
       {(() => {
         const A = SC15_ART;
-        const w = A.h * A.ratio;
+        /** ⚠ ONE HEIGHT DRIVES EVERYTHING. The cover and the level are derived
+         *  from the picture's rect, so growing it grows them — there is nothing
+         *  to keep in step by hand. */
+        const h = interpolate(
+          progressInOut(f, local(A.zoom.at, FROM), A.zoom.over),
+          [0, 1],
+          [A.h, A.zoom.to],
+        );
+        const w = h * A.ratio;
         /** ⚠ ONE CONVERSION, USED BY EVERYTHING. The cover and the level are
          *  written in the FILE's pixels and come through here, so moving or
          *  resizing the picture moves them with it — there is no second copy
@@ -195,8 +203,8 @@ export const BrptGroup = () => {
         const L = (theme.canvas.width - w) / 2;
         /** ⚠ THE BOTTOM EDGE IS THE ANCHOR, so the picture grows upward and
          *  out of the top of the frame rather than off its own baseline. */
-        const T0 = A.bottom - A.h;
-        const k = A.h / A.img.h;
+        const T0 = A.bottom - h;
+        const k = h / A.img.h;
         const X = (ix: number) => L + ix * k;
         const Y = (iy: number) => T0 + iy * k;
         /** The left edge of the covered block: half a pitch before the first
@@ -214,7 +222,7 @@ export const BrptGroup = () => {
                 left: L,
                 top: T0,
                 width: w,
-                height: A.h,
+                height: h,
                 /* ⚠ ROUNDED — Simon's call. Every other surface in this episode
                    is; a screenshot with square corners reads as a foreign
                    object dropped on the page. */

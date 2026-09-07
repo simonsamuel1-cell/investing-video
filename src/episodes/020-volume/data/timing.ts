@@ -833,25 +833,39 @@ export const SC15_BLANK: boolean = true;
 export const SC15_ART = {
   src: "art/brpt.png",
   ratio: 1230 / 1800,
+  /** The size it arrives at and holds — centred in the room between the
+   *  heading rail and the subtitle band. */
+  h: 780,
   /**
-   * ⚠ TWICE THE SIZE, ANCHORED ON ITS BOTTOM EDGE — Simon's "perbesar 100%,
-   * anchor bawah". 780 → 1560, with the bottom left exactly where it was.
-   *
-   * ⚠ WHAT THAT CROPS IS THE POINT. Growing upward from 964 puts the top edge
-   * at −596, which in the file's own pixels is y 688 — within two pixels of
-   * `price.y0`, the top of the price plot. The app's header, its price, the
-   * Prev/Open/High/Low row and the timeframe tabs all leave the frame, and what
-   * is left is the chart and nothing else.
-   *
-   * ⚠ AND IT BREAKS TWO STANDING RULES, WHICH IS SIMON'S CALL TO MAKE. At 1066
-   * wide, centred, it runs 427 → 1493: past the logo zone's `maxX` of 1368 in
-   * the top 150px (though still 47px clear of the mark itself), and it reaches
-   * the frame's top edge rather than stopping at the 54px margin. A picture
-   * that satisfies both can only be 814 tall — a 4% enlargement, not 100%.
+   * ⚠ THE BOTTOM EDGE, AND IT NEVER MOVES. It is where the picture sits at its
+   * arriving size, and it is also the anchor the enlargement grows from — one
+   * number, so the two states cannot disagree about where the bottom is.
    */
-  h: 1560,
-  /** The bottom edge, which is what stays put. */
   bottom: 964,
+  /**
+   * ═══ AND AT f11848 IT GROWS INTO THE PART SIMON SCREENSHOTTED ═══
+   *
+   * ⚠ 100% BIGGER, ANCHORED ON THE BOTTOM — his numbers. 780 → 1560 over
+   * f11848–11931, with the bottom pinned, so the picture opens upward.
+   *
+   * ⚠ WHAT THAT CROPS IS WHY IT IS THE RIGHT MOVE. Growing upward from 964 puts
+   * the top edge at −596, which in the FILE's own pixels is y 688 — within two
+   * pixels of `price.y0`, the top of the price plot. The app's header, its
+   * price, the Prev/Open/High/Low row and the timeframe tabs all leave the
+   * frame, and what is left is the chart and its volume: the part he marked.
+   *
+   * ⚠ EASED, NOT LINEAR. Unlike a drifting camera this one starts and stops on
+   * screen, and a move the viewer can see beginning and ending is exactly what
+   * an eased curve is for.
+   *
+   * ⚠ AND THE END STATE BREAKS TWO STANDING RULES, WHICH IS SIMON'S CALL TO
+   * MAKE. At 1066 wide, centred, it runs 427 → 1493: past the logo zone's
+   * `maxX` of 1368 in the top 150px (though still 47px clear of the mark
+   * itself), and it reaches the frame's top edge rather than stopping at the
+   * 54px margin. A picture that satisfies both can only reach 814 tall — a 4%
+   * enlargement, not 100%.
+   */
+  zoom: { at: 11848, over: 83, to: 1560 },
   /**
    * ═══ EVERYTHING BELOW IS IN THE FILE'S OWN PIXELS ═══
    *
