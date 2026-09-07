@@ -20,7 +20,7 @@
 import { Img, interpolate, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, HighlightCircle, HighlightBox, MarkerArrow,
   gridOf, useMotion, progress, textReveal, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -382,6 +382,19 @@ export const BrptGroup = () => {
                 />
               );
             })}
+            {/* ── the recovery, marked ─────────────────────────────────── */}
+            {f >= local(A.arrow.at, FROM) && (
+              <MarkerArrow
+                from={{ x: X(A.arrow.from.x), y: Y(A.arrow.from.y) }}
+                to={{ x: X(A.arrow.to.x), y: Y(A.arrow.to.y) }}
+                bow={A.arrow.bow}
+                at={local(A.arrow.at, FROM)}
+                over={A.arrow.over}
+                width={A.arrow.width}
+                headLen={A.arrow.headLen}
+              />
+            )}
+
             {/* ── the ring on that same candle ─────────────────────────── */}
             {/* ⚠ ITS RADIUS TRAVELS WITH THE PICTURE but its STROKE does not:
                 `HighlightCircle` draws a 2px rule whatever the ring's size, and

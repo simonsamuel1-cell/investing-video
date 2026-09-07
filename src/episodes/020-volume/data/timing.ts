@@ -1042,6 +1042,33 @@ export const SC15_ART = {
    */
   answer: { at: 13057, over: 24, wipe: 46 },
   /**
+   * ═══ THE ARROW ALONG THE RECOVERY ═══  (Simon's frame)
+   *
+   * ⚠ BOTH ENDS ARE MEASURED, NOT DRAWN BY EYE. It runs from the tape's own low
+   * — bar 29, the candle the ring and the level are already about, whose bottom
+   * sits at y 1259 — to the top of bar 39 at y 1009, which is the highest ink
+   * anywhere in the ten columns the cover has just given back. The tip is put a
+   * little past and above that so the head does not sit on the candle it is
+   * pointing at.
+   *
+   * ⚠ IN THE FILE'S PIXELS, so it rides the picture; its STROKE is in canvas
+   * pixels and does not, for the reason every other mark here does not.
+   *
+   * ⚠ AND IT IS THE MARKER, in the marker's own red. It is the second time this
+   * episode draws on top of the video rather than in it — the first was f9019 —
+   * and using the section's indigo would file it with the level and the ring,
+   * which are readings OF the chart rather than a hand pointing at it.
+   */
+  arrow: {
+    at: 13103,
+    over: 34,
+    from: { x: 880, y: 1276 },
+    to: { x: 1204, y: 980 },
+    bow: 42,
+    width: 10,
+    headLen: 54,
+  },
+  /**
    * ═══ THE TWO ANSWERS ═══  (Simon's frame)
    *
    * They stand in the room the picture just gave up. The bullets are circles
