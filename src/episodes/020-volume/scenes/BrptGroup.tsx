@@ -392,6 +392,7 @@ export const BrptGroup = () => {
                 over={A.arrow.over}
                 width={A.arrow.width}
                 headLen={A.arrow.headLen}
+                color={theme.color.indigo}
               />
             )}
 

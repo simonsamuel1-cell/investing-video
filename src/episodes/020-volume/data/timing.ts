@@ -1054,10 +1054,11 @@ export const SC15_ART = {
    * ⚠ IN THE FILE'S PIXELS, so it rides the picture; its STROKE is in canvas
    * pixels and does not, for the reason every other mark here does not.
    *
-   * ⚠ AND IT IS THE MARKER, in the marker's own red. It is the second time this
-   * episode draws on top of the video rather than in it — the first was f9019 —
-   * and using the section's indigo would file it with the level and the ring,
-   * which are readings OF the chart rather than a hand pointing at it.
+   * ⚠ THE MARKER'S SHAPE, THE SECTION'S COLOUR — Simon's call. It keeps the
+   * hand-drawn wobble, the taper and the two-stroke head of the f9019 arrow but
+   * takes indigo, so it reads as part of this section's marking rather than as
+   * a second, louder voice on a chart that already carries three indigo marks.
+   * The marker red stays where it started, at f9019.
    */
   arrow: {
     at: 13103,
