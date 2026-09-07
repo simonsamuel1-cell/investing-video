@@ -789,7 +789,13 @@ export const QUIZ = { at: 11289, hold: 74, walk: 50, text: "Quiz Time" } as cons
  * CG-D's span. The BRPT quiz's whole picture goes: the card, the tape, the
  * histogram, the support level, the reveal mask, both crosshairs, both stat
  * strips, the question line, the countdown, the price chip and the closing
- * point. "Quiz Time" and the scene's own heading are all that render.
+ * point — and, since "textnya juga", the scene's own centred heading in both
+ * its states ("Menurutmu, apa yang terjadi?" and "False breakdown").
+ *
+ * ⚠ "QUIZ TIME" IS THE ONE THING LEFT STANDING, and deliberately. It is the
+ * SECTION's name rather than the scene's, it sits in the heading rail rather
+ * than in the picture, and Simon asked for it two changes before this one —
+ * blanking it would undo the work the blanking is clearing space for.
  *
  * ⚠ IT IS A LEVER, NOT A DELETION. Every one of those still compiles and is
  * still keyed to the same VO-locked beats, so flipping this to `false` brings

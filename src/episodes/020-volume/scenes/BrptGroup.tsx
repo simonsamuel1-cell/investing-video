@@ -173,11 +173,14 @@ export const BrptGroup = () => {
       </div>
       )}
 
-      {/* ⚠ OUTSIDE THE PICTURE, so it survives the blanking — Simon kept the
-          titles. It was inside the group that fades in with the chart; a title
-          that is exempt from a blanking cannot be mounted inside the thing
-          being blanked. */}
-      <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
+      {/* ⚠ THE CENTRED HEADING GOES WITH THE PICTURE — "textnya juga". The one
+          thing left standing is "Quiz Time" below: it is the SECTION's name and
+          Simon asked for it two changes ago, so blanking it would undo the work
+          the blanking was clearing space for. Both of these are the SCENE's own
+          headings and they are content, not the rail. */}
+      {!SC15_BLANK && (
+        <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
+      )}
 
       {/* ⚠ LAST, SO IT IS ON TOP. It is the first thing on screen in this
           group and it has to stay legible over the card the chart is drawn on
