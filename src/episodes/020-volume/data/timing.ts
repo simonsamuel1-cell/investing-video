@@ -834,6 +834,60 @@ export const SC15_ART = {
   h: 780,
   top: 176,
   bottom: 972,
+  /**
+   * ═══ EVERYTHING BELOW IS IN THE FILE'S OWN PIXELS ═══
+   *
+   * ⚠ AND IT IS MEASURED, NOT PLACED BY EYE. The screenshot was scanned for
+   * candle-green and candle-red: the price tape lives in y 720–1259, the
+   * histogram in y 1423–1646, and the orange 1.800 line pins the plot's width
+   * at x 43–1202. The volume bars separate cleanly into FORTY columns, first
+   * centre 57 and last 1188, so the pitch is 29.0 — the candles share that axis
+   * and therefore that pitch.
+   *
+   * ⚠ THE SCENE CONVERTS THESE, it does not hold canvas numbers. The picture's
+   * height and position are free numbers above; if either moves, the cover and
+   * the level move with it because they are expressed against the FILE.
+   */
+  img: { w: 1230, h: 1800 },
+  plot: { x0: 43, x1: 1202 },
+  /**
+   * ⚠ THE COVER RUNS 10px PAST THE PLOT'S RIGHT EDGE. `x1` is where the orange
+   * 1.800 line stops, and the last column's antialiased edge reaches a pixel or
+   * two beyond it — enough to leave a red hairline standing outside the panel,
+   * which reads as a rendering fault rather than as a withheld answer.
+   *
+   * ⚠ AND THE PANEL'S ROUNDED CORNER IS WHY IT IS THIS BIG. A 16px radius in
+   * canvas pixels is 37 of the file's, so the bottom-right corner arc cuts back
+   * a long way; at 10 the last bar's own corner pixel sat 0.3px OUTSIDE the arc
+   * and showed through. 16, with the histogram pane taken 14 lower, puts it
+   * comfortably inside.
+   */
+  padRight: 16,
+  /** The two panes, top and bottom, generous enough to hide a whole column. */
+  price: { y0: 690, y1: 1300 },
+  vol: { y0: 1400, y1: 1670 },
+  bars: { n: 40, first: 57, pitch: 29.0 },
+  /**
+   * ⚠ TEN COLUMNS FROM THE RIGHT, COVERED FROM THE FIRST FRAME — Simon's call,
+   * and the shape is the one episode 019 uses for the same job: a solid GREY
+   * rounded panel, not indigo. Indigo is this episode's marking colour, and a
+   * big indigo panel reads as something being pointed AT rather than something
+   * withheld.
+   *
+   * ⚠ TWO PANELS, NOT ONE. Simon named the candles and the volume bars
+   * separately, and one tall rect between them would swallow the month row that
+   * dates the tape.
+   */
+  hide: 10,
+  /**
+   * ⚠ THE LOW IS THE TAPE'S OWN, FOUND BY SCANNING — the lowest candle ink in
+   * the file sits at y 1259, on the column at x 898. That works out as bar 29,
+   * which is the LAST BAR STILL VISIBLE: the level lands on the low of the
+   * tape the viewer can actually see, with the answer still covered.
+   */
+  low: 1259,
+  supportAt: 11505,
+  supportOver: 30,
 } as const;
 
 export const HEAD = {

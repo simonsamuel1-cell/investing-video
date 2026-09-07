@@ -183,21 +183,75 @@ export const BrptGroup = () => {
           chart used to start. A section cannot announce itself over its own
           picture. */}
       {(() => {
-        const w = SC15_ART.h * SC15_ART.ratio;
+        const A = SC15_ART;
+        const w = A.h * A.ratio;
         const inn = progress(f, T.chart, m.sec(0.6));
         if (inn <= 0.001) return null;
+        /** ⚠ ONE CONVERSION, USED BY EVERYTHING. The cover and the level are
+         *  written in the FILE's pixels and come through here, so moving or
+         *  resizing the picture moves them with it — there is no second copy
+         *  of these numbers to fall out of step. */
+        const L = (theme.canvas.width - w) / 2;
+        const T0 = (A.top + A.bottom - A.h) / 2;
+        const k = A.h / A.img.h;
+        const X = (ix: number) => L + ix * k;
+        const Y = (iy: number) => T0 + iy * k;
+        /** The left edge of the covered block: half a pitch before the first
+         *  hidden column's centre, so the cover starts in the gap rather than
+         *  through a candle. */
+        const cx = X(A.bars.first + A.bars.pitch * (A.bars.n - A.hide) - A.bars.pitch / 2);
+        const cw = X(A.plot.x1 + A.padRight) - cx;
+        const line = progress(f, local(A.supportAt, FROM), A.supportOver);
         return (
-          <Img
-            src={staticFile(SC15_ART.src)}
-            style={{
-              position: "absolute",
-              left: (theme.canvas.width - w) / 2,
-              top: (SC15_ART.top + SC15_ART.bottom - SC15_ART.h) / 2,
-              width: w,
-              height: SC15_ART.h,
-              opacity: inn,
-            }}
-          />
+          <>
+            <Img
+              src={staticFile(A.src)}
+              style={{
+                position: "absolute",
+                left: L,
+                top: T0,
+                width: w,
+                height: A.h,
+                /* ⚠ ROUNDED — Simon's call. Every other surface in this episode
+                   is; a screenshot with square corners reads as a foreign
+                   object dropped on the page. */
+                borderRadius: theme.shape.cardRadius,
+                opacity: inn,
+              }}
+            />
+            {/* ── the answer, withheld ─────────────────────────────────── */}
+            {[A.price, A.vol].map((pane, i) => (
+              <div
+                key={i}
+                style={{
+                  position: "absolute",
+                  left: cx,
+                  top: Y(pane.y0),
+                  width: cw,
+                  height: Y(pane.y1) - Y(pane.y0),
+                  borderRadius: theme.shape.panelRadius,
+                  background: theme.color.border,
+                  opacity: inn,
+                }}
+              />
+            ))}
+            {/* ── the support level, on the low of the visible tape ─────── */}
+            {line > 0.001 && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: X(A.plot.x0),
+                  top: Y(A.low),
+                  /* ⚠ IT DRAWS LEFT TO RIGHT and runs UNDER the cover, not up
+                     to it: a level that stops where the answer begins would be
+                     telling the viewer where to look. */
+                  width: (X(A.plot.x1) - X(A.plot.x0)) * line,
+                  height: theme.shape.rule,
+                  background: theme.color.indigo,
+                }}
+              />
+            )}
+          </>
         );
       })()}
 
