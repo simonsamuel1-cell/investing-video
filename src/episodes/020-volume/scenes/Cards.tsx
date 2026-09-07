@@ -44,9 +44,10 @@ export const Cards = () => (
         beside it and opens out into SC11. A full-screen contents list dropped
         over a chart that was still being read said the same thing worse. */}
 
-    {/* ⚠ INTERROGATIVE. Nothing directional, priced or coloured renders on a
-        question card — the answer is still two scenes away. */}
-    <ChapterCard n="Now you try" title="BRPT" sub="Baca harganya · Bandingkan volumenya" at={CARDS.practice.at} over={CARDS.practice.over} />
+    {/* ⚠ THE PRACTICE CARD IS GONE — Simon'''s call. "Quiz Time" opens the
+        section from the middle of the frame at f11289 and walks up to the
+        heading rail; a full-screen "Now you try / BRPT" 80 frames earlier said
+        the same thing and covered the two columns while it did. */}
 
     <ChapterCard n="04" title="Read the Context" sub="Kesehatan trend · Volume spike" at={CARDS.ch04.at} over={CARDS.ch04.over}>
       <StepRail steps={STEPS} at={CARDS.ch04.at} active={3} done={[0, 1, 2]} />

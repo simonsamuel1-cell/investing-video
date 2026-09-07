@@ -13,7 +13,17 @@ export const BLOCK = {
   SC01: 0, SC02: 809, SC03: 1516, SC04: 2448, SC05: 3399, SC06: 4260,
   SC07: 4954, SC08: 5951, SC09: 6858, SC10: 7533,
   SC11: 8214, SC12: 8911, SC13: 9601, SC14: 10471,
-  SC15A: 11261, SC15B: 13026,
+  /**
+   * ⚠ 11289, NOT 11261 — Simon's frame. He wanted the two breakdown columns to
+   * run to 11288 and the quiz to open on 11289.
+   *
+   * ⚠ AND IT MOVES NOTHING VO-LOCKED. Every beat inside CG-D is written
+   * `local(BEAT.x, FROM)` against this same number, so a beat's GLOBAL frame is
+   * `FROM + (BEAT.x − FROM)` = `BEAT.x` whatever FROM is. Only the group's own
+   * frame-zero work — the chart building — moves with it, and that is delayed
+   * further on purpose so it does not draw under the quiz title.
+   */
+  SC15A: 11289, SC15B: 13026,
   SC16: 14509, SC17: 15415, SC18: 16653, SC19: 17820, SC20: 18764,
   END: 19652,
 } as const;
@@ -31,11 +41,15 @@ export const BLOCK = {
  * SC07–SC10 by ComboTable, and is already complete when CHAPTER 03 lands over
  * it.
  */
+/* ⚠ THE PRACTICE CARD IS GONE — Simon's call, and it is the same reason 02's
+   and 03's went: the beat that hands the chapter over already exists. `QUIZ`
+   below announces the section by name, from the middle of the frame, and a
+   full-screen card saying "Now you try / BRPT" 80 frames earlier said it twice
+   — and covered the two columns Simon wanted to run to 11288. */
 export const CARDS = {
   roadmap: { at: 1410, over: 100 },
   ch02: { at: 4906, over: 96 },
   ch03: { at: 8178, over: 96 },
-  practice: { at: 11206, over: 110 },
   ch04: { at: 14458, over: 102 },
   ch05: { at: 16608, over: 90 },
   recap: { at: 18720, over: 88 },
@@ -371,6 +385,17 @@ export const COUNTDOWN = [BEAT.three, BEAT.two, BEAT.one];
  * as a slide up from nowhere.
  */
 export const CUTS = {
+  /**
+   * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
+   *
+   * ⚠ AND IT IS ONE-SIDED ON PURPOSE, which is the one time that is right.
+   * The rule is that both halves must evaluate the SAME cut, because two
+   * hand-tuned moves that happen to meet is not a cut. Here there is no second
+   * picture to meet: what follows is an empty stage with a name on it. So the
+   * camera carries the columns out, and the title arrives on its own entrance
+   * — sliding it in as well would animate it twice.
+   */
+  toQuiz: { at: 11289, over: 24, distance: 90, blur: 10, axis: "y" as const },
   intoSC01: { at: 0, over: 30, distance: 90, blur: 12, axis: "y" as const },
   /** SC01 → the "Satu hal yang perlu dicek" mascot card. A real cut: SC01 is
    *  carried out and the card carried in on one move at f892. */
@@ -740,6 +765,23 @@ export const MASCOT = {
  *
  * ⚠ HIS WORDING VERBATIM, ellipsis included.
  */
+/**
+ * ═══ QUIZ TIME ═══  (Simon's frame, and his reference)
+ *
+ * "Dari 11289, beri Quiz Time. Sama seperti 6725-6787" — episode 019's own
+ * gesture, which is why `QuizTitle` now lives in core rather than in 019.
+ *
+ * ⚠ 019 IS 30fps AND THIS IS 60. His 62 frames there are 2.07 seconds, which
+ * is 124 frames here — 74 big and centred, then 50 walking up to the rail.
+ * Copying 62 across would have run the whole move at double speed.
+ *
+ * ⚠ IT SETTLES ON `HEAD`'s OWN ANCHOR, the same place SC11's heading stood, so
+ * the rail does not move between the two sections. CG-D's own title is CENTRED
+ * and arrives at f11560; the two sit side by side rather than on top of each
+ * other, which is exactly how 019 hangs its question beside the heading.
+ */
+export const QUIZ = { at: 11289, hold: 74, walk: 50, text: "Quiz Time" } as const;
+
 export const HEAD = {
   at: 2541,
   hold: 30,

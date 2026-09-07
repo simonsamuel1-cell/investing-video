@@ -20,10 +20,10 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, QuizTitle,
   gridOf, useMotion, progress, price as fmtPrice, theme,
 } from "../../../core";
-import { BLOCK, BEAT, local, COUNTDOWN } from "../data/timing";
+import { BLOCK, BEAT, HEAD, QUIZ, local, COUNTDOWN } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
 import {
   BRPT, BRPT_DOMAIN, BRPT_VOL, BRPT_BREAK, BRPT_REBOUND, BRPT_ASK,
@@ -33,7 +33,17 @@ import {
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC15A;
 const T = {
-  chart: 0,
+  /**
+   * ⚠ THE CHART WAITS FOR THE QUIZ TITLE TO LEAVE THE MIDDLE. At frame 0 it
+   * would build under "Quiz Time" while the words are still 2.5× size and
+   * centred — 019 opens on an empty stage for exactly this reason. It starts
+   * as the walk starts, so the heading vacates the middle and the tape fills
+   * it: one move handing over to the next rather than two at once.
+   *
+   * There is room. 2.6s of drawing from f11363 finishes at f11519, and the
+   * first VO-locked beat in this group is the ticker at f11560.
+   */
+  chart: QUIZ.hold,
   ticker: local(BEAT.brpt, FROM),
   low: local(BEAT.monthLow, FROM),
   twoDays: local(BEAT.lastTwoDays, FROM),
@@ -68,6 +78,14 @@ export const BrptGroup = () => {
 
   return (
     <Stage>
+      {/* ⚠ THE WHOLE PICTURE WAITS FOR THE TITLE TO LEAVE THE MIDDLE. Mounted
+          from frame 0 the empty card, its gridlines and the reveal mask all
+          stood behind "Quiz Time" while it was still 2.5× size and centred —
+          which is a section announcing itself over the section it is
+          announcing. 019 opens on bare paper for the same reason. It arrives
+          on the same frame the chart starts drawing, so the heading vacating
+          the middle and the picture filling it are one hand-over. */}
+      <div style={{ position: "absolute", inset: 0, opacity: progress(f, T.chart, m.fade) }}>
       <Card />
       <SourceTag kind={BRPT.kind} label="BRPT · 1D" y={TAG_Y} />
       <Title text={answering ? "False breakdown" : "Menurutmu, apa yang terjadi?"} at={answering ? T.upTo : T.ticker} />
@@ -149,6 +167,25 @@ export const BrptGroup = () => {
           )}
         </>
       )}
+      </div>
+
+      {/* ⚠ LAST, SO IT IS ON TOP. It is the first thing on screen in this
+          group and it has to stay legible over the card the chart is drawn on
+          — mounted before the card it was simply painted over.
+
+          ⚠ IT IS NOT PART OF THE PICTURE THE CUT CARRIES IN; see CUTS.toQuiz,
+          which is deliberately one-sided. It settles on HEAD's own anchor, the
+          same rail SC11's heading stood on, so the section name does not jump
+          between the two sections. */}
+      <QuizTitle
+        text={QUIZ.text}
+        at={local(QUIZ.at, FROM)}
+        hold={QUIZ.hold}
+        walk={QUIZ.walk}
+        x={HEAD.x}
+        y={HEAD.y}
+        size={HEAD.size}
+      />
     </Stage>
   );
 };

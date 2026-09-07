@@ -1046,6 +1046,13 @@ export const MainChartGroup = () => {
 
   return (
     <Stage>
+      {/* ⚠ THE WHOLE PICTURE IS CARRIED OUT ON f11289 — Simon's transition.
+          It wraps everything INSIDE the stage rather than the stage itself, so
+          the ground stays put: a camera move that takes the paper with it is
+          not a camera move, it is the frame sliding. `cutOutStyle` is the
+          identity outside its own 24-frame window, so it costs nothing for the
+          eleven thousand frames before it. */}
+      <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toQuiz) }}>
       {/* ⚠ NOT DRAWN HERE ONCE SC11 OWNS THE FRAME. The white panel belongs to
           a COLUMN, and from f10471 there are two of them; leaving it at the
           stage level gave the second column candles standing on the page with
@@ -2214,6 +2221,7 @@ export const MainChartGroup = () => {
           ⚠ THE NUMBERS THEY USED — VOL_HIGH and VOL_AVG at BREAK_AT — are still
           asserted in data/series.ts, so bringing the strips back needs no data
           work; only a place to put them where the histogram is visible. */}
+      </div>
     </Stage>
   );
 };
