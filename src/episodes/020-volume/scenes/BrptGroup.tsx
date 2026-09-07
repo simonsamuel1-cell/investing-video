@@ -283,11 +283,7 @@ export const BrptGroup = () => {
                      reads as a sheet laid over it, which is exactly the
                      gesture. */
                   backgroundColor: theme.color.cardBg,
-                  /* ⚠ THE EDGE IS THE WHOLE SIGNAL NOW. On the chart's own
-                     white, nothing but this outline says a panel is there —
-                     and `box-sizing: border-box` (the stage's own reset) keeps
-                     it INSIDE the rect, so adding it moves nothing. */
-                  border: `${A.edge.width}px dashed ${theme.color.border}`,
+
                   /* ⚠ THE QUESTION MARK IS A CHILD OF THE SHAPE, not a third
                      element placed at its centre. Centred by layout, it stays
                      in the middle of the panel however the picture is resized
@@ -305,6 +301,31 @@ export const BrptGroup = () => {
                   lineHeight: 1,
                 }}
               >
+                {/* ⚠ THE OUTLINE IS SVG, NOT A CSS BORDER, AND THAT IS THE ONLY
+                    WAY TO SET A DASH LENGTH. `border-style: dashed` picks its
+                    own pattern and no property changes it — Simon asked for
+                    longer dashes and the CSS version simply could not do it.
+
+                    ⚠ INSET BY HALF THE STROKE. An SVG stroke straddles the
+                    path, so a rect drawn on the box's own edge would hang one
+                    pixel outside it on every side. */}
+                <svg
+                  style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                  width={cw}
+                  height={Y(pane.y1) - Y(pane.y0)}
+                >
+                  <rect
+                    x={A.edge.width / 2}
+                    y={A.edge.width / 2}
+                    width={cw - A.edge.width}
+                    height={Y(pane.y1) - Y(pane.y0) - A.edge.width}
+                    rx={theme.shape.panelRadius}
+                    fill="none"
+                    stroke={theme.color.border}
+                    strokeWidth={A.edge.width}
+                    strokeDasharray={`${A.edge.dash} ${A.edge.gap}`}
+                  />
+                </svg>
                 ?
               </div>
             ))}

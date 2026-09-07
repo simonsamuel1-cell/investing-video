@@ -1009,8 +1009,14 @@ export const SC15_ART = {
    * ⚠ IN CANVAS PIXELS, NOT THE FILE'S, for the same reason the hatch was: the
    * shapes grow with the picture, and a dash pattern that grew with them would
    * turn into a row of blocks at double size.
+   *
+   * ⚠ `dash` AND `gap` ONLY MEAN ANYTHING BECAUSE THE OUTLINE IS DRAWN IN SVG.
+   * CSS `border-style: dashed` picks its own pattern and there is no property
+   * that changes it — the first version of this set both numbers and the
+   * browser ignored them. A stroked rect with `stroke-dasharray` is the only
+   * way to say how long a dash is.
    */
-  edge: { width: 2, dash: 10, gap: 8 },
+  edge: { width: 2, dash: 22, gap: 12 },
   /**
    * ⚠ THE WHOLE PICTURE SLIDES LEFT UNTIL IT TOUCHES THE MARGIN — Simon's
    * frame. The distance is DERIVED (`theme.margin.left` minus wherever the
