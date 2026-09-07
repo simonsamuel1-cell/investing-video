@@ -189,31 +189,39 @@ export const PALETTES: Record<PaletteName, Palette> = {
  * ⚠ INDIGO, NOT A NEUTRAL. A grey glow reads as a shadow bug; the hue is what
  * makes it read as deliberate. Hue-locked to 247 like every other indigo here.
  *
+ * `soft` is `rest` spread wide and made fainter — the reference folder's own
+ * shadow. It goes with `cardGrad`: a surface that is lit from above throws a
+ * large soft shadow, not a tight dark one. Never use it with a flat fill.
+ *
  * `bloom` is `glow` WITHOUT the ring — for something that already has a border
  * of its own. Using the full `glow` there draws a second edge just outside the
  * first, which reads as a double border rather than as a lit one.
  */
-export const SHADOWS: Record<PaletteName, { rest: string; lift: string; glow: string; bloom: string }> = {
+export const SHADOWS: Record<PaletteName, { rest: string; soft: string; lift: string; glow: string; bloom: string }> = {
   terang: {
     rest: "0 10px 24px rgba(0, 0, 0, 0.05)",
+    soft: "0 26px 64px rgba(0, 0, 0, 0.075), 0 6px 16px rgba(0, 0, 0, 0.04)",
     lift: "0 24px 42px rgba(0, 0, 0, 0.10)",
     glow: "0 0 0 3px rgba(95, 77, 238, 0.55), 0 0 46px 12px rgba(95, 77, 238, 0.34)",
     bloom: "0 0 46px 12px rgba(95, 77, 238, 0.34)",
   },
   gelap: {
     rest: "0 10px 24px rgba(0, 0, 0, 0.45)",
+    soft: "0 26px 64px rgba(0, 0, 0, 0.55), 0 6px 16px rgba(0, 0, 0, 0.30)",
     lift: "0 24px 42px rgba(0, 0, 0, 0.65)",
     glow: "0 0 0 3px rgba(139, 122, 247, 0.65), 0 0 46px 12px rgba(139, 122, 247, 0.40)",
     bloom: "0 0 46px 12px rgba(139, 122, 247, 0.40)",
   },
   kertas: {
     rest: "0 10px 24px rgba(60, 45, 30, 0.06)",
+    soft: "0 26px 64px rgba(60, 45, 30, 0.10), 0 6px 16px rgba(60, 45, 30, 0.05)",
     lift: "0 24px 42px rgba(60, 45, 30, 0.12)",
     glow: "0 0 0 3px rgba(95, 77, 238, 0.50), 0 0 46px 12px rgba(95, 77, 238, 0.30)",
     bloom: "0 0 46px 12px rgba(95, 77, 238, 0.30)",
   },
   ungu: {
     rest: "0 10px 24px rgba(52, 24, 78, 0.10)",
+    soft: "0 26px 64px rgba(52, 24, 78, 0.14), 0 6px 16px rgba(52, 24, 78, 0.07)",
     lift: "0 24px 42px rgba(52, 24, 78, 0.18)",
     glow: "0 0 0 3px rgba(122, 47, 176, 0.55), 0 0 46px 12px rgba(122, 47, 176, 0.34)",
     bloom: "0 0 46px 12px rgba(122, 47, 176, 0.34)",
@@ -286,6 +294,40 @@ export const theme = {
      * would just be a second shape.
      */
     halo: "radial-gradient(circle, rgba(255,255,255,1) 42%, rgba(255,255,255,0) 70%)",
+    /**
+     * ═══ SURFACES, NOT FILLS ═══  (from the reference study, 2026-09-07)
+     *
+     * Every reference in Simon's folder paints its cards with a GRADIENT — the
+     * "white" ones included. A flat #FFFFFF rectangle on a flat #F5F5F5 ground
+     * is two pieces of paper; a card with a direction of light on it is a
+     * surface something is standing on, and that is the whole difference
+     * between the references and this episode.
+     *
+     * ⚠ IT HAS TO BE THIS SUBTLE. Top to bottom the swing is five values of
+     * lightness. Any more and it reads as a panel that is dirty at the bottom
+     * rather than as a lit one.
+     */
+    cardGrad: "linear-gradient(179deg, #FFFFFF 0%, #FDFDFE 48%, #F2F2F6 100%)",
+    /** ⚠ AND THE EDGE GOES QUIET. A gradient surface carries its own top edge;
+     *  leaving the full hairline on draws a second one over it. */
+    cardEdge: "rgba(22, 22, 48, 0.05)",
+    /**
+     * ═══ THE GROUND IS NOT A COLOUR EITHER ═══
+     *
+     * Two very wide, very faint blooms behind the cards. They exist to be
+     * MOVED: given opposite drifts they are the slow layer the references
+     * always have running under the fast one, and they cost nothing because
+     * nothing is ever read off them.
+     *
+     * ⚠ THE HUES ARE THE TWO ANCHORS, at a tenth of their strength. A neutral
+     * grey bloom reads as a render fault; the brand hues read as light.
+     */
+    bloomIndigo:
+      "radial-gradient(58% 62% at 26% 30%, rgba(95,77,238,0.10) 0%, " +
+      "rgba(95,77,238,0.045) 38%, rgba(95,77,238,0) 72%)",
+    bloomCyan:
+      "radial-gradient(56% 60% at 78% 72%, rgba(92,200,227,0.15) 0%, " +
+      "rgba(92,200,227,0.06) 40%, rgba(92,200,227,0) 74%)",
     /**
      * ⚠ A TEXT SELECTION, NOT A HIGHLIGHTER. Stronger than `indigoWash` because
      * it stands for something a cursor has just dragged over — a selection that

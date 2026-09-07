@@ -943,6 +943,56 @@ export const SC11 = {
    */
   narrow: 0.65,
   /**
+   * ═══ THE CAMERA NEVER STOPS ═══  (from the reference folder, 2026-09-07)
+   *
+   * Every chart clip Simon put in `VIDEO 21 - Volume/Video Reference` has TWO
+   * layers running at different speeds: a slow one that never arrives and never
+   * leaves, and a fast one that is the beat. Between f9240 and f10470 this
+   * scene had only the fast one — four text beats with three long holds between
+   * them, and in those holds not a single pixel moved.
+   *
+   * ⚠ THE DRIFT IS LINEAR AND UNCLAMPED, AND THAT IS THE WHOLE POINT.
+   * `progress` would ease it, and an eased drift reads as a move that is about
+   * to finish — which puts the dead frame back, just later. The references
+   * drift at CONSTANT velocity because their camera never starts or stops on
+   * screen. `over` is the stretch the numbers below are QUOTED over, not a
+   * stop: past f10471 the same rate simply carries on under the split.
+   *
+   * ⚠ IT MOVES THE COLUMN, NOT THE WORDS. The drift rides the same wrapper the
+   * pick-lift uses, so the card, the tape, the histogram and the cyan band
+   * travel as one thing and cannot fall out of register. The reading beside the
+   * chart and the note under it are outside it: type that creeps reads as a
+   * bug, and the references never move it either.
+   */
+  cam: {
+    over: 1231,
+    /**
+     * ⚠ IT PULLS BACK, IT DOES NOT PUSH IN — and that is geometry, not taste.
+     * The card already stands ON the 96px left margin, so ANY push-in grows it
+     * straight through the margin: at two per cent its left edge lands at 84,
+     * and at the split the right column's edge lands past 1824. Receding keeps
+     * every edge inside the stage at every frame of the stretch, and a picture
+     * that slowly settles away under a heading that holds is the same move the
+     * references make anyway.
+     *
+     * Under a pixel a frame, in both terms.
+     */
+    zoom: -0.018,
+    x: 5,
+    y: -10,
+    /** ⚠ THE GROUND GOES THE OTHER WAY, AND FURTHER. Two layers at the same
+     *  speed are one layer; the parallax IS the depth. */
+    bloom: { x: 78, y: 48 },
+    /**
+     * ⚠ THE HISTOGRAM ARRIVES BAR BY BAR, LEFT TO RIGHT — and only once the
+     * pull-back has settled. During the shrink the view is still widening, so
+     * bars are still coming into existence; starting the stagger inside it
+     * would drop a late bar in at full height, which is the pop it exists to
+     * avoid. `at` is measured from `shrink.at`, so the two cannot drift apart.
+     */
+    bars: { at: 36, spread: 26, over: 16 },
+  },
+  /**
    * ═══ THE READING BESIDE THE CHART ═══  (Simon's frames)
    *
    * ⚠ EACH GROUP IS LAID OUT WHOLE FROM ITS FIRST FRAME, kicker and body

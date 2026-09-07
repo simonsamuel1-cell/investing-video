@@ -1212,8 +1212,68 @@ export const MainChartGroup = () => {
         /** ⚠ THE SAME FRACTION `candleWidth` USES, so a bar is exactly as wide
          *  as the candle standing over it. */
         const barW = Math.max(3, Math.abs(xz(1) - xz(0)) * 0.68);
+        const BAR_R = Math.min(barW * 0.4, 10);
+        /**
+         * ═══ ⚠ THE SLOW LAYER — see SC11.cam in data/timing ═══
+         *
+         * Linear, and deliberately not clamped: a camera that eases is a camera
+         * the viewer can feel stopping, and this one is never supposed to
+         * arrive. Zero at f9240, so the shrink it starts inside covers its
+         * first frames completely.
+         */
+        const camT = Math.max(0, (f - T.shrink) / SC11.cam.over);
         return (
         <>
+        {/* ── the ground, and it is moving ────────────────────────────────
+            ⚠ TWO BLOOMS, OPPOSITE DIRECTIONS, DIFFERENT DISTANCES. This is the
+            law every reference clip obeys, at its cheapest: something is always
+            travelling behind the thing being read, slower than it and the other
+            way, so a held frame is never a still frame. Nothing is measured off
+            it, which is why it is allowed to be this vague.
+
+            ⚠ AND IT ARRIVES WITH THE SHRINK. At full strength from its first
+            frame it would be a wash switching on. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: narrowT,
+            pointerEvents: "none",
+            /* ⚠ AND IT STOPS BEFORE THE SUBTITLE BAND. The band is reserved and
+               the audit checks it by pixel equality with the ground, so a wash
+               that drifts into it is a violation however faint it looks —
+               measured at 12 levels off the paper before this mask. It fades
+               out over 160px rather than being clipped: a soft ground with a
+               straight edge across it is worse than no ground at all. */
+            WebkitMaskImage:
+              `linear-gradient(to bottom, #000 0px, #000 ${theme.captionBand.top - 160}px, ` +
+              `transparent ${theme.captionBand.top}px)`,
+            maskImage:
+              `linear-gradient(to bottom, #000 0px, #000 ${theme.captionBand.top - 160}px, ` +
+              `transparent ${theme.captionBand.top}px)`,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: -260,
+              background: theme.color.bloomIndigo,
+              transform: `translate(${(camT * SC11.cam.bloom.x).toFixed(1)}px, ${(
+                camT * SC11.cam.bloom.y
+              ).toFixed(1)}px)`,
+            }}
+          />
+          <div
+            style={{
+              position: "absolute",
+              inset: -260,
+              background: theme.color.bloomCyan,
+              transform: `translate(${(-camT * SC11.cam.bloom.x * 0.62).toFixed(1)}px, ${(
+                -camT * SC11.cam.bloom.y * 0.62
+              ).toFixed(1)}px)`,
+            }}
+          />
+        </div>
         {/* ⚠ THE COLUMN IS DRAWN TWICE, THE SECOND ONE TRANSLATED. Everything
             inside is laid out at the left column's coordinates and its clip
             travels with it, so the copy cannot drift out of register with the
@@ -1299,7 +1359,15 @@ export const MainChartGroup = () => {
           style={{
             position: "absolute",
             inset: 0,
-            transform: `scale(${(1 + SC11.pick.grow * picked).toFixed(4)})`,
+            /* ⚠ THE DRIFT AND THE LIFT SHARE ONE TRANSFORM, and they must:
+               everything that has to stay in register with the candles — the
+               card, the histogram, the cyan band — is inside this wrapper, and
+               a second wrapper for the camera would be one more place for the
+               two to disagree. The pick multiplies the drift rather than
+               replacing it, so a column can be lifted while still travelling. */
+            transform:
+              `translate(${(camT * SC11.cam.x).toFixed(2)}px, ${(camT * SC11.cam.y).toFixed(2)}px) ` +
+              `scale(${((1 + camT * SC11.cam.zoom) * (1 + SC11.pick.grow * picked)).toFixed(4)})`,
             transformOrigin: `${(CARD.x + CARD_NOW.w / 2).toFixed(1)}px ${(
               CARD.y +
               (volBox.y + volBox.h - CARD.y) / 2
@@ -1332,7 +1400,14 @@ export const MainChartGroup = () => {
           }}
         >
         {/* the column's own white panel — one per copy */}
-        <Card rect={{ x: CARD.x, y: CARD.y, w: CARD_NOW.w, h: CARD_NOW.h }} />
+        {/* ⚠ `soft` — gradient fill, quiet edge, wide low shadow. Every video in
+            the reference folder paints its cards this way, the white ones
+            included; flat white on flat grey is two pieces of paper, and it is
+            the single biggest reason this chapter looked flatter than they do.
+            It is on for the WHOLE of SC11, not from f9240: a surface that
+            changes treatment in the middle of one continuous shot is a worse
+            fault than the one being fixed. */}
+        <Card rect={{ x: CARD.x, y: CARD.y, w: CARD_NOW.w, h: CARD_NOW.h }} soft />
         {/* ⚠ THE READING'S NAME, INSIDE ITS OWN WINDOW. It belongs to the
             column, so it is drawn in the copy rather than beside it. */}
         {splitT > 0.01 && (
@@ -1481,7 +1556,7 @@ export const MainChartGroup = () => {
             the card reads as a rendering fault rather than as a pane arriving. */}
         {volBox.h > 24 && (
           <>
-            <Card rect={volBox} />
+            <Card rect={volBox} soft />
             {/* ⚠ DRAWN IN SCREEN COORDS, POSITIONED THROUGH THE ZOOM. The bars
                 have to stand under the candles the viewer can actually see, and
                 those are 3x magnified; putting the histogram inside the zoomed
@@ -1493,7 +1568,25 @@ export const MainChartGroup = () => {
                 const x = xz(i) + shiftX;
                 if (x < volBox.x - barW || x > volBox.x + volBox.w + barW) return null;
                 const v = volAt(i) + (target[i] - volAt(i)) * splitT;
-                const h = (v / volPeak) * (volBox.h - 24) * narrowT;
+                /**
+                 * ⚠ EACH BAR HAS ITS OWN START, AND IT COMES FROM ITS POSITION.
+                 * The whole histogram scaling up as one block is a slide
+                 * building; a row that fills left to right is a reading being
+                 * taken. Keyed on x rather than on the index because only the
+                 * visible third of the tape is drawn — the index would put the
+                 * stagger's start off the left edge of the window.
+                 */
+                const u = Math.min(1, Math.max(0, (x - volBox.x) / volBox.w));
+                const grew = progress(
+                  f,
+                  T.shrink + SC11.cam.bars.at + u * SC11.cam.bars.spread,
+                  SC11.cam.bars.over,
+                );
+                const h = (v / volPeak) * (volBox.h - 24) * grew;
+                const col =
+                  CHART1_ALL[i].c >= CHART1_ALL[i].o
+                    ? theme.color.candleGreen
+                    : theme.color.candleRed;
                 return (
                   <div
                     key={i}
@@ -1503,11 +1596,20 @@ export const MainChartGroup = () => {
                       top: volBox.y + volBox.h - 12 - h,
                       width: barW,
                       height: Math.max(1, h),
-                      borderRadius: Math.min(barW * 0.28, 8),
-                      background:
-                        CHART1_ALL[i].c >= CHART1_ALL[i].o
-                          ? theme.color.candleGreen
-                          : theme.color.candleRed,
+                      /* ⚠ ROUND ON TOP, ALMOST SQUARE AT THE FOOT. A bar stands
+                         ON a baseline; rounding the corners it is standing on
+                         lifts it off the line it is measured from. */
+                      /* ⚠ AND THE RADIUS IS CAPPED BY THE HEIGHT. A bar still
+                         growing is a few pixels tall, and a 10px radius on it
+                         draws a dome rather than a bar. */
+                      borderRadius: `${Math.min(BAR_R, h * 0.45).toFixed(1)}px ${Math.min(
+                        BAR_R,
+                        h * 0.45,
+                      ).toFixed(1)}px 3px 3px`,
+                      /* ⚠ A GRADIENT, NOT A FILL — the reference folder's bars
+                         are all lit from the top. Light at the head, solid at
+                         the foot, so the height reads as weight. */
+                      background: `linear-gradient(180deg, ${col}C0 0%, ${col} 74%)`,
                       opacity: 0.72 * (1 - splitT) * dim,
                     }}
                   />
@@ -1518,6 +1620,15 @@ export const MainChartGroup = () => {
                 downVol.map((v, i) => {
                   const bw = Math.max(3, (grid2.x(1) - grid2.x(0)) * 0.68);
                   const h = (v / downPeak) * (volBox.h - 24);
+                  /* ⚠ THE SAME TREATMENT AS THE BARS IT REPLACES. These cross
+                     over the breakout's histogram inside the split's own move;
+                     one set gradient and the other flat would make the swap
+                     visible as a change of material rather than of data. */
+                  const bR = Math.min(bw * 0.4, 10);
+                  const bCol =
+                    BREAKDOWN.bars[i].c >= BREAKDOWN.bars[i].o
+                      ? theme.color.candleGreen
+                      : theme.color.candleRed;
                   return (
                     <div
                       key={`d${i}`}
@@ -1527,12 +1638,9 @@ export const MainChartGroup = () => {
                         top: volBox.y + volBox.h - 12 - h,
                         width: bw,
                         height: Math.max(1, h),
-                        borderRadius: Math.min(bw * 0.28, 8),
+                        borderRadius: `${bR}px ${bR}px 3px 3px`,
                         opacity: 0.72 * splitT * dim,
-                        background:
-                          BREAKDOWN.bars[i].c >= BREAKDOWN.bars[i].o
-                            ? theme.color.candleGreen
-                            : theme.color.candleRed,
+                        background: `linear-gradient(180deg, ${bCol}C0 0%, ${bCol} 74%)`,
                       }}
                     />
                   );

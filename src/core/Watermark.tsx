@@ -13,7 +13,13 @@
  * needs useCurrentFrame — the Composition stays a single expression with no
  * hooks.
  */
-import { AbsoluteFill, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import {
+  AbsoluteFill,
+  Img,
+  interpolate,
+  staticFile,
+  useCurrentFrame,
+} from "remotion";
 import { useMotion } from "./useMotion";
 
 export const Watermark = ({
@@ -36,7 +42,13 @@ export const Watermark = ({
   );
   return (
     <AbsoluteFill style={{ opacity: op, zIndex: 100 }}>
-      <Img src={staticFile(src)} style={{ width: "100%", height: "100%" }} />
+      <Img
+        src={staticFile(src)}
+        style={{
+          width: "100%",
+          height: "100%",
+        }}
+      />
     </AbsoluteFill>
   );
 };

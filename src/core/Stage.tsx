@@ -71,18 +71,29 @@ export const Stage = ({
   );
 };
 
+/**
+ * ⚠ `soft` IS THE REFERENCE SURFACE, AND IT IS OPT-IN.
+ *
+ * Gradient fill, a quiet edge and a wide low shadow — the treatment every video
+ * in Simon's reference folder gives a card. It is a prop rather than the
+ * default because a surface change is visible on every frame of every episode,
+ * and those are not all being re-cut; a scene asks for it when it has been
+ * redesigned to the reference.
+ */
 export const Card = ({
   rect = theme.stage.card,
   children,
   opacity = 1,
   radius = theme.shape.cardRadius,
   scale = 1,
+  soft = false,
 }: {
   rect?: Rect;
   children?: React.ReactNode;
   opacity?: number;
   radius?: number;
   scale?: number;
+  soft?: boolean;
 }) => {
   const c = usePalette();
   const shadow = useShadow();
@@ -97,9 +108,9 @@ export const Card = ({
           width: rect.w,
           height: rect.h,
           borderRadius: radius,
-          background: c.cardBg,
-          border: `${theme.shape.hairline}px solid ${c.border}`,
-          boxShadow: shadow.rest,
+          background: soft ? theme.color.cardGrad : c.cardBg,
+          border: `${theme.shape.hairline}px solid ${soft ? theme.color.cardEdge : c.border}`,
+          boxShadow: soft ? shadow.soft : shadow.rest,
           opacity,
           transform: scale === 1 ? undefined : `scale(${scale})`,
           transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px`,
