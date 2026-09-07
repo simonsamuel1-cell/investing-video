@@ -50,7 +50,6 @@ export const CARDS = {
   roadmap: { at: 1410, over: 100 },
   ch02: { at: 4906, over: 96 },
   ch03: { at: 8178, over: 96 },
-  ch04: { at: 14458, over: 102 },
   ch05: { at: 16608, over: 90 },
   recap: { at: 18720, over: 88 },
 } as const;

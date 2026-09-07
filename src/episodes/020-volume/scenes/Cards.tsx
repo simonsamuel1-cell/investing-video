@@ -49,9 +49,11 @@ export const Cards = () => (
         heading rail; a full-screen "Now you try / BRPT" 80 frames earlier said
         the same thing and covered the two columns while it did. */}
 
-    <ChapterCard n="04" title="Read the Context" sub="Kesehatan trend · Volume spike" at={CARDS.ch04.at} over={CARDS.ch04.over}>
-      <StepRail steps={STEPS} at={CARDS.ch04.at} active={3} done={[0, 1, 2]} />
-    </ChapterCard>
+    {/* ⚠ CHAPTER 04'S CARD IS GONE — Simon's call, and the third to go for the
+        same reason as 02's and 03's. It ran f14458–14560, straight over the
+        camera cut into SC16 at f14518 and the first 42 frames of the scene that
+        cut exists to introduce: a full-screen card on top of a transition is a
+        transition nobody sees. */}
 
     <ChapterCard n="05" title="Use Volume Correctly" sub="Salah kaprah · Batasannya" at={CARDS.ch05.at} over={CARDS.ch05.over}>
       <StepRail steps={STEPS} at={CARDS.ch05.at} active={4} done={[0, 1, 2, 3]} />
