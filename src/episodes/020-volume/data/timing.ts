@@ -55,7 +55,6 @@ export const CARDS = {
   roadmap: { at: 1410, over: 100 },
   ch02: { at: 4906, over: 96 },
   ch03: { at: 8178, over: 96 },
-  recap: { at: 18748, over: 88 },
 } as const;
 
 /**
@@ -400,6 +399,8 @@ export const CUTS = {
   toSpikes: { at: 16078, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /** SC18 out, SC19 in — Simon's frames, "17847-17848 transisi camera cut". */
   toLimits: { at: 17848, over: 24, distance: 90, blur: 10, axis: "x" as const },
+  /** SC19 out, SC20 in — Simon's frames, "18791-18792 transisi camera cut". */
+  toClose: { at: 18792, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
@@ -1910,6 +1911,41 @@ export const LIMITS = {
    * top of the margin.
    */
   grow: { at: 18309, over: 40 },
+  /**
+   * ⚠ THE DISPLAY'S PADDING IN THE GROWN STATE IS 25 ON THREE SIDES AND A LINE
+   * OF TEXT AT THE BOTTOM — Simon. Which is why `bottom` is derived from the
+   * row's own size rather than typed: change the type and the display gives up
+   * exactly as much room as the words now need, and no more.
+   */
+  full: { pad: 25, size: 36, gap: 26 },
+  /**
+   * ═══ THE FOUR THINGS TO READ VOLUME AGAINST ═══  (Simon's frames and colours)
+   *
+   * ⚠ EACH WORD TURNS ON ITS OWN MARK, and that pairing is the whole device.
+   * The lead-in has no drawing because it names nothing; the four that follow
+   * each put one thing on the chart, in the colour the word is set in, so the
+   * colour is the link rather than a decoration.
+   */
+  read: {
+    over: 22,
+    lead: { at: 18355, text: "Baca volume dengan:", tone: "ink" as const },
+    items: [
+      { at: 18439, text: "Trend", tone: "indigo" as const, mark: "zig" as const },
+      { at: 18480, text: "Support & Resistance", tone: "orange" as const, mark: "zone" as const },
+      { at: 18566, text: "Pola candle", tone: "cyan" as const, mark: "channel" as const },
+      { at: 18637, text: "Kondisi market", tone: "marun" as const, mark: "ma" as const },
+    ],
+    /** ⚠ THE ZIGZAG'S THRESHOLD IS A FRACTION OF THE TAPE'S OWN RANGE, never an
+     *  absolute: the same number must give the same density on a chart running
+     *  to 100 and one running to 12,000. */
+/** ⚠ 0.08, NOT 0.16. The tape is now mostly a long quiet base, and at 0.16 no
+     *  swing inside that base clears the threshold — the zigzag only appeared
+     *  over the breakout at the right and said nothing about the trend it is
+     *  meant to be tracing. */
+    zigThr: 0.08,
+    maPeriod: 8,
+    width: 4,
+  },
   cards: [
     { at: 17996, title: "Sebagai konfirmasi", tone: "ok" as const },
     { at: 18148, title: "Sebagai prediksi", tone: "no" as const },

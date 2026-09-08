@@ -455,6 +455,79 @@ export const SS5: Series = {
 export const SS4_VOL = SS4_JSON.vol;
 export const SS5_VOL = SS5_JSON.vol;
 export const SS4_DOMAIN = domainOf(SS4.closes, SS4.bars);
+
+/**
+ * ═══ SS4, WITH A LONGER RUN-UP ═══  (Simon: "masih terlalu stretched")
+ *
+ * ⚠ THE EXTRA BARS GO IN FRONT, NOT BEHIND. Twenty candles across 1580px of
+ * plot is a 52px candle standing 79px from the next one, which reads as a
+ * diagram of a chart rather than a chart. What was missing is not more CHART —
+ * it is more BASE: SS4's whole point is a long quiet stretch that then breaks
+ * out on a volume spike, and the traced window starts most of the way through
+ * the quiet part. Prepending the rest of it makes the breakout later in the
+ * frame, which is where it belongs.
+ *
+ * ⚠ SYNTHETIC, SEEDED, AND SAYING SO. These 26 bars are not in Simon's
+ * screenshot; they are a run-up generated at SS4's own opening level and scaled
+ * to its own bar sizes, so the join is invisible and the traced part is
+ * untouched.
+ */
+export const SS4_LONG: Series = (() => {
+  const lead = 26;
+  const open = SS4.bars[0].o;
+  const body = SS4.bars.slice(0, 6).reduce((a, b) => a + Math.abs(b.c - b.o), 0) / 6;
+  const rnd = seeded(0x5514);
+  const bars: Bar[] = [];
+  let p = open;
+  for (let i = 0; i < lead; i++) {
+    const step = (rnd() - 0.5) * 2 * body * 1.6;
+    const c = p + step;
+    const wick = body * (0.4 + rnd() * 0.9);
+    bars.push({ o: p, c, h: Math.max(p, c) + wick, l: Math.min(p, c) - wick });
+    p = c;
+  }
+  /* ⚠ THE JOIN IS CLOSED, NOT LEFT TO CHANCE. The last generated close is
+     nudged onto SS4's first open so the two tapes are one price series. */
+  const drift = SS4.bars[0].o - p;
+  bars.forEach((b, i) => {
+    const k = ((i + 1) / lead) * drift;
+    b.o += k; b.c += k; b.h += k; b.l += k;
+  });
+  const all = [...bars, ...SS4.bars];
+  return { closes: all.map((b) => b.c), bars: all, kind: "traced", label: SS4.label };
+})();
+export const SS4_LONG_VOL = [
+  ...volumeOf(SS4_LONG.bars.slice(0, SS4_LONG.bars.length - SS4.bars.length), 0x5514).map(
+    /* the run-up is the QUIET part, so its bars stay under the spike */
+    (v) => v * 0.42 * Math.max(...SS4_VOL),
+  ),
+  ...SS4_VOL,
+];
+export const SS4_LONG_DOMAIN = domainOf(SS4_LONG.closes, SS4_LONG.bars);
+
+/**
+ * A ZigZag through a tape's swings: hold the running extreme, commit a vertex
+ * when price retraces `thr` against it. The same walk SS_ZIG does, made general
+ * because SC19 needs one over a different tape.
+ */
+export const zigzagOf = (bars: Bar[], thr: number) => {
+  const pts: { i: number; v: number }[] = [];
+  let dir = 0;
+  let exI = 0;
+  let exV = bars[0].c;
+  for (let i = 1; i < bars.length; i++) {
+    if (dir === 1) {
+      if (bars[i].h > exV) { exI = i; exV = bars[i].h; }
+      else if (bars[i].l < exV - thr) { pts.push({ i: exI, v: exV }); dir = -1; exI = i; exV = bars[i].l; }
+    } else if (dir === -1) {
+      if (bars[i].l < exV) { exI = i; exV = bars[i].l; }
+      else if (bars[i].h > exV + thr) { pts.push({ i: exI, v: exV }); dir = 1; exI = i; exV = bars[i].h; }
+    } else if (bars[i].h > exV + thr) { dir = 1; exI = i; exV = bars[i].h; }
+    else if (bars[i].l < exV - thr) { dir = -1; exI = i; exV = bars[i].l; }
+  }
+  pts.push({ i: exI, v: exV });
+  return pts;
+};
 export const SS5_DOMAIN = domainOf(SS5.closes, SS5.bars);
 
 {

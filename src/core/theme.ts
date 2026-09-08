@@ -361,6 +361,15 @@ export const theme = {
     indigoGlow: "rgba(95, 77, 238, 0.55)",
     marker: "#E8201A",
     /**
+     * ⚠ TWO HUES THE PALETTE DOES NOT OWN, AT SIMON'S DIRECTION. SC19 names
+     * four things to read volume against and gives each one a colour; indigo
+     * and cyan take two of them, and the other two need to be as far from those
+     * and from each other as the wheel allows. Named here rather than typed in
+     * the scene, which is the rule that survives — the hue lock does not.
+     */
+    orange: "#E8871E",
+    marun: "#8C2F39",
+    /**
      * ═══ THE GLASS SET ═══  (sampled from Simon's ConversBank reference, 0:06)
      *
      * ⚠ EVERY VALUE HERE WAS READ OFF THAT FRAME, not invented. The ground runs

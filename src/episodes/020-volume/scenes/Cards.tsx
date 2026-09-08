@@ -13,10 +13,14 @@
  * over it. See CombosGroup.
  *
  * ONE RAIL, CARRIED. The same StepRail opens the episode and closes it in SC20.
+ *
+ * ⚠ AND THERE ARE NO CARDS LEFT. All five went, one at a time, each for the
+ * same reason: the Scene Transisi either side of them already hands the chapter
+ * over, and a full-frame contents list on top of that says it twice. What
+ * survives is `STEPS`, which SC20 still closes the episode with — the file is
+ * kept for it, and for the record of why the cards are not here.
  */
-import { ChapterCard, StepRail } from "../../../core";
 import type { Step } from "../../../core";
-import { CARDS } from "../data/timing";
 
 export const STEPS: Step[] = [
   { n: "01", label: "Understand Volume" },
@@ -60,8 +64,9 @@ export const Cards = () => (
         rather than as a contents list: the scene shrinks into the card it
         belongs to and the bonus rises out of the board that leaves. */}
 
-    <ChapterCard n="Recap" title="Volume Analysis" at={CARDS.recap.at} over={CARDS.recap.over}>
-      <StepRail steps={STEPS} at={CARDS.recap.at} done={[0, 1, 2, 3, 4]} />
-    </ChapterCard>
+    {/* ⚠ AND THE RECAP CARD IS GONE TOO — Simon: "visual ini hapus". It was the
+        last of the five full-screen contents lists; the bonus chapter ends on
+        the reading it has been building, and a checklist over the top of that
+        is a summary of a summary. */}
   </>
 );

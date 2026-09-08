@@ -9,8 +9,9 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, StepRail, Words, Line, TuntunMark, useMotion, progress, theme,
+  cutInStyle,
 } from "../../../core";
-import { BLOCK, BEAT, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, local } from "../data/timing";
 import { STEPS } from "./Cards";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -33,6 +34,7 @@ export const SC20 = () => {
 
   return (
     <Stage>
+      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toClose) }}>
       {out > 0.001 && (
         <StepRail steps={STEPS} at={T.rail} done={[0, 1, 2, 3, 4]} opacity={out} />
       )}
@@ -64,6 +66,7 @@ export const SC20 = () => {
           />
         </>
       )}
+      </div>
     </Stage>
   );
 };
