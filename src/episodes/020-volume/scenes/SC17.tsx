@@ -44,67 +44,6 @@ const CARDS = V.cards.map((card, i) => ({
   vol: i === 0 ? SS4_VOL : SS5_VOL,
 }));
 
-/* ── the device's own furniture ──────────────────────────────────────────── */
-
-const StatusBar = ({ ink }: { ink: string }) => {
-  const U = V.ui;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: U.pad + 12,
-        right: U.pad + 12,
-        top: U.status.y,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        fontFamily: theme.text.family,
-        fontSize: U.status.size,
-        fontWeight: 700,
-        color: ink,
-      }}
-    >
-      <span>9:41</span>
-      {/* signal, wifi, battery — shapes, not glyphs, so no font can lose them */}
-      <span style={{ display: "flex", alignItems: "flex-end", gap: 5 }}>
-        {[4, 7, 10, 13].map((h) => (
-          <i key={h} style={{ width: 3, height: h, borderRadius: 1, background: ink }} />
-        ))}
-        <i style={{ width: 9, height: 9, marginLeft: 3, borderRadius: "50% 50% 2px 50%", transform: "rotate(45deg)", background: ink }} />
-        <i style={{ width: 22, height: 11, marginLeft: 5, borderRadius: 3, border: `1.5px solid ${ink}`, boxSizing: "border-box", padding: 2 }}>
-          <i style={{ display: "block", width: "100%", height: "100%", borderRadius: 1, background: ink }} />
-        </i>
-      </span>
-    </div>
-  );
-};
-
-const Header = ({ ink }: { ink: string }) => {
-  const U = V.ui;
-  const s = U.header.size;
-  return (
-    <div
-      style={{
-        position: "absolute",
-        left: U.pad + 10,
-        right: U.pad + 10,
-        top: U.header.y,
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
-    >
-      <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-        <path d="M15 5 L7 12 L15 19" stroke={ink} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-      <svg width={s} height={s} viewBox="0 0 24 24" fill="none">
-        <circle cx={10.5} cy={10.5} r={6.5} stroke={ink} strokeWidth={2} />
-        <path d="M15.5 15.5 L20 20" stroke={ink} strokeWidth={2} strokeLinecap="round" />
-      </svg>
-    </div>
-  );
-};
-
 /* ── one window ──────────────────────────────────────────────────────────── */
 
 const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
@@ -141,9 +80,6 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
         transform: `translateY(${((1 - pop.opacity) * 26).toFixed(1)}px) scale(${pop.scale.toFixed(4)})`,
       }}
     >
-      <StatusBar ink={theme.color.glassInk} />
-      <Header ink={theme.color.glassInk} />
-
       {/* ── the product display ─────────────────────────────────────────── */}
       <div
         style={{
@@ -195,28 +131,6 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
         </g>
       </svg>
 
-      {/* the reference's own button, kept because it is what makes the shape
-          read as a product page rather than as a card with a chart on it */}
-      <div
-        style={{
-          position: "absolute",
-          left: U.display.x + U.display.w - U.fab.d - 18,
-          top: U.display.y + U.display.h - U.fab.d / 2,
-          width: U.fab.d,
-          height: U.fab.d,
-          borderRadius: "50%",
-          background: theme.color.glassInk,
-          boxShadow: theme.color.glassShadow,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <svg width={26} height={26} viewBox="0 0 24 24">
-          <path d="M12 5 V19 M5 12 H19" stroke="#FFFFFF" strokeWidth={2.4} strokeLinecap="round" />
-        </svg>
-      </div>
-
       {/* ── name and paragraph ──────────────────────────────────────────── */}
       <div
         style={{
@@ -256,18 +170,6 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
         </div>
       ))}
 
-      <div
-        style={{
-          position: "absolute",
-          left: V.win.w / 2 - U.home.w / 2,
-          top: U.home.y,
-          width: U.home.w,
-          height: U.home.h,
-          borderRadius: U.home.h / 2,
-          background: theme.color.glassInk,
-          opacity: 0.85,
-        }}
-      />
     </div>
   );
 };

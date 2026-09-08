@@ -1498,19 +1498,24 @@ export const SC16_V2 = {
   /**
    * ═══ f15500 · THE PREVIEW OPENS ON THE TWO SPIKES ═══  (Simon's crop)
    *
-   * ⚠ IT IS THE SAME CHANGE OF GRID AS EVERY OTHER MOVE IN THIS SCENE, not a
-   * scale on the picture. Blowing the chart up with a transform would take the
-   * candle bodies, the wicks and the histogram's hairlines up with it, and a
-   * mark whose stroke thickens is a mark that has become part of the picture.
-   * Twenty slots across the plot instead of a hundred; the price domain
-   * narrows to what those twenty actually reach.
+   * ⚠ ONE FACTOR, BOTH AXES — Simon: "jangan di stretch". The first version
+   * framed twenty slots across the plot and narrowed the domain to what those
+   * twenty reach, which are two DIFFERENT magnifications: 5× sideways and about
+   * 2.7× up, so every candle came out fat. Here `k` scales the bar pitch, the
+   * price panel's height and the histogram's height by the same number, the
+   * domain does not change at all, and no candle changes shape.
    *
-   * ⚠ AND THE HISTOGRAM NEEDS NOTHING DOING TO IT. Its peak is bar 21, which is
-   * inside this window — so the tallest bar already touches the top of the
-   * panel and stays there. Renormalising would have been the wrong instinct
-   * anyway: it would change what the bars mean halfway through the shot.
+   * ⚠ WHICH MEANS THINGS LEAVE THE FRAME, and that is what zooming in IS. The
+   * volume baseline is the anchor — it stays on y=900 — and slot `centre` is
+   * put in the middle of the screen; everything else follows from those two,
+   * so the tape's high prices ride off the top exactly as they would in a
+   * charting app. A zoom where nothing leaves is a zoom that stretched.
+   *
+   * ⚠ AND THE HISTOGRAM STILL NEEDS NOTHING NORMALISING. Its peak is bar 21,
+   * which is on screen throughout; the panel grows with everything else, so the
+   * bars keep both their heights relative to each other and their proportions.
    */
-  zoom: { at: 15500, over: 60, from: 14, to: 33 },
+  zoom: { at: 15500, over: 60, k: 2.2, centre: 26 },
   /**
    * ═══ f15712–15962 · THE TWO SPIKES, ALONE IN COLOUR ═══  (Simon's frames)
    *
@@ -1551,20 +1556,32 @@ export const SC16_V2 = {
  * the logo owns. Below 150 that rule does not apply.
  */
 export const SPIKES = {
-  win: { w: 440, h: 800, y: 150, gap: 200, radius: 46 },
-  /** Inside the device, in its own coordinates. */
+  win: { w: 440, h: 640, y: 200, gap: 200, radius: 46 },
+  /**
+   * Inside the window, in its own coordinates.
+   *
+   * ⚠ NO CHROME AT ALL — Simon took the clock, the signal, the battery, the
+   * chevron, the search glyph, the plus button and the home bar out, one
+   * message after another, and he was right to. Every one of them was the
+   * REFERENCE's furniture rather than this shot's: they say "this is a phone",
+   * and what this shot has to say is "this is one thing, named, and explained".
+   * What is left is the display, the name and the paragraph — which was the
+   * part of the reference that was actually being borrowed.
+   */
   ui: {
     pad: 20,
-    status: { y: 24, size: 17 },
-    header: { y: 62, size: 26 },
-    display: { x: 20, y: 118, w: 400, h: 442, radius: 30 },
+    display: { x: 20, y: 20, w: 400, h: 442, radius: 30 },
     /** Where the tape may draw inside the display. */
-    price: { x: 34, y: 132, w: 372, h: 286 },
-    volume: { x: 34, y: 438, w: 372, h: 108 },
-    fab: { d: 74 },
-    title: { y: 596, size: 36 },
-    desc: { y: 656, size: 20, leading: 1.5 },
-    home: { y: 762, w: 140, h: 5 },
+    price: { x: 34, y: 34, w: 372, h: 286 },
+    volume: { x: 34, y: 340, w: 372, h: 108 },
+    title: { y: 500, size: 36 },
+    /**
+     * ⚠ 18px, MEASURED RATHER THAN CHOSEN. The longest line is 44 characters;
+     * at 20 it ran 430px wide inside a 372px column and hung over the window's
+     * right edge. The lines are typed rather than wrapped, so nothing on screen
+     * would have told me — the assertion at the foot of SC17.tsx does.
+     */
+    desc: { y: 558, size: 18, leading: 1.55 },
   },
   /**
    * ⚠ THE TAPE BUILDS, IT DOES NOT APPEAR. The window pops, and ten frames

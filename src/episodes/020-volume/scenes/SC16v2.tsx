@@ -168,19 +168,20 @@ export const SC16v2 = () => {
    * transform on the picture would have taken every stroke width up with it.
    */
   const near2 = progressInOut(f, local(V.zoom.at, FROM), V.zoom.over);
-  const ZN = V.zoom.to - V.zoom.from;
-  const pitchZ = (V.full.w - GRID_PAD_X * 2) / ZN;
-  const boxZoom = {
-    x: V.full.x - pitchZ * (HEAD + V.zoom.from),
-    y: V.pan.price.y,
-    w: pitchZ * (N - 1) + GRID_PAD_X * 2,
-    h: V.pan.price.h,
-  };
-  const win2 = SS_GROWN.slice(V.zoom.from, V.zoom.to + 1);
-  const domZoom: [number, number] = [
-    Math.min(...win2.map((b) => b.l)),
-    Math.max(...win2.map((b) => b.h)),
-  ];
+  const K = V.zoom.k;
+  /**
+   * ⚠ ONE MAGNIFICATION, APPLIED TO EVERY RECT — that is the whole difference
+   * between a zoom and a stretch. `Z` maps a panned-state point to its zoomed
+   * position about two anchors: the histogram's BASELINE, which stays where it
+   * is, and slot `centre`, which goes to the middle of the screen. The DOMAIN
+   * is not touched, so the price scale grows purely because its box does — by
+   * the same k as the pitch and the histogram's height.
+   */
+  const BASE = V.pan.volume.y + V.pan.volume.h;
+  const FX = x0 + V.zoom.centre * PITCH;
+  const ZX = (p: number) => theme.canvas.width / 2 + (p - FX) * K;
+  const ZY = (p: number) => BASE + (p - BASE) * K;
+  const boxZoom = { x: ZX(boxPan.x), y: ZY(boxPan.y), w: boxPan.w * K, h: boxPan.h * K };
   const dive = (a: number, b: number) => a + (b - a) * near2;
 
   const box = {
@@ -192,8 +193,8 @@ export const SC16v2 = () => {
   const G = gridOf(
     SS2.closes,
     [
-      dive(slide(mix(domNear[0], SS2_DOMAIN[0]), SS_GROWN_DOMAIN[0]), domZoom[0]),
-      dive(slide(mix(domNear[1], SS2_DOMAIN[1]), SS_GROWN_DOMAIN[1]), domZoom[1]),
+      slide(mix(domNear[0], SS2_DOMAIN[0]), SS_GROWN_DOMAIN[0]),
+      slide(mix(domNear[1], SS2_DOMAIN[1]), SS_GROWN_DOMAIN[1]),
     ],
     box,
     0.06,
@@ -207,7 +208,14 @@ export const SC16v2 = () => {
    */
   const Gnew = { ...G, x: (k: number) => G.x(N + k) };
   const Gvol = { ...G, x: (k: number) => G.x(HEAD + k) };
-  const volBox = { x: V.full.x, y: V.pan.volume.y, w: V.full.w, h: V.pan.volume.h };
+  /** ⚠ THE HISTOGRAM ZOOMS TOO, or the candles would grow and the bars under
+   *  them would not — which is the stretch, one panel down. */
+  const volBox = {
+    x: V.full.x,
+    y: dive(V.pan.volume.y, ZY(V.pan.volume.y)),
+    w: V.full.w,
+    h: dive(V.pan.volume.h, V.pan.volume.h * K),
+  };
 
   /** The level and the trend leave first, and finish leaving before anything
    *  moves — Simon has rejected a fade that runs under the next beat before. */
