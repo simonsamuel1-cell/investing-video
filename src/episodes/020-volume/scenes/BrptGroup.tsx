@@ -20,7 +20,7 @@
 import { Img, interpolate, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Level, RevealMask, Crosshair, Countdown, progressInOut,
-  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, DashedBox, Words, dashOpenAt, HighlightCircle, HighlightBox, MarkerArrow, markerGeom,
+  Chip, Title, Line, KeyPoint, SourceTag, StatStrip, cutInStyle, cutOutStyle, DashedBox, Words, dashOpenAt, HighlightCircle, HighlightBox, MarkerArrow, markerGeom,
   gridOf, useMotion, progress, textReveal, price as fmtPrice, theme,
 } from "../../../core";
 import { BLOCK, BEAT, CUTS, HEAD, QUIZ, SC15_BLANK, SC15_ART, local, COUNTDOWN } from "../data/timing";
@@ -107,8 +107,31 @@ export const BrptGroup = () => {
           than its pieces is what makes the cover and the picture inseparable:
           they move together, both fully opaque, so the answer can never show
           through a half-transparent shape the way it did when this was a
-          fade. */}
-      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toQuiz) }}>
+          fade.
+          
+          ⚠ AND THE SAME WRAPPER CARRIES IT OUT AT f14518. The cut into SC16 was
+          one-sided until now — SC16 slid in and this simply stopped being
+          drawn, which is a scene disappearing rather than a camera moving. Both
+          halves of THAT cut now evaluate CUTS.toSC16 too.
+
+          ⚠ THE TWO TRANSFORMS ARE CONCATENATED, NOT ONE OVERWRITING THE OTHER.
+          They are 3200 frames apart, so each is the identity while the other is
+          moving — but spreading two style objects would have silently dropped
+          the first `transform` key, and the entrance at f11289 would have gone
+          missing with nothing to show why. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `${cutInStyle(f + FROM, CUTS.toQuiz).transform} ${
+            cutOutStyle(f + FROM, CUTS.toSC16).transform
+          }`,
+          filter:
+            [cutInStyle(f + FROM, CUTS.toQuiz).filter, cutOutStyle(f + FROM, CUTS.toSC16).filter]
+              .filter(Boolean)
+              .join(" ") || undefined,
+        }}
+      >
       {/* ⚠ THE WHOLE PICTURE WAITS FOR THE TITLE TO LEAVE THE MIDDLE. Mounted
           from frame 0 the empty card, its gridlines and the reveal mask all
           stood behind "Quiz Time" while it was still 2.5× size and centred —
