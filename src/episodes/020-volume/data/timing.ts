@@ -1449,11 +1449,11 @@ export const SC16_V2 = {
    */
   marks: [
     {
-      from: 8, to: 55, label: "Volume kuat", tone: "cyan" as const,
+      from: 8, to: 55, label: "Volume kuat", tone: "cyan" as const, trend: "support" as const,
       in: { at: 15061, over: 26 }, out: { at: 15454, over: 22 },
     },
     {
-      from: 78, to: 98, label: "Volume ringan", tone: "indigo" as const,
+      from: 78, to: 98, label: "Volume ringan", tone: "indigo" as const, trend: "resistance" as const,
       in: { at: 15240, over: 26 }, out: { at: 15454, over: 22 },
     },
   ],
@@ -1463,6 +1463,30 @@ export const SC16_V2 = {
   /** The word over each box: flush with its left edge, clear of its top, and
    *  in the box's own colour so the pair cannot be read the wrong way round. */
   markLabel: { size: 36, gap: 14 },
+  /**
+   * ⚠ EACH LINE ARRIVES WITH ITS OWN BOX, NOT BOTH WITH THE FIRST. Simon tagged
+   * both "(saat Volume kuat)", but he also tagged them with different crops —
+   * the higher-lows line is the first box's range and the lower-highs line is
+   * the second's, and a resistance line drawn 179 frames before the box it
+   * belongs to would be pointing at nothing. Read as a slip; say the word and
+   * `at` here becomes each mark's own `in.at` — or both become 15061.
+   */
+  swingLine: { over: 34, width: 3, gone: { at: 15454, over: 22 } },
+  /**
+   * ═══ THE PRICE LINES ═══  (Simon: "bebas saja penempatannya yang penting
+   * rapi, jaraknya rapi")
+   *
+   * ⚠ ROUND LEVELS, NOT EQUAL DIVISIONS OF THE PANEL. Both are evenly spaced,
+   * so both are "rapi" — but a chart divided into sevenths is divided by its
+   * own height, and one drawn on 70, 80, 90 … is divided by price. Only the
+   * second keeps its spacing when anything moves the domain, which `SS_HIDE`
+   * just did.
+   *
+   * ⚠ AND THEY WAIT FOR THE MOVE TO FINISH. Ticks over an interpolating domain
+   * slide against the candles for the whole pan, which reads as the grid coming
+   * loose from the chart.
+   */
+  rules: { at: 14981, over: 30, want: 8 },
 } as const;
 
 export const SC16_UI = {

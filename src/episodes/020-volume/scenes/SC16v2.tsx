@@ -21,19 +21,28 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import {
   Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
-  progress, progressInOut, ramp, textReveal, candleWidth, usePalette,
+  progress, progressInOut, ramp, textReveal, candleWidth, ticksOf, usePalette,
   GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
 import { ResistanceArea, resistanceTop } from "./ResistanceArea";
 import {
   SS2, SS2_DOMAIN, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL, SS_KEEP,
-  SS_NEW, SS_VIEW, SS_ZIG,
+  SS_NEW, SS_VIEW, SS_ZIG, trendThrough,
 } from "../data/series";
 
 /* ⚠ THE MARKS ARE SLOTS IN THE GROWN TAPE, AND `SS_HIDE` CAN SHORTEN IT. A box
    whose range has been hidden would silently draw off the end of the
    histogram, so it fails here instead. */
+/**
+ * ⚠ FITTED ONCE, AT MODULE SCOPE. A hull and a pair search inside a component
+ * is that search run sixty times a second, on data that cannot change.
+ */
+const TRENDS = SC16_V2.marks.map((m) => trendThrough(m.from, m.to, m.trend === "support"));
+
+/** The price lines, as round levels of the tape's own finished domain. */
+const RULES = ticksOf(SS_GROWN_DOMAIN, SC16_V2.rules.want);
+
 SC16_V2.marks.forEach((m) => {
   if (m.to >= SS_GROWN.length) {
     throw new Error(
@@ -241,9 +250,12 @@ export const SC16v2 = () => {
    * is the tallest bar inside it — a box drawn to the panel's ceiling would
    * claim a height none of these bars reach.
    */
+  const ruled = progress(f, local(V.rules.at, FROM), V.rules.over);
+  const trendGone = progress(f, local(V.swingLine.gone.at, FROM), V.swingLine.gone.over);
+
   const P = V.markPad;
   const L = V.markLabel;
-  const marks = V.marks.map((m) => {
+  const marks = V.marks.map((m, i) => {
     const grow =
       progressInOut(f, local(m.in.at, FROM), m.in.over) -
       progressInOut(f, local(m.out.at, FROM), m.out.over);
@@ -257,7 +269,19 @@ export const SC16v2 = () => {
       y1: volBox.y + volBox.h - (tall / peak) * volBox.h - P.top,
       y2: volBox.y + volBox.h + P.bottom,
     };
-    return { grow, rect, label: m.label, hue: m.tone === "cyan" ? c.cyan : c.indigo };
+    /** The straight line through this range's swings — drawn from its left end
+     *  on the same frame the box opens from that same edge. */
+    const t = TRENDS[i];
+    const swept = progressInOut(f, local(m.in.at, FROM), V.swingLine.over) * (1 - trendGone);
+    const a = { x: Gvol.x(t.i1), y: G.y(t.v1) };
+    const b = { x: Gvol.x(t.i2), y: G.y(t.v2) };
+    return {
+      grow,
+      rect,
+      label: m.label,
+      hue: m.tone === "cyan" ? c.cyan : c.indigo,
+      trend: { a, b, swept, len: Math.hypot(b.x - a.x, b.y - a.y) },
+    };
   });
 
   return (
@@ -364,6 +388,32 @@ export const SC16v2 = () => {
                   </div>
                 )}
 
+                {/* ── the price lines ────────────────────────────────────
+                    ⚠ UNDER THE TAPE, and drawn across the plot's own rect
+                    rather than the grid's box — during the pan that box is
+                    3800px wide, and a gridline as long as it would leave the
+                    screen on both sides. */}
+                {ruled > 0.001 && (
+                  <svg
+                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                    width={theme.canvas.width}
+                    height={theme.canvas.height}
+                    opacity={ruled}
+                  >
+                    {RULES.map((p) => (
+                      <line
+                        key={p}
+                        x1={V.full.x}
+                        y1={G.y(p)}
+                        x2={V.full.x + V.full.w}
+                        y2={G.y(p)}
+                        stroke={c.border}
+                        strokeWidth={theme.shape.hairline}
+                      />
+                    ))}
+                  </svg>
+                )}
+
                 {/* ⚠ ALL 232, ALWAYS — the twenty that stay are simply the ones
                     the plot's edge does not cut. Drawing "the survivors" as
                     their own array would mean creating twenty candles at the
@@ -386,6 +436,34 @@ export const SC16v2 = () => {
                   shown={grown}
                   opacity={volIn}
                 />
+
+                {/* ── one straight line per range ──────────────────────────
+                    ⚠ INDIGO, BOTH OF THEM. The boxes are cyan and indigo to
+                    separate two readings of VOLUME; giving the price lines the
+                    same two colours would make the pair look like the same
+                    distinction one panel up, which it is not. */}
+                {marks.map((mk, i) =>
+                  mk === null || mk.trend.swept <= 0.001 ? null : (
+                    <svg
+                      key={`t${i}`}
+                      style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                      width={theme.canvas.width}
+                      height={theme.canvas.height}
+                    >
+                      <line
+                        x1={mk.trend.a.x}
+                        y1={mk.trend.a.y}
+                        x2={mk.trend.b.x}
+                        y2={mk.trend.b.y}
+                        stroke={c.indigo}
+                        strokeWidth={V.swingLine.width}
+                        strokeLinecap="round"
+                        strokeDasharray={mk.trend.len}
+                        strokeDashoffset={mk.trend.len * (1 - mk.trend.swept)}
+                      />
+                    </svg>
+                  ),
+                )}
 
                 {/* ── the two marks on the histogram ─────────────────────── */}
                 {marks.map((mk, i) =>

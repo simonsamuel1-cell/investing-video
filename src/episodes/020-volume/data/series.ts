@@ -408,6 +408,90 @@ export const SS_GROWN_DOMAIN = domainOf(SS_GROWN.map((b) => b.c), SS_GROWN);
   }
 }
 
+/**
+ * ═══ A STRAIGHT TRENDLINE THROUGH A RANGE OF THE GROWN TAPE ═══
+ *
+ * `under` draws the support line under a run of HIGHER LOWS; the other way up
+ * it is the resistance line over a run of LOWER HIGHS. Simon asked for one of
+ * each, one per highlighted range.
+ *
+ * ⚠ THE CANDIDATES ARE HULL VERTICES, AND THAT IS NOT AN OPTIMISATION. A line
+ * that leaves price on one side of it can only touch the convex hull of the
+ * lows (or the highs); every other bar is strictly inside, so a pair that
+ * includes one is a line something already crosses. Fitting over all pairs
+ * would search thousands of candidates to arrive back at these eight.
+ *
+ * ⚠ AND IT IS THE LONGEST VALID LINE, NOT THE TIGHTEST. The tightest is always
+ * the two adjacent hull points — a two-bar line that says nothing about a
+ * trend. Allowing price to poke through by `TOL` and then maximising SPAN is
+ * what a chartist actually draws: the lower-highs line here is 84→98 with seven
+ * bars near it and one 1.04 through it, where zero tolerance would have given
+ * 84→91 and stopped before the move it is describing.
+ *
+ * ⚠ IT EXTENDS FORWARD ONLY. A trendline is a claim about what comes next, so
+ * it runs on to the end of the range — but never backwards, where its own slope
+ * would carry it off the bottom of the panel within a few bars.
+ */
+export const trendThrough = (
+  from: number,
+  to: number,
+  under: boolean,
+): { i1: number; v1: number; i2: number; v2: number } => {
+  const key = under ? "l" : "h";
+  const span = Math.max(...SS_GROWN.map((b) => b.h)) - Math.min(...SS_GROWN.map((b) => b.l));
+  const TOL = 0.02 * span;
+  const at = (i: number) => SS_GROWN[i][key];
+
+  /* the hull of the lows (or of the highs), left to right */
+  const hull: number[] = [];
+  for (let i = from; i <= to; i++) {
+    while (hull.length >= 2) {
+      const a = hull[hull.length - 2];
+      const b = hull[hull.length - 1];
+      const cross = (b - a) * (at(i) - at(a)) - (at(b) - at(a)) * (i - a);
+      if (under ? cross <= 0 : cross >= 0) hull.pop();
+      else break;
+    }
+    hull.push(i);
+  }
+
+  let best: { i: number; j: number; m: number } | null = null;
+  let bestSpan = -1;
+  for (let a = 0; a < hull.length; a++) {
+    for (let b = a + 1; b < hull.length; b++) {
+      const i = hull[a];
+      const j = hull[b];
+      const m = (at(j) - at(i)) / (j - i);
+      if (under ? m <= 0 : m >= 0) continue;
+      let worst = 0;
+      for (let k = from; k <= to; k++) {
+        const y = at(i) + m * (k - i);
+        worst = Math.max(worst, under ? y - at(k) : at(k) - y);
+      }
+      if (worst > TOL) continue;
+      if (j - i > bestSpan) { bestSpan = j - i; best = { i, j, m }; }
+    }
+  }
+  if (!best) throw new Error(`no ${under ? "higher-lows" : "lower-highs"} line fits ${from}..${to}`);
+
+  /* forward to the end of the range, while it neither crosses price nor leaves
+     the chart */
+  const [lo, hi] = SS_GROWN_DOMAIN;
+  let end = best.j;
+  for (let k = best.j + 1; k <= to; k++) {
+    const y = at(best.i) + best.m * (k - best.i);
+    if (y < lo || y > hi) break;
+    if ((under ? y - at(k) : at(k) - y) > TOL) break;
+    end = k;
+  }
+  return {
+    i1: best.i,
+    v1: at(best.i),
+    i2: end,
+    v2: at(best.i) + best.m * (end - best.i),
+  };
+};
+
 import TWO_RAW from "./two-breakout.json";
 const TWO_BARS = (TWO_RAW as { bars: Bar[]; vol: number[] }).bars;
 const TWO_VOLS = (TWO_RAW as { bars: Bar[]; vol: number[] }).vol;
