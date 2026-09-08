@@ -184,15 +184,25 @@ export const CHART1_DOMAIN2 = domainOf(CHART1_ALL.map((b) => b.c), CHART1_ALL);
 /**
  * ═══ SS1 — SIMON'S OWN BREAKOUT SCREENSHOT, TRACED ═══
  *
- * 62 candles colour-keyed out of `SS1.png` in his VIDEO 21 folder: teal for up,
- * red for down, the body found as the widest run in each column and the wick as
- * the whole ink extent. Values are the file's own pixels turned upside down and
- * scaled to 0–100, so higher really is higher.
+ * 46 candles colour-keyed out of `SS1.png` in his VIDEO 21 folder.
+ *
+ * ⚠ 46, AND THE FIRST TRACE SAID 62. That was the whole inaccuracy Simon saw.
+ * The column groups were being split by the dotted line's own row and by a
+ * looser alpha test, so a fixed pitch was fitted to a wrong count and every
+ * bar's x — and therefore its body — was read across candle boundaries. The
+ * real structure is unambiguous: 46 runs of EXACTLY 5 columns each, first
+ * centre at x=4, last at x=379, pitch 8.33. Nothing is fitted any more; each
+ * candle is read from its own measured column range.
+ *
+ * ⚠ AND THE BODY IS NOT "THE WIDEST RUN", IT IS THE 5-WIDE ONE. Every row in
+ * this image is either 1px of ink (wick) or 5px (body) — no other width exists
+ * anywhere in the file. So the body is exact rather than estimated, down to the
+ * one-row doji at bar 42 that the old threshold swallowed.
  *
  * ⚠ THE RESISTANCE IS THE PICTURE'S OWN DOTTED LINE, NOT A NUMBER I CHOSE. It
  * was found by scanning for the one row whose teal pixels run the FULL width of
  * the image — 100 of them from x=2 to x=382, which no candle can do — at y=128
- * of 535. That is 76.075 on this scale.
+ * of 535. That is 76.03 on this scale, and the last SIX bars close above it.
  *
  * ⚠ AND IT REALLY IS A BREAKOUT, which the assertion below checks: eight bars
  * close above the level, and all eight are in the last quarter of the tape.
@@ -206,7 +216,7 @@ export const SS1: Series = {
 };
 export const SS1_DOMAIN = domainOf(SS1.closes, SS1.bars);
 /** The dotted level in the screenshot, in this series' own scale. */
-export const SS1_RES = 76.075;
+export const SS1_RES = 76.03;
 /**
  * ⚠ THE AREA IS DERIVED FROM THE TESTS, not drawn around the line by eye. Its
  * top is the level; its floor is the highest HIGH that stayed under the level
