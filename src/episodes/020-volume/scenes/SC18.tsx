@@ -21,9 +21,10 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Stage, Card, SourceTag, usePalette, gridOf, domainOf, theme,
+  Stage, Card, Title, SourceTag, cutOutStyle, usePalette, gridOf, domainOf,
+  ramp, textReveal, theme,
 } from "../../../core";
-import { BLOCK, SC18_TICK, local } from "../data/timing";
+import { BLOCK, CUTS, SC18_TICK, local } from "../data/timing";
 import { TAG_Y } from "../data/layout";
 import { TICK, TICK_VOL } from "../data/series";
 
@@ -37,7 +38,7 @@ const V = SC18_TICK;
  *  on the same band of the frame as every other scene in the episode. */
 const CARD_W = theme.canvas.width * V.cardWidth;
 const PANEL = {
-  x: theme.canvas.width / 2 - CARD_W / 2,
+  x: theme.canvas.width / 2 - CARD_W / 2 - V.shift,
   y: theme.stage.card.y,
   w: CARD_W,
   h: theme.stage.card.h,
@@ -88,11 +89,31 @@ export const SC18 = () => {
   /** ⚠ THE BAR'S HEIGHT IS THE NINTH'S, FIXED. Same volume, either colour. */
   const vh = (TICK_VOL[LIVE] / PEAK) * VOLBOX.h;
 
+  const C = V.col;
+  /** ⚠ THE TWO BLOCKS ARE STACKED FROM ONE ORIGIN, so moving `col.y` moves both
+   *  and the 60px between them cannot drift. */
+  const okY = C.y;
+  const okText = okY + C.icon + C.gap;
+  const badY = okText + V.right.size + C.between;
+  const badText = badY + C.icon + C.gap;
+
+  /** ⚠ LINEAR, AND COUNTED IN CHARACTERS. Typing that eases is a machine
+   *  warming up; a hand goes at one speed. */
+  const typed = Math.floor(
+    ramp(f, local(V.right.at, FROM), V.right.text.length * V.right.perChar) *
+      V.right.text.length,
+  );
+
   return (
     <Stage>
+      <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toLimits) }}>
       {/* the white panel Simon kept, at a third of the frame */}
       <Card rect={PANEL} />
       <SourceTag kind={TICK.kind} y={TAG_Y} />
+      {/* ⚠ FLUSH LEFT ON THE MARGIN — Simon: "di pojok kiri atas". `Title`
+          centres by default, which is the stage's own heading; this one belongs
+          to the margin, so it takes `align="left"` and the margin's x. */}
+      <Title text={V.title} at={0} x={theme.margin.left} y={theme.stage.title.y - theme.text.title.size / 2} align="left" />
 
       {/* ── the nine that stand still ──────────────────────────────────── */}
       <svg
@@ -139,6 +160,92 @@ export const SC18 = () => {
           opacity={0.72}
         />
       </svg>
+
+      {/* ── the reading, typed out beside the loop ──────────────────────── */}
+      {typed > 0 && (
+        <>
+          <Mark x={C.x} y={okY} d={C.icon} fill={c.candleGreen} kind="check" />
+          <div
+            style={{
+              position: "absolute",
+              left: C.x,
+              top: okText,
+              fontFamily: theme.text.family,
+              fontSize: V.right.size,
+              fontWeight: 700,
+              lineHeight: 1,
+              color: theme.color.indigo,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {V.right.text.slice(0, typed)}
+          </div>
+        </>
+      )}
+
+      {/* ── and the misreading it rules out ─────────────────────────────── */}
+      {f >= local(V.wrong.at, FROM) && (
+        <>
+          <Mark x={C.x} y={badY} d={C.icon} fill={theme.color.warn} kind="cross" />
+          {V.wrong.lines.map((line, i) => {
+            const r = textReveal(f, local(V.wrong.at, FROM) + i * V.wrong.stagger, V.wrong.over, 12);
+            return (
+              <div
+                key={line}
+                style={{
+                  position: "absolute",
+                  left: C.x,
+                  top: badText + i * V.wrong.size * 1.5,
+                  fontFamily: theme.text.family,
+                  fontSize: V.wrong.size,
+                  fontWeight: 600,
+                  lineHeight: 1,
+                  color: c.ink,
+                  whiteSpace: "nowrap",
+                  opacity: r.opacity,
+                  transform: `translateY(${r.dy.toFixed(1)}px)`,
+                }}
+              >
+                {line}
+              </div>
+            );
+          })}
+        </>
+      )}
+      </div>
     </Stage>
+  );
+};
+
+/**
+ * A filled disc with a white glyph in it — the two marks this scene needs and
+ * nothing else.
+ *
+ * ⚠ THE COLOURS ARE THE SCENE'S OWN. Green and red are candle colours
+ * everywhere else in this project; here they are what the scene is ABOUT, and
+ * the red is `warn` — the one red allowed outside a candle, and only for naming
+ * a mistake, which is exactly what the cross does.
+ */
+const Mark = ({
+  x, y, d, fill, kind,
+}: { x: number; y: number; d: number; fill: string; kind: "check" | "cross" }) => {
+  const r = d / 2;
+  const a = d * 0.24;
+  return (
+    <svg style={{ position: "absolute", left: x, top: y, overflow: "visible" }} width={d} height={d}>
+      <circle cx={r} cy={r} r={r} fill={fill} />
+      <path
+        d={
+          kind === "check"
+            ? `M${r - a} ${r} L${r - a * 0.15} ${r + a * 0.8} L${r + a} ${r - a * 0.7}`
+            : `M${r - a} ${r - a} L${r + a} ${r + a} M${r + a} ${r - a} L${r - a} ${r + a}`
+        }
+        stroke="#FFFFFF"
+        strokeWidth={Math.max(3, d * 0.09)}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
   );
 };

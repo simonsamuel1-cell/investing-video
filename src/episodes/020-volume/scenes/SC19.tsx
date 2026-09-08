@@ -9,9 +9,9 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, Card, Chart, VolumeBars, Chip, Title, StatStrip, SourceTag,
-  gridOf, useMotion, progress, theme,
+  cutInStyle, gridOf, useMotion, progress, theme,
 } from "../../../core";
-import { BLOCK, BEAT, local } from "../data/timing";
+import { BLOCK, BEAT, CUTS, local } from "../data/timing";
 import { PRICE, VOL, TAG_Y } from "../data/layout";
 import { UP, UP_DOMAIN, HEALTHY_VOL } from "../data/series";
 
@@ -34,6 +34,7 @@ export const SC19 = () => {
   const m = useMotion();
   return (
     <Stage>
+      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toLimits) }}>
       <Card />
       <SourceTag kind={UP.kind} y={TAG_Y} />
       <Title text="Pahami batasnya" at={T.limits} />
@@ -74,6 +75,7 @@ export const SC19 = () => {
         at={T.trend}
         stagger={T.levels - T.trend}
       />
+      </div>
     </Stage>
   );
 };

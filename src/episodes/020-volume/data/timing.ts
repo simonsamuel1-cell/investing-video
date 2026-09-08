@@ -398,6 +398,8 @@ export const CUTS = {
   /** The chart out, the two product windows in — Simon's frame, "16078
    *  transisi camera cut ke scene selanjutnya". */
   toSpikes: { at: 16078, over: 24, distance: 90, blur: 10, axis: "x" as const },
+  /** SC18 out, SC19 in — Simon's frames, "17847-17848 transisi camera cut". */
+  toLimits: { at: 17848, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
@@ -1821,6 +1823,42 @@ export const TRANS = {
  */
 export const SC18_TICK = {
   at: 16891,
+  /**
+   * ⚠ THE PANEL MOVES LEFT 200 TO MAKE A COLUMN, not to be off-centre. The two
+   * readings that arrive at 17015 and 17338 need a place to stand, and a
+   * third-width panel in the middle of the frame leaves two narrow gutters
+   * instead of one usable column.
+   */
+  shift: 200,
+  /**
+   * ═══ THE TWO READINGS ═══  (Simon's frames)
+   *
+   * ⚠ ONE IS TYPED AND THE OTHER IS NOT, at Simon's direction — and the split
+   * is the right way round. The first line is what the loop beside it has been
+   * demonstrating for two seconds, so letters arriving one at a time reads as
+   * the viewer's own conclusion being written down. The pair below it is a
+   * misreading being named and struck out; that wants to be simply THERE.
+   */
+  col: { x: 1160, y: 380, icon: 64, gap: 20, between: 60 },
+  right: {
+    at: 17015,
+    /** ⚠ 2 FRAMES A LETTER, LINEAR. Eased typing speeds up and slows down,
+     *  which is a machine, not a hand. */
+    perChar: 2,
+    size: 36,
+    text: "Warna volume mengikuti candle",
+  },
+  /** ⚠ IT NAMES THE MISTAKE, NOT THE SUBJECT. "Warna volume bar" alone was the
+   *  old heading and it announced a topic; the chapter this now belongs to is
+   *  the bonus one, so the heading says which kind of thing is coming. */
+  title: "Common Mistake: Warna Volume Bar",
+  wrong: {
+    at: 17338,
+    over: 22,
+    stagger: 8,
+    size: 32,
+    lines: ["Volume hijau = pembelian", "Volume merah = penjualan"],
+  },
   /** Of the canvas. */
   cardWidth: 1 / 3,
   /** One full up-and-down, in frames. */
