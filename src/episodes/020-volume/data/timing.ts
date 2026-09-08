@@ -1852,9 +1852,14 @@ export const SC18_TICK = {
    */
   /** ⚠ `between` IS 100 — Simon's number, measured from the bottom of the
    *  typed line to the top of the cross, not between the two blocks' boxes. */
-  col: { x: 1160, y: 380, icon: 64, gap: 20, between: 100 },
+/** ⚠ `between` IS 100 — Simon's number, and `y` came UP to 260 to pay for the
+   *  third block: stacked from 380 the info line finished at 980, eight pixels
+   *  inside the band the subtitles own. */
+  col: { x: 1160, y: 260, icon: 64, gap: 20, between: 100 },
   right: {
-    at: 17015,
+    /** ⚠ 17117 — Simon moved it. The typed heading now runs first and this
+     *  waits for it, so two things are never being typed at once. */
+    at: 17117,
     /** ⚠ 2 FRAMES A LETTER, LINEAR. Eased typing speeds up and slows down,
      *  which is a machine, not a hand. */
     perChar: 2,
@@ -1864,7 +1869,33 @@ export const SC18_TICK = {
   /** ⚠ IT NAMES THE MISTAKE, NOT THE SUBJECT. "Warna volume bar" alone was the
    *  old heading and it announced a topic; the chapter this now belongs to is
    *  the bonus one, so the heading says which kind of thing is coming. */
-  title: "Common Mistake: Warna Volume Bar",
+/**
+   * ⚠ THE HEADING IS TWO PARTS, AND ONLY THE SECOND IS TYPED. "Common Mistake:"
+   * is the label the whole bonus chapter carries, so it is simply there from
+   * the scene's first frame; what the typing spells out is which mistake this
+   * one is. A heading that types itself whole would make the label look like
+   * news every time it appears.
+   */
+  head: { lead: "Common Mistake: ", tail: "Warna Volume Bar", at: 17016, perChar: 2 },
+  /**
+   * ═══ AND THE NOTE UNDER IT ALL ═══
+   *
+   * ⚠ 17638, WHICH IS WHERE THE SENTENCE IS. "Nah, setiap transaksi tetap punya
+   * pembeli dan penjual" runs 17638–17832; the note says the same thing, so it
+   * arrives with it rather than at a frame chosen for the layout.
+   *
+   * ⚠ THE MARK IS HANDWRITTEN AND ITALIC — Simon's call, and it is the only
+   * handwriting in the episode. Everything else in this column is a finding
+   * being stated; this is an aside, and an aside in the same face as the
+   * findings reads as a fifth finding.
+   */
+  note: {
+    at: 17638,
+    over: 26,
+    gap: 100,
+    size: 32,
+    text: "Tiap transaksi ada pembeli & penjual",
+  },
   wrong: {
     at: 17338,
     over: 22,

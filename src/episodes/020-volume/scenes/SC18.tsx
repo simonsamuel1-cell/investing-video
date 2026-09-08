@@ -21,7 +21,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Stage, Card, Title, SourceTag, cutOutStyle, usePalette, gridOf, domainOf,
+  Stage, Card, SourceTag, cutOutStyle, usePalette, gridOf, domainOf,
   ramp, textReveal, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC18_TICK, local } from "../data/timing";
@@ -96,9 +96,17 @@ export const SC18 = () => {
   const okText = okY + C.icon + C.gap;
   const badY = okText + V.right.size + C.between;
   const badText = badY + C.icon + C.gap;
+  /** ⚠ MEASURED FROM THE BOTTOM OF THE SECOND LINE, not from the block's top —
+   *  Simon's 100 is a gap under "Volume merah…", and a gap under a block of two
+   *  lines has to know where the second one ends. */
+  const noteY = badText + V.wrong.size * 1.5 + V.wrong.size + V.note.gap;
 
   /** ⚠ LINEAR, AND COUNTED IN CHARACTERS. Typing that eases is a machine
    *  warming up; a hand goes at one speed. */
+  const headTyped = Math.floor(
+    ramp(f, local(V.head.at, FROM), V.head.tail.length * V.head.perChar) *
+      V.head.tail.length,
+  );
   const typed = Math.floor(
     ramp(f, local(V.right.at, FROM), V.right.text.length * V.right.perChar) *
       V.right.text.length,
@@ -108,10 +116,26 @@ export const SC18 = () => {
     <Stage>
       <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toLimits) }}>
       <SourceTag kind={TICK.kind} y={TAG_Y} />
-      {/* ⚠ FLUSH LEFT ON THE MARGIN — Simon: "di pojok kiri atas". `Title`
-          centres by default, which is the stage's own heading; this one belongs
-          to the margin, so it takes `align="left"` and the margin's x. */}
-      <Title text={V.title} at={0} x={theme.margin.left} y={theme.stage.title.y - theme.text.title.size / 2} align="left" />
+      {/* ⚠ FLUSH LEFT ON THE MARGIN, AND IN TWO PARTS. "Common Mistake:" is
+          the label the bonus chapter carries, so it is simply there; the typing
+          spells out WHICH mistake. `Title` is not used because it reveals one
+          string as a whole, which is the entrance this heading no longer has. */}
+      <div
+        style={{
+          position: "absolute",
+          left: theme.margin.left,
+          top: theme.stage.title.y - theme.text.title.size / 2,
+          fontFamily: theme.text.family,
+          fontSize: theme.text.title.size,
+          fontWeight: theme.text.title.weight,
+          lineHeight: 1.2,
+          color: theme.color.indigo,
+          whiteSpace: "pre",
+        }}
+      >
+        {V.head.lead}
+        {V.head.tail.slice(0, headTyped)}
+      </div>
       {/* ⚠ ONE GROUP: the panel and the column beside it travel together. The
           heading is deliberately outside it — it belongs to the margin. */}
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${-V.group}px)` }}>
@@ -203,7 +227,9 @@ export const SC18 = () => {
                   fontSize: V.wrong.size,
                   fontWeight: 600,
                   lineHeight: 1,
-                  color: c.ink,
+                  /* ⚠ INDIGO, LIKE EVERY OTHER WORD HERE — Simon: "semua warna
+                     text di scene ini, indigo, tidak ada yang hitam". */
+                  color: theme.color.indigo,
                   whiteSpace: "nowrap",
                   opacity: r.opacity,
                   transform: `translateY(${r.dy.toFixed(1)}px)`,
@@ -215,6 +241,33 @@ export const SC18 = () => {
           })}
         </>
       )}
+
+      {/* ── the aside, in the only handwriting in the episode ───────────── */}
+      {f >= local(V.note.at, FROM) && (() => {
+        const r = textReveal(f, local(V.note.at, FROM), V.note.over, 12);
+        return (
+          <>
+            <Mark x={C.x} y={noteY} d={C.icon} fill={theme.color.indigo} kind="info" />
+            <div
+              style={{
+                position: "absolute",
+                left: C.x,
+                top: noteY + C.icon + C.gap,
+                fontFamily: theme.text.family,
+                fontSize: V.note.size,
+                fontWeight: 600,
+                lineHeight: 1,
+                color: theme.color.indigo,
+                whiteSpace: "nowrap",
+                opacity: r.opacity,
+                transform: `translateY(${r.dy.toFixed(1)}px)`,
+              }}
+            >
+              {V.note.text}
+            </div>
+          </>
+        );
+      })()}
       </div>
       </div>
     </Stage>
@@ -232,24 +285,43 @@ export const SC18 = () => {
  */
 const Mark = ({
   x, y, d, fill, kind,
-}: { x: number; y: number; d: number; fill: string; kind: "check" | "cross" }) => {
+}: { x: number; y: number; d: number; fill: string; kind: "check" | "cross" | "info" }) => {
   const r = d / 2;
   const a = d * 0.24;
   return (
     <svg style={{ position: "absolute", left: x, top: y, overflow: "visible" }} width={d} height={d}>
       <circle cx={r} cy={r} r={r} fill={fill} />
-      <path
-        d={
-          kind === "check"
-            ? `M${r - a} ${r} L${r - a * 0.15} ${r + a * 0.8} L${r + a} ${r - a * 0.7}`
-            : `M${r - a} ${r - a} L${r + a} ${r + a} M${r + a} ${r - a} L${r - a} ${r + a}`
-        }
-        stroke="#FFFFFF"
-        strokeWidth={Math.max(3, d * 0.09)}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
+      {/* ⚠ THE "i" IS A GLYPH, NOT A PATH — and handwritten, at Simon's word.
+          The two marks above are drawn because a tick and a cross are shapes;
+          a letter is a letter, and the face it is set in is the point of it. */}
+      {kind === "info" ? (
+        <text
+          x={r}
+          y={r}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fontFamily={theme.text.hand}
+          fontStyle="italic"
+          fontWeight={700}
+          fontSize={d * 0.72}
+          fill="#FFFFFF"
+        >
+          i
+        </text>
+      ) : (
+        <path
+          d={
+            kind === "check"
+              ? `M${r - a} ${r} L${r - a * 0.15} ${r + a * 0.8} L${r + a} ${r - a * 0.7}`
+              : `M${r - a} ${r - a} L${r + a} ${r + a} M${r + a} ${r - a} L${r - a} ${r + a}`
+          }
+          stroke="#FFFFFF"
+          strokeWidth={Math.max(3, d * 0.09)}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+        />
+      )}
     </svg>
   );
 };
