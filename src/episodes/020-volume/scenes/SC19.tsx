@@ -1,28 +1,45 @@
 /**
  * SC19 — what volume is for, and what it is not. `from 17848 · dur 944`
  *
- * ═══ THE SMALL WINDOW IS A MASK, NOT A SMALL CHART ═══
+ * Everything the scene used to draw is gone — Simon: "17848-18791 hilangkan
+ * semua visual". What is left is two of SC17's windows: the correct reading
+ * alone in the middle, then the wrong one beside it, then the correct one
+ * opened out to fill the frame.
  *
- * ⚠ THE TAPE IS LAID OUT ONCE AND NEVER RE-LAID. Simon: "yang kecil ini ibarat
- * masking sebagian kecil dari chart besarnya… aku gamau ukurannya berubah". The
- * chart has ONE geometry in canvas pixels; the window is a hole cut in front of
- * it. Opening the window makes the hole bigger, which REVEALS more bars — it
- * does not stretch the ones already showing.
+ * ⚠ THE SAME WINDOW AS 16583, MINUS ITS GROUND — Simon's words. It is the
+ * object this episode has already used to say "here is one thing, named", so
+ * using it again says these two are the same KIND of thing as those two. A new
+ * card shape would have said they were something else.
  *
- * ⚠ WHICH IS WHY THE CHART'S HEIGHT FITS THE SMALL DISPLAY, NOT THE BIG ONE.
- * Extending sideways is the only extension that can happen without a rescale:
- * both panels must be wholly visible in the little window, so their combined
- * height is set to fit inside it and the grown window carries the spare room
- * instead. A chart sized to the tall display would have to shrink to fit the
- * short one, which is the change of size this scene exists not to make.
+ * ⚠ AND THE FIRST ARRIVES ALONE. It is the correct reading; it gets the frame
+ * to itself before the wrong one turns up beside it and makes the shot a
+ * comparison.
  *
- * ⚠ AND THE OFFSET IS THE ONLY THING THAT MOVES. In the small state the tape is
- * slid so its TAIL sits in the hole — the breakout is the point of the card —
- * and that slide goes to zero as the window opens out.
+
+ * ═══ THE TWO DISPLAYS ARE LOCKED TO SS6 ═══  (Simon, and he is owed it)
  *
- * Everything the scene used to draw is gone ("hilangkan semua visual"); the
- * ground and the heading belong to MistakesLayer, which spans this scene and
- * SC18 across the cut neither of them takes part in.
+ * ⚠ SS6.png IS THIS FILE'S OWN OUTPUT AT f18250, AND IT IS THE CONTRACT. It was
+ * verified pixel-for-pixel: both 400×400 display regions differ from the render
+ * in ZERO pixels. Anything that changes them is a regression, whatever else it
+ * was trying to do — `npm run lock:ss6` re-checks it, and the assertions at the
+ * foot of this file fail the build if the geometry or the tape moves.
+ *
+ * ⚠ WHICH IS WHY THE TAPE HERE IS SS4 AND NOT SS4_LONG. The longer tape was
+ * added so the GROWN chart would stop looking stretched, and it did — but the
+ * same 46 bars in the 400px window turned the display into the cramped thing
+ * Simon rejected. The display Simon approved wins; the grown view is stretched
+ * again as a result, and that is a trade he has to make knowingly rather than
+ * one I make for him.
+ *
+ * ⚠ AND THE MASKING REWRITE IS REVERTED. Laying the tape out once and cutting a
+ * hole in front of it is the right idea and it is what "extend" means — but it
+ * cannot also reproduce SS6, because SS6's small display shows the WHOLE tape
+ * at a size the big display does not use. One of the two had to go, and the one
+ * Simon has approved twice stays.
+ *
+ * ⚠ THE GROUND AND THE HEADING ARE NOT HERE. They belong to MistakesLayer,
+ * which spans this scene and SC18 — see the cut at 17847 that neither of them
+ * takes part in.
  */
 import { useCurrentFrame } from "remotion";
 import {
@@ -31,8 +48,7 @@ import {
 } from "../../../core";
 import { BLOCK, CUTS, LIMITS, local } from "../data/timing";
 import {
-  SS4_LONG, SS4_LONG_DOMAIN, SS4_LONG_VOL, COLOUR, COLOUR_VOL, domainOfColour,
-  zigzagOf,
+  SS4, SS4_DOMAIN, SS4_VOL, COLOUR, COLOUR_VOL, domainOfColour, zigzagOf,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -52,20 +68,31 @@ const mixRect = (a: Rect, b: Rect, t: number): Rect => ({
 /** Where each window rests: the first alone in the middle, then the pair. */
 const PAIR_W = V.win.w * 2 + V.win.gap;
 const SOLO_X = theme.canvas.width / 2 - V.win.w / 2;
-const PAIR_X = [
-  theme.canvas.width / 2 - PAIR_W / 2,
-  theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap,
-];
+const PAIR_X = [theme.canvas.width / 2 - PAIR_W / 2, theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap];
 
+/**
+ * ═══ THE SMALL STATE AND THE FULL ONE, BOTH WRITTEN AS BOXES ═══
+ *
+ * ⚠ NOT ONE SCALED FROM THE OTHER — Simon: "window di kiri membesar memenuhi
+ * layar sesuai batas margin". The window is portrait and the margin is
+ * landscape, so scaling the small layout by a factor would stretch a chart that
+ * has to stay a chart. Both states are typed as rects and interpolated, which
+ * is the same technique every zoom in this episode uses.
+ *
+ * ⚠ AND FULL IS THE CARD, NOT THE CANVAS. The heading lives at the top of the
+ * margin; a window that filled to the true edge would cover the sentence it is
+ * illustrating.
+ */
 const small = (x: number): Record<string, Rect> => ({
   win: { x, y: V.win.y, w: V.win.w, h: V.win.h },
   display: { x: x + V.ui.display.x, y: V.win.y + V.ui.display.y, w: V.ui.display.w, h: V.ui.display.h },
+  price: { x: x + V.ui.price.x, y: V.win.y + V.ui.price.y, w: V.ui.price.w, h: V.ui.price.h },
+  volume: { x: x + V.ui.volume.x, y: V.win.y + V.ui.volume.y, w: V.ui.volume.w, h: V.ui.volume.h },
 });
-
 /**
  * ⚠ 25 ON THREE SIDES AND A LINE OF TEXT AT THE BOTTOM — Simon's numbers, and
- * the bottom one is DERIVED from the row's own size, so setting the type bigger
- * takes exactly as much room from the chart as the words now need.
+ * the bottom one is DERIVED from the row's own size. This rect is only used
+ * once the window has opened out, so it cannot touch SS6.
  */
 const CARD = theme.stage.card;
 const P = V.full.pad;
@@ -74,35 +101,12 @@ const DISPLAY_H = CARD.h - P - ROW_H;
 const FULL: Record<string, Rect> = {
   win: { x: CARD.x, y: CARD.y, w: CARD.w, h: CARD.h },
   display: { x: CARD.x + P, y: CARD.y + P, w: CARD.w - P * 2, h: DISPLAY_H },
+  price: { x: CARD.x + P + 34, y: CARD.y + P + 30, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.6 },
+  volume: { x: CARD.x + P + 34, y: CARD.y + P + DISPLAY_H * 0.68, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.26 },
 };
 const ROW_Y = CARD.y + P + DISPLAY_H + V.full.gap;
 
-/** The chart's ONE geometry — see the header. */
-const CH_H = { price: 250, gap: 26, volume: 104 };
-const CH_TOTAL = CH_H.price + CH_H.gap + CH_H.volume;
-const CH_TOP = FULL.display.y + (DISPLAY_H - CH_TOTAL) / 2;
-const CH = {
-  price: { x: FULL.display.x + 34, y: CH_TOP, w: FULL.display.w - 68, h: CH_H.price },
-  volume: { x: FULL.display.x + 34, y: CH_TOP + CH_H.price + CH_H.gap, w: FULL.display.w - 68, h: CH_H.volume },
-};
-
-/**
- * ⚠ THE SECOND WINDOW KEEPS ITS OWN LAYOUT, AND THAT IS NOT AN INCONSISTENCY.
- * The masking rule exists so that a chart which GROWS does not resize; this one
- * never grows, and laying its fourteen bars out on the big chart's pitch put
- * three of them in the window at 124px apart. A tape that is only ever seen at
- * one size should be drawn for that size.
- */
-const SMALL_CH = (x: number) => {
-  const d = small(x).display;
-  return {
-    price: { x: d.x + 22, y: d.y + 22, w: d.w - 44, h: d.h * 0.6 },
-    volume: { x: d.x + 22, y: d.y + d.h * 0.7, w: d.w - 44, h: d.h * 0.24 },
-  };
-};
-
-/** The five inks the row is set in, read from the palette where it has them so
- *  a palette swap takes the marks with it. */
+/** The five inks the row is set in. */
 const TONE = (c: ReturnType<typeof usePalette>) => ({
   ink: c.ink,
   indigo: theme.color.indigo,
@@ -110,6 +114,8 @@ const TONE = (c: ReturnType<typeof usePalette>) => ({
   cyan: c.cyan,
   marun: theme.color.marun,
 });
+
+const COLOUR_DOMAIN = domainOfColour;
 
 /* ── one window ───────────────────────────────────────────────────────────── */
 
@@ -121,63 +127,49 @@ const Window = ({ i }: { i: number }) => {
   const pop = popIn(f, at, V.pop);
   if (pop.opacity <= 0.001) return null;
 
+  /** The first window slides aside as the second lands — one curve. */
   const spread = progressInOut(f, local(V.spread.at, FROM), V.spread.over);
   const x = i === 0 ? lerp(SOLO_X, PAIR_X[0], spread) : PAIR_X[1];
 
   /** ⚠ ONLY THE LEFT ONE OPENS OUT, and its words leave as it does — Simon:
-   *  "text dan iconnya fade out". What is being revealed is more chart. */
+   *  "text dan iconnya fade out". What is being enlarged is the chart. */
   const open = i === 0 ? progressInOut(f, local(V.grow.at, FROM), V.grow.over) : 0;
   const S = small(x);
-  const R = { win: mixRect(S.win, FULL.win, open), display: mixRect(S.display, FULL.display, open) };
+  const R = {
+    win: mixRect(S.win, FULL.win, open),
+    display: mixRect(S.display, FULL.display, open),
+    price: mixRect(S.price, FULL.price, open),
+    volume: mixRect(S.volume, FULL.volume, open),
+  };
 
-  const series = i === 0 ? SS4_LONG : COLOUR;
-  const domain = i === 0 ? SS4_LONG_DOMAIN : domainOfColour;
-  const vol = i === 0 ? SS4_LONG_VOL : COLOUR_VOL;
-  /** ⚠ ONE GEOMETRY FOR THE WINDOW THAT EXTENDS, ITS OWN FOR THE ONE THAT DOES
-   *  NOT. See SMALL_CH. */
-  const CHi = i === 0 ? CH : SMALL_CH(x);
-  const g = gridOf(series.closes, domain, CHi.price, 0.08, i === 1 ? V.fan.gutter : 0);
+  const series = i === 0 ? SS4 : COLOUR;
+  const domain = i === 0 ? SS4_DOMAIN : COLOUR_DOMAIN;
+  const vol = i === 0 ? SS4_VOL : COLOUR_VOL;
+  const g = gridOf(series.closes, domain, R.price, 0.08, i === 1 ? V.fan.gutter : 0);
   const built = progress(f, at + V.build.after, V.build.over);
   const head = textReveal(f, at + V.words.after, V.words.over, 12);
   const w = Math.max(3, g.slot * 0.66);
   const peak = Math.max(...vol);
   const chrome = (1 - open) * pop.opacity;
-  const bars = series.bars;
 
-  /**
-   * ⚠ THE MASK'S OFFSET, AND NOTHING ELSE. In the small state the tape is slid
-   * so its last bar sits `tail` inside the hole's right edge; opened out, the
-   * slide is zero and the chart is exactly where it was laid.
-   */
-  const last = bars.length - 1;
-  const tail = i === 1 ? V.fan.len + 60 : 44;
-  const dx = i === 1 ? 0 : lerp(S.display.x + S.display.w - tail - g.x(last), 0, open);
-  const dy = i === 1 ? 0 : lerp(S.display.y + (S.display.h - CH_TOTAL) / 2 - CH_TOP, 0, open);
-  const tip = { x: g.x(last), y: g.y(bars[last].c) };
+  /** The three futures nobody can pick between — see `fan` in timing.ts. */
+  const last = series.bars.length - 1;
+  const tip = { x: g.x(last), y: g.y(series.bars[last].c) };
 
-  /**
-   * ═══ THE FOUR MARKS ═══  — each DERIVED from the tape rather than placed on
-   * it: a zigzag through its own swings, zones on its own extremes, a channel
-   * on its own hull, an average of its own closes.
-   */
-  const R2 = V.read;
-  const on = (k: number) => progress(f, local(R2.items[k].at, FROM), R2.over);
+  /* ── the four marks, all derived from the tape ──────────────────────── */
+  const on = (k: number) => progress(f, local(V.read.items[k].at, FROM), V.read.over);
   const ink = TONE(c);
-  const span = domain[1] - domain[0];
-
-  const zig = zigzagOf(bars, span * R2.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
+  const bars = series.bars;
+  const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
   const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
-
   const highs = [...bars.map((b) => b.h)].sort((a, b) => b - a);
   const lows = [...bars.map((b) => b.l)].sort((a, b) => a - b);
   const zones = [
     { hi: highs[0], lo: highs[3] },
     { hi: lows[3], lo: lows[0] },
   ];
-
-  /** ⚠ EACH LINE IS ASKED FOR ITS OWN SIDE. Deriving the side by comparing the
-   *  pair back to the hull it came from passes for both when they share an
-   *  endpoint, and drew the lows line twice. */
+  /** ⚠ EACH LINE IS ASKED FOR ITS OWN SIDE — deriving it by comparing the pair
+   *  back to its hull passes for both when they share an endpoint. */
   const hull = (key: "l" | "h", under: boolean) => {
     const h: number[] = [];
     for (let k = 0; k < bars.length; k++) {
@@ -203,13 +195,14 @@ const Window = ({ i }: { i: number }) => {
     const [a, b2] = hull(key, key === "l");
     return { a, b: b2, key };
   });
-  const maPath = pathOf(sma(series.closes, R2.maPeriod), g);
+  const maPath = pathOf(sma(series.closes, V.read.maPeriod), g);
 
   return (
     <div
       style={{
-        /* ⚠ THE ONE THAT OPENS OUT GOES ON TOP, or the second sits over it as it
-           fills the frame and reads as a card stuck to the glass. */
+        /* ⚠ THE ONE THAT OPENS OUT GOES ON TOP. Left in mount order the second
+           window sits over the first as it fills the frame, which reads as a
+           card stuck to the glass rather than a card behind it. */
         position: "absolute",
         inset: 0,
         zIndex: open > 0.001 ? 2 : 1,
@@ -231,10 +224,6 @@ const Window = ({ i }: { i: number }) => {
           boxShadow: theme.color.glassShadow,
         }}
       />
-
-      {/* ⚠ THE HOLE. Two divs: one sized to the display, one shifted back by its
-          origin so everything inside stays in CANVAS coordinates — and the tape
-          slides behind it rather than being redrawn to fit. */}
       <div
         style={{
           position: "absolute",
@@ -244,113 +233,108 @@ const Window = ({ i }: { i: number }) => {
           height: R.display.h,
           borderRadius: V.ui.display.radius,
           background: theme.color.glassBg,
-          overflow: "hidden",
         }}
+      />
+
+      <svg
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
       >
-        <div
-          style={{
-            position: "absolute",
-            left: -R.display.x,
-            top: -R.display.y,
-            width: theme.canvas.width,
-            height: theme.canvas.height,
-            transform: `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`,
-          }}
-        >
-          <svg
-            style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-            width={theme.canvas.width}
-            height={theme.canvas.height}
-          >
-            {bars.slice(0, Math.ceil(bars.length * built)).map((b, k) => {
-              const bx = g.x(k);
-              const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
-              const top = Math.min(g.y(b.o), g.y(b.c));
-              const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
-              const vh = (vol[k] / peak) * CHi.volume.h;
-              return (
-                <g key={k}>
-                  <line x1={bx} y1={g.y(b.h)} x2={bx} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.rule} />
-                  <rect x={bx - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} fill={fill} />
-                  <rect
-                    x={bx - w / 2}
-                    y={CHi.volume.y + CHi.volume.h - vh}
-                    width={w}
-                    height={Math.max(1, vh)}
-                    rx={Math.min(w * 0.28, 6)}
-                    fill={fill}
-                    opacity={0.72}
-                  />
-                </g>
-              );
-            })}
+        {series.bars.slice(0, Math.ceil(series.bars.length * built)).map((b, k) => {
+          const bx = g.x(k);
+          const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
+          const top = Math.min(g.y(b.o), g.y(b.c));
+          const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
+          const vh = (vol[k] / peak) * R.volume.h;
+          return (
+            <g key={k}>
+              <line x1={bx} y1={g.y(b.h)} x2={bx} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.hairline} />
+              <rect x={bx - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 4)} fill={fill} />
+              <rect
+                x={bx - w / 2}
+                y={R.volume.y + R.volume.h - vh}
+                width={w}
+                height={Math.max(1, vh)}
+                rx={Math.min(w * 0.28, 4)}
+                fill={fill}
+                opacity={0.72}
+              />
+            </g>
+          );
+        })}
 
-            {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
-                down alone is a choice between two things, which is still a
-                prediction; the one through the middle makes it "nobody knows". */}
-            {i === 1 &&
-              built > 0.99 &&
-              [-V.fan.spread, 0, V.fan.spread].map((ddy) => {
-                const ex = tip.x + V.fan.len;
-                const ey = tip.y + ddy;
-                const a = Math.atan2(ey - tip.y, ex - tip.x);
-                const hx = ex - Math.cos(a) * V.fan.head;
-                const hy = ey - Math.sin(a) * V.fan.head;
-                const nx = -Math.sin(a) * V.fan.head * 0.5;
-                const ny = Math.cos(a) * V.fan.head * 0.5;
-                return (
-                  <g key={ddy} opacity={head.opacity}>
-                    <line x1={tip.x} y1={tip.y} x2={hx} y2={hy} stroke={theme.color.indigo} strokeWidth={V.fan.width} strokeLinecap="round" />
-                    <polygon points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`} fill={theme.color.indigo} />
-                  </g>
-                );
-              })}
+        {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
+            down alone is a choice between two things, which is still a
+            prediction; the one straight through the middle is what turns it
+            into "nobody knows". */}
+        {i === 1 &&
+          built > 0.99 &&
+          [-V.fan.spread, 0, V.fan.spread].map((dy) => {
+            const ex = tip.x + V.fan.len;
+            const ey = tip.y + dy;
+            const a = Math.atan2(ey - tip.y, ex - tip.x);
+            const hx = ex - Math.cos(a) * V.fan.head;
+            const hy = ey - Math.sin(a) * V.fan.head;
+            const nx = -Math.sin(a) * V.fan.head * 0.5;
+            const ny = Math.cos(a) * V.fan.head * 0.5;
+            return (
+              <g key={dy} opacity={head.opacity}>
+                <line x1={tip.x} y1={tip.y} x2={hx} y2={hy} stroke={theme.color.indigo} strokeWidth={V.fan.width} strokeLinecap="round" />
+                <polygon
+                  points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`}
+                  fill={theme.color.indigo}
+                />
+              </g>
+            );
+          })}
 
-            {/* ── the four things to read volume against ──────────────────
-                ⚠ EACH IN THE COLOUR OF THE WORD THAT NAMED IT, so the colour
-                is the link rather than a decoration. */}
-            {i === 0 && open > 0.99 && (
-              <>
-                {on(0) > 0.001 && (
-                  <path d={zigPath} fill="none" stroke={ink.indigo} strokeWidth={R2.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
-                )}
-                {on(1) > 0.001 &&
-                  zones.map((z, k) => (
-                    <rect
-                      key={k}
-                      x={CHi.price.x}
-                      y={g.y(z.hi)}
-                      width={CHi.price.w}
-                      height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
-                      fill={`${ink.orange}22`}
-                      stroke={ink.orange}
-                      strokeWidth={theme.shape.rule}
-                      rx={10}
-                      opacity={on(1)}
-                    />
-                  ))}
-                {on(2) > 0.001 &&
-                  chan.map((q, k) => (
-                    <line
-                      key={k}
-                      x1={g.x(q.a)}
-                      y1={g.y(bars[q.a][q.key])}
-                      x2={g.x(q.b)}
-                      y2={g.y(bars[q.b][q.key])}
-                      stroke={ink.cyan}
-                      strokeWidth={R2.width}
-                      strokeLinecap="round"
-                      opacity={on(2)}
-                    />
-                  ))}
-                {on(3) > 0.001 && (
-                  <path d={maPath} fill="none" stroke={ink.marun} strokeWidth={R2.width} strokeLinecap="round" opacity={on(3)} />
-                )}
-              </>
+        {/* ── the four things to read volume against ──────────────────
+            ⚠ ONLY ONCE THE WINDOW IS OPEN, so none of them can appear in the
+            display SS6 locks. Each is DERIVED from the tape — a zigzag through
+            its own swings, zones on its own extremes, a channel on its own
+            hull, an average of its own closes — and drawn in the colour of the
+            word that named it. */}
+        {i === 0 && open > 0.99 && (
+          <>
+            {on(0) > 0.001 && (
+              <path d={zigPath} fill="none" stroke={ink.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
             )}
-          </svg>
-        </div>
-      </div>
+            {on(1) > 0.001 &&
+              zones.map((z, k) => (
+                <rect
+                  key={k}
+                  x={R.price.x}
+                  y={g.y(z.hi)}
+                  width={R.price.w}
+                  height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
+                  fill={`${ink.orange}22`}
+                  stroke={ink.orange}
+                  strokeWidth={theme.shape.rule}
+                  rx={10}
+                  opacity={on(1)}
+                />
+              ))}
+            {on(2) > 0.001 &&
+              chan.map((q, k) => (
+                <line
+                  key={k}
+                  x1={g.x(q.a)}
+                  y1={g.y(bars[q.a][q.key])}
+                  x2={g.x(q.b)}
+                  y2={g.y(bars[q.b][q.key])}
+                  stroke={ink.cyan}
+                  strokeWidth={V.read.width}
+                  strokeLinecap="round"
+                  opacity={on(2)}
+                />
+              ))}
+            {on(3) > 0.001 && (
+              <path d={maPath} fill="none" stroke={ink.marun} strokeWidth={V.read.width} strokeLinecap="round" opacity={on(3)} />
+            )}
+          </>
+        )}
+      </svg>
 
       {/* ── the row of words under the display ──────────────────────────── */}
       {i === 0 && open > 0.5 && (
@@ -449,8 +433,8 @@ const Disc = ({
 
 export const SC19 = () => {
   const f = useCurrentFrame();
-  /** ⚠ BOTH HALVES ON ONE ELEMENT, CONCATENATED. Two style objects each with a
-   *  `transform` means the second silently wins, and the cut goes one-sided. */
+  /** ⚠ BOTH HALVES ON ONE ELEMENT, CONCATENATED — two style objects each with a
+   *  `transform` means the second silently wins and the cut goes one-sided. */
   const cIn = cutInStyle(f + FROM, CUTS.toLimits);
   const cOut = cutOutStyle(f + FROM, CUTS.toClose);
   const cam = {
@@ -467,3 +451,35 @@ export const SC19 = () => {
     </Stage>
   );
 };
+
+/**
+ * ═══ THE LOCK, IN CODE ═══
+ *
+ * `npm run lock:ss6` catches a changed display by rendering it; these catch it
+ * at BUILD time, before anything is rendered at all. Every number below is one
+ * the two displays are made of — move any of them and this throws with the name
+ * of what moved, instead of quietly producing a different picture.
+ */
+{
+  const eq = (name: string, got: unknown, want: unknown) => {
+    if (JSON.stringify(got) !== JSON.stringify(want)) {
+      throw new Error(
+        `SS6 LOCK: ${name} is ${JSON.stringify(got)}, and the approved display was drawn with ${JSON.stringify(want)}. ` +
+          "Both product displays at f18250 are approved artwork — change the thing that moved this, not the lock.",
+      );
+    }
+  };
+  eq("LIMITS.win", V.win, { w: 440, h: 640, radius: 46, y: 220, gap: 160 });
+  eq("LIMITS.ui.display", V.ui.display, { x: 20, y: 110, w: 400, h: 400, radius: 30 });
+  eq("LIMITS.ui.price", V.ui.price, { x: 34, y: 124, w: 372, h: 250 });
+  eq("LIMITS.ui.volume", V.ui.volume, { x: 34, y: 392, w: 372, h: 104 });
+  eq("the frames the two windows arrive on", V.cards.map((q) => q.at), [17996, 18148]);
+  eq("SS4's bar count", SS4.bars.length, 20);
+  eq("COLOUR's bar count", COLOUR.bars.length, 14);
+  /* the tapes themselves, at the ends — enough to catch a reseed or a retrace */
+  eq(
+    "SS4's first and last close",
+    [SS4.closes[0], SS4.closes[SS4.closes.length - 1]].map((v) => Math.round(v * 1e3)),
+    [276000,645000],
+  );
+}
