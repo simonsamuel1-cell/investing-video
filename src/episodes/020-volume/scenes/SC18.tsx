@@ -291,16 +291,18 @@ const Mark = ({
   return (
     <svg style={{ position: "absolute", left: x, top: y, overflow: "visible" }} width={d} height={d}>
       <circle cx={r} cy={r} r={r} fill={fill} />
-      {/* ⚠ THE "i" IS A GLYPH, NOT A PATH — and handwritten, at Simon's word.
-          The two marks above are drawn because a tick and a cross are shapes;
-          a letter is a letter, and the face it is set in is the point of it. */}
+      {/* ⚠ THE "i" IS A GLYPH, NOT A PATH — and a Times italic, at Simon's
+          word. The two marks above are drawn because a tick and a cross are
+          shapes; a letter is a letter, and the face it is set in is the point
+          of it. A serif among all this sans reads as a mark someone made
+          rather than as another thing the video is saying. */}
       {kind === "info" ? (
         <text
           x={r}
           y={r}
           textAnchor="middle"
           dominantBaseline="central"
-          fontFamily={theme.text.hand}
+          fontFamily={theme.text.serif}
           fontStyle="italic"
           fontWeight={700}
           fontSize={d * 0.72}

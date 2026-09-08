@@ -35,12 +35,7 @@
 import { Easing } from "remotion";
 import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
-/**
- * ⚠ A THIRD FACE, AND IT IS FOR ASIDES ONLY. Handwriting says "someone wrote
- * this in the margin", which is exactly what an aside is and exactly what a
- * finding is not. Used anywhere a scene states something, it undercuts it.
- */
-import { loadFont as loadHand } from "@remotion/google-fonts/Caveat";
+
 
 loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
 /**
@@ -50,7 +45,6 @@ loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
  * A sentence set in it reads as code, and nothing in these videos is code.
  */
 loadMono("normal", { weights: ["400", "500"] });
-loadHand("normal", { weights: ["600", "700"] });
 
 const W = 1920;
 const H = 1080;
@@ -415,8 +409,17 @@ export const theme = {
 
   text: {
     family: "Plus Jakarta Sans",
-    /** ⚠ ASIDES ONLY — see the import. */
-    hand: "Caveat",
+/**
+     * ⚠ A THIRD FACE, FOR ASIDES ONLY, AND IT IS NOT LOADED. Times is on every
+     * machine that will ever render this, so it costs nothing and cannot fail
+     * to arrive — which is why a stack rather than a webfont is the right shape
+     * for the one italic letter in the episode.
+     *
+     * ⚠ AND IT IS A SERIF ON PURPOSE. Everything else here is one geometric
+     * sans; a letter in a different KIND of face reads as a mark someone made,
+     * not as another thing the video is saying.
+     */
+    serif: "'Times New Roman', Times, serif",
     mono: "JetBrains Mono",
     display: { size: 96, weight: 800 },
     title: { size: 48, weight: 700 },

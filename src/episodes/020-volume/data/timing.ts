@@ -1884,10 +1884,10 @@ export const SC18_TICK = {
    * pembeli dan penjual" runs 17638–17832; the note says the same thing, so it
    * arrives with it rather than at a frame chosen for the layout.
    *
-   * ⚠ THE MARK IS HANDWRITTEN AND ITALIC — Simon's call, and it is the only
-   * handwriting in the episode. Everything else in this column is a finding
-   * being stated; this is an aside, and an aside in the same face as the
-   * findings reads as a fifth finding.
+   * ⚠ THE MARK IS A TIMES ITALIC — Simon's call, and it is the only serif in
+   * the episode. Everything else in this column is a finding being stated; this
+   * is an aside, and an aside in the same face as the findings reads as a fifth
+   * finding.
    */
   note: {
     at: 17638,
