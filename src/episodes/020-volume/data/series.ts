@@ -182,63 +182,74 @@ export const CHART1_DOMAIN2 = domainOf(CHART1_ALL.map((b) => b.c), CHART1_ALL);
  * as a different stock, which is exactly the misreading this is here to stop.
  */
 /**
- * ═══ SS1 — SIMON'S OWN BREAKOUT SCREENSHOT, TRACED ═══
+ * ═══ SS1 AND SS2 ARE ONE TAPE, AND THAT WAS WORTH PROVING ═══
  *
- * 46 candles colour-keyed out of `SS1.png` in his VIDEO 21 folder.
+ * Simon supplied two screenshots: SS1, a portrait close-up of a breakout, and
+ * SS2, a landscape view of "the same thing zoomed out". They are not similar —
+ * they are THE SAME DATA. SS1 is bars 168–213 of SS2, and the evidence is not a
+ * judgement call:
  *
- * ⚠ 46, AND THE FIRST TRACE SAID 62. That was the whole inaccuracy Simon saw.
- * The column groups were being split by the dotted line's own row and by a
- * looser alpha test, so a fixed pitch was fitted to a wrong count and every
- * bar's x — and therefore its body — was read across candle boundaries. The
- * real structure is unambiguous: 46 runs of EXACTLY 5 columns each, first
- * centre at x=4, last at x=379, pitch 8.33. Nothing is fitted any more; each
- * candle is read from its own measured column range.
+ *   · a sliding-window search over every length from 30 to 90 and every offset
+ *     finds one minimum, at (start 168, length 46), with a mean difference of
+ *     0.00098 on normalised closes — three orders of magnitude below the next
+ *     candidate;
+ *   · the least-squares map from SS1's scale to SS2's is y = 0.68885x + 31.889
+ *     with a MAXIMUM residual of 0.149 in 100, across all 184 values;
+ *   · the direction of all 46 candles agrees;
+ *   · and SS1's dotted line at 76.03 maps to 84.262, while SS2's own dotted line
+ *     sits at 84.279. Seventeen thousandths apart. Same level.
  *
- * ⚠ AND THE BODY IS NOT "THE WIDEST RUN", IT IS THE 5-WIDE ONE. Every row in
- * this image is either 1px of ink (wick) or 5px (body) — no other width exists
- * anywhere in the file. So the body is exact rather than estimated, down to the
- * one-row doji at bar 42 that the old threshold swallowed.
+ * ⚠ SO THERE IS ONE SERIES, NOT TWO. SS2 is the tape; the portrait view is a
+ * WINDOW on it. That is what lets the widening at f14665 be a change of grid on
+ * unchanged data rather than one chart dissolving into another — the viewer can
+ * see that no candle moved, which is the whole point of a zoom-out.
  *
- * ⚠ THE RESISTANCE IS THE PICTURE'S OWN DOTTED LINE, NOT A NUMBER I CHOSE. It
- * was found by scanning for the one row whose teal pixels run the FULL width of
- * the image — 100 of them from x=2 to x=382, which no candle can do — at y=128
- * of 535. That is 76.03 on this scale, and the last SIX bars close above it.
- *
- * ⚠ AND IT REALLY IS A BREAKOUT, which the assertion below checks: eight bars
- * close above the level, and all eight are in the last quarter of the tape.
+ * ⚠ 232 CANDLES, EACH READ FROM ITS OWN MEASURED COLUMN RUN. SS2's pitch is
+ * 5.25px and therefore NOT an integer, so bodies land on 2 or 3 columns
+ * depending on where they fall; nothing is fitted, each run is measured. The
+ * one candle clipped by the left edge of the screenshot is dropped rather than
+ * guessed at, and the pale teal artefact at the bottom-left (135,204,197 — a
+ * third colour that is neither candle) is excluded by requiring r < 80.
  */
-import SS1_BARS from "./ss1.json";
-export const SS1: Series = {
-  closes: (SS1_BARS as Bar[]).map((b) => b.c),
-  bars: SS1_BARS as Bar[],
+import SS2_BARS from "./ss2.json";
+export const SS2: Series = {
+  closes: (SS2_BARS as Bar[]).map((b) => b.c),
+  bars: SS2_BARS as Bar[],
   kind: "traced",
   label: "Breakout",
 };
-export const SS1_DOMAIN = domainOf(SS1.closes, SS1.bars);
-/** The dotted level in the screenshot, in this series' own scale. */
-export const SS1_RES = 76.03;
+export const SS2_DOMAIN = domainOf(SS2.closes, SS2.bars);
+/** The dotted level, from SS2's own artwork at y=97 of 618. */
+export const SS_RES = 84.2788;
+/** The window SS1 shows — the close-up the scene opens on. */
+export const SS_VIEW = { from: 168, to: 214 } as const;
 /**
- * ⚠ THE AREA IS DERIVED FROM THE TESTS, not drawn around the line by eye. Its
- * top is the level; its floor is the highest HIGH that stayed under the level
- * before the break, which is the ceiling price actually kept hitting.
+ * ⚠ THE AREA SITS ON THE PEAK, NOT UNDER THE LINE — Simon's call, and it is
+ * derived rather than placed. Its top is the highest high before the break; its
+ * floor is the second highest. That is the zone price topped out at twice and
+ * then cleared, which is what a resistance area is a claim about.
+ *
+ * ⚠ AND IT IS NOT THE DOTTED LINE. In the screenshots that line is drawn three
+ * whole units ABOVE the highest thing under it, so nothing ever tests it — a
+ * property of the original artwork, not of this tape. Anchoring the band to the
+ * price instead is why it now has candles touching it.
  */
-export const SS1_BAND = (() => {
-  const brk = SS1.bars.findIndex((b) => b.c > SS1_RES);
-  const under = SS1.bars.slice(0, brk).map((b) => b.h).filter((h) => h < SS1_RES);
-  return { hi: SS1_RES, lo: Math.max(...under) };
+export const SS_BAND = (() => {
+  const brk = SS2.bars.findIndex((b) => b.c > SS_RES);
+  const highs = SS2.bars.slice(0, brk).map((b) => b.h).sort((a, b) => b - a);
+  return { hi: highs[0], lo: highs[1] };
 })();
 {
-  const above = SS1.bars.filter((b) => b.c > SS1_RES);
-  if (above.length < 4) {
-    throw new Error(`SS1 is meant to be a breakout: only ${above.length} bars close above ${SS1_RES}`);
+  const brk = SS2.bars.findIndex((b) => b.c > SS_RES);
+  if (brk < 0) throw new Error("SS2: nothing closes above the dotted level — not a breakout");
+  if (brk < SS_VIEW.from || brk >= SS_VIEW.to) {
+    throw new Error(`SS2's break is at bar ${brk}, outside the close-up window ${SS_VIEW.from}..${SS_VIEW.to}`);
   }
-  const first = SS1.bars.findIndex((b) => b.c > SS1_RES);
-  if (first < SS1.bars.length * 0.7) {
-    throw new Error(`SS1's break is at bar ${first} of ${SS1.bars.length} — too early to read as a breakout`);
+  if (!(SS_BAND.lo < SS_BAND.hi && SS_BAND.hi < SS_RES)) {
+    throw new Error(`SS_BAND ${JSON.stringify(SS_BAND)} must sit below the level ${SS_RES} and not be inverted`);
   }
-  if (!(SS1_BAND.lo < SS1_BAND.hi)) {
-    throw new Error("SS1_BAND is inverted — no high stayed under the level before the break");
-  }
+  const touching = SS2.bars.slice(0, brk).filter((b) => b.h >= SS_BAND.lo).length;
+  if (touching < 2) throw new Error("SS_BAND is meant to be a zone price tested — fewer than two bars reach it");
 }
 
 import TWO_RAW from "./two-breakout.json";

@@ -1289,13 +1289,38 @@ export const SC16_V2 = {
   open: { at: 14577, dot: 10, wide: 24, tall: 28 },
   /** Inside the window, where the tape may draw. */
   plot: { x: 44, y: 56 },
-  /** The candles arrive one at a time, after the frame has finished opening. */
-  build: { at: 14649, over: 96 },
-  /** ⚠ THE AREA, THEN ITS NAME. The band is what the claim is; the word is a
-   *  label for it, and a label that lands first is a caption with nothing under
-   *  it yet. */
-  zone: { at: 14760, over: 30 },
-  label: { at: 14790, text: "Resistance", size: 26, gap: 10 },
+  /**
+   * ⚠ THE CANDLES DO NOT ARRIVE ONE BY ONE — Simon changed his mind, and he was
+   * right. They are simply THERE, laid out against the window's FINISHED rect,
+   * and the frame opening over them is what reveals them: the same clip that
+   * makes the box grow is the chart's mask. A tape built bar by bar inside a box
+   * that is also growing is two entrances fighting each other.
+   *
+   * ⚠ WHICH MEANS THE GRID IS BUILT FROM THE FINAL RECT, NOT THE CURRENT ONE.
+   * Laid out against a growing box the candles would stretch as it opened, and
+   * a stretched candle is a lie about its price.
+   */
+  zone: { at: 14700, over: 30 },
+  label: { at: 14700, text: "Resistance", size: 26, gap: 10 },
+  /**
+   * ═══ AND AT f14665 IT OPENS OUT ═══  (Simon's frame, SS2 as the reference)
+   *
+   * The white panel grows to fill the screen and the view widens from the 46
+   * bars of the close-up to all 232 — SS1 becoming SS2.
+   *
+   * ⚠ ONE CURVE DRIVES BOTH, which is what "konsisten dengan background
+   * putihnya" has to mean. The panel's rect and the chart's grid are read off
+   * the same progress value, so the tape cannot finish opening before the paper
+   * under it does.
+   *
+   * ⚠ AND IT IS A CHANGE OF GRID, NOT A CHANGE OF PICTURE. Both states are
+   * expressed as (box, domain) over the SAME 232 bars and interpolated, so no
+   * candle is created or destroyed — the viewer can see that nothing moved
+   * except the frame, which is the only thing that makes a zoom-out legible.
+   */
+  wide: { at: 14665, over: 54 },
+  /** Where the tape may draw once the panel is the whole screen. */
+  full: { x: 120, y: 200, w: 1680, h: 700 },
 } as const;
 
 export const SC16_UI = {

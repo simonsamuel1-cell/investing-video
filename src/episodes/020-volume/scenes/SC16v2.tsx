@@ -20,10 +20,10 @@
  */
 import { interpolate, useCurrentFrame } from "remotion";
 import {
-  Stage, Candles, cutInStyle, gridOf, progress, progressInOut, theme,
+  Stage, Candles, cutInStyle, gridOf, domainOf, progress, progressInOut, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
-import { SS1, SS1_DOMAIN, SS1_BAND } from "../data/series";
+import { SS2, SS2_DOMAIN, SS_BAND, SS_VIEW } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC16;
@@ -50,10 +50,57 @@ export const SC16v2 = () => {
   const x = theme.canvas.width / 2 - w / 2;
   const y = theme.canvas.height / 2 - h / 2;
 
-  /** The plot, inside whatever the window currently is. */
-  const box = { x: x + V.plot.x, y: y + V.plot.y, w: w - V.plot.x * 2, h: h - V.plot.y * 2 };
-  const G = gridOf(SS1.closes, SS1_DOMAIN, box, 0.06, 0);
-  const shown = progress(f, local(V.build.at, FROM), V.build.over);
+  /**
+   * ═══ THE WIDENING, AS A CHANGE OF GRID ═══
+   *
+   * ⚠ BOTH STATES ARE (BOX, DOMAIN) OVER THE SAME 232 BARS. The close-up is not
+   * a different chart — it is this one on a box wide enough that 46 of its bars
+   * fill the plot, slid so bar 168 lands on the left edge. Interpolating the
+   * box and the domain therefore moves the FRAME, and every candle stays where
+   * the data puts it. A cross-fade between two charts would ghost all 232.
+   */
+  const open = progressInOut(f, local(V.wide.at, FROM), V.wide.over);
+
+  /** The panel: the portrait window, opening out to the whole screen. */
+  const px0 = interpolate(open, [0, 1], [x, 0]);
+  const py0 = interpolate(open, [0, 1], [y, 0]);
+  const pw = interpolate(open, [0, 1], [w, theme.canvas.width]);
+  const ph = interpolate(open, [0, 1], [h, theme.canvas.height]);
+  const radius = interpolate(open, [0, 1], [Math.min(V.win.radius, w / 2, h / 2), 0]);
+
+  /**
+   * ⚠ THE PLOT IS BUILT FROM THE FINISHED RECT, NOT THE CURRENT ONE. While the
+   * frame is still drawing itself the box is a sliver; laying the tape out
+   * against it would stretch every candle as it opened. The frame's growth is
+   * the chart's MASK, not its layout — Simon: "gunakan teknik masking".
+   */
+  /** The window's FINISHED position, which is where the tape is laid out. */
+  const X0 = theme.canvas.width / 2 - V.win.w / 2;
+  const Y0 = theme.canvas.height / 2 - V.win.h / 2;
+  const near = { x: X0 + V.plot.x, y: Y0 + V.plot.y, w: V.win.w - V.plot.x * 2, h: V.win.h - V.plot.y * 2 };
+  const far = V.full;
+  const N = SS2.bars.length;
+  const SPAN = SS_VIEW.to - SS_VIEW.from;
+  /** The close-up, written as a grid: wide enough that `SPAN` bars fill the
+   *  plot, and slid so `SS_VIEW.from` sits on its left edge. */
+  const zoomW = (near.w * (N - 1)) / (SPAN - 1);
+  const boxNear = { ...near, x: near.x - (zoomW * SS_VIEW.from) / (N - 1), w: zoomW };
+  const win = SS2.bars.slice(SS_VIEW.from, SS_VIEW.to);
+  const domNear = domainOf(win.map((b) => b.c), win);
+  const mix = (a: number, b: number) => a + (b - a) * open;
+  const box = {
+    x: mix(boxNear.x, far.x),
+    y: mix(boxNear.y, far.y),
+    w: mix(boxNear.w, far.w),
+    h: mix(boxNear.h, far.h),
+  };
+  const G = gridOf(
+    SS2.closes,
+    [mix(domNear[0], SS2_DOMAIN[0]), mix(domNear[1], SS2_DOMAIN[1])],
+    box,
+    0.06,
+    0,
+  );
   const zone = progressInOut(f, local(V.zone.at, FROM), V.zone.over);
   const named = progress(f, local(V.label.at, FROM), V.zone.over);
 
@@ -110,11 +157,11 @@ export const SC16v2 = () => {
             <div
               style={{
                 position: "absolute",
-                left: x,
-                top: y,
-                width: w,
-                height: h,
-                borderRadius: Math.min(V.win.radius, w / 2, h / 2),
+                left: px0,
+                top: py0,
+                width: pw,
+                height: ph,
+                borderRadius: radius,
                 background: theme.color.glassPanel,
                 border: `${theme.shape.hairline}px solid ${theme.color.glassEdge}`,
                 boxShadow: theme.color.glassShadow,
@@ -128,24 +175,24 @@ export const SC16v2 = () => {
             <div
               style={{
                 position: "absolute",
-                left: x,
-                top: y,
-                width: w,
-                height: h,
-                borderRadius: Math.min(V.win.radius, w / 2, h / 2),
+                left: px0,
+                top: py0,
+                width: pw,
+                height: ph,
+                borderRadius: radius,
                 overflow: "hidden",
               }}
             >
-              <div style={{ position: "absolute", left: -x, top: -y, width: theme.canvas.width, height: theme.canvas.height }}>
+              <div style={{ position: "absolute", left: -px0, top: -py0, width: theme.canvas.width, height: theme.canvas.height }}>
                 {/* ── the area price kept failing at ─────────────────────── */}
                 {zone > 0.001 && (
                   <div
                     style={{
                       position: "absolute",
                       left: box.x,
-                      top: G.y(SS1_BAND.hi),
+                      top: G.y(SS_BAND.hi),
                       width: box.w,
-                      height: (G.y(SS1_BAND.lo) - G.y(SS1_BAND.hi)) * zone,
+                      height: (G.y(SS_BAND.lo) - G.y(SS_BAND.hi)) * zone,
                       background: theme.color.zoneFill,
                       borderTop: `${theme.shape.rule}px solid ${theme.color.indigo}`,
                       borderBottom: `${theme.shape.rule}px solid ${theme.color.indigo}`,
@@ -153,7 +200,9 @@ export const SC16v2 = () => {
                   />
                 )}
 
-                <Candles bars={SS1.bars} grid={G} shown={shown} />
+                {/* ⚠ NO `shown`. The tape is complete from its first frame; the
+                    frame opening over it is the reveal. */}
+                <Candles bars={SS2.bars} grid={G} />
               </div>
             </div>
 
@@ -167,7 +216,7 @@ export const SC16v2 = () => {
                 style={{
                   position: "absolute",
                   left: box.x,
-                  top: G.y(SS1_BAND.hi) - V.label.gap - V.label.size,
+                  top: G.y(SS_BAND.hi) - V.label.gap - V.label.size,
                   fontFamily: theme.text.family,
                   fontSize: V.label.size,
                   fontWeight: 700,
