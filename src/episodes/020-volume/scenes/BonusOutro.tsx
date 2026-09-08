@@ -107,9 +107,21 @@ export const BonusOutro = () => {
           landing={BONUS.landing}
           /* ⚠ SCENE-LOCAL. RoadmapCards reads the frame of the group it is
              mounted in, and this one starts at f16647. */
-          cardsAt={[0, 0, 0].map(() => local(BONUS.at, FROM))}
-          cardDur={BONUS.over}
-          contents={roadmapContents(f, m, [0, 0, 0, 0], BONUS.landing)}
+          /* ⚠ STAGGERED, LIKE TRANS2'S. Three cards opening together is one
+             event; opening 12 frames apart they are three, and the board is
+             built rather than switched on. */
+          cardsAt={BONUS.cards.map((q) => local(q, FROM))}
+          cardDur={BONUS.cardDur}
+          contents={roadmapContents(
+            f,
+            m,
+            [0, 1, 2, 3].map((i) =>
+              i === BONUS.landing
+                ? 0
+                : local(BONUS.cards[i > BONUS.landing ? i - 1 : i], FROM),
+            ),
+            BONUS.landing,
+          )}
         />
 
         {/* ⚠ CLIP OUTSIDE, SCALE INSIDE — a clip-path on the scaling wrapper

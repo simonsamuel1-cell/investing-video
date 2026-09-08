@@ -1796,15 +1796,40 @@ export const TRANS = {
  * six frames later than 120 would put it. They sit inside a hold.
  */
 export const BONUS = {
+  /**
+   * ═══ TRANS2'S CADENCE, WITH ONE BEAT ADDED ═══  (Simon: "ikuti dari Scene
+   * Transisi di 8245")
+   *
+   * Every duration and every hold below is the one that was approved at f8178,
+   * carried across rather than re-invented:
+   *
+   *     shrink 44 · three cards at +8 / +20 / +32, 22 each · HOLD 30 ·
+   *     [the added beat] · HOLD 30 · push 60 · HOLD 24 · fade 12
+   *
+   * ⚠ THE HOLDS ARE THE PART THAT MATTERS, and they are the two TRANS2 spells
+   * out. Thirty frames before the camera moves, "so the roadmap can be read
+   * before it is used"; twenty-four before the fade, because "the card is what
+   * the chapter is being handed to — it has to be LOOKED at before it goes, and
+   * a fade that starts on the frame the move ends reads as the card being taken
+   * away rather than shown."
+   *
+   * ⚠ THE ADDED BEAT BORROWS THE SHRINK'S 44 AND THE PUSH'S HOLD. It is the
+   * same KIND of event as the shrink — the picture changing hands — so it takes
+   * the same duration, and it earns the same thirty frames of stillness after
+   * it that TRANS2 gives the board.
+   *
+   * ⚠ THERE IS NO GLOW, and TRANS2 has one. Its glow lights the card the camera
+   * is about to close on, which is the NEXT chapter, already on the board. Here
+   * the thing being handed to is not on the board at all — that is the whole
+   * point of it — so there is nothing to light until it has arrived, by which
+   * time the move itself is the emphasis.
+   */
   at: 16647,
-  /** The shrink into the rightmost card, and the board arriving behind it. */
-  over: 30,
+  over: 44,
   landing: 3,
-  /** ⚠ 60, NOT 15 — Simon: "transisinya terlalu cepat". The board is the video's
-   *  whole contents page and the picture has just landed on it; fifteen frames
-   *  is a quarter of a second to read four chapters and notice which one just
-   *  filled in. */
-  hold: 60,
+  /** The other three open one after another, behind the shrink. */
+  cards: [16655, 16667, 16679],
+  cardDur: 22,
   /**
    * The cards leave upward and the bonus card rises into the middle.
    *
@@ -1814,21 +1839,20 @@ export const BONUS = {
    * the difference between one continuous move and two cuts pretending to be
    * one.
    */
-  rise: { at: 16737, over: 30 },
-  hold2: 30,
-  /** ⚠ A BEAT OF ITS OWN NOW, not the same curve as the fade. Growing and
-   *  vanishing together read as one gesture; separated, the card arrives, is
-   *  read, and only then hands over. */
-  grow: { at: 16797, over: 30, amount: 0.5 },
-  hold3: 30,
+  rise: { at: 16731, over: 44 },
+  /** ⚠ A BEAT OF ITS OWN, not the same curve as the fade. Growing and vanishing
+   *  together read as one gesture; separated, the card arrives, is read, and
+   *  only then hands over. */
+  grow: { at: 16805, over: 60, amount: 0.55 },
   /**
-   * ⚠ IT RUNS OVER SC18, WHICH HAS BEEN PLAYING SINCE 16743 — Simon: "tidak
-   * masalah jika ada scene overlap". And it is not merely tolerable: the lines
-   * underneath it are "Sebelum selesai, ada beberapa hal yang sering salah
-   * dibaca", which is what the card says. It clears on 16887, before "saat
-   * menggunakan volume. Pertama," at 16920.
+   * ⚠ IT RUNS 158 FRAMES OVER SC18, WHICH HAS BEEN PLAYING SINCE 16743 — Simon:
+   * "tidak masalah jika ada scene overlap". And the overlap is doing work
+   * rather than being tolerated: the lines underneath it are "Sebelum selesai,
+   * ada beberapa hal yang sering salah dibaca", which is what the card says. It
+   * clears on 16901, nineteen frames before "saat menggunakan volume. Pertama,"
+   * at 16920 — the whole schedule is built backwards from that.
    */
-  fade: { at: 16857, over: 30 },
+  fade: { at: 16889, over: 12 },
   /** ⚠ 28 IN A 24px PAD, SO IT STAYS ON ONE LINE. At 34 and at 30 it broke after
    *  "Common", which puts the two words that actually name the thing on
    *  different rows — the worst of the available breaks. */
