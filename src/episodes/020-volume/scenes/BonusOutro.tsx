@@ -31,7 +31,6 @@ import { BLOCK, BONUS, MAP_LABELS, SPIKES } from "../data/timing";
 import { SC17 } from "./SC17";
 import { TWO, TWO_DOMAIN, TWO_VOL_STRONG } from "../data/series";
 import { roadmapContents } from "./MainChartGroup";
-import { Card1Thumb } from "./UnderstandGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BONUS.at;
@@ -136,11 +135,18 @@ export const BonusOutro = () => {
             m,
             [0, 1, 2, 3].map((i) => (i === BONUS.landing ? 0 : BUILT)),
             BONUS.landing,
-            /* ⚠ WHAT LANDED IN "mengenal volume" AT f5093, not the icon the
-               opening board draws — the card has a memory. */
-            <Card1Thumb />,
           )}
         />
+        {/* ⚠ CARD 1 STILL DRAWS THE ICON HERE, AND THAT IS A KNOWN GAP.
+            `Card1Thumb` puts f5093's picture in "mengenal volume" correctly at
+            8245 — same component, same call — but inside this group the frozen
+            UnderstandGroup comes out at map = 0, so what lands in the card is
+            SC06 unshrunk rather than the picture that shrank into it. Passing
+            it through `contents`, mounting it as a sibling, and offsetting the
+            freeze frame all produced the identical wrong frame, which says the
+            fault is in what the freeze resolves to here rather than in where
+            the thumbnail is drawn. Left as the icon until that is understood:
+            a wrong picture in the card is worse than a plain one. */}
 
         {/* ⚠ CLIP OUTSIDE, SCALE INSIDE — a clip-path on the scaling wrapper
             scales with it and never matches the card it is clipping into. */}

@@ -443,7 +443,7 @@ const Headline = ({ g }: { g: number }) => {
  */
 const THUMB_FROZEN = 5093 - FROM;
 
-export const Card1Thumb = () => {
+export const Card1Thumb = ({ at = 0 }: { at?: number }) => {
   const slot = ROADMAP_SLOTS[TRANS.landing];
   return (
     /* ⚠ overflow, NOT clip-path, AND AN EXPLICIT OFFSET. The frozen group paints
@@ -472,7 +472,7 @@ export const Card1Thumb = () => {
           height: theme.canvas.height,
         }}
       >
-        <Freeze frame={THUMB_FROZEN}>
+        <Freeze frame={THUMB_FROZEN + at}>
           <UnderstandGroup />
         </Freeze>
       </div>
