@@ -1266,13 +1266,21 @@ export const SC15_ART = {
  * is for — and a pair where one is larger says one of them matters more.
  */
 export const SC16_UI = {
-  x: 380,
-  w: 1160,
-  h: 300,
-  top: 200,
-  gap: 60,
+  /**
+   * ⚠ THE PANES ARE NOT SIZED, THEY ARE PADDED — Simon's call. Each one hugs
+   * its own line with 40px either side and 60 above and below, so the two come
+   * out at different widths because the two lines are different lengths. That
+   * is the point: a pair forced to one width would be a table, and this is two
+   * chips.
+   *
+   * ⚠ WHICH MEANS NO NUMBER HERE MEASURES TEXT. The old `x`, `w`, `h` and `top`
+   * were a rect chosen against the longest line; flex layout gets the same
+   * answer from the browser, and keeps getting it when the wording changes.
+   */
+  pad: { x: 40, y: 60 },
+  gap: 40,
   radius: 40,
-  size: 56,
+  size: 36,
   /** The second pane follows the first rather than arriving with it. */
   stagger: 10,
   lines: ["Untuk konfirmasi breakout", "Membaca performa trend"],

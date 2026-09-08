@@ -106,57 +106,66 @@ export const SC16 = () => {
           ))}
         </div>
 
-        {U.lines.map((line, i) => {
-          const at = i * U.stagger;
-          /* A panel is a UI element, so it may pop; the line inside it never
-             does — see core/Text. */
-          const p = popIn(f, at, m.pop, { from: 0.94, back: 1.02 });
-          const t = textReveal(f, at + m.fade, m.reveal);
-          const y = U.top + i * (U.h + U.gap);
-          return (
-            <div
-              key={i}
-              style={{
-                position: "absolute",
-                left: U.x,
-                top: y,
-                width: U.w,
-                height: U.h,
-                borderRadius: U.radius,
-                /* ⚠ A GRADIENT, NOT A TINT — the reference's panels are brighter
-                   along their top edge, and that is what makes them read as
-                   glass catching the light rather than as a pale rectangle. */
-                /* ⚠ OPAQUE, NOT FROSTED. At 0:06 — the frame Simon named — the
-                   card in front is #FDFDFF and solid; the see-through panels
-                   are a LATER part of that video. What gives this one depth is
-                   the blurred layer behind it, not translucency. */
-                background: theme.color.glassPanel,
-                border: `${theme.shape.hairline}px solid ${theme.color.glassEdge}`,
-                boxShadow: theme.color.glassShadow,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                opacity: p.opacity,
-                transform: `scale(${p.scale.toFixed(4)})`,
-                transformOrigin: "50% 50%",
-              }}
-            >
+        {/* ⚠ ONE CENTRED COLUMN, NOT TWO PLACED RECTS — Simon: "kelompokkan
+            keduanya lalu center align, horizontal dan vertikal". The group is
+            centred on both axes by LAYOUT, so nothing here has to know how tall
+            two padded lines come out, and it stays centred if either line
+            changes length. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: U.gap,
+          }}
+        >
+          {U.lines.map((line, i) => {
+            const at = i * U.stagger;
+            /* A panel is a UI element, so it may pop; the line inside it never
+               does — see core/Text. */
+            const p = popIn(f, at, m.pop, { from: 0.94, back: 1.02 });
+            const tx = textReveal(f, at + m.fade, m.reveal);
+            return (
               <div
+                key={i}
                 style={{
-                  fontFamily: theme.text.family,
-                  fontSize: U.size,
-                  fontWeight: 600,
-                  color: theme.color.glassInk,
-                  opacity: t.opacity,
-                  transform: `translateY(${t.dy}px)`,
-                  whiteSpace: "nowrap",
+                  /* ⚠ THE PANE'S SIZE COMES FROM ITS PADDING. No width, no
+                     height: 40 either side and 60 above and below is the whole
+                     specification, and the browser does the measuring. */
+                  padding: `${U.pad.y}px ${U.pad.x}px`,
+                  borderRadius: U.radius,
+                  /* ⚠ OPAQUE, NOT FROSTED. At 0:06 — the frame Simon named —
+                     the card in front is #FDFDFF and solid; the see-through
+                     panels are a LATER part of that video. What gives this one
+                     depth is the blurred layer behind it, not translucency. */
+                  background: theme.color.glassPanel,
+                  border: `${theme.shape.hairline}px solid ${theme.color.glassEdge}`,
+                  boxShadow: theme.color.glassShadow,
+                  opacity: p.opacity,
+                  transform: `scale(${p.scale.toFixed(4)})`,
                 }}
               >
-                {line}
+                <div
+                  style={{
+                    fontFamily: theme.text.family,
+                    fontSize: U.size,
+                    fontWeight: 600,
+                    lineHeight: 1,
+                    color: theme.color.glassInk,
+                    opacity: tx.opacity,
+                    transform: `translateY(${tx.dy}px)`,
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {line}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </Stage>
   );
