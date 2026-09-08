@@ -23,7 +23,8 @@ import {
   Stage, Candles, cutInStyle, gridOf, domainOf, progress, progressInOut, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
-import { SS2, SS2_DOMAIN, SS_BAND, SS_VIEW } from "../data/series";
+import { ResistanceArea } from "./ResistanceArea";
+import { SS2, SS2_DOMAIN, SS_BAND, SS_VIEW, SS_ZIG } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC16;
@@ -101,8 +102,38 @@ export const SC16v2 = () => {
     0.06,
     0,
   );
-  const zone = progressInOut(f, local(V.zone.at, FROM), V.zone.over);
-  const named = progress(f, local(V.label.at, FROM), V.zone.over);
+  /** ⚠ THE CLOSE-UP'S OWN GRID, kept so `ResistanceArea` can convert its DROP
+   *  into a price against the view that number was chosen in. */
+  const G0 = gridOf(SS2.closes, domNear, near, 0.06, 0);
+
+  /**
+   * ═══ THE ZIGZAG, DRAWN FROM ITS TAIL FORWARDS ═══
+   *
+   * ⚠ ONE LENGTH FOR THE WHOLE POLYLINE, not one per leg. Revealing it leg by
+   * leg would make each segment take the same time whatever its length, so a
+   * short leg would crawl and a long one would race; measuring the whole path
+   * once and running a dash offset along it keeps the pen at one speed.
+   */
+  const drawn = progressInOut(f, local(V.trend.at, FROM), V.trend.over);
+  const zig = SS_ZIG.map((q) => ({ x: G.x(q.i), y: G.y(q.v) }));
+  const segs = zig.slice(1).map((q, k) => Math.hypot(q.x - zig[k].x, q.y - zig[k].y));
+  const zigLen = segs.reduce((a, b2) => a + b2, 0);
+  const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
+  /** The head takes the LAST leg's direction — that is the way the trend is
+   *  pointing when it arrives. */
+  const last = zig[zig.length - 1];
+  const prev = zig[zig.length - 2];
+  const dl = Math.max(1, Math.hypot(last.x - prev.x, last.y - prev.y));
+  const tDir = { x: (last.x - prev.x) / dl, y: (last.y - prev.y) / dl };
+  const nx = -tDir.y;
+  const ny = tDir.x;
+  const headPts = [
+    [last.x, last.y],
+    [last.x - tDir.x * V.trend.head.len + nx * V.trend.head.half, last.y - tDir.y * V.trend.head.len + ny * V.trend.head.half],
+    [last.x - tDir.x * V.trend.head.len - nx * V.trend.head.half, last.y - tDir.y * V.trend.head.len - ny * V.trend.head.half],
+  ]
+    .map((q) => q.map((v) => v.toFixed(1)).join(","))
+    .join(" ");
 
   return (
     <Stage transparent>
@@ -185,50 +216,47 @@ export const SC16v2 = () => {
             >
               <div style={{ position: "absolute", left: -px0, top: -py0, width: theme.canvas.width, height: theme.canvas.height }}>
                 {/* ── the area price kept failing at ─────────────────────── */}
-                {zone > 0.001 && (
-                  <div
-                    style={{
-                      position: "absolute",
-                      left: box.x,
-                      top: G.y(SS_BAND.hi),
-                      width: box.w,
-                      height: (G.y(SS_BAND.lo) - G.y(SS_BAND.hi)) * zone,
-                      background: theme.color.zoneFill,
-                      borderTop: `${theme.shape.rule}px solid ${theme.color.indigo}`,
-                      borderBottom: `${theme.shape.rule}px solid ${theme.color.indigo}`,
-                    }}
-                  />
-                )}
+                {/* ⚠ NO ENTRANCE — Simon: "sudah ada sejak awal". The level is
+                    on the chart from its first frame and the window opening
+                    over it is what reveals it; its position lives in
+                    ResistanceArea.tsx, where DROP is the one number to change. */}
+                <ResistanceArea
+                  grid={G}
+                  box={box}
+                  band={SS_BAND}
+                  closeUp={G0}
+                  label={V.label}
+                />
 
-                {/* ⚠ NO `shown`. The tape is complete from its first frame; the
-                    frame opening over it is the reveal. */}
                 <Candles bars={SS2.bars} grid={G} />
+
+                {/* ── the trend leg ────────────────────────────────────────
+                    ⚠ INDIGO — Simon's call. The reference draws it white on a
+                    dark chart; on this pale ground the episode's own marking
+                    colour is the reading of that, and it puts the trend in the
+                    same voice as the level it breaks. */}
+                {drawn > 0.001 && (
+                  <svg
+                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                    width={theme.canvas.width}
+                    height={theme.canvas.height}
+                  >
+                    <path
+                      d={zigPath}
+                      fill="none"
+                      stroke={theme.color.indigo}
+                      strokeWidth={V.trend.width}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeDasharray={zigLen}
+                      strokeDashoffset={zigLen * (1 - drawn)}
+                    />
+                    {drawn > 0.995 && <polygon points={headPts} fill={theme.color.indigo} />}
+                  </svg>
+                )}
               </div>
             </div>
 
-            {/* ⚠ THE NAME SITS OUTSIDE THE CLIP, AT THE FAR LEFT — Simon's
-                call, and the one place the library's own `Zone` would not put
-                it: that component labels at the RIGHT end, where the eye lands
-                as a level draws. Here the level is an area that is simply
-                there, and the left is the end price never came back to. */}
-            {named > 0.001 && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: box.x,
-                  top: G.y(SS_BAND.hi) - V.label.gap - V.label.size,
-                  fontFamily: theme.text.family,
-                  fontSize: V.label.size,
-                  fontWeight: 700,
-                  lineHeight: 1,
-                  color: theme.color.indigo,
-                  opacity: named,
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {V.label.text}
-              </div>
-            )}
           </>
         )}
       </div>

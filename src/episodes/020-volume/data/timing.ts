@@ -1300,8 +1300,40 @@ export const SC16_V2 = {
    * Laid out against a growing box the candles would stretch as it opened, and
    * a stretched candle is a lie about its price.
    */
-  zone: { at: 14700, over: 30 },
-  label: { at: 14700, text: "Resistance", size: 26, gap: 10 },
+  /**
+   * ⚠ THE LEVEL IS THERE FROM THE FIRST FRAME — Simon: "sudah ada sejak awal".
+   * It is not animated on at all; the window opening over it is what reveals
+   * it, exactly as with the candles. A level that arrives after the tape reads
+   * as a thing someone added; a level already on the chart reads as a thing
+   * that was always true of it.
+   */
+  label: { text: "Resistance", size: 26, gap: 10 },
+  /**
+   * ⚠ AND IT SITS 100px LOWER — Simon's number, converted to a PRICE once and
+   * for all. 100 canvas pixels means a different price at every zoom level, so
+   * applying it as a screen offset would make the band drift against the
+   * candles all the way through the widening. It is measured in the close-up's
+   * own grid and subtracted from the band's two values, which makes it a level
+   * again — flat, and fixed to the tape.
+   */
+  bandDrop: 100,
+  /**
+   * ═══ THE TREND ARROW ═══  (Simon's reference: the opening seconds of
+   * 65cdc0e9…mp4)
+   *
+   * One straight heavy line from a swing low to a swing high with a solid head
+   * at the leading end, drawn from the tail forwards. In the reference it is
+   * white on a dark chart, so on this pale ground it takes the scene's own ink
+   * rather than a brand accent — that is what "white" means there.
+   *
+   * ⚠ IT COMES AFTER THE VIEW HAS OPENED. The leg it draws spans 87 bars, and
+   * 41 of those are outside the close-up: drawn before the widening it would be
+   * a line that mostly points off the edge of the window.
+   */
+  /** ⚠ 3px, AND THE HEAD CAME DOWN WITH IT. A 34px head on a 3px line is a
+   *  dart on a thread; the reference's head is about four times its own stroke,
+   *  so this one is 14 by 6. Say the word if you want it big again. */
+  trend: { at: 14740, over: 46, width: 3, head: { len: 14, half: 6 } },
   /**
    * ═══ AND AT f14665 IT OPENS OUT ═══  (Simon's frame, SS2 as the reference)
    *

@@ -239,6 +239,41 @@ export const SS_BAND = (() => {
   const highs = SS2.bars.slice(0, brk).map((b) => b.h).sort((a, b) => b - a);
   return { hi: highs[0], lo: highs[1] };
 })();
+/**
+ * ═══ THE TREND, AS A ZIGZAG ═══  (Simon's call, and his B-roll reference)
+ *
+ * The arrow in `65cdc0e9…mp4` is not one straight line — it is a polyline
+ * through the swing points, labelled X-A-B-C-D. So this is a proper ZigZag:
+ * walk the tape holding the running extreme, and commit a vertex only when
+ * price retraces `THR` against it.
+ *
+ * ⚠ THE THRESHOLD IS CHOSEN FOR THE COUNT, AND THAT IS THE ONE JUDGEMENT HERE.
+ * The tape spans 94.8 units; at 12 the zigzag has 21 vertices and reads as
+ * noise, at 40 it has 3 and says nothing. 28 gives nine — the same density as
+ * the reference — and it ends on bar 212, the tape's own highest high, so the
+ * head lands on the peak rather than somewhere arbitrary.
+ */
+export const SS_ZIG = (() => {
+  const THR = 28;
+  const b = SS2.bars;
+  const pts: { i: number; v: number }[] = [];
+  let dir = 0;
+  let exI = 0;
+  let exV = b[0].c;
+  for (let i = 1; i < b.length; i++) {
+    if (dir === 1) {
+      if (b[i].h > exV) { exI = i; exV = b[i].h; }
+      else if (b[i].l < exV - THR) { pts.push({ i: exI, v: exV }); dir = -1; exI = i; exV = b[i].l; }
+    } else if (dir === -1) {
+      if (b[i].l < exV) { exI = i; exV = b[i].l; }
+      else if (b[i].h > exV + THR) { pts.push({ i: exI, v: exV }); dir = 1; exI = i; exV = b[i].h; }
+    } else if (b[i].h > exV + THR) { dir = 1; exI = i; exV = b[i].h; }
+    else if (b[i].l < exV - THR) { dir = -1; exI = i; exV = b[i].l; }
+  }
+  pts.push({ i: exI, v: exV });
+  return pts;
+})();
+
 {
   const brk = SS2.bars.findIndex((b) => b.c > SS_RES);
   if (brk < 0) throw new Error("SS2: nothing closes above the dotted level — not a breakout");
@@ -250,6 +285,12 @@ export const SS_BAND = (() => {
   }
   const touching = SS2.bars.slice(0, brk).filter((b) => b.h >= SS_BAND.lo).length;
   if (touching < 2) throw new Error("SS_BAND is meant to be a zone price tested — fewer than two bars reach it");
+  if (SS_ZIG.length < 5) throw new Error(`SS_ZIG has only ${SS_ZIG.length} vertices — raise the threshold`);
+  if (SS_ZIG.some((q, k) => k && q.i <= SS_ZIG[k - 1].i)) throw new Error("SS_ZIG is not left to right");
+  const peak = SS2.bars.reduce((m, x, i) => (x.h > SS2.bars[m].h ? i : m), 0);
+  if (SS_ZIG[SS_ZIG.length - 1].i !== peak) {
+    throw new Error(`SS_ZIG ends at bar ${SS_ZIG[SS_ZIG.length - 1].i}, not the tape's high at ${peak}`);
+  }
 }
 
 import TWO_RAW from "./two-breakout.json";
