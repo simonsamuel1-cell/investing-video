@@ -1372,8 +1372,8 @@ export const SC16_V2 = {
    */
   clear: { at: 14893, over: 30 },
   pan: {
-    at: 14933,
-    over: 84,
+    at: 14925,
+    over: 54,
     /**
      * ⚠ 124, AND IT IS NOT A ROUND NUMBER BY ACCIDENT. Twenty candles have to
      * be twenty — Simon will count them. The tape is clipped at the plot's left
@@ -1389,13 +1389,20 @@ export const SC16_V2 = {
   },
   /** The histogram arrives under the twenty before anything new is added to
    *  them — the panel is established, then it starts filling. */
-  vol: { at: 14985, over: 40 },
+  vol: { at: 14955, over: 26 },
   /**
-   * ⚠ UN-EASED, AND THAT IS THE POINT. 120 candles over 350 frames is one
-   * every 2.9; an eased build would deal them slowly, then fast, then slowly,
-   * which reads as a machine speeding up rather than as a tape printing.
+   * ⚠ UN-EASED, AND THAT IS THE POINT. An eased build would deal the candles
+   * slowly, then fast, then slowly, which reads as a machine speeding up
+   * rather than as a tape printing.
+   *
+   * ⚠ IT ENDS ON 15051 — Simon's frame, and that number is what sets every
+   * other one above it. 158 frames is the whole act, so the clear, the move
+   * and the print cannot each have as long as they would like: the move came
+   * down from 84 frames to 54 to leave the print 70, which is 1.7 candles a
+   * frame. Shortening the print instead would have put 120 candles inside 30
+   * frames, and four a frame stops being a tape printing and becomes a wipe.
    */
-  build: { at: 15025, over: 350 },
+  build: { at: 14981, over: 70 },
 } as const;
 
 export const SC16_UI = {
