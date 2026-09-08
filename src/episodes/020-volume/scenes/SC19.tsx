@@ -1,23 +1,28 @@
 /**
  * SC19 — what volume is for, and what it is not. `from 17848 · dur 944`
  *
- * Everything the scene used to draw is gone — Simon: "17848-18791 hilangkan
- * semua visual". What is left is two of SC17's windows: the correct reading
- * alone in the middle, then the wrong one beside it, then the correct one
- * opened out to fill the frame.
+ * ═══ THE SMALL WINDOW IS A MASK, NOT A SMALL CHART ═══
  *
- * ⚠ THE SAME WINDOW AS 16583, MINUS ITS GROUND — Simon's words. It is the
- * object this episode has already used to say "here is one thing, named", so
- * using it again says these two are the same KIND of thing as those two. A new
- * card shape would have said they were something else.
+ * ⚠ THE TAPE IS LAID OUT ONCE AND NEVER RE-LAID. Simon: "yang kecil ini ibarat
+ * masking sebagian kecil dari chart besarnya… aku gamau ukurannya berubah". The
+ * chart has ONE geometry in canvas pixels; the window is a hole cut in front of
+ * it. Opening the window makes the hole bigger, which REVEALS more bars — it
+ * does not stretch the ones already showing.
  *
- * ⚠ AND THE FIRST ARRIVES ALONE. It is the correct reading; it gets the frame
- * to itself before the wrong one turns up beside it and makes the shot a
- * comparison.
+ * ⚠ WHICH IS WHY THE CHART'S HEIGHT FITS THE SMALL DISPLAY, NOT THE BIG ONE.
+ * Extending sideways is the only extension that can happen without a rescale:
+ * both panels must be wholly visible in the little window, so their combined
+ * height is set to fit inside it and the grown window carries the spare room
+ * instead. A chart sized to the tall display would have to shrink to fit the
+ * short one, which is the change of size this scene exists not to make.
  *
- * ⚠ THE GROUND AND THE HEADING ARE NOT HERE. They belong to MistakesLayer,
- * which spans this scene and SC18 — see the cut at 17847 that neither of them
- * takes part in.
+ * ⚠ AND THE OFFSET IS THE ONLY THING THAT MOVES. In the small state the tape is
+ * slid so its TAIL sits in the hole — the breakout is the point of the card —
+ * and that slide goes to zero as the window opens out.
+ *
+ * Everything the scene used to draw is gone ("hilangkan semua visual"); the
+ * ground and the heading belong to MistakesLayer, which spans this scene and
+ * SC18 across the cut neither of them takes part in.
  */
 import { useCurrentFrame } from "remotion";
 import {
@@ -47,49 +52,57 @@ const mixRect = (a: Rect, b: Rect, t: number): Rect => ({
 /** Where each window rests: the first alone in the middle, then the pair. */
 const PAIR_W = V.win.w * 2 + V.win.gap;
 const SOLO_X = theme.canvas.width / 2 - V.win.w / 2;
-const PAIR_X = [theme.canvas.width / 2 - PAIR_W / 2, theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap];
+const PAIR_X = [
+  theme.canvas.width / 2 - PAIR_W / 2,
+  theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap,
+];
 
-/**
- * ═══ THE SMALL STATE AND THE FULL ONE, BOTH WRITTEN AS BOXES ═══
- *
- * ⚠ NOT ONE SCALED FROM THE OTHER — Simon: "window di kiri membesar memenuhi
- * layar sesuai batas margin". The window is portrait and the margin is
- * landscape, so scaling the small layout by a factor would stretch a chart that
- * has to stay a chart. Both states are typed as rects and interpolated, which
- * is the same technique every zoom in this episode uses.
- *
- * ⚠ AND FULL IS THE CARD, NOT THE CANVAS. The heading lives at the top of the
- * margin; a window that filled to the true edge would cover the sentence it is
- * illustrating.
- */
 const small = (x: number): Record<string, Rect> => ({
   win: { x, y: V.win.y, w: V.win.w, h: V.win.h },
   display: { x: x + V.ui.display.x, y: V.win.y + V.ui.display.y, w: V.ui.display.w, h: V.ui.display.h },
-  price: { x: x + V.ui.price.x, y: V.win.y + V.ui.price.y, w: V.ui.price.w, h: V.ui.price.h },
-  volume: { x: x + V.ui.volume.x, y: V.win.y + V.ui.volume.y, w: V.ui.volume.w, h: V.ui.volume.h },
 });
-const CARD = theme.stage.card;
+
 /**
  * ⚠ 25 ON THREE SIDES AND A LINE OF TEXT AT THE BOTTOM — Simon's numbers, and
- * the bottom one is DERIVED from the row's own size. Type the row bigger and
- * the display gives up exactly as much room as the words now need, and no more.
+ * the bottom one is DERIVED from the row's own size, so setting the type bigger
+ * takes exactly as much room from the chart as the words now need.
  */
+const CARD = theme.stage.card;
 const P = V.full.pad;
 const ROW_H = V.full.gap + V.full.size + V.full.gap;
 const DISPLAY_H = CARD.h - P - ROW_H;
 const FULL: Record<string, Rect> = {
   win: { x: CARD.x, y: CARD.y, w: CARD.w, h: CARD.h },
   display: { x: CARD.x + P, y: CARD.y + P, w: CARD.w - P * 2, h: DISPLAY_H },
-  price: { x: CARD.x + P + 34, y: CARD.y + P + 30, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.6 },
-  volume: { x: CARD.x + P + 34, y: CARD.y + P + DISPLAY_H * 0.68, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.26 },
 };
-/** The row sits in the space the display gave up for it. */
 const ROW_Y = CARD.y + P + DISPLAY_H + V.full.gap;
 
-const COLOUR_DOMAIN = domainOfColour;
+/** The chart's ONE geometry — see the header. */
+const CH_H = { price: 250, gap: 26, volume: 104 };
+const CH_TOTAL = CH_H.price + CH_H.gap + CH_H.volume;
+const CH_TOP = FULL.display.y + (DISPLAY_H - CH_TOTAL) / 2;
+const CH = {
+  price: { x: FULL.display.x + 34, y: CH_TOP, w: FULL.display.w - 68, h: CH_H.price },
+  volume: { x: FULL.display.x + 34, y: CH_TOP + CH_H.price + CH_H.gap, w: FULL.display.w - 68, h: CH_H.volume },
+};
 
-/** The five inks the row is set in. Read from the palette where the palette has
- *  them, so a palette swap takes the marks with it. */
+/**
+ * ⚠ THE SECOND WINDOW KEEPS ITS OWN LAYOUT, AND THAT IS NOT AN INCONSISTENCY.
+ * The masking rule exists so that a chart which GROWS does not resize; this one
+ * never grows, and laying its fourteen bars out on the big chart's pitch put
+ * three of them in the window at 124px apart. A tape that is only ever seen at
+ * one size should be drawn for that size.
+ */
+const SMALL_CH = (x: number) => {
+  const d = small(x).display;
+  return {
+    price: { x: d.x + 22, y: d.y + 22, w: d.w - 44, h: d.h * 0.6 },
+    volume: { x: d.x + 22, y: d.y + d.h * 0.7, w: d.w - 44, h: d.h * 0.24 },
+  };
+};
+
+/** The five inks the row is set in, read from the palette where it has them so
+ *  a palette swap takes the marks with it. */
 const TONE = (c: ReturnType<typeof usePalette>) => ({
   ink: c.ink,
   indigo: theme.color.indigo,
@@ -108,53 +121,53 @@ const Window = ({ i }: { i: number }) => {
   const pop = popIn(f, at, V.pop);
   if (pop.opacity <= 0.001) return null;
 
-  /** The first window slides aside as the second lands — one curve. */
   const spread = progressInOut(f, local(V.spread.at, FROM), V.spread.over);
   const x = i === 0 ? lerp(SOLO_X, PAIR_X[0], spread) : PAIR_X[1];
 
   /** ⚠ ONLY THE LEFT ONE OPENS OUT, and its words leave as it does — Simon:
-   *  "text dan iconnya fade out". What is being enlarged is the chart. */
+   *  "text dan iconnya fade out". What is being revealed is more chart. */
   const open = i === 0 ? progressInOut(f, local(V.grow.at, FROM), V.grow.over) : 0;
   const S = small(x);
-  const R = {
-    win: mixRect(S.win, FULL.win, open),
-    display: mixRect(S.display, FULL.display, open),
-    price: mixRect(S.price, FULL.price, open),
-    volume: mixRect(S.volume, FULL.volume, open),
-  };
+  const R = { win: mixRect(S.win, FULL.win, open), display: mixRect(S.display, FULL.display, open) };
 
   const series = i === 0 ? SS4_LONG : COLOUR;
-  const domain = i === 0 ? SS4_LONG_DOMAIN : COLOUR_DOMAIN;
+  const domain = i === 0 ? SS4_LONG_DOMAIN : domainOfColour;
   const vol = i === 0 ? SS4_LONG_VOL : COLOUR_VOL;
-  const g = gridOf(series.closes, domain, R.price, 0.08, i === 1 ? V.fan.gutter : 0);
+  /** ⚠ ONE GEOMETRY FOR THE WINDOW THAT EXTENDS, ITS OWN FOR THE ONE THAT DOES
+   *  NOT. See SMALL_CH. */
+  const CHi = i === 0 ? CH : SMALL_CH(x);
+  const g = gridOf(series.closes, domain, CHi.price, 0.08, i === 1 ? V.fan.gutter : 0);
   const built = progress(f, at + V.build.after, V.build.over);
   const head = textReveal(f, at + V.words.after, V.words.over, 12);
   const w = Math.max(3, g.slot * 0.66);
   const peak = Math.max(...vol);
   const chrome = (1 - open) * pop.opacity;
-
-  /** The three futures nobody can pick between — see `fan` in timing.ts. */
-  const last = series.bars.length - 1;
-  const tip = { x: g.x(last), y: g.y(series.bars[last].c) };
+  const bars = series.bars;
 
   /**
-   * ═══ THE FOUR MARKS ═══
-   *
-   * ⚠ EACH ONE IS DERIVED FROM THE TAPE, not placed on it. A zigzag through its
-   * own swings, a zone on its own extremes, a channel on its own hull and an
-   * average of its own closes — so all four stay true if the tape ever changes,
-   * and none of them is a drawing that happens to sit near some candles.
+   * ⚠ THE MASK'S OFFSET, AND NOTHING ELSE. In the small state the tape is slid
+   * so its last bar sits `tail` inside the hole's right edge; opened out, the
+   * slide is zero and the chart is exactly where it was laid.
+   */
+  const last = bars.length - 1;
+  const tail = i === 1 ? V.fan.len + 60 : 44;
+  const dx = i === 1 ? 0 : lerp(S.display.x + S.display.w - tail - g.x(last), 0, open);
+  const dy = i === 1 ? 0 : lerp(S.display.y + (S.display.h - CH_TOTAL) / 2 - CH_TOP, 0, open);
+  const tip = { x: g.x(last), y: g.y(bars[last].c) };
+
+  /**
+   * ═══ THE FOUR MARKS ═══  — each DERIVED from the tape rather than placed on
+   * it: a zigzag through its own swings, zones on its own extremes, a channel
+   * on its own hull, an average of its own closes.
    */
   const R2 = V.read;
   const on = (k: number) => progress(f, local(R2.items[k].at, FROM), R2.over);
-  const stroke = (t: keyof ReturnType<typeof TONE>) => TONE(c)[t];
+  const ink = TONE(c);
   const span = domain[1] - domain[0];
-  const bars = series.bars;
 
   const zig = zigzagOf(bars, span * R2.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
   const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
 
-  /** The two zones: the band price topped out in, and the one it based in. */
   const highs = [...bars.map((b) => b.h)].sort((a, b) => b - a);
   const lows = [...bars.map((b) => b.l)].sort((a, b) => a - b);
   const zones = [
@@ -162,8 +175,9 @@ const Window = ({ i }: { i: number }) => {
     { hi: lows[3], lo: lows[0] },
   ];
 
-  /** The channel: the tightest line under the lows and the tightest over the
-   *  highs, each through two points nothing crosses. */
+  /** ⚠ EACH LINE IS ASKED FOR ITS OWN SIDE. Deriving the side by comparing the
+   *  pair back to the hull it came from passes for both when they share an
+   *  endpoint, and drew the lows line twice. */
   const hull = (key: "l" | "h", under: boolean) => {
     const h: number[] = [];
     for (let k = 0; k < bars.length; k++) {
@@ -185,72 +199,17 @@ const Window = ({ i }: { i: number }) => {
     }
     return best;
   };
-  /** ⚠ TWO LINES, EACH ASKED FOR ITS OWN SIDE. The first version derived the
-   *  key by comparing the pair back to the hull it came from, which is a test
-   *  that passes for both when the two happen to share an endpoint — and it
-   *  drew the lows line twice. */
   const chan = (["l", "h"] as const).map((key) => {
     const [a, b2] = hull(key, key === "l");
     return { a, b: b2, key };
   });
-
-  const avg = sma(series.closes, R2.maPeriod);
-  const maPath = pathOf(avg, g);
-
-  const marks = (
-    <>
-      {on(0) > 0.001 && (
-        <path
-          d={zigPath}
-          fill="none"
-          stroke={stroke("indigo")}
-          strokeWidth={R2.width}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={on(0)}
-        />
-      )}
-      {on(1) > 0.001 &&
-        zones.map((z, k) => (
-          <rect
-            key={k}
-            x={R.price.x}
-            y={g.y(z.hi)}
-            width={R.price.w}
-            height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
-            fill={`${stroke("orange")}22`}
-            stroke={stroke("orange")}
-            strokeWidth={theme.shape.rule}
-            rx={10}
-            opacity={on(1)}
-          />
-        ))}
-      {on(2) > 0.001 &&
-        chan.map((q, k) => (
-          <line
-            key={k}
-            x1={g.x(q.a)}
-            y1={g.y(bars[q.a][q.key])}
-            x2={g.x(q.b)}
-            y2={g.y(bars[q.b][q.key])}
-            stroke={stroke("cyan")}
-            strokeWidth={R2.width}
-            strokeLinecap="round"
-            opacity={on(2)}
-          />
-        ))}
-      {on(3) > 0.001 && (
-        <path d={maPath} fill="none" stroke={stroke("marun")} strokeWidth={R2.width} strokeLinecap="round" opacity={on(3)} />
-      )}
-    </>
-  );
+  const maPath = pathOf(sma(series.closes, R2.maPeriod), g);
 
   return (
     <div
       style={{
-        /* ⚠ THE ONE THAT OPENS OUT GOES ON TOP. Left in mount order the second
-           window sits over the first as it fills the frame, which reads as a
-           card stuck to the glass rather than a card behind it. */
+        /* ⚠ THE ONE THAT OPENS OUT GOES ON TOP, or the second sits over it as it
+           fills the frame and reads as a card stuck to the glass. */
         position: "absolute",
         inset: 0,
         zIndex: open > 0.001 ? 2 : 1,
@@ -272,6 +231,10 @@ const Window = ({ i }: { i: number }) => {
           boxShadow: theme.color.glassShadow,
         }}
       />
+
+      {/* ⚠ THE HOLE. Two divs: one sized to the display, one shifted back by its
+          origin so everything inside stays in CANVAS coordinates — and the tape
+          slides behind it rather than being redrawn to fit. */}
       <div
         style={{
           position: "absolute",
@@ -281,67 +244,113 @@ const Window = ({ i }: { i: number }) => {
           height: R.display.h,
           borderRadius: V.ui.display.radius,
           background: theme.color.glassBg,
+          overflow: "hidden",
         }}
-      />
-
-      <svg
-        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
       >
-        {series.bars.slice(0, Math.ceil(series.bars.length * built)).map((b, k) => {
-          const bx = g.x(k);
-          const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
-          const top = Math.min(g.y(b.o), g.y(b.c));
-          const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
-          const vh = (vol[k] / peak) * R.volume.h;
-          return (
-            <g key={k}>
-              <line x1={bx} y1={g.y(b.h)} x2={bx} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.hairline} />
-              <rect x={bx - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 4)} fill={fill} />
-              <rect
-                x={bx - w / 2}
-                y={R.volume.y + R.volume.h - vh}
-                width={w}
-                height={Math.max(1, vh)}
-                rx={Math.min(w * 0.28, 4)}
-                fill={fill}
-                opacity={0.72}
-              />
-            </g>
-          );
-        })}
+        <div
+          style={{
+            position: "absolute",
+            left: -R.display.x,
+            top: -R.display.y,
+            width: theme.canvas.width,
+            height: theme.canvas.height,
+            transform: `translate(${dx.toFixed(1)}px, ${dy.toFixed(1)}px)`,
+          }}
+        >
+          <svg
+            style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+          >
+            {bars.slice(0, Math.ceil(bars.length * built)).map((b, k) => {
+              const bx = g.x(k);
+              const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
+              const top = Math.min(g.y(b.o), g.y(b.c));
+              const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
+              const vh = (vol[k] / peak) * CHi.volume.h;
+              return (
+                <g key={k}>
+                  <line x1={bx} y1={g.y(b.h)} x2={bx} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.rule} />
+                  <rect x={bx - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} fill={fill} />
+                  <rect
+                    x={bx - w / 2}
+                    y={CHi.volume.y + CHi.volume.h - vh}
+                    width={w}
+                    height={Math.max(1, vh)}
+                    rx={Math.min(w * 0.28, 6)}
+                    fill={fill}
+                    opacity={0.72}
+                  />
+                </g>
+              );
+            })}
 
-        {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
-            down alone is a choice between two things, which is still a
-            prediction; the one straight through the middle is what turns it
-            into "nobody knows". */}
-        {i === 1 &&
-          built > 0.99 &&
-          [-V.fan.spread, 0, V.fan.spread].map((dy) => {
-            const ex = tip.x + V.fan.len;
-            const ey = tip.y + dy;
-            const a = Math.atan2(ey - tip.y, ex - tip.x);
-            const hx = ex - Math.cos(a) * V.fan.head;
-            const hy = ey - Math.sin(a) * V.fan.head;
-            const nx = -Math.sin(a) * V.fan.head * 0.5;
-            const ny = Math.cos(a) * V.fan.head * 0.5;
-            return (
-              <g key={dy} opacity={head.opacity}>
-                <line x1={tip.x} y1={tip.y} x2={hx} y2={hy} stroke={theme.color.indigo} strokeWidth={V.fan.width} strokeLinecap="round" />
-                <polygon
-                  points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`}
-                  fill={theme.color.indigo}
-                />
-              </g>
-            );
-          })}
+            {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
+                down alone is a choice between two things, which is still a
+                prediction; the one through the middle makes it "nobody knows". */}
+            {i === 1 &&
+              built > 0.99 &&
+              [-V.fan.spread, 0, V.fan.spread].map((ddy) => {
+                const ex = tip.x + V.fan.len;
+                const ey = tip.y + ddy;
+                const a = Math.atan2(ey - tip.y, ex - tip.x);
+                const hx = ex - Math.cos(a) * V.fan.head;
+                const hy = ey - Math.sin(a) * V.fan.head;
+                const nx = -Math.sin(a) * V.fan.head * 0.5;
+                const ny = Math.cos(a) * V.fan.head * 0.5;
+                return (
+                  <g key={ddy} opacity={head.opacity}>
+                    <line x1={tip.x} y1={tip.y} x2={hx} y2={hy} stroke={theme.color.indigo} strokeWidth={V.fan.width} strokeLinecap="round" />
+                    <polygon points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`} fill={theme.color.indigo} />
+                  </g>
+                );
+              })}
 
-        {/* ── the four things to read volume against ───────────────────
-            ⚠ EACH DRAWN IN THE COLOUR OF THE WORD THAT NAMED IT, so the
-            colour is the link rather than a decoration. */}
-        {i === 0 && open > 0.99 && marks}
-      </svg>
+            {/* ── the four things to read volume against ──────────────────
+                ⚠ EACH IN THE COLOUR OF THE WORD THAT NAMED IT, so the colour
+                is the link rather than a decoration. */}
+            {i === 0 && open > 0.99 && (
+              <>
+                {on(0) > 0.001 && (
+                  <path d={zigPath} fill="none" stroke={ink.indigo} strokeWidth={R2.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
+                )}
+                {on(1) > 0.001 &&
+                  zones.map((z, k) => (
+                    <rect
+                      key={k}
+                      x={CHi.price.x}
+                      y={g.y(z.hi)}
+                      width={CHi.price.w}
+                      height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
+                      fill={`${ink.orange}22`}
+                      stroke={ink.orange}
+                      strokeWidth={theme.shape.rule}
+                      rx={10}
+                      opacity={on(1)}
+                    />
+                  ))}
+                {on(2) > 0.001 &&
+                  chan.map((q, k) => (
+                    <line
+                      key={k}
+                      x1={g.x(q.a)}
+                      y1={g.y(bars[q.a][q.key])}
+                      x2={g.x(q.b)}
+                      y2={g.y(bars[q.b][q.key])}
+                      stroke={ink.cyan}
+                      strokeWidth={R2.width}
+                      strokeLinecap="round"
+                      opacity={on(2)}
+                    />
+                  ))}
+                {on(3) > 0.001 && (
+                  <path d={maPath} fill="none" stroke={ink.marun} strokeWidth={R2.width} strokeLinecap="round" opacity={on(3)} />
+                )}
+              </>
+            )}
+          </svg>
+        </div>
+      </div>
 
       {/* ── the row of words under the display ──────────────────────────── */}
       {i === 0 && open > 0.5 && (
@@ -366,7 +375,7 @@ const Window = ({ i }: { i: number }) => {
               <span
                 key={q.text}
                 style={{
-                  color: TONE(c)[q.tone],
+                  color: ink[q.tone],
                   whiteSpace: "nowrap",
                   opacity: r.opacity,
                   transform: `translateY(${r.dy.toFixed(1)}px)`,
