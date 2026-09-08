@@ -33,13 +33,38 @@ const FROM = BLOCK.SC18;
 const V = SC18_TICK;
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** ⚠ THE PANEL KEEPS THE CARD'S y AND HEIGHT AND LOSES TWO THIRDS OF ITS WIDTH.
- *  Only the width was asked for, so only the width moves — the scene still sits
- *  on the same band of the frame as every other scene in the episode. */
+/**
+ * ═══ THE COLUMN, MEASURED BEFORE ANYTHING IS PLACED ═══
+ *
+ * ⚠ IT IS ONE GROUP AND ITS HEIGHT IS DERIVED, NOT TYPED — Simon: "kelompokkan
+ * semua icon dan text kecuali judul". Every row below is stacked from `col.y`
+ * with the gaps he gave, so the group's top and bottom fall out of the same
+ * numbers that draw it. Type a height here instead and the day a line is added
+ * the panel is centred on a group that no longer exists.
+ */
+const C = V.col;
+const OK_Y = C.y;
+const OK_TEXT = OK_Y + C.icon + C.gap;
+const BAD_Y = OK_TEXT + V.right.size + C.between;
+const BAD_TEXT = BAD_Y + C.icon + C.gap;
+/** ⚠ MEASURED FROM THE BOTTOM OF THE SECOND LINE, not from the block's top —
+ *  Simon's 100 is a gap under "Volume merah…", and a gap under a block of two
+ *  lines has to know where the second one ends. */
+const NOTE_Y = BAD_TEXT + V.right.size * 1.5 + V.right.size + V.note.gap;
+const NOTE_TEXT = NOTE_Y + C.icon + C.gap;
+const COL_MID = (OK_Y + NOTE_TEXT + V.right.size) / 2;
+
+/**
+ * ⚠ THE PANEL IS CENTRED ON THE COLUMN, NOT ON THE STAGE — Simon: "buat window
+ * + chartnya align-center vertically terhadap kelompok tersebut". It keeps the
+ * card's height and loses two thirds of its width; what moved is which thing it
+ * lines up with. Written as `COL_MID` rather than a y, so the two stay level
+ * however either of them changes.
+ */
 const CARD_W = theme.canvas.width * V.cardWidth;
 const PANEL = {
   x: theme.canvas.width / 2 - CARD_W / 2 - V.shift,
-  y: theme.stage.card.y,
+  y: COL_MID - theme.stage.card.h / 2,
   w: CARD_W,
   h: theme.stage.card.h,
 };
@@ -89,17 +114,6 @@ export const SC18 = () => {
   /** ⚠ THE BAR'S HEIGHT IS THE NINTH'S, FIXED. Same volume, either colour. */
   const vh = (TICK_VOL[LIVE] / PEAK) * VOLBOX.h;
 
-  const C = V.col;
-  /** ⚠ THE TWO BLOCKS ARE STACKED FROM ONE ORIGIN, so moving `col.y` moves both
-   *  and the 60px between them cannot drift. */
-  const okY = C.y;
-  const okText = okY + C.icon + C.gap;
-  const badY = okText + V.right.size + C.between;
-  const badText = badY + C.icon + C.gap;
-  /** ⚠ MEASURED FROM THE BOTTOM OF THE SECOND LINE, not from the block's top —
-   *  Simon's 100 is a gap under "Volume merah…", and a gap under a block of two
-   *  lines has to know where the second one ends. */
-  const noteY = badText + V.wrong.size * 1.5 + V.wrong.size + V.note.gap;
 
   /** ⚠ LINEAR, AND COUNTED IN CHARACTERS. Typing that eases is a machine
    *  warming up; a hand goes at one speed. */
@@ -191,12 +205,12 @@ export const SC18 = () => {
       {/* ── the reading, typed out beside the loop ──────────────────────── */}
       {typed > 0 && (
         <>
-          <Mark x={C.x} y={okY} d={C.icon} fill={c.candleGreen} kind="check" />
+          <Mark x={C.x} y={OK_Y} d={C.icon} fill={c.candleGreen} kind="check" />
           <div
             style={{
               position: "absolute",
               left: C.x,
-              top: okText,
+              top: OK_TEXT,
               fontFamily: theme.text.family,
               fontSize: V.right.size,
               fontWeight: 700,
@@ -213,7 +227,7 @@ export const SC18 = () => {
       {/* ── and the misreading it rules out ─────────────────────────────── */}
       {f >= local(V.wrong.at, FROM) && (
         <>
-          <Mark x={C.x} y={badY} d={C.icon} fill={theme.color.warn} kind="cross" />
+          <Mark x={C.x} y={BAD_Y} d={C.icon} fill={theme.color.warn} kind="cross" />
           {V.wrong.lines.map((line, i) => {
             const r = textReveal(f, local(V.wrong.at, FROM) + i * V.wrong.stagger, V.wrong.over, 12);
             return (
@@ -222,10 +236,13 @@ export const SC18 = () => {
                 style={{
                   position: "absolute",
                   left: C.x,
-                  top: badText + i * V.wrong.size * 1.5,
+                  top: BAD_TEXT + i * V.right.size * 1.5,
                   fontFamily: theme.text.family,
-                  fontSize: V.wrong.size,
-                  fontWeight: 600,
+                  /* ⚠ THE SAME SIZE AND WEIGHT AS THE LINE ABOVE — Simon, and
+                     it is read from `right.size` rather than repeated, so the
+                     three cannot drift apart again. */
+                  fontSize: V.right.size,
+                  fontWeight: 700,
                   lineHeight: 1,
                   /* ⚠ INDIGO, LIKE EVERY OTHER WORD HERE — Simon: "semua warna
                      text di scene ini, indigo, tidak ada yang hitam". */
@@ -247,15 +264,15 @@ export const SC18 = () => {
         const r = textReveal(f, local(V.note.at, FROM), V.note.over, 12);
         return (
           <>
-            <Mark x={C.x} y={noteY} d={C.icon} fill={theme.color.indigo} kind="info" />
+            <Mark x={C.x} y={NOTE_Y} d={C.icon} fill={theme.color.indigo} kind="info" />
             <div
               style={{
                 position: "absolute",
                 left: C.x,
-                top: noteY + C.icon + C.gap,
+                top: NOTE_TEXT,
                 fontFamily: theme.text.family,
-                fontSize: V.note.size,
-                fontWeight: 600,
+                fontSize: V.right.size,
+                fontWeight: 700,
                 lineHeight: 1,
                 color: theme.color.indigo,
                 whiteSpace: "nowrap",

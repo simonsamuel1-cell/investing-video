@@ -1856,6 +1856,13 @@ export const SC18_TICK = {
    *  third block: stacked from 380 the info line finished at 980, eight pixels
    *  inside the band the subtitles own. */
   col: { x: 1160, y: 260, icon: 64, gap: 20, between: 100 },
+  /**
+   * ⚠ ONE SIZE AND ONE WEIGHT FOR ALL THREE — Simon, twice. They are the same
+   * KIND of statement, and three findings in one column at two sizes reads as a
+   * hierarchy that is not there. `right.size` is the only place it is set; the
+   * other two blocks read it rather than repeat it, so they cannot drift apart
+   * again.
+   */
   right: {
     /** ⚠ 17117 — Simon moved it. The typed heading now runs first and this
      *  waits for it, so two things are never being typed at once. */
@@ -1893,14 +1900,12 @@ export const SC18_TICK = {
     at: 17638,
     over: 26,
     gap: 100,
-    size: 32,
     text: "Tiap transaksi ada pembeli & penjual",
   },
   wrong: {
     at: 17338,
     over: 22,
     stagger: 8,
-    size: 32,
     lines: ["Volume hijau = pembelian", "Volume merah = penjualan"],
   },
   /** Of the canvas. */
