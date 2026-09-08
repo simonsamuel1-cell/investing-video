@@ -31,6 +31,18 @@ export type Grid = {
  * `gutter` reserves room on the RIGHT for price labels, so a tick never lands
  * on the line it is measuring.
  */
+/**
+ * The breathing room `gridOf` leaves inside its box on each side, so the first
+ * and last candle are not welded to the plot's edges.
+ *
+ * ⚠ EXPORTED BECAUSE A SCENE SOMETIMES HAS TO SOLVE FOR A BOX. Whenever a move
+ * is specified as "this bar lands on this pixel" — a pan that keeps the last N
+ * candles, a chart that continues an earlier one — the box has to be derived
+ * from `x(i) = box.x + GRID_PAD_X + …`, and a scene that types 18 for it is a
+ * scene that silently breaks the day this number changes.
+ */
+export const GRID_PAD_X = 18;
+
 export const gridOf = (
   values: (number | null)[],
   domain: [number, number],
@@ -41,7 +53,7 @@ export const gridOf = (
   const [lo, hi] = domain;
   const span = Math.max(1e-9, hi - lo);
   const n = Math.max(1, values.length);
-  const padX = 18;
+  const padX = GRID_PAD_X;
   const inner = box.w - padX * 2 - gutter;
   return {
     lo,

@@ -20,11 +20,15 @@
  */
 import { interpolate, useCurrentFrame } from "remotion";
 import {
-  Stage, Candles, cutInStyle, gridOf, domainOf, progress, progressInOut, theme,
+  Stage, Candles, VolumeBars, cutInStyle, gridOf, domainOf, progress,
+  progressInOut, ramp, GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
 import { ResistanceArea } from "./ResistanceArea";
-import { SS2, SS2_DOMAIN, SS_BAND, SS_VIEW, SS_ZIG } from "../data/series";
+import {
+  SS2, SS2_DOMAIN, SS3, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL,
+  SS_KEEP, SS_VIEW, SS_ZIG,
+} from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC16;
@@ -89,19 +93,85 @@ export const SC16v2 = () => {
   const win = SS2.bars.slice(SS_VIEW.from, SS_VIEW.to);
   const domNear = domainOf(win.map((b) => b.c), win);
   const mix = (a: number, b: number) => a + (b - a) * open;
+
+  /**
+   * ═══ AND AT f14933 THE SAME TRICK A THIRD TIME ═══  (Simon's beat at 14893)
+   *
+   * "bergeser ke kiri dan ke bawah hingga keluar dan tersisa 20 candlestick
+   * paling kanan" — a third (box, domain) state, interpolated exactly like the
+   * widening was, and for the same reason: what has to move is the FRAME.
+   *
+   * ⚠ LEFT comes out of the box. The panned box is solved so that bar 212 —
+   * the first of the twenty Simon keeps — lands on `V.pan.x0`, which drags the
+   * 212 bars before it off the left edge as one rigid tape. Nothing is
+   * translated by hand, so no candle can slip out of step with its own volume.
+   *
+   * ⚠ DOWN comes out of the domain, and would be missing without this. The
+   * grown view's ceiling is SS3's high, which is 50 units above anything on
+   * screen right now; opening the domain to it pushes the survivors into the
+   * bottom third, which is where a tape that is about to rise has to start.
+   *
+   * ⚠ AND THE PRICE PANEL GIVES UP 200px OF ITS HEIGHT to the histogram in the
+   * same move, so the panel does not have to shove the candles aside when it
+   * arrives — by the time it fades up, its room is already there.
+   */
+  const pan = progressInOut(f, local(V.pan.at, FROM), V.pan.over);
+  /** The pitch the grown 140-slot tape wants across the plot. */
+  const PITCH = (V.full.w - GRID_PAD_X * 2) / (SS_GROWN.length - 1);
+  /** The first surviving bar, in SS2's own indices. */
+  const HEAD = N - SS_KEEP;
+  const boxPan = {
+    x: V.pan.x0 - GRID_PAD_X - PITCH * HEAD,
+    y: V.pan.price.y,
+    w: PITCH * (N - 1) + GRID_PAD_X * 2,
+    h: V.pan.price.h,
+  };
+  const slide = (a: number, b: number) => a + (b - a) * pan;
   const box = {
-    x: mix(boxNear.x, far.x),
-    y: mix(boxNear.y, far.y),
-    w: mix(boxNear.w, far.w),
-    h: mix(boxNear.h, far.h),
+    x: slide(mix(boxNear.x, far.x), boxPan.x),
+    y: slide(mix(boxNear.y, far.y), boxPan.y),
+    w: slide(mix(boxNear.w, far.w), boxPan.w),
+    h: slide(mix(boxNear.h, far.h), boxPan.h),
   };
   const G = gridOf(
     SS2.closes,
-    [mix(domNear[0], SS2_DOMAIN[0]), mix(domNear[1], SS2_DOMAIN[1])],
+    [
+      slide(mix(domNear[0], SS2_DOMAIN[0]), SS_GROWN_DOMAIN[0]),
+      slide(mix(domNear[1], SS2_DOMAIN[1]), SS_GROWN_DOMAIN[1]),
+    ],
     box,
     0.06,
     0,
   );
+  /**
+   * ⚠ TWO VIEWS ONTO G, NOT TWO GRIDS. SS3 continues SS2's slots, so its bar k
+   * is SS2's slot N+k; the histogram runs under the twenty survivors first, so
+   * its bar k is slot HEAD+k. Both borrow G's y and its slot, which is what
+   * guarantees a volume bar can never drift off the candle it belongs to.
+   */
+  const Gnew = { ...G, x: (k: number) => G.x(N + k) };
+  const Gvol = { ...G, x: (k: number) => G.x(HEAD + k) };
+  const volBox = { x: V.full.x, y: V.pan.volume.y, w: V.full.w, h: V.pan.volume.h };
+
+  /** The level and the trend leave first, and finish leaving before anything
+   *  moves — Simon has rejected a fade that runs under the next beat before. */
+  const clear = progress(f, local(V.clear.at, FROM), V.clear.over);
+  const volIn = progress(f, local(V.vol.at, FROM), V.vol.over);
+  /** ⚠ UN-EASED. A tape prints at one bar a moment, not slowly-fast-slowly. */
+  const built = ramp(f, local(V.build.at, FROM), V.build.over);
+  const grown = (SS_KEEP + SS3.bars.length * built) / SS_GROWN.length;
+
+  /**
+   * ⚠ THE PLOT'S OWN EDGE, CLOSING IN AS THE PAN RUNS. Twenty candles have to
+   * be twenty: at the end of the move SS2's bar 211 still sits at x≈116, inside
+   * the canvas though outside the plot, and without a clip it would stand there
+   * as a twenty-first. Interpolated rather than typed so that before the pan it
+   * is the whole canvas and clips nothing — the close-up and the widening are
+   * already framed by the window, and a second frame around them would cut the
+   * tape early.
+   */
+  const clipX = interpolate(pan, [0, 1], [0, V.full.x]);
+  const clipW = interpolate(pan, [0, 1], [theme.canvas.width, V.full.w]);
   /** ⚠ THE CLOSE-UP'S OWN GRID, kept so `ResistanceArea` can convert its DROP
    *  into a price against the view that number was chosen in. */
   const G0 = gridOf(SS2.closes, domNear, near, 0.06, 0);
@@ -215,29 +285,61 @@ export const SC16v2 = () => {
               }}
             >
               <div style={{ position: "absolute", left: -px0, top: -py0, width: theme.canvas.width, height: theme.canvas.height }}>
+               {/* ⚠ THE PLOT'S EDGE — see `clipX`. Two divs, because the outer
+                   one moves and everything inside it is written in CANVAS
+                   coordinates; the inner one puts that origin back. */}
+               <div style={{ position: "absolute", left: clipX, top: 0, width: clipW, height: theme.canvas.height, overflow: "hidden" }}>
+                <div style={{ position: "absolute", left: -clipX, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
                 {/* ── the area price kept failing at ─────────────────────── */}
                 {/* ⚠ NO ENTRANCE — Simon: "sudah ada sejak awal". The level is
                     on the chart from its first frame and the window opening
                     over it is what reveals it; its position lives in
-                    ResistanceArea.tsx, where DROP is the one number to change. */}
-                <ResistanceArea
-                  grid={G}
-                  box={box}
-                  band={SS_BAND}
-                  closeUp={G0}
-                  label={V.label}
-                />
+                    ResistanceArea.tsx, where DROP is the one number to change.
+                    It LEAVES at f14893, before the view moves, so it never has
+                    to be dragged across the screen on its way out. */}
+                {clear < 0.999 && (
+                  <div style={{ opacity: 1 - clear }}>
+                    <ResistanceArea
+                      grid={G}
+                      box={box}
+                      band={SS_BAND}
+                      closeUp={G0}
+                      label={V.label}
+                    />
+                  </div>
+                )}
 
+                {/* ⚠ ALL 232, ALWAYS — the twenty that stay are simply the ones
+                    the plot's edge does not cut. Drawing "the survivors" as
+                    their own array would mean creating twenty candles at the
+                    moment 212 others are destroyed, and the seam would show. */}
                 <Candles bars={SS2.bars} grid={G} />
+
+                {/* ── and the tape that grows out of them ─────────────────── */}
+                {built > 0.001 && <Candles bars={SS3.bars} grid={Gnew} shown={built} />}
+
+                {/* ⚠ THE HISTOGRAM STARTS UNDER THE SURVIVORS AND FOLLOWS THE
+                    NEW BARS IN. `shown` is the fraction of all 140 slots that
+                    exist, so the twenty are there from the moment the panel
+                    fades up and every newcomer's bar arrives with its own
+                    candle rather than a beat behind it. */}
+                <VolumeBars
+                  bars={SS_GROWN}
+                  volume={SS_GROWN_VOL}
+                  grid={Gvol}
+                  box={volBox}
+                  shown={grown}
+                  opacity={volIn}
+                />
 
                 {/* ── the trend leg ────────────────────────────────────────
                     ⚠ INDIGO — Simon's call. The reference draws it white on a
                     dark chart; on this pale ground the episode's own marking
                     colour is the reading of that, and it puts the trend in the
                     same voice as the level it breaks. */}
-                {drawn > 0.001 && (
+                {drawn > 0.001 && clear < 0.999 && (
                   <svg
-                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: 1 - clear }}
                     width={theme.canvas.width}
                     height={theme.canvas.height}
                   >
@@ -254,6 +356,8 @@ export const SC16v2 = () => {
                     {drawn > 0.995 && <polygon points={headPts} fill={theme.color.indigo} />}
                   </svg>
                 )}
+                </div>
+               </div>
               </div>
             </div>
 

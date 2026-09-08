@@ -17,7 +17,7 @@ import { theme, type Grid } from "../../../core";
  * view's pixels. Bigger pushes it down, smaller lifts it, 0 puts it back on the
  * peak it came from. Simon's number is 100.
  */
-export const DROP = 100;
+export const DROP = 150;
 /** The frame around it. `radius` is capped at half the band's height so a thin
  *  band becomes a capsule rather than drawing a broken corner. */
 const EDGE = { width: theme.shape.rule, radius: 16 };

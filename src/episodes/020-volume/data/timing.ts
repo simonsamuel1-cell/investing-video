@@ -1353,6 +1353,49 @@ export const SC16_V2 = {
   wide: { at: 14665, over: 54 },
   /** Where the tape may draw once the panel is the whole screen. */
   full: { x: 120, y: 200, w: 1680, h: 700 },
+
+  /**
+   * ═══ f14893 · THE VIEW LEAVES, AND TWENTY CANDLES STAY ═══  (Simon's frame)
+   *
+   * "candlestick chartnya bergeser ke kiri dan ke bawah hingga keluar dan
+   * tersisa 20 candlestick paling kanan" — and then a new tape grows out of
+   * those twenty, this time with its volume under it.
+   *
+   * ⚠ IT IS ONE GRID CHANGE, NOT A TRANSLATION OF A PICTURE. Sliding the whole
+   * chart by a pixel offset would be a lie the moment a new candle arrives: the
+   * newcomers would have to be laid out against a box that no longer matches
+   * the one the survivors were drawn in. Both states are (box, domain) over the
+   * same 232 bars, so what moves is the FRAME — the survivors travel left
+   * because 212 bars are being pushed off the left edge, and DOWN because the
+   * domain is opening upward to make room for a rise that has not happened yet.
+   * That second half is the whole reason Simon asked for "ke bawah".
+   */
+  clear: { at: 14893, over: 30 },
+  pan: {
+    at: 14933,
+    over: 84,
+    /**
+     * ⚠ 124, AND IT IS NOT A ROUND NUMBER BY ACCIDENT. Twenty candles have to
+     * be twenty — Simon will count them. The tape is clipped at the plot's left
+     * edge (120), so where the first survivor lands decides whether its
+     * left-hand neighbour is fully gone: at 124 that neighbour's body ends at
+     * 116 and is cut entirely, while the survivor's own body starts exactly on
+     * 120 and is whole. A slot either way shows 21 candles or half of one.
+     */
+    x0: 124,
+    /** The price panel gives up its bottom 200px so the histogram can have it. */
+    price: { y: 200, h: 500 },
+    volume: { y: 740, h: 160 },
+  },
+  /** The histogram arrives under the twenty before anything new is added to
+   *  them — the panel is established, then it starts filling. */
+  vol: { at: 14985, over: 40 },
+  /**
+   * ⚠ UN-EASED, AND THAT IS THE POINT. 120 candles over 350 frames is one
+   * every 2.9; an eased build would deal them slowly, then fast, then slowly,
+   * which reads as a machine speeding up rather than as a tape printing.
+   */
+  build: { at: 15025, over: 350 },
 } as const;
 
 export const SC16_UI = {

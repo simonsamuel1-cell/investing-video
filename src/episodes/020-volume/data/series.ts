@@ -293,6 +293,97 @@ export const SS_ZIG = (() => {
   }
 }
 
+/**
+ * ═══ SS3 — THE TAPE THAT GROWS OUT OF SS2'S LAST TWENTY ═══
+ *
+ * Simon's third screenshot, and the first with a VOLUME PANEL in it. At f14893
+ * the SS2 view slides left and down until only its last twenty candles are
+ * left, and these 120 bars are what then builds to the right of them.
+ *
+ * ⚠ IT IS NOT A CONTINUATION OF SS2, AND I CHECKED. A sliding-window match of
+ * SS3's first twenty directions against every position in SS2 tops out at 16/20
+ * — chance, for twenty coin flips over 213 offsets. There is no join to find,
+ * so one is MADE: the tape is placed so its first bar opens exactly on SS2's
+ * last close, and scaled so its median bar range equals the median range of the
+ * twenty candles it continues. That is the only pair of numbers that can make a
+ * seam invisible — a bar that starts where the last one ended, at the same size.
+ *
+ * ⚠ 120 BARS, EACH MEASURED. SS3 is a flat-colour render with ten distinct
+ * pixel values in it, so nothing here is estimated: bodies are runs exactly 7px
+ * wide at a 9.61px pitch, wicks are the centre column, and the panel is split by
+ * COLOUR rather than by row — saturated (12,142,118 / 240,47,60) is price, pale
+ * (135,204,197 / 246,159,157) is volume. The two overlap vertically in the
+ * artwork and that is fine, because neither is ever read by position.
+ *
+ * ⚠ THE DOTTED LEVEL IS THE SAME RED AS A DOWN CANDLE. It runs along y=535 at
+ * every fourth column, so a bar with no ink there would otherwise gain a stray
+ * 1px body. A dot is dropped when the rows above and below it in the same
+ * column are empty, which cannot touch a candle that genuinely crosses 535.
+ */
+import SS3_RAW from "./ss3.json";
+const SS3_JSON = SS3_RAW as { bars: Bar[]; vol: number[] };
+export const SS3: Series = {
+  closes: SS3_JSON.bars.map((b) => b.c),
+  bars: SS3_JSON.bars,
+  kind: "traced",
+  label: "Uptrend",
+};
+/** SS3's own histogram, in the artwork's pixels. Only the ratios are read. */
+export const SS3_VOL = SS3_JSON.vol;
+
+/** How many of SS2's candles survive the slide — Simon's number. */
+export const SS_KEEP = 20;
+/** Those twenty, as the left edge of the tape that follows. */
+export const SS_TAIL = SS2.bars.slice(SS2.bars.length - SS_KEEP);
+
+/**
+ * ⚠ THE SURVIVORS' VOLUME IS DERIVED, NOT TRACED — and it has to be. SS2's
+ * screenshot is a price panel only; there is no histogram under those twenty
+ * candles to read. Leaving them empty would put a twenty-slot hole at the left
+ * of a panel that is full everywhere else, which reads as broken data rather
+ * than as missing data.
+ *
+ * So each one is given the volume its own range implies, scaled so the twenty
+ * sit at SS3's median. Range and volume genuinely move together on a tape, so
+ * this is the shape the panel would have had; no random number is involved, and
+ * nothing downstream reads it as a quantity.
+ */
+export const SS_TAIL_VOL = (() => {
+  const med = (a: number[]) => [...a].sort((x, y) => x - y)[a.length >> 1];
+  const mv = med(SS3_VOL);
+  const mr = med(SS_TAIL.map((b) => b.h - b.l));
+  return SS_TAIL.map((b) => Math.max(6, (mv * (b.h - b.l)) / mr));
+})();
+
+/** The 140 slots the scene ends on: the survivors, then SS3. */
+export const SS_GROWN = [...SS_TAIL, ...SS3.bars];
+export const SS_GROWN_VOL = [...SS_TAIL_VOL, ...SS3_VOL];
+export const SS_GROWN_DOMAIN = domainOf(SS_GROWN.map((b) => b.c), SS_GROWN);
+
+{
+  if (SS3.bars.length !== 120) throw new Error(`SS3 traced ${SS3.bars.length} bars, not 120`);
+  if (SS3_VOL.length !== SS3.bars.length) throw new Error("SS3: one volume per bar, or the histogram lies about which candle it belongs to");
+  SS3.bars.forEach((b, i) => {
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c)) {
+      throw new Error(`SS3 bar ${i}: the wick does not contain its own body`);
+    }
+  });
+  /* the seam: SS3 opens where SS2 closed, to within a rounding place */
+  const seam = Math.abs(SS3.bars[0].o - SS2.bars[SS2.bars.length - 1].c);
+  if (seam > 0.01) throw new Error(`SS3 opens ${seam.toFixed(3)} away from SS2's last close — the join would show`);
+  /* and it has to be an UPTREND, or the scene it illustrates is not there */
+  if (SS3.bars[SS3.bars.length - 1].c <= SS3.bars[0].o) throw new Error("SS3 does not end above where it started");
+  if (SS_GROWN.length !== SS_KEEP + 120) throw new Error("SS_GROWN is not 140 slots");
+  if (SS_GROWN_VOL.length !== SS_GROWN.length) throw new Error("SS_GROWN_VOL does not match SS_GROWN");
+  /* the survivors must sit LOW in the grown view, or "ke bawah" has nowhere to
+     go and the twenty candles end up mid-screen with the trend on top of them */
+  const [lo, hi] = SS_GROWN_DOMAIN;
+  const top = Math.max(...SS_TAIL.map((b) => b.h));
+  if ((top - lo) / (hi - lo) > 0.55) {
+    throw new Error(`the surviving twenty reach ${(((top - lo) / (hi - lo)) * 100).toFixed(0)}% of the grown view — SS3 has no room to rise`);
+  }
+}
+
 import TWO_RAW from "./two-breakout.json";
 const TWO_BARS = (TWO_RAW as { bars: Bar[]; vol: number[] }).bars;
 const TWO_VOLS = (TWO_RAW as { bars: Bar[]; vol: number[] }).vol;
