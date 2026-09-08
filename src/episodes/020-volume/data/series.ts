@@ -355,9 +355,31 @@ export const SS_TAIL_VOL = (() => {
   return SS_TAIL.map((b) => Math.max(6, (mv * (b.h - b.l)) / mr));
 })();
 
-/** The 140 slots the scene ends on: the survivors, then SS3. */
-export const SS_GROWN = [...SS_TAIL, ...SS3.bars];
-export const SS_GROWN_VOL = [...SS_TAIL_VOL, ...SS3_VOL];
+/**
+ * ═══ HOW MANY OF THE 140 ARE HIDDEN ═══  (Simon: 40)
+ *
+ * ⚠ A HIDE, NOT A CUT — "aku mau secara teknis kamu hide, agar bisa
+ * ditambahkan ketika aku minta". Set this back to 0 and all 140 return; nothing
+ * else in the episode has to be touched, because every number the scene lays
+ * the tape out with is derived from `SS_GROWN.length`.
+ *
+ * ⚠ AND HIDING IS WHY IT WORKS AT ALL. The complaint was that the tape is too
+ * small to read on a phone, and dropping the last 40 slots is the only fix that
+ * does not shrink anything: 100 bars across the same plot are 1.4× wider than
+ * 140, and — because the hidden 40 contain both the tape's high and its two
+ * 200-plus volume spikes — the price domain and the histogram's peak both come
+ * down with them, so what is left fills the panel vertically too.
+ */
+export const SS_HIDE = 40;
+
+const GROWN_ALL = [...SS_TAIL, ...SS3.bars];
+const GROWN_VOL_ALL = [...SS_TAIL_VOL, ...SS3_VOL];
+const SHOWN = GROWN_ALL.length - SS_HIDE;
+/** The slots the scene ends on: the survivors, then as much of SS3 as is shown. */
+export const SS_GROWN = GROWN_ALL.slice(0, SHOWN);
+export const SS_GROWN_VOL = GROWN_VOL_ALL.slice(0, SHOWN);
+/** SS3's own bars, minus the hidden tail — what actually prints in. */
+export const SS_NEW = SS3.bars.slice(0, SHOWN - SS_KEEP);
 export const SS_GROWN_DOMAIN = domainOf(SS_GROWN.map((b) => b.c), SS_GROWN);
 
 {
@@ -373,7 +395,9 @@ export const SS_GROWN_DOMAIN = domainOf(SS_GROWN.map((b) => b.c), SS_GROWN);
   if (seam > 0.01) throw new Error(`SS3 opens ${seam.toFixed(3)} away from SS2's last close — the join would show`);
   /* and it has to be an UPTREND, or the scene it illustrates is not there */
   if (SS3.bars[SS3.bars.length - 1].c <= SS3.bars[0].o) throw new Error("SS3 does not end above where it started");
-  if (SS_GROWN.length !== SS_KEEP + 120) throw new Error("SS_GROWN is not 140 slots");
+  if (SS_HIDE < 0 || SS_HIDE >= SS3.bars.length) throw new Error(`SS_HIDE ${SS_HIDE} would hide the whole of SS3`);
+  if (SS_GROWN.length !== SS_KEEP + 120 - SS_HIDE) throw new Error("SS_GROWN is not the slots that are left");
+  if (SS_NEW.length !== SS_GROWN.length - SS_KEEP) throw new Error("SS_NEW and SS_GROWN disagree about how many bars print in");
   if (SS_GROWN_VOL.length !== SS_GROWN.length) throw new Error("SS_GROWN_VOL does not match SS_GROWN");
   /* the survivors must sit LOW in the grown view, or "ke bawah" has nowhere to
      go and the twenty candles end up mid-screen with the trend on top of them */

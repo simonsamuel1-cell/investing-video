@@ -1392,14 +1392,13 @@ export const SC16_V2 = {
     at: 14925,
     over: 54,
     /**
-     * ⚠ 124, AND IT IS NOT A ROUND NUMBER BY ACCIDENT. Twenty candles have to
-     * be twenty — Simon will count them. The tape is clipped at the plot's left
-     * edge (120), so where the first survivor lands decides whether its
-     * left-hand neighbour is fully gone: at 124 that neighbour's body ends at
-     * 116 and is cut entirely, while the survivor's own body starts exactly on
-     * 120 and is whole. A slot either way shows 21 candles or half of one.
+     * ⚠ WHERE THE FIRST SURVIVOR LANDS IS DERIVED, NOT TYPED — see `x0` in
+     * SC16v2.tsx. Twenty candles have to be twenty, and the tape is clipped at
+     * the plot's left edge, so that edge has to fall exactly between the last
+     * hidden candle and the first kept one. Typed, it was 124 and correct only
+     * while the tape was 140 bars long; `SS_HIDE` changes the pitch, and with
+     * it the only number that can be right.
      */
-    x0: 124,
     /** The price panel gives up its bottom 200px so the histogram can have it. */
     price: { y: 200, h: 500 },
     volume: { y: 740, h: 160 },
@@ -1440,13 +1439,30 @@ export const SC16_V2 = {
    * tape, the second by the flat stretch and its near-zero bar. If a box is a
    * few bars out, these four numbers are the whole fix.
    */
+  /**
+   * ⚠ BOTH LEAVE TOGETHER ON 15476 — Simon's change, and it is not a tidy-up.
+   * The first box used to go at 15190, before the second arrived, so the two
+   * readings were never on screen at once and "kuat" versus "ringan" was a
+   * claim the viewer had to hold in their head. Overlapping them from 15240
+   * makes it a comparison you can see, which is why each now carries its own
+   * word.
+   */
   marks: [
-    { from: 8, to: 55, in: { at: 15061, over: 26 }, out: { at: 15190, over: 22 } },
-    { from: 78, to: 98, in: { at: 15240, over: 26 }, out: { at: 15454, over: 22 } },
+    {
+      from: 8, to: 55, label: "Volume kuat", tone: "cyan" as const,
+      in: { at: 15061, over: 26 }, out: { at: 15454, over: 22 },
+    },
+    {
+      from: 78, to: 98, label: "Volume ringan", tone: "indigo" as const,
+      in: { at: 15240, over: 26 }, out: { at: 15454, over: 22 },
+    },
   ],
   /** How far outside the bars the box sits. A mark that touches what it marks
    *  reads as part of it. */
   markPad: { x: 8, top: 14, bottom: 10 },
+  /** The word over each box: flush with its left edge, clear of its top, and
+   *  in the box's own colour so the pair cannot be read the wrong way round. */
+  markLabel: { size: 36, gap: 14 },
 } as const;
 
 export const SC16_UI = {

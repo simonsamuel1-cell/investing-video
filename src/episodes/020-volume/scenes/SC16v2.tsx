@@ -21,14 +21,26 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import {
   Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
-  progress, progressInOut, ramp, textReveal, candleWidth, GRID_PAD_X, theme,
+  progress, progressInOut, ramp, textReveal, candleWidth, usePalette,
+  GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
 import { ResistanceArea, resistanceTop } from "./ResistanceArea";
 import {
-  SS2, SS2_DOMAIN, SS3, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL,
-  SS_KEEP, SS_VIEW, SS_ZIG,
+  SS2, SS2_DOMAIN, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL, SS_KEEP,
+  SS_NEW, SS_VIEW, SS_ZIG,
 } from "../data/series";
+
+/* ⚠ THE MARKS ARE SLOTS IN THE GROWN TAPE, AND `SS_HIDE` CAN SHORTEN IT. A box
+   whose range has been hidden would silently draw off the end of the
+   histogram, so it fails here instead. */
+SC16_V2.marks.forEach((m) => {
+  if (m.to >= SS_GROWN.length) {
+    throw new Error(
+      `SC16 mark "${m.label}" ends at slot ${m.to}, but only ${SS_GROWN.length} are shown — raise SS_HIDE's floor or move the mark`,
+    );
+  }
+});
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC16;
@@ -37,6 +49,7 @@ const V = SC16_V2;
 
 export const SC16v2 = () => {
   const f = useCurrentFrame();
+  const c = usePalette();
   const U = SC16_UI;
   /** Linear and unclamped — a drift that eases reads as one about to finish. */
   const d = f / U.drift.over;
@@ -120,8 +133,18 @@ export const SC16v2 = () => {
   const PITCH = (V.full.w - GRID_PAD_X * 2) / (SS_GROWN.length - 1);
   /** The first surviving bar, in SS2's own indices. */
   const HEAD = N - SS_KEEP;
+  /**
+   * ⚠ WHERE THE FIRST SURVIVOR LANDS, SOLVED RATHER THAN TYPED. The tape is
+   * clipped at the plot's left edge, and twenty has to stay twenty however wide
+   * the candles get: put the first kept candle's body edge exactly on that
+   * clip, and its hidden neighbour — a whole slot further left, and narrower
+   * than a slot — cannot reach it. The old typed 124 is what this returns at
+   * 140 bars; at 100 it returns 126 on its own.
+   */
+  const HALF = (0.68 * PITCH * (N - 1)) / N / 2;
+  const x0 = V.full.x + HALF;
   const boxPan = {
-    x: V.pan.x0 - GRID_PAD_X - PITCH * HEAD,
+    x: x0 - GRID_PAD_X - PITCH * HEAD,
     y: V.pan.price.y,
     w: PITCH * (N - 1) + GRID_PAD_X * 2,
     h: V.pan.price.h,
@@ -159,7 +182,7 @@ export const SC16v2 = () => {
   const volIn = progress(f, local(V.vol.at, FROM), V.vol.over);
   /** ⚠ UN-EASED. A tape prints at one bar a moment, not slowly-fast-slowly. */
   const built = ramp(f, local(V.build.at, FROM), V.build.over);
-  const grown = (SS_KEEP + SS3.bars.length * built) / SS_GROWN.length;
+  const grown = (SS_KEEP + SS_NEW.length * built) / SS_GROWN.length;
 
   /**
    * ⚠ THE PLOT'S OWN EDGE, CLOSING IN AS THE PAN RUNS. Twenty candles have to
@@ -219,6 +242,7 @@ export const SC16v2 = () => {
    * claim a height none of these bars reach.
    */
   const P = V.markPad;
+  const L = V.markLabel;
   const marks = V.marks.map((m) => {
     const grow =
       progressInOut(f, local(m.in.at, FROM), m.in.over) -
@@ -227,15 +251,13 @@ export const SC16v2 = () => {
     const half = candleWidth(Gvol) / 2;
     const peak = Math.max(...SS_GROWN_VOL);
     const tall = Math.max(...SS_GROWN_VOL.slice(m.from, m.to + 1));
-    return {
-      grow,
-      rect: {
-        x1: Gvol.x(m.from) - half - P.x,
-        x2: Gvol.x(m.to) + half + P.x,
-        y1: volBox.y + volBox.h - (tall / peak) * volBox.h - P.top,
-        y2: volBox.y + volBox.h + P.bottom,
-      },
+    const rect = {
+      x1: Gvol.x(m.from) - half - P.x,
+      x2: Gvol.x(m.to) + half + P.x,
+      y1: volBox.y + volBox.h - (tall / peak) * volBox.h - P.top,
+      y2: volBox.y + volBox.h + P.bottom,
     };
+    return { grow, rect, label: m.label, hue: m.tone === "cyan" ? c.cyan : c.indigo };
   });
 
   return (
@@ -349,7 +371,7 @@ export const SC16v2 = () => {
                 <Candles bars={SS2.bars} grid={G} />
 
                 {/* ── and the tape that grows out of them ─────────────────── */}
-                {built > 0.001 && <Candles bars={SS3.bars} grid={Gnew} shown={built} />}
+                {built > 0.001 && <Candles bars={SS_NEW} grid={Gnew} shown={built} />}
 
                 {/* ⚠ THE HISTOGRAM STARTS UNDER THE SURVIVORS AND FOLLOWS THE
                     NEW BARS IN. `shown` is the fraction of all 140 slots that
@@ -368,7 +390,37 @@ export const SC16v2 = () => {
                 {/* ── the two marks on the histogram ─────────────────────── */}
                 {marks.map((mk, i) =>
                   mk === null ? null : (
-                    <HighlightBox key={i} rect={mk.rect} grow={mk.grow} />
+                    <HighlightBox
+                      key={i}
+                      rect={mk.rect}
+                      grow={mk.grow}
+                      stroke={mk.hue}
+                      fill={`${mk.hue}1F`}
+                    />
+                  ),
+                )}
+                {/* ⚠ THE WORD TAKES ITS BOX'S COLOUR, and sits flush with the
+                    box's left edge — the edge the wipe opens from, so the label
+                    and the mark start in the same place. */}
+                {marks.map((mk, i) =>
+                  mk === null ? null : (
+                    <div
+                      key={`l${i}`}
+                      style={{
+                        position: "absolute",
+                        left: mk.rect.x1,
+                        top: mk.rect.y1 - L.gap - L.size,
+                        fontFamily: theme.text.family,
+                        fontSize: L.size,
+                        fontWeight: 700,
+                        lineHeight: 1,
+                        color: mk.hue,
+                        whiteSpace: "nowrap",
+                        opacity: mk.grow,
+                      }}
+                    >
+                      {mk.label}
+                    </div>
                   ),
                 )}
 
