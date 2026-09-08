@@ -29,8 +29,8 @@ export const BLOCK = {
    * through what used to be SC17's opening, and the two product windows take
    * only the last 575 frames of it.
    */
-  SC16: 14518, SC17: 16078, SC18: 16653, SC19: 17820, SC20: 18764,
-  END: 19652,
+  SC16: 14518, SC17: 16078, SC18: 16743, SC19: 17910, SC20: 18854,
+  END: 19742,
 } as const;
 
 /**
@@ -55,8 +55,7 @@ export const CARDS = {
   roadmap: { at: 1410, over: 100 },
   ch02: { at: 4906, over: 96 },
   ch03: { at: 8178, over: 96 },
-  ch05: { at: 16608, over: 90 },
-  recap: { at: 18720, over: 88 },
+  recap: { at: 18810, over: 88 },
 } as const;
 
 /**
@@ -364,12 +363,12 @@ export const BEAT = {
   pullback: 15162, lighterVolume: 15306,
   context: 15606, spike: 15726, thanUsual: 16050, nearBreakout: 16104,
   afterRally: 16304, sharpDrop: 16476,
-  misread: 16830, barColour: 16998, followsCandle: 17178,
-  onlyBuying: 17322, buyerAndSeller: 17754,
-  limits: 17836, alreadyHappened: 18060, notCertainty: 18124,
-  trend: 18414, levels: 18456, pattern: 18536, market: 18606,
-  direction: 18840, behindIt: 19028, notAGuess: 19128,
-  convincing3: 19410, watchOut: 19544,
+  misread: 16920, barColour: 17088, followsCandle: 17268,
+  onlyBuying: 17412, buyerAndSeller: 17844,
+  limits: 17926, alreadyHappened: 18150, notCertainty: 18214,
+  trend: 18504, levels: 18546, pattern: 18626, market: 18696,
+  direction: 18930, behindIt: 19118, notAGuess: 19218,
+  convincing3: 19500, watchOut: 19634,
 } as const;
 
 /** ⚠ THE COUNTDOWN IS UNEVEN AND THAT IS CORRECT — 102 frames then 40. Each
@@ -1763,6 +1762,56 @@ export const TRANS = {
    * rather than a shape that expands and is thrown away.
    */
   gone: 5149,
+} as const;
+
+/**
+ * ═══ THE THIRD SCENE TRANSISI ═══  (Simon's frames, and it replaces CHAPTER 05)
+ *
+ * The same gesture as TRANS and TRANS2 with one beat added: the two product
+ * windows shrink into the LAST card on the board, the whole board then leaves
+ * upward and a card that was never on it rises from below — "Bonus Tips -
+ * Common Mistakes" — and that card is pushed into the frame and faded off it.
+ *
+ * ⚠ IT REPLACES A CARD THAT WAS DOING NOTHING THIS ONE DOES. The CHAPTER 05
+ * card dropped a contents list over a chart still being read; this hands the
+ * chapter over. Simon: "yang aku screenshot, hapus".
+ *
+ * ═══ 90 FRAMES OF NEW TIME, 120 FRAMES OF TRANSITION ═══
+ *
+ * ⚠ AND THAT IS THE WHOLE REASON THE VO ONLY NEEDED 90 — "tambahkan 120 frames
+ * di antara 16646-16647, tapi voice overnya hanya ditambahkan 90 frame". The
+ * four beats that hold the screen alone are 30 + 15 + 30 + 15; the closing fade
+ * runs OVER SC18, which by then has started. Padding the recording by 120 would
+ * have put a second and a half of silence under a scene that is already
+ * talking, and padding the visuals by 90 would have cut the fade in half.
+ *
+ * ⚠ THE PAD GOES IN THE GAP THE RECORDING ALREADY HAS, at 277.5s — between
+ * "bisa menunjukkan panic selling." ending on f16644 and "Sebelum selesai,"
+ * starting on f16662. Every cue and every beat from there on moves 90 frames
+ * with it, which is why this edit touches BEAT and subtitles.ts as well.
+ *
+ * ⚠ 126, NOT 120, AND THE SIX ARE INVISIBLE. Simon cut SC17 six frames before
+ * the old block boundary ("perpanjang scene 16599 hingga 16646"), so the fade —
+ * which has to begin on SC18's first frame or it fades onto nothing — starts
+ * six frames later than 120 would put it. They sit inside a hold.
+ */
+export const BONUS = {
+  at: 16647,
+  /** The shrink into the rightmost card, and the board arriving behind it. */
+  over: 30,
+  landing: 3,
+  hold: 15,
+  /** The board leaves upward; the new card rises into the middle. */
+  rise: { at: 16692, over: 30 },
+  /** ⚠ 21, NOT 15 — this is where the six spare frames live. */
+  hold2: 21,
+  /** ⚠ IT BEGINS ON SC18'S FIRST FRAME. A fade "ke scene selanjutnya" that
+   *  starts before that scene exists is a fade to an empty ground. */
+  fade: { at: 16743, over: 30, amount: 0.5 },
+  /** ⚠ 28 IN A 24px PAD, SO IT STAYS ON ONE LINE. At 34 and at 30 it broke after
+   *  "Common", which puts the two words that actually name the thing on
+   *  different rows — the worst of the available breaks. */
+  card: { title: "Bonus Tips - Common Mistakes", size: 28, pad: 24 },
 } as const;
 
 /**

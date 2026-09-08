@@ -488,7 +488,19 @@ export const SC16v2 = () => {
                     exist, so the twenty are there from the moment the panel
                     fades up and every newcomer's bar arrives with its own
                     candle rather than a beat behind it. */}
-                <div style={{ filter: grey > 0.001 ? `saturate(${(1 - grey * 0.92).toFixed(3)})` : undefined }}>
+                {/* ⚠ SATURATE AND BRIGHTEN — Simon: "bisa dibuat lebih abu abu
+                    terang?". Desaturating alone lands a candle red and a candle
+                    green on almost the same mid grey, which is heavy enough to
+                    still compete with the two bars that are supposed to be the
+                    only thing lit. Lifting the brightness with it puts the
+                    whole histogram a step back instead of merely draining it. */}
+                <div
+                  style={{
+                    filter: grey > 0.001
+                      ? `saturate(${(1 - grey * 0.95).toFixed(3)}) brightness(${(1 + grey * 0.3).toFixed(3)})`
+                      : undefined,
+                  }}
+                >
                   <VolumeBars
                     bars={SS_GROWN}
                     volume={SS_GROWN_VOL}

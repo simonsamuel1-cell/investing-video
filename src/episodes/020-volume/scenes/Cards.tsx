@@ -55,9 +55,10 @@ export const Cards = () => (
         cut exists to introduce: a full-screen card on top of a transition is a
         transition nobody sees. */}
 
-    <ChapterCard n="05" title="Use Volume Correctly" sub="Salah kaprah · Batasannya" at={CARDS.ch05.at} over={CARDS.ch05.over}>
-      <StepRail steps={STEPS} at={CARDS.ch05.at} active={4} done={[0, 1, 2, 3]} />
-    </ChapterCard>
+    {/* ⚠ AND CHAPTER 05'S IS GONE TOO — Simon: "yang aku screenshot, hapus".
+        It is replaced by BonusOutro, which does the same job as a hand-over
+        rather than as a contents list: the scene shrinks into the card it
+        belongs to and the bonus rises out of the board that leaves. */}
 
     <ChapterCard n="Recap" title="Volume Analysis" at={CARDS.recap.at} over={CARDS.recap.over}>
       <StepRail steps={STEPS} at={CARDS.recap.at} done={[0, 1, 2, 3, 4]} />

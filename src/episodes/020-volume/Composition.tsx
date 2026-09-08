@@ -35,7 +35,7 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
+import { BLOCK, BONUS, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -46,6 +46,7 @@ import { BrptGroup } from "./scenes/BrptGroup";
 import { SC16 } from "./scenes/SC16";
 import { SC16v2 } from "./scenes/SC16v2";
 import { SC17 } from "./scenes/SC17";
+import { BonusOutro } from "./scenes/BonusOutro";
 import { SC18 } from "./scenes/SC18";
 import { SC19 } from "./scenes/SC19";
 import { SC20 } from "./scenes/SC20";
@@ -53,7 +54,7 @@ import { Cards } from "./scenes/Cards";
 
 /** The voice ends on the last cue. `VO_END` is computed from the SRT, so a
  *  re-cut recording fails against the wrong number rather than truncating. */
-export const TOTAL_FRAMES = 19652;
+export const TOTAL_FRAMES = 19742;
 
 type Mounted = {
   from: number;
@@ -116,7 +117,10 @@ const SCENES: Mounted[] = [
   },
   {
     from: BLOCK.SC17,
-    duration: BLOCK.SC18 - BLOCK.SC17,
+    /** ⚠ IT STOPS ON 16646 — Simon's frame — not on SC18's boundary. What
+     *  follows belongs to the bonus transition, which freezes this scene's own
+     *  last frame in order to shrink it. */
+    duration: BONUS.at - BLOCK.SC17,
     Component: SC17,
     name: "SC17 Two spikes, two contexts",
   },
@@ -186,6 +190,14 @@ const SCENES: Mounted[] = [
   SCENES.forEach(({ from, duration }) => {
     for (let i = from; i < from + duration; i++) owned[i] = true;
   });
+  /**
+   * ⚠ THE BONUS TRANSITION OWNS ITS OWN STRETCH, though it is not in the table.
+   * It is mounted as an OVERLAY because its closing fade has to be ABOVE SC18 —
+   * but for the 96 frames before that it is the only thing on screen, so the
+   * tiling has to count it or the hole check fires on frames that are not
+   * empty at all.
+   */
+  for (let i = BONUS.at; i < BLOCK.SC18; i++) owned[i] = true;
   /* ⚠ CHECKED AGAINST THE FULL TABLE, not against what is currently visible:
      `HIDDEN` is a review switch, and the tiling has to stay sound underneath it
      so nothing is quietly lost when a mount comes back. */
@@ -218,6 +230,17 @@ const Body = () => (
 
     {/* above the tiling, straddling the cuts — see scenes/Cards.tsx */}
     <Cards />
+
+    {/* ⚠ ABOVE EVERYTHING, INCLUDING THE CARDS. Its last 30 frames fade onto
+        SC18, which is drawn by the tiling underneath; mounted any lower it
+        would be transitioning beneath the scene it transitions to. */}
+    <Sequence
+      from={BONUS.at}
+      durationInFrames={BONUS.fade.at + BONUS.fade.over - BONUS.at}
+      name="Scene Transisi 3"
+    >
+      <BonusOutro />
+    </Sequence>
 
     <Captions cues={CUES} mute={RUNNING_LINE.mute} />
     <Watermark totalFrames={TOTAL_FRAMES} />
