@@ -31,6 +31,7 @@ import {
 import { BLOCK, MAP_LABELS, TRANS2, local } from "../data/timing";
 import { CombosGroupV3 } from "./CombosGroupV3";
 import { roadmapContents } from "./MainChartGroup";
+import { Card1Thumb } from "./UnderstandGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = TRANS2.at;
@@ -106,6 +107,9 @@ export const CombosOutro = () => {
                 : local(TRANS2.cards[i > TRANS2.landing ? i - 1 : i], FROM),
             ),
             TRANS2.landing,
+            /* ⚠ WHAT LANDED IN "mengenal volume" AT f5093, not the icon the
+               opening board draws — the card has a memory. */
+            <Card1Thumb />,
           )}
         />
 

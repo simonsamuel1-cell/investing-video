@@ -24,23 +24,43 @@
  */
 import { AbsoluteFill, Freeze, useCurrentFrame } from "remotion";
 import {
-  GridGround, RoadmapCards, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip,
-  useMotion, usePalette, useShadow, progress, progressInOut, theme,
+  GridGround, RoadmapCards, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip, VolumeBars,
+  gridOf, useMotion, usePalette, useShadow, progress, progressInOut, theme,
 } from "../../../core";
-import { BLOCK, BONUS, MAP_LABELS, SPIKES, local } from "../data/timing";
+import { BLOCK, BONUS, MAP_LABELS, SPIKES } from "../data/timing";
 import { SC17 } from "./SC17";
+import { TWO, TWO_DOMAIN, TWO_VOL_STRONG } from "../data/series";
 import { roadmapContents } from "./MainChartGroup";
+import { Card1Thumb } from "./UnderstandGroup";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BONUS.at;
 /** ⚠ SC17'S OWN LAST FRAME, in SC17's numbering. Freezing on a global number
  *  would hold it 16646 frames into a scene 569 frames long and draw nothing. */
 const FROZEN = BONUS.at - BLOCK.SC17 - 1;
-/** Where the bonus card comes to rest: the middle of the frame. */
+/** ⚠ FAR ENOUGH IN THE PAST THAT EVERY REVEAL IS OVER. A card told to arrive
+ *  600 frames ago is a card that is simply there. */
+const BUILT = -600;
+/**
+ * Where the bonus card comes to rest: the middle of the frame — but lifted by
+ * half the label's height, so the CARD AND ITS NAME are centred together rather
+ * than the card being centred and the name hanging below the middle.
+ */
+const LABEL_H = ROADMAP_CARD.label + theme.text.tag.size;
 const REST = {
   x: theme.canvas.width / 2 - ROADMAP_CARD.w / 2,
-  y: theme.canvas.height / 2 - ROADMAP_CARD.h / 2,
+  y: theme.canvas.height / 2 - (ROADMAP_CARD.h + LABEL_H) / 2,
 };
+/** ⚠ THE SAME INSETS THE ROADMAP'S OWN HISTOGRAM CARD USES, so this reads as
+ *  the fifth card on that board rather than as a card of its own design. */
+const PIC = {
+  x: REST.x + 44,
+  y: REST.y + 66,
+  w: ROADMAP_CARD.w - 88,
+  h: ROADMAP_CARD.h - 122,
+};
+/** Only the x mapping is read by VolumeBars, so the domain here is nominal. */
+const PIC_GRID = gridOf(TWO.closes, TWO_DOMAIN, PIC, 0.02, 0);
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const BonusOutro = () => {
@@ -97,30 +117,28 @@ export const BonusOutro = () => {
           group and it does not fade with the cards: the bonus card arrives INTO
           this room rather than bringing a second one with it, which is what
           makes the two halves one move instead of two cuts. */}
-      <GridGround f={f} opacity={map} />
+      <GridGround f={f} opacity={1} />
 
       {/* ── the cards, and only the cards, leaving upward ────────────────── */}
       <div style={{ position: "absolute", inset: 0, transform: `translateY(${(-lift).toFixed(1)}px)` }}>
         <RoadmapCards
           labels={MAP_LABELS}
-          reveal={map}
+          /* ⚠ ALREADY COMPLETE ON THE FIRST FRAME — see BONUS in timing.ts. The
+             cards and their pictures are handed times far enough in the past
+             that every reveal has finished before this scene starts, so the
+             board is standing there rather than being built for a third time. */
+          reveal={1}
           landing={BONUS.landing}
-          /* ⚠ SCENE-LOCAL. RoadmapCards reads the frame of the group it is
-             mounted in, and this one starts at f16647. */
-          /* ⚠ STAGGERED, LIKE TRANS2'S. Three cards opening together is one
-             event; opening 12 frames apart they are three, and the board is
-             built rather than switched on. */
-          cardsAt={BONUS.cards.map((q) => local(q, FROM))}
-          cardDur={BONUS.cardDur}
+          cardsAt={[BUILT, BUILT, BUILT]}
+          cardDur={1}
           contents={roadmapContents(
             f,
             m,
-            [0, 1, 2, 3].map((i) =>
-              i === BONUS.landing
-                ? 0
-                : local(BONUS.cards[i > BONUS.landing ? i - 1 : i], FROM),
-            ),
+            [0, 1, 2, 3].map((i) => (i === BONUS.landing ? 0 : BUILT)),
             BONUS.landing,
+            /* ⚠ WHAT LANDED IN "mengenal volume" AT f5093, not the icon the
+               opening board draws — the card has a memory. */
+            <Card1Thumb />,
           )}
         />
 
@@ -148,32 +166,79 @@ export const BonusOutro = () => {
         <div
           style={{
             position: "absolute",
-            left: REST.x,
-            top: REST.y,
-            width: ROADMAP_CARD.w,
-            height: ROADMAP_CARD.h,
+            inset: 0,
             transform:
               `translateY(${((1 - rise) * (theme.canvas.height + 220)).toFixed(1)}px) ` +
               `scale(${(1 + BONUS.grow.amount * push).toFixed(4)})`,
-            transformOrigin: `${ROADMAP_CARD.w / 2}px ${ROADMAP_CARD.h / 2}px`,
-            borderRadius: theme.shape.panelRadius,
-            background: c.cardBg,
-            border: `${theme.shape.hairline}px solid ${c.border}`,
-            boxShadow: shadow.lift,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: BONUS.card.pad,
-            boxSizing: "border-box",
-            fontFamily: theme.text.family,
-            fontSize: BONUS.card.size,
-            fontWeight: 800,
-            lineHeight: 1.25,
-            textAlign: "center",
-            color: c.ink,
+            transformOrigin: `${(REST.x + ROADMAP_CARD.w / 2).toFixed(1)}px ${(REST.y + (ROADMAP_CARD.h + LABEL_H) / 2).toFixed(1)}px`,
           }}
         >
-          {BONUS.card.title}
+          <div
+            style={{
+              position: "absolute",
+              left: REST.x,
+              top: REST.y,
+              width: ROADMAP_CARD.w,
+              height: ROADMAP_CARD.h,
+              borderRadius: theme.shape.panelRadius,
+              background: c.cardBg,
+              border: `${theme.shape.hairline}px solid ${c.border}`,
+              boxShadow: shadow.lift,
+            }}
+          />
+          {/* ⚠ THE HISTOGRAM IS THE ONE THE ROADMAP ALREADY DRAWS on "mengenal
+              volume" — same tape, same insets. The card is not making a new
+              point about volume; the cross over it is the point. */}
+          <VolumeBars
+            bars={TWO.bars}
+            volume={TWO_VOL_STRONG}
+            grid={PIC_GRID}
+            box={PIC}
+          />
+          {/* ⚠ `warn`, THE ONE RED ALLOWED OUTSIDE A CANDLE, and only for naming
+              a mistake — which is exactly what this names. */}
+          <svg
+            style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+          >
+            {(() => {
+              const cx = REST.x + ROADMAP_CARD.w / 2;
+              const cy = REST.y + ROADMAP_CARD.h / 2;
+              const r = BONUS.card.mark.d / 2;
+              const a = BONUS.card.mark.arm;
+              return (
+                <>
+                  <circle cx={cx} cy={cy} r={r} fill={theme.color.warn} />
+                  <path
+                    d={`M${cx - a} ${cy - a} L${cx + a} ${cy + a} M${cx + a} ${cy - a} L${cx - a} ${cy + a}`}
+                    stroke="#FFFFFF"
+                    strokeWidth={BONUS.card.mark.stroke}
+                    strokeLinecap="round"
+                  />
+                </>
+              );
+            })()}
+          </svg>
+          {/* ⚠ UNDER THE CARD, in the roadmap's own label slot and type — see
+              BONUS.card in timing.ts. */}
+          <div
+            style={{
+              position: "absolute",
+              left: REST.x,
+              top: REST.y + ROADMAP_CARD.h + ROADMAP_CARD.label,
+              width: ROADMAP_CARD.w,
+              textAlign: "center",
+              fontFamily: theme.text.family,
+              fontSize: theme.text.tag.size,
+              fontWeight: 700,
+              color: c.indigo,
+              letterSpacing: 0.5,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {BONUS.card.title}
+          </div>
         </div>
       )}
     </AbsoluteFill>

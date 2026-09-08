@@ -54,7 +54,7 @@ import { Cards } from "./scenes/Cards";
 
 /** The voice ends on the last cue. `VO_END` is computed from the SRT, so a
  *  re-cut recording fails against the wrong number rather than truncating. */
-export const TOTAL_FRAMES = 19742;
+export const TOTAL_FRAMES = 19680;
 
 type Mounted = {
   from: number;

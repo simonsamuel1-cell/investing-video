@@ -422,6 +422,64 @@ const Headline = ({ g }: { g: number }) => {
   );
 };
 
+/**
+ * ═══ WHAT ACTUALLY LANDED IN "mengenal volume" ═══  (Simon: the leftmost card
+ * at 8245 and 16693 should look like it does at 5093)
+ *
+ * ⚠ IT IS THE SCENE, FROZEN — not a thumbnail of it. `roadmapContents` draws
+ * card 1 as a bare histogram, which is a fair icon for "mengenal volume" and is
+ * NOT what is in that card the first time the board is used: at f5093 the
+ * chapter's own last picture is sitting in it, two mini windows and a dashed
+ * line, because it shrank in there. Every later appearance of the board has to
+ * show the same thing or the card is not the same object.
+ *
+ * ⚠ FROZEN ON f5093 ITSELF, AND CLIPPED TO THE CARD — which is simpler than it
+ * looks and also the only version that is right. The obvious move is to freeze
+ * the chapter's last frame and re-apply the shrink here, but the scene is still
+ * BUILDING while it shrinks: at TRANS.at - 1 the histogram is half drawn and
+ * the dashed box has not opened. Freezing the frame Simon named and clipping to
+ * slot 1 takes the picture exactly as he saw it, and the rest of that board —
+ * which the frozen group also paints — falls outside the clip.
+ */
+const THUMB_FROZEN = 5093 - FROM;
+
+export const Card1Thumb = () => {
+  const slot = ROADMAP_SLOTS[TRANS.landing];
+  return (
+    /* ⚠ overflow, NOT clip-path, AND AN EXPLICIT OFFSET. The frozen group paints
+       the whole board; only the card is wanted. A clip-path here made an extra
+       containing block and the group's own absolute layers measured themselves
+       against it, so the picture landed a card and a half to the right. Two
+       divs — one sized to the card, one shifted back by its origin — cannot be
+       read two ways. */
+    <div
+      style={{
+        position: "absolute",
+        left: slot.x,
+        top: slot.y,
+        width: ROADMAP_CARD.w,
+        height: ROADMAP_CARD.h,
+        borderRadius: theme.shape.panelRadius,
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: -slot.x,
+          top: -slot.y,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+        }}
+      >
+        <Freeze frame={THUMB_FROZEN}>
+          <UnderstandGroup />
+        </Freeze>
+      </div>
+    </div>
+  );
+};
+
 export const UnderstandGroup = () => {
   const f = useCurrentFrame();
   const m = useMotion();

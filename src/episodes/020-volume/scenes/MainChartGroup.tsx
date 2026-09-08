@@ -370,6 +370,15 @@ export const roadmapContents = (
   m: ReturnType<typeof useMotion>,
   at: number[],
   landing: number,
+  /**
+   * ⚠ AN OVERRIDE FOR CARD 1, because the histogram below is an ICON and the
+   * board has a MEMORY. The first time the roadmap is used, the chapter's own
+   * picture shrinks into that card and stays there; every later appearance has
+   * to show the same thing or it is not the same card. See Card1Thumb in
+   * UnderstandGroup.tsx — passed in rather than imported here, so this file
+   * does not have to know about the group that imports it.
+   */
+  card1?: React.ReactNode,
 ): React.ReactNode[] =>
   [
     /* what SC01 ends on: the mark, the word, and the pair — see CARD0_PANES */
@@ -432,7 +441,10 @@ export const roadmapContents = (
       ))}
     </React.Fragment>,
     /* ⚠ A HISTOGRAM WITH NO PRICE PANE ABOVE IT, and that IS the chapter:
-       volume on its own, before it is read against anything. */
+       volume on its own, before it is read against anything. It is the OPENING
+       board's icon only — once the chapter has landed in this card, `card1`
+       carries what landed. */
+    card1 ?? (
     <VolumeBars
       key="c1"
       bars={TWO.bars}
@@ -443,7 +455,8 @@ export const roadmapContents = (
          card with nothing beside it to be misread against, so it normalises to
          its own maximum and fills the height it has. */
       shown={progress(f, at[1], m.sec(0.9))}
-    />,
+    />
+    ),
     ...CARD_PANES.map((q, i) => (
       <React.Fragment key={`c${i + 2}`}>
         <Chart

@@ -29,8 +29,8 @@ export const BLOCK = {
    * through what used to be SC17's opening, and the two product windows take
    * only the last 575 frames of it.
    */
-  SC16: 14518, SC17: 16078, SC18: 16743, SC19: 17910, SC20: 18854,
-  END: 19742,
+  SC16: 14518, SC17: 16078, SC18: 16681, SC19: 17848, SC20: 18792,
+  END: 19680,
 } as const;
 
 /**
@@ -55,7 +55,7 @@ export const CARDS = {
   roadmap: { at: 1410, over: 100 },
   ch02: { at: 4906, over: 96 },
   ch03: { at: 8178, over: 96 },
-  recap: { at: 18810, over: 88 },
+  recap: { at: 18748, over: 88 },
 } as const;
 
 /**
@@ -363,12 +363,12 @@ export const BEAT = {
   pullback: 15162, lighterVolume: 15306,
   context: 15606, spike: 15726, thanUsual: 16050, nearBreakout: 16104,
   afterRally: 16304, sharpDrop: 16476,
-  misread: 16920, barColour: 17088, followsCandle: 17268,
-  onlyBuying: 17412, buyerAndSeller: 17844,
-  limits: 17926, alreadyHappened: 18150, notCertainty: 18214,
-  trend: 18504, levels: 18546, pattern: 18626, market: 18696,
-  direction: 18930, behindIt: 19118, notAGuess: 19218,
-  convincing3: 19500, watchOut: 19634,
+  misread: 16858, barColour: 17026, followsCandle: 17206,
+  onlyBuying: 17350, buyerAndSeller: 17782,
+  limits: 17864, alreadyHappened: 18088, notCertainty: 18152,
+  trend: 18442, levels: 18484, pattern: 18564, market: 18634,
+  direction: 18868, behindIt: 19056, notAGuess: 19156,
+  convincing3: 19438, watchOut: 19572,
 } as const;
 
 /** ⚠ THE COUNTDOWN IS UNEVEN AND THAT IS CORRECT — 102 frames then 40. Each
@@ -1827,9 +1827,20 @@ export const BONUS = {
   at: 16647,
   over: 44,
   landing: 3,
-  /** The other three open one after another, behind the shrink. */
-  cards: [16655, 16667, 16679],
-  cardDur: 22,
+  /**
+   * ⚠ THE BOARD IS ALREADY THERE — Simon: "kotak kotak yang lain, harusnya uda
+   * ga perlu animasi muncul lagi, harusnya uda ada, dan visualnya yang dari
+   * 8245". And he is right that this is not a detail. At f8178 the board was
+   * being ASSEMBLED for the first time, so the cards opening one by one was the
+   * event. By here the viewer has seen it twice; opening it a third time says
+   * "here is a new thing" about the one object in the video that is meant to be
+   * the same every time. It is simply standing there, complete, and the picture
+   * shrinking onto it is the only thing that moves.
+   *
+   * ⚠ WHICH IS WHY THE HOLD IS STILL WORTH ITS 30 FRAMES. Nothing is arriving
+   * in them any more — but the board is now the finished map of everything the
+   * video has covered, and that is the thing being looked at.
+   */
   /**
    * The cards leave upward and the bonus card rises into the middle.
    *
@@ -1845,18 +1856,37 @@ export const BONUS = {
    *  only then hands over. */
   grow: { at: 16805, over: 60, amount: 0.55 },
   /**
-   * ⚠ IT RUNS 158 FRAMES OVER SC18, WHICH HAS BEEN PLAYING SINCE 16743 — Simon:
-   * "tidak masalah jika ada scene overlap". And the overlap is doing work
-   * rather than being tolerated: the lines underneath it are "Sebelum selesai,
-   * ada beberapa hal yang sering salah dibaca", which is what the card says. It
-   * clears on 16901, nineteen frames before "saat menggunakan volume. Pertama,"
-   * at 16920 — the whole schedule is built backwards from that.
+   * ⚠ IT RUNS 220 FRAMES OVER SC18, WHICH NOW STARTS AT 16681 — Simon moved the
+   * recording forward to 16690 and said the transition is the layer that wins:
+   * "Scene juga boleh ikut, yang pasti Scene Transisi adalah prioritas".
+   *
+   * ⚠ AND THAT COSTS SOMETHING WORTH SAYING OUT LOUD. The schedule used to be
+   * built backwards from "saat menggunakan volume. Pertama," so the card was
+   * gone before SC18 had anything to show. At 28 frames of pad that line lands
+   * on 16858, and the card is still up for another 43 frames — so SC18's first
+   * point is spoken over the transition rather than under it. Shortening the
+   * 60-frame push, or bringing the fade to 16846, is the fix if that reads
+   * wrong on screen.
    */
   fade: { at: 16889, over: 12 },
-  /** ⚠ 28 IN A 24px PAD, SO IT STAYS ON ONE LINE. At 34 and at 30 it broke after
-   *  "Common", which puts the two words that actually name the thing on
-   *  different rows — the worst of the available breaks. */
-  card: { title: "Bonus Tips - Common Mistakes", size: 28, pad: 24 },
+  /**
+   * ⚠ THE NAME GOES UNDER THE CARD, NOT INSIDE IT — Simon, with the roadmap's
+   * own cards as the reference. Inside, it was a card whose entire content was
+   * its title; under it, it is the fifth thing on a board where every other
+   * card is a picture with its name beneath. The gap and the type come from
+   * ROADMAP_CARD.label and theme.text.tag, so it is the same label, not one
+   * that looks like it.
+   *
+   * ⚠ AND THE CARD NOW CARRIES A PICTURE: a histogram with a red cross over
+   * it. Every other card on that board shows what its chapter looks like; this
+   * one has to show what a mistake looks like.
+   */
+  card: {
+    title: "Bonus Tips - Common Mistakes",
+    /** ⚠ `warn`, WHICH IS THE ONE RED THIS PROJECT ALLOWS OUTSIDE A CANDLE —
+     *  and only for naming a mistake, which is exactly what this is. */
+    mark: { d: 108, stroke: 9, arm: 26 },
+  },
 } as const;
 
 /**
