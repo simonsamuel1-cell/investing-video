@@ -35,7 +35,7 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION } from "./data/timing";
+import { BLOCK, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -44,6 +44,7 @@ import { CombosGroupV3 } from "./scenes/CombosGroupV3";
 import { CombosOutro } from "./scenes/CombosOutro";
 import { BrptGroup } from "./scenes/BrptGroup";
 import { SC16 } from "./scenes/SC16";
+import { SC16v2 } from "./scenes/SC16v2";
 import { SC17 } from "./scenes/SC17";
 import { SC18 } from "./scenes/SC18";
 import { SC19 } from "./scenes/SC19";
@@ -102,7 +103,9 @@ const SCENES: Mounted[] = [
   {
     from: BLOCK.SC16,
     duration: BLOCK.SC17 - BLOCK.SC16,
-    Component: SC16,
+    /** ⚠ ONE HANDLE, `SC16_VERSION` — the same pattern the combos chapter
+     *  uses. This is the only place either version is mounted. */
+    Component: SC16_VERSION === 1 ? SC16 : SC16v2,
     name: "SC16 Trend health",
   },
   {

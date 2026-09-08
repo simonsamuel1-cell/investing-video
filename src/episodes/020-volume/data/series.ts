@@ -181,6 +181,56 @@ export const CHART1_DOMAIN2 = domainOf(CHART1_ALL.map((b) => b.c), CHART1_ALL);
  * window had its own price series the viewer could explain the difference away
  * as a different stock, which is exactly the misreading this is here to stop.
  */
+/**
+ * ═══ SS1 — SIMON'S OWN BREAKOUT SCREENSHOT, TRACED ═══
+ *
+ * 62 candles colour-keyed out of `SS1.png` in his VIDEO 21 folder: teal for up,
+ * red for down, the body found as the widest run in each column and the wick as
+ * the whole ink extent. Values are the file's own pixels turned upside down and
+ * scaled to 0–100, so higher really is higher.
+ *
+ * ⚠ THE RESISTANCE IS THE PICTURE'S OWN DOTTED LINE, NOT A NUMBER I CHOSE. It
+ * was found by scanning for the one row whose teal pixels run the FULL width of
+ * the image — 100 of them from x=2 to x=382, which no candle can do — at y=128
+ * of 535. That is 76.075 on this scale.
+ *
+ * ⚠ AND IT REALLY IS A BREAKOUT, which the assertion below checks: eight bars
+ * close above the level, and all eight are in the last quarter of the tape.
+ */
+import SS1_BARS from "./ss1.json";
+export const SS1: Series = {
+  closes: (SS1_BARS as Bar[]).map((b) => b.c),
+  bars: SS1_BARS as Bar[],
+  kind: "traced",
+  label: "Breakout",
+};
+export const SS1_DOMAIN = domainOf(SS1.closes, SS1.bars);
+/** The dotted level in the screenshot, in this series' own scale. */
+export const SS1_RES = 76.075;
+/**
+ * ⚠ THE AREA IS DERIVED FROM THE TESTS, not drawn around the line by eye. Its
+ * top is the level; its floor is the highest HIGH that stayed under the level
+ * before the break, which is the ceiling price actually kept hitting.
+ */
+export const SS1_BAND = (() => {
+  const brk = SS1.bars.findIndex((b) => b.c > SS1_RES);
+  const under = SS1.bars.slice(0, brk).map((b) => b.h).filter((h) => h < SS1_RES);
+  return { hi: SS1_RES, lo: Math.max(...under) };
+})();
+{
+  const above = SS1.bars.filter((b) => b.c > SS1_RES);
+  if (above.length < 4) {
+    throw new Error(`SS1 is meant to be a breakout: only ${above.length} bars close above ${SS1_RES}`);
+  }
+  const first = SS1.bars.findIndex((b) => b.c > SS1_RES);
+  if (first < SS1.bars.length * 0.7) {
+    throw new Error(`SS1's break is at bar ${first} of ${SS1.bars.length} — too early to read as a breakout`);
+  }
+  if (!(SS1_BAND.lo < SS1_BAND.hi)) {
+    throw new Error("SS1_BAND is inverted — no high stayed under the level before the break");
+  }
+}
+
 import TWO_RAW from "./two-breakout.json";
 const TWO_BARS = (TWO_RAW as { bars: Bar[]; vol: number[] }).bars;
 const TWO_VOLS = (TWO_RAW as { bars: Bar[]; vol: number[] }).vol;

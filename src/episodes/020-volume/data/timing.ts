@@ -1265,6 +1265,39 @@ export const SC15_ART = {
  * ⚠ THE TWO ARE THE SAME SIZE. They are two halves of one answer — what volume
  * is for — and a pair where one is larger says one of them matters more.
  */
+/**
+ * ⚠ WHICH SC16 IS BUILT. 1 is the two padded chips; 2 is the portrait window
+ * with Simon's own breakout screenshot traced into it. Nothing else selects
+ * between them — see Composition.tsx, the same handle the combos chapter uses.
+ */
+export const SC16_VERSION: 1 | 2 = 2;
+
+/**
+ * ═══ SC16 · VERSION 2 — ONE PORTRAIT WINDOW ═══  (Simon's frames)
+ *
+ * Nothing but the ground until f14577, then a window that draws itself the way
+ * a rectangle gets drawn: a dot, then its WIDTH, then its HEIGHT. Three beats
+ * that never overlap — a box that grows both ways at once is a box scaling up,
+ * which is a different gesture and the one this is not.
+ *
+ * ⚠ THE WINDOW CARRIES THE SCREENSHOT'S OWN RATIO. SS1.png is 384x535, so
+ * 560x780 is the same shape at 1.46x — the tape inside is not stretched to fit
+ * a rectangle chosen for the stage.
+ */
+export const SC16_V2 = {
+  win: { w: 560, h: 780, radius: 32, dot: 18 },
+  open: { at: 14577, dot: 10, wide: 24, tall: 28 },
+  /** Inside the window, where the tape may draw. */
+  plot: { x: 44, y: 56 },
+  /** The candles arrive one at a time, after the frame has finished opening. */
+  build: { at: 14649, over: 96 },
+  /** ⚠ THE AREA, THEN ITS NAME. The band is what the claim is; the word is a
+   *  label for it, and a label that lands first is a caption with nothing under
+   *  it yet. */
+  zone: { at: 14760, over: 30 },
+  label: { at: 14790, text: "Resistance", size: 26, gap: 10 },
+} as const;
+
 export const SC16_UI = {
   /**
    * ⚠ THE PANES ARE NOT SIZED, THEY ARE PADDED — Simon's call. Each one hugs
