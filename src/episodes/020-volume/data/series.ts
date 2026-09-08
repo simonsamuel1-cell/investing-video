@@ -857,6 +857,8 @@ export const TICK_VOL = volumeOf(
 
 export const COLOUR: Series = fromShape({ seed: 618, n: 14, shape: "sideways", start: 4200, label: "Warna mengikuti candle" });
 export const COLOUR_VOL = volumeOf(COLOUR.bars, 0x618);
+/** COLOUR's own range — SC19 draws it alone, so it normalises to itself. */
+export const domainOfColour = domainOf(COLOUR.closes, COLOUR.bars);
 
 /* ══ 8. BRPT — SC15A and SC15B ═══════════════════════════════════════════
  *

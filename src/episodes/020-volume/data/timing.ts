@@ -1821,6 +1821,112 @@ export const TRANS = {
  * the oscillation, so what the viewer watches is one candle updating rather
  * than ten different candles taking turns.
  */
+/**
+ * ═══ THE BONUS CHAPTER'S OWN LAYER ═══  (Simon: 16681–18791)
+ *
+ * A drifting blurred gradient under both scenes, and the heading that survives
+ * the cut between them.
+ *
+ * ⚠ THE HEADING LIVES HERE BECAUSE IT HAS TO OUTLIVE A SCENE. "Ketika transisi
+ * 17847-17848, judulnya tidak ikut transisi" — a title owned by SC18 is carried
+ * out with SC18 whatever you do to it, so the only way for it to stay still
+ * across a cut is for it to belong to neither side. It belongs to the CHAPTER,
+ * which is what this layer is.
+ *
+ * ⚠ AND THE GROUND IS ONE SURFACE FOR THE SAME REASON. Painted per scene it
+ * would restart its drift on the cut, which is the one thing a background that
+ * never stops must not do.
+ *
+ * ⚠ LINEAR AND UNCLAMPED, NOT EASED — the law this episode's reference study
+ * settled. A drift that eases reads as a move about to finish; this one never
+ * starts and never ends on screen.
+ */
+export const MISTAKES = {
+  from: 16681,
+  to: 18792,
+  ground: {
+    /** Quoted over the layer's own length, so nothing clamps inside it. */
+    over: 2111,
+    blur: 150,
+    /** Big, soft, and slow. Fixed positions rather than seeded: eight numbers
+     *  typed out are eight numbers that stay put. */
+    blobs: [
+      { x: -120, y: -80, r: 760, c: "bloomIndigo" as const, dx: 150, dy: 90 },
+      { x: 1180, y: 120, r: 700, c: "bloomCyan" as const, dx: -120, dy: 130 },
+      { x: 420, y: 700, r: 820, c: "bloomIndigo" as const, dx: 110, dy: -100 },
+    ],
+  },
+  /**
+   * ⚠ ONE LEAD AND A TAIL THAT IS SWAPPED, NOT TWO TITLES. "Common Mistake:" is
+   * the chapter's label and never moves; the tail types in, types OUT on the
+   * cut, and a different tail types in after it. Two separate headings
+   * cross-fading would be two things where the viewer is being shown one thing
+   * changing its subject.
+   */
+  head: {
+    lead: "Common Mistake: ",
+    perChar: 2,
+    tails: [
+      { text: "Warna Volume Bar", at: 17016, gone: 17848 },
+      { text: "Tidak Paham Batas", at: 17904, gone: 99999 },
+    ],
+  },
+} as const;
+
+/**
+ * ═══ SC19 · WHAT VOLUME IS FOR, AND WHAT IT IS NOT ═══  (Simon's frames)
+ *
+ * Everything the scene used to draw is gone; what is left is two of SC17's
+ * windows, one at a time.
+ *
+ * ⚠ THE SAME WINDOW AS 16583, MINUS ITS GROUND — Simon's words. It is the same
+ * object the episode has already used to say "here is one thing, named", so
+ * using it again says these two are the same KIND of thing as those two. A new
+ * card shape would have said they were something else.
+ *
+ * ⚠ AND THE FIRST ONE ARRIVES ALONE, IN THE MIDDLE. It is the correct reading;
+ * it gets the frame to itself before the wrong one turns up beside it and turns
+ * the shot into a comparison.
+ */
+export const LIMITS = {
+  win: { w: 440, h: 640, radius: 46, y: 220, gap: 160 },
+  ui: {
+    icon: { d: 64, top: 26 },
+    display: { x: 20, y: 110, w: 400, h: 400, radius: 30 },
+    price: { x: 34, y: 124, w: 372, h: 250 },
+    volume: { x: 34, y: 392, w: 372, h: 104 },
+    title: { y: 552, size: 36 },
+  },
+  pop: 26,
+  build: { after: 10, over: 40 },
+  words: { after: 18, over: 22 },
+  /** The first window slides aside as the second arrives — one curve, so it
+   *  cannot be halfway across when the other one lands. */
+  spread: { at: 18148, over: 34 },
+  /**
+   * ⚠ 18309 — Simon. The LEFT window opens out to the card's rect and its icon
+   * and name leave as it does: what is being enlarged is the chart, and a title
+   * that grew with it would be a heading competing with the one already at the
+   * top of the margin.
+   */
+  grow: { at: 18309, over: 40 },
+  cards: [
+    { at: 17996, title: "Sebagai konfirmasi", tone: "ok" as const },
+    { at: 18148, title: "Sebagai prediksi", tone: "no" as const },
+  ],
+  /**
+   * ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and down alone
+   * is a choice between two things, which is still a prediction; the third one
+   * straight through the middle is what makes it "nobody knows".
+   */
+  /**
+   * ⚠ AND THE TAPE GIVES UP ROOM FOR THEM. `gutter` is what `gridOf` reserves
+   * on the right; without it the last candle sits on the plot's edge and three
+   * arrows a hundred pixels long leave the card entirely.
+   */
+  fan: { len: 96, spread: 32, width: 4, head: 13, gutter: 130 },
+} as const;
+
 export const SC18_TICK = {
   at: 16891,
   /**

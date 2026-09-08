@@ -117,39 +117,15 @@ export const SC18 = () => {
 
   /** ⚠ LINEAR, AND COUNTED IN CHARACTERS. Typing that eases is a machine
    *  warming up; a hand goes at one speed. */
-  const headTyped = Math.floor(
-    ramp(f, local(V.head.at, FROM), V.head.tail.length * V.head.perChar) *
-      V.head.tail.length,
-  );
   const typed = Math.floor(
     ramp(f, local(V.right.at, FROM), V.right.text.length * V.right.perChar) *
       V.right.text.length,
   );
 
   return (
-    <Stage>
+    <Stage transparent>
       <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toLimits) }}>
       <SourceTag kind={TICK.kind} y={TAG_Y} />
-      {/* ⚠ FLUSH LEFT ON THE MARGIN, AND IN TWO PARTS. "Common Mistake:" is
-          the label the bonus chapter carries, so it is simply there; the typing
-          spells out WHICH mistake. `Title` is not used because it reveals one
-          string as a whole, which is the entrance this heading no longer has. */}
-      <div
-        style={{
-          position: "absolute",
-          left: theme.margin.left,
-          top: theme.stage.title.y - theme.text.title.size / 2,
-          fontFamily: theme.text.family,
-          fontSize: theme.text.title.size,
-          fontWeight: theme.text.title.weight,
-          lineHeight: 1.2,
-          color: theme.color.indigo,
-          whiteSpace: "pre",
-        }}
-      >
-        {V.head.lead}
-        {V.head.tail.slice(0, headTyped)}
-      </div>
       {/* ⚠ ONE GROUP: the panel and the column beside it travel together. The
           heading is deliberately outside it — it belongs to the margin. */}
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${-V.group}px)` }}>

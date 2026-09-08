@@ -35,7 +35,7 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, BONUS, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
+import { BLOCK, BONUS, MISTAKES, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -47,6 +47,7 @@ import { SC16 } from "./scenes/SC16";
 import { SC16v2 } from "./scenes/SC16v2";
 import { SC17 } from "./scenes/SC17";
 import { BonusOutro } from "./scenes/BonusOutro";
+import { MistakesLayer } from "./scenes/MistakesLayer";
 import { SC18 } from "./scenes/SC18";
 import { SC19 } from "./scenes/SC19";
 import { SC20 } from "./scenes/SC20";
@@ -212,6 +213,13 @@ const SCENES: Mounted[] = [
 
 const Body = () => (
   <Stage>
+    {/* ⚠ UNDER THE TILING, AND ON PURPOSE. The bonus chapter's ground and its
+        heading have to survive the cut at 17847, so they belong to neither
+        scene either side of it — see scenes/MistakesLayer.tsx. Both scenes
+        above it draw on a transparent Stage. */}
+    <Sequence from={MISTAKES.from} durationInFrames={MISTAKES.to - MISTAKES.from} name="Bonus chapter ground">
+      <MistakesLayer />
+    </Sequence>
     {SCENES.filter((m) => !HIDDEN.includes(m.name ?? "")).map(
       ({ from, duration, Component, name }) => (
         <Sequence
