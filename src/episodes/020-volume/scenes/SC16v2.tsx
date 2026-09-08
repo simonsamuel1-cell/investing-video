@@ -22,13 +22,13 @@ import { interpolate, useCurrentFrame } from "remotion";
 import {
   Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
   progress, progressInOut, ramp, textReveal, candleWidth, ticksOf, usePalette,
-  GRID_PAD_X, theme,
+  cutOutStyle, GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
 import { ResistanceArea, resistanceTop } from "./ResistanceArea";
 import {
   SS2, SS2_DOMAIN, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL, SS_KEEP,
-  SS_NEW, SS_VIEW, SS_ZIG, trendThrough,
+  SS_NEW, SS_VIEW, SS_VOL_TOP2, SS_ZIG, trendThrough,
 } from "../data/series";
 
 /* ⚠ THE MARKS ARE SLOTS IN THE GROWN TAPE, AND `SS_HIDE` CAN SHORTEN IT. A box
@@ -159,17 +159,41 @@ export const SC16v2 = () => {
     h: V.pan.price.h,
   };
   const slide = (a: number, b: number) => a + (b - a) * pan;
+
+  /**
+   * ═══ AND A FOURTH, AT f15500 — THE PREVIEW OPENS ON THE TWO SPIKES ═══
+   *
+   * ⚠ STILL A CHANGE OF GRID. Twenty slots across the plot instead of a
+   * hundred, and a domain narrowed to what those twenty actually reach. A
+   * transform on the picture would have taken every stroke width up with it.
+   */
+  const near2 = progressInOut(f, local(V.zoom.at, FROM), V.zoom.over);
+  const ZN = V.zoom.to - V.zoom.from;
+  const pitchZ = (V.full.w - GRID_PAD_X * 2) / ZN;
+  const boxZoom = {
+    x: V.full.x - pitchZ * (HEAD + V.zoom.from),
+    y: V.pan.price.y,
+    w: pitchZ * (N - 1) + GRID_PAD_X * 2,
+    h: V.pan.price.h,
+  };
+  const win2 = SS_GROWN.slice(V.zoom.from, V.zoom.to + 1);
+  const domZoom: [number, number] = [
+    Math.min(...win2.map((b) => b.l)),
+    Math.max(...win2.map((b) => b.h)),
+  ];
+  const dive = (a: number, b: number) => a + (b - a) * near2;
+
   const box = {
-    x: slide(mix(boxNear.x, far.x), boxPan.x),
-    y: slide(mix(boxNear.y, far.y), boxPan.y),
-    w: slide(mix(boxNear.w, far.w), boxPan.w),
-    h: slide(mix(boxNear.h, far.h), boxPan.h),
+    x: dive(slide(mix(boxNear.x, far.x), boxPan.x), boxZoom.x),
+    y: dive(slide(mix(boxNear.y, far.y), boxPan.y), boxZoom.y),
+    w: dive(slide(mix(boxNear.w, far.w), boxPan.w), boxZoom.w),
+    h: dive(slide(mix(boxNear.h, far.h), boxPan.h), boxZoom.h),
   };
   const G = gridOf(
     SS2.closes,
     [
-      slide(mix(domNear[0], SS2_DOMAIN[0]), SS_GROWN_DOMAIN[0]),
-      slide(mix(domNear[1], SS2_DOMAIN[1]), SS_GROWN_DOMAIN[1]),
+      dive(slide(mix(domNear[0], SS2_DOMAIN[0]), SS_GROWN_DOMAIN[0]), domZoom[0]),
+      dive(slide(mix(domNear[1], SS2_DOMAIN[1]), SS_GROWN_DOMAIN[1]), domZoom[1]),
     ],
     box,
     0.06,
@@ -250,6 +274,21 @@ export const SC16v2 = () => {
    * is the tallest bar inside it — a box drawn to the panel's ceiling would
    * claim a height none of these bars reach.
    */
+  /**
+   * ═══ THE TWO SPIKES, ALONE IN COLOUR ═══
+   *
+   * ⚠ THE GREY IS A FILTER ON THE WHOLE HISTOGRAM, and the two are RE-DRAWN in
+   * colour on top of it. Recolouring a hundred bars one by one would mean
+   * teaching VolumeBars about exceptions — and every chart in core would then
+   * carry a prop that one shot in one episode needed.
+   */
+  const S = V.spikes;
+  const grey =
+    progress(f, local(S.at, FROM), S.fade) * (1 - progress(f, local(S.gone, FROM), S.fade));
+  /** ⚠ ONE SLOW BREATH. `Math.sin` unclamped would keep pulsing after the beat
+   *  is over; it is multiplied by `grey`, so it stops when the grey does. */
+  const pulse = (1 - Math.cos((2 * Math.PI * (f - local(S.at, FROM))) / S.beat)) / 2;
+
   const ruled = progress(f, local(V.rules.at, FROM), V.rules.over);
   const trendGone = progress(f, local(V.swingLine.gone.at, FROM), V.swingLine.gone.over);
 
@@ -284,9 +323,22 @@ export const SC16v2 = () => {
     };
   });
 
+  /**
+   * ⚠ BOTH HALVES OF BOTH CUTS, CONCATENATED RATHER THAN SPREAD. Two style
+   * objects each carrying a `transform` means the second silently wins, which
+   * is how the cut into this scene ended up one-sided the first time. The
+   * scene is carried IN at 14518 and OUT at 16078 by the same element.
+   */
+  const cIn = cutInStyle(f + FROM, CUTS.toSC16);
+  const cOut = cutOutStyle(f + FROM, CUTS.toSpikes);
+  const cam = {
+    transform: `${cIn.transform} ${cOut.transform}`,
+    filter: [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") || undefined,
+  };
+
   return (
     <Stage transparent>
-      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toSC16) }}>
+      <div style={{ position: "absolute", inset: 0, ...cam }}>
         {/* ⚠ A PLAIN DIV, NOT `AbsoluteFill` — that one also sets width and
             height to 100%, and 100% measured from left:-120 ends at x=1800. */}
         <div
@@ -428,14 +480,43 @@ export const SC16v2 = () => {
                     exist, so the twenty are there from the moment the panel
                     fades up and every newcomer's bar arrives with its own
                     candle rather than a beat behind it. */}
-                <VolumeBars
-                  bars={SS_GROWN}
-                  volume={SS_GROWN_VOL}
-                  grid={Gvol}
-                  box={volBox}
-                  shown={grown}
-                  opacity={volIn}
-                />
+                <div style={{ filter: grey > 0.001 ? `saturate(${(1 - grey * 0.92).toFixed(3)})` : undefined }}>
+                  <VolumeBars
+                    bars={SS_GROWN}
+                    volume={SS_GROWN_VOL}
+                    grid={Gvol}
+                    box={volBox}
+                    shown={grown}
+                    opacity={volIn}
+                  />
+                </div>
+                {grey > 0.001 && (
+                  <svg
+                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+                    width={theme.canvas.width}
+                    height={theme.canvas.height}
+                  >
+                    {SS_VOL_TOP2.map((i) => {
+                      const w = candleWidth(Gvol);
+                      const h = (SS_GROWN_VOL[i] / Math.max(...SS_GROWN_VOL)) * volBox.h;
+                      const fill = SS_GROWN[i].c >= SS_GROWN[i].o ? c.candleGreen : c.candleRed;
+                      const g = S.glow.min + (S.glow.max - S.glow.min) * pulse;
+                      return (
+                        <rect
+                          key={i}
+                          x={Gvol.x(i) - w / 2}
+                          y={volBox.y + volBox.h - h}
+                          width={w}
+                          height={Math.max(1, h)}
+                          rx={Math.min(w * 0.28, 8)}
+                          fill={fill}
+                          opacity={0.72 * grey}
+                          style={{ filter: `drop-shadow(0 0 ${(g * 0.4).toFixed(1)}px ${fill}) drop-shadow(0 0 ${g.toFixed(1)}px ${fill})` }}
+                        />
+                      );
+                    })}
+                  </svg>
+                )}
 
                 {/* ── one straight line per range ──────────────────────────
                     ⚠ INDIGO, BOTH OF THEM. The boxes are cyan and indigo to

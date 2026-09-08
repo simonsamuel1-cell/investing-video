@@ -24,7 +24,12 @@ export const BLOCK = {
    * further on purpose so it does not draw under the quiz title.
    */
   SC15A: 11289, SC15B: 13026,
-  SC16: 14518, SC17: 15415, SC18: 16653, SC19: 17820, SC20: 18764,
+  /**
+   * ⚠ SC17 MOVED FROM 15415 TO 16078 — Simon's cut. The chart now runs on
+   * through what used to be SC17's opening, and the two product windows take
+   * only the last 575 frames of it.
+   */
+  SC16: 14518, SC17: 16078, SC18: 16653, SC19: 17820, SC20: 18764,
   END: 19652,
 } as const;
 
@@ -391,6 +396,9 @@ export const CUTS = {
    * content inside it for the twelve frames the move lasts.
    */
   toSC16: { at: 14518, over: 24, distance: 90, blur: 10, axis: "x" as const },
+  /** The chart out, the two product windows in — Simon's frame, "16078
+   *  transisi camera cut ke scene selanjutnya". */
+  toSpikes: { at: 16078, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
@@ -1487,6 +1495,98 @@ export const SC16_V2 = {
    * loose from the chart.
    */
   rules: { at: 14981, over: 30, want: 8 },
+  /**
+   * ═══ f15500 · THE PREVIEW OPENS ON THE TWO SPIKES ═══  (Simon's crop)
+   *
+   * ⚠ IT IS THE SAME CHANGE OF GRID AS EVERY OTHER MOVE IN THIS SCENE, not a
+   * scale on the picture. Blowing the chart up with a transform would take the
+   * candle bodies, the wicks and the histogram's hairlines up with it, and a
+   * mark whose stroke thickens is a mark that has become part of the picture.
+   * Twenty slots across the plot instead of a hundred; the price domain
+   * narrows to what those twenty actually reach.
+   *
+   * ⚠ AND THE HISTOGRAM NEEDS NOTHING DOING TO IT. Its peak is bar 21, which is
+   * inside this window — so the tallest bar already touches the top of the
+   * panel and stays there. Renormalising would have been the wrong instinct
+   * anyway: it would change what the bars mean halfway through the shot.
+   */
+  zoom: { at: 15500, over: 60, from: 14, to: 33 },
+  /**
+   * ═══ f15712–15962 · THE TWO SPIKES, ALONE IN COLOUR ═══  (Simon's frames)
+   *
+   * "2 volume bars yang paling tinggi, berkedip glow, sedangkan volume bar lain
+   * berubah warna jadi greyscale. Setelah itu warna kembali normal."
+   *
+   * ⚠ WHICH TWO IS DERIVED, NOT TYPED — see SS_VOL_TOP2. Naming the bars by
+   * index would be a claim about the data that stops being true the moment
+   * SS_HIDE or the trace changes.
+   */
+  spikes: {
+    at: 15712,
+    gone: 15962,
+    fade: 24,
+    /** One full breath, and slow: a glow that flickers reads as a fault. */
+    beat: 46,
+    glow: { min: 10, max: 34 },
+  },
+} as const;
+
+/**
+ * ═══ SC17 · TWO PRODUCT WINDOWS ═══  (Simon's reference screenshot)
+ *
+ * A mobile product page: a display area with the thing in it, a title, and a
+ * description. The reference has a price beside the title and Simon struck it
+ * — "dalam konteks chart, jangan gunakan harga" — so the title row is a title
+ * and nothing else.
+ *
+ * ⚠ 440 WIDE, WHICH IS A CHUNKIER PHONE THAN THE REFERENCE'S, AND DELIBERATELY.
+ * The description is the longest line in the shot at 44 characters; on a
+ * correctly-proportioned 376px phone it only fits at 15px, and Simon has just
+ * spent a beat telling me the last thing was too small to read on a phone.
+ * Widening the device is the one change here that nobody will notice and
+ * everybody will benefit from.
+ *
+ * ⚠ AND THEY START AT y=150, WHICH IS THE LOGO ZONE'S FLOOR. The pair is 1080
+ * wide and centred, so the right-hand window ends at x=1500 — inside the strip
+ * the logo owns. Below 150 that rule does not apply.
+ */
+export const SPIKES = {
+  win: { w: 440, h: 800, y: 150, gap: 200, radius: 46 },
+  /** Inside the device, in its own coordinates. */
+  ui: {
+    pad: 20,
+    status: { y: 24, size: 17 },
+    header: { y: 62, size: 26 },
+    display: { x: 20, y: 118, w: 400, h: 442, radius: 30 },
+    /** Where the tape may draw inside the display. */
+    price: { x: 34, y: 132, w: 372, h: 286 },
+    volume: { x: 34, y: 438, w: 372, h: 108 },
+    fab: { d: 74 },
+    title: { y: 596, size: 36 },
+    desc: { y: 656, size: 20, leading: 1.5 },
+    home: { y: 762, w: 140, h: 5 },
+  },
+  /**
+   * ⚠ THE TAPE BUILDS, IT DOES NOT APPEAR. The window pops, and ten frames
+   * later the candles start printing into it — the same rule as every other
+   * chart in the episode, and the reason is the same: a chart that is simply
+   * there was never drawn, so nobody watched it being drawn.
+   */
+  pop: 26,
+  build: { after: 10, over: 40 },
+  words: { after: 18, over: 22, stagger: 8 },
+  cards: [
+    {
+      at: 16140,
+      title: "Volume Spike Hijau",
+      desc: ["Dekat breakout, volume spike jadi konfirmasi.", "Setelah rally panjang, bisa profit taking."],
+    },
+    {
+      at: 16462,
+      title: "Volume Merah",
+      desc: ["Harga jatuh tajam,", "menunjukkan panic selling"],
+    },
+  ],
 } as const;
 
 export const SC16_UI = {

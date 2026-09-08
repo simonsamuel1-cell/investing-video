@@ -408,6 +408,75 @@ export const SS_GROWN_DOMAIN = domainOf(SS_GROWN.map((b) => b.c), SS_GROWN);
   }
 }
 
+/** The two biggest bars in the histogram, left to right. Derived, because
+ *  which two they are is a fact about the data and not a decision. */
+export const SS_VOL_TOP2 = SS_GROWN_VOL
+  .map((v, i) => ({ v, i }))
+  .sort((a, b) => b.v - a.v)
+  .slice(0, 2)
+  .map((q) => q.i)
+  .sort((a, b) => a - b);
+
+/**
+ * ═══ SS4 AND SS5 — THE TWO SPIKES, EACH IN ITS OWN CONTEXT ═══
+ *
+ * Two more of Simon's screenshots, traced the same way as SS3 and used inside
+ * the product windows at 16140 and 16462. SS4 is a base that breaks out on a
+ * green spike; SS5 is a slide that ends on a red one.
+ *
+ * ⚠ THEIR VALUES ARE PIXELS AND MEAN NOTHING OUTSIDE THEIR OWN PANEL. Each one
+ * is drawn alone, in its own window, against its own domain — there is no
+ * second tape to be read against, so a shared scale would be a shared scale
+ * with nothing. One unit per pixel of the source image, counted up from the
+ * bottom, is the honest way to say that.
+ *
+ * ⚠ THE HORIZONTAL RULES ARE FOUND, NOT TYPED. Both images carry a dotted
+ * level drawn in the SAME red as a down candle, so it is detected as the row
+ * whose candle-coloured ink spans nearly the full width and then dropped
+ * wherever the rows above and below it in that column are empty — which cannot
+ * touch a candle that genuinely crosses the level.
+ */
+import SS4_RAW from "./ss4.json";
+import SS5_RAW from "./ss5.json";
+const SS4_JSON = SS4_RAW as { bars: Bar[]; vol: number[] };
+const SS5_JSON = SS5_RAW as { bars: Bar[]; vol: number[] };
+export const SS4: Series = {
+  closes: SS4_JSON.bars.map((b) => b.c),
+  bars: SS4_JSON.bars,
+  kind: "traced",
+  label: "Volume spike hijau",
+};
+export const SS5: Series = {
+  closes: SS5_JSON.bars.map((b) => b.c),
+  bars: SS5_JSON.bars,
+  kind: "traced",
+  label: "Volume merah",
+};
+export const SS4_VOL = SS4_JSON.vol;
+export const SS5_VOL = SS5_JSON.vol;
+export const SS4_DOMAIN = domainOf(SS4.closes, SS4.bars);
+export const SS5_DOMAIN = domainOf(SS5.closes, SS5.bars);
+
+{
+  if (SS_VOL_TOP2.length !== 2) throw new Error("SS_VOL_TOP2 needs two bars to blink");
+  for (const [n, S, V] of [["SS4", SS4, SS4_VOL], ["SS5", SS5, SS5_VOL]] as const) {
+    if (!S.bars.length) throw new Error(`${n} traced nothing`);
+    if (V.length !== S.bars.length) throw new Error(`${n}: one volume per bar, or the histogram lies about which candle it belongs to`);
+    S.bars.forEach((b, i) => {
+      if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c)) {
+        throw new Error(`${n} bar ${i}: the wick does not contain its own body`);
+      }
+    });
+  }
+  /* each one is here to show ONE spike, so it had better have one */
+  const spikey = (v: number[]) => Math.max(...v) / (v.reduce((a, b) => a + b, 0) / v.length);
+  if (spikey(SS4_VOL) < 2) throw new Error("SS4's biggest bar is not a spike — it barely clears its own average");
+  if (spikey(SS5_VOL) < 2) throw new Error("SS5's biggest bar is not a spike — it barely clears its own average");
+  /* and the shapes have to be the opposite way up, or the pair says nothing */
+  if (SS4.closes[SS4.closes.length - 1] <= SS4.closes[0]) throw new Error("SS4 does not end above where it started");
+  if (SS5.closes[SS5.closes.length - 1] >= SS5.closes[0]) throw new Error("SS5 does not end below where it started");
+}
+
 /**
  * ═══ A STRAIGHT TRENDLINE THROUGH A RANGE OF THE GROWN TAPE ═══
  *

@@ -45,6 +45,7 @@ import { CombosOutro } from "./scenes/CombosOutro";
 import { BrptGroup } from "./scenes/BrptGroup";
 import { SC16 } from "./scenes/SC16";
 import { SC16v2 } from "./scenes/SC16v2";
+import { SC17 } from "./scenes/SC17";
 import { SC18 } from "./scenes/SC18";
 import { SC19 } from "./scenes/SC19";
 import { SC20 } from "./scenes/SC20";
@@ -107,11 +108,17 @@ const SCENES: Mounted[] = [
      * PICTURE this whole stretch is spoken over, so SC17's own visuals are gone
      * rather than layered on top of it.
      */
-    duration: BLOCK.SC18 - BLOCK.SC16,
+    duration: BLOCK.SC17 - BLOCK.SC16,
     /** ⚠ ONE HANDLE, `SC16_VERSION` — the same pattern the combos chapter
      *  uses. This is the only place either version is mounted. */
     Component: SC16_VERSION === 1 ? SC16 : SC16v2,
     name: "SC16 Trend health",
+  },
+  {
+    from: BLOCK.SC17,
+    duration: BLOCK.SC18 - BLOCK.SC17,
+    Component: SC17,
+    name: "SC17 Two spikes, two contexts",
   },
   {
     from: BLOCK.SC18,
