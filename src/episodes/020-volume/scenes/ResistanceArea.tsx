@@ -23,6 +23,20 @@ export const DROP = 150;
 const EDGE = { width: theme.shape.rule, radius: 16 };
 // ═══════════════════════════════════════════════════════════════════════════
 
+/**
+ * The band's TOP EDGE in canvas pixels — the same number the component draws
+ * itself against.
+ *
+ * ⚠ EXPORTED SO NOTHING ELSE RE-DERIVES IT. The caption above the band is
+ * placed relative to this edge, and a second copy of `DROP` living in the scene
+ * is a caption that stays behind the day the band is moved.
+ */
+export const resistanceTop = (
+  grid: Grid,
+  band: { hi: number; lo: number },
+  closeUp: Grid,
+) => grid.y(band.hi - ((closeUp.hi - closeUp.lo) / closeUp.box.h) * DROP);
+
 export const ResistanceArea = ({
   grid,
   box,
@@ -46,7 +60,7 @@ export const ResistanceArea = ({
   label?: { text: string; size: number; gap: number };
 }) => {
   const drop = ((closeUp.hi - closeUp.lo) / closeUp.box.h) * DROP;
-  const top = grid.y(band.hi - drop);
+  const top = resistanceTop(grid, band, closeUp);
   const bottom = grid.y(band.lo - drop);
   const h = bottom - top;
 

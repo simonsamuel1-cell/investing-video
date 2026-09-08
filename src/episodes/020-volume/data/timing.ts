@@ -1370,6 +1370,23 @@ export const SC16_V2 = {
    * domain is opening upward to make room for a rise that has not happened yet.
    * That second half is the whole reason Simon asked for "ke bawah".
    */
+  /**
+   * ═══ THE LINE OVER THE CHART ═══  (Simon: 14665–14884, 60px, 100px above)
+   *
+   * ⚠ ITS y IS THE BAND'S, NOT A TYPED NUMBER. "100 px di atas area resistance"
+   * measures from a thing that MOVES: the band is still travelling while the
+   * view widens at 14665, and it sits wherever `DROP` in ResistanceArea.tsx
+   * puts it. The gap is applied to the band's own top edge every frame, so the
+   * line keeps its 100px whatever either of those does later.
+   */
+  caption: {
+    text: "Volume bisa juga buat membaca performa trend",
+    at: 14665,
+    gone: 14884,
+    over: 26,
+    size: 60,
+    gap: 100,
+  },
   clear: { at: 14893, over: 30 },
   pan: {
     at: 14925,
@@ -1403,6 +1420,33 @@ export const SC16_V2 = {
    * frames, and four a frame stops being a tape printing and becomes a wipe.
    */
   build: { at: 14981, over: 70 },
+
+  /**
+   * ═══ TWO MARKS ON THE HISTOGRAM ═══  (Simon's frames and his two crops)
+   *
+   * "wipe in ke kanan" then "wipe out ke kiri" is exactly HighlightBox's own
+   * `grow`: it opens from its LEFT edge rightwards and closes back the way it
+   * came, so the edge where the claim starts never moves.
+   *
+   * ⚠ THE RANGES ARE BAR INDICES, NOT PIXELS, and that is the only way they can
+   * be right. The tape is laid out by the grid, so a box typed in canvas pixels
+   * would come off its bars the moment anything upstream — the pitch, x0, the
+   * plot's width — is touched. `from`/`to` are inclusive slots in the grown
+   * 140-bar tape; slot 0 is the first surviving candle.
+   *
+   * ⚠ AND THEY ARE READ OFF SIMON'S CROPS, WHICH IS A JUDGEMENT. The two crops
+   * have no coordinates in them, so each one was matched by its own landmarks —
+   * the first by the twin 148/147 green bars that are the tallest greens on the
+   * tape, the second by the flat stretch and its near-zero bar. If a box is a
+   * few bars out, these four numbers are the whole fix.
+   */
+  marks: [
+    { from: 8, to: 55, in: { at: 15061, over: 26 }, out: { at: 15190, over: 22 } },
+    { from: 78, to: 98, in: { at: 15240, over: 26 }, out: { at: 15454, over: 22 } },
+  ],
+  /** How far outside the bars the box sits. A mark that touches what it marks
+   *  reads as part of it. */
+  markPad: { x: 8, top: 14, bottom: 10 },
 } as const;
 
 export const SC16_UI = {

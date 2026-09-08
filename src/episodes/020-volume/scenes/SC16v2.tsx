@@ -20,11 +20,11 @@
  */
 import { interpolate, useCurrentFrame } from "remotion";
 import {
-  Stage, Candles, VolumeBars, cutInStyle, gridOf, domainOf, progress,
-  progressInOut, ramp, GRID_PAD_X, theme,
+  Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
+  progress, progressInOut, ramp, textReveal, candleWidth, GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
-import { ResistanceArea } from "./ResistanceArea";
+import { ResistanceArea, resistanceTop } from "./ResistanceArea";
 import {
   SS2, SS2_DOMAIN, SS3, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL,
   SS_KEEP, SS_VIEW, SS_ZIG,
@@ -172,9 +172,16 @@ export const SC16v2 = () => {
    */
   const clipX = interpolate(pan, [0, 1], [0, V.full.x]);
   const clipW = interpolate(pan, [0, 1], [theme.canvas.width, V.full.w]);
+
   /** ⚠ THE CLOSE-UP'S OWN GRID, kept so `ResistanceArea` can convert its DROP
    *  into a price against the view that number was chosen in. */
   const G0 = gridOf(SS2.closes, domNear, near, 0.06, 0);
+  /** The line over the chart — see `caption` in timing.ts for why its y is the
+   *  band's own edge rather than a number. */
+  const C = V.caption;
+  const cap = textReveal(f, local(C.at, FROM), C.over);
+  const capOut = progress(f, local(C.gone, FROM), C.over);
+  const capY = resistanceTop(G, SS_BAND, G0) - C.gap - C.size;
 
   /**
    * ═══ THE ZIGZAG, DRAWN FROM ITS TAIL FORWARDS ═══
@@ -204,6 +211,32 @@ export const SC16v2 = () => {
   ]
     .map((q) => q.map((v) => v.toFixed(1)).join(","))
     .join(" ");
+
+  /**
+   * ⚠ THE BOX IS SOLVED FROM THE GRID, so it cannot come off its bars. Its
+   * left and right edges are the outer bars' own edges plus a pad, and its top
+   * is the tallest bar inside it — a box drawn to the panel's ceiling would
+   * claim a height none of these bars reach.
+   */
+  const P = V.markPad;
+  const marks = V.marks.map((m) => {
+    const grow =
+      progressInOut(f, local(m.in.at, FROM), m.in.over) -
+      progressInOut(f, local(m.out.at, FROM), m.out.over);
+    if (grow <= 0.001) return null;
+    const half = candleWidth(Gvol) / 2;
+    const peak = Math.max(...SS_GROWN_VOL);
+    const tall = Math.max(...SS_GROWN_VOL.slice(m.from, m.to + 1));
+    return {
+      grow,
+      rect: {
+        x1: Gvol.x(m.from) - half - P.x,
+        x2: Gvol.x(m.to) + half + P.x,
+        y1: volBox.y + volBox.h - (tall / peak) * volBox.h - P.top,
+        y2: volBox.y + volBox.h + P.bottom,
+      },
+    };
+  });
 
   return (
     <Stage transparent>
@@ -332,6 +365,13 @@ export const SC16v2 = () => {
                   opacity={volIn}
                 />
 
+                {/* ── the two marks on the histogram ─────────────────────── */}
+                {marks.map((mk, i) =>
+                  mk === null ? null : (
+                    <HighlightBox key={i} rect={mk.rect} grow={mk.grow} />
+                  ),
+                )}
+
                 {/* ── the trend leg ────────────────────────────────────────
                     ⚠ INDIGO — Simon's call. The reference draws it white on a
                     dark chart; on this pale ground the episode's own marking
@@ -358,6 +398,33 @@ export const SC16v2 = () => {
                 )}
                 </div>
                </div>
+
+               {/* ⚠ OUTSIDE THE PLOT'S CLIP. The line is type about the chart,
+                   not part of the tape, and clipping it at x=120 would shave
+                   its ends the moment the pan closes that edge in. */}
+               {cap.opacity > 0.001 && capOut < 0.999 && (
+                 <div
+                   style={{
+                     position: "absolute",
+                     /* ⚠ FLUSH LEFT ON THE PLOT'S EDGE, under the same x as
+                        the "Resistance" label. Centred, a 60px line of this
+                        length ends at x≈1650 and lands on the tape's own high
+                        — type over candles, which is the one thing a caption
+                        about a chart must not be. */
+                     left: V.full.x,
+                     top: capY,
+                     fontFamily: theme.text.family,
+                     fontSize: C.size,
+                     fontWeight: 700,
+                     lineHeight: 1,
+                     color: theme.color.glassInk,
+                     opacity: cap.opacity * (1 - capOut),
+                     transform: `translateY(${cap.dy.toFixed(1)}px)`,
+                   }}
+                 >
+                   {C.text}
+                 </div>
+               )}
               </div>
             </div>
 
