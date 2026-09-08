@@ -1800,14 +1800,35 @@ export const BONUS = {
   /** The shrink into the rightmost card, and the board arriving behind it. */
   over: 30,
   landing: 3,
-  hold: 15,
-  /** The board leaves upward; the new card rises into the middle. */
-  rise: { at: 16692, over: 30 },
-  /** ⚠ 21, NOT 15 — this is where the six spare frames live. */
-  hold2: 21,
-  /** ⚠ IT BEGINS ON SC18'S FIRST FRAME. A fade "ke scene selanjutnya" that
-   *  starts before that scene exists is a fade to an empty ground. */
-  fade: { at: 16743, over: 30, amount: 0.5 },
+  /** ⚠ 60, NOT 15 — Simon: "transisinya terlalu cepat". The board is the video's
+   *  whole contents page and the picture has just landed on it; fifteen frames
+   *  is a quarter of a second to read four chapters and notice which one just
+   *  filled in. */
+  hold: 60,
+  /**
+   * The cards leave upward and the bonus card rises into the middle.
+   *
+   * ⚠ THE GROUND DOES NOT GO WITH THEM — Simon: "background kotak-kotak nya
+   * tetap stay". Only the cards travel. What that buys is a room the bonus card
+   * arrives INTO rather than a second room that replaces the first, and it is
+   * the difference between one continuous move and two cuts pretending to be
+   * one.
+   */
+  rise: { at: 16737, over: 30 },
+  hold2: 30,
+  /** ⚠ A BEAT OF ITS OWN NOW, not the same curve as the fade. Growing and
+   *  vanishing together read as one gesture; separated, the card arrives, is
+   *  read, and only then hands over. */
+  grow: { at: 16797, over: 30, amount: 0.5 },
+  hold3: 30,
+  /**
+   * ⚠ IT RUNS OVER SC18, WHICH HAS BEEN PLAYING SINCE 16743 — Simon: "tidak
+   * masalah jika ada scene overlap". And it is not merely tolerable: the lines
+   * underneath it are "Sebelum selesai, ada beberapa hal yang sering salah
+   * dibaca", which is what the card says. It clears on 16887, before "saat
+   * menggunakan volume. Pertama," at 16920.
+   */
+  fade: { at: 16857, over: 30 },
   /** ⚠ 28 IN A 24px PAD, SO IT STAYS ON ONE LINE. At 34 and at 30 it broke after
    *  "Common", which puts the two words that actually name the thing on
    *  different rows — the worst of the available breaks. */

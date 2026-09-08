@@ -54,7 +54,10 @@ export const BonusOutro = () => {
    *  cannot arrive before the card that catches it exists. */
   const map = progressInOut(g, BONUS.at, BONUS.over);
   const rise = progressInOut(g, BONUS.rise.at, BONUS.rise.over);
-  const push = progress(g, BONUS.fade.at, BONUS.fade.over);
+  /** ⚠ THREE SEPARATE CURVES NOW. Growing and vanishing on one of them read as
+   *  a single gesture; apart, the card arrives, holds long enough to be read,
+   *  and only then hands the frame over. */
+  const push = progressInOut(g, BONUS.grow.at, BONUS.grow.over);
   const clear = progress(g, BONUS.fade.at, BONUS.fade.over);
   if (clear >= 0.999) return null;
 
@@ -90,9 +93,14 @@ export const BonusOutro = () => {
           room it is happening in. */}
       <AbsoluteFill style={{ background: theme.color.glassBg }} />
 
-      {/* ── the board, leaving upward ───────────────────────────────────── */}
+      {/* ⚠ THE GROUND STAYS — Simon's correction. It is not inside the lifted
+          group and it does not fade with the cards: the bonus card arrives INTO
+          this room rather than bringing a second one with it, which is what
+          makes the two halves one move instead of two cuts. */}
+      <GridGround f={f} opacity={map} />
+
+      {/* ── the cards, and only the cards, leaving upward ────────────────── */}
       <div style={{ position: "absolute", inset: 0, transform: `translateY(${(-lift).toFixed(1)}px)` }}>
-        <GridGround f={f} opacity={map * (1 - rise)} />
         <RoadmapCards
           labels={MAP_LABELS}
           reveal={map}
@@ -134,7 +142,7 @@ export const BonusOutro = () => {
             height: ROADMAP_CARD.h,
             transform:
               `translateY(${((1 - rise) * (theme.canvas.height + 220)).toFixed(1)}px) ` +
-              `scale(${(1 + BONUS.fade.amount * push).toFixed(4)})`,
+              `scale(${(1 + BONUS.grow.amount * push).toFixed(4)})`,
             transformOrigin: `${ROADMAP_CARD.w / 2}px ${ROADMAP_CARD.h / 2}px`,
             borderRadius: theme.shape.panelRadius,
             background: c.cardBg,
