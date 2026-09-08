@@ -136,20 +136,37 @@ export const SC16 = () => {
                      height: 40 either side and 60 above and below is the whole
                      specification, and the browser does the measuring. */
                   padding: `${U.pad.y}px ${U.pad.x}px`,
-                  borderRadius: U.radius,
-                  /* ⚠ OPAQUE, NOT FROSTED. At 0:06 — the frame Simon named —
-                     the card in front is #FDFDFF and solid; the see-through
-                     panels are a LATER part of that video. What gives this one
-                     depth is the blurred layer behind it, not translucency. */
-                  background: theme.color.glassPanel,
-                  border: `${theme.shape.hairline}px solid ${theme.color.glassEdge}`,
-                  boxShadow: theme.color.glassShadow,
+                  position: "relative",
                   opacity: p.opacity,
-                  transform: `scale(${p.scale.toFixed(4)})`,
                 }}
               >
+                {/* ⚠ THE PANEL POPS, THE TYPE DOES NOT — and this layer is what
+                    separates them. The scale used to sit on the padded box, so
+                    the LINE INSIDE scaled with it: during the ten frames of
+                    stagger the second pane was still at 0.94 and its 36px read
+                    as 34, which is exactly the "font sizenya beda" Simon saw.
+                    Both are `U.size`, one variable — they cannot differ. The
+                    background is now an absolute sibling that carries the pop
+                    and nothing else.
+
+                    ⚠ OPAQUE, NOT FROSTED. At 0:06 — the frame Simon named — the
+                    card in front is #FDFDFF and solid; the see-through panels
+                    are a LATER part of that video. What gives this one depth is
+                    the blurred layer behind it, not translucency. */}
                 <div
                   style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: U.radius,
+                    background: theme.color.glassPanel,
+                    border: `${theme.shape.hairline}px solid ${theme.color.glassEdge}`,
+                    boxShadow: theme.color.glassShadow,
+                    transform: `scale(${p.scale.toFixed(4)})`,
+                  }}
+                />
+                <div
+                  style={{
+                    position: "relative",
                     fontFamily: theme.text.family,
                     fontSize: U.size,
                     fontWeight: 600,
