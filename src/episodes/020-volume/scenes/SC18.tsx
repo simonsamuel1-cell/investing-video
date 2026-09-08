@@ -107,13 +107,16 @@ export const SC18 = () => {
   return (
     <Stage>
       <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toLimits) }}>
-      {/* the white panel Simon kept, at a third of the frame */}
-      <Card rect={PANEL} />
       <SourceTag kind={TICK.kind} y={TAG_Y} />
       {/* ⚠ FLUSH LEFT ON THE MARGIN — Simon: "di pojok kiri atas". `Title`
           centres by default, which is the stage's own heading; this one belongs
           to the margin, so it takes `align="left"` and the margin's x. */}
       <Title text={V.title} at={0} x={theme.margin.left} y={theme.stage.title.y - theme.text.title.size / 2} align="left" />
+      {/* ⚠ ONE GROUP: the panel and the column beside it travel together. The
+          heading is deliberately outside it — it belongs to the margin. */}
+      <div style={{ position: "absolute", inset: 0, transform: `translateX(${-V.group}px)` }}>
+      {/* the white panel Simon kept, at a third of the frame */}
+      <Card rect={PANEL} />
 
       {/* ── the nine that stand still ──────────────────────────────────── */}
       <svg
@@ -212,6 +215,7 @@ export const SC18 = () => {
           })}
         </>
       )}
+      </div>
       </div>
     </Stage>
   );

@@ -1831,6 +1831,17 @@ export const SC18_TICK = {
    */
   shift: 200,
   /**
+   * ⚠ THE PANEL AND THE COLUMN ARE ONE OBJECT NOW — Simon: "kelompokkan ini,
+   * lalu geser lagi ke kiri 200 px". `shift` above moved the panel alone to
+   * make room for the column; this moves the two of them together, so the gap
+   * between them is fixed and any later nudge is one number rather than two
+   * kept in step by hand.
+   *
+   * ⚠ AND THE HEADING IS NOT IN THE GROUP. It belongs to the margin, not to
+   * this arrangement — Simon's crop of "ini" starts at the white panel.
+   */
+  group: 200,
+  /**
    * ═══ THE TWO READINGS ═══  (Simon's frames)
    *
    * ⚠ ONE IS TYPED AND THE OTHER IS NOT, at Simon's direction — and the split
@@ -1839,7 +1850,9 @@ export const SC18_TICK = {
    * the viewer's own conclusion being written down. The pair below it is a
    * misreading being named and struck out; that wants to be simply THERE.
    */
-  col: { x: 1160, y: 380, icon: 64, gap: 20, between: 60 },
+  /** ⚠ `between` IS 100 — Simon's number, measured from the bottom of the
+   *  typed line to the top of the cross, not between the two blocks' boxes. */
+  col: { x: 1160, y: 380, icon: 64, gap: 20, between: 100 },
   right: {
     at: 17015,
     /** ⚠ 2 FRAMES A LETTER, LINEAR. Eased typing speeds up and slows down,
