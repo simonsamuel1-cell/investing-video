@@ -823,6 +823,38 @@ export const SPIKE_AT = 41;
 export const SPIKE_VOL = lift(volumeOf(UP.bars, 0x5717), { [SPIKE_AT]: 4.6, [SPIKE_AT + 1]: 1.6 });
 
 /* ══ 7. SC18 — colour follows the candle ═════════════════════════════════ */
+/**
+ * ═══ SC18's LIVE CANDLE ═══  (Simon: 10 volume bars, a sideways tape, and the
+ * last candle looping up and down)
+ *
+ * ⚠ NINE BARS, NOT TEN. The tenth is not data — it is COMPUTED EVERY FRAME in
+ * the scene, because its close is what oscillates. Generating ten and then
+ * overwriting the last would leave a bar in the series that nothing ever draws,
+ * and the next person to read this file would believe it.
+ *
+ * ⚠ AND ITS VOLUME IS STILL ONE OF THESE TEN. The bar's HEIGHT must not move
+ * while its colour flips — the whole point is that only the colour follows the
+ * candle — so the tenth volume is drawn from the same seeded set as the other
+ * nine and simply never recomputed.
+ */
+export const TICK: Series = fromShape({ seed: 907, n: 9, shape: "sideways", start: 4200, label: "Warna mengikuti candle" });
+export const TICK_VOL = volumeOf(
+  /* ten bars' worth of volume out of nine bars: the tenth borrows the ninth's
+     shape, which is the only bar it is guaranteed to look natural beside */
+  [...TICK.bars, TICK.bars[TICK.bars.length - 1]],
+  0x907,
+);
+
+{
+  if (TICK.bars.length !== 9) throw new Error("TICK is meant to be nine drawn bars plus one live one");
+  if (TICK_VOL.length !== 10) throw new Error("TICK_VOL must cover the live bar too");
+  /* sideways means sideways: the tape must not have drifted into a trend */
+  const lo = Math.min(...TICK.bars.map((b) => b.l));
+  const hi = Math.max(...TICK.bars.map((b) => b.h));
+  const drift = Math.abs(TICK.closes[TICK.closes.length - 1] - TICK.closes[0]);
+  if (drift > (hi - lo) * 0.5) throw new Error("TICK drifts too far to read as sideways — change the seed");
+}
+
 export const COLOUR: Series = fromShape({ seed: 618, n: 14, shape: "sideways", start: 4200, label: "Warna mengikuti candle" });
 export const COLOUR_VOL = volumeOf(COLOUR.bars, 0x618);
 

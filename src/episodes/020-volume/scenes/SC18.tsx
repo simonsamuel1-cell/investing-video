@@ -1,5 +1,6 @@
 /**
- * SC18 — the colour misconception. `from 16593 · dur 1167`
+ * SC18 — the colour misconception, as one candle that keeps changing its mind.
+ * `from 16681 · dur 1167`
  *
  * ⚠ THIS IS THE ONE SCENE THAT EARNS THE COLOUR RULE. Green and red belong to
  * candle bodies, wicks and volume bars and nowhere else — and the reason volume
@@ -7,77 +8,137 @@
  * own candle RESTATED, so it takes that candle's colour. It is not a claim
  * about who was buying.
  *
- * The legend prints the actual values because here the colour IS the subject.
- * It still reads them out of the palette, so it cannot drift from the chart
- * standing next to it.
+ * ⚠ AND IT NOW TEACHES IT BY DEMONSTRATION RATHER THAN BY LEGEND. The scene
+ * used to say it with a colour key beside a static chart; Simon replaced that
+ * with the thing itself. The last candle closes above its open and below it,
+ * over and over, and the bar underneath changes colour with it and NEVER
+ * CHANGES HEIGHT. Same volume, either colour — which is the whole claim, made
+ * without a single word.
+ *
+ * ⚠ EVERYTHING ELSE IS GONE — "ganti semua visual, tapi keep background
+ * putihnya". The title, the two chips, the colour key and the reading were all
+ * saying in type what the loop now says by moving.
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Stage, Card, Chart, VolumeBars, ColorKey, Chip, Title, KeyPoint, SourceTag,
-  usePalette, gridOf, useMotion, progress, theme,
+  Stage, Card, SourceTag, usePalette, gridOf, domainOf, theme,
 } from "../../../core";
-import { BLOCK, BEAT, local } from "../data/timing";
+import { BLOCK, SC18_TICK, local } from "../data/timing";
 import { TAG_Y } from "../data/layout";
-import { COLOUR, COLOUR_VOL } from "../data/series";
-import { domainOf } from "../../../core";
+import { TICK, TICK_VOL } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC18;
-const T = {
-  misread: local(BEAT.misread, FROM),
-  colour: local(BEAT.barColour, FROM),
-  follows: local(BEAT.followsCandle, FROM),
-  onlyBuying: local(BEAT.onlyBuying, FROM),
-  both: local(BEAT.buyerAndSeller, FROM),
-};
+const V = SC18_TICK;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const CARD = theme.stage.card;
-const CHART = { x: CARD.x + 56, y: CARD.y + 76, w: CARD.w * 0.52, h: CARD.h * 0.44 };
-const VOLBOX = { x: CHART.x, y: CHART.y + CHART.h + CARD.h * 0.06, w: CHART.w, h: CARD.h * 0.2 };
-const KEY = { x: CARD.x + CARD.w * 0.62, y: CARD.y + CARD.h * 0.28, w: CARD.w * 0.34, h: CARD.h * 0.22 };
-const G = gridOf(COLOUR.closes, domainOf(COLOUR.closes, COLOUR.bars), CHART, 0.12, 0);
-const PEAK = Math.max(...COLOUR_VOL);
+/** ⚠ THE PANEL KEEPS THE CARD'S y AND HEIGHT AND LOSES TWO THIRDS OF ITS WIDTH.
+ *  Only the width was asked for, so only the width moves — the scene still sits
+ *  on the same band of the frame as every other scene in the episode. */
+const CARD_W = theme.canvas.width * V.cardWidth;
+const PANEL = {
+  x: theme.canvas.width / 2 - CARD_W / 2,
+  y: theme.stage.card.y,
+  w: CARD_W,
+  h: theme.stage.card.h,
+};
+const CHART = { x: PANEL.x + 56, y: PANEL.y + 70, w: PANEL.w - 112, h: PANEL.h * 0.46 };
+const VOLBOX = { x: CHART.x, y: CHART.y + CHART.h + 46, w: CHART.w, h: PANEL.h * 0.2 };
+
+/**
+ * ⚠ THE DOMAIN COVERS THE OSCILLATION, NOT JUST THE NINE DRAWN BARS. Built from
+ * the tape alone, the live candle would ride off the top of the plot at the top
+ * of every cycle — and a chart whose scale is wrong only twice a second is
+ * worse than one that is wrong all the time.
+ */
+const BASE = domainOf(TICK.closes, TICK.bars);
+const SPAN = BASE[1] - BASE[0];
+const AMP = SPAN * V.amp;
+const OPEN = TICK.bars[TICK.bars.length - 1].c;
+const REACH = AMP * V.wick;
+const DOMAIN: [number, number] = [
+  Math.min(BASE[0], OPEN - REACH),
+  Math.max(BASE[1], OPEN + REACH),
+];
+/** Ten slots, because the live candle occupies the tenth. */
+const G = gridOf([...TICK.closes, OPEN], DOMAIN, CHART, 0.12, 0);
+const PEAK = Math.max(...TICK_VOL);
+const LIVE = TICK.closes.length;
 
 export const SC18 = () => {
   const f = useCurrentFrame();
-  const m = useMotion();
   const c = usePalette();
+  const at = local(V.at, FROM);
+  if (f < at) return null;
+
+  /**
+   * ⚠ ONE SINE DRIVES THE BODY AND THE TWO COLOURS. The close travels through
+   * its own open, so `up` flips on the frame the body is at zero height — the
+   * one frame where a colour change cannot be seen happening.
+   */
+  const swing = Math.sin((2 * Math.PI * (f - at)) / V.period);
+  const close = OPEN + AMP * swing;
+  const up = close >= OPEN;
+  const fill = up ? c.candleGreen : c.candleRed;
+
+  const w = Math.max(3, G.slot * 0.68);
+  const x = G.x(LIVE);
+  const top = Math.min(G.y(OPEN), G.y(close));
+  const h = Math.max(1.5, Math.abs(G.y(close) - G.y(OPEN)));
+  /** ⚠ THE BAR'S HEIGHT IS THE NINTH'S, FIXED. Same volume, either colour. */
+  const vh = (TICK_VOL[LIVE] / PEAK) * VOLBOX.h;
+
   return (
     <Stage>
-      <Card />
-      <SourceTag kind={COLOUR.kind} y={TAG_Y} />
-      <Title text="Warna volume bar" at={T.colour} />
-      <Chart series={COLOUR} grid={G} at={T.colour} over={m.sec(1.0)} tickLabels={false} />
-      <VolumeBars bars={COLOUR.bars} volume={COLOUR_VOL} grid={G} box={VOLBOX} peak={PEAK} />
-      <Chip label="Candle" x={CHART.x} y={CHART.y - theme.text.chip.size} at={T.colour} anchor="left" tone="slate" />
-      <Chip label="Volume bar" x={VOLBOX.x} y={VOLBOX.y + VOLBOX.h + theme.text.chip.size} at={T.follows} anchor="left" tone="slate" />
+      {/* the white panel Simon kept, at a third of the frame */}
+      <Card rect={PANEL} />
+      <SourceTag kind={TICK.kind} y={TAG_Y} />
 
-      <ColorKey
-        entries={[
-          { name: "Candle naik", color: c.candleGreen },
-          { name: "Volume-nya", color: c.candleGreen },
-          { name: "Candle turun", color: c.candleRed },
-          { name: "Volume-nya", color: c.candleRed },
-        ]}
-        rect={KEY}
-        at={T.follows}
-      />
+      {/* ── the nine that stand still ──────────────────────────────────── */}
+      <svg
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      >
+        {TICK.bars.map((b, i) => {
+          const bx = G.x(i);
+          const bfill = b.c >= b.o ? c.candleGreen : c.candleRed;
+          const bt = Math.min(G.y(b.o), G.y(b.c));
+          const bh = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
+          const bv = (TICK_VOL[i] / PEAK) * VOLBOX.h;
+          return (
+            <g key={i}>
+              <line x1={bx} y1={G.y(b.h)} x2={bx} y2={G.y(b.l)} stroke={bfill} strokeWidth={theme.shape.rule} />
+              <rect x={bx - w / 2} y={bt} width={w} height={bh} rx={Math.min(w * 0.22, 5)} fill={bfill} />
+              <rect
+                x={bx - w / 2}
+                y={VOLBOX.y + VOLBOX.h - bv}
+                width={w}
+                height={Math.max(1, bv)}
+                rx={Math.min(w * 0.28, 8)}
+                fill={bfill}
+                opacity={0.72}
+              />
+            </g>
+          );
+        })}
 
-      <Chip
-        label="Volume hijau = pembelian saja"
-        x={theme.canvas.width / 2}
-        y={CARD.y + CARD.h * 0.74}
-        at={T.onlyBuying}
-        tone="slate"
-        strike={progress(f, T.onlyBuying + m.sec(0.6), m.sec(0.5))}
-      />
-      <KeyPoint
-        text="Setiap transaksi punya pembeli dan penjual"
-        sub="Warnanya cuma mengikuti candle-nya"
-        at={T.both}
-        rect={{ x: CARD.x, y: CARD.y + CARD.h * 0.82, w: CARD.w, h: theme.text.title.size * 2 }}
-      />
+        {/* ── and the one that does not ──────────────────────────────────
+            ⚠ ITS WICK IS A FIXED ENVELOPE. High and low do not follow the
+            close, so this reads as one candle updating rather than as a
+            different candle every half-second. */}
+        <line x1={x} y1={G.y(OPEN + REACH)} x2={x} y2={G.y(OPEN - REACH)} stroke={fill} strokeWidth={theme.shape.rule} />
+        <rect x={x - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} fill={fill} />
+        <rect
+          x={x - w / 2}
+          y={VOLBOX.y + VOLBOX.h - vh}
+          width={w}
+          height={Math.max(1, vh)}
+          rx={Math.min(w * 0.28, 8)}
+          fill={fill}
+          opacity={0.72}
+        />
+      </svg>
     </Stage>
   );
 };

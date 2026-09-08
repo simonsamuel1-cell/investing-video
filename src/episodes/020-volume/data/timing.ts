@@ -1795,6 +1795,43 @@ export const TRANS = {
  * which has to begin on SC18's first frame or it fades onto nothing — starts
  * six frames later than 120 would put it. They sit inside a hold.
  */
+/**
+ * ═══ SC18 · THE LIVE CANDLE ═══  (Simon's frames, 16891–17847)
+ *
+ * "Ganti semua visual, tapi keep background putihnya" — so the white panel
+ * stays and everything that stood on it goes: the title, the two chips, the
+ * colour key and the reading. What is left is one narrow card with ten bars in
+ * it, and the last of them alternating for as long as the scene runs.
+ *
+ * ⚠ A THIRD OF THE SCREEN WIDE, AND THAT IS WHAT MAKES THE POINT LEGIBLE. Ten
+ * bars across 528px of plot is a 36px candle; the same ten across the full card
+ * would be 105px apart and read as a diagram rather than a chart. The panel got
+ * narrower so the candles could get bigger.
+ *
+ * ⚠ THE LOOP IS A SINE, NOT A SWITCH. Simon: "satu saat di atas harga
+ * sebelumnya (warna jadi hijau), satu saat di bawah (warna jadi merah), dan ini
+ * berulang naik turun". A flip between two states would change colour on a
+ * frame where the body is at full height, which reads as a glitch; a close that
+ * travels through its own open crosses at ZERO body height, so the colour
+ * changes on the one frame where there is nothing to see changing.
+ *
+ * ⚠ AND THE WICK DOES NOT MOVE WITH IT. High and low are a fixed envelope round
+ * the oscillation, so what the viewer watches is one candle updating rather
+ * than ten different candles taking turns.
+ */
+export const SC18_TICK = {
+  at: 16891,
+  /** Of the canvas. */
+  cardWidth: 1 / 3,
+  /** One full up-and-down, in frames. */
+  period: 120,
+  /** How far the close travels either side of its open, as a fraction of the
+   *  tape's own range. */
+  amp: 0.17,
+  /** The wick's envelope, as a multiple of `amp`. */
+  wick: 1.35,
+} as const;
+
 export const BONUS = {
   /**
    * ═══ TRANS2'S CADENCE, WITH ONE BEAT ADDED ═══  (Simon: "ikuti dari Scene
