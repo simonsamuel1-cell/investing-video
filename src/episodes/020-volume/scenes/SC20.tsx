@@ -19,7 +19,7 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, GridGround, QuoteCard, Words, TuntunMark, quoteListY,
-  cutInStyle, useMotion, progress, theme,
+  cutInStyle, useMotion, progress, progressInOut, theme,
 } from "../../../core";
 import { BLOCK, CLOSE, CUTS, MASCOT, local } from "../data/timing";
 
@@ -30,23 +30,41 @@ const V = CLOSE;
 
 /** ⚠ MASCOT'S OWN RECT, not a copy of it — see the header. */
 const CARD = MASCOT.card;
-const RECT = (() => {
-  const total = CARD.markH + CARD.gap + CARD.h;
-  const top = (theme.logoZone.height + theme.captionBand.top) / 2 - total / 2 - CARD.lift;
-  const boxY = top + CARD.markH + CARD.gap;
-  return {
-    markY: top,
-    box: { x: theme.canvas.width / 2 - CARD.w / 2, y: boxY, w: CARD.w, h: CARD.h },
-    /* centred in the card BY ITS INK, not by its boxes — see quoteListY */
-    listY: quoteListY(boxY, CARD.h, CARD.lead, V.lines.length),
-  };
-})();
+const X = theme.canvas.width / 2 - CARD.w / 2;
+/** One line instead of two, so the second card is a lead shorter. */
+const H2 = CARD.h - CARD.lead;
+const BAND = (theme.logoZone.height + theme.captionBand.top) / 2;
+
+/**
+ * ⚠ TWO STACKS, EACH CENTRED IN THE BAND, AND THE SCENE MOVES BETWEEN THEM.
+ * Simon: "maskot dan text box pertama akan naik ya, menyesuaikan posisi". The
+ * mascot and the first card are one object; what changes is where the whole
+ * stack sits, so the gap between them cannot drift while it happens.
+ *
+ * ⚠ AND THE LIFT ONLY APPLIES TO THE SHORT STACK. `card.lift` nudges 474px of
+ * content off centre so it does not sit low under the logo; 748px does not have
+ * that problem, and the same nudge would push it up into the logo zone.
+ */
+const stackTop = (total: number, lift: number) => BAND - total / 2 - lift;
+const TOP_ONE = stackTop(CARD.markH + CARD.gap + CARD.h, CARD.lift);
+const TOP_TWO = stackTop(CARD.markH + CARD.gap + CARD.h + V.second.gap + H2, 0);
 
 export const SC20 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const at = local(V.at, FROM);
+  const words = local(V.text, FROM);
+  const two = local(V.second.at, FROM);
   const ground = progress(f, local(V.ground.at, FROM), V.ground.over);
+
+  /** One curve moves the stack and brings the second card in, so the card
+   *  cannot land before the room for it exists. */
+  const rise = progressInOut(f, two, V.second.over);
+  const markY = TOP_ONE + (TOP_TWO - TOP_ONE) * rise;
+  const boxY = markY + CARD.markH + CARD.gap;
+  const box2Y = boxY + CARD.h + V.second.gap;
+  const listY = quoteListY(boxY, CARD.h, CARD.lead, V.lines.length);
+  const list2Y = quoteListY(box2Y, H2, CARD.lead, V.second.lines.length);
 
   return (
     <Stage>
@@ -61,18 +79,18 @@ export const SC20 = () => {
             <TuntunMark
               x={theme.canvas.width / 2}
               y={
-                RECT.markY +
+                markY +
                 Math.sin(((f - at) / MASCOT.float.period) * Math.PI * 2) * MASCOT.float.amount
               }
               height={CARD.markH}
             />
             <QuoteCard
-              x={RECT.box.x}
-              y={RECT.box.y}
-              w={RECT.box.w}
-              h={RECT.box.h}
+              x={X}
+              y={boxY}
+              w={CARD.w}
+              h={CARD.h}
               at={at + m.sec(0.2)}
-              listY={RECT.listY}
+              listY={listY}
               lead={CARD.lead}
               count={V.lines.length}
             >
@@ -81,8 +99,8 @@ export const SC20 = () => {
                   key={line}
                   text={line}
                   x={theme.canvas.width / 2}
-                  y={RECT.listY + CARD.lead * n + CARD.size * 0.62}
-                  at={at + m.sec(0.45) + n * V.lines[0].split(" ").length * 6}
+                  y={listY + CARD.lead * n + CARD.size * 0.62}
+                  at={words + n * V.lines[0].split(" ").length * 6}
                   stagger={6}
                   anchor="center"
                   size={CARD.size}
@@ -91,6 +109,35 @@ export const SC20 = () => {
                 />
               ))}
             </QuoteCard>
+
+            {/* ── and the second reading, once there is room for it ─────── */}
+            {f >= two && (
+              <QuoteCard
+                x={X}
+                y={box2Y}
+                w={CARD.w}
+                h={H2}
+                at={two}
+                listY={list2Y}
+                lead={CARD.lead}
+                count={V.second.lines.length}
+              >
+                {V.second.lines.map((line, n) => (
+                  <Words
+                    key={line}
+                    text={line}
+                    x={theme.canvas.width / 2}
+                    y={list2Y + CARD.lead * n + CARD.size * 0.62}
+                    at={two + m.sec(0.4)}
+                    stagger={6}
+                    anchor="center"
+                    size={CARD.size}
+                    weight={600}
+                    marks={[{ text: V.second.mark, color: theme.color.hlCyan }]}
+                  />
+                ))}
+              </QuoteCard>
+            )}
           </>
         )}
       </div>

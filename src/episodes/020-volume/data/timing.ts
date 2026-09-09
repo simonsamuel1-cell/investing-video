@@ -787,9 +787,32 @@ export const MASCOT = {
  */
 export const CLOSE = {
   ground: { at: 18792, over: 40 },
+  /** The panel arrives first and the words land on Simon's frame. */
   at: 18860,
-  lines: ["Harga menunjukkan arah,", "volume menunjukkan keyakinannya."],
-  mark: "keyakinannya",
+  text: 18888,
+  lines: ["Harga menunjukkan arah,", "volume menunjukkan tenaganya."],
+  mark: "tenaganya",
+  /**
+   * ═══ AND A SECOND CARD ═══  (Simon's frame)
+   *
+   * ⚠ THE GROUP RISES RATHER THAN THE CARD SQUEEZING IN. Simon saw it himself:
+   * "text box baru tidak akan muat di bawahnya, jadi maskot dan text box
+   * pertama akan naik". The mascot and the first card are one object and they
+   * move as one, so the gap between them cannot drift; what changes is where
+   * the whole stack is centred, from the band's middle for one card to the
+   * band's middle for two.
+   *
+   * ⚠ AND THE LIFT GOES WITH IT. `card.lift` nudges a 474px stack off centre so
+   * it does not sit low under the logo; a 748px stack does not have that
+   * problem and the same nudge would push it into the logo zone instead.
+   */
+  second: {
+    at: 19143,
+    over: 30,
+    gap: 40,
+    lines: ["Volume tidak menebak, tapi menilai."],
+    mark: "menilai",
+  },
 } as const;
 
 /**
