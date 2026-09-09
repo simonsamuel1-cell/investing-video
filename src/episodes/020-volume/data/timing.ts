@@ -810,6 +810,18 @@ export const CLOSE = {
     at: 19143,
     over: 30,
     gap: 40,
+    /**
+     * ⚠ 80, BECAUSE CENTRED IS NOT HIGH ENOUGH — Simon: "kurang naik nih".
+     * Centring the two-card stack in the band leaves 37px above the mascot and
+     * 37px below the second card, which is balanced and reads as CRAMPED: the
+     * pair fills the frame with nothing under it. Lifted, the weight sits where
+     * the eye starts and the caption band gets its air back.
+     *
+     * ⚠ AND IT IS SAFE ABOVE. The logo zone's rule is about x — content in the
+     * top 150px must end before 1368 — and the mascot is 130px wide on the
+     * centreline, so it clears that by 340px however high it goes.
+     */
+    lift: 80,
     lines: ["Volume tidak menebak, tapi menilai."],
     mark: "menilai",
   },

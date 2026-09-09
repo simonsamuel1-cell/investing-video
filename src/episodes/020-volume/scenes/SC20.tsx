@@ -41,13 +41,14 @@ const BAND = (theme.logoZone.height + theme.captionBand.top) / 2;
  * mascot and the first card are one object; what changes is where the whole
  * stack sits, so the gap between them cannot drift while it happens.
  *
- * ⚠ AND THE LIFT ONLY APPLIES TO THE SHORT STACK. `card.lift` nudges 474px of
- * content off centre so it does not sit low under the logo; 748px does not have
- * that problem, and the same nudge would push it up into the logo zone.
+ * ⚠ EACH STACK HAS ITS OWN LIFT, and neither is the other's. `card.lift` was
+ * measured against 474px of content; the taller stack needed more, not less —
+ * centred, the pair fills the frame with nothing under it. Two totals through
+ * one function, rather than one offset from the other.
  */
 const stackTop = (total: number, lift: number) => BAND - total / 2 - lift;
 const TOP_ONE = stackTop(CARD.markH + CARD.gap + CARD.h, CARD.lift);
-const TOP_TWO = stackTop(CARD.markH + CARD.gap + CARD.h + V.second.gap + H2, 0);
+const TOP_TWO = stackTop(CARD.markH + CARD.gap + CARD.h + V.second.gap + H2, V.second.lift);
 
 export const SC20 = () => {
   const f = useCurrentFrame();
