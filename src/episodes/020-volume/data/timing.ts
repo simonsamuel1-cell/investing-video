@@ -768,6 +768,31 @@ export const MASCOT = {
 } as const;
 
 /**
+ * ═══ SC20 · THE CLOSE ═══  (Simon: the mascot, a quote and the grid, as at 3288)
+ *
+ * ⚠ THE SAME CARD THE EPISODE ALREADY USED, NOT ONE THAT LOOKS LIKE IT. The
+ * roadmap and its ticks are gone; what closes the video is the object that
+ * closed the first chapter — mark, bordered panel, solid block behind it, quote
+ * marks in opposite corners, on the same drifting grid. Using it again says
+ * "this is the same kind of statement as that one" without a word.
+ *
+ * ⚠ THE LINES ARE MY DRAFT — Simon: "coba kamu yang ringkas dulu". They take
+ * the shape of the closing narration itself ("harga menunjukkan arahnya,
+ * sedangkan volume menunjukkan seberapa ramai transaksi di baliknya") and cut
+ * it to the one contrast the whole episode is about. The highlight lands on the
+ * half that is new: everyone already knows price shows direction.
+ *
+ * ⚠ AND THE GROUND ARRIVES BEFORE THE MASCOT, as it does at 2461. The grid is
+ * the room the closing happens in, not something the card brings with it.
+ */
+export const CLOSE = {
+  ground: { at: 18792, over: 40 },
+  at: 18860,
+  lines: ["Harga menunjukkan arah,", "volume menunjukkan keyakinannya."],
+  mark: "keyakinannya",
+} as const;
+
+/**
  * ═══ THE HEADLINE ═══  (Simon's frames)
  *
  * One line, top left, that CORRECTS ITSELF: it states the wrong answer, strikes
