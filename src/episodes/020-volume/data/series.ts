@@ -481,23 +481,55 @@ export const SS4_DOMAIN = domainOf(SS4.closes, SS4.bars);
  */
 import SS7_RAW from "./ss7.json";
 const SS7_PX = (SS7_RAW as { px: Bar[] }).px;
-export const SS4_LEAD = 41;
+/**
+ * ⚠ EIGHT OF SS4'S OWN BARS ARE DROPPED — Simon: "hitung 12 candle dari kanan,
+ * lalu hapus 8 candlestick sebelum 12 candle itu". They were the flat base
+ * immediately before the breakout, and SS7's tail already provides a flat
+ * stretch: the two together read as one dead run twice as long as it should be.
+ * What is left is the 12 that matter, with the run-up shifted right into the
+ * gap and 8 more SS7 bars filling the far left.
+ *
+ * ⚠ AND THE WINDOW OF SS7 IS SEARCHED FOR, NOT TAKEN FROM THE END. Dropping
+ * those 8 moves the join to SS4's bar 8, which opens 9 units above the floor of
+ * a domain the chart may not leave — so a run-up that dips at all has nowhere
+ * to go. All 61 windows of SS7 were tried at the matched candle size; the one
+ * starting at bar 56 is the only one that both fits inside SS4's range and
+ * lands within 2.7 units of the join, which is a seventh of a median body and
+ * invisible. The others miss it by 11 to 46.
+ *
+ * ⚠ THE SIZE IS MATCHED TO ALL OF SS4, NOT TO THE 12 THAT SURVIVE. Those twelve
+ * are the breakout — median body 37 against SS4's own 20. Matching them would
+ * have made an ordinary run-up out of breakout-sized candles, and no window of
+ * SS7 fits the domain at that size at all.
+ */
+export const SS4_DROP = 8;
+export const SS4_LEAD = 41 + SS4_DROP;
+export const SS4_KEEP = SS4.bars.slice(SS4_DROP);
 export const SS4_RUNUP: Series = (() => {
-  const win = SS7_PX.slice(-SS4_LEAD);
   const med = (a: number[]) => [...a].sort((x, y) => x - y)[a.length >> 1];
   const [lo, hi] = SS4_DOMAIN;
-  const open = SS4.bars[0].o;
-  const last = win[win.length - 1].c;
-  /* pixels grow downward, so a value is `open` plus the distance ABOVE `last` */
-  const fit = Math.min(
-    (hi - open) / (last - Math.min(...win.map((b) => b.h))),
-    (open - lo) / (Math.max(...win.map((b) => b.l)) - last),
-  );
-  const match = med(SS4.bars.map((b) => Math.abs(b.c - b.o))) / med(win.map((b) => Math.abs(b.c - b.o)));
-  const s = Math.min(fit, match);
-  const V = (y: number) => open + (last - y) * s;
-  const bars: Bar[] = win.map((b) => ({ o: V(b.o), h: V(b.h), l: V(b.l), c: V(b.c) }));
-  const all = [...bars, ...SS4.bars];
+  const open = SS4_KEEP[0].o;
+  const body = med(SS4.bars.map((b) => Math.abs(b.c - b.o)));
+
+  let best: { bars: Bar[]; gap: number } | null = null;
+  for (let at = 0; at + SS4_LEAD <= SS7_PX.length; at++) {
+    const win = SS7_PX.slice(at, at + SS4_LEAD);
+    const s = body / med(win.map((b) => Math.abs(b.c - b.o)));
+    /* pixels grow downward: `h` is the smallest y, `l` the largest */
+    const yTop = Math.min(...win.map((b) => b.h));
+    const yBot = Math.max(...win.map((b) => b.l));
+    if ((yBot - yTop) * s > hi - lo) continue;
+    /* start from the offset that closes the join, then push it inside the
+       domain — whatever is left over IS the join's discontinuity */
+    let A = open + s * win[win.length - 1].c;
+    if (A - s * yBot < lo) A += lo - (A - s * yBot);
+    if (A - s * yTop > hi) A -= A - s * yTop - hi;
+    const gap = Math.abs(A - s * win[win.length - 1].c - open);
+    if (best && gap >= best.gap) continue;
+    best = { gap, bars: win.map((b) => ({ o: A - s * b.o, h: A - s * b.h, l: A - s * b.l, c: A - s * b.c })) };
+  }
+  if (!best) throw new Error("no window of SS7 fits SS4's price range at a matched candle size");
+  const all = [...best.bars, ...SS4_KEEP];
   return { closes: all.map((b) => b.c), bars: all, kind: "traced", label: SS4.label };
 })();
 /**
@@ -512,7 +544,7 @@ export const SS4_RUNUP_VOL = (() => {
   const peak = Math.max(...SS4_VOL);
   const ranges = lead.map((b) => b.h - b.l);
   const top = Math.max(...ranges);
-  return [...ranges.map((r) => (r / top) * peak * 0.62), ...SS4_VOL];
+  return [...ranges.map((r) => (r / top) * peak * 0.62), ...SS4_VOL.slice(SS4_DROP)];
 })();
 
 {
@@ -523,11 +555,15 @@ export const SS4_RUNUP_VOL = (() => {
       throw new Error(`SS7 bar ${i}: the wick does not contain its own body`);
     }
   });
-  if (SS4_RUNUP.bars.length !== SS4_LEAD + SS4.bars.length) throw new Error("SS4_RUNUP lost bars");
-  if (Math.abs(SS4_RUNUP.bars[SS4_LEAD - 1].c - SS4.bars[0].o) > 1e-9) {
-    throw new Error("the run-up does not close on SS4's first open — the join would show");
-  }
-  if (Math.max(...SS4_RUNUP_VOL) !== Math.max(...SS4_VOL)) {
+  if (SS4_RUNUP.bars.length !== SS4_LEAD + SS4_KEEP.length) throw new Error("SS4_RUNUP lost bars");
+  if (SS4_RUNUP.bars.length !== 61) throw new Error("the grown tape is not 61 slots — its box was solved for 61");
+  /* ⚠ THE JOIN IS ALLOWED A SEAM, BUT A SMALL ONE. Dropping SS4's first eight
+     puts the join 9 units above the domain floor, so no window of SS7 can close
+     it exactly; a seventh of a median body is the most that may show. */
+  const seam = Math.abs(SS4_RUNUP.bars[SS4_LEAD - 1].c - SS4_KEEP[0].o);
+  const body = [...SS4.bars.map((b) => Math.abs(b.c - b.o))].sort((a, b) => a - b)[SS4.bars.length >> 1];
+  if (seam > body / 5) throw new Error(`the run-up joins ${seam.toFixed(1)} away from SS4 — that seam would show`);
+  if (Math.max(...SS4_RUNUP_VOL) !== Math.max(...SS4_VOL.slice(SS4_DROP))) {
     throw new Error("SS4_RUNUP_VOL's peak is not SS4's — the locked twenty would be rescaled");
   }
   const [lo, hi] = SS4_DOMAIN;

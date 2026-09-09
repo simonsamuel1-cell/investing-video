@@ -48,7 +48,7 @@ import {
 } from "../../../core";
 import { BLOCK, CUTS, LIMITS, local } from "../data/timing";
 import {
-  SS4, SS4_DOMAIN, SS4_VOL, SS4_LEAD, SS4_RUNUP, SS4_RUNUP_VOL, COLOUR, COLOUR_VOL,
+  SS4, SS4_DOMAIN, SS4_VOL, SS4_LEAD, SS4_KEEP, SS4_RUNUP, SS4_RUNUP_VOL, COLOUR, COLOUR_VOL,
   domainOfColour, zigzagOf,
 } from "../data/series";
 
@@ -223,12 +223,17 @@ const Window = ({ i }: { i: number }) => {
   const bars = series.bars;
   const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
   const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
-  const highs = [...bars.map((b) => b.h)].sort((a, b) => b - a);
-  const lows = [...bars.map((b) => b.l)].sort((a, b) => a - b);
-  const zones = [
-    { hi: highs[0], lo: highs[3] },
-    { hi: lows[3], lo: lows[0] },
-  ];
+  /**
+   * ⚠ BOTH BANDS ARE THE SAME HEIGHT — Simon. Left to their own extremes they
+   * came out different depths, which reads as one level being a stronger claim
+   * than the other; they are the same KIND of claim, so they are the same size.
+   * Each is CENTRED on its own level rather than hung off one extreme.
+   */
+  const zoneH = (domain[1] - domain[0]) * V.read.zoneH;
+  const top3 = [...bars.map((b) => b.h)].sort((a, b) => b - a).slice(0, 3);
+  const bot3 = [...bars.map((b) => b.l)].sort((a, b) => a - b).slice(0, 3);
+  const mid = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length;
+  const zones = [mid(top3), mid(bot3)].map((v) => ({ hi: v + zoneH / 2, lo: v - zoneH / 2 }));
   /** ⚠ EACH LINE IS ASKED FOR ITS OWN SIDE — deriving it by comparing the pair
    *  back to its hull passes for both when they share an endpoint. */
   const hull = (key: "l" | "h", under: boolean) => {
@@ -243,17 +248,25 @@ const Window = ({ i }: { i: number }) => {
       }
       h.push(k);
     }
-    let best = [h[0], h[h.length - 1]];
+    /**
+     * ⚠ AN EDGE OF THE HULL, NOT ANY PAIR OF ITS VERTICES. The old version took
+     * the widest pair, which is the CHORD from the first vertex to the last —
+     * and the chord of a lower hull lies ABOVE it, so the line came out over
+     * the candles instead of under them. Only adjacent vertices are an edge,
+     * and only an edge is guaranteed to have nothing on its far side.
+     */
+    let best = [h[0], h[1] ?? h[0]];
     let bestSpan = -1;
-    for (let a = 0; a < h.length; a++) {
-      for (let b = a + 1; b < h.length; b++) {
-        if (h[b] - h[a] > bestSpan) { bestSpan = h[b] - h[a]; best = [h[a], h[b]]; }
-      }
+    for (let k = 1; k < h.length; k++) {
+      if (h[k] - h[k - 1] > bestSpan) { bestSpan = h[k] - h[k - 1]; best = [h[k - 1], h[k]]; }
     }
     return best;
   };
-  const chan = (["l", "h"] as const).map((key) => {
-    const [a, b2] = hull(key, key === "l");
+  /** ⚠ ONE LINE, UNDER THE LOWS — Simon. Two lines drew a channel, which is a
+   *  claim about where price is contained; one under the lows is the pattern
+   *  the word "pola candle" is naming. */
+  const chan = (["l"] as const).map((key) => {
+    const [a, b2] = hull(key, true);
     return { a, b: b2, key };
   });
   const maPath = pathOf(sma(series.closes, V.read.maPeriod), g);
@@ -320,7 +333,7 @@ const Window = ({ i }: { i: number }) => {
             thirds of the entrance drawing bars that are off the left edge, and
             the window would look empty while it filled. */}
         {series.bars
-          .slice(0, long ? SS4_LEAD + Math.ceil(SS4.bars.length * built) : Math.ceil(series.bars.length * built))
+          .slice(0, long ? SS4_LEAD + Math.ceil(SS4_KEEP.length * built) : Math.ceil(series.bars.length * built))
           .map((b, k) => {
           const bx = g.x(k);
           const fill = b.c >= b.o ? c.candleGreen : c.candleRed;

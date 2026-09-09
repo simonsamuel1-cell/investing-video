@@ -1963,7 +1963,13 @@ export const LIMITS = {
      *  swing inside that base clears the threshold — the zigzag only appeared
      *  over the breakout at the right and said nothing about the trend it is
      *  meant to be tracing. */
-    zigThr: 0.08,
+/** ⚠ 0.20, NOT 0.08 — Simon: "kurangin kerumitannya". At 0.08 the zigzag
+     *  committed a vertex on every wobble in the run-up and read as noise; the
+     *  threshold is a fraction of the tape's OWN range, so it means the same
+     *  density whatever the chart is priced in. */
+    zigThr: 0.2,
+    /** Both support and resistance bands, as a fraction of the tape's range. */
+    zoneH: 0.05,
     maPeriod: 8,
     width: 4,
   },
