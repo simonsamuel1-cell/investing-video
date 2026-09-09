@@ -1,5 +1,5 @@
 /**
- * SC20 — the close. `from 18792 · dur 888`
+ * SC20 — the close. `from 18792 · dur 1068`
  *
  * ⚠ THE SAME CARD THE EPISODE ALREADY USED, NOT ONE THAT LOOKS LIKE IT. The
  * roadmap and its ticks are gone — Simon: "ganti dengan maskot, quote dan

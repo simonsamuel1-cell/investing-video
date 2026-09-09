@@ -7,7 +7,7 @@
  *
  * BLOCK boundaries, not VO in/out: each scene runs until the next begins, cut
  * at the midpoint of the silence between them, so the timeline is continuous
- * from f0 to f19592 and no frame is unowned.
+ * from f0 to BLOCK.END and no frame is unowned.
  */
 export const BLOCK = {
   SC01: 0, SC02: 809, SC03: 1516, SC04: 2448, SC05: 3399, SC06: 4260,
@@ -30,7 +30,15 @@ export const BLOCK = {
    * only the last 575 frames of it.
    */
   SC16: 14518, SC17: 16078, SC18: 16681, SC19: 17848, SC20: 18792,
-  END: 19680,
+  /**
+   * ⚠ 180 FRAMES PAST THE LAST WORD — Simon: "di akhir scene perpanjang 3 detik
+   * supaya ga langsung end". The voice ends on 19680 and the two quote cards are
+   * still standing there; ending on that same frame cuts the last sentence off
+   * at the moment it lands. These three seconds are the pause after it, so
+   * nothing here starts them: SC20's duration is `END - SC20` and the tail is
+   * simply the closing picture held.
+   */
+  END: 19860,
 } as const;
 
 /**

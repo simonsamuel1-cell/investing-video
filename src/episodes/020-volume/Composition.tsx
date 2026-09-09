@@ -54,8 +54,12 @@ import { SC20 } from "./scenes/SC20";
 import { Cards } from "./scenes/Cards";
 
 /** The voice ends on the last cue. `VO_END` is computed from the SRT, so a
- *  re-cut recording fails against the wrong number rather than truncating. */
-export const TOTAL_FRAMES = 19680;
+ *  re-cut recording fails against the wrong number rather than truncating.
+ *
+ *  ⚠ LONGER THAN THE VOICE ON PURPOSE, and it is `BLOCK.END` — the closing
+ *  cards hold for three seconds after the last word (see BLOCK.END). The guard
+ *  below is a floor, not an equality, precisely so this tail is allowed. */
+export const TOTAL_FRAMES = BLOCK.END;
 
 type Mounted = {
   from: number;
