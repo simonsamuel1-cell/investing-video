@@ -457,63 +457,76 @@ export const SS5_VOL = SS5_JSON.vol;
 export const SS4_DOMAIN = domainOf(SS4.closes, SS4.bars);
 
 /**
- * ═══ THE BARS THAT COME BEFORE SS4 ═══  (Simon: "tambahkan candlestick ke kiri")
+ * ═══ THE BARS THAT COME BEFORE SS4 ═══  (Simon: trace SS7 for the left-hand chart)
  *
- * ⚠ THEY ARE ONLY EVER SEEN ONCE THE WINDOW HAS OPENED. In the small window
- * they are outside the display and clipped away, which is what lets SS6 stay
- * locked while the tape behind it gets longer — the display Simon approved is
- * showing the same twenty candles at the same size, with more of the same tape
- * waiting off its left edge.
+ * ⚠ TRACED, NOT GENERATED. The first version of these 41 bars was a seeded
+ * random walk; Simon gave SS7 instead. It is a 109-candle screenshot in the
+ * same flat-colour render as SS1–SS3: bodies are runs exactly 7px wide at a
+ * 10.03px pitch, wicks are the centre column, and the dotted level at y=305 is
+ * drawn in the SAME red as a down candle, so a dot is dropped only where the
+ * rows above and below it in that column are empty — which cannot touch a
+ * candle that genuinely crosses it. All 109 wicks contain their own bodies and
+ * all 109 directions agree with their colour.
  *
- * ⚠ WHICH IS WHY THEY MUST NOT MOVE ANYTHING SS4 OWNS. They are generated
- * INSIDE SS4's own price range and their volumes are held under SS4's tallest
- * bar, so neither the price domain nor the histogram's peak changes. Either one
- * would rescale the twenty candles that are under contract.
+ * ⚠ THE LAST 41, NOT THE FIRST. They are what runs INTO SS4, so the tape reads
+ * as one series rather than two stuck together — and the join is closed exactly:
+ * the last close is mapped onto SS4's first open.
+ *
+ * ⚠ THE SCALE IS THE TIGHTER OF TWO CONSTRAINTS, and both matter. One is that
+ * the run-up must fit inside SS4's own price range: outside it a bar draws past
+ * the panel, and SS4's twenty are under contract (see SS6). The other is that
+ * its candles must be the SAME SIZE as SS4's, or the join is visible as a
+ * change of scale. Here the size match is the tighter one at 1.667 px per unit,
+ * and the result sits at 246–705 inside a domain of 209–749.
  */
+import SS7_RAW from "./ss7.json";
+const SS7_PX = (SS7_RAW as { px: Bar[] }).px;
 export const SS4_LEAD = 41;
 export const SS4_RUNUP: Series = (() => {
-  const open = SS4.bars[0].o;
-  const body = SS4.bars.slice(0, 6).reduce((a, b) => a + Math.abs(b.c - b.o), 0) / 6;
+  const win = SS7_PX.slice(-SS4_LEAD);
+  const med = (a: number[]) => [...a].sort((x, y) => x - y)[a.length >> 1];
   const [lo, hi] = SS4_DOMAIN;
-  const rnd = seeded(0x4104);
-  const bars: Bar[] = [];
-  let p = open;
-  for (let i = 0; i < SS4_LEAD; i++) {
-    const step = (rnd() - 0.5) * 2 * body * 1.5;
-    /* ⚠ CLAMPED INTO SS4'S RANGE, not merely started in it — a random walk 41
-       steps long will leave any band it is not held inside, and one bar outside
-       the domain is a bar drawn past the edge of its own panel. */
-    const c = Math.min(hi - body, Math.max(lo + body, p + step));
-    const wick = body * (0.4 + rnd() * 0.8);
-    bars.push({
-      o: p,
-      c,
-      h: Math.min(hi, Math.max(p, c) + wick),
-      l: Math.max(lo, Math.min(p, c) - wick),
-    });
-    p = c;
-  }
-  /* the join is closed onto SS4's first open, so the two are one price series */
-  const drift = SS4.bars[0].o - p;
-  bars.forEach((b, i) => {
-    const k = ((i + 1) / SS4_LEAD) * drift;
-    b.o += k; b.c += k; b.h += k; b.l += k;
-  });
+  const open = SS4.bars[0].o;
+  const last = win[win.length - 1].c;
+  /* pixels grow downward, so a value is `open` plus the distance ABOVE `last` */
+  const fit = Math.min(
+    (hi - open) / (last - Math.min(...win.map((b) => b.h))),
+    (open - lo) / (Math.max(...win.map((b) => b.l)) - last),
+  );
+  const match = med(SS4.bars.map((b) => Math.abs(b.c - b.o))) / med(win.map((b) => Math.abs(b.c - b.o)));
+  const s = Math.min(fit, match);
+  const V = (y: number) => open + (last - y) * s;
+  const bars: Bar[] = win.map((b) => ({ o: V(b.o), h: V(b.h), l: V(b.l), c: V(b.c) }));
   const all = [...bars, ...SS4.bars];
   return { closes: all.map((b) => b.c), bars: all, kind: "traced", label: SS4.label };
 })();
-export const SS4_RUNUP_VOL = [
-  ...volumeOf(SS4_RUNUP.bars.slice(0, SS4_LEAD), 0x4104).map((v, i, a) => {
-    /* ⚠ HELD UNDER SS4'S OWN PEAK. VolumeBars normalises to the tallest bar in
-       the array; a taller run-up bar would shorten all twenty locked ones. */
-    const peak = Math.max(...SS4_VOL);
-    return (v / Math.max(...a)) * peak * 0.5;
-  }),
-  ...SS4_VOL,
-];
+/**
+ * ⚠ THE RUN-UP'S VOLUME IS DERIVED, AND IT HAS TO BE: SS7 is a price panel with
+ * no histogram under it. Each bar is given the volume its own range implies —
+ * range and volume genuinely move together on a tape — held under SS4's tallest
+ * bar, because VolumeBars normalises to the array's maximum and a taller run-up
+ * bar would shorten all twenty locked ones.
+ */
+export const SS4_RUNUP_VOL = (() => {
+  const lead = SS4_RUNUP.bars.slice(0, SS4_LEAD);
+  const peak = Math.max(...SS4_VOL);
+  const ranges = lead.map((b) => b.h - b.l);
+  const top = Math.max(...ranges);
+  return [...ranges.map((r) => (r / top) * peak * 0.62), ...SS4_VOL];
+})();
 
 {
+  if (SS7_PX.length !== 109) throw new Error(`SS7 traced ${SS7_PX.length} candles, not 109`);
+  SS7_PX.forEach((b, i) => {
+    /* pixels: `h` is the SMALLEST y and `l` the largest, so the test inverts */
+    if (b.h > Math.min(b.o, b.c) || b.l < Math.max(b.o, b.c)) {
+      throw new Error(`SS7 bar ${i}: the wick does not contain its own body`);
+    }
+  });
   if (SS4_RUNUP.bars.length !== SS4_LEAD + SS4.bars.length) throw new Error("SS4_RUNUP lost bars");
+  if (Math.abs(SS4_RUNUP.bars[SS4_LEAD - 1].c - SS4.bars[0].o) > 1e-9) {
+    throw new Error("the run-up does not close on SS4's first open — the join would show");
+  }
   if (Math.max(...SS4_RUNUP_VOL) !== Math.max(...SS4_VOL)) {
     throw new Error("SS4_RUNUP_VOL's peak is not SS4's — the locked twenty would be rescaled");
   }
