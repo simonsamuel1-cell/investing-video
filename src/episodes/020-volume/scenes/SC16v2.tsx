@@ -21,7 +21,7 @@
 import { interpolate, useCurrentFrame } from "remotion";
 import {
   Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
-  progress, progressInOut, ramp, textReveal, candleWidth, ticksOf, usePalette,
+  progress, progressInOut, textReveal, candleWidth, ticksOf, usePalette,
   cutOutStyle, GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
@@ -221,8 +221,15 @@ export const SC16v2 = () => {
    *  moves — Simon has rejected a fade that runs under the next beat before. */
   const clear = progress(f, local(V.clear.at, FROM), V.clear.over);
   const volIn = progress(f, local(V.vol.at, FROM), V.vol.over);
-  /** ⚠ UN-EASED. A tape prints at one bar a moment, not slowly-fast-slowly. */
-  const built = ramp(f, local(V.build.at, FROM), V.build.over);
+  /**
+   * ⚠ EASED, LIKE EVERY OTHER MOVE IN THE VIDEO — Simon: "pasangkan easy ease
+   * ke segala animasi pergerakan". It printed at one bar a moment on the
+   * argument that a tape is a metronome; against the rest of the episode that
+   * read as the one mechanical thing on screen. It still starts and finishes on
+   * the same frames — easing changes the pacing between them, never the ends —
+   * so the build still lands on 15051.
+   */
+  const built = progressInOut(f, local(V.build.at, FROM), V.build.over);
   const grown = (SS_KEEP + SS_NEW.length * built) / SS_GROWN.length;
 
   /**

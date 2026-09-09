@@ -13,9 +13,9 @@
  * what makes it one surface rather than a thing each scene has to remember to
  * draw.
  */
-import { useCurrentFrame, interpolate } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { AbsoluteFill } from "remotion";
-import { ramp, usePalette, theme } from "../../../core";
+import { progress, ramp, useMotion, usePalette, theme } from "../../../core";
 import { MISTAKES, local } from "../data/timing";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -26,6 +26,7 @@ const V = MISTAKES;
 export const MistakesLayer = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   /** ⚠ LINEAR AND UNCLAMPED. A drift that eases reads as a move about to
    *  finish; this one neither starts nor ends on screen. */
   const d = f / V.ground.over;
@@ -77,7 +78,10 @@ export const MistakesLayer = () => {
           lineHeight: 1.2,
           color: theme.color.indigo,
           whiteSpace: "pre",
-          opacity: interpolate(f, [0, 12], [0, 1], { extrapolateRight: "clamp" }),
+          /* ⚠ EASED, AND ITS LENGTH COMES FROM THE THEME — it was a linear ramp
+           over a frame count typed in here, which is the one thing a component
+           may never do (see helpers.ts). */
+        opacity: progress(f, 0, m.fade),
         }}
       >
         {V.head.lead}
