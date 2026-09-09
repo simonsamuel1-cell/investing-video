@@ -1910,7 +1910,28 @@ export const LIMITS = {
    * that grew with it would be a heading competing with the one already at the
    * top of the margin.
    */
-  grow: { at: 18309, over: 40 },
+  /**
+   * ═══ f18309 · THE WINDOW OPENS, AND THE CHART GROWS BY HALF ═══
+   *
+   * ⚠ 1.5×, NOT "fill the display" — Simon: "aku mau membesar 50% saja". The
+   * old version sized the chart to whatever rect it landed in, which is how a
+   * 400px display became a 1678px one and the candles grew with it. One factor,
+   * applied to the pitch AND the panel heights together, is what "lock ratio…
+   * tidak stretch" means: every proportion inside the display is the same
+   * before and after.
+   *
+   * ⚠ AND IT GROWS TOWARD THE TOP RIGHT. The tape's last bar lands `right` in
+   * from the opened display's right edge and the histogram's baseline sits
+   * `bottom` up from its floor, so the twenty candles travel right and upward
+   * as they grow while the volume stays on the floor — Simon's directions,
+   * exactly.
+   *
+   * ⚠ WHICH LEAVES THE LEFT EMPTY, and that is the point of SS4_LEAD. At 1.5×
+   * the twenty candles are 530px of a 1678px display; the 41 bars that come
+   * before them fill the rest at the SAME size, because they were always there
+   * — clipped off the small window's left edge.
+   */
+  grow: { at: 18309, over: 40, scale: 1.5, right: 40, bottom: 8 },
   /**
    * ⚠ THE DISPLAY'S PADDING IN THE GROWN STATE IS 25 ON THREE SIDES AND A LINE
    * OF TEXT AT THE BOTTOM — Simon. Which is why `bottom` is derived from the

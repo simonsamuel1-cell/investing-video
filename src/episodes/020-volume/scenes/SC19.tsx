@@ -44,11 +44,12 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, cutInStyle, cutOutStyle, gridOf, pathOf, popIn, progress,
-  progressInOut, sma, textReveal, usePalette, theme,
+  progressInOut, sma, textReveal, usePalette, GRID_PAD_X, theme,
 } from "../../../core";
 import { BLOCK, CUTS, LIMITS, local } from "../data/timing";
 import {
-  SS4, SS4_DOMAIN, SS4_VOL, COLOUR, COLOUR_VOL, domainOfColour, zigzagOf,
+  SS4, SS4_DOMAIN, SS4_VOL, SS4_LEAD, SS4_RUNUP, SS4_RUNUP_VOL, COLOUR, COLOUR_VOL,
+  domainOfColour, zigzagOf,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -117,6 +118,52 @@ const TONE = (c: ReturnType<typeof usePalette>) => ({
 
 const COLOUR_DOMAIN = domainOfColour;
 
+/**
+ * ═══ THE CHART'S TWO STATES, AND WHY THEY CANNOT STRETCH ═══
+ *
+ * ⚠ BOTH ARE DERIVED FROM SS4'S OWN SMALL LAYOUT, and the grown one is that
+ * layout times `grow.scale` in BOTH axes. Pitch, panel heights and the gap
+ * between the panels all take the same factor, so every proportion inside the
+ * display is identical before and after — which is the whole of "lock ratio…
+ * tidak stretch". Nothing here is a rect chosen to fill a space.
+ *
+ * ⚠ AND THE SMALL STATE DRAWS SS4 EXACTLY WHERE IT ALREADY DID. The box is
+ * solved so that bar SS4_LEAD — the first of the twenty under contract — lands
+ * on the pixel SS4's own bar 0 lands on today, at the same pitch. The 41 bars
+ * in front of it fall off the display's left edge and are clipped.
+ */
+const chartBoxes = (S: Record<string, Rect>, open: number) => {
+  const N = SS4_LEAD + SS4.bars.length;
+  /** SS4's own pitch in the small window — the number SS6 is drawn with. */
+  const p = (S.price.w - GRID_PAD_X * 2) / (SS4.bars.length - 1);
+  const x0 = S.price.x + GRID_PAD_X;
+  const dropY = S.volume.y + S.volume.h - S.price.y;
+  const gapY = S.volume.y - S.price.y;
+
+  const k = LIMITS.grow.scale;
+  const small = {
+    price: { x: x0 - GRID_PAD_X - p * SS4_LEAD, y: S.price.y, w: p * (N - 1) + GRID_PAD_X * 2, h: S.price.h },
+    volume: { x: 0, y: S.volume.y, w: 0, h: S.volume.h },
+  };
+  const gp = p * k;
+  const innerG = gp * (N - 1);
+  const right = FULL.display.x + FULL.display.w - LIMITS.grow.right;
+  const bottom = FULL.display.y + FULL.display.h - LIMITS.grow.bottom;
+  const gy = bottom - dropY * k;
+  const grown = {
+    price: { x: right - GRID_PAD_X - innerG, y: gy, w: innerG + GRID_PAD_X * 2, h: S.price.h * k },
+    volume: { x: 0, y: gy + gapY * k, w: 0, h: S.volume.h * k },
+  };
+  return {
+    price: mixRect(small.price, grown.price, open),
+    volume: mixRect(small.volume, grown.volume, open),
+    /** ⚠ THE CANDLE'S WIDTH COMES FROM THE PITCH, not from `grid.slot`. `slot`
+     *  divides by the BAR COUNT, so lengthening the tape would have thinned the
+     *  twenty locked candles by half a pixel — enough to break the lock. */
+    w: lerp(p, gp, open) * (0.66 * (SS4.bars.length - 1)) / SS4.bars.length,
+  };
+};
+
 /* ── one window ───────────────────────────────────────────────────────────── */
 
 const Window = ({ i }: { i: number }) => {
@@ -135,20 +182,34 @@ const Window = ({ i }: { i: number }) => {
    *  "text dan iconnya fade out". What is being enlarged is the chart. */
   const open = i === 0 ? progressInOut(f, local(V.grow.at, FROM), V.grow.over) : 0;
   const S = small(x);
+  /**
+   * ⚠ ONLY THE WINDOW AND ITS DISPLAY ARE INTERPOLATED AS RECTS. The chart
+   * inside is not — it takes ONE scale factor, so it cannot stretch.
+   *
+   * ⚠ AND THE LONG TAPE ONLY EXISTS ONCE THE GROWTH HAS STARTED. Solving the
+   * 61-bar box so that SS4's twenty land on the pixels they already occupy is
+   * exact on paper and lands a few ten-thousandths off in floating point —
+   * enough to move 493 antialiased pixels of a display that is under contract.
+   * Before the growth the scene therefore runs the ORIGINAL arithmetic, not an
+   * equivalent one. The swap happens on the first frame of the move, where the
+   * 41 extra bars are still outside the display and clipped away.
+   */
+  const CB = i === 0 && open > 0.0001 ? chartBoxes(S, open) : null;
+  const long = CB !== null;
   const R = {
     win: mixRect(S.win, FULL.win, open),
     display: mixRect(S.display, FULL.display, open),
-    price: mixRect(S.price, FULL.price, open),
-    volume: mixRect(S.volume, FULL.volume, open),
+    price: CB ? CB.price : S.price,
+    volume: CB ? CB.volume : S.volume,
   };
 
-  const series = i === 0 ? SS4 : COLOUR;
+  const series = i === 1 ? COLOUR : long ? SS4_RUNUP : SS4;
   const domain = i === 0 ? SS4_DOMAIN : COLOUR_DOMAIN;
-  const vol = i === 0 ? SS4_VOL : COLOUR_VOL;
+  const vol = i === 1 ? COLOUR_VOL : long ? SS4_RUNUP_VOL : SS4_VOL;
   const g = gridOf(series.closes, domain, R.price, 0.08, i === 1 ? V.fan.gutter : 0);
   const built = progress(f, at + V.build.after, V.build.over);
   const head = textReveal(f, at + V.words.after, V.words.over, 12);
-  const w = Math.max(3, g.slot * 0.66);
+  const w = CB ? CB.w : Math.max(3, g.slot * 0.66);
   const peak = Math.max(...vol);
   const chrome = (1 - open) * pop.opacity;
 
@@ -241,7 +302,26 @@ const Window = ({ i }: { i: number }) => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       >
-        {series.bars.slice(0, Math.ceil(series.bars.length * built)).map((b, k) => {
+        {/* ⚠ THE CHART IS CLIPPED INSIDE THE SVG, not by a div around it. The 41
+            bars in front of SS4 have to be cut off at the display's edge — but
+            wrapping the svg in an `overflow: hidden` div moved 493 pixels of the
+            locked display, because a new clipping container rasterises the same
+            shapes on a different sub-pixel grid. A clipPath on a `<g>` leaves
+            the svg exactly where it was in the DOM. */}
+        {CB && (
+          <defs>
+            <clipPath id={`d${i}`}>
+              <rect x={R.display.x} y={R.display.y} width={R.display.w} height={R.display.h} rx={V.ui.display.radius} />
+            </clipPath>
+          </defs>
+        )}
+        <g clipPath={CB ? `url(#d${i})` : undefined}>
+        {/* ⚠ THE BUILD COUNTS ONLY THE TWENTY. Counting all 61 would spend two
+            thirds of the entrance drawing bars that are off the left edge, and
+            the window would look empty while it filled. */}
+        {series.bars
+          .slice(0, long ? SS4_LEAD + Math.ceil(SS4.bars.length * built) : Math.ceil(series.bars.length * built))
+          .map((b, k) => {
           const bx = g.x(k);
           const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
           const top = Math.min(g.y(b.o), g.y(b.c));
@@ -334,6 +414,7 @@ const Window = ({ i }: { i: number }) => {
             )}
           </>
         )}
+        </g>
       </svg>
 
       {/* ── the row of words under the display ──────────────────────────── */}
