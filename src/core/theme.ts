@@ -338,6 +338,9 @@ export const theme = {
     /** A neutral fill one step darker than white — for a selected row on a
      *  white board, where a tint would claim a meaning the row does not have. */
     greyWash: "#ECECEE",
+    /** ⚠ A LIGHT GREY FOR TYPE THAT IS STILL THERE BUT NOT SPEAKING. `slate` is
+     *  the reading voice and `greyWash` is a fill; neither is a dimmed word. */
+    mute: "#B4B4BC",
     hlCyan: "rgba(92, 200, 227, 0.34)",
     /** ⚠ A READING BAND'S FILL — 20%, and deliberately lighter than `hlCyan`.
      *  A band stands over CANDLES rather than behind words, and at a

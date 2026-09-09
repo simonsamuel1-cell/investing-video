@@ -1949,13 +1949,28 @@ export const LIMITS = {
    */
   read: {
     over: 22,
-    lead: { at: 18355, text: "Baca volume dengan:", tone: "ink" as const },
+    /** ⚠ THE LEAD STAYS BLACK — Simon set it that way and "semua indigo" is
+     *  about the four readings and their lines, not the label in front of them. */
+    lead: { at: 18355, text: "Baca volume dengan:" },
+/**
+     * ⚠ ONE MARK ON THE CHART AT A TIME — Simon: "bertumpukkan ga jelas". Four
+     * marks left standing on top of each other stop being four readings and
+     * become one mess; each now holds the chart until the next word arrives.
+     * The WORDS still accumulate, because the list is the point.
+     *
+     * ⚠ AND THEY ARE ALL INDIGO NOW, lines included. Four hues said the four
+     * readings were four different KINDS of thing; they are the same kind, done
+     * four ways, and which one is being spoken is carried by the pill instead.
+     */
     items: [
-      { at: 18439, text: "Trend", tone: "indigo" as const, mark: "zig" as const },
-      { at: 18480, text: "Support & Resistance", tone: "orange" as const, mark: "zone" as const },
-      { at: 18566, text: "Pola candle", tone: "cyan" as const, mark: "channel" as const },
-      { at: 18637, text: "Kondisi market", tone: "marun" as const, mark: "ma" as const },
+      { at: 18439, text: "Trend", mark: "zig" as const },
+      { at: 18480, text: "Support & Resistance", mark: "zone" as const },
+      { at: 18566, text: "Pola candle", mark: "channel" as const },
+      { at: 18637, text: "Kondisi market", mark: "ma" as const },
     ],
+    /** ⚠ EVERY WORD CARRIES THE PILL'S PADDING, LIT OR NOT. Only the fill and
+     *  the ink change, so the row cannot re-flow as the highlight moves. */
+    pill: { x: 18, y: 10, radius: 999 },
     /** ⚠ THE ZIGZAG'S THRESHOLD IS A FRACTION OF THE TAPE'S OWN RANGE, never an
      *  absolute: the same number must give the same density on a chart running
      *  to 100 and one running to 12,000. */

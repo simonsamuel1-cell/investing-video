@@ -107,15 +107,6 @@ const FULL: Record<string, Rect> = {
 };
 const ROW_Y = CARD.y + P + DISPLAY_H + V.full.gap;
 
-/** The five inks the row is set in. */
-const TONE = (c: ReturnType<typeof usePalette>) => ({
-  ink: c.ink,
-  indigo: theme.color.indigo,
-  orange: theme.color.orange,
-  cyan: c.cyan,
-  marun: theme.color.marun,
-});
-
 const COLOUR_DOMAIN = domainOfColour;
 
 /**
@@ -218,8 +209,15 @@ const Window = ({ i }: { i: number }) => {
   const tip = { x: g.x(last), y: g.y(series.bars[last].c) };
 
   /* ── the four marks, all derived from the tape ──────────────────────── */
-  const on = (k: number) => progress(f, local(V.read.items[k].at, FROM), V.read.over);
-  const ink = TONE(c);
+  /**
+   * ⚠ ONE AT A TIME: the LAST word to have arrived owns the chart, and the mark
+   * before it is gone rather than faded under the next. `live` is that index,
+   * and it is what the pill follows too — one number, so the highlight and the
+   * drawing can never disagree about which reading is being spoken.
+   */
+  let live = -1;
+  V.read.items.forEach((q, k) => { if (f >= local(q.at, FROM)) live = k; });
+  const on = (k: number) => (k === live ? progress(f, local(V.read.items[k].at, FROM), V.read.over) : 0);
   const bars = series.bars;
   const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
   const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
@@ -391,7 +389,7 @@ const Window = ({ i }: { i: number }) => {
         {i === 0 && open > 0.99 && (
           <>
             {on(0) > 0.001 && (
-              <path d={zigPath} fill="none" stroke={ink.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
+              <path d={zigPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
             )}
             {on(1) > 0.001 &&
               zones.map((z, k) => (
@@ -401,8 +399,8 @@ const Window = ({ i }: { i: number }) => {
                   y={g.y(z.hi)}
                   width={R.price.w}
                   height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
-                  fill={`${ink.orange}22`}
-                  stroke={ink.orange}
+                  fill={theme.color.indigoWash}
+                  stroke={theme.color.indigo}
                   strokeWidth={theme.shape.rule}
                   rx={10}
                   opacity={on(1)}
@@ -416,14 +414,14 @@ const Window = ({ i }: { i: number }) => {
                   y1={g.y(bars[q.a][q.key])}
                   x2={g.x(q.b)}
                   y2={g.y(bars[q.b][q.key])}
-                  stroke={ink.cyan}
+                  stroke={theme.color.indigo}
                   strokeWidth={V.read.width}
                   strokeLinecap="round"
                   opacity={on(2)}
                 />
               ))}
             {on(3) > 0.001 && (
-              <path d={maPath} fill="none" stroke={ink.marun} strokeWidth={V.read.width} strokeLinecap="round" opacity={on(3)} />
+              <path d={maPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" opacity={on(3)} />
             )}
           </>
         )}
@@ -447,13 +445,21 @@ const Window = ({ i }: { i: number }) => {
             lineHeight: 1,
           }}
         >
-          {[V.read.lead, ...V.read.items].map((q) => {
+          {[V.read.lead, ...V.read.items].map((q, k) => {
             const r = textReveal(f, local(q.at, FROM), V.read.over, 12);
+            const lead = k === 0;
+            const lit = k - 1 === live;
             return (
               <span
                 key={q.text}
                 style={{
-                  color: ink[q.tone],
+                  /* ⚠ THE PADDING IS ON EVERY WORD, lit or not — only the fill
+                     and the ink change, so the row cannot re-flow as the
+                     highlight moves along it. */
+                  padding: lead ? 0 : `${V.read.pill.y}px ${V.read.pill.x}px`,
+                  borderRadius: V.read.pill.radius,
+                  background: lit ? theme.color.indigo : undefined,
+                  color: lead ? c.ink : lit ? theme.color.onIndigo : theme.color.mute,
                   whiteSpace: "nowrap",
                   opacity: r.opacity,
                   transform: `translateY(${r.dy.toFixed(1)}px)`,
