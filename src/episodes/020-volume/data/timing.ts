@@ -1938,7 +1938,10 @@ export const LIMITS = {
    * row's own size rather than typed: change the type and the display gives up
    * exactly as much room as the words now need, and no more.
    */
-  full: { pad: 25, size: 36, gap: 26 },
+/** ⚠ 32 — Simon, "semua font size kecuali judul, dikurangi 4 px". The card
+   *  titles inside the windows are left alone: they are titles, and they are
+   *  also inside the display SS6 locks. */
+  full: { pad: 25, size: 32, gap: 26 },
   /**
    * ═══ THE FOUR THINGS TO READ VOLUME AGAINST ═══  (Simon's frames and colours)
    *
@@ -1963,9 +1966,13 @@ export const LIMITS = {
      * four ways, and which one is being spoken is carried by the pill instead.
      */
     items: [
-      { at: 18439, text: "Trend", mark: "zig" as const },
+/** ⚠ SWAPPED — Simon. "Trend" now draws the straight line through the lows
+       *  and "Pola candle" draws the zigzag, which is the right way round: a
+       *  trendline IS a line under the lows, and a zigzag through the swings is
+       *  a reading of the shapes price makes. */
+      { at: 18439, text: "Trend", mark: "channel" as const },
       { at: 18480, text: "Support & Resistance", mark: "zone" as const },
-      { at: 18566, text: "Pola candle", mark: "channel" as const },
+      { at: 18566, text: "Pola candle", mark: "zig" as const },
       { at: 18637, text: "Kondisi market", mark: "ma" as const },
     ],
     /** ⚠ EVERY WORD CARRIES THE PILL'S PADDING, LIT OR NOT. Only the fill and

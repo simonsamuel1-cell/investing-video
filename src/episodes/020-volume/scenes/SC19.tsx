@@ -218,6 +218,13 @@ const Window = ({ i }: { i: number }) => {
   let live = -1;
   V.read.items.forEach((q, k) => { if (f >= local(q.at, FROM)) live = k; });
   const on = (k: number) => (k === live ? progress(f, local(V.read.items[k].at, FROM), V.read.over) : 0);
+  /** ⚠ THE MARKS ARE LOOKED UP BY NAME, not by position. They were indexed by
+   *  slot, so swapping two items in timing.ts would have swapped their FRAMES
+   *  and left the drawings where they were. */
+  const markOn = (name: string) => {
+    const k = V.read.items.findIndex((q) => q.mark === name);
+    return on(k);
+  };
   const bars = series.bars;
   const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
   const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
@@ -260,12 +267,23 @@ const Window = ({ i }: { i: number }) => {
     }
     return best;
   };
-  /** ⚠ ONE LINE, UNDER THE LOWS — Simon. Two lines drew a channel, which is a
-   *  claim about where price is contained; one under the lows is the pattern
-   *  the word "pola candle" is naming. */
+  /**
+   * ⚠ ONE LINE, UNDER THE LOWS. Two lines drew a channel, which is a claim
+   * about where price is contained; one line under the lows is a trendline —
+   * which is why it now belongs to the word "Trend".
+   *
+   * ⚠ AND IT RUNS BACKWARDS ALONG ITS OWN SLOPE — Simon: "extend lagi ke
+   * belakang". A line that starts at the swing it was fitted to reads as a
+   * segment between two candles; run back until it would cut through a bar, it
+   * reads as a level price has been respecting all along. Stopping there is
+   * what keeps it from claiming support it never had.
+   */
   const chan = (["l"] as const).map((key) => {
     const [a, b2] = hull(key, true);
-    return { a, b: b2, key };
+    const m = (bars[b2][key] - bars[a][key]) / (b2 - a);
+    let from = a;
+    while (from > 0 && bars[from - 1][key] >= bars[a][key] + m * (from - 1 - a) - 1e-9) from--;
+    return { a: from, b: b2, v0: bars[a][key] + m * (from - a), v1: bars[b2][key] };
   });
   const maPath = pathOf(sma(series.closes, V.read.maPeriod), g);
 
@@ -388,10 +406,10 @@ const Window = ({ i }: { i: number }) => {
             word that named it. */}
         {i === 0 && open > 0.99 && (
           <>
-            {on(0) > 0.001 && (
-              <path d={zigPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={on(0)} />
+            {markOn("zig") > 0.001 && (
+              <path d={zigPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={markOn("zig")} />
             )}
-            {on(1) > 0.001 &&
+            {markOn("zone") > 0.001 &&
               zones.map((z, k) => (
                 <rect
                   key={k}
@@ -403,25 +421,25 @@ const Window = ({ i }: { i: number }) => {
                   stroke={theme.color.indigo}
                   strokeWidth={theme.shape.rule}
                   rx={10}
-                  opacity={on(1)}
+                  opacity={markOn("zone")}
                 />
               ))}
-            {on(2) > 0.001 &&
+            {markOn("channel") > 0.001 &&
               chan.map((q, k) => (
                 <line
                   key={k}
                   x1={g.x(q.a)}
-                  y1={g.y(bars[q.a][q.key])}
+                  y1={g.y(q.v0)}
                   x2={g.x(q.b)}
-                  y2={g.y(bars[q.b][q.key])}
+                  y2={g.y(q.v1)}
                   stroke={theme.color.indigo}
                   strokeWidth={V.read.width}
                   strokeLinecap="round"
-                  opacity={on(2)}
+                  opacity={markOn("channel")}
                 />
               ))}
-            {on(3) > 0.001 && (
-              <path d={maPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" opacity={on(3)} />
+            {markOn("ma") > 0.001 && (
+              <path d={maPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" opacity={markOn("ma")} />
             )}
           </>
         )}
@@ -432,13 +450,19 @@ const Window = ({ i }: { i: number }) => {
       {i === 0 && open > 0.5 && (
         <div
           style={{
+            /* ⚠ IT FILLS THE WHITE BAND AND CENTRES ITSELF IN IT — Simon. The
+               band is exactly the room the display gave up for the row, so
+               centring in it is centring in the white space under the chart,
+               and it stays centred if the type or the padding ever change. */
             position: "absolute",
             left: FULL.display.x,
-            top: ROW_Y,
+            top: ROW_Y - V.full.gap,
             width: FULL.display.w,
+            height: ROW_H,
             display: "flex",
-            alignItems: "baseline",
-            gap: 22,
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 18,
             fontFamily: theme.text.family,
             fontSize: V.full.size,
             fontWeight: 700,
@@ -448,7 +472,11 @@ const Window = ({ i }: { i: number }) => {
           {[V.read.lead, ...V.read.items].map((q, k) => {
             const r = textReveal(f, local(q.at, FROM), V.read.over, 12);
             const lead = k === 0;
-            const lit = k - 1 === live;
+/* ⚠ NEVER THE LEAD — Simon: "'Baca volume dengan' ga perlu di
+                 highlight". Before the first reading arrives `live` is -1, and
+                 `k - 1 === live` is true for k = 0: the label wore the pill for
+                 the 84 frames it stood alone. */
+            const lit = !lead && k - 1 === live;
             return (
               <span
                 key={q.text}
