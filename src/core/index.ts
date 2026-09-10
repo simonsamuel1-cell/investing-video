@@ -55,6 +55,12 @@ export { Countdown } from "./Countdown";
 export { ColorKey } from "./ColorKey";
 export type { KeyEntry } from "./ColorKey";
 export { StatStrip } from "./StatStrip";
+/* The dashboard chrome — a chart's ticker strip, header and stat tiles.
+   Added for VIDEO 22 from Simon's Chart Dashboard reference. */
+export {
+  TickerStrip, InstrumentHeader, InstrumentRow, IndicatorPills, StatTiles, DashRule,
+} from "./Dashboard";
+export type { Ticker } from "./Dashboard";
 export type { Stat } from "./StatStrip";
 export { ComboTable } from "./ComboTable";
 export type { ComboRow } from "./ComboTable";

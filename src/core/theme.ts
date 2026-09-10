@@ -265,6 +265,14 @@ export const theme = {
     warn: "#E5475D",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     /**
+     * ⚠ THE WASH BEHIND A CHIP THAT NAMES A MISTAKE, and the only place `warn`
+     * gets a fill. Added for VIDEO 22, whose subject is eight named mistakes:
+     * a red WORD on the ground reads as an error message, and a red word in a
+     * pill reads as a label — which is what these are. Still words only; the
+     * rule that nothing drawn on a chart is red is untouched.
+     */
+    warnWash: "rgba(229, 71, 93, 0.10)",
+    /**
      * A price ZONE's fill, and the only reason it is not `indigoWash`: a zone
      * carries no border, so the fill alone has to say "this is an area" — see
      * chart/Annotations.tsx. At 9% it disappeared; at 18% it reads as ground

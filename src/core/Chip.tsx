@@ -32,7 +32,14 @@ import { progress } from "./helpers";
 import { useMotion } from "./useMotion";
 import { Layer } from "./Stage";
 
-export type Tone = "indigo" | "cyan" | "slate";
+/**
+ * ⚠ `warn` NAMES A MISTAKE, AND ONLY IN WORDS. Added for VIDEO 22, which
+ * labels eight of them. It is the same red the candles use, so the episode
+ * still has exactly one red — and it is still forbidden on drawn chart
+ * content. Components that only know three tones fall through to indigo,
+ * which is the right default for them.
+ */
+export type Tone = "indigo" | "cyan" | "slate" | "warn";
 
 /** Breathing room inside a pill, proportional so it holds at any type size. */
 const PILL_PAD = { x: 0.62, y: 0.3 };
@@ -71,13 +78,16 @@ export const Chip = ({
   if (f < at) return null;
 
   const p = progress(f, at, m.pop);
-  const ink = tone === "cyan" ? c.cyan : tone === "slate" ? c.slate : c.indigo;
+  const ink =
+    tone === "cyan" ? c.cyan : tone === "slate" ? c.slate : tone === "warn" ? theme.color.warn : c.indigo;
   const wash =
     tone === "cyan"
       ? theme.color.cyanWash
       : tone === "slate"
         ? theme.color.slateWash
-        : theme.color.indigoWash;
+        : tone === "warn"
+          ? theme.color.warnWash
+          : theme.color.indigoWash;
   const shift =
     anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
   const size = theme.text.chip.size;

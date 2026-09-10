@@ -18,6 +18,7 @@
  * `vignette={false}` there.
  */
 import { theme } from "./theme";
+import type { Rect } from "./helpers";
 
 const GRID = {
   cell: 84,
@@ -38,6 +39,7 @@ export const GridGround = ({
   opacity = 1,
   vignette = true,
   tone,
+  clip,
 }: {
   /** The frame to read the drift from. Scene-local is fine — it only loops. */
   f: number;
@@ -45,6 +47,17 @@ export const GridGround = ({
   vignette?: boolean;
   /** Overrides the line colour where the default is too quiet for the scene. */
   tone?: string;
+  /**
+   * The rectangle the ground is allowed to cover.
+   *
+   * ⚠ THIS IS A SAFE-AREA TOOL, NOT A DECORATION. The grid paints its own
+   * PAPER full-bleed, so a scene that stands on it puts white into the 108px
+   * subtitle band and the 360×150 logo zone — scripts/audit-frames.mjs fails
+   * the frame, correctly: a drifting grid under a burned-in caption is exactly
+   * what those reserves exist to prevent. Pass the band the scene may use and
+   * the grid stops there, still canvas-aligned so the drift is unchanged.
+   */
+  clip?: Rect;
 }) => {
   if (opacity <= 0) return null;
   const drift = ((f % GRID.loop) / GRID.loop) * GRID.cell;
@@ -52,8 +65,8 @@ export const GridGround = ({
    *  whole layer would lift the paper off the episode's own ground. */
   const ink = 0.9;
   const line = tone ?? theme.color.gridLine;
-  return (
-    <div style={{ position: "absolute", inset: 0, opacity }}>
+  const body = (
+    <>
       <div style={{ position: "absolute", inset: 0, background: theme.color.gridPaper }} />
       <div
         style={{
@@ -73,6 +86,37 @@ export const GridGround = ({
             : null),
         }}
       />
+    </>
+  );
+
+  /* ⚠ CLIPPED WITH A WINDOW, NOT WITH A SMALLER GRID. The inner layer is still
+     the full canvas and is offset back into place, so the cells line up with
+     where they would have been — shrinking the grid instead would move every
+     line the moment the clip changed. */
+  if (!clip) return <div style={{ position: "absolute", inset: 0, opacity }}>{body}</div>;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: clip.x,
+        top: clip.y,
+        width: clip.w,
+        height: clip.h,
+        overflow: "hidden",
+        opacity,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: -clip.x,
+          top: -clip.y,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+        }}
+      >
+        {body}
+      </div>
     </div>
   );
 };

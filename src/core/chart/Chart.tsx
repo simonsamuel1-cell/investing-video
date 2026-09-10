@@ -27,6 +27,8 @@ export const Chart = ({
   opacity = 1,
   ticks,
   tickLabels = true,
+  tickSide = "right",
+  tickSize,
   baseline = true,
   gridSpan,
 }: {
@@ -41,6 +43,20 @@ export const Chart = ({
   /** Price levels for gridlines. Defaults to ticksOf(the grid's domain). */
   ticks?: number[];
   tickLabels?: boolean;
+  /**
+   * Which side the price scale hangs on.
+   *
+   * ⚠ "left" IS A DIFFERENT CHART, NOT A NUDGE. A right-hand scale reads as a
+   * live tape whose newest bar is nearest its own price; a left-hand column
+   * reads as a printed chart you scan from the axis inward. VIDEO 19's GGRM
+   * panel is the second kind and that is most of why it looks the way it does.
+   * With "left" the box must already start clear of the column — the label is
+   * drawn OUTSIDE the plot, not in a gutter inside it.
+   */
+  tickSide?: "left" | "right";
+  /** Overrides the axis type size. The left-hand column carries a bigger
+   *  label than a gutter can, and the size is part of that look. */
+  tickSize?: number;
   /**
    * The rule along the bottom of the plot box. A floor for a chart that has one
    * — a tape sitting ON its axis. A chart whose price levels are already drawn
@@ -105,11 +121,11 @@ export const Chart = ({
             key={p}
             style={{
               position: "absolute",
-              left: span.x2 - 8,
+              left: tickSide === "left" ? span.x1 - 16 : span.x2 - 8,
               top: grid.y(p),
               transform: "translate(-100%, -50%)",
               fontFamily: theme.text.family,
-              fontSize: theme.text.axis.size,
+              fontSize: tickSize ?? theme.text.axis.size,
               fontWeight: theme.text.axis.weight,
               color: c.muted,
               opacity,
