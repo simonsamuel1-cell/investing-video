@@ -7,6 +7,10 @@ import {
   TOTAL_FRAMES as MA_FRAMES,
 } from "./episodes/019-moving-average/Composition";
 import { VolumeComposition, TOTAL_FRAMES as V20_FRAMES } from "./episodes/020-volume/Composition";
+import {
+  TAMistakesComposition,
+  TOTAL_FRAMES as V22_FRAMES,
+} from "./episodes/022-ta-mistakes/Composition";
 import { theme } from "./core";
 
 export const RemotionRoot: React.FC = () => {
@@ -37,6 +41,18 @@ export const RemotionRoot: React.FC = () => {
         id="Volume020"
         component={VolumeComposition}
         durationInFrames={V20_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
+          number comes from the corrected SRT via
+          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
+          closing card held for three seconds. */}
+      <Composition
+        id="TAMistakes022"
+        component={TAMistakesComposition}
+        durationInFrames={V22_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
