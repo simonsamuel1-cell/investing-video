@@ -281,7 +281,13 @@ export const PREMISE = {
   normal: { at: 1496, over: 40 },
   /** ⚠ THE TWO SENTENCES UNDER THE READINGS ARE GONE — Simon: "itu hapus aja
    *  dari awal". They were written for two cards that no longer exist, and the
-   *  chart coming back over the top of them is what made that obvious. */
+   *  chart coming back over the top of them is what made that obvious.
+   *
+   *  ⚠ WHAT REPLACES THEM IS ONE DASHED BOX over the chart, and it lands on
+   *  f1541 because that is the frame the old left-hand sentence used: the cue
+   *  it belongs to runs 1460–1806, so the box is stamped while the sentence is
+   *  being said rather than after it. */
+  note: 1541,
   close: 1848,
 } as const;
 

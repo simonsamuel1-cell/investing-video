@@ -28,11 +28,11 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
 import {
-  Line, Stage, VerdictMark,
-  progress, textReveal, theme, useMotion, usePalette,
+  DashedBox, Line, Stage, VerdictMark,
+  dashOpenAt, progress, textReveal, theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, PREMISE, local } from "../data/timing";
-import { READINGS } from "../data/layout";
+import { NOTE_BOX, READINGS } from "../data/layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC03;
@@ -101,6 +101,51 @@ const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at:
   );
 };
 
+const NOTE = [
+  "Setup yang bagus meningkatkan kualitas keputusan.",
+  "Bukan menjamin hasil",
+];
+
+const Note = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const c = usePalette();
+  const at = local(V.note, FROM);
+  /** ⚠ THE CONTENT WAITS FOR THE FRAME TO SNAP OPEN. `dashOpenAt` is the one
+   *  answer to "when may my content start"; typed as a guess it arrives while
+   *  the box is still a sliver. */
+  const open = dashOpenAt(at, m);
+  return (
+    <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 12,
+          fontFamily: theme.text.family,
+          fontSize: theme.text.body.size,
+          fontWeight: theme.text.body.weight,
+          color: c.indigo,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {NOTE.map((line, i) => {
+          const r = textReveal(f, open + i * m.sec(0.14), m.reveal);
+          return (
+            <span key={line} style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}>
+              {line}
+            </span>
+          );
+        })}
+      </div>
+    </DashedBox>
+  );
+};
+
 export const SC03 = () => (
   /* ⚠ TRANSPARENT, SO THE SCENE BEFORE IT CAN LEAVE PROPERLY. Simon asked for
      everything at 1139 to FADE except the carried words; an opaque stage here
@@ -116,6 +161,11 @@ export const SC03 = () => (
       <Mark kind="check" label="Probabilitas" at={local(V.probabilitas, FROM)} />
       <Mark kind="cross" label="Kepastian" at={local(V.kepastian, FROM)} />
     </Row>
+    {/* ⚠ STAMPED, NOT PLACED — a dashed frame is a note written on the chart,
+        which is what this sentence is: the reading the scene just made, left on
+        the picture it was made about. */}
+    <Note />
+
     <Line
       text="SETUP LENGKAP TETAP BISA GAGAL."
       x={theme.canvas.width / 2}

@@ -112,6 +112,20 @@ export const BUBBLE = { w: 188, h: 96 } as const;
  */
 export const READINGS = { gap: 150, noteW: 430 } as const;
 
+/**
+ * SC03's dashed note, stamped over the top of the chart.
+ *
+ * ⚠ CENTRED ON THE FRAME AND HIGH IN THE CARD — Simon: "di tengah chart bagian
+ * atas". That band is the one part of this tape with nothing in it: the price
+ * spends the whole window well below its own high, so the box lands on paper
+ * rather than on candles.
+ */
+export const NOTE_BOX = (() => {
+  const w = 980;
+  const h = 164;
+  return { x: (theme.canvas.width - w) / 2, y: CARD.y + 40, w, h };
+})();
+
 /* ── charts with a histogram under them ─────────────────────────────────── */
 /** Same 70 / 6 / 24 split VIDEO 20 settled on: the histogram is a companion to
  *  price, and a pane given equal height stops being one. */
