@@ -77,6 +77,9 @@ export const TOTAL_FRAMES = BLOCK.END;
  */
 const { chrome = true } = getInputProps() as { chrome?: boolean };
 
+/** ⚠ THE CHAPTER CARDS' ONE SWITCH — see where it is used, below. */
+const CHAPTER_CARDS = false;
+
 type Mounted = { from: number; duration: number; Component: React.FC; name: string };
 
 /**
@@ -153,8 +156,14 @@ const Body = () => (
       <CarryLine />
     </Sequence>
 
-    {/* above everything, straddling the cuts — GLOBAL frames, see scenes/Cards.tsx */}
-    <Cards />
+    {/* ═══ ⚠ THE SIX TRANSITION CARDS ARE OFF ═══
+        Simon: "hapus ini … instead kosongkan dulu, aku punya ide visualnya tapi
+        panjang". What is empty is the PICTURE, not the plan: the six windows
+        are still in data/timing.ts (CARDS) and scenes/Cards.tsx is untouched,
+        so bringing them back is this one word. The cuts they straddled play
+        through with the scenes either side of them, which is what the recording
+        supports anyway. */}
+    {CHAPTER_CARDS && <Cards />}
 
     <Captions cues={CUES} show={chrome} />
     {chrome && <Watermark totalFrames={TOTAL_FRAMES} />}

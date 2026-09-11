@@ -101,9 +101,14 @@ const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at:
   );
 };
 
+/**
+ * ⚠ THE SECOND LINE IS RED, AND THAT IS ALLOWED. `warn` is the episode's one
+ * red outside a candle body and it is for WORDS that name a mistake — "bukan
+ * menjamin hasil" is the correction the whole scene exists to make.
+ */
 const NOTE = [
-  "Setup yang bagus meningkatkan kualitas keputusan.",
-  "Bukan menjamin hasil",
+  { text: "Setup yang bagus meningkatkan kualitas keputusan.", warn: false },
+  { text: "Bukan menjamin hasil", warn: true },
 ];
 
 const Note = () => {
@@ -121,11 +126,11 @@ const Note = () => {
    * instead of leaving a gap or an overlap.
    */
   let start = open;
-  const lines = NOTE.map((text) => {
+  const lines = NOTE.map(({ text, warn }) => {
     const span = text.length * V.notePerChar;
     const shown = text.slice(0, Math.floor(ramp(f, start, span) * text.length));
     start += span;
-    return { text, shown };
+    return { text, shown, warn };
   });
   return (
     <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at}>
@@ -148,7 +153,9 @@ const Note = () => {
         }}
       >
         {lines.map((line) => (
-          <span key={line.text}>{line.shown}</span>
+          <span key={line.text} style={line.warn ? { color: theme.color.warn } : undefined}>
+            {line.shown}
+          </span>
         ))}
       </div>
     </DashedBox>
