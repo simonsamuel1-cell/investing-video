@@ -288,7 +288,9 @@ export const PREMISE = {
    *  it belongs to runs 1460–1806, so the box is stamped while the sentence is
    *  being said rather than after it. */
   note: 1541,
-  close: 1848,
+  /** ⚠ TYPED, LIKE SC02'S ANSWER — two frames a letter, so both lines are down
+   *  well before the cue they belong to ends on 1806. */
+  notePerChar: 2,
 } as const;
 
 /* ═══ SC04 — masuk tanpa invalidation ════════════════════════════════════ */

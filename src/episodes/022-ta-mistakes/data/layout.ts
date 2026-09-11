@@ -121,9 +121,20 @@ export const READINGS = { gap: 150, noteW: 430 } as const;
  * rather than on candles.
  */
 export const NOTE_BOX = (() => {
-  const w = 980;
-  const h = 164;
-  return { x: (theme.canvas.width - w) / 2, y: CARD.y + 40, w, h };
+  /**
+   * ⚠ ITS RIGHT EDGE IS THE LOGO ZONE'S LINE, and that is what sets the width.
+   * Simon wants the box half out of the card, which puts its top strip inside
+   * the first 150px of the canvas — the band nothing may enter to the right of
+   * `logoZone.maxX`. Centred, that caps the box at twice the distance from the
+   * middle to that line. The type is sized to what is left, not the other way
+   * round.
+   */
+  const w = (theme.logoZone.maxX - theme.canvas.width / 2) * 2;
+  const h = 140;
+  /** ⚠ HALF IN, HALF OUT — Simon. The card's own top edge runs through its
+   *  middle, which is what makes it read as a note stuck onto the chart rather
+   *  than a panel inside it. */
+  return { x: (theme.canvas.width - w) / 2, y: CARD.y - h / 2, w, h };
 })();
 
 /* ── charts with a histogram under them ─────────────────────────────────── */

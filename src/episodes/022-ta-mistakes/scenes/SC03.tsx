@@ -28,8 +28,8 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
 import {
-  DashedBox, Line, Stage, VerdictMark,
-  dashOpenAt, progress, textReveal, theme, useMotion, usePalette,
+  DashedBox, Stage, VerdictMark,
+  dashOpenAt, progress, ramp, textReveal, theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, PREMISE, local } from "../data/timing";
 import { NOTE_BOX, READINGS } from "../data/layout";
@@ -115,6 +115,18 @@ const Note = () => {
    *  answer to "when may my content start"; typed as a guess it arrives while
    *  the box is still a sliver. */
   const open = dashOpenAt(at, m);
+  /**
+   * ⚠ TYPED, AND THE SECOND LINE WAITS FOR THE FIRST. Each line's own length
+   * decides when the next may start, so re-wording either one keeps the rhythm
+   * instead of leaving a gap or an overlap.
+   */
+  let start = open;
+  const lines = NOTE.map((text) => {
+    const span = text.length * V.notePerChar;
+    const shown = text.slice(0, Math.floor(ramp(f, start, span) * text.length));
+    start += span;
+    return { text, shown };
+  });
   return (
     <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at}>
       <div
@@ -125,22 +137,19 @@ const Note = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
-          gap: 12,
           fontFamily: theme.text.family,
-          fontSize: theme.text.body.size,
-          fontWeight: theme.text.body.weight,
-          color: c.indigo,
-          whiteSpace: "nowrap",
+          fontSize: theme.text.tag.size,
+          /* ⚠ BOLD AND BLACK — Simon. The indigo said "this is a label"; this is
+             the sentence the scene is making. */
+          fontWeight: 800,
+          lineHeight: 1.25,
+          color: c.ink,
+          whiteSpace: "pre",
         }}
       >
-        {NOTE.map((line, i) => {
-          const r = textReveal(f, open + i * m.sec(0.14), m.reveal);
-          return (
-            <span key={line} style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}>
-              {line}
-            </span>
-          );
-        })}
+        {lines.map((line) => (
+          <span key={line.text}>{line.shown}</span>
+        ))}
       </div>
     </DashedBox>
   );
@@ -166,13 +175,5 @@ export const SC03 = () => (
         the picture it was made about. */}
     <Note />
 
-    <Line
-      text="SETUP LENGKAP TETAP BISA GAGAL."
-      x={theme.canvas.width / 2}
-      y={theme.stage.caption.y}
-      at={local(V.close, FROM)}
-      size={theme.text.title.size}
-      weight={theme.text.title.weight}
-    />
   </Stage>
 );
