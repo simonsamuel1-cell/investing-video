@@ -178,7 +178,13 @@ export const SetupGroup = () => {
       : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over) * (1 - normal);
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
-  const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
+  const cleared = 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
+  /** ⚠ THE LINES COME BACK WITH THE CHART; THE CHIPS DO NOT. Simon asked for
+   *  the trend and the two levels — they are drawn ON the tape and belong to
+   *  it. The four ✓ chips are the opening's checklist, and SC03 is not the
+   *  scene that reads it; they return in SC04, which strikes one of them. */
+  const marks = g >= BLOCK.SC04 || g >= PREMISE.resume.at ? 1 : cleared;
+  const chips = g >= BLOCK.SC04 ? 1 : cleared;
   const back = progress(f, local(INVALID.danger, FROM), m.fade);
   const chartOp = g < BLOCK.SC04 ? quiet : 0.28 + 0.72 * back;
 
@@ -219,8 +225,13 @@ export const SetupGroup = () => {
    * states all four readings at once. The four chips and the resistance are
    * not in the rotation.
    */
+  /** ⚠ THE ROTATION IS THE OPENING'S, AND IT ENDS WHEN THE CHART COMES BACK.
+   *  SC03 hands the frame back to the trade with everything on it — Simon:
+   *  "garis trend dan garis support resistance munculin juga". */
   const turn = (next: number) =>
-    g >= BLOCK.SC04 ? 1 : 1 - (1 - OPEN.dim) * progress(f, local(next, FROM), m.fade);
+    g >= BLOCK.SC04 || g >= PREMISE.resume.at
+      ? 1
+      : 1 - (1 - OPEN.dim) * progress(f, local(next, FROM), m.fade);
 
   /**
    * ⚠ THE PLOT'S OWN LEFT EDGE, AS A BAR INDEX. Simon wants the support run
@@ -458,7 +469,7 @@ export const SetupGroup = () => {
           needs it — by then the four chips have been read, struck, and are
           finished. */}
       {g < BLOCK.SC05 && (
-      <div style={{ opacity: fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) * marks }}>
+      <div style={{ opacity: fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) * chips }}>
         {OPEN.checks.map((q, i) => (
           <Chip
             key={q.label}

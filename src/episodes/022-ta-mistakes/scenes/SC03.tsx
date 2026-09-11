@@ -29,7 +29,7 @@ import React from "react";
 import { useCurrentFrame } from "remotion";
 import {
   Line, Stage, VerdictMark,
-  textReveal, theme, useMotion, usePalette,
+  progress, textReveal, theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, PREMISE, local } from "../data/timing";
 import { READINGS } from "../data/layout";
@@ -76,7 +76,11 @@ const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at:
   const m = useMotion();
   const c = usePalette();
   const r = textReveal(f, at, m.reveal);
-  if (r.opacity <= 0.001) return <span style={{ visibility: "hidden" }} />;
+  /** ⚠ THEY LEAVE AS THE CHART ARRIVES — Simon: "saat transisi ke chart, semua
+   *  text fade out". The reading has been made; what the scene hands back to is
+   *  the trade it was made about. */
+  const out = progress(f, local(PREMISE.resume.at, FROM), m.fade);
+  if (r.opacity <= 0.001 || out >= 0.999) return <span style={{ visibility: "hidden" }} />;
   return (
     <span
       style={{
@@ -87,36 +91,12 @@ const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at:
         fontWeight: theme.text.title.weight,
         color: c.ink,
         whiteSpace: "nowrap",
-        opacity: r.opacity,
+        opacity: r.opacity * (1 - out),
         transform: `translateY(${r.dy}px)`,
       }}
     >
       <VerdictMark kind={kind} size={MARK} />
       {label}
-    </span>
-  );
-};
-
-const Note = ({ text, at }: { text: string; at: number }) => {
-  const f = useCurrentFrame();
-  const m = useMotion();
-  const c = usePalette();
-  const r = textReveal(f, at, m.reveal);
-  if (r.opacity <= 0.001) return null;
-  return (
-    <span
-      style={{
-        width: READINGS.noteW,
-        textAlign: "center",
-        fontSize: theme.text.body.size,
-        fontWeight: theme.text.body.weight,
-        lineHeight: 1.3,
-        color: c.slate,
-        opacity: r.opacity,
-        transform: `translateY(${r.dy}px)`,
-      }}
-    >
-      {text}
     </span>
   );
 };
@@ -136,11 +116,6 @@ export const SC03 = () => (
       <Mark kind="check" label="Probabilitas" at={local(V.probabilitas, FROM)} />
       <Mark kind="cross" label="Kepastian" at={local(V.kepastian, FROM)} />
     </Row>
-    <Row y={ROW_Y + theme.text.title.size * 1.6}>
-      <Note text="SETUP BAGUS → KUALITAS KEPUTUSAN NAIK" at={local(V.left, FROM)} />
-      <Note text="≠ JAMINAN HASIL" at={local(V.right, FROM)} />
-    </Row>
-
     <Line
       text="SETUP LENGKAP TETAP BISA GAGAL."
       x={theme.canvas.width / 2}

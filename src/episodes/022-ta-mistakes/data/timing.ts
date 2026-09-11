@@ -279,8 +279,9 @@ export const PREMISE = {
    */
   resume: { at: 1460, over: 24 },
   normal: { at: 1496, over: 40 },
-  left: 1541,
-  right: 1765,
+  /** ⚠ THE TWO SENTENCES UNDER THE READINGS ARE GONE — Simon: "itu hapus aja
+   *  dari awal". They were written for two cards that no longer exist, and the
+   *  chart coming back over the top of them is what made that obvious. */
   close: 1848,
 } as const;
 

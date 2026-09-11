@@ -71,6 +71,11 @@ export const CarryLine = () => {
    */
   const carry = progress(f, local(PREMISE.carry.at, FROM), PREMISE.carry.over);
   const gone = progress(f, local(PREMISE.carry.at, FROM), m.fade);
+  /** ⚠ AND THE SUBJECT LEAVES WHEN ITS SUBJECT COMES BACK — Simon: "saat
+   *  transisi ke chart, semua text fade out". The two words were standing in
+   *  for the chart while it was away; there is nothing for them to do once it
+   *  is on screen again. */
+  const out = progress(f, local(PREMISE.resume.at, FROM), m.fade);
 
   const typed = ramp(f, local(REVERSE.notYet, FROM), ANSWER.length * REVERSE.perChar);
   const answer = ANSWER.slice(0, Math.floor(typed * ANSWER.length));
@@ -91,6 +96,7 @@ export const CarryLine = () => {
           fontWeight: theme.text.display.weight,
           color: c.indigo,
           whiteSpace: "pre",
+          opacity: 1 - out,
         }}
       >
         <span style={{ fontSize: SIZE, opacity: lead.opacity, transform: `translateY(${lead.dy}px)` }}>
