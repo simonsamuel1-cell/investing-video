@@ -263,6 +263,13 @@ export const theme = {
      * red. Never on drawn chart content.
      */
     warn: "#E5475D",
+    /**
+     * The mirror of `warn`, and the ONE green allowed outside a candle body:
+     * an affirmation MARK — a tick in a disc saying a condition was met. Same
+     * green the candles use, so the episode still has exactly one green.
+     * Never on drawn chart content, and never as a colour for words.
+     */
+    ok: "#22B573",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     /**
      * ⚠ THE WASH BEHIND A CHIP THAT NAMES A MISTAKE, and the only place `warn`

@@ -29,7 +29,7 @@ const V = COPY;
 
 const [A, B] = tradeCards();
 /** ⚠ A PLACEHOLDER TICKER — see the header. */
-const TICKER = "SAHAM XYZ";
+const TICKER = "SAHAM ABCD";
 
 export const SC14 = () => {
   const f = useCurrentFrame();

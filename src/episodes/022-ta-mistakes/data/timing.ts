@@ -144,11 +144,15 @@ export const OPEN = {
    */
   chart: { at: 96, over: 368 },
   setup: 119,
+  /** ⚠ SENTENCE CASE, AND NO ARROW — Simon. Four shouted labels under a chart
+   *  read as a banner; these are things the trader ticked off, so they are
+   *  written the way he would have written them. The arrow after "Trend" said
+   *  the same thing the word already says. */
   checks: [
-    { label: "TREND ↑", at: 227 },
-    { label: "SUPPORT BERTAHAN", at: 295 },
-    { label: "VOLUME MENGUAT", at: 362 },
-    { label: "BREAKOUT", at: 464 },
+    { label: "Trend", at: 227 },
+    { label: "Support bertahan", at: 295 },
+    { label: "Volume menguat", at: 362 },
+    { label: "Breakout", at: 464 },
   ],
   /** The resistance line is drawn early and RESTYLES when the tape closes over
    *  it — it is never redrawn. */

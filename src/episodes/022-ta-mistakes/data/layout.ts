@@ -70,15 +70,25 @@ export const DASH = {
  * leave that sentence with nothing on screen. The chrome is 019's; the panes
  * are this episode's.
  */
-const MA_AXIS_COL = 150;
+/**
+ * ⚠ NOW THE ORDINARY INSET, NOT A PRICE COLUMN — Simon: "tulisan label harganya
+ * hapus aja". The 150px was room for the scale; with the scale gone it was an
+ * empty margin that pushed the tape off the card's own left edge. 40 is the
+ * inset the instrument name above it already uses, so the tape starts where
+ * the title does.
+ */
+const MA_AXIS_COL = 40;
 export const MA = {
   /** Centre-y of the identity line and of the pills opposite it. */
   headY: CARD.y + 62,
   pillsRight: CARD.x + CARD.w - 40,
   headX: CARD.x + 40,
-  plot: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 120, w: CARD.w - MA_AXIS_COL - 40, h: 400 },
-  vol: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 536, w: CARD.w - MA_AXIS_COL - 40, h: 72 },
-  axis: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 622, w: CARD.w - MA_AXIS_COL - 40, h: 28 },
+  /** ⚠ FLUSH TO THE CARD'S RIGHT EDGE — Simon: "chartnya mentok ke kanan".
+   *  `gridOf` still leaves GRID_PAD_X inside the box, so the newest candle
+   *  stands clear of the corner without a second inset doing it. */
+  plot: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 120, w: CARD.w - MA_AXIS_COL, h: 400 },
+  vol: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 536, w: CARD.w - MA_AXIS_COL, h: 72 },
+  axis: { x: CARD.x + MA_AXIS_COL, y: CARD.y + 622, w: CARD.w - MA_AXIS_COL, h: 28 },
   /** ⚠ ZERO — the scale is outside the box, not reserved inside it. */
   gutter: 0,
   /** Bigger than a gutter label. The size is part of the look. */
@@ -269,7 +279,10 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
   }
   if (DASH.plot.x + DASH.plot.w > DASH.tiles.x)
     throw new Error("022-ta-mistakes/layout: the chart column runs into the stat tiles");
-  /* the MA scale is drawn OUTSIDE the plot — it needs the column to exist */
-  if (MA.plot.x - CARD.x < 120)
-    throw new Error("022-ta-mistakes/layout: the MA price column is too narrow for its labels");
+  /* ⚠ THE PRICE COLUMN CHECK IS GONE WITH THE PRICE COLUMN. It guarded a scale
+     drawn OUTSIDE the plot; the scale was removed (Simon: "tulisan label
+     harganya hapus aja"), so what is left is an ordinary inset. What matters
+     now is the other edge — the tape is meant to reach the card's. */
+  if (MA.plot.x + MA.plot.w !== CARD.x + CARD.w)
+    throw new Error("022-ta-mistakes/layout: the MA plot no longer ends on the card's right edge");
 })();

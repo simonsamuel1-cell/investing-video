@@ -41,8 +41,8 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Chart, Chip, DashRule, IndicatorPills, InstrumentHeader,
-  InstrumentRow, Level, Line, Stage, StatTiles, TickerStrip, TimeAxis,
+  Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
+  InstrumentRow, Level, Line, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
   domainOf, gridOf, fadeOut, popIn, price, progress, sma,
   theme, useMotion, usePalette,
@@ -50,7 +50,7 @@ import {
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
 import { DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_AXIS, SETUP_LEVELS, SETUP_STEPS, SETUP_VOL, TICKERS, XYZ,
+  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_VOL, TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -115,17 +115,6 @@ export const SetupGroup = () => {
   if (g >= BLOCK.SC03 && g < BLOCK.SC04) return null;
 
   const grid = gridOf(SETUP.closes, DOMAIN, L.plot, 0.12, L.gutter);
-  /** ⚠ THE SAME x MAPPING, A LOWER BOX. core/TimeAxis hangs its labels under
-   *  the grid box it is handed, and the price grid's box bottom is where the
-   *  volume histogram starts — so the labels printed across the bars. Same x,
-   *  same width, same gutter; only the box's bottom edge moves. */
-  const axisGrid = gridOf(
-    SETUP.closes,
-    DOMAIN,
-    { ...L.plot, y: L.axis.y - 14 - L.plot.h },
-    0.12,
-    L.gutter,
-  );
 
   /* ── the three stages of one tape ─────────────────────────────────────── */
   const p2 = progress(f, local(REVERSE.turn, FROM), m.sec(2.4));
@@ -175,25 +164,17 @@ export const SetupGroup = () => {
       {CHART_STYLE === "ma" ? (
         <div style={{ opacity: dash }}>
           <InstrumentRow
-            ticker="XYZ"
+            ticker="ABCD"
             name={XYZ.name}
             x={MA.headX}
             y={MA.headY}
             at={local(OPEN.header, FROM)}
           />
-          {/* ⚠ A PILL ARRIVES WITH ITS INDICATOR — 019's rule. SUPPORT is not
-              drawn until SC04, so its pill is not there until SC04 either. */}
-          <IndicatorPills
-            right={MA.pillsRight}
-            y={MA.headY}
-            items={[
-              { label: "Volume", at: local(OPEN.chart.at, FROM) + m.reveal },
-              { label: "Resistance", at: local(OPEN.resistance.at, FROM) },
-              ...(g >= INVALID.support.at
-                ? [{ label: "Support", at: local(INVALID.support.at, FROM) }]
-                : []),
-            ]}
-          />
+          {/* ⚠ THE INDICATOR PILLS ARE GONE — Simon: "label pill volume dan
+              resistance hapus aja". They named what the chart was already
+              showing: the histogram IS the volume, and the level carries the
+              word "Resistance" at its own right end. Two names for one thing
+              is what made the header busy. */}
         </div>
       ) : (
       <div style={{ opacity: dash }}>
@@ -251,12 +232,19 @@ export const SetupGroup = () => {
           at={local(OPEN.chart.at, FROM)}
           over={OPEN.chart.over}
           baseline={false}
+          /* ⚠ NO PRICE SCALE — Simon: "tulisan label harganya hapus aja". The
+             gridlines stay: they are what makes the tape readable as levels.
+             What went is the column of numbers, and with it the reason the
+             plot began 150px inside the card. */
+          tickLabels={false}
           tickSide={CHART_STYLE === "ma" ? "left" : "right"}
           tickSize={CHART_STYLE === "ma" ? MA.tickSize : undefined}
         />
         <Candles bars={SETUP.bars} grid={grid} from={SETUP_STEPS.open + 1} shown={shown} />
         <VolumeBars bars={SETUP.bars} volume={SETUP_VOL} grid={grid} box={L.vol} shown={shown} />
-        <TimeAxis labels={SETUP_AXIS} grid={axisGrid} at={local(OPEN.chart.at, FROM) + m.reveal} />
+        {/* ⚠ NO TIME AXIS — Simon: "timeframe 3 bln 2 bln 1 bln sekarang,
+            hapus". The story is "it looked complete, then it failed"; how many
+            months the tape covers is not part of it. */}
 
         {/* ⚠ RESTYLED WHEN BROKEN, NOT REDRAWN — `broken` is what core/Level
             takes, and it is the difference between "the level failed" and "a
@@ -266,7 +254,7 @@ export const SetupGroup = () => {
           grid={grid}
           at={local(OPEN.resistance.at, FROM)}
           over={OPEN.resistance.over}
-          label="RESISTANCE"
+          label="Resistance"
           broken={g >= OPEN.broken}
           /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
              the box edge and the label sits on the price scale; pinned to the
@@ -285,7 +273,7 @@ export const SetupGroup = () => {
             grid={grid}
             at={local(INVALID.support.at, FROM)}
             over={INVALID.support.over}
-            label="SUPPORT"
+            label="Support"
             broken={g >= INVALID.broken}
             to={Math.min(N - 1, seen + 14)}
           />
@@ -311,8 +299,12 @@ export const SetupGroup = () => {
             at={local(q.at, FROM)}
             tone={g >= REVERSE.dim ? "slate" : "indigo"}
             check
+            /* ⚠ A GREEN DISC WITH A WHITE TICK — Simon. An ink ✓ is the same
+               weight as the word it precedes; a filled disc reads as a box
+               someone ticked, which is what these four are. */
+            checkDisc
             strike={
-              q.label === "SUPPORT BERTAHAN"
+              q.label === "Support bertahan"
                 ? progress(f, local(INVALID.strike, FROM), m.reveal)
                 : 0
             }
@@ -346,7 +338,7 @@ export const SetupGroup = () => {
       )}
       {g >= OPEN.taken && g < BLOCK.SC04 && (
         <Chip
-          label="POSISI TERBUKA"
+          label="Posisi terbuka"
           x={theme.stage.active.x}
           y={theme.stage.active.y + theme.text.chip.size}
           at={local(OPEN.taken, FROM)}

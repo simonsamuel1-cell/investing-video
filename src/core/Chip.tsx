@@ -54,6 +54,7 @@ export const Chip = ({
   leaderTo,
   strike = 0,
   check = false,
+  checkDisc = false,
   pill = false,
 }: {
   label: string;
@@ -69,6 +70,13 @@ export const Chip = ({
   /** 0→1 strikethrough sweep, in the label's own ink. */
   strike?: number;
   check?: boolean;
+  /**
+   * Draws the tick as a white glyph in a filled green disc instead of an ink
+   * ✓. OPT-IN, and it has to be: episodes already on screen use the plain
+   * glyph, and a tick that changed shape under them would be a silent edit to
+   * finished work.
+   */
+  checkDisc?: boolean;
   /** Wraps the label in a tinted, outlined pill. */
   pill?: boolean;
 }) => {
@@ -128,7 +136,31 @@ export const Chip = ({
             : null),
         }}
       >
-        {check && <span style={{ marginRight: 10 }}>✓</span>}
+        {check &&
+          (checkDisc ? (
+            /* ⚠ SIZED FROM THE TYPE, not typed. The disc has to sit on the
+               same baseline as the word at any size the chip is used at. */
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                width: Math.round(size * 1.08),
+                height: Math.round(size * 1.08),
+                marginRight: Math.round(size * 0.32),
+                borderRadius: 999,
+                background: theme.color.ok,
+                color: theme.color.onIndigo,
+                fontSize: Math.round(size * 0.62),
+                lineHeight: 1,
+                verticalAlign: "middle",
+              }}
+            >
+              ✓
+            </span>
+          ) : (
+            <span style={{ marginRight: 10 }}>✓</span>
+          ))}
         {label}
         {strike > 0.001 && (
           <div

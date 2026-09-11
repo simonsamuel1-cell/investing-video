@@ -74,9 +74,9 @@ export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
  * it builds, in scenes/SetupGroup.tsx — the readout counts with the data, the
  * reference folder's second model of continuous motion.
  */
-export const XYZ = { name: "Saham XYZ", sub: "XYZ · Ilustrasi", unit: "1D" } as const;
+export const XYZ = { name: "Saham ABCD", sub: "ABCD · Ilustrasi", unit: "1D" } as const;
 const strip = seeded(0x2209);
-export const TICKERS = ["XYZ", "ARV", "BLN", "CMT", "DRA", "ELP", "FST"].map((symbol, i) => ({
+export const TICKERS = ["ABCD", "ARV", "BLN", "CMT", "DRA", "ELP", "FST"].map((symbol, i) => ({
   symbol,
   /* the neighbours sit in the same range as the tape, so the strip reads as
      one market rather than as seven unrelated numbers */
