@@ -133,7 +133,14 @@ export const NOTE_BOX = (() => {
    * straddles the card's edge, which is what makes it read as a note stuck onto
    * the chart rather than a panel inside it. The alternative is 30px type.
    */
-  const w = 1180;
+  /**
+   * ⚠ TUNED TO THE SENTENCE, MEASURED OFF A RENDER. The longest line sets 992px
+   * at 40px type, and this leaves ~34px of air each side — Simon: "padding kiri
+   * kanannya kurangin". Nothing in code can measure a string's width, so this
+   * number is the one thing here that has to be re-checked if the wording or
+   * the type size changes; the render will show it immediately.
+   */
+  const w = 1060;
   const h = 140;
   return { x: (theme.canvas.width - w) / 2, y: theme.logoZone.height, w, h };
 })();
