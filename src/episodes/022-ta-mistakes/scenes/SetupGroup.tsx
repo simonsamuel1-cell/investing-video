@@ -44,14 +44,13 @@ import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
   InstrumentRow, Layer, Level, Line, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
-  domainOf, gridOf, fadeOut, popIn, price, progress, sma,
+  domainOf, gridOf, fadeOut, popIn, price, progress, sma, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
 import { DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_SUPPORT_FROM, SETUP_TREND, SETUP_VOL,
-  TICKERS, XYZ,
+  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND, SETUP_VOL, TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -148,6 +147,28 @@ export const SetupGroup = () => {
   /** The screen's own chrome fades with the chart, never separately — it is
    *  one object. */
   const dash = chartOp * behind;
+
+  /**
+   * ⚠ ONE MARK LIT AT A TIME — see OPEN.dim. A mark steps back to 30% when the
+   * next one arrives and comes back up on the breakout, where the sentence
+   * states all four readings at once. The four chips and the resistance are
+   * not in the rotation.
+   */
+  const turn = (next: number) =>
+    1 -
+    (1 - OPEN.dim) *
+      progress(f, local(next, FROM), m.fade) *
+      (1 - progress(f, local(OPEN.broken, FROM), m.fade));
+
+  /**
+   * ⚠ THE PLOT'S OWN LEFT EDGE, AS A BAR INDEX. Simon wants the support run
+   * back past the first candle — "bukan candlestick paling kiri" — and `Level`
+   * spans bar indices, so the edge has to be solved for rather than typed:
+   * `gridOf` leaves GRID_PAD_X inside the box, and this is the index whose x
+   * lands exactly on it. Typed as a number it would break the first time the
+   * plot or the tape changed width.
+   */
+  const EDGE = -(GRID_PAD_X * (N - 1)) / (L.plot.w - GRID_PAD_X * 2);
 
   /** ⚠ THE CAPTION ROW, WHICH IS WHAT IT IS FOR — theme.stage.caption is "the
    *  single row of chips between the card and the subtitle band". */
@@ -268,14 +289,14 @@ export const SetupGroup = () => {
           const y2 = grid.y(SETUP_TREND.v1);
           const len = Math.hypot(x2 - x1, y2 - y1);
           return (
-            <Layer opacity={dash}>
+            <Layer opacity={dash * turn(OPEN.support.at)}>
               <line
                 x1={x1}
                 y1={y1}
                 x2={x2}
                 y2={y2}
                 stroke={c.indigo}
-                strokeWidth={theme.shape.rule}
+                strokeWidth={theme.shape.line}
                 strokeLinecap="round"
                 strokeDasharray={len}
                 strokeDashoffset={len * (1 - drawn)}
@@ -327,9 +348,14 @@ export const SetupGroup = () => {
             over={OPEN.support.over}
             label="Support"
             broken={g >= INVALID.broken}
-            /* ⚠ IT STARTS WHERE IT WAS MADE — see SETUP_SUPPORT_FROM. */
-            from={SETUP_SUPPORT_FROM}
+            /* ⚠ RUN BACK TO THE PLOT'S EDGE — Simon. It used to start on the
+               bar that made it, which is truer about where the level came from
+               and reads as a line that begins in the middle of a chart. A
+               level is a price, and a price is true across the frame. */
+            from={EDGE}
             to={Math.min(N - 1, seen + 14)}
+            width={theme.shape.line}
+            opacity={turn(OPEN.vol.at)}
           />
         )}
       </div>

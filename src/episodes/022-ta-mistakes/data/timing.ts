@@ -152,6 +152,18 @@ export const OPEN = {
   trend: { at: 236, over: 40 },
   support: { at: 301, over: 40 },
   vol: { at: 365, over: 26 },
+  /**
+   * ⚠ ONE MARK AT A TIME — Simon: "tiap bukan gilirannya, buat jadi transparan
+   * 30%". A mark hands its turn to the next one and steps back; it does not
+   * leave, because the point of the scene is that all four readings were there
+   * at once. They all come back up on the breakout, which is the frame the
+   * sentence states them as one finished setup.
+   *
+   * ⚠ THE FOUR CHIPS AND THE RESISTANCE ARE NOT IN THE ROTATION — his call.
+   * The chips are the list being read; the level is what the last item is
+   * about.
+   */
+  dim: 0.3,
   setup: 119,
   /** ⚠ SENTENCE CASE, AND NO ARROW — Simon. Four shouted labels under a chart
    *  read as a banner; these are things the trader ticked off, so they are

@@ -33,6 +33,7 @@ export const Level = ({
   opacity = 1,
   from,
   to,
+  width = theme.shape.rule,
 }: {
   value: number;
   grid: Grid;
@@ -45,6 +46,9 @@ export const Level = ({
   /** Bar indices the line spans. Defaults to the whole plot. */
   from?: number;
   to?: number;
+  /** Stroke width. Defaults to the theme's rule, so nothing already drawn
+   *  changes; pass `theme.shape.line` for a level that has to carry a scene. */
+  width?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -64,7 +68,7 @@ export const Level = ({
           x2={x2}
           y2={y}
           stroke={ink}
-          strokeWidth={theme.shape.rule}
+          strokeWidth={width}
           {...(broken
             ? { strokeDasharray: "12 9", opacity: p }
             : drawPath(p, Math.abs(x2 - x1)))}

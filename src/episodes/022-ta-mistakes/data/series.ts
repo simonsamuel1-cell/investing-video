@@ -100,35 +100,25 @@ export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
 /**
  * ═══ THE TREND LINE UNDER THE LOWS ═══  (Simon, f236)
  *
- * ⚠ MEASURED, NOT DRAWN BY EYE. The lows' LOWER HULL is the set of points with
- * nothing below them; only two ADJACENT hull vertices make an edge, and only an
- * edge is guaranteed to keep the whole tape above it. Taking the widest PAIR of
- * vertices instead gives a chord, and the chord of a lower hull runs ABOVE it —
- * a "support" line drawn straight through the candles.
+ * Two lows, and both are chosen rather than eyeballed: the FURTHEST BACK one —
+ * "tarik dari low paling belakang", which is the tape's own lowest bar — and
+ * the low the horizontal support is drawn at, so the second point the line
+ * touches IS that level ("tambah 1 garis support di low kedua"). The two marks
+ * are one reading of the tape rather than two levels that happen to be near
+ * each other.
  *
- * ⚠ AND IT ENDS ON THE SUPPORT BAR, which is what ties the two lines together.
- * The second low the trend line touches IS the floor the horizontal support is
- * drawn at (Simon: "tambah 1 garis support di low kedua"), so the two marks are
- * one reading of the tape rather than two levels that happen to be near each
- * other.
+ * ⚠ IT IS ALLOWED TO CUT THROUGH CANDLES — Simon: "kalo ada candlestick yg
+ * kelewatan garis trend ini, gapapa". It was fitted to the lows' convex hull
+ * before, which guarantees nothing crosses it but forces the line to start
+ * halfway along the tape. Anchored at the real low it reads as the trend of
+ * the whole move, and the bars it clips are the pullbacks inside that move.
  */
 export const SETUP_TREND = (() => {
   const bars = SETUP.bars.slice(0, SETUP_STEPS.open + 1);
-  const hull: number[] = [];
-  for (let k = 0; k < bars.length; k++) {
-    while (hull.length >= 2) {
-      const a = hull[hull.length - 2];
-      const b = hull[hull.length - 1];
-      const cross = (b - a) * (bars[k].l - bars[a].l) - (bars[b].l - bars[a].l) * (k - a);
-      if (cross <= 0) hull.pop();
-      else break;
-    }
-    hull.push(k);
-  }
-  const at = hull.indexOf(SETUP_SUPPORT_FROM);
-  if (at < 1) throw new Error("022-ta-mistakes/series: the support bar is not a vertex of the lows' hull");
-  const from = hull[at - 1];
+  const lows = bars.map((b) => b.l);
+  const from = lows.indexOf(Math.min(...lows));
   const to = SETUP_SUPPORT_FROM;
+  if (from >= to) throw new Error("022-ta-mistakes/series: the tape's lowest bar is not before its support");
   const slope = (bars[to].l - bars[from].l) / (to - from);
   /** Extended to the last bar SC01 draws — a trend line stops being one the
    *  moment it stops being ahead of the price it is under. */
@@ -345,17 +335,17 @@ export const ADMR_MACD = ADMR.closes.map((c, i) => {
   const touches = c.slice(0, SETUP_STEPS.open).filter((v) => v < support + 3).length;
   if (touches < 2) fail(`SETUP only approaches support ${touches}× — the story needs it tested`);
 
-  /* the trend line has to stay under every low it runs past, or it is a line
-     drawn through the candles rather than under them */
+  /* ⚠ THE LINE MAY CLIP CANDLES — Simon allowed that. What still has to hold
+     is that both its ends are real lows of this tape and that the second one
+     is the level the support line is drawn at, or the two marks stop being one
+     reading. */
   {
-    const { from, to, v0, v1 } = SETUP_TREND;
-    const slope = (v1 - v0) / (to - from);
-    for (let i = from; i <= to; i++) {
-      if (SETUP.bars[i].l < v0 + slope * (i - from) - 1e-6)
-        fail(`the lows trend line cuts through bar ${i}`);
-    }
-    if (Math.abs(SETUP.bars[SETUP_TREND.touch].l - support) > 1e-6)
+    const { from, v0, touch } = SETUP_TREND;
+    if (Math.abs(SETUP.bars[from].l - v0) > 1e-6) fail("the trend line does not start on a low");
+    if (Math.abs(SETUP.bars[touch].l - support) > 1e-6)
       fail("the trend line's second low is not the level the support line is drawn at");
+    if (SETUP.bars.slice(0, SETUP_STEPS.open + 1).some((b) => b.l < v0 - 1e-6))
+      fail("the trend line does not start on the LOWEST low");
   }
 
   /* SC09 — the two windows must be identical where they claim to be */
