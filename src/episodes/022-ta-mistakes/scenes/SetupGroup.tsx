@@ -43,25 +43,21 @@ import { useCurrentFrame } from "remotion";
 import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
   InstrumentRow, Layer, Level, Line, SpeechBubble, Stage, StatTiles, TickerStrip,
-  VolumeBars, Words,
-  domainOf, gridOf, fadeOut, price, progress, ramp, sma, ticksOf, GRID_PAD_X,
+  VolumeBars,
+  gridOf, fadeOut, price, progress, ramp, sma, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
-import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
+import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, PREMISE, REVERSE, local } from "../data/timing";
 import { BUBBLE, DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_BREAK_FROM, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND, SETUP_VOL,
-  TICKERS, XYZ,
+  SETUP, SETUP_BREAK_FROM, SETUP_DOMAIN, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND,
+  SETUP_VOL, TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const FROM = BLOCK.SC01;
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** ⚠ ONE DOMAIN FOR THE WHOLE TAPE, computed from every bar of it. Letting the
- *  scale follow the bars drawn so far would re-rule the chart under the
- *  viewer every time a candle arrives. */
-const DOMAIN = domainOf(SETUP.closes, SETUP.bars);
 const N = SETUP.bars.length;
 /** The fraction of the tape that shows bars 0…k. */
 const upto = (k: number) => (k + 1) / N;
@@ -83,8 +79,6 @@ const MA20 = sma(SETUP.closes, 20);
  */
 const L = CHART_STYLE === "ma" ? MA : DASH;
 const signed = (v: number) => `${v >= 0 ? "+" : "−"}${price(Math.abs(v))}`;
-/** ⚠ SENTENCE CASE, AND SIMON'S WORDING — reproduced, not restyled. */
-const ANSWER = "Belum tentu";
 
 /**
  * The white panel, as a clip. `inset()` is written from the EDGES of the frame,
@@ -132,10 +126,17 @@ export const SetupGroup = () => {
   const c = usePalette();
   const g = f + FROM;
 
-  /* ⚠ DARK FOR SC03 — see the header. */
-  if (g >= BLOCK.SC03 && g < BLOCK.SC04) return null;
+  /**
+   * ⚠ IT FADES INTO SC03 RATHER THAN STOPPING ON THE BOUNDARY — Simon: "buat
+   * semua visual di 1139 menghilang fade kecuali text". SC03 draws on a
+   * transparent stage for exactly this, so the window is still here, on its way
+   * out, while the two carried words slide to the middle over the top of it.
+   */
+  const leaving =
+    g >= PREMISE.carry.at ? progress(f, local(PREMISE.carry.at, FROM), PREMISE.carry.over) : 0;
+  if (g >= BLOCK.SC03 && g < BLOCK.SC04 && leaving >= 0.999) return null;
 
-  const grid = gridOf(SETUP.closes, DOMAIN, L.plot, 0.12, L.gutter);
+  const grid = gridOf(SETUP.closes, SETUP_DOMAIN, L.plot, 0.12, L.gutter);
 
   /* ── the three stages of one tape ─────────────────────────────────────── */
   const p2 = progress(f, local(REVERSE.turn, FROM), m.sec(2.4));
@@ -151,7 +152,8 @@ export const SetupGroup = () => {
    * terlihat 50%". SC04 brings it back, because SC04 is about what the chart
    * did, not about the words over it.
    */
-  const quiet = 1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over);
+  const quiet =
+    (1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over)) * (1 - leaving);
   /**
    * ⚠ THE PICTURE PUSHES IN; THE PANEL DOES NOT MOVE. Only what is inside the
    * white card scales, anchored on the card's TOP edge so it grows downward —
@@ -160,20 +162,6 @@ export const SetupGroup = () => {
    */
   const push =
     g >= BLOCK.SC04 ? 0 : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over);
-  /**
-   * ⚠ THE QUESTION SITS ON A PRICE LINE — Simon: "buat textnya di atas garis
-   * harga". The gridlines belong to the chart, so they are inside the push and
-   * move with it; the one to sit above is found AFTER the scale, not before.
-   * Typed as a y it would drift the first time the zoom or the domain changed.
-   */
-  const zoomed = (y: number) =>
-    theme.stage.card.y + (y - theme.stage.card.y) * (1 + REVERSE.zoom.by * push);
-  const askY = ticksOf([grid.lo, grid.hi])
-    .map((v) => zoomed(grid.y(v)))
-    .reduce((best, y) =>
-      Math.abs(y - theme.canvas.height / 2) < Math.abs(best - theme.canvas.height / 2) ? y : best,
-    ) - theme.text.display.size * 0.75;
-
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
   const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
@@ -504,50 +492,9 @@ export const SetupGroup = () => {
           says the trade was taken, and a second label saying it again in the
           corner is the frame repeating itself. */}
 
-      {/* ── SC02 · the question, and the answer ─────────────────────────────
-          ⚠ UNDER THE WINDOW, IN THE ROOM THE LIFT MADE — Simon: "973 muncul
-          text di bawah windownya". Centred between the card's lifted edge and
-          the subtitle band, so it sits in that space rather than at some
-          distance from it. */}
-      {g >= REVERSE.ask && g < BLOCK.SC03 && (
-        <>
-          <Words
-            text="Technical Analysis gagal?"
-            x={theme.canvas.width / 2}
-            y={askY}
-            at={local(REVERSE.ask, FROM)}
-            anchor="center"
-            size={theme.text.display.size}
-            weight={theme.text.display.weight}
-            color={c.indigo}
-          />
-          {/* ⚠ TYPED, NOT REVEALED — Simon. `ramp`, because a typewriter that
-              eases speeds up and slows down in the middle of a word. */}
-          {g >= REVERSE.notYet && (
-            <div
-              style={{
-                position: "absolute",
-                left: theme.canvas.width / 2,
-                top: askY + theme.text.display.size * 1.25,
-                transform: "translate(-50%, -50%)",
-                fontFamily: theme.text.family,
-                fontSize: theme.text.display.size,
-                fontWeight: theme.text.display.weight,
-                color: c.ink,
-                whiteSpace: "pre",
-              }}
-            >
-              {ANSWER.slice(
-                0,
-                Math.floor(
-                  ramp(f, local(REVERSE.notYet, FROM), ANSWER.length * REVERSE.perChar) *
-                    ANSWER.length,
-                ),
-              )}
-            </div>
-          )}
-        </>
-      )}
+      {/* ⚠ THE QUESTION AND THE ANSWER ARE NOT THIS SCENE'S ANY MORE. They
+          cross the cut into SC03, so they belong to neither side of it — see
+          scenes/CarryLine.tsx, mounted above the tiling. */}
 
       {/* ── SC04 · the reason stops holding ───────────────────────────────── */}
       {/* ⚠ ONE SLOT, HANDED OVER. The chip states what stopped being true and

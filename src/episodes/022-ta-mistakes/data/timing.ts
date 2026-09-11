@@ -256,9 +256,19 @@ export const REVERSE = {
  *  thing the compliance line forbids. */
 export const PREMISE = {
   leave: { at: 0, over: 34 },
-  intinya: 1148,
-  split: { at: 1220, over: 40 },
-  labels: 1323,
+  /**
+   * ═══ THE CUT NOBODY SEES ═══  (Simon's idea)
+   *
+   * SC02 ends asking whether Technical Analysis failed; SC03 opens on what
+   * Technical Analysis actually gives you. Same two words, so they are not
+   * drawn twice: on this frame everything else fades, "gagal?" and the answer
+   * go with it, and the two words slide to the middle of the frame and stay
+   * there through the cut. See scenes/CarryLine.tsx.
+   */
+  carry: { at: 1139, over: 30 },
+  /** The two readings, each on its own word. */
+  probabilitas: 1294,
+  kepastian: 1370,
   left: 1541,
   right: 1765,
   close: 1848,

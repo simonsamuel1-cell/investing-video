@@ -12,7 +12,7 @@
  * turns a sentence in the narration into a lie the viewer cannot catch. They
  * run at module load, so the build fails rather than the video.
  */
-import { fromAnchors, seeded, sma, toBars, volumeOf } from "../../../core";
+import { domainOf, fromAnchors, seeded, sma, toBars, volumeOf } from "../../../core";
 import type { Anchor, Bar, Series } from "../../../core";
 import SS01 from "./ss01.json";
 
@@ -105,6 +105,11 @@ export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
  * the tape is ever re-traced.
  */
 export const SETUP_BREAK_FROM: number = SS01.breakout;
+/** ⚠ ONE DOMAIN FOR THE WHOLE TAPE, and it lives with the tape. Two components
+ *  now place things against this chart — the scene that draws it and the layer
+ *  that carries a line of type across the cut — and a scale computed twice is a
+ *  scale that will disagree with itself. */
+export const SETUP_DOMAIN = domainOf(SETUP.closes, SETUP.bars);
 
 /**
  * ═══ THE TREND LINE UNDER THE LOWS ═══  (Simon, f236)

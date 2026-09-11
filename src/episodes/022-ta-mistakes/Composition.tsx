@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, COUNTER } from "./data/timing";
+import { BLOCK, COUNTER, REVERSE } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { SC06 } from "./scenes/SC06";
@@ -58,6 +58,7 @@ import { ProcessGroup } from "./scenes/ProcessGroup";
 import { SC18 } from "./scenes/SC18";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
+import { CarryLine } from "./scenes/CarryLine";
 
 /** ⚠ LONGER THAN THE VOICE ON PURPOSE — `BLOCK.END` holds the closing card for
  *  three seconds after the last word. The guard below is a floor, not an
@@ -138,6 +139,18 @@ const Body = () => (
       name="CG-E · Mistake counter"
     >
       <MistakeCounter />
+    </Sequence>
+
+    {/* ⚠ ABOVE THE TILING, AND THAT IS THE WHOLE POINT. The two words it holds
+        belong to SC02's question and to SC03's answer, so they belong to
+        neither scene — SC03 paints an opaque stage over CG-A, and a heading
+        owned by either side would be covered by the other. */}
+    <Sequence
+      from={REVERSE.ask}
+      durationInFrames={BLOCK.SC04 - REVERSE.ask}
+      name="Carry · Technical Analysis"
+    >
+      <CarryLine />
     </Sequence>
 
     {/* above everything, straddling the cuts — GLOBAL frames, see scenes/Cards.tsx */}
