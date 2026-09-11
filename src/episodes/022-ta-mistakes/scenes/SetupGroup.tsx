@@ -50,7 +50,7 @@ import {
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
 import { DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_VOL, TICKERS, XYZ,
+  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_SUPPORT_FROM, SETUP_VOL, TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -275,6 +275,8 @@ export const SetupGroup = () => {
             over={INVALID.support.over}
             label="Support"
             broken={g >= INVALID.broken}
+            /* ⚠ IT STARTS WHERE IT WAS MADE — see SETUP_SUPPORT_FROM. */
+            from={SETUP_SUPPORT_FROM}
             to={Math.min(N - 1, seen + 14)}
           />
         )}

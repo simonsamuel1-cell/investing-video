@@ -13,7 +13,8 @@
  * run at module load, so the build fails rather than the video.
  */
 import { fromAnchors, seeded, sma, toBars, volumeOf } from "../../../core";
-import type { Anchor, Series } from "../../../core";
+import type { Anchor, Bar, Series } from "../../../core";
+import SS01 from "./ss01.json";
 
 /** Anchors → a synthetic tape. Core has `fromShape` for a shape and
  *  `fromScreenshot` for a trace; this is neither — the turns are DESIGNED to
@@ -32,16 +33,45 @@ const designed = (anchors: Anchor[], n: number, seed: number, label?: string): S
  * rather than mounting a second chart. The cold open's failure IS the worked
  * example of Mistake 01; two charts would make that a different story.
  */
-export const SETUP = designed(
+/**
+ * ⚠ THE FIRST 63 BARS ARE TRACED FROM SIMON'S `ss01.png`, not designed — his
+ * call, and `scripts/trace-ss01.mjs` is the trace. 170 candles in the picture
+ * are aggregated into 63 bars (open of the first, close of the last, the
+ * extremes of all — what a higher timeframe IS), and the pixel scale is solved
+ * from TWO points: the level the tape breaks is 120, the floor it holds is
+ * 104. Every other price on this chart therefore follows from the picture
+ * rather than being chosen.
+ *
+ * ⚠ THE LAST 15 BARS ARE NOT IN THE PICTURE, AND CANNOT BE. ss01 ends on its
+ * high — that is the breakout the cold open needs. What the story needs next
+ * is the reversal that makes the trade fail, and no screenshot of a successful
+ * chart contains it. So the tail is designed, it starts on the traced tape's
+ * own last close, and it is the only part of this tape anybody chose.
+ */
+const HEAD: Bar[] = SS01.bars;
+const TAIL_N = 15;
+const TAIL_CLOSES = fromAnchors(
   [
-    [0, 101], [0.07, 111], [0.13, 105], [0.21, 118], [0.29, 105], [0.40, 119],
-    [0.50, 105.5], [0.60, 120], [0.68, 105.8], [0.75, 119],
-    /* the breakout, and then the whole thing rolling back over */
-    [0.80, 133], [0.84, 137], [0.90, 124], [0.935, 117], [0.97, 107], [1, 95],
+    [0, HEAD[HEAD.length - 1].c],
+    /* one more push, so the reversal is a failure rather than a stall */
+    [0.2, 129.5],
+    [0.45, 121],
+    [0.7, 112],
+    [0.9, 103],
+    [1, 95],
   ],
-  78,
+  TAIL_N + 1,
   0x2201,
-);
+).slice(1);
+export const SETUP: Series = {
+  closes: [...HEAD.map((b) => b.c), ...TAIL_CLOSES],
+  bars: [...HEAD, ...toBars(TAIL_CLOSES, 0x2201 ^ 0x5bf0)],
+  /* ⚠ `synthetic`, THOUGH MOST OF IT IS TRACED. The tag on screen is the same
+     either way, and the honest label for a tape whose ending was written is
+     not "traced". */
+  kind: "synthetic",
+  label: "ss01 + reversal",
+};
 /**
  * ⚠ SHAPED, NOT JUST GENERATED. `volumeOf` sizes each bar by its own body, and
  * on this tape that came out flat — but SC01's third beat is the words "volume
@@ -50,12 +80,19 @@ export const SETUP = designed(
  * the sentence is about. Illustration, and the series says so.
  */
 export const SETUP_VOL = volumeOf(SETUP.bars, 0x2202).map((v, i) => {
-  const t = Math.max(0, Math.min(1, (i - 44) / (62 - 44)));
+  /* ⚠ THE RAMP FOLLOWS THE TRACED TAPE'S OWN BREAKOUT (bar 59), not the frame
+     numbers it used to be fitted to. It runs from the consolidation into the
+     thrust, which is the stretch "volume menguat" is spoken over. */
+  const t = Math.max(0, Math.min(1, (i - 50) / (SS01.breakout - 50)));
   return v * (1 + t * 1.5);
 });
 /** The two levels the narration names. Typed here, once, and read by SC01,
  *  SC02 and SC04 — a level re-typed in a scene is a level that drifts. */
-export const SETUP_LEVELS = { resistance: 120, support: 104 } as const;
+export const SETUP_LEVELS = SS01.levels;
+/** ⚠ THE BAR THE FLOOR WAS FORMED ON. Drawn from bar 0 the support line runs
+ *  under half a tape that had not reached it yet, which says price was holding
+ *  a level that did not exist. A level starts where it was made. */
+export const SETUP_SUPPORT_FROM = SS01.levels.supportFrom;
 /** How far the tape is drawn in each scene. ⚠ BAR INDICES, NOT FRAMES. */
 export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
 
