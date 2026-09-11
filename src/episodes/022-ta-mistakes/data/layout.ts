@@ -101,6 +101,17 @@ export const MA = {
  */
 export const BUBBLE = { w: 188, h: 96 } as const;
 
+/**
+ * SC03's two readings, as one centred pair.
+ *
+ * ⚠ A GAP, NOT TWO POSITIONS — Simon: "jarak antara probabilitas dengan
+ * kepastian buat jadi 150 px aja". Placed independently in two half-card
+ * columns, the distance between the WORDS depends on how long they are, which
+ * is not a number anyone can set. One centred row with a gap between its
+ * children is, and the sentence under each reading travels with it.
+ */
+export const READINGS = { gap: 150, noteW: 430 } as const;
+
 /* ── charts with a histogram under them ─────────────────────────────────── */
 /** Same 70 / 6 / 24 split VIDEO 20 settled on: the histogram is a companion to
  *  price, and a pane given equal height stops being one. */
