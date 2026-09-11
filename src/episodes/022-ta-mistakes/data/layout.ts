@@ -337,3 +337,38 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
   if (MA.plot.x + MA.plot.w !== CARD.x + CARD.w)
     throw new Error("022-ta-mistakes/layout: the MA plot no longer ends on the card's right edge");
 })();
+
+/**
+ * ═══ THE CARD LIST'S ROW ═══
+ *
+ * ⚠ THE GAP IS SOLVED FOR, NOT CHOSEN — Simon: "yang bisa terlihat penuh di
+ * layar hanya 5, card yang ke 6 harusnya hanya terlihat setengah, jadi jaraknya
+ * tolong disesuaikan". Five cards and half of a sixth have to reach exactly the
+ * right edge of the frame, which fixes the gap once the card's width is picked:
+ *
+ *     left + 5·(w + gap) + w/2 = canvas.width
+ *
+ * Type a gap instead and the sixth card is cut at whatever fraction falls out.
+ */
+export const CARD_ROW = (() => {
+  const w = 280;
+  const h = 640;
+  const left = theme.margin.left;
+  const gap = (theme.canvas.width - left - 5.5 * w) / 5;
+  return {
+    w,
+    h,
+    gap,
+    y: (theme.canvas.height - h) / 2,
+    x: (i: number) => left + i * (w + gap),
+  };
+})();
+
+{
+  /** Kept honest: the sixth card must be cut exactly in half by the frame. */
+  const c = CARD_ROW;
+  const half = c.x(5) + c.w / 2;
+  if (Math.abs(half - theme.canvas.width) > 0.5) {
+    throw new Error(`022-ta-mistakes/layout: the sixth card is cut at ${half}, not at the frame's edge`);
+  }
+}

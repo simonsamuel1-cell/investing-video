@@ -280,6 +280,16 @@ export const theme = {
      */
     warnWash: "rgba(229, 71, 93, 0.10)",
     /**
+     * ⚠ THE HOVER FLOOD, and the only wash strong enough to carry white type.
+     * It is blurred wherever it is used, so it reads as ink spreading into a
+     * card rather than as a shape drawn on one — see the card-list transition.
+     * The reference this came from floods in orange; the hue here is the
+     * episode's indigo, because a warm flood would be the only warm thing in
+     * the video.
+     */
+    liquid: "rgba(95, 77, 238, 0.72)",
+    liquidEdge: "rgba(95, 77, 238, 0)",
+    /**
      * A price ZONE's fill, and the only reason it is not `indigoWash`: a zone
      * carries no border, so the fill alone has to say "this is an area" — see
      * chart/Annotations.tsx. At 9% it disappeared; at 18% it reads as ground

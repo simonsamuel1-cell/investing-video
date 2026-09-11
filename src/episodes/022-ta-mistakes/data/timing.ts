@@ -293,6 +293,51 @@ export const PREMISE = {
   notePerChar: 2,
 } as const;
 
+/**
+ * ═══ SCENE TRANSISI · THE CARD LIST ═══  (Simon's f1994, his reference clip)
+ *
+ * Six cards in a row, a pointer that hovers one of them, and the hovered card
+ * floods with colour — `VIDEO 22 - TA Mistakes/card list.mp4`.
+ *
+ * ⚠ THE TIMING HERE IS A PROPOSAL, NOT A LOCK. Simon: "coba kamu atur dulu tapi
+ * jangan terpaku pada subtitle … aku hanya mau tau di detik berapa aku bisa
+ * menambahkan durasi voice over". So the scene is written as a length rather
+ * than as a set of VO-locked beats: it opens on 1994 (00:33.233) and wants
+ * `over` frames. Whatever he adds to the recording at that timecode, only
+ * `over` changes and the beats inside scale with nothing — they are offsets
+ * from the scene's own start.
+ *
+ * ⚠ IT OVERLAPS SC04 AND IS DRAWN ON TOP, his instruction. Until the VO has
+ * room in it, the card list plays over the opening of the next scene.
+ */
+export const CARD_LIST = {
+  at: 1994,
+  /** 3 seconds. The list has to be read before the pointer picks one. */
+  over: 180,
+  /** The six cards arrive left to right. */
+  deal: { at: 0, step: 5, over: 26 },
+  /** The pointer comes in from off-frame and lands on a card. */
+  cursor: { at: 30, over: 34, card: 0 },
+  /** The flood, from where the pointer touched. */
+  hover: { at: 62, over: 46 },
+  /** ⚠ IT OWNS THE FRAME WHILE IT RUNS, and hands it back rather than popping
+   *  off. A transition that vanishes on one frame is a cut, and this stretch
+   *  already has one at each end. */
+  ground: { at: 0, over: 14 },
+  out: { at: 158, over: 22 },
+  titles: [
+    "Entry tanpa tahu kapan salah",
+    "Overtrading",
+    "Revenge Trading",
+    "Confirmation Bias",
+    /** ⚠ SPELT CORRECTLY. Simon typed "Hindisght"; the same mistake is named
+     *  "HINDSIGHT BIAS" by the counter in SC11, and two spellings of one term
+     *  in one video is the kind of thing only the video notices. */
+    "Hindsight Bias",
+    "Asal Copy Trade",
+  ],
+} as const;
+
 /* ═══ SC04 — masuk tanpa invalidation ════════════════════════════════════ */
 export const INVALID = {
   danger: 2123,

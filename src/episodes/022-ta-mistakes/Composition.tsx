@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, COUNTER, REVERSE } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, REVERSE } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { SC06 } from "./scenes/SC06";
@@ -59,6 +59,7 @@ import { SC18 } from "./scenes/SC18";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
+import { CardList } from "./scenes/CardList";
 
 /** ⚠ LONGER THAN THE VOICE ON PURPOSE — `BLOCK.END` holds the closing card for
  *  three seconds after the last word. The guard below is a floor, not an
@@ -164,6 +165,13 @@ const Body = () => (
         through with the scenes either side of them, which is what the recording
         supports anyway. */}
     {CHAPTER_CARDS && <Cards />}
+
+    {/* ⚠ THE TOPMOST LAYER — Simon: "layer ini harus yang paling atas jika
+        overlapping dengan scene lain". It runs over SC04's opening until the
+        recording has room made in it at 00:33.233. */}
+    <Sequence from={CARD_LIST.at} durationInFrames={CARD_LIST.over} name="Scene Transisi · Card list">
+      <CardList />
+    </Sequence>
 
     <Captions cues={CUES} show={chrome} />
     {chrome && <Watermark totalFrames={TOTAL_FRAMES} />}

@@ -32,6 +32,7 @@ export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
 export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
 export { SpeechBubble, bubblePath } from "./SpeechBubble";
 export { VerdictMark } from "./VerdictMark";
+export { Cursor } from "./Cursor";
 export { TabRow } from "./TabRow";
 export { RollList, type RollSeg } from "./RollList";
 export { PickRail } from "./PickRail";
