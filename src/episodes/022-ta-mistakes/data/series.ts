@@ -96,6 +96,15 @@ export const SETUP_SUPPORT_FROM = SS01.levels.supportFrom;
 
 /** How far the tape is drawn in each scene. ⚠ BAR INDICES, NOT FRAMES. */
 export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
+/**
+ * ⚠ THE BAR THE BREAKOUT STARTS ON, AND THE ONLY THING SC01 WITHHOLDS — Simon:
+ * "dari awal, coba hide 4 candlestick paling kanan … lalu 441, 4 candlesticknya
+ * muncul satu per satu". It is DERIVED from the trace rather than counted off
+ * the picture: it is the first bar that closes above the level, so "the four
+ * that are hidden" and "the run that breaks resistance" cannot drift apart if
+ * the tape is ever re-traced.
+ */
+export const SETUP_BREAK_FROM: number = SS01.breakout;
 
 /**
  * ═══ THE TREND LINE UNDER THE LOWS ═══  (Simon, f236)
@@ -324,6 +333,14 @@ export const ADMR_MACD = ADMR.closes.map((c, i) => {
   };
   const { resistance, support } = SETUP_LEVELS;
   const c = SETUP.closes;
+
+  /* the withheld run IS the breakout: every bar of it closes above the level,
+     and nothing before it does */
+  for (let i = SETUP_BREAK_FROM; i <= SETUP_STEPS.open; i++) {
+    if (c[i] <= resistance) fail(`bar ${i} is withheld as part of the breakout but does not close above resistance`);
+  }
+  if (c.slice(0, SETUP_BREAK_FROM).some((v) => v > resistance))
+    fail("SETUP closes above resistance before the run SC01 withholds");
 
   /* CG-A — the setup has to fail at resistance before it breaks it */
   const rejects = c.slice(0, SETUP_STEPS.open - 8).filter((v) => v > resistance).length;

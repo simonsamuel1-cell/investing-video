@@ -44,13 +44,14 @@ import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
   InstrumentRow, Layer, Level, Line, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
-  domainOf, gridOf, fadeOut, popIn, price, progress, sma, GRID_PAD_X,
+  domainOf, gridOf, fadeOut, popIn, price, progress, ramp, sma, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
 import { DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND, SETUP_VOL, TICKERS, XYZ,
+  SETUP, SETUP_BREAK_FROM, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND, SETUP_VOL,
+  TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -64,8 +65,13 @@ const DOMAIN = domainOf(SETUP.closes, SETUP.bars);
 const N = SETUP.bars.length;
 /** The fraction of the tape that shows bars 0…k. */
 const upto = (k: number) => (k + 1) / N;
-/** Bars 0–62 — what SC01 draws. The rest is carried by `Candles from`. */
-const HEAD = { ...SETUP, bars: SETUP.bars.slice(0, SETUP_STEPS.open + 1) };
+/**
+ * What is standing there on frame 0: the setup UP TO its breakout. The four
+ * bars that break the level are withheld and printed on the word — see
+ * SETUP_BREAK_FROM and OPEN.print — and the rest of the tape is carried into
+ * SC02 by `Candles from`.
+ */
+const HEAD = { ...SETUP, bars: SETUP.bars.slice(0, SETUP_BREAK_FROM) };
 /** The 20-bar average, for the last stat tile. Computed once. */
 const MA20 = sma(SETUP.closes, 20);
 /**
@@ -139,10 +145,25 @@ export const SetupGroup = () => {
    *  the screen is derived from. During SC01 the head is still drawing, so it
    *  is the head's own progress that decides; afterwards `shown` carries it. */
   const build = progress(f, local(OPEN.chart.at, FROM), OPEN.chart.over);
+  /**
+   * ⚠ LINEAR, AND THAT IS THE WHOLE POINT HERE. Four bars have to land ONE AT
+   * A TIME, evenly; on an eased curve the middle two cross their thresholds
+   * almost together and read as three candles, not four. (The episode eases
+   * everything that MOVES — this is a count of arrivals, not a move.)
+   */
+  const printed = ramp(f, local(OPEN.print.at, FROM), OPEN.print.over);
+  const head = upto(SETUP_BREAK_FROM - 1) + (upto(SETUP_STEPS.open) - upto(SETUP_BREAK_FROM - 1)) * printed;
+  /**
+   * ⚠ THE HISTOGRAM AND THE READOUT FOLLOW THE SAME NUMBER AS THE CANDLES.
+   * `shown` is already at the head's full length during SC01, so a volume pane
+   * driven by it drew four bars standing under four candles that had not been
+   * printed yet — the withheld breakout, visible in the one place nobody looks.
+   */
+  const tape = printed >= 1 ? shown : head;
   const seen =
     build < 1
       ? Math.ceil((SETUP_STEPS.open + 1) * build)
-      : Math.min(N, Math.ceil(N * shown));
+      : Math.min(N, Math.ceil(N * tape));
   const R = readout(seen);
   /** The screen's own chrome fades with the chart, never separately — it is
    *  one object. */
@@ -262,6 +283,11 @@ export const SetupGroup = () => {
           tickSide={CHART_STYLE === "ma" ? "left" : "right"}
           tickSize={CHART_STYLE === "ma" ? MA.tickSize : undefined}
         />
+        {/* ⚠ THE BREAKOUT, PRINTED ON ITS OWN WORD — Simon's f441. Four bars,
+            one at a time, the last landing on f464. */}
+        {printed > 0.001 && (
+          <Candles bars={SETUP.bars} grid={grid} from={SETUP_BREAK_FROM} shown={head} />
+        )}
         <Candles bars={SETUP.bars} grid={grid} from={SETUP_STEPS.open + 1} shown={shown} />
         {/* ⚠ THE ONE THING THAT STILL ARRIVES — Simon: "365 muncul volume bar
             nya". The price is already there; the histogram appearing under it
@@ -271,7 +297,7 @@ export const SetupGroup = () => {
           volume={SETUP_VOL}
           grid={grid}
           box={L.vol}
-          shown={shown}
+          shown={tape}
           opacity={progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over)}
         />
 
@@ -317,14 +343,11 @@ export const SetupGroup = () => {
           at={local(OPEN.resistance.at, FROM)}
           over={OPEN.resistance.over}
           label="Resistance"
-          /* ⚠ BROKEN FROM THE FRAME IT IS DRAWN ON, now that the whole head is
-             standing there from f0. The tape closes above this level on its
-             own last bars, and those bars are on screen — a level drawn
-             unbroken under a price that has plainly broken it is the chart
-             telling the viewer something the chart itself disproves. The word
-             "breakout" at 464 is still the beat; what it lands on is the chip,
-             because the evidence is already up. */
-          broken={g >= OPEN.resistance.at}
+          /* ⚠ BROKEN ON f464 AGAIN, and truthfully so: the bars that close above
+             this level are the four SC01 withholds, so until they print there
+             is nothing on screen above it. The level is tested and holds —
+             its own high touches 120 exactly — and then it fails on the word. */
+          broken={g >= OPEN.broken}
           /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
              the box edge and the label sits on the price scale; pinned to the
              final bar it hangs in empty space until the tape catches up. Level

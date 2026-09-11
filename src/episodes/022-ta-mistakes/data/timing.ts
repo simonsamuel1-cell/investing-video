@@ -153,6 +153,13 @@ export const OPEN = {
   support: { at: 301, over: 40 },
   vol: { at: 365, over: 26 },
   /**
+   * ⚠ THE ONLY BARS THAT ARRIVE IN TIME. The setup stands complete from f0
+   * EXCEPT its breakout: four candles are withheld and print one at a time
+   * from here, the last landing on f464 — the word "breakout". Which four is
+   * not typed; see SETUP_BREAK_FROM.
+   */
+  print: { at: 441, over: 24 },
+  /**
    * ⚠ ONE MARK AT A TIME — Simon: "tiap bukan gilirannya, buat jadi transparan
    * 30%". A mark hands its turn to the next one and steps back; it does not
    * leave, because the point of the scene is that all four readings were there
