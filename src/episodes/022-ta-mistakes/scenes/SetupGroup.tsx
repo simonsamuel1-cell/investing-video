@@ -44,7 +44,7 @@ import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
   InstrumentRow, Layer, Level, Line, SpeechBubble, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
-  domainOf, gridOf, fadeOut, price, progress, ramp, sma, GRID_PAD_X,
+  domainOf, gridOf, fadeOut, price, progress, ramp, sma, ticksOf, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
@@ -83,6 +83,8 @@ const MA20 = sma(SETUP.closes, 20);
  */
 const L = CHART_STYLE === "ma" ? MA : DASH;
 const signed = (v: number) => `${v >= 0 ? "+" : "−"}${price(Math.abs(v))}`;
+/** ⚠ SENTENCE CASE, AND SIMON'S WORDING — reproduced, not restyled. */
+const ANSWER = "Belum tentu";
 
 /**
  * The white panel, as a clip. `inset()` is written from the EDGES of the frame,
@@ -158,6 +160,20 @@ export const SetupGroup = () => {
    */
   const push =
     g >= BLOCK.SC04 ? 0 : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over);
+  /**
+   * ⚠ THE QUESTION SITS ON A PRICE LINE — Simon: "buat textnya di atas garis
+   * harga". The gridlines belong to the chart, so they are inside the push and
+   * move with it; the one to sit above is found AFTER the scale, not before.
+   * Typed as a y it would drift the first time the zoom or the domain changed.
+   */
+  const zoomed = (y: number) =>
+    theme.stage.card.y + (y - theme.stage.card.y) * (1 + REVERSE.zoom.by * push);
+  const askY = ticksOf([grid.lo, grid.hi])
+    .map((v) => zoomed(grid.y(v)))
+    .reduce((best, y) =>
+      Math.abs(y - theme.canvas.height / 2) < Math.abs(best - theme.canvas.height / 2) ? y : best,
+    ) - theme.text.display.size * 0.75;
+
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
   const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
@@ -494,19 +510,43 @@ export const SetupGroup = () => {
           the subtitle band, so it sits in that space rather than at some
           distance from it. */}
       {g >= REVERSE.ask && g < BLOCK.SC03 && (
-        <Words
-          text={g >= REVERSE.notYet ? "BELUM TENTU." : "Technical Analysis gagal?"}
-          key={g >= REVERSE.notYet ? "b" : "a"}
-          /* ⚠ THE MIDDLE OF THE FRAME, both ways — Simon. The panel covers the
-             centre, so "inside the white background" and "centred on screen"
-             are the same place. */
-          x={theme.canvas.width / 2}
-          y={theme.canvas.height / 2}
-          at={local(g >= REVERSE.notYet ? REVERSE.notYet : REVERSE.ask, FROM)}
-          anchor="center"
-          size={theme.text.display.size}
-          weight={theme.text.display.weight}
-        />
+        <>
+          <Words
+            text="Technical Analysis gagal?"
+            x={theme.canvas.width / 2}
+            y={askY}
+            at={local(REVERSE.ask, FROM)}
+            anchor="center"
+            size={theme.text.display.size}
+            weight={theme.text.display.weight}
+            color={c.indigo}
+          />
+          {/* ⚠ TYPED, NOT REVEALED — Simon. `ramp`, because a typewriter that
+              eases speeds up and slows down in the middle of a word. */}
+          {g >= REVERSE.notYet && (
+            <div
+              style={{
+                position: "absolute",
+                left: theme.canvas.width / 2,
+                top: askY + theme.text.display.size * 1.25,
+                transform: "translate(-50%, -50%)",
+                fontFamily: theme.text.family,
+                fontSize: theme.text.display.size,
+                fontWeight: theme.text.display.weight,
+                color: c.ink,
+                whiteSpace: "pre",
+              }}
+            >
+              {ANSWER.slice(
+                0,
+                Math.floor(
+                  ramp(f, local(REVERSE.notYet, FROM), ANSWER.length * REVERSE.perChar) *
+                    ANSWER.length,
+                ),
+              )}
+            </div>
+          )}
+        </>
       )}
 
       {/* ── SC04 · the reason stops holding ───────────────────────────────── */}

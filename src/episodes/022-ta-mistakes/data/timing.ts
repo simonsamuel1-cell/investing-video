@@ -238,7 +238,16 @@ export const REVERSE = {
   zoom: { at: 938, over: 35, by: 0.8 },
   /** Simon's frame for the question, and it lands as the push settles. */
   ask: 973,
+  /**
+   * ⚠ THE ANSWER JOINS THE QUESTION, it does not replace it. Both stand until
+   * the scene ends — the question is what the viewer is still holding while
+   * the answer arrives, and swapping one for the other threw it away.
+   *
+   * ⚠ AND IT IS TYPED. The question is stated; the answer is somebody working
+   * it out, which is what a line appearing a letter at a time reads as.
+   */
   notYet: 1084,
+  perChar: 3,
 } as const;
 
 /* ═══ SC03 — probabilitas, bukan kepastian ═══════════════════════════════ */
