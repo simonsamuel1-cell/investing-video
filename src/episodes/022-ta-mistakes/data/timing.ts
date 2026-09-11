@@ -269,6 +269,16 @@ export const PREMISE = {
   /** The two readings, each on its own word. */
   probabilitas: 1294,
   kepastian: 1370,
+  /**
+   * ═══ AND THE CHART COMES BACK ═══  (Simon's 1460)
+   *
+   * ⚠ IT RETURNS WHERE IT LEFT — half strength and still pushed in, the frame
+   * it went out on. A chart that came back at full size would be a new chart
+   * arriving, and this one is the same trade the scene has been talking about
+   * the whole time. Only after it is back does the picture undo the push.
+   */
+  resume: { at: 1460, over: 24 },
+  normal: { at: 1496, over: 40 },
   left: 1541,
   right: 1765,
   close: 1848,

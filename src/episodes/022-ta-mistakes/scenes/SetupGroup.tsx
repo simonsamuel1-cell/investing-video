@@ -134,7 +134,17 @@ export const SetupGroup = () => {
    */
   const leaving =
     g >= PREMISE.carry.at ? progress(f, local(PREMISE.carry.at, FROM), PREMISE.carry.over) : 0;
-  if (g >= BLOCK.SC03 && g < BLOCK.SC04 && leaving >= 0.999) return null;
+  /**
+   * ⚠ AND IT COMES BACK MID-SC03 — Simon's 1460, "from last we left off". The
+   * window returns in the state it went out in, half strength and still pushed
+   * in, and only then undoes the push. Coming back at full size would read as a
+   * second chart arriving rather than as the one the scene has been about.
+   */
+  const resume =
+    g >= PREMISE.resume.at ? progress(f, local(PREMISE.resume.at, FROM), PREMISE.resume.over) : 0;
+  const normal =
+    g >= PREMISE.normal.at ? progress(f, local(PREMISE.normal.at, FROM), PREMISE.normal.over) : 0;
+  if (g >= BLOCK.SC03 && g < BLOCK.SC04 && leaving >= 0.999 && resume <= 0.001) return null;
 
   const grid = gridOf(SETUP.closes, SETUP_DOMAIN, L.plot, 0.12, L.gutter);
 
@@ -152,8 +162,10 @@ export const SetupGroup = () => {
    * terlihat 50%". SC04 brings it back, because SC04 is about what the chart
    * did, not about the words over it.
    */
+  /** Out on the carry, back on the resume, and up to full as the push undoes. */
+  const gate = Math.min(1, 1 - leaving + resume);
   const quiet =
-    (1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over)) * (1 - leaving);
+    (1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over) + 0.5 * normal) * gate;
   /**
    * ⚠ THE PICTURE PUSHES IN; THE PANEL DOES NOT MOVE. Only what is inside the
    * white card scales, anchored on the card's TOP edge so it grows downward —
@@ -161,7 +173,9 @@ export const SetupGroup = () => {
    * white rectangle itself lunge at the viewer, which is a different move.
    */
   const push =
-    g >= BLOCK.SC04 ? 0 : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over);
+    g >= BLOCK.SC04
+      ? 0
+      : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over) * (1 - normal);
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
   const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
