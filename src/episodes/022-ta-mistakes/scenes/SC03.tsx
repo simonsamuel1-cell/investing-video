@@ -138,7 +138,7 @@ const Note = () => {
           alignItems: "center",
           justifyContent: "center",
           fontFamily: theme.text.family,
-          fontSize: theme.text.tag.size,
+          fontSize: theme.text.body.size + 4,
           /* ⚠ BOLD AND BLACK — Simon. The indigo said "this is a label"; this is
              the sentence the scene is making. */
           fontWeight: 800,
