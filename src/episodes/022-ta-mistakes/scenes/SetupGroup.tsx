@@ -42,7 +42,7 @@
 import { useCurrentFrame } from "remotion";
 import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
-  InstrumentRow, Level, Line, Stage, StatTiles, TickerStrip,
+  InstrumentRow, Layer, Level, Line, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
   domainOf, gridOf, fadeOut, popIn, price, progress, sma,
   theme, useMotion, usePalette,
@@ -50,7 +50,8 @@ import {
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
 import { DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_SUPPORT_FROM, SETUP_VOL, TICKERS, XYZ,
+  SETUP, SETUP_LEVELS, SETUP_STEPS, SETUP_SUPPORT_FROM, SETUP_TREND, SETUP_VOL,
+  TICKERS, XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -241,7 +242,47 @@ export const SetupGroup = () => {
           tickSize={CHART_STYLE === "ma" ? MA.tickSize : undefined}
         />
         <Candles bars={SETUP.bars} grid={grid} from={SETUP_STEPS.open + 1} shown={shown} />
-        <VolumeBars bars={SETUP.bars} volume={SETUP_VOL} grid={grid} box={L.vol} shown={shown} />
+        {/* ⚠ THE ONE THING THAT STILL ARRIVES — Simon: "365 muncul volume bar
+            nya". The price is already there; the histogram appearing under it
+            is what the words "volume menguat" have to land on. */}
+        <VolumeBars
+          bars={SETUP.bars}
+          volume={SETUP_VOL}
+          grid={grid}
+          box={L.vol}
+          shown={shown}
+          opacity={progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over)}
+        />
+
+        {/* ── the lows' own line, drawn under them ─────────────────────────
+            ⚠ TRIMMED, NOT FADED. A trend line that fades on is a line that was
+            always there; drawn from its first low to its last it is a reading
+            being made. The geometry is SETUP_TREND — measured off the hull of
+            the lows, never typed. */}
+        {(() => {
+          const drawn = progress(f, local(OPEN.trend.at, FROM), OPEN.trend.over);
+          if (drawn <= 0.001) return null;
+          const x1 = grid.x(SETUP_TREND.from);
+          const y1 = grid.y(SETUP_TREND.v0);
+          const x2 = grid.x(SETUP_TREND.to);
+          const y2 = grid.y(SETUP_TREND.v1);
+          const len = Math.hypot(x2 - x1, y2 - y1);
+          return (
+            <Layer opacity={dash}>
+              <line
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke={c.indigo}
+                strokeWidth={theme.shape.rule}
+                strokeLinecap="round"
+                strokeDasharray={len}
+                strokeDashoffset={len * (1 - drawn)}
+              />
+            </Layer>
+          );
+        })()}
         {/* ⚠ NO TIME AXIS — Simon: "timeframe 3 bln 2 bln 1 bln sekarang,
             hapus". The story is "it looked complete, then it failed"; how many
             months the tape covers is not part of it. */}
@@ -255,7 +296,14 @@ export const SetupGroup = () => {
           at={local(OPEN.resistance.at, FROM)}
           over={OPEN.resistance.over}
           label="Resistance"
-          broken={g >= OPEN.broken}
+          /* ⚠ BROKEN FROM THE FRAME IT IS DRAWN ON, now that the whole head is
+             standing there from f0. The tape closes above this level on its
+             own last bars, and those bars are on screen — a level drawn
+             unbroken under a price that has plainly broken it is the chart
+             telling the viewer something the chart itself disproves. The word
+             "breakout" at 464 is still the beat; what it lands on is the chip,
+             because the evidence is already up. */
+          broken={g >= OPEN.resistance.at}
           /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
              the box edge and the label sits on the price scale; pinned to the
              final bar it hangs in empty space until the tape catches up. Level
@@ -267,12 +315,16 @@ export const SetupGroup = () => {
              a little way forward is also what a level actually is. */
           to={Math.min(N - 1, seen + 14)}
         />
-        {g >= INVALID.support.at && (
+        {/* ⚠ IT ARRIVES IN SC01 NOW — Simon: "301 tambah 1 garis support di low
+            kedua". It is the reason the trade was taken, so it has to be on
+            screen while the reason is being given; SC04 does not introduce it,
+            it BREAKS it. */}
+        {g >= OPEN.support.at && (
           <Level
             value={SETUP_LEVELS.support}
             grid={grid}
-            at={local(INVALID.support.at, FROM)}
-            over={INVALID.support.over}
+            at={local(OPEN.support.at, FROM)}
+            over={OPEN.support.over}
             label="Support"
             broken={g >= INVALID.broken}
             /* ⚠ IT STARTS WHERE IT WAS MADE — see SETUP_SUPPORT_FROM. */

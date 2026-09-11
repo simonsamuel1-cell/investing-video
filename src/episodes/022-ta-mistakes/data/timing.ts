@@ -128,21 +128,30 @@ export const OPEN = {
    * ⚠ `chart.at` MOVED 24 → 96 to make room for it. Nothing VO-locked moved:
    * the first spoken beat is 119 and the first check chip is 227.
    */
-  shell: { at: 8, over: 20 },
+  /** ⚠ THE CARD IS PART OF "THE CHART IS ALREADY THERE". Left at f8 it dealt
+   *  itself over a tape that was already standing on the paper. */
+  shell: { at: -60, over: 20 },
   strip: { at: 26, step: 5 },
   rules: { at: 64, over: 26 },
   header: 78,
   /** The stat tiles land last, as the tape reaches them. */
   tiles: { at: 300, step: 5 },
   /**
-   * ⚠ IT FINISHES ON f464, THE WORD "breakout". Over 200 the head was complete
-   * by f296 — the breakout candle was already standing there while the voice
-   * was still saying "trend naik", and the resistance line sat unbroken under
-   * a price that had plainly broken it. Drawing across the whole sentence puts
-   * each bar under the clause that describes it: trend by 227, the support
-   * tests by 295, the volume ramp by 362, the breakout ON 464.
+   * ⚠ THE TAPE IS SIMPLY THERE — Simon: "dari 0 chartnya uda keliatan … jangan
+   * animasi muncul satu per satu". It used to print a bar at a time across the
+   * whole sentence. A chart told to arrive before the scene began is a chart
+   * that is standing there on frame 0, and `at` in the past is how that is
+   * said — the same trick the roadmap uses for a board built long ago.
+   *
+   * ⚠ WHAT ARRIVES IN TIME IS THE READING, NOT THE PRICE. The three marks land
+   * on their own clauses instead: the lows' trend line on "trend naik", the
+   * support line on "support bertahan", the histogram on "volume menguat".
    */
-  chart: { at: 96, over: 368 },
+  chart: { at: -60, over: 30 },
+  /** The three marks, each a few frames after the word that names it. */
+  trend: { at: 236, over: 40 },
+  support: { at: 301, over: 40 },
+  vol: { at: 365, over: 26 },
   setup: 119,
   /** ⚠ SENTENCE CASE, AND NO ARROW — Simon. Four shouted labels under a chart
    *  read as a banner; these are things the trader ticked off, so they are

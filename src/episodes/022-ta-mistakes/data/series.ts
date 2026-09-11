@@ -93,8 +93,48 @@ export const SETUP_LEVELS = SS01.levels;
  *  under half a tape that had not reached it yet, which says price was holding
  *  a level that did not exist. A level starts where it was made. */
 export const SETUP_SUPPORT_FROM = SS01.levels.supportFrom;
+
 /** How far the tape is drawn in each scene. ⚠ BAR INDICES, NOT FRAMES. */
 export const SETUP_STEPS = { open: 62, reverse: 72, breakdown: 77 } as const;
+
+/**
+ * ═══ THE TREND LINE UNDER THE LOWS ═══  (Simon, f236)
+ *
+ * ⚠ MEASURED, NOT DRAWN BY EYE. The lows' LOWER HULL is the set of points with
+ * nothing below them; only two ADJACENT hull vertices make an edge, and only an
+ * edge is guaranteed to keep the whole tape above it. Taking the widest PAIR of
+ * vertices instead gives a chord, and the chord of a lower hull runs ABOVE it —
+ * a "support" line drawn straight through the candles.
+ *
+ * ⚠ AND IT ENDS ON THE SUPPORT BAR, which is what ties the two lines together.
+ * The second low the trend line touches IS the floor the horizontal support is
+ * drawn at (Simon: "tambah 1 garis support di low kedua"), so the two marks are
+ * one reading of the tape rather than two levels that happen to be near each
+ * other.
+ */
+export const SETUP_TREND = (() => {
+  const bars = SETUP.bars.slice(0, SETUP_STEPS.open + 1);
+  const hull: number[] = [];
+  for (let k = 0; k < bars.length; k++) {
+    while (hull.length >= 2) {
+      const a = hull[hull.length - 2];
+      const b = hull[hull.length - 1];
+      const cross = (b - a) * (bars[k].l - bars[a].l) - (bars[b].l - bars[a].l) * (k - a);
+      if (cross <= 0) hull.pop();
+      else break;
+    }
+    hull.push(k);
+  }
+  const at = hull.indexOf(SETUP_SUPPORT_FROM);
+  if (at < 1) throw new Error("022-ta-mistakes/series: the support bar is not a vertex of the lows' hull");
+  const from = hull[at - 1];
+  const to = SETUP_SUPPORT_FROM;
+  const slope = (bars[to].l - bars[from].l) / (to - from);
+  /** Extended to the last bar SC01 draws — a trend line stops being one the
+   *  moment it stops being ahead of the price it is under. */
+  const end = SETUP_STEPS.open;
+  return { from, to: end, v0: bars[from].l, v1: bars[from].l + slope * (end - from), touch: to };
+})();
 
 /**
  * ═══ CG-A's DASHBOARD ═══  (Simon's `Chart Dashboard.jpeg`)
@@ -304,6 +344,19 @@ export const ADMR_MACD = ADMR.closes.map((c, i) => {
   if (c[SETUP_STEPS.breakdown] >= support) fail("SETUP never closes below support");
   const touches = c.slice(0, SETUP_STEPS.open).filter((v) => v < support + 3).length;
   if (touches < 2) fail(`SETUP only approaches support ${touches}× — the story needs it tested`);
+
+  /* the trend line has to stay under every low it runs past, or it is a line
+     drawn through the candles rather than under them */
+  {
+    const { from, to, v0, v1 } = SETUP_TREND;
+    const slope = (v1 - v0) / (to - from);
+    for (let i = from; i <= to; i++) {
+      if (SETUP.bars[i].l < v0 + slope * (i - from) - 1e-6)
+        fail(`the lows trend line cuts through bar ${i}`);
+    }
+    if (Math.abs(SETUP.bars[SETUP_TREND.touch].l - support) > 1e-6)
+      fail("the trend line's second low is not the level the support line is drawn at");
+  }
 
   /* SC09 — the two windows must be identical where they claim to be */
   const shared = CTX_SHARED;
