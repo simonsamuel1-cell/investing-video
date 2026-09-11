@@ -30,6 +30,7 @@ export { MarkerArrow, markerGeom } from "./MarkerArrow";
 export { QuizTitle } from "./QuizTitle";
 export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
 export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
+export { SpeechBubble, bubblePath } from "./SpeechBubble";
 export { TabRow } from "./TabRow";
 export { RollList, type RollSeg } from "./RollList";
 export { PickRail } from "./PickRail";

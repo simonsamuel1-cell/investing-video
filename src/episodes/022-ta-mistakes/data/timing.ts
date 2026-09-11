@@ -171,6 +171,12 @@ export const OPEN = {
    * about.
    */
   dim: 0.3,
+  /** ⚠ AND IT LASTS TO THE END OF SC02 — Simon: "transparansi 30% nya
+   *  perpanjang sampe akhir scene di 1139". A mark that hands over stays
+   *  handed over; nothing lights back up inside the opening. The group is dark
+   *  through SC03 and comes back at full for SC04, which is a different
+   *  argument about the same chart. */
+  dimTo: 1139,
   setup: 119,
   /** ⚠ SENTENCE CASE, AND NO ARROW — Simon. Four shouted labels under a chart
    *  read as a banner; these are things the trader ticked off, so they are
@@ -186,9 +192,17 @@ export const OPEN = {
    *  it — it is never redrawn. */
   resistance: { at: 150, over: 44 },
   broken: 464,
-  /** ⚠ THE BUTTON IS THE STORY, NOT ADVICE. It is pressed and becomes a status
-   *  chip; no arrow is ever drawn on the price. See scenes/SetupGroup.tsx. */
-  buy: 552,
+  /**
+   * ⚠ THE BUTTON IS THE STORY, NOT ADVICE. It is pressed and becomes a status
+   * chip; no arrow is ever drawn on the price. See scenes/SetupGroup.tsx.
+   *
+   * ⚠ IT IS A SPEECH BUBBLE NOW — Simon's shape, his frames: up on 536 and it
+   * does not leave until 680, which is INSIDE SC02. The trade is still being
+   * spoken about while the price has started turning, and the bubble sitting
+   * there through the first frames of the reversal is the whole point.
+   */
+  buy: 536,
+  bubbleGone: 680,
   taken: 586,
   close: 604,
 } as const;

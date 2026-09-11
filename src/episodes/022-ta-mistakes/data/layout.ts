@@ -95,6 +95,12 @@ export const MA = {
   tickSize: 34,
 } as const;
 
+/**
+ * The BUY bubble's box. Sized to the word rather than to the card: a bubble as
+ * wide as a panel stops reading as something somebody said.
+ */
+export const BUBBLE = { w: 188, h: 96 } as const;
+
 /* ── charts with a histogram under them ─────────────────────────────────── */
 /** Same 70 / 6 / 24 split VIDEO 20 settled on: the histogram is a companion to
  *  price, and a pane given equal height stops being one. */

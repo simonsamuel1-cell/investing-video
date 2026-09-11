@@ -42,13 +42,13 @@
 import { useCurrentFrame } from "remotion";
 import {
   Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
-  InstrumentRow, Layer, Level, Line, Stage, StatTiles, TickerStrip,
+  InstrumentRow, Layer, Level, Line, SpeechBubble, Stage, StatTiles, TickerStrip,
   VolumeBars, Words,
-  domainOf, gridOf, fadeOut, popIn, price, progress, ramp, sma, GRID_PAD_X,
+  domainOf, gridOf, fadeOut, price, progress, ramp, sma, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
 import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, REVERSE, local } from "../data/timing";
-import { DASH, MA } from "../data/layout";
+import { BUBBLE, DASH, MA } from "../data/layout";
 import {
   SETUP, SETUP_BREAK_FROM, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND, SETUP_VOL,
   TICKERS, XYZ,
@@ -176,10 +176,7 @@ export const SetupGroup = () => {
    * not in the rotation.
    */
   const turn = (next: number) =>
-    1 -
-    (1 - OPEN.dim) *
-      progress(f, local(next, FROM), m.fade) *
-      (1 - progress(f, local(OPEN.broken, FROM), m.fade));
+    g >= BLOCK.SC04 ? 1 : 1 - (1 - OPEN.dim) * progress(f, local(next, FROM), m.fade);
 
   /**
    * ⚠ THE PLOT'S OWN LEFT EDGE, AS A BAR INDEX. Simon wants the support run
@@ -298,7 +295,7 @@ export const SetupGroup = () => {
           grid={grid}
           box={L.vol}
           shown={tape}
-          opacity={progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over)}
+          opacity={progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over) * turn(OPEN.broken)}
         />
 
         {/* ── the lows' own line, drawn under them ─────────────────────────
@@ -416,28 +413,22 @@ export const SetupGroup = () => {
       </div>
       )}
 
-      {/* ── SC01 · the button, pressed ────────────────────────────────────── */}
-      {g >= OPEN.buy && g < OPEN.taken && (
-        <div
-          style={{
-            position: "absolute",
-            /* ⚠ OVER THE CHART, NOT THE CARD. At 0.16 of the card it landed
-               on the instrument header the dashboard now puts there. */
-            left: L.plot.x + L.plot.w * 0.84,
-            top: L.plot.y + L.plot.h * 0.16,
-            transform: `translate(-50%, -50%) scale(${popIn(f, local(OPEN.buy, FROM), m.pop).scale})`,
-            opacity: popIn(f, local(OPEN.buy, FROM), m.pop).opacity,
-            padding: `${m.sec(0.2)}px ${m.sec(0.62)}px`,
-            borderRadius: theme.shape.chipRadius,
-            background: c.indigo,
-            color: theme.color.onIndigo,
-            fontFamily: theme.text.family,
-            fontSize: theme.text.chip.size,
-            fontWeight: theme.text.chip.weight,
-          }}
-        >
-          BUY
-        </div>
+      {/* ── SC01 · the decision, spoken ───────────────────────────────────
+          ⚠ A SPEECH BUBBLE, NOT A BUTTON — Simon's shape. A button is an
+          instruction; a bubble is somebody saying what they did, which is what
+          this scene is about. Still no arrow on the price.
+
+          ⚠ ITS TAIL POINTS DOWN-LEFT, so the box sits above and right of the
+          tape it is speaking about — see core/SpeechBubble.tsx. */}
+      {g >= OPEN.buy && g < OPEN.bubbleGone && (
+        <SpeechBubble
+          label="BUY"
+          x={L.plot.x + L.plot.w * 0.84 - BUBBLE.w / 2}
+          y={L.plot.y + L.plot.h * 0.16 - BUBBLE.h}
+          w={BUBBLE.w}
+          h={BUBBLE.h}
+          at={local(OPEN.buy, FROM)}
+        />
       )}
       {g >= OPEN.taken && g < BLOCK.SC04 && (
         <Chip
