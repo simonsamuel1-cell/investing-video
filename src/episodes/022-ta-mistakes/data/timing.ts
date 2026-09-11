@@ -214,7 +214,24 @@ export const REVERSE = {
   /** The four ✓ chips go quiet here rather than disappearing: the evidence did
    *  not vanish, it stopped being enough. */
   dim: 838,
-  ask: 928,
+  /**
+   * ═══ AND THEN THE WHOLE READING LEAVES ═══  (Simon's f918)
+   *
+   * ⚠ ONE FRAME TAKES EVERYTHING THE SETUP CLAIMED. The four chips, the support
+   * and the resistance — lines and labels both — go together, because they were
+   * one argument and it has just stopped being true. Left one at a time they
+   * would read as four small corrections instead of one failed thesis.
+   *
+   * ⚠ THE WINDOW ITSELF DOES NOT LEAVE, IT STEPS BACK: down to half strength,
+   * then lifted until only half of it is on screen. The chart is still the
+   * subject of the sentence — it is just no longer the thing being pointed at,
+   * and the room it gives up is where the question goes.
+   */
+  clear: 918,
+  fade: { at: 918, over: 20 },
+  lift: { at: 938, over: 35 },
+  /** Simon's frame for the question, and it lands as the lift settles. */
+  ask: 973,
   notYet: 1084,
 } as const;
 

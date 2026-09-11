@@ -130,11 +130,24 @@ export const SetupGroup = () => {
     (upto(SETUP_STEPS.reverse) - upto(SETUP_STEPS.open)) * p2 +
     (upto(SETUP_STEPS.breakdown) - upto(SETUP_STEPS.reverse)) * p3;
 
-  /* SC02 lets the picture go quiet behind its question; SC04 brings it back,
-     because SC04 is about what the chart did, not about the words over it. */
-  /** ⚠ 0.28, NOT 0.45. The screen has far more on it than the bare plot
-   *  did, and a big word over it needs the room. */
-  const quiet = fadeOut(f, local(REVERSE.ask, FROM), m.fade) * 0.72 + 0.28;
+  /**
+   * SC02 steps the window back rather than fading it out — Simon: "window saham
+   * ini memudar 50%, lalu bergeser naik ke atas hingga previewnya cuma
+   * terlihat 50%". SC04 brings it back, because SC04 is about what the chart
+   * did, not about the words over it.
+   */
+  const quiet = 1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over);
+  /**
+   * ⚠ HALF THE CARD, SOLVED FOR. Lifting by the card's top plus half its height
+   * puts its bottom edge exactly halfway down what used to be the card — so
+   * "half the window is left" is true whatever the margins become.
+   */
+  const LIFT = theme.stage.card.y + theme.stage.card.h / 2;
+  const lift =
+    g >= BLOCK.SC04 ? 0 : LIFT * progress(f, local(REVERSE.lift.at, FROM), REVERSE.lift.over);
+  /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
+   *  which the group is dark in front of. */
+  const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
   const back = progress(f, local(INVALID.danger, FROM), m.fade);
   const chartOp = g < BLOCK.SC04 ? quiet : 0.28 + 0.72 * back;
 
@@ -195,7 +208,22 @@ export const SetupGroup = () => {
 
   return (
     <Stage>
-      <Card rect={theme.stage.card} opacity={progress(f, local(OPEN.shell.at, FROM), OPEN.shell.over)} soft />
+      {/* ═══ THE WINDOW ═══ — the card, its chrome and its tape, as ONE object.
+          ⚠ IT IS A GROUP BECAUSE SC02 MOVES IT. Simon lifts the whole thing
+          until half of it is off the top; a card that travelled without its
+          chart, or a chart without its card, would come apart mid-move. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${(-lift).toFixed(1)}px)`,
+        }}
+      >
+      <Card
+        rect={theme.stage.card}
+        opacity={progress(f, local(OPEN.shell.at, FROM), OPEN.shell.over) * (g < BLOCK.SC04 ? quiet : 1)}
+        soft
+      />
 
       {/* ── the screen's own furniture ─────────────────────────────────────
           ⚠ IT LOADS IN THE ORDER A SCREEN LOADS — strip, rules, header, then
@@ -203,9 +231,10 @@ export const SetupGroup = () => {
           that was already finished. */}
       {CHART_STYLE === "ma" ? (
         <div style={{ opacity: dash }}>
+          {/* ⚠ THE TICKER ALONE — Simon: "hapus … 'Saham ABCD'". The name said
+              the same thing the code says, one size smaller. */}
           <InstrumentRow
             ticker="ABCD"
-            name={XYZ.name}
             x={MA.headX}
             y={MA.headY}
             at={local(OPEN.header, FROM)}
@@ -340,6 +369,11 @@ export const SetupGroup = () => {
           at={local(OPEN.resistance.at, FROM)}
           over={OPEN.resistance.over}
           label="Resistance"
+          /* ⚠ ON THE LEFT — Simon. The right-hand end of this plot is where the
+             breakout, the bubble and the newest bars all are; a label there is
+             standing in the middle of the story. */
+          labelSide="left"
+          opacity={marks}
           /* ⚠ BROKEN ON f464 AGAIN, and truthfully so: the bars that close above
              this level are the four SC01 withholds, so until they print there
              is nothing on screen above it. The level is tested and holds —
@@ -375,9 +409,11 @@ export const SetupGroup = () => {
             from={EDGE}
             to={Math.min(N - 1, seen + 14)}
             width={theme.shape.line}
-            opacity={turn(OPEN.vol.at)}
+            labelSide="left"
+            opacity={turn(OPEN.vol.at) * marks}
           />
         )}
+      </div>
       </div>
 
       {/* ── SC01 · the four things that made it look complete ───────────────
@@ -386,7 +422,7 @@ export const SetupGroup = () => {
           needs it — by then the four chips have been read, struck, and are
           finished. */}
       {g < BLOCK.SC05 && (
-      <div style={{ opacity: fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) }}>
+      <div style={{ opacity: fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) * marks }}>
         {OPEN.checks.map((q, i) => (
           <Chip
             key={q.label}
@@ -430,28 +466,21 @@ export const SetupGroup = () => {
           at={local(OPEN.buy, FROM)}
         />
       )}
-      {g >= OPEN.taken && g < BLOCK.SC04 && (
-        <Chip
-          label="Posisi terbuka"
-          x={theme.stage.active.x}
-          y={theme.stage.active.y + theme.text.chip.size}
-          at={local(OPEN.taken, FROM)}
-          anchor="left"
-          tone="slate"
-          pill
-        />
-      )}
+      {/* ⚠ NO STATUS CHIP — Simon: "hapus 'Posisi terbuka'". The bubble already
+          says the trade was taken, and a second label saying it again in the
+          corner is the frame repeating itself. */}
 
-      {/* ── SC02 · the question, and the answer ───────────────────────────── */}
+      {/* ── SC02 · the question, and the answer ─────────────────────────────
+          ⚠ UNDER THE WINDOW, IN THE ROOM THE LIFT MADE — Simon: "973 muncul
+          text di bawah windownya". Centred between the card's lifted edge and
+          the subtitle band, so it sits in that space rather than at some
+          distance from it. */}
       {g >= REVERSE.ask && g < BLOCK.SC03 && (
         <Words
-          text={g >= REVERSE.notYet ? "BELUM TENTU." : "TA-NYA GAGAL?"}
+          text={g >= REVERSE.notYet ? "BELUM TENTU." : "Technical Analysis gagal?"}
           key={g >= REVERSE.notYet ? "b" : "a"}
-          /* ⚠ CENTRED ON THE CHART COLUMN, NOT ON THE CANVAS. The dashboard
-             puts the stat tiles in the right third, so the frame's middle is
-             no longer the middle of what is being read. */
-          x={L.plot.x + L.plot.w / 2}
-          y={L.plot.y + L.plot.h * 0.5}
+          x={theme.canvas.width / 2}
+          y={(theme.stage.card.y + theme.stage.card.h - LIFT + theme.captionBand.top) / 2}
           at={local(g >= REVERSE.notYet ? REVERSE.notYet : REVERSE.ask, FROM)}
           anchor="center"
           size={theme.text.display.size}

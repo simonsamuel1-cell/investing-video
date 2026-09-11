@@ -34,6 +34,7 @@ export const Level = ({
   from,
   to,
   width = theme.shape.rule,
+  labelSide = "right",
 }: {
   value: number;
   grid: Grid;
@@ -49,6 +50,12 @@ export const Level = ({
   /** Stroke width. Defaults to the theme's rule, so nothing already drawn
    *  changes; pass `theme.shape.line` for a level that has to carry a scene. */
   width?: number;
+  /**
+   * Which end the label sits on. `right` is the default and the reason is
+   * below; `left` is for a plot whose right-hand side is where the story is
+   * happening, so a label there would be standing on the newest bars.
+   */
+  labelSide?: "left" | "right";
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -87,9 +94,9 @@ export const Level = ({
              * resistance level is a claim about.
              */
             position: "absolute",
-            left: x2 - 12,
+            left: labelSide === "left" ? Math.min(x1, x2) + 12 : x2 - 12,
             top: y - 10,
-            transform: "translate(-100%, -100%)",
+            transform: labelSide === "left" ? "translateY(-100%)" : "translate(-100%, -100%)",
             fontFamily: theme.text.family,
             fontSize: theme.text.tag.size,
             fontWeight: theme.text.tag.weight,

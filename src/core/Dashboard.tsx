@@ -417,7 +417,8 @@ export const InstrumentRow = ({
   opacity = 1,
 }: {
   ticker: string;
-  name: string;
+  /** Optional — a row that is only a ticker is a row with nothing to explain. */
+  name?: string;
   x: number;
   /** Centre-y of the row. */
   y: number;
@@ -466,7 +467,9 @@ export const InstrumentRow = ({
       >
         {ticker}
       </span>
-      <span style={{ fontSize: theme.text.tag.size, fontWeight: 500, color: c.slate }}>{name}</span>
+      {name && (
+        <span style={{ fontSize: theme.text.tag.size, fontWeight: 500, color: c.slate }}>{name}</span>
+      )}
     </div>
   );
 };
