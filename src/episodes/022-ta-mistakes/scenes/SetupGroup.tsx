@@ -85,6 +85,19 @@ const L = CHART_STYLE === "ma" ? MA : DASH;
 const signed = (v: number) => `${v >= 0 ? "+" : "−"}${price(Math.abs(v))}`;
 
 /**
+ * The white panel, as a clip. `inset()` is written from the EDGES of the frame,
+ * which is why it is derived here once rather than in the render — four numbers
+ * typed against a card that moves are four numbers that rot.
+ */
+const CARD_CLIP = (() => {
+  const r = theme.stage.card;
+  return (
+    `inset(${r.y}px ${theme.canvas.width - (r.x + r.w)}px ` +
+    `${theme.canvas.height - (r.y + r.h)}px ${r.x}px round ${theme.shape.cardRadius}px)`
+  );
+})();
+
+/**
  * Everything the screen says about itself, at THIS frame.
  *
  * ⚠ READ OFF THE BARS THAT EXIST, NOT OFF THE SERIES. `SETUP.closes.at(-1)` is
@@ -138,13 +151,13 @@ export const SetupGroup = () => {
    */
   const quiet = 1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over);
   /**
-   * ⚠ HALF THE CARD, SOLVED FOR. Lifting by the card's top plus half its height
-   * puts its bottom edge exactly halfway down what used to be the card — so
-   * "half the window is left" is true whatever the margins become.
+   * ⚠ THE PICTURE PUSHES IN; THE PANEL DOES NOT MOVE. Only what is inside the
+   * white card scales, anchored on the card's TOP edge so it grows downward —
+   * "ke bagian atas background putihnya". Scaling the card too would make the
+   * white rectangle itself lunge at the viewer, which is a different move.
    */
-  const LIFT = theme.stage.card.y + theme.stage.card.h / 2;
-  const lift =
-    g >= BLOCK.SC04 ? 0 : LIFT * progress(f, local(REVERSE.lift.at, FROM), REVERSE.lift.over);
+  const push =
+    g >= BLOCK.SC04 ? 0 : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over);
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
   const marks = g >= BLOCK.SC04 ? 1 : 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
@@ -208,22 +221,27 @@ export const SetupGroup = () => {
 
   return (
     <Stage>
-      {/* ═══ THE WINDOW ═══ — the card, its chrome and its tape, as ONE object.
-          ⚠ IT IS A GROUP BECAUSE SC02 MOVES IT. Simon lifts the whole thing
-          until half of it is off the top; a card that travelled without its
-          chart, or a chart without its card, would come apart mid-move. */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          transform: `translateY(${(-lift).toFixed(1)}px)`,
-        }}
-      >
       <Card
         rect={theme.stage.card}
         opacity={progress(f, local(OPEN.shell.at, FROM), OPEN.shell.over) * (g < BLOCK.SC04 ? quiet : 1)}
         soft
       />
+      {/* ═══ WHAT IS INSIDE THE PANEL ═══ — chrome and tape, as one picture.
+          ⚠ CLIP OUTSIDE, SCALE INSIDE. A clip-path on the element that scales
+          scales with it and stops matching the panel it is clipping to; the
+          clip has to sit on a wrapper that never moves.
+          ⚠ AND THE CLIP ONLY EXISTS WHILE THE PUSH DOES. A clipping container
+          rasterises the same shapes on a different sub-pixel grid, so leaving
+          it on would nudge every frame of SC01 and SC04 for nothing. */}
+      <div style={{ position: "absolute", inset: 0, clipPath: push > 0.001 ? CARD_CLIP : undefined }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${(1 + REVERSE.zoom.by * push).toFixed(4)})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.stage.card.y}px`,
+        }}
+      >
 
       {/* ── the screen's own furniture ─────────────────────────────────────
           ⚠ IT LOADS IN THE ORDER A SCREEN LOADS — strip, rules, header, then
@@ -374,11 +392,10 @@ export const SetupGroup = () => {
              standing in the middle of the story. */
           labelSide="left"
           opacity={marks}
-          /* ⚠ BROKEN ON f464 AGAIN, and truthfully so: the bars that close above
-             this level are the four SC01 withholds, so until they print there
-             is nothing on screen above it. The level is tested and holds —
-             its own high touches 120 exactly — and then it fails on the word. */
-          broken={g >= OPEN.broken}
+          /* ⚠ IT NEVER RESTYLES — Simon: "garis resistancenya ga usa berubah
+             warna dan bentuk". The break is already told by the four candles
+             printing through it; saying it a second time in the line's own
+             colour made the level look like a different object afterwards. */
           /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
              the box edge and the label sits on the price scale; pinned to the
              final bar it hangs in empty space until the tape catches up. Level
@@ -413,6 +430,7 @@ export const SetupGroup = () => {
             opacity={turn(OPEN.vol.at) * marks}
           />
         )}
+      </div>
       </div>
       </div>
 
@@ -479,8 +497,11 @@ export const SetupGroup = () => {
         <Words
           text={g >= REVERSE.notYet ? "BELUM TENTU." : "Technical Analysis gagal?"}
           key={g >= REVERSE.notYet ? "b" : "a"}
+          /* ⚠ THE MIDDLE OF THE FRAME, both ways — Simon. The panel covers the
+             centre, so "inside the white background" and "centred on screen"
+             are the same place. */
           x={theme.canvas.width / 2}
-          y={(theme.stage.card.y + theme.stage.card.h - LIFT + theme.captionBand.top) / 2}
+          y={theme.canvas.height / 2}
           at={local(g >= REVERSE.notYet ? REVERSE.notYet : REVERSE.ask, FROM)}
           anchor="center"
           size={theme.text.display.size}

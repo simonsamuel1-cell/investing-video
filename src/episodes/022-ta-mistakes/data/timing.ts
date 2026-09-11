@@ -223,14 +223,20 @@ export const REVERSE = {
    * would read as four small corrections instead of one failed thesis.
    *
    * ⚠ THE WINDOW ITSELF DOES NOT LEAVE, IT STEPS BACK: down to half strength,
-   * then lifted until only half of it is on screen. The chart is still the
-   * subject of the sentence — it is just no longer the thing being pointed at,
-   * and the room it gives up is where the question goes.
+   * and then the picture inside it pushes in. The chart is still the subject of
+   * the sentence — it is just no longer the thing being pointed at.
+   *
+   * ⚠ IT USED TO SLIDE UP UNTIL HALF OF IT WAS OFF SCREEN, and Simon killed it:
+   * "ternyata jelek ya kalo di jadiin terlihat 50%". The half that survived was
+   * the bottom one — the histogram and the feet of the candles — which is the
+   * half with nothing in it. A push IN keeps the whole white panel and gives
+   * the question a room to land in instead of a gap.
    */
   clear: 918,
   fade: { at: 918, over: 20 },
-  lift: { at: 938, over: 35 },
-  /** Simon's frame for the question, and it lands as the lift settles. */
+  /** 80% in, anchored on the panel's top edge so it grows downward. */
+  zoom: { at: 938, over: 35, by: 0.8 },
+  /** Simon's frame for the question, and it lands as the push settles. */
   ask: 973,
   notYet: 1084,
 } as const;
