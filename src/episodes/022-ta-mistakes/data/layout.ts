@@ -135,12 +135,13 @@ export const NOTE_BOX = (() => {
    */
   /**
    * ⚠ TUNED TO THE SENTENCE, MEASURED OFF A RENDER. The longest line sets 992px
-   * at 40px type, and this leaves ~34px of air each side — Simon: "padding kiri
-   * kanannya kurangin". Nothing in code can measure a string's width, so this
-   * number is the one thing here that has to be re-checked if the wording or
-   * the type size changes; the render will show it immediately.
+   * at 40px type, and this leaves ~44px of air each side — Simon asked for it
+   * tighter, then for 10px back on each side. Nothing in code can measure a
+   * string's width, so this number is the one thing here that has to be
+   * re-checked if the wording or the type size changes; the render will show it
+   * immediately.
    */
-  const w = 1060;
+  const w = 1080;
   const h = 140;
   return { x: (theme.canvas.width - w) / 2, y: theme.logoZone.height, w, h };
 })();
