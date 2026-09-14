@@ -437,6 +437,14 @@ const Row2 = () => {
   const wide = R.w + R.gap * V2.spread;
   const from0 = theme.canvas.width + 40;
   const startX = (i: number) => from0 + i * wide;
+  /**
+   * ⚠ AND OUT THE SAME WAY, FANNING — Simon. One curve again; the extra that
+   * each card further right takes is what opens the row up as it leaves. The
+   * distance is solved from the FIRST card, because it is the one with the
+   * whole frame still to cross.
+   */
+  const leave = progressInOut(f, V2.out.at, V2.out.over);
+  const outX = (i: number) => leave * (AWAY + i * R.gap * V2.out.spread);
 
   /** The pointer's target on the card it picks — the same spot on the card that
    *  round one used, so the two picks read as the same gesture. */
@@ -454,7 +462,12 @@ const Row2 = () => {
           key={title}
           n={i + 1}
           title={title}
-          box={{ x: startX(i) + (R.x(i) - startX(i)) * t, y: R.y, w: R.w, h: R.h }}
+          box={{
+            x: startX(i) + (R.x(i) - startX(i)) * t + outX(i),
+            y: R.y,
+            w: R.w,
+            h: R.h,
+          }}
           /** ⚠ A DONE CARD IS FULLY FLOODED AND IN THE OTHER TONE. It does not
            *  animate: it arrives already finished, which is what "done" looks
            *  like. */
@@ -462,10 +475,12 @@ const Row2 = () => {
           wet={i === V2.cursor.card ? progress(f, V2.hover.at, V2.hover.over) : 0}
         />
       ))}
+      {/** ⚠ THE POINTER GOES WHEN THE ROW DOES. It picked one; there is nothing
+        *  for it to be doing while the list leaves. */}
       <Cursor
         x={from.x + (land.x - from.x) * walk}
         y={from.y + (land.y - from.y) * walk}
-        opacity={walk > 0.001 ? 1 : 0}
+        opacity={walk > 0.001 ? 1 - leave : 0}
       />
     </>
   );
@@ -955,8 +970,11 @@ export const CardList = () => {
    *  SC06; it now runs past it, because the transition INTO mistake 02 belongs
    *  to this layer too. */
   const round2 = CARD_LIST.row2.hover.at + CARD_LIST.row2.hover.over;
-  if (round2 > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the second round is still running when the window ends");
+  if (round2 > CARD_LIST.row2.out.at) {
+    throw new Error("022-ta-mistakes/CardList: the row starts leaving while its flood is still spreading");
+  }
+  if (CARD_LIST.row2.out.at + CARD_LIST.row2.out.over > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the row is still leaving when the window ends");
   }
   if (CARD_LIST.away.at < CARD_LIST.note.at) {
     throw new Error("022-ta-mistakes/CardList: the picture leaves before its own note has been written");

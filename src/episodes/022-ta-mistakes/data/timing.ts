@@ -320,11 +320,12 @@ export const CARD_LIST = {
    *
    * ⚠ AND IT NOW RUNS PAST SC06'S START, because the second Scene Transisi is
    * this layer's too: at 4046 everything leaves to the left and the six cards
-   * come back for mistake 02. Simon: overlapping SC06 is fine, so the window
-   * runs to 4245 — the flood settles at 4164 and the row then stands for 81
-   * frames, which is room for whatever comes next rather than a held ending.
+   * come back for mistake 02, and at 4227 they leave to the right again. Simon:
+   * overlapping SC06 is fine. The window ends on the frame the last card clears
+   * the edge — 4267, not the 4245 he asked for before the exit existed, because
+   * the exit needs 40 frames to be a move rather than a strobe.
    */
-  over: 2252,
+  over: 2274,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -494,6 +495,18 @@ export const CARD_LIST = {
     spread: 4,
     cursor: { at: 2092, over: 34, card: 1 },
     hover: { at: 2124, over: 46 },
+    /**
+     * ⚠ AND OUT AGAIN AT 4227, FANNING OPEN — Simon. The mirror of the way they
+     * came in: every card takes the same curve, and each one further right takes
+     * three gaps more than the one before it, so the row stretches as it goes
+     * instead of sliding off as a block.
+     *
+     * ⚠ 40 FRAMES, NOT THE 18 UNTIL 4245. The leftmost card has 1864px to cover
+     * before it clears the frame; in 18 it would be crossing 100px per frame
+     * while still on screen, which strobes. 40 is the rate the first row left
+     * at and the rate that already looked right.
+     */
+    out: { at: 2233, over: 40, spread: 3 },
     /** ⚠ THE CARDS ALREADY DEALT WITH. Cyan, not gone: a list that removes its
      *  finished items is a queue, and this is a syllabus. */
     done: [0],
