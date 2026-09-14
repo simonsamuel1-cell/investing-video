@@ -16,6 +16,12 @@
  * passed off regardless, because a thing that is hidden by luck is a thing that
  * comes back the day the number moves.
  *
+ * ⚠ THE WINDOW IS ON BBCA, AND IT HAS TO BE NAMED — Simon. Which chart 019
+ * shows is decided by the frame, and the frame where the list is open and
+ * settled is 15 frames past the one where BBCA hands over to BBRI. Holding a
+ * single frame, the two could not both be had, so the name is passed instead of
+ * hunted for.
+ *
  * ⚠ THE RIGHT-HAND EXTENSION IS A PORTFOLIO HERE, NOT A WATCHLIST — Simon. The
  * panel is showing what somebody owns, so the prices come off and the two
  * columns that are left get named. That is `portfolio` on BrokerPanel, opt-in
@@ -57,7 +63,7 @@ export const Platform = () => {
         ...cutInStyle(g, PLATFORM_CUT),
       }}
     >
-      <BrokerPanel f={AT} structure={false} portfolio />
+      <BrokerPanel f={AT} structure={false} portfolio chart="BBCA" />
     </div>
   );
 };

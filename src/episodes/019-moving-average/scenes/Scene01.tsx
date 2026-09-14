@@ -576,6 +576,7 @@ export const BrokerPanel = ({
   shrink = 1,
   structure = true,
   portfolio = false,
+  chart,
 }: {
   f: number;
   /**
@@ -599,6 +600,13 @@ export const BrokerPanel = ({
    * Defaults to off, so nothing in this episode changes.
    */
   portfolio?: boolean;
+  /**
+   * ⚠ FORCES WHICH NAME IS IN THE WINDOW, instead of letting the frame decide.
+   * Added for VIDEO 22, which holds this panel on one frame: the frame that has
+   * the list open and settled is not the frame BBCA is up on, so without this
+   * the two could never both be had.
+   */
+  chart?: string;
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -609,9 +617,15 @@ export const BrokerPanel = ({
   const plotW = PLOT.w - LIST.take * open;
 
   /** Which chart the window is on, and therefore which row is selected. */
-  const active = CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0);
-  /** A chart is up from its own frame until the next one takes over. */
+  const pick = chart ? CHARTS.findIndex((c) => c.t === chart) : -1;
+  const active = pick < 0 ? CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0) : pick;
+  /**
+   * A chart is up from its own frame until the next one takes over — unless a
+   * caller has NAMED one, in which case there is no cross-fade to be in the
+   * middle of and the answer is simply yes or no.
+   */
   const alpha = (i: number) => {
+    if (pick >= 0) return i === pick ? 1 : 0;
     const inA = i === 0 ? 1 : progress(f, CHARTS[i].at, T.swapOver);
     const next = CHARTS[i + 1];
     return inA * (next ? 1 - progress(f, next.at, T.swapOver) : 1);
