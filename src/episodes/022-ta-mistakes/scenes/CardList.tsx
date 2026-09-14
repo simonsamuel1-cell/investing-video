@@ -32,7 +32,7 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  Candles, Cursor, gridOf, progress, progressInOut, textReveal, theme,
+  Candles, Cursor, Level, gridOf, progress, progressInOut, textReveal, theme,
   useMotion, usePalette, useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
@@ -90,6 +90,15 @@ const TAPE_GRID = gridOf(
   O.plot,
   0,
 );
+/**
+ * ⚠ THE LEVEL IS A CLAIM ABOUT THE WHOLE CARD, not only about the bars drawn so
+ * far. Same vertical scale as the tape — same box.y, box.h and the same pad: 0,
+ * so y(0.25) is the same pixel — on a box that runs the card's full inner
+ * width, so the line carries on past the last candle the way a level on a chart
+ * does. The tape stops 250px short because Simon wants that room; the level
+ * crossing it is what the room is for.
+ */
+const LEVEL_GRID = gridOf([0], [0, 1], { ...O.plot, x: O.x + O.pad, w: O.w - O.pad * 2 }, 0);
 
 /**
  * The big numeral's offset from the card's bottom-centre — Simon's, settled at
@@ -291,6 +300,21 @@ export const CardList = () => {
         grid={TAPE_GRID}
         wipe={(i) => progressInOut(f, V.tape.at + i * V.tape.step, V.tape.over)}
       />
+
+      {/* ⚠ NOW IT MAY BE DRAWN. Held back until the tape had finished, so the
+          line arrives as the confirmation of something already watched rather
+          than as an instruction about what to watch. Indigo and 3px, the same
+          weight every other level in this episode is drawn at. */}
+      <Level
+        value={CARD_SUPPORT}
+        grid={LEVEL_GRID}
+        at={V.support.at}
+        over={V.support.over}
+        label="Support"
+        labelSide="left"
+        labelAt="below"
+        width={theme.shape.line}
+      />
     </div>
   );
 };
@@ -314,6 +338,9 @@ export const CardList = () => {
    *  tape rests on 0.25 of the card; layout.ts says the support is the line
    *  between the two lowest bands. Nothing but this check makes those the same
    *  place, and if they drift the tape will rest on nothing. */
+  if (Math.abs(TAPE_GRID.y(CARD_SUPPORT) - LEVEL_GRID.y(CARD_SUPPORT)) > 1e-9) {
+    throw new Error("022-ta-mistakes/CardList: the level's grid and the tape's grid disagree about where the support is");
+  }
   if (Math.abs(TAPE_GRID.y(CARD_SUPPORT) - CARD_OPEN.support) > 0.5) {
     throw new Error(
       `022-ta-mistakes/CardList: the tape's support lands at ${TAPE_GRID.y(CARD_SUPPORT).toFixed(1)}, not on the band line at ${CARD_OPEN.support}`,
@@ -327,6 +354,14 @@ export const CardList = () => {
   const lastBar = CARD_LIST.tape.at + (CARD_TAPE.length - 1) * CARD_LIST.tape.step + CARD_LIST.tape.over;
   if (lastBar > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the last bar is still wiping on when the window ends");
+  }
+  /** ⚠ SIMON'S ORDER, ENFORCED. The level is a confirmation of what the tape
+   *  did; drawn while the tape is still building it becomes an instruction. */
+  if (CARD_LIST.support.at < lastBar) {
+    throw new Error("022-ta-mistakes/CardList: the support is drawn while the tape is still building");
+  }
+  if (CARD_LIST.support.at + CARD_LIST.support.over > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the support is still drawing when the window ends");
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */

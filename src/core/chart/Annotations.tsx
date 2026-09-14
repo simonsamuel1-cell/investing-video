@@ -35,6 +35,7 @@ export const Level = ({
   to,
   width = theme.shape.rule,
   labelSide = "right",
+  labelAt = "above",
 }: {
   value: number;
   grid: Grid;
@@ -56,6 +57,13 @@ export const Level = ({
    * happening, so a label there would be standing on the newest bars.
    */
   labelSide?: "left" | "right";
+  /**
+   * Which side of the LINE the label sits on. `above` is the default, because a
+   * level is usually drawn under the price it is holding up and the room is
+   * above it. `below` is for a level with the tape sitting on top of it, where
+   * a label above would be standing in the price.
+   */
+  labelAt?: "above" | "below";
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -95,8 +103,13 @@ export const Level = ({
              */
             position: "absolute",
             left: labelSide === "left" ? Math.min(x1, x2) + 12 : x2 - 12,
-            top: y - 10,
-            transform: labelSide === "left" ? "translateY(-100%)" : "translate(-100%, -100%)",
+            top: labelAt === "below" ? y + 10 : y - 10,
+            transform: [
+              labelSide === "left" ? "" : "translateX(-100%)",
+              labelAt === "below" ? "" : "translateY(-100%)",
+            ]
+              .filter(Boolean)
+              .join(" ") || "none",
             fontFamily: theme.text.family,
             fontSize: theme.text.tag.size,
             fontWeight: theme.text.tag.weight,

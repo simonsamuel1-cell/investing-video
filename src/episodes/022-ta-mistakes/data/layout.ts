@@ -414,7 +414,7 @@ export const CARD_OPEN = (() => {
   const plotW = a + ((target - endOf(a)) * (b - a)) / (endOf(b) - endOf(a));
   const plot = { x: x + DPAD, y, w: plotW, h };
 
-  return { x, y, w, h, band, support, bars, padR, plot };
+  return { x, y, w, h, band, support, bars, pad: DPAD, padR, plot };
 })();
 
 {

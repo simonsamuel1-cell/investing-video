@@ -358,7 +358,14 @@ export const CARD_LIST = {
    * `step` is deliberately shorter than `over`, so a bar is still growing when
    * the next one starts and the tape never stops moving.
    */
-  tape: { at: 267, step: 11, over: 12 },
+  tape: { at: 267, step: 23, over: 28 },
+  /**
+   * ⚠ THE LEVEL IS DRAWN ONLY ONCE THE TAPE HAS FINISHED ASKING FOR IT — Simon,
+   * 2496. Ten bars have fallen into it and bounced off it three times by then,
+   * so the line is not being introduced, it is being CONFIRMED. Drawn on, the
+   * way every line in this project arrives.
+   */
+  support: { at: 502, over: 28 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */
