@@ -567,9 +567,9 @@ export const CardList = () => {
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */
-  if (CARD_LIST.at + CARD_LIST.over !== BLOCK.SC05) {
+  if (CARD_LIST.at + CARD_LIST.over !== BLOCK.SC06) {
     throw new Error(
-      `022-ta-mistakes/CardList: the window ends at ${CARD_LIST.at + CARD_LIST.over}, not on SC05 at ${BLOCK.SC05}`,
+      `022-ta-mistakes/CardList: the window ends at ${CARD_LIST.at + CARD_LIST.over}, not on SC06 at ${BLOCK.SC06}`,
     );
   }
 }

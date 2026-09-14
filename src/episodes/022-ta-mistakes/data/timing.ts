@@ -313,16 +313,17 @@ export const PREMISE = {
 export const CARD_LIST = {
   at: 1994,
   /**
-   * ⚠ IT RUNS TO THE SC04/SC05 CUT — 1994 → 3084. Three seconds of that is the
-   * list being read; the rest is the leaving and then the opened card STANDING
-   * there, because Simon wants the visual to survive to 3075.
+   * ⚠ IT NOW RUNS TO THE SC05/SC06 CUT — 1994 → 4047. Three seconds of that is
+   * the list being read; the rest is the leaving, the chart, and then the chart
+   * STANDING there. Simon extended it to 4041 and had SC05's visuals deleted,
+   * so this layer is the only thing drawing across that whole stretch.
    *
-   * ⚠ AND 3084, NOT 3075, ON PURPOSE. Letting go on his frame would show nine
-   * frames of SC04's tail — a scene that by then has never been on screen at
-   * all — before SC05 cuts in. Holding the extra nine costs nothing and the
-   * boundary is already a hard cut.
+   * ⚠ AND 4047, NOT 4041, ON PURPOSE — the same reason as before. Letting go on
+   * his frame leaves six frames owned by a scene with nothing in it any more;
+   * ending on the block boundary hands straight to SC06, and that boundary is
+   * already a hard cut.
    */
-  over: 1090,
+  over: 2053,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -434,6 +435,12 @@ export const INVALID = {
 } as const;
 
 /* ═══ SC05 — harapan, lalu invalidation sebelum entry ════════════════════ */
+/**
+ * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "visual yang awalnya ada di timeframe
+ * ini, dihapus saja". The card list covers 3084 → 4047 now. The table is kept
+ * because it is the VO's own frame table for that stretch and re-deriving it
+ * from the SRT is the expensive part; the scene that read it is gone.
+ */
 export const HOPE = {
   hope: 3245,
   /** ⚠ VERBATIM, CURLY QUOTES INCLUDED — reproduced exactly as Simon corrected

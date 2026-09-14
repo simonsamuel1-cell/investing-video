@@ -167,8 +167,14 @@ const Body = () => (
     {CHAPTER_CARDS && <Cards />}
 
     {/* ⚠ THE TOPMOST LAYER — Simon: "layer ini harus yang paling atas jika
-        overlapping dengan scene lain". It runs over SC04's opening until the
-        recording has room made in it at 00:33.233. */}
+        overlapping dengan scene lain".
+
+        ⚠ AND IT NOW OWNS EVERYTHING FROM 1994 TO SC06. Simon extended it to
+        4041 and had the visuals that used to run there deleted, so SC04's
+        stretch is covered by it and SC05's is covered by it and empty
+        underneath — see the note on HOPE in data/timing.ts. SetupGroup still
+        spans to BLOCK.SC06 because the timeline may not have a hole in it; what
+        it draws after 1994 is simply never seen. */}
     <Sequence from={CARD_LIST.at} durationInFrames={CARD_LIST.over} name="Scene Transisi · Card list">
       <CardList />
     </Sequence>

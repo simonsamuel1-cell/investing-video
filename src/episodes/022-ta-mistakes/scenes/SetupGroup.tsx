@@ -47,7 +47,7 @@ import {
   gridOf, fadeOut, price, progress, ramp, sma, GRID_PAD_X,
   theme, useMotion, usePalette,
 } from "../../../core";
-import { BLOCK, CHART_STYLE, HOPE, INVALID, OPEN, PREMISE, REVERSE, local } from "../data/timing";
+import { BLOCK, CHART_STYLE, INVALID, OPEN, PREMISE, REVERSE, local } from "../data/timing";
 import { BUBBLE, DASH, MA } from "../data/layout";
 import {
   SETUP, SETUP_BREAK_FROM, SETUP_DOMAIN, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND,
@@ -188,8 +188,6 @@ export const SetupGroup = () => {
   const back = progress(f, local(INVALID.danger, FROM), m.fade);
   const chartOp = g < BLOCK.SC04 ? quiet : 0.28 + 0.72 * back;
 
-  /* SC05 puts the chart behind the words for good. */
-  const behind = 1 - progress(f, local(HOPE.hope, FROM), m.fade) * 0.6;
 
   /** How much of the tape exists on this frame — the number every readout on
    *  the screen is derived from. During SC01 the head is still drawing, so it
@@ -217,7 +215,9 @@ export const SetupGroup = () => {
   const R = readout(seen);
   /** The screen's own chrome fades with the chart, never separately — it is
    *  one object. */
-  const dash = chartOp * behind;
+  /** ⚠ NO LONGER DIMMED FOR SC05. That scene's words are gone — Simon — and
+   *  with them the only reason the chart ever stood behind anything. */
+  const dash = chartOp;
 
   /**
    * ⚠ ONE MARK LIT AT A TIME — see OPEN.dim. A mark steps back to 30% when the
@@ -556,74 +556,7 @@ export const SetupGroup = () => {
       )}
 
       {/* ── SC05 · hoping, and then deciding in advance ───────────────────── */}
-      {g >= BLOCK.SC05 && <Hope f={f} />}
     </Stage>
   );
 };
 
-/**
- * SC05 as its own block. It is the same mount and the same chart underneath —
- * only the words over it change, which is why it is not a separate scene.
- *
- * ⚠ THE TWO QUOTES ARE VERBATIM, CURLY QUOTES AND ALL. They are what Simon
- * corrected in the SRT and they are what the subtitle under them says.
- */
-const Hope = ({ f }: { f: number }) => {
-  const m = useMotion();
-  const g = f + FROM;
-  const out = fadeOut(f, local(HOPE.quotesOut.at, FROM), HOPE.quotesOut.over);
-  /** ⚠ INSIDE THE PLOT. At 0.32 of the card this row landed on the
-   *  instrument header the dashboard now puts there. */
-  const mid = L.plot.y + L.plot.h * 0.24;
-  /** ⚠ A PILL IS TALLER THAN ITS TYPE. At 2× the chip size the two rows
-   *  overlapped by their own padding. */
-  const ROW = theme.text.chip.size * 2.6;
-
-  return (
-    <>
-      {g < HOPE.rail && (
-        <div style={{ opacity: out }}>
-          {HOPE.quotes.map((q, i) => (
-            <Chip
-              key={q.text}
-              label={q.text}
-              x={theme.canvas.width / 2}
-              y={mid + i * ROW}
-              at={local(q.at, FROM)}
-              tone="slate"
-              pill
-            />
-          ))}
-        </div>
-      )}
-
-      {HOPE.rows.map((r, i) => (
-        <Chip
-          key={r.text}
-          label={r.text}
-          x={theme.canvas.width / 2}
-          y={mid + i * ROW}
-          at={local(r.at, FROM)}
-          tone={r.ok ? "indigo" : "slate"}
-          check={r.ok}
-          strike={r.ok ? 0 : progress(f, local(r.at, FROM) + m.reveal, m.reveal)}
-          pill
-        />
-      ))}
-
-      {g >= HOPE.close && (
-        <Line
-          text="INVALIDATION DITENTUKAN SEBELUM ENTRY."
-          /* ⚠ BELOW THE CARD. Inside it at 0.74 it sat on the volume
-             histogram; SC05's caption row is free — the four evidence chips
-             belong to SC01–SC04 and have already gone. */
-          x={theme.canvas.width / 2}
-          y={theme.stage.caption.y}
-          at={local(HOPE.close, FROM)}
-          size={theme.text.title.size}
-          weight={theme.text.title.weight}
-        />
-      )}
-    </>
-  );
-};
