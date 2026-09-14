@@ -181,25 +181,32 @@ const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
 /**
  * ═══ THE LONG POSITION TOOL ═══  (Simon's screenshot)
  *
- * ⚠ THE STOP IS THE SUPPORT, EXACTLY. Nothing is chosen here: the trade was
- * taken because the level held, so the price at which the trade is wrong IS
- * that level, and the tool's lower edge lands on the line already drawn. A stop
- * placed anywhere else would be a number this video does not have.
+ * ⚠ ITS HALF-HEIGHT IS STILL THE ENTRY-TO-SUPPORT DISTANCE, DOUBLED. Simon
+ * asked for twice the height, and doubling is the only honest way to give it to
+ * him: the one distance in this picture that means anything is from the entry
+ * down to the level the trade was taken on, so the tool is built from that and
+ * a multiplier rather than from two new prices. At ×2 the stop sits the same
+ * distance BELOW the level instead of on it — which is what a stop usually is,
+ * but it is a different sentence from the one the ×1 version said.
  *
- * ⚠ AND THE UPPER HALF IS THE LOWER HALF MIRRORED, for the same reason. Any
- * other target would be a claim about how far this goes; the same distance up
- * is a shape, and it is what Simon's reference shows.
+ * ⚠ AND THE UPPER HALF IS THE LOWER HALF MIRRORED. Any other target would be a
+ * claim about how far this goes; the same distance up is a shape, and it is
+ * what Simon's reference shows.
  *
  * ⚠ IT STARTS ON THE BAR THAT WAS BOUGHT and runs to the edge of the window —
  * a position tool is drawn forward from the entry, over the ground the trade
  * has yet to cover.
  */
-const TOOL = {
-  entry: CARD_ENTRY,
-  stop: CARD_SUPPORT,
-  target: CARD_ENTRY + (CARD_ENTRY - CARD_SUPPORT),
-  x1: ZOOM_GRID.x(BUY_I),
-};
+const TOOL = (() => {
+  /** ⚠ SIMON'S "+100%". One number, and both halves follow it. */
+  const reach = (CARD_ENTRY - CARD_SUPPORT) * 2;
+  return {
+    entry: CARD_ENTRY,
+    stop: CARD_ENTRY - reach,
+    target: CARD_ENTRY + reach,
+    x1: ZOOM_GRID.x(BUY_I),
+  };
+})();
 
 const SAID = V.hopes.said.map((q) => {
   const x = ZOOM_GRID.x(q.bar);
@@ -758,6 +765,18 @@ export const CardList = () => {
   for (let i = SEEN_TO + 1; i < CARD_ALL.length; i++) {
     if (CARD_ALL[i].h > CARD_SUPPORT) {
       throw new Error(`022-ta-mistakes/CardList: bar ${i} arrives one at a time but is not below the support`);
+    }
+  }
+  /** ⚠ THE TOOL HAS TO FIT THE CARD IT IS DRAWN IN — the small one, since the
+   *  rewind has closed the card by the time it appears. */
+  {
+    const box = { y: CARD_OPEN.y, h: CARD_OPEN.h };
+    const top = ZOOM_GRID.y(TOOL.target);
+    const bot = ZOOM_GRID.y(TOOL.stop);
+    if (top < box.y || bot > box.y + box.h) {
+      throw new Error(
+        `022-ta-mistakes/CardList: the position tool runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside the card`,
+      );
     }
   }
   /** ⚠ NEITHER PILL MAY SIT ON A CANDLE OR LEAVE THE CARD. Both are solved

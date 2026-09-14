@@ -449,8 +449,8 @@ export const CARD_LIST = {
   /**
    * ⚠ THE LONG POSITION TOOL, after the rewind — Simon's screenshot. It is the
    * answer to the mistake this whole stretch has been about: the lower edge is
-   * a line you draw BEFORE the trade, and it sits on the support, because that
-   * is where the reason for the trade stops being true.
+   * a line you draw BEFORE the trade, and it is measured from the support,
+   * because that is where the reason for the trade stops being true.
    */
   tool: { at: 1620, over: 34 },
 
