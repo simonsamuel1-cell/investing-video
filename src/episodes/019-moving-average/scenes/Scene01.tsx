@@ -619,7 +619,7 @@ export const BrokerPanel = ({
    * caller owns the timing: `shown(k)` is that badge's own 0→1, the way
    * core's Candles takes a `wipe`.
    */
-  marks?: { text: string; shown: (k: number) => number };
+  marks?: { text: string; shown: (k: number, t: string) => number };
   /**
    * ⚠ REPLACES THE RIGHT-HAND COLUMN'S NUMBER, ticker by ticker. A watchlist's
    * number is the market's move and belongs to the ticker; a portfolio's is the
@@ -1053,17 +1053,21 @@ export const BrokerPanel = ({
                     { v: ch.lo, text: "Support", above: false },
                   ].map((L) => (
                     <g key={L.text}>
+                      {/* ⚠ FROM THE FIRST CANDLE TO THE LAST — Simon. A level
+                          drawn to the plot's edges claims to hold over ground
+                          the chart does not show; drawn between the bars, it
+                          says only what those bars say. */}
                       <line
-                        x1={0}
+                        x1={lx(0, plotW)}
                         y1={ch.y(L.v)}
-                        x2={plotW * levels.shown}
+                        x2={lx(0, plotW) + (lx(N - 1, plotW) - lx(0, plotW)) * levels.shown}
                         y2={ch.y(L.v)}
                         stroke={C.indigo}
                         strokeWidth={theme.layout.stroke.ma}
                         strokeLinecap="round"
                       />
                       <text
-                        x={8}
+                        x={lx(0, plotW)}
                         y={ch.y(L.v) + (L.above ? -12 : 30)}
                         fontFamily={font}
                         fontSize={22}
@@ -1085,7 +1089,7 @@ export const BrokerPanel = ({
                   were, so a badge never sits on the bar it is about. */}
               {marks &&
                 ch.pt.map((pv, k) => {
-                  const a = marks.shown(k);
+                  const a = marks.shown(k, ch.t);
                   if (a <= 0.001) return null;
                   const bw = 62;
                   const bh = 32;

@@ -170,9 +170,13 @@ export const Platform = () => {
           /** ⚠ THE TIMING IS THIS EPISODE'S, THE GEOMETRY IS 019'S. The swings
            *  are known inside that panel and nowhere else, so it draws them;
            *  when each one lands is a beat in THIS timeline, so we decide. */
+          /** ⚠ BBCA ONLY — Simon: no Buy labels on BBRI. They belong to the
+           *  name that was being traded at every turn, and they leave with it
+           *  when the window changes at 4501. */
           marks={{
             text: "Buy",
-            shown: (k) => progressInOut(g, BUYS.at + k * BUYS.step, BUYS.over) * ink,
+            shown: (k, t) =>
+              t === "BBCA" ? progressInOut(g, BUYS.at + k * BUYS.step, BUYS.over) * ink : 0,
           }}
           /** ⚠ THE SHAPE WITHOUT THE NAMING — the HL/HH/LH/LL labels stay off,
            *  as they have been since this panel arrived. */

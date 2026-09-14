@@ -705,7 +705,10 @@ export const BUYS = { at: 4356, step: 4, over: 14 } as const;
 export const PLAT = {
   /** 4501 — the window changes name, and the structure draws on the new one. */
   swap: { at: 4501, over: 12 },
-  zig: { at: 4501, over: 44 },
+  /** ⚠ IT CRAWLS — Simon: 4501 → 4641. 140 frames for a line that used to take
+   *  44: at that speed it was a line appearing, and what he wants is a line
+   *  being traced across the chart. */
+  zig: { at: 4501, over: 140 },
   /** 4679 — the chart's own extremes, drawn as two lines. */
   levels: { at: 4679, over: 30 },
   /** 4775 — everything drawn ON the chart goes. The chart itself stays. */
