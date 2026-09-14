@@ -312,8 +312,17 @@ export const PREMISE = {
  */
 export const CARD_LIST = {
   at: 1994,
-  /** 3 seconds. The list has to be read before the pointer picks one. */
-  over: 180,
+  /**
+   * ⚠ IT RUNS TO THE SC04/SC05 CUT — 1994 → 3084. Three seconds of that is the
+   * list being read; the rest is the leaving and then the opened card STANDING
+   * there, because Simon wants the visual to survive to 3075.
+   *
+   * ⚠ AND 3084, NOT 3075, ON PURPOSE. Letting go on his frame would show nine
+   * frames of SC04's tail — a scene that by then has never been on screen at
+   * all — before SC05 cuts in. Holding the extra nine costs nothing and the
+   * boundary is already a hard cut.
+   */
+  over: 1090,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -324,7 +333,24 @@ export const CARD_LIST = {
    *  off. A transition that vanishes on one frame is a cut, and this stretch
    *  already has one at each end. */
   ground: { at: 0, over: 14 },
-  out: { at: 158, over: 22 },
+  /**
+   * ═══ THE EXIT ═══  Simon, at 2173.
+   *
+   * ⚠ IT LEAVES BY MOVING, NOT BY FADING. Cards 2–6 slide off to the right as
+   * one row; the card the pointer picked follows them only as far as the
+   * middle, opening out to 640 wide on the way. A list that dissolves says
+   * "that was the list"; a list that leaves one card standing in the middle
+   * says "and THIS is the one we are about to talk about", which is the join
+   * this transition is being asked to make.
+   *
+   * `lead` is how long after the row starts before the picked card moves —
+   * Simon's "lalu". Small enough that the two overlap, because a card that
+   * waits for an empty frame reads as a second transition.
+   */
+  exit: { at: 179, row: 32, lead: 20, one: 36, w: 640 },
+  /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
+     end of the window and is CUT. A dissolve here would be a wipe between
+     scenes by another name, and this join is a cut — see `over`. */
   titles: [
     "Entry tanpa tahu kapan salah",
     "Overtrading",
