@@ -120,6 +120,17 @@ const Card = ({ i, title }: { i: number; title: string }) => {
   const w = R.w + (V.exit.w - R.w) * open;
   const x = R.x(i) + (OPEN_X - R.x(i)) * open;
   const blob = blobOf(w);
+  /**
+   * ⚠ THE CARD EMPTIES AS IT OPENS — Simon. Title, number and the ink itself
+   * all leave on the SAME curve as the width, so what the eye reads is one
+   * event: a card clearing itself out to become a white space. Faded on their
+   * own schedule they would read as three things going wrong at once.
+   *
+   * ⚠ AND THE WHITE IS THE CARD'S OWN. Nothing repaints it — the flood is an
+   * overlay, so draining the overlay IS turning the card white, and the paper
+   * underneath is the same `cardBg` every other card is made of.
+   */
+  const drain = 1 - open;
 
   return (
     <div
@@ -139,10 +150,11 @@ const Card = ({ i, title }: { i: number; title: string }) => {
         overflow: "hidden",
       }}
     >
-      {wet > 0.001 && (
+      {wet * drain > 0.001 && (
         <div
           style={{
             position: "absolute",
+            opacity: drain,
             left: w * TOUCH.fx - blob / 2,
             top: R.h * TOUCH.fy - blob / 2,
             width: blob,
@@ -189,6 +201,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
            * up. Deep indigo, not the brand one: see `liquidInk` in core/theme.
            */
           color: interpolateColors(wet, [0, 1], [c.muted, theme.color.liquidInk]),
+          opacity: drain,
         }}
       >
         {i + 1}
@@ -213,6 +226,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           fontWeight: 700,
           lineHeight: 1.25,
           color: c.ink,
+          opacity: drain,
         }}
       >
         {title}
