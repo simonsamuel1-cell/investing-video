@@ -32,7 +32,7 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Chip, Cursor, Level, SpeechBubble, candleWidth,
+  BUBBLE_TIP, Candles, Chip, Cursor, Level, Line, SpeechBubble, candleWidth,
   extendGrid, gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal,
   theme, useMotion, usePalette, useShadow,
 } from "../../../core";
@@ -545,16 +545,21 @@ export const CardList = () => {
       />
 
       {/* ═══ WHAT THE POSITION SAYS TO ITSELF ═══  Simon, 3294 and 3367.
-          ⚠ INDIGO PILLS, NOT RED ONES. These are not the mistake being named —
-          they are the reasoning that keeps it going, and reasoning gets the
-          colour everything else in this video thinks in. The red is saved for
-          the word that judges it. */}
+          ⚠ INDIGO, NOT RED. These are not the mistake being named — they are
+          the reasoning that keeps it going, and reasoning gets the colour
+          everything else in this video thinks in. The red is saved for the word
+          that judges it.
+
+          ⚠ FILLED, NOT OUTLINED — Simon. An outlined pill over a chart is an
+          annotation ON the chart; these are not about the candles behind them,
+          they are somebody talking over the top of them, and a solid block of
+          the brand colour is what says that. */}
       {SAID.map(
         (q) =>
           f >= q.at &&
           f < V.hopes.out && (
             <div key={q.text} style={{ opacity: 1 - progress(f, V.hopes.out - m.fade, m.fade) }}>
-              <Chip label={q.text} x={q.x} y={q.y} at={q.at} tone="indigo" pill />
+              <Chip label={q.text} x={q.x} y={q.y} at={q.at} tone="indigo" pill solid />
             </div>
           ),
       )}
@@ -564,22 +569,29 @@ export const CardList = () => {
           in this scene and the word is about the whole picture, not about a
           bar in it — put inside the plot it would be pointing at whichever
           candle it happened to land on.
-          ⚠ SOLID RED WITH WHITE TYPE, which is allowed and is the reason `warn`
-          exists: this episode's one red outside a candle body, for WORDS that
-          name a mistake. "Invalid" is the mistake being named. */}
+
+          ⚠ THE WORD ITSELF, NO PILL — Simon. Red type, and that is allowed and
+          is the reason `warn` exists: this episode's one red outside a candle
+          body, for WORDS that name a mistake. "Invalid" is the mistake being
+          named.
+
+          ⚠ AND IT IS A `Line`, NOT A PILL-LESS `Chip`. Chip's weight belongs to
+          its own type scale; this word is bold because Simon asked for bold,
+          and Line is the component that takes a weight. It also enters the way
+          every word in this project enters — fade and rise, never a pop. */}
       {f >= V.invalid.at && f < V.invalid.out && (
         /** ⚠ IT FADES OUT, like the Buy bubble did once Simon saw that one pop.
          *  The fade LANDS on his frame rather than starting there, so 3102 is
          *  still the frame the word is gone on. */
         <div style={{ opacity: 1 - progress(f, V.invalid.out - m.fade, m.fade) }}>
-          <Chip
-            label="Invalid"
+          <Line
+            text="Invalid"
             x={theme.canvas.width / 2}
             y={theme.stage.caption.y}
             at={V.invalid.at}
-            tone="warn"
-            pill
-            solid
+            size={theme.text.chip.size}
+            weight={800}
+            color={theme.color.warn}
           />
         </div>
       )}
