@@ -21,10 +21,27 @@
  * Simon's standing rule against the word is about labels this project adds to
  * its own drawings; this one is a disclosure.
  */
+import { useCurrentFrame } from "remotion";
+import { cutInStyle } from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
+import { BLOCK, PLATFORM_CUT } from "../data/timing";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
 const AT = 170;
 
-export const Platform = () => <BrokerPanel f={AT} structure={false} />;
+export const Platform = () => {
+  const f = useCurrentFrame();
+  /**
+   * ⚠ GLOBAL FRAMES, AND THIS IS THE ONE BUG CameraCut WARNS ABOUT. A scene
+   * inside a Sequence sees its own rebased frame; the cut is written in the
+   * timeline's numbers, so the scene's `from` has to go back on before the
+   * curve is asked anything.
+   */
+  const style = cutInStyle(f + BLOCK.SC06, PLATFORM_CUT);
+  return (
+    <div style={{ position: "absolute", inset: 0, ...style }}>
+      <BrokerPanel f={AT} structure={false} />
+    </div>
+  );
+};

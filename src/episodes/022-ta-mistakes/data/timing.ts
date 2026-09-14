@@ -638,6 +638,30 @@ export const HOPE = {
   close: 3900,
 } as const;
 
+/**
+ * ═══ SC06 · THE PLATFORM ARRIVES ═══  Simon: "4282 berikan transisi masuk,
+ * camera cut geser naik tanpa blur".
+ *
+ * ⚠ `at` IS THE CUT ITSELF, not the start of the move. The panel is fully
+ * displaced on that frame and settles over the half-move after it — which is
+ * the only half that can be seen, since the card list owns everything up to
+ * 4281 and the first half would happen behind it.
+ *
+ * ⚠ BLUR ZERO IS SIMON'S, AND core/CameraCut.ts SAYS WHAT IT COSTS: without it
+ * the move reads as a slide rather than as a camera. Kept explicit here rather
+ * than omitted, so the zero is a decision on the record and not a default
+ * nobody chose.
+ */
+export const PLATFORM_CUT = {
+  at: 4282,
+  over: 32,
+  /** ⚠ SHORT. A long throw reads as a slide even WITH the blur; this one has
+   *  none, so the distance is the only thing keeping it a camera move. */
+  distance: 96,
+  blur: 0,
+  axis: "y",
+} as const;
+
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
   fromUs: 4103,
