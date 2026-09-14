@@ -357,7 +357,7 @@ export const CARD_LIST = {
    * `step` is deliberately shorter than `over`, so a bar is still coming out
    * while the next one starts — the edge crossing the card never stops moving.
    */
-  tape: { at: 267, step: 7, over: 13 },
+  tape: { at: 267, step: 11, over: 12 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

@@ -401,8 +401,8 @@ export const CARD_OPEN = (() => {
   const support = y + band * 3;
 
   /** Simon's: where the candles must stop, measured from the card's right edge. */
-  const padR = 80;
-  const bars = 15;
+  const padR = 250;
+  const bars = 10;
   const endOf = (bw: number) => {
     const g = gridOf(new Array(bars).fill(0), [0, 1], { x: x + DPAD, y, w: bw, h }, 0);
     return g.x(bars - 1) + candleWidth(g) / 2;

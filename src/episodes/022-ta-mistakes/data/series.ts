@@ -424,39 +424,35 @@ export const ADMR_MACD = ADMR.closes.map((c, i) => {
  * WITHOUT it being drawn yet: the eye has already watched the tape refuse to go
  * below something.
  *
- * ⚠ THE TWO OUTER BANDS ARE LEFT EMPTY, and that is the whole vertical spec.
- * Sitting in the one band directly above the level, the tape used a quarter of
- * a 640px card and read as a chart that had been shrunk; spanning to 0.70 it
- * fills the two middle bands, keeps the bottom quarter clear for the break that
- * is coming, and keeps the top quarter clear for whatever gets written there.
+ * ⚠ IT STARTS AT THE TOP OF THE CARD AND FALLS INTO THE LEVEL — Simon. That
+ * ordering is the whole point: a range that merely sits above a line says
+ * nothing, while a fall that STOPS on one says the line is holding something
+ * up. The bottom band stays clear because nothing has broken yet, and that is
+ * the room the break is going to need.
  *
- * The story, in four moves: four bars down into the level, a bounce, a retest,
- * and a hold. Fifteen bars, because fifteen is what Simon asked for.
+ * The story, in four moves: five bars down from the top into the level, a
+ * bounce off it, a pullback, and a retest that holds. Ten bars, because ten is
+ * roughly what Simon asked for.
  */
 export const CARD_SUPPORT = 0.25;
 export const CARD_TAPE: Bar[] = [
-  { o: 0.66, c: 0.59, h: 0.70, l: 0.57 },
-  { o: 0.59, c: 0.50, h: 0.61, l: 0.47 },
-  { o: 0.50, c: 0.38, h: 0.52, l: 0.34 },
-  { o: 0.38, c: 0.29, h: 0.39, l: 0.25 },
-  { o: 0.29, c: 0.41, h: 0.45, l: 0.25 },
-  { o: 0.41, c: 0.48, h: 0.52, l: 0.39 },
-  { o: 0.48, c: 0.56, h: 0.59, l: 0.47 },
-  { o: 0.56, c: 0.47, h: 0.57, l: 0.43 },
-  { o: 0.47, c: 0.36, h: 0.48, l: 0.32 },
-  { o: 0.36, c: 0.30, h: 0.38, l: 0.25 },
-  { o: 0.30, c: 0.39, h: 0.43, l: 0.27 },
-  { o: 0.39, c: 0.52, h: 0.56, l: 0.38 },
-  { o: 0.52, c: 0.59, h: 0.63, l: 0.50 },
-  { o: 0.59, c: 0.54, h: 0.61, l: 0.50 },
-  { o: 0.54, c: 0.63, h: 0.66, l: 0.52 },
+  { o: 0.92, c: 0.84, h: 0.95, l: 0.82 },
+  { o: 0.84, c: 0.72, h: 0.86, l: 0.70 },
+  { o: 0.72, c: 0.58, h: 0.74, l: 0.55 },
+  { o: 0.58, c: 0.44, h: 0.60, l: 0.41 },
+  { o: 0.44, c: 0.30, h: 0.46, l: 0.25 },
+  { o: 0.30, c: 0.42, h: 0.46, l: 0.25 },
+  { o: 0.42, c: 0.50, h: 0.53, l: 0.40 },
+  { o: 0.50, c: 0.40, h: 0.52, l: 0.37 },
+  { o: 0.40, c: 0.31, h: 0.42, l: 0.25 },
+  { o: 0.31, c: 0.45, h: 0.48, l: 0.28 },
 ] as const as Bar[];
 
 {
   /** Kept honest: the tape has to actually rest on the line the card's bands
-   *  put there, and it has to leave the outer bands alone — otherwise the
-   *  support Simon is about to draw would be a line through the middle of a
-   *  range rather than the floor the range is standing on. */
+   *  put there, and it has to arrive from the top — otherwise the support Simon
+   *  is about to draw would be a line through the middle of a range rather than
+   *  the floor a fall stopped on. */
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/series: ${m}`);
   };
@@ -464,9 +460,9 @@ export const CARD_TAPE: Bar[] = [
   const touches = lows.filter((l) => Math.abs(l - CARD_SUPPORT) < 1e-9).length;
   if (Math.min(...lows) < CARD_SUPPORT) fail("the card tape trades below its own support");
   if (touches < 2) fail(`the card tape touches its support ${touches} times — a level needs testing`);
-  if (Math.max(...CARD_TAPE.map((b) => b.h)) > 0.75 + 1e-9)
-    fail("the card tape reaches into the card's top band");
-  if (CARD_TAPE.length !== 15) fail(`the card tape has ${CARD_TAPE.length} bars, not the 15 asked for`);
+  if (CARD_TAPE[0].h < 0.9) fail("the card tape does not start at the top of the card");
+  if (Math.max(...CARD_TAPE.map((b) => b.h)) > 1)
+    fail("the card tape leaves the card");
   for (const [i, b] of CARD_TAPE.entries()) {
     if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
       fail(`card tape bar ${i + 1} has a wick inside its own body`);
