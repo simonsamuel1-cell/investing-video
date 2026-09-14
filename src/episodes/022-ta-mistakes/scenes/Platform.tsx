@@ -22,9 +22,9 @@
  * its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { progress } from "../../../core";
+import { cutInStyle, progress } from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
-import { BLOCK, PLATFORM } from "../data/timing";
+import { BLOCK, PLATFORM, PLATFORM_CUT } from "../data/timing";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -37,13 +37,21 @@ export const Platform = () => {
    * 4282 is written in the timeline's numbers, so the scene's `from` has to go
    * back on before anything is asked about it.
    *
-   * ⚠ AND IT IS A FADE, NOT A MOVE — Simon. The panel is under the card list
-   * until 4281, so anything that has to start before the frame it lands on
-   * would do half its work unseen; a fade has no hidden half.
+   * ⚠ BOTH AT ONCE — Simon: the camera cut AND a fade. They are written to land
+   * on the same frame; given different lengths they would read as a slide with
+   * a fade happening near it rather than as one arrival.
    */
-  const shown = progress(f + BLOCK.SC06, PLATFORM.at, PLATFORM.fade);
+  const g = f + BLOCK.SC06;
+  const shown = progress(g, PLATFORM.at, PLATFORM.fade);
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: shown }}>
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        opacity: shown,
+        ...cutInStyle(g, PLATFORM_CUT),
+      }}
+    >
       <BrokerPanel f={AT} structure={false} />
     </div>
   );

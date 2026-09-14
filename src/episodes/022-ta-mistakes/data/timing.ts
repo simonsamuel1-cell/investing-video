@@ -657,14 +657,32 @@ export const HOPE = {
 } as const;
 
 /**
- * ═══ SC06 · THE PLATFORM ARRIVES ═══  Simon: it fades in at 4282.
+ * ═══ SC06 · THE PLATFORM ARRIVES ═══  Simon: a camera cut without blur, and a
+ * fade on top of it.
  *
- * ⚠ IT WAS A CAMERA CUT AND IT IS NOT ANY MORE. A cut that slides has to start
- * moving BEFORE the frame it lands on, and every frame before 4282 belongs to
- * the card list — so only half of it could ever be seen, which is half of a
- * thing that only works whole. A fade has no hidden half.
+ * ⚠ THE TWO LAND ON THE SAME FRAME, AND THAT IS THE WHOLE TRICK. The cut is
+ * written as a 40-frame move whose midpoint is 4282, so its visible half runs
+ * 4282 → 4302; the fade is 20 and ends there too. Given different lengths they
+ * would read as a slide with a fade happening near it.
+ *
+ * ⚠ AND THE FADE IS DOING THE JOB THE BLUR USED TO. core/CameraCut.ts is blunt
+ * about it — without the blur a cut reads as a slide — but the blur was only
+ * ever there to stop the eye resolving detail mid-move. Something arriving out
+ * of nothing cannot have its detail resolved either.
  */
 export const PLATFORM = { at: 4282, fade: 20 } as const;
+export const PLATFORM_CUT = {
+  at: 4282,
+  /** ⚠ HALF OF THIS IS NEVER SEEN. The card list owns every frame before 4282,
+   *  so the incoming half is the only half there is — which is also why `at` is
+   *  the frame the panel first appears on and not the frame it starts moving. */
+  over: 40,
+  /** ⚠ SHORT. With no blur, the distance is the only thing keeping this a
+   *  camera move rather than a slide. */
+  distance: 96,
+  blur: 0,
+  axis: "y",
+} as const;
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
