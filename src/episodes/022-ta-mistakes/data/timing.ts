@@ -349,13 +349,14 @@ export const CARD_LIST = {
    */
   exit: { at: 179, row: 32, lead: 20, one: 36 },
   /**
-   * ⚠ THE TAPE INSIDE THE OPENED CARD — Simon, 2261 → 2372. Fifteen bars, each
-   * uncovered left to right inside its own slot rather than appearing whole:
-   * what is being watched here is the chart being DRAWN, and a bar that pops
-   * has not been drawn, it has arrived.
+   * ⚠ THE TAPE INSIDE THE OPENED CARD — Simon, 2261 → 2372. Ten bars, each
+   * uncovered IN THE DIRECTION IT MOVED rather than appearing whole: green
+   * grows up out of its low, red grows down out of its high. What is being
+   * watched here is the chart being DRAWN, and a bar that pops has not been
+   * drawn, it has arrived.
    *
-   * `step` is deliberately shorter than `over`, so a bar is still coming out
-   * while the next one starts — the edge crossing the card never stops moving.
+   * `step` is deliberately shorter than `over`, so a bar is still growing when
+   * the next one starts and the tape never stops moving.
    */
   tape: { at: 267, step: 11, over: 12 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the

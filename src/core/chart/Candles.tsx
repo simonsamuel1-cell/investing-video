@@ -18,10 +18,11 @@
  * appears is a failed scene.
  *
  * ⚠ AND `wipe` IS THE OTHER WAY TO ARRIVE. `shown` hands a bar over whole, which
- * is right for a tape keeping pace with a voice. `wipe` uncovers each bar left
- * to right inside its own slot, which is right when the DRAWING of the chart is
- * the thing being watched. Opt-in, and off by default — no existing caller
- * changes.
+ * is right for a tape keeping pace with a voice. `wipe` uncovers each bar IN
+ * THE DIRECTION IT MOVED — green grows up from its low, red grows down from its
+ * high — which is right when the DRAWING of the chart is what is being watched.
+ * A bar that grows the way it went is a bar the eye reads before it has
+ * finished arriving. Opt-in, and off by default — no existing caller changes.
  */
 import React from "react";
 import { theme } from "../theme";
@@ -64,21 +65,28 @@ export const Candles = ({
         const top = Math.min(grid.y(b.o), grid.y(b.c));
         const h = Math.max(1.5, Math.abs(grid.y(b.c) - grid.y(b.o)));
         const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
-        /** ⚠ THE SLOT, NOT THE BODY, IS WHAT GETS UNCOVERED. Clipped to the
-         *  body the wick would appear before the bar it belongs to; clipped to
-         *  the slot, wick and body come out of the same moving edge. */
+        /** ⚠ THE WHOLE BAR IS UNCOVERED, WICK INCLUDED, from the end it came
+         *  from: an up bar grows out of its low, a down bar out of its high.
+         *  Clipped to the body instead, a wick would be standing there before
+         *  the bar it belongs to existed. */
         const t = wipe ? Math.max(0, Math.min(1, wipe(i))) : 1;
         if (t <= 0.001) return null;
+        const hiY = grid.y(b.h);
+        const loY = grid.y(b.l);
+        const span = Math.max(1, loY - hiY);
         return (
           <g key={i} clipPath={t < 0.999 ? `url(#${id}-${i})` : undefined}>
             {t < 0.999 && (
               <defs>
                 <clipPath id={`${id}-${i}`}>
                   <rect
-                    x={x - grid.slot / 2}
-                    y={grid.box.y}
-                    width={grid.slot * t}
-                    height={grid.box.h}
+                    /* ⚠ WIDER THAN THE SLOT ON PURPOSE. This clip is doing the
+                       vertical edge only; a horizontal edge here would be a
+                       second animation nobody asked for. */
+                    x={x - grid.slot}
+                    y={fill === c.candleGreen ? loY - span * t : hiY}
+                    width={grid.slot * 2}
+                    height={span * t}
                   />
                 </clipPath>
               </defs>
