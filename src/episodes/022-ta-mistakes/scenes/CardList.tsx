@@ -116,7 +116,16 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           position: "absolute",
           left: R.w / 2 + NUM.dx,
           top: R.h,
-          transform: "translate(-50%, -50%)",
+          /**
+           * ⚠ THE BASELINE SITS ON THE CARD'S BOTTOM EDGE — Simon: "angkanya ga
+           * keliatan, geser naik hingga keliatan". Centred on that edge the
+           * bottom half of every digit was gone. The percentage is of the
+           * numeral's OWN box, so it holds at any size: a line box is `size`
+           * tall with the baseline about 78% down it, and 90% leaves the glyph
+           * whole with only its descender space cropped — still masked, still
+           * read as a number printed under the card rather than placed in it.
+           */
+          transform: "translate(-50%, -90%)",
           fontFamily: theme.text.family,
           /** ⚠ A THIRD OF THE CARD, not a typed size. */
           fontSize: R.h / 3,
