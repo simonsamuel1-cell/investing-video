@@ -366,6 +366,17 @@ export const CARD_LIST = {
    * way every line in this project arrives.
    */
   support: { at: 502, over: 28 },
+  /**
+   * ⚠ THE SAME BUY BUBBLE SC01 USES — Simon: "copy and paste design label Buy
+   * di 603". Not a second design for the same act: the viewer has already been
+   * shown what taking the trade looks like in this video, and showing it the
+   * same way is what makes this the SAME MISTAKE rather than a new picture.
+   *
+   * 2556 → 2644 in global frames. It arrives after the level has been drawn,
+   * because the level is the reason the trade gets taken.
+   */
+  buy: 562,
+  buyGone: 650,
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

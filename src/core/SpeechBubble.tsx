@@ -33,6 +33,17 @@ const TAIL = {
   drop: 0.25,
 } as const;
 
+/**
+ * The tip, as fractions of the BOX's width and height — the box being what `x`,
+ * `y`, `w` and `h` describe, with the tail hanging below it.
+ *
+ * ⚠ EXPORTED BECAUSE PLACING A BUBBLE MEANS PLACING ITS TIP. The tip is the
+ * only part of the shape that means anything; a scene that wants it on a
+ * particular bar has to solve the box backwards from it, and a scene that
+ * copies these numbers by hand will be wrong the day the tail is redrawn.
+ */
+export const BUBBLE_TIP = { x: TAIL.tipX, y: 1 + TAIL.drop } as const;
+
 export const bubblePath = (w: number, h: number, r: number) => {
   const tipY = h + h * TAIL.drop;
   return [

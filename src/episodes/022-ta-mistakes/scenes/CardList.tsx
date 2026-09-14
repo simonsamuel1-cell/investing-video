@@ -32,11 +32,11 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  Candles, Cursor, Level, gridOf, progress, progressInOut, textReveal, theme,
-  useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, gridOf, progress,
+  progressInOut, textReveal, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
-import { CARD_OPEN, CARD_ROW } from "../data/layout";
+import { BUBBLE, CARD_OPEN, CARD_ROW } from "../data/layout";
 import { CARD_SUPPORT, CARD_TAPE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -99,6 +99,22 @@ const TAPE_GRID = gridOf(
  * crossing it is what the room is for.
  */
 const LEVEL_GRID = gridOf([0], [0, 1], { ...O.plot, x: O.x + O.pad, w: O.w - O.pad * 2 }, 0);
+
+/**
+ * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
+ * of it that means anything — it is what says WHICH bar the trade was taken on
+ * — so the anchor is solved from the tip backwards through the tail's own
+ * fractions, and the box lands wherever that puts it.
+ *
+ * ⚠ AND IT SPEAKS ABOUT THE LAST BAR, in the room to the right of the tape that
+ * Simon's 250px left empty. The trade is taken because the level held; the last
+ * bar is the one that held it.
+ */
+const BUY_AT = (() => {
+  const last = CARD_TAPE.length - 1;
+  const tip = { x: TAPE_GRID.x(last) + 14, y: TAPE_GRID.y(CARD_TAPE[last].h) - 12 };
+  return { x: tip.x - BUBBLE.w * BUBBLE_TIP.x, y: tip.y - BUBBLE.h * BUBBLE_TIP.y };
+})();
 
 /**
  * The big numeral's offset from the card's bottom-centre — Simon's, settled at
@@ -315,6 +331,14 @@ export const CardList = () => {
         labelAt="below"
         width={theme.shape.line}
       />
+
+      {/* ⚠ THE SAME BUBBLE, NOT A NEW ONE — Simon's "copy and paste". Same
+          component, same size, same tone as SC01's, because this is the same
+          act being made a second time and a different picture of it would read
+          as a different mistake. */}
+      {f >= V.buy && f < V.buyGone && (
+        <SpeechBubble label="BUY" x={BUY_AT.x} y={BUY_AT.y} w={BUBBLE.w} h={BUBBLE.h} at={V.buy} />
+      )}
     </div>
   );
 };

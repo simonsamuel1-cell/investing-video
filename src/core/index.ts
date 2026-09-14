@@ -30,7 +30,7 @@ export { MarkerArrow, markerGeom } from "./MarkerArrow";
 export { QuizTitle } from "./QuizTitle";
 export { DashedBox, DASH_IN, dashOpenAt } from "./DashedBox";
 export { QuoteCard, QUOTE, quoteMarks, quoteListY } from "./QuoteCard";
-export { SpeechBubble, bubblePath } from "./SpeechBubble";
+export { SpeechBubble, BUBBLE_TIP, bubblePath } from "./SpeechBubble";
 export { VerdictMark } from "./VerdictMark";
 export { Cursor } from "./Cursor";
 export { TabRow } from "./TabRow";
