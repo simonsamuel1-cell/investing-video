@@ -39,7 +39,8 @@ import {
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
 import {
-  CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
+  CARD_ALL, CARD_ENTRY, CARD_FALL, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT,
+  CARD_TAPE,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -387,9 +388,16 @@ export const CardList = () => {
            *  nothing about it is ever watched happening. */
           if (i < CARD_HEAD_N) return progressInOut(f, V.tape.at, V.tape.over);
           const k = i - CARD_HEAD_N;
-          return k < CARD_TAPE.length
-            ? progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over)
-            : progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over);
+          if (k < CARD_TAPE.length) {
+            return progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over);
+          }
+          const j = k - CARD_TAPE.length;
+          /** ⚠ THE TAIL IS THE FUTURE AND CANNOT BE BEHIND THE MASK. It arrives
+           *  bar by bar once the fall has finished, which is the only order a
+           *  price chart is allowed to put them in. */
+          return j < CARD_FALL.length
+            ? progressInOut(f, V.fall.at + j * V.fall.step, V.fall.over)
+            : progressInOut(f, V.tail.at + (j - CARD_FALL.length) * V.tail.step, V.tail.over);
         }}
       />
 
@@ -504,6 +512,26 @@ export const CardList = () => {
     CARD_LIST.fall.at + (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step + CARD_LIST.fall.over;
   if (lastFall > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the fall is still running when the window ends");
+  }
+  if (CARD_LIST.tail.at < lastFall) {
+    throw new Error("022-ta-mistakes/CardList: the tail starts before the fall has finished");
+  }
+  const tailN = CARD_ALL.length - CARD_HEAD_N - CARD_FULL.length;
+  const lastTail = CARD_LIST.tail.at + (tailN - 1) * CARD_LIST.tail.step + CARD_LIST.tail.over;
+  if (lastTail > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the tail is still running when the window ends");
+  }
+  /** And it has to fit the card it grinds along the bottom of. */
+  {
+    const right = ZOOM_GRID.x(CARD_ALL.length - 1) + ZOOM_GRID.slot / 2;
+    if (right > CARD_GROWN.x + CARD_GROWN.w - CARD_OPEN.pad) {
+      throw new Error(`022-ta-mistakes/CardList: the tail ends at ${right.toFixed(0)}, off the right of the card`);
+    }
+    const low = ZOOM_GRID.y(Math.min(...CARD_ALL.map((b) => b.l)));
+    const high = ZOOM_GRID.y(Math.max(...CARD_ALL.map((b) => b.h)));
+    if (high < CARD_GROWN.y || low > CARD_GROWN.y + CARD_GROWN.h) {
+      throw new Error(`022-ta-mistakes/CardList: the tape runs ${high.toFixed(0)}..${low.toFixed(0)}, outside the card`);
+    }
   }
   /**
    * ⚠ THE LOCK. Simon: "lock semua timing dan ukuran, jangan ada yang berubah".

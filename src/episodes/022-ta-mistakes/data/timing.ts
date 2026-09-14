@@ -391,6 +391,10 @@ export const CARD_LIST = {
   /** ⚠ AND THEN IT FALLS. Fourteen bars, wiping on the same way the first ten
    *  did, so the fall is the same tape continuing and not a second chart. */
   fall: { at: 746, step: 14, over: 18 },
+  /** ⚠ AND THE GRIND AFTER IT — ss02's lower half. It cannot be behind the mask
+   *  with the history: these bars are the future until price gets to them, so
+   *  they arrive, fast and small, once the fall has finished. */
+  tail: { at: 948, step: 6, over: 12 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

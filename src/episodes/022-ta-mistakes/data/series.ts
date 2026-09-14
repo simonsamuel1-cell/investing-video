@@ -15,6 +15,7 @@
 import { domainOf, fromAnchors, seeded, sma, toBars, volumeOf } from "../../../core";
 import type { Anchor, Bar, Series } from "../../../core";
 import SS01 from "./ss01.json";
+import SS02 from "./ss02.json";
 
 /** Anchors → a synthetic tape. Core has `fromShape` for a shape and
  *  `fromScreenshot` for a trace; this is neither — the turns are DESIGNED to
@@ -534,46 +535,86 @@ export const CARD_ENTRY = CARD_TAPE[CARD_TAPE.length - 1].c;
 }
 
 /**
- * ═══ WHAT WAS ALREADY THERE ═══  Simon: the extra candles "sudah exist sejak
- * awal scene, hanya saja sebelum 2730 kena masking jadi ngga keliatan".
+ * ═══ WHAT WAS ALREADY THERE, AND WHAT COMES AFTER ═══
  *
- * ⚠ THIS IS HISTORY, AND HISTORY IS THE ONLY SIDE THAT CAN BE ADDED. A chart
- * can always have more past than it is showing — that is what zooming out is
- * for. It cannot have more FUTURE: bars to the right of the newest one have not
- * happened, and drawing them before the fall arrives there would be the one
- * thing a price chart may never do. So the room the zoom-out opened on the left
- * fills, and the room on the right stays empty until price gets to it.
+ * Simon: the empty white space ABOVE the support is copied from the top of his
+ * `ss02.png`, and the space BELOW it from the bottom of the same picture. Both
+ * are traced — `scripts/trace-ss02.mjs` — not drawn in its style.
  *
- * ⚠ AND IT RALLIES THROUGH THE LEVEL IT LATER BREAKS. Coming from 0.12 up
- * through 0.25, the line the whole card is about is first resistance, then
- * support, then gone — which is the honest reason a level like that is worth
- * drawing at all, and it costs nothing to say it with the bars instead of with
- * a label.
+ * ⚠ ss02 HAS NO PRICES IN IT EITHER, and the trace does not invent any. It
+ * comes out in units of the picture's own blue line, and that line IS this
+ * card's support: one scale maps the whole picture onto this card, so the line
+ * Simon drew on his screenshot and the line this scene draws are the same line.
  *
- * ⚠ THE JOIN IS EXACT: the last close here IS the first open of CARD_TAPE, so
- * the two read as one tape and not as two charts abutted. Asserted below.
+ * ⚠ THE SCALE IS SOLVED FROM THE PICTURE'S HIGHEST WICK, so ss02's high lands
+ * on the top of the card and nothing traced is ever cropped. Everything else —
+ * where the two pieces join, how many bars there is room for — follows from it.
+ *
+ * ⚠ AND ONLY TWO PIECES CAN BE TAKEN. The bars above the line come BEFORE the
+ * tape this scene already draws, so they are its history; the bars below come
+ * AFTER the fall, so they are its future and arrive when price gets to them. A
+ * chart may have more past than it is showing. It may not have more future.
  */
-export const CARD_HEAD: Bar[] = [
-  { o: 0.12, c: 0.18, h: 0.20, l: 0.10 },
-  { o: 0.18, c: 0.15, h: 0.21, l: 0.13 },
-  { o: 0.15, c: 0.24, h: 0.26, l: 0.14 },
-  { o: 0.24, c: 0.31, h: 0.34, l: 0.23 },
-  { o: 0.31, c: 0.27, h: 0.33, l: 0.25 },
-  { o: 0.27, c: 0.36, h: 0.38, l: 0.26 },
-  { o: 0.36, c: 0.44, h: 0.47, l: 0.35 },
-  { o: 0.44, c: 0.40, h: 0.46, l: 0.37 },
-  { o: 0.40, c: 0.50, h: 0.52, l: 0.39 },
-  { o: 0.50, c: 0.58, h: 0.61, l: 0.49 },
-  { o: 0.58, c: 0.54, h: 0.60, l: 0.51 },
-  { o: 0.54, c: 0.63, h: 0.66, l: 0.53 },
-  { o: 0.63, c: 0.72, h: 0.74, l: 0.62 },
-  { o: 0.72, c: 0.68, h: 0.74, l: 0.66 },
-  { o: 0.68, c: 0.80, h: 0.83, l: 0.67 },
-  { o: 0.80, c: 0.92, h: 0.94, l: 0.79 },
-] as const as Bar[];
+const SS02_CEIL = 1.06;
+const SS02_SCALE = (SS02_CEIL - CARD_SUPPORT) / Math.max(...SS02.above.map((b) => b.h));
+const ss02 = (b: Bar, shift = 0): Bar => ({
+  o: +(CARD_SUPPORT + b.o * SS02_SCALE + shift).toFixed(4),
+  c: +(CARD_SUPPORT + b.c * SS02_SCALE + shift).toFixed(4),
+  h: +(CARD_SUPPORT + b.h * SS02_SCALE + shift).toFixed(4),
+  l: +(CARD_SUPPORT + b.l * SS02_SCALE + shift).toFixed(4),
+});
+
+/**
+ * ⚠ NINE BARS, AND NINE IS WHAT THE PICTURE HAS. ss02 rises into its high in
+ * nine bars and then spends the next thirty-two falling to the line — which is
+ * the move this card's own tape already makes. Taking more would mean drawing
+ * that fall twice; inventing more would mean bars that are not in Simon's
+ * screenshot. So the far left of the card stays paper, the way the far right
+ * does.
+ */
+export const CARD_HEAD: Bar[] = (() => {
+  const bars = SS02.above.slice(0, 9).map((b) => ss02(b));
+  /** ⚠ THE LAST CLOSE IS PULLED THE LAST 11px ONTO THE TAPE'S OPEN. The trace
+   *  lands 0.027 short of it, and a chart whose history gaps into its own next
+   *  bar is a chart with a mistake in it. One bar is adjusted; the other eight
+   *  are the picture. */
+  const last = bars[bars.length - 1];
+  bars[bars.length - 1] = {
+    ...last,
+    c: CARD_TAPE[0].o,
+    h: Math.max(last.h, last.o, CARD_TAPE[0].o),
+    l: Math.min(last.l, last.o, CARD_TAPE[0].o),
+  };
+  return bars;
+})();
+
+/**
+ * ⚠ TWENTY BARS OF AFTERWARDS, from the part of ss02 that is already down where
+ * this card's fall ends. The picture grinds sideways there and keeps leaking
+ * lower — which is the honest end of this story, and a better one than a crash:
+ * the position is not killed, it is just never right again.
+ */
+export const CARD_TAIL: Bar[] = (() => {
+  const want = CARD_FALL[CARD_FALL.length - 1].c;
+  const n = 20;
+  /** The bar in ss02's lower half that opens nearest to where this fall ended
+   *  — solved, so the join is the picture's own shape and not a stretch. */
+  let start = 0;
+  let best = Infinity;
+  SS02.below.forEach((b, i) => {
+    if (i + n > SS02.below.length) return;
+    const e = Math.abs(ss02(b).o - want);
+    if (e < best) {
+      best = e;
+      start = i;
+    }
+  });
+  const shift = want - ss02(SS02.below[start]).o;
+  return SS02.below.slice(start, start + n).map((b) => ss02(b, shift));
+})();
 
 /** Everything, in order. One series, one grid, one tape. */
-export const CARD_ALL: Bar[] = [...CARD_HEAD, ...CARD_FULL];
+export const CARD_ALL: Bar[] = [...CARD_HEAD, ...CARD_FULL, ...CARD_TAIL];
 /** Where CARD_TAPE's first bar sits in CARD_ALL — the index the grids anchor
  *  on, so adding history moves nothing that is already on screen. */
 export const CARD_HEAD_N = CARD_HEAD.length;
@@ -582,14 +623,24 @@ export const CARD_HEAD_N = CARD_HEAD.length;
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/series: ${m}`);
   };
-  const last = CARD_HEAD[CARD_HEAD.length - 1];
-  if (last.c !== CARD_TAPE[0].o) fail("the history does not close where the tape opens");
-  for (const [i, b] of CARD_HEAD.entries()) {
-    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
-      fail(`card history bar ${i + 1} has a wick inside its own body`);
+  if (CARD_HEAD[CARD_HEAD.length - 1].c !== CARD_TAPE[0].o)
+    fail("the history does not close where the tape opens");
+  if (CARD_TAIL[0].o !== CARD_FALL[CARD_FALL.length - 1].c)
+    fail("the tail does not open where the fall closed");
+  for (const [tag, set] of [["history", CARD_HEAD], ["tail", CARD_TAIL]] as const) {
+    for (const [i, b] of set.entries()) {
+      if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
+        fail(`card ${tag} bar ${i + 1} has a wick inside its own body`);
+    }
   }
-  /** ⚠ IT HAS TO COME FROM BELOW THE LEVEL, or the level was never resistance
-   *  and the rally through it says nothing. */
-  if (CARD_HEAD[0].o >= CARD_SUPPORT) fail("the history starts above the level it is supposed to rally through");
-  if (!CARD_HEAD.some((b) => b.c > CARD_SUPPORT)) fail("the history never gets above the level");
+  /** ⚠ THE TWO PIECES ARE ON THE TWO SIDES OF THE LINE, which is the whole of
+   *  what Simon asked for. If either crosses it, the wrong half of ss02 was
+   *  taken. */
+  if (Math.min(...CARD_HEAD.map((b) => b.l)) < CARD_SUPPORT)
+    fail("the history dips below the support — that is not the top of ss02");
+  if (Math.max(...CARD_TAIL.map((b) => b.h)) > CARD_SUPPORT)
+    fail("the tail reaches above the support — that is not the bottom of ss02");
+  /** And nothing traced may be taller than the card it is traced into. */
+  if (Math.max(...CARD_HEAD.map((b) => b.h)) > SS02_CEIL + 1e-9)
+    fail("the history reaches past the top of the card");
 }
