@@ -695,6 +695,27 @@ export const PLATFORM_CUT = {
  */
 export const BUYS = { at: 4356, step: 4, over: 14 } as const;
 
+/**
+ * ═══ THE REST OF THE PLATFORM'S STRETCH ═══  (Simon)
+ *
+ * ⚠ EVERY BEAT IS A GLOBAL FRAME, because the panel it drives is held on one
+ * frame of ANOTHER episode's clock — see scenes/Platform.tsx. Nothing in this
+ * block may be derived from 019's numbers or from each other.
+ */
+export const PLAT = {
+  /** 4501 — the window changes name, and the structure draws on the new one. */
+  swap: { at: 4501, over: 12 },
+  zig: { at: 4501, over: 44 },
+  /** 4679 — the chart's own extremes, drawn as two lines. */
+  levels: { at: 4679, over: 30 },
+  /** 4775 — everything drawn ON the chart goes. The chart itself stays. */
+  clear: { at: 4775, over: 24 },
+  /** 4894 — the panel shrinks toward the middle, making room under it. */
+  shrink: { at: 4894, over: 40, by: 0.72 },
+  /** And the sentence that room was made for. */
+  note: { at: 4944, perChar: 2 },
+} as const;
+
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
   fromUs: 4103,

@@ -579,6 +579,9 @@ export const BrokerPanel = ({
   chart,
   marks,
   pnl,
+  alpha: alphaOf,
+  zig,
+  levels,
 }: {
   f: number;
   /**
@@ -625,6 +628,24 @@ export const BrokerPanel = ({
    * green.
    */
   pnl?: Record<string, string>;
+  /**
+   * ⚠ OVERRIDES WHICH CHART IS ON SCREEN, per ticker, 0→1. `chart` says which
+   * one the HEADER and the selected row are about; this says what is drawn, so
+   * a caller holding one frame can still cross-fade between two of them.
+   */
+  alpha?: (t: string) => number;
+  /**
+   * ⚠ DRAWS THE ACTIVE CHART'S STRUCTURE ON THE CALLER'S OWN CURVE. `drawn` is
+   * the 0→1 the line and its rings ride; `labels` is off by default, because the
+   * episode that borrows this usually wants the shape without the naming.
+   */
+  zig?: { drawn: number; labels?: boolean; opacity?: number };
+  /**
+   * ⚠ THE ACTIVE CHART'S OWN EXTREMES, as two lines. Nothing is chosen: the
+   * support is its lowest low and the resistance its highest high, so neither
+   * can be a level this panel does not actually show.
+   */
+  levels?: { shown: number; opacity?: number };
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -643,6 +664,7 @@ export const BrokerPanel = ({
    * middle of and the answer is simply yes or no.
    */
   const alpha = (i: number) => {
+    if (alphaOf) return alphaOf(CHARTS[i].t);
     if (pick >= 0) return i === pick ? 1 : 0;
     const inA = i === 0 ? 1 : progress(f, CHARTS[i].at, T.swapOver);
     const next = CHARTS[i + 1];
@@ -875,7 +897,12 @@ export const BrokerPanel = ({
           const o = alpha(n);
           if (o <= 0.001) return null;
           const zt = ZIG[n];
-          const drawn = zt ? progressInOut(f, zt.from, zt.dur) : 0;
+          /** ⚠ THE CALLER'S CURVE WINS. `zig` hands the draw in, which is the
+           *  only way a panel held on one frame can have a line arrive on it. */
+          const own = structure && zt && f >= zt.from;
+          const drawn = zig ? zig.drawn : zt ? progressInOut(f, zt.from, zt.dur) : 0;
+          const zigOn = zig ? n === active && zig.drawn > 0.001 : own;
+          const zigLabels = zig ? !!zig.labels : true;
           const isBmri = n === 2;
           return (
             <svg
@@ -944,8 +971,8 @@ export const BrokerPanel = ({
               })}
 
               {/* ── the market structure, traced by hand ── */}
-              {structure && zt && f >= zt.from && (
-                <g>
+              {zigOn && (
+                <g opacity={zig?.opacity ?? 1}>
                   <path
                     d={ch.pt
                       .map(
@@ -983,7 +1010,7 @@ export const BrokerPanel = ({
                           stroke={C.indigo}
                           strokeWidth={theme.layout.border.thick}
                         />
-                        {pv.label && (
+                        {zigLabels && pv.label && (
                           <>
                             <rect
                               x={cx - w / 2}
@@ -1011,6 +1038,42 @@ export const BrokerPanel = ({
                       </g>
                     );
                   })}
+                </g>
+              )}
+
+              {/* ── the chart's own extremes, as two lines ──
+                  ⚠ NOTHING IS CHOSEN HERE. The support is this chart's lowest
+                  low and the resistance its highest high, read off the same
+                  bars it is drawn from — so neither can be a level the panel
+                  does not actually show. */}
+              {levels && n === active && levels.shown > 0.001 && (
+                <g opacity={levels.opacity ?? 1}>
+                  {[
+                    { v: ch.hi, text: "Resistance", above: true },
+                    { v: ch.lo, text: "Support", above: false },
+                  ].map((L) => (
+                    <g key={L.text}>
+                      <line
+                        x1={0}
+                        y1={ch.y(L.v)}
+                        x2={plotW * levels.shown}
+                        y2={ch.y(L.v)}
+                        stroke={C.indigo}
+                        strokeWidth={theme.layout.stroke.ma}
+                        strokeLinecap="round"
+                      />
+                      <text
+                        x={8}
+                        y={ch.y(L.v) + (L.above ? -12 : 30)}
+                        fontFamily={font}
+                        fontSize={22}
+                        fontWeight={600}
+                        fill={C.indigo}
+                      >
+                        {L.text}
+                      </text>
+                    </g>
+                  ))}
                 </g>
               )}
 

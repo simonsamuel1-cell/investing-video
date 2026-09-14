@@ -33,9 +33,12 @@
  * its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { cutInStyle, progress, progressInOut } from "../../../core";
+import {
+  DashedBox, cutInStyle, dashOpenAt, progress, progressInOut, ramp, theme,
+  useMotion, usePalette,
+} from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
-import { BLOCK, BUYS, PLATFORM, PLATFORM_CUT } from "../data/timing";
+import { BLOCK, BUYS, PLAT, PLATFORM, PLATFORM_CUT } from "../data/timing";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -56,6 +59,19 @@ const AT = 170;
  * TLKM row has always read "−0,38%", and one column with both glyphs in it is a
  * column that looks broken.
  */
+/**
+ * ⚠ THE BOX SITS IN THE ROOM THE SHRINK OPENS, and is solved from it. 019's
+ * panel ends at y 900; scaled about the frame's centre it ends at 540 +
+ * (900 − 540) × by, and the subtitle band starts at 972. The box is centred in
+ * what is left, so it cannot land on either.
+ */
+const BOX = (() => {
+  const floor = 540 + (900 - 540) * PLAT.shrink.by;
+  const w = 760;
+  const h = 108;
+  return { x: (theme.canvas.width - w) / 2, y: (floor + theme.captionBand.top) / 2 - h / 2, w, h };
+})();
+
 const PNL = {
   BBCA: "−14,97%",
   BBRI: "−9,81%",
@@ -63,6 +79,42 @@ const PNL = {
   TLKM: "−4,25%",
   ASII: "−18,11%",
   ANTM: "+3,29%",
+};
+
+/**
+ * ⚠ THE SENTENCE THE SHRINK MAKES ROOM FOR — Simon, verbatim. It is the answer
+ * to a board where every name is green and five of six holdings are not: the
+ * act this scene keeps showing is not the only move available.
+ */
+const NOTE = "Tidak trading juga keputusan";
+
+const Note = ({ g }: { g: number }) => {
+  const m = useMotion();
+  const c = usePalette();
+  /** ⚠ THE TYPING WAITS FOR THE FRAME TO SNAP OPEN. `dashOpenAt` is the one
+   *  answer to "when may my content start". */
+  const open = dashOpenAt(PLAT.note.at, m);
+  const shown = NOTE.slice(0, Math.floor(ramp(g, open, NOTE.length * PLAT.note.perChar) * NOTE.length));
+  return (
+    <DashedBox x={BOX.x} y={BOX.y} w={BOX.w} h={BOX.h} at={PLAT.note.at - BLOCK.SC06}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: theme.text.family,
+          fontSize: theme.text.body.size,
+          fontWeight: 800,
+          color: c.ink,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {shown}
+      </div>
+    </DashedBox>
+  );
 };
 
 export const Platform = () => {
@@ -78,6 +130,19 @@ export const Platform = () => {
    */
   const g = f + BLOCK.SC06;
   const shown = progress(g, PLATFORM.at, PLATFORM.fade);
+
+  /** ⚠ THE WINDOW CHANGES NAME AT 4501, and the two charts CROSS-FADE rather
+   *  than cut: `chart` says which one the header and the selected row are
+   *  about, `alpha` says what is drawn, so a panel held on one frame can still
+   *  swap the way 019's own does. */
+  const swap = progress(g, PLAT.swap.at, PLAT.swap.over);
+  /** ⚠ ONE FADE FOR EVERYTHING DRAWN *ON* THE CHART — Simon: at 4775 all the
+   *  lines go. The chart itself is not one of them. */
+  const ink = 1 - progress(g, PLAT.clear.at, PLAT.clear.over);
+  /** ⚠ THE PANEL SHRINKS ABOUT THE FRAME'S CENTRE, which is what makes the room
+   *  it shrinks to make appear UNDER it rather than around it. */
+  const small = 1 - (1 - PLAT.shrink.by) * progressInOut(g, PLAT.shrink.at, PLAT.shrink.over);
+
   return (
     <div
       style={{
@@ -87,20 +152,35 @@ export const Platform = () => {
         ...cutInStyle(g, PLATFORM_CUT),
       }}
     >
-      <BrokerPanel
-        f={AT}
-        structure={false}
-        portfolio
-        chart="BBCA"
-        pnl={PNL}
-        /** ⚠ THE TIMING IS THIS EPISODE'S, THE GEOMETRY IS 019'S. The swings
-         *  are known inside that panel and nowhere else, so it draws them; when
-         *  each one lands is a beat in THIS timeline, so we decide that. */
-        marks={{
-          text: "Buy",
-          shown: (k) => progressInOut(g, BUYS.at + k * BUYS.step, BUYS.over),
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${small.toFixed(4)})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
         }}
-      />
+      >
+        <BrokerPanel
+          f={AT}
+          structure={false}
+          portfolio
+          chart={swap >= 0.5 ? "BBRI" : "BBCA"}
+          alpha={(t) => (t === "BBRI" ? swap : t === "BBCA" ? 1 - swap : 0)}
+          pnl={PNL}
+          /** ⚠ THE TIMING IS THIS EPISODE'S, THE GEOMETRY IS 019'S. The swings
+           *  are known inside that panel and nowhere else, so it draws them;
+           *  when each one lands is a beat in THIS timeline, so we decide. */
+          marks={{
+            text: "Buy",
+            shown: (k) => progressInOut(g, BUYS.at + k * BUYS.step, BUYS.over) * ink,
+          }}
+          /** ⚠ THE SHAPE WITHOUT THE NAMING — the HL/HH/LH/LL labels stay off,
+           *  as they have been since this panel arrived. */
+          zig={{ drawn: progressInOut(g, PLAT.zig.at, PLAT.zig.over), opacity: ink }}
+          levels={{ shown: progressInOut(g, PLAT.levels.at, PLAT.levels.over), opacity: ink }}
+        />
+      </div>
+      <Note g={g} />
     </div>
   );
 };
