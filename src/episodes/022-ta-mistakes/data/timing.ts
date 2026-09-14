@@ -387,8 +387,23 @@ export const CARD_LIST = {
    * the chart at 286, and the chart inside it zooms OUT. The two overlap by
    * design — one move, not a grow and then a separate shrink.
    */
-  grow: { at: 666, over: 48 },
-  zoom: { at: 682, over: 48 },
+  /**
+   * ⚠ MOVED TO 3083 — Simon: the widening used to start at 2660 and he has
+   * shifted it to the old SC05 boundary. Everything else in this block is where
+   * it was; only these two moved, and they moved TOGETHER by the same 423
+   * frames, because they are one gesture. Left behind, the chart would zoom out
+   * inside a card that is still 640 wide, which is not a zoom, it is a shrink.
+   */
+  grow: { at: 1089, over: 48 },
+  zoom: { at: 1105, over: 48 },
+  /**
+   * ⚠ SIX, AND SIX IS WHAT THE SMALL CARD CAN HOLD — Simon: "candlestick yang
+   * muncul (di bawah garis support) hanya 6 saja". It is the mask that enforces
+   * it, not the tape: the fall and the grind run on their own locked schedule
+   * behind it, and the card's window is solved so that exactly six of them are
+   * ever seen arriving. See SMALL_MASK in scenes/CardList.tsx.
+   */
+  seen: 6,
   /** ⚠ AND THEN IT FALLS. Fourteen bars, wiping on the same way the first ten
    *  did, so the fall is the same tape continuing and not a second chart. */
   fall: { at: 746, step: 14, over: 18 },

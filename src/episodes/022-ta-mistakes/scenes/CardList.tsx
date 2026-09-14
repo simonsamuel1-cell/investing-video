@@ -32,9 +32,9 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, extendGrid, gridOf, lerpBox,
-  lerpGrid, progress, progressInOut, textReveal, theme, useMotion, usePalette,
-  useShadow,
+  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, candleWidth, extendGrid,
+  gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal, theme,
+  useMotion, usePalette, useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
@@ -131,6 +131,26 @@ const ZOOM_GRID = extendGrid(
 );
 /** The bar the trade was taken on, in the extended series. */
 const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
+
+/**
+ * ═══ THE SMALL CARD'S WINDOW ═══  Simon: "candlestick yang muncul (di bawah
+ * garis support) hanya 6 saja".
+ *
+ * ⚠ THE SIX IS A MASK, NOT A TAPE. The fall and the grind keep the schedule
+ * they were locked at; what changes is how much of the card is window. Cutting
+ * the series to six instead would have thrown away the chart that the zoom-out
+ * at 3083 exists to reveal.
+ *
+ * ⚠ ITS LEFT EDGE IS THE PLOT'S, SO THE HISTORY STAYS HIDDEN; its right edge is
+ * SOLVED from where the sixth bar ends, so the seventh is fully outside rather
+ * than sliced. A typed number here would cut a candle in half the first time
+ * anything about the row moved.
+ */
+const SMALL_MASK = (() => {
+  const last = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
+  const right = TAPE_GRID.x(last) + candleWidth(TAPE_GRID) / 2 + 1;
+  return { x: O.plot.x, y: O.plot.y, w: right - O.plot.x, h: O.plot.h };
+})();
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -346,7 +366,7 @@ export const CardList = () => {
    * them, and widens to the grown card. Nothing is added when it opens; what
    * was always laid out stops being hidden.
    */
-  const mask = lerpBox(O.plot, CARD_GROWN, progressInOut(f, V.grow.at, V.grow.over));
+  const mask = lerpBox(SMALL_MASK, CARD_GROWN, progressInOut(f, V.grow.at, V.grow.over));
   /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
    *  two grids and not a transform. */
   const grid = lerpGrid(TAPE_GRID, ZOOM_GRID, progressInOut(f, V.zoom.at, V.zoom.over));
@@ -412,12 +432,15 @@ export const CardList = () => {
         at={V.support.at}
         over={V.support.over}
         label="Support"
-        /** ⚠ IT MOVED TO THE FAR END WHEN THE HISTORY ARRIVED. The label used
-         *  to sit at the left of the line because the left was empty; it is
-         *  candles now, and a label standing in the tape is a label that has
-         *  to be read around. Still under the line, which is what Simon
-         *  asked for — the end it sits on was never the instruction. */
-        labelSide="right"
+        /**
+         * ⚠ BACK ON THE LEFT, AND IT HAS TO BE. The right-hand end is where the
+         * break happens: once the fall arrives the label is standing in the six
+         * bars Simon wants seen. The left end is clear at BOTH scales — the
+         * small card's leftmost bars are the tape's high ones and the grown
+         * card's are ss02's quiet range, and neither comes near a level this
+         * far below them.
+         */
+        labelSide="left"
         labelAt="below"
         width={theme.shape.line}
       />
@@ -499,14 +522,8 @@ export const CardList = () => {
   if (CARD_LIST.support.at + CARD_LIST.support.over > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the support is still drawing when the window ends");
   }
-  /** ⚠ SIMON'S ORDER AGAIN: grow, zoom, THEN fall. A bar that lands while the
-   *  grid is still moving lands somewhere that does not exist a frame later. */
-  const zoomed = CARD_LIST.zoom.at + CARD_LIST.zoom.over;
   if (CARD_LIST.grow.at < CARD_LIST.buyGone) {
     throw new Error("022-ta-mistakes/CardList: the card starts growing before the Buy bubble has gone");
-  }
-  if (CARD_LIST.fall.at < zoomed) {
-    throw new Error("022-ta-mistakes/CardList: the fall starts while the chart is still zooming");
   }
   const lastFall =
     CARD_LIST.fall.at + (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step + CARD_LIST.fall.over;
@@ -520,6 +537,29 @@ export const CardList = () => {
   const lastTail = CARD_LIST.tail.at + (tailN - 1) * CARD_LIST.tail.step + CARD_LIST.tail.over;
   if (lastTail > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the tail is still running when the window ends");
+  }
+  /** ⚠ NO BAR MAY LAND WHILE THE GRID IS MOVING. Where the zoom sits relative
+   *  to the tape is Simon's to choose — it used to be before it and is now
+   *  after it — but it may never be DURING it, because a bar that arrives
+   *  mid-zoom arrives somewhere that does not exist a frame later. */
+  const zoomStart = CARD_LIST.zoom.at;
+  const zoomEnd = zoomStart + CARD_LIST.zoom.over;
+  if (!(lastTail <= zoomStart || CARD_LIST.fall.at >= zoomEnd)) {
+    throw new Error("022-ta-mistakes/CardList: bars are still arriving while the chart is zooming");
+  }
+  /** ⚠ AND THE SIX HAVE TO BE SIX. The window's right edge must clear the sixth
+   *  bar whole and leave the seventh entirely outside, and the whole thing must
+   *  still fit the card it is a window into. */
+  {
+    const i = CARD_HEAD_N + CARD_TAPE.length + CARD_LIST.seen;
+    const right = SMALL_MASK.x + SMALL_MASK.w;
+    const nextLeft = TAPE_GRID.x(i) - candleWidth(TAPE_GRID) / 2;
+    if (nextLeft < right) {
+      throw new Error(`022-ta-mistakes/CardList: bar ${CARD_LIST.seen + 1} below the support is sliced by the window`);
+    }
+    if (right > CARD_OPEN.x + CARD_OPEN.w) {
+      throw new Error("022-ta-mistakes/CardList: the window for the six reaches past the small card");
+    }
   }
   /** And it has to fit the card it grinds along the bottom of. */
   {
