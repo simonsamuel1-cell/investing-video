@@ -318,12 +318,12 @@ export const CARD_LIST = {
    * STANDING there. Simon extended it to 4041 and had SC05's visuals deleted,
    * so this layer is the only thing drawing across that whole stretch.
    *
-   * ⚠ AND 4047, NOT 4041, ON PURPOSE — the same reason as before. Letting go on
-   * his frame leaves six frames owned by a scene with nothing in it any more;
-   * ending on the block boundary hands straight to SC06, and that boundary is
-   * already a hard cut.
+   * ⚠ AND IT NOW RUNS PAST SC06'S START, because the second Scene Transisi is
+   * this layer's too: at 4046 everything leaves to the left and the six cards
+   * come back for mistake 02. The window ends once that flood has settled, so
+   * SC06 is covered for its first 133 frames and shows from 4180.
    */
-  over: 2053,
+  over: 2186,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -453,6 +453,36 @@ export const CARD_LIST = {
    * because that is where the reason for the trade stops being true.
    */
   tool: { at: 1620, over: 34 },
+
+  /**
+   * ═══ AND THE WHOLE THING LEAVES TO THE LEFT ═══  Simon, 4046 → the second
+   * Scene Transisi.
+   *
+   * ⚠ ONLY THE CONTENT MOVES, NOT THE GROUND. The card, the note, the tool and
+   * the tape travel off the left edge together as one object; the paper they
+   * are on stays, because the row that arrives next has to arrive ONTO
+   * something. A ground that left with them would flash the scene underneath.
+   */
+  away: { at: 2052, over: 44 },
+
+  /**
+   * ═══ THE SECOND ROUND ═══  Simon: the six cards come back from the right,
+   * the pointer picks the second one, and the first is cyan because it is done.
+   *
+   * ⚠ THEY RETURN THE WAY THEY LEFT — as one row, one distance, one curve. The
+   * first round DEALT them, card by card, because the list was new; a list that
+   * has already been read comes back as the thing it is rather than being
+   * introduced a second time.
+   */
+  row2: {
+    at: 2062,
+    over: 44,
+    cursor: { at: 2092, over: 34, card: 1 },
+    hover: { at: 2124, over: 46 },
+    /** ⚠ THE CARDS ALREADY DEALT WITH. Cyan, not gone: a list that removes its
+     *  finished items is a queue, and this is a syllabus. */
+    done: [0],
+  },
 
   /**
    * ⚠ AND THE FALL IS RUN AGAIN — Simon, from 3832. Twelve bars down to the

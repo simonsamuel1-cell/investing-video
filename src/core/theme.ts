@@ -315,6 +315,17 @@ export const theme = {
      * gridlines, not for any drawn chart content that is not one of these two
      * halves of one tool.
      */
+    /**
+     * ⚠ THE FLOOD IN THE OTHER TONE, for a card that has already been dealt
+     * with. Same wash, same weight, hue 192 instead of 247 — a list where the
+     * done items are a different COLOUR of the same thing reads as progress,
+     * while a list where they are a different shape reads as two lists.
+     */
+    liquidCyan: "rgba(92, 200, 227, 0.72)",
+    liquidCyanEdge: "rgba(92, 200, 227, 0)",
+    /** Cyan taken down to L 32%, so a numeral in the cyan flood is as readable
+     *  as `liquidInk` is in the indigo one. */
+    liquidCyanInk: "#1A7389",
     gainWash: "rgba(34, 181, 115, 0.16)",
     riskWash: "rgba(229, 71, 93, 0.14)",
     /**

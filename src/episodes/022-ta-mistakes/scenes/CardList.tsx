@@ -35,11 +35,11 @@ import {
   BUBBLE_TIP, Candles, Chip, Cursor, DashedBox, Level, Line, PositionTool,
   SpeechBubble, candleWidth, dashOpenAt, extendGrid, gridOf, lerpBox, lerpGrid,
   progress, progressInOut, ramp, textReveal, theme, useMotion, usePalette,
-  useShadow,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
+import { MistakeCard, TOUCH } from "./MistakeCard";
 import {
   CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
 } from "../data/series";
@@ -49,29 +49,11 @@ const V = CARD_LIST;
 const R = CARD_ROW;
 // ═══════════════════════════════════════════════════════════════════════════
 
-/**
- * Where the pointer lands, and therefore where the flood starts: the lower
- * right of the card it picks, the way a hand arrives at a thing rather than
- * at its middle.
- *
- * ⚠ FRACTIONS OF THE CARD, NOT CANVAS PIXELS. The picked card changes width
- * during the exit, and the ink already in it has to stay on the same spot of
- * the paper — held as pixels it would slide across its own card as the card
- * opened out.
- */
-const TOUCH = { fx: 0.82, fy: 0.86 };
 /** The same point in canvas pixels, for the pointer, which lives outside any card. */
 const LAND = {
   x: R.x(V.cursor.card) + R.w * TOUCH.fx,
   y: R.y + R.h * TOUCH.fy,
 };
-/**
- * ⚠ NOT BIG ENOUGH TO COVER THE CARD, AND THAT IS THE POINT. In the reference
- * the top of a hovered card is still paper — what sells the flood is the soft
- * diagonal edge halfway up it. A blob that covers the card is a fill; one that
- * stops inside it is ink. Sized from the card's LIVE width so it opens with it.
- */
-const blobOf = (w: number) => w * 2.2;
 
 /**
  * ⚠ THE SWEEP IS SOLVED, NOT TYPED: far enough that the LEFTMOST of the leaving
@@ -79,6 +61,10 @@ const blobOf = (w: number) => w * 2.2;
  * a round number it would be wrong the moment the row's geometry moved.
  */
 const SWEEP = theme.canvas.width - R.x(1);
+/** ⚠ FAR ENOUGH THAT THE GROWN CARD'S RIGHT EDGE CLEARS THE LEFT OF THE FRAME.
+ *  Solved from the widest thing that travels, so nothing can be left hanging at
+ *  the edge however the card is re-sized. */
+const AWAY = CARD_GROWN.x + CARD_GROWN.w + 40;
 /** Where the picked card lands, and the box it becomes — see CARD_OPEN. */
 const O = CARD_OPEN;
 
@@ -280,18 +266,6 @@ const BUY_AT = (() => {
 })();
 
 /**
- * The big numeral's offset from the card's bottom-centre — Simon's, settled at
- * 60 right and 20 up. Kept as one pair rather than folded into the style so the
- * next nudge is one number.
- *
- * ⚠ 60 IS AS FAR RIGHT AS THE DIGITS GO. At 90 the card's own clip started
- * cutting 2, 3 and 5 down their right-hand side — a crop that reads as a
- * mistake, where the bottom crop reads as a page number. The numeral is meant
- * to be cut by ONE edge, and that edge is the bottom one.
- */
-const NUM = { dx: 60, dy: -20 } as const;
-
-/**
  * ═══ THE SMALL CARD'S WINDOW ═══  Simon: "candlestick yang muncul (di bawah
  * garis support) hanya 6 saja".
  *
@@ -327,9 +301,6 @@ const windowOf = (g: Grid, box: { x: number; y: number; w: number; h: number }) 
 
 const Card = ({ i, title }: { i: number; title: string }) => {
   const f = useCurrentFrame();
-  const c = usePalette();
-  const m = useMotion();
-  const shadow = useShadow();
   const r = textReveal(f, V.deal.at + i * V.deal.step, V.deal.over, 34);
   if (r.opacity <= 0.001) return null;
 
@@ -352,7 +323,17 @@ const Card = ({ i, title }: { i: number; title: string }) => {
    * out only, which for something leaving the frame reads as a card that gives
    * up halfway.
    */
-  const sweep = picked ? 0 : progressInOut(f, V.exit.at, V.exit.row) * SWEEP;
+  /**
+   * ⚠ THE FIVE THAT LEFT DO NOT COME BACK WITH THE GROUP. They sit off the
+   * right edge on a transform, which is invisible and free — until 4046, when
+   * the wrapper takes a second transform 1864px to the LEFT and would drag them
+   * across the frame again. Adding the same amount here cancels it exactly, so
+   * they stay where they went and every frame before 4046 renders unchanged.
+   * Unmounting them instead cost a box-shadow that was bleeding in from off
+   * frame, which is 5486 pixels of a picture Simon has already signed off.
+   */
+  const travel = progressInOut(f, V.away.at, V.away.over) * AWAY;
+  const sweep = picked ? 0 : progressInOut(f, V.exit.at, V.exit.row) * SWEEP + travel;
   const open = picked ? progressInOut(f, V.exit.at + V.exit.lead, V.exit.one) : 0;
   /** ⚠ AND THEN A THIRD SIZE — Simon: the preview grows to the size of the
    *  chart at 286, which is the ordinary card every other scene draws in. Two
@@ -361,125 +342,28 @@ const Card = ({ i, title }: { i: number; title: string }) => {
     ? progressInOut(f, V.grow.at, V.grow.over) -
       progressInOut(f, V.rev.card.at, V.rev.card.over)
     : 0;
-  const b = lerpBox(
+  const box = lerpBox(
     lerpBox({ x: R.x(i), y: R.y, w: R.w, h: R.h }, { x: O.x, y: O.y, w: O.w, h: O.h }, open),
     CARD_GROWN,
     grown,
   );
-  const { x, y, w } = b;
-  const blob = blobOf(w);
+
   /**
    * ⚠ THE CARD EMPTIES AS IT OPENS — Simon. Title, number and the ink itself
    * all leave on the SAME curve as the width, so what the eye reads is one
-   * event: a card clearing itself out to become a white space. Faded on their
-   * own schedule they would read as three things going wrong at once.
-   *
-   * ⚠ AND THE WHITE IS THE CARD'S OWN. Nothing repaints it — the flood is an
-   * overlay, so draining the overlay IS turning the card white, and the paper
-   * underneath is the same `cardBg` every other card is made of.
+   * event: a card clearing itself out to become a white space.
    */
-  const drain = 1 - open;
-
   return (
-    <div
-      style={{
-        position: "absolute",
-        left: x,
-        top: y,
-        width: w,
-        height: b.h,
-        borderRadius: theme.shape.cardRadius,
-        background: c.cardBg,
-        boxShadow: shadow.rest,
-        opacity: r.opacity,
-        transform: `translate(${sweep}px, ${r.dy}px)`,
-        /* ⚠ THE CLIP IS ON THE CARD, and the flood is a child of it — a blob
-           clipped by anything that also moves would drift off its own card. */
-        overflow: "hidden",
-      }}
-    >
-      {wet * drain > 0.001 && (
-        <div
-          style={{
-            position: "absolute",
-            opacity: drain,
-            left: w * TOUCH.fx - blob / 2,
-            top: b.h * TOUCH.fy - blob / 2,
-            width: blob,
-            height: blob,
-            borderRadius: "50%",
-            background: `radial-gradient(circle, ${theme.color.liquid} 0%, ${theme.color.liquid} 26%, ${theme.color.liquidEdge} 70%)`,
-            filter: `blur(${Math.round(w * 0.22)}px)`,
-            transform: `scale(${(0.05 + 0.95 * wet).toFixed(4)})`,
-          }}
-        />
-      )}
-      {/* ═══ THE NUMBER ═══  (Simon)
-          ⚠ IT HANGS OFF THE BOTTOM EDGE AND THE CARD CUTS IT. That is what the
-          masking is FOR — a numeral this size placed safely inside the card is
-          just a big grey digit, while one the card crops reads as a page
-          number printed under everything else. The card's own `overflow` does
-          the cutting, so the mask can never drift off the shape it belongs to.
-
-          ⚠ ANCHORED ON THE CARD'S BOTTOM-CENTRE, then moved by NUM — his
-          offsets, measured from that corner-less anchor so they stay put
-          whatever the card's width and height become. */}
-      <div
-        style={{
-          position: "absolute",
-          left: w / 2 + NUM.dx,
-          top: b.h + NUM.dy,
-          /**
-           * ⚠ THE PERCENTAGE IS THE SIT, THE PIXELS ARE THE NUDGE. -90% is of
-           * the numeral's OWN box, so the glyph lands whole on the card's
-           * bottom edge at any size; NUM.dy is Simon's 20px on top of that.
-           * Kept apart on purpose — re-sizing the card must not undo his nudge,
-           * and his nudge must not have to be re-derived when it is re-sized.
-           */
-          transform: "translate(-50%, -90%)",
-          fontFamily: theme.text.family,
-          /** ⚠ A THIRD OF THE CARD, not a typed size. */
-          fontSize: b.h / 3,
-          fontWeight: 800,
-          lineHeight: 1,
-          /**
-           * ⚠ IT TAKES THE FLOOD'S COLOUR ON THE SAME CURVE AS THE FLOOD —
-           * Simon. Driven by `wet`, so the ink reaching the numeral and the ink
-           * reaching the card are one event rather than two that nearly line
-           * up. Deep indigo, not the brand one: see `liquidInk` in core/theme.
-           */
-          color: interpolateColors(wet, [0, 1], [c.muted, theme.color.liquidInk]),
-          opacity: drain,
-        }}
-      >
-        {i + 1}
-      </div>
-
-      {/* ⚠ THE TITLE STAYS DARK, as it does in the reference. The flood is a
-          bottom-up thing and the title is at the top; a white copy cross-faded
-          in under it would be white type on the pale part of the card, which is
-          type that is not there. */}
-      <div
-        style={{
-          position: "absolute",
-          left: m.sec(0.4),
-          top: m.sec(0.4),
-          /* ⚠ THE WRAP WIDTH IS THE RESTING ONE, EVEN WHILE THE CARD OPENS. Fed
-             the live width the three lines would re-wrap to two on one frame
-             in the middle of the move — a jump, not a motion. The card grows
-             around its title instead, and the room it opens up is room. */
-          width: R.w - m.sec(0.8),
-          fontFamily: theme.text.family,
-          fontSize: theme.text.body.size,
-          fontWeight: 700,
-          lineHeight: 1.25,
-          color: c.ink,
-          opacity: drain,
-        }}
-      >
-        {title}
-      </div>
-    </div>
+    <MistakeCard
+      n={i + 1}
+      title={title}
+      box={box}
+      wet={wet}
+      drain={1 - open}
+      opacity={r.opacity}
+      dx={sweep}
+      dy={r.dy}
+    />
   );
 };
 
@@ -523,6 +407,64 @@ const Note = () => {
         {shown}
       </div>
     </DashedBox>
+  );
+};
+
+/**
+ * ═══ THE SECOND ROUND ═══  Simon, from 4046.
+ *
+ * ⚠ THE SAME SIX CARDS, NOT A SECOND LIST. Same component, same row geometry,
+ * same pointer — what has changed is which one is being picked and that the
+ * first one is finished. Drawn fresh rather than reusing round one's `Card`
+ * because the two rounds do genuinely different things with them: the first
+ * dealt them and took one away to become a chart, this one brings the row back
+ * and marks one off.
+ */
+const Row2 = () => {
+  const f = useCurrentFrame();
+  const V2 = V.row2;
+  /** ⚠ IN FROM THE RIGHT BY EXACTLY THE DISTANCE THEY LEFT BY. The row is the
+   *  same object coming back, so the journey is the one it made, reversed. */
+  const enter = (1 - progressInOut(f, V2.at, V2.over)) * SWEEP;
+  if (f < V2.at) return null;
+
+  /** The pointer's target on the card it picks — the same spot on the card that
+   *  round one used, so the two picks read as the same gesture. */
+  const land = {
+    x: R.x(V2.cursor.card) + R.w * TOUCH.fx,
+    y: R.y + R.h * TOUCH.fy,
+  };
+  const walk = progressInOut(f, V2.cursor.at, V2.cursor.over);
+  const from = { x: theme.canvas.width + 60, y: theme.canvas.height + 60 };
+
+  return (
+    <>
+      {V.titles.map((title, i) => (
+        <MistakeCard
+          key={title}
+          n={i + 1}
+          title={title}
+          box={{ x: R.x(i), y: R.y, w: R.w, h: R.h }}
+          dx={enter}
+          /** ⚠ A DONE CARD IS FULLY FLOODED AND IN THE OTHER TONE. It does not
+           *  animate: it arrives already finished, which is what "done" looks
+           *  like. */
+          tone={(V2.done as readonly number[]).includes(i) ? "cyan" : "indigo"}
+          wet={
+            (V2.done as readonly number[]).includes(i)
+              ? 1
+              : i === V2.cursor.card
+                ? progress(f, V2.hover.at, V2.hover.over)
+                : 0
+          }
+        />
+      ))}
+      <Cursor
+        x={from.x + (land.x - from.x) * walk}
+        y={from.y + (land.y - from.y) * walk}
+        opacity={walk > 0.001 ? 1 : 0}
+      />
+    </>
   );
 };
 
@@ -598,6 +540,18 @@ export const CardList = () => {
   return (
     <div style={{ position: "absolute", inset: 0, opacity: ground }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
+
+      {/* ⚠ EVERYTHING BUT THE GROUND TRAVELS — Simon, from 4046. One transform
+          on one wrapper, so the chart, the note, the tool and the tape leave as
+          the single object they have become rather than as eight things that
+          agree about where they are going. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateX(${-progressInOut(f, V.away.at, V.away.over) * AWAY}px)`,
+        }}
+      >
       {V.titles.map((title, i) => (
         <Card key={title} i={i} title={title} />
       ))}
@@ -806,6 +760,12 @@ export const CardList = () => {
           opacity={1 - progress(f, V.buyGone - m.fade, m.fade)}
         />
       )}
+      </div>
+
+      {/* ⚠ ON TOP, AND OUTSIDE THE TRAVELLING GROUP. The new row is arriving
+          while the old picture is still leaving; inside the wrapper it would
+          be leaving with it. */}
+      <Row2 />
     </div>
   );
 };
@@ -988,9 +948,17 @@ export const CardList = () => {
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */
-  if (CARD_LIST.at + CARD_LIST.over !== BLOCK.SC06) {
-    throw new Error(
-      `022-ta-mistakes/CardList: the window ends at ${CARD_LIST.at + CARD_LIST.over}, not on SC06 at ${BLOCK.SC06}`,
-    );
+  /** ⚠ THE WINDOW HAS TO OUTLAST THE SECOND ROUND. It used to end exactly on
+   *  SC06; it now runs past it, because the transition INTO mistake 02 belongs
+   *  to this layer too. */
+  const round2 = CARD_LIST.row2.hover.at + CARD_LIST.row2.hover.over;
+  if (round2 > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the second round is still running when the window ends");
+  }
+  if (CARD_LIST.away.at < CARD_LIST.note.at) {
+    throw new Error("022-ta-mistakes/CardList: the picture leaves before its own note has been written");
+  }
+  if (CARD_LIST.at + CARD_LIST.away.at < BLOCK.SC06 - 4) {
+    throw new Error("022-ta-mistakes/CardList: the second transition starts well before SC06 — check the join");
   }
 }
