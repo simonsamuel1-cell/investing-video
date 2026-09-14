@@ -5,7 +5,7 @@
  * scene in this episode follows. A number that appears twice in a scene file
  * belongs here instead.
  */
-import { theme, columns, inset } from "../../../core";
+import { candleWidth, gridOf, theme, columns, inset } from "../../../core";
 import type { Rect } from "../../../core";
 
 const PLOT = theme.stage.plot;
@@ -370,5 +370,64 @@ export const CARD_ROW = (() => {
   const half = c.x(5) + c.w / 2;
   if (Math.abs(half - theme.canvas.width) > 0.5) {
     throw new Error(`022-ta-mistakes/layout: the sixth card is cut at ${half}, not at the frame's edge`);
+  }
+}
+
+/**
+ * ═══ THE OPENED TRANSITION CARD ═══  (Simon)
+ *
+ * The one card the list hands to the middle at 2229, and the box everything
+ * after it is drawn inside.
+ *
+ * ⚠ FOUR EQUAL BANDS, IMAGINED AND NEVER DRAWN. Simon places the contents of
+ * this card against a card cut into four equal rows; `support` is the line
+ * between the two lowest of them. Held here rather than in the scene because
+ * more than one thing is about to be placed against it, and two scenes that
+ * each work out "a quarter of the way up" for themselves will eventually
+ * disagree by a pixel.
+ *
+ * ⚠ THE PLOT'S WIDTH IS SOLVED, NOT TYPED. Simon's rule is about the CANDLE:
+ * the last one must stop 80px short of the card's right edge. A box whose own
+ * edge is 80px short would put the last candle at 80 + the grid's padding +
+ * half a body, i.e. somewhere else. So the box is solved backwards from where
+ * the candle has to end, using the real grid and the real candle width — and
+ * asserted, because a solve nobody checks is a guess with arithmetic in it.
+ */
+export const CARD_OPEN = (() => {
+  const w = 640;
+  const x = (theme.canvas.width - w) / 2;
+  const { y, h } = CARD_ROW;
+  const band = h / 4;
+  const support = y + band * 3;
+
+  /** Simon's: where the candles must stop, measured from the card's right edge. */
+  const padR = 80;
+  const bars = 15;
+  const endOf = (bw: number) => {
+    const g = gridOf(new Array(bars).fill(0), [0, 1], { x: x + DPAD, y, w: bw, h }, 0);
+    return g.x(bars - 1) + candleWidth(g) / 2;
+  };
+  /** ⚠ TWO PROBES ARE ENOUGH BECAUSE THE END IS LINEAR IN THE WIDTH. Newton on
+   *  a straight line lands exactly; the assertion below proves it did. */
+  const target = x + w - padR;
+  const [a, b] = [400, 600];
+  const plotW = a + ((target - endOf(a)) * (b - a)) / (endOf(b) - endOf(a));
+  const plot = { x: x + DPAD, y, w: plotW, h };
+
+  return { x, y, w, h, band, support, bars, padR, plot };
+})();
+
+{
+  const o = CARD_OPEN;
+  const g = gridOf(new Array(o.bars).fill(0), [0, 1], o.plot, 0);
+  const end = g.x(o.bars - 1) + candleWidth(g) / 2;
+  if (Math.abs(end - (o.x + o.w - o.padR)) > 0.5) {
+    throw new Error(
+      `022-ta-mistakes/layout: the last candle ends at ${end.toFixed(1)}, not ${o.padR}px from the card's right edge`,
+    );
+  }
+  /** And the support has to be a band line, not near one. */
+  if (Math.abs(o.support - (o.y + o.h * 0.75)) > 1e-9) {
+    throw new Error("022-ta-mistakes/layout: the card's support is not the line between its two lowest bands");
   }
 }

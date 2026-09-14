@@ -16,7 +16,14 @@
  * BARS ARRIVE ONE BY ONE. `shown` is an eased 0→1 from the caller; the tape
  * builds with the voice-over instead of appearing complete. A chart that simply
  * appears is a failed scene.
+ *
+ * ⚠ AND `wipe` IS THE OTHER WAY TO ARRIVE. `shown` hands a bar over whole, which
+ * is right for a tape keeping pace with a voice. `wipe` uncovers each bar left
+ * to right inside its own slot, which is right when the DRAWING of the chart is
+ * the thing being watched. Opt-in, and off by default — no existing caller
+ * changes.
  */
+import React from "react";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { Layer } from "../Stage";
@@ -30,6 +37,7 @@ export const Candles = ({
   opacity = 1,
   /** Draw only from this index — for a tape that continues an earlier scene's. */
   from = 0,
+  wipe,
 }: {
   bars: Bar[];
   grid: Grid;
@@ -37,8 +45,13 @@ export const Candles = ({
   shown?: number;
   opacity?: number;
   from?: number;
+  /** Per-bar 0→1 left-to-right reveal inside the bar's own slot. */
+  wipe?: (i: number) => number;
 }) => {
   const c = usePalette();
+  /** ⚠ ONE ID PER MOUNTED CHART, so two wiping tapes cannot reference each
+   *  other's clip rects. */
+  const id = React.useId();
   if (opacity <= 0.001) return null;
   const upto = Math.ceil(bars.length * Math.max(0, Math.min(1, shown)));
   const w = candleWidth(grid);
@@ -51,8 +64,25 @@ export const Candles = ({
         const top = Math.min(grid.y(b.o), grid.y(b.c));
         const h = Math.max(1.5, Math.abs(grid.y(b.c) - grid.y(b.o)));
         const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
+        /** ⚠ THE SLOT, NOT THE BODY, IS WHAT GETS UNCOVERED. Clipped to the
+         *  body the wick would appear before the bar it belongs to; clipped to
+         *  the slot, wick and body come out of the same moving edge. */
+        const t = wipe ? Math.max(0, Math.min(1, wipe(i))) : 1;
+        if (t <= 0.001) return null;
         return (
-          <g key={i}>
+          <g key={i} clipPath={t < 0.999 ? `url(#${id}-${i})` : undefined}>
+            {t < 0.999 && (
+              <defs>
+                <clipPath id={`${id}-${i}`}>
+                  <rect
+                    x={x - grid.slot / 2}
+                    y={grid.box.y}
+                    width={grid.slot * t}
+                    height={grid.box.h}
+                  />
+                </clipPath>
+              </defs>
+            )}
             <line
               x1={x}
               y1={grid.y(b.h)}

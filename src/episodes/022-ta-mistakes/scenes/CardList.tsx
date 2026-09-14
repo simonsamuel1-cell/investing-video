@@ -32,11 +32,12 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  Cursor, progress, progressInOut, textReveal, theme, useMotion, usePalette,
-  useShadow,
+  Candles, Cursor, gridOf, progress, progressInOut, textReveal, theme,
+  useMotion, usePalette, useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
-import { CARD_ROW } from "../data/layout";
+import { CARD_OPEN, CARD_ROW } from "../data/layout";
+import { CARD_SUPPORT, CARD_TAPE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = CARD_LIST;
@@ -73,8 +74,22 @@ const blobOf = (w: number) => w * 2.2;
  * a round number it would be wrong the moment the row's geometry moved.
  */
 const SWEEP = theme.canvas.width - R.x(1);
-/** Where the picked card lands — the middle of the frame, at its opened width. */
-const OPEN_X = (theme.canvas.width - V.exit.w) / 2;
+/** Where the picked card lands, and the box it becomes — see CARD_OPEN. */
+const O = CARD_OPEN;
+
+/**
+ * ⚠ THE TAPE'S GRID HAS NO PRICE IN IT. `pad: 0` and the domain [0, 1] make the
+ * vertical axis the CARD ITSELF: 0 is its bottom edge, 1 its top. That is what
+ * lets a bar's low land exactly on the line between two of Simon's bands
+ * instead of near it — with the grid's usual 12% breathing room the tape would
+ * float somewhere close to the level and nothing would rest on anything.
+ */
+const TAPE_GRID = gridOf(
+  CARD_TAPE.map((b) => b.c),
+  [0, 1],
+  O.plot,
+  0,
+);
 
 /**
  * The big numeral's offset from the card's bottom-centre — Simon's, settled at
@@ -117,8 +132,8 @@ const Card = ({ i, title }: { i: number; title: string }) => {
    */
   const sweep = picked ? 0 : progressInOut(f, V.exit.at, V.exit.row) * SWEEP;
   const open = picked ? progressInOut(f, V.exit.at + V.exit.lead, V.exit.one) : 0;
-  const w = R.w + (V.exit.w - R.w) * open;
-  const x = R.x(i) + (OPEN_X - R.x(i)) * open;
+  const w = R.w + (O.w - R.w) * open;
+  const x = R.x(i) + (O.x - R.x(i)) * open;
   const blob = blobOf(w);
   /**
    * ⚠ THE CARD EMPTIES AS IT OPENS — Simon. Title, number and the ink itself
@@ -264,6 +279,18 @@ export const CardList = () => {
         <Card key={title} i={i} title={title} />
       ))}
       <Cursor x={cursor.x} y={cursor.y} opacity={walk > 0.001 ? put : 0} />
+
+      {/* ═══ THE TAPE ═══  Simon, 2261 → 2372.
+          ⚠ NOT CLIPPED, AND IT DOES NOT NEED TO BE: the plot box is solved to
+          sit inside the opened card, so nothing drawn against it can reach the
+          card's edge. A clip here would only be hiding a geometry bug.
+          ⚠ AND THE SUPPORT IS STILL NOT DRAWN — Simon's "jangan digambarkan
+          dulu". The tape resting on it three times is what puts it there. */}
+      <Candles
+        bars={CARD_TAPE}
+        grid={TAPE_GRID}
+        wipe={(i) => progressInOut(f, V.tape.at + i * V.tape.step, V.tape.over)}
+      />
     </div>
   );
 };
@@ -282,6 +309,24 @@ export const CardList = () => {
   const settled = CARD_LIST.exit.at + CARD_LIST.exit.lead + CARD_LIST.exit.one;
   if (settled > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the picked card is still moving when the window ends");
+  }
+  /** ⚠ THE ONE ASSERTION THAT TIES THE TWO FILES TOGETHER. series.ts says the
+   *  tape rests on 0.25 of the card; layout.ts says the support is the line
+   *  between the two lowest bands. Nothing but this check makes those the same
+   *  place, and if they drift the tape will rest on nothing. */
+  if (Math.abs(TAPE_GRID.y(CARD_SUPPORT) - CARD_OPEN.support) > 0.5) {
+    throw new Error(
+      `022-ta-mistakes/CardList: the tape's support lands at ${TAPE_GRID.y(CARD_SUPPORT).toFixed(1)}, not on the band line at ${CARD_OPEN.support}`,
+    );
+  }
+  /** The tape has to be drawn in a card that has finished moving — bars wiping
+   *  on while the card is still opening would be two motions arguing. */
+  if (CARD_LIST.tape.at < settled) {
+    throw new Error("022-ta-mistakes/CardList: the tape starts before the card has settled");
+  }
+  const lastBar = CARD_LIST.tape.at + (CARD_TAPE.length - 1) * CARD_LIST.tape.step + CARD_LIST.tape.over;
+  if (lastBar > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the last bar is still wiping on when the window ends");
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */

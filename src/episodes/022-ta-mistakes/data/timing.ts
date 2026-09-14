@@ -347,7 +347,17 @@ export const CARD_LIST = {
    * Simon's "lalu". Small enough that the two overlap, because a card that
    * waits for an empty frame reads as a second transition.
    */
-  exit: { at: 179, row: 32, lead: 20, one: 36, w: 640 },
+  exit: { at: 179, row: 32, lead: 20, one: 36 },
+  /**
+   * ⚠ THE TAPE INSIDE THE OPENED CARD — Simon, 2261 → 2372. Fifteen bars, each
+   * uncovered left to right inside its own slot rather than appearing whole:
+   * what is being watched here is the chart being DRAWN, and a bar that pops
+   * has not been drawn, it has arrived.
+   *
+   * `step` is deliberately shorter than `over`, so a bar is still coming out
+   * while the next one starts — the edge crossing the card never stops moving.
+   */
+  tape: { at: 267, step: 7, over: 13 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

@@ -408,3 +408,67 @@ export const ADMR_MACD = ADMR.closes.map((c, i) => {
       fail(`ADMR high ${i} is not lower than the one before it — that is not a descending triangle`);
   }
 })();
+
+/* ═══ SCENE TRANSISI · the tape inside the opened card ════════════════════
+ *
+ * ⚠ THERE ARE NO PRICES HERE, AND THAT IS DELIBERATE. Every number below is a
+ * HEIGHT INSIDE THE CARD — 0 is the card's bottom edge, 1 its top — so this
+ * tape cannot state a price, a level or a move, because it does not have any.
+ * It is a shape being used to explain a shape, which is the only honest way to
+ * draw a chart that no data was supplied for.
+ *
+ * ⚠ IT IS PLACED AGAINST THE CARD'S FOUR BANDS, not against a price scale.
+ * Simon divides the opened card into four equal rows; the support is the line
+ * between the two lowest, at 0.25. The tape rests on that line three times and
+ * never trades through it — which is what makes the level readable later
+ * WITHOUT it being drawn yet: the eye has already watched the tape refuse to go
+ * below something.
+ *
+ * ⚠ THE TWO OUTER BANDS ARE LEFT EMPTY, and that is the whole vertical spec.
+ * Sitting in the one band directly above the level, the tape used a quarter of
+ * a 640px card and read as a chart that had been shrunk; spanning to 0.70 it
+ * fills the two middle bands, keeps the bottom quarter clear for the break that
+ * is coming, and keeps the top quarter clear for whatever gets written there.
+ *
+ * The story, in four moves: four bars down into the level, a bounce, a retest,
+ * and a hold. Fifteen bars, because fifteen is what Simon asked for.
+ */
+export const CARD_SUPPORT = 0.25;
+export const CARD_TAPE: Bar[] = [
+  { o: 0.66, c: 0.59, h: 0.70, l: 0.57 },
+  { o: 0.59, c: 0.50, h: 0.61, l: 0.47 },
+  { o: 0.50, c: 0.38, h: 0.52, l: 0.34 },
+  { o: 0.38, c: 0.29, h: 0.39, l: 0.25 },
+  { o: 0.29, c: 0.41, h: 0.45, l: 0.25 },
+  { o: 0.41, c: 0.48, h: 0.52, l: 0.39 },
+  { o: 0.48, c: 0.56, h: 0.59, l: 0.47 },
+  { o: 0.56, c: 0.47, h: 0.57, l: 0.43 },
+  { o: 0.47, c: 0.36, h: 0.48, l: 0.32 },
+  { o: 0.36, c: 0.30, h: 0.38, l: 0.25 },
+  { o: 0.30, c: 0.39, h: 0.43, l: 0.27 },
+  { o: 0.39, c: 0.52, h: 0.56, l: 0.38 },
+  { o: 0.52, c: 0.59, h: 0.63, l: 0.50 },
+  { o: 0.59, c: 0.54, h: 0.61, l: 0.50 },
+  { o: 0.54, c: 0.63, h: 0.66, l: 0.52 },
+] as const as Bar[];
+
+{
+  /** Kept honest: the tape has to actually rest on the line the card's bands
+   *  put there, and it has to leave the outer bands alone — otherwise the
+   *  support Simon is about to draw would be a line through the middle of a
+   *  range rather than the floor the range is standing on. */
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  const lows = CARD_TAPE.map((b) => b.l);
+  const touches = lows.filter((l) => Math.abs(l - CARD_SUPPORT) < 1e-9).length;
+  if (Math.min(...lows) < CARD_SUPPORT) fail("the card tape trades below its own support");
+  if (touches < 2) fail(`the card tape touches its support ${touches} times — a level needs testing`);
+  if (Math.max(...CARD_TAPE.map((b) => b.h)) > 0.75 + 1e-9)
+    fail("the card tape reaches into the card's top band");
+  if (CARD_TAPE.length !== 15) fail(`the card tape has ${CARD_TAPE.length} bars, not the 15 asked for`);
+  for (const [i, b] of CARD_TAPE.entries()) {
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
+      fail(`card tape bar ${i + 1} has a wick inside its own body`);
+  }
+}
