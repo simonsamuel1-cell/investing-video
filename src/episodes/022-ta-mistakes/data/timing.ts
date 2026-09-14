@@ -323,7 +323,7 @@ export const CARD_LIST = {
    * come back for mistake 02. The window ends once that flood has settled, so
    * SC06 is covered for its first 133 frames and shows from 4180.
    */
-  over: 2186,
+  over: 2176,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -475,10 +475,13 @@ export const CARD_LIST = {
    * introduced a second time.
    */
   row2: {
-    at: 2062,
-    over: 44,
-    cursor: { at: 2092, over: 34, card: 1 },
-    hover: { at: 2124, over: 46 },
+    /** ⚠ THE SAME FRAME THE PICTURE LEAVES ON. One goes left, the other comes
+     *  in from the right, and they cross — which is what makes it one move and
+     *  not a scene ending followed by a scene starting. */
+    at: 2052,
+    over: 48,
+    cursor: { at: 2080, over: 34, card: 1 },
+    hover: { at: 2112, over: 46 },
     /** ⚠ THE CARDS ALREADY DEALT WITH. Cyan, not gone: a list that removes its
      *  finished items is a queue, and this is a syllabus. */
     done: [0],

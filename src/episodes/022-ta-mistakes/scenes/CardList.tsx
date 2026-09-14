@@ -423,9 +423,15 @@ const Note = () => {
 const Row2 = () => {
   const f = useCurrentFrame();
   const V2 = V.row2;
-  /** ⚠ IN FROM THE RIGHT BY EXACTLY THE DISTANCE THEY LEFT BY. The row is the
-   *  same object coming back, so the journey is the one it made, reversed. */
-  const enter = (1 - progressInOut(f, V2.at, V2.over)) * SWEEP;
+  /**
+   * ⚠ IT STARTS OUTSIDE THE FRAME — Simon: "harusnya geser ke kiri, masuk dari
+   * luar". The distance the row LEFT by only had to clear the leftmost card of
+   * the five that went; coming back, the whole six have to start off screen, so
+   * the distance is solved from the FIRST card's own left edge instead. At the
+   * old number the first card was already 337px inside the frame on the frame
+   * it appeared, which is a card popping into existence, not one arriving.
+   */
+  const enter = (1 - progressInOut(f, V2.at, V2.over)) * AWAY;
   if (f < V2.at) return null;
 
   /** The pointer's target on the card it picks — the same spot on the card that
@@ -449,14 +455,8 @@ const Row2 = () => {
           /** ⚠ A DONE CARD IS FULLY FLOODED AND IN THE OTHER TONE. It does not
            *  animate: it arrives already finished, which is what "done" looks
            *  like. */
-          tone={(V2.done as readonly number[]).includes(i) ? "cyan" : "indigo"}
-          wet={
-            (V2.done as readonly number[]).includes(i)
-              ? 1
-              : i === V2.cursor.card
-                ? progress(f, V2.hover.at, V2.hover.over)
-                : 0
-          }
+          done={(V2.done as readonly number[]).includes(i)}
+          wet={i === V2.cursor.card ? progress(f, V2.hover.at, V2.hover.over) : 0}
         />
       ))}
       <Cursor

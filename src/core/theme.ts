@@ -326,6 +326,14 @@ export const theme = {
     /** Cyan taken down to L 32%, so a numeral in the cyan flood is as readable
      *  as `liquidInk` is in the indigo one. */
     liquidCyanInk: "#1A7389",
+    /**
+     * ⚠ A PAINT, NOT A COLOUR, and it lives here for the same reason every
+     * colour does: a gradient written into a scene is a look that cannot be
+     * changed in one place. White off the top of a filled card, so a card that
+     * is simply this colour still reads bottom-up like the ones being flooded.
+     */
+    gloss:
+      "linear-gradient(180deg, rgba(255,255,255,0.62) 0%, rgba(255,255,255,0.16) 34%, rgba(255,255,255,0) 62%)",
     gainWash: "rgba(34, 181, 115, 0.16)",
     riskWash: "rgba(229, 71, 93, 0.14)",
     /**

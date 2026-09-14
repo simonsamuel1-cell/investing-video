@@ -36,7 +36,7 @@ export const MistakeCard = ({
   box,
   wet = 0,
   drain = 1,
-  tone = "indigo",
+  done = false,
   opacity = 1,
   dx = 0,
   dy = 0,
@@ -50,11 +50,13 @@ export const MistakeCard = ({
   /** 1→0 as the card empties itself out. */
   drain?: number;
   /**
-   * Which flood. ⚠ `cyan` IS "ALREADY DONE" — Simon: the card that has had its
-   * turn changes colour so the list reads as progress rather than as six things
-   * of equal standing.
+   * ⚠ A CARD THAT HAS HAD ITS TURN. Simon: full cyan, a little white gradation,
+   * and its title in the same ink as its number. Not a flood — a flood is
+   * something happening, and this already happened: it arrives finished, which
+   * is what done looks like. The list reads as progress rather than as six
+   * things of equal standing.
    */
-  tone?: "indigo" | "cyan";
+  done?: boolean;
   opacity?: number;
   /** A rigid move, for a row travelling as one object. */
   dx?: number;
@@ -66,10 +68,10 @@ export const MistakeCard = ({
   if (opacity <= 0.001) return null;
 
   const blob = blobOf(box.w);
-  const cyan = tone === "cyan";
-  const ink = cyan ? theme.color.liquidCyan : theme.color.liquid;
-  const edge = cyan ? theme.color.liquidCyanEdge : theme.color.liquidEdge;
-  const digit = cyan ? theme.color.liquidCyanInk : theme.color.liquidInk;
+  /** ⚠ ONE INK FOR EVERYTHING ON A DONE CARD — Simon: the title takes the
+   *  number's colour. Two darks on a card this saturated would read as two
+   *  levels of importance on something that is over. */
+  const digit = done ? theme.color.liquidCyanInk : theme.color.liquidInk;
 
   return (
     <div
@@ -89,7 +91,24 @@ export const MistakeCard = ({
         overflow: "hidden",
       }}
     >
-      {wet * drain > 0.001 && (
+      {done && (
+        <>
+          {/* ⚠ FULL FILL, NOT A BLOB. A blob is ink spreading; this card is
+              simply this colour now. */}
+          <div style={{ position: "absolute", inset: 0, background: theme.color.liquidCyan }} />
+          {/* ⚠ AND A LITTLE WHITE OFF THE TOP — Simon. It keeps the bottom-up
+              reading every other card in this row has, so a finished card still
+              belongs to the same set of objects. */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: theme.color.gloss,
+            }}
+          />
+        </>
+      )}
+      {!done && wet * drain > 0.001 && (
         <div
           style={{
             position: "absolute",
@@ -99,7 +118,7 @@ export const MistakeCard = ({
             width: blob,
             height: blob,
             borderRadius: "50%",
-            background: `radial-gradient(circle, ${ink} 0%, ${ink} 26%, ${edge} 70%)`,
+            background: `radial-gradient(circle, ${theme.color.liquid} 0%, ${theme.color.liquid} 26%, ${theme.color.liquidEdge} 70%)`,
             filter: `blur(${Math.round(box.w * 0.22)}px)`,
             transform: `scale(${(0.05 + 0.95 * wet).toFixed(4)})`,
           }}
@@ -123,7 +142,7 @@ export const MistakeCard = ({
           fontWeight: 800,
           lineHeight: 1,
           /** ⚠ IT TAKES THE FLOOD'S COLOUR ON THE SAME CURVE AS THE FLOOD. */
-          color: interpolateColors(wet, [0, 1], [c.muted, digit]),
+          color: done ? digit : interpolateColors(wet, [0, 1], [c.muted, digit]),
           opacity: drain,
         }}
       >
@@ -144,7 +163,7 @@ export const MistakeCard = ({
           fontSize: theme.text.body.size,
           fontWeight: 700,
           lineHeight: 1.25,
-          color: c.ink,
+          color: done ? digit : c.ink,
           opacity: drain,
         }}
       >
