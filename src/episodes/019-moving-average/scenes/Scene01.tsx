@@ -563,6 +563,7 @@ export const BrokerPanel = ({
   f,
   shrink = 1,
   structure = true,
+  portfolio = false,
 }: {
   f: number;
   /**
@@ -578,6 +579,14 @@ export const BrokerPanel = ({
    * is being talked about. Defaults to on, so nothing in this episode changes.
    */
   structure?: boolean;
+  /**
+   * ⚠ TURNS THE RIGHT-HAND EXTENSION FROM A WATCHLIST INTO A PORTFOLIO. Added
+   * for VIDEO 22, where the panel is showing what somebody OWNS rather than
+   * what they are following — so the prices come off (a holding's last price
+   * says nothing about the holding) and the two remaining columns get named.
+   * Defaults to off, so nothing in this episode changes.
+   */
+  portfolio?: boolean;
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -1103,8 +1112,32 @@ export const BrokerPanel = ({
                 color: C.textMuted,
               }}
             >
-              Watchlist
+              {portfolio ? "Portfolio" : "Watchlist"}
             </div>
+            {/* ⚠ THE COLUMN NAMES, AND THEY ARE PLACED BY THE ROWS' OWN MATHS —
+                Simon: "Stock" level with the codes, "P&L" level with the
+                percentages. `pad + avatar + 14` is exactly where a row's ticker
+                starts and `pad` is exactly where its right column ends, so the
+                heading cannot drift off the column it names. */}
+            {portfolio && (
+              <div
+                style={{
+                  position: "absolute",
+                  left: LIST.pad + LIST.avatar + 14,
+                  right: LIST.pad,
+                  top: LIST.rowTop - 36,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  fontFamily: font,
+                  fontSize: LIST.size - 2,
+                  fontWeight: UI.weight,
+                  color: C.textMuted,
+                }}
+              >
+                <span>Stock</span>
+                <span>P&amp;L</span>
+              </div>
+            )}
             {WATCH.map((w, i) => {
               /* the selected row IS the chart in the window — one source of
              truth, so the two can never disagree */
@@ -1174,16 +1207,21 @@ export const BrokerPanel = ({
                       alignItems: "flex-end",
                     }}
                   >
-                    <span
-                      style={{
-                        fontSize: LIST.size,
-                        fontWeight: UI.axis,
-                        color: C.price,
-                        lineHeight: 1.2,
-                      }}
-                    >
-                      {fmtRp(w.p)}
-                    </span>
+                    {/* ⚠ NO PRICE IN A PORTFOLIO — Simon. What a holding is
+                        worth per share is not what the row is about; the
+                        number that matters is the one under it. */}
+                    {!portfolio && (
+                      <span
+                        style={{
+                          fontSize: LIST.size,
+                          fontWeight: UI.axis,
+                          color: C.price,
+                          lineHeight: 1.2,
+                        }}
+                      >
+                        {fmtRp(w.p)}
+                      </span>
+                    )}
                     <span
                       style={{
                         fontSize: LIST.size,

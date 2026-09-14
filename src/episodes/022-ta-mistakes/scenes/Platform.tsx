@@ -16,6 +16,11 @@
  * passed off regardless, because a thing that is hidden by luck is a thing that
  * comes back the day the number moves.
  *
+ * ⚠ THE RIGHT-HAND EXTENSION IS A PORTFOLIO HERE, NOT A WATCHLIST — Simon. The
+ * panel is showing what somebody owns, so the prices come off and the two
+ * columns that are left get named. That is `portfolio` on BrokerPanel, opt-in
+ * and off by default, so 019 is untouched.
+ *
  * ⚠ THE "Ilustrasi" TAG STAYS, and has to. The prices on that panel are
  * invented on a real ticker, and the tag is the only thing on screen saying so.
  * Simon's standing rule against the word is about labels this project adds to
@@ -52,7 +57,7 @@ export const Platform = () => {
         ...cutInStyle(g, PLATFORM_CUT),
       }}
     >
-      <BrokerPanel f={AT} structure={false} />
+      <BrokerPanel f={AT} structure={false} portfolio />
     </div>
   );
 };
