@@ -174,6 +174,18 @@ const LIST = {
   size: 24,
 };
 
+/**
+ * What the PORTFOLIO variant moves — see `portfolio` on BrokerPanel.
+ *
+ * ⚠ THE DROP IS THE WHOLE POINT OF IT — Simon: "beri jarak antara Portfolio
+ * dengan semua text dan elemen di bawahnya". A watchlist's title sits straight
+ * on its rows because there is nothing between them; a portfolio has a column
+ * heading in there, and a title, a heading and a first row stacked at a
+ * watchlist's spacing read as three rows of a list rather than as a title over
+ * a table.
+ */
+const PF = { drop: 34, head: 38, weight: 400 };
+
 export const FRAMES = ["5m", "15m", "1H", "1D", "1W"];
 /** Every screenshot is a DAILY chart, so 1D is the live pill throughout. */
 export const ACTIVE = "1D";
@@ -1123,14 +1135,19 @@ export const BrokerPanel = ({
               <div
                 style={{
                   position: "absolute",
-                  left: LIST.pad + LIST.avatar + 14,
+                  /* ⚠ "Stock" IS LEFT-ALIGNED TO THE LIST, NOT TO THE CODES —
+                     Simon. The column it names starts at the avatar, and the
+                     avatar starts here. */
+                  left: LIST.pad,
                   right: LIST.pad,
-                  top: LIST.rowTop - 36,
+                  top: LIST.rowTop + PF.drop - PF.head,
                   display: "flex",
                   justifyContent: "space-between",
                   fontFamily: font,
                   fontSize: LIST.size - 2,
-                  fontWeight: UI.weight,
+                  /* ⚠ THIN — Simon. A column heading that weighs the same as
+                     the rows under it is another row. */
+                  fontWeight: PF.weight,
                   color: C.textMuted,
                 }}
               >
@@ -1148,7 +1165,7 @@ export const BrokerPanel = ({
                   style={{
                     position: "absolute",
                     left: 0,
-                    top: LIST.rowTop + i * LIST.rowH,
+                    top: LIST.rowTop + (portfolio ? PF.drop : 0) + i * LIST.rowH,
                     width: LIST.w,
                     height: LIST.rowH,
                     boxSizing: "border-box",
