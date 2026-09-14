@@ -55,11 +55,16 @@ const TOUCH = {
 const BLOB = R.w * 2.2;
 
 /**
- * The big numeral's offset from the card's bottom-centre — Simon's, and he has
- * moved it twice: 40px right, then 50 more, then 20 up off the edge. Kept as one
- * pair rather than folded into the style so the next nudge is one number.
+ * The big numeral's offset from the card's bottom-centre — Simon's, settled at
+ * 60 right and 20 up. Kept as one pair rather than folded into the style so the
+ * next nudge is one number.
+ *
+ * ⚠ 60 IS AS FAR RIGHT AS THE DIGITS GO. At 90 the card's own clip started
+ * cutting 2, 3 and 5 down their right-hand side — a crop that reads as a
+ * mistake, where the bottom crop reads as a page number. The numeral is meant
+ * to be cut by ONE edge, and that edge is the bottom one.
  */
-const NUM = { dx: 90, dy: -20 } as const;
+const NUM = { dx: 60, dy: -20 } as const;
 
 const Card = ({ i, title }: { i: number; title: string }) => {
   const f = useCurrentFrame();
