@@ -40,6 +40,7 @@ import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
 import { MistakeCard, TOUCH } from "./MistakeCard";
+import { MistakeRow } from "./MistakeRow";
 import {
   CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
 } from "../data/series";
@@ -437,81 +438,11 @@ export const CardListFadeIn = () => {
 /**
  * ═══ THE SECOND ROUND ═══  Simon, from 4046.
  *
- * ⚠ THE SAME SIX CARDS, NOT A SECOND LIST. Same component, same row geometry,
- * same pointer — what has changed is which one is being picked and that the
- * first one is finished. Drawn fresh rather than reusing round one's `Card`
- * because the two rounds do genuinely different things with them: the first
- * dealt them and took one away to become a chart, this one brings the row back
- * and marks one off.
+ * ⚠ THE SAME SIX CARDS, NOT A SECOND LIST — and now literally the same drawing
+ * as the third round: see scenes/MistakeRow.tsx. What this wrapper still owns
+ * is the clock, because round two counts in CardList's own window.
  */
-const Row2 = () => {
-  const f = useCurrentFrame();
-  const V2 = V.row2;
-  if (f < V2.at) return null;
-  /**
-   * ⚠ THEY START OUTSIDE THE FRAME AND FAR APART — Simon, twice over.
-   *
-   * The first card begins just past the right edge, so nothing pops into
-   * existence; the rest begin at four times the resting gap behind it, so the
-   * row arrives as a loose pack and closes up on the way in. Six different
-   * distances on ONE curve — the difference between them is the gathering, and
-   * nothing has to be animated twice to produce it.
-   */
-  const t = progressInOut(f, V2.at, V2.over);
-  const wide = R.w + R.gap * V2.spread;
-  const from0 = theme.canvas.width + 40;
-  const startX = (i: number) => from0 + i * wide;
-  /**
-   * ⚠ AND OUT ONE AT A TIME, FROM THE FAR END — Simon. Same distance for every
-   * card, staggered starts: the one nearest the edge goes first, because they
-   * are all travelling right and a card that set off before the one in front of
-   * it would drive into it. The stagger is also what opens the gaps, so there
-   * is no separate spreading to arrange.
-   */
-  const outAt = (i: number) => V2.out.at + (V.titles.length - 1 - i) * V2.out.step;
-  const outX = (i: number) => progressInOut(f, outAt(i), V2.out.over) * AWAY;
-  /** The pointer goes with the first card that leaves. */
-  const leave = progressInOut(f, V2.out.at, V2.out.over);
-
-  /** The pointer's target on the card it picks — the same spot on the card that
-   *  round one used, so the two picks read as the same gesture. */
-  const land = {
-    x: R.x(V2.cursor.card) + R.w * TOUCH.fx,
-    y: R.y + R.h * TOUCH.fy,
-  };
-  const walk = progressInOut(f, V2.cursor.at, V2.cursor.over);
-  const from = { x: theme.canvas.width + 60, y: theme.canvas.height + 60 };
-
-  return (
-    <>
-      {V.titles.map((title, i) => (
-        <MistakeCard
-          key={title}
-          n={i + 1}
-          title={title}
-          box={{
-            x: startX(i) + (R.x(i) - startX(i)) * t + outX(i),
-            y: R.y,
-            w: R.w,
-            h: R.h,
-          }}
-          /** ⚠ A DONE CARD IS FULLY FLOODED AND IN THE OTHER TONE. It does not
-           *  animate: it arrives already finished, which is what "done" looks
-           *  like. */
-          done={(V2.done as readonly number[]).includes(i)}
-          wet={i === V2.cursor.card ? progress(f, V2.hover.at, V2.hover.over) : 0}
-        />
-      ))}
-      {/** ⚠ THE POINTER GOES WHEN THE ROW DOES. It picked one; there is nothing
-        *  for it to be doing while the list leaves. */}
-      <Cursor
-        x={from.x + (land.x - from.x) * walk}
-        y={from.y + (land.y - from.y) * walk}
-        opacity={walk > 0.001 ? 1 - leave : 0}
-      />
-    </>
-  );
-};
+const Row2 = () => <MistakeRow f={useCurrentFrame()} V2={V.row2} />;
 
 export const CardList = () => {
   const f = useCurrentFrame();

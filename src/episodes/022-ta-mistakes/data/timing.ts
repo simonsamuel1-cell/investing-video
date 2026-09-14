@@ -733,6 +733,39 @@ export const PLAT = {
   note: { at: 4944, perChar: 2 },
 } as const;
 
+/**
+ * ═══ SCENE TRANSISI 3 ═══  Simon, from 5045: the platform leaves UPWARD and the
+ * list comes back for mistake 03.
+ *
+ * ⚠ THE SAME SHAPE AS THE SECOND ROUND, offset. Every beat here is the second
+ * round's own offset from its start, carried onto this one — "cara masuk dan
+ * keluarnya sama". What differs is which card is picked and how many are done,
+ * which is the only thing that SHOULD differ between two turns of one list.
+ *
+ * ⚠ AND EVERY NUMBER IS GLOBAL. Round two counts inside CardList's window;
+ * this round is its own window, so the two tables cannot be read the same way
+ * and nothing here may be derived from that one.
+ */
+export const ROW3 = {
+  from: 5045,
+  over: 236,
+  /** ⚠ UP, NOT LEFT — Simon. The platform is a window onto a screen; a screen
+   *  that slides sideways reads as another screen arriving, one that lifts away
+   *  reads as this one being put down. */
+  away: { at: 5045, over: 44 },
+  row: {
+    at: 5045,
+    over: 60,
+    spread: 4,
+    /** ⚠ THE THIRD CARD THIS TIME. */
+    cursor: { at: 5085, over: 34, card: 2 },
+    hover: { at: 5117, over: 46 },
+    /** ⚠ TWO DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1],
+    out: { at: 5226, step: 4, over: 34 },
+  },
+} as const;
+
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
   fromUs: 4103,
