@@ -320,10 +320,11 @@ export const CARD_LIST = {
    *
    * ⚠ AND IT NOW RUNS PAST SC06'S START, because the second Scene Transisi is
    * this layer's too: at 4046 everything leaves to the left and the six cards
-   * come back for mistake 02. The window ends once that flood has settled, so
-   * SC06 is covered for its first 133 frames and shows from 4180.
+   * come back for mistake 02. Simon: overlapping SC06 is fine, so the window
+   * runs to 4245 — the flood settles at 4164 and the row then stands for 81
+   * frames, which is room for whatever comes next rather than a held ending.
    */
-  over: 2176,
+  over: 2252,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
