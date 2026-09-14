@@ -422,11 +422,11 @@ export const CARD_LIST = {
    * What is below the level is the trade going wrong, and that is worth
    * watching happen bar by bar.
    *
-   * Nineteen bars across 739 frames — the last two of the fall and all
-   * seventeen of the grind — each taking 55 to come out and the next starting
-   * 38 later, so the last lands on 3822.
+   * Nineteen bars across 433 frames — the last two of the fall and all
+   * seventeen of the grind — each taking 37 to come out and the next starting
+   * 22 later, so the last lands on 3516.
    */
-  reveal: { at: 1089, step: 38, over: 55 },
+  reveal: { at: 1089, step: 22, over: 37 },
 
   /**
    * ⚠ THE LEVEL FLASHES AS IT GOES — Simon, from 2751, three times. It is the
@@ -449,15 +449,17 @@ export const CARD_LIST = {
    * a position that has already broken its own reason. Curly, like the other
    * quoted speech in this episode.
    *
-   * ⚠ EACH IS PINNED TO THE BAR ARRIVING ON ITS FRAME, not to a coordinate.
-   * The frame decides which bar that is, so re-timing the reveal moves the
-   * words with the candles instead of leaving them behind.
+   * ⚠ EACH IS PINNED TO A BAR, AND THE BAR IS NOW FIXED — Simon: "lock posisi".
+   * They were derived from whichever candle was arriving on their frame, which
+   * was right while the reveal's schedule was still being decided and is wrong
+   * now that it is: shortening the reveal to 3516 would have slid both words
+   * four bars to the right. The indices are what that derivation gave, frozen.
    */
   hopes: {
     out: 1669,
     said: [
-      { text: "“Sedikit lagi”", at: 1300, above: true },
-      { text: "“Mungkin nanti balik”", at: 1373, above: false },
+      { text: "“Sedikit lagi”", at: 1300, above: true, bar: 45 },
+      { text: "“Mungkin nanti balik”", at: 1373, above: false, bar: 47 },
     ],
   },
 

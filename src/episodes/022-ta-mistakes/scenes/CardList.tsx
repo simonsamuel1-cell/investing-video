@@ -138,9 +138,11 @@ const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
 /**
  * ═══ THE TWO SENTENCES, PINNED TO THE BARS THEY LAND ON ═══  (Simon)
  *
- * ⚠ THE BAR IS FOUND FROM THE FRAME, not typed. Each pill goes over the candle
- * that is arriving as it appears, so the reveal's own schedule decides which
- * one that is — re-time the reveal and the words follow the candles.
+ * ⚠ THE BAR IS FIXED — Simon: "lock posisi". It used to be found from the
+ * frame, which was right while the reveal's schedule was still moving; frozen,
+ * these two words stay where he has seen them however the reveal is re-timed.
+ * The heights below are still solved, because those depend on the tape and not
+ * on the clock.
  *
  * ⚠ AND THE PILL CLEARS EVERY BAR IT SPANS, not just the one it names. A pill
  * is 300–420px wide and the tape keeps moving under it until 3663; hugging only
@@ -177,14 +179,13 @@ const pillWidth = (s: string) => s.length * SAID_TYPE.size * 0.5 + SAID_TYPE.siz
 const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
 
 const SAID = V.hopes.said.map((q) => {
-  const i = SEEN_TO + 1 + Math.floor((q.at - V.reveal.at) / V.reveal.step);
-  const x = ZOOM_GRID.x(i);
+  const x = ZOOM_GRID.x(q.bar);
   const half = pillWidth(q.text) / 2;
   const near = CARD_ALL.filter((_, k) => Math.abs(ZOOM_GRID.x(k) - x) <= half);
   const y = q.above
     ? Math.min(...near.map((b) => ZOOM_GRID.y(b.h))) - PILL.gap - PILL.h / 2
     : Math.max(...near.map((b) => ZOOM_GRID.y(b.l))) + PILL.gap + PILL.h / 2;
-  return { ...q, i, x, y, half };
+  return { ...q, x, y, half };
 });
 
 /**
