@@ -32,9 +32,10 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Chip, Cursor, Level, Line, PositionTool, SpeechBubble,
-  candleWidth, extendGrid, gridOf, lerpBox, lerpGrid, progress, progressInOut,
-  textReveal, theme, useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Chip, Cursor, DashedBox, Level, Line, PositionTool,
+  SpeechBubble, candleWidth, dashOpenAt, extendGrid, gridOf, lerpBox, lerpGrid,
+  progress, progressInOut, ramp, textReveal, theme, useMotion, usePalette,
+  useShadow,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
@@ -197,6 +198,37 @@ const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
  * a position tool is drawn forward from the entry, over the ground the trade
  * has yet to cover.
  */
+/**
+ * ═══ THE NOTE'S BOX ═══  Simon: "overlap aja dengan chart bagian bawah (bagian
+ * yang masih banyak white space)".
+ *
+ * ⚠ THE WHITE SPACE IS SOLVED, NOT EYEBALLED. It is white until the twelve bars
+ * fall back into it, and by the end of that fall the rightmost one reaches
+ * 713px — a box placed on the paper it sees at 3896 would be sitting on three
+ * candles by 4004. So the top is taken from the LOWEST thing the card will ever
+ * hold and the bottom from the card's own floor, and what is left in between is
+ * the box. It cannot cover anything, and it does not have to be re-checked when
+ * the tape changes.
+ *
+ * ⚠ THIS BOX CANNOT LIVE IN data/layout.ts, and that is the reason: it is
+ * derived from the TAPE, and layout does not know about series.
+ */
+const CARD_NOTE = (() => {
+  const pad = 26;
+  const gap = 14;
+  const floor = Math.max(
+    ...CARD_ALL.slice(SEEN_FROM, SEEN_TO + 1).map((b) => ZOOM_GRID.y(b.l)),
+    ZOOM_GRID.y(CARD_ENTRY - (CARD_ENTRY - CARD_SUPPORT) * 2),
+  );
+  const y = floor + gap;
+  return {
+    x: CARD_OPEN.x + pad,
+    y,
+    w: CARD_OPEN.w - pad * 2,
+    h: CARD_OPEN.y + CARD_OPEN.h - gap - y,
+  };
+})();
+
 const TOOL = (() => {
   /** ⚠ SIMON'S "+100%". One number, and both halves follow it. */
   const reach = (CARD_ENTRY - CARD_SUPPORT) * 2;
@@ -438,6 +470,46 @@ const Card = ({ i, title }: { i: number; title: string }) => {
   );
 };
 
+/**
+ * ⚠ THE SENTENCE IS SIMON'S, VERBATIM. It is the point of the whole stretch:
+ * not that the tool predicts anything, but that it tells you when what you
+ * expected has stopped happening.
+ */
+const NOTE = "Jadi tahu kapan tidak sesuai rencana";
+
+const Note = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const c = usePalette();
+  /** ⚠ THE TYPING WAITS FOR THE FRAME TO SNAP OPEN. `dashOpenAt` is the one
+   *  answer to "when may my content start"; guessed, it arrives while the box
+   *  is still a sliver. */
+  const open = dashOpenAt(V.note.at, m);
+  const shown = NOTE.slice(0, Math.floor(ramp(f, open, NOTE.length * V.note.perChar) * NOTE.length));
+  return (
+    <DashedBox x={CARD_NOTE.x} y={CARD_NOTE.y} w={CARD_NOTE.w} h={CARD_NOTE.h} at={V.note.at}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "0 28px",
+          textAlign: "center",
+          fontFamily: theme.text.family,
+          fontSize: theme.text.body.size,
+          fontWeight: 800,
+          lineHeight: 1.25,
+          color: c.ink,
+        }}
+      >
+        {shown}
+      </div>
+    </DashedBox>
+  );
+};
+
 export const CardList = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -554,7 +626,21 @@ export const CardList = () => {
                  *  because it is the trade going wrong and that is worth
                  *  watching happen. */
                 progressInOut(f, V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step, V.reveal.over);
-          return arrive * gone(i);
+          /**
+           * ⚠ AND THE TWELVE COME BACK — Simon, from 3832. `max` rather than a
+           * branch: the rewind has taken this bar to nothing by then, so
+           * whichever of the two runs is showing more of it IS the bar, and
+           * neither run has to know about the other.
+           */
+          const again =
+            i <= SEEN_TO
+              ? progressInOut(
+                  f,
+                  V.again.at + (k - CARD_TAPE.length) * V.again.step,
+                  V.again.over,
+                )
+              : 0;
+          return Math.max(arrive * gone(i), again);
         }}
       />
 
@@ -601,6 +687,13 @@ export const CardList = () => {
          *  shrinks, and the position tool marks the same price properly. */
         opacity={1 - progress(f, V.rev.card.at, V.rev.card.over)}
       />
+
+      {/* ═══ THE NOTE ═══  Simon, over the card's empty lower half.
+          ⚠ TYPED, like the other dashed note in this episode — he asked for
+          that treatment the last time this object appeared, and a frame that
+          snaps open onto finished text reads as a caption rather than as
+          something being written down. */}
+      <Note />
 
       {/* ═══ THE TOOL ═══  Simon's screenshot, after the rewind.
           ⚠ IT IS THE ANSWER TO THE MISTAKE, not decoration. Everything before

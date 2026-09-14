@@ -455,6 +455,21 @@ export const CARD_LIST = {
   tool: { at: 1620, over: 34 },
 
   /**
+   * ⚠ AND THE FALL IS RUN AGAIN — Simon, from 3832. Twelve bars down to the
+   * right, on the same beat they had the first time, because it is the same
+   * twelve bars: what changed between the two runs is not the market, it is
+   * that a line has been drawn saying when to stop.
+   */
+  again: { at: 1838, step: 14, over: 18 },
+
+  /**
+   * ⚠ THE SENTENCE THE WHOLE STRETCH HAS BEEN FOR. Stamped in a dashed frame
+   * over the empty lower half of the card — a note written on the chart, which
+   * is what it is.
+   */
+  note: { at: 1902, perChar: 2 },
+
+  /**
    * ⚠ THE LEVEL FLASHES AS IT GOES — Simon, from 2751, three times. It is the
    * one moment in this card where the line is doing something rather than just
    * being somewhere: price is closing through it as it blinks.
