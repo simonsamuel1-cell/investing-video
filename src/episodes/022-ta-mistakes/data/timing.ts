@@ -388,14 +388,17 @@ export const CARD_LIST = {
    * design — one move, not a grow and then a separate shrink.
    */
   /**
-   * ⚠ MOVED TO 3083 — Simon: the widening used to start at 2660 and he has
-   * shifted it to the old SC05 boundary. Everything else in this block is where
-   * it was; only these two moved, and they moved TOGETHER by the same 423
-   * frames, because they are one gesture. Left behind, the chart would zoom out
-   * inside a card that is still 640 wide, which is not a zoom, it is a shrink.
+   * ⚠ THE TWO ARE NOT ONE GESTURE ANY MORE — Simon: "aku hanya minta timing
+   * pelebaran width nya saja". The card opens at 3083; the chart zooms out
+   * where it always did, at 2676, inside a card that is still 640 wide.
+   *
+   * ⚠ WHICH MEANS THE CARD SHOWS LESS OF THE TAPE FOR THOSE 407 FRAMES, and
+   * that is a consequence of the split, not a bug: zooming out moves the tape
+   * 150px left, and a 640-wide card cannot hold what was only just fitting in
+   * it. The window solves itself around it — see `windowOf` in CardList.
    */
   grow: { at: 1089, over: 48 },
-  zoom: { at: 1105, over: 48 },
+  zoom: { at: 682, over: 48 },
   /**
    * ⚠ SIX, AND SIX IS WHAT THE SMALL CARD CAN HOLD — Simon: "candlestick yang
    * muncul (di bawah garis support) hanya 6 saja". It is the mask that enforces

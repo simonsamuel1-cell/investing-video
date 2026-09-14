@@ -36,6 +36,7 @@ import {
   gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal, theme,
   useMotion, usePalette, useShadow,
 } from "../../../core";
+import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
 import {
@@ -133,26 +134,6 @@ const ZOOM_GRID = extendGrid(
 const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
 
 /**
- * ═══ THE SMALL CARD'S WINDOW ═══  Simon: "candlestick yang muncul (di bawah
- * garis support) hanya 6 saja".
- *
- * ⚠ THE SIX IS A MASK, NOT A TAPE. The fall and the grind keep the schedule
- * they were locked at; what changes is how much of the card is window. Cutting
- * the series to six instead would have thrown away the chart that the zoom-out
- * at 3083 exists to reveal.
- *
- * ⚠ ITS LEFT EDGE IS THE PLOT'S, SO THE HISTORY STAYS HIDDEN; its right edge is
- * SOLVED from where the sixth bar ends, so the seventh is fully outside rather
- * than sliced. A typed number here would cut a candle in half the first time
- * anything about the row moved.
- */
-const SMALL_MASK = (() => {
-  const last = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
-  const right = TAPE_GRID.x(last) + candleWidth(TAPE_GRID) / 2 + 1;
-  return { x: O.plot.x, y: O.plot.y, w: right - O.plot.x, h: O.plot.h };
-})();
-
-/**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
  * of it that means anything — it is what says WHICH bar the trade was taken on
  * — so the anchor is solved from the tip backwards through the tail's own
@@ -179,6 +160,40 @@ const BUY_AT = (() => {
  * to be cut by ONE edge, and that edge is the bottom one.
  */
 const NUM = { dx: 60, dy: -20 } as const;
+
+/**
+ * ═══ THE SMALL CARD'S WINDOW ═══  Simon: "candlestick yang muncul (di bawah
+ * garis support) hanya 6 saja".
+ *
+ * ⚠ THE SIX IS A MASK, NOT A TAPE. The fall and the grind keep the schedule
+ * they were locked at; what changes is how much of the card is window. Cutting
+ * the series to six instead would have thrown away the chart that the card
+ * opening at 3083 exists to reveal.
+ *
+ * ⚠ AND IT IS SOLVED PER FRAME, because the grid moves under it. The zoom-out
+ * at 2676 happens while the card is still 640 wide, so a window worked out once
+ * at the small scale would be in the wrong place for the rest of the scene.
+ *
+ * ⚠ BOTH EDGES LAND IN A GAP BETWEEN TWO BARS, never through one. Three things
+ * want to cut this window — the history has to stay hidden, the card has an
+ * edge, and Simon's six is a cap — and any of them landing mid-candle would
+ * show half a bar, which reads as a rendering fault rather than as a window.
+ */
+const windowOf = (g: Grid, box: { x: number; y: number; w: number; h: number }) => {
+  const half = candleWidth(g) / 2;
+  /** The clear air between bar i and bar i+1. */
+  const gap = (i: number) => (g.x(i) + half + (g.x(i + 1) - half)) / 2;
+  const first = CARD_HEAD_N;
+  const capped = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
+
+  /** ⚠ THE HISTORY IS HIDDEN, AND SO IS ANYTHING PAST THE CARD'S OWN EDGE. */
+  let lo = first - 1;
+  while (lo < capped - 1 && gap(lo) < box.x) lo++;
+  let hi = capped;
+  while (hi > lo + 1 && gap(hi) > box.x + box.w) hi--;
+
+  return { x: gap(lo), y: box.y, w: gap(hi) - gap(lo), h: box.h };
+};
 
 const Card = ({ i, title }: { i: number; title: string }) => {
   const f = useCurrentFrame();
@@ -359,17 +374,21 @@ export const CardList = () => {
     progressInOut(f, V.grow.at, V.grow.over),
   );
   const inner: [number, number] = [card.x + O.pad, card.x + card.w - O.pad];
-  /**
-   * ⚠ THE WINDOW THE TAPE IS SEEN THROUGH — Simon: the extra candles exist from
-   * the start and are simply masked until the preview opens out. It starts as
-   * the plot box, which is exactly the ten bars and nothing either side of
-   * them, and widens to the grown card. Nothing is added when it opens; what
-   * was always laid out stops being hidden.
-   */
-  const mask = lerpBox(SMALL_MASK, CARD_GROWN, progressInOut(f, V.grow.at, V.grow.over));
   /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
    *  two grids and not a transform. */
   const grid = lerpGrid(TAPE_GRID, ZOOM_GRID, progressInOut(f, V.zoom.at, V.zoom.over));
+  /**
+   * ⚠ THE WINDOW THE TAPE IS SEEN THROUGH — Simon: the extra candles exist from
+   * the start and are simply masked until the preview opens out. It is solved
+   * against the LIVE grid, because the zoom moves the bars under it long before
+   * the card opens; widened to the grown card, it stops hiding what was always
+   * laid out rather than adding anything.
+   */
+  const mask = lerpBox(
+    windowOf(grid, { x: O.x, y: O.y, w: O.w, h: O.h }),
+    CARD_GROWN,
+    progressInOut(f, V.grow.at, V.grow.over),
+  );
 
   const walk = progress(f, V.cursor.at, V.cursor.over);
   const from = { x: theme.canvas.width + 60, y: theme.canvas.height + 60 };
@@ -547,18 +566,24 @@ export const CardList = () => {
   if (!(lastTail <= zoomStart || CARD_LIST.fall.at >= zoomEnd)) {
     throw new Error("022-ta-mistakes/CardList: bars are still arriving while the chart is zooming");
   }
-  /** ⚠ AND THE SIX HAVE TO BE SIX. The window's right edge must clear the sixth
-   *  bar whole and leave the seventh entirely outside, and the whole thing must
-   *  still fit the card it is a window into. */
-  {
-    const i = CARD_HEAD_N + CARD_TAPE.length + CARD_LIST.seen;
-    const right = SMALL_MASK.x + SMALL_MASK.w;
-    const nextLeft = TAPE_GRID.x(i) - candleWidth(TAPE_GRID) / 2;
-    if (nextLeft < right) {
-      throw new Error(`022-ta-mistakes/CardList: bar ${CARD_LIST.seen + 1} below the support is sliced by the window`);
+  /** ⚠ AND THE SIX HAVE TO BE SIX, AT BOTH SCALES THE SMALL CARD EVER HOLDS.
+   *  The window is solved per frame, so what is checked here is that the solve
+   *  lands where it is supposed to: inside the card, cutting between bars, and
+   *  never showing a seventh bar below the support. */
+  for (const [name, g] of [["before the zoom", TAPE_GRID], ["after it", ZOOM_GRID]] as const) {
+    const box = { x: CARD_OPEN.x, y: CARD_OPEN.y, w: CARD_OPEN.w, h: CARD_OPEN.h };
+    const win = windowOf(g, box);
+    const half = candleWidth(g) / 2;
+    const right = win.x + win.w;
+    if (win.x < box.x - 0.5 || right > box.x + box.w + 0.5) {
+      throw new Error(`022-ta-mistakes/CardList: the window ${name} leaves the small card`);
     }
-    if (right > CARD_OPEN.x + CARD_OPEN.w) {
-      throw new Error("022-ta-mistakes/CardList: the window for the six reaches past the small card");
+    const seventh = CARD_HEAD_N + CARD_TAPE.length + CARD_LIST.seen;
+    if (g.x(seventh) - half < right) {
+      throw new Error(`022-ta-mistakes/CardList: a seventh bar below the support shows ${name}`);
+    }
+    if (g.x(CARD_HEAD_N - 1) + half > win.x) {
+      throw new Error(`022-ta-mistakes/CardList: the history shows ${name}`);
     }
   }
   /** And it has to fit the card it grinds along the bottom of. */
