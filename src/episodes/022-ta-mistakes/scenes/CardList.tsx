@@ -54,8 +54,12 @@ const TOUCH = {
  */
 const BLOB = R.w * 2.2;
 
-/** The big numeral's offset from the card's bottom-centre — Simon's 40px. */
-const NUM = { dx: 40 } as const;
+/**
+ * The big numeral's offset from the card's bottom-centre — Simon's, and he has
+ * moved it twice: 40px right, then 50 more, then 20 up off the edge. Kept as one
+ * pair rather than folded into the style so the next nudge is one number.
+ */
+const NUM = { dx: 90, dy: -20 } as const;
 
 const Card = ({ i, title }: { i: number; title: string }) => {
   const f = useCurrentFrame();
@@ -108,22 +112,20 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           number printed under everything else. The card's own `overflow` does
           the cutting, so the mask can never drift off the shape it belongs to.
 
-          ⚠ ANCHORED ON THE CARD'S BOTTOM-CENTRE, then 40px right — his offset,
-          measured from the centre so it stays put whatever the card's width
-          becomes. */}
+          ⚠ ANCHORED ON THE CARD'S BOTTOM-CENTRE, then moved by NUM — his
+          offsets, measured from that corner-less anchor so they stay put
+          whatever the card's width and height become. */}
       <div
         style={{
           position: "absolute",
           left: R.w / 2 + NUM.dx,
-          top: R.h,
+          top: R.h + NUM.dy,
           /**
-           * ⚠ THE BASELINE SITS ON THE CARD'S BOTTOM EDGE — Simon: "angkanya ga
-           * keliatan, geser naik hingga keliatan". Centred on that edge the
-           * bottom half of every digit was gone. The percentage is of the
-           * numeral's OWN box, so it holds at any size: a line box is `size`
-           * tall with the baseline about 78% down it, and 90% leaves the glyph
-           * whole with only its descender space cropped — still masked, still
-           * read as a number printed under the card rather than placed in it.
+           * ⚠ THE PERCENTAGE IS THE SIT, THE PIXELS ARE THE NUDGE. -90% is of
+           * the numeral's OWN box, so the glyph lands whole on the card's
+           * bottom edge at any size; NUM.dy is Simon's 20px on top of that.
+           * Kept apart on purpose — re-sizing the card must not undo his nudge,
+           * and his nudge must not have to be re-derived when it is re-sized.
            */
           transform: "translate(-50%, -90%)",
           fontFamily: theme.text.family,
