@@ -135,9 +135,10 @@ const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
  *  the window until it opens. */
 const SEEN_FROM = CARD_HEAD_N;
 const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
-/** How many bars the window is hiding, and therefore how many the reveal has
- *  to hand over one at a time. */
-const HIDDEN = CARD_ALL.length - (SEEN_TO - SEEN_FROM + 1);
+/** How many bars sit BELOW the level and behind the window — the ones the
+ *  reveal has to hand over one at a time. The history is above it and is not
+ *  part of this. */
+const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -453,16 +454,20 @@ export const CardList = () => {
            * waits for the card to open and then comes out one at a time —
            * Simon: "tidak langsung muncul semua".
            */
-          if (i >= SEEN_FROM && i <= SEEN_TO) {
+          /** ⚠ THE HISTORY DOES NOT ARRIVE, IT IS UNCOVERED — Simon: the one
+           *  at a time is for what is below the level. Nothing happened to
+           *  these bars; they were out of frame, and the card opening is the
+           *  whole of their story. */
+          if (i < SEEN_FROM) return progressInOut(f, V.tape.at, V.tape.over);
+          if (i <= SEEN_TO) {
             const k = i - SEEN_FROM;
             return k < CARD_TAPE.length
               ? progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over)
               : progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over);
           }
-          /** ⚠ IN INDEX ORDER, so the chart fills left to right: the history
-           *  first, then what is left of the fall and the grind after it. */
-          const rank = i < SEEN_FROM ? i : SEEN_FROM + (i - SEEN_TO - 1);
-          return progressInOut(f, V.reveal.at + rank * V.reveal.step, V.reveal.over);
+          /** ⚠ AND WHAT IS BELOW IT ARRIVES IN ORDER, left to right, because it
+           *  is the trade going wrong and that is worth watching happen. */
+          return progressInOut(f, V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step, V.reveal.over);
         }}
       />
 
@@ -610,6 +615,19 @@ export const CardList = () => {
    *  was hiding can only start arriving once the window has started opening. */
   if (CARD_LIST.reveal.at < CARD_LIST.grow.at) {
     throw new Error("022-ta-mistakes/CardList: hidden bars arrive before the card opens");
+  }
+  /** ⚠ AND THE REVEAL IS EXACTLY WHAT IS BELOW THE LEVEL. Simon's rule is about
+   *  the level, not about the window, so the split has to be checked against
+   *  the tape rather than trusted to line up. */
+  for (let i = SEEN_TO + 1; i < CARD_ALL.length; i++) {
+    if (CARD_ALL[i].h > CARD_SUPPORT) {
+      throw new Error(`022-ta-mistakes/CardList: bar ${i} arrives one at a time but is not below the support`);
+    }
+  }
+  for (let i = 0; i < SEEN_FROM; i++) {
+    if (CARD_ALL[i].l < CARD_SUPPORT) {
+      throw new Error(`022-ta-mistakes/CardList: history bar ${i} is below the support but is only uncovered`);
+    }
   }
   /** ⚠ NO BAR MAY LAND WHILE THE GRID IS MOVING. Where the zoom sits relative
    *  to the tape is Simon's to choose — it used to be after it and is now

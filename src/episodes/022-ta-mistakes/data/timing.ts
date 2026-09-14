@@ -412,20 +412,21 @@ export const CARD_LIST = {
    *  did, so the fall is the same tape continuing and not a second chart. */
   fall: { at: 746, step: 14, over: 18 },
   /**
-   * ═══ AND EVERYTHING ELSE ARRIVES WHEN THE CARD OPENS ═══  Simon: "candlestick
-   * tidak langsung muncul semua, tapi muncul satu per satu, animasinya selesai
-   * 3822".
+   * ═══ WHAT IS BELOW THE LEVEL ARRIVES ONE AT A TIME ═══  Simon: "animasi
+   * candlestick satu per satu, hanya berlaku pada candlesticks di bawah garis
+   * support".
    *
-   * ⚠ THE MASK NO LONGER HANDS THEM OVER IN ONE GO. Every bar the small card
-   * was hiding — eighteen of history, the last two of the fall, all seventeen
-   * of the grind — comes out on its own beat, in order, left to right. The
-   * window opening is what makes them possible; this is what makes them happen.
+   * ⚠ AND ONLY WHAT IS BELOW IT. The eighteen bars of history are above the
+   * level and were always there — the card opening is the whole of their
+   * arrival, because nothing happened to them, they were simply out of frame.
+   * What is below the level is the trade going wrong, and that is worth
+   * watching happen bar by bar.
    *
-   * Thirty-seven bars across 739 frames, each taking 55 to come out and the
-   * next starting 19 later, so three are always on the way at once and the last
-   * lands on 3822.
+   * Nineteen bars across 739 frames — the last two of the fall and all
+   * seventeen of the grind — each taking 55 to come out and the next starting
+   * 38 later, so the last lands on 3822.
    */
-  reveal: { at: 1089, step: 19, over: 55 },
+  reveal: { at: 1089, step: 38, over: 55 },
 
   /**
    * ⚠ THE LEVEL FLASHES AS IT GOES — Simon, from 2751, three times. It is the
