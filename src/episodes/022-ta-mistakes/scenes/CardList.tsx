@@ -54,6 +54,9 @@ const TOUCH = {
  */
 const BLOB = R.w * 2.2;
 
+/** The big numeral's offset from the card's bottom-centre — Simon's 40px. */
+const NUM = { dx: 40 } as const;
+
 const Card = ({ i, title }: { i: number; title: string }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -98,6 +101,33 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           }}
         />
       )}
+      {/* ═══ THE NUMBER ═══  (Simon)
+          ⚠ IT HANGS OFF THE BOTTOM EDGE AND THE CARD CUTS IT. That is what the
+          masking is FOR — a numeral this size placed safely inside the card is
+          just a big grey digit, while one the card crops reads as a page
+          number printed under everything else. The card's own `overflow` does
+          the cutting, so the mask can never drift off the shape it belongs to.
+
+          ⚠ ANCHORED ON THE CARD'S BOTTOM-CENTRE, then 40px right — his offset,
+          measured from the centre so it stays put whatever the card's width
+          becomes. */}
+      <div
+        style={{
+          position: "absolute",
+          left: R.w / 2 + NUM.dx,
+          top: R.h,
+          transform: "translate(-50%, -50%)",
+          fontFamily: theme.text.family,
+          /** ⚠ A THIRD OF THE CARD, not a typed size. */
+          fontSize: R.h / 3,
+          fontWeight: 800,
+          lineHeight: 1,
+          color: c.muted,
+        }}
+      >
+        {i + 1}
+      </div>
+
       {/* ⚠ THE TITLE STAYS DARK, as it does in the reference. The flood is a
           bottom-up thing and the title is at the top; a white copy cross-faded
           in under it would be white type on the pale part of the card, which is
