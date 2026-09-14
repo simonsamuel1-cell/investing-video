@@ -18,7 +18,7 @@
  */
 import { Sequence, useCurrentFrame } from "remotion";
 import { progressInOut, theme, usePalette } from "../../../core";
-import { BLOCK, ROW3 } from "../data/timing";
+import { BLOCK, CARD_LIST, ROW3 } from "../data/timing";
 import { MistakeRow } from "./MistakeRow";
 import { Platform } from "./Platform";
 
@@ -47,3 +47,21 @@ export const CardList3 = () => {
     </div>
   );
 };
+
+/** Kept honest: the same three things the second round is checked for. */
+{
+  const V = ROW3.row;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/CardList3: ${m}`);
+  };
+  if (V.hover.at + V.hover.over > V.out.at) {
+    fail("the row starts leaving while its flood is still spreading");
+  }
+  const last = V.out.at + (CARD_LIST.titles.length - 1) * V.out.step + V.out.over;
+  if (last > ROW3.from + ROW3.over) {
+    fail(`the last card clears at ${last}, past the window's end`);
+  }
+  if (ROW3.away.at < ROW3.from) {
+    fail("the platform starts leaving before this layer is mounted");
+  }
+}

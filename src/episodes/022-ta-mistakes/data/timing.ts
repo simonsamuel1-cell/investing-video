@@ -748,7 +748,10 @@ export const PLAT = {
  */
 export const ROW3 = {
   from: 5045,
-  over: 236,
+  /** ⚠ IT ENDS ON THE FRAME THE LAST CARD CLEARS. Simon moved the exit forward
+   *  to 5192; six cards four frames apart, each taking 34, puts the last one
+   *  off screen at 5246. */
+  over: 202,
   /** ⚠ UP, NOT LEFT — Simon. The platform is a window onto a screen; a screen
    *  that slides sideways reads as another screen arriving, one that lifts away
    *  reads as this one being put down. */
@@ -762,7 +765,10 @@ export const ROW3 = {
     hover: { at: 5117, over: 46 },
     /** ⚠ TWO DONE NOW. The list is a syllabus, and it keeps what it has done. */
     done: [0, 1],
-    out: { at: 5226, step: 4, over: 34 },
+    /** ⚠ 5192 — Simon. Same exit as the second round: one at a time, from the
+     *  far end, because they all travel right and a card that set off before
+     *  the one in front of it would drive into it. */
+    out: { at: 5192, step: 4, over: 34 },
   },
 } as const;
 
