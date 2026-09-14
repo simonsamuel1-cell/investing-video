@@ -456,7 +456,10 @@ export const CARD_LIST = {
    * four bars to the right. The indices are what that derivation gave, frozen.
    */
   hopes: {
-    out: 1669,
+    /** ⚠ THEY GO AS THE LAST CANDLE LANDS — Simon, 3516. The fade lands on that
+     *  frame rather than starting there, so the two things finish together:
+     *  the tape stops moving and the talking stops with it. */
+    out: 1522,
     said: [
       { text: "“Sedikit lagi”", at: 1300, above: true, bar: 45 },
       { text: "“Mungkin nanti balik”", at: 1373, above: false, bar: 47 },
