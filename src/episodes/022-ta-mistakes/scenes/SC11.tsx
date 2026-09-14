@@ -1,5 +1,5 @@
 /**
- * SC11 — hindsight bias. `from 8968 · dur 1037`
+ * SC11 — hindsight bias. `from 8998 · dur 1037`
  *
  * ⚠ THE REVEAL MASK RUNS BACKWARDS HERE, and that is the whole scene.
  * Everywhere else in the library a mask OPENS to show what happened; this one

@@ -1,12 +1,12 @@
 /**
- * SC08 — confirmation bias. `from 5954 · dur 1080`
+ * SC08 — confirmation bias. `from 5984 · dur 1080`
  *
  * Six pieces of evidence on one ambiguous tape: three that support the
  * scenario, three that argue against it. A highlight box grows around the
  * supporting three and the other three FADE — the viewer watches the bias
  * happen instead of being told about it.
  *
- * ⚠ f6917 HAS NO AIR. Cue 31 ("…membuktikan aku salah?") runs straight into
+ * ⚠ f6947 HAS NO AIR. Cue 31 ("…membuktikan aku salah?") runs straight into
  * cue 32 ("Ini membantu tetap objektif."). The box collapses and the three
  * ignored markers come back to full on that same frame — one move, no pause.
  *

@@ -1,5 +1,5 @@
 /**
- * VIDEO 22 — COMMON MISTAKES IN TECHNICAL ANALYSIS. `16800 frames · 60fps`
+ * VIDEO 22 — COMMON MISTAKES IN TECHNICAL ANALYSIS. `16830 frames · 60fps`
  *
  * ⚠ EVERY FRAME NUMBER COMES FROM data/timing.ts, WHICH COPIES
  * docs/Video22_TA_Mistakes_Script_SYNCED.md. That table was computed from the
@@ -19,7 +19,7 @@
  *                         that the evidence did not change, the reading did.
  *   CG-C  SC16+SC17       the process rail, built and then carried to the left.
  *                         SC17 checks the person, not the process.
- *   CG-D  f1938 → 15772   ONE roadmap object, in every transition card: it
+ *   CG-D  f1938 → 15802   ONE roadmap object, in every transition card: it
  *                         lights the next part each time and comes back all-✓
  *                         under the recap. Six cards, not six boards.
  *   CG-E  SC04 → SC14     one mistake counter, 01 → 08, dark for the ADMR case.
@@ -33,8 +33,8 @@
  * a plain hard cut under a card is what the recording actually supports; a
  * camera move added on top would be a move nobody asked for.
  *
- * ⚠ FOUR JOINS IN THE RECORDING HAVE NO SILENCE AT ALL — f227, f4900, f6917,
- * f12496 — and all four fall INSIDE a scene, not at a boundary. Each one is
+ * ⚠ FOUR JOINS IN THE RECORDING HAVE NO SILENCE AT ALL — f227, f4900, f6947,
+ * f12526 — and all four fall INSIDE a scene, not at a boundary. Each one is
  * marked in the scene that owns it, because a beat there cannot be given an
  * entrance that needs a run-up.
  */

@@ -1,5 +1,5 @@
 /**
- * SC14 — asal copy trade. `from 12316 · dur 724`
+ * SC14 — asal copy trade. `from 12346 · dur 724`
  *
  * Two trade cards with the SAME ticker in both headers, and four rows that
  * fill one per spoken beat. The identical header is what makes the differing
@@ -12,7 +12,7 @@
  * "lebih tinggi". A made-up entry price next to a ticker is a fabricated
  * number and an entry marker in the same stroke.
  *
- * ⚠ f12496 HAS NO AIR. "…copy trade orang lain." runs straight into "Sahamnya
+ * ⚠ f12526 HAS NO AIR. "…copy trade orang lain." runs straight into "Sahamnya
  * mungkin sama," — the two cards must already be standing there.
  */
 import { useCurrentFrame } from "remotion";

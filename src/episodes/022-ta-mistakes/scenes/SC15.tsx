@@ -1,5 +1,5 @@
 /**
- * SC15 — the question worth asking. `from 13040 · dur 630`
+ * SC15 — the question worth asking. `from 13070 · dur 630`
  *
  * The wrong question arrives big, is struck, and drops; two better ones rise
  * in its place. One object replaced, not three appearing — the replacement IS

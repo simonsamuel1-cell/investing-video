@@ -1,5 +1,5 @@
 /**
- * CG-C — SC16 + SC17. `from 13670 · dur 2054`
+ * CG-C — SC16 + SC17. `from 13700 · dur 2054`
  *
  * ONE rail, built and then carried. SC16 fills it question by question; SC17
  * moves it to the left and keeps it there while the self-check happens beside
@@ -147,7 +147,7 @@ const SelfCheck = ({ f }: { f: number }) => {
         color={c.slate}
       />
 
-      {/* ⚠ EACH FLAG LANDS ON ITS OWN WORD — 14999 / 15024 / 15099. The first
+      {/* ⚠ EACH FLAG LANDS ON ITS OWN WORD — 15029 / 15054 / 15129. The first
           two are 25 frames apart because "FOMO, kesal," is said that fast. */}
       {SELF.flags.map((q, i) => (
         <div key={q.label} style={{ transform: `translateX(${aside * P.w * 0.06}px)`, opacity: 1 - aside * 0.55 }}>

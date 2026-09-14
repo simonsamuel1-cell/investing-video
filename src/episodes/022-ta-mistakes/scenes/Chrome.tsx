@@ -1,5 +1,5 @@
 /**
- * CG-E — the mistake counter. `from 1995 · dur 11045, dark for the ADMR case`
+ * CG-E — the mistake counter. `from 1995 · dur 11075, dark for the ADMR case`
  *
  * ONE chip whose number climbs 01 → 08, mounted once above the tiling. Eight
  * scenes each drawing their own heading is eight headings that happen to look

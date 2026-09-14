@@ -1,5 +1,5 @@
 /**
- * SC18 — the close. `from 15724 · dur 1076 (VO ends 16620; the tail is held)`
+ * SC18 — the close. `from 15754 · dur 1076 (VO ends 16650; the tail is held)`
  *
  * Four rules land one per spoken sentence, then collapse into the card the
  * episode opened on.
@@ -13,7 +13,7 @@
  * word on it.
  *
  * ⚠ THE LAST 180 FRAMES ARE A HOLD. Nothing starts them and nothing moves in
- * them — the voice ends on 16620 and the card is still standing there, and
+ * them — the voice ends on 16650 and the card is still standing there, and
  * ending on that frame would cut the sentence off as it lands.
  */
 import { useCurrentFrame } from "remotion";

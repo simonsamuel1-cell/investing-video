@@ -1,5 +1,5 @@
 /**
- * CG-B — SC12 + SC13, the ADMR case. `from 10005 · dur 2311`
+ * CG-B — SC12 + SC13, the ADMR case. `from 10035 · dur 2311`
  *
  * ONE tape, drawn once. SC12 reads the evidence with everything after the
  * decision date masked; SC13 opens that same mask, three events at a time. If
@@ -301,7 +301,7 @@ const MacdPane = ({ shown, grid }: { shown: number; grid: ReturnType<typeof grid
                *
                * The standing rule is that only candle bodies carry green and
                * red; everything else is indigo / cyan / neutral. But the voice
-               * at f10666 says "MACD histogram sudah hijau", and the evidence
+               * at f10696 says "MACD histogram sudah hijau", and the evidence
                * chip beside it repeats the word. Drawn in indigo the picture
                * does not say what the sentence says.
                *

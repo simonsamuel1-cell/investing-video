@@ -1,8 +1,8 @@
 /**
- * SC10 — indicator overload. `from 7965 · dur 1003`
+ * SC10 — indicator overload. `from 7995 · dur 1003`
  *
  * The chart starts clean and is CROWDED on screen: five panes arrive between
- * f8112 and f8283, and the price pane gives up height for each one until it is
+ * f8142 and f8313, and the price pane gives up height for each one until it is
  * squeezed. The crowding is the argument, so the geometry has to actually
  * crowd — a scene that merely says "too many indicators" over a comfortable
  * chart is asking to be taken on trust.
@@ -73,7 +73,7 @@ export const SC10 = () => {
 
       {stack.panes.map((box, i) => {
         const same = SAME.includes(i);
-        /* the three that read alike are lit at 8450 and then fold together */
+        /* the three that read alike are lit at 8480 and then fold together */
         const dim = g >= V.lit && !same ? 1 - merge * 0.75 : 1;
         const fold = same ? 1 - merge : 1;
         /** ⚠ THE LINE STARTS AFTER THE LABEL. A pane 40px tall has no room for

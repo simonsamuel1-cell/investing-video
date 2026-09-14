@@ -1,5 +1,5 @@
 /**
- * SC09 — konteks market. `from 7034 · dur 931`
+ * SC09 — konteks market. `from 7064 · dur 931`
  *
  * Two windows, and the setup inside them is not similar — it is IDENTICAL, bar
  * for bar, for the first 34 bars (see data/series.ts, which copies the head

@@ -22,17 +22,25 @@ export const local = (beat: number, from: number) => beat - from;
 export const BLOCK = {
   SC01: 0, SC02: 646, SC03: 1140,
   SC04: 1995, SC05: 3084,
-  SC06: 4047, SC07: 5031,
-  SC08: 5954, SC09: 7034, SC10: 7965, SC11: 8968,
-  SC12: 10005, SC13: 11044,
-  SC14: 12316, SC15: 13040, SC16: 13670, SC17: 14750, SC18: 15724,
+  SC06: 4047,
   /**
-   * ⚠ 180 FRAMES PAST THE LAST WORD. The voice ends on 16620 and the closing
+   * ⚠ 5046, AND IT MOVED WITH THE SILENCE — Simon put 30 frames of hold in at
+   * 5035. This file's rule is that a boundary is cut at the MIDPOINT of the
+   * silence between two scenes: that gap was 5022 → 5040 and is now 5022 →
+   * 5070, so its middle went from 5031 to 5046. The pause is therefore held on
+   * the platform rather than on SC07's empty opening.
+   */
+  SC07: 5046,
+  SC08: 5984, SC09: 7064, SC10: 7995, SC11: 8998,
+  SC12: 10035, SC13: 11074,
+  SC14: 12346, SC15: 13070, SC16: 13700, SC17: 14780, SC18: 15754,
+  /**
+   * ⚠ 180 FRAMES PAST THE LAST WORD. The voice ends on 16650 and the closing
    * quote card is still standing there; ending on that frame cuts the last
    * sentence off at the moment it lands. Nothing starts these three seconds —
    * SC18's duration is `END - SC18` and the tail is the closing picture held.
    */
-  END: 16800,
+  END: 16830,
 } as const;
 
 /**
@@ -47,12 +55,12 @@ export const BLOCK = {
 export const CARDS = {
   roadmap: { at: 1938, over: 114 },
   ch02: { at: 4002, over: 90 },
-  ch03: { at: 5908, over: 92 },
+  ch03: { at: 5938, over: 92 },
   /** ⚠ THE LONGEST ONE, 122 f — this join has 0.83 s of air, the most in the
    *  whole recording. It is the only card that is not fighting for room. */
-  ch04: { at: 9944, over: 122 },
-  ch05: { at: 12262, over: 108 },
-  recap: { at: 15676, over: 96 },
+  ch04: { at: 9974, over: 122 },
+  ch05: { at: 12292, over: 108 },
+  recap: { at: 15706, over: 96 },
 } as const;
 
 /** The roadmap, as five parts. Verb-first, and the same object all the way
@@ -748,85 +756,85 @@ export const OVERTRADE = {
 
 /* ═══ SC07 — revenge trading ═════════════════════════════════════════════ */
 export const REVENGE = {
-  name: 5091,
-  loss: 5156,
+  name: 5121,
+  loss: 5186,
   /** The loop back into a new trade — fast, and that speed is the point. */
-  loop: { at: 5325, over: 26 },
-  next: 5325,
-  cut: 5524,
-  caption: 5560,
-  verdict: 5741,
-  gate: 5794,
-  close: 5860,
+  loop: { at: 5355, over: 26 },
+  next: 5355,
+  cut: 5554,
+  caption: 5590,
+  verdict: 5771,
+  gate: 5824,
+  close: 5890,
 } as const;
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
 export const BIASED = {
-  name: 6062,
-  chart: { at: 5990, over: 120 },
+  name: 6092,
+  chart: { at: 6020, over: 120 },
   /** Six markers on the tape: three that support the scenario, three against.
    *  `i` is a bar index into the BIAS tape. */
   marks: [
     { i: 9, supports: true }, { i: 17, supports: false }, { i: 26, supports: true },
     { i: 34, supports: false }, { i: 43, supports: true }, { i: 52, supports: false },
   ],
-  box: { at: 6325, over: 30 },
-  fade: { at: 6409, over: 30 },
-  q1: 6619,
-  q2: 6787,
-  /** ⚠ f6917 HAS NO AIR — cue 31 runs straight into 32. The box collapses and
+  box: { at: 6355, over: 30 },
+  fade: { at: 6439, over: 30 },
+  q1: 6649,
+  q2: 6817,
+  /** ⚠ f6947 HAS NO AIR — cue 31 runs straight into 32. The box collapses and
    *  the three ignored markers come back to full on the same frame. */
-  collapse: 6917,
-  close: 6960,
+  collapse: 6947,
+  close: 6990,
 } as const;
 
 /* ═══ SC09 — konteks market ══════════════════════════════════════════════ */
 export const CONTEXT = {
-  name: 7044,
+  name: 7074,
   /** Two windows, the SAME setup in both — only the context strip differs. */
-  panes: { at: 7100, over: 40 },
-  left: 7298,
-  right: 7447,
-  same: 7554,
+  panes: { at: 7130, over: 40 },
+  left: 7328,
+  right: 7477,
+  same: 7584,
   /** The frame that draws the wider market around both. */
-  wider: 7732,
-  close: 7800,
+  wider: 7762,
+  close: 7830,
 } as const;
 
 /* ═══ SC10 — indicator overload ══════════════════════════════════════════ */
 export const OVERLOAD = {
-  name: 8045,
-  chart: { at: 7990, over: 90 },
+  name: 8075,
+  chart: { at: 8020, over: 90 },
   /**
-   * ⚠ THE PANES ARRIVE BETWEEN 8112 AND 8283 — the stretch the voice spends on
+   * ⚠ THE PANES ARRIVE BETWEEN 8142 AND 8313 — the stretch the voice spends on
    * "menambahkan banyak indikator … tidak selalu menambah kualitas". The
    * crowding IS the argument, so they land on the sentence that describes it.
    */
-  add: { at: 8112, step: 34, count: 5 },
+  add: { at: 8142, step: 34, count: 5 },
   /** Which of the five read the same thing. Indexed, so re-ordering the panes
    *  in layout.ts re-orders the highlight with them. */
   similar: [1, 2, 4],
-  lit: 8450,
-  merge: { at: 8604, over: 40 },
-  close: 8734,
+  lit: 8480,
+  merge: { at: 8634, over: 40 },
+  close: 8764,
 } as const;
 
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
 export const HINDSIGHT = {
-  name: 9049,
+  name: 9079,
   /** The whole tape, already annotated, arrives finished. */
-  chart: { at: 8990, over: 90 },
-  obvious: 9140,
+  chart: { at: 9020, over: 90 },
+  obvious: 9170,
   /**
    * ⚠ THE MASK RUNS BACKWARDS HERE. Everywhere else in the library a reveal
    * mask opens; this one CLOSES over the right-hand side, hiding the future
    * that was already on screen. It is the same device SC12–SC13 use for real,
    * introduced first so the ADMR case reads as its application.
    */
-  hide: { at: 9364, over: 56 },
-  note: 9452,
-  chips: 9642,
-  close: 9844,
+  hide: { at: 9394, over: 56 },
+  note: 9482,
+  chips: 9672,
+  close: 9874,
 } as const;
 
 /* ═══ SC12 + SC13 — the ADMR case (CG-B) ═════════════════════════════════ */
@@ -836,36 +844,36 @@ export const HINDSIGHT = {
  * whole point — that the evidence did not change, the reading of it did.
  */
 export const ADMR = {
-  chart: { at: 10030, over: 150 },
-  title: 10135,
-  uptrend: { at: 10367, over: 44 },
-  triangle: { at: 10398, over: 60 },
-  volume: 10530,
-  macd: 10666,
-  focus: 10780,
-  rebound: 11018,
+  chart: { at: 10060, over: 150 },
+  title: 10165,
+  uptrend: { at: 10397, over: 44 },
+  triangle: { at: 10428, over: 60 },
+  volume: 10560,
+  macd: 10696,
+  focus: 10810,
+  rebound: 11048,
   /** The three evidence chips SC13 then turns over one at a time. */
   evidence: [
-    { label: "UPTREND JANGKA PANJANG", at: 10367 },
-    { label: "VOLUME MASIH AKTIF", at: 10530 },
-    { label: "MACD HISTOGRAM HIJAU", at: 10666 },
+    { label: "UPTREND JANGKA PANJANG", at: 10397 },
+    { label: "VOLUME MASIH AKTIF", at: 10560 },
+    { label: "MACD HISTOGRAM HIJAU", at: 10696 },
   ],
   /* ── SC13 ───────────────────────────────────────────────────────────── */
-  watch: 11050,
-  ma100: { at: 11229, over: 60 },
+  watch: 11080,
+  ma100: { at: 11259, over: 60 },
   events: [
-    { tag: "11 MEI 2026", label: "BREAK DI BAWAH MA100", at: 11328, hit: 11428 },
-    { tag: "RETEST", label: "GAGAL KEMBALI KE ATAS MA100", at: 11590, hit: 11716 },
-    { tag: "18 MEI", label: "SUPPORT TRIANGLE DITEMBUS", at: 11880, hit: 11990 },
+    { tag: "11 MEI 2026", label: "BREAK DI BAWAH MA100", at: 11358, hit: 11458 },
+    { tag: "RETEST", label: "GAGAL KEMBALI KE ATAS MA100", at: 11620, hit: 11746 },
+    { tag: "18 MEI", label: "SUPPORT TRIANGLE DITEMBUS", at: 11910, hit: 12020 },
   ],
   /** Which evidence chip each event turns over. Indexed by name in the scene,
    *  never by position — swapping two events must swap their frames, not their
    *  drawings. */
   turns: [
-    { label: "UPTREND JANGKA PANJANG", at: 11428, strike: true },
-    { label: "MACD HISTOGRAM HIJAU", at: 11990, strike: false },
+    { label: "UPTREND JANGKA PANJANG", at: 11458, strike: true },
+    { label: "MACD HISTOGRAM HIJAU", at: 12020, strike: false },
   ],
-  close: 12142,
+  close: 12172,
 } as const;
 
 /* ═══ SC14 — asal copy trade ═════════════════════════════════════════════ */
@@ -873,29 +881,29 @@ export const ADMR = {
  *  price beside a real-looking ticker is the fabricated number rule and the
  *  buy-marker rule at the same time. */
 export const COPY = {
-  name: 12395,
-  cards: { at: 12440, over: 40 },
-  /** ⚠ f12496 HAS NO AIR — cue 57 runs straight into 58. */
-  same: 12496,
+  name: 12425,
+  cards: { at: 12470, over: 40 },
+  /** ⚠ f12526 HAS NO AIR — cue 57 runs straight into 58. */
+  same: 12526,
   rows: [
-    { label: "TIMEFRAME", a: "Harian", b: "Mingguan", at: 12610 },
-    { label: "HARGA ENTRY", a: "lebih awal", b: "lebih tinggi", at: 12638 },
-    { label: "BATAS RISIKO", a: "lebih ketat", b: "lebih longgar", at: 12695 },
-    { label: "RENCANA EXIT", a: "bertahap", b: "sekaligus", at: 12780 },
+    { label: "TIMEFRAME", a: "Harian", b: "Mingguan", at: 12640 },
+    { label: "HARGA ENTRY", a: "lebih awal", b: "lebih tinggi", at: 12668 },
+    { label: "BATAS RISIKO", a: "lebih ketat", b: "lebih longgar", at: 12725 },
+    { label: "RENCANA EXIT", a: "bertahap", b: "sekaligus", at: 12810 },
   ],
-  close: 12916,
+  close: 12946,
 } as const;
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */
 export const ASK = {
-  shrink: { at: 13050, over: 34 },
-  wrong: 13147,
-  strike: 13230,
+  shrink: { at: 13080, over: 34 },
+  wrong: 13177,
+  strike: 13260,
   better: [
-    { text: "“KENAPA TRADE ITU DIAMBIL?”", at: 13309 },
-    { text: "“KAPAN LOGIKANYA DIANGGAP SALAH?”", at: 13404 },
+    { text: "“KENAPA TRADE ITU DIAMBIL?”", at: 13339 },
+    { text: "“KAPAN LOGIKANYA DIANGGAP SALAH?”", at: 13434 },
   ],
-  close: 13597,
+  close: 13627,
 } as const;
 
 /* ═══ SC16 — the process, six questions (CG-C) ═══════════════════════════ */
@@ -906,61 +914,61 @@ export const ASK = {
  * them on a grid is exactly how a build comes off its own voice.
  */
 export const PROCESS = {
-  rail: { at: 13700, over: 40 },
-  pull: 13725,
+  rail: { at: 13730, over: 40 },
+  pull: 13755,
   items: [
-    { text: "“Trend-nya bagaimana?”", at: 13940 },
-    { text: "“Level pentingnya di mana?”", at: 14010 },
-    { text: "“Setup-nya apa?”", at: 14098 },
-    { text: "“Volume mendukung?”", at: 14154 },
-    { text: "“Timeframe lain sejalan?”", at: 14228 },
+    { text: "“Trend-nya bagaimana?”", at: 13970 },
+    { text: "“Level pentingnya di mana?”", at: 14040 },
+    { text: "“Setup-nya apa?”", at: 14128 },
+    { text: "“Volume mendukung?”", at: 14184 },
+    { text: "“Timeframe lain sejalan?”", at: 14258 },
   ],
   /** The five go one step quiet while the voice says the sixth is the one. */
-  quiet: 14348,
-  sixth: { text: "“apa invalidation-nya?”", at: 14465 },
+  quiet: 14378,
+  sixth: { text: "“apa invalidation-nya?”", at: 14495 },
   /** One row empties out to show "satu bagian belum jelas". */
-  blank: 14542,
-  close: 14600,
+  blank: 14572,
+  close: 14630,
 } as const;
 
 /* ═══ SC17 — cek dirimu sendiri ══════════════════════════════════════════ */
 export const SELF = {
   /** The rail from SC16 shrinks to the left and STAYS. The process did not go
    *  away; what is being checked now is the person running it. (CG-C) */
-  shrink: { at: 14768, over: 40 },
-  panel: 14800,
+  shrink: { at: 14798, over: 40 },
+  panel: 14830,
   flags: [
-    { label: "FOMO", at: 14999 },
-    { label: "KESAL", at: 15024 },
-    { label: "INGIN MEMBALAS LOSS", at: 15099 },
+    { label: "FOMO", at: 15029 },
+    { label: "KESAL", at: 15054 },
+    { label: "INGIN MEMBALAS LOSS", at: 15129 },
   ],
-  stop: 15148,
-  tool: 15275,
-  notCertainty: 15347,
+  stop: 15178,
+  tool: 15305,
+  notCertainty: 15377,
   /** ⚠ THE EMOTION CHIPS ARE NOT DELETED — they move out of the process's
    *  path. "Emosi boleh ada" is the line; deleting them would say the
    *  opposite. */
-  move: { at: 15584, over: 40 },
-  close: 15650,
+  move: { at: 15614, over: 40 },
+  close: 15680,
 } as const;
 
 /* ═══ SC18 — the close ═══════════════════════════════════════════════════ */
 /** ⚠ THE FOUR RULES ARE UNEVEN TOO: 102 · 130 · 150 f. Same rule as SC16. */
 export const CLOSE = {
-  ground: { at: 15724, over: 60 },
-  simple: 15736,
+  ground: { at: 15754, over: 60 },
+  simple: 15766,
   rules: [
-    { cond: "BELUM LENGKAP", act: "TUNGGU", at: 15852 },
-    { cond: "SUDAH INVALID", act: "KELUAR", at: 15954 },
-    { cond: "KONDISI BERUBAH", act: "EVALUASI ULANG", at: 16084 },
-    { cond: "ALASANNYA EMOSIONAL", act: "JANGAN DIPAKSAKAN", at: 16234 },
+    { cond: "BELUM LENGKAP", act: "TUNGGU", at: 15882 },
+    { cond: "SUDAH INVALID", act: "KELUAR", at: 15984 },
+    { cond: "KONDISI BERUBAH", act: "EVALUASI ULANG", at: 16114 },
+    { cond: "ALASANNYA EMOSIONAL", act: "JANGAN DIPAKSAKAN", at: 16264 },
   ],
-  collapse: { at: 16380, over: 40 },
+  collapse: { at: 16410, over: 40 },
   /** ⚠ THE SAME CARD THE ROADMAP OPENED ON, not one that looks like it — the
    *  mark over a bordered panel on the drifting grid, so the ending rhymes
    *  with the opening instead of introducing a new look at the last minute. */
-  card: 16428,
-  text: 16452,
+  card: 16458,
+  text: 16482,
   lines: ["No trade unless the conditions are met."],
   mark: "conditions are met",
 } as const;
