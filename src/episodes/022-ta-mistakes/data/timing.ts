@@ -323,19 +323,30 @@ export const CARD_LIST = {
    * come back for mistake 02, and at 4227 they leave to the right again. Simon:
    * overlapping SC06 is fine. The window ends on the frame the last card clears
    * the edge — 4267, not the 4245 he asked for before the exit existed, because
-   * the exit needs 40 frames to be a move rather than a strobe.
+   * the exit needs room to be a move rather than a strobe: six cards leaving
+   * four frames apart, each taking 34, puts the last one clear at 4281.
    */
-  over: 2274,
+  over: 2288,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
   cursor: { at: 30, over: 34, card: 0 },
   /** The flood, from where the pointer touched. */
   hover: { at: 62, over: 46 },
-  /** ⚠ IT OWNS THE FRAME WHILE IT RUNS, and hands it back rather than popping
-   *  off. A transition that vanishes on one frame is a cut, and this stretch
-   *  already has one at each end. */
-  ground: { at: 0, over: 14 },
+  /**
+   * ⚠ THE SCENE IS FADED INTO, AND THE FADE FINISHES BEFORE IT STARTS — Simon:
+   * "transisi scene 1 di 1993-1994 berikan transisi fade".
+   *
+   * It used to fade its own ground up over its first 14 frames, which is not
+   * the same thing: the cards were dealing through a half-transparent ground,
+   * and SC04's chips and note were snapping in UNDERNEATH at 1995, in full
+   * view. What reads as a hard join there is that snap, not the cut.
+   *
+   * So the fade is 18 frames of pre-roll ENDING on 1993, mounted as its own
+   * window in Composition.tsx. This layer opens on a ground that is already
+   * solid, and nothing under it is ever seen changing.
+   */
+  fade: 18,
   /**
    * ═══ THE EXIT ═══  Simon, at 2173.
    *
@@ -496,17 +507,21 @@ export const CARD_LIST = {
     cursor: { at: 2092, over: 34, card: 1 },
     hover: { at: 2124, over: 46 },
     /**
-     * ⚠ AND OUT AGAIN AT 4227, FANNING OPEN — Simon. The mirror of the way they
-     * came in: every card takes the same curve, and each one further right takes
-     * three gaps more than the one before it, so the row stretches as it goes
-     * instead of sliding off as a block.
+     * ⚠ OUT AT 4227, ONE AT A TIME — Simon: "keluar satu per satu, tapi
+     * timingnya berdekatan". Four frames between starts, which is close enough
+     * that it reads as one gesture and far enough apart that it is six cards
+     * leaving rather than a block sliding off.
      *
-     * ⚠ 40 FRAMES, NOT THE 18 UNTIL 4245. The leftmost card has 1864px to cover
-     * before it clears the frame; in 18 it would be crossing 100px per frame
-     * while still on screen, which strobes. 40 is the rate the first row left
-     * at and the rate that already looked right.
+     * ⚠ THE RIGHTMOST GOES FIRST, and it has to: they are all travelling right,
+     * so a card that set off before the one in front of it would drive into it.
+     * Leaving from the far end is also what opens the gaps up, which is the
+     * look Simon asked for the last time this row moved — so there is no
+     * separate spreading to arrange, the stagger IS the spread.
+     *
+     * ⚠ 34 FRAMES EACH. The leftmost has 1864px to cover before it clears the
+     * frame; much quicker and it crosses the screen faster than the eye tracks.
      */
-    out: { at: 2233, over: 40, spread: 3 },
+    out: { at: 2233, step: 4, over: 34 },
     /** ⚠ THE CARDS ALREADY DEALT WITH. Cyan, not gone: a list that removes its
      *  finished items is a queue, and this is a syllabus. */
     done: [0],

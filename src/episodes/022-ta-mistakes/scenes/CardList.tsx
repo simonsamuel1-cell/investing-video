@@ -411,6 +411,30 @@ const Note = () => {
 };
 
 /**
+ * The fade INTO the scene, as its own window.
+ *
+ * ⚠ IT IS A SEPARATE MOUNT ON PURPOSE. Faded from inside CardList it would have
+ * to start at CardList's own frame 0, which is exactly the frame the cards
+ * start dealing on — and a dissolve with the incoming scene already moving
+ * inside it is a muddle rather than a transition. Here it finishes on 1993 and
+ * the scene opens on 1994 with its ground already solid.
+ */
+export const CardListFadeIn = () => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  return (
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        background: c.bg,
+        opacity: progress(f, 0, CARD_LIST.fade),
+      }}
+    />
+  );
+};
+
+/**
  * ═══ THE SECOND ROUND ═══  Simon, from 4046.
  *
  * ⚠ THE SAME SIX CARDS, NOT A SECOND LIST. Same component, same row geometry,
@@ -438,13 +462,16 @@ const Row2 = () => {
   const from0 = theme.canvas.width + 40;
   const startX = (i: number) => from0 + i * wide;
   /**
-   * ⚠ AND OUT THE SAME WAY, FANNING — Simon. One curve again; the extra that
-   * each card further right takes is what opens the row up as it leaves. The
-   * distance is solved from the FIRST card, because it is the one with the
-   * whole frame still to cross.
+   * ⚠ AND OUT ONE AT A TIME, FROM THE FAR END — Simon. Same distance for every
+   * card, staggered starts: the one nearest the edge goes first, because they
+   * are all travelling right and a card that set off before the one in front of
+   * it would drive into it. The stagger is also what opens the gaps, so there
+   * is no separate spreading to arrange.
    */
+  const outAt = (i: number) => V2.out.at + (V.titles.length - 1 - i) * V2.out.step;
+  const outX = (i: number) => progressInOut(f, outAt(i), V2.out.over) * AWAY;
+  /** The pointer goes with the first card that leaves. */
   const leave = progressInOut(f, V2.out.at, V2.out.over);
-  const outX = (i: number) => leave * (AWAY + i * R.gap * V2.out.spread);
 
   /** The pointer's target on the card it picks — the same spot on the card that
    *  round one used, so the two picks read as the same gesture. */
@@ -490,12 +517,6 @@ export const CardList = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  /** ⚠ IT OWNS THE FRAME. Transparent, the scene underneath shows between the
-   *  cards and the transition reads as a row of cards dropped onto a chart.
-   *
-   *  ⚠ AND IT NEVER FADES BACK OUT — Simon wants the opened card to stand to
-   *  3075, so the layer holds and the window's end cuts it. See `out`. */
-  const ground = progress(f, V.ground.at, V.ground.over);
 
   /**
    * ⚠ THE REWIND IS A SUBTRACTION, NOT A SECOND ANIMATION — Simon, from 3517.
@@ -556,7 +577,10 @@ export const CardList = () => {
   const put = 1 - progress(f, V.exit.at, V.exit.row);
 
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: ground }}>
+    /** ⚠ OPAQUE FROM ITS FIRST FRAME. The fade into this scene happens BEFORE
+     *  it — see CardListFadeIn and `fade` in data/timing.ts — so that nothing
+     *  underneath is ever seen changing through a half-transparent ground. */
+    <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
 
       {/* ⚠ EVERYTHING BUT THE GROUND TRAVELS — Simon, from 4046. One transform
@@ -973,7 +997,11 @@ export const CardList = () => {
   if (round2 > CARD_LIST.row2.out.at) {
     throw new Error("022-ta-mistakes/CardList: the row starts leaving while its flood is still spreading");
   }
-  if (CARD_LIST.row2.out.at + CARD_LIST.row2.out.over > CARD_LIST.over) {
+  const lastOut =
+    CARD_LIST.row2.out.at +
+    (CARD_LIST.titles.length - 1) * CARD_LIST.row2.out.step +
+    CARD_LIST.row2.out.over;
+  if (lastOut > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the row is still leaving when the window ends");
   }
   if (CARD_LIST.away.at < CARD_LIST.note.at) {

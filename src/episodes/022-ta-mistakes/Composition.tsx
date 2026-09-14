@@ -59,7 +59,7 @@ import { SC18 } from "./scenes/SC18";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
-import { CardList } from "./scenes/CardList";
+import { CardList, CardListFadeIn } from "./scenes/CardList";
 
 /** ⚠ LONGER THAN THE VOICE ON PURPOSE — `BLOCK.END` holds the closing card for
  *  three seconds after the last word. The guard below is a floor, not an
@@ -175,6 +175,16 @@ const Body = () => (
         underneath — see the note on HOPE in data/timing.ts. SetupGroup still
         spans to BLOCK.SC06 because the timeline may not have a hole in it; what
         it draws after 1994 is simply never seen. */}
+    {/* ⚠ THE FADE IS ITS OWN WINDOW, AND IT ENDS WHERE THE SCENE BEGINS —
+        Simon. See `fade` in data/timing.ts for why it cannot live inside the
+        scene it is fading into. */}
+    <Sequence
+      from={CARD_LIST.at - CARD_LIST.fade}
+      durationInFrames={CARD_LIST.fade}
+      name="Scene Transisi · fade in"
+    >
+      <CardListFadeIn />
+    </Sequence>
     <Sequence from={CARD_LIST.at} durationInFrames={CARD_LIST.over} name="Scene Transisi · Card list">
       <CardList />
     </Sequence>
