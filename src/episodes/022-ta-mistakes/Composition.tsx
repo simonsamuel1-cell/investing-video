@@ -46,7 +46,6 @@ import { BLOCK, CARD_LIST, COUNTER, REVERSE, ROW3 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
-import { SC07 } from "./scenes/SC07";
 import { SC08 } from "./scenes/SC08";
 import { SC09 } from "./scenes/SC09";
 import { SC10 } from "./scenes/SC10";
@@ -94,6 +93,14 @@ const HIDDEN: string[] = [];
 
 /** ⚠ ORDER IS Z-ORDER. CG-A is first because SC03 is mounted over the stretch
  *  it deliberately leaves blank — see the header. */
+/**
+ * ⚠ A SCENE THAT DRAWS NOTHING, and it is not the same as no scene at all. The
+ * coverage assertion below is the thing that catches a one-frame hole before a
+ * render does, and it can only do that if every stretch is owned by something.
+ * A deleted scene therefore leaves this behind rather than a gap in the table.
+ */
+const Blank = () => null;
+
 const SCENES: Mounted[] = [
   { from: BLOCK.SC01, duration: BLOCK.SC06 - BLOCK.SC01, Component: SetupGroup, name: "CG-A · SC01·02·04·05" },
   { from: BLOCK.SC03, duration: BLOCK.SC04 - BLOCK.SC03, Component: SC03, name: "SC03 Probabilitas" },
@@ -103,7 +110,11 @@ const SCENES: Mounted[] = [
    *  because the timeline may not have a hole in it — the card list covers its
    *  first 235 frames, and the panel is what shows from 4282. */
   { from: BLOCK.SC06, duration: BLOCK.SC07 - BLOCK.SC06, Component: Platform, name: "SC06 Platform" },
-  { from: BLOCK.SC07, duration: BLOCK.SC08 - BLOCK.SC07, Component: SC07, name: "SC07 Revenge trading" },
+  /** ⚠ SC07'S VISUALS ARE GONE — Simon: "visual scene 07 hapus aja". The window
+   *  stays because the timeline may not have a hole in it; what owns it now
+   *  draws nothing. The third card row covers its first 200 frames anyway, and
+   *  REVENGE is still in data/timing.ts for whatever replaces it. */
+  { from: BLOCK.SC07, duration: BLOCK.SC08 - BLOCK.SC07, Component: Blank, name: "SC07 (empty)" },
   { from: BLOCK.SC08, duration: BLOCK.SC09 - BLOCK.SC08, Component: SC08, name: "SC08 Confirmation bias" },
   { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: SC09, name: "SC09 Konteks market" },
   { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: SC10, name: "SC10 Indicator overload" },

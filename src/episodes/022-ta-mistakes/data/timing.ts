@@ -794,6 +794,12 @@ export const OVERTRADE = {
 } as const;
 
 /* ═══ SC07 — revenge trading ═════════════════════════════════════════════ */
+/**
+ * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "visual scene 07 hapus aja". Kept for
+ * the same reason HOPE is: it is the VO's own frame table for that stretch and
+ * re-deriving it from the SRT is the expensive part. Only the scene that read
+ * it is gone.
+ */
 export const REVENGE = {
   name: 5121,
   loss: 5186,
