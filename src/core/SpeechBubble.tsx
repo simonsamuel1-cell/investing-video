@@ -74,6 +74,7 @@ export const SpeechBubble = ({
   at,
   tone = "indigo",
   radius = theme.shape.panelRadius,
+  opacity = 1,
 }: {
   label: string;
   /** Top-left of the BOX. The tail hangs below it. */
@@ -87,11 +88,18 @@ export const SpeechBubble = ({
    *  surface with the episode's ink, for a bubble on a coloured ground. */
   tone?: "indigo" | "paper";
   radius?: number;
+  /**
+   * ⚠ FOR LEAVING, NOT FOR ARRIVING. A bubble arrives by growing out of its own
+   * tip — that is `at` and it is not optional. This is the other end: a bubble
+   * that has finished speaking fades, because popping it back into the tip it
+   * came from would read as the trade being un-taken.
+   */
+  opacity?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  if (f < at) return null;
+  if (f < at || opacity <= 0.001) return null;
 
   const pop = popIn(f, at, m.pop);
   const fill = tone === "indigo" ? c.indigo : c.cardBg;
@@ -105,7 +113,7 @@ export const SpeechBubble = ({
         top: y,
         width: w,
         height: h,
-        opacity: pop.opacity,
+        opacity: pop.opacity * opacity,
         /** ⚠ THE ORIGIN IS THE TIP, so the bubble grows OUT of the thing it is
          *  pointing at rather than swelling around its own middle. */
         transform: `scale(${pop.scale.toFixed(4)})`,

@@ -278,6 +278,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
 export const CardList = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   /** ⚠ IT OWNS THE FRAME. Transparent, the scene underneath shows between the
    *  cards and the transition reads as a row of cards dropped onto a chart.
    *
@@ -337,7 +338,18 @@ export const CardList = () => {
           act being made a second time and a different picture of it would read
           as a different mistake. */}
       {f >= V.buy && f < V.buyGone && (
-        <SpeechBubble label="BUY" x={BUY_AT.x} y={BUY_AT.y} w={BUBBLE.w} h={BUBBLE.h} at={V.buy} />
+        <SpeechBubble
+          label="BUY"
+          x={BUY_AT.x}
+          y={BUY_AT.y}
+          w={BUBBLE.w}
+          h={BUBBLE.h}
+          at={V.buy}
+          /** ⚠ IT FADES OUT — Simon. The fade LANDS on his frame rather than
+           *  starting there, so 2644 is still the frame the bubble is gone on
+           *  and not the frame it begins leaving. */
+          opacity={1 - progress(f, V.buyGone - m.fade, m.fade)}
+        />
       )}
     </div>
   );
