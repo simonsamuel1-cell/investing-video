@@ -41,6 +41,30 @@ import { BLOCK, BUYS, PLATFORM, PLATFORM_CUT } from "../data/timing";
  *  this is not a frame of THIS timeline and must never be derived from one. */
 const AT = 170;
 
+/**
+ * ═══ THE PORTFOLIO'S P&L ═══  (Simon)
+ *
+ * ⚠ THESE ARE POSITIONS, NOT THE MARKET. The panel's header still shows BBCA's
+ * day (+0,40%), and it should: what a stock did today and what a holder is down
+ * on it are different numbers, and the difference is the scene's whole point —
+ * five of six holdings under water while every name on the board is green.
+ *
+ * ⚠ ILLUSTRATIVE, AND COVERED. Real tickers with invented positions, on a panel
+ * that carries the "Ilustrasi" tag for exactly this reason.
+ *
+ * ⚠ TYPOGRAPHIC MINUS, not a hyphen. Simon typed "-14,97%"; the panel's own
+ * TLKM row has always read "−0,38%", and one column with both glyphs in it is a
+ * column that looks broken.
+ */
+const PNL = {
+  BBCA: "−14,97%",
+  BBRI: "−9,81%",
+  BMRI: "−3,14%",
+  TLKM: "−4,25%",
+  ASII: "−18,11%",
+  ANTM: "+3,29%",
+};
+
 export const Platform = () => {
   const f = useCurrentFrame();
   /**
@@ -68,6 +92,7 @@ export const Platform = () => {
         structure={false}
         portfolio
         chart="BBCA"
+        pnl={PNL}
         /** ⚠ THE TIMING IS THIS EPISODE'S, THE GEOMETRY IS 019'S. The swings
          *  are known inside that panel and nowhere else, so it draws them; when
          *  each one lands is a beat in THIS timeline, so we decide that. */

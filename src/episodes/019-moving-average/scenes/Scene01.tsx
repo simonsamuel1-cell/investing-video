@@ -578,6 +578,7 @@ export const BrokerPanel = ({
   portfolio = false,
   chart,
   marks,
+  pnl,
 }: {
   f: number;
   /**
@@ -616,6 +617,14 @@ export const BrokerPanel = ({
    * core's Candles takes a `wipe`.
    */
   marks?: { text: string; shown: (k: number) => number };
+  /**
+   * ⚠ REPLACES THE RIGHT-HAND COLUMN'S NUMBER, ticker by ticker. A watchlist's
+   * number is the market's move and belongs to the ticker; a portfolio's is the
+   * holder's own and cannot be derived from anything on this panel — so it is
+   * handed in. The sign decides the colour, so a caller cannot state a loss in
+   * green.
+   */
+  pnl?: Record<string, string>;
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -1301,16 +1310,25 @@ export const BrokerPanel = ({
                         {fmtRp(w.p)}
                       </span>
                     )}
-                    <span
-                      style={{
-                        fontSize: LIST.size,
-                        fontWeight: UI.weight,
-                        lineHeight: 1.2,
-                        color: w.up ? C.candleGreen : C.candleRed,
-                      }}
-                    >
-                      {w.c}
-                    </span>
+                    {(() => {
+                      const v = pnl?.[w.t] ?? w.c;
+                      /* ⚠ THE SIGN IS READ, NOT TRUSTED. `up` describes the
+                         market's move; a P&L handed in has its own direction,
+                         and the two need not agree. */
+                      const down = pnl ? /^[−-]/.test(v) : !w.up;
+                      return (
+                        <span
+                          style={{
+                            fontSize: LIST.size,
+                            fontWeight: UI.weight,
+                            lineHeight: 1.2,
+                            color: down ? C.candleRed : C.candleGreen,
+                          }}
+                        >
+                          {v}
+                        </span>
+                      );
+                    })()}
                   </div>
                 </div>
               );
