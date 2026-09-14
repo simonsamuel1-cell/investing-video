@@ -135,10 +135,43 @@ const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
  *  the window until it opens. */
 const SEEN_FROM = CARD_HEAD_N;
 const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
+/**
+ * ═══ THE TWO SENTENCES, PINNED TO THE BARS THEY LAND ON ═══  (Simon)
+ *
+ * ⚠ THE BAR IS FOUND FROM THE FRAME, not typed. Each pill goes over the candle
+ * that is arriving as it appears, so the reveal's own schedule decides which
+ * one that is — re-time the reveal and the words follow the candles.
+ *
+ * ⚠ AND THE PILL CLEARS EVERY BAR IT SPANS, not just the one it names. A pill
+ * is 300–420px wide and the tape keeps moving under it until 3663; hugging only
+ * its own candle, the second one would have three later bars growing through
+ * it. "Below the candle" is still true of a pill below all of them, and it is
+ * the only version of it that stays true.
+ *
+ * ⚠ SOLVED AT THE ZOOMED SCALE ONCE, because by 3294 the zoom is 570 frames
+ * done and the grid cannot move again inside this window.
+ */
+const PILL = { h: theme.text.chip.size * 1.8, gap: 10 };
+/** Rough, and it only has to be generous: it decides how many bars the pill is
+ *  checked against, so over-estimating costs nothing and under-estimating is
+ *  caught by the assertion at the bottom of this file. */
+const pillWidth = (s: string) => s.length * theme.text.chip.size * 0.5 + theme.text.chip.size * 1.24;
+
 /** How many bars sit BELOW the level and behind the window — the ones the
  *  reveal has to hand over one at a time. The history is above it and is not
  *  part of this. */
 const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
+
+const SAID = V.hopes.said.map((q) => {
+  const i = SEEN_TO + 1 + Math.floor((q.at - V.reveal.at) / V.reveal.step);
+  const x = ZOOM_GRID.x(i);
+  const half = pillWidth(q.text) / 2;
+  const near = CARD_ALL.filter((_, k) => Math.abs(ZOOM_GRID.x(k) - x) <= half);
+  const y = q.above
+    ? Math.min(...near.map((b) => ZOOM_GRID.y(b.h))) - PILL.gap - PILL.h / 2
+    : Math.max(...near.map((b) => ZOOM_GRID.y(b.l))) + PILL.gap + PILL.h / 2;
+  return { ...q, i, x, y, half };
+});
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -511,6 +544,21 @@ export const CardList = () => {
         dashed
       />
 
+      {/* ═══ WHAT THE POSITION SAYS TO ITSELF ═══  Simon, 3294 and 3367.
+          ⚠ INDIGO PILLS, NOT RED ONES. These are not the mistake being named —
+          they are the reasoning that keeps it going, and reasoning gets the
+          colour everything else in this video thinks in. The red is saved for
+          the word that judges it. */}
+      {SAID.map(
+        (q) =>
+          f >= q.at &&
+          f < V.hopes.out && (
+            <div key={q.text} style={{ opacity: 1 - progress(f, V.hopes.out - m.fade, m.fade) }}>
+              <Chip label={q.text} x={q.x} y={q.y} at={q.at} tone="indigo" pill />
+            </div>
+          ),
+      )}
+
       {/* ═══ THE VERDICT ═══  Simon, 2966 → 3102.
           ⚠ UNDER THE CHART, NOT ON IT. The caption row below the card is empty
           in this scene and the word is about the whole picture, not about a
@@ -623,6 +671,22 @@ export const CardList = () => {
     if (CARD_ALL[i].h > CARD_SUPPORT) {
       throw new Error(`022-ta-mistakes/CardList: bar ${i} arrives one at a time but is not below the support`);
     }
+  }
+  /** ⚠ NEITHER PILL MAY SIT ON A CANDLE OR LEAVE THE CARD. Both are solved
+   *  against an ESTIMATED text width, so this is the check that the estimate
+   *  was wide enough and the solve landed somewhere a pill can be. */
+  for (const q of SAID) {
+    const top = q.y - PILL.h / 2;
+    const bot = q.y + PILL.h / 2;
+    if (top < CARD_GROWN.y || bot > CARD_GROWN.y + CARD_GROWN.h) {
+      throw new Error(`022-ta-mistakes/CardList: the pill "${q.text}" leaves the card`);
+    }
+    CARD_ALL.forEach((b, k) => {
+      if (Math.abs(ZOOM_GRID.x(k) - q.x) > q.half) return;
+      if (ZOOM_GRID.y(b.h) < bot && ZOOM_GRID.y(b.l) > top) {
+        throw new Error(`022-ta-mistakes/CardList: the pill "${q.text}" sits on bar ${k}`);
+      }
+    });
   }
   for (let i = 0; i < SEEN_FROM; i++) {
     if (CARD_ALL[i].l < CARD_SUPPORT) {

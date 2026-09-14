@@ -439,6 +439,28 @@ export const CARD_LIST = {
    */
   blink: { at: 757, times: 3, over: 18 },
 
+  /**
+   * ═══ WHAT PEOPLE SAY WHILE A TRADE GOES WRONG ═══  Simon, 3294 and 3367,
+   * both gone at 3663.
+   *
+   * ⚠ VERBATIM, AND WITH HIS QUOTE MARKS. He asked for the quotation marks
+   * explicitly, and they are the point: these are not the video's claims about
+   * the market, they are the two sentences a person says to themselves to keep
+   * a position that has already broken its own reason. Curly, like the other
+   * quoted speech in this episode.
+   *
+   * ⚠ EACH IS PINNED TO THE BAR ARRIVING ON ITS FRAME, not to a coordinate.
+   * The frame decides which bar that is, so re-timing the reveal moves the
+   * words with the candles instead of leaving them behind.
+   */
+  hopes: {
+    out: 1669,
+    said: [
+      { text: "“Sedikit lagi”", at: 1300, above: true },
+      { text: "“Mungkin nanti balik”", at: 1373, above: false },
+    ],
+  },
+
   /** ⚠ THE VERDICT, UNDER THE CHART — Simon, 2966 → 3102. White on solid red:
    *  `warn` is this episode's one red outside a candle and it is for WORDS that
    *  name a mistake, which is exactly what this word is. */
