@@ -298,6 +298,26 @@ export const theme = {
      */
     liquidInk: "#2310B2",
     /**
+     * ═══ ⚠ THE THIRD PLACE GREEN AND RED ARE ALLOWED ═══
+     *
+     * A position tool's two halves: what the trade is reaching for, and what it
+     * is risking. Added for VIDEO 22's lesson on invalidation, where the tool
+     * IS the teaching — the whole point of the scene is that the lower box has
+     * to be drawn before the trade, not after.
+     *
+     * ⚠ AND IT IS THE SAME EXCEPTION `ok` AND `warn` ARE, not a new one. Those
+     * are a tick and a cross: a yes and a no as MARKS. These are the same yes
+     * and no as AREAS, in the one context where the two colours are not
+     * decoration but the meaning itself. Same two hues the candles use, so the
+     * episode still has exactly one green and one red.
+     *
+     * ⚠ STILL FORBIDDEN EVERYWHERE ELSE. Not for bands, not for zones, not for
+     * gridlines, not for any drawn chart content that is not one of these two
+     * halves of one tool.
+     */
+    gainWash: "rgba(34, 181, 115, 0.16)",
+    riskWash: "rgba(229, 71, 93, 0.14)",
+    /**
      * A price ZONE's fill, and the only reason it is not `indigoWash`: a zone
      * carries no border, so the fill alone has to say "this is an area" — see
      * chart/Annotations.tsx. At 9% it disappeared; at 18% it reads as ground

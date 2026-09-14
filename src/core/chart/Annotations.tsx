@@ -430,3 +430,71 @@ export const RevealMask = ({
     </Layer>
   );
 };
+
+/**
+ * A long-position tool — the thing a platform draws when somebody marks where
+ * they are getting in, what they are reaching for, and where they are wrong.
+ *
+ * ⚠ THE LOWER EDGE IS THE POINT, not the upper one. This exists in VIDEO 22
+ * because the episode's first mistake is entering without knowing when the idea
+ * has failed, and this tool is the answer: the stop is a line you draw BEFORE
+ * the trade. Everything else about it is context for that edge.
+ *
+ * ⚠ IT CARRIES NO NUMBERS, and must not. Given prices it becomes a trade
+ * recommendation; as two areas around a line it is a demonstration of a tool.
+ *
+ * ⚠ IT GROWS OUT OF THE ENTRY, in both directions at once, because that is the
+ * order the thing is made in: you mark where you are, then how far each way.
+ */
+export const PositionTool = ({
+  grid,
+  entry,
+  target,
+  stop,
+  x1,
+  x2,
+  at,
+  over,
+  opacity = 1,
+}: {
+  grid: Grid;
+  /** The three levels, in the grid's own units. */
+  entry: number;
+  target: number;
+  stop: number;
+  /** Pixel ends — a tool is placed by dragging, not by bar index. */
+  x1: number;
+  x2: number;
+  at: number;
+  over: number;
+  opacity?: number;
+}) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  if (opacity <= 0.001 || f < at) return null;
+  const p = progress(f, at, Math.max(1, over));
+  const yE = grid.y(entry);
+  const yT = grid.y(target);
+  const yS = grid.y(stop);
+  const w = Math.abs(x2 - x1);
+  const x = Math.min(x1, x2);
+
+  return (
+    <Layer opacity={opacity}>
+      <rect x={x} y={yE - (yE - yT) * p} width={w} height={(yE - yT) * p} fill={theme.color.gainWash} />
+      <rect x={x} y={yE} width={w} height={(yS - yE) * p} fill={theme.color.riskWash} />
+      {/* ⚠ DOTTED, AND IT IS THE ONE LINE HERE. The two edges of the boxes are
+          the target and the stop; drawing them as lines as well would be the
+          same three levels said twice. */}
+      <line
+        x1={x}
+        y1={yE}
+        x2={x + w * p}
+        y2={yE}
+        stroke={c.ink}
+        strokeWidth={theme.shape.hairline}
+        strokeDasharray="3 5"
+      />
+    </Layer>
+  );
+};

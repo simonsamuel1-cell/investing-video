@@ -429,6 +429,32 @@ export const CARD_LIST = {
   reveal: { at: 1089, step: 22, over: 37 },
 
   /**
+   * ═══ AND THEN IT REWINDS ═══  Simon, from 3517, back to how 2721 looked.
+   *
+   * ⚠ ONLY THE CANDLES AND THE CARD'S WIDTH GO BACK — his words. The words on
+   * screen are not un-said; what is undone is the picture, so the scene can
+   * make its point again on the setup rather than on the wreck.
+   *
+   * ⚠ AND THE BARS LEAVE RIGHT TO LEFT, which is the only order a rewind has.
+   * The card following them rather than leading is what makes it read as the
+   * tape retreating and the frame closing after it, instead of a window simply
+   * shutting on a chart.
+   *
+   * ⚠ THE BUY LINE DOES NOT COME BACK — Simon: "tanpa garis putus putus
+   * indigo". It leaves with the card. What replaces it is `tool`, which marks
+   * the same price properly.
+   */
+  rev: { at: 1523, step: 2, over: 20, card: { at: 1543, over: 60 } },
+
+  /**
+   * ⚠ THE LONG POSITION TOOL, after the rewind — Simon's screenshot. It is the
+   * answer to the mistake this whole stretch has been about: the lower edge is
+   * a line you draw BEFORE the trade, and it sits on the support, because that
+   * is where the reason for the trade stops being true.
+   */
+  tool: { at: 1620, over: 34 },
+
+  /**
    * ⚠ THE LEVEL FLASHES AS IT GOES — Simon, from 2751, three times. It is the
    * one moment in this card where the line is doing something rather than just
    * being somewhere: price is closing through it as it blinks.

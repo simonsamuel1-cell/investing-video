@@ -32,9 +32,9 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Chip, Cursor, Level, Line, SpeechBubble, candleWidth,
-  extendGrid, gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal,
-  theme, useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Chip, Cursor, Level, Line, PositionTool, SpeechBubble,
+  candleWidth, extendGrid, gridOf, lerpBox, lerpGrid, progress, progressInOut,
+  textReveal, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
@@ -178,6 +178,29 @@ const pillWidth = (s: string) => s.length * SAID_TYPE.size * 0.5 + SAID_TYPE.siz
  *  part of this. */
 const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
 
+/**
+ * ═══ THE LONG POSITION TOOL ═══  (Simon's screenshot)
+ *
+ * ⚠ THE STOP IS THE SUPPORT, EXACTLY. Nothing is chosen here: the trade was
+ * taken because the level held, so the price at which the trade is wrong IS
+ * that level, and the tool's lower edge lands on the line already drawn. A stop
+ * placed anywhere else would be a number this video does not have.
+ *
+ * ⚠ AND THE UPPER HALF IS THE LOWER HALF MIRRORED, for the same reason. Any
+ * other target would be a claim about how far this goes; the same distance up
+ * is a shape, and it is what Simon's reference shows.
+ *
+ * ⚠ IT STARTS ON THE BAR THAT WAS BOUGHT and runs to the edge of the window —
+ * a position tool is drawn forward from the entry, over the ground the trade
+ * has yet to cover.
+ */
+const TOOL = {
+  entry: CARD_ENTRY,
+  stop: CARD_SUPPORT,
+  target: CARD_ENTRY + (CARD_ENTRY - CARD_SUPPORT),
+  x1: ZOOM_GRID.x(BUY_I),
+};
+
 const SAID = V.hopes.said.map((q) => {
   const x = ZOOM_GRID.x(q.bar);
   const half = pillWidth(q.text) / 2;
@@ -282,7 +305,10 @@ const Card = ({ i, title }: { i: number; title: string }) => {
   /** ⚠ AND THEN A THIRD SIZE — Simon: the preview grows to the size of the
    *  chart at 286, which is the ordinary card every other scene draws in. Two
    *  blends rather than one number, so each stage keeps its own curve. */
-  const grown = picked ? progressInOut(f, V.grow.at, V.grow.over) : 0;
+  const grown = picked
+    ? progressInOut(f, V.grow.at, V.grow.over) -
+      progressInOut(f, V.rev.card.at, V.rev.card.over)
+    : 0;
   const b = lerpBox(
     lerpBox({ x: R.x(i), y: R.y, w: R.w, h: R.h }, { x: O.x, y: O.y, w: O.w, h: O.h }, open),
     CARD_GROWN,
@@ -416,18 +442,23 @@ export const CardList = () => {
    *  3075, so the layer holds and the window's end cuts it. See `out`. */
   const ground = progress(f, V.ground.at, V.ground.over);
 
-  /** ⚠ IN FROM OFF-FRAME, BOTTOM RIGHT — a pointer that fades up in the middle
-   *  of the screen has no hand attached to it. */
+  /**
+   * ⚠ THE REWIND IS A SUBTRACTION, NOT A SECOND ANIMATION — Simon, from 3517.
+   * The card's width is its growth MINUS its shrinking, so the two cannot
+   * disagree about where it is and the end state is the start state exactly.
+   */
+  const grown =
+    progressInOut(f, V.grow.at, V.grow.over) -
+    progressInOut(f, V.rev.card.at, V.rev.card.over);
+  /** ⚠ RIGHT TO LEFT, which is the only order a rewind has. */
+  const gone = (i: number) =>
+    1 - progressInOut(f, V.rev.at + (CARD_ALL.length - 1 - i) * V.rev.step, V.rev.over);
   /**
    * ⚠ THE CARD'S LIVE BOX, AND EVERY ANNOTATION SPANS IT. A level drawn across
    * "the card" while the card is growing has to be told what the card currently
    * IS, or it spends the move pointing at where the card used to be.
    */
-  const card = lerpBox(
-    { x: O.x, y: O.y, w: O.w, h: O.h },
-    CARD_GROWN,
-    progressInOut(f, V.grow.at, V.grow.over),
-  );
+  const card = lerpBox({ x: O.x, y: O.y, w: O.w, h: O.h }, CARD_GROWN, grown);
   const inner: [number, number] = [card.x + O.pad, card.x + card.w - O.pad];
   /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
    *  two grids and not a transform. */
@@ -439,11 +470,7 @@ export const CardList = () => {
    * the card opens; widened to the grown card, it stops hiding what was always
    * laid out rather than adding anything.
    */
-  const mask = lerpBox(
-    windowOf(grid, { x: O.x, y: O.y, w: O.w, h: O.h }),
-    CARD_GROWN,
-    progressInOut(f, V.grow.at, V.grow.over),
-  );
+  const mask = lerpBox(windowOf(grid, { x: O.x, y: O.y, w: O.w, h: O.h }), CARD_GROWN, grown);
 
   /**
    * ⚠ THREE FLASHES AS THE LEVEL GOES — Simon, from 2751. A half-sine per beat,
@@ -507,15 +534,20 @@ export const CardList = () => {
            *  these bars; they were out of frame, and the card opening is the
            *  whole of their story. */
           if (i < SEEN_FROM) return progressInOut(f, V.tape.at, V.tape.over);
-          if (i <= SEEN_TO) {
-            const k = i - SEEN_FROM;
-            return k < CARD_TAPE.length
-              ? progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over)
-              : progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over);
+          const k = i - SEEN_FROM;
+          /** ⚠ THE TEN BARS OF THE SETUP NEVER LEAVE. They are what the rewind
+           *  is rewinding TO, so nothing that happens after 3517 touches them. */
+          if (k < CARD_TAPE.length) {
+            return progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over);
           }
-          /** ⚠ AND WHAT IS BELOW IT ARRIVES IN ORDER, left to right, because it
-           *  is the trade going wrong and that is worth watching happen. */
-          return progressInOut(f, V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step, V.reveal.over);
+          const arrive =
+            i <= SEEN_TO
+              ? progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over)
+              : /** ⚠ WHAT IS BELOW THE LEVEL ARRIVES IN ORDER, left to right,
+                 *  because it is the trade going wrong and that is worth
+                 *  watching happen. */
+                progressInOut(f, V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step, V.reveal.over);
+          return arrive * gone(i);
         }}
       />
 
@@ -557,6 +589,25 @@ export const CardList = () => {
         at={V.entry.at}
         over={V.entry.over}
         dashed
+        /** ⚠ IT DOES NOT COME BACK WITH THE CARD — Simon: the rewind stops at
+         *  2721 "tanpa garis putus putus indigo". It leaves when the card
+         *  shrinks, and the position tool marks the same price properly. */
+        opacity={1 - progress(f, V.rev.card.at, V.rev.card.over)}
+      />
+
+      {/* ═══ THE TOOL ═══  Simon's screenshot, after the rewind.
+          ⚠ IT IS THE ANSWER TO THE MISTAKE, not decoration. Everything before
+          this has been a trade taken without a line saying when it was wrong;
+          this is that line, drawn where the reason for the trade lives. */}
+      <PositionTool
+        grid={grid}
+        entry={TOOL.entry}
+        target={TOOL.target}
+        stop={TOOL.stop}
+        x1={TOOL.x1}
+        x2={inner[1]}
+        at={V.tool.at}
+        over={V.tool.over}
       />
 
       {/* ═══ WHAT THE POSITION SAYS TO ITSELF ═══  Simon, 3294 and 3367.
