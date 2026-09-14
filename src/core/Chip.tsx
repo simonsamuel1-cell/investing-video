@@ -56,6 +56,7 @@ export const Chip = ({
   check = false,
   checkDisc = false,
   pill = false,
+  solid = false,
 }: {
   label: string;
   x: number;
@@ -79,6 +80,15 @@ export const Chip = ({
   checkDisc?: boolean;
   /** Wraps the label in a tinted, outlined pill. */
   pill?: boolean;
+  /**
+   * Fills the pill with the tone's own ink and sets the type white.
+   *
+   * ⚠ FOR A VERDICT, NOT FOR A LABEL. A tinted pill is an annotation on
+   * something; a filled one is a stamp ON it, and reads as loud as it looks.
+   * Use it where the word is the whole point — "Invalid" on a chart that has
+   * just broken — and nowhere it would merely be emphasis.
+   */
+  solid?: boolean;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -120,7 +130,7 @@ export const Chip = ({
           left: x,
           top: y,
           transform: `translate(${shift}, -50%) scale(${0.94 + 0.06 * p})`,
-          color: ink,
+          color: solid ? theme.color.onIndigo : ink,
           fontFamily: theme.text.family,
           fontSize: size,
           fontWeight: theme.text.chip.weight,
@@ -129,9 +139,13 @@ export const Chip = ({
           ...(pill
             ? {
                 padding: `${Math.round(size * PILL_PAD.y)}px ${Math.round(size * PILL_PAD.x)}px`,
-                background: wash,
-                border: `${theme.shape.rule}px solid ${ink}`,
+                background: solid ? ink : wash,
+                /* ⚠ NO BORDER ON A SOLID ONE. An outline in the same colour as
+                   the fill is a hairline nobody can see; in any other colour it
+                   is a second shape. */
+                border: solid ? "none" : `${theme.shape.rule}px solid ${ink}`,
                 borderRadius: 999,
+                fontWeight: solid ? 800 : undefined,
               }
             : null),
         }}

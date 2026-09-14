@@ -32,16 +32,15 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, candleWidth, extendGrid,
-  gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal, theme,
-  useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Chip, Cursor, Level, SpeechBubble, candleWidth,
+  extendGrid, gridOf, lerpBox, lerpGrid, progress, progressInOut, textReveal,
+  theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
 import {
-  CARD_ALL, CARD_ENTRY, CARD_FALL, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT,
-  CARD_TAPE,
+  CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -132,6 +131,13 @@ const ZOOM_GRID = extendGrid(
 );
 /** The bar the trade was taken on, in the extended series. */
 const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
+/** The stretch of the tape the small card can show — everything else is behind
+ *  the window until it opens. */
+const SEEN_FROM = CARD_HEAD_N;
+const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
+/** How many bars the window is hiding, and therefore how many the reveal has
+ *  to hand over one at a time. */
+const HIDDEN = CARD_ALL.length - (SEEN_TO - SEEN_FROM + 1);
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -390,6 +396,24 @@ export const CardList = () => {
     progressInOut(f, V.grow.at, V.grow.over),
   );
 
+  /**
+   * ⚠ THREE FLASHES AS THE LEVEL GOES — Simon, from 2751. A half-sine per beat,
+   * so each one swells and falls back rather than switching on: a level that
+   * snaps to red and snaps back reads as a bulb, not as a line under pressure.
+   *
+   * ⚠ COLOUR, WEIGHT AND GLOW ALL RIDE THE SAME `k`. Given separate curves they
+   * would be three effects that happen near each other; on one they are one
+   * line doing one thing.
+   */
+  const beat = (f - V.blink.at) / V.blink.over;
+  const k = beat < 0 || beat >= V.blink.times ? 0 : Math.sin(Math.PI * (beat % 1));
+  const hot = {
+    ink: interpolateColors(k, [0, 1], [c.indigo, theme.color.warn]),
+    /** ⚠ +3, NOT →3 — see `blink` in data/timing.ts. */
+    width: theme.shape.line + theme.shape.line * k,
+    glow: k * 16,
+  };
+
   const walk = progress(f, V.cursor.at, V.cursor.over);
   const from = { x: theme.canvas.width + 60, y: theme.canvas.height + 60 };
   const cursor = {
@@ -422,21 +446,23 @@ export const CardList = () => {
          *  drawn from one grid so the join cannot land a bar in the wrong
          *  place — but it arrives on its own beat, long after the first ten. */
         wipe={(i) => {
-          /** ⚠ HISTORY DOES NOT ARRIVE, IT IS ALREADY THERE. It comes in with
-           *  the tape's first bar and is behind the mask the whole time, so
-           *  nothing about it is ever watched happening. */
-          if (i < CARD_HEAD_N) return progressInOut(f, V.tape.at, V.tape.over);
-          const k = i - CARD_HEAD_N;
-          if (k < CARD_TAPE.length) {
-            return progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over);
+          /**
+           * ⚠ TWO SCHEDULES, AND WHICH ONE A BAR IS ON IS DECIDED BY THE
+           * WINDOW. Everything the small card can show arrives while it is
+           * small, on the beats it was locked to. Everything it cannot show
+           * waits for the card to open and then comes out one at a time —
+           * Simon: "tidak langsung muncul semua".
+           */
+          if (i >= SEEN_FROM && i <= SEEN_TO) {
+            const k = i - SEEN_FROM;
+            return k < CARD_TAPE.length
+              ? progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over)
+              : progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over);
           }
-          const j = k - CARD_TAPE.length;
-          /** ⚠ THE TAIL IS THE FUTURE AND CANNOT BE BEHIND THE MASK. It arrives
-           *  bar by bar once the fall has finished, which is the only order a
-           *  price chart is allowed to put them in. */
-          return j < CARD_FALL.length
-            ? progressInOut(f, V.fall.at + j * V.fall.step, V.fall.over)
-            : progressInOut(f, V.tail.at + (j - CARD_FALL.length) * V.tail.step, V.tail.over);
+          /** ⚠ IN INDEX ORDER, so the chart fills left to right: the history
+           *  first, then what is left of the fall and the grind after it. */
+          const rank = i < SEEN_FROM ? i : SEEN_FROM + (i - SEEN_TO - 1);
+          return progressInOut(f, V.reveal.at + rank * V.reveal.step, V.reveal.over);
         }}
       />
 
@@ -450,6 +476,8 @@ export const CardList = () => {
         span={inner}
         at={V.support.at}
         over={V.support.over}
+        ink={hot.ink}
+        glow={hot.glow}
         label="Support"
         /**
          * ⚠ BACK ON THE LEFT, AND IT HAS TO BE. The right-hand end is where the
@@ -461,7 +489,7 @@ export const CardList = () => {
          */
         labelSide="left"
         labelAt="below"
-        width={theme.shape.line}
+        width={hot.width}
       />
 
       {/* ⚠ THE ENTRY, AS A DASHED LINE FROM THE BUY BAR — Simon. Dashed rather
@@ -477,6 +505,31 @@ export const CardList = () => {
         over={V.entry.over}
         dashed
       />
+
+      {/* ═══ THE VERDICT ═══  Simon, 2966 → 3102.
+          ⚠ UNDER THE CHART, NOT ON IT. The caption row below the card is empty
+          in this scene and the word is about the whole picture, not about a
+          bar in it — put inside the plot it would be pointing at whichever
+          candle it happened to land on.
+          ⚠ SOLID RED WITH WHITE TYPE, which is allowed and is the reason `warn`
+          exists: this episode's one red outside a candle body, for WORDS that
+          name a mistake. "Invalid" is the mistake being named. */}
+      {f >= V.invalid.at && f < V.invalid.out && (
+        /** ⚠ IT FADES OUT, like the Buy bubble did once Simon saw that one pop.
+         *  The fade LANDS on his frame rather than starting there, so 3102 is
+         *  still the frame the word is gone on. */
+        <div style={{ opacity: 1 - progress(f, V.invalid.out - m.fade, m.fade) }}>
+          <Chip
+            label="Invalid"
+            x={theme.canvas.width / 2}
+            y={theme.stage.caption.y}
+            at={V.invalid.at}
+            tone="warn"
+            pill
+            solid
+          />
+        </div>
+      )}
 
       {/* ⚠ THE SAME BUBBLE, NOT A NEW ONE — Simon's "copy and paste". Same
           component, same size, same tone as SC01's, because this is the same
@@ -549,22 +602,27 @@ export const CardList = () => {
   if (lastFall > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the fall is still running when the window ends");
   }
-  if (CARD_LIST.tail.at < lastFall) {
-    throw new Error("022-ta-mistakes/CardList: the tail starts before the fall has finished");
+  const lastReveal = CARD_LIST.reveal.at + (HIDDEN - 1) * CARD_LIST.reveal.step + CARD_LIST.reveal.over;
+  if (lastReveal > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the reveal is still running when the window ends");
   }
-  const tailN = CARD_ALL.length - CARD_HEAD_N - CARD_FULL.length;
-  const lastTail = CARD_LIST.tail.at + (tailN - 1) * CARD_LIST.tail.step + CARD_LIST.tail.over;
-  if (lastTail > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the tail is still running when the window ends");
+  /** ⚠ NOTHING MAY BE REVEALED BEFORE THERE IS ROOM FOR IT. The bars the window
+   *  was hiding can only start arriving once the window has started opening. */
+  if (CARD_LIST.reveal.at < CARD_LIST.grow.at) {
+    throw new Error("022-ta-mistakes/CardList: hidden bars arrive before the card opens");
   }
   /** ⚠ NO BAR MAY LAND WHILE THE GRID IS MOVING. Where the zoom sits relative
-   *  to the tape is Simon's to choose — it used to be before it and is now
-   *  after it — but it may never be DURING it, because a bar that arrives
+   *  to the tape is Simon's to choose — it used to be after it and is now
+   *  before it — but it may never be DURING it, because a bar that arrives
    *  mid-zoom arrives somewhere that does not exist a frame later. */
   const zoomStart = CARD_LIST.zoom.at;
   const zoomEnd = zoomStart + CARD_LIST.zoom.over;
-  if (!(lastTail <= zoomStart || CARD_LIST.fall.at >= zoomEnd)) {
-    throw new Error("022-ta-mistakes/CardList: bars are still arriving while the chart is zooming");
+  const tapeEnd = CARD_LIST.tape.at + (CARD_TAPE.length - 1) * CARD_LIST.tape.step + CARD_LIST.tape.over;
+  if (tapeEnd > zoomStart) {
+    throw new Error("022-ta-mistakes/CardList: the tape is still building when the chart starts zooming");
+  }
+  if (CARD_LIST.fall.at < zoomEnd) {
+    throw new Error("022-ta-mistakes/CardList: the fall starts while the chart is still zooming");
   }
   /** ⚠ AND THE SIX HAVE TO BE SIX, AT BOTH SCALES THE SMALL CARD EVER HOLDS.
    *  The window is solved per frame, so what is checked here is that the solve

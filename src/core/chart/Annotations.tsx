@@ -38,6 +38,8 @@ export const Level = ({
   labelAt = "above",
   span,
   dashed = false,
+  ink: inkOverride,
+  glow = 0,
 }: {
   value: number;
   grid: Grid;
@@ -83,6 +85,14 @@ export const Level = ({
    * dash offset cannot both own strokeDasharray.
    */
   dashed?: boolean;
+  /**
+   * Overrides the level's colour. ⚠ FOR A LEVEL THAT IS DOING SOMETHING, not
+   * for a level that is a different kind of level — a line that flashes as it
+   * breaks, say. A permanent colour belongs in the theme and in `broken`.
+   */
+  ink?: string;
+  /** Radius of a glow around the line, in pixels. 0 is none. */
+  glow?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -92,7 +102,7 @@ export const Level = ({
   const xEnd = span ? span[1] : to === undefined ? grid.box.x + grid.box.w : grid.x(to);
   const x2 = dashed && !broken ? x1 + (xEnd - x1) * p : xEnd;
   const y = grid.y(value);
-  const ink = broken ? c.muted : c.indigo;
+  const ink = inkOverride ?? (broken ? c.muted : c.indigo);
 
   return (
     <>
@@ -104,6 +114,9 @@ export const Level = ({
           y2={y}
           stroke={ink}
           strokeWidth={width}
+          /* ⚠ THE GLOW IS THE LINE'S OWN COLOUR. A glow in a second hue would
+             be a second mark sitting under the first one. */
+          style={glow > 0 ? { filter: `drop-shadow(0 0 ${glow}px ${ink})` } : undefined}
           {...(broken
             ? { strokeDasharray: "12 9", opacity: p }
             : dashed

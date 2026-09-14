@@ -400,29 +400,48 @@ export const CARD_LIST = {
   grow: { at: 1089, over: 48 },
   zoom: { at: 682, over: 48 },
   /**
-   * ⚠ SIX, AND SIX IS WHAT THE SMALL CARD CAN HOLD — Simon: "candlestick yang
-   * muncul (di bawah garis support) hanya 6 saja". It is the mask that enforces
-   * it, not the tape: the fall and the grind run on their own locked schedule
-   * behind it, and the card's window is solved so that exactly six of them are
-   * ever seen arriving. See SMALL_MASK in scenes/CardList.tsx.
+   * ⚠ TWELVE, AND TWELVE IS WHAT THE SMALL CARD CAN HOLD — Simon, after asking
+   * how many more would fill the paper on the right. Measured off the render:
+   * 169px of it, at a 27.4px pitch, is six more bars to the card's inner margin
+   * and seven to its very edge. It is the mask that enforces the number, not
+   * the tape: the fall runs on its own locked schedule behind it, and the
+   * card's window is solved so exactly twelve are ever seen arriving.
    */
-  seen: 6,
+  seen: 12,
   /** ⚠ AND THEN IT FALLS. Fourteen bars, wiping on the same way the first ten
    *  did, so the fall is the same tape continuing and not a second chart. */
   fall: { at: 746, step: 14, over: 18 },
   /**
-   * ⚠ AND THE GRIND AFTER IT — ss02's lower half. It cannot be behind the mask
-   * with the history: these bars are the future until price gets to them, so
-   * they arrive once the fall has finished.
+   * ═══ AND EVERYTHING ELSE ARRIVES WHEN THE CARD OPENS ═══  Simon: "candlestick
+   * tidak langsung muncul semua, tapi muncul satu per satu, animasinya selesai
+   * 3822".
    *
-   * ⚠ THE LAST BAR LANDS ON 3000 — Simon. Seventeen bars into the 58 frames
-   * between the end of the fall and that number means they overlap thirteen
-   * deep: each takes 26 frames to come out but the next starts two frames
-   * later, so what crosses the card is a wave rather than seventeen separate
-   * arrivals. At this speed that is the right reading anyway — the grind is not
-   * seventeen events, it is one long nothing.
+   * ⚠ THE MASK NO LONGER HANDS THEM OVER IN ONE GO. Every bar the small card
+   * was hiding — eighteen of history, the last two of the fall, all seventeen
+   * of the grind — comes out on its own beat, in order, left to right. The
+   * window opening is what makes them possible; this is what makes them happen.
+   *
+   * Thirty-seven bars across 739 frames, each taking 55 to come out and the
+   * next starting 19 later, so three are always on the way at once and the last
+   * lands on 3822.
    */
-  tail: { at: 948, step: 2, over: 26 },
+  reveal: { at: 1089, step: 19, over: 55 },
+
+  /**
+   * ⚠ THE LEVEL FLASHES AS IT GOES — Simon, from 2751, three times. It is the
+   * one moment in this card where the line is doing something rather than just
+   * being somewhere: price is closing through it as it blinks.
+   *
+   * ⚠ AND THE THICKENING IS +3, NOT →3. At rest this level is already drawn at
+   * `theme.shape.line`, which IS 3px, so setting it to 3 would be no change at
+   * all. Simon's number is taken as the amount it gains.
+   */
+  blink: { at: 757, times: 3, over: 18 },
+
+  /** ⚠ THE VERDICT, UNDER THE CHART — Simon, 2966 → 3102. White on solid red:
+   *  `warn` is this episode's one red outside a candle and it is for WORDS that
+   *  name a mistake, which is exactly what this word is. */
+  invalid: { at: 972, out: 1108 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */
