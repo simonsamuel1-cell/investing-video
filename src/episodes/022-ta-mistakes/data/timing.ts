@@ -713,8 +713,14 @@ export const PLAT = {
   levels: { at: 4679, over: 30 },
   /** 4775 — everything drawn ON the chart goes. The chart itself stays. */
   clear: { at: 4775, over: 24 },
-  /** 4894 — the panel shrinks toward the middle, making room under it. */
-  shrink: { at: 4894, over: 40, by: 0.72 },
+  /**
+   * 4894 — the panel shrinks toward the middle, making room under it.
+   *
+   * ⚠ `lift` RIDES THE SAME CURVE AS THE SCALE, and that is the point: Simon
+   * wants the finished arrangement 40px higher, not the panel 40px higher for
+   * the whole scene. On one curve nothing before 4894 moves at all.
+   */
+  shrink: { at: 4894, over: 40, by: 0.72, lift: 40 },
   /** And the sentence that room was made for. */
   note: { at: 4944, perChar: 2 },
 } as const;

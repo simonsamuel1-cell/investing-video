@@ -69,7 +69,14 @@ const BOX = (() => {
   const floor = 540 + (900 - 540) * PLAT.shrink.by;
   const w = 760;
   const h = 108;
-  return { x: (theme.canvas.width - w) / 2, y: (floor + theme.captionBand.top) / 2 - h / 2, w, h };
+  /** ⚠ THE SAME 40 THE PANEL TAKES, so the gap between them is the one that was
+   *  solved for and the pair moves as a pair. */
+  return {
+    x: (theme.canvas.width - w) / 2,
+    y: (floor + theme.captionBand.top) / 2 - h / 2 - PLAT.shrink.lift,
+    w,
+    h,
+  };
 })();
 
 const PNL = {
@@ -141,7 +148,8 @@ export const Platform = () => {
   const ink = 1 - progress(g, PLAT.clear.at, PLAT.clear.over);
   /** ⚠ THE PANEL SHRINKS ABOUT THE FRAME'S CENTRE, which is what makes the room
    *  it shrinks to make appear UNDER it rather than around it. */
-  const small = 1 - (1 - PLAT.shrink.by) * progressInOut(g, PLAT.shrink.at, PLAT.shrink.over);
+  const closing = progressInOut(g, PLAT.shrink.at, PLAT.shrink.over);
+  const small = 1 - (1 - PLAT.shrink.by) * closing;
 
   return (
     <div
@@ -156,7 +164,12 @@ export const Platform = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `scale(${small.toFixed(4)})`,
+          /** ⚠ THE LIFT IS ON THE SHRINK'S OWN CURVE — Simon's 40px is for the
+           *  arrangement this lands in, not for the panel throughout, so on one
+           *  curve nothing before 4894 moves. Translate before scale: the shift
+           *  is 40 screen pixels, and a translate AFTER a 0.72 scale would be
+           *  40 × 0.72 of them. */
+          transform: `translateY(${(-PLAT.shrink.lift * closing).toFixed(1)}px) scale(${small.toFixed(4)})`,
           transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
         }}
       >
