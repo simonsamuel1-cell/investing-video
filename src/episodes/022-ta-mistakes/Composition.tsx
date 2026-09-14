@@ -45,7 +45,7 @@ import { CUES, VO_END } from "./subtitles";
 import { BLOCK, CARD_LIST, COUNTER, REVERSE } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
-import { SC06 } from "./scenes/SC06";
+import { Platform } from "./scenes/Platform";
 import { SC07 } from "./scenes/SC07";
 import { SC08 } from "./scenes/SC08";
 import { SC09 } from "./scenes/SC09";
@@ -96,7 +96,12 @@ const HIDDEN: string[] = [];
 const SCENES: Mounted[] = [
   { from: BLOCK.SC01, duration: BLOCK.SC06 - BLOCK.SC01, Component: SetupGroup, name: "CG-A · SC01·02·04·05" },
   { from: BLOCK.SC03, duration: BLOCK.SC04 - BLOCK.SC03, Component: SC03, name: "SC03 Probabilitas" },
-  { from: BLOCK.SC06, duration: BLOCK.SC07 - BLOCK.SC06, Component: SC06, name: "SC06 Overtrading" },
+  /** ⚠ SC06'S OWN VISUALS ARE GONE — Simon: "scene dari 4282-5030 dihapus
+   *  semua". What runs here now is VIDEO 19's broker panel, held on its frame
+   *  170; see scenes/Platform.tsx. The window still starts at BLOCK.SC06
+   *  because the timeline may not have a hole in it — the card list covers its
+   *  first 235 frames, and the panel is what shows from 4282. */
+  { from: BLOCK.SC06, duration: BLOCK.SC07 - BLOCK.SC06, Component: Platform, name: "SC06 Platform" },
   { from: BLOCK.SC07, duration: BLOCK.SC08 - BLOCK.SC07, Component: SC07, name: "SC07 Revenge trading" },
   { from: BLOCK.SC08, duration: BLOCK.SC09 - BLOCK.SC08, Component: SC08, name: "SC08 Confirmation bias" },
   { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: SC09, name: "SC09 Konteks market" },

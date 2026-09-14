@@ -562,6 +562,7 @@ const spanOf = (
 export const BrokerPanel = ({
   f,
   shrink = 1,
+  structure = true,
 }: {
   f: number;
   /**
@@ -571,6 +572,12 @@ export const BrokerPanel = ({
    * LANDED — the closing roadmap — leaves it at 1 and has no outline of its own.
    */
   shrink?: number;
+  /**
+   * ⚠ OFF HIDES THE ZIGZAG AND ITS HL/HH/LH/LL LABELS. Added for VIDEO 22,
+   * which borrows this panel for a frame where the market structure is not what
+   * is being talked about. Defaults to on, so nothing in this episode changes.
+   */
+  structure?: boolean;
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -884,7 +891,7 @@ export const BrokerPanel = ({
               })}
 
               {/* ── the market structure, traced by hand ── */}
-              {zt && f >= zt.from && (
+              {structure && zt && f >= zt.from && (
                 <g>
                   <path
                     d={ch.pt
