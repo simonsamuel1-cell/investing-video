@@ -22,9 +22,9 @@
  * its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { cutInStyle } from "../../../core";
+import { progress } from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
-import { BLOCK, PLATFORM_CUT } from "../data/timing";
+import { BLOCK, PLATFORM } from "../data/timing";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -33,14 +33,17 @@ const AT = 170;
 export const Platform = () => {
   const f = useCurrentFrame();
   /**
-   * ⚠ GLOBAL FRAMES, AND THIS IS THE ONE BUG CameraCut WARNS ABOUT. A scene
-   * inside a Sequence sees its own rebased frame; the cut is written in the
-   * timeline's numbers, so the scene's `from` has to go back on before the
-   * curve is asked anything.
+   * ⚠ GLOBAL FRAMES. A scene inside a Sequence sees its own rebased frame, and
+   * 4282 is written in the timeline's numbers, so the scene's `from` has to go
+   * back on before anything is asked about it.
+   *
+   * ⚠ AND IT IS A FADE, NOT A MOVE — Simon. The panel is under the card list
+   * until 4281, so anything that has to start before the frame it lands on
+   * would do half its work unseen; a fade has no hidden half.
    */
-  const style = cutInStyle(f + BLOCK.SC06, PLATFORM_CUT);
+  const shown = progress(f + BLOCK.SC06, PLATFORM.at, PLATFORM.fade);
   return (
-    <div style={{ position: "absolute", inset: 0, ...style }}>
+    <div style={{ position: "absolute", inset: 0, opacity: shown }}>
       <BrokerPanel f={AT} structure={false} />
     </div>
   );
