@@ -36,6 +36,8 @@ export const Level = ({
   width = theme.shape.rule,
   labelSide = "right",
   labelAt = "above",
+  span,
+  dashed = false,
 }: {
   value: number;
   grid: Grid;
@@ -64,13 +66,31 @@ export const Level = ({
    * a label above would be standing in the price.
    */
   labelAt?: "above" | "below";
+  /**
+   * Pixel ends, overriding `from`/`to`.
+   *
+   * ⚠ FOR A LEVEL THAT IS NOT ABOUT THE BARS. A level drawn across a whole
+   * card, or one that starts on a bar and carries on past the plot, cannot be
+   * said in bar indices without a fractional index — which is a pixel with
+   * extra steps and no longer survives the grid changing under it.
+   */
+  span?: [number, number];
+  /**
+   * Dashed, but still live. ⚠ NOT THE SAME THING AS `broken`: `broken` says a
+   * level FAILED and mutes it; this is a level that was always provisional — an
+   * entry price, a projection — and keeps the ink of a level that still counts.
+   * It arrives by growing its far end, because a dash pattern and a draw-on
+   * dash offset cannot both own strokeDasharray.
+   */
+  dashed?: boolean;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   if (opacity <= 0.001 || f < at) return null;
   const p = progress(f, at, Math.max(1, over));
-  const x1 = from === undefined ? grid.box.x : grid.x(from);
-  const x2 = to === undefined ? grid.box.x + grid.box.w : grid.x(to);
+  const x1 = span ? span[0] : from === undefined ? grid.box.x : grid.x(from);
+  const xEnd = span ? span[1] : to === undefined ? grid.box.x + grid.box.w : grid.x(to);
+  const x2 = dashed && !broken ? x1 + (xEnd - x1) * p : xEnd;
   const y = grid.y(value);
   const ink = broken ? c.muted : c.indigo;
 
@@ -86,7 +106,9 @@ export const Level = ({
           strokeWidth={width}
           {...(broken
             ? { strokeDasharray: "12 9", opacity: p }
-            : drawPath(p, Math.abs(x2 - x1)))}
+            : dashed
+              ? { strokeDasharray: "12 9" }
+              : drawPath(p, Math.abs(x2 - x1)))}
         />
       </Layer>
       {label && (
@@ -102,7 +124,7 @@ export const Level = ({
              * resistance level is a claim about.
              */
             position: "absolute",
-            left: labelSide === "left" ? Math.min(x1, x2) + 12 : x2 - 12,
+            left: labelSide === "left" ? Math.min(x1, xEnd) + 12 : xEnd - 12,
             top: labelAt === "below" ? y + 10 : y - 10,
             transform: [
               labelSide === "left" ? "" : "translateX(-100%)",

@@ -5,7 +5,7 @@
  * scene in this episode follows. A number that appears twice in a scene file
  * belongs here instead.
  */
-import { candleWidth, gridOf, theme, columns, inset } from "../../../core";
+import { GRID_PAD_X, candleWidth, gridOf, theme, columns, inset } from "../../../core";
 import type { Rect } from "../../../core";
 
 const PLOT = theme.stage.plot;
@@ -430,4 +430,70 @@ export const CARD_OPEN = (() => {
   if (Math.abs(o.support - (o.y + o.h * 0.75)) > 1e-9) {
     throw new Error("022-ta-mistakes/layout: the card's support is not the line between its two lowest bands");
   }
+}
+
+/**
+ * ═══ THE CARD GROWN, AND THE CHART ZOOMED OUT INSIDE IT ═══  (Simon)
+ *
+ * ⚠ THE CARD BECOMES THE ORDINARY ONE. "Sebesar chart di 286" is `theme.stage.
+ * card` — the window every other scene in this episode draws in. Held as that
+ * rather than as its measurements, so the transition lands on the same box the
+ * rest of the video uses instead of on a copy of it that will drift.
+ *
+ * ⚠ AND THE CHART SHRINKS WHILE THE CARD GROWS, which is the move: zooming a
+ * chart OUT is how room appears at the right for bars that have not happened
+ * yet. Simon's numbers are `dx`, `dy` and the two scales; everything else is
+ * solved from them.
+ *
+ * ⚠ ANCHORED ON WHAT THE EYE IS WATCHING, not on a corner. The shift is applied
+ * to the CENTRE of the ten bars already drawn and to the middle of the prices
+ * they cover, so "150 left and 100 up" is 150 and 100 for the thing on screen.
+ * Anchored top-left, the same numbers would move the tape by some other amount
+ * entirely, because the box also shrank.
+ */
+export const CARD_GROWN = theme.stage.card;
+
+export const CARD_ZOOM = (() => {
+  /** ⚠ SIMON'S FOUR NUMBERS. Everything below is derived. */
+  const kx = 0.75;
+  const ky = 0.62;
+  const dx = -150;
+  const dy = -100;
+
+  /** 10 drawn + 14 that fall. The count is what a zoom-out is FOR. */
+  const bars = CARD_OPEN.bars + 14;
+  /** The middle of the prices the ten bars cover — the anchor for `dy`. */
+  const MID = 0.6;
+
+  const a = gridOf(new Array(CARD_OPEN.bars).fill(0), [0, 1], CARD_OPEN.plot, 0);
+  const pitchA = a.x(1) - a.x(0);
+  const pitchB = pitchA * kx;
+  const half = (CARD_OPEN.bars - 1) / 2;
+
+  const w = pitchB * (bars - 1) + GRID_PAD_X * 2;
+  const h = CARD_OPEN.plot.h * ky;
+  const x = a.x(0) + half * pitchA + dx - half * pitchB - GRID_PAD_X;
+  const y = a.y(MID) + dy - h * (1 - MID);
+
+  return { bars, kx, ky, dx, dy, plot: { x, y, w, h } };
+})();
+
+{
+  const o = CARD_OPEN;
+  const z = CARD_ZOOM;
+  const a = gridOf(new Array(o.bars).fill(0), [0, 1], o.plot, 0);
+  const b = gridOf(new Array(z.bars).fill(0), [0, 1], z.plot, 0);
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  /** Simon's shift, measured on the thing that moved rather than on its box. */
+  const centre = (g: { x: (i: number) => number }) => (g.x(0) + g.x(o.bars - 1)) / 2;
+  if (Math.abs(centre(b) - centre(a) - z.dx) > 0.5) fail("the zoom does not move the tape left by dx");
+  if (Math.abs(b.y(0.6) - a.y(0.6) - z.dy) > 0.5) fail("the zoom does not move the tape up by dy");
+  /** And everything it draws has to still be inside the grown card. */
+  const lowest = b.y(-0.33);
+  if (b.y(0.95) < CARD_GROWN.y || lowest > CARD_GROWN.y + CARD_GROWN.h)
+    fail(`the zoomed chart runs from ${b.y(0.95).toFixed(0)} to ${lowest.toFixed(0)}, outside the grown card`);
+  if (b.x(z.bars - 1) > CARD_GROWN.x + CARD_GROWN.w - o.pad)
+    fail("the fall runs off the right of the grown card");
 }

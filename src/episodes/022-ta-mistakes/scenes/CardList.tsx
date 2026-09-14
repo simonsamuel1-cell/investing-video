@@ -32,12 +32,12 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, gridOf, progress,
-  progressInOut, textReveal, theme, useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, gridOf, lerpBox, lerpGrid,
+  progress, progressInOut, textReveal, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
-import { BUBBLE, CARD_OPEN, CARD_ROW } from "../data/layout";
-import { CARD_SUPPORT, CARD_TAPE } from "../data/series";
+import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
+import { CARD_ENTRY, CARD_FULL, CARD_SUPPORT, CARD_TAPE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = CARD_LIST;
@@ -98,7 +98,19 @@ const TAPE_GRID = gridOf(
  * does. The tape stops 250px short because Simon wants that room; the level
  * crossing it is what the room is for.
  */
-const LEVEL_GRID = gridOf([0], [0, 1], { ...O.plot, x: O.x + O.pad, w: O.w - O.pad * 2 }, 0);
+/**
+ * ⚠ THE ZOOMED-OUT GRID IS A DIFFERENT GRID, NOT A SCALED PICTURE. It holds all
+ * twenty-four bars where the first holds ten — which is what zooming a chart
+ * out IS — so the fall has somewhere to happen. Between the two, `lerpGrid`
+ * blends the mappings; nothing drawn on the chart is scaled, so strokes, corner
+ * radii and type keep their own weight all the way through the move.
+ */
+const ZOOM_GRID = gridOf(
+  CARD_FULL.map((b) => b.c),
+  [0, 1],
+  CARD_ZOOM.plot,
+  0,
+);
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -157,8 +169,16 @@ const Card = ({ i, title }: { i: number; title: string }) => {
    */
   const sweep = picked ? 0 : progressInOut(f, V.exit.at, V.exit.row) * SWEEP;
   const open = picked ? progressInOut(f, V.exit.at + V.exit.lead, V.exit.one) : 0;
-  const w = R.w + (O.w - R.w) * open;
-  const x = R.x(i) + (O.x - R.x(i)) * open;
+  /** ⚠ AND THEN A THIRD SIZE — Simon: the preview grows to the size of the
+   *  chart at 286, which is the ordinary card every other scene draws in. Two
+   *  blends rather than one number, so each stage keeps its own curve. */
+  const grown = picked ? progressInOut(f, V.grow.at, V.grow.over) : 0;
+  const b = lerpBox(
+    lerpBox({ x: R.x(i), y: R.y, w: R.w, h: R.h }, { x: O.x, y: O.y, w: O.w, h: O.h }, open),
+    CARD_GROWN,
+    grown,
+  );
+  const { x, y, w } = b;
   const blob = blobOf(w);
   /**
    * ⚠ THE CARD EMPTIES AS IT OPENS — Simon. Title, number and the ink itself
@@ -177,9 +197,9 @@ const Card = ({ i, title }: { i: number; title: string }) => {
       style={{
         position: "absolute",
         left: x,
-        top: R.y,
+        top: y,
         width: w,
-        height: R.h,
+        height: b.h,
         borderRadius: theme.shape.cardRadius,
         background: c.cardBg,
         boxShadow: shadow.rest,
@@ -196,7 +216,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
             position: "absolute",
             opacity: drain,
             left: w * TOUCH.fx - blob / 2,
-            top: R.h * TOUCH.fy - blob / 2,
+            top: b.h * TOUCH.fy - blob / 2,
             width: blob,
             height: blob,
             borderRadius: "50%",
@@ -220,7 +240,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
         style={{
           position: "absolute",
           left: w / 2 + NUM.dx,
-          top: R.h + NUM.dy,
+          top: b.h + NUM.dy,
           /**
            * ⚠ THE PERCENTAGE IS THE SIT, THE PIXELS ARE THE NUDGE. -90% is of
            * the numeral's OWN box, so the glyph lands whole on the card's
@@ -231,7 +251,7 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           transform: "translate(-50%, -90%)",
           fontFamily: theme.text.family,
           /** ⚠ A THIRD OF THE CARD, not a typed size. */
-          fontSize: R.h / 3,
+          fontSize: b.h / 3,
           fontWeight: 800,
           lineHeight: 1,
           /**
@@ -288,6 +308,21 @@ export const CardList = () => {
 
   /** ⚠ IN FROM OFF-FRAME, BOTTOM RIGHT — a pointer that fades up in the middle
    *  of the screen has no hand attached to it. */
+  /**
+   * ⚠ THE CARD'S LIVE BOX, AND EVERY ANNOTATION SPANS IT. A level drawn across
+   * "the card" while the card is growing has to be told what the card currently
+   * IS, or it spends the move pointing at where the card used to be.
+   */
+  const card = lerpBox(
+    { x: O.x, y: O.y, w: O.w, h: O.h },
+    CARD_GROWN,
+    progressInOut(f, V.grow.at, V.grow.over),
+  );
+  const inner: [number, number] = [card.x + O.pad, card.x + card.w - O.pad];
+  /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
+   *  two grids and not a transform. */
+  const grid = lerpGrid(TAPE_GRID, ZOOM_GRID, progressInOut(f, V.zoom.at, V.zoom.over));
+
   const walk = progress(f, V.cursor.at, V.cursor.over);
   const from = { x: theme.canvas.width + 60, y: theme.canvas.height + 60 };
   const cursor = {
@@ -313,9 +348,20 @@ export const CardList = () => {
           ⚠ AND THE SUPPORT IS STILL NOT DRAWN — Simon's "jangan digambarkan
           dulu". The tape resting on it three times is what puts it there. */}
       <Candles
-        bars={CARD_TAPE}
-        grid={TAPE_GRID}
-        wipe={(i) => progressInOut(f, V.tape.at + i * V.tape.step, V.tape.over)}
+        bars={CARD_FULL}
+        grid={grid}
+        /** ⚠ ONE SERIES, TWO SCHEDULES. The fall is the same tape continuing —
+         *  drawn from one grid so the join cannot land a bar in the wrong
+         *  place — but it arrives on its own beat, long after the first ten. */
+        wipe={(i) =>
+          i < CARD_TAPE.length
+            ? progressInOut(f, V.tape.at + i * V.tape.step, V.tape.over)
+            : progressInOut(
+                f,
+                V.fall.at + (i - CARD_TAPE.length) * V.fall.step,
+                V.fall.over,
+              )
+        }
       />
 
       {/* ⚠ NOW IT MAY BE DRAWN. Held back until the tape had finished, so the
@@ -324,13 +370,28 @@ export const CardList = () => {
           weight every other level in this episode is drawn at. */}
       <Level
         value={CARD_SUPPORT}
-        grid={LEVEL_GRID}
+        grid={grid}
+        span={inner}
         at={V.support.at}
         over={V.support.over}
         label="Support"
         labelSide="left"
         labelAt="below"
         width={theme.shape.line}
+      />
+
+      {/* ⚠ THE ENTRY, AS A DASHED LINE FROM THE BUY BAR — Simon. Dashed rather
+          than solid because it is not a level the market knows about: it is one
+          person's price, and the whole scene is about what happens to it. It
+          starts ON the bar that was bought and runs to the card's edge, so
+          everything that comes after is read against it. */}
+      <Level
+        value={CARD_ENTRY}
+        grid={grid}
+        span={[grid.x(CARD_TAPE.length - 1), inner[1]]}
+        at={V.entry.at}
+        over={V.entry.over}
+        dashed
       />
 
       {/* ⚠ THE SAME BUBBLE, NOT A NEW ONE — Simon's "copy and paste". Same
@@ -374,9 +435,6 @@ export const CardList = () => {
    *  tape rests on 0.25 of the card; layout.ts says the support is the line
    *  between the two lowest bands. Nothing but this check makes those the same
    *  place, and if they drift the tape will rest on nothing. */
-  if (Math.abs(TAPE_GRID.y(CARD_SUPPORT) - LEVEL_GRID.y(CARD_SUPPORT)) > 1e-9) {
-    throw new Error("022-ta-mistakes/CardList: the level's grid and the tape's grid disagree about where the support is");
-  }
   if (Math.abs(TAPE_GRID.y(CARD_SUPPORT) - CARD_OPEN.support) > 0.5) {
     throw new Error(
       `022-ta-mistakes/CardList: the tape's support lands at ${TAPE_GRID.y(CARD_SUPPORT).toFixed(1)}, not on the band line at ${CARD_OPEN.support}`,
@@ -398,6 +456,20 @@ export const CardList = () => {
   }
   if (CARD_LIST.support.at + CARD_LIST.support.over > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the support is still drawing when the window ends");
+  }
+  /** ⚠ SIMON'S ORDER AGAIN: grow, zoom, THEN fall. A bar that lands while the
+   *  grid is still moving lands somewhere that does not exist a frame later. */
+  const zoomed = CARD_LIST.zoom.at + CARD_LIST.zoom.over;
+  if (CARD_LIST.grow.at < CARD_LIST.buyGone) {
+    throw new Error("022-ta-mistakes/CardList: the card starts growing before the Buy bubble has gone");
+  }
+  if (CARD_LIST.fall.at < zoomed) {
+    throw new Error("022-ta-mistakes/CardList: the fall starts while the chart is still zooming");
+  }
+  const lastFall =
+    CARD_LIST.fall.at + (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step + CARD_LIST.fall.over;
+  if (lastFall > CARD_LIST.over) {
+    throw new Error("022-ta-mistakes/CardList: the fall is still running when the window ends");
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */

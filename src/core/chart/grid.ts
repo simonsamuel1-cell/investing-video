@@ -134,3 +134,36 @@ export const defaultBox = (): Box => theme.stage.plot;
 
 /** Bars → the values a grid must cover, for convenience at a call site. */
 export const barValues = (bars: Bar[]) => bars.flatMap((b) => [b.h, b.l]);
+
+/** Two boxes, blended. */
+export const lerpBox = (a: Box, b: Box, t: number): Box => ({
+  x: a.x + (b.x - a.x) * t,
+  y: a.y + (b.y - a.y) * t,
+  w: a.w + (b.w - a.w) * t,
+  h: a.h + (b.h - a.h) * t,
+});
+
+/**
+ * Two grids, blended — how a chart ZOOMS.
+ *
+ * ⚠ THIS IS THE ONLY HONEST WAY TO ANIMATE A ZOOM, and it is why no scene in
+ * this project scales a chart in CSS. A CSS scale takes the stroke widths, the
+ * candle corner radii and the type with it, so what arrives is a PICTURE of a
+ * chart at a different size. Blending the grids moves every bar and every price
+ * to where it belongs at the new scale and leaves everything drawn on it drawn
+ * at its own weight.
+ *
+ * ⚠ AND IT BLENDS THE MAPPINGS, NOT THE INPUTS. The two grids may hold
+ * different numbers of bars — zooming out is usually exactly that — so there is
+ * no single `gridOf` call in between them. `x(i)` extrapolates outside a grid's
+ * own range, so a bar that only exists at one end still has somewhere to be.
+ */
+export const lerpGrid = (a: Grid, b: Grid, t: number): Grid =>
+  t <= 0 ? a : t >= 1 ? b : {
+    lo: a.lo + (b.lo - a.lo) * t,
+    hi: a.hi + (b.hi - a.hi) * t,
+    slot: a.slot + (b.slot - a.slot) * t,
+    box: lerpBox(a.box, b.box, t),
+    x: (i) => a.x(i) + (b.x(i) - a.x(i)) * t,
+    y: (v) => a.y(v) + (b.y(v) - a.y(v)) * t,
+  };

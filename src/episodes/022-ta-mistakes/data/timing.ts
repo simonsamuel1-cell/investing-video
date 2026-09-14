@@ -377,6 +377,20 @@ export const CARD_LIST = {
    */
   buy: 562,
   buyGone: 650,
+  /** ⚠ THE ENTRY, LEFT ON THE CHART AFTER THE BUBBLE HAS GONE — Simon's dashed
+   *  line from the buy point. It arrives with the bubble and STAYS, because
+   *  everything that happens next only means something measured against it. */
+  entry: { at: 562, over: 30 },
+  /**
+   * ═══ THE CARD OPENS ALL THE WAY ═══  Simon: the preview grows to the size of
+   * the chart at 286, and the chart inside it zooms OUT. The two overlap by
+   * design — one move, not a grow and then a separate shrink.
+   */
+  grow: { at: 666, over: 48 },
+  zoom: { at: 682, over: 48 },
+  /** ⚠ AND THEN IT FALLS. Fourteen bars, wiping on the same way the first ten
+   *  did, so the fall is the same tape continuing and not a second chart. */
+  fall: { at: 746, step: 14, over: 18 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

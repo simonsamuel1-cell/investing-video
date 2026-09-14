@@ -468,3 +468,67 @@ export const CARD_TAPE: Bar[] = [
       fail(`card tape bar ${i + 1} has a wick inside its own body`);
   }
 }
+
+/**
+ * ═══ AND THEN IT FALLS ═══  Simon: "setelah itu chartnya turun zigzag".
+ *
+ * ⚠ THE ZIGZAG IS THE POINT, NOT THE FALL. A straight drop says the market
+ * went against you; a staircase of lower highs says something worse and truer —
+ * that there were four separate moments when it looked like it had stopped. The
+ * trade in the bubble above is still open through every one of them, and that
+ * is the mistake this whole episode opens with: nothing here told the buyer
+ * WHEN to admit the idea was wrong.
+ *
+ * ⚠ IT BREAKS THE LEVEL ON THE FIRST BAR. The support is drawn, the trade is
+ * taken because of it, and then it goes — in that order, so the level is seen
+ * failing rather than reported as having failed.
+ *
+ * Same units as CARD_TAPE: heights inside the card, no prices. These go BELOW
+ * zero, which is below the card's bottom edge in that scale and simply means
+ * the chart has fallen further than the card's own height — the zoom-out is
+ * what makes the room for it.
+ */
+export const CARD_FALL: Bar[] = [
+  { o: 0.45, c: 0.22, h: 0.46, l: 0.20 },
+  { o: 0.22, c: 0.28, h: 0.30, l: 0.21 },
+  { o: 0.28, c: 0.16, h: 0.29, l: 0.14 },
+  { o: 0.16, c: 0.10, h: 0.18, l: 0.08 },
+  { o: 0.10, c: 0.16, h: 0.19, l: 0.09 },
+  { o: 0.16, c: 0.04, h: 0.17, l: 0.01 },
+  { o: 0.04, c: -0.04, h: 0.06, l: -0.07 },
+  { o: -0.04, c: 0.03, h: 0.06, l: -0.05 },
+  { o: 0.03, c: -0.10, h: 0.04, l: -0.13 },
+  { o: -0.10, c: -0.18, h: -0.08, l: -0.21 },
+  { o: -0.18, c: -0.11, h: -0.08, l: -0.20 },
+  { o: -0.11, c: -0.22, h: -0.10, l: -0.25 },
+  { o: -0.22, c: -0.30, h: -0.20, l: -0.33 },
+  { o: -0.30, c: -0.26, h: -0.23, l: -0.32 },
+] as const as Bar[];
+
+/** The tape and its fall are ONE series, so one grid draws both and the join
+ *  cannot land a bar in the wrong place. */
+export const CARD_FULL: Bar[] = [...CARD_TAPE, ...CARD_FALL];
+/** Where the buyer got in: the close of the last bar before the fall. */
+export const CARD_ENTRY = CARD_TAPE[CARD_TAPE.length - 1].c;
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  if (CARD_FALL[0].o !== CARD_ENTRY) fail("the fall does not open where the tape closed");
+  if (CARD_FALL[0].c >= CARD_SUPPORT) fail("the fall's first bar does not break the support");
+  for (const [i, b] of CARD_FALL.entries()) {
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
+      fail(`card fall bar ${i + 1} has a wick inside its own body`);
+  }
+  /** ⚠ LOWER HIGHS, OR IT IS NOT A ZIGZAG. Four bounces that each fail lower
+   *  than the last is the shape; four bounces at the same height is a range. */
+  const bounces = CARD_FALL.filter((b) => b.c > b.o);
+  if (bounces.length < 3) fail(`the fall has ${bounces.length} bounces — that is a drop, not a zigzag`);
+  for (let i = 1; i < bounces.length; i++) {
+    if (bounces[i].h >= bounces[i - 1].h)
+      fail(`fall bounce ${i + 1} does not fail lower than the one before it`);
+  }
+  if (CARD_FALL[CARD_FALL.length - 1].c >= CARD_FALL[0].o - 0.4)
+    fail("the fall does not actually go anywhere");
+}
