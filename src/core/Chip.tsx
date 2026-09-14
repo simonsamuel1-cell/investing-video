@@ -57,6 +57,8 @@ export const Chip = ({
   checkDisc = false,
   pill = false,
   solid = false,
+  size = theme.text.chip.size,
+  weight,
 }: {
   label: string;
   x: number;
@@ -89,6 +91,14 @@ export const Chip = ({
    * just broken — and nowhere it would merely be emphasis.
    */
   solid?: boolean;
+  /**
+   * Type size. ⚠ THE PILL IS BUILT FROM IT — padding and corner are fractions
+   * of the type — so one number resizes the whole object and a pill can never
+   * end up with the padding of a different size.
+   */
+  size?: number;
+  /** Overrides the weight. Defaults to the chip scale's, or 800 when `solid`. */
+  weight?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -108,7 +118,7 @@ export const Chip = ({
           : theme.color.indigoWash;
   const shift =
     anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
-  const size = theme.text.chip.size;
+  const wt = weight ?? (solid ? 800 : theme.text.chip.weight);
 
   return (
     <>
@@ -133,7 +143,7 @@ export const Chip = ({
           color: solid ? theme.color.onIndigo : ink,
           fontFamily: theme.text.family,
           fontSize: size,
-          fontWeight: theme.text.chip.weight,
+          fontWeight: wt,
           whiteSpace: "nowrap",
           opacity: p,
           ...(pill
@@ -145,7 +155,6 @@ export const Chip = ({
                    is a second shape. */
                 border: solid ? "none" : `${theme.shape.rule}px solid ${ink}`,
                 borderRadius: 999,
-                fontWeight: solid ? 800 : undefined,
               }
             : null),
         }}

@@ -151,11 +151,25 @@ const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
  * ⚠ SOLVED AT THE ZOOMED SCALE ONCE, because by 3294 the zoom is 570 frames
  * done and the grid cannot move again inside this window.
  */
-const PILL = { h: theme.text.chip.size * 1.8, gap: 10 };
+/** ⚠ SIMON'S: four smaller than the chip scale, and medium rather than bold.
+ *  The pill's padding and corner come off `size`, so this one number resizes
+ *  the whole object. */
+const SAID_TYPE = { size: theme.text.chip.size - 4, weight: 500 };
+/**
+ * The verdict's type, and the gap under it.
+ *
+ * ⚠ `up` IS THE GAP YOU CAN SEE, not the gap in the maths. A line box is taller
+ * than the letters in it, so a text centred `up` above the edge leaves a
+ * smaller gap than `up` — 11px, measured, for this face at this size. `ink` is
+ * the distance from the centre of the box to the bottom of the letters, read
+ * off the render, and subtracting it makes Simon's 30 the one on screen.
+ */
+const INVALID = { size: theme.text.chip.size + 10, up: 30, ink: 0.39 };
+const PILL = { h: SAID_TYPE.size * 1.8, gap: 10 };
 /** Rough, and it only has to be generous: it decides how many bars the pill is
  *  checked against, so over-estimating costs nothing and under-estimating is
  *  caught by the assertion at the bottom of this file. */
-const pillWidth = (s: string) => s.length * theme.text.chip.size * 0.5 + theme.text.chip.size * 1.24;
+const pillWidth = (s: string) => s.length * SAID_TYPE.size * 0.5 + SAID_TYPE.size * 1.24;
 
 /** How many bars sit BELOW the level and behind the window — the ones the
  *  reveal has to hand over one at a time. The history is above it and is not
@@ -559,16 +573,26 @@ export const CardList = () => {
           f >= q.at &&
           f < V.hopes.out && (
             <div key={q.text} style={{ opacity: 1 - progress(f, V.hopes.out - m.fade, m.fade) }}>
-              <Chip label={q.text} x={q.x} y={q.y} at={q.at} tone="indigo" pill solid />
+              <Chip
+                label={q.text}
+                x={q.x}
+                y={q.y}
+                at={q.at}
+                tone="indigo"
+                pill
+                solid
+                size={SAID_TYPE.size}
+                weight={SAID_TYPE.weight}
+              />
             </div>
           ),
       )}
 
       {/* ═══ THE VERDICT ═══  Simon, 2966 → 3102.
-          ⚠ UNDER THE CHART, NOT ON IT. The caption row below the card is empty
-          in this scene and the word is about the whole picture, not about a
-          bar in it — put inside the plot it would be pointing at whichever
-          candle it happened to land on.
+          ⚠ INSIDE THE CARD NOW, 30px off its bottom edge — and it rides the
+          card's LIVE box, because the card grows out from under it at 3083.
+          Pinned to where the small card's floor was, it would be left hanging
+          in the middle of the big one.
 
           ⚠ THE WORD ITSELF, NO PILL — Simon. Red type, and that is allowed and
           is the reason `warn` exists: this episode's one red outside a candle
@@ -587,9 +611,9 @@ export const CardList = () => {
           <Line
             text="Invalid"
             x={theme.canvas.width / 2}
-            y={theme.stage.caption.y}
+            y={card.y + card.h - INVALID.up - INVALID.size * INVALID.ink}
             at={V.invalid.at}
-            size={theme.text.chip.size}
+            size={INVALID.size}
             weight={800}
             color={theme.color.warn}
           />
