@@ -572,7 +572,7 @@ const ss02 = (b: Bar, shift = 0): Bar => ({
  * screenshot. So the far left of the card stays paper, the way the far right
  * does.
  */
-export const CARD_HEAD: Bar[] = (() => {
+const SS02_HEAD: Bar[] = (() => {
   const bars = SS02.above.slice(0, 9).map((b) => ss02(b));
   /** ⚠ THE LAST CLOSE IS PULLED THE LAST 11px ONTO THE TAPE'S OPEN. The trace
    *  lands 0.027 short of it, and a chart whose history gaps into its own next
@@ -587,6 +587,42 @@ export const CARD_HEAD: Bar[] = (() => {
   };
   return bars;
 })();
+
+/**
+ * ⚠ SEVEN QUIET BARS IN FRONT OF THE PICTURE — Simon: "masih ada white space,
+ * tolong isi deh, bikin sideways chart aja". Seven is what the card has room
+ * for between its left edge and where ss02's own first bar lands; the eighth
+ * would be cut by the card.
+ *
+ * ⚠ AND SIDEWAYS IS THE ONLY THING THEY MAY BE. Anything with a direction in it
+ * would be a claim the screenshot does not make — a rally invented in front of
+ * a traced chart reads as part of the trace. A quiet range says only "this was
+ * going on before", which is true of every chart ever drawn.
+ *
+ * ⚠ WRITTEN AS DISTANCES FROM WHERE ss02 OPENS, so the join cannot drift: the
+ * last one closes at exactly 0 from it. Re-trace the screenshot and these
+ * follow it instead of having to be retyped.
+ */
+const CARD_QUIET: Bar[] = (() => {
+  const at = SS02_HEAD[0].o;
+  return [
+    { o: 0.05, c: 0.02, h: 0.06, l: 0.0 },
+    { o: 0.02, c: 0.07, h: 0.09, l: 0.01 },
+    { o: 0.07, c: 0.01, h: 0.08, l: -0.01 },
+    { o: 0.01, c: 0.06, h: 0.08, l: 0.0 },
+    { o: 0.06, c: -0.02, h: 0.07, l: -0.04 },
+    { o: -0.02, c: 0.04, h: 0.06, l: -0.03 },
+    { o: 0.04, c: 0, h: 0.05, l: -0.02 },
+  ].map((b) => ({
+    o: +(at + b.o).toFixed(4),
+    c: +(at + b.c).toFixed(4),
+    h: +(at + b.h).toFixed(4),
+    l: +(at + b.l).toFixed(4),
+  }));
+})();
+
+/** The whole of what came before: a quiet range, then ss02's own rise. */
+export const CARD_HEAD: Bar[] = [...CARD_QUIET, ...SS02_HEAD];
 
 /**
  * ⚠ TWENTY BARS OF AFTERWARDS, from the part of ss02 that is already down where
@@ -643,4 +679,12 @@ export const CARD_HEAD_N = CARD_HEAD.length;
   /** And nothing traced may be taller than the card it is traced into. */
   if (Math.max(...CARD_HEAD.map((b) => b.h)) > SS02_CEIL + 1e-9)
     fail("the history reaches past the top of the card");
+  if (CARD_QUIET[CARD_QUIET.length - 1].c !== SS02_HEAD[0].o)
+    fail("the quiet range does not close where ss02 opens");
+  /** ⚠ SIDEWAYS MEANS SIDEWAYS. The quiet bars may not add up to a move, or
+   *  they are a trend nobody traced. */
+  const quiet = CARD_QUIET.map((b) => b.c);
+  const band = Math.max(...quiet) - Math.min(...quiet);
+  if (Math.abs(quiet[quiet.length - 1] - quiet[0]) > band * 0.75)
+    fail("the quiet range trends — it is supposed to be sideways");
 }
