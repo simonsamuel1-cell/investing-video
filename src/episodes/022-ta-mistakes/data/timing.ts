@@ -479,9 +479,20 @@ export const CARD_LIST = {
      *  in from the right, and they cross — which is what makes it one move and
      *  not a scene ending followed by a scene starting. */
     at: 2052,
-    over: 48,
-    cursor: { at: 2080, over: 34, card: 1 },
-    hover: { at: 2112, over: 46 },
+    /** ⚠ LONGER THAN THE ROW'S OWN TRAVEL NEEDS, because the cards do not all
+     *  travel the same distance any more — see `spread`. The one at the back
+     *  covers nearly three times the frame's width, and 48 frames made that a
+     *  strobe rather than a move. */
+    over: 60,
+    /**
+     * ⚠ THEY COME IN LOOSE AND CLOSE UP — Simon, "demi estetika". The gap starts
+     * four times its resting width, so the six arrive as a spread pack and
+     * gather into a row instead of sliding in already formed. One curve, six
+     * different distances: that difference IS the closing up.
+     */
+    spread: 4,
+    cursor: { at: 2092, over: 34, card: 1 },
+    hover: { at: 2124, over: 46 },
     /** ⚠ THE CARDS ALREADY DEALT WITH. Cyan, not gone: a list that removes its
      *  finished items is a queue, and this is a syllabus. */
     done: [0],

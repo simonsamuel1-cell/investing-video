@@ -423,16 +423,20 @@ const Note = () => {
 const Row2 = () => {
   const f = useCurrentFrame();
   const V2 = V.row2;
-  /**
-   * ⚠ IT STARTS OUTSIDE THE FRAME — Simon: "harusnya geser ke kiri, masuk dari
-   * luar". The distance the row LEFT by only had to clear the leftmost card of
-   * the five that went; coming back, the whole six have to start off screen, so
-   * the distance is solved from the FIRST card's own left edge instead. At the
-   * old number the first card was already 337px inside the frame on the frame
-   * it appeared, which is a card popping into existence, not one arriving.
-   */
-  const enter = (1 - progressInOut(f, V2.at, V2.over)) * AWAY;
   if (f < V2.at) return null;
+  /**
+   * ⚠ THEY START OUTSIDE THE FRAME AND FAR APART — Simon, twice over.
+   *
+   * The first card begins just past the right edge, so nothing pops into
+   * existence; the rest begin at four times the resting gap behind it, so the
+   * row arrives as a loose pack and closes up on the way in. Six different
+   * distances on ONE curve — the difference between them is the gathering, and
+   * nothing has to be animated twice to produce it.
+   */
+  const t = progressInOut(f, V2.at, V2.over);
+  const wide = R.w + R.gap * V2.spread;
+  const from0 = theme.canvas.width + 40;
+  const startX = (i: number) => from0 + i * wide;
 
   /** The pointer's target on the card it picks — the same spot on the card that
    *  round one used, so the two picks read as the same gesture. */
@@ -450,8 +454,7 @@ const Row2 = () => {
           key={title}
           n={i + 1}
           title={title}
-          box={{ x: R.x(i), y: R.y, w: R.w, h: R.h }}
-          dx={enter}
+          box={{ x: startX(i) + (R.x(i) - startX(i)) * t, y: R.y, w: R.w, h: R.h }}
           /** ⚠ A DONE CARD IS FULLY FLOODED AND IN THE OTHER TONE. It does not
            *  animate: it arrives already finished, which is what "done" looks
            *  like. */
