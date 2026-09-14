@@ -214,18 +214,31 @@ const HIDDEN = CARD_ALL.length - 1 - SEEN_TO;
  * derived from the TAPE, and layout does not know about series.
  */
 const CARD_NOTE = (() => {
-  const pad = 26;
   const gap = 14;
   const floor = Math.max(
     ...CARD_ALL.slice(SEEN_FROM, SEEN_TO + 1).map((b) => ZOOM_GRID.y(b.l)),
     ZOOM_GRID.y(CARD_ENTRY - (CARD_ENTRY - CARD_SUPPORT) * 2),
   );
-  const y = floor + gap;
+  /**
+   * ⚠ ONE LINE, AND THE BOX IS SIZED TO IT RATHER THAN THE OTHER WAY ROUND —
+   * Simon: "jangan dibuat 2 text line … ukuran text box ga harus di dalam
+   * chart". The sentence does not fit the card's width at this size, so the box
+   * leaves the card on both sides. A note stuck ACROSS a chart is still a note
+   * on it; a sentence broken in half to fit inside one is a sentence that lost
+   * an argument with a box.
+   *
+   * ⚠ THE WIDTH IS MEASURED, NOT COMPUTED. Nothing in code can measure a
+   * string, so this is the one number here that has to be re-checked if the
+   * wording or the type size changes — the render shows it immediately.
+   */
+  const w = 840;
+  const h = 104;
+  const band = { top: floor + gap, bot: CARD_OPEN.y + CARD_OPEN.h - gap };
   return {
-    x: CARD_OPEN.x + pad,
-    y,
-    w: CARD_OPEN.w - pad * 2,
-    h: CARD_OPEN.y + CARD_OPEN.h - gap - y,
+    x: (theme.canvas.width - w) / 2,
+    y: (band.top + band.bot) / 2 - h / 2,
+    w,
+    h,
   };
 })();
 
@@ -496,12 +509,15 @@ const Note = () => {
           alignItems: "center",
           justifyContent: "center",
           padding: "0 28px",
-          textAlign: "center",
           fontFamily: theme.text.family,
           fontSize: theme.text.body.size,
           fontWeight: 800,
           lineHeight: 1.25,
           color: c.ink,
+          /** ⚠ IT MAY NOT WRAP. The box is sized to the sentence; a wrap here
+           *  would mean the measurement is stale, and a silent second line is
+           *  exactly what Simon asked not to have. */
+          whiteSpace: "nowrap",
         }}
       >
         {shown}
