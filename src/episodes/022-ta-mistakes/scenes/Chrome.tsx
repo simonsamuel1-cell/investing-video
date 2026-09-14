@@ -28,8 +28,8 @@ export const MistakeCounter = () => {
   const c = usePalette();
   const g = f + FROM;
 
-  /* ⚠ OUT FOR THE CASE STUDY — see the header. */
-  if (g >= V.gap.from && g < V.gap.to) return null;
+  /* ⚠ OUT FOR THE STRETCHES THAT ARE NOT ABOUT A NAMED MISTAKE — see `gaps`. */
+  if (V.gaps.some((q) => g >= q.from && g < q.to)) return null;
 
   /* The current entry is the last one the voice has reached. Found by frame,
      not by index, so re-ordering the table cannot desynchronise the label from

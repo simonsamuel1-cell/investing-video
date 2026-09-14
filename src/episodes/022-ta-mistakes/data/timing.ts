@@ -80,8 +80,26 @@ export const STEPS = [
 export const COUNTER = {
   from: BLOCK.SC04,
   to: BLOCK.SC15,
-  /** Out for the ADMR case study. */
-  gap: { from: BLOCK.SC12, to: BLOCK.SC14 },
+  /**
+   * Stretches the counter is OUT for.
+   *
+   * ⚠ SC12→SC14 is the ADMR case study: a worked example is not another entry
+   * in the list, and leaving the counter up there files it as "mistake 07½".
+   *
+   * ⚠ SC06→SC07 is Simon's — "hapus tulisan Mistake 02 dan OVERTRADING". That
+   * stretch is VIDEO 19's platform panel held still, a shot about what a chart
+   * looks like rather than about a mistake being named, and a counter over it
+   * would be labelling the wrong thing.
+   *
+   * ⚠ THE CONSEQUENCE, ON THE RECORD: entry 02 now never appears. Its window
+   * was exactly this one, so the counter reads 01 … 03 and the list of eight
+   * shows seven. Say the word and it can move to wherever overtrading is
+   * actually discussed instead.
+   */
+  gaps: [
+    { from: BLOCK.SC06, to: BLOCK.SC07 },
+    { from: BLOCK.SC12, to: BLOCK.SC14 },
+  ],
   over: 18,
   items: [
     { n: "01", label: "TANPA INVALIDATION", at: BLOCK.SC04 },
