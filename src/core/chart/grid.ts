@@ -167,3 +167,21 @@ export const lerpGrid = (a: Grid, b: Grid, t: number): Grid =>
     x: (i) => a.x(i) + (b.x(i) - a.x(i)) * t,
     y: (v) => a.y(v) + (b.y(v) - a.y(v)) * t,
   };
+
+/**
+ * The same grid, with room for bars OUTSIDE the range it was built for.
+ *
+ * ⚠ IT RE-INDEXES, IT DOES NOT RE-SOLVE. `gridOf` spreads n bars across a box,
+ * so calling it again with a longer series changes the pitch AND the candle
+ * width: every bar already on screen shifts and every body gets wider. This
+ * keeps the pitch and the slot the base grid solved and only moves the origin,
+ * so bar `before` of the longer series sits exactly where bar 0 of the base sat.
+ *
+ * ⚠ WHICH IS WHAT MAKES HISTORY ADDABLE WITHOUT REDRAWING ANYTHING. A chart
+ * that has been approved at one scale must stay at that scale when what is
+ * around it is revealed; the reveal is a mask, not a re-layout.
+ */
+export const extendGrid = (base: Grid, before: number): Grid => {
+  const pitch = base.x(1) - base.x(0);
+  return { ...base, x: (i) => base.x(0) + (i - before) * pitch };
+};

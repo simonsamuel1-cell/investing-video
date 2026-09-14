@@ -32,12 +32,15 @@
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, gridOf, lerpBox, lerpGrid,
-  progress, progressInOut, textReveal, theme, useMotion, usePalette, useShadow,
+  BUBBLE_TIP, Candles, Cursor, Level, SpeechBubble, extendGrid, gridOf, lerpBox,
+  lerpGrid, progress, progressInOut, textReveal, theme, useMotion, usePalette,
+  useShadow,
 } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
-import { CARD_ENTRY, CARD_FULL, CARD_SUPPORT, CARD_TAPE } from "../data/series";
+import {
+  CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
+} from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = CARD_LIST;
@@ -84,11 +87,22 @@ const O = CARD_OPEN;
  * instead of near it — with the grid's usual 12% breathing room the tape would
  * float somewhere close to the level and nothing would rest on anything.
  */
-const TAPE_GRID = gridOf(
-  CARD_TAPE.map((b) => b.c),
-  [0, 1],
-  O.plot,
-  0,
+/**
+ * ⚠ BOTH GRIDS ARE EXTENDED, NOT REBUILT. The chart has sixteen bars of history
+ * that the small card never showed; adding them to the SERIES a `gridOf` is
+ * built from would change the pitch and the candle width and quietly redraw
+ * everything Simon has already approved. `extendGrid` keeps the scale each grid
+ * solved and only moves the origin, so bar CARD_HEAD_N lands exactly where bar
+ * 0 used to. Asserted at the bottom of this file, both scales.
+ */
+const TAPE_GRID = extendGrid(
+  gridOf(
+    CARD_TAPE.map((b) => b.c),
+    [0, 1],
+    O.plot,
+    0,
+  ),
+  CARD_HEAD_N,
 );
 /**
  * ⚠ THE LEVEL IS A CLAIM ABOUT THE WHOLE CARD, not only about the bars drawn so
@@ -105,12 +119,17 @@ const TAPE_GRID = gridOf(
  * blends the mappings; nothing drawn on the chart is scaled, so strokes, corner
  * radii and type keep their own weight all the way through the move.
  */
-const ZOOM_GRID = gridOf(
-  CARD_FULL.map((b) => b.c),
-  [0, 1],
-  CARD_ZOOM.plot,
-  0,
+const ZOOM_GRID = extendGrid(
+  gridOf(
+    CARD_FULL.map((b) => b.c),
+    [0, 1],
+    CARD_ZOOM.plot,
+    0,
+  ),
+  CARD_HEAD_N,
 );
+/** The bar the trade was taken on, in the extended series. */
+const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
 
 /**
  * ⚠ THE BUBBLE IS PLACED BY ITS TIP, NOT BY ITS BOX. The tip is the only part
@@ -124,7 +143,7 @@ const ZOOM_GRID = gridOf(
  */
 const BUY_AT = (() => {
   const last = CARD_TAPE.length - 1;
-  const tip = { x: TAPE_GRID.x(last) + 14, y: TAPE_GRID.y(CARD_TAPE[last].h) - 12 };
+  const tip = { x: TAPE_GRID.x(BUY_I) + 14, y: TAPE_GRID.y(CARD_TAPE[last].h) - 12 };
   return { x: tip.x - BUBBLE.w * BUBBLE_TIP.x, y: tip.y - BUBBLE.h * BUBBLE_TIP.y };
 })();
 
@@ -319,6 +338,14 @@ export const CardList = () => {
     progressInOut(f, V.grow.at, V.grow.over),
   );
   const inner: [number, number] = [card.x + O.pad, card.x + card.w - O.pad];
+  /**
+   * ⚠ THE WINDOW THE TAPE IS SEEN THROUGH — Simon: the extra candles exist from
+   * the start and are simply masked until the preview opens out. It starts as
+   * the plot box, which is exactly the ten bars and nothing either side of
+   * them, and widens to the grown card. Nothing is added when it opens; what
+   * was always laid out stops being hidden.
+   */
+  const mask = lerpBox(O.plot, CARD_GROWN, progressInOut(f, V.grow.at, V.grow.over));
   /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
    *  two grids and not a transform. */
   const grid = lerpGrid(TAPE_GRID, ZOOM_GRID, progressInOut(f, V.zoom.at, V.zoom.over));
@@ -348,20 +375,22 @@ export const CardList = () => {
           ⚠ AND THE SUPPORT IS STILL NOT DRAWN — Simon's "jangan digambarkan
           dulu". The tape resting on it three times is what puts it there. */}
       <Candles
-        bars={CARD_FULL}
+        bars={CARD_ALL}
         grid={grid}
+        clip={mask}
         /** ⚠ ONE SERIES, TWO SCHEDULES. The fall is the same tape continuing —
          *  drawn from one grid so the join cannot land a bar in the wrong
          *  place — but it arrives on its own beat, long after the first ten. */
-        wipe={(i) =>
-          i < CARD_TAPE.length
-            ? progressInOut(f, V.tape.at + i * V.tape.step, V.tape.over)
-            : progressInOut(
-                f,
-                V.fall.at + (i - CARD_TAPE.length) * V.fall.step,
-                V.fall.over,
-              )
-        }
+        wipe={(i) => {
+          /** ⚠ HISTORY DOES NOT ARRIVE, IT IS ALREADY THERE. It comes in with
+           *  the tape's first bar and is behind the mask the whole time, so
+           *  nothing about it is ever watched happening. */
+          if (i < CARD_HEAD_N) return progressInOut(f, V.tape.at, V.tape.over);
+          const k = i - CARD_HEAD_N;
+          return k < CARD_TAPE.length
+            ? progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over)
+            : progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over);
+        }}
       />
 
       {/* ⚠ NOW IT MAY BE DRAWN. Held back until the tape had finished, so the
@@ -375,7 +404,12 @@ export const CardList = () => {
         at={V.support.at}
         over={V.support.over}
         label="Support"
-        labelSide="left"
+        /** ⚠ IT MOVED TO THE FAR END WHEN THE HISTORY ARRIVED. The label used
+         *  to sit at the left of the line because the left was empty; it is
+         *  candles now, and a label standing in the tape is a label that has
+         *  to be read around. Still under the line, which is what Simon
+         *  asked for — the end it sits on was never the instruction. */
+        labelSide="right"
         labelAt="below"
         width={theme.shape.line}
       />
@@ -388,7 +422,7 @@ export const CardList = () => {
       <Level
         value={CARD_ENTRY}
         grid={grid}
-        span={[grid.x(CARD_TAPE.length - 1), inner[1]]}
+        span={[grid.x(BUY_I), inner[1]]}
         at={V.entry.at}
         over={V.entry.over}
         dashed
@@ -470,6 +504,38 @@ export const CardList = () => {
     CARD_LIST.fall.at + (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step + CARD_LIST.fall.over;
   if (lastFall > CARD_LIST.over) {
     throw new Error("022-ta-mistakes/CardList: the fall is still running when the window ends");
+  }
+  /**
+   * ⚠ THE LOCK. Simon: "lock semua timing dan ukuran, jangan ada yang berubah".
+   * Adding sixteen bars of history must move NOTHING that was already drawn, at
+   * either scale — so both grids are checked against a grid built the old way,
+   * bar for bar and slot for slot.
+   */
+  for (const [name, box, bars, ext] of [
+    ["small", CARD_OPEN.plot, CARD_TAPE, TAPE_GRID],
+    ["zoomed", CARD_ZOOM.plot, CARD_FULL, ZOOM_GRID],
+  ] as const) {
+    const was = gridOf(bars.map((b) => b.c), [0, 1], box, 0);
+    if (Math.abs(was.slot - ext.slot) > 1e-9) {
+      throw new Error(`022-ta-mistakes/CardList: the ${name} candles changed width when history was added`);
+    }
+    for (let i = 0; i < bars.length; i++) {
+      if (Math.abs(was.x(i) - ext.x(CARD_HEAD_N + i)) > 1e-9) {
+        throw new Error(`022-ta-mistakes/CardList: ${name} bar ${i} moved when history was added`);
+      }
+    }
+  }
+  /** And the history has to be OUT of the small card's window, or it would be
+   *  half-visible at the edge instead of masked. */
+  {
+    const edge = TAPE_GRID.x(CARD_HEAD_N - 1) + TAPE_GRID.slot / 2;
+    if (edge > CARD_OPEN.plot.x) {
+      throw new Error("022-ta-mistakes/CardList: the newest history bar pokes into the small card");
+    }
+    const left = ZOOM_GRID.x(0) - ZOOM_GRID.slot / 2;
+    if (left < CARD_GROWN.x + CARD_OPEN.pad) {
+      throw new Error("022-ta-mistakes/CardList: the oldest history bar runs off the left of the grown card");
+    }
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
    *  a scene nobody has seen flashes; one frame long and it eats SC05's open. */

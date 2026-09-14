@@ -28,7 +28,7 @@ import React from "react";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { Layer } from "../Stage";
-import { candleWidth, type Grid } from "./grid";
+import { candleWidth, type Box, type Grid } from "./grid";
 import type { Bar } from "./series";
 
 export const Candles = ({
@@ -39,6 +39,7 @@ export const Candles = ({
   /** Draw only from this index — for a tape that continues an earlier scene's. */
   from = 0,
   wipe,
+  clip,
 }: {
   bars: Bar[];
   grid: Grid;
@@ -46,8 +47,15 @@ export const Candles = ({
   shown?: number;
   opacity?: number;
   from?: number;
-  /** Per-bar 0→1 left-to-right reveal inside the bar's own slot. */
+  /** Per-bar 0→1 reveal, in the direction the bar moved. */
   wipe?: (i: number) => number;
+  /**
+   * A window the tape is seen through. ⚠ THE MASK IS HOW A CHART HAS MORE
+   * HISTORY THAN IT IS SHOWING — bars outside it exist, are laid out, and are
+   * simply not visible. Widening the mask reveals them without redrawing
+   * anything, which is not true of adding them to the series later.
+   */
+  clip?: Box;
 }) => {
   const c = usePalette();
   /** ⚠ ONE ID PER MOUNTED CHART, so two wiping tapes cannot reference each
@@ -58,7 +66,7 @@ export const Candles = ({
   const w = candleWidth(grid);
 
   return (
-    <Layer opacity={opacity}>
+    <Layer opacity={opacity} clip={clip}>
       {bars.slice(from, upto).map((b, k) => {
         const i = from + k;
         const x = grid.x(i);

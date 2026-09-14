@@ -532,3 +532,64 @@ export const CARD_ENTRY = CARD_TAPE[CARD_TAPE.length - 1].c;
   if (CARD_FALL[CARD_FALL.length - 1].c >= CARD_FALL[0].o - 0.4)
     fail("the fall does not actually go anywhere");
 }
+
+/**
+ * ═══ WHAT WAS ALREADY THERE ═══  Simon: the extra candles "sudah exist sejak
+ * awal scene, hanya saja sebelum 2730 kena masking jadi ngga keliatan".
+ *
+ * ⚠ THIS IS HISTORY, AND HISTORY IS THE ONLY SIDE THAT CAN BE ADDED. A chart
+ * can always have more past than it is showing — that is what zooming out is
+ * for. It cannot have more FUTURE: bars to the right of the newest one have not
+ * happened, and drawing them before the fall arrives there would be the one
+ * thing a price chart may never do. So the room the zoom-out opened on the left
+ * fills, and the room on the right stays empty until price gets to it.
+ *
+ * ⚠ AND IT RALLIES THROUGH THE LEVEL IT LATER BREAKS. Coming from 0.12 up
+ * through 0.25, the line the whole card is about is first resistance, then
+ * support, then gone — which is the honest reason a level like that is worth
+ * drawing at all, and it costs nothing to say it with the bars instead of with
+ * a label.
+ *
+ * ⚠ THE JOIN IS EXACT: the last close here IS the first open of CARD_TAPE, so
+ * the two read as one tape and not as two charts abutted. Asserted below.
+ */
+export const CARD_HEAD: Bar[] = [
+  { o: 0.12, c: 0.18, h: 0.20, l: 0.10 },
+  { o: 0.18, c: 0.15, h: 0.21, l: 0.13 },
+  { o: 0.15, c: 0.24, h: 0.26, l: 0.14 },
+  { o: 0.24, c: 0.31, h: 0.34, l: 0.23 },
+  { o: 0.31, c: 0.27, h: 0.33, l: 0.25 },
+  { o: 0.27, c: 0.36, h: 0.38, l: 0.26 },
+  { o: 0.36, c: 0.44, h: 0.47, l: 0.35 },
+  { o: 0.44, c: 0.40, h: 0.46, l: 0.37 },
+  { o: 0.40, c: 0.50, h: 0.52, l: 0.39 },
+  { o: 0.50, c: 0.58, h: 0.61, l: 0.49 },
+  { o: 0.58, c: 0.54, h: 0.60, l: 0.51 },
+  { o: 0.54, c: 0.63, h: 0.66, l: 0.53 },
+  { o: 0.63, c: 0.72, h: 0.74, l: 0.62 },
+  { o: 0.72, c: 0.68, h: 0.74, l: 0.66 },
+  { o: 0.68, c: 0.80, h: 0.83, l: 0.67 },
+  { o: 0.80, c: 0.92, h: 0.94, l: 0.79 },
+] as const as Bar[];
+
+/** Everything, in order. One series, one grid, one tape. */
+export const CARD_ALL: Bar[] = [...CARD_HEAD, ...CARD_FULL];
+/** Where CARD_TAPE's first bar sits in CARD_ALL — the index the grids anchor
+ *  on, so adding history moves nothing that is already on screen. */
+export const CARD_HEAD_N = CARD_HEAD.length;
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  const last = CARD_HEAD[CARD_HEAD.length - 1];
+  if (last.c !== CARD_TAPE[0].o) fail("the history does not close where the tape opens");
+  for (const [i, b] of CARD_HEAD.entries()) {
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c))
+      fail(`card history bar ${i + 1} has a wick inside its own body`);
+  }
+  /** ⚠ IT HAS TO COME FROM BELOW THE LEVEL, or the level was never resistance
+   *  and the rally through it says nothing. */
+  if (CARD_HEAD[0].o >= CARD_SUPPORT) fail("the history starts above the level it is supposed to rally through");
+  if (!CARD_HEAD.some((b) => b.c > CARD_SUPPORT)) fail("the history never gets above the level");
+}
