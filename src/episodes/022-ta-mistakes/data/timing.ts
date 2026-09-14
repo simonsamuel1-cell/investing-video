@@ -94,18 +94,19 @@ export const COUNTER = {
    * ⚠ SC12→SC14 is the ADMR case study: a worked example is not another entry
    * in the list, and leaving the counter up there files it as "mistake 07½".
    *
-   * ⚠ SC06→SC07 is Simon's — "hapus tulisan Mistake 02 dan OVERTRADING". That
-   * stretch is VIDEO 19's platform panel held still, a shot about what a chart
-   * looks like rather than about a mistake being named, and a counter over it
-   * would be labelling the wrong thing.
+   * ⚠ SC06→SC08 is Simon's, in two steps: the counter came off the platform
+   * ("hapus tulisan Mistake 02 dan OVERTRADING") and then off SC07 with the
+   * rest of that scene ("judulnya juga hapus"). Both stretches are the same
+   * case — nothing there is a named mistake any more, so a counter over them
+   * would be labelling something that is not being said.
    *
-   * ⚠ THE CONSEQUENCE, ON THE RECORD: entry 02 now never appears. Its window
-   * was exactly this one, so the counter reads 01 … 03 and the list of eight
-   * shows seven. Say the word and it can move to wherever overtrading is
-   * actually discussed instead.
+   * ⚠ THE CONSEQUENCE, ON THE RECORD: entries 02 and 03 now never appear. Their
+   * windows were exactly these, so the counter reads 01 … 04 and the list of
+   * eight shows six. Whatever replaces those two stretches can carry them
+   * again; until then the video counts eight mistakes and labels six.
    */
   gaps: [
-    { from: BLOCK.SC06, to: BLOCK.SC07 },
+    { from: BLOCK.SC06, to: BLOCK.SC08 },
     { from: BLOCK.SC12, to: BLOCK.SC14 },
   ],
   over: 18,
