@@ -454,11 +454,23 @@ export const CARD_OPEN = (() => {
 export const CARD_GROWN = theme.stage.card;
 
 export const CARD_ZOOM = (() => {
-  /** ⚠ SIMON'S FOUR NUMBERS. Everything below is derived. */
+  /** ⚠ SIMON'S NUMBERS — except `dx`, which is now solved. See below. */
   const kx = 0.75;
   const ky = 0.62;
-  const dx = -150;
   const dy = -100;
+  /**
+   * ⚠ THE LEFT SHIFT IS BOUNDED BY THE CARD IT HAPPENS IN. Simon asked for 150
+   * and then, once the zoom moved back to 2676, for the three red bars on the
+   * left to survive it — and those two cannot both be had. At 150 the zoom-out
+   * pushes the tape's first three bars out of a card that is still 640 wide.
+   *
+   * So the shift is taken as far as it can go and no further: the last gap
+   * before the tape's first bar must still land inside the card's left edge.
+   * `WANT` records what was asked for, because the day this happens in a wider
+   * card the answer is 150 again and nobody should have to re-derive that.
+   */
+  const WANT = -150;
+  const MARGIN = 6;
 
   /** 10 drawn + 14 that fall. The count is what a zoom-out is FOR. */
   const bars = CARD_OPEN.bars + 14;
@@ -472,10 +484,14 @@ export const CARD_ZOOM = (() => {
 
   const w = pitchB * (bars - 1) + GRID_PAD_X * 2;
   const h = CARD_OPEN.plot.h * ky;
-  const x = a.x(0) + half * pitchA + dx - half * pitchB - GRID_PAD_X;
+  /** The first bar of the tape, at the zoomed scale, before any shift. */
+  const rest = a.x(0) + half * (pitchA - pitchB);
+  const floor = CARD_OPEN.x + MARGIN + pitchB / 2 - rest;
+  const dx = Math.max(WANT, floor);
+  const x = rest + dx - GRID_PAD_X;
   const y = a.y(MID) + dy - h * (1 - MID);
 
-  return { bars, kx, ky, dx, dy, plot: { x, y, w, h } };
+  return { bars, kx, ky, dx, dy, want: WANT, plot: { x, y, w, h } };
 })();
 
 {
@@ -489,6 +505,11 @@ export const CARD_ZOOM = (() => {
   /** Simon's shift, measured on the thing that moved rather than on its box. */
   const centre = (g: { x: (i: number) => number }) => (g.x(0) + g.x(o.bars - 1)) / 2;
   if (Math.abs(centre(b) - centre(a) - z.dx) > 0.5) fail("the zoom does not move the tape left by dx");
+  /** ⚠ AND THE THREE RED BARS SURVIVE IT — Simon. The gap in front of the
+   *  tape's first bar has to land inside the small card, or the zoom-out pushes
+   *  the start of the tape out of the card it happens in. */
+  const lead = b.x(0) - (b.x(1) - b.x(0)) / 2;
+  if (lead < CARD_OPEN.x) fail(`the zoom pushes the tape past the card's left edge, to ${lead.toFixed(0)}`);
   if (Math.abs(b.y(0.6) - a.y(0.6) - z.dy) > 0.5) fail("the zoom does not move the tape up by dy");
   /** And everything it draws has to still be inside the grown card. */
   const lowest = b.y(-0.33);

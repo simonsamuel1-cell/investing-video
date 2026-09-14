@@ -415,14 +415,14 @@ export const CARD_LIST = {
    * with the history: these bars are the future until price gets to them, so
    * they arrive once the fall has finished.
    *
-   * ⚠ THE LAST BAR LANDS ON 3000 — Simon. Twenty bars into the 54 frames
-   * between the end of the fall and that number means they overlap ten deep:
-   * each takes 20 frames to come out but the next starts two frames later, so
-   * what crosses the card is a wave rather than twenty separate arrivals. At
-   * this speed that is the right reading anyway — the grind is not twenty
-   * events, it is one long nothing.
+   * ⚠ THE LAST BAR LANDS ON 3000 — Simon. Seventeen bars into the 58 frames
+   * between the end of the fall and that number means they overlap thirteen
+   * deep: each takes 26 frames to come out but the next starts two frames
+   * later, so what crosses the card is a wave rather than seventeen separate
+   * arrivals. At this speed that is the right reading anyway — the grind is not
+   * seventeen events, it is one long nothing.
    */
-  tail: { at: 948, step: 2, over: 20 },
+  tail: { at: 948, step: 2, over: 26 },
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */

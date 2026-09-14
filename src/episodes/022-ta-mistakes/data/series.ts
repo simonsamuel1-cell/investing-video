@@ -589,10 +589,12 @@ const SS02_HEAD: Bar[] = (() => {
 })();
 
 /**
- * ⚠ SEVEN QUIET BARS IN FRONT OF THE PICTURE — Simon: "masih ada white space,
- * tolong isi deh, bikin sideways chart aja". Seven is what the card has room
- * for between its left edge and where ss02's own first bar lands; the eighth
- * would be cut by the card.
+ * ⚠ NINE QUIET BARS IN FRONT OF THE PICTURE — Simon: "masih ada white space,
+ * tolong isi deh, bikin sideways chart aja". Nine is what the card has room for
+ * between its left edge and where ss02's own first bar lands; the tenth would be
+ * cut by the card. It was seven until the zoom's left shift had to be bounded
+ * (see CARD_ZOOM) and the whole tape moved 79px right — two more bars is what
+ * that opened up.
  *
  * ⚠ AND SIDEWAYS IS THE ONLY THING THEY MAY BE. Anything with a direction in it
  * would be a claim the screenshot does not make — a rally invented in front of
@@ -606,6 +608,8 @@ const SS02_HEAD: Bar[] = (() => {
 const CARD_QUIET: Bar[] = (() => {
   const at = SS02_HEAD[0].o;
   return [
+    { o: 0.01, c: -0.01, h: 0.03, l: -0.03 },
+    { o: -0.01, c: 0.05, h: 0.07, l: -0.02 },
     { o: 0.05, c: 0.02, h: 0.06, l: 0.0 },
     { o: 0.02, c: 0.07, h: 0.09, l: 0.01 },
     { o: 0.07, c: 0.01, h: 0.08, l: -0.01 },
@@ -625,14 +629,15 @@ const CARD_QUIET: Bar[] = (() => {
 export const CARD_HEAD: Bar[] = [...CARD_QUIET, ...SS02_HEAD];
 
 /**
- * ⚠ TWENTY BARS OF AFTERWARDS, from the part of ss02 that is already down where
- * this card's fall ends. The picture grinds sideways there and keeps leaking
+ * ⚠ SEVENTEEN BARS OF AFTERWARDS, from the part of ss02 that is already down
+ * where this card's fall ends. It was twenty; bounding the zoom's left shift
+ * moved the whole tape right, and three of them no longer fit the card. The picture grinds sideways there and keeps leaking
  * lower — which is the honest end of this story, and a better one than a crash:
  * the position is not killed, it is just never right again.
  */
 export const CARD_TAIL: Bar[] = (() => {
   const want = CARD_FALL[CARD_FALL.length - 1].c;
-  const n = 20;
+  const n = 17;
   /** The bar in ss02's lower half that opens nearest to where this fall ended
    *  — solved, so the join is the picture's own shape and not a stretch. */
   let start = 0;
