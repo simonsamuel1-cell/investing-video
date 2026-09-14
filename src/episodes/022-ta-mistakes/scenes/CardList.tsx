@@ -25,7 +25,7 @@
  * ends neatly says "six things"; a row that runs off the edge says "and there
  * are more of these", which is what a list of mistakes should say.
  */
-import { useCurrentFrame } from "remotion";
+import { interpolateColors, useCurrentFrame } from "remotion";
 import {
   Cursor, progress, textReveal, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
@@ -138,7 +138,13 @@ const Card = ({ i, title }: { i: number; title: string }) => {
           fontSize: R.h / 3,
           fontWeight: 800,
           lineHeight: 1,
-          color: c.muted,
+          /**
+           * ⚠ IT TAKES THE FLOOD'S COLOUR ON THE SAME CURVE AS THE FLOOD —
+           * Simon. Driven by `wet`, so the ink reaching the numeral and the ink
+           * reaching the card are one event rather than two that nearly line
+           * up. Deep indigo, not the brand one: see `liquidInk` in core/theme.
+           */
+          color: interpolateColors(wet, [0, 1], [c.muted, theme.color.liquidInk]),
         }}
       >
         {i + 1}

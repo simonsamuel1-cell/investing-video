@@ -290,6 +290,14 @@ export const theme = {
     liquid: "rgba(95, 77, 238, 0.72)",
     liquidEdge: "rgba(95, 77, 238, 0)",
     /**
+     * ⚠ THE ONE COLOUR THAT READS ON TOP OF THE FLOOD. `indigo` on `liquid` is
+     * the same hue at nearly the same lightness, which is type that is there
+     * and cannot be read; this is 247° taken down to L 38% so a mark sitting in
+     * the flood stays legible — and, because the flood is blurred and never
+     * covers a whole card, legible on bare card too.
+     */
+    liquidInk: "#2310B2",
+    /**
      * A price ZONE's fill, and the only reason it is not `indigoWash`: a zone
      * carries no border, so the fill alone has to say "this is an area" — see
      * chart/Annotations.tsx. At 9% it disappeared; at 18% it reads as ground
