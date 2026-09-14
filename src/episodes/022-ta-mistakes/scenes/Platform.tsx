@@ -33,9 +33,9 @@
  * its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { cutInStyle, progress } from "../../../core";
+import { cutInStyle, progress, progressInOut } from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
-import { BLOCK, PLATFORM, PLATFORM_CUT } from "../data/timing";
+import { BLOCK, BUYS, PLATFORM, PLATFORM_CUT } from "../data/timing";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -63,7 +63,19 @@ export const Platform = () => {
         ...cutInStyle(g, PLATFORM_CUT),
       }}
     >
-      <BrokerPanel f={AT} structure={false} portfolio chart="BBCA" />
+      <BrokerPanel
+        f={AT}
+        structure={false}
+        portfolio
+        chart="BBCA"
+        /** ⚠ THE TIMING IS THIS EPISODE'S, THE GEOMETRY IS 019'S. The swings
+         *  are known inside that panel and nowhere else, so it draws them; when
+         *  each one lands is a beat in THIS timeline, so we decide that. */
+        marks={{
+          text: "Buy",
+          shown: (k) => progressInOut(g, BUYS.at + k * BUYS.step, BUYS.over),
+        }}
+      />
     </div>
   );
 };

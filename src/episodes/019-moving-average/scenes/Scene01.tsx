@@ -577,6 +577,7 @@ export const BrokerPanel = ({
   structure = true,
   portfolio = false,
   chart,
+  marks,
 }: {
   f: number;
   /**
@@ -607,6 +608,14 @@ export const BrokerPanel = ({
    * the two could never both be had.
    */
   chart?: string;
+  /**
+   * ⚠ A BADGE ON EVERY SWING OF THE CHART IN THE WINDOW. Added for VIDEO 22's
+   * overtrading scene, where the point is that somebody acted at all of them —
+   * so the same pivots the structure is traced from get a label each, and the
+   * caller owns the timing: `shown(k)` is that badge's own 0→1, the way
+   * core's Candles takes a `wipe`.
+   */
+  marks?: { text: string; shown: (k: number) => number };
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -995,6 +1004,45 @@ export const BrokerPanel = ({
                   })}
                 </g>
               )}
+
+              {/* ── a badge on every swing ──
+                  ⚠ IT IS THE SAME LIST OF POINTS THE STRUCTURE IS TRACED FROM,
+                  which is the whole reason this belongs here and not in the
+                  scene above: the swings are known in this closure and nowhere
+                  else. Above a high and below a low, like the structure labels
+                  were, so a badge never sits on the bar it is about. */}
+              {marks &&
+                ch.pt.map((pv, k) => {
+                  const a = marks.shown(k);
+                  if (a <= 0.001) return null;
+                  const bw = 62;
+                  const bh = 32;
+                  const cx = lx(pv.i, plotW);
+                  const by = pv.high ? pv.y - 14 - bh : pv.y + 14;
+                  return (
+                    <g key={`mk${pv.i}`} opacity={a}>
+                      <rect
+                        x={cx - bw / 2}
+                        y={by}
+                        width={bw}
+                        height={bh}
+                        rx={theme.layout.radius.sm}
+                        fill={C.candleGreen}
+                      />
+                      <text
+                        x={cx}
+                        y={by + 23}
+                        textAnchor="middle"
+                        fontFamily={font}
+                        fontSize={20}
+                        fontWeight={700}
+                        fill={C.surface}
+                      >
+                        {marks.text}
+                      </text>
+                    </g>
+                  );
+                })}
 
               {/* ── the bands, under the average ── */}
               {isBmri && bbOn && (

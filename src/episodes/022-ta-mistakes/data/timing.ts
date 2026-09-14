@@ -684,6 +684,17 @@ export const PLATFORM_CUT = {
   axis: "y",
 } as const;
 
+/**
+ * ⚠ A "Buy" ON EVERY SWING — Simon, from 4356. Thirteen of them, four frames
+ * apart, so they land as a rattle rather than a row appearing.
+ *
+ * ⚠ AND THEY ARE THE MISTAKE, NOT A SIGNAL. This is the overtrading scene: what
+ * the badges say is that somebody acted at every turn the chart made, which is
+ * the thing being warned about. The episode's rule against buy markers is about
+ * marks that TELL the viewer to act; these are a portrait of somebody who did.
+ */
+export const BUYS = { at: 4356, step: 4, over: 14 } as const;
+
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
   fromUs: 4103,
