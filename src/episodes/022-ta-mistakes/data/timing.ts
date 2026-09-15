@@ -820,13 +820,48 @@ export const REVENGE_T = {
    */
   pan: { at: 5394, over: 70, up: 115 },
   tool: { at: 5484, over: 36 },
-  up: { at: 5540, step: 22, over: 28 },
-  down: { at: 5730, step: 22, over: 28 },
-  /** ⚠ THE OLD TOOL GOES WITH THE PAN. Its trade is over, and its left edge
-   *  leaves the card anyway; drawn on it would stretch across a chart it is no
-   *  longer about. */
+  /**
+   * ⚠ EVERYTHING THE CHART DOES IS OVER BY `endsAt` — Simon: "seluruh animasi
+   * chart sebaiknya selesai di 5676". Held here as his number rather than left
+   * as whatever the last bar happens to add up to, and asserted below, so a
+   * later nudge to a step or a reveal cannot quietly walk past it.
+   *
+   * ⚠ THE FIFTEEN BARS ARE ONE RUN. `down.at` is `up.at + 7 * step`, which is
+   * where the eighth bar of a continuous tape falls; the two keys exist so the
+   * legs can be retimed apart, not because they are two events. The reveal is
+   * long against the step on purpose — three bars are always mid-growth, which
+   * is what makes a compressed run still read as a tape rather than a count.
+   */
+  up: { at: 5530, step: 8, over: 34 },
+  down: { at: 5586, step: 8, over: 34 },
+  endsAt: 5676,
+  /** ⚠ THE FIRST TRADE GOES WITH THE PAN — its tool AND the support line and
+   *  label it was drawn against. That trade is over; left up, they would stretch
+   *  across a chart they are no longer about, and the support would sit under
+   *  the new tool as though the new trade were a claim about it. One curve, so
+   *  they cannot come apart. */
   clear: { at: 5394, over: 40 },
 } as const;
+
+{
+  const V = REVENGE_T;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  /** The two legs have to stay one tape. */
+  if (V.down.at !== V.up.at + 7 * V.up.step) {
+    fail(`the revenge fall starts at ${V.down.at}, not where the rally's run reaches (${V.up.at + 7 * V.up.step})`);
+  }
+  const last = V.down.at + 7 * V.down.step + V.down.over;
+  if (last !== V.endsAt) fail(`the revenge tape finishes at ${last}, not ${V.endsAt}`);
+  for (const [name, end] of [
+    ["the pan", V.pan.at + V.pan.over],
+    ["the tool", V.tool.at + V.tool.over],
+  ] as const) {
+    if (end > V.endsAt) fail(`${name} finishes at ${end}, after ${V.endsAt}`);
+  }
+  if (V.endsAt > V.at + V.over) fail("the chart is still animating when the scene ends");
+}
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {

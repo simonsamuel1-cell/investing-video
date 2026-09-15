@@ -84,10 +84,17 @@ const nextGrid = (g: typeof ZOOM_GRID) => ({
   x: (i: number) => g.x(SEEN_TO + 1 + i),
 });
 
-/** ⚠ THE TOOL IS PLACED ON THE PRICE THE CARD CLOSED AT, and reaches the same
- *  distance each way — the same convention the first one used, so two tools in
- *  one video cannot mean two different things. */
-const REACH = 0.24;
+/**
+ * ⚠ THE TOOL IS PLACED ON THE PRICE THE CARD CLOSED AT, and reaches the same
+ * distance each way — the same convention the first one used, so two tools in
+ * one video cannot mean two different things.
+ *
+ * ⚠ SIMON'S "2x LIPAT", and it is one number because both halves read it. The
+ * first tool got the same instruction at 3832 and took it the same way: the
+ * target and the stop are one reach apart from the entry, so doubling the reach
+ * doubles the whole tool without tilting it.
+ */
+const REACH = 0.24 * 2;
 
 export const Revenge = () => {
   const f = useCurrentFrame();
@@ -98,8 +105,17 @@ export const Revenge = () => {
   const panned = progressInOut(g, V.pan.at, V.pan.over);
   const grid = lerpGrid(ZOOM_GRID, PAN_GRID, panned);
   const next = nextGrid(grid);
-  /** ⚠ THE OLD TRADE'S TOOL LEAVES WITH THE PAN. Its entry is off the card by
-   *  the end of it, and a tool anchored off screen is a rectangle. */
+  /**
+   * ⚠ EVERYTHING THE FIRST TRADE LEFT ON THE CARD GOES WITH THE PAN — its tool,
+   * and the support line and label it was drawn against (Simon: "garis support
+   * dan textnya dibuat fade out"). One curve for all of it, because they are
+   * one thing: the picture the last scene ended on.
+   *
+   * The tool has to go because its entry is off the card by the end of the pan
+   * and a tool anchored off screen is just a rectangle. The support has to go
+   * because the level it marks belongs to the trade that is over — left up, it
+   * would sit under the new trade as though the new trade were about it.
+   */
   const old = 1 - progress(g, V.clear.at, V.clear.over);
   const inner: [number, number] = [O.x + O.pad, O.x + O.w - O.pad];
 
@@ -121,7 +137,18 @@ export const Revenge = () => {
           overflow: "hidden",
         }}
       />
-      <Candles bars={SHOWN} grid={grid} clip={{ x: O.x, y: O.y, w: O.w, h: O.h }} />
+      {/* ⚠ THE TRACED PRE-HISTORY IS NOT DRAWN. `SHOWN` is indexed against the
+          grid, so it cannot be sliced at the front without moving every bar;
+          the first CARD_HEAD_N of it are hidden by their wipe instead. They
+          have to go: the rewind at 3517 took them off the card, and the last
+          of them ends one pixel INSIDE the card's left edge — drawn, it
+          survives the clip as a red splinter against the corner radius. */}
+      <Candles
+        bars={SHOWN}
+        grid={grid}
+        clip={{ x: O.x, y: O.y, w: O.w, h: O.h }}
+        wipe={(i) => (i < CARD_HEAD_N ? 0 : 1)}
+      />
 
       <Level
         value={CARD_SUPPORT}
@@ -137,9 +164,10 @@ export const Revenge = () => {
         labelSide="left"
         labelAt="below"
         width={theme.shape.line}
+        opacity={old}
       />
 
-      {/* The first trade's tool, on its way out. */}
+      {/* The first trade's tool, leaving on the same curve as its level. */}
       <PositionTool
         grid={grid}
         entry={TOOL.entry}
@@ -202,5 +230,21 @@ export const Revenge = () => {
   const bot = PAN_GRID.y(Math.min(...CARD_REVENGE.map((b) => b.l)));
   if (top < CARD_OPEN.y || bot > CARD_OPEN.y + CARD_OPEN.h) {
     fail(`the revenge tape runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside the card`);
+  }
+  /** ⚠ AND THE DOUBLED TOOL HAS TO FIT TOO. It is drawn as two filled boxes, so
+   *  a target or a stop off the card is not a line that disappears — it is a
+   *  wash running to the card's edge and reading as a different shape. */
+  const tTop = PAN_GRID.y(REVENGE_ENTRY + REACH);
+  const tBot = PAN_GRID.y(REVENGE_ENTRY - REACH);
+  if (tTop < CARD_OPEN.y || tBot > CARD_OPEN.y + CARD_OPEN.h) {
+    fail(`the position tool runs ${tTop.toFixed(0)}..${tBot.toFixed(0)}, outside the card`);
+  }
+  /** ⚠ THE TRADE MUST STILL FAIL ON SCREEN: short of the target, through the
+   *  stop. That is the only thing the two washes are there to say. */
+  if (Math.max(...CARD_REVENGE.map((b) => b.h)) >= REVENGE_ENTRY + REACH) {
+    fail("the revenge trade reaches its target");
+  }
+  if (Math.min(...CARD_REVENGE.map((b) => b.l)) > REVENGE_ENTRY - REACH) {
+    fail("the revenge trade never breaks its stop");
   }
 }

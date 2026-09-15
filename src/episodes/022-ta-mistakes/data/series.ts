@@ -703,11 +703,17 @@ export const CARD_HEAD_N = CARD_HEAD.length;
  * seam in it that no amount of timing will hide.
  *
  * ⚠ SEVEN UP, THEN EIGHT DOWN — his two pictures, and between them the whole
- * point of the scene. The trade taken straight after a loss WORKS: three
- * increasingly large green bars, and it clears the target. Then it turns and
+ * point of the scene. The trade taken straight after a loss WORKS: it chops
+ * around the entry, then four greens lift it into profit. Then it turns and
  * gives all of it back, through the entry and out the other side of the stop.
  * A revenge trade that simply failed would be a story about a bad trade; one
  * that wins first is a story about why the win did not mean anything.
+ *
+ * ⚠ THE RALLY IS THE SHORT LEG AND THE FALL IS THE LONG ONE — Simon's
+ * correction, and it is the arithmetic of the thing. The rally covers 0.28 of
+ * the card's height; the fall covers 0.84, three times as much. The profit
+ * never reaches the target the tool is asking for, and the loss goes clean
+ * through the stop: a small win taken as proof, paid for with a large loss.
  *
  * Same units as everything else on this card: heights inside it, no prices.
  */
@@ -715,21 +721,21 @@ export const CARD_REVENGE_UP: Bar[] = [
   { o: -0.22, c: -0.25, h: -0.20, l: -0.27 },
   { o: -0.25, c: -0.23, h: -0.21, l: -0.27 },
   { o: -0.23, c: -0.26, h: -0.22, l: -0.28 },
-  { o: -0.26, c: -0.19, h: -0.17, l: -0.27 },
-  { o: -0.19, c: -0.08, h: -0.05, l: -0.20 },
-  { o: -0.08, c: 0.10, h: 0.13, l: -0.09 },
-  { o: 0.10, c: 0.26, h: 0.30, l: 0.08 },
+  { o: -0.26, c: -0.21, h: -0.19, l: -0.27 },
+  { o: -0.21, c: -0.14, h: -0.12, l: -0.22 },
+  { o: -0.14, c: -0.03, h: 0.0, l: -0.15 },
+  { o: -0.03, c: 0.06, h: 0.09, l: -0.05 },
 ] as const as Bar[];
 
 export const CARD_REVENGE_DOWN: Bar[] = [
-  { o: 0.26, c: 0.12, h: 0.28, l: 0.10 },
-  { o: 0.12, c: 0.14, h: 0.17, l: 0.10 },
-  { o: 0.14, c: 0.02, h: 0.16, l: -0.01 },
-  { o: 0.02, c: 0.05, h: 0.07, l: 0.00 },
-  { o: 0.05, c: -0.10, h: 0.06, l: -0.13 },
-  { o: -0.10, c: -0.07, h: -0.05, l: -0.12 },
-  { o: -0.07, c: -0.24, h: -0.06, l: -0.27 },
-  { o: -0.24, c: -0.50, h: -0.23, l: -0.54 },
+  { o: 0.06, c: -0.04, h: 0.08, l: -0.06 },
+  { o: -0.04, c: -0.02, h: 0.01, l: -0.06 },
+  { o: -0.02, c: -0.15, h: 0.0, l: -0.18 },
+  { o: -0.15, c: -0.11, h: -0.09, l: -0.17 },
+  { o: -0.11, c: -0.28, h: -0.10, l: -0.31 },
+  { o: -0.28, c: -0.24, h: -0.22, l: -0.30 },
+  { o: -0.24, c: -0.46, h: -0.23, l: -0.50 },
+  { o: -0.46, c: -0.78, h: -0.45, l: -0.82 },
 ] as const as Bar[];
 
 export const CARD_REVENGE: Bar[] = [...CARD_REVENGE_UP, ...CARD_REVENGE_DOWN];
@@ -755,4 +761,12 @@ export const REVENGE_ENTRY = CARD_FALL[CARD_FALL.length - 3].c;
   const bottom = Math.min(...CARD_REVENGE_DOWN.map((b) => b.l));
   if (top <= REVENGE_ENTRY) fail("the revenge trade never goes into profit");
   if (bottom >= REVENGE_ENTRY) fail("the revenge trade never goes under water");
+  /** ⚠ AND THE LOSS HAS TO BE THE BIGGER MOVE. Simon asked for the rally short
+   *  and the fall long, which is the whole shape of the beat; if some later
+   *  tweak flattens that out the scene still renders and quietly stops meaning
+   *  what it means. */
+  const rally = top - REVENGE_ENTRY;
+  const drop = REVENGE_ENTRY - bottom;
+  if (drop <= rally * 1.5)
+    fail(`the fall (${drop.toFixed(2)}) is not clearly longer than the rally (${rally.toFixed(2)})`);
 }
