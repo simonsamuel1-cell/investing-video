@@ -46,7 +46,12 @@ const GRIDS = B.boxes.map((r, i) =>
   gridOf(
     TAPES[i].map((b) => b.c),
     [Math.min(...TAPES[i].map((b) => b.l)), Math.max(...TAPES[i].map((b) => b.h))],
-    { x: r.x + B.pad.x, y: r.y + B.pad.top, w: r.w - B.pad.x * 2, h: r.h - B.pad.top - B.pad.bottom },
+    {
+      x: r.x + B.pad[i].x,
+      y: r.y + B.pad[i].top,
+      w: r.w - B.pad[i].x * 2,
+      h: r.h - B.pad[i].top - B.pad[i].bottom,
+    },
     0,
   ),
 );

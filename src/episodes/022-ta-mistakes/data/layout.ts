@@ -758,17 +758,29 @@ export const BREAKOUT_BOX = (() => {
     ],
     verdict: { y: Math.round(rule + toBox + chartH + toVerdict) },
     /**
-     * ⚠ THE PLOT LEAVES MORE ROOM UNDER IT THAN OVER IT, and the reason is the
-     * "Buy" mark: it hangs below the lowest bar, which is the one place on a
-     * chart with nothing beneath it and therefore the one place a badge can run
-     * out of card. At an even inset it did — 8px past the floor, caught by the
-     * assertion in scenes/Breakout.tsx rather than by looking at a render.
+     * ⚠ THE TWO PLOTS SIT DIFFERENTLY IN THEIR CARDS, AND THE SAME HEIGHT — 320
+     * each. I wrote the opposite here a moment ago ("two plots inset
+     * differently inside boxes of the same size are two charts drawn to look
+     * like a pair") and Simon overruled it: ss07 opens high and its tape was
+     * brushing "Market sideways", so the right chart comes down.
      *
-     * ⚠ BOTH CHARTS GET IT, not just the one with the mark. Two plots inset
-     * differently inside boxes of the same size are two different charts drawn
-     * to look like a pair.
+     * The rule that survives is the one that actually matters — the two charts
+     * are the SAME SIZE, so nothing about their shapes is being compared
+     * unfairly. What differs is only where that size sits inside its card, and
+     * each side has its own reason. The left leaves 76 underneath because the
+     * "Buy" mark hangs below the lowest bar; the right has no mark, so it
+     * spends exactly that room on the clearance it does need, at the top.
+     *
+     * ⚠ AND THE LEFT'S OWN CLEARANCE IS LUCK, NOT GEOMETRY. Its plot starts at
+     * 351, ABOVE its heading's ink — it is clear only because ss06 opens low
+     * and nothing reaches up there. Measured at 0 pixels behind the heading
+     * today; re-trace ss06 with a higher opening and this side will need the
+     * same treatment.
      */
-    pad: { x: 34, top: 34, bottom: 76 },
+    pad: [
+      { x: 34, top: 34, bottom: 76 },
+      { x: 34, top: 76, bottom: 34 },
+    ],
   };
 })();
 
@@ -787,6 +799,16 @@ export const BREAKOUT_BOX = (() => {
     if (Math.abs(x - mid) > 0.5) fail(`arrow ${i + 1} points at ${x}, not window ${i + 1}'s centre ${mid}`);
   });
   if (b.rule.y + b.rule.drop >= b.boxes[0].y) fail("the arrows reach into the chart cards");
+  /** ⚠ THE TWO PLOTS MUST BE THE SAME HEIGHT even though they sit differently
+   *  in their cards — that is the half of the pairing that has to hold, and it
+   *  is the half an edit to either inset could break without anything looking
+   *  wrong. */
+  const h = b.pad.map((q, i) => b.boxes[i].h - q.top - q.bottom);
+  if (h[0] !== h[1]) fail(`the two plots are ${h[0]} and ${h[1]} tall`);
+  /** And the right one has to clear its own heading, which is why it moved. */
+  if (b.boxes[1].y + b.pad[1].top <= b.boxes[1].y + b.head.y + 16) {
+    fail("the right chart still starts inside its heading");
+  }
   if (b.verdict.y + 24 > theme.captionBand.top) {
     fail(`the verdicts sit at ${b.verdict.y}, inside the subtitle band`);
   }
