@@ -1063,6 +1063,20 @@ export const ROW4 = {
   },
 } as const;
 
+/**
+ * ═══ SC08 · TWO WINDOWS, THE SAME CHART ═══  Simon: "buat 2 window kiri kanan,
+ * isi chartnya sama", and — as with the last few — the timing is not the point
+ * yet.
+ *
+ * ⚠ IT OPENS AFTER THE CARD ROW HAS CLEARED. The fourth transition's last card
+ * is off screen on 6232; a window arriving under it would be two lists of
+ * things moving at once.
+ */
+export const TWIN = {
+  at: 6250,
+  over: 40,
+} as const;
+
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
 /**
  * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hapus semua visual scene 8 termasuk

@@ -16,6 +16,7 @@ import { domainOf, fromAnchors, seeded, sma, toBars, volumeOf } from "../../../c
 import type { Anchor, Bar, Series } from "../../../core";
 import SS01 from "./ss01.json";
 import SS02 from "./ss02.json";
+import SS03_DOC from "./ss03.json";
 
 /** Anchors → a synthetic tape. Core has `fromShape` for a shape and
  *  `fromScreenshot` for a trace; this is neither — the turns are DESIGNED to
@@ -769,4 +770,29 @@ export const REVENGE_ENTRY = CARD_FALL[CARD_FALL.length - 3].c;
   const drop = REVENGE_ENTRY - bottom;
   if (drop <= rally * 1.5)
     fail(`the fall (${drop.toFixed(2)}) is not clearly longer than the rally (${rally.toFixed(2)})`);
+}
+
+/* ═══ SC08 · THE SAME CHART, TWICE ═══════════════════════════════════════ */
+/**
+ * ⚠ TRACED, NOT GENERATED — Simon: "cari ss03". These 111 bars are the shape of
+ * his screenshot, read by scripts/trace-ss03.mjs. Heights are in units of the
+ * picture's own dotted level, which is what a screenshot can honestly give: it
+ * has no axis in it, so nothing here is a price and nothing claims to be.
+ *
+ * ⚠ AND IT IS ONE ARRAY, DRAWN TWICE. Simon: "isi chartnya sama". Two windows
+ * reading one series cannot drift apart; two copies of it would only have to be
+ * kept in step by hand, and "the same" is the whole claim the picture makes.
+ */
+export const SS03: Bar[] = SS03_DOC.ohlc as Bar[];
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  if (SS03.length < 100) fail(`only ${SS03.length} bars came out of ss03`);
+  for (const [i, b] of SS03.entries()) {
+    if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c)) {
+      fail(`ss03 bar ${i + 1} has a wick inside its own body`);
+    }
+  }
 }
