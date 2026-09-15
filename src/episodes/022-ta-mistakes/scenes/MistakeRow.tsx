@@ -12,7 +12,7 @@
  */
 import { Cursor, progress, progressInOut, theme } from "../../../core";
 import { CARD_LIST } from "../data/timing";
-import { CARD_ROW } from "../data/layout";
+import { CARD_ROW, VISIBLE } from "../data/layout";
 import { MistakeCard, TOUCH } from "./MistakeCard";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -25,6 +25,26 @@ const TITLES = CARD_LIST.titles;
  * than typed, so nothing is left hanging at an edge however the row is re-sized.
  */
 const AWAY = theme.stage.card.x + theme.stage.card.w + 40;
+
+/**
+ * ═══ HOW FAR ALONG THE LIST THE ROW RESTS ═══  Simon's choice, once the list
+ * grew past the window.
+ *
+ * ⚠ THE PICK IS ALWAYS THE LAST CARD FULLY INSIDE THE WINDOW. Five cards fit
+ * whole and the sixth is cut by the frame, so a pick at slot 4 is the furthest
+ * one that can be read in full — and anything past it pulls the row along by
+ * whole card-pitches until it sits there.
+ *
+ * ⚠ IT IS A RESTING PLACE, NOT A SCROLL. Every round brings the row in from off
+ * the right anyway, so a later round simply arrives already further along.
+ * Nothing slides on screen, and there is no second animation to keep in step
+ * with the first.
+ *
+ * ⚠ AND IT IS ZERO FOR EVERY ROUND SO FAR. Rounds one to four pick cards 1–4,
+ * all of them inside the first five slots, so this returns 0 and the rows that
+ * are already approved are untouched — proven frame by frame, not assumed.
+ */
+const panOf = (card: number) => Math.max(0, card - (VISIBLE - 2)) * (R.w + R.gap);
 
 /** One round of the list: when it arrives, who is picked, who is finished. */
 export type Round = {
@@ -67,6 +87,9 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
    * gesture, run backwards.
    */
   const t = (i: number) => progressInOut(f, V2.at + i * V2.step, V2.over);
+  /** Where this round's row comes to rest — see `panOf`. */
+  const pan = panOf(V2.cursor.card);
+  const restX = (i: number) => R.x(i) - pan;
   const wide = R.w + R.gap * V2.spread;
   const from0 = theme.canvas.width + 40;
   const startX = (i: number) => from0 + i * wide;
@@ -85,7 +108,7 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
   /** The pointer's target on the card it picks — the same spot on the card that
    *  round one used, so the two picks read as the same gesture. */
   const land = {
-    x: R.x(V2.cursor.card) + R.w * TOUCH.fx,
+    x: restX(V2.cursor.card) + R.w * TOUCH.fx,
     y: R.y + R.h * TOUCH.fy,
   };
   const walk = progressInOut(f, V2.cursor.at, V2.cursor.over);
@@ -99,7 +122,7 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
           n={i + 1}
           title={title}
           box={{
-            x: startX(i) + (R.x(i) - startX(i)) * t(i) + outX(i),
+            x: startX(i) + (restX(i) - startX(i)) * t(i) + outX(i),
             y: R.y,
             w: R.w,
             h: R.h,

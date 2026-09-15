@@ -360,7 +360,7 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
  * missing mistakes appeared to be a layout problem. It is not: the row is
  * unchanged, and the list is now longer than the window.
  */
-const VISIBLE = 6;
+export const VISIBLE = 6;
 
 export const CARD_ROW = (() => {
   const w = 280;

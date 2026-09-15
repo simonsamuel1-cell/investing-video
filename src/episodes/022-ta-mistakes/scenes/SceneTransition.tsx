@@ -28,6 +28,7 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
 import { progressInOut, theme, usePalette } from "../../../core";
+import { CARD_ROW, VISIBLE } from "../data/layout";
 import { CARD_LIST } from "../data/timing";
 import { MistakeRow, type Round } from "./MistakeRow";
 
@@ -122,6 +123,18 @@ export const assertRowArrival = (name: string, row: Round) => {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/${name}: ${m}`);
   };
+  /** ⚠ AND THE CARD IT PICKS HAS TO BE FULLY ON SCREEN WHEN IT GETS THERE. The
+   *  row rests further along the list for a later pick (see `panOf`), so this
+   *  is really a check that the panning rule and the window rule agree — a pick
+   *  the pointer can reach but the viewer cannot read is the failure mode the
+   *  eight-card list introduced. */
+  const pan = Math.max(0, row.cursor.card - (VISIBLE - 2)) * (CARD_ROW.w + CARD_ROW.gap);
+  const left = CARD_ROW.x(row.cursor.card) - pan;
+  if (left < 0 || left + CARD_ROW.w > theme.canvas.width) {
+    fail(
+      `card ${row.cursor.card + 1} rests at ${left.toFixed(0)}..${(left + CARD_ROW.w).toFixed(0)}, not fully on a ${theme.canvas.width}px frame`,
+    );
+  }
   const landed = row.at + row.cursor.card * row.step + row.over;
   const reached = row.cursor.at + row.cursor.over;
   if (reached < landed) {
