@@ -1084,13 +1084,20 @@ export const TWIN = {
   card: { at: 6250, over: 20 },
   /**
    * ⚠ THE LIGHT RUNNING ROUND WINDOW 1's EDGE — Simon: "animasi seperti lampu
-   * neon yang menjalar berulang di bordernya". `lap` is how many frames one
-   * trip around takes, and it is the only number here: the thing repeats, so it
-   * has a period rather than a start and an end. It begins with the card and
-   * does not stop, because what it is saying is "this is the window you are
-   * looking at" and that stays true.
+   * neon yang menjalar berulang di bordernya".
+   *
+   * ⚠ IT STARTS AT 6446, NOT WITH THE CARD. Simon moved it: before window 2
+   * exists there is nothing to be picked out FROM, so a lit window on an empty
+   * screen is decoration. The moment the second one arrives it becomes a
+   * statement about which of the two is being read — so that is when it lights.
+   *
+   * `lap` is how many frames one trip round takes. It repeats and does not
+   * stop, because what it says stays true.
    */
-  neon: { lap: 100 },
+  neon: { at: 6446, over: 30, lap: 100 },
+  /** ⚠ AND WINDOW 1 GROWS 10% AS IT GOES — Simon, on the same frame. Rides the
+   *  slide rather than following it: one move, not a shuffle then a swell. */
+  grow: { at: 6446, over: 54, by: 1.1 },
   tape: { at: 6252, step: 0.55, over: 12 },
   /**
    * ═══ STEP 2 · THE TWO INDIGO LINES ═══
@@ -1116,7 +1123,9 @@ export const TWIN = {
    * slides left, window 2 arrives beside it.
    */
   split: { at: 6446, over: 54 },
-  second: { at: 6484, over: 40 },
+  /** ⚠ WINDOW 2 STARTS ARRIVING ON THE SPLIT FRAME, which is what makes 6446
+   *  the frame the neon lights on: Simon tied the two together. */
+  second: { at: 6446, over: 44 },
 } as const;
 
 {

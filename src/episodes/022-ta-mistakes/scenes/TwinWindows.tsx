@@ -318,7 +318,13 @@ export const TwinWindows = () => {
   const card = progressInOut(g, V.card.at, V.card.over);
   /** ⚠ WRAPPED, NOT CLAMPED. The light repeats, so its progress is the fraction
    *  of a lap elapsed and nothing else — `% 1` is the whole animation. */
-  const neon = ((g - V.card.at) / V.neon.lap) % 1;
+  const neon = ((g - V.neon.at) / V.neon.lap) % 1;
+  /** ⚠ AND IT FADES UP RATHER THAN SNAPPING ON. The beam is already moving when
+   *  it becomes visible, so the light arrives mid-travel — which is what a tube
+   *  warming up looks like, and what switching a shape on does not. */
+  const lit = progressInOut(g, V.neon.at, V.neon.over);
+  /** ⚠ SCALED ABOUT ITS OWN CENTRE, so growing does not also move it. */
+  const scale = 1 + (V.grow.by - 1) * progressInOut(g, V.grow.at, V.grow.over);
   /**
    * ⚠ THE STAGGER COUNTS THE LINES THAT ARE DRAWN, not the entries in the
    * array. Two of the four are hidden; indexed by position, the first visible
@@ -361,12 +367,26 @@ export const TwinWindows = () => {
             style={{
               position: "absolute",
               inset: 0,
-              transform: `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px)`,
+              transform:
+                i === 0
+                  ? `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px) scale(${scale.toFixed(4)})`
+                  : undefined,
+              transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px`,
+              /**
+               * ⚠ WINDOW 2 IS DRAINED AND SET BACK — Simon: "monochrome terang
+               * dan transparansi 75% sejak awal". One filter over the whole
+               * group rather than a pale palette inside it: the candles keep
+               * their own reds and greens in the data and lose them on the way
+               * to the screen, so nothing about what is drawn has to know it is
+               * the window nobody is reading.
+               */
+              filter: i === 1 ? "grayscale(1) brightness(1.12)" : undefined,
+              opacity: i === 1 ? 0.75 : undefined,
             }}
           >
             {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
                 from behind it rather than washing over the chart. */}
-            {i === 0 ? (
+            {i === 0 && lit > 0.001 ? (
               <div
                 style={{
                   position: "absolute",
@@ -380,7 +400,7 @@ export const TwinWindows = () => {
                    *  one for the room around it. A single shadow is either a
                    *  hard rim or a fog. */
                   boxShadow: `0 0 ${NEON.glow}px ${theme.color.indigoGlow}, 0 0 ${NEON.halo}px ${theme.color.indigoWashStrong}`,
-                  opacity: alpha,
+                  opacity: alpha * lit,
                 }}
               />
             ) : null}
@@ -409,7 +429,9 @@ export const TwinWindows = () => {
               />
               {/* ⚠ LAST, so the light runs ON the card's edge rather than under
                   the chart drawn inside it. */}
-              {i === 0 ? <NeonEdge rect={rect} lap={neon} opacity={alpha} /> : null}
+              {i === 0 && lit > 0.001 ? (
+                <NeonEdge rect={rect} lap={neon} opacity={alpha * lit} />
+              ) : null}
             </Card>
           </div>
         ),
