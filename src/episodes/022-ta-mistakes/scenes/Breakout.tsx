@@ -52,6 +52,8 @@ const GRIDS = B.boxes.map((r, i) =>
 );
 /** ⚠ THE LOWEST BAR OF THE LEFT TAPE — where Simon wants the "Buy". Found, not
  *  counted off the picture, so it follows the trace if ss06 is ever re-read. */
+/** The radius the arrows turn through. */
+const ROUND = 16;
 const BUY_AT = TAPES[0].reduce((best, b, i) => (b.l < TAPES[0][best].l ? i : best), 0);
 
 export const Breakout = () => {
@@ -71,13 +73,19 @@ export const Breakout = () => {
           and each one points at the middle of its own window.
 
           ⚠ THEY GROW OUT FROM THE TITLE, one to each side, then turn down onto
-          the window they mean. Drawn as one path per side so the corner is a
-          corner rather than two lines meeting, and the head only appears once
-          the turn has been made — an arrowhead waiting at a destination the
-          line has not reached is a label, not a gesture. */}
+          the window they mean. One path per side, so the turn is ROUNDED rather
+          than mitred — Simon — and the head only appears once that turn has
+          been made: an arrowhead waiting at a destination the line has not
+          reached is a label, not a gesture.
+
+          ⚠ INDIGO, NOT INK. They are the video's own pointing, not something
+          drawn on the charts, and indigo is the colour this episode thinks
+          in. */}
       <Layer opacity={title.opacity}>
         {B.rule.to.map((x, i) => {
           const mid = (B.rule.to[0] + B.rule.to[1]) / 2;
+          /** Which way this one leaves the title: -1 to the left, +1 right. */
+          const side = x < mid ? -1 : 1;
           const run = mid + (x - mid) * rule;
           const tip = B.rule.y + B.rule.drop;
           return (
@@ -85,23 +93,29 @@ export const Breakout = () => {
               <path
                 d={
                   rule > 0.999
-                    ? `M ${mid} ${B.rule.y} H ${x} V ${tip}`
+                    ? /** ⚠ THE CORNER IS AN ARC, and the straight before it
+                       *  stops one radius short — drawn to the corner and then
+                       *  curved, the bend would bulge past where the arrow is
+                       *  meant to point. */
+                      `M ${mid} ${B.rule.y} H ${x - side * ROUND} Q ${x} ${B.rule.y} ${x} ${B.rule.y + ROUND} V ${tip}`
                     : `M ${mid} ${B.rule.y} H ${run}`
                 }
                 fill="none"
-                stroke={c.ink}
-                strokeWidth={theme.shape.rule}
+                stroke={c.indigo}
+                strokeWidth={theme.shape.line}
+                strokeLinecap="round"
               />
               {rule > 0.999
-                ? [-1, 1].map((side) => (
+                ? [-1, 1].map((wing) => (
                     <line
-                      key={side}
+                      key={wing}
                       x1={x}
                       y1={tip}
-                      x2={x + side * 9}
+                      x2={x + wing * 9}
                       y2={tip - 13}
-                      stroke={c.ink}
-                      strokeWidth={theme.shape.rule}
+                      stroke={c.indigo}
+                      strokeWidth={theme.shape.line}
+                      strokeLinecap="round"
                     />
                   ))
                 : null}
@@ -145,22 +159,25 @@ export const Breakout = () => {
         const said = textReveal(g, V.verdict.at + i * V.verdict.step, m.reveal);
         return (
           <div key={i} style={{ position: "absolute", inset: 0 }}>
-            <div
-              style={{
-                position: "absolute",
-                left: r.x,
-                top: B.head.y,
-                transform: `translateY(calc(-50% + ${head.dy}px))`,
-                fontFamily: theme.text.family,
-                fontSize: theme.text.tag.size,
-                fontWeight: 700,
-                color: c.slate,
-                opacity: head.opacity,
-              }}
-            >
-              {V.heads[i]}
-            </div>
             <Card rect={r} opacity={on}>
+              {/* ⚠ THE NAME SITS INSIDE ITS OWN WINDOW — Simon: top-left corner.
+                  Outside, the two names were labels on a diagram; inside, each
+                  one is the window saying which market it is. */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: r.x + B.head.x,
+                  top: r.y + B.head.y,
+                  transform: `translateY(calc(-50% + ${head.dy}px))`,
+                  fontFamily: theme.text.family,
+                  fontSize: theme.text.tag.size,
+                  fontWeight: 700,
+                  color: c.slate,
+                  opacity: head.opacity,
+                }}
+              >
+                {V.heads[i]}
+              </div>
               {/* ⚠ THE TAPE DRAWS ACROSS, so the two charts are watched being
                   the same and then not. Arriving finished, the identity of
                   their first two thirds is something a viewer has to go

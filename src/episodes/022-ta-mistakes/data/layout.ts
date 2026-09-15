@@ -723,8 +723,14 @@ export const PROVE_BOX = (() => {
 export const BREAKOUT_BOX = (() => {
   const [left, right] = halves();
   const chartH = 430;
-  const toHead = 78;
-  const toBox = 118;
+  /**
+   * ⚠ NO HEADING ROW ANY MORE — Simon: "taro di dalem windownya aja, taro pojok
+   * kiri atas". The names moved inside their own cards, so the 78px that held
+   * them above the boxes is gone and the stack is that much shorter. It
+   * re-centres on its own, because its height was always a sum rather than a
+   * set of typed tops.
+   */
+  const toBox = 86;
   const toVerdict = 48;
   /** Half the type that sits above the rule and below the verdict row. */
   const half = 24;
@@ -744,7 +750,8 @@ export const BREAKOUT_BOX = (() => {
       to: [left.x + left.w / 2, right.x + right.w / 2],
       drop: 46,
     },
-    head: { y: Math.round(rule + toHead) },
+    /** Where a window's own name sits, from its top-left corner. */
+    head: { x: 34, y: 44 },
     boxes: [
       { x: left.x, y: Math.round(rule + toBox), w: left.w, h: chartH },
       { x: right.x, y: Math.round(rule + toBox), w: right.w, h: chartH },
@@ -779,7 +786,7 @@ export const BREAKOUT_BOX = (() => {
     const mid = b.boxes[i].x + b.boxes[i].w / 2;
     if (Math.abs(x - mid) > 0.5) fail(`arrow ${i + 1} points at ${x}, not window ${i + 1}'s centre ${mid}`);
   });
-  if (b.rule.y + b.rule.drop >= b.head.y) fail("the arrows reach past the column headings");
+  if (b.rule.y + b.rule.drop >= b.boxes[0].y) fail("the arrows reach into the chart cards");
   if (b.verdict.y + 24 > theme.captionBand.top) {
     fail(`the verdicts sit at ${b.verdict.y}, inside the subtitle band`);
   }
