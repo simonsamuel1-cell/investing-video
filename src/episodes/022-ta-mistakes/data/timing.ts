@@ -1128,8 +1128,16 @@ export const TWIN = {
    * `lap` is one trip round; `hold` is the dark between passes. A light that
    * runs continuously reads as a spinner; one that arrives, stops and goes
    * again reads as a pass being made.
+   *
+   * ⚠ AND IT GOES ROUND TWICE, THEN STOPS — Simon: "beamnya muter 2x aja,
+   * berhenti di 6600". `laps` is the count and `stop` is his frame; the two are
+   * checked against each other below rather than one of them being derived,
+   * because they are two different statements about the same moment and a
+   * silent disagreement between them is exactly what an assertion is for. The
+   * GLOW stays: the beam saying its piece twice is a gesture, but which window
+   * is being read does not stop being true.
    */
-  neon: { at: 6375, over: 30, lap: 100, hold: 10 },
+  neon: { at: 6375, over: 30, lap: 100, hold: 10, laps: 2, stop: 6600 },
   /**
    * ⚠ WINDOW 2 WAITS FOR WINDOW 1 TO STOP MOVING. They used to arrive on the
    * same frame and collided in mid-air — Simon sent the frame where they
@@ -1162,6 +1170,14 @@ export const TWIN = {
    *  exactly this check being absent. */
   if (V.second.at < V.split.at + V.split.over) {
     fail(`window 2 starts at ${V.second.at}, before the slide ends at ${V.split.at + V.split.over}`);
+  }
+  /** ⚠ TWO LAPS HAVE TO FIT INSIDE SIMON'S STOP FRAME. They end on 6595 against
+   *  his 6600 — the five frames between are inside the dark hold, so the two
+   *  numbers describe the same picture — but a change to `lap` or `hold` could
+   *  put the light still travelling when it is meant to be over. */
+  const lastLap = V.neon.at + V.neon.laps * (V.neon.lap + V.neon.hold);
+  if (lastLap > V.neon.stop) {
+    fail(`the beam's ${V.neon.laps} laps end at ${lastLap}, after it is meant to stop on ${V.neon.stop}`);
   }
 }
 

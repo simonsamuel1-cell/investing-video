@@ -475,8 +475,14 @@ export const TwinWindows = () => {
    * reset between passes.
    */
   const cycle = V.neon.lap + V.neon.hold;
-  const phase = (((g - V.neon.at) % cycle) + cycle) % cycle;
+  const elapsed = g - V.neon.at;
+  const phase = ((elapsed % cycle) + cycle) % cycle;
   const neon = progressInOut(phase, 0, V.neon.lap);
+  /** ⚠ TWO PASSES AND NO MORE — Simon. Counted rather than timed out, so the
+   *  light always finishes the lap it is on: cutting it on a frame would stop
+   *  it wherever it happened to be, which is the one place a travelling light
+   *  must never stop. */
+  const running = elapsed < V.neon.laps * cycle;
   /** ⚠ AND IT FADES UP RATHER THAN SNAPPING ON. The beam is already moving when
    *  it becomes visible, so the light arrives mid-travel — which is what a tube
    *  warming up looks like, and what switching a shape on does not. */
@@ -645,7 +651,7 @@ export const TwinWindows = () => {
                 />
                 {/* ⚠ LAST, so the light runs ON the card's edge rather than under
                   the chart drawn inside it. */}
-                {i === 0 && lit > 0.001 ? (
+                {i === 0 && lit > 0.001 && running ? (
                   <NeonEdge rect={rect} lap={neon} opacity={lit} />
                 ) : null}
               </Card>
