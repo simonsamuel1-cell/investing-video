@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3, ROW4 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -60,6 +60,7 @@ import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
 import { CardList, CardListFadeIn } from "./scenes/CardList";
 import { CardList3 } from "./scenes/CardList3";
+import { CardList4 } from "./scenes/CardList4";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
 
@@ -225,6 +226,15 @@ const Body = () => (
         same picture with its clock started — see scenes/Revenge.tsx. */}
     <Sequence from={REVENGE_T.at} durationInFrames={REVENGE_T.over} name="SC07 · revenge trade">
       <Revenge />
+    </Sequence>
+
+    {/* ⚠ THE FOURTH TURN OF THE LIST, and like the third it owns the outgoing
+        picture's exit as well as its own arrival. ⚠ IT OVERLAPS SC08 — Simon:
+        "tidak masalah overlap dengan scene lain", while the timing is parked.
+        Mounted AFTER the revenge scene so that on 6023, where both are drawn,
+        this layer's copy is the one on top. See scenes/CardList4.tsx. */}
+    <Sequence from={ROW4.from} durationInFrames={ROW4.over} name="Scene Transisi 4 · Card list">
+      <CardList4 />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

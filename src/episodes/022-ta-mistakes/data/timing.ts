@@ -819,7 +819,18 @@ export const RECALL = {
  */
 export const REVENGE_T = {
   at: 5394,
-  over: 590,
+  /**
+   * ⚠ IT HANDS OVER AT 6023 — Simon: "perpanjang scene nya hingga 6023. Lalu
+   * transisi ke Scene Transisi". 6023 is this scene's LAST frame and the
+   * transition's FIRST, which is the same one-frame overlap round three uses:
+   * the row arriving and the picture leaving have to cross, and on that frame
+   * there are two copies of this scene in the same place at the same progress.
+   *
+   * ⚠ AND IT NOW RUNS OVER SC08 — Simon: "tidak masalah overlap dengan scene
+   * lain", said while the timing is still open. The two windows genuinely
+   * overlap from 5984; nothing downstream has been moved to make room yet.
+   */
+  over: 6023 - 5394 + 1,
   /** ⚠ THE PAN IS A CHANGE OF GRID, not a transform on a picture — see
    *  scenes/Revenge.tsx. `left` and `up` are what the chart moves by. */
   /**
@@ -969,6 +980,38 @@ export const REVENGE = {
   verdict: 5771,
   gate: 5824,
   close: 5890,
+} as const;
+
+/**
+ * ═══ SCENE TRANSISI 4 ═══  Simon: "transisi ke Scene Transisi, highlight kartu
+ * 4", and "lakukan dulu tanpa pedulikan timing".
+ *
+ * ⚠ ROUND THREE'S RHYTHM, MOVED. Every gap here is the one ROW3 uses — 40 to
+ * the pointer, 72 to the flood, 147 to the exit — because the two rounds are
+ * the same gesture and a transition that breathed differently each time would
+ * read as a different device rather than a returning one. The frames are
+ * PROVISIONAL: Simon has parked the timing, and this is the shape to tune.
+ */
+export const ROW4 = {
+  from: 6023,
+  /** Ends on the frame the last card clears: six cards four apart, each taking
+   *  34, from 6170. */
+  over: 202,
+  /** ⚠ LEFT, NOT UP. What leaves here is a chart on a card — a page — and a
+   *  page is pushed aside by what comes next. Round three lifted because what
+   *  left there was a window onto a screen, which reads as being put down. */
+  away: { at: 6023, over: 44 },
+  row: {
+    at: 6023,
+    over: 60,
+    spread: 4,
+    /** ⚠ THE FOURTH CARD THIS TIME — Simon's "highlight kartu 4", zero-based. */
+    cursor: { at: 6063, over: 34, card: 3 },
+    hover: { at: 6095, over: 46 },
+    /** ⚠ THREE DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1, 2],
+    out: { at: 6170, step: 4, over: 34 },
+  },
 } as const;
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
