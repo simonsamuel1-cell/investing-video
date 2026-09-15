@@ -41,6 +41,7 @@ import { BLOCK, CARD_LIST } from "../data/timing";
 import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
 import { MistakeCard, TOUCH } from "./MistakeCard";
 import { MistakeRow } from "./MistakeRow";
+import { assertRowArrival } from "./SceneTransition";
 import {
   CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
 } from "../data/series";
@@ -461,6 +462,12 @@ export const CardListFadeIn = () => {
  * is the clock, because round two counts in CardList's own window.
  */
 const Row2 = () => <MistakeRow f={useCurrentFrame()} V2={V.row2} />;
+
+/** ⚠ ROUND TWO IS CHECKED THE SAME WAY THE OTHERS ARE. It does not go through
+ *  SceneTransition — the row arrives into this scene rather than onto a picture
+ *  a transition layer has to carry off — but a staggered entrance can strand
+ *  the pointer over empty paper here exactly as it can there. */
+assertRowArrival("CardList/Row2", V.row2);
 
 export const CardList = ({
   note = true,

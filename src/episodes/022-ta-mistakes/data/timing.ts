@@ -530,6 +530,11 @@ export const CARD_LIST = {
      * gather into a row instead of sliding in already formed. One curve, six
      * different distances: that difference IS the closing up.
      */
+    /** ⚠ FOUR FRAMES BETWEEN CARDS ON THE WAY IN — Simon: "masuk kartu nya
+     *  satu per satu". The same step the exit uses, so the row arrives the way
+     *  it leaves: close enough to read as one gesture, far enough apart that it
+     *  is six cards arriving rather than a block sliding on. */
+    step: 4,
     spread: 4,
     cursor: { at: 2092, over: 34, card: 1 },
     hover: { at: 2124, over: 46 },
@@ -760,6 +765,11 @@ export const ROW3 = {
   row: {
     at: 5045,
     over: 60,
+    /** ⚠ FOUR FRAMES BETWEEN CARDS ON THE WAY IN — Simon: "masuk kartu nya
+     *  satu per satu". The same step the exit uses, so the row arrives the way
+     *  it leaves: close enough to read as one gesture, far enough apart that it
+     *  is six cards arriving rather than a block sliding on. */
+    step: 4,
     spread: 4,
     /** ⚠ THE THIRD CARD THIS TIME. */
     cursor: { at: 5085, over: 34, card: 2 },
@@ -1004,6 +1014,11 @@ export const ROW4 = {
   row: {
     at: 6023,
     over: 60,
+    /** ⚠ FOUR FRAMES BETWEEN CARDS ON THE WAY IN — Simon: "masuk kartu nya
+     *  satu per satu". The same step the exit uses, so the row arrives the way
+     *  it leaves: close enough to read as one gesture, far enough apart that it
+     *  is six cards arriving rather than a block sliding on. */
+    step: 4,
     spread: 4,
     /** ⚠ THE FOURTH CARD THIS TIME — Simon's "highlight kartu 4", zero-based. */
     cursor: { at: 6063, over: 34, card: 3 },

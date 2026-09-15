@@ -30,6 +30,13 @@ const AWAY = theme.stage.card.x + theme.stage.card.w + 40;
 export type Round = {
   at: number;
   over: number;
+  /**
+   * ⚠ THE ARRIVAL'S STAGGER — Simon: "tolong dibuat masuk kartu nya satu per
+   * satu", for every round of the list and every one after it. Frames between
+   * one card setting off and the next, mirroring `out.step`, so the row comes
+   * in the way it goes out.
+   */
+  step: number;
   spread: number;
   cursor: { at: number; over: number; card: number };
   hover: { at: number; over: number };
@@ -48,7 +55,18 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
    * distances on ONE curve — the difference between them is the gathering, and
    * nothing has to be animated twice to produce it.
    */
-  const t = progressInOut(f, V2.at, V2.over);
+  /**
+   * ⚠ ONE AT A TIME, AND THE LEFTMOST FIRST — Simon, and the direction decides
+   * which end starts. They travel LEFT into place, so the card in front sets
+   * off first; staggered the other way the row would land back to front, which
+   * reads as the list being dealt in reverse.
+   *
+   * ⚠ IT IS THE MIRROR OF THE EXIT, on purpose and on the same `step`. The row
+   * leaves one at a time from the far end because they all travel right; it
+   * arrives one at a time from the near end because they all travel left. Same
+   * gesture, run backwards.
+   */
+  const t = (i: number) => progressInOut(f, V2.at + i * V2.step, V2.over);
   const wide = R.w + R.gap * V2.spread;
   const from0 = theme.canvas.width + 40;
   const startX = (i: number) => from0 + i * wide;
@@ -81,7 +99,7 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
           n={i + 1}
           title={title}
           box={{
-            x: startX(i) + (R.x(i) - startX(i)) * t + outX(i),
+            x: startX(i) + (R.x(i) - startX(i)) * t(i) + outX(i),
             y: R.y,
             w: R.w,
             h: R.h,

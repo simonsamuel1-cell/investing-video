@@ -108,4 +108,38 @@ export const assertTransition = (name: string, V: Transition) => {
   if (V.row.done.includes(V.row.cursor.card)) {
     fail(`the pointer picks card ${V.row.cursor.card + 1}, which is already done`);
   }
+  assertRowArrival(name, V.row);
+};
+
+/**
+ * ⚠ THE POINTER MAY NOT ARRIVE BEFORE THE CARD IT PICKS. Staggering the row's
+ * entrance made this possible for the first time: the later a card sits in the
+ * row the later it lands, so a pointer aimed at the far end can now get there
+ * first and hover over empty paper. Exported, because round two is inside
+ * CardList and has the same exposure.
+ */
+export const assertRowArrival = (name: string, row: Round) => {
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/${name}: ${m}`);
+  };
+  const landed = row.at + row.cursor.card * row.step + row.over;
+  const reached = row.cursor.at + row.cursor.over;
+  if (reached < landed) {
+    fail(
+      `the pointer reaches card ${row.cursor.card + 1} on ${reached}, ${landed - reached} frames before that card lands`,
+    );
+  }
+  /** ⚠ AND THE FLOOD CANNOT START BEFORE ITS CARD HAS LANDED — the same
+   *  exposure, on the other half of the gesture. Note what is NOT checked here:
+   *  the flood is allowed to lead the pointer's last frame or two. Round two
+   *  has done exactly that since it was approved, and a hover response that
+   *  begins as the pointer settles is anticipation, not an error. */
+  if (row.hover.at < landed) {
+    fail(`card ${row.cursor.card + 1} floods on ${row.hover.at}, before it lands on ${landed}`);
+  }
+  /** The whole row has to be in before any of it leaves. */
+  const allIn = row.at + (CARD_LIST.titles.length - 1) * row.step + row.over;
+  if (row.out.at < allIn) {
+    fail(`the row starts leaving on ${row.out.at}, before the last card lands on ${allIn}`);
+  }
 };
