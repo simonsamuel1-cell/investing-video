@@ -94,19 +94,24 @@ export const COUNTER = {
    * ⚠ SC12→SC14 is the ADMR case study: a worked example is not another entry
    * in the list, and leaving the counter up there files it as "mistake 07½".
    *
-   * ⚠ SC06→SC08 is Simon's, in two steps: the counter came off the platform
-   * ("hapus tulisan Mistake 02 dan OVERTRADING") and then off SC07 with the
-   * rest of that scene ("judulnya juga hapus"). Both stretches are the same
-   * case — nothing there is a named mistake any more, so a counter over them
-   * would be labelling something that is not being said.
+   * ⚠ SC06→SC09 is Simon's, in three steps: the counter came off the platform
+   * ("hapus tulisan Mistake 02 dan OVERTRADING"), then off SC07 with the rest
+   * of that scene ("judulnya juga hapus"), and now off SC08 the same way
+   * ("hapus semua visual scene 8 termasuk text"). All three are one case —
+   * nothing there is a named mistake any more, so a counter over them would be
+   * labelling something that is not being said. The counter is not drawn BY
+   * those scenes, which is exactly why it has to be taken off here: deleting a
+   * scene does not remove an overlay that outlives it.
    *
-   * ⚠ THE CONSEQUENCE, ON THE RECORD: entries 02 and 03 never appear on the
-   * counter. Their windows are exactly these, so it reads 01 … 04. The CARDS
-   * now name all eight, so that half of the discrepancy is closed; the counter
-   * still skips two, and whatever replaces those two stretches can carry them.
+   * ⚠ THE CONSEQUENCE, ON THE RECORD, AND IT IS GROWING: entries 02, 03 and 04
+   * never appear on the counter. Their windows are exactly this gap, so it now
+   * reads 01, then 05 06 07 08. The CARDS name all eight, so the list itself is
+   * whole; it is the running tally that has holes, and each one arrived as a
+   * side effect of deleting a scene rather than as a decision about the tally.
+   * Whatever fills 4282–7063 can carry 02, 03 and 04 again.
    */
   gaps: [
-    { from: BLOCK.SC06, to: BLOCK.SC08 },
+    { from: BLOCK.SC06, to: BLOCK.SC09 },
     { from: BLOCK.SC12, to: BLOCK.SC14 },
   ],
   over: 18,
@@ -1059,6 +1064,12 @@ export const ROW4 = {
 } as const;
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
+/**
+ * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hapus semua visual scene 8 termasuk
+ * text". Kept for the same reason REVENGE and HOPE are: it is the VO's own
+ * frame table for that stretch, and re-deriving it from the SRT is the
+ * expensive part. Only the scene that read it is gone.
+ */
 export const BIASED = {
   name: 6092,
   chart: { at: 6020, over: 120 },

@@ -46,7 +46,6 @@ import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3, ROW4 } fro
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
-import { SC08 } from "./scenes/SC08";
 import { SC09 } from "./scenes/SC09";
 import { SC10 } from "./scenes/SC10";
 import { SC11 } from "./scenes/SC11";
@@ -118,7 +117,12 @@ const SCENES: Mounted[] = [
    *  draws nothing. The third card row covers its first 200 frames anyway, and
    *  REVENGE is still in data/timing.ts for whatever replaces it. */
   { from: BLOCK.SC07, duration: BLOCK.SC08 - BLOCK.SC07, Component: Blank, name: "SC07 (empty)" },
-  { from: BLOCK.SC08, duration: BLOCK.SC09 - BLOCK.SC08, Component: SC08, name: "SC08 Confirmation bias" },
+  /** ⚠ SC08'S VISUALS ARE GONE — Simon: "hapus semua visual scene 8 termasuk
+   *  text". Same shape as SC07: the window stays because the timeline may not
+   *  have a hole in it, and what owns it now draws nothing. The fourth card row
+   *  covers its first 249 frames; BIASED is still in data/timing.ts for
+   *  whatever replaces the rest. */
+  { from: BLOCK.SC08, duration: BLOCK.SC09 - BLOCK.SC08, Component: Blank, name: "SC08 (empty)" },
   { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: SC09, name: "SC09 Konteks market" },
   { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: SC10, name: "SC10 Indicator overload" },
   { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: SC11, name: "SC11 Hindsight bias" },
