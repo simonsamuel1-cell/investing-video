@@ -30,21 +30,24 @@ const AWAY = theme.stage.card.x + theme.stage.card.w + 40;
  * ═══ HOW FAR ALONG THE LIST THE ROW RESTS ═══  Simon's choice, once the list
  * grew past the window.
  *
- * ⚠ THE PICK IS ALWAYS THE LAST CARD FULLY INSIDE THE WINDOW. Five cards fit
- * whole and the sixth is cut by the frame, so a pick at slot 4 is the furthest
- * one that can be read in full — and anything past it pulls the row along by
- * whole card-pitches until it sits there.
+ * ⚠ THE PICK SITS IN THE FOURTH SLOT, NOT THE LAST READABLE ONE. Five cards fit
+ * whole and the sixth is cut by the frame, so slot 4 is the furthest a card can
+ * be read in full — and that is where this used to put the pick. Simon asked
+ * for the row to be along already by card 5: "saat seleksi kartu 5, previewnya
+ * bisa sudah tergeser ke kiri ga?". Stopping a slot earlier leaves TWO cards
+ * beside the picked one instead of none, so the list still visibly continues
+ * past the thing being pointed at.
+ *
+ * ⚠ AND IT IS STILL ZERO FOR THE FIRST FOUR ROUNDS. Cards 1–4 sit inside the
+ * first four slots either way, so nothing already approved moves — proven frame
+ * by frame rather than assumed.
  *
  * ⚠ IT IS A RESTING PLACE, NOT A SCROLL. Every round brings the row in from off
  * the right anyway, so a later round simply arrives already further along.
  * Nothing slides on screen, and there is no second animation to keep in step
  * with the first.
- *
- * ⚠ AND IT IS ZERO FOR EVERY ROUND SO FAR. Rounds one to four pick cards 1–4,
- * all of them inside the first five slots, so this returns 0 and the rows that
- * are already approved are untouched — proven frame by frame, not assumed.
  */
-const panOf = (card: number) => Math.max(0, card - (VISIBLE - 2)) * (R.w + R.gap);
+const panOf = (card: number) => Math.max(0, card - (VISIBLE - 3)) * (R.w + R.gap);
 
 /** One round of the list: when it arrives, who is picked, who is finished. */
 export type Round = {

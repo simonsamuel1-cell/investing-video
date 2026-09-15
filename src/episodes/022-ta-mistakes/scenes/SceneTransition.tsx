@@ -128,7 +128,7 @@ export const assertRowArrival = (name: string, row: Round) => {
    *  is really a check that the panning rule and the window rule agree — a pick
    *  the pointer can reach but the viewer cannot read is the failure mode the
    *  eight-card list introduced. */
-  const pan = Math.max(0, row.cursor.card - (VISIBLE - 2)) * (CARD_ROW.w + CARD_ROW.gap);
+  const pan = Math.max(0, row.cursor.card - (VISIBLE - 3)) * (CARD_ROW.w + CARD_ROW.gap);
   const left = CARD_ROW.x(row.cursor.card) - pan;
   if (left < 0 || left + CARD_ROW.w > theme.canvas.width) {
     fail(
