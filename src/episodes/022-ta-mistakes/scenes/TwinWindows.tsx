@@ -18,10 +18,10 @@
  * two devices where the video has one.
  */
 import { useCurrentFrame } from "remotion";
-import { Candles, Card, candleWidth, gridOf, progressInOut, usePalette } from "../../../core";
+import { Candles, Card, Layer, candleWidth, gridOf, progressInOut, theme, usePalette } from "../../../core";
 import { halves } from "../data/layout";
 import { TWIN } from "../data/timing";
-import { SS03 } from "../data/series";
+import { SS03, TA_ARROWS, TA_LINES } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = TWIN;
@@ -131,6 +131,64 @@ const gridFor = (r: typeof LEFT) =>
 const GRID_L = gridFor(LEFT);
 const GRID_R = gridFor(RIGHT);
 
+/**
+ * ═══ WHAT SOMEBODY DREW ON THE CHART ═══  Simon: ss05 on the left, ss04 on the
+ * right — "contoh gambar technical analysis by a human".
+ *
+ * ⚠ THE SAME FOUR LINES IN BOTH WINDOWS, AND THAT IS THE SCENE. Two people were
+ * given one chart, drew the same trendlines on it, and arrived at opposite
+ * conclusions. If the lines differed the picture would be about two analyses;
+ * identical, it is about two readings — which is what confirmation bias is.
+ *
+ * ⚠ A RULE EXTENSION, ON THE RECORD. A dashed arrow projecting price out of the
+ * last bar is, on its own, indistinguishable from a signal. It is drawn here
+ * because the scene shows TWO of them pointing opposite ways from the same bar,
+ * which is an argument that neither is worth anything — a portrait of the
+ * mistake, in the same class as the "Buy" badges at 4356 and the position tool.
+ * The video never draws one of these alone.
+ *
+ * ⚠ AND THE ARROWS ARE RE-SCALED, NOT REPRODUCED. Simon's screenshots frame the
+ * whole tape; these windows show its last 66 bars, so the same arrow in level
+ * units is far taller than the room here — ss05's would finish 220px above the
+ * card. What is preserved is what he pointed at: the direction and the slope.
+ * Both get the same vertical reach, so the only difference the eye can find
+ * between the two windows is which way they go.
+ *
+ * ⚠ THE REACH IS SET BY THE ARROW WITH LESS ROOM. The two do not start from the
+ * same price — the up arrow was drawn from the wedge's apex and the down one
+ * from a little below it — so the rising one runs out of card first, and 150
+ * is what leaves it air at the top. The falling one could go further and
+ * deliberately does not: an arrow that is longer because it happened to have
+ * space would read as the more confident of the two.
+ */
+const REACH_PX = 150;
+
+/** Global bar index → the grid's own index, since the grid covers only what is
+ *  shown. Linear, so the hidden bars to the left still have a place. */
+const ix = (bar: number) => bar - HIDDEN;
+
+const arrowOf = (grid: typeof GRID_L, k: { a: number[]; b: number[] }) => {
+  const x0 = grid.x(ix(k.a[0]));
+  const y0 = grid.y(k.a[1]);
+  const dx = grid.x(ix(k.b[0])) - x0;
+  const dy = grid.y(k.b[1]) - y0;
+  /** ⚠ SCALED BY ITS RISE, NOT ITS LENGTH. Equal lengths on two different
+   *  slopes would put the steeper arrow's tip nearer the card's edge; equal
+   *  rises put both tips the same distance from it. */
+  const k2 = REACH_PX / Math.abs(dy);
+  return { x0, y0, x1: x0 + dx * k2, y1: y0 + dy * k2 };
+};
+
+/** ⚠ THE HEAD IS BUILT FROM THE ARROW'S OWN DIRECTION, so it can never end up
+ *  pointing somewhere the line does not. */
+const headOf = (a: ReturnType<typeof arrowOf>, len = 26, spread = 0.42) => {
+  const th = Math.atan2(a.y1 - a.y0, a.x1 - a.x0);
+  return [th - Math.PI + spread, th - Math.PI - spread].map((t) => ({
+    x: a.x1 + Math.cos(t) * len,
+    y: a.y1 + Math.sin(t) * len,
+  }));
+};
+
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -141,11 +199,56 @@ export const TwinWindows = () => {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
-      {([[LEFT, GRID_L], [RIGHT, GRID_R]] as const).map(([rect, grid], i) => (
-        <Card key={i} rect={rect} opacity={t}>
-          <Candles bars={SHOWN} grid={grid} />
-        </Card>
-      ))}
+      {(
+        [
+          [LEFT, GRID_L, TA_ARROWS.up],
+          [RIGHT, GRID_R, TA_ARROWS.down],
+        ] as const
+      ).map(([rect, grid, arrow], i) => {
+        const a = arrowOf(grid, arrow);
+        return (
+          <Card key={i} rect={rect} opacity={t}>
+            <Candles bars={SHOWN} grid={grid} />
+            {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four
+                lines start back in the hidden bars, so they have to be allowed
+                to run off the left edge and be cut by the card — which is what
+                a trendline drawn on a longer chart looks like from here. */}
+            <Layer opacity={t} clip={rect}>
+              {TA_LINES.map((l, k) => (
+                <line
+                  key={k}
+                  x1={grid.x(ix(l.a[0]))}
+                  y1={grid.y(l.a[1])}
+                  x2={grid.x(ix(l.b[0]))}
+                  y2={grid.y(l.b[1])}
+                  stroke={c.indigo}
+                  strokeWidth={theme.shape.rule}
+                />
+              ))}
+              <line
+                x1={a.x0}
+                y1={a.y0}
+                x2={a.x1}
+                y2={a.y1}
+                stroke={c.ink}
+                strokeWidth={theme.shape.line}
+                strokeDasharray="14 10"
+              />
+              {headOf(a).map((h, k) => (
+                <line
+                  key={k}
+                  x1={a.x1}
+                  y1={a.y1}
+                  x2={h.x}
+                  y2={h.y}
+                  stroke={c.ink}
+                  strokeWidth={theme.shape.line}
+                />
+              ))}
+            </Layer>
+          </Card>
+        );
+      })}
     </div>
   );
 };
