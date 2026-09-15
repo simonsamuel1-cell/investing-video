@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, REVERSE, ROW3 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, RECALL, REVERSE, ROW3 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -60,6 +60,7 @@ import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
 import { CardList, CardListFadeIn } from "./scenes/CardList";
 import { CardList3 } from "./scenes/CardList3";
+import { ChartRecall } from "./scenes/ChartRecall";
 
 /** ⚠ LONGER THAN THE VOICE ON PURPOSE — `BLOCK.END` holds the closing card for
  *  three seconds after the last word. The guard below is a floor, not an
@@ -211,6 +212,12 @@ const Body = () => (
         layer draws both. See scenes/CardList3.tsx. */}
     <Sequence from={ROW3.from} durationInFrames={ROW3.over} name="Scene Transisi 3 · Card list">
       <CardList3 />
+    </Sequence>
+
+    {/* ⚠ THE SAME CHART AS 4044, HELD — see scenes/ChartRecall.tsx. It fills the
+        stretch SC07's deleted visuals left empty. */}
+    <Sequence from={RECALL.at} durationInFrames={RECALL.over} name="SC07 · chart recalled">
+      <ChartRecall />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

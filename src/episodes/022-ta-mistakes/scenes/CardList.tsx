@@ -444,7 +444,20 @@ export const CardListFadeIn = () => {
  */
 const Row2 = () => <MistakeRow f={useCurrentFrame()} V2={V.row2} />;
 
-export const CardList = () => {
+export const CardList = ({
+  note = true,
+  deck = true,
+}: {
+  note?: boolean;
+  /**
+   * ⚠ THE FIVE UN-PICKED CARDS. They are parked off the right edge on a
+   * transform from 2205 onward, which is invisible and free — until a caller
+   * translates the whole layer, at which point they are dragged back across the
+   * frame. The recall at 5247 slides this layer in from the left, so it asks
+   * for the picked card alone.
+   */
+  deck?: boolean;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -525,9 +538,11 @@ export const CardList = () => {
           transform: `translateX(${-progressInOut(f, V.away.at, V.away.over) * AWAY}px)`,
         }}
       >
-      {V.titles.map((title, i) => (
-        <Card key={title} i={i} title={title} />
-      ))}
+      {V.titles.map((title, i) =>
+        deck || i === V.cursor.card ? (
+          <Card key={title} i={i} title={title} />
+        ) : null,
+      )}
       <Cursor x={cursor.x} y={cursor.y} opacity={walk > 0.001 ? put : 0} />
 
       {/* ═══ THE TAPE ═══  Simon, 2261 → 2372.
@@ -632,11 +647,15 @@ export const CardList = () => {
       />
 
       {/* ═══ THE NOTE ═══  Simon, over the card's empty lower half.
+          ⚠ IT CAN BE LEFT OUT. The scene that recalls this picture at 5247
+          wants the chart and not the sentence — "kecuali text box, jangan
+          di-include" — and the way to have the same picture minus one thing is
+          to draw it again with that thing off, not to draw a second picture.
           ⚠ TYPED, like the other dashed note in this episode — he asked for
           that treatment the last time this object appeared, and a frame that
           snaps open onto finished text reads as a caption rather than as
           something being written down. */}
-      <Note />
+      {note && <Note />}
 
       {/* ═══ THE TOOL ═══  Simon's screenshot, after the rewind.
           ⚠ IT IS THE ANSWER TO THE MISTAKE, not decoration. Everything before

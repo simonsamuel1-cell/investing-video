@@ -773,6 +773,26 @@ export const ROW3 = {
   },
 } as const;
 
+/**
+ * ═══ THE CHART COMES BACK ═══  Simon, from 5247: the same picture as 4044,
+ * sliding in from off the left.
+ *
+ * ⚠ `frame` IS CardList's OWN CLOCK, not this timeline's. 4044 is a global
+ * frame; the layer that draws that picture counts from 1994, so what it has to
+ * be shown is 2050. Holding one and writing the other is how a recall like this
+ * silently drifts.
+ *
+ * ⚠ AND IT IS THE SAME LAYER, FROZEN — not a copy of it. Same card, same tape,
+ * same tool, same everything, because it IS that drawing; only the note is
+ * switched off, which is a flag rather than a second picture.
+ */
+export const RECALL = {
+  at: 5247,
+  over: 737,
+  in: 44,
+  frame: 4044 - 1994,
+} as const;
+
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */
 export const OVERTRADE = {
   fromUs: 4103,
