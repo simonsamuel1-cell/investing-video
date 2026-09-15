@@ -303,8 +303,33 @@ const NeonEdge = ({
 }) => {
   const c = usePalette();
   const r = theme.shape.cardRadius;
+  /**
+   * ⚠ THE PERIMETER IS COMPUTED, NOT MEASURED. Four straight sides less the
+   * eight radii they give up to the corners, plus the one circle those corners
+   * add up to. Guessed even slightly wrong, the arc drifts a little further off
+   * each lap until the loop visibly stutters.
+   */
   const per = 2 * (rect.w + rect.h) - 8 * r + 2 * Math.PI * r;
-  const beam = per * NEON.beam;
+
+  /**
+   * ⚠ THE LIGHT IS A HEAD AND A LENGTH, NOT A FIXED BAR THAT SLIDES — Simon:
+   * "start dari titik yang tidak ada, lalu dari titik jadi memanjang, hingga end
+   * jadi titik yang tidak ada lagi".
+   *
+   * The HEAD is where the light has got to: `lap` of the way round. The LENGTH
+   * swells from nothing to full and back on a half-sine, which is the only
+   * curve that is zero at both ends and has no corner at the top. The tail is
+   * then wherever it has to be — `offset` is solved from the two, because a
+   * dash pattern is positioned by its START and what is being aimed is its end.
+   *
+   * ⚠ AND NOTHING IS DRAWN WHEN THE LENGTH IS NOTHING. A round cap on a
+   * zero-length dash is not nothing — it is a dot the width of the stroke,
+   * which would sit lit in the corner through the whole pause between laps.
+   */
+  const head = lap * per;
+  const len = NEON.beam * per * Math.sin(Math.PI * lap);
+  if (len < 0.5) return null;
+
   return (
     <Layer opacity={opacity}>
       <rect
@@ -317,8 +342,8 @@ const NeonEdge = ({
         stroke={c.indigo}
         strokeWidth={NEON.width}
         strokeLinecap="round"
-        strokeDasharray={`${beam.toFixed(1)} ${(per - beam).toFixed(1)}`}
-        strokeDashoffset={(-lap * per).toFixed(1)}
+        strokeDasharray={`${len.toFixed(1)} ${(per - len).toFixed(1)}`}
+        strokeDashoffset={(len - head).toFixed(1)}
         /** ⚠ TWO SHADOWS, A TIGHT ONE AND A WIDE ONE. One alone is either a
          *  hard edge or a haze; the pair is what a tube of light looks like. */
         style={{
