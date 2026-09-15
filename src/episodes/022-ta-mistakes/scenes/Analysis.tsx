@@ -146,17 +146,24 @@ export const Analysis = ({
    * not how anybody draws one. Each of these truncates the thing it names, so
    * it grows from the end a pen would have started at.
    */
-  show: { lines: readonly number[]; zig: number; arrow: number };
+  show: { lines: readonly number[]; stroke: number };
   opacity?: number;
 }) => {
   const c = usePalette();
   const px = (p: readonly [number, number]) => ({ x: rect.x + p[0], y: rect.y + p[1] });
 
-  const a0 = px(arrow.a);
+  /**
+   * ⚠ ONE PATH FROM THE LEFTMOST CANDLE TO THE ARROWHEAD. The swing line's last
+   * point IS the arrow's start, so appending the arrow's two points makes the
+   * whole gesture a single polyline — no join to keep closed, and no second
+   * ease to stumble over.
+   */
+  const path = [...zig, arrow.a, arrow.b].map((p) => px(p));
+  const drawn = partial(path, show.stroke);
   const tip = px(arrow.b);
   /** ⚠ THE HEAD IS BUILT FROM THE ARROW'S OWN DIRECTION, so it can never end up
    *  pointing somewhere the line does not. */
-  const th = Math.atan2(tip.y - a0.y, tip.x - a0.x);
+  const th = Math.atan2(tip.y - px(arrow.a).y, tip.x - px(arrow.a).x);
   const head = [th - Math.PI + 0.42, th - Math.PI - 0.42].map((t) => ({
     x: tip.x + Math.cos(t) * 26,
     y: tip.y + Math.sin(t) * 26,
@@ -188,37 +195,19 @@ export const Analysis = ({
           />
         );
       })}
-      {/* ═══ THE SWING LINE ═══  Simon: same style as the arrow, and running
-          into the point the arrow starts from. It is drawn as ONE polyline with
-          the arrow's start appended, so the join cannot open up: a separate
-          connecting segment would be a second object that has to be kept
-          touching this one.
+      {/* ═══ THE SWING LINE AND ITS ARROW ═══  Simon: the zigzag runs into the
+          point the arrow starts from, in the same style.
 
-          ⚠ AND IT IS REVEALED BY LENGTH ALONG ITSELF, not per vertex. Cut at a
-          vertex the line would arrive in six jumps of very different sizes,
-          because the legs are not the same length; cut by distance it moves at
-          one speed, which is what a hand does. */}
-      {show.zig > 0.001 ? (
+          ⚠ REVEALED BY LENGTH ALONG THE WHOLE PATH, not per vertex and not per
+          object. Cut at a vertex it would arrive in jumps of very different
+          sizes, because the legs are not the same length; cut per object it
+          stopped at the join, which is what Simon saw at 6350. Cut by distance
+          across the lot, one pen moves at one speed from the first candle to
+          the arrowhead. */}
+      {show.stroke > 0.001 ? (
         <polyline
-          points={partial(
-            [...zig, arrow.a].map((p) => px(p)),
-            show.zig,
-          )
-            .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
-            .join(" ")}
+          points={drawn.map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ")}
           fill="none"
-          stroke={c.ink}
-          strokeWidth={theme.shape.line}
-          strokeDasharray="14 10"
-        />
-      ) : null}
-
-      {show.arrow > 0.001 ? (
-        <line
-          x1={a0.x}
-          y1={a0.y}
-          x2={a0.x + (tip.x - a0.x) * show.arrow}
-          y2={a0.y + (tip.y - a0.y) * show.arrow}
           stroke={c.ink}
           strokeWidth={theme.shape.line}
           strokeDasharray="14 10"
@@ -228,7 +217,7 @@ export const Analysis = ({
       {/* ⚠ THE HEAD LANDS WITH THE TIP, not before it. A head waiting at the
           end of a line that has not arrived is a destination, and the whole
           point of a projection is that it is still being drawn. */}
-      {show.arrow > 0.999 &&
+      {show.stroke > 0.999 &&
         head.map((h, i) => (
           <line
             key={i}

@@ -1092,14 +1092,17 @@ export const TWIN = {
    */
   lines: { at: 6276, step: 0, over: 32 },
   /**
-   * ═══ STEP 3 · THE SWING LINE, AND THE ARROW IT RUNS INTO ═══
-   * ⚠ ONE STROKE, TWO KEYS. The zigzag ends exactly where the arrow starts, so
-   * on screen this is a single pen moving from the leftmost candle to the
-   * arrowhead. They are separate keys only so the arrow can be moved to its own
-   * beat without touching the swing line.
+   * ═══ STEP 3 · THE SWING LINE AND THE ARROW, AS ONE STROKE ═══
+   * ⚠ ONE KEY NOW, AND THAT IS THE FIX. They were two — the zigzag to 6352 and
+   * the arrow from it — and each carried its own ease, so the pen slowed to a
+   * stop at the join and started again from nothing. Simon saw it: "di 6350
+   * entah kenapa panahnya ada sedikit berhenti". Nothing was wrong with either
+   * curve; the seam was in having two of them. The swing line already ends
+   * exactly where the arrow starts, so on screen this was always one pen moving
+   * from the leftmost candle to the arrowhead — it is now one reveal as well,
+   * eased once across the whole length.
    */
-  zig: { at: 6312, over: 40 },
-  arrow: { at: 6352, over: 20 },
+  stroke: { at: 6312, over: 60 },
   /** ⚠ WINDOW 1 IS FINISHED HERE. Asserted below: every step above lands by it,
    *  and the hand-over cannot start before it. */
   done: 6372,
@@ -1147,15 +1150,13 @@ export const TWIN = {
   const ends: [string, number][] = [
     ["the card", V.card.at + V.card.over],
     ["the indigo lines", V.lines.at + V.lines.step + V.lines.over],
-    ["the swing line", V.zig.at + V.zig.over],
-    ["the arrow", V.arrow.at + V.arrow.over],
+    ["the swing line and its arrow", V.stroke.at + V.stroke.over],
   ];
   for (const [name, e] of ends) {
     if (e > V.done) fail(`${name} finishes at ${e}, after ${V.done}`);
   }
   if (V.lines.at < ends[0][1]) fail("the lines start before the card has arrived");
-  if (V.zig.at < ends[1][1]) fail("the swing line starts before the lines are drawn");
-  if (V.arrow.at > ends[2][1]) fail("the arrow starts after the swing line has already got there");
+  if (V.stroke.at < ends[1][1]) fail("the swing line starts before the lines are drawn");
   if (V.split.at <= V.done) fail("the windows split before the first one is finished");
   /** ⚠ AND WINDOW 2 WAITS FOR THE SLIDE. The collision Simon photographed was
    *  exactly this check being absent. */

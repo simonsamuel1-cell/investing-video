@@ -412,15 +412,17 @@ export const TwinWindows = () => {
   })();
   const one = {
     lines: linesShow,
-    zig: progressInOut(g, V.zig.at, V.zig.over),
-    arrow: progressInOut(g, V.arrow.at, V.arrow.over),
+    /** ⚠ ONE PROGRESS FOR THE SWING LINE AND ITS ARROW — see `stroke` in
+     *  data/timing.ts. Two of them eased separately and the pen stopped at the
+     *  join. */
+    stroke: progressInOut(g, V.stroke.at, V.stroke.over),
   };
 
   /** ⚠ WINDOW 2 ARRIVES FINISHED. Simon has given the order for window 1 and
    *  not yet for this one; drawing it step by step would be inventing a beat he
    *  has not asked for. */
   const two = progressInOut(g, V.second.at, V.second.over);
-  const whole = { lines: LEFT_LINES.map(() => 1), zig: 1, arrow: 1 };
+  const whole = { lines: LEFT_LINES.map(() => 1), stroke: 1 };
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
@@ -507,7 +509,7 @@ export const TwinWindows = () => {
                   fontWeight: 700,
                   color: i === 0 ? QUOTE.one.ink : c.muted,
                   whiteSpace: "nowrap",
-                  opacity: i === 1 ? 1 : show.arrow,
+                  opacity: i === 1 ? 1 : show.stroke,
                 }}
               >
                 {i === 0 ? QUOTE.one.text : QUOTE.two.text}
