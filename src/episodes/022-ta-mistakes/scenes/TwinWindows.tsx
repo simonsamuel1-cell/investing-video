@@ -40,13 +40,21 @@ const LEFT = shorter(L0);
 const RIGHT = shorter(R0);
 
 /**
- * ⚠ THE FIRST FIFTEEN BARS ARE GONE — Simon: "hapus 15 candlestick paling kiri
- * setiap window". Sliced at the front rather than masked, because a bar that is
- * hidden is still in the grid: it would keep its slot, the remaining bars would
- * stay exactly as thin as they are now, and the clutter this is meant to fix
- * would be untouched.
+ * ⚠ THIRTY BARS ARE HIDDEN, NOT DELETED — Simon, and he said why: "nanti aku
+ * butuh candlesticks yang di-hide ini sebagai acuan untuk membuat garis
+ * resistance". So `SS03` stays whole in data/series.ts and this is only the
+ * window onto it. A price taken off any of the thirty is still there to be
+ * taken.
+ *
+ * ⚠ AND THEY ARE OUT OF THE GRID, WHICH IS THE POINT OF HIDING THEM. A bar
+ * drawn at zero opacity still holds its slot: the visible bars would stay
+ * exactly as thin as they are, and "agar setiap candle bisa terlihat" would be
+ * impossible. The grid is solved over what is SHOWN, so dropping bars is what
+ * widens the rest. A level read off a hidden bar needs its PRICE, not its slot,
+ * so nothing is lost by them having no place on this axis.
  */
-const SHOWN = SS03.slice(15);
+const HIDDEN = 30;
+const SHOWN = SS03.slice(HIDDEN);
 
 /**
  * ═══ WHERE THE CHART SITS INSIDE ITS WINDOW ═══
@@ -56,21 +64,19 @@ const SHOWN = SS03.slice(15);
  * GRID_PAD_X on its own, so a plot that starts exactly on the window's left
  * edge still has air in front of the tape rather than a candle cut by the card.
  *
- * ⚠ THE TWO ASKS PULL AGAINST EACH OTHER, AND THIS IS WHERE THEY MEET. A grid
- * spreads its bars across whatever width it is given, so white space on the
- * right can only come from a NARROWER plot — and a narrower plot means a
- * tighter bar pitch, which is the clutter Simon wants less of. The width below
- * is the one that buys the most right-hand space while keeping the bars no
- * thinner than they were before the 15 were dropped: 96 bars across 624px of
- * inner is a 6.5px slot, the same the full 111 had across the full window.
- * Fewer bars at the same width is what "less cluttered" means here; going wider
- * would stretch them further but there would be almost no white space left.
+ * ⚠ FLUSH LEFT, AND STILL NARROWER THAN THE WINDOW. Simon wants the chart
+ * stretched wide enough that every candle reads, and he wants white space at
+ * the right; a grid spreads its bars across whatever width it is given, so
+ * those two are traded against each other in this one number. At 0.84 the tape
+ * is 702px of an 836px window: an 8.2px slot and a 5.6px body, against the
+ * 4.4px it was before the second fifteen went — and 134px still free at the
+ * right.
  *
- * ⚠ SO THE STRETCH THAT IS LEFT IS VERTICAL, and it is real: the inset is cut
- * right down, so the same price range covers more of a shorter window than it
- * covered of a taller one.
+ * ⚠ AND THE HEIGHT IS LOCKED — Simon: "lock size height chart (2 2nya)". Both
+ * of the numbers that set it are held below and asserted, so the width can be
+ * tuned again without the chart quietly changing shape underneath it.
  */
-const PLOT_W = 0.79;
+const PLOT_W = 0.84;
 const PAD_Y = 22;
 const plotOf = (r: typeof LEFT) => ({
   x: r.x,
@@ -134,9 +140,36 @@ export const TwinWindows = () => {
    *  change to PLOT_W could take away without anything looking broken. */
   const lastBar = GRID_L.x(SHOWN.length - 1) + candleWidth(GRID_L) / 2;
   const free = LEFT.x + LEFT.w - lastBar;
-  if (free < LEFT.w * 0.2) {
+  /**
+   * ⚠ THE FLOOR IS MINE, NOT SIMON'S, and it is a floor rather than a spec. He
+   * asked for white space at the right and did not say how much; this exists so
+   * that a later tweak to PLOT_W cannot take it away without the build noticing.
+   * It started at a fifth and came down to a seventh when he asked for the
+   * chart to be stretched wider — which is the trade, stated once here instead
+   * of being argued each time the width moves.
+   */
+  if (free < LEFT.w * 0.15) {
     fail(`only ${free.toFixed(0)}px of the window is free to the right of the tape`);
   }
   /** And nothing may reach the card's own right edge. */
   if (lastBar > LEFT.x + LEFT.w) fail("the tape runs past the window's right edge");
+  /**
+   * ⚠ THE HEIGHT IS LOCKED, SO IT IS WRITTEN DOWN — Simon: "lock size height
+   * chart (2 2nya)". Both windows and both plots, stated as the numbers that
+   * were on screen when he locked them. A lock nobody can read is a convention;
+   * this one fails the build.
+   */
+  const LOCKED = { window: 536, plot: 492 };
+  if (LEFT.h !== LOCKED.window) {
+    fail(`the window is ${LEFT.h}px tall, and its height is locked at ${LOCKED.window}`);
+  }
+  if (plotOf(LEFT).h !== LOCKED.plot) {
+    fail(`the plot is ${plotOf(LEFT).h}px tall, and its height is locked at ${LOCKED.plot}`);
+  }
+  /** ⚠ AND THE HIDDEN BARS ARE STILL REACHABLE. They are the reference for a
+   *  resistance level Simon has not drawn yet; sliced out of the series rather
+   *  than out of this window, they would be gone. */
+  if (SS03.length !== SHOWN.length + HIDDEN) {
+    fail("the hidden bars have left the series, so nothing can be measured off them");
+  }
 }
