@@ -1091,10 +1091,13 @@ export const TWIN = {
    * screen is decoration. The moment the second one arrives it becomes a
    * statement about which of the two is being read — so that is when it lights.
    *
-   * `lap` is how many frames one trip round takes. It repeats and does not
-   * stop, because what it says stays true.
+   * `lap` is how many frames one trip round takes and `hold` is how long it
+   * waits at the top-left corner before setting off again — Simon: "antar loop,
+   * kasih jeda henti dulu 30 frame". A light that runs continuously reads as a
+   * spinner; one that arrives, stops, and goes again reads as a pass being
+   * made. It repeats and does not end, because what it says stays true.
    */
-  neon: { at: 6446, over: 30, lap: 100 },
+  neon: { at: 6446, over: 30, lap: 100, hold: 30 },
   /** ⚠ AND WINDOW 1 GROWS 10% AS IT GOES — Simon, on the same frame. Rides the
    *  slide rather than following it: one move, not a shuffle then a swell. */
   grow: { at: 6446, over: 54, by: 1.1 },
@@ -1123,9 +1126,13 @@ export const TWIN = {
    * slides left, window 2 arrives beside it.
    */
   split: { at: 6446, over: 54 },
-  /** ⚠ WINDOW 2 STARTS ARRIVING ON THE SPLIT FRAME, which is what makes 6446
-   *  the frame the neon lights on: Simon tied the two together. */
-  second: { at: 6446, over: 44 },
+  /**
+   * ⚠ WINDOW 2 WAITS FOR WINDOW 1 TO STOP MOVING. It used to arrive on the same
+   * frame and the two collided in mid-air — Simon sent the frame where they
+   * overlap. `split` ends on 6500, so this begins after it: one thing moves at
+   * a time, which is also the only way the eye can follow either.
+   */
+  second: { at: 6506, over: 44 },
 } as const;
 
 {

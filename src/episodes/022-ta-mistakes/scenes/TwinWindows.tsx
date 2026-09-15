@@ -266,6 +266,11 @@ const CENTRED = {
  */
 const NEON = { beam: 0.14, glow: 44, halo: 130, width: 5 };
 
+/** ⚠ WINDOW 2 IS DRAWN SMALLER SO THERE IS AIR BETWEEN THEM — Simon. At 0.9 the
+ *  gap comes back to about the 56px the two windows were laid out with, which
+ *  a 10% grow on window 1 had eaten down to 17. */
+const SECOND = { scale: 0.9 };
+
 const NeonEdge = ({
   rect,
   lap,
@@ -318,7 +323,17 @@ export const TwinWindows = () => {
   const card = progressInOut(g, V.card.at, V.card.over);
   /** ⚠ WRAPPED, NOT CLAMPED. The light repeats, so its progress is the fraction
    *  of a lap elapsed and nothing else — `% 1` is the whole animation. */
-  const neon = ((g - V.neon.at) / V.neon.lap) % 1;
+  /**
+   * ⚠ ONE PASS, THEN A PAUSE — Simon. The cycle is a lap plus a hold, and the
+   * lap's own progress is EASED, so the light leaves the corner slowly, runs
+   * fastest down the middle of its trip and settles back into the corner. Held
+   * at 1 through the pause, it parks exactly where it started: a full lap and a
+   * standing start are the same place on a closed path, so nothing has to be
+   * reset between passes.
+   */
+  const cycle = V.neon.lap + V.neon.hold;
+  const phase = (((g - V.neon.at) % cycle) + cycle) % cycle;
+  const neon = progressInOut(phase, 0, V.neon.lap);
   /** ⚠ AND IT FADES UP RATHER THAN SNAPPING ON. The beam is already moving when
    *  it becomes visible, so the light arrives mid-travel — which is what a tube
    *  warming up looks like, and what switching a shape on does not. */
@@ -370,7 +385,7 @@ export const TwinWindows = () => {
               transform:
                 i === 0
                   ? `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px) scale(${scale.toFixed(4)})`
-                  : undefined,
+                  : `scale(${SECOND.scale})`,
               transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px`,
               /**
                * ⚠ WINDOW 2 IS DRAINED AND SET BACK — Simon: "monochrome terang
