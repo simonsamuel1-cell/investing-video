@@ -135,6 +135,15 @@ const REACH = 0.24 * 2;
 const STAMP = { pill: 47, gap: 20 };
 const DROP = STAMP.pill + STAMP.gap;
 
+/**
+ * ⚠ THE STAMPS HANG FROM THE TOOL'S TOP EDGE, NOT FROM ITS MIDDLE — Simon:
+ * "align-center vertically terhadap tepi atas tool Long Position". That edge is
+ * the TARGET, so it is written as the target rather than as a pixel read off
+ * the wash: the lid of the green box is exactly `entry + REACH`, and taking it
+ * from the price keeps the stamps on it if the reach is ever changed again.
+ */
+const stampY = (g: typeof ZOOM_GRID) => g.y(REVENGE_ENTRY + REACH);
+
 /** ⚠ SCENE-LOCAL, FROM THE TABLE'S OWN GLOBAL FRAMES. Every number in
  *  REVENGE_T is written where Simon reads it — on the timeline — so the one
  *  place that converts is here, and no scene-local frame is ever typed. */
@@ -348,10 +357,10 @@ export const Revenge = () => {
           the trade happened — and a stamp behind them would be a word with
           candles through it.
 
-          ⚠ GREEN THEN RED, IN THAT ORDER AND IN THAT PLACE. "Masuk lagi" takes
-          the tool's own centre because that is the decision the tool IS; "Loss
-          lagi" lands under it because it is the answer to it. Read downwards,
-          the two of them are the whole scene in four words.
+          ⚠ GREEN THEN RED, IN THAT ORDER AND IN THAT PLACE. "Masuk lagi" sits
+          on the tool's top edge — the price the trade was reaching for — and
+          "Loss lagi" lands 20px under it, because it is the answer to it. Read
+          downwards, the two of them are the whole scene in four words.
 
           ⚠ AND THE GREEN IS NOT AN APPROVAL. It narrates an action being taken,
           not one being recommended — which is why it is a fill under white type
@@ -360,7 +369,7 @@ export const Revenge = () => {
         <Chip
           label="Masuk lagi"
           x={(grid.x(SEEN_TO) + inner[1]) / 2}
-          y={grid.y(REVENGE_ENTRY)}
+          y={stampY(grid)}
           at={local(V.enter)}
           tone="ok"
           pill
@@ -369,7 +378,7 @@ export const Revenge = () => {
         <Chip
           label="Loss lagi"
           x={(grid.x(SEEN_TO) + inner[1]) / 2}
-          y={grid.y(REVENGE_ENTRY) + DROP}
+          y={stampY(grid) + DROP}
           at={local(V.lossAgain)}
           tone="warn"
           pill
@@ -427,8 +436,8 @@ export const Revenge = () => {
     (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2;
   for (const [name, mid] of [
     ["Loss", toolMid(PAN_GRID)],
-    ["Masuk lagi", { x: stampX, y: PAN_GRID.y(REVENGE_ENTRY) }],
-    ["Loss lagi", { x: stampX, y: PAN_GRID.y(REVENGE_ENTRY) + DROP }],
+    ["Masuk lagi", { x: stampX, y: stampY(PAN_GRID) }],
+    ["Loss lagi", { x: stampX, y: stampY(PAN_GRID) + DROP }],
   ] as const) {
     /** ⚠ THE CARD, MINUS HALF A PILL. A chip is centred on its point, so a
      *  centre that merely sits on the card can still hang half its badge over
