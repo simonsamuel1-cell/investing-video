@@ -68,10 +68,18 @@ export const LEFT_LINES: readonly Seg[] = [
   /** The steeper rising support under the recovery. */
   { a: [140, 515], b: [680, 185] },
 ];
-/** ⚠ THE CONCLUSION. Its LENGTH is not used — see `REACH_PX` in TwinWindows,
- *  which gives both windows' arrows the same reach so neither reads as the more
- *  confident. What these two points set is where it starts and which way it
- *  goes. */
+/**
+ * ⚠ THE CONCLUSION. `a` is where it starts and `b` IS THE TIP — it sets the
+ * direction AND the length, both. Keep `b` inside 0..836 by 0..536 or the head
+ * is cut off by the card.
+ *
+ * ⚠ IT USED TO BE DIRECTION ONLY. Both arrows were given one fixed reach so
+ * neither could read as the more confident of the two; Simon moved `b` to make
+ * one longer and nothing happened, so the normalising is gone and the two
+ * lengths are now his to set. Worth knowing what that costs: a longer arrow
+ * looks like a stronger claim, and the scene's point is that neither claim is
+ * worth anything.
+ */
 export const LEFT_ARROW: Seg = { a: [620, 200], b: [900, -100] };
 
 // ═══ EDIT · RIGHT WINDOW (ss04 — the one that concludes DOWN) ════════════
@@ -94,27 +102,19 @@ export const Analysis = ({
   rect,
   lines,
   arrow,
-  reach,
   opacity = 1,
 }: {
   /** The window these coordinates are measured from. */
   rect: { x: number; y: number; w: number; h: number };
   lines: readonly Seg[];
   arrow: Seg;
-  /** Pixels of rise or fall the arrow is given, whatever its drawn length. */
-  reach: number;
   opacity?: number;
 }) => {
   const c = usePalette();
   const px = (p: readonly [number, number]) => ({ x: rect.x + p[0], y: rect.y + p[1] });
 
   const a0 = px(arrow.a);
-  const a1 = px(arrow.b);
-  /** ⚠ SCALED BY ITS RISE, NOT ITS LENGTH. Equal lengths on two different
-   *  slopes would put the steeper arrow's tip nearer the card's edge; equal
-   *  rises put both tips the same distance from it. */
-  const k = reach / Math.max(1e-6, Math.abs(a1.y - a0.y));
-  const tip = { x: a0.x + (a1.x - a0.x) * k, y: a0.y + (a1.y - a0.y) * k };
+  const tip = px(arrow.b);
   /** ⚠ THE HEAD IS BUILT FROM THE ARROW'S OWN DIRECTION, so it can never end up
    *  pointing somewhere the line does not. */
   const th = Math.atan2(tip.y - a0.y, tip.x - a0.x);

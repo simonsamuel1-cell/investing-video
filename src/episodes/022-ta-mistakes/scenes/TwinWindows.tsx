@@ -160,16 +160,10 @@ const GRID_R = gridFor(RIGHT);
  * position tool. The video never draws one of these alone, and Analysis.tsx
  * asserts that the two disagree.
  *
- * ⚠ AND THE ARROWS ARE RE-SCALED, NOT REPRODUCED. Simon's screenshots frame the
- * whole tape; these windows show its last 66 bars, so ss05's arrow would finish
- * 220px above the card. Direction and slope are what he pointed at and what is
- * kept. Both get the same reach, set by the rising one — it starts higher and
- * runs out of card first. The falling one could go further and deliberately
- * does not: an arrow longer because it happened to have room would read as the
- * more confident of the two.
+ * ⚠ THE ARROWS' LENGTHS ARE SIMON'S NOW. They used to be normalised to one
+ * reach so neither could read as the more confident; he moved a tip to make one
+ * longer, so `b` in each file is the tip and sets the length outright.
  */
-const REACH_PX = 150;
-
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -192,7 +186,7 @@ export const TwinWindows = () => {
               start back in the hidden bars, so they have to be allowed to run
               off the left edge and be cut by the card — which is what a
               trendline drawn on a longer chart looks like from here. */}
-          <Analysis rect={rect} lines={lines} arrow={arrow} reach={REACH_PX} opacity={t} />
+          <Analysis rect={rect} lines={lines} arrow={arrow} opacity={t} />
         </Card>
       ))}
     </div>

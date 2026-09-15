@@ -7,10 +7,9 @@
  * window. Same box as scenes/Analysis.tsx: 836 wide, 536 tall, y DOWN.
  *
  *   `a`  where the arrow starts — the bar the analyst is reading from.
- *   `b`  which way it goes. ⚠ ONLY THE DIRECTION OF `b` IS USED, NOT THE
- *        DISTANCE. Both windows' arrows are given the same reach (`REACH_PX` in
- *        TwinWindows) so neither reads as the more confident of the two; move
- *        `b` to change the ANGLE, not the length.
+ *   `b`  THE TIP. It sets the direction and the length, both. ⚠ KEEP IT INSIDE
+ *        0..836 BY 0..536 — the card clips anything past its own edges, so a
+ *        tip outside that box loses its arrowhead and the line just runs off.
  *
  * Patokan inside the window: candles run x≈110 to x≈700 now that the last eight
  * are gone, the chart's top is y≈122 and its floor y≈514. Everything right of
@@ -24,7 +23,7 @@
 import type { Seg } from "./Analysis";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════
-export const RIGHT_ARROW: Seg = { a: [604.29, 216.76], b: [717.04, 518.8] };
+export const RIGHT_ARROW: Seg = { a: [604.29, 216.76], b: [1000, 800] };
 // ═══════════════════════════════════════════════════════════════════════════
 
 {
