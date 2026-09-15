@@ -38,8 +38,15 @@ import { Layer } from "./Stage";
  * still has exactly one red — and it is still forbidden on drawn chart
  * content. Components that only know three tones fall through to indigo,
  * which is the right default for them.
+ *
+ * ⚠ `ok` IS ITS MIRROR, AND IT IS NOT AN APPROVAL. Green here narrates an
+ * ACTION being taken, not an action being recommended — VIDEO 22 uses it for
+ * "Masuk lagi" over a revenge trade that then loses, with "Loss lagi" stamped
+ * underneath it. Use it where the green is describing what somebody did; a
+ * green word that could be read as advice is the one thing it must never be,
+ * which is why it is only ever a fill under white type and never ink.
  */
-export type Tone = "indigo" | "cyan" | "slate" | "warn";
+export type Tone = "indigo" | "cyan" | "slate" | "warn" | "ok";
 
 /** Breathing room inside a pill, proportional so it holds at any type size. */
 const PILL_PAD = { x: 0.62, y: 0.3 };
@@ -107,7 +114,15 @@ export const Chip = ({
 
   const p = progress(f, at, m.pop);
   const ink =
-    tone === "cyan" ? c.cyan : tone === "slate" ? c.slate : tone === "warn" ? theme.color.warn : c.indigo;
+    tone === "cyan"
+      ? c.cyan
+      : tone === "slate"
+        ? c.slate
+        : tone === "warn"
+          ? theme.color.warn
+          : tone === "ok"
+            ? theme.color.ok
+            : c.indigo;
   const wash =
     tone === "cyan"
       ? theme.color.cyanWash
@@ -115,7 +130,9 @@ export const Chip = ({
         ? theme.color.slateWash
         : tone === "warn"
           ? theme.color.warnWash
-          : theme.color.indigoWash;
+          : tone === "ok"
+            ? theme.color.okWash
+            : theme.color.indigoWash;
   const shift =
     anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
   const wt = weight ?? (solid ? 800 : theme.text.chip.weight);

@@ -120,6 +120,21 @@ const nextGrid = (g: typeof ZOOM_GRID) => ({
  */
 const REACH = 0.24 * 2;
 
+/**
+ * ═══ THE TWO STAMPS ON THE SECOND TRADE ═══  Simon, 5540: "Loss lagi" moves to
+ * 20px below "Masuk lagi".
+ *
+ * ⚠ `pill` IS MEASURED, NOT COMPUTED, and it is the same class of number as
+ * CARD_NOTE's width. A Chip's height is its type size plus proportional padding
+ * plus whatever line box the font asks for, and nothing in code can ask a font
+ * that — so it is read off a render (47px) and the gap below it is Simon's 20.
+ * Together they are the distance between the two stamps' CENTRES, which is what
+ * a Chip is positioned by; the render check confirms the gap that comes out the
+ * other end really is 20.
+ */
+const STAMP = { pill: 47, gap: 20 };
+const DROP = STAMP.pill + STAMP.gap;
+
 /** ⚠ SCENE-LOCAL, FROM THE TABLE'S OWN GLOBAL FRAMES. Every number in
  *  REVENGE_T is written where Simon reads it — on the timeline — so the one
  *  place that converts is here, and no scene-local frame is ever typed. */
@@ -326,17 +341,35 @@ export const Revenge = () => {
           }
         />
 
-        {/* ═══ AND THE SECOND VERDICT ═══  Simon: "Loss lagi", same stamp, middle
-          of the new tool.
+        {/* ═══ WHAT THE TRADE DOES, AND WHAT IT COSTS ═══  Simon, 5540 and 5682.
 
-          ⚠ LAST IN THE TREE, so it sits over the tape it is judging. The bars
-          run straight through the middle of the tool — that is where the trade
-          happened — and a stamp behind them would be a word with candles
-          through it. */}
+          ⚠ BOTH LAST IN THE TREE, so they sit over the tape they are about.
+          The bars run straight through the middle of the tool — that is where
+          the trade happened — and a stamp behind them would be a word with
+          candles through it.
+
+          ⚠ GREEN THEN RED, IN THAT ORDER AND IN THAT PLACE. "Masuk lagi" takes
+          the tool's own centre because that is the decision the tool IS; "Loss
+          lagi" lands under it because it is the answer to it. Read downwards,
+          the two of them are the whole scene in four words.
+
+          ⚠ AND THE GREEN IS NOT AN APPROVAL. It narrates an action being taken,
+          not one being recommended — which is why it is a fill under white type
+          rather than green ink, and why the thing directly beneath it is the
+          loss it produced. */}
+        <Chip
+          label="Masuk lagi"
+          x={(grid.x(SEEN_TO) + inner[1]) / 2}
+          y={grid.y(REVENGE_ENTRY)}
+          at={local(V.enter)}
+          tone="ok"
+          pill
+          solid
+        />
         <Chip
           label="Loss lagi"
           x={(grid.x(SEEN_TO) + inner[1]) / 2}
-          y={grid.y(REVENGE_ENTRY)}
+          y={grid.y(REVENGE_ENTRY) + DROP}
           at={local(V.lossAgain)}
           tone="warn"
           pill
@@ -390,20 +423,20 @@ export const Revenge = () => {
   /** ⚠ BOTH VERDICTS ARE STAMPED ON THE TOOL, AND A CHIP IS NOT CLIPPED. It is
    *  a div over the top of everything, so a tool centre that wandered off the
    *  card would put the word on the grey paper beside it rather than cut it. */
+  const stampX =
+    (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2;
   for (const [name, mid] of [
     ["Loss", toolMid(PAN_GRID)],
-    [
-      "Loss lagi",
-      {
-        x:
-          (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) /
-          2,
-        y: PAN_GRID.y(REVENGE_ENTRY),
-      },
-    ],
+    ["Masuk lagi", { x: stampX, y: PAN_GRID.y(REVENGE_ENTRY) }],
+    ["Loss lagi", { x: stampX, y: PAN_GRID.y(REVENGE_ENTRY) + DROP }],
   ] as const) {
+    /** ⚠ THE CARD, MINUS HALF A PILL. A chip is centred on its point, so a
+     *  centre that merely sits on the card can still hang half its badge over
+     *  the edge — and a chip is not clipped by anything. */
+    const pad = STAMP.pill / 2;
     const inX = mid.x > CARD_OPEN.x && mid.x < CARD_OPEN.x + CARD_OPEN.w;
-    const inY = mid.y > CARD_OPEN.y && mid.y < CARD_OPEN.y + CARD_OPEN.h;
+    const inY =
+      mid.y - pad > CARD_OPEN.y && mid.y + pad < CARD_OPEN.y + CARD_OPEN.h;
     if (!inX || !inY) {
       fail(
         `"${name}" would be stamped at ${mid.x.toFixed(0)},${mid.y.toFixed(0)}, off the card`,

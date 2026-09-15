@@ -267,7 +267,17 @@ export const theme = {
      * The mirror of `warn`, and the ONE green allowed outside a candle body:
      * an affirmation MARK — a tick in a disc saying a condition was met. Same
      * green the candles use, so the episode still has exactly one green.
-     * Never on drawn chart content, and never as a colour for words.
+     * Never on drawn chart content.
+     *
+     * ⚠ AND SINCE VIDEO 22, UNDER A WORD — but only as a FILL, never as ink.
+     * This used to read "never as a colour for words", and the distinction that
+     * replaced it is the one that matters: green ink on the ground beside a
+     * chart is indistinguishable from a signal, while a word in a filled green
+     * badge is plainly a label on something. VIDEO 22 needs it twice, both
+     * times to narrate a mistake as it is being made — the "Buy" badges on
+     * every swing at 4356, and "Masuk lagi" over the revenge trade's entry at
+     * 5540, which is immediately followed by "Loss lagi" under it. The rule
+     * that nothing DRAWN on a chart is green is untouched.
      */
     ok: "#22B573",
     indigoWash: "rgba(95, 77, 238, 0.09)",
@@ -279,6 +289,9 @@ export const theme = {
      * rule that nothing drawn on a chart is red is untouched.
      */
     warnWash: "rgba(229, 71, 93, 0.10)",
+    /** The mirror of `warnWash`, and the only place `ok` gets a fill of its
+     *  own. Same rule as that one: words, never drawn chart content. */
+    okWash: "rgba(34, 181, 115, 0.10)",
     /**
      * ⚠ THE HOVER FLOOD, and the only wash strong enough to carry white type.
      * It is blurred wherever it is used, so it reads as ink spreading into a
