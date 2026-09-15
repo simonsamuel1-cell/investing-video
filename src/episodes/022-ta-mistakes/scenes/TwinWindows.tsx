@@ -45,11 +45,11 @@ const V = TWIN;
 const DROP_H = 150;
 const [L0, R0] = halves();
 const BOTTOM = L0.y + L0.h - DROP_H / 2;
-/** ⚠ SIMON RE-SET THIS AFTER LOCKING IT. It was 536 and locked; "shrink
- *  heightnya" lifts that lock deliberately, so the number moves and the
- *  assertion that guards it moves with it — rather than the assertion being
- *  deleted, which is how a lock stops meaning anything. */
-const WIN_H = 436;
+/** ⚠ THE WINDOW'S OWN HEIGHT IS THE ONE SIMON LOCKED, and it has not moved. It
+ *  briefly did — I read "shrink heightnya" as the window and he corrected it:
+ *  "maksudnya shrink chartnya saja, tidak termasuk background putih/windownya".
+ *  The shrink lives in the plot below instead. */
+const WIN_H = 536;
 const shorter = (r: typeof L0) => ({ ...r, y: BOTTOM - WIN_H, h: WIN_H });
 const LEFT = shorter(L0);
 const RIGHT = shorter(R0);
@@ -96,17 +96,24 @@ const SHOWN = SS03.slice(HIDDEN);
  * plot; widening the plot instead would eat the white space Simon asked for
  * first.
  *
- * ⚠ AND THE HEIGHT IS LOCKED — Simon: "lock size height chart (2 2nya)". Both
- * of the numbers that set it are held below and asserted, so the width can be
- * tuned again without the chart quietly changing shape underneath it.
+ * ⚠ AND THE CHART SHRINKS INSIDE A WINDOW THAT DOES NOT — Simon's correction.
+ * The plot is given an explicit height rather than an inset top and bottom, so
+ * "shrink the chart" is one number and the white card it sits in is untouched
+ * by it. What the shrink leaves behind is headroom at the top of the window.
+ *
+ * ⚠ AND THE BOTTOM INSET IS THE ANCHOR — "anchor bawah", now applied where he
+ * meant it. The plot's foot is a fixed distance up from the window's floor and
+ * the height is taken off the top; expressed as a top inset plus a height it
+ * would re-centre itself every time either moved.
  */
 const PLOT_W = 0.84;
-const PAD_Y = 22;
+const PAD_BOTTOM = 22;
+const PLOT_H = 392;
 const plotOf = (r: typeof LEFT) => ({
   x: r.x,
-  y: r.y + PAD_Y,
+  y: r.y + r.h - PAD_BOTTOM - PLOT_H,
   w: r.w * PLOT_W,
-  h: r.h - PAD_Y * 2,
+  h: PLOT_H,
 });
 
 /**
@@ -183,17 +190,23 @@ export const TwinWindows = () => {
    * were on screen when he locked them. A lock nobody can read is a convention;
    * this one fails the build.
    */
-  const LOCKED = { window: 436, plot: 392 };
+  const LOCKED = { window: 536, plot: PLOT_H };
   if (LEFT.h !== LOCKED.window) {
     fail(`the window is ${LEFT.h}px tall, and its height is locked at ${LOCKED.window}`);
   }
   if (plotOf(LEFT).h !== LOCKED.plot) {
     fail(`the plot is ${plotOf(LEFT).h}px tall, and its height is locked at ${LOCKED.plot}`);
   }
-  /** ⚠ AND THE BOTTOM EDGE HAS NOT MOVED. It is the anchor; a shrink that took
-   *  height off the wrong end would still pass every other check here. */
+  /** ⚠ AND THE FEET HAVE NOT MOVED — either of them. The window's bottom is
+   *  where the first shrink left it, and the chart's bottom is a fixed inset up
+   *  from that. A shrink that came off the wrong end would pass every other
+   *  check in this file. */
   if (LEFT.y + LEFT.h !== BOTTOM) {
     fail(`the windows end at ${LEFT.y + LEFT.h}, not on the anchored bottom at ${BOTTOM}`);
+  }
+  const foot = plotOf(LEFT).y + plotOf(LEFT).h;
+  if (foot !== BOTTOM - PAD_BOTTOM) {
+    fail(`the chart's foot is at ${foot}, not ${PAD_BOTTOM}px up from the window's floor`);
   }
   /** ⚠ AND THE HIDDEN BARS ARE STILL REACHABLE. They are the reference for a
    *  resistance level Simon has not drawn yet; sliced out of the series rather
