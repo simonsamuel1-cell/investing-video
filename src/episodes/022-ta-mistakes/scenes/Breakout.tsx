@@ -20,25 +20,39 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Layer, VerdictMark, domainOf, gridOf, inset, progressInOut,
+  Candles, Card, Layer, VerdictMark, gridOf, progressInOut,
   textReveal, theme, useMotion, usePalette,
 } from "../../../core";
 import { BREAKOUT_BOX } from "../data/layout";
 import { BREAKOUT } from "../data/timing";
-import { CTX_FAILS, CTX_SHARED, CTX_WORKS } from "../data/series";
+import { SETUP_FAILS, SETUP_WORKS } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = BREAKOUT;
 const B = BREAKOUT_BOX;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const TAPES = [CTX_WORKS, CTX_FAILS];
-/** ⚠ SHARED — see the header. */
-const DOMAIN = domainOf(
-  [...CTX_WORKS.closes, ...CTX_FAILS.closes],
-  [...CTX_WORKS.bars, ...CTX_FAILS.bars],
+const TAPES = [SETUP_WORKS, SETUP_FAILS];
+/**
+ * ⚠ EACH CHART IS NORMALISED TO ITSELF. They are two different pictures of two
+ * different markets, so a shared domain would be a claim that they are the same
+ * instrument — and it would squash whichever moved less.
+ *
+ * ⚠ AND THE DOMAIN COVERS THE WICKS, not the closes: a domain solved from
+ * closes alone clips the extremes of a traced tape, and the extremes are where
+ * both of these stories happen.
+ */
+const GRIDS = B.boxes.map((r, i) =>
+  gridOf(
+    TAPES[i].map((b) => b.c),
+    [Math.min(...TAPES[i].map((b) => b.l)), Math.max(...TAPES[i].map((b) => b.h))],
+    { x: r.x + B.pad.x, y: r.y + B.pad.top, w: r.w - B.pad.x * 2, h: r.h - B.pad.top - B.pad.bottom },
+    0,
+  ),
 );
-const GRIDS = B.boxes.map((r, i) => gridOf(TAPES[i].closes, DOMAIN, inset(r, 34), 0));
+/** ⚠ THE LOWEST BAR OF THE LEFT TAPE — where Simon wants the "Buy". Found, not
+ *  counted off the picture, so it follows the trace if ss06 is ever re-read. */
+const BUY_AT = TAPES[0].reduce((best, b, i) => (b.l < TAPES[0][best].l ? i : best), 0);
 
 export const Breakout = () => {
   const f = useCurrentFrame();
@@ -53,35 +67,44 @@ export const Breakout = () => {
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
 
-      {/* ═══ THE BRACKET ═══  ⚠ DRAWN IN TWO HALVES, growing outward from the
-          middle, with a stub turned down at each end. It is a brace, not an
-          underline: what the stubs do is gather the two columns in, and a rule
-          that arrived from one side would read as a timeline instead. */}
+      {/* ═══ THE TWO ARROWS ═══  Simon: the lines beside the title are arrows,
+          and each one points at the middle of its own window.
+
+          ⚠ THEY GROW OUT FROM THE TITLE, one to each side, then turn down onto
+          the window they mean. Drawn as one path per side so the corner is a
+          corner rather than two lines meeting, and the head only appears once
+          the turn has been made — an arrowhead waiting at a destination the
+          line has not reached is a label, not a gesture. */}
       <Layer opacity={title.opacity}>
-        {[-1, 1].map((side) => {
-          const mid = (B.rule.x1 + B.rule.x2) / 2;
-          const end = side < 0 ? B.rule.x1 : B.rule.x2;
-          const x = mid + (end - mid) * rule;
+        {B.rule.to.map((x, i) => {
+          const mid = (B.rule.to[0] + B.rule.to[1]) / 2;
+          const run = mid + (x - mid) * rule;
+          const tip = B.rule.y + B.rule.drop;
           return (
-            <g key={side}>
-              <line
-                x1={mid}
-                y1={B.rule.y}
-                x2={x}
-                y2={B.rule.y}
+            <g key={i}>
+              <path
+                d={
+                  rule > 0.999
+                    ? `M ${mid} ${B.rule.y} H ${x} V ${tip}`
+                    : `M ${mid} ${B.rule.y} H ${run}`
+                }
+                fill="none"
                 stroke={c.ink}
                 strokeWidth={theme.shape.rule}
               />
-              {rule > 0.999 ? (
-                <line
-                  x1={end}
-                  y1={B.rule.y}
-                  x2={end}
-                  y2={B.rule.y + B.rule.stub}
-                  stroke={c.ink}
-                  strokeWidth={theme.shape.rule}
-                />
-              ) : null}
+              {rule > 0.999
+                ? [-1, 1].map((side) => (
+                    <line
+                      key={side}
+                      x1={x}
+                      y1={tip}
+                      x2={x + side * 9}
+                      y2={tip - 13}
+                      stroke={c.ink}
+                      strokeWidth={theme.shape.rule}
+                    />
+                  ))
+                : null}
             </g>
           );
         })}
@@ -143,10 +166,41 @@ export const Breakout = () => {
                   their first two thirds is something a viewer has to go
                   looking for. */}
               <Candles
-                bars={TAPES[i].bars}
+                bars={TAPES[i]}
                 grid={GRIDS[i]}
                 wipe={(k) => progressInOut(g, col.tape.at + k * col.tape.step, col.tape.over)}
               />
+              {/* ═══ THE ENTRY ═══  Simon: white "Buy" on the lowest candle of
+                  the left chart, and none on the right — not yet.
+
+                  ⚠ GREEN UNDER WHITE, WHICH IS THE ONE FORM THIS EPISODE LETS
+                  GREEN TAKE ON A WORD: a filled badge is plainly a label on
+                  something, where green ink beside a chart would read as the
+                  video's own call. It is also the same object as the "Buy"
+                  badges at 4356.
+
+                  ⚠ AND IT SITS UNDER THE LOW, in the inset the plot leaves
+                  inside the card — so it marks the bar without covering it. */}
+              {i === 0 ? (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: GRIDS[0].x(BUY_AT),
+                    top: GRIDS[0].y(TAPES[0][BUY_AT].l) + 22,
+                    transform: "translate(-50%, -50%)",
+                    padding: "5px 13px",
+                    borderRadius: theme.shape.chipRadius,
+                    background: theme.color.ok,
+                    color: theme.color.onIndigo,
+                    fontFamily: theme.text.family,
+                    fontSize: theme.text.tag.size,
+                    fontWeight: 800,
+                    opacity: progressInOut(g, col.tape.at + BUY_AT * col.tape.step, col.tape.over),
+                  }}
+                >
+                  Buy
+                </div>
+              ) : null}
             </Card>
             {/* ═══ AND WHAT EACH ONE CAME TO ═══ */}
             <div
@@ -175,26 +229,20 @@ export const Breakout = () => {
   );
 };
 
-/** Kept honest: the thing the drawing claims has to be true of the numbers. */
+/** Kept honest. */
 {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/Breakout: ${m}`);
   };
-  /** ⚠ THE BARS, NOT THE CLOSES. Checking closes is what let this through the
-   *  first time: they matched while every open, high and low differed, and the
-   *  wicks are drawn. A claim about what is on screen has to be checked against
-   *  what is on screen. */
-  for (let i = 0; i < CTX_SHARED; i++) {
-    const a = CTX_WORKS.bars[i];
-    const b = CTX_FAILS.bars[i];
-    if (a.o !== b.o || a.h !== b.h || a.l !== b.l || a.c !== b.c) {
-      fail(`the two setups differ at bar ${i + 1}, so "setup-nya bisa sama" is not true of the tapes`);
-    }
+  /** ⚠ THE BUY MARK HAS TO STAY INSIDE ITS CARD. It hangs below the lowest bar,
+   *  which is the one place on the chart with nothing under it — and therefore
+   *  the one place a badge can run out of card. */
+  const r = B.boxes[0];
+  const y = GRIDS[0].y(TAPES[0][BUY_AT].l) + 22;
+  if (y + 20 > r.y + r.h) {
+    fail(`the Buy mark reaches ${(y + 20).toFixed(0)}, past the card's floor at ${r.y + r.h}`);
   }
-  /** ⚠ AND THEY MUST END APART, or there is nothing to put a tick and a cross
-   *  under. */
-  const last = CTX_WORKS.closes.length - 1;
-  if (CTX_WORKS.closes[last] <= CTX_FAILS.closes[last]) {
-    fail("the trending market does not finish above the sideways one");
-  }
+  /** And it must be on the lowest bar, which is what Simon asked for. */
+  const lowest = Math.min(...TAPES[0].map((b) => b.l));
+  if (TAPES[0][BUY_AT].l !== lowest) fail("the Buy mark is not on the lowest candle");
 }

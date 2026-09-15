@@ -732,14 +732,36 @@ export const BREAKOUT_BOX = (() => {
   const A = theme.stage.active;
   const rule = A.y + (A.h - height) / 2 + half;
   return {
-    /** The bracket: a rule across both columns with a stub down at each end. */
-    rule: { y: Math.round(rule), x1: left.x, x2: right.x + right.w, stub: 18 },
+    /**
+     * ⚠ TWO ARROWS, NOT A BRACKET — Simon: "itu adalah panah yang menunjuk ke
+     * kedua windows. Jadi titik end dari setiap panah harusnya mengarah ke
+     * tengah width windows". Each runs out from the title and turns down onto
+     * its own window's CENTRE, so the title is pointing at two things rather
+     * than fencing off a region.
+     */
+    rule: {
+      y: Math.round(rule),
+      to: [left.x + left.w / 2, right.x + right.w / 2],
+      drop: 46,
+    },
     head: { y: Math.round(rule + toHead) },
     boxes: [
       { x: left.x, y: Math.round(rule + toBox), w: left.w, h: chartH },
       { x: right.x, y: Math.round(rule + toBox), w: right.w, h: chartH },
     ],
     verdict: { y: Math.round(rule + toBox + chartH + toVerdict) },
+    /**
+     * ⚠ THE PLOT LEAVES MORE ROOM UNDER IT THAN OVER IT, and the reason is the
+     * "Buy" mark: it hangs below the lowest bar, which is the one place on a
+     * chart with nothing beneath it and therefore the one place a badge can run
+     * out of card. At an even inset it did — 8px past the floor, caught by the
+     * assertion in scenes/Breakout.tsx rather than by looking at a render.
+     *
+     * ⚠ BOTH CHARTS GET IT, not just the one with the mark. Two plots inset
+     * differently inside boxes of the same size are two different charts drawn
+     * to look like a pair.
+     */
+    pad: { x: 34, top: 34, bottom: 76 },
   };
 })();
 
@@ -749,7 +771,15 @@ export const BREAKOUT_BOX = (() => {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
-  if (b.rule.y - 24 < A.y) fail("the setup bracket is above the safe area");
+  if (b.rule.y - 24 < A.y) fail("the setup title is above the safe area");
+  /** ⚠ AND EACH ARROW HAS TO LAND ON ITS OWN WINDOW'S MIDDLE. Typed once, the
+   *  two would stay right until a window moved; derived, they cannot come
+   *  apart from the boxes they point at. */
+  b.rule.to.forEach((x, i) => {
+    const mid = b.boxes[i].x + b.boxes[i].w / 2;
+    if (Math.abs(x - mid) > 0.5) fail(`arrow ${i + 1} points at ${x}, not window ${i + 1}'s centre ${mid}`);
+  });
+  if (b.rule.y + b.rule.drop >= b.head.y) fail("the arrows reach past the column headings");
   if (b.verdict.y + 24 > theme.captionBand.top) {
     fail(`the verdicts sit at ${b.verdict.y}, inside the subtitle band`);
   }

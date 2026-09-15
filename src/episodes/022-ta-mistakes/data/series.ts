@@ -17,6 +17,7 @@ import type { Anchor, Bar, Series } from "../../../core";
 import SS01 from "./ss01.json";
 import SS02 from "./ss02.json";
 import SS03_DOC from "./ss03.json";
+import SS0607 from "./ss0607.json";
 
 /** Anchors → a synthetic tape. Core has `fromShape` for a shape and
  *  `fromScreenshot` for a trace; this is neither — the turns are DESIGNED to
@@ -829,3 +830,39 @@ export const SS03: Bar[] = SS03_DOC.ohlc as Bar[];
  * four lines, within a hundredth of a level unit of each other. The only thing
  * that differed was the arrow — one chart, two readings.
  */
+
+/* ═══ SC09 · THE SETUP THAT WORKED, AND THE ONE THAT DID NOT ═══════════════ */
+/**
+ * ⚠ TRACED, NOT GENERATED — Simon: "window kiri, trace dari ss06… window kanan,
+ * trace dari ss07". Two real charts rather than one synthetic tape shown twice.
+ *
+ * ⚠ WHICH RETIRES THE CLAIM THE OLD PAIR MADE. `CTX_WORKS` and `CTX_FAILS` were
+ * built to be identical for their first 34 bars — the same setup read in two
+ * markets. These are two different pictures, so what the scene now says is the
+ * simpler thing Simon drew: this setup worked here, and it failed there. The
+ * assertion that checked the old identity is gone with it rather than left to
+ * pass vacuously.
+ *
+ * Heights are in units of each picture's own dotted level. Not prices.
+ */
+export const SETUP_WORKS: Bar[] = SS0607.ss06.ohlc as Bar[];
+export const SETUP_FAILS: Bar[] = SS0607.ss07.ohlc as Bar[];
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  for (const [name, bars] of [["ss06", SETUP_WORKS], ["ss07", SETUP_FAILS]] as const) {
+    if (bars.length < 20) fail(`only ${bars.length} bars came out of ${name}`);
+    for (const [i, b] of bars.entries()) {
+      if (b.h < Math.max(b.o, b.c) || b.l > Math.min(b.o, b.c)) {
+        fail(`${name} bar ${i + 1} has a wick inside its own body`);
+      }
+    }
+  }
+  /** ⚠ THE TWO HAVE TO DISAGREE ABOUT WHAT HAPPENED, or the tick and the cross
+   *  under them are decoration. */
+  const end = (b: Bar[]) => b[b.length - 1].c - b[0].o;
+  if (end(SETUP_WORKS) <= 0) fail("the setup that is meant to work does not finish higher");
+  if (end(SETUP_FAILS) >= 0) fail("the setup that is meant to fail does not finish lower");
+}
