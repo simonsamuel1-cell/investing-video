@@ -98,11 +98,39 @@ export const RIGHT_LINES: readonly Seg[] = LEFT_LINES;
  * ⚠ THE DRAWING IS SHARED, SO THE TWO WINDOWS CANNOT DIVERGE BY ACCIDENT. Only
  * the numbers above can make them differ, and only on purpose.
  */
+/**
+ * ⚠ A POLYLINE CUT AT A FRACTION OF ITS OWN LENGTH. Walk the legs adding up
+ * distance, keep whole legs until the budget runs out, then land part-way along
+ * the one that spends it. Cutting at a vertex instead would make the line
+ * arrive in jumps of very different sizes, since the legs are not equal.
+ */
+const partial = (pts: { x: number; y: number }[], k: number) => {
+  if (k >= 0.999) return pts;
+  const seg = pts.slice(1).map((p, i) => Math.hypot(p.x - pts[i].x, p.y - pts[i].y));
+  const want = seg.reduce((a, b) => a + b, 0) * k;
+  const out = [pts[0]];
+  let run = 0;
+  for (let i = 0; i < seg.length; i++) {
+    if (run + seg[i] >= want) {
+      const f = seg[i] === 0 ? 0 : (want - run) / seg[i];
+      out.push({
+        x: pts[i].x + (pts[i + 1].x - pts[i].x) * f,
+        y: pts[i].y + (pts[i + 1].y - pts[i].y) * f,
+      });
+      break;
+    }
+    run += seg[i];
+    out.push(pts[i + 1]);
+  }
+  return out;
+};
+
 export const Analysis = ({
   rect,
   lines,
   arrow,
   zig,
+  show,
   opacity = 1,
 }: {
   /** The window these coordinates are measured from. */
@@ -112,6 +140,13 @@ export const Analysis = ({
   /** The swing line, in the same window pixels — see TwinWindows, which reads
    *  it off the candles. Its last point is joined to the arrow's start. */
   zig: readonly (readonly [number, number])[];
+  /**
+   * How much of each thing is drawn, 0 to 1. ⚠ THESE ARE LENGTHS, NOT
+   * OPACITIES: a trendline that fades up arrives everywhere at once, which is
+   * not how anybody draws one. Each of these truncates the thing it names, so
+   * it grows from the end a pen would have started at.
+   */
+  show: { lines: readonly number[]; zig: number; arrow: number };
   opacity?: number;
 }) => {
   const c = usePalette();
@@ -131,8 +166,12 @@ export const Analysis = ({
     <Layer opacity={opacity} clip={rect}>
       {lines.map((l, i) => {
         if (l.hidden) return null;
+        const k = show.lines[i] ?? 1;
+        if (k <= 0.001) return null;
         const p = px(l.a);
-        const q = px(l.b);
+        const e = px(l.b);
+        /** ⚠ GROWN FROM `a`, the end a pen starts at. */
+        const q = { x: p.x + (e.x - p.x) * k, y: p.y + (e.y - p.y) * k };
         return (
           <line
             key={i}
@@ -153,37 +192,54 @@ export const Analysis = ({
           into the point the arrow starts from. It is drawn as ONE polyline with
           the arrow's start appended, so the join cannot open up: a separate
           connecting segment would be a second object that has to be kept
-          touching this one. */}
-      <polyline
-        points={[...zig, [arrow.a[0], arrow.a[1]] as const]
-          .map((p) => `${(rect.x + p[0]).toFixed(1)},${(rect.y + p[1]).toFixed(1)}`)
-          .join(" ")}
-        fill="none"
-        stroke={c.ink}
-        strokeWidth={theme.shape.line}
-        strokeDasharray="14 10"
-      />
+          touching this one.
 
-      <line
-        x1={a0.x}
-        y1={a0.y}
-        x2={tip.x}
-        y2={tip.y}
-        stroke={c.ink}
-        strokeWidth={theme.shape.line}
-        strokeDasharray="14 10"
-      />
-      {head.map((h, i) => (
-        <line
-          key={i}
-          x1={tip.x}
-          y1={tip.y}
-          x2={h.x}
-          y2={h.y}
+          ⚠ AND IT IS REVEALED BY LENGTH ALONG ITSELF, not per vertex. Cut at a
+          vertex the line would arrive in six jumps of very different sizes,
+          because the legs are not the same length; cut by distance it moves at
+          one speed, which is what a hand does. */}
+      {show.zig > 0.001 ? (
+        <polyline
+          points={partial(
+            [...zig, arrow.a].map((p) => px(p)),
+            show.zig,
+          )
+            .map((p) => `${p.x.toFixed(1)},${p.y.toFixed(1)}`)
+            .join(" ")}
+          fill="none"
           stroke={c.ink}
           strokeWidth={theme.shape.line}
+          strokeDasharray="14 10"
         />
-      ))}
+      ) : null}
+
+      {show.arrow > 0.001 ? (
+        <line
+          x1={a0.x}
+          y1={a0.y}
+          x2={a0.x + (tip.x - a0.x) * show.arrow}
+          y2={a0.y + (tip.y - a0.y) * show.arrow}
+          stroke={c.ink}
+          strokeWidth={theme.shape.line}
+          strokeDasharray="14 10"
+        />
+      ) : null}
+
+      {/* ⚠ THE HEAD LANDS WITH THE TIP, not before it. A head waiting at the
+          end of a line that has not arrived is a destination, and the whole
+          point of a projection is that it is still being drawn. */}
+      {show.arrow > 0.999 &&
+        head.map((h, i) => (
+          <line
+            key={i}
+            x1={tip.x}
+            y1={tip.y}
+            x2={h.x}
+            y2={h.y}
+            stroke={c.ink}
+            strokeWidth={theme.shape.line}
+          />
+        ))}
     </Layer>
   );
 };

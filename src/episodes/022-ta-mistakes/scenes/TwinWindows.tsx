@@ -18,7 +18,7 @@
  * two devices where the video has one.
  */
 import { useCurrentFrame } from "remotion";
-import { Candles, Card, candleWidth, gridOf, progressInOut, usePalette } from "../../../core";
+import { Candles, Card, candleWidth, gridOf, progressInOut, theme, usePalette } from "../../../core";
 import { halves } from "../data/layout";
 import { TWIN } from "../data/timing";
 import { SS03 } from "../data/series";
@@ -232,34 +232,171 @@ const ZIG = pivotsOf(DRAWN).map(
   (p) => [GRID_L.x(p.i) - LEFT.x, GRID_L.y(p.v) - LEFT.y] as [number, number],
 );
 
+/**
+ * ⚠ WINDOW 1 STARTS IN THE MIDDLE OF THE FRAME — Simon: "muncul dulu window 1
+ * di tengah, align center horizontal dan vertikal" — and moves to its own half
+ * at 6446 to make room for window 2. Written as an OFFSET from where it ends
+ * up, not as two positions: everything inside it is measured from its own
+ * top-left corner, so moving the whole thing by one transform keeps the chart,
+ * the lines and the swing line in the places this file already locked them.
+ */
+const CENTRED = {
+  x: (theme.canvas.width - LEFT.w) / 2,
+  y: (theme.canvas.height - LEFT.h) / 2,
+};
+
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const g = f + V.at;
-  const t = progressInOut(g, V.at, V.over);
-  if (t <= 0.001) return null;
+
+  const slid = progressInOut(g, V.split.at, V.split.over);
+  const off = {
+    x: (CENTRED.x - LEFT.x) * (1 - slid),
+    y: (CENTRED.y - LEFT.y) * (1 - slid),
+  };
+
+  const card = progressInOut(g, V.card.at, V.card.over);
+  /**
+   * ⚠ THE STAGGER COUNTS THE LINES THAT ARE DRAWN, not the entries in the
+   * array. Two of the four are hidden; indexed by position, the first visible
+   * line would wait two steps for its turn behind lines nobody can see.
+   */
+  const linesShow = (() => {
+    const out = LEFT_LINES.map(() => 0);
+    let k = 0;
+    LEFT_LINES.forEach((l, i) => {
+      if (l.hidden) return;
+      out[i] = progressInOut(g, V.lines.at + k * V.lines.step, V.lines.over);
+      k += 1;
+    });
+    return out;
+  })();
+  const one = {
+    lines: linesShow,
+    zig: progressInOut(g, V.zig.at, V.zig.over),
+    arrow: progressInOut(g, V.arrow.at, V.arrow.over),
+  };
+
+  /** ⚠ WINDOW 2 ARRIVES FINISHED. Simon has given the order for window 1 and
+   *  not yet for this one; drawing it step by step would be inventing a beat he
+   *  has not asked for. */
+  const two = progressInOut(g, V.second.at, V.second.over);
+  const whole = { lines: LEFT_LINES.map(() => 1), zig: 1, arrow: 1 };
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
       {(
         [
-          [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW],
-          [RIGHT, GRID_R, RIGHT_LINES, RIGHT_ARROW],
+          [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW, card, one, off],
+          [RIGHT, GRID_R, RIGHT_LINES, RIGHT_ARROW, two, whole, { x: 0, y: 0 }],
         ] as const
-      ).map(([rect, grid, lines, arrow], i) => (
-        <Card key={i} rect={rect} opacity={t}>
-          <Candles bars={DRAWN} grid={grid} />
-          {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four lines
-              start back in the hidden bars, so they have to be allowed to run
-              off the left edge and be cut by the card — which is what a
-              trendline drawn on a longer chart looks like from here. */}
-          <Analysis rect={rect} lines={lines} arrow={arrow} zig={ZIG} opacity={t} />
-        </Card>
-      ))}
+      ).map(([rect, grid, lines, arrow, alpha, show, shift], i) =>
+        alpha <= 0.001 ? null : (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px)`,
+            }}
+          >
+            <Card rect={rect} opacity={alpha}>
+              {/* ⚠ THE TAPE DRAWS ACROSS, one bar at a time on a one-frame
+                  step — a sweep, not fifty-eight arrivals. */}
+              <Candles
+                bars={DRAWN}
+                grid={grid}
+                wipe={(k) =>
+                  i === 0 ? progressInOut(g, V.tape.at + k * V.tape.step, V.tape.over) : 1
+                }
+              />
+              {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four
+                  lines start back in the hidden bars, so they have to be
+                  allowed to run off the left edge and be cut by the card —
+                  which is what a trendline drawn on a longer chart looks like
+                  from here. */}
+              <Analysis
+                rect={rect}
+                lines={lines}
+                arrow={arrow}
+                zig={ZIG}
+                show={show}
+                opacity={alpha}
+              />
+            </Card>
+          </div>
+        ),
+      )}
     </div>
   );
 };
+
+/**
+ * ═══ THE LOCK ═══  Simon: "Ok lock ya, aku mau ingat bentuk setiap window
+ * beserta isinya."
+ *
+ * ⚠ EVERY NUMBER THAT MAKES THESE WINDOWS WHAT THEY ARE, written down once and
+ * checked at build time. Not a comment — comments do not fail. Each of these
+ * was arrived at over several rounds of his corrections, and any one of them
+ * could be undone by an edit somewhere else in the file that looks harmless.
+ *
+ * To change something here on purpose, change the number in BOTH places: the
+ * setting above and the lock below. That second edit is the point — it is what
+ * stops a change happening by accident.
+ */
+const LOCK = {
+  /** The white card. */
+  window: { w: 836, h: 536, bottom: 801 },
+  /** The chart inside it: flush left, 84% of the width, 392 tall, 22 up. */
+  plot: { w: 702.24, h: 392, padBottom: 22 },
+  /** The tape: 111 traced, 45 hidden at the left, 8 trimmed at the right. */
+  bars: { traced: 111, hidden: 45, trimmed: 8, drawn: 58 },
+  /** Four analysis lines, two of them hidden; one swing line of seven points. */
+  drawing: { lines: 4, linesShown: 2, pivots: 7 },
+};
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/TwinWindows: the lock is broken — ${m}`);
+  };
+  const near = (a: number, b: number) => Math.abs(a - b) < 0.01;
+  const P = plotOf(LEFT);
+  if (LEFT.w !== LOCK.window.w || LEFT.h !== LOCK.window.h) {
+    fail(`the window is ${LEFT.w}x${LEFT.h}, locked at ${LOCK.window.w}x${LOCK.window.h}`);
+  }
+  if (LEFT.y + LEFT.h !== LOCK.window.bottom) {
+    fail(`the window's foot is at ${LEFT.y + LEFT.h}, locked at ${LOCK.window.bottom}`);
+  }
+  if (!near(P.w, LOCK.plot.w) || P.h !== LOCK.plot.h) {
+    fail(`the plot is ${P.w.toFixed(2)}x${P.h}, locked at ${LOCK.plot.w}x${LOCK.plot.h}`);
+  }
+  if (P.x !== LEFT.x) fail("the plot is no longer flush with the window's left edge");
+  if (LEFT.y + LEFT.h - (P.y + P.h) !== LOCK.plot.padBottom) {
+    fail(`the chart's foot is not ${LOCK.plot.padBottom}px up from the window's floor`);
+  }
+  if (SS03.length !== LOCK.bars.traced) fail(`${SS03.length} bars traced, locked at ${LOCK.bars.traced}`);
+  if (HIDDEN !== LOCK.bars.hidden) fail(`${HIDDEN} bars hidden, locked at ${LOCK.bars.hidden}`);
+  if (TRIM_RIGHT !== LOCK.bars.trimmed) fail(`${TRIM_RIGHT} bars trimmed, locked at ${LOCK.bars.trimmed}`);
+  if (DRAWN.length !== LOCK.bars.drawn) fail(`${DRAWN.length} bars drawn, locked at ${LOCK.bars.drawn}`);
+  if (LEFT_LINES.length !== LOCK.drawing.lines) {
+    fail(`${LEFT_LINES.length} analysis lines, locked at ${LOCK.drawing.lines}`);
+  }
+  const shown = LEFT_LINES.filter((l) => !l.hidden).length;
+  if (shown !== LOCK.drawing.linesShown) {
+    fail(`${shown} lines drawn, locked at ${LOCK.drawing.linesShown}`);
+  }
+  if (ZIG.length !== LOCK.drawing.pivots) {
+    fail(`the swing line has ${ZIG.length} points, locked at ${LOCK.drawing.pivots}`);
+  }
+  /** ⚠ AND WINDOW 1 REALLY IS CENTRED WHILE IT IS ALONE. Simon asked for it in
+   *  both directions; a canvas that changed size would silently break only the
+   *  centring and nothing else here would notice. */
+  if (!near(CENTRED.x * 2 + LEFT.w, theme.canvas.width) || !near(CENTRED.y * 2 + LEFT.h, theme.canvas.height)) {
+    fail("window 1's opening position is not the centre of the frame");
+  }
+}
 
 /** Kept honest. */
 {

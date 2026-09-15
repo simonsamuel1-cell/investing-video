@@ -1074,8 +1074,60 @@ export const ROW4 = {
  */
 export const TWIN = {
   at: 6250,
-  over: 40,
+  /**
+   * ═══ STEP 1 · THE WINDOW AND ITS CHART ═══
+   * The card fades, then the tape draws across it one bar at a time. `step` is
+   * 1, so 58 bars take 58 frames — a sweep rather than 58 arrivals.
+   */
+  card: { at: 6250, over: 30 },
+  tape: { at: 6258, step: 1, over: 16 },
+  /**
+   * ═══ STEP 2 · THE TWO INDIGO LINES ═══
+   * ⚠ THEY GROW FROM `a` TO `b`, which is how somebody draws a trendline: from
+   * the old end toward the new one. Twenty frames apart so it reads as two
+   * lines being drawn, not a pair switching on.
+   */
+  lines: { at: 6331, step: 18, over: 40 },
+  /**
+   * ═══ STEP 3 · THE SWING LINE, AND THE ARROW IT RUNS INTO ═══
+   * ⚠ ONE STROKE, TWO KEYS. The zigzag ends exactly where the arrow starts, so
+   * on screen this is a single pen moving from the leftmost candle to the
+   * arrowhead. They are separate keys only so the arrow can be moved to its own
+   * beat later without touching the swing line.
+   */
+  zig: { at: 6389, over: 40 },
+  arrow: { at: 6429, over: 16 },
+  /** ⚠ SIMON'S 6445. Asserted below: every step above has to be finished by it. */
+  done: 6445,
+  /**
+   * ═══ AND THEN THE ROOM FOR THE SECOND WINDOW ═══  Simon, 6446: window 1
+   * slides left, window 2 arrives beside it.
+   */
+  split: { at: 6446, over: 54 },
+  second: { at: 6484, over: 40 },
 } as const;
+
+{
+  const V = TWIN;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  /** ⚠ THE THREE STEPS ARE IN ORDER AND THEY ALL LAND BY `done`. Simon gave the
+   *  order and the end frame; both are checked rather than left to the reading
+   *  of four separate keys. */
+  const ends: [string, number][] = [
+    ["the chart", V.tape.at + 57 * V.tape.step + V.tape.over],
+    ["the indigo lines", V.lines.at + V.lines.step + V.lines.over],
+    ["the swing line", V.zig.at + V.zig.over],
+    ["the arrow", V.arrow.at + V.arrow.over],
+  ];
+  for (const [name, e] of ends) {
+    if (e > V.done) fail(`${name} finishes at ${e}, after ${V.done}`);
+  }
+  if (V.lines.at < ends[0][1]) fail("the lines start before the chart is drawn");
+  if (V.zig.at < ends[1][1]) fail("the swing line starts before the lines are drawn");
+  if (V.split.at <= V.done) fail("the windows split before the first one is finished");
+}
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
 /**
