@@ -788,9 +788,44 @@ export const ROW3 = {
  */
 export const RECALL = {
   at: 5247,
-  over: 737,
+  /** ⚠ IT HANDS OVER AT 5394, where the picture stops being a memory and starts
+   *  moving again — see REVENGE. */
+  over: 147,
   in: 44,
   frame: 4044 - 1994,
+} as const;
+
+/**
+ * ═══ THE REVENGE TRADE ═══  Simon, from 5394.
+ *
+ * The recalled chart pans up and left until only its last seven bars are on the
+ * card, a position tool is drawn on the price it closed at, and then the tape
+ * runs again: seven bars up into profit, eight back down through the stop.
+ *
+ * ⚠ NOTHING HERE IS IN A HURRY — Simon: "timing dan durasi tidak buru-buru".
+ * Each bar takes 28 frames to come out and the next starts 22 later, which is a
+ * third of a second apart. The whole beat fills the 589 frames SC07's deleted
+ * visuals left, and ends with 71 of them still held.
+ */
+export const REVENGE_T = {
+  at: 5394,
+  over: 590,
+  /** ⚠ THE PAN IS A CHANGE OF GRID, not a transform on a picture — see
+   *  scenes/Revenge.tsx. `left` and `up` are what the chart moves by. */
+  /**
+   * ⚠ `up` IS MEASURED, NOT CHOSEN. At 200 the whole story — the seven bars
+   * kept, the rally and the fall — sat in the card's top half with 240px of
+   * paper under it. 115 is what centres what the card will END UP holding, read
+   * off a render of the finished beat rather than off the frame it starts on.
+   */
+  pan: { at: 5394, over: 70, up: 115 },
+  tool: { at: 5484, over: 36 },
+  up: { at: 5540, step: 22, over: 28 },
+  down: { at: 5730, step: 22, over: 28 },
+  /** ⚠ THE OLD TOOL GOES WITH THE PAN. Its trade is over, and its left edge
+   *  leaves the card anyway; drawn on it would stretch across a chart it is no
+   *  longer about. */
+  clear: { at: 5394, over: 40 },
 } as const;
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */

@@ -108,7 +108,7 @@ const TAPE_GRID = extendGrid(
  * blends the mappings; nothing drawn on the chart is scaled, so strokes, corner
  * radii and type keep their own weight all the way through the move.
  */
-const ZOOM_GRID = extendGrid(
+export const ZOOM_GRID = extendGrid(
   gridOf(
     CARD_FULL.map((b) => b.c),
     [0, 1],
@@ -122,7 +122,7 @@ const BUY_I = CARD_HEAD_N + CARD_TAPE.length - 1;
 /** The stretch of the tape the small card can show — everything else is behind
  *  the window until it opens. */
 const SEEN_FROM = CARD_HEAD_N;
-const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
+export const SEEN_TO = CARD_HEAD_N + CARD_TAPE.length + V.seen - 1;
 /**
  * ═══ THE TWO SENTENCES, PINNED TO THE BARS THEY LAND ON ═══  (Simon)
  *
@@ -229,7 +229,7 @@ const CARD_NOTE = (() => {
   };
 })();
 
-const TOOL = (() => {
+export const TOOL = (() => {
   /** ⚠ SIMON'S "+100%". One number, and both halves follow it. */
   const reach = (CARD_ENTRY - CARD_SUPPORT) * 2;
   return {
