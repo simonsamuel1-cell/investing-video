@@ -287,8 +287,18 @@ const SECOND = { scale: 0.9 };
  */
 const QUOTE = {
   at: [40, 58] as const,
-  one: "\u201CPasti naik\u201D",
-  two: "\u201CGa mungkin terjadi\u201D",
+  /**
+   * ⚠ GREEN ON ONE, GREY ON THE OTHER — Simon, and the pair is the point. One
+   * reader is sure and coloured like it; the other is dismissed and drawn like
+   * an aside. See theme.color.ok: this is the first place in the library green
+   * carries a word, and it carries it as SPEECH — somebody's confidence in
+   * quotation marks, in a scene built to show that confidence was worth
+   * nothing.
+   */
+  one: { text: "\u201CPasti naik\u201D", ink: theme.color.ok },
+  /** ⚠ ITS INK IS THE PALETTE'S `muted`, read at render — a grey typed here
+   *  would be a second grey one shade off the one the rest of the video uses. */
+  two: { text: "\u201CGa mungkin terjadi\u201D" },
 };
 
 const NeonEdge = ({
@@ -480,12 +490,12 @@ export const TwinWindows = () => {
                   fontFamily: theme.text.family,
                   fontSize: theme.text.body.size,
                   fontWeight: 700,
-                  color: c.ink,
+                  color: i === 0 ? QUOTE.one.ink : c.muted,
                   whiteSpace: "nowrap",
                   opacity: alpha * (i === 0 ? show.arrow : 1),
                 }}
               >
-                {i === 0 ? QUOTE.one : QUOTE.two}
+                {i === 0 ? QUOTE.one.text : QUOTE.two.text}
               </div>
               {/* ⚠ THE TAPE DRAWS ACROSS, one bar at a time on a one-frame
                   step — a sweep, not fifty-eight arrivals. */}

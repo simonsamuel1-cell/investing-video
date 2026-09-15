@@ -267,7 +267,17 @@ export const theme = {
      * The mirror of `warn`, and the ONE green allowed outside a candle body:
      * an affirmation MARK — a tick in a disc saying a condition was met. Same
      * green the candles use, so the episode still has exactly one green.
-     * Never on drawn chart content, and never as a colour for words.
+     * Never on drawn chart content.
+     *
+     * ⚠ AND SINCE VIDEO 22, ON QUOTED SPEECH — at Simon's direction, and worth
+     * being exact about because this line used to end "and never as a colour
+     * for words". SC08 puts "Pasti naik" in green inside one window and a grey
+     * "Ga mungkin terjadi" in the other: two people reading one chart to
+     * opposite conclusions. The green is a PERSON'S confidence, inside
+     * quotation marks, in a scene built to show that confidence was worth
+     * nothing. What stays forbidden is what the old wording was protecting:
+     * green ink on or beside a chart, where it could be read as the video's own
+     * verdict rather than as somebody being quoted.
      */
     ok: "#22B573",
     indigoWash: "rgba(95, 77, 238, 0.09)",

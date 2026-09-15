@@ -1097,7 +1097,7 @@ export const TWIN = {
    * spinner; one that arrives, stops, and goes again reads as a pass being
    * made. It repeats and does not end, because what it says stays true.
    */
-  neon: { at: 6446, over: 30, lap: 100, hold: 30 },
+  neon: { at: 6446, over: 30, lap: 100, hold: 10 },
   /** ⚠ AND WINDOW 1 GROWS 10% AS IT GOES — Simon, on the same frame. Rides the
    *  slide rather than following it: one move, not a shuffle then a swell. */
   grow: { at: 6446, over: 54, by: 1.1 },
