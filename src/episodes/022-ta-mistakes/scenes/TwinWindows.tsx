@@ -25,9 +25,9 @@ import {
   Layer,
   candleWidth,
   dashOpenAt,
+  textReveal,
   gridOf,
   progressInOut,
-  ramp,
   theme,
   useMotion,
   usePalette,
@@ -405,8 +405,16 @@ const Prove = () => {
   const g = f + V.at;
   const open = dashOpenAt(PROVE.box.at - V.at, m);
   const grown = progressInOut(g, PROVE.grow.at, PROVE.grow.over);
-  const write = (text: string, at: number, perChar: number) =>
-    text.slice(0, Math.floor(ramp(f, at, text.length * perChar) * text.length));
+  /** ⚠ A CROSS-FADE, NOT A THIRD ARRIVAL. The questions came in; this is not
+   *  another line turning up, it is the two of them resolving into what they
+   *  were asking for. */
+  const closed = progressInOut(g, PROVE.close.at, PROVE.close.over);
+  /** ⚠ FADE AND RISE — Simon: "animasi kedua pertanyaan, fade in scroll naik
+   *  aja". They used to type. `textReveal` is the library's one entrance for
+   *  words and this is exactly what it does, so the questions now arrive the
+   *  way every other sentence in the episode does instead of the way a terminal
+   *  does. */
+  const arrive = (at: number) => textReveal(f, at, m.reveal);
 
   const row = {
     height: B.line,
@@ -439,15 +447,54 @@ const Prove = () => {
           position: "absolute",
           left: 0,
           right: 0,
-          top: 30,
+          top: B.pad,
           padding: "0 28px",
+          opacity: 1 - closed,
         }}
       >
-        <div style={row}>{write(PROVE.lines[0], open, PROVE.box.perChar)}</div>
-        <div style={row}>
-          {write(PROVE.lines[1], PROVE.grow.at - V.at, PROVE.grow.perChar)}
-        </div>
+        {PROVE.lines.map((text, k) => {
+          const r = arrive(k === 0 ? open : PROVE.grow.at - V.at);
+          return (
+            <div
+              key={text}
+              style={{ ...row, opacity: r.opacity, transform: `translateY(${r.dy}px)` }}
+            >
+              {text}
+            </div>
+          );
+        })}
       </div>
+      {/* ═══ AND WHAT THE TWO QUESTIONS WERE FOR ═══  Simon, 6967: "Stay
+          objective", green, as big as the two lines it replaces.
+
+          ⚠ THE SIZE IS THE TWO ROWS, NOT A NUMBER THAT LOOKS LIKE THEM. Twice
+          the body size at the same 1.25 leading is a 90px line box — exactly
+          the two 45px rows it stands in place of — so it fills the box the
+          questions filled without the box being touched.
+
+          ⚠ AND IT IS THE SAME GREEN AS "Pasti naik", on purpose. That one was a
+          reader's certainty; this is the discipline that would have caught it.
+          One hue saying both is the scene's argument in a single colour. */}
+      {closed > 0.001 ? (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: theme.text.family,
+            fontSize: theme.text.body.size * 2,
+            fontWeight: 800,
+            lineHeight: 1.25,
+            color: theme.color.ok,
+            whiteSpace: "nowrap",
+            opacity: closed,
+          }}
+        >
+          {PROVE.close.text}
+        </div>
+      ) : null}
     </DashedBox>
   );
 };

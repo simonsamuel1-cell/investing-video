@@ -246,7 +246,7 @@ const Body = () => (
         window kiri kanan, isi chartnya sama". An overlay rather than the
         blanked scene itself, so the window it fills stays the one the coverage
         assertion owns. See scenes/TwinWindows.tsx. */}
-    <Sequence from={TWIN.at} durationInFrames={BLOCK.SC09 - TWIN.at} name="SC08 · two windows">
+    <Sequence from={TWIN.at} durationInFrames={TWIN.to - TWIN.at} name="SC08 · two windows">
       <TwinWindows />
     </Sequence>
 

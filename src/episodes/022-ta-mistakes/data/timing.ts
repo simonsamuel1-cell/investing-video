@@ -1074,6 +1074,14 @@ export const ROW4 = {
  */
 export const TWIN = {
   at: 6250,
+  /**
+   * ⚠ IT RUNS PAST ITS OWN BLOCK — Simon: "perpanjang scene hingga 7102".
+   * SC09's window opens on 7064, so the last 38 frames of this one are drawn
+   * over the top of it. That is deliberate and it is the same arrangement the
+   * fourth card row has with SC08; what it costs is on the record rather than
+   * discovered later: SC09's first 38 frames are hidden.
+   */
+  to: 7102,
 
   /* ── WINDOW 1 BUILDS ITSELF, ALONE AND CENTRED ──────────────────────── */
   /**
@@ -1204,6 +1212,17 @@ export const PROVE = {
     "Apa yang membuat analisis benar?",
     "Apa yang bisa membuktikan salah?",
   ],
+  /**
+   * ⚠ THE TWO QUESTIONS GIVE WAY TO WHAT THEY WERE FOR — Simon, 6967: "Stay
+   * objective", green, as tall as the two lines it replaces. The box does not
+   * change size; only what is in it does, which is the point — the same frame
+   * that held the questions now holds the answer.
+   *
+   * ⚠ ON THE VOICE. Cue 48 opens at 6977 with "Ini membantu tetap objektif";
+   * the words land ten frames ahead of it, which is the margin every other
+   * caption in this episode is written to.
+   */
+  close: { at: 6967, over: 20, text: "Stay objective" },
 } as const;
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
