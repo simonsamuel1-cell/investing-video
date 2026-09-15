@@ -1074,70 +1074,66 @@ export const ROW4 = {
  */
 export const TWIN = {
   at: 6250,
+
+  /* ── WINDOW 1 BUILDS ITSELF, ALONE AND CENTRED ──────────────────────── */
   /**
-   * ═══ STEP 1 · THE WINDOW AND ITS CHART ═══
-   * The card fades, then the tape draws across it one bar at a time. ⚠ `step` IS
-   * FRACTIONAL ON PURPOSE: 58 bars at a whole frame each would spend 57 of the
-   * 125 Simon gave the whole sequence. At 0.55 the sweep takes 31 and is still
-   * a sweep — the bars simply arrive closer together than one per frame.
+   * ═══ STEP 1 · THE WINDOW, WITH ITS CHART ALREADY ON IT ═══
+   * ⚠ NO SWEEP ANY MORE — Simon: "animasi chart window 1 cancel aja, jadi kartu
+   * putih muncul sudah ada chartnya". The tape used to draw across bar by bar.
+   * What this scene animates is somebody READING a chart, and the chart is not
+   * the part they made; drawing it first put the emphasis on the wrong thing.
    */
   card: { at: 6250, over: 20 },
   /**
-   * ⚠ THE LIGHT RUNNING ROUND WINDOW 1's EDGE — Simon: "animasi seperti lampu
-   * neon yang menjalar berulang di bordernya".
-   *
-   * ⚠ IT STARTS AT 6446, NOT WITH THE CARD. Simon moved it: before window 2
-   * exists there is nothing to be picked out FROM, so a lit window on an empty
-   * screen is decoration. The moment the second one arrives it becomes a
-   * statement about which of the two is being read — so that is when it lights.
-   *
-   * `lap` is how many frames one trip round takes and `hold` is how long it
-   * waits at the top-left corner before setting off again — Simon: "antar loop,
-   * kasih jeda henti dulu 30 frame". A light that runs continuously reads as a
-   * spinner; one that arrives, stops, and goes again reads as a pass being
-   * made. It repeats and does not end, because what it says stays true.
-   */
-  neon: { at: 6446, over: 30, lap: 100, hold: 10 },
-  /** ⚠ AND WINDOW 1 GROWS 10% AS IT GOES — Simon, on the same frame. Rides the
-   *  slide rather than following it: one move, not a shuffle then a swell. */
-  grow: { at: 6446, over: 32, by: 1.1 },
-  tape: { at: 6252, step: 0.55, over: 12 },
-  /**
    * ═══ STEP 2 · THE TWO INDIGO LINES ═══
-   * ⚠ THEY GROW FROM `a` TO `b`, which is how somebody draws a trendline: from
-   * the old end toward the new one. Twenty frames apart so it reads as two
-   * lines being drawn, not a pair switching on.
+   * ⚠ BOTH AT ONCE — Simon: "sekaligus". `step` is 0, which is how that is said
+   * here: the stagger is a number rather than a branch, so taking it away does
+   * not take away the machinery that could bring it back.
    */
-  lines: { at: 6296, step: 12, over: 26 },
+  lines: { at: 6276, step: 0, over: 32 },
   /**
    * ═══ STEP 3 · THE SWING LINE, AND THE ARROW IT RUNS INTO ═══
    * ⚠ ONE STROKE, TWO KEYS. The zigzag ends exactly where the arrow starts, so
    * on screen this is a single pen moving from the leftmost candle to the
    * arrowhead. They are separate keys only so the arrow can be moved to its own
-   * beat later without touching the swing line.
+   * beat without touching the swing line.
    */
-  zig: { at: 6334, over: 26 },
-  arrow: { at: 6360, over: 15 },
-  /** ⚠ SIMON'S 6375, down from 6445. Asserted below: every step above has to be
-   *  finished by it. */
-  done: 6375,
+  zig: { at: 6312, over: 40 },
+  arrow: { at: 6352, over: 20 },
+  /** ⚠ WINDOW 1 IS FINISHED HERE. Asserted below: every step above lands by it,
+   *  and the hand-over cannot start before it. */
+  done: 6372,
+
+  /* ── AND THEN IT MAKES ROOM ──────────────────────────────────────────── */
   /**
-   * ═══ AND THEN THE ROOM FOR THE SECOND WINDOW ═══  Simon, 6446: window 1
-   * slides left, window 2 arrives beside it.
+   * ⚠ 6375 IS THE HAND-OVER — Simon: "di 6375 adalah transisi munculnya window
+   * 2". Three things start on it: window 1 slides left, grows 10%, and lights.
    */
-  split: { at: 6446, over: 32 },
+  split: { at: 6375, over: 32 },
+  /** ⚠ RIDES THE SLIDE rather than following it: one move, not a shuffle and
+   *  then a swell. */
+  grow: { at: 6375, over: 32, by: 1.1 },
   /**
-   * ⚠ WINDOW 2 WAITS FOR WINDOW 1 TO STOP MOVING. It used to arrive on the same
-   * frame and the two collided in mid-air — Simon sent the frame where they
-   * overlap. `split` ends on 6478, so this begins after it: one thing moves at
-   * a time, which is also the only way the eye can follow either.
+   * ⚠ THE LIGHT RUNNING ROUND WINDOW 1's EDGE — Simon: "animasi seperti lampu
+   * neon yang menjalar berulang di bordernya".
    *
-   * ⚠ AND THE WHOLE HAND-OVER IS QUICKER NOW — Simon: "percepat animasi window 1
-   * geser ke kiri hingga munculnya window 2". The slide went from 54 frames to
-   * 32 and the second window's fade from 44 to 36, so the two windows are both
-   * standing by 6518 instead of 6550.
+   * ⚠ IT LIGHTS ON THE HAND-OVER, NOT WITH THE CARD. Before window 2 exists
+   * there is nothing to be picked out FROM, so a lit window on an empty screen
+   * is decoration. The moment the second one is on its way it becomes a
+   * statement about which of the two is being read.
+   *
+   * `lap` is one trip round; `hold` is the dark between passes. A light that
+   * runs continuously reads as a spinner; one that arrives, stops and goes
+   * again reads as a pass being made.
    */
-  second: { at: 6482, over: 36 },
+  neon: { at: 6375, over: 30, lap: 100, hold: 10 },
+  /**
+   * ⚠ WINDOW 2 WAITS FOR WINDOW 1 TO STOP MOVING. They used to arrive on the
+   * same frame and collided in mid-air — Simon sent the frame where they
+   * overlap. The slide ends on 6407, so this begins after it: one thing moves
+   * at a time, which is also the only way the eye can follow either.
+   */
+  second: { at: 6411, over: 36 },
 } as const;
 
 {
@@ -1145,11 +1141,11 @@ export const TWIN = {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/timing: ${m}`);
   };
-  /** ⚠ THE THREE STEPS ARE IN ORDER AND THEY ALL LAND BY `done`. Simon gave the
-   *  order and the end frame; both are checked rather than left to the reading
-   *  of four separate keys. */
+  /** ⚠ THE STEPS ARE IN SIMON'S ORDER AND THEY ALL LAND BY `done`. Both were
+   *  given as instructions; both are checked rather than left to the reading of
+   *  four separate keys. */
   const ends: [string, number][] = [
-    ["the chart", V.tape.at + 57 * V.tape.step + V.tape.over],
+    ["the card", V.card.at + V.card.over],
     ["the indigo lines", V.lines.at + V.lines.step + V.lines.over],
     ["the swing line", V.zig.at + V.zig.over],
     ["the arrow", V.arrow.at + V.arrow.over],
@@ -1157,9 +1153,15 @@ export const TWIN = {
   for (const [name, e] of ends) {
     if (e > V.done) fail(`${name} finishes at ${e}, after ${V.done}`);
   }
-  if (V.lines.at < ends[0][1]) fail("the lines start before the chart is drawn");
+  if (V.lines.at < ends[0][1]) fail("the lines start before the card has arrived");
   if (V.zig.at < ends[1][1]) fail("the swing line starts before the lines are drawn");
+  if (V.arrow.at > ends[2][1]) fail("the arrow starts after the swing line has already got there");
   if (V.split.at <= V.done) fail("the windows split before the first one is finished");
+  /** ⚠ AND WINDOW 2 WAITS FOR THE SLIDE. The collision Simon photographed was
+   *  exactly this check being absent. */
+  if (V.second.at < V.split.at + V.split.over) {
+    fail(`window 2 starts at ${V.second.at}, before the slide ends at ${V.split.at + V.split.over}`);
+  }
 }
 
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */

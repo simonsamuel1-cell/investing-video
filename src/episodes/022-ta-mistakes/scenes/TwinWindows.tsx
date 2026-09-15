@@ -458,7 +458,15 @@ export const TwinWindows = () => {
                * faded after, the window arrives as an object.
                */
               filter: i === 1 ? "grayscale(1) brightness(1.12)" : undefined,
-              opacity: i === 1 ? 0.75 * alpha : undefined,
+              /**
+               * ⚠ BOTH WINDOWS FADE AS A GROUP. Window 2 was fixed first; window
+               * 1 has the same exposure now that its chart arrives WITH its
+               * card rather than after it — two translucent things stacked let
+               * the ground show through the card behind its own candles.
+               * Composited here and faded once, each window arrives as an
+               * object.
+               */
+              opacity: i === 1 ? 0.75 * alpha : alpha,
             }}
           >
             {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
@@ -477,11 +485,11 @@ export const TwinWindows = () => {
                    *  one for the room around it. A single shadow is either a
                    *  hard rim or a fog. */
                   boxShadow: `0 0 ${NEON.glow}px ${theme.color.indigoGlow}, 0 0 ${NEON.halo}px ${theme.color.indigoWashStrong}`,
-                  opacity: alpha * lit,
+                  opacity: lit,
                 }}
               />
             ) : null}
-            <Card rect={rect} opacity={i === 1 ? 1 : alpha}>
+            <Card rect={rect} opacity={1}>
               {/* ⚠ THE QUOTE ARRIVES WITH THE CONCLUSION IT IS ABOUT — for
                   window 1 that is the arrow, which is the last thing drawn;
                   for window 2 it is the window itself, which arrives finished.
@@ -499,20 +507,15 @@ export const TwinWindows = () => {
                   fontWeight: 700,
                   color: i === 0 ? QUOTE.one.ink : c.muted,
                   whiteSpace: "nowrap",
-                  opacity: i === 1 ? 1 : alpha * show.arrow,
+                  opacity: i === 1 ? 1 : show.arrow,
                 }}
               >
                 {i === 0 ? QUOTE.one.text : QUOTE.two.text}
               </div>
-              {/* ⚠ THE TAPE DRAWS ACROSS, one bar at a time on a one-frame
-                  step — a sweep, not fifty-eight arrivals. */}
-              <Candles
-                bars={DRAWN}
-                grid={grid}
-                wipe={(k) =>
-                  i === 0 ? progressInOut(g, V.tape.at + k * V.tape.step, V.tape.over) : 1
-                }
-              />
+              {/* ⚠ THE TAPE ARRIVES WITH THE CARD — Simon cancelled its sweep.
+                  No `wipe` at all rather than a wipe held at 1: a reveal that
+                  is always finished is a thing to explain later. */}
+              <Candles bars={DRAWN} grid={grid} />
               {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four
                   lines start back in the hidden bars, so they have to be
                   allowed to run off the left edge and be cut by the card —
@@ -524,12 +527,12 @@ export const TwinWindows = () => {
                 arrow={arrow}
                 zig={ZIG}
                 show={show}
-                opacity={i === 1 ? 1 : alpha}
+                opacity={1}
               />
               {/* ⚠ LAST, so the light runs ON the card's edge rather than under
                   the chart drawn inside it. */}
               {i === 0 && lit > 0.001 ? (
-                <NeonEdge rect={rect} lap={neon} opacity={alpha * lit} />
+                <NeonEdge rect={rect} lap={neon} opacity={lit} />
               ) : null}
             </Card>
           </div>
