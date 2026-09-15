@@ -535,14 +535,25 @@ export const CARD_ZOOM = (() => {
  * the card is full of the trade that just failed, so the room has to be made
  * rather than found. That is the whole reason the chart moves at all.
  *
- * ⚠ THE WIDTH IS MEASURED, NOT COMPUTED — same rule as CARD_NOTE, and measured
- * against the LONGER of the two sentences the box has to hold, because the
- * second one replaces the first inside the same frame.
+ * ⚠ TWO LINES, BOTH KEPT — Simon: "buat 2 text line aja, gabung dengan 'Tidak
+ * ada setup = jangan trade'". The second sentence used to REPLACE the first and
+ * it read as rushed, because the eye had barely finished the first one. Stacked
+ * instead, the box is an argument with two halves rather than a sign that
+ * changed its mind.
+ *
+ * ⚠ THE HEIGHT IS DERIVED FROM THE TYPE, and `pad` is the same 30 the one-line
+ * note at 3832 works out to. So this box is that box with a second line in it,
+ * not a second box that happens to look similar.
+ *
+ * ⚠ THE WIDTH IS STILL MEASURED, NOT COMPUTED — same rule as CARD_NOTE, and
+ * measured against the LONGER of the two sentences, since they now share a
+ * frame rather than take turns in one.
  */
 export const REVENGE_NOTE = (() => {
   const gap = 40;
   const w = 920;
-  const h = 104;
+  const line = Math.round(theme.text.body.size * 1.25);
+  const h = line * 2 + 30 * 2;
   const group = CARD_OPEN.h + gap + h;
   const { y: ay, h: ah } = theme.stage.active;
   const top = ay + (ah - group) / 2;
@@ -550,6 +561,9 @@ export const REVENGE_NOTE = (() => {
     /** How far the whole chart group rises. */
     up: CARD_OPEN.y - top,
     box: { x: (theme.canvas.width - w) / 2, y: top + CARD_OPEN.h + gap, w, h },
+    /** One text row, so the scene stacks its two lines on the same rhythm the
+     *  box was sized by. */
+    line,
   };
 })();
 

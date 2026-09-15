@@ -879,12 +879,15 @@ export const REVENGE_T = {
    */
   note: { at: 5751, perChar: 2 },
   /**
-   * ⚠ AND THE LINE CHANGES ON THE LINE THAT CHANGES IT — Simon's 5876 lands 22
-   * frames into cue 43, "Setiap trade baru harus memenuhi aturan yang sama".
-   * The box stays; only what it says is replaced, which is why this is a
-   * cross-fade and not a second box arriving.
+   * ⚠ THE SECOND LINE JOINS THE FIRST, IT DOES NOT REPLACE IT — Simon: replacing
+   * read as rushed. 5876 lands 22 frames into cue 43, "Setiap trade baru harus
+   * memenuhi aturan yang sama", so the second sentence is written as the second
+   * sentence is said, underneath the first one rather than over it.
+   *
+   * ⚠ IT TYPES, like the line above it. A line that faded in would be the only
+   * text in the episode that arrives without being written.
    */
-  swap: { at: 5876, over: 16 },
+  line2: { at: 5876, perChar: 2 },
   /** ⚠ THE FIRST TRADE GOES WITH THE PAN — its tool AND the support line and
    *  label it was drawn against. That trade is over; left up, they would stretch
    *  across a chart they are no longer about, and the support would sit under
@@ -924,8 +927,7 @@ export const REVENGE_T = {
   /** The note cannot open before the room for it starts being made, and the
    *  line it swaps to cannot land before the box holding it is up. */
   if (V.note.at < V.lift.at) fail("the revenge note opens before the chart lifts");
-  if (V.swap.at <= V.note.at) fail("the revenge note's second line lands before its first");
-  if (V.swap.at + V.swap.over > V.at + V.over) fail("the note's second line is still arriving when the scene ends");
+  if (V.line2.at <= V.note.at) fail("the revenge note's second line lands before its first");
 }
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */

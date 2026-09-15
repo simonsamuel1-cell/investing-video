@@ -186,38 +186,63 @@ const Note = () => {
   /** ⚠ THE TYPING WAITS FOR THE FRAME TO SNAP OPEN — `dashOpenAt` is the one
    *  answer to that, and guessing it starts the words inside a sliver. */
   const open = dashOpenAt(local(V.note.at), m);
-  const typed = LINES[0].slice(
-    0,
-    Math.floor(
-      ramp(f, open, LINES[0].length * V.note.perChar) * LINES[0].length,
-    ),
-  );
-  const swap = progressInOut(f, local(V.swap.at), V.swap.over);
-  const line = {
-    position: "absolute",
-    inset: 0,
+  /** ⚠ BOTH LINES ARE WRITTEN, on their own clocks: the first as the box
+   *  arrives, the second when the voice reaches it. Same function for both, so
+   *  they cannot end up two different kinds of text. */
+  const write = (text: string, at: number, perChar: number) =>
+    text.slice(0, Math.floor(ramp(f, at, text.length * perChar) * text.length));
+
+  const row = {
+    height: REVENGE_NOTE.line,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    padding: "0 28px",
     fontFamily: theme.text.family,
     fontSize: theme.text.body.size,
     fontWeight: 800,
     lineHeight: 1.25,
     color: c.ink,
     /** ⚠ NEITHER LINE MAY WRAP. The box is sized to the LONGER of them; a wrap
-     *  means that measurement is stale, and a silent second line is the thing
+     *  means that measurement is stale, and a silent third line is the thing
      *  Simon asked not to have. */
     whiteSpace: "nowrap",
   } as const;
 
   return (
     <DashedBox x={B.x} y={B.y} w={B.w} h={B.h} at={local(V.note.at)}>
-      <div style={{ ...line, opacity: 1 - swap }}>{typed}</div>
-      <div style={{ ...line, opacity: swap }}>{LINES[1]}</div>
+      {/* ⚠ THE TWO ROWS ARE CENTRED AS A BLOCK, not one each in half the box.
+          The second line is empty for two seconds before it is written, and a
+          per-half layout would leave the first line sitting high in a frame
+          that looks unbalanced until the second one turns up. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          padding: "0 28px",
+        }}
+      >
+        <div style={row}>{write(LINES[0], open, V.note.perChar)}</div>
+        <div style={row}>
+          {write(LINES[1], local(V.line2.at), V.line2.perChar)}
+        </div>
+      </div>
     </DashedBox>
   );
 };
+
+/** Kept honest: the second line has to finish being written before the scene
+ *  does, or it is cut off mid-word by a hard cut into SC08. */
+{
+  const end = V.line2.at + LINES[1].length * V.line2.perChar;
+  if (end > V.at + V.over) {
+    throw new Error(
+      `022-ta-mistakes/Revenge: the note's second line finishes typing at ${end}, after the scene ends at ${V.at + V.over}`,
+    );
+  }
+}
 
 export const Revenge = () => {
   const f = useCurrentFrame();
