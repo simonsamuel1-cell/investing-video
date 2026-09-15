@@ -271,6 +271,26 @@ const NEON = { beam: 0.14, glow: 44, halo: 130, width: 5 };
  *  a 10% grow on window 1 had eaten down to 17. */
 const SECOND = { scale: 0.9 };
 
+/**
+ * ═══ WHAT EACH READER SAYS ═══  Simon: "Pasti naik" in window 1, "Ga mungkin
+ * terjadi" in window 2, both in quotation marks.
+ *
+ * ⚠ IN QUOTES BECAUSE THEY ARE QUOTES. These are not labels on the charts —
+ * they are two people talking, and the marks are what keeps them from reading
+ * as the video's own opinion about which chart is right. Curly, like every
+ * other quoted line in this episode.
+ *
+ * ⚠ `at` IS WINDOW PIXELS, the same box everything in scenes/Analysis.tsx uses:
+ * from the top-left corner of the window the text is in, y down. It lands in the
+ * headroom Simon left above the chart when he shrank it, so it sits over paper
+ * rather than over candles.
+ */
+const QUOTE = {
+  at: [40, 58] as const,
+  one: "\u201CPasti naik\u201D",
+  two: "\u201CGa mungkin terjadi\u201D",
+};
+
 const NeonEdge = ({
   rect,
   lap,
@@ -420,6 +440,28 @@ export const TwinWindows = () => {
               />
             ) : null}
             <Card rect={rect} opacity={alpha}>
+              {/* ⚠ THE QUOTE ARRIVES WITH THE CONCLUSION IT IS ABOUT — for
+                  window 1 that is the arrow, which is the last thing drawn;
+                  for window 2 it is the window itself, which arrives finished.
+                  Simon gave no frame for either, and a quote that turns up
+                  before the drawing it comments on would be a verdict with
+                  nothing under it. */}
+              <div
+                style={{
+                  position: "absolute",
+                  left: rect.x + QUOTE.at[0],
+                  top: rect.y + QUOTE.at[1],
+                  transform: "translateY(-50%)",
+                  fontFamily: theme.text.family,
+                  fontSize: theme.text.body.size,
+                  fontWeight: 700,
+                  color: c.ink,
+                  whiteSpace: "nowrap",
+                  opacity: alpha * (i === 0 ? show.arrow : 1),
+                }}
+              >
+                {i === 0 ? QUOTE.one : QUOTE.two}
+              </div>
               {/* ⚠ THE TAPE DRAWS ACROSS, one bar at a time on a one-frame
                   step — a sweep, not fifty-eight arrivals. */}
               <Candles
