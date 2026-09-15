@@ -1076,18 +1076,20 @@ export const TWIN = {
   at: 6250,
   /**
    * ═══ STEP 1 · THE WINDOW AND ITS CHART ═══
-   * The card fades, then the tape draws across it one bar at a time. `step` is
-   * 1, so 58 bars take 58 frames — a sweep rather than 58 arrivals.
+   * The card fades, then the tape draws across it one bar at a time. ⚠ `step` IS
+   * FRACTIONAL ON PURPOSE: 58 bars at a whole frame each would spend 57 of the
+   * 125 Simon gave the whole sequence. At 0.55 the sweep takes 31 and is still
+   * a sweep — the bars simply arrive closer together than one per frame.
    */
-  card: { at: 6250, over: 30 },
-  tape: { at: 6258, step: 1, over: 16 },
+  card: { at: 6250, over: 20 },
+  tape: { at: 6252, step: 0.55, over: 12 },
   /**
    * ═══ STEP 2 · THE TWO INDIGO LINES ═══
    * ⚠ THEY GROW FROM `a` TO `b`, which is how somebody draws a trendline: from
    * the old end toward the new one. Twenty frames apart so it reads as two
    * lines being drawn, not a pair switching on.
    */
-  lines: { at: 6331, step: 18, over: 40 },
+  lines: { at: 6296, step: 12, over: 26 },
   /**
    * ═══ STEP 3 · THE SWING LINE, AND THE ARROW IT RUNS INTO ═══
    * ⚠ ONE STROKE, TWO KEYS. The zigzag ends exactly where the arrow starts, so
@@ -1095,10 +1097,11 @@ export const TWIN = {
    * arrowhead. They are separate keys only so the arrow can be moved to its own
    * beat later without touching the swing line.
    */
-  zig: { at: 6389, over: 40 },
-  arrow: { at: 6429, over: 16 },
-  /** ⚠ SIMON'S 6445. Asserted below: every step above has to be finished by it. */
-  done: 6445,
+  zig: { at: 6334, over: 26 },
+  arrow: { at: 6360, over: 15 },
+  /** ⚠ SIMON'S 6375, down from 6445. Asserted below: every step above has to be
+   *  finished by it. */
+  done: 6375,
   /**
    * ═══ AND THEN THE ROOM FOR THE SECOND WINDOW ═══  Simon, 6446: window 1
    * slides left, window 2 arrives beside it.
