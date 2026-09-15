@@ -121,28 +121,39 @@ const nextGrid = (g: typeof ZOOM_GRID) => ({
 const REACH = 0.24 * 2;
 
 /**
- * ═══ THE TWO STAMPS ON THE SECOND TRADE ═══  Simon, 5540: "Loss lagi" moves to
- * 20px below "Masuk lagi".
+ * ═══ THE TWO STAMPS ON THE SECOND TRADE ═══  Simon: the pair is grouped, and
+ * the GROUP is centred on the Long Position tool; the 20px between them is
+ * border to border.
  *
- * ⚠ `pill` IS MEASURED, NOT COMPUTED, and it is the same class of number as
- * CARD_NOTE's width. A Chip's height is its type size plus proportional padding
- * plus whatever line box the font asks for, and nothing in code can ask a font
- * that — so it is read off a render (47px) and the gap below it is Simon's 20.
- * Together they are the distance between the two stamps' CENTRES, which is what
- * a Chip is positioned by; the render check confirms the gap that comes out the
- * other end really is 20.
+ * ⚠ `pill` IS THE FULL HEIGHT OF A CHIP, MEASURED — and measuring it is where
+ * this went wrong once already. A pill's ends are fully rounded, so a column
+ * taken near its left edge reads a CHORD, not the height: that gave 47, `DROP`
+ * came out at 67 against a real pill of 66, and the two badges ended up 1px
+ * apart. The number below is read off rows whose run of colour is over 100px
+ * wide — wide enough that a candle body, which is the same green and the same
+ * red, cannot be mistaken for a pill.
+ *
+ * ⚠ AND IT CANNOT BE COMPUTED. 36px of type plus proportional padding is
+ * knowable; the line box the font asks for is not, and pinning a line-height on
+ * Chip to make it knowable would resize every chip in every finished episode.
  */
-const STAMP = { pill: 47, gap: 20 };
+const STAMP = { pill: 66, gap: 20 };
+/** Centre to centre — what a Chip is positioned by. Border to border it is
+ *  `gap`, which is the number Simon gave. */
 const DROP = STAMP.pill + STAMP.gap;
 
 /**
- * ⚠ THE STAMPS HANG FROM THE TOOL'S TOP EDGE, NOT FROM ITS MIDDLE — Simon:
- * "align-center vertically terhadap tepi atas tool Long Position". That edge is
- * the TARGET, so it is written as the target rather than as a pixel read off
- * the wash: the lid of the green box is exactly `entry + REACH`, and taking it
- * from the price keeps the stamps on it if the reach is ever changed again.
+ * ⚠ THE PAIR IS ONE OBJECT, CENTRED ON THE TOOL — Simon: "group kedua pill itu,
+ * lalu vertical align center terhadap tool Long Positionnya". So neither stamp
+ * is placed on its own: the group's middle is the tool's middle, and each sits
+ * half a `DROP` either side of it. Placed individually they would drift apart
+ * the moment the pill height or the gap changed.
+ *
+ * ⚠ THE TOOL'S MIDDLE IS `entry`, not the average of its two edges — target and
+ * stop are one reach either side of it, so the box's centre IS the entry.
  */
-const stampY = (g: typeof ZOOM_GRID) => g.y(REVENGE_ENTRY + REACH);
+const stampAt = (g: typeof ZOOM_GRID, below: boolean) =>
+  g.y(REVENGE_ENTRY) + (below ? DROP / 2 : -DROP / 2);
 
 /** ⚠ SCENE-LOCAL, FROM THE TABLE'S OWN GLOBAL FRAMES. Every number in
  *  REVENGE_T is written where Simon reads it — on the timeline — so the one
@@ -357,10 +368,10 @@ export const Revenge = () => {
           the trade happened — and a stamp behind them would be a word with
           candles through it.
 
-          ⚠ GREEN THEN RED, IN THAT ORDER AND IN THAT PLACE. "Masuk lagi" sits
-          on the tool's top edge — the price the trade was reaching for — and
-          "Loss lagi" lands 20px under it, because it is the answer to it. Read
-          downwards, the two of them are the whole scene in four words.
+          ⚠ GREEN THEN RED, IN THAT ORDER AND IN THAT PLACE. The two of them are
+          one object centred on the tool, green above the middle and red below
+          it. Read downwards they are the whole scene in four words, and that
+          reading is the reason they are grouped rather than placed.
 
           ⚠ AND THE GREEN IS NOT AN APPROVAL. It narrates an action being taken,
           not one being recommended — which is why it is a fill under white type
@@ -369,7 +380,7 @@ export const Revenge = () => {
         <Chip
           label="Masuk lagi"
           x={(grid.x(SEEN_TO) + inner[1]) / 2}
-          y={stampY(grid)}
+          y={stampAt(grid, false)}
           at={local(V.enter)}
           tone="ok"
           pill
@@ -378,7 +389,7 @@ export const Revenge = () => {
         <Chip
           label="Loss lagi"
           x={(grid.x(SEEN_TO) + inner[1]) / 2}
-          y={stampY(grid) + DROP}
+          y={stampAt(grid, true)}
           at={local(V.lossAgain)}
           tone="warn"
           pill
@@ -436,8 +447,8 @@ export const Revenge = () => {
     (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2;
   for (const [name, mid] of [
     ["Loss", toolMid(PAN_GRID)],
-    ["Masuk lagi", { x: stampX, y: stampY(PAN_GRID) }],
-    ["Loss lagi", { x: stampX, y: stampY(PAN_GRID) + DROP }],
+    ["Masuk lagi", { x: stampX, y: stampAt(PAN_GRID, false) }],
+    ["Loss lagi", { x: stampX, y: stampAt(PAN_GRID, true) }],
   ] as const) {
     /** ⚠ THE CARD, MINUS HALF A PILL. A chip is centred on its point, so a
      *  centre that merely sits on the card can still hang half its badge over
