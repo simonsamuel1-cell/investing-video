@@ -17,7 +17,6 @@ import type { Anchor, Bar, Series } from "../../../core";
 import SS01 from "./ss01.json";
 import SS02 from "./ss02.json";
 import SS03_DOC from "./ss03.json";
-import SS0405 from "./ss0405.json";
 
 /** Anchors → a synthetic tape. Core has `fromShape` for a shape and
  *  `fromScreenshot` for a trace; this is neither — the turns are DESIGNED to
@@ -802,44 +801,15 @@ export const SS03: Bar[] = SS03_DOC.ohlc as Bar[];
  * ═══ SC08 · WHAT TWO PEOPLE DREW ON IT ═══  Simon: ss04 and ss05, "contoh
  * gambar technical analysis by a human".
  *
- * ⚠ THE TWO SCREENSHOTS CARRY THE SAME ANALYSIS. Traced independently they come
- * back within a hundredth of a level unit of each other on all four lines — the
- * same descending trendline, the same rising support, the same inner line, the
- * same horizontal. What differs is one thing: the arrow at the end. That is the
- * whole picture Simon is after, and it is why one set of lines is used for both
- * windows rather than each window getting its own traced copy. Two sets would
- * differ by the crop noise above, and a viewer comparing them would be looking
- * for meaning in a rounding error.
+ * ⚠ THE GEOMETRY IS NOT HERE. It was, briefly; it now lives in
+ * scenes/Analysis.tsx because Simon asked for one file he can move the lines
+ * around in, and a traced copy sitting here as well would be a second source
+ * for the same drawing. What survives of the trace is data/ss0405.json — the
+ * record of what the screenshots actually contained, which scripts/trace-
+ * ss0405.mjs rewrites and nothing reads. That is deliberate: it is evidence,
+ * not input.
  *
- * ⚠ ss05's LINES, BECAUSE ITS CROP MATCHES ss03's. It traces 111 bars to ss04's
- * 112, so its indices need no correction to sit on the tape the windows draw.
+ * ⚠ WHAT THE TRACE FOUND, for the record: the two screenshots carry the SAME
+ * four lines, within a hundredth of a level unit of each other. The only thing
+ * that differed was the arrow — one chart, two readings.
  */
-export const TA_LINES = SS0405.ss05.lines as readonly { a: number[]; b: number[] }[];
-
-/**
- * ⚠ AND THE TWO CONCLUSIONS. Simon: "ss04 ada panah turun, ss05 ada panah
- * naik". Kept as the direction and the slope somebody drew, not as a length —
- * the windows show a narrower slice of the tape than his screenshots did, so
- * the arrows are re-scaled where they are drawn. What must survive is which way
- * each one points and how steeply.
- */
-export const TA_ARROWS = {
-  up: SS0405.ss05.arrow as { a: number[]; b: number[] },
-  down: SS0405.ss04.arrow as { a: number[]; b: number[] },
-};
-
-{
-  const fail = (m: string) => {
-    throw new Error(`022-ta-mistakes/series: ${m}`);
-  };
-  if (TA_LINES.length !== 4) fail(`${TA_LINES.length} analysis lines traced, expected 4`);
-  /** ⚠ THE TWO ARROWS MUST DISAGREE, or the scene has nothing to say. */
-  const rise = (k: { a: number[]; b: number[] }) => k.b[1] - k.a[1];
-  if (rise(TA_ARROWS.up) <= 0) fail("ss05's arrow does not point up");
-  if (rise(TA_ARROWS.down) >= 0) fail("ss04's arrow does not point down");
-  /** And they must start from the same place, or they are not two readings of
-   *  one moment. */
-  if (Math.abs(TA_ARROWS.up.a[0] - TA_ARROWS.down.a[0]) > 1.5) {
-    fail(`the two arrows start ${Math.abs(TA_ARROWS.up.a[0] - TA_ARROWS.down.a[0]).toFixed(1)} bars apart`);
-  }
-}
