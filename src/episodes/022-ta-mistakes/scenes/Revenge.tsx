@@ -26,13 +26,33 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Chip, Level, PositionTool, candleWidth, extendGrid, gridOf, lerpGrid,
-  progress, progressInOut, theme, useMotion, usePalette, useShadow,
+  Candles,
+  Chip,
+  DashedBox,
+  Level,
+  PositionTool,
+  candleWidth,
+  dashOpenAt,
+  extendGrid,
+  gridOf,
+  lerpGrid,
+  progress,
+  progressInOut,
+  ramp,
+  theme,
+  useMotion,
+  usePalette,
+  useShadow,
 } from "../../../core";
-import { CARD_OPEN, CARD_ZOOM } from "../data/layout";
+import { CARD_OPEN, CARD_ZOOM, REVENGE_NOTE } from "../data/layout";
 import { REVENGE_T } from "../data/timing";
 import {
-  CARD_ALL, CARD_FULL, CARD_HEAD_N, CARD_REVENGE, CARD_REVENGE_UP, CARD_SUPPORT,
+  CARD_ALL,
+  CARD_FULL,
+  CARD_HEAD_N,
+  CARD_REVENGE,
+  CARD_REVENGE_UP,
+  CARD_SUPPORT,
   REVENGE_ENTRY,
 } from "../data/series";
 import { SEEN_TO, TOOL, ZOOM_GRID, toolMid } from "./CardList";
@@ -61,7 +81,11 @@ const PAN_GRID = (() => {
   const last = SEEN_TO - KEEP; // the newest bar that must go
   const gap = (ZOOM_GRID.x(last) + half + (ZOOM_GRID.x(last + 1) - half)) / 2;
   const left = gap - O.x;
-  const plot = { ...CARD_ZOOM.plot, x: CARD_ZOOM.plot.x - left, y: CARD_ZOOM.plot.y - V.pan.up };
+  const plot = {
+    ...CARD_ZOOM.plot,
+    x: CARD_ZOOM.plot.x - left,
+    y: CARD_ZOOM.plot.y - V.pan.up,
+  };
   return extendGrid(
     gridOf(
       CARD_FULL.map((b) => b.c),
@@ -96,6 +120,70 @@ const nextGrid = (g: typeof ZOOM_GRID) => ({
  */
 const REACH = 0.24 * 2;
 
+/** ⚠ SCENE-LOCAL, FROM THE TABLE'S OWN GLOBAL FRAMES. Every number in
+ *  REVENGE_T is written where Simon reads it — on the timeline — so the one
+ *  place that converts is here, and no scene-local frame is ever typed. */
+const local = (frame: number) => frame - V.at;
+
+/**
+ * ═══ WHAT THE SCENE CONCLUDES ═══  Simon, 5721 and 5876.
+ *
+ * ⚠ ONE BOX, TWO LINES. The second replaces the first INSIDE the frame that is
+ * already up — "ganti isi di 5876", not a new box. A box that left and came
+ * back would read as a second conclusion; this is the same conclusion, restated
+ * on the sentence that restates it.
+ *
+ * ⚠ THE FIRST LINE TYPES AND THE SECOND ONE DOES NOT. Typing is how a box
+ * ARRIVES here — it is what the note at 3832 does. Re-typing into a frame the
+ * eye has already read would be that arrival happening twice, so the swap is a
+ * cross-fade: same object, new words.
+ */
+const LINES = [
+  "Tidak ada setup = jangan trade",
+  "Trade baru harus punya aturan yang sama",
+] as const;
+
+const Note = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const c = usePalette();
+  const B = REVENGE_NOTE.box;
+  /** ⚠ THE TYPING WAITS FOR THE FRAME TO SNAP OPEN — `dashOpenAt` is the one
+   *  answer to that, and guessing it starts the words inside a sliver. */
+  const open = dashOpenAt(local(V.note.at), m);
+  const typed = LINES[0].slice(
+    0,
+    Math.floor(
+      ramp(f, open, LINES[0].length * V.note.perChar) * LINES[0].length,
+    ),
+  );
+  const swap = progressInOut(f, local(V.swap.at), V.swap.over);
+  const line = {
+    position: "absolute",
+    inset: 0,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: "0 28px",
+    fontFamily: theme.text.family,
+    fontSize: theme.text.body.size,
+    fontWeight: 800,
+    lineHeight: 1.25,
+    color: c.ink,
+    /** ⚠ NEITHER LINE MAY WRAP. The box is sized to the LONGER of them; a wrap
+     *  means that measurement is stale, and a silent second line is the thing
+     *  Simon asked not to have. */
+    whiteSpace: "nowrap",
+  } as const;
+
+  return (
+    <DashedBox x={B.x} y={B.y} w={B.w} h={B.h} at={local(V.note.at)}>
+      <div style={{ ...line, opacity: 1 - swap }}>{typed}</div>
+      <div style={{ ...line, opacity: swap }}>{LINES[1]}</div>
+    </DashedBox>
+  );
+};
+
 export const Revenge = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -119,122 +207,147 @@ export const Revenge = () => {
    */
   const old = 1 - progress(g, V.clear.at, V.clear.over);
   const inner: [number, number] = [O.x + O.pad, O.x + O.w - O.pad];
+  /** ⚠ THE WHOLE CHART GROUP RISES AS ONE — Simon: "geser naik chart untuk
+   *  memberi ruang". Card, tape, level, both tools and both stamps sit on one
+   *  transform, so the stamps cannot come unstuck from the tools they are on.
+   *  The distance is solved in layout, not here. */
+  const lift = REVENGE_NOTE.up * progressInOut(g, V.lift.at, V.lift.over);
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
-      {/* ⚠ THE CARD IS THE MASK. Everything the pan carries off its left edge is
-          clipped by the thing it is drawn on, which cannot drift away from it. */}
       <div
         style={{
           position: "absolute",
-          left: O.x,
-          top: O.y,
-          width: O.w,
-          height: O.h,
-          borderRadius: theme.shape.cardRadius,
-          background: c.cardBg,
-          boxShadow: shadow.rest,
-          overflow: "hidden",
+          inset: 0,
+          transform: `translateY(${(-lift).toFixed(1)}px)`,
         }}
-      />
-      {/* ⚠ THE TRACED PRE-HISTORY IS NOT DRAWN. `SHOWN` is indexed against the
+      >
+        {/* ⚠ THE CARD IS THE MASK. Everything the pan carries off its left edge is
+          clipped by the thing it is drawn on, which cannot drift away from it. */}
+        <div
+          style={{
+            position: "absolute",
+            left: O.x,
+            top: O.y,
+            width: O.w,
+            height: O.h,
+            borderRadius: theme.shape.cardRadius,
+            background: c.cardBg,
+            boxShadow: shadow.rest,
+            overflow: "hidden",
+          }}
+        />
+        {/* ⚠ THE TRACED PRE-HISTORY IS NOT DRAWN. `SHOWN` is indexed against the
           grid, so it cannot be sliced at the front without moving every bar;
           the first CARD_HEAD_N of it are hidden by their wipe instead. They
           have to go: the rewind at 3517 took them off the card, and the last
           of them ends one pixel INSIDE the card's left edge — drawn, it
           survives the clip as a red splinter against the corner radius. */}
-      <Candles
-        bars={SHOWN}
-        grid={grid}
-        clip={{ x: O.x, y: O.y, w: O.w, h: O.h }}
-        wipe={(i) => (i < CARD_HEAD_N ? 0 : 1)}
-      />
+        <Candles
+          bars={SHOWN}
+          grid={grid}
+          clip={{ x: O.x, y: O.y, w: O.w, h: O.h }}
+          wipe={(i) => (i < CARD_HEAD_N ? 0 : 1)}
+        />
 
-      <Level
-        value={CARD_SUPPORT}
-        grid={grid}
-        span={inner}
-        /** ⚠ ALREADY DRAWN ON FRAME ZERO. This scene takes over from a picture
-         *  that has these on it; an entrance here would be the level drawing
-         *  itself a second time. `at` is before the window so the curve is
-         *  already finished when the window opens. */
-        at={-2}
-        over={1}
-        label="Support"
-        labelSide="left"
-        labelAt="below"
-        width={theme.shape.line}
-        opacity={old}
-      />
+        <Level
+          value={CARD_SUPPORT}
+          grid={grid}
+          span={inner}
+          /** ⚠ ALREADY DRAWN ON FRAME ZERO. This scene takes over from a picture
+           *  that has these on it; an entrance here would be the level drawing
+           *  itself a second time. `at` is before the window so the curve is
+           *  already finished when the window opens. */
+          at={-2}
+          over={1}
+          label="Support"
+          labelSide="left"
+          labelAt="below"
+          width={theme.shape.line}
+          opacity={old}
+        />
 
-      {/* The first trade's tool, leaving on the same curve as its level. */}
-      <PositionTool
-        grid={grid}
-        entry={TOOL.entry}
-        target={TOOL.target}
-        stop={TOOL.stop}
-        x1={TOOL.x1}
-        x2={inner[1]}
-        at={-2}
-        over={1}
-        opacity={old}
-      />
+        {/* The first trade's tool, leaving on the same curve as its level. */}
+        <PositionTool
+          grid={grid}
+          entry={TOOL.entry}
+          target={TOOL.target}
+          stop={TOOL.stop}
+          x1={TOOL.x1}
+          x2={inner[1]}
+          at={-2}
+          over={1}
+          opacity={old}
+        />
 
-      {/* ═══ AND THE NEXT ONE ═══  Simon: "muncul lagi tool Long Position". */}
-      <PositionTool
-        grid={grid}
-        entry={REVENGE_ENTRY}
-        target={REVENGE_ENTRY + REACH}
-        stop={REVENGE_ENTRY - REACH}
-        x1={grid.x(SEEN_TO)}
-        x2={inner[1]}
-        at={V.tool.at - V.at}
-        over={V.tool.over}
-      />
+        {/* ═══ AND THE NEXT ONE ═══  Simon: "muncul lagi tool Long Position". */}
+        <PositionTool
+          grid={grid}
+          entry={REVENGE_ENTRY}
+          target={REVENGE_ENTRY + REACH}
+          stop={REVENGE_ENTRY - REACH}
+          x1={grid.x(SEEN_TO)}
+          x2={inner[1]}
+          at={local(V.tool.at)}
+          over={V.tool.over}
+        />
 
-      {/* ⚠ THE FIRST VERDICT IS CARRIED OVER, NOT RE-STAMPED. It has been on the
+        {/* ⚠ THE FIRST VERDICT IS CARRIED OVER, NOT RE-STAMPED. It has been on the
           chart since 5310 and this scene opens on that picture, so it arrives
           a full pop BEFORE frame zero — anything later and the word would pop
           a second time on the hand-over frame. It then leaves with the trade it
           judges, on the same curve as that trade's tool and level: `opacity`
           is not a prop a Chip takes, by design, so the fade belongs to the
           layer the three of them share. */}
-      <div style={{ position: "absolute", inset: 0, opacity: old }}>
-        <Chip label="Loss" {...toolMid(grid)} at={-m.pop} tone="warn" pill solid />
-      </div>
+        <div style={{ position: "absolute", inset: 0, opacity: old }}>
+          <Chip
+            label="Loss"
+            {...toolMid(grid)}
+            at={-m.pop}
+            tone="warn"
+            pill
+            solid
+          />
+        </div>
 
-      <Candles
-        bars={CARD_REVENGE}
-        grid={next}
-        clip={{ x: O.x, y: O.y, w: O.w, h: O.h }}
-        wipe={(i) =>
-          i < CARD_REVENGE_UP.length
-            ? progressInOut(g, V.up.at + i * V.up.step, V.up.over)
-            : progressInOut(
-                g,
-                V.down.at + (i - CARD_REVENGE_UP.length) * V.down.step,
-                V.down.over,
-              )
-        }
-      />
+        <Candles
+          bars={CARD_REVENGE}
+          grid={next}
+          clip={{ x: O.x, y: O.y, w: O.w, h: O.h }}
+          wipe={(i) =>
+            i < CARD_REVENGE_UP.length
+              ? progressInOut(g, V.up.at + i * V.up.step, V.up.over)
+              : progressInOut(
+                  g,
+                  V.down.at + (i - CARD_REVENGE_UP.length) * V.down.step,
+                  V.down.over,
+                )
+          }
+        />
 
-      {/* ═══ AND THE SECOND VERDICT ═══  Simon: "Loss lagi", same stamp, middle
+        {/* ═══ AND THE SECOND VERDICT ═══  Simon: "Loss lagi", same stamp, middle
           of the new tool.
 
           ⚠ LAST IN THE TREE, so it sits over the tape it is judging. The bars
           run straight through the middle of the tool — that is where the trade
           happened — and a stamp behind them would be a word with candles
           through it. */}
-      <Chip
-        label="Loss lagi"
-        x={(grid.x(SEEN_TO) + inner[1]) / 2}
-        y={grid.y(REVENGE_ENTRY)}
-        at={V.lossAgain - V.at}
-        tone="warn"
-        pill
-        solid
-      />
+        <Chip
+          label="Loss lagi"
+          x={(grid.x(SEEN_TO) + inner[1]) / 2}
+          y={grid.y(REVENGE_ENTRY)}
+          at={local(V.lossAgain)}
+          tone="warn"
+          pill
+          solid
+        />
+      </div>
+
+      {/* ⚠ OUTSIDE THE LIFT. The box is what the room was made FOR; carried on
+          the same transform it would rise away from the space it is meant to
+          fill. */}
+      <Note />
     </div>
   );
 };
@@ -253,12 +366,16 @@ export const Revenge = () => {
   }
   const right = PAN_GRID.x(SEEN_TO + CARD_REVENGE.length) + half;
   if (right > CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad) {
-    fail(`the revenge tape ends at ${right.toFixed(0)}, past the card's inner edge`);
+    fail(
+      `the revenge tape ends at ${right.toFixed(0)}, past the card's inner edge`,
+    );
   }
   const top = PAN_GRID.y(Math.max(...CARD_REVENGE.map((b) => b.h)));
   const bot = PAN_GRID.y(Math.min(...CARD_REVENGE.map((b) => b.l)));
   if (top < CARD_OPEN.y || bot > CARD_OPEN.y + CARD_OPEN.h) {
-    fail(`the revenge tape runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside the card`);
+    fail(
+      `the revenge tape runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside the card`,
+    );
   }
   /** ⚠ AND THE DOUBLED TOOL HAS TO FIT TOO. It is drawn as two filled boxes, so
    *  a target or a stop off the card is not a line that disappears — it is a
@@ -266,19 +383,31 @@ export const Revenge = () => {
   const tTop = PAN_GRID.y(REVENGE_ENTRY + REACH);
   const tBot = PAN_GRID.y(REVENGE_ENTRY - REACH);
   if (tTop < CARD_OPEN.y || tBot > CARD_OPEN.y + CARD_OPEN.h) {
-    fail(`the position tool runs ${tTop.toFixed(0)}..${tBot.toFixed(0)}, outside the card`);
+    fail(
+      `the position tool runs ${tTop.toFixed(0)}..${tBot.toFixed(0)}, outside the card`,
+    );
   }
   /** ⚠ BOTH VERDICTS ARE STAMPED ON THE TOOL, AND A CHIP IS NOT CLIPPED. It is
    *  a div over the top of everything, so a tool centre that wandered off the
    *  card would put the word on the grey paper beside it rather than cut it. */
   for (const [name, mid] of [
     ["Loss", toolMid(PAN_GRID)],
-    ["Loss lagi", { x: (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2, y: PAN_GRID.y(REVENGE_ENTRY) }],
+    [
+      "Loss lagi",
+      {
+        x:
+          (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) /
+          2,
+        y: PAN_GRID.y(REVENGE_ENTRY),
+      },
+    ],
   ] as const) {
     const inX = mid.x > CARD_OPEN.x && mid.x < CARD_OPEN.x + CARD_OPEN.w;
     const inY = mid.y > CARD_OPEN.y && mid.y < CARD_OPEN.y + CARD_OPEN.h;
     if (!inX || !inY) {
-      fail(`"${name}" would be stamped at ${mid.x.toFixed(0)},${mid.y.toFixed(0)}, off the card`);
+      fail(
+        `"${name}" would be stamped at ${mid.x.toFixed(0)},${mid.y.toFixed(0)}, off the card`,
+      );
     }
   }
   /** ⚠ THE TRADE MUST STILL FAIL ON SCREEN: short of the target, through the

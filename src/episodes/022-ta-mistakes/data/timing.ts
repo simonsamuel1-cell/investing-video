@@ -856,6 +856,28 @@ export const REVENGE_T = {
    * sentence.
    */
   lossAgain: 5682,
+  /**
+   * ⚠ THE CHART RISES TO MAKE ROOM — Simon, 5721. How far is solved in
+   * data/layout.ts (`REVENGE_NOTE.up`); this is only when.
+   */
+  lift: { at: 5721, over: 40 },
+  /**
+   * ⚠ THE BOX STARTS BEFORE THE LIFT HAS FINISHED. Waiting for the chart to
+   * settle would be two events in a row where the eye only has one thing to
+   * follow; overlapped, the room appearing and the thing filling it are one
+   * move. It still cannot collide — the box's home is empty paper from 5721.
+   *
+   * ⚠ ON THE CUE IT BELONGS TO: 5684 opens "Kalau belum ada setup, jawabannya
+   * tetap: jangan trade", which is the sentence this box is.
+   */
+  note: { at: 5751, perChar: 2 },
+  /**
+   * ⚠ AND THE LINE CHANGES ON THE LINE THAT CHANGES IT — Simon's 5876 lands 22
+   * frames into cue 43, "Setiap trade baru harus memenuhi aturan yang sama".
+   * The box stays; only what it says is replaced, which is why this is a
+   * cross-fade and not a second box arriving.
+   */
+  swap: { at: 5876, over: 16 },
   /** ⚠ THE FIRST TRADE GOES WITH THE PAN — its tool AND the support line and
    *  label it was drawn against. That trade is over; left up, they would stretch
    *  across a chart they are no longer about, and the support would sit under
@@ -887,6 +909,11 @@ export const REVENGE_T = {
    *  number that happens to be bigger. */
   if (V.lossAgain < V.endsAt) fail(`"Loss lagi" lands at ${V.lossAgain}, before the tape finishes`);
   if (V.lossAgain > V.at + V.over) fail(`"Loss lagi" lands after the scene ends`);
+  /** The note cannot open before the room for it starts being made, and the
+   *  line it swaps to cannot land before the box holding it is up. */
+  if (V.note.at < V.lift.at) fail("the revenge note opens before the chart lifts");
+  if (V.swap.at <= V.note.at) fail("the revenge note's second line lands before its first");
+  if (V.swap.at + V.swap.over > V.at + V.over) fail("the note's second line is still arriving when the scene ends");
 }
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */

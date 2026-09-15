@@ -518,3 +518,61 @@ export const CARD_ZOOM = (() => {
   if (b.x(z.bars - 1) > CARD_GROWN.x + CARD_GROWN.w - o.pad)
     fail("the fall runs off the right of the grown card");
 }
+
+/**
+ * ═══ THE REVENGE TRADE'S CLOSING NOTE ═══  Simon, at 5721: "geser naik chart
+ * untuk memberi ruang pada text box garis putus putus, lalu tambahkan text box
+ * garis putus putus di bawah chart".
+ *
+ * ⚠ THE LIFT IS NOT A CHOSEN DISTANCE — it is what is left over once the card
+ * and its note are treated as ONE object and that object is centred in the safe
+ * area. Typed, the card would be "about right" until a margin moved; solved,
+ * the air above the card and the air below the box are the same number by
+ * construction, and the box can never end up in the subtitle band.
+ *
+ * ⚠ AND THE BOX IS BELOW THE CARD, NOT OVER IT. The note at 3832 overlaps its
+ * chart because Simon asked for that — there was white space to sit in. Here
+ * the card is full of the trade that just failed, so the room has to be made
+ * rather than found. That is the whole reason the chart moves at all.
+ *
+ * ⚠ THE WIDTH IS MEASURED, NOT COMPUTED — same rule as CARD_NOTE, and measured
+ * against the LONGER of the two sentences the box has to hold, because the
+ * second one replaces the first inside the same frame.
+ */
+export const REVENGE_NOTE = (() => {
+  const gap = 40;
+  const w = 920;
+  const h = 104;
+  const group = CARD_OPEN.h + gap + h;
+  const { y: ay, h: ah } = theme.stage.active;
+  const top = ay + (ah - group) / 2;
+  return {
+    /** How far the whole chart group rises. */
+    up: CARD_OPEN.y - top,
+    box: { x: (theme.canvas.width - w) / 2, y: top + CARD_OPEN.h + gap, w, h },
+  };
+})();
+
+{
+  const n = REVENGE_NOTE;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  if (n.up <= 0) fail("the revenge note leaves no room to lift the chart into");
+  /** ⚠ THE BOX MAY NOT ENTER THE SUBTITLE BAND. It is the one rule in this
+   *  episode that no scene is allowed to negotiate. */
+  if (n.box.y + n.box.h > theme.captionBand.top) {
+    fail(`the revenge note ends at ${(n.box.y + n.box.h).toFixed(0)}, inside the subtitle band`);
+  }
+  /** And the lifted card may not climb out of the top of the safe area. */
+  if (CARD_OPEN.y - n.up < theme.stage.active.y) {
+    fail("lifting the chart takes it above the safe area");
+  }
+  /** The air above the card and below the box is the same by construction —
+   *  assert it, so a later edit to `gap` cannot quietly make it a typed offset. */
+  const above = CARD_OPEN.y - n.up - theme.stage.active.y;
+  const below = theme.stage.active.y + theme.stage.active.h - (n.box.y + n.box.h);
+  if (Math.abs(above - below) > 0.5) {
+    fail(`the group is not centred: ${above.toFixed(1)} above, ${below.toFixed(1)} below`);
+  }
+}
