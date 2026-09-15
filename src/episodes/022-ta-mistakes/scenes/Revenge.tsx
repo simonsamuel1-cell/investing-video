@@ -172,6 +172,23 @@ const Note = () => {
   const write = (text: string, at: number, perChar: number) =>
     text.slice(0, Math.floor(ramp(f, at, text.length * perChar) * text.length));
 
+  /**
+   * ⚠ THE MARK FOLLOWS THE SENTENCE, IT DOES NOT RACE IT — Simon: "beri
+   * highlight cyan". Its frame is derived from when the first line finishes
+   * being written rather than typed into the table, because the writing starts
+   * when the dashed frame snaps open and only this component knows when that
+   * was. A highlighter drawn across a half-written line is a pen moving faster
+   * than the hand.
+   */
+  const written = open + LINES[0].length * V.note.perChar;
+  const markAt = written + V.note.mark.gap;
+  const mark = progressInOut(f, markAt, V.note.mark.over);
+  if (markAt + V.note.mark.over > local(V.line2.at)) {
+    throw new Error(
+      `022-ta-mistakes/Revenge: the cyan mark finishes at ${markAt + V.note.mark.over}, after the second line starts at ${local(V.line2.at)}`,
+    );
+  }
+
   const row = {
     height: REVENGE_NOTE.line,
     display: "flex",
@@ -204,7 +221,39 @@ const Note = () => {
           padding: "0 28px",
         }}
       >
-        <div style={row}>{write(LINES[0], open, V.note.perChar)}</div>
+        <div style={row}>
+          {/* ⚠ THE WASH IS ITS OWN LAYER, BEHIND the words, and the span hugs
+              the line so nothing here has to know how wide the sentence is.
+              Same geometry and same colour as a marked run in core/Text — this
+              is that mark, not a second kind of highlighter.
+
+              ⚠ AND IT WIPES LEFT TO RIGHT rather than fading: a wash that
+              appears everywhere at once reads as the words changing colour
+              instead of as a pen being drawn across them. */}
+          <span
+            style={{
+              position: "relative",
+              display: "inline-block",
+              padding: "0.04em 0.18em",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <span
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: `${(mark * 100).toFixed(1)}%`,
+                background: theme.color.hlCyan,
+                borderRadius: 6,
+              }}
+            />
+            <span style={{ position: "relative" }}>
+              {write(LINES[0], open, V.note.perChar)}
+            </span>
+          </span>
+        </div>
         <div style={row}>
           {write(LINES[1], local(V.line2.at), V.line2.perChar)}
         </div>

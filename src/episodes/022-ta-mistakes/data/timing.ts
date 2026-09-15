@@ -870,7 +870,19 @@ export const REVENGE_T = {
    * ⚠ ON THE CUE IT BELONGS TO: 5684 opens "Kalau belum ada setup, jawabannya
    * tetap: jangan trade", which is the sentence this box is.
    */
-  note: { at: 5751, perChar: 2 },
+  note: {
+    at: 5751,
+    perChar: 2,
+    /**
+     * ⚠ THE CYAN MARK ON THE FIRST LINE — Simon. Only a DURATION and a gap
+     * live here, never a frame: a highlighter drawn across a half-written
+     * sentence is a pen moving faster than the hand. The scene starts it
+     * `gap` frames after that line finishes being typed, which is a number it
+     * can work out and I cannot, because the typing begins when the dashed
+     * frame snaps open rather than when the box is asked for.
+     */
+    mark: { gap: 12, over: 26 },
+  },
   /**
    * ⚠ THE SECOND LINE JOINS THE FIRST, IT DOES NOT REPLACE IT — Simon: replacing
    * read as rushed. 5876 lands 22 frames into cue 43, "Setiap trade baru harus
