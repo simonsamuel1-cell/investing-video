@@ -1100,7 +1100,7 @@ export const TWIN = {
   neon: { at: 6446, over: 30, lap: 100, hold: 10 },
   /** ⚠ AND WINDOW 1 GROWS 10% AS IT GOES — Simon, on the same frame. Rides the
    *  slide rather than following it: one move, not a shuffle then a swell. */
-  grow: { at: 6446, over: 54, by: 1.1 },
+  grow: { at: 6446, over: 32, by: 1.1 },
   tape: { at: 6252, step: 0.55, over: 12 },
   /**
    * ═══ STEP 2 · THE TWO INDIGO LINES ═══
@@ -1125,14 +1125,19 @@ export const TWIN = {
    * ═══ AND THEN THE ROOM FOR THE SECOND WINDOW ═══  Simon, 6446: window 1
    * slides left, window 2 arrives beside it.
    */
-  split: { at: 6446, over: 54 },
+  split: { at: 6446, over: 32 },
   /**
    * ⚠ WINDOW 2 WAITS FOR WINDOW 1 TO STOP MOVING. It used to arrive on the same
    * frame and the two collided in mid-air — Simon sent the frame where they
-   * overlap. `split` ends on 6500, so this begins after it: one thing moves at
+   * overlap. `split` ends on 6478, so this begins after it: one thing moves at
    * a time, which is also the only way the eye can follow either.
+   *
+   * ⚠ AND THE WHOLE HAND-OVER IS QUICKER NOW — Simon: "percepat animasi window 1
+   * geser ke kiri hingga munculnya window 2". The slide went from 54 frames to
+   * 32 and the second window's fade from 44 to 36, so the two windows are both
+   * standing by 6518 instead of 6550.
    */
-  second: { at: 6506, over: 44 },
+  second: { at: 6482, over: 36 },
 } as const;
 
 {

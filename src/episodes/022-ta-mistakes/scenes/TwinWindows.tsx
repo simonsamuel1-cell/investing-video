@@ -449,9 +449,16 @@ export const TwinWindows = () => {
                * their own reds and greens in the data and lose them on the way
                * to the screen, so nothing about what is drawn has to know it is
                * the window nobody is reading.
+               *
+               * ⚠ AND IT FADES HERE, AS ONE GROUP — Simon: "fade in aja langsung
+               * 1 group". It used to fade the card and its contents separately,
+               * and two translucent things stacked are not the same as one
+               * translucent picture: at half way you could see the ground
+               * THROUGH the card, behind its own candles. Composited first and
+               * faded after, the window arrives as an object.
                */
               filter: i === 1 ? "grayscale(1) brightness(1.12)" : undefined,
-              opacity: i === 1 ? 0.75 : undefined,
+              opacity: i === 1 ? 0.75 * alpha : undefined,
             }}
           >
             {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
@@ -474,7 +481,7 @@ export const TwinWindows = () => {
                 }}
               />
             ) : null}
-            <Card rect={rect} opacity={alpha}>
+            <Card rect={rect} opacity={i === 1 ? 1 : alpha}>
               {/* ⚠ THE QUOTE ARRIVES WITH THE CONCLUSION IT IS ABOUT — for
                   window 1 that is the arrow, which is the last thing drawn;
                   for window 2 it is the window itself, which arrives finished.
@@ -492,7 +499,7 @@ export const TwinWindows = () => {
                   fontWeight: 700,
                   color: i === 0 ? QUOTE.one.ink : c.muted,
                   whiteSpace: "nowrap",
-                  opacity: alpha * (i === 0 ? show.arrow : 1),
+                  opacity: i === 1 ? 1 : alpha * show.arrow,
                 }}
               >
                 {i === 0 ? QUOTE.one.text : QUOTE.two.text}
@@ -517,7 +524,7 @@ export const TwinWindows = () => {
                 arrow={arrow}
                 zig={ZIG}
                 show={show}
-                opacity={alpha}
+                opacity={i === 1 ? 1 : alpha}
               />
               {/* ⚠ LAST, so the light runs ON the card's edge rather than under
                   the chart drawn inside it. */}
