@@ -80,7 +80,7 @@ export const LEFT_LINES: readonly Seg[] = [
  * looks like a stronger claim, and the scene's point is that neither claim is
  * worth anything.
  */
-export const LEFT_ARROW: Seg = { a: [620, 200], b: [900, -100] };
+export const LEFT_ARROW: Seg = { a: [620, 200], b: [775, 45] };
 
 // ═══ EDIT · RIGHT WINDOW (ss04 — the one that concludes DOWN) ════════════
 /** ⚠ THE SAME ARRAY, NOT A COPY OF IT — Simon: "copy garis-garis bantu analisa
@@ -102,12 +102,16 @@ export const Analysis = ({
   rect,
   lines,
   arrow,
+  zig,
   opacity = 1,
 }: {
   /** The window these coordinates are measured from. */
   rect: { x: number; y: number; w: number; h: number };
   lines: readonly Seg[];
   arrow: Seg;
+  /** The swing line, in the same window pixels — see TwinWindows, which reads
+   *  it off the candles. Its last point is joined to the arrow's start. */
+  zig: readonly (readonly [number, number])[];
   opacity?: number;
 }) => {
   const c = usePalette();
@@ -145,6 +149,21 @@ export const Analysis = ({
           />
         );
       })}
+      {/* ═══ THE SWING LINE ═══  Simon: same style as the arrow, and running
+          into the point the arrow starts from. It is drawn as ONE polyline with
+          the arrow's start appended, so the join cannot open up: a separate
+          connecting segment would be a second object that has to be kept
+          touching this one. */}
+      <polyline
+        points={[...zig, [arrow.a[0], arrow.a[1]] as const]
+          .map((p) => `${(rect.x + p[0]).toFixed(1)},${(rect.y + p[1]).toFixed(1)}`)
+          .join(" ")}
+        fill="none"
+        stroke={c.ink}
+        strokeWidth={theme.shape.line}
+        strokeDasharray="14 10"
+      />
+
       <line
         x1={a0.x}
         y1={a0.y}

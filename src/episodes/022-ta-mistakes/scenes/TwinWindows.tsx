@@ -164,6 +164,74 @@ const GRID_R = gridFor(RIGHT);
  * reach so neither could read as the more confident; he moved a tip to make one
  * longer, so `b` in each file is the tip and sets the length outright.
  */
+/**
+ * ═══ THE ZIGZAG BACK TO THE START OF THE ARROW ═══  Simon: "buat trend line
+ * zigzag dari candlestick paling kiri, lalu nanti sambungkan ke titik start
+ * garis putus putus tanda panah. Stylenya samakan dengan panah garis putus
+ * putus."
+ *
+ * ⚠ IT IS DERIVED, NOT DRAWN BY HAND, and that is the difference between it and
+ * everything in Analysis.tsx. The four trendlines are somebody's opinion, so
+ * they are typed coordinates; a zigzag is just the swings the tape actually
+ * made, so it is READ OFF THE CANDLES. Typing it would let it drift away from
+ * the bars it claims to join.
+ *
+ * ⚠ A SWING IS A REVERSAL BIG ENOUGH TO COUNT. Walk the bars keeping the
+ * running extreme; when price turns back from it by more than `SWING`, that
+ * extreme was a pivot. Without a threshold every one-bar wiggle is a turn and
+ * the line is a comb; with one, what comes out is the shape somebody would
+ * actually draw.
+ */
+const SWING = 0.2;
+
+const pivotsOf = (bars: typeof DRAWN) => {
+  const piv: { i: number; v: number; high: boolean }[] = [];
+  let up = bars[1].c >= bars[0].c;
+  let ext = { i: 0, v: up ? bars[0].h : bars[0].l, high: up };
+  for (let i = 1; i < bars.length; i++) {
+    const b = bars[i];
+    if (up) {
+      if (b.h > ext.v) ext = { i, v: b.h, high: true };
+      else if (ext.v - b.l >= SWING) {
+        piv.push(ext);
+        up = false;
+        ext = { i, v: b.l, high: false };
+      }
+    } else {
+      if (b.l < ext.v) ext = { i, v: b.l, high: false };
+      else if (b.h - ext.v >= SWING) {
+        piv.push(ext);
+        up = true;
+        ext = { i, v: b.h, high: true };
+      }
+    }
+  }
+  /** ⚠ THE RUNNING EXTREME CLOSES THE LINE. Dropped, the zigzag would stop at
+   *  the last CONFIRMED turn and leave the newest swing — the one the arrow is
+   *  about — off the drawing. */
+  piv.push(ext);
+  /**
+   * ⚠ AND IT IS FORCED TO START ON THE LEFTMOST CANDLE — Simon: "dari
+   * candlestick paling kiri". At this threshold the first real pivot is a few
+   * bars in, because the bars before it did not turn hard enough to count. The
+   * line still has to BEGIN at bar 0, so bar 0 is added on the side opposite
+   * the pivot it runs up or down to: a first leg into a high starts from a low.
+   */
+  if (piv[0].i !== 0) {
+    piv.unshift({ i: 0, v: piv[0].high ? bars[0].l : bars[0].h, high: !piv[0].high });
+  }
+  return piv;
+};
+
+/**
+ * ⚠ IN WINDOW PIXELS, so it can be handed to Analysis beside the hand-typed
+ * lines and end on the arrow's own start point. Both windows share one grid
+ * shape, so this is computed once against the left and is true of either.
+ */
+const ZIG = pivotsOf(DRAWN).map(
+  (p) => [GRID_L.x(p.i) - LEFT.x, GRID_L.y(p.v) - LEFT.y] as [number, number],
+);
+
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -186,7 +254,7 @@ export const TwinWindows = () => {
               start back in the hidden bars, so they have to be allowed to run
               off the left edge and be cut by the card — which is what a
               trendline drawn on a longer chart looks like from here. */}
-          <Analysis rect={rect} lines={lines} arrow={arrow} opacity={t} />
+          <Analysis rect={rect} lines={lines} arrow={arrow} zig={ZIG} opacity={t} />
         </Card>
       ))}
     </div>
