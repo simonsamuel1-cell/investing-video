@@ -40,7 +40,7 @@ const LEFT = shorter(L0);
 const RIGHT = shorter(R0);
 
 /**
- * ⚠ THIRTY BARS ARE HIDDEN, NOT DELETED — Simon, and he said why: "nanti aku
+ * ⚠ FORTY-FIVE BARS ARE HIDDEN, NOT DELETED — Simon, and he said why: "nanti aku
  * butuh candlesticks yang di-hide ini sebagai acuan untuk membuat garis
  * resistance". So `SS03` stays whole in data/series.ts and this is only the
  * window onto it. A price taken off any of the thirty is still there to be
@@ -53,7 +53,11 @@ const RIGHT = shorter(R0);
  * widens the rest. A level read off a hidden bar needs its PRICE, not its slot,
  * so nothing is lost by them having no place on this axis.
  */
-const HIDDEN = 30;
+/** ⚠ RAISED THREE TIMES, FIFTEEN AT A TIME, EACH TIME TO THE SAME COMPLAINT:
+ *  "masih terlalu cluttered". This is the only number that moves for it — the
+ *  plot's width and height are both fixed, so hiding bars is what widens the
+ *  ones that are left. */
+const HIDDEN = 45;
 const SHOWN = SS03.slice(HIDDEN);
 
 /**
@@ -68,9 +72,14 @@ const SHOWN = SS03.slice(HIDDEN);
  * stretched wide enough that every candle reads, and he wants white space at
  * the right; a grid spreads its bars across whatever width it is given, so
  * those two are traded against each other in this one number. At 0.84 the tape
- * is 702px of an 836px window: an 8.2px slot and a 5.6px body, against the
- * 4.4px it was before the second fifteen went — and 134px still free at the
- * right.
+ * is 702px of an 836px window, and what that slot is worth per bar depends on
+ * how many are shown: 66 bars make it a 10.1px slot and a 6.9px body, against
+ * the 4.4px it was when 96 were drawn — with ~148px still free at the right.
+ *
+ * ⚠ THE WIDTH HAS NOT MOVED SINCE, and should not have to. Clutter is now fixed
+ * by hiding bars, which widens the rest without touching either edge of the
+ * plot; widening the plot instead would eat the white space Simon asked for
+ * first.
  *
  * ⚠ AND THE HEIGHT IS LOCKED — Simon: "lock size height chart (2 2nya)". Both
  * of the numbers that set it are held below and asserted, so the width can be
