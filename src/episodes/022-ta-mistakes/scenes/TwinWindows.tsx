@@ -182,15 +182,7 @@ export const TwinWindows = () => {
               start back in the hidden bars, so they have to be allowed to run
               off the left edge and be cut by the card — which is what a
               trendline drawn on a longer chart looks like from here. */}
-          <Analysis
-            grid={grid}
-            first={HIDDEN}
-            clip={rect}
-            lines={lines}
-            arrow={arrow}
-            reach={REACH_PX}
-            opacity={t}
-          />
+          <Analysis rect={rect} lines={lines} arrow={arrow} reach={REACH_PX} opacity={t} />
         </Card>
       ))}
     </div>

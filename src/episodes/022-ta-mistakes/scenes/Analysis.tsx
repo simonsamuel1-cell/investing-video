@@ -2,94 +2,88 @@
  * scenes/Analysis.tsx — every line somebody drew on the SC08 charts, in one
  * place, meant to be edited by hand.
  *
- * ═══ HOW TO READ AND CHANGE A LINE ═══════════════════════════════════════
+ * ═══ HOW TO READ AND CHANGE A LINE ══════════════════════════════════════
  *
- * A line is two points, and a point is `[bar, level]`.
+ * A line is two points, and a point is `[x, y]` in PIXELS from the top-left
+ * corner of its own white window. The window is 836 wide and 536 tall.
  *
- *   bar    Which candle it sits over, counting the whole traced tape from 0.
- *          There are 111. ⚠ ONLY BARS 45 TO 110 ARE ON SCREEN — the first 45
- *          are hidden (see TwinWindows), so bar 45 is at the window's LEFT
- *          EDGE and bar 110 is the last candle. A bar below 45 is off the left
- *          edge and gets cut by the card, which is what the long trendlines do
- *          on purpose. Bars above 110 land in the white space on the right,
- *          which is where the arrow goes. Fractions are fine.
+ *     [0, 0] ────────────── x ──────────────▶ [836, 0]
+ *        │                                        top-right
+ *        y      the chart lives here
+ *        │
+ *        ▼
+ *     [0, 536]                                 [836, 536]
  *
- *   level  How high, in units of the dotted level from Simon's screenshot.
- *          0 is that line, 1 is the distance from it to the top of the original
- *          picture. ⚠ ONLY ABOUT -0.36 TO 0.31 IS ON SCREEN — that is the range
- *          the 66 visible candles cover, and the plot is solved to it. A level
- *          outside that is above or below the chart; it is not an error, but it
- *          will be cut by the card.
+ *   x    0 is the window's left edge, 836 its right edge. NEGATIVE is fine and
+ *        is used on purpose: three of the four lines start off the left edge,
+ *        which is how a trendline drawn on a longer chart looks from here. The
+ *        candles run from x≈110 to x≈783; past that is the white space.
  *
- * So: to MOVE a line, change both levels by the same amount. To TURN it, change
- * one of them. To slide it along, change both bars.
+ *   y    0 is the window's TOP and 536 its bottom — y goes DOWN, like every
+ *        screen coordinate. The chart's own top is y≈122 and its floor is
+ *        y≈514. A value outside 0..536 is cut by the card.
  *
- * ⚠ THE NUMBERS ARE AT THE TRACE'S FULL PRECISION, not rounded for looks. Four
- * decimals is no harder to type over than three, and rounding them moved the
- * lines by about a third of a pixel — which is nothing to look at but would
- * have meant this file could not be shown to be the same drawing as the code it
- * replaced. Type whatever you like over them; they are only a starting point.
+ * So: to move a line DOWN, make both y bigger. To turn it, change one y. To
+ * slide it sideways, change both x. Both windows use the same coordinates, so a
+ * number here means the same place in either one.
  *
- * ⚠ THESE NUMBERS CAME OUT OF A TRACE, AND THEY ARE NOW HAND-HELD. They started
- * as scripts/trace-ss0405.mjs reading ss04 and ss05; re-running that script
+ * ⚠ THESE ARE PIXELS, SO THEY DO NOT FOLLOW THE CHART. Before this they were
+ * bar-and-price anchors that moved with the candles; in pixels a line stays put
+ * if the chart is ever re-sized or re-scaled. That is the trade for being
+ * directly editable, and it is fine while the window's height is locked — just
+ * know that these numbers would all need redoing if it stopped being.
+ *
+ * ⚠ THEY CAME OUT OF A TRACE AND ARE NOW HAND-HELD. They started as
+ * scripts/trace-ss0405.mjs reading ss04 and ss05; re-running that script
  * rewrites data/ss0405.json but NOT this file, so anything edited here stays
  * edited. That is the point of the file existing.
  *
  * ⚠ AND BOTH WINDOWS STARTED IDENTICAL, WHICH WAS THE SCENE. The two
- * screenshots trace to the same four lines within a hundredth of a level unit,
- * and the only thing that differed was the arrow — one chart, two readings.
- * Editing LEFT away from RIGHT changes that claim from "the same lines read two
- * ways" to "two different analyses". Both are worth saying; they are not the
- * same thing, and the difference is now a choice made here.
+ * screenshots trace to the same four lines, and the only thing that differed
+ * was the arrow — one chart, two readings. Editing LEFT away from RIGHT changes
+ * that claim from "the same lines read two ways" to "two different analyses".
+ * Both are worth saying; they are not the same thing, and the difference is now
+ * a choice made here.
  */
 import { Layer, theme, usePalette } from "../../../core";
-import type { Grid } from "../../../core";
 
 export type Seg = { readonly a: readonly [number, number]; readonly b: readonly [number, number] };
 
 // ═══ EDIT · LEFT WINDOW (ss05 — the one that concludes UP) ═══════════════
 export const LEFT_LINES: readonly Seg[] = [
   /** The flat blue line along the bottom. */
-  { a: [3.4, -0.3817], b: [115.4, -0.3817] },
-  /** The descending trendline down from the high on the far left. */
-  { a: [10.1, 0.9244], b: [84.89, 0.3234] },
+  { a: [-408.39, 526.83], b: [739.59, 526.83] },
+  /** The descending trendline down from the high off the left edge. */
+  { a: [-339.72, -238.14], b: [426.87, 113.86] },
   /** The shallow rising line through the middle of the range. */
-  { a: [47.1, 0.2007], b: [104.56, 0.3631] },
+  { a: [39.52, 185.72], b: [628.48, 90.61] },
   /** The steeper rising support under the recovery. */
-  { a: [43.11, -0.2943], b: [96.56, 0.1031] },
+  { a: [-1.37, 475.64], b: [546.48, 242.89] },
 ];
 /** ⚠ THE CONCLUSION. Its LENGTH is not used — see `REACH_PX` in TwinWindows,
  *  which gives both windows' arrows the same reach so neither reads as the more
  *  confident. What these two points set is where it starts and which way it
  *  goes. */
-export const LEFT_ARROW: Seg = { a: [102.273, 0.2047], b: [113.3, 0.8975] };
+export const LEFT_ARROW: Seg = { a: [605.04, 183.38], b: [718.06, -222.38] };
 
 // ═══ EDIT · RIGHT WINDOW (ss04 — the one that concludes DOWN) ════════════
 export const RIGHT_LINES: readonly Seg[] = LEFT_LINES;
-export const RIGHT_ARROW: Seg = { a: [102.2, 0.1477], b: [113.2, -0.368] };
+export const RIGHT_ARROW: Seg = { a: [604.29, 216.76], b: [717.04, 518.8] };
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
  * ⚠ THE DRAWING IS SHARED, SO THE TWO WINDOWS CANNOT DIVERGE BY ACCIDENT. Only
  * the numbers above can make them differ, and only on purpose.
- *
- * ⚠ `first` IS THE GLOBAL INDEX OF THE GRID'S OWN BAR 0. The grid covers the
- * visible bars alone; everything here is written against the whole tape, and
- * this is the one place the two are reconciled. `grid.x` is linear, so a bar
- * before `first` simply lands left of the plot rather than failing.
  */
 export const Analysis = ({
-  grid,
-  first,
-  clip,
+  rect,
   lines,
   arrow,
   reach,
   opacity = 1,
 }: {
-  grid: Grid;
-  first: number;
-  clip: { x: number; y: number; w: number; h: number };
+  /** The window these coordinates are measured from. */
+  rect: { x: number; y: number; w: number; h: number };
   lines: readonly Seg[];
   arrow: Seg;
   /** Pixels of rise or fall the arrow is given, whatever its drawn length. */
@@ -97,10 +91,7 @@ export const Analysis = ({
   opacity?: number;
 }) => {
   const c = usePalette();
-  const px = (p: readonly [number, number]) => ({
-    x: grid.x(p[0] - first),
-    y: grid.y(p[1]),
-  });
+  const px = (p: readonly [number, number]) => ({ x: rect.x + p[0], y: rect.y + p[1] });
 
   const a0 = px(arrow.a);
   const a1 = px(arrow.b);
@@ -118,7 +109,7 @@ export const Analysis = ({
   }));
 
   return (
-    <Layer opacity={opacity} clip={clip}>
+    <Layer opacity={opacity} clip={rect}>
       {lines.map((l, i) => {
         const p = px(l.a);
         const q = px(l.b);
@@ -159,10 +150,15 @@ export const Analysis = ({
 };
 
 /** Kept honest: the two arrows have to disagree, or the scene has nothing to
- *  say — and an edit above is exactly how that could stop being true. */
+ *  say — and an edit above is exactly how that could stop being true.
+ *
+ *  ⚠ Y GOES DOWN, so an arrow that points UP has the SMALLER y at its tip. This
+ *  check caught the coordinate change itself: written for the bar-and-price
+ *  anchors it had the sign the other way round, and the first render after the
+ *  switch failed on it rather than quietly drawing both arrows the same way. */
 {
-  const rise = (k: Seg) => k.b[1] - k.a[1];
-  if (rise(LEFT_ARROW) <= 0 || rise(RIGHT_ARROW) >= 0) {
+  const fall = (k: Seg) => k.b[1] - k.a[1];
+  if (fall(LEFT_ARROW) >= 0 || fall(RIGHT_ARROW) <= 0) {
     throw new Error(
       "022-ta-mistakes/Analysis: the left arrow must point up and the right one down",
     );
