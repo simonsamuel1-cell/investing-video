@@ -1082,6 +1082,15 @@ export const TWIN = {
    * a sweep — the bars simply arrive closer together than one per frame.
    */
   card: { at: 6250, over: 20 },
+  /**
+   * ⚠ THE LIGHT RUNNING ROUND WINDOW 1's EDGE — Simon: "animasi seperti lampu
+   * neon yang menjalar berulang di bordernya". `lap` is how many frames one
+   * trip around takes, and it is the only number here: the thing repeats, so it
+   * has a period rather than a start and an end. It begins with the card and
+   * does not stop, because what it is saying is "this is the window you are
+   * looking at" and that stays true.
+   */
+  neon: { lap: 100 },
   tape: { at: 6252, step: 0.55, over: 12 },
   /**
    * ═══ STEP 2 · THE TWO INDIGO LINES ═══

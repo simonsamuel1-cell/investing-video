@@ -18,7 +18,7 @@
  * two devices where the video has one.
  */
 import { useCurrentFrame } from "remotion";
-import { Candles, Card, candleWidth, gridOf, progressInOut, theme, usePalette } from "../../../core";
+import { Candles, Card, Layer, candleWidth, gridOf, progressInOut, theme, usePalette } from "../../../core";
 import { halves } from "../data/layout";
 import { TWIN } from "../data/timing";
 import { SS03 } from "../data/series";
@@ -245,6 +245,65 @@ const CENTRED = {
   y: (theme.canvas.height - LEFT.h) / 2,
 };
 
+/**
+ * ═══ THE NEON EDGE ═══  Simon: "berikan glow indigo. Lalu animasi seperti lampu
+ * neon yang menjalar berulang di bordernya window 1."
+ *
+ * ⚠ TWO THINGS, NOT ONE. A steady glow says the window is lit; a short bright
+ * arc running round the border says it is live. Together they read as neon;
+ * either alone reads as a shadow or as a loading spinner.
+ *
+ * ⚠ THE TRAVEL IS A DASH OFFSET, NOT A MOVING SHAPE. One rounded rect is
+ * stroked with a dash pattern of exactly two parts — a short lit arc and a gap
+ * as long as everything else — and the offset is wound round the perimeter. So
+ * the light follows the border's own corners for free, which a rectangle or a
+ * gradient chasing it in pixels never quite does.
+ *
+ * ⚠ AND THE PERIMETER IS COMPUTED, NOT MEASURED. Four straight sides less the
+ * eight radii they give up to the corners, plus the one circle those corners
+ * add up to. Guessed even slightly wrong, the lit arc drifts a little further
+ * off每 lap until the loop visibly stutters.
+ */
+const NEON = { beam: 0.14, glow: 44, halo: 130, width: 5 };
+
+const NeonEdge = ({
+  rect,
+  lap,
+  opacity,
+}: {
+  rect: { x: number; y: number; w: number; h: number };
+  /** 0 to 1 and wrapping — one trip round the border. */
+  lap: number;
+  opacity: number;
+}) => {
+  const c = usePalette();
+  const r = theme.shape.cardRadius;
+  const per = 2 * (rect.w + rect.h) - 8 * r + 2 * Math.PI * r;
+  const beam = per * NEON.beam;
+  return (
+    <Layer opacity={opacity}>
+      <rect
+        x={rect.x}
+        y={rect.y}
+        width={rect.w}
+        height={rect.h}
+        rx={r}
+        fill="none"
+        stroke={c.indigo}
+        strokeWidth={NEON.width}
+        strokeLinecap="round"
+        strokeDasharray={`${beam.toFixed(1)} ${(per - beam).toFixed(1)}`}
+        strokeDashoffset={(-lap * per).toFixed(1)}
+        /** ⚠ TWO SHADOWS, A TIGHT ONE AND A WIDE ONE. One alone is either a
+         *  hard edge or a haze; the pair is what a tube of light looks like. */
+        style={{
+          filter: `drop-shadow(0 0 5px ${c.indigo}) drop-shadow(0 0 14px ${c.indigo}) drop-shadow(0 0 34px ${theme.color.indigoGlow})`,
+        }}
+      />
+    </Layer>
+  );
+};
+
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -257,6 +316,9 @@ export const TwinWindows = () => {
   };
 
   const card = progressInOut(g, V.card.at, V.card.over);
+  /** ⚠ WRAPPED, NOT CLAMPED. The light repeats, so its progress is the fraction
+   *  of a lap elapsed and nothing else — `% 1` is the whole animation. */
+  const neon = ((g - V.card.at) / V.neon.lap) % 1;
   /**
    * ⚠ THE STAGGER COUNTS THE LINES THAT ARE DRAWN, not the entries in the
    * array. Two of the four are hidden; indexed by position, the first visible
@@ -302,6 +364,26 @@ export const TwinWindows = () => {
               transform: `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px)`,
             }}
           >
+            {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
+                from behind it rather than washing over the chart. */}
+            {i === 0 ? (
+              <div
+                style={{
+                  position: "absolute",
+                  left: rect.x,
+                  top: rect.y,
+                  width: rect.w,
+                  height: rect.h,
+                  borderRadius: theme.shape.cardRadius,
+                  /** ⚠ TWO SHADOWS AGAIN, AND FOR THE SAME REASON AS THE
+                   *  BEAM'S: a tight bright one for the edge and a wide faint
+                   *  one for the room around it. A single shadow is either a
+                   *  hard rim or a fog. */
+                  boxShadow: `0 0 ${NEON.glow}px ${theme.color.indigoGlow}, 0 0 ${NEON.halo}px ${theme.color.indigoWashStrong}`,
+                  opacity: alpha,
+                }}
+              />
+            ) : null}
             <Card rect={rect} opacity={alpha}>
               {/* ⚠ THE TAPE DRAWS ACROSS, one bar at a time on a one-frame
                   step — a sweep, not fifty-eight arrivals. */}
@@ -325,6 +407,9 @@ export const TwinWindows = () => {
                 show={show}
                 opacity={alpha}
               />
+              {/* ⚠ LAST, so the light runs ON the card's edge rather than under
+                  the chart drawn inside it. */}
+              {i === 0 ? <NeonEdge rect={rect} lap={neon} opacity={alpha} /> : null}
             </Card>
           </div>
         ),
