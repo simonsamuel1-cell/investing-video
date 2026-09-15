@@ -28,14 +28,29 @@ const V = TWIN;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * ⚠ 150px SHORTER THAN THE STAGE CARD — Simon — and the height comes off both
- * ends, so the pair stays centred in the band every other scene draws in. Taken
- * off the bottom alone they would sit high against a subtitle band that is
- * already the lowest thing on screen.
+ * ═══ THE TWO WINDOWS ═══
+ *
+ * ⚠ THE BOTTOM EDGE IS THE ANCHOR — Simon: "anchor bawah". Height is taken off
+ * the TOP, so the pair keeps its footing on the frame while it shrinks and
+ * nothing below it has to move. Written as a bottom and a height rather than a
+ * top and a height, because the anchor is the thing that must not drift: a top
+ * plus a height re-centres itself every time the height changes, which is the
+ * one thing "anchor bawah" rules out.
+ *
+ * ⚠ THE BOTTOM IS WHERE THE FIRST SHRINK LEFT IT. Simon's earlier "diturunkan
+ * 150 px" came off both ends, so the pair sat centred at 265..801; that 801 is
+ * now the fixed edge, derived from the same 150 rather than typed, so the two
+ * instructions cannot come apart.
  */
 const DROP_H = 150;
 const [L0, R0] = halves();
-const shorter = (r: typeof L0) => ({ ...r, y: r.y + DROP_H / 2, h: r.h - DROP_H });
+const BOTTOM = L0.y + L0.h - DROP_H / 2;
+/** ⚠ SIMON RE-SET THIS AFTER LOCKING IT. It was 536 and locked; "shrink
+ *  heightnya" lifts that lock deliberately, so the number moves and the
+ *  assertion that guards it moves with it — rather than the assertion being
+ *  deleted, which is how a lock stops meaning anything. */
+const WIN_H = 436;
+const shorter = (r: typeof L0) => ({ ...r, y: BOTTOM - WIN_H, h: WIN_H });
 const LEFT = shorter(L0);
 const RIGHT = shorter(R0);
 
@@ -168,12 +183,17 @@ export const TwinWindows = () => {
    * were on screen when he locked them. A lock nobody can read is a convention;
    * this one fails the build.
    */
-  const LOCKED = { window: 536, plot: 492 };
+  const LOCKED = { window: 436, plot: 392 };
   if (LEFT.h !== LOCKED.window) {
     fail(`the window is ${LEFT.h}px tall, and its height is locked at ${LOCKED.window}`);
   }
   if (plotOf(LEFT).h !== LOCKED.plot) {
     fail(`the plot is ${plotOf(LEFT).h}px tall, and its height is locked at ${LOCKED.plot}`);
+  }
+  /** ⚠ AND THE BOTTOM EDGE HAS NOT MOVED. It is the anchor; a shrink that took
+   *  height off the wrong end would still pass every other check here. */
+  if (LEFT.y + LEFT.h !== BOTTOM) {
+    fail(`the windows end at ${LEFT.y + LEFT.h}, not on the anchored bottom at ${BOTTOM}`);
   }
   /** ⚠ AND THE HIDDEN BARS ARE STILL REACHABLE. They are the reference for a
    *  resistance level Simon has not drawn yet; sliced out of the series rather
