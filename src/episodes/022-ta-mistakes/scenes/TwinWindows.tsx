@@ -493,10 +493,8 @@ export const TwinWindows = () => {
    *  kecilkan ke tengah sebanyak 30%". About the frame's own centre, which is
    *  what "ke tengah" asks for: the pair ends up centred as well as smaller,
    *  and neither window has to be moved separately to get there. */
-  const pack =
-    1 -
-    (1 - PROVE.shrink.by) *
-      progressInOut(g, PROVE.shrink.at, PROVE.shrink.over);
+  const packed = progressInOut(g, PROVE.shrink.at, PROVE.shrink.over);
+  const pack = 1 - (1 - PROVE.shrink.by) * packed;
   /**
    * ⚠ THE STAGGER COUNTS THE LINES THAT ARE DRAWN, not the entries in the
    * array. Two of the four are hidden; indexed by position, the first visible
@@ -533,7 +531,12 @@ export const TwinWindows = () => {
         style={{
           position: "absolute",
           inset: 0,
-          transform: `scale(${pack.toFixed(4)})`,
+          /** ⚠ SCALE THEN LIFT, in that order. The shrink is about the frame's
+           *  centre — "ke tengah" — and the rise is what balances the group
+           *  against the box that appears under it; applied the other way round
+           *  the lift would itself be scaled. Both ride one progress, so the
+           *  windows make room and take their place in a single move. */
+          transform: `translateY(${(-PROVE_BOX.up * packed).toFixed(1)}px) scale(${pack.toFixed(4)})`,
           transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
         }}
       >

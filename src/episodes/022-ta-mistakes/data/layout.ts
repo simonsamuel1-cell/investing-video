@@ -624,37 +624,69 @@ export const REVENGE_NOTE = (() => {
 }
 
 /**
- * ═══ SC08's CLOSING QUESTION ═══  Simon, 6594: a box under the two shrunken
- * windows, one line tall, growing to two at 6787.
+ * ═══ SC08's CLOSING GROUP ═══  Simon, 6594: the two windows shrink toward the
+ * middle and a question box appears under them — and then, on seeing it,
+ * "semua visual di geser naik, karna secara design, bagian atas dan bawah tidak
+ * balance".
  *
- * ⚠ TWO HEIGHTS, ONE TOP. The box grows DOWNWARD — the second question is added
- * under the first, not swapped for it — so `y` is the anchor and the height is
- * what moves. Sized from the type rather than typed, on the same 30px padding
- * the other two dashed notes in this episode work out to.
+ * ⚠ THE LIFT IS SOLVED, NOT TYPED. The windows and the box are one object once
+ * the box is up, and that object is centred in the safe area. What is left over
+ * is how far everything rises. Typed, it would be right for this box and wrong
+ * the moment the box gained a line.
  *
- * ⚠ AND THE TOP IS SOLVED FROM WHERE THE WINDOWS END UP. They shrink to 0.7
- * about the centre of the frame, so their floor rises to a place nothing can
- * read off the layout — it is computed here from the same number.
+ * ⚠ AND IT IS SOLVED FOR THE TALLER BOX. The second question arrives at 6787
+ * and stays, so the two-line state is the one the eye lives with; balanced for
+ * one line it would sink 22px low the moment the second turned up.
+ *
+ * ⚠ THE WINDOW GEOMETRY IS RESTATED HERE, and that is the price of the box
+ * knowing where the windows end. It was wrong before: this block used window 1's
+ * UNGROWN foot and so put the box 22px too high, leaving 26px of air under the
+ * windows where 48 was asked for. The grow is now part of the solve, and the
+ * assertion below re-derives the same floor a second way.
  */
 export const PROVE_BOX = (() => {
+  const C = theme.canvas.height / 2;
+  /** Window 1's own box, before anything happens to it. */
+  const win = { top: 265, bottom: 801 };
+  /** ⚠ THE TWO TRANSFORMS THE SCENE APPLIES, in the order it applies them. */
+  const GROW = 1.1;
+  const SHRINK = 0.7;
+  const mid = (win.top + win.bottom) / 2;
+  const grownTop = mid - ((win.bottom - win.top) * GROW) / 2;
+  const grownBottom = mid + ((win.bottom - win.top) * GROW) / 2;
+  const top = C + (grownTop - C) * SHRINK;
+  const floor = C + (grownBottom - C) * SHRINK;
+
   const line = Math.round(theme.text.body.size * 1.25);
   const pad = 30;
   const w = 720;
-  /** The lower of the two windows' feet, after the group has shrunk. */
-  const floor = theme.canvas.height / 2 + (801 - theme.canvas.height / 2) * 0.7;
   const gap = 48;
+  const two = line * 2 + pad * 2;
+  const boxY = floor + gap;
+
+  /** Centre the whole thing — windows and the taller box — in the safe area. */
+  const A = theme.stage.active;
+  const height = boxY + two - top;
+  const up = top - (A.y + (A.h - height) / 2);
+
   return {
+    up: Math.round(up),
     x: (theme.canvas.width - w) / 2,
-    y: Math.round(floor + gap),
+    y: Math.round(boxY - up),
     w,
     line,
+    pad,
     one: line + pad * 2,
-    two: line * 2 + pad * 2,
+    two,
+    /** Kept for the assertion below, and for anything that needs to know where
+     *  the windows come to rest. */
+    windows: { top: top - up, floor: floor - up },
   };
 })();
 
 {
   const b = PROVE_BOX;
+  const A = theme.stage.active;
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
@@ -664,4 +696,12 @@ export const PROVE_BOX = (() => {
     fail(`the closing question ends at ${b.y + b.two}, inside the subtitle band`);
   }
   if (b.two <= b.one) fail("the box's two-line height is not taller than its one-line height");
+  if (b.windows.top < A.y) fail("the lift takes the windows above the safe area");
+  /** ⚠ AND THE AIR ABOVE AND BELOW HAS TO MATCH, which is the whole point of
+   *  the lift. Within a pixel, since the lift is rounded to one. */
+  const above = b.windows.top - A.y;
+  const below = A.y + A.h - (b.y + b.two);
+  if (Math.abs(above - below) > 1.5) {
+    fail(`the closing group is not balanced: ${above.toFixed(1)} above, ${below.toFixed(1)} below`);
+  }
 }
