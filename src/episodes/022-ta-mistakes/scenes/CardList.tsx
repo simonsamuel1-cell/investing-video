@@ -240,6 +240,24 @@ export const TOOL = (() => {
   };
 })();
 
+/**
+ * The middle of that tool, for a verdict stamped ON the trade rather than
+ * beside it.
+ *
+ * ⚠ THE CENTRE IS THE ENTRY, and that is not a coincidence to be re-derived:
+ * the target and the stop are one `reach` either side of it, so the box's
+ * vertical middle IS `entry`. Averaging the two would say the same thing in a
+ * way that stops being true the moment either one moves on its own.
+ *
+ * ⚠ IT TAKES A GRID BECAUSE ONE OF ITS TWO READERS IS PANNING. The x ends are
+ * frozen pixels — a tool is placed by dragging — but the y follows whatever
+ * grid the chart is being drawn against at that moment.
+ */
+export const toolMid = (grid: Grid) => ({
+  x: (TOOL.x1 + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2,
+  y: grid.y(TOOL.entry),
+});
+
 const SAID = V.hopes.said.map((q) => {
   const x = ZOOM_GRID.x(q.bar);
   const half = pillWidth(q.text) / 2;

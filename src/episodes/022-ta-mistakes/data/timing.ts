@@ -793,6 +793,16 @@ export const RECALL = {
   over: 147,
   in: 44,
   frame: 4044 - 1994,
+  /**
+   * ⚠ THE VERDICT ON THE FIRST TRADE — Simon: "Loss", white on a red pill, in
+   * the middle of the Long Position tool. It lands ON the cue that names it:
+   * 5216 opens "Setelah loss, kita ingin cepat mengembalikan kerugian", so the
+   * word is on screen while the word is being said.
+   *
+   * ⚠ AND AFTER THE SLIDE HAS SETTLED (5247 + `in`). A stamp that arrives while
+   * the thing it stamps is still travelling is a label on a moving object.
+   */
+  loss: 5310,
 } as const;
 
 /**
@@ -835,6 +845,17 @@ export const REVENGE_T = {
   up: { at: 5530, step: 8, over: 34 },
   down: { at: 5586, step: 8, over: 34 },
   endsAt: 5676,
+  /**
+   * ⚠ THE VERDICT ON THE SECOND TRADE — Simon: "Loss lagi", same stamp, middle
+   * of the new tool, "setelah 5676".
+   *
+   * ⚠ IN THE SILENCE, NOT OVER A WORD. Cue 41 ends at 5668 and cue 42 opens at
+   * 5684; 5682 is inside that gap. The tape lands, the sentence about it
+   * finishes, and then the word arrives on its own — which is the beat the
+   * whole scene has been building, and it would be stepped on by either
+   * sentence.
+   */
+  lossAgain: 5682,
   /** ⚠ THE FIRST TRADE GOES WITH THE PAN — its tool AND the support line and
    *  label it was drawn against. That trade is over; left up, they would stretch
    *  across a chart they are no longer about, and the support would sit under
@@ -861,6 +882,11 @@ export const REVENGE_T = {
     if (end > V.endsAt) fail(`${name} finishes at ${end}, after ${V.endsAt}`);
   }
   if (V.endsAt > V.at + V.over) fail("the chart is still animating when the scene ends");
+  /** ⚠ THE SECOND VERDICT COMES AFTER THE TAPE IT JUDGES, and before the scene
+   *  is over. Simon's "setelah 5676", kept as a relation rather than as a
+   *  number that happens to be bigger. */
+  if (V.lossAgain < V.endsAt) fail(`"Loss lagi" lands at ${V.lossAgain}, before the tape finishes`);
+  if (V.lossAgain > V.at + V.over) fail(`"Loss lagi" lands after the scene ends`);
 }
 
 /* ═══ SC06 — overtrading ═════════════════════════════════════════════════ */

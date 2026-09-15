@@ -26,8 +26,8 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Level, PositionTool, candleWidth, extendGrid, gridOf, lerpGrid,
-  progress, progressInOut, theme, usePalette, useShadow,
+  Candles, Chip, Level, PositionTool, candleWidth, extendGrid, gridOf, lerpGrid,
+  progress, progressInOut, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import { CARD_OPEN, CARD_ZOOM } from "../data/layout";
 import { REVENGE_T } from "../data/timing";
@@ -35,7 +35,7 @@ import {
   CARD_ALL, CARD_FULL, CARD_HEAD_N, CARD_REVENGE, CARD_REVENGE_UP, CARD_SUPPORT,
   REVENGE_ENTRY,
 } from "../data/series";
-import { SEEN_TO, TOOL, ZOOM_GRID } from "./CardList";
+import { SEEN_TO, TOOL, ZOOM_GRID, toolMid } from "./CardList";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = REVENGE_T;
@@ -99,6 +99,7 @@ const REACH = 0.24 * 2;
 export const Revenge = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const shadow = useShadow();
   const g = f + V.at;
 
@@ -192,6 +193,17 @@ export const Revenge = () => {
         over={V.tool.over}
       />
 
+      {/* ⚠ THE FIRST VERDICT IS CARRIED OVER, NOT RE-STAMPED. It has been on the
+          chart since 5310 and this scene opens on that picture, so it arrives
+          a full pop BEFORE frame zero — anything later and the word would pop
+          a second time on the hand-over frame. It then leaves with the trade it
+          judges, on the same curve as that trade's tool and level: `opacity`
+          is not a prop a Chip takes, by design, so the fade belongs to the
+          layer the three of them share. */}
+      <div style={{ position: "absolute", inset: 0, opacity: old }}>
+        <Chip label="Loss" {...toolMid(grid)} at={-m.pop} tone="warn" pill solid />
+      </div>
+
       <Candles
         bars={CARD_REVENGE}
         grid={next}
@@ -205,6 +217,23 @@ export const Revenge = () => {
                 V.down.over,
               )
         }
+      />
+
+      {/* ═══ AND THE SECOND VERDICT ═══  Simon: "Loss lagi", same stamp, middle
+          of the new tool.
+
+          ⚠ LAST IN THE TREE, so it sits over the tape it is judging. The bars
+          run straight through the middle of the tool — that is where the trade
+          happened — and a stamp behind them would be a word with candles
+          through it. */}
+      <Chip
+        label="Loss lagi"
+        x={(grid.x(SEEN_TO) + inner[1]) / 2}
+        y={grid.y(REVENGE_ENTRY)}
+        at={V.lossAgain - V.at}
+        tone="warn"
+        pill
+        solid
       />
     </div>
   );
@@ -238,6 +267,19 @@ export const Revenge = () => {
   const tBot = PAN_GRID.y(REVENGE_ENTRY - REACH);
   if (tTop < CARD_OPEN.y || tBot > CARD_OPEN.y + CARD_OPEN.h) {
     fail(`the position tool runs ${tTop.toFixed(0)}..${tBot.toFixed(0)}, outside the card`);
+  }
+  /** ⚠ BOTH VERDICTS ARE STAMPED ON THE TOOL, AND A CHIP IS NOT CLIPPED. It is
+   *  a div over the top of everything, so a tool centre that wandered off the
+   *  card would put the word on the grey paper beside it rather than cut it. */
+  for (const [name, mid] of [
+    ["Loss", toolMid(PAN_GRID)],
+    ["Loss lagi", { x: (PAN_GRID.x(SEEN_TO) + (CARD_OPEN.x + CARD_OPEN.w - CARD_OPEN.pad)) / 2, y: PAN_GRID.y(REVENGE_ENTRY) }],
+  ] as const) {
+    const inX = mid.x > CARD_OPEN.x && mid.x < CARD_OPEN.x + CARD_OPEN.w;
+    const inY = mid.y > CARD_OPEN.y && mid.y < CARD_OPEN.y + CARD_OPEN.h;
+    if (!inX || !inY) {
+      fail(`"${name}" would be stamped at ${mid.x.toFixed(0)},${mid.y.toFixed(0)}, off the card`);
+    }
   }
   /** ⚠ THE TRADE MUST STILL FAIL ON SCREEN: short of the target, through the
    *  stop. That is the only thing the two washes are there to say. */
