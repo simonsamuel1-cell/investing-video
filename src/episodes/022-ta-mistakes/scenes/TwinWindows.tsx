@@ -228,31 +228,9 @@ const pivotsOf = (bars: typeof DRAWN) => {
  * lines and end on the arrow's own start point. Both windows share one grid
  * shape, so this is computed once against the left and is true of either.
  */
-const PIVOTS = pivotsOf(DRAWN);
-const toPx = (pts: typeof PIVOTS) =>
-  pts.map((p) => [GRID_L.x(p.i) - LEFT.x, GRID_L.y(p.v) - LEFT.y] as [number, number]);
-
-/**
- * ⚠ THE RIGHT WINDOW'S SWING LINE STOPS AT THE THIRD HIGH — Simon: "dari titik
- * high ketiga, langsung hubungkan saja ke start panah". So its last leg runs
- * straight from that peak into the arrow rather than dipping to the low after
- * it, which is the reading: the fall has already begun and the last swing down
- * is the beginning of it, not a separate move.
- *
- * ⚠ AND IT IS COUNTED, NOT INDEXED. Written as "the sixth point" it would be
- * the sixth point whatever that turned out to be; counting highs keeps it
- * meaning the third peak if `SWING` is ever retuned and the pivots renumber.
- */
-const toHigh = (n: number) => {
-  let seen = 0;
-  for (let k = 0; k < PIVOTS.length; k++) {
-    if (PIVOTS[k].high && ++seen === n) return PIVOTS.slice(0, k + 1);
-  }
-  throw new Error(`022-ta-mistakes/TwinWindows: the swing line has fewer than ${n} highs`);
-};
-
-const ZIG_LEFT = toPx(PIVOTS);
-const ZIG_RIGHT = toPx(toHigh(3));
+const ZIG = pivotsOf(DRAWN).map(
+  (p) => [GRID_L.x(p.i) - LEFT.x, GRID_L.y(p.v) - LEFT.y] as [number, number],
+);
 
 export const TwinWindows = () => {
   const f = useCurrentFrame();
@@ -266,17 +244,17 @@ export const TwinWindows = () => {
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
       {(
         [
-          [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW, ZIG_LEFT],
-          [RIGHT, GRID_R, RIGHT_LINES, RIGHT_ARROW, ZIG_RIGHT],
+          [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW],
+          [RIGHT, GRID_R, RIGHT_LINES, RIGHT_ARROW],
         ] as const
-      ).map(([rect, grid, lines, arrow, zig], i) => (
+      ).map(([rect, grid, lines, arrow], i) => (
         <Card key={i} rect={rect} opacity={t}>
           <Candles bars={DRAWN} grid={grid} />
           {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four lines
               start back in the hidden bars, so they have to be allowed to run
               off the left edge and be cut by the card — which is what a
               trendline drawn on a longer chart looks like from here. */}
-          <Analysis rect={rect} lines={lines} arrow={arrow} zig={zig} opacity={t} />
+          <Analysis rect={rect} lines={lines} arrow={arrow} zig={ZIG} opacity={t} />
         </Card>
       ))}
     </div>
