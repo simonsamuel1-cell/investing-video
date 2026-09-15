@@ -100,10 +100,10 @@ export const COUNTER = {
    * case — nothing there is a named mistake any more, so a counter over them
    * would be labelling something that is not being said.
    *
-   * ⚠ THE CONSEQUENCE, ON THE RECORD: entries 02 and 03 now never appear. Their
-   * windows were exactly these, so the counter reads 01 … 04 and the list of
-   * eight shows six. Whatever replaces those two stretches can carry them
-   * again; until then the video counts eight mistakes and labels six.
+   * ⚠ THE CONSEQUENCE, ON THE RECORD: entries 02 and 03 never appear on the
+   * counter. Their windows are exactly these, so it reads 01 … 04. The CARDS
+   * now name all eight, so that half of the discrepancy is closed; the counter
+   * still skips two, and whatever replaces those two stretches can carry them.
    */
   gaps: [
     { from: BLOCK.SC06, to: BLOCK.SC08 },
@@ -353,7 +353,11 @@ export const CARD_LIST = {
    * the exit needs room to be a move rather than a strobe: six cards leaving
    * four frames apart, each taking 34, puts the last one clear at 4281.
    */
-  over: 2288,
+  /** ⚠ +8 FOR THE TWO CARDS THE LIST GAINED. The exit is one card every four
+   *  frames, so eight of them take eight frames longer to clear than six did.
+   *  Simon's own rule for this exit the last time it moved: "perpanjang juga
+   *  scene nya kalo perlu, biar timingnya pas". */
+  over: 2288 + 8,
   /** The six cards arrive left to right. */
   deal: { at: 0, step: 5, over: 26 },
   /** The pointer comes in from off-frame and lands on a card. */
@@ -619,14 +623,31 @@ export const CARD_LIST = {
   /* ⚠ THERE IS NO `out`, AND THAT IS THE POINT. The opened card holds to the
      end of the window and is CUT. A dissolve here would be a wipe between
      scenes by another name, and this join is a cut — see `over`. */
+  /**
+   * ⚠ EIGHT, NOT SIX — Simon: "ternyata harusnya 8 kartu". The list had been
+   * missing the two mistakes between confirmation bias and hindsight bias, and
+   * that was not only a short row: it is exactly the discrepancy `COUNTER` has
+   * carried a note about, where the video counts eight and the cards named six.
+   * These eight are now one for one with `COUNTER.items`, and asserted to be —
+   * a card and a counter entry are the same mistake said twice, so they cannot
+   * be allowed to disagree about how many there are.
+   *
+   * ⚠ THE WORDING IS SIMON'S, INCLUDING ITS CASE. The two new ones are typed as
+   * he typed them; the four already on screen keep the wording he approved,
+   * which is why "Hindsight Bias" is still Title Case although his latest list
+   * says "Hindsight bias" — restyling an approved card off a re-typed list is a
+   * silent edit to finished work.
+   */
   titles: [
     "Entry tanpa tahu kapan salah",
     "Overtrading",
     "Revenge Trading",
     "Confirmation Bias",
-    /** ⚠ SPELT CORRECTLY. Simon typed "Hindisght"; the same mistake is named
-     *  "HINDSIGHT BIAS" by the counter in SC11, and two spellings of one term
-     *  in one video is the kind of thing only the video notices. */
+    "Ignore market context",
+    "Indicator overload",
+    /** ⚠ SPELT CORRECTLY. Simon first typed "Hindisght"; the same mistake is
+     *  named "HINDSIGHT BIAS" by the counter in SC11, and two spellings of one
+     *  term in one video is the kind of thing only the video notices. */
     "Hindsight Bias",
     "Asal Copy Trade",
   ],
@@ -757,7 +778,11 @@ export const ROW3 = {
   /** ⚠ IT ENDS ON THE FRAME THE LAST CARD CLEARS. Simon moved the exit forward
    *  to 5192; six cards four frames apart, each taking 34, puts the last one
    *  off screen at 5246. */
-  over: 202,
+  /** ⚠ +8 FOR THE TWO CARDS THE LIST GAINED. The exit is one card every four
+   *  frames, so eight of them take eight frames longer to clear than six did.
+   *  Simon's own rule for this exit the last time it moved: "perpanjang juga
+   *  scene nya kalo perlu, biar timingnya pas". */
+  over: 202 + 8,
   /** ⚠ UP, NOT LEFT — Simon. The platform is a window onto a screen; a screen
    *  that slides sideways reads as another screen arriving, one that lifts away
    *  reads as this one being put down. */
@@ -1006,7 +1031,11 @@ export const ROW4 = {
   from: 6023,
   /** Ends on the frame the last card clears: six cards four apart, each taking
    *  34, from 6170. */
-  over: 202,
+  /** ⚠ +8 FOR THE TWO CARDS THE LIST GAINED. The exit is one card every four
+   *  frames, so eight of them take eight frames longer to clear than six did.
+   *  Simon's own rule for this exit the last time it moved: "perpanjang juga
+   *  scene nya kalo perlu, biar timingnya pas". */
+  over: 202 + 8,
   /** ⚠ LEFT, NOT UP. What leaves here is a chart on a card — a page — and a
    *  page is pushed aside by what comes next. Round three lifted because what
    *  left there was a window onto a screen, which reads as being put down. */
@@ -1233,3 +1262,18 @@ export const CLOSE = {
   lines: ["No trade unless the conditions are met."],
   mark: "conditions are met",
 } as const;
+
+/** ⚠ AT THE FOOT OF THE FILE, because COUNTER is declared above CARD_LIST
+ *  and a check between them cannot run before both exist.
+ *
+ *  ⚠ THE CARDS AND THE COUNTER ARE ONE LIST SAID TWICE. Worded differently on
+ *  purpose — the cards are headings, the counter is a tag in caps — but they
+ *  cannot disagree about HOW MANY mistakes this video has. Six cards against
+ *  eight entries is the bug Simon just caught by hand. */
+{
+  if (CARD_LIST.titles.length !== COUNTER.items.length) {
+    throw new Error(
+      `022-ta-mistakes/timing: ${CARD_LIST.titles.length} cards against ${COUNTER.items.length} counter entries`,
+    );
+  }
+}

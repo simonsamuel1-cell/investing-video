@@ -7,6 +7,7 @@
  */
 import { GRID_PAD_X, candleWidth, gridOf, theme, columns, inset } from "../../../core";
 import type { Rect } from "../../../core";
+import { CARD_LIST } from "./timing";
 
 const PLOT = theme.stage.plot;
 const CARD = theme.stage.card;
@@ -350,11 +351,22 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
  *
  * Type a gap instead and the sixth card is cut at whatever fraction falls out.
  */
+/**
+ * ⚠ `VISIBLE` IS A WINDOW, NOT A COUNT. Simon's rule fixes how much of the row
+ * the frame shows — five whole cards and half of the next — and that is
+ * independent of how long the list actually is. It was written here as a `5.5`
+ * and a `5` back when the list happened to be six long; those two numbers
+ * looked like the list's length and were not, which is why adding the two
+ * missing mistakes appeared to be a layout problem. It is not: the row is
+ * unchanged, and the list is now longer than the window.
+ */
+const VISIBLE = 6;
+
 export const CARD_ROW = (() => {
   const w = 280;
   const h = 640;
   const left = theme.margin.left;
-  const gap = (theme.canvas.width - left - 5.5 * w) / 5;
+  const gap = (theme.canvas.width - left - (VISIBLE - 0.5) * w) / (VISIBLE - 1);
   return {
     w,
     h,
@@ -365,11 +377,31 @@ export const CARD_ROW = (() => {
 })();
 
 {
-  /** Kept honest: the sixth card must be cut exactly in half by the frame. */
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
   const c = CARD_ROW;
-  const half = c.x(5) + c.w / 2;
+  /** Kept honest: the last card of the WINDOW must be cut exactly in half by
+   *  the frame — the thing Simon asked for, stated against the window rather
+   *  than against the list. */
+  const half = c.x(VISIBLE - 1) + c.w / 2;
   if (Math.abs(half - theme.canvas.width) > 0.5) {
-    throw new Error(`022-ta-mistakes/layout: the sixth card is cut at ${half}, not at the frame's edge`);
+    fail(`card ${VISIBLE} is cut at ${half.toFixed(1)}, not at the frame's edge`);
+  }
+  /**
+   * ⚠ ON THE RECORD, AND UNRESOLVED: the list is longer than the window. With
+   * eight mistakes and a six-card window, cards 7 and 8 sit entirely off the
+   * right edge and are never seen. That is what Simon's two rules add up to —
+   * "only five and a half fit" and "there are eight" — and the way out is a
+   * decision he has to make, not one to be taken here by quietly narrowing the
+   * cards and restyling four transitions that are already approved. This does
+   * not throw; it is a note in the one place anybody would look.
+   */
+  if (CARD_LIST.titles.length > VISIBLE) {
+    const off = CARD_LIST.titles.length - VISIBLE;
+    if (c.x(VISIBLE) < theme.canvas.width) {
+      fail(`card ${VISIBLE + 1} is partly on screen, so the window rule is not what it says (${off} cards past it)`);
+    }
   }
 }
 
