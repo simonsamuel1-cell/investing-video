@@ -1251,6 +1251,41 @@ export const BIASED = {
   close: 6990,
 } as const;
 
+/**
+ * ═══ SCENE TRANSISI 5 ═══  Simon: "7101-7102 transisi ke scene transisi,
+ * seleksi kartu ke 5".
+ *
+ * ⚠ ROUND FOUR'S RHYTHM AGAIN, moved by 1078 — the same gaps the list has used
+ * every time it has turned, because it is the same gesture returning and a
+ * transition that breathed differently each round would read as a different
+ * device.
+ *
+ * ⚠ EXCEPT THE POINTER, WHICH HAD TO WAIT FOUR MORE FRAMES. Card 5 sits one
+ * slot further along than card 4 did, and the row arrives one card at a time —
+ * so at round four's spacing the pointer would have reached it two frames
+ * BEFORE it landed. The assertion in scenes/SceneTransition.tsx caught it; the
+ * cursor and the flood both move with it.
+ */
+export const ROW5 = {
+  from: 7101,
+  over: 210,
+  /** ⚠ LEFT, like round four: what leaves is a page, and a page is pushed
+   *  aside by what comes next. */
+  away: { at: 7101, over: 44 },
+  row: {
+    at: 7101,
+    over: 60,
+    step: 4,
+    spread: 4,
+    /** ⚠ THE FIFTH CARD THIS TIME — Simon's "kartu ke 5", zero-based. */
+    cursor: { at: 7145, over: 34, card: 4 },
+    hover: { at: 7179, over: 46 },
+    /** ⚠ FOUR DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1, 2, 3],
+    out: { at: 7248, step: 4, over: 34 },
+  },
+} as const;
+
 /* ═══ SC09 — konteks market ══════════════════════════════════════════════ */
 export const CONTEXT = {
   name: 7074,

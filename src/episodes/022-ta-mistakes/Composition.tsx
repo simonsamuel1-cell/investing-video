@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3, ROW4, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3, ROW4, ROW5, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -60,6 +60,7 @@ import { CarryLine } from "./scenes/CarryLine";
 import { CardList, CardListFadeIn } from "./scenes/CardList";
 import { CardList3 } from "./scenes/CardList3";
 import { CardList4 } from "./scenes/CardList4";
+import { CardList5 } from "./scenes/CardList5";
 import { TwinWindows } from "./scenes/TwinWindows";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
@@ -248,6 +249,13 @@ const Body = () => (
         assertion owns. See scenes/TwinWindows.tsx. */}
     <Sequence from={TWIN.at} durationInFrames={TWIN.to - TWIN.at} name="SC08 · two windows">
       <TwinWindows />
+    </Sequence>
+
+    {/* ⚠ THE FIFTH TURN OF THE LIST, and like the third and fourth it owns the
+        outgoing picture's exit as well as its own arrival. It runs over SC09
+        the way the fourth ran over SC08. See scenes/CardList5.tsx. */}
+    <Sequence from={ROW5.from} durationInFrames={ROW5.over} name="Scene Transisi 5 · Card list">
+      <CardList5 />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />
