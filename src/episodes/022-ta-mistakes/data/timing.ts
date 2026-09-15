@@ -855,13 +855,6 @@ export const REVENGE_T = {
    * whole scene has been building, and it would be stepped on by either
    * sentence.
    */
-  /**
-   * ⚠ THE TRADE BEING TAKEN, NARRATED — Simon, 5540: "Masuk lagi", white on a
-   * green pill, after the tool is up (the tool settles at 5520) and as the
-   * rally's first bar starts. Green because it describes what somebody DID,
-   * and it is answered by `lossAgain` in red directly underneath.
-   */
-  enter: 5540,
   lossAgain: 5682,
   /**
    * ⚠ THE CHART RISES TO MAKE ROOM — Simon, 5721. How far is solved in
@@ -919,11 +912,6 @@ export const REVENGE_T = {
    *  number that happens to be bigger. */
   if (V.lossAgain < V.endsAt) fail(`"Loss lagi" lands at ${V.lossAgain}, before the tape finishes`);
   if (V.lossAgain > V.at + V.over) fail(`"Loss lagi" lands after the scene ends`);
-  /** ⚠ THE ENTRY IS NARRATED AFTER THE TOOL THAT MAKES IT — Simon's "setelah
-   *  tool Long Position muncul". A green "Masuk lagi" before the tool is up
-   *  would be a label with nothing under it. */
-  if (V.enter < V.tool.at + V.tool.over) fail(`"Masuk lagi" lands at ${V.enter}, before the tool has finished arriving`);
-  if (V.lossAgain <= V.enter) fail(`"Loss lagi" lands before "Masuk lagi"`);
   /** The note cannot open before the room for it starts being made, and the
    *  line it swaps to cannot land before the box holding it is up. */
   if (V.note.at < V.lift.at) fail("the revenge note opens before the chart lifts");
