@@ -705,3 +705,60 @@ export const PROVE_BOX = (() => {
     fail(`the closing group is not balanced: ${above.toFixed(1)} above, ${below.toFixed(1)} below`);
   }
 }
+
+/**
+ * ═══ SC09 · ONE SETUP, TWO MARKETS ═══  Simon's sketch: a bracket across the
+ * top naming the setup, two columns under it for the two markets, a chart in
+ * each, and a verdict under each chart.
+ *
+ * ⚠ THE BRACKET SPANS BOTH COLUMNS, and that is the drawing's argument. A title
+ * over each chart would say "here are two setups"; one title over both says
+ * "here is one setup, twice" — which is the only reason the two outcomes mean
+ * anything.
+ *
+ * ⚠ THE WHOLE STACK IS CENTRED, not hung from the top. Its height is the sum of
+ * its parts, so a taller chart or a bigger gap re-centres everything instead of
+ * pushing the verdicts toward the subtitle band.
+ */
+export const BREAKOUT_BOX = (() => {
+  const [left, right] = halves();
+  const chartH = 430;
+  const toHead = 78;
+  const toBox = 118;
+  const toVerdict = 48;
+  /** Half the type that sits above the rule and below the verdict row. */
+  const half = 24;
+  const height = toBox + chartH + toVerdict + half * 2;
+  const A = theme.stage.active;
+  const rule = A.y + (A.h - height) / 2 + half;
+  return {
+    /** The bracket: a rule across both columns with a stub down at each end. */
+    rule: { y: Math.round(rule), x1: left.x, x2: right.x + right.w, stub: 18 },
+    head: { y: Math.round(rule + toHead) },
+    boxes: [
+      { x: left.x, y: Math.round(rule + toBox), w: left.w, h: chartH },
+      { x: right.x, y: Math.round(rule + toBox), w: right.w, h: chartH },
+    ],
+    verdict: { y: Math.round(rule + toBox + chartH + toVerdict) },
+  };
+})();
+
+{
+  const b = BREAKOUT_BOX;
+  const A = theme.stage.active;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  if (b.rule.y - 24 < A.y) fail("the setup bracket is above the safe area");
+  if (b.verdict.y + 24 > theme.captionBand.top) {
+    fail(`the verdicts sit at ${b.verdict.y}, inside the subtitle band`);
+  }
+  /** ⚠ AND THE STACK IS CENTRED, which is the whole reason its height is a sum
+   *  rather than a set of typed tops. */
+  const above = b.rule.y - 24 - A.y;
+  const below = A.y + A.h - (b.verdict.y + 24);
+  if (Math.abs(above - below) > 1.5) {
+    fail(`the setup stack is not balanced: ${above} above, ${below} below`);
+  }
+  if (b.boxes[0].w !== b.boxes[1].w) fail("the two chart boxes are different widths");
+}

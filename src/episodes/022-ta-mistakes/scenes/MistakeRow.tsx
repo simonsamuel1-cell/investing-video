@@ -21,10 +21,19 @@ const TITLES = CARD_LIST.titles;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * ⚠ FAR ENOUGH THAT THE WIDEST THING TRAVELLING CLEARS THE FRAME. Solved rather
- * than typed, so nothing is left hanging at an edge however the row is re-sized.
+ * ⚠ FAR ENOUGH THAT THE WIDEST THING TRAVELLING CLEARS THE FRAME, and it has to
+ * be solved FROM THE PAN. This was a constant — the stage card's right edge plus
+ * air — which was true while every row rested at x ≥ 96. It stopped being true
+ * the moment a round panned the row left: with card 5 picked the leftmost card
+ * rests at -241, so the old distance left it 297px still on screen at the end of
+ * its exit. Simon saw it at 7310.
+ *
+ * The distance is now measured from where the card actually starts: the frame's
+ * width, less that resting x, plus air. Every card travels the same distance —
+ * the stagger is what opens the gaps — so one number solved for the furthest one
+ * clears them all.
  */
-const AWAY = theme.stage.card.x + theme.stage.card.w + 40;
+const awayFrom = (pan: number) => theme.canvas.width - (R.x(0) - pan) + 40;
 
 /**
  * ═══ HOW FAR ALONG THE LIST THE ROW RESTS ═══  Simon's choice, once the list
@@ -104,7 +113,7 @@ export const MistakeRow = ({ f, V2 }: { f: number; V2: Round }) => {
    * is no separate spreading to arrange.
    */
   const outAt = (i: number) => V2.out.at + (TITLES.length - 1 - i) * V2.out.step;
-  const outX = (i: number) => progressInOut(f, outAt(i), V2.out.over) * AWAY;
+  const outX = (i: number) => progressInOut(f, outAt(i), V2.out.over) * awayFrom(pan);
   /** The pointer goes with the first card that leaves. */
   const leave = progressInOut(f, V2.out.at, V2.out.over);
 

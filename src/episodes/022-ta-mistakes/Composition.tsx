@@ -42,11 +42,10 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, ROW3, ROW4, ROW5, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
-import { SC09 } from "./scenes/SC09";
 import { SC10 } from "./scenes/SC10";
 import { SC11 } from "./scenes/SC11";
 import { AdmrGroup } from "./scenes/AdmrGroup";
@@ -61,6 +60,7 @@ import { CardList, CardListFadeIn } from "./scenes/CardList";
 import { CardList3 } from "./scenes/CardList3";
 import { CardList4 } from "./scenes/CardList4";
 import { CardList5 } from "./scenes/CardList5";
+import { Breakout } from "./scenes/Breakout";
 import { TwinWindows } from "./scenes/TwinWindows";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
@@ -125,7 +125,11 @@ const SCENES: Mounted[] = [
    *  covers its first 249 frames; BIASED is still in data/timing.ts for
    *  whatever replaces the rest. */
   { from: BLOCK.SC08, duration: BLOCK.SC09 - BLOCK.SC08, Component: Blank, name: "SC08 (empty)" },
-  { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: SC09, name: "SC09 Konteks market" },
+  /** ⚠ SC09'S VISUALS ARE GONE — Simon: "hilangkan dulu semua visual di scene
+   *  09". Same shape as SC07 and SC08: the window stays because the timeline
+   *  may not have a hole in it, and what owns it now draws nothing. CONTEXT is
+   *  still in data/timing.ts for whatever replaces it. */
+  { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: Blank, name: "SC09 (empty)" },
   { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: SC10, name: "SC10 Indicator overload" },
   { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: SC11, name: "SC11 Hindsight bias" },
   { from: BLOCK.SC12, duration: BLOCK.SC14 - BLOCK.SC12, Component: AdmrGroup, name: "CG-B · SC12+13 ADMR" },
@@ -256,6 +260,18 @@ const Body = () => (
         the way the fourth ran over SC08. See scenes/CardList5.tsx. */}
     <Sequence from={ROW5.from} durationInFrames={ROW5.over} name="Scene Transisi 5 · Card list">
       <CardList5 />
+    </Sequence>
+
+    {/* ⚠ WHAT FILLS THE STRETCH SC09'S DELETED VISUALS LEFT — Simon's sketch:
+        one setup, two markets, two outcomes. An overlay rather than the blanked
+        scene itself, so the window it fills stays the one the coverage
+        assertion owns. See scenes/Breakout.tsx. */}
+    <Sequence
+      from={BREAKOUT.at}
+      durationInFrames={BLOCK.SC10 - BREAKOUT.at}
+      name="SC09 · one setup, two markets"
+    >
+      <Breakout />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

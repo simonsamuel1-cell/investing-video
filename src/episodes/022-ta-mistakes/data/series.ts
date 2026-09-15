@@ -218,7 +218,23 @@ export const CTX_SHARED = 34;
 const ctx = (tail: Anchor[], seed: number, head?: Series): Series => {
   const closes = fromAnchors([...CTX_HEAD, ...tail], CTX_N, seed);
   if (head) for (let i = 0; i < CTX_SHARED; i++) closes[i] = head.closes[i];
-  return { closes, bars: toBars(closes, seed ^ 0x5bf0), kind: "synthetic" };
+  const bars = toBars(closes, seed ^ 0x5bf0);
+  /**
+   * ⚠ THE BARS ARE COPIED TOO, AND THE COMMENT ABOVE USED TO CLAIM THEY DID NOT
+   * NEED TO BE. It said `toBars` "agrees by construction, because it walks the
+   * closes in order from the same seed" — and that is wrong. It sizes each
+   * bar's body and wicks against the SERIES' OWN RANGE, and the two tails have
+   * different ranges, so identical closes came back with all 34 heads' opens,
+   * highs and lows different. The scene draws those wicks. Measured before this
+   * fix: 34 of 34 shared bars differed, and 1,003 pixels of the two charts'
+   * "identical" stretch did not match.
+   *
+   * Copying the head's BARS is what makes the claim true of the thing on
+   * screen. Bar 34 still opens where bar 33 closed, because that close was
+   * copied first and `toBars` read it.
+   */
+  if (head) for (let i = 0; i < CTX_SHARED; i++) bars[i] = head.bars[i];
+  return { closes, bars, kind: "synthetic" };
 };
 export const CTX_WORKS = ctx([[0.72, 118], [0.86, 126], [1, 133]], 0x2221);
 export const CTX_FAILS = ctx([[0.72, 112], [0.86, 101], [1, 94]], 0x2221, CTX_WORKS);

@@ -94,24 +94,27 @@ export const COUNTER = {
    * ⚠ SC12→SC14 is the ADMR case study: a worked example is not another entry
    * in the list, and leaving the counter up there files it as "mistake 07½".
    *
-   * ⚠ SC06→SC09 is Simon's, in three steps: the counter came off the platform
+   * ⚠ SC06→SC10 is Simon's, in four steps: the counter came off the platform
    * ("hapus tulisan Mistake 02 dan OVERTRADING"), then off SC07 with the rest
-   * of that scene ("judulnya juga hapus"), and now off SC08 the same way
-   * ("hapus semua visual scene 8 termasuk text"). All three are one case —
+   * of that scene ("judulnya juga hapus"), then off SC08 ("hapus semua visual
+   * scene 8 termasuk text") and now off SC09 the same way. All four are one —
    * nothing there is a named mistake any more, so a counter over them would be
    * labelling something that is not being said. The counter is not drawn BY
    * those scenes, which is exactly why it has to be taken off here: deleting a
    * scene does not remove an overlay that outlives it.
    *
-   * ⚠ THE CONSEQUENCE, ON THE RECORD, AND IT IS GROWING: entries 02, 03 and 04
-   * never appear on the counter. Their windows are exactly this gap, so it now
-   * reads 01, then 05 06 07 08. The CARDS name all eight, so the list itself is
-   * whole; it is the running tally that has holes, and each one arrived as a
-   * side effect of deleting a scene rather than as a decision about the tally.
-   * Whatever fills 4282–7063 can carry 02, 03 and 04 again.
+   * ⚠ THE CONSEQUENCE, ON THE RECORD, AND IT KEEPS GROWING: entries 02, 03, 04
+   * and 05 never appear on the counter. Their windows are exactly this gap, so
+   * it now reads 01, then 06 07 08 — four of the eight. The CARDS name all
+   * eight, so the list itself is whole; it is the running tally that has holes,
+   * and every one arrived as a side effect of deleting a scene rather than as a
+   * decision about the tally. ⚠ SC08's stretch is NOT empty any more — the two
+   * windows fill it — and its counter entry has still not come back, which is
+   * the precedent this one follows. Whatever fills 4282–7994 can carry all four
+   * again.
    */
   gaps: [
-    { from: BLOCK.SC06, to: BLOCK.SC09 },
+    { from: BLOCK.SC06, to: BLOCK.SC10 },
     { from: BLOCK.SC12, to: BLOCK.SC14 },
   ],
   over: 18,
@@ -1287,6 +1290,12 @@ export const ROW5 = {
 } as const;
 
 /* ═══ SC09 — konteks market ══════════════════════════════════════════════ */
+/**
+ * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hilangkan dulu semua visual di scene
+ * 09". Kept for the same reason REVENGE, HOPE and BIASED are: it is the VO's
+ * own frame table for that stretch and re-deriving it from the SRT is the
+ * expensive part. Only the scene that read it is gone.
+ */
 export const CONTEXT = {
   name: 7074,
   /** Two windows, the SAME setup in both — only the context strip differs. */
@@ -1298,6 +1307,46 @@ export const CONTEXT = {
   wider: 7762,
   close: 7830,
 } as const;
+
+/**
+ * ═══ SC09 · ONE SETUP, TWO MARKETS ═══  Simon, 7311, from his sketch.
+ *
+ * ⚠ THE BEATS LAND ON THE SENTENCE THAT NAMES THEM. Cue 7260–7622 is "Setup
+ * yang berjalan baik saat market trending bisa lebih sering gagal saat market
+ * sideways" — so the setup is named first, then the trending column while the
+ * voice is on "market trending", then the sideways one on "market sideways".
+ * The two verdicts wait for 7644, "Setup-nya bisa sama, tapi konteksnya
+ * berbeda", which is what they are the proof of.
+ */
+export const BREAKOUT = {
+  at: 7311,
+  title: { at: 7311, over: 34 },
+  cols: [
+    { at: 7380, over: 30, tape: { at: 7404, step: 1.2, over: 14 } },
+    { at: 7500, over: 30, tape: { at: 7524, step: 1.2, over: 14 } },
+  ],
+  /** ⚠ ONE AFTER THE OTHER, not together: the second verdict is the surprise,
+   *  and landing both at once spends it. */
+  verdict: { at: 7650, step: 40, over: 26 },
+  heads: ["Market trending", "Market sideways"],
+  says: ["Setup berhasil", "Setup gagal"],
+  setup: "Setup : Buy on Breakout",
+} as const;
+
+{
+  const V = BREAKOUT;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  /** ⚠ EACH COLUMN'S CHART HAS TO BE DRAWN BEFORE ITS VERDICT. A tick under a
+   *  chart that has not finished is a conclusion drawn from nothing. */
+  V.cols.forEach((c, i) => {
+    const drawn = c.tape.at + 55 * c.tape.step + c.tape.over;
+    const said = V.verdict.at + i * V.verdict.step;
+    if (said < drawn) fail(`verdict ${i + 1} lands at ${said}, before its chart finishes at ${drawn.toFixed(0)}`);
+  });
+  if (V.cols[1].at < V.cols[0].at) fail("the second column arrives before the first");
+}
 
 /* ═══ SC10 — indicator overload ══════════════════════════════════════════ */
 export const OVERLOAD = {
