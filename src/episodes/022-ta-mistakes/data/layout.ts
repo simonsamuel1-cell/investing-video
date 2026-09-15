@@ -622,3 +622,46 @@ export const REVENGE_NOTE = (() => {
     fail(`the group is not centred: ${above.toFixed(1)} above, ${below.toFixed(1)} below`);
   }
 }
+
+/**
+ * ═══ SC08's CLOSING QUESTION ═══  Simon, 6594: a box under the two shrunken
+ * windows, one line tall, growing to two at 6787.
+ *
+ * ⚠ TWO HEIGHTS, ONE TOP. The box grows DOWNWARD — the second question is added
+ * under the first, not swapped for it — so `y` is the anchor and the height is
+ * what moves. Sized from the type rather than typed, on the same 30px padding
+ * the other two dashed notes in this episode work out to.
+ *
+ * ⚠ AND THE TOP IS SOLVED FROM WHERE THE WINDOWS END UP. They shrink to 0.7
+ * about the centre of the frame, so their floor rises to a place nothing can
+ * read off the layout — it is computed here from the same number.
+ */
+export const PROVE_BOX = (() => {
+  const line = Math.round(theme.text.body.size * 1.25);
+  const pad = 30;
+  const w = 720;
+  /** The lower of the two windows' feet, after the group has shrunk. */
+  const floor = theme.canvas.height / 2 + (801 - theme.canvas.height / 2) * 0.7;
+  const gap = 48;
+  return {
+    x: (theme.canvas.width - w) / 2,
+    y: Math.round(floor + gap),
+    w,
+    line,
+    one: line + pad * 2,
+    two: line * 2 + pad * 2,
+  };
+})();
+
+{
+  const b = PROVE_BOX;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  /** ⚠ EVEN AT ITS TALLER HEIGHT IT MAY NOT ENTER THE SUBTITLE BAND. The box
+   *  grows after it has arrived, so the check that matters is the second one. */
+  if (b.y + b.two > theme.captionBand.top) {
+    fail(`the closing question ends at ${b.y + b.two}, inside the subtitle band`);
+  }
+  if (b.two <= b.one) fail("the box's two-line height is not taller than its one-line height");
+}

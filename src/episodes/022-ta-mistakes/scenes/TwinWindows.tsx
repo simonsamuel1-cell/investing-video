@@ -18,9 +18,22 @@
  * two devices where the video has one.
  */
 import { useCurrentFrame } from "remotion";
-import { Candles, Card, Layer, candleWidth, gridOf, progressInOut, theme, usePalette } from "../../../core";
-import { halves } from "../data/layout";
-import { TWIN } from "../data/timing";
+import {
+  Candles,
+  Card,
+  DashedBox,
+  Layer,
+  candleWidth,
+  dashOpenAt,
+  gridOf,
+  progressInOut,
+  ramp,
+  theme,
+  useMotion,
+  usePalette,
+} from "../../../core";
+import { PROVE_BOX, halves } from "../data/layout";
+import { PROVE, TWIN } from "../data/timing";
 import { SS03 } from "../data/series";
 import { Analysis, LEFT_ARROW, LEFT_LINES, RIGHT_LINES } from "./Analysis";
 import { RIGHT_ARROW } from "./ArrowRight";
@@ -139,7 +152,12 @@ const DOMAIN: [number, number] = [
   Math.max(...SHOWN.map((b) => b.h)),
 ];
 const gridFor = (r: typeof LEFT) =>
-  gridOf(SHOWN.map((b) => b.c), DOMAIN, plotOf(r), 0);
+  gridOf(
+    SHOWN.map((b) => b.c),
+    DOMAIN,
+    plotOf(r),
+    0,
+  );
 
 const GRID_L = gridFor(LEFT);
 const GRID_R = gridFor(RIGHT);
@@ -218,7 +236,11 @@ const pivotsOf = (bars: typeof DRAWN) => {
    * the pivot it runs up or down to: a first leg into a high starts from a low.
    */
   if (piv[0].i !== 0) {
-    piv.unshift({ i: 0, v: piv[0].high ? bars[0].l : bars[0].h, high: !piv[0].high });
+    piv.unshift({
+      i: 0,
+      v: piv[0].high ? bars[0].l : bars[0].h,
+      high: !piv[0].high,
+    });
   }
   return piv;
 };
@@ -364,6 +386,72 @@ const NeonEdge = ({
   );
 };
 
+/**
+ * ═══ THE QUESTION UNDER THE WINDOWS ═══  Simon, 6594 and 6787.
+ *
+ * ⚠ TWO LINES, THE SECOND ADDED NOT SWAPPED. The box grows downward from a
+ * fixed top so the first question stays exactly where it was — the same
+ * correction Simon made to the revenge note at 5876, applied here before it
+ * could be got wrong twice.
+ *
+ * ⚠ BOTH ARE WRITTEN, ON THEIR OWN CLOCKS AND THROUGH ONE FUNCTION, so they
+ * cannot end up two different kinds of text.
+ */
+const Prove = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const c = usePalette();
+  const B = PROVE_BOX;
+  const g = f + V.at;
+  const open = dashOpenAt(PROVE.box.at - V.at, m);
+  const grown = progressInOut(g, PROVE.grow.at, PROVE.grow.over);
+  const write = (text: string, at: number, perChar: number) =>
+    text.slice(0, Math.floor(ramp(f, at, text.length * perChar) * text.length));
+
+  const row = {
+    height: B.line,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontFamily: theme.text.family,
+    fontSize: theme.text.body.size,
+    fontWeight: 800,
+    lineHeight: 1.25,
+    color: c.ink,
+    /** ⚠ NEITHER QUESTION MAY WRAP. The box is sized to the longer of them; a
+     *  wrap means that measurement is stale. */
+    whiteSpace: "nowrap",
+  } as const;
+
+  return (
+    <DashedBox
+      x={B.x}
+      y={B.y}
+      w={B.w}
+      h={B.one + (B.two - B.one) * grown}
+      at={PROVE.box.at - V.at}
+    >
+      {/* ⚠ PINNED TO THE TOP, NOT CENTRED IN THE BOX. Centred, the first line
+          would slide down as the box grew — which is exactly the thing "anchor
+          atas" rules out. */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: 30,
+          padding: "0 28px",
+        }}
+      >
+        <div style={row}>{write(PROVE.lines[0], open, PROVE.box.perChar)}</div>
+        <div style={row}>
+          {write(PROVE.lines[1], PROVE.grow.at - V.at, PROVE.grow.perChar)}
+        </div>
+      </div>
+    </DashedBox>
+  );
+};
+
 export const TwinWindows = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -395,6 +483,14 @@ export const TwinWindows = () => {
   const lit = progressInOut(g, V.neon.at, V.neon.over);
   /** ⚠ SCALED ABOUT ITS OWN CENTRE, so growing does not also move it. */
   const scale = 1 + (V.grow.by - 1) * progressInOut(g, V.grow.at, V.grow.over);
+  /** ⚠ BOTH WINDOWS SHRINK AS ONE — Simon: "group kedua windows ini, lalu
+   *  kecilkan ke tengah sebanyak 30%". About the frame's own centre, which is
+   *  what "ke tengah" asks for: the pair ends up centred as well as smaller,
+   *  and neither window has to be moved separately to get there. */
+  const pack =
+    1 -
+    (1 - PROVE.shrink.by) *
+      progressInOut(g, PROVE.shrink.at, PROVE.shrink.over);
   /**
    * ⚠ THE STAGGER COUNTS THE LINES THAT ARE DRAWN, not the entries in the
    * array. Two of the four are hidden; indexed by position, the first visible
@@ -427,119 +523,137 @@ export const TwinWindows = () => {
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
-      {(
-        [
-          [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW, card, one, off],
-          [RIGHT, GRID_R, RIGHT_LINES, RIGHT_ARROW, two, whole, { x: 0, y: 0 }],
-        ] as const
-      ).map(([rect, grid, lines, arrow, alpha, show, shift], i) =>
-        alpha <= 0.001 ? null : (
-          <div
-            key={i}
-            style={{
-              position: "absolute",
-              inset: 0,
-              transform:
-                i === 0
-                  ? `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px) scale(${scale.toFixed(4)})`
-                  : `scale(${SECOND.scale})`,
-              transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px`,
-              /**
-               * ⚠ WINDOW 2 IS DRAINED AND SET BACK — Simon: "monochrome terang
-               * dan transparansi 75% sejak awal". One filter over the whole
-               * group rather than a pale palette inside it: the candles keep
-               * their own reds and greens in the data and lose them on the way
-               * to the screen, so nothing about what is drawn has to know it is
-               * the window nobody is reading.
-               *
-               * ⚠ AND IT FADES HERE, AS ONE GROUP — Simon: "fade in aja langsung
-               * 1 group". It used to fade the card and its contents separately,
-               * and two translucent things stacked are not the same as one
-               * translucent picture: at half way you could see the ground
-               * THROUGH the card, behind its own candles. Composited first and
-               * faded after, the window arrives as an object.
-               */
-              filter: i === 1 ? "grayscale(1) brightness(1.12)" : undefined,
-              /**
-               * ⚠ BOTH WINDOWS FADE AS A GROUP. Window 2 was fixed first; window
-               * 1 has the same exposure now that its chart arrives WITH its
-               * card rather than after it — two translucent things stacked let
-               * the ground show through the card behind its own candles.
-               * Composited here and faded once, each window arrives as an
-               * object.
-               */
-              opacity: i === 1 ? 0.75 * alpha : alpha,
-            }}
-          >
-            {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `scale(${pack.toFixed(4)})`,
+          transformOrigin: `${theme.canvas.width / 2}px ${theme.canvas.height / 2}px`,
+        }}
+      >
+        {(
+          [
+            [LEFT, GRID_L, LEFT_LINES, LEFT_ARROW, card, one, off],
+            [
+              RIGHT,
+              GRID_R,
+              RIGHT_LINES,
+              RIGHT_ARROW,
+              two,
+              whole,
+              { x: 0, y: 0 },
+            ],
+          ] as const
+        ).map(([rect, grid, lines, arrow, alpha, show, shift], i) =>
+          alpha <= 0.001 ? null : (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                inset: 0,
+                transform:
+                  i === 0
+                    ? `translate(${shift.x.toFixed(1)}px, ${shift.y.toFixed(1)}px) scale(${scale.toFixed(4)})`
+                    : `scale(${SECOND.scale})`,
+                transformOrigin: `${rect.x + rect.w / 2}px ${rect.y + rect.h / 2}px`,
+                /**
+                 * ⚠ WINDOW 2 IS DRAINED AND SET BACK — Simon: "monochrome terang
+                 * dan transparansi 75% sejak awal". One filter over the whole
+                 * group rather than a pale palette inside it: the candles keep
+                 * their own reds and greens in the data and lose them on the way
+                 * to the screen, so nothing about what is drawn has to know it is
+                 * the window nobody is reading.
+                 *
+                 * ⚠ AND IT FADES HERE, AS ONE GROUP — Simon: "fade in aja langsung
+                 * 1 group". It used to fade the card and its contents separately,
+                 * and two translucent things stacked are not the same as one
+                 * translucent picture: at half way you could see the ground
+                 * THROUGH the card, behind its own candles. Composited first and
+                 * faded after, the window arrives as an object.
+                 */
+                filter: i === 1 ? "grayscale(1) brightness(1.12)" : undefined,
+                /**
+                 * ⚠ BOTH WINDOWS FADE AS A GROUP. Window 2 was fixed first; window
+                 * 1 has the same exposure now that its chart arrives WITH its
+                 * card rather than after it — two translucent things stacked let
+                 * the ground show through the card behind its own candles.
+                 * Composited here and faded once, each window arrives as an
+                 * object.
+                 */
+                opacity: i === 1 ? 0.75 * alpha : alpha,
+              }}
+            >
+              {/* ⚠ THE GLOW SITS UNDER THE CARD, so the light spreads outward
                 from behind it rather than washing over the chart. */}
-            {i === 0 && lit > 0.001 ? (
-              <div
-                style={{
-                  position: "absolute",
-                  left: rect.x,
-                  top: rect.y,
-                  width: rect.w,
-                  height: rect.h,
-                  borderRadius: theme.shape.cardRadius,
-                  /** ⚠ TWO SHADOWS AGAIN, AND FOR THE SAME REASON AS THE
-                   *  BEAM'S: a tight bright one for the edge and a wide faint
-                   *  one for the room around it. A single shadow is either a
-                   *  hard rim or a fog. */
-                  boxShadow: `0 0 ${NEON.glow}px ${theme.color.indigoGlow}, 0 0 ${NEON.halo}px ${theme.color.indigoWashStrong}`,
-                  opacity: lit,
-                }}
-              />
-            ) : null}
-            <Card rect={rect} opacity={1}>
-              {/* ⚠ THE QUOTE ARRIVES WITH THE CONCLUSION IT IS ABOUT — for
+              {i === 0 && lit > 0.001 ? (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: rect.x,
+                    top: rect.y,
+                    width: rect.w,
+                    height: rect.h,
+                    borderRadius: theme.shape.cardRadius,
+                    /** ⚠ TWO SHADOWS AGAIN, AND FOR THE SAME REASON AS THE
+                     *  BEAM'S: a tight bright one for the edge and a wide faint
+                     *  one for the room around it. A single shadow is either a
+                     *  hard rim or a fog. */
+                    boxShadow: `0 0 ${NEON.glow}px ${theme.color.indigoGlow}, 0 0 ${NEON.halo}px ${theme.color.indigoWashStrong}`,
+                    opacity: lit,
+                  }}
+                />
+              ) : null}
+              <Card rect={rect} opacity={1}>
+                {/* ⚠ THE QUOTE ARRIVES WITH THE CONCLUSION IT IS ABOUT — for
                   window 1 that is the arrow, which is the last thing drawn;
                   for window 2 it is the window itself, which arrives finished.
                   Simon gave no frame for either, and a quote that turns up
                   before the drawing it comments on would be a verdict with
                   nothing under it. */}
-              <div
-                style={{
-                  position: "absolute",
-                  left: rect.x + QUOTE.at[0],
-                  top: rect.y + QUOTE.at[1],
-                  transform: "translateY(-50%)",
-                  fontFamily: theme.text.family,
-                  fontSize: theme.text.body.size,
-                  fontWeight: 700,
-                  color: i === 0 ? QUOTE.one.ink : c.muted,
-                  whiteSpace: "nowrap",
-                  opacity: i === 1 ? 1 : show.stroke,
-                }}
-              >
-                {i === 0 ? QUOTE.one.text : QUOTE.two.text}
-              </div>
-              {/* ⚠ THE TAPE ARRIVES WITH THE CARD — Simon cancelled its sweep.
+                <div
+                  style={{
+                    position: "absolute",
+                    left: rect.x + QUOTE.at[0],
+                    top: rect.y + QUOTE.at[1],
+                    transform: "translateY(-50%)",
+                    fontFamily: theme.text.family,
+                    fontSize: theme.text.body.size,
+                    fontWeight: 700,
+                    color: i === 0 ? QUOTE.one.ink : c.muted,
+                    whiteSpace: "nowrap",
+                    opacity: i === 1 ? 1 : show.stroke,
+                  }}
+                >
+                  {i === 0 ? QUOTE.one.text : QUOTE.two.text}
+                </div>
+                {/* ⚠ THE TAPE ARRIVES WITH THE CARD — Simon cancelled its sweep.
                   No `wipe` at all rather than a wipe held at 1: a reveal that
                   is always finished is a thing to explain later. */}
-              <Candles bars={DRAWN} grid={grid} />
-              {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four
+                <Candles bars={DRAWN} grid={grid} />
+                {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four
                   lines start back in the hidden bars, so they have to be
                   allowed to run off the left edge and be cut by the card —
                   which is what a trendline drawn on a longer chart looks like
                   from here. */}
-              <Analysis
-                rect={rect}
-                lines={lines}
-                arrow={arrow}
-                zig={ZIG}
-                show={show}
-                opacity={1}
-              />
-              {/* ⚠ LAST, so the light runs ON the card's edge rather than under
+                <Analysis
+                  rect={rect}
+                  lines={lines}
+                  arrow={arrow}
+                  zig={ZIG}
+                  show={show}
+                  opacity={1}
+                />
+                {/* ⚠ LAST, so the light runs ON the card's edge rather than under
                   the chart drawn inside it. */}
-              {i === 0 && lit > 0.001 ? (
-                <NeonEdge rect={rect} lap={neon} opacity={lit} />
-              ) : null}
-            </Card>
-          </div>
-        ),
-      )}
+                {i === 0 && lit > 0.001 ? (
+                  <NeonEdge rect={rect} lap={neon} opacity={lit} />
+                ) : null}
+              </Card>
+            </div>
+          ),
+        )}
+      </div>
+      <Prove />
     </div>
   );
 };
@@ -575,36 +689,56 @@ const LOCK = {
   const near = (a: number, b: number) => Math.abs(a - b) < 0.01;
   const P = plotOf(LEFT);
   if (LEFT.w !== LOCK.window.w || LEFT.h !== LOCK.window.h) {
-    fail(`the window is ${LEFT.w}x${LEFT.h}, locked at ${LOCK.window.w}x${LOCK.window.h}`);
+    fail(
+      `the window is ${LEFT.w}x${LEFT.h}, locked at ${LOCK.window.w}x${LOCK.window.h}`,
+    );
   }
   if (LEFT.y + LEFT.h !== LOCK.window.bottom) {
-    fail(`the window's foot is at ${LEFT.y + LEFT.h}, locked at ${LOCK.window.bottom}`);
+    fail(
+      `the window's foot is at ${LEFT.y + LEFT.h}, locked at ${LOCK.window.bottom}`,
+    );
   }
   if (!near(P.w, LOCK.plot.w) || P.h !== LOCK.plot.h) {
-    fail(`the plot is ${P.w.toFixed(2)}x${P.h}, locked at ${LOCK.plot.w}x${LOCK.plot.h}`);
+    fail(
+      `the plot is ${P.w.toFixed(2)}x${P.h}, locked at ${LOCK.plot.w}x${LOCK.plot.h}`,
+    );
   }
-  if (P.x !== LEFT.x) fail("the plot is no longer flush with the window's left edge");
+  if (P.x !== LEFT.x)
+    fail("the plot is no longer flush with the window's left edge");
   if (LEFT.y + LEFT.h - (P.y + P.h) !== LOCK.plot.padBottom) {
-    fail(`the chart's foot is not ${LOCK.plot.padBottom}px up from the window's floor`);
+    fail(
+      `the chart's foot is not ${LOCK.plot.padBottom}px up from the window's floor`,
+    );
   }
-  if (SS03.length !== LOCK.bars.traced) fail(`${SS03.length} bars traced, locked at ${LOCK.bars.traced}`);
-  if (HIDDEN !== LOCK.bars.hidden) fail(`${HIDDEN} bars hidden, locked at ${LOCK.bars.hidden}`);
-  if (TRIM_RIGHT !== LOCK.bars.trimmed) fail(`${TRIM_RIGHT} bars trimmed, locked at ${LOCK.bars.trimmed}`);
-  if (DRAWN.length !== LOCK.bars.drawn) fail(`${DRAWN.length} bars drawn, locked at ${LOCK.bars.drawn}`);
+  if (SS03.length !== LOCK.bars.traced)
+    fail(`${SS03.length} bars traced, locked at ${LOCK.bars.traced}`);
+  if (HIDDEN !== LOCK.bars.hidden)
+    fail(`${HIDDEN} bars hidden, locked at ${LOCK.bars.hidden}`);
+  if (TRIM_RIGHT !== LOCK.bars.trimmed)
+    fail(`${TRIM_RIGHT} bars trimmed, locked at ${LOCK.bars.trimmed}`);
+  if (DRAWN.length !== LOCK.bars.drawn)
+    fail(`${DRAWN.length} bars drawn, locked at ${LOCK.bars.drawn}`);
   if (LEFT_LINES.length !== LOCK.drawing.lines) {
-    fail(`${LEFT_LINES.length} analysis lines, locked at ${LOCK.drawing.lines}`);
+    fail(
+      `${LEFT_LINES.length} analysis lines, locked at ${LOCK.drawing.lines}`,
+    );
   }
   const shown = LEFT_LINES.filter((l) => !l.hidden).length;
   if (shown !== LOCK.drawing.linesShown) {
     fail(`${shown} lines drawn, locked at ${LOCK.drawing.linesShown}`);
   }
   if (ZIG.length !== LOCK.drawing.pivots) {
-    fail(`the swing line has ${ZIG.length} points, locked at ${LOCK.drawing.pivots}`);
+    fail(
+      `the swing line has ${ZIG.length} points, locked at ${LOCK.drawing.pivots}`,
+    );
   }
   /** ⚠ AND WINDOW 1 REALLY IS CENTRED WHILE IT IS ALONE. Simon asked for it in
    *  both directions; a canvas that changed size would silently break only the
    *  centring and nothing else here would notice. */
-  if (!near(CENTRED.x * 2 + LEFT.w, theme.canvas.width) || !near(CENTRED.y * 2 + LEFT.h, theme.canvas.height)) {
+  if (
+    !near(CENTRED.x * 2 + LEFT.w, theme.canvas.width) ||
+    !near(CENTRED.y * 2 + LEFT.h, theme.canvas.height)
+  ) {
     fail("window 1's opening position is not the centre of the frame");
   }
 }
@@ -623,7 +757,9 @@ const LOCK = {
   const top = GRID_L.y(DOMAIN[1]);
   const bot = GRID_L.y(DOMAIN[0]);
   if (top < LEFT.y || bot > LEFT.y + LEFT.h) {
-    fail(`the tape runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside a window at ${LEFT.y}..${LEFT.y + LEFT.h}`);
+    fail(
+      `the tape runs ${top.toFixed(0)}..${bot.toFixed(0)}, outside a window at ${LEFT.y}..${LEFT.y + LEFT.h}`,
+    );
   }
   /** ⚠ AND THE WHITE SPACE ON THE RIGHT HAS TO ACTUALLY BE THERE. It is the
    *  thing Simon asked for first, and it is the one part of this that a later
@@ -639,10 +775,13 @@ const LOCK = {
    * of being argued each time the width moves.
    */
   if (free < LEFT.w * 0.15) {
-    fail(`only ${free.toFixed(0)}px of the window is free to the right of the tape`);
+    fail(
+      `only ${free.toFixed(0)}px of the window is free to the right of the tape`,
+    );
   }
   /** And nothing may reach the card's own right edge. */
-  if (lastBar > LEFT.x + LEFT.w) fail("the tape runs past the window's right edge");
+  if (lastBar > LEFT.x + LEFT.w)
+    fail("the tape runs past the window's right edge");
   /**
    * ⚠ THE HEIGHT IS LOCKED, SO IT IS WRITTEN DOWN — Simon: "lock size height
    * chart (2 2nya)". Both windows and both plots, stated as the numbers that
@@ -651,32 +790,44 @@ const LOCK = {
    */
   const LOCKED = { window: 536, plot: PLOT_H };
   if (LEFT.h !== LOCKED.window) {
-    fail(`the window is ${LEFT.h}px tall, and its height is locked at ${LOCKED.window}`);
+    fail(
+      `the window is ${LEFT.h}px tall, and its height is locked at ${LOCKED.window}`,
+    );
   }
   if (plotOf(LEFT).h !== LOCKED.plot) {
-    fail(`the plot is ${plotOf(LEFT).h}px tall, and its height is locked at ${LOCKED.plot}`);
+    fail(
+      `the plot is ${plotOf(LEFT).h}px tall, and its height is locked at ${LOCKED.plot}`,
+    );
   }
   /** ⚠ AND THE FEET HAVE NOT MOVED — either of them. The window's bottom is
    *  where the first shrink left it, and the chart's bottom is a fixed inset up
    *  from that. A shrink that came off the wrong end would pass every other
    *  check in this file. */
   if (LEFT.y + LEFT.h !== BOTTOM) {
-    fail(`the windows end at ${LEFT.y + LEFT.h}, not on the anchored bottom at ${BOTTOM}`);
+    fail(
+      `the windows end at ${LEFT.y + LEFT.h}, not on the anchored bottom at ${BOTTOM}`,
+    );
   }
   const foot = plotOf(LEFT).y + plotOf(LEFT).h;
   if (foot !== BOTTOM - PAD_BOTTOM) {
-    fail(`the chart's foot is at ${foot}, not ${PAD_BOTTOM}px up from the window's floor`);
+    fail(
+      `the chart's foot is at ${foot}, not ${PAD_BOTTOM}px up from the window's floor`,
+    );
   }
   /** ⚠ AND THE HIDDEN BARS ARE STILL REACHABLE. They are the reference for a
    *  resistance level Simon has not drawn yet; sliced out of the series rather
    *  than out of this window, they would be gone. */
   if (SS03.length !== SHOWN.length + HIDDEN) {
-    fail("the hidden bars have left the series, so nothing can be measured off them");
+    fail(
+      "the hidden bars have left the series, so nothing can be measured off them",
+    );
   }
   /** ⚠ AND THE CANDLES THAT STAY HAVE NOT MOVED. The grid must still be solved
    *  over the full window, or trimming the right-hand bars re-spreads the rest
    *  — which is exactly what Simon locked against. */
   if (GRID_L.slot !== gridFor(LEFT).slot) {
-    fail("the grid no longer covers the untrimmed window, so the candles have shifted");
+    fail(
+      "the grid no longer covers the untrimmed window, so the candles have shifted",
+    );
   }
 }

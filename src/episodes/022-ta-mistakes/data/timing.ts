@@ -1165,6 +1165,31 @@ export const TWIN = {
   }
 }
 
+/**
+ * ═══ SC08 · THE QUESTION, AND THE ONE NOBODY ASKS ═══  Simon, 6594 and 6787.
+ *
+ * ⚠ THE WINDOWS GIVE UP THE FRAME TO A SENTENCE. Both shrink together toward
+ * the middle, which leaves the room the box needs and — more to the point —
+ * demotes them: the two readings stop being the subject the moment the question
+ * about how to read anything at all turns up under them.
+ *
+ * ⚠ AND THE BOX GROWS DOWNWARD FROM A FIXED TOP. The second line is an
+ * ADDITION, not a replacement — the same correction Simon made to the revenge
+ * note at 5876 — so the first question has to stay exactly where it was while
+ * the second arrives under it.
+ */
+export const PROVE = {
+  shrink: { at: 6594, over: 40, by: 0.7 },
+  /** ⚠ IT OPENS BEFORE THE SHRINK FINISHES. The room appearing and the thing
+   *  filling it are one move; waited out, they are two. */
+  box: { at: 6620, perChar: 2 },
+  grow: { at: 6787, over: 24, perChar: 2 },
+  lines: [
+    "Apa yang membuat analisis benar?",
+    "Apa yang bisa membuktikan salah?",
+  ],
+} as const;
+
 /* ═══ SC08 — confirmation bias ═══════════════════════════════════════════ */
 /**
  * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hapus semua visual scene 8 termasuk
