@@ -22,9 +22,8 @@ import { Candles, Card, candleWidth, gridOf, progressInOut, usePalette } from ".
 import { halves } from "../data/layout";
 import { TWIN } from "../data/timing";
 import { SS03 } from "../data/series";
-import {
-  Analysis, LEFT_ARROW, LEFT_LINES, RIGHT_ARROW, RIGHT_LINES,
-} from "./Analysis";
+import { Analysis, LEFT_ARROW, LEFT_LINES, RIGHT_LINES } from "./Analysis";
+import { RIGHT_ARROW } from "./ArrowRight";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = TWIN;
@@ -76,7 +75,18 @@ const RIGHT = shorter(R0);
  *  plot's width and height are both fixed, so hiding bars is what widens the
  *  ones that are left. */
 const HIDDEN = 45;
+/**
+ * ⚠ THE LAST EIGHT COME OFF THE DRAWING, NOT OFF THE GRID — Simon: "Lock posisi
+ * candle, lalu hapus 8 candlestick paling kanan". Those two halves of the
+ * sentence pull opposite ways, and the grid is where they are reconciled: it
+ * is still solved over all 66 bars, so every candle that stays is exactly where
+ * it was, and only the drawing is cut short. Sliced out of the grid instead,
+ * the remaining 58 would re-spread across the same width and every one of them
+ * would move — which is the thing he locked.
+ */
+const TRIM_RIGHT = 8;
 const SHOWN = SS03.slice(HIDDEN);
+const DRAWN = SHOWN.slice(0, SHOWN.length - TRIM_RIGHT);
 
 /**
  * ═══ WHERE THE CHART SITS INSIDE ITS WINDOW ═══
@@ -177,7 +187,7 @@ export const TwinWindows = () => {
         ] as const
       ).map(([rect, grid, lines, arrow], i) => (
         <Card key={i} rect={rect} opacity={t}>
-          <Candles bars={SHOWN} grid={grid} />
+          <Candles bars={DRAWN} grid={grid} />
           {/* ⚠ CLIPPED TO THE WINDOW, not to the plot. Three of the four lines
               start back in the hidden bars, so they have to be allowed to run
               off the left edge and be cut by the card — which is what a
@@ -208,7 +218,7 @@ export const TwinWindows = () => {
   /** ⚠ AND THE WHITE SPACE ON THE RIGHT HAS TO ACTUALLY BE THERE. It is the
    *  thing Simon asked for first, and it is the one part of this that a later
    *  change to PLOT_W could take away without anything looking broken. */
-  const lastBar = GRID_L.x(SHOWN.length - 1) + candleWidth(GRID_L) / 2;
+  const lastBar = GRID_L.x(DRAWN.length - 1) + candleWidth(GRID_L) / 2;
   const free = LEFT.x + LEFT.w - lastBar;
   /**
    * ⚠ THE FLOOR IS MINE, NOT SIMON'S, and it is a floor rather than a spec. He
@@ -252,5 +262,11 @@ export const TwinWindows = () => {
    *  than out of this window, they would be gone. */
   if (SS03.length !== SHOWN.length + HIDDEN) {
     fail("the hidden bars have left the series, so nothing can be measured off them");
+  }
+  /** ⚠ AND THE CANDLES THAT STAY HAVE NOT MOVED. The grid must still be solved
+   *  over the full window, or trimming the right-hand bars re-spreads the rest
+   *  — which is exactly what Simon locked against. */
+  if (GRID_L.slot !== gridFor(LEFT).slot) {
+    fail("the grid no longer covers the untrimmed window, so the candles have shifted");
   }
 }

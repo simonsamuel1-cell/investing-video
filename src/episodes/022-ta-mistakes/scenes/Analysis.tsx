@@ -47,28 +47,43 @@
  */
 import { Layer, theme, usePalette } from "../../../core";
 
-export type Seg = { readonly a: readonly [number, number]; readonly b: readonly [number, number] };
+export type Seg = {
+  readonly a: readonly [number, number];
+  readonly b: readonly [number, number];
+  /** ⚠ HIDDEN, NOT DELETED — Simon's word, and the same rule the hidden candles
+   *  follow: a line kept here stays editable and can come back by removing one
+   *  flag. Deleting it would mean re-tracing the screenshot to get it again. */
+  readonly hidden?: true;
+};
 
 // ═══ EDIT · LEFT WINDOW (ss05 — the one that concludes UP) ═══════════════
 export const LEFT_LINES: readonly Seg[] = [
-  /** The flat blue line along the bottom. */
-  { a: [-408.39, 526.83], b: [739.59, 526.83] },
-  /** The descending trendline down from the high off the left edge. */
-  { a: [-339.72, -238.14], b: [426.87, 113.86] },
+  /** The flat blue line along the bottom. ⚠ HIDDEN — Simon. */
+  { a: [-408.39, 526.83], b: [739.59, 526.83], hidden: true },
+  /** The descending trendline down from the high off the left edge.
+   *  ⚠ HIDDEN — Simon. */
+  { a: [-339.72, -238.14], b: [426.87, 113.86], hidden: true },
   /** The shallow rising line through the middle of the range. */
   { a: [39.52, 185.72], b: [628.48, 90.61] },
   /** The steeper rising support under the recovery. */
-  { a: [-1.37, 475.64], b: [546.48, 242.89] },
+  { a: [140, 515], b: [680, 185] },
 ];
 /** ⚠ THE CONCLUSION. Its LENGTH is not used — see `REACH_PX` in TwinWindows,
  *  which gives both windows' arrows the same reach so neither reads as the more
  *  confident. What these two points set is where it starts and which way it
  *  goes. */
-export const LEFT_ARROW: Seg = { a: [605.04, 183.38], b: [718.06, -222.38] };
+export const LEFT_ARROW: Seg = { a: [620, 200], b: [900, -100] };
 
 // ═══ EDIT · RIGHT WINDOW (ss04 — the one that concludes DOWN) ════════════
+/** ⚠ THE SAME ARRAY, NOT A COPY OF IT — Simon: "copy garis-garis bantu analisa
+ *  ini ke window kanan. Kecuali panah garis putus putus". Pointing at it rather
+ *  than duplicating the four lines is what makes "the same" true rather than
+ *  maintained: hide a line on the left and it is hidden on the right too. Give
+ *  the right window its own list here the day they are meant to differ. */
 export const RIGHT_LINES: readonly Seg[] = LEFT_LINES;
-export const RIGHT_ARROW: Seg = { a: [604.29, 216.76], b: [717.04, 518.8] };
+/** ⚠ AND THE ARROW IS THE ONE THING THAT DOES NOT COME ACROSS. It has its own
+ *  file, scenes/ArrowRight.tsx, because it is the only thing in the right
+ *  window that says something different — and because Simon asked for it. */
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
@@ -111,6 +126,7 @@ export const Analysis = ({
   return (
     <Layer opacity={opacity} clip={rect}>
       {lines.map((l, i) => {
+        if (l.hidden) return null;
         const p = px(l.a);
         const q = px(l.b);
         return (
@@ -121,7 +137,11 @@ export const Analysis = ({
             x2={q.x}
             y2={q.y}
             stroke={c.indigo}
-            strokeWidth={theme.shape.rule}
+            /** ⚠ SIMON'S 3px, and it is `theme.shape.line` rather than a typed
+             *  3 — the theme already calls that weight `line`, and a number
+             *  here would be the same value with nothing tying it to the rest
+             *  of the video. */
+            strokeWidth={theme.shape.line}
           />
         );
       })}
@@ -149,18 +169,19 @@ export const Analysis = ({
   );
 };
 
-/** Kept honest: the two arrows have to disagree, or the scene has nothing to
- *  say — and an edit above is exactly how that could stop being true.
+/** Kept honest.
  *
  *  ⚠ Y GOES DOWN, so an arrow that points UP has the SMALLER y at its tip. This
  *  check caught the coordinate change itself: written for the bar-and-price
  *  anchors it had the sign the other way round, and the first render after the
- *  switch failed on it rather than quietly drawing both arrows the same way. */
+ *  switch failed on it rather than quietly drawing both arrows the same way.
+ *  The right window's arrow is checked in its own file now. */
 {
-  const fall = (k: Seg) => k.b[1] - k.a[1];
-  if (fall(LEFT_ARROW) >= 0 || fall(RIGHT_ARROW) <= 0) {
-    throw new Error(
-      "022-ta-mistakes/Analysis: the left arrow must point up and the right one down",
-    );
+  if (LEFT_ARROW.b[1] >= LEFT_ARROW.a[1]) {
+    throw new Error("022-ta-mistakes/Analysis: the left window's arrow must point UP");
+  }
+  /** And at least one line has to survive being hidden. */
+  if (LEFT_LINES.every((l) => l.hidden)) {
+    throw new Error("022-ta-mistakes/Analysis: every analysis line is hidden");
   }
 }
