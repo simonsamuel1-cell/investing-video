@@ -201,6 +201,14 @@ export const STUDY = (() => {
    */
   const labelH = 22;
   const inset = 7;
+  /**
+   * ⚠ THE PANES' CONTENT STARTS ON THE EIGHTH CANDLE — Simon: "garis-garis (rsi
+   * stoch macd) mulai dari sebelah kanan textnya aja, jadi tiga garis ini
+   * muncul dari candle ke 8 saja". The name lives at the pane's own left edge,
+   * so the line has to begin to the right of it; counted in BARS rather than
+   * pixels, the gap stays the gap when the plot's width changes.
+   */
+  const from = 7;
   const at = height - foot - (pane * 3 + gap * 2);
   return {
     height,
@@ -209,6 +217,7 @@ export const STUDY = (() => {
     lead,
     labelH,
     inset,
+    from,
     at,
     /** The price plot once it has made room for the three panes… */
     shrunk: at - lead - BARE.plotTop,
@@ -462,28 +471,40 @@ const makeChart = (sh: {
   const warmFull = [...warm, ...closes];
   const warmBars = [...toBars(warm, sh.seed + 5), ...bars];
   /**
-   * ⚠ SHORTER LOOKBACKS — Simon: "garisnya juga buat lebih volatile". This tape
-   * is a smooth synthetic series, and a 14-bar RSI on it barely leaves the
-   * middle of its own pane: 13→67, averaging 3.3 points a bar. At 7 it runs
-   * 6→85 and averages 6.1. Real arithmetic on the same tape, a different
-   * question asked of it — not a line stretched to look busy.
+   * ═══ THE TWO OSCILLATORS ═══  Simon asked for the same lines to be MORE
+   * volatile and LESS rigid, which pull against each other — so they are two
+   * separate moves, and the numbers say what each one bought.
    *
-   * ⚠ AND THE SLOW STOCHASTIC, NOT THE FAST ONE — "dibuat smooth aja, jangan
-   * berantakan". Raw %K jumps ten points a bar and reads as noise; the slow
-   * variant takes %K's own 3-bar mean as the line and smooths THAT again for
-   * the signal, which keeps the full 0→100 swing and loses the chatter. It is
-   * what every platform means by "Stochastic" anyway.
+   * ⚠ A SHORTER LOOKBACK BUYS THE SWING. This tape is a smooth synthetic
+   * series and a 14-bar RSI on it barely leaves the middle of its own pane:
+   * range 53, averaging 3.3 points a bar. At 5 it is range 90 and 8.1.
+   *
+   * ⚠ SMOOTHING TWICE BUYS THE LINE. Two 3-bar means is very nearly a Gaussian:
+   * it costs a little of the swing and takes most of the corners. RSI(5)
+   * smoothed twice ends at range 84, 6.3 points a bar, and a curvature of 3.3 —
+   * which is what the ORIGINAL RSI(14) had. So the line is as smooth as it ever
+   * was while moving twice as far, and neither half of that is a line stretched
+   * to look busy: it is RSI arithmetic on this tape throughout.
+   *
+   * ⚠ AND THE SLOW STOCHASTIC, which is what every platform means by the word.
+   * Raw %K jumps thirteen points a bar and reads as noise; the slow variant is
+   * %K's own 3-bar mean, and two more passes round off the plateaus it makes
+   * whenever the tape pins it at 0 or 100 — those flats were most of what read
+   * as rigid.
    */
-  const st = stochastic(warmBars, 9, 3);
-  const slowD = sma(
-    st.d.map((v) => v ?? 0),
-    3,
-  ).map((v, i) => (st.d[i] === null || i < 2 ? null : v));
+  const smooth = (a: (number | null)[], n: number) =>
+    sma(
+      a.map((v) => v ?? 0),
+      n,
+    ).map((v, i) => (a[i] === null || i < n - 1 ? null : v));
+  const easy = (a: (number | null)[]) => smooth(smooth(a, 3), 3);
+  const st = stochastic(warmBars, 5, 3);
+  const slowK = easy(st.d);
   const mc = macd(warmFull, 12, 26, 9);
   const study = {
-    rsi: rsi(warmFull, 7).slice(STUDY_WARM),
-    k: st.d.slice(STUDY_WARM),
-    d: slowD.slice(STUDY_WARM),
+    rsi: easy(rsi(warmFull, 5)).slice(STUDY_WARM),
+    k: slowK.slice(STUDY_WARM),
+    d: smooth(slowK, 3).slice(STUDY_WARM),
     macd: mc.line.slice(STUDY_WARM),
     signal: mc.signal.slice(STUDY_WARM),
     hist: mc.hist.slice(STUDY_WARM),
@@ -1573,6 +1594,13 @@ export const BrokerPanel = ({
                   const top = STUDY.at + k * (STUDY.pane + STUDY.gap);
                   const x0 = X(0);
                   const x1 = X(N - 1);
+                  /** Where this pane's own content begins — see STUDY.from. */
+                  const xa = X(STUDY.from);
+                  /** ⚠ AND THE FIRST SEVEN VALUES ARE DROPPED, not clipped. A
+                   *  clip would hide a line that is still being drawn behind
+                   *  the words; nulling them means it was never there. */
+                  const cut = (vs: (number | null)[]) =>
+                    vs.map((v, i) => (i < STUDY.from ? null : v));
                   /**
                    * 0→1 up the pane, from its own floor — and the top of that
                    * travel stops BELOW the name's row, so no line can ever
@@ -1620,7 +1648,7 @@ export const BrokerPanel = ({
                   const band = (t: number) => (
                     <line
                       key={t}
-                      x1={x0}
+                      x1={xa}
                       y1={py(t)}
                       x2={x1}
                       y2={py(t)}
@@ -1691,20 +1719,20 @@ export const BrokerPanel = ({
                       {k === 0 && (
                         <>
                           {[30, 70].map((v) => band(pct(v)))}
-                          <path d={path(ch.study.rsi, pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(cut(ch.study.rsi), pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
                         </>
                       )}
                       {k === 1 && (
                         <>
                           {[20, 80].map((v) => band(pct(v)))}
-                          <path d={path(ch.study.k, pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
-                          <path d={path(ch.study.d, pct)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(cut(ch.study.k), pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(cut(ch.study.d), pct)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
                         </>
                       )}
                       {k === 2 && (
                         <>
                           {band(sig(0))}
-                          {ch.study.hist.map((v, i) =>
+                          {cut(ch.study.hist).map((v, i) =>
                             v === null ? null : (
                               <rect
                                 key={i}
