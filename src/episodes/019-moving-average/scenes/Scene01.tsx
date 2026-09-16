@@ -1648,19 +1648,34 @@ export const BrokerPanel = ({
                   const sig = (v: number) => (v - mLo) / Math.max(1e-9, mHi - mLo);
                   return (
                     <g key={label} opacity={on}>
-                      {/* ⚠ THE PANE IS THE TAPE'S OWN COLUMN. It starts and
-                          ends where the plot does, so the three studies and the
-                          chart above them share one left edge and one right
-                          edge — which is what makes them read as panes of one
-                          picture rather than three boxes near it. */}
-                      <rect
-                        x={px0}
-                        y={top}
-                        width={plotW}
-                        height={STUDY.pane}
-                        rx={theme.layout.radius.sm}
-                        fill={C.surface}
-                        fillOpacity={0.62}
+                      {/* ═══ THE SEPARATOR ═══  Simon: "tambahkan separator
+                          (garis horizontal tipis saja) di antara chart rsi
+                          stoch dan macd".
+
+                          ⚠ EACH PANE BRINGS ITS OWN, the one ABOVE it, so a
+                          divider arrives with the thing it is dividing off
+                          rather than three of them appearing over an empty
+                          stack. The first one separates the chart from RSI, so
+                          it sits in the `lead` gap; the other two sit in `gap`.
+
+                          ⚠ AND IT IS PLACED FROM THE PANE, NOT FROM THE PLOT.
+                          The price plot's height is animating while the studies
+                          arrive; measured down from the chart's floor these
+                          would be riding that shrink.
+
+                          ⚠ THE PANE'S OWN GROUND IS GONE with this. It was
+                          white at 0.62 — which was visible while the chart
+                          stood on the episode's grey, and has drawn nothing at
+                          all since the white window came back around it. A
+                          shape that cannot be seen is not a subtle shape, it is
+                          a shape nobody will remember is there. */}
+                      <line
+                        x1={x0}
+                        y1={top - (k === 0 ? STUDY.lead : STUDY.gap) / 2}
+                        x2={x1}
+                        y2={top - (k === 0 ? STUDY.lead : STUDY.gap) / 2}
+                        stroke={C.gridline}
+                        strokeWidth={theme.layout.border.thin}
                       />
                       <text
                         x={x0}
