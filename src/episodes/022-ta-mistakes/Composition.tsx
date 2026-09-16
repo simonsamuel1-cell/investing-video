@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -54,6 +54,7 @@ import { Platform } from "./scenes/Platform";
  * Bringing any of them back is one import and one row in SCENES.
  */
 import { Overload } from "./scenes/Overload";
+import { ChartWindow } from "./scenes/ChartWindow";
 import { CopyTrade } from "./scenes/CopyTrade";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
@@ -206,6 +207,20 @@ const Body = () => (
       name="SC10 · indicator overload"
     >
       <Overload />
+    </Sequence>
+
+    {/* ⚠ SC11'S CHART WINDOW — Simon: "copy deh sama animasinya … tapi chart
+        dan animasinya aja, sisanya jangan ambil". It is the draft workbench's
+        window and tape, and none of what that workbench stacks on top. It opens
+        on 9320, the frame round seven clears and the frame the voice starts the
+        sentence about it. Its own window again rather than a tile: BLOCK.SC11
+        is 8998 and the picture belongs to the voice. See scenes/ChartWindow.tsx. */}
+    <Sequence
+      from={WINDOW11.at}
+      durationInFrames={WINDOW11.to - WINDOW11.at}
+      name="SC11 · chart window"
+    >
+      <ChartWindow />
     </Sequence>
 
     {/* ⚠ SC15 ON ITS OWN WINDOW, FOR THE SAME REASON SC10 IS ON ONE. Its three

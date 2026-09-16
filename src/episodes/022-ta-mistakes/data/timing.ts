@@ -1751,6 +1751,57 @@ export const ROW7 = {
   }
 }
 
+/* ═══ SC11 — THE CHART WINDOW ════════════════════════════════════════════
+ *
+ * ⚠ 9320 IS SIMON'S, AND IT IS THE FRAME THE CARDS CLEAR. Round seven runs
+ * 9110→9320, so the window opens on the first frame the list is gone — and on
+ * the same frame the voice starts "Setelah harga bergerak, chart sering
+ * terlihat sangat jelas." The pad at 9276 is what made those two the same
+ * number; before it the sentence began 29 frames early. Asserted below rather
+ * than typed twice.
+ *
+ * ⚠ THE CHART AND ITS ANIMATION, AND NOTHING ELSE — Simon: "tapi chart dan
+ * animasinya aja, sisanya jangan ambil". What is NOT here is everything the
+ * draft workbench puts on top of the same window: the title card, Resistance,
+ * the Zone, Swing Low, Prior High, the Decision Point cut, the three branches
+ * and the process matrix. The window and the tape are the whole scene for now.
+ *
+ * ⚠ WHICH MEANS IT STANDS STILL FROM 9390 TO 10165, and that is worth saying
+ * plainly rather than leaving to be noticed. The card is up by 9340, the tape
+ * finishes building at 9390, and after that nothing moves for thirteen
+ * seconds. That stretch is the room for whatever goes on top of it.
+ */
+export const WINDOW11 = {
+  at: ROW7.from + ROW7.over,
+  /** ⚠ IT ENDS IN THE AIR BEFORE THE ADMR CASE. The last hindsight sentence
+   *  runs out on 10160 and "Sekarang kita lihat contohnya di ADMR." starts on
+   *  10210, so the window leaves in between rather than under either. */
+  to: 10185,
+  card: 9320,
+  /** ⚠ THE TAPE STARTS AS THE CARD FINISHES — 20 frames is `fade` at 60fps.
+   *  A chart that builds inside a window still arriving is two things at once. */
+  candles: 9340,
+  /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
+   *  chart and its animation, and an ending was not part of either. A picture
+   *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
+   *  window was given exactly this on his own instruction. One line to remove
+   *  when what goes on top decides its own ending. */
+  out: 10165,
+} as const;
+
+{
+  const V = WINDOW11;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.at !== ROW7.from + ROW7.over) fail(`SC11's window opens at ${V.at}, not where round seven clears`);
+  if (V.card !== V.at) fail(`SC11's window card arrives at ${V.card}, not when the scene does at ${V.at}`);
+  if (V.candles <= V.card) fail("SC11's tape builds before its window exists");
+  if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
+  /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
+  if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);
+}
+
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
 export const HINDSIGHT = {
   name: 9079,

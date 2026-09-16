@@ -971,3 +971,59 @@ export const PLAN_TAPE: Series = {
   if (up === 0 || up === PLAN_TAPE.bars.length) fail("SC15's strip is all one colour");
   if (PLAN_TAPE.closes[11] <= PLAN_TAPE.closes[0]) fail("SC15's strip does not rise");
 }
+
+/* ═══ SC11 · THE CHART WINDOW'S TAPE ═════════════════════════════════════
+ *
+ * ⚠⚠ [NEEDS DATA: ~60 IDX daily bars, ISO dates, TradingView export with ADJ
+ * active] ⚠⚠  Wanted: an uptrend, a level tested twice, then a breakdown, with
+ * the decision bar at ≈65% of the visible range. It must NOT be ADMR — SC12 is
+ * the ADMR case study and this chart would spoil its reveal.
+ *
+ * ⚠ IT IS THE DRAFT'S TAPE, COPIED EXACTLY — Simon: "copy deh sama animasinya".
+ * Same anchors, same n, same two seeds, so the bars are identical to the ones
+ * on the draft workbench rather than merely similar.
+ *
+ * ⚠ AND scenes/Draft.tsx STILL HOLDS ITS OWN COPY, which is worth writing down
+ * because it is the one duplicate in this episode. That file belongs to the
+ * other chat and cannot be edited from here; at handover its local `SERIES`
+ * should be deleted and this imported instead. Until then the two are one edit
+ * away from drifting, and a tape that drifts is two charts of one thing.
+ *
+ * ⚠ NOT `fromShape`. Its five shapes cannot produce "rises, fails at a level
+ * twice, then breaks" — the turns have to land where the narration says they
+ * do, so the closes are designed from anchors and `kind` stays honest.
+ */
+export const HIND_WINDOW: Series = (() => {
+  const closes = fromAnchors(
+    [
+      [0, 100], [0.12, 108], [0.2, 104], [0.34, 116], [0.42, 111],
+      [0.54, 124], [0.6, 118], [0.66, 124.5],
+      [0.72, 112], [0.8, 106], [0.88, 101], [1, 96],
+    ],
+    60,
+    0x22c1,
+  );
+  return { closes, bars: toBars(closes, 0x22c2), kind: "synthetic" };
+})();
+
+/** ⚠ RELATIVE, NOT DATED. A made-up date on a generated tape is a fabricated
+ *  fact; these become real ISO months with the export. */
+export const HIND_WINDOW_AXIS: [number, string][] = [
+  [0, "−3 bln"], [19, "−2 bln"], [38, "−1 bln"], [57, "Sekarang"],
+];
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  if (HIND_WINDOW.bars.length !== 60) fail(`SC11's window tape is ${HIND_WINDOW.bars.length} bars, not 60`);
+  /** ⚠ THE AXIS LABELS HAVE TO NAME BARS THAT EXIST. Four labels on a 60-bar
+   *  tape is the one thing a shorter export would break silently. */
+  HIND_WINDOW_AXIS.forEach(([i, t]) => {
+    if (i < 0 || i >= HIND_WINDOW.bars.length) fail(`SC11's axis label "${t}" points at bar ${i}, which is not on the tape`);
+  });
+  /** ⚠ AND THE SHAPE THE NARRATION DESCRIBES HAS TO BE IN IT: it must end
+   *  BELOW where it started, or "setelah harga bergerak" is describing a chart
+   *  that did not break. */
+  if (HIND_WINDOW.closes[59] >= HIND_WINDOW.closes[0]) fail("SC11's window tape does not break down");
+}
