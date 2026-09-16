@@ -1150,26 +1150,36 @@ export const PLAN = {
   if (P.b1.chipY - pillH(P.b1.chipSize) / 2 < PLAN_A.y) fail("SC15's mistake chip is above the safe area");
 }
 
-/* ═══ SC11 · TWO WINDOWS ═════════════════════════════════════════════════
+/* ═══ SC11 · ONE WINDOW, CENTRED ═════════════════════════════════════════
  *
- * ⚠ IT IS THE SAME WINDOW, SPLIT — Simon: "hapus isi chartnya, keep windownya.
- * Lalu buat windownya jadi 2 kiri kanan". So the outer bounds are exactly the
- * box the single window occupied: 96..1824 across, 230..870 down. The pair is
- * cut out of it rather than laid out afresh, which is the only way "jadi 2"
- * means the thing that was there is now two of it.
+ * ⚠ A SHIFT, NOT A RESIZE — Simon: "remove 1 window, lalu geser window 1 nya
+ * lagi ke tengah". The window that is left is still exactly the size it was as
+ * the left half of the pair; only its x moved. That is why the size is taken
+ * from `halves()` and then re-centred rather than written out: "the same window
+ * moved" is a claim, and the claim is asserted below.
  *
- * ⚠ AND THE CUT IS `halves()`, the episode's own. SC08's two windows and SC09's
- * comparison are both cut with it; a third pair at a merely similar size would
- * be three devices where the video has one.
+ * ⚠ AND IT IS A LIST OF ONE, ON PURPOSE. Simon is still deciding — this scene
+ * has been one window, then two, then one again. `COUNT` is the whole
+ * difference; everything downstream maps over the list and does not care how
+ * long it is.
  *
- * ⚠ THE PLOT, THE SPAN AND THE TICKS ARE GONE, and that is deliberate rather
- * than tidying. They described a chart box inside a 1728-wide card; each half
- * is 836 now, so every one of those numbers is wrong for the box that exists.
- * Keeping them would be keeping a geometry that reads as usable and is not.
- * The tape itself is untouched in data/series.ts — that is the expensive part
- * and it is box-independent.
+ * ⚠ THE OUTER BOUNDS STAY AS THEY WERE, unused by the drawing but kept as the
+ * thing the size is derived FROM. Delete it and 836 becomes a number somebody
+ * typed.
  */
 const W11_BOUNDS: Rect = { x: theme.stage.active.x, y: 230, w: theme.stage.active.w, h: 640 };
+
+/**
+ * How many windows the scene draws. 1 or 2 — nothing else is laid out.
+ *
+ * ⚠ TYPED `number`, NOT `1 | 2`, AND THAT IS NOT LAZINESS. A literal type here
+ * narrows to whatever it currently is, and TypeScript then calls the branch for
+ * the other value unreachable — so the assertions that guard the arrangement
+ * Simon is not using would refuse to compile, and flipping this back would mean
+ * editing the checks as well as the number. The point of this constant is that
+ * it is the ONLY thing that changes.
+ */
+const W11_COUNT: number = 1;
 
 /**
  * ⚠ THE INSET IS THE SAME ON THREE SIDES, and the bottom is deeper by exactly
@@ -1188,19 +1198,25 @@ const plotOf = (card: Rect): Rect => ({
   h: card.h - W11_PAD * 2 - W11_NAME,
 });
 
-const W11_CARDS = halves(W11_BOUNDS);
+/** ⚠ THE PAIR IS STILL WHAT DECIDES THE SIZE, even when only one is drawn. */
+const W11_PAIR = halves(W11_BOUNDS);
+const W11_CARDS: Rect[] =
+  W11_COUNT === 2
+    ? W11_PAIR
+    : [{ ...W11_PAIR[0], x: (theme.canvas.width - W11_PAIR[0].w) / 2 }];
 
 export const WIN11 = {
-  /** The pair's outer bounds — the window before it was split. */
+  /** The box the window was cut out of — kept because the size derives from it. */
   bounds: W11_BOUNDS,
+  count: W11_COUNT,
   cards: W11_CARDS,
   /** Where the pattern is drawn inside each window. */
-  plots: W11_CARDS.map(plotOf) as [Rect, Rect],
+  plots: W11_CARDS.map(plotOf),
   /** Centre of the pattern's name, under each plot. */
   names: W11_CARDS.map((r) => ({
     x: r.x + r.w / 2,
     y: r.y + r.h - W11_PAD - W11_NAME / 2,
-  })) as [{ x: number; y: number }, { x: number; y: number }],
+  })),
 };
 
 {
@@ -1209,24 +1225,37 @@ export const WIN11 = {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
-  /** ⚠ THE TWO ARE THE SAME SIZE. Whatever goes in them later is a comparison,
-   *  and a comparison whose halves are different sizes has already answered
-   *  itself. */
-  if (W.cards[0].w !== W.cards[1].w) fail(`SC11's windows are ${W.cards[0].w} and ${W.cards[1].w} wide`);
-  if (W.cards[0].h !== W.cards[1].h) fail("SC11's windows are different heights");
-  /** ⚠ AND THE PAIR STILL FILLS THE BOX THE SINGLE WINDOW DID, edge to edge.
-   *  This is the assertion that makes "the same window, split" true rather
-   *  than merely intended. */
-  if (W.cards[0].x !== W.bounds.x) fail("SC11's left window does not start where the window did");
-  const right = W.cards[1].x + W.cards[1].w;
-  if (right !== W.bounds.x + W.bounds.w) fail(`SC11's right window ends at ${right}, not at ${W.bounds.x + W.bounds.w}`);
-  if (W.cards[1].x - (W.cards[0].x + W.cards[0].w) !== GAP) fail("SC11's windows are not split on the episode's own gap");
-  /** ⚠ AND THE PAIR STAYS INSIDE THE FRAME'S MARGINS. */
-  if (W.bounds.y < A.y) fail("SC11's windows start above the safe area");
-  if (W.bounds.y + W.bounds.h > theme.captionBand.top) {
-    fail(`SC11's windows reach ${W.bounds.y + W.bounds.h}, inside the subtitle band`);
+  if (W.cards.length !== W.count) fail(`SC11 lays out ${W.cards.length} windows but says it draws ${W.count}`);
+  /**
+   * ⚠ THE WINDOW IS THE SAME SIZE IT WAS AS HALF OF A PAIR. This is the whole
+   * of "geser, bukan resize", and it is the one thing a later edit could break
+   * without anything looking wrong — a window nudged to the middle by hand
+   * would almost certainly also be given a rounder width.
+   */
+  W.cards.forEach((r, i) => {
+    if (r.w !== W11_PAIR[0].w || r.h !== W11_PAIR[0].h) {
+      fail(`SC11's window ${i + 1} is ${r.w}×${r.h}, not the ${W11_PAIR[0].w}×${W11_PAIR[0].h} a half is`);
+    }
+    if (r.x < A.x || r.x + r.w > A.x + A.w) fail(`SC11's window ${i + 1} reaches outside the safe area`);
+  });
+  /** ⚠ AND WITH ONE OF THEM, IT IS ON THE FRAME'S CENTRE-LINE. */
+  if (W.count === 1) {
+    const mid = W.cards[0].x + W.cards[0].w / 2;
+    if (mid !== theme.canvas.width / 2) fail(`SC11's window is centred on ${mid}, not on ${theme.canvas.width / 2}`);
   }
-  if (W.bounds.y < theme.logoZone.height) fail("SC11's windows reach into the logo zone");
+  /** ⚠ AND WITH TWO, THE PAIR FILLS THE BOX IT WAS CUT FROM, edge to edge. */
+  if (W.count === 2) {
+    const right = W.cards[1].x + W.cards[1].w;
+    if (W.cards[0].x !== W.bounds.x || right !== W.bounds.x + W.bounds.w) {
+      fail("SC11's pair does not fill the box it was cut from");
+    }
+  }
+  /** ⚠ THE PAIR STAYS INSIDE THE FRAME'S MARGINS, top and bottom. */
+  if (W.bounds.y < A.y) fail("SC11's window starts above the safe area");
+  if (W.bounds.y + W.bounds.h > theme.captionBand.top) {
+    fail(`SC11's window reaches ${W.bounds.y + W.bounds.h}, inside the subtitle band`);
+  }
+  if (W.bounds.y < theme.logoZone.height) fail("SC11's window reaches into the logo zone");
   /** ⚠ THE DRAWING AND ITS NAME MAY NOT TOUCH. The plot's floor and the top of
    *  the name's own band are the same line by construction, so what is checked
    *  is that a line of type centred on that band still clears the floor. */
@@ -1242,9 +1271,4 @@ export const WIN11 = {
       fail(`SC11's window ${i + 1} draws wider than itself`);
     }
   });
-  /** ⚠ AND THE TWO PLOTS ARE THE SAME SIZE — the halves are, so this catches an
-   *  inset that stopped being shared rather than a box that moved. */
-  if (W.plots[0].w !== W.plots[1].w || W.plots[0].h !== W.plots[1].h) {
-    fail("SC11's two plots are different sizes");
-  }
 }

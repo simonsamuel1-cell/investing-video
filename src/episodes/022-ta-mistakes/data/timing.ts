@@ -1760,12 +1760,12 @@ export const ROW7 = {
  * number; before it the sentence began 29 frames early. Asserted below rather
  * than typed twice.
  *
- * ⚠ TWO WINDOWS, AND THE SAME PATTERN IN BOTH — Simon: "hapus isi chartnya,
- * keep windownya. Lalu buat windownya jadi 2 kiri kanan", then "cuplikat gambar
- * itu di 2 window" of the Bullish Flag from his reference sheet. One set of
- * bars drawn twice, each window solving its own grid inside its own box: "the
- * same" is true by construction rather than by maintenance. See FLAG_BARS in
- * data/series.ts and WIN11 in data/layout.ts.
+ * ⚠ ONE WINDOW AGAIN, CENTRED, WITH THE BULLISH FLAG IN IT. This scene has been
+ * a chart, then an empty window, then two, and now one — Simon: "remove 1
+ * window, lalu geser window 1 nya lagi ke tengah". None of that touches the
+ * table: the frames below are what arrives WHEN, and how many windows arrive is
+ * `W11_COUNT` in data/layout.ts. See FLAG_BARS in data/series.ts for the
+ * pattern itself.
  *
  * ⚠ FOUR ARRIVALS, IN THE ORDER THE DRAWING IS MADE: the windows, the bars
  * left to right, the two lines that close the triangle, then its name. The

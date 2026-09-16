@@ -1,21 +1,24 @@
 /**
- * SC11 · TWO WINDOWS, THE SAME PATTERN.  `from 9320 · to 10185`
+ * SC11 · ONE WINDOW, CENTRED.  `from 9320 · to 10185`
  *
- * ⚠ THE BULLISH FLAG FROM SIMON'S REFERENCE SHEET — "cuplikat gambar itu di 2
- * window", the Flag cell under Bullish Patterns in chart pattern.webp. Sixteen
- * bars traced off that drawing, and the two converging lines that make it a
- * flag rather than a run of candles.
+ * ⚠ THE BULLISH FLAG FROM SIMON'S REFERENCE SHEET — the Flag cell under
+ * Bullish Patterns in chart pattern.webp. Sixteen bars traced off that drawing,
+ * and the two converging lines that make it a flag rather than a run of
+ * candles.
  *
- * ⚠ ONE SET OF BARS, DRAWN TWICE — not two that match. FLAG_BARS is read by
- * both windows, so "the same pattern in both" is true by construction rather
- * than by maintenance. If the two are ever meant to diverge, that divergence
- * has to be written down as a difference; it can never happen by accident.
- * Same rule SC08's two windows are built on.
+ * ⚠ ONE WINDOW NOW, AND IT IS THE HALF THAT WAS LEFT — Simon: "remove 1 window,
+ * lalu geser window 1 nya lagi ke tengah". A shift, not a resize: it is still
+ * exactly the size it was as half of a pair, standing on the frame's own
+ * centre-line. See WIN11 in data/layout.ts, where that is asserted.
  *
- * ⚠ AND ONE GRID SHAPE, NOT ONE GRID. Each window solves its own grid inside
- * its own box — the boxes are the same size, so the two come out identical —
- * rather than sharing a grid that would draw both patterns in the left-hand
- * window's pixels.
+ * ⚠ THE SCENE STILL DRAWS A LIST, and that is on purpose. This has been one
+ * window, then two, then one again; `W11_COUNT` in data/layout.ts is the whole
+ * difference and nothing here counts. What is below maps over whatever it is
+ * handed.
+ *
+ * ⚠ AND EACH WINDOW SOLVES ITS OWN GRID inside its own box, rather than sharing
+ * one — which is what let the pair be identical without either of them being
+ * drawn in the other's pixels, and is why going back to two needs no change here.
  *
  * ⚠ NO "Entry" AND NO ARROW. The reference labels an entry on the breakout and
  * draws an arrow down to it. Both are directional markers, scripts/audit.mjs is
