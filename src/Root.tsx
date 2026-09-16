@@ -11,6 +11,7 @@ import {
   TAMistakesComposition,
   TOTAL_FRAMES as V22_FRAMES,
 } from "./episodes/022-ta-mistakes/Composition";
+import { TAMistakesDraft, DRAFT_FRAMES } from "./episodes/022-ta-mistakes/Draft";
 import { theme } from "./core";
 
 export const RemotionRoot: React.FC = () => {
@@ -53,6 +54,19 @@ export const RemotionRoot: React.FC = () => {
         id="TAMistakes022"
         component={TAMistakesComposition}
         durationInFrames={V22_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* ⚠ A WORKBENCH, NOT A DELIVERABLE. One scene on its own clock, starting
+          at 0, so it can be built and judged without the 16830-frame episode
+          around it — and so a second conversation can work on the NEXT scene
+          without touching this one's files. See episodes/022-ta-mistakes/
+          Draft.tsx for the rule that makes that safe. */}
+      <Composition
+        id="TAMistakes022Draft"
+        component={TAMistakesDraft}
+        durationInFrames={DRAFT_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
