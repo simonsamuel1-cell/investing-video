@@ -33,28 +33,50 @@
  * ⚠ THE LINES DRAW, THEY DO NOT FADE. They are a reading OF the candles, so
  * they arrive after them and they arrive by being drawn from the triangle's
  * mouth to its apex — which is where the bars put it. See FLAG_LINES.
+ *
+ * ⚠ AND THE WEDGE IS OPENED 5° WIDER THAN THE BARS ASK FOR — Simon: "gedein
+ * sudutnya 5 derajat", so it clears the candles rather than hugging them. The
+ * apex is the pivot, so the point the two converge to has not moved. See
+ * flagWedge in data/layout.ts.
+ *
+ * ⚠ THE LAST THREE BARS ARE HIDDEN — Simon: "hide 3 candlestick dari kanan",
+ * which are the breakout. On a scene about hindsight that is the whole picture:
+ * the flag, and no answer yet. The domain still reserves their room, so nothing
+ * moves when they come back.
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Card, Chart, Layer, Line, Stage,
+  Candles, Card, Layer, Line, Stage,
   domainOf, drawPath, fadeOut, gridOf, progress, theme, useMotion, usePalette,
 } from "../../../core";
 import { WINDOW11, local } from "../data/timing";
-import { WIN11 } from "../data/layout";
-import { FLAG, FLAG_BARS, FLAG_LINES } from "../data/series";
+import { WIN11, flagWedge } from "../data/layout";
+import { FLAG, FLAG_BARS } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = WINDOW11;
 const W = WIN11;
-const F = FLAG_LINES;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const NAME = "Flag";
+/**
+ * ⚠ THE DOMAIN IS THE WHOLE TAPE, INCLUDING THE BARS THAT ARE HIDDEN. That is
+ * what makes them HIDDEN rather than removed: the price scale still reserves
+ * their room, so the thirteen on screen sit exactly where they sat and nothing
+ * moves when the three come back. It also leaves the top of the plot empty,
+ * which on a scene about not knowing what comes next is the right kind of
+ * empty — a chart that had re-fitted itself around the missing future would be
+ * making the opposite point.
+ */
 const DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
+/** ⚠ SLICED, NOT RE-INDEXED. core/Candles maps index k of what it is given onto
+ *  grid.x(k), so dropping bars off the END leaves every remaining one where it
+ *  was. Dropping them off the front would not. */
+const SHOWN = FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden);
 
-/** ⚠ SOLVED ONCE, AT MODULE LOAD. Two grids, one per window — same size boxes,
- *  so the two drawings are identical without sharing a coordinate space. */
-const GRIDS = W.plots.map((box) => gridOf(FLAG.closes, DOMAIN, box, 0.08));
+/** ⚠ SOLVED ONCE, AT MODULE LOAD. One grid per window, each inside its own box
+ *  — so two windows would be identical without sharing a coordinate space. */
+const GRIDS = W.plots.map((box) => gridOf(FLAG.closes, DOMAIN, box, W.plotPad));
 
 export const ChartWindow = () => {
   const f = useCurrentFrame();
@@ -71,52 +93,40 @@ export const ChartWindow = () => {
           <Card key={`win${i}`} rect={rect} opacity={open} soft />
         ))}
 
+        {/* ⚠ core/Candles DIRECTLY, NOT core/Chart. Chart was here for its
+            left-to-right build and everything else it draws was already turned
+            off; its `shown` is a fraction of the whole series, and hiding the
+            last three bars is exactly a thing that fraction cannot say. The
+            build is the one line it was providing. */}
         {GRIDS.map((g, i) => (
-          <Chart
+          <Candles
             key={`bars${i}`}
-            series={FLAG}
+            bars={SHOWN}
             grid={g}
-            at={local(V.candles, V.at)}
-            over={m.sec(0.83)}
-            ticks={[]}
-            tickLabels={false}
-            baseline={false}
+            shown={progress(f, local(V.candles, V.at), m.sec(0.83))}
           />
         ))}
 
         {/* ⚠ MOUNTED ON THEIR OWN FRAME. An animated path that exists before
             its beat is a path that flashes its end state on frame zero. */}
         {f >= local(V.lines, V.at) &&
-          GRIDS.map((g, i) => {
-            /** The triangle's mouth and its apex, in this window's pixels. */
-            const ends = [
-              { a: { i: F.from, p: F.upAt(F.from) }, b: F.apex },
-              { a: { i: F.from, p: F.loAt(F.from) }, b: F.apex },
-            ];
-            return (
-              <Layer key={`lines${i}`}>
-                {ends.map((e, k) => {
-                  const x1 = g.x(e.a.i);
-                  const y1 = g.y(e.a.p);
-                  const x2 = g.x(e.b.i);
-                  const y2 = g.y(e.b.p);
-                  return (
-                    <line
-                      key={k}
-                      x1={x1}
-                      y1={y1}
-                      x2={x2}
-                      y2={y2}
-                      stroke={c.indigo}
-                      strokeWidth={theme.shape.line}
-                      strokeLinecap="round"
-                      {...drawPath(drawn, Math.hypot(x2 - x1, y2 - y1))}
-                    />
-                  );
-                })}
-              </Layer>
-            );
-          })}
+          GRIDS.map((g, i) => (
+            <Layer key={`lines${i}`}>
+              {flagWedge(g).map((e, k) => (
+                <line
+                  key={k}
+                  x1={e.x1}
+                  y1={e.y1}
+                  x2={e.x2}
+                  y2={e.y2}
+                  stroke={c.indigo}
+                  strokeWidth={W.wedge.width}
+                  strokeLinecap="round"
+                  {...drawPath(drawn, Math.hypot(e.x2 - e.x1, e.y2 - e.y1))}
+                />
+              ))}
+            </Layer>
+          ))}
 
         {W.names.map((n, i) => (
           <Line

@@ -5,10 +5,10 @@
  * scene in this episode follows. A number that appears twice in a scene file
  * belongs here instead.
  */
-import { GRID_PAD_X, candleWidth, gridOf, splitRects, theme, columns, inset } from "../../../core";
-import type { Rect } from "../../../core";
+import { GRID_PAD_X, candleWidth, domainOf, gridOf, splitRects, theme, columns, inset } from "../../../core";
+import type { Grid, Rect } from "../../../core";
 import { CARD_LIST } from "./timing";
-import { SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
+import { FLAG, FLAG_BARS, FLAG_LINES, SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
 
 const PLOT = theme.stage.plot;
 const CARD = theme.stage.card;
@@ -1198,6 +1198,37 @@ const plotOf = (card: Rect): Rect => ({
   h: card.h - W11_PAD * 2 - W11_NAME,
 });
 
+/** The grid's vertical head-room, shared so the scene and the solve below
+ *  cannot build two different grids for one box. */
+export const W11_PLOT_PAD = 0.08;
+
+/**
+ * ⚠ 20px OFF THE CANDLES, NOT OFF THE BOX — Simon: "bayangin semua candlestick
+ * kamu grup, baru kurangin 20 px". Those are two different numbers. `gridOf`
+ * keeps GRID_PAD_X inside the box and `candleWidth` takes a fraction of the
+ * slot, so a box narrowed by 20 narrows the DRAWN group by rather more than 20.
+ * What he asked for is the group, so the group is what is solved for.
+ *
+ * ⚠ SOLVED WITH TWO PROBES RATHER THAN WITH core's OWN CONSTANTS. The group's
+ * width is linear in the box's, so measuring it at two widths gives the slope
+ * exactly — and it keeps working the day `candleWidth`'s fraction or GRID_PAD_X
+ * changes, which writing 0.68 and 18 into this file would not.
+ *
+ * ⚠ AND IT COMES OFF BOTH SIDES. The drawing stays where it was centred.
+ */
+const W11_SHRINK = 20;
+const FLAG_DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
+const flagGroupW = (box: Rect) => {
+  const g = gridOf(FLAG.closes, FLAG_DOMAIN, box, W11_PLOT_PAD);
+  return g.x(FLAG.closes.length - 1) - g.x(0) + candleWidth(g);
+};
+const narrowed = (box: Rect): Rect => {
+  const probe = 100;
+  const slope = (flagGroupW(box) - flagGroupW({ ...box, w: box.w - probe })) / probe;
+  const dw = W11_SHRINK / slope;
+  return { ...box, x: box.x + dw / 2, w: box.w - dw };
+};
+
 /** ⚠ THE PAIR IS STILL WHAT DECIDES THE SIZE, even when only one is drawn. */
 const W11_PAIR = halves(W11_BOUNDS);
 const W11_CARDS: Rect[] =
@@ -1210,13 +1241,67 @@ export const WIN11 = {
   bounds: W11_BOUNDS,
   count: W11_COUNT,
   cards: W11_CARDS,
-  /** Where the pattern is drawn inside each window. */
-  plots: W11_CARDS.map(plotOf),
+  /** Where the pattern is drawn inside each window, already narrowed so the
+   *  candle group itself is 20px less wide than the box would give it. */
+  plots: W11_CARDS.map((c) => narrowed(plotOf(c))),
+  plotPad: W11_PLOT_PAD,
+  /**
+   * ⚠ THREE BARS OFF THE RIGHT, HIDDEN AND NOT REMOVED — Simon: "hide 3
+   * candlestick dari kanan". The three are the breakout, and the distinction
+   * matters twice over: the thirteen that remain keep the positions they had,
+   * and the price scale still reserves the room the hidden three need, so
+   * nothing moves when they come back. On a scene about not knowing what comes
+   * next, a chart that has quietly re-fitted itself around the missing future
+   * would be making the opposite point.
+   */
+  hidden: 3,
+  wedge: {
+    /** ⚠ FIVE DEGREES WIDER THAN THE BARS ASK FOR — Simon: "gedein sudutnya 5
+     *  derajat". Split evenly about the apex, so the point does not move and
+     *  the mouth opens symmetrically. */
+    deg: 5,
+    /** ⚠ ALREADY 3px, AND NAMED HERE SO IT IS ONE NUMBER. Simon asked for 3
+     *  and `theme.shape.line` is 3; measured across the drawn diagonals it
+     *  renders 3–4px, the 4 being antialiasing. Kept as its own slot rather
+     *  than reaching into the theme, because this is the lever now. */
+    width: theme.shape.line,
+  },
   /** Centre of the pattern's name, under each plot. */
   names: W11_CARDS.map((r) => ({
     x: r.x + r.w / 2,
     y: r.y + r.h - W11_PAD - W11_NAME / 2,
   })),
+};
+
+/**
+ * The two lines of the flag, in a grid's own pixels, opened by `wedge.deg`.
+ *
+ * ⚠ THE APEX IS THE PIVOT. Both arms keep the x they had — the mouth is still
+ * at the bar the triangle opens on — and only their height changes, so the
+ * point the two converge to does not move. Rotating about the mouth instead
+ * would slide the apex along the chart, which is the one part of this shape
+ * that means something.
+ *
+ * ⚠ AND THE WIDENING LIVES HERE, NOT IN data/series.ts. Degrees are a SCREEN
+ * measurement and that file has no pixels in it. What it asserts is that no bar
+ * breaks the un-widened wedge — which is the stronger claim, because opening
+ * the wedge can only put more room around the bars, never less.
+ */
+export const flagWedge = (g: Grid) => {
+  const F = FLAG_LINES;
+  const ax = g.x(F.apex.i);
+  const ay = g.y(F.apex.p);
+  const mx = g.x(F.from);
+  const run = ax - mx;
+  const half = ((WIN11.wedge.deg / 2) * Math.PI) / 180;
+  const arm = (price: number, sign: 1 | -1) => {
+    const rise = sign * (ay - g.y(price));
+    return ay - sign * run * Math.tan(Math.atan2(rise, run) + half);
+  };
+  return [
+    { x1: mx, y1: arm(F.upAt(F.from), 1), x2: ax, y2: ay },
+    { x1: mx, y1: arm(F.loAt(F.from), -1), x2: ax, y2: ay },
+  ];
 };
 
 {
@@ -1271,4 +1356,28 @@ export const WIN11 = {
       fail(`SC11's window ${i + 1} draws wider than itself`);
     }
   });
+  /** ⚠ THE GROUP REALLY IS 20px NARROWER, and this is the only place that can
+   *  say so — the shrink is solved, not typed, so a wrong solve would look
+   *  entirely plausible. Measured against the box it was cut from. */
+  W.plots.forEach((p, i) => {
+    const want = flagGroupW(plotOf(W.cards[i])) - W11_SHRINK;
+    if (Math.abs(flagGroupW(p) - want) > 0.01) {
+      fail(`SC11's candle group is ${flagGroupW(p).toFixed(1)}px, not the ${want.toFixed(1)} asked for`);
+    }
+    if (Math.abs(p.x + p.w / 2 - (plotOf(W.cards[i]).x + plotOf(W.cards[i]).w / 2)) > 0.01) {
+      fail(`SC11's window ${i + 1} took its 20px off one side`);
+    }
+  });
+  /** ⚠ AND THE WIDENED WEDGE STAYS IN ITS OWN PLOT. Opening it 5° lifts the
+   *  mouth on both sides; far enough and it would be drawn outside the box. */
+  W.plots.forEach((p, i) => {
+    const g = gridOf(FLAG.closes, FLAG_DOMAIN, p, W11_PLOT_PAD);
+    flagWedge(g).forEach((seg) => {
+      if (seg.y1 < p.y || seg.y1 > p.y + p.h) {
+        fail(`SC11's wedge opens to ${Math.round(seg.y1)} in window ${i + 1}, outside its plot`);
+      }
+    });
+  });
+  /** ⚠ AND HIDING THREE MAY NOT EMPTY THE PATTERN. */
+  if (W.hidden < 0 || W.hidden >= FLAG_LINES.last) fail(`SC11 hides ${W.hidden} bars, which is not a reading of the flag`);
 }
