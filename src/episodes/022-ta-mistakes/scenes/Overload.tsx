@@ -25,6 +25,11 @@
  * own gutter, left of where the first candle starts. See STUDY in 019's
  * Scene01, where all four of those numbers live together.
  *
+ * ⚠ AND THE PANEL'S WALLS ARE DOWN, for now. The white card, its border and
+ * its wash are off, so the chart stands on the episode's own ground with
+ * nothing boxing it in, and the ticker has moved up to the logo's line. This is
+ * scaffolding Simon asked for while he rearranges — `bare` is one word to undo.
+ *
  * ⚠ THE "Ilustrasi" TAG STAYS, and has to — the same disclosure SC06 carries.
  * The prices on that panel are invented on a real ticker, and the tag is the
  * only thing on screen saying so. Simon's standing rule against the word is
@@ -55,6 +60,13 @@ export const Overload = () => {
         f={AT}
         chart="BMRI"
         extension={false}
+        /** ⚠ NO CARD AND NO CHROME — Simon, opening the picture up while he
+         *  works out what goes where: "kita buka background putihnya supaya
+         *  tidak ada batasan untuk sementara", and then the timeframe pills,
+         *  the two indicator buttons, the dashed last-price line, the chip on
+         *  the axis and the big 4.210 with its +0,70%, each by name. What is
+         *  left is the ticker, the tape and the seven readings of it. */
+        bare
         /** ⚠ THE SHAPE WITHOUT THE NAMING. Simon asked for the zigzag he has
          *  seen before, which is the line and its rings — the HL/HH/LH/LL
          *  chips would be a second scene's argument sitting on this one. */

@@ -159,6 +159,27 @@ const STUDY_WARM = 40;
  *
  * `foot` keeps the panel 20px clear of VIDEO 22's subtitle band at 972.
  */
+/**
+ * ═══ THE PANEL WITH ITS WALLS DOWN ═══  (VIDEO 22, `bare` on BrokerPanel)
+ *
+ * ⚠ IT KNOWS ABOUT 022'S LOGO, AND IT HAS TO. Simon: "geser naik hingga
+ * align-top pada logo". The thing the header is being aligned to is not on this
+ * panel and never will be — it is the Tuntun mark in the frame the panel is
+ * borrowed into — so the number is measured off a render and named here rather
+ * than left as a guess inside a scene. 45 is where that mark's ink starts.
+ *
+ * ⚠ AND THE PRICE ROW IS NOT LIFTED, IT IS GONE — Simon: "harga 4210 yang besar
+ * juga hapus aja dan 0.70% juga hapus". So there is one row left and one number
+ * to place it by.
+ */
+export const BARE = (() => {
+  const logoTop = 45;
+  /** ⚠ THE AVATAR'S INK STARTS ON ITS OWN TOP EDGE, not a pixel into it — I
+   *  allowed for a pixel that was not there and the ticker sat one above the
+   *  mark. Measured at 0 after the correction. */
+  return { headTop: logoTop - PANEL.y };
+})();
+
 export const STUDY = (() => {
   const top = 200;
   const plotH = 320;
@@ -705,6 +726,7 @@ export const BrokerPanel = ({
   levels,
   extension = true,
   studies,
+  bare = false,
 }: {
   f: number;
   /**
@@ -788,6 +810,20 @@ export const BrokerPanel = ({
    * shape as `marks`.
    */
   studies?: { shown: (i: number) => number };
+  /**
+   * ⚠ THE PANEL WITHOUT ITS PANEL — Simon: "kita buka background putihnya supaya
+   * tidak ada batasan untuk sementara". The white card, its border, its wash and
+   * its clip all come off, so what is left is the chart itself standing on the
+   * episode's own ground with nothing boxing it in. The clip has to go with the
+   * rest: the header lifts to the logo's line, which is ABOVE this panel's own
+   * top edge, and a panel that still clipped would simply cut it off.
+   *
+   * ⚠ IT ALSO TAKES THE CHROME. The timeframe pills, the two indicator buttons,
+   * the dashed last-price line and the price chip on the axis are all
+   * a broker's UI rather than the chart — Simon asked for each of them by name —
+   * and what is left is the reading.
+   */
+  bare?: boolean;
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -831,16 +867,21 @@ export const BrokerPanel = ({
           top: PANEL.y,
           width: PANEL.w,
           height: panelH,
-          borderRadius: theme.layout.radius.lg,
-          background: C.surface,
+          borderRadius: bare ? 0 : theme.layout.radius.lg,
+          background: bare ? "transparent" : C.surface,
           /* the panel's own outline fades as the mask takes over — otherwise
          it rides the shrink as a second, nested card border. C.border is
          #D8DBE0; the alpha is what animates */
-          border: `${theme.layout.border.thin}px solid rgba(216, 219, 224, ${(1 - shrink).toFixed(3)})`,
-          overflow: "hidden",
+          border: bare
+            ? "none"
+            : `${theme.layout.border.thin}px solid rgba(216, 219, 224, ${(1 - shrink).toFixed(3)})`,
+          /** ⚠ AND THE CLIP GOES WITH THE CARD. The header lifts to the logo's
+           *  line, which is above this panel's own top edge. */
+          overflow: bare ? "visible" : "hidden",
         }}
       >
         {/* the chart's own ground — a wash, hue-locked to the palette */}
+        {!bare && (
         <div
           style={{
             position: "absolute",
@@ -851,6 +892,7 @@ export const BrokerPanel = ({
             background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
           }}
         />
+        )}
 
         {/* ── header: it belongs to whichever chart is up ── */}
         {CHARTS.map((ch, i) => {
@@ -862,7 +904,7 @@ export const BrokerPanel = ({
                 style={{
                   position: "absolute",
                   left: HEAD.x,
-                  top: 36,
+                  top: bare ? BARE.headTop : 36,
                   display: "flex",
                   alignItems: "center",
                   gap: HEAD.gap,
@@ -922,6 +964,7 @@ export const BrokerPanel = ({
               </div>
 
               {/* left edge on the ticker, not on the avatar beside it */}
+              {!bare && (
               <div
                 style={{
                   position: "absolute",
@@ -959,6 +1002,7 @@ export const BrokerPanel = ({
                   {ch.change}
                 </span>
               </div>
+              )}
             </div>
           );
         })}
@@ -967,6 +1011,7 @@ export const BrokerPanel = ({
         panel, so they travel left with its right edge when the extension
         opens: without that the chart appears to shrink under its own
         controls instead of making room beside them. */}
+        {!bare && (
         <div
           style={{
             position: "absolute",
@@ -996,9 +1041,10 @@ export const BrokerPanel = ({
             );
           })}
         </div>
+        )}
 
         {/* ── the two indicator buttons, under the timeframes ── */}
-        {f >= T.buttons && (
+        {!bare && f >= T.buttons && (
           <div
             style={{
               position: "absolute",
@@ -1339,15 +1385,17 @@ export const BrokerPanel = ({
 
               {/* the last-price line, and nothing else on it — the readout it
               carries is the pill on the axis */}
-              <line
-                x1={PLOT.x - PANEL.x}
-                y1={Y(ch.price)}
-                x2={PLOT.x - PANEL.x + plotW}
-                y2={Y(ch.price)}
-                stroke={C.text}
-                strokeWidth={theme.layout.border.thin}
-                strokeDasharray="8 8"
-              />
+              {!bare && (
+                <line
+                  x1={PLOT.x - PANEL.x}
+                  y1={Y(ch.price)}
+                  x2={PLOT.x - PANEL.x + plotW}
+                  y2={Y(ch.price)}
+                  stroke={C.text}
+                  strokeWidth={theme.layout.border.thin}
+                  strokeDasharray="8 8"
+                />
+              )}
 
               {/* ═══ THE THREE STUDIES, UNDER THE PRICE ═══  (VIDEO 22)
 
@@ -1491,7 +1539,8 @@ export const BrokerPanel = ({
         })}
 
         {/* the price the crosshair sits on, on the axis */}
-        {CHARTS.map((ch, i) => {
+        {!bare &&
+        CHARTS.map((ch, i) => {
           const o = alpha(i);
           if (o <= 0.001) return null;
           return (
