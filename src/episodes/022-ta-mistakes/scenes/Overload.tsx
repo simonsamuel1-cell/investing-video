@@ -25,6 +25,11 @@
  * own gutter, left of where the first candle starts. See STUDY in 019's
  * Scene01, where all four of those numbers live together.
  *
+ * ⚠ SUPPORT AND RESISTANCE ARE HIDDEN FOR NOW — Simon: "coba hide dulu garis
+ * support dan resistance nya", while he settles the chart. The `levels` prop is
+ * simply not passed; PANEL10.levels still holds their timing, so this is one
+ * line to put back rather than a thing to rebuild.
+ *
  * ⚠ AND THE PANEL'S WALLS ARE DOWN, for now. The white card, its border and
  * its wash are off, so the chart stands on the episode's own ground with
  * nothing boxing it in, and the ticker has moved up to the logo's line. This is
@@ -71,7 +76,6 @@ export const Overload = () => {
          *  seen before, which is the line and its rings — the HL/HH/LH/LL
          *  chips would be a second scene's argument sitting on this one. */
         zig={{ drawn: progressInOut(g, V.zig.at, V.zig.over) }}
-        levels={{ shown: progressInOut(g, V.levels.at, V.levels.over) }}
         /** ⚠ ONE AFTER ANOTHER, not together. Three panes that appear at once
          *  are a layout; three that arrive in turn are somebody adding them. */
         studies={{ shown: (i) => progressInOut(g, V.studies.at + i * V.studies.step, V.studies.over) }}

@@ -160,37 +160,45 @@ const STUDY_WARM = 40;
  * `foot` keeps the panel 20px clear of VIDEO 22's subtitle band at 972.
  */
 export const STUDY = (() => {
-  const top = 200;
-  const plotH = 320;
-  const lead = 20;
-  const pane = 62;
+  /**
+   * ⚠ THE STACK IS MEASURED FROM THE BOTTOM UP, and the price plot is what is
+   * left. The window's floor is fixed — it has to clear VIDEO 22's subtitle
+   * band — so every pane that grows has to be paid for by the chart above it,
+   * and that is the only direction this can be solved in without a second
+   * number that has to agree with the first.
+   */
+  const height = 802;
+  const pane = 78;
   const gap = 12;
+  const lead = 20;
   const tail = 8;
   const axis = 30;
   const foot = 14;
+  /**
+   * ⚠ THE NAME SITS INSIDE ITS PANE NOW, in a row of its own across the top,
+   * and the line is drawn UNDER it. It used to live in a gutter to the left of
+   * the tape — which was the right answer while there was a price axis there to
+   * share the column with. Simon has balanced the chart's white space since
+   * ("chartnya perlu di stretch ke kiri"), so there is no gutter left to sit
+   * in: a name outside the plot now means the plot is not centred.
+   */
+  const labelH = 22;
+  const inset = 7;
+  const axisY = height - foot;
+  const at = axisY - axis - tail - (pane * 3 + gap * 2);
   return {
-    plotH,
+    height,
     pane,
     gap,
     lead,
-    /** Panel-local y of the first pane's top edge. */
-    at: top + plotH + lead,
-    /** Panel-local baseline of the month row, under the last pane. */
-    axisY: top + plotH + lead + pane * 3 + gap * 2 + tail + axis,
-    height: top + plotH + lead + pane * 3 + gap * 2 + tail + axis + foot,
-    /**
-     * ⚠ THEY SHARE THE PRICE AXIS'S COLUMN, so they are sized to it. That column
-     * is about 86px wide — what "5.000" takes at 30px — and a study name that
-     * overruns it is a name reaching towards its own line. "Stochastic (14, 3)"
-     * ran 190px and sat under its plot; "Stochastic" ran 112 and cleared the
-     * first value by 8px, which is not a collision but is luck. "Stoch" is what
-     * every platform prints in that column anyway. Measured: 64px clear.
-     */
+    labelH,
+    inset,
+    at,
+    axisY,
+    /** The price plot's height in each of the two modes it is asked for. */
+    plotH: at - lead - 200,
+    bareH: at - lead,
     names: ["RSI", "Stoch", "MACD"],
-    /** Where a name starts, and the x the lines may not come left of. */
-    labelX: 44,
-    /** The room the stack takes under the price plot, axis and floor included. */
-    below: lead + pane * 3 + gap * 2 + tail + axis + foot,
   };
 })();
 
@@ -315,11 +323,18 @@ export const BARE = (() => {
    * name is the one thing on this picture that cannot move with the tape. 110
    * leaves "Stoch" 38px clear of its own first value; measured, not guessed.
    */
+  /**
+   * ⚠ ONE MARGIN, BOTH SIDES — Simon: "aku mau white space kiri dan kanan itu
+   * balance, jadi chartnya perlu di stretch ke kiri". The left used to carry a
+   * 110px gutter for the study names on top of this margin, so the tape sat
+   * 124px from the window's left edge and 43 from its right. With the names
+   * moved inside their own panes there is nothing left to reserve, and the tape
+   * is centred by construction: `plotW = PANEL.w - 2 × pad` is the only width
+   * that can balance, so it is derived rather than tuned.
+   */
   const pad = 30;
-  const gutter = 110;
-  const labelX = 30;
   const plotTop = pad;
-  return { headTop, pad, gutter, labelX, plotTop };
+  return { headTop, pad, plotTop, plotW: PANEL.w - pad * 2 };
 })();
 /**
  * The price column's centre line. The axis labels and the last-price pill are
@@ -892,19 +907,15 @@ export const BrokerPanel = ({
    * then a function of those three, so no position here is typed twice.
    */
   const plotTop = bare ? BARE.plotTop : PLOT.y - PANEL.y;
-  const plotH = studies
-    ? bare
-      ? STUDY.at - STUDY.lead - BARE.plotTop
-      : STUDY.plotH
-    : PLOT.h;
-  const px0 = bare ? BARE.gutter : PLOT.x - PANEL.x;
-  const plotW = bare ? PANEL.w - BARE.gutter - BARE.pad : PLOT.w - LIST.take * open;
+  const plotH = studies ? (bare ? STUDY.bareH - BARE.plotTop : STUDY.plotH) : PLOT.h;
+  const px0 = bare ? BARE.pad : PLOT.x - PANEL.x;
+  const plotW = bare ? BARE.plotW : PLOT.w - LIST.take * open;
   /** ⚠ A FULLER SPAN WHEN THERE IS A WINDOW TO FILL, and still enough slack for
    *  the two level labels — "Resistance" hangs 12 above its line and "Support"
    *  30 below its own. At 0.84/0.06 of a 490px plot that is 29 above and 49
    *  below. */
   const plotSpan = bare ? 0.84 : 0.8;
-  const labelX = bare ? BARE.labelX : STUDY.labelX;
+
 
   /** Which chart the window is on, and therefore which row is selected. */
   const pick = chart ? CHARTS.findIndex((c) => c.t === chart) : -1;
@@ -1508,11 +1519,20 @@ export const BrokerPanel = ({
                   const on = studies.shown(k);
                   if (on <= 0.001) return null;
                   const top = STUDY.at + k * (STUDY.pane + STUDY.gap);
-                  const inset = 9;
                   const x0 = X(0);
                   const x1 = X(N - 1);
-                  /** 0→1 up the pane, from its own floor. */
-                  const py = (t: number) => top + STUDY.pane - inset - t * (STUDY.pane - inset * 2);
+                  /**
+                   * 0→1 up the pane, from its own floor — and the top of that
+                   * travel stops BELOW the name's row, so no line can ever
+                   * reach the words. That is the whole reason the panes grew
+                   * from 62 to 78: the label came inside when the gutter went,
+                   * and the line kept its own height rather than paying for it.
+                   */
+                  const py = (t: number) =>
+                    top +
+                    STUDY.pane -
+                    STUDY.inset -
+                    t * (STUDY.pane - STUDY.labelH - STUDY.inset * 2);
                   const path = (vs: (number | null)[], t: (v: number) => number) =>
                     vs
                       .map((v, i) => (v === null ? "" : `${i === 0 || vs[i - 1] === null ? "M" : "L"}${X(i).toFixed(1)},${py(t(v)).toFixed(1)}`))
@@ -1548,18 +1568,23 @@ export const BrokerPanel = ({
                   const sig = (v: number) => (v - mLo) / Math.max(1e-9, mHi - mLo);
                   return (
                     <g key={label} opacity={on}>
+                      {/* ⚠ THE PANE IS THE TAPE'S OWN COLUMN. It starts and
+                          ends where the plot does, so the three studies and the
+                          chart above them share one left edge and one right
+                          edge — which is what makes them read as panes of one
+                          picture rather than three boxes near it. */}
                       <rect
-                        x={labelX - 8}
+                        x={px0}
                         y={top}
-                        width={px0 + plotW - (STUDY.labelX - 8)}
+                        width={plotW}
                         height={STUDY.pane}
                         rx={theme.layout.radius.sm}
                         fill={C.surface}
                         fillOpacity={0.62}
                       />
                       <text
-                        x={labelX}
-                        y={top + STUDY.pane / 2 + 7}
+                        x={x0}
+                        y={top + STUDY.labelH}
                         fontFamily={font}
                         fontSize={20}
                         fontWeight={UI.weight}
