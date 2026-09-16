@@ -764,7 +764,11 @@ export const BREAKOUT_BOX = (() => {
    * move); they are typed as the contract now, not as a description.
    */
   const mark = {
-    dot: 7,
+    /** ⚠ 9, AND THE CARD FOLLOWS IT. Simon grew the dot by 2; because the 30 is
+     *  measured from its EDGE, every label drops 2px with it, every mark reaches
+     *  2px deeper, and both windows are 2px taller for it. That chain is the
+     *  reason this is one number and not four. */
+    dot: 9,
     gap: 30,
     pill: 48,
     note: 38,
