@@ -35,10 +35,14 @@ export const BLOCK = {
   SC12: 10035, SC13: 11074,
   SC14: 12346, SC15: 13070, SC16: 13700, SC17: 14780, SC18: 15754,
   /**
-   * ⚠ 180 FRAMES PAST THE LAST WORD. The voice ends on 16650 and the closing
-   * quote card is still standing there; ending on that frame cuts the last
-   * sentence off at the moment it lands. Nothing starts these three seconds —
-   * SC18's duration is `END - SC18` and the tail is the closing picture held.
+   * ⚠ 120 FRAMES PAST THE LAST WORD NOW, NOT 180. It was three seconds: the
+   * voice ended on 16650 and the closing quote card was still standing there,
+   * because ending on that frame cuts the last sentence off at the moment it
+   * lands. The two pads at 8060 and 8200 moved the last word to 16710 and END
+   * was left alone, so the hold is two seconds. That still does the job and the
+   * audio still fits — it runs out at 16776 — but it is a number that has
+   * shrunk by side effect rather than by decision, and the next voice-only pad
+   * takes another 30 off it.
    */
   END: 16830,
 } as const;
