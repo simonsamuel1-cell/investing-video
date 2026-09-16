@@ -734,6 +734,44 @@ export const BREAKOUT_BOX = (() => {
   const toVerdict = 48;
   /** Half the type that sits above the rule and below the verdict row. */
   const half = 24;
+  /**
+   * ⚠ THE MARKS' OWN METRICS, AND THE CARDS' INSETS ARE SOLVED FROM THEM.
+   *
+   * Simon: "kasih jarak antara dot dengan label buy 30 px". A gap stated
+   * border-to-border is only true if everything it is measured between has a
+   * KNOWN size, so the dot, the pill and the note are all fixed here rather
+   * than left to the text inside them — a pill that sizes itself to its own
+   * line box is a pill whose 30px is whatever the font decided.
+   *
+   * `pill` 48 and `note` 38 are the heights those two already render at (the
+   * pill measured off frame 7900 before this change, so the badge does not
+   * move); they are typed as the contract now, not as a description.
+   */
+  const mark = {
+    dot: 7,
+    gap: 30,
+    pill: 48,
+    note: 38,
+    /** Between the "Sell" pill and the line under it. */
+    stack: 8,
+    /** A label group's width, so it can be centred and clamped deterministically. */
+    group: 180,
+    /** How close a group may come to its card's side. */
+    edge: 24,
+    /** And how close the lowest mark may come to the card's floor. */
+    floor: 10,
+  };
+  /**
+   * ⚠ THE BOTTOM INSET IS THE "Buy" MARK'S OWN HEIGHT, NOT A NUMBER.
+   *
+   * The left card's entry hangs under the LOWEST bar of its tape — which, with
+   * a zero-pad grid, is the plot's own floor — so everything below that line
+   * has to be paid for out of the card: the dot, Simon's 30, the pill, and a
+   * clearance so the pill is not welded to the card's edge. It was 76 when the
+   * mark was a bare badge sitting 22px under the low; the 30 makes it 95, and
+   * deriving it is the only way the two numbers cannot drift apart.
+   */
+  const under = mark.dot + mark.gap + mark.pill + mark.floor;
   const height = toBox + chartH + toVerdict + half * 2;
   const A = theme.stage.active;
   const rule = A.y + (A.h - height) / 2 + half;
@@ -757,29 +795,30 @@ export const BREAKOUT_BOX = (() => {
       { x: right.x, y: Math.round(rule + toBox), w: right.w, h: chartH },
     ],
     verdict: { y: Math.round(rule + toBox + chartH + toVerdict) },
+    mark,
     /**
-     * ⚠ THE TWO PLOTS SIT DIFFERENTLY IN THEIR CARDS, AND THE SAME HEIGHT — 320
-     * each. I wrote the opposite here a moment ago ("two plots inset
-     * differently inside boxes of the same size are two charts drawn to look
-     * like a pair") and Simon overruled it: ss07 opens high and its tape was
-     * brushing "Market sideways", so the right chart comes down.
+     * ⚠ THE TWO PLOTS SIT DIFFERENTLY IN THEIR CARDS, AND THE SAME HEIGHT.
+     * I wrote the opposite here once ("two plots inset differently inside boxes
+     * of the same size are two charts drawn to look like a pair") and Simon
+     * overruled it: ss07 opens high and its tape was brushing "Market
+     * sideways", so the right chart comes down.
      *
      * The rule that survives is the one that actually matters — the two charts
      * are the SAME SIZE, so nothing about their shapes is being compared
-     * unfairly. What differs is only where that size sits inside its card, and
-     * each side has its own reason. The left leaves 76 underneath because the
-     * "Buy" mark hangs below the lowest bar; the right has no mark, so it
-     * spends exactly that room on the clearance it does need, at the top.
+     * unfairly. What differs is only where that size sits inside its card. The
+     * left leaves `under` beneath because its "Buy" hangs below the lowest bar;
+     * the right's own entry is at bar 16, well inside its plot, so it spends
+     * exactly that room on the clearance it does need, at the top.
      *
-     * ⚠ AND THE LEFT'S OWN CLEARANCE IS LUCK, NOT GEOMETRY. Its plot starts at
-     * 351, ABOVE its heading's ink — it is clear only because ss06 opens low
-     * and nothing reaches up there. Measured at 0 pixels behind the heading
-     * today; re-trace ss06 with a higher opening and this side will need the
-     * same treatment.
+     * ⚠ AND THE LEFT'S OWN TOP CLEARANCE IS LUCK, NOT GEOMETRY. Its plot starts
+     * at 351, ABOVE its heading's ink — it is clear only because ss06 opens low
+     * and nothing reaches up there. Measured at 0 pixels behind the heading;
+     * re-trace ss06 with a higher opening and this side will need the same
+     * treatment.
      */
     pad: [
-      { x: 34, top: 34, bottom: 76 },
-      { x: 34, top: 76, bottom: 34 },
+      { x: 34, top: 34, bottom: under },
+      { x: 34, top: under, bottom: 34 },
     ],
   };
 })();
@@ -820,4 +859,9 @@ export const BREAKOUT_BOX = (() => {
     fail(`the setup stack is not balanced: ${above} above, ${below} below`);
   }
   if (b.boxes[0].w !== b.boxes[1].w) fail("the two chart boxes are different widths");
+  /** ⚠ A LABEL GROUP HAS TO FIT BETWEEN ITS CARD'S MARGINS, or the clamp that
+   *  keeps it inside would have nowhere to put it. */
+  if (b.mark.group + b.mark.edge * 2 > b.boxes[0].w) {
+    fail(`a ${b.mark.group}px label group does not fit inside a ${b.boxes[0].w}px card`);
+  }
 }

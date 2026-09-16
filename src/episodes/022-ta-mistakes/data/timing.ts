@@ -1330,7 +1330,23 @@ export const BREAKOUT = {
   verdict: { at: 7650, step: 40, over: 26 },
   heads: ["Market trending", "Market sideways"],
   says: ["Setup berhasil", "Setup gagal"],
-  setup: "Setup : Buy on Breakout",
+  /**
+   * ⚠ THE SETUP IS NAMED IN TWO PIECES because Simon wants only half of it
+   * coloured: "Setup:" is the label and stays ink; "beli di garis support" is
+   * the rule itself and is indigo. Split here rather than in the scene so the
+   * words and the way they are broken travel together.
+   */
+  setup: { lead: "Setup:", term: "beli di garis support" },
+  /**
+   * ⚠ THE ANALYSIS IS LAID OVER A FINISHED CHART. Each column draws its tape,
+   * and only then the level it was read against, the entry, and the exit — in
+   * that order, because a support drawn while the bars are still arriving is a
+   * line the viewer watches the market being fitted to.
+   */
+  marks: [
+    { support: { at: 7460, over: 22 }, buy: { at: 7486, over: 16 }, sell: { at: 7510, over: 16 } },
+    { support: { at: 7576, over: 22 }, buy: { at: 7602, over: 16 }, sell: { at: 7626, over: 16 } },
+  ],
 } as const;
 
 {
@@ -1346,6 +1362,20 @@ export const BREAKOUT = {
     if (said < drawn) fail(`verdict ${i + 1} lands at ${said}, before its chart finishes at ${drawn.toFixed(0)}`);
   });
   if (V.cols[1].at < V.cols[0].at) fail("the second column arrives before the first");
+  /** ⚠ AND THE READING IS IN ITS OWN ORDER — level, entry, exit. A "Sell" that
+   *  lands before the "Buy" is a trade shown backwards. */
+  V.marks.forEach((m, i) => {
+    if (m.buy.at < m.support.at + m.support.over) {
+      fail(`column ${i + 1}'s entry lands at ${m.buy.at}, before its support finishes at ${m.support.at + m.support.over}`);
+    }
+    if (m.sell.at < m.buy.at + m.buy.over) {
+      fail(`column ${i + 1}'s exit lands at ${m.sell.at}, before its entry finishes at ${m.buy.at + m.buy.over}`);
+    }
+    const said = V.verdict.at + i * V.verdict.step;
+    if (said < m.sell.at + m.sell.over) {
+      fail(`verdict ${i + 1} lands at ${said}, before the trade it is judging closes at ${m.sell.at + m.sell.over}`);
+    }
+  });
 }
 
 /* ═══ SC10 — indicator overload ══════════════════════════════════════════ */
