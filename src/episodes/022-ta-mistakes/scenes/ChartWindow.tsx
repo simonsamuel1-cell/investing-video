@@ -143,10 +143,10 @@ const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
  * my content start" — text that begins while the box is still a sliver is text
  * hanging in the air. Same shape as SC10's note, which is the same instruction.
  *
- * ⚠ SET LEFT, NOT CENTRED, AND THAT IS BECAUSE IT TYPES. A centred line grows
- * out of its own middle and both ends creep; on two lines the break point moves
- * as well. Left-aligned, the sentence simply fills the first line and drops to
- * the second, which is what typing looks like.
+ * ⚠ CENTRED, NOW THAT IT IS ONE LINE. It was set left while it wrapped onto
+ * two, because a centred line grows out of its own middle as it types and on
+ * two lines the break point creeps as well. One line nearly filling its box has
+ * neither problem, and left-aligning it would leave all the slack on one side.
  */
 const Note = ({ g }: { g: number }) => {
   const m = useMotion();
@@ -166,6 +166,7 @@ const Note = ({ g }: { g: number }) => {
           padding: N.pad,
           display: "flex",
           alignItems: "center",
+          justifyContent: "center",
           fontFamily: theme.text.family,
           fontSize: theme.text.body.size,
           fontWeight: theme.text.title.weight,

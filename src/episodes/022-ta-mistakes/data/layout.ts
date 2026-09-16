@@ -1304,37 +1304,41 @@ export const bigAt = (t: number) => {
 /**
  * SC11's closing note — Simon, 9805.
  *
- * ⚠ ABOVE THE PAIR, BECAUSE THAT IS WHERE THE ROOM IS. Measured on the rendered
- * frame: the only ink-free full-width bands are 54..229 above the windows, a
- * 40px strip inside their own tops, and 894..971 under their shadows. That last
- * one is 78px against a 108px subtitle band — a letterbox, and it would sit on
- * the captions. So the note takes the band this episode's headline slot has
- * always been in.
+ * ⚠ IT STRADDLES THE WINDOW'S BOTTOM EDGE — Simon: "text boxnya muncul di
+ * bawah, overlap dengan tepi window bawah, align-center secara x-axis". So its
+ * own middle IS that edge: half of it is stamped on the card and half hangs
+ * below it. Derived from the card rather than typed, so the note cannot come
+ * off the edge it is pinned to if the windows ever move.
  *
- * ⚠ AND ITS WIDTH IS DECIDED BY THE LOGO. Anything drawn in the top 150px must
- * end before theme.logoZone.maxX. That is also why the sentence is set on two
- * lines — one line of it is about 1140px wide, and a box that wide cannot be up
- * here at all.
+ * ⚠ AND DOWN HERE IT CAN BE ONE LINE. Up in the headline band its width was
+ * capped by theme.logoZone.maxX and the sentence had to break in two; at y815
+ * there is no such limit, so 1200 holds all sixty-one characters on one line
+ * with room to spare. The text is centred again for the same reason — one line
+ * nearly filling its box reads centred, and left-aligning it would leave the
+ * slack all on one side.
  *
- * ⚠ THE CORNER BLOCKS COUNT, ON EVERY SIDE, and putting that in the arithmetic
- * moved two numbers rather than one. core/DashedBox draws a solid block centred
- * on each corner, so the INK reaches half a block past the rectangle all round.
- * At 800 wide the measured ink ran to x1366 against a limit of 1368 — inside,
- * but by accident. And at y56 it ran to y49, which is FIVE PIXELS ABOVE the
- * safe area, where it had been sitting unnoticed until the assertion below was
- * taught about the overhang and refused to render.
+ * ⚠ IT COVERS NOTHING. The big window's plot ends at y778 and its lowest bar at
+ * 736; the box starts at 815, so the 55px it overlaps is the card's own empty
+ * foot. Asserted, because that clearance is the whole reason this position is
+ * available at all.
  *
- * ⚠ SO THE TOP IS DERIVED NOW, not chosen: the box starts half a block below
- * the safe area's own top, which is the highest it can legally be.
+ * ⚠ THE CORNER BLOCKS COUNT, ON EVERY SIDE. core/DashedBox centres a solid
+ * block on each corner, so the ink reaches half a block past the rectangle all
+ * round. That overhang put the box five pixels above the safe area at its last
+ * position without anything saying so; it is in the arithmetic now, and down
+ * here it is what the subtitle band is measured against.
  */
 const W11_BLOCK = 15;
 const W11_NOTE = (() => {
-  const w = 780;
+  const w = 1200;
+  const h = 110;
+  /** The edge it is pinned to: the big window's floor, wherever that is. */
+  const edge = W11_SHAPE.y + W11_SHAPE.h;
   return {
     x: (theme.canvas.width - w) / 2,
-    y: theme.stage.active.y + W11_BLOCK / 2,
+    y: edge - h / 2,
     w,
-    h: 150,
+    h,
     pad: 36,
     block: W11_BLOCK,
   };
@@ -1475,14 +1479,24 @@ export const flagWedge = (g: Grid) => {
    *  also the one thing that can land on the windows. */
   const n = W.note;
   /** ⚠ MEASURED TO THE INK, NOT TO THE RECTANGLE. The corner blocks reach half
-   *  a block past every edge, which is what nearly put this box in the logo
-   *  zone at its old width. */
+   *  a block past every edge, and that overhang has already put this box five
+   *  pixels outside the safe area once, at its old position, with nothing
+   *  saying so. */
   const over = n.block / 2;
-  if (n.y - over < A.y) fail("SC11's note starts above the safe area");
-  if (n.y - over < theme.logoZone.height && n.x + n.w + over > theme.logoZone.maxX) {
-    fail(`SC11's note reaches x${n.x + n.w + over} in the top ${theme.logoZone.height}px, past the logo zone's ${theme.logoZone.maxX}`);
+  const edge = end.card.y + end.card.h;
+  /** ⚠ IT REALLY DOES STRADDLE THE EDGE, half above and half below — the one
+   *  thing "overlap dengan tepi window bawah" actually asks for, and the one
+   *  thing a later nudge to y would quietly undo. */
+  if (Math.abs(n.y + n.h / 2 - edge) > 0.5) fail(`SC11's note is centred on ${n.y + n.h / 2}, not on the window's floor at ${edge}`);
+  if (n.x + n.w / 2 !== theme.canvas.width / 2) fail("SC11's note is not centred on the frame");
+  /** ⚠ AND IT STAYS OUT OF THE SUBTITLE BAND AND OFF THE DRAWING. */
+  if (n.y + n.h + over > theme.captionBand.top) {
+    fail(`SC11's note reaches ${n.y + n.h + over}, inside the subtitle band at ${theme.captionBand.top}`);
   }
-  if (n.y + n.h + over >= end.card.y) fail(`SC11's note ends at ${n.y + n.h + over}, on top of the windows at ${end.card.y}`);
+  if (n.x - over < A.x || n.x + n.w + over > A.x + A.w) fail("SC11's note reaches outside the safe area");
+  if (n.y - over <= end.plot.y + end.plot.h) {
+    fail(`SC11's note starts at ${n.y - over}, on top of the drawing which ends at ${end.plot.y + end.plot.h}`);
+  }
   /** ⚠ AND THE DROPPED FAN STILL HAS TO LAND INSIDE THE PLOT. 20px is a
    *  drawing offset, so nothing about the scale knows it is happening — the
    *  lowest bar could be pushed through the floor and the chart would simply
