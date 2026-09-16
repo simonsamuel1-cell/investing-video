@@ -30,6 +30,14 @@ import {
   mulberry32,
 } from "../helpers";
 import { toBars } from "../series";
+/**
+ * ⚠ THE THREE STUDIES' MATHS COMES FROM core, not from this episode's helpers.
+ * They are arithmetic on a list of numbers with no opinion about this video —
+ * Wilder's smoothing, a range position, a difference of two averages — and the
+ * one thing that must not happen is two copies of them drifting apart. 019's
+ * own sma/ema/bollinger stay where they are; nothing already drawn moves.
+ */
+import { macd, rsi, stochastic, swingsOf } from "../../../core";
 import {
   BBCA_1D,
   BBRI_1D,
@@ -131,6 +139,68 @@ export const PLOT = {
 const N = 105;
 const MA_PERIOD = 20;
 const SLOW_PERIOD = 50;
+/** Bars of pre-history the three studies are seeded on — see `study` in
+ *  makeChart. Longer than any of their own periods, so all three exist on the
+ *  first bar the chart actually shows. */
+const STUDY_WARM = 40;
+
+/**
+ * ═══ THE THREE STUDIES ═══  (VIDEO 22, `studies` on BrokerPanel)
+ *
+ * ⚠ ONE OBJECT, BECAUSE THE THREE NUMBERS CANNOT BE CHOSEN SEPARATELY. Opening
+ * three panes under the price makes the panel taller AND the price plot
+ * shorter, and a caller allowed to set those independently is a caller who can
+ * ask for a chart that does not fit its own window. The panel's height is the
+ * SUM of what is in it, so it cannot disagree with the stack.
+ *
+ * ⚠ AND ONE TIME AXIS FOR ALL FOUR, at the foot. The months belong to the
+ * tape, not to the price pane; repeated under each study they would be three
+ * more rows of type in the tightest part of the picture.
+ *
+ * `foot` keeps the panel 20px clear of VIDEO 22's subtitle band at 972.
+ */
+export const STUDY = (() => {
+  const top = 200;
+  const plotH = 320;
+  const lead = 20;
+  const pane = 62;
+  const gap = 12;
+  const tail = 8;
+  const axis = 30;
+  const foot = 14;
+  return {
+    plotH,
+    pane,
+    gap,
+    /** Panel-local y of the first pane's top edge. */
+    at: top + plotH + lead,
+    /** Panel-local baseline of the month row, under the last pane. */
+    axisY: top + plotH + lead + pane * 3 + gap * 2 + tail + axis,
+    height: top + plotH + lead + pane * 3 + gap * 2 + tail + axis + foot,
+    /**
+     * ⚠ THEY SHARE THE PRICE AXIS'S COLUMN, so they are sized to it. That column
+     * is about 86px wide — what "5.000" takes at 30px — and a study name that
+     * overruns it is a name reaching towards its own line. "Stochastic (14, 3)"
+     * ran 190px and sat under its plot; "Stochastic" ran 112 and cleared the
+     * first value by 8px, which is not a collision but is luck. "Stoch" is what
+     * every platform prints in that column anyway. Measured: 64px clear.
+     */
+    names: ["RSI", "Stoch", "MACD"],
+    /** Where a name starts, and the x the lines may not come left of. */
+    labelX: 44,
+  };
+})();
+
+{
+  /** ⚠ THE PANEL MAY NOT REACH VIDEO 22'S SUBTITLE BAND. This panel is drawn at
+   *  PANEL.y in both episodes, and 22 keeps the bottom 108px of every frame
+   *  empty for burned-in captions. */
+  if (PANEL.y + STUDY.height > 1080 - 108) {
+    throw new Error(
+      `019/Scene01: the studies make the panel reach ${PANEL.y + STUDY.height}, inside the subtitle band at 972`,
+    );
+  }
+}
 
 /**
  * ═══ THE WATCHLIST ═══
@@ -325,13 +395,49 @@ const makeChart = (sh: {
   })();
   const levels: number[] = [];
   for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) levels.push(v);
-  /* 0.80, not 0.88: a LL label hangs UNDER its low, and at 0.88 the lowest bar
-     left no room for a chip above the month row. */
-  const y = (v: number) =>
-    PLOT.y -
-    PANEL.y +
-    PLOT.h * (1 - (v - lo) / (hi - lo)) * 0.8 +
-    PLOT.h * 0.06;
+  /**
+   * ⚠ THE PLOT'S HEIGHT IS A PARAMETER NOW, and `y` is this function at the
+   * panel's own height. VIDEO 22 stacks three study panes under this chart and
+   * the price has to give them the room; a `y` closed over the constant could
+   * only be squashed by scaling the drawing, which takes the type, the stroke
+   * widths and the candle corners with it.
+   *
+   * ⚠ NOTHING IN THIS EPISODE PASSES A HEIGHT, so `y` is the same function it
+   * has always been — proven pixel-identical across six frames of 019 after the
+   * change, not assumed.
+   *
+   * 0.80, not 0.88: a LL label hangs UNDER its low, and at 0.88 the lowest bar
+   * left no room for a chip above the month row.
+   */
+  const yAt = (v: number, h: number) =>
+    PLOT.y - PANEL.y + h * (1 - (v - lo) / (hi - lo)) * 0.8 + h * 0.06;
+  const y = (v: number) => yAt(v, PLOT.h);
+
+  /**
+   * ⚠ THE STUDIES ARE WARMED UP THE WAY THE AVERAGE IS. MACD does not exist
+   * until its 26th bar and its signal for nine more after that; read off the
+   * visible window alone, the line would start a third of the way across a
+   * chart that is a SLICE of a series already running. 40 covers the longest of
+   * the three with room to spare.
+   *
+   * ⚠ AND THE STOCHASTIC NEEDS BARS, NOT CLOSES, so the warm-up gets bars too.
+   * Fed closes-as-flat-bars it would read 100 or 0 on every one of its first
+   * thirteen values, which is a spike at the left edge of a picture whose whole
+   * point is what the indicators say.
+   */
+  const warm = priorOf(closes[0], STUDY_WARM, sh.seed + 4);
+  const warmFull = [...warm, ...closes];
+  const warmBars = [...toBars(warm, sh.seed + 5), ...bars];
+  const st = stochastic(warmBars, 14, 3);
+  const mc = macd(warmFull, 12, 26, 9);
+  const study = {
+    rsi: rsi(warmFull, 14).slice(STUDY_WARM),
+    k: st.k.slice(STUDY_WARM),
+    d: st.d.slice(STUDY_WARM),
+    macd: mc.line.slice(STUDY_WARM),
+    signal: mc.signal.slice(STUDY_WARM),
+    hist: mc.hist.slice(STUDY_WARM),
+  };
 
   const prior = priorOf(closes[0], MA_PERIOD, sh.seed + 2);
   const full = [...prior, ...closes];
@@ -346,9 +452,21 @@ const makeChart = (sh: {
   const slowPrior = priorOf(closes[0], SLOW_PERIOD, sh.seed + 3);
   const maSlow = sma([...slowPrior, ...closes], SLOW_PERIOD).slice(SLOW_PERIOD);
 
-  /* Swing points: highs on the bar's high, lows on its low. A swing marked at
-     the close floats inside the candle it names. */
-  const pt = sh.pivots.map((p) => ({
+  /**
+   * Swing points: highs on the bar's high, lows on its low. A swing marked at
+   * the close floats inside the candle it names.
+   *
+   * ⚠ A CHART WITH NO PIVOTS TRACED GETS ITS OWN, FOUND. BBCA's and BBRI's were
+   * read off Simon's screenshots by hand and stay that way; BMRI never had any,
+   * because 019 never draws its structure — and VIDEO 22 asks for exactly that
+   * line on exactly that chart. Typing a third list by eye would be a fourth
+   * thing to keep in step with a tape that is generated; `swingsOf` follows it.
+   *
+   * ⚠ AND IT CHANGES NOTHING ALREADY DRAWN. The two hand-traced charts keep
+   * their own lists, and 019 has no frame on which BMRI's structure is shown.
+   */
+  const pivots: Pivot[] = sh.pivots.length ? sh.pivots : swingsOf(bars, 6);
+  const pt = pivots.map((p: Pivot) => ({
     ...p,
     y: y(p.high ? bars[p.i].h : bars[p.i].l),
   }));
@@ -360,12 +478,15 @@ const makeChart = (sh: {
 
   return {
     ...sh,
+    pivots,
     closes,
     bars,
     lo,
     hi,
     levels,
     y,
+    yAt,
+    study,
     ma,
     maSlow,
     bb,
@@ -582,6 +703,8 @@ export const BrokerPanel = ({
   alpha: alphaOf,
   zig,
   levels,
+  extension = true,
+  studies,
 }: {
   f: number;
   /**
@@ -646,14 +769,38 @@ export const BrokerPanel = ({
    * can be a level this panel does not actually show.
    */
   levels?: { shown: number; opacity?: number };
+  /**
+   * ⚠ OFF REMOVES THE RIGHT-HAND COLUMN ENTIRELY, watchlist and portfolio
+   * alike, and gives the 400px back to the chart. Added for VIDEO 22 — Simon:
+   * "jangan include watchlist ya di sebelah kanan ya" — which holds this panel
+   * on a frame where the column is long since open, so hiding it by choosing an
+   * earlier frame was never available. Defaults to on, so 019 is untouched.
+   */
+  extension?: boolean;
+  /**
+   * ⚠ THREE PANES UNDER THE PRICE — RSI, stochastic and MACD, in that order —
+   * AND THE PRICE PLOT SHRINKS TO PAY FOR THEM. See `STUDY`: the panel gets
+   * taller, the chart gets shorter, and the month row moves to the foot of the
+   * stack, because three studies wedged into the room the price already had is
+   * the collision Simon ruled out rather than the crowding the scene is about.
+   *
+   * `shown(i)` is each pane's own 0→1, so the caller owns the timing — the same
+   * shape as `marks`.
+   */
+  studies?: { shown: (i: number) => number };
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
    * so the candles, the structure and the indicator lines all narrow together
    * rather than being scaled — text on a scaled group is text that stretches.
    */
-  const open = progressInOut(f, T.list.in, T.list.over);
+  const open = extension ? progressInOut(f, T.list.in, T.list.over) : 0;
   const plotW = PLOT.w - LIST.take * open;
+  /** ⚠ THE PANEL IS AS TALL AS WHAT IS IN IT. With the studies open that is
+   *  STUDY.height, which is a sum of the stack rather than a second number that
+   *  has to agree with it. */
+  const panelH = studies ? STUDY.height : PANEL.h;
+  const plotH = studies ? STUDY.plotH : PLOT.h;
 
   /** Which chart the window is on, and therefore which row is selected. */
   const pick = chart ? CHARTS.findIndex((c) => c.t === chart) : -1;
@@ -683,7 +830,7 @@ export const BrokerPanel = ({
           left: PANEL.x,
           top: PANEL.y,
           width: PANEL.w,
-          height: PANEL.h,
+          height: panelH,
           borderRadius: theme.layout.radius.lg,
           background: C.surface,
           /* the panel's own outline fades as the mask takes over — otherwise
@@ -700,7 +847,7 @@ export const BrokerPanel = ({
             left: 0,
             top: 168,
             width: PANEL.w,
-            height: PANEL.h - 168,
+            height: panelH - 168,
             background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
           }}
         />
@@ -904,6 +1051,27 @@ export const BrokerPanel = ({
           const zigOn = zig ? n === active && zig.drawn > 0.001 : own;
           const zigLabels = zig ? !!zig.labels : true;
           const isBmri = n === 2;
+          /**
+           * ⚠ EVERY PRICE ON THIS CHART GOES THROUGH `Y`, not through `ch.y`.
+           * The two are the same function whenever no studies are open — same
+           * object is not guaranteed, same VALUE is — so 019 draws what it
+           * always drew, and the studies case squashes the MAPPING rather than
+           * the drawing.
+           */
+          const Y = plotH === PLOT.h ? ch.y : (v: number) => ch.yAt(v, plotH);
+          /** The swings, and the length the zigzag draws along, at this height.
+           *  Recomputed rather than scaled: the line's length is not a linear
+           *  function of the plot's height, because its x-run does not move. */
+          const pts =
+            plotH === PLOT.h
+              ? ch.pt
+              : ch.pivots.map((pv) => ({ ...pv, y: Y(pv.high ? ch.bars[pv.i].h : ch.bars[pv.i].l) }));
+          const zAt = [0];
+          for (let i = 1; i < pts.length; i++) {
+            const dx = lx(pts[i].i, PLOT.w) - lx(pts[i - 1].i, PLOT.w);
+            zAt.push(zAt[i - 1] + Math.hypot(dx, pts[i].y - pts[i - 1].y));
+          }
+          const zLen = zAt[zAt.length - 1];
           return (
             <svg
               key={ch.t}
@@ -914,23 +1082,23 @@ export const BrokerPanel = ({
                 overflow: "visible",
               }}
               width={PANEL.w}
-              height={PANEL.h}
+              height={panelH}
               opacity={o}
             >
               {ch.levels.map((v) => (
                 <g key={v}>
                   <line
                     x1={PLOT.x - PANEL.x}
-                    y1={ch.y(v)}
+                    y1={Y(v)}
                     x2={PLOT.x - PANEL.x + plotW}
-                    y2={ch.y(v)}
+                    y2={Y(v)}
                     stroke={C.gridline}
                     strokeWidth={theme.layout.border.thin}
                     strokeDasharray="2 8"
                   />
                   <text
                     x={AXIS_CX}
-                    y={ch.y(v) + 10}
+                    y={Y(v) + 10}
                     textAnchor="middle"
                     fontFamily={font}
                     fontSize={UI.size}
@@ -945,16 +1113,16 @@ export const BrokerPanel = ({
               {/* the tape is simply THERE — no entrance */}
               {ch.bars.map((b, i) => {
                 const x = lx(i, plotW);
-                const top = Math.min(ch.y(b.o), ch.y(b.c));
-                const h = Math.max(2, Math.abs(ch.y(b.c) - ch.y(b.o)));
+                const top = Math.min(Y(b.o), Y(b.c));
+                const h = Math.max(2, Math.abs(Y(b.c) - Y(b.o)));
                 const up = b.c >= b.o;
                 return (
                   <g key={i}>
                     <line
                       x1={x}
-                      y1={ch.y(b.h)}
+                      y1={Y(b.h)}
                       x2={x}
-                      y2={ch.y(b.l)}
+                      y2={Y(b.l)}
                       stroke={up ? C.candleGreen : C.candleRed}
                       strokeWidth={theme.layout.stroke.wick}
                     />
@@ -974,7 +1142,7 @@ export const BrokerPanel = ({
               {zigOn && (
                 <g opacity={zig?.opacity ?? 1}>
                   <path
-                    d={ch.pt
+                    d={pts
                       .map(
                         (p, i) =>
                           `${i === 0 ? "M" : "L"}${lx(p.i, plotW).toFixed(1)},${p.y.toFixed(1)}`,
@@ -985,14 +1153,14 @@ export const BrokerPanel = ({
                     strokeWidth={theme.layout.stroke.ma}
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeDasharray={ch.zigLen}
-                    strokeDashoffset={ch.zigLen * (1 - drawn)}
+                    strokeDasharray={zLen}
+                    strokeDashoffset={zLen * (1 - drawn)}
                   />
-                  {ch.pt.map((pv, k) => {
+                  {pts.map((pv, k) => {
                     /* a point waits for the LINE to reach it, not for a frame
                    number guessed off the easing curve */
                     const a = clamp01(
-                      (drawn - (ch.zigAt[k] / ch.zigLen) * ZIG_LEAD) * 9,
+                      (drawn - (zAt[k] / zLen) * ZIG_LEAD) * 9,
                     );
                     if (a <= 0.001) return null;
                     const w = 74;
@@ -1059,16 +1227,16 @@ export const BrokerPanel = ({
                           says only what those bars say. */}
                       <line
                         x1={lx(0, plotW)}
-                        y1={ch.y(L.v)}
+                        y1={Y(L.v)}
                         x2={lx(0, plotW) + (lx(N - 1, plotW) - lx(0, plotW)) * levels.shown}
-                        y2={ch.y(L.v)}
+                        y2={Y(L.v)}
                         stroke={C.indigo}
                         strokeWidth={theme.layout.stroke.ma}
                         strokeLinecap="round"
                       />
                       <text
                         x={lx(0, plotW)}
-                        y={ch.y(L.v) + (L.above ? -12 : 30)}
+                        y={Y(L.v) + (L.above ? -12 : 30)}
                         fontFamily={font}
                         fontSize={22}
                         fontWeight={600}
@@ -1088,7 +1256,7 @@ export const BrokerPanel = ({
                   else. Above a high and below a low, like the structure labels
                   were, so a badge never sits on the bar it is about. */}
               {marks &&
-                ch.pt.map((pv, k) => {
+                pts.map((pv, k) => {
                   const a = marks.shown(k, ch.t);
                   if (a <= 0.001) return null;
                   const bw = 62;
@@ -1124,11 +1292,11 @@ export const BrokerPanel = ({
               {isBmri && bbOn && (
                 <g opacity={progress(f, T.bb, theme.motion.revealF)}>
                   <path
-                    d={`${pathOf(ch.bb.upper, plotW, ch.y)} ${ch.bb.lower
+                    d={`${pathOf(ch.bb.upper, plotW, Y)} ${ch.bb.lower
                       .map((v, i) =>
                         v === null
                           ? ""
-                          : `L${lx(i, plotW).toFixed(1)},${ch.y(v).toFixed(1)}`,
+                          : `L${lx(i, plotW).toFixed(1)},${Y(v).toFixed(1)}`,
                       )
                       .reverse()
                       .join(" ")} Z`}
@@ -1139,7 +1307,7 @@ export const BrokerPanel = ({
                   {[ch.bb.upper, ch.bb.lower].map((band, k) => (
                     <path
                       key={k}
-                      d={pathOf(band, plotW, ch.y)}
+                      d={pathOf(band, plotW, Y)}
                       fill="none"
                       stroke={C.bbTosca}
                       strokeWidth={theme.layout.stroke.band}
@@ -1149,7 +1317,7 @@ export const BrokerPanel = ({
                         f,
                         T.bb,
                         T.drawOver,
-                        lenOf(band, plotW, ch.y),
+                        lenOf(band, plotW, Y),
                       )}
                     />
                   ))}
@@ -1159,13 +1327,13 @@ export const BrokerPanel = ({
               {/* ── the average ── */}
               {isBmri && maOn && (
                 <path
-                  d={pathOf(ch.ma, plotW, ch.y)}
+                  d={pathOf(ch.ma, plotW, Y)}
                   fill="none"
                   stroke={C.maOrange}
                   strokeWidth={theme.layout.stroke.ma}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, plotW, ch.y))}
+                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, plotW, Y))}
                 />
               )}
 
@@ -1173,13 +1341,123 @@ export const BrokerPanel = ({
               carries is the pill on the axis */}
               <line
                 x1={PLOT.x - PANEL.x}
-                y1={ch.y(ch.price)}
+                y1={Y(ch.price)}
                 x2={PLOT.x - PANEL.x + plotW}
-                y2={ch.y(ch.price)}
+                y2={Y(ch.price)}
                 stroke={C.text}
                 strokeWidth={theme.layout.border.thin}
                 strokeDasharray="8 8"
               />
+
+              {/* ═══ THE THREE STUDIES, UNDER THE PRICE ═══  (VIDEO 22)
+
+                  ⚠ EVERY LINE IN HERE IS INDIGO OR CYAN. The green and red on
+                  this panel belong to candle bodies and to nothing else, and a
+                  histogram coloured by sign is exactly the place that rule gets
+                  broken by accident — so the MACD's bars read indigo above zero
+                  and cyan below, which is a hue pair rather than a verdict.
+
+                  ⚠ THE NAME SITS IN THE PRICE AXIS'S GUTTER, left of where the
+                  first candle starts, so it cannot land on the line it names.
+                  Simon: "jangan ada yang bertabrakan". */}
+              {studies &&
+                STUDY.names.map((label, k) => {
+                  const on = studies.shown(k);
+                  if (on <= 0.001) return null;
+                  const top = STUDY.at + k * (STUDY.pane + STUDY.gap);
+                  const inset = 9;
+                  const x0 = lx(0, plotW);
+                  const x1 = lx(N - 1, plotW);
+                  /** 0→1 up the pane, from its own floor. */
+                  const py = (t: number) => top + STUDY.pane - inset - t * (STUDY.pane - inset * 2);
+                  const path = (vs: (number | null)[], t: (v: number) => number) =>
+                    vs
+                      .map((v, i) => (v === null ? "" : `${i === 0 || vs[i - 1] === null ? "M" : "L"}${lx(i, plotW).toFixed(1)},${py(t(v)).toFixed(1)}`))
+                      .join(" ");
+                  const band = (t: number) => (
+                    <line
+                      key={t}
+                      x1={x0}
+                      y1={py(t)}
+                      x2={x1}
+                      y2={py(t)}
+                      stroke={C.gridline}
+                      strokeWidth={theme.layout.border.thin}
+                      strokeDasharray="2 8"
+                    />
+                  );
+                  const pct = (v: number) => v / 100;
+                  /**
+                   * ⚠ MACD HAS NO 0→100, so it is scaled to its OWN range with
+                   * zero forced into it — and zero lands wherever it actually
+                   * falls rather than in the middle. Centred instead, a series
+                   * that runs −213 to +70 spends the top third of the pane
+                   * empty and squashes everything that happens into the
+                   * bottom; this tape is exactly that shape.
+                   */
+                  const vals = [...ch.study.macd, ...ch.study.signal, ...ch.study.hist, 0]
+                    .filter((v): v is number => v !== null);
+                  const mLo = Math.min(...vals);
+                  const mHi = Math.max(...vals);
+                  const sig = (v: number) => (v - mLo) / Math.max(1e-9, mHi - mLo);
+                  return (
+                    <g key={label} opacity={on}>
+                      <rect
+                        x={STUDY.labelX - 8}
+                        y={top}
+                        width={PLOT.x - PANEL.x + plotW - (STUDY.labelX - 8)}
+                        height={STUDY.pane}
+                        rx={theme.layout.radius.sm}
+                        fill={C.surface}
+                        fillOpacity={0.62}
+                      />
+                      <text
+                        x={STUDY.labelX}
+                        y={top + STUDY.pane / 2 + 7}
+                        fontFamily={font}
+                        fontSize={20}
+                        fontWeight={UI.weight}
+                        fill={C.textMuted}
+                        letterSpacing={1}
+                      >
+                        {label}
+                      </text>
+                      {k === 0 && (
+                        <>
+                          {[30, 70].map((v) => band(pct(v)))}
+                          <path d={path(ch.study.rsi, pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                        </>
+                      )}
+                      {k === 1 && (
+                        <>
+                          {[20, 80].map((v) => band(pct(v)))}
+                          <path d={path(ch.study.k, pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(ch.study.d, pct)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                        </>
+                      )}
+                      {k === 2 && (
+                        <>
+                          {band(sig(0))}
+                          {ch.study.hist.map((v, i) =>
+                            v === null ? null : (
+                              <rect
+                                key={i}
+                                x={lx(i, plotW) - bodyW(plotW) / 2}
+                                y={Math.min(py(sig(0)), py(sig(v)))}
+                                width={bodyW(plotW)}
+                                height={Math.max(1, Math.abs(py(sig(v)) - py(sig(0))))}
+                                fill={v >= 0 ? C.indigo : C.cyan}
+                                fillOpacity={0.35}
+                              />
+                            ),
+                          )}
+                          <path d={path(ch.study.macd, sig)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(ch.study.signal, sig)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                        </>
+                      )}
+                    </g>
+                  );
+                })}
 
               {AXIS.map((t, i) => (
                 <text
@@ -1192,7 +1470,7 @@ export const BrokerPanel = ({
                   }
                   /* the panel clips: a baseline below its height is a label
                  cut in half */
-                  y={PLOT.y + PLOT.h - PANEL.y + 34}
+                  y={studies ? STUDY.axisY : PLOT.y + plotH - PANEL.y + 34}
                   textAnchor="middle"
                   fontFamily={font}
                   fontSize={UI.size}
@@ -1217,7 +1495,7 @@ export const BrokerPanel = ({
                 position: "absolute",
                 left: AXIS_CX,
                 transform: "translateX(-50%)",
-                top: ch.y(ch.price) - 22,
+                top: (plotH === PLOT.h ? ch.y : (v: number) => ch.yAt(v, plotH))(ch.price) - 22,
                 opacity: o,
                 background: C.text,
                 color: C.surface,
@@ -1241,7 +1519,7 @@ export const BrokerPanel = ({
               left: LIST.x,
               top: 0,
               width: LIST.w,
-              height: PANEL.h,
+              height: panelH,
               background: C.surface,
               borderLeft: `${theme.layout.border.thin}px solid ${C.border}`,
               /* A DRAWER, not a fade: it starts its full width outside the

@@ -296,6 +296,134 @@ export const bollinger = (
   return { mid, upper, lower };
 };
 
+/**
+ * The tape's own turning points: a bar whose high is the highest within `reach`
+ * bars either side is a swing high, and the mirror for lows.
+ *
+ * ⚠ IT ALTERNATES, AND THAT IS THE HALF THAT MAKES IT A ZIGZAG. A raw fractal
+ * scan returns runs of highs with no low between them on a strong trend, and a
+ * line through those is a line that goes up twice — so a run keeps only its
+ * extreme and the result strictly alternates high, low, high.
+ *
+ * ⚠ DERIVED, NOT TYPED. A list of bar indices read off a picture is right until
+ * the tape is regenerated and then silently wrong; this follows the bars.
+ */
+export const swingsOf = (
+  bars: Bar[],
+  reach = 5,
+): { i: number; high: boolean }[] => {
+  const raw: { i: number; high: boolean }[] = [];
+  bars.forEach((b, i) => {
+    const a = Math.max(0, i - reach);
+    const z = Math.min(bars.length - 1, i + reach);
+    let hi = true;
+    let lo = true;
+    for (let k = a; k <= z; k++) {
+      if (k !== i && bars[k].h > b.h) hi = false;
+      if (k !== i && bars[k].l < b.l) lo = false;
+    }
+    if (hi) raw.push({ i, high: true });
+    else if (lo) raw.push({ i, high: false });
+  });
+  const out: { i: number; high: boolean }[] = [];
+  for (const p of raw) {
+    const last = out[out.length - 1];
+    if (!last || last.high !== p.high) {
+      out.push(p);
+      continue;
+    }
+    const keep = p.high ? bars[p.i].h > bars[last.i].h : bars[p.i].l < bars[last.i].l;
+    if (keep) out[out.length - 1] = p;
+  }
+  return out;
+};
+
+/**
+ * Relative Strength Index — Wilder's, with his smoothing rather than a plain
+ * mean of the last `period` moves.
+ *
+ * ⚠ THE SMOOTHING IS THE DEFINITION, not a refinement of it. A simple average
+ * of gains over losses gives a line that jumps whenever a big bar falls out of
+ * the window, and every platform a viewer has seen draws Wilder's — so the
+ * simple version would be a line that is right nowhere anybody could check.
+ */
+export const rsi = (closes: number[], period = 14): (number | null)[] => {
+  const out: (number | null)[] = [null];
+  let up = 0;
+  let down = 0;
+  for (let i = 1; i < closes.length; i++) {
+    const d = closes[i] - closes[i - 1];
+    const g = Math.max(0, d);
+    const l = Math.max(0, -d);
+    if (i <= period) {
+      up += g / period;
+      down += l / period;
+      out.push(i < period ? null : 100 - 100 / (1 + up / Math.max(1e-9, down)));
+      continue;
+    }
+    up = (up * (period - 1) + g) / period;
+    down = (down * (period - 1) + l) / period;
+    out.push(100 - 100 / (1 + up / Math.max(1e-9, down)));
+  }
+  return out;
+};
+
+/**
+ * Stochastic oscillator — %K over `period` bars, %D its `smooth`-bar mean.
+ *
+ * ⚠ IT READS HIGHS AND LOWS, NOT CLOSES. %K is where the close sits inside the
+ * RANGE of the window; computed from closes alone it is a different indicator
+ * that happens to look similar on a quiet tape and disagree on a violent one.
+ */
+export const stochastic = (
+  bars: Bar[],
+  period = 14,
+  smooth = 3,
+): { k: (number | null)[]; d: (number | null)[] } => {
+  const k = bars.map((b, i) => {
+    if (i < period - 1) return null;
+    let hi = -Infinity;
+    let lo = Infinity;
+    for (let j = i - period + 1; j <= i; j++) {
+      if (bars[j].h > hi) hi = bars[j].h;
+      if (bars[j].l < lo) lo = bars[j].l;
+    }
+    return ((b.c - lo) / Math.max(1e-9, hi - lo)) * 100;
+  });
+  const d = k.map((_, i) => {
+    if (i < period - 1 + smooth - 1) return null;
+    let s = 0;
+    for (let j = i - smooth + 1; j <= i; j++) s += k[j] as number;
+    return s / smooth;
+  });
+  return { k, d };
+};
+
+/**
+ * MACD — fast EMA minus slow EMA, its own EMA as the signal, and the gap
+ * between them as the histogram.
+ *
+ * ⚠ THE SIGNAL IS AN EMA OF THE MACD LINE ITSELF, which only exists from the
+ * slow period on. Seeding it on the whole array instead would start it before
+ * the line it is smoothing, and the histogram would then report a gap between
+ * a number and nothing.
+ */
+export const macd = (
+  closes: number[],
+  fast = 12,
+  slow = 26,
+  signalPeriod = 9,
+): { line: (number | null)[]; signal: (number | null)[]; hist: (number | null)[] } => {
+  const f = ema(closes, fast);
+  const s = ema(closes, slow);
+  const line = closes.map((_, i) => (f[i] === null || s[i] === null ? null : (f[i] as number) - (s[i] as number)));
+  const start = line.findIndex((v) => v !== null);
+  const sig = start < 0 ? [] : ema(line.slice(start) as number[], signalPeriod);
+  const signal = line.map((_, i) => (start < 0 || i < start ? null : sig[i - start] ?? null));
+  const hist = line.map((v, i) => (v === null || signal[i] === null ? null : v - (signal[i] as number)));
+  return { line, signal, hist };
+};
+
 /** Volume that agrees with its candles: bigger on bigger bodies, with seeded
  *  variation. Illustrative only — a real export brings its own volume. */
 export const volumeOf = (bars: Bar[], seed: number): number[] => {

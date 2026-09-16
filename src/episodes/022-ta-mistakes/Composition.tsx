@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -53,6 +53,7 @@ import { Platform } from "./scenes/Platform";
  * SC11.tsx, AdmrGroup.tsx, SC14.tsx, SC15.tsx, ProcessGroup.tsx, SC18.tsx.
  * Bringing any of them back is one import and one row in SCENES.
  */
+import { Overload } from "./scenes/Overload";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -151,7 +152,10 @@ const SCENES: Mounted[] = [
    * that outlives these scenes, so deleting them does not remove it — see the
    * note on `gaps` there, and what it costs.
    */
-  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: Blank, name: "SC10 (empty)" },
+  /** ⚠ SC10 IS FILLED AGAIN, by an overlay — see the Sequence below. Its tile
+   *  stays Blank because the picture has to start when round six clears at
+   *  8270 and run 112 frames past SC11's window, and a tile can do neither. */
+  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: Blank, name: "SC10 (overlaid)" },
   { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: Blank, name: "SC11 (empty)" },
   { from: BLOCK.SC12, duration: BLOCK.SC14 - BLOCK.SC12, Component: Blank, name: "SC12+13 (empty)" },
   { from: BLOCK.SC14, duration: BLOCK.SC15 - BLOCK.SC14, Component: Blank, name: "SC14 (empty)" },
@@ -185,6 +189,22 @@ const Body = () => (
         <Component />
       </Sequence>
     ))}
+
+    {/* ⚠ SC10 ON ITS OWN WINDOW, AND BELOW THE COUNTER. It opens when round six
+        clears and is held past SC11's opening.
+
+        ⚠ IT SITS HERE, NOT WITH THE OTHER OVERLAYS AT THE FOOT OF THIS FILE.
+        It paints an opaque panel over the whole frame, so mounted above CG-E it
+        would hide the counter for its whole run — the chip simply would not be
+        there for mistake 06. An overlay that is a SCENE belongs where its tile
+        was: above the tiling, below the chrome. See scenes/Overload.tsx. */}
+    <Sequence
+      from={PANEL10.at}
+      durationInFrames={PANEL10.to - PANEL10.at}
+      name="SC10 · indicator overload"
+    >
+      <Overload />
+    </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a
         chapter join must cover the counter too, or the card is not a card. */}

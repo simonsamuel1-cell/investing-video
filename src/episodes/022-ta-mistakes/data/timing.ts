@@ -1549,6 +1549,54 @@ export const OVERLOAD = {
   }
 }
 
+/**
+ * ═══ SC10 · ONE CHART, SEVEN READINGS ═══  Simon, from 019's frame 510.
+ *
+ * ⚠ THE BEATS LAND ON THE SENTENCE THAT NAMES THEM, and that sentence is where
+ * the two pads at 8060 and 8200 put it: 8262–8536 is "Menambahkan banyak
+ * indikator tidak selalu menambah kualitas analisis". Everything that piles
+ * onto the chart — the zigzag, the two levels, the three studies — arrives
+ * inside it, finishing on 8514.
+ *
+ * ⚠ 9110, WHICH IS SIMON'S OWN 9050 MOVED BY HIS OWN PADS. He set the end four
+ * frames after SC10's last word; the two voice-only pads moved that word from
+ * 9046 to 9106, so the same rule gives 9110. Left at 9050 the picture would cut
+ * 56 frames into the sentence it was cut to finish on.
+ */
+export const PANEL10 = {
+  /** ⚠ WHERE ROUND SIX CLEARS. Asserted below rather than typed twice. */
+  at: 8270,
+  to: 9110,
+  panel: { at: 8270, over: 30 },
+  zig: { at: 8320, over: 46 },
+  levels: { at: 8356, over: 40 },
+  studies: { at: 8400, step: 44, over: 26 },
+} as const;
+
+{
+  const V = PANEL10;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.at !== ROW6.from + ROW6.over) {
+    fail(`SC10 opens at ${V.at}, but round six clears at ${ROW6.from + ROW6.over}`);
+  }
+  /** ⚠ THE CHART HAS TO BE THERE BEFORE ANYTHING IS DRAWN ON IT. A level or a
+   *  zigzag fading up on a panel that is still arriving is a reading of a chart
+   *  nobody has seen yet. */
+  const ready = V.panel.at + V.panel.over;
+  ([["zigzag", V.zig.at], ["levels", V.levels.at], ["studies", V.studies.at]] as [string, number][]).forEach(
+    ([n, at]) => {
+      if (at < ready) fail(`SC10's ${n} start at ${at}, before its panel has arrived at ${ready}`);
+    },
+  );
+  /** ⚠ AND THE PILE FINISHES INSIDE THE SENTENCE THAT DESCRIBES IT — 8536 is
+   *  the last frame of "Menambahkan banyak indikator…". */
+  const done = V.studies.at + 2 * V.studies.step + V.studies.over;
+  if (done > 8536) fail(`SC10 is still stacking at ${done}, after the sentence about it ends on 8536`);
+  if (V.to <= done) fail(`SC10 ends at ${V.to}, before it has finished arriving at ${done}`);
+}
+
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
 export const HINDSIGHT = {
   name: 9079,
