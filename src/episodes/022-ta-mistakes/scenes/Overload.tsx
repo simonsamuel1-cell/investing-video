@@ -25,6 +25,11 @@
  * own gutter, left of where the first candle starts. See STUDY in 019's
  * Scene01, where all four of those numbers live together.
  *
+ * ⚠ NO SCRIBBLE ANY MORE — Simon: "remove scribblenya deh, windownya fade out
+ * di 8880". The window simply goes. scenes/Scribble.tsx is whole on disk and
+ * PANEL10.scribble still holds its frames, so it is one import and one line to
+ * bring back; what is gone is the mount.
+ *
  * ⚠ SUPPORT AND RESISTANCE ARE HIDDEN FOR NOW — Simon: "coba hide dulu garis
  * support dan resistance nya", while he settles the chart. The `levels` prop is
  * simply not passed; PANEL10.levels still holds their timing, so this is one
@@ -44,9 +49,8 @@ import { useCurrentFrame } from "remotion";
 import {
   DashedBox, dashOpenAt, progressInOut, ramp, theme, useMotion, usePalette,
 } from "../../../core";
-import { BrokerPanel, PANEL, STUDY } from "../../019-moving-average/scenes/Scene01";
+import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
 import { PANEL10 } from "../data/timing";
-import { Scribble } from "./Scribble";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -145,17 +149,6 @@ export const Overload = () => {
       {/* ⚠ THE WINDOW IT COVERS IS 019'S OWN BOX, read from there rather than
           typed here: the panel decides where it is, and a second copy of that
           rectangle would be a scrawl that misses the day it moves. */}
-      {/* ⚠ THE SCRAWL IS THE WINDOW'S SIZE, AND NOTHING CUTS IT — Simon, over
-          two turns: "jangan di masking", then "seukuran windownya aja… aku
-          gamau bentrok sama logo dan subtitle". Those are one instruction, not
-          two: fitted to the window it needs no mask, its edges stay ragged
-          loops, and it cannot reach the logo or the captions because the window
-          does not. The rectangle is read from 019 rather than typed here, so
-          the scrawl follows the window if it ever moves. */}
-      <Scribble
-        box={{ x: PANEL.x, y: PANEL.y, w: PANEL.w, h: STUDY.height }}
-        drawn={progressInOut(g, V.scribble.at, V.scribble.over)}
-      />
       </div>
       {/* ⚠ OUTSIDE THE FADE, because it arrives after it. Inside, the note
           would open at an opacity that is already on its way to nothing. */}
