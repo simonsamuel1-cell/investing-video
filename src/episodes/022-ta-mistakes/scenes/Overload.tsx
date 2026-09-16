@@ -42,8 +42,9 @@
  */
 import { useCurrentFrame } from "remotion";
 import { progressInOut } from "../../../core";
-import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
+import { BrokerPanel, PANEL, STUDY } from "../../019-moving-average/scenes/Scene01";
 import { PANEL10 } from "../data/timing";
+import { Scribble } from "./Scribble";
 
 /** ⚠ 019'S OWN FRAME NUMBER. That episode runs at 30fps and this one at 60, so
  *  this is not a frame of THIS timeline and must never be derived from one. */
@@ -60,8 +61,13 @@ export const Overload = () => {
   const g = f + V.at;
   const p = (q: { at: number; over: number }) => progressInOut(g, q.at, q.over);
 
+  /** ⚠ ONE FADE OVER EVERYTHING, scrawl included — Simon: "setelah itu semua
+   *  visualnya fade out". What is being cleared is the whole attempt, not the
+   *  chart with its verdict left standing on top of it. */
+  const gone = 1 - progressInOut(g, V.clear.at, V.clear.over);
+
   return (
-    <div style={{ position: "absolute", inset: 0 }}>
+    <div style={{ position: "absolute", inset: 0, opacity: gone }}>
       <BrokerPanel
         f={AT}
         chart="BMRI"
@@ -85,6 +91,13 @@ export const Overload = () => {
         studies={{
           shown: (i) => progressInOut(g, V.studies.at + i * V.studies.step, V.studies.over),
         }}
+      />
+      {/* ⚠ THE WINDOW IT COVERS IS 019'S OWN BOX, read from there rather than
+          typed here: the panel decides where it is, and a second copy of that
+          rectangle would be a scrawl that misses the day it moves. */}
+      <Scribble
+        box={{ x: PANEL.x, y: PANEL.y, w: PANEL.w, h: STUDY.height }}
+        drawn={progressInOut(g, V.scribble.at, V.scribble.over)}
       />
     </div>
   );

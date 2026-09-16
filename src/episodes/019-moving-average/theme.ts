@@ -80,6 +80,26 @@ export const theme = {
      * stop any of them meaning anything.
      */
     crossRed: "#E95D71",
+    /**
+     * ═══ THE THREE STUDIES' OWN INKS ═══  (VIDEO 22)
+     *
+     * Simon: "3 indikatornya boleh warna beda selain cyan indigo hijau merah
+     * loh" — an explicit release from the hue lock for these three lines, and
+     * for nothing else.
+     *
+     * ⚠ THEY ALSO HAVE TO CLEAR WHAT IS ALREADY ON THAT PICTURE, which is more
+     * than the four he named: `maOrange` is the average directly above them and
+     * `bbTosca` is the bands. A study wearing either would be saying it is the
+     * same kind of thing as the line above it. So the free hues are violet
+     * through magenta, and the warm end below the average's amber.
+     *
+     * ⚠ NAMED BY ROLE, NOT BY COLOUR. `rsiInk` survives Simon changing his mind
+     * about the hue; `studyMagenta` would be a lie the first time he did.
+     * Nothing outside the three study panes may use them.
+     */
+    rsiInk: "#D6409F",
+    stochInk: "#7C3AED",
+    macdInk: "#B45309",
   },
 
   layout: {

@@ -1584,6 +1584,16 @@ export const PANEL10 = {
    *  first study needs it. */
   shrink: { at: 8520, over: 34 },
   studies: { at: 8570, step: 46, over: 28 },
+  /**
+   * ⚠ AND THEN IT IS SCRIBBLED OUT — Simon, 8800→8860. The voice reaches "lebih
+   * banyak indikator belum tentu berarti lebih banyak insight" on 8884, so the
+   * scrawl is laid down just BEFORE the sentence that explains it and is still
+   * standing there while it is said.
+   */
+  scribble: { at: 8800, over: 60 },
+  /** ⚠ THEN EVERYTHING GOES — Simon: "setelah itu semua visualnya fade out".
+   *  The scrawl included: what is being cleared is the whole attempt. */
+  clear: { at: 8880, over: 50 },
   /** Kept for whatever puts the two levels back — see scenes/Overload.tsx. */
   levels: { at: 8356, over: 40 },
 } as const;
@@ -1620,6 +1630,19 @@ export const PANEL10 = {
     }
   });
   if (V.win.at !== V.at) fail(`SC10's window opens at ${V.win.at}, not when the scene does at ${V.at}`);
+  /** ⚠ THE SCRAWL WAITS FOR THE LAST STUDY, and the clearing waits for the
+   *  scrawl. Scribbling out a picture that is still arriving would be crossing
+   *  out something nobody has read. */
+  const lastStudy = V.studies.at + V.studies.step * 2 + V.studies.over;
+  if (V.scribble.at < lastStudy) {
+    fail(`SC10 is scribbled at ${V.scribble.at}, before its last study lands at ${lastStudy}`);
+  }
+  if (V.clear.at < V.scribble.at + V.scribble.over) {
+    fail(`SC10 clears at ${V.clear.at}, before the scrawl finishes at ${V.scribble.at + V.scribble.over}`);
+  }
+  if (V.clear.at + V.clear.over > V.to) {
+    fail(`SC10 is still clearing at ${V.clear.at + V.clear.over}, past its own end at ${V.to}`);
+  }
   const done = steps[steps.length - 1][1] + steps[steps.length - 1][2];
   if (V.to <= done) fail(`SC10 ends at ${V.to}, before it has finished arriving at ${done}`);
   /** ⚠ AND THE STUDIES LAND ON THE SENTENCE ABOUT INDICATORS THAT READ ALIKE —

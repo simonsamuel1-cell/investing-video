@@ -228,8 +228,12 @@ export const STUDY = (() => {
     /** …and before it does: the whole window, less its own padding. */
     full: height - BARE.plotTop - BARE.pad,
     names: ["RSI", "Stoch", "MACD"],
+    /** The name's pill: its height, and the air either side of the word. */
+    pill: 36,
+    pillPad: 16,
   };
 })();
+
 
 {
   /** ⚠ THE PANEL MAY NOT REACH VIDEO 22'S SUBTITLE BAND. This panel is drawn at
@@ -383,6 +387,23 @@ export const BTN = { top: 108, gap: 10, padX: 16, padY: 8, size: 20 };
 
 const font = theme.type.family;
 const C = theme.colors;
+
+/**
+ * ═══ ONE COLOUR PER STUDY ═══  Simon: "buat warnanya beda beda aja,
+ * garis-garisnya juga".
+ *
+ * ⚠ AND SIMON MADE THAT CALL — "3 indikatornya boleh warna beda selain cyan
+ * indigo hijau merah loh". Before it, the three could only be indigo, cyan and
+ * a lightness step of indigo, because those were the hues the episode had left:
+ * `maOrange` and `bbTosca` are the average and the bands on this same picture,
+ * so a study could not wear either. The release is his; the constraint that
+ * survives it is that one — see rsiInk / stochInk / macdInk in the theme.
+ */
+const STUDY_INK = [C.rsiInk, C.stochInk, C.macdInk];
+/** The same colour as a wash behind its own name. Derived from the ink so a
+ *  pill can never end up tinted with something its line is not. */
+const tint = (hex: string, a: number) =>
+  `rgba(${parseInt(hex.slice(1, 3), 16)}, ${parseInt(hex.slice(3, 5), 16)}, ${parseInt(hex.slice(5, 7), 16)}, ${a})`;
 
 /**
  * The plot's width is LIVE — it shrinks once, to make room for the extension —
@@ -1605,6 +1626,7 @@ export const BrokerPanel = ({
                    *  the words; nulling them means it was never there. */
                   const cut = (vs: (number | null)[]) =>
                     vs.map((v, i) => (i < STUDY.from ? null : v));
+                  const ink = STUDY_INK[k];
                   /**
                    * 0→1 up the pane, from its own floor — and the top of that
                    * travel stops BELOW the name's row, so no line can ever
@@ -1706,35 +1728,21 @@ export const BrokerPanel = ({
                         stroke={C.gridline}
                         strokeWidth={theme.layout.border.thin}
                       />
-                      <text
-                        x={x0}
-                        /** ⚠ ONE PIXEL UP, AND THE REASON IS THE SAME FOR ALL
-                         *  THREE. `central` centres the EM box; these three
-                         *  names are cap-height only — no descender in RSI,
-                         *  Stoch or MACD — so their INK sits a pixel below that
-                         *  centre. Measured at +1 on each of them, and at 0 on
-                         *  each of them after. */
-                        y={top + STUDY.pane / 2 - 1}
-                        dominantBaseline="central"
-                        fontFamily={font}
-                        fontSize={20}
-                        fontWeight={UI.weight}
-                        fill={C.textMuted}
-                        letterSpacing={1}
-                      >
-                        {label}
-                      </text>
                       {k === 0 && (
                         <>
                           {[30, 70].map((v) => band(pct(v)))}
-                          <path d={path(cut(ch.study.rsi), pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(cut(ch.study.rsi), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
                         </>
                       )}
                       {k === 1 && (
                         <>
                           {[20, 80].map((v) => band(pct(v)))}
-                          <path d={path(cut(ch.study.k), pct)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
-                          <path d={path(cut(ch.study.d), pct)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path d={path(cut(ch.study.k), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          {/* ⚠ THE SIGNAL IS DASHED, NOT A SECOND COLOUR. One
+                              colour per study is what Simon asked for, and a
+                              stochastic needs two lines — so the difference
+                              between them is the pattern. */}
+                          <path d={path(cut(ch.study.d), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeDasharray="7 7" strokeLinecap="round" />
                         </>
                       )}
                       {k === 2 && (
@@ -1748,7 +1756,12 @@ export const BrokerPanel = ({
                                 y={Math.min(py(sig(0)), py(sig(v)))}
                                 width={bodyW(plotW)}
                                 height={Math.max(1, Math.abs(py(sig(v)) - py(sig(0))))}
-                                fill={v >= 0 ? C.indigo : C.cyan}
+                                /** ⚠ ONE COLOUR, BOTH SIDES. The bar's sign is
+                                 *  already which side of the zero line it is
+                                 *  on; colouring it as well would make the
+                                 *  study wear two of the three colours this
+                                 *  picture has. */
+                                fill={ink}
                                 /** ⚠ FULL STRENGTH NOW. The bars were a wash
                                  *  behind two lines; with the lines gone they
                                  *  are the pane, and a pane drawn at a third of
@@ -1788,6 +1801,48 @@ export const BrokerPanel = ({
             </svg>
           );
         })}
+
+        {/* ═══ THE STUDIES' NAMES, AS PILLS ═══  Simon: "beri pill design pada
+            3 text itu", each in its own colour.
+
+            ⚠ HTML, NOT SVG, AND THAT IS THE WHOLE REASON THEY ARE HERE rather
+            than inside the chart with the lines they name. A pill has to be as
+            wide as its word, and SVG has no way to ask how wide a word is —
+            three typed widths would be three numbers that quietly stop being
+            right the day the type does.
+
+            ⚠ THE WASH IS DERIVED FROM THE INK, so a pill can never end up
+            tinted with a colour its own line is not. */}
+        {studies &&
+          STUDY.names.map((label, k) => {
+            const on = studies.shown(k);
+            if (on <= 0.001) return null;
+            return (
+              <div
+                key={label}
+                style={{
+                  position: "absolute",
+                  left: px0 + 14,
+                  top: STUDY.at + k * (STUDY.pane + STUDY.gap) + STUDY.pane / 2,
+                  transform: "translateY(-50%)",
+                  height: STUDY.pill,
+                  padding: `0 ${STUDY.pillPad}px`,
+                  display: "flex",
+                  alignItems: "center",
+                  borderRadius: STUDY.pill / 2,
+                  background: tint(STUDY_INK[k], 0.13),
+                  color: STUDY_INK[k],
+                  fontFamily: font,
+                  fontSize: 20,
+                  fontWeight: 700,
+                  letterSpacing: 1,
+                  opacity: on,
+                }}
+              >
+                {label}
+              </div>
+            );
+          })}
 
         {/* the price the crosshair sits on, on the axis */}
         {!bare &&
