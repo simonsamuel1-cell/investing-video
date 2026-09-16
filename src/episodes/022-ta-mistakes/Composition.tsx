@@ -29,9 +29,13 @@
  * padded and nothing had to be folded into a scene — unlike VIDEO 20, whose
  * SC10 → SC11 join had zero silence.
  *
- * ⚠ NO WIPES, AND NO CameraCut EITHER. Every join here has real air in it, so
- * a plain hard cut under a card is what the recording actually supports; a
- * camera move added on top would be a move nobody asked for.
+ * ⚠ NO WIPES. That one still holds, and always will.
+ *
+ * ⚠ BUT THERE IS ONE CameraCut NOW, AT 10185 — Simon asked for it. This note
+ * used to say there were none, on the grounds that every join here has real air
+ * in it and a camera move on top would be a move nobody asked for. Somebody has
+ * now asked for one, at the end of SC11, so the reasoning stands for the other
+ * joins and the claim does not. See CUT11 in data/timing.ts.
  *
  * ⚠ FOUR JOINS IN THE RECORDING HAVE NO SILENCE AT ALL — f227, f4900, f6947,
  * f12526 — and all four fall INSIDE a scene, not at a boundary. Each one is

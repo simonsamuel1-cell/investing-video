@@ -1850,8 +1850,42 @@ export const WINDOW11 = {
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
    *  window was given exactly this on his own instruction. One line to remove
    *  when what goes on top decides its own ending. */
-  out: 10165,
+  /**
+   * ⚠ IT LEAVES ON A CAMERA CUT NOW, NOT A FADE — Simon: "10184-10185 beri
+   * transisi camera cut". `out` is gone; what replaces it is CUT11 below, and
+   * the frame the scene starts moving on is that cut's own first frame rather
+   * than a second number that could drift away from it.
+   */
 } as const;
+
+/**
+ * ═══ SC11 → whatever follows · THE CAMERA CUT ═══════════════════════════
+ *
+ * ⚠ Simon: "10184-10185 beri transisi camera cut". 10185 is the MIDPOINT of the
+ * move, not its start — core/CameraCut runs one ease-in-out curve across the
+ * boundary and swaps the content at its fastest frame, where the blur peaks and
+ * the eye cannot resolve detail anyway. So SC11 draws its last frame on 10184
+ * already travelling, and 10185 is where the swap happens.
+ *
+ * ⚠ IT REPLACES THE FADE, IT DOES NOT JOIN IT. The window used to dissolve from
+ * 10165; a dissolve under a camera move is two exits played at once.
+ *
+ * ⚠ ONLY THE OUTGOING HALF EXISTS YET, AND THAT IS WORTH SAYING PLAINLY. There
+ * is nothing mounted at 10185 — the next picture in this episode is SC15 at
+ * 12514 — so for now the move carries SC11 off into empty ground, which is what
+ * a cut with one half looks like: a whip-pan to nothing. Whatever lands on
+ * 10185 takes the incoming half by reading THIS object through `cutInStyle`.
+ * Two hand-tuned moves that happen to meet is not a cut.
+ *
+ * ⚠ AND IT TRAVELS ON x. A vertical throw is capped by the subtitle band —
+ * core/CameraCut says so — and this scene has already moved left once, when the
+ * big window made room for the small one. The camera going the same way reads
+ * as the same room.
+ */
+export const CUT11 = { at: 10185, over: 40, distance: 120, blur: 10, axis: "x" } as const;
+
+/** The frame SC11 starts moving on: half the cut, before the cut. */
+const LEAVES = CUT11.at - CUT11.over / 2;
 
 {
   const V = WINDOW11;
@@ -1877,12 +1911,15 @@ export const WINDOW11 = {
    *  over when it starts, and the one that could run past the scene's end is
    *  the one nobody writes down. */
   const lastRed = V.down.at + V.down.step * 2;
-  if (lastRed >= V.out) fail(`SC11's last falling bar starts at ${lastRed}, when the scene is already leaving at ${V.out}`);
+  if (lastRed >= LEAVES) fail(`SC11's last falling bar starts at ${lastRed}, when the scene is already moving at ${LEAVES}`);
   /** ⚠ AND THE SENTENCE HAS TO FINISH TYPING BEFORE THE SCENE LEAVES. A note
    *  that is still arriving while the picture fades is a sentence nobody read. */
   const typed = V.note.at + V.note.text.length * V.note.perChar;
-  if (typed >= V.out) fail(`SC11's note finishes typing at ${typed}, after it has started leaving at ${V.out}`);
-  if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
+  if (typed >= LEAVES) fail(`SC11's note finishes typing at ${typed}, after it has started moving at ${LEAVES}`);
+  /** ⚠ THE CUT LANDS ON THE SCENE'S OWN LAST FRAME + 1, which is what makes it
+   *  a cut rather than an exit: the swap is the boundary. */
+  if (CUT11.at !== V.to) fail(`SC11's cut lands on ${CUT11.at}, not on its own boundary at ${V.to}`);
+  if (LEAVES <= V.note.at) fail("SC11 starts moving before its own sentence has begun");
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);
 }

@@ -24,6 +24,11 @@
  * one had to wait for its last three bars and the other never did. On a scene
  * about hindsight that pair is the argument.
  *
+ * ⚠ IT LEAVES ON A CAMERA CUT — Simon: "10184-10185 beri transisi camera cut".
+ * The whole picture travels and blurs across that boundary rather than
+ * dissolving; see CUT11 in data/timing.ts, and the note there about the
+ * incoming half, which does not exist yet.
+ *
  * ⚠ NO NAMES — Simon: "hapus semua kata Flag". Both captions are gone and both
  * drawings are now centred in their windows rather than riding above the band
  * one used to occupy. See plotOf in data/layout.ts: the boxes did not resize,
@@ -48,11 +53,11 @@
 import { useCurrentFrame } from "remotion";
 import {
   Candles, Card, DashedBox, Layer, Stage,
-  candleWidth, dashOpenAt, domainOf, drawPath, fadeOut, gridOf, pathOf,
+  candleWidth, cutOutStyle, dashOpenAt, domainOf, drawPath, gridOf, pathOf,
   progress, ramp, theme, useMotion, usePalette,
 } from "../../../core";
 import type { Grid } from "../../../core";
-import { WINDOW11, local } from "../data/timing";
+import { CUT11, WINDOW11, local } from "../data/timing";
 import { WIN11, bigAt, droppedBy, flagWedge } from "../data/layout";
 import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINE } from "../data/series";
 
@@ -213,10 +218,13 @@ export const ChartWindow = () => {
   /** ⚠ ONE OPACITY FOR THE WHOLE SECOND WINDOW — Simon: "fade in aja semuanya
    *  langsung". Nothing in there draws on. */
   const fill = progress(f, local(V.small.fill, V.at), m.fade);
-  const out = fadeOut(f, local(V.out, V.at), m.fade);
 
   /** ⚠ RESOLVED EVERY FRAME, AND CHEAPLY. The whole big window — card and plot
    *  — is a function of how far through the shift it is. */
+  /** ⚠ GLOBAL FRAMES FOR THE CUT, and this is the number one bug in this
+   *  pipeline: a scene inside a Sequence sees rebased frames, and both halves
+   *  of a cut have to evaluate the same curve from the timeline's own. */
+  const g = f + V.at;
   const big = bigAt(slide);
   const bigGrid = gridOf(FLAG.closes, DOMAIN, big.plot, W.plotPad);
 
@@ -240,7 +248,10 @@ export const ChartWindow = () => {
 
   return (
     <Stage>
-      <div style={{ opacity: out }}>
+      {/* ⚠ THE CAMERA MOVES THE PICTURE, NOT THE GROUND. Stage's background
+          stays put underneath: it is a flat colour, so translating it would
+          show nothing and could only expose an edge. */}
+      <div style={cutOutStyle(g, CUT11)}>
         {/* ═══ the big window — the pattern being made ═══════════════════ */}
         <Card rect={big.card} opacity={open} soft />
         {/* ⚠ core/Candles DIRECTLY, NOT core/Chart. Chart was here for its
@@ -303,7 +314,7 @@ export const ChartWindow = () => {
         {fill > 0.001 && wedge(SMALL_GRID, fill, false, "smallWedge")}
 
         {/* ═══ what the two of them add up to ═══════════════════════════ */}
-        <Note g={f + V.at} />
+        <Note g={g} />
       </div>
     </Stage>
   );
