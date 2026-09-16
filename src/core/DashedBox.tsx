@@ -71,6 +71,7 @@ export const DashedBox = ({
   opacity = 1,
   solid = false,
   blocks = true,
+  origin = "left",
   shadow,
   beats = DASH_IN,
   children,
@@ -86,6 +87,24 @@ export const DashedBox = ({
   opacity?: number;
   /** Draw the frame as an unbroken rule instead of a dashed one. */
   solid?: boolean;
+  /**
+   * Which edge the snap opens FROM.
+   *
+   * `left` — the default, and what every box in these episodes has done since
+   * this component arrived: the frame grows rightwards off its own left edge,
+   * like a marquee being dragged out.
+   *
+   * `center` — it grows both ways off its middle, so the box arrives where it
+   * will finally be rather than travelling to it. Right for a box whose place
+   * is the point: one pinned to the centre of the frame, or straddling
+   * something, where opening from an edge reads as the box sliding into
+   * position.
+   *
+   * ⚠ OPT-IN, AND IT HAS TO BE. Eleven scenes across two episodes already mount
+   * this, and every one of them was approved with the left-hand open. A default
+   * change here would restyle finished work in an episode nobody is looking at.
+   */
+  origin?: "left" | "center";
   /** The corner blocks. They exist to give a DASH rhythm somewhere to start
    *  and stop; on a solid frame they are leftovers, so a solid box usually
    *  wants them off. */
@@ -111,12 +130,16 @@ export const DashedBox = ({
   const open = progressInOut(f, at + m.sec(beats.rise), m.sec(beats.open));
   /** The frame's width right now — a sliver until the snap. */
   const wNow = DASH_IN.sliver + (w - DASH_IN.sliver) * open;
+  /** ⚠ THE ONLY DIFFERENCE `origin` MAKES. Opening from the centre is the same
+   *  width on the same curve, with the left edge pulled back by half of what is
+   *  missing — so the box's middle never moves. */
+  const left = origin === "center" ? x + (w - wNow) / 2 : x;
 
   return (
     <div
       style={{
         position: "absolute",
-        left: x,
+        left,
         top: y + (1 - rise) * DASH_IN.riseBy,
         width: wNow,
         height: h,

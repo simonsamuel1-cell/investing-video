@@ -143,6 +143,13 @@ const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
  * my content start" — text that begins while the box is still a sliver is text
  * hanging in the air. Same shape as SC10's note, which is the same instruction.
  *
+ * ⚠ IT OPENS FROM ITS MIDDLE — Simon: "muncul kotaknya dari tengah dong, jadi
+ * widthnya melebar ke kiri kanan". This box is pinned to two things at once,
+ * the frame's centre-line and the window's floor, and a frame that grows off
+ * its left edge reads as a box sliding into position rather than one arriving
+ * where it belongs. `origin` is opt-in in core/DashedBox: eleven other scenes
+ * mount that component and all of them were approved opening from the left.
+ *
  * ⚠ CENTRED, NOW THAT IT IS ONE LINE. It was set left while it wrapped onto
  * two, because a centred line grows out of its own middle as it types and on
  * two lines the break point creeps as well. One line nearly filling its box has
@@ -158,7 +165,15 @@ const Note = ({ g }: { g: number }) => {
     Math.floor(ramp(g, open, V.note.text.length * V.note.perChar) * V.note.text.length),
   );
   return (
-    <DashedBox x={N.x} y={N.y} w={N.w} h={N.h} block={N.block} at={local(V.note.at, V.at)}>
+    <DashedBox
+      x={N.x}
+      y={N.y}
+      w={N.w}
+      h={N.h}
+      block={N.block}
+      origin="center"
+      at={local(V.note.at, V.at)}
+    >
       <div
         style={{
           position: "absolute",
