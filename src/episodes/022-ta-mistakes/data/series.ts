@@ -1131,6 +1131,33 @@ export const FLAG_LINES = (() => {
 })();
 
 /**
+ * The other three bars — the same breakout, downwards.
+ *
+ * ⚠ MIRRORED, NOT INVENTED — Simon: "tambahkan 3 candlestick baru di kanan tapi
+ * turun … posisinya persis sejajar di bawah 3 candlestick hollow". Each one is
+ * its counterpart reflected about the last bar the chart actually has, so the
+ * two futures are the SAME move in opposite directions: same three x positions,
+ * same body heights, same wicks. Reflecting means there is not one new number
+ * here — and it means neither future can accidentally be drawn as the more
+ * likely one, which on a scene about hindsight is the whole point.
+ *
+ * ⚠ AND THE REFLECTION IS ABOUT A CLOSE, NOT ABOUT THE MIDDLE OF THE BOX. Both
+ * fans start from where the tape actually stopped, so they meet at that price
+ * and open out from it.
+ */
+export const FLAG_DOWN: Bar[] = (() => {
+  const pivot = FLAG_BARS[FLAG_LINES.last].c;
+  const flip = (v: number) => pivot * 2 - v;
+  return FLAG_BARS.slice(FLAG_LINES.last + 1).map((b) => ({
+    o: flip(b.o),
+    c: flip(b.c),
+    /* ⚠ HIGH AND LOW SWAP. A reflected high is a low. */
+    h: flip(b.l),
+    l: flip(b.h),
+  }));
+})();
+
+/**
  * The same flag, STRAIGHTENED — Simon: "line chartnya lurusin aja, ga perlu
  * sama persis dengan candlestick chart di kiri".
  *
@@ -1209,4 +1236,22 @@ export const FLAG_LINE: (number | null)[] = (() => {
     if (legs[k] >= legs[k - 1]) fail(`the straightened flag's leg ${k + 1} does not narrow`);
   }
   if (legs[legs.length - 1] <= legs[legs.length - 2]) fail("the straightened flag never breaks out");
+  /**
+   * ⚠ THE TWO FUTURES HAVE TO BE THE SAME SIZE, or one of them is the video's
+   * own forecast. Mirrored they cannot differ — this is what catches the day
+   * somebody writes the down bars out by hand instead.
+   */
+  const up = FLAG_BARS.slice(F.last + 1);
+  if (FLAG_DOWN.length !== up.length) fail("the two futures are different lengths");
+  up.forEach((b, k) => {
+    const d = FLAG_DOWN[k];
+    if (Math.abs(Math.abs(b.c - b.o) - Math.abs(d.c - d.o)) > 0.01) fail(`future bar ${k + 1} has bodies of different sizes`);
+    if (Math.abs(b.h - b.l - (d.h - d.l)) > 0.01) fail(`future bar ${k + 1} has ranges of different sizes`);
+    if (d.c >= d.o) fail(`future bar ${k + 1} does not fall`);
+  });
+  /** ⚠ AND THE DOWN FAN HAS TO FIT THE SCALE THE CHART ALREADY HAS. Below the
+   *  tape's own low it would be drawn outside the plot — or force the domain to
+   *  grow, which would move every bar already on screen. */
+  const lo = Math.min(...FLAG_BARS.map((b) => b.l));
+  if (Math.min(...FLAG_DOWN.map((b) => b.l)) < lo) fail("the down future falls out of the chart's own scale");
 }

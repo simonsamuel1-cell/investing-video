@@ -11,7 +11,13 @@
  * the wedge, and only then lets those three back as empty outlines; it slides
  * left; a window half its size arrives on the right holding the same pattern
  * already finished — straightened to six points, drawn as a line, with nothing
- * withheld and nothing animated.
+ * withheld and nothing animated; and last, a second dashed fan opens under the
+ * first, the same three bars going the other way.
+ *
+ * ⚠ TWO FUTURES, NOT ONE. A single dashed fan going up is a forecast, and this
+ * video does not make them. Two of them, mirrored so they cannot differ in size
+ * or in weight, is the scene saying it does not know — which is the thing the
+ * narration is about.
  *
  * ⚠ THE DIFFERENCE BETWEEN THE TWO IS THE WHOLE REASON FOR BOTH. Same series,
  * same domain, same wedge. One of them is being made and one of them is done;
@@ -48,7 +54,7 @@ import {
 import type { Grid } from "../../../core";
 import { WINDOW11, local } from "../data/timing";
 import { WIN11, bigAt, flagWedge } from "../data/layout";
-import { FLAG, FLAG_BARS, FLAG_LINE } from "../data/series";
+import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = WINDOW11;
@@ -69,7 +75,7 @@ const DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
  *  grid.x(k), so dropping bars off the END leaves every remaining one where it
  *  was. Dropping them off the front would not. */
 const SOLID = FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden);
-const GHOSTS = FLAG_BARS.slice(FLAG_BARS.length - W.hidden);
+const UP = FLAG_BARS.slice(FLAG_BARS.length - W.hidden);
 
 /** ⚠ THE SMALL WINDOW DOES NOT MOVE, so its grid is solved once. */
 const SMALL_GRID = gridOf(FLAG.closes, DOMAIN, W.small.plot, W.plotPad);
@@ -83,20 +89,31 @@ const SMALL_GRID = gridOf(FLAG.closes, DOMAIN, W.small.plot, W.plotPad);
  * not happened yet. What they share with the real bars is their geometry, and
  * that comes from the same grid.
  */
-const Ghosts = ({ g }: { g: Grid }) => {
+const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
   const c = usePalette();
   const w = candleWidth(g);
   return (
     <>
-      {GHOSTS.map((b, k) => {
-        const i = FLAG_BARS.length - GHOSTS.length + k;
+      {bars.map((b, k) => {
+        /** ⚠ BOTH FANS SIT ON THE SAME THREE INDICES, which is what puts the
+         *  falling three exactly under the rising three — Simon: "persis
+         *  sejajar di bawah". */
+        const i = FLAG_BARS.length - bars.length + k;
         const x = g.x(i);
         const top = Math.min(g.y(b.o), g.y(b.c));
         const h = Math.abs(g.y(b.c) - g.y(b.o));
         return (
-          <g key={i} stroke={c.muted} strokeWidth={W.ghost.width} strokeDasharray={W.ghost.dash} fill="none">
+          <g key={i} stroke={c.muted} strokeWidth={W.ghost.width} fill="none">
+            {/* ⚠ SOLID — a dash on a 3px line is a line with pieces missing. */}
             <line x1={x} y1={g.y(b.h)} x2={x} y2={g.y(b.l)} />
-            <rect x={x - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} />
+            <rect
+              x={x - w / 2}
+              y={top}
+              width={w}
+              height={h}
+              rx={Math.min(w * 0.22, 5)}
+              strokeDasharray={W.ghost.dash}
+            />
           </g>
         );
       })}
@@ -111,6 +128,7 @@ export const ChartWindow = () => {
   const open = progress(f, local(V.card, V.at), m.fade);
   const drawn = progress(f, local(V.lines, V.at), m.sec(0.5));
   const ghost = progress(f, local(V.ghost, V.at), m.reveal);
+  const down = progress(f, local(V.down, V.at), m.reveal);
   const slide = progress(f, local(V.shift, V.at), m.move);
   const small = progress(f, local(V.small.at, V.at), m.fade);
   /** ⚠ ONE OPACITY FOR THE WHOLE SECOND WINDOW — Simon: "fade in aja semuanya
@@ -160,7 +178,14 @@ export const ChartWindow = () => {
             exists is a bar breaking nothing. */}
         {ghost > 0.001 && (
           <Layer opacity={ghost}>
-            <Ghosts g={bigGrid} />
+            <Ghosts g={bigGrid} bars={UP} />
+          </Layer>
+        )}
+        {/* ⚠ AND THEN THE OTHER ONE. One dashed fan going up is a forecast; two
+            of them, the same size, is the scene saying it does not know. */}
+        {down > 0.001 && (
+          <Layer opacity={down}>
+            <Ghosts g={bigGrid} bars={FLAG_DOWN} />
           </Layer>
         )}
 

@@ -1815,6 +1815,13 @@ export const WINDOW11 = {
    * finished, which is the difference the scene is about.
    */
   small: { at: 9530, fill: 9560 },
+  /**
+   * ⚠ THE OTHER FUTURE — Simon, 9600: "tambahkan 3 candlestick baru di kanan
+   * tapi turun". The same three bars mirrored, hanging under the three that
+   * rose. It comes last because the scene's claim only exists once there are
+   * TWO of them: one dashed fan going up is a forecast, and two is the point.
+   */
+  down: 9600,
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
@@ -1838,11 +1845,12 @@ export const WINDOW11 = {
   const steps: [string, number][] = [
     ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the ghost bars", V.ghost],
     ["the shift", V.shift], ["the second window", V.small.at], ["its contents", V.small.fill],
+    ["the down future", V.down],
   ];
   steps.forEach(([n, at], i) => {
     if (i && at <= steps[i - 1][1]) fail(`SC11's ${n} starts at ${at}, not after ${steps[i - 1][0]}`);
   });
-  if (V.small.fill >= V.out) fail(`SC11 fills the second window at ${V.small.fill}, when it is already leaving at ${V.out}`);
+  if (V.down >= V.out) fail(`SC11 opens the second future at ${V.down}, when it is already leaving at ${V.out}`);
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);

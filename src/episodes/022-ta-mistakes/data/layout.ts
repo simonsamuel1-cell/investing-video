@@ -1220,13 +1220,20 @@ const plotOf = (card: Rect, pad: number, type: number): Rect => {
  * ⚠ "16 11" IS THE EPISODE'S DASH AND IT IS THE WRONG ONE HERE. A candle body
  * is about 28px wide, so that rhythm puts one and a half dashes along a side
  * and the thing reads as a broken rectangle rather than a dashed one. This is
- * the same rhythm scaled to the object it is drawn on.
+ * the same rhythm scaled to the object it is drawn on — and lengthened once
+ * since, on Simon's "putus putusnya panjangin": 10 and 6 still gives a narrow
+ * side nearly two whole periods, which is the floor below which a dashed
+ * rectangle stops reading as dashed.
+ *
+ * ⚠ THE WICK IS SOLID — Simon: "wicknya ga perlu putus putus". It is one or two
+ * pixels wide, so a dash on it is not a dash, it is a line with pieces missing.
+ * The body carries the "this has not happened" and the wick just measures.
  *
  * ⚠ AND THEY ARE NEITHER GREEN NOR RED. The candle colours belong to
  * core/Candles — scripts/audit.mjs enforces it — and they would be wrong here
  * anyway: a bar that has not happened yet has no direction to have closed in.
  */
-const W11_GHOST = { dash: "6 5", width: theme.shape.rule } as const;
+const W11_GHOST = { dash: "10 6", width: theme.shape.line } as const;
 
 /** The grid's vertical head-room, shared so the scene and the solve below
  *  cannot build two different grids for one box. */
