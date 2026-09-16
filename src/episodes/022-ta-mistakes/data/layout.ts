@@ -1171,10 +1171,36 @@ export const PLAN = {
  */
 const W11_BOUNDS: Rect = { x: theme.stage.active.x, y: 230, w: theme.stage.active.w, h: 640 };
 
+/**
+ * ⚠ THE INSET IS THE SAME ON THREE SIDES, and the bottom is deeper by exactly
+ * the name's own band. A pattern drawing centred in its window with its name
+ * under it is the reference's own arrangement; taking the name's room off the
+ * plot rather than out of the margin is what keeps the drawing centred in what
+ * is left instead of sitting low in the card.
+ */
+const W11_PAD = 56;
+const W11_NAME = 72;
+
+const plotOf = (card: Rect): Rect => ({
+  x: card.x + W11_PAD,
+  y: card.y + W11_PAD,
+  w: card.w - W11_PAD * 2,
+  h: card.h - W11_PAD * 2 - W11_NAME,
+});
+
+const W11_CARDS = halves(W11_BOUNDS);
+
 export const WIN11 = {
   /** The pair's outer bounds — the window before it was split. */
   bounds: W11_BOUNDS,
-  cards: halves(W11_BOUNDS),
+  cards: W11_CARDS,
+  /** Where the pattern is drawn inside each window. */
+  plots: W11_CARDS.map(plotOf) as [Rect, Rect],
+  /** Centre of the pattern's name, under each plot. */
+  names: W11_CARDS.map((r) => ({
+    x: r.x + r.w / 2,
+    y: r.y + r.h - W11_PAD - W11_NAME / 2,
+  })) as [{ x: number; y: number }, { x: number; y: number }],
 };
 
 {
@@ -1201,4 +1227,24 @@ export const WIN11 = {
     fail(`SC11's windows reach ${W.bounds.y + W.bounds.h}, inside the subtitle band`);
   }
   if (W.bounds.y < theme.logoZone.height) fail("SC11's windows reach into the logo zone");
+  /** ⚠ THE DRAWING AND ITS NAME MAY NOT TOUCH. The plot's floor and the top of
+   *  the name's own band are the same line by construction, so what is checked
+   *  is that a line of type centred on that band still clears the floor. */
+  W.plots.forEach((p, i) => {
+    const n = W.names[i];
+    if (p.y + p.h > n.y - theme.text.chip.size / 2) {
+      fail(`SC11's window ${i + 1} draws its pattern into its own name`);
+    }
+    if (n.y + theme.text.chip.size / 2 > W.cards[i].y + W.cards[i].h) {
+      fail(`SC11's window ${i + 1} hangs its name past the bottom of the card`);
+    }
+    if (p.x < W.cards[i].x || p.x + p.w > W.cards[i].x + W.cards[i].w) {
+      fail(`SC11's window ${i + 1} draws wider than itself`);
+    }
+  });
+  /** ⚠ AND THE TWO PLOTS ARE THE SAME SIZE — the halves are, so this catches an
+   *  inset that stopped being shared rather than a box that moved. */
+  if (W.plots[0].w !== W.plots[1].w || W.plots[0].h !== W.plots[1].h) {
+    fail("SC11's two plots are different sizes");
+  }
 }

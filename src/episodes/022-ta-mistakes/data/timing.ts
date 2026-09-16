@@ -1760,14 +1760,17 @@ export const ROW7 = {
  * number; before it the sentence began 29 frames early. Asserted below rather
  * than typed twice.
  *
- * ⚠ AND THE WINDOW IS EMPTY, AND THERE ARE TWO OF IT — Simon: "hapus isi
- * chartnya, keep windownya. Lalu buat windownya jadi 2 kiri kanan". The chart
- * that was here for one commit is gone; what the scene draws now is two cards
- * arriving together and leaving together. See WIN11 in data/layout.ts.
+ * ⚠ TWO WINDOWS, AND THE SAME PATTERN IN BOTH — Simon: "hapus isi chartnya,
+ * keep windownya. Lalu buat windownya jadi 2 kiri kanan", then "cuplikat gambar
+ * itu di 2 window" of the Bullish Flag from his reference sheet. One set of
+ * bars drawn twice, each window solving its own grid inside its own box: "the
+ * same" is true by construction rather than by maintenance. See FLAG_BARS in
+ * data/series.ts and WIN11 in data/layout.ts.
  *
- * ⚠ WHICH MEANS IT STANDS STILL FROM 9340 TO 10165 — fourteen seconds of two
- * empty windows. That is worth saying plainly rather than leaving to be
- * noticed: it is the room for whatever goes in them, not an oversight.
+ * ⚠ FOUR ARRIVALS, IN THE ORDER THE DRAWING IS MADE: the windows, the bars
+ * left to right, the two lines that close the triangle, then its name. The
+ * lines come after the bars because a boundary drawn around candles that are
+ * not there yet is a boundary around nothing.
  */
 export const WINDOW11 = {
   at: ROW7.from + ROW7.over,
@@ -1776,15 +1779,15 @@ export const WINDOW11 = {
    *  10210, so the window leaves in between rather than under either. */
   to: 10185,
   card: 9320,
-  /**
-   * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hapus isi chartnya". Kept for the
-   * same reason PANEL10.scribble is: the frame is the cheap half and the tape
-   * is whole in data/series.ts, so a chart returning to one of the two windows
-   * starts here rather than somewhere newly chosen. The rule it held is still
-   * the right one — a tape that builds inside a window still arriving is two
-   * things at once, and 20 frames is `fade` at 60fps.
-   */
+  /** ⚠ THE BARS START AS THE WINDOWS FINISH — 20 frames is `fade` at 60fps. A
+   *  tape that builds inside a window still arriving is two things at once. */
   candles: 9340,
+  /** ⚠ AFTER THE BARS, NOT WITH THEM. The triangle is a reading OF the candles;
+   *  drawn while they are still arriving it is a shape the chart then grows
+   *  into, which is the wrong way round and is the scene's own subject. */
+  lines: 9400,
+  /** The pattern's name, once the drawing that earns it is finished. */
+  name: 9440,
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
@@ -1800,10 +1803,18 @@ export const WINDOW11 = {
   };
   if (V.at !== ROW7.from + ROW7.over) fail(`SC11's window opens at ${V.at}, not where round seven clears`);
   if (V.card !== V.at) fail(`SC11's window card arrives at ${V.card}, not when the scene does at ${V.at}`);
-  /** ⚠ THE CHECK ON `candles` WENT WITH THE CHART. It guarded the tape's place
-   *  behind the window, and nothing draws a tape here now — an assertion
-   *  holding a relationship that no longer exists is worse than no assertion.
-   *  It comes back with the mount. */
+  /**
+   * ⚠ THE DRAWING IS MADE IN ONE ORDER AND CHECKED IN IT. Windows, bars, lines,
+   * name — each waits for the one before to have started, because each is a
+   * reading of it. Durations are useMotion's, so only the starts live here.
+   */
+  const steps: [string, number][] = [
+    ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the name", V.name],
+  ];
+  steps.forEach(([n, at], i) => {
+    if (i && at <= steps[i - 1][1]) fail(`SC11's ${n} starts at ${at}, not after ${steps[i - 1][0]}`);
+  });
+  if (V.name >= V.out) fail(`SC11 names the pattern at ${V.name}, when it is already leaving at ${V.out}`);
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);

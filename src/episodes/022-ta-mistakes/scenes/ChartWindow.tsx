@@ -1,53 +1,131 @@
 /**
- * SC11 · TWO WINDOWS.  `from 9320 · to 10185`
+ * SC11 · TWO WINDOWS, THE SAME PATTERN.  `from 9320 · to 10185`
  *
- * ⚠ THE WINDOWS ARE EMPTY ON PURPOSE — Simon: "hapus isi chartnya, keep
- * windownya. Lalu buat windownya jadi 2 kiri kanan". What is drawn here is two
- * white cards arriving and, at the end, leaving. Nothing else.
+ * ⚠ THE BULLISH FLAG FROM SIMON'S REFERENCE SHEET — "cuplikat gambar itu di 2
+ * window", the Flag cell under Bullish Patterns in chart pattern.webp. Sixteen
+ * bars traced off that drawing, and the two converging lines that make it a
+ * flag rather than a run of candles.
  *
- * ⚠ THE FILE KEEPS ITS NAME, and that is a choice worth stating. It held the
- * draft workbench's chart until this instruction and the tape is untouched on
- * disk — HIND_WINDOW in data/series.ts, still with its [NEEDS DATA] marker, and
- * WINDOW11.candles in data/timing.ts still holds the frame it built on. Putting
- * a chart back into a half is an import and a mount, not a rebuild; renaming
- * the file twice in two days would cost more than the name is worth.
+ * ⚠ ONE SET OF BARS, DRAWN TWICE — not two that match. FLAG_BARS is read by
+ * both windows, so "the same pattern in both" is true by construction rather
+ * than by maintenance. If the two are ever meant to diverge, that divergence
+ * has to be written down as a difference; it can never happen by accident.
+ * Same rule SC08's two windows are built on.
  *
- * ⚠ WHAT WENT WITH THE CHART, AND WHY IT IS NOT COMING BACK BY ITSELF: the
- * plot box, the gridline span, the price ticks and the data credit. All four
- * described a chart inside a 1728-wide card; each half is 836 now, so every one
- * of those numbers is wrong for the box that exists. They are deleted rather
- * than parked, because parked geometry reads as usable.
+ * ⚠ AND ONE GRID SHAPE, NOT ONE GRID. Each window solves its own grid inside
+ * its own box — the boxes are the same size, so the two come out identical —
+ * rather than sharing a grid that would draw both patterns in the left-hand
+ * window's pixels.
  *
- * ⚠ THE PAIR IS THE SAME BOX, CUT. 96..1824 across and 230..870 down is exactly
- * where the single window stood; `halves()` splits it on the episode's own gap,
- * the same cut SC08's two windows and SC09's comparison use. See WIN11 in
- * data/layout.ts, where that is asserted rather than intended.
+ * ⚠ NO "Entry" AND NO ARROW. The reference labels an entry on the breakout and
+ * draws an arrow down to it. Both are directional markers, scripts/audit.mjs is
+ * right to refuse them, and they are the one part of that cell that cannot come
+ * across. The pattern is the drawing; the instruction is not.
  *
- * ⚠ AND THEY ARRIVE ON THE SAME FRAME. Two windows that open one after the
- * other make the first one the subject and the second the comparison; nothing
- * in the voice says one of them leads.
+ * ⚠ NO PRICE SCALE, NO GRIDLINES, NO TIME AXIS. core/Chart is here for its
+ * left-to-right build — the animation Simon kept — and everything it would
+ * otherwise draw is turned off. A pattern diagram with a price scale is a
+ * chart of something, and this is a chart of nothing in particular.
+ *
+ * ⚠ THE LINES DRAW, THEY DO NOT FADE. They are a reading OF the candles, so
+ * they arrive after them and they arrive by being drawn from the triangle's
+ * mouth to its apex — which is where the bars put it. See FLAG_LINES.
  */
 import { useCurrentFrame } from "remotion";
-import { Card, Stage, fadeOut, progress, useMotion } from "../../../core";
+import {
+  Card, Chart, Layer, Line, Stage,
+  domainOf, drawPath, fadeOut, gridOf, progress, theme, useMotion, usePalette,
+} from "../../../core";
 import { WINDOW11, local } from "../data/timing";
 import { WIN11 } from "../data/layout";
+import { FLAG, FLAG_BARS, FLAG_LINES } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = WINDOW11;
 const W = WIN11;
+const F = FLAG_LINES;
 // ═══════════════════════════════════════════════════════════════════════════
+
+const NAME = "Flag";
+const DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
+
+/** ⚠ SOLVED ONCE, AT MODULE LOAD. Two grids, one per window — same size boxes,
+ *  so the two drawings are identical without sharing a coordinate space. */
+const GRIDS = W.plots.map((box) => gridOf(FLAG.closes, DOMAIN, box, 0.08));
 
 export const ChartWindow = () => {
   const f = useCurrentFrame();
   const m = useMotion();
+  const c = usePalette();
   const open = progress(f, local(V.card, V.at), m.fade);
+  const drawn = progress(f, local(V.lines, V.at), m.sec(0.5));
   const out = fadeOut(f, local(V.out, V.at), m.fade);
 
   return (
     <Stage>
       <div style={{ opacity: out }}>
         {W.cards.map((rect, i) => (
-          <Card key={i} rect={rect} opacity={open} soft />
+          <Card key={`win${i}`} rect={rect} opacity={open} soft />
+        ))}
+
+        {GRIDS.map((g, i) => (
+          <Chart
+            key={`bars${i}`}
+            series={FLAG}
+            grid={g}
+            at={local(V.candles, V.at)}
+            over={m.sec(0.83)}
+            ticks={[]}
+            tickLabels={false}
+            baseline={false}
+          />
+        ))}
+
+        {/* ⚠ MOUNTED ON THEIR OWN FRAME. An animated path that exists before
+            its beat is a path that flashes its end state on frame zero. */}
+        {f >= local(V.lines, V.at) &&
+          GRIDS.map((g, i) => {
+            /** The triangle's mouth and its apex, in this window's pixels. */
+            const ends = [
+              { a: { i: F.from, p: F.upAt(F.from) }, b: F.apex },
+              { a: { i: F.from, p: F.loAt(F.from) }, b: F.apex },
+            ];
+            return (
+              <Layer key={`lines${i}`}>
+                {ends.map((e, k) => {
+                  const x1 = g.x(e.a.i);
+                  const y1 = g.y(e.a.p);
+                  const x2 = g.x(e.b.i);
+                  const y2 = g.y(e.b.p);
+                  return (
+                    <line
+                      key={k}
+                      x1={x1}
+                      y1={y1}
+                      x2={x2}
+                      y2={y2}
+                      stroke={c.indigo}
+                      strokeWidth={theme.shape.line}
+                      strokeLinecap="round"
+                      {...drawPath(drawn, Math.hypot(x2 - x1, y2 - y1))}
+                    />
+                  );
+                })}
+              </Layer>
+            );
+          })}
+
+        {W.names.map((n, i) => (
+          <Line
+            key={`name${i}`}
+            text={NAME}
+            x={n.x}
+            y={n.y}
+            at={local(V.name, V.at)}
+            size={theme.text.chip.size}
+            weight={theme.text.chip.weight}
+            color={c.slate}
+          />
         ))}
       </div>
     </Stage>

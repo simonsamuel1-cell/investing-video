@@ -1034,3 +1034,127 @@ export const HIND_WINDOW_AXIS: [number, string][] = [
    *  that did not break. */
   if (HIND_WINDOW.closes[59] >= HIND_WINDOW.closes[0]) fail("SC11's window tape does not break down");
 }
+
+/* ═══ SC11 · THE BULLISH FLAG ════════════════════════════════════════════
+ *
+ * ⚠ TRACED FROM SIMON'S REFERENCE — "chart pattern.webp", Bullish Patterns,
+ * the Flag cell. Sixteen bars read off that drawing bar by bar: three rising
+ * greens for the pole, ten that oscillate with shrinking amplitude inside a
+ * converging triangle, then three rising greens that leave it.
+ *
+ * ⚠ IT IS A DIAGRAM, NOT A TAPE, which is why the bars are written out rather
+ * than generated. Every constructor in core/chart makes a plausible market;
+ * this has to make one SPECIFIC shape, and a shape that is nearly right is a
+ * pattern nobody recognises. The same reason CARD_TAPE is a literal.
+ *
+ * ⚠ NO "Entry", NO ARROW. The reference labels an entry on the breakout and
+ * draws an arrow to it. Both are directional markers, scripts/audit.mjs is
+ * right to refuse them, and they are the one part of that cell that cannot
+ * come across. The pattern is the drawing; the instruction is not.
+ *
+ * ⚠ AND NO TICKER AND NO PRICE SCALE ANYWHERE NEAR IT. The numbers below are
+ * drawing coordinates, not prices — they are the reference's own pixels turned
+ * upside down and divided by ten. Nothing on screen reads them.
+ */
+export const FLAG_BARS: Bar[] = [
+  /* ── the pole: three greens, each opening on the last one's close ── */
+  { o: 27.0, c: 45.0, h: 46.5, l: 25.5 },
+  { o: 46.0, c: 62.0, h: 63.5, l: 44.5 },
+  { o: 66.0, c: 92.0, h: 93.5, l: 64.0 },
+  /* ── the flag: ten bars, converging ── */
+  /** ⚠ ITS HIGH IS THE UPPER LINE'S FIRST ANCHOR. */
+  { o: 94.0, c: 116.0, h: 118.0, l: 92.0 },
+  { o: 102.5, c: 92.0, h: 104.0, l: 90.5 },
+  { o: 91.0, c: 75.0, h: 92.5, l: 73.5 },
+  /** ⚠ ITS LOW IS THE LOWER LINE'S FIRST ANCHOR. */
+  { o: 73.5, c: 96.0, h: 97.5, l: 71.0 },
+  { o: 94.5, c: 106.0, h: 107.5, l: 93.0 },
+  { o: 92.0, c: 83.0, h: 93.5, l: 81.5 },
+  { o: 80.0, c: 89.0, h: 90.5, l: 78.5 },
+  /** ⚠ ITS HIGH IS THE UPPER LINE'S SECOND ANCHOR. */
+  { o: 85.0, c: 98.0, h: 100.0, l: 83.5 },
+  /** ⚠ ITS LOW IS THE LOWER LINE'S SECOND ANCHOR. */
+  { o: 95.0, c: 82.0, h: 96.5, l: 80.0 },
+  /** ⚠ 94.5, NOT 95. The upper line is at 94.86 on this bar and the first
+   *  write put its wick 0.14 through it — the assertion below caught exactly
+   *  what it exists for, on the last bar of the throat where the clearance is
+   *  smallest. Nothing here has room to be approximately right. */
+  { o: 89.5, c: 93.5, h: 94.5, l: 88.0 },
+  /* ── out of it: three greens, the last the tallest ── */
+  { o: 94.0, c: 115.0, h: 116.5, l: 93.0 },
+  { o: 112.0, c: 134.5, h: 136.0, l: 110.5 },
+  { o: 135.0, c: 152.0, h: 153.5, l: 133.5 },
+];
+
+/** The same bars as a Series, for core/Chart — which owns the left-to-right
+ *  build Simon asked to keep. ⚠ `synthetic`, and it has to be: a traced
+ *  diagram is not market data and SourceTag must never credit it as such. */
+export const FLAG: Series = {
+  closes: FLAG_BARS.map((b) => b.c),
+  bars: FLAG_BARS,
+  kind: "synthetic",
+};
+
+/**
+ * The two lines that make it a flag, SOLVED FROM THE BARS.
+ *
+ * ⚠ AN APEX THAT IS TYPED IS AN APEX THAT STOPS BEING THE APEX the first time
+ * a bar moves. Each line is defined by the two bars it actually touches — one
+ * high and one high, one low and one low — and where they cross is arithmetic.
+ * That is also what makes the assertion below possible: a pattern is only a
+ * pattern if no bar in it breaks its own boundary.
+ */
+export const FLAG_LINES = (() => {
+  const up = { a: 3, b: 10 };
+  const lo = { a: 6, b: 11 };
+  const hi = (i: number) => FLAG_BARS[i].h;
+  const low = (i: number) => FLAG_BARS[i].l;
+  const mUp = (hi(up.b) - hi(up.a)) / (up.b - up.a);
+  const mLo = (low(lo.b) - low(lo.a)) / (lo.b - lo.a);
+  const upAt = (i: number) => hi(up.a) + mUp * (i - up.a);
+  const loAt = (i: number) => low(lo.a) + mLo * (i - lo.a);
+  /** Where the two meet: upAt(i) = loAt(i). */
+  const apexI = (low(lo.a) - mLo * lo.a - hi(up.a) + mUp * up.a) / (mUp - mLo);
+  return {
+    /** The triangle opens on the bar the upper line is anchored to. */
+    from: up.a,
+    upAt,
+    loAt,
+    apex: { i: apexI, p: upAt(apexI) },
+    /** The last bar still inside the triangle. */
+    last: 12,
+  };
+})();
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  const F = FLAG_LINES;
+  if (FLAG_BARS.length !== 16) fail(`the flag is ${FLAG_BARS.length} bars, not the 16 traced from the reference`);
+  /**
+   * ⚠ NOTHING INSIDE THE FLAG MAY LEAVE IT. This is the whole assertion: a
+   * converging pair of lines with a candle poking through is not a flag, it is
+   * two lines drawn near some candles, and it is the failure a hand-written
+   * diagram invites.
+   */
+  for (let i = F.from; i <= F.last; i++) {
+    const b = FLAG_BARS[i];
+    if (b.h > F.upAt(i) + 0.01) fail(`flag bar ${i + 1} tops ${b.h} above its own upper line at ${F.upAt(i).toFixed(1)}`);
+    if (b.l < F.loAt(i) - 0.01) fail(`flag bar ${i + 1} bottoms ${b.l} below its own lower line at ${F.loAt(i).toFixed(1)}`);
+  }
+  /** ⚠ AND THE THREE AFTER IT MUST ACTUALLY LEAVE — a flag whose breakout does
+   *  not clear the upper line is a flag that never broke out. */
+  for (let i = F.last + 1; i < FLAG_BARS.length; i++) {
+    if (FLAG_BARS[i].c <= F.upAt(i)) fail(`flag bar ${i + 1} closes at ${FLAG_BARS[i].c}, still inside the triangle`);
+  }
+  /** ⚠ THE APEX HAS TO BE ON THE CHART. Solved rather than typed, so it can
+   *  land anywhere — including off the right edge, where the lines would be
+   *  drawn out of their own box. */
+  if (F.apex.i <= F.last || F.apex.i > FLAG_BARS.length - 1) {
+    fail(`the flag's apex is at bar ${F.apex.i.toFixed(2)}, not between its last bar and the chart's edge`);
+  }
+  /** ⚠ AND THE POLE HAS TO RISE INTO IT, or the pattern is a triangle rather
+   *  than a flag — the pole is what makes it a continuation. */
+  if (FLAG_BARS[2].c <= FLAG_BARS[0].o) fail("the flag has no pole");
+}
