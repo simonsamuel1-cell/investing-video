@@ -113,8 +113,16 @@ export const COUNTER = {
    * the precedent this one follows. Whatever fills 4282–7994 can carry all four
    * again.
    */
+  /**
+   * ⚠ THE FIRST GAP ENDS AT 8270, NOT AT BLOCK.SC10. SC09's picture is held to
+   * 8060 and the sixth card row runs over the top until 8270, so a counter that
+   * came back at 7995 would spend its whole entrance under two opaque layers
+   * and be revealed already standing there. It returns when SC10 does. The
+   * literal is checked against `ROW6`/`OVERLOAD` where those are declared — it
+   * cannot name them from up here.
+   */
   gaps: [
-    { from: BLOCK.SC06, to: BLOCK.SC10 },
+    { from: BLOCK.SC06, to: 8270 },
     { from: BLOCK.SC12, to: BLOCK.SC14 },
   ],
   over: 18,
@@ -124,8 +132,13 @@ export const COUNTER = {
     { n: "03", label: "REVENGE TRADING", at: BLOCK.SC07 },
     { n: "04", label: "CONFIRMATION BIAS", at: BLOCK.SC08 },
     { n: "05", label: "ABAI KONTEKS MARKET", at: BLOCK.SC09 },
-    { n: "06", label: "INDICATOR OVERLOAD", at: BLOCK.SC10 },
-    { n: "07", label: "HINDSIGHT BIAS", at: BLOCK.SC11 },
+    /** ⚠ 8270 FOR THE SAME REASON THE GAP ENDS THERE — see above. */
+    { n: "06", label: "INDICATOR OVERLOAD", at: 8270 },
+    /** ⚠ 9050, NOT BLOCK.SC11. SC10's picture is held 52 frames past its block,
+     *  so an entry that turned over at 8998 renamed the mistake while the
+     *  previous one was still on screen — the chip read "07 HINDSIGHT BIAS"
+     *  over the indicator panes. It turns over when the picture does. */
+    { n: "07", label: "HINDSIGHT BIAS", at: 9050 },
     { n: "08", label: "ASAL COPY TRADE", at: BLOCK.SC14 },
   ],
 } as const;
@@ -1320,6 +1333,16 @@ export const CONTEXT = {
  */
 export const BREAKOUT = {
   at: 7311,
+  /**
+   * ⚠ IT OUTLIVES ITS OWN BLOCK — Simon: "perpanjang scene nya hingga 8060".
+   * SC10's window opens at 7995, so the last 65 frames of this picture are held
+   * over the top of it, the way SC08 was held to 7102.
+   *
+   * ⚠ WHICH IS WHY `OVERLOAD.chart` MOVED TO 8060. SC10's chart used to begin
+   * fading at 8020 — under this overlay, where nobody could see it — and would
+   * have been revealed already half-arrived. It now starts as this lifts.
+   */
+  to: 8060,
   title: { at: 7311, over: 34 },
   cols: [
     { at: 7380, over: 30, tape: { at: 7404, step: 1.2, over: 14 } },
@@ -1362,6 +1385,10 @@ export const BREAKOUT = {
     if (said < drawn) fail(`verdict ${i + 1} lands at ${said}, before its chart finishes at ${drawn.toFixed(0)}`);
   });
   if (V.cols[1].at < V.cols[0].at) fail("the second column arrives before the first");
+  /** ⚠ AND THE PICTURE HAS TO OUTLAST ITS OWN LAST MOVE, or the extension is a
+   *  cut dressed as a hold. */
+  const last = V.verdict.at + V.verdict.step + V.verdict.over;
+  if (V.to <= last) fail(`SC09 ends at ${V.to}, before its second verdict lands at ${last}`);
   /** ⚠ AND THE READING IS IN ITS OWN ORDER — level, entry, exit. A "Sell" that
    *  lands before the "Buy" is a trade shown backwards. */
   V.marks.forEach((m, i) => {
@@ -1378,29 +1405,148 @@ export const BREAKOUT = {
   });
 }
 
+/**
+ * ═══ SCENE TRANSISI 6 ═══  Simon: "dari 8060 ke scene 10, tambahkan scene
+ * transisi seleksi kartu ke 6".
+ *
+ * ⚠ IT LANDS ON THE NAMING, AND THAT IS THE POINT. The voice spends 8076–8194
+ * on "Jangan terjebak indicator overload" — which is card six's own text. The
+ * list is up, the pointer is on that card, and the words are read off the thing
+ * the viewer is looking at. SC10 then opens having already been introduced.
+ *
+ * ⚠ 210, LIKE EVERY ROUND SINCE THE THIRD. The length is not a taste: the exit
+ * is one card every four frames and eight of them take 210 frames to arrive,
+ * be picked, and clear.
+ */
+export const ROW6 = {
+  from: 8060,
+  over: 210,
+  /** ⚠ LEFT, like rounds four and five: what leaves is a page. */
+  away: { at: 8060, over: 44 },
+  row: {
+    at: 8060,
+    over: 60,
+    step: 4,
+    spread: 4,
+    /**
+     * ⚠ THE SIXTH CARD — Simon's "kartu ke 6", zero-based.
+     *
+     * ⚠ AND FOUR FRAMES LATER THAN ROUND FIVE'S, WHICH IS NOT A TASTE. The row
+     * arrives one card every four frames, so the sixth card lands four frames
+     * after the fifth; copying round five's 44 put the pointer on it two frames
+     * before it existed. The assertion caught exactly that.
+     */
+    cursor: { at: 8108, over: 34, card: 5 },
+    hover: { at: 8142, over: 46 },
+    /** ⚠ FIVE DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1, 2, 3, 4],
+    out: { at: 8207, step: 4, over: 34 },
+  },
+} as const;
+
 /* ═══ SC10 — indicator overload ══════════════════════════════════════════ */
 export const OVERLOAD = {
-  name: 8075,
-  chart: { at: 8020, over: 90 },
   /**
-   * ⚠ THE PANES ARRIVE BETWEEN 8142 AND 8313 — the stretch the voice spends on
-   * "menambahkan banyak indikator … tidak selalu menambah kualitas". The
-   * crowding IS the argument, so they land on the sentence that describes it.
+   * ⚠ THE SCENE NOW OPENS WHERE ITS TRANSITION CLEARS, not where its block
+   * does. Everything in here moved forward by 210 with `ROW6`, and it is worth
+   * saying what that cost and what it did not: SC10's beats used to run 60
+   * frames AHEAD of the words they belong to — the 7099 pad was voice-only, so
+   * the picture had been leading the voice since then. Re-laying them against
+   * the cue table has quietly closed that. Each one is now inside the sentence
+   * that describes it, which is what the old comment claimed and the old
+   * numbers no longer did.
    */
-  add: { at: 8142, step: 34, count: 5 },
+  from: ROW6.from + ROW6.over,
+  /**
+   * ⚠ AND IT OUTLIVES ITS BLOCK AT THE OTHER END — Simon: "scene 10 perpanjang
+   * hingga 9050". SC11's window opens at 8998; the last 52 frames of this
+   * picture are held over it. 9050 is four frames after this scene's last word.
+   */
+  to: 9050,
+  /** 8296 · the title, arriving with the scene rather than under the card that
+   *  already said it. */
+  name: 8296,
+  /** 8270 · as the row clears. */
+  chart: { at: 8270, over: 56 },
+  /**
+   * ⚠ THE PANES ARRIVE BETWEEN 8336 AND 8472 — inside 8202–8476, the stretch
+   * the voice spends on "Menambahkan banyak indikator tidak selalu menambah
+   * kualitas analisis". The crowding IS the argument, so they land on the
+   * sentence that describes it.
+   */
+  add: { at: 8336, step: 34, count: 5 },
   /** Which of the five read the same thing. Indexed, so re-ordering the panes
    *  in layout.ts re-orders the highlight with them. */
   similar: [1, 2, 4],
-  lit: 8480,
-  merge: { at: 8634, over: 40 },
-  close: 8764,
+  /** 8560 · inside "Kalau beberapa indikator membaca hal yang mirip…" (8506). */
+  lit: 8560,
+  merge: { at: 8672, over: 40 },
+  /** 8870 · inside "Lebih banyak indikator belum tentu berarti lebih banyak
+   *  insight" (8824–9046). */
+  close: 8870,
 } as const;
+
+{
+  const V = OVERLOAD;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  /** ⚠ THE CHART HAS TO BE A CHART BEFORE THE FIRST PANE LANDS ON IT. The whole
+   *  scene is about what happens when you pile indicators onto a reading; a
+   *  pane arriving on a tape still drawing itself is piling onto nothing. */
+  if (V.chart.at + V.chart.over > V.add.at) {
+    fail(`SC10's chart finishes at ${V.chart.at + V.chart.over}, after its first pane at ${V.add.at}`);
+  }
+  if (V.name < V.chart.at) fail("SC10 is named before its chart exists");
+  /** ⚠ NOTHING IN THE SCENE MAY START BEFORE THE SCENE DOES. Every beat here is
+   *  a global frame turned local against `from`, so one left behind the move
+   *  would not throw — it would simply be a beat that had already happened when
+   *  the picture appeared. */
+  const beats: [string, number][] = [
+    ["chart", V.chart.at], ["name", V.name], ["first pane", V.add.at],
+    ["lit", V.lit], ["merge", V.merge.at], ["close", V.close],
+  ];
+  beats.forEach(([n, at]) => {
+    if (at < V.from) fail(`SC10's ${n} is at ${at}, before the scene opens at ${V.from}`);
+    if (at > V.to) fail(`SC10's ${n} is at ${at}, after the scene ends at ${V.to}`);
+  });
+  const last = V.add.at + (V.add.count - 1) * V.add.step;
+  if (V.lit < last) fail(`SC10 lights its panes at ${V.lit}, before the last one arrives at ${last}`);
+  /** ⚠ AND THE COUNTER HAS TO COME BACK WHERE THE SCENE DOES. Its gap and its
+   *  sixth entry are literals up at the head of this file — they cannot name
+   *  ROW6, which is declared 1200 lines below them — so this is what keeps the
+   *  three in step. */
+  if (COUNTER.gaps[0].to !== V.from) {
+    fail(`the counter returns at ${COUNTER.gaps[0].to}, not when SC10 opens at ${V.from}`);
+  }
+  if (COUNTER.items[5].at !== V.from) {
+    fail(`the counter's sixth entry is at ${COUNTER.items[5].at}, not when SC10 opens at ${V.from}`);
+  }
+  if (COUNTER.items[6].at !== V.to) {
+    fail(`the counter's seventh entry is at ${COUNTER.items[6].at}, not when SC10 ends at ${V.to}`);
+  }
+  /** ⚠ AND SC09 HAS TO HAND OVER TO THE ROW THAT REPLACES IT — no bare frame
+   *  between one picture ending and the next layer starting. */
+  if (ROW6.from !== BREAKOUT.to) {
+    fail(`round six starts at ${ROW6.from}, but SC09 is held to ${BREAKOUT.to}`);
+  }
+  if (ROW6.from + ROW6.over !== V.from) {
+    fail(`round six clears at ${ROW6.from + ROW6.over}, but SC10 opens at ${V.from}`);
+  }
+}
 
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
 export const HINDSIGHT = {
   name: 9079,
-  /** The whole tape, already annotated, arrives finished. */
-  chart: { at: 9020, over: 90 },
+  /**
+   * The whole tape, already annotated, arrives finished.
+   *
+   * ⚠ 9050, THE FRAME SC10 LIFTS. It used to begin at 9020, which is
+   * now under the previous picture — it would have been uncovered a third of
+   * the way through its own fade. It starts as SC10 lifts instead. The voice
+   * reaches this scene at 9070, so the picture still leads its first word.
+   */
+  chart: { at: 9050, over: 90 },
   obvious: 9170,
   /**
    * ⚠ THE MASK RUNS BACKWARDS HERE. Everywhere else in the library a reveal

@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, OVERLOAD, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -61,6 +61,7 @@ import { CardList3 } from "./scenes/CardList3";
 import { CardList4 } from "./scenes/CardList4";
 import { CardList5 } from "./scenes/CardList5";
 import { Breakout } from "./scenes/Breakout";
+import { CardList6 } from "./scenes/CardList6";
 import { TwinWindows } from "./scenes/TwinWindows";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
@@ -130,7 +131,12 @@ const SCENES: Mounted[] = [
    *  may not have a hole in it, and what owns it now draws nothing. CONTEXT is
    *  still in data/timing.ts for whatever replaces it. */
   { from: BLOCK.SC09, duration: BLOCK.SC10 - BLOCK.SC09, Component: Blank, name: "SC09 (empty)" },
-  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: SC10, name: "SC10 Indicator overload" },
+  /** ⚠ SC10 IS AN OVERLAY NOW, not a tile — Simon: "scene 10 perpanjang hingga
+   *  9050". Its picture has to start after round six clears at 8270 and run 52
+   *  frames past SC11's window, and a tile can do neither. Same shape as SC09:
+   *  the window stays because the timeline may not have a hole in it, and what
+   *  owns it here draws nothing. */
+  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: Blank, name: "SC10 (overlaid)" },
   { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: SC11, name: "SC11 Hindsight bias" },
   { from: BLOCK.SC12, duration: BLOCK.SC14 - BLOCK.SC12, Component: AdmrGroup, name: "CG-B · SC12+13 ADMR" },
   { from: BLOCK.SC14, duration: BLOCK.SC15 - BLOCK.SC14, Component: SC14, name: "SC14 Copy trade" },
@@ -164,6 +170,23 @@ const Body = () => (
         <Component />
       </Sequence>
     ))}
+
+    {/* ⚠ SC10 ON ITS OWN WINDOW, AND BELOW THE COUNTER. It opens when round six
+        clears and is held 52 frames past its block, over SC11's opening — which
+        is why HINDSIGHT's chart begins on the frame this ends.
+
+        ⚠ IT SITS HERE, NOT WITH THE OTHER OVERLAYS AT THE FOOT OF THIS FILE.
+        SC10 paints an opaque Stage, so mounted above CG-E it hid the counter
+        for its whole run — the chip simply was not there for mistake 06. An
+        overlay that is a SCENE belongs where its tile was: above the tiling,
+        below the chrome. See data/timing.ts. */}
+    <Sequence
+      from={OVERLOAD.from}
+      durationInFrames={OVERLOAD.to - OVERLOAD.from}
+      name="SC10 · indicator overload"
+    >
+      <SC10 />
+    </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a
         chapter join must cover the counter too, or the card is not a card. */}
@@ -268,10 +291,17 @@ const Body = () => (
         assertion owns. See scenes/Breakout.tsx. */}
     <Sequence
       from={BREAKOUT.at}
-      durationInFrames={BLOCK.SC10 - BREAKOUT.at}
+      durationInFrames={BREAKOUT.to - BREAKOUT.at}
       name="SC09 · one setup, two markets"
     >
       <Breakout />
+    </Sequence>
+
+    {/* ⚠ THE SIXTH TURN OF THE LIST, and it carries SC09 off the way the fifth
+        carried SC08. It also does SC10's introducing: the voice names mistake
+        six over it, off card six. See scenes/CardList6.tsx. */}
+    <Sequence from={ROW6.from} durationInFrames={ROW6.over} name="Scene Transisi 6 · Card list">
+      <CardList6 />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

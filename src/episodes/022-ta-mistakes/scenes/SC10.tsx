@@ -20,12 +20,15 @@ import {
   Candles, Card, IndicatorLine, Line, Stage,
   domainOf, gridOf, progress, theme, useMotion, usePalette,
 } from "../../../core";
-import { BLOCK, OVERLOAD, local } from "../data/timing";
+import { OVERLOAD, local } from "../data/timing";
 import { OVERLOAD_PANES, overloadStack } from "../data/layout";
 import { OVER_PANES, OVER_TAPE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const FROM = BLOCK.SC10;
+/** ⚠ THE SCENE'S OWN WINDOW, NOT ITS BLOCK. SC10 is mounted as an overlay that
+ *  opens when round six clears and is held past SC11's start, so its clock has
+ *  to be that window's — see OVERLOAD.from / .to in data/timing.ts. */
+const FROM = OVERLOAD.from;
 const V = OVERLOAD;
 // ═══════════════════════════════════════════════════════════════════════════
 
