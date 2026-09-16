@@ -1760,16 +1760,14 @@ export const ROW7 = {
  * number; before it the sentence began 29 frames early. Asserted below rather
  * than typed twice.
  *
- * ⚠ THE CHART AND ITS ANIMATION, AND NOTHING ELSE — Simon: "tapi chart dan
- * animasinya aja, sisanya jangan ambil". What is NOT here is everything the
- * draft workbench puts on top of the same window: the title card, Resistance,
- * the Zone, Swing Low, Prior High, the Decision Point cut, the three branches
- * and the process matrix. The window and the tape are the whole scene for now.
+ * ⚠ AND THE WINDOW IS EMPTY, AND THERE ARE TWO OF IT — Simon: "hapus isi
+ * chartnya, keep windownya. Lalu buat windownya jadi 2 kiri kanan". The chart
+ * that was here for one commit is gone; what the scene draws now is two cards
+ * arriving together and leaving together. See WIN11 in data/layout.ts.
  *
- * ⚠ WHICH MEANS IT STANDS STILL FROM 9390 TO 10165, and that is worth saying
- * plainly rather than leaving to be noticed. The card is up by 9340, the tape
- * finishes building at 9390, and after that nothing moves for thirteen
- * seconds. That stretch is the room for whatever goes on top of it.
+ * ⚠ WHICH MEANS IT STANDS STILL FROM 9340 TO 10165 — fourteen seconds of two
+ * empty windows. That is worth saying plainly rather than leaving to be
+ * noticed: it is the room for whatever goes in them, not an oversight.
  */
 export const WINDOW11 = {
   at: ROW7.from + ROW7.over,
@@ -1778,8 +1776,14 @@ export const WINDOW11 = {
    *  10210, so the window leaves in between rather than under either. */
   to: 10185,
   card: 9320,
-  /** ⚠ THE TAPE STARTS AS THE CARD FINISHES — 20 frames is `fade` at 60fps.
-   *  A chart that builds inside a window still arriving is two things at once. */
+  /**
+   * ⚠ NOTHING DRAWS THIS ANY MORE — Simon: "hapus isi chartnya". Kept for the
+   * same reason PANEL10.scribble is: the frame is the cheap half and the tape
+   * is whole in data/series.ts, so a chart returning to one of the two windows
+   * starts here rather than somewhere newly chosen. The rule it held is still
+   * the right one — a tape that builds inside a window still arriving is two
+   * things at once, and 20 frames is `fade` at 60fps.
+   */
   candles: 9340,
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
@@ -1796,7 +1800,10 @@ export const WINDOW11 = {
   };
   if (V.at !== ROW7.from + ROW7.over) fail(`SC11's window opens at ${V.at}, not where round seven clears`);
   if (V.card !== V.at) fail(`SC11's window card arrives at ${V.card}, not when the scene does at ${V.at}`);
-  if (V.candles <= V.card) fail("SC11's tape builds before its window exists");
+  /** ⚠ THE CHECK ON `candles` WENT WITH THE CHART. It guarded the tape's place
+   *  behind the window, and nothing draws a tape here now — an assertion
+   *  holding a relationship that no longer exists is worse than no assertion.
+   *  It comes back with the mount. */
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);

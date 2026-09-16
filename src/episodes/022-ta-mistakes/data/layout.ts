@@ -1150,37 +1150,32 @@ export const PLAN = {
   if (P.b1.chipY - pillH(P.b1.chipSize) / 2 < PLAN_A.y) fail("SC15's mistake chip is above the safe area");
 }
 
-/* ═══ SC11 · THE CHART WINDOW ════════════════════════════════════════════
+/* ═══ SC11 · TWO WINDOWS ═════════════════════════════════════════════════
  *
- * ⚠ THE DRAFT'S OWN BOXES, CARRIED ACROSS — Simon: "copy deh sama animasinya".
- * They are its numbers rather than new ones because the thing he approved is
- * the picture at that size; re-solving it here would be a different window
- * that happens to hold the same chart.
+ * ⚠ IT IS THE SAME WINDOW, SPLIT — Simon: "hapus isi chartnya, keep windownya.
+ * Lalu buat windownya jadi 2 kiri kanan". So the outer bounds are exactly the
+ * box the single window occupied: 96..1824 across, 230..870 down. The pair is
+ * cut out of it rather than laid out afresh, which is the only way "jadi 2"
+ * means the thing that was there is now two of it.
  *
- * ⚠ THE PRICE SCALE LIVES OUTSIDE THE PLOT, and that is the only reason `span`
- * exists. core/Chart hangs its tick labels 8px inside `span.x2`, so the
- * gridlines run PAST the last candle and the numbers sit in their own column
- * between the plot's right edge and the card's — rather than on top of the
- * newest bars, which is where they land when the span is the plot.
+ * ⚠ AND THE CUT IS `halves()`, the episode's own. SC08's two windows and SC09's
+ * comparison are both cut with it; a third pair at a merely similar size would
+ * be three devices where the video has one.
+ *
+ * ⚠ THE PLOT, THE SPAN AND THE TICKS ARE GONE, and that is deliberate rather
+ * than tidying. They described a chart box inside a 1728-wide card; each half
+ * is 836 now, so every one of those numbers is wrong for the box that exists.
+ * Keeping them would be keeping a geometry that reads as usable and is not.
+ * The tape itself is untouched in data/series.ts — that is the expensive part
+ * and it is box-independent.
  */
-const W11_CARD: Rect = { x: theme.stage.active.x, y: 230, w: theme.stage.active.w, h: 640 };
-/** The gap the scale's column needs, measured from the card's right edge. */
-const W11_SCALE = 198;
-const W11_RIM = 26;
+const W11_BOUNDS: Rect = { x: theme.stage.active.x, y: 230, w: theme.stage.active.w, h: 640 };
 
-export const WIN11 = (() => {
-  const plot = { x: W11_CARD.x + 64, y: W11_CARD.y + 60, h: 460 };
-  const x2 = W11_CARD.x + W11_CARD.w - W11_RIM;
-  return {
-    card: W11_CARD,
-    plot: { ...plot, w: x2 - W11_SCALE - plot.x },
-    span: { x1: plot.x, x2, y1: plot.y, y2: plot.y + plot.h },
-    /** Round levels the tape actually spans — 96 to 125. */
-    ticks: [100, 105, 110, 115, 120, 125],
-    /** Where the data credit hangs once the export is real. */
-    tag: { x: 1580, y: W11_CARD.y + W11_CARD.h - 44 },
-  };
-})();
+export const WIN11 = {
+  /** The pair's outer bounds — the window before it was split. */
+  bounds: W11_BOUNDS,
+  cards: halves(W11_BOUNDS),
+};
 
 {
   const W = WIN11;
@@ -1188,22 +1183,22 @@ export const WIN11 = (() => {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
-  /** ⚠ THE WINDOW STAYS INSIDE THE FRAME'S OWN MARGINS. */
-  if (W.card.y < A.y) fail("SC11's window starts above the safe area");
-  if (W.card.y + W.card.h > theme.captionBand.top) {
-    fail(`SC11's window reaches ${W.card.y + W.card.h}, inside the subtitle band`);
+  /** ⚠ THE TWO ARE THE SAME SIZE. Whatever goes in them later is a comparison,
+   *  and a comparison whose halves are different sizes has already answered
+   *  itself. */
+  if (W.cards[0].w !== W.cards[1].w) fail(`SC11's windows are ${W.cards[0].w} and ${W.cards[1].w} wide`);
+  if (W.cards[0].h !== W.cards[1].h) fail("SC11's windows are different heights");
+  /** ⚠ AND THE PAIR STILL FILLS THE BOX THE SINGLE WINDOW DID, edge to edge.
+   *  This is the assertion that makes "the same window, split" true rather
+   *  than merely intended. */
+  if (W.cards[0].x !== W.bounds.x) fail("SC11's left window does not start where the window did");
+  const right = W.cards[1].x + W.cards[1].w;
+  if (right !== W.bounds.x + W.bounds.w) fail(`SC11's right window ends at ${right}, not at ${W.bounds.x + W.bounds.w}`);
+  if (W.cards[1].x - (W.cards[0].x + W.cards[0].w) !== GAP) fail("SC11's windows are not split on the episode's own gap");
+  /** ⚠ AND THE PAIR STAYS INSIDE THE FRAME'S MARGINS. */
+  if (W.bounds.y < A.y) fail("SC11's windows start above the safe area");
+  if (W.bounds.y + W.bounds.h > theme.captionBand.top) {
+    fail(`SC11's windows reach ${W.bounds.y + W.bounds.h}, inside the subtitle band`);
   }
-  /** ⚠ AND IT CLEARS THE LOGO ZONE, which a full-width card at y230 does by
-   *  height rather than by width — worth asserting, because moving it up is
-   *  the obvious thing to try when a headline needs room. */
-  if (W.card.y < theme.logoZone.height) fail("SC11's window reaches into the logo zone");
-  /** ⚠ THE SCALE'S COLUMN HAS TO BE EMPTY OF CANDLES. This is the assertion
-   *  the whole `span` arrangement exists for: shrink the column and the price
-   *  numbers land on the newest bars. */
-  const col = W.span.x2 - (W.plot.x + W.plot.w);
-  if (col !== W11_SCALE) fail(`SC11's price column is ${col}px, not the ${W11_SCALE} it is laid out for`);
-  if (W.span.x2 > W.card.x + W.card.w) fail("SC11's gridlines run past the window's right edge");
-  if (W.plot.x < W.card.x) fail("SC11's plot starts left of its own window");
-  if (W.span.y2 > W.card.y + W.card.h) fail("SC11's plot runs past the bottom of its window");
-  if (W.tag.y > W.card.y + W.card.h) fail("SC11's data credit hangs below its window");
+  if (W.bounds.y < theme.logoZone.height) fail("SC11's windows reach into the logo zone");
 }

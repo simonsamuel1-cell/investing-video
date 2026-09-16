@@ -979,6 +979,13 @@ export const PLAN_TAPE: Series = {
  * the decision bar at ≈65% of the visible range. It must NOT be ADMR — SC12 is
  * the ADMR case study and this chart would spoil its reveal.
  *
+ * ⚠ NOTHING DRAWS THIS AT THE MOMENT — Simon: "hapus isi chartnya, keep
+ * windownya". SC11 is two empty windows now. The tape is kept because it is
+ * the expensive half and because it is BOX-INDEPENDENT: it does not care how
+ * wide the window it lands in is, which is exactly what the plot geometry that
+ * went with the chart could not say. Putting a chart into one of the two halves
+ * is an import and a mount. See scenes/ChartWindow.tsx.
+ *
  * ⚠ IT IS THE DRAFT'S TAPE, COPIED EXACTLY — Simon: "copy deh sama animasinya".
  * Same anchors, same n, same two seeds, so the bars are identical to the ones
  * on the draft workbench rather than merely similar.
