@@ -1590,10 +1590,17 @@ export const PANEL10 = {
    * scrawl is laid down just BEFORE the sentence that explains it and is still
    * standing there while it is said.
    */
-  scribble: { at: 8800, over: 60 },
+  scribble: { at: 8740, over: 120 },
   /** ⚠ THEN EVERYTHING GOES — Simon: "setelah itu semua visualnya fade out".
    *  The scrawl included: what is being cleared is the whole attempt. */
   clear: { at: 8880, over: 50 },
+  /**
+   * ⚠ AND THE ANSWER LANDS ON EMPTY GROUND — Simon, 8940. The clearing finishes
+   * on 8930, so nothing of the chart is still standing behind it: the sentence
+   * gets the frame to itself, which is the whole shape of this scene — pile
+   * seven readings on, scrawl them out, say the one thing.
+   */
+  note: { at: 8940, perChar: 2, text: "Banyak indikator ≠ banyak insight" },
   /** Kept for whatever puts the two levels back — see scenes/Overload.tsx. */
   levels: { at: 8356, over: 40 },
 } as const;
@@ -1642,6 +1649,12 @@ export const PANEL10 = {
   }
   if (V.clear.at + V.clear.over > V.to) {
     fail(`SC10 is still clearing at ${V.clear.at + V.clear.over}, past its own end at ${V.to}`);
+  }
+  /** ⚠ THE NOTE WAITS FOR THE GROUND TO BE EMPTY. Opened while the chart is
+   *  still fading it would be a box arriving over a picture that is leaving,
+   *  which reads as two things happening rather than one replacing the other. */
+  if (V.note.at < V.clear.at + V.clear.over) {
+    fail(`SC10's note opens at ${V.note.at}, before the clearing finishes at ${V.clear.at + V.clear.over}`);
   }
   const done = steps[steps.length - 1][1] + steps[steps.length - 1][2];
   if (V.to <= done) fail(`SC10 ends at ${V.to}, before it has finished arriving at ${done}`);

@@ -41,7 +41,9 @@
  * about labels this project adds to its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { progressInOut } from "../../../core";
+import {
+  DashedBox, dashOpenAt, progressInOut, ramp, theme, useMotion, usePalette,
+} from "../../../core";
 import { BrokerPanel, PANEL, STUDY } from "../../019-moving-average/scenes/Scene01";
 import { PANEL10 } from "../data/timing";
 import { Scribble } from "./Scribble";
@@ -53,6 +55,53 @@ const AT = 510;
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = PANEL10;
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * ⚠ THE BOX IS CENTRED IN THE SAFE AREA, not on the canvas. The bottom 108px is
+ * the subtitle band, so the frame's own middle is 54px below the middle of what
+ * this episode is allowed to draw in — and a box centred on the canvas would
+ * sit visibly low above a caption.
+ */
+const NOTE_BOX = (() => {
+  const w = 900;
+  const h = 132;
+  const A = theme.stage.active;
+  return { x: (theme.canvas.width - w) / 2, y: A.y + (A.h - h) / 2, w, h };
+})();
+
+/** The scene's closing line, typed into the box once it has snapped open. */
+const Note = ({ g }: { g: number }) => {
+  const m = useMotion();
+  const c = usePalette();
+  /** ⚠ THE TYPING WAITS FOR THE FRAME. `dashOpenAt` is the one answer to "when
+   *  may my content start" — text that begins while the box is still a sliver
+   *  is text hanging in the air. */
+  const open = dashOpenAt(V.note.at, m);
+  const shown = V.note.text.slice(
+    0,
+    Math.floor(ramp(g, open, V.note.text.length * V.note.perChar) * V.note.text.length),
+  );
+  return (
+    <DashedBox {...NOTE_BOX} at={V.note.at - V.at}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: theme.text.family,
+          fontSize: theme.text.body.size,
+          fontWeight: 800,
+          color: c.ink,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {shown}
+      </div>
+    </DashedBox>
+  );
+};
 
 export const Overload = () => {
   const f = useCurrentFrame();
@@ -67,7 +116,8 @@ export const Overload = () => {
   const gone = 1 - progressInOut(g, V.clear.at, V.clear.over);
 
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: gone }}>
+    <div style={{ position: "absolute", inset: 0 }}>
+      <div style={{ position: "absolute", inset: 0, opacity: gone }}>
       <BrokerPanel
         f={AT}
         chart="BMRI"
@@ -95,10 +145,21 @@ export const Overload = () => {
       {/* ⚠ THE WINDOW IT COVERS IS 019'S OWN BOX, read from there rather than
           typed here: the panel decides where it is, and a second copy of that
           rectangle would be a scrawl that misses the day it moves. */}
+      {/* ⚠ THE SCRAWL IS THE WINDOW'S SIZE, AND NOTHING CUTS IT — Simon, over
+          two turns: "jangan di masking", then "seukuran windownya aja… aku
+          gamau bentrok sama logo dan subtitle". Those are one instruction, not
+          two: fitted to the window it needs no mask, its edges stay ragged
+          loops, and it cannot reach the logo or the captions because the window
+          does not. The rectangle is read from 019 rather than typed here, so
+          the scrawl follows the window if it ever moves. */}
       <Scribble
         box={{ x: PANEL.x, y: PANEL.y, w: PANEL.w, h: STUDY.height }}
         drawn={progressInOut(g, V.scribble.at, V.scribble.over)}
       />
+      </div>
+      {/* ⚠ OUTSIDE THE FADE, because it arrives after it. Inside, the note
+          would open at an opacity that is already on its way to nothing. */}
+      <Note g={g} />
     </div>
   );
 };

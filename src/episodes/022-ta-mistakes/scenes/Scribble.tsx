@@ -29,6 +29,32 @@ export type Rect = { x: number; y: number; w: number; h: number };
  */
 const LOOPS = 34;
 /**
+ * ⚠ HOW FAR THE LOOPS SPREAD AND REACH, as fractions of the box, and they are
+ * DIFFERENT for the two axes on purpose.
+ *
+ * Sideways the scrawl is free to run off the frame — Simon: "scribblenya di
+ * luar window aja, jangan di masking" — and a cut at the canvas's own edge is
+ * not a cut anybody sees.
+ *
+ * Downwards and upwards it has to DIE OUT rather than be trimmed, because a
+ * straight horizontal edge across a scribble is exactly the masking he has just
+ * taken off. So `spreadY + reachY` is kept under half the box: the ink stops
+ * because it ran out, not because something stopped it.
+ */
+const SPREAD_X = 0.25;
+const REACH_X = [0.16, 0.34];
+const SPREAD_Y = 0.12;
+const REACH_Y = [0.2, 0.5];
+/**
+ * ⚠ THE LOOPS TILT, THEY DO NOT TUMBLE. With a free rotation a loop's WIDEST
+ * radius can end up being its vertical one, which blew the scrawl's height out
+ * to the point that fitting it to the window shrank the width to two thirds of
+ * the box — a ball in the middle of a wide card. Held inside ±35° the ball keeps
+ * the box's own proportions, and it is also what the reference looks like: a
+ * hand scribbling across something wide works across it, not around it.
+ */
+const TILT = 0.61;
+/**
  * ⚠ THE WANDER IS LOW-FREQUENCY, and that is the whole difference between a pen
  * and a wire frame. My first attempt jittered every sampled point independently,
  * which is noise: it put a corner every few pixels and the scrawl came out
@@ -54,39 +80,86 @@ const mulberry32 = (seed: number) => {
   };
 };
 
-/** The scrawl as one path, and how far the pen travels along it. */
+/**
+ * The scrawl as one path, and how far the pen travels along it.
+ *
+ * ⚠ IT IS MEASURED AND FITTED TO THE BOX, not trusted to land in it. Every loop
+ * is drawn at a random ROTATION, so a loop's widest radius can end up being its
+ * vertical one — reasoning about the extent from the spread and the reach gave
+ * me 369px when the real answer was 971, which is how the first version ended
+ * up behind the logo. The points are measured and scaled uniformly about their
+ * own centre instead.
+ *
+ * ⚠ AND THE FIT IS WHY THERE IS NO MASK. Simon asked for the scrawl unmasked
+ * and then for it to be the window's size — "aku gamau bentrok sama logo dan
+ * subtitle" — and those two are the same instruction: a scribble that is ALREADY
+ * the size of the thing it covers needs nothing cutting it, so its edges are
+ * ragged loops rather than a straight trim, and the two reserved strips are
+ * clear because the window clears them.
+ */
 export const scribbleOf = (box: Rect, seed = 8800) => {
   const rnd = mulberry32(seed);
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
-  let d = "";
-  let len = 0;
+  const loops: { x: number; y: number }[][] = [];
   for (let i = 0; i < LOOPS; i++) {
     /** ⚠ THE LOOPS FILL THE BOX, they do not sit in the middle of it. Centres
      *  spread across it and the radii reach past its edges, because a scrawl
      *  that covers a window has to overrun the window. */
-    const ox = cx + (rnd() - 0.5) * box.w * 0.46;
-    const oy = cy + (rnd() - 0.5) * box.h * 0.46;
-    const rx = box.w * (0.13 + rnd() * 0.24);
-    const ry = box.h * (0.18 + rnd() * 0.3);
-    const rot = rnd() * Math.PI;
+    const ox = cx + (rnd() - 0.5) * box.w * SPREAD_X * 2;
+    const oy = cy + (rnd() - 0.5) * box.h * SPREAD_Y * 2;
+    const rx = box.w * (REACH_X[0] + rnd() * (REACH_X[1] - REACH_X[0]));
+    const ry = box.h * (REACH_Y[0] + rnd() * (REACH_Y[1] - REACH_Y[0]));
+    const rot = (rnd() - 0.5) * TILT * 2;
     const cos = Math.cos(rot);
     const sin = Math.sin(rot);
     const start = rnd() * Math.PI * 2;
     const phase = WAVES.map(() => rnd() * Math.PI * 2);
     const amp = WAVES.map(() => (0.4 + rnd() * 0.6) * WOBBLE);
-    let prev: { x: number; y: number } | null = null;
+    const pts: { x: number; y: number }[] = [];
     for (let k = 0; k <= STEPS; k++) {
       const a = start + (k / STEPS) * Math.PI * 2 * OVER;
       const w = 1 + WAVES.reduce((sum, n, j) => sum + amp[j] * Math.sin(n * a + phase[j]), 0);
       const ex = Math.cos(a) * rx * w;
       const ey = Math.sin(a) * ry * w;
-      const x = ox + ex * cos - ey * sin;
-      const y = oy + ex * sin + ey * cos;
-      d += `${k === 0 ? "M" : "L"}${x.toFixed(1)},${y.toFixed(1)}`;
+      pts.push({ x: ox + ex * cos - ey * sin, y: oy + ex * sin + ey * cos });
+    }
+    loops.push(pts);
+  }
+
+  const all = loops.flat();
+  const bx = [Math.min(...all.map((q) => q.x)), Math.max(...all.map((q) => q.x))];
+  const by = [Math.min(...all.map((q) => q.y)), Math.max(...all.map((q) => q.y))];
+  /** ⚠ ONE SCALE FOR BOTH AXES. Fitting them separately squashes every loop to
+   *  the box's aspect, and a ball of flattened rings reads as a pattern rather
+   *  than as a hand. The tighter of the two wins, so the scrawl ends up AT the
+   *  box on one axis and a little inside it on the other. */
+  const k = Math.min(box.w / (bx[1] - bx[0]), box.h / (by[1] - by[0]));
+
+  /**
+   * ⚠ THE PEN NEVER LIFTS — Simon: "trim path aja… jadi animasi 1 garis yang
+   * membentuk scribble". Every loop after the first begins with an L, not an M,
+   * so the stroke runs from wherever the last loop ended straight into the next
+   * one. That is what makes this ONE line: a trim along a path of many subpaths
+   * reveals them one at a time with the pen jumping between them, which reads as
+   * a shape being assembled rather than as somebody scribbling.
+   *
+   * ⚠ AND THE CONNECTORS ARE NOT A COMPROMISE. Look at the reference: a real
+   * scrawl has long sweeping strokes cutting right across the tangle, and they
+   * are exactly this — the hand travelling from one loop to the next without
+   * stopping.
+   */
+  let d = "";
+  let len = 0;
+  let prev: { x: number; y: number } | null = null;
+  for (const pts of loops) {
+    pts.forEach((q) => {
+      const x = cx + (q.x - (bx[0] + bx[1]) / 2) * k;
+      const y = cy + (q.y - (by[0] + by[1]) / 2) * k;
+      d += `${prev ? "L" : "M"}${x.toFixed(1)},${y.toFixed(1)}`;
       if (prev) len += Math.hypot(x - prev.x, y - prev.y);
       prev = { x, y };
-    }
+    });
   }
   return { d, len };
 };
@@ -96,6 +169,7 @@ export const Scribble = ({
   drawn,
   opacity = 1,
 }: {
+  /** The scrawl is fitted to this — it IS the scrawl's size. */
   box: Rect;
   /** 0→1: how much of the scrawl the pen has laid down. */
   drawn: number;
@@ -104,7 +178,6 @@ export const Scribble = ({
   const c = usePalette();
   const { d, len } = scribbleOf(box);
   if (opacity <= 0.001 || drawn <= 0.001) return null;
-  const id = `scrib-${box.x}-${box.y}`;
   return (
     <svg
       style={{ position: "absolute", left: 0, top: 0 }}
@@ -112,17 +185,8 @@ export const Scribble = ({
       height={theme.canvas.height}
       opacity={opacity}
     >
-      {/* ⚠ CLIPPED TO THE WINDOW, and to its own corners. The loops overrun the
-          box on purpose; without the clip the scrawl would spill onto the
-          episode's ground and stop being something done TO the chart. */}
-      <defs>
-        <clipPath id={id}>
-          <rect x={box.x} y={box.y} width={box.w} height={box.h} rx={24} />
-        </clipPath>
-      </defs>
       <path
         d={d}
-        clipPath={`url(#${id})`}
         fill="none"
         /** ⚠ THE PALETTE'S INK, NOT A TYPED BLACK. Simon asked for black and on
          *  this episode's `terang` palette that is exactly what `ink` is —
