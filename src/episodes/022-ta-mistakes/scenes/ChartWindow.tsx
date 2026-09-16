@@ -47,9 +47,9 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Layer, Stage,
-  candleWidth, domainOf, drawPath, fadeOut, gridOf, pathOf, progress, theme,
-  useMotion, usePalette,
+  Candles, Card, DashedBox, Layer, Stage,
+  candleWidth, dashOpenAt, domainOf, drawPath, fadeOut, gridOf, pathOf,
+  progress, ramp, theme, useMotion, usePalette,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { WINDOW11, local } from "../data/timing";
@@ -133,6 +133,49 @@ const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
         );
       })}
     </>
+  );
+};
+
+/**
+ * The scene's closing line, typed into a dashed box.
+ *
+ * ⚠ THE TYPING WAITS FOR THE FRAME. `dashOpenAt` is the one answer to "when may
+ * my content start" — text that begins while the box is still a sliver is text
+ * hanging in the air. Same shape as SC10's note, which is the same instruction.
+ *
+ * ⚠ SET LEFT, NOT CENTRED, AND THAT IS BECAUSE IT TYPES. A centred line grows
+ * out of its own middle and both ends creep; on two lines the break point moves
+ * as well. Left-aligned, the sentence simply fills the first line and drops to
+ * the second, which is what typing looks like.
+ */
+const Note = ({ g }: { g: number }) => {
+  const m = useMotion();
+  const c = usePalette();
+  const N = W.note;
+  const open = dashOpenAt(V.note.at, m);
+  const shown = V.note.text.slice(
+    0,
+    Math.floor(ramp(g, open, V.note.text.length * V.note.perChar) * V.note.text.length),
+  );
+  return (
+    <DashedBox x={N.x} y={N.y} w={N.w} h={N.h} block={N.block} at={local(V.note.at, V.at)}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          padding: N.pad,
+          display: "flex",
+          alignItems: "center",
+          fontFamily: theme.text.family,
+          fontSize: theme.text.body.size,
+          fontWeight: theme.text.title.weight,
+          lineHeight: 1.3,
+          color: c.ink,
+        }}
+      >
+        {shown}
+      </div>
+    </DashedBox>
   );
 };
 
@@ -242,6 +285,9 @@ export const ChartWindow = () => {
           </Layer>
         )}
         {fill > 0.001 && wedge(SMALL_GRID, fill, false, "smallWedge")}
+
+        {/* ═══ what the two of them add up to ═══════════════════════════ */}
+        <Note g={f + V.at} />
       </div>
     </Stage>
   );

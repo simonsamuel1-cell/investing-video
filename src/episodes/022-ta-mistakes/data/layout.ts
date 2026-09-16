@@ -1301,6 +1301,45 @@ export const bigAt = (t: number) => {
   };
 };
 
+/**
+ * SC11's closing note — Simon, 9805.
+ *
+ * ⚠ ABOVE THE PAIR, BECAUSE THAT IS WHERE THE ROOM IS. Measured on the rendered
+ * frame: the only ink-free full-width bands are 54..229 above the windows, a
+ * 40px strip inside their own tops, and 894..971 under their shadows. That last
+ * one is 78px against a 108px subtitle band — a letterbox, and it would sit on
+ * the captions. So the note takes the band this episode's headline slot has
+ * always been in.
+ *
+ * ⚠ AND ITS WIDTH IS DECIDED BY THE LOGO. Anything drawn in the top 150px must
+ * end before theme.logoZone.maxX. That is also why the sentence is set on two
+ * lines — one line of it is about 1140px wide, and a box that wide cannot be up
+ * here at all.
+ *
+ * ⚠ THE CORNER BLOCKS COUNT, ON EVERY SIDE, and putting that in the arithmetic
+ * moved two numbers rather than one. core/DashedBox draws a solid block centred
+ * on each corner, so the INK reaches half a block past the rectangle all round.
+ * At 800 wide the measured ink ran to x1366 against a limit of 1368 — inside,
+ * but by accident. And at y56 it ran to y49, which is FIVE PIXELS ABOVE the
+ * safe area, where it had been sitting unnoticed until the assertion below was
+ * taught about the overhang and refused to render.
+ *
+ * ⚠ SO THE TOP IS DERIVED NOW, not chosen: the box starts half a block below
+ * the safe area's own top, which is the highest it can legally be.
+ */
+const W11_BLOCK = 15;
+const W11_NOTE = (() => {
+  const w = 780;
+  return {
+    x: (theme.canvas.width - w) / 2,
+    y: theme.stage.active.y + W11_BLOCK / 2,
+    w,
+    h: 150,
+    pad: 36,
+    block: W11_BLOCK,
+  };
+})();
+
 export const WIN11 = {
   /** The box the window's size was cut out of — kept because the size derives. */
   bounds: W11_BOUNDS,
@@ -1311,6 +1350,7 @@ export const WIN11 = {
   },
   ghost: W11_GHOST,
   downDrop: W11_DOWN_DROP,
+  note: W11_NOTE,
   plotPad: W11_PLOT_PAD,
   /**
    * ⚠ THREE BARS OFF THE RIGHT OF THE BIG WINDOW, HIDDEN AND NOT REMOVED —
@@ -1429,6 +1469,20 @@ export const flagWedge = (g: Grid) => {
     });
   });
   if (W.hidden < 0 || W.hidden >= FLAG_LINES.last) fail(`SC11 hides ${W.hidden} bars, which is not a reading of the flag`);
+  /** ⚠ THE NOTE CLEARS THE LOGO AND CLEARS THE WINDOWS. It is the one thing in
+   *  this scene drawn in the top 150px, so it is the one thing that can walk
+   *  into the logo zone — and the band it sits in is only 176px tall, so it is
+   *  also the one thing that can land on the windows. */
+  const n = W.note;
+  /** ⚠ MEASURED TO THE INK, NOT TO THE RECTANGLE. The corner blocks reach half
+   *  a block past every edge, which is what nearly put this box in the logo
+   *  zone at its old width. */
+  const over = n.block / 2;
+  if (n.y - over < A.y) fail("SC11's note starts above the safe area");
+  if (n.y - over < theme.logoZone.height && n.x + n.w + over > theme.logoZone.maxX) {
+    fail(`SC11's note reaches x${n.x + n.w + over} in the top ${theme.logoZone.height}px, past the logo zone's ${theme.logoZone.maxX}`);
+  }
+  if (n.y + n.h + over >= end.card.y) fail(`SC11's note ends at ${n.y + n.h + over}, on top of the windows at ${end.card.y}`);
   /** ⚠ AND THE DROPPED FAN STILL HAS TO LAND INSIDE THE PLOT. 20px is a
    *  drawing offset, so nothing about the scale knows it is happening — the
    *  lowest bar could be pushed through the floor and the chart would simply

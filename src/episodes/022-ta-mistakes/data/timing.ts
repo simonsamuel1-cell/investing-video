@@ -1831,6 +1831,20 @@ export const WINDOW11 = {
    * these are three things that happened in an order.
    */
   down: { at: 9600, step: 20 },
+  /**
+   * ⚠ THE SCENE'S ONE SENTENCE — Simon, 9805. It arrives once both futures are
+   * standing there: the one the pattern promised and the one that happened.
+   * Said before them it would be advice, and said over them it is a reading of
+   * what is on screen.
+   *
+   * ⚠ IT TYPES, like SC10's. Same instruction ("muncul text box putus putus …
+   * isinya"), same component, same two frames a character.
+   */
+  note: {
+    at: 9805,
+    perChar: 2,
+    text: "Nilai keputusan dari proses dan hasil, bukan hasil akhir saja",
+  },
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
@@ -1854,7 +1868,7 @@ export const WINDOW11 = {
   const steps: [string, number][] = [
     ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the ghost bars", V.ghost],
     ["the shift", V.shift], ["the second window", V.small.at], ["its contents", V.small.fill],
-    ["the down future", V.down.at],
+    ["the down future", V.down.at], ["the note", V.note.at],
   ];
   steps.forEach(([n, at], i) => {
     if (i && at <= steps[i - 1][1]) fail(`SC11's ${n} starts at ${at}, not after ${steps[i - 1][0]}`);
@@ -1864,6 +1878,10 @@ export const WINDOW11 = {
    *  the one nobody writes down. */
   const lastRed = V.down.at + V.down.step * 2;
   if (lastRed >= V.out) fail(`SC11's last falling bar starts at ${lastRed}, when the scene is already leaving at ${V.out}`);
+  /** ⚠ AND THE SENTENCE HAS TO FINISH TYPING BEFORE THE SCENE LEAVES. A note
+   *  that is still arriving while the picture fades is a sentence nobody read. */
+  const typed = V.note.at + V.note.text.length * V.note.perChar;
+  if (typed >= V.out) fail(`SC11's note finishes typing at ${typed}, after it has started leaving at ${V.out}`);
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);
