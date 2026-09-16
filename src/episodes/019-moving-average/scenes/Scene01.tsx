@@ -193,13 +193,18 @@ export const STUDY = (() => {
   const lead = 20;
   const foot = 30;
   /**
-   * ⚠ THE NAME SITS INSIDE ITS PANE, in a row of its own across the top, and
-   * the line is drawn UNDER it. It used to live in a gutter left of the tape,
-   * which was right while a price axis shared that column; with the chart
-   * centred in its window there is no gutter to sit in, and a name outside the
-   * plot would mean the plot is not centred.
+   * ⚠ THE NAME SITS INSIDE ITS PANE, CENTRED ON IT — Simon: "3 text nya buat
+   * align-center pada masing masing indikator". It used to live in a gutter
+   * left of the tape, which was right while a price axis shared that column;
+   * with the chart centred in its window there is no gutter to sit in.
+   *
+   * ⚠ AND THE LINE GETS THE WHOLE PANE BACK. While the name was a row across
+   * the top, the line's travel had to stop below it — 42px of a 78px pane — or
+   * it would have run through the words. The names start at the pane's left
+   * edge and the content starts on the eighth candle, so the two cannot meet at
+   * ANY height now, and a reservation whose reason is gone is just a pane drawn
+   * half empty.
    */
-  const labelH = 22;
   const inset = 7;
   /**
    * ⚠ THE PANES' CONTENT STARTS ON THE EIGHTH CANDLE — Simon: "garis-garis (rsi
@@ -215,7 +220,6 @@ export const STUDY = (() => {
     pane,
     gap,
     lead,
-    labelH,
     inset,
     from,
     at,
@@ -1609,10 +1613,7 @@ export const BrokerPanel = ({
                    * and the line kept its own height rather than paying for it.
                    */
                   const py = (t: number) =>
-                    top +
-                    STUDY.pane -
-                    STUDY.inset -
-                    t * (STUDY.pane - STUDY.labelH - STUDY.inset * 2);
+                    top + STUDY.pane - STUDY.inset - t * (STUDY.pane - STUDY.inset * 2);
                   /**
                    * ⚠ A CURVE, NOT A POLYLINE — Simon: "dibuat smooth aja,
                    * jangan berantakan". Straight segments between 105 points
@@ -1707,7 +1708,14 @@ export const BrokerPanel = ({
                       />
                       <text
                         x={x0}
-                        y={top + STUDY.labelH}
+                        /** ⚠ ONE PIXEL UP, AND THE REASON IS THE SAME FOR ALL
+                         *  THREE. `central` centres the EM box; these three
+                         *  names are cap-height only — no descender in RSI,
+                         *  Stoch or MACD — so their INK sits a pixel below that
+                         *  centre. Measured at +1 on each of them, and at 0 on
+                         *  each of them after. */
+                        y={top + STUDY.pane / 2 - 1}
+                        dominantBaseline="central"
                         fontFamily={font}
                         fontSize={20}
                         fontWeight={UI.weight}
