@@ -41,7 +41,7 @@
  * about labels this project adds to its own drawings; this one is a disclosure.
  */
 import { useCurrentFrame } from "remotion";
-import { progress, progressInOut } from "../../../core";
+import { progressInOut } from "../../../core";
 import { BrokerPanel } from "../../019-moving-average/scenes/Scene01";
 import { PANEL10 } from "../data/timing";
 
@@ -58,27 +58,33 @@ export const Overload = () => {
   /** ⚠ GLOBAL FRAMES. The table is written in the timeline's numbers and a
    *  scene inside a Sequence sees its own, so `from` goes back on first. */
   const g = f + V.at;
+  const p = (q: { at: number; over: number }) => progressInOut(g, q.at, q.over);
 
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: progress(g, V.panel.at, V.panel.over) }}>
+    <div style={{ position: "absolute", inset: 0 }}>
       <BrokerPanel
         f={AT}
         chart="BMRI"
         extension={false}
-        /** ⚠ NO CARD AND NO CHROME — Simon, opening the picture up while he
-         *  works out what goes where: "kita buka background putihnya supaya
-         *  tidak ada batasan untuk sementara", and then the timeframe pills,
-         *  the two indicator buttons, the dashed last-price line, the chip on
-         *  the axis and the big 4.210 with its +0,70%, each by name. What is
-         *  left is the ticker, the tape and the seven readings of it. */
         bare
-        /** ⚠ THE SHAPE WITHOUT THE NAMING. Simon asked for the zigzag he has
-         *  seen before, which is the line and its rings — the HL/HH/LH/LL
-         *  chips would be a second scene's argument sitting on this one. */
-        zig={{ drawn: progressInOut(g, V.zig.at, V.zig.over) }}
-        /** ⚠ ONE AFTER ANOTHER, not together. Three panes that appear at once
-         *  are a layout; three that arrive in turn are somebody adding them. */
-        studies={{ shown: (i) => progressInOut(g, V.studies.at + i * V.studies.step, V.studies.over) }}
+        build={{
+          /** ⚠ WIDTH FIRST, THEN HEIGHT — Simon: "dari titik di tengah, terus
+           *  width nya memanjang, terus heightnya memanjang". Two moves on one
+           *  window, so the second starts where the first ends. */
+          win: {
+            w: progressInOut(g, V.win.at, V.win.over),
+            h: progressInOut(g, V.win.at + V.win.over, V.win.over),
+          },
+          tape: p(V.tape),
+          ma: p(V.ma),
+          bb: p(V.bb),
+          /** 1 while the chart fills the window, 0 once it has made room. */
+          fit: 1 - p(V.shrink),
+        }}
+        zig={{ drawn: p(V.zig) }}
+        studies={{
+          shown: (i) => progressInOut(g, V.studies.at + i * V.studies.step, V.studies.over),
+        }}
       />
     </div>
   );

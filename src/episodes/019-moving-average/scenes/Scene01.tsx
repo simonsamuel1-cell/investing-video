@@ -145,47 +145,63 @@ const SLOW_PERIOD = 50;
 const STUDY_WARM = 40;
 
 /**
+ * ═══ THE PANEL WITH ITS WALLS DOWN ═══  (VIDEO 22, `bare` on BrokerPanel)
+ *
+ * ⚠ ONE MARGIN, ALL FOUR SIDES — Simon: "aku mau white space kiri dan kanan itu
+ * balance". `plotW = PANEL.w - 2 × pad` is the only width that CAN balance, so
+ * it is derived rather than tuned, and the same number runs top and bottom so
+ * the tape sits in the middle of its window rather than near it.
+ *
+ * ⚠ THERE IS NO HEADER HERE ANY MORE. The ticker group had been lifted out of
+ * the window and aligned to the logo; Simon has since deleted it — "hapus aja
+ * deh BMRI bank mandiri ilustrasi nya" — and with it the last thing on this
+ * picture that named a real instrument. The "Ilustrasi" tag went with it, and
+ * that is the right outcome rather than a loss: the tag disclosed that invented
+ * prices sat on a real ticker, and there is no ticker on screen to disclose
+ * about any more.
+ */
+/** The size the window opens from and the thickness of the line it is while its
+ *  width is running. */
+const WIN_SEED = 6;
+
+export const BARE = (() => {
+  const pad = 30;
+  return { pad, plotTop: pad, plotW: PANEL.w - pad * 2 };
+})();
+
+/**
  * ═══ THE THREE STUDIES ═══  (VIDEO 22, `studies` on BrokerPanel)
  *
- * ⚠ ONE OBJECT, BECAUSE THE THREE NUMBERS CANNOT BE CHOSEN SEPARATELY. Opening
- * three panes under the price makes the panel taller AND the price plot
- * shorter, and a caller allowed to set those independently is a caller who can
- * ask for a chart that does not fit its own window. The panel's height is the
- * SUM of what is in it, so it cannot disagree with the stack.
- *
- * ⚠ AND ONE TIME AXIS FOR ALL FOUR, at the foot. The months belong to the
- * tape, not to the price pane; repeated under each study they would be three
- * more rows of type in the tightest part of the picture.
- *
- * `foot` keeps the panel 20px clear of VIDEO 22's subtitle band at 972.
+ * ⚠ ONE OBJECT, BECAUSE THE NUMBERS CANNOT BE CHOSEN SEPARATELY. Opening three
+ * panes under the price makes the price plot shorter by exactly what they take,
+ * and a caller allowed to set those independently is a caller who can ask for a
+ * chart that does not fit its own window.
  */
 export const STUDY = (() => {
   /**
-   * ⚠ THE STACK IS MEASURED FROM THE BOTTOM UP, and the price plot is what is
-   * left. The window's floor is fixed — it has to clear VIDEO 22's subtitle
-   * band — so every pane that grows has to be paid for by the chart above it,
-   * and that is the only direction this can be solved in without a second
-   * number that has to agree with the first.
+   * ⚠ MEASURED FROM THE WINDOW'S FLOOR UP, and the price plot is what is left.
+   * The floor is fixed — it has to clear VIDEO 22's subtitle band — so a pane
+   * that grows is paid for by the chart above it, which is the only direction
+   * this can be solved in without a second number that has to agree.
+   *
+   * ⚠ NO MONTH ROW UNDER THEM NOW — Simon: "hapus juga Apr Mei Jun Jul Agu
+   * Sep". The 38px it took goes back to the panes and to the chart.
    */
   const height = 802;
   const pane = 78;
   const gap = 12;
   const lead = 20;
-  const tail = 8;
-  const axis = 30;
-  const foot = 14;
+  const foot = 30;
   /**
-   * ⚠ THE NAME SITS INSIDE ITS PANE NOW, in a row of its own across the top,
-   * and the line is drawn UNDER it. It used to live in a gutter to the left of
-   * the tape — which was the right answer while there was a price axis there to
-   * share the column with. Simon has balanced the chart's white space since
-   * ("chartnya perlu di stretch ke kiri"), so there is no gutter left to sit
-   * in: a name outside the plot now means the plot is not centred.
+   * ⚠ THE NAME SITS INSIDE ITS PANE, in a row of its own across the top, and
+   * the line is drawn UNDER it. It used to live in a gutter left of the tape,
+   * which was right while a price axis shared that column; with the chart
+   * centred in its window there is no gutter to sit in, and a name outside the
+   * plot would mean the plot is not centred.
    */
   const labelH = 22;
   const inset = 7;
-  const axisY = height - foot;
-  const at = axisY - axis - tail - (pane * 3 + gap * 2);
+  const at = height - foot - (pane * 3 + gap * 2);
   return {
     height,
     pane,
@@ -194,10 +210,10 @@ export const STUDY = (() => {
     labelH,
     inset,
     at,
-    axisY,
-    /** The price plot's height in each of the two modes it is asked for. */
-    plotH: at - lead - 200,
-    bareH: at - lead,
+    /** The price plot once it has made room for the three panes… */
+    shrunk: at - lead - BARE.plotTop,
+    /** …and before it does: the whole window, less its own padding. */
+    full: height - BARE.plotTop - BARE.pad,
     names: ["RSI", "Stoch", "MACD"],
   };
 })();
@@ -282,60 +298,6 @@ const AXIS = ["Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
 export const UI = { size: 30, weight: 600, axis: 500, name: 36, price: 70 };
 export const HEAD = { x: 40, avatar: 52, gap: 16 };
 
-/**
- * ═══ THE PANEL WITH ITS WALLS DOWN ═══  (VIDEO 22, `bare` on BrokerPanel)
- *
- * ⚠ IT KNOWS ABOUT 022'S LOGO, AND IT HAS TO. Simon: "geser naik hingga
- * align-top pada logo". The thing the header is being aligned to is not on this
- * panel and never will be — it is the Tuntun mark in the frame the panel is
- * borrowed into — so the number is measured off a render and named here rather
- * than left as a guess inside a scene. 45 is where that mark's ink starts.
- *
- * ⚠ AND THE PRICE ROW IS NOT LIFTED, IT IS GONE — Simon: "harga 4210 yang besar
- * juga hapus aja dan 0.70% juga hapus". So there is one row left and one number
- * to place it by.
- */
-export const BARE = (() => {
-  /** Measured off a render of 022: where the Tuntun mark's ink starts and ends. */
-  const logo = { top: 45, bottom: 141 };
-  /**
-   * ⚠ ALIGN-BOTTOM NOW, AND THE ROW'S HEIGHT IS THE AVATAR'S. The header is a
-   * flex row whose tallest child is the 52px circle, so its ink runs from the
-   * row's own top to one pixel short of `top + avatar` — which is why the
-   * bottom edge is `avatar - 1` rather than `avatar`. (Align-TOP, which this
-   * replaces, needed no such allowance, and I wrongly made one: the ticker sat
-   * a pixel above the mark until it was measured.)
-   */
-  const headTop = logo.bottom - (HEAD.avatar - 1) - PANEL.y;
-  /**
-   * ⚠ THE CHART'S OWN WINDOW IS THE PANEL'S BOX — Simon: "berikan window putih
-   * untuk chartnya sebagai background". The header has moved out above it, so
-   * what is left inside is only the chart, and the white card can come back
-   * around exactly that.
-   *
-   * ⚠ AND THE CHART FILLS IT — "stretch fill pada windownya". Two things were
-   * paying for something that is gone: 200px at the top held a header that is
-   * now outside, and a 150px gutter held price numbers Simon has deleted. The
-   * plot takes both back, which puts it at 490 — the height it has in 019 —
-   * WITH the three studies still under it.
-   *
-   * ⚠ THE GUTTER DOES NOT GO TO ZERO. The study names still live in it, and a
-   * name is the one thing on this picture that cannot move with the tape. 110
-   * leaves "Stoch" 38px clear of its own first value; measured, not guessed.
-   */
-  /**
-   * ⚠ ONE MARGIN, BOTH SIDES — Simon: "aku mau white space kiri dan kanan itu
-   * balance, jadi chartnya perlu di stretch ke kiri". The left used to carry a
-   * 110px gutter for the study names on top of this margin, so the tape sat
-   * 124px from the window's left edge and 43 from its right. With the names
-   * moved inside their own panes there is nothing left to reserve, and the tape
-   * is centred by construction: `plotW = PANEL.w - 2 × pad` is the only width
-   * that can balance, so it is derived rather than tuned.
-   */
-  const pad = 30;
-  const plotTop = pad;
-  return { headTop, pad, plotTop, plotW: PANEL.w - pad * 2 };
-})();
 /**
  * The price column's centre line. The axis labels and the last-price pill are
  * BOTH centred on it — right-aligning them lined up their right edges but left
@@ -499,12 +461,29 @@ const makeChart = (sh: {
   const warm = priorOf(closes[0], STUDY_WARM, sh.seed + 4);
   const warmFull = [...warm, ...closes];
   const warmBars = [...toBars(warm, sh.seed + 5), ...bars];
-  const st = stochastic(warmBars, 14, 3);
+  /**
+   * ⚠ SHORTER LOOKBACKS — Simon: "garisnya juga buat lebih volatile". This tape
+   * is a smooth synthetic series, and a 14-bar RSI on it barely leaves the
+   * middle of its own pane: 13→67, averaging 3.3 points a bar. At 7 it runs
+   * 6→85 and averages 6.1. Real arithmetic on the same tape, a different
+   * question asked of it — not a line stretched to look busy.
+   *
+   * ⚠ AND THE SLOW STOCHASTIC, NOT THE FAST ONE — "dibuat smooth aja, jangan
+   * berantakan". Raw %K jumps ten points a bar and reads as noise; the slow
+   * variant takes %K's own 3-bar mean as the line and smooths THAT again for
+   * the signal, which keeps the full 0→100 swing and loses the chatter. It is
+   * what every platform means by "Stochastic" anyway.
+   */
+  const st = stochastic(warmBars, 9, 3);
+  const slowD = sma(
+    st.d.map((v) => v ?? 0),
+    3,
+  ).map((v, i) => (st.d[i] === null || i < 2 ? null : v));
   const mc = macd(warmFull, 12, 26, 9);
   const study = {
-    rsi: rsi(warmFull, 14).slice(STUDY_WARM),
-    k: st.k.slice(STUDY_WARM),
-    d: st.d.slice(STUDY_WARM),
+    rsi: rsi(warmFull, 7).slice(STUDY_WARM),
+    k: st.d.slice(STUDY_WARM),
+    d: slowD.slice(STUDY_WARM),
     macd: mc.line.slice(STUDY_WARM),
     signal: mc.signal.slice(STUDY_WARM),
     hist: mc.hist.slice(STUDY_WARM),
@@ -788,6 +767,7 @@ export const BrokerPanel = ({
   extension = true,
   studies,
   bare = false,
+  build,
 }: {
   f: number;
   /**
@@ -889,6 +869,29 @@ export const BrokerPanel = ({
    * gutter — so the plot takes both back. See BARE.
    */
   bare?: boolean;
+  /**
+   * ⚠ THE PICTURE ASSEMBLED ONE PIECE AT A TIME, on the caller's own curves —
+   * Simon's order, for VIDEO 22: the window, then the tape, then the average,
+   * then the bands, then the structure, then the three studies.
+   *
+   * `win` draws the window itself: `w` runs its width out from a point at the
+   * centre and `h` then runs its height, so it opens as a line before it is a
+   * box. `tape`, `ma` and `bb` are each that element's own 0→1.
+   *
+   * ⚠ `fit` IS THE ONE THAT CHANGES THE GEOMETRY. At 1 the price plot fills the
+   * whole window — which is why the average, the bands and the structure all
+   * arrive at the right size without being told anything: they are drawn
+   * through the same mapping as the tape. At 0 it has shrunk from the TOP DOWN
+   * to leave room for the studies. Nothing else moves; the window does not
+   * resize and the padding does not change.
+   */
+  build?: {
+    win: { w: number; h: number };
+    tape: number;
+    ma: number;
+    bb: number;
+    fit: number;
+  };
 }) => {
   /**
    * The extension opens once and stays. The plot's width is derived from it,
@@ -907,7 +910,13 @@ export const BrokerPanel = ({
    * then a function of those three, so no position here is typed twice.
    */
   const plotTop = bare ? BARE.plotTop : PLOT.y - PANEL.y;
-  const plotH = studies ? (bare ? STUDY.bareH - BARE.plotTop : STUDY.plotH) : PLOT.h;
+  /** ⚠ THE SHRINK IS A CHANGE OF MAPPING, NOT A SCALE. Everything drawn on the
+   *  chart goes through `Y`, so moving this one number takes the candles, the
+   *  average, the bands and the structure with it at their own stroke widths —
+   *  where a CSS scale would take the strokes and the candle corners too. */
+  const plotH = bare
+    ? STUDY.full + (STUDY.shrunk - STUDY.full) * (1 - (build?.fit ?? 0))
+    : PLOT.h;
   const px0 = bare ? BARE.pad : PLOT.x - PANEL.x;
   const plotW = bare ? BARE.plotW : PLOT.w - LIST.take * open;
   /** ⚠ A FULLER SPAN WHEN THERE IS A WINDOW TO FILL, and still enough slack for
@@ -933,8 +942,18 @@ export const BrokerPanel = ({
     return inA * (next ? 1 - progress(f, next.at, T.swapOver) : 1);
   };
 
-  const maOn = f >= T.ma;
-  const bbOn = f >= T.bb;
+  /** ⚠ THE CALLER'S CURVE WINS WHEREVER IT IS GIVEN. `build` hands each element
+   *  its own 0→1, which is the only way a panel held on ONE frame can have
+   *  things arrive on it in an order. Without it, 019's own frame decides, as
+   *  it always has. */
+  const maOn = build ? build.ma > 0.001 : f >= T.ma;
+  const bbOn = build ? build.bb > 0.001 : f >= T.bb;
+  /** strokeDasharray/offset for a line that draws on, from a 0→1 rather than a
+   *  frame — `drawPath` in this episode's helpers takes frames. */
+  const dashAt = (q: number, len: number) => ({
+    strokeDasharray: len,
+    strokeDashoffset: len * (1 - Math.max(0, Math.min(1, q))),
+  });
 
   return (
     <>
@@ -947,12 +966,10 @@ export const BrokerPanel = ({
           width: PANEL.w,
           height: panelH,
           borderRadius: theme.layout.radius.lg,
-          /** ⚠ THE CARD IS BACK IN BARE MODE, and it is a different card. It
-           *  used to be the whole panel's, header and chrome inside it; the
-           *  header now stands above it and the chrome is gone, so what it
-           *  encloses is only the chart — which is what Simon asked for:
-           *  "berikan window putih untuk chartnya sebagai background". */
-          background: C.surface,
+          /** ⚠ IN BARE MODE THE CARD IS DRAWN SEPARATELY, below, because it has
+           *  to open on its own clock while the things inside it wait. This
+           *  container is then only a coordinate system. */
+          background: bare ? "transparent" : C.surface,
           /* the panel's own outline fades as the mask takes over — otherwise
          it rides the shrink as a second, nested card border. C.border is
          #D8DBE0; the alpha is what animates */
@@ -964,6 +981,34 @@ export const BrokerPanel = ({
           overflow: bare ? "visible" : "hidden",
         }}
       >
+        {/* ═══ THE WINDOW ═══  Simon: "pertama muncul dulu windownya, dari titik
+            di tengah, terus width nya memanjang, terus heightnya memanjang".
+
+            ⚠ ITS WIDTH AND HEIGHT, NOT A SCALE. Scaled up from a point, the
+            corner radius would grow with it and the card would arrive as a
+            lozenge becoming a rectangle; run as w then h it is a line drawn out
+            from the centre that then opens, and its corners are the corners it
+            keeps. */}
+        {bare && (
+          <div
+            style={{
+              position: "absolute",
+              left: PANEL.w / 2,
+              top: panelH / 2,
+              /** ⚠ BOTH RUN FROM A POINT, NOT FROM NOTHING. Scaled from 0 the
+               *  width phase would draw a bar with no height — invisible — and
+               *  the window would seem to appear when its SECOND move started.
+               *  `seed` is that point's own size, so what opens is a dot, then
+               *  a line, then the box. */
+              width: WIN_SEED + (PANEL.w - WIN_SEED) * (build?.win.w ?? 1),
+              height: WIN_SEED + (panelH - WIN_SEED) * (build?.win.h ?? 1),
+              transform: "translate(-50%, -50%)",
+              borderRadius: theme.layout.radius.lg,
+              background: C.surface,
+            }}
+          />
+        )}
+
         {/* the chart's own ground — a wash, hue-locked to the palette */}
         {!bare && (
         <div
@@ -978,8 +1023,10 @@ export const BrokerPanel = ({
         />
         )}
 
-        {/* ── header: it belongs to whichever chart is up ── */}
-        {CHARTS.map((ch, i) => {
+        {/* ── header: it belongs to whichever chart is up ──
+            ⚠ GONE IN BARE MODE — Simon deleted the ticker group. See BARE. */}
+        {!bare &&
+        CHARTS.map((ch, i) => {
           const o = alpha(i);
           if (o <= 0.001) return null;
           return (
@@ -988,7 +1035,7 @@ export const BrokerPanel = ({
                 style={{
                   position: "absolute",
                   left: HEAD.x,
-                  top: bare ? BARE.headTop : 36,
+                  top: 36,
                   display: "flex",
                   alignItems: "center",
                   gap: HEAD.gap,
@@ -1262,7 +1309,12 @@ export const BrokerPanel = ({
                 </g>
               ))}
 
-              {/* the tape is simply THERE — no entrance */}
+              {/* the tape is simply THERE — no entrance, unless a caller has
+                  asked for one. ⚠ ALL AT ONCE WHEN IT DOES — Simon: "lalu
+                  chartnya muncul dulu, langsung semua". A tape that builds bar
+                  by bar is a market happening; this one is a chart being put on
+                  screen, and the scene is about what gets piled on it after. */}
+              <g opacity={build ? build.tape : 1}>
               {ch.bars.map((b, i) => {
                 const x = X(i);
                 const top = Math.min(Y(b.o), Y(b.c));
@@ -1289,6 +1341,7 @@ export const BrokerPanel = ({
                   </g>
                 );
               })}
+              </g>
 
               {/* ── the market structure, traced by hand ── */}
               {zigOn && (
@@ -1442,7 +1495,7 @@ export const BrokerPanel = ({
 
               {/* ── the bands, under the average ── */}
               {isBmri && bbOn && (
-                <g opacity={progress(f, T.bb, theme.motion.revealF)}>
+                <g opacity={build ? build.bb : progress(f, T.bb, theme.motion.revealF)}>
                   <path
                     d={`${pathOf(ch.bb.upper, X, Y)} ${ch.bb.lower
                       .map((v, i) =>
@@ -1465,12 +1518,9 @@ export const BrokerPanel = ({
                       strokeWidth={theme.layout.stroke.band}
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      {...drawPath(
-                        f,
-                        T.bb,
-                        T.drawOver,
-                        lenOf(band, X, Y),
-                      )}
+                      {...(build
+                        ? dashAt(build.bb, lenOf(band, X, Y))
+                        : drawPath(f, T.bb, T.drawOver, lenOf(band, X, Y)))}
                     />
                   ))}
                 </g>
@@ -1485,7 +1535,9 @@ export const BrokerPanel = ({
                   strokeWidth={theme.layout.stroke.ma}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, X, Y))}
+                  {...(build
+                    ? dashAt(build.ma, lenOf(ch.ma, X, Y))
+                    : drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, X, Y)))}
                 />
               )}
 
@@ -1533,10 +1585,38 @@ export const BrokerPanel = ({
                     STUDY.pane -
                     STUDY.inset -
                     t * (STUDY.pane - STUDY.labelH - STUDY.inset * 2);
-                  const path = (vs: (number | null)[], t: (v: number) => number) =>
-                    vs
-                      .map((v, i) => (v === null ? "" : `${i === 0 || vs[i - 1] === null ? "M" : "L"}${X(i).toFixed(1)},${py(t(v)).toFixed(1)}`))
-                      .join(" ");
+                  /**
+                   * ⚠ A CURVE, NOT A POLYLINE — Simon: "dibuat smooth aja,
+                   * jangan berantakan". Straight segments between 105 points
+                   * put a corner on every bar, and 105 corners is what
+                   * "berantakan" looks like however calm the numbers are. This
+                   * is Catmull-Rom through the same points, written as cubics,
+                   * so the line passes through every value it reports and only
+                   * the path BETWEEN them is invented.
+                   *
+                   * ⚠ TENSION 0.6, NOT 1. A full Catmull-Rom overshoots on a
+                   * sharp turn, and this pane has a hard ceiling and floor —
+                   * an overshoot at 99 would draw above the top of its own box.
+                   */
+                  const path = (vs: (number | null)[], t: (v: number) => number) => {
+                    const pt = vs
+                      .map((v, i) => (v === null ? null : { x: X(i), y: py(t(v)) }))
+                      .filter((q): q is { x: number; y: number } => q !== null);
+                    if (pt.length < 2) return "";
+                    let d = `M${pt[0].x.toFixed(1)},${pt[0].y.toFixed(1)}`;
+                    for (let i = 0; i < pt.length - 1; i++) {
+                      const p0 = pt[i - 1] ?? pt[i];
+                      const p1 = pt[i];
+                      const p2 = pt[i + 1];
+                      const p3 = pt[i + 2] ?? p2;
+                      const k = 0.6 / 3;
+                      d +=
+                        `C${(p1.x + (p2.x - p0.x) * k).toFixed(1)},${(p1.y + (p2.y - p0.y) * k).toFixed(1)}` +
+                        ` ${(p2.x - (p3.x - p1.x) * k).toFixed(1)},${(p2.y - (p3.y - p1.y) * k).toFixed(1)}` +
+                        ` ${p2.x.toFixed(1)},${p2.y.toFixed(1)}`;
+                    }
+                    return d;
+                  };
                   const band = (t: number) => (
                     <line
                       key={t}
@@ -1633,7 +1713,10 @@ export const BrokerPanel = ({
                   );
                 })}
 
-              {AXIS.map((t, i) => (
+              {/* ⚠ NO MONTH ROW IN BARE MODE — Simon: "hapus juga Apr Mei Jun
+                  Jul Agu Sep". */}
+              {!bare &&
+                AXIS.map((t, i) => (
                 <text
                   key={t}
                   x={
@@ -1641,7 +1724,7 @@ export const BrokerPanel = ({
                   }
                   /* the panel clips: a baseline below its height is a label
                  cut in half */
-                  y={studies ? STUDY.axisY : plotTop + plotH + 34}
+                  y={plotTop + plotH + 34}
                   textAnchor="middle"
                   fontFamily={font}
                   fontSize={UI.size}
@@ -1650,7 +1733,7 @@ export const BrokerPanel = ({
                 >
                   {t}
                 </text>
-              ))}
+                ))}
             </svg>
           );
         })}

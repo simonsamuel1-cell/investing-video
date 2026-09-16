@@ -1567,10 +1567,25 @@ export const PANEL10 = {
   /** ⚠ WHERE ROUND SIX CLEARS. Asserted below rather than typed twice. */
   at: 8270,
   to: 9110,
-  panel: { at: 8270, over: 30 },
-  zig: { at: 8320, over: 46 },
+  /**
+   * ⚠ SEVEN ARRIVALS, IN SIMON'S ORDER: the window, the tape, the average, the
+   * bands, the structure, then RSI, Stoch and MACD. Nothing shares a frame with
+   * anything else — the whole scene is that they keep coming.
+   *
+   * The window opens in two moves, width then height; `over` is each of them,
+   * so it is up on `at + over × 2`.
+   */
+  win: { at: 8270, over: 22 },
+  tape: { at: 8322, over: 24 },
+  ma: { at: 8360, over: 30 },
+  bb: { at: 8404, over: 30 },
+  zig: { at: 8448, over: 40 },
+  /** ⚠ AND THEN THE CHART GIVES UP ITS ROOM, anchored at the top, before the
+   *  first study needs it. */
+  shrink: { at: 8520, over: 34 },
+  studies: { at: 8570, step: 46, over: 28 },
+  /** Kept for whatever puts the two levels back — see scenes/Overload.tsx. */
   levels: { at: 8356, over: 40 },
-  studies: { at: 8400, step: 44, over: 26 },
 } as const;
 
 {
@@ -1581,20 +1596,36 @@ export const PANEL10 = {
   if (V.at !== ROW6.from + ROW6.over) {
     fail(`SC10 opens at ${V.at}, but round six clears at ${ROW6.from + ROW6.over}`);
   }
-  /** ⚠ THE CHART HAS TO BE THERE BEFORE ANYTHING IS DRAWN ON IT. A level or a
-   *  zigzag fading up on a panel that is still arriving is a reading of a chart
-   *  nobody has seen yet. */
-  const ready = V.panel.at + V.panel.over;
-  ([["zigzag", V.zig.at], ["levels", V.levels.at], ["studies", V.studies.at]] as [string, number][]).forEach(
-    ([n, at]) => {
-      if (at < ready) fail(`SC10's ${n} start at ${at}, before its panel has arrived at ${ready}`);
-    },
-  );
-  /** ⚠ AND THE PILE FINISHES INSIDE THE SENTENCE THAT DESCRIBES IT — 8536 is
-   *  the last frame of "Menambahkan banyak indikator…". */
-  const done = V.studies.at + 2 * V.studies.step + V.studies.over;
-  if (done > 8536) fail(`SC10 is still stacking at ${done}, after the sentence about it ends on 8536`);
+  /**
+   * ⚠ ONE AT A TIME, AND CHECKED AS SUCH. Simon numbered them, so the order is
+   * the specification — and a table that merely happens to be in order today is
+   * a table that stops being in order the first time one number is nudged.
+   */
+  const steps: [string, number, number][] = [
+    ["window", V.win.at, V.win.over * 2],
+    ["tape", V.tape.at, V.tape.over],
+    ["moving average", V.ma.at, V.ma.over],
+    ["bollinger bands", V.bb.at, V.bb.over],
+    ["zigzag", V.zig.at, V.zig.over],
+    ["shrink", V.shrink.at, V.shrink.over],
+    ["RSI", V.studies.at, V.studies.over],
+    ["Stoch", V.studies.at + V.studies.step, V.studies.over],
+    ["MACD", V.studies.at + V.studies.step * 2, V.studies.over],
+  ];
+  steps.forEach(([n, at, over], i) => {
+    if (i === 0) return;
+    const [pn, pat, pover] = steps[i - 1];
+    if (at < pat + pover) {
+      fail(`SC10's ${n} starts at ${at}, before ${pn} has finished at ${pat + pover}`);
+    }
+  });
+  if (V.win.at !== V.at) fail(`SC10's window opens at ${V.win.at}, not when the scene does at ${V.at}`);
+  const done = steps[steps.length - 1][1] + steps[steps.length - 1][2];
   if (V.to <= done) fail(`SC10 ends at ${V.to}, before it has finished arriving at ${done}`);
+  /** ⚠ AND THE STUDIES LAND ON THE SENTENCE ABOUT INDICATORS THAT READ ALIKE —
+   *  8566–8856, which is what three oscillators under one tape are. */
+  if (V.studies.at < 8566) fail(`SC10's studies start at ${V.studies.at}, before the sentence about them`);
+  if (done > 8856) fail(`SC10's studies finish at ${done}, after that sentence ends on 8856`);
 }
 
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
