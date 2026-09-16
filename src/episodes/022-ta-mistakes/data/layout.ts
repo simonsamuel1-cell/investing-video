@@ -8,6 +8,7 @@
 import { GRID_PAD_X, candleWidth, gridOf, theme, columns, inset } from "../../../core";
 import type { Rect } from "../../../core";
 import { CARD_LIST } from "./timing";
+import { SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
 
 const PLOT = theme.stage.plot;
 const CARD = theme.stage.card;
@@ -722,7 +723,6 @@ export const PROVE_BOX = (() => {
  */
 export const BREAKOUT_BOX = (() => {
   const [left, right] = halves();
-  const chartH = 430;
   /**
    * ⚠ NO HEADING ROW ANY MORE — Simon: "taro di dalem windownya aja, taro pojok
    * kiri atas". The names moved inside their own cards, so the 78px that held
@@ -732,6 +732,22 @@ export const BREAKOUT_BOX = (() => {
    */
   const toBox = 86;
   const toVerdict = 48;
+  /**
+   * ⚠ THE CHART'S OWN HEIGHT, AND IT DOES NOT MOVE. Simon lengthened the
+   * WINDOW — "panjangin height kedua windows hingga sell dan loss 20% di window
+   * kanan muat" — so the room comes out of the card, not out of the two tapes
+   * he has already approved the shape of. 301 is what both plots have been
+   * since ss06 and ss07 were traced.
+   */
+  const plotH = 301;
+  /** The inset a plot keeps from a card edge when nothing is asking for more. */
+  const rim = 34;
+  /**
+   * And from the top edge, where the window's own name sits. 76 is the measured
+   * number: at this inset a heading's ink ends 14px above the first candle, and
+   * nothing is drawn behind the words.
+   */
+  const headroom = 76;
   /** Half the type that sits above the rule and below the verdict row. */
   const half = 24;
   /**
@@ -771,7 +787,39 @@ export const BREAKOUT_BOX = (() => {
    * mark was a bare badge sitting 22px under the low; the 30 makes it 95, and
    * deriving it is the only way the two numbers cannot drift apart.
    */
-  const under = mark.dot + mark.gap + mark.pill + mark.floor;
+  /**
+   * ═══ AND THE CARD IS AS TALL AS ITS DEEPEST MARK NEEDS ═══
+   *
+   * ⚠ THIS IS WHY THE WINDOWS GREW. Every mark now hangs BELOW its bar's low,
+   * and the sideways exit is on a bar 81% of the way down its own plot — so its
+   * label reaches 73px past the floor of the chart, where the trending entry
+   * (on the lowest wick there is, and therefore ON the floor) reaches 85. A card
+   * that only had `rim` under its chart could hold neither.
+   *
+   * ⚠ AND IT IS SOLVED, NOT TRIED. The reach depends on where the bar sits in
+   * the plot, which depends on the plot's height, which is what the card is
+   * being sized around — get it by eye and it is right until a tape is
+   * re-traced. Both cards then take the taller of the two, because they must
+   * stay the same size, and each spends its own leftover on the inset above.
+   */
+  const tapes = [SETUP_WORKS, SETUP_FAILS];
+  const bottom = tapes.map((t, i) => {
+    const lo = Math.min(...t.map((b) => b.l));
+    const hi = Math.max(...t.map((b) => b.h));
+    /** 0 at the top of the plot, 1 on its floor. */
+    const down = (v: number) => (hi - v) / (hi - lo);
+    const reach = [
+      { bar: SETUP_TRADE.buy[i], h: mark.dot + mark.gap + mark.pill },
+      { bar: SETUP_TRADE.sell[i], h: mark.dot + mark.gap + mark.pill + mark.stack + mark.note },
+    ].map((m) => m.h - plotH * (1 - down(t[m.bar].l)));
+    return Math.max(rim, Math.max(...reach) + mark.floor);
+  });
+  const chartH = Math.ceil(plotH + headroom + Math.max(...bottom));
+  /** ⚠ THE TOP INSET IS THE REMAINDER, so both plots are exactly `plotH` tall
+   *  however the rounding falls. Rounding the two insets independently would
+   *  leave the charts a pixel apart in height, which is the one thing about
+   *  this pair that has to hold. */
+  const padTop = bottom.map((b) => Math.round(chartH - plotH - b));
   const height = toBox + chartH + toVerdict + half * 2;
   const A = theme.stage.active;
   const rule = A.y + (A.h - height) / 2 + half;
@@ -797,29 +845,20 @@ export const BREAKOUT_BOX = (() => {
     verdict: { y: Math.round(rule + toBox + chartH + toVerdict) },
     mark,
     /**
-     * ⚠ THE TWO PLOTS SIT DIFFERENTLY IN THEIR CARDS, AND THE SAME HEIGHT.
+     * ⚠ THE TWO PLOTS SIT DIFFERENTLY IN THEIR CARDS, AND ARE THE SAME HEIGHT.
      * I wrote the opposite here once ("two plots inset differently inside boxes
      * of the same size are two charts drawn to look like a pair") and Simon
-     * overruled it: ss07 opens high and its tape was brushing "Market
-     * sideways", so the right chart comes down.
+     * overruled it. The rule that survives is the one that matters — the two
+     * charts are the SAME SIZE, so nothing about their shapes is being compared
+     * unfairly. What differs is only where that size sits inside its card, and
+     * that is now decided by each card's own deepest mark rather than chosen.
      *
-     * The rule that survives is the one that actually matters — the two charts
-     * are the SAME SIZE, so nothing about their shapes is being compared
-     * unfairly. What differs is only where that size sits inside its card. The
-     * left leaves `under` beneath because its "Buy" hangs below the lowest bar;
-     * the right's own entry is at bar 16, well inside its plot, so it spends
-     * exactly that room on the clearance it does need, at the top.
-     *
-     * ⚠ AND THE LEFT'S OWN TOP CLEARANCE IS LUCK, NOT GEOMETRY. Its plot starts
-     * at 351, ABOVE its heading's ink — it is clear only because ss06 opens low
-     * and nothing reaches up there. Measured at 0 pixels behind the heading;
-     * re-trace ss06 with a higher opening and this side will need the same
-     * treatment.
+     * ⚠ AND THE TOP CLEARANCE IS NO LONGER LUCK. It used to be: the left plot
+     * started ABOVE its heading's ink and was clear only because ss06 opens low.
+     * Every card now gets at least `headroom` over its chart, so re-tracing
+     * either tape cannot put a candle behind a heading.
      */
-    pad: [
-      { x: 34, top: 34, bottom: under },
-      { x: 34, top: under, bottom: 34 },
-    ],
+    pad: padTop.map((t) => ({ x: rim, top: t, bottom: chartH - plotH - t })),
   };
 })();
 
@@ -844,10 +883,11 @@ export const BREAKOUT_BOX = (() => {
    *  wrong. */
   const h = b.pad.map((q, i) => b.boxes[i].h - q.top - q.bottom);
   if (h[0] !== h[1]) fail(`the two plots are ${h[0]} and ${h[1]} tall`);
-  /** And the right one has to clear its own heading, which is why it moved. */
-  if (b.boxes[1].y + b.pad[1].top <= b.boxes[1].y + b.head.y + 16) {
-    fail("the right chart still starts inside its heading");
-  }
+  /** ⚠ AND BOTH HAVE TO CLEAR THEIR OWN HEADING, not just the one that once
+   *  did not. The ink of a tag centred on `head.y` ends about 16px below it. */
+  b.pad.forEach((q, i) => {
+    if (q.top <= b.head.y + 16) fail(`chart ${i + 1} starts inside its heading`);
+  });
   if (b.verdict.y + 24 > theme.captionBand.top) {
     fail(`the verdicts sit at ${b.verdict.y}, inside the subtitle band`);
   }

@@ -866,3 +866,43 @@ export const SETUP_FAILS: Bar[] = SS0607.ss07.ohlc as Bar[];
   if (end(SETUP_WORKS) <= 0) fail("the setup that is meant to work does not finish higher");
   if (end(SETUP_FAILS) >= 0) fail("the setup that is meant to fail does not finish lower");
 }
+
+/**
+ * ═══ WHERE THE TRADE IS READ OFF EACH TAPE ═══
+ *
+ * All four bars are Simon's: the trending entry on the lowest wick there is,
+ * the sideways entry on "candle ke 16", the trending exit on "candle ke 3 dari
+ * kanan", the sideways exit on the last bar but one.
+ *
+ * ⚠ THE FIRST IS FOUND, THE OTHER THREE ARE COUNTED, and they are different
+ * kinds of claim. The trending support is the lowest low there IS, so it has to
+ * be searched for and will follow ss06 if that tape is ever re-traced; the rest
+ * are positions Simon picked by eye off the pictures, and a position is what
+ * they have to stay.
+ *
+ * ⚠ AND THIS LIVES WITH THE TAPES BECAUSE THE WINDOW IS SOLVED FROM IT. Every
+ * mark hangs BELOW its bar's low, so how much room a card needs under its chart
+ * depends on how far down the plot that bar already sits — layout.ts cannot
+ * size the window without knowing which bars these are.
+ */
+export const SETUP_TRADE = {
+  buy: [SETUP_WORKS.reduce((best, b, i) => (b.l < SETUP_WORKS[best].l ? i : best), 0), 15],
+  sell: [SETUP_WORKS.length - 3, SETUP_FAILS.length - 2],
+} as const;
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  const T = [SETUP_WORKS, SETUP_FAILS];
+  if (T[0][SETUP_TRADE.buy[0]].l !== Math.min(...T[0].map((b) => b.l))) {
+    fail("the trending entry is not on the lowest wick");
+  }
+  if (SETUP_TRADE.buy[1] !== 15) fail("the sideways entry is not candle 16");
+  if (SETUP_TRADE.sell[0] !== T[0].length - 3) fail("the trending exit is not the third bar from the right");
+  if (SETUP_TRADE.sell[1] !== T[1].length - 2) fail("the sideways exit is not the second bar from the right");
+  /** ⚠ AND EVERY TRADE HAS TO BE A TRADE: bought before it is sold. */
+  [0, 1].forEach((i) => {
+    if (SETUP_TRADE.sell[i] <= SETUP_TRADE.buy[i]) fail(`tape ${i + 1} is sold on or before the bar it is bought`);
+  });
+}

@@ -25,7 +25,7 @@ import {
 } from "../../../core";
 import { BREAKOUT_BOX } from "../data/layout";
 import { BREAKOUT } from "../data/timing";
-import { SETUP_FAILS, SETUP_WORKS } from "../data/series";
+import { SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = BREAKOUT;
@@ -59,24 +59,25 @@ const GRIDS = B.boxes.map((r, i) =>
 const ROUND = 16;
 const M = B.mark;
 
-/**
- * ═══ WHERE THE TRADE IS READ OFF ═══
- *
- * ⚠ THE LEFT ENTRY IS FOUND, THE RIGHT ONE IS COUNTED. Simon named them
- * differently and they are different KINDS of claim: on the trending tape the
- * support is the lowest wick there is, so it must be searched for and will
- * follow ss06 if that is ever re-traced; on the sideways tape it is "candle ke
- * 16", a bar Simon picked by eye off ss07 because that is where the range's
- * floor is — a number, and a number is what it has to stay.
- */
-const BUY_AT = [
-  TAPES[0].reduce((best, b, i) => (b.l < TAPES[0][best].l ? i : best), 0),
-  15,
-];
-/** And both trades are closed on the last bar but one — Simon, for both. */
-const SELL_AT = TAPES.map((t) => t.length - 2);
+/** Which bar each mark is read off. Solved in series.ts, because the window's
+ *  own height is solved from it. */
+const BUY_AT = SETUP_TRADE.buy;
+const SELL_AT = SETUP_TRADE.sell;
 /** The level each entry was taken at: the low of the bar it is read off. */
 const SUPPORT = BUY_AT.map((k, i) => TAPES[i][k].l);
+
+/**
+ * ⚠ THE DOT BREATHES, IN SECONDS. Simon asked for a pulse, and a pulse is a
+ * wall-clock rhythm — written in frames it would beat twice as fast the day
+ * this episode is rendered at 120. One ring behind another, out and gone, then
+ * a rest: a ring that reappears the instant the last one dies reads as a
+ * loading spinner rather than as a heartbeat.
+ *
+ * ⚠ AND THE RING NEVER SITS AT THE DOT'S OWN EDGE. It is skipped entirely until
+ * its turn comes round, because a ring clamped at the start of its travel is a
+ * second outline around the dot that is simply always there.
+ */
+const PULSE = { every: 1.7, ring: 1.0, lag: 0.28, to: 3.4, peak: 0.5 };
 
 /**
  * ═══ WHERE A MARK LANDS ═══  Solved once, so the drawing and the checks at the
@@ -93,28 +94,26 @@ const SUPPORT = BUY_AT.map((k, i) => TAPES[i][k].l);
  * hang over the edge, so the group slides in while the dot stays where the
  * price is. The dot is the claim; the label only has to be findable.
  *
- * ⚠ AND IT IS PUSHED CLEAR OF ITS OWN SUPPORT LINE. The sideways chart closes
- * BELOW the level it bought, so its "Sell" hangs up into exactly the band the
- * level runs through — and a caption laid over a line ends the line as far as
- * the eye is concerned, which on the right card hid 135px of it. Pushing the
- * group instead of breaking the line keeps the level a level; the extra
- * distance is only ever spent on the side that needs it.
+ * ⚠ AND EVERY MARK HANGS BELOW THE LOW. It used to be that the sideways exit
+ * hung above its candle, which put its caption across the level it had bought —
+ * Simon moved it under ("taro di bawah candle aja deh") and the window grew to
+ * hold it. So there is no longer a side to choose: the dot is on the low wick
+ * and the words are beneath it, four times over.
+ *
+ * ⚠ IT IS STILL PUSHED CLEAR OF ITS OWN SUPPORT LINE, downward, if the line
+ * runs through it. Nothing triggers that today — every mark clears its level by
+ * geometry now — but a re-traced tape could put a bar back in the way, and a
+ * caption laid over a line ends the line as far as the eye is concerned.
  */
-const markBox = (i: number, bar: number, side: "low" | "high", note: boolean) => {
+const markBox = (i: number, bar: number, note: boolean) => {
   const g = GRIDS[i];
   const r = B.boxes[i];
   const x = g.x(bar);
-  const y = g.y(side === "low" ? TAPES[i][bar].l : TAPES[i][bar].h);
+  const y = g.y(TAPES[i][bar].l);
   const h = M.pill + (note ? M.stack + M.note : 0);
   const level = g.y(SUPPORT[i]);
-  let top = side === "low" ? y + M.dot + M.gap : y - M.dot - M.gap - h;
-  /** ⚠ AND IT ONLY MOVES IF THE LINE ACTUALLY RUNS THROUGH IT, and then only
-   *  further along the way it already hangs. Pushed to the near side instead,
-   *  a group would cross back over the candle it is naming — which is the one
-   *  thing Simon ruled out. Today this fires once, on the sideways card. */
-  if (level > top && level < top + h) {
-    top = side === "low" ? level + M.stack : level - M.stack - h;
-  }
+  let top = y + M.dot + M.gap;
+  if (level > top && level < top + h) top = level + M.stack;
   const left = Math.min(
     Math.max(x - M.group / 2, r.x + M.edge),
     r.x + r.w - M.edge - M.group,
@@ -122,25 +121,47 @@ const markBox = (i: number, bar: number, side: "low" | "high", note: boolean) =>
   return { x, y, left, top, h, card: r };
 };
 
-/** A dot on a wick and the label that hangs off it. */
+/** A pulsing dot on a wick and the label that hangs off it. */
 const Mark = ({
-  i, bar, side, word, fill, note, show,
+  i, bar, at, word, fill, note, show,
 }: {
   i: number;
   bar: number;
-  /** Which wick the dot sits on, and therefore which way the label hangs. */
-  side: "low" | "high";
+  /** When the mark arrives, in scene frames — the beat the pulse counts from. */
+  at: number;
   word: string;
   fill: string;
   note?: string;
   show: { opacity: number; dy: number };
 }) => {
   const c = usePalette();
-  const { x, y, left, top } = markBox(i, bar, side, note !== undefined);
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const { x, y, left, top } = markBox(i, bar, note !== undefined);
   if (show.opacity <= 0.001) return null;
+
+  const period = m.sec(PULSE.every);
+  const phase = (f - at) % period;
+  const rings = [0, m.sec(PULSE.lag)]
+    .map((lag) => (phase - lag) / m.sec(PULSE.ring))
+    .filter((q) => q >= 0 && q <= 1)
+    .map((q) => ({ r: M.dot * (1 + q * (PULSE.to - 1)), op: (1 - q) * PULSE.peak }));
+
   return (
     <>
       <Layer opacity={show.opacity}>
+        {rings.map((ring, k) => (
+          <circle
+            key={k}
+            cx={x}
+            cy={y}
+            r={ring.r}
+            fill="none"
+            stroke={c.indigo}
+            strokeWidth={theme.shape.rule}
+            opacity={ring.op}
+          />
+        ))}
         <circle cx={x} cy={y} r={M.dot} fill={c.indigo} />
       </Layer>
       <div
@@ -354,23 +375,17 @@ export const Breakout = () => {
               <Mark
                 i={i}
                 bar={BUY_AT[i]}
-                side="low"
+                at={V.marks[i].buy.at - V.at}
                 word="Buy"
                 fill={theme.color.ok}
                 show={textReveal(g, V.marks[i].buy.at, V.marks[i].buy.over)}
               />
-              {/* ═══ AND THE EXIT ═══  Simon: "Sell" on the last bar but one —
-                  hanging BELOW it on the trending chart, ABOVE it on the
-                  sideways one, with what the trade came to underneath.
-
-                  ⚠ THE SIDE IS NOT A STYLE CHOICE. Left, the exit is high and
-                  the room is beneath it; right, the exit is low and the room is
-                  above. Each label hangs into the empty half of its own
-                  chart. */}
+              {/* ═══ AND THE EXIT ═══  Simon: "Sell" under the candle on both
+                  charts now, with what the trade came to underneath it. */}
               <Mark
                 i={i}
                 bar={SELL_AT[i]}
-                side={i === 0 ? "low" : "high"}
+                at={V.marks[i].sell.at - V.at}
                 word="Sell"
                 fill={theme.color.warn}
                 note={i === 0 ? "Profit 20%" : "Loss 20%"}
@@ -409,14 +424,12 @@ export const Breakout = () => {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/Breakout: ${m}`);
   };
-  /** The left entry must be on the lowest bar, which is what Simon asked for;
-   *  the right one on candle 16, counted his way — from one. */
-  const lowest = Math.min(...TAPES[0].map((b) => b.l));
-  if (TAPES[0][BUY_AT[0]].l !== lowest) fail("the left Buy is not on the lowest candle");
-  if (BUY_AT[1] !== 15) fail(`the right Buy is on candle ${BUY_AT[1] + 1}, not candle 16`);
-  SELL_AT.forEach((k, i) => {
-    if (k !== TAPES[i].length - 2) fail(`window ${i + 1}'s Sell is not on the last bar but one`);
-  });
+  /** ⚠ THE PULSE HAS TO BREATHE, not spin. A ring whose travel fills the whole
+   *  period never leaves a gap between one ring and the next, and the rest is
+   *  the half of a pulse that reads as a pulse. */
+  if (PULSE.ring + PULSE.lag >= PULSE.every) {
+    fail(`the pulse rings overlap: ${PULSE.ring}s + ${PULSE.lag}s lag in a ${PULSE.every}s loop`);
+  }
   /** ⚠ AND THE LEVEL WAITS FOR ITS OWN TAPE. timing.ts can only bound this with
    *  a guessed bar count; the real length lives here, so the check does too. */
   V.cols.forEach((col, i) => {
@@ -439,13 +452,13 @@ export const Breakout = () => {
    * wider of the two — go anywhere it liked.
    */
   const marks = [0, 1].flatMap((i) => {
-    const one = (bar: number, side: "low" | "high", note: boolean, name: string) => {
-      const q = markBox(i, bar, side, note);
+    const one = (bar: number, note: boolean, name: string) => {
+      const q = markBox(i, bar, note);
       return { i, name, card: q.card, x0: q.left, x1: q.left + M.group, y0: q.top, y1: q.top + q.h };
     };
     return [
-      one(BUY_AT[i], "low", false, `window ${i + 1}'s Buy`),
-      one(SELL_AT[i], i === 0 ? "low" : "high", true, `window ${i + 1}'s Sell`),
+      one(BUY_AT[i], false, `window ${i + 1}'s Buy`),
+      one(SELL_AT[i], true, `window ${i + 1}'s Sell`),
     ];
   });
   for (const m of marks) {
