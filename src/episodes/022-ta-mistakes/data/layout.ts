@@ -1150,52 +1150,69 @@ export const PLAN = {
   if (P.b1.chipY - pillH(P.b1.chipSize) / 2 < PLAN_A.y) fail("SC15's mistake chip is above the safe area");
 }
 
-/* ═══ SC11 · ONE WINDOW, CENTRED ═════════════════════════════════════════
+/* ═══ SC11 · THE BIG WINDOW SHIFTS, AND A SMALL ONE JOINS IT ═════════════
  *
- * ⚠ A SHIFT, NOT A RESIZE — Simon: "remove 1 window, lalu geser window 1 nya
- * lagi ke tengah". The window that is left is still exactly the size it was as
- * the left half of the pair; only its x moved. That is why the size is taken
- * from `halves()` and then re-centred rather than written out: "the same window
- * moved" is a claim, and the claim is asserted below.
+ * ⚠ Simon: "setelah animasinya selesai, windownya geser kiri, lalu muncul
+ * window baru di sebelah kanan yang ukurannya 2x lipat lebih kecil."
  *
- * ⚠ AND IT IS A LIST OF ONE, ON PURPOSE. Simon is still deciding — this scene
- * has been one window, then two, then one again. `COUNT` is the whole
- * difference; everything downstream maps over the list and does not care how
- * long it is.
+ * ⚠ THE PAIR IS CENTRED, WHICH IS WHAT DECIDES HOW FAR LEFT. "Geser kiri" does
+ * not name a destination, and the two that would: hard against the left margin,
+ * which leaves 418px of dead air on the right, or the group balanced on the
+ * frame. Simon has asked for balanced margins every time the question has come
+ * up, so the window slides exactly far enough for the pair to sit centred —
+ * 542 → 305, with 209px of margin either side of the two of them.
  *
- * ⚠ THE OUTER BOUNDS STAY AS THEY WERE, unused by the drawing but kept as the
- * thing the size is derived FROM. Delete it and 836 becomes a number somebody
- * typed.
+ * ⚠ AND "2x LEBIH KECIL" IS HALF IN BOTH DIRECTIONS — 418×320 against 836×640.
+ * Vertically it centres on the big window's own middle, so the two share a
+ * centre-line rather than a top or a bottom edge.
+ *
+ * ⚠ THE BIG WINDOW'S SIZE STILL COMES FROM `halves()`, even though nothing is
+ * halved any more. That is where 836×640 came from when the scene briefly had
+ * two windows, and deriving it keeps it a size rather than a number somebody
+ * typed. The W11_COUNT lever that went with that arrangement is gone: it
+ * described two EQUAL windows, and this is not that.
  */
 const W11_BOUNDS: Rect = { x: theme.stage.active.x, y: 230, w: theme.stage.active.w, h: 640 };
+const W11_SHAPE = halves(W11_BOUNDS)[0];
+
+/** ⚠ THE EPISODE'S OWN GAP, the one SC08 and SC09 put between a pair. */
+const W11_GAP = GAP;
+const W11_SMALL_SHAPE = { w: W11_SHAPE.w / 2, h: W11_SHAPE.h / 2 };
+const W11_ROW_W = W11_SHAPE.w + W11_GAP + W11_SMALL_SHAPE.w;
+const W11_ROW_X = (theme.canvas.width - W11_ROW_W) / 2;
+
+/** Where the big window stands before the shift, and where it lands. */
+const W11_FROM_X = (theme.canvas.width - W11_SHAPE.w) / 2;
+const W11_TO_X = W11_ROW_X;
+
+const W11_SMALL: Rect = {
+  x: W11_ROW_X + W11_SHAPE.w + W11_GAP,
+  y: W11_SHAPE.y + (W11_SHAPE.h - W11_SMALL_SHAPE.h) / 2,
+  ...W11_SMALL_SHAPE,
+};
 
 /**
- * How many windows the scene draws. 1 or 2 — nothing else is laid out.
- *
- * ⚠ TYPED `number`, NOT `1 | 2`, AND THAT IS NOT LAZINESS. A literal type here
- * narrows to whatever it currently is, and TypeScript then calls the branch for
- * the other value unreachable — so the assertions that guard the arrangement
- * Simon is not using would refuse to compile, and flipping this back would mean
- * editing the checks as well as the number. The point of this constant is that
- * it is the ONLY thing that changes.
- */
-const W11_COUNT: number = 1;
-
-/**
- * ⚠ THE INSET IS THE SAME ON THREE SIDES, and the bottom is deeper by exactly
- * the name's own band. A pattern drawing centred in its window with its name
- * under it is the reference's own arrangement; taking the name's room off the
- * plot rather than out of the margin is what keeps the drawing centred in what
- * is left instead of sitting low in the card.
+ * ⚠ THE INSET IS THE SAME ON THREE SIDES, and the bottom is deeper by the
+ * name's own band. ⚠ AND THE BAND IS TWICE THE TYPE, in both windows — that is
+ * what lets the small one be laid out by the same rule instead of by eye. The
+ * big window's 72 under 36px type is where the ratio came from.
  */
 const W11_PAD = 56;
-const W11_NAME = 72;
+const W11_TYPE = theme.text.chip.size;
+/** ⚠ HALF THE INSET, BUT NOT HALF THE TYPE. 18px is below anything else in
+ *  this library; the theme's smallest is what a half-size window gets. */
+const W11_SMALL_PAD = W11_PAD / 2;
+const W11_SMALL_TYPE = theme.text.axis.size;
 
-const plotOf = (card: Rect): Rect => ({
-  x: card.x + W11_PAD,
-  y: card.y + W11_PAD,
-  w: card.w - W11_PAD * 2,
-  h: card.h - W11_PAD * 2 - W11_NAME,
+const plotOf = (card: Rect, pad: number, type: number): Rect => ({
+  x: card.x + pad,
+  y: card.y + pad,
+  w: card.w - pad * 2,
+  h: card.h - pad * 2 - type * 2,
+});
+const nameOf = (card: Rect, pad: number, type: number) => ({
+  x: card.x + card.w / 2,
+  y: card.y + card.h - pad - type,
 });
 
 /** The grid's vertical head-room, shared so the scene and the solve below
@@ -1214,7 +1231,8 @@ export const W11_PLOT_PAD = 0.08;
  * exactly — and it keeps working the day `candleWidth`'s fraction or GRID_PAD_X
  * changes, which writing 0.68 and 18 into this file would not.
  *
- * ⚠ AND IT COMES OFF BOTH SIDES. The drawing stays where it was centred.
+ * ⚠ AND IT IS THE CANDLE WINDOW'S ONLY. The small window holds a line, which
+ * has no bodies to be too wide.
  */
 const W11_SHRINK = 20;
 const FLAG_DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
@@ -1229,30 +1247,46 @@ const narrowed = (box: Rect): Rect => {
   return { ...box, x: box.x + dw / 2, w: box.w - dw };
 };
 
-/** ⚠ THE PAIR IS STILL WHAT DECIDES THE SIZE, even when only one is drawn. */
-const W11_PAIR = halves(W11_BOUNDS);
-const W11_CARDS: Rect[] =
-  W11_COUNT === 2
-    ? W11_PAIR
-    : [{ ...W11_PAIR[0], x: (theme.canvas.width - W11_PAIR[0].w) / 2 }];
+/**
+ * The big window at a point in its shift — 0 where it starts, 1 where it lands.
+ *
+ * ⚠ A FUNCTION, NOT TWO RECTS, because everything inside it has to travel: the
+ * plot, the grid solved from the plot, the candles on the grid and the wedge
+ * solved from the grid. Written as two states, the scene would have to slide a
+ * finished picture with a CSS transform — and this project's rule is that a
+ * chart's geometry belongs to the box it is in, not to a transform laid over it.
+ */
+export const bigAt = (t: number) => {
+  const card: Rect = { ...W11_SHAPE, x: W11_FROM_X + (W11_TO_X - W11_FROM_X) * t };
+  return {
+    card,
+    plot: narrowed(plotOf(card, W11_PAD, W11_TYPE)),
+    name: nameOf(card, W11_PAD, W11_TYPE),
+    type: W11_TYPE,
+  };
+};
 
 export const WIN11 = {
-  /** The box the window was cut out of — kept because the size derives from it. */
+  /** The box the window's size was cut out of — kept because the size derives. */
   bounds: W11_BOUNDS,
-  count: W11_COUNT,
-  cards: W11_CARDS,
-  /** Where the pattern is drawn inside each window, already narrowed so the
-   *  candle group itself is 20px less wide than the box would give it. */
-  plots: W11_CARDS.map((c) => narrowed(plotOf(c))),
+  /** ⚠ THE SMALL WINDOW DOES NOT MOVE. It arrives where it belongs. */
+  small: {
+    card: W11_SMALL,
+    plot: plotOf(W11_SMALL, W11_SMALL_PAD, W11_SMALL_TYPE),
+    name: nameOf(W11_SMALL, W11_SMALL_PAD, W11_SMALL_TYPE),
+    type: W11_SMALL_TYPE,
+  },
   plotPad: W11_PLOT_PAD,
   /**
-   * ⚠ THREE BARS OFF THE RIGHT, HIDDEN AND NOT REMOVED — Simon: "hide 3
-   * candlestick dari kanan". The three are the breakout, and the distinction
-   * matters twice over: the thirteen that remain keep the positions they had,
-   * and the price scale still reserves the room the hidden three need, so
-   * nothing moves when they come back. On a scene about not knowing what comes
-   * next, a chart that has quietly re-fitted itself around the missing future
-   * would be making the opposite point.
+   * ⚠ THREE BARS OFF THE RIGHT OF THE BIG WINDOW, HIDDEN AND NOT REMOVED —
+   * Simon: "hide 3 candlestick dari kanan". The three are the breakout, and the
+   * distinction matters twice over: the thirteen that remain keep the positions
+   * they had, and the price scale still reserves the room the hidden three need,
+   * so nothing moves when they come back.
+   *
+   * ⚠ AND THE SMALL WINDOW SHOWS ALL SIXTEEN — Simon: "termasuk 3 candlestick
+   * paling kanan". That difference is the only one between the two drawings
+   * besides the shape of the ink, and it is the whole point of showing both.
    */
   hidden: 3,
   wedge: {
@@ -1262,15 +1296,9 @@ export const WIN11 = {
     deg: 5,
     /** ⚠ ALREADY 3px, AND NAMED HERE SO IT IS ONE NUMBER. Simon asked for 3
      *  and `theme.shape.line` is 3; measured across the drawn diagonals it
-     *  renders 3–4px, the 4 being antialiasing. Kept as its own slot rather
-     *  than reaching into the theme, because this is the lever now. */
+     *  renders 3–4px, the 4 being antialiasing. */
     width: theme.shape.line,
   },
-  /** Centre of the pattern's name, under each plot. */
-  names: W11_CARDS.map((r) => ({
-    x: r.x + r.w / 2,
-    y: r.y + r.h - W11_PAD - W11_NAME / 2,
-  })),
 };
 
 /**
@@ -1310,67 +1338,54 @@ export const flagWedge = (g: Grid) => {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
-  if (W.cards.length !== W.count) fail(`SC11 lays out ${W.cards.length} windows but says it draws ${W.count}`);
-  /**
-   * ⚠ THE WINDOW IS THE SAME SIZE IT WAS AS HALF OF A PAIR. This is the whole
-   * of "geser, bukan resize", and it is the one thing a later edit could break
-   * without anything looking wrong — a window nudged to the middle by hand
-   * would almost certainly also be given a rounder width.
-   */
-  W.cards.forEach((r, i) => {
-    if (r.w !== W11_PAIR[0].w || r.h !== W11_PAIR[0].h) {
-      fail(`SC11's window ${i + 1} is ${r.w}×${r.h}, not the ${W11_PAIR[0].w}×${W11_PAIR[0].h} a half is`);
-    }
+  const start = bigAt(0);
+  const end = bigAt(1);
+  /** ⚠ IT SLIDES, IT DOES NOT TRAVEL. Same size at both ends, and only x moves
+   *  — the one thing a later edit to either position could break silently. */
+  if (start.card.w !== end.card.w || start.card.h !== end.card.h) fail("SC11's window changes size as it shifts");
+  if (start.card.y !== end.card.y) fail("SC11's window drifts vertically as it shifts");
+  if (end.card.x >= start.card.x) fail(`SC11's window shifts to ${end.card.x}, which is not left of ${start.card.x}`);
+  /** ⚠ AND IT STARTS ON THE FRAME'S CENTRE-LINE, where it has been standing. */
+  if (start.card.x + start.card.w / 2 !== theme.canvas.width / 2) fail("SC11's window does not start centred");
+  /** ⚠ THE PAIR IS BALANCED — this is what decided how far left it goes, so it
+   *  is the thing to assert rather than the distance. */
+  const leftAir = end.card.x - A.x;
+  const rightAir = A.x + A.w - (W.small.card.x + W.small.card.w);
+  if (Math.abs(leftAir - rightAir) > 0.5) fail(`SC11's pair leaves ${leftAir} left and ${rightAir} right`);
+  if (W.small.card.x - (end.card.x + end.card.w) !== W11_GAP) fail("SC11's pair is not split on the episode's own gap");
+  /** ⚠ HALF IN BOTH DIRECTIONS, and sharing the big window's centre-line. */
+  if (W.small.card.w * 2 !== end.card.w || W.small.card.h * 2 !== end.card.h) {
+    fail(`SC11's small window is ${W.small.card.w}×${W.small.card.h}, not half of ${end.card.w}×${end.card.h}`);
+  }
+  const mid = (r: Rect) => r.y + r.h / 2;
+  if (mid(W.small.card) !== mid(end.card)) fail("SC11's two windows do not share a centre-line");
+  /** ⚠ BOTH STAY INSIDE THE FRAME'S MARGINS. */
+  [end.card, W.small.card].forEach((r, i) => {
     if (r.x < A.x || r.x + r.w > A.x + A.w) fail(`SC11's window ${i + 1} reaches outside the safe area`);
+    if (r.y < A.y) fail(`SC11's window ${i + 1} starts above the safe area`);
+    if (r.y + r.h > theme.captionBand.top) fail(`SC11's window ${i + 1} reaches into the subtitle band`);
+    if (r.y < theme.logoZone.height) fail(`SC11's window ${i + 1} reaches into the logo zone`);
   });
-  /** ⚠ AND WITH ONE OF THEM, IT IS ON THE FRAME'S CENTRE-LINE. */
-  if (W.count === 1) {
-    const mid = W.cards[0].x + W.cards[0].w / 2;
-    if (mid !== theme.canvas.width / 2) fail(`SC11's window is centred on ${mid}, not on ${theme.canvas.width / 2}`);
-  }
-  /** ⚠ AND WITH TWO, THE PAIR FILLS THE BOX IT WAS CUT FROM, edge to edge. */
-  if (W.count === 2) {
-    const right = W.cards[1].x + W.cards[1].w;
-    if (W.cards[0].x !== W.bounds.x || right !== W.bounds.x + W.bounds.w) {
-      fail("SC11's pair does not fill the box it was cut from");
-    }
-  }
-  /** ⚠ THE PAIR STAYS INSIDE THE FRAME'S MARGINS, top and bottom. */
-  if (W.bounds.y < A.y) fail("SC11's window starts above the safe area");
-  if (W.bounds.y + W.bounds.h > theme.captionBand.top) {
-    fail(`SC11's window reaches ${W.bounds.y + W.bounds.h}, inside the subtitle band`);
-  }
-  if (W.bounds.y < theme.logoZone.height) fail("SC11's window reaches into the logo zone");
-  /** ⚠ THE DRAWING AND ITS NAME MAY NOT TOUCH. The plot's floor and the top of
-   *  the name's own band are the same line by construction, so what is checked
-   *  is that a line of type centred on that band still clears the floor. */
-  W.plots.forEach((p, i) => {
-    const n = W.names[i];
-    if (p.y + p.h > n.y - theme.text.chip.size / 2) {
-      fail(`SC11's window ${i + 1} draws its pattern into its own name`);
-    }
-    if (n.y + theme.text.chip.size / 2 > W.cards[i].y + W.cards[i].h) {
-      fail(`SC11's window ${i + 1} hangs its name past the bottom of the card`);
-    }
-    if (p.x < W.cards[i].x || p.x + p.w > W.cards[i].x + W.cards[i].w) {
-      fail(`SC11's window ${i + 1} draws wider than itself`);
-    }
+  /** ⚠ NEITHER DRAWING TOUCHES ITS OWN NAME, and the small one is laid out by
+   *  the same rule as the big one rather than by eye — which is exactly why it
+   *  has to be checked at the size where the rule is tightest. */
+  ([[start, "big"], [end, "big, shifted"], [{ ...W.small }, "small"]] as const).forEach(([w, n]) => {
+    if (w.plot.y + w.plot.h > w.name.y - w.type / 2) fail(`SC11's ${n} window draws its pattern into its own name`);
+    if (w.name.y + w.type / 2 > w.card.y + w.card.h) fail(`SC11's ${n} window hangs its name past the bottom of the card`);
+    if (w.plot.x < w.card.x || w.plot.x + w.plot.w > w.card.x + w.card.w) fail(`SC11's ${n} window draws wider than itself`);
   });
-  /** ⚠ THE GROUP REALLY IS 20px NARROWER, and this is the only place that can
-   *  say so — the shrink is solved, not typed, so a wrong solve would look
-   *  entirely plausible. Measured against the box it was cut from. */
-  W.plots.forEach((p, i) => {
-    const want = flagGroupW(plotOf(W.cards[i])) - W11_SHRINK;
-    if (Math.abs(flagGroupW(p) - want) > 0.01) {
-      fail(`SC11's candle group is ${flagGroupW(p).toFixed(1)}px, not the ${want.toFixed(1)} asked for`);
+  /** ⚠ THE GROUP REALLY IS 20px NARROWER, at both ends of the shift — the
+   *  shrink is solved, not typed, so a wrong solve would look plausible. */
+  [start, end].forEach((w) => {
+    const want = flagGroupW(plotOf(w.card, W11_PAD, W11_TYPE)) - W11_SHRINK;
+    if (Math.abs(flagGroupW(w.plot) - want) > 0.01) {
+      fail(`SC11's candle group is ${flagGroupW(w.plot).toFixed(1)}px, not the ${want.toFixed(1)} asked for`);
     }
-    if (Math.abs(p.x + p.w / 2 - (plotOf(W.cards[i]).x + plotOf(W.cards[i]).w / 2)) > 0.01) {
-      fail(`SC11's window ${i + 1} took its 20px off one side`);
-    }
+    const bare = plotOf(w.card, W11_PAD, W11_TYPE);
+    if (Math.abs(w.plot.x + w.plot.w / 2 - (bare.x + bare.w / 2)) > 0.01) fail("SC11 took its 20px off one side");
   });
-  /** ⚠ AND THE WIDENED WEDGE STAYS IN ITS OWN PLOT. Opening it 5° lifts the
-   *  mouth on both sides; far enough and it would be drawn outside the box. */
-  W.plots.forEach((p, i) => {
+  /** ⚠ AND THE WIDENED WEDGE STAYS IN ITS OWN PLOT, in both windows. */
+  [end.plot, W.small.plot].forEach((p, i) => {
     const g = gridOf(FLAG.closes, FLAG_DOMAIN, p, W11_PLOT_PAD);
     flagWedge(g).forEach((seg) => {
       if (seg.y1 < p.y || seg.y1 > p.y + p.h) {
@@ -1378,6 +1393,5 @@ export const flagWedge = (g: Grid) => {
       }
     });
   });
-  /** ⚠ AND HIDING THREE MAY NOT EMPTY THE PATTERN. */
   if (W.hidden < 0 || W.hidden >= FLAG_LINES.last) fail(`SC11 hides ${W.hidden} bars, which is not a reading of the flag`);
 }
