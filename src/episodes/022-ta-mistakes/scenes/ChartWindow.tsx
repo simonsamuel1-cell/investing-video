@@ -115,9 +115,12 @@ const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
         const top = Math.min(g.y(b.o), g.y(b.c));
         const h = Math.abs(g.y(b.c) - g.y(b.o));
         return (
+          /* ⚠ NO WICK — Simon: "yang 3 candlestick hollow, hapus wicknya". A
+             wick is a high and a low, and a bar that has not happened has
+             neither; the dashed body is the whole of what this says. It is also
+             what separates the two fans at a glance now: the solid red bars
+             below keep their wicks because they are bars that did happen. */
           <g key={i} stroke={c.muted} strokeWidth={W.ghost.width} fill="none">
-            {/* ⚠ SOLID — a dash on a 3px line is a line with pieces missing. */}
-            <line x1={x} y1={g.y(b.h)} x2={x} y2={g.y(b.l)} />
             <rect
               x={x - w / 2}
               y={top}
