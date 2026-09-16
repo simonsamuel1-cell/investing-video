@@ -8,7 +8,7 @@
 import { GRID_PAD_X, candleWidth, domainOf, gridOf, splitRects, theme, columns, inset } from "../../../core";
 import type { Grid, Rect } from "../../../core";
 import { CARD_LIST } from "./timing";
-import { FLAG, FLAG_BARS, FLAG_LINES, SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
+import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINES, SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
 
 const PLOT = theme.stage.plot;
 const CARD = theme.stage.card;
@@ -1235,6 +1235,23 @@ const plotOf = (card: Rect, pad: number, type: number): Rect => {
  */
 const W11_GHOST = { dash: "10 6", width: theme.shape.line } as const;
 
+/**
+ * ⚠ THE FALLING FAN IS DRAWN 20px LOWER THAN ITS PRICES PUT IT — Simon:
+ * "turunin posisinya 20 px".
+ *
+ * ⚠ AND IT IS A DRAWING OFFSET, NOT A PRICE ONE, which is the whole reason it
+ * lives here and not in data/series.ts. Both fans leave from the same close, so
+ * their first bars met at that price and read as one long candle rather than
+ * two — the gap separates them. Moving the PRICES down instead would make the
+ * falling move a different size from the rising one, and the mirror exists
+ * precisely so that it cannot be.
+ */
+const W11_DOWN_DROP = 20;
+
+/** The same grid, drawn lower. `x` and the scale are untouched, so the fan
+ *  stays in its own columns and every bar keeps its height. */
+export const droppedBy = (g: Grid, px: number): Grid => ({ ...g, y: (v) => g.y(v) + px });
+
 /** The grid's vertical head-room, shared so the scene and the solve below
  *  cannot build two different grids for one box. */
 export const W11_PLOT_PAD = 0.08;
@@ -1293,6 +1310,7 @@ export const WIN11 = {
     plot: plotOf(W11_SMALL, W11_SMALL_PAD, W11_SMALL_TYPE),
   },
   ghost: W11_GHOST,
+  downDrop: W11_DOWN_DROP,
   plotPad: W11_PLOT_PAD,
   /**
    * ⚠ THREE BARS OFF THE RIGHT OF THE BIG WINDOW, HIDDEN AND NOT REMOVED —
@@ -1411,4 +1429,13 @@ export const flagWedge = (g: Grid) => {
     });
   });
   if (W.hidden < 0 || W.hidden >= FLAG_LINES.last) fail(`SC11 hides ${W.hidden} bars, which is not a reading of the flag`);
+  /** ⚠ AND THE DROPPED FAN STILL HAS TO LAND INSIDE THE PLOT. 20px is a
+   *  drawing offset, so nothing about the scale knows it is happening — the
+   *  lowest bar could be pushed through the floor and the chart would simply
+   *  draw it there. */
+  [end.plot, W.small.plot].forEach((p, i) => {
+    const g = droppedBy(gridOf(FLAG.closes, FLAG_DOMAIN, p, W11_PLOT_PAD), W.downDrop);
+    const low = Math.max(...FLAG_DOWN.map((b) => g.y(b.l)));
+    if (low > p.y + p.h) fail(`SC11's falling fan reaches ${Math.round(low)} in window ${i + 1}, below its plot`);
+  });
 }

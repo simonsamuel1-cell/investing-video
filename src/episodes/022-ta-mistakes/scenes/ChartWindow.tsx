@@ -53,7 +53,7 @@ import {
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { WINDOW11, local } from "../data/timing";
-import { WIN11, bigAt, flagWedge } from "../data/layout";
+import { WIN11, bigAt, droppedBy, flagWedge } from "../data/layout";
 import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -76,6 +76,18 @@ const DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
  *  was. Dropping them off the front would not. */
 const SOLID = FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden);
 const UP = FLAG_BARS.slice(FLAG_BARS.length - W.hidden);
+/**
+ * ⚠ THE FALLING FAN AS A FULL-LENGTH TAPE, so core/Candles can draw it.
+ *
+ * That component is the only place in this project allowed to use the candle
+ * colours — scripts/audit.mjs enforces it by filename — and now that these
+ * three are solid red rather than outlines, it is the component that has to
+ * draw them. It maps index k of what it is given onto grid.x(k), so the three
+ * are handed to it at the END of a sixteen-long array and read back with
+ * `from`, which puts them in the same three columns as the rising three.
+ */
+const DOWN_TAPE = [...FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden), ...FLAG_DOWN];
+const DOWN_FROM = FLAG_BARS.length - W.hidden;
 
 /** ⚠ THE SMALL WINDOW DOES NOT MOVE, so its grid is solved once. */
 const SMALL_GRID = gridOf(FLAG.closes, DOMAIN, W.small.plot, W.plotPad);
@@ -181,13 +193,20 @@ export const ChartWindow = () => {
             <Ghosts g={bigGrid} bars={UP} />
           </Layer>
         )}
-        {/* ⚠ AND THEN THE OTHER ONE. One dashed fan going up is a forecast; two
-            of them, the same size, is the scene saying it does not know. */}
-        {down > 0.001 && (
-          <Layer opacity={down}>
-            <Ghosts g={bigGrid} bars={FLAG_DOWN} />
-          </Layer>
-        )}
+        {/* ⚠ AND THEN THE OTHER ONE, SOLID AND 20px LOWER — Simon: "turunin
+            posisinya 20 px … buat jadi berwarna merah (uda bukan hollow)". The
+            rising three are what the pattern promised and these are what
+            happened, so only one of the two is drawn as a possibility.
+            ⚠ THE 20px IS A DRAWING OFFSET, NOT A PRICE. Both fans leave from
+            the same close, so their first bars met there and read as one long
+            candle; this separates them without making the falling move a
+            different size from the rising one. See droppedBy. */}
+        <Candles
+          bars={DOWN_TAPE}
+          grid={droppedBy(bigGrid, W.downDrop)}
+          from={DOWN_FROM}
+          opacity={down}
+        />
 
         {/* ═══ the small window — the pattern already finished ═══════════ */}
         <Card rect={W.small.card} opacity={small} soft />

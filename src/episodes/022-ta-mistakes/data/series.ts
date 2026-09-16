@@ -1138,8 +1138,14 @@ export const FLAG_LINES = (() => {
  * its counterpart reflected about the last bar the chart actually has, so the
  * two futures are the SAME move in opposite directions: same three x positions,
  * same body heights, same wicks. Reflecting means there is not one new number
- * here — and it means neither future can accidentally be drawn as the more
- * likely one, which on a scene about hindsight is the whole point.
+ * here.
+ *
+ * ⚠ THEY ARE NO LONGER DRAWN ALIKE, AND THAT IS A LATER DECISION OF SIMON'S —
+ * "buat jadi berwarna merah (uda bukan hollow)". The rising three stay dashed
+ * outlines and the falling three are solid: one is what the pattern promised
+ * and the other is what happened. What the mirror still guarantees is that the
+ * two MOVES are the same size, so the difference on screen is entirely the
+ * weight of the ink and not a bigger move drawn to look more convincing.
  *
  * ⚠ AND THE REFLECTION IS ABOUT A CLOSE, NOT ABOUT THE MIDDLE OF THE BOX. Both
  * fans start from where the tape actually stopped, so they meet at that price
@@ -1237,9 +1243,11 @@ export const FLAG_LINE: (number | null)[] = (() => {
   }
   if (legs[legs.length - 1] <= legs[legs.length - 2]) fail("the straightened flag never breaks out");
   /**
-   * ⚠ THE TWO FUTURES HAVE TO BE THE SAME SIZE, or one of them is the video's
-   * own forecast. Mirrored they cannot differ — this is what catches the day
-   * somebody writes the down bars out by hand instead.
+   * ⚠ THE TWO FUTURES HAVE TO BE THE SAME SIZE. They are drawn differently on
+   * purpose — one dashed, one solid — so the SIZE is the only thing left that
+   * could quietly make one of them the more persuasive, and mirrored they
+   * cannot differ. This is what catches the day somebody writes the down bars
+   * out by hand instead.
    */
   const up = FLAG_BARS.slice(F.last + 1);
   if (FLAG_DOWN.length !== up.length) fail("the two futures are different lengths");
