@@ -1391,12 +1391,15 @@ export const BrokerPanel = ({
                    * ⚠ MACD HAS NO 0→100, so it is scaled to its OWN range with
                    * zero forced into it — and zero lands wherever it actually
                    * falls rather than in the middle. Centred instead, a series
-                   * that runs −213 to +70 spends the top third of the pane
-                   * empty and squashes everything that happens into the
-                   * bottom; this tape is exactly that shape.
+                   * that is mostly one side of zero spends half the pane empty.
+                   *
+                   * ⚠ AND THE RANGE IS THE HISTOGRAM'S ALONE — Simon: "buat macd
+                   * nya tanpa garis". With the two lines gone, scaling to their
+                   * spread would leave the only thing still drawn squeezed into
+                   * the middle of its own pane by series nobody can see. On this
+                   * tape that is the difference between ±213 and −56…+74.
                    */
-                  const vals = [...ch.study.macd, ...ch.study.signal, ...ch.study.hist, 0]
-                    .filter((v): v is number => v !== null);
+                  const vals = [...ch.study.hist, 0].filter((v): v is number => v !== null);
                   const mLo = Math.min(...vals);
                   const mHi = Math.max(...vals);
                   const sig = (v: number) => (v - mLo) / Math.max(1e-9, mHi - mLo);
@@ -1447,12 +1450,15 @@ export const BrokerPanel = ({
                                 width={bodyW(plotW)}
                                 height={Math.max(1, Math.abs(py(sig(v)) - py(sig(0))))}
                                 fill={v >= 0 ? C.indigo : C.cyan}
-                                fillOpacity={0.35}
+                                /** ⚠ FULL STRENGTH NOW. The bars were a wash
+                                 *  behind two lines; with the lines gone they
+                                 *  are the pane, and a pane drawn at a third of
+                                 *  its own ink reads as something switched
+                                 *  off. */
+                                fillOpacity={0.9}
                               />
                             ),
                           )}
-                          <path d={path(ch.study.macd, sig)} fill="none" stroke={C.indigo} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
-                          <path d={path(ch.study.signal, sig)} fill="none" stroke={C.cyan} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
                         </>
                       )}
                     </g>
