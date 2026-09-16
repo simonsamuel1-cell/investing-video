@@ -1118,12 +1118,44 @@ export const FLAG_LINES = (() => {
   return {
     /** The triangle opens on the bar the upper line is anchored to. */
     from: up.a,
+    /** The bars each line is anchored to — exported because the straightened
+     *  line below is drawn through exactly these. */
+    up,
+    lo,
     upAt,
     loAt,
     apex: { i: apexI, p: upAt(apexI) },
     /** The last bar still inside the triangle. */
     last: 12,
   };
+})();
+
+/**
+ * The same flag, STRAIGHTENED — Simon: "line chartnya lurusin aja, ga perlu
+ * sama persis dengan candlestick chart di kiri".
+ *
+ * Six points instead of sixteen, and they are not chosen for their looks: they
+ * are the pattern's own turns. Where the pole opens, where it tops out, and the
+ * four bars the two boundary lines are anchored to. So the straightened line
+ * touches the wedge exactly where the candles touch it, and the two windows
+ * agree by construction rather than by eye.
+ *
+ * ⚠ SPARSE, NOT SHORT. Nulls everywhere else, because core's `pathOf` skips
+ * them — so every point stays on the SAME index as its bar, and the small
+ * window is the same chart as the big one at a different size rather than a
+ * second chart that resembles it.
+ */
+export const FLAG_LINE: (number | null)[] = (() => {
+  const F = FLAG_LINES;
+  const out: (number | null)[] = FLAG_BARS.map(() => null);
+  const last = FLAG_BARS.length - 1;
+  out[0] = FLAG_BARS[0].o;
+  out[F.up.a] = FLAG_BARS[F.up.a].h;
+  out[F.lo.a] = FLAG_BARS[F.lo.a].l;
+  out[F.up.b] = FLAG_BARS[F.up.b].h;
+  out[F.lo.b] = FLAG_BARS[F.lo.b].l;
+  out[last] = FLAG_BARS[last].h;
+  return out;
 })();
 
 {
@@ -1157,4 +1189,24 @@ export const FLAG_LINES = (() => {
   /** ⚠ AND THE POLE HAS TO RISE INTO IT, or the pattern is a triangle rather
    *  than a flag — the pole is what makes it a continuation. */
   if (FLAG_BARS[2].c <= FLAG_BARS[0].o) fail("the flag has no pole");
+  /**
+   * ⚠ THE STRAIGHTENED LINE HAS TO BE A FLAG TOO. Six points, in order, turning
+   * alternately — up, down, up, down, up — with the swings shrinking until the
+   * last one. Drawn through the wrong bars it would still be a line, and it
+   * would still look plausible; what it would have stopped being is the same
+   * pattern the candles beside it are making.
+   */
+  const pts = FLAG_LINE.map((v, i) => ({ i, v })).filter((q): q is { i: number; v: number } => q.v !== null);
+  if (pts.length !== 6) fail(`the straightened flag has ${pts.length} points, not 6`);
+  pts.forEach((q, k) => {
+    if (k && q.i <= pts[k - 1].i) fail("the straightened flag doubles back on itself");
+    if (k && Math.sign(q.v - pts[k - 1].v) === (k % 2 === 1 ? -1 : 1)) {
+      fail(`the straightened flag's leg ${k} goes the wrong way`);
+    }
+  });
+  const legs = pts.slice(1).map((q, k) => Math.abs(q.v - pts[k].v));
+  for (let k = 1; k < legs.length - 1; k++) {
+    if (legs[k] >= legs[k - 1]) fail(`the straightened flag's leg ${k + 1} does not narrow`);
+  }
+  if (legs[legs.length - 1] <= legs[legs.length - 2]) fail("the straightened flag never breaks out");
 }

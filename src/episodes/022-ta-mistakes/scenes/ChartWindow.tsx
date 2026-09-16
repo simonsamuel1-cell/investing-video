@@ -6,23 +6,28 @@
  * and the two converging lines that make it a flag rather than a run of
  * candles.
  *
- * ⚠ THE SCENE IS ONE PICTURE MADE, THEN MOVED ASIDE FOR A SECOND — Simon:
- * "setelah animasinya selesai, windownya geser kiri, lalu muncul window baru di
- * sebelah kanan yang ukurannya 2x lipat lebih kecil." The big window builds the
- * pattern in candles with the last three bars hidden; it slides left; a window
- * half its size arrives on the right holding the SAME pattern, all sixteen bars
- * this time, drawn as a line.
+ * ⚠ THE SCENE IS ONE PICTURE MADE, THEN MOVED ASIDE FOR A SECOND. The big
+ * window builds the pattern in candles with the last three bars withheld, draws
+ * the wedge, and only then lets those three back as empty outlines; it slides
+ * left; a window half its size arrives on the right holding the same pattern
+ * already finished — straightened to six points, drawn as a line, with nothing
+ * withheld and nothing animated.
  *
  * ⚠ THE DIFFERENCE BETWEEN THE TWO IS THE WHOLE REASON FOR BOTH. Same series,
- * same domain, same wedge — what differs is that one of them has the ending and
- * the other does not, and that one is candles and the other is a line. On a
- * scene about hindsight that pair is the argument.
+ * same domain, same wedge. One of them is being made and one of them is done;
+ * one had to wait for its last three bars and the other never did. On a scene
+ * about hindsight that pair is the argument.
+ *
+ * ⚠ NO NAMES — Simon: "hapus semua kata Flag". Both captions are gone and both
+ * drawings are now centred in their windows rather than riding above the band
+ * one used to occupy. See plotOf in data/layout.ts: the boxes did not resize,
+ * they moved.
  *
  * ⚠ THE WINDOW SLIDES AS GEOMETRY, NOT AS A TRANSFORM. Its card, its plot, the
  * grid solved from that plot, the candles on that grid and the wedge solved
  * from it are all recomputed at the shift's own progress — see `bigAt` in
  * data/layout.ts. A CSS transform over a finished picture would take the stroke
- * widths and the type with it, which is the thing this project does not do.
+ * widths with it, which is the thing this project does not do.
  *
  * ⚠ NO "Entry" AND NO ARROW. The reference labels an entry on the breakout and
  * draws an arrow to it. Both are directional markers, scripts/audit.mjs is
@@ -36,36 +41,68 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Layer, Line, Stage,
-  domainOf, drawPath, fadeOut, gridOf, lengthOf, pathOf, progress, theme,
+  Candles, Card, Layer, Stage,
+  candleWidth, domainOf, drawPath, fadeOut, gridOf, pathOf, progress, theme,
   useMotion, usePalette,
 } from "../../../core";
+import type { Grid } from "../../../core";
 import { WINDOW11, local } from "../data/timing";
 import { WIN11, bigAt, flagWedge } from "../data/layout";
-import { FLAG, FLAG_BARS } from "../data/series";
+import { FLAG, FLAG_BARS, FLAG_LINE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = WINDOW11;
 const W = WIN11;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const NAME = "Flag";
 /**
  * ⚠ ONE DOMAIN FOR BOTH WINDOWS, AND IT COVERS ALL SIXTEEN BARS. In the big
- * window that is what makes the last three HIDDEN rather than removed — the
- * scale still reserves their room, so the thirteen on screen sit where they sat
- * and nothing moves if they come back. In the small one it is what makes the
- * two drawings the same drawing: a line normalised to its own range would be a
- * different shape from the candles beside it, and the comparison would be rigged.
+ * window that is what makes the last three WITHHELD rather than removed — the
+ * scale reserves their room from the first frame, so they arrive into the space
+ * that was always theirs and nothing else moves. In the small one it is what
+ * makes the two drawings the same drawing: a line normalised to its own range
+ * would be a different shape from the candles beside it, and the comparison
+ * would be rigged.
  */
 const DOMAIN = domainOf(FLAG.closes, FLAG_BARS);
 /** ⚠ SLICED, NOT RE-INDEXED. core/Candles maps index k of what it is given onto
  *  grid.x(k), so dropping bars off the END leaves every remaining one where it
  *  was. Dropping them off the front would not. */
-const SHOWN = FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden);
+const SOLID = FLAG_BARS.slice(0, FLAG_BARS.length - W.hidden);
+const GHOSTS = FLAG_BARS.slice(FLAG_BARS.length - W.hidden);
 
 /** ⚠ THE SMALL WINDOW DOES NOT MOVE, so its grid is solved once. */
 const SMALL_GRID = gridOf(FLAG.closes, DOMAIN, W.small.plot, W.plotPad);
+
+/**
+ * The three bars the big window withheld, as outlines.
+ *
+ * ⚠ DRAWN HERE RATHER THAN BY core/Candles, and it is not a near-miss of that
+ * component. Candles fills a body in the direction the bar closed; these have
+ * no fill and no direction, because the whole point of them is that they had
+ * not happened yet. What they share with the real bars is their geometry, and
+ * that comes from the same grid.
+ */
+const Ghosts = ({ g }: { g: Grid }) => {
+  const c = usePalette();
+  const w = candleWidth(g);
+  return (
+    <>
+      {GHOSTS.map((b, k) => {
+        const i = FLAG_BARS.length - GHOSTS.length + k;
+        const x = g.x(i);
+        const top = Math.min(g.y(b.o), g.y(b.c));
+        const h = Math.abs(g.y(b.c) - g.y(b.o));
+        return (
+          <g key={i} stroke={c.muted} strokeWidth={W.ghost.width} strokeDasharray={W.ghost.dash} fill="none">
+            <line x1={x} y1={g.y(b.h)} x2={x} y2={g.y(b.l)} />
+            <rect x={x - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} />
+          </g>
+        );
+      })}
+    </>
+  );
+};
 
 export const ChartWindow = () => {
   const f = useCurrentFrame();
@@ -73,18 +110,21 @@ export const ChartWindow = () => {
   const c = usePalette();
   const open = progress(f, local(V.card, V.at), m.fade);
   const drawn = progress(f, local(V.lines, V.at), m.sec(0.5));
+  const ghost = progress(f, local(V.ghost, V.at), m.reveal);
   const slide = progress(f, local(V.shift, V.at), m.move);
   const small = progress(f, local(V.small.at, V.at), m.fade);
-  const smallWedge = progress(f, local(V.small.wedge, V.at), m.sec(0.5));
+  /** ⚠ ONE OPACITY FOR THE WHOLE SECOND WINDOW — Simon: "fade in aja semuanya
+   *  langsung". Nothing in there draws on. */
+  const fill = progress(f, local(V.small.fill, V.at), m.fade);
   const out = fadeOut(f, local(V.out, V.at), m.fade);
 
-  /** ⚠ RESOLVED EVERY FRAME, AND CHEAPLY. The whole big window — card, plot,
-   *  name — is a function of how far through the shift it is. */
+  /** ⚠ RESOLVED EVERY FRAME, AND CHEAPLY. The whole big window — card and plot
+   *  — is a function of how far through the shift it is. */
   const big = bigAt(slide);
   const bigGrid = gridOf(FLAG.closes, DOMAIN, big.plot, W.plotPad);
 
-  const wedge = (g: ReturnType<typeof gridOf>, p: number, key: string) => (
-    <Layer key={key}>
+  const wedge = (g: Grid, p: number, trim: boolean, key: string) => (
+    <Layer key={key} opacity={trim ? 1 : p}>
       {flagWedge(g).map((e, k) => (
         <line
           key={k}
@@ -95,7 +135,7 @@ export const ChartWindow = () => {
           stroke={c.indigo}
           strokeWidth={W.wedge.width}
           strokeLinecap="round"
-          {...drawPath(p, Math.hypot(e.x2 - e.x1, e.y2 - e.y1))}
+          {...(trim ? drawPath(p, Math.hypot(e.x2 - e.x1, e.y2 - e.y1)) : null)}
         />
       ))}
     </Layer>
@@ -104,62 +144,49 @@ export const ChartWindow = () => {
   return (
     <Stage>
       <div style={{ opacity: out }}>
-        {/* ═══ the big window — candles, and no ending ═══════════════════ */}
+        {/* ═══ the big window — the pattern being made ═══════════════════ */}
         <Card rect={big.card} opacity={open} soft />
         {/* ⚠ core/Candles DIRECTLY, NOT core/Chart. Chart was here for its
             left-to-right build and everything else it draws was already turned
-            off; its `shown` is a fraction of the whole series, and hiding the
-            last three bars is exactly a thing that fraction cannot say. */}
+            off; its `shown` is a fraction of the whole series, and withholding
+            the last three bars is exactly a thing that fraction cannot say. */}
         <Candles
-          bars={SHOWN}
+          bars={SOLID}
           grid={bigGrid}
           shown={progress(f, local(V.candles, V.at), m.sec(0.83))}
         />
-        {f >= local(V.lines, V.at) && wedge(bigGrid, drawn, "bigWedge")}
-        <Line
-          text={NAME}
-          x={big.name.x}
-          y={big.name.y}
-          at={local(V.name, V.at)}
-          size={big.type}
-          weight={theme.text.chip.weight}
-          color={c.slate}
-        />
+        {f >= local(V.lines, V.at) && wedge(bigGrid, drawn, true, "bigWedge")}
+        {/* ⚠ AFTER THE WEDGE — Simon. An empty bar arriving before the boundary
+            exists is a bar breaking nothing. */}
+        {ghost > 0.001 && (
+          <Layer opacity={ghost}>
+            <Ghosts g={bigGrid} />
+          </Layer>
+        )}
 
-        {/* ═══ the small window — a line, and the ending ═════════════════ */}
+        {/* ═══ the small window — the pattern already finished ═══════════ */}
         <Card rect={W.small.card} opacity={small} soft />
-        {/* ⚠ THE PRICE IS INK, NOT INDIGO, AND THAT IS WHY core/Chart's line
-            mode is not used here. It draws its path in `indigo`, which is also
-            the wedge's colour — and three indigo lines crossing in a 418px box
-            is one drawing nobody can read. In the big window the price is in
-            the candles' own colours and the reading is indigo; this keeps that
-            split. core's own path helpers do the drawing either way. */}
-        {f >= local(V.small.line, V.at) && (
-          <Layer opacity={small}>
+        {/* ⚠ THE PRICE IS INK, NOT INDIGO, AND IT IS SIX POINTS RATHER THAN
+            SIXTEEN — Simon: "lurusin aja, ga perlu sama persis". The six are the
+            pattern's own turns, so the line touches the wedge exactly where the
+            candles do; see FLAG_LINE. Ink rather than indigo because indigo is
+            the wedge's, and three indigo lines crossing in a 418px box is one
+            drawing nobody can read — the first render proved it.
+            ⚠ AND IT FADES. No trim, no build: this window holds a finished
+            thing. */}
+        {fill > 0.001 && (
+          <Layer opacity={fill}>
             <path
-              d={pathOf(FLAG.closes, SMALL_GRID)}
+              d={pathOf(FLAG_LINE, SMALL_GRID)}
               fill="none"
               stroke={c.ink}
               strokeWidth={theme.shape.line}
               strokeLinecap="round"
               strokeLinejoin="round"
-              {...drawPath(
-                progress(f, local(V.small.line, V.at), m.sec(0.83)),
-                lengthOf(FLAG.closes, SMALL_GRID),
-              )}
             />
           </Layer>
         )}
-        {f >= local(V.small.wedge, V.at) && wedge(SMALL_GRID, smallWedge, "smallWedge")}
-        <Line
-          text={NAME}
-          x={W.small.name.x}
-          y={W.small.name.y}
-          at={local(V.small.name, V.at)}
-          size={W.small.type}
-          weight={theme.text.chip.weight}
-          color={c.slate}
-        />
+        {fill > 0.001 && wedge(SMALL_GRID, fill, false, "smallWedge")}
       </div>
     </Stage>
   );

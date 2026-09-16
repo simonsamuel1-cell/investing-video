@@ -1192,28 +1192,41 @@ const W11_SMALL: Rect = {
 };
 
 /**
- * ⚠ THE INSET IS THE SAME ON THREE SIDES, and the bottom is deeper by the
- * name's own band. ⚠ AND THE BAND IS TWICE THE TYPE, in both windows — that is
- * what lets the small one be laid out by the same rule instead of by eye. The
- * big window's 72 under 36px type is where the ratio came from.
+ * ⚠ THE VERTICAL INSET IS DEEPER THAN THE HORIZONTAL ONE, and the difference is
+ * exactly where the pattern's name used to stand. Simon: "hapus semua kata
+ * Flag". The drawing keeps the size it was approved at — so the candle group is
+ * still the width that was solved for and the scale of the bars has not moved —
+ * and the band the caption occupied is now split evenly above and below it. A
+ * window holding only a drawing centres the drawing; a window that lost its
+ * caption and left the drawing riding high is a window with a hole in it.
  */
 const W11_PAD = 56;
 const W11_TYPE = theme.text.chip.size;
-/** ⚠ HALF THE INSET, BUT NOT HALF THE TYPE. 18px is below anything else in
- *  this library; the theme's smallest is what a half-size window gets. */
+/** ⚠ HALF THE INSET, BUT THE BAND STILL FOLLOWS ITS OWN TYPE. The small window
+ *  never fitted 18px type; the theme's smallest is what set its band, and that
+ *  is still what sets how much shorter than its box the drawing is. */
 const W11_SMALL_PAD = W11_PAD / 2;
 const W11_SMALL_TYPE = theme.text.axis.size;
 
-const plotOf = (card: Rect, pad: number, type: number): Rect => ({
-  x: card.x + pad,
-  y: card.y + pad,
-  w: card.w - pad * 2,
-  h: card.h - pad * 2 - type * 2,
-});
-const nameOf = (card: Rect, pad: number, type: number) => ({
-  x: card.x + card.w / 2,
-  y: card.y + card.h - pad - type,
-});
+const plotOf = (card: Rect, pad: number, type: number): Rect => {
+  const h = card.h - pad * 2 - type * 2;
+  return { x: card.x + pad, y: card.y + (card.h - h) / 2, w: card.w - pad * 2, h };
+};
+
+/**
+ * ⚠ THE THREE HIDDEN BARS COME BACK AS OUTLINES — Simon: "muncul 3 candlestick
+ * yang tadi di hide dengan style garis putus-putus no fill".
+ *
+ * ⚠ "16 11" IS THE EPISODE'S DASH AND IT IS THE WRONG ONE HERE. A candle body
+ * is about 28px wide, so that rhythm puts one and a half dashes along a side
+ * and the thing reads as a broken rectangle rather than a dashed one. This is
+ * the same rhythm scaled to the object it is drawn on.
+ *
+ * ⚠ AND THEY ARE NEITHER GREEN NOR RED. The candle colours belong to
+ * core/Candles — scripts/audit.mjs enforces it — and they would be wrong here
+ * anyway: a bar that has not happened yet has no direction to have closed in.
+ */
+const W11_GHOST = { dash: "6 5", width: theme.shape.rule } as const;
 
 /** The grid's vertical head-room, shared so the scene and the solve below
  *  cannot build two different grids for one box. */
@@ -1261,8 +1274,6 @@ export const bigAt = (t: number) => {
   return {
     card,
     plot: narrowed(plotOf(card, W11_PAD, W11_TYPE)),
-    name: nameOf(card, W11_PAD, W11_TYPE),
-    type: W11_TYPE,
   };
 };
 
@@ -1273,9 +1284,8 @@ export const WIN11 = {
   small: {
     card: W11_SMALL,
     plot: plotOf(W11_SMALL, W11_SMALL_PAD, W11_SMALL_TYPE),
-    name: nameOf(W11_SMALL, W11_SMALL_PAD, W11_SMALL_TYPE),
-    type: W11_SMALL_TYPE,
   },
+  ghost: W11_GHOST,
   plotPad: W11_PLOT_PAD,
   /**
    * ⚠ THREE BARS OFF THE RIGHT OF THE BIG WINDOW, HIDDEN AND NOT REMOVED —
@@ -1366,13 +1376,13 @@ export const flagWedge = (g: Grid) => {
     if (r.y + r.h > theme.captionBand.top) fail(`SC11's window ${i + 1} reaches into the subtitle band`);
     if (r.y < theme.logoZone.height) fail(`SC11's window ${i + 1} reaches into the logo zone`);
   });
-  /** ⚠ NEITHER DRAWING TOUCHES ITS OWN NAME, and the small one is laid out by
-   *  the same rule as the big one rather than by eye — which is exactly why it
-   *  has to be checked at the size where the rule is tightest. */
+  /** ⚠ EVERY DRAWING IS CENTRED IN ITS OWN WINDOW, which is the whole of what
+   *  removing the name changed — the boxes did not resize, they moved. */
   ([[start, "big"], [end, "big, shifted"], [{ ...W.small }, "small"]] as const).forEach(([w, n]) => {
-    if (w.plot.y + w.plot.h > w.name.y - w.type / 2) fail(`SC11's ${n} window draws its pattern into its own name`);
-    if (w.name.y + w.type / 2 > w.card.y + w.card.h) fail(`SC11's ${n} window hangs its name past the bottom of the card`);
     if (w.plot.x < w.card.x || w.plot.x + w.plot.w > w.card.x + w.card.w) fail(`SC11's ${n} window draws wider than itself`);
+    const above = w.plot.y - w.card.y;
+    const below = w.card.y + w.card.h - (w.plot.y + w.plot.h);
+    if (Math.abs(above - below) > 0.5) fail(`SC11's ${n} window holds ${above} above its drawing and ${below} below`);
   });
   /** ⚠ THE GROUP REALLY IS 20px NARROWER, at both ends of the shift — the
    *  shrink is solved, not typed, so a wrong solve would look plausible. */

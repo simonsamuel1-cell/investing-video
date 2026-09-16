@@ -1786,8 +1786,18 @@ export const WINDOW11 = {
    *  drawn while they are still arriving it is a shape the chart then grows
    *  into, which is the wrong way round and is the scene's own subject. */
   lines: 9400,
-  /** The pattern's name, once the drawing that earns it is finished. */
-  name: 9440,
+  /**
+   * ⚠ THE THREE HIDDEN BARS COME BACK, AS OUTLINES — Simon: "setelah 2 garis
+   * indigonya muncul, muncul 3 candlestick yang tadi di hide dengan style garis
+   * putus-putus no fill". After the wedge, because the wedge is what they are
+   * about to break: an empty dashed bar arriving before the boundary exists is
+   * a bar breaking nothing.
+   *
+   * ⚠ IT TOOK THE FRAME THE PATTERN'S NAME HAD. "Flag" is gone from both
+   * windows — Simon: "hapus semua kata Flag" — and 9440 was already the beat
+   * after the wedge settles, which is where this belongs.
+   */
+  ghost: 9440,
   /**
    * ⚠ AFTER THE DRAWING IS DONE, NOT DURING IT — Simon: "setelah animasinya
    * selesai, windownya geser kiri". The name arrives on 9440 and settles a
@@ -1796,13 +1806,15 @@ export const WINDOW11 = {
   shift: 9480,
   /**
    * The second window and what goes in it: the same pattern, all sixteen bars
-   * this time, drawn as a line.
+   * this time, straightened to six points and drawn as a line.
    *
-   * ⚠ ITS OWN BEATS FOLLOW THE BIG WINDOW'S RHYTHM rather than a new one — the
-   * line 30 frames after the window, the wedge 60 after the line, the name 40
-   * after that, which is the spacing the big window was built on.
+   * ⚠ ITS CONTENTS DO NOT BUILD, THEY ARRIVE — Simon: "line chartnya ga perlu
+   * dianimasiin, fade in aja semuanya langsung". One beat for the line and the
+   * wedge together, because "semuanya" is everything in that window. The big
+   * window is where this pattern is MADE; the small one is where it is already
+   * finished, which is the difference the scene is about.
    */
-  small: { at: 9530, line: 9560, wedge: 9620, name: 9660 },
+  small: { at: 9530, fill: 9560 },
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
@@ -1824,14 +1836,13 @@ export const WINDOW11 = {
    * reading of it. Durations are useMotion's, so only the starts live here.
    */
   const steps: [string, number][] = [
-    ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the name", V.name],
-    ["the shift", V.shift], ["the second window", V.small.at], ["its line", V.small.line],
-    ["its wedge", V.small.wedge], ["its name", V.small.name],
+    ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the ghost bars", V.ghost],
+    ["the shift", V.shift], ["the second window", V.small.at], ["its contents", V.small.fill],
   ];
   steps.forEach(([n, at], i) => {
     if (i && at <= steps[i - 1][1]) fail(`SC11's ${n} starts at ${at}, not after ${steps[i - 1][0]}`);
   });
-  if (V.small.name >= V.out) fail(`SC11 names the second pattern at ${V.small.name}, when it is already leaving at ${V.out}`);
+  if (V.small.fill >= V.out) fail(`SC11 fills the second window at ${V.small.fill}, when it is already leaving at ${V.out}`);
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);
