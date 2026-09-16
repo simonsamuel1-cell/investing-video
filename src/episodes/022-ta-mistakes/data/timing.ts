@@ -85,9 +85,13 @@ export const STEPS = [
  * entry in the list, and leaving the counter up there would file the ADMR case
  * as "mistake 07½".
  */
+/** Hoisted so `gaps` can name it — a gap that runs to the end of the counter's
+ *  life should say so rather than repeat the frame. */
+const COUNTER_TO = BLOCK.SC15;
+
 export const COUNTER = {
   from: BLOCK.SC04,
-  to: BLOCK.SC15,
+  to: COUNTER_TO,
   /**
    * Stretches the counter is OUT for.
    *
@@ -114,17 +118,26 @@ export const COUNTER = {
    * again.
    */
   /**
-   * ⚠ THE FIRST GAP ENDS AT 8270, NOT AT BLOCK.SC10. SC09's picture is held to
-   * 8060 and the sixth card row runs over the top until 8270, so a counter that
-   * came back at 7995 would spend its whole entrance under two opaque layers
-   * and be revealed already standing there. It returns when SC10 does. The
-   * literal is checked against `ROW6`/`OVERLOAD` where those are declared — it
-   * cannot name them from up here.
+   * ⚠ ONE GAP NOW, AND IT RUNS TO THE END OF THE COUNTER'S OWN LIFE — Simon:
+   * "hapus semua visual dari scene 10 ke belakang". This chip is an overlay
+   * that outlives the scenes it labels, so blanking them does not remove it;
+   * it has to be taken off, and this is the fifth time for the same reason. A
+   * counter reading "06 INDICATOR OVERLOAD" over an empty screen is naming
+   * something that is not being said.
+   *
+   * ⚠ WHICH LEAVES IT WITH NOTHING TO DRAW AT ALL, and that is worth saying
+   * plainly rather than discovering later. Its only live stretch is now
+   * 1995→4047, entry 01 — and the card list is mounted above it across
+   * 1994→4282, so the one entry left is underneath an opaque layer for every
+   * frame of it. The chip is in the episode and is never seen. CG-E is still
+   * mounted because that is one line to undo; what would bring it back is a
+   * scene under it, not a change here.
+   *
+   * ⚠ AND THE ADMR GAP IS GONE because this one swallows it, not because the
+   * case study stopped being a case study. If SC12–SC13 come back, so does
+   * `{ from: BLOCK.SC12, to: BLOCK.SC14 }`.
    */
-  gaps: [
-    { from: BLOCK.SC06, to: 8270 },
-    { from: BLOCK.SC12, to: BLOCK.SC14 },
-  ],
+  gaps: [{ from: BLOCK.SC06, to: COUNTER_TO }],
   over: 18,
   items: [
     { n: "01", label: "TANPA INVALIDATION", at: BLOCK.SC04 },
@@ -132,13 +145,14 @@ export const COUNTER = {
     { n: "03", label: "REVENGE TRADING", at: BLOCK.SC07 },
     { n: "04", label: "CONFIRMATION BIAS", at: BLOCK.SC08 },
     { n: "05", label: "ABAI KONTEKS MARKET", at: BLOCK.SC09 },
-    /** ⚠ 8270 FOR THE SAME REASON THE GAP ENDS THERE — see above. */
-    { n: "06", label: "INDICATOR OVERLOAD", at: 8270 },
-    /** ⚠ 9050, NOT BLOCK.SC11. SC10's picture is held 52 frames past its block,
-     *  so an entry that turned over at 8998 renamed the mistake while the
-     *  previous one was still on screen — the chip read "07 HINDSIGHT BIAS"
-     *  over the indicator panes. It turns over when the picture does. */
-    { n: "07", label: "HINDSIGHT BIAS", at: 9050 },
+    { n: "06", label: "INDICATOR OVERLOAD", at: BLOCK.SC10 },
+    /** ⚠ THESE SIX ARE BACK ON THEIR BLOCK BOUNDARIES. 06 and 07 had been moved
+     *  to 8270 and 9050 to follow SC10's picture, which no longer exists; a
+     *  number tuned to a deleted picture is worse than the plain boundary,
+     *  because it looks deliberate. Whatever fills these stretches moves them
+     *  again — and 07 must move with anything held past 8998, which is what
+     *  caught the chip reading "07 HINDSIGHT BIAS" over SC10's panes. */
+    { n: "07", label: "HINDSIGHT BIAS", at: BLOCK.SC11 },
     { n: "08", label: "ASAL COPY TRADE", at: BLOCK.SC14 },
   ],
 } as const;
@@ -1516,15 +1530,11 @@ export const OVERLOAD = {
    *  sixth entry are literals up at the head of this file — they cannot name
    *  ROW6, which is declared 1200 lines below them — so this is what keeps the
    *  three in step. */
-  if (COUNTER.gaps[0].to !== V.from) {
-    fail(`the counter returns at ${COUNTER.gaps[0].to}, not when SC10 opens at ${V.from}`);
-  }
-  if (COUNTER.items[5].at !== V.from) {
-    fail(`the counter's sixth entry is at ${COUNTER.items[5].at}, not when SC10 opens at ${V.from}`);
-  }
-  if (COUNTER.items[6].at !== V.to) {
-    fail(`the counter's seventh entry is at ${COUNTER.items[6].at}, not when SC10 ends at ${V.to}`);
-  }
+  /** ⚠ THE THREE COUNTER CHECKS THAT WERE HERE ARE GONE WITH THE PICTURE. They
+   *  held the chip's gap and its sixth and seventh entries to SC10's own window;
+   *  the counter is now off for this whole stretch, so they would have been
+   *  three assertions guarding a relationship that no longer exists. What they
+   *  were protecting is written into `gaps` and `items` instead. */
   /** ⚠ AND SC09 HAS TO HAND OVER TO THE ROW THAT REPLACES IT — no bare frame
    *  between one picture ending and the next layer starting. */
   if (ROW6.from !== BREAKOUT.to) {
@@ -1541,12 +1551,12 @@ export const HINDSIGHT = {
   /**
    * The whole tape, already annotated, arrives finished.
    *
-   * ⚠ 9050, THE FRAME SC10 LIFTS. It used to begin at 9020, which is
-   * now under the previous picture — it would have been uncovered a third of
-   * the way through its own fade. It starts as SC10 lifts instead. The voice
-   * reaches this scene at 9070, so the picture still leads its first word.
+   * ⚠ BACK ON 9020, ITS OWN VO VALUE. It was moved to 9050 while SC10's picture
+   * was held that far — it would otherwise have been uncovered a third of the
+   * way through its own fade — and that picture is gone. Anything held past
+   * 8998 again has to move this again; that is the whole of what 9050 knew.
    */
-  chart: { at: 9050, over: 90 },
+  chart: { at: 9020, over: 90 },
   obvious: 9170,
   /**
    * ⚠ THE MASK RUNS BACKWARDS HERE. Everywhere else in the library a reveal

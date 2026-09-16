@@ -42,17 +42,17 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, OVERLOAD, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
-import { SC10 } from "./scenes/SC10";
-import { SC11 } from "./scenes/SC11";
-import { AdmrGroup } from "./scenes/AdmrGroup";
-import { SC14 } from "./scenes/SC14";
-import { SC15 } from "./scenes/SC15";
-import { ProcessGroup } from "./scenes/ProcessGroup";
-import { SC18 } from "./scenes/SC18";
+/**
+ * ⚠ SC10 → SC18 ARE NO LONGER IMPORTED — Simon: "hapus semua visual dari scene
+ * 10 ke belakang". The files stay on disk, whole and compiling, because they
+ * are the work and the frame tables they read are untouched: SC10.tsx,
+ * SC11.tsx, AdmrGroup.tsx, SC14.tsx, SC15.tsx, ProcessGroup.tsx, SC18.tsx.
+ * Bringing any of them back is one import and one row in SCENES.
+ */
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -136,13 +136,28 @@ const SCENES: Mounted[] = [
    *  frames past SC11's window, and a tile can do neither. Same shape as SC09:
    *  the window stays because the timeline may not have a hole in it, and what
    *  owns it here draws nothing. */
-  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: Blank, name: "SC10 (overlaid)" },
-  { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: SC11, name: "SC11 Hindsight bias" },
-  { from: BLOCK.SC12, duration: BLOCK.SC14 - BLOCK.SC12, Component: AdmrGroup, name: "CG-B · SC12+13 ADMR" },
-  { from: BLOCK.SC14, duration: BLOCK.SC15 - BLOCK.SC14, Component: SC14, name: "SC14 Copy trade" },
-  { from: BLOCK.SC15, duration: BLOCK.SC16 - BLOCK.SC15, Component: SC15, name: "SC15 The right question" },
-  { from: BLOCK.SC16, duration: BLOCK.SC18 - BLOCK.SC16, Component: ProcessGroup, name: "CG-C · SC16+17" },
-  { from: BLOCK.SC18, duration: BLOCK.END - BLOCK.SC18, Component: SC18, name: "SC18 Close" },
+  /**
+   * ═══ ⚠ EVERYTHING FROM SC10 ON DRAWS NOTHING ═══  Simon: "hapus semua visual
+   * dari scene 10 ke belakang".
+   *
+   * Same shape as SC07, SC08 and SC09, eight rows at once: the windows stay
+   * because the timeline may not have a hole in it, and what owns them draws
+   * nothing. Every frame table behind them is untouched in data/timing.ts —
+   * OVERLOAD, HINDSIGHT, the ADMR case, COPY, QUESTION, PROCESS, CLOSE — and so
+   * are the components, which are simply no longer mounted. That is the
+   * expensive half and it is the half that is kept.
+   *
+   * ⚠ AND THE COUNTER CAME OFF WITH THEM, in data/timing.ts. It is an overlay
+   * that outlives these scenes, so deleting them does not remove it — see the
+   * note on `gaps` there, and what it costs.
+   */
+  { from: BLOCK.SC10, duration: BLOCK.SC11 - BLOCK.SC10, Component: Blank, name: "SC10 (empty)" },
+  { from: BLOCK.SC11, duration: BLOCK.SC12 - BLOCK.SC11, Component: Blank, name: "SC11 (empty)" },
+  { from: BLOCK.SC12, duration: BLOCK.SC14 - BLOCK.SC12, Component: Blank, name: "SC12+13 (empty)" },
+  { from: BLOCK.SC14, duration: BLOCK.SC15 - BLOCK.SC14, Component: Blank, name: "SC14 (empty)" },
+  { from: BLOCK.SC15, duration: BLOCK.SC16 - BLOCK.SC15, Component: Blank, name: "SC15 (empty)" },
+  { from: BLOCK.SC16, duration: BLOCK.SC18 - BLOCK.SC16, Component: Blank, name: "SC16+17 (empty)" },
+  { from: BLOCK.SC18, duration: BLOCK.END - BLOCK.SC18, Component: Blank, name: "SC18 (empty)" },
 ];
 
 /* ⚠ COVERAGE, ASSERTED. Reading a table is how a one-frame hole survives to the
@@ -170,23 +185,6 @@ const Body = () => (
         <Component />
       </Sequence>
     ))}
-
-    {/* ⚠ SC10 ON ITS OWN WINDOW, AND BELOW THE COUNTER. It opens when round six
-        clears and is held 52 frames past its block, over SC11's opening — which
-        is why HINDSIGHT's chart begins on the frame this ends.
-
-        ⚠ IT SITS HERE, NOT WITH THE OTHER OVERLAYS AT THE FOOT OF THIS FILE.
-        SC10 paints an opaque Stage, so mounted above CG-E it hid the counter
-        for its whole run — the chip simply was not there for mistake 06. An
-        overlay that is a SCENE belongs where its tile was: above the tiling,
-        below the chrome. See data/timing.ts. */}
-    <Sequence
-      from={OVERLOAD.from}
-      durationInFrames={OVERLOAD.to - OVERLOAD.from}
-      name="SC10 · indicator overload"
-    >
-      <SC10 />
-    </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a
         chapter join must cover the counter too, or the card is not a card. */}
