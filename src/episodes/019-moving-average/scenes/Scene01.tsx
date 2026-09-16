@@ -159,27 +159,6 @@ const STUDY_WARM = 40;
  *
  * `foot` keeps the panel 20px clear of VIDEO 22's subtitle band at 972.
  */
-/**
- * ═══ THE PANEL WITH ITS WALLS DOWN ═══  (VIDEO 22, `bare` on BrokerPanel)
- *
- * ⚠ IT KNOWS ABOUT 022'S LOGO, AND IT HAS TO. Simon: "geser naik hingga
- * align-top pada logo". The thing the header is being aligned to is not on this
- * panel and never will be — it is the Tuntun mark in the frame the panel is
- * borrowed into — so the number is measured off a render and named here rather
- * than left as a guess inside a scene. 45 is where that mark's ink starts.
- *
- * ⚠ AND THE PRICE ROW IS NOT LIFTED, IT IS GONE — Simon: "harga 4210 yang besar
- * juga hapus aja dan 0.70% juga hapus". So there is one row left and one number
- * to place it by.
- */
-export const BARE = (() => {
-  const logoTop = 45;
-  /** ⚠ THE AVATAR'S INK STARTS ON ITS OWN TOP EDGE, not a pixel into it — I
-   *  allowed for a pixel that was not there and the ticker sat one above the
-   *  mark. Measured at 0 after the correction. */
-  return { headTop: logoTop - PANEL.y };
-})();
-
 export const STUDY = (() => {
   const top = 200;
   const plotH = 320;
@@ -193,6 +172,7 @@ export const STUDY = (() => {
     plotH,
     pane,
     gap,
+    lead,
     /** Panel-local y of the first pane's top edge. */
     at: top + plotH + lead,
     /** Panel-local baseline of the month row, under the last pane. */
@@ -209,6 +189,8 @@ export const STUDY = (() => {
     names: ["RSI", "Stoch", "MACD"],
     /** Where a name starts, and the x the lines may not come left of. */
     labelX: 44,
+    /** The room the stack takes under the price plot, axis and floor included. */
+    below: lead + pane * 3 + gap * 2 + tail + axis + foot,
   };
 })();
 
@@ -291,6 +273,54 @@ const AXIS = ["Apr", "Mei", "Jun", "Jul", "Agu", "Sep"];
  */
 export const UI = { size: 30, weight: 600, axis: 500, name: 36, price: 70 };
 export const HEAD = { x: 40, avatar: 52, gap: 16 };
+
+/**
+ * ═══ THE PANEL WITH ITS WALLS DOWN ═══  (VIDEO 22, `bare` on BrokerPanel)
+ *
+ * ⚠ IT KNOWS ABOUT 022'S LOGO, AND IT HAS TO. Simon: "geser naik hingga
+ * align-top pada logo". The thing the header is being aligned to is not on this
+ * panel and never will be — it is the Tuntun mark in the frame the panel is
+ * borrowed into — so the number is measured off a render and named here rather
+ * than left as a guess inside a scene. 45 is where that mark's ink starts.
+ *
+ * ⚠ AND THE PRICE ROW IS NOT LIFTED, IT IS GONE — Simon: "harga 4210 yang besar
+ * juga hapus aja dan 0.70% juga hapus". So there is one row left and one number
+ * to place it by.
+ */
+export const BARE = (() => {
+  /** Measured off a render of 022: where the Tuntun mark's ink starts and ends. */
+  const logo = { top: 45, bottom: 141 };
+  /**
+   * ⚠ ALIGN-BOTTOM NOW, AND THE ROW'S HEIGHT IS THE AVATAR'S. The header is a
+   * flex row whose tallest child is the 52px circle, so its ink runs from the
+   * row's own top to one pixel short of `top + avatar` — which is why the
+   * bottom edge is `avatar - 1` rather than `avatar`. (Align-TOP, which this
+   * replaces, needed no such allowance, and I wrongly made one: the ticker sat
+   * a pixel above the mark until it was measured.)
+   */
+  const headTop = logo.bottom - (HEAD.avatar - 1) - PANEL.y;
+  /**
+   * ⚠ THE CHART'S OWN WINDOW IS THE PANEL'S BOX — Simon: "berikan window putih
+   * untuk chartnya sebagai background". The header has moved out above it, so
+   * what is left inside is only the chart, and the white card can come back
+   * around exactly that.
+   *
+   * ⚠ AND THE CHART FILLS IT — "stretch fill pada windownya". Two things were
+   * paying for something that is gone: 200px at the top held a header that is
+   * now outside, and a 150px gutter held price numbers Simon has deleted. The
+   * plot takes both back, which puts it at 490 — the height it has in 019 —
+   * WITH the three studies still under it.
+   *
+   * ⚠ THE GUTTER DOES NOT GO TO ZERO. The study names still live in it, and a
+   * name is the one thing on this picture that cannot move with the tape. 110
+   * leaves "Stoch" 38px clear of its own first value; measured, not guessed.
+   */
+  const pad = 30;
+  const gutter = 110;
+  const labelX = 30;
+  const plotTop = pad;
+  return { headTop, pad, gutter, labelX, plotTop };
+})();
 /**
  * The price column's centre line. The axis labels and the last-price pill are
  * BOTH centred on it — right-aligning them lined up their right edges but left
@@ -430,8 +460,13 @@ const makeChart = (sh: {
    * 0.80, not 0.88: a LL label hangs UNDER its low, and at 0.88 the lowest bar
    * left no room for a chip above the month row.
    */
-  const yAt = (v: number, h: number) =>
-    PLOT.y - PANEL.y + h * (1 - (v - lo) / (hi - lo)) * 0.8 + h * 0.06;
+  const yAt = (
+    v: number,
+    h: number,
+    top = PLOT.y - PANEL.y,
+    span = 0.8,
+    lead = 0.06,
+  ) => top + h * (1 - (v - lo) / (hi - lo)) * span + h * lead;
   const y = (v: number) => yAt(v, PLOT.h);
 
   /**
@@ -643,20 +678,31 @@ const ZIG_LEAD = 0.9;
 
 type Chart = (typeof CHARTS)[number];
 
-const pathOf = (v: (number | null)[], w: number, y: (n: number) => number) => {
+/** ⚠ THEY TAKE THE CHART'S OWN x, not a width to re-derive it from. The plot's
+ *  left edge moves in bare mode, so a second copy of that arithmetic in here is
+ *  a second copy that can disagree with the tape's. */
+const pathOf = (
+  v: (number | null)[],
+  x: (i: number) => number,
+  y: (n: number) => number,
+) => {
   let d = "";
   v.forEach((n, i) => {
     if (n === null) return;
-    d += `${d === "" ? "M" : "L"}${lx(i, w).toFixed(1)},${y(n).toFixed(1)} `;
+    d += `${d === "" ? "M" : "L"}${x(i).toFixed(1)},${y(n).toFixed(1)} `;
   });
   return d.trim();
 };
-const lenOf = (v: (number | null)[], w: number, y: (n: number) => number) => {
+const lenOf = (
+  v: (number | null)[],
+  x: (i: number) => number,
+  y: (n: number) => number,
+) => {
   let len = 0;
   let prev: { x: number; y: number } | null = null;
   v.forEach((n, i) => {
     if (n === null) return;
-    const q = { x: lx(i, w), y: y(n) };
+    const q = { x: x(i), y: y(n) };
     if (prev) len += Math.hypot(q.x - prev.x, q.y - prev.y);
     prev = q;
   });
@@ -811,17 +857,21 @@ export const BrokerPanel = ({
    */
   studies?: { shown: (i: number) => number };
   /**
-   * ⚠ THE PANEL WITHOUT ITS PANEL — Simon: "kita buka background putihnya supaya
-   * tidak ada batasan untuk sementara". The white card, its border, its wash and
-   * its clip all come off, so what is left is the chart itself standing on the
-   * episode's own ground with nothing boxing it in. The clip has to go with the
-   * rest: the header lifts to the logo's line, which is ABOVE this panel's own
-   * top edge, and a panel that still clipped would simply cut it off.
+   * ⚠ THE PANEL TAKEN APART INTO A HEADER AND A CHART — VIDEO 22, over three of
+   * Simon's turns. The ticker group lifts OUT of the window and aligns to the
+   * logo; the window stays, white, around what is left, which is only the
+   * chart. The clip has to go even though the card does not: the header now
+   * stands above this panel's own top edge and a panel that still clipped would
+   * cut it off.
    *
-   * ⚠ IT ALSO TAKES THE CHROME. The timeframe pills, the two indicator buttons,
-   * the dashed last-price line and the price chip on the axis are all
-   * a broker's UI rather than the chart — Simon asked for each of them by name —
-   * and what is left is the reading.
+   * ⚠ IT ALSO TAKES THE CHROME AND THE READOUTS, each asked for by name: the
+   * timeframe pills, the two indicator buttons, the dashed last-price line, the
+   * price chip on the axis, the big price with its change, and the numbers down
+   * the price axis. A broker's UI rather than the chart.
+   *
+   * ⚠ AND THE CHART THEN FILLS THE WINDOW. Two things were paying for
+   * something that has gone — 200px of header room and a 150px price-number
+   * gutter — so the plot takes both back. See BARE.
    */
   bare?: boolean;
 }) => {
@@ -831,12 +881,30 @@ export const BrokerPanel = ({
    * rather than being scaled — text on a scaled group is text that stretches.
    */
   const open = extension ? progressInOut(f, T.list.in, T.list.over) : 0;
-  const plotW = PLOT.w - LIST.take * open;
   /** ⚠ THE PANEL IS AS TALL AS WHAT IS IN IT. With the studies open that is
    *  STUDY.height, which is a sum of the stack rather than a second number that
    *  has to agree with it. */
   const panelH = studies ? STUDY.height : PANEL.h;
-  const plotH = studies ? STUDY.plotH : PLOT.h;
+  /**
+   * ⚠ WITH THE WALLS DOWN THE PLOT TAKES BACK WHAT IT WAS PAYING FOR. The 200px
+   * that held a header now standing outside the window, and the 150px gutter
+   * that held price numbers Simon has deleted — see BARE. Everything below is
+   * then a function of those three, so no position here is typed twice.
+   */
+  const plotTop = bare ? BARE.plotTop : PLOT.y - PANEL.y;
+  const plotH = studies
+    ? bare
+      ? STUDY.at - STUDY.lead - BARE.plotTop
+      : STUDY.plotH
+    : PLOT.h;
+  const px0 = bare ? BARE.gutter : PLOT.x - PANEL.x;
+  const plotW = bare ? PANEL.w - BARE.gutter - BARE.pad : PLOT.w - LIST.take * open;
+  /** ⚠ A FULLER SPAN WHEN THERE IS A WINDOW TO FILL, and still enough slack for
+   *  the two level labels — "Resistance" hangs 12 above its line and "Support"
+   *  30 below its own. At 0.84/0.06 of a 490px plot that is 29 above and 49
+   *  below. */
+  const plotSpan = bare ? 0.84 : 0.8;
+  const labelX = bare ? BARE.labelX : STUDY.labelX;
 
   /** Which chart the window is on, and therefore which row is selected. */
   const pick = chart ? CHARTS.findIndex((c) => c.t === chart) : -1;
@@ -867,8 +935,13 @@ export const BrokerPanel = ({
           top: PANEL.y,
           width: PANEL.w,
           height: panelH,
-          borderRadius: bare ? 0 : theme.layout.radius.lg,
-          background: bare ? "transparent" : C.surface,
+          borderRadius: theme.layout.radius.lg,
+          /** ⚠ THE CARD IS BACK IN BARE MODE, and it is a different card. It
+           *  used to be the whole panel's, header and chrome inside it; the
+           *  header now stands above it and the chrome is gone, so what it
+           *  encloses is only the chart — which is what Simon asked for:
+           *  "berikan window putih untuk chartnya sebagai background". */
+          background: C.surface,
           /* the panel's own outline fades as the mask takes over — otherwise
          it rides the shrink as a second, nested card border. C.border is
          #D8DBE0; the alpha is what animates */
@@ -1104,17 +1177,33 @@ export const BrokerPanel = ({
            * always drew, and the studies case squashes the MAPPING rather than
            * the drawing.
            */
-          const Y = plotH === PLOT.h ? ch.y : (v: number) => ch.yAt(v, plotH);
-          /** The swings, and the length the zigzag draws along, at this height.
-           *  Recomputed rather than scaled: the line's length is not a linear
-           *  function of the plot's height, because its x-run does not move. */
-          const pts =
-            plotH === PLOT.h
-              ? ch.pt
-              : ch.pivots.map((pv) => ({ ...pv, y: Y(pv.high ? ch.bars[pv.i].h : ch.bars[pv.i].l) }));
+          const Y = (v: number) => ch.yAt(v, plotH, plotTop, plotSpan);
+          /** ⚠ AND EVERY x GOES THROUGH `X`, not through the module's `lx`. The
+           *  plot's LEFT EDGE moves in bare mode — the price numbers it used to
+           *  leave room for are gone — so an origin baked into `lx` would put
+           *  the tape and the studies in different places. */
+          const X = (i: number) => px0 + 14 + ((plotW - 28) * i) / (N - 1);
+          /**
+           * The swings, and the length the zigzag draws along, at this mapping.
+           * Recomputed rather than scaled: the line's length is not a linear
+           * function of the plot's height, because its x-run does not move.
+           *
+           * ⚠ ALWAYS RECOMPUTED, NEVER SHORT-CIRCUITED. This read `plotH ===
+           * PLOT.h ? ch.pt : …` and that was a test of ONE of the four things
+           * the mapping is made of. Bare mode happens to land on 490 — the same
+           * height — with a different top and a different span, so the shortcut
+           * fired and drew the structure of a chart that was not on screen: the
+           * zigzag ran a third of the way down into the study panes. `Y` is
+           * `ch.y` exactly when nothing has been overridden, so there is
+           * nothing to save here anyway.
+           */
+          const pts = ch.pivots.map((pv) => ({
+            ...pv,
+            y: Y(pv.high ? ch.bars[pv.i].h : ch.bars[pv.i].l),
+          }));
           const zAt = [0];
           for (let i = 1; i < pts.length; i++) {
-            const dx = lx(pts[i].i, PLOT.w) - lx(pts[i - 1].i, PLOT.w);
+            const dx = X(pts[i].i) - X(pts[i - 1].i);
             zAt.push(zAt[i - 1] + Math.hypot(dx, pts[i].y - pts[i - 1].y));
           }
           const zLen = zAt[zAt.length - 1];
@@ -1134,14 +1223,19 @@ export const BrokerPanel = ({
               {ch.levels.map((v) => (
                 <g key={v}>
                   <line
-                    x1={PLOT.x - PANEL.x}
+                    x1={px0}
                     y1={Y(v)}
-                    x2={PLOT.x - PANEL.x + plotW}
+                    x2={px0 + plotW}
                     y2={Y(v)}
                     stroke={C.gridline}
                     strokeWidth={theme.layout.border.thin}
                     strokeDasharray="2 8"
                   />
+                  {/* ⚠ NO PRICE NUMBERS WITH THE WALLS DOWN — Simon: "hapus
+                      angka harga". The gridlines stay: they are how a wick is
+                      read against the one before it, and they say nothing the
+                      numbers were saying. */}
+                  {!bare && (
                   <text
                     x={AXIS_CX}
                     y={Y(v) + 10}
@@ -1153,12 +1247,13 @@ export const BrokerPanel = ({
                   >
                     {fmtRp(v)}
                   </text>
+                  )}
                 </g>
               ))}
 
               {/* the tape is simply THERE — no entrance */}
               {ch.bars.map((b, i) => {
-                const x = lx(i, plotW);
+                const x = X(i);
                 const top = Math.min(Y(b.o), Y(b.c));
                 const h = Math.max(2, Math.abs(Y(b.c) - Y(b.o)));
                 const up = b.c >= b.o;
@@ -1191,7 +1286,7 @@ export const BrokerPanel = ({
                     d={pts
                       .map(
                         (p, i) =>
-                          `${i === 0 ? "M" : "L"}${lx(p.i, plotW).toFixed(1)},${p.y.toFixed(1)}`,
+                          `${i === 0 ? "M" : "L"}${X(p.i).toFixed(1)},${p.y.toFixed(1)}`,
                       )
                       .join(" ")}
                     fill="none"
@@ -1210,7 +1305,7 @@ export const BrokerPanel = ({
                     );
                     if (a <= 0.001) return null;
                     const w = 74;
-                    const cx = lx(pv.i, plotW);
+                    const cx = X(pv.i);
                     const cy = pv.high ? pv.y - 18 : pv.y + 18;
                     return (
                       <g key={pv.i} opacity={a}>
@@ -1272,16 +1367,16 @@ export const BrokerPanel = ({
                           the chart does not show; drawn between the bars, it
                           says only what those bars say. */}
                       <line
-                        x1={lx(0, plotW)}
+                        x1={X(0)}
                         y1={Y(L.v)}
-                        x2={lx(0, plotW) + (lx(N - 1, plotW) - lx(0, plotW)) * levels.shown}
+                        x2={X(0) + (X(N - 1) - X(0)) * levels.shown}
                         y2={Y(L.v)}
                         stroke={C.indigo}
                         strokeWidth={theme.layout.stroke.ma}
                         strokeLinecap="round"
                       />
                       <text
-                        x={lx(0, plotW)}
+                        x={X(0)}
                         y={Y(L.v) + (L.above ? -12 : 30)}
                         fontFamily={font}
                         fontSize={22}
@@ -1307,7 +1402,7 @@ export const BrokerPanel = ({
                   if (a <= 0.001) return null;
                   const bw = 62;
                   const bh = 32;
-                  const cx = lx(pv.i, plotW);
+                  const cx = X(pv.i);
                   const by = pv.high ? pv.y - 14 - bh : pv.y + 14;
                   return (
                     <g key={`mk${pv.i}`} opacity={a}>
@@ -1338,11 +1433,11 @@ export const BrokerPanel = ({
               {isBmri && bbOn && (
                 <g opacity={progress(f, T.bb, theme.motion.revealF)}>
                   <path
-                    d={`${pathOf(ch.bb.upper, plotW, Y)} ${ch.bb.lower
+                    d={`${pathOf(ch.bb.upper, X, Y)} ${ch.bb.lower
                       .map((v, i) =>
                         v === null
                           ? ""
-                          : `L${lx(i, plotW).toFixed(1)},${Y(v).toFixed(1)}`,
+                          : `L${X(i).toFixed(1)},${Y(v).toFixed(1)}`,
                       )
                       .reverse()
                       .join(" ")} Z`}
@@ -1353,7 +1448,7 @@ export const BrokerPanel = ({
                   {[ch.bb.upper, ch.bb.lower].map((band, k) => (
                     <path
                       key={k}
-                      d={pathOf(band, plotW, Y)}
+                      d={pathOf(band, X, Y)}
                       fill="none"
                       stroke={C.bbTosca}
                       strokeWidth={theme.layout.stroke.band}
@@ -1363,7 +1458,7 @@ export const BrokerPanel = ({
                         f,
                         T.bb,
                         T.drawOver,
-                        lenOf(band, plotW, Y),
+                        lenOf(band, X, Y),
                       )}
                     />
                   ))}
@@ -1373,13 +1468,13 @@ export const BrokerPanel = ({
               {/* ── the average ── */}
               {isBmri && maOn && (
                 <path
-                  d={pathOf(ch.ma, plotW, Y)}
+                  d={pathOf(ch.ma, X, Y)}
                   fill="none"
                   stroke={C.maOrange}
                   strokeWidth={theme.layout.stroke.ma}
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, plotW, Y))}
+                  {...drawPath(f, T.ma, T.drawOver, lenOf(ch.ma, X, Y))}
                 />
               )}
 
@@ -1387,9 +1482,9 @@ export const BrokerPanel = ({
               carries is the pill on the axis */}
               {!bare && (
                 <line
-                  x1={PLOT.x - PANEL.x}
+                  x1={px0}
                   y1={Y(ch.price)}
-                  x2={PLOT.x - PANEL.x + plotW}
+                  x2={px0 + plotW}
                   y2={Y(ch.price)}
                   stroke={C.text}
                   strokeWidth={theme.layout.border.thin}
@@ -1414,13 +1509,13 @@ export const BrokerPanel = ({
                   if (on <= 0.001) return null;
                   const top = STUDY.at + k * (STUDY.pane + STUDY.gap);
                   const inset = 9;
-                  const x0 = lx(0, plotW);
-                  const x1 = lx(N - 1, plotW);
+                  const x0 = X(0);
+                  const x1 = X(N - 1);
                   /** 0→1 up the pane, from its own floor. */
                   const py = (t: number) => top + STUDY.pane - inset - t * (STUDY.pane - inset * 2);
                   const path = (vs: (number | null)[], t: (v: number) => number) =>
                     vs
-                      .map((v, i) => (v === null ? "" : `${i === 0 || vs[i - 1] === null ? "M" : "L"}${lx(i, plotW).toFixed(1)},${py(t(v)).toFixed(1)}`))
+                      .map((v, i) => (v === null ? "" : `${i === 0 || vs[i - 1] === null ? "M" : "L"}${X(i).toFixed(1)},${py(t(v)).toFixed(1)}`))
                       .join(" ");
                   const band = (t: number) => (
                     <line
@@ -1454,16 +1549,16 @@ export const BrokerPanel = ({
                   return (
                     <g key={label} opacity={on}>
                       <rect
-                        x={STUDY.labelX - 8}
+                        x={labelX - 8}
                         y={top}
-                        width={PLOT.x - PANEL.x + plotW - (STUDY.labelX - 8)}
+                        width={px0 + plotW - (STUDY.labelX - 8)}
                         height={STUDY.pane}
                         rx={theme.layout.radius.sm}
                         fill={C.surface}
                         fillOpacity={0.62}
                       />
                       <text
-                        x={STUDY.labelX}
+                        x={labelX}
                         y={top + STUDY.pane / 2 + 7}
                         fontFamily={font}
                         fontSize={20}
@@ -1493,7 +1588,7 @@ export const BrokerPanel = ({
                             v === null ? null : (
                               <rect
                                 key={i}
-                                x={lx(i, plotW) - bodyW(plotW) / 2}
+                                x={X(i) - bodyW(plotW) / 2}
                                 y={Math.min(py(sig(0)), py(sig(v)))}
                                 width={bodyW(plotW)}
                                 height={Math.max(1, Math.abs(py(sig(v)) - py(sig(0))))}
@@ -1517,14 +1612,11 @@ export const BrokerPanel = ({
                 <text
                   key={t}
                   x={
-                    PLOT.x -
-                    PANEL.x +
-                    14 +
-                    ((plotW - 28) * i) / (AXIS.length - 1)
+                    px0 + 14 + ((plotW - 28) * i) / (AXIS.length - 1)
                   }
                   /* the panel clips: a baseline below its height is a label
                  cut in half */
-                  y={studies ? STUDY.axisY : PLOT.y + plotH - PANEL.y + 34}
+                  y={studies ? STUDY.axisY : plotTop + plotH + 34}
                   textAnchor="middle"
                   fontFamily={font}
                   fontSize={UI.size}
@@ -1550,7 +1642,7 @@ export const BrokerPanel = ({
                 position: "absolute",
                 left: AXIS_CX,
                 transform: "translateX(-50%)",
-                top: (plotH === PLOT.h ? ch.y : (v: number) => ch.yAt(v, plotH))(ch.price) - 22,
+                top: ch.yAt(ch.price, plotH, plotTop, plotSpan) - 22,
                 opacity: o,
                 background: C.text,
                 color: C.surface,
