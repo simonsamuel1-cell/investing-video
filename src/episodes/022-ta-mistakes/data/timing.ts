@@ -1745,6 +1745,150 @@ export const COPY = {
   close: 12946,
 } as const;
 
+/* ═══ SC15 — SATU SAHAM, DUA RENCANA ═════════════════════════════════════
+ *
+ * ⚠ THESE FRAMES ARE THE VOICE'S, NOT `BLOCK`'S. The three cues this scene is
+ * built on are 12484, 12646 and 13066 in subtitles.ts, and every beat below
+ * lands on one of them or between two. `BLOCK.SC14` still says 12346 and
+ * `BLOCK.SC15` still says 13070 because the five VO pads were never rippled
+ * into that table — see the note on BLOCK.END. So the scene is mounted on its
+ * OWN window rather than on a tile, the way SC10 is, and the block table is
+ * left alone until it is re-derived as a whole.
+ *
+ * ⚠ AND THAT IS WHY IT OVERLAPS TWO TILES. 12484–13176 straddles the
+ * SC14/SC15 boundary at 13070. Both are Blank, so nothing is covered; what
+ * matters is that the picture sits where the sentence is.
+ *
+ * ⚠ B1 ENDS EXACTLY WHERE B2a BEGINS — 12646 — and that is the cue boundary,
+ * not a round number. "…copy trade orang lain." hands straight over to
+ * "Sahamnya mungkin sama,", so the title card is off the screen on the frame
+ * the header arrives.
+ *
+ * ⚠ ONE CHIP ON TOP, EIGHT VALUES UNDERNEATH. The shape of the table IS the
+ * argument: what is shared is one object and what differs is a stack, so the
+ * four rows must arrive one per spoken difference and none of them may still
+ * be moving when the next one starts. That is the assertion at the bottom.
+ */
+/**
+ * Two entrance profiles for a row, not four.
+ *
+ * ⚠ THE FIRST ROW HAS THE LONGEST WINDOW and gets the relaxed one; the last
+ * three follow the one before by 54–68 f and are compressed so each is
+ * finished before its neighbour starts. `valueAt` and `ruleAt` are offsets
+ * from the row's own `at`.
+ */
+const ROW_EASY = { label: 14, valueAt: 10, value: 20, ruleAt: 24, rule: 14 } as const;
+const ROW_TIGHT = { label: 12, valueAt: 8, value: 18, ruleAt: 20, rule: 12 } as const;
+
+export const PLANS = {
+  at: 12484,
+  to: 13176,
+
+  /* ── B1 · the card that names the mistake ───────────────────────────── */
+  /** ⚠ THE CHIPS CARRY NO `over`. core/Chip owns its own entrance — one pop,
+   *  from useMotion — and a duration here would be a number nothing reads. */
+  b1: {
+    chip: 12484,
+    head: { at: 12494, stagger: 4 },
+    sub: 12518,
+    rule: { at: 12530, over: 30 },
+    /** The whole card leaves together, up and out. */
+    out: { at: 12626, over: 20 },
+  },
+
+  /* ── B2a · one source, two empty columns ────────────────────────────── */
+  /**
+   * ⚠ THESE SEVEN DELIBERATELY OVERLAP. The sameness has to be established as
+   * one gesture — card, chip, tape, wires, columns — and seven things arriving
+   * strictly one after another would take 140 frames it does not have. The
+   * assertion below therefore checks the ORDER they start in, not that each
+   * has finished.
+   */
+  card: { at: 12646, over: 20 },
+  same: 12660,
+  /** ⚠ 4 FRAMES EACH, STAGGERED BY 2, so the twelve land across 26 — the
+   *  window the build prompt gives. Per candle that is fast, and it is meant
+   *  to be: what reads here is the sweep, not any one bar. */
+  tape: { at: 12668, over: 4, step: 2 },
+  wires: { at: 12680, over: 24 },
+  cols: { at: 12690, over: 24 },
+  who: 12698,
+  split: { at: 12704, over: 14 },
+
+  /* ── B2b–B2e · the four differences ─────────────────────────────────── */
+  /**
+   * ⚠ BOTH SIDES OF A ROW ARRIVE ON THE SAME FRAME. A stagger between them
+   * would make one plan the subject and the other the comparison, and the
+   * scene's whole claim is that neither is the right one.
+   */
+  rows: [
+    { label: "Timeframe", a: "Daily", b: "Weekly", at: 12746, step: ROW_EASY },
+    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12814, step: ROW_TIGHT },
+    { label: "Risk Limit", a: "2%", b: "5%", at: 12868, step: ROW_TIGHT },
+    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 12926, step: ROW_TIGHT },
+  ],
+
+  /* ── B3 · the same table, said out loud ─────────────────────────────── */
+  /**
+   * ⚠ NOTHING MOVES POSITION HERE. The columns are where they have been since
+   * 12690 and the header has not shifted since 12646; what changes is only
+   * the emphasis. A scene that rearranges on its closing line is telling the
+   * viewer the arrangement was not the point.
+   */
+  lift: { at: 13066, over: 24 },
+  edge: { at: 13074, over: 24 },
+  close: { at: 13084, text: "Same Stock, Different Trade" },
+} as const;
+
+{
+  const V = PLANS;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.to - V.at !== 692) fail(`SC15 is ${V.to - V.at} frames, not the 692 the voice needs`);
+  /** ⚠ THE TITLE CARD IS GONE ON THE FRAME THE HEADER ARRIVES. They share
+   *  12646 because the two cues do. */
+  if (V.b1.out.at + V.b1.out.over !== V.card.at) {
+    fail(`SC15's title card clears at ${V.b1.out.at + V.b1.out.over}, not when the header arrives at ${V.card.at}`);
+  }
+  /** B2a's seven, in the order they were specified. Starts only — see above. */
+  const opens: [string, number][] = [
+    ["header card", V.card.at], ["same-stock chip", V.same], ["candle strip", V.tape.at],
+    ["connectors", V.wires.at], ["columns", V.cols.at], ["column names", V.who],
+    ["divider", V.split.at],
+  ];
+  opens.forEach(([n, at], i) => {
+    if (i && at < opens[i - 1][1]) fail(`SC15's ${n} opens at ${at}, before ${opens[i - 1][0]} at ${opens[i - 1][1]}`);
+  });
+  /** ⚠ THE TWELVE CANDLES LAND INSIDE B2a, and the last one is what decides
+   *  that — a stagger makes the strip longer than any one candle's wipe. */
+  const lastBar = V.tape.at + V.tape.step * 11 + V.tape.over;
+  if (lastBar > V.split.at + V.split.over) {
+    fail(`SC15's strip finishes at ${lastBar}, after B2a has closed at ${V.split.at + V.split.over}`);
+  }
+  /**
+   * ⚠ A ROW MAY NOT STILL BE MOVING WHEN THE NEXT ONE STARTS, and this is the
+   * assertion the scene actually needs. The build prompt asked for "≤30 frames
+   * per row"; its own numbers are 38 and 32, so that rule was never the real
+   * one. What is real is the clearance between neighbours, because the voice
+   * names the four differences 54–68 frames apart and a row still sliding when
+   * its successor lands turns a list into a blur.
+   */
+  const ends = V.rows.map((r) => r.at + r.step.ruleAt + r.step.rule);
+  V.rows.forEach((r, i) => {
+    const next = i + 1 < V.rows.length ? V.rows[i + 1].at : V.lift.at;
+    const who = i + 1 < V.rows.length ? `row ${i + 2}` : "the closing emphasis";
+    if (ends[i] > next) fail(`SC15's ${r.label} row is still moving at ${ends[i]}, when ${who} starts at ${next}`);
+    if (i && r.at <= V.rows[i - 1].at) fail(`SC15's ${r.label} row does not follow the one before it`);
+  });
+  /** ⚠ AND THE CLOSING LINE LANDS INSIDE THE SCENE. core/Chip pops over
+   *  useMotion's own duration, so only its start can be checked here. */
+  if (V.close.at >= V.to) fail(`SC15's closing chip arrives at ${V.close.at}, at or after the scene ends at ${V.to}`);
+  if (V.lift.at < ends[ends.length - 1]) {
+    fail(`SC15's emphasis starts at ${V.lift.at}, before the last row has settled at ${ends[ends.length - 1]}`);
+  }
+}
+
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */
 export const ASK = {
   shrink: { at: 13080, over: 34 },

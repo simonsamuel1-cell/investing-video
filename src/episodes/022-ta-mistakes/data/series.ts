@@ -906,3 +906,68 @@ export const SETUP_TRADE = {
     if (SETUP_TRADE.sell[i] <= SETUP_TRADE.buy[i]) fail(`tape ${i + 1} is sold on or before the bar it is bought`);
   });
 }
+
+/* ═══ SC15 · THE HEADER'S CANDLE STRIP ═══════════════════════════════════
+ *
+ * ⚠ DECORATIVE, AND IT HAS TO STAY THAT WAY. It is twelve bars in a 320×72
+ * strip at 45% opacity with no axis, no gridline, no price and — above all —
+ * no ticker. Its whole job is to say "a stock" without saying WHICH stock,
+ * because the eight plan values underneath must not be attachable to any real
+ * instrument. Anything that would make it readable makes it a chart.
+ *
+ * ⚠ IT IS A TAPE THAT HAD TO BE SOLVED, NOT PICKED, and the reason is that
+ * `toBars` opens each bar on the previous CLOSE. A bar's body is therefore the
+ * size of that bar's own move, and the plot's height is the whole series'
+ * RANGE — so a tape that trends cleanly spends its height on the trend and
+ * leaves each body a hairline. The first version climbed 100 → 119 and came
+ * back from the render as twelve dashes: median body 5px in a 75px strip, with
+ * four bars under 3.
+ *
+ * So the drift is small and the per-bar tremor is large. The anchors carry a
+ * rise of seven units and the tremor is 60% of that, which means the anchors
+ * set the DIRECTION and the tremor sets the texture — the shape that survives
+ * is "rising and choppy", not the named turn the build prompt described, and
+ * that is the honest trade for bodies anybody can see.
+ *
+ * ⚠ AND THE SEED IS CHOSEN, BY SEARCH. 2700 combinations of seed and tremor
+ * were measured in this exact box for the flattest spread of body heights that
+ * still rises and still has both colours in it. This one is [3,4,5,10,14,15,
+ * 10,8,6,5,14,12]px — median 10, no outlier. The 3px floor is `toBars` own
+ * (2.3% of the range) and cannot be beaten from here.
+ */
+const PLAN_SEED = 8863;
+const PLAN_CLOSES = fromAnchors(
+  [
+    [0, 100],
+    [0.5, 107],
+    [0.72, 105],
+    [1, 108],
+  ],
+  12,
+  PLAN_SEED,
+  0.6,
+);
+export const PLAN_TAPE: Series = {
+  closes: PLAN_CLOSES,
+  bars: toBars(PLAN_CLOSES, PLAN_SEED ^ 0x5bf0, 1.5),
+  kind: "synthetic",
+};
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/series: ${m}`);
+  };
+  if (PLAN_TAPE.bars.length !== 12) fail(`SC15's strip is ${PLAN_TAPE.bars.length} bars, not the 12 it is drawn for`);
+  /** ⚠ AND IT MUST NOT CARRY A LABEL. `designed` takes one and SourceTag
+   *  prints it for real data; a label on an invented tape is the ticker this
+   *  scene is built to not have. */
+  if (PLAN_TAPE.label !== undefined) fail("SC15's strip carries a label — this scene shows no ticker");
+  if (PLAN_TAPE.kind === "market") fail("SC15's strip claims to be real data");
+  /** ⚠ AND IT HAS TO STAY A CHART RATHER THAN A ROW OF DASHES. Both colours
+   *  present, and a net rise — the two things the seed was chosen for. A
+   *  nudge to the anchors or the tremor that loses either is a nudge that
+   *  should fail here rather than in a render nobody looks at twice. */
+  const up = PLAN_TAPE.bars.filter((b) => b.c >= b.o).length;
+  if (up === 0 || up === PLAN_TAPE.bars.length) fail("SC15's strip is all one colour");
+  if (PLAN_TAPE.closes[11] <= PLAN_TAPE.closes[0]) fail("SC15's strip does not rise");
+}

@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -54,6 +54,7 @@ import { Platform } from "./scenes/Platform";
  * Bringing any of them back is one import and one row in SCENES.
  */
 import { Overload } from "./scenes/Overload";
+import { CopyTrade } from "./scenes/CopyTrade";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -204,6 +205,25 @@ const Body = () => (
       name="SC10 · indicator overload"
     >
       <Overload />
+    </Sequence>
+
+    {/* ⚠ SC15 ON ITS OWN WINDOW, FOR THE SAME REASON SC10 IS ON ONE. Its three
+        cues are 12484, 12646 and 13066 in the recording, and `BLOCK` is still
+        120–150 frames behind from SC11 on because the five VO pads were never
+        rippled into it. So the picture is hung on the voice and the block table
+        is left alone until it is re-derived as a whole — which means this
+        straddles the SC14/SC15 boundary at 13070. Both tiles are Blank, so
+        nothing of theirs is covered.
+
+        ⚠ AND IT SITS WHERE ITS TILE WOULD: above the tiling, below the chrome.
+        It paints its own ground, so mounted above CG-E it would hide the
+        counter — the same mistake SC10 made once. See scenes/CopyTrade.tsx. */}
+    <Sequence
+      from={PLANS.at}
+      durationInFrames={PLANS.to - PLANS.at}
+      name="SC15 · satu saham, dua rencana"
+    >
+      <CopyTrade />
     </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a

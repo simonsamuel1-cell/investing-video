@@ -5,7 +5,7 @@
  * scene in this episode follows. A number that appears twice in a scene file
  * belongs here instead.
  */
-import { GRID_PAD_X, candleWidth, gridOf, theme, columns, inset } from "../../../core";
+import { GRID_PAD_X, candleWidth, gridOf, splitRects, theme, columns, inset } from "../../../core";
 import type { Rect } from "../../../core";
 import { CARD_LIST } from "./timing";
 import { SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
@@ -908,4 +908,244 @@ export const BREAKOUT_BOX = (() => {
   if (b.mark.group + b.mark.edge * 2 > b.boxes[0].w) {
     fail(`a ${b.mark.group}px label group does not fit inside a ${b.boxes[0].w}px card`);
   }
+}
+
+/* ═══ SC15 · SATU SAHAM, DUA RENCANA ═════════════════════════════════════
+ *
+ * ⚠ THE ARGUMENT IS THE LAYOUT. One header at the top, two columns beneath
+ * it, and by the end one chip up there is outnumbered by eight values down
+ * here. Nothing on screen says "the ticker is the small part" — the geometry
+ * says it, which is why every number below is solved rather than chosen.
+ *
+ * ⚠ THE HEADER'S TOP EDGE IS THE LOGO ZONE'S FLOOR, derived and not typed.
+ * The one object everything else hangs from is as high as this episode is
+ * allowed to put it, so the two columns get the most room the frame has.
+ *
+ * ⚠ AND THE TWO COLUMNS COME FROM `splitRects`, not from two rects. A
+ * comparison whose halves are placed independently is a comparison that can
+ * quietly stop being symmetrical; asking core for the halves means it cannot.
+ */
+const PLAN_W = theme.canvas.width;
+const PLAN_A = theme.stage.active;
+
+/**
+ * A core/Chip pill's height, from the type it is built out of.
+ *
+ * ⚠ SOLVED, NOT OBSERVED. Chip pads by 0.3 of the size above and below and
+ * carries a 2px rule, and the face's own line box is 1.26 of the size. Every
+ * gap in this scene that sits above or below a chip is measured from this, so
+ * changing a chip's size moves what is around it instead of colliding with it.
+ */
+const pillH = (size: number) => size * 1.26 + Math.round(size * 0.3) * 2 + theme.shape.rule * 2;
+
+/**
+ * ⚠ THE THEME'S SMALLEST TYPE, WHICH IS THE FLOOR THIS PROJECT HAS ALREADY
+ * SET. The build prompt sized these three pills by their boxes — 220×40 and
+ * 180×40 — which works out at about 20px, below anything else in the library.
+ * 26 is the nearest size the episode already trusts to be read, and the pill it
+ * builds is 53 tall rather than 40.
+ */
+const PLAN_CHIP = theme.text.axis.size;
+
+/** The four rows, as one pitch rather than four tops. */
+const PLAN_ROW = {
+  y0: 530,
+  pitch: 80,
+  /** The separator, below the row's centre-line and clear of a descender. */
+  rule: 30,
+  labelSize: 22,
+  valueSize: 32,
+  /** ⚠ 40% — a separator as strong as the border around the column divides it
+   *  into four cards instead of ruling four rows. */
+  ruleAlpha: 0.4,
+  /** How far a value rises into place. Shorter than the default: four of these
+   *  arrive in twelve seconds and a long rise reads as drift. */
+  rise: 8,
+} as const;
+
+/** The margin above a column's name and below its last separator. ⚠ ONE
+ *  NUMBER FOR BOTH, which is what makes the column balanced rather than
+ *  bottom-heavy — the build prompt's 440 left 24 above and 60 below. */
+const PLAN_COL_PAD = 24;
+const PLAN_LAST_RULE = PLAN_ROW.y0 + PLAN_ROW.pitch * 3 + PLAN_ROW.rule;
+
+/** The band the two columns are cut from. Centred on the frame, so the
+ *  divider and the header's centre are the same x by construction. */
+const PLAN_BAND: Rect = (() => {
+  const w = 1600;
+  const y = 420;
+  return { x: (PLAN_W - w) / 2, y, w, h: PLAN_LAST_RULE + PLAN_COL_PAD - y };
+})();
+
+/** ⚠ 200, WHICH IS WHAT MAKES THE COLUMNS 700 WIDE. The gap is the number
+ *  chosen; the column width follows from it and from the band. */
+const PLAN_GAP = 200;
+const [PLAN_LEFT, PLAN_RIGHT] = splitRects(PLAN_GAP, PLAN_BAND);
+
+/** The header card, centred and sitting on the logo zone's floor. */
+const PLAN_HEAD: Rect = (() => {
+  const w = 400;
+  return { x: (PLAN_W - w) / 2, y: theme.logoZone.height, w, h: 180 };
+})();
+
+/** Its two insets: the margin all round, and the air between chip and strip. */
+const HEAD_PAD = 18;
+const HEAD_GAP = 16;
+
+/**
+ * ⚠ B1'S STACK IS SPACED FROM THE INK, NOT FROM THE BOXES, and that is the
+ * whole reason these three numbers are derived. Measured off a render: a 96px
+ * display line's ink ends 122px below the block's own top, and a 36px line's
+ * runs 13 above its centre to 21 below. The build prompt's y372 and y444 were
+ * spaced from the type's boxes and left THREE pixels between the headline's
+ * descenders and the sub's ascenders.
+ */
+const B1_GAP = 28;
+const B1_HEAD_Y = 252;
+const B1_INK = { head: 122, subUp: 13, subDown: 21 } as const;
+
+/**
+ * A connector from the header's bottom edge to the top of a column, elbowed
+ * at the midpoint with a rounded corner.
+ *
+ * ⚠ IT RETURNS ITS OWN LENGTH. A trim-path draw needs the number, and a path
+ * whose dash length is measured by hand stops being right the first time the
+ * columns move. Two quarter-circles plus three straights is exact.
+ */
+const PLAN_ELBOW = 12;
+const wireOf = (from: { x: number; y: number }, to: { x: number; y: number }) => {
+  const r = PLAN_ELBOW;
+  const my = (from.y + to.y) / 2;
+  const dir = to.x < from.x ? -1 : 1;
+  const d =
+    `M${from.x},${from.y} L${from.x},${my - r} ` +
+    `Q${from.x},${my} ${from.x + dir * r},${my} ` +
+    `L${to.x - dir * r},${my} ` +
+    `Q${to.x},${my} ${to.x},${my + r} L${to.x},${to.y}`;
+  const arc = (Math.PI * r) / 2;
+  const len = my - r - from.y + arc + (Math.abs(to.x - from.x) - r * 2) + arc + (to.y - my - r);
+  return { d, len };
+};
+
+export const PLAN = {
+  /** B1 — the card that names the mistake, and then gets out of the way. `x`
+   *  is a left edge; `headY` is a TOP, because a display line is anchored by
+   *  its first line rather than by its middle, and the two `y` under it are
+   *  centre-lines, which is what core/Line and core/Chip anchor on. */
+  b1: {
+    x: PLAN_A.x,
+    chipY: 202,
+    /** ⚠ THE BUILD PROMPT'S OWN 20px. It is a badge under a 96px headline, not
+     *  a label that has to be read on its own, which is why it is the one chip
+     *  here allowed under the theme's smallest size. */
+    chipSize: 20,
+    headY: B1_HEAD_Y,
+    subY: B1_HEAD_Y + B1_INK.head + B1_GAP + B1_INK.subUp,
+    rule: { y: B1_HEAD_Y + B1_INK.head + B1_GAP * 2 + B1_INK.subUp + B1_INK.subDown, w: 420 },
+    /** How far the whole card travels up as it leaves. */
+    lift: 24,
+  },
+
+  head: {
+    rect: PLAN_HEAD,
+    chipSize: PLAN_CHIP,
+    chipY: PLAN_HEAD.y + HEAD_PAD + pillH(PLAN_CHIP) / 2,
+    /**
+     * ⚠ DECORATIVE, AND SIZED TO SAY SO. What is left of a 400×180 card once
+     * the chip and the margins have had theirs — there is no room in it for an
+     * axis, which is the point.
+     */
+    tape: {
+      x: PLAN_HEAD.x + 40,
+      y: PLAN_HEAD.y + HEAD_PAD + pillH(PLAN_CHIP) + HEAD_GAP,
+      w: 320,
+      h: PLAN_HEAD.h - HEAD_PAD * 2 - pillH(PLAN_CHIP) - HEAD_GAP,
+    },
+    /** ⚠ CAPPED AT 45% — the strip must never read as something analysable. */
+    tapeAlpha: 0.45,
+    /** ⚠ TIGHTER THAN THE CHART DEFAULT. 12% of head-room top and bottom on a
+     *  75px strip is 18px spent on nothing; the bars need it more than the
+     *  margin does. */
+    tapePad: 0.08,
+  },
+
+  band: PLAN_BAND,
+  cols: [PLAN_LEFT, PLAN_RIGHT] as [Rect, Rect],
+
+  /** Both columns are read with the same insets — that is the comparison. */
+  col: {
+    pad: 40,
+    chipSize: PLAN_CHIP,
+    chipY: PLAN_BAND.y + PLAN_COL_PAD + pillH(PLAN_CHIP) / 2,
+    /** How far a column slides up as it arrives. */
+    rise: 10,
+  },
+
+  row: PLAN_ROW,
+
+  wires: [
+    wireOf({ x: PLAN_W / 2, y: PLAN_HEAD.y + PLAN_HEAD.h }, { x: PLAN_LEFT.x + PLAN_LEFT.w / 2, y: PLAN_BAND.y }),
+    wireOf({ x: PLAN_W / 2, y: PLAN_HEAD.y + PLAN_HEAD.h }, { x: PLAN_RIGHT.x + PLAN_RIGHT.w / 2, y: PLAN_BAND.y }),
+  ],
+
+  /** ⚠ THE EPISODE'S OWN CAPTION LINE, not a typed y. It is 924, four pixels
+   *  above where the build prompt put it, and the four pixels are clearance
+   *  the scene's tightest point can use. */
+  close: { x: PLAN_W / 2, y: theme.stage.caption.y, size: 32 },
+} as const;
+
+{
+  const P = PLAN;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  /** ⚠ THE HEADER IS THE ONE OBJECT THE WHOLE SCENE HANGS FROM, so it has to
+   *  be on the frame's centre-line and the columns have to be either side of
+   *  that same line. Typed, the three would agree until one of them moved. */
+  const mid = PLAN_W / 2;
+  if (P.head.rect.x + P.head.rect.w / 2 !== mid) fail("SC15's header card is not centred on the frame");
+  if (P.band.x + P.band.w / 2 !== mid) fail("SC15's column band is not centred on the frame");
+  if (P.cols[0].w !== P.cols[1].w) fail(`SC15's columns are ${P.cols[0].w} and ${P.cols[1].w} wide`);
+  if (P.cols[0].x + P.cols[0].w >= mid || P.cols[1].x <= mid) fail("SC15's columns cross their own divider");
+  /** ⚠ THE HEADER SITS ON THE LOGO ZONE, NOT IN IT. */
+  if (P.head.rect.y < theme.logoZone.height) fail(`SC15's header card starts at ${P.head.rect.y}, inside the logo zone`);
+  /** ⚠ AND THE CARD HOLDS ITS TWO THINGS WITH EQUAL AIR ROUND THEM — the one
+   *  assertion that catches a chip-size change, which would otherwise push the
+   *  strip out of the bottom of the card without anything else complaining. */
+  const t = P.head.tape;
+  if (t.x < P.head.rect.x || t.x + t.w > P.head.rect.x + P.head.rect.w) fail("SC15's candle strip is wider than its card");
+  if (Math.abs(t.y + t.h - (P.head.rect.y + P.head.rect.h - HEAD_PAD)) > 0.5) {
+    fail(`SC15's candle strip ends at ${t.y + t.h}, not ${HEAD_PAD}px above the card's floor`);
+  }
+  if (t.h < pillH(P.head.chipSize)) fail(`SC15's strip is ${Math.round(t.h)}px tall, less than the chip above it`);
+  /**
+   * ⚠ THE COLUMN IS BALANCED, and this is the assertion that keeps it so. The
+   * margin above the name and the margin below the last separator are one
+   * number; if the band's height ever stops following the rows, they part.
+   */
+  const above = P.col.chipY - pillH(P.col.chipSize) / 2 - P.band.y;
+  const below = P.band.y + P.band.h - PLAN_LAST_RULE;
+  if (Math.abs(above - below) > 0.5) fail(`SC15's columns hold ${above} above and ${below} below`);
+  /** ⚠ AND FOUR ROWS HAVE TO FIT UNDER THE NAME. */
+  const firstTop = P.row.y0 - P.row.valueSize / 2;
+  if (firstTop <= P.col.chipY + pillH(P.col.chipSize) / 2) fail("SC15's first row starts inside the column's own name");
+  if (PLAN_LAST_RULE > P.band.y + P.band.h) fail(`SC15's last separator is at ${PLAN_LAST_RULE}, below the column floor`);
+  /** ⚠ THE TIGHTEST POINT IN THE SCENE — the closing line's bottom edge, which
+   *  is solvable rather than observable because the pill is built from type. */
+  const chipLow = P.close.y + pillH(P.close.size) / 2;
+  if (chipLow > theme.captionBand.top) {
+    fail(`SC15's closing chip reaches ${Math.round(chipLow)}, inside the subtitle band at ${theme.captionBand.top}`);
+  }
+  /** ⚠ AND NOTHING LEAVES THE SAFE AREA ON EITHER SIDE. */
+  if (P.cols[0].x < PLAN_A.x || P.cols[1].x + P.cols[1].w > PLAN_A.x + PLAN_A.w) {
+    fail("SC15's columns reach outside the safe area");
+  }
+  /** ⚠ B1 IS CHECKED AGAINST THE FRAME, NOT AGAINST THE TABLE BELOW IT. Its
+   *  rule sits inside the column band — and that is fine, because the title
+   *  card is gone on the frame the header arrives and the two never share a
+   *  pixel. An assertion comparing them would guard a collision that cannot
+   *  happen, and would fail on a correct build. */
+  if (P.b1.rule.y >= theme.captionBand.top) fail("SC15's title card rule is in the subtitle band");
+  if (P.b1.x + P.b1.rule.w > PLAN_A.x + PLAN_A.w) fail("SC15's title card rule runs past the safe area");
+  if (P.b1.chipY - pillH(P.b1.chipSize) / 2 < PLAN_A.y) fail("SC15's mistake chip is above the safe area");
 }
