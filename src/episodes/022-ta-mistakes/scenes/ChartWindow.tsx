@@ -140,7 +140,12 @@ export const ChartWindow = () => {
   const open = progress(f, local(V.card, V.at), m.fade);
   const drawn = progress(f, local(V.lines, V.at), m.sec(0.5));
   const ghost = progress(f, local(V.ghost, V.at), m.reveal);
-  const down = progress(f, local(V.down, V.at), m.reveal);
+  /** ⚠ ONE PER BAR — Simon: "candlestick merah nya animasi muncul satu satu".
+   *  core/Candles' `wipe` grows each bar out of the end it came from, which for
+   *  a falling bar is its high; three of them 20 frames apart read as a
+   *  cascade. */
+  const red = (i: number) =>
+    progress(f, local(V.down.at, V.at) + (i - DOWN_FROM) * V.down.step, m.reveal);
   const slide = progress(f, local(V.shift, V.at), m.move);
   const small = progress(f, local(V.small.at, V.at), m.fade);
   /** ⚠ ONE OPACITY FOR THE WHOLE SECOND WINDOW — Simon: "fade in aja semuanya
@@ -200,12 +205,15 @@ export const ChartWindow = () => {
             ⚠ THE 20px IS A DRAWING OFFSET, NOT A PRICE. Both fans leave from
             the same close, so their first bars met there and read as one long
             candle; this separates them without making the falling move a
-            different size from the rising one. See droppedBy. */}
+            different size from the rising one. See droppedBy.
+            ⚠ AND THEY ARRIVE ONE AT A TIME. No opacity here: `wipe` returns 0
+            for a bar whose frame has not come and core/Candles draws nothing
+            for it, so the stagger is also the mount guard. */}
         <Candles
           bars={DOWN_TAPE}
           grid={droppedBy(bigGrid, W.downDrop)}
           from={DOWN_FROM}
-          opacity={down}
+          wipe={red}
         />
 
         {/* ═══ the small window — the pattern already finished ═══════════ */}

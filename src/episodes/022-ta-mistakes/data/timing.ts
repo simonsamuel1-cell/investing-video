@@ -1818,10 +1818,19 @@ export const WINDOW11 = {
   /**
    * ⚠ THE OTHER FUTURE — Simon, 9600: "tambahkan 3 candlestick baru di kanan
    * tapi turun". The same three bars mirrored, hanging under the three that
-   * rose. It comes last because the scene's claim only exists once there are
-   * TWO of them: one dashed fan going up is a forecast, and two is the point.
+   * rose. It comes last because what it does is turn a promise into an outcome:
+   * the dashed fan is what the pattern said would happen, and this is what did.
+   *
+   * ⚠ ONE AT A TIME — Simon: "candlestick merah nya animasi muncul satu satu".
+   * 20 frames apart, which is just inside the reveal each one takes, so they
+   * cascade rather than arriving as three separate events. The last is down by
+   * 9640 and settled by 9664.
+   *
+   * ⚠ AND ONLY THESE THREE ARE STAGGERED. The dashed fan above still arrives
+   * together, because it is one statement — "it could have gone here" — while
+   * these are three things that happened in an order.
    */
-  down: 9600,
+  down: { at: 9600, step: 20 },
   /** ⚠ A FADE, NOT A CUT, and it is mine rather than Simon's: he asked for the
    *  chart and its animation, and an ending was not part of either. A picture
    *  that vanishes on a frame boundary reads as a dropped shot, and SC10's
@@ -1845,12 +1854,16 @@ export const WINDOW11 = {
   const steps: [string, number][] = [
     ["windows", V.card], ["bars", V.candles], ["lines", V.lines], ["the ghost bars", V.ghost],
     ["the shift", V.shift], ["the second window", V.small.at], ["its contents", V.small.fill],
-    ["the down future", V.down],
+    ["the down future", V.down.at],
   ];
   steps.forEach(([n, at], i) => {
     if (i && at <= steps[i - 1][1]) fail(`SC11's ${n} starts at ${at}, not after ${steps[i - 1][0]}`);
   });
-  if (V.down >= V.out) fail(`SC11 opens the second future at ${V.down}, when it is already leaving at ${V.out}`);
+  /** ⚠ CHECKED ON THE LAST BAR, NOT THE FIRST. A stagger means the beat is not
+   *  over when it starts, and the one that could run past the scene's end is
+   *  the one nobody writes down. */
+  const lastRed = V.down.at + V.down.step * 2;
+  if (lastRed >= V.out) fail(`SC11's last falling bar starts at ${lastRed}, when the scene is already leaving at ${V.out}`);
   if (V.out >= V.to) fail(`SC11's window starts leaving at ${V.out}, at or after it ends at ${V.to}`);
   /** ⚠ AND IT MUST NOT REACH THE ADMR SENTENCE, which starts on 10210. */
   if (V.to > 10210) fail(`SC11's window is still up at ${V.to}, when the ADMR case is being introduced`);
