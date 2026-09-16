@@ -1663,6 +1663,88 @@ export const PANEL10 = {
   if (done > 8856) fail(`SC10's studies finish at ${done}, after that sentence ends on 8856`);
 }
 
+/**
+ * ═══ SCENE TRANSISI 7 ═══  Simon: "9109-9110 kasih Scene Transisi seleksi
+ * kartu selanjutnya."
+ *
+ * ⚠ 9109 AND 9110 ARE THE JOIN, not a two-frame window. SC10's own window runs
+ * to 9110 and therefore draws its last frame on 9109; this layer takes over on
+ * the next one. `from` is read off PANEL10 rather than typed, so the two cannot
+ * come apart — asserted below.
+ *
+ * ⚠ IT LANDS IN THE SILENCE AND PICKS THE CARD THE VOICE IS ABOUT TO NAME. The
+ * indicator sentence ends on 9106 and "Ada juga hindsight bias." starts on
+ * 9130, so this opens into 24 frames of air and the seventh card — "Hindsight
+ * Bias" — floods while the words arrive. The same shape as round six, which
+ * named indicator overload the same way.
+ *
+ * ⚠ AND WHAT LEAVES DOES NOT MOVE — Simon: "dari scene terakhir (yang ada text
+ * box), kasih fade out aja". By 9110 SC10 is one sentence in a dashed box; the
+ * chart cleared at 8930. See `leave` in scenes/SceneTransition.tsx for why that
+ * is a third kind of exit rather than a slide with the distance set to zero.
+ *
+ * ⚠ 210 AGAIN, LIKE EVERY ROUND SINCE THE THIRD, and the pointer is four frames
+ * later than round six's for the reason round six was four later than round
+ * five's: the row arrives one card every four frames, so the seventh card lands
+ * four frames after the sixth. Copying the previous round's number is exactly
+ * the mistake the assertion caught last time.
+ */
+export const ROW7 = {
+  from: PANEL10.to,
+  over: 210,
+  /** ⚠ NO DIRECTION — see `leave: "fade"` in CardList7. */
+  away: { at: PANEL10.to, over: 44 },
+  row: {
+    at: PANEL10.to,
+    over: 60,
+    step: 4,
+    spread: 4,
+    /** ⚠ THE SEVENTH CARD, zero-based. It is off the right edge until the row
+     *  rests further along for it — see `panOf` in data/layout.ts. */
+    cursor: { at: PANEL10.to + 52, over: 34, card: 6 },
+    hover: { at: PANEL10.to + 86, over: 46 },
+    /** ⚠ SIX DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1, 2, 3, 4, 5],
+    out: { at: PANEL10.to + 147, step: 4, over: 34 },
+  },
+} as const;
+
+{
+  const V = ROW7;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  /** ⚠ THE JOIN IS THE POINT OF THIS ROUND, so it is the thing checked. The
+   *  other rounds' shapes are checked by assertTransition where they are
+   *  mounted; this is the one relationship that lives in the table. */
+  if (V.from !== PANEL10.to) fail(`round seven opens at ${V.from}, not where SC10 ends at ${PANEL10.to}`);
+  if (V.away.at !== V.from) fail("round seven starts clearing SC10 before it is mounted");
+  /**
+   * ⚠ THE ROUND FOLLOWS THE ONE BEFORE IT, and this is checked against ROW6
+   * rather than typed. The list is a syllabus: each round picks the next card
+   * and keeps everything picked so far, so a round written by copying the last
+   * one is a round that picks the same card twice.
+   */
+  if (V.row.cursor.card !== ROW6.row.cursor.card + 1) {
+    fail(`round seven picks card ${V.row.cursor.card + 1}, not the one after round six's ${ROW6.row.cursor.card + 1}`);
+  }
+  const carried = [...ROW6.row.done, ROW6.row.cursor.card];
+  if (V.row.done.length !== carried.length || V.row.done.some((d, i) => d !== carried[i])) {
+    fail(`round seven has ${V.row.done.length} cards done, not round six's ${carried.length}`);
+  }
+  /**
+   * ⚠ AND THE POINTER IS ONE CARD LATER, NOT THE SAME NUMBER. The row arrives
+   * one card every four frames, so the seventh card lands four frames after the
+   * sixth — copying round five's offset into round six put the pointer on a
+   * card two frames before it existed, and this is the check that would have
+   * caught it in the table rather than in a render.
+   */
+  const want = ROW6.row.cursor.at - ROW6.from + ROW6.row.step;
+  if (V.row.cursor.at - V.from !== want) {
+    fail(`round seven's pointer starts ${V.row.cursor.at - V.from} frames in, not ${want}`);
+  }
+}
+
 /* ═══ SC11 — hindsight bias ══════════════════════════════════════════════ */
 export const HINDSIGHT = {
   name: 9079,

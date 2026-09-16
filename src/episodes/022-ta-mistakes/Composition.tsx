@@ -42,7 +42,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, TWIN } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -64,6 +64,7 @@ import { CardList4 } from "./scenes/CardList4";
 import { CardList5 } from "./scenes/CardList5";
 import { Breakout } from "./scenes/Breakout";
 import { CardList6 } from "./scenes/CardList6";
+import { CardList7 } from "./scenes/CardList7";
 import { TwinWindows } from "./scenes/TwinWindows";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
@@ -340,6 +341,16 @@ const Body = () => (
         six over it, off card six. See scenes/CardList6.tsx. */}
     <Sequence from={ROW6.from} durationInFrames={ROW6.over} name="Scene Transisi 6 · Card list">
       <CardList6 />
+    </Sequence>
+
+    {/* ⚠ THE SEVENTH TURN, AND IT CARRIES SC10 OFF BY FADING IT — Simon:
+        "9109-9110 kasih Scene Transisi seleksi kartu selanjutnya … dari scene
+        terakhir (yang ada text box), kasih fade out aja". It takes over on the
+        frame after SC10's window draws its last, and like round six it does the
+        introducing: the voice names hindsight bias over it, off card seven.
+        See scenes/CardList7.tsx. */}
+    <Sequence from={ROW7.from} durationInFrames={ROW7.over} name="Scene Transisi 7 · Card list">
+      <CardList7 />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

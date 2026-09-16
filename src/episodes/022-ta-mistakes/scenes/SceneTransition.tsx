@@ -59,23 +59,39 @@ export const SceneTransition = ({
    * arriving; one that lifts away reads as this one being put down. A chart on
    * a card is the other way round: it is a page, and a page is pushed aside by
    * what comes next.
+   *
+   * ⚠ AND `fade` IS FOR A PICTURE THAT IS ALREADY FINISHED. See the note on
+   * the style below — it is not a weaker version of the other two.
    */
-  leave: "up" | "left";
+  leave: "up" | "left" | "fade";
   children: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const g = f + V.from;
-  const gone = progressInOut(g, V.away.at, V.away.over) * AWAY[leave];
-  const shift =
-    leave === "up"
-      ? `translateY(${(-gone).toFixed(1)}px)`
-      : `translateX(${(-gone).toFixed(1)}px)`;
+  const p = progressInOut(g, V.away.at, V.away.over);
+  /**
+   * ⚠ A FADE MOVES NOTHING, AND THAT IS WHY IT IS A THIRD KIND rather than a
+   * translate of zero. Both of the others carry a picture off: a window is put
+   * down, a page is pushed aside. Neither is right for a scene that has already
+   * finished speaking — SC10 ends on a sentence in a box, and sliding that box
+   * away would set the closing line moving at the exact moment it is meant to
+   * be read. Simon's call: "kasih fade out aja".
+   */
+  const style: React.CSSProperties =
+    leave === "fade"
+      ? { opacity: 1 - p }
+      : {
+          transform:
+            leave === "up"
+              ? `translateY(${(-p * AWAY.up).toFixed(1)}px)`
+              : `translateX(${(-p * AWAY.left).toFixed(1)}px)`,
+        };
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
-      <div style={{ position: "absolute", inset: 0, transform: shift }}>
+      <div style={{ position: "absolute", inset: 0, ...style }}>
         {children}
       </div>
       <MistakeRow f={g} V2={V.row} />
