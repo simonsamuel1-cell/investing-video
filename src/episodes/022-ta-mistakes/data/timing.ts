@@ -35,14 +35,20 @@ export const BLOCK = {
   SC12: 10035, SC13: 11074,
   SC14: 12346, SC15: 13070, SC16: 13700, SC17: 14780, SC18: 15754,
   /**
-   * ⚠ 120 FRAMES PAST THE LAST WORD NOW, NOT 180. It was three seconds: the
+   * ⚠ 90 FRAMES PAST THE LAST WORD NOW, NOT 180. It was three seconds: the
    * voice ended on 16650 and the closing quote card was still standing there,
    * because ending on that frame cuts the last sentence off at the moment it
-   * lands. The two pads at 8060 and 8200 moved the last word to 16710 and END
-   * was left alone, so the hold is two seconds. That still does the job and the
-   * audio still fits — it runs out at 16776 — but it is a number that has
-   * shrunk by side effect rather than by decision, and the next voice-only pad
-   * takes another 30 off it.
+   * lands. The pads at 8060 and 8200 moved the last word to 16710, the pad at
+   * 9276 moved it to 16740, and END was left alone each time — so the hold is
+   * a second and a half. It still does the job.
+   *
+   * ⚠ BUT THE AUDIO IS THE THING TO WATCH NOW, NOT THE HOLD. The recording
+   * runs out at 16806 and this number is 16830, so there are 24 frames of
+   * picture after the last sample. The next voice-only pad puts the audio PAST
+   * the end of the composition — it would be cut off mid-tail — and the one
+   * after that also breaks the guard in Composition.tsx, which requires END to
+   * be at least VO_END (16800). So the next pad is the one that has to move
+   * this number too, and it is a decision rather than a side effect.
    */
   END: 16830,
 } as const;
@@ -1830,18 +1836,18 @@ export const COPY = {
 /* ═══ SC15 — SATU SAHAM, DUA RENCANA ═════════════════════════════════════
  *
  * ⚠ THESE FRAMES ARE THE VOICE'S, NOT `BLOCK`'S. The three cues this scene is
- * built on are 12484, 12646 and 13066 in subtitles.ts, and every beat below
+ * built on are 12514, 12676 and 13096 in subtitles.ts, and every beat below
  * lands on one of them or between two. `BLOCK.SC14` still says 12346 and
- * `BLOCK.SC15` still says 13070 because the five VO pads were never rippled
+ * `BLOCK.SC15` still says 13070 because the six VO pads were never rippled
  * into that table — see the note on BLOCK.END. So the scene is mounted on its
  * OWN window rather than on a tile, the way SC10 is, and the block table is
  * left alone until it is re-derived as a whole.
  *
- * ⚠ AND THAT IS WHY IT OVERLAPS TWO TILES. 12484–13176 straddles the
+ * ⚠ AND THAT IS WHY IT OVERLAPS TWO TILES. 12514–13206 straddles the
  * SC14/SC15 boundary at 13070. Both are Blank, so nothing is covered; what
  * matters is that the picture sits where the sentence is.
  *
- * ⚠ B1 ENDS EXACTLY WHERE B2a BEGINS — 12646 — and that is the cue boundary,
+ * ⚠ B1 ENDS EXACTLY WHERE B2a BEGINS — 12676 — and that is the cue boundary,
  * not a round number. "…copy trade orang lain." hands straight over to
  * "Sahamnya mungkin sama,", so the title card is off the screen on the frame
  * the header arrives.
@@ -1863,19 +1869,19 @@ const ROW_EASY = { label: 14, valueAt: 10, value: 20, ruleAt: 24, rule: 14 } as 
 const ROW_TIGHT = { label: 12, valueAt: 8, value: 18, ruleAt: 20, rule: 12 } as const;
 
 export const PLANS = {
-  at: 12484,
-  to: 13176,
+  at: 12514,
+  to: 13206,
 
   /* ── B1 · the card that names the mistake ───────────────────────────── */
   /** ⚠ THE CHIPS CARRY NO `over`. core/Chip owns its own entrance — one pop,
    *  from useMotion — and a duration here would be a number nothing reads. */
   b1: {
-    chip: 12484,
-    head: { at: 12494, stagger: 4 },
-    sub: 12518,
-    rule: { at: 12530, over: 30 },
+    chip: 12514,
+    head: { at: 12524, stagger: 4 },
+    sub: 12548,
+    rule: { at: 12560, over: 30 },
     /** The whole card leaves together, up and out. */
-    out: { at: 12626, over: 20 },
+    out: { at: 12656, over: 20 },
   },
 
   /* ── B2a · one source, two empty columns ────────────────────────────── */
@@ -1886,16 +1892,16 @@ export const PLANS = {
    * assertion below therefore checks the ORDER they start in, not that each
    * has finished.
    */
-  card: { at: 12646, over: 20 },
-  same: 12660,
+  card: { at: 12676, over: 20 },
+  same: 12690,
   /** ⚠ 4 FRAMES EACH, STAGGERED BY 2, so the twelve land across 26 — the
    *  window the build prompt gives. Per candle that is fast, and it is meant
    *  to be: what reads here is the sweep, not any one bar. */
-  tape: { at: 12668, over: 4, step: 2 },
-  wires: { at: 12680, over: 24 },
-  cols: { at: 12690, over: 24 },
-  who: 12698,
-  split: { at: 12704, over: 14 },
+  tape: { at: 12698, over: 4, step: 2 },
+  wires: { at: 12710, over: 24 },
+  cols: { at: 12720, over: 24 },
+  who: 12728,
+  split: { at: 12734, over: 14 },
 
   /* ── B2b–B2e · the four differences ─────────────────────────────────── */
   /**
@@ -1904,22 +1910,22 @@ export const PLANS = {
    * scene's whole claim is that neither is the right one.
    */
   rows: [
-    { label: "Timeframe", a: "Daily", b: "Weekly", at: 12746, step: ROW_EASY },
-    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12814, step: ROW_TIGHT },
-    { label: "Risk Limit", a: "2%", b: "5%", at: 12868, step: ROW_TIGHT },
-    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 12926, step: ROW_TIGHT },
+    { label: "Timeframe", a: "Daily", b: "Weekly", at: 12776, step: ROW_EASY },
+    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12844, step: ROW_TIGHT },
+    { label: "Risk Limit", a: "2%", b: "5%", at: 12898, step: ROW_TIGHT },
+    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 12956, step: ROW_TIGHT },
   ],
 
   /* ── B3 · the same table, said out loud ─────────────────────────────── */
   /**
    * ⚠ NOTHING MOVES POSITION HERE. The columns are where they have been since
-   * 12690 and the header has not shifted since 12646; what changes is only
+   * 12720 and the header has not shifted since 12676; what changes is only
    * the emphasis. A scene that rearranges on its closing line is telling the
    * viewer the arrangement was not the point.
    */
-  lift: { at: 13066, over: 24 },
-  edge: { at: 13074, over: 24 },
-  close: { at: 13084, text: "Same Stock, Different Trade" },
+  lift: { at: 13096, over: 24 },
+  edge: { at: 13104, over: 24 },
+  close: { at: 13114, text: "Same Stock, Different Trade" },
 } as const;
 
 {
@@ -1929,7 +1935,7 @@ export const PLANS = {
   };
   if (V.to - V.at !== 692) fail(`SC15 is ${V.to - V.at} frames, not the 692 the voice needs`);
   /** ⚠ THE TITLE CARD IS GONE ON THE FRAME THE HEADER ARRIVES. They share
-   *  12646 because the two cues do. */
+   *  12676 because the two cues do. */
   if (V.b1.out.at + V.b1.out.over !== V.card.at) {
     fail(`SC15's title card clears at ${V.b1.out.at + V.b1.out.over}, not when the header arrives at ${V.card.at}`);
   }

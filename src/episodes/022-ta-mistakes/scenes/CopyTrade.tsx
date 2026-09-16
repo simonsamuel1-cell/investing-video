@@ -1,21 +1,21 @@
 /**
- * SC15 · ASAL COPY TRADE.  `from 12484 · to 13176`
+ * SC15 · ASAL COPY TRADE.  `from 12514 · to 13206`
  *
  * Satu saham bisa jadi empat keputusan yang berbeda. What gets copied is the
  * ticker; what decides the outcome is everything the ticker does not show.
  *
  * ⚠ THE LAYOUT IS THE ARGUMENT. One header at the top, two columns beneath —
- * and by 12958 a single chip up there is outnumbered by eight values down
+ * and by 12988 a single chip up there is outnumbered by eight values down
  * here. No sentence has to say the ticker is the small part.
  *
- * ⚠ ITS FRAMES ARE THE VOICE'S, NOT `BLOCK`'S. 12484 · 12646 · 13066 are the
+ * ⚠ ITS FRAMES ARE THE VOICE'S, NOT `BLOCK`'S. 12514 · 12676 · 13096 are the
  * three subtitle cues this is built on, so it is mounted on its own window
- * rather than on a tile — the block table is still 120–150 frames behind the
- * recording from SC11 on, because the five VO pads were never rippled into it.
+ * rather than on a tile — the block table is still 150–180 frames behind the
+ * recording from SC11 on, because the six VO pads were never rippled into it.
  * It therefore straddles the SC14/SC15 boundary at 13070; both tiles are
  * Blank, so nothing is covered. See PLANS in data/timing.ts.
  *
- * ⚠ THE TITLE CARD LEAVES ON THE FRAME THE HEADER ARRIVES. 12626 → 12646 is
+ * ⚠ THE TITLE CARD LEAVES ON THE FRAME THE HEADER ARRIVES. 12656 → 12676 is
  * not a chosen overlap: "…copy trade orang lain." hands straight over to
  * "Sahamnya mungkin sama," with no air between the cues, so the second beat
  * cannot be given a run-up.
@@ -129,7 +129,7 @@ export const CopyTrade = () => {
     <Stage>
       <Naming g={g} />
 
-      {/* ⚠ MOUNTED ONCE, AT 12646, AND NEVER AGAIN. Every beat after this is a
+      {/* ⚠ MOUNTED ONCE, AT 12676, AND NEVER AGAIN. Every beat after this is a
           prop change inside one instance — see the header of PlanCompare. */}
       {g >= V.card.at && <PlanCompare g={g} />}
 
