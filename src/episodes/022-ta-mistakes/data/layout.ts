@@ -1035,19 +1035,71 @@ const pillH = (size: number) => size * 1.26 + Math.round(size * 0.3) * 2 + theme
  */
 const PLAN_CHIP = theme.text.axis.size;
 
+/** The margin above a column's name and below its last separator. ⚠ ONE
+ *  NUMBER FOR BOTH, which is what makes the column balanced rather than
+ *  bottom-heavy. */
+const PLAN_COL_PAD = 24;
+
+/**
+ * ⚠ THE SHARED OBJECT IS A LINE OF TYPE, NOT A CARD. Simon: "window 'Same
+ * Stock' nya hapus, ganti dengan langsung text aja". The card, its chip and its
+ * decorative candle strip are all gone with it — and the strip going is a small
+ * relief, because it was the one drawn thing in the scene that had to be capped
+ * at 45% opacity to stop it reading as analysable.
+ *
+ * ⚠ `half` AND `inkDown` ARE MEASURED, NOT GUESSED. At 48px bold the line's ink
+ * runs x792..1127 and y219..264 — 168 either side of the centre and 24 below
+ * it. `half` is where the two connectors start, 14 clear of the last letter;
+ * `inkDown` is what the 50px of air below the line is measured FROM, because a
+ * gap measured from a type box is a gap you cannot see.
+ */
+const PLAN_TICKER = {
+  y: 240,
+  size: theme.text.title.size,
+  half: 168 + 14,
+  inkDown: 24,
+  /** Simon's 50: "jarak antar text ABCD dan windows jadi 50 px". */
+  air: 50,
+} as const;
+
+/**
+ * The column's own name row: an avatar and a name beside it, on ONE line.
+ *
+ * ⚠ ONE LINE IS WHAT SET THE COLUMN'S WIDTH. "windownya panjangin lagi sampe
+ * muat buat namanya jadi 1 text line" — measured off a render, "Trader" is 94px
+ * and "profesional" 164 at this size, so the name is about 267. With 24 of
+ * padding either side and 58 for the avatar and its gap, the column cannot be
+ * under 373; 420 gives it 47 to spare and both columns are cut to the same
+ * width by construction.
+ */
+const PLAN_NAME = {
+  size: PLAN_CHIP + 4,
+  avatar: 44,
+  gap: 14,
+  lead: 1.25,
+} as const;
+const PLAN_NAME_H = PLAN_NAME.size * PLAN_NAME.lead;
+
+/** ⚠ THE BAND'S TOP IS THE TICKER'S INK PLUS SIMON'S 50, and everything below
+ *  hangs off it — the name, the first row, the last separator and the band's
+ *  own height. Moving the line moves the table. */
+const PLAN_BAND_Y = PLAN_TICKER.y + PLAN_TICKER.inkDown + PLAN_TICKER.air;
+const PLAN_NAME_Y = PLAN_BAND_Y + PLAN_COL_PAD + PLAN_NAME_H / 2;
+/** The air between the name's baseline box and the first value's centre. */
+const PLAN_NAME_GAP = 34;
+const PLAN_VALUE = 32;
+
 /** The four rows, as one pitch rather than four tops. */
 const PLAN_ROW = {
-  /** ⚠ 545, NOT 530, AND THE FIFTEEN PIXELS ARE THE NAME'S. "Trader
-   *  profesional" beside a 44px avatar cannot be one line in a 350-wide column,
-   *  so the name is two; two lines of 30px need 75, and the first row had to
-   *  move out from under them. The assertion at the foot of this file is what
-   *  said so. */
-  y0: 545,
+  /** ⚠ DERIVED FROM THE NAME, NOT TYPED. It was 530, then 545 when the name
+   *  wrapped to two lines, and it would have had to move again now that it does
+   *  not. Hanging it off the name row means it follows on its own. */
+  y0: PLAN_NAME_Y + PLAN_NAME_H / 2 + PLAN_NAME_GAP + PLAN_VALUE / 2,
   pitch: 80,
   /** The separator, below the row's centre-line and clear of a descender. */
   rule: 30,
   labelSize: 22,
-  valueSize: 32,
+  valueSize: PLAN_VALUE,
   /** ⚠ 40% — a separator as strong as the border around the column divides it
    *  into four cards instead of ruling four rows. */
   ruleAlpha: 0.4,
@@ -1056,10 +1108,6 @@ const PLAN_ROW = {
   rise: 8,
 } as const;
 
-/** The margin above a column's name and below its last separator. ⚠ ONE
- *  NUMBER FOR BOTH, which is what makes the column balanced rather than
- *  bottom-heavy — the build prompt's 440 left 24 above and 60 below. */
-const PLAN_COL_PAD = 24;
 const PLAN_LAST_RULE = PLAN_ROW.y0 + PLAN_ROW.pitch * 3 + PLAN_ROW.rule;
 
 /** The band the two columns are cut from. Centred on the frame, so the
@@ -1068,49 +1116,23 @@ const PLAN_LAST_RULE = PLAN_ROW.y0 + PLAN_ROW.pitch * 3 + PLAN_ROW.rule;
  *  50% masing masing". The COLUMN is the number chosen now and the band follows
  *  from it, which is the opposite of how this was written; with the band fixed,
  *  halving a column would have had to move the gap as well. */
-const PLAN_COL_W = 350;
+/** ⚠ 420 — WIDE ENOUGH FOR THE NAME ON ONE LINE, and that is the whole reason
+ *  for the number. See PLAN_NAME. Both columns are cut from one band, so they
+ *  cannot differ. */
+const PLAN_COL_W = 420;
 const PLAN_GAP = 200;
 const PLAN_BAND: Rect = (() => {
   const w = PLAN_COL_W * 2 + PLAN_GAP;
-  const y = 420;
-  return { x: (PLAN_W - w) / 2, y, w, h: PLAN_LAST_RULE + PLAN_COL_PAD - y };
+  return {
+    x: (PLAN_W - w) / 2,
+    y: PLAN_BAND_Y,
+    w,
+    h: PLAN_LAST_RULE + PLAN_COL_PAD - PLAN_BAND_Y,
+  };
 })();
 const [PLAN_LEFT, PLAN_RIGHT] = splitRects(PLAN_GAP, PLAN_BAND);
 
-/**
- * ⚠ THE SHARED OBJECT IS A LINE OF TYPE NOW, NOT A CARD. Simon: "window 'Same
- * Stock' nya hapus, ganti dengan langsung text aja". The card, its chip and its
- * decorative candle strip are all gone with it — and the strip going is a small
- * relief, because it was the one drawn thing in the scene that had to be capped
- * at 45% opacity to stop it reading as analysable.
- *
- * `half` is where the two connectors start: "panahnya ganti start pointnya dari
- * kiri dan kanan text". It is the line's own half-width plus air, MEASURED off
- * a render rather than guessed — the ink runs x792..1128 at this size, so 168
- * is the half-width and the connectors start 14 clear of it.
- */
-const PLAN_TICKER = {
-  y: 240,
-  size: theme.text.title.size,
-  half: 168 + 14,
-} as const;
 
-/**
- * The column's own name row: an avatar and a name beside it.
- *
- * ⚠ TWO LINES OF ROOM, BECAUSE ONE DOES NOT FIT. A 350-wide column with 24 of
- * padding leaves 302, the avatar and its gap take 58, and "Trader profesional"
- * at 30px is about 297 — so the name wraps and the row is sized for the taller
- * of the two. "Kamu" is one line and is centred in the same height, which is
- * what keeps the two columns level.
- */
-const PLAN_NAME = {
-  size: PLAN_CHIP + 4,
-  avatar: 44,
-  gap: 14,
-  lead: 1.25,
-} as const;
-const PLAN_NAME_H = PLAN_NAME.size * PLAN_NAME.lead * 2;
 
 /**
  * ⚠ B1'S STACK IS SPACED FROM THE INK, NOT FROM THE BOXES, and that is the
@@ -1175,10 +1197,10 @@ export const PLAN = {
 
   /** Both columns are read with the same insets — that is the comparison. */
   col: {
-    /** ⚠ 24, DOWN FROM 40. A 350-wide column cannot spend 80 of itself on air
-     *  and still hold an avatar, a name and a value on one line. */
+    /** ⚠ 24, DOWN FROM 40. Even at 420 a column cannot spend 80 of itself on
+     *  air and still hold an avatar, a name and a value on one line. */
     pad: 24,
-    nameY: PLAN_BAND.y + PLAN_COL_PAD + PLAN_NAME_H / 2,
+    nameY: PLAN_NAME_Y,
     /** How far a column slides up as it arrives. */
     rise: 10,
   },
@@ -1220,11 +1242,12 @@ export const PLAN = {
   if (P.ticker.half >= reach - PLAN_ELBOW) {
     fail(`SC15's connectors start ${P.ticker.half} out and only reach ${Math.round(reach)}`);
   }
-  /** ⚠ AND THE NAME HAS TO FIT BESIDE ITS AVATAR. Two lines of room, the
-   *  avatar and its gap out of the column's inner width — if that leaves less
-   *  than half the column for the words, the wrap will not save it. */
+  /** ⚠ AND THE NAME HAS TO FIT BESIDE ITS AVATAR ON ONE LINE. "Trader
+   *  profesional" measures about 267 at this size — read off a render, not
+   *  estimated — so the room left after the padding, the avatar and its gap has
+   *  to beat that or the name wraps and the two columns stop being level. */
   const inner = P.cols[0].w - P.col.pad * 2 - P.name.avatar - P.name.gap;
-  if (inner < P.cols[0].w / 2) fail(`SC15's column name has ${Math.round(inner)}px, under half the column`);
+  if (inner < 267) fail(`SC15's column name has ${Math.round(inner)}px and needs 267`);
   /**
    * ⚠ THE COLUMN IS BALANCED, and this is the assertion that keeps it so. The
    * margin above the name and the margin below the last separator are one

@@ -50,8 +50,6 @@ const V = PLANS;
 const P = PLAN;
 // ═══════════════════════════════════════════════════════════════════════════
 
-const MID = theme.canvas.width / 2;
-
 /**
  * ⚠ THE ONE SHARED OBJECT IS A TICKER NOW, AND IT IS A PLACEHOLDER ON PURPOSE.
  * `$ABCD` is not an instrument: no IDX board carries it, the dollar prefix is
@@ -109,10 +107,8 @@ export const PlanCompare = ({ g }: { g: number }) => {
   const card = p(V.card);
   const wire = p(V.wires);
   const cols = p(V.cols);
-  const split = p(V.split);
   const who = progress(g, V.who, m.reveal);
-  /** B3 — emphasis only. Nothing below changes position on these two. */
-  const lift = p(V.lift);
+  /** B3 — emphasis only. Nothing below changes position on it. */
   const edge = p(V.edge);
 
   const ink = [c.indigo, c.cyan];
@@ -275,32 +271,10 @@ export const PlanCompare = ({ g }: { g: number }) => {
             />
           ))}
 
-          {g >= V.split.at && (
-            <>
-              <line
-                x1={MID}
-                y1={P.band.y}
-                x2={MID}
-                y2={P.band.y + P.band.h * split}
-                stroke={c.border}
-                strokeWidth={theme.shape.rule}
-              />
-              {/* ⚠ THE SAME RULE, WIDER AND IN THE ACCENT. Laid over the
-                  neutral one rather than replacing it, so 2px → 3px happens
-                  without a frame where the line is two colours. */}
-              {lift > 0.001 && (
-                <line
-                  x1={MID}
-                  y1={P.band.y}
-                  x2={MID}
-                  y2={P.band.y + P.band.h * split}
-                  stroke={c.indigo}
-                  strokeWidth={theme.shape.rule + lift}
-                  opacity={lift}
-                />
-              )}
-            </>
-          )}
+          {/* ⚠ NO DIVIDER. "Remove garis vertikal di tengah" — it was a rule
+              down the middle of the band and a second, heavier one laid over it
+              at B3. What separates the two columns now is the gap and the hue,
+              which is what was doing the work anyway. */}
 
           {V.rows.map((row, k) => {
             const drawn = progress(g, row.at + row.step.ruleAt, row.step.rule);

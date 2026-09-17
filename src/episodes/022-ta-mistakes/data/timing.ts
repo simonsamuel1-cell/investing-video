@@ -2459,9 +2459,15 @@ export const PLANS = {
    */
   rows: [
     { label: "Timeframe", a: "Daily", b: "Weekly", at: 12821, step: ROW_EASY },
-    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12889, step: ROW_TIGHT },
-    { label: "Risk Limit", a: "2%", b: "5%", at: 12943, step: ROW_TIGHT },
-    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 13001, step: ROW_TIGHT },
+    /** ⚠ NO "Rp". Simon: "Hapus Rp." Two bare numbers against a placeholder
+     *  ticker read as a comparison; a rupiah sign in front of them reads as a
+     *  quote, which is the one thing this scene must not be. */
+    { label: "Entry Price", a: "1.240", b: "1.185", at: 12889, step: ROW_TIGHT },
+    /** ⚠ AND ONE SIDE HAS NO LIMIT AT ALL. "risk limit kanan ubah jadi '-'
+     *  nihil" — the dash is the point of the row: what the two plans differ in
+     *  here is not the size of the limit but whether there is one. */
+    { label: "Risk Limit", a: "7%", b: "-", at: 12943, step: ROW_TIGHT },
+    { label: "Exit Plan", a: "3 Hari", b: "6 Minggu", at: 13001, step: ROW_TIGHT },
   ],
 
   /* ── B3 · the same table, said out loud ─────────────────────────────── */
@@ -2489,19 +2495,17 @@ export const PLANS = {
   }
   /** B2a's seven, in the order they were specified. Starts only — see above. */
   const opens: [string, number][] = [
-    ["header card", V.card.at], ["same-stock chip", V.same], ["candle strip", V.tape.at],
+    ["ticker line", V.card.at],
     ["connectors", V.wires.at], ["columns", V.cols.at], ["column names", V.who],
-    ["divider", V.split.at],
   ];
   opens.forEach(([n, at], i) => {
     if (i && at < opens[i - 1][1]) fail(`SC15's ${n} opens at ${at}, before ${opens[i - 1][0]} at ${opens[i - 1][1]}`);
   });
-  /** ⚠ THE TWELVE CANDLES LAND INSIDE B2a, and the last one is what decides
-   *  that — a stagger makes the strip longer than any one candle's wipe. */
-  const lastBar = V.tape.at + V.tape.step * 11 + V.tape.over;
-  if (lastBar > V.split.at + V.split.over) {
-    fail(`SC15's strip finishes at ${lastBar}, after B2a has closed at ${V.split.at + V.split.over}`);
-  }
+  /** ⚠ B2a HAS TO BE CLOSED BEFORE THE FIRST ROW ARRIVES. It used to be the
+   *  candle strip that decided this; the strip and the divider are both gone
+   *  now, so what is left to check is that the names are up before the table
+   *  starts filling underneath them. */
+  if (V.rows[0].at < V.who) fail(`SC15's first row lands at ${V.rows[0].at}, before the names at ${V.who}`);
   /**
    * ⚠ A ROW MAY NOT STILL BE MOVING WHEN THE NEXT ONE STARTS, and this is the
    * assertion the scene actually needs. The build prompt asked for "≤30 frames
