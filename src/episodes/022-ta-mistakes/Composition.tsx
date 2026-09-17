@@ -46,7 +46,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN, WINDOW11 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -71,6 +71,7 @@ import { CardList5 } from "./scenes/CardList5";
 import { Breakout } from "./scenes/Breakout";
 import { CardList6 } from "./scenes/CardList6";
 import { CardList7 } from "./scenes/CardList7";
+import { CardList8 } from "./scenes/CardList8";
 import { TwinWindows } from "./scenes/TwinWindows";
 import { ChartRecall } from "./scenes/ChartRecall";
 import { Revenge } from "./scenes/Revenge";
@@ -236,7 +237,7 @@ const Body = () => (
         overlay, which begins independently at PLANS.at. */}
     <Sequence
       from={WINDOW11.to}
-      durationInFrames={PLANS.at - WINDOW11.to}
+      durationInFrames={ROW8.from - WINDOW11.to}
       name="SC12+13 · ADMR case"
     >
       <AdmrGroup />
@@ -385,6 +386,16 @@ const Body = () => (
         See scenes/CardList7.tsx. */}
     <Sequence from={ROW7.from} durationInFrames={ROW7.over} name="Scene Transisi 7 · Card list">
       <CardList7 />
+    </Sequence>
+
+    {/* ⚠ THE EIGHTH AND LAST TURN, AND IT CARRIES THE ADMR WINDOW OFF — Simon:
+        "12535 transisikan ke scene transisi dan seleksi kartu Asal Copy Trade,
+        lalu transisi kartu keluar lagi dan masuk ke scene berikutnya". The 45
+        frames of silence at 12505 are what make room for it: the voice names
+        the mistake 24 frames into this window, which is where rounds six and
+        seven put theirs. See scenes/CardList8.tsx. */}
+    <Sequence from={ROW8.from} durationInFrames={ROW8.over} name="Scene Transisi 8 · Card list">
+      <CardList8 />
     </Sequence>
 
     <Captions cues={CUES} show={chrome} />

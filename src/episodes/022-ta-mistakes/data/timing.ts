@@ -56,7 +56,7 @@ export const BLOCK = {
    * be at least VO_END (16800). So the next pad is the one that has to move
    * this number too, and it is a decision rather than a side effect.
    */
-  END: 16830,
+  END: 16875,
 } as const;
 
 /**
@@ -1994,6 +1994,42 @@ export const ADMR = {
   close: 12172,
 } as const;
 
+/**
+ * ═══ SCENE TRANSISI 8 ═══  Simon: "12535 transisikan ke scene transisi dan
+ * seleksi kartu Asal Copy Trade, lalu transisi kartu keluar lagi dan masuk ke
+ * scene berikutnya."
+ *
+ * The eighth and last turn of the list. The ADMR window is the picture that
+ * leaves, it leaves LEFT the way rounds four to six did — what goes off is a
+ * page — and the pointer picks card eight, whose own text is "Asal Copy Trade".
+ *
+ * ⚠ THE 45-FRAME PAD AT 12505 IS WHAT MAKES ROOM FOR IT. Without it the voice
+ * names the mistake on 12514, 21 frames before this layer is even mounted.
+ * With it the naming lands on 12559 — 24 frames in, which is where rounds six
+ * and seven put theirs, and the round does the introducing.
+ *
+ * ⚠ AND THE CURSOR IS FOUR FRAMES LATER THAN ROUND SEVEN'S, which is arithmetic
+ * rather than taste: the row deals one card every four frames, so the eighth
+ * card lands four frames after the seventh. `from + 28 + 4 × card` is the rule
+ * every round here follows, and the assertion catches it when it is not.
+ */
+export const ROW8 = {
+  from: 12535,
+  over: 210,
+  away: { at: 12535, over: 44 },
+  row: {
+    at: 12535,
+    over: 60,
+    step: 4,
+    spread: 4,
+    cursor: { at: 12535 + 56, over: 34, card: 7 },
+    hover: { at: 12535 + 90, over: 46 },
+    /** ⚠ SEVEN DONE NOW. The list is a syllabus, and it keeps what it has done. */
+    done: [0, 1, 2, 3, 4, 5, 6],
+    out: { at: 12535 + 147, step: 4, over: 34 },
+  },
+} as const;
+
 /* ═══ SC12 — THE ADMR TAPE, DRAWN IN TWO RUNS ════════════════════════════
  *
  * ⚠ THE WINDOW ARRIVES EMPTY, AND THAT IS THE WHOLE STAGING. CUT11 delivers
@@ -2381,19 +2417,19 @@ const ROW_EASY = { label: 14, valueAt: 10, value: 20, ruleAt: 24, rule: 14 } as 
 const ROW_TIGHT = { label: 12, valueAt: 8, value: 18, ruleAt: 20, rule: 12 } as const;
 
 export const PLANS = {
-  at: 12514,
-  to: 13206,
+  at: 12559,
+  to: 13251,
 
   /* ── B1 · the card that names the mistake ───────────────────────────── */
   /** ⚠ THE CHIPS CARRY NO `over`. core/Chip owns its own entrance — one pop,
    *  from useMotion — and a duration here would be a number nothing reads. */
   b1: {
-    chip: 12514,
-    head: { at: 12524, stagger: 4 },
-    sub: 12548,
-    rule: { at: 12560, over: 30 },
+    chip: 12559,
+    head: { at: 12569, stagger: 4 },
+    sub: 12593,
+    rule: { at: 12605, over: 30 },
     /** The whole card leaves together, up and out. */
-    out: { at: 12656, over: 20 },
+    out: { at: 12701, over: 20 },
   },
 
   /* ── B2a · one source, two empty columns ────────────────────────────── */
@@ -2404,16 +2440,16 @@ export const PLANS = {
    * assertion below therefore checks the ORDER they start in, not that each
    * has finished.
    */
-  card: { at: 12676, over: 20 },
-  same: 12690,
+  card: { at: 12721, over: 20 },
+  same: 12735,
   /** ⚠ 4 FRAMES EACH, STAGGERED BY 2, so the twelve land across 26 — the
    *  window the build prompt gives. Per candle that is fast, and it is meant
    *  to be: what reads here is the sweep, not any one bar. */
-  tape: { at: 12698, over: 4, step: 2 },
-  wires: { at: 12710, over: 24 },
-  cols: { at: 12720, over: 24 },
-  who: 12728,
-  split: { at: 12734, over: 14 },
+  tape: { at: 12743, over: 4, step: 2 },
+  wires: { at: 12755, over: 24 },
+  cols: { at: 12765, over: 24 },
+  who: 12773,
+  split: { at: 12779, over: 14 },
 
   /* ── B2b–B2e · the four differences ─────────────────────────────────── */
   /**
@@ -2422,22 +2458,22 @@ export const PLANS = {
    * scene's whole claim is that neither is the right one.
    */
   rows: [
-    { label: "Timeframe", a: "Daily", b: "Weekly", at: 12776, step: ROW_EASY },
-    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12844, step: ROW_TIGHT },
-    { label: "Risk Limit", a: "2%", b: "5%", at: 12898, step: ROW_TIGHT },
-    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 12956, step: ROW_TIGHT },
+    { label: "Timeframe", a: "Daily", b: "Weekly", at: 12821, step: ROW_EASY },
+    { label: "Entry Price", a: "Rp1.240", b: "Rp1.185", at: 12889, step: ROW_TIGHT },
+    { label: "Risk Limit", a: "2%", b: "5%", at: 12943, step: ROW_TIGHT },
+    { label: "Exit Plan", a: "3 Days", b: "6 Weeks", at: 13001, step: ROW_TIGHT },
   ],
 
   /* ── B3 · the same table, said out loud ─────────────────────────────── */
   /**
    * ⚠ NOTHING MOVES POSITION HERE. The columns are where they have been since
-   * 12720 and the header has not shifted since 12676; what changes is only
+   * 12765 and the header has not shifted since 12721; what changes is only
    * the emphasis. A scene that rearranges on its closing line is telling the
    * viewer the arrangement was not the point.
    */
-  lift: { at: 13096, over: 24 },
-  edge: { at: 13104, over: 24 },
-  close: { at: 13114, text: "Same Stock, Different Trade" },
+  lift: { at: 13141, over: 24 },
+  edge: { at: 13149, over: 24 },
+  close: { at: 13159, text: "Same Stock, Different Trade" },
 } as const;
 
 {
