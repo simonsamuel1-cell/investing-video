@@ -79,7 +79,17 @@ const ground = (c: ReturnType<typeof usePalette>) => ({
 
 /** ⚠ ONE `id` PER CLIP, SCOPED TO THIS SCENE. Two <clipPath id="plot"> in one
  *  document and the second one silently wins for both. */
-const CLIP = { tape: "admr-tape", price: "admr-price-gutter" };
+const CLIP = { tape: "admr-tape", price: "admr-price-gutter", window: "admr-window" };
+
+/**
+ * ⚠ THE CORNER IS IN CANVAS PIXELS, DIVIDED BACK OUT. Everything inside this
+ * <svg> is in the export's own pixels and the whole thing is scaled by 0.5956
+ * on the way to the canvas — so a radius of 24 typed here would land as 14 on
+ * screen and the window would not match any other card in the episode. Dividing
+ * by the scale makes it the theme's own 24 where the viewer sees it, and keeps
+ * it correct if the window is ever resized.
+ */
+const R = theme.shape.cardRadius / ADMR_SHOT.scale;
 
 const AXIS = {
   fontFamily: theme.text.family,
@@ -115,6 +125,12 @@ export const AdmrChart = () => {
         <clipPath id={CLIP.price}>
           <rect x={F.x} y={PANES.price.y0} width={F.w} height={PANES.price.y1 - PANES.price.y0 + 1} />
         </clipPath>
+        {/* Insurance, not correction: nothing currently reaches a corner, but a
+            gridline runs to the very top of the window and the date strip to
+            the very bottom, so the day one of them moves it is already held. */}
+        <clipPath id={CLIP.window}>
+          <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} rx={R - 2} />
+        </clipPath>
       </defs>
 
       {/* ── the window ─────────────────────────────────────────────────── */}
@@ -122,9 +138,10 @@ export const AdmrChart = () => {
           ring inside it — two steps of dark that exist to separate the chart
           from the app around it. On white there is nothing to separate it from
           but the page, so the two rings become the one border the page uses. */}
-      <rect x={F.x} y={F.y} width={F.w} height={F.h} fill={g.edge} />
-      <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} fill={g.bg} />
+      <rect x={F.x} y={F.y} width={F.w} height={F.h} rx={R} fill={g.edge} />
+      <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} rx={R - 2} fill={g.bg} />
 
+      <g clipPath={`url(#${CLIP.window})`}>
       {/* ── the grid, under everything the tape draws ──────────────────── */}
       {[...SHOT.grid.h, ...SHOT.grid.macdH].map((y) => (
         <rect key={`h${y}`} x={P.x0} y={y - 1} width={PLOT_W} height={SHOT.grid.weight} fill={g.grid} />
@@ -289,6 +306,7 @@ export const AdmrChart = () => {
         </text>
       ))}
 
+      </g>
     </svg>
   );
 };
