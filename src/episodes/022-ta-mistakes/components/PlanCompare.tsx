@@ -57,7 +57,7 @@ const P = PLAN;
  * price for it. The rule this file used to keep by naming NOTHING is kept now
  * by naming something that cannot be mistaken for a real company.
  */
-const TICKER = "Saham $ABCD";
+const TICKER = { word: "Saham ", code: "$ABCD" } as const;
 
 const WHO = ["Trader profesional", "Kamu"] as const;
 
@@ -136,7 +136,11 @@ export const PlanCompare = ({ g }: { g: number }) => {
           opacity: card,
         }}
       >
-        {TICKER}
+        {TICKER.word}
+        {/* ⚠ THE CODE IS INDIGO AND THE WORD IS NOT. Simon's. It is also the
+            one thing on this frame that both columns are about, so the accent
+            reads as "this is the shared object" rather than as decoration. */}
+        <span style={{ color: c.indigo }}>{TICKER.code}</span>
       </div>
 
       {/* ── the two columns ───────────────────────────────────────────── */}

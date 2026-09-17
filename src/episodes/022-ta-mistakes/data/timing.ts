@@ -2486,7 +2486,10 @@ export const PLANS = {
    */
   lift: { at: 13141, over: 24 },
   edge: { at: 13149, over: 24 },
-  close: { at: 13159, text: "Same Stock, Different Trade" },
+  /** ⚠ THE SIGN IS THE SENTENCE. Simon asked for "tanda 'tidak sama dengan'"
+   *  in the middle of it, so the line says the thing with a symbol rather than
+   *  with a word — the same stock is not the same trade. */
+  close: { at: 13159, text: "Saham sama ≠ trade sama" },
 } as const;
 
 {

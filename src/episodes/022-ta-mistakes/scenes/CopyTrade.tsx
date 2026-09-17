@@ -34,7 +34,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import {
-  Chip, Layer, Line, Stage, Words,
+  Chip, DashedBox, Layer, Line, Stage, Words,
   progress, theme, usePalette,
 } from "../../../core";
 import { PLANS, local } from "../data/timing";
@@ -121,6 +121,7 @@ const Naming = ({ g }: { g: number }) => {
 
 export const CopyTrade = () => {
   const f = useCurrentFrame();
+  const c = usePalette();
   /** ⚠ GLOBAL FRAMES. The table is written in the timeline's numbers and a
    *  scene inside a Sequence sees its own, so `at` goes back on first. */
   const g = f + V.at;
@@ -133,17 +134,40 @@ export const CopyTrade = () => {
           prop change inside one instance — see the header of PlanCompare. */}
       {g >= V.card.at && <PlanCompare g={g} />}
 
-      {/* ⚠ THE ONLY THING B3 ADDS. The columns do not move and the header does
-          not move; its stillness against two brightening columns is the beat. */}
-      <Chip
-        label={V.close.text}
+      {/* ⚠ THE ONLY THING B3 ADDS. The columns do not move and the ticker does
+          not move; its stillness against two brightening columns is the beat.
+
+          ⚠ AND IT IS THE EPISODE'S MARQUEE NOW, NOT A PILL — "text box putus
+          putus". The same dashed frame SC06 and SC11 close on, so the three
+          closings are one shape. Its content is drawn whole rather than typed:
+          this is a conclusion arriving, not a sentence being written. */}
+      <DashedBox
         x={P.close.x}
         y={P.close.y}
+        w={P.close.w}
+        h={P.close.h}
         at={local(V.close.at, V.at)}
-        size={P.close.size}
-        weight={theme.text.title.weight}
-        pill
-      />
+        block={P.close.block}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: theme.text.family,
+            fontSize: P.close.size,
+            fontWeight: theme.text.title.weight,
+            color: c.ink,
+            /** ⚠ IT MAY NOT WRAP. The box is measured to the sentence, so a
+             *  second line here means the measurement has gone stale. */
+            whiteSpace: "nowrap",
+          }}
+        >
+          {V.close.text}
+        </div>
+      </DashedBox>
     </Stage>
   );
 };

@@ -1083,6 +1083,15 @@ const PLAN_NAME_H = PLAN_NAME.size * PLAN_NAME.lead;
  *  size instead of having to be re-measured every time the size moves. */
 const PLAN_NAME_W = 267 * (PLAN_NAME.size / 30);
 
+/**
+ * The closing line's box. `w` is MEASURED — "Saham sama ≠ trade sama" sets 394
+ * of ink at 32px/700, read off the frame — plus 38 either side. `block` is
+ * core/DashedBox's own corner size, repeated here because the bottom edge has
+ * to be solved with half of it hanging outside the rect: the box's rect ends at
+ * y950 and its corner blocks at 958, against the band at 972.
+ */
+const PLAN_CLOSE = { w: 394 + 38 * 2, h: 92, size: 32, block: 15, air: 12 } as const;
+
 /** ⚠ THE BAND'S TOP IS THE TICKER'S INK PLUS SIMON'S 50, and everything below
  *  hangs off it — the name, the first row, the last separator and the band's
  *  own height. Moving the line moves the table. */
@@ -1215,10 +1224,33 @@ export const PLAN = {
     wireOf({ x: PLAN_W / 2 + PLAN_TICKER.half, y: PLAN_TICKER.y }, { x: PLAN_RIGHT.x + PLAN_RIGHT.w / 2, y: PLAN_BAND.y }),
   ],
 
-  /** ⚠ THE EPISODE'S OWN CAPTION LINE, not a typed y. It is 924, four pixels
-   *  above where the build prompt put it, and the four pixels are clearance
-   *  the scene's tightest point can use. */
-  close: { x: PLAN_W / 2, y: theme.stage.caption.y, size: 32 },
+  /**
+   * ═══ THE CLOSING LINE, IN A DASHED BOX ═══
+   * Simon: "Text boxnya juga ubah jadi text box putus putus." It was a pill;
+   * it is the episode's marquee now, the same one SC06 and SC11 close on.
+   *
+   * ⚠ ITS WIDTH IS MEASURED, NOT COMPUTED — the same rule every other dashed
+   * box in this episode follows. core/DashedBox is a FIXED size on purpose (it
+   * has to land its dashes on known coordinates), so the sentence is rendered,
+   * its ink is read off the frame, and the box is that plus its padding.
+   *
+   * ⚠ AND THE CORNER BLOCKS OVERHANG. They sit centred on the corner, so half a
+   * block stands outside the rect on every side — which is exactly how SC11's
+   * note ended up 5px inside the subtitle band before anyone noticed. The
+   * bottom edge below is solved with that half block in it.
+   */
+  close: (() => {
+    const w = PLAN_CLOSE.w;
+    const h = PLAN_CLOSE.h;
+    return {
+      x: (PLAN_W - w) / 2,
+      y: theme.captionBand.top - PLAN_CLOSE.air - PLAN_CLOSE.block / 2 - h,
+      w,
+      h,
+      block: PLAN_CLOSE.block,
+      size: PLAN_CLOSE.size,
+    };
+  })(),
 } as const;
 
 {
@@ -1271,12 +1303,13 @@ export const PLAN = {
   const firstTop = P.row.y0 - P.row.valueSize / 2;
   if (firstTop <= P.col.nameY + P.name.h / 2) fail("SC15's first row starts inside the column's own name");
   if (PLAN_LAST_RULE > P.band.y + P.band.h) fail(`SC15's last separator is at ${PLAN_LAST_RULE}, below the column floor`);
-  /** ⚠ THE TIGHTEST POINT IN THE SCENE — the closing line's bottom edge, which
-   *  is solvable rather than observable because the pill is built from type. */
-  const chipLow = P.close.y + pillH(P.close.size) / 2;
-  if (chipLow > theme.captionBand.top) {
-    fail(`SC15's closing chip reaches ${Math.round(chipLow)}, inside the subtitle band at ${theme.captionBand.top}`);
+  /** ⚠ THE TIGHTEST POINT IN THE SCENE — the closing box's bottom edge WITH ITS
+   *  corner blocks, which stand half outside the rect. */
+  const boxLow = P.close.y + P.close.h + P.close.block / 2;
+  if (boxLow > theme.captionBand.top) {
+    fail(`SC15's closing box reaches ${Math.round(boxLow)}, inside the subtitle band at ${theme.captionBand.top}`);
   }
+  if (P.close.y < PLAN_LAST_RULE) fail("SC15's closing box overlaps the table above it");
   /** ⚠ AND NOTHING LEAVES THE SAFE AREA ON EITHER SIDE. */
   if (P.cols[0].x < PLAN_A.x || P.cols[1].x + P.cols[1].w > PLAN_A.x + PLAN_A.w) {
     fail("SC15's columns reach outside the safe area");
