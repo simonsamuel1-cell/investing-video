@@ -2028,16 +2028,44 @@ export const ADMR_TAPE = {
    */
   runs: [
     { at: CUT11.at + CUT11.over / 2, to: 10421, bars: 56 },
-    { at: 10580, to: 10707, bars: 123 },
+    { at: 10580, to: 10646, bars: 123 },
   ],
 
   /**
-   * ⚠ THE RULE RIDES THE FRONT OF THE TAPE, it is not timed separately.
-   * "garis ini muncul dari tepi kiri, hingga sejajar candle ke 123" — it stands
-   * at the plot's left edge when the first run begins, follows the newest bar
-   * across, waits on bar 56 through the hold, and comes to rest on bar 123. A
-   * second clock for it would only be a second thing to keep in sync.
+   * ═══ THE TRIANGLE ═══
+   * "Setelah itu muncul 2 garis: (1) menghubungkan high candle ke 57 ke high
+   * candle ke 118, setelah itu dipanjangin (extend, bukan dihubungkan lagi) ke
+   * atas candle 123, (2) menghubungkan low candle ke 66, ke low candle ke 123."
+   *
+   * ⚠ INDICES ARE ZERO-BASED AND SIMON COUNTS FROM ONE. Candle 57 is bar 56.
+   * Getting this wrong moves a trendline by one day and nothing on screen says
+   * so — which is why the numbers below are indices and the comment carries the
+   * candle numbers he used.
+   *
+   * ⚠ `run` IS AN EXTENSION, NOT A SECOND SEGMENT. It continues the slope the
+   * first two highs set, out to bar 122; it does not touch that bar's high, and
+   * it must not, or the line would stop being a claim about the first two.
+   *
+   * They form under "Lalu terbentuk descending triangle." — cue 10578–10696 —
+   * which is why run 2 now finishes at 10646 rather than 10707: the tape has to
+   * be complete before the lines it is being read through can be drawn on it.
    */
+  tri: {
+    /** high(candle 57) → high(candle 118), then extended over candle 123. */
+    high: { at: 10646, over: 30, from: 56, to: 117, run: { at: 10676, over: 18, to: 122 } },
+    /** low(candle 66) → low(candle 123). */
+    low: { at: 10664, over: 30, from: 65, to: 122 },
+  },
+
+  /**
+   * ⚠ THE RULE ARRIVES LAST AND SWEEPS. It used to ride the front of the tape,
+   * which put it on screen from the first bar; Simon: "harusnya baru muncul di
+   * 10703, muncul dari kiri ke kanan, easy ease. Bukan muncul dari awal." So it
+   * is its own beat now, travelling from the plot's left edge to bar 122 on the
+   * symmetric curve — and it lands in the gap between "…descending triangle."
+   * and "Volume terakhir masih cukup aktif".
+   */
+  mark: { at: 10703, over: 30, bar: 122 },
 
   /**
    * The note, and the one place in this episode where the burned-in band goes
@@ -2086,6 +2114,26 @@ export const ADMR_TAPE = {
     fail(`the tape asks for ${b.bars} bars and the trace has ${SHOT.bars.length}`);
   /** The note may not arrive while the tape is still moving under it. */
   if (V.note.at < b.to) fail(`the note lands at ${V.note.at}, while run 2 is still drawing`);
+  /* ── the triangle, and the rule that follows it ─────────────────────── */
+  const T = V.tri;
+  for (const [name, i] of [
+    ["high.from", T.high.from], ["high.to", T.high.to], ["high.run.to", T.high.run.to],
+    ["low.from", T.low.from], ["low.to", T.low.to],
+  ] as const) {
+    if (i < 0 || i >= b.bars) fail(`the triangle's ${name} is bar ${i}, outside the ${b.bars} the tape draws`);
+  }
+  if (T.high.from >= T.high.to) fail("the high line runs backwards");
+  if (T.high.run.to <= T.high.to) fail("the high line's extension does not go past the second high");
+  if (T.low.from >= T.low.to) fail("the low line runs backwards");
+  if (T.high.at < b.to) fail(`the triangle starts at ${T.high.at}, while the tape is still drawing`);
+  if (T.high.run.at < T.high.at + T.high.over)
+    fail("the high line is extended before it has finished connecting its two highs");
+  const triEnd = Math.max(T.high.run.at + T.high.run.over, T.low.at + T.low.over);
+  if (V.mark.at < triEnd) fail(`the rule sweeps at ${V.mark.at}, before the triangle finishes at ${triEnd}`);
+  if (V.mark.at + V.mark.over > V.note.at)
+    fail(`the rule is still travelling at ${V.note.at}, when the note opens`);
+  if (V.mark.bar !== b.bars - 1)
+    fail(`the rule stops on bar ${V.mark.bar} and the tape ends on ${b.bars - 1}`);
   /** The zoom must frame exactly as far as the projection reaches. */
   if (V.zoom.last !== b.bars - 1 + V.ghost.count)
     fail(`the zoom ends on bar ${V.zoom.last}, and the projection reaches ${b.bars - 1 + V.ghost.count}`);

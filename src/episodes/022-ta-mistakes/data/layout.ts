@@ -281,8 +281,10 @@ export const ADMR_NOTE = (() => {
  * every other rule in the episode.
  */
 export const ADMR_INK = {
-  /** The vertical rule that rides the front of the tape. */
+  /** The vertical rule that sweeps in at f10703. */
   mark: theme.shape.line / ADMR_SHOT.scale,
+  /** The two trendlines that make the triangle. */
+  tri: theme.shape.line / ADMR_SHOT.scale,
   /** The projected bars: dashed, hollow, no wick. */
   ghost: {
     width: theme.shape.rule / ADMR_SHOT.scale,

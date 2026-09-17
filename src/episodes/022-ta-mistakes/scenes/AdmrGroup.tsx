@@ -19,9 +19,11 @@
  * far the zoom has travelled, and what the projection is doing. Retiming any
  * beat is an edit to data/timing.ts and nothing else.
  *
- *   f10185  the cut delivers the window — grid, price ladder, dates, no data
- *   f10205  run 1 begins; 56 candles are on screen by f10421
- *   f10580  run 2 begins; 123 by f10707, and there it stops
+ *   f10185  the cut delivers the window — border, price ladder, dates, no data
+ *   f10205  run 1 begins; 56 candles are wiped in by f10421
+ *   f10580  run 2 begins; 123 by f10646, and there it stops
+ *   f10646  the triangle draws itself on the tape, high line then low line
+ *   f10703  the rule sweeps in from the left and stops on bar 122
  *   f10950  the note opens and the zoom leans in on the right-hand end
  *   f11010  ten hollow bars climb away from the last close, blinking 3×
  *
@@ -32,7 +34,7 @@
  * bug in this pipeline and it is silent when you get it wrong.
  */
 import { AbsoluteFill, useCurrentFrame } from "remotion";
-import { cutInStyle, progress, theme, useMotion } from "../../../core";
+import { cutInStyle, progress, progressInOut, theme, useMotion } from "../../../core";
 import { ADMR_TAPE, CUT11, local } from "../data/timing";
 import { AdmrChart } from "./AdmrChart";
 import { AdmrNote } from "./AdmrNote";
@@ -67,13 +69,21 @@ const FENCE = {
 const V = ADMR_TAPE;
 const [RUN1, RUN2] = V.runs;
 
-/** Bars drawn at a GLOBAL frame: two ramps with a hold between them. */
+/**
+ * How far the tape has been uncovered at a GLOBAL frame — two eased runs with a
+ * hold between them.
+ *
+ * ⚠ ONE CURVE FOR THE BARS AND THE LINES. The bars are wiped by a front and the
+ * three plotted lines draw themselves by trim path, but both read this, so the
+ * lines' two checkpoints ("candle ke 56 dan 123") are the runs' own ends and
+ * cannot drift from them. Easy ease, per run — `progressInOut`.
+ */
 const drawn = (g: number) => {
   if (g < RUN1.at) return 0;
-  if (g <= RUN1.to) return (RUN1.bars * (g - RUN1.at)) / (RUN1.to - RUN1.at);
+  if (g <= RUN1.to) return RUN1.bars * progressInOut(g, RUN1.at, RUN1.to - RUN1.at);
   if (g < RUN2.at) return RUN1.bars;
   if (g <= RUN2.to)
-    return RUN1.bars + ((RUN2.bars - RUN1.bars) * (g - RUN2.at)) / (RUN2.to - RUN2.at);
+    return RUN1.bars + (RUN2.bars - RUN1.bars) * progressInOut(g, RUN2.at, RUN2.to - RUN2.at);
   return RUN2.bars;
 };
 
@@ -81,6 +91,15 @@ export const AdmrGroup = () => {
   const f = useCurrentFrame();
   const g = f + FROM;
   const m = useMotion();
+
+  /** Each trendline draws itself on the symmetric curve — "easy ease". */
+  const tri = {
+    high: progressInOut(g, V.tri.high.at, V.tri.high.over),
+    run: progressInOut(g, V.tri.high.run.at, V.tri.high.run.over),
+    low: progressInOut(g, V.tri.low.at, V.tri.low.over),
+  };
+  /** And so does the rule's travel, from the plot's left edge to bar 122. */
+  const mark = progressInOut(g, V.mark.at, V.mark.over);
 
   const zoom = progress(f, local(V.zoom.at, FROM), m.sec(0.9));
   const open = progress(f, local(V.note.at, FROM), m.reveal);
@@ -102,7 +121,8 @@ export const AdmrGroup = () => {
       <AbsoluteFill style={cutInStyle(g, CUT11)}>
         <AdmrChart
           shown={drawn(g)}
-          mark={g >= RUN1.at}
+          mark={mark}
+          tri={tri}
           zoom={zoom}
           ghosts={since >= 0 ? V.ghost.count : 0}
           ghostInk={ghostInk}

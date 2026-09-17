@@ -43,6 +43,13 @@
  * is up, how far the zoom has travelled and what the projection is doing.
  * Everything in here is geometry.
  *
+ * ⚠ THE GRID IS GONE, AT SIMON'S DIRECTION. "Kurasa garis vertikal dan
+ * horizontalnya remove aja, karna terlalu mengganggu." Both ladders are still
+ * in the trace — they are what the price labels and the dates are positioned
+ * against, and they are what the zoom's framing is solved from — they are
+ * simply not drawn. The pane separator stays: it is structure, not grid, and
+ * without it the MACD pane floats.
+ *
  * ⚠ THE ZOOM IS A CHANGE OF MAPPING, NOT A CSS SCALE. `X()` below is one affine
  * map on TIME only, blended from identity to the framing `ADMR_TAPE.zoom` asks
  * for. Prices do not move, so the horizontal gridlines and the whole price
@@ -84,6 +91,72 @@ const BODY_STEP = (() => {
   return h[(h.length / 2) | 0];
 })();
 
+/**
+ * ⚠ THE THREE PLOTTED LINES DRAW THEMSELVES; THE WIPE DOES NOT CUT THEM.
+ * Simon: "garis MA di chart candlestick dan 2 garis di macd munculnya boleh
+ * langsung memanjang aja ga usa patah patah, animasi trim path, easy ease, tapi
+ * ada checkpointnya juga ya, yaitu candle ke 56 dan 123." A clip uncovers a
+ * steep segment all at once — that is the "patah patah". A trim walks along the
+ * stroke instead.
+ *
+ * `trimOf` turns an x into the fraction of that path's own LENGTH reached
+ * there, which is the unit stroke-dashoffset works in. The two checkpoints need
+ * no arithmetic of their own: the lines and the tape are driven by the same
+ * `shown`, so bar 56 and bar 123 are where they are because that is where the
+ * tape is.
+ *
+ * ⚠ MEASURED ON THE UNZOOMED PATH, and that is not an approximation: the zoom
+ * does not begin until f10950 and every line is finished at f10646.
+ */
+const trimOf = (pts: readonly (readonly number[])[]) => {
+  const cum = [0];
+  for (let i = 1; i < pts.length; i++)
+    cum.push(cum[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+  const total = cum[cum.length - 1];
+  return (x: number) => {
+    if (x <= pts[0][0]) return 0;
+    if (x >= pts[pts.length - 1][0]) return 1;
+    let i = 1;
+    while (pts[i][0] < x) i++;
+    const t = (x - pts[i - 1][0]) / (pts[i][0] - pts[i - 1][0]);
+    return (cum[i - 1] + t * (cum[i] - cum[i - 1])) / total;
+  };
+};
+const TRIM = {
+  /** The red one — MA100, as Simon confirmed. */
+  ma: trimOf(SHOT.ma.pts),
+  macd: trimOf(SHOT.macdLine.pts),
+  signal: trimOf(SHOT.signal.pts),
+};
+
+/**
+ * ═══ THE TRIANGLE ═══
+ * Two lines, from the tape's own wicks: the HIGH line joins the tops of bars 56
+ * and 117 (candles 57 and 118) and is then carried on to bar 122; the LOW line
+ * joins the bottoms of bars 65 and 122 (candles 66 and 123).
+ *
+ * ⚠ THE RUN-ON IS AN EXTENSION, NOT A SECOND SEGMENT — "dipanjangin (extend,
+ * bukan dihubungkan lagi)". Its far end is where the FIRST TWO highs' slope
+ * reaches bar 122, which is nowhere near that bar's own high (1,964 against
+ * 1,830). Joining it to the high instead would turn a claim about two highs
+ * into a line through three.
+ */
+const TRI = (() => {
+  const T = ADMR_TAPE.tri;
+  const hi = (i: number) => ({ x: centreAt(i), y: BARS[i].wt });
+  const lo = (i: number) => ({ x: centreAt(i), y: BARS[i].wb });
+  const a = hi(T.high.from);
+  const b = hi(T.high.to);
+  const runX = centreAt(T.high.run.to);
+  return {
+    a,
+    b,
+    ext: { x: runX, y: a.y + ((b.y - a.y) * (runX - a.x)) / (b.x - a.x) },
+    c: lo(T.low.from),
+    d: lo(T.low.to),
+  };
+})();
+
 /** The framing the zoom travels to, in the export's own pixels. */
 const Z = ADMR_TAPE.zoom;
 const ZOOM_L = centreAt(Z.first) - PITCH / 2;
@@ -117,15 +190,23 @@ const AXIS = {
 export const AdmrChart = ({
   shown,
   mark,
+  tri,
   zoom,
   ghosts,
   ghostInk,
 }: {
-  /** How many bars of the tape are drawn, from the left. Fractional, because
-   *  the runs are timed; the bars themselves arrive whole, one at a time. */
+  /**
+   * How far the tape has been uncovered, in bars — FRACTIONAL, and that is the
+   * whole of the wipe. "Semua candlestick, volume, dan macd muncul satu satunya
+   * pake animasi wipe": every bar up to the front is drawn and the group is cut
+   * at the front, so a bar is revealed across its own width rather than
+   * switched on whole.
+   */
   shown: number;
-  /** Whether the vertical rule that rides the front of the tape is up. */
-  mark: boolean;
+  /** The rule's sweep from the plot's left edge to bar `ADMR_TAPE.mark.bar`. */
+  mark: number;
+  /** The triangle: two lines drawn by trim path, and the high line's run-on. */
+  tri: { high: number; run: number; low: number };
   /** 0 = the whole tape in frame, 1 = framed on `ADMR_TAPE.zoom`. */
   zoom: number;
   /** How many projected bars are drawn past the front. */
@@ -148,10 +229,17 @@ export const AdmrChart = ({
   /** What a WIDTH becomes under that map — its derivative, which is constant. */
   const K = 1 + (ZOOM_K - 1) * zoom;
 
-  const n = Math.max(0, Math.min(BARS.length, Math.floor(shown)));
-  /** The right edge of the newest bar: where the three lines are cut off. */
-  const front = n > 0 ? X(centreAt(n - 1) + PITCH / 2) : P.x0;
-  const anchor = n > 0 ? BARS[n - 1] : null;
+  /**
+   * ⚠ THE FRONT IS A POSITION, NOT A COUNT. Flooring it drew whole bars one at
+   * a time, which is a pop; the wipe needs the edge to land inside a bar, so
+   * every bar the edge has reached is drawn and the whole group is cut there.
+   */
+  const bars = Math.max(0, Math.min(BARS.length, Math.ceil(shown)));
+  /** The front edge, in the export's own pixels — the trims read it directly. */
+  const tip = BARS[0].x - PITCH / 2 + Math.max(0, shown) * PITCH;
+  const front = X(tip);
+  /** The projection hangs off the LAST bar of the tape, not off the front. */
+  const anchor = BARS[ADMR_TAPE.mark.bar];
 
   return (
     <svg
@@ -166,8 +254,8 @@ export const AdmrChart = ({
         <clipPath id={CLIP.tape}>
           <rect x={P.x0} y={F.y} width={PLOT_W} height={F.h} />
         </clipPath>
-        {/* The three plotted lines are continuous, so they cannot arrive bar by
-            bar — they are cut at the front of the tape instead. */}
+        {/* The wipe. Everything the tape draws lives inside this, so the front
+            edge cuts bars, bars, volume, histogram and lines all at once. */}
         <clipPath id={CLIP.front}>
           <rect
             x={P.x0}
@@ -198,29 +286,9 @@ export const AdmrChart = ({
       <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} rx={R - 2} fill={ground.bg} />
 
       <g clipPath={`url(#${CLIP.window})`}>
-        {/* ── the grid, which is on screen before anything is drawn on it ── */}
-        {[...SHOT.grid.h, ...SHOT.grid.macdH].map((y) => (
-          <rect key={`h${y}`} x={P.x0} y={y - 1} width={PLOT_W} height={SHOT.grid.weight} fill={ground.grid} />
-        ))}
-        {/* ⚠ THE VERTICAL LINES STOP ABOVE THE DATE STRIP. Run the full height
-            of the window they comb straight through the month names, which the
-            export does not do: its MACD plot ends at y1331 and the time axis
-            under it carries no grid at all.
-
-            ⚠ AND THEY TRAVEL WITH THE ZOOM, because each one IS a time — a
-            month boundary. Their WEIGHT does not, because a rule is chrome. */}
-        <g clipPath={`url(#${CLIP.tape})`}>
-          {SHOT.grid.v.map((x) => (
-            <rect
-              key={`v${x}`}
-              x={X(x) - SHOT.grid.weight / 2}
-              y={SHOT.grid.vSpan.y0}
-              width={SHOT.grid.weight}
-              height={SHOT.grid.vSpan.y1 - SHOT.grid.vSpan.y0 + 1}
-              fill={ground.grid}
-            />
-          ))}
-        </g>
+        {/* ⚠ NO GRIDLINES. Removed on instruction — "terlalu mengganggu". The
+            two ladders are still in the trace and are still what the labels and
+            the zoom are solved against; they are simply not drawn. */}
         <rect
           x={F.x + 2}
           y={PANES.sep.y0}
@@ -234,7 +302,8 @@ export const AdmrChart = ({
               Measured, not styled: #22AB94 at 50% over the #141414 ground is
               exactly the (27,96,84) in the file, and over a #212121 gridline it
               is exactly the (33,102,90) two rows lower. */}
-          {SHOT.vol.slice(0, n).map((v) => (
+          <g clipPath={`url(#${CLIP.front})`}>
+          {SHOT.vol.slice(0, bars).map((v) => (
             <rect
               key={`vol${v.i}`}
               x={X(v.l)}
@@ -245,24 +314,27 @@ export const AdmrChart = ({
               fillOpacity={VOL.alpha}
             />
           ))}
+          </g>
 
           {/* ⚠ THE MA100 GOES UNDER THE CANDLES, which is the order the export
               drew it in and the reason the trace had to interpolate the six
               stretches where a candle buries it. Against the volume it is
               unordered: checked pixel by pixel, the line does not pass through
               a single volume bar anywhere in this export. */}
-          <g clipPath={`url(#${CLIP.front})`}>
-            <polyline
-              points={SHOT.ma.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
-              fill="none"
-              stroke={C.ma}
-              strokeWidth={SHOT.ma.width}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-          </g>
+          <polyline
+            points={SHOT.ma.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            fill="none"
+            stroke={C.ma}
+            strokeWidth={SHOT.ma.width}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={1 - TRIM.ma(tip)}
+          />
 
-          {BARS.slice(0, n).map((b) => {
+          <g clipPath={`url(#${CLIP.front})`}>
+          {BARS.slice(0, bars).map((b) => {
             const ink = b.up ? C.up : C.down;
             const cx = X(b.bl + b.bw / 2);
             const bw = b.bw * K;
@@ -273,6 +345,7 @@ export const AdmrChart = ({
               </g>
             );
           })}
+          </g>
 
           {/* ⚠ HOLLOW, DASHED AND WITHOUT A WICK — because they are not data and
               must not be readable as data. They climb from the close of the
@@ -287,7 +360,7 @@ export const AdmrChart = ({
               return (
                 <rect
                   key={`ghost${i}`}
-                  x={X(centreAt(n + i)) - bw / 2}
+                  x={X(centreAt(ADMR_TAPE.mark.bar + 1 + i)) - bw / 2}
                   y={bottom - BODY_STEP}
                   width={bw}
                   height={BODY_STEP}
@@ -300,8 +373,9 @@ export const AdmrChart = ({
               );
             })}
 
+          <g clipPath={`url(#${CLIP.front})`}>
           {/* Simon's own cursor left this on the export, at 1,525. */}
-          {SHOT.crosshair && n > 0 && (
+          {SHOT.crosshair && bars > 0 && (
             <line
               x1={P.x0}
               x2={P.x1 + 1}
@@ -321,7 +395,7 @@ export const AdmrChart = ({
             />
           )}
 
-          {SHOT.hist.slice(0, n).map((h) => (
+          {SHOT.hist.slice(0, bars).map((h) => (
             <rect
               key={`hist${h.i}`}
               x={X(h.l)}
@@ -331,34 +405,88 @@ export const AdmrChart = ({
               fill={TONE[h.tone as string]}
             />
           ))}
-          <g clipPath={`url(#${CLIP.front})`}>
-            <polyline
-              points={SHOT.macdLine.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
-              fill="none"
-              stroke={C.macd}
-              strokeWidth={SHOT.macdLine.width}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
-            <polyline
-              points={SHOT.signal.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
-              fill="none"
-              stroke={C.signal}
-              strokeWidth={SHOT.signal.width}
-              strokeLinejoin="round"
-              strokeLinecap="round"
-            />
           </g>
+          <polyline
+            points={SHOT.macdLine.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            fill="none"
+            stroke={C.macd}
+            strokeWidth={SHOT.macdLine.width}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={1 - TRIM.macd(tip)}
+          />
+          <polyline
+            points={SHOT.signal.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            fill="none"
+            stroke={C.signal}
+            strokeWidth={SHOT.signal.width}
+            strokeLinejoin="round"
+            strokeLinecap="round"
+            pathLength={1}
+            strokeDasharray={1}
+            strokeDashoffset={1 - TRIM.signal(tip)}
+          />
+
+          {/* ── the triangle, drawn on the tape it is read from ──────────
+              Trim path, one line at a time, and the high line's run-on is its
+              own stroke so it can carry the slope past the two highs that set
+              it. Indigo: the same ink every annotation in this episode uses. */}
+          {tri.high > 0 && (
+            <line
+              x1={X(TRI.a.x)}
+              y1={TRI.a.y}
+              x2={X(TRI.b.x)}
+              y2={TRI.b.y}
+              stroke={c.indigo}
+              strokeWidth={ADMR_INK.tri}
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={1 - tri.high}
+            />
+          )}
+          {tri.run > 0 && (
+            <line
+              x1={X(TRI.b.x)}
+              y1={TRI.b.y}
+              x2={X(TRI.ext.x)}
+              y2={TRI.ext.y}
+              stroke={c.indigo}
+              strokeWidth={ADMR_INK.tri}
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={1 - tri.run}
+            />
+          )}
+          {tri.low > 0 && (
+            <line
+              x1={X(TRI.c.x)}
+              y1={TRI.c.y}
+              x2={X(TRI.d.x)}
+              y2={TRI.d.y}
+              stroke={c.indigo}
+              strokeWidth={ADMR_INK.tri}
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={1 - tri.low}
+            />
+          )}
         </g>
 
-        {/* ── the rule that rides the front of the tape ──────────────────
-            "garis ini muncul dari tepi kiri, hingga sejajar candle ke 123."
-            It has no clock of its own: it stands wherever the newest bar is,
-            which is the plot's left edge before there is one. Full window
-            height, so it reads as "here is now" rather than as a chart line. */}
-        {mark && (
+        {/* ── the rule, swept in ─────────────────────────────────────────
+            "harusnya baru muncul di 10703, muncul dari kiri ke kanan, easy
+            ease. Bukan muncul dari awal." It used to ride the front of the tape,
+            which put it on screen from the first bar; now it is its own beat,
+            travelling from the plot's left edge to bar 122 on the symmetric
+            curve. Full window height, so it reads as "here is now" rather than
+            as a chart line. */}
+        {mark > 0 && (
           <rect
-            x={(n > 0 ? X(centreAt(n - 1)) : P.x0) - ADMR_INK.mark / 2}
+            x={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark - ADMR_INK.mark / 2}
             y={F.y + 2}
             width={ADMR_INK.mark}
             height={F.h - 4}
