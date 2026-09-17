@@ -99,13 +99,14 @@ const centreAt = (i: number) => BARS[0].x + i * PITCH;
 const LAST = ADMR_TAPE.runs[1].bars - 1;
 
 /**
- * The step the projection climbs by: the MEDIAN real body on this tape. Picking
- * a number would be picking how big the imagined rebound is; the tape's own
- * typical day is the one step that is not a choice.
+ * The projection's body: the MEDIAN real body on this tape, times `ghost.tall`.
+ * The median is what keeps it honest — the size is still measured off the tape
+ * rather than typed — and the multiplier is the one thing anybody chooses about
+ * it, which is how big the imagined rally is. "Buat lebih tinggi sangat tinggi."
  */
 const BODY_STEP = (() => {
   const h = BARS.map((b) => b.bb - b.bt + 1).sort((a, b) => a - b);
-  return h[(h.length / 2) | 0];
+  return h[(h.length / 2) | 0] * ADMR_TAPE.ghost.tall;
 })();
 
 /**
@@ -259,6 +260,9 @@ export const AdmrChart = ({
     y: FOCUS.y + (F.y + F.h * ADMR_TAPE.zoom.place.y - FOCUS.y) * zoom,
   };
   const VIEW = `translate(${land.x - FOCUS.x * k} ${land.y - FOCUS.y * k}) scale(${k})`;
+  /** The same affine, per axis, for the things that are NOT inside it. */
+  const atX = (x: number) => land.x + (x - FOCUS.x) * k;
+  const atY = (y: number) => land.y + (y - FOCUS.y) * k;
 
   /**
    * ⚠ THE FRONT IS A POSITION, NOT A COUNT. Flooring it drew whole bars one at
@@ -296,8 +300,16 @@ export const AdmrChart = ({
         </clipPath>
         {/* The "800" label is cut in half by the floor of the price pane in the
             export, because that is where the pane ends. */}
+        {/* ⚠ IT FOLLOWS THE MOVE even though the labels it cuts do not: the
+            floor that cuts "800" in half is the price pane's, and the pane is
+            inside the move. */}
         <clipPath id={CLIP.price}>
-          <rect x={F.x} y={PANES.price.y0} width={F.w} height={PANES.price.y1 - PANES.price.y0 + 1} />
+          <rect
+            x={F.x}
+            y={atY(PANES.price.y0)}
+            width={F.w}
+            height={(PANES.price.y1 - PANES.price.y0 + 1) * k}
+          />
         </clipPath>
         {/* Insurance, not correction: nothing currently reaches a corner, but a
             gridline runs to the very top of the window and the date strip to
@@ -518,16 +530,33 @@ export const AdmrChart = ({
             putus putus vertikal indigonya remove aja deh, ternyata mengganggu."
             What is left saying where the tape ends is the tape ending. */}
 
+        </g>
+
         {/* ── the scales ─────────────────────────────────────────────────
+
+            ⚠ THEY ARE OUTSIDE THE MOVE, AND THAT IS THE POINT. Simon: "aku mau
+            label x-axis dan y-axis nya bertambah jaraknya aja, jangan ikut
+            nge-zoom ukurannya. Label ini memang seharusnya punya behaviour yang
+            berbeda, ibarat seperti cara kerja tradingview yang sebenarnya."
+
+            So a label takes ONE coordinate from the move and keeps the other,
+            and keeps its type size whatever happens:
+              · a PRICE stays pinned in the right-hand gutter and its y follows
+                the move, so the ladder spreads apart as the preview closes in;
+              · a DATE stays pinned on the bottom strip and its x follows,
+                so the months spread apart the same way.
+            That is exactly what a real chart does, and it is why they cannot
+            live inside the transform: inside it, the type would double and the
+            ladder would walk off the right-hand edge.
 
             ⚠ THE SIX VALUE TAGS ARE GONE, ON INSTRUCTION. "Ada 3 label harga yang
             bentuknya berbeda dari yang lain … Semua label dengan style itu,
-            hapus." — Simon, 2026-09-17. They were the boxed readouts the export
-            puts against the right edge: 1,855 in the MA's red, 1,525 filled in
-            teal, 1,400 outlined in teal, and the same form again for 66.96 M,
-            −18 and −106. All six carried that style, so all six go; what is left
-            is one plain grey ladder per pane. They are still in the trace, which
-            is a record of the export rather than of the scene.
+            hapus." They were the boxed readouts the export puts against the
+            right edge: 1,855 in the MA's red, 1,525 filled in teal, 1,400
+            outlined in teal, and the same form again for 66.96 M, −18 and −106.
+            All six carried that style, so all six go; what is left is one plain
+            grey ladder per pane. They are still in the trace, which is a record
+            of the export rather than of the scene.
 
             ⚠ AND TWO LABELS COME BACK BECAUSE OF IT. TradingView hides a scale
             label when a tag lands on it, so 1,400 and −100 are simply absent from
@@ -536,41 +565,34 @@ export const AdmrChart = ({
             hole in the middle and read as a bug. data/admr-chart.json puts them
             back and marks them `restored` — their VALUES are arithmetic off the
             same ladder that names every other label on the scale, so nothing
-            here is invented.
-
-            ⚠ THE PRICE LADDER DOES NOT MOVE WITH THE ZOOM. That zoom is on TIME
-            only, so every one of these still names the gridline beside it. The
-            dates DO move, because a date is a time. */}
+            here is invented. */}
         <g clipPath={`url(#${CLIP.price})`}>
           {SHOT.axis.price.map((l) => (
-            <text key={l.text} x={l.x0} y={l.cy} fill={ground.axis} dominantBaseline="central" {...AXIS}>
+            <text key={l.text} x={l.x0} y={atY(l.cy)} fill={ground.axis} dominantBaseline="central" {...AXIS}>
               {l.text}
             </text>
           ))}
         </g>
         {SHOT.axis.macd.map((l) => (
-          <text key={l.text} x={l.x0} y={l.cy} fill={ground.axis} dominantBaseline="central" {...AXIS}>
+          <text key={l.text} x={l.x0} y={atY(l.cy)} fill={ground.axis} dominantBaseline="central" {...AXIS}>
             {l.text}
           </text>
         ))}
-        <g clipPath={`url(#${CLIP.tape})`}>
-          {SHOT.axis.dates.map((d) => (
-            <text
-              key={`${d.text}${d.cx}`}
-              x={d.cx}
-              y={d.cy}
-              fill={ground.axis}
-              textAnchor="middle"
-              dominantBaseline="central"
-              {...AXIS}
-              /* The year is the one label the export sets in the bold weight. */
-              fontWeight={d.strong ? 700 : AXIS.fontWeight}
-            >
-              {d.text}
-            </text>
-          ))}
-        </g>
-        </g>
+        {SHOT.axis.dates.map((d) => (
+          <text
+            key={`${d.text}${d.cx}`}
+            x={atX(d.cx)}
+            y={d.cy}
+            fill={ground.axis}
+            textAnchor="middle"
+            dominantBaseline="central"
+            {...AXIS}
+            /* The year is the one label the export sets in the bold weight. */
+            fontWeight={d.strong ? 700 : AXIS.fontWeight}
+          >
+            {d.text}
+          </text>
+        ))}
       </g>
     </svg>
   );

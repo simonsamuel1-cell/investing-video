@@ -2113,7 +2113,7 @@ export const ADMR_TAPE = {
      * third to climb into and the triangle above it stays in frame. It is a
      * translation, so it changes nothing's size.
      */
-    place: { x: 0.58, y: 0.62 },
+    place: { x: 0.46, y: 0.62 },
   },
 
   /**
@@ -2123,7 +2123,19 @@ export const ADMR_TAPE = {
    * they cannot be read as data. No wick, no fill, no number, no level named,
    * no marker. See rule 7.
    */
-  ghost: { at: 11010, count: 10, blinks: 3 },
+  ghost: {
+    at: 11010,
+    count: 10,
+    blinks: 3,
+    /**
+     * ⚠ HOW TALL, AS A MULTIPLE OF THE TAPE'S OWN MEDIAN DAY. "Buat lebih
+     * tinggi sangat tinggi." A body is still measured rather than typed — it is
+     * this many of the median real body on this tape — so what is chosen here
+     * is how big the imagined rally is, and nothing else. They keep overlapping
+     * by half, so the climb scales with them.
+     */
+    tall: 3,
+  },
 } as const;
 
 {
@@ -2177,6 +2189,23 @@ export const ADMR_TAPE = {
       fail(`at k=${V.zoom.k} the last projected bar lands at ${last.toFixed(0)}, past the window at ${SHOT.frame.x + SHOT.frame.w}`);
     if (land - (fx - SHOT.plot.x0) * V.zoom.k > SHOT.frame.x)
       fail("the move leaves bare window on the left of the tape");
+    /**
+     * ⚠ AND THE PROJECTION HAS TO STAY UNDER THE CEILING. Tall bodies climbing
+     * by half a body each is a rally that grows with `tall`, and the window has
+     * a top edge — a factor one step too far and the last bars are drawn off the
+     * frame, where the whole point of them is lost.
+     */
+    {
+      const bar = SHOT.bars;
+      const heights = bar.map((q) => q.bb - q.bt + 1).sort((x, y) => x - y);
+      const body = heights[(heights.length / 2) | 0] * V.ghost.tall;
+      const anchorBar = bar[b.bars - 1];
+      const top = (anchorBar.up ? anchorBar.bt : anchorBar.bb) - (V.ghost.count - 1) * body * 0.5 - body;
+      const onScreen = SHOT.frame.y + SHOT.frame.h * V.zoom.place.y +
+        (top - ((anchorBar.up ? anchorBar.bt : anchorBar.bb))) * V.zoom.k;
+      if (onScreen < SHOT.frame.y)
+        fail(`at tall=${V.ghost.tall} the projection reaches y${onScreen.toFixed(0)}, above the window at ${SHOT.frame.y}`);
+    }
   }
   /** ⚠ THE BOX AND THE BAND MUST NOT BOTH SAY IT. */
   const cue = CUES.find((q) => q.start >= V.note.mute.from && q.start < V.note.mute.to);
