@@ -25,7 +25,7 @@ import {
   Candles, Card, Chart, Chip, CrossMark, IndicatorLine, Level, Line, SourceTag, Stage, VolumeBars,
   domainOf, gridOf, progress, theme, useMotion, usePalette,
 } from "../../../core";
-import { ADMR as V, BLOCK, local } from "../data/timing";
+import { ADMR as V, BLOCK, WINDOW11, local } from "../data/timing";
 import { ADMR_PANES } from "../data/layout";
 import {
   ADMR, ADMR_EVENTS, ADMR_MA100, ADMR_MACD, ADMR_SHAPE, ADMR_TRIANGLE,
@@ -33,7 +33,10 @@ import {
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const FROM = BLOCK.SC12;
+/** The carried ADMR window comes in on SC11's camera-cut midpoint, not on the
+ * stale SC12 tile boundary. Keeping this anchor here makes every local beat
+ * resolve from the frame where the viewer first sees the case. */
+const FROM = WINDOW11.to;
 // ═══════════════════════════════════════════════════════════════════════════
 
 /** ⚠ THE DOMAIN COVERS THE MA100 TOO. Left to the closes alone the average

@@ -59,6 +59,7 @@ import { Platform } from "./scenes/Platform";
  */
 import { Overload } from "./scenes/Overload";
 import { ChartWindow } from "./scenes/ChartWindow";
+import { AdmrGroup } from "./scenes/AdmrGroup";
 import { CopyTrade } from "./scenes/CopyTrade";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
@@ -225,6 +226,19 @@ const Body = () => (
       name="SC11 · chart window"
     >
       <ChartWindow />
+    </Sequence>
+
+    {/* ⚠ THE ADMR WINDOW STARTS ON SC11'S CUT, f10185. This is the existing
+        carried case-study component, not a remake; it resolves its local
+        clock from this cut so the full window is already present on f10185.
+        It remains beneath the copy-trade overlay, which begins independently
+        at PLANS.at. */}
+    <Sequence
+      from={WINDOW11.to}
+      durationInFrames={PLANS.at - WINDOW11.to}
+      name="SC12+13 · ADMR case"
+    >
+      <AdmrGroup />
     </Sequence>
 
     {/* ⚠ SC15 ON ITS OWN WINDOW, FOR THE SAME REASON SC10 IS ON ONE. Its three
