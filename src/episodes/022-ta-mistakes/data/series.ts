@@ -2,10 +2,16 @@
  * data/series.ts — every tape this episode draws, and the claims each one has
  * to keep.
  *
- * ⚠ ONE REAL DATASET IS OUTSTANDING. SC12–SC13 are a worked example on ADMR,
- * and the ADMR export has not arrived — see `ADMR` below. Everything else in
- * this episode is illustration by design, built from core's own constructors
- * so `kind` travels with the series and nothing has to remember to say so.
+ * ⚠ THE ADMR EXPORT ARRIVED, AND IT DOES NOT COME THROUGH HERE. SC12–SC13 are
+ * a worked example on ADMR, and since 2026-09-17 that scene REPRODUCES Simon's
+ * screenshot rather than re-plotting it — the pixels live in data/admr-chart.json
+ * and scenes/AdmrChart.tsx draws them at one uniform scale. The `ADMR` series
+ * below is the old placeholder; nothing draws it any more, and it is kept only
+ * until the reading layer (the three dated events) is re-hung on the traced
+ * bars, because that is the shape those annotations were written against.
+ * Everything else in this episode is illustration by design, built from core's
+ * own constructors so `kind` travels with the series and nothing has to
+ * remember to say so.
  *
  * ⚠ THE ASSERTIONS AT THE BOTTOM ARE THE POINT. A tape whose support stops
  * being tested, or whose breakout stops closing above the level a scene draws,
@@ -282,19 +288,18 @@ export const HIND_MASK = 39;
 
 /* ═══ CG-B · SC12 + SC13 · the ADMR case ═════════════════════════════════
  *
- * ⚠⚠ [NEEDS DATA: ADMR daily OHLCV + volume, ~Jan–Jun 2026] ⚠⚠
+ * ⚠⚠ NOTHING DRAWS THIS ANY MORE. ⚠⚠
  *
- * THIS IS A PLACEHOLDER, AND THE SCENE SAYS SO ON SCREEN. It is shaped to the
- * narration — a long uptrend, a descending triangle, the MA100 break, a failed
- * retest, then the triangle's support going — so the scene can be built,
- * timed and reviewed now. It is NOT ADMR.
+ * It was the placeholder for SC12–SC13 while the ADMR export was outstanding,
+ * shaped to the narration — a long uptrend, a descending triangle, the MA100
+ * break, a failed retest, then the triangle's support going. The export has
+ * since arrived and the scene reproduces it directly: data/admr-chart.json,
+ * traced by scripts/trace-admr2.mjs, drawn by scenes/AdmrChart.tsx.
  *
- * TO SWAP IN THE REAL EXPORT: replace this with
- *     export const ADMR = fromOHLC(rows, "ADMR · 1D · IDX");
- * and nothing else changes. `kind` becomes "market", SourceTag prints the
- * credit by itself, and the "data belum masuk" chip in scenes/AdmrGroup.tsx
- * disappears because it keys off `ADMR.kind`. The three event indices below
- * must then be re-derived FROM THE DATES, not kept.
+ * It is kept because the READING layer is not back yet. The three dated events
+ * below, and the assertions that check them, are the shape those annotations
+ * were written against; when they are re-hung on the traced bars the indices
+ * must be re-derived FROM THE DATES, and this block goes with them.
  */
 export const ADMR = designed(
   [

@@ -6,6 +6,7 @@
  * belongs here instead.
  */
 import { GRID_PAD_X, candleWidth, domainOf, gridOf, splitRects, theme, columns, inset } from "../../../core";
+import SHOT from "./admr-chart.json";
 import type { Grid, Rect } from "../../../core";
 import { CARD_LIST } from "./timing";
 import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINES, SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
@@ -191,6 +192,38 @@ export const ADMR_PANES = {
   },
 } as const;
 
+/**
+ * ═══ CG-B · THE ADMR EXPORT, REPRODUCED ═══
+ *
+ * ⚠ THIS IS THE ONE PICTURE IN THE EPISODE THAT IS NOT DRAWN IN THE HOUSE
+ * STYLE, and the reason is the brief: "duplikat aja semuanya". So it is not
+ * laid out at all — `data/admr-chart.json` carries the export's own 2720×1370
+ * rectangle and everything inside it in the export's own pixels, and all this
+ * box does is decide where that rectangle lands and how big it is. One uniform
+ * scale, which is what keeps the candle bodies, the wicks, the volume bars and
+ * the histogram bars in the proportions the screenshot has.
+ *
+ * ⚠ HEIGHT DECIDES IT, NOT WIDTH. The export is 1.985:1 and the active area is
+ * 1.882:1, so filling the width would be 870px tall and would have to start at
+ * y102 to clear the captions — which puts the top-right corner of a chart that
+ * reaches x1824 inside the logo zone. Hanging it from below the logo zone
+ * instead costs 108px of width and costs nothing else.
+ */
+export const ADMR_SHOT = (() => {
+  const top = theme.logoZone.height + 2;
+  const bottom = theme.captionBand.top - 4;
+  const tall = bottom - top;
+  const wide = (tall * SHOT.frame.w) / SHOT.frame.h;
+  return {
+    x: (theme.canvas.width - wide) / 2,
+    y: top,
+    w: wide,
+    h: tall,
+    /** Source px → canvas px. Nothing in the scene may use any other. */
+    scale: wide / SHOT.frame.w,
+  };
+})();
+
 /* ── the mistake counter (CG-E) ─────────────────────────────────────────── */
 /**
  * Top-left, level with the title strip.
@@ -301,6 +334,7 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
   const boxes: Record<string, Rect> = {
     PRICE, VOL, FULL, RAIL, RAIL_LEFT, SELF_PANEL, RULES,
     ADMR_PRICE: ADMR_PANES.price, ADMR_VOL: ADMR_PANES.vol, ADMR_MACD: ADMR_PANES.macd,
+    ADMR_SHOT,
     DASH_STRIP: DASH.strip, DASH_HEADER: DASH.header, DASH_PLOT: DASH.plot,
     DASH_VOL: DASH.vol, DASH_AXIS: DASH.axis, DASH_TILES: DASH.tiles,
   };

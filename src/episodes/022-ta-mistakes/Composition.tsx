@@ -228,11 +228,12 @@ const Body = () => (
       <ChartWindow />
     </Sequence>
 
-    {/* ⚠ THE ADMR WINDOW STARTS ON SC11'S CUT, f10185. This is the existing
-        carried case-study component, not a remake; it resolves its local
-        clock from this cut so the full window is already present on f10185.
-        It remains beneath the copy-trade overlay, which begins independently
-        at PLANS.at. */}
+    {/* ⚠ THE ADMR WINDOW STARTS ON SC11'S CUT, f10185, and it takes that cut's
+        INCOMING half — which is why it has no entrance of its own and is
+        already complete on the frame it lands. Since 2026-09-17 the tape is no
+        longer drawn in the house style: it is Simon's own TradingView export
+        reproduced from data/admr-chart.json. It remains beneath the copy-trade
+        overlay, which begins independently at PLANS.at. */}
     <Sequence
       from={WINDOW11.to}
       durationInFrames={PLANS.at - WINDOW11.to}
