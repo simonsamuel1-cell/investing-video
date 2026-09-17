@@ -36,7 +36,7 @@
  * That is also why they live in the JSON and not in a palette slot: they are
  * measurements, and a theme swap must not follow them.
  */
-import { theme } from "../../../core";
+import { theme, usePalette } from "../../../core";
 import { ADMR_SHOT } from "../data/layout";
 import SHOT from "../data/admr-chart.json";
 
@@ -48,6 +48,78 @@ const PLOT_W = P.x1 - P.x0 + 1;
 /** The four histogram tones, reached by the name the trace recorded. */
 const TONE = C.hist as Record<string, string>;
 const VOL = C.vol as { up: string; down: string; alpha: number };
+
+/**
+ * ═══ THE GROUND IS OURS, THE INK IS THE CHART'S ═══ (Simon, 2026-09-17:
+ * "buat backgroundnya jadi putih, bukan hitam")
+ *
+ * ⚠ AND THE TRACE IS NOT TOUCHED TO DO IT. `SHOT.colors` still holds the dark
+ * values sampled out of the export, because scripts/redraw-admr.mjs diffs the
+ * JSON against that export and a recoloured JSON would fail its own proof. So
+ * the window's GROUND — background, grid, rules, scale type — is read from the
+ * episode palette instead, and everything that carries DATA keeps the colour it
+ * has in the file. Flip the palette and the chart follows; re-run the trace and
+ * the geometry still verifies. Neither can break the other.
+ *
+ * ⚠ THE VOLUME BARS AND THE HISTOGRAM TINTS ARE LEFT ALONE ON PURPOSE. The
+ * volume is drawn at 50% and composites against whatever is behind it, so on
+ * white it becomes the pale teal and pale pink a light-theme chart has, for
+ * free. The two pale histogram tones stay the light tints they are — that is
+ * what the falling bars look like in a light chart, and darkening them would
+ * make "falling" louder than "growing", which is backwards.
+ */
+/**
+ * ⚠ ONE INK STOPS WORKING WHEN THE GROUND FLIPS, AND IT IS A LEGIBILITY BUG,
+ * NOT A STYLE CHOICE.
+ *
+ * The value tags borrow the colour of the thing they measure — so the MACD tag
+ * is drawn in the CURRENT histogram tone, which right now is the pale pink of a
+ * falling bar. Pale pink on black is a label; pale pink on white is nothing.
+ * The same, less badly, for the teal volume tag and the orange signal tag.
+ *
+ * So anything set as TYPE or as a 2px OUTLINE is walked away from the ground
+ * until it reaches a contrast ratio of 3 — WCAG's floor for large text, and the
+ * least that survives a video being watched on a phone. FILLS are left alone:
+ * a histogram bar is a shape, it is read by its size, and darkening the falling
+ * bars would make them louder than the growing ones, which is backwards.
+ *
+ * ⚠ IT IS COMPUTED, NOT TYPED, so it survives a palette swap in either
+ * direction — on a dark ground the same function walks the ink the other way.
+ */
+const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const hex = (v: number[]) => "#" + v.map((n) => Math.round(n).toString(16).padStart(2, "0")).join("");
+const lum = (v: number[]) =>
+  v
+    .map((n) => n / 255)
+    .map((u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4))
+    .reduce((a, u, i) => a + u * [0.2126, 0.7152, 0.0722][i], 0);
+const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+const READABLE = 3;
+const legible = (ink: string, bg: string) => {
+  const g = lum(rgb(bg));
+  if (ratio(lum(rgb(ink)), g) >= READABLE) return ink;
+  /** Away from the ground: toward black over a light one, toward white over a
+   *  dark one. Binary search, because luminance is not linear in the channel. */
+  const away = g > 0.4 ? [0, 0, 0] : [255, 255, 255];
+  const from = rgb(ink);
+  let lo = 0, hi = 1;
+  for (let i = 0; i < 24; i++) {
+    const t = (lo + hi) / 2;
+    const mid = from.map((n, k) => n + (away[k] - n) * t);
+    if (ratio(lum(mid), g) >= READABLE) hi = t;
+    else lo = t;
+  }
+  return hex(from.map((n, k) => n + (away[k] - n) * hi));
+};
+
+const ground = (c: ReturnType<typeof usePalette>) => ({
+  /** White, not the page — the chart is a window on the page, not the page. */
+  bg: c.cardBg,
+  grid: c.border,
+  edge: c.border,
+  sep: c.border,
+  axis: c.slate,
+});
 
 /** ⚠ ONE `id` PER CLIP, SCOPED TO THIS SCENE. Two <clipPath id="plot"> in one
  *  document and the second one silently wins for both. */
@@ -68,6 +140,7 @@ const AXIS = {
  * AdmrGroup does it on the root. See core/CameraCut.ts.
  */
 export const AdmrChart = () => {
+  const g = ground(usePalette());
   return (
     <svg
       viewBox={`${F.x} ${F.y} ${F.w} ${F.h}`}
@@ -89,13 +162,16 @@ export const AdmrChart = () => {
       </defs>
 
       {/* ── the window ─────────────────────────────────────────────────── */}
-      <rect x={F.x} y={F.y} width={F.w} height={F.h} fill={C.edge} />
-      <rect x={F.x + 1} y={F.y + 1} width={F.w - 2} height={F.h - 2} fill={C.edge2} />
-      <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} fill={C.bg} />
+      {/* ⚠ ONE RULE, NOT TWO. The export draws a #313131 ring with a #292929
+          ring inside it — two steps of dark that exist to separate the chart
+          from the app around it. On white there is nothing to separate it from
+          but the page, so the two rings become the one border the page uses. */}
+      <rect x={F.x} y={F.y} width={F.w} height={F.h} fill={g.edge} />
+      <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} fill={g.bg} />
 
       {/* ── the grid, under everything the tape draws ──────────────────── */}
       {[...SHOT.grid.h, ...SHOT.grid.macdH].map((y) => (
-        <rect key={`h${y}`} x={P.x0} y={y - 1} width={PLOT_W} height={SHOT.grid.weight} fill={C.grid} />
+        <rect key={`h${y}`} x={P.x0} y={y - 1} width={PLOT_W} height={SHOT.grid.weight} fill={g.grid} />
       ))}
       {/* ⚠ THE VERTICAL LINES STOP ABOVE THE DATE STRIP. Run the full height of
           the window they comb straight through the month names, which the
@@ -108,7 +184,7 @@ export const AdmrChart = () => {
           y={SHOT.grid.vSpan.y0}
           width={SHOT.grid.weight}
           height={SHOT.grid.vSpan.y1 - SHOT.grid.vSpan.y0 + 1}
-          fill={C.grid}
+          fill={g.grid}
         />
       ))}
       <rect
@@ -116,7 +192,7 @@ export const AdmrChart = () => {
         y={PANES.sep.y0}
         width={F.w - 4}
         height={PANES.sep.y1 - PANES.sep.y0 + 1}
-        fill={C.sep}
+        fill={g.sep}
       />
 
       <g clipPath={`url(#${CLIP.tape})`}>
@@ -213,13 +289,13 @@ export const AdmrChart = () => {
       {/* ── the scales ─────────────────────────────────────────────────── */}
       <g clipPath={`url(#${CLIP.price})`}>
         {SHOT.axis.price.map((l) => (
-          <text key={l.text} x={l.x0} y={l.cy} fill={C.axis} dominantBaseline="central" {...AXIS}>
+          <text key={l.text} x={l.x0} y={l.cy} fill={g.axis} dominantBaseline="central" {...AXIS}>
             {l.text}
           </text>
         ))}
       </g>
       {SHOT.axis.macd.map((l) => (
-        <text key={l.text} x={l.x0} y={l.cy} fill={C.axis} dominantBaseline="central" {...AXIS}>
+        <text key={l.text} x={l.x0} y={l.cy} fill={g.axis} dominantBaseline="central" {...AXIS}>
           {l.text}
         </text>
       ))}
@@ -228,7 +304,7 @@ export const AdmrChart = () => {
           key={`${d.text}${d.cx}`}
           x={d.cx}
           y={d.cy}
-          fill={C.axis}
+          fill={g.axis}
           textAnchor="middle"
           dominantBaseline="central"
           {...AXIS}
@@ -249,13 +325,13 @@ export const AdmrChart = () => {
               width={t.w - t.weight}
               height={t.h - t.weight}
               fill={t.fill ?? "none"}
-              stroke={t.stroke}
+              stroke={t.fill ? t.stroke : legible(t.stroke, g.bg)}
               strokeWidth={t.weight}
             />
             <text
               x={t.x + t.w / 2}
               y={t.cy}
-              fill={t.color}
+              fill={legible(t.color, t.fill ?? g.bg)}
               textAnchor="middle"
               dominantBaseline="central"
               {...AXIS}
