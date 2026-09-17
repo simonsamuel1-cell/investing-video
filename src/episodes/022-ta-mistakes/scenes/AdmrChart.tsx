@@ -50,14 +50,25 @@
  * simply not drawn. The pane separator stays: it is structure, not grid, and
  * without it the MACD pane floats.
  *
- * ⚠ THE PREVIEW MOVES, NOTHING RESIZES. `X()` below is a TRANSLATION — Simon:
- * "Lock semua ukuran ya … aku maunya ukurannya respectively masih sama, hanya
- * saja previewnya mendekat ke candle ke 123 tersebut." It used to stretch time
- * so a chosen span filled the plot, which left every candle 2.27× wider than it
- * is tall. Now the whole tape slides until bar 122 reaches the middle of the
- * plot, and every body, wick, volume bar, histogram bar and gap keeps the exact
- * size it was traced at. Prices never moved under either version, so the price
- * ladder still names what it always named.
+ * ⚠ THE PREVIEW MOVES CLOSER, AND NOTHING IS RESHAPED. Simon's call, asked and
+ * answered: "aku maunya ukurannya respectively masih sama, hanya saja previewnya
+ * mendekat ke candle ke 123 tersebut." `VIEW` below is ONE factor on BOTH axes
+ * about candle 123 — so every ratio in the picture is locked and not a single
+ * width, height, gap or stroke in this file is a function of it.
+ *
+ * ⚠ AND YES, THAT IS A `scale()` ON A CHART. The house rule against it exists
+ * because stretching a chart pulls type, hairlines and candle widths apart from
+ * each other; the first attempt here obeyed the letter of that rule — a new
+ * mapping on time alone — and produced exactly the distortion it forbids, every
+ * candle 2.27× wider than it was tall. A camera moving toward a PHOTOGRAPH is
+ * the one case where the uniform factor is the honest answer, and this window
+ * is a photograph.
+ *
+ * ⚠ IT IS THE CONTENT THAT MOVES, NOT THE WINDOW. The frame, its border and its
+ * rounded corners are the viewport and stay exactly where they are; everything
+ * inside is magnified and cropped by them. At k=2 the volume band, the MACD pane
+ * and the lower half of the price ladder are outside the frame — accepted, and
+ * see the note on `zoom` in data/timing.ts.
  */
 import { theme, usePalette } from "../../../core";
 import { ADMR_INK, ADMR_SHOT } from "../data/layout";
@@ -82,6 +93,10 @@ const BARS = SHOT.bars;
  */
 const PITCH = (BARS[BARS.length - 1].x - BARS[0].x) / (BARS.length - 1);
 const centreAt = (i: number) => BARS[0].x + i * PITCH;
+/** The tape's own last bar — candle 123. The projection hangs off it and the
+ *  preview closes on it, and it is read from the tape rather than from any
+ *  annotation that happens to point at it. */
+const LAST = ADMR_TAPE.runs[1].bars - 1;
 
 /**
  * The step the projection climbs by: the MEDIAN real body on this tape. Picking
@@ -160,11 +175,17 @@ const TRI = (() => {
 })();
 
 /**
- * How far the tape slides when the preview closes in, in the export's own
- * pixels: enough to put `focus` at `place` across the plot. One number, and it
- * is a distance rather than a factor — which is the whole point.
+ * The point the preview closes on: candle 123, at its CLOSE — the bar the
+ * sentence is about and the height the projection sets off from, so the move
+ * ends with both of them in the middle of the window.
  */
-const SHIFT = ADMR_TAPE.zoom.place * PLOT_W + P.x0 - centreAt(ADMR_TAPE.zoom.focus);
+const FOCUS = {
+  x: centreAt(ADMR_TAPE.zoom.focus),
+  y: (() => {
+    const b = BARS[ADMR_TAPE.zoom.focus];
+    return b.up ? b.bt : b.bb;
+  })(),
+};
 
 /** ⚠ ONE `id` PER CLIP, SCOPED TO THIS SCENE. Two <clipPath id="plot"> in one
  *  document and the second one silently wins for both. */
@@ -193,7 +214,6 @@ const AXIS = {
 
 export const AdmrChart = ({
   shown,
-  mark,
   tri,
   zoom,
   ghosts,
@@ -207,8 +227,6 @@ export const AdmrChart = ({
    * switched on whole.
    */
   shown: number;
-  /** The rule's sweep from the plot's left edge to bar `ADMR_TAPE.mark.bar`. */
-  mark: number;
   /** The triangle: two lines drawn by trim path, and the high line's run-on. */
   tri: { high: number; run: number; low: number };
   /** 0 = the whole tape in frame, 1 = framed on `ADMR_TAPE.zoom`. */
@@ -228,8 +246,19 @@ export const AdmrChart = ({
     axis: c.slate,
   };
 
-  /** Time, moved. A translation, so no width anywhere is a function of it. */
-  const X = (x: number) => x + SHIFT * zoom;
+  /**
+   * One factor, both axes, about FOCUS. Written as a transform rather than
+   * folded into the coordinates on purpose: there is then no place in this file
+   * where a size COULD accidentally depend on it.
+   */
+  const k = 1 + (ADMR_TAPE.zoom.k - 1) * zoom;
+  /** Where the focus itself ends up: where it already is at rest, `place` when
+   *  the move is finished. Blended, so the transform is identity at zoom 0. */
+  const land = {
+    x: FOCUS.x + (F.x + F.w * ADMR_TAPE.zoom.place.x - FOCUS.x) * zoom,
+    y: FOCUS.y + (F.y + F.h * ADMR_TAPE.zoom.place.y - FOCUS.y) * zoom,
+  };
+  const VIEW = `translate(${land.x - FOCUS.x * k} ${land.y - FOCUS.y * k}) scale(${k})`;
 
   /**
    * ⚠ THE FRONT IS A POSITION, NOT A COUNT. Flooring it drew whole bars one at
@@ -239,9 +268,8 @@ export const AdmrChart = ({
   const bars = Math.max(0, Math.min(BARS.length, Math.ceil(shown)));
   /** The front edge, in the export's own pixels — the trims read it directly. */
   const tip = BARS[0].x - PITCH / 2 + Math.max(0, shown) * PITCH;
-  const front = X(tip);
   /** The projection hangs off the LAST bar of the tape, not off the front. */
-  const anchor = BARS[ADMR_TAPE.mark.bar];
+  const anchor = BARS[LAST];
 
   return (
     <svg
@@ -262,7 +290,7 @@ export const AdmrChart = ({
           <rect
             x={P.x0}
             y={F.y}
-            width={Math.max(0, Math.min(front, P.x1 + 1) - P.x0)}
+            width={Math.max(0, Math.min(tip, P.x1 + 1) - P.x0)}
             height={F.h}
           />
         </clipPath>
@@ -288,6 +316,7 @@ export const AdmrChart = ({
       <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} rx={R - 2} fill={ground.bg} />
 
       <g clipPath={`url(#${CLIP.window})`}>
+        <g transform={VIEW}>
         {/* ⚠ NO GRIDLINES. Removed on instruction — "terlalu mengganggu". The
             two ladders are still in the trace and are still what the labels and
             the zoom are solved against; they are simply not drawn. */}
@@ -308,7 +337,7 @@ export const AdmrChart = ({
           {SHOT.vol.slice(0, bars).map((v) => (
             <rect
               key={`vol${v.i}`}
-              x={X(v.l)}
+              x={v.l}
               y={v.t}
               width={v.w}
               height={v.b - v.t + 1}
@@ -324,7 +353,7 @@ export const AdmrChart = ({
               unordered: checked pixel by pixel, the line does not pass through
               a single volume bar anywhere in this export. */}
           <polyline
-            points={SHOT.ma.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            points={SHOT.ma.pts.map(([x, y]) => `${x},${y}`).join(" ")}
             fill="none"
             stroke={C.ma}
             strokeWidth={SHOT.ma.width}
@@ -338,7 +367,7 @@ export const AdmrChart = ({
           <g clipPath={`url(#${CLIP.front})`}>
           {BARS.slice(0, bars).map((b) => {
             const ink = b.up ? C.up : C.down;
-            const cx = X(b.bl + b.bw / 2);
+            const cx = b.bl + b.bw / 2;
             return (
               <g key={`bar${b.i}`}>
                 <rect x={cx - 1} y={b.wt} width={2} height={b.wb - b.wt + 1} fill={ink} />
@@ -361,7 +390,7 @@ export const AdmrChart = ({
               return (
                 <rect
                   key={`ghost${i}`}
-                  x={X(centreAt(ADMR_TAPE.mark.bar + 1 + i)) - bw / 2}
+                  x={centreAt(LAST + 1 + i) - bw / 2}
                   y={bottom - BODY_STEP}
                   width={bw}
                   height={BODY_STEP}
@@ -399,7 +428,7 @@ export const AdmrChart = ({
           {SHOT.hist.slice(0, bars).map((h) => (
             <rect
               key={`hist${h.i}`}
-              x={X(h.l)}
+              x={h.l}
               y={h.t}
               width={h.w}
               height={h.b - h.t + 1}
@@ -408,7 +437,7 @@ export const AdmrChart = ({
           ))}
           </g>
           <polyline
-            points={SHOT.macdLine.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            points={SHOT.macdLine.pts.map(([x, y]) => `${x},${y}`).join(" ")}
             fill="none"
             stroke={C.macd}
             strokeWidth={SHOT.macdLine.width}
@@ -419,7 +448,7 @@ export const AdmrChart = ({
             strokeDashoffset={1 - TRIM.macd(tip)}
           />
           <polyline
-            points={SHOT.signal.pts.map(([x, y]) => `${X(x)},${y}`).join(" ")}
+            points={SHOT.signal.pts.map(([x, y]) => `${x},${y}`).join(" ")}
             fill="none"
             stroke={C.signal}
             strokeWidth={SHOT.signal.width}
@@ -442,9 +471,9 @@ export const AdmrChart = ({
               palette's two anchors, which is what they are for. */}
           {tri.high > 0 && (
             <line
-              x1={X(TRI.a.x)}
+              x1={TRI.a.x}
               y1={TRI.a.y}
-              x2={X(TRI.b.x)}
+              x2={TRI.b.x}
               y2={TRI.b.y}
               stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
@@ -456,9 +485,9 @@ export const AdmrChart = ({
           )}
           {tri.run > 0 && (
             <line
-              x1={X(TRI.b.x)}
+              x1={TRI.b.x}
               y1={TRI.b.y}
-              x2={X(TRI.ext.x)}
+              x2={TRI.ext.x}
               y2={TRI.ext.y}
               stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
@@ -470,9 +499,9 @@ export const AdmrChart = ({
           )}
           {tri.low > 0 && (
             <line
-              x1={X(TRI.c.x)}
+              x1={TRI.c.x}
               y1={TRI.c.y}
-              x2={X(TRI.d.x)}
+              x2={TRI.d.x}
               y2={TRI.d.y}
               stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
@@ -484,25 +513,10 @@ export const AdmrChart = ({
           )}
         </g>
 
-        {/* ── the rule, swept in ─────────────────────────────────────────
-            "harusnya baru muncul di 10703, muncul dari kiri ke kanan, easy
-            ease. Bukan muncul dari awal." It used to ride the front of the tape,
-            which put it on screen from the first bar; now it is its own beat,
-            travelling from the plot's left edge to bar 122 on the symmetric
-            curve. Full window height, so it reads as "here is now" rather than
-            as a chart line. */}
-        {mark > 0 && (
-          <line
-            x1={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark}
-            x2={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark}
-            y1={F.y + 2 + ADMR_INK.mark.short / 2}
-            y2={F.y + F.h - 2 - ADMR_INK.mark.short / 2}
-            stroke={c.indigo}
-            strokeWidth={ADMR_INK.mark.width}
-            strokeDasharray={ADMR_INK.mark.dash}
-            strokeLinecap="butt"
-          />
-        )}
+        {/* ⚠ THERE IS NO VERTICAL RULE. It rode the front of the tape, then
+            swept in at 10703 shortened and dashed, and then came off: "Garis
+            putus putus vertikal indigonya remove aja deh, ternyata mengganggu."
+            What is left saying where the tape ends is the tape ending. */}
 
         {/* ── the scales ─────────────────────────────────────────────────
 
@@ -543,7 +557,7 @@ export const AdmrChart = ({
           {SHOT.axis.dates.map((d) => (
             <text
               key={`${d.text}${d.cx}`}
-              x={X(d.cx)}
+              x={d.cx}
               y={d.cy}
               fill={ground.axis}
               textAnchor="middle"
@@ -555,6 +569,7 @@ export const AdmrChart = ({
               {d.text}
             </text>
           ))}
+        </g>
         </g>
       </g>
     </svg>

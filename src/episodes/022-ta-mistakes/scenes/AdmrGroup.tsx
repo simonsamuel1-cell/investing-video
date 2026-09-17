@@ -23,7 +23,6 @@
  *   f10205  run 1 begins; 56 candles are wiped in by f10421
  *   f10580  run 2 begins; 123 by f10646, and there it stops
  *   f10646  the triangle draws itself on the tape, high line then low line
- *   f10703  the rule sweeps in from the left and stops on bar 122
  *   f10950  the note opens and the zoom leans in on the right-hand end
  *   f11010  ten hollow bars climb away from the last close, blinking 3×
  *
@@ -98,9 +97,6 @@ export const AdmrGroup = () => {
     run: progressInOut(g, V.tri.high.run.at, V.tri.high.run.over),
     low: progressInOut(g, V.tri.low.at, V.tri.low.over),
   };
-  /** And so does the rule's travel, from the plot's left edge to bar 122. */
-  const mark = progressInOut(g, V.mark.at, V.mark.over);
-
   const zoom = progress(f, local(V.zoom.at, FROM), m.sec(0.9));
   const open = progress(f, local(V.note.at, FROM), m.reveal);
   const ink = progress(f, local(V.note.at, FROM) + m.reveal, m.fade);
@@ -121,7 +117,6 @@ export const AdmrGroup = () => {
       <AbsoluteFill style={cutInStyle(g, CUT11)}>
         <AdmrChart
           shown={drawn(g)}
-          mark={mark}
           tri={tri}
           zoom={zoom}
           ghosts={since >= 0 ? V.ghost.count : 0}

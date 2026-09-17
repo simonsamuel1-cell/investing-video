@@ -281,18 +281,6 @@ export const ADMR_NOTE = (() => {
  * every other rule in the episode.
  */
 export const ADMR_INK = {
-  /**
-   * The vertical rule that sweeps in at f10703.
-   *
-   * ⚠ `short` IS IN CANVAS PIXELS, DIVIDED BACK OUT, like every other width
-   * here. Simon asked for 150 off its height and he means 150 on the screen,
-   * not 150 in the export's coordinates — typed raw it would take off 89.
-   */
-  mark: {
-    width: theme.shape.line / ADMR_SHOT.scale,
-    short: 150 / ADMR_SHOT.scale,
-    dash: `${14 / ADMR_SHOT.scale} ${10 / ADMR_SHOT.scale}`,
-  },
   /** The two trendlines that make the triangle. */
   tri: theme.shape.line / ADMR_SHOT.scale,
   /** The projected bars: dashed, hollow, no wick. */
