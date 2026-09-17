@@ -19,6 +19,12 @@
  *  Anything handed to CameraCut is the opposite — it wants `f + FROM`. */
 export const local = (beat: number, from: number) => beat - from;
 
+/* ⚠ TWO IMPORTS, BOTH ONLY FOR ASSERTIONS. The tape says how many bars there
+   are to reveal; the cues say what the ADMR note is allowed to put on screen.
+   Neither is read at render time — see the checks under ADMR_TAPE. */
+import SHOT from "./admr-chart.json";
+import { CUES } from "../subtitles";
+
 export const BLOCK = {
   SC01: 0, SC02: 646, SC03: 1140,
   SC04: 1995, SC05: 3084,
@@ -1987,6 +1993,110 @@ export const ADMR = {
   ],
   close: 12172,
 } as const;
+
+/* ═══ SC12 — THE ADMR TAPE, DRAWN IN TWO RUNS ════════════════════════════
+ *
+ * ⚠ THE WINDOW ARRIVES EMPTY, AND THAT IS THE WHOLE STAGING. CUT11 delivers
+ * the frame, both sets of gridlines, the price ladder and the dates — and not
+ * one candle, not one volume bar, not one histogram bar and neither MACD line.
+ * Simon, 2026-09-17: "Bermula dari windownya saja dengan garis garis verti dan
+ * horizontal, label harga, dan label waktu, jangan ada candlestick, jangan ada
+ * volume bars, dan macd bars dan garisnya." The tape then draws itself in from
+ * the left one bar at a time, in two runs, each hung on the sentence said over
+ * it:
+ *
+ *   run 1   10205 → 10421, 56 candles   under "Sekarang kita lihat contohnya di
+ *                                       ADMR." and into "…masih berada dalam
+ *                                       uptrend."
+ *   hold    10421 → 10580               the uptrend sentence finishes on what
+ *                                       is already drawn.
+ *   run 2   10580 → 10707, to 123       under "Lalu terbentuk descending
+ *                                       triangle." — cue 10578–10696.
+ *
+ * ⚠ AND IT STOPS AT 123 OF 137. The last fourteen bars are the future this
+ * scene is not allowed to have shown yet: SC12 reads the evidence from where
+ * the viewer would have been standing. They are in the trace, undrawn.
+ */
+export const ADMR_TAPE = {
+  /** Frame zero for the group: the cut itself, which hands over the window. */
+  at: CUT11.at,
+  /**
+   * ⚠ RUN 1 DOES NOT START ON THE CUT — it starts on the frame the camera
+   * STOPS. CUT11 is a 40-frame move whose midpoint is the swap, so the window
+   * is still travelling and still blurred until 10205, and bars drawn into it
+   * before then arrive inside the smear rather than after it.
+   */
+  runs: [
+    { at: CUT11.at + CUT11.over / 2, to: 10421, bars: 56 },
+    { at: 10580, to: 10707, bars: 123 },
+  ],
+
+  /**
+   * ⚠ THE RULE RIDES THE FRONT OF THE TAPE, it is not timed separately.
+   * "garis ini muncul dari tepi kiri, hingga sejajar candle ke 123" — it stands
+   * at the plot's left edge when the first run begins, follows the newest bar
+   * across, waits on bar 56 through the hold, and comes to rest on bar 123. A
+   * second clock for it would only be a second thing to keep in sync.
+   */
+
+  /**
+   * The note, and the one place in this episode where the burned-in band goes
+   * quiet: the box says the sentence, so the subtitle underneath would say it
+   * twice. `Captions` matches `mute` on a cue's START, so the window only has
+   * to contain 10960.
+   */
+  note: {
+    at: 10950,
+    /** ⚠ WORD FOR WORD THE CUE AT 10960. Asserted below — if the SRT is ever
+     *  corrected, this throws at module load rather than drifting. */
+    text: "Kalau terlalu fokus pada satu skenario, kondisi ini bisa terlihat seperti persiapan rebound.",
+    mute: { from: 10950, to: 11230 },
+  },
+
+  /**
+   * ⚠ ZOOM BY BAR INDEX, NOT BY A FACTOR — because a zoom here is a change of
+   * MAPPING, never a CSS scale. `first`..`last` are the bars the plot is asked
+   * to hold when the move finishes; the scene solves the factor from them. It
+   * ends on `last`, which is the tenth projected bar, so the whole of what the
+   * note is talking about is inside the frame.
+   */
+  zoom: { at: 10950, first: 73, last: 132 },
+
+  /**
+   * ⚠ HOLLOW, DASHED, AND THEY BLINK — because they are NOT a forecast. They
+   * are the rebound the sentence says somebody would see if they were only
+   * looking for one, drawn in the one style nothing else in this video uses so
+   * they cannot be read as data. No wick, no fill, no number, no level named,
+   * no marker. See rule 7.
+   */
+  ghost: { at: 11010, count: 10, blinks: 3 },
+} as const;
+
+{
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  const V = ADMR_TAPE;
+  const [a, b] = V.runs;
+  if (a.at < CUT11.at) fail(`the tape starts at ${a.at}, before the cut that delivers the window`);
+  if (a.at >= a.to || b.at >= b.to) fail("a tape run ends before it starts");
+  if (b.at < a.to) fail(`run 2 starts at ${b.at}, before run 1 has finished at ${a.to}`);
+  if (b.bars <= a.bars) fail("run 2 does not add any bars");
+  if (b.bars > SHOT.bars.length)
+    fail(`the tape asks for ${b.bars} bars and the trace has ${SHOT.bars.length}`);
+  /** The note may not arrive while the tape is still moving under it. */
+  if (V.note.at < b.to) fail(`the note lands at ${V.note.at}, while run 2 is still drawing`);
+  /** The zoom must frame exactly as far as the projection reaches. */
+  if (V.zoom.last !== b.bars - 1 + V.ghost.count)
+    fail(`the zoom ends on bar ${V.zoom.last}, and the projection reaches ${b.bars - 1 + V.ghost.count}`);
+  if (V.zoom.first >= V.zoom.last) fail("the zoom window runs backwards");
+  if (V.ghost.at < V.zoom.at) fail("the projection arrives before the zoom that frames it");
+  /** ⚠ THE BOX AND THE BAND MUST NOT BOTH SAY IT. */
+  const cue = CUES.find((q) => q.start >= V.note.mute.from && q.start < V.note.mute.to);
+  if (!cue) fail(`nothing is muted by ${V.note.mute.from}–${V.note.mute.to}, so the band still says the note`);
+  else if (cue.text !== V.note.text)
+    fail(`the note says "${V.note.text}" and the muted cue says "${cue.text}"`);
+}
 
 /* ═══ SC14 — asal copy trade ═════════════════════════════════════════════ */
 /** ⚠ NO PRICES. The four rows differ in WORDS, not numbers: a made-up entry

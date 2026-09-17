@@ -96,6 +96,18 @@ export type Palette = {
   /** Two steps of indigo for stacked indicator lines. */
   indigoTint1: string;
   indigoTint2: string;
+  /**
+   * ⚠ THE STEP IN THE OTHER DIRECTION, and the palette had none. `indigoTint1`
+   * and `indigoTint2` both go lighter, which is what a stack of indicator lines
+   * needs; an indigo SURFACE needs an edge that is darker than its own fill or
+   * it has no edge at all. Added for VIDEO 22's ADMR note, whose box is indigo
+   * at 70% — a border in plain `indigo` reads as the same colour turned up
+   * rather than as a rule round the box.
+   *
+   * Hue-locked like every other indigo here: 247° in three of the four
+   * palettes, and 275° in `ungu` because that palette's indigo is 275°.
+   */
+  indigoDeep: string;
   indigoSoft: string;
   cyanSoft: string;
   /** The white card charts are drawn on. */
@@ -116,6 +128,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
     candleRed: "#E5475D",
     indigoTint1: "#8F82F4",
     indigoTint2: "#BDB4F9",
+    indigoDeep: "#3522C3",
     indigoSoft: "#EFEDFE",
     cyanSoft: "#EDFDFE",
     cardBg: "#FFFFFF",
@@ -133,6 +146,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
     candleRed: "#FF5E72",
     indigoTint1: "#9E92F7",
     indigoTint2: "#7268CF",
+    indigoDeep: "#4A36E2",
     indigoSoft: "#262041",
     cyanSoft: "#17303A",
     cardBg: "#1F1F21",
@@ -151,6 +165,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
     candleRed: "#CB4A3C",
     indigoTint1: "#8F82F4",
     indigoTint2: "#BDB4F9",
+    indigoDeep: "#3522C3",
     indigoSoft: "#ECE9FC",
     cyanSoft: "#F8E7DA",
     cardBg: "#FBF7F0",
@@ -171,6 +186,7 @@ export const PALETTES: Record<PaletteName, Palette> = {
     candleRed: "#C93A50",
     indigoTint1: "#9E6CC8",
     indigoTint2: "#C3A5DE",
+    indigoDeep: "#4F1D72",
     indigoSoft: "#F0E4FA",
     cyanSoft: "#DFF1F5",
     cardBg: "#FBF6FE",

@@ -224,6 +224,81 @@ export const ADMR_SHOT = (() => {
   };
 })();
 
+/**
+ * ═══ CG-B · THE ADMR NOTE ═══  (Simon's dialog-box reference, 2026-09-17)
+ *
+ * A bar laid across the bottom of the window: mascot on the left, one sentence
+ * on the right, indigo at 70% so the chart keeps reading through it. That
+ * transparency is not decoration — the sentence is ABOUT what is underneath, so
+ * covering it would be arguing with itself.
+ *
+ * ⚠ ITS FLOOR IS THE WINDOW'S FLOOR, NOT A STRADDLE. "y-axisnya overlap dengan
+ * tepi bawah" is what SC11's note did too, but there the window had room below
+ * it. Here the window already ends 4px above the subtitle band, so a box
+ * centred on that edge would hang half its height into the band — the one
+ * region that stays empty in every scene. It sits ON the edge instead and
+ * overlaps the chart upward, which is what the reference does: the box covers
+ * the bottom of the picture, and the picture shows through it.
+ */
+export const ADMR_NOTE = (() => {
+  /**
+   * ⚠ IT STOPS AT THE PRICE GUTTER, and that is what sets its width. Centred on
+   * the canvas as Simon asked and taken out to the window's edge, its right end
+   * lands across the "100 / 0 / −100" ladder and reads as a box that missed.
+   * Centred on the canvas, its right edge on the PLOT's right edge, and the
+   * width falls out of the two.
+   */
+  const plotRight = ADMR_SHOT.x + (SHOT.plot.x1 + 1 - SHOT.frame.x) * ADMR_SHOT.scale;
+  const wide = 2 * (plotRight - theme.canvas.width / 2);
+  const tall = 156;
+  return {
+    x: (theme.canvas.width - wide) / 2,
+    y: ADMR_SHOT.y + ADMR_SHOT.h - tall,
+    w: wide,
+    h: tall,
+    pad: 30,
+    /** The mascot's height inside the box, and the gap before the sentence. */
+    mark: 100,
+    gap: 30,
+    radius: theme.shape.panelRadius,
+    size: theme.text.body.size,
+    /** ⚠ THE MASCOT BREATHES, it does not bounce. Amplitude in px, period in
+     *  seconds — the scene turns the period into frames through useMotion. */
+    bob: { amount: 9, seconds: 2.2 },
+    /** The column the mascot is centred in. Wider than `mark` because the mark
+     *  is fractionally wider than it is tall and the scene must not have to
+     *  know its aspect. */
+    markBox: 120,
+  };
+})();
+
+/**
+ * ⚠ TWO INK WIDTHS FOR THE ADMR WINDOW, DIVIDED BACK OUT OF THE SCALE.
+ * Everything inside that window is in the export's own pixels and the whole
+ * thing is drawn at `ADMR_SHOT.scale`, so a stroke written as `rule` there
+ * would land at 0.6 of a pixel on the canvas. These are the theme's own
+ * weights, pre-divided, so the rule and the dashes are the same thickness as
+ * every other rule in the episode.
+ */
+export const ADMR_INK = {
+  /** The vertical rule that rides the front of the tape. */
+  mark: theme.shape.line / ADMR_SHOT.scale,
+  /** The projected bars: dashed, hollow, no wick. */
+  ghost: {
+    width: theme.shape.rule / ADMR_SHOT.scale,
+    dash: `${10 / ADMR_SHOT.scale} ${7 / ADMR_SHOT.scale}`,
+    /**
+     * ⚠ HOW FAR EACH ONE STEPS UP, AS A FRACTION OF ITS OWN BODY — and it is a
+     * half, not a whole. Stacked end to end, ten bars each closing exactly at
+     * the high of the one before is a vertical staircase that reaches +21% and
+     * reads as a fantasy nobody would have. Overlapping by half is what a run
+     * of green days actually looks like, and the sentence only works if the
+     * rebound it describes is one somebody could believe.
+     */
+    rise: 0.5,
+  },
+} as const;
+
 /* ── the mistake counter (CG-E) ─────────────────────────────────────────── */
 /**
  * Top-left, level with the title strip.
@@ -335,6 +410,7 @@ export const QUOTE_CARD = { w: CARD.w * 0.62, h: 196, lead: 62, size: 44, markH:
     PRICE, VOL, FULL, RAIL, RAIL_LEFT, SELF_PANEL, RULES,
     ADMR_PRICE: ADMR_PANES.price, ADMR_VOL: ADMR_PANES.vol, ADMR_MACD: ADMR_PANES.macd,
     ADMR_SHOT,
+    ADMR_NOTE,
     DASH_STRIP: DASH.strip, DASH_HEADER: DASH.header, DASH_PLOT: DASH.plot,
     DASH_VOL: DASH.vol, DASH_AXIS: DASH.axis, DASH_TILES: DASH.tiles,
   };
