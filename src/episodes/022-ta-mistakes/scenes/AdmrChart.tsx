@@ -219,6 +219,8 @@ export const AdmrChart = ({
   zoom,
   ghosts,
   ghostInk,
+  ask,
+  arc,
 }: {
   /**
    * How far the tape has been uncovered, in bars — FRACTIONAL, and that is the
@@ -234,8 +236,12 @@ export const AdmrChart = ({
   zoom: number;
   /** How many projected bars are drawn past the front. */
   ghosts: number;
-  /** Their opacity — the blink. */
+  /** Their opacity — the blink, and then the fade out. */
   ghostInk: number;
+  /** The question beside the tape. */
+  ask: number;
+  /** Simon's arrow. */
+  arc: number;
 }) => {
   const c = usePalette();
   const ground = {
@@ -550,6 +556,87 @@ export const AdmrChart = ({
             What is left saying where the tape ends is the tape ending. */}
 
         </g>
+
+        {/* ── the question, in the room the preview opened ───────────────
+            "berikan text 'Apa yang perlu diwaspadai?' di sebelah kanan
+            candlestick chart di dalam window, align-center secara vertikal."
+
+            ⚠ ITS X FOLLOWS THE TAPE AND ITS Y DOES NOT. The left edge of the
+            room is the right edge of the last projected bar, which moves with
+            the preview, so `atX` has it; the right edge is the price gutter,
+            which does not move at all. Vertically it is centred on the WINDOW —
+            that is what "align-center secara vertikal" asks for, and it is why
+            the question does not drop when the tape does. */}
+        {ask > 0 &&
+          (() => {
+            const left = atX(centreAt(LAST + ADMR_TAPE.ghost.count) + SHOT.counts.bodyW / 2) + ADMR_INK.ask.gap;
+            const right = SHOT.axis.price[0].x0 - ADMR_INK.ask.gap;
+            const mid = F.y + F.h / 2;
+            const step = ADMR_INK.ask.size * ADMR_INK.ask.lead;
+            const top = mid - (step * (ADMR_TAPE.ask.lines.length - 1)) / 2;
+            return (
+              <g opacity={ask}>
+                {ADMR_TAPE.ask.lines.map((line, i) => (
+                  <text
+                    key={line}
+                    x={(left + right) / 2}
+                    y={top + i * step}
+                    fill={c.ink}
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    fontFamily={theme.text.family}
+                    fontSize={ADMR_INK.ask.size}
+                    fontWeight={theme.text.title.weight}
+                  >
+                    {line}
+                  </text>
+                ))}
+              </g>
+            );
+          })()}
+
+        {/* ── the arrow ──────────────────────────────────────────────────
+            Simon's own drawing, turned a quarter to the right as he asked: it
+            leaves to the RIGHT of candle 123, bends DOWN, and its head finishes
+            pointing down-right.
+
+            ⚠ HUNG OFF ITS START POINT, NOT OFF A BOX. "start pointnya 20 px di
+            kanan candlestick ke-123" is a spec about one point, so the box is
+            solved backwards from it and the 20 stays 20 however the arrow is
+            sized.
+
+            ⚠ AND IT IS DRAWN BY EYE. The reference was pasted into the chat
+            rather than saved, so there was no file to trace — the one shape in
+            this window that is not measured. See `arc` in data/timing.ts. */}
+        {arc > 0 &&
+          (() => {
+            const bar = BARS[LAST];
+            const sx = atX(centreAt(LAST) + bar.bw / 2) + ADMR_TAPE.arc.gap / ADMR_SHOT.scale;
+            const sy = atY(bar.up ? bar.bt : bar.bb);
+            const w = ADMR_TAPE.arc.w / ADMR_SHOT.scale;
+            const h = ADMR_TAPE.arc.h / ADMR_SHOT.scale;
+            /** The path in its own 0..1 box, read off the rotated reference. */
+            const P = (u: number, v: number) => `${sx + (u - 0.1) * w},${sy + (v - 0.15) * h}`;
+            const at01 = (u: number, v: number) => ({ x: sx + (u - 0.1) * w, y: sy + (v - 0.15) * h });
+            const tip = at01(0.775, 0.92);
+            const before = at01(0.7, 0.84);
+            const a = Math.atan2(tip.y - before.y, tip.x - before.x);
+            const hs = ADMR_INK.arc.head;
+            const wing = (t: number) => `${tip.x - hs * Math.cos(a + t)},${tip.y - hs * Math.sin(a + t)}`;
+            return (
+              <g opacity={arc}>
+                <path
+                  d={`M ${P(0.1, 0.15)} C ${P(0.42, 0.13)} ${P(0.6, 0.24)} ${P(0.625, 0.52)} C ${P(0.645, 0.74)} ${P(0.7, 0.84)} ${P(0.775, 0.92)}`}
+                  fill="none"
+                  stroke={c.indigo}
+                  strokeWidth={ADMR_INK.arc.width}
+                  strokeDasharray={ADMR_INK.arc.dash}
+                  strokeLinecap="round"
+                />
+                <polygon points={`${tip.x},${tip.y} ${wing(0.42)} ${wing(-0.42)}`} fill={c.indigo} />
+              </g>
+            );
+          })()}
 
         {/* ── the scales ─────────────────────────────────────────────────
 

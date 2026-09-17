@@ -2131,7 +2131,45 @@ export const ADMR_TAPE = {
      * by half, so the climb scales with them.
      */
     tall: 3,
+    /** ⚠ THEY LEAVE BEFORE THE ARROW ARRIVES. The projection is what somebody
+     *  wanted to see; the arrow is what the next sentence is about. Both on
+     *  screen at once and the arrow reads as a comment on the rally. */
+    out: { at: 11300, over: 26 },
   },
+
+  /**
+   * The question, in the room the preview opened on the right of the tape.
+   *
+   * ⚠ IT ARRIVES 8 FRAMES BEFORE THE VOICE DOES — cue 11230 — which is the
+   * house habit: the picture is already there when the sentence names it.
+   *
+   * ⚠ AND THE BAND SAYS IT TOO, ON PURPOSE. The note that used to be muted
+   * against its own cue is gone; this is one short question set large beside
+   * the chart, not a second subtitle, so both can stand.
+   */
+  ask: {
+    at: 11222,
+    text: "Apa yang perlu diwaspadai?",
+    /** Two lines, because the room the preview opened is narrower than the
+     *  question is long. Asserted below to be the same words. */
+    lines: ["Apa yang perlu", "diwaspadai?"],
+  },
+
+  /**
+   * The arrow — Simon's own drawing, "rotate ke kanan 90 derajat" from the
+   * image he sent: it leaves to the RIGHT, bends DOWN, and its head finishes
+   * pointing down-right.
+   *
+   * ⚠ ITS START POINT IS THE SPEC. "start pointnya 20 px di kanan candlestick
+   * ke-123" — 20 CANVAS pixels right of that bar's body, at its close. The path
+   * is hung off that point rather than off a box, so the 20 stays 20.
+   *
+   * ⚠ AND IT IS DRAWN BY EYE, NOT TRACED. The reference was pasted into the
+   * chat rather than saved, so there is no file to measure — unlike every other
+   * shape in this scene. If it wants to be exact, drop the PNG in the episode
+   * folder and it can be traced like the chart was.
+   */
+  arc: { at: 11413, over: 26, gap: 20, w: 170, h: 250 },
 } as const;
 
 {
@@ -2164,6 +2202,14 @@ export const ADMR_TAPE = {
     fail("the high line is extended before it has finished connecting its two highs");
   const triEnd = Math.max(T.high.run.at + T.high.run.over, T.low.at + T.low.over);
   if (V.zoom.at < triEnd) fail(`the preview moves at ${V.zoom.at}, before the triangle finishes at ${triEnd}`);
+  /* ── the beats that hang off the move ───────────────────────────────── */
+  if (V.ghost.out.at < V.ghost.at + V.ghost.blinks * 2)
+    fail("the projection is faded out before it has finished blinking");
+  if (V.ask.at < V.zoom.at) fail(`the question lands at ${V.ask.at}, before the preview has opened room for it`);
+  if (V.ask.lines.join(" ") !== V.ask.text)
+    fail(`the question's two lines say "${V.ask.lines.join(" ")}" and its text says "${V.ask.text}"`);
+  if (V.arc.at < V.ghost.out.at + V.ghost.out.over)
+    fail(`the arrow arrives at ${V.arc.at}, while the projection is still fading`);
   /** The move's focus has to be a bar the tape actually draws. */
   if (V.zoom.focus < 0 || V.zoom.focus >= b.bars)
     fail(`the preview closes on bar ${V.zoom.focus}, outside the ${b.bars} the tape draws`);

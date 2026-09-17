@@ -235,6 +235,18 @@ export const ADMR_SHOT = (() => {
 export const ADMR_INK = {
   /** The two trendlines that make the triangle. */
   tri: theme.shape.line / ADMR_SHOT.scale,
+  /** The question set beside the tape, and the air around it. */
+  ask: {
+    size: theme.text.title.size / ADMR_SHOT.scale,
+    lead: 1.24,
+    gap: 40 / ADMR_SHOT.scale,
+  },
+  /** Simon's arrow: heavy, dashed, round-capped, with a solid head. */
+  arc: {
+    width: 6 / ADMR_SHOT.scale,
+    dash: `${12 / ADMR_SHOT.scale} ${14 / ADMR_SHOT.scale}`,
+    head: 22 / ADMR_SHOT.scale,
+  },
   /**
    * ⚠ EVERY BAR IN THE WINDOW HAS ROUNDED ENDS. Simon, 2026-09-17. In canvas
    * pixels and divided back out like every other width here — 2px on an 8.3px

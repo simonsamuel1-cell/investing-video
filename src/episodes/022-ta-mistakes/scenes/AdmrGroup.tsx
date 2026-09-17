@@ -25,6 +25,9 @@
  *   f10646  the triangle draws itself on the tape, high line then low line
  *   f10950  the preview closes in on candle 123
  *   f11010  ten hollow bars climb away from the last close, blinking 3×
+ *   f11222  "Apa yang perlu diwaspadai?" in the room the preview opened
+ *   f11300  the ten bars fade out
+ *   f11413  Simon's arrow, 20px right of candle 123
  *
  * ⚠ IT ARRIVES ON A CAMERA CUT, WHICH IS WHY THE WINDOW HAS NO ENTRANCE OF ITS
  * OWN. SC11 leaves through the outgoing half of CUT11 at f10185; this is the
@@ -106,8 +109,9 @@ export const AdmrGroup = () => {
   const half = m.sec(0.18);
   const since = g - V.ghost.at;
   const beat = Math.floor(since / half);
-  const ghostInk =
-    since < 0 ? 0 : beat >= V.ghost.blinks * 2 ? 1 : beat % 2 === 0 ? 1 : 0.12;
+  const blink = since < 0 ? 0 : beat >= V.ghost.blinks * 2 ? 1 : beat % 2 === 0 ? 1 : 0.12;
+  /** …and then they go, before the arrow arrives to talk about something else. */
+  const ghostInk = blink * (1 - progress(g, V.ghost.out.at, V.ghost.out.over));
 
   return (
     <AbsoluteFill style={FENCE}>
@@ -118,6 +122,8 @@ export const AdmrGroup = () => {
           zoom={zoom}
           ghosts={since >= 0 ? V.ghost.count : 0}
           ghostInk={ghostInk}
+          ask={progress(g, V.ask.at, m.reveal)}
+          arc={progress(g, V.arc.at, V.arc.over)}
         />
       </AbsoluteFill>
     </AbsoluteFill>
