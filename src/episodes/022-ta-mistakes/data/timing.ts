@@ -2053,8 +2053,22 @@ export const ADMR_TAPE = {
   tri: {
     /** high(candle 57) → high(candle 118), then extended over candle 123. */
     high: { at: 10646, over: 30, from: 56, to: 117, run: { at: 10676, over: 18, to: 122 } },
-    /** low(candle 66) → low(candle 123). */
-    low: { at: 10664, over: 30, from: 65, to: 122 },
+    /**
+     * ⚠ THE LOW LINE IS A LEVEL, NOT A SLOPE. It joined low(66) to low(123) and
+     * came out tilting upward; Simon: "buat 1 garis horizontal mulai dari atas
+     * wick candle merah yang seperti aku screenshot (aku malas hitung,
+     * lokasinya ada di sebelum candle ke 56)."
+     *
+     * That candle is 43 — the only red bar before 56 whose wick top is anywhere
+     * near the support, and the bar after it is green, which is what his crop
+     * shows. Its wick top is 1,685, and three bars touch that level: 46 at
+     * 1,687, 47 at 1,681 and 66 at 1,692. Flat is the right reading.
+     *
+     * ⚠ AND IT IS THE WICK'S TOP, NOT A LOW. The line is drawn FROM that point
+     * — `from` is where it starts, `to` is where it ends, and its height is the
+     * start bar's `wt` at both ends because it is horizontal.
+     */
+    low: { at: 10664, over: 30, from: 42, to: 122 },
   },
 
   /**
@@ -2153,6 +2167,7 @@ export const ADMR_TAPE = {
     /** Two lines, because the room the preview opened is narrower than the
      *  question is long. Asserted below to be the same words. */
     lines: ["Apa yang perlu", "diwaspadai?"],
+    out: { at: 11540, over: 26 },
   },
 
   /**
@@ -2169,7 +2184,48 @@ export const ADMR_TAPE = {
    * shape in this scene. If it wants to be exact, drop the PNG in the episode
    * folder and it can be traced like the chart was.
    */
-  arc: { at: 11413, over: 26, gap: 20, w: 170, h: 250 },
+  arc: { at: 11413, over: 26, gap: 20, w: 170, h: 250, out: { at: 11540, over: 26 } },
+
+  /**
+   * ⚠ THE HIGHLIGHT LANDS ON THE BAR THE SENTENCE IS ABOUT. Cue 11508 is "Pada
+   * 11 Mei 2026, harga break di bawah MA100", and candle 123 is 11 May — the
+   * date axis puts "May" on candle 118, which is 4 May because the 1st is
+   * Labour Day, so 11 May is five trading days later.
+   *
+   * ⚠ NOTHING ON SCREEN CLAIMS THAT DATE. No bar carries a label; the voice
+   * says it and the glow says which bar. That is the arrangement this scene has
+   * used throughout, and it is what keeps a real stock on a real date honest.
+   *
+   * Two blinks, each fading in and out, and one swell to 20% and back — all of
+   * it finished on 11752, where the next bar arrives.
+   */
+  glow: { at: 11642, to: 11752, blinks: 2, grow: 0.2 },
+
+  /**
+   * The days after the break, one beat at a time, each wiped in from the bottom
+   * — a candle grows out of its own low, which is the one direction that does
+   * not read as the tape scrolling.
+   *
+   * ⚠ THE FIRST ONE IS HALF AS FAST AGAIN. "Buat 50% lebih pelan dari yang
+   * biasa kamu buat ya" — `slow` multiplies the house reveal, and only for that
+   * bar; the three that follow it are at the usual speed.
+   */
+  after: [
+    { at: 11752, bars: 124, slow: 1.5, step: 0 },
+    { at: 12147, bars: 127, slow: 1, step: 14 },
+  ],
+
+  /**
+   * ⚠ THE PREVIEW LETS GO, AND THEN THE REST OF THE TAPE ARRIVES. "12338
+   * preview kembali normal, lalu sisa candlestick muncul semua (animasi wipe
+   * dari kiri)" — `lalu`, so the two are in sequence and not at once: the window
+   * pulls back to where it started, and the last ten bars wipe in left to right
+   * the way the first hundred and twenty-three did.
+   *
+   * It finishes at 12478, which is the frame the last sentence of the scene
+   * ends on; SC15 takes the screen at 12514.
+   */
+  back: { at: 12338, over: 60, tape: { at: 12398, to: 12478 } },
 } as const;
 
 {
@@ -2197,6 +2253,8 @@ export const ADMR_TAPE = {
   if (T.high.from >= T.high.to) fail("the high line runs backwards");
   if (T.high.run.to <= T.high.to) fail("the high line's extension does not go past the second high");
   if (T.low.from >= T.low.to) fail("the low line runs backwards");
+  if (SHOT.bars[T.low.from].up)
+    fail(`the low line starts on candle ${T.low.from + 1}, which is green — Simon's crop is a red one`);
   if (T.high.at < b.to) fail(`the triangle starts at ${T.high.at}, while the tape is still drawing`);
   if (T.high.run.at < T.high.at + T.high.over)
     fail("the high line is extended before it has finished connecting its two highs");
@@ -2210,6 +2268,24 @@ export const ADMR_TAPE = {
     fail(`the question's two lines say "${V.ask.lines.join(" ")}" and its text says "${V.ask.text}"`);
   if (V.arc.at < V.ghost.out.at + V.ghost.out.over)
     fail(`the arrow arrives at ${V.arc.at}, while the projection is still fading`);
+  if (V.ask.out.at < V.arc.at) fail("the question leaves before the arrow it shares the room with arrives");
+  if (V.glow.at < V.arc.out.at + V.arc.out.over)
+    fail(`the highlight starts at ${V.glow.at}, while the arrow is still fading`);
+  if (V.glow.to <= V.glow.at) fail("the highlight ends before it starts");
+  /* ── the bars after the break ───────────────────────────────────────── */
+  let seen: number = b.bars;
+  for (const step of V.after) {
+    if (step.bars <= seen) fail(`a later beat asks for ${step.bars} bars and ${seen} are already up`);
+    if (step.bars > SHOT.bars.length)
+      fail(`a beat asks for ${step.bars} bars and the trace has ${SHOT.bars.length}`);
+    seen = step.bars;
+  }
+  if (V.after[0].at < V.glow.to) fail("candle 124 arrives before the highlight on 123 has finished");
+  if (V.back.at < V.after[V.after.length - 1].at)
+    fail("the preview lets go before the last hand-placed bar is up");
+  if (V.back.tape.at < V.back.at + V.back.over)
+    fail("the tape finishes arriving before the preview has pulled back");
+  if (V.back.tape.to <= V.back.tape.at) fail("the closing wipe ends before it starts");
   /** The move's focus has to be a bar the tape actually draws. */
   if (V.zoom.focus < 0 || V.zoom.focus >= b.bars)
     fail(`the preview closes on bar ${V.zoom.focus}, outside the ${b.bars} the tape draws`);

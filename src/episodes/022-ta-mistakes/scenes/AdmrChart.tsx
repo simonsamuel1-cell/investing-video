@@ -162,16 +162,18 @@ const TRIM = {
 const TRI = (() => {
   const T = ADMR_TAPE.tri;
   const hi = (i: number) => ({ x: centreAt(i), y: BARS[i].wt });
-  const lo = (i: number) => ({ x: centreAt(i), y: BARS[i].wb });
   const a = hi(T.high.from);
   const b = hi(T.high.to);
   const runX = centreAt(T.high.run.to);
+  /** ⚠ THE LOW LINE IS FLAT AND ITS HEIGHT IS A WICK TOP. Both ends take the
+   *  START bar's `wt` — see `tri.low` in data/timing.ts. */
+  const level = BARS[T.low.from].wt;
   return {
     a,
     b,
     ext: { x: runX, y: a.y + ((b.y - a.y) * (runX - a.x)) / (b.x - a.x) },
-    c: lo(T.low.from),
-    d: lo(T.low.to),
+    c: { x: centreAt(T.low.from), y: level },
+    d: { x: centreAt(T.low.to), y: level },
   };
 })();
 
@@ -195,6 +197,7 @@ const CLIP = {
   price: "admr-price-gutter",
   window: "admr-window",
   front: "admr-front",
+  glow: "admr-glow",
 };
 
 /**
@@ -221,6 +224,8 @@ export const AdmrChart = ({
   ghostInk,
   ask,
   arc,
+  glow,
+  after,
 }: {
   /**
    * How far the tape has been uncovered, in bars — FRACTIONAL, and that is the
@@ -242,6 +247,11 @@ export const AdmrChart = ({
   ask: number;
   /** Simon's arrow. */
   arc: number;
+  /** The highlight on candle 123: how bright its glow is, and how much bigger
+   *  the bar itself has grown. */
+  glow: { ink: number; scale: number };
+  /** The bars placed after the break, each 0→1 as it wipes up from its low. */
+  after: number[];
 }) => {
   const c = usePalette();
   const ground = {
@@ -323,6 +333,13 @@ export const AdmrChart = ({
         <clipPath id={CLIP.window}>
           <rect x={F.x + 2} y={F.y + 2} width={F.w - 4} height={F.h - 4} rx={R - 2} />
         </clipPath>
+        {/* ⚠ THE GLOW IS A BLUR, NOT A SECOND SHAPE. A ring drawn round the bar
+            would be one more line on a chart that has enough of them; a blurred
+            copy of the bar itself reads as the bar lighting up. In the export's
+            own pixels, so it survives the preview closing in. */}
+        <filter id={CLIP.glow} x="-300%" y="-300%" width="700%" height="700%">
+          <feGaussianBlur stdDeviation={ADMR_INK.round.bar * 2.6} />
+        </filter>
       </defs>
 
       {/* ── the window ─────────────────────────────────────────────────── */}
@@ -438,6 +455,91 @@ export const AdmrChart = ({
                 />
               );
             })}
+
+          {/* ── the days after the break ───────────────────────────────
+              Each one wipes up out of its own low — the one direction that does
+              not read as the tape scrolling — and is drawn OUTSIDE the front,
+              because the front is standing still on candle 123 until the
+              closing wipe comes for the rest. */}
+          {after.map((t, j) => {
+            if (t <= 0) return null;
+            const b = BARS[LAST + 1 + j];
+            if (!b) return null;
+            const ink = b.up ? C.up : C.down;
+            const cx = b.bl + b.bw / 2;
+            const h = b.wb - b.wt + 1;
+            const id = `admr-after-${j}`;
+            return (
+              <g key={id}>
+                <defs>
+                  <clipPath id={id}>
+                    <rect x={b.bl - b.bw} y={b.wb + 1 - h * t} width={b.bw * 3} height={h * t} />
+                  </clipPath>
+                </defs>
+                <g clipPath={`url(#${id})`}>
+                  <rect
+                    x={cx - 1}
+                    y={b.wt}
+                    width={2}
+                    height={h}
+                    rx={ADMR_INK.round.wick}
+                    fill={ink}
+                  />
+                  <rect
+                    x={b.bl}
+                    y={b.bt}
+                    width={b.bw}
+                    height={b.bb - b.bt + 1}
+                    rx={ADMR_INK.round.bar}
+                    fill={ink}
+                  />
+                </g>
+              </g>
+            );
+          })}
+
+          {/* ── the highlight on candle 123 ─────────────────────────────
+              A glow behind the bar, blinking twice, and the bar itself swelling
+              by a fifth and settling again. Both are finished on the frame the
+              next bar arrives — see `glow` in data/timing.ts. */}
+          {(glow.ink > 0 || glow.scale > 1) &&
+            (() => {
+              const b = BARS[LAST];
+              const cx = b.bl + b.bw / 2;
+              const cy = (b.wt + b.wb + 1) / 2;
+              const ink = b.up ? C.up : C.down;
+              const swell = `translate(${cx * (1 - glow.scale)} ${cy * (1 - glow.scale)}) scale(${glow.scale})`;
+              return (
+                <g transform={swell}>
+                  <g opacity={glow.ink} filter={`url(#${CLIP.glow})`}>
+                    <rect
+                      x={b.bl}
+                      y={b.wt}
+                      width={b.bw}
+                      height={b.wb - b.wt + 1}
+                      rx={ADMR_INK.round.bar}
+                      fill={c.indigo}
+                    />
+                  </g>
+                  <rect
+                    x={cx - 1}
+                    y={b.wt}
+                    width={2}
+                    height={b.wb - b.wt + 1}
+                    rx={ADMR_INK.round.wick}
+                    fill={ink}
+                  />
+                  <rect
+                    x={b.bl}
+                    y={b.bt}
+                    width={b.bw}
+                    height={b.bb - b.bt + 1}
+                    rx={ADMR_INK.round.bar}
+                    fill={ink}
+                  />
+                </g>
+              );
+            })()}
 
           <g clipPath={`url(#${CLIP.front})`}>
           {/* Simon's own cursor left this on the export, at 1,525. */}
