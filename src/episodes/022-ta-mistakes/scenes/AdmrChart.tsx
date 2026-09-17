@@ -353,6 +353,7 @@ export const AdmrChart = ({
               y={v.t}
               width={v.w}
               height={v.b - v.t + 1}
+              rx={ADMR_INK.round.bar}
               fill={v.up ? VOL.up : VOL.down}
               fillOpacity={VOL.alpha}
             />
@@ -382,17 +383,34 @@ export const AdmrChart = ({
             const cx = b.bl + b.bw / 2;
             return (
               <g key={`bar${b.i}`}>
-                <rect x={cx - 1} y={b.wt} width={2} height={b.wb - b.wt + 1} fill={ink} />
-                <rect x={cx - b.bw / 2} y={b.bt} width={b.bw} height={b.bb - b.bt + 1} fill={ink} />
+                <rect
+                  x={cx - 1}
+                  y={b.wt}
+                  width={2}
+                  height={b.wb - b.wt + 1}
+                  rx={ADMR_INK.round.wick}
+                  fill={ink}
+                />
+                <rect
+                  x={cx - b.bw / 2}
+                  y={b.bt}
+                  width={b.bw}
+                  height={b.bb - b.bt + 1}
+                  rx={ADMR_INK.round.bar}
+                  fill={ink}
+                />
               </g>
             );
           })}
           </g>
 
-          {/* ⚠ HOLLOW, DASHED AND WITHOUT A WICK — because they are not data and
-              must not be readable as data. They climb from the close of the
-              newest real bar, one median body per step, and they carry no
-              number and name no level. See `ghost` in data/timing.ts. */}
+          {/* ⚠ HOLLOW AND WITHOUT A WICK — because they are not data and must
+              not be readable as data. They were dashed as well until Simon
+              asked what they looked like solid; what still separates them from
+              the tape is that every real bar is FILLED and these are not, that
+              they blink, and that they carry no number and name no level. They
+              climb from the close of the newest real bar. See `ghost` in
+              data/timing.ts and `ghost` in data/layout.ts. */}
           {anchor &&
             ghosts > 0 &&
             Array.from({ length: ghosts }, (_, i) => {
@@ -406,10 +424,10 @@ export const AdmrChart = ({
                   y={bottom - BODY_STEP}
                   width={bw}
                   height={BODY_STEP}
+                  rx={ADMR_INK.round.bar}
                   fill="none"
                   stroke={C.up}
                   strokeWidth={ADMR_INK.ghost.width}
-                  strokeDasharray={ADMR_INK.ghost.dash}
                   opacity={ghostInk}
                 />
               );
@@ -444,6 +462,7 @@ export const AdmrChart = ({
               y={h.t}
               width={h.w}
               height={h.b - h.t + 1}
+              rx={ADMR_INK.round.bar}
               fill={TONE[h.tone as string]}
             />
           ))}

@@ -283,10 +283,25 @@ export const ADMR_NOTE = (() => {
 export const ADMR_INK = {
   /** The two trendlines that make the triangle. */
   tri: theme.shape.line / ADMR_SHOT.scale,
-  /** The projected bars: dashed, hollow, no wick. */
+  /**
+   * ⚠ EVERY BAR IN THE WINDOW HAS ROUNDED ENDS. Simon, 2026-09-17. In canvas
+   * pixels and divided back out like every other width here — 2px on an 8.3px
+   * body reads; 2px written raw would be 1.2 and would not. SVG clamps `rx` to
+   * half the box, so a one-pixel doji becomes a lozenge instead of an error.
+   */
+  round: {
+    bar: 2 / ADMR_SHOT.scale,
+    wick: 1 / ADMR_SHOT.scale,
+  },
+  /**
+   * The projected bars: hollow, no wick, and NOT dashed any more — Simon asked
+   * what they would look like solid. What still says they are not data is that
+   * they are hollow when every real bar is filled, that they blink, and that
+   * they carry no number and name no level. Restoring the dashes is one
+   * `strokeDasharray` back.
+   */
   ghost: {
     width: theme.shape.rule / ADMR_SHOT.scale,
-    dash: `${10 / ADMR_SHOT.scale} ${7 / ADMR_SHOT.scale}`,
     /**
      * ⚠ HOW FAR EACH ONE STEPS UP, AS A FRACTION OF ITS OWN BODY — and it is a
      * half, not a whole. Stacked end to end, ten bars each closing exactly at
