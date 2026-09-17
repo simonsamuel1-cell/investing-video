@@ -68,50 +68,6 @@ const VOL = C.vol as { up: string; down: string; alpha: number };
  * what the falling bars look like in a light chart, and darkening them would
  * make "falling" louder than "growing", which is backwards.
  */
-/**
- * ⚠ ONE INK STOPS WORKING WHEN THE GROUND FLIPS, AND IT IS A LEGIBILITY BUG,
- * NOT A STYLE CHOICE.
- *
- * The value tags borrow the colour of the thing they measure — so the MACD tag
- * is drawn in the CURRENT histogram tone, which right now is the pale pink of a
- * falling bar. Pale pink on black is a label; pale pink on white is nothing.
- * The same, less badly, for the teal volume tag and the orange signal tag.
- *
- * So anything set as TYPE or as a 2px OUTLINE is walked away from the ground
- * until it reaches a contrast ratio of 3 — WCAG's floor for large text, and the
- * least that survives a video being watched on a phone. FILLS are left alone:
- * a histogram bar is a shape, it is read by its size, and darkening the falling
- * bars would make them louder than the growing ones, which is backwards.
- *
- * ⚠ IT IS COMPUTED, NOT TYPED, so it survives a palette swap in either
- * direction — on a dark ground the same function walks the ink the other way.
- */
-const rgb = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
-const hex = (v: number[]) => "#" + v.map((n) => Math.round(n).toString(16).padStart(2, "0")).join("");
-const lum = (v: number[]) =>
-  v
-    .map((n) => n / 255)
-    .map((u) => (u <= 0.03928 ? u / 12.92 : ((u + 0.055) / 1.055) ** 2.4))
-    .reduce((a, u, i) => a + u * [0.2126, 0.7152, 0.0722][i], 0);
-const ratio = (a: number, b: number) => (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
-const READABLE = 3;
-const legible = (ink: string, bg: string) => {
-  const g = lum(rgb(bg));
-  if (ratio(lum(rgb(ink)), g) >= READABLE) return ink;
-  /** Away from the ground: toward black over a light one, toward white over a
-   *  dark one. Binary search, because luminance is not linear in the channel. */
-  const away = g > 0.4 ? [0, 0, 0] : [255, 255, 255];
-  const from = rgb(ink);
-  let lo = 0, hi = 1;
-  for (let i = 0; i < 24; i++) {
-    const t = (lo + hi) / 2;
-    const mid = from.map((n, k) => n + (away[k] - n) * t);
-    if (ratio(lum(mid), g) >= READABLE) hi = t;
-    else lo = t;
-  }
-  return hex(from.map((n, k) => n + (away[k] - n) * hi));
-};
-
 const ground = (c: ReturnType<typeof usePalette>) => ({
   /** White, not the page — the chart is a window on the page, not the page. */
   bg: c.cardBg,
@@ -286,7 +242,25 @@ export const AdmrChart = () => {
         />
       </g>
 
-      {/* ── the scales ─────────────────────────────────────────────────── */}
+      {/* ── the scales ─────────────────────────────────────────────────
+
+          ⚠ THE SIX VALUE TAGS ARE GONE, ON INSTRUCTION. "Ada 3 label harga yang
+          bentuknya berbeda dari yang lain … Semua label dengan style itu,
+          hapus." — Simon, 2026-09-17. They were the boxed readouts the export
+          puts against the right edge: 1,855 in the MA's red, 1,525 filled in
+          teal, 1,400 outlined in teal, and the same form again for 66.96 M,
+          −18 and −106. All six carried that style, so all six go; what is left
+          is one plain grey ladder per pane. They are still in the trace, which
+          is a record of the export rather than of the scene.
+
+          ⚠ AND TWO LABELS COME BACK BECAUSE OF IT. TradingView hides a scale
+          label when a tag lands on it, so 1,400 and −100 are simply absent from
+          the export, and the zero label is nudged 3px off its own gridline to
+          clear the −18 tag. Drawn exactly as traced, both ladders would have a
+          hole in the middle and read as a bug. data/admr-chart.json puts them
+          back and marks them `restored` — their VALUES are arithmetic off the
+          same ladder that names every other label on the scale, so nothing
+          here is invented. */}
       <g clipPath={`url(#${CLIP.price})`}>
         {SHOT.axis.price.map((l) => (
           <text key={l.text} x={l.x0} y={l.cy} fill={g.axis} dominantBaseline="central" {...AXIS}>
@@ -315,32 +289,6 @@ export const AdmrChart = () => {
         </text>
       ))}
 
-      {/* ── the value tags, last, because one of them covers a label ───── */}
-      <g>
-        {SHOT.tags.map((t) => (
-          <g key={t.text}>
-            <rect
-              x={t.x + t.weight / 2}
-              y={t.y + t.weight / 2}
-              width={t.w - t.weight}
-              height={t.h - t.weight}
-              fill={t.fill ?? "none"}
-              stroke={t.fill ? t.stroke : legible(t.stroke, g.bg)}
-              strokeWidth={t.weight}
-            />
-            <text
-              x={t.x + t.w / 2}
-              y={t.cy}
-              fill={legible(t.color, t.fill ?? g.bg)}
-              textAnchor="middle"
-              dominantBaseline="central"
-              {...AXIS}
-            >
-              {t.text}
-            </text>
-          </g>
-        ))}
-      </g>
     </svg>
   );
 };

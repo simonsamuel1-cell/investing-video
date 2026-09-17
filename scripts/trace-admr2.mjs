@@ -654,6 +654,45 @@ const tags = tagBands.map((b) => {
   };
 });
 
+/**
+ * ═══ THE SCALES, MADE WHOLE ═══
+ *
+ * ⚠ TWO GRIDLINES HAVE NO LABEL IN THE EXPORT, AND THAT IS THE TAGS' DOING.
+ * TradingView hides a scale label when one of its value tags lands on it — so
+ * 1,400 is missing from the price ladder and −100 from the MACD ladder, each
+ * sitting exactly under the tag that displaced it. The scene does not draw
+ * those tags (Simon, 2026-09-17: "Semua label dengan style itu, hapus"), which
+ * would leave a hole in an otherwise regular ladder and read as a bug. So the
+ * hidden labels are put back — their VALUES are arithmetic off the same ladder
+ * that names every other one, not a guess.
+ *
+ * ⚠ AND THE ZERO LABEL IS DISPLACED, not just hidden. It is drawn 3px above its
+ * own gridline to clear the −18 tag; every other label in that pane is within
+ * half a pixel of its line. With the tag gone it goes back on its line.
+ *
+ * So both ladders are snapped: one x for every label (the export left-aligns
+ * them, and the 2px scatter is glyph side-bearing, not position) and one offset
+ * from the gridline, the median of what was measured.
+ */
+const wholeScale = (labels, grids, valueAt, ink) => {
+  const mid = (a) => [...a].sort((x, y) => x - y)[(a.length / 2) | 0];
+  const off = mid(labels.map((l) => l.cy - nearest(grids, l.cy)));
+  const x0 = mid(labels.map((l) => l.x0));
+  return grids.map((gy, i) => {
+    const had = labels.find((l) => nearest(grids, l.cy) === gy);
+    return {
+      text: had ? had.text : fmt(valueAt(i)),
+      x0,
+      cy: gy + off,
+      grid: gy,
+      restored: !had,
+      ...(had ? { measured: { x0: had.x0, cy: had.cy } } : {}),
+    };
+  });
+};
+const priceScale = wholeScale(priceLabels, H_PRICE, (i) => 2400 - 200 * i, "price");
+const macdScale = wholeScale(macdLabels, H_MACD, (i) => 200 - 100 * i, "macd");
+
 /** The date axis. Words, not letters: inside a word the gaps are a few px. */
 const dateBand = (() => {
   let a = -1, b = -1;
@@ -728,7 +767,7 @@ writeFileSync(
       grid: { h: H_PRICE, macdH: H_MACD, v: V_GRID, vSpan: V_SPAN, weight: 2, priceStep: +priceLadder.step.toFixed(4), priceFit: +priceLadder.err.toFixed(3), macdStep: +macdLadder.step.toFixed(4), macdFit: +macdLadder.err.toFixed(3) },
       bars, vol, hist,
       ma, macdLine, signal, crosshair,
-      axis: { price: priceLabels, macd: macdLabels, dates, band: dateBand, capH, size: +(capH / 0.72).toFixed(1), ink: "#b8b8b8" },
+      axis: { price: priceScale, macd: macdScale, dates, band: dateBand, capH, size: +(capH / 0.72).toFixed(1), ink: "#b8b8b8" },
       tags,
       macdFloor,
       masks: { ...MASK, crosshairRows: CROSSHAIR_ROWS },
@@ -756,8 +795,8 @@ log(`             above-zero bottom ${[...new Set(hist.filter((h) => h.tone?.sta
 log(`ma100        ${ma.pts.length} pts  x ${ma.from}..${ma.to}  err ${ma.err}  w ${ma.width}  gaps ${ma.gaps.length}`);
 log(`macd line    ${macdLine.pts.length} pts  x ${macdLine.from}..${macdLine.to}  err ${macdLine.err}  w ${macdLine.width}  gaps ${macdLine.gaps.length}`);
 log(`signal       ${signal.pts.length} pts  x ${signal.from}..${signal.to}  err ${signal.err}  w ${signal.width}  gaps ${signal.gaps.length}`);
-log(`price labels ${priceLabels.map((b) => b.text + "@" + b.cy).join(" ")}`);
-log(`macd labels  ${macdLabels.map((b) => b.text + "@" + b.cy).join(" ")}`);
+log(`price labels ${priceScale.map((b) => b.text + "@" + b.cy + (b.restored ? "*" : "")).join(" ")}`);
+log(`macd labels  ${macdScale.map((b) => b.text + "@" + b.cy + (b.restored ? "*" : "")).join(" ")}  (* = put back where a tag had hidden it)`);
 log(`tags         ${tags.map((t) => `${t.text}@${t.cy}${t.filled ? " filled" : " outline"} ${t.stroke} ${t.w}x${t.h}`).join("  |  ")}`);
 log(`type         cap ${capH}px → size ${(capH / 0.72).toFixed(1)}px   macd floor y${macdFloor}`);
 log(`dates        band y${dateBand.y0}..${dateBand.y1}  ${dates.map((d) => d.text + "@" + d.cx + (d.strong ? "*" : "")).join(" ")}`);

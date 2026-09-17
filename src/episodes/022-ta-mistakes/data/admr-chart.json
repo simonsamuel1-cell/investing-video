@@ -5635,126 +5635,140 @@
   "price": [
    {
     "text": "2,400",
-    "x0": 2628,
-    "x1": 2692,
-    "y0": 65,
-    "y1": 87,
+    "x0": 2629,
     "cy": 74.5,
-    "band": 76.5,
     "grid": 77,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2628,
+     "cy": 74.5
+    }
    },
    {
     "text": "2,200",
-    "x0": 2628,
-    "x1": 2692,
-    "y0": 176,
-    "y1": 198,
-    "cy": 185.5,
-    "band": 187.5,
+    "x0": 2629,
+    "cy": 184.5,
     "grid": 187,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2628,
+     "cy": 185.5
+    }
    },
    {
     "text": "2,000",
-    "x0": 2628,
-    "x1": 2692,
-    "y0": 286,
-    "y1": 308,
+    "x0": 2629,
     "cy": 295.5,
-    "band": 297.5,
     "grid": 298,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2628,
+     "cy": 295.5
+    }
    },
    {
     "text": "1,800",
     "x0": 2629,
-    "x1": 2692,
-    "y0": 397,
-    "y1": 419,
-    "cy": 406.5,
-    "band": 408.5,
+    "cy": 405.5,
     "grid": 408,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2629,
+     "cy": 406.5
+    }
    },
    {
     "text": "1,600",
     "x0": 2629,
-    "x1": 2692,
-    "y0": 507,
-    "y1": 529,
     "cy": 516.5,
-    "band": 518.5,
     "grid": 519,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2629,
+     "cy": 516.5
+    }
+   },
+   {
+    "text": "1,400",
+    "x0": 2629,
+    "cy": 626.5,
+    "grid": 629,
+    "restored": true
    },
    {
     "text": "1,200",
     "x0": 2629,
-    "x1": 2692,
-    "y0": 728,
-    "y1": 750,
     "cy": 737.5,
-    "band": 739.5,
     "grid": 740,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2629,
+     "cy": 737.5
+    }
    },
    {
     "text": "1,000",
     "x0": 2629,
-    "x1": 2692,
-    "y0": 839,
-    "y1": 861,
-    "cy": 848.5,
-    "band": 850.5,
+    "cy": 847.5,
     "grid": 850,
-    "clipped": false
+    "restored": false,
+    "measured": {
+     "x0": 2629,
+     "cy": 848.5
+    }
    },
    {
     "text": "800",
-    "x0": 2627,
-    "x1": 2669,
-    "y0": 951,
-    "y1": 964,
+    "x0": 2629,
     "cy": 958.5,
-    "band": 958,
     "grid": 961,
-    "clipped": true
+    "restored": false,
+    "measured": {
+     "x0": 2627,
+     "cy": 958.5
+    }
    }
   ],
   "macd": [
    {
     "text": "200",
     "x0": 2628,
-    "x1": 2669,
-    "y0": 1006,
-    "y1": 1024,
     "cy": 1015.5,
-    "band": 1015.5,
     "grid": 1016,
-    "covered": false
+    "restored": false,
+    "measured": {
+     "x0": 2628,
+     "cy": 1015.5
+    }
    },
    {
     "text": "100",
-    "x0": 2629,
-    "x1": 2669,
-    "y0": 1111,
-    "y1": 1129,
-    "cy": 1120.5,
-    "band": 1120.5,
+    "x0": 2628,
+    "cy": 1119.5,
     "grid": 1120,
-    "covered": false
+    "restored": false,
+    "measured": {
+     "x0": 2629,
+     "cy": 1120.5
+    }
    },
    {
     "text": "0",
     "x0": 2628,
-    "x1": 2638,
-    "y0": 1216,
-    "y1": 1226,
-    "cy": 1221.5,
-    "band": 1221.5,
+    "cy": 1224.5,
     "grid": 1225,
-    "covered": true
+    "restored": false,
+    "measured": {
+     "x0": 2628,
+     "cy": 1221.5
+    }
+   },
+   {
+    "text": "−100",
+    "x0": 2628,
+    "cy": 1328.5,
+    "grid": 1329,
+    "restored": true
    }
   ],
   "dates": [
