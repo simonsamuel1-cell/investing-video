@@ -19,11 +19,11 @@
  *  Anything handed to CameraCut is the opposite — it wants `f + FROM`. */
 export const local = (beat: number, from: number) => beat - from;
 
-/* ⚠ TWO IMPORTS, BOTH ONLY FOR ASSERTIONS. The tape says how many bars there
-   are to reveal; the cues say what the ADMR note is allowed to put on screen.
-   Neither is read at render time — see the checks under ADMR_TAPE. */
+/* ⚠ AN IMPORT, AND ONLY FOR ASSERTIONS. The trace says how many bars there are
+   to reveal, how far apart they sit and where the window's edges are, so the
+   checks under ADMR_TAPE can be made against the picture rather than against
+   another number somebody typed. It is not read at render time. */
 import SHOT from "./admr-chart.json";
-import { CUES } from "../subtitles";
 
 export const BLOCK = {
   SC01: 0, SC02: 646, SC03: 1140,
@@ -2070,18 +2070,14 @@ export const ADMR_TAPE = {
    */
 
   /**
-   * The note, and the one place in this episode where the burned-in band goes
-   * quiet: the box says the sentence, so the subtitle underneath would say it
-   * twice. `Captions` matches `mute` on a cue's START, so the window only has
-   * to contain 10960.
+   * ⚠ THERE IS NO NOTE, AND THERE WAS ONE. A box across the bottom of the
+   * window carried the mascot and cue 10960 word for word, which meant the
+   * burned-in band had to be muted under it — `Captions` grew a `mute` prop for
+   * exactly that. Simon: "text box dengan maskotnya remove aja, balikin lagi
+   * subtitlenya." So the band says the sentence and the chart shows what the
+   * sentence is describing, which is the division of labour the rest of this
+   * episode already uses. `Captions` keeps `mute`; nothing in 022 passes it now.
    */
-  note: {
-    at: 10950,
-    /** ⚠ WORD FOR WORD THE CUE AT 10960. Asserted below — if the SRT is ever
-     *  corrected, this throws at module load rather than drifting. */
-    text: "Kalau terlalu fokus pada satu skenario, kondisi ini bisa terlihat seperti persiapan rebound.",
-    mute: { from: 10950, to: 11230 },
-  },
 
   /**
    * ⚠ THE PREVIEW MOVES CLOSER; NOTHING IS RESHAPED. Simon's call, asked and
@@ -2150,8 +2146,8 @@ export const ADMR_TAPE = {
   if (b.bars <= a.bars) fail("run 2 does not add any bars");
   if (b.bars > SHOT.bars.length)
     fail(`the tape asks for ${b.bars} bars and the trace has ${SHOT.bars.length}`);
-  /** The note may not arrive while the tape is still moving under it. */
-  if (V.note.at < b.to) fail(`the note lands at ${V.note.at}, while run 2 is still drawing`);
+  /** The preview may not start closing in while the tape is still drawing. */
+  if (V.zoom.at < b.to) fail(`the preview moves at ${V.zoom.at}, while run 2 is still drawing`);
   /* ── the triangle, and the rule that follows it ─────────────────────── */
   const T = V.tri;
   for (const [name, i] of [
@@ -2167,7 +2163,7 @@ export const ADMR_TAPE = {
   if (T.high.run.at < T.high.at + T.high.over)
     fail("the high line is extended before it has finished connecting its two highs");
   const triEnd = Math.max(T.high.run.at + T.high.run.over, T.low.at + T.low.over);
-  if (V.note.at < triEnd) fail(`the note opens at ${V.note.at}, before the triangle finishes at ${triEnd}`);
+  if (V.zoom.at < triEnd) fail(`the preview moves at ${V.zoom.at}, before the triangle finishes at ${triEnd}`);
   /** The move's focus has to be a bar the tape actually draws. */
   if (V.zoom.focus < 0 || V.zoom.focus >= b.bars)
     fail(`the preview closes on bar ${V.zoom.focus}, outside the ${b.bars} the tape draws`);
@@ -2207,11 +2203,6 @@ export const ADMR_TAPE = {
         fail(`at tall=${V.ghost.tall} the projection reaches y${onScreen.toFixed(0)}, above the window at ${SHOT.frame.y}`);
     }
   }
-  /** ⚠ THE BOX AND THE BAND MUST NOT BOTH SAY IT. */
-  const cue = CUES.find((q) => q.start >= V.note.mute.from && q.start < V.note.mute.to);
-  if (!cue) fail(`nothing is muted by ${V.note.mute.from}–${V.note.mute.to}, so the band still says the note`);
-  else if (cue.text !== V.note.text)
-    fail(`the note says "${V.note.text}" and the muted cue says "${cue.text}"`);
 }
 
 /* ═══ SC14 — asal copy trade ═════════════════════════════════════════════ */

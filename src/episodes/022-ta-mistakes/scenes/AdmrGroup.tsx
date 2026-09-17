@@ -15,15 +15,15 @@
  *
  * ═══ THIS FILE IS THE CLOCK, AND THE ONLY ONE ═══
  * AdmrChart owns no frames. Everything below reads `ADMR_TAPE` and hands the
- * chart four numbers: how far the tape has come, whether the rule is up, how
- * far the zoom has travelled, and what the projection is doing. Retiming any
- * beat is an edit to data/timing.ts and nothing else.
+ * chart four numbers: how far the tape has come, how the triangle is drawing,
+ * how far the preview has travelled, and what the projection is doing. Retiming
+ * any beat is an edit to data/timing.ts and nothing else.
  *
  *   f10185  the cut delivers the window — border, price ladder, dates, no data
  *   f10205  run 1 begins; 56 candles are wiped in by f10421
  *   f10580  run 2 begins; 123 by f10646, and there it stops
  *   f10646  the triangle draws itself on the tape, high line then low line
- *   f10950  the note opens and the zoom leans in on the right-hand end
+ *   f10950  the preview closes in on candle 123
  *   f11010  ten hollow bars climb away from the last close, blinking 3×
  *
  * ⚠ IT ARRIVES ON A CAMERA CUT, WHICH IS WHY THE WINDOW HAS NO ENTRANCE OF ITS
@@ -36,7 +36,6 @@ import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { cutInStyle, progress, progressInOut, theme, useMotion } from "../../../core";
 import { ADMR_TAPE, CUT11, local } from "../data/timing";
 import { AdmrChart } from "./AdmrChart";
-import { AdmrNote } from "./AdmrNote";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /** The frame this Sequence is mounted on, which is the cut itself. */
@@ -98,8 +97,6 @@ export const AdmrGroup = () => {
     low: progressInOut(g, V.tri.low.at, V.tri.low.over),
   };
   const zoom = progress(f, local(V.zoom.at, FROM), m.sec(0.9));
-  const open = progress(f, local(V.note.at, FROM), m.reveal);
-  const ink = progress(f, local(V.note.at, FROM) + m.reveal, m.fade);
 
   /**
    * ⚠ A HARD BLINK, NOT A PULSE. "kedip" is an eyelid: on, off, on. Three of
@@ -122,7 +119,6 @@ export const AdmrGroup = () => {
           ghosts={since >= 0 ? V.ghost.count : 0}
           ghostInk={ghostInk}
         />
-        {g >= V.note.at && <AdmrNote open={open} ink={ink} />}
       </AbsoluteFill>
     </AbsoluteFill>
   );

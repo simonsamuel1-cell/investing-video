@@ -46,7 +46,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { ADMR_TAPE, BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN, WINDOW11 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -387,11 +387,7 @@ const Body = () => (
       <CardList7 />
     </Sequence>
 
-    {/* ⚠ ONE WINDOW IS MUTED, AND IT IS NOT AN EDIT TO THE SRT. At f10950 the
-        ADMR note puts cue 10960 on the frame word for word, so the band
-        underneath would say the same sentence a second time. data/timing.ts
-        asserts the two strings are equal at module load. */}
-    <Captions cues={CUES} show={chrome} mute={[ADMR_TAPE.note.mute]} />
+    <Captions cues={CUES} show={chrome} />
     {chrome && <Watermark totalFrames={TOTAL_FRAMES} />}
     <Audio src={staticFile("vo/ta-mistakes.mp3")} />
   </Stage>
