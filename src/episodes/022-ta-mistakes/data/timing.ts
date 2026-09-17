@@ -2462,12 +2462,19 @@ export const PLANS = {
     /** ⚠ NO "Rp". Simon: "Hapus Rp." Two bare numbers against a placeholder
      *  ticker read as a comparison; a rupiah sign in front of them reads as a
      *  quote, which is the one thing this scene must not be. */
-    { label: "Entry Price", a: "1.240", b: "1.185", at: 12889, step: ROW_TIGHT },
+    /** ⚠ "2.000", NOT "2000". Simon typed the figure, not the formatting; the
+     *  column beside it reads 1.240, and two numbers in one table that disagree
+     *  about their own thousands separator read as a mistake in the table
+     *  rather than a difference between the plans. */
+    { label: "Entry Price", a: "1.240", b: "2.000", at: 12889, step: ROW_TIGHT },
     /** ⚠ AND ONE SIDE HAS NO LIMIT AT ALL. "risk limit kanan ubah jadi '-'
      *  nihil" — the dash is the point of the row: what the two plans differ in
      *  here is not the size of the limit but whether there is one. */
     { label: "Risk Limit", a: "7%", b: "-", at: 12943, step: ROW_TIGHT },
-    { label: "Exit Plan", a: "3 Hari", b: "6 Minggu", at: 13001, step: ROW_TIGHT },
+    /** ⚠ LOWER CASE, at Simon's direction — "3 hari dan 6 minggu, huruf kecil".
+     *  The two English values above them keep their capitals, which is his
+     *  call and not an oversight here. */
+    { label: "Exit Plan", a: "3 hari", b: "6 minggu", at: 13001, step: ROW_TIGHT },
   ],
 
   /* ── B3 · the same table, said out loud ─────────────────────────────── */

@@ -1026,14 +1026,6 @@ const PLAN_A = theme.stage.active;
  */
 const pillH = (size: number) => size * 1.26 + Math.round(size * 0.3) * 2 + theme.shape.rule * 2;
 
-/**
- * ⚠ THE THEME'S SMALLEST TYPE, WHICH IS THE FLOOR THIS PROJECT HAS ALREADY
- * SET. The build prompt sized these three pills by their boxes — 220×40 and
- * 180×40 — which works out at about 20px, below anything else in the library.
- * 26 is the nearest size the episode already trusts to be read, and the pill it
- * builds is 53 tall rather than 40.
- */
-const PLAN_CHIP = theme.text.axis.size;
 
 /** The margin above a column's name and below its last separator. ⚠ ONE
  *  NUMBER FOR BOTH, which is what makes the column balanced rather than
@@ -1073,12 +1065,23 @@ const PLAN_TICKER = {
  * width by construction.
  */
 const PLAN_NAME = {
-  size: PLAN_CHIP + 4,
+  /**
+   * ⚠ BIGGER THAN THE VALUES UNDER IT, AND IT WAS NOT. Simon: "Kayaknya Daily
+   * Weekly 1.240 7% punya font size yang lebih besar dari Trader profesional
+   * dan Kamu ya?" — he was right, 30 against 32. A column's name is its
+   * subject and the values are what it says about it, so the name goes to the
+   * body size and the values stay where they are.
+   */
+  size: theme.text.body.size,
   avatar: 44,
   gap: 14,
   lead: 1.25,
 } as const;
 const PLAN_NAME_H = PLAN_NAME.size * PLAN_NAME.lead;
+/** ⚠ "Trader profesional" MEASURED AT 30px AND SCALED. 94 for "Trader" and 164
+ *  for "profesional" plus a space, read off a render — so the width follows the
+ *  size instead of having to be re-measured every time the size moves. */
+const PLAN_NAME_W = 267 * (PLAN_NAME.size / 30);
 
 /** ⚠ THE BAND'S TOP IS THE TICKER'S INK PLUS SIMON'S 50, and everything below
  *  hangs off it — the name, the first row, the last separator and the band's
@@ -1116,10 +1119,10 @@ const PLAN_LAST_RULE = PLAN_ROW.y0 + PLAN_ROW.pitch * 3 + PLAN_ROW.rule;
  *  50% masing masing". The COLUMN is the number chosen now and the band follows
  *  from it, which is the opposite of how this was written; with the band fixed,
  *  halving a column would have had to move the gap as well. */
-/** ⚠ 420 — WIDE ENOUGH FOR THE NAME ON ONE LINE, and that is the whole reason
- *  for the number. See PLAN_NAME. Both columns are cut from one band, so they
- *  cannot differ. */
-const PLAN_COL_W = 420;
+/** ⚠ 440 — WIDE ENOUGH FOR THE NAME ON ONE LINE AT THE BODY SIZE, and that is
+ *  the whole reason for the number. See PLAN_NAME. Both columns are cut from
+ *  one band, so they cannot differ. */
+const PLAN_COL_W = 440;
 const PLAN_GAP = 200;
 const PLAN_BAND: Rect = (() => {
   const w = PLAN_COL_W * 2 + PLAN_GAP;
@@ -1243,11 +1246,19 @@ export const PLAN = {
     fail(`SC15's connectors start ${P.ticker.half} out and only reach ${Math.round(reach)}`);
   }
   /** ⚠ AND THE NAME HAS TO FIT BESIDE ITS AVATAR ON ONE LINE. "Trader
-   *  profesional" measures about 267 at this size — read off a render, not
-   *  estimated — so the room left after the padding, the avatar and its gap has
-   *  to beat that or the name wraps and the two columns stop being level. */
+   *  profesional" measures 267 at 30px — read off a render, not estimated, and
+   *  scaled with the size — so the room left after the padding, the avatar and
+   *  its gap has to beat it or the name wraps and the columns stop being
+   *  level. */
   const inner = P.cols[0].w - P.col.pad * 2 - P.name.avatar - P.name.gap;
-  if (inner < 267) fail(`SC15's column name has ${Math.round(inner)}px and needs 267`);
+  if (inner < PLAN_NAME_W) {
+    fail(`SC15's column name has ${Math.round(inner)}px and needs ${Math.round(PLAN_NAME_W)}`);
+  }
+  /** ⚠ AND THE NAME HAS TO BEAT THE VALUES UNDER IT. The column's subject
+   *  cannot be set smaller than what the column says about it. */
+  if (P.name.size <= P.row.valueSize) {
+    fail(`SC15's column name is ${P.name.size} against values at ${P.row.valueSize}`);
+  }
   /**
    * ⚠ THE COLUMN IS BALANCED, and this is the assertion that keeps it so. The
    * margin above the name and the margin below the last separator are one
