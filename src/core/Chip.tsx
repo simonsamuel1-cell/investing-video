@@ -27,7 +27,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { theme } from "./theme";
-import { usePalette } from "./palette";
+import { usePalette, useShadow } from "./palette";
 import { progress } from "./helpers";
 import { useMotion } from "./useMotion";
 import { Layer } from "./Stage";
@@ -57,8 +57,10 @@ export const Chip = ({
   checkDisc = false,
   pill = false,
   solid = false,
+  shadow = false,
   size = theme.text.chip.size,
   weight,
+  padY,
 }: {
   label: string;
   x: number;
@@ -92,6 +94,15 @@ export const Chip = ({
    */
   solid?: boolean;
   /**
+   * Lifts the pill off the ground with the palette's own resting shadow.
+   *
+   * ⚠ PILL ONLY, AND OPT-IN. A shadow under bare type is a drop-shadow on
+   * letterforms, which is a different look entirely and not one this library
+   * has; every chip already on screen is flat, and a shadow that arrived by
+   * default would be a silent edit to finished work.
+   */
+  shadow?: boolean;
+  /**
    * Type size. ⚠ THE PILL IS BUILT FROM IT — padding and corner are fractions
    * of the type — so one number resizes the whole object and a pill can never
    * end up with the padding of a different size.
@@ -99,10 +110,23 @@ export const Chip = ({
   size?: number;
   /** Overrides the weight. Defaults to the chip scale's, or 800 when `solid`. */
   weight?: number;
+  /**
+   * Overrides the pill's TOP AND BOTTOM padding in pixels. The horizontal one
+   * is never overridable: the pill's ends are round, so its side padding has to
+   * stay tied to the type or the caps stop matching the corner.
+   *
+   * ⚠ OPT-IN, AND A REAL PIXEL NUMBER ON PURPOSE. `PILL_PAD` is proportional
+   * because a chip has to hold its shape at any type size, and that is still
+   * the default. This exists for a stack of pills that has to breathe more than
+   * its type size says — VIDEO 22's three questions, where the height is the
+   * rhythm of the stack rather than a property of the word inside it.
+   */
+  padY?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
+  const sh = useShadow();
   if (f < at) return null;
 
   const p = progress(f, at, m.pop);
@@ -148,13 +172,14 @@ export const Chip = ({
           opacity: p,
           ...(pill
             ? {
-                padding: `${Math.round(size * PILL_PAD.y)}px ${Math.round(size * PILL_PAD.x)}px`,
+                padding: `${padY ?? Math.round(size * PILL_PAD.y)}px ${Math.round(size * PILL_PAD.x)}px`,
                 background: solid ? ink : wash,
                 /* ⚠ NO BORDER ON A SOLID ONE. An outline in the same colour as
                    the fill is a hairline nobody can see; in any other colour it
                    is a second shape. */
                 border: solid ? "none" : `${theme.shape.rule}px solid ${ink}`,
                 borderRadius: 999,
+                ...(shadow ? { boxShadow: sh.rest } : null),
               }
             : null),
         }}

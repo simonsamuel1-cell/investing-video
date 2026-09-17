@@ -1086,11 +1086,16 @@ const PLAN_NAME_W = 267 * (PLAN_NAME.size / 30);
 /**
  * The closing line's box. `w` is MEASURED — "Saham sama ≠ trade sama" sets 394
  * of ink at 32px/700, read off the frame — plus 38 either side. `block` is
- * core/DashedBox's own corner size, repeated here because the bottom edge has
- * to be solved with half of it hanging outside the rect: the box's rect ends at
- * y950 and its corner blocks at 958, against the band at 972.
+ * core/DashedBox's own corner size, repeated here because the box's edges have
+ * to be solved with half of it hanging outside the rect.
+ *
+ * ⚠ `air` IS SIMON'S 50, MEASURED TO THE CORNER BLOCKS. It used to be 12 and it
+ * used to mean something else — the clearance the box kept above the subtitle
+ * band, back when it hung off the bottom of the canvas. When the box was
+ * re-anchored under the cards the 12 came with it and quietly became a 12px
+ * gap where the direction asked for 50.
  */
-const PLAN_CLOSE = { w: 394 + 38 * 2, h: 92, size: 32, block: 15, air: 12 } as const;
+const PLAN_CLOSE = { w: 394 + 38 * 2, h: 92, size: 32, block: 15, air: 50 } as const;
 
 /** ⚠ THE BAND'S TOP IS THE TICKER'S INK PLUS SIMON'S 50, and everything below
  *  hangs off it — the name, the first row, the last separator and the band's
@@ -1244,11 +1249,83 @@ export const PLAN = {
     const h = PLAN_CLOSE.h;
     return {
       x: (PLAN_W - w) / 2,
-      y: theme.captionBand.top - PLAN_CLOSE.air - PLAN_CLOSE.block / 2 - h,
+      /** ⚠ 50 BELOW THE CARDS, AND THE 50 IS TO THE CORNER BLOCKS. Simon:
+       *  "geser naik sampe berjarak 50 px dari window". Half a block hangs
+       *  above the rect, so the rect starts half a block further down than the
+       *  gap does — the same overhang that decides the bottom edge. */
+      y: PLAN_BAND.y + PLAN_BAND.h + PLAN_CLOSE.air + PLAN_CLOSE.block / 2,
       w,
       h,
       block: PLAN_CLOSE.block,
       size: PLAN_CLOSE.size,
+    };
+  })(),
+
+  /**
+   * ═══ B4 · THE THREE QUESTIONS ═══
+   *
+   * A stack in the room the right column leaves behind, standing where that
+   * column stood — so the scene reads as the right-hand plan being replaced by
+   * what you should have asked about it rather than as a new list appearing
+   * somewhere else.
+   *
+   * ⚠ THE FIRST ONE IS LEVEL WITH THE COLUMN'S NAME, which is what ties the two
+   * halves together: a person on the left, the questions about them on the
+   * right, both starting on the same line.
+   *
+   * ⚠ LEFT-ALIGNED, NOT CENTRED. Simon, 2026-09-17 — "3 3nya align-left aja".
+   * Three questions of three different lengths centred on one axis is a shape,
+   * and the eye reads the shape before it reads the words; flush left they are
+   * a list, which is what they are. `x` is the column's own left edge, so the
+   * stack still stands exactly where the right-hand plan stood.
+   */
+  ask: {
+    x: PLAN_RIGHT.x,
+    y0: PLAN_NAME_Y,
+    pitch: 120,
+    size: theme.text.body.size,
+    /**
+     * ⚠ NOT THE SOLID PILL'S 800. A filled pill defaults to the heaviest weight
+     * in the scale because it is normally a one-word stamp; these are
+     * sentences, and at 800 three of them stacked shout. Body weight — the same
+     * one the names and the rows are set in.
+     */
+    weight: theme.text.body.weight,
+    /** "kasih 20 px padding atas bawah tiap text" — taller than the type asks
+     *  for, which is what turns three pills into a stack with air in it. */
+    padY: 20,
+  },
+
+  /** How far the ticker travels to sit over the left column alone. */
+  slide: PLAN_LEFT.x + PLAN_LEFT.w / 2 - PLAN_W / 2,
+
+  /**
+   * ═══ B5 · THE VERDICT ═══
+   *
+   * ⚠ CENTRED ON WHAT IT COVERS, NOT ON THE CANVAS. "di tengah (horizontal dan
+   * vertikal) semua visual" — by 13711 what is on screen is the ticker, the left
+   * column and the three questions, and their bounding box runs from the
+   * ticker's ink down to the column's floor. The canvas's own middle is 540 and
+   * theirs is nearer 470, and the difference is visible.
+   *
+   * ⚠ AND IT IS BIGGER THAN THE OTHER ONE. "Ukurannya harus lebih besar
+   * dibanding biasanya" — the closing box is 470×92 at 32px; this is 1100×150
+   * at 48. The width is MEASURED like every other dashed box here: the sentence
+   * sets 1008 of ink at 48px/700, read off a render with the box deliberately
+   * oversized so nothing was clipped, plus 46 either side.
+   */
+  verdict: (() => {
+    const w = 1008 + 46 * 2;
+    const h = 150;
+    const top = PLAN_TICKER.y - PLAN_TICKER.inkDown - 21;
+    const bottom = PLAN_BAND.y + PLAN_BAND.h;
+    return {
+      x: (PLAN_W - w) / 2,
+      y: (top + bottom) / 2 - h / 2,
+      w,
+      h,
+      block: 22,
+      size: theme.text.title.size,
     };
   })(),
 } as const;
@@ -1310,6 +1387,16 @@ export const PLAN = {
     fail(`SC15's closing box reaches ${Math.round(boxLow)}, inside the subtitle band at ${theme.captionBand.top}`);
   }
   if (P.close.y < PLAN_LAST_RULE) fail("SC15's closing box overlaps the table above it");
+  /** ⚠ AND THE VERDICT HAS TO COVER WHAT IT IS COVERING, without leaving the
+   *  safe area on either side or reaching a reserve. */
+  if (P.verdict.x - P.verdict.block / 2 < PLAN_A.x) fail("SC15's verdict reaches outside the safe area");
+  if (P.verdict.y - P.verdict.block / 2 < theme.logoZone.height) fail("SC15's verdict is inside the logo zone");
+  if (P.verdict.y + P.verdict.h + P.verdict.block / 2 > theme.captionBand.top) {
+    fail("SC15's verdict reaches the subtitle band");
+  }
+  /** ⚠ THE QUESTIONS STACK INSIDE THE FRAME, three of them at one pitch. */
+  const lastAsk = P.ask.y0 + P.ask.pitch * 2 + pillH(P.ask.size) / 2;
+  if (lastAsk > theme.captionBand.top) fail(`SC15's last question reaches ${Math.round(lastAsk)}`);
   /** ⚠ AND NOTHING LEAVES THE SAFE AREA ON EITHER SIDE. */
   if (P.cols[0].x < PLAN_A.x || P.cols[1].x + P.cols[1].w > PLAN_A.x + PLAN_A.w) {
     fail("SC15's columns reach outside the safe area");

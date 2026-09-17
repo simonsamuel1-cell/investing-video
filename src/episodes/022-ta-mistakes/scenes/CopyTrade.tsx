@@ -32,7 +32,7 @@
  * closing line should be in Bahasa. Every one of them is a single edit in
  * PLANS or in this file; none of them is a rebuild.
  */
-import { useCurrentFrame } from "remotion";
+import { AbsoluteFill, useCurrentFrame } from "remotion";
 import {
   Chip, DashedBox, Layer, Line, Stage, Words,
   progress, theme, usePalette,
@@ -126,8 +126,12 @@ export const CopyTrade = () => {
    *  scene inside a Sequence sees its own, so `at` goes back on first. */
   const g = f + V.at;
 
+  /** ⚠ THE WHOLE SCENE GOES TO HALF UNDER THE VERDICT — see B5 below. */
+  const dim = 1 - progress(g, V.verdict.at, V.verdict.over) * (1 - V.verdict.dim);
+
   return (
     <Stage>
+      <AbsoluteFill style={{ opacity: dim }}>
       <Naming g={g} />
 
       {/* ⚠ MOUNTED ONCE, AT 12676, AND NEVER AGAIN. Every beat after this is a
@@ -141,6 +145,7 @@ export const CopyTrade = () => {
           putus". The same dashed frame SC06 and SC11 close on, so the three
           closings are one shape. Its content is drawn whole rather than typed:
           this is a conclusion arriving, not a sentence being written. */}
+      <div style={{ opacity: 1 - progress(g, V.ask.away.at, V.ask.away.over) }}>
       <DashedBox
         x={P.close.x}
         y={P.close.y}
@@ -168,6 +173,66 @@ export const CopyTrade = () => {
           {V.close.text}
         </div>
       </DashedBox>
+      </div>
+      {/* ── B4 · the three questions ────────────────────────────────────
+          In the room the right column leaves behind, level with the person who
+          is left. Filled indigo with white type and lifted off the ground —
+          "pill design dengan fill indigo, warna textnya putih, kasih shadow". */}
+      {V.ask.rows.map((q, i) => (
+        <Chip
+          key={q.text}
+          label={q.text}
+          x={P.ask.x}
+          y={P.ask.y0 + i * P.ask.pitch}
+          at={local(q.at, V.at)}
+          size={P.ask.size}
+          weight={P.ask.weight}
+          padY={P.ask.padY}
+          anchor="left"
+          pill
+          solid
+          shadow
+        />
+      ))}
+      </AbsoluteFill>
+
+      {g >= V.verdict.at && (
+        <DashedBox
+          x={P.verdict.x}
+          y={P.verdict.y}
+          w={P.verdict.w}
+          h={P.verdict.h}
+          at={local(V.verdict.at, V.at)}
+          block={P.verdict.block}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: theme.text.family,
+              fontSize: P.verdict.size,
+              fontWeight: theme.text.title.weight,
+              color: c.ink,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {V.verdict.text}
+          </div>
+        </DashedBox>
+      )}
+
+      {/* ── B5 · the verdict ────────────────────────────────────────────
+          ⚠ IT DIMS WHAT IT COVERS RATHER THAN REPLACING IT. Simon: "semua
+          visual berkurang transparansinya jadi 50%". The table and the
+          questions stay legible underneath, which is the difference between a
+          conclusion drawn FROM them and one that arrives instead of them.
+
+          ⚠ AND THE DIM IS ON A WRAPPER, NOT ON EACH THING. Every element in
+          this scene already animates its own opacity; multiplying each of them
+          by 0.5 would mean fourteen places to keep in step. */}
     </Stage>
   );
 };

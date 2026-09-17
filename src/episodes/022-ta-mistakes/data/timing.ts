@@ -2418,7 +2418,15 @@ const ROW_TIGHT = { label: 12, valueAt: 8, value: 18, ruleAt: 20, rule: 12 } as 
 
 export const PLANS = {
   at: 12559,
-  to: 13251,
+  /**
+   * ⚠ 13895, NOT 13251 — Simon: "Perpanjang scene sampe 13711", and the beat he
+   * puts THERE needs room after it. The scene now carries two more sentences of
+   * the recording: "Jadi jangan cuma bertanya…" (13279) and "Kalau logikanya
+   * tidak kamu pahami, jangan langsung ikut." (13717–13885). 13895 is the middle
+   * of the silence before the next one starts at 13905, which is this file's own
+   * rule for a boundary.
+   */
+  to: 13895,
 
   /* ── B1 · the card that names the mistake ───────────────────────────── */
   /** ⚠ THE CHIPS CARRY NO `over`. core/Chip owns its own entrance — one pop,
@@ -2490,6 +2498,47 @@ export const PLANS = {
    *  in the middle of it, so the line says the thing with a symbol rather than
    *  with a word — the same stock is not the same trade. */
   close: { at: 13159, text: "Saham sama ≠ trade sama" },
+
+  /**
+   * ═══ B4 · THE THREE QUESTIONS ═══  Simon, at 13283.
+   *
+   * The table has made its point and the scene turns it into advice: the ticker
+   * slides over the left column, the right one and the closing box go, and three
+   * questions arrive one per sentence in the recording.
+   *
+   * ⚠ THE FIRST QUESTION IS THE ONE NOT TO ASK, and the two after it are the
+   * ones that matter — "Jadi jangan cuma bertanya: 'Dia beli saham apa?'" at
+   * 13279, then "Lebih penting pahami kenapa trade itu diambil, dan kapan
+   * logikanya dianggap salah." at 13477. All three are drawn the same, because
+   * the scene is about what you ask rather than about ranking the questions.
+   */
+  ask: {
+    /** The right column, both connectors and the closing box leave together. */
+    away: { at: 13283, over: 30 },
+    /** And the ticker slides over what is left. */
+    slide: { at: 13283, over: 40 },
+    rows: [
+      { text: "Dia beli saham apa?", at: 13283 },
+      { text: "Kenapa trade itu diambil?", at: 13489 },
+      { text: "Kapan logikanya salah?", at: 13594 },
+    ],
+  },
+
+  /**
+   * ═══ B5 · THE VERDICT ═══  Simon, at 13711.
+   *
+   * Everything already on screen drops to half and the conclusion arrives over
+   * it, centred on what it is covering. Six frames before "Kalau logikanya tidak
+   * kamu pahami, jangan langsung ikut." — the picture lands first and the voice
+   * says it.
+   */
+  verdict: {
+    at: 13711,
+    over: 30,
+    /** What everything underneath is taken down to. Simon's number. */
+    dim: 0.5,
+    text: "Kalau ga paham logikanya, jangan ikut trade",
+  },
 } as const;
 
 {
@@ -2497,7 +2546,7 @@ export const PLANS = {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/timing: ${m}`);
   };
-  if (V.to - V.at !== 692) fail(`SC15 is ${V.to - V.at} frames, not the 692 the voice needs`);
+  if (V.to - V.at !== 1336) fail(`SC15 is ${V.to - V.at} frames, not the 1336 the voice needs`);
   /** ⚠ THE TITLE CARD IS GONE ON THE FRAME THE HEADER ARRIVES. They share
    *  12676 because the two cues do. */
   if (V.b1.out.at + V.b1.out.over !== V.card.at) {
@@ -2534,6 +2583,16 @@ export const PLANS = {
   /** ⚠ AND THE CLOSING LINE LANDS INSIDE THE SCENE. core/Chip pops over
    *  useMotion's own duration, so only its start can be checked here. */
   if (V.close.at >= V.to) fail(`SC15's closing chip arrives at ${V.close.at}, at or after the scene ends at ${V.to}`);
+  /* ── B4 and B5 ──────────────────────────────────────────────────────── */
+  if (V.ask.away.at <= V.close.at) fail("SC15 clears the closing box before it has arrived");
+  V.ask.rows.forEach((q, i) => {
+    if (i && q.at <= V.ask.rows[i - 1].at) fail(`SC15's question ${i + 1} does not follow the one before it`);
+  });
+  if (V.ask.rows[0].at < V.ask.away.at) fail("SC15's first question lands before the table starts leaving");
+  if (V.verdict.at <= V.ask.rows[V.ask.rows.length - 1].at) {
+    fail("SC15's verdict covers the last question before it has arrived");
+  }
+  if (V.verdict.at + V.verdict.over >= V.to) fail("SC15's verdict is still arriving when the scene ends");
   if (V.lift.at < ends[ends.length - 1]) {
     fail(`SC15's emphasis starts at ${V.lift.at}, before the last row has settled at ${ends[ends.length - 1]}`);
   }

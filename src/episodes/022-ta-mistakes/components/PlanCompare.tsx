@@ -40,7 +40,7 @@
 import React from "react";
 import {
   Card, Layer,
-  drawPath, progress, textReveal, theme, useMotion, usePalette,
+  drawPath, progress, progressInOut, textReveal, theme, useMotion, usePalette,
 } from "../../../core";
 import { PLANS } from "../data/timing";
 import { PLAN } from "../data/layout";
@@ -108,6 +108,15 @@ export const PlanCompare = ({ g }: { g: number }) => {
   const wire = p(V.wires);
   const cols = p(V.cols);
   const who = progress(g, V.who, m.reveal);
+  /**
+   * ⚠ B4 TAKES HALF THE SCENE AWAY. The right column, its name, its rows and
+   * both connectors leave together; what is left is one person and the ticker
+   * over them. `gone` is applied to each of those and to nothing else, so the
+   * left column carries on untouched.
+   */
+  const gone = progress(g, V.ask.away.at, V.ask.away.over);
+  const slide = progressInOut(g, V.ask.slide.at, V.ask.slide.over) * P.slide;
+  const half = [1, 1 - gone];
   /** B3 — emphasis only. Nothing below changes position on it. */
   const edge = p(V.edge);
 
@@ -127,7 +136,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
           left: 0,
           top: P.ticker.y,
           width: theme.canvas.width,
-          transform: `translateY(calc(-50% + ${(1 - card) * P.col.rise}px))`,
+          transform: `translate(${slide}px, calc(-50% + ${(1 - card) * P.col.rise}px))`,
           textAlign: "center",
           fontFamily: theme.text.family,
           fontSize: P.ticker.size,
@@ -152,7 +161,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
         }}
       >
         {P.cols.map((r, i) => (
-          <Card key={`col${i}`} rect={r} opacity={cols} />
+          <Card key={`col${i}`} rect={r} opacity={cols * half[i]} />
         ))}
       </div>
       {/* ⚠ A RING OVER THE CARD'S OWN EDGE, not a border on it. core/Card
@@ -171,7 +180,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
               height: r.h,
               borderRadius: theme.shape.cardRadius,
               border: `${theme.shape.rule}px solid ${ink[i]}`,
-              opacity: edge,
+              opacity: edge * half[i],
             }}
           />
         ))}
@@ -187,7 +196,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
             y={P.col.nameY}
             size={P.name.avatar}
             ink={ink[i]}
-            opacity={who}
+            opacity={who * half[i]}
           />
           <div
             style={{
@@ -201,7 +210,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
               fontWeight: theme.text.display.weight,
               lineHeight: P.name.lead,
               color: ink[i],
-              opacity: who,
+              opacity: who * half[i],
             }}
           >
             {WHO[i]}
@@ -229,7 +238,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
                     fontSize: P.row.labelSize,
                     fontWeight: theme.text.body.weight,
                     color: c.slate,
-                    opacity: lab.opacity,
+                    opacity: lab.opacity * half[i],
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -245,7 +254,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
                     fontSize: P.row.valueSize,
                     fontWeight: theme.text.title.weight,
                     color: c.ink,
-                    opacity: val.opacity,
+                    opacity: val.opacity * half[i],
                     whiteSpace: "nowrap",
                   }}
                 >
@@ -271,6 +280,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
               stroke={c.border}
               strokeWidth={theme.shape.rule}
               strokeLinecap="round"
+              opacity={1 - gone}
               {...drawPath(wire, w.len)}
             />
           ))}
@@ -293,7 +303,7 @@ export const PlanCompare = ({ g }: { g: number }) => {
                 y2={y}
                 stroke={c.muted}
                 strokeWidth={theme.shape.hairline}
-                opacity={P.row.ruleAlpha}
+                opacity={P.row.ruleAlpha * half[i]}
               />
             ));
           })}
