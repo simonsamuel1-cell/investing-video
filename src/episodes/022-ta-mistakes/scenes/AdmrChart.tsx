@@ -50,12 +50,14 @@
  * simply not drawn. The pane separator stays: it is structure, not grid, and
  * without it the MACD pane floats.
  *
- * ⚠ THE ZOOM IS A CHANGE OF MAPPING, NOT A CSS SCALE. `X()` below is one affine
- * map on TIME only, blended from identity to the framing `ADMR_TAPE.zoom` asks
- * for. Prices do not move, so the horizontal gridlines and the whole price
- * ladder stay exactly where — and exactly what — they were. Bars get wider,
- * because bars DO get wider when a chart is zoomed in. Gridline rules, type and
- * the marker keep the weight they had, because chrome does not.
+ * ⚠ THE PREVIEW MOVES, NOTHING RESIZES. `X()` below is a TRANSLATION — Simon:
+ * "Lock semua ukuran ya … aku maunya ukurannya respectively masih sama, hanya
+ * saja previewnya mendekat ke candle ke 123 tersebut." It used to stretch time
+ * so a chosen span filled the plot, which left every candle 2.27× wider than it
+ * is tall. Now the whole tape slides until bar 122 reaches the middle of the
+ * plot, and every body, wick, volume bar, histogram bar and gap keeps the exact
+ * size it was traced at. Prices never moved under either version, so the price
+ * ladder still names what it always named.
  */
 import { theme, usePalette } from "../../../core";
 import { ADMR_INK, ADMR_SHOT } from "../data/layout";
@@ -157,10 +159,12 @@ const TRI = (() => {
   };
 })();
 
-/** The framing the zoom travels to, in the export's own pixels. */
-const Z = ADMR_TAPE.zoom;
-const ZOOM_L = centreAt(Z.first) - PITCH / 2;
-const ZOOM_K = PLOT_W / (centreAt(Z.last) + PITCH / 2 - ZOOM_L);
+/**
+ * How far the tape slides when the preview closes in, in the export's own
+ * pixels: enough to put `focus` at `place` across the plot. One number, and it
+ * is a distance rather than a factor — which is the whole point.
+ */
+const SHIFT = ADMR_TAPE.zoom.place * PLOT_W + P.x0 - centreAt(ADMR_TAPE.zoom.focus);
 
 /** ⚠ ONE `id` PER CLIP, SCOPED TO THIS SCENE. Two <clipPath id="plot"> in one
  *  document and the second one silently wins for both. */
@@ -224,10 +228,8 @@ export const AdmrChart = ({
     axis: c.slate,
   };
 
-  /** Time, mapped. Identity at zoom 0; `ADMR_TAPE.zoom`'s framing at 1. */
-  const X = (x: number) => (1 - zoom) * x + zoom * (P.x0 + (x - ZOOM_L) * ZOOM_K);
-  /** What a WIDTH becomes under that map — its derivative, which is constant. */
-  const K = 1 + (ZOOM_K - 1) * zoom;
+  /** Time, moved. A translation, so no width anywhere is a function of it. */
+  const X = (x: number) => x + SHIFT * zoom;
 
   /**
    * ⚠ THE FRONT IS A POSITION, NOT A COUNT. Flooring it drew whole bars one at
@@ -308,7 +310,7 @@ export const AdmrChart = ({
               key={`vol${v.i}`}
               x={X(v.l)}
               y={v.t}
-              width={v.w * K}
+              width={v.w}
               height={v.b - v.t + 1}
               fill={v.up ? VOL.up : VOL.down}
               fillOpacity={VOL.alpha}
@@ -337,11 +339,10 @@ export const AdmrChart = ({
           {BARS.slice(0, bars).map((b) => {
             const ink = b.up ? C.up : C.down;
             const cx = X(b.bl + b.bw / 2);
-            const bw = b.bw * K;
             return (
               <g key={`bar${b.i}`}>
-                <rect x={cx - K} y={b.wt} width={2 * K} height={b.wb - b.wt + 1} fill={ink} />
-                <rect x={cx - bw / 2} y={b.bt} width={bw} height={b.bb - b.bt + 1} fill={ink} />
+                <rect x={cx - 1} y={b.wt} width={2} height={b.wb - b.wt + 1} fill={ink} />
+                <rect x={cx - b.bw / 2} y={b.bt} width={b.bw} height={b.bb - b.bt + 1} fill={ink} />
               </g>
             );
           })}
@@ -356,7 +357,7 @@ export const AdmrChart = ({
             Array.from({ length: ghosts }, (_, i) => {
               const bottom =
                 (anchor.up ? anchor.bt : anchor.bb) - i * BODY_STEP * ADMR_INK.ghost.rise;
-              const bw = SHOT.counts.bodyW * K;
+              const bw = SHOT.counts.bodyW;
               return (
                 <rect
                   key={`ghost${i}`}
@@ -400,7 +401,7 @@ export const AdmrChart = ({
               key={`hist${h.i}`}
               x={X(h.l)}
               y={h.t}
-              width={h.w * K}
+              width={h.w}
               height={h.b - h.t + 1}
               fill={TONE[h.tone as string]}
             />
@@ -432,14 +433,20 @@ export const AdmrChart = ({
           {/* ── the triangle, drawn on the tape it is read from ──────────
               Trim path, one line at a time, and the high line's run-on is its
               own stroke so it can carry the slope past the two highs that set
-              it. Indigo: the same ink every annotation in this episode uses. */}
+              it.
+
+              ⚠ CYAN, NOT INDIGO. Simon, after seeing them: the rule that says
+              "here is now" and the two lines that say "this is the shape" are
+              different KINDS of claim, and at this point in the scene they are
+              on screen together. Indigo for the one, cyan for the other — the
+              palette's two anchors, which is what they are for. */}
           {tri.high > 0 && (
             <line
               x1={X(TRI.a.x)}
               y1={TRI.a.y}
               x2={X(TRI.b.x)}
               y2={TRI.b.y}
-              stroke={c.indigo}
+              stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
               strokeLinecap="round"
               pathLength={1}
@@ -453,7 +460,7 @@ export const AdmrChart = ({
               y1={TRI.b.y}
               x2={X(TRI.ext.x)}
               y2={TRI.ext.y}
-              stroke={c.indigo}
+              stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
               strokeLinecap="round"
               pathLength={1}
@@ -467,7 +474,7 @@ export const AdmrChart = ({
               y1={TRI.c.y}
               x2={X(TRI.d.x)}
               y2={TRI.d.y}
-              stroke={c.indigo}
+              stroke={c.cyan}
               strokeWidth={ADMR_INK.tri}
               strokeLinecap="round"
               pathLength={1}
@@ -485,12 +492,15 @@ export const AdmrChart = ({
             curve. Full window height, so it reads as "here is now" rather than
             as a chart line. */}
         {mark > 0 && (
-          <rect
-            x={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark - ADMR_INK.mark / 2}
-            y={F.y + 2}
-            width={ADMR_INK.mark}
-            height={F.h - 4}
-            fill={c.indigo}
+          <line
+            x1={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark}
+            x2={P.x0 + (X(centreAt(ADMR_TAPE.mark.bar)) - P.x0) * mark}
+            y1={F.y + 2 + ADMR_INK.mark.short / 2}
+            y2={F.y + F.h - 2 - ADMR_INK.mark.short / 2}
+            stroke={c.indigo}
+            strokeWidth={ADMR_INK.mark.width}
+            strokeDasharray={ADMR_INK.mark.dash}
+            strokeLinecap="butt"
           />
         )}
 

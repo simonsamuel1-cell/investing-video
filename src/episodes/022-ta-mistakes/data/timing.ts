@@ -2082,13 +2082,19 @@ export const ADMR_TAPE = {
   },
 
   /**
-   * ⚠ ZOOM BY BAR INDEX, NOT BY A FACTOR — because a zoom here is a change of
-   * MAPPING, never a CSS scale. `first`..`last` are the bars the plot is asked
-   * to hold when the move finishes; the scene solves the factor from them. It
-   * ends on `last`, which is the tenth projected bar, so the whole of what the
-   * note is talking about is inside the frame.
+   * ⚠ IT IS A PAN, AND NOTHING CHANGES SIZE. It used to stretch time so that
+   * bars 73..132 filled the plot, which made every candle 2.27× wider while
+   * leaving it the same height — Simon: "Lock semua ukuran ya … aku maunya
+   * ukurannya respectively masih sama, hanya saja previewnya mendekat ke candle
+   * ke 123 tersebut." So there is no factor any more. `focus` is the bar that
+   * travels to `place` across the plot, and every candle, volume bar, histogram
+   * bar and gap keeps the size it had.
+   *
+   * The empty stretch this opens on the right is not a gap — it is the room the
+   * projection climbs into, and the room after it is what a chart scrolled to
+   * its own right-hand edge always shows.
    */
-  zoom: { at: 10950, first: 73, last: 132 },
+  zoom: { at: 10950, focus: 122, place: 0.62 },
 
   /**
    * ⚠ HOLLOW, DASHED, AND THEY BLINK — because they are NOT a forecast. They
@@ -2134,10 +2140,26 @@ export const ADMR_TAPE = {
     fail(`the rule is still travelling at ${V.note.at}, when the note opens`);
   if (V.mark.bar !== b.bars - 1)
     fail(`the rule stops on bar ${V.mark.bar} and the tape ends on ${b.bars - 1}`);
-  /** The zoom must frame exactly as far as the projection reaches. */
-  if (V.zoom.last !== b.bars - 1 + V.ghost.count)
-    fail(`the zoom ends on bar ${V.zoom.last}, and the projection reaches ${b.bars - 1 + V.ghost.count}`);
-  if (V.zoom.first >= V.zoom.last) fail("the zoom window runs backwards");
+  /** The pan's focus has to be a bar the tape actually draws. */
+  if (V.zoom.focus < 0 || V.zoom.focus >= b.bars)
+    fail(`the pan focuses on bar ${V.zoom.focus}, outside the ${b.bars} the tape draws`);
+  if (V.zoom.place <= 0 || V.zoom.place >= 1) fail("the pan's landing place is outside the plot");
+  /**
+   * ⚠ AND THE PROJECTION HAS TO SURVIVE IT. Nothing is scaled any more, so the
+   * ten bars past the tape are the same width they always were — but the pan
+   * moves them, and a pan that is one bar too far pushes the last of them off
+   * the plot where nobody would see it go.
+   */
+  {
+    const bar = SHOT.bars;
+    const pitch = (bar[bar.length - 1].x - bar[0].x) / (bar.length - 1);
+    const centre = (i: number) => bar[0].x + i * pitch;
+    const wide = SHOT.plot.x1 - SHOT.plot.x0 + 1;
+    const shift = SHOT.plot.x0 + wide * V.zoom.place - centre(V.zoom.focus);
+    const last = centre(b.bars - 1 + V.ghost.count) + shift + SHOT.counts.bodyW / 2;
+    if (last > SHOT.plot.x1) fail(`the pan pushes the last projected bar to ${last.toFixed(0)}, past the plot at ${SHOT.plot.x1}`);
+    if (centre(V.zoom.focus) + shift < SHOT.plot.x0) fail("the pan takes its own focus off the plot");
+  }
   if (V.ghost.at < V.zoom.at) fail("the projection arrives before the zoom that frames it");
   /** ⚠ THE BOX AND THE BAND MUST NOT BOTH SAY IT. */
   const cue = CUES.find((q) => q.start >= V.note.mute.from && q.start < V.note.mute.to);
