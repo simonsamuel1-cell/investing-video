@@ -206,7 +206,7 @@ const Note = () => {
   } as const;
 
   return (
-    <DashedBox x={B.x} y={B.y} w={B.w} h={B.h} at={local(V.note.at)}>
+    <DashedBox x={B.x} y={B.y} w={B.w} h={B.h} at={local(V.note.at)} origin="center">
       {/* ⚠ THE TWO ROWS ARE CENTRED AS A BLOCK, not one each in half the box.
           The second line is empty for two seconds before it is written, and a
           per-half layout would leave the first line sitting high in a frame

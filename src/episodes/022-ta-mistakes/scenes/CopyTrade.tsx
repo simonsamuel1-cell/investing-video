@@ -153,6 +153,7 @@ export const CopyTrade = () => {
         h={P.close.h}
         at={local(V.close.at, V.at)}
         block={P.close.block}
+        origin="center"
       >
         <div
           style={{
@@ -204,6 +205,7 @@ export const CopyTrade = () => {
           h={P.verdict.h}
           at={local(V.verdict.at, V.at)}
           block={P.verdict.block}
+          origin="center"
         >
           <div
             style={{

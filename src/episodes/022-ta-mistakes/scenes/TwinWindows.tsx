@@ -438,6 +438,7 @@ const Prove = () => {
       w={B.w}
       h={B.one + (B.two - B.one) * grown}
       at={PROVE.box.at - V.at}
+      origin="center"
     >
       {/* ⚠ PINNED TO THE TOP, NOT CENTRED IN THE BOX. Centred, the first line
           would slide down as the box grew — which is exactly the thing "anchor

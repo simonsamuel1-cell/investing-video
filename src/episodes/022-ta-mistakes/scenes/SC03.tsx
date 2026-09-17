@@ -133,7 +133,7 @@ const Note = () => {
     return { text, shown, warn };
   });
   return (
-    <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at}>
+    <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at} origin="center">
       <div
         style={{
           position: "absolute",

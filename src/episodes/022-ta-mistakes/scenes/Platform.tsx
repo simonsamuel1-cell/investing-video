@@ -103,7 +103,7 @@ const Note = ({ g }: { g: number }) => {
   const open = dashOpenAt(PLAT.note.at, m);
   const shown = NOTE.slice(0, Math.floor(ramp(g, open, NOTE.length * PLAT.note.perChar) * NOTE.length));
   return (
-    <DashedBox x={BOX.x} y={BOX.y} w={BOX.w} h={BOX.h} at={PLAT.note.at - BLOCK.SC06}>
+    <DashedBox x={BOX.x} y={BOX.y} w={BOX.w} h={BOX.h} at={PLAT.note.at - BLOCK.SC06} origin="center">
       <div
         style={{
           position: "absolute",

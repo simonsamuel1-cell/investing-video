@@ -86,7 +86,7 @@ const Note = ({ g }: { g: number }) => {
     Math.floor(ramp(g, open, V.note.text.length * V.note.perChar) * V.note.text.length),
   );
   return (
-    <DashedBox {...NOTE_BOX} at={V.note.at - V.at}>
+    <DashedBox {...NOTE_BOX} at={V.note.at - V.at} origin="center">
       <div
         style={{
           position: "absolute",

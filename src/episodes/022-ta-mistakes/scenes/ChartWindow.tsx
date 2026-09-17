@@ -152,8 +152,11 @@ const Ghosts = ({ g, bars }: { g: Grid; bars: typeof FLAG_BARS }) => {
  * widthnya melebar ke kiri kanan". This box is pinned to two things at once,
  * the frame's centre-line and the window's floor, and a frame that grows off
  * its left edge reads as a box sliding into position rather than one arriving
- * where it belongs. `origin` is opt-in in core/DashedBox: eleven other scenes
- * mount that component and all of them were approved opening from the left.
+ * where it belongs. This was the first box in the episode to open that way;
+ * since 2026-09-17 every dashed box in VIDEO 22 does — "semua text box garis
+ * putus putus buat munculnya dari tengah manjang ke kanan kiri". `origin` is
+ * still opt-in in core/DashedBox, because VIDEO 20 mounts it in four scenes
+ * that were approved opening from the left.
  *
  * ⚠ CENTRED, NOW THAT IT IS ONE LINE. It was set left while it wrapped onto
  * two, because a centred line grows out of its own middle as it types and on

@@ -100,9 +100,12 @@ export const DashedBox = ({
    * something, where opening from an edge reads as the box sliding into
    * position.
    *
-   * ⚠ OPT-IN, AND IT HAS TO BE. Eleven scenes across two episodes already mount
-   * this, and every one of them was approved with the left-hand open. A default
-   * change here would restyle finished work in an episode nobody is looking at.
+   * ⚠ OPT-IN, AND IT HAS TO BE — even though VIDEO 22 now passes `center` at
+   * every one of its nine call sites ("semua text box garis putus putus buat
+   * munculnya dari tengah manjang ke kanan kiri", 2026-09-17). VIDEO 20 mounts
+   * this in four scenes that were approved with the left-hand open, and
+   * flipping the default would restyle a finished episode nobody is looking at.
+   * When 20 is asked for the same thing, flip the default and delete the prop.
    */
   origin?: "left" | "center";
   /** The corner blocks. They exist to give a DASH rhythm somewhere to start

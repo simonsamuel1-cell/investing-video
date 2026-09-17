@@ -404,7 +404,7 @@ const Note = () => {
   const open = dashOpenAt(V.note.at, m);
   const shown = NOTE.slice(0, Math.floor(ramp(f, open, NOTE.length * V.note.perChar) * NOTE.length));
   return (
-    <DashedBox x={CARD_NOTE.x} y={CARD_NOTE.y} w={CARD_NOTE.w} h={CARD_NOTE.h} at={V.note.at}>
+    <DashedBox x={CARD_NOTE.x} y={CARD_NOTE.y} w={CARD_NOTE.w} h={CARD_NOTE.h} at={V.note.at} origin="center">
       <div
         style={{
           position: "absolute",
