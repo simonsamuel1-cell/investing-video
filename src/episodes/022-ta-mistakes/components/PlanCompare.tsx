@@ -39,12 +39,11 @@
  */
 import React from "react";
 import {
-  Candles, Card, Chip, Layer,
-  domainOf, drawPath, gridOf, progress, textReveal, theme, usePalette,
+  Card, Layer,
+  drawPath, progress, textReveal, theme, useMotion, usePalette,
 } from "../../../core";
-import { PLANS, local } from "../data/timing";
+import { PLANS } from "../data/timing";
 import { PLAN } from "../data/layout";
-import { PLAN_TAPE } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = PLANS;
@@ -53,26 +52,65 @@ const P = PLAN;
 
 const MID = theme.canvas.width / 2;
 
-/** ⚠ SOLVED ONCE, AT MODULE LOAD. A grid rebuilt every frame is a grid that
- *  can disagree with itself between the wick and the body. */
-const TAPE = gridOf(
-  PLAN_TAPE.closes,
-  domainOf(PLAN_TAPE.closes, PLAN_TAPE.bars),
-  P.head.tape,
-  P.head.tapePad,
-);
+/**
+ * ⚠ THE ONE SHARED OBJECT IS A TICKER NOW, AND IT IS A PLACEHOLDER ON PURPOSE.
+ * `$ABCD` is not an instrument: no IDX board carries it, the dollar prefix is
+ * not how Indonesian tickers are written, and nothing in this scene quotes a
+ * price for it. The rule this file used to keep by naming NOTHING is kept now
+ * by naming something that cannot be mistaken for a real company.
+ */
+const TICKER = "Saham $ABCD";
 
-/** The two columns' accents. Hue is the ONLY thing that separates them. */
-const ACCENT = ["indigo", "cyan"] as const;
+const WHO = ["Trader profesional", "Kamu"] as const;
+
+/**
+ * ⚠ LOCAL UNTIL A SECOND SCENE WANTS ONE. A profile picture is not a core
+ * primitive the way Card and Chip are, and adding it to the library on the
+ * strength of one use is how core fills up with things nobody else needs.
+ *
+ * ⚠ AND IT IS CLIPPED TO ITS OWN DISC. The shoulders are an ellipse that runs
+ * off the bottom of the circle; without the clip it is a half-moon floating
+ * inside a ring, which is what it looked like first.
+ */
+const Avatar = ({
+  x, y, size, ink, opacity, id,
+}: {
+  x: number;
+  y: number;
+  size: number;
+  ink: string;
+  opacity: number;
+  id: string;
+}) => (
+  <svg
+    style={{ position: "absolute", left: x, top: y - size / 2, opacity }}
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+  >
+    <defs>
+      <clipPath id={id}>
+        <circle cx={12} cy={12} r={12} />
+      </clipPath>
+    </defs>
+    <g clipPath={`url(#${id})`}>
+      <circle cx={12} cy={12} r={12} fill={ink} opacity={0.16} />
+      <circle cx={12} cy={9.4} r={3.9} fill={ink} />
+      <ellipse cx={12} cy={21.4} rx={7.6} ry={6.6} fill={ink} />
+    </g>
+  </svg>
+);
 
 export const PlanCompare = ({ g }: { g: number }) => {
   const c = usePalette();
+  const m = useMotion();
   const p = (q: { at: number; over: number }) => progress(g, q.at, q.over);
 
   const card = p(V.card);
   const wire = p(V.wires);
   const cols = p(V.cols);
   const split = p(V.split);
+  const who = progress(g, V.who, m.reveal);
   /** B3 — emphasis only. Nothing below changes position on these two. */
   const lift = p(V.lift);
   const edge = p(V.edge);
@@ -81,30 +119,29 @@ export const PlanCompare = ({ g }: { g: number }) => {
 
   return (
     <>
-      {/* ── the one shared object ─────────────────────────────────────── */}
-      <Card rect={P.head.rect} opacity={card} scale={0.96 + 0.04 * card} />
-      {/* ⚠ SLATE, NOT CYAN. The build prompt asked for cyan and cyan is also
-          Trader B's accent — at the same pill size, two pills in one hue read
-          as a pair, and the pair they would make is exactly the wrong one. The
-          shared object belongs to neither column, so it is the one thing here
-          in neither column's colour. */}
-      <Chip
-        label="Same Stock"
-        x={MID}
-        y={P.head.chipY}
-        at={local(V.same, V.at)}
-        tone="slate"
-        size={P.head.chipSize}
-        pill
-      />
-      {/* ⚠ DECORATIVE AND CAPPED. No axis, no gridline, no price label — the
-          strip says "a stock" and must never say which, or how much. */}
-      <Candles
-        bars={PLAN_TAPE.bars}
-        grid={TAPE}
-        opacity={P.head.tapeAlpha}
-        wipe={(i) => progress(g, V.tape.at + i * V.tape.step, V.tape.over)}
-      />
+      {/* ── the one shared object ───────────────────────────────────────
+          A line of type, not a card. "window 'Same Stock' nya hapus, ganti
+          dengan langsung text aja" — and the decorative candle strip went with
+          it, which is a small relief: it was the one drawn thing in this scene
+          that had to be held at 45% opacity to stop it reading as something
+          analysable. */}
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: P.ticker.y,
+          width: theme.canvas.width,
+          transform: `translateY(calc(-50% + ${(1 - card) * P.col.rise}px))`,
+          textAlign: "center",
+          fontFamily: theme.text.family,
+          fontSize: P.ticker.size,
+          fontWeight: theme.text.title.weight,
+          color: c.ink,
+          opacity: card,
+        }}
+      >
+        {TICKER}
+      </div>
 
       {/* ── the two columns ───────────────────────────────────────────── */}
       <div
@@ -138,18 +175,38 @@ export const PlanCompare = ({ g }: { g: number }) => {
             }}
           />
         ))}
+      {/* ⚠ NO PILL, AND THE NAME IS THE PERSON. "Trader A"/"Trader B" were two
+          labels on two boxes; "Trader profesional" and "Kamu" are two people,
+          and a person gets a face rather than a badge. The hue is still the
+          only thing that separates the columns — see the note at the top. */}
       {P.cols.map((r, i) => (
-        <Chip
-          key={`who${i}`}
-          label={i === 0 ? "Trader A" : "Trader B"}
-          x={r.x + P.col.pad}
-          y={P.col.chipY}
-          at={local(V.who, V.at)}
-          tone={ACCENT[i]}
-          anchor="left"
-          size={P.col.chipSize}
-          pill
-        />
+        <React.Fragment key={`who${i}`}>
+          <Avatar
+            id={`plan-avatar-${i}`}
+            x={r.x + P.col.pad}
+            y={P.col.nameY}
+            size={P.name.avatar}
+            ink={ink[i]}
+            opacity={who}
+          />
+          <div
+            style={{
+              position: "absolute",
+              left: r.x + P.col.pad + P.name.avatar + P.name.gap,
+              top: P.col.nameY,
+              width: r.w - P.col.pad * 2 - P.name.avatar - P.name.gap,
+              transform: `translateY(calc(-50% + ${(1 - who) * P.row.rise}px))`,
+              fontFamily: theme.text.family,
+              fontSize: P.name.size,
+              fontWeight: theme.text.display.weight,
+              lineHeight: P.name.lead,
+              color: ink[i],
+              opacity: who,
+            }}
+          >
+            {WHO[i]}
+          </div>
+        </React.Fragment>
       ))}
 
       {/* ── the four rows ─────────────────────────────────────────────── */}

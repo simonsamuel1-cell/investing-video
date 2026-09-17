@@ -1037,7 +1037,12 @@ const PLAN_CHIP = theme.text.axis.size;
 
 /** The four rows, as one pitch rather than four tops. */
 const PLAN_ROW = {
-  y0: 530,
+  /** ⚠ 545, NOT 530, AND THE FIFTEEN PIXELS ARE THE NAME'S. "Trader
+   *  profesional" beside a 44px avatar cannot be one line in a 350-wide column,
+   *  so the name is two; two lines of 30px need 75, and the first row had to
+   *  move out from under them. The assertion at the foot of this file is what
+   *  said so. */
+  y0: 545,
   pitch: 80,
   /** The separator, below the row's centre-line and clear of a descender. */
   rule: 30,
@@ -1059,26 +1064,53 @@ const PLAN_LAST_RULE = PLAN_ROW.y0 + PLAN_ROW.pitch * 3 + PLAN_ROW.rule;
 
 /** The band the two columns are cut from. Centred on the frame, so the
  *  divider and the header's centre are the same x by construction. */
+/** ⚠ 350 — HALF WHAT IT WAS. Simon: "window kiri dan kanan kecilin widthnya
+ *  50% masing masing". The COLUMN is the number chosen now and the band follows
+ *  from it, which is the opposite of how this was written; with the band fixed,
+ *  halving a column would have had to move the gap as well. */
+const PLAN_COL_W = 350;
+const PLAN_GAP = 200;
 const PLAN_BAND: Rect = (() => {
-  const w = 1600;
+  const w = PLAN_COL_W * 2 + PLAN_GAP;
   const y = 420;
   return { x: (PLAN_W - w) / 2, y, w, h: PLAN_LAST_RULE + PLAN_COL_PAD - y };
 })();
-
-/** ⚠ 200, WHICH IS WHAT MAKES THE COLUMNS 700 WIDE. The gap is the number
- *  chosen; the column width follows from it and from the band. */
-const PLAN_GAP = 200;
 const [PLAN_LEFT, PLAN_RIGHT] = splitRects(PLAN_GAP, PLAN_BAND);
 
-/** The header card, centred and sitting on the logo zone's floor. */
-const PLAN_HEAD: Rect = (() => {
-  const w = 400;
-  return { x: (PLAN_W - w) / 2, y: theme.logoZone.height, w, h: 180 };
-})();
+/**
+ * ⚠ THE SHARED OBJECT IS A LINE OF TYPE NOW, NOT A CARD. Simon: "window 'Same
+ * Stock' nya hapus, ganti dengan langsung text aja". The card, its chip and its
+ * decorative candle strip are all gone with it — and the strip going is a small
+ * relief, because it was the one drawn thing in the scene that had to be capped
+ * at 45% opacity to stop it reading as analysable.
+ *
+ * `half` is where the two connectors start: "panahnya ganti start pointnya dari
+ * kiri dan kanan text". It is the line's own half-width plus air, MEASURED off
+ * a render rather than guessed — the ink runs x792..1128 at this size, so 168
+ * is the half-width and the connectors start 14 clear of it.
+ */
+const PLAN_TICKER = {
+  y: 240,
+  size: theme.text.title.size,
+  half: 168 + 14,
+} as const;
 
-/** Its two insets: the margin all round, and the air between chip and strip. */
-const HEAD_PAD = 18;
-const HEAD_GAP = 16;
+/**
+ * The column's own name row: an avatar and a name beside it.
+ *
+ * ⚠ TWO LINES OF ROOM, BECAUSE ONE DOES NOT FIT. A 350-wide column with 24 of
+ * padding leaves 302, the avatar and its gap take 58, and "Trader profesional"
+ * at 30px is about 297 — so the name wraps and the row is sized for the taller
+ * of the two. "Kamu" is one line and is centred in the same height, which is
+ * what keeps the two columns level.
+ */
+const PLAN_NAME = {
+  size: PLAN_CHIP + 4,
+  avatar: 44,
+  gap: 14,
+  lead: 1.25,
+} as const;
+const PLAN_NAME_H = PLAN_NAME.size * PLAN_NAME.lead * 2;
 
 /**
  * ⚠ B1'S STACK IS SPACED FROM THE INK, NOT FROM THE BOXES, and that is the
@@ -1093,25 +1125,26 @@ const B1_HEAD_Y = 252;
 const B1_INK = { head: 122, subUp: 13, subDown: 21 } as const;
 
 /**
- * A connector from the header's bottom edge to the top of a column, elbowed
- * at the midpoint with a rounded corner.
+ * A connector that leaves the ticker SIDEWAYS and turns down into a column.
  *
- * ⚠ IT RETURNS ITS OWN LENGTH. A trim-path draw needs the number, and a path
- * whose dash length is measured by hand stops being right the first time the
- * columns move. Two quarter-circles plus three straights is exact.
+ * ⚠ ONE ELBOW NOW, NOT TWO. It used to drop out of the card's bottom edge and
+ * elbow twice at the midpoint; the start point is the side of a line of type
+ * now, so it runs out horizontally, turns once, and falls. Same rounded corner,
+ * one fewer of them.
+ *
+ * ⚠ IT STILL RETURNS ITS OWN LENGTH. A trim-path draw needs the number, and a
+ * dash length measured by hand stops being right the first time the columns
+ * move. A quarter-circle plus two straights is exact.
  */
 const PLAN_ELBOW = 12;
 const wireOf = (from: { x: number; y: number }, to: { x: number; y: number }) => {
   const r = PLAN_ELBOW;
-  const my = (from.y + to.y) / 2;
   const dir = to.x < from.x ? -1 : 1;
   const d =
-    `M${from.x},${from.y} L${from.x},${my - r} ` +
-    `Q${from.x},${my} ${from.x + dir * r},${my} ` +
-    `L${to.x - dir * r},${my} ` +
-    `Q${to.x},${my} ${to.x},${my + r} L${to.x},${to.y}`;
+    `M${from.x},${from.y} L${to.x - dir * r},${from.y} ` +
+    `Q${to.x},${from.y} ${to.x},${from.y + r} L${to.x},${to.y}`;
   const arc = (Math.PI * r) / 2;
-  const len = my - r - from.y + arc + (Math.abs(to.x - from.x) - r * 2) + arc + (to.y - my - r);
+  const len = Math.abs(to.x - from.x) - r + arc + (to.y - from.y - r);
   return { d, len };
 };
 
@@ -1134,37 +1167,18 @@ export const PLAN = {
     lift: 24,
   },
 
-  head: {
-    rect: PLAN_HEAD,
-    chipSize: PLAN_CHIP,
-    chipY: PLAN_HEAD.y + HEAD_PAD + pillH(PLAN_CHIP) / 2,
-    /**
-     * ⚠ DECORATIVE, AND SIZED TO SAY SO. What is left of a 400×180 card once
-     * the chip and the margins have had theirs — there is no room in it for an
-     * axis, which is the point.
-     */
-    tape: {
-      x: PLAN_HEAD.x + 40,
-      y: PLAN_HEAD.y + HEAD_PAD + pillH(PLAN_CHIP) + HEAD_GAP,
-      w: 320,
-      h: PLAN_HEAD.h - HEAD_PAD * 2 - pillH(PLAN_CHIP) - HEAD_GAP,
-    },
-    /** ⚠ CAPPED AT 45% — the strip must never read as something analysable. */
-    tapeAlpha: 0.45,
-    /** ⚠ TIGHTER THAN THE CHART DEFAULT. 12% of head-room top and bottom on a
-     *  75px strip is 18px spent on nothing; the bars need it more than the
-     *  margin does. */
-    tapePad: 0.08,
-  },
+  ticker: PLAN_TICKER,
+  name: { ...PLAN_NAME, h: PLAN_NAME_H },
 
   band: PLAN_BAND,
   cols: [PLAN_LEFT, PLAN_RIGHT] as [Rect, Rect],
 
   /** Both columns are read with the same insets — that is the comparison. */
   col: {
-    pad: 40,
-    chipSize: PLAN_CHIP,
-    chipY: PLAN_BAND.y + PLAN_COL_PAD + pillH(PLAN_CHIP) / 2,
+    /** ⚠ 24, DOWN FROM 40. A 350-wide column cannot spend 80 of itself on air
+     *  and still hold an avatar, a name and a value on one line. */
+    pad: 24,
+    nameY: PLAN_BAND.y + PLAN_COL_PAD + PLAN_NAME_H / 2,
     /** How far a column slides up as it arrives. */
     rise: 10,
   },
@@ -1172,8 +1186,8 @@ export const PLAN = {
   row: PLAN_ROW,
 
   wires: [
-    wireOf({ x: PLAN_W / 2, y: PLAN_HEAD.y + PLAN_HEAD.h }, { x: PLAN_LEFT.x + PLAN_LEFT.w / 2, y: PLAN_BAND.y }),
-    wireOf({ x: PLAN_W / 2, y: PLAN_HEAD.y + PLAN_HEAD.h }, { x: PLAN_RIGHT.x + PLAN_RIGHT.w / 2, y: PLAN_BAND.y }),
+    wireOf({ x: PLAN_W / 2 - PLAN_TICKER.half, y: PLAN_TICKER.y }, { x: PLAN_LEFT.x + PLAN_LEFT.w / 2, y: PLAN_BAND.y }),
+    wireOf({ x: PLAN_W / 2 + PLAN_TICKER.half, y: PLAN_TICKER.y }, { x: PLAN_RIGHT.x + PLAN_RIGHT.w / 2, y: PLAN_BAND.y }),
   ],
 
   /** ⚠ THE EPISODE'S OWN CAPTION LINE, not a typed y. It is 924, four pixels
@@ -1191,32 +1205,37 @@ export const PLAN = {
    *  be on the frame's centre-line and the columns have to be either side of
    *  that same line. Typed, the three would agree until one of them moved. */
   const mid = PLAN_W / 2;
-  if (P.head.rect.x + P.head.rect.w / 2 !== mid) fail("SC15's header card is not centred on the frame");
+  if (P.ticker.y < theme.logoZone.height) fail(`SC15's ticker line is at ${P.ticker.y}, inside the logo zone`);
   if (P.band.x + P.band.w / 2 !== mid) fail("SC15's column band is not centred on the frame");
   if (P.cols[0].w !== P.cols[1].w) fail(`SC15's columns are ${P.cols[0].w} and ${P.cols[1].w} wide`);
   if (P.cols[0].x + P.cols[0].w >= mid || P.cols[1].x <= mid) fail("SC15's columns cross their own divider");
-  /** ⚠ THE HEADER SITS ON THE LOGO ZONE, NOT IN IT. */
-  if (P.head.rect.y < theme.logoZone.height) fail(`SC15's header card starts at ${P.head.rect.y}, inside the logo zone`);
-  /** ⚠ AND THE CARD HOLDS ITS TWO THINGS WITH EQUAL AIR ROUND THEM — the one
-   *  assertion that catches a chip-size change, which would otherwise push the
-   *  strip out of the bottom of the card without anything else complaining. */
-  const t = P.head.tape;
-  if (t.x < P.head.rect.x || t.x + t.w > P.head.rect.x + P.head.rect.w) fail("SC15's candle strip is wider than its card");
-  if (Math.abs(t.y + t.h - (P.head.rect.y + P.head.rect.h - HEAD_PAD)) > 0.5) {
-    fail(`SC15's candle strip ends at ${t.y + t.h}, not ${HEAD_PAD}px above the card's floor`);
+  /**
+   * ⚠ THE CONNECTORS HAVE TO TRAVEL OUTWARD, and that is the thing to check.
+   * Each one leaves a side of the ticker and lands on a column's centre-line,
+   * so the ticker's half-width has to be SHORTER than the distance from the
+   * frame's middle to that centre-line — otherwise the left wire starts to the
+   * right of where it is going and the elbow turns back on itself.
+   */
+  const reach = mid - (P.cols[0].x + P.cols[0].w / 2);
+  if (P.ticker.half >= reach - PLAN_ELBOW) {
+    fail(`SC15's connectors start ${P.ticker.half} out and only reach ${Math.round(reach)}`);
   }
-  if (t.h < pillH(P.head.chipSize)) fail(`SC15's strip is ${Math.round(t.h)}px tall, less than the chip above it`);
+  /** ⚠ AND THE NAME HAS TO FIT BESIDE ITS AVATAR. Two lines of room, the
+   *  avatar and its gap out of the column's inner width — if that leaves less
+   *  than half the column for the words, the wrap will not save it. */
+  const inner = P.cols[0].w - P.col.pad * 2 - P.name.avatar - P.name.gap;
+  if (inner < P.cols[0].w / 2) fail(`SC15's column name has ${Math.round(inner)}px, under half the column`);
   /**
    * ⚠ THE COLUMN IS BALANCED, and this is the assertion that keeps it so. The
    * margin above the name and the margin below the last separator are one
    * number; if the band's height ever stops following the rows, they part.
    */
-  const above = P.col.chipY - pillH(P.col.chipSize) / 2 - P.band.y;
+  const above = P.col.nameY - P.name.h / 2 - P.band.y;
   const below = P.band.y + P.band.h - PLAN_LAST_RULE;
   if (Math.abs(above - below) > 0.5) fail(`SC15's columns hold ${above} above and ${below} below`);
   /** ⚠ AND FOUR ROWS HAVE TO FIT UNDER THE NAME. */
   const firstTop = P.row.y0 - P.row.valueSize / 2;
-  if (firstTop <= P.col.chipY + pillH(P.col.chipSize) / 2) fail("SC15's first row starts inside the column's own name");
+  if (firstTop <= P.col.nameY + P.name.h / 2) fail("SC15's first row starts inside the column's own name");
   if (PLAN_LAST_RULE > P.band.y + P.band.h) fail(`SC15's last separator is at ${PLAN_LAST_RULE}, below the column floor`);
   /** ⚠ THE TIGHTEST POINT IN THE SCENE — the closing line's bottom edge, which
    *  is solvable rather than observable because the pill is built from type. */
