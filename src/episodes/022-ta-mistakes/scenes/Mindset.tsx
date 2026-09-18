@@ -220,18 +220,39 @@ export const Mindset = () => {
                 color={c.indigo}
               />
             ))}
-            {slid < 0.999 && V.mark.lines.map((row, i) => (
-              <Line
-                key={row}
-                text={row}
-                x={S.line.x}
-                y={S.line.y0 + i * S.line.lead}
-                at={local(V.mark.at, V.at) + m.move}
-                size={S.line.size}
-                weight={theme.text.title.weight}
-                color={c.indigo}
-              />
-            ))}
+            {/* ⚠ IT LEAVES WITH THE MARK, NOT WHERE IT STOOD — Simon: "text
+                'Technical analysis adalah…' fade out tapi ikut pindah bareng
+                maskot". The wrapper carries the mark's OWN travel, so the two
+                cannot come apart: one translate and one opacity on one curve.
+
+                ⚠ AND IT IS THE MARK'S RESTING TRAVEL, NOT ITS DRAWN POSITION.
+                The mark also breathes; a sentence that breathed with it would
+                be a second thing moving rather than the same thing leaving. */}
+            {slid < 0.999 && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: 1 - slid,
+                  transform:
+                    `translate(${((S.slide.mark.x - S.mark.x) * slid).toFixed(1)}px,` +
+                    ` ${((S.slide.mark.y - S.mark.y) * slid).toFixed(1)}px)`,
+                }}
+              >
+                {V.mark.lines.map((row, i) => (
+                  <Line
+                    key={row}
+                    text={row}
+                    x={S.line.x}
+                    y={S.line.y0 + i * S.line.lead}
+                    at={local(V.mark.at, V.at) + m.move}
+                    size={S.line.size}
+                    weight={theme.text.title.weight}
+                    color={c.indigo}
+                  />
+                ))}
+              </div>
+            )}
           </>
         )}
       </AbsoluteFill>
