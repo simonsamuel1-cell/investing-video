@@ -1830,22 +1830,43 @@ const PREP_TOP = theme.stage.active.y + (PREP_STRIP - PREP_LEADING * 2) / 2;
  * direction, and it is the pair that was named.
  */
 const PREP_ART = {
-  "01": { name: "01 Day", src: "art/prep/01-day.png", ratio: 881 / 1600 },
-  "02": { name: "02 Week", src: "art/prep/02-week.png", ratio: 881 / 1600 },
+  /**
+   * ⚠ 01 AND 02 ARE CROPPED, AND BY EXACTLY THE SAME AMOUNT — Simon: "berapapun
+   * yang kamu crop di image 01, crop juga dengan jumlah yang sama di 02". The
+   * two screens are the same app view at two timeframes, so any difference in
+   * framing between them would read as a difference in the DATA. Both lose the
+   * bottom 1446 of their 7417: the Company Quality strip and the action bar
+   * under it, cut on the white gap above that strip's own card border so no
+   * edge is sliced. Their card boundaries were checked to be on the same row
+   * first — 1291 in both — which is what makes one cut line honest for both.
+   *
+   * ⚠ IT ALSO TAKES THE "Buy" BUTTON OFF, which was the one thing in this scene
+   * that sat against rule 7. That is a consequence, not the reason.
+   */
+  "01": { name: "01 Day", src: "art/prep/01-day.png", ratio: 1094 / 1600 },
+  "02": { name: "02 Week", src: "art/prep/02-week.png", ratio: 1094 / 1600 },
   "03": { name: "03 Trend", src: "art/prep/03-trend.png", ratio: 1600 / 949 },
   "04": { name: "04 Setup", src: "art/prep/04-setup.png", ratio: 1279 / 1600 },
   "05": { name: "05 Level", src: "art/prep/05-level.png", ratio: 1600 / 906 },
 } as const;
 
 /**
- * ⚠ 520, DOWN FROM 580, AND THE QUESTION BOX IS WHY. Simon added a dashed box
- * "di bawah 5 file ini" at 14580, and the pair has to stay centred on the
- * screen — his first instruction about this scene. Those two together fix the
- * height: the box needs 92 of its own plus its corner blocks and 50 of air, and
- * 540 + H/2 + 50 + 92 + 15 has to clear the subtitle band at 972. The screens
- * lose a tenth of their size for it, which is the cheaper of the two.
+ * ⚠ THE HEIGHT IS PINNED FROM BOTH SIDES AND 532 IS WHAT IS LEFT.
+ *
+ * Below: Simon's dashed box goes "di bawah 5 file ini" and the pair has to stay
+ * centred on the screen, so 540 + H/2 + 50 of air + 92 of box + half a corner
+ * block has to clear the subtitle band at 972 — H ≤ 550.
+ *
+ * Beside: the middle pair is centred on the frame and the two columns hang off
+ * it, so the left column's outer edge has to clear the safe area at 96 —
+ * H ≤ 545 at 01 and 02's cropped ratio.
+ *
+ * 532 leaves 9px under the box and 21px outside the left column. It was 520
+ * while 01 and 02 still carried their action bar; the crop is what bought the
+ * rest — those two are 27% wider now at the same height, which is what Simon
+ * meant by "2 image di tengah jadi kecil banget".
  */
-const PREP_H = 520;
+const PREP_H = 532;
 const PREP_GAP = 32;
 /**
  * The left column's width, solved so its two panels stack to exactly PREP_H.
@@ -1877,19 +1898,20 @@ const PREP_SOLO_X = theme.canvas.width / 2 - PREP_TALL("01") / 2;
 
 /**
  * ⚠ THE VOLUME BARS INSIDE 01, AS FRACTIONS OF THE PICTURE. Measured off
- * public/art/prep/01-day.png itself — the coloured pixels run x31..834 and
- * y1010..1161 of its 881×1600 — so the mark follows the screenshot if the
- * screenshot is ever re-exported at another size. A typed rect would not.
+ * public/art/prep/01-day.png itself — the coloured pixels run x39..1036 and
+ * y1255..1442 of its 1094×1600 — so the mark follows the screenshot rather
+ * than a typed rect. It was re-measured when the crop moved it, which is
+ * exactly the change a typed rect would have survived silently.
  *
  * ⚠ AND THE PAD IS SMALL ON PURPOSE. The bars already span 91% of the picture;
  * any more air and the box stops reading as a mark on the volume panel and
  * starts reading as a box around the whole phone.
  */
 const PREP_VOL = {
-  x1: 31 / 881,
-  x2: 834 / 881,
-  y1: 1010 / 1600,
-  y2: 1161 / 1600,
+  x1: 39 / 1094,
+  x2: 1036 / 1094,
+  y1: 1255 / 1600,
+  y2: 1442 / 1600,
   pad: 8,
 } as const;
 
