@@ -2556,6 +2556,27 @@ export const PLANS = {
   },
 } as const;
 
+/**
+ * ═══ SC15 → whatever follows · THE CAMERA CUT ═══════════════════════════
+ *
+ * ⚠ Simon: "13894-13895 beri transisi camera cut". Same reading as CUT11 —
+ * 13895 is the MIDPOINT of the move, not its start. core/CameraCut runs one
+ * ease-in-out curve across the boundary and swaps the content on its fastest
+ * frame, so SC15 draws its last frame on 13894 already travelling.
+ *
+ * ⚠ THE SAME CAMERA AS CUT11, DELIBERATELY. Over, distance, blur and axis are
+ * copied rather than re-tuned: two cuts in one episode that move at different
+ * speeds are two cameras, and an audience reads that as an edit rather than as
+ * the same shot continuing.
+ *
+ * ⚠ ONLY THE OUTGOING HALF EXISTS. Nothing is mounted at 13895 — everything
+ * from SC10 on is Blank apart from the overlays, and SC15 is the last one — so
+ * for now the move carries the scene off into empty ground. Whatever lands on
+ * 13895 takes the incoming half by reading THIS object through `cutInStyle`,
+ * from GLOBAL frames. Two hand-tuned moves that happen to meet is not a cut.
+ */
+export const CUT15 = { at: 13895, over: 40, distance: 120, blur: 10, axis: "x" } as const;
+
 {
   const V = PLANS;
   const fail = (m: string) => {
@@ -2611,6 +2632,14 @@ export const PLANS = {
   if (V.lift.at < ends[ends.length - 1]) {
     fail(`SC15's emphasis starts at ${V.lift.at}, before the last row has settled at ${ends[ends.length - 1]}`);
   }
+  /** ⚠ THE CUT LANDS ON THE SCENE'S OWN BOUNDARY, same rule as CUT11. */
+  if (CUT15.at !== V.to) fail(`SC15's cut lands on ${CUT15.at}, not on its own boundary at ${V.to}`);
+  /** ⚠ AND THE VERDICT MUST BE FULLY STOPPED BEFORE THE CAMERA STARTS. A box
+   *  that is still opening while the picture is already travelling is two
+   *  moves at once, which is the thing a camera cut is for avoiding. */
+  const CAMERA = CUT15.at - CUT15.over / 2;
+  const landed = V.verdict.at + V.verdict.over;
+  if (landed > CAMERA) fail(`SC15's verdict lands at ${landed}, after the camera starts moving at ${CAMERA}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */

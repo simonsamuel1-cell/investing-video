@@ -35,9 +35,9 @@
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import {
   Chip, DashedBox, Layer, Line, Stage, Words,
-  progress, theme, usePalette,
+  cutOutStyle, progress, theme, usePalette,
 } from "../../../core";
-import { PLANS, local } from "../data/timing";
+import { CUT15, PLANS, local } from "../data/timing";
 import { PLAN } from "../data/layout";
 import { PlanCompare } from "../components/PlanCompare";
 
@@ -131,6 +131,16 @@ export const CopyTrade = () => {
 
   return (
     <Stage>
+      {/* ⚠ THE CAMERA MOVES THE PICTURE, NOT THE GROUND — same as SC11. Stage's
+          background stays put underneath: it is a flat colour, so translating
+          it could only expose an edge.
+
+          ⚠ AND IT IS AN AbsoluteFill, NOT A BARE div. SC11 could use a plain
+          one because everything under it is positioned by its own x/y; this
+          scene's dim wrapper is an AbsoluteFill, and `inset: 0` inside a
+          zero-height parent is zero. A transform makes the parent the
+          containing block either way, so the size has to be real. */}
+      <AbsoluteFill style={cutOutStyle(g, CUT15)}>
       <AbsoluteFill style={{ opacity: dim }}>
       <Naming g={g} />
 
@@ -243,6 +253,7 @@ export const CopyTrade = () => {
           ⚠ AND THE DIM IS ON A WRAPPER, NOT ON EACH THING. Every element in
           this scene already animates its own opacity; multiplying each of them
           by 0.5 would mean fourteen places to keep in step. */}
+      </AbsoluteFill>
     </Stage>
   );
 };
