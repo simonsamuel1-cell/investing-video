@@ -39,6 +39,7 @@ export const GridGround = ({
   opacity = 1,
   vignette = true,
   tone,
+  paper,
   clip,
 }: {
   /** The frame to read the drift from. Scene-local is fine — it only loops. */
@@ -47,6 +48,19 @@ export const GridGround = ({
   vignette?: boolean;
   /** Overrides the line colour where the default is too quiet for the scene. */
   tone?: string;
+  /**
+   * Overrides the PAPER under the lines.
+   *
+   * ⚠ FOR A GROUND THAT RUNS EDGE TO EDGE, and that is the only reason it
+   * exists. The default paper is white, which is right when the grid is a panel
+   * the scene stands ON — it lifts that panel off the episode's own ground. A
+   * grid that fills the frame has nothing to lift off: white then repaints the
+   * whole canvas, including the subtitle band and the logo zone, which
+   * scripts/audit-frames.mjs fails and is right to. Pass the episode's own
+   * background and the paper becomes invisible, leaving the LINES as the whole
+   * of the effect — and the vignette already keeps those out of both reserves.
+   */
+  paper?: string;
   /**
    * The rectangle the ground is allowed to cover.
    *
@@ -67,7 +81,7 @@ export const GridGround = ({
   const line = tone ?? theme.color.gridLine;
   const body = (
     <>
-      <div style={{ position: "absolute", inset: 0, background: theme.color.gridPaper }} />
+      <div style={{ position: "absolute", inset: 0, background: paper ?? theme.color.gridPaper }} />
       <div
         style={{
           position: "absolute",

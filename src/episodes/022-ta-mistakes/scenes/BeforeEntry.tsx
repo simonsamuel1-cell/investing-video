@@ -27,10 +27,10 @@
  */
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import {
-  DashedBox, HighlightBox, Line, Stage, cutInStyle, progress, progressInOut,
-  ramp, theme, useMotion, usePalette, useShadow,
+  DashedBox, HighlightBox, Line, Stage, cutInStyle, cutOutStyle, progress,
+  progressInOut, ramp, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
-import { CUT15, PREP, local } from "../data/timing";
+import { CUT15, CUT16, PREP, local } from "../data/timing";
 import { PREP_SHOT } from "../data/layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -48,7 +48,7 @@ const AT: Record<string, number> = {
 type Tile = (typeof PREP_SHOT)["tiles"][number];
 
 /**
- * ⚠ THE PUSH-IN HAS TO BE FENCED OFF THE SUBTITLE BAND, and only off that one.
+ * ⚠ THE SCENE HAS TO BE FENCED OFF THE SUBTITLE BAND, and only off that one.
  *
  * The move drives the whole picture DOWNWARDS — it is anchored on the frame's
  * top edge — so the screens and the question box both travel into the band that
@@ -170,12 +170,25 @@ export const BeforeEntry = () => {
       {/* ⚠ THE CAMERA MOVES THE PICTURE, NOT THE GROUND — the same shape SC11
           and SC15 use. Stage's background stays put underneath: it is a flat
           colour, so translating it could only expose an edge. */}
+      {/* ⚠ THE FENCE IS THE OUTERMOST THING IN THE SCENE, and it has to be.
+          It used to sit inside the two cuts, around the push-in alone; CUT16's
+          own 10px blur then rendered AFTER it and smeared the clipped edge
+          straight back into the band — audit-frames failed f15000 at y972 by
+          81. A filter applies to what its element has already produced, so the
+          clip only holds if nothing outside it blurs. One fence out here does
+          the push-in, both cuts, and anything added later.
+
+          ⚠ TWO CUTS, TWO ELEMENTS. CUT15 brings this scene in and CUT16 takes
+          it out; each is a transform and a filter, so they cannot share a node,
+          and nesting is what lets the outgoing move carry the incoming one's
+          result rather than fight it. */}
+      <AbsoluteFill style={FENCE}>
+      <AbsoluteFill style={cutOutStyle(g, CUT16)}>
       <AbsoluteFill style={cutInStyle(g, CUT15)}>
         {/* ⚠ EVERYTHING THE PUSH-IN CARRIES IS IN HERE, AND THE SENTENCE AFTER
             IT IS NOT. The move is a camera, so it takes the whole picture —
             type, screens, mark and question box alike — and leaves only the
             ground behind for what types next. */}
-        <AbsoluteFill style={FENCE}>
         <AbsoluteFill
           style={{
             /* ⚠ DOWN, BECAUSE `pan` IS THE CAMERA'S. A camera that rises puts
@@ -260,7 +273,6 @@ export const BeforeEntry = () => {
           </DashedBox>
         )}
         </AbsoluteFill>
-        </AbsoluteFill>
         {/* ⚠ IT TYPES, on the white the push-in uncovers — same two frames a
             character SC10 and SC11 use. It starts on the frame the move ENDS
             on, which is that move's own duration and not a second number. */}
@@ -283,6 +295,8 @@ export const BeforeEntry = () => {
             {typed}
           </div>
         )}
+      </AbsoluteFill>
+      </AbsoluteFill>
       </AbsoluteFill>
     </Stage>
   );

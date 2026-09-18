@@ -46,7 +46,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, PREP, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, MIND, PANEL10, PLANS, PREP, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -62,6 +62,7 @@ import { ChartWindow } from "./scenes/ChartWindow";
 import { AdmrGroup } from "./scenes/AdmrGroup";
 import { CopyTrade } from "./scenes/CopyTrade";
 import { BeforeEntry } from "./scenes/BeforeEntry";
+import { Mindset } from "./scenes/Mindset";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -279,6 +280,22 @@ const Body = () => (
       name="SC16 · sebelum entry"
     >
       <BeforeEntry />
+    </Sequence>
+
+    {/* ⚠ SC17 TAKES CUT16'S INCOMING HALF, on 15008, which is SC16's own last
+        frame plus one. Same reasoning as the two mounts above: the picture is
+        hung on the recording rather than on `BLOCK`, which is still 150–180
+        frames behind the voice from SC11 on. Its tile is Blank.
+
+        ⚠ AND ITS END IS MINE, NOT SIMON'S — he gave six beats and no ending.
+        15949 is the midpoint of the silence before "Jadi rule penutupnya
+        sederhana". See MIND in data/timing.ts. */}
+    <Sequence
+      from={MIND.at}
+      durationInFrames={MIND.to - MIND.at}
+      name="SC17 · cek dirimu sendiri"
+    >
+      <Mindset />
     </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a

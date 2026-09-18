@@ -2223,3 +2223,73 @@ export const PREP_SHOT = {
    *  of ink, x324..1597 against the area's 96..1824. */
   if (S.say.x + 1274 / 2 > A.x + A.w) fail("SC16's closing sentence runs outside the safe area");
 }
+
+/* ═══ SC17 · THE TRADER CHECKS HIMSELF ════════════════════════════════════
+ *
+ * One figure, centred, standing on the drifting grid.
+ *
+ * ⚠ THE SIX POSES ARE ONE RECT, NOT SIX. They are the same drawing at the same
+ * size — 1145×1374 every one, checked before they were copied in — so a rect
+ * each would be six chances for one of them to sit a pixel off the others and
+ * make the swap read as a jump instead of a change of pose.
+ *
+ * ⚠ AND IT STANDS ON THE BAND, NOT IN THE MIDDLE. These are half-body drawings,
+ * cut at the hips; floated in the centre of the frame the cut edge reads as a
+ * mistake, and resting it on the subtitle band's own top edge reads as the
+ * frame ending where the picture does.
+ */
+const GUY = { w: 1145, h: 1374 } as const;
+const GUY_H = 720;
+
+
+export const MIND_SHOT = {
+  /** The figure, centred and standing on the subtitle band's top edge. */
+  rect: (() => {
+    const h = GUY_H;
+    const w = (GUY.w / GUY.h) * h;
+    return {
+      x: theme.canvas.width / 2 - w / 2,
+      y: theme.captionBand.top - h,
+      w,
+      h,
+    };
+  })(),
+  srcs: ["01", "02", "03", "04", "05", "06"].map((n) => `art/guy/${n}.png`),
+  /**
+   * ⚠ THE GROUND RUNS EDGE TO EDGE AND FADES, IT IS NOT CUT. Simon: "background
+   * kotak kotaknya jangan cropped ya, full screen". Windowed between the two
+   * reserves it had a hard seam across the top of the frame; run to the canvas
+   * edge it puts grid lines inside both of them, and lines are 46 steps off
+   * this episode's ground where scripts/audit-frames.mjs tolerates six.
+   *
+   * So the lines cover the whole frame and go to NOTHING over the reserves
+   * instead — a falloff, which reads as a treatment, rather than an edge, which
+   * reads as a crop. Left and right are untouched, which is where a crop would
+   * have shown most.
+   *
+   * ⚠ THE STOPS ARE THE RESERVES' OWN NUMBERS. Transparent through the logo
+   * zone's 150 and full by 300; full until 850 and transparent by 965, seven
+   * short of the band at 972.
+   */
+  fade: {
+    inFrom: theme.logoZone.height,
+    inTo: theme.logoZone.height * 2,
+    outFrom: theme.captionBand.top - 122,
+    outTo: theme.captionBand.top - 7,
+  },
+} as const;
+
+{
+  const S = MIND_SHOT;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  const r = S.rect;
+  if (Math.abs(r.x + r.w / 2 - theme.canvas.width / 2) > 0.001) fail("SC17's figure is not centred on the frame");
+  if (r.y + r.h > theme.captionBand.top) {
+    fail(`SC17's figure reaches ${r.y + r.h}, inside the subtitle band at ${theme.captionBand.top}`);
+  }
+  if (r.y < theme.stage.active.y) fail(`SC17's figure starts at ${r.y}, above the safe area at ${theme.stage.active.y}`);
+  if (Math.abs(r.w / r.h - GUY.w / GUY.h) > 0.001) fail("SC17's figure is not at its drawing's own ratio");
+  if (S.srcs.length !== 6) fail(`SC17 has ${S.srcs.length} poses, not the six Simon gave beats for`);
+}

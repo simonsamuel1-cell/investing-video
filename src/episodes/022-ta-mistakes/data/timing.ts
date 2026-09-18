@@ -2642,6 +2642,21 @@ export const CUT15 = { at: 13895, over: 40, distance: 120, blur: 10, axis: "x" }
   if (landed > CAMERA) fail(`SC15's verdict lands at ${landed}, after the camera starts moving at ${CAMERA}`);
 }
 
+/**
+ * ═══ SC16 → SC17 · THE CAMERA CUT ═══════════════════════════════════════
+ *
+ * ⚠ Simon: "perpanjang scenenya hingga 15007, transisi ke scene berikutnya di
+ * 15008". Read like CUT11 and CUT15 — 15008 is the MIDPOINT of the move, so
+ * SC16 draws its last frame on 15007 already travelling and the swap lands on
+ * the boundary. It is the third cut in this episode and it copies the other
+ * two exactly: same over, distance, blur and axis, because two cuts that move
+ * at different speeds are two cameras.
+ *
+ * ⚠ AND UNLIKE THE OTHER TWO, BOTH HALVES EXIST. SC16 reads it through
+ * `cutOutStyle`, SC17 through `cutInStyle`, both from GLOBAL frames.
+ */
+export const CUT16 = { at: 15008, over: 40, distance: 120, blur: 10, axis: "x" } as const;
+
 /* ═══ SC16 — the checklist before an entry ═══════════════════════════════
  *
  * ⚠ IT OPENS ON CUT15, WHICH IS THE POINT. SC15 leaves through the outgoing
@@ -2663,7 +2678,7 @@ export const CUT15 = { at: 13895, over: 40, distance: 120, blur: 10, axis: "x" }
  */
 export const PREP = {
   at: CUT15.at,
-  to: 14975,
+  to: CUT16.at,
   /** "Sebelum entry," — on the cut. */
   lead: 13895,
   /** "apply semua yang sudah dipelajari" — Simon's second frame. */
@@ -2752,6 +2767,44 @@ export const PREP = {
    */
   const typed = V.zoom.at + 60 + V.say.text.length * V.say.perChar;
   if (typed > V.to) fail(`SC16's closing sentence finishes typing at ${typed}, after the scene ends at ${V.to}`);
+  /** ⚠ THE CUT LANDS ON THE SCENE'S OWN BOUNDARY, same rule as CUT11 and CUT15. */
+  if (CUT16.at !== V.to) fail(`SC16's cut lands on ${CUT16.at}, not on its own boundary at ${V.to}`);
+}
+
+/* ═══ SC17 — the trader checks himself ═══════════════════════════════════
+ *
+ * ⚠ IT OPENS ON CUT16'S INCOMING HALF, so the first pose has no entrance of its
+ * own and is already complete on the frame it lands.
+ *
+ * ⚠ THE SIX POSES ARE ONE FIGURE, NOT SIX. Each replaces the one before it, on
+ * the sentence it belongs to: 15008 with "Lalu cek juga dirimu sendiri", then
+ * the phone, the temper and the slump across "Kalau ingin entry karena FOMO,
+ * kesal, atau ingin membalas loss, berhenti dulu" (15125–15423), then calm
+ * again for "Technical Analysis adalah alat bantu keputusan" (15427) and
+ * "Emosi boleh ada, tapi jangan biarkan emosi mengambil alih proses" (15723).
+ *
+ * ⚠ `to` IS MINE. Simon gave the six beats and no ending; 15949 is the midpoint
+ * of the silence between "mengambil alih proses" (ends 15937) and "Jadi rule
+ * penutupnya sederhana" (starts 15961), which is this file's own rule for a
+ * boundary.
+ */
+export const MIND = {
+  at: CUT16.at,
+  to: 15949,
+  poses: [15008, 15138, 15243, 15372, 15444, 15747],
+} as const;
+
+{
+  const V = MIND;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.at !== CUT16.at) fail(`SC17 opens at ${V.at}, not on the cut that delivers it at ${CUT16.at}`);
+  if (V.poses[0] !== V.at) fail("SC17's first pose does not land on the cut that delivers it");
+  V.poses.forEach((at, i) => {
+    if (i && at <= V.poses[i - 1]) fail(`SC17's pose ${i + 1} lands at ${at}, not after the one before it`);
+  });
+  if (V.poses[V.poses.length - 1] >= V.to) fail("SC17's last pose arrives at or after the scene ends");
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */
