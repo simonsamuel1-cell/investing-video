@@ -2642,6 +2642,50 @@ export const CUT15 = { at: 13895, over: 40, distance: 120, blur: 10, axis: "x" }
   if (landed > CAMERA) fail(`SC15's verdict lands at ${landed}, after the camera starts moving at ${CAMERA}`);
 }
 
+/* ═══ SC16 — the checklist before an entry ═══════════════════════════════
+ *
+ * ⚠ IT OPENS ON CUT15, WHICH IS THE POINT. SC15 leaves through the outgoing
+ * half at 13895; this is the half that cut brings in, so the scene has no
+ * entrance of its own and is already complete on the frame it lands.
+ *
+ * ⚠ `to` IS MINE, NOT SIMON'S. He gave 13895 and 13971 and said the rest is
+ * for later — "sementara munculin dulu aja, nanti diatur timingnya". The end
+ * is cut at the midpoint of the silence between "trade belum siap" (ends
+ * 14957) and "Lalu cek juga dirimu sendiri" (starts 14993), which is this
+ * file's own rule for a boundary. It moves the day the five tiles get their
+ * beats.
+ *
+ * ⚠ AND THE FIVE TILES ARE THE FIVE QUESTIONS THE VOICE IS ABOUT TO ASK —
+ * 14165 "Trend-nya bagaimana?", 14235 "Level pentingnya di mana?", 14323
+ * "Setup-nya apa?", 14453 "Timeframe lain sejalan?". They all arrive together
+ * for now because that is what was asked for; when they are timed, those are
+ * the frames they are timed to.
+ */
+export const PREP = {
+  at: CUT15.at,
+  to: 14975,
+  /** "Sebelum entry," — on the cut. */
+  lead: 13895,
+  /** "apply semua yang sudah dipelajari" — Simon's second frame. */
+  apply: 13971,
+  /** All five, together, until they are given beats of their own. */
+  tiles: 13895,
+} as const;
+
+{
+  const V = PREP;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.at !== CUT15.at) fail(`SC16 opens at ${V.at}, not on the cut that delivers it at ${CUT15.at}`);
+  if (V.apply <= V.lead) fail("SC16's second line arrives at or before its first");
+  if (V.to <= V.apply) fail("SC16 ends before its second line has arrived");
+  /** ⚠ THE SECOND LINE MUST LAND WHILE THE VOICE IS STILL ON ITS SENTENCE.
+   *  13905 opens "Sebelum entry, tarik semua yang sudah dipelajari…" and it
+   *  runs to 14129; a line that arrives after it is a caption, not a title. */
+  if (V.apply > 14129) fail(`SC16's second line arrives at ${V.apply}, after the sentence it belongs to`);
+}
+
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */
 export const ASK = {
   shrink: { at: 13080, over: 34 },

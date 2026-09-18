@@ -46,7 +46,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, PANEL10, PLANS, PREP, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -61,6 +61,7 @@ import { Overload } from "./scenes/Overload";
 import { ChartWindow } from "./scenes/ChartWindow";
 import { AdmrGroup } from "./scenes/AdmrGroup";
 import { CopyTrade } from "./scenes/CopyTrade";
+import { BeforeEntry } from "./scenes/BeforeEntry";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -260,6 +261,24 @@ const Body = () => (
       name="SC15 · satu saham, dua rencana"
     >
       <CopyTrade />
+    </Sequence>
+
+    {/* ⚠ SC16 TAKES CUT15'S INCOMING HALF, which is why it starts on 13895 and
+        not on its tile. Everything said about SC15's mount applies here too:
+        `BLOCK` is still 150–180 frames behind the voice from SC11 on, so the
+        picture is hung on the recording and the block table is left alone
+        until it is re-derived as a whole. The SC16 tile is Blank, so nothing
+        of its own is covered.
+
+        ⚠ AND ITS END IS PROVISIONAL. Simon gave 13895 and 13971 and said the
+        rest comes later; 14975 is the midpoint of the silence before "Lalu cek
+        juga dirimu sendiri". See PREP in data/timing.ts. */}
+    <Sequence
+      from={PREP.at}
+      durationInFrames={PREP.to - PREP.at}
+      name="SC16 · sebelum entry"
+    >
+      <BeforeEntry />
     </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a

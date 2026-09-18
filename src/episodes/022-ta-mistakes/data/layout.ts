@@ -8,7 +8,7 @@
 import { GRID_PAD_X, candleWidth, domainOf, gridOf, splitRects, theme, columns, inset } from "../../../core";
 import SHOT from "./admr-chart.json";
 import type { Grid, Rect } from "../../../core";
-import { CARD_LIST } from "./timing";
+import { CARD_LIST, CUT15 } from "./timing";
 import { FLAG, FLAG_BARS, FLAG_DOWN, FLAG_LINES, SETUP_FAILS, SETUP_TRADE, SETUP_WORKS } from "./series";
 
 const PLOT = theme.stage.plot;
@@ -1767,4 +1767,133 @@ export const flagWedge = (g: Grid) => {
     const low = Math.max(...FLAG_DOWN.map((b) => g.y(b.l)));
     if (low > p.y + p.h) fail(`SC11's falling fan reaches ${Math.round(low)} in window ${i + 1}, below its plot`);
   });
+}
+
+/* ═══ SC16 · SEBELUM ENTRY ════════════════════════════════════════════════
+ *
+ * Two lines at the top of the frame and five tiles in the middle of it.
+ *
+ * ⚠ THE TWO LINES LIVE IN THE TITLE STRIP, AND THAT IS WHY THEY ARE 48px.
+ * Simon asked for "Sebelum entry," at the top with "space 1 text line di
+ * bawahnya" held for the second one — so the block is two lines from the
+ * start, not one line that later grows. `theme.stage` gives the strip 136px
+ * between the safe top and the card, and two 48px lines at a 1.25 lead are
+ * exactly 120 of it. At the display size they would be 240 and would have to
+ * push the tiles out of the middle of the screen, which is where he put them.
+ *
+ * ⚠ AND THE STRIP HEIGHT IS DERIVED, NOT TYPED. `theme` does not export
+ * TITLE_H, but the card's top minus the safe top IS that number, so moving a
+ * margin in the theme still moves this.
+ */
+const PREP_STRIP = theme.stage.card.y - theme.stage.active.y;
+const PREP_SIZE = theme.text.title.size;
+const PREP_LEADING = PREP_SIZE * 1.25;
+const PREP_TOP = theme.stage.active.y + (PREP_STRIP - PREP_LEADING * 2) / 2;
+
+/**
+ * ⚠ THE GRID IS 3×2 WITH ONE CELL EMPTY, and every clause of the direction
+ * falls out of it: "01 Day dan 02 Week bersebelahan di tengah layar secara
+ * vertikal" is the middle column, one above the other, on the screen's own
+ * centre-line; "03 Trend di sebelah kiri 01 dan 02" is the left column's top
+ * cell; "di bawahnya 03 adalah 05" is the one under it; "di samping kanan
+ * adalah 04" is the right column. The empty cell is bottom-right.
+ *
+ * ⚠ THE TILE SIZE IS A DECISION, NOT A MEASUREMENT, because the five images do
+ * not exist yet. It is solved from the space instead: two rows plus a gap fill
+ * the card's height exactly (204 → 876), the grid is centred on the canvas's
+ * own middle, and each tile is 4:3 — which is what a chart screenshot is. When
+ * the real files arrive, `objectFit: "contain"` means whatever aspect they have
+ * is honoured inside this box rather than stretched to it.
+ */
+const PREP_TILE = { w: 424, h: 318 } as const;
+const PREP_GAP = 36;
+const PREP_GRID = {
+  w: PREP_TILE.w * 3 + PREP_GAP * 2,
+  h: PREP_TILE.h * 2 + PREP_GAP,
+};
+const PREP_AT = (col: number, row: number): Rect => ({
+  x: (theme.canvas.width - PREP_GRID.w) / 2 + col * (PREP_TILE.w + PREP_GAP),
+  y: (theme.canvas.height - PREP_GRID.h) / 2 + row * (PREP_TILE.h + PREP_GAP),
+  w: PREP_TILE.w,
+  h: PREP_TILE.h,
+});
+
+export const PREP_SHOT = {
+  size: PREP_SIZE,
+  /** "Sebelum entry," — black. */
+  lead: { x: theme.canvas.width / 2, y: PREP_TOP + PREP_LEADING / 2 },
+  /** "apply semua yang sudah dipelajari" — indigo, one line below. */
+  apply: { x: theme.canvas.width / 2, y: PREP_TOP + PREP_LEADING * 1.5 },
+  /**
+   * ⚠ `src` IS null ON ALL FIVE AND THAT IS NOT A PLACEHOLDER FOR A DECISION —
+   * it is a placeholder for FILES. Simon named them (01 Day, 02 Week, 03 Trend,
+   * 04 Setup, 05 Level) but none of them is in the repo yet. Until one is, the
+   * tile draws its own name in a card so the layout can be judged; the moment a
+   * file lands in `public/art/prep/` this is the one string that changes and
+   * nothing else does.
+   */
+  tiles: [
+    { key: "03", name: "03 Trend", rect: PREP_AT(0, 0), src: null as string | null },
+    { key: "01", name: "01 Day", rect: PREP_AT(1, 0), src: null as string | null },
+    { key: "04", name: "04 Setup", rect: PREP_AT(2, 0), src: null as string | null },
+    { key: "05", name: "05 Level", rect: PREP_AT(0, 1), src: null as string | null },
+    { key: "02", name: "02 Week", rect: PREP_AT(1, 1), src: null as string | null },
+  ],
+} as const;
+
+{
+  const S = PREP_SHOT;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  const A = theme.stage.active;
+  /**
+   * ⚠ BOTH LINES SIT IN THE LOGO ZONE'S BAND, so their INK has to stop short of
+   * it. Measured off a render at 48px/700 rather than estimated: "Sebelum
+   * entry," is 349 of ink and "apply semua yang sudah dipelajari" is 791, which
+   * puts the wider one's right edge at 1355 against the zone's 1368.
+   *
+   * ⚠ THAT IS THIRTEEN PIXELS OF MARGIN, AND THE ASSERTION IS THE POINT. The
+   * second line is one word away from crossing into a reserve that has to stay
+   * empty; when the wording changes, this fails at module load instead of in a
+   * render nobody checks.
+   */
+  const INK = { lead: 349, apply: 791 } as const;
+  const widest = Math.max(INK.lead, INK.apply) * (S.size / theme.text.title.size);
+  if (S.lead.x + widest / 2 > theme.logoZone.maxX) {
+    fail(`SC16's lines reach ${Math.round(S.lead.x + widest / 2)}, past the logo zone at ${theme.logoZone.maxX}`);
+  }
+  /**
+   * ⚠ AND THE CUT CARRIES THEM FURTHER RIGHT THAN THAT. The scene arrives on
+   * CUT15's incoming half, which starts the whole picture `distance` px to the
+   * right of where it lands — so for twenty frames the second line reaches
+   * 1475. That clears the reserve ITSELF (which starts at 1560), which is why
+   * this checks the zone rather than the content margin: the rest position is
+   * held to the margin above, and the travel only has to stay out of the box.
+   * Raise the cut's distance past 206 and this is what says so.
+   */
+  const zone = theme.canvas.width - theme.logoZone.width;
+  if (S.lead.x + widest / 2 + CUT15.distance > zone) {
+    fail(`SC16's lines reach ${Math.round(S.lead.x + widest / 2 + CUT15.distance)} on the cut, inside the logo zone at ${zone}`);
+  }
+  /** ⚠ AND THE TILES MUST CLEAR THE TYPE ABOVE AND THE BAND BELOW. */
+  const top = Math.min(...S.tiles.map((t) => t.rect.y));
+  const bottom = Math.max(...S.tiles.map((t) => t.rect.y + t.rect.h));
+  if (top <= S.apply.y + S.size / 2) fail(`SC16's tiles start at ${top}, under the second line`);
+  if (bottom > theme.captionBand.top) {
+    fail(`SC16's tiles reach ${bottom}, inside the subtitle band at ${theme.captionBand.top}`);
+  }
+  const left = Math.min(...S.tiles.map((t) => t.rect.x));
+  const right = Math.max(...S.tiles.map((t) => t.rect.x + t.rect.w));
+  if (left < A.x || right > A.x + A.w) fail("SC16's tiles reach outside the safe area");
+  /** ⚠ THE MIDDLE COLUMN IS THE SCREEN'S MIDDLE — that is the one thing the
+   *  direction is explicit about, and it is the first thing a later tweak to
+   *  the tile size would quietly break. */
+  const mid = S.tiles.filter((t) => t.key === "01" || t.key === "02");
+  const midX = mid.map((t) => t.rect.x + t.rect.w / 2);
+  if (new Set(midX).size !== 1 || midX[0] !== theme.canvas.width / 2) {
+    fail("SC16's 01 and 02 are not stacked on the frame's centre-line");
+  }
+  const midY = (Math.min(...mid.map((t) => t.rect.y)) + Math.max(...mid.map((t) => t.rect.y + t.rect.h))) / 2;
+  if (midY !== theme.canvas.height / 2) fail(`SC16's middle column is centred on ${midY}, not on the screen at ${theme.canvas.height / 2}`);
 }
