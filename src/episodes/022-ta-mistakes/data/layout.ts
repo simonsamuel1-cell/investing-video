@@ -2242,10 +2242,30 @@ const GUY = { w: 1145, h: 1374 } as const;
 const GUY_H = 720;
 
 
+/** Simon's 400 — how far the figure drops at 15444 to make room for the mark. */
+const GUY_DROP = 400;
+/**
+ * ⚠ THE MARK'S HEIGHT IS THE LOGO'S OWN. public/watermark.png carries it at
+ * y45..141, so its ink is 96 tall; the mark takes that, which keeps the two the
+ * same size on screen even now that they no longer share a line.
+ */
+const MARK_H = 141 - 45;
+const MARK_GAP = 40;
+
 const GUY_RECT = (() => {
   const h = GUY_H;
   const w = (GUY.w / GUY.h) * h;
   return { x: theme.canvas.width / 2 - w / 2, y: theme.captionBand.top - h, w, h };
+})();
+
+/**
+ * The mark and its sentence, centred as a pair in the room the drop makes —
+ * from the safe top down to the figure's new top edge. See MIND_SHOT.mark.
+ */
+const MARK_TOP = (() => {
+  const block = MARK_H + MARK_GAP + theme.text.title.size;
+  const room = { top: theme.stage.active.y, bottom: GUY_RECT.y + GUY_DROP };
+  return (room.top + room.bottom) / 2 - block / 2;
 })();
 
 export const MIND_SHOT = {
@@ -2314,37 +2334,38 @@ export const MIND_SHOT = {
   },
 
   /** How far the figure drops to make room for the mark. Simon's 400. */
-  drop: 400,
+  drop: GUY_DROP,
 
   /**
-   * ⚠ THE MARK LANDS LEVEL WITH THE LOGO, AND THE LOGO WAS MEASURED. Simon:
-   * "sejajar logo (tengah secara vertikal)". public/watermark.png carries it at
-   * x1538..1852, y45..141 — so its centre is y93 and its ink is 96 tall. The
-   * mark takes both: the same height at the same centre, which makes the two
-   * read as a matched pair across the top of the frame rather than as one thing
-   * approximately beside another.
+   * ⚠ IT WAS LEVEL WITH THE LOGO AND IT IS NOT ANY MORE — Simon: "maskot dan
+   * text 'Technical analysis…' turunin lagi deh, sekarang terlalu atas". Level
+   * with the logo put the pair in the top 200px of the frame with six hundred
+   * of empty ground between them and the dropped figure's head, which is what
+   * he saw.
+   *
+   * ⚠ SO THE PAIR IS CENTRED IN THE ROOM THE DROP MAKES, between the safe top
+   * and the figure's new top edge — a position that follows the drop rather
+   * than a number typed under it. The logo's own measurement survives as the
+   * mark's HEIGHT: 96 is what public/watermark.png carries it at, and the two
+   * still read as the same size even though they no longer share a line.
    *
    * ⚠ AND IT FALLS IN FROM ABOVE THE FRAME. `from` is one mark-height clear of
    * the top edge, so nothing of it is on screen before it starts.
    */
-  mark: (() => {
-    const logo = { top: 45, bottom: 141 };
-    const h = logo.bottom - logo.top;
-    return {
-      x: theme.canvas.width / 2,
-      /** TOP edge at rest — core/TuntunMark takes a top, not a centre. */
-      y: logo.top,
-      h,
-      from: -h,
-      /** The slow rise and fall, the same pair VIDEO 20's mascot breathes on. */
-      float: { amount: 12, period: 240 },
-    };
-  })(),
+  mark: {
+    x: theme.canvas.width / 2,
+    /** TOP edge at rest — core/TuntunMark takes a top, not a centre. */
+    y: MARK_TOP,
+    h: MARK_H,
+    from: -MARK_H,
+    /** The slow rise and fall, the same pair VIDEO 20's mascot breathes on. */
+    float: { amount: 12, period: 240 },
+  },
 
   /** The sentence under the mark, at the title size Simon asked for. */
   line: {
     x: theme.canvas.width / 2,
-    y: 141 + 40 + theme.text.title.size / 2,
+    y: MARK_TOP + MARK_H + MARK_GAP + theme.text.title.size / 2,
     size: theme.text.title.size,
   },
 } as const;
@@ -2381,10 +2402,17 @@ export const MIND_SHOT = {
    *  render at 96px/800: 620 of ink. */
   if (S.stop.y + S.stop.size * 0.62 > r.y) fail("SC17's answer overlaps the figure");
   if (S.stop.x + 620 / 2 > A.x + A.w) fail("SC17's answer runs outside the safe area");
-  /** ⚠ THE MARK IS LEVEL WITH THE LOGO, which is what was asked for, so it is
-   *  the one thing here that is checked against the watermark's own numbers. */
-  if (S.mark.y + S.mark.h / 2 !== 93) fail(`SC17's mark is centred on ${S.mark.y + S.mark.h / 2}, not on the logo's 93`);
+  /** ⚠ THE MARK IS THE LOGO'S SIZE, not on its line — see the note on `mark`. */
+  if (S.mark.h !== 141 - 45) fail(`SC17's mark is ${S.mark.h} tall, not the logo's own 96`);
   if (S.mark.from + S.mark.h > 0) fail("SC17's mark is already on screen before it falls");
+  if (S.mark.y < A.y) fail(`SC17's mark rests at ${S.mark.y}, above the safe area at ${A.y}`);
+  /** ⚠ AND THE PAIR IS CENTRED IN THE ROOM THE DROP MAKES. This is the check
+   *  that keeps the two following the figure rather than a typed offset. */
+  const block = S.mark.h + 40 + S.line.size;
+  const mid = (A.y + r.y + S.drop) / 2;
+  if (Math.abs(S.mark.y + block / 2 - mid) > 0.001) {
+    fail(`SC17's mark and sentence are centred on ${S.mark.y + block / 2}, not on the ${mid} the drop leaves`);
+  }
   /** ⚠ AND THE SENTENCE UNDER IT CLEARS THE MARK AND THE LOGO ZONE'S BAND, and
    *  fits the safe area. Measured at 48px/700: 1424 of ink. */
   if (S.line.y - S.line.size * 0.62 < S.mark.y + S.mark.h) fail("SC17's sentence overlaps the mark");
