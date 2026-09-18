@@ -1982,21 +1982,31 @@ export const PREP_SHOT = {
    * The type still swells and fills the shot on the way, which is what the
    * direction is describing.
    *
-   * ⚠ AND `k` IS SOLVED, NOT CHOSEN. `to` is where the screens' top edge is
-   * meant to land — 900, which leaves 72px of card showing above the subtitle
-   * band and the rest of them below it. Change that one number and the move
-   * re-solves.
+   * ⚠ HALF THE TRAVEL — Simon: "previewnya terlalu dekat, coba kurangi jaraknya
+   * 50%". `FULL` is where the screens' top edge landed before, 900, which put
+   * them all but off the frame; what is halved is the camera's own journey,
+   * `k - 1`, not `k`. Halving `k` would be halving where the picture ENDS UP,
+   * which is not a distance at all — a camera that ends at 1.0 has not moved,
+   * so the move's length is what it travels past 1.
    *
-   * ⚠ 900 AND NOT LOWER, BECAUSE THE BAND IS AT 972. The move pushes the whole
-   * picture down, so without a floor the screens and the question box both end
-   * up inside a reserve that has to stay empty — scripts/audit-frames.mjs
-   * failed every frame of this move on exactly that. The scene fences the
-   * moving group off the band; `to` then decides how much card is left in the
-   * 72px between the two.
+   * 4.09 becomes 2.55, and the screens' top edge lands on 560 instead of 900.
+   *
+   * ⚠ WHICH IS WHY THE SENTENCE'S OWN PLACE IS DERIVED FROM `to` AND NOT TYPED.
+   * At the full push the white ran to 900 and the sentence sat comfortably on
+   * the canvas's middle; at half that, 540 would have put its ink straight
+   * through the card tops. It is centred in the white the move actually
+   * uncovers, so it follows this number wherever it goes next.
+   *
+   * ⚠ AND THE BAND AT 972 IS STILL THE FLOOR. The move pushes the whole picture
+   * down, so without a fence the screens and the question box both end up
+   * inside a reserve that has to stay empty — scripts/audit-frames.mjs failed
+   * every frame of this move on exactly that. The scene fences the moving group
+   * off the band; see FENCE in the scene.
    */
   zoom: (() => {
-    const to = 900;
-    return { x: theme.canvas.width / 2, y: 0, k: to / PREP_ROW_TOP, to };
+    const FULL = 900;
+    const k = 1 + (FULL / PREP_ROW_TOP - 1) / 2;
+    return { x: theme.canvas.width / 2, y: 0, k, to: PREP_ROW_TOP * k };
   })(),
   /**
    * ⚠ THE CLOSING SENTENCE SITS ON THE CANVAS, NOT IN THE PUSH-IN. It is drawn
@@ -2005,7 +2015,10 @@ export const PREP_SHOT = {
    */
   say: {
     x: theme.canvas.width / 2,
-    y: theme.canvas.height / 2,
+    /** ⚠ CENTRED IN THE WHITE THE PUSH-IN UNCOVERS, between the safe top and
+     *  the card edge the move leaves — never on the canvas's own middle. See
+     *  the note on `zoom`. */
+    y: (theme.stage.active.y + PREP_ROW_TOP * (1 + (900 / PREP_ROW_TOP - 1) / 2)) / 2,
     size: theme.text.title.size,
   },
   /** The volume mark, given 01's CURRENT left edge — it travels with the
@@ -2169,12 +2182,22 @@ export const PREP_SHOT = {
    * check that says so rather than leaving it to a render.
    */
   const z = S.zoom;
-  if (z.to >= theme.canvas.height) fail(`SC16's push-in leaves the screens at ${z.to}, off the bottom of the frame entirely`);
-  const seenH = theme.canvas.height - z.to;
-  if (seenH > pairH / 2) fail(`SC16's push-in still shows ${seenH} of the screens; most of them have to be gone`);
+  if (z.k <= 1) fail(`SC16's push-in scales to ${z.k}; it has to go somewhere`);
+  /** ⚠ SOME CARD HAS TO BE LEFT IN FRAME — "5 image itu akan terlihat sebagian
+   *  kecilnya saja". Pushed past the band there would be none. */
+  if (z.to >= theme.captionBand.top) fail(`SC16's push-in puts the screens at ${z.to}, below the band; none of them would be left`);
   const seenW = theme.canvas.width / z.k;
   if (seenW > right - left) fail("SC16's push-in does not crop the row horizontally at all");
-  /** ⚠ AND THE SENTENCE IT UNCOVERS MUST FIT THE SAFE AREA. Measured off a
-   *  render at 48px/700: 1274 of ink, x324..1597 against the area's 96..1824. */
+  /**
+   * ⚠ AND THE SENTENCE HAS TO CLEAR THE CARD EDGE THE MOVE LEAVES. This is the
+   * check that catches the half-travel case: at the full push the white ran to
+   * 900 and anything would have fitted, at half it runs to 560 and the canvas's
+   * own middle would have put the ink straight through the card tops.
+   */
+  const inkDown = S.say.size * 0.62;
+  if (S.say.y + inkDown >= z.to) fail(`SC16's closing sentence reaches ${Math.round(S.say.y + inkDown)}, on the cards the push-in leaves at ${Math.round(z.to)}`);
+  if (S.say.y - inkDown < theme.logoZone.height) fail("SC16's closing sentence rides up into the logo zone's band");
+  /** ⚠ AND IT MUST FIT THE SAFE AREA. Measured off a render at 48px/700: 1274
+   *  of ink, x324..1597 against the area's 96..1824. */
   if (S.say.x + 1274 / 2 > A.x + A.w) fail("SC16's closing sentence runs outside the safe area");
 }
