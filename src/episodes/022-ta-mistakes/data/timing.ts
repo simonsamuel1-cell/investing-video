@@ -2990,7 +2990,16 @@ export const RULES = {
      * at both ends. Simon asked for the size, not for one row, so the row gave
      * way. The break is at the clause: "unless" closes the condition.
      */
-    lines: ["No trade unless", "the conditions are met"],
+    /**
+     * ⚠ THE SECOND ROW IS INDIGO — Simon. The break was already at the clause:
+     * "No trade unless" is the condition and "the conditions are met" is what
+     * satisfies it, so the colour falls on the same seam the line does rather
+     * than cutting across it.
+     */
+    lines: [
+      { text: "No trade unless", indigo: false },
+      { text: "the conditions are met", indigo: true },
+    ],
   },
 } as const;
 

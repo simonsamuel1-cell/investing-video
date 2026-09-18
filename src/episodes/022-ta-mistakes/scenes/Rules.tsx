@@ -118,13 +118,14 @@ export const Rules = () => {
           {g >= V.close.at &&
             V.close.lines.map((row, i) => (
               <Line
-                key={row}
-                text={row}
+                key={row.text}
+                text={row.text}
                 x={S.close.x}
                 y={S.close.y0 + i * S.close.lead}
                 at={local(V.close.at, V.at)}
                 size={S.close.size}
                 weight={theme.text.display.weight}
+                color={row.indigo ? c.indigo : undefined}
               />
             ))}
         </AbsoluteFill>
