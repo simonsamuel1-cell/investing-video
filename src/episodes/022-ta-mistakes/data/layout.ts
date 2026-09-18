@@ -1795,7 +1795,7 @@ const PREP_TOP = theme.stage.active.y + (PREP_STRIP - PREP_LEADING * 2) / 2;
  *
  * ⚠ EVERY BOX IS ITS OWN PICTURE'S SHAPE, which is the whole reason these
  * ratios are here. The five files are Tuntun app screens and no two of them
- * are alike: 01 and 02 are full phone screens at 0.55, 03 and 05 are wide
+ * are alike: 01 and 02 are cropped phone screens at 0.68, 03 and 05 are wide
  * panels at 1.69 and 1.77, 04 is a table at 0.80. A common box would have
  * letterboxed four of them — "jangan di stretch" cuts both ways, and a picture
  * floating inside a frame two sizes too wide is the other half of that rule.
@@ -1851,41 +1851,56 @@ const PREP_ART = {
 } as const;
 
 /**
- * ⚠ THE HEIGHT IS PINNED FROM BOTH SIDES AND 532 IS WHAT IS LEFT.
+ * ⚠ TWO HEIGHTS NOW, NOT ONE — "2 image di tengah gedein lagi, 3 image lainnya
+ * boleh dibuat agak lebih kecil". The pair is the thing being read and the
+ * other three are what it is read against, so they no longer share a height.
  *
- * Below: Simon's dashed box goes "di bawah 5 file ini" and the pair has to stay
- * centred on the screen, so 540 + H/2 + 50 of air + 92 of box + half a corner
- * block has to clear the subtitle band at 972 — H ≤ 550.
+ * ⚠ AND THE PAIR'S IS SOLVED FROM THE FRAME, TOP AND BOTTOM. Its size is not a
+ * taste: the type's ink ends at 182 and the subtitle band starts at 972, so
+ * what the pair can have is what is left after the air under the type, the air
+ * above the question box, and the box's own 92 plus its corner blocks. 220 and
+ * 812 are those two edges, and 592 is the distance between them.
  *
- * Beside: the middle pair is centred on the frame and the two columns hang off
- * it, so the left column's outer edge has to clear the safe area at 96 —
- * H ≤ 545 at 01 and 02's cropped ratio.
- *
- * 532 leaves 9px under the box and 21px outside the left column. It was 520
- * while 01 and 02 still carried their action bar; the crop is what bought the
- * rest — those two are 27% wider now at the same height, which is what Simon
- * meant by "2 image di tengah jadi kecil banget".
+ * ⚠ ITS CENTRE THEREFORE LANDS ON 516, NOT ON 540. Simon asked for the pair "di
+ * tengah layar secara vertikal" before the question box existed; pinned to the
+ * canvas's own middle with the box below it, the pair can only be 550 and
+ * leaves 83px of dead white under the type. 516 is the middle of what the pair
+ * actually sits in, and it is worth 11% of its size.
  */
-const PREP_H = 532;
+const PREP_ROW_TOP = 220;
+const PREP_ROW_BOTTOM = 812;
+const PREP_HP = PREP_ROW_BOTTOM - PREP_ROW_TOP;
+/**
+ * ⚠ THE OTHER THREE ARE A DECISION, NOT A SOLVE — "boleh dibuat agak lebih
+ * kecil". 470 is a fifth under the pair, which reads as a difference without
+ * reading as a mistake, and it clears both edges: the left column's outer edge
+ * lands on 129 against the safe area's 96, and 04's on 1789 against 1824.
+ */
+const PREP_HS = 470;
 const PREP_GAP = 32;
 /**
- * The left column's width, solved so its two panels stack to exactly PREP_H.
+ * The left column's width, solved so its two panels stack to exactly PREP_HS.
  * At one width W the two heights are W/r03 and W/r05, so
  *   W (1/r03 + 1/r05) + gap = H.
  */
 const PREP_COL_W =
-  (PREP_H - PREP_GAP) / (1 / PREP_ART["03"].ratio + 1 / PREP_ART["05"].ratio);
+  (PREP_HS - PREP_GAP) / (1 / PREP_ART["03"].ratio + 1 / PREP_ART["05"].ratio);
 const PREP_WIDE = (key: "03" | "05") => ({
   w: PREP_COL_W,
   h: PREP_COL_W / PREP_ART[key].ratio,
 });
-const PREP_TALL = (key: "01" | "02" | "04") => PREP_ART[key].ratio * PREP_H;
+const PREP_TALL = (key: "01" | "02" | "04") =>
+  PREP_ART[key].ratio * (key === "04" ? PREP_HS : PREP_HP);
 
 /** The middle pair, placed on the frame's centre-line first. */
 const PREP_PAIR = PREP_TALL("01") + PREP_GAP + PREP_TALL("02");
 const PREP_MID_X = theme.canvas.width / 2 - PREP_PAIR / 2;
 const PREP_COL_X = PREP_MID_X - PREP_GAP - PREP_COL_W;
-const PREP_ROW_Y = theme.canvas.height / 2 - PREP_H / 2;
+const PREP_ROW_Y = PREP_ROW_TOP;
+/** ⚠ THE SHORTER THREE HANG ON THE PAIR'S OWN MIDDLE, not on the canvas's and
+ *  not on its top edge: a row of unequal heights reads as a row only while its
+ *  centres agree. */
+const PREP_SIDE_Y = PREP_ROW_TOP + PREP_HP / 2 - PREP_HS / 2;
 
 /**
  * ⚠ WHERE 01 STANDS BEFORE 02 EXISTS — "posisinya dari tengah dulu secara
@@ -1903,30 +1918,34 @@ const PREP_SOLO_X = theme.canvas.width / 2 - PREP_TALL("01") / 2;
  * than a typed rect. It was re-measured when the crop moved it, which is
  * exactly the change a typed rect would have survived silently.
  *
- * ⚠ AND THE PAD IS SMALL ON PURPOSE. The bars already span 91% of the picture;
- * any more air and the box stops reading as a mark on the volume panel and
- * starts reading as a box around the whole phone.
+ * ⚠ ITS WIDTH IS THE PICTURE'S, PLUS 25 EITHER SIDE — Simon: "buat widthnya
+ * sama dengan image terus ditambah 25 px di kiri 25 px di kanan", which is the
+ * same rule the highlight over a phone follows elsewhere. So only the two Y
+ * fractions are read off the file now; the bars' own x31..1036 no longer decide
+ * anything, because a mark that stands proud of what it marks has to be
+ * symmetric on the THING and not on the bars inside it.
  */
 const PREP_VOL = {
-  x1: 39 / 1094,
-  x2: 1036 / 1094,
   y1: 1255 / 1600,
   y2: 1442 / 1600,
+  /** How far the mark stands proud of the picture, left and right. Simon's 25. */
+  out: 25,
+  /** And how far above and below the bars it sits. */
   pad: 8,
 } as const;
 
 const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
-  if (key === "01") return { x: PREP_MID_X, y: PREP_ROW_Y, w: PREP_TALL("01"), h: PREP_H };
+  if (key === "01") return { x: PREP_MID_X, y: PREP_ROW_Y, w: PREP_TALL("01"), h: PREP_HP };
   if (key === "02") {
-    return { x: PREP_MID_X + PREP_TALL("01") + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("02"), h: PREP_H };
+    return { x: PREP_MID_X + PREP_TALL("01") + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("02"), h: PREP_HP };
   }
   if (key === "04") {
-    return { x: PREP_MID_X + PREP_PAIR + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("04"), h: PREP_H };
+    return { x: PREP_MID_X + PREP_PAIR + PREP_GAP, y: PREP_SIDE_Y, w: PREP_TALL("04"), h: PREP_HS };
   }
   const { w, h } = PREP_WIDE(key);
   return {
     x: PREP_COL_X,
-    y: key === "03" ? PREP_ROW_Y : PREP_ROW_Y + PREP_H - h,
+    y: key === "03" ? PREP_SIDE_Y : PREP_SIDE_Y + PREP_HS - h,
     w,
     h,
   };
@@ -1955,8 +1974,8 @@ export const PREP_SHOT = {
   vol: (x: number) => {
     const r = PREP_BOX("01");
     return {
-      x1: x + PREP_VOL.x1 * r.w - PREP_VOL.pad,
-      x2: x + PREP_VOL.x2 * r.w + PREP_VOL.pad,
+      x1: x - PREP_VOL.out,
+      x2: x + r.w + PREP_VOL.out,
       y1: r.y + PREP_VOL.y1 * r.h - PREP_VOL.pad,
       y2: r.y + PREP_VOL.y2 * r.h + PREP_VOL.pad,
     };
@@ -1972,10 +1991,10 @@ export const PREP_SHOT = {
     const w = 339 + 38 * 2;
     const h = 92;
     const block = 15;
-    const air = 50;
+    const air = 45;
     return {
       x: (theme.canvas.width - w) / 2,
-      y: PREP_ROW_Y + PREP_H + air + block / 2,
+      y: PREP_ROW_BOTTOM + air + block / 2,
       w,
       h,
       block,
@@ -2047,10 +2066,25 @@ export const PREP_SHOT = {
   if (Math.abs(mid - theme.canvas.width / 2) > 0.001) {
     fail(`SC16's 01 and 02 are centred on ${mid}, not on the frame at ${theme.canvas.width / 2}`);
   }
-  const midY = (Math.min(...pair.map((t) => t.rect.y)) + Math.max(...pair.map((t) => t.rect.y + t.rect.h))) / 2;
-  if (midY !== theme.canvas.height / 2) {
-    fail(`SC16's middle pair is centred on ${midY}, not on the screen at ${theme.canvas.height / 2}`);
-  }
+  /**
+   * ⚠ THE PAIR IS THE BIGGEST THING ON SCREEN — "2 image di tengah gedein lagi,
+   * 3 image lainnya boleh dibuat agak lebih kecil". It used to be checked
+   * against the canvas's own middle instead; that check is gone, because the
+   * pair is now centred in the space between the type and the question box
+   * rather than on the frame, which is what buying it its size cost. What is
+   * worth asserting is the relationship Simon asked for, not the coordinate it
+   * happened to produce.
+   */
+  const pairH = pair[0].rect.h;
+  const sideH = Math.max(...S.tiles.filter((t) => t.key === "04").map((t) => t.rect.h));
+  if (pairH <= sideH) fail(`SC16's pair is ${pairH} tall against the others' ${sideH}; it has to be bigger`);
+  /** ⚠ AND ALL FIVE SIT IN ONE ROW, on one centre-line, however tall each is. */
+  const centres = S.tiles.map((t) => t.rect.y + t.rect.h / 2);
+  const rowMid = pair[0].rect.y + pairH / 2;
+  S.tiles.forEach((t, i) => {
+    if (t.key === "03" || t.key === "05") return;
+    if (Math.abs(centres[i] - rowMid) > 0.001) fail(`SC16's ${t.name} is not on the row's centre-line`);
+  });
   /** ⚠ 03 AND 05 ARE THE SAME WIDTH, ON THE SAME LEFT EDGE, and their two
    *  heights plus the gap fill exactly the pair's height beside them. */
   const col = S.tiles.filter((t) => t.key === "03" || t.key === "05");
@@ -2059,7 +2093,7 @@ export const PREP_SHOT = {
   }
   if (Math.abs(col[0].rect.x - col[1].rect.x) > 0.001) fail("SC16's 03 and 05 are not on one left edge");
   const colH = Math.max(...col.map((t) => t.rect.y + t.rect.h)) - Math.min(...col.map((t) => t.rect.y));
-  if (Math.abs(colH - PREP_H) > 0.001) fail(`SC16's left column is ${colH} tall, not the ${PREP_H} beside it`);
+  if (Math.abs(colH - PREP_HS) > 0.001) fail(`SC16's left column is ${colH} tall, not the ${PREP_HS} it shares with 04`);
   const inner = Math.min(...col.map((t) => t.rect.y + t.rect.h)) === col[0].rect.y + col[0].rect.h
     ? col[1].rect.y - (col[0].rect.y + col[0].rect.h)
     : col[0].rect.y - (col[1].rect.y + col[1].rect.h);
@@ -2073,9 +2107,14 @@ export const PREP_SHOT = {
   if (S.solo <= one.x) fail(`SC16's 01 starts at ${S.solo} and ends at ${one.x}; it would travel the wrong way`);
   /** ⚠ THE VOLUME MARK HAS TO LAND ON THE PICTURE, not beside it. */
   const v = S.vol(one.x);
-  if (v.x1 < one.x - 12 || v.x2 > one.x + one.w + 12 || v.y1 < one.y || v.y2 > one.y + one.h) {
-    fail("SC16's volume mark does not sit on 01");
+  if (v.y1 < one.y || v.y2 > one.y + one.h) fail("SC16's volume mark runs off 01 vertically");
+  if (Math.abs(v.x1 - (one.x - 25)) > 0.001 || Math.abs(v.x2 - (one.x + one.w + 25)) > 0.001) {
+    fail("SC16's volume mark is not 25px proud of 01 on both sides");
   }
+  /** ⚠ AND ITS OVERHANG MUST NOT REACH THE COLUMN BESIDE IT. The mark is wider
+   *  than the picture, so the gap between 01 and 03/05 has to be wider still. */
+  const colRight = Math.max(...col.map((t) => t.rect.x + t.rect.w));
+  if (v.x1 <= colRight) fail(`SC16's volume mark reaches ${v.x1}, over the column that ends at ${colRight}`);
   /** ⚠ AND THE QUESTION BOX CLEARS THE SCREENS AND THE BAND, corner blocks and
    *  all. This is the check the note box in SC11 did not have. */
   const q = S.ask;
