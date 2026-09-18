@@ -2798,6 +2798,12 @@ export const MIND = {
    * berhenti dulu" (15125–15423). Red fill, white type — `warn` is the
    * episode's one red and its rule is that it names a mistake IN WORDS, which
    * is exactly what these three are.
+   *
+   * ⚠ `at` IS THE FRAME IT IS UP ON, NOT THE FRAME IT STARTS — Simon: "bukan
+   * waktu untuk mulai fade in textnya, tapi harus sudah muncul". The scene runs
+   * core/Chip's pop backwards off these, which is 20 frames at 60fps, so the
+   * first one begins on 15190 and the sentence that names it opens on 15125.
+   * Anything moved closer than a pop to that 15125 starts before the word.
    */
   labels: [
     { at: 15210, text: "FOMO", side: "right" },
@@ -2844,7 +2850,10 @@ export const MIND = {
   /** ⚠ THE THREE NAMES ARRIVE IN ORDER AND INSIDE THE SENTENCE THAT LISTS THEM,
    *  which the recording runs from 15125 to 15423. */
   V.labels.forEach((l, i) => {
-    if (l.at < 15125 || l.at > 15423) fail(`SC17's "${l.text}" lands at ${l.at}, outside the sentence that names it`);
+    /** ⚠ A POP'S WORTH OF ROOM BEFORE THE SENTENCE, because `at` is when it is
+     *  UP and the arrival runs backwards from there. 20 is m.pop at 60fps; the
+     *  duration itself is useMotion's and cannot be read here. */
+    if (l.at - 20 < 15125 || l.at > 15423) fail(`SC17's "${l.text}" lands at ${l.at}, outside the sentence that names it`);
     if (i && l.at <= V.labels[i - 1].at) fail(`SC17's "${l.text}" does not follow "${V.labels[i - 1].text}"`);
   });
   /** ⚠ AND THE ANSWER COMES AFTER ALL THREE, and the mark after the answer. */

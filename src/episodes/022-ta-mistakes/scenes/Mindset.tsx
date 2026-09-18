@@ -84,6 +84,18 @@ export const Mindset = () => {
    * a frame with neither on it is the thing that reads as a dropped shot.
    */
   const answered = progress(g, V.stop.at, m.fade);
+
+  /**
+   * ⚠ A LABEL'S BEAT IS THE FRAME IT IS UP ON, NOT THE FRAME IT STARTS — Simon:
+   * "15210, 15262, dan 15315 bukan waktu untuk mulai fade in textnya, tapi
+   * harus sudah muncul". So the pop is run BACKWARDS off the beat and it lands
+   * exactly there.
+   *
+   * ⚠ AND core/Chip POPS OVER `m.pop`, NOT `m.reveal`. Subtracting the wrong
+   * duration would leave it a few frames short of full on the frame that has to
+   * be full, which is the one thing this is for.
+   */
+  const upBy = (beat: number) => local(beat, V.at) - m.pop;
   /** And the same shape again for the answer leaving as the mark arrives. */
   const marked = progress(g, V.mark.at, m.fade);
 
@@ -151,7 +163,7 @@ export const Mindset = () => {
                 label={l.text}
                 x={at.x}
                 y={at.y}
-                at={local(l.at, V.at)}
+                at={upBy(l.at)}
                 anchor={at.anchor}
                 tone="warn"
                 size={S.labels.size}
