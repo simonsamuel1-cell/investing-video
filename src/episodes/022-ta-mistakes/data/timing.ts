@@ -2691,6 +2691,28 @@ export const PREP = {
   pair: 14475,
   /** "Dan yang paling penting: 'apa invalidation-nya?'" — the voice, 14573. */
   ask: { at: 14580, text: "Apa invalidation-nya?" },
+  /**
+   * ⚠ THE PREVIEW PUSHES IN ON THE TYPE AND LEAVES THE PICTURE BEHIND. Simon,
+   * 14782: "previewnya membesar ke 'Sebelum entry…'", and the two lines fade
+   * WHILE it is growing — so what the move ends on is the white ground they
+   * were standing on, with the screens' top edge pushed to the bottom of the
+   * frame and the rest of them off it.
+   *
+   * ⚠ ITS DURATION IS `useMotion`'s, NOT A NUMBER HERE, and so is the frame the
+   * sentence after it starts on. Simon gave no beat for that sentence — he said
+   * "setelah preview membesar" — so it is derived from the move's end rather
+   * than written down, where it could drift away from it.
+   */
+  zoom: { at: 14782 },
+  /**
+   * ⚠ IT TYPES, like SC10's and SC11's notes. `perChar` is the house's two
+   * frames a character; at 54 characters that is 108, which is what the
+   * assertion below checks against the scene's own end.
+   */
+  say: {
+    perChar: 2,
+    text: "Kalau satu bagian penting belum jelas, trade belum siap",
+  },
 } as const;
 
 {
@@ -2719,6 +2741,17 @@ export const PREP = {
   /** ⚠ AND THE HIGHLIGHT MUST BE ON 01 WHILE 01 IS STILL STANDING STILL. A mark
    *  drawn on a picture that then slides out from under it is two claims. */
   if (V.vol >= V.pair) fail(`SC16 marks the volume at ${V.vol}, when 01 is already moving at ${V.pair}`);
+  /** ⚠ THE PUSH-IN COMES AFTER EVERYTHING IT CARRIES OFF. */
+  if (V.zoom.at <= V.ask.at) fail(`SC16 pushes in at ${V.zoom.at}, before the question it is meant to leave behind`);
+  /**
+   * ⚠ AND THE SENTENCE HAS TO FINISH TYPING INSIDE THE SCENE. The move's own
+   * length is useMotion's, so 60 stands in for it here — a deliberate
+   * over-estimate, because the direction this check has to be wrong in is the
+   * one that fails early rather than the one that lets a half-typed sentence
+   * reach a render.
+   */
+  const typed = V.zoom.at + 60 + V.say.text.length * V.say.perChar;
+  if (typed > V.to) fail(`SC16's closing sentence finishes typing at ${typed}, after the scene ends at ${V.to}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */

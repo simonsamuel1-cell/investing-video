@@ -1969,6 +1969,45 @@ export const PREP_SHOT = {
   })),
   /** 01's two x positions: alone in the middle, then beside 02. */
   solo: PREP_SOLO_X,
+  /**
+   * ═══ THE PUSH-IN AT 14782 ═══
+   *
+   * ⚠ ANCHORED ON THE FRAME'S TOP EDGE, NOT ON THE TYPE. "Previewnya membesar
+   * ke 'Sebelum entry…'" reads as a zoom onto the two lines, but an anchor
+   * INSIDE them cannot do the job: they sit only 68px above the screens, so
+   * pushing the screens' top edge down to the bottom of the frame from there
+   * would need a scale of nearly ten and the type would be gone long before the
+   * move ended. Anchored on y0 the same journey takes 4.3, because the distance
+   * the screens have to travel is measured from the top of the frame instead.
+   * The type still swells and fills the shot on the way, which is what the
+   * direction is describing.
+   *
+   * ⚠ AND `k` IS SOLVED, NOT CHOSEN. `to` is where the screens' top edge is
+   * meant to land — 900, which leaves 72px of card showing above the subtitle
+   * band and the rest of them below it. Change that one number and the move
+   * re-solves.
+   *
+   * ⚠ 900 AND NOT LOWER, BECAUSE THE BAND IS AT 972. The move pushes the whole
+   * picture down, so without a floor the screens and the question box both end
+   * up inside a reserve that has to stay empty — scripts/audit-frames.mjs
+   * failed every frame of this move on exactly that. The scene fences the
+   * moving group off the band; `to` then decides how much card is left in the
+   * 72px between the two.
+   */
+  zoom: (() => {
+    const to = 900;
+    return { x: theme.canvas.width / 2, y: 0, k: to / PREP_ROW_TOP, to };
+  })(),
+  /**
+   * ⚠ THE CLOSING SENTENCE SITS ON THE CANVAS, NOT IN THE PUSH-IN. It is drawn
+   * outside the zoomed group, so it types at its own size on the white ground
+   * the move uncovers rather than being scaled with everything else.
+   */
+  say: {
+    x: theme.canvas.width / 2,
+    y: theme.canvas.height / 2,
+    size: theme.text.title.size,
+  },
   /** The volume mark, given 01's CURRENT left edge — it travels with the
    *  picture, so the scene hands it where 01 is rather than where it ends up. */
   vol: (x: number) => {
@@ -2123,4 +2162,19 @@ export const PREP_SHOT = {
     fail(`SC16's question box reaches ${q.y + q.h + q.block / 2}, inside the subtitle band at ${theme.captionBand.top}`);
   }
   if (q.x + q.w / 2 !== theme.canvas.width / 2) fail("SC16's question box is not centred on the frame");
+  /**
+   * ⚠ THE PUSH-IN HAS TO LEAVE THE SCREENS MOSTLY OFF THE FRAME — that is the
+   * whole ask, "sebagian besar sudah keluar layar". Vertically that is `to`
+   * against the canvas; horizontally it falls out of the scale, and this is the
+   * check that says so rather than leaving it to a render.
+   */
+  const z = S.zoom;
+  if (z.to >= theme.canvas.height) fail(`SC16's push-in leaves the screens at ${z.to}, off the bottom of the frame entirely`);
+  const seenH = theme.canvas.height - z.to;
+  if (seenH > pairH / 2) fail(`SC16's push-in still shows ${seenH} of the screens; most of them have to be gone`);
+  const seenW = theme.canvas.width / z.k;
+  if (seenW > right - left) fail("SC16's push-in does not crop the row horizontally at all");
+  /** ⚠ AND THE SENTENCE IT UNCOVERS MUST FIT THE SAFE AREA. Measured off a
+   *  render at 48px/700: 1274 of ink, x324..1597 against the area's 96..1824. */
+  if (S.say.x + 1274 / 2 > A.x + A.w) fail("SC16's closing sentence runs outside the safe area");
 }

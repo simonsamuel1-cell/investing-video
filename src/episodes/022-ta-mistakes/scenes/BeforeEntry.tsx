@@ -28,7 +28,7 @@
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import {
   DashedBox, HighlightBox, Line, Stage, cutInStyle, progress, progressInOut,
-  theme, useMotion, usePalette, useShadow,
+  ramp, theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import { CUT15, PREP, local } from "../data/timing";
 import { PREP_SHOT } from "../data/layout";
@@ -46,6 +46,26 @@ const AT: Record<string, number> = {
 // ═══════════════════════════════════════════════════════════════════════════
 
 type Tile = (typeof PREP_SHOT)["tiles"][number];
+
+/**
+ * ⚠ THE PUSH-IN HAS TO BE FENCED OFF THE SUBTITLE BAND, and only off that one.
+ *
+ * The move drives the whole picture DOWNWARDS — it is anchored on the frame's
+ * top edge — so the screens and the question box both travel into the band that
+ * has to stay empty. scripts/audit-frames.mjs failed every frame of it.
+ *
+ * ⚠ THE BOTTOM ONLY, NEVER THE TOP. AdmrGroup fences both reserves, but its
+ * content starts below the logo zone; this scene's first line of type sits at
+ * y75, inside the top 150, so a clip like that one would cut the headline off.
+ * The logo zone stays empty here by geometry instead — the type is centred and
+ * never reaches x1560, and everything else is below it.
+ *
+ * The clip is on the PARENT of the transform: the transform renders first and
+ * is then cut, which is why the two cannot live on the same element.
+ */
+const FENCE = {
+  clipPath: `inset(0px 0px ${theme.captionBand.height}px 0px)`,
+} as const;
 
 /**
  * One screen, on a card of its own shape.
@@ -114,12 +134,44 @@ export const BeforeEntry = () => {
   const mark = S.vol(oneX);
   const marked = progress(g, V.vol, m.reveal);
 
+  /**
+   * The push-in. One curve drives three things — the scale, the two lines
+   * fading "saat sedang membesar", and the frame the closing sentence may start
+   * typing on — so they cannot come apart.
+   */
+  const push = m.sec(0.9);
+  const zoom = progressInOut(g, V.zoom.at, push);
+  const k = 1 + (S.zoom.k - 1) * zoom;
+  const typedFrom = V.zoom.at + push;
+  const typed = V.say.text.slice(
+    0,
+    Math.floor(
+      ramp(g, typedFrom, V.say.text.length * V.say.perChar) * V.say.text.length,
+    ),
+  );
+
   return (
     <Stage>
       {/* ⚠ THE CAMERA MOVES THE PICTURE, NOT THE GROUND — the same shape SC11
           and SC15 use. Stage's background stays put underneath: it is a flat
           colour, so translating it could only expose an edge. */}
       <AbsoluteFill style={cutInStyle(g, CUT15)}>
+        {/* ⚠ EVERYTHING THE PUSH-IN CARRIES IS IN HERE, AND THE SENTENCE AFTER
+            IT IS NOT. The move is a camera, so it takes the whole picture —
+            type, screens, mark and question box alike — and leaves only the
+            ground behind for what types next. */}
+        <AbsoluteFill style={FENCE}>
+        <AbsoluteFill
+          style={{
+            transform: `scale(${k.toFixed(4)})`,
+            transformOrigin: `${S.zoom.x}px ${S.zoom.y}px`,
+          }}
+        >
+        {/* ⚠ THE TWO LINES GO ON THE MOVE'S OWN CURVE — "buat kedua text itu
+            fade out saat sedang membesar previewnya". One curve, so the type
+            cannot still be there when the move stops, whatever the move is
+            retimed to. */}
+        <div style={{ opacity: 1 - zoom }}>
         <Line
           text={LEAD}
           x={S.lead.x}
@@ -142,6 +194,7 @@ export const BeforeEntry = () => {
           weight={theme.text.title.weight}
           color={c.indigo}
         />
+        </div>
         {S.tiles.map((t) => (
           <Slot
             key={t.key}
@@ -187,6 +240,30 @@ export const BeforeEntry = () => {
               {V.ask.text}
             </div>
           </DashedBox>
+        )}
+        </AbsoluteFill>
+        </AbsoluteFill>
+        {/* ⚠ IT TYPES, on the white the push-in uncovers — same two frames a
+            character SC10 and SC11 use. It starts on the frame the move ENDS
+            on, which is that move's own duration and not a second number. */}
+        {typed.length > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: S.say.y,
+              transform: "translateY(-50%)",
+              textAlign: "center",
+              fontFamily: theme.text.family,
+              fontSize: S.say.size,
+              fontWeight: theme.text.title.weight,
+              color: c.ink,
+              whiteSpace: "pre",
+            }}
+          >
+            {typed}
+          </div>
         )}
       </AbsoluteFill>
     </Stage>
