@@ -51,11 +51,13 @@ export const BLOCK = {
    * Composition.tsx (END >= VO_END) would have passed while it happened,
    * because VO_END is the last CUE and not the last sample.
    *
-   * 16905 is the last cue's 16875 plus the half-second of hold this episode has
-   * ended on since the first cut, and 24 frames past the audio's own end —
-   * picture after the last sample, which is the side of the line to be on.
+   * ⚠ AND THEN SIMON ADDED 60 MORE: "di frame terakhir, tambahkan 60 frame,
+   * skalian perpanjang scene nya". 16905 was the last cue's 16875 plus this
+   * episode's half-second of hold; 16965 is a second and a half of it, and 84
+   * frames past the audio's own end. SC18 runs to this number rather than to
+   * one of its own, so "perpanjang scene nya" is this one edit.
    */
-  END: 16905,
+  END: 16965,
 } as const;
 
 /**
