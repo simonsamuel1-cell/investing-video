@@ -1959,8 +1959,10 @@ const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
 const PREP_ZOOM = (() => {
   const FULL = 900;
   const k = 1 + (FULL / PREP_ROW_TOP - 1) / 4;
-  const lift = 40;
-  return { x: theme.canvas.width / 2, y: 0, k, lift, to: PREP_ROW_TOP * k - lift };
+  /** ⚠ THE CAMERA'S MOVE, NOT THE PICTURE'S. Up 40, so the picture goes DOWN
+   *  40 and `to` grows by it. See the note in PREP_SHOT.zoom. */
+  const pan = 40;
+  return { x: theme.canvas.width / 2, y: 0, k, pan, to: PREP_ROW_TOP * k + pan };
 })();
 
 export const PREP_SHOT = {
@@ -2004,10 +2006,16 @@ export const PREP_SHOT = {
    *
    * 4.09 → 2.55 → 1.77, and the screens' top edge lands on 390 instead of 900.
    *
-   * ⚠ AND THE WHOLE PICTURE RIDES UP 40 WITH IT — "agak naik sedikit". The lift
-   * is on the move's own curve, so it arrives with the scale rather than as a
-   * second thing happening; it is subtracted from `to` here so everything hung
-   * off that number, the sentence included, already knows about it.
+   * ⚠ AND THE CAMERA PANS UP 40 WITH IT — "maksudku preview kameranya yang
+   * geser naik, which is imagenya jadi turun". `pan` is the CAMERA's move, so
+   * the picture goes the other way: it is ADDED to `to`, and the scene
+   * translates the group DOWN by it. Getting that sign the wrong way round is
+   * the whole of this note — it is the one number in the scene whose name and
+   * whose effect point in opposite directions.
+   *
+   * It rides the move's own curve, so it arrives with the scale rather than as
+   * a second thing happening, and it is in `to` here so everything hung off
+   * that number, the sentence included, already knows about it.
    *
    * ⚠ WHICH IS WHY THE SENTENCE'S OWN PLACE IS DERIVED FROM `to` AND NOT TYPED.
    * At the full push the white ran to 900 and the sentence sat comfortably on

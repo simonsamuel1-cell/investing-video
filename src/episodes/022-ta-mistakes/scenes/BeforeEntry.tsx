@@ -163,7 +163,10 @@ export const BeforeEntry = () => {
         <AbsoluteFill style={FENCE}>
         <AbsoluteFill
           style={{
-            transform: `translateY(${(-S.zoom.lift * zoom).toFixed(1)}px) scale(${k.toFixed(4)})`,
+            /* ⚠ DOWN, BECAUSE `pan` IS THE CAMERA'S. A camera that rises puts
+               its subject lower in the frame — Simon: "preview kameranya yang
+               geser naik, which is imagenya jadi turun". */
+            transform: `translateY(${(S.zoom.pan * zoom).toFixed(1)}px) scale(${k.toFixed(4)})`,
             transformOrigin: `${S.zoom.x}px ${S.zoom.y}px`,
           }}
         >
