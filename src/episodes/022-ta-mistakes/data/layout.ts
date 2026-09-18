@@ -2360,12 +2360,30 @@ export const MIND_SHOT = {
      *  right edge, so it re-centres in the wider room on its own. */
     const left = 400;
     const figureRight = GUY_RECT.x - left + GUY_RECT.w;
+    const x = (figureRight + theme.stage.active.x + theme.stage.active.w) / 2;
+    /** ⚠ THE MARK'S NEW TOP, and everything under it is measured from HERE.
+     *  Written from MARK_TOP instead — the mark's REST position — the sentence
+     *  below came out one whole mark-height too high and ran through it. */
+    const y = MARK_TOP + MARK_H;
     return {
       up: GUY_DROP,
       left,
-      mark: {
-        x: (figureRight + theme.stage.active.x + theme.stage.active.w) / 2,
-        y: MARK_TOP + MARK_H,
+      mark: { x, y },
+      /**
+       * ⚠ THE SECOND SENTENCE HANGS OFF THE MARK'S NEW PLACE, not off a typed
+       * point — same x, and the same gap under it that the first sentence uses,
+       * so the two readings of the same object are built the same way.
+       *
+       * ⚠ AND IT IS SET AT THE SCENE'S STATEMENT SIZE. Simon named no size for
+       * this one; the scene already has two statements at the display scale
+       * ("Berhenti dulu!" and the first sentence), and a third set differently
+       * would be saying something about itself that nobody meant.
+       */
+      line: {
+        x,
+        y0: y + MARK_H + MARK_GAP + MARK_LEAD / 2,
+        lead: MARK_LEAD,
+        size: MARK_SIZE,
       },
     };
   })(),
@@ -2484,4 +2502,21 @@ export const MIND_SHOT = {
     fail("SC17's mark lands on top of the figure it was meant to move beside");
   }
   if (S.slide.mark.x + S.mark.h / 2 > A.x + A.w) fail("SC17's mark slides outside the safe area");
+  /**
+   * ⚠ AND THE SENTENCE UNDER IT HAS TO FIT THE ROOM THE FIGURE LEAVES — the
+   * column from the figure's new right edge to the safe area's, 964 wide.
+   * Measured off a render at 96px/800, the widest row ("terbawa emosi") is 686.
+   */
+  const ROW2 = 686;
+  const columnLeft = r.x - S.slide.left + r.w;
+  if (S.slide.line.x - ROW2 / 2 < columnLeft) fail("SC17's second sentence runs back over the figure");
+  if (S.slide.line.x + ROW2 / 2 > A.x + A.w) fail("SC17's second sentence runs outside the safe area");
+  /** ⚠ AND IT HAS TO START BELOW THE MARK IT HANGS OFF. It did not, once: it
+   *  was measured from the mark's rest position rather than its slid one and
+   *  ran straight through it. */
+  if (S.slide.line.y0 - S.slide.line.size * 0.62 < S.slide.mark.y + S.mark.h) {
+    fail("SC17's second sentence overlaps the mark it sits under");
+  }
+  const floor = S.slide.line.y0 + S.slide.line.lead * 2 + S.slide.line.size * 0.62;
+  if (floor > theme.captionBand.top) fail(`SC17's second sentence reaches ${Math.round(floor)}, into the subtitle band`);
 }

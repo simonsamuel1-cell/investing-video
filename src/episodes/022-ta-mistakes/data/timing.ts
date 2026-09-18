@@ -2862,7 +2862,19 @@ export const MIND = {
    * and the mark crosses to the right of the room the figure leaves. Pose 06
    * lands 47 frames later looking that way, at the mark.
    */
-  slide: { at: 15700 },
+  slide: {
+    at: 15700,
+    /**
+     * ⚠ SIMON'S THREE ROWS AND HIS BREAKS, under the mark in its new place.
+     *
+     * ⚠ AND NO BEAT OF ITS OWN, BECAUSE HE GAVE NONE. It arrives when the
+     * diagonal finishes — which is `useMotion`'s duration and therefore the
+     * scene's to compute — so it cannot land while the mark it sits under is
+     * still travelling. That is 15730 at 60fps, and the voice reaches "Emosi
+     * boleh ada, tapi jangan biarkan emosi mengambil alih proses" on 15723.
+     */
+    lines: ["Boleh emosi,", "tapi jangan", "terbawa emosi"],
+  },
 } as const;
 
 {

@@ -204,6 +204,22 @@ export const Mindset = () => {
             <TuntunMark x={markX} y={markY} height={S.mark.h} opacity={fell} />
             {/* ⚠ TWO Lines, NOT ONE WRAPPED BLOCK. Simon chose where the break
                 falls; a wrap would put it wherever the width happens to. */}
+            {/* ⚠ THE SECOND SENTENCE ARRIVES WHEN THE DIAGONAL STOPS, which is
+                useMotion's duration and not a beat — Simon gave none, and one
+                written down could land while the mark it sits under is still
+                travelling. */}
+            {V.slide.lines.map((row, i) => (
+              <Line
+                key={row}
+                text={row}
+                x={S.slide.line.x}
+                y={S.slide.line.y0 + i * S.slide.line.lead}
+                at={local(V.slide.at, V.at) + m.move}
+                size={S.slide.line.size}
+                weight={theme.text.title.weight}
+                color={c.indigo}
+              />
+            ))}
             {slid < 0.999 && V.mark.lines.map((row, i) => (
               <Line
                 key={row}
