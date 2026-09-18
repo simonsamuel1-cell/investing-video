@@ -122,6 +122,21 @@ export const BeforeEntry = () => {
   const g = f + V.at;
 
   /**
+   * ⚠ WHATEVER THE CUT DELIVERS HAS NO ENTRANCE OF ITS OWN, and getting this
+   * wrong is what Simon saw: "kayak meleyot gitu, kayak mulainya sedikit dari
+   * kanan bawah". CUT15 brings the picture in on x. Anything whose beat IS the
+   * cut was also running its own reveal over those same twenty frames, and
+   * every reveal in this library slides in y — so the two moves composed into a
+   * diagonal, and a diagonal under a blur reads as a warp.
+   *
+   * Handing those elements a beat one reveal BEFORE frame zero makes them
+   * complete on the frame they land, which is what a cut means: the camera
+   * moves, the picture does not. Anything arriving later still gets its own
+   * entrance, because nothing is carrying it.
+   */
+  const born = (beat: number) => (beat === V.at ? -m.reveal : local(beat, V.at));
+
+  /**
    * 01's journey out of the middle. `progressInOut` rather than `progress`
    * because this one is a MOVE and not an arrival: it has to settle as
    * deliberately as it sets off, or 02 lands next to something still gliding.
@@ -179,7 +194,7 @@ export const BeforeEntry = () => {
           text={LEAD}
           x={S.lead.x}
           y={S.lead.y}
-          at={local(V.lead, V.at)}
+          at={born(V.lead)}
           size={S.size}
           weight={theme.text.title.weight}
         />
@@ -192,7 +207,7 @@ export const BeforeEntry = () => {
           text={APPLY}
           x={S.apply.x}
           y={S.apply.y}
-          at={local(V.apply, V.at)}
+          at={born(V.apply)}
           size={S.size}
           weight={theme.text.title.weight}
           color={c.indigo}
@@ -202,7 +217,7 @@ export const BeforeEntry = () => {
           <Slot
             key={t.key}
             tile={t}
-            at={t.key === "02" ? local(V.pair, V.at) + m.move : local(AT[t.key], V.at)}
+            at={t.key === "02" ? local(V.pair, V.at) + m.move : born(AT[t.key])}
             x={t.key === "01" ? oneX : undefined}
           />
         ))}
