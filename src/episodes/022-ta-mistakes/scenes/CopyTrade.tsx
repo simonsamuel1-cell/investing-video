@@ -218,10 +218,18 @@ export const CopyTrade = () => {
               fontSize: P.verdict.size,
               fontWeight: theme.text.title.weight,
               color: c.ink,
-              whiteSpace: "nowrap",
+              /* ⚠ `pre`, NOT `nowrap` — the sentence is two spans now, and
+                 under `nowrap` the space that separates them is at the end of
+                 the first one, where the collapser eats it. Same reason SC03's
+                 note uses `pre`. */
+              whiteSpace: "pre",
             }}
           >
-            {V.verdict.text}
+            {V.verdict.parts.map((part) => (
+              <span key={part.text} style={part.warn ? { color: theme.color.warn } : undefined}>
+                {part.text}
+              </span>
+            ))}
           </div>
         </DashedBox>
       )}

@@ -2537,7 +2537,22 @@ export const PLANS = {
     over: 30,
     /** What everything underneath is taken down to. Simon's number. */
     dim: 0.5,
-    text: "Kalau ga paham logikanya, jangan ikut trade",
+    /**
+     * ⚠ TWO RUNS ON ONE LINE, AND THE SECOND IS RED. Simon, 2026-09-18 —
+     * "'jangan ikut trade' warna merah". `warn` is the episode's one red and
+     * its rule is that it names a mistake IN WORDS, never on drawn chart
+     * content; an instruction not to take the trade is exactly that, and it is
+     * the same split SC03's note already makes.
+     *
+     * ⚠ THE TRAILING SPACE BELONGS TO THE FIRST RUN. Two adjacent spans have
+     * no word gap of their own, and a space at the head of the red run would
+     * be a red space — invisible here, but not once anything is ever drawn
+     * behind it.
+     */
+    parts: [
+      { text: "Kalau ga paham logikanya, ", warn: false },
+      { text: "jangan ikut trade", warn: true },
+    ],
   },
 } as const;
 
