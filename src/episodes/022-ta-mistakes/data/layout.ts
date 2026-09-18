@@ -1796,44 +1796,65 @@ const PREP_TOP = theme.stage.active.y + (PREP_STRIP - PREP_LEADING * 2) / 2;
  * ⚠ EVERY BOX IS ITS OWN PICTURE'S SHAPE, which is the whole reason these
  * ratios are here. The five files are Tuntun app screens and no two of them
  * are alike: 01 and 02 are full phone screens at 0.55, 03 and 05 are wide
- * panels at 1.81 and 1.70, 04 is a table at 0.77. A common box would have
+ * panels at 1.69 and 1.77, 04 is a table at 0.80. A common box would have
  * letterboxed four of them — "jangan di stretch" cuts both ways, and a picture
  * floating inside a frame two sizes too wide is the other half of that rule.
- * The numbers are MEASURED off the files themselves, after trimming the
- * transparent margin the export left on three of them.
+ *
+ * ⚠ THE RATIOS ARE THE EXPORT'S OWN, WITH NOTHING TRIMMED, and that is a fix
+ * rather than a default. They were first copied in through `convert -trim`,
+ * which strips a uniform border matching the corner pixel: on 04 and 05 it ate
+ * 151px of white from the LEFT ONLY and on 03 161px from the top, because
+ * those were the only sides uniform enough to match. The panels inside then sat
+ * hard against one edge of their card with their own margin gone — which is
+ * what Simon saw as "ke-crop" on 05 and 04. All five are now the export as
+ * shot, downscaled and nothing else, so each keeps the margin it was drawn
+ * with. NEVER TRIM THESE: the five come off one 4084px-wide screen and their
+ * margins are only consistent while they are all untouched.
+ *
+ * ⚠ 03 AND 05 ARE THE SAME WIDTH — Simon, "widthnya samain dengan 03". They
+ * come off the same 4084px capture, so equal width IS equal zoom: two panels
+ * from one screen shown at one scale. Their HEIGHTS differ, because their
+ * aspects do, and the column's width is solved so that the two of them plus the
+ * gap come to exactly the height of the pair beside them.
  *
  * ⚠ AND THE LAYOUT IS SOLVED FROM ONE HEIGHT. `PREP_H` is the tall column's
- * height; everything else falls out of it, so the arrangement cannot drift
- * out of proportion when it moves. 576 is what the WIDTH allows: the left
- * column's outer edge lands on 104 against the safe area's 96, and the right
- * one on 1769 against 1824. It is not the height that is tight.
+ * height; everything else falls out of it, so the arrangement cannot drift out
+ * of proportion when it moves. 580 is what the WIDTH allows: the left column's
+ * outer edge lands on 120 against the safe area's 96, and 04's on 1791 against
+ * 1824. It is not the height that is tight.
  *
  * ⚠ THE MIDDLE PAIR IS CENTRED ON THE FRAME, NOT THE GROUP. "01 Day dan 02
  * Week bersebelahan di tengah layar" — so the pair is placed on 960 first and
- * the two side columns hang off it. The whole group is therefore slightly
- * left of centre, because the left column is wider than the right; that is the
+ * the two side columns hang off it. The whole group is therefore slightly left
+ * of centre, because the left column is wider than the right; that is the
  * direction, and it is the pair that was named.
  */
 const PREP_ART = {
   "01": { name: "01 Day", src: "art/prep/01-day.png", ratio: 881 / 1600 },
   "02": { name: "02 Week", src: "art/prep/02-week.png", ratio: 881 / 1600 },
-  "03": { name: "03 Trend", src: "art/prep/03-trend.png", ratio: 1600 / 886 },
-  "04": { name: "04 Setup", src: "art/prep/04-setup.png", ratio: 1232 / 1600 },
-  "05": { name: "05 Level", src: "art/prep/05-level.png", ratio: 1600 / 941 },
+  "03": { name: "03 Trend", src: "art/prep/03-trend.png", ratio: 1600 / 949 },
+  "04": { name: "04 Setup", src: "art/prep/04-setup.png", ratio: 1279 / 1600 },
+  "05": { name: "05 Level", src: "art/prep/05-level.png", ratio: 1600 / 906 },
 } as const;
 
-const PREP_H = 576;
+const PREP_H = 580;
 const PREP_GAP = 32;
-/** The left column is two rows, so each of its screens is half the height. */
-const PREP_HALF = (PREP_H - PREP_GAP) / 2;
-const PREP_WIDE = (key: "03" | "05") => PREP_ART[key].ratio * PREP_HALF;
+/**
+ * The left column's width, solved so its two panels stack to exactly PREP_H.
+ * At one width W the two heights are W/r03 and W/r05, so
+ *   W (1/r03 + 1/r05) + gap = H.
+ */
+const PREP_COL_W =
+  (PREP_H - PREP_GAP) / (1 / PREP_ART["03"].ratio + 1 / PREP_ART["05"].ratio);
+const PREP_WIDE = (key: "03" | "05") => ({
+  w: PREP_COL_W,
+  h: PREP_COL_W / PREP_ART[key].ratio,
+});
 const PREP_TALL = (key: "01" | "02" | "04") => PREP_ART[key].ratio * PREP_H;
 
 /** The middle pair, placed on the frame's centre-line first. */
 const PREP_PAIR = PREP_TALL("01") + PREP_GAP + PREP_TALL("02");
 const PREP_MID_X = theme.canvas.width / 2 - PREP_PAIR / 2;
-/** The left column is as wide as its widest screen; both are centred in it. */
-const PREP_COL_W = Math.max(PREP_WIDE("03"), PREP_WIDE("05"));
 const PREP_COL_X = PREP_MID_X - PREP_GAP - PREP_COL_W;
 const PREP_ROW_Y = theme.canvas.height / 2 - PREP_H / 2;
 
@@ -1845,12 +1866,12 @@ const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
   if (key === "04") {
     return { x: PREP_MID_X + PREP_PAIR + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("04"), h: PREP_H };
   }
-  const w = PREP_WIDE(key);
+  const { w, h } = PREP_WIDE(key);
   return {
-    x: PREP_COL_X + (PREP_COL_W - w) / 2,
-    y: key === "03" ? PREP_ROW_Y : PREP_ROW_Y + PREP_HALF + PREP_GAP,
+    x: PREP_COL_X,
+    y: key === "03" ? PREP_ROW_Y : PREP_ROW_Y + PREP_H - h,
     w,
-    h: PREP_HALF,
+    h,
   };
 };
 
@@ -1938,8 +1959,17 @@ export const PREP_SHOT = {
   if (midY !== theme.canvas.height / 2) {
     fail(`SC16's middle pair is centred on ${midY}, not on the screen at ${theme.canvas.height / 2}`);
   }
-  /** ⚠ AND THE LEFT COLUMN'S TWO ROWS FILL EXACTLY THE PAIR'S HEIGHT. */
+  /** ⚠ 03 AND 05 ARE THE SAME WIDTH, ON THE SAME LEFT EDGE, and their two
+   *  heights plus the gap fill exactly the pair's height beside them. */
   const col = S.tiles.filter((t) => t.key === "03" || t.key === "05");
+  if (Math.abs(col[0].rect.w - col[1].rect.w) > 0.001) {
+    fail(`SC16's 03 is ${col[0].rect.w} wide and 05 is ${col[1].rect.w}; they have to match`);
+  }
+  if (Math.abs(col[0].rect.x - col[1].rect.x) > 0.001) fail("SC16's 03 and 05 are not on one left edge");
   const colH = Math.max(...col.map((t) => t.rect.y + t.rect.h)) - Math.min(...col.map((t) => t.rect.y));
   if (Math.abs(colH - PREP_H) > 0.001) fail(`SC16's left column is ${colH} tall, not the ${PREP_H} beside it`);
+  const inner = Math.min(...col.map((t) => t.rect.y + t.rect.h)) === col[0].rect.y + col[0].rect.h
+    ? col[1].rect.y - (col[0].rect.y + col[0].rect.h)
+    : col[0].rect.y - (col[1].rect.y + col[1].rect.h);
+  if (Math.abs(inner - PREP_GAP) > 0.001) fail(`SC16's left column has a ${inner}px gap, not ${PREP_GAP}`);
 }
