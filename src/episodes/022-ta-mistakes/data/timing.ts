@@ -2832,7 +2832,22 @@ export const MIND = {
    */
   mark: {
     at: 15444,
-    text: "Technical analysis adalah alat bantu keputusan, bukan kepastian",
+    /**
+     * ⚠ SIMON'S OWN LINE BREAKS, and his wording with ONE word put back. He
+     * typed "Technical analysis ada alat bantu keputusan"; the recording says
+     * "adalah" at 15427 and so did his own first version of this line, so the
+     * "ada" is a slip and it would read as one burned into the frame.
+     *
+     * ⚠ AND THREE ROWS IS WHAT MAKES THE SIZE POSSIBLE. At the display size his
+     * first two-line break set 2160 of ink on one row against a 1728 safe area —
+     * measured, the row ran off both edges of the CANVAS. These three are his,
+     * and at this size the widest of them is comfortable.
+     */
+    lines: [
+      "Technical analysis adalah",
+      "alat bantu keputusan,",
+      "bukan kepastian",
+    ],
   },
 } as const;
 

@@ -194,14 +194,20 @@ export const Mindset = () => {
         {g >= V.mark.at && (
           <>
             <TuntunMark x={S.mark.x} y={markY} height={S.mark.h} opacity={fell} />
-            <Line
-              text={V.mark.text}
-              x={S.line.x}
-              y={S.line.y}
-              at={local(V.mark.at, V.at) + m.move}
-              size={S.line.size}
-              weight={theme.text.title.weight}
-            />
+            {/* ⚠ TWO Lines, NOT ONE WRAPPED BLOCK. Simon chose where the break
+                falls; a wrap would put it wherever the width happens to. */}
+            {V.mark.lines.map((row, i) => (
+              <Line
+                key={row}
+                text={row}
+                x={S.line.x}
+                y={S.line.y0 + i * S.line.lead}
+                at={local(V.mark.at, V.at) + m.move}
+                size={S.line.size}
+                weight={theme.text.title.weight}
+                color={c.indigo}
+              />
+            ))}
           </>
         )}
       </AbsoluteFill>

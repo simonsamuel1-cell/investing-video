@@ -2251,6 +2251,15 @@ const GUY_DROP = 400;
  */
 const MARK_H = 141 - 45;
 const MARK_GAP = 40;
+/**
+ * ⚠ THE SAME SIZE AS "Berhenti dulu!" — Simon: "jangan naikin 20 px, tapi
+ * samain dengan 'Berhenti dulu'". Written as the display scale rather than as
+ * 96, because what he asked for is the relationship: the two of them are the
+ * scene's two statements and they are set alike.
+ */
+const MARK_SIZE = theme.text.display.size;
+const MARK_LEAD = MARK_SIZE * 1.2;
+const MARK_ROWS = 3;
 
 const GUY_RECT = (() => {
   const h = GUY_H;
@@ -2263,7 +2272,7 @@ const GUY_RECT = (() => {
  * from the safe top down to the figure's new top edge. See MIND_SHOT.mark.
  */
 const MARK_TOP = (() => {
-  const block = MARK_H + MARK_GAP + theme.text.title.size;
+  const block = MARK_H + MARK_GAP + MARK_LEAD * MARK_ROWS;
   const room = { top: theme.stage.active.y, bottom: GUY_RECT.y + GUY_DROP };
   return (room.top + room.bottom) / 2 - block / 2;
 })();
@@ -2362,11 +2371,17 @@ export const MIND_SHOT = {
     float: { amount: 12, period: 240 },
   },
 
-  /** The sentence under the mark, at the title size Simon asked for. */
+  /**
+   * ⚠ TWO ROWS, ON SIMON'S OWN BREAK, and they are two Lines rather than one
+   * wrapped block: a wrap puts the break wherever the width happens to fall, and
+   * he chose where it falls. `y0` is the first row's centre and `lead` steps to
+   * the second.
+   */
   line: {
     x: theme.canvas.width / 2,
-    y: MARK_TOP + MARK_H + MARK_GAP + theme.text.title.size / 2,
-    size: theme.text.title.size,
+    y0: MARK_TOP + MARK_H + MARK_GAP + MARK_LEAD / 2,
+    lead: MARK_LEAD,
+    size: MARK_SIZE,
   },
 } as const;
 
@@ -2408,15 +2423,25 @@ export const MIND_SHOT = {
   if (S.mark.y < A.y) fail(`SC17's mark rests at ${S.mark.y}, above the safe area at ${A.y}`);
   /** ⚠ AND THE PAIR IS CENTRED IN THE ROOM THE DROP MAKES. This is the check
    *  that keeps the two following the figure rather than a typed offset. */
-  const block = S.mark.h + 40 + S.line.size;
+  const block = S.mark.h + 40 + S.line.lead * 3;
   const mid = (A.y + r.y + S.drop) / 2;
   if (Math.abs(S.mark.y + block / 2 - mid) > 0.001) {
     fail(`SC17's mark and sentence are centred on ${S.mark.y + block / 2}, not on the ${mid} the drop leaves`);
   }
-  /** ⚠ AND THE SENTENCE UNDER IT CLEARS THE MARK AND THE LOGO ZONE'S BAND, and
-   *  fits the safe area. Measured at 48px/700: 1424 of ink. */
-  if (S.line.y - S.line.size * 0.62 < S.mark.y + S.mark.h) fail("SC17's sentence overlaps the mark");
-  if (S.line.x + 1424 / 2 > A.x + A.w) fail("SC17's sentence runs outside the safe area");
+  /**
+   * ⚠ AND THE SENTENCE CLEARS THE MARK ABOVE AND THE FIGURE BELOW, and fits the
+   * safe area. Its widest row was measured off a render at 96px/800: 1152 of
+   * ink against the area's 1728. On Simon's first two-row break that same
+   * sentence set 2160 at this size and ran off both edges of the canvas, which
+   * is what the third row is for — so this is asserted, not eyeballed.
+   */
+  const WIDEST_ROW = 1152;
+  if (S.line.y0 - S.line.size * 0.62 < S.mark.y + S.mark.h) fail("SC17's sentence overlaps the mark");
+  if (S.line.x + WIDEST_ROW / 2 > A.x + A.w) fail("SC17's sentence runs outside the safe area");
+  const lastRow = S.line.y0 + S.line.lead * 2 + S.line.size * 0.62;
+  if (lastRow > r.y + S.drop) fail(`SC17's sentence reaches ${Math.round(lastRow)}, onto the figure at ${r.y + S.drop}`);
+
+
   /**
    * ⚠ THE DROPPED FIGURE RUNS PAST THE BAND ON PURPOSE — 400 takes its floor to
    * 1372 — so the scene fences it there and what is checked is that ENOUGH of it
