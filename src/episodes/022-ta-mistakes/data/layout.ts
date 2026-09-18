@@ -2344,6 +2344,31 @@ export const MIND_SHOT = {
 
   /** How far the figure drops to make room for the mark. Simon's 400. */
   drop: GUY_DROP,
+  /**
+   * ⚠ THE DIAGONAL AT 15700, AS ONE VECTOR. `up` IS `drop`, not a second 400
+   * that happens to match: the figure is going back to the height it came from,
+   * and writing it twice is how the two would drift apart.
+   *
+   * ⚠ AND THE MARK CROSSES WITH IT. It goes to the middle of the room the
+   * figure vacates on the right — from the figure's new right edge to the safe
+   * area's — and one mark-height lower, which is Simon's "agak bawah dikit"
+   * measured against the only thing in the frame that could give it a scale.
+   */
+  slide: (() => {
+    /** ⚠ 400, NOT THE 200 IT STARTED AT — Simon watched it in the Studio and
+     *  asked for another 200. The mark's x is solved from the figure's new
+     *  right edge, so it re-centres in the wider room on its own. */
+    const left = 400;
+    const figureRight = GUY_RECT.x - left + GUY_RECT.w;
+    return {
+      up: GUY_DROP,
+      left,
+      mark: {
+        x: (figureRight + theme.stage.active.x + theme.stage.active.w) / 2,
+        y: MARK_TOP + MARK_H,
+      },
+    };
+  })(),
 
   /**
    * ⚠ IT WAS LEVEL WITH THE LOGO AND IT IS NOT ANY MORE — Simon: "maskot dan
@@ -2450,4 +2475,13 @@ export const MIND_SHOT = {
    */
   const seen = theme.captionBand.top - (r.y + S.drop);
   if (seen < r.h / 3) fail(`SC17's drop leaves only ${Math.round(seen)} of the figure, under a third of it`);
+  /** ⚠ AND THE DIAGONAL PUTS IT BACK WHERE IT STARTED, 200 to the left. Both
+   *  edges of that have to stay inside the safe area. */
+  if (S.slide.up !== S.drop) fail("SC17's rise and its drop are not the same distance");
+  if (r.x - S.slide.left < A.x) fail(`SC17's figure slides to ${r.x - S.slide.left}, outside the safe area`);
+  /** ⚠ AND THE MARK MUST CLEAR THE FIGURE IT CROSSES BEHIND. */
+  if (S.slide.mark.x - S.mark.h / 2 <= r.x - S.slide.left + r.w) {
+    fail("SC17's mark lands on top of the figure it was meant to move beside");
+  }
+  if (S.slide.mark.x + S.mark.h / 2 > A.x + A.w) fail("SC17's mark slides outside the safe area");
 }

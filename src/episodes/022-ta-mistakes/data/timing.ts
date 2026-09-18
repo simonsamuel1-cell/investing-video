@@ -2849,6 +2849,20 @@ export const MIND = {
       "bukan kepastian",
     ],
   },
+  /**
+   * ⚠ ONE DIAGONAL, NOT TWO MOVES — Simon: "geser naik lagi imagenya 400 px dan
+   * geser 200 px ke kiri (artinya geser serong)". He said so himself; written
+   * as an up and a left on two curves it would be an L.
+   *
+   * The 400 is the same 400 it came down on at 15444, so the figure lands back
+   * on the height it started at — that is why the scene reads it as ONE number
+   * rather than as two that happen to match.
+   *
+   * ⚠ AND THE FRAME EMPTIES AS IT GOES: the sentence fades out with the move,
+   * and the mark crosses to the right of the room the figure leaves. Pose 06
+   * lands 47 frames later looking that way, at the mark.
+   */
+  slide: { at: 15700 },
 } as const;
 
 {
@@ -2877,6 +2891,10 @@ export const MIND = {
   /** ⚠ THE MARK LANDS ON THE POSE THAT BELONGS TO IT — 05, the calm one, which
    *  is why both are written as 15444 rather than one being "about then". */
   if (V.mark.at !== V.poses[4]) fail(`SC17's mark arrives at ${V.mark.at}, not with pose 05 at ${V.poses[4]}`);
+  /** ⚠ THE DIAGONAL COMES AFTER THE SENTENCE IT CLEARS, AND BEFORE THE POSE
+   *  THAT LOOKS AT WHERE THE MARK LANDS. */
+  if (V.slide.at <= V.mark.at) fail("SC17's diagonal starts before the sentence it clears has arrived");
+  if (V.slide.at >= V.poses[5]) fail(`SC17's diagonal starts at ${V.slide.at}, at or after pose 06 at ${V.poses[5]}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */

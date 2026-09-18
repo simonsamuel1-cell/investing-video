@@ -104,6 +104,13 @@ export const Mindset = () => {
    * as deliberately as it sets off, with the mark coming down over it.
    */
   const dropped = progressInOut(g, V.mark.at, m.move) * S.drop;
+  /**
+   * ⚠ ONE CURVE FOR THE WHOLE DIAGONAL — "artinya geser serong". Up and left on
+   * two curves would be an L however closely their timings were matched, and it
+   * also carries the sentence out and the mark across, so none of the four can
+   * finish while another is still going.
+   */
+  const slid = progressInOut(g, V.slide.at, m.move);
 
   /**
    * The mark falls in from above the frame and then breathes — the same pair
@@ -112,8 +119,9 @@ export const Mindset = () => {
    * somewhere slightly different every time it is retimed.
    */
   const fell = progressInOut(g, V.mark.at, m.move);
+  const markX = S.mark.x + (S.slide.mark.x - S.mark.x) * slid;
   const markY =
-    S.mark.from + (S.mark.y - S.mark.from) * fell +
+    S.mark.from + (S.mark.y + (S.slide.mark.y - S.mark.y) * slid - S.mark.from) * fell +
     (fell >= 0.999
       ? Math.sin(((g - V.mark.at) / S.mark.float.period) * Math.PI * 2) * S.mark.float.amount
       : 0);
@@ -147,8 +155,8 @@ export const Mindset = () => {
           src={staticFile(S.srcs[pose])}
           style={{
             position: "absolute",
-            left: S.rect.x,
-            top: S.rect.y + dropped,
+            left: S.rect.x - S.slide.left * slid,
+            top: S.rect.y + dropped - S.slide.up * slid,
             width: S.rect.w,
             height: S.rect.h,
           }}
@@ -193,10 +201,10 @@ export const Mindset = () => {
         {/* ── the mark, level with the logo, and the sentence under it ───── */}
         {g >= V.mark.at && (
           <>
-            <TuntunMark x={S.mark.x} y={markY} height={S.mark.h} opacity={fell} />
+            <TuntunMark x={markX} y={markY} height={S.mark.h} opacity={fell} />
             {/* ⚠ TWO Lines, NOT ONE WRAPPED BLOCK. Simon chose where the break
                 falls; a wrap would put it wherever the width happens to. */}
-            {V.mark.lines.map((row, i) => (
+            {slid < 0.999 && V.mark.lines.map((row, i) => (
               <Line
                 key={row}
                 text={row}
