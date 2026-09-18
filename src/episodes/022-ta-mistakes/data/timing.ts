@@ -41,22 +41,21 @@ export const BLOCK = {
   SC12: 10035, SC13: 11074,
   SC14: 12346, SC15: 13070, SC16: 13700, SC17: 14780, SC18: 15754,
   /**
-   * ⚠ 90 FRAMES PAST THE LAST WORD NOW, NOT 180. It was three seconds: the
-   * voice ended on 16650 and the closing quote card was still standing there,
-   * because ending on that frame cuts the last sentence off at the moment it
-   * lands. The pads at 8060 and 8200 moved the last word to 16710, the pad at
-   * 9276 moved it to 16740, and END was left alone each time — so the hold is
-   * a second and a half. It still does the job.
+   * ⚠ 16905, AND THIS IS THE PAD THE OLD NOTE HERE WARNED ABOUT. It used to say
+   * that the recording ran to within 24 frames of END and that "the next pad is
+   * the one that has to move this number too, and it is a decision rather than
+   * a side effect". The 30-frame pad at 16642 is that pad.
    *
-   * ⚠ BUT THE AUDIO IS THE THING TO WATCH NOW, NOT THE HOLD. The recording
-   * runs out at 16806 and this number is 16830, so there are 24 frames of
-   * picture after the last sample. The next voice-only pad puts the audio PAST
-   * the end of the composition — it would be cut off mid-tail — and the one
-   * after that also breaks the guard in Composition.tsx, which requires END to
-   * be at least VO_END (16800). So the next pad is the one that has to move
-   * this number too, and it is a decision rather than a side effect.
+   * The recording was 280.856939s and is now 281.356939 — 16881.4 frames — so
+   * 16875 would have cut its last six frames off, and the guard in
+   * Composition.tsx (END >= VO_END) would have passed while it happened,
+   * because VO_END is the last CUE and not the last sample.
+   *
+   * 16905 is the last cue's 16875 plus the half-second of hold this episode has
+   * ended on since the first cut, and 24 frames past the audio's own end —
+   * picture after the last sample, which is the side of the line to be on.
    */
-  END: 16875,
+  END: 16905,
 } as const;
 
 /**
@@ -2877,6 +2876,23 @@ export const MIND = {
   },
 } as const;
 
+/**
+ * ═══ SC17 → SC18 · THE CAMERA CUT ═══════════════════════════════════════
+ *
+ * ⚠ Simon: "15948-15949 berikan transisi camera cut lagi, tapi backgroundnya
+ * stay ya, ga ikut transisi". The fourth cut, and the first where something is
+ * explicitly EXEMPT from it: the drifting grid is the room both scenes happen
+ * in, so it is drawn OUTSIDE the cut on both sides and reads as one continuous
+ * ground while the pictures swap over it.
+ *
+ * ⚠ WHICH MADE THE GRID'S FRAME A REAL NUMBER. core/GridGround says a
+ * scene-local frame is fine "because it only loops" — true of one scene, false
+ * across a boundary: SC17's local 941 and SC18's local 0 put the drift at 51.6
+ * and 0, and the ground would have jumped on the cut. Both scenes hand it the
+ * GLOBAL frame now.
+ */
+export const CUT17 = { at: 15949, over: 40, distance: 120, blur: 10, axis: "x" } as const;
+
 {
   const V = MIND;
   const fail = (m: string) => {
@@ -2907,6 +2923,96 @@ export const MIND = {
    *  THAT LOOKS AT WHERE THE MARK LANDS. */
   if (V.slide.at <= V.mark.at) fail("SC17's diagonal starts before the sentence it clears has arrived");
   if (V.slide.at >= V.poses[5]) fail(`SC17's diagonal starts at ${V.slide.at}, at or after pose 06 at ${V.poses[5]}`);
+  /** ⚠ THE CUT LANDS ON THE SCENE'S OWN BOUNDARY, same rule as the other three. */
+  if (CUT17.at !== V.to) fail(`SC17's cut lands on ${CUT17.at}, not on its own boundary at ${V.to}`);
+}
+
+/* ═══ SC18 — the closing rules ═══════════════════════════════════════════
+ *
+ * ⚠ IT OPENS ON CUT17'S INCOMING HALF, so "Rules" has no entrance of its own
+ * and is already complete on the frame it lands. The GROUND does not arrive
+ * with it — it was already there under SC17 and simply continues.
+ *
+ * ⚠ FOUR PAIRS, EIGHT BEATS, ALL SIMON'S, and each lands on its own half of the
+ * sentence the voice is saying: 16077 "Kalau kondisi belum lengkap, tunggu",
+ * 16179 "Kalau setup sudah invalid, keluar", 16309 "Kalau kondisi berubah,
+ * evaluasi ulang", 16459 "Dan kalau alasan masuknya emosional, jangan
+ * dipaksakan". The condition lands, then the answer to it.
+ *
+ * ⚠ AND `clear` TAKES EVERYTHING BUT THE GROUND — "semua visual hilang di
+ * 16672, kecuali background". The grid is the one thing that outlives both the
+ * cut and this.
+ */
+export const RULES = {
+  at: CUT17.at,
+  to: BLOCK.END,
+  /** On the cut, because the cut delivers it. */
+  head: { at: CUT17.at, text: "Rules" },
+  /**
+   * ⚠ EVERY CELL IS A LIST OF ROWS, even the one-row ones. Simon: "buat yang 3
+   * kata, jadi 2 text line" — the two three-word conditions ran a third longer
+   * than the rest and left the column's edge ragged. Written as `string | []`
+   * the scene would branch on the type at every cell; written as a list always,
+   * a cell that grows to two rows is an edit here and nothing there.
+   *
+   * ⚠ AND A TWO-ROW CELL CENTRES ON ITS ROW'S LINE, so the pair still reads
+   * across. That is the whole reason the pitch is bigger than the type.
+   */
+  rows: [
+    {
+      left: { at: 16094, text: ["Kondisi belum", "lengkap"] },
+      right: { at: 16152, text: ["Tunggu"] },
+    },
+    {
+      left: { at: 16188, text: ["Setup invalid"] },
+      right: { at: 16265, text: ["Keluar"] },
+    },
+    {
+      left: { at: 16302, text: ["Kondisi berubah"] },
+      right: { at: 16369, text: ["Evaluasi ulang"] },
+    },
+    {
+      left: { at: 16461, text: ["Alasan masuknya", "emosional"] },
+      right: { at: 16566, text: ["Jangan dipaksa"] },
+    },
+  ],
+  clear: 16672,
+  /**
+   * ⚠ THE LAST WORDS OF THE EPISODE, at the size the scene before it set —
+   * "sebesar 'Technical analysis adalah…'". The voice reaches them on 16683,
+   * which is 16653 plus the 30-frame pad at 16642.
+   */
+  close: {
+    at: 16688,
+    /**
+     * ⚠ TWO ROWS, AND THE SIZE IS WHY. On one row at the display scale this
+     * sets 1782 of ink — MEASURED, x71..1852 — which is outside the safe area
+     * at both ends. Simon asked for the size, not for one row, so the row gave
+     * way. The break is at the clause: "unless" closes the condition.
+     */
+    lines: ["No trade unless", "the conditions are met"],
+  },
+} as const;
+
+{
+  const V = RULES;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/timing: ${m}`);
+  };
+  if (V.at !== CUT17.at) fail(`SC18 opens at ${V.at}, not on the cut that delivers it at ${CUT17.at}`);
+  if (V.head.at !== V.at) fail("SC18's heading does not land on the cut that delivers it");
+  /** ⚠ EIGHT BEATS IN ONE ORDER, and a condition always before its answer. */
+  const beats = V.rows.flatMap((r) => [r.left, r.right]);
+  beats.forEach((b, i) => {
+    if (i && b.at <= beats[i - 1].at) {
+      fail(`SC18's "${b.text.join(" ")}" lands at ${b.at}, not after "${beats[i - 1].text.join(" ")}"`);
+    }
+    if (b.text.length > 2) fail(`SC18's "${b.text.join(" ")}" is ${b.text.length} rows; the pitch holds two`);
+  });
+  if (beats[0].at <= V.head.at) fail("SC18's first row lands before its heading");
+  if (V.clear <= beats[beats.length - 1].at) fail("SC18 clears the list before the last of it has arrived");
+  if (V.close.at <= V.clear) fail("SC18's closing line arrives before the list it replaces has gone");
+  if (V.close.at >= V.to) fail(`SC18's closing line arrives at ${V.close.at}, at or after the episode ends at ${V.to}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */

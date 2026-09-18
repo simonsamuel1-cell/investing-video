@@ -27,11 +27,11 @@
  */
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import {
-  Chip, GridGround, Line, Stage, TuntunMark, cutInStyle, progress, progressInOut,
-  theme, useMotion, usePalette,
+  Chip, GridGround, Line, Stage, TuntunMark, cutInStyle, cutOutStyle, progress,
+  progressInOut, theme, useMotion, usePalette,
 } from "../../../core";
-import { CUT16, MIND, local } from "../data/timing";
-import { MIND_SHOT } from "../data/layout";
+import { CUT16, CUT17, MIND, local } from "../data/timing";
+import { GROUND_FADE, MIND_SHOT } from "../data/layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = MIND;
@@ -51,25 +51,6 @@ const S = MIND_SHOT;
 const FENCE = {
   clipPath: `inset(0px 0px ${theme.captionBand.height}px 0px)`,
 } as const;
-
-/**
- * ⚠ THE GROUND GOES TO NOTHING OVER THE RESERVES RATHER THAN STOPPING AT THEM.
- * See MIND_SHOT.fade in data/layout.ts for why, and for where the stops come
- * from. `vignette` is off with it: the grid's own mask fades the SIDES too, and
- * a ground that falls away left and right is the crop this is avoiding.
- */
-const GROUND_FADE = (() => {
-  const F = MIND_SHOT.fade;
-  const ramp =
-    `linear-gradient(to bottom, transparent 0px, transparent ${F.inFrom}px, ` +
-    `#000 ${F.inTo}px, #000 ${F.outFrom}px, transparent ${F.outTo}px)`;
-  return {
-    position: "absolute",
-    inset: 0,
-    maskImage: ramp,
-    WebkitMaskImage: ramp,
-  } as const;
-})();
 
 export const Mindset = () => {
   const f = useCurrentFrame();
@@ -139,7 +120,6 @@ export const Mindset = () => {
   return (
     <Stage>
       <AbsoluteFill style={FENCE}>
-      <AbsoluteFill style={cutInStyle(g, CUT16)}>
         {/* ⚠ EDGE TO EDGE, WITH THE EPISODE'S OWN GROUND AS ITS PAPER. Simon:
             "background kotak kotaknya jangan cropped ya, full screen". It was
             windowed between the two reserves first, which left a seam across
@@ -147,10 +127,19 @@ export const Mindset = () => {
             Giving the paper that ground instead makes it invisible: the LINES
             become the whole of the effect, they run to every edge, and the
             grid's own vignette keeps them clear of the band and the logo zone
-            without anything being cut. */}
+            without anything being cut.
+
+            ⚠ AND IT IS OUTSIDE BOTH CUTS, ON THE GLOBAL FRAME. Simon again, at
+            15949: the ground "stay ya, ga ikut transisi". SC18 draws the same
+            grid from the same frame, so the two read as one continuous room the
+            pictures swap over. A scene-local frame would have jumped the drift
+            on that boundary — see the note on CUT17. */}
         <div style={GROUND_FADE}>
-          <GridGround f={f} paper={c.bg} vignette={false} />
+          <GridGround f={g} paper={c.bg} vignette={false} />
         </div>
+
+      <AbsoluteFill style={cutOutStyle(g, CUT17)}>
+      <AbsoluteFill style={cutInStyle(g, CUT16)}>
         <Img
           src={staticFile(S.srcs[pose])}
           style={{
@@ -255,6 +244,7 @@ export const Mindset = () => {
             )}
           </>
         )}
+      </AbsoluteFill>
       </AbsoluteFill>
       </AbsoluteFill>
     </Stage>

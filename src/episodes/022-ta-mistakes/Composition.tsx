@@ -46,7 +46,7 @@ import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, CARD_LIST, COUNTER, MIND, PANEL10, PLANS, PREP, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
+import { BLOCK, CARD_LIST, COUNTER, MIND, PANEL10, PLANS, PREP, RULES, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";
 import { SetupGroup } from "./scenes/SetupGroup";
 import { SC03 } from "./scenes/SC03";
 import { Platform } from "./scenes/Platform";
@@ -63,6 +63,7 @@ import { AdmrGroup } from "./scenes/AdmrGroup";
 import { CopyTrade } from "./scenes/CopyTrade";
 import { BeforeEntry } from "./scenes/BeforeEntry";
 import { Mindset } from "./scenes/Mindset";
+import { Rules } from "./scenes/Rules";
 import { MistakeCounter } from "./scenes/Chrome";
 import { Cards } from "./scenes/Cards";
 import { CarryLine } from "./scenes/CarryLine";
@@ -296,6 +297,18 @@ const Body = () => (
       name="SC17 · cek dirimu sendiri"
     >
       <Mindset />
+    </Sequence>
+
+    {/* ⚠ SC18 TAKES CUT17'S INCOMING HALF and runs to the end of the episode.
+        The GROUND does not arrive with it: both scenes draw the same grid from
+        the same GLOBAL frame, outside their own cuts, so it reads as one room
+        the pictures swap over. See scenes/Rules.tsx. */}
+    <Sequence
+      from={RULES.at}
+      durationInFrames={RULES.to - RULES.at}
+      name="SC18 · rules"
+    >
+      <Rules />
     </Sequence>
 
     {/* CG-E, above the tiling and below the cards: a card that lands over a

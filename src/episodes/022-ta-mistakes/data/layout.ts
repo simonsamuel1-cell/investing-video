@@ -2520,3 +2520,110 @@ export const MIND_SHOT = {
   const floor = S.slide.line.y0 + S.slide.line.lead * 2 + S.slide.line.size * 0.62;
   if (floor > theme.captionBand.top) fail(`SC17's second sentence reaches ${Math.round(floor)}, into the subtitle band`);
 }
+
+/* ═══ SC18 · THE CLOSING RULES ════════════════════════════════════════════
+ *
+ * A heading, four pairs under it, and one line after them.
+ *
+ * ⚠ THE TWO COLUMNS MEET AT A GUTTER, they are not two left-aligned blocks.
+ * The left side is the condition and the right side is what to do about it, so
+ * the left is set flush RIGHT and the right flush LEFT: the pairs then read
+ * across, and the list stays centred on the frame whatever any one row says.
+ */
+const RULE_SIZE = theme.text.title.size;
+const RULE_GUTTER = 60;
+
+export const RULES_SHOT = {
+  /**
+   * ⚠ AT THE SCENE-BEFORE'S STATEMENT SIZE. It is the title of the list, and
+   * this episode sets a statement at the display scale.
+   *
+   * ⚠ AND 220, NOT THE 170 IT STARTED AT. At the display size its ink runs 60
+   * above its centre, and 170 put that at 110 — inside the logo zone's own
+   * 150px band. The assertion below caught it at module load. Centred, "Rules"
+   * never comes near the zone's x, but the rule this episode keeps is that
+   * nothing is drawn in that band at all, and a heading is not the thing to
+   * make the first exception for.
+   */
+  head: { x: theme.canvas.width / 2, y: 220, size: theme.text.display.size },
+  rows: {
+    /** Flush right, stopping a gutter short of the frame's middle. */
+    left: theme.canvas.width / 2 - RULE_GUTTER,
+    /** And flush left, starting a gutter past it. */
+    right: theme.canvas.width / 2 + RULE_GUTTER,
+    y0: 390,
+    pitch: 140,
+    size: RULE_SIZE,
+    /** ⚠ THE STEP INSIDE A TWO-ROW CELL, not between rows. A cell centres its
+     *  own rows on its row's line, which is why the pitch has to be more than
+     *  twice this. */
+    lead: RULE_SIZE * 1.2,
+  },
+  /**
+   * The last words of the episode, at the size the scene before it set, on two
+   * rows centred on the frame. See RULES.close for why there are two.
+   */
+  close: (() => {
+    const size = theme.text.display.size;
+    const lead = size * 1.2;
+    return {
+      x: theme.canvas.width / 2,
+      y0: theme.canvas.height / 2 - lead / 2,
+      lead,
+      size,
+    };
+  })(),
+} as const;
+
+{
+  const S = RULES_SHOT;
+  const fail = (m: string) => {
+    throw new Error(`022-ta-mistakes/layout: ${m}`);
+  };
+  const A = theme.stage.active;
+  /**
+   * ⚠ THE WIDEST ROW OF EACH COLUMN, MEASURED off a render at 48px/700. On the
+   * left that is now "Alasan masuknya" at 397, not the 573 the whole phrase set
+   * before it was broken in two; on the right "Jangan dipaksa" at 353. Both are
+   * checked against the safe area rather than against the frame, because a list
+   * that touches the edge reads as a list that was cut.
+   */
+  const WIDEST = { left: 397, right: 353 };
+  if (S.rows.left - WIDEST.left < A.x) fail("SC18's left column runs outside the safe area");
+  if (S.rows.right + WIDEST.right > A.x + A.w) fail("SC18's right column runs outside the safe area");
+  /** ⚠ AND THE LIST HAS TO CLEAR ITS HEADING ABOVE AND THE BAND BELOW. */
+  const top = S.rows.y0 - S.rows.lead / 2 - S.rows.size * 0.62;
+  if (top < S.head.y + S.head.size * 0.62) fail("SC18's list starts under its own heading");
+  /** ⚠ THE FLOOR IS THE LAST CELL'S LAST ROW, and the last cell has two. */
+  const floor = S.rows.y0 + S.rows.pitch * 3 + S.rows.lead / 2 + S.rows.size * 0.62;
+  if (floor > theme.captionBand.top) fail(`SC18's list reaches ${Math.round(floor)}, into the subtitle band`);
+  /** ⚠ AND THE HEADING CLEARS THE LOGO ZONE'S BAND. */
+  if (S.head.y - S.head.size * 0.62 < theme.logoZone.height) fail("SC18's heading rides up into the logo zone's band");
+  /**
+   * ⚠ THE CLOSING LINE FITS THE SAFE AREA, and on ONE row it did not. Measured
+   * at 96px/800, the whole sentence sets 1782 of ink — x71..1852 against the
+   * area's 96..1824 — which is what put it on two. The wider of the two rows,
+   * "the conditions are met", is 1034.
+   */
+  if (S.close.x + 1034 / 2 > A.x + A.w) fail("SC18's closing line runs outside the safe area");
+}
+
+/**
+ * ⚠ THE GROUND GOES TO NOTHING OVER THE RESERVES RATHER THAN STOPPING AT THEM.
+ * See MIND_SHOT.fade in data/layout.ts for why, and for where the stops come
+ * from. `vignette` is off with it: the grid's own mask fades the SIDES too, and
+ * a ground that falls away left and right is the crop this is avoiding.
+ */
+export const GROUND_FADE = (() => {
+  const F = MIND_SHOT.fade;
+  const ramp =
+    `linear-gradient(to bottom, transparent 0px, transparent ${F.inFrom}px, ` +
+    `#000 ${F.inTo}px, #000 ${F.outFrom}px, transparent ${F.outTo}px)`;
+  return {
+    position: "absolute",
+    inset: 0,
+    maskImage: ramp,
+    WebkitMaskImage: ramp,
+  } as const;
+})();
+
