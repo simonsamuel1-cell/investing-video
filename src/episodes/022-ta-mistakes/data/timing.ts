@@ -2807,7 +2807,7 @@ export const MIND = {
    */
   labels: [
     { at: 15210, text: "FOMO", side: "right" },
-    { at: 15262, text: "kesal", side: "left" },
+    { at: 15262, text: "Kesal", side: "left" },
     { at: 15315, text: "Balas loss", side: "right" },
   ],
   /**

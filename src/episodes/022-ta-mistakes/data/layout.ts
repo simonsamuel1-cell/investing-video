@@ -2290,7 +2290,12 @@ export const MIND_SHOT = {
       y: r.y + r.h * k,
       anchor: side === "right" ? ("left" as const) : ("right" as const),
     });
-    return { at, size: theme.text.chip.size, steps: [0.28, 0.48, 0.68] };
+    /** ⚠ TWELVE OVER THE CHIP SCALE — Simon's number, written as the offset he
+     *  gave rather than as the 48 it lands on. 48 is also the title size, and
+     *  saying that here would claim these are titles; they are chips he asked
+     *  to be bigger, and the next change to either scale should move them the
+     *  way he meant. */
+    return { at, size: theme.text.chip.size + 12, steps: [0.28, 0.48, 0.68] };
   })(),
 
   /**
@@ -2358,9 +2363,10 @@ export const MIND_SHOT = {
   if (r.y < theme.stage.active.y) fail(`SC17's figure starts at ${r.y}, above the safe area at ${theme.stage.active.y}`);
   if (Math.abs(r.w / r.h - GUY.w / GUY.h) > 0.001) fail("SC17's figure is not at its drawing's own ratio");
   if (S.srcs.length !== 6) fail(`SC17 has ${S.srcs.length} poses, not the six Simon gave beats for`);
-  /** ⚠ THE THREE NAMES MUST FIT BESIDE THE FIGURE. Measured off a render at
-   *  36px/600 in a solid pill: the widest, "Balas loss", is 245 of box. */
-  const WIDEST = 245;
+  /** ⚠ THE THREE NAMES MUST FIT BESIDE THE FIGURE. Measured off a render in a
+   *  solid pill: the widest, "Balas loss", is 245 of box at the chip scale's
+   *  36px, and the pill is built from the type, so it scales with it. */
+  const WIDEST = 245 * (S.labels.size / theme.text.chip.size);
   const right = S.labels.at("right", 0.5);
   const left = S.labels.at("left", 0.5);
   if (right.x + WIDEST > A.x + A.w) fail("SC17's right-hand names run outside the safe area");
