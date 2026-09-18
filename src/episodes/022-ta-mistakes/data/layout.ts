@@ -2242,18 +2242,15 @@ const GUY = { w: 1145, h: 1374 } as const;
 const GUY_H = 720;
 
 
+const GUY_RECT = (() => {
+  const h = GUY_H;
+  const w = (GUY.w / GUY.h) * h;
+  return { x: theme.canvas.width / 2 - w / 2, y: theme.captionBand.top - h, w, h };
+})();
+
 export const MIND_SHOT = {
   /** The figure, centred and standing on the subtitle band's top edge. */
-  rect: (() => {
-    const h = GUY_H;
-    const w = (GUY.w / GUY.h) * h;
-    return {
-      x: theme.canvas.width / 2 - w / 2,
-      y: theme.captionBand.top - h,
-      w,
-      h,
-    };
-  })(),
+  rect: GUY_RECT,
   srcs: ["01", "02", "03", "04", "05", "06"].map((n) => `art/guy/${n}.png`),
   /**
    * ⚠ THE GROUND RUNS EDGE TO EDGE AND FADES, IT IS NOT CUT. Simon: "background
@@ -2277,6 +2274,74 @@ export const MIND_SHOT = {
     outFrom: theme.captionBand.top - 122,
     outTo: theme.captionBand.top - 7,
   },
+
+  /**
+   * ⚠ THE THREE NAMES STAND OFF THE FIGURE'S OWN EDGES, not at typed x. `air`
+   * is the gap from the drawing's box to the pill, so moving or resizing the
+   * figure carries them with it. Their heights are fractions of the figure for
+   * the same reason — a quarter, a half and two-thirds down it, which spreads
+   * them without any two sharing a line.
+   */
+  labels: (() => {
+    const air = 56;
+    const r = GUY_RECT;
+    const at = (side: string, k: number) => ({
+      x: side === "right" ? r.x + r.w + air : r.x - air,
+      y: r.y + r.h * k,
+      anchor: side === "right" ? ("left" as const) : ("right" as const),
+    });
+    return { at, size: theme.text.chip.size, steps: [0.28, 0.48, 0.68] };
+  })(),
+
+  /**
+   * ⚠ "Berhenti dulu!" GOES ABOVE THE FIGURE AND IT SHOUTS. Simon: "di atas
+   * image … ukurannya lebih besar dari 3 text tadi". The display size, not the
+   * next step up from a chip: the three are items in a list and this is the
+   * instruction about them, so a size that merely edges past theirs would read
+   * as a fourth item set slightly larger.
+   *
+   * It is centred in the air between the safe top and the figure's own top.
+   */
+  stop: {
+    x: theme.canvas.width / 2,
+    y: (theme.stage.active.y + GUY_RECT.y) / 2,
+    size: theme.text.display.size,
+  },
+
+  /** How far the figure drops to make room for the mark. Simon's 400. */
+  drop: 400,
+
+  /**
+   * ⚠ THE MARK LANDS LEVEL WITH THE LOGO, AND THE LOGO WAS MEASURED. Simon:
+   * "sejajar logo (tengah secara vertikal)". public/watermark.png carries it at
+   * x1538..1852, y45..141 — so its centre is y93 and its ink is 96 tall. The
+   * mark takes both: the same height at the same centre, which makes the two
+   * read as a matched pair across the top of the frame rather than as one thing
+   * approximately beside another.
+   *
+   * ⚠ AND IT FALLS IN FROM ABOVE THE FRAME. `from` is one mark-height clear of
+   * the top edge, so nothing of it is on screen before it starts.
+   */
+  mark: (() => {
+    const logo = { top: 45, bottom: 141 };
+    const h = logo.bottom - logo.top;
+    return {
+      x: theme.canvas.width / 2,
+      /** TOP edge at rest — core/TuntunMark takes a top, not a centre. */
+      y: logo.top,
+      h,
+      from: -h,
+      /** The slow rise and fall, the same pair VIDEO 20's mascot breathes on. */
+      float: { amount: 12, period: 240 },
+    };
+  })(),
+
+  /** The sentence under the mark, at the title size Simon asked for. */
+  line: {
+    x: theme.canvas.width / 2,
+    y: 141 + 40 + theme.text.title.size / 2,
+    size: theme.text.title.size,
+  },
 } as const;
 
 {
@@ -2284,6 +2349,7 @@ export const MIND_SHOT = {
   const fail = (m: string) => {
     throw new Error(`022-ta-mistakes/layout: ${m}`);
   };
+  const A = theme.stage.active;
   const r = S.rect;
   if (Math.abs(r.x + r.w / 2 - theme.canvas.width / 2) > 0.001) fail("SC17's figure is not centred on the frame");
   if (r.y + r.h > theme.captionBand.top) {
@@ -2292,4 +2358,37 @@ export const MIND_SHOT = {
   if (r.y < theme.stage.active.y) fail(`SC17's figure starts at ${r.y}, above the safe area at ${theme.stage.active.y}`);
   if (Math.abs(r.w / r.h - GUY.w / GUY.h) > 0.001) fail("SC17's figure is not at its drawing's own ratio");
   if (S.srcs.length !== 6) fail(`SC17 has ${S.srcs.length} poses, not the six Simon gave beats for`);
+  /** ⚠ THE THREE NAMES MUST FIT BESIDE THE FIGURE. Measured off a render at
+   *  36px/600 in a solid pill: the widest, "Balas loss", is 245 of box. */
+  const WIDEST = 245;
+  const right = S.labels.at("right", 0.5);
+  const left = S.labels.at("left", 0.5);
+  if (right.x + WIDEST > A.x + A.w) fail("SC17's right-hand names run outside the safe area");
+  if (left.x - WIDEST < A.x) fail("SC17's left-hand name runs outside the safe area");
+  /** ⚠ AND NO TWO OF THEM MAY SHARE A LINE. */
+  S.labels.steps.forEach((k, i) => {
+    if (i && Math.abs((k - S.labels.steps[i - 1]) * r.h) < S.labels.size * 1.6) {
+      fail(`SC17's name ${i + 1} sits too close to the one before it`);
+    }
+  });
+  /** ⚠ "Berhenti dulu!" HAS TO CLEAR THE FIGURE AND THE FRAME. Measured off a
+   *  render at 96px/800: 620 of ink. */
+  if (S.stop.y + S.stop.size * 0.62 > r.y) fail("SC17's answer overlaps the figure");
+  if (S.stop.x + 620 / 2 > A.x + A.w) fail("SC17's answer runs outside the safe area");
+  /** ⚠ THE MARK IS LEVEL WITH THE LOGO, which is what was asked for, so it is
+   *  the one thing here that is checked against the watermark's own numbers. */
+  if (S.mark.y + S.mark.h / 2 !== 93) fail(`SC17's mark is centred on ${S.mark.y + S.mark.h / 2}, not on the logo's 93`);
+  if (S.mark.from + S.mark.h > 0) fail("SC17's mark is already on screen before it falls");
+  /** ⚠ AND THE SENTENCE UNDER IT CLEARS THE MARK AND THE LOGO ZONE'S BAND, and
+   *  fits the safe area. Measured at 48px/700: 1424 of ink. */
+  if (S.line.y - S.line.size * 0.62 < S.mark.y + S.mark.h) fail("SC17's sentence overlaps the mark");
+  if (S.line.x + 1424 / 2 > A.x + A.w) fail("SC17's sentence runs outside the safe area");
+  /**
+   * ⚠ THE DROPPED FIGURE RUNS PAST THE BAND ON PURPOSE — 400 takes its floor to
+   * 1372 — so the scene fences it there and what is checked is that ENOUGH of it
+   * is left. A subject that leaves entirely is a cut, not a move; a third of it
+   * is the least that still reads as the same character.
+   */
+  const seen = theme.captionBand.top - (r.y + S.drop);
+  if (seen < r.h / 3) fail(`SC17's drop leaves only ${Math.round(seen)} of the figure, under a third of it`);
 }

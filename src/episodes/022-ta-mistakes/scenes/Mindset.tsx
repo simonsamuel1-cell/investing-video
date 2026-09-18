@@ -26,14 +26,31 @@
  * it goes looking. It is a ground: the figure is the subject.
  */
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
-import { GridGround, Stage, cutInStyle, usePalette } from "../../../core";
-import { CUT16, MIND } from "../data/timing";
+import {
+  Chip, GridGround, Line, Stage, TuntunMark, cutInStyle, progress, progressInOut,
+  theme, useMotion, usePalette,
+} from "../../../core";
+import { CUT16, MIND, local } from "../data/timing";
 import { MIND_SHOT } from "../data/layout";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const V = MIND;
 const S = MIND_SHOT;
 // ═══════════════════════════════════════════════════════════════════════════
+
+/**
+ * ⚠ THE SCENE IS FENCED OFF THE SUBTITLE BAND, because the figure is MEANT to
+ * run past it: 15444 drops it 400 and its floor lands on 1372. Clipping is the
+ * honest way to say "it slides out of frame" — the alternative is a drawing
+ * that stops dead at an invisible line.
+ *
+ * ⚠ AND THE FENCE IS OUTSIDE THE CUT, for the reason SC16's had to be moved
+ * there: a filter applies to what its element has already produced, so CUT16's
+ * blur would smear the clipped edge straight back into the band.
+ */
+const FENCE = {
+  clipPath: `inset(0px 0px ${theme.captionBand.height}px 0px)`,
+} as const;
 
 /**
  * ⚠ THE GROUND GOES TO NOTHING OVER THE RESERVES RATHER THAN STOPPING AT THEM.
@@ -57,8 +74,37 @@ const GROUND_FADE = (() => {
 export const Mindset = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   /** ⚠ GLOBAL FRAMES for the cut. See the header. */
   const g = f + V.at;
+
+  /**
+   * ⚠ ONE CURVE CLEARS THE THREE NAMES AND BRINGS THE ANSWER — "semua label
+   * text fade out, langsung muncul". Written twice it would be two curves, and
+   * a frame with neither on it is the thing that reads as a dropped shot.
+   */
+  const answered = progress(g, V.stop.at, m.fade);
+  /** And the same shape again for the answer leaving as the mark arrives. */
+  const marked = progress(g, V.mark.at, m.fade);
+
+  /**
+   * The figure's drop. `progressInOut` because it is a MOVE: it has to settle
+   * as deliberately as it sets off, with the mark coming down over it.
+   */
+  const dropped = progressInOut(g, V.mark.at, m.move) * S.drop;
+
+  /**
+   * The mark falls in from above the frame and then breathes — the same pair
+   * VIDEO 20's mascot floats on, so the two readings of one character move
+   * alike. The float starts only once it has landed, or the fall would arrive
+   * somewhere slightly different every time it is retimed.
+   */
+  const fell = progressInOut(g, V.mark.at, m.move);
+  const markY =
+    S.mark.from + (S.mark.y - S.mark.from) * fell +
+    (fell >= 0.999
+      ? Math.sin(((g - V.mark.at) / S.mark.float.period) * Math.PI * 2) * S.mark.float.amount
+      : 0);
 
   /**
    * Which pose is up. The LAST beat that has happened — written as a search
@@ -72,6 +118,7 @@ export const Mindset = () => {
 
   return (
     <Stage>
+      <AbsoluteFill style={FENCE}>
       <AbsoluteFill style={cutInStyle(g, CUT16)}>
         {/* ⚠ EDGE TO EDGE, WITH THE EPISODE'S OWN GROUND AS ITS PAPER. Simon:
             "background kotak kotaknya jangan cropped ya, full screen". It was
@@ -89,11 +136,63 @@ export const Mindset = () => {
           style={{
             position: "absolute",
             left: S.rect.x,
-            top: S.rect.y,
+            top: S.rect.y + dropped,
             width: S.rect.w,
             height: S.rect.h,
           }}
         />
+        {/* ── the three names the voice lists ──────────────────────────── */}
+        <div style={{ opacity: 1 - answered }}>
+          {V.labels.map((l, i) => {
+            const at = S.labels.at(l.side, S.labels.steps[i]);
+            return (
+              <Chip
+                key={l.text}
+                label={l.text}
+                x={at.x}
+                y={at.y}
+                at={local(l.at, V.at)}
+                anchor={at.anchor}
+                tone="warn"
+                size={S.labels.size}
+                pill
+                solid
+              />
+            );
+          })}
+        </div>
+
+        {/* ⚠ NO PILL, AND THAT IS THE POINT. The three above are things being
+            named; this is the instruction about them. */}
+        {g >= V.stop.at && (
+          <div style={{ opacity: answered * (1 - marked) }}>
+            <Line
+              text={V.stop.text}
+              x={S.stop.x}
+              y={S.stop.y}
+              at={local(V.stop.at, V.at)}
+              size={S.stop.size}
+              weight={theme.text.display.weight}
+              color={theme.color.warn}
+            />
+          </div>
+        )}
+
+        {/* ── the mark, level with the logo, and the sentence under it ───── */}
+        {g >= V.mark.at && (
+          <>
+            <TuntunMark x={S.mark.x} y={markY} height={S.mark.h} opacity={fell} />
+            <Line
+              text={V.mark.text}
+              x={S.line.x}
+              y={S.line.y}
+              at={local(V.mark.at, V.at) + m.move}
+              size={S.line.size}
+              weight={theme.text.title.weight}
+            />
+          </>
+        )}
+      </AbsoluteFill>
       </AbsoluteFill>
     </Stage>
   );

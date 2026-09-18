@@ -2792,6 +2792,42 @@ export const MIND = {
   at: CUT16.at,
   to: 15949,
   poses: [15008, 15138, 15243, 15372, 15444, 15747],
+  /**
+   * ⚠ THE THREE NAMES THE VOICE LISTS, each beside the figure on the frame it
+   * is said: "Kalau ingin entry karena FOMO, kesal, atau ingin membalas loss,
+   * berhenti dulu" (15125–15423). Red fill, white type — `warn` is the
+   * episode's one red and its rule is that it names a mistake IN WORDS, which
+   * is exactly what these three are.
+   */
+  labels: [
+    { at: 15210, text: "FOMO", side: "right" },
+    { at: 15262, text: "kesal", side: "left" },
+    { at: 15315, text: "Balas loss", side: "right" },
+  ],
+  /**
+   * ⚠ THE THREE GO AND THE ANSWER ARRIVES ON THE SAME FRAME — "semua label text
+   * fade out, langsung muncul". One beat, so there is never a frame with
+   * neither on it, and never one with both.
+   *
+   * ⚠ AND IT CARRIES NO LABEL. The three are things being named; this is the
+   * instruction about them, and a pill around it would make it a fourth item in
+   * the same list.
+   */
+  stop: { at: 15365, text: "Berhenti dulu!" },
+  /**
+   * ⚠ 15444 IS ONE BEAT DOING THREE THINGS, and they are one thing: the figure
+   * drops out of the way, the mark comes down into the room it leaves, and the
+   * sentence lands under the mark. It is also the frame pose 05 arrives on, so
+   * the character is already calm when the camera finds him again.
+   *
+   * ⚠ "Berhenti dulu!" GOES HERE TOO, and that is mine rather than Simon's. He
+   * did not say to clear it; the sentence below the mark lands where it stands,
+   * and two statements stacked is not a reading anyone asked for.
+   */
+  mark: {
+    at: 15444,
+    text: "Technical analysis adalah alat bantu keputusan, bukan kepastian",
+  },
 } as const;
 
 {
@@ -2805,6 +2841,18 @@ export const MIND = {
     if (i && at <= V.poses[i - 1]) fail(`SC17's pose ${i + 1} lands at ${at}, not after the one before it`);
   });
   if (V.poses[V.poses.length - 1] >= V.to) fail("SC17's last pose arrives at or after the scene ends");
+  /** ⚠ THE THREE NAMES ARRIVE IN ORDER AND INSIDE THE SENTENCE THAT LISTS THEM,
+   *  which the recording runs from 15125 to 15423. */
+  V.labels.forEach((l, i) => {
+    if (l.at < 15125 || l.at > 15423) fail(`SC17's "${l.text}" lands at ${l.at}, outside the sentence that names it`);
+    if (i && l.at <= V.labels[i - 1].at) fail(`SC17's "${l.text}" does not follow "${V.labels[i - 1].text}"`);
+  });
+  /** ⚠ AND THE ANSWER COMES AFTER ALL THREE, and the mark after the answer. */
+  if (V.stop.at <= V.labels[V.labels.length - 1].at) fail("SC17's answer arrives before the last name it answers");
+  if (V.mark.at <= V.stop.at) fail("SC17's mark arrives before the answer it replaces");
+  /** ⚠ THE MARK LANDS ON THE POSE THAT BELONGS TO IT — 05, the calm one, which
+   *  is why both are written as 15444 rather than one being "about then". */
+  if (V.mark.at !== V.poses[4]) fail(`SC17's mark arrives at ${V.mark.at}, not with pose 05 at ${V.poses[4]}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */
