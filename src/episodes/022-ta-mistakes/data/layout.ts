@@ -1771,7 +1771,7 @@ export const flagWedge = (g: Grid) => {
 
 /* ═══ SC16 · SEBELUM ENTRY ════════════════════════════════════════════════
  *
- * Two lines at the top of the frame and five tiles in the middle of it.
+ * Two lines at the top of the frame and five app screens in the middle of it.
  *
  * ⚠ THE TWO LINES LIVE IN THE TITLE STRIP, AND THAT IS WHY THEY ARE 48px.
  * Simon asked for "Sebelum entry," at the top with "space 1 text line di
@@ -1791,32 +1791,68 @@ const PREP_LEADING = PREP_SIZE * 1.25;
 const PREP_TOP = theme.stage.active.y + (PREP_STRIP - PREP_LEADING * 2) / 2;
 
 /**
- * ⚠ THE GRID IS 3×2 WITH ONE CELL EMPTY, and every clause of the direction
- * falls out of it: "01 Day dan 02 Week bersebelahan di tengah layar secara
- * vertikal" is the middle column, one above the other, on the screen's own
- * centre-line; "03 Trend di sebelah kiri 01 dan 02" is the left column's top
- * cell; "di bawahnya 03 adalah 05" is the one under it; "di samping kanan
- * adalah 04" is the right column. The empty cell is bottom-right.
+ * ═══ THE FIVE SCREENS ═══
  *
- * ⚠ THE TILE SIZE IS A DECISION, NOT A MEASUREMENT, because the five images do
- * not exist yet. It is solved from the space instead: two rows plus a gap fill
- * the card's height exactly (204 → 876), the grid is centred on the canvas's
- * own middle, and each tile is 4:3 — which is what a chart screenshot is. When
- * the real files arrive, `objectFit: "contain"` means whatever aspect they have
- * is honoured inside this box rather than stretched to it.
+ * ⚠ EVERY BOX IS ITS OWN PICTURE'S SHAPE, which is the whole reason these
+ * ratios are here. The five files are Tuntun app screens and no two of them
+ * are alike: 01 and 02 are full phone screens at 0.55, 03 and 05 are wide
+ * panels at 1.81 and 1.70, 04 is a table at 0.77. A common box would have
+ * letterboxed four of them — "jangan di stretch" cuts both ways, and a picture
+ * floating inside a frame two sizes too wide is the other half of that rule.
+ * The numbers are MEASURED off the files themselves, after trimming the
+ * transparent margin the export left on three of them.
+ *
+ * ⚠ AND THE LAYOUT IS SOLVED FROM ONE HEIGHT. `PREP_H` is the tall column's
+ * height; everything else falls out of it, so the arrangement cannot drift
+ * out of proportion when it moves. 576 is what the WIDTH allows: the left
+ * column's outer edge lands on 104 against the safe area's 96, and the right
+ * one on 1769 against 1824. It is not the height that is tight.
+ *
+ * ⚠ THE MIDDLE PAIR IS CENTRED ON THE FRAME, NOT THE GROUP. "01 Day dan 02
+ * Week bersebelahan di tengah layar" — so the pair is placed on 960 first and
+ * the two side columns hang off it. The whole group is therefore slightly
+ * left of centre, because the left column is wider than the right; that is the
+ * direction, and it is the pair that was named.
  */
-const PREP_TILE = { w: 424, h: 318 } as const;
-const PREP_GAP = 36;
-const PREP_GRID = {
-  w: PREP_TILE.w * 3 + PREP_GAP * 2,
-  h: PREP_TILE.h * 2 + PREP_GAP,
+const PREP_ART = {
+  "01": { name: "01 Day", src: "art/prep/01-day.png", ratio: 881 / 1600 },
+  "02": { name: "02 Week", src: "art/prep/02-week.png", ratio: 881 / 1600 },
+  "03": { name: "03 Trend", src: "art/prep/03-trend.png", ratio: 1600 / 886 },
+  "04": { name: "04 Setup", src: "art/prep/04-setup.png", ratio: 1232 / 1600 },
+  "05": { name: "05 Level", src: "art/prep/05-level.png", ratio: 1600 / 941 },
+} as const;
+
+const PREP_H = 576;
+const PREP_GAP = 32;
+/** The left column is two rows, so each of its screens is half the height. */
+const PREP_HALF = (PREP_H - PREP_GAP) / 2;
+const PREP_WIDE = (key: "03" | "05") => PREP_ART[key].ratio * PREP_HALF;
+const PREP_TALL = (key: "01" | "02" | "04") => PREP_ART[key].ratio * PREP_H;
+
+/** The middle pair, placed on the frame's centre-line first. */
+const PREP_PAIR = PREP_TALL("01") + PREP_GAP + PREP_TALL("02");
+const PREP_MID_X = theme.canvas.width / 2 - PREP_PAIR / 2;
+/** The left column is as wide as its widest screen; both are centred in it. */
+const PREP_COL_W = Math.max(PREP_WIDE("03"), PREP_WIDE("05"));
+const PREP_COL_X = PREP_MID_X - PREP_GAP - PREP_COL_W;
+const PREP_ROW_Y = theme.canvas.height / 2 - PREP_H / 2;
+
+const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
+  if (key === "01") return { x: PREP_MID_X, y: PREP_ROW_Y, w: PREP_TALL("01"), h: PREP_H };
+  if (key === "02") {
+    return { x: PREP_MID_X + PREP_TALL("01") + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("02"), h: PREP_H };
+  }
+  if (key === "04") {
+    return { x: PREP_MID_X + PREP_PAIR + PREP_GAP, y: PREP_ROW_Y, w: PREP_TALL("04"), h: PREP_H };
+  }
+  const w = PREP_WIDE(key);
+  return {
+    x: PREP_COL_X + (PREP_COL_W - w) / 2,
+    y: key === "03" ? PREP_ROW_Y : PREP_ROW_Y + PREP_HALF + PREP_GAP,
+    w,
+    h: PREP_HALF,
+  };
 };
-const PREP_AT = (col: number, row: number): Rect => ({
-  x: (theme.canvas.width - PREP_GRID.w) / 2 + col * (PREP_TILE.w + PREP_GAP),
-  y: (theme.canvas.height - PREP_GRID.h) / 2 + row * (PREP_TILE.h + PREP_GAP),
-  w: PREP_TILE.w,
-  h: PREP_TILE.h,
-});
 
 export const PREP_SHOT = {
   size: PREP_SIZE,
@@ -1824,21 +1860,15 @@ export const PREP_SHOT = {
   lead: { x: theme.canvas.width / 2, y: PREP_TOP + PREP_LEADING / 2 },
   /** "apply semua yang sudah dipelajari" — indigo, one line below. */
   apply: { x: theme.canvas.width / 2, y: PREP_TOP + PREP_LEADING * 1.5 },
-  /**
-   * ⚠ `src` IS null ON ALL FIVE AND THAT IS NOT A PLACEHOLDER FOR A DECISION —
-   * it is a placeholder for FILES. Simon named them (01 Day, 02 Week, 03 Trend,
-   * 04 Setup, 05 Level) but none of them is in the repo yet. Until one is, the
-   * tile draws its own name in a card so the layout can be judged; the moment a
-   * file lands in `public/art/prep/` this is the one string that changes and
-   * nothing else does.
-   */
-  tiles: [
-    { key: "03", name: "03 Trend", rect: PREP_AT(0, 0), src: null as string | null },
-    { key: "01", name: "01 Day", rect: PREP_AT(1, 0), src: null as string | null },
-    { key: "04", name: "04 Setup", rect: PREP_AT(2, 0), src: null as string | null },
-    { key: "05", name: "05 Level", rect: PREP_AT(0, 1), src: null as string | null },
-    { key: "02", name: "02 Week", rect: PREP_AT(1, 1), src: null as string | null },
-  ],
+  /** ⚠ IN READING ORDER, NOT IN NUMBER ORDER — left column, middle pair, then
+   *  the right. A list that draws itself the way the eye crosses the frame is
+   *  one fewer thing to hold in your head when the five get their own beats. */
+  tiles: (["03", "01", "02", "04", "05"] as const).map((key) => ({
+    key,
+    name: PREP_ART[key].name,
+    src: PREP_ART[key].src,
+    rect: PREP_BOX(key),
+  })),
 } as const;
 
 {
@@ -1876,24 +1906,40 @@ export const PREP_SHOT = {
   if (S.lead.x + widest / 2 + CUT15.distance > zone) {
     fail(`SC16's lines reach ${Math.round(S.lead.x + widest / 2 + CUT15.distance)} on the cut, inside the logo zone at ${zone}`);
   }
-  /** ⚠ AND THE TILES MUST CLEAR THE TYPE ABOVE AND THE BAND BELOW. */
+  /** ⚠ AND THE SCREENS MUST CLEAR THE TYPE ABOVE AND THE BAND BELOW. */
   const top = Math.min(...S.tiles.map((t) => t.rect.y));
   const bottom = Math.max(...S.tiles.map((t) => t.rect.y + t.rect.h));
-  if (top <= S.apply.y + S.size / 2) fail(`SC16's tiles start at ${top}, under the second line`);
+  if (top <= S.apply.y + S.size / 2) fail(`SC16's screens start at ${top}, under the second line`);
   if (bottom > theme.captionBand.top) {
-    fail(`SC16's tiles reach ${bottom}, inside the subtitle band at ${theme.captionBand.top}`);
+    fail(`SC16's screens reach ${bottom}, inside the subtitle band at ${theme.captionBand.top}`);
   }
   const left = Math.min(...S.tiles.map((t) => t.rect.x));
   const right = Math.max(...S.tiles.map((t) => t.rect.x + t.rect.w));
-  if (left < A.x || right > A.x + A.w) fail("SC16's tiles reach outside the safe area");
-  /** ⚠ THE MIDDLE COLUMN IS THE SCREEN'S MIDDLE — that is the one thing the
-   *  direction is explicit about, and it is the first thing a later tweak to
-   *  the tile size would quietly break. */
-  const mid = S.tiles.filter((t) => t.key === "01" || t.key === "02");
-  const midX = mid.map((t) => t.rect.x + t.rect.w / 2);
-  if (new Set(midX).size !== 1 || midX[0] !== theme.canvas.width / 2) {
-    fail("SC16's 01 and 02 are not stacked on the frame's centre-line");
+  if (left < A.x || right > A.x + A.w) {
+    fail(`SC16's screens run ${Math.round(left)}..${Math.round(right)}, outside the safe area`);
   }
-  const midY = (Math.min(...mid.map((t) => t.rect.y)) + Math.max(...mid.map((t) => t.rect.y + t.rect.h))) / 2;
-  if (midY !== theme.canvas.height / 2) fail(`SC16's middle column is centred on ${midY}, not on the screen at ${theme.canvas.height / 2}`);
+  /** ⚠ EVERY BOX IS ITS PICTURE'S OWN SHAPE. This is the assertion that keeps
+   *  the five from being letterboxed the next time one of them is re-exported
+   *  at a different size. */
+  S.tiles.forEach((t) => {
+    const want = PREP_ART[t.key].ratio;
+    if (Math.abs(t.rect.w / t.rect.h - want) > 0.001) {
+      fail(`SC16's ${t.name} is boxed at ${(t.rect.w / t.rect.h).toFixed(3)}, not at its own ${want.toFixed(3)}`);
+    }
+  });
+  /** ⚠ THE PAIR IS ON THE FRAME'S CENTRE-LINE — the one thing the direction is
+   *  explicit about, and the first thing a change to PREP_H would break. */
+  const pair = S.tiles.filter((t) => t.key === "01" || t.key === "02");
+  const mid = (Math.min(...pair.map((t) => t.rect.x)) + Math.max(...pair.map((t) => t.rect.x + t.rect.w))) / 2;
+  if (Math.abs(mid - theme.canvas.width / 2) > 0.001) {
+    fail(`SC16's 01 and 02 are centred on ${mid}, not on the frame at ${theme.canvas.width / 2}`);
+  }
+  const midY = (Math.min(...pair.map((t) => t.rect.y)) + Math.max(...pair.map((t) => t.rect.y + t.rect.h))) / 2;
+  if (midY !== theme.canvas.height / 2) {
+    fail(`SC16's middle pair is centred on ${midY}, not on the screen at ${theme.canvas.height / 2}`);
+  }
+  /** ⚠ AND THE LEFT COLUMN'S TWO ROWS FILL EXACTLY THE PAIR'S HEIGHT. */
+  const col = S.tiles.filter((t) => t.key === "03" || t.key === "05");
+  const colH = Math.max(...col.map((t) => t.rect.y + t.rect.h)) - Math.min(...col.map((t) => t.rect.y));
+  if (Math.abs(colH - PREP_H) > 0.001) fail(`SC16's left column is ${colH} tall, not the ${PREP_H} beside it`);
 }

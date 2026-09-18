@@ -7,18 +7,20 @@
  * frames — the Sequence rebases them, so `at` has to be added back. That is the
  * number one bug in this pipeline and it is silent when you get it wrong.
  *
- * ⚠ THE FIVE TILES ARE EMPTY ON PURPOSE. Simon named five image files — 01 Day,
- * 02 Week, 03 Trend, 04 Setup, 05 Level — and none of them is in the repo yet.
- * Rather than invent artwork, each tile draws its own name in a card, so the
- * layout is judged now and the pictures drop in later: `src` in data/layout.ts
- * is the only thing that changes, and it changes per tile.
+ * ⚠ THE FIVE PICTURES ARE SIMON'S OWN APP SCREENS, from
+ * "Documents/01 Academy/VIDEO 22 - TA Mistakes". They are copied into
+ * public/art/prep/ with the transparent margin the export left on three of them
+ * trimmed off, and each one's box in data/layout.ts is its own aspect — so
+ * nothing is stretched and nothing is letterboxed.
  *
  * ⚠ AND THEY ALL ARRIVE TOGETHER — "sementara munculin dulu aja, nanti diatur
  * timingnya". One frame in data/timing.ts feeds all five; splitting it into five
  * is an edit to that table and nothing here.
  */
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
-import { Line, Stage, cutInStyle, progress, theme, useMotion, usePalette } from "../../../core";
+import {
+  Line, Stage, cutInStyle, progress, theme, useMotion, usePalette, useShadow,
+} from "../../../core";
 import { CUT15, PREP, local } from "../data/timing";
 import { PREP_SHOT } from "../data/layout";
 
@@ -32,19 +34,24 @@ const APPLY = "apply semua yang sudah dipelajari";
 type Tile = (typeof PREP_SHOT)["tiles"][number];
 
 /**
- * One slot in the grid. A card that either holds a picture or says which
- * picture it is waiting for.
+ * One screen, on a card of its own shape.
  *
- * ⚠ `contain`, NEVER `cover`. The box is solved from the space rather than
- * measured off the artwork, so the artwork's own aspect is the one thing this
- * component does not know — and Simon's standing rule is "jangan di stretch".
- * `contain` letterboxes inside the card; `cover` would crop the picture to fit
- * a shape nobody chose.
+ * ⚠ THE CARD IS UNDER THE PICTURE, NOT AROUND IT. Three of the five have their
+ * own rounded white panel with transparent corners; a border here would draw a
+ * second edge outside the one the artwork already has. A white card at exactly
+ * the picture's size fills those corners instead, and the shadow is what sets
+ * it off the ground.
+ *
+ * ⚠ `contain`, NEVER `cover`. The box IS the picture's ratio, so contain is a
+ * no-op today — it is here for the day a file is re-exported slightly
+ * differently, where cover would silently crop it and Simon's standing rule is
+ * "jangan di stretch".
  */
 const Slot = ({ tile, at }: { tile: Tile; at: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
+  const sh = useShadow();
   const p = progress(f, at, m.reveal);
   if (p <= 0.001) return null;
   const r = tile.rect;
@@ -61,30 +68,14 @@ const Slot = ({ tile, at }: { tile: Tile; at: number }) => {
         transform: `translateY(${((1 - p) * theme.text.body.size) / 2}px)`,
         borderRadius: theme.shape.cardRadius,
         background: c.cardBg,
-        border: `${theme.shape.rule}px solid ${c.border}`,
+        boxShadow: sh.rest,
         overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
       }}
     >
-      {tile.src ? (
-        <Img
-          src={staticFile(tile.src)}
-          style={{ width: "100%", height: "100%", objectFit: "contain" }}
-        />
-      ) : (
-        <span
-          style={{
-            fontFamily: theme.text.family,
-            fontSize: theme.text.tag.size,
-            fontWeight: theme.text.tag.weight,
-            color: c.muted,
-          }}
-        >
-          {tile.name}
-        </span>
-      )}
+      <Img
+        src={staticFile(tile.src)}
+        style={{ width: "100%", height: "100%", objectFit: "contain" }}
+      />
     </div>
   );
 };
