@@ -2668,8 +2668,29 @@ export const PREP = {
   lead: 13895,
   /** "apply semua yang sudah dipelajari" — Simon's second frame. */
   apply: 13971,
-  /** All five, together, until they are given beats of their own. */
-  tiles: 13895,
+  /**
+   * ⚠ 01 IS THERE FROM THE FIRST FRAME, ALONE IN THE MIDDLE — "01 dari awal
+   * sudah ada, tapi posisinya dari tengah dulu secara horizontal". It is the
+   * chart itself, and everything that follows is something read off it, so it
+   * holds the frame on its own until there is something to compare it with.
+   */
+  one: 13895,
+  /** The three panels, each on its own question in the voice. */
+  three: 14170,
+  five: 14246,
+  four: 14337,
+  /** ⚠ THE HIGHLIGHT ON 01's VOLUME BARS — "Volume mendukung?", 14379. */
+  vol: 14397,
+  /**
+   * ⚠ 01 MOVES FIRST AND 02 ARRIVES AFTER IT — "tapi 01 nya geser dulu, baru
+   * 02 nya muncul". This is the frame the slide STARTS on; 02's own arrival is
+   * that plus the move's duration, which is `useMotion`'s and therefore lives
+   * in the scene rather than here. Writing it as a second frame would let the
+   * two drift apart the day the motion is retuned.
+   */
+  pair: 14475,
+  /** "Dan yang paling penting: 'apa invalidation-nya?'" — the voice, 14573. */
+  ask: { at: 14580, text: "Apa invalidation-nya?" },
 } as const;
 
 {
@@ -2684,6 +2705,20 @@ export const PREP = {
    *  13905 opens "Sebelum entry, tarik semua yang sudah dipelajari…" and it
    *  runs to 14129; a line that arrives after it is a caption, not a title. */
   if (V.apply > 14129) fail(`SC16's second line arrives at ${V.apply}, after the sentence it belongs to`);
+  /** ⚠ THE FIVE ARRIVE IN ONE ORDER AND IT IS CHECKED IN THAT ORDER. Each one
+   *  lands on the question the voice is asking, so a beat out of sequence is a
+   *  picture answering the wrong sentence. */
+  const beats: [string, number][] = [
+    ["01", V.one], ["03", V.three], ["05", V.five], ["04", V.four],
+    ["the volume highlight", V.vol], ["02's slide", V.pair], ["the question", V.ask.at],
+  ];
+  beats.forEach(([n, at], i) => {
+    if (i && at <= beats[i - 1][1]) fail(`SC16's ${n} lands at ${at}, not after ${beats[i - 1][0]}`);
+  });
+  if (V.ask.at >= V.to) fail(`SC16's question arrives at ${V.ask.at}, at or after the scene ends at ${V.to}`);
+  /** ⚠ AND THE HIGHLIGHT MUST BE ON 01 WHILE 01 IS STILL STANDING STILL. A mark
+   *  drawn on a picture that then slides out from under it is two claims. */
+  if (V.vol >= V.pair) fail(`SC16 marks the volume at ${V.vol}, when 01 is already moving at ${V.pair}`);
 }
 
 /* ═══ SC15 — the question worth asking ═══════════════════════════════════ */

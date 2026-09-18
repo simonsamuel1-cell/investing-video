@@ -13,13 +13,22 @@
  * trimmed off, and each one's box in data/layout.ts is its own aspect — so
  * nothing is stretched and nothing is letterboxed.
  *
- * ⚠ AND THEY ALL ARRIVE TOGETHER — "sementara munculin dulu aja, nanti diatur
- * timingnya". One frame in data/timing.ts feeds all five; splitting it into five
- * is an edit to that table and nothing here.
+ * ⚠ THE FIVE ARRIVE ON THE QUESTIONS THEY ANSWER. 01 is there from the first
+ * frame, alone on the frame's centre-line; 03 at 14170 is "Trend-nya
+ * bagaimana?", 05 at 14246 is "Level pentingnya di mana?", 04 at 14337 is
+ * "Setup-nya apa?", the volume mark at 14397 is "Volume mendukung?", and 02 at
+ * 14475 is "Timeframe lain sejalan?" — which is why 01 has to MOVE for it
+ * rather than 02 simply appearing: the answer to that question is the two of
+ * them side by side, and the move is what says so.
+ *
+ * ⚠ 02's OWN FRAME IS NOT IN THE TABLE, AND THAT IS DELIBERATE. It arrives when
+ * the slide finishes, which is `useMotion`'s duration; written down as a second
+ * number the two would drift apart the day the motion is retuned.
  */
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import {
-  Line, Stage, cutInStyle, progress, theme, useMotion, usePalette, useShadow,
+  DashedBox, HighlightBox, Line, Stage, cutInStyle, progress, progressInOut,
+  theme, useMotion, usePalette, useShadow,
 } from "../../../core";
 import { CUT15, PREP, local } from "../data/timing";
 import { PREP_SHOT } from "../data/layout";
@@ -29,6 +38,11 @@ const V = PREP;
 const S = PREP_SHOT;
 const LEAD = "Sebelum entry,";
 const APPLY = "apply semua yang sudah dipelajari";
+/** Which beat each screen arrives on, GLOBAL. 02 is missing on purpose: it
+ *  lands when the slide finishes, which only `useMotion` knows. */
+const AT: Record<string, number> = {
+  "01": V.one, "03": V.three, "05": V.five, "04": V.four,
+};
 // ═══════════════════════════════════════════════════════════════════════════
 
 type Tile = (typeof PREP_SHOT)["tiles"][number];
@@ -47,7 +61,7 @@ type Tile = (typeof PREP_SHOT)["tiles"][number];
  * differently, where cover would silently crop it and Simon's standing rule is
  * "jangan di stretch".
  */
-const Slot = ({ tile, at }: { tile: Tile; at: number }) => {
+const Slot = ({ tile, at, x }: { tile: Tile; at: number; x?: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -60,7 +74,7 @@ const Slot = ({ tile, at }: { tile: Tile; at: number }) => {
     <div
       style={{
         position: "absolute",
-        left: r.x,
+        left: x ?? r.x,
         top: r.y,
         width: r.w,
         height: r.h,
@@ -83,8 +97,22 @@ const Slot = ({ tile, at }: { tile: Tile; at: number }) => {
 export const BeforeEntry = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   /** ⚠ GLOBAL FRAMES for the cut. See the header. */
   const g = f + V.at;
+
+  /**
+   * 01's journey out of the middle. `progressInOut` rather than `progress`
+   * because this one is a MOVE and not an arrival: it has to settle as
+   * deliberately as it sets off, or 02 lands next to something still gliding.
+   */
+  const ONE = S.tiles.find((t) => t.key === "01")!.rect;
+  const slid = progressInOut(g, V.pair, m.move);
+  const oneX = S.solo + (ONE.x - S.solo) * slid;
+
+  /** The mark on the volume bars, opening rightwards off its own left edge. */
+  const mark = S.vol(oneX);
+  const marked = progress(g, V.vol, m.reveal);
 
   return (
     <Stage>
@@ -102,7 +130,7 @@ export const BeforeEntry = () => {
         />
         {/* ⚠ INDIGO, AND IT IS THE SECOND HALF OF ONE SENTENCE. Simon gave it
             its own frame at 13971, 76 after the first — the line is held open
-            for it from the start rather than appearing and pushing the tiles
+            for it from the start rather than appearing and pushing the screens
             down, which is what "sediakan space 1 text line di bawahnya" asks
             for. */}
         <Line
@@ -115,8 +143,51 @@ export const BeforeEntry = () => {
           color={c.indigo}
         />
         {S.tiles.map((t) => (
-          <Slot key={t.key} tile={t} at={local(V.tiles, V.at)} />
+          <Slot
+            key={t.key}
+            tile={t}
+            at={t.key === "02" ? local(V.pair, V.at) + m.move : local(AT[t.key], V.at)}
+            x={t.key === "01" ? oneX : undefined}
+          />
         ))}
+        {/* ⚠ OUTSIDE THE CARD, NOT INSIDE IT. A Slot clips its own contents so
+            the picture's corners follow the card's; a mark drawn in there would
+            be clipped with them, and this one is meant to sit ON the picture
+            rather than in it. It is given 01's CURRENT left edge, so it travels
+            with the screen instead of jumping when the screen does. */}
+        {marked > 0.001 && (
+          <HighlightBox rect={mark} grow={marked} opacity={marked} />
+        )}
+        {/* ⚠ THE SAME MARQUEE SC15 CLOSES ON, and it opens from its middle like
+            every dashed box in this episode now does. */}
+        {g >= V.ask.at && (
+          <DashedBox
+            x={S.ask.x}
+            y={S.ask.y}
+            w={S.ask.w}
+            h={S.ask.h}
+            at={local(V.ask.at, V.at)}
+            block={S.ask.block}
+            origin="center"
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: theme.text.family,
+                fontSize: S.ask.size,
+                fontWeight: theme.text.title.weight,
+                color: c.ink,
+                whiteSpace: "pre",
+              }}
+            >
+              {V.ask.text}
+            </div>
+          </DashedBox>
+        )}
       </AbsoluteFill>
     </Stage>
   );

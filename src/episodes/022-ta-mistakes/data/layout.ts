@@ -1837,7 +1837,15 @@ const PREP_ART = {
   "05": { name: "05 Level", src: "art/prep/05-level.png", ratio: 1600 / 906 },
 } as const;
 
-const PREP_H = 580;
+/**
+ * ⚠ 520, DOWN FROM 580, AND THE QUESTION BOX IS WHY. Simon added a dashed box
+ * "di bawah 5 file ini" at 14580, and the pair has to stay centred on the
+ * screen — his first instruction about this scene. Those two together fix the
+ * height: the box needs 92 of its own plus its corner blocks and 50 of air, and
+ * 540 + H/2 + 50 + 92 + 15 has to clear the subtitle band at 972. The screens
+ * lose a tenth of their size for it, which is the cheaper of the two.
+ */
+const PREP_H = 520;
 const PREP_GAP = 32;
 /**
  * The left column's width, solved so its two panels stack to exactly PREP_H.
@@ -1857,6 +1865,33 @@ const PREP_PAIR = PREP_TALL("01") + PREP_GAP + PREP_TALL("02");
 const PREP_MID_X = theme.canvas.width / 2 - PREP_PAIR / 2;
 const PREP_COL_X = PREP_MID_X - PREP_GAP - PREP_COL_W;
 const PREP_ROW_Y = theme.canvas.height / 2 - PREP_H / 2;
+
+/**
+ * ⚠ WHERE 01 STANDS BEFORE 02 EXISTS — "posisinya dari tengah dulu secara
+ * horizontal". On the frame's centre-line, not on the pair's: for nine seconds
+ * it is the only chart on screen and the middle is where a single thing goes.
+ * At 14475 it travels from here to `PREP_BOX("01")` and 02 lands in the space
+ * it leaves.
+ */
+const PREP_SOLO_X = theme.canvas.width / 2 - PREP_TALL("01") / 2;
+
+/**
+ * ⚠ THE VOLUME BARS INSIDE 01, AS FRACTIONS OF THE PICTURE. Measured off
+ * public/art/prep/01-day.png itself — the coloured pixels run x31..834 and
+ * y1010..1161 of its 881×1600 — so the mark follows the screenshot if the
+ * screenshot is ever re-exported at another size. A typed rect would not.
+ *
+ * ⚠ AND THE PAD IS SMALL ON PURPOSE. The bars already span 91% of the picture;
+ * any more air and the box stops reading as a mark on the volume panel and
+ * starts reading as a box around the whole phone.
+ */
+const PREP_VOL = {
+  x1: 31 / 881,
+  x2: 834 / 881,
+  y1: 1010 / 1600,
+  y2: 1161 / 1600,
+  pad: 8,
+} as const;
 
 const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
   if (key === "01") return { x: PREP_MID_X, y: PREP_ROW_Y, w: PREP_TALL("01"), h: PREP_H };
@@ -1883,13 +1918,48 @@ export const PREP_SHOT = {
   apply: { x: theme.canvas.width / 2, y: PREP_TOP + PREP_LEADING * 1.5 },
   /** ⚠ IN READING ORDER, NOT IN NUMBER ORDER — left column, middle pair, then
    *  the right. A list that draws itself the way the eye crosses the frame is
-   *  one fewer thing to hold in your head when the five get their own beats. */
+   *  one fewer thing to hold in your head, now that the five have their own
+   *  beats. */
   tiles: (["03", "01", "02", "04", "05"] as const).map((key) => ({
     key,
     name: PREP_ART[key].name,
     src: PREP_ART[key].src,
     rect: PREP_BOX(key),
   })),
+  /** 01's two x positions: alone in the middle, then beside 02. */
+  solo: PREP_SOLO_X,
+  /** The volume mark, given 01's CURRENT left edge — it travels with the
+   *  picture, so the scene hands it where 01 is rather than where it ends up. */
+  vol: (x: number) => {
+    const r = PREP_BOX("01");
+    return {
+      x1: x + PREP_VOL.x1 * r.w - PREP_VOL.pad,
+      x2: x + PREP_VOL.x2 * r.w + PREP_VOL.pad,
+      y1: r.y + PREP_VOL.y1 * r.h - PREP_VOL.pad,
+      y2: r.y + PREP_VOL.y2 * r.h + PREP_VOL.pad,
+    };
+  },
+  /**
+   * ⚠ "Apa invalidation-nya?" IN THE EPISODE'S MARQUEE, 50 BELOW THE SCREENS —
+   * the same dashed frame and the same 50 that SC15's closing line uses, so the
+   * two closings are one shape. `w` is MEASURED: the sentence sets 339 of ink
+   * at 32px/700, read off a render, plus 38 either side. The 50 is to the CORNER BLOCKS, half of which hang above the
+   * rect — the same overhang that decides SC15's.
+   */
+  ask: (() => {
+    const w = 339 + 38 * 2;
+    const h = 92;
+    const block = 15;
+    const air = 50;
+    return {
+      x: (theme.canvas.width - w) / 2,
+      y: PREP_ROW_Y + PREP_H + air + block / 2,
+      w,
+      h,
+      block,
+      size: 32,
+    };
+  })(),
 } as const;
 
 {
@@ -1972,4 +2042,24 @@ export const PREP_SHOT = {
     ? col[1].rect.y - (col[0].rect.y + col[0].rect.h)
     : col[0].rect.y - (col[1].rect.y + col[1].rect.h);
   if (Math.abs(inner - PREP_GAP) > 0.001) fail(`SC16's left column has a ${inner}px gap, not ${PREP_GAP}`);
+  /** ⚠ 01 STARTS ON THE FRAME'S CENTRE-LINE AND ENDS LEFT OF IT. If the slide
+   *  ever came out zero the beat would still play and nobody would see it. */
+  const one = S.tiles.find((t) => t.key === "01")!.rect;
+  if (Math.abs(S.solo + one.w / 2 - theme.canvas.width / 2) > 0.001) {
+    fail("SC16's 01 does not start on the frame's centre-line");
+  }
+  if (S.solo <= one.x) fail(`SC16's 01 starts at ${S.solo} and ends at ${one.x}; it would travel the wrong way`);
+  /** ⚠ THE VOLUME MARK HAS TO LAND ON THE PICTURE, not beside it. */
+  const v = S.vol(one.x);
+  if (v.x1 < one.x - 12 || v.x2 > one.x + one.w + 12 || v.y1 < one.y || v.y2 > one.y + one.h) {
+    fail("SC16's volume mark does not sit on 01");
+  }
+  /** ⚠ AND THE QUESTION BOX CLEARS THE SCREENS AND THE BAND, corner blocks and
+   *  all. This is the check the note box in SC11 did not have. */
+  const q = S.ask;
+  if (q.y - q.block / 2 <= bottom) fail(`SC16's question box starts at ${q.y - q.block / 2}, on top of the screens`);
+  if (q.y + q.h + q.block / 2 > theme.captionBand.top) {
+    fail(`SC16's question box reaches ${q.y + q.h + q.block / 2}, inside the subtitle band at ${theme.captionBand.top}`);
+  }
+  if (q.x + q.w / 2 !== theme.canvas.width / 2) fail("SC16's question box is not centred on the frame");
 }
