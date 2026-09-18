@@ -163,7 +163,7 @@ export const BeforeEntry = () => {
         <AbsoluteFill style={FENCE}>
         <AbsoluteFill
           style={{
-            transform: `scale(${k.toFixed(4)})`,
+            transform: `translateY(${(-S.zoom.lift * zoom).toFixed(1)}px) scale(${k.toFixed(4)})`,
             transformOrigin: `${S.zoom.x}px ${S.zoom.y}px`,
           }}
         >

@@ -1951,6 +1951,18 @@ const PREP_BOX = (key: keyof typeof PREP_ART): Rect => {
   };
 };
 
+/**
+ * The push-in's own numbers, declared here so `PREP_SHOT` can hang the closing
+ * sentence off `to` without restating the arithmetic. See the note inside
+ * PREP_SHOT.zoom for why the travel is halved rather than the scale.
+ */
+const PREP_ZOOM = (() => {
+  const FULL = 900;
+  const k = 1 + (FULL / PREP_ROW_TOP - 1) / 4;
+  const lift = 40;
+  return { x: theme.canvas.width / 2, y: 0, k, lift, to: PREP_ROW_TOP * k - lift };
+})();
+
 export const PREP_SHOT = {
   size: PREP_SIZE,
   /** "Sebelum entry," — black. */
@@ -1982,14 +1994,20 @@ export const PREP_SHOT = {
    * The type still swells and fills the shot on the way, which is what the
    * direction is describing.
    *
-   * ⚠ HALF THE TRAVEL — Simon: "previewnya terlalu dekat, coba kurangi jaraknya
-   * 50%". `FULL` is where the screens' top edge landed before, 900, which put
-   * them all but off the frame; what is halved is the camera's own journey,
+   * ⚠ A QUARTER OF THE TRAVEL, HALVED TWICE — Simon: "previewnya terlalu dekat,
+   * coba kurangi jaraknya 50%", then "kurangin lagi 50%". `FULL` is where the
+   * screens' top edge landed at the original push, 900, which put them all but
+   * off the frame; what is halved each time is the camera's own JOURNEY,
    * `k - 1`, not `k`. Halving `k` would be halving where the picture ENDS UP,
    * which is not a distance at all — a camera that ends at 1.0 has not moved,
    * so the move's length is what it travels past 1.
    *
-   * 4.09 becomes 2.55, and the screens' top edge lands on 560 instead of 900.
+   * 4.09 → 2.55 → 1.77, and the screens' top edge lands on 390 instead of 900.
+   *
+   * ⚠ AND THE WHOLE PICTURE RIDES UP 40 WITH IT — "agak naik sedikit". The lift
+   * is on the move's own curve, so it arrives with the scale rather than as a
+   * second thing happening; it is subtracted from `to` here so everything hung
+   * off that number, the sentence included, already knows about it.
    *
    * ⚠ WHICH IS WHY THE SENTENCE'S OWN PLACE IS DERIVED FROM `to` AND NOT TYPED.
    * At the full push the white ran to 900 and the sentence sat comfortably on
@@ -2003,11 +2021,7 @@ export const PREP_SHOT = {
    * every frame of this move on exactly that. The scene fences the moving group
    * off the band; see FENCE in the scene.
    */
-  zoom: (() => {
-    const FULL = 900;
-    const k = 1 + (FULL / PREP_ROW_TOP - 1) / 2;
-    return { x: theme.canvas.width / 2, y: 0, k, to: PREP_ROW_TOP * k };
-  })(),
+  zoom: PREP_ZOOM,
   /**
    * ⚠ THE CLOSING SENTENCE SITS ON THE CANVAS, NOT IN THE PUSH-IN. It is drawn
    * outside the zoomed group, so it types at its own size on the white ground
@@ -2018,7 +2032,7 @@ export const PREP_SHOT = {
     /** ⚠ CENTRED IN THE WHITE THE PUSH-IN UNCOVERS, between the safe top and
      *  the card edge the move leaves — never on the canvas's own middle. See
      *  the note on `zoom`. */
-    y: (theme.stage.active.y + PREP_ROW_TOP * (1 + (900 / PREP_ROW_TOP - 1) / 2)) / 2,
+    y: (theme.stage.active.y + PREP_ZOOM.to) / 2,
     size: theme.text.title.size,
   },
   /** The volume mark, given 01's CURRENT left edge — it travels with the
