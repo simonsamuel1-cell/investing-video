@@ -27,9 +27,9 @@ import { usePalette } from "../palette";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /**
  * ⚠ PHASE D AND THE GROUP'S END MOVED +302 when the second passage was cut in
- * at global 2482 — four frames before D began. Phase C therefore holds for 302
- * frames while the new line is spoken, and the camera's pull-out is left where
- * it was (1957–1997) so it finishes rather than freezing mid-move.
+ * at global 2486 — exactly where D began. Phase C therefore holds for 302
+ * frames while the new line is spoken, and the camera's pull-out (1957–1997)
+ * finishes on the very frame of the cut rather than being caught mid-move.
  */
 export const PHASE = { a: 0, b: 608, c: 1190, d: 2299, end: 2821 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };

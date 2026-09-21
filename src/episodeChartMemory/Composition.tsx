@@ -28,15 +28,23 @@ export const TOTAL_FRAMES = 7769; // 04:18.97 @30fps — VO-LOCKED, plus four in
 // derived from VIDEO_01_-_Chart_fixed.srt (106 cues) — not a wpm estimate.
 //
 // ⚠ FOUR PASSAGES WERE CUT IN, and every number after each one moved. Simon
-// gave the cuts as timecodes on the finished film; each lands two to six
-// frames before a scene change, so the scene that owns the cut simply lasts
-// longer and holds while the new line is spoken. Nothing inside a scene had to
-// be retimed — only the boundaries, the two SlideCut frames, and phase D.
+// first gave the cuts as timecodes on the finished film — 487, 2482, 3714,
+// 5187 — and each landed two to six frames short of a scene change. He then
+// asked for them ON the change, which is what they are now:
 //
-//   cut at 487  +244f  "Tapi sebenarnya, kita nggak perlu memahami semuanya…"
-//   cut at 2482 +302f  "Jadi, kita sudah punya dasar untuk membaca chart…"
-//   cut at 3714 +290f  "Sampai di sini, kita sudah melihat bahwa satu saham…"
-//   cut at 5187 +327f  "Sekarang kita sudah melihat bagaimana chart merekam…"
+//   cut at 489  +244f  "Tapi sebenarnya, kita nggak perlu memahami semuanya…"
+//   cut at 2486 +302f  "Ya, jadi kita sudah punya dasar untuk membaca chart…"
+//   cut at 3720 +290f  "Sampai di sini, kita sudah melihat bahwa satu saham…"
+//   cut at 5192 +327f  "Sekarang kita sudah melihat bagaimana chart merekam…"
+//
+// ⚠ AND THE SCENE TABLE BELOW DID NOT CHANGE WHEN THEY MOVED. Each cut stayed
+// inside the same scene and each scene grows by the same amount, so every
+// boundary lands on the frame it already had. Only the audio and the cues
+// shifted, by those two to six frames. Nothing inside a scene was ever
+// retimed — only the boundaries, the two SlideCut frames, and phase D.
+//
+// The outgoing scene HOLDS through each window: a cut on the boundary is the
+// last frame of what you were watching, not the first of what comes next.
 //
 // The audio was rebuilt sample-exact: 44100/30 = 1470 samples per frame, so
 // every cut falls on a whole frame and each passage is padded with a few
