@@ -168,10 +168,13 @@ export const RemotionRoot: React.FC = () => {
       />
 
       {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
-      {/* Was "ChartMemory". Remotion ids take only a-z A-Z 0-9 and "-", so the
-          spaces Simon wrote are hyphens; the title itself is unchanged. */}
+      {/* Was "ChartMemory". The one hyphen separates the module code from the
+          title; the title itself runs together because a Remotion id takes only
+          a-z A-Z 0-9 and "-" — no spaces, no underscores, not even a full stop.
+          The branch name spells it differently for the same reason in reverse:
+          git allows "_" and Simon prefers it there. */}
       <Composition
-        id="TA01-Memahami-Pergerakan-Pasar-dari-Grafik"
+        id="TA01-MemahamiPergerakanPasarDariGrafik"
         component={ChartMemoryComposition}
         durationInFrames={CHART_FRAMES}
         fps={30}
