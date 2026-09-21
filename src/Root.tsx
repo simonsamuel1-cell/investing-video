@@ -85,10 +85,6 @@ import {
   TOTAL_FRAMES as CHART_FRAMES,
 } from "./episodeChartMemory/Composition";
 import {
-  ChartMemoryComposition as ChartMemory2Composition,
-  TOTAL_FRAMES as CHART2_FRAMES,
-} from "./episodeChartMemory2/Composition";
-import {
   MarketStructureComposition,
   TOTAL_FRAMES as MS_FRAMES,
 } from "./episode20marketstructure/Composition";
@@ -171,21 +167,13 @@ export const RemotionRoot: React.FC = () => {
         height={1080}
       />
 
-      {/* ═══ The Chart is the Market's Memory ═════════════════════════════ */}
+      {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
+      {/* Was "ChartMemory". Remotion ids take only a-z A-Z 0-9 and "-", so the
+          spaces Simon wrote are hyphens; the title itself is unchanged. */}
       <Composition
-        id="ChartMemory"
+        id="TA01-Memahami-Pergerakan-Pasar-dari-Grafik"
         component={ChartMemoryComposition}
         durationInFrames={CHART_FRAMES}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      {/* ⚠ ChartMemory2 is the FROZEN BACKUP, with its own copy of every
-          scene and data file. Editing one never touches the other. */}
-      <Composition
-        id="ChartMemory2"
-        component={ChartMemory2Composition}
-        durationInFrames={CHART2_FRAMES}
         fps={30}
         width={1920}
         height={1080}
