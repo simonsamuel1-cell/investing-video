@@ -38,6 +38,19 @@ import { SceneWhichSectors } from "./scenes/SceneWhichSectors";
 import { SceneGoldHighlight } from "./scenes/SceneGoldHighlight";
 import { SceneFilterNote } from "./scenes/SceneFilterNote";
 import { SceneStocksHighlight } from "./scenes/SceneStocksHighlight";
+import { SceneTopGainersHighlight } from "./scenes/SceneTopGainersHighlight";
+import { SceneSectorsHighlight } from "./scenes/SceneSectorsHighlight";
+import { SceneSisterNotes } from "./scenes/SceneSisterNotes";
+import { SceneColumnHighlight } from "./scenes/SceneColumnHighlight";
+import { SceneForeignFlowHighlight } from "./scenes/SceneForeignFlowHighlight";
+import { SceneSpikeNotes } from "./scenes/SceneSpikeNotes";
+import { SceneQuietNotes } from "./scenes/SceneQuietNotes";
+import { SceneAskAI } from "./scenes/SceneAskAI";
+import { SceneSortNotes } from "./scenes/SceneSortNotes";
+import { SceneFindNotes } from "./scenes/SceneFindNotes";
+import { SceneRecapText } from "./scenes/SceneRecapText";
+import { SceneValidateNote } from "./scenes/SceneValidateNote";
+import { Scene32 } from "./scenes/Scene32";
 import { COLORS, MOUNT_VO } from "./theme";
 import { fontFamily } from "./fonts";
 
@@ -70,8 +83,14 @@ const MOVES: { src: [number, number]; dst: number; label: string }[] = [
   { src: [2153, 2486], dst: 1353, label: "2" }, // 1:11.20–1:22.26 → 0:45; skips S10-tail flash 1350–1352
   // move "3" (S12–13 continuation) is custom-mounted below (tags removed + freeze at 1794).
   // moves "4"+"B" are custom-mounted below as ONE continuous S14–16 playback (no cut).
-  { src: [4790, 5814], dst: 6004, label: "5" }, // 2:39.20–3:13.24 → 3:20.04
-  { src: [6523, 6902], dst: 7047, label: "6" }, // 3:37.13–3:50.02 → 3:54.27
+  // src starts at 4826 (was 4790) so the short S22 fragment that used to sit at
+  // 6004–6039 is dropped, and the S23–28 block now lands on 6004 instead of 6040.
+  { src: [4826, 5814], dst: 6004, label: "5" }, // → NV 6004–6992
+  // move "6" was src [6523,6902]→7047, which produced S30 at 7047–7274, S31 at
+  // 7275–7387 and S32 at 7388–7425. S30 is now dropped (texts take 7047–7243) and the
+  // other two are pulled forward, so it is split into two entries:
+  { src: [6751, 6864], dst: 7244, label: "6a" }, // S31 → NV 7244–7357
+  { src: [6864, 6902], dst: 7360, label: "6b" }, // S32 → NV 7360–7398 (then frozen)
   // move "A" (PrC 2756–3131 S14–16 → 1820) is custom-mounted below with a 3-item Concept list.
 ];
 
@@ -245,41 +264,199 @@ export const ConceptSectorVideo = () => (
 
     {/* Three text notes beside that phone: "Search at Concept Sector" @2876,
         "…worth checking" @2931, "…probably noise." @3088; all out with the clip @3178. */}
-    <Sequence from={2876} durationInFrames={302} name="SceneClipNotes · worth checking / probably noise (2876→3178)">
+    <Sequence
+      from={2876}
+      durationInFrames={302}
+      name="SceneClipNotes · worth checking / probably noise (2876→3178)"
+    >
       <SceneClipNotes />
     </Sequence>
 
     {/* Between the phone clips: "A catalyst hits" @3183 → "US-Iran tensions escalate"
         @3232; both out by 3291 (the tag row above keeps running). */}
-    <Sequence from={3183} durationInFrames={108} name="SceneCatalyst · A catalyst hits → US-Iran tensions escalate (3183→3291)">
+    <Sequence
+      from={3183}
+      durationInFrames={108}
+      name="SceneCatalyst · A catalyst hits → US-Iran tensions escalate (3183→3291)"
+    >
       <SceneCatalyst />
     </Sequence>
 
     {/* "Which sectors benefit?" — bridges the catalyst text to the chat clip. */}
-    <Sequence from={3294} durationInFrames={60} name="SceneWhichSectors · Which sectors benefit? (3294→3354)">
+    <Sequence
+      from={3294}
+      durationInFrames={60}
+      name="SceneWhichSectors · Which sectors benefit? (3294→3354)"
+    >
       <SceneWhichSectors />
     </Sequence>
+    {/* fadeDur 1: this clip runs straight into frame-4139-5034 at 4139, so it must NOT
+        dissolve early — it holds full opacity and hands over on 4138→4139. The other
+        clips keep the 14f fade because each is followed by an empty silver gap. */}
     <Sequence from={3354} durationInFrames={785} name="frame 3354–4139 (phone)">
-      <SceneFramePhone video="frame-3354-4139.mp4" dur={785} />
+      <SceneFramePhone video="frame-3354-4139.mp4" dur={785} fadeDur={1} />
     </Sequence>
 
     {/* Overlays ON TOP of the chat clip (mounted after it so they sit above the
         phone): highlight the Gold block (3600→3690), then the "Filter by …" note. */}
-    <Sequence from={3600} durationInFrames={90} name="SceneGoldHighlight · Gold Ecosystem → Gold Sector (3600→3690)">
+    <Sequence
+      from={3358}
+      durationInFrames={369}
+      name="SceneAskAI · Ask Tuntun AI (3358→3727)"
+    >
+      <SceneAskAI />
+    </Sequence>
+    <Sequence
+      from={3600}
+      durationInFrames={90}
+      name="SceneGoldHighlight · Gold Ecosystem → Gold Sector (3600→3690)"
+    >
       <SceneGoldHighlight />
     </Sequence>
-    <Sequence from={3824} durationInFrames={296} name="SceneFilterNote · Filter by … (3824→4120)">
+    <Sequence
+      from={3824}
+      durationInFrames={296}
+      name="SceneFilterNote · Filter by … (3824→4120)"
+    >
       <SceneFilterNote />
     </Sequence>
-    <Sequence from={3978} durationInFrames={142} name="SceneStocksHighlight · cyan box around stocks list (3978→4120)">
+    <Sequence
+      from={3978}
+      durationInFrames={142}
+      name="SceneStocksHighlight · cyan box around stocks list (3978→4120)"
+    >
       <SceneStocksHighlight />
     </Sequence>
 
     <Sequence from={4139} durationInFrames={895} name="frame 4139–5034 (phone)">
       <SceneFramePhone video="frame-4139-5034.mp4" dur={895} />
     </Sequence>
+
+    {/* HL boxes over that clip (mounted after it so they sit on top). */}
+    <Sequence
+      from={4139}
+      durationInFrames={92}
+      name="SceneTopGainersHighlight · KBLV/PSDN/CTTH/RONY/AGAR rows (4139→4231)"
+    >
+      <SceneTopGainersHighlight />
+    </Sequence>
+    <Sequence
+      from={4391}
+      durationInFrames={71}
+      name="SceneSectorsHighlight · IDX Sectors / Tuntun Sector / Group (4391→4462)"
+    >
+      <SceneSectorsHighlight />
+    </Sequence>
+
+    {/* Notes beside that clip: "Why does a stock spike?" @4140, "Find the reason at
+        Concept Sector" @4259; both out by 4564. */}
+    <Sequence
+      from={4140}
+      durationInFrames={424}
+      name="SceneSpikeNotes · why does a stock spike / find the reason (4140→4564)"
+    >
+      <SceneSpikeNotes />
+    </Sequence>
+
+    {/* Notes beside that clip: "Look for sister stocks…" @4583, "Use the filter again"
+        @4710; both out with the clip at 5034. */}
+    <Sequence
+      from={4583}
+      durationInFrames={451}
+      name="SceneSisterNotes · sister stocks / use the filter again (4583→5034)"
+    >
+      <SceneSisterNotes />
+    </Sequence>
+    {/* fadeInDur 12: this clip follows a 15-frame empty gap (clip 3 ends 5034), so it
+        fades up instead of popping in. The others hard-start — they follow a clip. */}
     <Sequence from={5049} durationInFrames={951} name="frame 5049–6000 (phone)">
-      <SceneFramePhone video="frame-5049-6000.mp4" dur={951} />
+      <SceneFramePhone video="frame-5049-6000.mp4" dur={951} fadeInDur={12} />
+    </Sequence>
+
+    {/* Notes beside that clip: "Quiet accumulation" @5037, "Across sectors, …" @5127. */}
+    <Sequence
+      from={5037}
+      durationInFrames={258}
+      name="SceneQuietNotes · quiet accumulation / across sectors (5037→5295)"
+    >
+      <SceneQuietNotes />
+    </Sequence>
+
+    {/* Two separate HL boxes on the sector table: the Price/Chg%/5D Chg% columns
+        (5301→5405, held still), then just the words "Foreign Flow" (5405→5552). */}
+    <Sequence
+      from={5301}
+      durationInFrames={104}
+      name="SceneColumnHighlight · Price/Chg%/5D Chg% columns (5301→5405)"
+    >
+      <SceneColumnHighlight />
+    </Sequence>
+    <Sequence
+      from={5405}
+      durationInFrames={147}
+      name="SceneForeignFlowHighlight · the words Foreign Flow (5405→5552)"
+    >
+      <SceneForeignFlowHighlight />
+    </Sequence>
+
+    {/* Notes beside that clip: "Sort by Foreign Flow" @5301 + "Find theme that has…"
+        @5563 (out 5739); then "Find accumulated stock" @5782 + "Check the technicals"
+        @5853 (out 5995). */}
+    <Sequence
+      from={5301}
+      durationInFrames={438}
+      name="SceneSortNotes · sort by Foreign Flow / find theme (5301→5739)"
+    >
+      <SceneSortNotes />
+    </Sequence>
+    <Sequence
+      from={5782}
+      durationInFrames={213}
+      name="SceneFindNotes · find accumulated stock / check the technicals (5782→5995)"
+    >
+      <SceneFindNotes />
+    </Sequence>
+
+    {/* S23–28 tail — the block's LAST frame (local 987) frozen from 6992 and fading
+        out so it is GONE at 7029. "validate on / chart pro" is baked into that frozen
+        frame, so it ends at 7029 with it. */}
+    <Sequence
+      from={6992}
+      durationInFrames={37}
+      name="S23–28 tail · freeze last frame @6992 → fade out, gone by 7029"
+    >
+      <FadeBox fadeOutAt={23} fadeOutDur={14}>
+        <Freeze frame={987}>
+          <Scene23to27 />
+        </Freeze>
+      </FadeBox>
+    </Sequence>
+
+    {/* "validate on / chart pro" — its own scene so it survives past the block's end
+        (6991) and its frozen tail, ending exactly at 7029. */}
+    <Sequence from={6960} durationInFrames={69} name="SceneValidateNote · validate on / chart pro (6960→7029)">
+      <SceneValidateNote />
+    </Sequence>
+
+    {/* Replaces the old S30 recap scene (was 7047–7274) with two centred lines. */}
+    <Sequence
+      from={7047}
+      durationInFrames={196}
+      name="SceneRecapText · isn't luck → a different level (7047→7243)"
+    >
+      <SceneRecapText />
+    </Sequence>
+
+    {/* S32 tail — the end card's last frame (local 37) frozen from 7398 and held to
+        the end of the composition (7470). */}
+    <Sequence
+      from={7398}
+      durationInFrames={72}
+      name="S32 tail · freeze last frame → end of composition (7398→7470)"
+    >
+      <Freeze frame={37}>
+        <Scene32 />
+      </Freeze>
     </Sequence>
 
     {/* move A — S14–16 (3-item Concept list) at NV 1820; content ends 2136 then

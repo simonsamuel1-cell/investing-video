@@ -19,14 +19,15 @@ const fOut = (f: number, s: number, d: number) => interpolate(f, [s, s + d], [1,
 
 const CARD_W = 620;
 const CARD_H = 120;
+const CELL_SIZE = 30; // font size of the cell copy
 const COL1 = 310;
 const COL2 = COL1 + CARD_W + 64; // 994
-// `at` = scene-local appearance frame (NV frame − 700).
+// `at` = scene-local appearance frame (NV frame − 700). `body` = the cell's copy.
 const CELLS = [
-  { header: "Catalyst", x: COL1, hy: 208, cy: 260, at: 9 }, // 709
-  { header: "Policy", x: COL2, hy: 208, cy: 260, at: 51 }, // 751
-  { header: "Commodity", x: COL1, hy: 430, cy: 482, at: 95 }, // 795
-  { header: "Sector", x: COL2, hy: 430, cy: 482, at: 139 }, // 839
+  { header: "Catalyst", body: "US-Iran tensions escalate", x: COL1, hy: 208, cy: 260, at: 9 }, // 709
+  { header: "Policy", body: "Government raises coal royalty rates", x: COL2, hy: 208, cy: 260, at: 51 }, // 751
+  { header: "Commodity", body: "Global nickel prices surge", x: COL1, hy: 430, cy: 482, at: 95 }, // 795
+  { header: "Sector", body: "Bank Indonesia holds interest rates", x: COL2, hy: 430, cy: 482, at: 139 }, // 839
 ];
 
 // BUMI card (centred), glides up at 959.
@@ -78,8 +79,8 @@ export const SceneThemeGrid = () => {
             <div style={{ position: "absolute", left: c.x, top: c.hy, width: CARD_W, textAlign: "center", fontSize: 34, fontWeight: 800, color: COLORS.purple }}>
               {c.header}
             </div>
-            <div style={{ position: "absolute", left: c.x, top: c.cy, width: CARD_W, height: CARD_H, boxSizing: "border-box", borderRadius: 18, border: `2px dashed ${COLORS.hairline}`, background: "rgba(255,255,255,0.55)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 28, fontWeight: 600, color: "#9AA0AA" }}>
-              input placeholder here
+            <div style={{ position: "absolute", left: c.x, top: c.cy, width: CARD_W, height: CARD_H, boxSizing: "border-box", borderRadius: 18, border: `2px solid ${COLORS.hairline}`, background: "rgba(255,255,255,0.66)", display: "flex", alignItems: "center", justifyContent: "center", textAlign: "center", padding: "0 24px", fontSize: CELL_SIZE, fontWeight: 600, lineHeight: 1.25, color: COLORS.black }}>
+              {c.body}
             </div>
           </div>
         );

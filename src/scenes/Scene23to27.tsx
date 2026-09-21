@@ -28,6 +28,18 @@ const RFV = { x: 1160, y: 401, w: 460, h: 222 };
 const MA5 = { x: 640, y: 466, w: 640, h: 92 };
 const MA5_SCALE = 0.84;
 
+// ─── "Curated by …" NOTE — POSITION / SIZE, edit these ──────────────────────
+// Right-aligned, anchored NOTE_GAP px off the phone's right edge and vertically
+// centred on it. The phone's right edge measures 961 while it is shifted left for
+// S25. (S26's "validate on / chart pro" note lives in SceneValidateNote.tsx.)
+const PHONE_RIGHT_SHIFTED = 961; // S25 — "Curated by …"
+const NOTE_GAP = 50; // gap from the phone to the text block
+const NOTE_CY = 512; // the phone's vertical centre
+const NOTE_SIZE = 48; // font size
+const NOTE_WEIGHT = 600; // font weight
+const NOTE_LINE_H = 1.2; // line height
+// ─────────────────────────────────────────────────────────────────────────────
+
 export const Scene23to27 = () => {
   const frame = useCurrentFrame();
 
@@ -48,8 +60,9 @@ export const Scene23to27 = () => {
   // "Curated by Tuntun Research Institute" — appears right-beside the shifted phone.
   const curatedOp = interpolate(frame, [495, 510, 605, 620], [0, 1, 1, 0], CLAMP);
 
-  // S26: "validate on chart pro" beside the (centred) phone @ 03:11.27 (local 931).
-  const validateOp = interpolate(frame, [931, 943, 1008, 1020], [0, 1, 1, 0], CLAMP);
+  // S26's "validate on / chart pro" note now lives in its own scene
+  // (SceneValidateNote, mounted from Video.tsx) so its timing is independent of this
+  // block — it must outlive the block's frozen tail.
   // S27/S28 (block now folds in S28): highlight over IDX Sectors / Tuntun Sector /
   // Concept, 03:21.02–03:25.02 (local 1206–1326). Width = phone (428) + 25px each side.
   const hl27Op = interpolate(frame, [1206, 1216, 1314, 1326], [0, 1, 1, 0], CLAMP);
@@ -63,18 +76,19 @@ export const Scene23to27 = () => {
       <div
         style={{
           position: "absolute",
-          left: 990,
-          top: 435,
-          width: 834,
-          fontSize: 64,
-          fontWeight: 800,
-          lineHeight: 1.18,
-          letterSpacing: -0.5,
-          color: COLORS.black,
+          left: PHONE_RIGHT_SHIFTED + NOTE_GAP,
+          top: NOTE_CY,
+          transform: "translateY(-50%)",
+          textAlign: "left",
+          fontSize: NOTE_SIZE,
+          fontWeight: NOTE_WEIGHT,
+          lineHeight: NOTE_LINE_H,
+          whiteSpace: "nowrap",
           opacity: curatedOp,
         }}
       >
-        Curated by<br />Tuntun Research Institute
+        <div style={{ color: COLORS.black }}>Curated by</div>
+        <div style={{ color: COLORS.purple }}>Tuntun Research Institute</div>
       </div>
 
       {/* Company Quality — section lifted out into an opaque card, bottom-left (per Scene_24.png) */}
@@ -190,23 +204,7 @@ export const Scene23to27 = () => {
         </span>
       </div>
 
-      {/* S26 — "validate on chart pro" right-beside the centred phone (20px gap) */}
-      <div
-        style={{
-          position: "absolute",
-          left: 1194,
-          top: 440,
-          width: 600,
-          fontSize: 60,
-          fontWeight: 800,
-          lineHeight: 1.2,
-          letterSpacing: -0.5,
-          color: COLORS.black,
-          opacity: validateOp,
-        }}
-      >
-        validate on<br />chart pro
-      </div>
+      {/* S26 note removed — see SceneValidateNote.tsx */}
 
       {/* S27/S28 — highlight over IDX Sectors / Tuntun Sector / Concept */}
       <div
