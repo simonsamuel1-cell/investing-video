@@ -1,5 +1,5 @@
 /**
- * SC18 — the closing rules. `from 15949 · to 16905`
+ * SC18 — the closing rules. `from 15949 · to 16965`
  *
  * ⚠ IT ARRIVES ON A CAMERA CUT AND THE GROUND DOES NOT. Simon: "berikan
  * transisi camera cut lagi, tapi backgroundnya stay ya, ga ikut transisi". The
