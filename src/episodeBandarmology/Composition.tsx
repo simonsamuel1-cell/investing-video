@@ -1,0 +1,163 @@
+/**
+ * Bandarmology — the program. Frame-exact §4 timeline, single root <Audio>, and
+ * the two continuity sequences (WyckoffStage, WorkflowStage) running in parallel
+ * with the independent scenes.
+ *
+ * from/duration are ABSOLUTE frames @30fps, calibrated to the recorded VO —
+ * do NOT re-estimate. Scenes 5–10 are owned by WyckoffStage (NOT in
+ * INDEPENDENT_SCENES); Scenes 22–33 content ARE independent and the WorkflowStage
+ * chrome (rail + phone) spans the same range on top.
+ */
+import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
+import type { FC } from "react";
+import { theme } from "./theme";
+import { Scene01 } from "./scenes/Scene01";
+import { Scene02 } from "./scenes/Scene02";
+import { Scene03 } from "./scenes/Scene03";
+import { Scene04 } from "./scenes/Scene04";
+import { Scene11 } from "./scenes/Scene11";
+import { Scene12 } from "./scenes/Scene12";
+import { Scene13 } from "./scenes/Scene13";
+import { Scene14 } from "./scenes/Scene14";
+import { Scene15 } from "./scenes/Scene15";
+import { Scene16 } from "./scenes/Scene16";
+import { Scene17 } from "./scenes/Scene17";
+import { Scene18 } from "./scenes/Scene18";
+import { Scene19 } from "./scenes/Scene19";
+import { Scene20 } from "./scenes/Scene20";
+import { Scene21 } from "./scenes/Scene21";
+import { Scene22 } from "./scenes/Scene22";
+import { Scene23 } from "./scenes/Scene23";
+import { Scene26 } from "./scenes/Scene26";
+import { Scene27 } from "./scenes/Scene27";
+import { Scene28 } from "./scenes/Scene28";
+import { Scene29 } from "./scenes/Scene29";
+import { Scene30 } from "./scenes/Scene30";
+import { Scene31 } from "./scenes/Scene31";
+import { Scene32 } from "./scenes/Scene32";
+import { Scene33 } from "./scenes/Scene33";
+import { Scene34 } from "./scenes/Scene34";
+import { WyckoffStage } from "./continuity/WyckoffStage";
+import { WorkflowStage } from "./continuity/WorkflowStage";
+import { S0102Stage } from "./continuity/S0102Stage";
+import { BandarTitle } from "./continuity/BandarTitle";
+import { DataTitle } from "./continuity/DataTitle";
+import { AnswerTitle } from "./continuity/AnswerTitle";
+import { MistakesStage } from "./continuity/MistakesStage";
+import { VerifyStage } from "./continuity/VerifyStage";
+import { MonitorStage } from "./continuity/MonitorStage";
+
+// VO delivered — public/bandarmology-vo.mp3 is in place.
+const MOUNT_VO = true;
+
+const INDEPENDENT_SCENES: Array<{
+  from: number;
+  duration: number;
+  Component: FC;
+}> = [
+  { from: 0, duration: 207, Component: Scene01 }, // wholesale market metaphor
+  { from: 224, duration: 334, Component: Scene02 }, // super-wholesalers
+  { from: 571, duration: 175, Component: Scene03 }, // bandarmology term
+  { from: 755, duration: 287, Component: Scene04 }, // clues not fortune-telling (DISCLAIMER)
+  // 1055–2482 — Scenes 5–10 rendered by WyckoffStage (see below). Gap intentional.
+  // DataTitle card runs 2514–2618 (see continuity below); Scene 11 phone follows.
+  { from: 2618, duration: 228, Component: Scene11 }, // public data tracks (phone + 4 points)
+  { from: 2849, duration: 251, Component: Scene12 }, // nego market (ends 3100)
+  // AnswerTitle card runs 3110–3187 (see continuity below); questions follow.
+  { from: 3199, duration: 251, Component: Scene13 }, // four questions (end 3450)
+  { from: 3453, duration: 336, Component: Scene14 }, // average cost matters most
+  { from: 3805, duration: 155, Component: Scene15 }, // five mistakes intro (image + highlight + title, ends 3960)
+  { from: 3962, duration: 271, Component: Scene16 }, // mistake 1 one day
+  { from: 4246, duration: 290, Component: Scene17 }, // mistake 2 rank w/o value
+  { from: 4544, duration: 226, Component: Scene18 }, // mistake 3 concentration
+  { from: 4784, duration: 214, Component: Scene19 }, // mistake 4 average cost
+  { from: 5010, duration: 216, Component: Scene20 }, // mistake 5 nego
+  { from: 5232, duration: 368, Component: Scene21 }, // honest caveat (DISCLAIMER)
+  // 5609–9020 — Scenes 22–33 content; WorkflowStage chrome spans same range.
+  { from: 5609, duration: 191, Component: Scene22 }, // 3-steps intro (ends 5800)
+  { from: 5800, duration: 976, Component: Scene23 }, // step1 screen: phone (scene23-flow.mp4) + "1. Screen" (ends 6776)
+  // Scenes 24–25 (three checks / big-picture question) folded into the extended Step-1 screen above (5800–6776).
+  // Scenes 26–28 (verify) content owned by VerifyStage (6776–7615); these render background only.
+  { from: 6776, duration: 259, Component: Scene26 },
+  { from: 7058, duration: 271, Component: Scene27 },
+  { from: 7342, duration: 261, Component: Scene28 },
+  { from: 7615, duration: 191, Component: Scene29 }, // verify takeaway: 3 lines (ends 7806)
+  { from: 7839, duration: 352, Component: Scene30 }, // step3 monitor: the trigger
+  { from: 8205, duration: 274, Component: Scene31 }, // market radar (PHONE [NEEDS DATA])
+  { from: 8479, duration: 211, Component: Scene32 }, // frozen radar + crossed texts (continuous, ends 8690)
+  { from: 8690, duration: 330, Component: Scene33 }, // Pro/Cons/Takeaway table (ends 9020)
+  { from: 9035, duration: 306, Component: Scene34 }, // bottom line (DISCLAIMER / close)
+];
+
+export const Bandarmology: FC = () => (
+  <AbsoluteFill style={{ backgroundColor: theme.colors.background }}>
+    {MOUNT_VO && <Audio src={staticFile("bandarmology-vo.mp3")} />}
+
+    {INDEPENDENT_SCENES.map(({ from, duration, Component }, i) => (
+      <Sequence
+        key={i}
+        from={from}
+        durationInFrames={duration}
+        showInTimeline={false}
+      >
+        <Component />
+      </Sequence>
+    ))}
+
+    {/* Real app-capture videos (portrait phone), mounted once across their scene
+        spans and layered in front of the scene captions. */}
+    {/* S01-02 phone ends at 570, where the title card takes over. */}
+    <Sequence
+      durationInFrames={570}
+      name="S01–02 capture"
+      showInTimeline={false}
+    >
+      <S0102Stage />
+    </Sequence>
+
+    {/* Title card: clears all visuals 570–750. */}
+    <Sequence from={570} durationInFrames={180} name="Bandarmology title">
+      <BandarTitle />
+    </Sequence>
+
+    {/* Title card between Wyckoff and the public-data scene (2514–2618). */}
+    <Sequence from={2514} durationInFrames={104} name="Public data title">
+      <DataTitle />
+    </Sequence>
+
+    {/* Title card before the four questions (3110–3187). */}
+    <Sequence from={3110} durationInFrames={77} name="All of these answer">
+      <AnswerTitle />
+    </Sequence>
+    {/* Scenes 16–20: phone + point titles + highlights, mounted once. */}
+    <Sequence from={3962} durationInFrames={1270} name="Mistakes (16–20)">
+      <MistakesStage />
+    </Sequence>
+
+    {/* Step 2 Verify (26–28): "2. Verify" title + captures + highlights, mounted once. */}
+    <Sequence from={6776} durationInFrames={839} name="Verify (26–28)">
+      <VerifyStage />
+    </Sequence>
+
+    {/* Step 3 Monitor (30–31): continuous "3. Monitor" title, mounted once. */}
+    <Sequence from={7839} durationInFrames={640} name="Monitor title (30–31)">
+      <MonitorStage />
+    </Sequence>
+
+    {/* Continuity 1: Wyckoff curve, Scenes 5–10. Mounted once, never remounts. */}
+    <Sequence
+      from={1055}
+      durationInFrames={1427}
+      style={{
+        translate: "-1px 0px",
+      }}
+    >
+      <WyckoffStage />
+    </Sequence>
+
+    {/* Continuity 2: Workflow rail + phone, Scenes 22–33. Parallel chrome. */}
+    <Sequence from={5609} durationInFrames={3411}>
+      <WorkflowStage />
+    </Sequence>
+  </AbsoluteFill>
+);
