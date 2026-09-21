@@ -1,5 +1,5 @@
 /**
- * SC08 — The Market Remembers a Price Area (from 4472, dur 720) — INDEPENDENT.
+ * SC08 — The Market Remembers a Price Area (from 5308, dur 1047) — INDEPENDENT.
  * The playhead reveals the daily series left→right; a zone band is drawn across
  * an area the price genuinely revisits, and each of the three real touches is
  * pinged as it arrives. Ends WITHOUT a fourth touch — the chips describe past
@@ -20,7 +20,7 @@ import { SLIDES, slideIn, slideBlur } from "../transitions/SlideCut";
 import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — the SlideCut curve is global. */
-const SCENE_FROM = 4472;
+const SCENE_FROM = 5308; // was 4472; +836 from cuts 1-3
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // This scene used to open mid-move, its card still growing out of SC07's. That

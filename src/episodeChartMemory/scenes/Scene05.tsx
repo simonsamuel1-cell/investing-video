@@ -1,6 +1,6 @@
 import { useCurrentFrame } from "remotion";
 /**
- * SC05 — Two Axes, Two Questions (Phase D, local 1997–2519). The candles fade to
+ * SC05 — Two Axes, Two Questions (Phase D, local 2299–2821). The candles fade to
  * 30% in ChartContinuity; here both axes brighten, their tick labels populate in
  * sequence, and a crosshair locks onto a real candle so its real price and date
  * can land on the two rails.

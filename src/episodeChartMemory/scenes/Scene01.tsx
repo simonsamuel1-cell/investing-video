@@ -1,5 +1,5 @@
 /**
- * SC01 — The Overloaded Chart (from 0, dur 489) — INDEPENDENT.
+ * SC01 — The Overloaded Chart (from 0, dur 733) — INDEPENDENT.
  * A clean BMRI daily chart eases in, then accumulates real indicators until it
  * is almost unreadable: two trendlines anchored to genuine pivots, MA20, MA50,
  * Bollinger, RSI and MACD sub-panes (price pane compressing 100% → 62% → 45%).

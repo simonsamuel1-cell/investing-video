@@ -8,7 +8,7 @@
  *
  * The difference is what moves. CardExpand grows one card into another, which
  * only works when both sides are the same object. These two boundaries no
- * longer are — 3008 goes from a candle series to three screenshots, and 4472
+ * longer are — 3554 goes from a candle series to three screenshots, and 5308
  * from a screenshot back to a chart — so there is nothing to grow. A pan does
  * not need the two sides to match: the outgoing frame slides off, the incoming
  * frame is already displaced and rides the same curve home.
@@ -23,9 +23,9 @@ export type Slide = { cut: number; dur: number; distance: number };
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const SLIDES: Record<string, Slide> = {
   /** SC05 → SC06: the chart hands over to the three BBCA screenshots. */
-  toImages: { cut: 3008, dur: 24, distance: 240 },
+  toImages: { cut: 3554, dur: 24, distance: 240 },
   /** SC07 → SC08: the weekly screenshot hands back to the daily series. */
-  toSupport: { cut: 4472, dur: 24, distance: 240 },
+  toSupport: { cut: 5308, dur: 24, distance: 240 },
 };
 /** Blur at the fastest frame. This is what sells the swap; do not drop it. */
 const BLUR_MAX = 8;

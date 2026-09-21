@@ -1,13 +1,13 @@
 /**
  * ChartContinuity — the ONE spanning chart element for SC02 → SC05
- * (global frames 489–3008, continuity-local 0–2519). The chart NEVER remounts:
+ * (global frames 733–3554, continuity-local 0–2821). The chart NEVER remounts:
  * a single geometry + mode timeline drives it through four phases, and each
  * phase's overlays live in scenes/Scene02–Scene05 which receive that geometry.
  *
  *   Phase A (local 0–608)     SC02  price cards → chili line chart
  *   Phase B (local 608–1190)  SC03  chili line morphs into the BMRI closes line
- *   Phase C (local 1190–1997) SC04  line mask-wipes into candlesticks + anatomy
- *   Phase D (local 1997–2519) SC05  candles de-emphasize; axes + crosshair
+ *   Phase C (local 1190–2299) SC04  line mask-wipes into candlesticks + anatomy
+ *   Phase D (local 2299–2821) SC05  candles de-emphasize; axes + crosshair
  */
 import { useCurrentFrame, interpolate, Sequence } from "remotion";
 import { SafeArea } from "../components/SafeArea";
@@ -25,7 +25,13 @@ import { Scene05 } from "../scenes/Scene05";
 import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-export const PHASE = { a: 0, b: 608, c: 1190, d: 1997, end: 2519 };
+/**
+ * ⚠ PHASE D AND THE GROUP'S END MOVED +302 when the second passage was cut in
+ * at global 2482 — four frames before D began. Phase C therefore holds for 302
+ * frames while the new line is spoken, and the camera's pull-out is left where
+ * it was (1957–1997) so it finishes rather than freezing mid-move.
+ */
+export const PHASE = { a: 0, b: 608, c: 1190, d: 2299, end: 2821 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
 // Where the camera pushes in to, and how many sessions it lands on.
@@ -53,7 +59,7 @@ const K = {
   cut: 1896, // global 2385 — exact midpoint = peak velocity
   pull: 1957, // global 2446 — camera backs out again…
   pullDur: 40, // …landing on full frame exactly at phase D
-  dimCandles: 1997, // SC05 f0
+  dimCandles: 2299, // SC05 f0 — moved with PHASE.d
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
   // SC02 sets the chili shape beside a busier one; the full-size line and its
   // month axis step aside while those comparison cards hold the stage.
@@ -62,7 +68,7 @@ const K = {
   // The gridlines and baseline clear before global 3007 too, so the ONLY thing
   // left at the boundary is the dimmed candle series — the element SC06 picks
   // up and carries on with.
-  exit: 2478,
+  exit: 2780, // was 2478; rides PHASE.end
   exitDur: 40,
 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -96,11 +102,11 @@ export const ChartContinuity = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
 
-  // ── the outgoing half of the SlideCut at 3008 ──
-  // This group is mounted from global 489, so add that back to read the shared
-  // curve. The pan starts at 2996 and the cut lands on this group's last frame
+  // ── the outgoing half of the SlideCut at 3554 ──
+  // This group is mounted from global 733, so add that back to read the shared
+  // curve. The pan starts at 3542 and the cut lands on this group's last frame
   // + 1, which is SC06's first.
-  const gf = f + 489;
+  const gf = f + 733;
   const dx = slideOut(gf, SLIDES.toImages);
   const slideFx = slideBlur(gf, SLIDES.toImages);
 

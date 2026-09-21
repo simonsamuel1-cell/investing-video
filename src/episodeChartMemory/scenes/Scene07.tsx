@@ -1,5 +1,5 @@
 /**
- * SC07 — Noise vs Direction (from 3720, dur 752) — INDEPENDENT.
+ * SC07 — Noise vs Direction (from 4556, dur 752) — INDEPENDENT.
  *
  * Same two-sided argument as before and the same beats, but the two candlestick
  * charts are now the BBCA screenshots. Which file lands in which pane is not
@@ -32,7 +32,7 @@ import { SLIDES, slideOut, slideBlur } from "../transitions/SlideCut";
 import { usePalette } from "../palette";
 
 /** This scene's `from` in Composition — needed to read the shared global curve. */
-const SCENE_FROM = 3720;
+const SCENE_FROM = 4556; // was 3720; +836 from cuts 1-3
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 // Every chip in this scene now matches the row labels' type size, and each one
