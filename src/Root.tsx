@@ -203,7 +203,7 @@ export const RemotionRoot: React.FC = () => {
           subtitles: CANDLE_SUBS_INDO,
           audioSrc: "vo-indo.mp3",
           showSubtitles: false,
-          muted: true,
+          muted: false,
         }}
       />
 
