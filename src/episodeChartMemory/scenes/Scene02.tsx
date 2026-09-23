@@ -10,7 +10,7 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
@@ -18,7 +18,7 @@ import { usePalette } from "../palette";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
   opener: 0, // "Padahal, kamu sudah membaca chart"
-  openerOut: 59, // global 548 — the line clears outright; it does NOT retreat to a header
+  openerOut: 81, // global 872 — the line clears outright; it does NOT retreat to a header
   header: 90, // "Coba lihat harga cabai"
   c1: 141, // "40.000 per kilogram"
   c2: 196, // "turun ke 20.000"
@@ -61,8 +61,15 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
   // opener line: centre stage, then simply clears
-  const op = textReveal(f, T.opener, 20);
-  const openerOp = op.opacity * (f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1);
+  /**
+   * ⚠ THE BOX OPENS BEFORE THE WORDS ARRIVE, and it opens from its MIDDLE —
+   * the way every dashed box in these videos does. The rule reaches its full
+   * width first and the line is then set inside it, rather than a box growing
+   * around text that is already there.
+   */
+  const boxOpen = progress(f, T.opener, 22);
+  const op = textReveal(f, T.opener + 8, 18);
+  const openerOp = f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1;
 
   const target = (idx: number) => ({
     cx: box.x + (box.w * idx) / (chiliMonthly.length - 1),
@@ -112,25 +119,50 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
       {/* one-cycle glow on the connected line */}
       {glow > 0.001 && <div style={{ position: "absolute", inset: 0, filter: `brightness(${1 + 0.25 * glow})`, pointerEvents: "none" }} />}
 
-      {/* opening reframe — one centred line, then gone */}
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 520,
-          width: theme.canvas.width,
-          textAlign: "center",
-          boxSizing: "border-box",
-          fontFamily: theme.type.family,
-          fontSize: 48,
-          fontWeight: 600,
-          color: pal.slate,
-          opacity: openerOp,
-          transform: `translateY(${op.y}px)`,
-        }}
-      >
-        Kamu sudah membaca chart seumur hidup.
-      </div>
+      {/* opening reframe — one centred line in a dashed box, then gone */}
+      {openerOp > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 520,
+            width: theme.canvas.width,
+            display: "flex",
+            justifyContent: "center",
+            opacity: openerOp,
+          }}
+        >
+          <div style={{ position: "relative", padding: "22px 42px" }}>
+            {/* ⚠ THE BORDER IS ITS OWN LAYER. Scaling the box that holds the
+                text would squash the letters with it; an inset element carries
+                the rule and the words sit on top of it, untouched. */}
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                border: `${theme.stroke.rule}px dashed ${pal.muted}`,
+                borderRadius: theme.radius.card,
+                transform: `scaleX(${boxOpen.toFixed(4)})`,
+                transformOrigin: "50% 50%",
+              }}
+            />
+            <div
+              style={{
+                position: "relative",
+                fontFamily: theme.type.family,
+                fontSize: 48,
+                fontWeight: 600,
+                color: pal.ink,
+                whiteSpace: "nowrap",
+                opacity: op.opacity,
+                transform: `translateY(${op.y}px)`,
+              }}
+            >
+              Sebetulnya, kamu sudah membaca chart sepanjang hidupmu
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* plain text, centred on the canvas */}
       <Chip label="Harga Cabai" x={theme.canvas.width / 2} y={224} variant="indigo" anchor="center" bare startFrame={T.header} opacity={1 - pairIn} />
@@ -157,20 +189,11 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
         );
       })}
 
-      {/* a thin connector from the first figure down to the second */}
-      {f >= T.c2 && settle < 0.5 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-          <line
-            x1={CARD_START[0].cx}
-            y1={CARD_START[0].cy + 56}
-            x2={CARD_START[1].cx}
-            y2={CARD_START[1].cy + 56}
-            stroke={pal.muted}
-            strokeWidth={theme.stroke.hair}
-            opacity={fadeIn(f, T.c2, 14) * (1 - settle)}
-          />
-        </svg>
-      )}
+      {/* ⚠ THE CONNECTOR BETWEEN THE FIRST TWO FIGURES IS GONE. It was a
+          hairline at y=486 from card one's centre to card two's, drawn from
+          T.c2 — global 987 — and it read as a stray rule under Rp40.000/kg
+          rather than as a link between two numbers, because it ran BELOW both
+          cards instead of between them. Simon: "Remove itu, ga guna." */}
 
       {/* the cards collapse into dots on the baseline */}
       {dots > 0.001 && pairIn < 0.5 && (
