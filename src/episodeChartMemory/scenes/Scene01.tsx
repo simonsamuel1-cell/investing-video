@@ -187,8 +187,6 @@ export const Scene01 = () => {
   });
 
   const trendDraw = (f >= T.trend ? progress(f, T.trend, 34) : 0) * keep.trend;
-  // one-cycle brightness pulse on the candle series
-  const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   /** The words wait for the frame — see DashedFrame. */
   const doubt = textReveal(f, dashOpenAt(T.thought), 14);
@@ -245,29 +243,19 @@ export const Scene01 = () => {
 
         <div style={{ position: "absolute", inset: 0, clipPath: CLIP }}>
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise}px)` }}>
-          {/* ⚠ THE GLOW ONLY — THE SWELL IS GONE. Raising brightness didn't
-              read ("Ternyata ga cukup kontras"), so the beat became a glow AND
-              a 10% swell; the swell dragged the whole price pane off its own
-              grid. Simon: "Yang candlestick membesar, disaster banget. Cancel
-              perbesaran 10% nya." The glow alone adds ink where there was
-              none and leaves every candle standing where the axis says. */}
-          {/* ⚠ THE GLOW IS FOR THE CANDLES ONLY. Simon, at 243: "glownya di
-              candlestick aja, yang lainnya ngga." The chart used to be one
-              SVG, so the drop-shadow haloed the gridlines and price labels
-              too. The axes are now their own layer (a chart with no candles
-              revealed) and the filter sits on a candles-only layer. */}
+          {/* ⚠ NO GLOW. It went brightness lift → glow + 10% swell → glow on the
+              candles only → gone: Simon, "glow indigo di candlesticks nya
+              cancel deh." On "Candlestick" the spotlight alone carries the
+              beat — the candles hold full opacity while the trendlines drop to
+              half and thin to 1px. */}
           <div style={{ position: "absolute", inset: 0, opacity: candleLvl }}>
-            <CandlestickChart data={bmriDaily} window={WINDOW} box={priceBox} axesOpacity={chartOp} revealProgress={0} />
-          </div>
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              opacity: candleLvl,
-              filter: pulse > 0.001 ? `drop-shadow(0 0 ${(20 * pulse).toFixed(1)}px ${pal.indigo})` : undefined,
-            }}
-          >
-            <CandlestickChart data={bmriDaily} window={WINDOW} box={priceBox} showAxes={false} revealProgress={candlesIn} />
+            <CandlestickChart
+              data={bmriDaily}
+              window={WINDOW}
+              box={priceBox}
+              axesOpacity={chartOp}
+              revealProgress={candlesIn}
+            />
           </div>
 
           <div style={{ position: "absolute", inset: 0, opacity: indLvl }}>
