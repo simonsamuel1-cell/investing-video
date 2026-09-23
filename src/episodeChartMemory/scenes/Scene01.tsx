@@ -83,6 +83,13 @@ const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur
 
 /** The doubt's box. Fixed, like every marquee in this film. */
 const DOUBT = { w: 560, h: 96 };
+/**
+ * ⚠ THE CHART'S LINES ARE 3px AT FULL WEIGHT, 1px WHEN NOT THE SUBJECT.
+ * Simon's "Pertebal garisnya jadi 3 px" was first applied only to the doubt's
+ * dashed box; it was meant for the lines on the chart as well — trendlines,
+ * MA20, MA50 and RSI. The theme's 2px rule stays the default everywhere else.
+ */
+const LINE = { full: 3, dim: 1 };
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 /** ⚠ ALL FIVE CHIPS READ THE SAME. Simon: "MA50, BB, RSI 14, dan MCD kenapa
@@ -169,7 +176,7 @@ export const Scene01 = () => {
    * beat. Same 0.5→1 level, so the two effects can never disagree.
    */
   const strokeOf = (lvl: number) =>
-    interpolate(lvl, [0.5, 1], [1, theme.stroke.rule], {
+    interpolate(lvl, [0.5, 1], [LINE.dim, LINE.full], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
