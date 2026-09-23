@@ -245,6 +245,16 @@ export const ChartContinuity = () => {
     return [at(0), at(PAIR_DX)];
   })();
   const twinOp = twinOpacity(f);
+  /**
+   * ⚠ LIFTED FOR THE WHOLE FOLD, FROM ITS FIRST FRAME. This used to key off
+   * `chiliFold > 0.001`, and the fold's ease-in-out stays under that for the
+   * first frame or two — while the comparison cards had already begun to fade
+   * in. For those frames the cards' "Cabai" and "Saham" labels were painted
+   * OVER the full-size paper and then vanished under it: Simon, at 1197, "Ada
+   * 'cabai', 'saham', 'chart' yang munculnya cuma bentar." Keyed off the
+   * frame, the paper covers them from the start and uncovers them as it goes.
+   */
+  const foldLift = f >= K.pairIn && f <= K.pairOut + 26;
   const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera, foldStyle, foldScale, twinStyle, twinOp };
 
   // ── chart mode timeline ──
@@ -297,7 +307,7 @@ export const ChartContinuity = () => {
           inset: 0,
           opacity: op,
           ...style,
-          zIndex: chiliFold > 0.001 ? 3 : undefined,
+          zIndex: foldLift ? 3 : undefined,
         }}
       >
       {/* ⚠ THE PAPER IS THE FIRST THING IN THE FOLD GROUP, so the month labels

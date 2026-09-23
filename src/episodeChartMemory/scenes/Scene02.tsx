@@ -61,6 +61,8 @@ const T = {
 // The three figures sit in one row, 10px apart. A uniform card width is what
 // makes that gap exact — natural widths differ per figure, so the pitch is
 // CARD_W + 10 and every card is centred inside its own box.
+/** Frames "Harga Cabai" takes to fade as the chart folds away. */
+const TITLE_OUT = 20;
 const CARD_W = 450;
 const CARD_GAP = 10;
 const CARD_COUNT = 16; // frames the figure spends counting up to its price
@@ -275,7 +277,23 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
       </DashedFrame>
 
       {/* plain text, centred on the canvas */}
-      <Chip label="Harga Cabai" x={theme.canvas.width / 2} y={224} variant="indigo" anchor="center" bare startFrame={T.header} opacity={1 - pairIn} />
+      {/* ⚠ "Harga Cabai" FADES; IT IS NOT COVERED. It sits on the paper, and
+          the paper is lifted above everything the moment the fold starts —
+          so on 1197 the title was simply painted over, a cut rather than an
+          exit. Simon: "'Harga Cabai' ilangnya fade out aja." Raised above the
+          paper, and faded over TITLE_OUT frames from the start of the fold. */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 4 }}>
+        <Chip
+          label="Harga Cabai"
+          x={theme.canvas.width / 2}
+          y={224}
+          variant="indigo"
+          anchor="center"
+          bare
+          startFrame={T.header}
+          opacity={f >= T.pairA ? fadeOut(f, T.pairA, TITLE_OUT) : 1}
+        />
+      </div>
 
       {/* the three spoken figures */}
       {SPOKEN.map(({ idx, start, rise }, i) => {
@@ -368,15 +386,9 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           ),
         )}
 
-      <Chip
-        label="Chart"
-        x={target(CHILI_SPOKEN.back).cx}
-        y={target(CHILI_SPOKEN.back).cy - 68}
-        variant="indigo"
-        anchor="center"
-        startFrame={T.glow + 10}
-        opacity={1 - pairIn}
-      />
+      {/* ⚠ NO "Chart" CHIP. Simon: "label 'Chart' langsung remove aja dari
+          awal, ga usa muncul." It also vanished for a frame at 1197, the
+          instant the folding paper was lifted over it. */}
 
       {/* ── the same shape, beside a busier one ── */}
       {pairOp > 0.001 && (
