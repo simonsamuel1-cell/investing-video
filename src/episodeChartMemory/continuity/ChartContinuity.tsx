@@ -23,6 +23,7 @@ import { Scene03 } from "../scenes/Scene03";
 import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
 import { usePalette } from "../palette";
+import { SahamChart, sahamGeomAt, type SahamGeom } from "./SahamChart";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /**
@@ -125,6 +126,10 @@ export type ContGeom = {
   twinStyle: React.CSSProperties;
   /** 0 while there is no twin; anything above 0 means draw the duplicate. */
   twinOp: number;
+  /** Opacity of the folded chili chart — it fades out with its window. */
+  foldOp: number;
+  /** The saham chart SC03 is read off — see SahamChart. */
+  saham: SahamGeom;
 };
 
 /** Chili price at normalized position t (0–1) across the monthly series. */
@@ -212,11 +217,24 @@ export const ChartContinuity = () => {
    * into the BMRI series at full size. The curve is the same shape pairMask
    * had — in, hold, out — read as a scale instead of an opacity.
    */
-  const chiliFold = interpolate(f, [K.pairIn, K.pairIn + 34, K.pairOut, K.pairOut + 26], [0, 1, 1, 0], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-    easing: theme.motion.easeInOut,
-  });
+  /**
+   * ⚠ IT NO LONGER UNFOLDS. Simon, at 1370: "Saat ini window kiri yang
+   * membesar, ubah jadi window kanan yang membesar." The chili chart stays
+   * folded in the left window and fades out with it (foldOp); the RIGHT
+   * window grows instead — see SahamChart. The whole group then waits,
+   * invisible, and comes back at full size on PHASE.c, where SC04 needs the
+   * BMRI chart it carries. The snap from folded to full happens while the
+   * group is at zero opacity, so nobody sees it.
+   */
+  const chiliFold =
+    f >= PHASE.c
+      ? 0
+      : interpolate(f, [K.pairIn, K.pairIn + 34], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+          easing: theme.motion.easeInOut,
+        });
+  const foldOp = f < K.pairOut || f >= PHASE.c ? 1 : 1 - progress(f, K.pairOut, 26);
   /**
    * ⚠ ONE UNIFORM SCALE, fitted to whichever of the card's sides runs out
    * first. A separate x and y factor would land the chart at the card's exact
@@ -255,7 +273,24 @@ export const ChartContinuity = () => {
    * frame, the paper covers them from the start and uncovers them as it goes.
    */
   const foldLift = f >= K.pairIn && f <= K.pairOut + 26;
-  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera, foldStyle, foldScale, twinStyle, twinOp };
+  const saham = sahamGeomAt(f, PAPER, BOX_FULL, PHASE.c);
+  const geom: ContGeom = {
+    box,
+    win,
+    cx: g.cx,
+    scale: g.scale,
+    xs,
+    bmriY,
+    chiliY,
+    chiliScaleY,
+    camera,
+    foldStyle,
+    foldScale,
+    twinStyle,
+    twinOp,
+    foldOp,
+    saham,
+  };
 
   // ── chart mode timeline ──
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
@@ -296,7 +331,7 @@ export const ChartContinuity = () => {
           foldStyle plus one horizontal offset. "Duplikat persis" is then a
           property of the code rather than something to keep in sync by eye. */}
       {([
-        { style: foldStyle, op: 1 },
+        { style: foldStyle, op: foldOp },
         { style: twinStyle, op: twinOp },
       ] as const).map(({ style, op }, copy) =>
         op <= 0.001 ? null : (
@@ -435,6 +470,11 @@ export const ChartContinuity = () => {
       </div>
         ),
       )}
+
+      {/* ── the saham chart: the right window, grown (1369 → handover) ──
+          Drawn after the continuity group so it covers it, and before the
+          phase overlays so SC03's marks sit on top of it. */}
+      <SahamChart paper={PAPER} full={BOX_FULL} handover={PHASE.c} />
 
       {/* ── per-phase overlays ──
           Each phase is wrapped in its own Sequence purely so its children read

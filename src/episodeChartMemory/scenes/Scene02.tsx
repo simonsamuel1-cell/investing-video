@@ -12,7 +12,7 @@ import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
 import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, linear } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
-import { SAHAM_CANDLES, SAHAM_REF_H } from "../data/sahamReference";
+import { SAHAM_CANDLES, SAHAM_CLOSE, FRAME_CLOSE, rangeOf, sahamScale } from "../data/sahamReference";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
@@ -56,7 +56,7 @@ const T = {
    * neither picture.
    */
   candleDur: 22, // → global 1330, Simon's "1308-1330"
-  pairOut: 578, // clear before the SC03 morph
+  pairOut: 578, // global 1369 — the left window fades; the right one grows (SahamChart)
 };
 // The three figures sit in one row, 10px apart. A uniform card width is what
 // makes that gap exact — natural widths differ per figure, so the pitch is
@@ -138,17 +138,28 @@ export const twinOpacity = (f: number) =>
 
 /**
  * ⚠ THE RIGHT WINDOW'S CANDLES ARE SIMON'S REFERENCE, TRACED — see
- * data/sahamReference. They used to be twenty seeded candles wandering along
- * the chili path. Drawn at the screenshot's own height ("ukurannya dibuat
- * sama tingginya dengan screenshot ini"): one screen pixel per traced pixel
- * vertically, centred in the window's plot area, stretched across its width.
+ * data/sahamReference: the close-up window onto the saham series. Drawn at
+ * the close-up screenshot's own height ("ukurannya dibuat sama tingginya
+ * dengan screenshot ini", 257px) and framed the way that screenshot frames
+ * them, centred in the window's plot area, stretched across its width.
  */
-const SAHAM_BOX = (() => {
+const CLOSE_H = 257;
+export const SAHAM_BOX = (() => {
   const m = MINI(1);
-  return { x: m.x, y: m.y + (m.h - SAHAM_REF_H) / 2, w: m.w, h: SAHAM_REF_H };
+  return { x: m.x, y: m.y + (m.h - CLOSE_H) / 2, w: m.w, h: CLOSE_H };
 })();
-/** Price (= SAHAM_REF_H − pixel row) back to a screen row, 1:1. */
-const sahamY = (p: number) => SAHAM_BOX.y + (SAHAM_REF_H - p);
+const CLOSE_RANGE = rangeOf(SAHAM_CLOSE);
+const sahamY = sahamScale(SAHAM_BOX, CLOSE_RANGE.hi, CLOSE_RANGE.lo, FRAME_CLOSE);
+/** A comparison card's rectangle, and where its label sits inside it. */
+export const PAIR_CARD = (i: number) => ({ x: PAIR_X(i), y: PAIR.y, w: PAIR.w, h: PAIR.h });
+export const PAIR_LABEL_DY = 26;
+/**
+ * ⚠ THE FRAME THE RIGHT WINDOW STOPS BEING SCENE02'S. From here the saham
+ * card, its label and its candles are drawn by continuity/SahamChart, which
+ * starts from exactly this picture and grows it — Simon, at 1370: "Saat ini
+ * window kiri yang membesar, ubah jadi window kanan yang membesar."
+ */
+export const SAHAM_TAKEOVER = 578;
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene02 = ({ geom }: { geom: ContGeom }) => {
@@ -297,7 +308,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           twin transform, so the right card's points are the left card's. */}
       {dots > 0.001 &&
         ([
-          { style: geom.foldStyle, op: 1 },
+          { style: geom.foldStyle, op: geom.foldOp },
           { style: geom.twinStyle, op: geom.twinOp },
         ] as const).map(({ style, op }, copy) =>
           op <= 0.001 ? null : (
@@ -361,8 +372,11 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
 
       {/* ── the same shape, beside a busier one ── */}
       {pairOp > 0.001 && (
-        <div style={{ opacity: pairOp }}>
-          {[0, 1].map((i) => (
+        <div style={{ opacity: pairIn }}>
+          {/* ⚠ THE RIGHT CARD ENDS AT THE TAKEOVER, THE LEFT ONE FADES. The
+              right card is not faded: on SAHAM_TAKEOVER SahamChart draws the
+              identical card on top and grows it, so there is nothing to fade. */}
+          {(f < SAHAM_TAKEOVER ? [0, 1] : [0]).map((i) => (
             <div
               key={i}
               style={{
@@ -374,16 +388,18 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
                 borderRadius: theme.radius.card,
                 background: pal.cardBg,
                 border: `${theme.stroke.hair}px solid ${pal.border}`,
+                opacity: i === 0 ? pairOut : 1,
               }}
             />
           ))}
-          {["Cabai", "Saham"].map((lab, i) => (
+          {(f < SAHAM_TAKEOVER ? ["Cabai", "Saham"] : ["Cabai"]).map((lab, i) => (
             <div
               key={lab}
               style={{
                 position: "absolute",
                 left: PAIR_X(i),
-                top: PAIR.y + 26,
+                top: PAIR.y + PAIR_LABEL_DY,
+                opacity: i === 0 ? pairOut : 1,
                 width: PAIR.w,
                 textAlign: "center",
                 fontFamily: theme.type.family,
@@ -404,11 +420,11 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
               thing at almost but not quite the same size. */}
           {/* ⚠ THE SAME PATH, TOLD CANDLE BY CANDLE. No axes — the left window
               has none either, and this is a comparison of shapes. */}
-          {swap > 0.001 && (
+          {swap > 0.001 && f < SAHAM_TAKEOVER && (
             <div style={{ opacity: swap }}>
               <CandlestickChart
                 data={SAHAM_CANDLES}
-                window={[0, SAHAM_CANDLES.length - 1]}
+                window={SAHAM_CLOSE}
                 box={SAHAM_BOX}
                 scaleOverride={sahamY}
                 showAxes={false}
