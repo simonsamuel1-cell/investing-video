@@ -9,9 +9,11 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
+import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
 import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
+import type { OHLC } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
@@ -34,9 +36,17 @@ const T = {
    */
   linkDur: 58,
   glow: 393, // "Jadilah sebuah chart"
-  pairA: 444, // "Chart saham sama saja" — the shape duplicates
+  /**
+   * ⚠ 405 IS GLOBAL 1196, and it now does two jobs at once: the preview folds
+   * into the LEFT window and "Harga Cabai" leaves. It used to be 444 — the
+   * windows simply faded up over a preview that faded down, with nothing
+   * travelling between them.
+   */
+  pairA: 405, // global 1196 — "Chart saham sama saja"; the shape folds into the window
   pairB: 490, // the denser stock line draws beside it
   crowd: 527, // "hanya lebih cepat dan melibatkan lebih banyak orang"
+  /** ⚠ GLOBAL 1313 — the right window stops being a copy and becomes candles. */
+  candles: 522,
   pairOut: 578, // clear before the SC03 morph
 };
 // The three figures sit in one row, 10px apart. A uniform card width is what
@@ -66,6 +76,56 @@ const PAIR = { y: 360, w: 640, h: 340, gap: 24 };
 const PAIR_X = (i: number) => (theme.canvas.width - (PAIR.w * 2 + PAIR.gap)) / 2 + i * (PAIR.w + PAIR.gap);
 const MINI = (i: number) => ({ x: PAIR_X(i) + 34, y: PAIR.y + 92, w: PAIR.w - 68, h: PAIR.h - 150 });
 const PRICE_RANGE: [number, number] = [18000, 42000];
+
+/**
+ * ⚠ TWENTY CANDLES THAT GO WHERE THE LEFT WINDOW GOES, BADLY. Simon: "secara
+ * garis besar arahnya kayak window kiri, tapi sepanjang jalannya tidak
+ * stabil." So the path is the chili series resampled to twenty, and what is
+ * added to it is a DAMPED WANDER — each step keeps 62% of the last one and
+ * adds a new kick — rather than independent noise. Independent noise averages
+ * back to the line every second candle and reads as a fuzzy version of it;
+ * a wander leans away for a run of candles and comes back, which is what an
+ * unstable path actually looks like.
+ *
+ * ⚠ SEEDED, because a render must be frame-deterministic — and computed once
+ * at module load rather than per frame, so the same twenty candles are drawn
+ * every time this scene is evaluated.
+ *
+ * This is illustration, not a quotation: the chili series it is built on is
+ * itself a placeholder (see data/chili.ts) and nothing here is labelled with
+ * a figure.
+ */
+const SAHAM_CANDLES: OHLC[] = (() => {
+  const rnd = mulberry32(20260923);
+  const N = 20;
+  const last = chiliMonthly.length - 1;
+  let wander = 0;
+  return Array.from({ length: N }, (_, k) => {
+    const t = (k / (N - 1)) * last;
+    const i = Math.min(last - 1, Math.floor(t));
+    const base = chiliMonthly[i].price + (chiliMonthly[i + 1].price - chiliMonthly[i].price) * (t - i);
+    wander = wander * 0.62 + (rnd() - 0.5) * 3000;
+    const mid = base + wander;
+    /**
+     * ⚠ THE BODY IS A MOVE, NOT TWO DRAWS FROM THE SAME RANGE. Picking the
+     * open and the close independently inside one span puts them close
+     * together about as often as far apart, so most candles came out as bare
+     * crosses — the series read as scatter rather than as candlesticks. A
+     * signed move gives every candle a body, and its sign gives the colour.
+     */
+    const move = (rnd() - 0.5) * (1200 + rnd() * 2600);
+    const o = mid - move / 2;
+    const c = mid + move / 2;
+    const wick = 200 + rnd() * 900;
+    return {
+      date: `s${k}`,
+      o,
+      c,
+      h: Math.max(o, c) + rnd() * wick,
+      l: Math.min(o, c) - rnd() * wick,
+    };
+  });
+})();
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene02 = ({ geom }: { geom: ContGeom }) => {
@@ -96,13 +156,9 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
     cy: chiliScaleY(chiliMonthly[idx].price),
   });
 
-  /** The three spoken points, and the length of the path through them — the
-   *  trim needs a real length, not a guess. */
+  /** The three spoken points, full size. Where they END UP is computed below,
+   *  once the small chart they fold into exists. */
   const DOT_PTS = SPOKEN.map(({ idx }) => target(idx));
-  const DOT_LEN = DOT_PTS.slice(1).reduce(
-    (sum, q, i) => sum + Math.hypot(q.cx - DOT_PTS[i].cx, q.cy - DOT_PTS[i].cy),
-    0,
-  );
 
   // ── comparison pair ──
   const pairIn = f >= T.pairA ? progress(f, T.pairA, 34) : 0;
@@ -116,17 +172,46 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
     const b = MINI(0);
     return chiliMonthly.map((c, k) => ({ x: b.x + (b.w * k) / (chiliMonthly.length - 1), y: yOf(c.price, b) }));
   })();
-  const denseMini = (() => {
+
+  /**
+   * ⚠ THE PREVIEW FOLDS INTO THE LEFT WINDOW — it does not cross-fade with it.
+   * Simon: "previewnya mengecil ke window kiri". Each of the three points
+   * travels to the position that same month already has inside the small
+   * chart, so when the fold lands the dots are sitting exactly on the mini
+   * line and can simply be dropped: there is no frame where two versions of
+   * the same shape are both on screen.
+   *
+   * ⚠ THE POINTS ARE INTERPOLATED, NOT THE GROUP SCALED. The big chart and
+   * the small one do not share an aspect ratio — a scale that fitted the
+   * width would miss the height, and the dots would arrive as ellipses.
+   */
+  const fold = f >= T.pairA ? progressInOut(f, T.pairA, 34) : 0;
+  const DOT_NOW = SPOKEN.map(({ idx }, i) => {
+    const big = DOT_PTS[i];
+    const small = chiliMini[idx];
+    return { cx: big.cx + (small.x - big.cx) * fold, cy: big.cy + (small.y - big.cy) * fold };
+  });
+  /** The trim needs a real length, and the path is shorter every frame it folds. */
+  const DOT_LEN = DOT_NOW.slice(1).reduce(
+    (sum, q, i) => sum + Math.hypot(q.cx - DOT_NOW[i].cx, q.cy - DOT_NOW[i].cy),
+    0,
+  );
+  /**
+   * ⚠ THE RIGHT WINDOW IS THE LEFT WINDOW. Simon: "buat saham persis kayak
+   * window kiri." It used to be a 150-point jittered line in cyan, which made
+   * the point about noise before the scene had made the point about sameness
+   * — and the line the voice is on is "Chart saham sama saja". Identical
+   * shape, identical colour; the difference arrives at 1313 and not before.
+   */
+  const sahamMini = (() => {
     const b = MINI(1);
-    const rnd = mulberry32(99213);
-    const N = 150;
-    return Array.from({ length: N }, (_, k) => {
-      const t = k / (N - 1);
-      const base = chiliMonthly[Math.min(chiliMonthly.length - 1, Math.round(t * (chiliMonthly.length - 1)))].price;
-      return { x: b.x + b.w * t, y: yOf(base, b) + (rnd() - 0.5) * 46 };
-    });
+    return chiliMonthly.map((c, k) => ({ x: b.x + (b.w * k) / (chiliMonthly.length - 1), y: yOf(c.price, b) }));
   })();
-  const denseDraw = f >= T.pairB ? progress(f, T.pairB, 60) : 0;
+  /** ⚠ FINISHES BEFORE THE SWAP. 26 frames from 490 lands on 516, six clear of
+   *  the candles at 522; at its old 60 it was still drawing as it was replaced. */
+  const denseDraw = f >= T.pairB ? progress(f, T.pairB, 26) : 0;
+  /** Line out, candles in — one curve, so no frame holds neither. */
+  const swap = f >= T.candles ? progress(f, T.candles, 20) : 0;
 
   // participants streaming into the busier line
   const crowd = f >= T.crowd ? progress(f, T.crowd, 44) : 0;
@@ -201,14 +286,14 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           cards instead of between them. Simon: "Remove itu, ga guna." */}
 
       {/* the cards collapse into dots on the baseline, and the dots are joined */}
-      {dots > 0.001 && pairIn < 0.5 && (
+      {dots > 0.001 && fold < 0.999 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
           {/* ⚠ DRAWN FIRST, so the dots sit ON the line and not under it.
               40.000 → 20.000 → 35.000, in the order the voice says them, which
               is also left to right: SPOKEN is high, low, back. */}
           {link > 0.001 && (
             <polyline
-              points={DOT_PTS.map((q) => `${q.cx},${q.cy}`).join(" ")}
+              points={DOT_NOW.map((q) => `${q.cx},${q.cy}`).join(" ")}
               fill="none"
               stroke={pal.indigo}
               strokeWidth={theme.stroke.rule}
@@ -220,11 +305,13 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
               opacity={1 - pairIn}
             />
           )}
-          {SPOKEN.map(({ idx }) => {
-            const tgt = target(idx);
-            const r = DOT_R * dots;
+          {SPOKEN.map(({ idx }, i) => {
+            const tgt = DOT_NOW[i];
+            /** They shrink as they travel, landing the size the mini chart
+             *  would draw them if it drew them at all. */
+            const r = DOT_R * dots * (1 - 0.72 * fold);
             return (
-              <g key={idx} opacity={1 - pairIn}>
+              <g key={idx} opacity={1}>
                 {/* the pulse — a ring leaving the dot, fading as it goes */}
                 <circle
                   cx={tgt.cx}
@@ -294,7 +381,24 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
             </div>
           ))}
           <LineChart points={chiliMini} progress={1} color={pal.indigo} />
-          {denseDraw > 0.001 && <LineChart points={denseMini} progress={denseDraw} color={pal.cyan} width={theme.stroke.hair} />}
+          {denseDraw > 0.001 && swap < 0.999 && (
+            <div style={{ opacity: 1 - swap }}>
+              <LineChart points={sahamMini} progress={denseDraw} color={pal.indigo} />
+            </div>
+          )}
+          {/* ⚠ THE SAME PATH, TOLD CANDLE BY CANDLE. No axes — the left window
+              has none either, and this is a comparison of shapes. */}
+          {swap > 0.001 && (
+            <div style={{ opacity: swap }}>
+              <CandlestickChart
+                data={SAHAM_CANDLES}
+                window={[0, SAHAM_CANDLES.length - 1]}
+                box={MINI(1)}
+                showAxes={false}
+                revealProgress={swap}
+              />
+            </div>
+          )}
           {crowdDots.length > 0 && (
             <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
               {crowdDots.map((d, k) => (
