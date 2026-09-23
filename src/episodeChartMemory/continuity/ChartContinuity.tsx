@@ -458,8 +458,29 @@ export const ChartContinuity = () => {
       )}
 
       {/* ── THE chart element — one line/candle surface across all four phases ── */}
-      {lineDraw > 0.001 && wipe < 1 && (
-        <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px 0px ${Math.max(0, wipeX)}px)` }}>
+      {/* ⚠ THE LINE WAS NEVER ON SCREEN — its clip box was ZERO PIXELS TALL.
+          `inset: 0` sizes a box from its containing block, and the nearest one
+          here is the SlideCut wrapper: a transformed div whose children are
+          all absolute, so it has no height. clip-path clips to the box it is
+          given, so the whole line was clipped away and SC04's "Line chart
+          menghubungkan harga penutupan" showed only a string of dots — Simon,
+          at 2009: "langsung keluarin line chartnya". The clip box is now the
+          canvas, stated outright.
+
+          ⚠ AND IT IS SHOWN FROM SC04 ONLY. Before PHASE.c this element has
+          only ever been invisible, and SC02/SC03 were approved that way — the
+          chili line and the saham chart carry those scenes. */}
+      {f >= PHASE.c && lineDraw > 0.001 && wipe < 1 && (
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: theme.canvas.width,
+            height: theme.canvas.height,
+            clipPath: `inset(0px 0px 0px ${Math.max(0, wipeX)}px)`,
+          }}
+        >
           <LineChart points={linePts} progress={lineDraw} color={pal.indigo} opacity={lineDim} />
         </div>
       )}

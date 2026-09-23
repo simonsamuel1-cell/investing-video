@@ -81,12 +81,6 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   // form selector: Line → Candlestick on the wipe
   const toCandle = local >= T.wipe ? progress(local, T.wipe, 30) : 0;
 
-  // the closes the line is built from, pulsing in sequence
-  const closePulse = (i: number) => {
-    const t = local - (T.closeChip + (i - a) * 4);
-    return t >= 0 && t < 18 ? Math.sin((t / 18) * Math.PI) : 0;
-  };
-  const closesOn = local >= T.closeChip && local < T.wipe;
 
   // ghost wicks — the data a line silently drops
   const ghostOn = local >= T.ghosts && local < T.hiddenCap + 20;
@@ -136,17 +130,10 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
         );
       })}
 
-      {/* the closes the line is drawn through */}
-      {closesOn && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-          {Array.from({ length: b - a + 1 }, (_, k) => {
-            const i = a + k;
-            const q = closePulse(i);
-            if (q <= 0.01) return null;
-            return <circle key={i} cx={cx(i)} cy={scale(bmriDaily[i].c)} r={3 + 4 * q} fill={pal.indigo} opacity={0.9 * q} />;
-          })}
-        </svg>
-      )}
+      {/* ⚠ NO TRAVELLING DOTS. A pulse ran along the closes from 2067 —
+          standing in for a line that was never actually drawn (see
+          ChartContinuity). Simon: "apa itu animasi muncul titik titik ini?
+          Gaada artinya." The line itself is on screen now. */}
 
       {/* the line still reads as closing prices before the wipe */}
       {local < T.wipe && (
