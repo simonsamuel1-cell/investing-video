@@ -95,14 +95,17 @@ const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur
 /** The doubt's box. Fixed, like every marquee in this film. */
 const DOUBT = { w: 560, h: 96 };
 /**
- * ⚠ 8px NOW. Simon: "Semua garis garis, buat jadi 8 px deh defaultnya.
+ * ⚠ 5px. Simon: "Semua garis garis, buat jadi 8 px deh defaultnya.
  * Kecuali garis x-axis harga." So every DATA line — trendlines, MA100, the
- * Bollinger middle line, RSI — draws at 8 when it is the subject or when the
+ * Bollinger middle line, RSI — draws at full weight when it is the subject or when the
  * whole pile is showing, and still thins to 1 while another layer holds the
  * spotlight. The price gridlines and the reference rules (RSI 70/30, MACD
  * zero) are axis furniture and stay hairlines.
  */
-const LINE = { full: 8, dim: 1 };
+// 8 on the first pass; Simon, on seeing it: "Defaultnya jadi 5 px aja."
+const LINE = { full: 5, dim: 1 };
+/** Opacity of a layer that is NOT the subject — "dari 50% jadi 30%". */
+const SPOT_DIM = 0.3;
 const MACD_SQUEEZE = 0.036;
 const LEGEND_STEP = 20;
 /**
@@ -199,7 +202,7 @@ export const Scene01 = () => {
     if (f < T.trend) return 1;
     const inn = progress(f, a, 8);
     const out = f >= b ? progress(f, b, 8) : 0;
-    const lvl = 0.5 + 0.5 * inn * (1 - out);
+    const lvl = SPOT_DIM + (1 - SPOT_DIM) * inn * (1 - out);
     return lvl + (1 - lvl) * release;
   };
   const trendLvl = spotlight(T.trend, T.pulse);
@@ -212,7 +215,7 @@ export const Scene01 = () => {
    * beat. Same 0.5→1 level, so the two effects can never disagree.
    */
   const strokeOf = (lvl: number) =>
-    interpolate(lvl, [0.5, 1], [LINE.dim, LINE.full], {
+    interpolate(lvl, [SPOT_DIM, 1], [LINE.dim, LINE.full], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
     });
