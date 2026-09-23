@@ -24,7 +24,7 @@
  */
 import React, { createContext, useContext } from "react";
 import { useCurrentFrame } from "remotion";
-import { PALETTES, type Palette, type PaletteName } from "./theme";
+import { PALETTES, theme, type Palette, type PaletteName } from "./theme";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 type Segment = { from: number; palette: PaletteName; fade: number };
@@ -74,7 +74,7 @@ export const paletteAt = (f: number): Palette => {
   const seg = SEGMENTS[i];
   const prev = i > 0 ? SEGMENTS[i - 1] : seg;
   if (seg.fade > 0 && f < seg.from + seg.fade) {
-    const t = (f - seg.from) / seg.fade;
+    const t = theme.motion.ease((f - seg.from) / seg.fade);
     return mixPalette(PALETTES[prev.palette], PALETTES[seg.palette], t);
   }
   return PALETTES[seg.palette];

@@ -62,7 +62,11 @@ export const Scene08 = () => {
   const slideFx = slideBlur(gf, SLIDES.toSupport);
   const g = chartGeom(bmriDaily, WINDOW, chart);
 
-  const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const reveal = interpolate(f, [0, REVEAL_END], [0.04, 1], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: theme.motion.ease,
+  });
   const bandDraw = f >= T.band ? progress(f, T.band, 46) : 0;
   const deepen = f >= T.deepen ? progress(f, T.deepen, 30) : 0;
   const trace = f >= T.trace ? progress(f, T.trace, 46) : 0;

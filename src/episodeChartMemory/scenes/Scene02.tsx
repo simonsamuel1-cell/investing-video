@@ -10,7 +10,7 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, linear } from "../helpers";
+import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import { SAHAM_CANDLES, SAHAM_CLOSE, FRAME_CLOSE, rangeOf, sahamScale } from "../data/sahamReference";
 import type { ContGeom } from "../continuity/ChartContinuity";
@@ -176,7 +176,7 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
    */
   const link = f >= T.dots ? progressInOut(f, T.dots, T.linkDur) : 0;
   /** One breath every 36 frames — the dot itself, and a ring leaving it. */
-  const beat = f >= T.dots ? ((f - T.dots) % 36) / 36 : 0;
+  const beat = f >= T.dots ? theme.motion.ease(((f - T.dots) % 36) / 36) : 0;
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
   // opener line: centre stage, then simply clears
@@ -215,11 +215,11 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const swap = f >= T.candles ? progress(f, T.candles, 20) : 0;
   /** ⚠ SEPARATE FROM THE CROSSFADE — see T.candleDur. */
   /**
-   * ⚠ LINEAR — one candle after another at a steady pace. On the episode's
-   * ease-out the 37 candles were ~90% out eight frames into a 22-frame
-   * window, which read as the chart popping on rather than being walked in.
+   * ⚠ EASY EASE, like everything else now. It was linear because the old
+   * ease-out had the 37 candles ~90% out eight frames into a 22-frame
+   * window; the symmetric easy ease walks them in across the whole window.
    */
-  const candleIn = f >= T.candles ? linear(f, T.candles, T.candleDur) : 0;
+  const candleIn = f >= T.candles ? progress(f, T.candles, T.candleDur) : 0;
 
   /* ⚠ THE CYAN SPECKS ARE GONE. Fourteen dots flew in from off-screen right
      to stand for "lebih banyak orang" — Simon: "Hilangkan elemen titik titik

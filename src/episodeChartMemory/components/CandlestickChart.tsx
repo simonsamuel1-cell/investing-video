@@ -72,7 +72,7 @@ export const CandlestickChart = ({
    */
   const REVEAL_FEATHER = 3.5; // candles mid-entrance at any instant
   const head = Math.max(0, Math.min(1, revealProgress)) * (g.slice.length + REVEAL_FEATHER);
-  const entranceOf = (i: number) => Math.max(0, Math.min(1, (head - i) / REVEAL_FEATHER));
+  const entranceOf = (i: number) => theme.motion.ease(Math.max(0, Math.min(1, (head - i) / REVEAL_FEATHER)));
 
   return (
     <svg

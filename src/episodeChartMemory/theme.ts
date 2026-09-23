@@ -179,11 +179,19 @@ export const theme = {
   // Two card elevations; scenes crossfade between them rather than authoring
   // shadow values inline.
   shadow: SHADOWS[PALETTE],
+  /**
+   * ⚠ EVERY ANIMATION IN THIS FILM IS AN EASY EASE. Simon: "this applies to
+   * all animations in this composition ya, tolong buat semua animasi jadi
+   * easy ease." After Effects' Easy Ease is 33.33% influence on both
+   * keyframes at zero speed — cubic-bezier(0.33, 0, 0.67, 1). It replaces the
+   * ease-out (0.22, 1, 0.36, 1) that most things used, which finished ~90% of
+   * a move in its first third, and the steeper in-out (0.65, 0, 0.35, 1).
+   * The two key names stay (they are frozen); they now hold the same curve.
+   * It is still symmetric, so a cut-on-action still lands on the midpoint.
+   */
   motion: {
-    ease: Easing.bezier(0.22, 1, 0.36, 1), // no overshoot
-    // Symmetric ease-in-out: slow, fast, slow. Its peak velocity sits exactly at
-    // the midpoint, which is where a cut-on-action wants to land.
-    easeInOut: Easing.bezier(0.65, 0, 0.35, 1),
+    ease: Easing.bezier(0.33, 0, 0.67, 1),
+    easeInOut: Easing.bezier(0.33, 0, 0.67, 1),
     revealFrames: 12,
     fadeFrames: 10,
   },

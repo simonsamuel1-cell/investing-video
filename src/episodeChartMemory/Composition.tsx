@@ -147,7 +147,7 @@ const Episode = ({
       f,
       [0, WATERMARK.fade, TOTAL_FRAMES - WATERMARK.fade, TOTAL_FRAMES],
       [0, 1, 1, 0],
-      { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
+      { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: theme.motion.ease },
     ) * WATERMARK.opacity;
   return (
   <AbsoluteFill style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>

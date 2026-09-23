@@ -41,7 +41,7 @@ export const Ping = ({
             : pal.slate;
   const CL = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const r = interpolate(f, [startFrame, startFrame + dur], [r0, r1], { ...CL, easing: theme.motion.ease });
-  const ringOp = interpolate(f, [startFrame, startFrame + dur], [0.85, 0], CL);
+  const ringOp = interpolate(f, [startFrame, startFrame + dur], [0.85, 0], { ...CL, easing: theme.motion.ease });
   const dotOp = interpolate(f, [startFrame, startFrame + 8], [0, 1], { ...CL, easing: theme.motion.ease });
 
   return (

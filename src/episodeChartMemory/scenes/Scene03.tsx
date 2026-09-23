@@ -55,6 +55,13 @@ const T = {
    */
   labels: 364,
   labelStep: 2, // frames between one label and the next, left to right
+  /**
+   * ⚠ THE PILLS STEP BACK TO 30% BEFORE "Berani masuk" ARRIVES — Simon:
+   * "Sebelum muncul text 'Berani masuk', semua Buy dan Sell jadi transparan
+   * 30%." Finished on the frame the chip starts (brave + 6).
+   */
+  labelsDim: 437,
+  labelsDimDur: 10,
   brave: 441,
   doubt: 487,
   exit: 517,
@@ -187,6 +194,7 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
   const zPts = ZIGZAG.map(({ i, key }) => ({ x: cx(i), y: y(D[i][key]) }));
   const zLen = zPts.slice(1).reduce((sum, q, k) => sum + Math.hypot(q.x - zPts[k].x, q.y - zPts[k].y), 0);
   const questionOp = local >= T.questionOut ? fadeOut(local, T.questionOut, T.questionOutDur) : 1;
+  const labelsDim = local >= T.labelsDim ? progress(local, T.labelsDim, T.labelsDimDur) : 0;
 
   /**
    * ⚠ PILLS CLEAR THE CANDLES AROUND THEM, AND EACH OTHER. A pill is wider
@@ -333,7 +341,7 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
                 fontSize: PILL_SIZE,
                 fontWeight: 700,
                 whiteSpace: "nowrap",
-                opacity: p,
+                opacity: p * (1 - 0.7 * labelsDim),
               }}
             >
               {buy ? "Buy" : "Sell"}
