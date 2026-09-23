@@ -14,7 +14,7 @@ import { SubPane } from "../components/SubPane";
 import { Chip } from "../components/Chip";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, textReveal } from "../helpers";
+import { progress, progressInOut, fadeIn, fadeOut, textReveal } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { usePalette } from "../palette";
 
@@ -107,6 +107,16 @@ const LINE = { full: 5, dim: 1 };
 /** Opacity of a layer that is NOT the subject — "dari 50% jadi 30%". */
 const SPOT_DIM = 0.3;
 const MACD_SQUEEZE = 0.036;
+/**
+ * ⚠ HOW LONG A LINE TAKES TO DRAW, and on which curve. Simon: "Animasi trim
+ * path tiap garisnya buat agak lebih lama." They were 30–34 frames on the
+ * episode's ease-out, which is ~90% done a third of the way in — so every line
+ * read as drawn in about ten frames. Now all of them use the symmetric
+ * ease-in-out over 32 frames, which puts 90% at ~24: two and a half times as
+ * long to the eye. 32 is also the ceiling for the trendlines — they start on
+ * 208 and must be finished before the spotlight passes to the candles on 241.
+ */
+const TRIM = 32;
 const LEGEND_STEP = 20;
 /**
  * ⚠ ONE WIDTH FOR EVERY CHIP, and a fixed pitch. The row used to step 168px
@@ -225,7 +235,7 @@ export const Scene01 = () => {
     easing: theme.motion.ease,
   });
 
-  const trendDraw = (f >= T.trend ? progress(f, T.trend, 34) : 0) * keep.trend;
+  const trendDraw = (f >= T.trend ? progressInOut(f, T.trend, TRIM) : 0) * keep.trend;
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   /** The words wait for the frame — see DashedFrame. */
   const doubt = textReveal(f, dashOpenAt(T.thought), 14);
@@ -233,8 +243,8 @@ export const Scene01 = () => {
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
   /** The band's middle line — the 20-day average — drawn with its area. */
-  const ma20 = (f >= T.bbMid ? progress(f, T.bbMid, 30) : 0) * keep.bbMid;
-  const ma100 = (f >= T.ma100 ? progress(f, T.ma100, 30) : 0) * keep.ma100;
+  const ma20 = (f >= T.bbMid ? progressInOut(f, T.bbMid, TRIM) : 0) * keep.bbMid;
+  const ma100 = (f >= T.ma100 ? progressInOut(f, T.ma100, TRIM) : 0) * keep.ma100;
   const bb = (f >= T.bb ? progress(f, T.bb, 30) : 0) * keep.bb;
 
   const trendLine = (ia: number, ib: number, useLow: boolean) => {
