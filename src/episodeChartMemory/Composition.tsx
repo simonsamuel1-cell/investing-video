@@ -20,7 +20,7 @@ import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
 import { PaletteProvider, usePalette } from "./palette";
 import { SUBTITLES, type SubtitleCue } from "./subtitles";
-import { ROADMAP_DISSOLVE, RoadmapStop, type Preview, type Stop } from "./continuity/Roadmap";
+import { HighLowBars, RoadmapStop, type Preview, type Stop } from "./continuity/Roadmap";
 
 export const TOTAL_FRAMES = 7827; // 04:20.90 @30fps — VO-LOCKED, plus five inserts
 
@@ -101,7 +101,14 @@ const PREVIEWS: Preview[] = [
 ];
 
 const STOPS: Stop[] = [
-  { at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01 },
+  /* ⚠ STOP 1 OVERRIDES ITS FIRST CARD, and only stop 1. Nothing of chapter
+     one has been seen yet when this roadmap appears, so Memahami Basic shows
+     a drawn price series instead of a still from a scene the viewer is about
+     to watch. From stop 2 on it carries the picture that folded into it. */
+  {
+    at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01,
+    previews: [{ Draw: HighLowBars }, PREVIEWS[1], PREVIEWS[2], PREVIEWS[3]],
+  },
   { at: 2749, land: 0, push: 2991, into: 1, end: 3090, freeze: 1957, Component: ChartContinuity },
   { at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06 },
   { at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08 },
@@ -158,10 +165,9 @@ const Episode = ({
         scene it is folding up, and the last frames of each push dissolve off
         the top of the scene that has already started underneath. */}
     {STOPS.map((s) => (
-      /* ⚠ IT OUTLIVES ITS OWN `end` BY THE DISSOLVE — see Roadmap.tsx. */
-      <Sequence key={s.at} from={s.at} durationInFrames={s.end - s.at + ROADMAP_DISSOLVE} layout="none">
-        <RoadmapStop stop={s} previews={PREVIEWS} />
-      </Sequence>
+      /* ⚠ NO <Sequence> — the stop windows itself, and it must. See the note
+         on RoadmapStop: a Sequence would shift what <Freeze> means. */
+      <RoadmapStop key={s.at} stop={s} previews={PREVIEWS} />
     ))}
 
     {/* Burned-in subtitles live in the reserved bottom band. */}

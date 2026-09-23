@@ -39,6 +39,7 @@ import { AbsoluteFill, Freeze, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { progress, progressInOut } from "../helpers";
+import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const CARD = { w: 536, h: 302, gap: 60, labelGap: 14, labelSize: 30 };
@@ -100,12 +101,37 @@ const cardPush = (p: number, box: { x: number; y: number }) => {
   };
 };
 
-/** The graph-paper ground, from 019's reference: faint grid, strongest mid-frame. */
-const Ground = () => {
+/**
+ * ⚠ THE PAPER IS WHITE, NOT THE EPISODE'S #F5F5F5 GROUND. Simon asked for it
+ * directly, and it is also what 019's reference does: the roadmap is a sheet
+ * the film is laid out on, not another scene standing on the same floor. The
+ * cards are white too, so what separates them from it is their border and
+ * their shadow — which is the whole reason both are on them.
+ */
+const PAPER = {
+  cell: 84,
+  /** One whole cell every six seconds, which is what makes the loop seamless:
+   *  at the end of the period the pattern is identical to its start, so there
+   *  is no frame where it jumps back. */
+  loop: 180,
+};
+
+/**
+ * The graph-paper ground: faint grid, strongest mid-frame, drifting slowly.
+ *
+ * ⚠ IT DRIFTS BY `backgroundPosition`, NOT BY A TRANSFORM. The vignette is a
+ * mask on this same element; translating the element would drag the vignette
+ * along with it and the soft edge would wander off the frame.
+ *
+ * ⚠ AND IT READS THE GLOBAL FRAME, so the paper is one continuous sheet across
+ * all four stops rather than four that each start over.
+ */
+const Ground = ({ f }: { f: number }) => {
   const pal = usePalette();
   const fade = "radial-gradient(ellipse 68% 68% at 50% 50%, black 35%, transparent 100%)";
+  const drift = (((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop * PAPER.cell;
   return (
-    <AbsoluteFill style={{ background: pal.bg }}>
+    <AbsoluteFill style={{ background: pal.cardBg }}>
       {/* ⚠ 2px RULES, NOT 1px. A one-pixel line averages with its neighbours
           the moment anything scales the frame down — at preview size, at 720p,
           on a phone — and becomes the same colour as the paper. 019 lost this
@@ -113,9 +139,19 @@ const Ground = () => {
       <AbsoluteFill
         style={{
           opacity: 0.55,
+          /* ⚠ ONE CELL PER TILE, NOT ONE SCREEN PER TILE. A repeating gradient
+             with no backgroundSize paints a tile the size of the ELEMENT, and
+             1920 / 84 is 22.86 — so the tile ends mid-cell and every repeat
+             seam is a column of the wrong width. It was invisible while the
+             paper was still, because the seam sat exactly on the frame's edge;
+             drifting it walked the seam into view and Simon caught it as a
+             stripe of unintended white. Sized to the cell, the seam lands on a
+             cell boundary and there is nothing to see. */
           backgroundImage:
-            `repeating-linear-gradient(0deg, ${pal.border} 0 2px, transparent 2px 84px),` +
-            `repeating-linear-gradient(90deg, ${pal.border} 0 2px, transparent 2px 84px)`,
+            `linear-gradient(to bottom, ${pal.border} 0 2px, transparent 2px),` +
+            `linear-gradient(to right, ${pal.border} 0 2px, transparent 2px)`,
+          backgroundSize: `${PAPER.cell}px ${PAPER.cell}px`,
+          backgroundPosition: `${drift.toFixed(2)}px ${drift.toFixed(2)}px`,
           maskImage: fade,
           WebkitMaskImage: fade,
         }}
@@ -189,7 +225,62 @@ const Box = ({ x, y, text, opacity }: { x: number; y: number; text: string; opac
  * ChartContinuity) and therefore wants its LOCAL frame, which is exactly what
  * `freeze` is.
  */
-export type Preview = { freeze: number; Component: React.FC };
+export type Preview =
+  /** A real scene of this film, frozen at its own local frame. */
+  | { freeze: number; Component: React.FC }
+  /** A drawing made for the card, at card size. */
+  | { Draw: React.FC };
+
+/**
+ * ⚠ THE FIRST STOP'S FIRST CARD IS A DRAWING, NOT A FROZEN SCENE. Simon gave a
+ * reference for it: plain black high-low bars, "cukup ambil chart hitamnya aja,
+ * garis dan label x axis & y axis nya ga perlu". At the first stop the viewer
+ * has not met chapter one yet, so a still from inside it is both a spoiler and
+ * unreadable at this size; a bare price series says where price comes from and
+ * stops there.
+ *
+ * ⚠ AND THE BARS ARE THE EPISODE'S OWN SERIES, not shapes invented to look
+ * right. data/bmri.ts is a seeded placeholder and says so in its own header, so
+ * when the real CSV lands this picture changes with every other chart in the
+ * film rather than drifting away from them. Nothing here is labelled, so no
+ * number is being presented as real either way.
+ */
+export const HighLowBars: React.FC = () => {
+  const pal = usePalette();
+  const [a, b] = WIN.sc01;
+  const N = 18;
+  const step = Math.max(1, Math.floor((b - a) / N));
+  const bars = Array.from({ length: N }, (_, i) => bmriDaily[a + i * step]).filter(Boolean);
+  const lo = Math.min(...bars.map((d) => d.l));
+  const hi = Math.max(...bars.map((d) => d.h));
+  const pad = { x: 46, y: 36 };
+  const plotW = CARD.w - pad.x * 2;
+  const plotH = CARD.h - pad.y * 2;
+  const BAR = 11;
+  const y = (v: number) => pad.y + ((hi - v) / (hi - lo)) * plotH;
+  return (
+    <div style={{ position: "absolute", inset: 0, background: pal.cardBg }}>
+      {bars.map((d, i) => {
+        const top = y(d.h);
+        return (
+          <div
+            key={d.date}
+            style={{
+              position: "absolute",
+              left: pad.x + (plotW / (bars.length - 1)) * i - BAR / 2,
+              top,
+              width: BAR,
+              /* a doji would otherwise be a zero-height nothing */
+              height: Math.max(BAR, y(d.l) - top),
+              borderRadius: BAR / 2,
+              background: pal.ink,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+};
 
 /** A scene, frozen, drawn at card size inside its box. */
 const Thumb = ({ box, pv }: { box: { x: number; y: number }; pv: Preview }) => (
@@ -204,21 +295,25 @@ const Thumb = ({ box, pv }: { box: { x: number; y: number }; pv: Preview }) => (
       overflow: "hidden",
     }}
   >
-    <div
-      style={{
-        position: "absolute",
-        left: 0,
-        top: 0,
-        width: theme.canvas.width,
-        height: theme.canvas.height,
-        transform: `scale(${SCALE.toFixed(6)})`,
-        transformOrigin: "0 0",
-      }}
-    >
-      <Freeze frame={pv.freeze}>
-        <pv.Component />
-      </Freeze>
-    </div>
+    {"Draw" in pv ? (
+      <pv.Draw />
+    ) : (
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+          transform: `scale(${SCALE.toFixed(6)})`,
+          transformOrigin: "0 0",
+        }}
+      >
+        <Freeze frame={pv.freeze}>
+          <pv.Component />
+        </Freeze>
+      </div>
+    )}
   </div>
 );
 
@@ -236,6 +331,8 @@ export type Stop = {
   /** The scene's OWN local frame to freeze at — see Preview, above. */
   freeze: number;
   Component: React.FC;
+  /** Overrides the shared set for this stop only. */
+  previews?: readonly Preview[];
 };
 
 /**
@@ -265,9 +362,28 @@ const folded = (p: number, box: { x: number; y: number }) => {
   };
 };
 
+/**
+ * ⚠ THIS IS MOUNTED BARE, NOT IN A <Sequence>, AND THAT IS LOAD-BEARING.
+ *
+ * `<Freeze frame={n}>` does not set a local frame — it sets the TIMELINE's
+ * frame to `n + the enclosing sequence's from`, and lets the same offset be
+ * subtracted again on the way back down. Inside a Sequence starting at 6086,
+ * freezing ChartContinuity at its local 1957 asks the timeline for frame 8043
+ * — past this composition's 7827 — so Remotion clamped it to the last frame
+ * and the Memahami Basic card quietly showed a different scene at the last
+ * stop than it did at the first three. Nothing errored; the picture was just
+ * wrong, and only in one of the four places it appears.
+ *
+ * With no Sequence the offset is zero, `Freeze` means exactly what it says,
+ * and every frozen frame is a real frame of this film. The window is enforced
+ * by the early return below, which is all the Sequence was doing anyway.
+ */
 export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly Preview[] }) => {
-  /** ⚠ GLOBAL FRAMES. The Sequence rebases, so `at` has to be added back. */
-  const f = useCurrentFrame() + stop.at;
+  /** Already global — there is no Sequence to rebase. */
+  const f = useCurrentFrame();
+  /** The window the Sequence used to enforce. It outlives `end` by the
+   *  dissolve, because the roadmap leaves off the top of the next scene. */
+  if (f < stop.at || f >= stop.end + M.dissolve) return null;
 
   const shrink = progressInOut(f, stop.at, M.shrink);
   const pushDur = Math.max(1, stop.end - stop.push);
@@ -309,14 +425,14 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
   return (
     <AbsoluteFill style={{ opacity: 1 - gone }}>
       <div style={{ position: "absolute", inset: 0, ...cardPush(push, BOXES[stop.into]) }}>
-        <Ground />
+        <Ground f={f} />
 
         {/* ── the four chapters ─────────────────────────────────────────── */}
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${gridY.toFixed(1)}px)` }}>
           {BOXES.map((b, i) => (
             <div key={b.text} style={{ opacity: swap }}>
               <Box x={b.x} y={b.y} text={b.text} opacity={1} />
-              <Thumb box={b} pv={previews[i]} />
+              <Thumb box={b} pv={(stop.previews ?? previews)[i]} />
             </div>
           ))}
           {stop.land !== null && picture}
