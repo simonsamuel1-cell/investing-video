@@ -7,7 +7,12 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { theme, type Palette } from "../theme";
 import { usePalette } from "../palette";
 
-export type ChipVariant = "indigo" | "slate" | "cyan";
+/**
+ * ⚠ "green" / "red" ARE THE CANDLE COLOURS, on Simon's explicit request for
+ * SC03's "Berani masuk" (hijau) and "Keluar" (merah) — the only chips in the
+ * film allowed them. Everything else stays indigo / cyan / slate.
+ */
+export type ChipVariant = "indigo" | "slate" | "cyan" | "green" | "red";
 
 /** Variant → colours, resolved against whichever palette is live this frame. */
 const chipColors = (v: ChipVariant, pal: Palette) =>
@@ -15,7 +20,11 @@ const chipColors = (v: ChipVariant, pal: Palette) =>
     ? { fg: pal.indigo, bg: pal.indigoSoft, line: pal.indigo }
     : v === "cyan"
       ? { fg: pal.cyan, bg: pal.cyanSoft, line: pal.cyan }
-      : { fg: pal.slate, bg: pal.cardBg, line: pal.muted };
+      : v === "green"
+        ? { fg: pal.candleGreen, bg: pal.cardBg, line: pal.candleGreen }
+        : v === "red"
+          ? { fg: pal.candleRed, bg: pal.cardBg, line: pal.candleRed }
+          : { fg: pal.slate, bg: pal.cardBg, line: pal.muted };
 
 export const Chip = ({
   label,
@@ -62,7 +71,12 @@ export const Chip = ({
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
           <line
             x1={x}
-            y1={y}
+            /* ⚠ A BARE CHIP'S CONNECTOR STARTS AT THE TEXT'S EDGE. With a pill
+               the line ran from the centre and the pill hid its first half;
+               with no pill it cut straight through the word ("Kel|uar").
+               Centred chips only — a side-anchored chip's line already leaves
+               from beside the word (SC04's "Harga Penutupan"). */
+            y1={bare && anchor === "center" ? y + Math.sign(connectorTo.y - y) * (size * 0.62) : y}
             x2={connectorTo.x}
             y2={connectorTo.y}
             stroke={c.line}
