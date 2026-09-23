@@ -1,7 +1,7 @@
 /**
  * SC01 — The Overloaded Chart (from 0, dur 791) — INDEPENDENT.
  * A clean BMRI daily chart eases in, then accumulates real indicators until it
- * is almost unreadable: two trendlines anchored to genuine pivots, MA20, MA50,
+ * is almost unreadable: two trendlines anchored to genuine pivots, MA100, Bollinger (with its MA20 middle line),
  * Bollinger, RSI and MACD sub-panes (price pane compressing 100% → 62% → 45%).
  * Every overlay is COMPUTED from the daily series — no arbitrary squiggles.
  * TODO [NEEDS DATA: BMRI daily OHLC CSV]
@@ -53,15 +53,18 @@ const T = {
   pulse: 241, // "Candlestick"
   indicators: 272, // "Indikator bertumpuk" — the spotlight moves to the overlays
   /**
-   * ⚠ TIMING AS IT WAS — IT IS THE COLOURS THAT SWAPPED. Simon asked for the
-   * MA and Bollinger lines to trade places, then: "salah, tuker lagi
-   * timingnya, tapi kali ini warna nya yang dituker." MA20 is the Bollinger
-   * band's own middle line, so it now wears the band's cyan; MA50 is orange.
-   * See IndicatorOverlays.
+   * ⚠ THREE ELEMENTS, TWO ARRIVALS. Simon: "garis orange adalah MA100, garis
+   * cyan adalah garis tengah Bollinger Band, area cyan adalah area Bollinger
+   * Band ... urutan munculnya tuh MA100 dulu, lalu Bollinger Band."
+   *
+   * The Bollinger band is ONE indicator — its middle line (the 20-day
+   * average) and its area arrive on the same frame. Before this they were
+   * split, and the area came in beside the orange line, two frames after it,
+   * so the band looked as if it belonged to the wrong line.
    */
-  ma20: 272,
-  ma50: 288,
-  bb: 290,
+  ma100: 272,
+  bbMid: 288,
+  bb: 288,
   rsi: 315, // "sampai chart-nya sendiri"
   macd: 345,
   legend: 315, // 5 chips across f315–f395
@@ -95,12 +98,22 @@ const DOUBT = { w: 560, h: 96 };
  * ⚠ THE CHART'S LINES ARE 3px AT FULL WEIGHT, 1px WHEN NOT THE SUBJECT.
  * Simon's "Pertebal garisnya jadi 3 px" was first applied only to the doubt's
  * dashed box; it was meant for the lines on the chart as well — trendlines,
- * MA20, MA50 and RSI. The theme's 2px rule stays the default everywhere else.
+ * MA100, the band's middle line and RSI. The theme's 2px rule stays the default everywhere else.
  */
 const LINE = { full: 3, dim: 1 };
 const MACD_SQUEEZE = 0.036;
 const LEGEND_STEP = 20;
-const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
+/**
+ * ⚠ ONE WIDTH FOR EVERY CHIP, and a fixed pitch. The row used to step 168px
+ * whatever the label, so "BB" left a hole after it and "MA 100" — wider than
+ * the "MA 50" it replaced — ran into the chip beside it. 170 fits the widest
+ * label; the gap between chips is 16.
+ */
+const LEGEND_W = 170;
+const LEGEND_GAP = 16;
+// ⚠ "MA 100", not "MA 50": the orange line IS the 100-day average now. The
+// MA 20 chip stays — it names the band's middle line, which is exactly that.
+const LEGEND = ["MA 20", "MA 100", "BB", "RSI 14", "MACD"];
 /** ⚠ ALL FIVE CHIPS READ THE SAME. Simon: "MA50, BB, RSI 14, dan MCD kenapa
  *  beda transparansi ya? Samain aja sama MA20." The stepped ramp was meant to
  *  keep the row legible; it just looked like four chips were malfunctioning. */
@@ -137,10 +150,11 @@ export const Scene01 = () => {
   const keep = {
     macd: 1 - leaves(f, 0),
     rsi: 1 - leaves(f, 1),
+    // the band leaves as it came, line and area together
     bb: 1 - leaves(f, 2),
-    ma50: 1 - leaves(f, 3),
-    ma20: 1 - leaves(f, 4),
-    trend: 1 - leaves(f, 5),
+    bbMid: 1 - leaves(f, 2),
+    ma100: 1 - leaves(f, 3),
+    trend: 1 - leaves(f, 4),
   };
 
   // price pane compresses as the sub-panes arrive — and grows back as they go
@@ -213,8 +227,9 @@ export const Scene01 = () => {
   const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
-  const ma20 = (f >= T.ma20 ? progress(f, T.ma20, 30) : 0) * keep.ma20;
-  const ma50 = (f >= T.ma50 ? progress(f, T.ma50, 30) : 0) * keep.ma50;
+  /** The band's middle line — the 20-day average — drawn with its area. */
+  const ma20 = (f >= T.bbMid ? progress(f, T.bbMid, 30) : 0) * keep.bbMid;
+  const ma100 = (f >= T.ma100 ? progress(f, T.ma100, 30) : 0) * keep.ma100;
   const bb = (f >= T.bb ? progress(f, T.bb, 30) : 0) * keep.bb;
 
   const trendLine = (ia: number, ib: number, useLow: boolean) => {
@@ -286,7 +301,7 @@ export const Scene01 = () => {
             cx={g.cx}
             scale={g.scale}
             ma20Progress={ma20}
-            ma50Progress={ma50}
+            ma100Progress={ma100}
             bbProgress={bb}
             strokeWidth={strokeOf(indLvl)}
           />
@@ -325,7 +340,8 @@ export const Scene01 = () => {
           <Chip
             key={lab}
             label={lab}
-            x={INNER.x + i * 168}
+            x={INNER.x + i * (LEGEND_W + LEGEND_GAP)}
+            width={LEGEND_W}
             y={210}
             variant="indigo"
             anchor="left"

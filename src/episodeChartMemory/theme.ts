@@ -44,7 +44,7 @@ export type Palette = {
   cardBg: string;
   border: string;
   muted: string;
-  /** MA50 on SC01's overloaded chart (MA20 is cyan, the band's middle line). */
+  /** MA100 on SC01's overloaded chart (cyan is the Bollinger band's). */
   maOrange: string;
   /** RSI on SC01 — Simon: "RSI ubah color code jadi ungu purple". */
   rsiPurple: string;
