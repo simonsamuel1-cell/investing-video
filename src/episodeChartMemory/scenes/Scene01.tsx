@@ -51,9 +51,16 @@ const T = {
   thoughtOut: 203, // the doubt clears before the clutter starts
   trend: 208, // "Garis di mana-mana"
   pulse: 241, // "Candlestick"
-  ma20: 272, // "Indikator bertumpuk"
-  ma50: 288,
-  bb: 290,
+  indicators: 272, // "Indikator bertumpuk" — the spotlight moves to the overlays
+  /**
+   * ⚠ THE CYAN PAIR COMES FIRST, THE ORANGE LINE SECOND. Simon: "timing dari
+   * garis moving average dan garis bollinger bands di tukar deh." The cyan
+   * MA50 and the Bollinger area it arrives with now open the beat on 272; the
+   * orange MA20 follows on 288. The area keeps its two frames behind its line.
+   */
+  ma50: 272,
+  bb: 274,
+  ma20: 288,
   rsi: 315, // "sampai chart-nya sendiri"
   macd: 345,
   legend: 315, // 5 chips across f315–f395
@@ -127,11 +134,12 @@ export const Scene01 = () => {
 
   /** How much of each layer survives the 531 reverse — see R, above. */
   const keep = {
+    // still the reverse of arrival: trend, MA50, BB, MA20, RSI, MACD
     macd: 1 - leaves(f, 0),
     rsi: 1 - leaves(f, 1),
-    bb: 1 - leaves(f, 2),
-    ma50: 1 - leaves(f, 3),
-    ma20: 1 - leaves(f, 4),
+    ma20: 1 - leaves(f, 2),
+    bb: 1 - leaves(f, 3),
+    ma50: 1 - leaves(f, 4),
     trend: 1 - leaves(f, 5),
   };
 
@@ -179,8 +187,8 @@ export const Scene01 = () => {
     return lvl + (1 - lvl) * release;
   };
   const trendLvl = spotlight(T.trend, T.pulse);
-  const candleLvl = spotlight(T.pulse, T.ma20);
-  const indLvl = spotlight(T.ma20, T.rsi);
+  const candleLvl = spotlight(T.pulse, T.indicators);
+  const indLvl = spotlight(T.indicators, T.rsi);
   /**
    * ⚠ THE SPOTLIGHT DIMS *AND* THINS. Simon: "Elemen yang ga di-highlight,
    * tebel garisnya jadi 1 px." Half-opacity alone left four 2px lines fighting
