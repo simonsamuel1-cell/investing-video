@@ -8,10 +8,9 @@
 import { useCurrentFrame, interpolate } from "remotion";
 import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
-import { LineChart } from "../components/LineChart";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { progress, progressInOut, linear, fadeOut, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { OHLC } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
@@ -43,10 +42,20 @@ const T = {
    * travelling between them.
    */
   pairA: 405, // global 1196 — "Chart saham sama saja"; the shape folds into the window
-  pairB: 490, // the denser stock line draws beside it
+  /** ⚠ GLOBAL 1235 — Simon's frame for "Muncul chart di window kanan". */
+  pairB: 444,
   crowd: 527, // "hanya lebih cepat dan melibatkan lebih banyak orang"
-  /** ⚠ GLOBAL 1313 — the right window stops being a copy and becomes candles. */
-  candles: 522,
+  /** ⚠ GLOBAL 1307 — the right window stops being a copy and becomes candles. */
+  candles: 516,
+  /**
+   * ⚠ AND IT TAKES ITS TIME GETTING THERE. Simon: "Candlestick mulai muncul
+   * satu satu di sini, take your time aja, ga usa animasi cepet." The reveal
+   * used to ride the same 20-frame curve as the crossfade, which walked twenty
+   * candles past the eye in two thirds of a second. 52 frames lands on 568 —
+   * ten clear of pairOut — and the crossfade stays short, so no frame holds
+   * neither picture.
+   */
+  candleDur: 52,
   pairOut: 578, // clear before the SC03 morph
 };
 // The three figures sit in one row, 10px apart. A uniform card width is what
@@ -66,16 +75,34 @@ const DOT_R = 13;
  *  whenever the text changes is a coincidence rather than a style. */
 const OPENER_BOX = { x: 220, y: 520, w: 1480, h: 116 };
 const OPENER_TEXT = "Sebetulnya, kamu sudah membaca chart sepanjang hidupmu";
-/** Frames to type it. 53 characters at a little over two a frame. */
-const OPENER_TYPE = 42;
+/**
+ * ⚠ IT FADES AND RISES; IT DOES NOT TYPE. Simon: "Textnya gajadi animasi
+ * ketikan, jadi entrance fade in aja, geser masuk dari bawah." The typewriter
+ * was reflowing the line inside a box that had only just snapped open, and two
+ * mechanisms arriving on the same beat read as one of them stuttering.
+ */
+const OPENER_IN = 26;
+const OPENER_RISE = 26;
 const CARD_START = [0, 1, 2].map((i) => ({ cx: theme.canvas.width / 2 + (i - 1) * (CARD_W + CARD_GAP), cy: CARD_CY }));
 const SPOKEN = [
   { idx: CHILI_SPOKEN.high, start: T.c1, rise: false },
   { idx: CHILI_SPOKEN.low, start: T.c2, rise: false },
   { idx: CHILI_SPOKEN.back, start: T.c3, rise: true },
 ];
-// side-by-side comparison cards
-const PAIR = { y: 360, w: 640, h: 340, gap: 24 };
+/**
+ * ⚠ THE TWO WINDOWS RUN THE FULL WIDTH OF THE SAFE AREA. Simon: "Ini terlalu
+ * kecil, lebarin deh, mentokin aja ke batas margin kiri kanan. Jarak antar
+ * kedua window juga tambah 50 px." 96 → 1824 is the margin, the gap goes
+ * 24 → 74, and what is left splits in two: (1728 − 74) / 2 = 827.
+ *
+ * ⚠ AND THE HEIGHT FOLLOWS, or widening would have made the picture SMALLER.
+ * The left window is filled by the chili chart folded into it, and that fold
+ * takes whichever of the card's two sides runs out first. Against the 1728×730
+ * paper, a 787-wide inner box needs 332 of height to stay the binding side —
+ * PAIR.h = 332 + 96. Keep the two numbers in step or the fold silently caps on
+ * height and the "wider" window just grows white margins.
+ */
+const PAIR = { y: 316, w: 827, h: 428, gap: 74 };
 const PAIR_X = (i: number) => (theme.canvas.width - (PAIR.w * 2 + PAIR.gap)) / 2 + i * (PAIR.w + PAIR.gap);
 /**
  * ⚠ WHERE THE BIG CHART LANDS — the card's whole inside, not its plot area.
@@ -90,7 +117,22 @@ export const PAIR_INNER = (i: number) => ({
   h: PAIR.h - 96,
 });
 export const MINI = (i: number) => ({ x: PAIR_X(i) + 34, y: PAIR.y + 92, w: PAIR.w - 68, h: PAIR.h - 150 });
-const PRICE_RANGE: [number, number] = [18000, 42000];
+/**
+ * ⚠ THE RIGHT WINDOW IS THE LEFT WINDOW, TO THE PIXEL. Simon: "1235 Muncul
+ * chart di window kanan. Chartnya duplikat persis dari window kiri." The first
+ * cut drew a SECOND chart there — the twelve-month chili curve in the right
+ * card's own box — which shared the data but not the shape, the weight, the
+ * dots or the month rail, so the two windows plainly showed two pictures on
+ * the line "Chart saham sama saja".
+ *
+ * The two cards are identical and sit PAIR_DX apart, so the duplicate is the
+ * fold's own transform plus one horizontal offset: whatever the left window
+ * shows, the right window shows, because it is the same drawing.
+ */
+export const PAIR_DX = PAIR.w + PAIR.gap;
+/** 0 → no twin, 1 → the full duplicate. Out again as the candles take over. */
+export const twinOpacity = (f: number) =>
+  (f >= T.pairB ? progress(f, T.pairB, 26) : 0) * (f >= T.candles ? 1 - progress(f, T.candles, 20) : 1);
 
 /**
  * ⚠ TWENTY CANDLES THAT GO WHERE THE LEFT WINDOW GOES, BADLY. Simon: "secara
@@ -161,15 +203,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
   // opener line: centre stage, then simply clears
-  /**
-   * ⚠ THE WORDS WAIT FOR THE FRAME, then TYPE. See DashedFrame: content that
-   * reflows while the box is still snapping open is what gives the trick away,
-   * so nothing is typed until the snap has landed.
-   *
-   * ⚠ LINEAR, NOT THE EPISODE'S EASE. A typewriter that accelerates and then
-   * crawls is not a typewriter; the whole read of the effect is a steady hand.
-   */
-  const typed = Math.round(linear(f, dashOpenAt(T.opener), OPENER_TYPE) * OPENER_TEXT.length);
+  /** ⚠ THE WORDS WAIT FOR THE FRAME — see DashedFrame — then slide up into it. */
+  const opener = textReveal(f, dashOpenAt(T.opener), OPENER_IN, OPENER_RISE);
   const openerOp = f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1;
 
   const target = (idx: number) => ({
@@ -185,9 +220,6 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const pairIn = f >= T.pairA ? progress(f, T.pairA, 34) : 0;
   const pairOut = f >= T.pairOut ? fadeOut(f, T.pairOut, 26) : 1;
   const pairOp = pairIn * pairOut;
-  const yOf = (price: number, b: { y: number; h: number }) =>
-    interpolate(price, PRICE_RANGE, [b.y + b.h, b.y], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-
   // left card = the same chili shape, small; right card = a denser series
   /**
    * ⚠ THE DOTS RIDE THE CHART'S OWN FOLD. `geom.foldStyle` is one transform,
@@ -202,36 +234,16 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
     (sum, q, i) => sum + Math.hypot(q.cx - DOT_PTS[i].cx, q.cy - DOT_PTS[i].cy),
     0,
   );
-  /**
-   * ⚠ THE RIGHT WINDOW IS THE LEFT WINDOW. Simon: "buat saham persis kayak
-   * window kiri." It used to be a 150-point jittered line in cyan, which made
-   * the point about noise before the scene had made the point about sameness
-   * — and the line the voice is on is "Chart saham sama saja". Identical
-   * shape, identical colour; the difference arrives at 1313 and not before.
-   */
-  const sahamMini = (() => {
-    const b = MINI(1);
-    return chiliMonthly.map((c, k) => ({ x: b.x + (b.w * k) / (chiliMonthly.length - 1), y: yOf(c.price, b) }));
-  })();
-  /** ⚠ FINISHES BEFORE THE SWAP. 26 frames from 490 lands on 516, six clear of
-   *  the candles at 522; at its old 60 it was still drawing as it was replaced. */
-  const denseDraw = f >= T.pairB ? progress(f, T.pairB, 26) : 0;
   /** Line out, candles in — one curve, so no frame holds neither. */
   const swap = f >= T.candles ? progress(f, T.candles, 20) : 0;
+  /** ⚠ SEPARATE FROM THE CROSSFADE — see T.candleDur. */
+  const candleIn = f >= T.candles ? progress(f, T.candles, T.candleDur) : 0;
 
-  // participants streaming into the busier line
-  const crowd = f >= T.crowd ? progress(f, T.crowd, 44) : 0;
-  const crowdDots = (() => {
-    if (crowd <= 0.001) return [];
-    const rnd = mulberry32(4477);
-    const b = MINI(1);
-    return Array.from({ length: 14 }, (_, k) => {
-      const q = Math.max(0, Math.min(1, crowd * 1.6 - k * 0.045));
-      const tx = b.x + b.w * rnd();
-      const ty = b.y + b.h * (0.2 + rnd() * 0.7);
-      return { x: interpolate(q, [0, 1], [theme.canvas.width + 40, tx]), y: ty, o: q };
-    });
-  })();
+  /* ⚠ THE CYAN SPECKS ARE GONE. Fourteen dots flew in from off-screen right
+     to stand for "lebih banyak orang" — Simon: "Hilangkan elemen titik titik
+     cyan, gaada artinya." They landed at seeded random points inside the
+     window, so they read as noise ON the chart rather than as participants
+     arriving at it. The line "Lebih cepat, lebih ramai" carries the beat. */
 
   return (
     <>
@@ -240,26 +252,25 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
 
       {/* opening reframe — one centred line in the marquee box, then gone */}
       <DashedFrame {...OPENER_BOX} at={T.opener} opacity={openerOp}>
-        {/* ⚠ LEFT-ALIGNED, NOT CENTRED. Centred text that is being typed grows
-            outwards from its middle, which reads as the line unfolding rather
-            than as someone writing it. The box is fixed and the finished line
-            very nearly fills it, so flush left lands within a few pixels of
-            where centred would have put it anyway. */}
+        {/* ⚠ CENTRED AGAIN. Flush left only ever existed to give the
+            typewriter a fixed left edge to write from. */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             display: "flex",
             alignItems: "center",
-            paddingLeft: 42,
+            justifyContent: "center",
             fontFamily: theme.type.family,
             fontSize: 48,
             fontWeight: 600,
             color: pal.ink,
-            whiteSpace: "pre",
+            whiteSpace: "nowrap",
+            opacity: opener.opacity,
+            transform: `translateY(${opener.y}px)`,
           }}
         >
-          {OPENER_TEXT.slice(0, typed)}
+          {OPENER_TEXT}
         </div>
       </DashedFrame>
 
@@ -294,12 +305,20 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           rather than as a link between two numbers, because it ran BELOW both
           cards instead of between them. Simon: "Remove itu, ga guna." */}
 
-      {/* the cards collapse into dots on the baseline, and the dots are joined */}
-      {dots > 0.001 && (
+      {/* the cards collapse into dots on the baseline, and the dots are joined.
+          ⚠ DRAWN ONCE PER WINDOW: the second copy is the same SVG wearing the
+          twin transform, so the right card's points are the left card's. */}
+      {dots > 0.001 &&
+        ([
+          { style: geom.foldStyle, op: 1 },
+          { style: geom.twinStyle, op: geom.twinOp },
+        ] as const).map(({ style, op }, copy) =>
+          op <= 0.001 ? null : (
         <svg
+          key={copy}
           /* ⚠ LIFTED WITH THE CHART IT BELONGS TO — see ChartContinuity's
              note: the cards below are opaque and drawn after this. */
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", zIndex: 3, ...geom.foldStyle }}
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", zIndex: 3, opacity: op, ...style }}
           width={theme.canvas.width}
           height={theme.canvas.height}
         >
@@ -346,7 +365,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
             );
           })}
         </svg>
-      )}
+          ),
+        )}
 
       <Chip
         label="Chart"
@@ -394,17 +414,13 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
               {lab}
             </div>
           ))}
-          {/* ⚠ NO LINE IS DRAWN IN THE LEFT CARD ANY MORE. Simon: "Preview
-              window kiri yang sekarang (1220) remove aja, ganti jadi chart
-              yang baru, yaitu chart harga cabai." What fills it is the real
-              chart, folded in — paper, months, line and points together. A
-              mini copy underneath would be a second drawing of the same thing
-              at almost but not quite the same size. */}
-          {denseDraw > 0.001 && swap < 0.999 && (
-            <div style={{ opacity: 1 - swap }}>
-              <LineChart points={sahamMini} progress={denseDraw} color={pal.indigo} />
-            </div>
-          )}
+          {/* ⚠ NEITHER CARD DRAWS A CHART OF ITS OWN. Simon: "Preview window
+              kiri yang sekarang (1220) remove aja, ganti jadi chart yang baru,
+              yaitu chart harga cabai." What fills the left card is the real
+              chart, folded in — paper, months, line and points together — and
+              what fills the right one is that same drawing offset by PAIR_DX.
+              A mini copy underneath would be a second drawing of the same
+              thing at almost but not quite the same size. */}
           {/* ⚠ THE SAME PATH, TOLD CANDLE BY CANDLE. No axes — the left window
               has none either, and this is a comparison of shapes. */}
           {swap > 0.001 && (
@@ -414,16 +430,9 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
                 window={[0, SAHAM_CANDLES.length - 1]}
                 box={MINI(1)}
                 showAxes={false}
-                revealProgress={swap}
+                revealProgress={candleIn}
               />
             </div>
-          )}
-          {crowdDots.length > 0 && (
-            <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-              {crowdDots.map((d, k) => (
-                <circle key={k} cx={d.x} cy={d.y} r={4} fill={pal.cyan} opacity={d.o * 0.9} />
-              ))}
-            </svg>
           )}
         </div>
       )}

@@ -22,6 +22,19 @@ import { usePalette } from "../palette";
 // Card top sits BELOW the 150px logo clear-zone so the brand mark never
 // lands on card chrome.
 const CARD = { x: 96, y: 160, w: 1728, h: 812 };
+/**
+ * ⚠ NOTHING DRAWS OUTSIDE THE PAPER. Simon, at 346: "elemennya muncul dari
+ * luar background putih, jadi jelek. Buat munculnya dari dalam background
+ * putih, yang RSI juga sama." The sub-panes slide up from a full pane-height
+ * below their resting box — which, before RSI has compressed the price pane,
+ * starts off the bottom of the card entirely. Clipping to the card turns that
+ * into exactly what he asked for: the pane emerges FROM the white edge.
+ * Written as a CSS inset so the coordinate space the chart draws in is
+ * untouched — an overflow:hidden wrapper would need its own origin.
+ */
+const CLIP = `inset(${CARD.y}px ${theme.canvas.width - CARD.x - CARD.w}px ${
+  theme.canvas.height - CARD.y - CARD.h
+}px ${CARD.x}px round ${theme.radius.cardLg}px)`;
 const INNER = { x: 160, y: 250, w: 1500, h: 620 };
 const T = {
   chartIn: 3, // "Pertama kali melihat chart saham"
@@ -35,7 +48,6 @@ const T = {
   candlesIn: 20,
   look: 58, // "banyak orang langsung berpikir" — the frame eases back, as if studied
   thought: 106, // "Ini pasti cuma bisa dibaca"
-  thoughtDim: 149, // "Bukan buat saya"
   thoughtOut: 203, // the doubt clears before the clutter starts
   trend: 208, // "Garis di mana-mana"
   pulse: 241, // "Candlestick"
@@ -73,7 +85,10 @@ const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur
 const DOUBT = { w: 560, h: 96 };
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
-const LEGEND_OPACITY = [1, 0.85, 0.7, 0.55, 0.4];
+/** ⚠ ALL FIVE CHIPS READ THE SAME. Simon: "MA50, BB, RSI 14, dan MCD kenapa
+ *  beda transparansi ya? Samain aja sama MA20." The stepped ramp was meant to
+ *  keep the row legible; it just looked like four chips were malfunctioning. */
+const LEGEND_OPACITY = [1, 1, 1, 1, 1];
 // ═══════════════════════════════════════════════════════════════════════════
 
 const WINDOW = WIN.sc01;
@@ -147,6 +162,17 @@ export const Scene01 = () => {
   const trendLvl = spotlight(T.trend, T.pulse);
   const candleLvl = spotlight(T.pulse, T.ma20);
   const indLvl = spotlight(T.ma20, T.rsi);
+  /**
+   * ⚠ THE SPOTLIGHT DIMS *AND* THINS. Simon: "Elemen yang ga di-highlight,
+   * tebel garisnya jadi 1 px." Half-opacity alone left four 2px lines fighting
+   * the subject; at 1px they recede into texture, which is the point of the
+   * beat. Same 0.5→1 level, so the two effects can never disagree.
+   */
+  const strokeOf = (lvl: number) =>
+    interpolate(lvl, [0.5, 1], [1, theme.stroke.rule], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+    });
   const rise = interpolate(f, [T.chartIn, T.chartIn + 40], [16, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -156,7 +182,6 @@ export const Scene01 = () => {
   const trendDraw = (f >= T.trend ? progress(f, T.trend, 34) : 0) * keep.trend;
   // one-cycle brightness pulse on the candle series
   const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
-  const thoughtDim = f >= T.thoughtDim ? progress(f, T.thoughtDim, 24) : 0;
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   /** The words wait for the frame — see DashedFrame. */
   const doubt = textReveal(f, dashOpenAt(T.thought), 14);
@@ -211,19 +236,19 @@ export const Scene01 = () => {
           }}
         />
 
+        <div style={{ position: "absolute", inset: 0, clipPath: CLIP }}>
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise}px)` }}>
-          {/* ⚠ A GLOW AND A BREATH, NOT A BRIGHTNESS LIFT. The old beat raised
-              brightness 18% on candles that are already near-white inside and
-              saturated outside — Simon: "Ternyata ga cukup kontras". A glow
-              adds ink where there was none and the 10% swell moves the shape
-              itself, so the beat reads at any size. */}
+          {/* ⚠ THE GLOW ONLY — THE SWELL IS GONE. Raising brightness didn't
+              read ("Ternyata ga cukup kontras"), so the beat became a glow AND
+              a 10% swell; the swell dragged the whole price pane off its own
+              grid. Simon: "Yang candlestick membesar, disaster banget. Cancel
+              perbesaran 10% nya." The glow alone adds ink where there was
+              none and leaves every candle standing where the axis says. */}
           <div
             style={{
               position: "absolute",
               inset: 0,
               opacity: candleLvl,
-              transform: `scale(${(1 + 0.1 * pulse).toFixed(4)})`,
-              transformOrigin: `${priceBox.x + priceBox.w / 2}px ${priceBox.y + priceBox.h / 2}px`,
               filter: pulse > 0.001 ? `drop-shadow(0 0 ${(20 * pulse).toFixed(1)}px ${pal.indigo})` : undefined,
             }}
           >
@@ -246,6 +271,7 @@ export const Scene01 = () => {
             ma20Progress={ma20}
             ma50Progress={ma50}
             bbProgress={bb}
+            strokeWidth={strokeOf(indLvl)}
           />
           </div>
 
@@ -262,7 +288,7 @@ export const Scene01 = () => {
                     x2={t.x2}
                     y2={t.y2}
                     stroke={pal.indigo}
-                    strokeWidth={theme.stroke.rule}
+                    strokeWidth={strokeOf(trendLvl)}
                     strokeDasharray={len}
                     strokeDashoffset={len * (1 - trendDraw)}
                     opacity={0.8 * trendLvl}
@@ -272,8 +298,9 @@ export const Scene01 = () => {
             </svg>
           )}
 
-          <SubPane kind="rsi" data={bmriDaily} window={WINDOW} box={rsiBox} cx={g.cx} slideProgress={rsiIn} title="RSI 14" />
-          <SubPane kind="macd" data={bmriDaily} window={WINDOW} box={macdBox} cx={g.cx} slideProgress={macdIn} title="MACD 12 26 9" />
+          <SubPane kind="rsi" data={bmriDaily} window={WINDOW} box={rsiBox} cx={g.cx} slideProgress={rsiIn} title="RSI 14" strokeWidth={strokeOf(indLvl)} />
+          <SubPane kind="macd" data={bmriDaily} window={WINDOW} box={macdBox} cx={g.cx} slideProgress={macdIn} title="MACD 12 26 9" strokeWidth={strokeOf(indLvl)} />
+        </div>
         </div>
 
         {/* accumulating legend chips — top-left, stepped opacity so text stays legible */}
@@ -303,7 +330,11 @@ export const Scene01 = () => {
         w={DOUBT.w}
         h={DOUBT.h}
         at={T.thought}
-        opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
+        /* ⚠ BLACK UNTIL IT LEAVES. The old cut faded the box to 55% on
+           "Bukan buat saya" — Simon: "Text box dan text 'cuma buat profesional'
+           buat hitam terus aja, jangan berubah warna." One opacity, and it is
+           the exit. */
+        opacity={thoughtOut}
       >
         <div
           style={{

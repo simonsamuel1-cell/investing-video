@@ -18,6 +18,7 @@ export const SubPane = ({
   cx,
   slideProgress,
   title,
+  strokeWidth = theme.stroke.rule,
 }: {
   kind: "rsi" | "macd";
   data: OHLC[];
@@ -26,6 +27,8 @@ export const SubPane = ({
   cx: (globalIdx: number) => number;
   slideProgress: number; // 0–1
   title: string;
+  /** Thinner while some other layer holds the spotlight — see Scene01. */
+  strokeWidth?: number;
 }) => {
   const pal = usePalette();
   if (slideProgress <= 0.001) return null;
@@ -48,7 +51,7 @@ export const SubPane = ({
       <>
         <line x1={box.x} y1={yOf(70)} x2={box.x + box.w} y2={yOf(70)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
         <line x1={box.x} y1={yOf(30)} x2={box.x + box.w} y2={yOf(30)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
-        <path d={pts.join(" ")} fill="none" stroke={pal.indigo} strokeWidth={theme.stroke.rule} />
+        <path d={pts.join(" ")} fill="none" stroke={pal.indigo} strokeWidth={strokeWidth} />
       </>
     );
   } else {

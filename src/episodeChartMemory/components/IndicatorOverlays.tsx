@@ -29,6 +29,7 @@ export const IndicatorOverlays = ({
   ma20Progress = 0,
   ma50Progress = 0,
   bbProgress = 0,
+  strokeWidth = theme.stroke.rule,
 }: {
   data: OHLC[];
   window: [number, number];
@@ -38,6 +39,10 @@ export const IndicatorOverlays = ({
   ma20Progress?: number;
   ma50Progress?: number;
   bbProgress?: number;
+  /** ⚠ A LAYER THAT ISN'T THE SUBJECT DRAWS THINNER. Simon: "Elemen yang
+   *  ga di-highlight, tebel garisnya jadi 1 px." The scene owns the spotlight,
+   *  so it hands the width down rather than this file guessing at it. */
+  strokeWidth?: number;
 }) => {
   const pal = usePalette();
   const [a, b] = win;
@@ -70,7 +75,7 @@ export const IndicatorOverlays = ({
           d={d50}
           fill="none"
           stroke={pal.indigoTintMA2}
-          strokeWidth={theme.stroke.rule}
+          strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma50Progress)}
         />
@@ -80,7 +85,7 @@ export const IndicatorOverlays = ({
           d={d20}
           fill="none"
           stroke={pal.indigoTintMA1}
-          strokeWidth={theme.stroke.rule}
+          strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma20Progress)}
         />

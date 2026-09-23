@@ -59,8 +59,20 @@ export const CandlestickChart = ({
   const pal = usePalette();
   const g = chartGeom(data, win, box, pad);
   const scale = scaleOverride ?? g.scale;
-  const shown = Math.ceil(g.slice.length * Math.max(0, Math.min(1, revealProgress)));
   const tickPrices = Array.from({ length: ticks }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / ticks);
+
+  /**
+   * ⚠ THE CANDLES DON'T SNAP ON, THEY OPEN. The first cut stepped one whole
+   * candle into existence per tick, which at 30fps is a stutter with a hard
+   * edge — Simon: "entrancenya jadi jelek banget". Now the head of the reveal
+   * is FEATHERED across a few candles, and each one grows out of its own
+   * mid-price while it fades up, so the series unrolls instead of clacking.
+   * revealProgress = 1 still means every candle at full size: the feather is
+   * only ever behind the head.
+   */
+  const REVEAL_FEATHER = 3.5; // candles mid-entrance at any instant
+  const head = Math.max(0, Math.min(1, revealProgress)) * (g.slice.length + REVEAL_FEATHER);
+  const entranceOf = (i: number) => Math.max(0, Math.min(1, (head - i) / REVEAL_FEATHER));
 
   return (
     <svg
@@ -88,7 +100,9 @@ export const CandlestickChart = ({
           <line x1={box.x} y1={box.y + box.h} x2={box.x + box.w} y2={box.y + box.h} stroke={pal.border} strokeWidth={theme.stroke.hair} />
         </g>
       )}
-      {g.slice.slice(0, shown).map((d, i) => {
+      {g.slice.map((d, i) => {
+        const e = entranceOf(i);
+        if (e <= 0.001) return null;
         const gi = g.a + i;
         const x = g.cx(gi);
         const up = d.c >= d.o;
@@ -97,10 +111,27 @@ export const CandlestickChart = ({
         const yC = scale(d.c);
         const top = Math.min(yO, yC);
         const h = Math.max(1.5, Math.abs(yC - yO));
+        /* ⚠ ROUNDED BODIES — Simon: "Buat semua candlestick jadi rounded
+           corner." Capped so a thin candle never turns into a lozenge, and the
+           wick is round-capped to match. */
+        const r = Math.min(4, g.bodyW * 0.28, h / 2);
+        const cy = (scale(d.h) + scale(d.l)) / 2;
         return (
-          <g key={gi}>
-            <line x1={x} y1={scale(d.h)} x2={x} y2={scale(d.l)} stroke={color} strokeWidth={Math.max(1, g.bodyW * 0.14)} />
-            <rect x={x - g.bodyW / 2} y={top} width={g.bodyW} height={h} fill={color} />
+          <g
+            key={gi}
+            opacity={e}
+            transform={e < 0.999 ? `translate(${x} ${cy}) scale(1 ${(0.5 + 0.5 * e).toFixed(4)}) translate(${-x} ${-cy})` : undefined}
+          >
+            <line
+              x1={x}
+              y1={scale(d.h)}
+              x2={x}
+              y2={scale(d.l)}
+              stroke={color}
+              strokeWidth={Math.max(1, g.bodyW * 0.14)}
+              strokeLinecap="round"
+            />
+            <rect x={x - g.bodyW / 2} y={top} width={g.bodyW} height={h} rx={r} ry={r} fill={color} />
           </g>
         );
       })}

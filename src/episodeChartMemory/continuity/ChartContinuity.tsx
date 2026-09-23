@@ -18,7 +18,7 @@ import { theme } from "../theme";
 import { progress, progressInOut, velocityBlur, fmtPrice, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { chiliMonthly } from "../data/chili";
-import { Scene02, PAIR_INNER } from "../scenes/Scene02";
+import { Scene02, PAIR_INNER, PAIR_DX, twinOpacity } from "../scenes/Scene02";
 import { Scene03 } from "../scenes/Scene03";
 import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
@@ -36,11 +36,21 @@ const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 /**
  * ⚠ THE PAPER THE CHILI CHART SITS ON, and the rectangle the fold is measured
  * from. It has to clear the month labels at box.y + box.h + 18 or the fold
- * would carry the chart away and leave its own axis behind at full size. Its
- * lowest edge is 870, clear of the 972 caption band; its top is 200, below the
- * 150px logo zone.
+ * would carry the chart away and leave its own axis behind at full size.
+ *
+ * ⚠ IT HOLDS THE THREE PRICE CARDS TOO, which is what the first cut got wrong.
+ * At settle the outer cards are centred on the first and last month — x 260
+ * and x 1660 — and each is 450 × 0.55 = 248 wide, so they reach 136 and 1784.
+ * A 200-wide margin cut both of them in half against the grey: Simon, at 1122,
+ * "Sesuaikan ukuran background putihnya biar semuanya muat di dalam dong."
+ * The paper now runs the full safe width, 96 → 1824, which leaves 40px of
+ * white outside each card.
+ *
+ * ⚠ THEN 30 MORE EACH WAY — "Tambah lagi heightnya 30 px ke atas dan 30 px ke
+ * bawah": 670 + 60 = 730, starting 30 higher at 170. Top clears the 150px
+ * logo zone; the lowest edge is 900, clear of the 972 caption band.
  */
-const PAPER = { x: 200, y: 200, w: 1520, h: 670 };
+const PAPER = { x: 96, y: 170, w: 1728, h: 730 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
 // Where the camera pushes in to, and how many sessions it lands on.
 const BOX_DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
@@ -111,6 +121,10 @@ export type ContGeom = {
    *  At 0.382 a 2px rule renders as three quarters of a pixel and the line
    *  joining the three points simply vanished inside the card. */
   foldScale: number;
+  /** The fold again, offset into the RIGHT comparison card — see PAIR_DX. */
+  twinStyle: React.CSSProperties;
+  /** 0 while there is no twin; anything above 0 means draw the duplicate. */
+  twinOp: number;
 };
 
 /** Chili price at normalized position t (0–1) across the monthly series. */
@@ -212,19 +226,26 @@ export const ChartContinuity = () => {
     const dst = PAIR_INNER(0);
     return 1 + (Math.min(dst.w / PAPER.w, dst.h / PAPER.h) - 1) * chiliFold;
   })();
-  const foldStyle = (() => {
+  /**
+   * ⚠ ONE TRANSFORM, TWO DESTINATIONS. `translate(T) scale(s)` about an origin
+   * O maps p to O + T + s·(p − O), so adding PAIR_DX to T alone moves the whole
+   * folded picture exactly PAIR_DX screen pixels right — the scale is untouched
+   * and the twin cannot drift from the original by construction.
+   */
+  const [foldStyle, twinStyle] = (() => {
     const dst = PAIR_INNER(0);
-    const scale = foldScale;
     const cx = PAPER.x + PAPER.w / 2;
     const cy = PAPER.y + PAPER.h / 2;
     const tx = (dst.x + dst.w / 2 - cx) * chiliFold;
     const ty = (dst.y + dst.h / 2 - cy) * chiliFold;
-    return {
-      transform: `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`,
+    const at = (shift: number) => ({
+      transform: `translate(${(tx + shift).toFixed(1)}px, ${ty.toFixed(1)}px) scale(${foldScale.toFixed(4)})`,
       transformOrigin: `${cx}px ${cy}px`,
-    };
+    });
+    return [at(0), at(PAIR_DX)];
   })();
-  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera, foldStyle, foldScale };
+  const twinOp = twinOpacity(f);
+  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera, foldStyle, foldScale, twinStyle, twinOp };
 
   // ── chart mode timeline ──
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
@@ -260,11 +281,22 @@ export const ChartContinuity = () => {
           are opaque — the chart folded correctly into the left one and was
           then painted over by it, which looked exactly like the fold failing.
           Lifted only during the fold so nothing changes for SC03 and SC04. */}
+      {/* ⚠ RENDERED ONCE PER COMPARISON WINDOW. The second copy is not a
+          second chart: it is this same subtree wearing twinStyle, which is
+          foldStyle plus one horizontal offset. "Duplikat persis" is then a
+          property of the code rather than something to keep in sync by eye. */}
+      {([
+        { style: foldStyle, op: 1 },
+        { style: twinStyle, op: twinOp },
+      ] as const).map(({ style, op }, copy) =>
+        op <= 0.001 ? null : (
       <div
+        key={copy}
         style={{
           position: "absolute",
           inset: 0,
-          ...foldStyle,
+          opacity: op,
+          ...style,
           zIndex: chiliFold > 0.001 ? 3 : undefined,
         }}
       >
@@ -391,6 +423,8 @@ export const ChartContinuity = () => {
       )}
       </div>
       </div>
+        ),
+      )}
 
       {/* ── per-phase overlays ──
           Each phase is wrapped in its own Sequence purely so its children read
