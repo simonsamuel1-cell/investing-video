@@ -244,6 +244,14 @@ export const Scene01 = () => {
               grid. Simon: "Yang candlestick membesar, disaster banget. Cancel
               perbesaran 10% nya." The glow alone adds ink where there was
               none and leaves every candle standing where the axis says. */}
+          {/* ⚠ THE GLOW IS FOR THE CANDLES ONLY. Simon, at 243: "glownya di
+              candlestick aja, yang lainnya ngga." The chart used to be one
+              SVG, so the drop-shadow haloed the gridlines and price labels
+              too. The axes are now their own layer (a chart with no candles
+              revealed) and the filter sits on a candles-only layer. */}
+          <div style={{ position: "absolute", inset: 0, opacity: candleLvl }}>
+            <CandlestickChart data={bmriDaily} window={WINDOW} box={priceBox} axesOpacity={chartOp} revealProgress={0} />
+          </div>
           <div
             style={{
               position: "absolute",
@@ -252,13 +260,7 @@ export const Scene01 = () => {
               filter: pulse > 0.001 ? `drop-shadow(0 0 ${(20 * pulse).toFixed(1)}px ${pal.indigo})` : undefined,
             }}
           >
-            <CandlestickChart
-              data={bmriDaily}
-              window={WINDOW}
-              box={priceBox}
-              axesOpacity={chartOp}
-              revealProgress={candlesIn}
-            />
+            <CandlestickChart data={bmriDaily} window={WINDOW} box={priceBox} showAxes={false} revealProgress={candlesIn} />
           </div>
 
           <div style={{ position: "absolute", inset: 0, opacity: indLvl }}>
