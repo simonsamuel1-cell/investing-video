@@ -20,8 +20,9 @@ import { Scene10 } from "./scenes/Scene10";
 import { Subtitles } from "./components/Subtitles";
 import { PaletteProvider, usePalette } from "./palette";
 import { SUBTITLES, type SubtitleCue } from "./subtitles";
+import { ROADMAP_DISSOLVE, RoadmapStop, type Preview, type Stop } from "./continuity/Roadmap";
 
-export const TOTAL_FRAMES = 7769; // 04:18.97 @30fps — VO-LOCKED, plus four inserts
+export const TOTAL_FRAMES = 7827; // 04:20.90 @30fps — VO-LOCKED, plus five inserts
 
 // Recorded VO: public/vo/chart-memory.mp3 ("VIDEO 01 - Chart.MP3"), 259.08s =
 // 7769 frames. Every from/duration below and every scene-local beat is now
@@ -62,13 +63,48 @@ const HAS_VO = true;
 const WATERMARK = { fade: 12, opacity: 1 };
 
 const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC }[] = [
-  { from: 0, duration: 733, Component: Scene01 }, // 489 + 244 (cut 1 holds here)
-  // SC02–SC05 → ChartContinuity (spanning Sequence below), 733–3554
-  { from: 3554, duration: 1002, Component: Scene06 }, // 712 + 290 (cut 3)
-  { from: 4556, duration: 752, Component: Scene07 },
-  { from: 5308, duration: 1047, Component: Scene08 }, // 720 + 327 (cut 4)
-  { from: 6355, duration: 754, Component: Scene09 },
-  { from: 7109, duration: 660, Component: Scene10 },
+  { from: 0, duration: 791, Component: Scene01 }, // 489 + 244 (cut 1) + 58 (the pause)
+  // SC02–SC05 → ChartContinuity (spanning Sequence below), 791–3612
+  { from: 3612, duration: 1002, Component: Scene06 }, // 712 + 290 (cut 3)
+  { from: 4614, duration: 752, Component: Scene07 },
+  { from: 5366, duration: 1047, Component: Scene08 }, // 720 + 327 (cut 4)
+  { from: 6413, duration: 754, Component: Scene09 },
+  { from: 7167, duration: 660, Component: Scene10 },
+];
+
+/**
+ * ═══ THE ROADMAP'S FOUR STOPS ═══ (see continuity/Roadmap.tsx)
+ *
+ * ⚠ `end` IS THE NEXT CHAPTER'S FIRST FRAME, not a length. Each push is timed
+ * to land exactly as the scene underneath begins — 791 is ChartContinuity's
+ * mount, 3090 is phase D, 4614 is SC07, 6413 is SC09 — so these four numbers
+ * are the same four that appear in the table above and must move with it.
+ *
+ * ⚠ AND EACH STOP SITS INSIDE ONE OF THE FOUR WINDOWS THE NEW VOICE-OVER
+ * BOUGHT, which is the whole reason it fits: 489-791, 2788-3090, 4324-4614,
+ * 6086-6413. The roadmap is what those windows were being held open for.
+ * Stop 2 starts at 2749, thirty-nine frames BEFORE its window, because that is
+ * where ChartContinuity's camera used to begin backing out to hand the chart
+ * to the next scene continuously. With a new passage spoken in between there
+ * is nothing to hand it to, so it folds into its card instead.
+ */
+/**
+ * What each box shows — the same frame that lands in it, so a fold settles
+ * onto a picture identical to itself. The last box has nothing folded into it
+ * (the film ends inside it), so it takes a frame from its own chapter.
+ */
+const PREVIEWS: Preview[] = [
+  { freeze: 1957, Component: ChartContinuity }, // Memahami Basic
+  { freeze: 710, Component: Scene06 }, // Alur Grafik
+  { freeze: 719, Component: Scene08 }, // Perilaku Pasar
+  { freeze: 545, Component: Scene09 }, // Ilusi Kepastian
+];
+
+const STOPS: Stop[] = [
+  { at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01 },
+  { at: 2749, land: 0, push: 2991, into: 1, end: 3090, freeze: 1957, Component: ChartContinuity },
+  { at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06 },
+  { at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08 },
 ];
 
 /**
@@ -114,9 +150,19 @@ const Episode = ({
     ))}
 
     {/* SC02 → SC05: ONE chart element, four phases, zero remounts. */}
-    <Sequence from={733} durationInFrames={2821}>
+    <Sequence from={791} durationInFrames={2821}>
       <ChartContinuity />
     </Sequence>
+
+    {/* ⚠ THE ROADMAP SITS OVER EVERY SCENE, and must: each stop covers the
+        scene it is folding up, and the last frames of each push dissolve off
+        the top of the scene that has already started underneath. */}
+    {STOPS.map((s) => (
+      /* ⚠ IT OUTLIVES ITS OWN `end` BY THE DISSOLVE — see Roadmap.tsx. */
+      <Sequence key={s.at} from={s.at} durationInFrames={s.end - s.at + ROADMAP_DISSOLVE} layout="none">
+        <RoadmapStop stop={s} previews={PREVIEWS} />
+      </Sequence>
+    ))}
 
     {/* Burned-in subtitles live in the reserved bottom band. */}
     {showSubtitles && <Subtitles cues={subtitles} />}

@@ -1,6 +1,6 @@
 /**
  * ChartContinuity — the ONE spanning chart element for SC02 → SC05
- * (global frames 733–3554, continuity-local 0–2821). The chart NEVER remounts:
+ * (global frames 791–3612, continuity-local 0–2821). The chart NEVER remounts:
  * a single geometry + mode timeline drives it through four phases, and each
  * phase's overlays live in scenes/Scene02–Scene05 which receive that geometry.
  *
@@ -102,11 +102,11 @@ export const ChartContinuity = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
 
-  // ── the outgoing half of the SlideCut at 3554 ──
-  // This group is mounted from global 733, so add that back to read the shared
-  // curve. The pan starts at 3542 and the cut lands on this group's last frame
+  // ── the outgoing half of the SlideCut at 3612 ──
+  // This group is mounted from global 791, so add that back to read the shared
+  // curve. The pan starts at 3600 and the cut lands on this group's last frame
   // + 1, which is SC06's first.
-  const gf = f + 733;
+  const gf = f + 791;
   const dx = slideOut(gf, SLIDES.toImages);
   const slideFx = slideBlur(gf, SLIDES.toImages);
 

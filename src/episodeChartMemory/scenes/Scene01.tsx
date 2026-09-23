@@ -1,5 +1,5 @@
 /**
- * SC01 — The Overloaded Chart (from 0, dur 733) — INDEPENDENT.
+ * SC01 — The Overloaded Chart (from 0, dur 791) — INDEPENDENT.
  * A clean BMRI daily chart eases in, then accumulates real indicators until it
  * is almost unreadable: two trendlines anchored to genuine pivots, MA20, MA50,
  * Bollinger, RSI and MACD sub-panes (price pane compressing 100% → 62% → 45%).
@@ -39,6 +39,27 @@ const T = {
   // (no brightness dim on this beat — the density alone carries it)
   // (no closing caption either — the stacked indicators say "rumit" on their own)
 };
+/**
+ * ⚠ 531 TAKES IT ALL BACK OFF. Simon: "Reverse chart yang saat ini penuh
+ * dengan indikator dan tools, menjadi seperti chart di 238 (tapi tanpa trend
+ * line)." Everything piled on between 208 and 395 leaves again in the REVERSE
+ * of the order it arrived — MACD first, the trendlines last.
+ *
+ * ⚠ AND IT IS THE SAME PROGRESS, MULTIPLIED, NOT A FADE LAID OVER THE TOP.
+ * Every one of these elements is DRAWN by its progress — a stroke that grows,
+ * a pane that slides in — so winding that progress back to 0 un-draws it: the
+ * averages retract along themselves and the sub-panes collapse, which is the
+ * only thing that lets the price chart grow back to the full height it had at
+ * 238. A fade would leave a squeezed chart behind a transparent RSI.
+ *
+ * It is finished by 597, which leaves twenty-two frames of the bare chart
+ * before 619 freezes it for the roadmap. That gap is deliberate: the picture
+ * the transition shrinks has to be one the eye has already settled on.
+ */
+const R = { start: 531, step: 8, dur: 26 };
+/** 0 → still there, 1 → gone. `i` is DEPARTURE order, not arrival order. */
+const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur);
+
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 const LEGEND_OPACITY = [1, 0.85, 0.7, 0.55, 0.4];
@@ -70,9 +91,19 @@ export const Scene01 = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
 
-  // price pane compresses as the sub-panes arrive
-  const rsiIn = progress(f, T.rsi, 26);
-  const macdIn = progress(f, T.macd, 26);
+  /** How much of each layer survives the 531 reverse — see R, above. */
+  const keep = {
+    macd: 1 - leaves(f, 0),
+    rsi: 1 - leaves(f, 1),
+    bb: 1 - leaves(f, 2),
+    ma50: 1 - leaves(f, 3),
+    ma20: 1 - leaves(f, 4),
+    trend: 1 - leaves(f, 5),
+  };
+
+  // price pane compresses as the sub-panes arrive — and grows back as they go
+  const rsiIn = progress(f, T.rsi, 26) * keep.rsi;
+  const macdIn = progress(f, T.macd, 26) * keep.macd;
   const priceH = INNER.h * (1 - 0.38 * rsiIn - 0.17 * macdIn);
   const priceBox = { ...INNER, h: priceH };
   const g = chartGeom(bmriDaily, WINDOW, priceBox);
@@ -87,7 +118,7 @@ export const Scene01 = () => {
     easing: theme.motion.ease,
   });
 
-  const trendDraw = f >= T.trend ? progress(f, T.trend, 34) : 0;
+  const trendDraw = (f >= T.trend ? progress(f, T.trend, 34) : 0) * keep.trend;
   // one-cycle brightness pulse on the candle series
   const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const thoughtDim = f >= T.thoughtDim ? progress(f, T.thoughtDim, 24) : 0;
@@ -95,9 +126,9 @@ export const Scene01 = () => {
   const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
-  const ma20 = f >= T.ma20 ? progress(f, T.ma20, 30) : 0;
-  const ma50 = f >= T.ma50 ? progress(f, T.ma50, 30) : 0;
-  const bb = f >= T.bb ? progress(f, T.bb, 30) : 0;
+  const ma20 = (f >= T.ma20 ? progress(f, T.ma20, 30) : 0) * keep.ma20;
+  const ma50 = (f >= T.ma50 ? progress(f, T.ma50, 30) : 0) * keep.ma50;
+  const bb = (f >= T.bb ? progress(f, T.bb, 30) : 0) * keep.bb;
 
   const trendLine = (ia: number, ib: number, useLow: boolean) => {
     const x1 = g.cx(ia);
@@ -196,7 +227,9 @@ export const Scene01 = () => {
             variant="indigo"
             anchor="left"
             startFrame={T.legend + LEGEND_STEP * i}
-            opacity={LEGEND_OPACITY[i]}
+            /* ⚠ THE CHIPS LEAVE RIGHT TO LEFT — departure index 4 - i, so
+               MACD goes first and MA 20 last, mirroring how they arrived. */
+            opacity={LEGEND_OPACITY[i] * (1 - leaves(f, 4 - i))}
           />
         ))}
       </div>

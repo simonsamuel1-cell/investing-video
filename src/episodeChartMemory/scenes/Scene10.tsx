@@ -1,5 +1,5 @@
 /**
- * SC10 — Zoom Out: The Market's Memory (from 7109, dur 660) — INDEPENDENT.
+ * SC10 — Zoom Out: The Market's Memory (from 7167, dur 660) — INDEPENDENT.
  * Opens tight on ~20 candles with five emotion chips pinned to distinct
  * sessions, then pulls back continuously to the full series until the chart
  * reads as texture and the closing line resolves.

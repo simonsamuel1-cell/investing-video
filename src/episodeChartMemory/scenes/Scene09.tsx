@@ -1,5 +1,5 @@
 /**
- * SC09 — Probability, Not Prediction (from 6355, dur 754) — INDEPENDENT.
+ * SC09 — Probability, Not Prediction (from 6413, dur 754) — INDEPENDENT.
  * The chart drops to texture; the statement resolves in two lines, then the
  * three things a chart can actually show, then the honest limit.
  */

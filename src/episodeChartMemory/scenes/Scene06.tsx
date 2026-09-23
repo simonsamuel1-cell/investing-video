@@ -1,5 +1,5 @@
 /**
- * SC06 — One Stock, Three Timeframes (from 3554, dur 1002) — INDEPENDENT.
+ * SC06 — One Stock, Three Timeframes (from 3612, dur 1002) — INDEPENDENT.
  *
  * Everything this scene used to draw — the card, the timeframe selector, the
  * ticker chip, the three wipe-over charts, the triptych and its closing line —
@@ -37,18 +37,18 @@ import { theme } from "../theme";
 import { BbcaImage, BbcaLabel, rowSlot, ROW_IMAGE, ROW_LABEL } from "../components/TimeframeImages";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-const SCENE_FROM = 3554; // was 3008; +546 from cuts 1 and 2
+const SCENE_FROM = 3612; // was 3008; +604 from the four cuts and the pause
 /** Global frames from the brief, converted to scene-local. */
 const G = (globalFrame: number) => globalFrame - SCENE_FROM;
 const S = {
-  base: G(3554), // 0    — the row arrives at 50%
-  hi1: G(3656), // 102  — #1 lit
-  hi2: G(3747), // 193  — #2 lit
-  hi3: G(3824), // 270  — #3 lit
-  allOn: G(3921), // 367  — everything at full strength
-  up1: G(4081), // 527  — #1 grows
-  up2: G(4143), // 589  — #2 grows, #1 settles
-  down2: G(4193), // 639  — #2 settles
+  base: G(3612), // 0    — the row arrives at 50%
+  hi1: G(3714), // 102  — #1 lit
+  hi2: G(3805), // 193  — #2 lit
+  hi3: G(3882), // 270  — #3 lit
+  allOn: G(3979), // 367  — everything at full strength
+  up1: G(4139), // 527  — #1 grows
+  up2: G(4201), // 589  — #2 grows, #1 settles
+  down2: G(4251), // 639  — #2 settles
 };
 const CHANGE = 16; // frames each opacity / scale change takes
 const DIM = 0.5;
