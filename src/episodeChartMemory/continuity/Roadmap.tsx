@@ -42,7 +42,7 @@ import { progress, progressInOut } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-export const CARD = { w: 536, h: 302, gap: 60, labelGap: 14, labelSize: 30 };
+export const CARD = { w: 536, h: 302, gap: 80, labelGap: 14, labelSize: 30 };
 
 /** Alone, and centred on both axes — Simon's words for the first stop. */
 export const INTRO = {
@@ -58,7 +58,10 @@ export const INTRO = {
  */
 const GRID = {
   x: (theme.canvas.width - (CARD.w * 2 + CARD.gap)) / 2,
-  y: 183,
+  /** Centred including the labels under the bottom row, so the cards sit a
+   *  little above the frame's middle. With the 80px gap the lowest ink lands
+   *  at 907, clear of the 972 band, and the widest at 1536, clear of 1560. */
+  y: 173,
 };
 
 export const BOXES = [
@@ -76,6 +79,16 @@ const M = {
   hold: 12, // a beat on the card before anything else moves
   swap: 36, // Introduction out, the four in — one move, two directions
   dissolve: ROADMAP_DISSOLVE, // the roadmap leaving off the top of the scene underneath
+  /** The glow lands exactly as the push sets off — see the note on Box. */
+  glowLead: 16,
+  /**
+   * ⚠ FASTER THAN THE DISSOLVE, ON PURPOSE. Simon asked for the trim to BE
+   * the handover at 790/791. Run at the dissolve's own fourteen frames it
+   * would be half transparent before it had emptied and the gesture would
+   * read as a fade; at twelve it is finished while the card is still there to
+   * be seen leaving.
+   */
+  trim: 12,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -160,24 +173,53 @@ const Ground = ({ f }: { f: number }) => {
   );
 };
 
-/** One empty card and its label. The card that catches a picture gets it drawn over. */
-const Box = ({ x, y, text, opacity }: { x: number; y: number; text: string; opacity: number }) => {
+/**
+ * One empty card and its label. The card that catches a picture gets it drawn
+ * over the top.
+ *
+ * ⚠ `flat` DROPS THE SHADOW AND KEEPS A HAIRLINE. Simon asked for "cuma border
+ * abu abu 1 px" on the card the first stop pushes into. It is the card that is
+ * about to become the whole frame, and a lifted card magnified to 1920 wide is
+ * a 24px smear of grey around the edge of the screen.
+ *
+ * ⚠ AND THE GLOW IS ITS OWN LAYER, not a third value in the same box-shadow.
+ * A box-shadow cannot be faded on its own; an overlay can, so the glow arrives
+ * over sixteen frames and the card underneath never changes.
+ */
+const Box = ({
+  x, y, text, opacity, flat = false, glow = 0,
+}: {
+  x: number; y: number; text: string; opacity: number; flat?: boolean; glow?: number;
+}) => {
   const pal = usePalette();
+  const rect = {
+    position: "absolute" as const,
+    left: x,
+    top: y,
+    width: CARD.w,
+    height: CARD.h,
+    borderRadius: theme.radius.card,
+  };
   return (
     <div style={{ opacity }}>
       <div
         style={{
-          position: "absolute",
-          left: x,
-          top: y,
-          width: CARD.w,
-          height: CARD.h,
-          borderRadius: theme.radius.card,
+          ...rect,
           background: pal.cardBg,
           border: `${theme.stroke.hair}px solid ${pal.border}`,
-          boxShadow: theme.shadow.rest,
+          boxShadow: flat ? "none" : theme.shadow.rest,
         }}
       />
+      {glow > 0.001 && (
+        <div
+          style={{
+            ...rect,
+            opacity: glow,
+            boxShadow: `0 0 0 2px ${pal.indigo}, 0 0 48px 14px ${pal.indigoTint14}`,
+            pointerEvents: "none",
+          }}
+        />
+      )}
       <div
         style={{
           position: "absolute",
@@ -229,7 +271,7 @@ export type Preview =
   /** A real scene of this film, frozen at its own local frame. */
   | { freeze: number; Component: React.FC }
   /** A drawing made for the card, at card size. */
-  | { Draw: React.FC };
+  | { Draw: React.FC<{ trim: number }> };
 
 /**
  * ⚠ THE FIRST STOP'S FIRST CARD IS A DRAWING, NOT A FROZEN SCENE. Simon gave a
@@ -245,7 +287,7 @@ export type Preview =
  * film rather than drifting away from them. Nothing here is labelled, so no
  * number is being presented as real either way.
  */
-export const HighLowBars: React.FC = () => {
+export const HighLowBars: React.FC<{ trim: number }> = ({ trim }) => {
   const pal = usePalette();
   const [a, b] = WIN.sc01;
   const N = 18;
@@ -260,30 +302,48 @@ export const HighLowBars: React.FC = () => {
   const y = (v: number) => pad.y + ((hi - v) / (hi - lo)) * plotH;
   return (
     <div style={{ position: "absolute", inset: 0, background: pal.cardBg }}>
-      {bars.map((d, i) => {
-        const top = y(d.h);
-        return (
-          <div
-            key={d.date}
-            style={{
-              position: "absolute",
-              left: pad.x + (plotW / (bars.length - 1)) * i - BAR / 2,
-              top,
-              width: BAR,
-              /* a doji would otherwise be a zero-height nothing */
-              height: Math.max(BAR, y(d.l) - top),
-              borderRadius: BAR / 2,
-              background: pal.ink,
-            }}
-          />
-        );
-      })}
+      {/* ⚠ TEN PER CENT SMALLER, AND THAT IS A CLEARANCE, NOT A TASTE. This
+          card becomes the whole frame at 790; at full size the top of the
+          series magnified to y=129, which is inside the watermark's own ink
+          (y 45–141). Shrunk, it starts at 168 and the logo has the top right
+          of the screen to itself. */}
+      <div style={{ position: "absolute", inset: 0, transform: "scale(0.9)", transformOrigin: "50% 50%" }}>
+        {bars.map((d, i) => {
+          const top = y(d.h);
+          /* a doji would otherwise be a zero-height nothing */
+          const full = Math.max(BAR, y(d.l) - top);
+          /**
+           * ⚠ EACH BAR LEAVES THE WAY IT LEANS. Simon: "Yang condong ke atas,
+           * maka trim path ke atas; sedangkan yang condong ke bawah, buat jadi
+           * trim path ke bawah." A bar that closed up keeps its high and draws
+           * its low up to meet it; one that closed down keeps its low and
+           * draws its high down. The series empties itself outward from the
+           * middle rather than all of it fading at once.
+           */
+          const h = full * (1 - trim);
+          const up = d.c >= d.o;
+          return (
+            <div
+              key={d.date}
+              style={{
+                position: "absolute",
+                left: pad.x + (plotW / (bars.length - 1)) * i - BAR / 2,
+                top: up ? top : top + (full - h),
+                width: BAR,
+                height: h,
+                borderRadius: BAR / 2,
+                background: pal.indigo,
+              }}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };
 
 /** A scene, frozen, drawn at card size inside its box. */
-const Thumb = ({ box, pv }: { box: { x: number; y: number }; pv: Preview }) => (
+const Thumb = ({ box, pv, trim }: { box: { x: number; y: number }; pv: Preview; trim: number }) => (
   <div
     style={{
       position: "absolute",
@@ -296,7 +356,7 @@ const Thumb = ({ box, pv }: { box: { x: number; y: number }; pv: Preview }) => (
     }}
   >
     {"Draw" in pv ? (
-      <pv.Draw />
+      <pv.Draw trim={trim} />
     ) : (
       <div
         style={{
@@ -333,6 +393,8 @@ export type Stop = {
   Component: React.FC;
   /** Overrides the shared set for this stop only. */
   previews?: readonly Preview[];
+  /** Box index that takes the indigo glow before the push, and loses its shadow. */
+  glow?: number;
 };
 
 /**
@@ -401,6 +463,25 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
    */
   const gone = progress(f, stop.end, M.dissolve);
 
+  /**
+   * ⚠ THE CARD ABOUT TO BE ENTERED LIGHTS UP FIRST, THEN LETS GO. Sixteen
+   * frames in, landing on the frame the push sets off, so the glow announces
+   * the move rather than accompanying it — and it fades back out ON the push,
+   * because a 2px ring magnified until the card IS the frame is a coloured
+   * border drawn around the whole screen.
+   */
+  const glowIn =
+    stop.glow === undefined ? 0 : progress(f, stop.push - M.glowLead, M.glowLead) * (1 - push);
+  /**
+   * The drawn series empties itself as the push lands. Only a Draw uses it.
+   *
+   * ⚠ EASE-IN-OUT, NOT THE DEFAULT EASE. `progress` runs on the episode's
+   * ease-out curve, which is almost finished in its first three frames — a
+   * trim on it looks like the bars were cut, not drawn away. Symmetric, the
+   * eye can follow each bar to the end it leaves by.
+   */
+  const trim = progressInOut(f, stop.end - 1, M.trim);
+
   /** Only the first stop has an Introduction to get rid of. */
   const swapAt = stop.at + M.shrink + M.hold;
   const swap = stop.land === null ? progressInOut(f, swapAt, M.swap) : 1;
@@ -431,8 +512,15 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${gridY.toFixed(1)}px)` }}>
           {BOXES.map((b, i) => (
             <div key={b.text} style={{ opacity: swap }}>
-              <Box x={b.x} y={b.y} text={b.text} opacity={1} />
-              <Thumb box={b} pv={(stop.previews ?? previews)[i]} />
+              <Box
+                x={b.x}
+                y={b.y}
+                text={b.text}
+                opacity={1}
+                flat={stop.glow === i}
+                glow={stop.glow === i ? glowIn : 0}
+              />
+              <Thumb box={b} pv={(stop.previews ?? previews)[i]} trim={trim} />
             </div>
           ))}
           {stop.land !== null && picture}

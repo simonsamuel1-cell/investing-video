@@ -108,6 +108,7 @@ const STOPS: Stop[] = [
   {
     at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01,
     previews: [{ Draw: HighLowBars }, PREVIEWS[1], PREVIEWS[2], PREVIEWS[3]],
+    glow: 0,
   },
   { at: 2749, land: 0, push: 2991, into: 1, end: 3090, freeze: 1957, Component: ChartContinuity },
   { at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06 },
