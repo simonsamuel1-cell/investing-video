@@ -81,6 +81,10 @@ export const IndicatorOverlays = ({
           fill="none"
           stroke={pal.maOrange}
           strokeWidth={strokeWidth}
+          /* round joins: at 8px a mitred corner on every session turns the
+             average into a row of spikes */
+          strokeLinecap="round"
+          strokeLinejoin="round"
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma100Progress)}
         />
@@ -91,6 +95,10 @@ export const IndicatorOverlays = ({
           fill="none"
           stroke={pal.cyan}
           strokeWidth={strokeWidth}
+          /* round joins: at 8px a mitred corner on every session turns the
+             average into a row of spikes */
+          strokeLinecap="round"
+          strokeLinejoin="round"
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma20Progress)}
         />

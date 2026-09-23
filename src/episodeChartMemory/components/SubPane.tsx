@@ -55,7 +55,7 @@ export const SubPane = ({
       <>
         <line x1={box.x} y1={yOf(70)} x2={box.x + box.w} y2={yOf(70)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
         <line x1={box.x} y1={yOf(30)} x2={box.x + box.w} y2={yOf(30)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
-        <path d={pts.join(" ")} fill="none" stroke={pal.rsiPurple} strokeWidth={strokeWidth} />
+        <path d={pts.join(" ")} fill="none" stroke={pal.rsiPurple} strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" />
       </>
     );
   } else {

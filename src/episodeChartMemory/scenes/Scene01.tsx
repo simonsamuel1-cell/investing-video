@@ -95,12 +95,14 @@ const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur
 /** The doubt's box. Fixed, like every marquee in this film. */
 const DOUBT = { w: 560, h: 96 };
 /**
- * ⚠ THE CHART'S LINES ARE 3px AT FULL WEIGHT, 1px WHEN NOT THE SUBJECT.
- * Simon's "Pertebal garisnya jadi 3 px" was first applied only to the doubt's
- * dashed box; it was meant for the lines on the chart as well — trendlines,
- * MA100, the band's middle line and RSI. The theme's 2px rule stays the default everywhere else.
+ * ⚠ 8px NOW. Simon: "Semua garis garis, buat jadi 8 px deh defaultnya.
+ * Kecuali garis x-axis harga." So every DATA line — trendlines, MA100, the
+ * Bollinger middle line, RSI — draws at 8 when it is the subject or when the
+ * whole pile is showing, and still thins to 1 while another layer holds the
+ * spotlight. The price gridlines and the reference rules (RSI 70/30, MACD
+ * zero) are axis furniture and stay hairlines.
  */
-const LINE = { full: 3, dim: 1 };
+const LINE = { full: 8, dim: 1 };
 const MACD_SQUEEZE = 0.036;
 const LEGEND_STEP = 20;
 /**
@@ -321,6 +323,7 @@ export const Scene01 = () => {
                     y2={t.y2}
                     stroke={pal.indigo}
                     strokeWidth={strokeOf(trendLvl)}
+                    strokeLinecap="round"
                     strokeDasharray={len}
                     strokeDashoffset={len * (1 - trendDraw)}
                     opacity={0.8 * trendLvl}
