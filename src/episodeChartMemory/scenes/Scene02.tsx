@@ -10,10 +10,11 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
-import { progress, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
+import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
@@ -25,6 +26,13 @@ const T = {
   c3: 238, // "lalu naik lagi"
   settle: 273, // "Susun angka itu berdasarkan waktu"
   dots: 337, // "dan hubungkan titiknya"
+  /**
+   * ⚠ THE THREE SPOKEN FIGURES ARE JOINED, and the join is the line the voice
+   * is describing. It lands on local 395 — global 1186, Simon's frame — which
+   * is two frames before the "Chart" chip at T.glow + 10, so the label arrives
+   * on a chart that already exists rather than on three loose points.
+   */
+  linkDur: 58,
   glow: 393, // "Jadilah sebuah chart"
   pairA: 444, // "Chart saham sama saja" — the shape duplicates
   pairB: 490, // the denser stock line draws beside it
@@ -38,6 +46,15 @@ const CARD_W = 450;
 const CARD_GAP = 10;
 const CARD_COUNT = 16; // frames the figure spends counting up to its price
 const CARD_CY = 430;
+/**
+ * ⚠ THE DOT IS 26px ACROSS, NOT 16. Simon asked for ten more pixels of
+ * diameter, which is five more of radius — at card size these are the whole
+ * chart, and 8 read as specks.
+ */
+const DOT_R = 13;
+/** The opening line's frame. Fixed, because a dash pattern that restarts
+ *  whenever the text changes is a coincidence rather than a style. */
+const OPENER_BOX = { x: 220, y: 520, w: 1480, h: 116 };
 const CARD_START = [0, 1, 2].map((i) => ({ cx: theme.canvas.width / 2 + (i - 1) * (CARD_W + CARD_GAP), cy: CARD_CY }));
 const SPOKEN = [
   { idx: CHILI_SPOKEN.high, start: T.c1, rise: false },
@@ -58,23 +75,34 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
 
   const settle = f >= T.settle ? progress(f, T.settle, 46) : 0;
   const dots = f >= T.dots ? progress(f, T.dots, 20) : 0;
+  /**
+   * ⚠ EASE-IN-OUT FOR A TRIM PATH. The episode's default ease is nearly
+   * finished in its first few frames, which draws a line as if it had been
+   * snapped into place; symmetric, the eye can follow the tip along it.
+   */
+  const link = f >= T.dots ? progressInOut(f, T.dots, T.linkDur) : 0;
+  /** One breath every 36 frames — the dot itself, and a ring leaving it. */
+  const beat = f >= T.dots ? ((f - T.dots) % 36) / 36 : 0;
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
   // opener line: centre stage, then simply clears
-  /**
-   * ⚠ THE BOX OPENS BEFORE THE WORDS ARRIVE, and it opens from its MIDDLE —
-   * the way every dashed box in these videos does. The rule reaches its full
-   * width first and the line is then set inside it, rather than a box growing
-   * around text that is already there.
-   */
-  const boxOpen = progress(f, T.opener, 22);
-  const op = textReveal(f, T.opener + 8, 18);
+  /** ⚠ THE WORDS WAIT FOR THE FRAME. See DashedFrame: content that reflows
+   *  while the box is still snapping open is what gives the trick away. */
+  const op = textReveal(f, dashOpenAt(T.opener), 18);
   const openerOp = f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1;
 
   const target = (idx: number) => ({
     cx: box.x + (box.w * idx) / (chiliMonthly.length - 1),
     cy: chiliScaleY(chiliMonthly[idx].price),
   });
+
+  /** The three spoken points, and the length of the path through them — the
+   *  trim needs a real length, not a guess. */
+  const DOT_PTS = SPOKEN.map(({ idx }) => target(idx));
+  const DOT_LEN = DOT_PTS.slice(1).reduce(
+    (sum, q, i) => sum + Math.hypot(q.cx - DOT_PTS[i].cx, q.cy - DOT_PTS[i].cy),
+    0,
+  );
 
   // ── comparison pair ──
   const pairIn = f >= T.pairA ? progress(f, T.pairA, 34) : 0;
@@ -119,50 +147,27 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
       {/* one-cycle glow on the connected line */}
       {glow > 0.001 && <div style={{ position: "absolute", inset: 0, filter: `brightness(${1 + 0.25 * glow})`, pointerEvents: "none" }} />}
 
-      {/* opening reframe — one centred line in a dashed box, then gone */}
-      {openerOp > 0.001 && (
+      {/* opening reframe — one centred line in the marquee box, then gone */}
+      <DashedFrame {...OPENER_BOX} at={T.opener} opacity={openerOp}>
         <div
           style={{
             position: "absolute",
-            left: 0,
-            top: 520,
-            width: theme.canvas.width,
+            inset: 0,
             display: "flex",
+            alignItems: "center",
             justifyContent: "center",
-            opacity: openerOp,
+            fontFamily: theme.type.family,
+            fontSize: 48,
+            fontWeight: 600,
+            color: pal.ink,
+            whiteSpace: "nowrap",
+            opacity: op.opacity,
+            transform: `translateY(${op.y}px)`,
           }}
         >
-          <div style={{ position: "relative", padding: "22px 42px" }}>
-            {/* ⚠ THE BORDER IS ITS OWN LAYER. Scaling the box that holds the
-                text would squash the letters with it; an inset element carries
-                the rule and the words sit on top of it, untouched. */}
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                border: `${theme.stroke.rule}px dashed ${pal.muted}`,
-                borderRadius: theme.radius.card,
-                transform: `scaleX(${boxOpen.toFixed(4)})`,
-                transformOrigin: "50% 50%",
-              }}
-            />
-            <div
-              style={{
-                position: "relative",
-                fontFamily: theme.type.family,
-                fontSize: 48,
-                fontWeight: 600,
-                color: pal.ink,
-                whiteSpace: "nowrap",
-                opacity: op.opacity,
-                transform: `translateY(${op.y}px)`,
-              }}
-            >
-              Sebetulnya, kamu sudah membaca chart sepanjang hidupmu
-            </div>
-          </div>
+          Sebetulnya, kamu sudah membaca chart sepanjang hidupmu
         </div>
-      )}
+      </DashedFrame>
 
       {/* plain text, centred on the canvas */}
       <Chip label="Harga Cabai" x={theme.canvas.width / 2} y={224} variant="indigo" anchor="center" bare startFrame={T.header} opacity={1 - pairIn} />
@@ -195,12 +200,49 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           rather than as a link between two numbers, because it ran BELOW both
           cards instead of between them. Simon: "Remove itu, ga guna." */}
 
-      {/* the cards collapse into dots on the baseline */}
+      {/* the cards collapse into dots on the baseline, and the dots are joined */}
       {dots > 0.001 && pairIn < 0.5 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+          {/* ⚠ DRAWN FIRST, so the dots sit ON the line and not under it.
+              40.000 → 20.000 → 35.000, in the order the voice says them, which
+              is also left to right: SPOKEN is high, low, back. */}
+          {link > 0.001 && (
+            <polyline
+              points={DOT_PTS.map((q) => `${q.cx},${q.cy}`).join(" ")}
+              fill="none"
+              stroke={pal.indigo}
+              strokeWidth={theme.stroke.rule}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              /* the trim: one dash as long as the whole path, walked into view */
+              strokeDasharray={DOT_LEN}
+              strokeDashoffset={DOT_LEN * (1 - link)}
+              opacity={1 - pairIn}
+            />
+          )}
           {SPOKEN.map(({ idx }) => {
             const tgt = target(idx);
-            return <circle key={idx} cx={tgt.cx} cy={tgt.cy} r={8 * dots} fill={pal.indigo} opacity={1 - pairIn} />;
+            const r = DOT_R * dots;
+            return (
+              <g key={idx} opacity={1 - pairIn}>
+                {/* the pulse — a ring leaving the dot, fading as it goes */}
+                <circle
+                  cx={tgt.cx}
+                  cy={tgt.cy}
+                  r={r * (1 + 1.5 * beat)}
+                  fill="none"
+                  stroke={pal.indigo}
+                  strokeWidth={theme.stroke.rule}
+                  opacity={(1 - beat) * 0.45}
+                />
+                <circle
+                  cx={tgt.cx}
+                  cy={tgt.cy}
+                  r={r * (1 + 0.08 * Math.sin(beat * Math.PI * 2))}
+                  fill={pal.indigo}
+                />
+              </g>
+            );
           })}
         </svg>
       )}
