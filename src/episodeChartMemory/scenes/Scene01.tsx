@@ -12,8 +12,9 @@ import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { IndicatorOverlays } from "../components/IndicatorOverlays";
 import { SubPane } from "../components/SubPane";
 import { Chip } from "../components/Chip";
+import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut } from "../helpers";
+import { progress, fadeIn, fadeOut, textReveal } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { usePalette } from "../palette";
 
@@ -24,6 +25,14 @@ const CARD = { x: 96, y: 160, w: 1728, h: 812 };
 const INNER = { x: 160, y: 250, w: 1500, h: 620 };
 const T = {
   chartIn: 3, // "Pertama kali melihat chart saham"
+  /**
+   * ⚠ THE PAPER ARRIVES BEFORE ANYTHING IS ON IT. Simon: "Fade in background
+   * putihnya aja (beserta label harganya), lalu muncul candlesticksnya satu
+   * per satu." The card and its price labels fade up empty, and only then do
+   * the candles walk in left to right — so the first thing the film does is
+   * set a stage rather than drop a finished picture onto one.
+   */
+  candlesIn: 20,
   look: 58, // "banyak orang langsung berpikir" — the frame eases back, as if studied
   thought: 106, // "Ini pasti cuma bisa dibaca"
   thoughtDim: 149, // "Bukan buat saya"
@@ -60,6 +69,8 @@ const R = { start: 531, step: 8, dur: 26 };
 /** 0 → still there, 1 → gone. `i` is DEPARTURE order, not arrival order. */
 const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur);
 
+/** The doubt's box. Fixed, like every marquee in this film. */
+const DOUBT = { w: 560, h: 96 };
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 const LEGEND_OPACITY = [1, 0.85, 0.7, 0.55, 0.4];
@@ -111,7 +122,31 @@ export const Scene01 = () => {
   const rsiBox = { x: INNER.x, y: INNER.y + priceH + 46, w: INNER.w, h: 118 };
   const macdBox = { x: INNER.x, y: rsiBox.y + rsiBox.h + 46, w: INNER.w, h: 118 };
 
-  const chartOp = fadeIn(f, T.chartIn, 40);
+  const chartOp = fadeIn(f, T.chartIn, 26);
+  /** The candles, one at a time, once the paper is there to put them on. */
+  const candlesIn = f >= T.candlesIn ? progress(f, T.candlesIn, 64) : 0;
+
+  /**
+   * ⚠ ONE THING AT A TIME, AND THE REST AT HALF. Simon, on "garis di
+   * mana-mana" / "candlestick" / "indikator bertumpuk": "Ketika lagi
+   * gilirannya muncul, yang lain kurangi transparansinya jadi 50%. Pas sampe
+   * di 315, buat transparansi semuanya jadi 100%."
+   *
+   * Before 208 nothing is competing yet, so everything is full. From 315 the
+   * release ramps every layer back up together — the scene stops naming parts
+   * and starts showing the pile-up, which only works if the pile is whole.
+   */
+  const release = f >= T.rsi ? progress(f, T.rsi, 12) : 0;
+  const spotlight = (a: number, b: number) => {
+    if (f < T.trend) return 1;
+    const inn = progress(f, a, 8);
+    const out = f >= b ? progress(f, b, 8) : 0;
+    const lvl = 0.5 + 0.5 * inn * (1 - out);
+    return lvl + (1 - lvl) * release;
+  };
+  const trendLvl = spotlight(T.trend, T.pulse);
+  const candleLvl = spotlight(T.pulse, T.ma20);
+  const indLvl = spotlight(T.ma20, T.rsi);
   const rise = interpolate(f, [T.chartIn, T.chartIn + 40], [16, 0], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -123,6 +158,8 @@ export const Scene01 = () => {
   const pulse = f >= T.pulse && f < T.pulse + 30 ? Math.sin(((f - T.pulse) / 30) * Math.PI) : 0;
   const thoughtDim = f >= T.thoughtDim ? progress(f, T.thoughtDim, 24) : 0;
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
+  /** The words wait for the frame — see DashedFrame. */
+  const doubt = textReveal(f, dashOpenAt(T.thought), 14);
   const lookBack = f >= T.look ? progress(f, T.look, 40) : 0;
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
@@ -174,11 +211,32 @@ export const Scene01 = () => {
           }}
         />
 
-        <div style={{ position: "absolute", inset: 0, opacity: chartOp, transform: `translateY(${rise}px)` }}>
-          <div style={{ position: "absolute", inset: 0, filter: `brightness(${1 + 0.18 * pulse})` }}>
-            <CandlestickChart data={bmriDaily} window={WINDOW} box={priceBox} />
+        <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise}px)` }}>
+          {/* ⚠ A GLOW AND A BREATH, NOT A BRIGHTNESS LIFT. The old beat raised
+              brightness 18% on candles that are already near-white inside and
+              saturated outside — Simon: "Ternyata ga cukup kontras". A glow
+              adds ink where there was none and the 10% swell moves the shape
+              itself, so the beat reads at any size. */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: candleLvl,
+              transform: `scale(${(1 + 0.1 * pulse).toFixed(4)})`,
+              transformOrigin: `${priceBox.x + priceBox.w / 2}px ${priceBox.y + priceBox.h / 2}px`,
+              filter: pulse > 0.001 ? `drop-shadow(0 0 ${(20 * pulse).toFixed(1)}px ${pal.indigo})` : undefined,
+            }}
+          >
+            <CandlestickChart
+              data={bmriDaily}
+              window={WINDOW}
+              box={priceBox}
+              axesOpacity={chartOp}
+              revealProgress={candlesIn}
+            />
           </div>
 
+          <div style={{ position: "absolute", inset: 0, opacity: indLvl }}>
           <IndicatorOverlays
             data={bmriDaily}
             window={WINDOW}
@@ -189,6 +247,7 @@ export const Scene01 = () => {
             ma50Progress={ma50}
             bbProgress={bb}
           />
+          </div>
 
           {/* trendlines anchored to real pivots */}
           {trendDraw > 0.001 && (
@@ -206,7 +265,7 @@ export const Scene01 = () => {
                     strokeWidth={theme.stroke.rule}
                     strokeDasharray={len}
                     strokeDashoffset={len * (1 - trendDraw)}
-                    opacity={0.8}
+                    opacity={0.8 * trendLvl}
                   />
                 );
               })}
@@ -234,17 +293,37 @@ export const Scene01 = () => {
         ))}
       </div>
 
-      {/* the doubt the VO names, before the clutter piles on */}
-      <Chip
-        label="Cuma buat profesional?"
-        x={theme.canvas.width / 2}
-        y={thoughtY}
-        variant="slate"
-        anchor="center"
-        bare
-        startFrame={T.thought}
+      {/* ⚠ THE DOUBT IS IN A BOX NOW — Simon: "kasih text box garis putus
+          putus deh, biar ga hambar stylenya". Same marquee the rest of the
+          film uses, so the one thought the viewer is being handed looks like
+          something the film put there on purpose. */}
+      <DashedFrame
+        x={(theme.canvas.width - DOUBT.w) / 2}
+        y={thoughtY - DOUBT.h / 2}
+        w={DOUBT.w}
+        h={DOUBT.h}
+        at={T.thought}
         opacity={(1 - 0.45 * thoughtDim) * thoughtOut}
-      />
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontFamily: theme.type.family,
+            fontSize: theme.type.chip.size,
+            fontWeight: theme.type.chip.weight,
+            color: pal.ink,
+            whiteSpace: "nowrap",
+            opacity: doubt.opacity,
+            transform: `translateY(${doubt.y}px)`,
+          }}
+        >
+          Cuma buat profesional?
+        </div>
+      </DashedFrame>
     </SafeArea>
   );
 };

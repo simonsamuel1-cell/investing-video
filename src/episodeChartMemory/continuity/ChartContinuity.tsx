@@ -18,7 +18,7 @@ import { theme } from "../theme";
 import { progress, progressInOut, velocityBlur, fmtPrice, type Box } from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { chiliMonthly } from "../data/chili";
-import { Scene02 } from "../scenes/Scene02";
+import { Scene02, PAIR_INNER } from "../scenes/Scene02";
 import { Scene03 } from "../scenes/Scene03";
 import { Scene04 } from "../scenes/Scene04";
 import { Scene05 } from "../scenes/Scene05";
@@ -33,6 +33,14 @@ import { usePalette } from "../palette";
  */
 export const PHASE = { a: 0, b: 608, c: 1190, d: 2299, end: 2821 };
 const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
+/**
+ * ⚠ THE PAPER THE CHILI CHART SITS ON, and the rectangle the fold is measured
+ * from. It has to clear the month labels at box.y + box.h + 18 or the fold
+ * would carry the chart away and leave its own axis behind at full size. Its
+ * lowest edge is 870, clear of the 972 caption band; its top is 200, below the
+ * 150px logo zone.
+ */
+const PAPER = { x: 200, y: 200, w: 1520, h: 670 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
 // Where the camera pushes in to, and how many sessions it lands on.
 const BOX_DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
@@ -63,7 +71,14 @@ const K = {
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
   // SC02 sets the chili shape beside a busier one; the full-size line and its
   // month axis step aside while those comparison cards hold the stage.
-  pairIn: 444,
+  /**
+   * ⚠ 405 MATCHES Scene02's T.pairA — they are one beat seen from two files,
+   * and they were 39 frames apart after the fold moved to Simon's 1196. The
+   * cards are opaque, so the mismatch hid behind them instead of showing.
+   */
+  pairIn: 405,
+  /** ⚠ GLOBAL 1065 — the paper the chili chart is drawn on fades up. */
+  paper: 274,
   pairOut: 578,
   // The gridlines and baseline clear before global 3007 too, so the ONLY thing
   // left at the boundary is the dimmed candle series — the element SC06 picks
@@ -88,6 +103,14 @@ export type ContGeom = {
   chiliScaleY: (price: number) => number;
   /** 0 = wide view, 1 = pushed into the detail framing. */
   camera: number;
+  /** ⚠ THE PHASE-A OVERLAY MUST WEAR THIS TOO. Scene02's dots belong to the
+   *  chili chart, and a chart that folds while its own points stay put is two
+   *  pictures, not one. */
+  foldStyle: React.CSSProperties;
+  /** ⚠ AND THE SCALE ITSELF, because a stroke does not want to be scaled.
+   *  At 0.382 a 2px rule renders as three quarters of a pixel and the line
+   *  joining the three points simply vanished inside the card. */
+  foldScale: number;
 };
 
 /** Chili price at normalized position t (0–1) across the monthly series. */
@@ -163,7 +186,45 @@ export const ChartContinuity = () => {
   const chiliY: number[] = [];
   for (let k = 0; k < n; k++) chiliY.push(chiliScaleY(chiliAt(k / (n - 1))));
 
-  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera };
+  /**
+   * ⚠ THE CHILI CHART FOLDS INTO THE LEFT COMPARISON CARD; it does not fade
+   * out behind it. Simon: "Yang mengecil semua chart termasuk background
+   * putihnya ya." What used to be here was `pairMask`, an opacity that took
+   * the line and the month axis away over 34 frames while two cards faded up
+   * on top of them — so the comparison arrived as a new screen rather than as
+   * the thing you were already looking at, made small.
+   *
+   * ⚠ IT UNFOLDS AGAIN AT pairOut, and it has to: SC03 morphs this same line
+   * into the BMRI series at full size. The curve is the same shape pairMask
+   * had — in, hold, out — read as a scale instead of an opacity.
+   */
+  const chiliFold = interpolate(f, [K.pairIn, K.pairIn + 34, K.pairOut, K.pairOut + 26], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+    easing: theme.motion.easeInOut,
+  });
+  /**
+   * ⚠ ONE UNIFORM SCALE, fitted to whichever of the card's sides runs out
+   * first. A separate x and y factor would land the chart at the card's exact
+   * proportions and squash the shape the whole scene is about.
+   */
+  const foldScale = (() => {
+    const dst = PAIR_INNER(0);
+    return 1 + (Math.min(dst.w / PAPER.w, dst.h / PAPER.h) - 1) * chiliFold;
+  })();
+  const foldStyle = (() => {
+    const dst = PAIR_INNER(0);
+    const scale = foldScale;
+    const cx = PAPER.x + PAPER.w / 2;
+    const cy = PAPER.y + PAPER.h / 2;
+    const tx = (dst.x + dst.w / 2 - cx) * chiliFold;
+    const ty = (dst.y + dst.h / 2 - cy) * chiliFold;
+    return {
+      transform: `translate(${tx.toFixed(1)}px, ${ty.toFixed(1)}px) scale(${scale.toFixed(4)})`,
+      transformOrigin: `${cx}px ${cy}px`,
+    };
+  })();
+  const geom: ContGeom = { box, win, cx: g.cx, scale: g.scale, xs, bmriY, chiliY, chiliScaleY, camera, foldStyle, foldScale };
 
   // ── chart mode timeline ──
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
@@ -174,16 +235,13 @@ export const ChartContinuity = () => {
   const linePts = xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
   // SC04 dims the line one step before the wipe begins
   const lineDimRaw = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
-  const pairMask = interpolate(f, [K.pairIn, K.pairIn + 34, K.pairOut, K.pairOut + 26], [1, 0, 0, 1], {
-    extrapolateLeft: "clamp",
-    extrapolateRight: "clamp",
-  });
-  const lineDim = lineDimRaw * pairMask;
+  const paperOp = f >= K.paper ? progress(f, K.paper, 30) : 0;
+  const lineDim = lineDimRaw;
   const wipeX = box.x + box.w * wipe;
 
   // ── axis furniture: months (chili) crossfading into dates + prices (BMRI) ──
   const axisDraw = f >= K.axisDraw ? progress(f, K.axisDraw, 50) : 0;
-  const chiliAxisOp = (f < K.morph ? 1 : 1 - progress(f, K.morph, 60)) * pairMask;
+  const chiliAxisOp = f < K.morph ? 1 : 1 - progress(f, K.morph, 60);
   const bmriAxisOp = f >= K.morph ? progress(f, K.morph, 60) : 0;
   // SC05 re-populates both rails one tick at a time, so continuity's own tick
   // labels step aside at phase D to avoid a doubled axis.
@@ -197,6 +255,37 @@ export const ChartContinuity = () => {
   return (
     <SafeArea>
       <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
+      {/* ⚠ ABOVE THE COMPARISON CARDS WHILE IT FOLDS, and only while it
+          folds. Scene02 draws those cards after this whole group, and they
+          are opaque — the chart folded correctly into the left one and was
+          then painted over by it, which looked exactly like the fold failing.
+          Lifted only during the fold so nothing changes for SC03 and SC04. */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...foldStyle,
+          zIndex: chiliFold > 0.001 ? 3 : undefined,
+        }}
+      >
+      {/* ⚠ THE PAPER IS THE FIRST THING IN THE FOLD GROUP, so the month labels
+          and the line are drawn ON it rather than beside it — and so all three
+          are carried into the card by one transform. */}
+      {paperOp > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            left: PAPER.x,
+            top: PAPER.y,
+            width: PAPER.w,
+            height: PAPER.h,
+            borderRadius: theme.radius.cardLg,
+            background: pal.cardBg,
+            border: `${theme.stroke.hair}px solid ${pal.border}`,
+            opacity: paperOp,
+          }}
+        />
+      )}
       {/* ── axis furniture ── */}
       {axisDraw > 0.001 && (
         <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
@@ -300,6 +389,7 @@ export const ChartContinuity = () => {
       {wipe > 0.001 && (
         <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
       )}
+      </div>
       </div>
 
       {/* ── per-phase overlays ──

@@ -11,7 +11,7 @@ import { Chip } from "../components/Chip";
 import { LineChart } from "../components/LineChart";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, progressInOut, linear, fadeOut, countTo, fmtRp, mulberry32 } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
 import type { OHLC } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
@@ -65,6 +65,9 @@ const DOT_R = 13;
 /** The opening line's frame. Fixed, because a dash pattern that restarts
  *  whenever the text changes is a coincidence rather than a style. */
 const OPENER_BOX = { x: 220, y: 520, w: 1480, h: 116 };
+const OPENER_TEXT = "Sebetulnya, kamu sudah membaca chart sepanjang hidupmu";
+/** Frames to type it. 53 characters at a little over two a frame. */
+const OPENER_TYPE = 42;
 const CARD_START = [0, 1, 2].map((i) => ({ cx: theme.canvas.width / 2 + (i - 1) * (CARD_W + CARD_GAP), cy: CARD_CY }));
 const SPOKEN = [
   { idx: CHILI_SPOKEN.high, start: T.c1, rise: false },
@@ -74,7 +77,19 @@ const SPOKEN = [
 // side-by-side comparison cards
 const PAIR = { y: 360, w: 640, h: 340, gap: 24 };
 const PAIR_X = (i: number) => (theme.canvas.width - (PAIR.w * 2 + PAIR.gap)) / 2 + i * (PAIR.w + PAIR.gap);
-const MINI = (i: number) => ({ x: PAIR_X(i) + 34, y: PAIR.y + 92, w: PAIR.w - 68, h: PAIR.h - 150 });
+/**
+ * ⚠ WHERE THE BIG CHART LANDS — the card's whole inside, not its plot area.
+ * Fitting the 1520x670 sheet into MINI's 572x190 gave a scale of 0.284 and a
+ * chart you could not read; the card minus its label strip takes 0.382, which
+ * is the difference between a thumbnail and a picture.
+ */
+export const PAIR_INNER = (i: number) => ({
+  x: PAIR_X(i) + 20,
+  y: PAIR.y + 74,
+  w: PAIR.w - 40,
+  h: PAIR.h - 96,
+});
+export const MINI = (i: number) => ({ x: PAIR_X(i) + 34, y: PAIR.y + 92, w: PAIR.w - 68, h: PAIR.h - 150 });
 const PRICE_RANGE: [number, number] = [18000, 42000];
 
 /**
@@ -146,9 +161,15 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   const glow = f >= T.glow && f < T.glow + 30 ? Math.sin(((f - T.glow) / 30) * Math.PI) : 0;
 
   // opener line: centre stage, then simply clears
-  /** ⚠ THE WORDS WAIT FOR THE FRAME. See DashedFrame: content that reflows
-   *  while the box is still snapping open is what gives the trick away. */
-  const op = textReveal(f, dashOpenAt(T.opener), 18);
+  /**
+   * ⚠ THE WORDS WAIT FOR THE FRAME, then TYPE. See DashedFrame: content that
+   * reflows while the box is still snapping open is what gives the trick away,
+   * so nothing is typed until the snap has landed.
+   *
+   * ⚠ LINEAR, NOT THE EPISODE'S EASE. A typewriter that accelerates and then
+   * crawls is not a typewriter; the whole read of the effect is a steady hand.
+   */
+  const typed = Math.round(linear(f, dashOpenAt(T.opener), OPENER_TYPE) * OPENER_TEXT.length);
   const openerOp = f >= T.openerOut ? fadeOut(f, T.openerOut, 18) : 1;
 
   const target = (idx: number) => ({
@@ -168,32 +189,17 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
     interpolate(price, PRICE_RANGE, [b.y + b.h, b.y], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   // left card = the same chili shape, small; right card = a denser series
-  const chiliMini = (() => {
-    const b = MINI(0);
-    return chiliMonthly.map((c, k) => ({ x: b.x + (b.w * k) / (chiliMonthly.length - 1), y: yOf(c.price, b) }));
-  })();
-
   /**
-   * ⚠ THE PREVIEW FOLDS INTO THE LEFT WINDOW — it does not cross-fade with it.
-   * Simon: "previewnya mengecil ke window kiri". Each of the three points
-   * travels to the position that same month already has inside the small
-   * chart, so when the fold lands the dots are sitting exactly on the mini
-   * line and can simply be dropped: there is no frame where two versions of
-   * the same shape are both on screen.
-   *
-   * ⚠ THE POINTS ARE INTERPOLATED, NOT THE GROUP SCALED. The big chart and
-   * the small one do not share an aspect ratio — a scale that fitted the
-   * width would miss the height, and the dots would arrive as ellipses.
+   * ⚠ THE DOTS RIDE THE CHART'S OWN FOLD. `geom.foldStyle` is one transform,
+   * computed once in ChartContinuity, worn by the paper, the month labels,
+   * the line — and here by the three points. Interpolating the points
+   * separately was the first attempt and it was wrong in a way that only
+   * showed at the end: the dots arrived where the small chart wanted them
+   * while the paper and the axis were still full size, because nothing was
+   * carrying those.
    */
-  const fold = f >= T.pairA ? progressInOut(f, T.pairA, 34) : 0;
-  const DOT_NOW = SPOKEN.map(({ idx }, i) => {
-    const big = DOT_PTS[i];
-    const small = chiliMini[idx];
-    return { cx: big.cx + (small.x - big.cx) * fold, cy: big.cy + (small.y - big.cy) * fold };
-  });
-  /** The trim needs a real length, and the path is shorter every frame it folds. */
-  const DOT_LEN = DOT_NOW.slice(1).reduce(
-    (sum, q, i) => sum + Math.hypot(q.cx - DOT_NOW[i].cx, q.cy - DOT_NOW[i].cy),
+  const DOT_LEN = DOT_PTS.slice(1).reduce(
+    (sum, q, i) => sum + Math.hypot(q.cx - DOT_PTS[i].cx, q.cy - DOT_PTS[i].cy),
     0,
   );
   /**
@@ -234,23 +240,26 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
 
       {/* opening reframe — one centred line in the marquee box, then gone */}
       <DashedFrame {...OPENER_BOX} at={T.opener} opacity={openerOp}>
+        {/* ⚠ LEFT-ALIGNED, NOT CENTRED. Centred text that is being typed grows
+            outwards from its middle, which reads as the line unfolding rather
+            than as someone writing it. The box is fixed and the finished line
+            very nearly fills it, so flush left lands within a few pixels of
+            where centred would have put it anyway. */}
         <div
           style={{
             position: "absolute",
             inset: 0,
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
+            paddingLeft: 42,
             fontFamily: theme.type.family,
             fontSize: 48,
             fontWeight: 600,
             color: pal.ink,
-            whiteSpace: "nowrap",
-            opacity: op.opacity,
-            transform: `translateY(${op.y}px)`,
+            whiteSpace: "pre",
           }}
         >
-          Sebetulnya, kamu sudah membaca chart sepanjang hidupmu
+          {OPENER_TEXT.slice(0, typed)}
         </div>
       </DashedFrame>
 
@@ -286,30 +295,35 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
           cards instead of between them. Simon: "Remove itu, ga guna." */}
 
       {/* the cards collapse into dots on the baseline, and the dots are joined */}
-      {dots > 0.001 && fold < 0.999 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
+      {dots > 0.001 && (
+        <svg
+          /* ⚠ LIFTED WITH THE CHART IT BELONGS TO — see ChartContinuity's
+             note: the cards below are opaque and drawn after this. */
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", zIndex: 3, ...geom.foldStyle }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
           {/* ⚠ DRAWN FIRST, so the dots sit ON the line and not under it.
               40.000 → 20.000 → 35.000, in the order the voice says them, which
               is also left to right: SPOKEN is high, low, back. */}
           {link > 0.001 && (
             <polyline
-              points={DOT_NOW.map((q) => `${q.cx},${q.cy}`).join(" ")}
+              points={DOT_PTS.map((q) => `${q.cx},${q.cy}`).join(" ")}
               fill="none"
               stroke={pal.indigo}
-              strokeWidth={theme.stroke.rule}
+              /* ⚠ DIVIDED BY THE FOLD, so the rule stays two pixels on screen
+                 however small the chart it belongs to gets. */
+              strokeWidth={theme.stroke.rule / geom.foldScale}
               strokeLinecap="round"
               strokeLinejoin="round"
               /* the trim: one dash as long as the whole path, walked into view */
               strokeDasharray={DOT_LEN}
               strokeDashoffset={DOT_LEN * (1 - link)}
-              opacity={1 - pairIn}
             />
           )}
           {SPOKEN.map(({ idx }, i) => {
-            const tgt = DOT_NOW[i];
-            /** They shrink as they travel, landing the size the mini chart
-             *  would draw them if it drew them at all. */
-            const r = DOT_R * dots * (1 - 0.72 * fold);
+            const tgt = DOT_PTS[i];
+            const r = DOT_R * dots;
             return (
               <g key={idx} opacity={1}>
                 {/* the pulse — a ring leaving the dot, fading as it goes */}
@@ -380,7 +394,12 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
               {lab}
             </div>
           ))}
-          <LineChart points={chiliMini} progress={1} color={pal.indigo} />
+          {/* ⚠ NO LINE IS DRAWN IN THE LEFT CARD ANY MORE. Simon: "Preview
+              window kiri yang sekarang (1220) remove aja, ganti jadi chart
+              yang baru, yaitu chart harga cabai." What fills it is the real
+              chart, folded in — paper, months, line and points together. A
+              mini copy underneath would be a second drawing of the same thing
+              at almost but not quite the same size. */}
           {denseDraw > 0.001 && swap < 0.999 && (
             <div style={{ opacity: 1 - swap }}>
               <LineChart points={sahamMini} progress={denseDraw} color={pal.indigo} />

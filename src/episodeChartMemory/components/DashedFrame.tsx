@@ -41,9 +41,21 @@ import { theme } from "../theme";
 import { usePalette } from "../palette";
 import { progress, progressInOut } from "../helpers";
 
-/** VIDEO 20's own numbers, in frames at this episode's 30fps. */
-const RISE = 4;
-const OPEN = 3;
+/**
+ * ⚠ SLOWER THAN VIDEO 20'S. Its numbers are 4 and 3 frames here, and Simon
+ * could not see the move at all: "cepet banget soalnya jadi ga keliatan
+ * pergerakannya. Take your time." Thirty frames total — a second — is enough
+ * for the rise and the snap to read as two separate events, which is the
+ * whole point of there being two.
+ *
+ * ⚠ AND THE RULE IS 3px, NOT THE THEME'S 2. Simon asked directly. It is a
+ * literal rather than theme.stroke.rule because this frame is a reproduction
+ * of a specific drawing, not a member of the episode's rule family — the dash
+ * length is a literal for the same reason.
+ */
+const RISE = 12;
+const OPEN = 18;
+const RULE = 3;
 const RISE_BY = 26;
 const SLIVER = 10;
 const DASH = "16 11";
@@ -90,7 +102,7 @@ export const DashedFrame = ({
           rx={theme.radius.card}
           fill="none"
           stroke={pal.ink}
-          strokeWidth={theme.stroke.rule}
+          strokeWidth={RULE}
           strokeDasharray={DASH}
         />
         {/* a solid block on each corner, so the dash rhythm has somewhere to
