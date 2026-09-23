@@ -1,6 +1,8 @@
 /**
- * IndicatorOverlays — MA20 / MA50 lines (indigo tints) and the Bollinger band
- * fill (8% indigo). All values are COMPUTED from the daily series in data/bmri —
+ * IndicatorOverlays — MA20 (orange), MA50 (cyan) and the Bollinger band fill
+ * (cyan). Each indicator now wears its own hue — Simon: MA20 "Ubah warna jadi
+ * orange", and the line + area that follow it "ubah warna jadi cyan" — so the
+ * pile-up on SC01 reads as several different tools, not one indigo smear. All values are COMPUTED from the daily series in data/bmri —
  * never arbitrary squiggles. Every path is conditionally mounted by its own
  * progress prop so nothing flashes at frame 0.
  */
@@ -69,12 +71,12 @@ export const IndicatorOverlays = ({
 
   return (
     <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-      {bbProgress > 0.001 && up.length > 1 && <polygon points={bbPoly} fill={pal.indigo} opacity={0.08 * bbProgress} />}
+      {bbProgress > 0.001 && up.length > 1 && <polygon points={bbPoly} fill={pal.cyan} opacity={0.14 * bbProgress} />}
       {ma50Progress > 0.001 && d50 && (
         <path
           d={d50}
           fill="none"
-          stroke={pal.indigoTintMA2}
+          stroke={pal.cyan}
           strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma50Progress)}
@@ -84,7 +86,7 @@ export const IndicatorOverlays = ({
         <path
           d={d20}
           fill="none"
-          stroke={pal.indigoTintMA1}
+          stroke={pal.maOrange}
           strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma20Progress)}

@@ -1,7 +1,11 @@
 /**
  * SubPane — RSI(14) or MACD(12,26,9) sub-pane that slides up under the price
- * pane. Values are COMPUTED from the daily series. Indigo/cyan/neutral only —
- * histogram bars never use candle red/green.
+ * pane. Values are COMPUTED from the daily series.
+ *
+ * ⚠ THE MACD HISTOGRAM IS CANDLE-COLOURED — the one place outside a candle
+ * body that the film uses green/red, and only because Simon asked for it:
+ * "MACD sesuaikan warna dengan candlestick." Above zero green, below zero red,
+ * which is how every trading platform draws it. The RSI line is purple.
  */
 import { theme } from "../theme";
 import { interpolate } from "remotion";
@@ -51,7 +55,7 @@ export const SubPane = ({
       <>
         <line x1={box.x} y1={yOf(70)} x2={box.x + box.w} y2={yOf(70)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
         <line x1={box.x} y1={yOf(30)} x2={box.x + box.w} y2={yOf(30)} stroke={pal.border} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" />
-        <path d={pts.join(" ")} fill="none" stroke={pal.indigo} strokeWidth={strokeWidth} />
+        <path d={pts.join(" ")} fill="none" stroke={pal.rsiPurple} strokeWidth={strokeWidth} />
       </>
     );
   } else {
@@ -75,8 +79,7 @@ export const SubPane = ({
               y={v >= 0 ? mid - hh : mid}
               width={barW}
               height={Math.max(1, hh)}
-              fill={v >= 0 ? pal.indigo : pal.indigoTintMA2}
-              opacity={0.85}
+              fill={v >= 0 ? pal.candleGreen : pal.candleRed}
             />
           );
         })}

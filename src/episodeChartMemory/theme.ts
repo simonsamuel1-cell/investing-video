@@ -44,6 +44,10 @@ export type Palette = {
   cardBg: string;
   border: string;
   muted: string;
+  /** MA20 on SC01's overloaded chart — Simon: "Ubah warna jadi orange". */
+  maOrange: string;
+  /** RSI on SC01 — Simon: "RSI ubah color code jadi ungu purple". */
+  rsiPurple: string;
 };
 
 export const PALETTES: Record<PaletteName, Palette> = {
@@ -65,6 +69,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
     cardBg: "#FFFFFF",
     border: "#DEDEE0",
     muted: "#B9B9BD",
+    maOrange: "#F2994A",
+    rsiPurple: "#9B51E0",
   },
   // Arah 1 — tanahnya dibalik. Rona merek dipertahankan, hanya diangkat
   // terangnya supaya tetap terbaca di atas hitam. Candle jadi jauh lebih kuat.
@@ -85,6 +91,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
     cardBg: "#1F1F21",
     border: "#34343A",
     muted: "#5A5A62",
+    maOrange: "#FFB066",
+    rsiPurple: "#B57CF2",
   },
   // Arah 2 — tanah kertas hangat. Indigo merek dipertahankan; cyan diganti
   // terakota, satu-satunya tempat aturan rona sengaja dilanggar.
@@ -105,6 +113,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
     cardBg: "#FBF7F0",
     border: "#E3D9CA",
     muted: "#B9AB98",
+    maOrange: "#D9822B",
+    rsiPurple: "#8E4FC7",
   },
   // Penanda bagian CONTOH (SC02 harga cabai, SC08 ingatan pasar). Ungunya
   // sengaja dijauhkan dari indigo merek: rona 282° vs 247°, dan lebih condong
@@ -128,6 +138,8 @@ export const PALETTES: Record<PaletteName, Palette> = {
     cardBg: "#FBF6FE",
     border: "#C9B3DC",
     muted: "#A38CB8",
+    maOrange: "#E8893A",
+    rsiPurple: "#A45DD6",
   },
 };
 

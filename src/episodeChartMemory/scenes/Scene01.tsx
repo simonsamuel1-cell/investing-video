@@ -90,6 +90,7 @@ const DOUBT = { w: 560, h: 96 };
  * MA20, MA50 and RSI. The theme's 2px rule stays the default everywhere else.
  */
 const LINE = { full: 3, dim: 1 };
+const MACD_SQUEEZE = 0.036;
 const LEGEND_STEP = 20;
 const LEGEND = ["MA 20", "MA 50", "BB", "RSI 14", "MACD"];
 /** ⚠ ALL FIVE CHIPS READ THE SAME. Simon: "MA50, BB, RSI 14, dan MCD kenapa
@@ -137,7 +138,18 @@ export const Scene01 = () => {
   // price pane compresses as the sub-panes arrive — and grows back as they go
   const rsiIn = progress(f, T.rsi, 26) * keep.rsi;
   const macdIn = progress(f, T.macd, 26) * keep.macd;
-  const priceH = INNER.h * (1 - 0.38 * rsiIn - 0.17 * macdIn);
+  /**
+   * ⚠ MACD TAKES THE SPACE RSI LEFT, IT DOES NOT PUSH THE STACK UP. Simon:
+   * "Setelah MACD masuk, malah jadi ada banyak white space di bagian bawah
+   * background putih ... masuknya MACD jangan terlalu dalem/naik." At 0.17
+   * the stack ended at 857 on a card that ends at 972 — 115px of empty paper.
+   * The stack's bottom is 250 + priceH + 328 (two 46px gaps, two 118px
+   * panes). Aimed at 940: the histogram's bars stop short of their pane's
+   * edge (the deepest red bar is about half the pane), so a 64px margin on the
+   * BOX still read as 100px of empty paper. priceH = 362 →
+   * 1 − 0.38 − 362/620 = 0.036 — MACD barely lifts the price pane at all.
+   */
+  const priceH = INNER.h * (1 - 0.38 * rsiIn - MACD_SQUEEZE * macdIn);
   const priceBox = { ...INNER, h: priceH };
   const g = chartGeom(bmriDaily, WINDOW, priceBox);
 
