@@ -53,14 +53,15 @@ const T = {
   pulse: 241, // "Candlestick"
   indicators: 272, // "Indikator bertumpuk" — the spotlight moves to the overlays
   /**
-   * ⚠ THE CYAN PAIR COMES FIRST, THE ORANGE LINE SECOND. Simon: "timing dari
-   * garis moving average dan garis bollinger bands di tukar deh." The cyan
-   * MA50 and the Bollinger area it arrives with now open the beat on 272; the
-   * orange MA20 follows on 288. The area keeps its two frames behind its line.
+   * ⚠ TIMING AS IT WAS — IT IS THE COLOURS THAT SWAPPED. Simon asked for the
+   * MA and Bollinger lines to trade places, then: "salah, tuker lagi
+   * timingnya, tapi kali ini warna nya yang dituker." MA20 is the Bollinger
+   * band's own middle line, so it now wears the band's cyan; MA50 is orange.
+   * See IndicatorOverlays.
    */
-  ma50: 272,
-  bb: 274,
-  ma20: 288,
+  ma20: 272,
+  ma50: 288,
+  bb: 290,
   rsi: 315, // "sampai chart-nya sendiri"
   macd: 345,
   legend: 315, // 5 chips across f315–f395
@@ -134,12 +135,11 @@ export const Scene01 = () => {
 
   /** How much of each layer survives the 531 reverse — see R, above. */
   const keep = {
-    // still the reverse of arrival: trend, MA50, BB, MA20, RSI, MACD
     macd: 1 - leaves(f, 0),
     rsi: 1 - leaves(f, 1),
-    ma20: 1 - leaves(f, 2),
-    bb: 1 - leaves(f, 3),
-    ma50: 1 - leaves(f, 4),
+    bb: 1 - leaves(f, 2),
+    ma50: 1 - leaves(f, 3),
+    ma20: 1 - leaves(f, 4),
     trend: 1 - leaves(f, 5),
   };
 

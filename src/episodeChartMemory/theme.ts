@@ -44,7 +44,7 @@ export type Palette = {
   cardBg: string;
   border: string;
   muted: string;
-  /** MA20 on SC01's overloaded chart — Simon: "Ubah warna jadi orange". */
+  /** MA50 on SC01's overloaded chart (MA20 is cyan, the band's middle line). */
   maOrange: string;
   /** RSI on SC01 — Simon: "RSI ubah color code jadi ungu purple". */
   rsiPurple: string;

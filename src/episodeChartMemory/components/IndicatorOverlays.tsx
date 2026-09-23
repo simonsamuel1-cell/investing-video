@@ -1,8 +1,12 @@
 /**
- * IndicatorOverlays — MA20 (orange), MA50 (cyan) and the Bollinger band fill
- * (cyan). Each indicator now wears its own hue — Simon: MA20 "Ubah warna jadi
- * orange", and the line + area that follow it "ubah warna jadi cyan" — so the
- * pile-up on SC01 reads as several different tools, not one indigo smear. All values are COMPUTED from the daily series in data/bmri —
+ * IndicatorOverlays — MA20 (cyan), MA50 (orange) and the Bollinger band fill
+ * (cyan). Each indicator wears its own hue so the pile-up on SC01 reads as
+ * several different tools, not one indigo smear.
+ *
+ * ⚠ MA20 IS CYAN BECAUSE IT IS THE BAND'S MIDDLE LINE. Bollinger(20, 2) is
+ * centred on the 20-day average, so the line running down the middle of the
+ * cyan area is this one — Simon had the two colours swapped round: "kali ini
+ * warna nya yang dituker". All values are COMPUTED from the daily series in data/bmri —
  * never arbitrary squiggles. Every path is conditionally mounted by its own
  * progress prop so nothing flashes at frame 0.
  */
@@ -76,7 +80,7 @@ export const IndicatorOverlays = ({
         <path
           d={d50}
           fill="none"
-          stroke={pal.cyan}
+          stroke={pal.maOrange}
           strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma50Progress)}
@@ -86,7 +90,7 @@ export const IndicatorOverlays = ({
         <path
           d={d20}
           fill="none"
-          stroke={pal.maOrange}
+          stroke={pal.cyan}
           strokeWidth={strokeWidth}
           strokeDasharray={LEN}
           strokeDashoffset={LEN * (1 - ma20Progress)}
