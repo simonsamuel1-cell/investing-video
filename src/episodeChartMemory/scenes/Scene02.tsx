@@ -10,9 +10,9 @@ import { PriceCard } from "../components/PriceCard";
 import { Chip } from "../components/Chip";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { theme } from "../theme";
-import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, mulberry32 } from "../helpers";
+import { progress, progressInOut, fadeOut, textReveal, countTo, fmtRp, linear } from "../helpers";
 import { chiliMonthly, CHILI_SPOKEN } from "../data/chili";
-import type { OHLC } from "../data/bmri";
+import { SAHAM_CANDLES, SAHAM_REF_H } from "../data/sahamReference";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
@@ -45,8 +45,8 @@ const T = {
   /** ⚠ GLOBAL 1235 — Simon's frame for "Muncul chart di window kanan". */
   pairB: 444,
   crowd: 527, // "hanya lebih cepat dan melibatkan lebih banyak orang"
-  /** ⚠ GLOBAL 1307 — the right window stops being a copy and becomes candles. */
-  candles: 516,
+  /** ⚠ GLOBAL 1308 — the right window stops being a copy and becomes candles. */
+  candles: 517,
   /**
    * ⚠ AND IT TAKES ITS TIME GETTING THERE. Simon: "Candlestick mulai muncul
    * satu satu di sini, take your time aja, ga usa animasi cepet." The reveal
@@ -55,7 +55,7 @@ const T = {
    * ten clear of pairOut — and the crossfade stays short, so no frame holds
    * neither picture.
    */
-  candleDur: 52,
+  candleDur: 22, // → global 1330, Simon's "1308-1330"
   pairOut: 578, // clear before the SC03 morph
 };
 // The three figures sit in one row, 10px apart. A uniform card width is what
@@ -137,54 +137,18 @@ export const twinOpacity = (f: number) =>
   (f >= T.pairB ? progress(f, T.pairB, 26) : 0) * (f >= T.candles ? 1 - progress(f, T.candles, 20) : 1);
 
 /**
- * ⚠ TWENTY CANDLES THAT GO WHERE THE LEFT WINDOW GOES, BADLY. Simon: "secara
- * garis besar arahnya kayak window kiri, tapi sepanjang jalannya tidak
- * stabil." So the path is the chili series resampled to twenty, and what is
- * added to it is a DAMPED WANDER — each step keeps 62% of the last one and
- * adds a new kick — rather than independent noise. Independent noise averages
- * back to the line every second candle and reads as a fuzzy version of it;
- * a wander leans away for a run of candles and comes back, which is what an
- * unstable path actually looks like.
- *
- * ⚠ SEEDED, because a render must be frame-deterministic — and computed once
- * at module load rather than per frame, so the same twenty candles are drawn
- * every time this scene is evaluated.
- *
- * This is illustration, not a quotation: the chili series it is built on is
- * itself a placeholder (see data/chili.ts) and nothing here is labelled with
- * a figure.
+ * ⚠ THE RIGHT WINDOW'S CANDLES ARE SIMON'S REFERENCE, TRACED — see
+ * data/sahamReference. They used to be twenty seeded candles wandering along
+ * the chili path. Drawn at the screenshot's own height ("ukurannya dibuat
+ * sama tingginya dengan screenshot ini"): one screen pixel per traced pixel
+ * vertically, centred in the window's plot area, stretched across its width.
  */
-const SAHAM_CANDLES: OHLC[] = (() => {
-  const rnd = mulberry32(20260923);
-  const N = 20;
-  const last = chiliMonthly.length - 1;
-  let wander = 0;
-  return Array.from({ length: N }, (_, k) => {
-    const t = (k / (N - 1)) * last;
-    const i = Math.min(last - 1, Math.floor(t));
-    const base = chiliMonthly[i].price + (chiliMonthly[i + 1].price - chiliMonthly[i].price) * (t - i);
-    wander = wander * 0.62 + (rnd() - 0.5) * 3000;
-    const mid = base + wander;
-    /**
-     * ⚠ THE BODY IS A MOVE, NOT TWO DRAWS FROM THE SAME RANGE. Picking the
-     * open and the close independently inside one span puts them close
-     * together about as often as far apart, so most candles came out as bare
-     * crosses — the series read as scatter rather than as candlesticks. A
-     * signed move gives every candle a body, and its sign gives the colour.
-     */
-    const move = (rnd() - 0.5) * (1200 + rnd() * 2600);
-    const o = mid - move / 2;
-    const c = mid + move / 2;
-    const wick = 200 + rnd() * 900;
-    return {
-      date: `s${k}`,
-      o,
-      c,
-      h: Math.max(o, c) + rnd() * wick,
-      l: Math.min(o, c) - rnd() * wick,
-    };
-  });
+const SAHAM_BOX = (() => {
+  const m = MINI(1);
+  return { x: m.x, y: m.y + (m.h - SAHAM_REF_H) / 2, w: m.w, h: SAHAM_REF_H };
 })();
+/** Price (= SAHAM_REF_H − pixel row) back to a screen row, 1:1. */
+const sahamY = (p: number) => SAHAM_BOX.y + (SAHAM_REF_H - p);
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene02 = ({ geom }: { geom: ContGeom }) => {
@@ -239,13 +203,18 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
   /** Line out, candles in — one curve, so no frame holds neither. */
   const swap = f >= T.candles ? progress(f, T.candles, 20) : 0;
   /** ⚠ SEPARATE FROM THE CROSSFADE — see T.candleDur. */
-  const candleIn = f >= T.candles ? progress(f, T.candles, T.candleDur) : 0;
+  /**
+   * ⚠ LINEAR — one candle after another at a steady pace. On the episode's
+   * ease-out the 37 candles were ~90% out eight frames into a 22-frame
+   * window, which read as the chart popping on rather than being walked in.
+   */
+  const candleIn = f >= T.candles ? linear(f, T.candles, T.candleDur) : 0;
 
   /* ⚠ THE CYAN SPECKS ARE GONE. Fourteen dots flew in from off-screen right
      to stand for "lebih banyak orang" — Simon: "Hilangkan elemen titik titik
      cyan, gaada artinya." They landed at seeded random points inside the
      window, so they read as noise ON the chart rather than as participants
-     arriving at it. The line "Lebih cepat, lebih ramai" carries the beat. */
+     arriving at it. */
 
   return (
     <>
@@ -440,7 +409,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
               <CandlestickChart
                 data={SAHAM_CANDLES}
                 window={[0, SAHAM_CANDLES.length - 1]}
-                box={MINI(1)}
+                box={SAHAM_BOX}
+                scaleOverride={sahamY}
                 showAxes={false}
                 revealProgress={candleIn}
               />
@@ -449,15 +419,8 @@ export const Scene02 = ({ geom }: { geom: ContGeom }) => {
         </div>
       )}
 
-      <Chip
-        label="Lebih cepat, lebih ramai"
-        x={PAIR_X(1) + PAIR.w / 2}
-        y={PAIR.y + PAIR.h + 46}
-        variant="cyan"
-        anchor="center"
-        startFrame={T.crowd}
-        opacity={pairOut}
-      />
+      {/* ⚠ NO "Lebih cepat, lebih ramai" CHIP under the right window — Simon:
+          "Remove label 'Lebih cepat, lebih ramai'". The voice says it. */}
     </>
   );
 };
