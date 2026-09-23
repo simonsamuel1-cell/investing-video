@@ -74,6 +74,13 @@ const CARD_LIFT_PX = 6;
 /** Buy / Sell pill: type size, its outer size, and its gap from the candles. */
 const PILL_SIZE = 22;
 const PILL = { w: 70, h: 36, gap: 8 };
+/** "Berani masuk" / "Ragu" / "Keluar": the film's chip, filled, bold, +10px. */
+const DECISION_CHIP = {
+  variant: "indigo",
+  solid: true,
+  weight: 700,
+  size: theme.type.chip.size + 10,
+} as const;
 // ═══════════════════════════════════════════════════════════════════════════
 
 const D = SAHAM_CANDLES;
@@ -206,6 +213,23 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
    */
   const labels = (() => {
     const placed: { i: number; buy: boolean; x: number; y: number }[] = [];
+    /**
+     * ⚠ AND THE THREE DECISION PILLS ARE OBSTACLES TOO, by their real
+     * footprint. At +10px bold they are wider than LABEL_CLEAR candles, and
+     * "Ragu" landed on a Sell beside it. Width is estimated from the label:
+     * ~0.6em a character plus the chip's 20px side padding.
+     */
+    const chipBox = (label: string, x: number, yy: number) => ({
+      x,
+      y: yy,
+      w: label.length * DECISION_CHIP.size * 0.6 + 40,
+      h: DECISION_CHIP.size * 1.25 + 16,
+    });
+    const blockers = [
+      chipBox("Berani masuk", cx(P.low), y(D[P.low].l) + 82),
+      chipBox("Ragu", cx(P.consol), y(D[P.consol].c) - 82),
+      chipBox("Keluar", cx(P.high), y(D[P.high].h) - 82),
+    ];
     const reach = PILL.w / 2;
     for (const { i, buy } of CANDIDATES) {
       const x = cx(i);
@@ -215,7 +239,9 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
         edge = buy ? Math.max(edge, y(D[j].l)) : Math.min(edge, y(D[j].h));
       }
       const py = buy ? edge + PILL.gap + PILL.h / 2 : edge - PILL.gap - PILL.h / 2;
-      const hit = placed.some((q) => Math.abs(q.x - x) < PILL.w + 6 && Math.abs(q.y - py) < PILL.h + 6);
+      const hit =
+        placed.some((q) => Math.abs(q.x - x) < PILL.w + 6 && Math.abs(q.y - py) < PILL.h + 6) ||
+        blockers.some((b) => Math.abs(b.x - x) < (b.w + PILL.w) / 2 + 6 && Math.abs(b.y - py) < (b.h + PILL.h) / 2 + 6);
       if (!hit) placed.push({ i, buy, x, y: py });
     }
     return placed;
@@ -350,40 +376,38 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
         })}
 
         {/* three recorded decisions — chips alternate above/below so none stack */}
-        <Ping x={cx(P.low)} y={y(D[P.low].l)} startFrame={T.brave} variant="green" />
+        <Ping x={cx(P.low)} y={y(D[P.low].l)} startFrame={T.brave} variant="indigo" />
         <Chip
           label="Berani masuk"
           x={cx(P.low)}
           y={y(D[P.low].l) + 82}
-          /* ⚠ TEXT ONLY, AND IN COLOUR — Simon: "remove backgroundnya aja,
-             jadi sisa text aja. 'Berani masuk' hijau, 'Ragu' cyan, 'Keluar'
-             merah." */
-          bare
-          variant="green"
+          /* ⚠ A SOLID INDIGO PILL, WHITE TYPE, BOLD, 10px LARGER — Simon:
+             "naikin font size nya by 10 px, naikin weight jadi bold, ubah
+             style text jadi pill design aja. Backgroundnya indigo, textnya
+             putih." Same for all three chips. */
+          {...DECISION_CHIP}
           anchor="center"
           startFrame={T.brave + 6}
           connectorTo={{ x: cx(P.low), y: y(D[P.low].l) + 14 }}
         />
 
-        <Ping x={cx(P.consol)} y={y(D[P.consol].c)} startFrame={T.doubt} variant="cyan" />
+        <Ping x={cx(P.consol)} y={y(D[P.consol].c)} startFrame={T.doubt} variant="indigo" />
         <Chip
           label="Ragu"
           x={cx(P.consol)}
           y={y(D[P.consol].c) - 82}
-          bare
-          variant="cyan"
+          {...DECISION_CHIP}
           anchor="center"
           startFrame={T.doubt + 6}
           connectorTo={{ x: cx(P.consol), y: y(D[P.consol].c) - 16 }}
         />
 
-        <Ping x={cx(P.high)} y={y(D[P.high].h)} startFrame={T.exit} variant="red" />
+        <Ping x={cx(P.high)} y={y(D[P.high].h)} startFrame={T.exit} variant="indigo" />
         <Chip
           label="Keluar"
           x={cx(P.high)}
           y={y(D[P.high].h) - 82}
-          bare
-          variant="red"
+          {...DECISION_CHIP}
           anchor="center"
           startFrame={T.exit + 6}
           connectorTo={{ x: cx(P.high), y: y(D[P.high].h) - 16 }}

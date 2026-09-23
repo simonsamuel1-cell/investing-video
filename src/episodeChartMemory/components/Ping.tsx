@@ -19,8 +19,7 @@ export const Ping = ({
   x: number;
   y: number;
   startFrame: number;
-  /** green / red: SC03's "Berani masuk" and "Keluar" only — see Chip. */
-  variant?: "indigo" | "slate" | "cyan" | "green" | "red";
+  variant?: "indigo" | "slate" | "cyan";
   r0?: number;
   r1?: number;
   dur?: number;
@@ -29,16 +28,7 @@ export const Ping = ({
   const pal = usePalette();
   const f = useCurrentFrame();
   if (f < startFrame) return null;
-  const color =
-    variant === "indigo"
-      ? pal.indigo
-      : variant === "cyan"
-        ? pal.cyan
-        : variant === "green"
-          ? pal.candleGreen
-          : variant === "red"
-            ? pal.candleRed
-            : pal.slate;
+  const color = variant === "indigo" ? pal.indigo : variant === "cyan" ? pal.cyan : pal.slate;
   const CL = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
   const r = interpolate(f, [startFrame, startFrame + dur], [r0, r1], { ...CL, easing: theme.motion.ease });
   const ringOp = interpolate(f, [startFrame, startFrame + dur], [0.85, 0], { ...CL, easing: theme.motion.ease });

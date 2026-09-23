@@ -7,12 +7,7 @@ import { useCurrentFrame, interpolate } from "remotion";
 import { theme, type Palette } from "../theme";
 import { usePalette } from "../palette";
 
-/**
- * ⚠ "green" / "red" ARE THE CANDLE COLOURS, on Simon's explicit request for
- * SC03's "Berani masuk" (hijau) and "Keluar" (merah) — the only chips in the
- * film allowed them. Everything else stays indigo / cyan / slate.
- */
-export type ChipVariant = "indigo" | "slate" | "cyan" | "green" | "red";
+export type ChipVariant = "indigo" | "slate" | "cyan";
 
 /** Variant → colours, resolved against whichever palette is live this frame. */
 const chipColors = (v: ChipVariant, pal: Palette) =>
@@ -20,11 +15,7 @@ const chipColors = (v: ChipVariant, pal: Palette) =>
     ? { fg: pal.indigo, bg: pal.indigoSoft, line: pal.indigo }
     : v === "cyan"
       ? { fg: pal.cyan, bg: pal.cyanSoft, line: pal.cyan }
-      : v === "green"
-        ? { fg: pal.candleGreen, bg: pal.cardBg, line: pal.candleGreen }
-        : v === "red"
-          ? { fg: pal.candleRed, bg: pal.cardBg, line: pal.candleRed }
-          : { fg: pal.slate, bg: pal.cardBg, line: pal.muted };
+      : { fg: pal.slate, bg: pal.cardBg, line: pal.muted };
 
 export const Chip = ({
   label,
@@ -38,6 +29,8 @@ export const Chip = ({
   opacity = 1,
   width,
   bare = false,
+  solid = false,
+  weight = theme.type.chip.weight,
 }: {
   label: string;
   x: number;
@@ -52,6 +45,9 @@ export const Chip = ({
   width?: number;
   /** Drop the pill: no background, no border — just the label in the variant colour. */
   bare?: boolean;
+  /** A filled pill: the variant colour behind white type, fully rounded. */
+  solid?: boolean;
+  weight?: number;
 }) => {
   const pal = usePalette();
   const f = useCurrentFrame();
@@ -95,13 +91,14 @@ export const Chip = ({
           boxSizing: "border-box",
           textAlign: "center",
           padding: "8px 20px",
-          borderRadius: theme.radius.chip,
-          background: bare ? "transparent" : c.bg,
-          border: bare ? "none" : `${theme.stroke.hair}px solid ${c.fg}`,
-          color: c.fg,
+          borderRadius: solid ? 999 : theme.radius.chip,
+          background: bare ? "transparent" : solid ? c.fg : c.bg,
+          border: bare || solid ? "none" : `${theme.stroke.hair}px solid ${c.fg}`,
+          /* solid: white type — the card colour, white in this palette */
+          color: solid ? pal.cardBg : c.fg,
           fontFamily: theme.type.family,
           fontSize: size,
-          fontWeight: theme.type.chip.weight,
+          fontWeight: weight,
           whiteSpace: "nowrap",
           opacity: p * opacity,
         }}
