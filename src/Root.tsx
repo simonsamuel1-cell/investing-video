@@ -1,17 +1,16 @@
 /**
- * EVERY EPISODE, ONE BRANCH.
+ * THE VIDEOS NOT YET APPROVED, one branch.
  *
- * Each video used to live on a branch of its own and could only be opened by
- * checking that branch out. They are all mounted here instead, and the rule
- * that makes that safe is ISOLATION: a video owns a folder, and nothing
- * outside that folder is allowed to change when it is edited.
+ * Split off `Module01_-_Technical_Analysis` on 2026-09-24: the TA videos stay
+ * there, these five live here. The two branches share no source file: a video
+ * owns a folder, and nothing outside that folder is allowed to change when it
+ * is edited.
  *
- * Three shapes of folder, because the videos were built in three eras:
+ * Two shapes of folder, because the videos were built in two eras:
  *
- *   1. `src/episodes/0NN-*`  — built on `src/core` (VIDEO 19, 20, 22).
- *   2. `src/episodeXxx/`     — self-contained older projects; they carry
- *                              their own theme, components and data.
- *   3. `src/Video.tsx` + `src/scenes` + `src/theme.ts` + `src/components`
+ *   1. `src/episodeXxx/`     — self-contained projects; they carry their own
+ *                              theme, components and data.
+ *   2. `src/Video.tsx` + `src/scenes` + `src/theme.ts` + `src/components`
  *                            — the ORIGINAL Concept Sector base, shared by
  *                              ConceptSectorTutorial, Bandarmology and
  *                              eventDriven, whose branches had it byte for
@@ -33,21 +32,6 @@ import { Composition } from "remotion";
 // ── the shared Concept Sector base ──────────────────────────────────────────
 import { ConceptSectorVideo } from "./Video";
 import { DURATION, FPS, FRAME } from "./theme";
-
-// ── built on src/core ───────────────────────────────────────────────────────
-import { theme } from "./core";
-import {
-  MovingAverageComposition,
-  TOTAL_FRAMES as MA_FRAMES,
-} from "./episodes/019-moving-average/Composition";
-import {
-  VolumeComposition,
-  TOTAL_FRAMES as V20_FRAMES,
-} from "./episodes/020-volume/Composition";
-import {
-  TAMistakesComposition,
-  TOTAL_FRAMES as V22_FRAMES,
-} from "./episodes/022-ta-mistakes/Composition";
 
 // ── migrated: videos that sit on the shared base ────────────────────────────
 import { Bandarmology } from "./episodeBandarmology/Composition";
@@ -76,21 +60,6 @@ import {
 } from "./episodeConceptSectorRev/theme";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
-import {
-  CandlestickComposition,
-  TOTAL_FRAMES as CANDLE_FRAMES,
-} from "./episodeCandlestick/Composition";
-import { theme as candleTheme } from "./episodeCandlestick/theme";
-import { SUBTITLES as CANDLE_SUBS } from "./episodeCandlestick/subtitles";
-import { SUBTITLES_INDO as CANDLE_SUBS_INDO } from "./episodeCandlestick/subtitlesIndo";
-import {
-  ChartMemoryComposition,
-  TOTAL_FRAMES as CHART_FRAMES,
-} from "./episodeChartMemory/Composition";
-import {
-  MarketStructureComposition,
-  TOTAL_FRAMES as MS_FRAMES,
-} from "./episode20marketstructure/Composition";
 import { MyComposition as FairValueComposition } from "./episodeFairValue/Composition";
 import { waitUntilDone as fairValueFontsReady } from "./episodeFairValue/fonts";
 
@@ -100,49 +69,6 @@ fairValueFontsReady();
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* The TA videos come first: Studio lists compositions in the order they
-          are registered here, and Simon wants every TA at the top. */}
-      {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
-      {/* Was "ChartMemory". The one hyphen separates the module code from the
-          title; the title itself runs together because a Remotion id takes only
-          a-z A-Z 0-9 and "-" — no spaces, no underscores, not even a full stop.
-          The branch name spells it differently for the same reason in reverse:
-          git allows "_" and Simon prefers it there. */}
-      <Composition
-        id="TA01-MemahamiPergerakanPasarDariGrafik"
-        component={ChartMemoryComposition}
-        durationInFrames={CHART_FRAMES}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      {/* ═══ TA02 — Candlestick Intermediate (Indonesian cut) ═════════════ */}
-      <Composition
-        id="TA02-CandlestickIntermediate"
-        component={CandlestickComposition}
-        durationInFrames={CANDLE_FRAMES}
-        fps={candleTheme.canvas.fps}
-        width={candleTheme.canvas.width}
-        height={candleTheme.canvas.height}
-        defaultProps={{
-          subtitles: CANDLE_SUBS_INDO,
-          audioSrc: "vo-indo.mp3",
-          showSubtitles: false,
-          muted: false,
-        }}
-      />
-      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
-          number comes from the corrected SRT via
-          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
-          closing card held for three seconds. */}
-      <Composition
-        id="TAMistakes022"
-        component={TAMistakesComposition}
-        durationInFrames={V22_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
       {/* ═══ Concept Sector ═══════════════════════════════════════════════ */}
       <Composition
         id="ConceptSectorTutorial"
@@ -207,47 +133,6 @@ export const RemotionRoot: React.FC = () => {
         fps={30}
         width={1920}
         height={1080}
-      />
-      {/* ═══ Candlestick Intermediate ═════════════════════════════════════ */}
-      <Composition
-        id="candlestickControl"
-        component={CandlestickComposition}
-        durationInFrames={CANDLE_FRAMES}
-        fps={candleTheme.canvas.fps}
-        width={candleTheme.canvas.width}
-        height={candleTheme.canvas.height}
-        defaultProps={{ subtitles: CANDLE_SUBS, audioSrc: "vo.mp3" }}
-      />
-      {/* ═══ Market Structure ═════════════════════════════════════════════ */}
-      <Composition
-        id="MarketStructure2"
-        component={MarketStructureComposition}
-        durationInFrames={MS_FRAMES}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-      {/* ═══ Built on src/core ════════════════════════════════════════════ */}
-      {/* VIDEO 19 — Moving Averages & Bollinger Bands, migrated onto src/core.
-          Still 30fps: the 60fps conversion is a separate pass, so a difference
-          that shows up here can only have come from core. */}
-      <Composition
-        id="MovingAverage019"
-        component={MovingAverageComposition}
-        durationInFrames={MA_FRAMES}
-        fps={30}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
-      {/* VIDEO 20 — Volume. Built on src/core at 60fps; every frame number
-          comes from the corrected SRT via docs/Video20_Volume_Script_SYNCED.md. */}
-      <Composition
-        id="Volume020"
-        component={VolumeComposition}
-        durationInFrames={V20_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
       />
     </>
   );
