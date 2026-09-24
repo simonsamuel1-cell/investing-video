@@ -15,6 +15,7 @@
  * prices, and nothing on screen labels it with a figure.
  */
 import type { OHLC } from "./bmri";
+import { bmriDaily, WIN } from "./bmri";
 import type { Box } from "../helpers";
 
 /** Height of the wide screenshot, in pixels. */
@@ -159,3 +160,32 @@ export const rangeOf = ([a, b]: [number, number]) => {
 export const sahamScale =
   (box: Box, hi: number, lo: number, frame: { top: number; bottom: number }) => (p: number) =>
     box.y + box.h * (frame.top + (1 - frame.top - frame.bottom) * ((hi - p) / (hi - lo)));
+
+/**
+ * ⚠ THE SAME CANDLES, GIVEN A PRICE AXIS — for SC04 and SC05. Simon, at
+ * 1981: "sebaiknya continuous aja dari 1980, gunakan candlesticks yang sama
+ * aja." Those scenes label prices and dates (SC05 is about the two axes), so
+ * the traced series is mapped LINEARLY onto the price band and the trading
+ * dates the BMRI placeholder used there. A linear map changes no shape: drawn
+ * with the same framing, every candle lands on the same pixel it had in SC03.
+ *
+ * TODO [NEEDS DATA]: these figures are placeholders exactly as the BMRI
+ * series they replace is (see data/bmri.ts) — layout values, not quotes.
+ */
+
+export const SAHAM_PRICED: OHLC[] = (() => {
+  const [a, b] = WIN.sc03;
+  const band = bmriDaily.slice(a, b + 1);
+  const pLo = Math.min(...band.map((d) => d.l));
+  const pHi = Math.max(...band.map((d) => d.h));
+  const { lo, hi } = rangeOf(SAHAM_ALL);
+  const toPrice = (v: number) => pLo + ((v - lo) / (hi - lo)) * (pHi - pLo);
+  const dates = bmriDaily.slice(bmriDaily.length - SAHAM_CANDLES.length).map((d) => d.date);
+  return SAHAM_CANDLES.map((d, k) => ({
+    date: dates[k],
+    o: toPrice(d.o),
+    c: toPrice(d.c),
+    h: toPrice(d.h),
+    l: toPrice(d.l),
+  }));
+})();

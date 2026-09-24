@@ -11,14 +11,19 @@ import { Chip } from "../components/Chip";
 import { AnatomyCandle } from "../components/AnatomyCandle";
 import { theme } from "../theme";
 import { fadeIn, fadeOut, progress, mulberry32 } from "../helpers";
-import { bmriDaily } from "../data/bmri";
+import type { OHLC } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  selector: 0, // "beberapa bentuk"
-  closeChip: 86, // "menghubungkan harga penutupan"
+  /**
+   * ⚠ GLOBAL 2073 — the Line / Candlestick buttons arrive WITH the line
+   * (Simon: "Di 2073, juga boleh munculkan button Line dan Candlestick"),
+   * not on the scene's first frame over a chart that is still candles.
+   */
+  selector: 92,
+  closeChip: 132, // global 2113 — labels the line once it has finished drawing
   ghosts: 238, // "tetapi banyak cerita"
   hiddenCap: 278, // "tidak terlihat" — timing beat only; the caption itself is gone
   wipe: 313, // "Candlestick memberi gambaran lebih lengkap"
@@ -45,11 +50,11 @@ const SEG = { y: 196, w: 250, h: 56, gap: 8, x: (theme.canvas.width - (250 * 2 +
 // ═══════════════════════════════════════════════════════════════════════════
 
 /** A real candle from the window with a readable body — the anatomy subject. */
-const pickAnatomy = (a: number, b: number) => {
+const pickAnatomy = (series: OHLC[], a: number, b: number) => {
   let best = a;
   let bestScore = -1;
   for (let i = a + 4; i <= b - 4; i++) {
-    const d = bmriDaily[i];
+    const d = series[i];
     const body = Math.abs(d.c - d.o);
     const wick = d.h - d.l;
     const score = body * 0.7 + wick * 0.3;
@@ -64,13 +69,13 @@ const pickAnatomy = (a: number, b: number) => {
 export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   const pal = usePalette();
   const local = useCurrentFrame();
-  const { box, win, cx, scale, camera } = geom;
+  const { box, win, cx, scale, camera, series } = geom;
   // The window bounds go FRACTIONAL while the camera moves (that is what keeps
   // the move smooth) — round before using them as array indices.
   const a = Math.ceil(win[0]);
   const b = Math.floor(win[1]);
-  const idx = pickAnatomy(a, b);
-  const candle = bmriDaily[idx];
+  const idx = pickAnatomy(series, a, b);
+  const candle = series[idx];
 
   const cardIn = local >= T.cardIn ? fadeIn(local, T.cardIn, 26) : 0;
   const back = local >= T.back ? progress(local, T.back, 40) : 0;
@@ -148,7 +153,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
           bare
           size={theme.type.chip.size - 4}
           startFrame={T.closeChip}
-          connectorTo={{ x: cx(b), y: scale(bmriDaily[b].c) - 10 }}
+          connectorTo={{ x: cx(b), y: scale(series[b].c) - 10 }}
         />
       )}
 
@@ -161,9 +166,9 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
             <line
               key={i}
               x1={cx(i)}
-              y1={scale(bmriDaily[i].h)}
+              y1={scale(series[i].h)}
               x2={cx(i)}
-              y2={scale(bmriDaily[i].l)}
+              y2={scale(series[i].l)}
               stroke={pal.muted}
               strokeWidth={theme.stroke.rule}
               strokeDasharray="6 6"

@@ -13,10 +13,12 @@
  *   642–690   ZOOM   the window widens from candles 4–40 to all 101: the chart
  *                    "shrinks" as the rest of its history comes into view
  *   …–handover       SC03 is read off the wide view
- *   handover         SC03's labels have cleared; the card AND its candles now
- *                    dissolve together onto the continuity paper beneath it —
- *                    the same white rectangle — so the candles crossfade into
- *                    SC04's line chart instead of leaving it an empty page
+ *   handover         SC03's labels have cleared, and this element simply
+ *                    stops: underneath it the continuity chart is drawing the
+ *                    SAME candles on the SAME white paper, pixel for pixel
+ *                    (Simon: "continuous aja dari 1980, gunakan candlesticks
+ *                    yang sama"). A dissolve here would veil one copy with the
+ *                    other and dip the candles a quarter lighter mid-way.
  *
  * ⚠ NO PRICE OR DATE LABELS while this chart is up. The series is a trace of a
  * screenshot, not market data; the BMRI axes would caption it with figures it
@@ -45,10 +47,8 @@ export const S = {
   hold: 30, // "Lalu jeda 30 frame"
   zoomDur: 48, // lands on 690 — global 1481, six frames before the trendlines
   labelOut: 12, // "Saham" clears early in the grow
-  /** SC03's labels clear this long before the handover… */
+  /** SC03's labels clear this long before the handover. */
   contentOut: 18,
-  /** …and the card and candles this long after it, over the identical paper. */
-  cardOut: 20,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -87,7 +87,7 @@ export const sahamGeomAt = (f: number, paper: Box, full: Box, handover: number) 
    * second; now they hold to the handover and go with the card (cardOp).
    */
   const labelsOp = f >= handover - S.contentOut ? 1 - progress(f, handover - S.contentOut, S.contentOut) : 1;
-  const cardOp = f >= handover ? 1 - progress(f, handover, S.cardOut) : 1;
+  const cardOp = f >= handover ? 0 : 1;
   return { grow, zoom, card, box, win, y, cx, labelsOp, cardOp, live: f >= S.grow && cardOp > 0.001 };
 };
 export type SahamGeom = ReturnType<typeof sahamGeomAt>;

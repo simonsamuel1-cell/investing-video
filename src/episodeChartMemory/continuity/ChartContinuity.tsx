@@ -16,7 +16,8 @@ import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { LineChart } from "../components/LineChart";
 import { theme } from "../theme";
 import { progress, progressInOut, velocityBlur, fmtPrice, type Box } from "../helpers";
-import { bmriDaily, WIN } from "../data/bmri";
+import type { OHLC } from "../data/bmri";
+import { SAHAM_PRICED, FRAME_ALL } from "../data/sahamReference";
 import { chiliMonthly } from "../data/chili";
 import { Scene02, PAIR_INNER, PAIR_DX, twinOpacity } from "../scenes/Scene02";
 import { Scene03 } from "../scenes/Scene03";
@@ -59,10 +60,20 @@ const N_DETAIL = 12;
 const CAMERA_BLUR = 7; // px at the camera's fastest frame
 // Continuity-local frames, all VO-derived (see each scene's T block).
 const K = {
-  lineDraw: 337, // "dan hubungkan titiknya"
   morph: 608, // chili → BMRI (SC03 phase start)
   morphDur: 90,
-  lineDim: 1428, // "tetapi banyak cerita tidak terlihat"
+  /**
+   * ⚠ SC04 IS PLAYED ON THE SAHAM CANDLES — Simon: "dari 1981 gunakan
+   * candlesticks yang sama; lalu dari 2073, muncul line chart yang
+   * menghubungkan candlesticks nya, sedangkan existing candlesticknya jadi
+   * transparan 20% … 2224 candlesticknya jadi transparansi 0%. 2295
+   * candlesticknya muncul satu per satu."
+   */
+  axesIn: 20, // the price and date rails fade up over the unchanged candles
+  lineIn: 1282, // global 2073 — the line through the closes draws in…
+  lineInDur: 40,
+  candlesFade: 20, // …while the candles step down to CANDLES_DIM
+  candlesOut: 1433, // global 2224 — and out altogether, leaving only the line
   narrow: 1530, // chart narrows for the anatomy card
   wipe: 1503, // "Candlestick memberi gambaran lebih lengkap"
   wipeDur: 60,
@@ -99,7 +110,17 @@ const K = {
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-const WINDOW = WIN.sc03;
+/**
+ * ⚠ THE CHART'S SERIES IS THE SAHAM TRACE, priced — see SAHAM_PRICED. It was
+ * the BMRI placeholder, which meant a different chart appeared at 1981 the
+ * moment SC03's saham chart handed over. Drawn in the same box with the same
+ * framing (FRAME_ALL), the candles land on SahamChart's pixels exactly, so the
+ * handover is invisible.
+ */
+const SERIES = SAHAM_PRICED;
+const WINDOW: [number, number] = [0, SERIES.length - 1];
+/** Opacity the candles step down to while the line is shown alone. */
+const CANDLES_DIM = 0.2;
 /** The last N_DETAIL sessions — what the camera lands on after the cut. */
 const WINDOW_DETAIL: [number, number] = [WINDOW[1] - N_DETAIL + 1, WINDOW[1]];
 
@@ -108,6 +129,8 @@ export type ContGeom = {
   win: [number, number];
   cx: (globalIdx: number) => number;
   scale: (price: number) => number;
+  /** The series the chart is drawing — the scenes index into this. */
+  series: OHLC[];
   xs: number[];
   bmriY: number[];
   chiliY: number[];
@@ -184,7 +207,10 @@ export const ChartContinuity = () => {
   const win: [number, number] =
     f < K.cut ? WINDOW : [interpolate(pullOut, [0, 1], [WINDOW_DETAIL[0], WINDOW[0]]), WINDOW[1]];
 
-  const g = chartGeom(bmriDaily, win, box);
+  const g = chartGeom(SERIES, win, box);
+  /** Framed the way SahamChart frames the same candles — see FRAME_ALL. */
+  const scale = (p: number) =>
+    box.y + box.h * (FRAME_ALL.top + (1 - FRAME_ALL.top - FRAME_ALL.bottom) * ((g.max - p) / (g.max - g.min)));
   const [a, b] = WINDOW;
   const n = b - a + 1;
 
@@ -192,7 +218,7 @@ export const ChartContinuity = () => {
   const bmriY: number[] = [];
   for (let k = 0; k < n; k++) {
     xs.push(g.cx(a + k));
-    bmriY.push(g.scale(bmriDaily[a + k].c));
+    bmriY.push(scale(SERIES[a + k].c));
   }
   // chili silhouette resampled onto the same x positions
   const chiliLo = Math.min(...chiliMonthly.map((c) => c.price));
@@ -278,7 +304,8 @@ export const ChartContinuity = () => {
     box,
     win,
     cx: g.cx,
-    scale: g.scale,
+    scale,
+    series: SERIES,
     xs,
     bmriY,
     chiliY,
@@ -294,13 +321,22 @@ export const ChartContinuity = () => {
 
   // ── chart mode timeline ──
   const morphT = f >= K.morph ? progress(f, K.morph, K.morphDur) : 0;
-  const lineDraw = f >= K.lineDraw ? progress(f, K.lineDraw, 46) : 0;
+  const lineDraw = f >= K.lineIn ? progressInOut(f, K.lineIn, K.lineInDur) : 0;
+  /** The candles before the wipe: full, then 20% under the line, then gone. */
+  const preWipeOp =
+    f < K.lineIn
+      ? 1
+      : f < K.candlesOut
+        ? 1 - (1 - CANDLES_DIM) * progress(f, K.lineIn, K.candlesFade)
+        : CANDLES_DIM * (1 - progress(f, K.candlesOut, K.candlesFade));
   const wipe = f >= K.wipe ? progress(f, K.wipe, K.wipeDur) : 0;
   const candleDim = f >= K.dimCandles ? interpolate(progress(f, K.dimCandles, 45), [0, 1], [1, 0.3]) : 1;
 
   const linePts = xs.map((x, k) => ({ x, y: chiliY[k] + (bmriY[k] - chiliY[k]) * morphT }));
-  // SC04 dims the line one step before the wipe begins
-  const lineDimRaw = f >= K.lineDim && f < K.wipe ? interpolate(progress(f, K.lineDim, 20), [0, 1], [1, 0.55]) : f >= K.wipe ? 0.55 : 1;
+  /* ⚠ THE LINE NO LONGER DIMS AT 2219. It stepped down to 55% on "tetapi
+     banyak cerita" when the line was drawn over nothing; now the candles
+     leave at 2224 and the line is the whole chart, so it stays at full. */
+  const lineDimRaw = 1;
   const paperOp = f >= K.paper ? progress(f, K.paper, 30) : 0;
   const lineDim = lineDimRaw;
   const wipeX = box.x + box.w * wipe;
@@ -313,7 +349,13 @@ export const ChartContinuity = () => {
   // labels step aside at phase D to avoid a doubled axis.
   // The rails belong to the wide view — they clear out early in the move rather
   // than lingering at half opacity underneath the detail card.
-  const axisOp = Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
+  /**
+   * ⚠ THE AXES ARRIVE AT THE HANDOVER, over candles that do not move. SC03's
+   * saham chart carries no price or date labels (see SahamChart); from
+   * PHASE.c this group draws the same candles with its axes, which fade up.
+   */
+  const handIn = f >= PHASE.c ? progress(f, PHASE.c, K.axesIn) : 1;
+  const axisOp = handIn * Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
   const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
@@ -378,10 +420,10 @@ export const ChartContinuity = () => {
           {bmriAxisOp > 0.001 &&
             tickPrices.map((p) => (
               <g key={p} opacity={bmriAxisOp * axisOp}>
-                <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={pal.border} strokeWidth={theme.stroke.hair} />
+                <line x1={box.x} y1={scale(p)} x2={box.x + box.w} y2={scale(p)} stroke={pal.border} strokeWidth={theme.stroke.hair} />
                 <text
                   x={box.x + box.w + 16}
-                  y={g.scale(p) + 8}
+                  y={scale(p) + 8}
                   fontFamily={theme.type.family}
                   fontSize={theme.type.axis.size}
                   fontWeight={theme.type.axis.weight}
@@ -432,7 +474,7 @@ export const ChartContinuity = () => {
               whiteSpace: "nowrap",
             }}
           >
-            {bmriDaily[i].date.slice(5).replace("-", "/")}
+            {SERIES[i].date.slice(5).replace("-", "/")}
           </div>
         ))}
 
@@ -484,8 +526,19 @@ export const ChartContinuity = () => {
           <LineChart points={linePts} progress={lineDraw} color={pal.indigo} opacity={lineDim} />
         </div>
       )}
-      {wipe > 0.001 && (
-        <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} revealProgress={wipe} dimOpacity={candleDim} />
+      {/* ⚠ THE CANDLES ARE ON SCREEN FROM 1981, not only from the wipe:
+          full, then 20% while the line draws, then gone at 2224 — and back
+          one by one on the wipe (2294), which is where they used to begin. */}
+      {f >= PHASE.c && (f >= K.wipe ? wipe > 0.001 : preWipeOp > 0.001) && (
+        <CandlestickChart
+          data={SERIES}
+          window={win}
+          box={box}
+          scaleOverride={scale}
+          showAxes={false}
+          revealProgress={f >= K.wipe ? wipe : 1}
+          dimOpacity={f >= K.wipe ? candleDim : preWipeOp}
+        />
       )}
       </div>
       </div>

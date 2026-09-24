@@ -9,7 +9,6 @@ import { AxisArrow } from "../components/AxisArrow";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeIn, fadeOut, countTo, fmtPrice } from "../helpers";
-import { bmriDaily } from "../data/bmri";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 
@@ -39,12 +38,12 @@ const N_Y_TICKS = 5;
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   const pal = usePalette();
   const local = useCurrentFrame();
-  const { box, win, cx, scale } = geom;
+  const { box, win, cx, scale, series } = geom;
   // Window bounds can be fractional mid-camera-move — round for array indexing.
   const a = Math.ceil(win[0]);
   const b = Math.floor(win[1]);
   const idx = a + Math.floor((b - a) * 0.62); // a real session, mid-right of the window
-  const d = bmriDaily[idx];
+  const d = series[idx];
   const px = cx(idx);
   const py = scale(d.c);
 
@@ -54,8 +53,8 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
 
   // real sessions and real price levels, spread across each rail
   const xTicks = Array.from({ length: N_X_TICKS }, (_, i) => a + Math.round(((b - a) * i) / (N_X_TICKS - 1)));
-  const lo = Math.min(...bmriDaily.slice(a, b + 1).map((s) => s.l));
-  const hi = Math.max(...bmriDaily.slice(a, b + 1).map((s) => s.h));
+  const lo = Math.min(...series.slice(a, b + 1).map((s) => s.l));
+  const hi = Math.max(...series.slice(a, b + 1).map((s) => s.h));
   const yTicks = Array.from({ length: N_Y_TICKS }, (_, i) => lo + ((hi - lo) * (i + 0.5)) / N_Y_TICKS);
 
   return (
@@ -97,7 +96,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               whiteSpace: "nowrap",
             }}
           >
-            {bmriDaily[i].date.slice(5).replace("-", "/")}
+            {series[i].date.slice(5).replace("-", "/")}
           </div>
         ))}
 
