@@ -33,8 +33,8 @@ export const AxisArrow = ({
   /** Nudges the label only, leaving the rail and arrowhead untouched. */
   labelDx?: number;
   labelDy?: number;
-  /** Set the label just past the arrowhead, centred on the rail — keeps it
-   *  inside the chart's paper instead of hanging below or above it. */
+  /** Set the label at the arrow's point: under it for the X rail, to its
+   *  left for the Y rail — inside the chart's paper. */
   labelAtTip?: boolean;
   labelSize?: number;
   labelOpacity?: number;
@@ -59,11 +59,20 @@ export const AxisArrow = ({
       <div
         style={{
           position: "absolute",
-          left: labelAtTip ? (orientation === "x" ? x2 + H + 14 : x1 + 22) + labelDx : (orientation === "x" ? x2 : x1 + 18) + labelDx,
+          /* ⚠ AT THE TIP — Simon: "Waktu" sits UNDER the rail, centred on the
+             arrow's point; "Harga" sits to the LEFT of its rail, level with
+             the point. Both inside the chart's paper. */
+          left: labelAtTip ? (orientation === "x" ? x2 + H : x1 - 14) + labelDx : (orientation === "x" ? x2 : x1 + 18) + labelDx,
           top: labelAtTip
-            ? (orientation === "x" ? y1 : y2 - H / 2) + labelDy
+            ? (orientation === "x" ? y1 + 14 : y2 - H / 2) + labelDy
             : (orientation === "x" ? y1 + labelOffset : y2 - labelOffset) + labelDy,
-          transform: labelAtTip ? "translate(0, -50%)" : orientation === "x" ? "translate(-100%, 0)" : "translate(0, -100%)",
+          transform: labelAtTip
+            ? orientation === "x"
+              ? "translate(-50%, 0)"
+              : "translate(-100%, -50%)"
+            : orientation === "x"
+              ? "translate(-100%, 0)"
+              : "translate(0, -100%)",
           fontFamily: theme.type.family,
           fontSize: labelSize,
           fontWeight: theme.type.header.weight,
