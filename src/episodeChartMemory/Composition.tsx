@@ -23,7 +23,13 @@ import { SUBTITLES, type SubtitleCue } from "./subtitles";
 import { HighLowBars, RoadmapStop, type Preview, type Stop } from "./continuity/Roadmap";
 import { SmoothLines, BullishRectangle, HollowProjection } from "./continuity/RoadmapCards";
 
-export const TOTAL_FRAMES = 7827; // 04:20.90 @30fps — VO-LOCKED, plus five inserts
+/**
+ * 04:21.90 @30fps — the VO-locked 7827 (five inserts included) plus a 30-frame
+ * tail. Simon, at 7826: "Di akhir scene, extend durasi 30 frame." The voice
+ * ends where it did; the last frame holds for another second before the film
+ * closes. The subtitles are untouched — there is nothing spoken to caption.
+ */
+export const TOTAL_FRAMES = 7857;
 
 // Recorded VO: public/vo/chart-memory.mp3 ("VIDEO 01 - Chart.MP3"), 259.08s =
 // 7769 frames. Every from/duration below and every scene-local beat is now
@@ -70,7 +76,7 @@ const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC 
   { from: 4614, duration: 752, Component: Scene07 },
   { from: 5366, duration: 1047, Component: Scene08 }, // 720 + 327 (cut 4)
   { from: 6413, duration: 754, Component: Scene09 },
-  { from: 7167, duration: 660, Component: Scene10 },
+  { from: 7167, duration: 690, Component: Scene10 }, // +30: the closing hold
 ];
 
 /**
