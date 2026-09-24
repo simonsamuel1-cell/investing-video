@@ -6,6 +6,7 @@ import { useCurrentFrame } from "remotion";
  * every candle's open and close are marked — each point a price at a time.
  */
 import { AxisArrow } from "../components/AxisArrow";
+import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 import { theme } from "../theme";
 import { progress, progressInOut, fadeIn, fadeOut, fmtPrice } from "../helpers";
 import type { ContGeom } from "../continuity/ChartContinuity";
@@ -32,6 +33,14 @@ const T = {
   points: 317,
   namesOutDur: 15,
   pointStep: 0.4, // frames between one candle's pair of points and the next
+  /**
+   * ⚠ GLOBAL 3488 — Simon: "Di atas garis harga 5205, ada muncul text box
+   * garis putus putus, isinya text 'Setiap titik menjawab berapa & kapan harga
+   * terbentuk' dengan animasi ketikan." The film's marquee, then the line
+   * types into it once the frame has snapped open.
+   */
+  caption: 398,
+  captionType: 30, // typed by 3548 — well before the scene clears at 3570
   // Everything this scene drew clears before the boundary.
   clear: 480,
   clearDur: 38,
@@ -45,6 +54,17 @@ const POINT_R = 4.5;
 const POINT_GAP = 2;
 /** "Ubah label label pada sumbu waktu jadi bulan aja Jan Feb Mar dst." */
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+const CAPTION_TEXT = "Setiap titik menjawab berapa & kapan harga terbentuk";
+/**
+ * The marquee: left-aligned to the chart with a 40px inset, sitting 16px above
+ * the top price line. It stops well short of the chart's right third, where
+ * the highest candles rise above that line. Fixed size, so the typing never
+ * reflows the frame — 44px either side of the finished line.
+ *
+ * ⚠ IT DOES NOT CLEAR WITH THE REST. The scene's marks fade from 3570; the
+ * line is its conclusion and stays up until the chart slides out at 3600.
+ */
+const CAPTION = { dx: 40, w: 1016, h: 96, gap: 16, padX: 44 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {
@@ -58,6 +78,7 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   const axisP = local >= T.axes ? progress(local, T.axes, T.axesDur) : 0;
   const clearOp = local >= T.clear ? fadeOut(local, T.clear, T.clearDur) : 1;
   const namesOp = local >= T.points ? fadeOut(local, T.points, T.namesOutDur) : 1;
+  const typed = Math.round(progress(local, dashOpenAt(T.caption), T.captionType) * CAPTION_TEXT.length);
 
   /** One label per month, on that month's first session in the window. */
   const xTicks: { i: number; label: string }[] = [];
@@ -166,6 +187,33 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
             {fmtPrice(p)}
           </div>
         ))}
+
+      {/* the line the points add up to, typed into the film's marquee */}
+      <DashedFrame
+        x={box.x + CAPTION.dx}
+        y={scale(yTicks[N_Y_TICKS - 1]) - CAPTION.gap - CAPTION.h}
+        w={CAPTION.w}
+        h={CAPTION.h}
+        at={T.caption}
+      >
+        {/* flush left, so a typed line grows from a fixed edge */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            paddingLeft: CAPTION.padX,
+            fontFamily: theme.type.family,
+            fontSize: theme.type.chip.size,
+            fontWeight: theme.type.chip.weight,
+            color: pal.ink,
+            whiteSpace: "pre",
+          }}
+        >
+          {CAPTION_TEXT.slice(0, typed)}
+        </div>
+      </DashedFrame>
 
       {/* every candle's open and close — skipped where the two would touch */}
       {local >= T.points && (
