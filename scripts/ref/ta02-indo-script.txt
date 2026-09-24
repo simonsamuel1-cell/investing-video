@@ -1,0 +1,113 @@
+[ORIGINAL SCRIPT — SCENE 01 | 00:00–00:08.25]
+Satu candle menunjukkan satu pertarungan. Tapi itu belum cukup untuk tahu siapa yang menang. Sinyal sebenarnya muncul saat beberapa candle mulai saling bicara.
+
+[NEW — LEARNING ROADMAP | ±00:08–00:15]
+Jadi kali ini, kita nggak cuma melihat satu candle.
+Kita akan melihat bagaimana beberapa candle mulai membentuk cerita, bagaimana konteks membuat cerita itu lebih jelas, dan bagaimana membacanya di chart nyata.
+
+[ORIGINAL SCRIPT — SCENE 02 | 00:08.00–00:20.04]
+Sebelum membahas pola, belajar dulu membaca satu candle dengan benar.
+Body hijau yang panjang dengan wick pendek berarti buyer menguasai harga dari pembukaan sampai penutupan. Hampir tidak ada perlawanan. Itu tanda keyakinan buyer.
+
+[ORIGINAL SCRIPT — SCENE 03 | 00:20.14–00:35.24]
+Body kecil dengan wick atas yang panjang berarti harga sempat mencoba naik, tapi ditolak keras. Seller sudah menunggu di atas, lalu mendorong harga turun lagi sebelum penutupan.
+Wick itu adalah bukti. Ada pihak yang memang siap menjual di level tersebut.
+
+[ORIGINAL SCRIPT — SCENE 04 | 00:35.24–00:51.27]
+Wick bawah yang panjang berarti harga sempat jatuh tajam, lalu buyer masuk dan mendorongnya kembali naik. Demand muncul.
+Kalau wick atas dan bawah sama-sama panjang dengan body kecil di tengah, buyer dan seller sedang bertarung tanpa pemenang. Pasar belum punya arah. Tunggu.
+
+[ORIGINAL SCRIPT — SCENE 05 | 00:51.27–01:17.14]
+Tiga candle merah muncul berturut-turut. Seller memegang kendali, sementara buyer terus mundur.
+Lalu candle keempat turun tajam di tengah sesi. Seller kembali menekan dan mencoba memperpanjang penurunan.
+Tapi kali ini, buyer menyerap seluruh tekanan jual dan mendorong harga naik hingga ditutup dekat titik awal.
+Penolakan itu meninggalkan wick bawah yang panjang. Ini bukan sekadar bentuk. Ini tanda perubahan dalam perilaku pasar—sinyal pertama bahwa demand mulai mengalahkan supply.
+
+[NEW — ROADMAP TRANSITION 01 | ±00:05]
+Sekarang kita sudah melihat bahwa satu candle bisa memberi petunjuk.
+Tapi ketika beberapa candle mulai muncul bersama, ceritanya bisa menjadi jauh lebih jelas.
+
+[ORIGINAL SCRIPT — SCENE 06 | 01:18.05–01:44.23]
+Ini kesalahan yang paling sering dibuat pemula. Mereka melihat satu candle, lalu langsung berkata, “Sinyal reversal.”
+Padahal candle yang sama bisa punya arti berbeda, tergantung di mana ia muncul pada chart.
+Wick bawah panjang di dasar downtrend yang sudah lama, setelah seller kehabisan tenaga, punya makna kuat. Candle yang sama di tengah sideways? Jauh lebih lemah dan mudah menipu.
+Candle dan lokasinya memberi gambaran penuh. Candle saja baru setengah cerita.
+
+[ORIGINAL SCRIPT — SCENE 07 | 01:45.03–02:01.12]
+Kalau wick bawah panjang muncul di area tempat buyer sudah dua kali masuk, ada tiga sinyal yang mengarah ke arah sama.
+Support dan resistance memberi dasar yang lebih kuat untuk membaca candle. Tanpanya, kamu seperti membaca satu kalimat tanpa tahu paragraf tempat kalimat itu berada.
+
+[ORIGINAL SCRIPT — SCENE 08 | 02:01.27–02:17.14]
+Ada puluhan pola candlestick dengan nama berbeda. Kamu tidak perlu menghafal semuanya.
+Tapi beberapa pola muncul berulang kali dan membawa pesan yang cukup jelas, jadi layak dipahami lebih dalam. Bukan dari namanya, tapi dari apa yang sebenarnya terjadi di dalam pergerakan harga.
+
+[ORIGINAL SCRIPT — SCENE 09 | 02:18.18–02:48.20]
+Pertama, Hammer. Salah satu sinyal bullish satu candle yang paling kuat.
+Harga dibuka, lalu jatuh tajam karena seller menekan keras sejak awal sesi. Tapi buyer masuk dengan kuat, menyerap seluruh tekanan, lalu mendorong harga kembali naik hingga ditutup dekat titik tertinggi.
+Wick bawah panjang adalah buktinya: demand muncul, melawan, lalu menang.
+Kalau Hammer muncul setelah downtrend dan tepat di area support, seller biasanya mulai kehabisan tenaga. Buyer mulai mengambil kendali dan peluang perubahan arah pun mulai terbuka dengan lebih jelas.
+
+[ORIGINAL SCRIPT — SCENE 10 | 02:49.09–03:21.18]
+Berikutnya, Bullish Engulfing. Salah satu sinyal bullish dua candle yang paling kuat.
+Candle pertama merah. Seller mendominasi. Candle kedua bahkan dibuka lebih rendah, seolah seller ingin menekan lagi.
+Tapi buyer masuk sangat agresif hingga harga ditutup di atas pembukaan candle pertama. Seluruh tekanan jual dari sesi sebelumnya terhapus dalam satu candle penuh.
+Ini bukan perubahan kecil. Buyer benar-benar mengalahkan seller dalam satu gerakan tegas.
+Kalau muncul setelah deretan candle merah dan dekat support, ini salah satu tanda paling jelas bahwa keseimbangan kekuatan sudah berubah.
+
+[ORIGINAL SCRIPT — SCENE 11 | 03:21.27–03:50.26]
+Sekarang kita balik. Ini Shooting Star, versi bearish dari Hammer.
+Harga dibuka, lalu melesat naik. Buyer terlihat percaya diri dan terus mengejar harga. Tapi seller sudah menunggu di atas.
+Mereka masuk, menekan harga kembali turun, lalu membawa penutupan dekat harga pembukaan.
+Wick atas yang panjang menunjukkan penolakan kuat. Pasar mencoba naik lebih tinggi, lalu ditolak.
+Kalau pola ini muncul setelah uptrend dan dekat resistance, keyakinan buyer mulai habis. Seller mulai mengambil alih dan risiko pembalikan ikut naik.
+
+[ORIGINAL SCRIPT — SCENE 12 | 03:50.26–04:18.26]
+Pasangannya adalah Bearish Engulfing, salah satu sinyal bearish dua candle yang paling kuat.
+Candle pertama hijau. Buyer masih memegang kendali. Candle kedua dibuka lebih tinggi, seolah kenaikan akan berlanjut, lalu jatuh dan ditutup di bawah pembukaan candle pertama.
+Seluruh kenaikan buyer berbalik dalam satu sesi.
+Kalau pola ini muncul di puncak uptrend dan dekat resistance, pergerakannya mulai kehilangan tenaga. Pihak yang sebelumnya mendorong harga naik sekarang mulai melepas saham dan menjual ke pasar.
+
+[NEW — ROADMAP TRANSITION 02 | ±00:05]
+Sekarang kita sudah melihat beberapa pola yang berbeda.
+Tapi jangan berhenti di nama polanya.
+Yang lebih penting adalah melihat di mana pola itu muncul dan apa yang terjadi sebelumnya.
+
+[ORIGINAL SCRIPT — SCENE 13A | 04:19.03–04:26.18]
+Sekarang kamu sudah melihat Engulfing, Hammer, dan Shooting Star. Ada dua kelompok pola lain yang juga layak untuk dipahami.
+
+[ORIGINAL SCRIPT — SCENE 13B | 04:27.05–04:40.11]
+Morning Star dan Evening Star terdiri dari tiga candle: satu dorongan kuat, satu candle kecil yang ragu, lalu dorongan kuat ke arah sebaliknya.
+Jeda kecil di tengah itulah saat kendali pasar perlahan berpindah tangan.
+
+[ORIGINAL SCRIPT — SCENE 13C | 04:41.03–04:54.09]
+Three White Soldiers dan Three Black Crows adalah tiga candle kuat ke arah sama.
+Tiga candle hijau menunjukkan pembelian yang stabil dan yakin. Tiga candle merah menunjukkan kebalikannya. Momentum tumbuh satu candle demi satu candle.
+
+[ORIGINAL SCRIPT — SCENE 13D | 04:54.14–05:01.02]
+Kamu tidak perlu menghafal nama. Pahami cerita dari setiap pola. Itulah yang mengubah chart biasa menjadi sebuah cerita.
+
+[NEW — ROADMAP TRANSITION 03 | ±00:05]
+Jadi, kita sudah tahu cara membaca candle dan mengenali beberapa pola.
+Sekarang waktunya melihat semuanya bekerja bersama dalam satu chart nyata.
+
+[ORIGINAL SCRIPT — SCENE 14A | 05:01.14–05:22.14]
+Sekarang kita lihat contoh nyata. BBRI, Juni 2026.
+Tanggal 8 muncul candle merah. Seller memegang kendali dan menutup harga di 2.590.
+Hari berikutnya dibuka lebih rendah, di 2.540. Lalu buyer masuk kuat, mendorong harga sampai 2.790, dan menelan seluruh body hari sebelumnya.
+Itulah Bullish Engulfing, tepat setelah rangkaian tekanan jual yang cukup panjang.
+
+[ORIGINAL SCRIPT — SCENE 14B | 05:22.14–05:29.00]
+Kamu sudah tahu artinya. Sekarang coba baca ceritanya sendiri.
+Jadi, apa yang terjadi berikutnya?
+Tiga… dua… satu… lihat.
+
+[ORIGINAL SCRIPT — SCENE 14C | 05:29.00–05:45.12]
+Harganya naik. Lebih dari sepuluh persen dalam beberapa hari berikutnya, lalu mencapai puncak pada tanggal 17.
+Tentu tidak ada jaminan. Pola Engulfing juga bisa gagal tanpa konfirmasi.
+Tapi beginilah saat ceritanya benar-benar berjalan, dan kamu berhasil membacanya sebelum chart menunjukkan hasil akhirnya.
+
+[ORIGINAL SCRIPT — SCENE 15 | 05:46.06–05:52.06]
+Satu candle adalah satu kalimat. Beberapa candle membentuk satu paragraf. Seluruh chart adalah cerita lengkap yang utuh.
+
+[ORIGINAL SCRIPT — SCENE 16 | 05:52.19–05:55.13]
+Belajarlah membaca ceritanya. Bukan sekadar mengenali bentuk.
