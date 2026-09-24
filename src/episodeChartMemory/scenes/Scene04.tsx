@@ -32,12 +32,21 @@ const T = {
   low: 445,
   close: 477,
   counter: 536, // "Empat informasi dalam satu candle"
-  back: 600, // "Karena itulah"
+  /**
+   * ⚠ THE ANATOMY CARD NO LONGER SLIDES LEFT. Simon, at 2584: "window
+   * candlestick jangan geser kiri, tapi fade out biasa dulu text-textnya, lalu
+   * trim path out candlesticknya." Labels fade first, then the candle trims.
+   */
+  textsOut: 603, // global 2584
+  textsOutDur: 15,
+  candleOut: 618, // global 2599
+  candleOutDur: 24,
+  /** Global 2685 — the Line / Candlestick buttons leave as the zoom starts. */
+  selectorOut: 704,
+  selectorOutDur: 15,
   // "membaca pergerakan harga dengan lebih detail" — the push-in and its
   // cut-on-action live in ChartContinuity (K.push / K.cut); these are just the
-  // label beats that hang off it.
-  label: 736, // global 2415 — the camera has come to rest
-  labelOut: 767, // global 2446 — it backs out again
+  // label beats that hang off it. (The "Detail" chip is gone with the cut.)
 };
 // Moved right 20px: at x=1250 the card's left edge sat 10px off the chart's
 // price labels and read as touching them. The candle and its four chips are
@@ -48,38 +57,33 @@ const FORMS = ["Line", "Candlestick"] as const;
 const SEG = { y: 196, w: 250, h: 56, gap: 8, x: (theme.canvas.width - (250 * 2 + 8)) / 2 };
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** A real candle from the window with a readable body — the anatomy subject. */
-const pickAnatomy = (series: OHLC[], a: number, b: number) => {
-  let best = a;
-  let bestScore = -1;
-  for (let i = a + 4; i <= b - 4; i++) {
-    const d = series[i];
-    const body = Math.abs(d.c - d.o);
-    const wick = d.h - d.l;
-    const score = body * 0.7 + wick * 0.3;
-    if (score > bestScore) {
-      bestScore = score;
-      best = i;
-    }
-  }
-  return best;
-};
+/**
+ * ⚠ THE ANATOMY CANDLE IS SIMON'S REFERENCE, GREEN. Simon, at 2371:
+ * "candlesticknya warna hijau aja, buat ulang dari screenshot ini." It used
+ * to be the chart's own biggest candle, which on the saham series is a red
+ * one. Proportions are read off his reference (a 520px-tall candle): upper
+ * wick 87, body 347, lower wick 86, body 66 wide, wick 10. Fitted to the card
+ * — "ukurannya ga harus sama, di muatin aja sama ukuran window" — with room
+ * above and below for High and Low. Units are pixels of the reference; no
+ * price is shown, so none is implied.
+ */
+const ANATOMY: OHLC = { date: "reference", l: 0, o: 86, c: 86 + 347, h: 520 };
+const ANATOMY_BODY = 66 / 520;
+const ANATOMY_WICK = 10 / 520;
 
 export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   const pal = usePalette();
   const local = useCurrentFrame();
-  const { box, win, cx, scale, camera, series } = geom;
+  const { win, cx, scale, series } = geom;
   // The window bounds go FRACTIONAL while the camera moves (that is what keeps
   // the move smooth) — round before using them as array indices.
   const a = Math.ceil(win[0]);
   const b = Math.floor(win[1]);
-  const idx = pickAnatomy(series, a, b);
-  const candle = series[idx];
 
   const cardIn = local >= T.cardIn ? fadeIn(local, T.cardIn, 26) : 0;
-  const back = local >= T.back ? progress(local, T.back, 40) : 0;
-  const cardOp = cardIn * (1 - back);
-  const cardShift = back * -180; // the card travels back toward the series
+  const textsOp = local >= T.textsOut ? fadeOut(local, T.textsOut, T.textsOutDur) : 1;
+  const candleTrim = local >= T.candleOut ? progress(local, T.candleOut, T.candleOutDur) : 0;
+  const cardOp = candleTrim < 0.999 ? cardIn : 0;
   const pulse = local >= T.counter && local < T.counter + 30 ? Math.sin(((local - T.counter) / 30) * Math.PI) : 0;
 
   // form selector: Line → Candlestick on the wipe
@@ -94,7 +98,6 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
     return [0.2, 0.42, 0.63, 0.84].map((q) => a + Math.floor((b - a) * (q + (rnd() - 0.5) * 0.04)));
   })();
 
-  const labelOp = local >= T.labelOut ? fadeOut(local, T.labelOut, 20) : 1;
 
   return (
     <>
@@ -108,8 +111,10 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
               position: "absolute",
               left: SEG.x + i * (SEG.w + SEG.gap),
               top: SEG.y,
-              // wide-view chrome: steps aside with the axes while the camera moves in
-              opacity: fadeIn(local, T.selector, 18) * Math.max(0, 1 - camera * 3),
+              // "Text 'Line' dan 'Candlestick' nya fade out juga" — at the zoom
+              opacity:
+                fadeIn(local, T.selector, 18) *
+                (local >= T.selectorOut ? fadeOut(local, T.selectorOut, T.selectorOutDur) : 1),
             }}
           >
             <div
@@ -164,28 +169,30 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
       )}
 
       {cardOp > 0.001 && (
-        <div style={{ opacity: cardOp, transform: `translateX(${cardShift}px)` }}>
+        <div style={{ opacity: cardOp }}>
           <AnatomyCandle
-            candle={candle}
+            candle={ANATOMY}
             cardX={CARD.x}
             cardY={CARD.y}
             cardW={CARD.w}
             cardH={CARD.h}
             nudgeX={20}
             showAt={{ open: T.open, high: T.high, low: T.low, close: T.close }}
+            labelsOp={textsOp}
+            bodyRatio={ANATOMY_BODY}
+            wickRatio={ANATOMY_WICK}
+            trim={candleTrim}
           />
         </div>
       )}
 
       {/* 4 Info · 1 Candle — pulses once above the anatomy card */}
-      {local >= T.counter && local < T.back + 40 && (
-        <div style={{ transform: `scale(${1 + 0.06 * pulse})`, transformOrigin: `${CARD.x + CARD.w / 2}px ${CARD.y - 34}px`, opacity: 1 - back }}>
+      {local >= T.counter && textsOp > 0.001 && (
+        <div style={{ transform: `scale(${1 + 0.06 * pulse})`, transformOrigin: `${CARD.x + CARD.w / 2}px ${CARD.y - 34}px`, opacity: textsOp }}>
           <Chip label="4 Info · 1 Candle" x={CARD.x + CARD.w / 2} y={CARD.y - 34} variant="indigo" anchor="center" startFrame={T.counter} />
         </div>
       )}
 
-      {/* the camera has landed; label what it landed on */}
-      <Chip label="Detail" x={box.x + box.w} y={box.y - 34} variant="slate" anchor="right" startFrame={T.label} opacity={labelOp} />
     </>
   );
 };

@@ -55,8 +55,20 @@ const BOX_FULL: Box = { x: 260, y: 250, w: 1400, h: 540 };
 const PAPER = { x: 96, y: 170, w: 1728, h: 730 };
 const BOX_NARROW_W = 900; // while the SC04 anatomy card occupies the right third
 // Where the camera pushes in to, and how many sessions it lands on.
-const BOX_DETAIL: Box = { x: 500, y: 330, w: 920, h: 400 };
-const N_DETAIL = 12;
+/**
+ * ⚠ THE CAMERA ZOOMS INTO THE CHART'S MIDDLE; IT NO LONGER CUTS. Simon, at
+ * 2685: "ga perlu camera cut, biar aja pake candlestick chart yang baru ini.
+ * Instead, previewnya membesar aja ke candlesticks di tengah chart (zoom in),
+ * tetap dalam masking background putih." The move used to shrink the box
+ * into a floating detail card and swap to the last 12 sessions on its fastest
+ * frame; now the box stays put and the WINDOW closes in on these candles, so
+ * the same chart simply gets bigger, clipped to the white paper.
+ */
+const ZOOM_WIN: [number, number] = [43, 57];
+/** The white paper as a clip — the zoom's mask. */
+const PAPER_CLIP = `inset(${PAPER.y}px ${theme.canvas.width - PAPER.x - PAPER.w}px ${
+  theme.canvas.height - PAPER.y - PAPER.h
+}px ${PAPER.x}px round ${theme.radius.cardLg}px)`;
 const CAMERA_BLUR = 7; // px at the camera's fastest frame
 // Continuity-local frames, all VO-derived (see each scene's T block).
 const K = {
@@ -79,15 +91,10 @@ const K = {
   wipeDur: 60,
   widen: 1836, // global 2325 — the anatomy card has cleared; chart returns to the full width it had at global 1997
   widenDur: 30, // …and settles by global 2355, clear of the camera move below
-  // ── CUT ON ACTION (global 2355 → 2415) ──────────────────────────────────
-  // ONE ease-in-out camera move carries the chart from full frame into the
-  // detail framing. Halfway through — at K.cut, the frame where the move is
-  // FASTEST — the content swaps hard from 70 sessions to 12. The motion never
-  // breaks across that frame, so the swap reads as continuous, not as a cut.
-  push: 1866, // global 2355 — camera starts moving
-  pushDur: 60, // global 2415 — camera rests
-  cut: 1896, // global 2385 — exact midpoint = peak velocity
-  pull: 1957, // global 2446 — camera backs out again…
+  // ── THE ZOOM (global 2685 → 2741) — see ZOOM_WIN ──────────────────────────
+  push: 1894, // global 2685 — "yang ingin membaca … lebih detail"
+  pushDur: 56, // global 2741 — at rest, before the roadmap lifts it at 2749
+  pull: 1957, // global 2748 — camera backs out again, under the roadmap…
   pullDur: 40, // …landing on full frame exactly at phase D
   dimCandles: 2299, // SC05 f0 — moved with PHASE.d
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
@@ -122,8 +129,6 @@ const WINDOW: [number, number] = [0, SERIES.length - 1];
 /** Opacity the candles step down to while the line is shown alone. */
 const CANDLES_DIM = 0.2;
 const LINE_CHART_W = 5;
-/** The last N_DETAIL sessions — what the camera lands on after the cut. */
-const WINDOW_DETAIL: [number, number] = [WINDOW[1] - N_DETAIL + 1, WINDOW[1]];
 
 export type ContGeom = {
   box: Box;
@@ -194,24 +199,32 @@ export const ChartContinuity = () => {
   const cameraAt = (x: number) =>
     (x >= K.push ? progressInOut(x, K.push, K.pushDur) : 0) - (x >= K.pull ? progressInOut(x, K.pull, K.pullDur) : 0);
   const blurPx = velocityBlur(cameraAt, f, K.push, K.pull + K.pullDur - K.push, CAMERA_BLUR);
-  const lerp = (from: number, to: number) => from + (to - from) * camera;
-  const box: Box = {
-    x: lerp(baseBox.x, BOX_DETAIL.x),
-    y: lerp(baseBox.y, BOX_DETAIL.y),
-    w: lerp(baseBox.w, BOX_DETAIL.w),
-    h: lerp(baseBox.h, BOX_DETAIL.h),
-  };
+  const box: Box = baseBox;
 
-  // The CUT: one frame, 70 sessions → 12. No interpolation — that is the point.
-  // On the way back out the window widens continuously (fractional bounds), so
-  // the return is a move, not a second cut.
-  const win: [number, number] =
-    f < K.cut ? WINDOW : [interpolate(pullOut, [0, 1], [WINDOW_DETAIL[0], WINDOW[0]]), WINDOW[1]];
+  /**
+   * The window's WIDTH is interpolated geometrically, so each frame magnifies
+   * by the same factor and the zoom neither lurches at the start nor rushes at
+   * the end; its centre travels from the full window's to ZOOM_WIN's. The
+   * price range follows the same fraction, so both axes zoom in step.
+   */
+  const w0 = WINDOW[1] - WINDOW[0];
+  const w1 = ZOOM_WIN[1] - ZOOM_WIN[0];
+  const wNow = w0 * Math.pow(w1 / w0, camera);
+  const zoomT = (w0 - wNow) / (w0 - w1);
+  const cNow = (WINDOW[0] + WINDOW[1]) / 2 + ((ZOOM_WIN[0] + ZOOM_WIN[1]) / 2 - (WINDOW[0] + WINDOW[1]) / 2) * zoomT;
+  const win: [number, number] = camera > 0 ? [cNow - wNow / 2, cNow + wNow / 2] : WINDOW;
 
   const g = chartGeom(SERIES, win, box);
+  const rangeIn = ([a0, b0]: [number, number]) => {
+    const sl = SERIES.slice(a0, b0 + 1);
+    return { hi: Math.max(...sl.map((d) => d.h)), lo: Math.min(...sl.map((d) => d.l)) };
+  };
+  const RF = rangeIn(WINDOW);
+  const RZ = rangeIn(ZOOM_WIN);
+  const hi = RF.hi + (RZ.hi - RF.hi) * zoomT;
+  const lo = RF.lo + (RZ.lo - RF.lo) * zoomT;
   /** Framed the way SahamChart frames the same candles — see FRAME_ALL. */
-  const scale = (p: number) =>
-    box.y + box.h * (FRAME_ALL.top + (1 - FRAME_ALL.top - FRAME_ALL.bottom) * ((g.max - p) / (g.max - g.min)));
+  const scale = (p: number) => box.y + box.h * (FRAME_ALL.top + (1 - FRAME_ALL.top - FRAME_ALL.bottom) * ((hi - p) / (hi - lo)));
   const [a, b] = WINDOW;
   const n = b - a + 1;
 
@@ -358,7 +371,7 @@ export const ChartContinuity = () => {
   const handIn = f >= PHASE.c ? progress(f, PHASE.c, K.axesIn) : 1;
   const axisOp = handIn * Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
   const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
-  const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
+  const tickPrices = Array.from({ length: 4 }, (_, i) => lo + ((hi - lo) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
 
   return (
@@ -457,7 +470,9 @@ export const ChartContinuity = () => {
             {c.month}
           </div>
         ))}
-      {/* date ticks (BMRI) */}
+      {/* date ticks — ⚠ MASKED TO THE PAPER like the candles: the zoom carries
+          them outward, and without the mask a digit rode past the card's edge */}
+      <div style={{ position: "absolute", left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: PAPER_CLIP }}>
       {bmriAxisOp > 0.001 &&
         dateIdx.map((i) => (
           <div
@@ -478,27 +493,12 @@ export const ChartContinuity = () => {
             {SERIES[i].date.slice(5).replace("-", "/")}
           </div>
         ))}
+      </div>
 
       {/* The chart and its card share one blur, so they smear together. */}
       <div style={{ filter: blurPx > 0.05 ? `blur(${blurPx}px)` : undefined }}>
-      {/* The detail card belongs to the AFTER side of the cut, so it appears on
-          the cut frame — no fade. It rides the same moving box as the chart. */}
-      {f >= K.cut && (
-        <div
-          style={{
-            position: "absolute",
-            left: box.x - 40,
-            top: box.y - 56,
-            width: box.w + 80,
-            height: box.h + 112,
-            borderRadius: theme.radius.cardLg,
-            background: pal.cardBg,
-            border: `${theme.stroke.hair}px solid ${pal.border}`,
-            boxShadow: theme.shadow.lift,
-            opacity: 1 - pullOut,
-          }}
-        />
-      )}
+      {/* ⚠ NO DETAIL CARD — Simon: "Ini uda ga kepake ya." It belonged to the
+          cut, and there is no cut any more. */}
 
       {/* ── THE chart element — one line/candle surface across all four phases ── */}
       {/* ⚠ THE LINE WAS NEVER ON SCREEN — its clip box was ZERO PIXELS TALL.
@@ -533,6 +533,17 @@ export const ChartContinuity = () => {
           full, then 20% while the line draws, then gone at 2224 — and back
           one by one on the wipe (2294), which is where they used to begin. */}
       {f >= PHASE.c && (f >= K.wipe ? wipe > 0.001 : preWipeOp > 0.001) && (
+        /* the white paper is the mask — "tetap dalam masking background putih" */
+        <div
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: theme.canvas.width,
+            height: theme.canvas.height,
+            clipPath: PAPER_CLIP,
+          }}
+        >
         <CandlestickChart
           data={SERIES}
           window={win}
@@ -542,6 +553,7 @@ export const ChartContinuity = () => {
           revealProgress={f >= K.wipe ? wipe : 1}
           dimOpacity={f >= K.wipe ? candleDim : preWipeOp}
         />
+        </div>
       )}
       </div>
       </div>

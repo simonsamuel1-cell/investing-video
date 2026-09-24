@@ -3,11 +3,11 @@
  * Simon, at 708: "Ubah visual isi dari tiap kotak di Scene Transisi."
  *
  *   Alur Grafik      (top right)     a line chart after his reference 1 —
- *                                    no vertical rules, no years
+ *                                    no vertical rules, no years, indigo
  *   Perilaku Pasar   (bottom left)   a bullish rectangle after reference 2 —
- *                                    no text
+ *                                    no text, indigo, stretched to the card
  *   Ilusi Kepastian  (bottom right)  13 candles, the last 3 hollow and rising,
- *                                    then those 3 mirrored left-to-right
+ *                                    and those 3 mirrored DOWNWARD beneath them
  *
  * Only the first stop uses these. The later stops push INTO their boxes and so
  * must show the scene they land on — see Composition's PREVIEWS.
@@ -81,15 +81,18 @@ export const SmoothLines: React.FC<{ trim: number }> = () => {
   return (
     <div style={{ position: "absolute", inset: 0, background: pal.cardBg }}>
       <svg width={CARD.w} height={CARD.h} style={{ position: "absolute", left: 0, top: 0 }}>
+        {/* ⚠ BOTH LINES INDIGO — Simon: "garisnya indigo aja". The faded ends
+            stay: they are what makes the lines read as running on past the
+            card, and they belong to the reference's look, not its palette. */}
         <defs>
-          {grad("rm-cool", pal.rsiPurple, pal.vizBlue)}
-          {grad("rm-warm", pal.maOrange, pal.vizPink)}
+          {grad("rm-cool", pal.indigo, pal.indigo)}
+          {grad("rm-warm", pal.indigo, pal.indigo)}
         </defs>
         <path d={smoothPath(COOL.map(fit))} fill="none" stroke="url(#rm-cool)" strokeWidth={4} strokeLinecap="round" />
         <path d={smoothPath(WARM.map(fit))} fill="none" stroke="url(#rm-warm)" strokeWidth={4} strokeLinecap="round" />
-        <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.vizPink} opacity={0.18} />
-        <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.vizPink} opacity={0.35} />
-        <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.vizPink} />
+        <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.indigo} opacity={0.18} />
+        <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.indigo} opacity={0.35} />
+        <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.indigo} />
       </svg>
     </div>
   );
@@ -121,13 +124,19 @@ const RECT = {
 
 export const BullishRectangle: React.FC<{ trim: number }> = () => {
   const pal = usePalette();
-  const pad = 40;
+  /**
+   * ⚠ STRETCHED ACROSS THE CARD, not fitted to its height. Simon: "width
+   * visualnya di stretch kiri kanan deh, biar ngisi white space di
+   * sampingnya." The reference is taller than wide; at one uniform scale it
+   * sat in a column with the card empty either side. x and y now take their
+   * own factor, each filling its own side of the card.
+   */
+  const pad = { x: 56, y: 40 };
   const b = RECT.bounds;
-  const k = Math.min((CARD.w - 2 * pad) / (b.x1 - b.x0), (CARD.h - 2 * pad) / (b.y1 - b.y0));
-  const ox = (CARD.w - (b.x1 - b.x0) * k) / 2;
-  const oy = (CARD.h - (b.y1 - b.y0) * k) / 2;
-  const X = (x: number) => ox + (x - b.x0) * k;
-  const Y = (y: number) => oy + (y - b.y0) * k;
+  const kx = (CARD.w - 2 * pad.x) / (b.x1 - b.x0);
+  const ky = (CARD.h - 2 * pad.y) / (b.y1 - b.y0);
+  const X = (x: number) => pad.x + (x - b.x0) * kx;
+  const Y = (y: number) => pad.y + (y - b.y0) * ky;
   const pts = (p: [number, number][]) => p.map(([x, y]) => `${X(x).toFixed(1)},${Y(y).toFixed(1)}`).join(" ");
   const hLine = (l: { y: number; x0: number; x1: number }, color: string, w: number, key: string) => (
     <line key={key} x1={X(l.x0)} y1={Y(l.y)} x2={X(l.x1)} y2={Y(l.y)} stroke={color} strokeWidth={w} strokeLinecap="round" />
@@ -149,7 +158,8 @@ export const BullishRectangle: React.FC<{ trim: number }> = () => {
         <polyline
           points={pts([...RECT.pole, ...RECT.swing.slice(1)])}
           fill="none"
-          stroke={pal.ink}
+          /* indigo — Simon: "garis hitam, ganti jadi garis indigo" */
+          stroke={pal.indigo}
           strokeWidth={4}
           strokeLinejoin="round"
           strokeLinecap="round"
@@ -182,19 +192,25 @@ const HOLLOW: Bar[] = [
   { o: 76, c: 81, h: 83, l: 75 },
 ];
 /**
- * …and those three again, MIRRORED LEFT-TO-RIGHT ("mirror secara horizontal
- * terhadap 3 candlestick hollow") and set after them: the same three shapes in
- * reverse order, so the projection climbs and then walks back down.
+ * …and those three again, MIRRORED DOWNWARD beneath them — Simon: "3
+ * candlestick paling kanan harusnya letaknya ada di bawah" the hollow ones.
+ * Reflected across the level the hollow run starts from (the last solid
+ * close), so from one point the path forks: the same three sessions up, or
+ * the same three down. That fork is the whole of "Ilusi Kepastian".
  */
-const MIRROR: Bar[] = [...HOLLOW].reverse();
+const PIVOT = SOLID[SOLID.length - 1].c;
+const MIRROR: Bar[] = HOLLOW.map((d) => ({ o: 2 * PIVOT - d.o, c: 2 * PIVOT - d.c, h: 2 * PIVOT - d.l, l: 2 * PIVOT - d.h }));
 
 export const HollowProjection: React.FC<{ trim: number }> = () => {
   const pal = usePalette();
+  /* thirteen columns; the mirrored three share the hollow three's columns */
   const bars = [...SOLID, ...HOLLOW, ...MIRROR];
+  const column = (i: number) => (i < SOLID.length + HOLLOW.length ? i : i - HOLLOW.length);
+  const cols = SOLID.length + HOLLOW.length;
   const pad = { x: 40, y: 34 };
   const lo = Math.min(...bars.map((d) => d.l));
   const hi = Math.max(...bars.map((d) => d.h));
-  const slot = (CARD.w - 2 * pad.x) / bars.length;
+  const slot = (CARD.w - 2 * pad.x) / cols;
   const bodyW = slot * 0.6;
   const Y = (v: number) => pad.y + ((hi - v) / (hi - lo)) * (CARD.h - 2 * pad.y);
   return (
@@ -202,7 +218,7 @@ export const HollowProjection: React.FC<{ trim: number }> = () => {
       <svg width={CARD.w} height={CARD.h} style={{ position: "absolute", left: 0, top: 0 }}>
         {bars.map((d, i) => {
           const hollow = i >= SOLID.length;
-          const x = pad.x + slot * (i + 0.5);
+          const x = pad.x + slot * (column(i) + 0.5);
           const top = Y(Math.max(d.o, d.c));
           const h = Math.max(2, Y(Math.min(d.o, d.c)) - top);
           const color = hollow ? pal.ink : d.c >= d.o ? pal.candleGreen : pal.candleRed;

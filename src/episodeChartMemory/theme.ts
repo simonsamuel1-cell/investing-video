@@ -48,9 +48,7 @@ export type Palette = {
   maOrange: string;
   /** RSI on SC01 — Simon: "RSI ubah color code jadi ungu purple". */
   rsiPurple: string;
-  /** The first roadmap's line-chart teaser, after Simon's reference: the
-   *  pink end of the warm line and the blue end of the cool one. */
-  vizPink: string;
+  /** The blue levels in the first roadmap's bullish-rectangle card. */
   vizBlue: string;
 };
 
@@ -75,7 +73,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
     muted: "#B9B9BD",
     maOrange: "#F2994A",
     rsiPurple: "#9B51E0",
-    vizPink: "#FF5C9A",
     vizBlue: "#0A6CFF",
   },
   // Arah 1 — tanahnya dibalik. Rona merek dipertahankan, hanya diangkat
@@ -99,7 +96,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
     muted: "#5A5A62",
     maOrange: "#FFB066",
     rsiPurple: "#B57CF2",
-    vizPink: "#FF7AAE",
     vizBlue: "#4D94FF",
   },
   // Arah 2 — tanah kertas hangat. Indigo merek dipertahankan; cyan diganti
@@ -123,7 +119,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
     muted: "#B9AB98",
     maOrange: "#D9822B",
     rsiPurple: "#8E4FC7",
-    vizPink: "#E0457F",
     vizBlue: "#1F5FD6",
   },
   // Penanda bagian CONTOH (SC02 harga cabai, SC08 ingatan pasar). Ungunya
@@ -150,7 +145,6 @@ export const PALETTES: Record<PaletteName, Palette> = {
     muted: "#A38CB8",
     maOrange: "#E8893A",
     rsiPurple: "#A45DD6",
-    vizPink: "#F0508E",
     vizBlue: "#2468E0",
   },
 };
