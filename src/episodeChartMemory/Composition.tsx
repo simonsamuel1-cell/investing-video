@@ -121,7 +121,14 @@ const STOPS: Stop[] = [
     at: 2820, land: 0, push: 2991, into: 1, end: 3090, freeze: 2028, Component: ChartContinuity,
     previews: [PREVIEWS[0], { Draw: SmoothLines }, { Draw: BullishRectangle }, { Draw: HollowProjection }],
   },
-  { at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06 },
+  /* ⚠ STOP 3: Perilaku Pasar and Ilusi Kepastian carry the first stop's
+     drawings — Simon: "isi kotak Perilaku Pasar dan Ilusi Kepastian ubah jadi
+     seperti scene transisi yang pertama." The first two boxes keep what
+     folded into them. */
+  {
+    at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06,
+    previews: [PREVIEWS[0], PREVIEWS[1], { Draw: BullishRectangle }, { Draw: HollowProjection }],
+  },
   { at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08 },
 ];
 
