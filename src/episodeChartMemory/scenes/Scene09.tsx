@@ -6,7 +6,7 @@
 import { useCurrentFrame } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart } from "../components/CandlestickChart";
-import { StatementText } from "../components/StatementText";
+import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 import { Chip } from "../components/Chip";
 import { theme } from "../theme";
 import { progress, fadeOut, textReveal, type Box } from "../helpers";
@@ -34,12 +34,23 @@ const BLOCK_DROP = 30;
 // "Informasi" / "Harapan · Tebakan" sit BELOW the chart, so they are not part
 // of that block — chart bottom is CHART.y + CHART.h = 800.
 const INFO_TOP = 826;
+/**
+ * The Technical Analysis box: top centre, and BELOW the 150px logo zone — at
+ * y 84 its right corner sat against the Tuntun mark. Sized to its longer
+ * second line with ~44px either side, and short enough to leave a clear gap
+ * above the chip row. Stated in screen coordinates; it sits inside the lifted
+ * block, so GROUP_DY is taken back off where it is drawn.
+ */
+const TA_BOX = { y: 160, w: 1060, h: 152, titleSize: 52 };
 const HOPE_TOP = 890;
 const T = {
-  texture: 0, // "Jadi, anggap"
-  carryDur: 50, // the chart settles from full strength down to texture
-  prob: 36, // "alat membaca probabilitas" — the headline lands first
-  notPred: 155, // "bukan alat meramal masa depan"
+  /**
+   * ⚠ GLOBAL 6450 — ONE TEXT BOX REPLACES "Probabilitas" / "Bukan prediksi".
+   * Simon: "muncul text box di atas tengah, isinya 'Technical Analysis' lalu
+   * di text-line kedua 'alat bantu baca probabilitas, bukan ramalan masa
+   * depan'." The film's marquee, top centre; the words rise in once it opens.
+   */
+  prob: 37,
   future: 419, // "tidak menjamin apa yang terjadi berikutnya"
   dim: 503, // "tidak ada alat yang bisa"
   lift: 558, // "chart memberimu keunggulan"
@@ -89,15 +100,16 @@ export const Scene09 = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
 
-  // full size from the first frame; it only settles down to texture
-  const carry = progress(f, T.texture, T.carryDur);
+  /* ⚠ ALREADY TEXTURE ON FRAME 0 — Simon: "Setelah transisi keempat,
+     candlestick chartnya langsung transparan aja." No settling from full. */
   const box: Box = CHART;
   const win: [number, number] = WIN.sc01;
-  const texture = 1 + (TEXTURE - 1) * carry;
+  const texture = TEXTURE;
   const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
   const rule = f >= T.dim ? progress(f, T.dim, 40) : 0;
   const future = f >= T.future ? progress(f, T.future, 34) : 0;
   const lift = f >= T.lift ? progress(f, T.lift, 26) : 0;
+  const taText = textReveal(f, dashOpenAt(T.prob), 26, 26);
   const info = textReveal(f, T.info);
   const hope = textReveal(f, T.hope);
   const texturePlus = texture * (1 + (TEXTURE_LIFT - 1) * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
@@ -127,8 +139,27 @@ export const Scene09 = () => {
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)`, opacity: clearOp }}>
-      <StatementText text="Probabilitas" y={392} startFrame={T.prob} size={96} weight={800} color={pal.indigo} />
-      <StatementText text="Bukan prediksi" y={496} startFrame={T.notPred} size={60} weight={700} color={pal.slate} />
+      <DashedFrame x={(theme.canvas.width - TA_BOX.w) / 2} y={TA_BOX.y - GROUP_DY} w={TA_BOX.w} h={TA_BOX.h} at={T.prob}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 6,
+            fontFamily: theme.type.family,
+            color: pal.ink,
+            whiteSpace: "nowrap",
+            opacity: taText.opacity,
+            transform: `translateY(${taText.y}px)`,
+          }}
+        >
+          <div style={{ fontSize: TA_BOX.titleSize, fontWeight: 800 }}>Technical Analysis</div>
+          <div style={{ fontSize: theme.type.chip.size, fontWeight: 500 }}>alat bantu baca probabilitas, bukan ramalan masa depan</div>
+        </div>
+      </DashedFrame>
 
       {CHIPS.map((c, i) => (
         <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />

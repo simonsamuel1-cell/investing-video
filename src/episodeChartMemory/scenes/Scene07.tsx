@@ -184,7 +184,8 @@ export const Scene07 = () => {
       {/* Header chips, centred over their own image. */}
       <div style={{ transform: `scale(${1 + 0.04 * pulseL})`, transformOrigin: `${paneSlot(0).cx}px ${PANE_HEADER_Y}px` }}>
         <Chip
-          label="5 Menit — Noise"
+          /* casing verbatim — Simon: "huruf kecil semua kecuali Mingguan" */
+          label="5 menit — noise"
           x={paneSlot(0).cx}
           y={PANE_HEADER_Y}
           size={CHIP_SIZE}
@@ -195,7 +196,7 @@ export const Scene07 = () => {
       </div>
       <div style={{ transform: `scale(${1 + 0.04 * pulseR})`, transformOrigin: `${paneSlot(1).cx}px ${PANE_HEADER_Y}px` }}>
         <Chip
-          label="Mingguan — Arah Besar"
+          label="Mingguan — arah besar"
           x={paneSlot(1).cx}
           y={PANE_HEADER_Y}
           size={CHIP_SIZE}

@@ -169,11 +169,14 @@ export const Scene08 = () => {
       </div>
 
       {/* the one chip on the band — below it, hanging off the first touch */}
+      {/* ⚠ A FILLED INDIGO PILL, WHITE TYPE, LOWER CASE — Simon: "ubah style
+          jadi background indigo, text putih. Textnya huruf kecil semua." */}
       <Chip
-        label="Pembeli masuk"
+        label="pembeli masuk"
         x={g.cx(ZONE_TOUCH_IDX[0])}
         y={yBot + 76}
-        variant="cyan"
+        variant="indigo"
+        solid
         anchor="center"
         startFrame={T.t1 + 8}
         opacity={clearOp}
