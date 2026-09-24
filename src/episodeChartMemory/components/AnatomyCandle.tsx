@@ -70,19 +70,11 @@ export const AnatomyCandle = ({
 
   return (
     <>
-      <div
-        style={{
-          position: "absolute",
-          left: cardX,
-          top: cardY,
-          width: cardW,
-          height: cardH,
-          borderRadius: theme.radius.cardLg,
-          background: pal.cardBg,
-          /* ⚠ NO BORDER — Simon, at 2379: "remove aja border tipisnya". */
-          opacity,
-        }}
-      />
+      {/* ⚠ NO CARD BEHIND THE CANDLE. Its border went at 2379 ("remove aja
+          border tipisnya"), which left a white rectangle on white paper doing
+          nothing — until the group moved down to the chart's top and its foot
+          hung out below the paper. cardX/cardY/cardW/cardH still place the
+          candle and its labels. */}
       <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity }} width={theme.canvas.width} height={theme.canvas.height}>
         {/* ⚠ THE CANDLE TRIMS OUT THE WAY IT LEANS — the rule SC01's bars
             follow: a candle that closed down keeps its low and its high draws

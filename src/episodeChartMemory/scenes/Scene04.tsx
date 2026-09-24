@@ -70,6 +70,8 @@ const SEG = { y: 196, w: 250, h: 56, gap: 8, x: (theme.canvas.width - (250 * 2 +
 const ANATOMY: OHLC = { date: "reference", l: 0, o: 86, c: 86 + 347, h: 520 };
 const ANATOMY_BODY = 66 / 520;
 const ANATOMY_WICK = 10 / 520;
+/** Half the "4 Info · 1 Candle" chip's rendered height — measured at 2560. */
+const COUNTER_HALF_H = 36;
 
 export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   const pal = usePalette();
@@ -81,6 +83,13 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
   const b = Math.floor(win[1]);
 
   const cardIn = local >= T.cardIn ? fadeIn(local, T.cardIn, 26) : 0;
+  /**
+   * The group's top is the counter chip's top edge (its centre, CARD.y − 34,
+   * less half its measured 72px height); the chart's top is the tip of its
+   * highest wick. Read off the chart, so it follows the chart if it changes.
+   */
+  const chartTop = scale(Math.max(...series.slice(a, b + 1).map((d) => d.h)));
+  const groupDy = chartTop - (CARD.y - 34 - COUNTER_HALF_H);
   const textsOp = local >= T.textsOut ? fadeOut(local, T.textsOut, T.textsOutDur) : 1;
   const candleTrim = local >= T.candleOut ? progress(local, T.candleOut, T.candleOutDur) : 0;
   const cardOp = candleTrim < 0.999 ? cardIn : 0;
@@ -168,6 +177,10 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
         </svg>
       )}
 
+      {/* ⚠ THE CARD AND ITS COUNTER MOVE AS ONE GROUP, TOP-ALIGNED TO THE
+          CHART — Simon: "Group semua ini, lalu geser ke bawah hingga
+          align-top terhadap chart." */}
+      <div style={{ transform: `translateY(${groupDy.toFixed(1)}px)` }}>
       {cardOp > 0.001 && (
         <div style={{ opacity: cardOp }}>
           <AnatomyCandle
@@ -192,6 +205,7 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
           <Chip label="4 Info · 1 Candle" x={CARD.x + CARD.w / 2} y={CARD.y - 34} variant="indigo" anchor="center" startFrame={T.counter} />
         </div>
       )}
+      </div>
 
     </>
   );
