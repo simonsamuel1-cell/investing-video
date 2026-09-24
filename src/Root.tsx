@@ -38,6 +38,7 @@ import {
 import {
   CandlestickComposition,
   TOTAL_FRAMES as CANDLE_FRAMES,
+  INDO_TOTAL_FRAMES as CANDLE_INDO_FRAMES,
 } from "./episodeCandlestick/Composition";
 import { theme as candleTheme } from "./episodeCandlestick/theme";
 import { SUBTITLES as CANDLE_SUBS } from "./episodeCandlestick/subtitles";
@@ -74,7 +75,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="TA03-CandlestickIntermediate"
         component={CandlestickComposition}
-        durationInFrames={CANDLE_FRAMES}
+        durationInFrames={CANDLE_INDO_FRAMES}
         fps={candleTheme.canvas.fps}
         width={candleTheme.canvas.width}
         height={candleTheme.canvas.height}
@@ -83,6 +84,7 @@ export const RemotionRoot: React.FC = () => {
           audioSrc: "vo-indo.mp3",
           showSubtitles: false,
           muted: false,
+          timeline: "indo",
         }}
       />
       {/* ═══ TA03 — Candlestick Intermediate (English cut) ════════════════ */}

@@ -56,4 +56,20 @@ export const theme = {
     revealFrames: 12,
     fadeFrames: 10,
   },
+  /**
+   * The roadmap — this video's "Scene Transisi" (continuity/Roadmap.tsx).
+   * Simon: "Stylenya sama persis seperti TA01, scene transisi pertama." So these
+   * are TA01's values, not this episode's: its 16px card radius (here cards are
+   * 20), its resting shadow, its glow, and its easy ease (0.33, 0, 0.67, 1)
+   * where this episode otherwise eases out.
+   */
+  roadmap: {
+    paper: "#FFFFFF",
+    rule: "#DEDEE0",
+    cardRadius: 16,
+    cardShadow: "0 10px 24px rgba(0, 0, 0, 0.05)",
+    glowTint: "rgba(95, 77, 238, 0.14)",
+    labelSize: 30,
+    ease: Easing.bezier(0.33, 0, 0.67, 1),
+  },
 } as const;
