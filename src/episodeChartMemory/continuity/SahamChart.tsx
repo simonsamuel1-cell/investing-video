@@ -13,9 +13,10 @@
  *   642–690   ZOOM   the window widens from candles 4–40 to all 101: the chart
  *                    "shrinks" as the rest of its history comes into view
  *   …–handover       SC03 is read off the wide view
- *   handover         the card dissolves onto the continuity paper beneath it,
- *                    which is the same white rectangle, and SC04's BMRI chart
- *                    is there underneath
+ *   handover         SC03's labels have cleared; the card AND its candles now
+ *                    dissolve together onto the continuity paper beneath it —
+ *                    the same white rectangle — so the candles crossfade into
+ *                    SC04's line chart instead of leaving it an empty page
  *
  * ⚠ NO PRICE OR DATE LABELS while this chart is up. The series is a trace of a
  * screenshot, not market data; the BMRI axes would caption it with figures it
@@ -44,9 +45,9 @@ export const S = {
   hold: 30, // "Lalu jeda 30 frame"
   zoomDur: 48, // lands on 690 — global 1481, six frames before the trendlines
   labelOut: 12, // "Saham" clears early in the grow
-  /** The candles clear this long before the handover… */
+  /** SC03's labels clear this long before the handover… */
   contentOut: 18,
-  /** …and the card this long after it, over the identical paper. */
+  /** …and the card and candles this long after it, over the identical paper. */
   cardOut: 20,
 };
 // ═══════════════════════════════════════════════════════════════════════════
@@ -79,9 +80,15 @@ export const sahamGeomAt = (f: number, paper: Box, full: Box, handover: number) 
   const frame = { top: lerp(FRAME_CLOSE.top, FRAME_ALL.top, zoom), bottom: lerp(FRAME_CLOSE.bottom, FRAME_ALL.bottom, zoom) };
   const y = sahamScale(box, lerp(CLOSE.hi, ALL.hi, lead), lerp(CLOSE.lo, ALL.lo, lead), frame);
   const cx = chartGeom(SAHAM_CANDLES, win, box).cx;
-  const contentOp = f >= handover - S.contentOut ? 1 - progress(f, handover - S.contentOut, S.contentOut) : 1;
+  /**
+   * ⚠ ONLY THE LABELS LEAVE BEFORE THE HANDOVER. Simon, at 1974: "kali ini
+   * labelnya saja yang fade out, candlestick dan backgroundnya stay." The
+   * candles used to clear with them and leave a blank white card for a
+   * second; now they hold to the handover and go with the card (cardOp).
+   */
+  const labelsOp = f >= handover - S.contentOut ? 1 - progress(f, handover - S.contentOut, S.contentOut) : 1;
   const cardOp = f >= handover ? 1 - progress(f, handover, S.cardOut) : 1;
-  return { grow, zoom, card, box, win, y, cx, contentOp, cardOp, live: f >= S.grow && cardOp > 0.001 };
+  return { grow, zoom, card, box, win, y, cx, labelsOp, cardOp, live: f >= S.grow && cardOp > 0.001 };
 };
 export type SahamGeom = ReturnType<typeof sahamGeomAt>;
 
@@ -129,8 +136,8 @@ export const SahamChart = ({ paper, full, handover }: { paper: Box; full: Box; h
           Saham
         </div>
       )}
-      {G.contentOp > 0.001 && (
-        <div style={{ position: "absolute", inset: 0, opacity: G.contentOp }}>
+      {G.cardOp > 0.001 && (
+        <div style={{ position: "absolute", inset: 0, opacity: G.cardOp }}>
           <CandlestickChart data={SAHAM_CANDLES} window={G.win} box={G.box} scaleOverride={G.y} showAxes={false} />
         </div>
       )}

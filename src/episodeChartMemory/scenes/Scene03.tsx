@@ -39,7 +39,12 @@ const T = {
   question: 182, // "membaca pesan di baliknya"
   questionOut: 262, // global 1661 — "Text 'Apa pesannya' fade out"
   questionOutDur: 16,
-  zigzagOut: 270, // global 1669 — "Trend line zigzag nya trim path out"
+  /**
+   * ⚠ GLOBAL 1665, AND EVERY LINE GOES — Simon: "pas di 1665, yang trim path
+   * keluar semua garis ya, termasuk garis atas bawah." The zigzag and both
+   * trendlines trim out together, each from its own start.
+   */
+  zigzagOut: 266,
   zigzagOutDur: 32,
   lift: 268, // "bukan sekadar catatan masa lalu"
   /**
@@ -190,7 +195,7 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
   const pal = usePalette();
   const local = useCurrentFrame();
   const { box } = geom;
-  const { cx, y, box: sbox, contentOp } = geom.saham;
+  const { cx, y, box: sbox, labelsOp } = geom.saham;
 
   const lift = local >= T.lift ? progress(local, T.lift, 30) : 0;
   const draw = local >= T.underline ? progressInOut(local, T.underline, TRIM) : 0;
@@ -284,9 +289,9 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
 
       {/* ⚠ EVERYTHING BELOW LEAVES WITH THE CANDLES before the handover to
           SC04's BMRI chart — see SahamChart's contentOut. */}
-      <div style={{ position: "absolute", inset: 0, opacity: contentOp }}>
+      <div style={{ position: "absolute", inset: 0, opacity: labelsOp }}>
         {/* the structure: one line along the lows, one along the highs */}
-        {draw > 0.001 && (
+        {draw > 0.001 && zOut < 0.999 && (
           <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
             {lines.map((t, i) => {
               const len = Math.hypot(t.x2 - t.x1, t.y2 - t.y1);
@@ -300,8 +305,9 @@ export const Scene03 = ({ geom }: { geom: ContGeom }) => {
                   stroke={pal.indigo}
                   strokeWidth={LINE_W}
                   strokeLinecap="round"
-                  strokeDasharray={len}
-                  strokeDashoffset={len * (1 - draw)}
+                  /* same trim as the zigzag: in from the start, then out from it */
+                  strokeDasharray={`${len} ${len}`}
+                  strokeDashoffset={zOut > 0 ? -len * zOut : len * (1 - draw)}
                   opacity={0.8 * (1 - 0.6 * underlineDim)}
                 />
               );
