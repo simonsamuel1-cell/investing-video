@@ -28,7 +28,7 @@ const REGIONS = [
 const root = resolve(".");
 const out = join(mkdtempSync(join(tmpdir(), "ss6-")), "f.png");
 const serveUrl = await bundle({ entryPoint: join(root, "src/index.ts") });
-const composition = await selectComposition({ serveUrl, id: "Volume020" });
+const composition = await selectComposition({ serveUrl, id: "TA09-Volume" });
 await renderStill({ composition, serveUrl, output: out, frame: FRAME, overwrite: true });
 
 const ref = PNG.sync.read(readFileSync(join(root, "scripts/ref/ss6.png")));

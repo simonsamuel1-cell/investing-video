@@ -90,7 +90,7 @@ export const TOTAL_FRAMES = BLOCK.END;
  * 360×150 logo zone are EMPTY, and it cannot do that against stills that have
  * the burned-in captions and the watermark painted into them:
  *
- *     node scripts/stills.mjs . TAMistakes022 out/check <frames> '{"chrome":false}'
+ *     node scripts/stills.mjs . TA11-TAMistakes out/check <frames> '{"chrome":false}'
  *
  * It never affects a real render — the default is on.
  */

@@ -54,8 +54,8 @@ import {
 export const RemotionRoot: React.FC = () => {
   return (
     <>
-      {/* The TA videos come first: Studio lists compositions in the order they
-          are registered here. */}
+      {/* Sorted by name: Studio lists compositions in the order they are
+          registered here. Keep new ones in their place in that order. */}
       {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
       {/* Was "ChartMemory". The one hyphen separates the module code from the
           title; the title itself runs together because a Remotion id takes only
@@ -70,9 +70,9 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-      {/* ═══ TA02 — Candlestick Intermediate (Indonesian cut) ═════════════ */}
+      {/* ═══ TA03 — Candlestick Intermediate (Indonesian cut) ═════════════ */}
       <Composition
-        id="TA02-CandlestickIntermediate"
+        id="TA03-CandlestickIntermediate"
         component={CandlestickComposition}
         durationInFrames={CANDLE_FRAMES}
         fps={candleTheme.canvas.fps}
@@ -85,21 +85,9 @@ export const RemotionRoot: React.FC = () => {
           muted: false,
         }}
       />
-      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
-          number comes from the corrected SRT via
-          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
-          closing card held for three seconds. */}
+      {/* ═══ TA03 — Candlestick Intermediate (English cut) ════════════════ */}
       <Composition
-        id="TAMistakes022"
-        component={TAMistakesComposition}
-        durationInFrames={V22_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
-      {/* ═══ Candlestick Intermediate ═════════════════════════════════════ */}
-      <Composition
-        id="candlestickControl"
+        id="TA03-CandlestickIntermediateEnglish"
         component={CandlestickComposition}
         durationInFrames={CANDLE_FRAMES}
         fps={candleTheme.canvas.fps}
@@ -109,7 +97,7 @@ export const RemotionRoot: React.FC = () => {
       />
       {/* ═══ Market Structure ═════════════════════════════════════════════ */}
       <Composition
-        id="MarketStructure2"
+        id="TA05-MarketStructure"
         component={MarketStructureComposition}
         durationInFrames={MS_FRAMES}
         fps={30}
@@ -121,7 +109,7 @@ export const RemotionRoot: React.FC = () => {
           Still 30fps: the 60fps conversion is a separate pass, so a difference
           that shows up here can only have come from core. */}
       <Composition
-        id="MovingAverage019"
+        id="TA07-MAdanBB"
         component={MovingAverageComposition}
         durationInFrames={MA_FRAMES}
         fps={30}
@@ -131,9 +119,21 @@ export const RemotionRoot: React.FC = () => {
       {/* VIDEO 20 — Volume. Built on src/core at 60fps; every frame number
           comes from the corrected SRT via docs/Video20_Volume_Script_SYNCED.md. */}
       <Composition
-        id="Volume020"
+        id="TA09-Volume"
         component={VolumeComposition}
         durationInFrames={V20_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
+          number comes from the corrected SRT via
+          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
+          closing card held for three seconds. */}
+      <Composition
+        id="TA11-TAMistakes"
+        component={TAMistakesComposition}
+        durationInFrames={V22_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
