@@ -23,7 +23,6 @@ const T = {
    * not on the scene's first frame over a chart that is still candles.
    */
   selector: 92,
-  closeChip: 132, // global 2113 — labels the line once it has finished drawing
   ghosts: 238, // "tetapi banyak cerita"
   hiddenCap: 278, // "tidak terlihat" — timing beat only; the caption itself is gone
   wipe: 313, // "Candlestick memberi gambaran lebih lengkap"
@@ -140,22 +139,8 @@ export const Scene04 = ({ geom }: { geom: ContGeom }) => {
           ChartContinuity). Simon: "apa itu animasi muncul titik titik ini?
           Gaada artinya." The line itself is on screen now. */}
 
-      {/* the line still reads as closing prices before the wipe */}
-      {local < T.wipe && (
-        <Chip
-          label="Harga Penutupan"
-          x={cx(b) - 22}
-          // y sits just below the Line/Candlestick selector; x is unchanged, so
-          // the connector still runs down to the last close.
-          y={SEG.y + SEG.h + 40}
-          variant="indigo"
-          anchor="right"
-          bare
-          size={theme.type.chip.size - 4}
-          startFrame={T.closeChip}
-          connectorTo={{ x: cx(b), y: scale(series[b].c) - 10 }}
-        />
-      )}
+      {/* ⚠ NO "Harga Penutupan" LABEL — Simon: "'Harga penutupan' nya di
+          remove." The voice says it over the line being drawn. */}
 
       {/* what a line quietly drops — carried by the ghost wicks alone, no caption */}
 

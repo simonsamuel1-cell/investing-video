@@ -121,6 +121,7 @@ const SERIES = SAHAM_PRICED;
 const WINDOW: [number, number] = [0, SERIES.length - 1];
 /** Opacity the candles step down to while the line is shown alone. */
 const CANDLES_DIM = 0.2;
+const LINE_CHART_W = 5;
 /** The last N_DETAIL sessions — what the camera lands on after the cut. */
 const WINDOW_DETAIL: [number, number] = [WINDOW[1] - N_DETAIL + 1, WINDOW[1]];
 
@@ -523,7 +524,9 @@ export const ChartContinuity = () => {
             clipPath: `inset(0px 0px 0px ${Math.max(0, wipeX)}px)`,
           }}
         >
-          <LineChart points={linePts} progress={lineDraw} color={pal.indigo} opacity={lineDim} />
+          {/* 5px — Simon: "garis line chartnya tebelin jadi 5 px", the same
+              weight SC01's lines carry at full strength */}
+          <LineChart points={linePts} progress={lineDraw} color={pal.indigo} opacity={lineDim} width={LINE_CHART_W} />
         </div>
       )}
       {/* ⚠ THE CANDLES ARE ON SCREEN FROM 1981, not only from the wipe:

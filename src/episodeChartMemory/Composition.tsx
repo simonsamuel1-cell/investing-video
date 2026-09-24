@@ -21,6 +21,7 @@ import { Subtitles } from "./components/Subtitles";
 import { PaletteProvider, usePalette } from "./palette";
 import { SUBTITLES, type SubtitleCue } from "./subtitles";
 import { HighLowBars, RoadmapStop, type Preview, type Stop } from "./continuity/Roadmap";
+import { SmoothLines, BullishRectangle, HollowProjection } from "./continuity/RoadmapCards";
 
 export const TOTAL_FRAMES = 7827; // 04:20.90 @30fps — VO-LOCKED, plus five inserts
 
@@ -107,7 +108,9 @@ const STOPS: Stop[] = [
      to watch. From stop 2 on it carries the picture that folded into it. */
   {
     at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01,
-    previews: [{ Draw: HighLowBars }, PREVIEWS[1], PREVIEWS[2], PREVIEWS[3]],
+    /* ⚠ ALL FOUR BOXES ARE DRAWINGS AT THIS STOP — see RoadmapCards. The
+       later stops push into their boxes, so they keep the frozen scenes. */
+    previews: [{ Draw: HighLowBars }, { Draw: SmoothLines }, { Draw: BullishRectangle }, { Draw: HollowProjection }],
     glow: 0,
   },
   { at: 2749, land: 0, push: 2991, into: 1, end: 3090, freeze: 1957, Component: ChartContinuity },

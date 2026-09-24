@@ -1,13 +1,9 @@
 /**
  * AnatomyCandle — one enlarged real candle on a card, with four Title Case
- * callout chips (Open / High / Low / Close) attached by 1px connectors:
+ * text labels (Open / High / Low / Close) attached by 1px connectors:
  * High at the wick top, Low at the wick bottom, Open/Close at the body edges.
- * Chips alternate sides so no two labels overlap.
- *
- * The whole group — candle plus all four chips — is centred on the card. That
- * only works if Open and Close occupy the same width, hence LABEL_W: with equal
- * side chips the group is symmetric about the wick, so putting the wick on the
- * card's centre line centres everything.
+ * Labels alternate sides so no two overlap. The wick sits on the card's
+ * centre line.
  */
 import { theme } from "../theme";
 import { priceScale } from "../helpers";
@@ -42,7 +38,9 @@ export const AnatomyCandle = ({
   const scale = priceScale(candle.l, candle.h, padTop, padBottom, 0.05);
   const cx = cardX + cardW / 2 + nudgeX;
   const bodyW = 92;
-  const LABEL_W = 150; // fixed, so Open and Close balance either side of the wick
+  /* ⚠ TEXT ONLY — Simon: "Label OHLC ubah jadi text aja." With no pill there
+     is no box to balance, so Open and Close sit flush against their
+     connectors instead of centred in a fixed 150px width. */
   const LABEL_GAP = 28; // connector length from the body edge to the chip
   const up = candle.c >= candle.o;
   const color = up ? pal.candleGreen : pal.candleRed;
@@ -74,29 +72,29 @@ export const AnatomyCandle = ({
       </svg>
 
       {/* High — above the wick top, centred */}
-      <Chip label="High" x={cx} y={scale(candle.h) - 52} variant="indigo" startFrame={showAt.high} anchor="center" connectorTo={{ x: cx, y: scale(candle.h) }} />
+      <Chip bare label="High" x={cx} y={scale(candle.h) - 52} variant="indigo" startFrame={showAt.high} anchor="center" connectorTo={{ x: cx, y: scale(candle.h) }} />
       {/* Low — below the wick bottom, centred */}
-      <Chip label="Low" x={cx} y={scale(candle.l) + 52} variant="indigo" startFrame={showAt.low} anchor="center" connectorTo={{ x: cx, y: scale(candle.l) }} />
+      <Chip bare label="Low" x={cx} y={scale(candle.l) + 52} variant="indigo" startFrame={showAt.low} anchor="center" connectorTo={{ x: cx, y: scale(candle.l) }} />
       {/* Open — left of the body edge */}
       <Chip
         label="Open"
+        bare
         x={leftX - LABEL_GAP}
         y={yO}
         variant="indigo"
         startFrame={showAt.open}
         anchor="right"
-        width={LABEL_W}
         connectorTo={{ x: leftX, y: yO }}
       />
       {/* Close — right of the body edge */}
       <Chip
         label="Close"
+        bare
         x={rightX + LABEL_GAP}
         y={yC}
         variant="indigo"
         startFrame={showAt.close}
         anchor="left"
-        width={LABEL_W}
         connectorTo={{ x: rightX, y: yC }}
       />
     </>
