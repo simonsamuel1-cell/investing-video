@@ -40,7 +40,10 @@ import {
   MovingAverageComposition,
   TOTAL_FRAMES as MA_FRAMES,
 } from "./episodes/019-moving-average/Composition";
-import { VolumeComposition, TOTAL_FRAMES as V20_FRAMES } from "./episodes/020-volume/Composition";
+import {
+  VolumeComposition,
+  TOTAL_FRAMES as V20_FRAMES,
+} from "./episodes/020-volume/Composition";
 import {
   TAMistakesComposition,
   TOTAL_FRAMES as V22_FRAMES,
@@ -97,6 +100,49 @@ fairValueFontsReady();
 export const RemotionRoot: React.FC = () => {
   return (
     <>
+      {/* The TA videos come first: Studio lists compositions in the order they
+          are registered here, and Simon wants every TA at the top. */}
+      {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
+      {/* Was "ChartMemory". The one hyphen separates the module code from the
+          title; the title itself runs together because a Remotion id takes only
+          a-z A-Z 0-9 and "-" — no spaces, no underscores, not even a full stop.
+          The branch name spells it differently for the same reason in reverse:
+          git allows "_" and Simon prefers it there. */}
+      <Composition
+        id="TA01-MemahamiPergerakanPasarDariGrafik"
+        component={ChartMemoryComposition}
+        durationInFrames={CHART_FRAMES}
+        fps={30}
+        width={1920}
+        height={1080}
+      />
+      {/* ═══ TA02 — Candlestick Intermediate (Indonesian cut) ═════════════ */}
+      <Composition
+        id="TA02-CandlestickIntermediate"
+        component={CandlestickComposition}
+        durationInFrames={CANDLE_FRAMES}
+        fps={candleTheme.canvas.fps}
+        width={candleTheme.canvas.width}
+        height={candleTheme.canvas.height}
+        defaultProps={{
+          subtitles: CANDLE_SUBS_INDO,
+          audioSrc: "vo-indo.mp3",
+          showSubtitles: false,
+          muted: false,
+        }}
+      />
+      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
+          number comes from the corrected SRT via
+          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
+          closing card held for three seconds. */}
+      <Composition
+        id="TAMistakes022"
+        component={TAMistakesComposition}
+        durationInFrames={V22_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
       {/* ═══ Concept Sector ═══════════════════════════════════════════════ */}
       <Composition
         id="ConceptSectorTutorial"
@@ -126,7 +172,6 @@ export const RemotionRoot: React.FC = () => {
         width={CSR_FRAME.width}
         height={CSR_FRAME.height}
       />
-
       {/* ═══ Bandarmology ═════════════════════════════════════════════════ */}
       <Composition
         id="Bandarmology"
@@ -136,7 +181,6 @@ export const RemotionRoot: React.FC = () => {
         width={BANDAR_FRAME.width}
         height={BANDAR_FRAME.height}
       />
-
       {/* ═══ Event-Driven Trading ═════════════════════════════════════════ */}
       <Composition
         id="eventDriven"
@@ -146,7 +190,6 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
       {/* ═══ Technical Tab ════════════════════════════════════════════════ */}
       <Composition
         id="TechnicalTabPreview"
@@ -156,7 +199,6 @@ export const RemotionRoot: React.FC = () => {
         width={TT_FRAME.width}
         height={TT_FRAME.height}
       />
-
       {/* ═══ Fair Value ═══════════════════════════════════════════════════ */}
       <Composition
         id="FairValue2"
@@ -166,22 +208,6 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
-      {/* ═══ TA01 — Memahami Pergerakan Pasar dari Grafik ════════════════ */}
-      {/* Was "ChartMemory". The one hyphen separates the module code from the
-          title; the title itself runs together because a Remotion id takes only
-          a-z A-Z 0-9 and "-" — no spaces, no underscores, not even a full stop.
-          The branch name spells it differently for the same reason in reverse:
-          git allows "_" and Simon prefers it there. */}
-      <Composition
-        id="TA01-MemahamiPergerakanPasarDariGrafik"
-        component={ChartMemoryComposition}
-        durationInFrames={CHART_FRAMES}
-        fps={30}
-        width={1920}
-        height={1080}
-      />
-
       {/* ═══ Candlestick Intermediate ═════════════════════════════════════ */}
       <Composition
         id="candlestickControl"
@@ -192,21 +218,6 @@ export const RemotionRoot: React.FC = () => {
         height={candleTheme.canvas.height}
         defaultProps={{ subtitles: CANDLE_SUBS, audioSrc: "vo.mp3" }}
       />
-      <Composition
-        id="Candlestick-Indo"
-        component={CandlestickComposition}
-        durationInFrames={CANDLE_FRAMES}
-        fps={candleTheme.canvas.fps}
-        width={candleTheme.canvas.width}
-        height={candleTheme.canvas.height}
-        defaultProps={{
-          subtitles: CANDLE_SUBS_INDO,
-          audioSrc: "vo-indo.mp3",
-          showSubtitles: false,
-          muted: false,
-        }}
-      />
-
       {/* ═══ Market Structure ═════════════════════════════════════════════ */}
       <Composition
         id="MarketStructure2"
@@ -216,7 +227,6 @@ export const RemotionRoot: React.FC = () => {
         width={1920}
         height={1080}
       />
-
       {/* ═══ Built on src/core ════════════════════════════════════════════ */}
       {/* VIDEO 19 — Moving Averages & Bollinger Bands, migrated onto src/core.
           Still 30fps: the 60fps conversion is a separate pass, so a difference
@@ -235,18 +245,6 @@ export const RemotionRoot: React.FC = () => {
         id="Volume020"
         component={VolumeComposition}
         durationInFrames={V20_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
-      {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
-          number comes from the corrected SRT via
-          docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
-          closing card held for three seconds. */}
-      <Composition
-        id="TAMistakes022"
-        component={TAMistakesComposition}
-        durationInFrames={V22_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
