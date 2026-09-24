@@ -95,7 +95,7 @@ const INDEPENDENT_SCENES: { from: number; duration: number; Component: React.FC 
  * (the film ends inside it), so it takes a frame from its own chapter.
  */
 const PREVIEWS: Preview[] = [
-  { freeze: 1957, Component: ChartContinuity }, // Memahami Basic
+  { freeze: 2028, Component: ChartContinuity }, // Memahami Basic — global 2819, the zoomed chart stop 2 folds
   { freeze: 710, Component: Scene06 }, // Alur Grafik
   { freeze: 719, Component: Scene08 }, // Perilaku Pasar
   { freeze: 545, Component: Scene09 }, // Ilusi Kepastian
@@ -108,12 +108,19 @@ const STOPS: Stop[] = [
      to watch. From stop 2 on it carries the picture that folded into it. */
   {
     at: 620, land: null, push: 719, into: 0, end: 791, freeze: 619, Component: Scene01,
-    /* ⚠ ALL FOUR BOXES ARE DRAWINGS AT THIS STOP — see RoadmapCards. The
-       later stops push into their boxes, so they keep the frozen scenes. */
+    /* ⚠ ALL FOUR BOXES ARE DRAWINGS AT THIS STOP — see RoadmapCards. */
     previews: [{ Draw: HighLowBars }, { Draw: SmoothLines }, { Draw: BullishRectangle }, { Draw: HollowProjection }],
     glow: 0,
   },
-  { at: 2749, land: 0, push: 2991, into: 1, end: 3090, freeze: 1957, Component: ChartContinuity },
+  /* ⚠ STOP 2 FOLDS AT 2820, NOT 2749 — Simon: "Preview mengecil/zoom out di
+     2820 aja mulainya." The zoomed chart holds until then and the frame just
+     before (continuity-local 2028) is what folds. Its boxes 2–4 are the first
+     stop's drawings: "visual di kanan atas, kanan bawah, kiri bawah; pake yang
+     dari Scene Transisi pertama". */
+  {
+    at: 2820, land: 0, push: 2991, into: 1, end: 3090, freeze: 2028, Component: ChartContinuity,
+    previews: [PREVIEWS[0], { Draw: SmoothLines }, { Draw: BullishRectangle }, { Draw: HollowProjection }],
+  },
   { at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06 },
   { at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08 },
 ];

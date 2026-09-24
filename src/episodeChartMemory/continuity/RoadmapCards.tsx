@@ -9,13 +9,12 @@
  *   Ilusi Kepastian  (bottom right)  13 candles, the last 3 hollow and rising,
  *                                    and those 3 mirrored DOWNWARD beneath them
  *
- * Only the first stop uses these. The later stops push INTO their boxes and so
- * must show the scene they land on — see Composition's PREVIEWS.
+ * Stops 1 and 2 use these (Simon asked for stop 2 to match stop 1).
  *
  * Like HighLowBars, each is drawn at card size (CARD.w × CARD.h) on the card's
- * white, and carries no label, so no figure is presented as real. `trim` is
- * accepted to fit the Preview contract; these three are pushed off-screen by
- * the zoom into box one and need no exit of their own.
+ * white, and carries no label, so no figure is presented as real. Only
+ * SmoothLines uses `trim` — stop 2 pushes into its box; the other two are
+ * only ever pushed off-screen.
  */
 import React from "react";
 import { usePalette } from "../palette";
@@ -59,7 +58,7 @@ const WARM: [number, number][] = [
 const HOT: [number, number] = [712, 360];
 const REF = { x0: 60, x1: 1140, y0: 180, y1: 680 };
 
-export const SmoothLines: React.FC<{ trim: number }> = () => {
+export const SmoothLines: React.FC<{ trim: number }> = ({ trim }) => {
   const pal = usePalette();
   const pad = { x: 34, y: 34 };
   const k = Math.min((CARD.w - 2 * pad.x) / (REF.x1 - REF.x0), (CARD.h - 2 * pad.y) / (REF.y1 - REF.y0));
@@ -88,11 +87,28 @@ export const SmoothLines: React.FC<{ trim: number }> = () => {
           {grad("rm-cool", pal.indigo, pal.indigo)}
           {grad("rm-warm", pal.indigo, pal.indigo)}
         </defs>
-        <path d={smoothPath(COOL.map(fit))} fill="none" stroke="url(#rm-cool)" strokeWidth={4} strokeLinecap="round" />
-        <path d={smoothPath(WARM.map(fit))} fill="none" stroke="url(#rm-warm)" strokeWidth={4} strokeLinecap="round" />
-        <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.indigo} opacity={0.18} />
-        <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.indigo} opacity={0.35} />
-        <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.indigo} />
+        {/* ⚠ THE LINES TRIM OUT AS A PUSH LANDS ON THIS CARD (stop 2 pushes
+            into it) — the same exit HighLowBars makes, so the next scene opens
+            on a clean page rather than through a magnified drawing. pathLength
+            1 lets the dash be written without measuring a Bézier. */}
+        {[COOL, WARM].map((pts, i) => (
+          <path
+            key={i}
+            d={smoothPath(pts.map(fit))}
+            pathLength={1}
+            fill="none"
+            stroke={i === 0 ? "url(#rm-cool)" : "url(#rm-warm)"}
+            strokeWidth={4}
+            strokeLinecap="round"
+            strokeDasharray="1 1"
+            strokeDashoffset={-trim}
+          />
+        ))}
+        <g opacity={1 - trim}>
+          <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.indigo} opacity={0.18} />
+          <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.indigo} opacity={0.35} />
+          <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.indigo} />
+        </g>
       </svg>
     </div>
   );

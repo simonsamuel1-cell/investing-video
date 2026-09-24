@@ -94,7 +94,10 @@ const K = {
   // ── THE ZOOM (global 2685 → 2741) — see ZOOM_WIN ──────────────────────────
   push: 1894, // global 2685 — "yang ingin membaca … lebih detail"
   pushDur: 56, // global 2741 — at rest, before the roadmap lifts it at 2749
-  pull: 1957, // global 2748 — camera backs out again, under the roadmap…
+  /* ⚠ AFTER THE ROADMAP HAS COVERED THE FRAME. Stop 2 now folds at 2820, so a
+     pull-out at 2748 would un-zoom on screen first; at 2080 (global 2871) the
+     roadmap's shrink has finished and the move happens out of sight. */
+  pull: 2080, // global 2871 — camera backs out again, under the roadmap…
   pullDur: 40, // …landing on full frame exactly at phase D
   dimCandles: 2299, // SC05 f0 — moved with PHASE.d
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
