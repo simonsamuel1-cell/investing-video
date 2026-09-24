@@ -393,7 +393,8 @@ export type Stop = {
   Component: React.FC;
   /** Overrides the shared set for this stop only. */
   previews?: readonly Preview[];
-  /** Box index that takes the indigo glow before the push, and loses its shadow. */
+  /** Box index that takes the indigo glow before the push, and loses its
+   *  shadow. Defaults to `into`, the box being pushed into. */
   glow?: number;
 };
 
@@ -470,8 +471,14 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
    * because a 2px ring magnified until the card IS the frame is a coloured
    * border drawn around the whole screen.
    */
-  const glowIn =
-    stop.glow === undefined ? 0 : progress(f, stop.push - M.glowLead, M.glowLead) * (1 - push);
+  /**
+   * ⚠ EVERY STOP LIGHTS THE CARD IT ENTERS. Only stop 1 named its glow box, so
+   * stops 2–4 pushed into an unlit card — Simon, at 3003: "border indigonya
+   * ga nyala ketika sedang seleksi kotak kanan atas di scene transisi
+   * kedua". The glow now defaults to the push's own box.
+   */
+  const glowBox = stop.glow ?? stop.into;
+  const glowIn = progress(f, stop.push - M.glowLead, M.glowLead) * (1 - push);
   /**
    * The drawn series empties itself as the push lands. Only a Draw uses it.
    *
@@ -517,8 +524,8 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
                 y={b.y}
                 text={b.text}
                 opacity={1}
-                flat={stop.glow === i}
-                glow={stop.glow === i ? glowIn : 0}
+                flat={glowBox === i}
+                glow={glowBox === i ? glowIn : 0}
               />
               <Thumb box={b} pv={(stop.previews ?? previews)[i]} trim={trim} />
             </div>
