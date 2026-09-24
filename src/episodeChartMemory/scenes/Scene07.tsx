@@ -27,7 +27,7 @@ import { Chip } from "../components/Chip";
 import { Ping } from "../components/Ping";
 import { theme } from "../theme";
 import { progress, fadeOut } from "../helpers";
-import { BbcaImage, BbcaLabel, rowSlot, paneSlot, lerpSlot, ROW_IMAGE, ROW_LABEL, LABEL, PANE_HEADER_Y, PANE_CAPTION_Y, ASPECT, type Slot } from "../components/TimeframeImages";
+import { BbcaImage, paneSlot, ROW_IMAGE, LABEL, PANE_HEADER_Y, PANE_CAPTION_Y, ASPECT, type Slot } from "../components/TimeframeImages";
 import { SLIDES, slideOut, slideBlur } from "../transitions/SlideCut";
 import { usePalette } from "../palette";
 
@@ -38,13 +38,14 @@ const SCENE_FROM = 4614; // was 3720; +894 from the cuts and the pause
 // Every chip in this scene now matches the row labels' type size, and each one
 // is centred on the pane it belongs to — the old card boxes are gone.
 const CHIP_SIZE = LABEL.size;
-// ── HANDOFF from SC06 ───────────────────────────────────────────────────────
-// This scene opens on SC06's row of three and resolves it. CARRY is how long
-// the left image takes to grow into its pane; CLEAR is how long the other two
-// take to leave. Both start on frame 0, so global 3719 and 3720 are the same
-// picture.
-const CARRY = 44;
-const CLEAR = 26;
+/*
+ * ⚠ NO HANDOFF FROM SC06 ANY MORE. This scene used to open on SC06's row of
+ * three and grow the left image out of its row slot into the pane — built for
+ * when SC06 cut straight into SC07. A roadmap stop now stands between them, so
+ * the row meant nothing and the image just drifted in from the left. Simon, at
+ * 4633: "mending langsung sudah di tengah aja, jangan geser-geser." The left
+ * image is in its pane from the first frame.
+ */
 /**
  * Which screenshot fills which pane: [left, right].
  *
@@ -121,10 +122,7 @@ export const Scene07 = () => {
   const pulseL = f >= T.pulse && f < T.pulse + 26 ? Math.sin(((f - T.pulse) / 26) * Math.PI) : 0;
   const pulseR = pulseL;
 
-  // ── the row of three resolving into the left pane ──
-  const carry = progress(f, 0, CARRY);
-  const leaving = 1 - progress(f, 0, CLEAR);
-  const slotL = lerpSlot(rowSlot(0), paneSlot(0), carry);
+  const slotL = paneSlot(0);
 
   const slotR = paneSlot(1);
 
@@ -142,17 +140,6 @@ export const Scene07 = () => {
       <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
       {/* the noisy side leads, then steps back while the trend side arrives */}
       <BbcaImage index={PANE_IMAGE[0]} slot={slotL} opacity={leftDim} />
-
-      {/* the other two, still where SC06 left them, on their way out */}
-      <BbcaImage index={ROW_IMAGE[1]} slot={rowSlot(1)} opacity={leaving} />
-      {rightIn <= 0.001 && <BbcaImage index={PANE_IMAGE[1]} slot={rowSlot(2)} opacity={leaving} />}
-
-      {/* SC06's three small labels, carried across the boundary and cleared
-          with the row they belong to. The left one rides its image as it grows,
-          then hands the job to the "5 Menit — Noise" chip. */}
-      <BbcaLabel text={ROW_LABEL[0]} slot={slotL} opacity={leaving} />
-      <BbcaLabel text={ROW_LABEL[1]} slot={rowSlot(1)} opacity={leaving} />
-      <BbcaLabel text={ROW_LABEL[2]} slot={rowSlot(2)} opacity={leaving} />
 
       {/* the broad-direction side, arriving on its own beat */}
       {rightIn > 0.001 && (

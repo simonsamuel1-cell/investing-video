@@ -15,13 +15,14 @@ import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const CHART: Box = { x: 200, y: 240, w: 1520, h: 560 };
-// ── HANDOFF from SC08 ───────────────────────────────────────────────────────
-// At global 5191 the only thing on screen is SC08's candle series: BMRI daily
-// over WIN.sc08, in this box, at full opacity. This scene opens by drawing
-// exactly that, then eases it into its own framing and down to texture. Match
-// these to SC08's CHART and window or the seam will show.
-const HANDOFF_BOX: Box = { x: 200, y: 230, w: 1500, h: 590 };
-const HANDOFF_WIN = WIN.sc08;
+/*
+ * ⚠ NO HANDOFF FROM SC08 ANY MORE. This scene used to open on SC08's framing
+ * and ease the chart out into its own — built for a direct SC08 → SC09 cut. A
+ * roadmap stop now stands between them, so all that was left was the chart
+ * growing for no reason. Simon, at 6415: "chartnya jangan membesar, langsung
+ * SUDAH besar aja." The chart is in its own box and window from frame 0; only
+ * its settling down to texture still eases.
+ */
 const TEXTURE = 0.15;
 // the chips are read off the chart, so it brightens a step behind them
 const TEXTURE_LIFT = 1.9;
@@ -36,7 +37,7 @@ const INFO_TOP = 826;
 const HOPE_TOP = 890;
 const T = {
   texture: 0, // "Jadi, anggap"
-  carryDur: 50, // the carried series eases into this scene's framing
+  carryDur: 50, // the chart settles from full strength down to texture
   prob: 36, // "alat membaca probabilitas" — the headline lands first
   notPred: 155, // "bukan alat meramal masa depan"
   future: 419, // "tidak menjamin apa yang terjadi berikutnya"
@@ -88,19 +89,11 @@ export const Scene09 = () => {
   const pal = usePalette();
   const f = useCurrentFrame();
 
-  // the series carried over from SC08: eases into this scene's box and window
-  // and settles down to texture
+  // full size from the first frame; it only settles down to texture
   const carry = progress(f, T.texture, T.carryDur);
-  const lerp = (from: number, to: number) => from + (to - from) * carry;
-  const box: Box = {
-    x: lerp(HANDOFF_BOX.x, CHART.x),
-    y: lerp(HANDOFF_BOX.y, CHART.y),
-    w: lerp(HANDOFF_BOX.w, CHART.w),
-    h: lerp(HANDOFF_BOX.h, CHART.h),
-  };
-  // both windows end on the same session, so only the left edge travels
-  const win: [number, number] = [lerp(HANDOFF_WIN[0], WIN.sc01[0]), WIN.sc01[1]];
-  const texture = lerp(1, TEXTURE);
+  const box: Box = CHART;
+  const win: [number, number] = WIN.sc01;
+  const texture = 1 + (TEXTURE - 1) * carry;
   const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
   const rule = f >= T.dim ? progress(f, T.dim, 40) : 0;
   const future = f >= T.future ? progress(f, T.future, 34) : 0;

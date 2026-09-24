@@ -129,7 +129,13 @@ const STOPS: Stop[] = [
     at: 4323, land: 1, push: 4533, into: 2, end: 4614, freeze: 710, Component: Scene06,
     previews: [PREVIEWS[0], PREVIEWS[1], { Draw: BullishRectangle }, { Draw: HollowProjection }],
   },
-  { at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08 },
+  /* ⚠ STOP 4: Ilusi Kepastian carries the first stop's drawing — Simon:
+     "buat kotak kanan bawah visualnya sama seperti yang di scene transisi
+     pertama." The push goes into it and leaves on the roadmap's dissolve. */
+  {
+    at: 6086, land: 2, push: 6253, into: 3, end: 6413, freeze: 719, Component: Scene08,
+    previews: [PREVIEWS[0], PREVIEWS[1], PREVIEWS[2], { Draw: HollowProjection }],
+  },
 ];
 
 /**
