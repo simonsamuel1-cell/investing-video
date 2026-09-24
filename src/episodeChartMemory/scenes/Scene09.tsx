@@ -53,7 +53,6 @@ const T = {
   prob: 37,
   future: 419, // "tidak menjamin apa yang terjadi berikutnya"
   dim: 503, // "tidak ada alat yang bisa"
-  lift: 558, // "chart memberimu keunggulan"
   info: 623, // "keputusan dengan informasi"
   hope: 673, // "bukan sekadar harapan atau tebakan"
   // Everything but the chart clears before the boundary, so that at global
@@ -65,7 +64,8 @@ const T = {
 // berulang" / "posisi pembeli serta penjual saat ini".
 const CHIP_AT = [225, 286, 330];
 const CHIPS = ["yang sudah terjadi", "pola berulang", "posisi saat ini"];
-const CHIP_Y = 636;
+/** 50px lower than it was — Simon: "3 label itu geser ke bawah 50 px". */
+const CHIP_Y = 686;
 // The three labels are different lengths, so fixed centres give uneven gaps.
 // These are their MEASURED rendered widths at 36px/600; the row is laid out
 // from them so the gap between chips is exactly CHIP_GAP. Re-measure if a label
@@ -106,16 +106,13 @@ export const Scene09 = () => {
   const win: [number, number] = WIN.sc01;
   const texture = TEXTURE;
   const dim = f >= T.dim ? progress(f, T.dim, 30) : 0;
-  const rule = f >= T.dim ? progress(f, T.dim, 40) : 0;
   const future = f >= T.future ? progress(f, T.future, 34) : 0;
-  const lift = f >= T.lift ? progress(f, T.lift, 26) : 0;
   const taText = textReveal(f, dashOpenAt(T.prob), 26, 26);
   const info = textReveal(f, T.info);
   const hope = textReveal(f, T.hope);
   const texturePlus = texture * (1 + (TEXTURE_LIFT - 1) * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
   const clearOp = f >= T.clear ? fadeOut(f, T.clear, T.clearDur) : 1;
 
-  const ruleW = 900;
 
   return (
     <SafeArea>
@@ -162,22 +159,12 @@ export const Scene09 = () => {
       </DashedFrame>
 
       {CHIPS.map((c, i) => (
-        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y - 10 * lift} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
+        /* ⚠ THEY STAY WHERE THEY LAND — Simon: "ga usa geser naik". */
+        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
       ))}
 
-      {rule > 0.001 && (
-        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-          <line
-            x1={960 - ruleW / 2}
-            y1={CHIP_Y + 54}
-            x2={960 - ruleW / 2 + ruleW * rule}
-            y2={CHIP_Y + 54}
-            stroke={lift > 0.5 ? pal.indigo : pal.slate}
-            strokeWidth={theme.stroke.hair}
-            opacity={0.6 + 0.4 * lift}
-          />
-        </svg>
-      )}
+      {/* ⚠ NO GREY RULE UNDER THE CHIPS — Simon: "hapus juga garis horizontal
+          abu abu nya". */}
       </div>
 
       {/* what the chart actually buys you, set against what it replaces —
