@@ -1,38 +1,50 @@
 import { useCurrentFrame } from "remotion";
 /**
- * SC05 — Two Axes, Two Questions (Phase D, local 2299–2821). The candles fade to
- * 30% in ChartContinuity; here both axes brighten, their tick labels populate in
- * sequence, and a crosshair locks onto a real candle so its real price and date
- * can land on the two rails.
+ * SC05 — Two Axes, Two Questions (Phase D, local 2299–2821). It opens on the
+ * empty white paper; both rails draw, the months fill the time rail, the grey
+ * price lines trim in with their labels and the (dimmed) candles, and then
+ * every candle's open and close are marked — each point a price at a time.
  */
 import { AxisArrow } from "../components/AxisArrow";
-import { Chip } from "../components/Chip";
 import { theme } from "../theme";
-import { progress, fadeIn, fadeOut, countTo, fmtPrice } from "../helpers";
+import { progress, progressInOut, fadeIn, fadeOut, fmtPrice } from "../helpers";
 import type { ContGeom } from "../continuity/ChartContinuity";
 import { usePalette } from "../palette";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const T = {
-  // Both rails now draw TOGETHER over global 2501–2571 (scene-local 15–85).
-  // Their tick labels keep their own later beats — the dates and the price
-  // levels are deliberately not part of this.
-  axes: 15, // global 2501
-  axesDur: 70, // both rails complete at global 2571
-  xTicks: 148, // "kapan pergerakan itu terjadi?"
-  yTicks: 260, // "di level berapa?"
-  cross: 316, // "menjawab dua pertanyaan"
-  priceTag: 401, // "harganya berapa"
-  priceCount: 24, // frames the readout spends counting up the rail
-  dateTag: 455, // "dan kapan harga itu terbentuk"
-  // Everything this scene drew clears before the boundary, so that at global
-  // 3007 only the dimmed candle series is left — that is what SC06 picks up.
+  axes: 15, // global 3105 — both rails draw together ("mulai muncul 2 sumbu")
+  axesDur: 70,
+  xTicks: 148, // global 3238 — "kapan pergerakan itu terjadi?"
+  /**
+   * ⚠ GLOBAL 3303 — Simon: "Trim path in garis abu abu harganya. Muncul juga
+   * label label harganya." The grey price lines draw in here, with their
+   * labels and with the candles (ChartContinuity K.sc05Candles).
+   */
+  yTicks: 213,
+  gridDur: 30,
+  /**
+   * ⚠ GLOBAL 3407 — the rail names leave, and every candle gets its two
+   * points: "Berikan 2 titik: open dan close, pada setiap candle, kecuali yang
+   * tipis/doji." This replaces the crosshair, its dashed guides and the
+   * price / date readouts, which are gone.
+   */
+  points: 317,
+  namesOutDur: 15,
+  pointStep: 0.4, // frames between one candle's pair of points and the next
+  // Everything this scene drew clears before the boundary.
   clear: 480,
-  clearDur: 38, // done by local 518 (global 3005)
+  clearDur: 38,
 };
 const TICK_STEP = 8; // frames between each tick label appearing
-const N_X_TICKS = 6;
 const N_Y_TICKS = 5;
+/** "Harga" / "Waktu" — Simon: "font sizenya kecilin 10 px". */
+const NAME_SIZE = theme.type.header.size - 10;
+/** Open / close points: radius, and the clearance that rules a doji out. */
+const POINT_R = 4.5;
+const POINT_GAP = 2;
+/** "Ubah label label pada sumbu waktu jadi bulan aja Jan Feb Mar dst." */
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const Scene05 = ({ geom }: { geom: ContGeom }) => {
@@ -42,24 +54,27 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
   // Window bounds can be fractional mid-camera-move — round for array indexing.
   const a = Math.ceil(win[0]);
   const b = Math.floor(win[1]);
-  const idx = a + Math.floor((b - a) * 0.62); // a real session, mid-right of the window
-  const d = series[idx];
-  const px = cx(idx);
-  const py = scale(d.c);
 
   const axisP = local >= T.axes ? progress(local, T.axes, T.axesDur) : 0;
   const clearOp = local >= T.clear ? fadeOut(local, T.clear, T.clearDur) : 1;
-  const crossP = local >= T.cross ? progress(local, T.cross, 24) : 0;
+  const namesOp = local >= T.points ? fadeOut(local, T.points, T.namesOutDur) : 1;
 
-  // real sessions and real price levels, spread across each rail
-  const xTicks = Array.from({ length: N_X_TICKS }, (_, i) => a + Math.round(((b - a) * i) / (N_X_TICKS - 1)));
+  /** One label per month, on that month's first session in the window. */
+  const xTicks: { i: number; label: string }[] = [];
+  for (let i = a; i <= b; i++) {
+    const m = Number(series[i].date.slice(5, 7));
+    const prev = i > a ? Number(series[i - 1].date.slice(5, 7)) : -1;
+    if (m !== prev) xTicks.push({ i, label: MONTHS[m - 1] });
+  }
   const lo = Math.min(...series.slice(a, b + 1).map((s) => s.l));
   const hi = Math.max(...series.slice(a, b + 1).map((s) => s.h));
   const yTicks = Array.from({ length: N_Y_TICKS }, (_, i) => lo + ((hi - lo) * (i + 0.5)) / N_Y_TICKS);
 
   return (
     <>
-      {/* both rails draw together */}
+      {/* both rails draw together — ⚠ BOTH INDIGO, names included, the names
+          10px smaller and set just past each arrowhead so they sit inside the
+          white paper instead of hanging off it */}
       {axisP > 0.001 && (
         <div style={{ opacity: clearOp }}>
           <AxisArrow
@@ -71,16 +86,29 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
             progress={axisP}
             color={pal.indigo}
             label="Waktu"
-            labelDx={20}
-            labelDy={20}
+            labelAtTip
+            labelSize={NAME_SIZE}
+            labelOpacity={namesOp}
           />
-          <AxisArrow orientation="y" x1={box.x} y1={box.y + box.h} x2={box.x} y2={box.y} progress={axisP} color={pal.cyan} label="Harga" />
+          <AxisArrow
+            orientation="y"
+            x1={box.x}
+            y1={box.y + box.h}
+            x2={box.x}
+            y2={box.y}
+            progress={axisP}
+            color={pal.indigo}
+            label="Harga"
+            labelAtTip
+            labelSize={NAME_SIZE}
+            labelOpacity={namesOp}
+          />
         </div>
       )}
 
-      {/* "kapan?" — the time rail fills in, one session at a time */}
+      {/* "kapan?" — the time rail fills in, month by month */}
       {local >= T.xTicks &&
-        xTicks.map((i, k) => (
+        xTicks.map(({ i, label }, k) => (
           <div
             key={`x${i}`}
             style={{
@@ -96,11 +124,29 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
               whiteSpace: "nowrap",
             }}
           >
-            {series[i].date.slice(5).replace("-", "/")}
+            {label}
           </div>
         ))}
 
-      {/* "di level berapa?" — the price rail fills in */}
+      {/* "di level berapa?" — the grey price lines trim in, and their labels */}
+      {local >= T.yTicks && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }} width={theme.canvas.width} height={theme.canvas.height}>
+          {yTicks.map((p, k) => {
+            const draw = progressInOut(local, T.yTicks + k * TICK_STEP, T.gridDur);
+            return (
+              <line
+                key={k}
+                x1={box.x}
+                y1={scale(p)}
+                x2={box.x + box.w * draw}
+                y2={scale(p)}
+                stroke={pal.border}
+                strokeWidth={theme.stroke.hair}
+              />
+            );
+          })}
+        </svg>
+      )}
       {local >= T.yTicks &&
         yTicks.map((p, k) => (
           <div
@@ -121,35 +167,26 @@ export const Scene05 = ({ geom }: { geom: ContGeom }) => {
           </div>
         ))}
 
-      {crossP > 0.001 && (
-        <svg
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }}
-          width={theme.canvas.width}
-          height={theme.canvas.height}
-        >
-          <line x1={px} y1={py} x2={px} y2={box.y + box.h} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
-          <line x1={box.x} y1={py} x2={px} y2={py} stroke={pal.slate} strokeWidth={theme.stroke.hair} strokeDasharray="8 8" opacity={crossP} />
-          <circle cx={px} cy={py} r={8} fill={pal.indigo} opacity={crossP} />
+      {/* every candle's open and close — skipped where the two would touch */}
+      {local >= T.points && (
+        <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }} width={theme.canvas.width} height={theme.canvas.height}>
+          {series.slice(a, b + 1).map((d, k) => {
+            const i = a + k;
+            const yo = scale(d.o);
+            const yc = scale(d.c);
+            if (Math.abs(yo - yc) < 2 * POINT_R + POINT_GAP) return null;
+            const p = progress(local, T.points + k * T.pointStep, 8);
+            if (p <= 0.001) return null;
+            return (
+              <g key={i} opacity={p}>
+                {[yo, yc].map((yy, j) => (
+                  <circle key={j} cx={cx(i)} cy={yy} r={POINT_R * (0.6 + 0.4 * p)} fill={pal.indigo} stroke={pal.cardBg} strokeWidth={1.5} />
+                ))}
+              </g>
+            );
+          })}
         </svg>
       )}
-
-      {/* the price answer lands on the Y rail… */}
-      {/* pulled in from box.x − 24: at that offset the chip crossed the safe-left margin */}
-      {/* the readout counts UP THE RAIL, from the bottom of the price axis to
-          the candle's close — the scene is literally about reading a value off
-          that axis, so the number earns the count */}
-      <Chip
-        label={fmtPrice(countTo(local, T.priceTag, T.priceCount, lo, d.c))}
-        x={box.x - 2}
-        y={py}
-        variant="cyan"
-        anchor="right"
-        startFrame={T.priceTag}
-        opacity={clearOp}
-      />
-
-      {/* …and the time answer on the X rail, dropped below the tick row */}
-      <Chip label={d.date.slice(5).replace("-", "/")} x={px} y={892} variant="indigo" anchor="center" startFrame={T.dateTag} opacity={clearOp} />
     </>
   );
 };

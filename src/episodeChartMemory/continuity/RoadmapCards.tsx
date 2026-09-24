@@ -12,9 +12,9 @@
  * Stops 1 and 2 use these (Simon asked for stop 2 to match stop 1).
  *
  * Like HighLowBars, each is drawn at card size (CARD.w × CARD.h) on the card's
- * white, and carries no label, so no figure is presented as real. Only
- * SmoothLines uses `trim` — stop 2 pushes into its box; the other two are
- * only ever pushed off-screen.
+ * white, and carries no label, so no figure is presented as real. `trim` is
+ * accepted to fit the Preview contract and not used: stop 2's push into
+ * SmoothLines leaves on the roadmap's dissolve ("fade out aja").
  */
 import React from "react";
 import { usePalette } from "../palette";
@@ -58,7 +58,7 @@ const WARM: [number, number][] = [
 const HOT: [number, number] = [712, 360];
 const REF = { x0: 60, x1: 1140, y0: 180, y1: 680 };
 
-export const SmoothLines: React.FC<{ trim: number }> = ({ trim }) => {
+export const SmoothLines: React.FC<{ trim: number }> = () => {
   const pal = usePalette();
   const pad = { x: 34, y: 34 };
   const k = Math.min((CARD.w - 2 * pad.x) / (REF.x1 - REF.x0), (CARD.h - 2 * pad.y) / (REF.y1 - REF.y0));
@@ -87,28 +87,22 @@ export const SmoothLines: React.FC<{ trim: number }> = ({ trim }) => {
           {grad("rm-cool", pal.indigo, pal.indigo)}
           {grad("rm-warm", pal.indigo, pal.indigo)}
         </defs>
-        {/* ⚠ THE LINES TRIM OUT AS A PUSH LANDS ON THIS CARD (stop 2 pushes
-            into it) — the same exit HighLowBars makes, so the next scene opens
-            on a clean page rather than through a magnified drawing. pathLength
-            1 lets the dash be written without measuring a Bézier. */}
+        {/* ⚠ NO TRIM ON EXIT — Simon, at 3090: "Visual line chartnya fade out
+            aja." When stop 2 pushes into this card it simply leaves with the
+            roadmap's own dissolve. */}
         {[COOL, WARM].map((pts, i) => (
           <path
             key={i}
             d={smoothPath(pts.map(fit))}
-            pathLength={1}
             fill="none"
             stroke={i === 0 ? "url(#rm-cool)" : "url(#rm-warm)"}
             strokeWidth={4}
             strokeLinecap="round"
-            strokeDasharray="1 1"
-            strokeDashoffset={-trim}
           />
         ))}
-        <g opacity={1 - trim}>
-          <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.indigo} opacity={0.18} />
-          <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.indigo} opacity={0.35} />
-          <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.indigo} />
-        </g>
+        <circle cx={hot[0]} cy={hot[1]} r={14} fill={pal.indigo} opacity={0.18} />
+        <circle cx={hot[0]} cy={hot[1]} r={9} fill={pal.indigo} opacity={0.35} />
+        <circle cx={hot[0]} cy={hot[1]} r={5} fill={pal.indigo} />
       </svg>
     </div>
   );

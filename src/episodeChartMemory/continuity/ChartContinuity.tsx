@@ -100,6 +100,14 @@ const K = {
   pull: 2080, // global 2871 — camera backs out again, under the roadmap…
   pullDur: 40, // …landing on full frame exactly at phase D
   dimCandles: 2299, // SC05 f0 — moved with PHASE.d
+  /**
+   * ⚠ SC05 OPENS ON AN EMPTY PAGE. Simon, at 3090: "visual selanjutnya cuma
+   * background putih aja, candlestick chartnya dan garis abu abu harga nanti
+   * dulu." From PHASE.d this group draws no rails, gridlines or labels (SC05
+   * draws its own), and the candles wait for the price rail at 3303.
+   */
+  sc05Candles: 2512, // global 3303 — with the grey price lines
+  sc05CandlesDur: 20,
   axisDraw: 273, // "Susun angka itu berdasarkan waktu"
   // SC02 sets the chili shape beside a busier one; the full-size line and its
   // month axis step aside while those comparison cards hold the stage.
@@ -372,7 +380,8 @@ export const ChartContinuity = () => {
    * PHASE.c this group draws the same candles with its axes, which fade up.
    */
   const handIn = f >= PHASE.c ? progress(f, PHASE.c, K.axesIn) : 1;
-  const axisOp = handIn * Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
+  const axisOp =
+    (f >= PHASE.d ? 0 : 1) * handIn * Math.max(0, 1 - camera * 3) * (f >= K.exit ? 1 - progress(f, K.exit, K.exitDur) : 1);
   const tickLabelOp = bmriAxisOp * axisOp * (f >= PHASE.d ? 1 - progress(f, PHASE.d, 24) : 1);
   const tickPrices = Array.from({ length: 4 }, (_, i) => lo + ((hi - lo) * (i + 0.5)) / 4);
   const dateIdx = [a, a + Math.floor(n * 0.33), a + Math.floor(n * 0.66), b];
@@ -554,7 +563,13 @@ export const ChartContinuity = () => {
           scaleOverride={scale}
           showAxes={false}
           revealProgress={f >= K.wipe ? wipe : 1}
-          dimOpacity={f >= K.wipe ? candleDim : preWipeOp}
+          dimOpacity={
+            f >= PHASE.d
+              ? candleDim * (f >= K.sc05Candles ? progress(f, K.sc05Candles, K.sc05CandlesDur) : 0)
+              : f >= K.wipe
+                ? candleDim
+                : preWipeOp
+          }
         />
         </div>
       )}

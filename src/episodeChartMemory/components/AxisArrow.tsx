@@ -17,6 +17,9 @@ export const AxisArrow = ({
   labelOffset = 46,
   labelDx = 0,
   labelDy = 0,
+  labelAtTip = false,
+  labelSize = theme.type.header.size,
+  labelOpacity = 1,
 }: {
   orientation: "x" | "y";
   x1: number;
@@ -30,6 +33,11 @@ export const AxisArrow = ({
   /** Nudges the label only, leaving the rail and arrowhead untouched. */
   labelDx?: number;
   labelDy?: number;
+  /** Set the label just past the arrowhead, centred on the rail — keeps it
+   *  inside the chart's paper instead of hanging below or above it. */
+  labelAtTip?: boolean;
+  labelSize?: number;
+  labelOpacity?: number;
 }) => {
   const hx = x1 + (x2 - x1) * progress;
   const hy = y1 + (y2 - y1) * progress;
@@ -51,14 +59,16 @@ export const AxisArrow = ({
       <div
         style={{
           position: "absolute",
-          left: (orientation === "x" ? x2 : x1 + 18) + labelDx,
-          top: (orientation === "x" ? y1 + labelOffset : y2 - labelOffset) + labelDy,
-          transform: orientation === "x" ? "translate(-100%, 0)" : "translate(0, -100%)",
+          left: labelAtTip ? (orientation === "x" ? x2 + H + 14 : x1 + 22) + labelDx : (orientation === "x" ? x2 : x1 + 18) + labelDx,
+          top: labelAtTip
+            ? (orientation === "x" ? y1 : y2 - H / 2) + labelDy
+            : (orientation === "x" ? y1 + labelOffset : y2 - labelOffset) + labelDy,
+          transform: labelAtTip ? "translate(0, -50%)" : orientation === "x" ? "translate(-100%, 0)" : "translate(0, -100%)",
           fontFamily: theme.type.family,
-          fontSize: theme.type.header.size,
+          fontSize: labelSize,
           fontWeight: theme.type.header.weight,
           color,
-          opacity: progress,
+          opacity: progress * labelOpacity,
           whiteSpace: "nowrap",
         }}
       >
