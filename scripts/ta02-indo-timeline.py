@@ -53,7 +53,9 @@ SR = 44100
 PASSAGES = [
     dict(n=1, cut=284, x_out=227, x_in=240),     # SC01 → SC02
     dict(n=2, cut=2307, x_out=2332, x_in=2345),  # SC05 → SC06
-    dict(n=3, cut=7606, x_out=7760, x_in=7773),  # SC12 → SC13A
+    # n=3 (SC12 → SC13A, cut 7606) REMOVED — Simon: "8332-8722 part ini remove
+    # aja deh, ga nyambung soalnya. Termasuk VO nya ya". SC12 runs into SC13A
+    # on its own fade again; see the SC13A anchor.
     dict(n=4, cut=8753, x_out=9031, x_in=9044),  # SC13D → BBRI
 ]
 
@@ -84,7 +86,7 @@ ANCHORS = [
     (5079, 4901),  # SC10  "Berikutnya, Bullish Engulfing." 4913 − 12
     (6057, 5976),  # SC11  "Ini Shooting Star," 5992 − 16
     (6926, 6808),  # SC12  "Pasangannya adalah Bearish Engulfing," 6816 − 8
-    # passage 3 (SC12 → SC13A)
+    (7773, 7612),  # SC13A "Sekarang kamu sudah melihat" 7612 − 0 (passage 3 removed)
     (8015, 7774),  # SC13B "Morning Star dan Evening Star" 7779 − 5
     (8433, 8139),  # SC13C "Three White Soldiers…" 8139 − 0
     (8834, 8534),  # SC13D "Kamu tidak perlu menghafal nama." 8535 − 1
@@ -363,8 +365,8 @@ def words_from_script(cues):
         if op == "equal":
             for k in range(i2 - i1):
                 take[owner[i1 + k]].append(script[j1 + k])
-        elif op == "insert":  # script words the SRT lacks go to the cue before them
-            take[owner[max(0, i1 - 1)]].extend(script[j1:j2])
+        elif op == "insert":  # script words nobody speaks — e.g. a passage that was cut
+            print(f"    script words not spoken, left out: {' '.join(script[j1:j2])!r}")
         else:  # replace / delete: the script's version goes to the cue holding the first word
             print(f"    SRT {' '.join(words[i1:i2])!r} -> script {' '.join(script[j1:j2])!r}")
             take[owner[i1]].extend(script[j1:j2])

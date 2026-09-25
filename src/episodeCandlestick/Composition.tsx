@@ -167,12 +167,18 @@ const Film: React.FC = () => {
 };
 
 /**
- * The Indonesian cut's four roadmap stops, one inside each new passage. Each
- * folds the picture held under the passage into the box of the chapter that
- * just ended and pushes into the next; a box that has caught a picture keeps
+ * The Indonesian cut's roadmap stops, one inside each new passage. Each folds
+ * the picture held under the passage into the box of the chapter that just
+ * ended and pushes into the next; a box that has caught a picture keeps
  * showing it at the stops after.
+ *
+ * ⚠ THREE, NOT FOUR. The third passage (SC12 → SC13A) and its voice were cut —
+ * Simon: "8332-8722 part ini remove aja deh, ga nyambung soalnya". Its chapter
+ * no longer opens, so the chapter that starts at SC06 now runs to SC13D, and
+ * the last stop folds SC13D into that box (1) and pushes into the next (2).
+ * Box 3 stays on the sheet, empty, until the chapters are named.
  */
-const [P1, P2, P3, P4] = INDO_PASSAGES;
+const [P1, P2, P4] = INDO_PASSAGES;
 /**
  * Simon: "Scene transisi yang pertama, mulainya dari 538 aja." The first
  * passage still starts at P1.at (284) — SC01 holds its last frame under the
@@ -203,20 +209,12 @@ const STOPS: Stop[] = [
     previews: [P2.xOut, null, null, null],
   },
   {
-    at: P3.at,
+    at: P4.at,
     land: 1,
     into: 2,
-    end: P3.end,
-    freeze: P3.xOut,
-    previews: [P2.xOut, P3.xOut, null, null],
-  },
-  {
-    at: P4.at,
-    land: 2,
-    into: 3,
     end: P4.end,
     freeze: P4.xOut,
-    previews: [P2.xOut, P3.xOut, P4.xOut, null],
+    previews: [P2.xOut, P4.xOut, null, null],
   },
 ];
 
