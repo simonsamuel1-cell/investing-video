@@ -8,7 +8,12 @@
  * markers, or price targets.
  */
 import { useContext } from "react";
-import { interpolate, interpolateColors, useCurrentFrame } from "remotion";
+import {
+  Freeze,
+  interpolate,
+  interpolateColors,
+  useCurrentFrame,
+} from "remotion";
 import { theme } from "../theme";
 import {
   sec,
@@ -204,16 +209,26 @@ const Scene01Classic = () => {
  *
  * ═══ AND IT GOES ON UNDER THE FIRST PASSAGE ═══ (output frames of the cut)
  *
+ *    92  "background abu abu nya fade out, lalu 'One Session' juga hilangkan
+ *        fade out." The dim leaves, then the chip.
+ *   170  "Kotak highlightnya membesar di 170." One Session's frame opens out
+ *        to the Sequence, and "The Sequence" pops.
  *   284  "Previewnya membesar ke bagian yang di-highlight 'Sequence'." The
- *        chart zooms into the Sequence box — a new window and price range fed
- *        to the same mapping every frame, never a CSS scale — and then every
- *        candle but the 5th in the box goes hollow: 50%, grey border, white.
+ *        chart zooms into the Sequence box — one factor on both axes ("jangan
+ *        stretch"), re-laid out every frame — and "The Sequence" fades as it
+ *        does ("Saat 285 membesar, 'The Sequence' fade out"). Then every candle
+ *        but the 5th in the box goes hollow: 50%, no fill, a grey border dashed
+ *        in 20px lengths ("no fill, bordernya garis putus putus, panjang
+ *        garisnya 20 px").
  *   450  "Candlenya satu per satu kembali ke style sebelumnya, tapi yang di
  *        dalam kotak sequence ini aja." Left to right, one at a time.
  *   538  the roadmap folds whatever this is showing.
  *
- * The cut holds SC01's frame 227 under the passage, so these beats cannot run
- * on the scene's own clock; they run on the cut's output frame (IndoClock).
+ * ⚠ EVERY BEAT OF THIS SCENE RUNS ON THE CUT'S OUTPUT FRAME. The cut re-times
+ * SC01 (holds on still frames, then SC01's frame 227 held under the passage),
+ * so Simon's frame numbers are output frames; `Scene01` freezes this whole
+ * component at the output frame (IndoClock), which makes useCurrentFrame()
+ * inside it — the FocusFrame's, the chips' — read those numbers directly.
  */
 const PANEL = { x: 96, y: 150, w: 1728, h: 750 };
 const PLOT = {
@@ -229,13 +244,28 @@ const MONTHS = ["Jul", "Agu", "Sep"];
 /** The hundreds always; the fifties join them as the zoom opens the scale up. */
 const LEVELS = [1200, 1250, 1300, 1350, 1400];
 
-// ═══ EDIT — the passage beats, in the cut's OUTPUT frames ═══
+// ═══ EDIT — every beat, in the cut's OUTPUT frames ═══
+const BEAT = {
+  chartIn: 0,
+  focus: 36, // the One Session frame draws and the rest dims (where it always fell)
+  chipA: 42, // "One Session"
+  dimOut: 92, // "92 background abu abu nya fade out"
+  dimOutDur: 12,
+  chipAOut: 104, // "lalu 'One Session' juga hilangkan fade out"
+  chipAOutDur: 10,
+  grow: 170, // "Kotak highlightnya membesar di 170"
+  growDur: 27,
+  seqOut: 285, // "Saat 285 membesar, 'The Sequence' fade out"
+  seqOutDur: 10,
+};
 const ZOOM = { at: 284, dur: 40 };
 const HOLLOW = {
   at: ZOOM.at + ZOOM.dur + 4,
   dur: 12,
   opacity: 0.5,
   border: 2.5,
+  /** "panjang garisnya 20 px" — and a gap half that. */
+  dash: "20 10",
 };
 const RESTORE = { at: 450, step: 8, dur: 10 };
 /** "buat candle ke-1, ke-5, ke-8 jadi merah" — in the Sequence box. */
@@ -313,13 +343,12 @@ const inside = (v: number, lo: number, hi: number, feather = 24) =>
   Math.max(0, Math.min(1, (v - lo) / feather, (hi - v) / feather));
 
 const Scene01App = () => {
+  /** The cut's OUTPUT frame: `Scene01` freezes this component at it. */
   const f = useCurrentFrame();
-  /** The cut's OUTPUT frame — see the header; 0 means no passage beats. */
-  const out = useContext(IndoClock) ?? 0;
   const A = theme.appPanel;
   const font = theme.type.family;
   const ease = (a: number, d: number) =>
-    interpolate(out, [a, a + d], [0, 1], {
+    interpolate(f, [a, a + d], [0, 1], {
       extrapolateLeft: "clamp",
       extrapolateRight: "clamp",
       easing: theme.motion.easy,
@@ -349,16 +378,17 @@ const Scene01App = () => {
     h: Y(seqLow) - Y(seqHigh) + FOCUS_PAD_Y * 2,
   };
 
-  const chartOpacity = fadeIn(f, sec(T.chartIn), 12);
-  const m = progress(f, sec(T.move), sec(T.moveDur));
+  const chartOpacity = fadeIn(f, BEAT.chartIn, 12);
+  const m = progress(f, BEAT.grow, BEAT.growDur);
   const rect = {
     x: lerp(rectA.x, rectB.x, m),
     y: lerp(rectA.y, rectB.y, m),
     w: lerp(rectA.w, rectB.w, m),
     h: lerp(rectA.h, rectB.h, m),
   };
-  const dimStrength = progress(f, sec(T.focus), 12) * (1 - m);
-  const strokeOpacity = fadeIn(f, sec(T.focus), 10);
+  const dimStrength =
+    progress(f, BEAT.focus, 12) * fadeOut(f, BEAT.dimOut, BEAT.dimOutDur);
+  const strokeOpacity = fadeIn(f, BEAT.focus, 10);
   const up = LAST >= PREV;
   const lastY = Y(LAST);
   const lastIn = inside(lastY, PLOT.y, PLOT.y + PLOT.h);
@@ -560,8 +590,6 @@ const Scene01App = () => {
                   ? theme.colors.candleGreen
                   : theme.colors.candleRed;
               const h = hollowOf(i);
-              const fill =
-                h > 0 ? interpolateColors(h, [0, 1], [ink, A.surface]) : ink;
               const line =
                 h > 0
                   ? interpolateColors(
@@ -571,26 +599,52 @@ const Scene01App = () => {
                     )
                   : ink;
               const top = Math.min(Y(c.open), Y(c.close));
+              const bodyH = Math.max(2, Math.abs(Y(c.close) - Y(c.open)));
+              /* ⚠ THE WICK STOPS AT THE BODY. With no fill a wick drawn high to
+                 low would run straight through the hollow candle; behind a
+                 filled body the two halves look exactly like one line. */
               return (
                 <g key={i} opacity={1 - (1 - HOLLOW.opacity) * h}>
                   <line
                     x1={x}
                     y1={Y(c.high)}
                     x2={x}
+                    y2={top}
+                    stroke={line}
+                    strokeWidth={wick}
+                  />
+                  <line
+                    x1={x}
+                    y1={top + bodyH}
+                    x2={x}
                     y2={Y(c.low)}
                     stroke={line}
                     strokeWidth={wick}
                   />
+                  {/* the colour drains out as the dashed outline comes in */}
                   <rect
                     x={x - body / 2}
                     y={top}
                     width={body}
-                    height={Math.max(2, Math.abs(Y(c.close) - Y(c.open)))}
+                    height={bodyH}
                     rx={2 * s}
-                    fill={fill}
-                    stroke={line}
-                    strokeWidth={HOLLOW.border * h}
+                    fill={ink}
+                    fillOpacity={1 - h}
                   />
+                  {h > 0.001 && (
+                    <rect
+                      x={x - body / 2}
+                      y={top}
+                      width={body}
+                      height={bodyH}
+                      rx={2 * s}
+                      fill="none"
+                      stroke={theme.colors.neutralMuted}
+                      strokeOpacity={h}
+                      strokeWidth={HOLLOW.border}
+                      strokeDasharray={HOLLOW.dash}
+                    />
+                  )}
                 </g>
               );
             })}
@@ -667,20 +721,35 @@ const Scene01App = () => {
         x={rectA.x + rectA.w + CHIP_GAP_X}
         y={rectA.y - CHIP_RISE}
         anchor="left"
-        startFrame={sec(T.chipA)}
-        opacity={fadeOut(f, sec(T.move), 10)}
+        startFrame={BEAT.chipA}
+        opacity={fadeOut(f, BEAT.chipAOut, BEAT.chipAOutDur)}
       />
       <Chip
         label="The Sequence"
         x={rectB.x}
         y={rectB.y - CHIP_RISE}
         anchor="left"
-        startFrame={sec(T.move)}
+        startFrame={BEAT.grow}
+        opacity={fadeOut(f, BEAT.seqOut, BEAT.seqOutDur)}
       />
     </SafeArea>
   );
 };
 
-/** SC01 — the English cut as it was; the Indonesian cut in TA07's panel. */
-export const Scene01 = () =>
-  useContext(Cut) === "indo" ? <Scene01App /> : <Scene01Classic />;
+/**
+ * SC01 — the English cut as it was; the Indonesian cut in TA07's panel, frozen
+ * at the cut's OUTPUT frame so every beat inside reads Simon's numbers.
+ * ⚠ Freeze inside SC01's own Sequence sets the frame its children see to
+ * exactly `frame`, whatever the offsets around it.
+ */
+export const Scene01 = () => {
+  const cut = useContext(Cut);
+  const out = useContext(IndoClock);
+  return cut === "indo" ? (
+    <Freeze frame={out ?? 0}>
+      <Scene01App />
+    </Freeze>
+  ) : (
+    <Scene01Classic />
+  );
+};
