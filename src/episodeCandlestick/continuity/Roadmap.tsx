@@ -38,10 +38,19 @@ import { theme } from "../theme";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const CARD = { w: 536, h: 302, gap: 80, labelGap: 14 };
 
-/** Alone, and centred on both axes — TA01's first stop. */
+/**
+ * Alone, and centred on both axes — TA01's first stop — but 30% LARGER than
+ * the chapter cards. Simon, on the SC01 panel folded into it: "preview
+ * akhirnya terlalu kecil, besarin 30%". Only this card: four of them at 1.3x
+ * would not fit the frame as a 2x2. It keeps the frame's own shape, so the
+ * fold into it still does not squash.
+ */
+const INTRO_SCALE = 1.3;
 const INTRO = {
-  x: (theme.canvas.width - CARD.w) / 2,
-  y: (theme.canvas.height - CARD.h) / 2,
+  w: CARD.w * INTRO_SCALE,
+  h: CARD.h * INTRO_SCALE,
+  x: (theme.canvas.width - CARD.w * INTRO_SCALE) / 2,
+  y: (theme.canvas.height - CARD.h * INTRO_SCALE) / 2,
 };
 
 /**
@@ -53,10 +62,10 @@ const GRID = { x: (theme.canvas.width - (CARD.w * 2 + CARD.gap)) / 2, y: 173 };
 
 /** "namanya pun juga 'Lorem Ipsum' dulu aja" — until the chapters are named. */
 export const BOXES = [
-  { x: GRID.x, y: GRID.y, text: "Lorem Ipsum" },
-  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y, text: "Lorem Ipsum" },
-  { x: GRID.x, y: GRID.y + CARD.h + CARD.gap, text: "Lorem Ipsum" },
-  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y + CARD.h + CARD.gap, text: "Lorem Ipsum" },
+  { x: GRID.x, y: GRID.y, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
+  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
+  { x: GRID.x, y: GRID.y + CARD.h + CARD.gap, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
+  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y + CARD.h + CARD.gap, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
 ] as const;
 
 export const ROADMAP_DISSOLVE = 14;
@@ -133,16 +142,16 @@ const Ground = ({ f }: { f: number }) => {
 
 /** One card and its label. `flat` drops the shadow (the card about to fill the frame). */
 const Box = ({
-  x, y, text, opacity, flat = false, glow = 0, labelOpacity = 1,
+  x, y, w = CARD.w, h = CARD.h, text, opacity, flat = false, glow = 0, labelOpacity = 1,
 }: {
-  x: number; y: number; text: string; opacity: number; flat?: boolean; glow?: number; labelOpacity?: number;
+  x: number; y: number; w?: number; h?: number; text: string; opacity: number; flat?: boolean; glow?: number; labelOpacity?: number;
 }) => {
   const rect = {
     position: "absolute" as const,
     left: x,
     top: y,
-    width: CARD.w,
-    height: CARD.h,
+    width: w,
+    height: h,
     borderRadius: theme.roadmap.cardRadius,
   };
   return (
@@ -169,8 +178,8 @@ const Box = ({
         style={{
           position: "absolute",
           left: x,
-          top: y + CARD.h + CARD.labelGap,
-          width: CARD.w,
+          top: y + h + CARD.labelGap,
+          width: w,
           textAlign: "center",
           fontFamily: theme.type.family,
           fontSize: theme.roadmap.labelSize,
@@ -237,7 +246,7 @@ export type Stop = {
 };
 
 /** Folds the frozen picture into `box`; clip and scale on one curve. */
-const folded = (p: number, box: { x: number; y: number }) => {
+const folded = (p: number, box: { x: number; y: number; w: number; h: number }) => {
   const W = theme.canvas.width;
   const H = theme.canvas.height;
   const r = theme.roadmap.cardRadius;
@@ -249,8 +258,8 @@ const folded = (p: number, box: { x: number; y: number }) => {
       width: W,
       height: H,
       clipPath:
-        `inset(${(box.y * p).toFixed(1)}px ${((W - box.x - CARD.w) * p).toFixed(1)}px ` +
-        `${((H - box.y - CARD.h) * p).toFixed(1)}px ${(box.x * p).toFixed(1)}px ` +
+        `inset(${(box.y * p).toFixed(1)}px ${((W - box.x - box.w) * p).toFixed(1)}px ` +
+        `${((H - box.y - box.h) * p).toFixed(1)}px ${(box.x * p).toFixed(1)}px ` +
         `round ${(r * p).toFixed(1)}px)`,
     },
     inner: {
@@ -261,7 +270,7 @@ const folded = (p: number, box: { x: number; y: number }) => {
       height: H,
       transform:
         `translate(${(box.x * p).toFixed(1)}px, ${(box.y * p).toFixed(1)}px) ` +
-        `scale(${(1 + (SCALE - 1) * p).toFixed(4)})`,
+        `scale(${(1 + (box.w / W - 1) * p).toFixed(4)})`,
       transformOrigin: "0 0",
     },
   };
@@ -296,7 +305,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   );
 
   /** Introduction rises out of frame; the four rise into it, on one curve. */
-  const introY = -(INTRO.y + CARD.h + 240) * swap;
+  const introY = -(INTRO.y + INTRO.h + 240) * swap;
   const gridY = (theme.canvas.height - GRID.y + 160) * (1 - swap);
 
   return (
@@ -330,7 +339,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
         {/* ── the Introduction, only on the first stop ──────────────────── */}
         {stop.land === null && (
           <div style={{ position: "absolute", inset: 0, transform: `translateY(${introY.toFixed(1)}px)` }}>
-            <Box x={INTRO.x} y={INTRO.y} text="Introduction" opacity={shrink} />
+            <Box x={INTRO.x} y={INTRO.y} w={INTRO.w} h={INTRO.h} text="Introduction" opacity={shrink} />
             {picture}
           </div>
         )}
