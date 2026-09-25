@@ -68,12 +68,14 @@ const FADE = 12; // every scene fades in at its start and out at its end
 const SceneFade: React.FC<{
   durationInFrames: number;
   children: React.ReactNode;
-}> = ({ durationInFrames, children }) => {
+  /** false: already fully on at its first frame (a scene continuing a picture). */
+  fadeIn?: boolean;
+}> = ({ durationInFrames, children, fadeIn = true }) => {
   const f = useCurrentFrame();
   const opacity = interpolate(
     f,
     [0, FADE, durationInFrames - FADE, durationInFrames],
-    [0, 1, 1, 0],
+    [fadeIn ? 0 : 1, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
   return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
@@ -85,9 +87,20 @@ const INDEPENDENT_SCENES: {
   Component: React.FC;
   /** Track name in the Indonesian cut's timeline (the English cut's tracks are unnamed). */
   label: string;
+  /**
+   * In the Indonesian cut, no fade-in: the scene takes over the picture the
+   * roadmap's push lands on (SC02 continues the Cara-baca-candle drawing).
+   */
+  continuesIndo?: boolean;
 }[] = [
   { from: 0, duration: 240, Component: Scene01, label: "SC01" },
-  { from: 240, duration: 374, Component: Scene02, label: "SC02" },
+  {
+    from: 240,
+    duration: 374,
+    Component: Scene02,
+    label: "SC02",
+    continuesIndo: true,
+  },
   { from: 614, duration: 460, Component: Scene03, label: "SC03" },
   { from: 1074, duration: 483, Component: Scene04, label: "SC04" },
   { from: 1557, duration: 788, Component: Scene05, label: "SC05" },
@@ -120,6 +133,7 @@ const OVERLAYS: readonly (readonly [number, number, string])[] = [
  */
 const Film: React.FC = () => {
   const tracks = useContext(FilmTracks);
+  const indo = useContext(Cut) === "indo";
   return (
     <AbsoluteFill
       style={{
@@ -127,18 +141,23 @@ const Film: React.FC = () => {
         fontFamily: theme.type.family,
       }}
     >
-      {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
-        <Sequence
-          key={from}
-          from={from}
-          durationInFrames={duration}
-          showInTimeline={tracks}
-        >
-          <SceneFade durationInFrames={duration}>
-            <Component />
-          </SceneFade>
-        </Sequence>
-      ))}
+      {INDEPENDENT_SCENES.map(
+        ({ from, duration, Component, continuesIndo }) => (
+          <Sequence
+            key={from}
+            from={from}
+            durationInFrames={duration}
+            showInTimeline={tracks}
+          >
+            <SceneFade
+              durationInFrames={duration}
+              fadeIn={!(indo && continuesIndo)}
+            >
+              <Component />
+            </SceneFade>
+          </Sequence>
+        ),
+      )}
       {/* SC09–SC12 pattern tab header (unchanged). */}
       <Sequence
         from={4158}

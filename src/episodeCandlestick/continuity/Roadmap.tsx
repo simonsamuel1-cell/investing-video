@@ -267,11 +267,15 @@ const Thumb = ({
         overflow: "hidden",
       }}
     >
+      {/* ⚠ CENTRED, NOT TOP-ALIGNED. The card is 1.775 and the frame 1.778, so
+          the picture is 0.25px shorter than the card; centred, a push lands
+          it on the frame to the pixel — which SC02 now depends on, since it
+          takes over the Cara-baca-candle drawing where the push leaves it. */}
       <div
         style={{
           position: "absolute",
           left: 0,
-          top: 0,
+          top: (CARD.h - theme.canvas.height * SCALE) / 2,
           width: theme.canvas.width,
           height: theme.canvas.height,
           transform: `scale(${SCALE.toFixed(6)})`,

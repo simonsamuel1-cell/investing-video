@@ -40,20 +40,54 @@ const Frame: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 // ═══ (1) Cara baca candle — one bullish candle and its anatomy, in indigo ═══
-const A = {
+/**
+ * ⚠ SC02 PICKS THIS CANDLE UP. The push into this box lands on SC02, and in the
+ * Indonesian cut SC02 draws THIS candle, here, then fades it to green — Simon:
+ * "buat continuous deh dari scene transisi". So its geometry is exported, and
+ * it sits high enough to leave SC02's "Conviction" chip room above the
+ * subtitle band.
+ */
+export const ANATOMY = {
   cx: 960,
-  body: { w: 230, top: 340, bottom: 800 },
-  wick: { w: 34, top: 225, bottom: 905 },
+  body: { w: 230, top: 290, bottom: 740 },
+  wick: { w: 34, top: 180, bottom: 840 },
+};
+const A = {
+  ...ANATOMY,
   lines: { left: 520, right: 1400, gap: 22 },
   dash: "26 18",
   stroke: 6,
-  arrow: { x: 690, top: 420, bottom: 760, shaft: 26, head: 104, headH: 92 },
+  arrow: { x: 690, top: 370, bottom: 710, shaft: 26, head: 104, headH: 92 },
+};
+
+/** The candle itself — wick and rounded body — in any colour. */
+export const AnatomyCandleShape: React.FC<{ fill: string }> = ({ fill }) => {
+  const bh = ANATOMY.body.bottom - ANATOMY.body.top;
+  const r = corner(ANATOMY.body.w, bh);
+  return (
+    <>
+      <rect
+        x={ANATOMY.cx - ANATOMY.wick.w / 2}
+        y={ANATOMY.wick.top}
+        width={ANATOMY.wick.w}
+        height={ANATOMY.wick.bottom - ANATOMY.wick.top}
+        fill={fill}
+      />
+      <rect
+        x={ANATOMY.cx - ANATOMY.body.w / 2}
+        y={ANATOMY.body.top}
+        width={ANATOMY.body.w}
+        height={bh}
+        rx={r}
+        ry={r}
+        fill={fill}
+      />
+    </>
+  );
 };
 
 export const CandleAnatomy: React.FC = () => {
   const bx = A.cx - A.body.w / 2;
-  const bh = A.body.bottom - A.body.top;
-  const r = corner(A.body.w, bh);
   const line = (x1: number, x2: number, y: number) => (
     <line
       x1={x1}
@@ -89,22 +123,7 @@ export const CandleAnatomy: React.FC = () => {
       {line(bx + A.body.w + A.lines.gap, A.lines.right, bodyMid)}
       {line(A.lines.left, A.lines.right, A.wick.bottom)}
       {/* the candle */}
-      <rect
-        x={A.cx - A.wick.w / 2}
-        y={A.wick.top}
-        width={A.wick.w}
-        height={A.wick.bottom - A.wick.top}
-        fill={theme.colors.indigo}
-      />
-      <rect
-        x={bx}
-        y={A.body.top}
-        width={A.body.w}
-        height={bh}
-        rx={r}
-        ry={r}
-        fill={theme.colors.indigo}
-      />
+      <AnatomyCandleShape fill={theme.colors.indigo} />
     </Frame>
   );
 };

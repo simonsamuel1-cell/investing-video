@@ -8,6 +8,7 @@
  * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets.
  */
+import { useContext } from "react";
 import { useCurrentFrame, interpolateColors } from "remotion";
 import { theme } from "../theme";
 import { sec, progress, textReveal, priceScale } from "../helpers";
@@ -15,6 +16,8 @@ import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
 import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
+import { Cut } from "../cut";
+import { ANATOMY, AnatomyCandleShape } from "../continuity/RoadmapCards";
 
 // ═══ EDIT ═══
 const CANDLE_X = 620; // hero candle center
@@ -57,7 +60,8 @@ const UPPER_MID = (Y_HIGH + Y_CLOSE) / 2;
 const BODY_MID = (Y_CLOSE + Y_OPEN) / 2;
 const LOWER_MID = (Y_OPEN + Y_LOW) / 2;
 
-export const Scene02 = () => {
+/** The English cut's SC02, as it was. */
+const Scene02Classic = () => {
   const f = useCurrentFrame();
 
   const buildP = progress(f, sec(T.build), sec(T.buildDur));
@@ -75,7 +79,7 @@ export const Scene02 = () => {
   const wickColor = interpolateColors(
     f,
     [sec(T.emph), sec(T.emph) + 12],
-    [theme.colors.slate, theme.colors.neutralMuted]
+    [theme.colors.slate, theme.colors.neutralMuted],
   );
   const bodyEmphOpacity = 0.82 + 0.18 * emphP;
 
@@ -93,56 +97,279 @@ export const Scene02 = () => {
 
   return (
     <SafeArea>
-      <div style={{ position: "absolute", left: 0, top: 0, transform: `translate(${GROUP_DX}px, ${GROUP_DY}px)` }}>
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          transform: `translate(${GROUP_DX}px, ${GROUP_DY}px)`,
+        }}
+      >
+        <svg
+          style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+        >
+          <Candle
+            x={CANDLE_X}
+            width={CANDLE_W}
+            open={HERO.open}
+            high={HERO.high}
+            low={HERO.low}
+            close={HERO.close}
+            scale={yOf}
+            buildProgress={buildP}
+            wickProgress={wickP}
+          />
+
+          {/* Body measurement — 2px indigo, end ticks, draws top→bottom */}
+          {f >= sec(T.bodyMeasure) && (
+            <g
+              stroke={theme.colors.indigo}
+              strokeWidth={theme.stroke.standard}
+              opacity={bodyEmphOpacity}
+            >
+              <line
+                x1={MEASURE_X}
+                y1={Y_CLOSE}
+                x2={MEASURE_X}
+                y2={measureEnd}
+              />
+              <line
+                x1={MEASURE_X - TICK_HALF}
+                y1={Y_CLOSE}
+                x2={MEASURE_X + TICK_HALF}
+                y2={Y_CLOSE}
+              />
+              <line
+                x1={MEASURE_X - TICK_HALF}
+                y1={measureEnd}
+                x2={MEASURE_X + TICK_HALF}
+                y2={measureEnd}
+              />
+            </g>
+          )}
+
+          {/* Upper wick tick */}
+          {f >= sec(T.upperTick) && (
+            <g stroke={wickColor} strokeWidth={theme.stroke.standard}>
+              <line
+                x1={MEASURE_X}
+                y1={Y_HIGH}
+                x2={MEASURE_X}
+                y2={Y_HIGH + (Y_CLOSE - TICK_GAP - Y_HIGH) * upperP}
+              />
+              <line
+                x1={MEASURE_X - TICK_HALF}
+                y1={Y_HIGH}
+                x2={MEASURE_X + TICK_HALF}
+                y2={Y_HIGH}
+                opacity={upperP}
+              />
+            </g>
+          )}
+
+          {/* Lower wick tick */}
+          {f >= sec(T.lowerTick) && (
+            <g stroke={wickColor} strokeWidth={theme.stroke.standard}>
+              <line
+                x1={MEASURE_X}
+                y1={Y_OPEN + TICK_GAP}
+                x2={MEASURE_X}
+                y2={Y_OPEN + TICK_GAP + (Y_LOW - Y_OPEN - TICK_GAP) * lowerP}
+              />
+              <line
+                x1={MEASURE_X - TICK_HALF}
+                y1={Y_LOW}
+                x2={MEASURE_X + TICK_HALF}
+                y2={Y_LOW}
+                opacity={lowerP}
+              />
+            </g>
+          )}
+        </svg>
+
+        {/* Labels — sentence case, 40px body type */}
+        {f >= sec(T.bodyMeasure) && (
+          <div
+            style={{
+              ...labelStyle,
+              top: BODY_MID,
+              color: theme.colors.ink,
+              opacity: bodyLabel.opacity * bodyEmphOpacity,
+              transform: `translateY(calc(-50% + ${bodyLabel.y}px))`,
+            }}
+          >
+            Open → close
+          </div>
+        )}
+        {f >= sec(T.upperTick) && (
+          <div
+            style={{
+              ...labelStyle,
+              top: UPPER_MID,
+              color: wickColor,
+              opacity: upperLabel.opacity,
+              transform: `translateY(calc(-50% + ${upperLabel.y}px))`,
+            }}
+          >
+            Small wick
+          </div>
+        )}
+        {f >= sec(T.lowerTick) && (
+          <div
+            style={{
+              ...labelStyle,
+              top: LOWER_MID,
+              color: wickColor,
+              opacity: lowerLabel.opacity,
+              transform: `translateY(calc(-50% + ${lowerLabel.y}px))`,
+            }}
+          >
+            Small wick
+          </div>
+        )}
+
+        <Chip
+          label="Conviction"
+          x={CANDLE_X}
+          y={CHIP_Y}
+          variant="indigo"
+          startFrame={sec(T.chip)}
+        />
+      </div>
+
+      <IllustrationTag />
+    </SafeArea>
+  );
+};
+
+/**
+ * ═══ SC02 IN THE INDONESIAN CUT: THE ROADMAP'S CANDLE, CONTINUED ═══
+ *
+ * Simon, on 712–1111: "buat continuous deh dari scene transisi, jadi
+ * candlestick yang di display sekarang ganti jadi pake candlestick yang dari
+ * scene transisi. lalu warnanya berubah fade jadi hijau."
+ *
+ * The first stop pushes into the Cara-baca-candle box and lands on it at 1:1;
+ * this scene opens on THAT candle, same place, same shape, already built and
+ * with no fade-in (Composition: continuesIndo), so as the roadmap dissolves
+ * only its pointer lines and arrow leave. Then the indigo fades to green, and
+ * the scene's own annotations follow, laid out around this candle.
+ */
+const GREEN = { at: 16, dur: 18 }; // after the roadmap's 14-frame dissolve
+const C = {
+  x: ANATOMY.cx,
+  high: ANATOMY.wick.top,
+  close: ANATOMY.body.top,
+  open: ANATOMY.body.bottom,
+  low: ANATOMY.wick.bottom,
+  right: ANATOMY.cx + ANATOMY.body.w / 2,
+};
+const M_X = C.right + 40; // the measurement lines
+const L_X = M_X + 40; // their labels
+const CHIP_TOP = C.low + 20; // "Conviction", under the candle, above the band
+
+const Scene02Continuous = () => {
+  const f = useCurrentFrame();
+  const fill = interpolateColors(
+    f,
+    [GREEN.at, GREEN.at + GREEN.dur],
+    [theme.colors.indigo, theme.colors.candleGreen],
+  );
+
+  const measureP = progress(f, sec(T.bodyMeasure), sec(T.measureDur));
+  const measureEnd = C.close + (C.open - C.close) * measureP;
+  const upperP = progress(f, sec(T.upperTick), sec(T.tickDur));
+  const lowerP = progress(f, sec(T.lowerTick), sec(T.tickDur));
+  const emphP = progress(f, sec(T.emph), 12);
+  const wickColor = interpolateColors(
+    f,
+    [sec(T.emph), sec(T.emph) + 12],
+    [theme.colors.slate, theme.colors.neutralMuted],
+  );
+  const bodyEmphOpacity = 0.82 + 0.18 * emphP;
+  const bodyLabel = textReveal(f, sec(T.bodyMeasure) + 6);
+  const upperLabel = textReveal(f, sec(T.upperTick) + 4);
+  const lowerLabel = textReveal(f, sec(T.lowerTick) + 4);
+  const labelStyle = {
+    position: "absolute" as const,
+    left: L_X,
+    fontSize: theme.type.body.size,
+    fontWeight: theme.type.body.weight,
+    whiteSpace: "nowrap" as const,
+  };
+
+  return (
+    <SafeArea>
       <svg
         style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
         width={theme.canvas.width}
         height={theme.canvas.height}
       >
-        <Candle
-          x={CANDLE_X}
-          width={CANDLE_W}
-          open={HERO.open}
-          high={HERO.high}
-          low={HERO.low}
-          close={HERO.close}
-          scale={yOf}
-          buildProgress={buildP}
-          wickProgress={wickP}
-        />
-
-        {/* Body measurement — 2px indigo, end ticks, draws top→bottom */}
+        <AnatomyCandleShape fill={fill} />
         {f >= sec(T.bodyMeasure) && (
-          <g stroke={theme.colors.indigo} strokeWidth={theme.stroke.standard} opacity={bodyEmphOpacity}>
-            <line x1={MEASURE_X} y1={Y_CLOSE} x2={MEASURE_X} y2={measureEnd} />
-            <line x1={MEASURE_X - TICK_HALF} y1={Y_CLOSE} x2={MEASURE_X + TICK_HALF} y2={Y_CLOSE} />
-            <line x1={MEASURE_X - TICK_HALF} y1={measureEnd} x2={MEASURE_X + TICK_HALF} y2={measureEnd} />
+          <g
+            stroke={theme.colors.indigo}
+            strokeWidth={theme.stroke.standard}
+            opacity={bodyEmphOpacity}
+          >
+            <line x1={M_X} y1={C.close} x2={M_X} y2={measureEnd} />
+            <line
+              x1={M_X - TICK_HALF}
+              y1={C.close}
+              x2={M_X + TICK_HALF}
+              y2={C.close}
+            />
+            <line
+              x1={M_X - TICK_HALF}
+              y1={measureEnd}
+              x2={M_X + TICK_HALF}
+              y2={measureEnd}
+            />
           </g>
         )}
-
-        {/* Upper wick tick */}
         {f >= sec(T.upperTick) && (
           <g stroke={wickColor} strokeWidth={theme.stroke.standard}>
-            <line x1={MEASURE_X} y1={Y_HIGH} x2={MEASURE_X} y2={Y_HIGH + (Y_CLOSE - TICK_GAP - Y_HIGH) * upperP} />
-            <line x1={MEASURE_X - TICK_HALF} y1={Y_HIGH} x2={MEASURE_X + TICK_HALF} y2={Y_HIGH} opacity={upperP} />
+            <line
+              x1={M_X}
+              y1={C.high}
+              x2={M_X}
+              y2={C.high + (C.close - TICK_GAP - C.high) * upperP}
+            />
+            <line
+              x1={M_X - TICK_HALF}
+              y1={C.high}
+              x2={M_X + TICK_HALF}
+              y2={C.high}
+              opacity={upperP}
+            />
           </g>
         )}
-
-        {/* Lower wick tick */}
         {f >= sec(T.lowerTick) && (
           <g stroke={wickColor} strokeWidth={theme.stroke.standard}>
-            <line x1={MEASURE_X} y1={Y_OPEN + TICK_GAP} x2={MEASURE_X} y2={Y_OPEN + TICK_GAP + (Y_LOW - Y_OPEN - TICK_GAP) * lowerP} />
-            <line x1={MEASURE_X - TICK_HALF} y1={Y_LOW} x2={MEASURE_X + TICK_HALF} y2={Y_LOW} opacity={lowerP} />
+            <line
+              x1={M_X}
+              y1={C.open + TICK_GAP}
+              x2={M_X}
+              y2={C.open + TICK_GAP + (C.low - C.open - TICK_GAP) * lowerP}
+            />
+            <line
+              x1={M_X - TICK_HALF}
+              y1={C.low}
+              x2={M_X + TICK_HALF}
+              y2={C.low}
+              opacity={lowerP}
+            />
           </g>
         )}
       </svg>
 
-      {/* Labels — sentence case, 40px body type */}
       {f >= sec(T.bodyMeasure) && (
         <div
           style={{
             ...labelStyle,
-            top: BODY_MID,
+            top: (C.close + C.open) / 2,
             color: theme.colors.ink,
             opacity: bodyLabel.opacity * bodyEmphOpacity,
             transform: `translateY(calc(-50% + ${bodyLabel.y}px))`,
@@ -155,7 +382,7 @@ export const Scene02 = () => {
         <div
           style={{
             ...labelStyle,
-            top: UPPER_MID,
+            top: (C.high + C.close) / 2,
             color: wickColor,
             opacity: upperLabel.opacity,
             transform: `translateY(calc(-50% + ${upperLabel.y}px))`,
@@ -168,7 +395,7 @@ export const Scene02 = () => {
         <div
           style={{
             ...labelStyle,
-            top: LOWER_MID,
+            top: (C.open + C.low) / 2,
             color: wickColor,
             opacity: lowerLabel.opacity,
             transform: `translateY(calc(-50% + ${lowerLabel.y}px))`,
@@ -178,10 +405,19 @@ export const Scene02 = () => {
         </div>
       )}
 
-      <Chip label="Conviction" x={CANDLE_X} y={CHIP_Y} variant="indigo" startFrame={sec(T.chip)} />
-      </div>
+      <Chip
+        label="Conviction"
+        x={C.x}
+        y={CHIP_TOP}
+        variant="indigo"
+        startFrame={sec(T.chip)}
+      />
 
       <IllustrationTag />
     </SafeArea>
   );
 };
+
+/** SC02 — the English cut as it was; the Indonesian cut continues the roadmap's candle. */
+export const Scene02 = () =>
+  useContext(Cut) === "indo" ? <Scene02Continuous /> : <Scene02Classic />;
