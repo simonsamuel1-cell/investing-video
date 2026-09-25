@@ -82,7 +82,7 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{
           subtitles: CANDLE_SUBS_INDO,
           audioSrc: "vo-indo.mp3",
-          showSubtitles: false,
+          showSubtitles: true,
           muted: false,
           timeline: "indo",
         }}

@@ -25,6 +25,9 @@ export const Subtitles = ({ cues = SUBTITLES }: { cues?: SubtitleCue[] }) => {
         justifyContent: "center",
         padding: "0 96px",
         boxSizing: "border-box",
+        // Above the Indonesian cut's roadmap (zIndex 20), which covers the
+        // whole frame while its passages are spoken; below the watermark (100).
+        zIndex: 30,
       }}
     >
       <span

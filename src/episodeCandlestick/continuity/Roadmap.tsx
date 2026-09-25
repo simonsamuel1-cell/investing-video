@@ -69,6 +69,14 @@ export const M = {
   glowLead: 16, // the glow lands exactly as the push sets off
   /** The push into the next chapter's box, landing on that chapter's first frame. */
   push: 90,
+  /**
+   * ⚠ THE LABELS LEAVE IN THE FIRST THIRD OF THE PUSH. The push magnifies the
+   * whole sheet, and the label under the card it enters swells to ~110px and
+   * sweeps down through the subtitle band — with the subtitles on, it wrote
+   * itself over them ("dalam satu chart nyata" under a giant "Lorem Ipsum").
+   * The one departure from TA01's first transition, and only in this move.
+   */
+  labelsOut: 30,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -125,9 +133,9 @@ const Ground = ({ f }: { f: number }) => {
 
 /** One card and its label. `flat` drops the shadow (the card about to fill the frame). */
 const Box = ({
-  x, y, text, opacity, flat = false, glow = 0,
+  x, y, text, opacity, flat = false, glow = 0, labelOpacity = 1,
 }: {
-  x: number; y: number; text: string; opacity: number; flat?: boolean; glow?: number;
+  x: number; y: number; text: string; opacity: number; flat?: boolean; glow?: number; labelOpacity?: number;
 }) => {
   const rect = {
     position: "absolute" as const,
@@ -169,6 +177,7 @@ const Box = ({
           fontWeight: 700,
           color: theme.colors.ink,
           letterSpacing: 0.5,
+          opacity: labelOpacity,
         }}
       >
         {text}
@@ -269,6 +278,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   /** Starts where the push lands, so the roadmap leaves off the TOP of the new chapter. */
   const gone = ease(f, stop.end, M.dissolve);
   const glowIn = ease(f, pushAt - M.glowLead, M.glowLead) * (1 - push);
+  const labels = 1 - ease(f, pushAt, M.labelsOut);
 
   /** Only the first stop has an Introduction to get rid of. */
   const swap = stop.land === null ? ease(f, stop.at + M.shrink + M.hold, M.swap) : 1;
@@ -302,7 +312,15 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
         <div style={{ position: "absolute", inset: 0, transform: `translateY(${gridY.toFixed(1)}px)` }}>
           {BOXES.map((b, i) => (
             <div key={i} style={{ opacity: swap }}>
-              <Box x={b.x} y={b.y} text={b.text} opacity={1} flat={stop.into === i} glow={stop.into === i ? glowIn : 0} />
+              <Box
+                x={b.x}
+                y={b.y}
+                text={b.text}
+                opacity={1}
+                flat={stop.into === i}
+                glow={stop.into === i ? glowIn : 0}
+                labelOpacity={labels}
+              />
               <Thumb box={b} freeze={stop.previews[i]} Film={Film} />
             </div>
           ))}
