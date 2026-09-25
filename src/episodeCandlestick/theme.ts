@@ -40,9 +40,6 @@ export const theme = {
     // references candleGreen/candleRed directly.
     tabRuleBullish: "#22B573",
     tabRuleBearish: "#E5475D",
-    // Scoped exception: the green dot in the Indonesian cut's "only
-    // illustration" pill — Simon: "lingkaran warna hijau".
-    tagDot: "#22B573",
   },
   type: {
     family: "Plus Jakarta Sans",
