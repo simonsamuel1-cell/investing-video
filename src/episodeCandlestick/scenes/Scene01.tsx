@@ -242,10 +242,11 @@ const RESTORE = { at: 450, step: 8, dur: 10 };
 const RED_IN_BOX = [1, 5, 8];
 /** The one candle that never goes hollow: the 5th in the box. */
 const KEEP_IN_BOX = 5;
-/** How much of the plot the box fills once zoomed. */
-const ZOOM_FILL = 0.7;
-/** The zoomed box: its top this far into the plot (room for its chip above). */
-const ZOOM_BOX = { top: 150, bottom: 20 };
+/**
+ * Where the Sequence box may sit once zoomed, in canvas px: below the room its
+ * chip needs over the wash, above the month row. The zoom is as large as fits.
+ */
+const ZOOM_BOX = { top: 420, bottom: 840 };
 // ═══════════════════════════════════════════════════════════════════════════
 
 const BOX = Array.from(
@@ -269,38 +270,42 @@ const CHANGE_TXT = `${CHANGE >= 0 ? "+" : "−"}${Math.abs(CHANGE).toFixed(2).re
 
 /**
  * THE MAPPING, AS A FUNCTION OF THE ZOOM. At z = 0 it is the panel as first
- * drawn (all 40 candles, the full range with 6% air); at z = 1 the Sequence box
- * fills ZOOM_FILL of the plot's width and sits between ZOOM_BOX's margins.
- * Width and span interpolate GEOMETRICALLY and the centre moves in step with
- * them, so the zoom closes at an even rate and the box never slides sideways.
+ * drawn (all 40 candles, the full range with 6% air).
+ *
+ * ⚠ ONE FACTOR FOR BOTH AXES — Simon: "Membesarnya jangan stretch". The first
+ * version narrowed the candle window and the price range separately (3.4x
+ * across, 1.8x up) and every candle came out wide and squat. Now px-per-candle
+ * and px-per-rupiah grow by the SAME factor, so each candle keeps its shape:
+ * the zoom is a camera moving in, re-laid out every frame, never a CSS scale.
+ * The factor is the largest at which the box fits ZOOM_BOX (and 90% of the
+ * plot's width), and it grows geometrically, so the move closes at an even
+ * rate; the box's centre travels in step with it to the middle of that room.
  */
-const I0 = { c: (N_CANDLES - 1) / 2, w: N_CANDLES - 1 };
-const I1 = {
-  c: (SEQ_FIRST + SEQ_LAST) / 2,
-  w: (SEQ_LAST - SEQ_FIRST + 1) / ZOOM_FILL,
-};
 const PAD = (P_MAX - P_MIN) * 0.06;
-const S0 = { hi: P_MAX + PAD, lo: P_MIN - PAD };
-const K1 =
-  (PLOT.h - ZOOM_BOX.top - ZOOM_BOX.bottom - FOCUS_PAD_Y * 2) /
-  (seqHigh - seqLow);
-const S1 = {
-  hi: seqHigh + (ZOOM_BOX.top + FOCUS_PAD_Y) / K1,
-  lo: seqHigh + (ZOOM_BOX.top + FOCUS_PAD_Y) / K1 - PLOT.h / K1,
-};
-const geo = (a: number, b: number, z: number) => a * Math.pow(b / a, z);
+const HI0 = P_MAX + PAD;
+const PX_PRICE0 = PLOT.h / (P_MAX - P_MIN + 2 * PAD);
+const STEP0 = (PLOT.w - 28) / (N_CANDLES - 1);
+const X0 = (i: number) => PLOT.x + 14 + STEP0 * i;
+const Y0 = (p: number) => PLOT.y + (HI0 - p) * PX_PRICE0;
+/** The box's own centre, in candles and in rupiah (its padding is symmetric). */
+const FOCUS = { i: (SEQ_FIRST + SEQ_LAST) / 2, p: (seqHigh + seqLow) / 2 };
+const ZOOM_MAX = Math.min(
+  (ZOOM_BOX.bottom - ZOOM_BOX.top - FOCUS_PAD_Y * 2) /
+    ((seqHigh - seqLow) * PX_PRICE0),
+  (PLOT.w * 0.9) / (STEP0 * (SEQ_LAST - SEQ_FIRST + 1)),
+);
+const FROM = { x: X0(FOCUS.i), y: Y0(FOCUS.p) };
+const TO = { x: PLOT.x + PLOT.w / 2, y: (ZOOM_BOX.top + ZOOM_BOX.bottom) / 2 };
 const mapAt = (z: number) => {
-  const w = geo(I0.w, I1.w, z);
-  const iq = (I0.w - w) / (I0.w - I1.w);
-  const ic = lerp(I0.c, I1.c, iq);
-  const span = geo(S0.hi - S0.lo, S1.hi - S1.lo, z);
-  const sq = (S0.hi - S0.lo - span) / (S0.hi - S0.lo - (S1.hi - S1.lo));
-  const hi = lerp(S0.hi, S1.hi, sq);
-  const X = (i: number) =>
-    PLOT.x + 14 + ((PLOT.w - 28) * (i - (ic - w / 2))) / w;
-  const Y = (p: number) => PLOT.y + ((hi - p) / span) * PLOT.h;
-  const step = (PLOT.w - 28) / w;
-  return { X, Y, step, body: ((PLOT.w - 28) / N_CANDLES) * 0.6 * (I0.w / w) };
+  const s = Math.pow(ZOOM_MAX, z);
+  /** How far the camera has closed, in the zoom's own terms (0 → 1). */
+  const q = (1 - 1 / s) / (1 - 1 / ZOOM_MAX);
+  const cx = lerp(FROM.x, TO.x, q);
+  const cy = lerp(FROM.y, TO.y, q);
+  const step = STEP0 * s;
+  const X = (i: number) => cx + (i - FOCUS.i) * step;
+  const Y = (p: number) => cy - (p - FOCUS.p) * PX_PRICE0 * s;
+  return { X, Y, step, s, body: ((PLOT.w - 28) / N_CANDLES) * 0.6 * s };
 };
 
 /** Fades a label out as it nears the plot's edge rather than cutting it. */
@@ -321,7 +326,7 @@ const Scene01App = () => {
     });
 
   const z = ease(ZOOM.at, ZOOM.dur);
-  const { X, Y, step, body } = mapAt(z);
+  const { X, Y, step, body, s } = mapAt(z);
   const hollow = ease(HOLLOW.at, HOLLOW.dur);
   const restoreOrder = BOX.filter((i) => i !== KEEP);
   const hollowOf = (i: number) => {
@@ -357,7 +362,7 @@ const Scene01App = () => {
   const up = LAST >= PREV;
   const lastY = Y(LAST);
   const lastIn = inside(lastY, PLOT.y, PLOT.y + PLOT.h);
-  const wick = lerp(A.wick, A.wick * 2, z);
+  const wick = A.wick * s;
 
   return (
     <SafeArea>
@@ -581,7 +586,7 @@ const Scene01App = () => {
                     y={top}
                     width={body}
                     height={Math.max(2, Math.abs(Y(c.close) - Y(c.open)))}
-                    rx={Math.max(2, body * 0.08)}
+                    rx={2 * s}
                     fill={fill}
                     stroke={line}
                     strokeWidth={HOLLOW.border * h}
