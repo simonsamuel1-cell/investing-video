@@ -36,7 +36,14 @@ import { AbsoluteFill, Freeze, interpolate, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
-export const CARD = { w: 536, h: 302, gap: 80, labelGap: 14 };
+/**
+ * THREE CHAPTER CARDS IN ONE ROW — Simon: "Kotak transisinya 3 aja". Smaller
+ * than TA01's 536×302 so three fit the safe width, and still the frame's shape
+ * (1.775), so a fold into one never squashes and a push never letterboxes.
+ */
+export const CARD = { w: 504, h: 284, gap: 56, labelGap: 14 };
+/** The chapter cards' size before the row — the Introduction is 1.3x THAT. */
+const CARD_WAS = { w: 536, h: 302 };
 
 /**
  * Alone, and centred on both axes — TA01's first stop — but 30% LARGER than
@@ -47,25 +54,39 @@ export const CARD = { w: 536, h: 302, gap: 80, labelGap: 14 };
  */
 const INTRO_SCALE = 1.3;
 const INTRO = {
-  w: CARD.w * INTRO_SCALE,
-  h: CARD.h * INTRO_SCALE,
-  x: (theme.canvas.width - CARD.w * INTRO_SCALE) / 2,
-  y: (theme.canvas.height - CARD.h * INTRO_SCALE) / 2,
+  w: CARD_WAS.w * INTRO_SCALE,
+  h: CARD_WAS.h * INTRO_SCALE,
+  x: (theme.canvas.width - CARD_WAS.w * INTRO_SCALE) / 2,
+  y: (theme.canvas.height - CARD_WAS.h * INTRO_SCALE) / 2,
 };
 
 /**
- * The 2×2, centred horizontally; vertically centred INCLUDING the labels under
- * the bottom row. Lowest ink at 907, clear of the 972 subtitle band; widest at
- * 1536, clear of the logo zone.
+ * The row, centred on both axes INCLUDING the labels under it (a label line is
+ * ~36px). Clear of the logo's corner and of the 972 subtitle band.
  */
-const GRID = { x: (theme.canvas.width - (CARD.w * 2 + CARD.gap)) / 2, y: 173 };
+const ROW_H = CARD.h + CARD.labelGap + 36;
+const GRID = {
+  x: (theme.canvas.width - (CARD.w * 3 + CARD.gap * 2)) / 2,
+  y: (theme.canvas.height - ROW_H) / 2,
+};
 
-/** "namanya pun juga 'Lorem Ipsum' dulu aja" — until the chapters are named. */
+/** Simon's names, verbatim. */
 export const BOXES = [
-  { x: GRID.x, y: GRID.y, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
-  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
-  { x: GRID.x, y: GRID.y + CARD.h + CARD.gap, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
-  { x: GRID.x + CARD.w + CARD.gap, y: GRID.y + CARD.h + CARD.gap, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
+  { x: GRID.x, y: GRID.y, w: CARD.w, h: CARD.h, text: "Cara baca candle" },
+  {
+    x: GRID.x + (CARD.w + CARD.gap),
+    y: GRID.y,
+    w: CARD.w,
+    h: CARD.h,
+    text: "Makna candle dalam chart",
+  },
+  {
+    x: GRID.x + (CARD.w + CARD.gap) * 2,
+    y: GRID.y,
+    w: CARD.w,
+    h: CARD.h,
+    text: "Study Case",
+  },
 ] as const;
 
 export const ROADMAP_DISSOLVE = 14;
@@ -92,7 +113,10 @@ export const M = {
 const CLAMP = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 /** TA01's easy ease — every move of the roadmap runs on it. */
 const ease = (f: number, start: number, dur: number) =>
-  interpolate(f, [start, start + dur], [0, 1], { ...CLAMP, easing: theme.roadmap.ease });
+  interpolate(f, [start, start + dur], [0, 1], {
+    ...CLAMP,
+    easing: theme.roadmap.ease,
+  });
 
 /** The card is the frame's own shape (1.775 vs 1.778), so a fold never squashes. */
 const SCALE = CARD.w / theme.canvas.width;
@@ -120,8 +144,10 @@ const PAPER = { cell: 84, loop: 180 };
  * continuous surface across all four stops.
  */
 const Ground = ({ f }: { f: number }) => {
-  const fade = "radial-gradient(ellipse 68% 68% at 50% 50%, black 35%, transparent 100%)";
-  const drift = ((((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop) * PAPER.cell;
+  const fade =
+    "radial-gradient(ellipse 68% 68% at 50% 50%, black 35%, transparent 100%)";
+  const drift =
+    ((((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop) * PAPER.cell;
   return (
     <AbsoluteFill style={{ background: theme.roadmap.paper }}>
       <AbsoluteFill
@@ -142,9 +168,25 @@ const Ground = ({ f }: { f: number }) => {
 
 /** One card and its label. `flat` drops the shadow (the card about to fill the frame). */
 const Box = ({
-  x, y, w = CARD.w, h = CARD.h, text, opacity, flat = false, glow = 0, labelOpacity = 1,
+  x,
+  y,
+  w = CARD.w,
+  h = CARD.h,
+  text,
+  opacity,
+  flat = false,
+  glow = 0,
+  labelOpacity = 1,
 }: {
-  x: number; y: number; w?: number; h?: number; text: string; opacity: number; flat?: boolean; glow?: number; labelOpacity?: number;
+  x: number;
+  y: number;
+  w?: number;
+  h?: number;
+  text: string;
+  opacity: number;
+  flat?: boolean;
+  glow?: number;
+  labelOpacity?: number;
 }) => {
   const rect = {
     position: "absolute" as const,
@@ -198,9 +240,22 @@ const Box = ({
 /** The film's picture, frozen at ORIGINAL frame `freeze`. */
 export type FilmAt = React.FC;
 
-/** A box's picture: the film frozen at the frame that folded into it, or empty. */
-const Thumb = ({ box, freeze, Film }: { box: { x: number; y: number }; freeze: number | null; Film: FilmAt }) =>
-  freeze === null ? null : (
+/**
+ * What a box shows: the film frozen at the frame that folded into it (a
+ * number), a drawing composed at full frame size (RoadmapCards), or nothing.
+ */
+export type Preview = number | React.FC | null;
+
+const Thumb = ({
+  box,
+  preview,
+  Film,
+}: {
+  box: { x: number; y: number };
+  preview: Preview;
+  Film: FilmAt;
+}) =>
+  preview === null ? null : (
     <div
       style={{
         position: "absolute",
@@ -223,9 +278,13 @@ const Thumb = ({ box, freeze, Film }: { box: { x: number; y: number }; freeze: n
           transformOrigin: "0 0",
         }}
       >
-        <Freeze frame={freeze}>
-          <Film />
-        </Freeze>
+        {typeof preview === "number" ? (
+          <Freeze frame={preview}>
+            <Film />
+          </Freeze>
+        ) : (
+          React.createElement(preview)
+        )}
       </div>
     </div>
   );
@@ -241,14 +300,17 @@ export type Stop = {
   end: number;
   /** ORIGINAL frame of the film to fold — the last full frame before the cut. */
   freeze: number;
-  /** Per box, the original frame showing in it (a picture folded there earlier), or null. */
-  previews: readonly (number | null)[];
+  /** Per box: a frame folded there earlier, a drawing, or nothing. */
+  previews: readonly Preview[];
   /** This stop's push, in frames, if not M.push. */
   push?: number;
 };
 
 /** Folds the frozen picture into `box`; clip and scale on one curve. */
-const folded = (p: number, box: { x: number; y: number; w: number; h: number }) => {
+const folded = (
+  p: number,
+  box: { x: number; y: number; w: number; h: number },
+) => {
   const W = theme.canvas.width;
   const H = theme.canvas.height;
   const r = theme.roadmap.cardRadius;
@@ -293,7 +355,8 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   const labels = 1 - ease(f, pushAt, M.labelsOut);
 
   /** Only the first stop has an Introduction to get rid of. */
-  const swap = stop.land === null ? ease(f, stop.at + M.shrink + M.hold, M.swap) : 1;
+  const swap =
+    stop.land === null ? ease(f, stop.at + M.shrink + M.hold, M.swap) : 1;
   const target = stop.land === null ? INTRO : BOXES[stop.land];
   const fold = folded(shrink, target);
 
@@ -317,11 +380,23 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
        drawn UNDER it — the ticker floated over the paper for the whole of
        stop 1. Still below the watermark's 100. */
     <AbsoluteFill style={{ opacity: 1 - gone, zIndex: 20 }}>
-      <div style={{ position: "absolute", inset: 0, ...cardPush(push, BOXES[stop.into]) }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...cardPush(push, BOXES[stop.into]),
+        }}
+      >
         <Ground f={f} />
 
         {/* ── the four chapters ─────────────────────────────────────────── */}
-        <div style={{ position: "absolute", inset: 0, transform: `translateY(${gridY.toFixed(1)}px)` }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: `translateY(${gridY.toFixed(1)}px)`,
+          }}
+        >
           {BOXES.map((b, i) => (
             <div key={i} style={{ opacity: swap }}>
               <Box
@@ -333,7 +408,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
                 glow={stop.into === i ? glowIn : 0}
                 labelOpacity={labels}
               />
-              <Thumb box={b} freeze={stop.previews[i]} Film={Film} />
+              <Thumb box={b} preview={stop.previews[i]} Film={Film} />
             </div>
           ))}
           {stop.land !== null && picture}
@@ -341,8 +416,21 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
 
         {/* ── the Introduction, only on the first stop ──────────────────── */}
         {stop.land === null && (
-          <div style={{ position: "absolute", inset: 0, transform: `translateY(${introY.toFixed(1)}px)` }}>
-            <Box x={INTRO.x} y={INTRO.y} w={INTRO.w} h={INTRO.h} text="Introduction" opacity={shrink} />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translateY(${introY.toFixed(1)}px)`,
+            }}
+          >
+            <Box
+              x={INTRO.x}
+              y={INTRO.y}
+              w={INTRO.w}
+              h={INTRO.h}
+              text="Introduction"
+              opacity={shrink}
+            />
             {picture}
           </div>
         )}

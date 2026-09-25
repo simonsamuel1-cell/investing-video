@@ -46,6 +46,11 @@ import { Subtitles } from "./components/Subtitles";
 import type { SubtitleCue } from "./subtitles";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
 import {
+  CandleAnatomy,
+  MorningStar,
+  SimpleChart,
+} from "./continuity/RoadmapCards";
+import {
   INDO_PASSAGES,
   INDO_TOTAL_FRAMES,
   indoFrame,
@@ -172,11 +177,12 @@ const Film: React.FC = () => {
  * ended and pushes into the next; a box that has caught a picture keeps
  * showing it at the stops after.
  *
- * ⚠ THREE, NOT FOUR. The third passage (SC12 → SC13A) and its voice were cut —
- * Simon: "8332-8722 part ini remove aja deh, ga nyambung soalnya". Its chapter
- * no longer opens, so the chapter that starts at SC06 now runs to SC13D, and
- * the last stop folds SC13D into that box (1) and pushes into the next (2).
- * Box 3 stays on the sheet, empty, until the chapters are named.
+ * ⚠ THREE STOPS, THREE CHAPTERS. The third passage (SC12 → SC13A) and its
+ * voice were cut — "8332-8722 part ini remove aja deh" — and the boxes went to
+ * three to match: "(1) Cara baca candle, (2) Makna candle dalam chart, (3)
+ * Study Case", each with its own drawing (continuity/RoadmapCards.tsx) until a
+ * picture folds into it. SC01 → Introduction → push into (1) → SC02; SC05 →
+ * (1), push into (2) → SC06; SC13D → (2), push into (3) → BBRI.
  */
 const [P1, P2, P4] = INDO_PASSAGES;
 /**
@@ -192,7 +198,7 @@ const STOPS: Stop[] = [
     into: 0,
     end: P1.end,
     freeze: P1.xOut,
-    previews: [null, null, null, null],
+    previews: [CandleAnatomy, MorningStar, SimpleChart],
     /* ⚠ 72, NOT 90 — TA01's own first push. From 538 the swap lands at 622,
        and a 90-frame push set off on that same frame: the grid never came to
        rest, so its ease-out read as no ease at all (Simon: "580-622 kayak
@@ -206,7 +212,7 @@ const STOPS: Stop[] = [
     into: 1,
     end: P2.end,
     freeze: P2.xOut,
-    previews: [P2.xOut, null, null, null],
+    previews: [P2.xOut, MorningStar, SimpleChart],
   },
   {
     at: P4.at,
@@ -214,7 +220,7 @@ const STOPS: Stop[] = [
     into: 2,
     end: P4.end,
     freeze: P4.xOut,
-    previews: [P2.xOut, P4.xOut, null, null],
+    previews: [P2.xOut, P4.xOut, SimpleChart],
   },
 ];
 
