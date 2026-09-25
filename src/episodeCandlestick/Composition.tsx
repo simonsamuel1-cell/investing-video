@@ -10,7 +10,7 @@
  * the roadmap (continuity/Roadmap.tsx) playing over each one. Editing a scene
  * still changes both cuts; re-run the script if a scene's length changes.
  */
-import React from "react";
+import React, { useContext } from "react";
 import {
   AbsoluteFill,
   Audio,
@@ -45,7 +45,13 @@ import { CaseStudyTabsPair } from "./components/CaseStudyTabsPair";
 import { Subtitles } from "./components/Subtitles";
 import type { SubtitleCue } from "./subtitles";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
-import { INDO_PASSAGES, INDO_TOTAL_FRAMES, indoSegment } from "./data/indoTimeline";
+import {
+  INDO_PASSAGES,
+  INDO_TOTAL_FRAMES,
+  indoFrame,
+  indoSegment,
+} from "./data/indoTimeline";
+import { FilmTracks } from "./tracks";
 
 export { INDO_TOTAL_FRAMES };
 
@@ -71,24 +77,34 @@ const INDEPENDENT_SCENES: {
   from: number;
   duration: number;
   Component: React.FC;
+  /** Track name in the Indonesian cut's timeline (the English cut's tracks are unnamed). */
+  label: string;
 }[] = [
-  { from: 0, duration: 240, Component: Scene01 },
-  { from: 240, duration: 374, Component: Scene02 },
-  { from: 614, duration: 460, Component: Scene03 },
-  { from: 1074, duration: 483, Component: Scene04 },
-  { from: 1557, duration: 788, Component: Scene05 },
-  { from: 2345, duration: 808, Component: Scene06 },
-  { from: 3153, duration: 504, Component: Scene07 },
-  { from: 3657, duration: 501, Component: Scene08 },
-  { from: 4158, duration: 921, Component: Scene09 },
-  { from: 5079, duration: 978, Component: Scene10 },
-  { from: 6057, duration: 869, Component: Scene11 },
-  { from: 6926, duration: 847, Component: Scene12 },
-  { from: 7773, duration: 242, Component: Scene13A },
-  { from: 8015, duration: 418, Component: Scene13B },
-  { from: 8433, duration: 401, Component: Scene13C },
-  { from: 8834, duration: 210, Component: Scene13D },
+  { from: 0, duration: 240, Component: Scene01, label: "SC01" },
+  { from: 240, duration: 374, Component: Scene02, label: "SC02" },
+  { from: 614, duration: 460, Component: Scene03, label: "SC03" },
+  { from: 1074, duration: 483, Component: Scene04, label: "SC04" },
+  { from: 1557, duration: 788, Component: Scene05, label: "SC05" },
+  { from: 2345, duration: 808, Component: Scene06, label: "SC06" },
+  { from: 3153, duration: 504, Component: Scene07, label: "SC07" },
+  { from: 3657, duration: 501, Component: Scene08, label: "SC08" },
+  { from: 4158, duration: 921, Component: Scene09, label: "SC09" },
+  { from: 5079, duration: 978, Component: Scene10, label: "SC10" },
+  { from: 6057, duration: 869, Component: Scene11, label: "SC11" },
+  { from: 6926, duration: 847, Component: Scene12, label: "SC12" },
+  { from: 7773, duration: 242, Component: Scene13A, label: "SC13A" },
+  { from: 8015, duration: 418, Component: Scene13B, label: "SC13B" },
+  { from: 8433, duration: 401, Component: Scene13C, label: "SC13C" },
+  { from: 8834, duration: 210, Component: Scene13D, label: "SC13D" },
   // 9044–10385 is the BBRI real-footage insert (see the video Sequence below).
+];
+
+/** The other Sequences of the film, as [from, end, Indonesian track name]. */
+const OVERLAYS: readonly (readonly [number, number, string])[] = [
+  [4158, 7766, "SC09–SC12 tabs"],
+  [8015, 8834, "SC13B–SC13C tabs"],
+  [9044, 10386, "SC14 BBRI"],
+  [10386, 10663, "SC15–SC16 closing"],
 ];
 
 /**
@@ -96,42 +112,58 @@ const INDEPENDENT_SCENES: {
  * subtitles, watermark or voice). It is a component of its own so the
  * Indonesian cut can re-time it and the roadmap can freeze it into its cards.
  */
-const Film: React.FC = () => (
-  <AbsoluteFill
-    style={{
-      backgroundColor: theme.colors.bg,
-      fontFamily: theme.type.family,
-    }}
-  >
-    {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
-      <Sequence key={from} from={from} durationInFrames={duration}>
-        <SceneFade durationInFrames={duration}>
-          <Component />
+const Film: React.FC = () => {
+  const tracks = useContext(FilmTracks);
+  return (
+    <AbsoluteFill
+      style={{
+        backgroundColor: theme.colors.bg,
+        fontFamily: theme.type.family,
+      }}
+    >
+      {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
+        <Sequence
+          key={from}
+          from={from}
+          durationInFrames={duration}
+          showInTimeline={tracks}
+        >
+          <SceneFade durationInFrames={duration}>
+            <Component />
+          </SceneFade>
+        </Sequence>
+      ))}
+      {/* SC09–SC12 pattern tab header (unchanged). */}
+      <Sequence
+        from={4158}
+        durationInFrames={7766 - 4158}
+        showInTimeline={tracks}
+      >
+        <CaseStudyTabs />
+      </Sequence>
+      {/* SC13B–SC13C header — 2-tab replica, persistent across both scenes. */}
+      <Sequence from={8015} durationInFrames={819} showInTimeline={tracks}>
+        <CaseStudyTabsPair />
+      </Sequence>
+      {/* SC14 — BBRI real footage with choreographed treatment + overlays. */}
+      <Sequence
+        from={9044}
+        durationInFrames={10386 - 9044}
+        showInTimeline={tracks}
+      >
+        <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
+          <Scene14Bbri />
+        </AbsoluteFill>
+      </Sequence>
+      {/* Continuity group — SC15 (0–193) + SC16 (193–277). */}
+      <Sequence from={10386} durationInFrames={277} showInTimeline={tracks}>
+        <SceneFade durationInFrames={277}>
+          <ClosingChart />
         </SceneFade>
       </Sequence>
-    ))}
-    {/* SC09–SC12 pattern tab header (unchanged). */}
-    <Sequence from={4158} durationInFrames={7766 - 4158}>
-      <CaseStudyTabs />
-    </Sequence>
-    {/* SC13B–SC13C header — 2-tab replica, persistent across both scenes. */}
-    <Sequence from={8015} durationInFrames={819}>
-      <CaseStudyTabsPair />
-    </Sequence>
-    {/* SC14 — BBRI real footage with choreographed treatment + overlays. */}
-    <Sequence from={9044} durationInFrames={10386 - 9044}>
-      <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
-        <Scene14Bbri />
-      </AbsoluteFill>
-    </Sequence>
-    {/* Continuity group — SC15 (0–193) + SC16 (193–277). */}
-    <Sequence from={10386} durationInFrames={277}>
-      <SceneFade durationInFrames={277}>
-        <ClosingChart />
-      </SceneFade>
-    </Sequence>
-  </AbsoluteFill>
-);
+    </AbsoluteFill>
+  );
+};
 
 /**
  * The Indonesian cut's four roadmap stops, one inside each new passage. Each
@@ -141,11 +173,76 @@ const Film: React.FC = () => (
  */
 const [P1, P2, P3, P4] = INDO_PASSAGES;
 const STOPS: Stop[] = [
-  { at: P1.at, land: null, into: 0, end: P1.end, freeze: P1.xOut, previews: [null, null, null, null] },
-  { at: P2.at, land: 0, into: 1, end: P2.end, freeze: P2.xOut, previews: [P2.xOut, null, null, null] },
-  { at: P3.at, land: 1, into: 2, end: P3.end, freeze: P3.xOut, previews: [P2.xOut, P3.xOut, null, null] },
-  { at: P4.at, land: 2, into: 3, end: P4.end, freeze: P4.xOut, previews: [P2.xOut, P3.xOut, P4.xOut, null] },
+  {
+    at: P1.at,
+    land: null,
+    into: 0,
+    end: P1.end,
+    freeze: P1.xOut,
+    previews: [null, null, null, null],
+  },
+  {
+    at: P2.at,
+    land: 0,
+    into: 1,
+    end: P2.end,
+    freeze: P2.xOut,
+    previews: [P2.xOut, null, null, null],
+  },
+  {
+    at: P3.at,
+    land: 1,
+    into: 2,
+    end: P3.end,
+    freeze: P3.xOut,
+    previews: [P2.xOut, P3.xOut, null, null],
+  },
+  {
+    at: P4.at,
+    land: 2,
+    into: 3,
+    end: P4.end,
+    freeze: P4.xOut,
+    previews: [P2.xOut, P3.xOut, P4.xOut, null],
+  },
 ];
+
+/**
+ * The Indonesian cut's timeline tracks — where each scene, overlay and
+ * transition actually sits in THIS cut, fixed. Display only: they render
+ * nothing. A scene's span is every output frame showing one of its original
+ * frames, outside the passages (those are the "Scene Transisi" tracks).
+ */
+const inPassage = (t: number) =>
+  INDO_PASSAGES.some((p) => t >= p.at && t < p.end);
+const indoSpan = (from: number, end: number) => {
+  let a = -1;
+  let b = -1;
+  for (let t = 0; t < INDO_TOTAL_FRAMES; t++) {
+    if (inPassage(t)) continue;
+    const x = indoFrame(t);
+    if (x >= from && x < end) {
+      if (a < 0) a = t;
+      b = t;
+    }
+  }
+  return { from: a, duration: b - a + 1 };
+};
+const INDO_TRACKS: { name: string; from: number; duration: number }[] = [
+  ...INDEPENDENT_SCENES.map(({ from, duration, label }) => ({
+    name: label,
+    ...indoSpan(from, from + duration),
+  })),
+  ...INDO_PASSAGES.map((p, i) => ({
+    name: `Scene Transisi ${i + 1}`,
+    from: p.at,
+    duration: p.end - p.at,
+  })),
+]
+  .sort((a, b) => a.from - b.from)
+  .concat(
+    OVERLAYS.map(([from, end, name]) => ({ name, ...indoSpan(from, end) })),
+  );
 
 export type CandlestickProps = {
   subtitles?: SubtitleCue[];
@@ -190,15 +287,35 @@ export const CandlestickComposition = ({
           on every frame (only props change), so nothing remounts at a seam.
           Inside the Sequence, Freeze's `frame` is local: exactly `runFrame`. */}
       {indo ? (
-        <Sequence from={runAt - runFrame} layout="none">
-          <Freeze frame={runFrame} active={rate === 0}>
-            <Film />
-          </Freeze>
-        </Sequence>
+        <FilmTracks.Provider value={false}>
+          <Sequence
+            from={runAt - runFrame}
+            layout="none"
+            showInTimeline={false}
+          >
+            <Freeze frame={runFrame} active={rate === 0}>
+              <Film />
+            </Freeze>
+          </Sequence>
+          {STOPS.map((stop) => (
+            <RoadmapStop key={stop.at} stop={stop} Film={Film} />
+          ))}
+        </FilmTracks.Provider>
       ) : (
         <Film />
       )}
-      {indo && STOPS.map((stop) => <RoadmapStop key={stop.at} stop={stop} Film={Film} />)}
+      {indo &&
+        INDO_TRACKS.map((track) => (
+          <Sequence
+            key={track.name}
+            name={track.name}
+            from={track.from}
+            durationInFrames={track.duration}
+            layout="none"
+          >
+            {null}
+          </Sequence>
+        ))}
       {/* Burned-in subtitles — per-composition language track (toggle via showSubtitles). */}
       {showSubtitles && <Subtitles cues={subtitles} />}
       {/* Full-frame brand watermark — always on top; fades in at the start, out at the very end. */}
@@ -210,7 +327,10 @@ export const CandlestickComposition = ({
           zIndex: 100,
         }}
       >
-        <Img src={staticFile("watermark.png")} style={{ maxWidth: "100%", maxHeight: "100%" }} />
+        <Img
+          src={staticFile("watermark.png")}
+          style={{ maxWidth: "100%", maxHeight: "100%" }}
+        />
       </AbsoluteFill>
       <Audio src={staticFile(audioSrc)} muted={muted} />
     </AbsoluteFill>

@@ -12,7 +12,9 @@
  *   1133–1162 slides back to center
  * Rounded corners throughout; a 2px edge crop hides a black source-edge line.
  */
+import { useContext } from "react";
 import { useCurrentFrame, interpolate, OffthreadVideo, staticFile } from "remotion";
+import { FilmTracks } from "../tracks";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 export const SAFE_TOP = 54;
@@ -60,6 +62,7 @@ export const BbriVideo = () => {
       <OffthreadVideo
         src={staticFile("bbri.mp4")}
         muted
+        showInTimeline={useContext(FilmTracks)}
         style={{ position: "absolute", left: -EC, top: -EC, width: box.width + 2 * EC, height: BASE_H * box.scale + 2 * EC, objectFit: "fill" }}
       />
     </div>
