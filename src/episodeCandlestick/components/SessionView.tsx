@@ -12,10 +12,18 @@
  *  - exported IntradayPanel: the intraday half alone (SC05 composes it beside
  *    its own daily panel).
  */
+import { useContext } from "react";
 import { useCurrentFrame, interpolate } from "remotion";
+import { Cut } from "../cut";
 import { theme } from "../theme";
 import type { SessionPoint } from "../helpers";
-import { fmtRp, pathPriceAt, priceScale, progress as easedProgress } from "../helpers";
+import {
+  fmtRp,
+  pathPriceAt,
+  priceScale,
+  smoothLineD,
+  progress as easedProgress,
+} from "../helpers";
 import { SessionClockAxis } from "./SessionClockAxis";
 import { LiveCandle } from "./LiveCandle";
 import { Ping } from "./Ping";
@@ -107,7 +115,9 @@ export const sessionGeom = ({
   const LABEL_GUTTER = 116; // ≈ width of "Rp X,XXX" at the price-label size
   const groupLeft = x - RECT_PAD;
   const groupRight = rightX + rightW + RECT_PAD + 20 + LABEL_GUTTER;
-  const centerOffset = centered ? theme.canvas.width / 2 - (groupLeft + groupRight) / 2 + centerNudge : 0;
+  const centerOffset = centered
+    ? theme.canvas.width / 2 - (groupLeft + groupRight) / 2 + centerNudge
+    : 0;
   return { axisW, gap, innerW, leftW, rightX, rightW, centerOffset };
 };
 
@@ -144,11 +154,16 @@ export const IntradayPanel = ({
   timeFontSize?: number; // clock-label size
 }) => {
   const clockY = y + height - 52;
+  const smooth = useContext(Cut) === "indo";
   const pts: string[] = [];
-  const n = 64;
+  const xy: { x: number; y: number }[] = [];
+  const n = smooth ? 160 : 64;
   for (let i = 0; i <= n; i++) {
     const t = (i / n) * Math.min(1, Math.max(0, progress));
-    pts.push(`${x + width * t},${scale(pathPriceAt(path, t))}`);
+    const px = x + width * t;
+    const py = scale(pathPriceAt(path, t, smooth));
+    pts.push(`${px},${py}`);
+    xy.push({ x: px, y: py });
   }
   return (
     <div style={{ position: "absolute", left: 0, top: 0, opacity }}>
@@ -182,19 +197,36 @@ export const IntradayPanel = ({
             strokeWidth={theme.stroke.hairline}
           />
         ))}
-        {progress > 0.001 && (
-          <polyline
-            points={pts.join(" ")}
-            fill="none"
-            stroke={theme.colors.indigo}
-            strokeWidth={3}
-            strokeLinejoin="round"
-            strokeLinecap="round"
-            opacity={traceOpacity}
-          />
-        )}
+        {progress > 0.001 &&
+          (smooth ? (
+            <path
+              d={smoothLineD(xy)}
+              fill="none"
+              stroke={theme.colors.indigo}
+              strokeWidth={3}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              opacity={traceOpacity}
+            />
+          ) : (
+            <polyline
+              points={pts.join(" ")}
+              fill="none"
+              stroke={theme.colors.indigo}
+              strokeWidth={3}
+              strokeLinejoin="round"
+              strokeLinecap="round"
+              opacity={traceOpacity}
+            />
+          ))}
       </svg>
-      <SessionClockAxis x={x} y={clockY} width={width} progress={clockProgress ?? progress} fontSize={timeFontSize} />
+      <SessionClockAxis
+        x={x}
+        y={clockY}
+        width={width}
+        progress={clockProgress ?? progress}
+        fontSize={timeFontSize}
+      />
     </div>
   );
 };
@@ -237,8 +269,16 @@ export const SessionView = ({
   rightDY = 0,
 }: SessionViewProps) => {
   const f = useCurrentFrame();
+  const smoothCut = useContext(Cut) === "indo";
   // Horizontal geometry (incl. the centered-group offset) from the shared helper.
-  const { axisW, leftW, rightX, rightW, centerOffset } = sessionGeom({ x, width, splitRatio, panelGap, centered, centerNudge });
+  const { axisW, leftW, rightX, rightW, centerOffset } = sessionGeom({
+    x,
+    width,
+    splitRatio,
+    panelGap,
+    centered,
+    centerNudge,
+  });
 
   // Right-panel collapse transform (identity when the defaults are used).
   const rPivotX = rightX - 20; // right panel rect's top-left corner
@@ -251,8 +291,13 @@ export const SessionView = ({
 
   // Highlighted-wick color, optionally switching to a late color (e.g. cyan → green).
   const effWickStroke =
-    !twoDay && wickStroke && wickStrokeFrame !== undefined && f >= wickStrokeFrame
-      ? lateWickStroke && lateWickStrokeFrame !== undefined && f >= lateWickStrokeFrame
+    !twoDay &&
+    wickStroke &&
+    wickStrokeFrame !== undefined &&
+    f >= wickStrokeFrame
+      ? lateWickStroke &&
+        lateWickStrokeFrame !== undefined &&
+        f >= lateWickStrokeFrame
         ? lateWickStroke
         : wickStroke
       : undefined;
@@ -261,7 +306,9 @@ export const SessionView = ({
     twoDay ? [path, day2Path] : [path],
     y,
     y + height - 72,
-    markerPrice !== undefined ? [markerPrice, ...extraScalePrices] : extraScalePrices,
+    markerPrice !== undefined
+      ? [markerPrice, ...extraScalePrices]
+      : extraScalePrices,
   );
 
   // intraday panel shows the ACTIVE day's trace; day-1 trace fades on reset
@@ -271,23 +318,35 @@ export const SessionView = ({
   // clock playhead: day-1 progress → quick wipe back to 09:00 → day-2 progress
   let clockProgress = progress;
   if (twoDay && resetFrame !== undefined && f >= resetFrame) {
-    const wipe = interpolate(f, [resetFrame, resetFrame + RESET_FRAMES], [1, 0], {
-      extrapolateLeft: "clamp",
-      extrapolateRight: "clamp",
-      easing: theme.motion.ease,
-    });
+    const wipe = interpolate(
+      f,
+      [resetFrame, resetFrame + RESET_FRAMES],
+      [1, 0],
+      {
+        extrapolateLeft: "clamp",
+        extrapolateRight: "clamp",
+        easing: theme.motion.ease,
+      },
+    );
     clockProgress = f < resetFrame + RESET_FRAMES ? wipe : day2Progress;
   }
   const traceOpacity =
     inDay2 && resetFrame !== undefined
-      ? interpolate(f, [resetFrame, resetFrame + RESET_FRAMES], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })
+      ? interpolate(f, [resetFrame, resetFrame + RESET_FRAMES], [0, 1], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+        })
       : 1;
 
   // dim the intraday half after the final close
   const lastDone = twoDay ? day2Progress >= 1 : progress >= 1;
   const dimOp =
     dimIntradayAfterClose && lastDone && closeFrame !== undefined
-      ? interpolate(f, [closeFrame, closeFrame + 14], [1, 0.25], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: theme.motion.ease })
+      ? interpolate(f, [closeFrame, closeFrame + 14], [1, 0.25], {
+          extrapolateLeft: "clamp",
+          extrapolateRight: "clamp",
+          easing: theme.motion.ease,
+        })
       : 1;
 
   // right-panel candle centers
@@ -295,21 +354,38 @@ export const SessionView = ({
   const c2x = rightX + rightW * 0.7;
 
   // ping fires at pingT's price on BOTH panels simultaneously
-  const pingPrice = pingT !== undefined ? pathPriceAt(inDay2 ? day2Path : path, pingT) : 0;
+  const pingPrice =
+    pingT !== undefined
+      ? pathPriceAt(inDay2 ? day2Path : path, pingT, smoothCut)
+      : 0;
   const pingLeftX = x + leftW * (pingT ?? 0);
   const pingCandleX = inDay2 ? c2x : c1x;
 
   // marker draw
-  const markerDraw = markerStartFrame !== undefined ? easedProgress(f, markerStartFrame, 18) : 1;
+  const markerDraw =
+    markerStartFrame !== undefined ? easedProgress(f, markerStartFrame, 18) : 1;
 
   // axis tick labels from the scale domain
-  const allPrices = [...path.map((p) => p.price), ...(day2Path ?? []).map((p) => p.price)];
+  const allPrices = [
+    ...path.map((p) => p.price),
+    ...(day2Path ?? []).map((p) => p.price),
+  ];
   const minP = Math.min(...allPrices);
   const maxP = Math.max(...allPrices);
-  const tickPrices = [0.15, 0.5, 0.85].map((q) => Math.round(minP + (maxP - minP) * q));
+  const tickPrices = [0.15, 0.5, 0.85].map((q) =>
+    Math.round(minP + (maxP - minP) * q),
+  );
 
   return (
-    <div style={{ position: "absolute", left: 0, top: 0, opacity, transform: `translateX(${centerOffset}px)` }}>
+    <div
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        opacity,
+        transform: `translateX(${centerOffset}px)`,
+      }}
+    >
       <div style={{ opacity: intradayOpacity }}>
         <IntradayPanel
           path={activePath!}
@@ -373,7 +449,13 @@ export const SessionView = ({
           )}
           {/* day 2 candle forms beside it */}
           {twoDay && inDay2 && day2Progress > 0.001 && (
-            <LiveCandle path={day2Path!} progress={day2Progress} x={c2x} width={candleWidth} scale={scale} />
+            <LiveCandle
+              path={day2Path!}
+              progress={day2Progress}
+              x={c2x}
+              width={candleWidth}
+              scale={scale}
+            />
           )}
         </g>
         {/* shared Rp axis at the far right of the whole component */}
@@ -393,28 +475,47 @@ export const SessionView = ({
             </text>
           ))}
         {/* dashed marker line across BOTH panels — lands at identical y (shared scale) */}
-        {markerPrice !== undefined && markerStartFrame !== undefined && f >= markerStartFrame && (
-          <line
-            x1={x}
-            y1={scale(markerPrice)}
-            x2={x + (width - axisW) * markerDraw}
-            y2={scale(markerPrice)}
-            stroke={theme.colors.indigo}
-            strokeWidth={theme.stroke.standard}
-            strokeDasharray="12 10"
-          />
-        )}
+        {markerPrice !== undefined &&
+          markerStartFrame !== undefined &&
+          f >= markerStartFrame && (
+            <line
+              x1={x}
+              y1={scale(markerPrice)}
+              x2={x + (width - axisW) * markerDraw}
+              y2={scale(markerPrice)}
+              stroke={theme.colors.indigo}
+              strokeWidth={theme.stroke.standard}
+              strokeDasharray="12 10"
+            />
+          )}
       </svg>
 
-      {markerPrice !== undefined && markerChipLabel && markerStartFrame !== undefined && (
-        <Chip label={markerChipLabel} x={x + 8} y={scale(markerPrice) - 74} variant="indigo" startFrame={markerStartFrame + 8} anchor="left" />
-      )}
+      {markerPrice !== undefined &&
+        markerChipLabel &&
+        markerStartFrame !== undefined && (
+          <Chip
+            label={markerChipLabel}
+            x={x + 8}
+            y={scale(markerPrice) - 74}
+            variant="indigo"
+            startFrame={markerStartFrame + 8}
+            anchor="left"
+          />
+        )}
 
       {/* ping fires simultaneously at the same price on both panels (fades via pingOpacity) */}
       {pingT !== undefined && pingStartFrame !== undefined && (
         <div style={{ opacity: pingOpacity }}>
-          <Ping cx={pingLeftX} cy={scale(pingPrice)} startFrame={pingStartFrame} />
-          <Ping cx={pingCandleX} cy={scale(pingPrice)} startFrame={pingStartFrame} />
+          <Ping
+            cx={pingLeftX}
+            cy={scale(pingPrice)}
+            startFrame={pingStartFrame}
+          />
+          <Ping
+            cx={pingCandleX}
+            cy={scale(pingPrice)}
+            startFrame={pingStartFrame}
+          />
         </div>
       )}
     </div>

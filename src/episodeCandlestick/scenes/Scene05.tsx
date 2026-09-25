@@ -9,7 +9,9 @@
  * 96/96/54/108 respected; bottom 108px empty; top-150px content ends x ≤ 1368;
  * deterministic (no Math.random); fictional data — IllustrationTag + Ticker.
  */
+import { useContext } from "react";
 import { useCurrentFrame } from "remotion";
+import { Cut } from "../cut";
 import { theme } from "../theme";
 import {
   sec,
@@ -19,6 +21,7 @@ import {
   clampProgress,
   textReveal,
   priceScale,
+  smoothLineD,
 } from "../helpers";
 import type { OHLC, SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
@@ -29,7 +32,11 @@ import { ReferenceLine } from "../components/ReferenceLine";
 import { Chip } from "../components/Chip";
 import { Ping } from "../components/Ping";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { IntradayPanel, sessionScale, sessionGeom } from "../components/SessionView";
+import {
+  IntradayPanel,
+  sessionScale,
+  sessionGeom,
+} from "../components/SessionView";
 
 // ═══ EDIT ═══
 // Benchmark chart design (matches SC03): centered group + 20px gap + 30px time.
@@ -38,7 +45,13 @@ import { IntradayPanel, sessionScale, sessionGeom } from "../components/SessionV
 const BENCH_GAP = 20;
 const BENCH_NUDGE = 30;
 const TIME_FONT = 30;
-const BENCH = sessionGeom({ x: 96, width: 1536, panelGap: BENCH_GAP, centered: true, centerNudge: BENCH_NUDGE });
+const BENCH = sessionGeom({
+  x: 96,
+  width: 1536,
+  panelGap: BENCH_GAP,
+  centered: true,
+  centerNudge: BENCH_NUDGE,
+});
 const SESSION_X = 96 + BENCH.centerOffset; // left panel (intraday trace)
 const SESSION_W = BENCH.leftW;
 const SESSION_Y = 240; // benchmark top (= SC03)
@@ -92,7 +105,11 @@ const SESSION_PATH: SessionPoint[] = [
 const DAILY_MIN = 1108;
 const DAILY_MAX = 1428;
 const dScale = priceScale(DAILY_MIN, DAILY_MAX, DAILY_TOP, DAILY_BOTTOM);
-const sScale = sessionScale([SESSION_PATH], SESSION_Y, SESSION_Y + SESSION_H - 72);
+const sScale = sessionScale(
+  [SESSION_PATH],
+  SESSION_Y,
+  SESSION_Y + SESSION_H - 72,
+);
 
 const SLOT = DAILY_W / 4;
 const cx = (i: number) => DAILY_X + SLOT * (i + 0.5);
@@ -106,6 +123,7 @@ const GUIDE_LEN = GUIDE_PTS.slice(1).reduce(
 
 export const Scene05 = () => {
   const f = useCurrentFrame();
+  const smooth = useContext(Cut) === "indo";
 
   const dailyOp = fadeIn(f, sec(T.panelIn));
   const sessionProg = clampProgress(f, sec(T.sessionPlay), sec(T.sessionDur));
@@ -159,19 +177,35 @@ export const Scene05 = () => {
             );
           })}
           {/* thin indigo trend guide over the falling highs */}
-          {f >= sec(T.guide) && (
-            <polyline
-              points={GUIDE_PTS.map((p) => `${p.x},${p.y}`).join(" ")}
-              fill="none"
-              stroke={theme.colors.indigo}
-              strokeWidth={theme.stroke.standard}
-              opacity={0.4}
-              strokeDasharray={GUIDE_LEN}
-              strokeDashoffset={GUIDE_LEN * (1 - guideDraw)}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          )}
+          {f >= sec(T.guide) &&
+            (smooth ? (
+              /* a curve through the highs in the Indonesian cut ("jangan
+                 bersudut"), drawn on by its own normalised length */
+              <path
+                d={smoothLineD(GUIDE_PTS)}
+                pathLength={1}
+                fill="none"
+                stroke={theme.colors.indigo}
+                strokeWidth={theme.stroke.standard}
+                opacity={0.4}
+                strokeDasharray="1 1"
+                strokeDashoffset={1 - guideDraw}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ) : (
+              <polyline
+                points={GUIDE_PTS.map((p) => `${p.x},${p.y}`).join(" ")}
+                fill="none"
+                stroke={theme.colors.indigo}
+                strokeWidth={theme.stroke.standard}
+                opacity={0.4}
+                strokeDasharray={GUIDE_LEN}
+                strokeDashoffset={GUIDE_LEN * (1 - guideDraw)}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            ))}
           {/* candle 4 open tick at Rp 1,238 */}
           {f >= sec(T.sessionIn) && (
             <line

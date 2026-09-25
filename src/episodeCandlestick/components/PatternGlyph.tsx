@@ -5,7 +5,10 @@
  * optional intraday path lines are accurate in miniature. Other patterns are
  * abstract shapes (no path line).
  */
+import { useContext } from "react";
 import { theme } from "../theme";
+import { smoothLineD } from "../helpers";
+import { Cut } from "../cut";
 import { Candle } from "./Candle";
 
 export type PatternName =
@@ -34,11 +37,35 @@ type Def = { candles: G[]; paths?: [number, number][][] }; // paths: per-candle 
 const DEFS: Record<PatternName, Def> = {
   hammer: {
     candles: [{ o: 1412, h: 1428, l: 1246, c: 1418 }],
-    paths: [[[0, 1412], [0.05, 1428], [0.16, 1372], [0.3, 1310], [0.45, 1246], [0.56, 1288], [0.72, 1348], [0.88, 1398], [1, 1418]]],
+    paths: [
+      [
+        [0, 1412],
+        [0.05, 1428],
+        [0.16, 1372],
+        [0.3, 1310],
+        [0.45, 1246],
+        [0.56, 1288],
+        [0.72, 1348],
+        [0.88, 1398],
+        [1, 1418],
+      ],
+    ],
   },
   shootingStar: {
     candles: [{ o: 1252, h: 1436, l: 1244, c: 1258 }],
-    paths: [[[0, 1252], [0.05, 1244], [0.16, 1298], [0.3, 1362], [0.45, 1436], [0.56, 1392], [0.72, 1330], [0.88, 1281], [1, 1258]]],
+    paths: [
+      [
+        [0, 1252],
+        [0.05, 1244],
+        [0.16, 1298],
+        [0.3, 1362],
+        [0.45, 1436],
+        [0.56, 1392],
+        [0.72, 1330],
+        [0.88, 1281],
+        [1, 1258],
+      ],
+    ],
   },
   bullishEngulfing: {
     candles: [
@@ -46,8 +73,25 @@ const DEFS: Record<PatternName, Def> = {
       { o: 1288, h: 1412, l: 1281, c: 1402 },
     ],
     paths: [
-      [[0, 1386], [0.1, 1394], [0.3, 1362], [0.55, 1334], [0.8, 1312], [0.9, 1298], [1, 1306]],
-      [[0, 1288], [0.08, 1281], [0.2, 1304], [0.4, 1338], [0.6, 1366], [0.8, 1390], [0.94, 1412], [1, 1402]],
+      [
+        [0, 1386],
+        [0.1, 1394],
+        [0.3, 1362],
+        [0.55, 1334],
+        [0.8, 1312],
+        [0.9, 1298],
+        [1, 1306],
+      ],
+      [
+        [0, 1288],
+        [0.08, 1281],
+        [0.2, 1304],
+        [0.4, 1338],
+        [0.6, 1366],
+        [0.8, 1390],
+        [0.94, 1412],
+        [1, 1402],
+      ],
     ],
   },
   bearishEngulfing: {
@@ -56,8 +100,25 @@ const DEFS: Record<PatternName, Def> = {
       { o: 1402, h: 1410, l: 1272, c: 1281 },
     ],
     paths: [
-      [[0, 1296], [0.1, 1288], [0.3, 1322], [0.55, 1352], [0.8, 1376], [0.92, 1392], [1, 1384]],
-      [[0, 1402], [0.06, 1410], [0.2, 1378], [0.4, 1344], [0.6, 1312], [0.8, 1288], [0.9, 1272], [1, 1281]],
+      [
+        [0, 1296],
+        [0.1, 1288],
+        [0.3, 1322],
+        [0.55, 1352],
+        [0.8, 1376],
+        [0.92, 1392],
+        [1, 1384],
+      ],
+      [
+        [0, 1402],
+        [0.06, 1410],
+        [0.2, 1378],
+        [0.4, 1344],
+        [0.6, 1312],
+        [0.8, 1288],
+        [0.9, 1272],
+        [1, 1281],
+      ],
     ],
   },
   doji: { candles: [{ o: 0.5, h: 0.85, l: 0.15, c: 0.52 }] },
@@ -137,6 +198,7 @@ export const PatternGlyph = ({
   pathLineOpacity?: number;
   outlineOpacity?: number;
 }) => {
+  const smooth = useContext(Cut) === "indo";
   const def = DEFS[pattern];
   const all = [
     ...def.candles.flatMap((g) => [g.h, g.l]),
@@ -153,34 +215,56 @@ export const PatternGlyph = ({
 
   return (
     <svg
-      style={{ position: "absolute", left: cx - size / 2, top, overflow: "visible" }}
+      style={{
+        position: "absolute",
+        left: cx - size / 2,
+        top,
+        overflow: "visible",
+      }}
       width={size}
       height={size}
     >
       <g opacity={outlineOpacity}>
         {def.candles.map((g, i) => (
-          <Candle key={i} x={size * centers[i]} width={bw} open={g.o} high={g.h} low={g.l} close={g.c} scale={yOf} />
+          <Candle
+            key={i}
+            x={size * centers[i]}
+            width={bw}
+            open={g.o}
+            high={g.h}
+            low={g.l}
+            close={g.c}
+            scale={yOf}
+          />
         ))}
       </g>
       {/* Path line — one CONNECTED polyline across every candle band (two-candle
           patterns previously drew two disconnected segments). */}
-      {showPathLine && def.paths && (
-        <polyline
-          points={def.paths
-            .flatMap((path, i) => {
-              const bandX = size * centers[i] - bw * 0.95;
-              const bandW = bw * 1.9;
-              return path.map(([t, p]) => `${bandX + bandW * t},${yOf(p)}`);
-            })
-            .join(" ")}
-          fill="none"
-          stroke={theme.colors.indigo}
-          strokeWidth={2.5}
-          strokeLinejoin="round"
-          strokeLinecap="round"
-          opacity={pathLineOpacity}
-        />
-      )}
+      {showPathLine &&
+        def.paths &&
+        (() => {
+          const pts = def.paths.flatMap((path, i) => {
+            const bandX = size * centers[i] - bw * 0.95;
+            const bandW = bw * 1.9;
+            return path.map(([t, p]) => ({ x: bandX + bandW * t, y: yOf(p) }));
+          });
+          const common = {
+            fill: "none",
+            stroke: theme.colors.indigo,
+            strokeWidth: 2.5,
+            strokeLinejoin: "round" as const,
+            strokeLinecap: "round" as const,
+            opacity: pathLineOpacity,
+          };
+          return smooth ? (
+            <path d={smoothLineD(pts)} {...common} />
+          ) : (
+            <polyline
+              points={pts.map((q) => `${q.x},${q.y}`).join(" ")}
+              {...common}
+            />
+          );
+        })()}
     </svg>
   );
 };

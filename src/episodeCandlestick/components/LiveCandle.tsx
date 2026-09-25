@@ -5,7 +5,9 @@
  * Render INSIDE a parent <svg>.
  */
 import type { SessionPoint } from "../helpers";
+import { useContext } from "react";
 import { pathOHLC } from "../helpers";
+import { Cut } from "../cut";
 import { Candle } from "./Candle";
 
 export const LiveCandle = ({
@@ -27,8 +29,23 @@ export const LiveCandle = ({
   wickStroke?: string;
   opacity?: number;
 }) => {
-  const { open, high, low, close } = pathOHLC(path, progress);
+  const { open, high, low, close } = pathOHLC(
+    path,
+    progress,
+    useContext(Cut) === "indo",
+  );
   return (
-    <Candle x={x} width={width} open={open} high={high} low={low} close={close} scale={scale} dim={dim} wickStroke={wickStroke} opacity={opacity} />
+    <Candle
+      x={x}
+      width={width}
+      open={open}
+      high={high}
+      low={low}
+      close={close}
+      scale={scale}
+      dim={dim}
+      wickStroke={wickStroke}
+      opacity={opacity}
+    />
   );
 };
