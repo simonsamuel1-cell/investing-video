@@ -57,6 +57,31 @@ export const theme = {
     fadeFrames: 10,
   },
   /**
+   * The broker-app chart panel of SC01 in the Indonesian cut — TA07's opening
+   * frame (019 Scene01), adopted. Simon: "Ubah tampilan candlestick chart yang
+   * di awal jadi seperti di TA07-MAdanBB frame 0". These are TA07's values.
+   * `up`/`upTint`/`downTint` are the day-change readout's colours in the
+   * header — the one place outside a candle this green and red appear, as in
+   * the panel it copies.
+   */
+  appPanel: {
+    surface: "#FFFFFF",
+    border: "#D8DBE0",
+    text: "#000000",
+    textMuted: "#6B7076",
+    gridline: "#DDE0E5",
+    indigo12: "#EDEAFE",
+    cyan12: "#E7F7FB",
+    up: "#22B573",
+    down: "#E5475D",
+    upTint: "rgba(34, 181, 115, 0.12)",
+    downTint: "rgba(229, 71, 93, 0.12)",
+    radius: { sm: 16, lg: 24 },
+    border1: 1,
+    wick: 1.5,
+    type: { size: 30, weight: 600, axis: 500, name: 36, price: 70 },
+  },
+  /**
    * The roadmap — this video's "Scene Transisi" (continuity/Roadmap.tsx).
    * Simon: "Stylenya sama persis seperti TA01, scene transisi pertama." So these
    * are TA01's values, not this episode's: its 16px card radius (here cards are

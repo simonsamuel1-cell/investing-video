@@ -52,6 +52,7 @@ import {
   indoSegment,
 } from "./data/indoTimeline";
 import { FilmTracks } from "./tracks";
+import { Cut } from "./cut";
 
 export { INDO_TOTAL_FRAMES };
 
@@ -172,9 +173,15 @@ const Film: React.FC = () => {
  * showing it at the stops after.
  */
 const [P1, P2, P3, P4] = INDO_PASSAGES;
+/**
+ * Simon: "Scene transisi yang pertama, mulainya dari 538 aja." The first
+ * passage still starts at P1.at (284) — SC01 holds its last frame under the
+ * voice until the roadmap takes over here; the push still lands on P1.end.
+ */
+const STOP1_AT = 538;
 const STOPS: Stop[] = [
   {
-    at: P1.at,
+    at: STOP1_AT,
     land: null,
     into: 0,
     end: P1.end,
@@ -211,15 +218,15 @@ const STOPS: Stop[] = [
  * The Indonesian cut's timeline tracks — where each scene, overlay and
  * transition actually sits in THIS cut, fixed. Display only: they render
  * nothing. A scene's span is every output frame showing one of its original
- * frames, outside the passages (those are the "Scene Transisi" tracks).
+ * frames while no roadmap is up (those are the "Scene Transisi" tracks), so a
+ * scene held under a passage before its roadmap starts is counted as itself.
  */
-const inPassage = (t: number) =>
-  INDO_PASSAGES.some((p) => t >= p.at && t < p.end);
+const inRoadmap = (t: number) => STOPS.some((s) => t >= s.at && t < s.end);
 const indoSpan = (from: number, end: number) => {
   let a = -1;
   let b = -1;
   for (let t = 0; t < INDO_TOTAL_FRAMES; t++) {
-    if (inPassage(t)) continue;
+    if (inRoadmap(t)) continue;
     const x = indoFrame(t);
     if (x >= from && x < end) {
       if (a < 0) a = t;
@@ -233,10 +240,10 @@ const INDO_TRACKS: { name: string; from: number; duration: number }[] = [
     name: label,
     ...indoSpan(from, from + duration),
   })),
-  ...INDO_PASSAGES.map((p, i) => ({
+  ...STOPS.map((s, i) => ({
     name: `Scene Transisi ${i + 1}`,
-    from: p.at,
-    duration: p.end - p.at,
+    from: s.at,
+    duration: s.end - s.at,
   })),
 ]
   .sort((a, b) => a.from - b.from)
@@ -287,20 +294,22 @@ export const CandlestickComposition = ({
           on every frame (only props change), so nothing remounts at a seam.
           Inside the Sequence, Freeze's `frame` is local: exactly `runFrame`. */}
       {indo ? (
-        <FilmTracks.Provider value={false}>
-          <Sequence
-            from={runAt - runFrame}
-            layout="none"
-            showInTimeline={false}
-          >
-            <Freeze frame={runFrame} active={rate === 0}>
-              <Film />
-            </Freeze>
-          </Sequence>
-          {STOPS.map((stop) => (
-            <RoadmapStop key={stop.at} stop={stop} Film={Film} />
-          ))}
-        </FilmTracks.Provider>
+        <Cut.Provider value="indo">
+          <FilmTracks.Provider value={false}>
+            <Sequence
+              from={runAt - runFrame}
+              layout="none"
+              showInTimeline={false}
+            >
+              <Freeze frame={runFrame} active={rate === 0}>
+                <Film />
+              </Freeze>
+            </Sequence>
+            {STOPS.map((stop) => (
+              <RoadmapStop key={stop.at} stop={stop} Film={Film} />
+            ))}
+          </FilmTracks.Provider>
+        </Cut.Provider>
       ) : (
         <Film />
       )}
