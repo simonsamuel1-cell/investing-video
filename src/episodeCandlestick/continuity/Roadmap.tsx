@@ -177,6 +177,7 @@ const Box = ({
   flat = false,
   glow = 0,
   labelOpacity = 1,
+  radius = theme.roadmap.cardRadius,
 }: {
   x: number;
   y: number;
@@ -187,6 +188,7 @@ const Box = ({
   flat?: boolean;
   glow?: number;
   labelOpacity?: number;
+  radius?: number;
 }) => {
   const rect = {
     position: "absolute" as const,
@@ -194,7 +196,7 @@ const Box = ({
     top: y,
     width: w,
     height: h,
-    borderRadius: theme.roadmap.cardRadius,
+    borderRadius: radius,
   };
   return (
     <div style={{ opacity }}>
@@ -251,10 +253,12 @@ const Thumb = ({
   box,
   preview,
   Film,
+  radius = theme.roadmap.cardRadius,
 }: {
   box: { x: number; y: number };
   preview: Preview;
   Film: FilmAt;
+  radius?: number;
 }) =>
   preview === null ? null : (
     <div
@@ -264,7 +268,7 @@ const Thumb = ({
         top: box.y,
         width: CARD.w,
         height: CARD.h,
-        borderRadius: theme.roadmap.cardRadius,
+        borderRadius: radius,
         overflow: "hidden",
       }}
     >
@@ -309,6 +313,12 @@ export type Stop = {
   previews: readonly Preview[];
   /** This stop's push, in frames, if not M.push. */
   push?: number;
+  /**
+   * The roadmap's dissolve off the next scene, in frames, if not M.dissolve.
+   * 0 is a cut on `end` — for a box whose picture IS the next scene's frame
+   * at `end`, where the push lands on the scene itself.
+   */
+  dissolve?: number;
 };
 
 /** Folds the frozen picture into `box`; clip and scale on one curve. */
@@ -348,14 +358,44 @@ const folded = (
 export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   /** Already global — there is no Sequence to rebase. */
   const f = useCurrentFrame();
-  if (f < stop.at || f >= stop.end + M.dissolve) return null;
+  const dissolve = stop.dissolve ?? M.dissolve;
+  if (f < stop.at || f >= stop.end + dissolve) return null;
 
   const shrink = ease(f, stop.at, M.shrink);
   const pushDur = stop.push ?? M.push;
   const pushAt = stop.end - pushDur;
-  const push = ease(f, pushAt, pushDur);
+  /* ⚠ ON A CUT THE PUSH ARRIVES ONE FRAME EARLY: its last frame must be the
+     picture at exactly 1:1, identical to the scene that replaces it on
+     `end`. Eased to `end` itself it is still 0.05% short on `end - 1`, and
+     the cut shows as every edge stepping half a pixel. */
+  const push = ease(f, pushAt, dissolve > 0 ? pushDur : pushDur - 1);
   /** Starts where the push lands, so the roadmap leaves off the TOP of the new chapter. */
-  const gone = ease(f, stop.end, M.dissolve);
+  const gone = dissolve > 0 ? ease(f, stop.end, dissolve) : 0;
+  /**
+   * ⚠ THE CARD BEING ENTERED SQUARES ITS CORNERS AS IT ARRIVES. Magnified to
+   * the frame, a 16px corner is a 61px curve cut out of each corner of the
+   * screen — invisible under a dissolve, but a cut onto the scene (dissolve 0)
+   * would pop it square. It reaches 0 exactly as the push lands.
+   */
+  const intoRadius = theme.roadmap.cardRadius * (1 - push);
+
+  /**
+   * ⚠ AND ON A CUT, THE LANDED FRAME IS THE SCENE ITSELF, UNSCALED. A picture
+   * scaled into the card and magnified back lands a pixel high — the browser
+   * snaps the card's sub-pixel offset at the small scale — so the cut would
+   * still step. Once the push is complete the frozen frame is drawn at 1:1,
+   * which is exactly what the scene shows on `end`.
+   */
+  const landed = stop.previews[stop.into];
+  if (dissolve === 0 && push >= 1 && typeof landed === "number") {
+    return (
+      <AbsoluteFill style={{ zIndex: 20 }}>
+        <Freeze frame={landed}>
+          <Film />
+        </Freeze>
+      </AbsoluteFill>
+    );
+  }
   const glowIn = ease(f, pushAt - M.glowLead, M.glowLead) * (1 - push);
   const labels = 1 - ease(f, pushAt, M.labelsOut);
 
@@ -412,8 +452,14 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
                 flat={stop.into === i}
                 glow={stop.into === i ? glowIn : 0}
                 labelOpacity={labels}
+                radius={stop.into === i ? intoRadius : undefined}
               />
-              <Thumb box={b} preview={stop.previews[i]} Film={Film} />
+              <Thumb
+                box={b}
+                preview={stop.previews[i]}
+                Film={Film}
+                radius={stop.into === i ? intoRadius : undefined}
+              />
             </div>
           ))}
           {stop.land !== null && picture}

@@ -45,11 +45,7 @@ import { CaseStudyTabsPair } from "./components/CaseStudyTabsPair";
 import { Subtitles } from "./components/Subtitles";
 import type { SubtitleCue } from "./subtitles";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
-import {
-  CandleAnatomy,
-  MorningStar,
-  SimpleChart,
-} from "./continuity/RoadmapCards";
+import { CandleAnatomy, MorningStar } from "./continuity/RoadmapCards";
 import {
   INDO_PASSAGES,
   INDO_TOTAL_FRAMES,
@@ -210,6 +206,16 @@ const [P1, P2, P4] = INDO_PASSAGES;
  * voice until the roadmap takes over here; the push still lands on P1.end.
  */
 const STOP1_AT = 538;
+/**
+ * THE STUDY CASE BOX SHOWS THE STUDY CASE ITSELF — Simon: "Yang study case
+ * ganti visual deh ... Ganti jadi 9788. Itu adalah visual langsung dari scene
+ * study case, jadi ga perlu fade out lagi." 9788 is the first clean frame of
+ * the BBRI scene; its box holds that frame (the ORIGINAL frame behind it), and
+ * the last stop pushes into it and lands ON 9788 with a cut instead of a
+ * dissolve — the live scene there is the same picture, to the pixel.
+ */
+const STUDY_CASE_AT = 9788;
+const STUDY_CASE = indoFrame(STUDY_CASE_AT);
 const STOPS: Stop[] = [
   {
     at: STOP1_AT,
@@ -217,7 +223,7 @@ const STOPS: Stop[] = [
     into: 0,
     end: P1.end,
     freeze: P1.xOut,
-    previews: [CandleAnatomy, MorningStar, SimpleChart],
+    previews: [CandleAnatomy, MorningStar, STUDY_CASE],
     /* ⚠ 72, NOT 90 — TA01's own first push. From 538 the swap lands at 622,
        and a 90-frame push set off on that same frame: the grid never came to
        rest, so its ease-out read as no ease at all (Simon: "580-622 kayak
@@ -231,15 +237,16 @@ const STOPS: Stop[] = [
     into: 1,
     end: P2.end,
     freeze: P2.xOut,
-    previews: [P2.xOut, MorningStar, SimpleChart],
+    previews: [P2.xOut, MorningStar, STUDY_CASE],
   },
   {
     at: P4.at,
     land: 1,
     into: 2,
-    end: P4.end,
+    end: STUDY_CASE_AT,
+    dissolve: 0,
     freeze: P4.xOut,
-    previews: [P2.xOut, P4.xOut, SimpleChart],
+    previews: [P2.xOut, P4.xOut, STUDY_CASE],
   },
 ];
 

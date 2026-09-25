@@ -20,7 +20,6 @@
  */
 import React from "react";
 import { theme } from "../theme";
-import { mulberry32 } from "../helpers";
 
 const W = theme.canvas.width;
 const H = theme.canvas.height;
@@ -169,90 +168,6 @@ export const MorningStar: React.FC = () => (
   </Frame>
 );
 
-// ═══ (3) Study Case — a price chart with its volume, very simple ═══
-/**
- * The reference's SHAPE — a long climb, a top, a sharp fall and a partial
- * recovery, volume underneath — not its numbers. Seeded, so it never changes
- * between renders; unlabelled, so nothing is presented as real.
- */
-const N = 34;
-const SHAPE = (q: number) =>
-  q < 0.7
-    ? 0.08 + 0.87 * Math.pow(q / 0.7, 1.25)
-    : q < 0.84
-      ? 0.95 - ((q - 0.7) / 0.14) * 0.42
-      : 0.53 + ((q - 0.84) / 0.16) * 0.2;
-const SERIES = (() => {
-  const rng = mulberry32(17);
-  const out: { o: number; h: number; l: number; c: number; v: number }[] = [];
-  let prev = SHAPE(0);
-  for (let i = 0; i < N; i++) {
-    const c = SHAPE(i / (N - 1)) + (rng() - 0.5) * 0.07;
-    const o = prev + (rng() - 0.5) * 0.02;
-    const h = Math.max(o, c) + rng() * 0.035;
-    const l = Math.min(o, c) - rng() * 0.035;
-    out.push({ o, h, l, c, v: 0.25 + rng() * 0.45 + Math.abs(c - o) * 3 });
-    prev = c;
-  }
-  return out;
-})();
-const SC = {
-  x0: 230,
-  x1: 1690,
-  top: 210,
-  bottom: 700,
-  volTop: 750,
-  volBottom: 915,
-};
-const LO = Math.min(...SERIES.map((d) => d.l));
-const HI = Math.max(...SERIES.map((d) => d.h));
-const VMAX = Math.max(...SERIES.map((d) => d.v));
-
-export const SimpleChart: React.FC = () => {
-  const step = (SC.x1 - SC.x0) / N;
-  const bw = step * 0.6;
-  const y = (p: number) =>
-    SC.bottom - ((p - LO) / (HI - LO)) * (SC.bottom - SC.top);
-  return (
-    <Frame>
-      {SERIES.map((d, i) => {
-        const x = SC.x0 + step * (i + 0.5);
-        const up = d.c >= d.o;
-        const ink = up ? theme.colors.candleGreen : theme.colors.candleRed;
-        const top = y(Math.max(d.o, d.c));
-        const h = Math.max(6, Math.abs(y(d.o) - y(d.c)));
-        const r = corner(bw, h);
-        const vh = (d.v / VMAX) * (SC.volBottom - SC.volTop);
-        return (
-          <g key={i}>
-            {/* volume, in the candle's colour but pale — as in the reference */}
-            <rect
-              x={x - step * 0.42}
-              y={SC.volBottom - vh}
-              width={step * 0.84}
-              height={vh}
-              fill={ink}
-              opacity={0.35}
-            />
-            <rect
-              x={x - 4}
-              y={y(d.h)}
-              width={8}
-              height={y(d.l) - y(d.h)}
-              fill={ink}
-            />
-            <rect
-              x={x - bw / 2}
-              y={top}
-              width={bw}
-              height={h}
-              rx={r}
-              ry={r}
-              fill={ink}
-            />
-          </g>
-        );
-      })}
-    </Frame>
-  );
-};
+// (3) Study Case has no drawing: its box shows the BBRI scene's own frame
+// (Composition: STUDY_CASE) — Simon: "Itu adalah visual langsung dari scene
+// study case".
