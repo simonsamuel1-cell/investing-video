@@ -86,6 +86,8 @@ export const theme = {
     wick: 1.5,
     type: { size: 30, weight: 600, axis: 500, name: 36, price: 70 },
   },
+  /** Candle body corners in the Indonesian cut: ratio of the body's width, and the cap (px). */
+  candle: { round: 0.18, roundMax: 8 },
   /**
    * The roadmap — this video's "Scene Transisi" (continuity/Roadmap.tsx).
    * Simon: "Stylenya sama persis seperti TA01, scene transisi pertama." So these
@@ -100,6 +102,14 @@ export const theme = {
     cardShadow: "0 10px 24px rgba(0, 0, 0, 0.05)",
     glowTint: "rgba(95, 77, 238, 0.14)",
     labelSize: 30,
-    ease: Easing.bezier(0.33, 0, 0.67, 1),
+    /**
+     * ⚠ NOT TA01's EASY EASE ANY MORE. Simon, on the swap: "animasi gerakannya
+     * kayak masih kurang easy ease nya, more like gerakan cepatnya gaada jadi
+     * gerakan easy ease nya ga keliatan, apalagi pas uda nyampe". (0.33, 0,
+     * 0.67, 1) is nearly straight through its middle, so a big move read as
+     * constant speed. This one starts slow, runs FAST through the middle and
+     * spends its last third settling — the landing is where the ease shows.
+     */
+    ease: Easing.bezier(0.7, 0, 0.2, 1),
   },
 } as const;

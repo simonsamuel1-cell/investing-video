@@ -4,7 +4,9 @@
  * color. Flat fill, no gradients. buildProgress grows the body open→close;
  * wickProgress extends the wicks from the body toward high/low.
  */
+import { useContext } from "react";
 import { theme } from "../theme";
+import { Cut } from "../cut";
 
 export type CandleProps = {
   x: number; // center x
@@ -47,10 +49,25 @@ export const Candle = ({
   // wicks extend from body extremes toward high / low
   const hiPrice = Math.max(open, liveClose);
   const loPrice = Math.min(open, liveClose);
-  const yHi = scale(hiPrice + (Math.max(high, hiPrice) - hiPrice) * wickProgress);
-  const yLo = scale(loPrice - (loPrice - Math.min(low, loPrice)) * wickProgress);
+  const yHi = scale(
+    hiPrice + (Math.max(high, hiPrice) - hiPrice) * wickProgress,
+  );
+  const yLo = scale(
+    loPrice - (loPrice - Math.min(low, loPrice)) * wickProgress,
+  );
 
   const wickW = Math.max(2, width * 0.12);
+  /**
+   * ⚠ ROUNDED IN THE INDONESIAN CUT — Simon: "style candlestick ubah semua
+   * jadi rounded corner". TA01's rule, scaled for this film's wider range of
+   * candle sizes: about a fifth of the body's width, capped at 8px so a big
+   * candle keeps its corners crisp, and never more than half the body's height
+   * so a doji stays a bar rather than a pill. The English cut keeps rx 2.
+   */
+  const rounded = useContext(Cut) === "indo";
+  const r = rounded
+    ? Math.min(width * theme.candle.round, bodyH / 2, theme.candle.roundMax)
+    : 2;
   return (
     <g opacity={opacity * (dim ? 0.25 : 1)}>
       <line
@@ -62,7 +79,15 @@ export const Candle = ({
         strokeWidth={wickStroke ? 4 : wickW}
         strokeLinecap="round"
       />
-      <rect x={x - width / 2} y={bodyTop} width={width} height={bodyH} rx={2} fill={color} />
+      <rect
+        x={x - width / 2}
+        y={bodyTop}
+        width={width}
+        height={bodyH}
+        rx={r}
+        ry={r}
+        fill={color}
+      />
     </g>
   );
 };

@@ -338,6 +338,10 @@ const mapAt = (z: number) => {
   return { X, Y, step, s, body: ((PLOT.w - 28) / N_CANDLES) * 0.6 * s };
 };
 
+/** The rounded body corner — the film's candle rule, its cap scaled with the zoom. */
+const cornerOf = (w: number, h: number, s: number) =>
+  Math.min(w * theme.candle.round, h / 2, theme.candle.roundMax * s);
+
 /** Fades a label out as it nears the plot's edge rather than cutting it. */
 const inside = (v: number, lo: number, hi: number, feather = 24) =>
   Math.max(0, Math.min(1, (v - lo) / feather, (hi - v) / feather));
@@ -627,7 +631,7 @@ const Scene01App = () => {
                     y={top}
                     width={body}
                     height={bodyH}
-                    rx={2 * s}
+                    rx={cornerOf(body, bodyH, s)}
                     fill={ink}
                     fillOpacity={1 - h}
                   />
@@ -637,7 +641,7 @@ const Scene01App = () => {
                       y={top}
                       width={body}
                       height={bodyH}
-                      rx={2 * s}
+                      rx={cornerOf(body, bodyH, s)}
                       fill="none"
                       stroke={theme.colors.neutralMuted}
                       strokeOpacity={h}
