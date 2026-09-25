@@ -226,7 +226,8 @@ const Box = ({
           fontFamily: theme.type.family,
           fontSize: theme.roadmap.labelSize,
           fontWeight: 700,
-          color: theme.colors.ink,
+          // indigo, as TA09/TA11's roadmaps — Simon: "warna text di tiap scene transisi jadi indigo aja deh"
+          color: theme.colors.indigo,
           letterSpacing: 0.5,
           opacity: labelOpacity,
         }}
