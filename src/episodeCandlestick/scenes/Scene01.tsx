@@ -8,7 +8,7 @@
  * markers, or price targets.
  */
 import { useContext } from "react";
-import { useCurrentFrame } from "remotion";
+import { interpolate, interpolateColors, useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 import {
   sec,
@@ -25,7 +25,7 @@ import { PricePanel, Ticker } from "../components/PricePanel";
 import { FocusFrame } from "../components/FocusFrame";
 import { Chip } from "../components/Chip";
 import { IllustrationTag } from "../components/IllustrationTag";
-import { Cut } from "../cut";
+import { Cut, IndoClock } from "../cut";
 
 // ═══ EDIT ═══
 const CHART_LEFT = 150; // chart box, px (whole group shifted +20px right)
@@ -201,6 +201,19 @@ const Scene01Classic = () => {
  * ⚠ NO "Ilustrasi" CHIP, though TA07 has one: that word never goes on screen
  * (Simon's standing rule; 019 keeps its literal only as a frozen migration).
  * ⚠ NO COMPANY NAME: $ABCD is fictional, and a name for it would be invented.
+ *
+ * ═══ AND IT GOES ON UNDER THE FIRST PASSAGE ═══ (output frames of the cut)
+ *
+ *   284  "Previewnya membesar ke bagian yang di-highlight 'Sequence'." The
+ *        chart zooms into the Sequence box — a new window and price range fed
+ *        to the same mapping every frame, never a CSS scale — and then every
+ *        candle but the 5th in the box goes hollow: 50%, grey border, white.
+ *   450  "Candlenya satu per satu kembali ke style sebelumnya, tapi yang di
+ *        dalam kotak sequence ini aja." Left to right, one at a time.
+ *   538  the roadmap folds whatever this is showing.
+ *
+ * The cut holds SC01's frame 227 under the passage, so these beats cannot run
+ * on the scene's own clock; they run on the cut's output frame (IndoClock).
  */
 const PANEL = { x: 96, y: 150, w: 1728, h: 750 };
 const PLOT = {
@@ -213,49 +226,138 @@ const HEAD = { x: 40, avatar: 52, gap: 16 };
 const AXIS_CX = PANEL.x + 84;
 const FRAMES = ["5m", "15m", "1H", "1D", "1W"];
 const MONTHS = ["Jul", "Agu", "Sep"];
-const LEVELS = [1200, 1300, 1400];
+/** The hundreds always; the fifties join them as the zoom opens the scale up. */
+const LEVELS = [1200, 1250, 1300, 1350, 1400];
 
-const APP_X = (i: number) =>
-  PLOT.x + 14 + ((PLOT.w - 28) * i) / (N_CANDLES - 1);
-const APP_BODY = ((PLOT.w - 28) / N_CANDLES) * 0.6;
-const appY = priceScale(P_MIN, P_MAX, PLOT.y, PLOT.y + PLOT.h);
+// ═══ EDIT — the passage beats, in the cut's OUTPUT frames ═══
+const ZOOM = { at: 284, dur: 40 };
+const HOLLOW = {
+  at: ZOOM.at + ZOOM.dur + 4,
+  dur: 12,
+  opacity: 0.5,
+  border: 2.5,
+};
+const RESTORE = { at: 450, step: 8, dur: 10 };
+/** "buat candle ke-1, ke-5, ke-8 jadi merah" — in the Sequence box. */
+const RED_IN_BOX = [1, 5, 8];
+/** The one candle that never goes hollow: the 5th in the box. */
+const KEEP_IN_BOX = 5;
+/** How much of the plot the box fills once zoomed. */
+const ZOOM_FILL = 0.7;
+/** The zoomed box: its top this far into the plot (room for its chip above). */
+const ZOOM_BOX = { top: 150, bottom: 20 };
+// ═══════════════════════════════════════════════════════════════════════════
+
+const BOX = Array.from(
+  { length: SEQ_LAST - SEQ_FIRST + 1 },
+  (_, k) => SEQ_FIRST + k,
+);
+const KEEP = BOX[KEEP_IN_BOX - 1];
+/** This cut's candles: the three in the box turned red — same range, open and close swapped. */
+const APP_SERIES: OHLC[] = SERIES.map((c, i) =>
+  RED_IN_BOX.some((n) => BOX[n - 1] === i) && c.close > c.open
+    ? { ...c, open: c.close, close: c.open }
+    : c,
+);
+
 /** Indonesian grouping, as the panel it copies: 1.441, +3,18%. */
 const idNum = (n: number) => Math.round(n).toLocaleString("de-DE");
-const LAST = SERIES[N_CANDLES - 1].close;
-const PREV = SERIES[N_CANDLES - 2].close;
+const LAST = APP_SERIES[N_CANDLES - 1].close;
+const PREV = APP_SERIES[N_CANDLES - 2].close;
 const CHANGE = ((LAST - PREV) / PREV) * 100;
 const CHANGE_TXT = `${CHANGE >= 0 ? "+" : "−"}${Math.abs(CHANGE).toFixed(2).replace(".", ",")}%`;
 
-const APP_A = {
-  x: APP_X(FOCUS_IDX) - FOCUS_W_SINGLE / 2,
-  y: appY(focusCandle.high) - FOCUS_PAD_Y,
-  w: FOCUS_W_SINGLE,
-  h: appY(focusCandle.low) - appY(focusCandle.high) + FOCUS_PAD_Y * 2,
+/**
+ * THE MAPPING, AS A FUNCTION OF THE ZOOM. At z = 0 it is the panel as first
+ * drawn (all 40 candles, the full range with 6% air); at z = 1 the Sequence box
+ * fills ZOOM_FILL of the plot's width and sits between ZOOM_BOX's margins.
+ * Width and span interpolate GEOMETRICALLY and the centre moves in step with
+ * them, so the zoom closes at an even rate and the box never slides sideways.
+ */
+const I0 = { c: (N_CANDLES - 1) / 2, w: N_CANDLES - 1 };
+const I1 = {
+  c: (SEQ_FIRST + SEQ_LAST) / 2,
+  w: (SEQ_LAST - SEQ_FIRST + 1) / ZOOM_FILL,
 };
-const APP_STEP = (PLOT.w - 28) / (N_CANDLES - 1);
-const APP_B = {
-  x: APP_X(SEQ_FIRST) - APP_STEP / 2,
-  y: appY(seqHigh) - FOCUS_PAD_Y,
-  w: APP_STEP * (SEQ_LAST - SEQ_FIRST + 1),
-  h: appY(seqLow) - appY(seqHigh) + FOCUS_PAD_Y * 2,
+const PAD = (P_MAX - P_MIN) * 0.06;
+const S0 = { hi: P_MAX + PAD, lo: P_MIN - PAD };
+const K1 =
+  (PLOT.h - ZOOM_BOX.top - ZOOM_BOX.bottom - FOCUS_PAD_Y * 2) /
+  (seqHigh - seqLow);
+const S1 = {
+  hi: seqHigh + (ZOOM_BOX.top + FOCUS_PAD_Y) / K1,
+  lo: seqHigh + (ZOOM_BOX.top + FOCUS_PAD_Y) / K1 - PLOT.h / K1,
 };
+const geo = (a: number, b: number, z: number) => a * Math.pow(b / a, z);
+const mapAt = (z: number) => {
+  const w = geo(I0.w, I1.w, z);
+  const iq = (I0.w - w) / (I0.w - I1.w);
+  const ic = lerp(I0.c, I1.c, iq);
+  const span = geo(S0.hi - S0.lo, S1.hi - S1.lo, z);
+  const sq = (S0.hi - S0.lo - span) / (S0.hi - S0.lo - (S1.hi - S1.lo));
+  const hi = lerp(S0.hi, S1.hi, sq);
+  const X = (i: number) =>
+    PLOT.x + 14 + ((PLOT.w - 28) * (i - (ic - w / 2))) / w;
+  const Y = (p: number) => PLOT.y + ((hi - p) / span) * PLOT.h;
+  const step = (PLOT.w - 28) / w;
+  return { X, Y, step, body: ((PLOT.w - 28) / N_CANDLES) * 0.6 * (I0.w / w) };
+};
+
+/** Fades a label out as it nears the plot's edge rather than cutting it. */
+const inside = (v: number, lo: number, hi: number, feather = 24) =>
+  Math.max(0, Math.min(1, (v - lo) / feather, (hi - v) / feather));
 
 const Scene01App = () => {
   const f = useCurrentFrame();
+  /** The cut's OUTPUT frame — see the header; 0 means no passage beats. */
+  const out = useContext(IndoClock) ?? 0;
   const A = theme.appPanel;
   const font = theme.type.family;
+  const ease = (a: number, d: number) =>
+    interpolate(out, [a, a + d], [0, 1], {
+      extrapolateLeft: "clamp",
+      extrapolateRight: "clamp",
+      easing: theme.motion.easy,
+    });
+
+  const z = ease(ZOOM.at, ZOOM.dur);
+  const { X, Y, step, body } = mapAt(z);
+  const hollow = ease(HOLLOW.at, HOLLOW.dur);
+  const restoreOrder = BOX.filter((i) => i !== KEEP);
+  const hollowOf = (i: number) => {
+    if (i === KEEP) return 0;
+    const k = restoreOrder.indexOf(i);
+    const back = k < 0 ? 0 : ease(RESTORE.at + k * RESTORE.step, RESTORE.dur);
+    return hollow * (1 - back);
+  };
+
+  const rectA = {
+    x: X(FOCUS_IDX) - FOCUS_W_SINGLE / 2,
+    y: Y(focusCandle.high) - FOCUS_PAD_Y,
+    w: FOCUS_W_SINGLE,
+    h: Y(focusCandle.low) - Y(focusCandle.high) + FOCUS_PAD_Y * 2,
+  };
+  const rectB = {
+    x: X(SEQ_FIRST) - step / 2,
+    y: Y(seqHigh) - FOCUS_PAD_Y,
+    w: step * BOX.length,
+    h: Y(seqLow) - Y(seqHigh) + FOCUS_PAD_Y * 2,
+  };
 
   const chartOpacity = fadeIn(f, sec(T.chartIn), 12);
   const m = progress(f, sec(T.move), sec(T.moveDur));
   const rect = {
-    x: lerp(APP_A.x, APP_B.x, m),
-    y: lerp(APP_A.y, APP_B.y, m),
-    w: lerp(APP_A.w, APP_B.w, m),
-    h: lerp(APP_A.h, APP_B.h, m),
+    x: lerp(rectA.x, rectB.x, m),
+    y: lerp(rectA.y, rectB.y, m),
+    w: lerp(rectA.w, rectB.w, m),
+    h: lerp(rectA.h, rectB.h, m),
   };
   const dimStrength = progress(f, sec(T.focus), 12) * (1 - m);
   const strokeOpacity = fadeIn(f, sec(T.focus), 10);
   const up = LAST >= PREV;
+  const lastY = Y(LAST);
+  const lastIn = inside(lastY, PLOT.y, PLOT.y + PLOT.h);
+  const wick = lerp(A.wick, A.wick * 2, z);
 
   return (
     <SafeArea>
@@ -403,100 +505,145 @@ const Scene01App = () => {
           width={theme.canvas.width}
           height={theme.canvas.height}
         >
-          {LEVELS.map((v) => (
-            <g key={v}>
-              <line
-                x1={PLOT.x}
-                y1={appY(v)}
-                x2={PLOT.x + PLOT.w}
-                y2={appY(v)}
-                stroke={A.gridline}
-                strokeWidth={A.border1}
-                strokeDasharray="2 8"
+          <defs>
+            {/* the plot: candles, gridlines and the last-price line stay inside it as the zoom opens */}
+            <clipPath id="sc01-plot">
+              <rect
+                x={PLOT.x}
+                y={PANEL.y + 168}
+                width={PLOT.w}
+                height={PLOT.y + PLOT.h + 8 - (PANEL.y + 168)}
               />
+            </clipPath>
+          </defs>
+          {LEVELS.map((v) => {
+            const y = Y(v);
+            const o =
+              (v % 100 === 0 ? 1 : z) * inside(y, PLOT.y, PLOT.y + PLOT.h);
+            if (o <= 0.001) return null;
+            return (
+              <g key={v} opacity={o}>
+                <line
+                  x1={PLOT.x}
+                  y1={y}
+                  x2={PLOT.x + PLOT.w}
+                  y2={y}
+                  stroke={A.gridline}
+                  strokeWidth={A.border1}
+                  strokeDasharray="2 8"
+                />
+                <text
+                  x={AXIS_CX}
+                  y={y + 10}
+                  textAnchor="middle"
+                  fontFamily={font}
+                  fontSize={A.type.size}
+                  fontWeight={A.type.axis}
+                  fill={A.textMuted}
+                >
+                  {idNum(v)}
+                </text>
+              </g>
+            );
+          })}
+          <g clipPath="url(#sc01-plot)">
+            {APP_SERIES.map((c, i) => {
+              const x = X(i);
+              if (x < PLOT.x - step || x > PLOT.x + PLOT.w + step) return null;
+              const ink =
+                c.close >= c.open
+                  ? theme.colors.candleGreen
+                  : theme.colors.candleRed;
+              const h = hollowOf(i);
+              const fill =
+                h > 0 ? interpolateColors(h, [0, 1], [ink, A.surface]) : ink;
+              const line =
+                h > 0
+                  ? interpolateColors(
+                      h,
+                      [0, 1],
+                      [ink, theme.colors.neutralMuted],
+                    )
+                  : ink;
+              const top = Math.min(Y(c.open), Y(c.close));
+              return (
+                <g key={i} opacity={1 - (1 - HOLLOW.opacity) * h}>
+                  <line
+                    x1={x}
+                    y1={Y(c.high)}
+                    x2={x}
+                    y2={Y(c.low)}
+                    stroke={line}
+                    strokeWidth={wick}
+                  />
+                  <rect
+                    x={x - body / 2}
+                    y={top}
+                    width={body}
+                    height={Math.max(2, Math.abs(Y(c.close) - Y(c.open)))}
+                    rx={Math.max(2, body * 0.08)}
+                    fill={fill}
+                    stroke={line}
+                    strokeWidth={HOLLOW.border * h}
+                  />
+                </g>
+              );
+            })}
+            {/* the last-price line; its readout is the pill on the axis.
+                ⚠ IT LEAVES WITH ITS PILL — the zoom lifts 1.441 above the plot,
+                and the wash above the plot is still inside the clip. */}
+            <line
+              x1={PLOT.x}
+              y1={lastY}
+              x2={PLOT.x + PLOT.w}
+              y2={lastY}
+              opacity={lastIn}
+              stroke={A.text}
+              strokeWidth={A.border1}
+              strokeDasharray="8 8"
+            />
+          </g>
+          {MONTHS.map((t, i) => {
+            const x = X((i * (N_CANDLES - 1)) / (MONTHS.length - 1));
+            const o = inside(x, PLOT.x - 40, PLOT.x + PLOT.w + 40, 40);
+            if (o <= 0.001) return null;
+            return (
               <text
-                x={AXIS_CX}
-                y={appY(v) + 10}
+                key={t}
+                x={x}
+                y={PLOT.y + PLOT.h + 34}
                 textAnchor="middle"
                 fontFamily={font}
                 fontSize={A.type.size}
                 fontWeight={A.type.axis}
                 fill={A.textMuted}
+                opacity={o}
               >
-                {idNum(v)}
+                {t}
               </text>
-            </g>
-          ))}
-          {SERIES.map((c, i) => {
-            const x = APP_X(i);
-            const bull = c.close >= c.open;
-            const ink = bull
-              ? theme.colors.candleGreen
-              : theme.colors.candleRed;
-            const top = Math.min(appY(c.open), appY(c.close));
-            return (
-              <g key={i}>
-                <line
-                  x1={x}
-                  y1={appY(c.high)}
-                  x2={x}
-                  y2={appY(c.low)}
-                  stroke={ink}
-                  strokeWidth={A.wick}
-                />
-                <rect
-                  x={x - APP_BODY / 2}
-                  y={top}
-                  width={APP_BODY}
-                  height={Math.max(2, Math.abs(appY(c.close) - appY(c.open)))}
-                  rx={2}
-                  fill={ink}
-                />
-              </g>
             );
           })}
-          {/* the last-price line; its readout is the pill on the axis */}
-          <line
-            x1={PLOT.x}
-            y1={appY(LAST)}
-            x2={PLOT.x + PLOT.w}
-            y2={appY(LAST)}
-            stroke={A.text}
-            strokeWidth={A.border1}
-            strokeDasharray="8 8"
-          />
-          {MONTHS.map((t, i) => (
-            <text
-              key={t}
-              x={PLOT.x + 14 + ((PLOT.w - 28) * i) / (MONTHS.length - 1)}
-              y={PLOT.y + PLOT.h + 34}
-              textAnchor="middle"
-              fontFamily={font}
-              fontSize={A.type.size}
-              fontWeight={A.type.axis}
-              fill={A.textMuted}
-            >
-              {t}
-            </text>
-          ))}
         </svg>
-        <div
-          style={{
-            position: "absolute",
-            left: AXIS_CX,
-            top: appY(LAST) - 22,
-            transform: "translateX(-50%)",
-            background: A.text,
-            color: A.surface,
-            fontFamily: font,
-            fontSize: A.type.size,
-            fontWeight: A.type.weight,
-            borderRadius: A.radius.sm,
-            padding: "6px 16px",
-          }}
-        >
-          {idNum(LAST)}
-        </div>
+        {lastIn > 0.001 && (
+          <div
+            style={{
+              position: "absolute",
+              left: AXIS_CX,
+              top: lastY - 22,
+              transform: "translateX(-50%)",
+              background: A.text,
+              color: A.surface,
+              fontFamily: font,
+              fontSize: A.type.size,
+              fontWeight: A.type.weight,
+              borderRadius: A.radius.sm,
+              padding: "6px 16px",
+              opacity: lastIn,
+            }}
+          >
+            {idNum(LAST)}
+          </div>
+        )}
       </div>
 
       {f >= sec(T.focus) && (
@@ -512,16 +659,16 @@ const Scene01App = () => {
 
       <Chip
         label="One Session"
-        x={APP_A.x + APP_A.w + CHIP_GAP_X}
-        y={APP_A.y - CHIP_RISE}
+        x={rectA.x + rectA.w + CHIP_GAP_X}
+        y={rectA.y - CHIP_RISE}
         anchor="left"
         startFrame={sec(T.chipA)}
         opacity={fadeOut(f, sec(T.move), 10)}
       />
       <Chip
         label="The Sequence"
-        x={APP_B.x}
-        y={APP_B.y - CHIP_RISE}
+        x={rectB.x}
+        y={rectB.y - CHIP_RISE}
         anchor="left"
         startFrame={sec(T.move)}
       />

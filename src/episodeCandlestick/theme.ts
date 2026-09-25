@@ -53,6 +53,8 @@ export const theme = {
   stroke: { hairline: 1, standard: 2 },
   motion: {
     ease: Easing.bezier(0.22, 1, 0.36, 1), // no overshoot
+    /** After Effects' Easy Ease — symmetric; for camera moves (SC01's zoom). */
+    easy: Easing.bezier(0.33, 0, 0.67, 1),
     revealFrames: 12,
     fadeFrames: 10,
   },

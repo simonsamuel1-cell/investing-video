@@ -52,7 +52,7 @@ import {
   indoSegment,
 } from "./data/indoTimeline";
 import { FilmTracks } from "./tracks";
-import { Cut } from "./cut";
+import { Cut, IndoClock } from "./cut";
 
 export { INDO_TOTAL_FRAMES };
 
@@ -295,20 +295,22 @@ export const CandlestickComposition = ({
           Inside the Sequence, Freeze's `frame` is local: exactly `runFrame`. */}
       {indo ? (
         <Cut.Provider value="indo">
-          <FilmTracks.Provider value={false}>
-            <Sequence
-              from={runAt - runFrame}
-              layout="none"
-              showInTimeline={false}
-            >
-              <Freeze frame={runFrame} active={rate === 0}>
-                <Film />
-              </Freeze>
-            </Sequence>
-            {STOPS.map((stop) => (
-              <RoadmapStop key={stop.at} stop={stop} Film={Film} />
-            ))}
-          </FilmTracks.Provider>
+          <IndoClock.Provider value={f}>
+            <FilmTracks.Provider value={false}>
+              <Sequence
+                from={runAt - runFrame}
+                layout="none"
+                showInTimeline={false}
+              >
+                <Freeze frame={runFrame} active={rate === 0}>
+                  <Film />
+                </Freeze>
+              </Sequence>
+              {STOPS.map((stop) => (
+                <RoadmapStop key={stop.at} stop={stop} Film={Film} />
+              ))}
+            </FilmTracks.Provider>
+          </IndoClock.Provider>
         </Cut.Provider>
       ) : (
         <Film />
