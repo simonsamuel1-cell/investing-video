@@ -187,6 +187,12 @@ const STOPS: Stop[] = [
     end: P1.end,
     freeze: P1.xOut,
     previews: [null, null, null, null],
+    /* ⚠ 72, NOT 90 — TA01's own first push. From 538 the swap lands at 622,
+       and a 90-frame push set off on that same frame: the grid never came to
+       rest, so its ease-out read as no ease at all (Simon: "580-622 kayak
+       gaada easy ease nya"). At 72 the grid holds 622-640, the glow comes on
+       after it has landed, and then the push. */
+    push: 72,
   },
   {
     at: P2.at,

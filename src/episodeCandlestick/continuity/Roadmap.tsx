@@ -243,6 +243,8 @@ export type Stop = {
   freeze: number;
   /** Per box, the original frame showing in it (a picture folded there earlier), or null. */
   previews: readonly (number | null)[];
+  /** This stop's push, in frames, if not M.push. */
+  push?: number;
 };
 
 /** Folds the frozen picture into `box`; clip and scale on one curve. */
@@ -282,8 +284,9 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   if (f < stop.at || f >= stop.end + M.dissolve) return null;
 
   const shrink = ease(f, stop.at, M.shrink);
-  const pushAt = stop.end - M.push;
-  const push = ease(f, pushAt, M.push);
+  const pushDur = stop.push ?? M.push;
+  const pushAt = stop.end - pushDur;
+  const push = ease(f, pushAt, pushDur);
   /** Starts where the push lands, so the roadmap leaves off the TOP of the new chapter. */
   const gone = ease(f, stop.end, M.dissolve);
   const glowIn = ease(f, pushAt - M.glowLead, M.glowLead) * (1 - push);
