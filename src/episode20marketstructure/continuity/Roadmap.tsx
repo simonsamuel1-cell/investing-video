@@ -20,7 +20,7 @@
  *   stop 4   SC17 → (3),  push into (4) → SC18
  *
  * ⚠ THE CARDS ARE EMPTY ON PURPOSE ("visualnya kosongkan"); a box shows a
- * picture only once one has folded into it. The names are "Lorem Ipsum".
+ * picture only once one has folded into it.
  *
  * ⚠ MOUNTED BARE, NOT IN A <Sequence>: `<Freeze frame={n}>` then means exactly
  * the built film's frame n.
@@ -49,29 +49,29 @@ const INTRO = {
  */
 const GRID = { x: (theme.canvas.width - (CARD.w * 2 + CARD.gap)) / 2, y: 173 };
 
-/** "text nya Lorem Ipsum" — until the chapters are named. */
+/** Simon's names — "Semua nya huruf kapital di huruf pertama tiap kata". */
 export const BOXES = [
-  { x: GRID.x, y: GRID.y, w: CARD.w, h: CARD.h, text: "Lorem Ipsum" },
+  { x: GRID.x, y: GRID.y, w: CARD.w, h: CARD.h, text: "Market Structure" },
   {
     x: GRID.x + CARD.w + CARD.gap,
     y: GRID.y,
     w: CARD.w,
     h: CARD.h,
-    text: "Lorem Ipsum",
+    text: "Struktur & Level Harga",
   },
   {
     x: GRID.x,
     y: GRID.y + CARD.h + CARD.gap,
     w: CARD.w,
     h: CARD.h,
-    text: "Lorem Ipsum",
+    text: "Tanda Perubahan Struktur",
   },
   {
     x: GRID.x + CARD.w + CARD.gap,
     y: GRID.y + CARD.h + CARD.gap,
     w: CARD.w,
     h: CARD.h,
-    text: "Lorem Ipsum",
+    text: "Praktik Di Chart",
   },
 ] as const;
 
@@ -89,7 +89,7 @@ export const M = {
    * ⚠ THE LABELS LEAVE IN THE FIRST THIRD OF THE PUSH. The push magnifies the
    * whole sheet, and the label under the card it enters swells to ~110px and
    * sweeps down through the subtitle band — with the subtitles on, it wrote
-   * itself over them ("dalam satu chart nyata" under a giant "Lorem Ipsum").
+   * itself over them ("dalam satu chart nyata" under a giant chapter name).
    * The one departure from TA01's first transition, and only in this move.
    */
   labelsOut: 30,
