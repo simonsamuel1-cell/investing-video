@@ -172,6 +172,8 @@ const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut s
  * passage while its spotlight walks the phases (Scene10: HELD_SPOTS).
  */
 const STOP2_AT = 5673;
+/** "Sekarang scene transisi ketiga. Mulainya dari 8340 aja" — SC15 holds until then. */
+const STOP3_AT = 8340;
 const [P1, P2, P3, P4] = PASSAGES;
 const STOPS: Stop[] = [
   {
@@ -202,7 +204,7 @@ const STOPS: Stop[] = [
     previews: [P2.hold, StructureLevel, ShootingStar, TuntunLogoCard],
   },
   {
-    at: P3.at,
+    at: STOP3_AT,
     land: 1,
     into: 2,
     end: P3.end + CUT_TAIL,
