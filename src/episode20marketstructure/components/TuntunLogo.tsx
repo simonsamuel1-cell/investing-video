@@ -54,5 +54,5 @@ export const TuntunLogo = ({ cx, cy, size }: { cx: number; cy: number; size: num
 
 /** The roadmap's fourth box: the mark alone, centred, composed at full frame size. */
 export const TuntunLogoCard: React.FC = () => (
-  <TuntunLogo cx={theme.canvas.width / 2} cy={theme.canvas.height / 2} size={560} />
+  <TuntunLogo cx={theme.canvas.width / 2} cy={theme.canvas.height / 2} size={520} />
 );
