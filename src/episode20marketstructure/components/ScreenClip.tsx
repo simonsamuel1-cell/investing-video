@@ -12,7 +12,9 @@
  * Audio is muted here and nowhere else has to remember to: the episode has ONE
  * voice, mounted once at the root.
  */
+import { useContext } from "react";
 import { AbsoluteFill, OffthreadVideo, staticFile } from "remotion";
+import { FilmTracks } from "../tracks";
 import { theme } from "../theme";
 
 export const ScreenClip = ({
@@ -36,7 +38,11 @@ export const ScreenClip = ({
   const width = height * aspect;
   return (
     <AbsoluteFill
-      style={{ alignItems: "center", justifyContent: "flex-start", paddingTop: top }}
+      style={{
+        alignItems: "center",
+        justifyContent: "flex-start",
+        paddingTop: top,
+      }}
     >
       <div
         style={{
@@ -47,6 +53,7 @@ export const ScreenClip = ({
         }}
       >
         <OffthreadVideo
+          showInTimeline={useContext(FilmTracks)}
           src={staticFile(src)}
           muted
           style={{ height, width, marginLeft: -inset, display: "block" }}
