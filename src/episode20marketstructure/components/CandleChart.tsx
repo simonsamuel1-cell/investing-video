@@ -1,7 +1,7 @@
 /**
  * CandleChart.tsx — OHLC plotting with a frame-driven progressive reveal.
  *
- * candleGreen and candleRed appear HERE (and in the roadmap's RoadmapCandles) and nowhere else, on
+ * candleGreen and candleRed appear HERE and nowhere else in the episode, on
  * bodies and wicks only. Axes, gridlines and tick labels stay neutral.
  *
  * The price scale is computed from the FULL window, never from the revealed
@@ -54,6 +54,8 @@ export const CandleChart = ({
   range,
   hollowFrom,
   hollow = 0,
+  view,
+  focus,
 }: {
   bars: Bar[];
   box: Rect;
@@ -79,8 +81,20 @@ export const CandleChart = ({
   hollowFrom?: number;
   /** 0→1 for those bars: 1 = white body, ink outline; 0 = candle colour. */
   hollow?: number;
+  /**
+   * A CAMERA on the chart: canvas point p is drawn at p·k + (dx, dy). The
+   * grid is moved, never the picture — candle widths and wicks follow k, but
+   * a gridline stays a hairline at any zoom. Absent, nothing moves.
+   */
+  view?: { k: number; dx: number; dy: number };
+  /** Bars outside [from, to) drawn at `others` opacity — the rest of the chart arriving around a few. */
+  focus?: { from: number; to: number; others: number };
 }) => {
   const g = barGrid(bars, box, pad, range);
+  const v = view ?? { k: 1, dx: 0, dy: 0 };
+  const vx = (x: number) => x * v.k + v.dx;
+  const vy = (y: number) => y * v.k + v.dy;
+  const body = g.body * v.k;
   const shown = Math.ceil(bars.length * Math.max(0, Math.min(1, reveal)));
   const lines = ticks ?? [];
 
@@ -90,11 +104,11 @@ export const CandleChart = ({
         <g opacity={axisOpacity}>
           {lines.map((p) => (
             <g key={p}>
-              <line x1={box.x} y1={g.scale(p)} x2={box.x + box.w} y2={g.scale(p)} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
+              <line x1={vx(box.x)} y1={vy(g.scale(p))} x2={vx(box.x + box.w)} y2={vy(g.scale(p))} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
               {tickLabels && (
                 <text
-                  x={box.x + box.w + 16}
-                  y={g.scale(p) + 8}
+                  x={vx(box.x + box.w) + 16}
+                  y={vy(g.scale(p)) + 8}
                   fontFamily={theme.text.family}
                   fontSize={theme.text.axis.size}
                   fontWeight={theme.text.axis.weight}
@@ -105,33 +119,36 @@ export const CandleChart = ({
               )}
             </g>
           ))}
-          <line x1={box.x} y1={box.y + box.h} x2={box.x + box.w} y2={box.y + box.h} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
+          <line x1={vx(box.x)} y1={vy(box.y + box.h)} x2={vx(box.x + box.w)} y2={vy(box.y + box.h)} stroke={theme.color.hairline} strokeWidth={theme.shape.hairline} />
         </g>
       )}
       {bars.slice(0, shown).map((b, i) => {
-        const x = g.x(i);
+        const x = vx(g.x(i));
         const color = b.c >= b.o ? theme.color.candleGreen : theme.color.candleRed;
-        const top = Math.min(g.scale(b.o), g.scale(b.c));
-        const h = Math.max(1.5, Math.abs(g.scale(b.c) - g.scale(b.o)));
-        const wick = Math.max(1, g.body * 0.14);
+        const top = vy(Math.min(g.scale(b.o), g.scale(b.c)));
+        const h = Math.max(1.5, Math.abs(g.scale(b.c) - g.scale(b.o)) * v.k);
+        const wick = Math.max(1, body * 0.14);
+        const y = (p: number) => vy(g.scale(p));
+        const seen = focus && (i < focus.from || i >= focus.to) ? focus.others : 1;
+        if (seen <= 0.001) return null;
         /* The two versions are crossfaded rather than switched, so a bar can
            fill in over time without the body jumping. */
         const out = hollowFrom !== undefined && i >= hollowFrom ? hollow : 0;
         return (
-          <g key={i}>
+          <g key={i} opacity={seen < 1 ? seen : undefined}>
             {out < 0.999 && (
               <g opacity={1 - out}>
-                <line x1={x} y1={g.scale(b.h)} x2={x} y2={g.scale(b.l)} stroke={color} strokeWidth={wick} />
-                <rect x={x - g.body / 2} y={top} width={g.body} height={h} fill={color} />
+                <line x1={x} y1={y(b.h)} x2={x} y2={y(b.l)} stroke={color} strokeWidth={wick} />
+                <rect x={x - body / 2} y={top} width={body} height={h} fill={color} />
               </g>
             )}
             {out > 0.001 && (
               <g opacity={out}>
-                <line x1={x} y1={g.scale(b.h)} x2={x} y2={g.scale(b.l)} stroke={theme.color.ink} strokeWidth={wick} />
+                <line x1={x} y1={y(b.h)} x2={x} y2={y(b.l)} stroke={theme.color.ink} strokeWidth={wick} />
                 <rect
-                  x={x - g.body / 2}
+                  x={x - body / 2}
                   y={top}
-                  width={g.body}
+                  width={body}
                   height={h}
                   fill={theme.color.surface}
                   stroke={theme.color.ink}

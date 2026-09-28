@@ -1,5 +1,5 @@
 /**
- * TitleBlock.tsx — the episode's header pair, "Market structure" over
+ * TitleBlock.tsx — the episode's header pair, "Market Structure" over
  * "Struktur pergerakan harga".
  *
  * SC02 builds it in the middle of the frame and travels it up to the title
@@ -13,7 +13,7 @@
  */
 import { theme } from "../theme";
 
-export const TITLE = "Market structure";
+export const TITLE = "Market Structure";
 export const SUBTITLE = "Struktur pergerakan harga";
 
 /** The sub-line reads 4px smaller than the body size. */

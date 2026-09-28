@@ -58,7 +58,6 @@ import { CUES, type Cue } from "./subtitles";
 import { EXTENDED_TOTAL_FRAMES, PASSAGES } from "./data/extend";
 import { FilmTracks } from "./tracks";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
-import { MarketStructureCandles } from "./continuity/RoadmapCandles";
 
 /** The film as built was 10.586 frames; Simon's four passages make it this. */
 export const TOTAL_FRAMES = EXTENDED_TOTAL_FRAMES;
@@ -168,8 +167,13 @@ const STOPS: Stop[] = [
     into: 0,
     end: P1.end + CUT_TAIL,
     freeze: P1.hold,
-    // "Kotak "Market Structure" gunakan visual seperti ini (screenshot 1)"
-    previews: [MarketStructureCandles, null, null, null],
+    /* ⚠ CONTINUOUS INTO SC02 — "dari scene transisi dibuat continuous aja".
+       The box is SC02's own frame at the push's landing (P1.end + CUT_TAIL
+       plays film frame P1.end + CUT_TAIL − P1.frames): SC02 opens zoomed on
+       the 17 candles that box shows, so the push lands on the scene itself
+       and CUTS to it instead of dissolving. */
+    previews: [P1.end + CUT_TAIL - P1.frames, null, null, null],
+    dissolve: 0,
   },
   {
     at: P2.at,
