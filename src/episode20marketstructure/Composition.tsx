@@ -58,6 +58,8 @@ import { CUES, type Cue } from "./subtitles";
 import { EXTENDED_TOTAL_FRAMES, PASSAGES } from "./data/extend";
 import { FilmTracks } from "./tracks";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
+import { ShootingStar, StructureLevel } from "./continuity/RoadmapCandles";
+import { TuntunLogoCard } from "./components/TuntunLogo";
 
 /** The film as built was 10.586 frames; Simon's four passages make it this. */
 export const TOTAL_FRAMES = EXTENDED_TOTAL_FRAMES;
@@ -157,6 +159,9 @@ const Film: React.FC = () => {
  * CameraCut into the next scene has finished (the cut's 24 frames run
  * cut−12 → cut+11, under the roadmap), so the scene is settled when the
  * roadmap dissolves off it.
+ *
+ * A box keeps its drawing (continuity/RoadmapCandles, components/TuntunLogo)
+ * until its chapter has been played and a frame of it folded in.
  */
 const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut settles on cut+11
 const [P1, P2, P3, P4] = PASSAGES;
@@ -172,7 +177,7 @@ const STOPS: Stop[] = [
        plays film frame P1.end + CUT_TAIL − P1.frames): SC02 opens zoomed on
        the 17 candles that box shows, so the push lands on the scene itself
        and CUTS to it instead of dissolving. */
-    previews: [P1.end + CUT_TAIL - P1.frames, null, null, null],
+    previews: [P1.end + CUT_TAIL - P1.frames, StructureLevel, ShootingStar, TuntunLogoCard],
     dissolve: 0,
   },
   {
@@ -181,7 +186,7 @@ const STOPS: Stop[] = [
     into: 1,
     end: P2.end + CUT_TAIL,
     freeze: P2.hold,
-    previews: [P2.hold, null, null, null],
+    previews: [P2.hold, StructureLevel, ShootingStar, TuntunLogoCard],
   },
   {
     at: P3.at,
@@ -189,7 +194,7 @@ const STOPS: Stop[] = [
     into: 2,
     end: P3.end + CUT_TAIL,
     freeze: P3.hold,
-    previews: [P2.hold, P3.hold, null, null],
+    previews: [P2.hold, P3.hold, ShootingStar, TuntunLogoCard],
   },
   {
     at: P4.at,
@@ -197,7 +202,7 @@ const STOPS: Stop[] = [
     into: 3,
     end: P4.end + CUT_TAIL,
     freeze: P4.hold,
-    previews: [P2.hold, P3.hold, P4.hold, null],
+    previews: [P2.hold, P3.hold, P4.hold, TuntunLogoCard],
   },
 ];
 

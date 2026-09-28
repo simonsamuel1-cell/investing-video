@@ -126,6 +126,10 @@ export const theme = {
     glowTint: "rgba(95, 77, 238, 0.14)",
     labelSize: 30,
     ease: Easing.bezier(0.7, 0, 0.2, 1),
+    /** "area cyan resistance" in the Struktur & Level Harga box — cyan, washed. */
+    resistance: "rgba(92, 200, 227, 0.3)",
+    /** "icon tanda seru hitam di dalam segitiga kuning" — Simon's yellow, the roadmap's only one. */
+    caution: "#FFC400",
   },
 
   motion: {

@@ -1,7 +1,7 @@
 /**
  * CandleChart.tsx — OHLC plotting with a frame-driven progressive reveal.
  *
- * candleGreen and candleRed appear HERE and nowhere else in the episode, on
+ * candleGreen and candleRed appear HERE (and in the roadmap's RoadmapCandles) and nowhere else, on
  * bodies and wicks only. Axes, gridlines and tick labels stay neutral.
  *
  * The price scale is computed from the FULL window, never from the revealed
