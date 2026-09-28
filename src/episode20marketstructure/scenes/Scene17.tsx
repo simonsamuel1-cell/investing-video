@@ -12,7 +12,9 @@
  * panel ringed as the voice names it. Then the recording steps aside and the
  * caveat is stated in words: it is a SECOND opinion, not the first one.
  */
+import { useContext } from "react";
 import { useCurrentFrame } from "remotion";
+import { OutputClock } from "../clock";
 import { Stage } from "../components/Stage";
 import { ScreenClip } from "../components/ScreenClip";
 import { HighlightBox, blink } from "../components/HighlightBox";
@@ -74,6 +76,15 @@ const WORDS = {
   weight: theme.text.title.weight,
   stagger: 10,
 };
+/**
+ * ⚠ UNDER EXTENDED PART 04 THE SCENE UNDOES ITS SECOND HALF. The film holds
+ * this scene's last still frame through the passage, and Simon: "Di 9495, text
+ * "Gunakan sebagai second opinion" fade out, dan video mp4 nya kembali ke
+ * tengah." OUTPUT frames (clock.ts) — 9495 is the passage's first frame, and
+ * the held frame never advances. The recording goes back on the same move it
+ * stepped aside on; the words leave on the episode's fade, ahead of it.
+ */
+const HELD_BACK = 9495;
 const WORD_LINES = [
   { text: "Gunakan sebagai", accent: false },
   { text: "second opinion", accent: true },
@@ -82,8 +93,15 @@ const WORD_LINES = [
 
 export const Scene17 = () => {
   const f = useCurrentFrame();
+  const out = useContext(OutputClock);
+  const back =
+    out !== null && out >= HELD_BACK ? progress(out, HELD_BACK, CLIP.over) : 0;
+  const wordsOut =
+    out !== null && out >= HELD_BACK ? fadeOut(out, HELD_BACK) : 1;
   const slide =
-    f >= T.slide ? progress(f, T.slide, CLIP.over) * -CLIP.shift : 0;
+    f >= T.slide
+      ? progress(f, T.slide, CLIP.over) * -CLIP.shift * (1 - back)
+      : 0;
   const mark =
     blink(f, T.mark, MARK.blinkStep) *
     (f >= T.markOut ? fadeOut(f, T.markOut, MARK.out) : 1);
@@ -145,7 +163,7 @@ export const Scene17 = () => {
                   fontSize: WORDS.size,
                   fontWeight: WORDS.weight,
                   color: l.accent ? theme.color.indigo : theme.color.ink,
-                  opacity: rev.opacity,
+                  opacity: rev.opacity * wordsOut,
                   whiteSpace: "nowrap",
                 }}
               >

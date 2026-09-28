@@ -174,6 +174,8 @@ const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut s
 const STOP2_AT = 5673;
 /** "Sekarang scene transisi ketiga. Mulainya dari 8340 aja" — SC15 holds until then. */
 const STOP3_AT = 8340;
+/** "scene transisi keempat mulainya di 9636 aja" — SC17 holds, and re-centres (Scene17: HELD_BACK). */
+const STOP4_AT = 9636;
 const [P1, P2, P3, P4] = PASSAGES;
 const STOPS: Stop[] = [
   {
@@ -212,7 +214,7 @@ const STOPS: Stop[] = [
     previews: [P2.hold, P3.hold, ShootingStar, TuntunLogoCard],
   },
   {
-    at: P4.at,
+    at: STOP4_AT,
     land: 2,
     into: 3,
     end: P4.end + CUT_TAIL,
