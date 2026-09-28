@@ -113,6 +113,21 @@ export const theme = {
     shadow: "0 10px 24px rgba(0, 0, 0, 0.05)",
   },
 
+  /**
+   * The roadmap — TA05's "Scene Transisi" (continuity/Roadmap.tsx), with TA03's
+   * values: white paper, TA01's card radius and shadow, the indigo glow, and
+   * the harder ease Simon asked for there.
+   */
+  roadmap: {
+    paper: "#FFFFFF",
+    rule: "#DEDEE0",
+    cardRadius: 16,
+    cardShadow: "0 10px 24px rgba(0, 0, 0, 0.05)",
+    glowTint: "rgba(95, 77, 238, 0.14)",
+    labelSize: 30,
+    ease: Easing.bezier(0.7, 0, 0.2, 1),
+  },
+
   motion: {
     /** The episode's only curves. `settle` never overshoots. */
     settle: Easing.bezier(0.22, 1, 0.36, 1),

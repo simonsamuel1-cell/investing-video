@@ -57,6 +57,7 @@ import { Watermark } from "./components/Watermark";
 import { CUES, type Cue } from "./subtitles";
 import { EXTENDED_TOTAL_FRAMES, PASSAGES } from "./data/extend";
 import { FilmTracks } from "./tracks";
+import { RoadmapStop, type Stop } from "./continuity/Roadmap";
 
 /** The film as built was 10.586 frames; Simon's four passages make it this. */
 export const TOTAL_FRAMES = EXTENDED_TOTAL_FRAMES;
@@ -148,6 +149,52 @@ const Film: React.FC = () => {
   );
 };
 
+/**
+ * THE SCENE TRANSISI, one stop inside each passage — Simon: "Iya dibuatkan dulu
+ * saja Scene Transisinya, visualnya kosongkan, text nya Lorem Ipsum". Each
+ * folds the held frame into the box of the chapter that just ended (the first
+ * into the Introduction) and pushes into the next. The push lands where the
+ * CameraCut into the next scene has finished (the cut's 24 frames run
+ * cut−12 → cut+11, under the roadmap), so the scene is settled when the
+ * roadmap dissolves off it.
+ */
+const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut settles on cut+11
+const [P1, P2, P3, P4] = PASSAGES;
+const STOPS: Stop[] = [
+  {
+    at: P1.at,
+    land: null,
+    into: 0,
+    end: P1.end + CUT_TAIL,
+    freeze: P1.hold,
+    previews: [null, null, null, null],
+  },
+  {
+    at: P2.at,
+    land: 0,
+    into: 1,
+    end: P2.end + CUT_TAIL,
+    freeze: P2.hold,
+    previews: [P2.hold, null, null, null],
+  },
+  {
+    at: P3.at,
+    land: 1,
+    into: 2,
+    end: P3.end + CUT_TAIL,
+    freeze: P3.hold,
+    previews: [P2.hold, P3.hold, null, null],
+  },
+  {
+    at: P4.at,
+    land: 2,
+    into: 3,
+    end: P4.end + CUT_TAIL,
+    freeze: P4.hold,
+    previews: [P2.hold, P3.hold, P4.hold, null],
+  },
+];
+
 /** Fixed timeline tracks for Studio: where each part sits in the extended cut. Display only. */
 const TRACKS = [
   ...[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(
@@ -157,10 +204,10 @@ const TRACKS = [
       duration: outOf(from + duration - 1) + 1 - outOf(from),
     }),
   ),
-  ...PASSAGES.map((p) => ({
-    name: `Extended ${p.n}`,
-    from: p.at,
-    duration: p.end - p.at,
+  ...STOPS.map((s, i) => ({
+    name: `Scene Transisi ${i + 1}`,
+    from: s.at,
+    duration: s.end - s.at,
   })),
 ].sort((a, b) => a.from - b.from);
 
@@ -192,6 +239,9 @@ export const MarketStructureComposition = ({
             <Film />
           </Freeze>
         </Sequence>
+        {STOPS.map((stop) => (
+          <RoadmapStop key={stop.at} stop={stop} Film={Film} />
+        ))}
       </FilmTracks.Provider>
       {TRACKS.map((track) => (
         <Sequence
