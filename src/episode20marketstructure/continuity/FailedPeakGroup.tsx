@@ -15,17 +15,20 @@
  * it. The chart only arrives once the question has been put — so the trace
  * starts after the title leaves rather than running underneath it.
  */
+import { useContext } from "react";
 import { useCurrentFrame } from "remotion";
+import { OutputClock } from "../clock";
+import { Layer } from "../components/Stage";
 import { Stage, Card } from "../components/Stage";
 import { StructureLine } from "../components/StructureLine";
 import { Scene14, SC14 } from "../scenes/Scene14";
 import { Scene15, SC15 } from "../scenes/Scene15";
 import { theme } from "../theme";
-import { hold, progressInOut } from "../helpers";
+import { hold, progress, progressInOut } from "../helpers";
 import { CUTS, cutIn, cutOut, cutBlur } from "../transitions/CameraCut";
 import { sceneBreath, LONG_ORIGIN } from "../transitions/Breath";
 import { plot } from "../data/shape";
-import { FAILURE, FAIL_STOP_T } from "../data/shapes";
+import { FAILURE, FAIL_STOP_T, FAIL_LAST_HH, FAIL_STALL, FAIL_LOWER_LOW } from "../data/shapes";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 const BOX = {
@@ -57,9 +60,69 @@ const TRACE_FROM = 100;
 const GROUP_FROM = 6851;
 /** One slow breath over the card, starting once the title has cleared. */
 const BREATH = { at: 120, over: 620 };
+/**
+ * ⚠ UNDER EXTENDED PART 03, TWO ARROWS. The film holds SC15's last still frame
+ * while the passage says "Kita bukan cuma melihat apakah harga naik atau
+ * turun", and Simon: "8393, kasih panah diagonal naik dan panah diagonal
+ * turun, tempatkan yang bener ya". OUTPUT frame (clock.ts). Each arrow lies
+ * along the leg it names, measured off the line's own turns, and sits `offset`
+ * px beneath it in the empty card — the rise from the first low to the last
+ * higher high (indigo, as "Uptrend" is), the fall from the failed high to the
+ * lower low (cyan, as "Downtrend" is).
+ */
+const ARROWS = {
+  at: 8393,
+  over: 20,
+  stroke: 8,
+  head: { length: 34, width: 34 },
+  up: { from: 0, to: FAIL_LAST_HH, offset: 130, length: 360 },
+  /** Shorter, so its head stays clear of the "Lower low" label beside it. */
+  down: { from: FAIL_STALL, to: FAIL_LOWER_LOW, offset: 130, length: 230 },
+};
 // ═══════════════════════════════════════════════════════════════════════════
 
 const P = plot(FAILURE, BOX, { pad: 0.12 });
+
+/** An arrow parallel to the leg between two turns, `offset` px beneath it and centred on it. */
+const legArrow = (leg: { from: number; to: number; offset: number; length: number }) => {
+  const a = P.turn(leg.from);
+  const b = P.turn(leg.to);
+  const len = Math.hypot(b.x - a.x, b.y - a.y);
+  const ux = (b.x - a.x) / len;
+  const uy = (b.y - a.y) / len;
+  /** The normal that points DOWN the frame, whichever way the leg runs. */
+  const down = ux >= 0 ? 1 : -1;
+  const nx = -uy * down;
+  const ny = ux * down;
+  const mx = (a.x + b.x) / 2 + nx * leg.offset;
+  const my = (a.y + b.y) / 2 + ny * leg.offset;
+  return {
+    x1: mx - (ux * leg.length) / 2,
+    y1: my - (uy * leg.length) / 2,
+    ux,
+    uy,
+  };
+};
+const UP = legArrow(ARROWS.up);
+const DOWN = legArrow(ARROWS.down);
+
+/** Drawn on from its tail, the head riding the tip. */
+const Arrow = ({ a, length, grow, color }: { a: ReturnType<typeof legArrow>; length: number; grow: number; color: string }) => {
+  if (grow <= 0.001) return null;
+  const h = ARROWS.head;
+  const tipX = a.x1 + a.ux * length * grow;
+  const tipY = a.y1 + a.uy * length * grow;
+  const baseX = tipX - a.ux * h.length;
+  const baseY = tipY - a.uy * h.length;
+  const px = -a.uy * (h.width / 2);
+  const py = a.ux * (h.width / 2);
+  return (
+    <g opacity={Math.min(1, grow * 3)}>
+      <line x1={a.x1} y1={a.y1} x2={baseX} y2={baseY} stroke={color} strokeWidth={ARROWS.stroke} strokeLinecap="round" />
+      <polygon points={`${tipX},${tipY} ${baseX + px},${baseY + py} ${baseX - px},${baseY - py}`} fill={color} strokeLinejoin="round" stroke={color} strokeWidth={4} />
+    </g>
+  );
+};
 /** Where the draw stops: exactly on the failed peak, measured along the line. */
 const STOP = P.reaches(FAIL_STOP_T);
 
@@ -77,6 +140,8 @@ const DRAW_TO = [0, 0.44, 0.44, STOP, STOP, 0.8, 1];
 
 export const FailedPeakGroup = () => {
   const f = useCurrentFrame();
+  const out = useContext(OutputClock);
+  const arrows = out !== null && out >= ARROWS.at ? progress(out, ARROWS.at, ARROWS.over) : 0;
   const draw = hold(f, DRAW_AT, DRAW_TO);
   const gone = f >= TITLE.out ? progressInOut(f, TITLE.out, TITLE.over) : 0;
   const chart =
@@ -132,6 +197,12 @@ export const FailedPeakGroup = () => {
               <Scene14 f={f} p={P} plotRight={BOX.x + BOX.w} />
               <StructureLine plot={P} draw={draw} head />
               <Scene15 f={f} p={P} draw={draw} plotRight={BOX.x + BOX.w} />
+              {arrows > 0.001 && (
+                <Layer>
+                  <Arrow a={UP} length={ARROWS.up.length} grow={arrows} color={theme.color.indigo} />
+                  <Arrow a={DOWN} length={ARROWS.down.length} grow={arrows} color={theme.color.cyan} />
+                </Layer>
+              )}
             </Card>
           </div>
         )}

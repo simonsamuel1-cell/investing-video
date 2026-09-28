@@ -172,8 +172,11 @@ const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut s
  * passage while its spotlight walks the phases (Scene10: HELD_SPOTS).
  */
 const STOP2_AT = 5673;
-/** "Sekarang scene transisi ketiga. Mulainya dari 8340 aja" — SC15 holds until then. */
-const STOP3_AT = 8340;
+/**
+ * "Scene transisi ketiga mulainya di 8485 aja deh" — SC15 holds until then,
+ * with its two arrows (FailedPeakGroup: ARROWS) arriving at 8393.
+ */
+const STOP3_AT = 8485;
 /** "scene transisi keempat mulainya di 9636 aja" — SC17 holds, and re-centres (Scene17: HELD_BACK). */
 const STOP4_AT = 9636;
 const [P1, P2, P3, P4] = PASSAGES;
