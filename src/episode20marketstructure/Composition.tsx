@@ -58,6 +58,7 @@ import { CUES, type Cue } from "./subtitles";
 import { EXTENDED_TOTAL_FRAMES, PASSAGES } from "./data/extend";
 import { FilmTracks } from "./tracks";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
+import { MarketStructureCandles } from "./continuity/RoadmapCandles";
 
 /** The film as built was 10.586 frames; Simon's four passages make it this. */
 export const TOTAL_FRAMES = EXTENDED_TOTAL_FRAMES;
@@ -167,7 +168,8 @@ const STOPS: Stop[] = [
     into: 0,
     end: P1.end + CUT_TAIL,
     freeze: P1.hold,
-    previews: [null, null, null, null],
+    // "Kotak "Market Structure" gunakan visual seperti ini (screenshot 1)"
+    previews: [MarketStructureCandles, null, null, null],
   },
   {
     at: P2.at,
