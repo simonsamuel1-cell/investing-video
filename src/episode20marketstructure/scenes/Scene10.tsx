@@ -18,7 +18,9 @@
  * the scale of the whole cycle, and keeping both would put two boxes around one
  * stretch and invite the viewer to look for a difference that is not there.
  */
+import { useContext } from "react";
 import { useCurrentFrame } from "remotion";
+import { OutputClock } from "../clock";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
 import { RangeBand } from "../components/RangeBand";
@@ -163,6 +165,29 @@ const WASH: Record<string, string> = {
 /** Frames a spotlight takes to arrive, and to hand over to the next one. */
 const SPOT = 18;
 /**
+ * ⚠ UNDER EXTENDED PART 02 THE SPOTLIGHT KEEPS MOVING. The film holds this
+ * scene's last still frame while the passage recaps the three conditions, and
+ * Simon: "di 3 frames ini, aku mau kamu highlight sesuatu secara bergantian".
+ * OUTPUT frames (clock.ts), not this scene's — the held frame never advances.
+ * Indices into PHASES; the scene ends with the second Markdown lit, so that is
+ * where the first hand-over starts from.
+ */
+const HELD_SPOTS: { at: number; lit: number[] }[] = [
+  { at: -Infinity, lit: [4] },
+  { at: 5560, lit: [2] }, // "highlight bagian Markup"
+  { at: 5594, lit: [0, 4] }, // "highlight bagian Markdowns"
+  { at: 5640, lit: [1, 3] }, // "highlight bagian Accumulation dan Distribution"
+];
+/** How lit each phase is while held: each step hands over to the next, as the scene's own do. */
+const heldSpot = (out: number, i: number) =>
+  HELD_SPOTS.reduce((sum, step, k) => {
+    if (!step.lit.includes(i)) return sum;
+    const next = HELD_SPOTS[k + 1];
+    const inAt = step.at === -Infinity ? 1 : progress(out, step.at, SPOT);
+    const outAt = next ? progress(out, next.at, SPOT) : 0;
+    return sum + inAt * (1 - outAt);
+  }, 0);
+/**
  * THE FOLLOWING CAMERA.
  *
  * The cycle is the one thing in this episode a viewer must NOT be shown all at
@@ -201,6 +226,8 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export const Scene10 = () => {
   const f = useCurrentFrame();
+  const out = useContext(OutputClock);
+  const held = out !== null && out >= HELD_SPOTS[1].at;
   const draw = hold(f, DRAW_AT, DRAW_TO);
   const boxOut = f >= BOX_OUT.at ? fadeOut(f, BOX_OUT.at, BOX_OUT.over) : 1;
   const base =
@@ -258,7 +285,7 @@ export const Scene10 = () => {
                 const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
                 const outAt =
                   next && f >= next.at ? progress(f, next.at, SPOT) : 0;
-                const on = inAt * (1 - outAt);
+                const on = held ? heldSpot(out, i) : inAt * (1 - outAt);
                 if (on <= 0.001) return null;
                 return (
                   <rect

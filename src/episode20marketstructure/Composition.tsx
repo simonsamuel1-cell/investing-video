@@ -58,6 +58,7 @@ import { Watermark } from "./components/Watermark";
 import { CUES, type Cue } from "./subtitles";
 import { EXTENDED_TOTAL_FRAMES, PASSAGES } from "./data/extend";
 import { FilmTracks } from "./tracks";
+import { OutputClock } from "./clock";
 import { RoadmapStop, type Stop } from "./continuity/Roadmap";
 import { ShootingStar, StructureLevel } from "./continuity/RoadmapCandles";
 import { TuntunLogoCard } from "./components/TuntunLogo";
@@ -165,6 +166,12 @@ const Film: React.FC = () => {
  * until its chapter has been played and a frame of it folded in.
  */
 const CUT_TAIL = 23; // the passage ends on film frame cut−12; the CameraCut settles on cut+11
+/**
+ * Simon: "5417 saat ini adalah saat transisi ke Scene Transisi, aku mau
+ * dipindah aja ke 5673" — SC10 stays held for the first 256 frames of the
+ * passage while its spotlight walks the phases (Scene10: HELD_SPOTS).
+ */
+const STOP2_AT = 5673;
 const [P1, P2, P3, P4] = PASSAGES;
 const STOPS: Stop[] = [
   {
@@ -178,11 +185,16 @@ const STOPS: Stop[] = [
        plays film frame P1.end + CUT_TAIL − P1.frames): SC02 opens zoomed on
        the 17 candles that box shows, so the push lands on the scene itself
        and CUTS to it instead of dissolving. */
-    previews: [P1.end + CUT_TAIL - P1.frames, StructureLevel, ShootingStar, TuntunLogoCard],
+    previews: [
+      P1.end + CUT_TAIL - P1.frames,
+      StructureLevel,
+      ShootingStar,
+      TuntunLogoCard,
+    ],
     dissolve: 0,
   },
   {
-    at: P2.at,
+    at: STOP2_AT,
     land: 0,
     into: 1,
     end: P2.end + CUT_TAIL,
@@ -257,16 +269,18 @@ export const MarketStructureComposition = ({
       {/* ⚠ A SHIFTING SEQUENCE, AND A FREEZE ONLY ON THE HOLDS: a play-on run
           is the film offset by a constant, so the screen recordings PLAY in
           Studio; the tree keeps its shape every frame, so nothing remounts. */}
-      <FilmTracks.Provider value={false}>
-        <Sequence from={t0 - x0} layout="none" showInTimeline={false}>
-          <Freeze frame={x0} active={rate === 0}>
-            <Film />
-          </Freeze>
-        </Sequence>
-        {STOPS.map((stop) => (
-          <RoadmapStop key={stop.at} stop={stop} Film={Film} />
-        ))}
-      </FilmTracks.Provider>
+      <OutputClock.Provider value={f}>
+        <FilmTracks.Provider value={false}>
+          <Sequence from={t0 - x0} layout="none" showInTimeline={false}>
+            <Freeze frame={x0} active={rate === 0}>
+              <Film />
+            </Freeze>
+          </Sequence>
+          {STOPS.map((stop) => (
+            <RoadmapStop key={stop.at} stop={stop} Film={Film} />
+          ))}
+        </FilmTracks.Provider>
+      </OutputClock.Provider>
       {TRACKS.map((track) => (
         <Sequence
           key={`${ROWS}-${track.name}`}
