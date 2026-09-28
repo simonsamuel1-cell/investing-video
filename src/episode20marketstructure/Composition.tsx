@@ -29,6 +29,7 @@ import {
   AbsoluteFill,
   Audio,
   Freeze,
+  random,
   Sequence,
   staticFile,
   useCurrentFrame,
@@ -222,6 +223,18 @@ const TRACKS = [
   })),
 ].sort((a, b) => a.from - b.from);
 
+/**
+ * ⚠ THE ROWS REMOUNT TOGETHER, EVERY TIME THIS MODULE LOADS. Simon: "Klo
+ * geser2, scene transisi tuh naik turun." Studio orders its rows by when each
+ * one first mounted, counted per hot reload; rows that arrived in a later
+ * reload than the rest (the four Scene Transisi) share no count with them, so
+ * their place was settled through whichever hidden sequences were mounted —
+ * and those change as the playhead is dragged through a stop. Keyed on a value
+ * drawn once per load, the rows (and the voice, which also has a row) always
+ * mount as one batch and keep their order. Studio only: a render reads no key.
+ */
+const ROWS = String(random(null));
+
 export type MarketStructureProps = {
   cues?: Cue[];
   audioSrc?: string;
@@ -256,7 +269,7 @@ export const MarketStructureComposition = ({
       </FilmTracks.Provider>
       {TRACKS.map((track) => (
         <Sequence
-          key={track.name}
+          key={`${ROWS}-${track.name}`}
           name={track.name}
           from={track.from}
           durationInFrames={track.duration}
@@ -273,7 +286,7 @@ export const MarketStructureComposition = ({
       <Watermark />
 
       {/* ONE root Audio for the whole episode, aligned at frame 0. */}
-      <Audio src={staticFile(audioSrc)} muted={muted} />
+      <Audio key={ROWS} src={staticFile(audioSrc)} muted={muted} />
     </AbsoluteFill>
   );
 };
