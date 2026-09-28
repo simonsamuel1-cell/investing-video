@@ -170,7 +170,8 @@ const SPOT = 18;
  * Simon: "di 3 frames ini, aku mau kamu highlight sesuatu secara bergantian".
  * OUTPUT frames (clock.ts), not this scene's — the held frame never advances.
  * Indices into PHASES; the scene ends with the second Markdown lit, so that is
- * where the first hand-over starts from.
+ * where the first hand-over starts from. These three are all INDIGO, whatever
+ * the phase's own tone — "Highlightnya indigo semua ya".
  */
 const HELD_SPOTS: { at: number; lit: number[] }[] = [
   { at: -Infinity, lit: [4] },
@@ -178,15 +179,25 @@ const HELD_SPOTS: { at: number; lit: number[] }[] = [
   { at: 5594, lit: [0, 4] }, // "highlight bagian Markdowns"
   { at: 5640, lit: [1, 3] }, // "highlight bagian Accumulation dan Distribution"
 ];
-/** How lit each phase is while held: each step hands over to the next, as the scene's own do. */
+/**
+ * How lit each phase is while held, split by colour: `own` is the scene's
+ * closing spotlight in the phase's tone, `indigo` is Simon's three. Each step
+ * hands over to the next, as the scene's own do.
+ */
 const heldSpot = (out: number, i: number) =>
-  HELD_SPOTS.reduce((sum, step, k) => {
-    if (!step.lit.includes(i)) return sum;
-    const next = HELD_SPOTS[k + 1];
-    const inAt = step.at === -Infinity ? 1 : progress(out, step.at, SPOT);
-    const outAt = next ? progress(out, next.at, SPOT) : 0;
-    return sum + inAt * (1 - outAt);
-  }, 0);
+  HELD_SPOTS.reduce(
+    (sum, step, k) => {
+      if (!step.lit.includes(i)) return sum;
+      const next = HELD_SPOTS[k + 1];
+      const inAt = step.at === -Infinity ? 1 : progress(out, step.at, SPOT);
+      const outAt = next ? progress(out, next.at, SPOT) : 0;
+      const on = inAt * (1 - outAt);
+      return k === 0
+        ? { ...sum, own: sum.own + on }
+        : { ...sum, indigo: sum.indigo + on };
+    },
+    { own: 0, indigo: 0 },
+  );
 /**
  * THE FOLLOWING CAMERA.
  *
@@ -285,19 +296,25 @@ export const Scene10 = () => {
                 const inAt = f >= p.at ? progress(f, p.at, SPOT) : 0;
                 const outAt =
                   next && f >= next.at ? progress(f, next.at, SPOT) : 0;
-                const on = held ? heldSpot(out, i) : inAt * (1 - outAt);
-                if (on <= 0.001) return null;
-                return (
-                  <rect
-                    key={`${p.label}${i}`}
-                    x={xAt(p.win[0])}
-                    y={BOX.y}
-                    width={xAt(p.win[1]) - xAt(p.win[0])}
-                    height={BOX.h}
-                    fill={WASH[p.tone]}
-                    opacity={on}
-                  />
-                );
+                const spot = held
+                  ? heldSpot(out, i)
+                  : { own: inAt * (1 - outAt), indigo: 0 };
+                const column = (fill: string, on: number, key: string) =>
+                  on <= 0.001 ? null : (
+                    <rect
+                      key={key}
+                      x={xAt(p.win[0])}
+                      y={BOX.y}
+                      width={xAt(p.win[1]) - xAt(p.win[0])}
+                      height={BOX.h}
+                      fill={fill}
+                      opacity={on}
+                    />
+                  );
+                return [
+                  column(WASH[p.tone], spot.own, `${p.label}${i}`),
+                  column(theme.color.indigoWash, spot.indigo, `${p.label}${i}-held`),
+                ];
               })}
             </Layer>
 
