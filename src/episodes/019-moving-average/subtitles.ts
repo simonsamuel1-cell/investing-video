@@ -151,12 +151,16 @@ export const CUES: Cue[] = [
   { start: 8161, end: 8190, text: "mungkin segera terjadi." },
   { start: 8212, end: 8236, text: "Dalam kasus ini," },
   { start: 8236, end: 8315, text: "arah breakout sesuai dengan trend yang sudah terbentuk." },
-  { start: 8532, end: 8600, text: "Ingat, indikator tidak pernah memimpin harga." },
-  { start: 8616, end: 8667, text: "Indikator mengikuti data yang sudah terjadi," },
-  { start: 8678, end: 8787, text: "lalu membantu mengonfirmasi atau mempertanyakan analisismu." },
-  { start: 8796, end: 8865, text: "Gunakan moving average untuk membaca trend," },
-  { start: 8880, end: 8961, text: "Bollinger Bands untuk melihat perubahan volatility," },
-  { start: 8976, end: 9036, text: "dan tetap mulai dari price action." },
-  { start: 9048, end: 9100, text: "Tapi jangan pernah mengambil keputusan" },
-  { start: 9107, end: 9156, text: "hanya karena satu indikator." },
+  /* The Technical Tab passage, inserted at 8318 between two 15-frame pauses
+     (8333–8480). Not in the SRT: Simon's own words for it, one line for the
+     whole passage — "langsung muncul 1 kalimat aja gapapa". */
+  { start: 8333, end: 8480, text: "Di aplikasi, kamu juga bisa melihat berbagai indikator ini dalam satu tempat" },
+  { start: 8502, end: 8570, text: "Ingat, indikator tidak pernah memimpin harga." },
+  { start: 8586, end: 8637, text: "Indikator mengikuti data yang sudah terjadi," },
+  { start: 8648, end: 8757, text: "lalu membantu mengonfirmasi atau mempertanyakan analisismu." },
+  { start: 8766, end: 8835, text: "Gunakan moving average untuk membaca trend," },
+  { start: 8850, end: 8931, text: "Bollinger Bands untuk melihat perubahan volatility," },
+  { start: 8946, end: 9006, text: "dan tetap mulai dari price action." },
+  { start: 9018, end: 9070, text: "Tapi jangan pernah mengambil keputusan" },
+  { start: 9077, end: 9126, text: "hanya karena satu indikator." },
 ];

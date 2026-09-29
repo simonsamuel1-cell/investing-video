@@ -47,12 +47,12 @@ import { Captions, Watermark } from "../../core";
 import { CUES } from "./subtitles";
 
 /**
- * 9216 — was 9009 until Simon's insert at 8318: 30 frames of silence, the
- * Technical Tab passage ("Extended Part.mp3", 147 frames), 30 more of silence.
- * The VO carries all 207 (public/vo/moving-average.pre-extend-8318.mp3 is the
+ * 9186 — was 9009 until Simon's insert at 8318: 15 frames of silence, the
+ * Technical Tab passage ("Extended Part.mp3", 147 frames), 15 more of silence.
+ * The VO carries all 177 (public/vo/moving-average.pre-extend-8318.mp3 is the
  * file before it), and every global frame from 8318 on moved with it.
  */
-export const TOTAL_FRAMES = 9216;
+export const TOTAL_FRAMES = 9186;
 
 /**
  * ═══ ⚠ TEMPORARY A/B LEVER — SCENE 10'S CHART ═══
@@ -92,10 +92,10 @@ const INDEPENDENT_SCENES: Mounted[] = [
     ? []
     : [{ from: 5453, duration: 633, Component: Scene10 }]),
   { from: 6116, duration: 646, Component: Scene11 },
-  /* the closing card. 426, not 624: the VO's last line ends at 9156 and the
+  /* the closing card. 426, not 624: the VO's last line ends at 9126 and the
      card holds 60 frames past it, which is this project's outro. 624 would
      have left it sitting silent for eight and a half seconds. */
-  { from: 8790, duration: 426, Component: Scene13 },
+  { from: 8760, duration: 426, Component: Scene13 },
 ];
 
 /** Runs of scenes that share one element across an internal boundary. */
@@ -121,10 +121,10 @@ const CONTINUITY_GROUPS: Mounted[] = [
        measured silence, -91 dB from end to end. */
     /* 1821 → the group now runs to 8583, where it hands over to the closing
        card. Simon's 8400 was superseded by the quote he then asked for. */
-    /* 2028 → +207 for the insert at 8318, which lands INSIDE this group: it
+    /* 1998 → +177 for the insert at 8318, which lands INSIDE this group: it
        keeps its `from`, holds its 8318 picture through the pause, the passage
-       and the second pause, and now hands over at 8790. */
-    duration: 2028,
+       and the second pause, and now hands over at 8760. */
+    duration: 1998,
     Component: GgrmGroup,
   },
 ];

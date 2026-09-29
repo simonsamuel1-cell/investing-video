@@ -1,5 +1,5 @@
 /**
- * SCENE 13 — the close. `from 8790 · dur 426`
+ * SCENE 13 — the close. `from 8760 · dur 426`
  *
  * ⚠ EVERYTHING THIS SCENE USED TO DRAW IS GONE at Simon's direction — the
  * price line, both overlays, the mode-C text. It is now the card VIDEO 19
@@ -14,8 +14,8 @@
  * into one line makes the viewer's ear and eye disagree.
  *
  * ⚠ EACH ROW LANDS ON ITS OWN SENTENCE. The frames below are read off the
- * subtitle cues, not spaced by a fixed stagger — 8796, 8880, 8976 and 9048
- * against this scene's own 8790.
+ * subtitle cues, not spaced by a fixed stagger — 8766, 8850, 8946 and 9018
+ * against this scene's own 8760.
  *
  * ═══ WHY A CARD AND NOT A CHART ═══
  *
@@ -39,13 +39,13 @@ import { CUTS, cutInStyle } from "../transitions/CameraCut";
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
 /**
  * ⚠ CUED TO THE VOICE, one row per sentence. Global frames in the margin; this
- * scene is mounted at 8790.
+ * scene is mounted at 8760.
  */
 /** Where this scene is mounted — the cut is read from global frames. */
-const FROM = 8790;
+const FROM = 8760;
 const T = {
   mark: 0,
-  rows: [6, 90, 186, 258], // 8796 · 8880 · 8976 · 9048
+  rows: [6, 90, 186, 258], // 8766 · 8850 · 8946 · 9018
 };
 /**
  * The block sits ABOVE the subtitle band, which owns the bottom 108px. The

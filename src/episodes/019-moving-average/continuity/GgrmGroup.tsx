@@ -207,11 +207,11 @@ const T = {
   glow2: at(8012),
   glow2Out: at(8086),
   /**
-   * The line the whole episode leaves you with (VO 8532–8787). 8325 until the
-   * 207-frame insert at 8318 — the picture simply holds from the arrow's last
+   * The line the whole episode leaves you with (VO 8502–8757). 8325 until the
+   * 177-frame insert at 8318 — the picture simply holds from the arrow's last
    * frame until the quote, so nothing in this group needed more than this.
    */
-  quote: at(8532),
+  quote: at(8502),
 };
 /** How many bars at the right stay under the cover. */
 const HIDE = 23;
@@ -1221,7 +1221,7 @@ export const GgrmGroup = () => {
         ── THE LINE THE EPISODE LEAVES YOU WITH ──
         "Ingat, indikator tidak pernah memimpin harga" and "Indikator mengikuti
         data yang sudah terjadi, lalu membantu mengonfirmasi atau
-        mempertanyakan analisismu" — 8532 to 8787 — condensed to one sentence.
+        mempertanyakan analisismu" — 8502 to 8757 — condensed to one sentence.
         `menguji` holds both halves of the second: a test can be passed or
         failed, and a line that only said "mengonfirmasi" would promise the
         indicator agrees with you.

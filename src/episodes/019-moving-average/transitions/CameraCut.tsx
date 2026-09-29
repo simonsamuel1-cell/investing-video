@@ -88,7 +88,7 @@ export const CUTS = {
    * you have been reading, which is the truth. `toCross` is gone with it.
    */
   /**
-   * CG-C → SC13, on the 8789/8790 boundary (8582/8583 before the insert at 8318). The quiz is over and the episode
+   * CG-C → SC13, on the 8759/8760 boundary (8582/8583 before the insert at 8318). The quiz is over and the episode
    * closes on a card — a different KIND of frame, not the next step in the
    * same one — so the camera RISES, the same gesture and the same 90px this
    * episode's only other cut uses.
@@ -97,7 +97,7 @@ export const CUTS = {
    * 900 and the subtitle band starts at 972, so a longer throw would carry the
    * outgoing frame into a band nothing may enter.
    */
-  toClose: { at: 8790, over: 24, distance: 90, blur: 9, axis: "y" },
+  toClose: { at: 8760, over: 24, distance: 90, blur: 9, axis: "y" },
 } as const satisfies Record<string, Cut>;
 
 const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
