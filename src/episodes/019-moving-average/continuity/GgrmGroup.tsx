@@ -58,6 +58,7 @@ import { Stage } from "../../../core";
 import { QuizTitle } from "../components/QuizTitle";
 import { Arrow } from "../components/Arrow";
 import { QuoteBox } from "../components/QuoteBox";
+import { TechnicalTabs } from "../components/TechnicalTabs";
 import { CUTS, cutOutStyle } from "../transitions/CameraCut";
 import {
   PANEL,
@@ -212,6 +213,18 @@ const T = {
    * frame until the quote, so nothing in this group needed more than this.
    */
   quote: at(8502),
+  /**
+   * ═══ THE TECHNICAL TAB (8321 → 8759) ═══
+   * Simon: "Ganti visual chart nya dengan 5 png images … chartnya aja ya yang
+   * diganti, judulnya stay. text box juga stay." The panel fades out as the
+   * app's five screens come up in its place (components/TechnicalTabs), under
+   * "Di aplikasi, kamu juga bisa melihat berbagai indikator ini dalam satu
+   * tempat" and then the quote. The row steps on every 88 frames, so the five
+   * share the stretch evenly and the last is still up when the cut at 8760
+   * carries everything out.
+   */
+  tabs: at(8321),
+  tabSteps: [at(8409), at(8497), at(8585), at(8673)],
 };
 /** How many bars at the right stay under the cover. */
 const HIDE = 23;
@@ -596,12 +609,14 @@ export const GgrmGroup = () => {
   /* the cut out to the closing card — both sides read the SAME entry, from
      GLOBAL frames, which is the only way it is one move and not two */
   const out = cutOutStyle(f + FROM, CUTS.toClose);
+  /** The panel, leaving as the Technical tab takes its place. */
+  const tabsOff = 1 - progress(f, T.tabs, T.gateOver);
 
   return (
     <Stage>
       <div style={{ position: "absolute", inset: 0, ...out }}>
-      {READY && f >= T.chart && (
-        <div style={{ opacity: on }}>
+      {READY && f >= T.chart && tabsOff > 0.001 && (
+        <div style={{ opacity: on * tabsOff }}>
           {/* ── the window ── */}
           <div
             style={{
@@ -1226,6 +1241,8 @@ export const GgrmGroup = () => {
         failed, and a line that only said "mengonfirmasi" would promise the
         indicator agrees with you.
       */}
+      <TechnicalTabs f={f} at={T.tabs} steps={T.tabSteps} />
+
       <QuoteBox
         f={f}
         at={T.quote}
