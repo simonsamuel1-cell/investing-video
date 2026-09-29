@@ -217,14 +217,12 @@ const T = {
    * ═══ THE TECHNICAL TAB (8321 → 8759) ═══
    * Simon: "Ganti visual chart nya dengan 5 png images … chartnya aja ya yang
    * diganti, judulnya stay. text box juga stay." The panel fades out as the
-   * app's five screens come up in its place (components/TechnicalTabs), under
-   * "Di aplikasi, kamu juga bisa melihat berbagai indikator ini dalam satu
-   * tempat" and then the quote. The row steps on every 88 frames, so the five
-   * share the stretch evenly and the last is still up when the cut at 8760
+   * app's five screens come up in its place (components/TechnicalTabs), all
+   * five at once, under "Di aplikasi, kamu juga bisa melihat berbagai
+   * indikator ini dalam satu tempat" and then the quote, until the cut at 8760
    * carries everything out.
    */
   tabs: at(8321),
-  tabSteps: [at(8409), at(8497), at(8585), at(8673)],
 };
 /** How many bars at the right stay under the cover. */
 const HIDE = 23;
@@ -1241,7 +1239,7 @@ export const GgrmGroup = () => {
         failed, and a line that only said "mengonfirmasi" would promise the
         indicator agrees with you.
       */}
-      <TechnicalTabs f={f} at={T.tabs} steps={T.tabSteps} />
+      <TechnicalTabs f={f} at={T.tabs} />
 
       <QuoteBox
         f={f}
