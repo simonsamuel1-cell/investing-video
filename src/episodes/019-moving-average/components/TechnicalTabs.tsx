@@ -8,10 +8,12 @@
  *
  * ALL FIVE AT ONCE — "Jangan disusun satu baris dan buat selection style gitu
  * deh, bikin semua masuk dalam satu layar aja, gapapa overlap dengan text
- * box". Four columns, top-aligned: the two chart screens, then the summary
- * with the short support-and-resistance card under it, then the indicator
- * table — so the tallest column is two screens, and the whole set spans the
- * old panel's width exactly.
+ * box". Four columns, top-aligned, spanning the old panel's width exactly —
+ * and then: "Tab-01 dan Tab-02 ada di tengah; Tab-03 dan Tab-04 di kiri 01 dan
+ * 02; Tab-05 di kanan 01 dan 02." So the two chart screens are the middle
+ * pair, the summary stands on the short support-and-resistance card to their
+ * left, and the indicator table is on their right. They come up in the tabs'
+ * own order, the middle pair first.
  *
  * ⚠ ONE WIDTH FOR ALL FIVE. They are captures of the same phone, so the app's
  * type is the same size in each only if they share a width.
@@ -27,14 +29,14 @@ const SRC_W = 1600;
 /** The old panel's span, and the top of the screens under the heading. */
 const AREA = { x: 96, w: 1728, top: 160 };
 const GAP = 24;
-/** Left to right; a column holds one screen or, in the third, two. */
+/** Left to right; a column holds one screen or, in the first, two. */
 const COLUMNS = [
-  [{ src: "technical-tab/tab-01.png", h: 2300 }],
-  [{ src: "technical-tab/tab-02.png", h: 2300 }],
   [
     { src: "technical-tab/tab-03.png", h: 1848 },
     { src: "technical-tab/tab-04.png", h: 964 },
   ],
+  [{ src: "technical-tab/tab-01.png", h: 2300 }],
+  [{ src: "technical-tab/tab-02.png", h: 2300 }],
   [{ src: "technical-tab/tab-05.png", h: 1981 }],
 ];
 /** Each screen's width: four columns and their gaps fill AREA.w. */
@@ -45,7 +47,7 @@ const STAGGER = 5;
 const RISE = 24;
 // ═══════════════════════════════════════════════════════════════════════════
 
-/** Every screen with its place, in reading order. */
+/** Every screen with its place, in the tabs' own order (by file name). */
 const PLACED = COLUMNS.flatMap((col, c) => {
   let y = AREA.top;
   return col.map((tab) => {
@@ -54,7 +56,7 @@ const PLACED = COLUMNS.flatMap((col, c) => {
     y += h + GAP;
     return at;
   });
-});
+}).sort((a, b) => a.src.localeCompare(b.src));
 
 export const TechnicalTabs = ({
   f,
