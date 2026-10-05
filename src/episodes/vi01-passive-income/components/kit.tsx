@@ -16,20 +16,36 @@
  *
  * ⚠ TWO COLOURS, TWO KINDS OF ASSET. Indigo is work and human asset; cyan is
  * money that works and financial asset. The episode never swaps them.
+ *
+ * ⚠ EVERY MOVE IS AN EASY EASE — Simon, for this video: "animasi harus easy
+ * ease". In and out on core's `inOut` curve (progressInOut), never core's
+ * front-loaded `settle`, never a pop with an overshoot. That is why this kit
+ * has its own Pill, Sheet, DashBox, WordLine and QuoteFrame instead of core's
+ * Chip, Panel, DashedBox, Words and QuoteCard: those enter on `settle`, and
+ * changing them in core would change every other episode.
+ *
+ * ⚠ EVERY RECTANGLE HAS ROUND CORNERS — bars included. A square corner is a
+ * mistake here, not a style.
  */
 import React from "react";
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import {
-  DashedBox,
-  progress,
   progressInOut,
-  popIn,
-  textReveal,
+  quoteMarks,
   theme,
   usePalette,
   useMotion,
   useShadow,
 } from "../../../core";
+
+/** The episode's one curve: eased in AND out. */
+export const ease = progressInOut;
+
+/** Fade and rise, on the same easy ease. */
+export const rise = (f: number, at: number, over: number, by = 18) => {
+  const p = ease(f, at, over);
+  return { opacity: p, dy: (1 - p) * by };
+};
 
 export type Tone = "indigo" | "cyan" | "slate";
 
@@ -38,8 +54,8 @@ export const useLife = (at: number, out?: number, over?: number) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const o = over ?? m.fade;
-  const inn = progress(f, at, m.reveal);
-  const gone = out === undefined ? 0 : progress(f, out, o);
+  const inn = ease(f, at, m.reveal);
+  const gone = out === undefined ? 0 : ease(f, out, o);
   return inn * (1 - gone);
 };
 
@@ -70,13 +86,13 @@ export const Worker = ({
   const life = useLife(at, out);
   if (life <= 0.001) return null;
   const w = (h * 1000) / 1200;
-  const rise = (1 - progress(f, at, m.reveal)) * 30;
+  const lift = (1 - ease(f, at, m.reveal)) * 30;
   return (
     <div
       style={{
         position: "absolute",
         left: x - w / 2,
-        top: y - h + rise,
+        top: y - h + lift,
         width: w,
         height: h,
         opacity: life,
@@ -86,8 +102,8 @@ export const Worker = ({
       {poses.map(([from, pose], i) => {
         const next = poses[i + 1];
         const on =
-          (i === 0 ? 1 : progress(f, from, m.fade)) *
-          (next ? 1 - progress(f, next[0], m.fade) : 1);
+          (i === 0 ? 1 : ease(f, from, m.fade)) *
+          (next ? 1 - ease(f, next[0], m.fade) : 1);
         if (on <= 0.001) return null;
         return (
           <Img
@@ -197,8 +213,10 @@ export const Node = ({
   const c = usePalette();
   const shadow = useShadow();
   const m = useMotion();
-  const pop = popIn(f, at, m.pop * 1.4, { back: 1.06 });
-  const gone = out === undefined ? 0 : progress(f, out, m.fade);
+  /* eased in and out — it grows into place and stops; no overshoot */
+  const inn = ease(f, at, m.reveal);
+  const pop = { opacity: inn, scale: 0.94 + 0.06 * inn };
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
   const o = pop.opacity * (1 - gone);
   if (f < at || o <= 0.001) return null;
   const t = toneOf(c, tone);
@@ -285,8 +303,8 @@ export const Link = ({
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const draw = progressInOut(f, at, m.move);
-  const gone = out === undefined ? 0 : progress(f, out, m.fade);
+  const draw = ease(f, at, m.move);
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
   if (draw <= 0.001 || gone >= 0.999) return null;
   const ink = tone === "indigo" ? c.indigo : tone === "cyan" ? theme.color.cyanInk : c.slate;
   const ex = a.x + (b.x - a.x) * draw;
@@ -342,7 +360,7 @@ export const OUTSIDE_RESERVES = (() => {
 export const Strike = ({ x, y, w, at, color = theme.color.warn, width = 6 }: { x: number; y: number; w: number; at: number; color?: string; width?: number }) => {
   const f = useCurrentFrame();
   const m = useMotion();
-  const p = progressInOut(f, at, m.reveal);
+  const p = ease(f, at, m.reveal);
   if (p <= 0.001) return null;
   return (
     <div
@@ -392,9 +410,9 @@ export const Say = ({
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const r = textReveal(f, at, m.reveal);
-  const struck = strikeAt === undefined ? 0 : progressInOut(f, strikeAt, m.reveal);
-  const gone = out === undefined ? 0 : progress(f, out, m.fade);
+  const r = rise(f, at, m.reveal);
+  const struck = strikeAt === undefined ? 0 : ease(f, strikeAt, m.reveal);
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
   const o = r.opacity * (1 - gone) * (1 - 0.65 * dim);
   if (f < at || o <= 0.001) return null;
   const tx = anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
@@ -437,9 +455,9 @@ export const Say = ({
 
 // ═══ TypeBox ══════════════════════════════════════════════════════════════
 /**
- * TA07's line in a dashed box: the box rises and snaps open (core DashedBox),
- * then the words are typed on; `mark` is tinted in its tone once typed, at
- * `markAt` if given. Centred on `cx`.
+ * TA07's line in a dashed box: the box fades up as a sliver at its centre and
+ * opens out to both sides (DashBox), then the words are typed on; `mark` is
+ * tinted in its tone once typed, at `markAt` if given. Centred on `cx`.
  */
 export const TypeBox = ({
   cx,
@@ -477,24 +495,25 @@ export const TypeBox = ({
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const gone = out === undefined ? 0 : progress(f, out, m.fade);
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
   if (f < at || gone >= 0.999) return null;
-  const start = typeAt ?? at + 26;
+  /* never before the box has finished opening */
+  const start = Math.max(typeAt ?? 0, dashOpenAt(at, m));
   const shown = Math.max(0, Math.floor((f - start) * cps));
   const typed = text.slice(0, shown);
   const mStart = mark ? text.indexOf(mark) : -1;
   const mEnd = mStart >= 0 ? mStart + (mark as string).length : -1;
   const markOn =
     mStart >= 0 && shown >= mEnd
-      ? progress(f, markAt ?? start + Math.ceil(mEnd / cps), m.reveal)
+      ? ease(f, Math.max(markAt ?? 0, start + Math.ceil(mEnd / cps)), m.reveal)
       : 0;
   const wash = tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan;
   const ink = tone === "indigo" ? c.indigo : theme.color.cyanInk;
   const seg = (s: string, k: string) => <span key={k}>{s}</span>;
   return (
     <div style={{ opacity: (1 - gone) * (1 - 0.6 * dim) }}>
-      <DashedBox x={cx - w / 2} y={y} w={w} h={h} at={at}>
-        {/* the box's own coordinates — DashedBox positions its children */}
+      <DashBox cx={cx} y={y} w={w} h={h} at={at}>
+        {/* the box's own coordinates — DashBox positions its children */}
         <div
           style={{
             position: "absolute",
@@ -534,7 +553,251 @@ export const TypeBox = ({
                 seg(typed.slice(mEnd), "b"),
               ]}
         </div>
-      </DashedBox>
+      </DashBox>
+    </div>
+  );
+};
+
+// ═══ DashBox ══════════════════════════════════════════════════════════════
+/**
+ * TA07's dashed box, opening FROM ITS CENTRE — Simon: "munculnya harus dari
+ * tengah dari panjang width text boxnya memanjang ke kiri kanan, jangan cepet
+ * cepet". A sliver fades up at the centre, then both edges travel out together
+ * over most of a second. Content appears once it is fully open.
+ */
+/** Seconds: fade up as a sliver, then open — most of a second, not a snap. */
+export const DASH = { fadeSec: 0.3, openSec: 0.8, sliver: 12, block: 15, dash: "16 11" };
+export const dashOpenAt = (at: number, m: { sec: (s: number) => number }) => at + m.sec(DASH.fadeSec) + m.sec(DASH.openSec);
+
+export const DashBox = ({ cx, y, w, h, at, children }: { cx: number; y: number; w: number; h: number; at: number; children?: React.ReactNode }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  if (f < at) return null;
+  const fade = ease(f, at, m.sec(DASH.fadeSec));
+  const open = ease(f, at + m.sec(DASH.fadeSec), m.sec(DASH.openSec));
+  const wNow = DASH.sliver + (w - DASH.sliver) * open;
+  const r = theme.shape.panelRadius;
+  return (
+    <div style={{ position: "absolute", left: cx - wNow / 2, top: y, width: wNow, height: h, opacity: fade }}>
+      <div style={{ position: "absolute", inset: 0, borderRadius: r, background: c.cardBg }} />
+      <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={wNow} height={h}>
+        <rect x={1} y={1} width={Math.max(1, wNow - 2)} height={h - 2} rx={r} fill="none" stroke={c.ink} strokeWidth={theme.shape.rule} strokeDasharray={DASH.dash} />
+        {[[1, 1], [wNow - 1, 1], [1, h - 1], [wNow - 1, h - 1]].map(([x, yy], i) => (
+          <rect key={i} x={x - DASH.block / 2} y={yy - DASH.block / 2} width={DASH.block} height={DASH.block} rx={4} fill={c.ink} />
+        ))}
+      </svg>
+      {open >= 0.999 ? <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>{children}</div> : null}
+    </div>
+  );
+};
+
+// ═══ Pill ═════════════════════════════════════════════════════════════════
+/** A rounded label — core's Chip, eased in and out. `check` puts a ✓ before it. */
+export const Pill = ({
+  label,
+  x,
+  y,
+  at,
+  out,
+  tone = "indigo",
+  anchor = "center",
+  check = false,
+  size = 40,
+  dim = 0,
+}: {
+  label: string;
+  x: number;
+  y: number;
+  at: number;
+  out?: number;
+  tone?: Tone;
+  anchor?: "center" | "left";
+  check?: boolean;
+  size?: number;
+  dim?: number;
+}) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const inn = ease(f, at, m.reveal);
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
+  const o = inn * (1 - gone) * (1 - 0.65 * dim);
+  if (f < at || o <= 0.001) return null;
+  const t = toneOf(c, tone);
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        transform: `translate(${anchor === "center" ? "-50%" : "0"}, -50%) scale(${(0.94 + 0.06 * inn).toFixed(4)})`,
+        opacity: o,
+        display: "flex",
+        alignItems: "center",
+        gap: size * 0.3,
+        padding: `${size * 0.28}px ${size * 0.62}px`,
+        borderRadius: 999,
+        background: tone === "slate" ? theme.color.slateWash : t.wash,
+        border: `${theme.shape.rule}px solid ${t.ink}`,
+        fontFamily: theme.text.family,
+        fontSize: size,
+        fontWeight: 600,
+        color: t.ink,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {check ? <Icon name="check" size={size * 0.95} color={t.ink} stroke={4} /> : null}
+      {label}
+    </div>
+  );
+};
+
+// ═══ Sheet ═════════════════════════════════════════════════════════════════
+/** A white panel with round corners — core's Panel, eased in and out. */
+export const Sheet = ({ x, y, w, h, at, out }: { x: number; y: number; w: number; h: number; at: number; out?: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const shadow = useShadow();
+  const m = useMotion();
+  const inn = ease(f, at, m.reveal);
+  const gone = out === undefined ? 0 : ease(f, out, m.fade);
+  const o = inn * (1 - gone);
+  if (f < at || o <= 0.001) return null;
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        width: w,
+        height: h,
+        borderRadius: theme.shape.cardRadius,
+        background: c.cardBg,
+        border: `${theme.shape.hairline}px solid ${c.border}`,
+        boxShadow: shadow.rest,
+        opacity: o,
+        transform: `scale(${(0.97 + 0.03 * inn).toFixed(4)})`,
+      }}
+    />
+  );
+};
+
+// ═══ WordLine ═════════════════════════════════════════════════════════════
+/**
+ * A line arriving a word at a time, each word eased in; `mark` is washed in its
+ * colour from `markAt`, the wash wiping left to right on the same ease.
+ */
+export const WordLine = ({
+  text,
+  x,
+  y,
+  at,
+  stagger = 6,
+  size = 54,
+  weight = 700,
+  mark,
+  markColor,
+  markAt,
+}: {
+  text: string;
+  x: number;
+  y: number;
+  at: number;
+  stagger?: number;
+  size?: number;
+  weight?: number;
+  mark?: string;
+  markColor?: string;
+  markAt?: number;
+}) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  if (f < at) return null;
+  const words = text.split(" ");
+  const markWords = mark ? mark.split(" ") : [];
+  let mFrom = -1;
+  for (let i = 0; mark && i + markWords.length <= words.length; i++) {
+    if (markWords.every((w, k) => words[i + k] === w)) {
+      mFrom = i;
+      break;
+    }
+  }
+  const wipe = mFrom >= 0 && markAt !== undefined ? ease(f, markAt, m.move) : 0;
+  const w = (i: number, word: string) => {
+    const r = rise(f, at + i * stagger, m.reveal, 14);
+    return (
+      <span key={i} style={{ display: "inline-block", opacity: r.opacity, transform: `translateY(${r.dy}px)`, whiteSpace: "pre" }}>
+        {word}
+        {i < words.length - 1 ? " " : ""}
+      </span>
+    );
+  };
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        transform: "translate(-50%, -50%)",
+        fontFamily: theme.text.family,
+        fontSize: size,
+        fontWeight: weight,
+        color: c.ink,
+        whiteSpace: "nowrap",
+        lineHeight: 1.25,
+      }}
+    >
+      {mFrom < 0
+        ? words.map((word, i) => w(i, word))
+        : [
+            ...words.slice(0, mFrom).map((word, i) => w(i, word)),
+            <span key="mark" style={{ position: "relative", display: "inline-block" }}>
+              <span
+                style={{
+                  position: "absolute",
+                  left: -8,
+                  top: "8%",
+                  height: "88%",
+                  width: `calc(${(wipe * 100).toFixed(2)}% + ${16 * wipe}px)`,
+                  borderRadius: 10,
+                  background: markColor ?? theme.color.hlCyan,
+                }}
+              />
+              <span style={{ position: "relative" }}>
+                {markWords.map((word, k) => w(mFrom + k, word))}
+              </span>
+            </span>,
+            ...words.slice(mFrom + markWords.length).map((word, k) => w(mFrom + markWords.length + k, word)),
+          ]}
+    </div>
+  );
+};
+
+// ═══ QuoteFrame ═══════════════════════════════════════════════════════════
+/**
+ * TA09's closing quote card — white, a 4px ink border, a solid indigo block
+ * dropped behind it, the big quote marks in opposite corners — eased in and
+ * out. Geometry from core's QUOTE/quoteMarks, so it is the same card.
+ */
+export const QuoteFrame = ({ x, y, w, h, at, listY, lead, count, children }: { x: number; y: number; w: number; h: number; at: number; listY: number; lead: number; count: number; children?: React.ReactNode }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const r = rise(f, at, m.reveal * 1.4);
+  if (r.opacity <= 0.001) return null;
+  const shell = { position: "absolute" as const, left: x, top: y, width: w, height: h, borderRadius: theme.shape.panelRadius };
+  return (
+    <div style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}>
+      <div style={{ ...shell, left: x + 14, top: y + 14, background: c.indigo }} />
+      <div style={{ ...shell, background: c.cardBg, border: `4px solid ${c.ink}` }} />
+      {quoteMarks({ x, w }, listY, lead, count).map((q) => (
+        <div key={q.ch} style={{ position: "absolute", left: q.x, top: q.y, width: 76, textAlign: "center", fontFamily: theme.text.family, fontSize: 76, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
+          {q.ch}
+        </div>
+      ))}
+      {children}
     </div>
   );
 };

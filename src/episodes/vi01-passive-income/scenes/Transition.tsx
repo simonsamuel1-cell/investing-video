@@ -17,13 +17,11 @@ import {
   GridGround,
   ROADMAP_CARD,
   ROADMAP_SLOTS,
-  RoadmapCards,
   cardPush,
-  progress,
-  progressInOut,
   shrinkClip,
   theme,
   usePalette,
+  useShadow,
 } from "../../../core";
 import {
   MAP_LABELS,
@@ -33,7 +31,7 @@ import {
   TRANS_SHRINK,
   type Trans,
 } from "../data/timing";
-import { OUTSIDE_RESERVES } from "../components/kit";
+import { OUTSIDE_RESERVES, ease } from "../components/kit";
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -71,17 +69,87 @@ const InCard = ({ n, children }: { n: number; children: React.ReactNode }) => {
   );
 };
 
+/**
+ * TA09's board — core's RoadmapCards, drawn here so every card opens and lights
+ * on the episode's easy ease (core's opens on `settle`). Same slots, same card,
+ * same label style.
+ */
+const Board = ({
+  reveal,
+  landing,
+  cardsAt,
+  glow,
+  contents,
+}: {
+  reveal: number;
+  landing: number;
+  cardsAt: number[];
+  glow: { card: number; at: number; over: number };
+  contents: (React.ReactNode | null)[];
+}) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const shadow = useShadow();
+  if (reveal <= 0.001) return null;
+  const others = ROADMAP_SLOTS.map((_, i) => i).filter((i) => i !== landing);
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {ROADMAP_SLOTS.map((slot, n) => {
+        const a = n === landing ? reveal : ease(f, cardsAt[others.indexOf(n)], 22);
+        if (a <= 0.001) return null;
+        const lit = glow.card === n ? ease(f, glow.at, glow.over) : 0;
+        const box = { position: "absolute" as const, left: slot.x, top: slot.y, width: ROADMAP_CARD.w, height: ROADMAP_CARD.h, borderRadius: theme.shape.panelRadius };
+        return (
+          <div key={n} style={{ opacity: a }}>
+            {lit > 0.001 ? <div style={{ ...box, boxShadow: shadow.glow, opacity: lit }} /> : null}
+            <div style={{ ...box, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}` }} />
+            {contents[n] ? (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  clipPath:
+                    `inset(${slot.y}px ${theme.canvas.width - slot.x - ROADMAP_CARD.w}px ` +
+                    `${theme.canvas.height - slot.y - ROADMAP_CARD.h}px ${slot.x}px round ${theme.shape.panelRadius}px)`,
+                }}
+              >
+                {contents[n]}
+              </div>
+            ) : null}
+            <div
+              style={{
+                position: "absolute",
+                left: slot.x,
+                top: slot.y + ROADMAP_CARD.h + ROADMAP_CARD.label,
+                width: ROADMAP_CARD.w,
+                textAlign: "center",
+                fontFamily: theme.text.family,
+                fontSize: theme.text.tag.size,
+                fontWeight: 700,
+                color: c.indigo,
+                letterSpacing: 0.5,
+              }}
+            >
+              {MAP_LABELS[n]}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
 export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const end = t.at + TRANS_SHRINK + 70 + TRANS_FADE;
   if (f < t.at || f >= end) return null;
 
-  const map = progressInOut(f, t.at, TRANS_SHRINK);
+  const map = ease(f, t.at, TRANS_SHRINK);
   const glowAt = t.at + TRANS_SHRINK - 4;
   const pushAt = glowAt + TRANS_GLOW - 4;
-  const push = progressInOut(f, pushAt, TRANS_PUSH.over);
-  const fade = progress(f, pushAt + TRANS_PUSH.over - TRANS_FADE / 2, TRANS_FADE);
+  const push = ease(f, pushAt, TRANS_PUSH.over);
+  const fade = ease(f, pushAt + TRANS_PUSH.over - TRANS_FADE / 2, TRANS_FADE);
 
   /* The landing card's picture: the frozen frame, scaled from full frame into
      its slot, clipped on an OUTER element (core/Roadmap's warning). */
@@ -91,17 +159,16 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
 
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - fade }}>
+      {/* the grid stays put while the camera pushes past it, so its notch
+          around both reserves never moves */}
+      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f} opacity={map} paper={c.bg} />
+      </div>
       <div style={{ position: "absolute", inset: 0, ...cardPush(push, t.next, TRANS_PUSH.amount) }}>
-        {/* vignetted and stopped at the caption band, so both reserves stay clear */}
-        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
-          <GridGround f={f} opacity={map} paper={c.bg} />
-        </div>
-        <RoadmapCards
-          labels={MAP_LABELS}
+        <Board
           reveal={map}
           landing={t.landing}
           cardsAt={t.cards}
-          cardDur={22}
           glow={{ card: t.next, at: glowAt, over: TRANS_GLOW }}
           contents={t.thumbs.map((g, n) =>
             g === null ? null : (

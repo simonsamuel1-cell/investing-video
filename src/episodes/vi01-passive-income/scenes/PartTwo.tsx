@@ -10,9 +10,9 @@
  * brand's mark redrawn. No price, no recommendation.
  */
 import { useCurrentFrame } from "remotion";
-import { Chip, Stage, popIn, progress, progressInOut, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Icon, Link, Node, Say, Worker, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { ease, Pill, Icon, Link, Node, Say, Worker, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC09 — one company: the employee and the investor ═══════════════════
 const COMPANY: NodeBox = { x: 760, y: 330, w: 400, h: 250 };
@@ -25,8 +25,8 @@ export const SC09 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC09);
   /** The slice: lifts off the company's corner and lands in the investor's hands. */
-  const fly = progressInOut(f, L(B9.slice), 40);
-  const slice = progress(f, L(B9.slice) - 10, m.fade);
+  const fly = ease(f, L(B9.slice), 40);
+  const slice = ease(f, L(B9.slice) - 10, m.fade);
   const sx = COMPANY.x + COMPANY.w - 40 + (INVESTOR.x + INVESTOR.w / 2 - 30 - (COMPANY.x + COMPANY.w - 40)) * fly;
   const sy = COMPANY.y + 20 + (INVESTOR.y - 80 - (COMPANY.y + 20)) * fly;
   return (
@@ -36,7 +36,7 @@ export const SC09 = () => {
       <Node box={COMPANY} label="Bank Central Asia" sub="BBCA" icon="building" layout="column" at={L(B9.bca)} size={42} />
 
       {/* the employee: work goes in, salary comes back */}
-      <Worker x={330} y={940} h={600} at={L(B9.karyawan)} poses={[[0, 1]]} />
+      <Worker x={330} y={925} h={600} at={L(B9.karyawan)} poses={[[0, 1]]} />
       <Say text="Karyawan" x={330} y={300} at={L(B9.karyawan)} size={44} weight={800} color={c.indigo} />
       <Link a={{ x: 520, y: 470 }} b={nodeEdge(COMPANY, "l")} at={L(B9.karyawan) + 30} />
       <Say text="kerja" x={640} y={430} at={L(B9.karyawan) + 40} size={32} weight={600} color={c.indigo} />
@@ -115,7 +115,7 @@ export const SC11 = () => {
   const c = usePalette();
   const L = (g: number) => local(g, BLOCK.SC11);
   /** The wheel grows a little with each turn. */
-  const grow = 0.92 + 0.05 * B11.steps.reduce((s, g) => s + progressInOut(f, L(g), 30), 0);
+  const grow = 0.92 + 0.05 * B11.steps.reduce((s, g) => s + ease(f, L(g), 30), 0);
   return (
     <Stage>
       <Say text="Menghasilkan uang" x={560} y={190} at={L(B11.uang)} size={52} weight={800} color={c.indigo} />
@@ -150,35 +150,31 @@ export const SC12 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC12);
-  const dim = progress(f, L(B12.dim), m.fade);
+  const dim = ease(f, L(B12.dim), m.fade);
   const monthAt = (k: number) => L(B12.habit) + k * 30;
-  const saved = MONTHS.reduce((s, _, k) => s + progressInOut(f, monthAt(k) + 12, 22), 0);
+  const saved = MONTHS.reduce((s, _, k) => s + ease(f, monthAt(k) + 12, 22), 0);
   return (
     <Stage>
       <Say text="Mulainya nggak harus besar" x={960} y={190} at={L(B12.start)} size={52} />
       <div style={{ opacity: 1 - 0.65 * dim }}>
         {["Rp50 ribu", "Rp100 ribu", "Rp300 ribu"].map((label, i) => {
-          const p = popIn(f, L(B12.amounts[i]), m.pop, { back: 1.12 });
-          return (
-            <div key={label} style={{ opacity: p.opacity, transform: `scale(${p.scale})`, transformOrigin: `${[560, 960, 1360][i]}px 330px`, position: "absolute", inset: 0 }}>
-              <Chip label={label} x={[560, 960, 1360][i]} y={330} at={L(B12.amounts[i])} tone="cyan" pill size={52} />
-            </div>
-          );
+          /* 28 then 83 frames apart: a short ease, so each lands on its word */
+          return <Pill key={label} label={label} x={[560, 960, 1360][i]} y={330} at={L(B12.amounts[i])} tone="cyan" size={52} />;
         })}
       </div>
 
       {/* month after month: income comes in, a slice goes to the jar */}
       {MONTHS.map((mo, k) => {
         const at = monthAt(k);
-        const bar = progressInOut(f, at, 14);
+        const bar = ease(f, at, 14);
         if (bar <= 0.001) return null;
         const x = ROW.x0 + k * ROW.step;
-        const go = progressInOut(f, at + 12, 22);
+        const go = ease(f, at + 12, 22);
         const tx = (JAR.x + JAR.size / 2 - ROW.bar / 2 - x) * go;
         const ty = (JAR.y + 120 - (ROW.base - ROW.h)) * go;
         return (
           <div key={mo}>
-            <div style={{ position: "absolute", left: x, top: ROW.base - ROW.h * bar + ROW.slice, width: ROW.bar, height: (ROW.h - ROW.slice) * bar, background: theme.color.indigoWashStrong, border: `${theme.shape.rule}px solid ${c.indigo}`, borderRadius: "0 0 12px 12px", boxSizing: "border-box" }} />
+            <div style={{ position: "absolute", left: x, top: ROW.base - ROW.h * bar + ROW.slice, width: ROW.bar, height: (ROW.h - ROW.slice) * bar, background: theme.color.indigoWashStrong, border: `${theme.shape.rule}px solid ${c.indigo}`, borderRadius: 12, boxSizing: "border-box" }} />
             <div
               style={{
                 position: "absolute",
@@ -200,7 +196,7 @@ export const SC12 = () => {
 
       {/* the jar fills */}
       {f >= L(B12.habit) ? (
-        <div style={{ position: "absolute", left: JAR.x, top: JAR.y, opacity: progress(f, L(B12.habit), m.fade) }}>
+        <div style={{ position: "absolute", left: JAR.x, top: JAR.y, opacity: ease(f, L(B12.habit), m.fade) }}>
           <div style={{ position: "absolute", left: JAR.size * 0.24, top: JAR.size * (0.86 - 0.5 * (saved / MONTHS.length)), width: JAR.size * 0.52, height: JAR.size * 0.5 * (saved / MONTHS.length), background: theme.color.hlCyan, borderRadius: 10 }} />
           <Icon name="jar" size={JAR.size} color={theme.color.cyanInk} stroke={2.4} />
         </div>

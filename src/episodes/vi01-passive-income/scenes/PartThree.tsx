@@ -7,9 +7,9 @@
  * the narration gives; and the five-step process the story is really about.
  */
 import { useCurrentFrame } from "remotion";
-import { Chip, Panel, Stage, progress, progressInOut, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Stage, theme, useMotion, usePalette } from "../../../core";
+import { BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
+import { ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 const LINE = { y: 560, x0: 200, x1: 1400 };
@@ -27,9 +27,13 @@ export const SC13 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const L = (g: number) => local(g, BLOCK.SC13);
-  const reach = B13.steps.reduce((r, g, i) => Math.max(r, progressInOut(f, L(g) - 10, 30) * (STOPS[i].x - LINE.x0)), 0);
+  const reach = B13.steps.reduce((r, g, i) => Math.max(r, ease(f, L(g) - 10, 30) * (STOPS[i].x - LINE.x0)), 0);
+  /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
+     so the cut is a move and not a jump (data/timing.ts: CUTS). */
+  const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
   return (
     <Stage>
+      <div style={{ position: "absolute", inset: 0, opacity: clear }}>
       <Say text="Lo Kheng Hong" x={960} y={190} at={L(B13.name)} size={76} weight={800} />
       <Say text="nggak langsung mulai sebagai investor besar" x={960} y={270} at={L(B13.name) + 60} size={38} weight={600} color={c.slate} />
       {reach > 0.5 ? (
@@ -37,7 +41,7 @@ export const SC13 = () => {
       ) : null}
       {STOPS.map((s, i) => {
         const at = L(B13.steps[i]);
-        const on = progress(f, at, 14);
+        const on = ease(f, at, 14);
         if (on <= 0.001) return null;
         return (
           <div key={s.x}>
@@ -52,6 +56,7 @@ export const SC13 = () => {
         );
       })}
       <Link a={{ x: STOPS[3].x + 30, y: LINE.y }} b={nodeEdge(UNTR_AT, "l")} at={L(B13.untr) - 20} tone="cyan" />
+      </div>
       <Node box={UNTR_AT} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={L(B13.untr)} size={40} />
     </Stage>
   );
@@ -64,26 +69,26 @@ export const SC14 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC14);
   /** The card, carried up from where SC13 left it. */
-  const lift = progressInOut(f, 0, 40);
+  const lift = ease(f, 0, 40);
   const card = {
     x: UNTR_AT.x + (UNTR_TOP.x - UNTR_AT.x) * lift,
     y: UNTR_AT.y + (UNTR_TOP.y - UNTR_AT.y) * lift,
     w: UNTR_AT.w,
     h: UNTR_AT.h,
   };
-  const dim = progress(f, L(B14.caution), m.move);
+  const dim = ease(f, L(B14.caution), m.move);
   return (
     <Stage>
       <div style={{ opacity: 1 - 0.8 * dim }}>
         <Node box={card} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={-60} size={40} />
-        <Chip label="Krisis 1998" x={500} y={470} at={L(B14.krisis)} pill tone="slate" size={42} />
+        <Pill label="Krisis 1998" x={500} y={470} at={L(B14.krisis)} tone="slate" size={42} />
         <Say text="± Rp250 / saham" x={500} y={570} at={L(B14.rp250)} size={60} weight={800} />
         <Link a={{ x: 700, y: 640 }} b={{ x: 1210, y: 470 }} at={L(B14.later)} tone="cyan" width={6} />
         <Say text="beberapa tahun kemudian" x={955} y={640} at={L(B14.later) + 20} size={32} weight={600} color={c.slate} />
         <Say text="berkali-kali lipat" x={1420} y={520} at={L(B14.lipat)} size={40} weight={700} color={theme.color.cyanInk} />
         <Say text="± Rp15 ribu" x={1420} y={440} at={L(B14.rp15)} size={60} weight={800} color={theme.color.cyanInk} />
       </div>
-      <Panel rect={{ x: 360, y: 640, w: 1200, h: 240 }} at={L(B14.caution)} />
+      <Sheet x={360} y={640} w={1200} h={240} at={L(B14.caution)} />
       <Say x={960} y={712} at={L(B14.caution) + 6} size={52} weight={800}>
         <span style={{ display: "inline-flex", alignItems: "center", gap: 18 }}>
           <Icon name="hourglass" size={58} color={c.ink} />

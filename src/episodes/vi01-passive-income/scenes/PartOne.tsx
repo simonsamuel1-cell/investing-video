@@ -7,9 +7,9 @@
  * those colours carry into the life-long picture and the relay.
  */
 import { useCurrentFrame } from "remotion";
-import { Chip, Panel, Stage, Title, progress, progressInOut, theme, useMotion, usePalette } from "../../../core";
+import { Stage, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -51,7 +51,7 @@ export const SC04 = () => {
         strikeAt={L(B4.strike)}
       />
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
-        <OutChip key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} />
+        <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
       ))}
       <Node box={FLOW[0]} label="Kerja" icon="briefcase" at={L(B4.bedanya)} size={40} />
       <Link a={nodeEdge(FLOW[0], "r")} b={nodeEdge(FLOW[1], "l")} at={L(B4.sebagian) - 10} />
@@ -63,24 +63,14 @@ export const SC04 = () => {
   );
 };
 
-/** A ✓ chip that also knows how to leave. */
-const OutChip = ({ label, x, y, at, out }: { label: string; x: number; y: number; at: number; out: number }) => {
-  const f = useCurrentFrame();
-  const m = useMotion();
-  const gone = progress(f, out, m.fade);
-  if (gone >= 0.999) return null;
-  return (
-    <div style={{ opacity: 1 - gone }}>
-      <Chip label={label} x={x} y={y} at={at} check pill size={40} />
-    </div>
-  );
-};
 
 // ═══ SC05 — compounding, on the spoken numbers ════════════════════════════
 const VALUES = [100, 110, 121, 133];
 /** How much of each step's growth came from earlier growth (profit on profit). */
 const ON_PROFIT = [0, 0, 1, 2.1];
 const BARS = { base: 860, unit: 2.6, w: 180, x: [600, 860, 1120, 1380] };
+/** Each step's growth sits on the old value with a hairline of air, so both keep round corners. */
+const GAP = 5;
 const CHAIN: NodeBox[] = [
   { x: 250, y: 290, w: 280, h: 120 },
   { x: 700, y: 290, w: 380, h: 120 },
@@ -93,8 +83,8 @@ export const SC05 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC05);
   const chainOut = L(B5.compounding) - 30;
-  const chainDim = progress(f, L(B5.bars[0]) - 30, m.fade);
-  const axis = progressInOut(f, L(B5.axis), m.move);
+  const chainDim = ease(f, L(B5.bars[0]) - 30, m.fade);
+  const axis = ease(f, L(B5.axis), m.move);
   return (
     <Stage>
       <Say text="Waktu punya peran besar" x={960} y={180} at={L(B5.axis)} out={L(B5.compounding) - 20} size={56} />
@@ -119,7 +109,7 @@ export const SC05 = () => {
 
       {VALUES.map((v, i) => {
         const at = L(B5.bars[i]);
-        const grow = progressInOut(f, at, 22);
+        const grow = ease(f, at, 22);
         if (grow <= 0.001) return null;
         const prev = i === 0 ? v : VALUES[i - 1];
         const h = v * BARS.unit * grow;
@@ -129,15 +119,15 @@ export const SC05 = () => {
         return (
           <div key={v}>
             {/* what was already there */}
-            <div style={{ position: "absolute", left: x, top: BARS.base - prevH, width: BARS.w, height: prevH, background: c.cyanSoft, border: `${theme.shape.rule}px solid ${c.cyan}`, borderRadius: "10px 10px 0 0", boxSizing: "border-box" }} />
+            <div style={{ position: "absolute", left: x, top: BARS.base - prevH, width: BARS.w, height: prevH, background: c.cyanSoft, border: `${theme.shape.rule}px solid ${c.cyan}`, borderRadius: 12, boxSizing: "border-box" }} />
             {/* this step's growth, and the part of it that grew on growth */}
             {i > 0 ? (
               <>
-                <div style={{ position: "absolute", left: x, top: BARS.base - h, width: BARS.w, height: h - prevH, background: c.cyan, borderRadius: "10px 10px 0 0" }} />
-                <div style={{ position: "absolute", left: x, top: BARS.base - h, width: BARS.w, height: extra, background: theme.color.cyanInk, borderRadius: "10px 10px 0 0" }} />
+                <div style={{ position: "absolute", left: x, top: BARS.base - h - GAP, width: BARS.w, height: h - prevH, background: c.cyan, borderRadius: 12 }} />
+                {extra > 0.5 ? <div style={{ position: "absolute", left: x, top: BARS.base - h - 2 * GAP - extra, width: BARS.w, height: extra + GAP, background: theme.color.cyanInk, borderRadius: 12 }} /> : null}
               </>
             ) : null}
-            <Say text={String(v)} x={BARS.x[i]} y={BARS.base - h - 40} at={at} size={52} weight={800} color={i === 0 ? c.ink : theme.color.cyanInk} />
+            <Say text={String(v)} x={BARS.x[i]} y={BARS.base - h - 52} at={at} size={52} weight={800} color={i === 0 ? c.ink : theme.color.cyanInk} />
           </div>
         );
       })}
@@ -163,7 +153,7 @@ export const SC06 = () => {
   const firstOut = L(B6.loop) - 30;
   const lump = useLife(L(B6.modal), L(B6.bukanUang));
   const habit = useLife(L(B6.habit), firstOut);
-  const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * progressInOut(f, L(s), 24), 0);
+  const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * ease(f, L(s), 24), 0);
   return (
     <Stage>
       {/* "modal besar dulu?" — a stack of coins, struck */}
@@ -183,7 +173,7 @@ export const SC06 = () => {
         <div style={{ opacity: habit }}>
           <Say text="Kebiasaan" x={HABIT.x} y={HABIT.y - 70} at={L(B6.habitName)} anchor="left" size={56} weight={800} color={c.indigo} />
           {Array.from({ length: HABIT.cols * HABIT.rows }, (_, i) => {
-            const on = progress(f, L(B6.habit) + 24 + i * 5, 10);
+            const on = ease(f, L(B6.habit) + 24 + i * 5, 10);
             return (
               <div
                 key={i}
@@ -220,7 +210,7 @@ export const SC06 = () => {
       {/* and the skill, a step per turn */}
       {skillH > 0.5 ? (
         <>
-          <div style={{ position: "absolute", left: SKILL.x, top: SKILL.base - skillH, width: SKILL.w, height: skillH, background: c.indigo, borderRadius: "14px 14px 0 0" }} />
+          <div style={{ position: "absolute", left: SKILL.x, top: SKILL.base - skillH - 6, width: SKILL.w, height: skillH, background: c.indigo, borderRadius: 14 }} />
           <div style={{ position: "absolute", left: SKILL.x - 40, top: SKILL.base, width: SKILL.w + 80, height: theme.shape.rule, background: c.slate }} />
         </>
       ) : null}
@@ -242,9 +232,9 @@ export const SC07 = () => {
     ));
   return (
     <Stage>
-      <Title text="Kekayaan kita punya dua bagian" at={L(B7.split) - 20} />
-      <Panel rect={{ x: HALF.left, y: HALF.y, w: HALF.w, h: HALF.h }} at={L(B7.split)} />
-      <Panel rect={{ x: HALF.right, y: HALF.y, w: HALF.w, h: HALF.h }} at={L(B7.split) + 8} />
+      <Say text="Kekayaan kita punya dua bagian" x={960} y={122} at={L(B7.split) - 20} size={48} />
+      <Sheet x={HALF.left} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.split)} />
+      <Sheet x={HALF.right} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.split) + 8} />
       <Say text="Human Asset" x={HALF.left + HALF.w / 2} y={HALF.y + 90} at={L(B7.human)} size={60} weight={800} color={c.indigo} />
       <Say text="Financial Asset" x={HALF.right + HALF.w / 2} y={HALF.y + 90} at={L(B7.financial)} size={60} weight={800} color={theme.color.cyanInk} />
       {rows(HALF.left + 120, [["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]], B7.humanRows, "indigo")}
@@ -275,7 +265,7 @@ export const SC08 = () => {
   const chartOut = L(B8.estafet) - 24;
   const life = useLife(L(B8.muda) - 10, chartOut);
   /** Drawn left to right: youth first, then the rest under "Tapi idealnya". */
-  const reach = 0.3 * progressInOut(f, L(B8.muda), 60) + 0.7 * progressInOut(f, L(B8.idealnya), L(B8.tumbuh) - L(B8.idealnya) + 30);
+  const reach = 0.3 * ease(f, L(B8.muda), 60) + 0.7 * ease(f, L(B8.idealnya), L(B8.tumbuh) - L(B8.idealnya) + 30);
   const N = 60;
   const pts = Array.from({ length: N + 1 }, (_, i) => i / N);
   const X = (t: number) => LIFE.x0 + (LIFE.x1 - LIFE.x0) * t;
@@ -287,11 +277,11 @@ export const SC08 = () => {
     [...pts].reverse().map((t) => `L${X(t)},${LIFE.base - work(t)}`).join(" ") +
     " Z";
   /** The baton: from the worker's hand to the asset's, under "kita teruskan". */
-  const pass = progressInOut(f, L(B8.teruskan), L(B8.aset) - L(B8.teruskan));
+  const pass = ease(f, L(B8.teruskan), L(B8.aset) - L(B8.teruskan));
   /** The baton's centre, from beside the worker's node to beside the asset's. */
   const from = RELAY[0].x + RELAY[0].w + 130;
   const bx = from + (RELAY[1].x - 130 - from) * pass;
-  const baton = progress(f, L(B8.kerja) + 40, m.reveal);
+  const baton = ease(f, L(B8.kerja) + 40, m.reveal);
   return (
     <Stage>
       {life > 0.001 ? (
@@ -327,7 +317,7 @@ export const SC08 = () => {
             width: RELAY[1].x - RELAY[0].x - RELAY[0].w - 120,
             height: 0,
             borderTop: `${theme.shape.rule}px dashed ${c.muted}`,
-            opacity: progress(f, L(B8.estafet) + 20, m.fade),
+            opacity: ease(f, L(B8.estafet) + 20, m.fade),
           }}
         />
       ) : null}
@@ -354,7 +344,7 @@ export const SC08 = () => {
           </div>
         </div>
       ) : null}
-      <Node box={RELAY[1]} label="Aset" icon="box" tone="cyan" at={L(B8.teruskan) + 60} size={42} filled={progress(f, L(B8.aset), 20)} />
+      <Node box={RELAY[1]} label="Aset" icon="box" tone="cyan" at={L(B8.teruskan) + 60} size={42} filled={ease(f, L(B8.aset), 20)} />
     </Stage>
   );
 };

@@ -7,22 +7,9 @@
  * TA09's quote card on the grid, the Tuntun mark over it, the worker beside it.
  */
 import { useCurrentFrame } from "remotion";
-import {
-  Chip,
-  GridGround,
-  QuoteCard,
-  Stage,
-  TuntunMark,
-  Words,
-  progress,
-  progressInOut,
-  quoteListY,
-  theme,
-  useMotion,
-  usePalette,
-} from "../../../core";
+import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
-import { OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
+import { ease, Pill, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
 // ═══ SC16 — keep the life; set part of today aside ═══════════════════════
 const BAR = { x: 820, y: 760, w: 940, h: 74, future: 0.26 };
@@ -32,19 +19,21 @@ export const SC16 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC16);
-  const bar = progressInOut(f, L(B16.bedanya), m.move);
-  const split = progressInOut(f, L(B16.depan) - 30, 30);
+  const bar = ease(f, L(B16.bedanya), m.move);
+  const split = ease(f, L(B16.depan) - 30, 30);
   return (
     <Stage>
-      <Worker x={380} y={950} h={700} at={0} poses={[[0, 1]]} />
+      <Worker x={380} y={925} h={700} at={0} poses={[[0, 1]]} />
       <Say text="Lari dari pekerjaan" x={BAR.x} y={260} at={L(B16.lari)} anchor="left" size={60} weight={800} color={c.slate} strikeAt={L(B16.strike)} />
       {["Bangun karier", "Urus keluarga", "Menikmati hidup"].map((label, i) => (
-        <Chip key={label} label={label} x={BAR.x} y={390 + i * 92} at={L(B16.tetap[i])} anchor="left" check pill size={42} />
+        <Pill key={label} label={label} x={BAR.x} y={390 + i * 92} at={L(B16.tetap[i])} anchor="left" check size={42} />
       ))}
       <Say text="Hasil kerja hari ini" x={BAR.x} y={BAR.y - 56} at={L(B16.bedanya)} anchor="left" size={40} weight={700} />
       {bar > 0.001 ? (
         <>
-          <div style={{ position: "absolute", left: BAR.x, top: BAR.y, width: BAR.w * bar, height: BAR.h, borderRadius: 16, background: c.indigo }} />
+          {/* today's share shrinks back by the future's share plus a gap,
+              and the future's share is a rounded bar of its own */}
+          <div style={{ position: "absolute", left: BAR.x, top: BAR.y, width: BAR.w * bar - (BAR.w * BAR.future + 10) * split, height: BAR.h, borderRadius: 16, background: c.indigo }} />
           <div
             style={{
               position: "absolute",
@@ -52,7 +41,7 @@ export const SC16 = () => {
               top: BAR.y,
               width: BAR.w * BAR.future,
               height: BAR.h,
-              borderRadius: "0 16px 16px 0",
+              borderRadius: 16,
               background: theme.color.cyanInk,
               opacity: split,
             }}
@@ -86,17 +75,17 @@ export const SC17 = () => {
   const clear = L(B17.tanya) - 10;
   const first = useLife(L(B17.kecil) - 20, clear);
   const ink = (t: "indigo" | "cyan") => (t === "indigo" ? c.indigo : theme.color.cyanInk);
-  const pillars = progressInOut(f, L(B17.pillars), m.move);
-  const roof = progressInOut(f, L(B17.pillars) + 30, m.move);
+  const pillars = ease(f, L(B17.pillars), m.move);
+  const roof = ease(f, L(B17.pillars) + 30, m.move);
   return (
     <Stage>
       {first > 0.001 ? (
         <div style={{ opacity: first }}>
           {GROW_BARS.map((b, i) => {
-            const h = b.from + (b.to - b.from) * progressInOut(f, L(B17.grow[i]), 40);
+            const h = b.from + (b.to - b.from) * ease(f, L(B17.grow[i]), 40);
             return (
               <div key={b.label}>
-                <div style={{ position: "absolute", left: GROW.x[i], top: GROW.base - h, width: GROW.w, height: h, borderRadius: "14px 14px 0 0", background: b.tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan, border: `${theme.shape.rule}px solid ${ink(b.tone)}`, boxSizing: "border-box" }} />
+                <div style={{ position: "absolute", left: GROW.x[i], top: GROW.base - h, width: GROW.w, height: h, borderRadius: 14, background: b.tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan, border: `${theme.shape.rule}px solid ${ink(b.tone)}`, boxSizing: "border-box" }} />
                 <Say text={b.label} x={GROW.x[i] + GROW.w / 2} y={GROW.base + 40} at={L(B17.kecil) - 20} size={32} weight={700} color={ink(b.tone)} />
               </div>
             );
@@ -107,7 +96,7 @@ export const SC17 = () => {
           {/* two pillars under one roof */}
           {PILLARS.map((p) => (
             <div key={p.label}>
-              <div style={{ position: "absolute", left: p.x, top: GROW.base - 300 * pillars, width: 120, height: 300 * pillars, background: ink(p.tone), borderRadius: "10px 10px 0 0" }} />
+              <div style={{ position: "absolute", left: p.x, top: GROW.base - 300 * pillars, width: 120, height: 300 * pillars, background: ink(p.tone), borderRadius: 12 }} />
               <Say text={p.label} x={p.x + 60} y={GROW.base + 40} at={L(B17.pillars)} size={32} weight={700} color={ink(p.tone)} />
             </div>
           ))}
@@ -138,7 +127,7 @@ export const SC18 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC18);
   const rulesOut = L(B18.close) - 16;
-  const closing = progress(f, L(B18.close), m.move);
+  const closing = ease(f, L(B18.close), m.move);
   const g = f + BLOCK.SC18;
   return (
     <Stage>
@@ -155,24 +144,24 @@ export const SC18 = () => {
             <GridGround f={g} paper={c.bg} />
           </div>
           <TuntunMark x={CARD.x + CARD.w / 2} y={CARD.y - 170 + Math.sin(((g - B18.close) / 240) * Math.PI * 2) * 10} height={130} />
-          <QuoteCard x={CARD.x} y={CARD.y} w={CARD.w} h={CARD.h} at={L(B18.close) + 12} listY={CARD_LIST_Y} lead={CARD.lead} count={LINES.length}>
+          <QuoteFrame x={CARD.x} y={CARD.y} w={CARD.w} h={CARD.h} at={L(B18.close) + 12} listY={CARD_LIST_Y} lead={CARD.lead} count={LINES.length}>
             {LINES.map((line, n) => (
-              <Words
+              <WordLine
                 key={line}
                 text={line}
                 x={CARD.x + CARD.w / 2}
                 y={CARD_LIST_Y + CARD.lead * n + CARD.size * 0.62}
-                at={L(B18.close) + 30 + n * 60}
+                at={L(B18.close) + 40 + n * 60}
                 stagger={6}
-                anchor="center"
                 size={CARD.size}
                 weight={700}
-                marks={[{ text: "juga punya aset.", color: theme.color.hlCyan }]}
+                mark={n === 1 ? "juga punya aset." : undefined}
+                markColor={theme.color.hlCyan}
                 markAt={L(B18.mark)}
               />
             ))}
-          </QuoteCard>
-          <Worker x={300} y={950} h={600} at={L(B18.close) + 20} poses={[[0, 5]]} />
+          </QuoteFrame>
+          <Worker x={300} y={925} h={600} at={L(B18.close) + 20} poses={[[0, 5]]} />
         </div>
       ) : null}
     </Stage>

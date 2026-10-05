@@ -10,9 +10,10 @@
  * mounted bare above the tiling so they can freeze any scene by its global
  * frame. ONE root <Audio>; no scene has audio of its own.
  */
-import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
-import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
-import { BLOCK, TRANS, VO_LAST } from "./data/timing";
+import React from "react";
+import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile, useCurrentFrame } from "remotion";
+import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
+import { BLOCK, CUT, CUTS, TRANS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
 import { SC01, SC02, SC03 } from "./scenes/ColdOpen";
 import { SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
@@ -62,6 +63,23 @@ const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   if (TOTAL_FRAMES < VO_LAST) throw new Error("vi01-passive-income: the video ends before its voice");
 })();
 
+/**
+ * A scene inside its cuts: it arrives on the cut at its first frame (if there is
+ * one) and leaves on the cut at its last. Both read the GLOBAL frame, so the two
+ * halves of a cut are one move.
+ */
+const cutAt = (at: number): Cut | null => {
+  const c = CUTS.find((k) => k.at === at);
+  return c ? { at: c.at, axis: c.axis, ...CUT } : null;
+};
+const InCuts = ({ from, to, children }: { from: number; to: number; children: React.ReactNode }) => {
+  const g = useCurrentFrame() + from;
+  const cin = cutAt(from);
+  const cout = cutAt(to);
+  const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
+  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+};
+
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
 const chrome = (getInputProps() as { chrome?: boolean }).chrome !== false;
 
@@ -69,7 +87,9 @@ const Body = () => (
   <Stage>
     {SCENES.map(({ from, duration, Component, name }) => (
       <Sequence key={name} from={from} durationInFrames={duration} name={name}>
-        <Component />
+        <InCuts from={from} to={from + duration}>
+          <Component />
+        </InCuts>
       </Sequence>
     ))}
 

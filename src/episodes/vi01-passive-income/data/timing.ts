@@ -253,3 +253,35 @@ export const TRANS: Trans[] = [
   // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12462)
   { at: 12437, freeze: 12436, landing: 2, next: 3, cards: [12447, 12455, 12475], thumbs: [2989, 8485, null, null] },
 ];
+
+// ═══ EVERY OTHER SCENE CHANGE — a CameraCut ═══════════════════════════════
+/**
+ * Simon: "Harus selalu ada animasi transisi, meski normal banget, lalu animasi
+ * harus easy ease." The three chapter cuts have their Scene Transisi; every
+ * other boundary gets core's CameraCut (its curve is the in-out ease): the
+ * outgoing scene slides off with a blur, the incoming one slides in behind it.
+ * Always sideways: a rise would carry a scene's lowest things (the worker's
+ * feet) down through the caption band on the way in.
+ *
+ * ⚠ NOT SC13 → SC14. The United Tractors card is carried across that cut —
+ * SC13 leaves it exactly where SC14 picks it up — so the move IS the
+ * transition, and SC13 fades everything else off around it (scenes/PartThree).
+ */
+export const CUT = { over: 40, distance: 120, blur: 10 } as const;
+export const CUTS: { at: number; axis: "x" | "y" }[] = [
+  { at: BLOCK.SC02, axis: "x" },
+  { at: BLOCK.SC03, axis: "x" },
+  { at: BLOCK.SC05, axis: "x" },
+  { at: BLOCK.SC06, axis: "x" },
+  { at: BLOCK.SC07, axis: "x" },
+  { at: BLOCK.SC08, axis: "x" },
+  { at: BLOCK.SC10, axis: "x" },
+  { at: BLOCK.SC11, axis: "x" },
+  { at: BLOCK.SC12, axis: "x" },
+  { at: BLOCK.SC15, axis: "x" },
+  { at: BLOCK.SC16, axis: "x" },
+  { at: BLOCK.SC17, axis: "x" },
+  { at: BLOCK.SC18, axis: "x" },
+];
+/** How long SC13 takes to clear around the carried card before the cut. */
+export const CARRY_CLEAR = 30;

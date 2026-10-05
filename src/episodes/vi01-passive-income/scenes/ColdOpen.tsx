@@ -6,9 +6,9 @@
  * those two things live in, and the two questions the video is about.
  */
 import { useCurrentFrame } from "remotion";
-import { Chip, Stage, Title, popIn, progress, theme, useMotion, usePalette } from "../../../core";
+import { Stage, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
+import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 const CAL = { x: 520, y: 300, cell: 96, gap: 10, cols: 7, days: 30, payday: 25 };
@@ -25,15 +25,16 @@ export const SC01 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC01);
-  const calOut = progress(f, L(B1.kerja) - 6, m.move);
-  const cal = progress(f, L(B1.calendar), m.reveal) * (1 - calOut);
+  const calOut = ease(f, L(B1.kerja) - 6, m.move);
+  const cal = ease(f, L(B1.calendar), m.reveal) * (1 - calOut);
   /** The cursor runs day 1 → 25, settling on payday. */
   const day = Math.min(
     CAL.payday,
     1 + Math.floor(Math.max(0, f - L(B1.days[0])) / ((L(B1.days[1]) - L(B1.days[0])) / (CAL.payday - 1))),
   );
-  const stamp = popIn(f, L(B1.gajian), m.pop * 1.6, { back: 1.12 });
-  const stopped = progress(f, L(B1.berhenti), m.move);
+  const stampIn = ease(f, L(B1.gajian), m.reveal);
+  const stamp = { opacity: stampIn, scale: 0.9 + 0.1 * stampIn };
+  const stopped = ease(f, L(B1.berhenti), m.move);
 
   return (
     <Stage>
@@ -114,7 +115,7 @@ export const SC01 = () => {
       ) : null}
 
       {/* the worker, and the flow he keeps going */}
-      <Worker x={380} y={940} h={700} at={L(B1.kerja)} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
+      <Worker x={380} y={925} h={700} at={L(B1.kerja)} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
       <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.kerja)} dim={stopped} />
       <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />
       <Node box={FLOW1[1]} label="Penghasilan" icon="wallet" at={L(B1.penghasilan)} />
@@ -160,8 +161,8 @@ export const SC02 = () => {
   const L = (g: number) => local(g, BLOCK.SC02);
   return (
     <Stage>
-      <Title text="Menambah Penghasilan" at={L(B2.title)} />
-      <Worker x={330} y={950} h={700} at={0} poses={[[0, 6]]} />
+      <Say text="Menambah Penghasilan" x={960} y={122} at={L(B2.title)} size={48} />
+      <Worker x={330} y={925} h={700} at={0} poses={[[0, 6]]} />
       {WAYS.map((w, i) => {
         /* from just under the chip to just over the source, on the radius */
         const dx = ARC.cx - w.x;
@@ -179,9 +180,9 @@ export const SC02 = () => {
         );
       })}
       {WAYS.map((w, i) => (
-        <Chip key={w.label} label={w.label} x={w.x} y={w.y} at={L(B2.ways[i])} pill tone="indigo" size={40} />
+        <Pill key={w.label} label={w.label} x={w.x} y={w.y} at={L(B2.ways[i])} size={40} />
       ))}
-      <Node box={SOURCE} label="Waktu + Tenaga" icon="clock" at={L(B2.waktu)} filled={progress(f, L(B2.waktu) + 18, 18)} size={44} />
+      <Node box={SOURCE} label="Waktu + Tenaga" icon="clock" at={L(B2.waktu)} filled={ease(f, L(B2.waktu) + 18, 18)} size={44} />
     </Stage>
   );
 };
@@ -202,10 +203,10 @@ export const SC03 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC03);
-  const day = progress(f, L(B3.day), m.reveal);
+  const day = ease(f, L(B3.day), m.reveal);
   /** Blocks fill left to right between "Semakin dewasa" and "…makin banyak." */
-  const fill = (h: number) => progress(f, L(B3.dewasa) + ((L(B3.full) - L(B3.dewasa)) * h) / 24, 10);
-  const dimDay = progress(f, L(B3.q1) - 10, m.move);
+  const fill = (h: number) => ease(f, L(B3.dewasa) + ((L(B3.full) - L(B3.dewasa)) * h) / 24, 10);
+  const dimDay = ease(f, L(B3.q1) - 10, m.move);
   const ink = (t: "indigo" | "cyan" | "slate") => (t === "indigo" ? c.indigo : t === "cyan" ? theme.color.cyanInk : c.slate);
   const wash = (t: "indigo" | "cyan" | "slate") =>
     t === "indigo" ? theme.color.indigoWashStrong : t === "cyan" ? theme.color.hlCyan : theme.color.slateWash;
@@ -214,7 +215,7 @@ export const SC03 = () => {
     <Stage>
       <div style={{ opacity: day * (1 - 0.7 * dimDay) }}>
         <Say text="Sehari tetap cuma 24 jam" x={HOURS.x} y={HOURS.y - 70} at={L(B3.day)} anchor="left" size={44} />
-        <Say text={`${Math.round(24 * progress(f, L(B3.day), 50))} jam`} x={HOURS.x + rowW} y={HOURS.y - 70} at={L(B3.jam)} anchor="right" size={44} color={c.indigo} />
+        <Say text={`${Math.round(24 * ease(f, L(B3.day), 50))} jam`} x={HOURS.x + rowW} y={HOURS.y - 70} at={L(B3.jam)} anchor="right" size={44} color={c.indigo} />
         {Array.from({ length: 24 }, (_, h) => {
           const blk = DAY_BLOCKS.find((b) => h >= b.from && h < b.to)!;
           const on = fill(h);
@@ -254,7 +255,7 @@ export const SC03 = () => {
         h={130}
         at={L(B3.q1) + 30}
         typeAt={L(B3.q1Type)}
-        dim={progress(f, L(B3.q2), m.fade)}
+        dim={ease(f, L(B3.q2), m.fade)}
         text="“Gimana caranya aku bisa menghasilkan lebih banyak?”"
         size={42}
       />
