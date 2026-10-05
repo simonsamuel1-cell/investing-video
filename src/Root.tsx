@@ -33,6 +33,10 @@ import {
   TAMistakesComposition,
   TOTAL_FRAMES as V22_FRAMES,
 } from "./episodes/022-ta-mistakes/Composition";
+import {
+  PassiveIncomeComposition,
+  TOTAL_FRAMES as VI01_FRAMES,
+} from "./episodes/vi01-passive-income/Composition";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
 import {
@@ -136,6 +140,17 @@ export const RemotionRoot: React.FC = () => {
         id="TA11-TAMistakes"
         component={TAMistakesComposition}
         durationInFrames={V22_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI01 — Passive Income. Not a TA video: listed after the TA block. Built
+          on src/core at 60fps; every frame number comes from the recorded VO via
+          docs/VI01_PassiveIncome_Script_SYNCED.md. */}
+      <Composition
+        id="VI01-PassiveIncome"
+        component={PassiveIncomeComposition}
+        durationInFrames={VI01_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}

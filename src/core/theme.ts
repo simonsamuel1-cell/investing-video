@@ -355,6 +355,12 @@ export const theme = {
     zoneFill: "rgba(95, 77, 238, 0.18)",
     indigoWashStrong: "rgba(95, 77, 238, 0.16)",
     cyanWash: "rgba(92, 200, 227, 0.12)",
+    /**
+     * Cyan for TYPE and strokes on white. The brand cyan (#5CC8E3) is a fill:
+     * as a word on a white card it is too light to read. Same hue (192), darker
+     * — added for VI01, where cyan is "financial asset" and has to be read.
+     */
+    cyanInk: "#2098B6",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.
