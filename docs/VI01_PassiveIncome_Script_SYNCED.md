@@ -487,12 +487,9 @@ Tahan sampai f19200.
 
 ## Open items
 
-- **Branch.** VI01 bukan video TA, tapi aku taruh di folder yang sama dengan video TA (`moving-average-core`, branch Module01) karena library bersamanya (`src/core`) hanya ada di sana dan Studio :3004 langsung bisa membukanya. Kalau mau dipindah ke branch modul sendiri, bilang.
-- **Typo di script asli:** "pelajari asetnya,cbeli sesuatu" → ditulis **"pelajari asetnya, beli sesuatu"**. SRT mendengarnya "cebeli" — kemungkinan narator membacanya apa adanya. Cek audionya di 04:20.2 (f15612); kalau memang terdengar "cebeli", perlu take ulang baris itu.
-- **File audio lain di folder INV01** (`01 Kita tetap kerja…`, `02 dengan mulai membangun aset`, `03–05, 09 Lo Keng Hong`, `06 15 ribu`, `07_1/07_2 Cari saham…`, `08 Kita tetap bisa bangun karir`, `MiniMax_…Compelling_Storyteller`) — **tidak dipakai**; yang dipakai hanya `INV01 - Main VO.MP3`. Kalau itu take pengganti untuk baris tertentu, bilang baris mana dan aku sambungkan seperti di TA07.
-- `[NEEDS ASSET]` foto Lo Kheng Hong — opsional.
-- `[NEEDS ASSET]` kemasan Indomie / Ultra Milk, logo BCA / Indofood CBP / Ultrajaya / United Tractors — opsional. Tanpa itu: kartu nama + kode saham, **bukan logo tiruan**.
-- **UNTR**: hanya dua angka dari narasi (± Rp250 di 1998, ± Rp15 ribu kemudian), tanpa grafik. Kalau mau grafik harga sungguhan: `[NEEDS DATA: UNTR harga bulanan 1998–2008]`.
-- **SC05**: 100 → 110 → 121 → 133 adalah ilustrasi (10% per periode); bukan data pasar, tidak diberi tag apa pun di layar.
-- **Label roadmap** (Gaji & Waktu · Uang Yang Ikut Bekerja · Ikut Punya Bisnis · Cerita Lo Kheng Hong) — usulanku, silakan ganti.
-- Gaya Scene Transisi: TA09. Alternatif TA11 (kartu bernomor + kursor) tersedia.
+- **Typo di script asli:** "pelajari asetnya,cbeli sesuatu" → ditulis **"pelajari asetnya, beli sesuatu"**. Simon: ok.
+- **Placeholder — logo:** BCA (BBCA), Indofood CBP (ICBP), Ultrajaya (ULTJ), United Tractors (UNTR) saat ini kartu teks (nama + kode saham), bukan logo. Diganti dengan logo asli begitu filenya ada — tidak digambar ulang.
+- **Placeholder — foto:** Lo Kheng Hong saat ini kartu nama saja.
+- **UNTR**: hanya dua angka dari narasi (± Rp250 di 1998, ± Rp15 ribu kemudian), tanpa grafik.
+- **SC05**: 100 → 110 → 121 → 133 adalah ilustrasi (10% per periode); bukan data pasar.
+- **Label roadmap** (Gaji & Waktu · Uang Yang Ikut Bekerja · Ikut Punya Bisnis · Cerita Lo Kheng Hong) — usulan, silakan ganti.
