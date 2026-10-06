@@ -64,6 +64,15 @@ const WORK = { shift: -200, feet: 940, label: SPLIT.word, weight: 700, gap: 110 
 /** "Border template hp nya tipisin, jadi 2 px aja"; the UI centred top to bottom on the screen. */
 const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 5, radius: 64, ui: { top: 70, bottom: 468 } };
 const BALANCE = 50_000_000;
+/** "transparan 40%" — the top row and the history pill, so the balance card leads. */
+const PHONE_QUIET = 0.4;
+/**
+ * "Kelompokkan Kerja, Orang Kerja png, template hp dan isinya, lalu buat tengah
+ * horizontal": the photo's left edge to the phone's right edge, centred on the frame.
+ */
+const GROUP_LEFT = theme.canvas.width / 2 + WORK.shift - (PHOTO_H * ORANG_KERJA) / 2;
+const GROUP_RIGHT = PHONE.cx + PHONE.w / 2;
+const GROUP_DX = theme.canvas.width / 2 - (GROUP_LEFT + GROUP_RIGHT) / 2;
 /** Where the pause and the question stood before the flow was taken out — unchanged. */
 const PAUSE_AT = { x: 826, y: 338 };
 const QUESTION_AT = { x: 1280, y: 740 };
@@ -131,14 +140,14 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
     ({ ...type, height: 56, borderRadius: 28, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 18, fontWeight: 700, boxShadow: shadow.rest }) as const;
   const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   return (
-    <div style={{ position: "absolute", left: P.cx - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.muted, boxShadow: shadow.rest, opacity: life }}>
+    <div style={{ position: "absolute", left: P.cx + GROUP_DX - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.slate, boxShadow: shadow.rest, opacity: life }}>
       <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: sh, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
         {/* the island */}
         <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
 
         <div style={{ position: "absolute", left: 0, right: 0, top: drop, height: sh }}>
         {/* avatar · Overview · bell */}
-        <div style={{ position: "absolute", left: 22, right: 22, top: 70, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ position: "absolute", left: 22, right: 22, top: 70, display: "flex", alignItems: "center", justifyContent: "space-between", opacity: PHONE_QUIET }}>
           <div style={circle(52, c.indigoTint2)}>
             <svg width={26} height={26} viewBox="0 0 24 24"><circle cx={12} cy={9} r={4} {...line} stroke={c.cardBg} /><path d="M4.5 20c1.5-3.6 4.2-5 7.5-5s6 1.4 7.5 5" {...line} stroke={c.cardBg} /></svg>
           </div>
@@ -168,7 +177,7 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
         </div>
 
         {/* the history, faded */}
-        <div style={{ ...pill(c.cardBg, c.ink), position: "absolute", left: 18, right: 18, top: 408, height: 60, justifyContent: "space-between", padding: "0 24px", fontWeight: 600, opacity: 0.45 }}>
+        <div style={{ ...pill(c.cardBg, c.ink), position: "absolute", left: 18, right: 18, top: 408, height: 60, justifyContent: "space-between", padding: "0 24px", fontWeight: 600, opacity: PHONE_QUIET }}>
           Transaction History
           <svg width={18} height={18} viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" {...line} /></svg>
         </div>
@@ -250,7 +259,7 @@ export const SC01 = () => {
       {/* it comes up from below, but never through the caption band — the frame
           is clipped there, so it rises out from behind the band's top edge */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <div style={{ position: "absolute", inset: 0, transform: `translateX(${WORK.shift}px)` }}>
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${(WORK.shift + GROUP_DX).toFixed(2)}px)` }}>
           <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px)` }}>
             <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} color={c.indigo} />
           </div>
