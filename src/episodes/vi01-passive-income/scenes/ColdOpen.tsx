@@ -29,10 +29,17 @@ const CAL_GROW = 0.15;
  */
 const CAL_SHRINK = 0.3;
 const CAL_BOTTOM = CAL.y + CAL.h / 2 + (CAL.h / 2) * (1 + CAL_GROW);
-const SPLIT = { bottom: 900, gap: 60, word: 160, from: 0.5 };
-const CAL_DOWN = SPLIT.bottom - CAL_BOTTOM;
-const CAL_TOP_AFTER = SPLIT.bottom - CAL.h * (1 + CAL_GROW) * (1 - CAL_SHRINK);
-const WORD_Y = CAL_TOP_AFTER - SPLIT.gap - SPLIT.word / 2;
+const SPLIT = { gap: 60, word: 160, from: 0.5 };
+/**
+ * Where they settle: GAJIAN over the page, the PAIR centred on the frame —
+ * Simon: "posisi akhir Gajian dan kalender geser naik lagi, buat mereka (as a
+ * grup) align-center."
+ */
+const CAL_H_AFTER = CAL.h * (1 + CAL_GROW) * (1 - CAL_SHRINK);
+const GROUP_H = SPLIT.word + SPLIT.gap + CAL_H_AFTER;
+const GROUP_BOTTOM = theme.canvas.height / 2 + GROUP_H / 2;
+const CAL_DOWN = GROUP_BOTTOM - CAL_BOTTOM;
+const WORD_Y = GROUP_BOTTOM - CAL_H_AFTER - SPLIT.gap - SPLIT.word / 2;
 /** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
 const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 /** The flow: three nodes in a row on the right, the worker on the left. */
@@ -98,18 +105,9 @@ export const SC01 = () => {
 
   return (
     <Stage>
-      {/* the calendar: grows, then shrinks about its bottom edge and drops */}
-      {cal > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${((1 - calIn) * 30 + split * CAL_DOWN).toFixed(2)}px)` }}>
-          <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px` }}>
-            <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
-              <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
-            </div>
-          </div>
-        </div>
-      ) : null}
-
-      {/* GAJIAN: from the frame's centre, growing, up to the top */}
+      {/* GAJIAN: from the frame's centre, growing, up to the top — drawn FIRST,
+          so it rises from BEHIND the page ("secara layer harusnya dari belakang
+          kalender") */}
       {wordIn * (1 - calOut) > 0.001 ? (
         <div
           style={{
@@ -128,6 +126,17 @@ export const SC01 = () => {
           }}
         >
           GAJIAN
+        </div>
+      ) : null}
+
+      {/* the calendar: grows, then shrinks about its bottom edge and drops */}
+      {cal > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${((1 - calIn) * 30 + split * CAL_DOWN).toFixed(2)}px)` }}>
+          <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px` }}>
+            <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
+              <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
+            </div>
+          </div>
         </div>
       ) : null}
 
