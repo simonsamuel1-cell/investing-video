@@ -81,6 +81,8 @@ const GROUP_DX = theme.canvas.width / 2 - (GROUP_LEFT + GROUP_RIGHT) / 2;
  */
 const LEAVE_X = 300;
 const SPEND = { x: [560, 1360], y: [330, 560, 790], disc: 150, icon: 84 };
+/** "kasih garis yang ditarik dari hp ke tiap icon": from the middle of the phone's side, drawn out to each disc. */
+const SPEND_LINE = { width: 3, drawSec: 0.35 };
 const SPEND_ICONS: IconName[][] = [
   ["shirt", "pants", "car"],
   ["basket", "burger", "glass"],
@@ -209,9 +211,18 @@ const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; a
   if (life <= 0.001) return null;
   const lift = (1 - ease(f, at, m.reveal)) * 24;
   const D = SPEND.disc;
+  /** "icon iconnya kasih warna fill" — palette tints, the basket in its yellow. */
+  const fills: Partial<Record<IconName, string>> = {
+    shirt: c.indigoTint1,
+    pants: c.cyan,
+    car: c.indigoTint2,
+    basket: theme.color.basketYellow,
+    burger: c.indigoTint2,
+    glass: c.cyan,
+  };
   return (
     <div style={{ position: "absolute", left: x - D / 2, top: y - D / 2 + lift, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: life, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Icon name={name} size={SPEND.icon} color={c.ink} fill={name === "basket" ? theme.color.basketYellow : undefined} />
+      <Icon name={name} size={SPEND.icon} color={c.ink} fill={fills[name]} />
     </div>
   );
 };
@@ -300,9 +311,26 @@ export const SC01 = () => {
         </div>
       </div>
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
+      {/* the lines, under the phone and the discs */}
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        {SPEND_ICONS.map((col, i) =>
+          col.map((name, j) => {
+            const at = iconsAt + m.sec(0.12) * (i * 3 + j);
+            const p = ease(f, at, m.sec(SPEND_LINE.drawSec));
+            if (p <= 0.001) return null;
+            const x0 = theme.canvas.width / 2 + (i === 0 ? -1 : 1) * (PHONE.w / 2);
+            const y0 = PHONE.top + PHONE.h / 2;
+            const dx = SPEND.x[i] - x0;
+            const dy = SPEND.y[j] - y0;
+            const len = Math.hypot(dx, dy);
+            const reach = (len - SPEND.disc / 2) * p;
+            return <line key={name} x1={x0} y1={y0} x2={x0 + (dx / len) * reach} y2={y0 + (dy / len) * reach} stroke={c.slate} strokeWidth={SPEND_LINE.width} strokeLinecap="round" />;
+          }),
+        )}
+      </svg>
       <BalancePhone at={L(B1.penghasilan)} countOver={m.sec(1.5)} centre={centre} />
       {SPEND_ICONS.map((col, i) =>
-        col.map((name, j) => <SpendIcon key={name} name={name} x={SPEND.x[i]} y={SPEND.y[j]} at={iconsAt + m.sec(0.12) * (i * 3 + j)} />),
+        col.map((name, j) => <SpendIcon key={name} name={name} x={SPEND.x[i]} y={SPEND.y[j]} at={iconsAt + m.sec(0.12) * (i * 3 + j) + m.sec(SPEND_LINE.drawSec * 0.7)} />),
       )}
 
       {/* "berhenti kerja sementara": a pause over the work */}
