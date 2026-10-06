@@ -46,7 +46,7 @@ const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 const ORANG_KERJA = 1312 / 1199;
 /** …whose solid pixels stop at row 1138: the feet, where its contact shadow goes. */
 const ORANG_KERJA_FLOOR = 1138 / 1199;
-/** The photo's height: it rises from below the frame to stand centred on it. */
+/** The photo's height: it rises from below the frame, centred left to right ("maksudku tengah horizontal"). */
 const PHOTO_H = 560;
 /** Far enough up that the pair is gone — GAJIAN's top is the highest point. */
 const EXIT_RISE = 1000;
@@ -158,7 +158,7 @@ export const SC01 = () => {
       {/* it comes up from below, but never through the caption band — the frame
           is clipped there, so it rises out from behind the band's top edge */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={theme.canvas.height / 2 + PHOTO_H / 2} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height / 2 + PHOTO_H / 2} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
+        <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={940} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - 940 + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
       </div>
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
       <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.kerjaNode)} dim={stopped} />
