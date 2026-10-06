@@ -18,8 +18,21 @@ import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type Node
  * hairline, the date large in slate. No band, no rings, no border.
  */
 const CAL = { cx: 960, y: 290, w: 440, h: 480, band: 120, rule: 56 };
-/** "kasih juga pelan-pelan keseluruhan kalender membesar 15%" — over its whole stay. */
+/** "kasih juga pelan-pelan keseluruhan kalender membesar 15%" — until GAJIAN. */
 const CAL_GROW = 0.15;
+/**
+ * THEN GAJIAN TAKES THE TOP — Simon: "Posisi 'gajian' mulai dari tengah layar
+ * (horizontal-vertikal), lalu membesar dan geser ke bagian atas layar.
+ * Kalendernya pun dari posisi sekarang, mengecil 30% anchor bawah dan geser ke
+ * bawah." The page shrinks about its own bottom edge and that edge drops to
+ * `bottom`; the word rises from the frame's centre to sit `gap` above it.
+ */
+const CAL_SHRINK = 0.3;
+const CAL_BOTTOM = CAL.y + CAL.h / 2 + (CAL.h / 2) * (1 + CAL_GROW);
+const SPLIT = { bottom: 900, gap: 60, word: 160, from: 0.5 };
+const CAL_DOWN = SPLIT.bottom - CAL_BOTTOM;
+const CAL_TOP_AFTER = SPLIT.bottom - CAL.h * (1 + CAL_GROW) * (1 - CAL_SHRINK);
+const WORD_Y = CAL_TOP_AFTER - SPLIT.gap - SPLIT.word / 2;
 /** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
 const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 /** The flow: three nodes in a row on the right, the worker on the left. */
@@ -45,7 +58,7 @@ const Calendar = ({ month, date, last, speed }: { month: string; date: number; l
   return (
     <>
       <div style={{ position: "absolute", left, top: CAL.y, width: CAL.w, height: CAL.h, borderRadius: r, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 22, boxSizing: "border-box", fontFamily: theme.text.family, fontSize: 40, fontWeight: 700, color: c.indigo, letterSpacing: 1 }}>
+        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 22, boxSizing: "border-box", fontFamily: theme.text.family, fontSize: 40, fontWeight: 800, color: theme.color.calendarRed, letterSpacing: 1 }}>
           {month}
         </div>
         <div style={{ position: "absolute", left: CAL.rule, top: CAL.band, width: CAL.w - CAL.rule * 2, height: theme.shape.hairline * 2, borderRadius: 2, background: c.border }} />
@@ -73,52 +86,54 @@ export const SC01 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC01);
-  const calOut = ease(f, L(B1.kerja) - 6, m.move);
+  const calOut = ease(f, L(B1.handover), m.move);
   const calIn = ease(f, L(B1.calendar), m.move);
   const cal = calIn * (1 - calOut);
-  const grow = 1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.kerja) - 6 - L(B1.calendar));
+  const grow = 1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.gajian) - L(B1.calendar));
+  /** GAJIAN up and bigger, the calendar down and smaller — one move, one curve. */
+  const split = ease(f, L(B1.gajian), L(B1.settled) - L(B1.gajian));
   const roll = (t: number) => 1 + (B1.payday - 1) * ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
-  const stampIn = ease(f, L(B1.gajian), m.reveal);
-  const stamp = { opacity: stampIn, scale: 0.9 + 0.1 * stampIn };
+  const wordIn = ease(f, L(B1.gajian), m.reveal);
   const stopped = ease(f, L(B1.berhenti), m.move);
 
   return (
     <Stage>
-      {/* the calendar, and payday beside it */}
+      {/* the calendar: grows, then shrinks about its bottom edge and drops */}
       {cal > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${(1 - calIn) * 30}px)` }}>
-          <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
-            <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
-          </div>
-          {stamp.opacity > 0.001 ? (
-            <div
-              style={{
-                position: "absolute",
-                /* beside the page as it grows, not under it */
-                left: CAL.cx + (CAL.w / 2) * grow + 60,
-                top: CAL.y + CAL.h / 2,
-                opacity: stamp.opacity,
-                transform: `translateY(-50%) scale(${stamp.scale})`,
-                transformOrigin: "0% 50%",
-                padding: "16px 38px",
-                borderRadius: 999,
-                background: theme.color.indigoWash,
-                color: c.indigo,
-                fontFamily: theme.text.family,
-                fontSize: 80,
-                fontWeight: 800,
-                letterSpacing: 2,
-              }}
-            >
-              GAJIAN
+        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${((1 - calIn) * 30 + split * CAL_DOWN).toFixed(2)}px)` }}>
+          <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px` }}>
+            <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
+              <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
             </div>
-          ) : null}
+          </div>
+        </div>
+      ) : null}
+
+      {/* GAJIAN: from the frame's centre, growing, up to the top */}
+      {wordIn * (1 - calOut) > 0.001 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: theme.canvas.width / 2 - calOut * 80,
+            top: theme.canvas.height / 2 + (WORD_Y - theme.canvas.height / 2) * split,
+            transform: `translate(-50%, -50%) scale(${(SPLIT.from + (1 - SPLIT.from) * split).toFixed(4)})`,
+            opacity: wordIn * (1 - calOut),
+            fontFamily: theme.text.family,
+            fontSize: SPLIT.word,
+            fontWeight: 800,
+            color: theme.color.calendarRed,
+            letterSpacing: 4,
+            lineHeight: 1,
+            whiteSpace: "nowrap",
+          }}
+        >
+          GAJIAN
         </div>
       ) : null}
 
       {/* the worker, and the flow he keeps going */}
-      <Worker x={380} y={925} h={700} at={L(B1.kerja)} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
-      <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.kerja)} dim={stopped} />
+      <Worker x={380} y={925} h={700} at={L(B1.handover)} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
+      <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.handover) + 6} dim={stopped} />
       <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />
       <Node box={FLOW1[1]} label="Penghasilan" icon="wallet" at={L(B1.penghasilan)} />
       <Link a={nodeEdge(FLOW1[1], "r")} b={nodeEdge(FLOW1[2], "l")} at={L(B1.hidup) - 14} cut={stopped} />

@@ -361,6 +361,13 @@ export const theme = {
      * — added for VI01, where cyan is "financial asset" and has to be read.
      */
     cyanInk: "#2098B6",
+    /**
+     * ⚠ A SIMON-REQUESTED EXCEPTION to "red only in candles": the red a wall
+     * calendar prints its month and its paydays in. VI01's opening — "Design
+     * 'Gajian' nya … Buat lebih bold dan warna merah. Januari juga buat merah."
+     * Same hex as `warn`, named for what it is so neither use leaks into the other.
+     */
+    calendarRed: "#E5475D",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.

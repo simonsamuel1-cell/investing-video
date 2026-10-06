@@ -43,7 +43,11 @@ export const SC01 = {
   /** "80-150 angka 1 nya scroll hingga angka 25" — lands on 25 as the pause begins. */
   scroll: [80, 150] as const,
   payday: 25,
-  gajian: 190, // "GAJIAN."
+  gajian: 190, // "GAJIAN." — the word appears mid-screen and starts to rise
+  /** GAJIAN has risen and grown to the top; the calendar has shrunk 30% and dropped. */
+  settled: 236,
+  /** The calendar and GAJIAN leave; the worker and the flow arrive. */
+  handover: 250,
   kerja: 220, // "Kita kerja,"
   penghasilan: 301, // "dapat penghasilan,"
   hidup: 460, // "…menjalani hidup."
