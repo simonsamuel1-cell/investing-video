@@ -37,6 +37,13 @@ VO = SRC / "INV01 - Main VO.MP3"
 SCRIPT = ROOT / "docs" / "VI01_PassiveIncome_Script_ORIGINAL.txt"
 SRT_OUT = ROOT / "assets" / "VI01_PassiveIncome_Sub_CORRECTED.srt"
 JSON_OUT = ROOT / "docs" / "VI01_sentences.json"
+# Silence Simon has had spliced into the VO (scripts/vi01-vo.py builds the padded
+# file from the same list). Alignment runs on the ORIGINAL recording; every time
+# written out is then moved past the pads before it, so the cues match the
+# padded file the video plays.
+PADS = json.loads((ROOT / "src/episodes/vi01-passive-income/data/pads.json").read_text())
+PAD_S = [(p["at"] / 60, p["frames"] / 60) for p in PADS]
+padded = lambda t: t + sum(d for at, d in PAD_S if t >= at)
 
 # One line of the caption band (core/Captions: Plus Jakarta Sans 500 at 36px,
 # 1728px between the margins), measured in the real font, with room to spare.
@@ -229,12 +236,17 @@ for a, b in zip(cues, cues[1:]):
     if a["end"] > b["start"]:
         a["end"] = b["start"]
 
+for c in cues:
+    c["start"], c["end"] = round(padded(c["start"]), 3), round(padded(c["end"]), 3)
+for sc in out_scenes:
+    for sen in sc["sentences"]:
+        sen["start"], sen["end"] = round(padded(sen["start"]), 3), round(padded(sen["end"]), 3)
 SRT_OUT.parent.mkdir(exist_ok=True)
 SRT_OUT.write_text("\n".join(f"{i + 1}\n{ts(c['start'])} --> {ts(c['end'])}\n{c['text']}\n" for i, c in enumerate(cues)))
-words_out = [{"w": w[4], "scene": w[1], "start": round(starts[i], 3), "end": round(ends[i], 3),
+words_out = [{"w": w[4], "scene": w[1], "start": round(padded(starts[i]), 3), "end": round(padded(ends[i]), 3),
               "matched": match[i] is not None} for i, w in enumerate(script_words)]
 JSON_OUT.write_text(json.dumps({"scenes": out_scenes, "unmatched": unmatched,
-                                "vo_end": srt[-1][1], "words": words_out}, ensure_ascii=False, indent=1))
+                                "vo_end": padded(srt[-1][1]), "words": words_out}, ensure_ascii=False, indent=1))
 print(f"{len(cues)} cues, {sum(len(s['sentences']) for s in out_scenes)} sentences")
 print("unmatched script words:", unmatched)
 print("widest cue: %.0f px" % max(width(c["text"]) for c in cues))
