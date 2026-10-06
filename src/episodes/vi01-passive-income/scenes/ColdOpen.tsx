@@ -46,6 +46,10 @@ const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 const ORANG_KERJA = 1312 / 1199;
 /** …whose solid pixels stop at row 1138: the feet, where its contact shadow goes. */
 const ORANG_KERJA_FLOOR = 1138 / 1199;
+/** The photo's height: it rises from below the frame to stand centred on it. */
+const PHOTO_H = 560;
+/** Far enough up that the pair is gone — GAJIAN's top is the highest point. */
+const EXIT_RISE = 1000;
 /** The flow: three nodes in a row on the right, the worker on the left. */
 const FLOW1: NodeBox[] = [
   { x: 720, y: 450, w: 300, h: 150 },
@@ -97,9 +101,12 @@ export const SC01 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC01);
-  const calOut = ease(f, L(B1.handover), m.move);
+  /** After the second pause the pair slides straight up and out of the frame. */
+  const exit = ease(f, L(B1.exit), m.move);
+  /** Gone once it has cleared the top of the frame. */
+  const gone = exit >= 0.999;
   const calIn = ease(f, L(B1.calendar), m.move);
-  const cal = calIn * (1 - calOut);
+  const cal = gone ? 0 : calIn;
   const grow = 1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.gajian) - L(B1.calendar));
   /** GAJIAN up and bigger, the calendar down and smaller — one move, one curve. */
   const split = ease(f, L(B1.gajian), L(B1.settled) - L(B1.gajian));
@@ -112,14 +119,14 @@ export const SC01 = () => {
       {/* GAJIAN: from the frame's centre, growing, up to the top — drawn FIRST,
           so it rises from BEHIND the page ("secara layer harusnya dari belakang
           kalender") */}
-      {wordIn * (1 - calOut) > 0.001 ? (
+      {!gone && wordIn > 0.001 ? (
         <div
           style={{
             position: "absolute",
-            left: theme.canvas.width / 2 - calOut * 80,
-            top: theme.canvas.height / 2 + (WORD_Y - theme.canvas.height / 2) * split,
+            left: theme.canvas.width / 2,
+            top: theme.canvas.height / 2 + (WORD_Y - theme.canvas.height / 2) * split - exit * EXIT_RISE,
             transform: `translate(-50%, -50%) scale(${(SPLIT.from + (1 - SPLIT.from) * split).toFixed(4)})`,
-            opacity: wordIn * (1 - calOut),
+            opacity: wordIn,
             fontFamily: theme.text.family,
             fontSize: SPLIT.word,
             fontWeight: 800,
@@ -135,7 +142,7 @@ export const SC01 = () => {
 
       {/* the calendar: grows, then shrinks about its bottom edge and drops */}
       {cal > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${((1 - calIn) * 30 + split * CAL_DOWN).toFixed(2)}px)` }}>
+        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translateY(${((1 - calIn) * 30 + split * CAL_DOWN - exit * EXIT_RISE).toFixed(2)}px)` }}>
           <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px` }}>
             <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
               <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
@@ -148,9 +155,13 @@ export const SC01 = () => {
       {/* Simon's photo of someone at work, 240-500 — mirrored so he faces the
           flow, with a plain shadow and a contact shadow under him;
           the yellow worker takes over after */}
-      <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={940} h={560} at={L(B1.photo[0])} out={L(B1.photo[1])} mirror shadow floor={ORANG_KERJA_FLOOR} />
+      {/* it comes up from below, but never through the caption band — the frame
+          is clipped there, so it rises out from behind the band's top edge */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={theme.canvas.height / 2 + PHOTO_H / 2} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height / 2 + PHOTO_H / 2} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
+      </div>
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
-      <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.handover) + 6} dim={stopped} />
+      <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.kerjaNode)} dim={stopped} />
       <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />
       <Node box={FLOW1[1]} label="Penghasilan" icon="wallet" at={L(B1.penghasilan)} />
       <Link a={nodeEdge(FLOW1[1], "r")} b={nodeEdge(FLOW1[2], "l")} at={L(B1.hidup) - 14} cut={stopped} />

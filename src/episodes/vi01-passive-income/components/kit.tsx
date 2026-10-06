@@ -50,11 +50,11 @@ export const rise = (f: number, at: number, over: number, by = 18) => {
 export type Tone = "indigo" | "cyan" | "slate";
 
 /** One appearance and, optionally, one leaving — scene-local frames. */
-export const useLife = (at: number, out?: number, over?: number) => {
+export const useLife = (at: number, out?: number, over?: number, inOver?: number) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const o = over ?? m.fade;
-  const inn = ease(f, at, m.reveal);
+  const inn = ease(f, at, inOver ?? m.reveal);
   const gone = out === undefined ? 0 : ease(f, out, o);
   return inn * (1 - gone);
 };
@@ -139,6 +139,8 @@ export const Cutout = ({
   mirror = false,
   shadow = false,
   floor = 1,
+  rise = 30,
+  riseFrames,
 }: {
   src: string;
   /** width ÷ height of the file */
@@ -154,13 +156,17 @@ export const Cutout = ({
   shadow?: boolean;
   /** Where the feet are, as a fraction of the height — the contact shadow centres there. */
   floor?: number;
+  /** How far below its place it starts — a few px to settle in, or off the frame to come up from below. */
+  rise?: number;
+  /** How long the entrance takes (defaults to the episode's reveal). */
+  riseFrames?: number;
 }) => {
   const f = useCurrentFrame();
   const m = useMotion();
-  const life = useLife(at, out);
+  const life = useLife(at, out, undefined, riseFrames);
   if (life <= 0.001) return null;
   const w = h * aspect;
-  const lift = (1 - ease(f, at, m.reveal)) * 30;
+  const lift = (1 - ease(f, at, riseFrames ?? m.reveal)) * rise;
   return (
     /* ⚠ THE SHADOW ON THE WRAPPER, THE MIRROR ON THE PICTURE. On one element
        the filter is drawn first and the flip applied after, so a shadow cast

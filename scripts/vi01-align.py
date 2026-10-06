@@ -44,6 +44,10 @@ JSON_OUT = ROOT / "docs" / "VI01_sentences.json"
 PADS = json.loads((ROOT / "src/episodes/vi01-passive-income/data/pads.json").read_text())
 PAD_S = [(p["at"] / 60, p["frames"] / 60) for p in PADS]
 padded = lambda t: t + sum(d for at, d in PAD_S if t >= at)
+# A cue START refined into the same breath a pad was cut into, a hair before
+# the cut, belongs AFTER the pause — otherwise the next line's subtitle appears
+# over the silence. Within a quarter second counts as the same breath.
+padded_start = lambda t: t + sum(d for at, d in PAD_S if t >= at - 0.25)
 
 # One line of the caption band (core/Captions: Plus Jakarta Sans 500 at 36px,
 # 1728px between the margins), measured in the real font, with room to spare.
@@ -237,7 +241,7 @@ for a, b in zip(cues, cues[1:]):
         a["end"] = b["start"]
 
 for c in cues:
-    c["start"], c["end"] = round(padded(c["start"]), 3), round(padded(c["end"]), 3)
+    c["start"], c["end"] = round(padded_start(c["start"]), 3), round(padded(c["end"]), 3)
 for sc in out_scenes:
     for sen in sc["sentences"]:
         sen["start"], sen["end"] = round(padded(sen["start"]), 3), round(padded(sen["end"]), 3)
