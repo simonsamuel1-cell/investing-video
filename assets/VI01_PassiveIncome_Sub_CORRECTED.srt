@@ -7,337 +7,337 @@ Setiap bulan, ada satu momen yang selalu kita tunggu: GAJIAN.
 Kita kerja, dapat penghasilan, lalu pakai uang itu untuk menjalani hidup.
 
 3
-00:00:09,100 --> 00:00:13,700
+00:00:09,433 --> 00:00:14,033
 Tapi coba bayangin kalau suatu hari kita harus berhenti kerja sementara.
 
 4
-00:00:14,266 --> 00:00:16,366
+00:00:14,599 --> 00:00:16,699
 Apakah penghasilan kita juga ikut berhenti?
 
 5
-00:00:16,933 --> 00:00:20,266
+00:00:17,266 --> 00:00:20,599
 Makanya, banyak orang berusaha menambah penghasilan.
 
 6
-00:00:20,900 --> 00:00:24,333
+00:00:21,233 --> 00:00:24,666
 Ada yang mengejar naik jabatan, belajar skill baru,
 
 7
-00:00:24,700 --> 00:00:28,966
+00:00:25,033 --> 00:00:29,299
 bangun bisnis, ambil freelance, atau cari side hustle.
 
 8
-00:00:29,366 --> 00:00:32,933
+00:00:29,699 --> 00:00:33,266
 Semua itu bagus, tapi hampir semuanya tetap membutuhkan satu hal yang sama:
 
 9
-00:00:33,366 --> 00:00:34,666
+00:00:33,699 --> 00:00:34,999
 waktu dan tenaga kita.
 
 10
-00:00:35,100 --> 00:00:37,566
+00:00:35,433 --> 00:00:37,899
 Masalahnya, sehari tetap cuma 24 jam.
 
 11
-00:00:38,066 --> 00:00:41,566
+00:00:38,399 --> 00:00:41,899
 Semakin dewasa, tanggung jawab biasanya justru makin banyak.
 
 12
-00:00:42,300 --> 00:00:46,200
+00:00:42,633 --> 00:00:46,533
 Jadi selain bertanya, “Gimana caranya aku bisa menghasilkan lebih banyak?”
 
 13
-00:00:46,966 --> 00:00:48,000
+00:00:47,299 --> 00:00:48,333
 Kita juga perlu mulai bertanya:
 
 14
-00:00:48,266 --> 00:00:51,266
+00:00:48,599 --> 00:00:51,599
 “Gimana caranya uang yang sudah aku hasilkan ikut bekerja?”
 
 15
-00:00:51,566 --> 00:00:54,133
+00:00:51,899 --> 00:00:54,466
 Di sinilah konsep passive income mulai masuk.
 
 16
-00:00:54,733 --> 00:00:58,700
+00:00:55,066 --> 00:00:59,033
 Bukan berarti investasi hari ini, lalu besok langsung berhenti kerja.
 
 17
-00:00:59,133 --> 00:01:02,100
+00:00:59,466 --> 00:01:02,433
 Kita tetap kerja, tetap bangun karier, dan tetap belajar.
 
 18
-00:01:02,800 --> 00:01:07,100
+00:01:03,133 --> 00:01:07,433
 Bedanya, sebagian uang yang kita hasilkan mulai kita ubah menjadi aset.
 
 19
-00:01:07,500 --> 00:01:10,300
+00:01:07,833 --> 00:01:10,633
 Dan di sini, waktu punya peran besar.
 
 20
-00:01:10,766 --> 00:01:12,733
+00:01:11,099 --> 00:01:13,066
 Kalau sebuah aset menghasilkan keuntungan,
 
 21
-00:01:12,966 --> 00:01:16,138
+00:01:13,299 --> 00:01:16,471
 keuntungan itu bisa ikut menghasilkan keuntungan berikutnya.
 
 22
-00:01:16,138 --> 00:01:23,500
+00:01:16,471 --> 00:01:23,833
 Misalnya, 100 jadi 110, lalu 121, lalu 133.
 
 23
-00:01:24,300 --> 00:01:28,700
+00:01:24,633 --> 00:01:29,033
 Itulah konsep compounding: hasil yang terus ikut bertumbuh seiring waktu.
 
 24
-00:01:29,133 --> 00:01:32,700
+00:01:29,466 --> 00:01:33,033
 Makanya, kita nggak harus nunggu punya modal besar dulu.
 
 25
-00:01:33,166 --> 00:01:36,366
+00:01:33,499 --> 00:01:36,699
 Yang penting adalah mulai membangun kebiasaannya.
 
 26
-00:01:36,966 --> 00:01:39,100
+00:01:37,299 --> 00:01:39,433
 Karena investasi bukan cuma soal uang.
 
 27
-00:01:39,766 --> 00:01:42,900
+00:01:40,099 --> 00:01:43,233
 Semakin sering kita belajar dan mengevaluasi keputusan,
 
 28
-00:01:43,533 --> 00:01:46,900
+00:01:43,866 --> 00:01:47,233
 semakin baik juga kemampuan kita mengelola aset.
 
 29
-00:01:47,000 --> 00:01:49,400
+00:01:47,333 --> 00:01:49,733
 Kalau dipikir-pikir, kekayaan kita punya dua bagian.
 
 30
-00:01:49,900 --> 00:01:51,136
+00:01:50,233 --> 00:01:51,469
 Yang pertama, human asset:
 
 31
-00:01:51,136 --> 00:01:55,766
+00:01:51,469 --> 00:01:56,099
 waktu, kemampuan, dan pengalaman yang membantu kita menghasilkan uang.
 
 32
-00:01:56,333 --> 00:01:58,263
+00:01:56,666 --> 00:01:58,596
 Yang kedua, financial asset:
 
 33
-00:01:58,263 --> 00:02:02,466
+00:01:58,596 --> 00:02:02,799
 tabungan, investasi, dan aset yang kita bangun dari penghasilan tadi.
 
 34
-00:02:02,800 --> 00:02:04,649
+00:02:03,133 --> 00:02:04,982
 Human asset punya batas.
 
 35
-00:02:04,649 --> 00:02:06,866
+00:02:04,982 --> 00:02:07,199
 Financial asset bisa terus kita miliki.
 
 36
-00:02:07,400 --> 00:02:10,933
+00:02:07,733 --> 00:02:11,266
 Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.
 
 37
-00:02:11,566 --> 00:02:15,400
+00:02:11,899 --> 00:02:15,733
 Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.
 
 38
-00:02:15,766 --> 00:02:18,900
+00:02:16,099 --> 00:02:19,233
 Bayangin seperti estafet: kita kerja untuk menghasilkan uang,
 
 39
-00:02:19,333 --> 00:02:22,900
+00:02:19,666 --> 00:02:23,233
 lalu sebagian uang itu kita teruskan untuk membangun aset.
 
 40
-00:02:23,166 --> 00:02:25,000
+00:02:23,499 --> 00:02:25,333
 Hal menarik dari investasi adalah:
 
 41
-00:02:25,500 --> 00:02:30,900
+00:02:25,833 --> 00:02:31,233
 kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.
 
 42
-00:02:31,333 --> 00:02:34,766
+00:02:31,666 --> 00:02:35,099
 Ada orang yang bekerja di BCA untuk mendapatkan penghasilan.
 
 43
-00:02:35,133 --> 00:02:39,866
+00:02:35,466 --> 00:02:40,199
 Di sisi lain, sebagai investor, kita juga bisa punya sebagian kecil dari bisnis BCA.
 
 44
-00:02:40,266 --> 00:02:43,600
+00:02:40,599 --> 00:02:43,933
 Hal yang sama sebenarnya ada di sekitar kita setiap hari.
 
 45
-00:02:43,900 --> 00:02:46,200
+00:02:44,233 --> 00:02:46,533
 Kita makan Indomie, minum Ultra Milk,
 
 46
-00:02:46,200 --> 00:02:48,333
+00:02:46,533 --> 00:02:48,666
 dan menggunakan banyak produk dari perusahaan besar.
 
 47
-00:02:48,733 --> 00:02:51,600
+00:02:49,066 --> 00:02:51,933
 Sebagai konsumen, kita menikmati produknya.
 
 48
-00:02:52,166 --> 00:02:53,300
+00:02:52,499 --> 00:02:53,633
 Tapi lewat investasi,
 
 49
-00:02:53,400 --> 00:02:57,466
+00:02:53,733 --> 00:02:57,799
 kita juga bisa ikut punya sebagian kecil dari bisnis di balik produk-produk itu.
 
 50
-00:02:57,866 --> 00:03:03,866
+00:02:58,199 --> 00:03:04,199
 Dan di sinilah bedanya antara sekadar menghasilkan uang, dengan mulai membangun aset.
 
 51
-00:03:04,333 --> 00:03:07,333
+00:03:04,666 --> 00:03:07,666
 Sebuah bisnis bisa menghasilkan pendapatan, mencetak laba,
 
 52
-00:03:07,433 --> 00:03:09,500
+00:03:07,766 --> 00:03:09,833
 lalu memakai laba itu untuk berkembang lebih jauh.
 
 53
-00:03:09,833 --> 00:03:11,766
+00:03:10,166 --> 00:03:12,099
 Sebagai pemilik sebagian dari bisnis tersebut,
 
 54
-00:03:12,166 --> 00:03:15,500
+00:03:12,499 --> 00:03:15,833
 kita ikut punya exposure terhadap pertumbuhan nilainya.
 
 55
-00:03:16,033 --> 00:03:17,433
+00:03:16,366 --> 00:03:17,766
 Dan mulainya nggak harus besar.
 
 56
-00:03:17,566 --> 00:03:21,033
+00:03:17,899 --> 00:03:21,366
 Bisa Rp50 ribu, Rp100 ribu, atau Rp300 ribu.
 
 57
-00:03:21,233 --> 00:03:23,133
+00:03:21,566 --> 00:03:23,466
 Yang paling penting bukan nominal pertamanya,
 
 58
-00:03:23,566 --> 00:03:28,700
+00:03:23,899 --> 00:03:29,033
 tapi kebiasaan untuk menyisihkan sebagian income dan mulai mengubahnya menjadi aset.
 
 59
-00:03:29,066 --> 00:03:32,666
+00:03:29,399 --> 00:03:32,999
 Lo Kheng Hong juga nggak langsung mulai sebagai investor besar.
 
 60
-00:03:33,300 --> 00:03:37,133
+00:03:33,633 --> 00:03:37,466
 Sebelum dikenal seperti sekarang, dia pernah bekerja sebagai pegawai bank.
 
 61
-00:03:37,333 --> 00:03:40,533
+00:03:37,666 --> 00:03:40,866
 Sambil bekerja, dia menabung, belajar, membaca laporan perusahaan,
 
 62
-00:03:40,766 --> 00:03:42,566
+00:03:41,099 --> 00:03:42,899
 dan pelan-pelan mulai berinvestasi.
 
 63
-00:03:43,033 --> 00:03:47,733
+00:03:43,366 --> 00:03:48,066
 Salah satu contoh terkenalnya adalah saat dia membeli saham United Tractors.
 
 64
-00:03:47,900 --> 00:03:55,033
+00:03:48,233 --> 00:03:55,366
 Saat krisis 1998, Lo Kheng Hong membeli United Tractors di harga sekitar Rp250 per saham.
 
 65
-00:03:55,466 --> 00:03:58,566
+00:03:55,799 --> 00:03:58,899
 Beberapa tahun kemudian, nilainya sudah meningkat berkali-kali lipat,
 
 66
-00:03:58,866 --> 00:04:01,710
+00:03:59,199 --> 00:04:02,043
 bahkan pernah berada di kisaran sekitar Rp15 ribu.
 
 67
-00:04:02,000 --> 00:04:05,300
+00:04:02,333 --> 00:04:05,633
 Tapi tentu saja, ini adalah contoh dari masa lalu.
 
 68
-00:04:05,700 --> 00:04:08,900
+00:04:06,033 --> 00:04:09,233
 Nggak semua investasi akan memberikan hasil seperti ini.
 
 69
-00:04:09,066 --> 00:04:14,200
+00:04:09,399 --> 00:04:14,533
 Yang menarik dari cerita ini sebenarnya bukan: “Cari saham yang bisa naik berkali-kali.”
 
 70
-00:04:14,533 --> 00:04:16,600
+00:04:14,866 --> 00:04:16,933
 Yang lebih penting justru prosesnya.
 
 71
-00:04:17,066 --> 00:04:21,200
+00:04:17,399 --> 00:04:21,533
 Kerja untuk menghasilkan uang, sisihkan sebagian, pelajari asetnya,
 
 72
-00:04:21,230 --> 00:04:26,133
+00:04:21,563 --> 00:04:26,466
 beli sesuatu yang benar-benar dipahami, lalu beri waktu untuk berkembang.
 
 73
-00:04:26,466 --> 00:04:30,600
+00:04:26,799 --> 00:04:30,933
 Jadi membangun passive income bukan berarti kita harus lari dari pekerjaan.
 
 74
-00:04:31,233 --> 00:04:35,233
+00:04:31,566 --> 00:04:35,566
 Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang.
 
 75
-00:04:35,766 --> 00:04:40,566
+00:04:36,099 --> 00:04:40,899
 Bedanya, sebagian hasil kerja kita hari ini mulai ikut disiapkan untuk masa depan.
 
 76
-00:04:41,233 --> 00:04:43,400
+00:04:41,566 --> 00:04:43,733
 Di awal, aset kita mungkin masih kecil.
 
 77
-00:04:44,000 --> 00:04:46,766
+00:04:44,333 --> 00:04:47,099
 Tapi kalau kemampuan kerja terus berkembang, income bertambah,
 
 78
-00:04:46,933 --> 00:04:48,400
+00:04:47,266 --> 00:04:48,733
 dan aset juga ikut tumbuh,
 
 79
-00:04:48,566 --> 00:04:51,600
+00:04:48,899 --> 00:04:51,933
 pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial.
 
 80
-00:04:52,066 --> 00:04:54,133
+00:04:52,399 --> 00:04:54,466
 Kita juga mulai punya lebih banyak pilihan.
 
 81
-00:04:54,800 --> 00:04:57,633
+00:04:55,133 --> 00:04:57,966
 Jadi setiap kali income masuk, coba tanya:
 
 82
-00:04:57,866 --> 00:05:01,000
+00:04:58,199 --> 00:05:01,333
 “Berapa yang bisa aku sisihkan untuk mulai punya aset?”
 
 83
-00:05:01,200 --> 00:05:05,633
+00:05:01,533 --> 00:05:05,966
 Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.
 
 84
-00:05:06,166 --> 00:05:07,233
+00:05:06,499 --> 00:05:07,566
 Sedangkan investasi,
 
 85
-00:05:07,533 --> 00:05:12,000
+00:05:07,866 --> 00:05:12,333
 membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.
 
 86
-00:05:12,533 --> 00:05:17,566
+00:05:12,866 --> 00:05:17,899
 Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset.
