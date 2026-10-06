@@ -39,8 +39,13 @@ import { useMotion } from "../../../core";
 
 /** "font huruf sambung" — Dancing Script, for ST1's list only. */
 const { fontFamily: SCRIPT } = loadScript("normal", { weights: ["500"] });
-/** The four points: small, one under another, centred on the frame. */
-const LIST = { size: 48, step: 84 };
+/**
+ * The four points, one under another, and the lens across the middle of the
+ * frame: two lines `gap` apart. Outside the lens a point is small script in
+ * light grey; inside it, the same point is Plus Jakarta Sans, indigo and large.
+ * `step` puts the neighbours just outside the lines.
+ */
+const LIST = { size: 48, step: 130, lensSize: 96, gap: 200, lineW: 900 };
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -220,6 +225,41 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
   const sceneOut = ease(f, T.out, m.fade);
   const listIn = ease(f, T.out + m.fade, m.fade);
   const leave = ease(f, T.end, TRANS_FADE);
+  /* one point up: Introduction out of the lens, Passive Income into it */
+  const k = ease(f, T.scroll, m.move);
+  const cy = theme.canvas.height / 2;
+  const lensTop = cy - LIST.gap / 2;
+  const lensBottom = cy + LIST.gap / 2;
+  const W = theme.canvas.width;
+  const H = theme.canvas.height;
+  const points = (inLens: boolean) =>
+    LIST_POINTS.map((p, i) => {
+      const size = inLens ? LIST.lensSize : LIST.size;
+      return (
+        <div
+          key={p}
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            /* a lens magnifies distance too, so the copy inside it is spaced
+               out by the same factor — only one point fits between the lines */
+            top: cy + (i - k) * LIST.step * (inLens ? LIST.lensSize / LIST.size : 1) - size * 0.6,
+            textAlign: "center",
+            fontFamily: inLens ? theme.text.family : SCRIPT,
+            fontSize: size,
+            fontWeight: inLens ? 800 : 500,
+            lineHeight: 1.2,
+            color: inLens ? c.indigo : c.muted,
+          }}
+        >
+          {p}
+        </div>
+      );
+    });
+  const line = (y: number) => (
+    <div style={{ position: "absolute", left: (W - LIST.lineW) / 2, top: y - theme.shape.rule / 2, width: LIST.lineW, height: theme.shape.rule, borderRadius: theme.shape.rule, background: c.slate }} />
+  );
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
@@ -227,25 +267,16 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
         <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
           <GridGround f={f} paper={c.bg} />
         </div>
-        {LIST_POINTS.map((p, i) => (
-          <div
-            key={p}
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: theme.canvas.height / 2 + (i - (LIST_POINTS.length - 1) / 2) * LIST.step - LIST.size * 0.6,
-              textAlign: "center",
-              fontFamily: SCRIPT,
-              fontSize: LIST.size,
-              fontWeight: 500,
-              lineHeight: 1.2,
-              color: c.muted,
-            }}
-          >
-            {p}
-          </div>
-        ))}
+        {/* outside the lens: everything above the top line and below the bottom one */}
+        <div style={{ position: "absolute", inset: 0, clipPath: `polygon(0 0, ${W}px 0, ${W}px ${lensTop}px, 0 ${lensTop}px, 0 ${lensBottom}px, ${W}px ${lensBottom}px, ${W}px ${H}px, 0 ${H}px)` }}>
+          {points(false)}
+        </div>
+        {/* inside it: the magnified copy */}
+        <div style={{ position: "absolute", inset: 0, clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)` }}>
+          {points(true)}
+        </div>
+        {line(lensTop)}
+        {line(lensBottom)}
       </div>
       {sceneOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - sceneOut }}>

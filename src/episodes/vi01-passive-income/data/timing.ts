@@ -320,7 +320,13 @@ export const TRANS: Trans[] = [
  * 3155 aja". SC03 holds on its last frame past its block until `out`, fades,
  * the grid and the list come up, and the whole card leaves off SC04 at `end`.
  */
-export const LIST_TRANS = { freeze: 3124, out: 3155, end: 3260 };
+/**
+ * Then the lens — "Di tengah layar, buat 2 garis horizontal dengan jarak 200 px
+ * … masking … seperti menjadi lensa pembesar. Text Introduction akan di
+ * dalamnya terlebih dahulu, lalu akan scroll naik per poin." At `scroll` the
+ * list moves up one point, carrying "Passive Income" into the lens.
+ */
+export const LIST_TRANS = { freeze: 3124, out: 3155, scroll: 3205, end: 3260 };
 export const LIST_POINTS = ["Introduction", "Passive Income", "Punya Bisnis", "Lo Kheng Hong"];
 
 // ═══ EVERY OTHER SCENE CHANGE — a CameraCut ═══════════════════════════════
