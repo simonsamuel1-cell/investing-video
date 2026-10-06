@@ -447,13 +447,24 @@ const BUBBLES: { icon: IconName; label: string; x: number; y: number }[] = [
 /** Disc and glyph size; the drift (px) and its two periods (s); the overshoot on arrival. */
 const BUBBLE = { label: 30, labelGap: 18, disc: 150, icon: 82, bob: 12, sway: 6, bobSec: 2.4, swaySec: 3.3, peak: 1.15 };
 
+/** Where the five gather: the middle bubble, "Bangun bisnis". */
+const GATHER = { x: 960, y: 140 };
+/** "Waktu + Tenaga" — "sebesar text Gajian", over the head. */
+const WAKTU = { y: 200 };
+
 /** One bubble: small → past full size → full size, then drifting for as long as it is up. */
-const Bubble = ({ icon, label, x, y, at, i }: { icon: IconName; label: string; x: number; y: number; at: number; i: number }) => {
+const Bubble = ({ icon, label, x: x0, y: y0, at, i, gatherAt }: { icon: IconName; label: string; x: number; y: number; at: number; i: number; gatherAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const shadow = useShadow();
-  if (f < at) return null;
+  /* 1940: the names go; the bubbles gather on "Bangun bisnis"; then they go */
+  const nameOut = ease(f, gatherAt, m.fade);
+  const gather = ease(f, gatherAt + m.fade, m.move);
+  const gone = ease(f, gatherAt + m.fade + m.move, m.fade);
+  if (f < at || gone >= 0.999) return null;
+  const x = x0 + (GATHER.x - x0) * gather;
+  const y = y0 + (GATHER.y - y0) * gather;
   /* "dari kecil ke besar ke normal": two eased legs, no spring */
   const grow = ease(f, at, m.reveal);
   const settle = ease(f, at + m.reveal, m.reveal);
@@ -471,11 +482,11 @@ const Bubble = ({ icon, label, x, y, at, i }: { icon: IconName; label: string; x
   const D = BUBBLE.disc;
   return (
     <>
-      <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow, transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow * (1 - gone), transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
         <Icon name={icon} size={BUBBLE.icon} color={c.ink} fill={fills[icon]} />
       </div>
       {/* the name rides with its bubble but is not scaled with it */}
-      <div style={{ position: "absolute", left: x + dx, top: y + D / 2 + BUBBLE.labelGap + dy, transform: "translateX(-50%)", opacity: grow, fontFamily: theme.text.family, fontSize: BUBBLE.label, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", lineHeight: 1 }}>
+      <div style={{ position: "absolute", left: x + dx, top: y + D / 2 + BUBBLE.labelGap + dy, transform: "translateX(-50%)", opacity: grow * (1 - nameOut), fontFamily: theme.text.family, fontSize: BUBBLE.label, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", lineHeight: 1 }}>
         {label}
       </div>
     </>
@@ -483,18 +494,24 @@ const Bubble = ({ icon, label, x, y, at, i }: { icon: IconName; label: string; x
 };
 
 export const SC02 = () => {
+  const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC02);
   return (
     <Stage>
-      {/* head to chest, centred on the head; never into the caption band */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+      {/* head to chest, centred on the head; masked off at the dashed box's
+          bottom edge — "Masking bawah orangnya, buat naik sampe di bawah text box nya" */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.canvas.height - (MAKANYA.y + MAKANYA.h)}px 0)` }}>
         <Cutout src="art/vi01/orang-tuntun.png" aspect={TUNTUN.aspect} x={theme.canvas.width / 2 - (TUNTUN.headU - 0.5) * TUNTUN_H * TUNTUN.aspect} y={TUNTUN_TOP + TUNTUN_H} h={TUNTUN_H} at={L(B2.title)} riseFrames={m.move} shadow floor={TUNTUN.floor} />
       </div>
-      <TypeBox cx={theme.canvas.width / 2} y={MAKANYA.y} w={MAKANYA.w} h={MAKANYA.h} at={L(B2.title)} text="Makanya, banyak orang berusaha menambah penghasilan" size={MAKANYA.size} />
-      {BUBBLES.map((b, i) => (
-        <Bubble key={b.icon} icon={b.icon} label={b.label} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} />
+      <TypeBox cx={theme.canvas.width / 2} y={MAKANYA.y} w={MAKANYA.w} h={MAKANYA.h} at={L(B2.title)} text="Makanya, banyak orang berusaha menambah penghasilan" size={MAKANYA.size} closeAt={L(B2.gather)} />
+      {/* "Bangun bisnis" drawn last, so the others gather under it */}
+      {BUBBLES.map((b, i) => ({ b, i }))
+        .sort((p, q) => Number(p.b.icon === "store") - Number(q.b.icon === "store"))
+        .map(({ b, i }) => (
+        <Bubble key={b.icon} icon={b.icon} label={b.label} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} gatherAt={L(B2.gather)} />
       ))}
+      <Say text="Waktu + Tenaga" x={theme.canvas.width / 2} y={WAKTU.y} at={L(B2.gather) + m.fade * 2 + m.move} size={SPLIT.word} weight={800} color={c.indigo} />
     </Stage>
   );
 };

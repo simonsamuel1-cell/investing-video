@@ -83,6 +83,12 @@ export const SC02 = {
   ways: [1338, 1410, 1502, 1560, 1702] as const,
   bagus: 1782, // "Semua itu bagus,"
   waktu: 2022, // "waktu dan tenaga kita."
+  /**
+   * Simon: "1940 Text 5 bubble fade out dan text box juga menghilang (animasi
+   * reverse), lalu buat semua 5 bubble berkumpul di 'Bangun bisnis', lalu semua
+   * bubble menghilang fade out, dan nextnya muncul text 'Waktu + Tenaga'".
+   */
+  gather: 1940,
 };
 
 export const SC03 = {

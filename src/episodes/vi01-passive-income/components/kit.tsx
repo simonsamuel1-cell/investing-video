@@ -854,6 +854,7 @@ export const TypeBox = ({
   tone = "indigo",
   size = 40,
   cps = 1,
+  closeAt,
 }: {
   cx: number;
   y: number;
@@ -871,6 +872,8 @@ export const TypeBox = ({
   size?: number;
   /** Characters per frame — 1.0 at 60fps is 60 a second, about speech pace. */
   cps?: number;
+  /** "animasi reverse": the text un-types, then the box closes back into its centre. */
+  closeAt?: number;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -879,7 +882,9 @@ export const TypeBox = ({
   if (f < at || gone >= 0.999) return null;
   /* never before the box has finished opening */
   const start = Math.max(typeAt ?? 0, dashOpenAt(at, m));
-  const shown = Math.max(0, Math.floor((f - start) * cps));
+  const untyped = closeAt === undefined ? 0 : Math.max(0, Math.floor((f - closeAt) * cps * 2));
+  const shown = Math.max(0, Math.min(Math.floor((f - start) * cps), text.length - untyped));
+  const shutAt = closeAt === undefined ? undefined : closeAt + Math.ceil(text.length / (cps * 2));
   const typed = text.slice(0, shown);
   const mStart = mark ? text.indexOf(mark) : -1;
   const mEnd = mStart >= 0 ? mStart + (mark as string).length : -1;
@@ -893,7 +898,7 @@ export const TypeBox = ({
   const seg = (s: string, k: string) => <span key={k}>{s}</span>;
   return (
     <div style={{ opacity: (1 - gone) * (1 - 0.6 * dim) }}>
-      <DashBox cx={cx} y={y} w={w} h={h} at={at}>
+      <DashBox cx={cx} y={y} w={w} h={h} at={at} closeAt={shutAt}>
         {/* the box's own coordinates — DashBox positions its children */}
         <div
           style={{
@@ -963,6 +968,7 @@ export const DashBox = ({
   w,
   h,
   at,
+  closeAt,
   children,
 }: {
   cx: number;
@@ -970,14 +976,19 @@ export const DashBox = ({
   w: number;
   h: number;
   at: number;
+  /** The way it came, backwards: back in to its centre, then fades. */
+  closeAt?: number;
   children?: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   if (f < at) return null;
-  const fade = ease(f, at, m.sec(DASH.fadeSec));
-  const open = ease(f, at + m.sec(DASH.fadeSec), m.sec(DASH.openSec));
+  const shut = closeAt === undefined ? 0 : ease(f, closeAt, m.sec(DASH.openSec));
+  const unfade = closeAt === undefined ? 0 : ease(f, closeAt + m.sec(DASH.openSec), m.sec(DASH.fadeSec));
+  if (unfade >= 0.999) return null;
+  const fade = ease(f, at, m.sec(DASH.fadeSec)) * (1 - unfade);
+  const open = ease(f, at + m.sec(DASH.fadeSec), m.sec(DASH.openSec)) * (1 - shut);
   const wNow = DASH.sliver + (w - DASH.sliver) * open;
   const r = theme.shape.panelRadius;
   return (
