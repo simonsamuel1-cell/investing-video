@@ -6,18 +6,18 @@
  * those two things live in, and the two questions the video is about.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, theme, useMotion, usePalette } from "../../../core";
+import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
 import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
- * A DESK CALENDAR, ONE PAGE — Simon: "Kalender ini harusnya cukup tanggalnya
- * (mulai dari 1 dulu aja), dan bulan Januari." The month on an indigo band,
- * the date under it and nothing else; two rings on top so it reads as a
- * calendar you tear a page from, not as a card. Every corner round.
+ * A CALENDAR PAGE, MINIMAL — Simon: "Kalender ini harusnya cukup tanggalnya
+ * (mulai dari 1 dulu aja), dan bulan Januari", then "buat designnya lebih
+ * minimalis". A white page on a soft shadow, the month small in indigo over a
+ * hairline, the date large in slate. No band, no rings, no border.
  */
-const CAL = { cx: 960, y: 290, w: 460, h: 500, band: 132, ring: { w: 26, h: 72, dx: 120 } };
+const CAL = { cx: 960, y: 290, w: 440, h: 480, band: 120, rule: 56 };
 /** "kasih juga pelan-pelan keseluruhan kalender membesar 15%" — over its whole stay. */
 const CAL_GROW = 0.15;
 /** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
@@ -36,6 +36,7 @@ const FLOW1: NodeBox[] = [
  */
 const Calendar = ({ month, date, last, speed }: { month: string; date: number; last: number; speed: number }) => {
   const c = usePalette();
+  const shadow = useShadow();
   /* A vertical-only blur, as fast as the strip is moving — motion blur, not a soft focus. */
   const rowH = CAL.h - CAL.band;
   const blur = Math.min(ROLL_BLUR.max, Math.abs(speed) * rowH * ROLL_BLUR.perSpeed);
@@ -43,10 +44,11 @@ const Calendar = ({ month, date, last, speed }: { month: string; date: number; l
   const r = theme.shape.cardRadius;
   return (
     <>
-      <div style={{ position: "absolute", left, top: CAL.y, width: CAL.w, height: CAL.h, borderRadius: r, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}`, overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, background: c.indigo, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 60, fontWeight: 800, color: c.cardBg, letterSpacing: 1 }}>
+      <div style={{ position: "absolute", left, top: CAL.y, width: CAL.w, height: CAL.h, borderRadius: r, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 22, boxSizing: "border-box", fontFamily: theme.text.family, fontSize: 40, fontWeight: 700, color: c.indigo, letterSpacing: 1 }}>
           {month}
         </div>
+        <div style={{ position: "absolute", left: CAL.rule, top: CAL.band, width: CAL.w - CAL.rule * 2, height: theme.shape.hairline * 2, borderRadius: 2, background: c.border }} />
         <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, overflow: "hidden" }}>
           <svg width={0} height={0} style={{ position: "absolute" }}>
             <filter id="vi01-roll-blur" x="-10%" y="-20%" width="120%" height="140%">
@@ -55,27 +57,13 @@ const Calendar = ({ month, date, last, speed }: { month: string; date: number; l
           </svg>
           <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, transform: `translateY(${(-(date - 1) * rowH).toFixed(2)}px)`, filter: blur > 0.3 ? "url(#vi01-roll-blur)" : undefined }}>
             {Array.from({ length: last }, (_, i) => (
-              <div key={i} style={{ height: rowH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.slate, lineHeight: 1 }}>
+              <div key={i} style={{ height: rowH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 240, fontWeight: 700, color: c.slate, lineHeight: 1 }}>
                 {i + 1}
               </div>
             ))}
           </div>
         </div>
       </div>
-      {[-1, 1].map((side) => (
-        <div
-          key={side}
-          style={{
-            position: "absolute",
-            left: CAL.cx + side * CAL.ring.dx - CAL.ring.w / 2,
-            top: CAL.y - CAL.ring.h / 2,
-            width: CAL.ring.w,
-            height: CAL.ring.h,
-            borderRadius: CAL.ring.w / 2,
-            background: c.ink,
-          }}
-        />
-      ))}
     </>
   );
 };
@@ -112,13 +100,13 @@ export const SC01 = () => {
                 opacity: stamp.opacity,
                 transform: `translateY(-50%) scale(${stamp.scale})`,
                 transformOrigin: "0% 50%",
-                padding: "18px 40px",
+                padding: "16px 38px",
                 borderRadius: 999,
-                background: c.indigo,
-                color: c.cardBg,
+                background: theme.color.indigoWash,
+                color: c.indigo,
                 fontFamily: theme.text.family,
-                fontSize: theme.text.display.size,
-                fontWeight: theme.text.display.weight,
+                fontSize: 80,
+                fontWeight: 800,
                 letterSpacing: 2,
               }}
             >
