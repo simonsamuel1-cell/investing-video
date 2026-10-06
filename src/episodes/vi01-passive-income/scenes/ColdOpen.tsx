@@ -424,7 +424,8 @@ const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466
  * then "Orangnya geser naik 70px".
  */
 const TUNTUN_FROM = 270;
-const TUNTUN_ZOOM = 1.3;
+/** …and then "Orangnya kecilin 15%" — the head stays where it starts. */
+const TUNTUN_ZOOM = 1.3 * 0.85;
 const TUNTUN_H = (((theme.captionBand.top - 400) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top)) * TUNTUN_ZOOM;
 const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
 /** "Lalu di bawahnya muncul text box garis putus putus" — TA07's dashed box over the chest, clear of the caption band. */
