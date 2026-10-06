@@ -604,7 +604,8 @@ const WallClock = ({ turn }: { turn: number }) => {
  *     (no Copy / Paste bar);
  *  2. a heavy left-aligned block where the key words sit white and italic on a
  *     solid bar, bracketed by a thin line with a knob at each end.
- * Each word arrives as it is spoken; the small "Pertanyaan n" comes first.
+ * Each word arrives as it is spoken; the small label comes first — Simon renamed them
+ * "Jangan cuma tanya" and "Tanya juga".
  */
 const QUIZ = { label: 36, size: 100, track: -2, labelY: 300, lineY: [440, 560, 680] };
 const SELECT = { caret: 5, knob: 22 };
@@ -639,7 +640,7 @@ const QuestionOne = ({ f, L }: { f: number; L: (g: number) => number }) => {
   const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const, textAlign: "center" as const };
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - out, transform: `translateY(${(-out * 60).toFixed(2)}px)` }}>
-      <QuizLabel f={f} at={L(B3.label1)} text="Pertanyaan 1" />
+      <QuizLabel f={f} at={L(B3.label1)} text="Jangan cuma tanya" />
       <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.lineY[0] - QUIZ.size * 0.55, ...line }}>
         <Word f={f} at={W[0]} style={{ fontWeight: 800 }}>Gimana</Word> <Word f={f} at={W[1]} style={{ fontWeight: 800 }}>caranya</Word>{" "}
         <Word f={f} at={W[2]} style={{ fontWeight: 400 }}>aku</Word> <Word f={f} at={W[3]} style={{ fontWeight: 400 }}>bisa</Word>
@@ -681,7 +682,7 @@ const QuestionTwo = ({ f, L }: { f: number; L: (g: number) => number }) => {
   const PAD = 28;
   return (
     <>
-      <QuizLabel f={f} at={at} text="Pertanyaan 2" />
+      <QuizLabel f={f} at={at} text="Tanya juga" />
       {/* left-aligned, the block as a whole centred on the frame */}
       <div style={{ position: "absolute", left: "50%", top: QUIZ.lineY[0] - QUIZ.size * 0.55, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
         <div style={line}>
