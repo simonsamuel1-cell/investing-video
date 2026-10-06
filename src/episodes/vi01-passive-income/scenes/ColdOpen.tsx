@@ -420,27 +420,32 @@ export const SC01 = () => {
 const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672 };
 /**
  * The head starts here, leaving the top of the frame to the bubbles; then
- * "Orangnya perbesar lagi dan geser naik sedikit" — 30% larger, 60 px higher.
+ * "Orangnya perbesar lagi dan geser naik sedikit" — 30% larger, 60 px higher;
+ * then "Orangnya geser naik 70px".
  */
-const TUNTUN_FROM = 340;
+const TUNTUN_FROM = 270;
 const TUNTUN_ZOOM = 1.3;
 const TUNTUN_H = (((theme.captionBand.top - 400) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top)) * TUNTUN_ZOOM;
 const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
 /** "Lalu di bawahnya muncul text box garis putus putus" — TA07's dashed box over the chest, clear of the caption band. */
 const MAKANYA = { y: 800, w: 1560, h: 140, size: 50 };
-/** The five bubbles on an arc over the head. */
-const BUBBLES: { icon: IconName; x: number; y: number }[] = [
-  { icon: "briefcase", x: 500, y: 330 },
-  { icon: "tools", x: 730, y: 235 },
-  { icon: "store", x: 960, y: 200 },
-  { icon: "pen", x: 1190, y: 235 },
-  { icon: "monitor", x: 1420, y: 330 },
+/**
+ * The five bubbles on an arc over the head, each named under it — "Di bawah
+ * setiap icon, berikan label namanya, sesuai subtitle". The arc sits 60 px
+ * higher than first built so the middle label clears the raised head.
+ */
+const BUBBLES: { icon: IconName; label: string; x: number; y: number }[] = [
+  { icon: "briefcase", label: "Naik jabatan", x: 500, y: 270 },
+  { icon: "tools", label: "Skill baru", x: 730, y: 175 },
+  { icon: "store", label: "Bangun bisnis", x: 960, y: 140 },
+  { icon: "pen", label: "Freelance", x: 1190, y: 175 },
+  { icon: "monitor", label: "Side hustle", x: 1420, y: 270 },
 ];
 /** Disc and glyph size; the drift (px) and its two periods (s); the overshoot on arrival. */
-const BUBBLE = { disc: 150, icon: 82, bob: 12, sway: 6, bobSec: 2.4, swaySec: 3.3, peak: 1.15 };
+const BUBBLE = { label: 30, labelGap: 18, disc: 150, icon: 82, bob: 12, sway: 6, bobSec: 2.4, swaySec: 3.3, peak: 1.15 };
 
 /** One bubble: small → past full size → full size, then drifting for as long as it is up. */
-const Bubble = ({ icon, x, y, at, i }: { icon: IconName; x: number; y: number; at: number; i: number }) => {
+const Bubble = ({ icon, label, x, y, at, i }: { icon: IconName; label: string; x: number; y: number; at: number; i: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -462,9 +467,15 @@ const Bubble = ({ icon, x, y, at, i }: { icon: IconName; x: number; y: number; a
   };
   const D = BUBBLE.disc;
   return (
-    <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow, transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Icon name={icon} size={BUBBLE.icon} color={c.ink} fill={fills[icon]} />
-    </div>
+    <>
+      <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow, transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Icon name={icon} size={BUBBLE.icon} color={c.ink} fill={fills[icon]} />
+      </div>
+      {/* the name rides with its bubble but is not scaled with it */}
+      <div style={{ position: "absolute", left: x + dx, top: y + D / 2 + BUBBLE.labelGap + dy, transform: "translateX(-50%)", opacity: grow, fontFamily: theme.text.family, fontSize: BUBBLE.label, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", lineHeight: 1 }}>
+        {label}
+      </div>
+    </>
   );
 };
 
@@ -479,7 +490,7 @@ export const SC02 = () => {
       </div>
       <TypeBox cx={theme.canvas.width / 2} y={MAKANYA.y} w={MAKANYA.w} h={MAKANYA.h} at={L(B2.title)} text="Makanya, banyak orang berusaha menambah penghasilan" size={MAKANYA.size} />
       {BUBBLES.map((b, i) => (
-        <Bubble key={b.icon} icon={b.icon} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} />
+        <Bubble key={b.icon} icon={b.icon} label={b.label} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} />
       ))}
     </Stage>
   );
