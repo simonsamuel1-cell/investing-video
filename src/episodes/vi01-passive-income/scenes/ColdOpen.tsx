@@ -18,6 +18,10 @@ import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type Node
  * calendar you tear a page from, not as a card. Every corner round.
  */
 const CAL = { cx: 960, y: 290, w: 460, h: 500, band: 132, ring: { w: 26, h: 72, dx: 120 } };
+/** "kasih juga pelan-pelan keseluruhan kalender membesar 15%" — over its whole stay. */
+const CAL_GROW = 0.15;
+/** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
+const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 /** The flow: three nodes in a row on the right, the worker on the left. */
 const FLOW1: NodeBox[] = [
   { x: 720, y: 450, w: 300, h: 150 },
@@ -30,8 +34,11 @@ const FLOW1: NodeBox[] = [
  * fractional — the dates are one strip that rolls up through the window, so
  * 1 → 25 is a scroll, not a swap.
  */
-const Calendar = ({ month, date, last }: { month: string; date: number; last: number }) => {
+const Calendar = ({ month, date, last, speed }: { month: string; date: number; last: number; speed: number }) => {
   const c = usePalette();
+  /* A vertical-only blur, as fast as the strip is moving — motion blur, not a soft focus. */
+  const rowH = CAL.h - CAL.band;
+  const blur = Math.min(ROLL_BLUR.max, Math.abs(speed) * rowH * ROLL_BLUR.perSpeed);
   const left = CAL.cx - CAL.w / 2;
   const r = theme.shape.cardRadius;
   return (
@@ -41,9 +48,14 @@ const Calendar = ({ month, date, last }: { month: string; date: number; last: nu
           {month}
         </div>
         <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, overflow: "hidden" }}>
-          <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, transform: `translateY(${(-(date - 1) * (CAL.h - CAL.band)).toFixed(2)}px)` }}>
+          <svg width={0} height={0} style={{ position: "absolute" }}>
+            <filter id="vi01-roll-blur" x="-10%" y="-20%" width="120%" height="140%">
+              <feGaussianBlur stdDeviation={`0 ${blur.toFixed(2)}`} />
+            </filter>
+          </svg>
+          <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, transform: `translateY(${(-(date - 1) * rowH).toFixed(2)}px)`, filter: blur > 0.3 ? "url(#vi01-roll-blur)" : undefined }}>
             {Array.from({ length: last }, (_, i) => (
-              <div key={i} style={{ height: CAL.h - CAL.band, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
+              <div key={i} style={{ height: rowH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.slate, lineHeight: 1 }}>
                 {i + 1}
               </div>
             ))}
@@ -76,6 +88,8 @@ export const SC01 = () => {
   const calOut = ease(f, L(B1.kerja) - 6, m.move);
   const calIn = ease(f, L(B1.calendar), m.move);
   const cal = calIn * (1 - calOut);
+  const grow = 1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.kerja) - 6 - L(B1.calendar));
+  const roll = (t: number) => 1 + (B1.payday - 1) * ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
   const stampIn = ease(f, L(B1.gajian), m.reveal);
   const stamp = { opacity: stampIn, scale: 0.9 + 0.1 * stampIn };
   const stopped = ease(f, L(B1.berhenti), m.move);
@@ -85,12 +99,15 @@ export const SC01 = () => {
       {/* the calendar, and payday beside it */}
       {cal > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${(1 - calIn) * 30}px)` }}>
-          <Calendar month="Januari" date={1 + (B1.payday - 1) * ease(f, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]))} last={B1.payday} />
+          <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
+            <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
+          </div>
           {stamp.opacity > 0.001 ? (
             <div
               style={{
                 position: "absolute",
-                left: CAL.cx + CAL.w / 2 + 60,
+                /* beside the page as it grows, not under it */
+                left: CAL.cx + (CAL.w / 2) * grow + 60,
                 top: CAL.y + CAL.h / 2,
                 opacity: stamp.opacity,
                 transform: `translateY(-50%) scale(${stamp.scale})`,
