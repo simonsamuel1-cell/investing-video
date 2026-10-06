@@ -604,7 +604,9 @@ export const SC03 = () => {
   const L = (g: number) => local(g, BLOCK.SC03);
   /* 2143: the clock; its hands turn 120° until 2300, where it scrolls up and out */
   const clockIn = ease(f, L(B3.clock), m.move);
-  const turn = HANDS.turn * ease(f, L(B3.clock), L(B3.clockOut) - L(B3.clock));
+  /* "Jamnya buat continuous deh, jangan berhenti": a steady rate — 120° by
+     2300 — that keeps going while the clock scrolls away */
+  const turn = (HANDS.turn * Math.max(0, f - L(B3.clock))) / (L(B3.clockOut) - L(B3.clock));
   const up = ease(f, L(B3.clockOut), m.move);
   const mikirAt = L(B3.clockOut) + m.move / 2;
   /* the fifty, one after another, from "Semakin dewasa" to "…makin banyak." */
