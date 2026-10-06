@@ -428,7 +428,9 @@ const TUNTUN_ZOOM = 1.3;
 const TUNTUN_H = (((theme.captionBand.top - 400) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top)) * TUNTUN_ZOOM;
 const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
 /** "Lalu di bawahnya muncul text box garis putus putus" — TA07's dashed box over the chest, clear of the caption band. */
-const MAKANYA = { y: 800, w: 1560, h: 140, size: 50 };
+/** "Text box dan isinya kecilin 20%" — box and type at 0.8, about the same centre. */
+const MAKANYA_SCALE = 0.8;
+const MAKANYA = { y: 870 - (140 * MAKANYA_SCALE) / 2, w: 1560 * MAKANYA_SCALE, h: 140 * MAKANYA_SCALE, size: 50 * MAKANYA_SCALE };
 /**
  * The five bubbles on an arc over the head, each named under it — "Di bawah
  * setiap icon, berikan label namanya, sesuai subtitle". The arc sits 60 px
