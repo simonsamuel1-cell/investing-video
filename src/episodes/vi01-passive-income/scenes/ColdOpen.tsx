@@ -8,7 +8,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, useLife, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, useLife, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
@@ -73,6 +73,18 @@ const PHONE_QUIET = 0.4;
 const GROUP_LEFT = theme.canvas.width / 2 + WORK.shift - (PHOTO_H * ORANG_KERJA) / 2;
 const GROUP_RIGHT = PHONE.cx + PHONE.w / 2;
 const GROUP_DX = theme.canvas.width / 2 - (GROUP_LEFT + GROUP_RIGHT) / 2;
+/**
+ * 395 — Simon: "Text Kerja dan orang kerja png nya geser kiri dan fade out.
+ * Lalu template hp dan isinya ke tengah horizontal. Lalu muncul 3 icon di kiri
+ * 3 icon di kanan". Where the pay goes: each icon on a white disc, left column
+ * then right, top to bottom.
+ */
+const LEAVE_X = 300;
+const SPEND = { x: [560, 1360], y: [330, 560, 790], disc: 150, icon: 84 };
+const SPEND_ICONS: IconName[][] = [
+  ["shirt", "pants", "car"],
+  ["basket", "burger", "glass"],
+];
 /** Where the pause and the question stood before the flow was taken out — unchanged. */
 const PAUSE_AT = { x: 826, y: 338 };
 const QUESTION_AT = { x: 1280, y: 740 };
@@ -121,7 +133,7 @@ const Calendar = ({ month, date, last, speed }: { month: string; date: number; l
 };
 
 /** The phone and the card inside it — a remake of Simon's reference, in palette colours. */
-const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
+const BalancePhone = ({ at, countOver, centre }: { at: number; countOver: number; centre: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const shadow = useShadow();
@@ -140,7 +152,7 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
     ({ ...type, height: 56, borderRadius: 28, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 18, fontWeight: 700, boxShadow: shadow.rest }) as const;
   const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   return (
-    <div style={{ position: "absolute", left: P.cx + GROUP_DX - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.slate, boxShadow: shadow.rest, opacity: life }}>
+    <div style={{ position: "absolute", left: P.cx + GROUP_DX + (theme.canvas.width / 2 - P.cx - GROUP_DX) * centre - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.slate, boxShadow: shadow.rest, opacity: life }}>
       <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: sh, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
         {/* the island */}
         <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
@@ -187,6 +199,23 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
   );
 };
 
+/** One of the things the pay goes on: a white disc, the glyph in ink, settling up into place. */
+const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; at: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
+  const life = useLife(at);
+  if (life <= 0.001) return null;
+  const lift = (1 - ease(f, at, m.reveal)) * 24;
+  const D = SPEND.disc;
+  return (
+    <div style={{ position: "absolute", left: x - D / 2, top: y - D / 2 + lift, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: life, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Icon name={name} size={SPEND.icon} color={c.ink} fill={name === "basket" ? theme.color.basketYellow : undefined} />
+    </div>
+  );
+};
+
 export const SC01 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -207,6 +236,10 @@ export const SC01 = () => {
   /** The photo's rise from below — "Kerja" rides on it, as one group. */
   const lift = (1 - ease(f, L(B1.photo[0]), m.move)) * (theme.canvas.height - WORK.feet + PHOTO_H);
   const ground = ease(f, L(B1.photo[0]), m.move);
+  /** 395: Kerja and the photo leave to the left; the phone takes the middle; the six icons follow. */
+  const leave = ease(f, L(B1.spend), m.move);
+  const centre = ease(f, L(B1.spend) + m.move / 2, m.move);
+  const iconsAt = L(B1.spend) + m.move * 1.5;
 
   return (
     <Stage>
@@ -259,7 +292,7 @@ export const SC01 = () => {
       {/* it comes up from below, but never through the caption band — the frame
           is clipped there, so it rises out from behind the band's top edge */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <div style={{ position: "absolute", inset: 0, transform: `translateX(${(WORK.shift + GROUP_DX).toFixed(2)}px)` }}>
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - leave, transform: `translateX(${(WORK.shift + GROUP_DX - LEAVE_X * leave).toFixed(2)}px)` }}>
           <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px)` }}>
             <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} color={c.indigo} />
           </div>
@@ -267,7 +300,10 @@ export const SC01 = () => {
         </div>
       </div>
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
-      <BalancePhone at={L(B1.penghasilan)} countOver={m.sec(1.5)} />
+      <BalancePhone at={L(B1.penghasilan)} countOver={m.sec(1.5)} centre={centre} />
+      {SPEND_ICONS.map((col, i) =>
+        col.map((name, j) => <SpendIcon key={name} name={name} x={SPEND.x[i]} y={SPEND.y[j]} at={iconsAt + m.sec(0.12) * (i * 3 + j)} />),
+      )}
 
       {/* "berhenti kerja sementara": a pause over the work */}
       {stopped > 0.001 ? (

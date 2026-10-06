@@ -238,7 +238,13 @@ export type IconName =
   | "spark"
   | "users"
   | "bowl"
-  | "milk";
+  | "milk"
+  | "shirt"
+  | "pants"
+  | "car"
+  | "basket"
+  | "burger"
+  | "glass";
 
 /** Line icons on a 48-unit grid, drawn in `color` at `size` px. */
 export const Icon = ({
@@ -246,11 +252,14 @@ export const Icon = ({
   size = 48,
   color,
   stroke = 3.2,
+  fill = "none",
 }: {
   name: IconName;
   size?: number;
   color: string;
   stroke?: number;
+  /** The basket's body only — the one icon drawn with a solid colour. */
+  fill?: string;
 }) => {
   const p = {
     fill: "none",
@@ -260,6 +269,30 @@ export const Icon = ({
     strokeLinejoin: "round" as const,
   };
   const d: Record<IconName, React.ReactNode> = {
+    shirt: <path d="M17 8L7 14l4 9 5-2v19h16V21l5 2 4-9-10-6c-1 3-4 5-7 5s-6-2-7-5z" {...p} />,
+    pants: <path d="M14 7h20l3 34h-9l-4-22-4 22h-9zM14 13h20" {...p} />,
+    car: (
+      <>
+        <path d="M7 32v-7l5-10h24l5 10v7a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2zM7 25h34" {...p} />
+        <circle cx="15" cy="34" r="4" {...p} />
+        <circle cx="33" cy="34" r="4" {...p} />
+      </>
+    ),
+    basket: (
+      <>
+        <path d="M9 19l4 19a3 3 0 0 0 3 2h16a3 3 0 0 0 3-2l4-19z" {...p} fill={fill} />
+        <path d="M14 19l6-11M34 19l-6-11M6 19h36M19 26v8M24 26v8M29 26v8" {...p} />
+      </>
+    ),
+    burger: (
+      <>
+        <path d="M8 21c0-8 7-13 16-13s16 5 16 13z" {...p} />
+        <path d="M7 27c3 2 6 2 9 0s6-2 9 0 6 2 9 0 5-2 7 0" {...p} />
+        <rect x="7" y="31" width="34" height="5" rx="2.5" {...p} />
+        <path d="M9 40h30a3 3 0 0 1-3 3H12a3 3 0 0 1-3-3z" {...p} />
+      </>
+    ),
+    glass: <path d="M13 7h22l-3 33a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3zM14.5 19h19" {...p} />,
     briefcase: (
       <>
         <rect x="6" y="15" width="36" height="25" rx="5" {...p} />

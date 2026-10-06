@@ -368,6 +368,8 @@ export const theme = {
      * Same hex as `warn`, named for what it is so neither use leaks into the other.
      */
     calendarRed: "#E5475D",
+    /** VI01 SC01, Simon: "icon keranjang kuning" — the shopping basket's body, nothing else. */
+    basketYellow: "#F5B82E",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.

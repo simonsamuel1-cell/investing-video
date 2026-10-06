@@ -52,6 +52,8 @@ export const SC01 = {
   exit: 260,
   /** "…lalu muncul orang kerja png nya dari bawah, posisinya di tengah vertikal" — up to the frame's middle, then out. */
   photo: [276, 530] as const, // starts up as the pair is still leaving, so the frame is never empty
+  /** Simon: "395 — Kerja dan orang kerja png geser kiri dan fade out", then the phone to the middle and six icons. */
+  spend: 395,
   kerja: 266, // "Kita kerja," — measured in the audio (3.44 s of the recording), after both pads
   /** The Kerja node, once the pair has cleared the frame. */
   kerjaNode: 306,
