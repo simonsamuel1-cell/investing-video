@@ -94,6 +94,14 @@ export const SC02 = {
 };
 
 export const SC03 = {
+  /**
+   * Simon: "2143 Ubah visual jadi jam dinding, kedua jarum jamnya berputar 120
+   * derajat, posisi jarum jamnya awalnya dari pukul 02.10" — "1 hari" over it,
+   * "24 jam" under it. Then "2300 Jam dan 2 text scroll naik keluar layar. Lalu
+   * muncul OrangMikir.png … lalu di sekitarnya muncul 50 text random".
+   */
+  clock: 2143,
+  clockOut: 2300,
   day: 2146, // "Masalahnya,"
   jam: 2265, // "24 jam."
   dewasa: 2324, // "Semakin dewasa,"

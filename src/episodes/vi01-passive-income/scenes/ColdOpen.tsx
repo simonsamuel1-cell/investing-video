@@ -5,7 +5,7 @@
  * people add income, all drawing on the same two things; then the 24 hours
  * those two things live in, and the two questions the video is about.
  */
-import { useCurrentFrame } from "remotion";
+import { random, useCurrentFrame } from "remotion";
 import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
 import { Cutout, ease, Icon, Say, TypeBox, useLife, type IconName } from "../components/kit";
@@ -517,66 +517,116 @@ export const SC02 = () => {
 };
 
 // ═══ SC03 — 24 hours, and the two questions ═══════════════════════════════
-/** One day, hour by hour; and what fills it as you get older. */
-const HOURS = { x: 170, y: 250, cell: 62, gap: 4, h: 96 };
-const DAY_BLOCKS: { from: number; to: number; label: string; tone: "indigo" | "cyan" | "slate" }[] = [
-  { from: 0, to: 7, label: "Istirahat", tone: "slate" },
-  { from: 7, to: 9, label: "Jalan", tone: "slate" },
-  { from: 9, to: 18, label: "Kerja", tone: "indigo" },
-  { from: 18, to: 20, label: "Jalan", tone: "slate" },
-  { from: 20, to: 24, label: "Keluarga", tone: "cyan" },
+/** The wall clock, and its two lines — indigo, over and under it. */
+const CLOCK = { cx: 960, cy: 500, r: 230, label: 72, above: 170, below: 830, exit: 1100 };
+/** Hands from 02.10 (hour 65°, minute 60° from twelve), both turning 120°. */
+const HANDS = { hour: 65, minute: 60, turn: 120 };
+/** "OrangMikir.png", 1086 × 1448: seated, feet on row 1365, solid from row 64, columns 163–987. */
+const MIKIR = { aspect: 1086 / 1448, h: 620, feet: 930, floor: 1365 / 1448, solidCx: 575 / 1086, top: 64 / 1448, left: 163 / 1086, right: 987 / 1086 };
+const MIKIR_X = theme.canvas.width / 2 - (MIKIR.solidCx - 0.5) * MIKIR.h * MIKIR.aspect;
+const MIKIR_Y = MIKIR.feet + (1 - MIKIR.floor) * MIKIR.h;
+/** What a grown-up carries — fifty of them, around the man thinking. */
+const LOADS = [
+  "Rumah", "Keluarga", "Financial freedom", "Cicilan", "KPR", "Cicilan mobil", "Biaya sekolah anak", "Tagihan listrik",
+  "Asuransi", "Dana darurat", "Orang tua", "Pernikahan", "Kesehatan", "Pajak", "Liburan", "Kontrakan",
+  "Uang belanja", "Biaya rumah sakit", "Pensiun", "Tabungan", "Investasi", "Kartu kredit", "Utang", "Biaya hidup",
+  "Transportasi", "Bensin", "Internet", "Pulsa", "Arisan", "Kondangan", "Zakat", "Hadiah ulang tahun",
+  "Biaya kuliah", "Renovasi rumah", "Servis mobil", "Popok bayi", "Susu anak", "Les anak", "Dana pensiun", "Rawat orang tua",
+  "Asisten rumah tangga", "Iuran lingkungan", "BPJS", "Tagihan air", "Paylater", "Cicilan HP", "Gaya hidup", "Dana pendidikan",
+  "Sewa kantor", "Biaya nikah",
 ];
+if (LOADS.length !== 50) throw new Error(`VI01 SC03: ${LOADS.length} loads, Simon asked for 50`);
+/**
+ * Where each one sits: drawn from a seeded random, kept only where it clears
+ * the man, the logo zone, the caption band and every word placed before it.
+ * Deterministic — the same layout in Studio and in every render.
+ */
+const LOAD_PLACES = (() => {
+  const W = theme.canvas.width;
+  const man = {
+    l: MIKIR_X - (0.5 - MIKIR.left) * MIKIR.h * MIKIR.aspect - 30,
+    r: MIKIR_X + (MIKIR.right - 0.5) * MIKIR.h * MIKIR.aspect + 30,
+    t: MIKIR_Y - MIKIR.h + MIKIR.top * MIKIR.h - 30,
+    b: theme.captionBand.top,
+  };
+  const placed: { l: number; r: number; t: number; b: number }[] = [];
+  const hit = (a: typeof man, b: typeof man) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+  const logo = { l: W - theme.logoZone.width, r: W, t: 0, b: theme.logoZone.height };
+  return LOADS.map((text, i) => {
+    for (let k = 0; k < 4000; k++) {
+      const size = 26 + Math.floor(random(`vi01-load-size-${i}-${k}`) * 20);
+      const w = text.length * size * 0.56 + 10;
+      const h = size * 1.3;
+      const x = 70 + w / 2 + random(`vi01-load-x-${i}-${k}`) * (W - 140 - w);
+      const y = 70 + h / 2 + random(`vi01-load-y-${i}-${k}`) * (theme.captionBand.top - 30 - 70 - h);
+      const box = { l: x - w / 2 - 12, r: x + w / 2 + 12, t: y - h / 2 - 6, b: y + h / 2 + 6 };
+      if (hit(box, man) || hit(box, logo) || placed.some((p) => hit(box, p))) continue;
+      placed.push(box);
+      return { text, x, y, size, order: random(`vi01-load-order-${i}`), slate: random(`vi01-load-tone-${i}`) < 0.5 };
+    }
+    throw new Error(`VI01 SC03: no room for "${text}"`);
+  });
+})();
+
+/** A plain wall clock: white face, twelve ticks, two round-ended hands. */
+const WallClock = ({ turn }: { turn: number }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const R = CLOCK.r;
+  const hand = (deg: number, len: number, w: number) => (
+    <line x1={R} y1={R} x2={R + Math.sin((deg * Math.PI) / 180) * len} y2={R - Math.cos((deg * Math.PI) / 180) * len} stroke={c.ink} strokeWidth={w} strokeLinecap="round" />
+  );
+  return (
+    <div style={{ position: "absolute", left: CLOCK.cx - R, top: CLOCK.cy - R, width: R * 2, height: R * 2, borderRadius: R, background: c.cardBg, boxShadow: shadow.soft }}>
+      <svg width={R * 2} height={R * 2} style={{ position: "absolute", left: 0, top: 0 }}>
+        <circle cx={R} cy={R} r={R - 6} fill="none" stroke={c.ink} strokeWidth={8} />
+        {Array.from({ length: 12 }, (_, i) => {
+          const a = (i * 30 * Math.PI) / 180;
+          const r0 = i % 3 === 0 ? R - 52 : R - 40;
+          return <line key={i} x1={R + Math.sin(a) * r0} y1={R - Math.cos(a) * r0} x2={R + Math.sin(a) * (R - 24)} y2={R - Math.cos(a) * (R - 24)} stroke={i % 3 === 0 ? c.ink : c.slate} strokeWidth={i % 3 === 0 ? 8 : 5} strokeLinecap="round" />;
+        })}
+        {hand(HANDS.hour + turn, R * 0.5, 14)}
+        {hand(HANDS.minute + turn, R * 0.72, 9)}
+        <circle cx={R} cy={R} r={14} fill={c.indigo} />
+      </svg>
+    </div>
+  );
+};
 
 export const SC03 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC03);
-  const day = ease(f, L(B3.day), m.reveal);
-  /** Blocks fill left to right between "Semakin dewasa" and "…makin banyak." */
-  const fill = (h: number) => ease(f, L(B3.dewasa) + ((L(B3.full) - L(B3.dewasa)) * h) / 24, 10);
-  const dimDay = ease(f, L(B3.q1) - 10, m.move);
-  const ink = (t: "indigo" | "cyan" | "slate") => (t === "indigo" ? c.indigo : t === "cyan" ? theme.color.cyanInk : c.slate);
-  const wash = (t: "indigo" | "cyan" | "slate") =>
-    t === "indigo" ? theme.color.indigoWashStrong : t === "cyan" ? theme.color.hlCyan : theme.color.slateWash;
-  const rowW = 24 * HOURS.cell + 23 * HOURS.gap;
+  /* 2143: the clock; its hands turn 120° until 2300, where it scrolls up and out */
+  const clockIn = ease(f, L(B3.clock), m.move);
+  const turn = HANDS.turn * ease(f, L(B3.clock), L(B3.clockOut) - L(B3.clock));
+  const up = ease(f, L(B3.clockOut), m.move);
+  const mikirAt = L(B3.clockOut) + m.move / 2;
+  /* the fifty, one after another, from "Semakin dewasa" to "…makin banyak." */
+  const loadsFrom = Math.max(L(B3.dewasa), mikirAt + m.reveal);
+  const loadsOver = L(B3.full) - loadsFrom;
+  /* then they and the man clear for the two questions */
+  const clear = ease(f, L(B3.q1) - m.move, m.move);
   return (
     <Stage>
-      <div style={{ opacity: day * (1 - 0.7 * dimDay) }}>
-        <Say text="Sehari tetap cuma 24 jam" x={HOURS.x} y={HOURS.y - 70} at={L(B3.day)} anchor="left" size={44} />
-        <Say text={`${Math.round(24 * ease(f, L(B3.day), 50))} jam`} x={HOURS.x + rowW} y={HOURS.y - 70} at={L(B3.jam)} anchor="right" size={44} color={c.indigo} />
-        {Array.from({ length: 24 }, (_, h) => {
-          const blk = DAY_BLOCKS.find((b) => h >= b.from && h < b.to)!;
-          const on = fill(h);
-          return (
-            <div
-              key={h}
-              style={{
-                position: "absolute",
-                left: HOURS.x + h * (HOURS.cell + HOURS.gap),
-                top: HOURS.y,
-                width: HOURS.cell,
-                height: HOURS.h,
-                borderRadius: 10,
-                border: `${theme.shape.hairline}px solid ${on > 0.5 ? ink(blk.tone) : c.border}`,
-                background: on > 0.001 ? wash(blk.tone) : c.cardBg,
-              }}
-            />
-          );
-        })}
-        {DAY_BLOCKS.map((b) => (
-          <Say
-            key={`${b.label}${b.from}`}
-            text={b.label}
-            x={HOURS.x + ((b.from + b.to) / 2) * (HOURS.cell + HOURS.gap)}
-            y={HOURS.y + 140}
-            at={L(B3.dewasa) + ((L(B3.full) - L(B3.dewasa)) * b.from) / 24}
-            size={30}
-            weight={600}
-            color={ink(b.tone)}
-          />
-        ))}
-      </div>
+      {up < 0.999 && clockIn > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: clockIn, transform: `translateY(${((1 - clockIn) * 30 - up * CLOCK.exit).toFixed(2)}px)` }}>
+          <WallClock turn={turn} />
+          <Say text="1 hari" x={CLOCK.cx} y={CLOCK.above} at={L(B3.clock)} size={CLOCK.label} weight={800} color={c.indigo} />
+          <Say text="24 jam" x={CLOCK.cx} y={CLOCK.below} at={L(B3.clock)} size={CLOCK.label} weight={800} color={c.indigo} />
+        </div>
+      ) : null}
+
+      {clear < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - clear }}>
+          <Cutout src="art/vi01/orang-mikir.png" aspect={MIKIR.aspect} x={MIKIR_X} y={MIKIR_Y} h={MIKIR.h} at={mikirAt} shadow floor={MIKIR.floor} />
+          {LOAD_PLACES.map((w) => (
+            <Say key={w.text} text={w.text} x={w.x} y={w.y} at={loadsFrom + Math.round(w.order * loadsOver)} size={w.size} weight={700} color={w.slate ? c.slate : c.ink} />
+          ))}
+        </div>
+      ) : null}
+
       <TypeBox
         cx={960}
         y={500}
