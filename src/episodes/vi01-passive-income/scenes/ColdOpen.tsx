@@ -93,6 +93,19 @@ const BAYANGIN = { y: 150, size: 64, weight: 700, gap: 14 };
 const LAYOFF = 1086 / 1448;
 const LAYOFF_SOLID_CX = (378 + 840) / 2 / 1086;
 const LAYOFF_FLOOR = 1390 / 1448;
+/**
+ * THE CLOSE-UP: "perbesar orangnya hingga yang muncul di preview dari kepala
+ * hingga dada" — rows 40 (above the hair) to 580 (the chest) of the 1448-row
+ * file fill the frame down to the caption band, the face centred left to right.
+ * Both files share one canvas and one scale; each is centred on its own head.
+ */
+const CLOSE = { top: 40, chest: 580, rows: 1448 };
+const CLOSE_H = (theme.captionBand.top * CLOSE.rows) / (CLOSE.chest - CLOSE.top);
+const CLOSE_TOP = (-CLOSE.top / CLOSE.rows) * CLOSE_H;
+/** Head columns (the middle of the head's solid span) in each file. */
+const HEAD_U = { layoff: 515 / 1086, bingung: 595 / 1086 };
+/** "OrangBingung.png" — same 1086 × 1448 canvas; feet on row 1416. */
+const BINGUNG_FLOOR = 1416 / 1448;
 /** TA11's ground (TAMistakes f15104): the grid fades out toward the logo row and the caption band. */
 const GROUND_RAMP =
   `linear-gradient(to bottom, transparent ${theme.logoZone.height}px, black ${theme.logoZone.height * 2}px, ` +
@@ -231,10 +244,10 @@ const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; a
 };
 
 /** One piece of a line, easing in on its own frame; it holds its place while hidden, so the line never reflows. */
-const Piece = ({ text, at, color }: { text: string; at: number; color: string }) => {
+const Piece = ({ text, at, out, color }: { text: string; at: number; out?: number; color: string }) => {
   const f = useCurrentFrame();
   const m = useMotion();
-  const t = ease(f, at, m.reveal);
+  const t = ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.fade));
   return <span style={{ display: "inline-block", color, opacity: t, transform: `translateY(${((1 - t) * 14).toFixed(2)}px)` }}>{text}</span>;
 };
 
@@ -264,6 +277,18 @@ export const SC01 = () => {
   /** 555: the phone and the icons go; "Tapi" comes once they have. */
   const spent = ease(f, L(B1.bayangin[0]), m.fade);
   const tapiAt = L(B1.bayangin[0]) + m.fade;
+  /** 861: the push into the face, scaled about the one point that carries the
+      full-length shot onto the close-up; the swap and the new line as it lands. */
+  const push = ease(f, L(B1.closeUp), m.move);
+  const swapAt = L(B1.closeUp) + m.move;
+  const swapped = f >= swapAt;
+  const w0 = PHOTO_H * LAYOFF;
+  const start = { left: theme.canvas.width / 2 - (LAYOFF_SOLID_CX - 0.5) * w0 - w0 / 2, top: WORK.feet - PHOTO_H };
+  const k = CLOSE_H / PHOTO_H;
+  const end = { left: theme.canvas.width / 2 - HEAD_U.layoff * CLOSE_H * LAYOFF, top: CLOSE_TOP };
+  const pivot = { x: (k * start.left - end.left) / (k - 1), y: (k * start.top - end.top) / (k - 1) };
+  const s = 1 + (k - 1) * push;
+  const shot = { h: PHOTO_H * s, left: pivot.x + s * (start.left - pivot.x), top: pivot.y + s * (start.top - pivot.y) };
 
   return (
     <Stage>
@@ -351,16 +376,28 @@ export const SC01 = () => {
         </div>
       ) : null}
 
+      {/* the picture first, so the line reads over the close-up; never into the caption band */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        {!swapped ? (
+          <Cutout src="art/vi01/layoff.png" aspect={LAYOFF} x={shot.left + (shot.h * LAYOFF) / 2} y={shot.top + shot.h} h={shot.h} at={L(B1.bayangin[2])} shadow floor={LAYOFF_FLOOR} />
+        ) : (
+          <Cutout src="art/vi01/orang-bingung.png" aspect={LAYOFF} x={theme.canvas.width / 2 - (HEAD_U.bingung - 0.5) * CLOSE_H * LAYOFF} y={CLOSE_TOP + CLOSE_H} h={CLOSE_H} at={swapAt - m.reveal} rise={0} shadow floor={BINGUNG_FLOOR} />
+        )}
+      </div>
+
       {/* then the line, piece by piece, across the top — "Tapi" and "coba
           bayangin:" in indigo, the rest in black — and Layoff.png under it */}
       <div style={{ position: "absolute", left: 0, right: 0, top: BAYANGIN.y, display: "flex", flexDirection: "column", alignItems: "center", gap: BAYANGIN.gap, fontFamily: theme.text.family, fontSize: BAYANGIN.size, fontWeight: BAYANGIN.weight, lineHeight: 1.1, whiteSpace: "pre" }}>
         <div>
-          <Piece text="Tapi" at={tapiAt} color={c.indigo} />
-          <Piece text=" coba bayangin:" at={L(B1.bayangin[1])} color={c.indigo} />
+          <Piece text="Tapi" at={tapiAt} out={swapAt} color={c.indigo} />
+          <Piece text=" coba bayangin:" at={L(B1.bayangin[1])} out={swapAt} color={c.indigo} />
         </div>
-        <Piece text="suatu hari harus berhenti kerja sementara" at={L(B1.bayangin[2])} color={c.ink} />
+        <Piece text="suatu hari harus berhenti kerja sementara" at={L(B1.bayangin[2])} out={swapAt} color={c.ink} />
       </div>
-      <Cutout src="art/vi01/layoff.png" aspect={LAYOFF} x={theme.canvas.width / 2 - (LAYOFF_SOLID_CX - 0.5) * PHOTO_H * LAYOFF} y={WORK.feet} h={PHOTO_H} at={L(B1.bayangin[2])} shadow floor={LAYOFF_FLOOR} />
+      {/* …and in its place, as the picture swaps */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: BAYANGIN.y, display: "flex", justifyContent: "center", fontFamily: theme.text.family, fontSize: BAYANGIN.size, fontWeight: BAYANGIN.weight, lineHeight: 1.1, whiteSpace: "pre" }}>
+        <Piece text="Apakah penghasilan kita juga ikut berhenti?" at={swapAt} color={c.ink} />
+      </div>
     </Stage>
   );
 };

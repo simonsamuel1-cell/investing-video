@@ -62,6 +62,12 @@ export const SC01 = {
    * once they are gone, "coba bayangin:" at 591, the rest (and Layoff.png) at 652.
    */
   bayangin: [555, 591, 652] as const,
+  /**
+   * "861 Gambarnya membesar hingga close up pada wajah … langsung ganti ke
+   * OrangBingung.png. Text di atas juga ganti 'Apakah penghasilan kita juga
+   * ikut berhenti?'" — the push starts here; the swap lands as it ends.
+   */
+  closeUp: 861,
   kerja: 266, // "Kita kerja," — measured in the audio (3.44 s of the recording), after both pads
   /** The Kerja node, once the pair has cleared the frame. */
   kerjaNode: 306,
