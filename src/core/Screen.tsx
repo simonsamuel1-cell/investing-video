@@ -79,7 +79,7 @@ export const DeviceFrame = ({
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           />
         ) : (
-          <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          <Img showInTimeline={false} src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
         )}
       </div>
     </div>
@@ -119,7 +119,7 @@ export const ScreenClip = ({
           style={{ width: "100%", height: "100%", objectFit: fit }}
         />
       ) : (
-        <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: fit }} />
+        <Img showInTimeline={false} src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: fit }} />
       )}
     </AbsoluteFill>
   );

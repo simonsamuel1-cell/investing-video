@@ -11,7 +11,7 @@
  * frame. ONE root <Audio>; no scene has audio of its own.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, TRANS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
@@ -83,10 +83,22 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
 const chrome = (getInputProps() as { chrome?: boolean }).chrome !== false;
 
+/**
+ * ⚠ THE ROWS REMOUNT TOGETHER, EVERY TIME THIS MODULE LOADS. Simon: "panel
+ * compositionnya dibuat stay still aja, klo aku geser garis merahnya,
+ * layer2nya ga gerak2". Studio orders its rows by when each first mounted,
+ * counted per hot reload, and settles ties through whichever hidden sequences
+ * are mounted (the Scene Transisi's frozen scenes come and go as the playhead
+ * moves). Keyed on a value drawn once per load, the scene rows and the voice
+ * always mount as one batch and keep their order — TA05's fix. Studio only:
+ * a render reads no key.
+ */
+const ROWS = String(random(null));
+
 const Body = () => (
   <Stage>
     {SCENES.map(({ from, duration, Component, name }) => (
-      <Sequence key={name} from={from} durationInFrames={duration} name={name}>
+      <Sequence key={`${ROWS}-${name}`} from={from} durationInFrames={duration} name={name}>
         <InCuts from={from} to={from + duration}>
           <Component />
         </InCuts>
@@ -99,7 +111,7 @@ const Body = () => (
 
     <Captions cues={CUES} show={chrome} />
     {chrome && <Watermark totalFrames={TOTAL_FRAMES} />}
-    <Audio src={staticFile("vo/passive-income.mp3")} />
+    <Audio key={ROWS} src={staticFile("vo/passive-income.mp3")} />
   </Stage>
 );
 

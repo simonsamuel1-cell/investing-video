@@ -42,7 +42,7 @@ export const Watermark = ({
   );
   return (
     <AbsoluteFill style={{ opacity: op, zIndex: 100 }}>
-      <Img
+      <Img showInTimeline={false}
         src={staticFile(src)}
         style={{
           width: "100%",

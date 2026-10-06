@@ -105,7 +105,7 @@ export const Worker = ({
           (next ? 1 - ease(f, next[0], m.fade) : 1);
         if (on <= 0.001) return null;
         return (
-          <Img
+          <Img showInTimeline={false}
             key={i}
             src={staticFile(`art/guy/0${pose}.png`)}
             style={{
@@ -200,7 +200,7 @@ export const Cutout = ({
           filter: shadow ? theme.shape.photoShadow : undefined,
         }}
       >
-        <Img
+        <Img showInTimeline={false}
           src={staticFile(src)}
           style={{
             position: "absolute",
