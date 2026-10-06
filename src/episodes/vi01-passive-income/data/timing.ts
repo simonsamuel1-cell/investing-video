@@ -106,6 +106,14 @@ export const SC03 = {
   jam: 2265, // "24 jam."
   dewasa: 2324, // "Semakin dewasa,"
   full: 2509, // "…makin banyak."
+  /** Simon: "2560 Muncul dulu text kecil 'Pertanyaan 1'" — then the question, word by word as it is spoken. */
+  label1: 2560,
+  /** Gimana · caranya · aku · bisa · menghasilkan · lebih · banyak? (the word clock, docs/VI01_sentences.json) */
+  q1Words: [2674, 2693, 2715, 2726, 2740, 2776, 2793] as const,
+  /** "2831 Text sebelumnya transisi hilang, lalu muncul text kecil 'Pertanyaan 2'". */
+  label2: 2831,
+  /** Gimana · caranya · uang · yang · sudah · aku · hasilkan · ikut bekerja? */
+  q2Words: [2936, 2956, 2978, 2992, 3006, 3023, 3035, 3068] as const,
   q1: 2578, // "Jadi selain bertanya, …"
   q1Type: 2674, // the question itself
   q2: 2858, // "Kita juga perlu mulai bertanya:"

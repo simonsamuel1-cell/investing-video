@@ -597,6 +597,117 @@ const WallClock = ({ turn }: { turn: number }) => {
   );
 };
 
+/**
+ * THE TWO QUESTIONS — no text box. Simon's two references:
+ *  1. a phrase SELECTED in a text editor — big type, bold against regular,
+ *     a pale selection over the key words, a caret at each end with its knob
+ *     (no Copy / Paste bar);
+ *  2. a heavy left-aligned block where the key words sit white and italic on a
+ *     solid bar, bracketed by a thin line with a knob at each end.
+ * Each word arrives as it is spoken; the small "Pertanyaan n" comes first.
+ */
+const QUIZ = { label: 36, size: 100, track: -2, labelY: 300, lineY: [440, 560, 680] };
+const SELECT = { caret: 5, knob: 22 };
+
+/** One word, easing up into place on its own frame. */
+const Word = ({ f, at, children, style }: { f: number; at: number; children: React.ReactNode; style?: React.CSSProperties }) => {
+  const m = useMotion();
+  const t = ease(f, at, m.reveal);
+  return <span style={{ display: "inline-block", opacity: t, transform: `translateY(${((1 - t) * 18).toFixed(2)}px)`, ...style }}>{children}</span>;
+};
+
+const QuizLabel = ({ f, at, out, text }: { f: number; at: number; out?: number; text: string }) => {
+  const c = usePalette();
+  const m = useMotion();
+  const t = ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.move));
+  return (
+    <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.labelY, textAlign: "center", opacity: t, fontFamily: theme.text.family, fontSize: QUIZ.label, fontWeight: 700, letterSpacing: 2, color: c.indigo }}>
+      {text}
+    </div>
+  );
+};
+
+/** "Gimana caranya aku bisa / menghasilkan lebih banyak?" — "lebih banyak?" selected as it is said. */
+const QuestionOne = ({ f, L }: { f: number; L: (g: number) => number }) => {
+  const c = usePalette();
+  const m = useMotion();
+  const W = B3.q1Words.map(L);
+  const out = ease(f, L(B3.label2), m.move);
+  if (f < L(B3.label1) || out >= 0.999) return null;
+  /* the selection runs across the two words while they are spoken */
+  const sel = ease(f, W[5], W[6] + m.reveal - W[5]);
+  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const, textAlign: "center" as const };
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: 1 - out, transform: `translateY(${(-out * 60).toFixed(2)}px)` }}>
+      <QuizLabel f={f} at={L(B3.label1)} text="Pertanyaan 1" />
+      <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.lineY[0] - QUIZ.size * 0.55, ...line }}>
+        <Word f={f} at={W[0]} style={{ fontWeight: 800 }}>Gimana</Word> <Word f={f} at={W[1]} style={{ fontWeight: 800 }}>caranya</Word>{" "}
+        <Word f={f} at={W[2]} style={{ fontWeight: 400 }}>aku</Word> <Word f={f} at={W[3]} style={{ fontWeight: 400 }}>bisa</Word>
+      </div>
+      <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.lineY[1] - QUIZ.size * 0.55, ...line }}>
+        <Word f={f} at={W[4]} style={{ fontWeight: 400 }}>menghasilkan</Word>{" "}
+        <span style={{ position: "relative", display: "inline-block" }}>
+          {/* the selection: a pale wash swept left to right, a caret at each end */}
+          <span style={{ position: "absolute", left: -6, top: "8%", height: "88%", width: `calc(${(sel * 100).toFixed(2)}% + ${(12 * sel).toFixed(2)}px)`, background: theme.color.indigoWashStrong, borderRadius: 4 }} />
+          {sel > 0.001 ? (
+            <>
+              <span style={{ position: "absolute", left: -6 - SELECT.caret / 2, top: "4%", width: SELECT.caret, height: "92%", borderRadius: SELECT.caret, background: c.indigo }} />
+              <span style={{ position: "absolute", left: -6 - SELECT.knob / 2, top: "100%", width: SELECT.knob, height: SELECT.knob, borderRadius: SELECT.knob, background: c.indigo, marginTop: -SELECT.knob / 2 - 4 }} />
+              <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`, top: "4%", width: SELECT.caret, height: "92%", marginLeft: -SELECT.caret / 2, borderRadius: SELECT.caret, background: c.indigo }} />
+              <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`, top: "4%", width: SELECT.knob, height: SELECT.knob, marginLeft: -SELECT.knob / 2, marginTop: -SELECT.knob / 2, borderRadius: SELECT.knob, background: c.indigo }} />
+            </>
+          ) : null}
+          <span style={{ position: "relative" }}>
+            <Word f={f} at={W[5]} style={{ fontWeight: 800 }}>lebih</Word> <Word f={f} at={W[6]} style={{ fontWeight: 800 }}>banyak?</Word>
+          </span>
+        </span>
+      </div>
+    </div>
+  );
+};
+
+/** "Gimana caranya uang / yang sudah aku hasilkan / ikut bekerja?" — the last two white on an indigo bar. */
+const QuestionTwo = ({ f, L }: { f: number; L: (g: number) => number }) => {
+  const c = usePalette();
+  const m = useMotion();
+  const W = B3.q2Words.map(L);
+  const at = L(B3.label2) + m.move;
+  if (f < at) return null;
+  const bar = ease(f, W[7], m.sec(0.3));
+  const bracket = ease(f, W[7] + m.sec(0.15), m.sec(0.3));
+  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, fontWeight: 800, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const };
+  const K = SELECT.knob;
+  /** The bar reaches this far past the words, so its bracket stands clear of the lines above. */
+  const PAD = 28;
+  return (
+    <>
+      <QuizLabel f={f} at={at} text="Pertanyaan 2" />
+      {/* left-aligned, the block as a whole centred on the frame */}
+      <div style={{ position: "absolute", left: "50%", top: QUIZ.lineY[0] - QUIZ.size * 0.55, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        <div style={line}>
+          <Word f={f} at={W[0]}>Gimana</Word> <Word f={f} at={W[1]}>caranya</Word> <Word f={f} at={W[2]}>uang</Word>
+        </div>
+        <div style={line}>
+          <Word f={f} at={W[3]}>yang</Word> <Word f={f} at={W[4]}>sudah</Word> <Word f={f} at={W[5]}>aku</Word> <Word f={f} at={W[6]}>hasilkan</Word>
+        </div>
+        <div style={{ ...line, position: "relative", marginTop: 8 }}>
+          {/* the bar grows out from its left edge, the bracket and knobs after it */}
+          <span style={{ position: "absolute", left: -PAD, top: 0, bottom: 0, width: `calc(${(bar * 100).toFixed(2)}% + ${(2 * PAD * bar).toFixed(2)}px)`, background: c.indigo, borderRadius: 8 }} />
+          {bracket > 0.001 ? (
+            <span style={{ position: "absolute", inset: 0, opacity: bracket }}>
+              <span style={{ position: "absolute", left: -PAD - 2, top: -QUIZ.size * 0.55, height: `calc(100% + ${QUIZ.size * 0.55}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
+              <span style={{ position: "absolute", left: -PAD - K / 2, top: -QUIZ.size * 0.55 - K / 2, width: K, height: K, borderRadius: K, background: c.indigo }} />
+              <span style={{ position: "absolute", right: -PAD - 2, top: 0, height: `calc(100% + ${QUIZ.size * 0.4}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
+              <span style={{ position: "absolute", right: -PAD - K / 2, top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`, width: K, height: K, borderRadius: K, background: c.indigo }} />
+            </span>
+          ) : null}
+          <span style={{ position: "relative", color: c.cardBg, fontStyle: "italic", opacity: bar }}>ikut bekerja?</span>
+        </div>
+      </div>
+    </>
+  );
+};
+
 export const SC03 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -633,30 +744,8 @@ export const SC03 = () => {
         </div>
       ) : null}
 
-      <TypeBox
-        cx={960}
-        y={500}
-        w={1380}
-        h={130}
-        at={L(B3.q1) + 30}
-        typeAt={L(B3.q1Type)}
-        dim={ease(f, L(B3.q2), m.fade)}
-        text="“Gimana caranya aku bisa menghasilkan lebih banyak?”"
-        size={42}
-      />
-      <TypeBox
-        cx={960}
-        y={690}
-        w={1560}
-        h={150}
-        at={L(B3.q2) + 14}
-        typeAt={L(B3.q2Type)}
-        text="“Gimana caranya uang yang sudah aku hasilkan ikut bekerja?”"
-        mark="ikut bekerja"
-        markAt={L(B3.ikutBekerja)}
-        tone="cyan"
-        size={46}
-      />
+      <QuestionOne f={f} L={L} />
+      <QuestionTwo f={f} L={L} />
     </Stage>
   );
 };
