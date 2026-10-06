@@ -230,6 +230,38 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
  * — still, for now ("jangan dianimasikan") — and the card fades off SC04, which
  * has been running underneath since its block began.
  */
+/**
+ * The lens's rule, after Simon's reference: a hairline with a diamond and a
+ * bead at each end, a bead at its middle, and a small flourish over the middle
+ * — above the top rule, mirrored below the bottom one.
+ */
+const OrnateRule = ({ y, flip, color }: { y: number; flip: boolean; color: string }) => {
+  const w = LIST.lineW;
+  const h = 60;
+  const mid = w / 2;
+  const cy = h / 2;
+  const end = (x: number, dir: 1 | -1) => (
+    <>
+      <path d={`M${x} ${cy} l${dir * 7} -5 l${dir * 7} 5 l${-dir * 7} 5 z`} fill={color} />
+      <circle cx={x + dir * 20} cy={cy} r={2.6} fill={color} />
+    </>
+  );
+  return (
+    <svg width={w} height={h} style={{ position: "absolute", left: (theme.canvas.width - w) / 2, top: y - cy, overflow: "visible" }}>
+      <line x1={14} y1={cy} x2={w - 14} y2={cy} stroke={color} strokeWidth={2} />
+      {end(0, 1)}
+      {end(w, -1)}
+      <circle cx={mid} cy={cy} r={4} fill={color} />
+      {/* the flourish: two curls out from a small leaf, mirrored for the bottom rule */}
+      <g transform={`translate(${mid} ${cy}) scale(1 ${flip ? -1 : 1})`} fill="none" stroke={color} strokeWidth={2.4} strokeLinecap="round">
+        <path d="M0 -10 C -6 -20 -18 -24 -26 -16 C -31 -11 -27 -4 -21 -7 C -18 -9 -19 -13 -22 -13" />
+        <path d="M0 -10 C 6 -20 18 -24 26 -16 C 31 -11 27 -4 21 -7 C 18 -9 19 -13 22 -13" />
+        <path d="M0 -12 L 4 -18 L 0 -26 L -4 -18 Z" fill={color} />
+      </g>
+    </svg>
+  );
+};
+
 export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -272,9 +304,7 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
         </div>
       );
     });
-  const line = (y: number) => (
-    <div style={{ position: "absolute", left: (W - LIST.lineW) / 2, top: y - theme.shape.rule / 2, width: LIST.lineW, height: theme.shape.rule, borderRadius: theme.shape.rule, background: c.slate }} />
-  );
+  const line = (y: number, flip: boolean) => <OrnateRule y={y} flip={flip} color={c.indigo} />;
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
@@ -290,8 +320,8 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
         <div style={{ position: "absolute", inset: 0, clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)` }}>
           {points(true)}
         </div>
-        {line(lensTop)}
-        {line(lensBottom)}
+        {line(lensTop, false)}
+        {line(lensBottom, true)}
       </div>
       {sceneOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - sceneOut }}>
