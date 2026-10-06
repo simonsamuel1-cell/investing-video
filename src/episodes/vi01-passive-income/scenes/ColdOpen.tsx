@@ -6,9 +6,9 @@
  * those two things live in, and the two questions the video is about.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, useLife, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
@@ -50,12 +50,25 @@ const ORANG_KERJA_FLOOR = 1138 / 1199;
 const PHOTO_H = 560;
 /** Far enough up that the pair is gone — GAJIAN's top is the highest point. */
 const EXIT_RISE = 1000;
-/** The flow: three nodes in a row on the right, the worker on the left. */
-const FLOW1: NodeBox[] = [
-  { x: 720, y: 450, w: 300, h: 150 },
-  { x: 1100, y: 450, w: 360, h: 150 },
-  { x: 1540, y: 450, w: 280, h: 150 },
-];
+/**
+ * "Kerja" over the photo, the two as one group moved 200 px left — Simon:
+ * "Kelompokkan Kerja dan OrangKerja png, lalu geser 200 px ke kiri (ini bukan
+ * animasi, tapi re-positioning)". The label sits `gap` above the photo's top.
+ */
+const WORK = { shift: -200, feet: 940, label: 60, weight: 600, gap: 50 };
+/**
+ * …and on their right, the pay landing: a phone holding Simon's balance card,
+ * the balance counting Rp 0 → Rp 50.000.000 as it fades in.
+ */
+const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 14, radius: 64 };
+const BALANCE = 50_000_000;
+/** Where the pause and the question stood before the flow was taken out — unchanged. */
+const PAUSE_AT = { x: 826, y: 338 };
+const QUESTION_AT = { x: 1280, y: 740 };
+/** TA11's ground (TAMistakes f15104): the grid fades out toward the logo row and the caption band. */
+const GROUND_RAMP =
+  `linear-gradient(to bottom, transparent ${theme.logoZone.height}px, black ${theme.logoZone.height * 2}px, ` +
+  `black ${theme.captionBand.top - 122}px, transparent ${theme.captionBand.top - 7}px)`;
 
 /**
  * The calendar page: month on the band, the date below. `date` may be
@@ -96,6 +109,68 @@ const Calendar = ({ month, date, last, speed }: { month: string; date: number; l
   );
 };
 
+/** The phone and the card inside it — a remake of Simon's reference, in palette colours. */
+const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const shadow = useShadow();
+  const life = useLife(at);
+  if (life <= 0.001) return null;
+  const amount = BALANCE * ease(f, at, countOver);
+  const P = PHONE;
+  const sw = P.w - P.bezel * 2;
+  const type = { fontFamily: theme.text.family, lineHeight: 1 } as const;
+  const circle = (d: number, bg: string) =>
+    ({ width: d, height: d, borderRadius: d / 2, background: bg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: shadow.rest }) as const;
+  const pill = (bg: string, color: string) =>
+    ({ ...type, height: 56, borderRadius: 28, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 18, fontWeight: 700, boxShadow: shadow.rest }) as const;
+  const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+  return (
+    <div style={{ position: "absolute", left: P.cx - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.ink, boxShadow: shadow.rest, opacity: life }}>
+      <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: P.h - P.bezel * 2, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
+        {/* the island */}
+        <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
+
+        {/* avatar · Overview · bell */}
+        <div style={{ position: "absolute", left: 22, right: 22, top: 70, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <div style={circle(52, c.indigoTint2)}>
+            <svg width={26} height={26} viewBox="0 0 24 24"><circle cx={12} cy={9} r={4} {...line} stroke={c.cardBg} /><path d="M4.5 20c1.5-3.6 4.2-5 7.5-5s6 1.4 7.5 5" {...line} stroke={c.cardBg} /></svg>
+          </div>
+          <div style={{ ...pill(c.cardBg, c.ink), width: 150, height: 52, fontSize: 19, fontWeight: 600 }}>Overview</div>
+          <div style={circle(52, c.cardBg)}>
+            <svg width={24} height={24} viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" {...line} /><path d="M10 20.5a2 2 0 0 0 4 0" {...line} /></svg>
+          </div>
+        </div>
+
+        {/* the balance card */}
+        <div style={{ position: "absolute", left: 18, right: 18, top: 148, height: 236, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft }}>
+          <div style={{ ...type, position: "absolute", left: 26, top: 34, fontSize: 15, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
+          <div style={{ ...type, position: "absolute", left: 26, top: 66, fontSize: 36, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
+            Rp {price(amount)}
+          </div>
+          <div style={{ position: "absolute", right: 22, top: 26, ...circle(42, c.bg), boxShadow: "none" }}>
+            <svg width={22} height={22} viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" {...line} /><circle cx={12} cy={12} r={3} {...line} /></svg>
+          </div>
+          <div style={{ position: "absolute", left: 22, right: 22, bottom: 24, display: "flex", gap: 10 }}>
+            <div style={{ ...pill(c.ink, c.cardBg), flex: 1.1 }}>
+              <svg width={18} height={18} viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" {...line} stroke={c.cardBg} /></svg>
+              Send
+            </div>
+            <div style={{ ...pill(c.cardBg, c.ink), flex: 1.3, border: `${theme.shape.hairline * 2}px solid ${c.border}`, boxShadow: "none" }}>Withdraw</div>
+            <div style={{ ...pill(c.bg, c.ink), width: 56, boxShadow: "none", fontSize: 22, letterSpacing: 1 }}>•••</div>
+          </div>
+        </div>
+
+        {/* the history, faded */}
+        <div style={{ ...pill(c.cardBg, c.ink), position: "absolute", left: 18, right: 18, top: 408, height: 60, justifyContent: "space-between", padding: "0 24px", fontWeight: 600, opacity: 0.45 }}>
+          Transaction History
+          <svg width={18} height={18} viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" {...line} /></svg>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const SC01 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -113,9 +188,19 @@ export const SC01 = () => {
   const roll = (t: number) => 1 + (B1.payday - 1) * ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
   const wordIn = ease(f, L(B1.gajian), m.reveal);
   const stopped = ease(f, L(B1.berhenti), m.move);
+  /** The photo's rise from below — "Kerja" rides on it, as one group. */
+  const lift = (1 - ease(f, L(B1.photo[0]), m.move)) * (theme.canvas.height - WORK.feet + PHOTO_H);
+  const ground = ease(f, L(B1.photo[0]), m.move);
 
   return (
     <Stage>
+      {/* TA11's grid behind everything, coming in with the photo */}
+      {ground > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: ground, maskImage: GROUND_RAMP, WebkitMaskImage: GROUND_RAMP }}>
+          <GridGround f={f + BLOCK.SC01} paper={c.bg} vignette={false} />
+        </div>
+      ) : null}
+
       {/* GAJIAN: from the frame's centre, growing, up to the top — drawn FIRST,
           so it rises from BEHIND the page ("secara layer harusnya dari belakang
           kalender") */}
@@ -158,22 +243,23 @@ export const SC01 = () => {
       {/* it comes up from below, but never through the caption band — the frame
           is clipped there, so it rises out from behind the band's top edge */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={940} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - 940 + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${WORK.shift}px)` }}>
+          <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px)` }}>
+            <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} />
+          </div>
+          <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={WORK.feet} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - WORK.feet + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
+        </div>
       </div>
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
-      <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.kerjaNode)} dim={stopped} />
-      <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />
-      <Node box={FLOW1[1]} label="Penghasilan" icon="wallet" at={L(B1.penghasilan)} />
-      <Link a={nodeEdge(FLOW1[1], "r")} b={nodeEdge(FLOW1[2], "l")} at={L(B1.hidup) - 14} cut={stopped} />
-      <Node box={FLOW1[2]} label="Hidup" icon="home" at={L(B1.hidup)} dim={stopped * 0.5} />
+      <BalancePhone at={L(B1.penghasilan)} countOver={m.sec(1.5)} />
 
       {/* "berhenti kerja sementara": a pause over the work */}
       {stopped > 0.001 ? (
         <div
           style={{
             position: "absolute",
-            left: FLOW1[0].x + FLOW1[0].w / 2 - 44,
-            top: FLOW1[0].y - 112,
+            left: PAUSE_AT.x,
+            top: PAUSE_AT.y,
             opacity: stopped,
           }}
         >
@@ -182,8 +268,8 @@ export const SC01 = () => {
       ) : null}
       <Say
         text="Penghasilan ikut berhenti?"
-        x={FLOW1[1].x + FLOW1[1].w / 2}
-        y={740}
+        x={QUESTION_AT.x}
+        y={QUESTION_AT.y}
         at={L(B1.apakah)}
         size={56}
         color={c.indigo}
