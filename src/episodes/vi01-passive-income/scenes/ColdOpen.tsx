@@ -418,10 +418,16 @@ export const SC01 = () => {
  */
 /** "OrangTuntun.png", 941 × 1672: hair from row 70, chest at row 620, head centred on column 466. */
 const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672 };
-/** The head starts here, leaving the top of the frame to the bubbles. */
-const TUNTUN_FROM = 400;
-const TUNTUN_H = ((theme.captionBand.top - TUNTUN_FROM) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top);
+/**
+ * The head starts here, leaving the top of the frame to the bubbles; then
+ * "Orangnya perbesar lagi dan geser naik sedikit" — 30% larger, 60 px higher.
+ */
+const TUNTUN_FROM = 340;
+const TUNTUN_ZOOM = 1.3;
+const TUNTUN_H = (((theme.captionBand.top - 400) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top)) * TUNTUN_ZOOM;
 const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
+/** "Lalu di bawahnya muncul text box garis putus putus" — TA07's dashed box over the chest, clear of the caption band. */
+const MAKANYA = { y: 800, w: 1560, h: 140, size: 50 };
 /** The five bubbles on an arc over the head. */
 const BUBBLES: { icon: IconName; x: number; y: number }[] = [
   { icon: "briefcase", x: 500, y: 330 },
@@ -471,6 +477,7 @@ export const SC02 = () => {
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <Cutout src="art/vi01/orang-tuntun.png" aspect={TUNTUN.aspect} x={theme.canvas.width / 2 - (TUNTUN.headU - 0.5) * TUNTUN_H * TUNTUN.aspect} y={TUNTUN_TOP + TUNTUN_H} h={TUNTUN_H} at={L(B2.title)} riseFrames={m.move} shadow floor={TUNTUN.floor} />
       </div>
+      <TypeBox cx={theme.canvas.width / 2} y={MAKANYA.y} w={MAKANYA.w} h={MAKANYA.h} at={L(B2.title)} text="Makanya, banyak orang berusaha menambah penghasilan" size={MAKANYA.size} />
       {BUBBLES.map((b, i) => (
         <Bubble key={b.icon} icon={b.icon} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} />
       ))}
