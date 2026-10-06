@@ -519,7 +519,11 @@ export const SC02 = () => {
 // ═══ SC03 — 24 hours, and the two questions ═══════════════════════════════
 /** The wall clock, and its two lines — indigo, over and under it. */
 const CLOCK = { cx: 960, cy: 500, r: 230, label: 72, above: 170, below: 830, exit: 1100 };
-/** Hands from 02.10 (hour 65°, minute 60° from twelve), both turning 120°. */
+/**
+ * Hands from 02.10 (hour 65°, minute 60° from twelve). The minute hand turns
+ * 120° — twenty minutes — and the hour hand moves as a wall clock's would,
+ * a twelfth of that ("Jarum pendeknya bersikap seperti jam dinding biasa").
+ */
 const HANDS = { hour: 65, minute: 60, turn: 120 };
 /** "OrangMikir.png", 1086 × 1448: seated, feet on row 1365, solid from row 64, columns 163–987. */
 const MIKIR = { aspect: 1086 / 1448, h: 620, feet: 930, floor: 1365 / 1448, solidCx: 575 / 1086, top: 64 / 1448, left: 163 / 1086, right: 987 / 1086 };
@@ -585,7 +589,7 @@ const WallClock = ({ turn }: { turn: number }) => {
           const r0 = i % 3 === 0 ? R - 52 : R - 40;
           return <line key={i} x1={R + Math.sin(a) * r0} y1={R - Math.cos(a) * r0} x2={R + Math.sin(a) * (R - 24)} y2={R - Math.cos(a) * (R - 24)} stroke={i % 3 === 0 ? c.ink : c.slate} strokeWidth={i % 3 === 0 ? 8 : 5} strokeLinecap="round" />;
         })}
-        {hand(HANDS.hour + turn, R * 0.5, 14)}
+        {hand(HANDS.hour + turn / 12, R * 0.5, 14)}
         {hand(HANDS.minute + turn, R * 0.72, 9)}
         <circle cx={R} cy={R} r={14} fill={c.indigo} />
       </svg>
