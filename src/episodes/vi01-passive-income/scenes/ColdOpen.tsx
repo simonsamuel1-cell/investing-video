@@ -62,7 +62,7 @@ const WORK = { shift: -200, feet: 940, label: SPLIT.word, weight: 700, gap: 110 
  * the balance counting Rp 0 → Rp 50.000.000 as it fades in.
  */
 /** "Border template hp nya tipisin, jadi 2 px aja"; the UI centred top to bottom on the screen. */
-const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 2, radius: 64, ui: { top: 70, bottom: 468 } };
+const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 5, radius: 64, ui: { top: 70, bottom: 468 } };
 const BALANCE = 50_000_000;
 /** Where the pause and the question stood before the flow was taken out — unchanged. */
 const PAUSE_AT = { x: 826, y: 338 };
@@ -131,7 +131,7 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
     ({ ...type, height: 56, borderRadius: 28, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 18, fontWeight: 700, boxShadow: shadow.rest }) as const;
   const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   return (
-    <div style={{ position: "absolute", left: P.cx - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.ink, boxShadow: shadow.rest, opacity: life }}>
+    <div style={{ position: "absolute", left: P.cx - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.muted, boxShadow: shadow.rest, opacity: life }}>
       <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: sh, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
         {/* the island */}
         <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
