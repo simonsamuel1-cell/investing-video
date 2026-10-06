@@ -44,6 +44,8 @@ const WORD_Y = GROUP_BOTTOM - CAL_H_AFTER - SPLIT.gap - SPLIT.word / 2;
 const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 /** "Orang Kerja.png" (INV01 - Passive Income/Gambar), 1312 × 1199. */
 const ORANG_KERJA = 1312 / 1199;
+/** …whose solid pixels stop at row 1138: the feet, where its contact shadow goes. */
+const ORANG_KERJA_FLOOR = 1138 / 1199;
 /** The flow: three nodes in a row on the right, the worker on the left. */
 const FLOW1: NodeBox[] = [
   { x: 720, y: 450, w: 300, h: 150 },
@@ -144,9 +146,9 @@ export const SC01 = () => {
 
       {/* the worker, and the flow he keeps going */}
       {/* Simon's photo of someone at work, 240-500 — mirrored so he faces the
-          flow, on a plain shadow ("Orangnya flip … lalu kasih shadow");
+          flow, with a plain shadow and a contact shadow under him;
           the yellow worker takes over after */}
-      <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={940} h={560} at={L(B1.photo[0])} out={L(B1.photo[1])} mirror shadow />
+      <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={940} h={560} at={L(B1.photo[0])} out={L(B1.photo[1])} mirror shadow floor={ORANG_KERJA_FLOOR} />
       <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
       <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.handover) + 6} dim={stopped} />
       <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />

@@ -138,6 +138,7 @@ export const Cutout = ({
   out,
   mirror = false,
   shadow = false,
+  floor = 1,
 }: {
   src: string;
   /** width ÷ height of the file */
@@ -149,8 +150,10 @@ export const Cutout = ({
   out?: number;
   /** Flipped left-to-right. */
   mirror?: boolean;
-  /** A plain drop shadow (theme.shape.photoShadow). */
+  /** A plain drop shadow (theme.shape.photoShadow) and a contact shadow under it. */
   shadow?: boolean;
+  /** Where the feet are, as a fraction of the height — the contact shadow centres there. */
+  floor?: number;
 }) => {
   const f = useCurrentFrame();
   const m = useMotion();
@@ -162,56 +165,225 @@ export const Cutout = ({
     /* ⚠ THE SHADOW ON THE WRAPPER, THE MIRROR ON THE PICTURE. On one element
        the filter is drawn first and the flip applied after, so a shadow cast
        to the left lands on the right. */
-    <div style={{ position: "absolute", left: x - w / 2, top: y - h + lift, width: w, height: h, opacity: life, filter: shadow ? theme.shape.photoShadow : undefined }}>
-      <Img
-        src={staticFile(src)}
+    <div
+      style={{
+        position: "absolute",
+        left: x - w / 2,
+        top: y - h + lift,
+        width: w,
+        height: h,
+        opacity: life,
+      }}
+    >
+      {shadow ? (
+        <div
+          style={{
+            position: "absolute",
+            left: w * 0.06,
+            top: h * floor - h * 0.05,
+            width: w * 0.88,
+            height: h * 0.1,
+            background: theme.shape.floorShadow,
+          }}
+        />
+      ) : null}
+      <div
         style={{
           position: "absolute",
           inset: 0,
-          width: w,
-          height: h,
-          transform: mirror ? "scaleX(-1)" : undefined,
+          filter: shadow ? theme.shape.photoShadow : undefined,
         }}
-      />
+      >
+        <Img
+          src={staticFile(src)}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: w,
+            height: h,
+            transform: mirror ? "scaleX(-1)" : undefined,
+          }}
+        />
+      </div>
     </div>
   );
 };
 
 // ═══ Icons ════════════════════════════════════════════════════════════════
 export type IconName =
-  | "briefcase" | "wallet" | "home" | "pause" | "clock" | "bolt" | "calendar"
-  | "building" | "coin" | "jar" | "hourglass" | "book" | "chart" | "heart"
-  | "check" | "person" | "loop" | "box" | "spark" | "users" | "bowl" | "milk";
+  | "briefcase"
+  | "wallet"
+  | "home"
+  | "pause"
+  | "clock"
+  | "bolt"
+  | "calendar"
+  | "building"
+  | "coin"
+  | "jar"
+  | "hourglass"
+  | "book"
+  | "chart"
+  | "heart"
+  | "check"
+  | "person"
+  | "loop"
+  | "box"
+  | "spark"
+  | "users"
+  | "bowl"
+  | "milk";
 
 /** Line icons on a 48-unit grid, drawn in `color` at `size` px. */
-export const Icon = ({ name, size = 48, color, stroke = 3.2 }: { name: IconName; size?: number; color: string; stroke?: number }) => {
-  const p = { fill: "none", stroke: color, strokeWidth: stroke, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };
+export const Icon = ({
+  name,
+  size = 48,
+  color,
+  stroke = 3.2,
+}: {
+  name: IconName;
+  size?: number;
+  color: string;
+  stroke?: number;
+}) => {
+  const p = {
+    fill: "none",
+    stroke: color,
+    strokeWidth: stroke,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
   const d: Record<IconName, React.ReactNode> = {
-    briefcase: (<><rect x="6" y="15" width="36" height="25" rx="5" {...p} /><path d="M17 15v-4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4M6 26h36" {...p} /></>),
-    wallet: (<><rect x="6" y="12" width="36" height="28" rx="5" {...p} /><path d="M30 22h12v10H30a5 5 0 0 1 0-10z" {...p} /><path d="M10 12l18-6 4 6" {...p} /></>),
-    home: (<path d="M8 22L24 9l16 13M12 19v20h24V19M20 39V28h8v11" {...p} />),
-    pause: (<><circle cx="24" cy="24" r="17" {...p} /><path d="M20 17v14M28 17v14" {...p} /></>),
-    clock: (<><circle cx="24" cy="24" r="17" {...p} /><path d="M24 14v10l7 5" {...p} /></>),
-    bolt: (<path d="M27 6L12 27h11l-3 15 16-22H25z" {...p} />),
-    calendar: (<><rect x="7" y="10" width="34" height="31" rx="5" {...p} /><path d="M7 19h34M16 6v8M32 6v8" {...p} /></>),
-    building: (<><path d="M10 41V11l14-5 14 5v30" {...p} /><path d="M6 41h36M17 17h4M27 17h4M17 25h4M27 25h4M21 41v-8h6v8" {...p} /></>),
-    coin: (<><circle cx="24" cy="24" r="16" {...p} /><path d="M29 18.5c-1.2-1.6-3-2.5-5-2.5-3 0-5 1.6-5 4s2.4 3.3 5 4 5 1.6 5 4-2 4-5 4c-2 0-3.8-.9-5-2.5M24 12v4M24 32v4" {...p} /></>),
-    jar: (<><path d="M14 12h20M15 12v4c-3 2-5 5-5 9v10a5 5 0 0 0 5 5h18a5 5 0 0 0 5-5V25c0-4-2-7-5-9v-4" {...p} /><path d="M10 28h28" {...p} /></>),
-    hourglass: (<path d="M13 7h22M13 41h22M15 7c0 9 9 11 9 17s-9 8-9 17M33 7c0 9-9 11-9 17s9 8 9 17" {...p} />),
-    book: (<path d="M24 13c-4-3-10-4-16-3v27c6-1 12 0 16 3 4-3 10-4 16-3V10c-6-1-12 0-16 3zM24 13v27" {...p} />),
-    chart: (<path d="M7 40h34M10 33l9-9 7 6 12-14M30 16h8v8" {...p} />),
-    heart: (<path d="M24 39S8 29 8 18a8 8 0 0 1 16-2 8 8 0 0 1 16 2c0 11-16 21-16 21z" {...p} />),
-    check: (<path d="M11 25l9 9 17-19" {...p} />),
-    person: (<><circle cx="24" cy="15" r="7" {...p} /><path d="M10 41c0-8 6-13 14-13s14 5 14 13" {...p} /></>),
-    loop: (<path d="M36 18a14 14 0 1 0 2 10M38 10v8h-8" {...p} />),
-    box: (<><path d="M8 16l16-8 16 8v17l-16 8-16-8z" {...p} /><path d="M8 16l16 8 16-8M24 24v17" {...p} /></>),
-    spark: (<path d="M24 6v8M24 34v8M6 24h8M34 24h8M11 11l6 6M31 31l6 6M37 11l-6 6M17 31l-6 6" {...p} />),
-    bowl: (<><path d="M6 24h36a18 16 0 0 1-36 0z" {...p} /><path d="M16 17c0-3 3-4 3-8M24 17c0-3 3-4 3-8M32 17c0-3 3-4 3-8" {...p} /></>),
-    milk: (<><path d="M15 15l4-9h10l4 9v27H15z" {...p} /><path d="M15 15h18" {...p} /><rect x="19" y="23" width="10" height="11" rx="2" {...p} /></>),
-    users: (<><circle cx="18" cy="16" r="6" {...p} /><circle cx="33" cy="18" r="5" {...p} /><path d="M6 40c0-7 5-12 12-12s12 5 12 12M30 28c6 0 12 4 12 11" {...p} /></>),
+    briefcase: (
+      <>
+        <rect x="6" y="15" width="36" height="25" rx="5" {...p} />
+        <path d="M17 15v-4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4M6 26h36" {...p} />
+      </>
+    ),
+    wallet: (
+      <>
+        <rect x="6" y="12" width="36" height="28" rx="5" {...p} />
+        <path d="M30 22h12v10H30a5 5 0 0 1 0-10z" {...p} />
+        <path d="M10 12l18-6 4 6" {...p} />
+      </>
+    ),
+    home: <path d="M8 22L24 9l16 13M12 19v20h24V19M20 39V28h8v11" {...p} />,
+    pause: (
+      <>
+        <circle cx="24" cy="24" r="17" {...p} />
+        <path d="M20 17v14M28 17v14" {...p} />
+      </>
+    ),
+    clock: (
+      <>
+        <circle cx="24" cy="24" r="17" {...p} />
+        <path d="M24 14v10l7 5" {...p} />
+      </>
+    ),
+    bolt: <path d="M27 6L12 27h11l-3 15 16-22H25z" {...p} />,
+    calendar: (
+      <>
+        <rect x="7" y="10" width="34" height="31" rx="5" {...p} />
+        <path d="M7 19h34M16 6v8M32 6v8" {...p} />
+      </>
+    ),
+    building: (
+      <>
+        <path d="M10 41V11l14-5 14 5v30" {...p} />
+        <path
+          d="M6 41h36M17 17h4M27 17h4M17 25h4M27 25h4M21 41v-8h6v8"
+          {...p}
+        />
+      </>
+    ),
+    coin: (
+      <>
+        <circle cx="24" cy="24" r="16" {...p} />
+        <path
+          d="M29 18.5c-1.2-1.6-3-2.5-5-2.5-3 0-5 1.6-5 4s2.4 3.3 5 4 5 1.6 5 4-2 4-5 4c-2 0-3.8-.9-5-2.5M24 12v4M24 32v4"
+          {...p}
+        />
+      </>
+    ),
+    jar: (
+      <>
+        <path
+          d="M14 12h20M15 12v4c-3 2-5 5-5 9v10a5 5 0 0 0 5 5h18a5 5 0 0 0 5-5V25c0-4-2-7-5-9v-4"
+          {...p}
+        />
+        <path d="M10 28h28" {...p} />
+      </>
+    ),
+    hourglass: (
+      <path
+        d="M13 7h22M13 41h22M15 7c0 9 9 11 9 17s-9 8-9 17M33 7c0 9-9 11-9 17s9 8 9 17"
+        {...p}
+      />
+    ),
+    book: (
+      <path
+        d="M24 13c-4-3-10-4-16-3v27c6-1 12 0 16 3 4-3 10-4 16-3V10c-6-1-12 0-16 3zM24 13v27"
+        {...p}
+      />
+    ),
+    chart: <path d="M7 40h34M10 33l9-9 7 6 12-14M30 16h8v8" {...p} />,
+    heart: (
+      <path
+        d="M24 39S8 29 8 18a8 8 0 0 1 16-2 8 8 0 0 1 16 2c0 11-16 21-16 21z"
+        {...p}
+      />
+    ),
+    check: <path d="M11 25l9 9 17-19" {...p} />,
+    person: (
+      <>
+        <circle cx="24" cy="15" r="7" {...p} />
+        <path d="M10 41c0-8 6-13 14-13s14 5 14 13" {...p} />
+      </>
+    ),
+    loop: <path d="M36 18a14 14 0 1 0 2 10M38 10v8h-8" {...p} />,
+    box: (
+      <>
+        <path d="M8 16l16-8 16 8v17l-16 8-16-8z" {...p} />
+        <path d="M8 16l16 8 16-8M24 24v17" {...p} />
+      </>
+    ),
+    spark: (
+      <path
+        d="M24 6v8M24 34v8M6 24h8M34 24h8M11 11l6 6M31 31l6 6M37 11l-6 6M17 31l-6 6"
+        {...p}
+      />
+    ),
+    bowl: (
+      <>
+        <path d="M6 24h36a18 16 0 0 1-36 0z" {...p} />
+        <path
+          d="M16 17c0-3 3-4 3-8M24 17c0-3 3-4 3-8M32 17c0-3 3-4 3-8"
+          {...p}
+        />
+      </>
+    ),
+    milk: (
+      <>
+        <path d="M15 15l4-9h10l4 9v27H15z" {...p} />
+        <path d="M15 15h18" {...p} />
+        <rect x="19" y="23" width="10" height="11" rx="2" {...p} />
+      </>
+    ),
+    users: (
+      <>
+        <circle cx="18" cy="16" r="6" {...p} />
+        <circle cx="33" cy="18" r="5" {...p} />
+        <path d="M6 40c0-7 5-12 12-12s12 5 12 12M30 28c6 0 12 4 12 11" {...p} />
+      </>
+    ),
   };
   return (
-    <svg width={size} height={size} viewBox="0 0 48 48" style={{ display: "block", flexShrink: 0 }}>
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 48 48"
+      style={{ display: "block", flexShrink: 0 }}
+    >
       {d[name]}
     </svg>
   );
@@ -221,15 +393,20 @@ export const Icon = ({ name, size = 48, color, stroke = 3.2 }: { name: IconName;
 /** A node's footprint, so links can be drawn between them. */
 export type NodeBox = { x: number; y: number; w: number; h: number };
 export const nodeEdge = (b: NodeBox, side: "l" | "r" | "t" | "b") =>
-  side === "l" ? { x: b.x, y: b.y + b.h / 2 }
-  : side === "r" ? { x: b.x + b.w, y: b.y + b.h / 2 }
-  : side === "t" ? { x: b.x + b.w / 2, y: b.y }
-  : { x: b.x + b.w / 2, y: b.y + b.h };
+  side === "l"
+    ? { x: b.x, y: b.y + b.h / 2 }
+    : side === "r"
+      ? { x: b.x + b.w, y: b.y + b.h / 2 }
+      : side === "t"
+        ? { x: b.x + b.w / 2, y: b.y }
+        : { x: b.x + b.w / 2, y: b.y + b.h };
 
 const toneOf = (c: ReturnType<typeof usePalette>, tone: Tone) =>
-  tone === "indigo" ? { ink: c.indigo, wash: theme.color.indigoWash }
-  : tone === "cyan" ? { ink: theme.color.cyanInk, wash: theme.color.cyanWash }
-  : { ink: c.slate, wash: "transparent" };
+  tone === "indigo"
+    ? { ink: c.indigo, wash: theme.color.indigoWash }
+    : tone === "cyan"
+      ? { ink: theme.color.cyanInk, wash: theme.color.cyanWash }
+      : { ink: c.slate, wash: "transparent" };
 
 /**
  * A card with an icon over (or beside) a label. UI, so it POPS in; `dim`
@@ -295,7 +472,14 @@ export const Node = ({
       }}
     >
       {filled > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, background: t.ink, opacity: filled }} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: t.ink,
+            opacity: filled,
+          }}
+        />
       ) : null}
       <div
         style={{
@@ -319,7 +503,14 @@ export const Node = ({
         <div>
           {label}
           {sub ? (
-            <div style={{ fontSize: size * 0.62, fontWeight: 500, color: filled > 0.5 ? c.cardBg : c.slate, marginTop: 4 }}>
+            <div
+              style={{
+                fontSize: size * 0.62,
+                fontWeight: 500,
+                color: filled > 0.5 ? c.cardBg : c.slate,
+                marginTop: 4,
+              }}
+            >
               {sub}
             </div>
           ) : null}
@@ -359,7 +550,12 @@ export const Link = ({
   const draw = ease(f, at, m.move);
   const gone = out === undefined ? 0 : ease(f, out, m.fade);
   if (draw <= 0.001 || gone >= 0.999) return null;
-  const ink = tone === "indigo" ? c.indigo : tone === "cyan" ? theme.color.cyanInk : c.slate;
+  const ink =
+    tone === "indigo"
+      ? c.indigo
+      : tone === "cyan"
+        ? theme.color.cyanInk
+        : c.slate;
   const ex = a.x + (b.x - a.x) * draw;
   const ey = a.y + (b.y - a.y) * draw;
   const len = Math.hypot(b.x - a.x, b.y - a.y);
@@ -373,15 +569,48 @@ export const Link = ({
     <svg
       width={theme.canvas.width}
       height={theme.canvas.height}
-      style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: 1 - gone }}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        overflow: "visible",
+        opacity: 1 - gone,
+      }}
     >
       {cut > 0.001 && draw >= 0.999 ? (
         <>
-          <line x1={a.x} y1={a.y} x2={mx - ux * gap} y2={my - uy * gap} stroke={ink} strokeWidth={width} strokeLinecap="round" strokeDasharray={dashed ? "10 10" : undefined} />
-          <line x1={mx + ux * gap} y1={my + uy * gap} x2={b.x - ux * H * 0.6} y2={b.y - uy * H * 0.6} stroke={ink} strokeWidth={width} strokeLinecap="round" opacity={1 - cut * 0.6} />
+          <line
+            x1={a.x}
+            y1={a.y}
+            x2={mx - ux * gap}
+            y2={my - uy * gap}
+            stroke={ink}
+            strokeWidth={width}
+            strokeLinecap="round"
+            strokeDasharray={dashed ? "10 10" : undefined}
+          />
+          <line
+            x1={mx + ux * gap}
+            y1={my + uy * gap}
+            x2={b.x - ux * H * 0.6}
+            y2={b.y - uy * H * 0.6}
+            stroke={ink}
+            strokeWidth={width}
+            strokeLinecap="round"
+            opacity={1 - cut * 0.6}
+          />
         </>
       ) : (
-        <line x1={a.x} y1={a.y} x2={ex - (head ? ux * H * 0.6 : 0)} y2={ey - (head ? uy * H * 0.6 : 0)} stroke={ink} strokeWidth={width} strokeLinecap="round" strokeDasharray={dashed ? "10 10" : undefined} />
+        <line
+          x1={a.x}
+          y1={a.y}
+          x2={ex - (head ? ux * H * 0.6 : 0)}
+          y2={ey - (head ? uy * H * 0.6 : 0)}
+          stroke={ink}
+          strokeWidth={width}
+          strokeLinecap="round"
+          strokeDasharray={dashed ? "10 10" : undefined}
+        />
       )}
       {head ? (
         <polygon
@@ -410,7 +639,21 @@ export const OUTSIDE_RESERVES = (() => {
 
 // ═══ Strike ═══════════════════════════════════════════════════════════════
 /** A line drawn through a phrase — `warn` red, the one place red is allowed. */
-export const Strike = ({ x, y, w, at, color = theme.color.warn, width = 6 }: { x: number; y: number; w: number; at: number; color?: string; width?: number }) => {
+export const Strike = ({
+  x,
+  y,
+  w,
+  at,
+  color = theme.color.warn,
+  width = 6,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  at: number;
+  color?: string;
+  width?: number;
+}) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const p = ease(f, at, m.reveal);
@@ -560,7 +803,8 @@ export const TypeBox = ({
     mStart >= 0 && shown >= mEnd
       ? ease(f, Math.max(markAt ?? 0, start + Math.ceil(mEnd / cps)), m.reveal)
       : 0;
-  const wash = tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan;
+  const wash =
+    tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan;
   const ink = tone === "indigo" ? c.indigo : theme.color.cyanInk;
   const seg = (s: string, k: string) => <span key={k}>{s}</span>;
   return (
@@ -619,10 +863,31 @@ export const TypeBox = ({
  * over most of a second. Content appears once it is fully open.
  */
 /** Seconds: fade up as a sliver, then open — most of a second, not a snap. */
-export const DASH = { fadeSec: 0.3, openSec: 0.8, sliver: 12, block: 15, dash: "16 11" };
-export const dashOpenAt = (at: number, m: { sec: (s: number) => number }) => at + m.sec(DASH.fadeSec) + m.sec(DASH.openSec);
+export const DASH = {
+  fadeSec: 0.3,
+  openSec: 0.8,
+  sliver: 12,
+  block: 15,
+  dash: "16 11",
+};
+export const dashOpenAt = (at: number, m: { sec: (s: number) => number }) =>
+  at + m.sec(DASH.fadeSec) + m.sec(DASH.openSec);
 
-export const DashBox = ({ cx, y, w, h, at, children }: { cx: number; y: number; w: number; h: number; at: number; children?: React.ReactNode }) => {
+export const DashBox = ({
+  cx,
+  y,
+  w,
+  h,
+  at,
+  children,
+}: {
+  cx: number;
+  y: number;
+  w: number;
+  h: number;
+  at: number;
+  children?: React.ReactNode;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -632,15 +897,62 @@ export const DashBox = ({ cx, y, w, h, at, children }: { cx: number; y: number; 
   const wNow = DASH.sliver + (w - DASH.sliver) * open;
   const r = theme.shape.panelRadius;
   return (
-    <div style={{ position: "absolute", left: cx - wNow / 2, top: y, width: wNow, height: h, opacity: fade }}>
-      <div style={{ position: "absolute", inset: 0, borderRadius: r, background: c.cardBg }} />
-      <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={wNow} height={h}>
-        <rect x={1} y={1} width={Math.max(1, wNow - 2)} height={h - 2} rx={r} fill="none" stroke={c.ink} strokeWidth={theme.shape.rule} strokeDasharray={DASH.dash} />
-        {[[1, 1], [wNow - 1, 1], [1, h - 1], [wNow - 1, h - 1]].map(([x, yy], i) => (
-          <rect key={i} x={x - DASH.block / 2} y={yy - DASH.block / 2} width={DASH.block} height={DASH.block} rx={4} fill={c.ink} />
+    <div
+      style={{
+        position: "absolute",
+        left: cx - wNow / 2,
+        top: y,
+        width: wNow,
+        height: h,
+        opacity: fade,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: r,
+          background: c.cardBg,
+        }}
+      />
+      <svg
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+        width={wNow}
+        height={h}
+      >
+        <rect
+          x={1}
+          y={1}
+          width={Math.max(1, wNow - 2)}
+          height={h - 2}
+          rx={r}
+          fill="none"
+          stroke={c.ink}
+          strokeWidth={theme.shape.rule}
+          strokeDasharray={DASH.dash}
+        />
+        {[
+          [1, 1],
+          [wNow - 1, 1],
+          [1, h - 1],
+          [wNow - 1, h - 1],
+        ].map(([x, yy], i) => (
+          <rect
+            key={i}
+            x={x - DASH.block / 2}
+            y={yy - DASH.block / 2}
+            width={DASH.block}
+            height={DASH.block}
+            rx={4}
+            fill={c.ink}
+          />
         ))}
       </svg>
-      {open >= 0.999 ? <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>{children}</div> : null}
+      {open >= 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, overflow: "hidden" }}>
+          {children}
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -700,7 +1012,9 @@ export const Pill = ({
         whiteSpace: "nowrap",
       }}
     >
-      {check ? <Icon name="check" size={size * 0.95} color={t.ink} stroke={4} /> : null}
+      {check ? (
+        <Icon name="check" size={size * 0.95} color={t.ink} stroke={4} />
+      ) : null}
       {label}
     </div>
   );
@@ -708,7 +1022,21 @@ export const Pill = ({
 
 // ═══ Sheet ═════════════════════════════════════════════════════════════════
 /** A white panel with round corners — core's Panel, eased in and out. */
-export const Sheet = ({ x, y, w, h, at, out }: { x: number; y: number; w: number; h: number; at: number; out?: number }) => {
+export const Sheet = ({
+  x,
+  y,
+  w,
+  h,
+  at,
+  out,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  at: number;
+  out?: number;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const shadow = useShadow();
@@ -781,7 +1109,15 @@ export const WordLine = ({
   const w = (i: number, word: string) => {
     const r = rise(f, at + i * stagger, m.reveal, 14);
     return (
-      <span key={i} style={{ display: "inline-block", opacity: r.opacity, transform: `translateY(${r.dy}px)`, whiteSpace: "pre" }}>
+      <span
+        key={i}
+        style={{
+          display: "inline-block",
+          opacity: r.opacity,
+          transform: `translateY(${r.dy}px)`,
+          whiteSpace: "pre",
+        }}
+      >
         {word}
         {i < words.length - 1 ? " " : ""}
       </span>
@@ -806,7 +1142,10 @@ export const WordLine = ({
         ? words.map((word, i) => w(i, word))
         : [
             ...words.slice(0, mFrom).map((word, i) => w(i, word)),
-            <span key="mark" style={{ position: "relative", display: "inline-block" }}>
+            <span
+              key="mark"
+              style={{ position: "relative", display: "inline-block" }}
+            >
               <span
                 style={{
                   position: "absolute",
@@ -822,7 +1161,9 @@ export const WordLine = ({
                 {markWords.map((word, k) => w(mFrom + k, word))}
               </span>
             </span>,
-            ...words.slice(mFrom + markWords.length).map((word, k) => w(mFrom + markWords.length + k, word)),
+            ...words
+              .slice(mFrom + markWords.length)
+              .map((word, k) => w(mFrom + markWords.length + k, word)),
           ]}
     </div>
   );
@@ -834,19 +1175,64 @@ export const WordLine = ({
  * dropped behind it, the big quote marks in opposite corners — eased in and
  * out. Geometry from core's QUOTE/quoteMarks, so it is the same card.
  */
-export const QuoteFrame = ({ x, y, w, h, at, listY, lead, count, children }: { x: number; y: number; w: number; h: number; at: number; listY: number; lead: number; count: number; children?: React.ReactNode }) => {
+export const QuoteFrame = ({
+  x,
+  y,
+  w,
+  h,
+  at,
+  listY,
+  lead,
+  count,
+  children,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  at: number;
+  listY: number;
+  lead: number;
+  count: number;
+  children?: React.ReactNode;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const r = rise(f, at, m.reveal * 1.4);
   if (r.opacity <= 0.001) return null;
-  const shell = { position: "absolute" as const, left: x, top: y, width: w, height: h, borderRadius: theme.shape.panelRadius };
+  const shell = {
+    position: "absolute" as const,
+    left: x,
+    top: y,
+    width: w,
+    height: h,
+    borderRadius: theme.shape.panelRadius,
+  };
   return (
     <div style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}>
-      <div style={{ ...shell, left: x + 14, top: y + 14, background: c.indigo }} />
-      <div style={{ ...shell, background: c.cardBg, border: `4px solid ${c.ink}` }} />
+      <div
+        style={{ ...shell, left: x + 14, top: y + 14, background: c.indigo }}
+      />
+      <div
+        style={{ ...shell, background: c.cardBg, border: `4px solid ${c.ink}` }}
+      />
       {quoteMarks({ x, w }, listY, lead, count).map((q) => (
-        <div key={q.ch} style={{ position: "absolute", left: q.x, top: q.y, width: 76, textAlign: "center", fontFamily: theme.text.family, fontSize: 76, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
+        <div
+          key={q.ch}
+          style={{
+            position: "absolute",
+            left: q.x,
+            top: q.y,
+            width: 76,
+            textAlign: "center",
+            fontFamily: theme.text.family,
+            fontSize: 76,
+            fontWeight: 800,
+            color: c.ink,
+            lineHeight: 1,
+          }}
+        >
           {q.ch}
         </div>
       ))}

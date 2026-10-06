@@ -572,6 +572,8 @@ export const theme = {
      * kiri 10 px". `artShadow` is a coloured glow for drawn art.
      */
     photoShadow: "drop-shadow(-10px 0px 5px rgba(0, 0, 0, 0.3))",
+    /** …and the contact shadow it stands on — "tadi ada shadow di bawah, adain lagi". */
+    floorShadow: "radial-gradient(closest-side, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0))",
   },
 
   /**
