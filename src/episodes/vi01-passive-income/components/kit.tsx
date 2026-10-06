@@ -138,7 +138,6 @@ export const Cutout = ({
   out,
   mirror = false,
   shadow = false,
-  floor = 1,
 }: {
   src: string;
   /** width ÷ height of the file */
@@ -150,10 +149,8 @@ export const Cutout = ({
   out?: number;
   /** Flipped left-to-right. */
   mirror?: boolean;
-  /** A soft drop shadow, and the contact shadow it stands on. */
+  /** A plain drop shadow (theme.shape.photoShadow). */
   shadow?: boolean;
-  /** Where the feet are, as a fraction of the height — the contact shadow centres there. */
-  floor?: number;
 }) => {
   const f = useCurrentFrame();
   const m = useMotion();
@@ -162,10 +159,10 @@ export const Cutout = ({
   const w = h * aspect;
   const lift = (1 - ease(f, at, m.reveal)) * 30;
   return (
-    <div style={{ position: "absolute", left: x - w / 2, top: y - h + lift, width: w, height: h, opacity: life }}>
-      {shadow ? (
-        <div style={{ position: "absolute", left: w * 0.06, top: h * floor - h * 0.05, width: w * 0.88, height: h * 0.1, background: theme.shape.floorShadow }} />
-      ) : null}
+    /* ⚠ THE SHADOW ON THE WRAPPER, THE MIRROR ON THE PICTURE. On one element
+       the filter is drawn first and the flip applied after, so a shadow cast
+       to the left lands on the right. */
+    <div style={{ position: "absolute", left: x - w / 2, top: y - h + lift, width: w, height: h, opacity: life, filter: shadow ? theme.shape.photoShadow : undefined }}>
       <Img
         src={staticFile(src)}
         style={{
@@ -174,7 +171,6 @@ export const Cutout = ({
           width: w,
           height: h,
           transform: mirror ? "scaleX(-1)" : undefined,
-          filter: shadow ? theme.shape.photoShadow : undefined,
         }}
       />
     </div>

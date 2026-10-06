@@ -567,12 +567,11 @@ export const theme = {
       "drop-shadow(0 -6px 14px rgba(236, 92, 168, 0.38)) " +
       "drop-shadow(0 36px 28px rgba(92, 200, 227, 0.46))",
     /**
-     * A neutral shadow for a PHOTO cut out of its background (VI01's
-     * "Orang Kerja"): a soft drop under it, and the contact shadow it stands
-     * on. `artShadow` is a coloured glow for drawn art and would tint a photo.
+     * A plain shadow for a PHOTO cut out of its background (VI01's "Orang
+     * Kerja") — Simon: "shadownya normal aja, blurnya kira-kira 5, arahnya ke
+     * kiri 10 px". `artShadow` is a coloured glow for drawn art.
      */
-    photoShadow: "drop-shadow(0 16px 22px rgba(0, 0, 0, 0.16))",
-    floorShadow: "radial-gradient(closest-side, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0))",
+    photoShadow: "drop-shadow(-10px 0px 5px rgba(0, 0, 0, 0.3))",
   },
 
   /**
