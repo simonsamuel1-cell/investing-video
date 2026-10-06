@@ -100,8 +100,13 @@ const LAYOFF_FLOOR = 1390 / 1448;
  * Both files share one canvas and one scale; each is centred on its own head.
  */
 const CLOSE = { top: 40, chest: 580, rows: 1448 };
-const CLOSE_H = (theme.captionBand.top * CLOSE.rows) / (CLOSE.chest - CLOSE.top);
-const CLOSE_TOP = (-CLOSE.top / CLOSE.rows) * CLOSE_H;
+/**
+ * …and it moves down as it grows — "skalian geser ke bawah, biar ga overlap
+ * sama text di atas": the head starts 20 px under the two-line text.
+ */
+const CLOSE_FROM = BAYANGIN.y + BAYANGIN.size * 1.1 * 2 + BAYANGIN.gap + 20;
+const CLOSE_H = ((theme.captionBand.top - CLOSE_FROM) * CLOSE.rows) / (CLOSE.chest - CLOSE.top);
+const CLOSE_TOP = CLOSE_FROM - (CLOSE.top / CLOSE.rows) * CLOSE_H;
 /** Head columns (the middle of the head's solid span) in each file. */
 const HEAD_U = { layoff: 515 / 1086, bingung: 595 / 1086 };
 /** "OrangBingung.png" — same 1086 × 1448 canvas; feet on row 1416. */
