@@ -8,7 +8,7 @@
 import { useCurrentFrame } from "remotion";
 import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
@@ -42,6 +42,8 @@ const CAL_DOWN = GROUP_BOTTOM - CAL_BOTTOM;
 const WORD_Y = GROUP_BOTTOM - CAL_H_AFTER - SPLIT.gap - SPLIT.word / 2;
 /** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
 const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
+/** "Orang Kerja.png" (INV01 - Passive Income/Gambar), 1312 × 1199. */
+const ORANG_KERJA = 1312 / 1199;
 /** The flow: three nodes in a row on the right, the worker on the left. */
 const FLOW1: NodeBox[] = [
   { x: 720, y: 450, w: 300, h: 150 },
@@ -141,7 +143,9 @@ export const SC01 = () => {
       ) : null}
 
       {/* the worker, and the flow he keeps going */}
-      <Worker x={380} y={925} h={700} at={L(B1.handover)} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
+      {/* Simon's photo of someone at work, 240-500; the yellow worker takes over after */}
+      <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={380} y={925} h={560} at={L(B1.photo[0])} out={L(B1.photo[1])} />
+      <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
       <Node box={FLOW1[0]} label="Kerja" icon="briefcase" at={L(B1.handover) + 6} dim={stopped} />
       <Link a={nodeEdge(FLOW1[0], "r")} b={nodeEdge(FLOW1[1], "l")} at={L(B1.penghasilan) - 14} cut={stopped} />
       <Node box={FLOW1[1]} label="Penghasilan" icon="wallet" at={L(B1.penghasilan)} />

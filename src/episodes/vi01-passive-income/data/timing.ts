@@ -48,6 +48,8 @@ export const SC01 = {
   settled: 236,
   /** The calendar and GAJIAN leave; the worker and the flow arrive. */
   handover: 250,
+  /** "dari 240-500 gunakan 'Orang Kerja.png' … instead of … orang kuning" */
+  photo: [240, 500] as const,
   kerja: 220, // "Kita kerja,"
   penghasilan: 301, // "dapat penghasilan,"
   hidup: 460, // "…menjalani hidup."

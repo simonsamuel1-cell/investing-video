@@ -124,6 +124,51 @@ export const Worker = ({
   );
 };
 
+// ═══ Cutout ═══════════════════════════════════════════════════════════════
+/**
+ * A transparent-background picture standing on `y` (its bottom edge), centred
+ * on `x` — eased in, eased out. For Simon's own art in public/art/vi01.
+ */
+export const Cutout = ({
+  src,
+  aspect,
+  x,
+  y,
+  h,
+  at,
+  out,
+}: {
+  src: string;
+  /** width ÷ height of the file */
+  aspect: number;
+  x: number;
+  y: number;
+  h: number;
+  at: number;
+  out?: number;
+}) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const life = useLife(at, out);
+  if (life <= 0.001) return null;
+  const w = h * aspect;
+  const lift = (1 - ease(f, at, m.reveal)) * 30;
+  return (
+    <Img
+      src={staticFile(src)}
+      style={{
+        position: "absolute",
+        left: x - w / 2,
+        top: y - h + lift,
+        width: w,
+        height: h,
+        opacity: life,
+        filter: `drop-shadow(${theme.shape.artShadow})`,
+      }}
+    />
+  );
+};
+
 // ═══ Icons ════════════════════════════════════════════════════════════════
 export type IconName =
   | "briefcase" | "wallet" | "home" | "pause" | "clock" | "bolt" | "calendar"
