@@ -56,6 +56,12 @@ export const SC01 = {
   photo: [276, 550] as const, // starts up as the pair is still leaving, so the frame is never empty
   /** Simon: "395 — Kerja dan orang kerja png geser kiri dan fade out", then the phone to the middle and six icons. */
   spend: 395,
+  /**
+   * Simon: "555 Hp dan 6 icon fade out. Lalu muncul text 'Tapi coba bayangin:
+   * suatu hari harus berhenti kerja sementara', tapi satu per satu" — "Tapi"
+   * once they are gone, "coba bayangin:" at 591, the rest (and Layoff.png) at 652.
+   */
+  bayangin: [555, 591, 652] as const,
   kerja: 266, // "Kita kerja," — measured in the audio (3.44 s of the recording), after both pads
   /** The Kerja node, once the pair has cleared the frame. */
   kerjaNode: 306,

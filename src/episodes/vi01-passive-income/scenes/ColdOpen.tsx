@@ -87,9 +87,12 @@ const SPEND_ICONS: IconName[][] = [
   ["shirt", "pants", "car"],
   ["basket", "burger", "glass"],
 ];
-/** Where the pause and the question stood before the flow was taken out — unchanged. */
-const PAUSE_AT = { x: 826, y: 338 };
-const QUESTION_AT = { x: 1280, y: 740 };
+/** "Tapi coba bayangin: suatu hari harus berhenti kerja sementara" — two lines at the top of the frame. */
+const BAYANGIN = { y: 150, size: 64, weight: 700, gap: 14 };
+/** "Layoff.png" (INV01 - Passive Income/Gambar), 1086 × 1448 — the figure stands in columns 378–840, feet on row 1390. */
+const LAYOFF = 1086 / 1448;
+const LAYOFF_SOLID_CX = (378 + 840) / 2 / 1086;
+const LAYOFF_FLOOR = 1390 / 1448;
 /** TA11's ground (TAMistakes f15104): the grid fades out toward the logo row and the caption band. */
 const GROUND_RAMP =
   `linear-gradient(to bottom, transparent ${theme.logoZone.height}px, black ${theme.logoZone.height * 2}px, ` +
@@ -227,6 +230,14 @@ const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; a
   );
 };
 
+/** One piece of a line, easing in on its own frame; it holds its place while hidden, so the line never reflows. */
+const Piece = ({ text, at, color }: { text: string; at: number; color: string }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const t = ease(f, at, m.reveal);
+  return <span style={{ display: "inline-block", color, opacity: t, transform: `translateY(${((1 - t) * 14).toFixed(2)}px)` }}>{text}</span>;
+};
+
 export const SC01 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -243,7 +254,6 @@ export const SC01 = () => {
   const split = ease(f, L(B1.gajian), L(B1.settled) - L(B1.gajian));
   const roll = (t: number) => 1 + (B1.payday - 1) * ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
   const wordIn = ease(f, L(B1.gajian), m.reveal);
-  const stopped = ease(f, L(B1.berhenti), m.move);
   /** The photo's rise from below — "Kerja" rides on it, as one group. */
   const lift = (1 - ease(f, L(B1.photo[0]), m.move)) * (theme.canvas.height - WORK.feet + PHOTO_H);
   const ground = ease(f, L(B1.photo[0]), m.move);
@@ -251,6 +261,9 @@ export const SC01 = () => {
   const leave = ease(f, L(B1.spend), m.move);
   const centre = ease(f, L(B1.spend) + m.move / 2, m.move);
   const iconsAt = L(B1.spend) + m.move * 1.5;
+  /** 555: the phone and the icons go; "Tapi" comes once they have. */
+  const spent = ease(f, L(B1.bayangin[0]), m.fade);
+  const tapiAt = L(B1.bayangin[0]) + m.fade;
 
   return (
     <Stage>
@@ -310,7 +323,9 @@ export const SC01 = () => {
           <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={WORK.feet} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - WORK.feet + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
         </div>
       </div>
-      <Worker x={380} y={925} h={700} at={L(B1.photo[1])} poses={[[0, 1], [L(B1.berhenti) + 10, 4]]} />
+      {/* 555: the phone, its lines and the six icons fade out together */}
+      {spent < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - spent }}>
       {/* the lines, under the phone and the discs */}
       <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
         {SPEND_ICONS.map((col, i) =>
@@ -333,27 +348,19 @@ export const SC01 = () => {
         col.map((name, j) => <SpendIcon key={name} name={name} x={SPEND.x[i]} y={SPEND.y[j]} at={iconsAt + m.sec(0.12) * (i * 3 + j) + m.sec(SPEND_LINE.drawSec * 0.7)} />),
       )}
 
-      {/* "berhenti kerja sementara": a pause over the work */}
-      {stopped > 0.001 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: PAUSE_AT.x,
-            top: PAUSE_AT.y,
-            opacity: stopped,
-          }}
-        >
-          <Icon name="pause" size={88} color={theme.color.warn} />
         </div>
       ) : null}
-      <Say
-        text="Penghasilan ikut berhenti?"
-        x={QUESTION_AT.x}
-        y={QUESTION_AT.y}
-        at={L(B1.apakah)}
-        size={56}
-        color={c.indigo}
-      />
+
+      {/* then the line, piece by piece, across the top — "Tapi" and "coba
+          bayangin:" in indigo, the rest in black — and Layoff.png under it */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: BAYANGIN.y, display: "flex", flexDirection: "column", alignItems: "center", gap: BAYANGIN.gap, fontFamily: theme.text.family, fontSize: BAYANGIN.size, fontWeight: BAYANGIN.weight, lineHeight: 1.1, whiteSpace: "pre" }}>
+        <div>
+          <Piece text="Tapi" at={tapiAt} color={c.indigo} />
+          <Piece text=" coba bayangin:" at={L(B1.bayangin[1])} color={c.indigo} />
+        </div>
+        <Piece text="suatu hari harus berhenti kerja sementara" at={L(B1.bayangin[2])} color={c.ink} />
+      </div>
+      <Cutout src="art/vi01/layoff.png" aspect={LAYOFF} x={theme.canvas.width / 2 - (LAYOFF_SOLID_CX - 0.5) * PHOTO_H * LAYOFF} y={WORK.feet} h={PHOTO_H} at={L(B1.bayangin[2])} shadow floor={LAYOFF_FLOOR} />
     </Stage>
   );
 };
