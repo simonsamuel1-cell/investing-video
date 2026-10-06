@@ -81,7 +81,7 @@ const GROUP_DX = theme.canvas.width / 2 - (GROUP_LEFT + GROUP_RIGHT) / 2;
  */
 const LEAVE_X = 300;
 const SPEND = { x: [560, 1360], y: [330, 560, 790], disc: 150, icon: 84 };
-/** "kasih garis yang ditarik dari hp ke tiap icon": from the middle of the phone's side, drawn out to each disc. */
+/** "kasih garis yang ditarik dari hp ke tiap icon" — from the phone's centre, behind it ("dari belakang hp nya"), drawn out to each disc. */
 const SPEND_LINE = { width: 3, drawSec: 0.35 };
 const SPEND_ICONS: IconName[][] = [
   ["shirt", "pants", "car"],
@@ -318,7 +318,7 @@ export const SC01 = () => {
             const at = iconsAt + m.sec(0.12) * (i * 3 + j);
             const p = ease(f, at, m.sec(SPEND_LINE.drawSec));
             if (p <= 0.001) return null;
-            const x0 = theme.canvas.width / 2 + (i === 0 ? -1 : 1) * (PHONE.w / 2);
+            const x0 = theme.canvas.width / 2;
             const y0 = PHONE.top + PHONE.h / 2;
             const dx = SPEND.x[i] - x0;
             const dy = SPEND.y[j] - y0;
