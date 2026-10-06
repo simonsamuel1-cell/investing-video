@@ -12,8 +12,7 @@
  * as it was on global frame n.
  */
 import React from "react";
-import { Freeze, Sequence, useCurrentFrame } from "remotion";
-import { loadFont as loadScript } from "@remotion/google-fonts/DancingScript";
+import { Freeze, Sequence, continueRender, delayRender, useCurrentFrame } from "remotion";
 import {
   GridGround,
   ROADMAP_CARD,
@@ -37,15 +36,31 @@ import {
 import { OUTSIDE_RESERVES, ease } from "../components/kit";
 import { useMotion } from "../../../core";
 
-/** "font huruf sambung" — Dancing Script, for ST1's list only. */
-const { fontFamily: SCRIPT } = loadScript("normal", { weights: ["500"] });
+/**
+ * "font huruf sambung" — Simon: "pake Playwrite England Joined aja" (Google
+ * Fonts family "Playwrite GB J"). Not in @remotion/google-fonts, so it is
+ * fetched the same way that package does: from Google's font CDN, with the
+ * render held until it has loaded.
+ */
+const SCRIPT = "Playwrite GB J";
+const SCRIPT_URL = "https://fonts.gstatic.com/s/playwritegbj/v11/k3kEo8wSPe9dzQ1UGbvobAPhY5iG-fsubxedDheGdc9Hbd7X9HBZ8Q.woff2";
+if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
+  const hold = delayRender(`font ${SCRIPT}`);
+  new FontFace(SCRIPT, `url(${SCRIPT_URL}) format("woff2")`, { weight: "400" })
+    .load()
+    .then((face) => {
+      document.fonts.add(face);
+      continueRender(hold);
+    })
+    .catch(() => continueRender(hold));
+}
 /**
  * The four points, one under another, and the lens across the middle of the
- * frame: two lines `gap` apart. Outside the lens a point is small script in
+ * frame: two lines `gap` apart ("jarak antar 2 garis horizontal jadiin 150 px"). Outside the lens a point is small script in
  * light grey; inside it, the same point is Plus Jakarta Sans, indigo and large.
  * `step` puts the neighbours just outside the lines.
  */
-const LIST = { size: 48, step: 130, lensSize: 96, gap: 200, lineW: 900 };
+const LIST = { size: 48, step: 130, lensSize: 96, gap: 150, lineW: 900 };
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -248,7 +263,7 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
             textAlign: "center",
             fontFamily: inLens ? theme.text.family : SCRIPT,
             fontSize: size,
-            fontWeight: inLens ? 800 : 500,
+            fontWeight: inLens ? 800 : 400,
             lineHeight: 1.2,
             color: inLens ? c.indigo : c.muted,
           }}

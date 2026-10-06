@@ -321,7 +321,7 @@ export const TRANS: Trans[] = [
  * the grid and the list come up, and the whole card leaves off SC04 at `end`.
  */
 /**
- * Then the lens — "Di tengah layar, buat 2 garis horizontal dengan jarak 200 px
+ * Then the lens — "Di tengah layar, buat 2 garis horizontal dengan jarak 200 px" (later 150
  * … masking … seperti menjadi lensa pembesar. Text Introduction akan di
  * dalamnya terlebih dahulu, lalu akan scroll naik per poin." At `scroll` the
  * list moves up one point, carrying "Passive Income" into the lens.
