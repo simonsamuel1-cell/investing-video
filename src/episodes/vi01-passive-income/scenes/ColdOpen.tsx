@@ -55,12 +55,14 @@ const EXIT_RISE = 1000;
  * "Kelompokkan Kerja dan OrangKerja png, lalu geser 200 px ke kiri (ini bukan
  * animasi, tapi re-positioning)". The label sits `gap` above the photo's top.
  */
-const WORK = { shift: -200, feet: 940, label: 60, weight: 600, gap: 50 };
+/** "Kerja nya font size sama dengan Gajian aja. Bold, Indigo." */
+const WORK = { shift: -200, feet: 940, label: SPLIT.word, weight: 700, gap: 110 };
 /**
  * …and on their right, the pay landing: a phone holding Simon's balance card,
  * the balance counting Rp 0 → Rp 50.000.000 as it fades in.
  */
-const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 14, radius: 64 };
+/** "Border template hp nya tipisin, jadi 2 px aja"; the UI centred top to bottom on the screen. */
+const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 2, radius: 64, ui: { top: 70, bottom: 468 } };
 const BALANCE = 50_000_000;
 /** Where the pause and the question stood before the flow was taken out — unchanged. */
 const PAUSE_AT = { x: 826, y: 338 };
@@ -119,6 +121,9 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
   const amount = BALANCE * ease(f, at, countOver);
   const P = PHONE;
   const sw = P.w - P.bezel * 2;
+  const sh = P.h - P.bezel * 2;
+  /** The UI block (top row → history) moved so its middle is the screen's middle. */
+  const drop = (sh - (P.ui.bottom - P.ui.top)) / 2 - P.ui.top;
   const type = { fontFamily: theme.text.family, lineHeight: 1 } as const;
   const circle = (d: number, bg: string) =>
     ({ width: d, height: d, borderRadius: d / 2, background: bg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: shadow.rest }) as const;
@@ -127,10 +132,11 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
   const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
   return (
     <div style={{ position: "absolute", left: P.cx - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.ink, boxShadow: shadow.rest, opacity: life }}>
-      <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: P.h - P.bezel * 2, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: sh, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
         {/* the island */}
         <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
 
+        <div style={{ position: "absolute", left: 0, right: 0, top: drop, height: sh }}>
         {/* avatar · Overview · bell */}
         <div style={{ position: "absolute", left: 22, right: 22, top: 70, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div style={circle(52, c.indigoTint2)}>
@@ -165,6 +171,7 @@ const BalancePhone = ({ at, countOver }: { at: number; countOver: number }) => {
         <div style={{ ...pill(c.cardBg, c.ink), position: "absolute", left: 18, right: 18, top: 408, height: 60, justifyContent: "space-between", padding: "0 24px", fontWeight: 600, opacity: 0.45 }}>
           Transaction History
           <svg width={18} height={18} viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" {...line} /></svg>
+        </div>
         </div>
       </div>
     </div>
@@ -245,7 +252,7 @@ export const SC01 = () => {
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${WORK.shift}px)` }}>
           <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px)` }}>
-            <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} />
+            <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} color={c.indigo} />
           </div>
           <Cutout src="art/vi01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={WORK.feet} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - WORK.feet + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
         </div>
