@@ -20,7 +20,7 @@ import { SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
 import { SC09, SC10, SC11, SC12 } from "./scenes/PartTwo";
 import { SC13, SC14, SC15 } from "./scenes/PartThree";
 import { SC16, SC17, SC18 } from "./scenes/Close";
-import { SceneTransisi, type Mount } from "./scenes/Transition";
+import { ListTransisi, SceneTransisi, type Mount } from "./scenes/Transition";
 
 export const TOTAL_FRAMES = BLOCK.END;
 
@@ -105,6 +105,7 @@ const Body = () => (
       </Sequence>
     ))}
 
+    <ListTransisi scenes={SCENES} />
     {TRANS.map((t) => (
       <SceneTransisi key={t.at} t={t} scenes={SCENES} />
     ))}

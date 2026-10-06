@@ -13,6 +13,7 @@
  */
 import React from "react";
 import { Freeze, Sequence, useCurrentFrame } from "remotion";
+import { loadFont as loadScript } from "@remotion/google-fonts/DancingScript";
 import {
   GridGround,
   ROADMAP_CARD,
@@ -24,6 +25,8 @@ import {
   useShadow,
 } from "../../../core";
 import {
+  LIST_POINTS,
+  LIST_TRANS,
   MAP_LABELS,
   TRANS_FADE,
   TRANS_GLOW,
@@ -32,6 +35,12 @@ import {
   type Trans,
 } from "../data/timing";
 import { OUTSIDE_RESERVES, ease } from "../components/kit";
+import { useMotion } from "../../../core";
+
+/** "font huruf sambung" — Dancing Script, for ST1's list only. */
+const { fontFamily: SCRIPT } = loadScript("normal", { weights: ["500"] });
+/** The four points: small, one under another, centred on the frame. */
+const LIST = { size: 48, step: 84 };
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -191,6 +200,58 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
+
+/**
+ * ST1 · SC03 → SC04, Simon's own. SC03 held on its last frame until
+ * LIST_TRANS.out, then it fades; the drifting grid and the four points come up
+ * — still, for now ("jangan dianimasikan") — and the card fades off SC04, which
+ * has been running underneath since its block began.
+ */
+export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const T = LIST_TRANS;
+  const from = T.freeze + 1;
+  if (f < from || f >= T.end + TRANS_FADE) return null;
+  const sceneOut = ease(f, T.out, m.fade);
+  const listIn = ease(f, T.out + m.fade, m.fade);
+  const leave = ease(f, T.end, TRANS_FADE);
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
+      <div style={{ position: "absolute", inset: 0, background: c.bg }} />
+      <div style={{ position: "absolute", inset: 0, opacity: listIn }}>
+        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+          <GridGround f={f} paper={c.bg} />
+        </div>
+        {LIST_POINTS.map((p, i) => (
+          <div
+            key={p}
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: theme.canvas.height / 2 + (i - (LIST_POINTS.length - 1) / 2) * LIST.step - LIST.size * 0.6,
+              textAlign: "center",
+              fontFamily: SCRIPT,
+              fontSize: LIST.size,
+              fontWeight: 500,
+              lineHeight: 1.2,
+              color: c.muted,
+            }}
+          >
+            {p}
+          </div>
+        ))}
+      </div>
+      {sceneOut < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - sceneOut }}>
+          <SceneAt g={T.freeze} scenes={scenes} />
+        </div>
+      ) : null}
     </div>
   );
 };

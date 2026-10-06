@@ -305,13 +305,23 @@ export const TRANS_FADE = 24;
 export const TRANS_LEN = 130;
 
 export const TRANS: Trans[] = [
-  // ST1 · SC03 → SC04 (0.30 s of air; SC03's last word ends f3116)
-  { at: 3090, freeze: 3089, landing: 0, next: 1, cards: [3108, 3118, 3128], thumbs: [null, null, null, null] },
   // ST2 · SC08 → SC09 (0.27 s; SC08's last word ends f8614)
   { at: 8586, freeze: 8585, landing: 1, next: 2, cards: [8596, 8604, 8624], thumbs: [3089, null, null, null] },
   // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12562)
   { at: 12537, freeze: 12536, landing: 2, next: 3, cards: [12547, 12555, 12575], thumbs: [3089, 8585, null, null] },
 ];
+
+/**
+ * ST1 · SC03 → SC04 is its own — Simon: "Semua fade out, lalu masuk scene
+ * transisi. Tapi scene transisi kali mau ku buat berbeda. Background tetap
+ * kotak kotak bergerak. Lalu muncul 4 point scrollable (Introduction, Passive
+ * Income, Punya Bisnis, Lo Kheng Hong), size kecil, font huruf sambung,
+ * abu-abu terang. Buat begini dulu jangan dianimasikan." — and "fade outnya di
+ * 3155 aja". SC03 holds on its last frame past its block until `out`, fades,
+ * the grid and the list come up, and the whole card leaves off SC04 at `end`.
+ */
+export const LIST_TRANS = { freeze: 3124, out: 3155, end: 3260 };
+export const LIST_POINTS = ["Introduction", "Passive Income", "Punya Bisnis", "Lo Kheng Hong"];
 
 // ═══ EVERY OTHER SCENE CHANGE — a CameraCut ═══════════════════════════════
 /**
