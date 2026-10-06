@@ -244,7 +244,11 @@ export type IconName =
   | "car"
   | "basket"
   | "burger"
-  | "glass";
+  | "glass"
+  | "tools"
+  | "store"
+  | "pen"
+  | "monitor";
 
 /** Line icons on a 48-unit grid, drawn in `color` at `size` px. */
 export const Icon = ({
@@ -298,6 +302,36 @@ export const Icon = ({
         <path d="M9 40h30a3 3 0 0 1-3 3H12a3 3 0 0 1-3-3z" {...p} fill={fill} />
       </>
     ),
+    tools: (
+      <>
+        <g transform="rotate(45 24 24)">
+          <rect x="19.5" y="4" width="9" height="15" rx="4" {...p} fill={fill} />
+          <path d="M24 19v19l-1.5 3h3L24 38" {...p} />
+        </g>
+        <g transform="rotate(-45 24 24)">
+          <rect x="14" y="6" width="20" height="9" rx="2.5" {...p} fill={fill} />
+          <rect x="21.5" y="15" width="5" height="27" rx="2.5" {...p} />
+        </g>
+      </>
+    ),
+    store: (
+      <>
+        <path d="M10 22v18h28V22M20 40V29h8v11" {...p} />
+        <path d="M11 8h26l5 10a4.5 4.5 0 0 1-9 0a4.5 4.5 0 0 1-9 0a4.5 4.5 0 0 1-9 0a4.5 4.5 0 0 1-9 0z" {...p} fill={fill} />
+      </>
+    ),
+    pen: (
+      <g transform="rotate(45 24 24)">
+        <rect x="19" y="4" width="10" height="28" rx="2.5" {...p} fill={fill} />
+        <path d="M19 32h10l-5 10zM24 37v5" {...p} />
+      </g>
+    ),
+    monitor: (
+      <>
+        <rect x="5" y="8" width="38" height="25" rx="3.5" {...p} fill={fill} />
+        <path d="M24 33v7M15 41h18" {...p} />
+      </>
+    ),
     glass: (
       <>
         <path d="M14.1 19h19.8L32 40a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3z" fill={fill} />
@@ -306,7 +340,7 @@ export const Icon = ({
     ),
     briefcase: (
       <>
-        <rect x="6" y="15" width="36" height="25" rx="5" {...p} />
+        <rect x="6" y="15" width="36" height="25" rx="5" {...p} fill={fill} />
         <path d="M17 15v-4a3 3 0 0 1 3-3h8a3 3 0 0 1 3 3v4M6 26h36" {...p} />
       </>
     ),

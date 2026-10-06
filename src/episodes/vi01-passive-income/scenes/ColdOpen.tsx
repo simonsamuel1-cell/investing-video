@@ -8,7 +8,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Icon, Say, TypeBox, useLife, type IconName } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
@@ -408,41 +408,72 @@ export const SC01 = () => {
 };
 
 // ═══ SC02 — five ways, one source ═════════════════════════════════════════
-/** The five on an arc over the one thing they all draw on — no line crosses a chip. */
-const SOURCE: NodeBox = { x: 1010, y: 740, w: 520, h: 140 };
-const ARC = { cx: SOURCE.x + SOURCE.w / 2, cy: SOURCE.y + 40, r: 470 };
-const WAYS = ["Naik jabatan", "Skill baru", "Bangun bisnis", "Freelance", "Side hustle"].map((label, i) => {
-  const a = ((200 + i * 35) * Math.PI) / 180;
-  return { label, x: ARC.cx + ARC.r * Math.cos(a), y: ARC.cy + ARC.r * Math.sin(a) };
-});
+/**
+ * Simon, 1020-2110: "Muncul dulu OrangTuntun.png di tengah layar horizontal,
+ * tapi perbesar hingga previewnya dari kepala hingga dada. Lalu di atasnya
+ * muncul 5 bubble icon: tas kerja, palu dan obeng, toko, pulpen, monitor.
+ * Berikan animasi bubble yang terus bergerak, berikan juga animasi muncul dari
+ * kecil ke besar ke normal." Each bubble lands on its own way in the VO
+ * (naik jabatan, skill baru, bangun bisnis, freelance, side hustle).
+ */
+/** "OrangTuntun.png", 941 × 1672: hair from row 70, chest at row 620, head centred on column 466. */
+const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672 };
+/** The head starts here, leaving the top of the frame to the bubbles. */
+const TUNTUN_FROM = 400;
+const TUNTUN_H = ((theme.captionBand.top - TUNTUN_FROM) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top);
+const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
+/** The five bubbles on an arc over the head. */
+const BUBBLES: { icon: IconName; x: number; y: number }[] = [
+  { icon: "briefcase", x: 500, y: 330 },
+  { icon: "tools", x: 730, y: 235 },
+  { icon: "store", x: 960, y: 200 },
+  { icon: "pen", x: 1190, y: 235 },
+  { icon: "monitor", x: 1420, y: 330 },
+];
+/** Disc and glyph size; the drift (px) and its two periods (s); the overshoot on arrival. */
+const BUBBLE = { disc: 150, icon: 82, bob: 12, sway: 6, bobSec: 2.4, swaySec: 3.3, peak: 1.15 };
+
+/** One bubble: small → past full size → full size, then drifting for as long as it is up. */
+const Bubble = ({ icon, x, y, at, i }: { icon: IconName; x: number; y: number; at: number; i: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
+  if (f < at) return null;
+  /* "dari kecil ke besar ke normal": two eased legs, no spring */
+  const grow = ease(f, at, m.reveal);
+  const settle = ease(f, at + m.reveal, m.reveal);
+  const scale = grow * BUBBLE.peak - (BUBBLE.peak - 1) * settle;
+  const t = (f - at) / m.sec(1);
+  const dy = Math.sin((t / BUBBLE.bobSec + i * 0.23) * Math.PI * 2) * BUBBLE.bob;
+  const dx = Math.sin((t / BUBBLE.swaySec + i * 0.37) * Math.PI * 2) * BUBBLE.sway;
+  const fills: Partial<Record<IconName, string>> = {
+    briefcase: c.indigoTint1,
+    tools: c.cyan,
+    store: c.indigoTint2,
+    pen: c.cyan,
+    monitor: c.indigoTint1,
+  };
+  const D = BUBBLE.disc;
+  return (
+    <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow, transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Icon name={icon} size={BUBBLE.icon} color={c.ink} fill={fills[icon]} />
+    </div>
+  );
+};
 
 export const SC02 = () => {
-  const f = useCurrentFrame();
+  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC02);
   return (
     <Stage>
-      <Say text="Menambah Penghasilan" x={960} y={122} at={L(B2.title)} size={48} />
-      <Worker x={330} y={925} h={700} at={0} poses={[[0, 6]]} />
-      {WAYS.map((w, i) => {
-        /* from just under the chip to just over the source, on the radius */
-        const dx = ARC.cx - w.x;
-        const dy = ARC.cy - w.y;
-        const d = Math.hypot(dx, dy);
-        return (
-          <Link
-            key={`l${i}`}
-            a={{ x: w.x + (dx / d) * 64, y: w.y + (dy / d) * 64 }}
-            b={{ x: w.x + (dx / d) * (d - 90), y: w.y + (dy / d) * (d - 90) }}
-            at={L(B2.waktu) - 30 + i * 4}
-            tone="slate"
-            width={3}
-          />
-        );
-      })}
-      {WAYS.map((w, i) => (
-        <Pill key={w.label} label={w.label} x={w.x} y={w.y} at={L(B2.ways[i])} size={40} />
+      {/* head to chest, centred on the head; never into the caption band */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src="art/vi01/orang-tuntun.png" aspect={TUNTUN.aspect} x={theme.canvas.width / 2 - (TUNTUN.headU - 0.5) * TUNTUN_H * TUNTUN.aspect} y={TUNTUN_TOP + TUNTUN_H} h={TUNTUN_H} at={L(B2.title)} riseFrames={m.move} shadow floor={TUNTUN.floor} />
+      </div>
+      {BUBBLES.map((b, i) => (
+        <Bubble key={b.icon} icon={b.icon} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} />
       ))}
-      <Node box={SOURCE} label="Waktu + Tenaga" icon="clock" at={L(B2.waktu)} filled={ease(f, L(B2.waktu) + 18, 18)} size={44} />
     </Stage>
   );
 };
