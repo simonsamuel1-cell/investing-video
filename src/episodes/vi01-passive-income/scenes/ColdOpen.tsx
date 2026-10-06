@@ -25,8 +25,12 @@ const FLOW1: NodeBox[] = [
   { x: 1540, y: 450, w: 280, h: 150 },
 ];
 
-/** The calendar page: month on the band, the date below. */
-const Calendar = ({ month, date }: { month: string; date: number }) => {
+/**
+ * The calendar page: month on the band, the date below. `date` may be
+ * fractional — the dates are one strip that rolls up through the window, so
+ * 1 → 25 is a scroll, not a swap.
+ */
+const Calendar = ({ month, date, last }: { month: string; date: number; last: number }) => {
   const c = usePalette();
   const left = CAL.cx - CAL.w / 2;
   const r = theme.shape.cardRadius;
@@ -36,8 +40,14 @@ const Calendar = ({ month, date }: { month: string; date: number }) => {
         <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, background: c.indigo, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 60, fontWeight: 800, color: c.cardBg, letterSpacing: 1 }}>
           {month}
         </div>
-        <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
-          {date}
+        <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, overflow: "hidden" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, transform: `translateY(${(-(date - 1) * (CAL.h - CAL.band)).toFixed(2)}px)` }}>
+            {Array.from({ length: last }, (_, i) => (
+              <div key={i} style={{ height: CAL.h - CAL.band, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
+                {i + 1}
+              </div>
+            ))}
+          </div>
         </div>
       </div>
       {[-1, 1].map((side) => (
@@ -75,7 +85,7 @@ export const SC01 = () => {
       {/* the calendar, and payday beside it */}
       {cal > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${(1 - calIn) * 30}px)` }}>
-          <Calendar month="Januari" date={1} />
+          <Calendar month="Januari" date={1 + (B1.payday - 1) * ease(f, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]))} last={B1.payday} />
           {stamp.opacity > 0.001 ? (
             <div
               style={{

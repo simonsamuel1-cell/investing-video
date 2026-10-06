@@ -40,6 +40,9 @@ export const VO_LAST = 19024;
 // ═══ COLD OPEN ═════════════════════════════════════════════════════════════
 export const SC01 = {
   calendar: 6, // the calendar page (Januari, 1) arrives with "Setiap bulan"
+  /** "80-150 angka 1 nya scroll hingga angka 25" — lands on 25 as the pause begins. */
+  scroll: [80, 150] as const,
+  payday: 25,
   gajian: 190, // "GAJIAN."
   kerja: 220, // "Kita kerja,"
   penghasilan: 301, // "dapat penghasilan,"
