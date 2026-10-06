@@ -11,8 +11,13 @@ import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing
 import { ease, Pill, Icon, Link, Node, Say, TypeBox, Worker, nodeEdge, type NodeBox } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
-const CAL = { x: 520, y: 300, cell: 96, gap: 10, cols: 7, days: 30, payday: 25 };
-const calW = CAL.cols * CAL.cell + (CAL.cols - 1) * CAL.gap;
+/**
+ * A DESK CALENDAR, ONE PAGE — Simon: "Kalender ini harusnya cukup tanggalnya
+ * (mulai dari 1 dulu aja), dan bulan Januari." The month on an indigo band,
+ * the date under it and nothing else; two rings on top so it reads as a
+ * calendar you tear a page from, not as a card. Every corner round.
+ */
+const CAL = { cx: 960, y: 290, w: 460, h: 500, band: 132, ring: { w: 26, h: 72, dx: 120 } };
 /** The flow: three nodes in a row on the right, the worker on the left. */
 const FLOW1: NodeBox[] = [
   { x: 720, y: 450, w: 300, h: 150 },
@@ -20,83 +25,65 @@ const FLOW1: NodeBox[] = [
   { x: 1540, y: 450, w: 280, h: 150 },
 ];
 
+/** The calendar page: month on the band, the date below. */
+const Calendar = ({ month, date }: { month: string; date: number }) => {
+  const c = usePalette();
+  const left = CAL.cx - CAL.w / 2;
+  const r = theme.shape.cardRadius;
+  return (
+    <>
+      <div style={{ position: "absolute", left, top: CAL.y, width: CAL.w, height: CAL.h, borderRadius: r, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}`, overflow: "hidden" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, background: c.indigo, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 60, fontWeight: 800, color: c.cardBg, letterSpacing: 1 }}>
+          {month}
+        </div>
+        <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 260, fontWeight: 800, color: c.ink, lineHeight: 1 }}>
+          {date}
+        </div>
+      </div>
+      {[-1, 1].map((side) => (
+        <div
+          key={side}
+          style={{
+            position: "absolute",
+            left: CAL.cx + side * CAL.ring.dx - CAL.ring.w / 2,
+            top: CAL.y - CAL.ring.h / 2,
+            width: CAL.ring.w,
+            height: CAL.ring.h,
+            borderRadius: CAL.ring.w / 2,
+            background: c.ink,
+          }}
+        />
+      ))}
+    </>
+  );
+};
+
 export const SC01 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC01);
   const calOut = ease(f, L(B1.kerja) - 6, m.move);
-  const cal = ease(f, L(B1.calendar), m.reveal) * (1 - calOut);
-  /** The cursor runs day 1 → 25, settling on payday. */
-  const day = Math.min(
-    CAL.payday,
-    1 + Math.floor(Math.max(0, f - L(B1.days[0])) / ((L(B1.days[1]) - L(B1.days[0])) / (CAL.payday - 1))),
-  );
+  const calIn = ease(f, L(B1.calendar), m.move);
+  const cal = calIn * (1 - calOut);
   const stampIn = ease(f, L(B1.gajian), m.reveal);
   const stamp = { opacity: stampIn, scale: 0.9 + 0.1 * stampIn };
   const stopped = ease(f, L(B1.berhenti), m.move);
 
   return (
     <Stage>
-      {/* the month */}
+      {/* the calendar, and payday beside it */}
       {cal > 0.001 ? (
-        <div style={{ opacity: cal, transform: `translateX(${-calOut * 80}px)` }}>
-          <div
-            style={{
-              position: "absolute",
-              left: CAL.x - 40,
-              top: CAL.y - 110,
-              width: calW + 80,
-              height: 5 * CAL.cell + 4 * CAL.gap + 160,
-              borderRadius: theme.shape.cardRadius,
-              background: c.cardBg,
-              border: `${theme.shape.hairline}px solid ${c.border}`,
-            }}
-          />
-          <div style={{ position: "absolute", left: CAL.x, top: CAL.y - 82, display: "flex", alignItems: "center", gap: 14 }}>
-            <Icon name="calendar" size={54} color={c.indigo} />
-            <span style={{ fontFamily: theme.text.family, fontSize: 42, fontWeight: 700, color: c.ink }}>Bulan ini</span>
-          </div>
-          {Array.from({ length: CAL.days }, (_, i) => {
-            const d = i + 1;
-            const x = CAL.x + (i % CAL.cols) * (CAL.cell + CAL.gap);
-            const y = CAL.y + Math.floor(i / CAL.cols) * (CAL.cell + CAL.gap);
-            const past = f >= L(B1.days[0]) && d < day;
-            const here = f >= L(B1.days[0]) && d === day;
-            const pay = d === CAL.payday && f >= L(B1.gajian);
-            return (
-              <div
-                key={d}
-                style={{
-                  position: "absolute",
-                  left: x,
-                  top: y,
-                  width: CAL.cell,
-                  height: CAL.cell,
-                  borderRadius: 14,
-                  background: pay ? c.indigo : here ? theme.color.indigoWashStrong : past ? theme.color.slateWash : "transparent",
-                  border: `${theme.shape.hairline}px solid ${here || pay ? c.indigo : c.border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  fontFamily: theme.text.family,
-                  fontSize: 34,
-                  fontWeight: 600,
-                  color: pay ? c.cardBg : past ? c.muted : c.ink,
-                }}
-              >
-                {d}
-              </div>
-            );
-          })}
+        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translate(${-calOut * 80}px, ${(1 - calIn) * 30}px)` }}>
+          <Calendar month="Januari" date={1} />
           {stamp.opacity > 0.001 ? (
             <div
               style={{
                 position: "absolute",
-                left: CAL.x + calW + 60,
-                top: CAL.y + 200,
+                left: CAL.cx + CAL.w / 2 + 60,
+                top: CAL.y + CAL.h / 2,
                 opacity: stamp.opacity,
-                transform: `scale(${stamp.scale})`,
+                transform: `translateY(-50%) scale(${stamp.scale})`,
                 transformOrigin: "0% 50%",
                 padding: "18px 40px",
                 borderRadius: 999,

@@ -14,8 +14,7 @@
  * ⚠ PADDED VO. Every frame below is a frame of the PADDED recording that
  * public/vo/passive-income.mp3 is built as (scripts/vi01-vo.py, from
  * data/pads.json): +30 at 150 — Simon, 2026-10-06: "Di frame 150, beri jeda
- * 30 frame (VO dan scene visual)". Everything after 150 moved 30; the month's
- * cursor still lands on payday at 150 and holds there through the pause.
+ * 30 frame (VO dan scene visual)". Everything after 150 moved 30.
  */
 
 /** Scene-local frame for a beat written in GLOBAL frames. */
@@ -40,8 +39,7 @@ export const VO_LAST = 19024;
 
 // ═══ COLD OPEN ═════════════════════════════════════════════════════════════
 export const SC01 = {
-  calendar: 6, // the month card arrives with "Setiap bulan"
-  days: [30, 150] as const, // the cursor runs through the month
+  calendar: 6, // the calendar page (Januari, 1) arrives with "Setiap bulan"
   gajian: 190, // "GAJIAN."
   kerja: 220, // "Kita kerja,"
   penghasilan: 301, // "dapat penghasilan,"
