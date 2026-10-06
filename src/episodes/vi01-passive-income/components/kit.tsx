@@ -96,7 +96,6 @@ export const Worker = ({
         width: w,
         height: h,
         opacity: life,
-        filter: `drop-shadow(${theme.shape.artShadow})`,
       }}
     >
       {poses.map(([from, pose], i) => {
@@ -137,6 +136,9 @@ export const Cutout = ({
   h,
   at,
   out,
+  mirror = false,
+  shadow = false,
+  floor = 1,
 }: {
   src: string;
   /** width ÷ height of the file */
@@ -146,6 +148,12 @@ export const Cutout = ({
   h: number;
   at: number;
   out?: number;
+  /** Flipped left-to-right. */
+  mirror?: boolean;
+  /** A soft drop shadow, and the contact shadow it stands on. */
+  shadow?: boolean;
+  /** Where the feet are, as a fraction of the height — the contact shadow centres there. */
+  floor?: number;
 }) => {
   const f = useCurrentFrame();
   const m = useMotion();
@@ -154,18 +162,22 @@ export const Cutout = ({
   const w = h * aspect;
   const lift = (1 - ease(f, at, m.reveal)) * 30;
   return (
-    <Img
-      src={staticFile(src)}
-      style={{
-        position: "absolute",
-        left: x - w / 2,
-        top: y - h + lift,
-        width: w,
-        height: h,
-        opacity: life,
-        filter: `drop-shadow(${theme.shape.artShadow})`,
-      }}
-    />
+    <div style={{ position: "absolute", left: x - w / 2, top: y - h + lift, width: w, height: h, opacity: life }}>
+      {shadow ? (
+        <div style={{ position: "absolute", left: w * 0.06, top: h * floor - h * 0.05, width: w * 0.88, height: h * 0.1, background: theme.shape.floorShadow }} />
+      ) : null}
+      <Img
+        src={staticFile(src)}
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: w,
+          height: h,
+          transform: mirror ? "scaleX(-1)" : undefined,
+          filter: shadow ? theme.shape.photoShadow : undefined,
+        }}
+      />
+    </div>
   );
 };
 
