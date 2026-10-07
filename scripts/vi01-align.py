@@ -235,6 +235,47 @@ for sc in scenes:
     out_scenes.append(sc_out)
 assert idx == len(script_words)
 
+# ── retakes: re-recorded stretches spliced over the original (vi01-vo.py) ────
+# A retake longer than its stretch pushes everything after it later, exactly as
+# a pad would; inside the stretch, times are carried from the old speech onto
+# the new take's speech, linearly — the words are the same, the pacing close.
+RETAKES = json.loads((ROOT / "src/episodes/vi01-passive-income/data/retakes.json").read_text())
+_F = 60
+
+
+def _speech(path):
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", str(path), "-f", "f32le", "-ac", "1", "-ar", str(SR), "-"],
+                         capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, dtype=np.float32)
+    spf = SR // _F
+    n = len(x) // spf
+    e = np.array([np.sqrt(np.mean(x[i * spf:(i + 1) * spf] ** 2)) for i in range(n)])
+    on = np.where(e > 0.02)[0]
+    return n, on[0] / _F, (on[-1] + 1) / _F
+
+
+_RT = []
+for r in RETAKES:
+    n, s0, s1 = _speech(r["file"])
+    a, b = r["from"] / _F, r["to"] / _F
+    inside = [i for i in range(len(starts)) if starts[i] is not None and a <= starts[i] < b]
+    o0, o1 = min(starts[i] for i in inside), max(ends[i] for i in inside)
+    _RT.append({"a": a, "b": b, "len": n / _F, "s0": s0, "s1": s1, "o0": o0, "o1": o1})
+    PAD_S.append((b, max(0.0, n / _F - (b - a))))
+_base = lambda t, slack=0.0: t + sum(d for at, d in PAD_S if t >= at - slack)
+
+
+def _in_take(t):
+    for r in _RT:
+        if r["a"] <= t < r["b"]:
+            u = min(1.0, max(0.0, (t - r["o0"]) / (r["o1"] - r["o0"])))
+            return _base(r["a"]) + r["s0"] + u * (r["s1"] - r["s0"])
+    return None
+
+
+padded = lambda t: _in_take(t) if _in_take(t) is not None else _base(t)
+padded_start = lambda t: _in_take(t) if _in_take(t) is not None else _base(t, 0.25)
+
 # a cue never runs into the next one
 for a, b in zip(cues, cues[1:]):
     if a["end"] > b["start"]:

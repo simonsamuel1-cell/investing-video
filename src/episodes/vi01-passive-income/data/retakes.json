@@ -1,0 +1,14 @@
+[
+  {
+    "from": 3216,
+    "to": 3482,
+    "file": "/Users/samuelsurja/Documents/01 Academy/INV01 - Passive Income/10 Bukan berarti.MP3",
+    "why": "Simon 2026-10-07: \"3335-3612 Voice over bagian ini, replace dengan '10 Bukan berarti.MP3'\" — 3335 on the padded timeline is 19 frames into the 3316 pause, so the pause keeps those 19 and the take starts at 3216 of the original"
+  },
+  {
+    "from": 3482,
+    "to": 3682,
+    "file": "/Users/samuelsurja/Documents/01 Academy/INV01 - Passive Income/11 Tetap kerja.MP3",
+    "why": "Simon 2026-10-07: \"3612-3812 Voice over bagian ini, replace dengan '11 Tetap kerja.MP3'. Kalo durasinya ngga muat untuk replace, geser vo aslinya, buat gap tambahan.\""
+  }
+]
