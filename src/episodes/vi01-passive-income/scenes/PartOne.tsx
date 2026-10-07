@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -45,8 +45,37 @@ const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 
  */
 const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1417, solidCx: 563 / 1086, from: 330 };
 const RESIGN_H = ((theme.captionBand.top - RESIGN.from) * RESIGN.rows) / (RESIGN.hips - RESIGN.top);
-/** "OrangTuntun.png", 941 × 1672: hair from row 70, chest at row 620, head on column 466 — head to chest, head 300 px left of centre. */
-const TUNTUN4 = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672, from: 330, left: 300 };
+/** "OrangTuntun2.png", 1622 × 2872: hair from row 190, chest at row 1150, head on column 813 — head to chest, head 300 px left of centre. */
+const TUNTUN4 = { aspect: 1622 / 2872, rows: 2872, top: 190, chest: 1150, headU: 813 / 1622, floor: 2767 / 2872, from: 330, left: 300 };
+/**
+ * The three "Tetap …" on his right, top to bottom — no pill: black type typed
+ * out beside an empty box, then a green tick drawn into the box.
+ */
+const TODO = { x: 1010, y: [520, 640, 760], size: 52, box: 50, gap: 26, cps: 1 };
+
+const Todo = ({ label, y, at, out }: { label: string; y: number; at: number; out: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const life = useLife(at, out, undefined, m.fade);
+  if (life <= 0.001) return null;
+  const shown = Math.max(0, Math.floor((f - at) * TODO.cps));
+  const tickAt = at + Math.ceil(label.length / TODO.cps) + m.sec(0.1);
+  const tick = ease(f, tickAt, m.sec(0.35));
+  const B = TODO.box;
+  const TICK_LEN = 40;
+  return (
+    <div style={{ position: "absolute", left: TODO.x, top: y - B / 2, height: B, display: "flex", alignItems: "center", gap: TODO.gap, opacity: life }}>
+      <svg width={B} height={B} viewBox="0 0 50 50" style={{ flex: "none" }}>
+        <rect x={3} y={3} width={44} height={44} rx={10} fill={c.cardBg} stroke={c.ink} strokeWidth={4} />
+        {tick > 0.001 ? (
+          <path d="M13 26 L22 35 L38 16" fill="none" stroke={theme.color.checkGreen} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={TICK_LEN} strokeDashoffset={TICK_LEN * (1 - tick)} />
+        ) : null}
+      </svg>
+      <span style={{ fontFamily: theme.text.family, fontSize: TODO.size, fontWeight: 700, color: c.ink, whiteSpace: "pre", lineHeight: 1 }}>{label.slice(0, shown)}</span>
+    </div>
+  );
+};
 const TUNTUN4_H = ((theme.captionBand.top - TUNTUN4.from) * TUNTUN4.rows) / (TUNTUN4.chest - TUNTUN4.top);
 /** How far the card and the photo travel: from just off one side of the frame to just off the other. */
 const SLIDE = theme.canvas.width;
@@ -175,7 +204,7 @@ export const SC04 = () => {
       />
       {/* …and the next one in behind it, the same carousel move */}
       <Cutout
-        src="art/vi01/orang-tuntun.png"
+        src="art/vi01/orang-tuntun-2.png"
         aspect={TUNTUN4.aspect}
         x={theme.canvas.width / 2 - TUNTUN4.left - (TUNTUN4.headU - 0.5) * TUNTUN4_H * TUNTUN4.aspect + SLIDE * (1 - ease(f, L(B4.tuntun[0]), m.move))}
         y={TUNTUN4.from - (TUNTUN4.top / TUNTUN4.rows) * TUNTUN4_H + TUNTUN4_H}
@@ -188,7 +217,7 @@ export const SC04 = () => {
       />
       </div>
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
-        <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
+        <Todo key={label} label={label} y={TODO.y[i]} at={L(B4.tetap[i])} out={clear} />
       ))}
       <Node box={FLOW[0]} label="Kerja" icon="briefcase" at={L(B4.bedanya)} size={40} />
       <Link a={nodeEdge(FLOW[0], "r")} b={nodeEdge(FLOW[1], "l")} at={L(B4.sebagian) - 10} />

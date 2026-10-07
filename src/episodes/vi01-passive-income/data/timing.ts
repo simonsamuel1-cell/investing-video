@@ -145,7 +145,8 @@ export const SC04 = {
   /**
    * "3619-3858 Orang Resign nya scroll ke kiri keluar layar. Lalu dari kanan,
    * masuk Orang Tuntun png (preview dari kepala hingga dada)" — ending "300 px
-   * ke kiri dari tengah"; it fades at the end of the range.
+   * ke kiri dari tengah"; it fades at the end of the range. ("My bad, harusnya
+   * Orang Tuntun 2.")
    */
   tuntun: [3619, 3858] as const,
   bukan: 3349, // "Bukan berarti investasi hari ini,"
