@@ -7,9 +7,9 @@
  * those colours carry into the life-long picture and the relay.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
+import { Cutout, ease, Sheet, Icon, Link, Node, OUTSIDE_RESERVES, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -187,6 +187,30 @@ const AssetCard = ({ at, moveAt, moveOver, top, dx }: { at: number; moveAt: numb
   );
 };
 
+/**
+ * THE CARRIED TITLE — "Passive Income", from the moment ST1 hands it over
+ * until SC05's "Compounding". Mounted at the composition root, outside every
+ * scene's CameraCut, so the SC04 → SC05 cut moves everything but it. At
+ * SC05.peran it shrinks a little and "Peran Waktu di" comes up over it.
+ * Reads the GLOBAL frame.
+ */
+const CARRIED = { y: SC04_TITLE.y, size: SC04_TITLE.size, smallY: 255, smallSize: 72, overY: 168, overSize: 52 };
+export const CarriedTitle = () => {
+  const g = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const from = LIST_TRANS.handoff;
+  const out = ease(g, B5.compounding - m.move, m.fade);
+  if (g < from || out >= 0.999) return null;
+  const k = ease(g, B5.peran, m.move);
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: 1 - out }}>
+      <Say text="Passive Income" x={theme.canvas.width / 2} y={CARRIED.y + (CARRIED.smallY - CARRIED.y) * k} at={from - m.reveal} size={CARRIED.size + (CARRIED.smallSize - CARRIED.size) * k} weight={800} color={c.indigo} />
+      <Say text="Peran Waktu di" x={theme.canvas.width / 2} y={CARRIED.overY} at={B5.peran + m.move / 2} size={CARRIED.overSize} weight={700} />
+    </div>
+  );
+};
+
 export const SC04 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
@@ -199,15 +223,8 @@ export const SC04 = () => {
   const lines = ease(f, L(B4.map) + m.move, m.sec(0.6));
   const branch = ease(f, L(B4.branch), m.sec(0.5));
   const slide = (MAP.bubbleX - TODO_BUBBLE_X) * toMap;
-  /* the title is the word Scene Transisi 1 carried here: it is simply there
-     from the hand-off on, never fading in */
-  const handoff = L(LIST_TRANS.handoff);
   return (
     <Stage>
-      {/* 3338: everything but the carried title goes for the card */}
-      {f >= handoff ? (
-        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
-      ) : null}
       {/* the card rides under the carried title until it lands, then holds —
           masked above the caption band while it is still low */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
@@ -268,39 +285,90 @@ const ON_PROFIT = [0, 0, 1, 2.1];
 const BARS = { base: 860, unit: 2.6, w: 180, x: [600, 860, 1120, 1380] };
 /** Each step's growth sits on the old value with a hairline of air, so both keep round corners. */
 const GAP = 5;
-const CHAIN: NodeBox[] = [
-  { x: 250, y: 290, w: 280, h: 120 },
-  { x: 700, y: 290, w: 380, h: 120 },
-  { x: 1250, y: 290, w: 470, h: 120 },
-];
+
+/**
+ * THE COIN TREE — a remake of Simon's picture: one large coin, arrows out to
+ * coins, and from those to smaller coins, and on — money that makes money.
+ * Still for now ("Taro dulu aja, jangan animasikan dulu"); it fades in at
+ * SC05.tree and out before the time axis.
+ */
+type Coin = { x: number; y: number; r: number; parent?: number };
+const TREE: Coin[] = (() => {
+  const root = { x: 960, y: 620, r: 62 };
+  const out: Coin[] = [root];
+  const first = [-150, -95, -35, 30, 95, 150];
+  first.forEach((a) => {
+    const rad = (a * Math.PI) / 180;
+    const p = out.length;
+    const c1 = { x: root.x + Math.sin(rad) * 190, y: root.y - Math.cos(rad) * 190, r: 40, parent: 0 };
+    out.push(c1);
+    [-24, 24].forEach((d) => {
+      const r2 = ((a + d) * Math.PI) / 180;
+      out.push({ x: c1.x + Math.sin(r2) * 125, y: c1.y - Math.cos(r2) * 125, r: 28, parent: p });
+    });
+  });
+  return out;
+})();
+
+const CoinTree = ({ at, out }: { at: number; out: number }) => {
+  const c = usePalette();
+  const life = useLife(at, out);
+  if (life <= 0.001) return null;
+  const arrow = (a: Coin, b: Coin, i: number) => {
+    const dx = b.x - a.x;
+    const dy = b.y - a.y;
+    const len = Math.hypot(dx, dy);
+    const ux = dx / len;
+    const uy = dy / len;
+    const x1 = a.x + ux * (a.r + 8);
+    const y1 = a.y + uy * (a.r + 8);
+    const x2 = b.x - ux * (b.r + 8);
+    const y2 = b.y - uy * (b.r + 8);
+    const h = 9;
+    return (
+      <g key={i}>
+        <line x1={x1} y1={y1} x2={x2 - ux * h} y2={y2 - uy * h} stroke={c.ink} strokeWidth={3} strokeLinecap="round" />
+        <path d={`M ${x2} ${y2} L ${x2 - ux * h * 1.6 - uy * h} ${y2 - uy * h * 1.6 + ux * h} L ${x2 - ux * h * 1.6 + uy * h} ${y2 - uy * h * 1.6 - ux * h} Z`} fill={c.ink} />
+      </g>
+    );
+  };
+  return (
+    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, opacity: life }}>
+      {TREE.map((n, i) => (n.parent === undefined ? null : arrow(TREE[n.parent], n, i)))}
+      {TREE.map((n, i) => (
+        <g key={`c${i}`}>
+          <circle cx={n.x} cy={n.y} r={n.r} fill={c.indigo} />
+          <circle cx={n.x} cy={n.y} r={n.r * 0.8} fill="none" stroke={c.cardBg} strokeWidth={Math.max(2, n.r * 0.06)} />
+          <text x={n.x} y={n.y} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={n.r * 0.72} fill={c.cardBg}>
+            Rp
+          </text>
+        </g>
+      ))}
+    </svg>
+  );
+};
 
 export const SC05 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC05);
-  const chainOut = L(B5.compounding) - 30;
-  const chainDim = ease(f, L(B5.bars[0]) - 30, m.fade);
   const axis = ease(f, L(B5.axis), m.move);
+  /* the grid comes up once the cut has landed */
+  const grid = ease(f, CUT.over / 2, m.fade);
   return (
     <Stage>
-      <Say text="Waktu punya peran besar" x={960} y={180} at={L(B5.axis)} out={L(B5.compounding) - 20} size={56} />
+      <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC05} paper={c.bg} />
+      </div>
+      <CoinTree at={L(B5.tree)} out={L(B5.axis) - m.fade} />
       <Say text="Compounding" x={960} y={170} at={L(B5.compounding)} size={84} weight={800} color={theme.color.cyanInk} />
       <Say text="hasil yang terus ikut bertumbuh seiring waktu" x={960} y={262} at={L(B5.line)} size={40} weight={600} color={c.slate} />
-
-      <div style={{ opacity: 1 - 0.55 * chainDim }}>
-        <Node box={CHAIN[0]} label="Aset" icon="box" tone="cyan" at={L(B5.kalau)} out={chainOut} size={36} />
-        <Link a={nodeEdge(CHAIN[0], "r")} b={nodeEdge(CHAIN[1], "l")} at={L(B5.kalau) + 40} tone="cyan" out={chainOut} />
-        <Node box={CHAIN[1]} label="Keuntungan" icon="coin" tone="cyan" at={L(B5.kalau) + 80} out={chainOut} size={36} />
-        <Link a={nodeEdge(CHAIN[1], "r")} b={nodeEdge(CHAIN[2], "l")} at={L(B5.lagi)} tone="cyan" out={chainOut} />
-        <Node box={CHAIN[2]} label="Keuntungan berikutnya" icon="coin" tone="cyan" at={L(B5.lagi) + 60} out={chainOut} size={36} />
-      </div>
 
       {/* the time axis the bars stand on */}
       {axis > 0.001 ? (
         <>
           <div style={{ position: "absolute", left: 440, top: BARS.base, width: 1120 * axis, height: theme.shape.rule, background: c.slate }} />
-          <Say text="waktu →" x={1560} y={BARS.base + 40} at={L(B5.axis) + 20} anchor="right" size={30} weight={600} color={c.slate} />
         </>
       ) : null}
 

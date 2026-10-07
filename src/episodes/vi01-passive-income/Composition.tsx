@@ -16,7 +16,7 @@ import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, t
 import { BLOCK, CUT, CUTS, TRANS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
 import { SC01, SC02, SC03 } from "./scenes/ColdOpen";
-import { SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
+import { CarriedTitle, SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
 import { SC09, SC10, SC11, SC12 } from "./scenes/PartTwo";
 import { SC13, SC14, SC15 } from "./scenes/PartThree";
 import { SC16, SC17, SC18 } from "./scenes/Close";
@@ -106,6 +106,8 @@ const Body = () => (
     ))}
 
     <ListTransisi scenes={SCENES} />
+    {/* "Passive Income", over the SC04 → SC05 cut rather than in it */}
+    <CarriedTitle />
     {TRANS.map((t) => (
       <SceneTransisi key={t.at} t={t} scenes={SCENES} />
     ))}

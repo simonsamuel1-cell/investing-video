@@ -178,7 +178,17 @@ export const SC04 = {
 };
 
 export const SC05 = {
-  axis: 4283, // "waktu punya peran besar."
+  /**
+   * Simon: "Di 4257, Passive Income mengecil sedikit, lalu di atasnya ada
+   * tambahan text judul 'Peran Waktu di'." The title is the one carried from
+   * ST1 — it rides through the SC04 → SC05 cut untouched ("Transisi camera cut
+   * nya tetap ada, kecuali Passive Income"), and the grid fades in behind it.
+   */
+  peran: 4257,
+  /** "Di 4380 Remake gambar yang aku copy. Taro dulu aja, jangan animasikan dulu." — the coin tree. */
+  tree: 4380,
+  /** "Garis waktu di 4321 sudah tepat, tapi 'Waktu' nya remove. Lalu geser timing munculnya di 4698" */
+  axis: 4698,
   kalau: 4401, // "Kalau sebuah aset menghasilkan keuntungan,"
   lagi: 4533, // "keuntungan itu bisa ikut menghasilkan keuntungan"
   /** "100 … 110 … 121 … 133" — each bar lands on its own number. */
