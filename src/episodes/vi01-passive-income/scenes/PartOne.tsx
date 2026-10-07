@@ -280,8 +280,6 @@ export const SC04 = () => {
 
 // ═══ SC05 — compounding, on the spoken numbers ════════════════════════════
 const VALUES = [100, 110, 121, 133];
-/** How much of each step's growth came from earlier growth (profit on profit). */
-const ON_PROFIT = [0, 0, 1, 2.1];
 const BARS = { base: 860, unit: 2.6, w: 180, r: 14, x: [600, 860, 1120, 1380] };
 
 /**
@@ -392,17 +390,15 @@ export const SC05 = () => {
         const prev = i === 0 ? v : VALUES[i - 1];
         const h = v * BARS.unit * grow;
         const base = prev * BARS.unit * grow;
-        const extra = ON_PROFIT[i] * BARS.unit * grow;
         const x = BARS.x[i] - BARS.w / 2;
         return (
           <div key={v}>
             <div style={{ position: "absolute", left: x, top: BARS.base - h, width: BARS.w, height: h, borderRadius: `${BARS.r}px ${BARS.r}px 0 0`, overflow: "hidden", border: `${theme.shape.rule}px solid ${c.cyan}`, borderBottom: "none", boxSizing: "border-box", background: c.cyanSoft }}>
               {i > 0 ? (
                 <>
-                  {/* this year's growth on top of last year's value… */}
+                  {/* this year's growth on top of last year's value, one colour
+                      ("itu di samain aja sama warna bawahnya") */}
                   <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: h - base, background: c.cyan }} />
-                  {/* …and the part of it that grew on earlier growth */}
-                  {extra > 0.5 ? <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: extra, background: theme.color.cyanInk }} /> : null}
                 </>
               ) : null}
             </div>
