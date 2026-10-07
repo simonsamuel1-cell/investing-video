@@ -30,11 +30,14 @@ const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number
  * THE TOTAL ASSET CARD — a remake of Simon's screenshot of the app's balance
  * card: "Total Asset" with an eye, the total large; Deposit and Withdraw as two
  * tinted square buttons on the right; Available Cash and Total Invested along
- * the bottom. The numbers are his screenshot's, verbatim.
+ * the bottom. Simon's numbers: Rp 50,000,000 in all, first as cash, then — at
+ * `moveAt` — all of it invested; the two figures count across together.
  */
+const TOTAL_ASSET = 50_000_000;
+const fmtAsset = (n: number) => Math.round(n).toLocaleString("en-US");
 const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 54 };
 
-const AssetCard = ({ at, out }: { at: number; out: number }) => {
+const AssetCard = ({ at, out, moveAt }: { at: number; out: number; moveAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const shadow = useShadow();
@@ -42,6 +45,7 @@ const AssetCard = ({ at, out }: { at: number; out: number }) => {
   const life = useLife(at, out);
   if (life <= 0.001) return null;
   const lift = (1 - ease(f, at, m.reveal)) * 24;
+  const invested = TOTAL_ASSET * ease(f, moveAt, m.sec(1));
   const type = { fontFamily: theme.text.family, lineHeight: 1, whiteSpace: "nowrap" as const };
   const button = (label: string, glyph: React.ReactNode) => (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
@@ -76,7 +80,7 @@ const AssetCard = ({ at, out }: { at: number; out: number }) => {
           <circle cx={12} cy={12} r={3} />
         </svg>
       </div>
-      <div style={{ ...type, position: "absolute", left: ASSET.pad, top: ASSET.pad + 66, fontSize: ASSET.total, fontWeight: 800, color: c.ink, fontVariantNumeric: "tabular-nums" }}>8,083,652</div>
+      <div style={{ ...type, position: "absolute", left: ASSET.pad, top: ASSET.pad + 66, fontSize: ASSET.total, fontWeight: 800, color: c.ink, fontVariantNumeric: "tabular-nums" }}>{fmtAsset(TOTAL_ASSET)}</div>
 
       {/* Deposit · Withdraw */}
       <div style={{ position: "absolute", right: ASSET.pad - 10, top: ASSET.pad - 24, display: "flex", gap: 44 }}>
@@ -101,11 +105,11 @@ const AssetCard = ({ at, out }: { at: number; out: number }) => {
       {/* Available Cash · Total Invested */}
       <div style={{ position: "absolute", left: ASSET.pad, bottom: ASSET.pad, display: "flex", flexDirection: "column", gap: 16 }}>
         <span style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.slate }}>Available Cash</span>
-        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>2,001,150</span>
+        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>{fmtAsset(TOTAL_ASSET - invested)}</span>
       </div>
       <div style={{ position: "absolute", right: ASSET.pad, bottom: ASSET.pad, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
         <span style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.slate }}>Total Invested</span>
-        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>7,872,091</span>
+        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>{fmtAsset(invested)}</span>
       </div>
     </div>
   );
@@ -131,7 +135,7 @@ export const SC04 = () => {
       {f >= handoff ? (
         <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
       ) : null}
-      <AssetCard at={L(B4.asset[0]) + m.fade} out={L(B4.asset[1])} />
+      <AssetCard at={L(B4.asset[0]) + m.fade} out={L(B4.asset[1])} moveAt={L(B4.invest)} />
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
         <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
       ))}

@@ -134,6 +134,8 @@ export const SC04 = {
   title: 3198, // "passive income"
   /** Simon: "3338-3623 Remove semua visual. Remake gambar ini" — the Total Asset card, alone on screen. */
   asset: [3338, 3623] as const,
+  /** "Di 3453, avaiable cash jadi 0; Total invested jadi 50,000,000" — the cash moves into investments. */
+  invest: 3453,
   bukan: 3349, // "Bukan berarti investasi hari ini,"
   strike: 3558, // "…langsung berhenti kerja."
   tetap: [3639, 3706, 3788] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
