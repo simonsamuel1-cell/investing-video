@@ -53,11 +53,39 @@ const TUNTUN4 = { aspect: 1622 / 2872, rows: 2872, top: 190, chest: 1150, headU:
  */
 const TODO = { x: 1010, y: [520, 640, 760], size: 52, box: 50, gap: 26, cps: 1 };
 
-const Todo = ({ label, y, at, out }: { label: string; y: number; at: number; out: number }) => {
+/**
+ * THE MAP — Simon's sketch: the three on the left, each line running right and
+ * bending into one, into "Penghasilan"; from it two branches, "ubah jadi
+ * asset" and "Simpan". Text widths measured in the real face at 52 px bold.
+ */
+const MAP = {
+  x: 100,
+  y: [350, 540, 730],
+  textW: [279, 499, 327],
+  cy: 540,
+  col: 790,
+  r: 50,
+  join: 900,
+  hub: 925,
+  hubW: 306,
+  fork: 1315,
+  forkR: 30,
+  branchY: [440, 640],
+  branchEnd: 1410,
+  leaf: 1435,
+  pad: 26,
+  stroke: 4,
+};
+
+/** A line drawn on from its start: `p` 0 → 1. */
+const Drawn = ({ d, p, color }: { d: string; p: number; color: string }) =>
+  p > 0.001 ? <path d={d} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} fill="none" stroke={color} strokeWidth={MAP.stroke} strokeLinecap="round" strokeLinejoin="round" /> : null;
+
+const Todo = ({ label, x, y, at }: { label: string; x: number; y: number; at: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const life = useLife(at, out, undefined, m.fade);
+  const life = useLife(at, undefined, undefined, m.fade);
   if (life <= 0.001) return null;
   const shown = Math.max(0, Math.floor((f - at) * TODO.cps));
   const tickAt = at + Math.ceil(label.length / TODO.cps) + m.sec(0.1);
@@ -65,7 +93,7 @@ const Todo = ({ label, y, at, out }: { label: string; y: number; at: number; out
   const B = TODO.box;
   const TICK_LEN = 40;
   return (
-    <div style={{ position: "absolute", left: TODO.x, top: y - B / 2, height: B, display: "flex", alignItems: "center", gap: TODO.gap, opacity: life }}>
+    <div style={{ position: "absolute", left: x, top: y - B / 2, height: B, display: "flex", alignItems: "center", gap: TODO.gap, opacity: life }}>
       <svg width={B} height={B} viewBox="0 0 50 50" style={{ flex: "none" }}>
         <rect x={3} y={3} width={44} height={44} rx={10} fill={c.cardBg} stroke={c.ink} strokeWidth={4} />
         {tick > 0.001 ? (
@@ -156,18 +184,19 @@ const AssetCard = ({ at, moveAt, moveOver, top, dx }: { at: number; moveAt: numb
     </div>
   );
 };
-const FLOW: NodeBox[] = [
-  { x: 220, y: 500, w: 330, h: 150 },
-  { x: 720, y: 500, w: 420, h: 150 },
-  { x: 1320, y: 500, w: 340, h: 150 },
-];
 
 export const SC04 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC04);
   const c = usePalette();
-  const clear = L(B4.bedanya) - 20;
+  /* the map: the three move over, their lines run into the hub, the hub
+     branches on "ubah menjadi aset" */
+  const toMap = ease(f, L(B4.map), m.move);
+  const linesAt = L(B4.map) + m.move;
+  const lines = ease(f, linesAt, m.sec(0.6));
+  const hubAt = linesAt + m.sec(0.6) - m.sec(0.15);
+  const branches = ease(f, L(B4.aset) - m.sec(0.6), m.sec(0.6));
   /* the title is the word Scene Transisi 1 carried here: it is simply there
      from the hand-off on, never fading in */
   const handoff = L(LIST_TRANS.handoff);
@@ -206,25 +235,45 @@ export const SC04 = () => {
       <Cutout
         src="art/vi01/orang-tuntun-2.png"
         aspect={TUNTUN4.aspect}
-        x={theme.canvas.width / 2 - TUNTUN4.left - (TUNTUN4.headU - 0.5) * TUNTUN4_H * TUNTUN4.aspect + SLIDE * (1 - ease(f, L(B4.tuntun[0]), m.move))}
+        x={theme.canvas.width / 2 - TUNTUN4.left - (TUNTUN4.headU - 0.5) * TUNTUN4_H * TUNTUN4.aspect + SLIDE * (1 - ease(f, L(B4.tuntun[0]), m.move)) - SLIDE * ease(f, L(B4.map), m.move)}
         y={TUNTUN4.from - (TUNTUN4.top / TUNTUN4.rows) * TUNTUN4_H + TUNTUN4_H}
         h={TUNTUN4_H}
         at={L(B4.tuntun[0]) - m.reveal}
-        out={L(B4.tuntun[1])}
         rise={0}
         shadow
         floor={TUNTUN4.floor}
       />
       </div>
+      {/* 3859: the three move left to head the map as the photo goes */}
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
-        <Todo key={label} label={label} y={TODO.y[i]} at={L(B4.tetap[i])} out={clear} />
+        <Todo key={label} label={label} x={TODO.x + (MAP.x - TODO.x) * toMap} y={TODO.y[i] + (MAP.y[i] - TODO.y[i]) * toMap} at={L(B4.tetap[i])} />
       ))}
-      <Node box={FLOW[0]} label="Kerja" icon="briefcase" at={L(B4.bedanya)} size={40} />
-      <Link a={nodeEdge(FLOW[0], "r")} b={nodeEdge(FLOW[1], "l")} at={L(B4.sebagian) - 10} />
-      <Node box={FLOW[1]} label="Penghasilan" icon="wallet" at={L(B4.sebagian)} size={40} />
-      <Link a={nodeEdge(FLOW[1], "r")} b={nodeEdge(FLOW[2], "l")} at={L(B4.aset) - 50} tone="cyan" />
-      <Say text="sebagian" x={(FLOW[1].x + FLOW[1].w + FLOW[2].x) / 2} y={FLOW[1].y - 36} at={L(B4.aset) - 50} size={32} weight={600} color={theme.color.cyanInk} />
-      <Node box={FLOW[2]} label="Aset" icon="box" tone="cyan" at={L(B4.aset)} size={40} />
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        {MAP.y.map((y, i) => {
+          const x0 = MAP.x + TODO.box + TODO.gap + MAP.textW[i] + MAP.pad;
+          const bend = y === MAP.cy ? "" : (() => {
+            const s = Math.sign(MAP.cy - y);
+            return ` H ${MAP.col - MAP.r} Q ${MAP.col} ${y} ${MAP.col} ${y + s * MAP.r} V ${MAP.cy - s * MAP.r} Q ${MAP.col} ${MAP.cy} ${MAP.col + MAP.r} ${MAP.cy}`;
+          })();
+          return <Drawn key={i} d={`M ${x0} ${y}${bend} H ${MAP.join}`} p={lines} color={c.ink} />;
+        })}
+        {MAP.branchY.map((y, i) => {
+          const s = Math.sign(y - MAP.cy);
+          const from = MAP.hub + MAP.hubW + MAP.pad;
+          const R = MAP.forkR;
+          return (
+            <Drawn
+              key={i}
+              d={`M ${from} ${MAP.cy} H ${MAP.fork - R} Q ${MAP.fork} ${MAP.cy} ${MAP.fork} ${MAP.cy + s * R} V ${y - s * R} Q ${MAP.fork} ${y} ${MAP.fork + R} ${y} H ${MAP.branchEnd}`}
+              p={branches}
+              color={c.ink}
+            />
+          );
+        })}
+      </svg>
+      <Say text="Penghasilan" x={MAP.hub} y={MAP.cy} at={hubAt} anchor="left" size={TODO.size} weight={700} />
+      <Say text="ubah jadi asset" x={MAP.leaf} y={MAP.branchY[0]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
+      <Say text="Simpan" x={MAP.leaf} y={MAP.branchY[1]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
     </Stage>
   );
 };

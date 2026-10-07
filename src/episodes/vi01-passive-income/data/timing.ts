@@ -148,7 +148,15 @@ export const SC04 = {
    * ke kiri dari tengah"; it fades at the end of the range. ("My bad, harusnya
    * Orang Tuntun 2.")
    */
-  tuntun: [3619, 3858] as const,
+  tuntun: [3619] as const,
+  /**
+   * "3859 Instead of visual fade out semua, buat Orang Tuntun nya geser ke kiri
+   * kluar layar. Lalu yang 3 poin, extend ke kanan membuat mapping seperti
+   * gambar" — the three to the left, their lines drawn into "Penghasilan" on
+   * "uang yang kita hasilkan", which branches into "ubah jadi asset" and
+   * "Simpan" on "ubah menjadi aset".
+   */
+  map: 3859,
   bukan: 3349, // "Bukan berarti investasi hari ini,"
   strike: 3558, // "…langsung berhenti kerja."
   tetap: [3639, 3706, 3788] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
