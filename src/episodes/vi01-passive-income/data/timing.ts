@@ -211,6 +211,15 @@ export const SC05 = {
 export const SC06 = {
   /** "5578 balancenya dari Rp 0,- jadi Rp 1,000,000,000,- dan UI nya ikut membesar 10%" */
   balance: 5578,
+  /**
+   * Simon: "5700 Hapus visual di sini. Buat 3 row" — Bulan 1-3, each a Bank
+   * balance card and a Total invested card, a coin sent across, 30 frames
+   * apart. `months` is when the rows come up; `send` is each row's coin.
+   */
+  months: 5700,
+  send: [5760, 5790, 5820] as const,
+  /** "5931 Muncul text box garis putus putus di atas subtitle, isinya 'Investasi bukan cuma soal uang'" */
+  notMoney: 5931,
   modal: 5651, // "modal besar dulu."
   strike: 5698,
   habit: 5823, // "mulai membangun kebiasaannya."

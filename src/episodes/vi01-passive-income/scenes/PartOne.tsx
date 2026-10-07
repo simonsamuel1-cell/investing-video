@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Sheet, Icon, Link, Node, OUTSIDE_RESERVES, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Sheet, Icon, Link, Node, OUTSIDE_RESERVES, Say, TypeBox, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -360,8 +360,8 @@ const SCROLL_UP = 1100;
  * THE BANK BALANCE CARD — a remake of Simon's screenshot: "Bank balance", and
  * under it the balance, the currency small and raised before it. It comes up
  * from below anchored to the chart (the same scroll), counts Rp 0,- →
- * Rp 1,000,000,000,- at SC06.balance as it grows 10%, and leaves when SC06's
- * "Karena investasi bukan cuma soal uang" begins. Mounted at the composition
+ * Rp 1,000,000,000.- at SC06.balance as it grows 10%, and leaves at
+ * SC06.months. Mounted at the composition
  * root: it crosses the SC05 → SC06 boundary. Reads the GLOBAL frame.
  */
 const BANK = { w: 1080, h: 360, pad: 72, label: 50, amount: 100, currency: 46, balance: 1_000_000_000, grow: 0.1 };
@@ -371,11 +371,12 @@ export const BankBalance = () => {
   const m = useMotion();
   const shadow = useShadow();
   const up = ease(g, B5.scroll, m.move);
-  const out = ease(g, B6.bukanUang - m.fade, m.fade);
+  /* "5700 Hapus visual di sini" — it gives way to the three months */
+  const out = ease(g, B6.months, m.fade);
   if (g < B5.scroll || out >= 0.999) return null;
   const count = ease(g, B6.balance, m.sec(1.5));
   const scale = 1 + BANK.grow * count;
-  const amount = `${Math.round(BANK.balance * count).toLocaleString("en-US")},-`;
+  const amount = `${Math.round(BANK.balance * count).toLocaleString("en-US")}.-`;
   const top = (theme.captionBand.top - BANK.h) / 2 + SCROLL_UP * (1 - up);
   return (
     <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)`, opacity: 1 - out }}>
@@ -465,7 +466,6 @@ export const SC05 = () => {
 };
 
 // ═══ SC06 — the habit, not the lump sum ══════════════════════════════════
-const HABIT = { x: 1060, y: 330, cell: 76, gap: 12, cols: 7, rows: 4 };
 const LOOP: NodeBox[] = [
   { x: 420, y: 290, w: 360, h: 130 },
   { x: 700, y: 640, w: 420, h: 130 },
@@ -475,13 +475,72 @@ const LOOP: NodeBox[] = [
 const SKILL = { x: 1380, w: 150, base: 860, heights: [130, 250, 370, 500] };
 const SKILL_STEPS = [B6.belajar, B6.evaluasi, B6.baik, B6.kelola];
 
+/**
+ * THE THREE MONTHS — "Bulan 1 … 3", each a small Bank balance card and, after a
+ * gap, a Total invested card. A coin flies from left to right; when it lands
+ * the left drops Rp 5,000,000 and the right gains it. The left starts at
+ * Rp 20,000,000 every month; the right carries what was invested before.
+ */
+const MONTH = { tag: 34, cardW: 560, cardH: 176, gapX: 200, rowY: [140, 380, 620], tagGap: 34, label: 30, amount: 54, pad: 34, coinR: 26 };
+const MONTH_X = [(theme.canvas.width - 2 * MONTH.cardW - MONTH.gapX) / 2, (theme.canvas.width + MONTH.gapX) / 2];
+const SALARY = 20_000_000;
+const SENT = 5_000_000;
+const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
+
+const MiniBalance = ({ x, y, label, amount }: { x: number; y: number; label: string; amount: string }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  return (
+    <div style={{ position: "absolute", left: x, top: y, width: MONTH.cardW, height: MONTH.cardH, borderRadius: 26, background: c.cardBg, boxShadow: shadow.soft, fontFamily: theme.text.family, color: c.ink }}>
+      <div style={{ position: "absolute", left: MONTH.pad, top: MONTH.pad, fontSize: MONTH.label, fontWeight: 500, lineHeight: 1 }}>{label}</div>
+      <div style={{ position: "absolute", left: MONTH.pad, bottom: MONTH.pad, fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{amount}</div>
+    </div>
+  );
+};
+
+const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; out: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const life = useLife(at, out);
+  if (life <= 0.001) return null;
+  const top = MONTH.rowY[i];
+  const cardTop = top + MONTH.tagGap;
+  const fly = ease(f, send, m.move);
+  const land = ease(f, send + m.move, m.sec(0.4));
+  const before = SENT * i;
+  /* the coin, from the left card's right edge to the right card's left edge, on a low arc */
+  const x0 = MONTH_X[0] + MONTH.cardW - MONTH.coinR;
+  const x1 = MONTH_X[1] + MONTH.coinR;
+  const cy = cardTop + MONTH.cardH / 2;
+  const coinX = x0 + (x1 - x0) * fly;
+  const coinY = cy - Math.sin(Math.PI * fly) * 60;
+  const flying = fly > 0.001 && fly < 0.999;
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      <div style={{ position: "absolute", left: MONTH_X[0], top: top - MONTH.tag / 2, fontFamily: theme.text.family, fontSize: MONTH.tag, fontWeight: 700, color: c.indigo, lineHeight: 1 }}>Bulan {i + 1}</div>
+      <MiniBalance x={MONTH_X[0]} y={cardTop} label="Bank balance" amount={rp(SALARY - SENT * land)} />
+      <MiniBalance x={MONTH_X[1]} y={cardTop} label="Total invested" amount={rp(before + SENT * land)} />
+      {flying ? (
+        <svg width={MONTH.coinR * 2} height={MONTH.coinR * 2} style={{ position: "absolute", left: coinX - MONTH.coinR, top: coinY - MONTH.coinR }}>
+          <circle cx={MONTH.coinR} cy={MONTH.coinR} r={MONTH.coinR} fill={theme.color.coinYellow} />
+          <circle cx={MONTH.coinR} cy={MONTH.coinR} r={MONTH.coinR * 0.8} fill="none" stroke={c.cardBg} strokeWidth={2} />
+          <text x={MONTH.coinR} y={MONTH.coinR} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={MONTH.coinR * 0.72} fill={c.ink}>Rp</text>
+        </svg>
+      ) : null}
+    </div>
+  );
+};
+
+/** The dashed box, just above the caption band. */
+const NOT_MONEY = { w: 980, h: 110, size: 46, y: theme.captionBand.top - 110 - 24 };
+
 export const SC06 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const L = (g: number) => local(g, BLOCK.SC06);
   const firstOut = L(B6.loop) - 30;
-  const lump = useLife(L(B6.modal), L(B6.bukanUang));
-  const habit = useLife(L(B6.habit), firstOut);
+  const m = useMotion();
   const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * ease(f, L(s), 24), 0);
   return (
     <Stage>
@@ -489,50 +548,13 @@ export const SC06 = () => {
       <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC06} paper={c.bg} />
       </div>
-      {/* "modal besar dulu?" — a stack of coins, struck */}
-      {lump > 0.001 ? (
-        <div style={{ opacity: lump }}>
-          {[0, 1, 2].map((k) => (
-            <div key={k} style={{ position: "absolute", left: 440 + k * 60, top: 300 + (k % 2) * 40 }}>
-              <Icon name="coin" size={170} color={theme.color.cyanInk} stroke={2.6} />
-            </div>
-          ))}
-        </div>
-      ) : null}
-      <Say text="Modal besar dulu?" x={600} y={600} at={L(B6.modal)} out={L(B6.bukanUang)} size={52} strikeAt={L(B6.strike)} />
-
-      {/* the habit: a month of ticks, one a day */}
-      {habit > 0.001 ? (
-        <div style={{ opacity: habit }}>
-          <Say text="Kebiasaan" x={HABIT.x} y={HABIT.y - 70} at={L(B6.habitName)} anchor="left" size={56} weight={800} color={c.indigo} />
-          {Array.from({ length: HABIT.cols * HABIT.rows }, (_, i) => {
-            const on = ease(f, L(B6.habit) + 24 + i * 5, 10);
-            return (
-              <div
-                key={i}
-                style={{
-                  position: "absolute",
-                  left: HABIT.x + (i % HABIT.cols) * (HABIT.cell + HABIT.gap),
-                  top: HABIT.y + Math.floor(i / HABIT.cols) * (HABIT.cell + HABIT.gap),
-                  width: HABIT.cell,
-                  height: HABIT.cell,
-                  borderRadius: 14,
-                  background: on > 0.5 ? theme.color.indigoWashStrong : c.cardBg,
-                  border: `${theme.shape.hairline}px solid ${on > 0.5 ? c.indigo : c.border}`,
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                {on > 0.001 ? <div style={{ opacity: on }}><Icon name="check" size={46} color={c.indigo} stroke={4} /></div> : null}
-              </div>
-            );
-          })}
-        </div>
-      ) : null}
+      {/* 5700: the three months, each row's coin 30 frames after the last */}
+      {B6.send.map((send, i) => (
+        <MonthRow key={i} i={i} at={L(B6.months) + m.fade + i * 6} send={L(send)} out={firstOut} />
+      ))}
+      <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} />
 
       {/* the loop that makes the skill */}
-      <Say text="Bukan cuma soal uang" x={960} y={180} at={L(B6.bukanUang)} size={56} />
       <Node box={LOOP[0]} label="Belajar" icon="book" at={L(B6.belajar)} size={38} />
       <Link a={{ x: LOOP[0].x + LOOP[0].w, y: LOOP[0].y + 90 }} b={{ x: LOOP[1].x + LOOP[1].w / 2, y: LOOP[1].y }} at={L(B6.toEvaluasi)} />
       <Node box={LOOP[1]} label="Evaluasi keputusan" icon="check" at={L(B6.evaluasi)} size={38} />
