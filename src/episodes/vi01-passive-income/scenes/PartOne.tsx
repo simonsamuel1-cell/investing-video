@@ -491,7 +491,7 @@ const MONTH = {
   rowY: [120, 380, 640],
   tagGap: 34 * MONTH_K,
   label: 30 * MONTH_K,
-  amount: 54 * MONTH_K,
+  amount: 36, // "Nominalnya jadi 36 px deh"
   pad: 34 * MONTH_K,
   coinR: 26 * MONTH_K,
 };
