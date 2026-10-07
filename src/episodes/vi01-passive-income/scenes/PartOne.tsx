@@ -45,6 +45,9 @@ const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 
  */
 const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1417, solidCx: 563 / 1086, from: 330 };
 const RESIGN_H = ((theme.captionBand.top - RESIGN.from) * RESIGN.rows) / (RESIGN.hips - RESIGN.top);
+/** "OrangTuntun.png", 941 × 1672: hair from row 70, chest at row 620, head on column 466 — head to chest, head 300 px left of centre. */
+const TUNTUN4 = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672, from: 330, left: 300 };
+const TUNTUN4_H = ((theme.captionBand.top - TUNTUN4.from) * TUNTUN4.rows) / (TUNTUN4.chest - TUNTUN4.top);
 /** How far the card and the photo travel: from just off one side of the frame to just off the other. */
 const SLIDE = theme.canvas.width;
 
@@ -161,14 +164,27 @@ export const SC04 = () => {
       <Cutout
         src="art/vi01/orang-resign.png"
         aspect={RESIGN.aspect}
-        x={theme.canvas.width / 2 - (RESIGN.solidCx - 0.5) * RESIGN_H * RESIGN.aspect + SLIDE * (1 - ease(f, L(B4.resign), m.move))}
+        x={theme.canvas.width / 2 - (RESIGN.solidCx - 0.5) * RESIGN_H * RESIGN.aspect + SLIDE * (1 - ease(f, L(B4.resign), m.move)) - SLIDE * ease(f, L(B4.tuntun[0]), m.move)}
         y={RESIGN.from - (RESIGN.top / RESIGN.rows) * RESIGN_H + RESIGN_H}
         h={RESIGN_H}
         at={L(B4.resign) - m.reveal}
-        out={L(B4.asset[1])}
+        out={L(B4.tuntun[0]) + m.move}
         rise={0}
         shadow
         floor={RESIGN.feet / RESIGN.rows}
+      />
+      {/* …and the next one in behind it, the same carousel move */}
+      <Cutout
+        src="art/vi01/orang-tuntun.png"
+        aspect={TUNTUN4.aspect}
+        x={theme.canvas.width / 2 - TUNTUN4.left - (TUNTUN4.headU - 0.5) * TUNTUN4_H * TUNTUN4.aspect + SLIDE * (1 - ease(f, L(B4.tuntun[0]), m.move))}
+        y={TUNTUN4.from - (TUNTUN4.top / TUNTUN4.rows) * TUNTUN4_H + TUNTUN4_H}
+        h={TUNTUN4_H}
+        at={L(B4.tuntun[0]) - m.reveal}
+        out={L(B4.tuntun[1])}
+        rise={0}
+        shadow
+        floor={TUNTUN4.floor}
       />
       </div>
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (

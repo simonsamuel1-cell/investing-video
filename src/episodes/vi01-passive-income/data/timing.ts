@@ -135,13 +135,19 @@ export const SC04 = {
   /**
    * The Total Asset card — "Remake gambar ini" — then "UI nya ikut muncul dari
    * 3290, anchor to Passive Income": it comes up with the carried title, riding
-   * under it. `asset[1]` is where the photo after it leaves.
+   * under it.
    */
-  asset: [3290, 3623] as const,
+  asset: [3290] as const,
   /** "jumlah cash dan invested nya berubah dari 3396-3488" — the cash counts across into investments. */
   invest: [3396, 3488] as const,
   /** "Lalu UI ini scroll keluar layar ke kiri, lalu dari kanan geser masuk Orang Resign.png" */
   resign: 3500,
+  /**
+   * "3619-3858 Orang Resign nya scroll ke kiri keluar layar. Lalu dari kanan,
+   * masuk Orang Tuntun png (preview dari kepala hingga dada)" — ending "300 px
+   * ke kiri dari tengah"; it fades at the end of the range.
+   */
+  tuntun: [3619, 3858] as const,
   bukan: 3349, // "Bukan berarti investasi hari ini,"
   strike: 3558, // "…langsung berhenti kerja."
   tetap: [3639, 3706, 3788] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
