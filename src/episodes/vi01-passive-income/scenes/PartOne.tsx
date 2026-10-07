@@ -532,7 +532,7 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       <div style={{ position: "absolute", left: MONTH_X[0], top: top - MONTH.tag / 2, fontFamily: theme.text.family, fontSize: MONTH.tag, fontWeight: 700, color: c.indigo, lineHeight: 1 }}>Bulan {i + 1}</div>
-      <MiniBalance x={MONTH_X[0]} y={cardTop} label="Bank balance" amount={rp(SALARY - SENT * land)} />
+      <MiniBalance x={MONTH_X[0]} y={cardTop} label="Salary Balance" amount={rp(SALARY - SENT * land)} />
       <MiniBalance x={MONTH_X[1]} y={cardTop} label="Total invested" amount={rp(before + SENT * land)} />
       {flying ? (
         <svg width={MONTH.coinR * 2} height={MONTH.coinR * 2} style={{ position: "absolute", left: coinX - MONTH.coinR, top: coinY - MONTH.coinR }}>
