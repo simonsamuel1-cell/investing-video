@@ -481,7 +481,20 @@ const SKILL_STEPS = [B6.belajar, B6.evaluasi, B6.baik, B6.kelola];
  * the left drops Rp 5,000,000 and the right gains it. The left starts at
  * Rp 20,000,000 every month; the right carries what was invested before.
  */
-const MONTH = { tag: 34, cardW: 560, cardH: 176, gapX: 200, rowY: [140, 380, 620], tagGap: 34, label: 30, amount: 54, pad: 34, coinR: 26 };
+/** "Size keseluruhan 3 bulan, kecil 10%, kasih jarak lagi juga" — everything at 0.9, the rows further apart. */
+const MONTH_K = 0.9;
+const MONTH = {
+  tag: 34 * MONTH_K,
+  cardW: 560 * MONTH_K,
+  cardH: 176 * MONTH_K,
+  gapX: 200 * MONTH_K,
+  rowY: [120, 380, 640],
+  tagGap: 34 * MONTH_K,
+  label: 30 * MONTH_K,
+  amount: 54 * MONTH_K,
+  pad: 34 * MONTH_K,
+  coinR: 26 * MONTH_K,
+};
 const MONTH_X = [(theme.canvas.width - 2 * MONTH.cardW - MONTH.gapX) / 2, (theme.canvas.width + MONTH.gapX) / 2];
 const SALARY = 20_000_000;
 const SENT = 5_000_000;
