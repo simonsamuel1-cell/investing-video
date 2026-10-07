@@ -492,6 +492,7 @@ const MONTH = {
   tagGap: 34 * MONTH_K,
   label: 30 * MONTH_K,
   amount: 36, // "Nominalnya jadi 36 px deh"
+  labelGap: 20,
   pad: 34 * MONTH_K,
   coinR: 26 * MONTH_K,
 };
@@ -505,8 +506,11 @@ const MiniBalance = ({ x, y, label, amount }: { x: number; y: number; label: str
   const shadow = useShadow();
   return (
     <div style={{ position: "absolute", left: x, top: y, width: MONTH.cardW, height: MONTH.cardH, borderRadius: 26, background: c.cardBg, boxShadow: shadow.soft, fontFamily: theme.text.family, color: c.ink }}>
-      <div style={{ position: "absolute", left: MONTH.pad, top: MONTH.pad, fontSize: MONTH.label, fontWeight: 500, lineHeight: 1 }}>{label}</div>
-      <div style={{ position: "absolute", left: MONTH.pad, bottom: MONTH.pad, fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{amount}</div>
+      {/* label and amount 20 px apart ("jaraknya jadi 20 px aja"), the pair centred in the card */}
+      <div style={{ position: "absolute", left: MONTH.pad, top: 0, bottom: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: MONTH.labelGap }}>
+        <div style={{ fontSize: MONTH.label, fontWeight: 500, lineHeight: 1 }}>{label}</div>
+        <div style={{ fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{amount}</div>
+      </div>
     </div>
   );
 };
