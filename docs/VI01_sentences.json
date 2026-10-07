@@ -204,12 +204,12 @@
     {
      "text": "Bedanya, sebagian uang yang kita hasilkan mulai kita ubah menjadi aset.",
      "start": 64.9,
-     "end": 69.2,
+     "end": 69.7,
      "parts": [
       {
        "text": "Bedanya, sebagian uang yang kita hasilkan mulai kita ubah menjadi aset.",
        "start": 64.9,
-       "end": 69.2
+       "end": 69.7
       }
      ]
     }
@@ -220,54 +220,54 @@
    "sentences": [
     {
      "text": "Dan di sini, waktu punya peran besar.",
-     "start": 69.6,
-     "end": 72.4,
+     "start": 70.1,
+     "end": 72.9,
      "parts": [
       {
        "text": "Dan di sini, waktu punya peran besar.",
-       "start": 69.6,
-       "end": 72.4
+       "start": 70.1,
+       "end": 72.9
       }
      ]
     },
     {
      "text": "Kalau sebuah aset menghasilkan keuntungan, keuntungan itu bisa ikut menghasilkan keuntungan berikutnya.",
-     "start": 72.866,
-     "end": 78.238,
+     "start": 73.366,
+     "end": 78.738,
      "parts": [
       {
        "text": "Kalau sebuah aset menghasilkan keuntungan,",
-       "start": 72.866,
-       "end": 74.833
+       "start": 73.366,
+       "end": 75.333
       },
       {
        "text": "keuntungan itu bisa ikut menghasilkan keuntungan berikutnya.",
-       "start": 75.066,
-       "end": 78.238
+       "start": 75.566,
+       "end": 78.738
       }
      ]
     },
     {
      "text": "Misalnya, 100 jadi 110, lalu 121, lalu 133.",
-     "start": 78.238,
-     "end": 85.6,
+     "start": 78.738,
+     "end": 86.1,
      "parts": [
       {
        "text": "Misalnya, 100 jadi 110, lalu 121, lalu 133.",
-       "start": 78.238,
-       "end": 85.6
+       "start": 78.738,
+       "end": 86.1
       }
      ]
     },
     {
      "text": "Itulah konsep compounding: hasil yang terus ikut bertumbuh seiring waktu.",
-     "start": 86.4,
-     "end": 90.8,
+     "start": 86.9,
+     "end": 91.3,
      "parts": [
       {
        "text": "Itulah konsep compounding: hasil yang terus ikut bertumbuh seiring waktu.",
-       "start": 86.4,
-       "end": 90.8
+       "start": 86.9,
+       "end": 91.3
       }
      ]
     }
@@ -278,54 +278,54 @@
    "sentences": [
     {
      "text": "Makanya, kita nggak harus nunggu punya modal besar dulu.",
-     "start": 91.233,
-     "end": 94.8,
+     "start": 91.733,
+     "end": 95.3,
      "parts": [
       {
        "text": "Makanya, kita nggak harus nunggu punya modal besar dulu.",
-       "start": 91.233,
-       "end": 94.8
+       "start": 91.733,
+       "end": 95.3
       }
      ]
     },
     {
      "text": "Yang penting adalah mulai membangun kebiasaannya.",
-     "start": 95.266,
-     "end": 98.466,
+     "start": 95.766,
+     "end": 98.966,
      "parts": [
       {
        "text": "Yang penting adalah mulai membangun kebiasaannya.",
-       "start": 95.266,
-       "end": 98.466
+       "start": 95.766,
+       "end": 98.966
       }
      ]
     },
     {
      "text": "Karena investasi bukan cuma soal uang.",
-     "start": 99.066,
-     "end": 101.2,
+     "start": 99.566,
+     "end": 101.7,
      "parts": [
       {
        "text": "Karena investasi bukan cuma soal uang.",
-       "start": 99.066,
-       "end": 101.2
+       "start": 99.566,
+       "end": 101.7
       }
      ]
     },
     {
      "text": "Semakin sering kita belajar dan mengevaluasi keputusan, semakin baik juga kemampuan kita mengelola aset.",
-     "start": 101.866,
-     "end": 109.0,
+     "start": 102.366,
+     "end": 109.5,
      "parts": [
       {
        "text": "Semakin sering kita belajar dan mengevaluasi keputusan,",
-       "start": 101.866,
-       "end": 105.0
+       "start": 102.366,
+       "end": 105.5
       },
       {
        "text": "semakin baik juga kemampuan kita mengelola aset.",
-       "start": 105.633,
-       "end": 109.0
+       "start": 106.133,
+       "end": 109.5
       }
      ]
     }
@@ -336,71 +336,71 @@
    "sentences": [
     {
      "text": "Kalau dipikir-pikir, kekayaan kita punya dua bagian.",
-     "start": 109.1,
-     "end": 111.5,
+     "start": 109.6,
+     "end": 112.0,
      "parts": [
       {
        "text": "Kalau dipikir-pikir, kekayaan kita punya dua bagian.",
-       "start": 109.1,
-       "end": 111.5
+       "start": 109.6,
+       "end": 112.0
       }
      ]
     },
     {
      "text": "Yang pertama, human asset: waktu, kemampuan, dan pengalaman yang membantu kita menghasilkan uang.",
-     "start": 112.0,
-     "end": 117.866,
+     "start": 112.5,
+     "end": 118.366,
      "parts": [
       {
        "text": "Yang pertama, human asset:",
-       "start": 112.0,
-       "end": 113.236
+       "start": 112.5,
+       "end": 113.736
       },
       {
        "text": "waktu, kemampuan, dan pengalaman yang membantu kita menghasilkan uang.",
-       "start": 113.236,
-       "end": 117.866
+       "start": 113.736,
+       "end": 118.366
       }
      ]
     },
     {
      "text": "Yang kedua, financial asset: tabungan, investasi, dan aset yang kita bangun dari penghasilan tadi.",
-     "start": 118.433,
-     "end": 124.566,
+     "start": 118.933,
+     "end": 125.066,
      "parts": [
       {
        "text": "Yang kedua, financial asset:",
-       "start": 118.433,
-       "end": 120.363
+       "start": 118.933,
+       "end": 120.863
       },
       {
        "text": "tabungan, investasi, dan aset yang kita bangun dari penghasilan tadi.",
-       "start": 120.363,
-       "end": 124.566
+       "start": 120.863,
+       "end": 125.066
       }
      ]
     },
     {
      "text": "Human asset punya batas.",
-     "start": 124.9,
-     "end": 126.749,
+     "start": 125.4,
+     "end": 127.249,
      "parts": [
       {
        "text": "Human asset punya batas.",
-       "start": 124.9,
-       "end": 126.749
+       "start": 125.4,
+       "end": 127.249
       }
      ]
     },
     {
      "text": "Financial asset bisa terus kita miliki.",
-     "start": 126.749,
-     "end": 128.966,
+     "start": 127.249,
+     "end": 129.466,
      "parts": [
       {
        "text": "Financial asset bisa terus kita miliki.",
-       "start": 126.749,
-       "end": 128.966
+       "start": 127.249,
+       "end": 129.466
       }
      ]
     }
@@ -411,42 +411,42 @@
    "sentences": [
     {
      "text": "Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.",
-     "start": 129.5,
-     "end": 133.033,
+     "start": 130.0,
+     "end": 133.533,
      "parts": [
       {
        "text": "Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.",
-       "start": 129.5,
-       "end": 133.033
+       "start": 130.0,
+       "end": 133.533
       }
      ]
     },
     {
      "text": "Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.",
-     "start": 133.666,
-     "end": 137.5,
+     "start": 134.166,
+     "end": 138.0,
      "parts": [
       {
        "text": "Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.",
-       "start": 133.666,
-       "end": 137.5
+       "start": 134.166,
+       "end": 138.0
       }
      ]
     },
     {
      "text": "Bayangin seperti estafet: kita kerja untuk menghasilkan uang, lalu sebagian uang itu kita teruskan untuk membangun aset.",
-     "start": 137.866,
-     "end": 145.0,
+     "start": 138.366,
+     "end": 145.5,
      "parts": [
       {
        "text": "Bayangin seperti estafet: kita kerja untuk menghasilkan uang,",
-       "start": 137.866,
-       "end": 141.0
+       "start": 138.366,
+       "end": 141.5
       },
       {
        "text": "lalu sebagian uang itu kita teruskan untuk membangun aset.",
-       "start": 141.433,
-       "end": 145.0
+       "start": 141.933,
+       "end": 145.5
       }
      ]
     }
@@ -457,42 +457,42 @@
    "sentences": [
     {
      "text": "Hal menarik dari investasi adalah: kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.",
-     "start": 145.266,
-     "end": 153.0,
+     "start": 145.766,
+     "end": 153.5,
      "parts": [
       {
        "text": "Hal menarik dari investasi adalah:",
-       "start": 145.266,
-       "end": 147.1
+       "start": 145.766,
+       "end": 147.6
       },
       {
        "text": "kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.",
-       "start": 147.6,
-       "end": 153.0
+       "start": 148.1,
+       "end": 153.5
       }
      ]
     },
     {
      "text": "Ada orang yang bekerja di BCA untuk mendapatkan penghasilan.",
-     "start": 153.433,
-     "end": 156.866,
+     "start": 153.933,
+     "end": 157.366,
      "parts": [
       {
        "text": "Ada orang yang bekerja di BCA untuk mendapatkan penghasilan.",
-       "start": 153.433,
-       "end": 156.866
+       "start": 153.933,
+       "end": 157.366
       }
      ]
     },
     {
      "text": "Di sisi lain, sebagai investor, kita juga bisa punya sebagian kecil dari bisnis BCA.",
-     "start": 157.233,
-     "end": 161.966,
+     "start": 157.733,
+     "end": 162.466,
      "parts": [
       {
        "text": "Di sisi lain, sebagai investor, kita juga bisa punya sebagian kecil dari bisnis BCA.",
-       "start": 157.233,
-       "end": 161.966
+       "start": 157.733,
+       "end": 162.466
       }
      ]
     }
@@ -503,59 +503,59 @@
    "sentences": [
     {
      "text": "Hal yang sama sebenarnya ada di sekitar kita setiap hari.",
-     "start": 162.366,
-     "end": 165.7,
+     "start": 162.866,
+     "end": 166.2,
      "parts": [
       {
        "text": "Hal yang sama sebenarnya ada di sekitar kita setiap hari.",
-       "start": 162.366,
-       "end": 165.7
+       "start": 162.866,
+       "end": 166.2
       }
      ]
     },
     {
      "text": "Kita makan Indomie, minum Ultra Milk, dan menggunakan banyak produk dari perusahaan besar.",
-     "start": 166.0,
-     "end": 170.433,
+     "start": 166.5,
+     "end": 170.933,
      "parts": [
       {
        "text": "Kita makan Indomie, minum Ultra Milk,",
-       "start": 166.0,
-       "end": 168.3
+       "start": 166.5,
+       "end": 168.8
       },
       {
        "text": "dan menggunakan banyak produk dari perusahaan besar.",
-       "start": 168.3,
-       "end": 170.433
+       "start": 168.8,
+       "end": 170.933
       }
      ]
     },
     {
      "text": "Sebagai konsumen, kita menikmati produknya.",
-     "start": 170.833,
-     "end": 173.7,
+     "start": 171.333,
+     "end": 174.2,
      "parts": [
       {
        "text": "Sebagai konsumen, kita menikmati produknya.",
-       "start": 170.833,
-       "end": 173.7
+       "start": 171.333,
+       "end": 174.2
       }
      ]
     },
     {
      "text": "Tapi lewat investasi, kita juga bisa ikut punya sebagian kecil dari bisnis di balik produk-produk itu.",
-     "start": 174.266,
-     "end": 179.566,
+     "start": 174.766,
+     "end": 180.066,
      "parts": [
       {
        "text": "Tapi lewat investasi,",
-       "start": 174.266,
-       "end": 175.4
+       "start": 174.766,
+       "end": 175.9
       },
       {
        "text": "kita juga bisa ikut punya sebagian kecil dari bisnis di balik produk-produk itu.",
-       "start": 175.5,
-       "end": 179.566
+       "start": 176.0,
+       "end": 180.066
       }
      ]
     }
@@ -566,47 +566,47 @@
    "sentences": [
     {
      "text": "Dan di sinilah bedanya antara sekadar menghasilkan uang, dengan mulai membangun aset.",
-     "start": 179.966,
-     "end": 185.966,
+     "start": 180.466,
+     "end": 186.466,
      "parts": [
       {
        "text": "Dan di sinilah bedanya antara sekadar menghasilkan uang, dengan mulai membangun aset.",
-       "start": 179.966,
-       "end": 185.966
+       "start": 180.466,
+       "end": 186.466
       }
      ]
     },
     {
      "text": "Sebuah bisnis bisa menghasilkan pendapatan, mencetak laba, lalu memakai laba itu untuk berkembang lebih jauh.",
-     "start": 186.433,
-     "end": 191.6,
+     "start": 186.933,
+     "end": 192.1,
      "parts": [
       {
        "text": "Sebuah bisnis bisa menghasilkan pendapatan, mencetak laba,",
-       "start": 186.433,
-       "end": 189.433
+       "start": 186.933,
+       "end": 189.933
       },
       {
        "text": "lalu memakai laba itu untuk berkembang lebih jauh.",
-       "start": 189.533,
-       "end": 191.6
+       "start": 190.033,
+       "end": 192.1
       }
      ]
     },
     {
      "text": "Sebagai pemilik sebagian dari bisnis tersebut, kita ikut punya exposure terhadap pertumbuhan nilainya.",
-     "start": 191.933,
-     "end": 197.6,
+     "start": 192.433,
+     "end": 198.1,
      "parts": [
       {
        "text": "Sebagai pemilik sebagian dari bisnis tersebut,",
-       "start": 191.933,
-       "end": 193.866
+       "start": 192.433,
+       "end": 194.366
       },
       {
        "text": "kita ikut punya exposure terhadap pertumbuhan nilainya.",
-       "start": 194.266,
-       "end": 197.6
+       "start": 194.766,
+       "end": 198.1
       }
      ]
     }
@@ -617,42 +617,42 @@
    "sentences": [
     {
      "text": "Dan mulainya nggak harus besar.",
-     "start": 198.133,
-     "end": 199.533,
+     "start": 198.633,
+     "end": 200.033,
      "parts": [
       {
        "text": "Dan mulainya nggak harus besar.",
-       "start": 198.133,
-       "end": 199.533
+       "start": 198.633,
+       "end": 200.033
       }
      ]
     },
     {
      "text": "Bisa Rp50 ribu, Rp100 ribu, atau Rp300 ribu.",
-     "start": 199.666,
-     "end": 203.133,
+     "start": 200.166,
+     "end": 203.633,
      "parts": [
       {
        "text": "Bisa Rp50 ribu, Rp100 ribu, atau Rp300 ribu.",
-       "start": 199.666,
-       "end": 203.133
+       "start": 200.166,
+       "end": 203.633
       }
      ]
     },
     {
      "text": "Yang paling penting bukan nominal pertamanya, tapi kebiasaan untuk menyisihkan sebagian income dan mulai mengubahnya menjadi aset.",
-     "start": 203.333,
-     "end": 210.8,
+     "start": 203.833,
+     "end": 211.3,
      "parts": [
       {
        "text": "Yang paling penting bukan nominal pertamanya,",
-       "start": 203.333,
-       "end": 205.233
+       "start": 203.833,
+       "end": 205.733
       },
       {
        "text": "tapi kebiasaan untuk menyisihkan sebagian income dan mulai mengubahnya menjadi aset.",
-       "start": 205.666,
-       "end": 210.8
+       "start": 206.166,
+       "end": 211.3
       }
      ]
     }
@@ -663,54 +663,54 @@
    "sentences": [
     {
      "text": "Lo Kheng Hong juga nggak langsung mulai sebagai investor besar.",
-     "start": 211.166,
-     "end": 214.766,
+     "start": 211.666,
+     "end": 215.266,
      "parts": [
       {
        "text": "Lo Kheng Hong juga nggak langsung mulai sebagai investor besar.",
-       "start": 211.166,
-       "end": 214.766
+       "start": 211.666,
+       "end": 215.266
       }
      ]
     },
     {
      "text": "Sebelum dikenal seperti sekarang, dia pernah bekerja sebagai pegawai bank.",
-     "start": 215.4,
-     "end": 219.233,
+     "start": 215.9,
+     "end": 219.733,
      "parts": [
       {
        "text": "Sebelum dikenal seperti sekarang, dia pernah bekerja sebagai pegawai bank.",
-       "start": 215.4,
-       "end": 219.233
+       "start": 215.9,
+       "end": 219.733
       }
      ]
     },
     {
      "text": "Sambil bekerja, dia menabung, belajar, membaca laporan perusahaan, dan pelan-pelan mulai berinvestasi.",
-     "start": 219.433,
-     "end": 224.666,
+     "start": 219.933,
+     "end": 225.166,
      "parts": [
       {
        "text": "Sambil bekerja, dia menabung, belajar, membaca laporan perusahaan,",
-       "start": 219.433,
-       "end": 222.633
+       "start": 219.933,
+       "end": 223.133
       },
       {
        "text": "dan pelan-pelan mulai berinvestasi.",
-       "start": 222.866,
-       "end": 224.666
+       "start": 223.366,
+       "end": 225.166
       }
      ]
     },
     {
      "text": "Salah satu contoh terkenalnya adalah saat dia membeli saham United Tractors.",
-     "start": 225.133,
-     "end": 229.833,
+     "start": 225.633,
+     "end": 230.333,
      "parts": [
       {
        "text": "Salah satu contoh terkenalnya adalah saat dia membeli saham United Tractors.",
-       "start": 225.133,
-       "end": 229.833
+       "start": 225.633,
+       "end": 230.333
       }
      ]
     }
@@ -721,54 +721,54 @@
    "sentences": [
     {
      "text": "Saat krisis 1998, Lo Kheng Hong membeli United Tractors di harga sekitar Rp250 per saham.",
-     "start": 230.0,
-     "end": 237.133,
+     "start": 230.5,
+     "end": 237.633,
      "parts": [
       {
        "text": "Saat krisis 1998, Lo Kheng Hong membeli United Tractors di harga sekitar Rp250 per saham.",
-       "start": 230.0,
-       "end": 237.133
+       "start": 230.5,
+       "end": 237.633
       }
      ]
     },
     {
      "text": "Beberapa tahun kemudian, nilainya sudah meningkat berkali-kali lipat, bahkan pernah berada di kisaran sekitar Rp15 ribu.",
-     "start": 237.566,
-     "end": 243.81,
+     "start": 238.066,
+     "end": 244.31,
      "parts": [
       {
        "text": "Beberapa tahun kemudian, nilainya sudah meningkat berkali-kali lipat,",
-       "start": 237.566,
-       "end": 240.666
+       "start": 238.066,
+       "end": 241.166
       },
       {
        "text": "bahkan pernah berada di kisaran sekitar Rp15 ribu.",
-       "start": 240.966,
-       "end": 243.81
+       "start": 241.466,
+       "end": 244.31
       }
      ]
     },
     {
      "text": "Tapi tentu saja, ini adalah contoh dari masa lalu.",
-     "start": 244.1,
-     "end": 247.4,
+     "start": 244.6,
+     "end": 247.9,
      "parts": [
       {
        "text": "Tapi tentu saja, ini adalah contoh dari masa lalu.",
-       "start": 244.1,
-       "end": 247.4
+       "start": 244.6,
+       "end": 247.9
       }
      ]
     },
     {
      "text": "Nggak semua investasi akan memberikan hasil seperti ini.",
-     "start": 247.8,
-     "end": 251.0,
+     "start": 248.3,
+     "end": 251.5,
      "parts": [
       {
        "text": "Nggak semua investasi akan memberikan hasil seperti ini.",
-       "start": 247.8,
-       "end": 251.0
+       "start": 248.3,
+       "end": 251.5
       }
      ]
     }
@@ -779,42 +779,42 @@
    "sentences": [
     {
      "text": "Yang menarik dari cerita ini sebenarnya bukan: “Cari saham yang bisa naik berkali-kali.”",
-     "start": 251.166,
-     "end": 256.3,
+     "start": 251.666,
+     "end": 256.8,
      "parts": [
       {
        "text": "Yang menarik dari cerita ini sebenarnya bukan: “Cari saham yang bisa naik berkali-kali.”",
-       "start": 251.166,
-       "end": 256.3
+       "start": 251.666,
+       "end": 256.8
       }
      ]
     },
     {
      "text": "Yang lebih penting justru prosesnya.",
-     "start": 256.633,
-     "end": 258.7,
+     "start": 257.133,
+     "end": 259.2,
      "parts": [
       {
        "text": "Yang lebih penting justru prosesnya.",
-       "start": 256.633,
-       "end": 258.7
+       "start": 257.133,
+       "end": 259.2
       }
      ]
     },
     {
      "text": "Kerja untuk menghasilkan uang, sisihkan sebagian, pelajari asetnya, beli sesuatu yang benar-benar dipahami, lalu beri waktu untuk berkembang.",
-     "start": 259.166,
-     "end": 268.233,
+     "start": 259.666,
+     "end": 268.733,
      "parts": [
       {
        "text": "Kerja untuk menghasilkan uang, sisihkan sebagian, pelajari asetnya,",
-       "start": 259.166,
-       "end": 263.3
+       "start": 259.666,
+       "end": 263.8
       },
       {
        "text": "beli sesuatu yang benar-benar dipahami, lalu beri waktu untuk berkembang.",
-       "start": 263.33,
-       "end": 268.233
+       "start": 263.83,
+       "end": 268.733
       }
      ]
     }
@@ -825,37 +825,37 @@
    "sentences": [
     {
      "text": "Jadi membangun passive income bukan berarti kita harus lari dari pekerjaan.",
-     "start": 268.566,
-     "end": 272.7,
+     "start": 269.066,
+     "end": 273.2,
      "parts": [
       {
        "text": "Jadi membangun passive income bukan berarti kita harus lari dari pekerjaan.",
-       "start": 268.566,
-       "end": 272.7
+       "start": 269.066,
+       "end": 273.2
       }
      ]
     },
     {
      "text": "Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang.",
-     "start": 273.333,
-     "end": 277.333,
+     "start": 273.833,
+     "end": 277.833,
      "parts": [
       {
        "text": "Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang.",
-       "start": 273.333,
-       "end": 277.333
+       "start": 273.833,
+       "end": 277.833
       }
      ]
     },
     {
      "text": "Bedanya, sebagian hasil kerja kita hari ini mulai ikut disiapkan untuk masa depan.",
-     "start": 277.866,
-     "end": 282.666,
+     "start": 278.366,
+     "end": 283.166,
      "parts": [
       {
        "text": "Bedanya, sebagian hasil kerja kita hari ini mulai ikut disiapkan untuk masa depan.",
-       "start": 277.866,
-       "end": 282.666
+       "start": 278.366,
+       "end": 283.166
       }
      ]
     }
@@ -866,64 +866,64 @@
    "sentences": [
     {
      "text": "Di awal, aset kita mungkin masih kecil.",
-     "start": 283.333,
-     "end": 285.5,
+     "start": 283.833,
+     "end": 286.0,
      "parts": [
       {
        "text": "Di awal, aset kita mungkin masih kecil.",
-       "start": 283.333,
-       "end": 285.5
+       "start": 283.833,
+       "end": 286.0
       }
      ]
     },
     {
      "text": "Tapi kalau kemampuan kerja terus berkembang, income bertambah, dan aset juga ikut tumbuh, pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial.",
-     "start": 286.1,
-     "end": 293.7,
+     "start": 286.6,
+     "end": 294.2,
      "parts": [
       {
        "text": "Tapi kalau kemampuan kerja terus berkembang, income bertambah,",
-       "start": 286.1,
-       "end": 288.866
+       "start": 286.6,
+       "end": 289.366
       },
       {
        "text": "dan aset juga ikut tumbuh,",
-       "start": 289.033,
-       "end": 290.5
+       "start": 289.533,
+       "end": 291.0
       },
       {
        "text": "pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial.",
-       "start": 290.666,
-       "end": 293.7
+       "start": 291.166,
+       "end": 294.2
       }
      ]
     },
     {
      "text": "Kita juga mulai punya lebih banyak pilihan.",
-     "start": 294.166,
-     "end": 296.233,
+     "start": 294.666,
+     "end": 296.733,
      "parts": [
       {
        "text": "Kita juga mulai punya lebih banyak pilihan.",
-       "start": 294.166,
-       "end": 296.233
+       "start": 294.666,
+       "end": 296.733
       }
      ]
     },
     {
      "text": "Jadi setiap kali income masuk, coba tanya: “Berapa yang bisa aku sisihkan untuk mulai punya aset?”",
-     "start": 296.9,
-     "end": 303.1,
+     "start": 297.4,
+     "end": 303.6,
      "parts": [
       {
        "text": "Jadi setiap kali income masuk, coba tanya:",
-       "start": 296.9,
-       "end": 299.733
+       "start": 297.4,
+       "end": 300.233
       },
       {
        "text": "“Berapa yang bisa aku sisihkan untuk mulai punya aset?”",
-       "start": 299.966,
-       "end": 303.1
+       "start": 300.466,
+       "end": 303.6
       }
      ]
     }
@@ -934,42 +934,42 @@
    "sentences": [
     {
      "text": "Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.",
-     "start": 303.3,
-     "end": 307.733,
+     "start": 303.8,
+     "end": 308.233,
      "parts": [
       {
        "text": "Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.",
-       "start": 303.3,
-       "end": 307.733
+       "start": 303.8,
+       "end": 308.233
       }
      ]
     },
     {
      "text": "Sedangkan investasi, membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.",
-     "start": 308.266,
-     "end": 314.1,
+     "start": 308.766,
+     "end": 314.6,
      "parts": [
       {
        "text": "Sedangkan investasi,",
-       "start": 308.266,
-       "end": 309.333
+       "start": 308.766,
+       "end": 309.833
       },
       {
        "text": "membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.",
-       "start": 309.633,
-       "end": 314.1
+       "start": 310.133,
+       "end": 314.6
       }
      ]
     },
     {
      "text": "Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset.",
-     "start": 314.633,
-     "end": 319.666,
+     "start": 315.133,
+     "end": 320.166,
      "parts": [
       {
        "text": "Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset.",
-       "start": 314.633,
-       "end": 319.666
+       "start": 315.133,
+       "end": 320.166
       }
      ]
     }
@@ -989,7 +989,7 @@
   "ribu.",
   "beli"
  ],
- "vo_end": 319.666,
+ "vo_end": 320.166,
  "words": [
   {
    "w": "Setiap",
@@ -2045,3941 +2045,3941 @@
    "w": "aset.",
    "scene": 4,
    "start": 68.895,
-   "end": 69.2,
+   "end": 69.7,
    "matched": true
   },
   {
    "w": "Dan",
    "scene": 5,
-   "start": 69.6,
-   "end": 69.867,
+   "start": 70.1,
+   "end": 70.367,
    "matched": true
   },
   {
    "w": "di",
    "scene": 5,
-   "start": 69.867,
-   "end": 70.067,
+   "start": 70.367,
+   "end": 70.567,
    "matched": true
   },
   {
    "w": "sini,",
    "scene": 5,
-   "start": 70.067,
-   "end": 70.4,
+   "start": 70.567,
+   "end": 70.9,
    "matched": true
   },
   {
    "w": "waktu",
    "scene": 5,
-   "start": 70.9,
-   "end": 71.275,
+   "start": 71.4,
+   "end": 71.775,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 5,
-   "start": 71.275,
-   "end": 71.65,
+   "start": 71.775,
+   "end": 72.15,
    "matched": true
   },
   {
    "w": "peran",
    "scene": 5,
-   "start": 71.65,
-   "end": 72.025,
+   "start": 72.15,
+   "end": 72.525,
    "matched": true
   },
   {
    "w": "besar.",
    "scene": 5,
-   "start": 72.025,
-   "end": 72.4,
+   "start": 72.525,
+   "end": 72.9,
    "matched": true
   },
   {
    "w": "Kalau",
    "scene": 5,
-   "start": 72.866,
-   "end": 73.147,
+   "start": 73.366,
+   "end": 73.647,
    "matched": true
   },
   {
    "w": "sebuah",
    "scene": 5,
-   "start": 73.147,
-   "end": 73.475,
+   "start": 73.647,
+   "end": 73.975,
    "matched": true
   },
   {
    "w": "aset",
    "scene": 5,
-   "start": 73.475,
-   "end": 73.709,
+   "start": 73.975,
+   "end": 74.209,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 5,
-   "start": 73.709,
-   "end": 74.318,
+   "start": 74.209,
+   "end": 74.818,
    "matched": true
   },
   {
    "w": "keuntungan,",
    "scene": 5,
-   "start": 74.318,
-   "end": 74.833,
+   "start": 74.818,
+   "end": 75.333,
    "matched": true
   },
   {
    "w": "keuntungan",
    "scene": 5,
-   "start": 75.066,
-   "end": 75.59,
+   "start": 75.566,
+   "end": 76.09,
    "matched": true
   },
   {
    "w": "itu",
    "scene": 5,
-   "start": 75.59,
-   "end": 75.78,
+   "start": 76.09,
+   "end": 76.28,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 5,
-   "start": 75.78,
-   "end": 76.019,
+   "start": 76.28,
+   "end": 76.519,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 5,
-   "start": 76.019,
-   "end": 76.257,
+   "start": 76.519,
+   "end": 76.757,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 5,
-   "start": 76.257,
-   "end": 76.876,
+   "start": 76.757,
+   "end": 77.376,
    "matched": true
   },
   {
    "w": "keuntungan",
    "scene": 5,
-   "start": 76.876,
-   "end": 77.4,
+   "start": 77.376,
+   "end": 77.9,
    "matched": true
   },
   {
    "w": "berikutnya.",
    "scene": 5,
-   "start": 77.5,
-   "end": 78.493,
+   "start": 78.0,
+   "end": 78.993,
    "matched": true
   },
   {
    "w": "Misalnya,",
    "scene": 5,
-   "start": 78.493,
-   "end": 79.305,
+   "start": 78.993,
+   "end": 79.805,
    "matched": true
   },
   {
    "w": "100",
    "scene": 5,
-   "start": 79.305,
-   "end": 79.666,
+   "start": 79.805,
+   "end": 80.166,
    "matched": true
   },
   {
    "w": "jadi",
    "scene": 5,
-   "start": 79.966,
-   "end": 80.837,
+   "start": 80.466,
+   "end": 81.337,
    "matched": true
   },
   {
    "w": "110,",
    "scene": 5,
-   "start": 80.837,
-   "end": 81.533,
+   "start": 81.337,
+   "end": 82.033,
    "matched": true
   },
   {
    "w": "lalu",
    "scene": 5,
-   "start": 81.533,
-   "end": 82.404,
+   "start": 82.033,
+   "end": 82.904,
    "matched": true
   },
   {
    "w": "121,",
    "scene": 5,
-   "start": 82.404,
-   "end": 83.1,
+   "start": 82.904,
+   "end": 83.6,
    "matched": true
   },
   {
    "w": "lalu",
    "scene": 5,
-   "start": 83.6,
-   "end": 84.711,
+   "start": 84.1,
+   "end": 85.211,
    "matched": true
   },
   {
    "w": "133.",
    "scene": 5,
-   "start": 84.711,
-   "end": 85.6,
+   "start": 85.211,
+   "end": 86.1,
    "matched": true
   },
   {
    "w": "Itulah",
    "scene": 5,
-   "start": 86.4,
-   "end": 86.849,
+   "start": 86.9,
+   "end": 87.349,
    "matched": true
   },
   {
    "w": "konsep",
    "scene": 5,
-   "start": 86.849,
-   "end": 87.297,
+   "start": 87.349,
+   "end": 87.797,
    "matched": true
   },
   {
    "w": "compounding:",
    "scene": 5,
-   "start": 87.297,
-   "end": 88.066,
+   "start": 87.797,
+   "end": 88.566,
    "matched": true
   },
   {
    "w": "hasil",
    "scene": 5,
-   "start": 88.4,
-   "end": 88.713,
+   "start": 88.9,
+   "end": 89.213,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 5,
-   "start": 88.713,
-   "end": 88.974,
+   "start": 89.213,
+   "end": 89.474,
    "matched": true
   },
   {
    "w": "terus",
    "scene": 5,
-   "start": 88.974,
-   "end": 89.287,
+   "start": 89.474,
+   "end": 89.787,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 5,
-   "start": 89.287,
-   "end": 89.548,
+   "start": 89.787,
+   "end": 90.048,
    "matched": true
   },
   {
    "w": "bertumbuh",
    "scene": 5,
-   "start": 89.548,
-   "end": 90.07,
+   "start": 90.048,
+   "end": 90.57,
    "matched": true
   },
   {
    "w": "seiring",
    "scene": 5,
-   "start": 90.07,
-   "end": 90.487,
+   "start": 90.57,
+   "end": 90.987,
    "matched": true
   },
   {
    "w": "waktu.",
    "scene": 5,
-   "start": 90.487,
-   "end": 90.8,
+   "start": 90.987,
+   "end": 91.3,
    "matched": true
   },
   {
    "w": "Makanya,",
    "scene": 6,
-   "start": 91.233,
-   "end": 91.752,
+   "start": 91.733,
+   "end": 92.252,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 6,
-   "start": 91.752,
-   "end": 92.076,
+   "start": 92.252,
+   "end": 92.576,
    "matched": true
   },
   {
    "w": "nggak",
    "scene": 6,
-   "start": 92.076,
-   "end": 92.465,
+   "start": 92.576,
+   "end": 92.965,
    "matched": true
   },
   {
    "w": "harus",
    "scene": 6,
-   "start": 92.465,
-   "end": 92.854,
+   "start": 92.965,
+   "end": 93.354,
    "matched": true
   },
   {
    "w": "nunggu",
    "scene": 6,
-   "start": 92.854,
-   "end": 93.308,
+   "start": 93.354,
+   "end": 93.808,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 6,
-   "start": 93.308,
-   "end": 93.697,
+   "start": 93.808,
+   "end": 94.197,
    "matched": true
   },
   {
    "w": "modal",
    "scene": 6,
-   "start": 93.697,
-   "end": 94.087,
+   "start": 94.197,
+   "end": 94.587,
    "matched": true
   },
   {
    "w": "besar",
    "scene": 6,
-   "start": 94.087,
-   "end": 94.476,
+   "start": 94.587,
+   "end": 94.976,
    "matched": true
   },
   {
    "w": "dulu.",
    "scene": 6,
-   "start": 94.476,
-   "end": 94.8,
+   "start": 94.976,
+   "end": 95.3,
    "matched": true
   },
   {
    "w": "Yang",
    "scene": 6,
-   "start": 95.266,
-   "end": 95.593,
+   "start": 95.766,
+   "end": 96.093,
    "matched": true
   },
   {
    "w": "penting",
    "scene": 6,
-   "start": 95.593,
-   "end": 96.115,
+   "start": 96.093,
+   "end": 96.615,
    "matched": true
   },
   {
    "w": "adalah",
    "scene": 6,
-   "start": 96.115,
-   "end": 96.572,
+   "start": 96.615,
+   "end": 97.072,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 6,
-   "start": 96.572,
-   "end": 96.964,
+   "start": 97.072,
+   "end": 97.464,
    "matched": true
   },
   {
    "w": "membangun",
    "scene": 6,
-   "start": 96.964,
-   "end": 97.617,
+   "start": 97.464,
+   "end": 98.117,
    "matched": true
   },
   {
    "w": "kebiasaannya.",
    "scene": 6,
-   "start": 97.617,
-   "end": 98.466,
+   "start": 98.117,
+   "end": 98.966,
    "matched": true
   },
   {
    "w": "Karena",
    "scene": 6,
-   "start": 99.066,
-   "end": 99.459,
+   "start": 99.566,
+   "end": 99.959,
    "matched": true
   },
   {
    "w": "investasi",
    "scene": 6,
-   "start": 99.459,
-   "end": 100.021,
+   "start": 99.959,
+   "end": 100.521,
    "matched": true
   },
   {
    "w": "bukan",
    "scene": 6,
-   "start": 100.021,
-   "end": 100.358,
+   "start": 100.521,
+   "end": 100.858,
    "matched": true
   },
   {
    "w": "cuma",
    "scene": 6,
-   "start": 100.358,
-   "end": 100.638,
+   "start": 100.858,
+   "end": 101.138,
    "matched": true
   },
   {
    "w": "soal",
    "scene": 6,
-   "start": 100.638,
-   "end": 100.919,
+   "start": 101.138,
+   "end": 101.419,
    "matched": true
   },
   {
    "w": "uang.",
    "scene": 6,
-   "start": 100.919,
-   "end": 101.2,
+   "start": 101.419,
+   "end": 101.7,
    "matched": true
   },
   {
    "w": "Semakin",
    "scene": 6,
-   "start": 101.866,
-   "end": 102.322,
+   "start": 102.366,
+   "end": 102.822,
    "matched": true
   },
   {
    "w": "sering",
    "scene": 6,
-   "start": 102.322,
-   "end": 102.721,
+   "start": 102.822,
+   "end": 103.221,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 6,
-   "start": 102.721,
-   "end": 103.006,
+   "start": 103.221,
+   "end": 103.506,
    "matched": true
   },
   {
    "w": "belajar",
    "scene": 6,
-   "start": 103.006,
-   "end": 103.461,
+   "start": 103.506,
+   "end": 103.961,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 6,
-   "start": 103.461,
-   "end": 103.689,
+   "start": 103.961,
+   "end": 104.189,
    "matched": true
   },
   {
    "w": "mengevaluasi",
    "scene": 6,
-   "start": 103.689,
-   "end": 104.43,
+   "start": 104.189,
+   "end": 104.93,
    "matched": true
   },
   {
    "w": "keputusan,",
    "scene": 6,
-   "start": 104.43,
-   "end": 105.0,
+   "start": 104.93,
+   "end": 105.5,
    "matched": true
   },
   {
    "w": "semakin",
    "scene": 6,
-   "start": 105.633,
-   "end": 106.102,
+   "start": 106.133,
+   "end": 106.602,
    "matched": true
   },
   {
    "w": "baik",
    "scene": 6,
-   "start": 106.102,
-   "end": 106.394,
+   "start": 106.602,
+   "end": 106.894,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 6,
-   "start": 106.394,
-   "end": 106.687,
+   "start": 106.894,
+   "end": 107.187,
    "matched": true
   },
   {
    "w": "kemampuan",
    "scene": 6,
-   "start": 106.687,
-   "end": 107.273,
+   "start": 107.187,
+   "end": 107.773,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 6,
-   "start": 107.273,
-   "end": 107.566,
+   "start": 107.773,
+   "end": 108.066,
    "matched": true
   },
   {
    "w": "mengelola",
    "scene": 6,
-   "start": 107.833,
-   "end": 108.611,
+   "start": 108.333,
+   "end": 109.111,
    "matched": true
   },
   {
    "w": "aset.",
    "scene": 6,
-   "start": 108.611,
-   "end": 109.0,
+   "start": 109.111,
+   "end": 109.5,
    "matched": true
   },
   {
    "w": "Kalau",
    "scene": 7,
-   "start": 109.1,
-   "end": 109.36,
+   "start": 109.6,
+   "end": 109.86,
    "matched": true
   },
   {
    "w": "dipikir-pikir,",
    "scene": 7,
-   "start": 109.36,
-   "end": 110.033,
+   "start": 109.86,
+   "end": 110.533,
    "matched": false
   },
   {
    "w": "kekayaan",
    "scene": 7,
-   "start": 110.033,
-   "end": 110.459,
+   "start": 110.533,
+   "end": 110.959,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 7,
-   "start": 110.459,
-   "end": 110.696,
+   "start": 110.959,
+   "end": 111.196,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 7,
-   "start": 110.696,
-   "end": 110.979,
+   "start": 111.196,
+   "end": 111.479,
    "matched": true
   },
   {
    "w": "dua",
    "scene": 7,
-   "start": 110.979,
-   "end": 111.169,
+   "start": 111.479,
+   "end": 111.669,
    "matched": true
   },
   {
    "w": "bagian.",
    "scene": 7,
-   "start": 111.169,
-   "end": 111.5,
+   "start": 111.669,
+   "end": 112.0,
    "matched": true
   },
   {
    "w": "Yang",
    "scene": 7,
-   "start": 112.0,
-   "end": 112.231,
+   "start": 112.5,
+   "end": 112.731,
    "matched": true
   },
   {
    "w": "pertama,",
    "scene": 7,
-   "start": 112.231,
-   "end": 112.6,
+   "start": 112.731,
+   "end": 113.1,
    "matched": true
   },
   {
    "w": "human",
    "scene": 7,
-   "start": 112.6,
-   "end": 113.094,
+   "start": 113.1,
+   "end": 113.594,
    "matched": true
   },
   {
    "w": "asset:",
    "scene": 7,
-   "start": 113.094,
-   "end": 113.506,
+   "start": 113.594,
+   "end": 114.006,
    "matched": true
   },
   {
    "w": "waktu,",
    "scene": 7,
-   "start": 113.506,
-   "end": 114.0,
+   "start": 114.006,
+   "end": 114.5,
    "matched": true
   },
   {
    "w": "kemampuan,",
    "scene": 7,
-   "start": 114.2,
-   "end": 114.773,
+   "start": 114.7,
+   "end": 115.273,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 7,
-   "start": 114.773,
-   "end": 115.002,
+   "start": 115.273,
+   "end": 115.502,
    "matched": true
   },
   {
    "w": "pengalaman",
    "scene": 7,
-   "start": 115.002,
-   "end": 115.633,
+   "start": 115.502,
+   "end": 116.133,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 7,
-   "start": 115.9,
-   "end": 116.166,
+   "start": 116.4,
+   "end": 116.666,
    "matched": true
   },
   {
    "w": "membantu",
    "scene": 7,
-   "start": 116.166,
-   "end": 116.644,
+   "start": 116.666,
+   "end": 117.144,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 7,
-   "start": 116.644,
-   "end": 116.91,
+   "start": 117.144,
+   "end": 117.41,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 7,
-   "start": 116.91,
-   "end": 117.6,
+   "start": 117.41,
+   "end": 118.1,
    "matched": true
   },
   {
    "w": "uang.",
    "scene": 7,
-   "start": 117.6,
-   "end": 117.866,
+   "start": 118.1,
+   "end": 118.366,
    "matched": true
   },
   {
    "w": "Yang",
    "scene": 7,
-   "start": 118.433,
-   "end": 118.741,
+   "start": 118.933,
+   "end": 119.241,
    "matched": true
   },
   {
    "w": "kedua,",
    "scene": 7,
-   "start": 118.741,
-   "end": 119.049,
+   "start": 119.241,
+   "end": 119.549,
    "matched": true
   },
   {
    "w": "financial",
    "scene": 7,
-   "start": 119.049,
-   "end": 119.666,
+   "start": 119.549,
+   "end": 120.166,
    "matched": true
   },
   {
    "w": "asset:",
    "scene": 7,
-   "start": 119.833,
-   "end": 120.238,
+   "start": 120.333,
+   "end": 120.738,
    "matched": true
   },
   {
    "w": "tabungan,",
    "scene": 7,
-   "start": 120.238,
-   "end": 120.966,
+   "start": 120.738,
+   "end": 121.466,
    "matched": true
   },
   {
    "w": "investasi,",
    "scene": 7,
-   "start": 121.233,
-   "end": 121.971,
+   "start": 121.733,
+   "end": 122.471,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 7,
-   "start": 121.971,
-   "end": 122.266,
+   "start": 122.471,
+   "end": 122.766,
    "matched": true
   },
   {
    "w": "aset",
    "scene": 7,
-   "start": 122.366,
-   "end": 122.563,
+   "start": 122.866,
+   "end": 123.063,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 7,
-   "start": 122.563,
-   "end": 122.76,
+   "start": 123.063,
+   "end": 123.26,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 7,
-   "start": 122.76,
-   "end": 122.957,
+   "start": 123.26,
+   "end": 123.457,
    "matched": true
   },
   {
    "w": "bangun",
    "scene": 7,
-   "start": 122.957,
-   "end": 123.233,
+   "start": 123.457,
+   "end": 123.733,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 7,
-   "start": 123.5,
-   "end": 123.742,
+   "start": 124.0,
+   "end": 124.242,
    "matched": true
   },
   {
    "w": "penghasilan",
    "scene": 7,
-   "start": 123.742,
-   "end": 124.324,
+   "start": 124.242,
+   "end": 124.824,
    "matched": true
   },
   {
    "w": "tadi.",
    "scene": 7,
-   "start": 124.324,
-   "end": 124.566,
+   "start": 124.824,
+   "end": 125.066,
    "matched": true
   },
   {
    "w": "Human",
    "scene": 7,
-   "start": 124.9,
-   "end": 125.33,
+   "start": 125.4,
+   "end": 125.83,
    "matched": true
   },
   {
    "w": "asset",
    "scene": 7,
-   "start": 125.33,
-   "end": 125.689,
+   "start": 125.83,
+   "end": 126.189,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 7,
-   "start": 125.689,
-   "end": 126.119,
+   "start": 126.189,
+   "end": 126.619,
    "matched": true
   },
   {
    "w": "batas.",
    "scene": 7,
-   "start": 126.119,
-   "end": 126.549,
+   "start": 126.619,
+   "end": 127.049,
    "matched": true
   },
   {
    "w": "Financial",
    "scene": 7,
-   "start": 126.549,
-   "end": 127.266,
+   "start": 127.049,
+   "end": 127.766,
    "matched": true
   },
   {
    "w": "asset",
    "scene": 7,
-   "start": 127.433,
-   "end": 127.707,
+   "start": 127.933,
+   "end": 128.207,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 7,
-   "start": 127.707,
-   "end": 127.981,
+   "start": 128.207,
+   "end": 128.481,
    "matched": true
   },
   {
    "w": "terus",
    "scene": 7,
-   "start": 127.981,
-   "end": 128.309,
+   "start": 128.481,
+   "end": 128.809,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 7,
-   "start": 128.309,
-   "end": 128.583,
+   "start": 128.809,
+   "end": 129.083,
    "matched": true
   },
   {
    "w": "miliki.",
    "scene": 7,
-   "start": 128.583,
-   "end": 128.966,
+   "start": 129.083,
+   "end": 129.466,
    "matched": true
   },
   {
    "w": "Waktu",
    "scene": 8,
-   "start": 129.5,
-   "end": 129.782,
+   "start": 130.0,
+   "end": 130.282,
    "matched": true
   },
   {
    "w": "masih",
    "scene": 8,
-   "start": 129.782,
-   "end": 130.065,
+   "start": 130.282,
+   "end": 130.565,
    "matched": true
   },
   {
    "w": "muda,",
    "scene": 8,
-   "start": 130.065,
-   "end": 130.3,
+   "start": 130.565,
+   "end": 130.8,
    "matched": true
   },
   {
    "w": "wajar",
    "scene": 8,
-   "start": 130.466,
-   "end": 130.725,
+   "start": 130.966,
+   "end": 131.225,
    "matched": true
   },
   {
    "w": "kalau",
    "scene": 8,
-   "start": 130.725,
-   "end": 130.985,
+   "start": 131.225,
+   "end": 131.485,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 8,
-   "start": 130.985,
-   "end": 131.374,
+   "start": 131.485,
+   "end": 131.874,
    "matched": true
   },
   {
    "w": "besar",
    "scene": 8,
-   "start": 131.374,
-   "end": 131.633,
+   "start": 131.874,
+   "end": 132.133,
    "matched": true
   },
   {
    "w": "penghasilan",
    "scene": 8,
-   "start": 131.766,
-   "end": 132.273,
+   "start": 132.266,
+   "end": 132.773,
    "matched": true
   },
   {
    "w": "datang",
    "scene": 8,
-   "start": 132.273,
-   "end": 132.568,
+   "start": 132.773,
+   "end": 133.068,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 8,
-   "start": 132.568,
-   "end": 132.78,
+   "start": 133.068,
+   "end": 133.28,
    "matched": true
   },
   {
    "w": "kerja.",
    "scene": 8,
-   "start": 132.78,
-   "end": 133.033,
+   "start": 133.28,
+   "end": 133.533,
    "matched": true
   },
   {
    "w": "Tapi",
    "scene": 8,
-   "start": 133.666,
-   "end": 133.952,
+   "start": 134.166,
+   "end": 134.452,
    "matched": true
   },
   {
    "w": "idealnya,",
    "scene": 8,
-   "start": 133.952,
-   "end": 134.466,
+   "start": 134.452,
+   "end": 134.966,
    "matched": true
   },
   {
    "w": "saat",
    "scene": 8,
-   "start": 134.6,
-   "end": 134.834,
+   "start": 135.1,
+   "end": 135.334,
    "matched": true
   },
   {
    "w": "income",
    "scene": 8,
-   "start": 134.834,
-   "end": 135.163,
+   "start": 135.334,
+   "end": 135.663,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 8,
-   "start": 135.163,
-   "end": 135.397,
+   "start": 135.663,
+   "end": 135.897,
    "matched": true
   },
   {
    "w": "meningkat,",
    "scene": 8,
-   "start": 135.397,
-   "end": 135.866,
+   "start": 135.897,
+   "end": 136.366,
    "matched": true
   },
   {
    "w": "aset",
    "scene": 8,
-   "start": 136.066,
-   "end": 136.332,
+   "start": 136.566,
+   "end": 136.832,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 8,
-   "start": 136.332,
-   "end": 136.597,
+   "start": 136.832,
+   "end": 137.097,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 8,
-   "start": 136.597,
-   "end": 136.863,
+   "start": 137.097,
+   "end": 137.363,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 8,
-   "start": 136.863,
-   "end": 137.128,
+   "start": 137.363,
+   "end": 137.628,
    "matched": true
   },
   {
    "w": "tumbuh.",
    "scene": 8,
-   "start": 137.128,
-   "end": 137.5,
+   "start": 137.628,
+   "end": 138.0,
    "matched": true
   },
   {
    "w": "Bayangin",
    "scene": 8,
-   "start": 137.866,
-   "end": 138.382,
+   "start": 138.366,
+   "end": 138.882,
    "matched": true
   },
   {
    "w": "seperti",
    "scene": 8,
-   "start": 138.382,
-   "end": 138.841,
+   "start": 138.882,
+   "end": 139.341,
    "matched": true
   },
   {
    "w": "estafet:",
    "scene": 8,
-   "start": 138.841,
-   "end": 139.3,
+   "start": 139.341,
+   "end": 139.8,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 8,
-   "start": 139.5,
-   "end": 139.714,
+   "start": 140.0,
+   "end": 140.214,
    "matched": true
   },
   {
    "w": "kerja",
    "scene": 8,
-   "start": 139.714,
-   "end": 139.971,
+   "start": 140.214,
+   "end": 140.471,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 8,
-   "start": 139.971,
-   "end": 140.229,
+   "start": 140.471,
+   "end": 140.729,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 8,
-   "start": 140.229,
-   "end": 140.786,
+   "start": 140.729,
+   "end": 141.286,
    "matched": true
   },
   {
    "w": "uang,",
    "scene": 8,
-   "start": 140.786,
-   "end": 141.0,
+   "start": 141.286,
+   "end": 141.5,
    "matched": true
   },
   {
    "w": "lalu",
    "scene": 8,
-   "start": 141.433,
-   "end": 141.737,
+   "start": 141.933,
+   "end": 142.237,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 8,
-   "start": 141.737,
-   "end": 142.285,
+   "start": 142.237,
+   "end": 142.785,
    "matched": true
   },
   {
    "w": "uang",
    "scene": 8,
-   "start": 142.285,
-   "end": 142.59,
+   "start": 142.785,
+   "end": 143.09,
    "matched": true
   },
   {
    "w": "itu",
    "scene": 8,
-   "start": 142.59,
-   "end": 142.833,
+   "start": 143.09,
+   "end": 143.333,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 8,
-   "start": 143.0,
-   "end": 143.286,
+   "start": 143.5,
+   "end": 143.786,
    "matched": true
   },
   {
    "w": "teruskan",
    "scene": 8,
-   "start": 143.286,
-   "end": 143.8,
+   "start": 143.786,
+   "end": 144.3,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 8,
-   "start": 143.8,
-   "end": 144.143,
+   "start": 144.3,
+   "end": 144.643,
    "matched": true
   },
   {
    "w": "membangun",
    "scene": 8,
-   "start": 144.143,
-   "end": 144.714,
+   "start": 144.643,
+   "end": 145.214,
    "matched": true
   },
   {
    "w": "aset.",
    "scene": 8,
-   "start": 144.714,
-   "end": 145.0,
+   "start": 145.214,
+   "end": 145.5,
    "matched": true
   },
   {
    "w": "Hal",
    "scene": 9,
-   "start": 145.266,
-   "end": 145.482,
+   "start": 145.766,
+   "end": 145.982,
    "matched": true
   },
   {
    "w": "menarik",
    "scene": 9,
-   "start": 145.482,
-   "end": 145.913,
+   "start": 145.982,
+   "end": 146.413,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 9,
-   "start": 145.913,
-   "end": 146.183,
+   "start": 146.413,
+   "end": 146.683,
    "matched": true
   },
   {
    "w": "investasi",
    "scene": 9,
-   "start": 146.183,
-   "end": 146.722,
+   "start": 146.683,
+   "end": 147.222,
    "matched": true
   },
   {
    "w": "adalah:",
    "scene": 9,
-   "start": 146.722,
-   "end": 147.1,
+   "start": 147.222,
+   "end": 147.6,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 9,
-   "start": 147.6,
-   "end": 147.814,
+   "start": 148.1,
+   "end": 148.314,
    "matched": true
   },
   {
    "w": "nggak",
    "scene": 9,
-   "start": 147.814,
-   "end": 148.07,
+   "start": 148.314,
+   "end": 148.57,
    "matched": true
   },
   {
    "w": "harus",
    "scene": 9,
-   "start": 148.07,
-   "end": 148.327,
+   "start": 148.57,
+   "end": 148.827,
    "matched": true
   },
   {
    "w": "bekerja",
    "scene": 9,
-   "start": 148.327,
-   "end": 148.668,
+   "start": 148.827,
+   "end": 149.168,
    "matched": true
   },
   {
    "w": "di",
    "scene": 9,
-   "start": 148.668,
-   "end": 148.797,
+   "start": 149.168,
+   "end": 149.297,
    "matched": true
   },
   {
    "w": "sebuah",
    "scene": 9,
-   "start": 148.797,
-   "end": 149.096,
+   "start": 149.297,
+   "end": 149.596,
    "matched": true
   },
   {
    "w": "perusahaan",
    "scene": 9,
-   "start": 149.096,
-   "end": 149.566,
+   "start": 149.596,
+   "end": 150.066,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 9,
-   "start": 150.1,
-   "end": 150.495,
+   "start": 150.6,
+   "end": 150.995,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 9,
-   "start": 150.495,
-   "end": 150.825,
+   "start": 150.995,
+   "end": 151.325,
    "matched": true
   },
   {
    "w": "memiliki",
    "scene": 9,
-   "start": 150.825,
-   "end": 151.418,
+   "start": 151.325,
+   "end": 151.918,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 9,
-   "start": 151.418,
-   "end": 152.011,
+   "start": 151.918,
+   "end": 152.511,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 9,
-   "start": 152.011,
-   "end": 152.341,
+   "start": 152.511,
+   "end": 152.841,
    "matched": true
   },
   {
    "w": "bisnisnya.",
    "scene": 9,
-   "start": 152.341,
-   "end": 153.0,
+   "start": 152.841,
+   "end": 153.5,
    "matched": true
   },
   {
    "w": "Ada",
    "scene": 9,
-   "start": 153.433,
-   "end": 153.622,
+   "start": 153.933,
+   "end": 154.122,
    "matched": true
   },
   {
    "w": "orang",
    "scene": 9,
-   "start": 153.622,
-   "end": 153.905,
+   "start": 154.122,
+   "end": 154.405,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 9,
-   "start": 153.905,
-   "end": 154.141,
+   "start": 154.405,
+   "end": 154.641,
    "matched": true
   },
   {
    "w": "bekerja",
    "scene": 9,
-   "start": 154.141,
-   "end": 154.519,
+   "start": 154.641,
+   "end": 155.019,
    "matched": true
   },
   {
    "w": "di",
    "scene": 9,
-   "start": 154.519,
-   "end": 154.661,
+   "start": 155.019,
+   "end": 155.161,
    "matched": true
   },
   {
    "w": "BCA",
    "scene": 9,
-   "start": 154.661,
-   "end": 154.85,
+   "start": 155.161,
+   "end": 155.35,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 9,
-   "start": 154.85,
-   "end": 155.133,
+   "start": 155.35,
+   "end": 155.633,
    "matched": true
   },
   {
    "w": "mendapatkan",
    "scene": 9,
-   "start": 155.133,
-   "end": 155.7,
+   "start": 155.633,
+   "end": 156.2,
    "matched": true
   },
   {
    "w": "penghasilan.",
    "scene": 9,
-   "start": 156.066,
-   "end": 156.866,
+   "start": 156.566,
+   "end": 157.366,
    "matched": true
   },
   {
    "w": "Di",
    "scene": 9,
-   "start": 157.233,
-   "end": 157.41,
+   "start": 157.733,
+   "end": 157.91,
    "matched": true
   },
   {
    "w": "sisi",
    "scene": 9,
-   "start": 157.41,
-   "end": 157.705,
+   "start": 157.91,
+   "end": 158.205,
    "matched": true
   },
   {
    "w": "lain,",
    "scene": 9,
-   "start": 157.705,
-   "end": 158.0,
+   "start": 158.205,
+   "end": 158.5,
    "matched": true
   },
   {
    "w": "sebagai",
    "scene": 9,
-   "start": 158.0,
-   "end": 158.486,
+   "start": 158.5,
+   "end": 158.986,
    "matched": true
   },
   {
    "w": "investor,",
    "scene": 9,
-   "start": 158.486,
-   "end": 159.033,
+   "start": 158.986,
+   "end": 159.533,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 9,
-   "start": 159.2,
-   "end": 159.466,
+   "start": 159.7,
+   "end": 159.966,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 9,
-   "start": 159.466,
-   "end": 159.732,
+   "start": 159.966,
+   "end": 160.232,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 9,
-   "start": 159.732,
-   "end": 159.998,
+   "start": 160.232,
+   "end": 160.498,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 9,
-   "start": 159.998,
-   "end": 160.317,
+   "start": 160.498,
+   "end": 160.817,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 9,
-   "start": 160.317,
-   "end": 160.796,
+   "start": 160.817,
+   "end": 161.296,
    "matched": true
   },
   {
    "w": "kecil",
    "scene": 9,
-   "start": 160.796,
-   "end": 161.115,
+   "start": 161.296,
+   "end": 161.615,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 9,
-   "start": 161.115,
-   "end": 161.381,
+   "start": 161.615,
+   "end": 161.881,
    "matched": true
   },
   {
    "w": "bisnis",
    "scene": 9,
-   "start": 161.381,
-   "end": 161.753,
+   "start": 161.881,
+   "end": 162.253,
    "matched": true
   },
   {
    "w": "BCA.",
    "scene": 9,
-   "start": 161.753,
-   "end": 161.966,
+   "start": 162.253,
+   "end": 162.466,
    "matched": true
   },
   {
    "w": "Hal",
    "scene": 10,
-   "start": 162.366,
-   "end": 162.515,
+   "start": 162.866,
+   "end": 163.015,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 10,
-   "start": 162.515,
-   "end": 162.702,
+   "start": 163.015,
+   "end": 163.202,
    "matched": true
   },
   {
    "w": "sama",
    "scene": 10,
-   "start": 162.702,
-   "end": 162.889,
+   "start": 163.202,
+   "end": 163.389,
    "matched": true
   },
   {
    "w": "sebenarnya",
    "scene": 10,
-   "start": 162.889,
-   "end": 163.3,
+   "start": 163.389,
+   "end": 163.8,
    "matched": true
   },
   {
    "w": "ada",
    "scene": 10,
-   "start": 163.633,
-   "end": 163.873,
+   "start": 164.133,
+   "end": 164.373,
    "matched": true
   },
   {
    "w": "di",
    "scene": 10,
-   "start": 163.873,
-   "end": 164.053,
+   "start": 164.373,
+   "end": 164.553,
    "matched": true
   },
   {
    "w": "sekitar",
    "scene": 10,
-   "start": 164.053,
-   "end": 164.533,
+   "start": 164.553,
+   "end": 165.033,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 10,
-   "start": 164.533,
-   "end": 164.833,
+   "start": 165.033,
+   "end": 165.333,
    "matched": true
   },
   {
    "w": "setiap",
    "scene": 10,
-   "start": 164.9,
-   "end": 165.367,
+   "start": 165.4,
+   "end": 165.867,
    "matched": true
   },
   {
    "w": "hari.",
    "scene": 10,
-   "start": 165.367,
-   "end": 165.7,
+   "start": 165.867,
+   "end": 166.2,
    "matched": true
   },
   {
    "w": "Kita",
    "scene": 10,
-   "start": 166.0,
-   "end": 166.254,
+   "start": 166.5,
+   "end": 166.754,
    "matched": true
   },
   {
    "w": "makan",
    "scene": 10,
-   "start": 166.254,
-   "end": 166.559,
+   "start": 166.754,
+   "end": 167.059,
    "matched": true
   },
   {
    "w": "Indomie,",
    "scene": 10,
-   "start": 166.559,
-   "end": 166.966,
+   "start": 167.059,
+   "end": 167.466,
    "matched": true
   },
   {
    "w": "minum",
    "scene": 10,
-   "start": 167.066,
-   "end": 167.502,
+   "start": 167.566,
+   "end": 168.002,
    "matched": true
   },
   {
    "w": "Ultra",
    "scene": 10,
-   "start": 167.502,
-   "end": 167.937,
+   "start": 168.002,
+   "end": 168.437,
    "matched": true
   },
   {
    "w": "Milk,",
    "scene": 10,
-   "start": 167.937,
-   "end": 168.3,
+   "start": 168.437,
+   "end": 168.8,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 10,
-   "start": 168.3,
-   "end": 168.464,
+   "start": 168.8,
+   "end": 168.964,
    "matched": true
   },
   {
    "w": "menggunakan",
    "scene": 10,
-   "start": 168.464,
-   "end": 168.956,
+   "start": 168.964,
+   "end": 169.456,
    "matched": true
   },
   {
    "w": "banyak",
    "scene": 10,
-   "start": 168.956,
-   "end": 169.243,
+   "start": 169.456,
+   "end": 169.743,
    "matched": true
   },
   {
    "w": "produk",
    "scene": 10,
-   "start": 169.243,
-   "end": 169.531,
+   "start": 169.743,
+   "end": 170.031,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 10,
-   "start": 169.531,
-   "end": 169.736,
+   "start": 170.031,
+   "end": 170.236,
    "matched": true
   },
   {
    "w": "perusahaan",
    "scene": 10,
-   "start": 169.736,
-   "end": 170.187,
+   "start": 170.236,
+   "end": 170.687,
    "matched": true
   },
   {
    "w": "besar.",
    "scene": 10,
-   "start": 170.187,
-   "end": 170.433,
+   "start": 170.687,
+   "end": 170.933,
    "matched": true
   },
   {
    "w": "Sebagai",
    "scene": 10,
-   "start": 170.833,
-   "end": 171.288,
+   "start": 171.333,
+   "end": 171.788,
    "matched": true
   },
   {
    "w": "konsumen,",
    "scene": 10,
-   "start": 171.288,
-   "end": 171.8,
+   "start": 171.788,
+   "end": 172.3,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 10,
-   "start": 172.0,
-   "end": 172.34,
+   "start": 172.5,
+   "end": 172.84,
    "matched": true
   },
   {
    "w": "menikmati",
    "scene": 10,
-   "start": 172.34,
-   "end": 173.02,
+   "start": 172.84,
+   "end": 173.52,
    "matched": true
   },
   {
    "w": "produknya.",
    "scene": 10,
-   "start": 173.02,
-   "end": 173.7,
+   "start": 173.52,
+   "end": 174.2,
    "matched": true
   },
   {
    "w": "Tapi",
    "scene": 10,
-   "start": 174.266,
-   "end": 174.536,
+   "start": 174.766,
+   "end": 175.036,
    "matched": true
   },
   {
    "w": "lewat",
    "scene": 10,
-   "start": 174.536,
-   "end": 174.86,
+   "start": 175.036,
+   "end": 175.36,
    "matched": true
   },
   {
    "w": "investasi,",
    "scene": 10,
-   "start": 174.86,
-   "end": 175.4,
+   "start": 175.36,
+   "end": 175.9,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 10,
-   "start": 175.5,
-   "end": 175.739,
+   "start": 176.0,
+   "end": 176.239,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 10,
-   "start": 175.739,
-   "end": 175.978,
+   "start": 176.239,
+   "end": 176.478,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 10,
-   "start": 175.978,
-   "end": 176.217,
+   "start": 176.478,
+   "end": 176.717,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 10,
-   "start": 176.217,
-   "end": 176.456,
+   "start": 176.717,
+   "end": 176.956,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 10,
-   "start": 176.456,
-   "end": 176.743,
+   "start": 176.956,
+   "end": 177.243,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 10,
-   "start": 176.743,
-   "end": 177.173,
+   "start": 177.243,
+   "end": 177.673,
    "matched": true
   },
   {
    "w": "kecil",
    "scene": 10,
-   "start": 177.173,
-   "end": 177.459,
+   "start": 177.673,
+   "end": 177.959,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 10,
-   "start": 177.459,
-   "end": 177.698,
+   "start": 177.959,
+   "end": 178.198,
    "matched": true
   },
   {
    "w": "bisnis",
    "scene": 10,
-   "start": 177.698,
-   "end": 178.033,
+   "start": 178.198,
+   "end": 178.533,
    "matched": true
   },
   {
    "w": "di",
    "scene": 10,
-   "start": 178.166,
-   "end": 178.322,
+   "start": 178.666,
+   "end": 178.822,
    "matched": true
   },
   {
    "w": "balik",
    "scene": 10,
-   "start": 178.322,
-   "end": 178.633,
+   "start": 178.822,
+   "end": 179.133,
    "matched": true
   },
   {
    "w": "produk-produk",
    "scene": 10,
-   "start": 178.633,
-   "end": 179.359,
+   "start": 179.133,
+   "end": 179.859,
    "matched": true
   },
   {
    "w": "itu.",
    "scene": 10,
-   "start": 179.359,
-   "end": 179.566,
+   "start": 179.859,
+   "end": 180.066,
    "matched": true
   },
   {
    "w": "Dan",
    "scene": 11,
-   "start": 179.966,
-   "end": 180.175,
+   "start": 180.466,
+   "end": 180.675,
    "matched": true
   },
   {
    "w": "di",
    "scene": 11,
-   "start": 180.175,
-   "end": 180.332,
+   "start": 180.675,
+   "end": 180.832,
    "matched": true
   },
   {
    "w": "sinilah",
    "scene": 11,
-   "start": 180.332,
-   "end": 180.749,
+   "start": 180.832,
+   "end": 181.249,
    "matched": true
   },
   {
    "w": "bedanya",
    "scene": 11,
-   "start": 180.749,
-   "end": 181.167,
+   "start": 181.249,
+   "end": 181.667,
    "matched": true
   },
   {
    "w": "antara",
    "scene": 11,
-   "start": 181.167,
-   "end": 181.533,
+   "start": 181.667,
+   "end": 182.033,
    "matched": true
   },
   {
    "w": "sekadar",
    "scene": 11,
-   "start": 182.133,
-   "end": 182.554,
+   "start": 182.633,
+   "end": 183.054,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 11,
-   "start": 182.554,
-   "end": 183.237,
+   "start": 183.054,
+   "end": 183.737,
    "matched": true
   },
   {
    "w": "uang,",
    "scene": 11,
-   "start": 183.237,
-   "end": 183.5,
+   "start": 183.737,
+   "end": 184.0,
    "matched": true
   },
   {
    "w": "dengan",
    "scene": 11,
-   "start": 184.266,
-   "end": 184.691,
+   "start": 184.766,
+   "end": 185.191,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 11,
-   "start": 184.691,
-   "end": 185.055,
+   "start": 185.191,
+   "end": 185.555,
    "matched": true
   },
   {
    "w": "membangun",
    "scene": 11,
-   "start": 185.055,
-   "end": 185.662,
+   "start": 185.555,
+   "end": 186.162,
    "matched": true
   },
   {
    "w": "aset.",
    "scene": 11,
-   "start": 185.662,
-   "end": 185.966,
+   "start": 186.162,
+   "end": 186.466,
    "matched": true
   },
   {
    "w": "Sebuah",
    "scene": 11,
-   "start": 186.433,
-   "end": 186.753,
+   "start": 186.933,
+   "end": 187.253,
    "matched": true
   },
   {
    "w": "bisnis",
    "scene": 11,
-   "start": 186.753,
-   "end": 187.073,
+   "start": 187.253,
+   "end": 187.573,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 11,
-   "start": 187.073,
-   "end": 187.302,
+   "start": 187.573,
+   "end": 187.802,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 11,
-   "start": 187.302,
-   "end": 187.897,
+   "start": 187.802,
+   "end": 188.397,
    "matched": true
   },
   {
    "w": "pendapatan,",
    "scene": 11,
-   "start": 187.897,
-   "end": 188.4,
+   "start": 188.397,
+   "end": 188.9,
    "matched": true
   },
   {
    "w": "mencetak",
    "scene": 11,
-   "start": 188.466,
-   "end": 189.088,
+   "start": 188.966,
+   "end": 189.588,
    "matched": true
   },
   {
    "w": "laba,",
    "scene": 11,
-   "start": 189.088,
-   "end": 189.433,
+   "start": 189.588,
+   "end": 189.933,
    "matched": true
   },
   {
    "w": "lalu",
    "scene": 11,
-   "start": 189.533,
-   "end": 189.74,
+   "start": 190.033,
+   "end": 190.24,
    "matched": true
   },
   {
    "w": "memakai",
    "scene": 11,
-   "start": 189.74,
-   "end": 190.07,
+   "start": 190.24,
+   "end": 190.57,
    "matched": true
   },
   {
    "w": "laba",
    "scene": 11,
-   "start": 190.07,
-   "end": 190.277,
+   "start": 190.57,
+   "end": 190.777,
    "matched": true
   },
   {
    "w": "itu",
    "scene": 11,
-   "start": 190.277,
-   "end": 190.442,
+   "start": 190.777,
+   "end": 190.942,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 11,
-   "start": 190.442,
-   "end": 190.691,
+   "start": 190.942,
+   "end": 191.191,
    "matched": true
   },
   {
    "w": "berkembang",
    "scene": 11,
-   "start": 190.691,
-   "end": 191.145,
+   "start": 191.191,
+   "end": 191.645,
    "matched": true
   },
   {
    "w": "lebih",
    "scene": 11,
-   "start": 191.145,
-   "end": 191.393,
+   "start": 191.645,
+   "end": 191.893,
    "matched": true
   },
   {
    "w": "jauh.",
    "scene": 11,
-   "start": 191.393,
-   "end": 191.6,
+   "start": 191.893,
+   "end": 192.1,
    "matched": true
   },
   {
    "w": "Sebagai",
    "scene": 11,
-   "start": 191.933,
-   "end": 192.269,
+   "start": 192.433,
+   "end": 192.769,
    "matched": true
   },
   {
    "w": "pemilik",
    "scene": 11,
-   "start": 192.269,
-   "end": 192.605,
+   "start": 192.769,
+   "end": 193.105,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 11,
-   "start": 192.605,
-   "end": 192.984,
+   "start": 193.105,
+   "end": 193.484,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 11,
-   "start": 192.984,
-   "end": 193.194,
+   "start": 193.484,
+   "end": 193.694,
    "matched": true
   },
   {
    "w": "bisnis",
    "scene": 11,
-   "start": 193.194,
-   "end": 193.488,
+   "start": 193.694,
+   "end": 193.988,
    "matched": true
   },
   {
    "w": "tersebut,",
    "scene": 11,
-   "start": 193.488,
-   "end": 193.866,
+   "start": 193.988,
+   "end": 194.366,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 11,
-   "start": 194.266,
-   "end": 194.569,
+   "start": 194.766,
+   "end": 195.069,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 11,
-   "start": 194.569,
-   "end": 194.872,
+   "start": 195.069,
+   "end": 195.372,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 11,
-   "start": 194.872,
-   "end": 195.236,
+   "start": 195.372,
+   "end": 195.736,
    "matched": true
   },
   {
    "w": "exposure",
    "scene": 11,
-   "start": 195.236,
-   "end": 195.781,
+   "start": 195.736,
+   "end": 196.281,
    "matched": true
   },
   {
    "w": "terhadap",
    "scene": 11,
-   "start": 195.781,
-   "end": 196.327,
+   "start": 196.281,
+   "end": 196.827,
    "matched": true
   },
   {
    "w": "pertumbuhan",
    "scene": 11,
-   "start": 196.327,
-   "end": 197.054,
+   "start": 196.827,
+   "end": 197.554,
    "matched": true
   },
   {
    "w": "nilainya.",
    "scene": 11,
-   "start": 197.054,
-   "end": 197.6,
+   "start": 197.554,
+   "end": 198.1,
    "matched": true
   },
   {
    "w": "Dan",
    "scene": 12,
-   "start": 198.133,
-   "end": 198.314,
+   "start": 198.633,
+   "end": 198.814,
    "matched": true
   },
   {
    "w": "mulainya",
    "scene": 12,
-   "start": 198.314,
-   "end": 198.72,
+   "start": 198.814,
+   "end": 199.22,
    "matched": true
   },
   {
    "w": "nggak",
    "scene": 12,
-   "start": 198.72,
-   "end": 198.991,
+   "start": 199.22,
+   "end": 199.491,
    "matched": true
   },
   {
    "w": "harus",
    "scene": 12,
-   "start": 198.991,
-   "end": 199.262,
+   "start": 199.491,
+   "end": 199.762,
    "matched": true
   },
   {
    "w": "besar.",
    "scene": 12,
-   "start": 199.262,
-   "end": 199.533,
+   "start": 199.762,
+   "end": 200.033,
    "matched": true
   },
   {
    "w": "Bisa",
    "scene": 12,
-   "start": 199.666,
-   "end": 200.176,
+   "start": 200.166,
+   "end": 200.676,
    "matched": true
   },
   {
    "w": "Rp50",
    "scene": 12,
-   "start": 200.176,
-   "end": 200.414,
+   "start": 200.676,
+   "end": 200.914,
    "matched": false
   },
   {
    "w": "ribu,",
    "scene": 12,
-   "start": 200.414,
-   "end": 200.652,
+   "start": 200.914,
+   "end": 201.152,
    "matched": false
   },
   {
    "w": "Rp100",
    "scene": 12,
-   "start": 200.652,
-   "end": 200.89,
+   "start": 201.152,
+   "end": 201.39,
    "matched": false
   },
   {
    "w": "ribu,",
    "scene": 12,
-   "start": 200.89,
-   "end": 201.4,
+   "start": 201.39,
+   "end": 201.9,
    "matched": true
   },
   {
    "w": "atau",
    "scene": 12,
-   "start": 201.633,
-   "end": 202.03,
+   "start": 202.133,
+   "end": 202.53,
    "matched": true
   },
   {
    "w": "Rp300",
    "scene": 12,
-   "start": 202.03,
-   "end": 202.682,
+   "start": 202.53,
+   "end": 203.182,
    "matched": false
   },
   {
    "w": "ribu.",
    "scene": 12,
-   "start": 202.682,
-   "end": 203.333,
+   "start": 203.182,
+   "end": 203.833,
    "matched": false
   },
   {
    "w": "Yang",
    "scene": 12,
-   "start": 203.333,
-   "end": 203.544,
+   "start": 203.833,
+   "end": 204.044,
    "matched": true
   },
   {
    "w": "paling",
    "scene": 12,
-   "start": 203.544,
-   "end": 203.84,
+   "start": 204.044,
+   "end": 204.34,
    "matched": true
   },
   {
    "w": "penting",
    "scene": 12,
-   "start": 203.84,
-   "end": 204.177,
+   "start": 204.34,
+   "end": 204.677,
    "matched": true
   },
   {
    "w": "bukan",
    "scene": 12,
-   "start": 204.177,
-   "end": 204.431,
+   "start": 204.677,
+   "end": 204.931,
    "matched": true
   },
   {
    "w": "nominal",
    "scene": 12,
-   "start": 204.431,
-   "end": 204.769,
+   "start": 204.931,
+   "end": 205.269,
    "matched": true
   },
   {
    "w": "pertamanya,",
    "scene": 12,
-   "start": 204.769,
-   "end": 205.233,
+   "start": 205.269,
+   "end": 205.733,
    "matched": true
   },
   {
    "w": "tapi",
    "scene": 12,
-   "start": 205.666,
-   "end": 205.962,
+   "start": 206.166,
+   "end": 206.462,
    "matched": true
   },
   {
    "w": "kebiasaan",
    "scene": 12,
-   "start": 205.962,
-   "end": 206.554,
+   "start": 206.462,
+   "end": 207.054,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 12,
-   "start": 206.554,
-   "end": 206.909,
+   "start": 207.054,
+   "end": 207.409,
    "matched": true
   },
   {
    "w": "menyisihkan",
    "scene": 12,
-   "start": 206.909,
-   "end": 207.619,
+   "start": 207.409,
+   "end": 208.119,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 12,
-   "start": 207.619,
-   "end": 208.152,
+   "start": 208.119,
+   "end": 208.652,
    "matched": true
   },
   {
    "w": "income",
    "scene": 12,
-   "start": 208.152,
-   "end": 208.566,
+   "start": 208.652,
+   "end": 209.066,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 12,
-   "start": 208.733,
-   "end": 208.969,
+   "start": 209.233,
+   "end": 209.469,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 12,
-   "start": 208.969,
-   "end": 209.324,
+   "start": 209.469,
+   "end": 209.824,
    "matched": true
   },
   {
    "w": "mengubahnya",
    "scene": 12,
-   "start": 209.324,
-   "end": 210.032,
+   "start": 209.824,
+   "end": 210.532,
    "matched": true
   },
   {
    "w": "menjadi",
    "scene": 12,
-   "start": 210.032,
-   "end": 210.505,
+   "start": 210.532,
+   "end": 211.005,
    "matched": true
   },
   {
    "w": "aset.",
    "scene": 12,
-   "start": 210.505,
-   "end": 210.8,
+   "start": 211.005,
+   "end": 211.3,
    "matched": true
   },
   {
    "w": "Lo",
    "scene": 13,
-   "start": 211.166,
-   "end": 211.359,
+   "start": 211.666,
+   "end": 211.859,
    "matched": true
   },
   {
    "w": "Kheng",
    "scene": 13,
-   "start": 211.359,
-   "end": 211.553,
+   "start": 211.859,
+   "end": 212.053,
    "matched": true
   },
   {
    "w": "Hong",
    "scene": 13,
-   "start": 211.553,
-   "end": 211.829,
+   "start": 212.053,
+   "end": 212.329,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 13,
-   "start": 211.829,
-   "end": 212.105,
+   "start": 212.329,
+   "end": 212.605,
    "matched": true
   },
   {
    "w": "nggak",
    "scene": 13,
-   "start": 212.105,
-   "end": 212.437,
+   "start": 212.605,
+   "end": 212.937,
    "matched": true
   },
   {
    "w": "langsung",
    "scene": 13,
-   "start": 212.437,
-   "end": 212.934,
+   "start": 212.937,
+   "end": 213.434,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 13,
-   "start": 212.934,
-   "end": 213.266,
+   "start": 213.434,
+   "end": 213.766,
    "matched": true
   },
   {
    "w": "sebagai",
    "scene": 13,
-   "start": 213.433,
-   "end": 213.897,
+   "start": 213.933,
+   "end": 214.397,
    "matched": true
   },
   {
    "w": "investor",
    "scene": 13,
-   "start": 213.897,
-   "end": 214.418,
+   "start": 214.397,
+   "end": 214.918,
    "matched": true
   },
   {
    "w": "besar.",
    "scene": 13,
-   "start": 214.418,
-   "end": 214.766,
+   "start": 214.918,
+   "end": 215.266,
    "matched": true
   },
   {
    "w": "Sebelum",
    "scene": 13,
-   "start": 215.4,
-   "end": 215.707,
+   "start": 215.9,
+   "end": 216.207,
    "matched": true
   },
   {
    "w": "dikenal",
    "scene": 13,
-   "start": 215.707,
-   "end": 216.014,
+   "start": 216.207,
+   "end": 216.514,
    "matched": true
   },
   {
    "w": "seperti",
    "scene": 13,
-   "start": 216.014,
-   "end": 216.321,
+   "start": 216.514,
+   "end": 216.821,
    "matched": true
   },
   {
    "w": "sekarang,",
    "scene": 13,
-   "start": 216.321,
-   "end": 216.666,
+   "start": 216.821,
+   "end": 217.166,
    "matched": true
   },
   {
    "w": "dia",
    "scene": 13,
-   "start": 217.066,
-   "end": 217.283,
+   "start": 217.566,
+   "end": 217.783,
    "matched": true
   },
   {
    "w": "pernah",
    "scene": 13,
-   "start": 217.283,
-   "end": 217.662,
+   "start": 217.783,
+   "end": 218.162,
    "matched": true
   },
   {
    "w": "bekerja",
    "scene": 13,
-   "start": 217.662,
-   "end": 218.095,
+   "start": 218.162,
+   "end": 218.595,
    "matched": true
   },
   {
    "w": "sebagai",
    "scene": 13,
-   "start": 218.095,
-   "end": 218.529,
+   "start": 218.595,
+   "end": 219.029,
    "matched": true
   },
   {
    "w": "pegawai",
    "scene": 13,
-   "start": 218.529,
-   "end": 218.962,
+   "start": 219.029,
+   "end": 219.462,
    "matched": true
   },
   {
    "w": "bank.",
    "scene": 13,
-   "start": 218.962,
-   "end": 219.233,
+   "start": 219.462,
+   "end": 219.733,
    "matched": true
   },
   {
    "w": "Sambil",
    "scene": 13,
-   "start": 219.433,
-   "end": 219.713,
+   "start": 219.933,
+   "end": 220.213,
    "matched": true
   },
   {
    "w": "bekerja,",
    "scene": 13,
-   "start": 219.713,
-   "end": 220.033,
+   "start": 220.213,
+   "end": 220.533,
    "matched": true
   },
   {
    "w": "dia",
    "scene": 13,
-   "start": 220.033,
-   "end": 220.279,
+   "start": 220.533,
+   "end": 220.779,
    "matched": true
   },
   {
    "w": "menabung,",
    "scene": 13,
-   "start": 220.279,
-   "end": 220.833,
+   "start": 220.779,
+   "end": 221.333,
    "matched": true
   },
   {
    "w": "belajar,",
    "scene": 13,
-   "start": 220.966,
-   "end": 221.347,
+   "start": 221.466,
+   "end": 221.847,
    "matched": true
   },
   {
    "w": "membaca",
    "scene": 13,
-   "start": 221.347,
-   "end": 221.728,
+   "start": 221.847,
+   "end": 222.228,
    "matched": true
   },
   {
    "w": "laporan",
    "scene": 13,
-   "start": 221.728,
-   "end": 222.109,
+   "start": 222.228,
+   "end": 222.609,
    "matched": true
   },
   {
    "w": "perusahaan,",
    "scene": 13,
-   "start": 222.109,
-   "end": 222.633,
+   "start": 222.609,
+   "end": 223.133,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 13,
-   "start": 222.866,
-   "end": 223.072,
+   "start": 223.366,
+   "end": 223.572,
    "matched": true
   },
   {
    "w": "pelan-pelan",
    "scene": 13,
-   "start": 223.072,
-   "end": 223.689,
+   "start": 223.572,
+   "end": 224.189,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 13,
-   "start": 223.689,
-   "end": 223.997,
+   "start": 224.189,
+   "end": 224.497,
    "matched": true
   },
   {
    "w": "berinvestasi.",
    "scene": 13,
-   "start": 223.997,
-   "end": 224.666,
+   "start": 224.497,
+   "end": 225.166,
    "matched": true
   },
   {
    "w": "Salah",
    "scene": 13,
-   "start": 225.133,
-   "end": 225.392,
+   "start": 225.633,
+   "end": 225.892,
    "matched": true
   },
   {
    "w": "satu",
    "scene": 13,
-   "start": 225.392,
-   "end": 225.609,
+   "start": 225.892,
+   "end": 226.109,
    "matched": true
   },
   {
    "w": "contoh",
    "scene": 13,
-   "start": 225.609,
-   "end": 225.911,
+   "start": 226.109,
+   "end": 226.411,
    "matched": true
   },
   {
    "w": "terkenalnya",
    "scene": 13,
-   "start": 225.911,
-   "end": 226.43,
+   "start": 226.411,
+   "end": 226.93,
    "matched": true
   },
   {
    "w": "adalah",
    "scene": 13,
-   "start": 226.43,
-   "end": 226.733,
+   "start": 226.93,
+   "end": 227.233,
    "matched": true
   },
   {
    "w": "saat",
    "scene": 13,
-   "start": 226.833,
-   "end": 227.137,
+   "start": 227.333,
+   "end": 227.637,
    "matched": true
   },
   {
    "w": "dia",
    "scene": 13,
-   "start": 227.137,
-   "end": 227.381,
+   "start": 227.637,
+   "end": 227.881,
    "matched": true
   },
   {
    "w": "membeli",
    "scene": 13,
-   "start": 227.381,
-   "end": 227.868,
+   "start": 227.881,
+   "end": 228.368,
    "matched": true
   },
   {
    "w": "saham",
    "scene": 13,
-   "start": 227.868,
-   "end": 228.233,
+   "start": 228.368,
+   "end": 228.733,
    "matched": true
   },
   {
    "w": "United",
    "scene": 13,
-   "start": 228.433,
-   "end": 229.046,
+   "start": 228.933,
+   "end": 229.546,
    "matched": true
   },
   {
    "w": "Tractors.",
    "scene": 13,
-   "start": 229.046,
-   "end": 229.833,
+   "start": 229.546,
+   "end": 230.333,
    "matched": true
   },
   {
    "w": "Saat",
    "scene": 14,
-   "start": 230.0,
-   "end": 230.598,
+   "start": 230.5,
+   "end": 231.098,
    "matched": true
   },
   {
    "w": "krisis",
    "scene": 14,
-   "start": 230.598,
-   "end": 231.435,
+   "start": 231.098,
+   "end": 231.935,
    "matched": true
   },
   {
    "w": "1998,",
    "scene": 14,
-   "start": 231.435,
-   "end": 232.033,
+   "start": 231.935,
+   "end": 232.533,
    "matched": true
   },
   {
    "w": "Lo",
    "scene": 14,
-   "start": 232.266,
-   "end": 232.47,
+   "start": 232.766,
+   "end": 232.97,
    "matched": true
   },
   {
    "w": "Kheng",
    "scene": 14,
-   "start": 232.47,
-   "end": 232.674,
+   "start": 232.97,
+   "end": 233.174,
    "matched": true
   },
   {
    "w": "Hong",
    "scene": 14,
-   "start": 232.674,
-   "end": 232.966,
+   "start": 233.174,
+   "end": 233.466,
    "matched": true
   },
   {
    "w": "membeli",
    "scene": 14,
-   "start": 232.966,
-   "end": 233.433,
+   "start": 233.466,
+   "end": 233.933,
    "matched": true
   },
   {
    "w": "United",
    "scene": 14,
-   "start": 233.433,
-   "end": 233.841,
+   "start": 233.933,
+   "end": 234.341,
    "matched": true
   },
   {
    "w": "Tractors",
    "scene": 14,
-   "start": 233.841,
-   "end": 234.366,
+   "start": 234.341,
+   "end": 234.866,
    "matched": true
   },
   {
    "w": "di",
    "scene": 14,
-   "start": 234.433,
-   "end": 234.678,
+   "start": 234.933,
+   "end": 235.178,
    "matched": true
   },
   {
    "w": "harga",
    "scene": 14,
-   "start": 234.678,
-   "end": 235.169,
+   "start": 235.178,
+   "end": 235.669,
    "matched": true
   },
   {
    "w": "sekitar",
    "scene": 14,
-   "start": 235.169,
-   "end": 235.824,
+   "start": 235.669,
+   "end": 236.324,
    "matched": true
   },
   {
    "w": "Rp250",
    "scene": 14,
-   "start": 235.824,
-   "end": 236.315,
+   "start": 236.324,
+   "end": 236.815,
    "matched": true
   },
   {
    "w": "per",
    "scene": 14,
-   "start": 236.315,
-   "end": 236.642,
+   "start": 236.815,
+   "end": 237.142,
    "matched": true
   },
   {
    "w": "saham.",
    "scene": 14,
-   "start": 236.642,
-   "end": 237.133,
+   "start": 237.142,
+   "end": 237.633,
    "matched": true
   },
   {
    "w": "Beberapa",
    "scene": 14,
-   "start": 237.566,
-   "end": 237.891,
+   "start": 238.066,
+   "end": 238.391,
    "matched": true
   },
   {
    "w": "tahun",
    "scene": 14,
-   "start": 237.891,
-   "end": 238.108,
+   "start": 238.391,
+   "end": 238.608,
    "matched": true
   },
   {
    "w": "kemudian,",
    "scene": 14,
-   "start": 238.108,
-   "end": 238.433,
+   "start": 238.608,
+   "end": 238.933,
    "matched": true
   },
   {
    "w": "nilainya",
    "scene": 14,
-   "start": 238.6,
-   "end": 239.023,
+   "start": 239.1,
+   "end": 239.523,
    "matched": true
   },
   {
    "w": "sudah",
    "scene": 14,
-   "start": 239.023,
-   "end": 239.304,
+   "start": 239.523,
+   "end": 239.804,
    "matched": true
   },
   {
    "w": "meningkat",
    "scene": 14,
-   "start": 239.304,
-   "end": 239.774,
+   "start": 239.804,
+   "end": 240.274,
    "matched": true
   },
   {
    "w": "berkali-kali",
    "scene": 14,
-   "start": 239.774,
-   "end": 240.384,
+   "start": 240.274,
+   "end": 240.884,
    "matched": true
   },
   {
    "w": "lipat,",
    "scene": 14,
-   "start": 240.384,
-   "end": 240.666,
+   "start": 240.884,
+   "end": 241.166,
    "matched": true
   },
   {
    "w": "bahkan",
    "scene": 14,
-   "start": 240.966,
-   "end": 241.338,
+   "start": 241.466,
+   "end": 241.838,
    "matched": true
   },
   {
    "w": "pernah",
    "scene": 14,
-   "start": 241.338,
-   "end": 241.711,
+   "start": 241.838,
+   "end": 242.211,
    "matched": true
   },
   {
    "w": "berada",
    "scene": 14,
-   "start": 241.711,
-   "end": 242.083,
+   "start": 242.211,
+   "end": 242.583,
    "matched": true
   },
   {
    "w": "di",
    "scene": 14,
-   "start": 242.083,
-   "end": 242.243,
+   "start": 242.583,
+   "end": 242.743,
    "matched": true
   },
   {
    "w": "kisaran",
    "scene": 14,
-   "start": 242.243,
-   "end": 242.668,
+   "start": 242.743,
+   "end": 243.168,
    "matched": true
   },
   {
    "w": "sekitar",
    "scene": 14,
-   "start": 242.668,
-   "end": 243.094,
+   "start": 243.168,
+   "end": 243.594,
    "matched": true
   },
   {
    "w": "Rp15",
    "scene": 14,
-   "start": 243.094,
-   "end": 243.597,
+   "start": 243.594,
+   "end": 244.097,
    "matched": false
   },
   {
    "w": "ribu.",
    "scene": 14,
-   "start": 243.597,
-   "end": 244.1,
+   "start": 244.097,
+   "end": 244.6,
    "matched": false
   },
   {
    "w": "Tapi",
    "scene": 14,
-   "start": 244.1,
-   "end": 244.381,
+   "start": 244.6,
+   "end": 244.881,
    "matched": true
   },
   {
    "w": "tentu",
    "scene": 14,
-   "start": 244.381,
-   "end": 244.719,
+   "start": 244.881,
+   "end": 245.219,
    "matched": true
   },
   {
    "w": "saja,",
    "scene": 14,
-   "start": 244.719,
-   "end": 245.0,
+   "start": 245.219,
+   "end": 245.5,
    "matched": true
   },
   {
    "w": "ini",
    "scene": 14,
-   "start": 245.2,
-   "end": 245.392,
+   "start": 245.7,
+   "end": 245.892,
    "matched": true
   },
   {
    "w": "adalah",
    "scene": 14,
-   "start": 245.392,
-   "end": 245.729,
+   "start": 245.892,
+   "end": 246.229,
    "matched": true
   },
   {
    "w": "contoh",
    "scene": 14,
-   "start": 245.729,
-   "end": 246.066,
+   "start": 246.229,
+   "end": 246.566,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 14,
-   "start": 246.6,
-   "end": 246.867,
+   "start": 247.1,
+   "end": 247.367,
    "matched": true
   },
   {
    "w": "masa",
    "scene": 14,
-   "start": 246.867,
-   "end": 247.133,
+   "start": 247.367,
+   "end": 247.633,
    "matched": true
   },
   {
    "w": "lalu.",
    "scene": 14,
-   "start": 247.133,
-   "end": 247.4,
+   "start": 247.633,
+   "end": 247.9,
    "matched": true
   },
   {
    "w": "Nggak",
    "scene": 14,
-   "start": 247.8,
-   "end": 248.086,
+   "start": 248.3,
+   "end": 248.586,
    "matched": true
   },
   {
    "w": "semua",
    "scene": 14,
-   "start": 248.086,
-   "end": 248.373,
+   "start": 248.586,
+   "end": 248.873,
    "matched": true
   },
   {
    "w": "investasi",
    "scene": 14,
-   "start": 248.373,
-   "end": 248.85,
+   "start": 248.873,
+   "end": 249.35,
    "matched": true
   },
   {
    "w": "akan",
    "scene": 14,
-   "start": 248.85,
-   "end": 249.089,
+   "start": 249.35,
+   "end": 249.589,
    "matched": true
   },
   {
    "w": "memberikan",
    "scene": 14,
-   "start": 249.089,
-   "end": 249.614,
+   "start": 249.589,
+   "end": 250.114,
    "matched": true
   },
   {
    "w": "hasil",
    "scene": 14,
-   "start": 249.614,
-   "end": 249.9,
+   "start": 250.114,
+   "end": 250.4,
    "matched": true
   },
   {
    "w": "seperti",
    "scene": 14,
-   "start": 250.2,
-   "end": 250.733,
+   "start": 250.7,
+   "end": 251.233,
    "matched": true
   },
   {
    "w": "ini.",
    "scene": 14,
-   "start": 250.733,
-   "end": 251.0,
+   "start": 251.233,
+   "end": 251.5,
    "matched": true
   },
   {
    "w": "Yang",
    "scene": 15,
-   "start": 251.166,
-   "end": 251.387,
+   "start": 251.666,
+   "end": 251.887,
    "matched": true
   },
   {
    "w": "menarik",
    "scene": 15,
-   "start": 251.387,
-   "end": 251.74,
+   "start": 251.887,
+   "end": 252.24,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 15,
-   "start": 251.74,
-   "end": 251.961,
+   "start": 252.24,
+   "end": 252.461,
    "matched": true
   },
   {
    "w": "cerita",
    "scene": 15,
-   "start": 251.961,
-   "end": 252.27,
+   "start": 252.461,
+   "end": 252.77,
    "matched": true
   },
   {
    "w": "ini",
    "scene": 15,
-   "start": 252.27,
-   "end": 252.447,
+   "start": 252.77,
+   "end": 252.947,
    "matched": true
   },
   {
    "w": "sebenarnya",
    "scene": 15,
-   "start": 252.447,
-   "end": 252.933,
+   "start": 252.947,
+   "end": 253.433,
    "matched": true
   },
   {
    "w": "bukan:",
    "scene": 15,
-   "start": 253.233,
-   "end": 253.642,
+   "start": 253.733,
+   "end": 254.142,
    "matched": true
   },
   {
    "w": "“Cari",
    "scene": 15,
-   "start": 253.642,
-   "end": 253.983,
+   "start": 254.142,
+   "end": 254.483,
    "matched": true
   },
   {
    "w": "saham",
    "scene": 15,
-   "start": 253.983,
-   "end": 254.392,
+   "start": 254.483,
+   "end": 254.892,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 15,
-   "start": 254.392,
-   "end": 254.732,
+   "start": 254.892,
+   "end": 255.232,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 15,
-   "start": 254.732,
-   "end": 255.073,
+   "start": 255.232,
+   "end": 255.573,
    "matched": true
   },
   {
    "w": "naik",
    "scene": 15,
-   "start": 255.073,
-   "end": 255.414,
+   "start": 255.573,
+   "end": 255.914,
    "matched": true
   },
   {
    "w": "berkali-kali.”",
    "scene": 15,
-   "start": 255.414,
-   "end": 256.3,
+   "start": 255.914,
+   "end": 256.8,
    "matched": true
   },
   {
    "w": "Yang",
    "scene": 15,
-   "start": 256.633,
-   "end": 256.92,
+   "start": 257.133,
+   "end": 257.42,
    "matched": true
   },
   {
    "w": "lebih",
    "scene": 15,
-   "start": 256.92,
-   "end": 257.265,
+   "start": 257.42,
+   "end": 257.765,
    "matched": true
   },
   {
    "w": "penting",
    "scene": 15,
-   "start": 257.265,
-   "end": 257.724,
+   "start": 257.765,
+   "end": 258.224,
    "matched": true
   },
   {
    "w": "justru",
    "scene": 15,
-   "start": 257.724,
-   "end": 258.126,
+   "start": 258.224,
+   "end": 258.626,
    "matched": true
   },
   {
    "w": "prosesnya.",
    "scene": 15,
-   "start": 258.126,
-   "end": 258.7,
+   "start": 258.626,
+   "end": 259.2,
    "matched": true
   },
   {
    "w": "Kerja",
    "scene": 15,
-   "start": 259.166,
-   "end": 259.413,
+   "start": 259.666,
+   "end": 259.913,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 15,
-   "start": 259.413,
-   "end": 259.66,
+   "start": 259.913,
+   "end": 260.16,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 15,
-   "start": 259.66,
-   "end": 260.194,
+   "start": 260.16,
+   "end": 260.694,
    "matched": true
   },
   {
    "w": "uang,",
    "scene": 15,
-   "start": 260.194,
-   "end": 260.4,
+   "start": 260.694,
+   "end": 260.9,
    "matched": true
   },
   {
    "w": "sisihkan",
    "scene": 15,
-   "start": 260.633,
-   "end": 261.233,
+   "start": 261.133,
+   "end": 261.733,
    "matched": true
   },
   {
    "w": "sebagian,",
    "scene": 15,
-   "start": 261.233,
-   "end": 261.833,
+   "start": 261.733,
+   "end": 262.333,
    "matched": true
   },
   {
    "w": "pelajari",
    "scene": 15,
-   "start": 262.233,
-   "end": 262.798,
+   "start": 262.733,
+   "end": 263.298,
    "matched": true
   },
   {
    "w": "asetnya,",
    "scene": 15,
-   "start": 262.798,
-   "end": 263.3,
+   "start": 263.298,
+   "end": 263.8,
    "matched": true
   },
   {
    "w": "beli",
    "scene": 15,
-   "start": 263.3,
-   "end": 263.97,
+   "start": 263.8,
+   "end": 264.47,
    "matched": false
   },
   {
    "w": "sesuatu",
    "scene": 15,
-   "start": 263.97,
-   "end": 264.392,
+   "start": 264.47,
+   "end": 264.892,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 15,
-   "start": 264.392,
-   "end": 264.657,
+   "start": 264.892,
+   "end": 265.157,
    "matched": true
   },
   {
    "w": "benar-benar",
    "scene": 15,
-   "start": 264.657,
-   "end": 265.291,
+   "start": 265.157,
+   "end": 265.791,
    "matched": true
   },
   {
    "w": "dipahami,",
    "scene": 15,
-   "start": 265.291,
-   "end": 265.766,
+   "start": 265.791,
+   "end": 266.266,
    "matched": true
   },
   {
    "w": "lalu",
    "scene": 15,
-   "start": 266.166,
-   "end": 266.416,
+   "start": 266.666,
+   "end": 266.916,
    "matched": true
   },
   {
    "w": "beri",
    "scene": 15,
-   "start": 266.416,
-   "end": 266.666,
+   "start": 266.916,
+   "end": 267.166,
    "matched": true
   },
   {
    "w": "waktu",
    "scene": 15,
-   "start": 266.666,
-   "end": 266.966,
+   "start": 267.166,
+   "end": 267.466,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 15,
-   "start": 267.433,
-   "end": 267.715,
+   "start": 267.933,
+   "end": 268.215,
    "matched": true
   },
   {
    "w": "berkembang.",
    "scene": 15,
-   "start": 267.715,
-   "end": 268.233,
+   "start": 268.215,
+   "end": 268.733,
    "matched": true
   },
   {
    "w": "Jadi",
    "scene": 16,
-   "start": 268.566,
-   "end": 268.8,
+   "start": 269.066,
+   "end": 269.3,
    "matched": true
   },
   {
    "w": "membangun",
    "scene": 16,
-   "start": 268.8,
-   "end": 269.322,
+   "start": 269.3,
+   "end": 269.822,
    "matched": true
   },
   {
    "w": "passive",
    "scene": 16,
-   "start": 269.322,
-   "end": 269.635,
+   "start": 269.822,
+   "end": 270.135,
    "matched": true
   },
   {
    "w": "income",
    "scene": 16,
-   "start": 269.635,
-   "end": 270.0,
+   "start": 270.135,
+   "end": 270.5,
    "matched": true
   },
   {
    "w": "bukan",
    "scene": 16,
-   "start": 270.0,
-   "end": 270.313,
+   "start": 270.5,
+   "end": 270.813,
    "matched": true
   },
   {
    "w": "berarti",
    "scene": 16,
-   "start": 270.313,
-   "end": 270.731,
+   "start": 270.813,
+   "end": 271.231,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 16,
-   "start": 270.731,
-   "end": 270.992,
+   "start": 271.231,
+   "end": 271.492,
    "matched": true
   },
   {
    "w": "harus",
    "scene": 16,
-   "start": 270.992,
-   "end": 271.305,
+   "start": 271.492,
+   "end": 271.805,
    "matched": true
   },
   {
    "w": "lari",
    "scene": 16,
-   "start": 271.305,
-   "end": 271.566,
+   "start": 271.805,
+   "end": 272.066,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 16,
-   "start": 271.833,
-   "end": 272.122,
+   "start": 272.333,
+   "end": 272.622,
    "matched": true
   },
   {
    "w": "pekerjaan.",
    "scene": 16,
-   "start": 272.122,
-   "end": 272.7,
+   "start": 272.622,
+   "end": 273.2,
    "matched": true
   },
   {
    "w": "Kita",
    "scene": 16,
-   "start": 273.333,
-   "end": 273.6,
+   "start": 273.833,
+   "end": 274.1,
    "matched": true
   },
   {
    "w": "tetap",
    "scene": 16,
-   "start": 273.6,
-   "end": 273.921,
+   "start": 274.1,
+   "end": 274.421,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 16,
-   "start": 273.921,
-   "end": 274.189,
+   "start": 274.421,
+   "end": 274.689,
    "matched": true
   },
   {
    "w": "bangun",
    "scene": 16,
-   "start": 274.189,
-   "end": 274.563,
+   "start": 274.689,
+   "end": 275.063,
    "matched": true
   },
   {
    "w": "karier,",
    "scene": 16,
-   "start": 274.563,
-   "end": 274.884,
+   "start": 275.063,
+   "end": 275.384,
    "matched": true
   },
   {
    "w": "urus",
    "scene": 16,
-   "start": 274.884,
-   "end": 275.152,
+   "start": 275.384,
+   "end": 275.652,
    "matched": true
   },
   {
    "w": "keluarga,",
    "scene": 16,
-   "start": 275.152,
-   "end": 275.633,
+   "start": 275.652,
+   "end": 276.133,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 16,
-   "start": 275.933,
-   "end": 276.126,
+   "start": 276.433,
+   "end": 276.626,
    "matched": true
   },
   {
    "w": "menikmati",
    "scene": 16,
-   "start": 276.126,
-   "end": 276.609,
+   "start": 276.626,
+   "end": 277.109,
    "matched": true
   },
   {
    "w": "hidup",
    "scene": 16,
-   "start": 276.609,
-   "end": 276.899,
+   "start": 277.109,
+   "end": 277.399,
    "matched": true
   },
   {
    "w": "sekarang.",
    "scene": 16,
-   "start": 276.899,
-   "end": 277.333,
+   "start": 277.399,
+   "end": 277.833,
    "matched": true
   },
   {
    "w": "Bedanya,",
    "scene": 16,
-   "start": 277.866,
-   "end": 278.283,
+   "start": 278.366,
+   "end": 278.783,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 16,
-   "start": 278.283,
-   "end": 278.753,
+   "start": 278.783,
+   "end": 279.253,
    "matched": true
   },
   {
    "w": "hasil",
    "scene": 16,
-   "start": 278.753,
-   "end": 279.066,
+   "start": 279.253,
+   "end": 279.566,
    "matched": true
   },
   {
    "w": "kerja",
    "scene": 16,
-   "start": 279.266,
-   "end": 279.576,
+   "start": 279.766,
+   "end": 280.076,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 16,
-   "start": 279.576,
-   "end": 279.835,
+   "start": 280.076,
+   "end": 280.335,
    "matched": true
   },
   {
    "w": "hari",
    "scene": 16,
-   "start": 279.835,
-   "end": 280.093,
+   "start": 280.335,
+   "end": 280.593,
    "matched": true
   },
   {
    "w": "ini",
    "scene": 16,
-   "start": 280.093,
-   "end": 280.3,
+   "start": 280.593,
+   "end": 280.8,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 16,
-   "start": 280.466,
-   "end": 280.813,
+   "start": 280.966,
+   "end": 281.313,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 16,
-   "start": 280.813,
-   "end": 281.103,
+   "start": 281.313,
+   "end": 281.603,
    "matched": true
   },
   {
    "w": "disiapkan",
    "scene": 16,
-   "start": 281.103,
-   "end": 281.682,
+   "start": 281.603,
+   "end": 282.182,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 16,
-   "start": 281.682,
-   "end": 282.029,
+   "start": 282.182,
+   "end": 282.529,
    "matched": true
   },
   {
    "w": "masa",
    "scene": 16,
-   "start": 282.029,
-   "end": 282.319,
+   "start": 282.529,
+   "end": 282.819,
    "matched": true
   },
   {
    "w": "depan.",
    "scene": 16,
-   "start": 282.319,
-   "end": 282.666,
+   "start": 282.819,
+   "end": 283.166,
    "matched": true
   },
   {
    "w": "Di",
    "scene": 17,
-   "start": 283.333,
-   "end": 283.504,
+   "start": 283.833,
+   "end": 284.004,
    "matched": true
   },
   {
    "w": "awal,",
    "scene": 17,
-   "start": 283.504,
-   "end": 283.789,
+   "start": 284.004,
+   "end": 284.289,
    "matched": true
   },
   {
    "w": "aset",
    "scene": 17,
-   "start": 283.789,
-   "end": 284.074,
+   "start": 284.289,
+   "end": 284.574,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 17,
-   "start": 284.074,
-   "end": 284.359,
+   "start": 284.574,
+   "end": 284.859,
    "matched": true
   },
   {
    "w": "mungkin",
    "scene": 17,
-   "start": 284.359,
-   "end": 284.816,
+   "start": 284.859,
+   "end": 285.316,
    "matched": true
   },
   {
    "w": "masih",
    "scene": 17,
-   "start": 284.816,
-   "end": 285.158,
+   "start": 285.316,
+   "end": 285.658,
    "matched": true
   },
   {
    "w": "kecil.",
    "scene": 17,
-   "start": 285.158,
-   "end": 285.5,
+   "start": 285.658,
+   "end": 286.0,
    "matched": true
   },
   {
    "w": "Tapi",
    "scene": 17,
-   "start": 286.1,
-   "end": 286.305,
+   "start": 286.6,
+   "end": 286.805,
    "matched": true
   },
   {
    "w": "kalau",
    "scene": 17,
-   "start": 286.305,
-   "end": 286.55,
+   "start": 286.805,
+   "end": 287.05,
    "matched": true
   },
   {
    "w": "kemampuan",
    "scene": 17,
-   "start": 286.55,
-   "end": 286.959,
+   "start": 287.05,
+   "end": 287.459,
    "matched": true
   },
   {
    "w": "kerja",
    "scene": 17,
-   "start": 286.959,
-   "end": 287.205,
+   "start": 287.459,
+   "end": 287.705,
    "matched": true
   },
   {
    "w": "terus",
    "scene": 17,
-   "start": 287.205,
-   "end": 287.45,
+   "start": 287.705,
+   "end": 287.95,
    "matched": true
   },
   {
    "w": "berkembang,",
    "scene": 17,
-   "start": 287.45,
-   "end": 287.9,
+   "start": 287.95,
+   "end": 288.4,
    "matched": true
   },
   {
    "w": "income",
    "scene": 17,
-   "start": 288.066,
-   "end": 288.395,
+   "start": 288.566,
+   "end": 288.895,
    "matched": true
   },
   {
    "w": "bertambah,",
    "scene": 17,
-   "start": 288.395,
-   "end": 288.866,
+   "start": 288.895,
+   "end": 289.366,
    "matched": true
   },
   {
    "w": "dan",
    "scene": 17,
-   "start": 289.033,
-   "end": 289.259,
+   "start": 289.533,
+   "end": 289.759,
    "matched": true
   },
   {
    "w": "aset",
    "scene": 17,
-   "start": 289.259,
-   "end": 289.541,
+   "start": 289.759,
+   "end": 290.041,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 17,
-   "start": 289.541,
-   "end": 289.823,
+   "start": 290.041,
+   "end": 290.323,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 17,
-   "start": 289.823,
-   "end": 290.105,
+   "start": 290.323,
+   "end": 290.605,
    "matched": true
   },
   {
    "w": "tumbuh,",
    "scene": 17,
-   "start": 290.105,
-   "end": 290.5,
+   "start": 290.605,
+   "end": 291.0,
    "matched": true
   },
   {
    "w": "pelan-pelan",
    "scene": 17,
-   "start": 290.666,
-   "end": 291.133,
+   "start": 291.166,
+   "end": 291.633,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 17,
-   "start": 291.133,
-   "end": 291.375,
+   "start": 291.633,
+   "end": 291.875,
    "matched": true
   },
   {
    "w": "nggak",
    "scene": 17,
-   "start": 291.375,
-   "end": 291.666,
+   "start": 291.875,
+   "end": 292.166,
    "matched": true
   },
   {
    "w": "cuma",
    "scene": 17,
-   "start": 291.666,
-   "end": 291.908,
+   "start": 292.166,
+   "end": 292.408,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 17,
-   "start": 291.908,
-   "end": 292.199,
+   "start": 292.408,
+   "end": 292.699,
    "matched": true
   },
   {
    "w": "satu",
    "scene": 17,
-   "start": 292.199,
-   "end": 292.441,
+   "start": 292.699,
+   "end": 292.941,
    "matched": true
   },
   {
    "w": "sumber",
    "scene": 17,
-   "start": 292.441,
-   "end": 292.78,
+   "start": 292.941,
+   "end": 293.28,
    "matched": true
   },
   {
    "w": "kekuatan",
    "scene": 17,
-   "start": 292.78,
-   "end": 293.216,
+   "start": 293.28,
+   "end": 293.716,
    "matched": true
   },
   {
    "w": "finansial.",
    "scene": 17,
-   "start": 293.216,
-   "end": 293.7,
+   "start": 293.716,
+   "end": 294.2,
    "matched": true
   },
   {
    "w": "Kita",
    "scene": 17,
-   "start": 294.166,
-   "end": 294.406,
+   "start": 294.666,
+   "end": 294.906,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 17,
-   "start": 294.406,
-   "end": 294.647,
+   "start": 294.906,
+   "end": 295.147,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 17,
-   "start": 294.647,
-   "end": 294.935,
+   "start": 295.147,
+   "end": 295.435,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 17,
-   "start": 294.935,
-   "end": 295.224,
+   "start": 295.435,
+   "end": 295.724,
    "matched": true
   },
   {
    "w": "lebih",
    "scene": 17,
-   "start": 295.224,
-   "end": 295.512,
+   "start": 295.724,
+   "end": 296.012,
    "matched": true
   },
   {
    "w": "banyak",
    "scene": 17,
-   "start": 295.512,
-   "end": 295.848,
+   "start": 296.012,
+   "end": 296.348,
    "matched": true
   },
   {
    "w": "pilihan.",
    "scene": 17,
-   "start": 295.848,
-   "end": 296.233,
+   "start": 296.348,
+   "end": 296.733,
    "matched": true
   },
   {
    "w": "Jadi",
    "scene": 17,
-   "start": 296.9,
-   "end": 297.172,
+   "start": 297.4,
+   "end": 297.672,
    "matched": true
   },
   {
    "w": "setiap",
    "scene": 17,
-   "start": 297.172,
-   "end": 297.553,
+   "start": 297.672,
+   "end": 298.053,
    "matched": true
   },
   {
    "w": "kali",
    "scene": 17,
-   "start": 297.553,
-   "end": 297.825,
+   "start": 298.053,
+   "end": 298.325,
    "matched": true
   },
   {
    "w": "income",
    "scene": 17,
-   "start": 297.825,
-   "end": 298.206,
+   "start": 298.325,
+   "end": 298.706,
    "matched": true
   },
   {
    "w": "masuk,",
    "scene": 17,
-   "start": 298.206,
-   "end": 298.533,
+   "start": 298.706,
+   "end": 299.033,
    "matched": true
   },
   {
    "w": "coba",
    "scene": 17,
-   "start": 298.933,
-   "end": 299.297,
+   "start": 299.433,
+   "end": 299.797,
    "matched": true
   },
   {
    "w": "tanya:",
    "scene": 17,
-   "start": 299.297,
-   "end": 299.733,
+   "start": 299.797,
+   "end": 300.233,
    "matched": true
   },
   {
    "w": "“Berapa",
    "scene": 17,
-   "start": 299.966,
-   "end": 300.38,
+   "start": 300.466,
+   "end": 300.88,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 17,
-   "start": 300.38,
-   "end": 300.676,
+   "start": 300.88,
+   "end": 301.176,
    "matched": true
   },
   {
    "w": "bisa",
    "scene": 17,
-   "start": 300.676,
-   "end": 300.971,
+   "start": 301.176,
+   "end": 301.471,
    "matched": true
   },
   {
    "w": "aku",
    "scene": 17,
-   "start": 300.971,
-   "end": 301.208,
+   "start": 301.471,
+   "end": 301.708,
    "matched": true
   },
   {
    "w": "sisihkan",
    "scene": 17,
-   "start": 301.208,
-   "end": 301.74,
+   "start": 301.708,
+   "end": 302.24,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 17,
-   "start": 301.74,
-   "end": 302.095,
+   "start": 302.24,
+   "end": 302.595,
    "matched": true
   },
   {
    "w": "mulai",
    "scene": 17,
-   "start": 302.095,
-   "end": 302.45,
+   "start": 302.595,
+   "end": 302.95,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 17,
-   "start": 302.45,
-   "end": 302.804,
+   "start": 302.95,
+   "end": 303.304,
    "matched": true
   },
   {
    "w": "aset?”",
    "scene": 17,
-   "start": 302.804,
-   "end": 303.1,
+   "start": 303.304,
+   "end": 303.6,
    "matched": true
   },
   {
    "w": "Karena",
    "scene": 18,
-   "start": 303.3,
-   "end": 303.589,
+   "start": 303.8,
+   "end": 304.089,
    "matched": true
   },
   {
    "w": "pada",
    "scene": 18,
-   "start": 303.589,
-   "end": 303.795,
+   "start": 304.089,
+   "end": 304.295,
    "matched": true
   },
   {
    "w": "akhirnya,",
    "scene": 18,
-   "start": 303.795,
-   "end": 304.166,
+   "start": 304.295,
+   "end": 304.666,
    "matched": true
   },
   {
    "w": "kerja",
    "scene": 18,
-   "start": 304.5,
-   "end": 304.797,
+   "start": 305.0,
+   "end": 305.297,
    "matched": true
   },
   {
    "w": "berarti",
    "scene": 18,
-   "start": 304.797,
-   "end": 305.192,
+   "start": 305.297,
+   "end": 305.692,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 18,
-   "start": 305.192,
-   "end": 305.44,
+   "start": 305.692,
+   "end": 305.94,
    "matched": true
   },
   {
    "w": "menggunakan",
    "scene": 18,
-   "start": 305.44,
-   "end": 306.033,
+   "start": 305.94,
+   "end": 306.533,
    "matched": true
   },
   {
    "w": "waktu",
    "scene": 18,
-   "start": 306.3,
-   "end": 306.587,
+   "start": 306.8,
+   "end": 307.087,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 18,
-   "start": 306.587,
-   "end": 306.873,
+   "start": 307.087,
+   "end": 307.373,
    "matched": true
   },
   {
    "w": "menghasilkan",
    "scene": 18,
-   "start": 306.873,
-   "end": 307.494,
+   "start": 307.373,
+   "end": 307.994,
    "matched": true
   },
   {
    "w": "uang.",
    "scene": 18,
-   "start": 307.494,
-   "end": 307.733,
+   "start": 307.994,
+   "end": 308.233,
    "matched": true
   },
   {
    "w": "Sedangkan",
    "scene": 18,
-   "start": 308.266,
-   "end": 308.8,
+   "start": 308.766,
+   "end": 309.3,
    "matched": true
   },
   {
    "w": "investasi,",
    "scene": 18,
-   "start": 308.8,
-   "end": 309.333,
+   "start": 309.3,
+   "end": 309.833,
    "matched": true
   },
   {
    "w": "membuat",
    "scene": 18,
-   "start": 309.633,
-   "end": 310.019,
+   "start": 310.133,
+   "end": 310.519,
    "matched": true
   },
   {
    "w": "sebagian",
    "scene": 18,
-   "start": 310.019,
-   "end": 310.453,
+   "start": 310.519,
+   "end": 310.953,
    "matched": true
   },
   {
    "w": "uang",
    "scene": 18,
-   "start": 310.453,
-   "end": 310.694,
+   "start": 310.953,
+   "end": 311.194,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 18,
-   "start": 310.694,
-   "end": 310.935,
+   "start": 311.194,
+   "end": 311.435,
    "matched": true
   },
   {
    "w": "sudah",
    "scene": 18,
-   "start": 310.935,
-   "end": 311.225,
+   "start": 311.435,
+   "end": 311.725,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 18,
-   "start": 311.225,
-   "end": 311.466,
+   "start": 311.725,
+   "end": 311.966,
    "matched": true
   },
   {
    "w": "hasilkan",
    "scene": 18,
-   "start": 311.466,
-   "end": 311.9,
+   "start": 311.966,
+   "end": 312.4,
    "matched": true
   },
   {
    "w": "ikut",
    "scene": 18,
-   "start": 312.233,
-   "end": 312.541,
+   "start": 312.733,
+   "end": 313.041,
    "matched": true
   },
   {
    "w": "bekerja",
    "scene": 18,
-   "start": 312.541,
-   "end": 313.033,
+   "start": 313.041,
+   "end": 313.533,
    "matched": true
   },
   {
    "w": "untuk",
    "scene": 18,
-   "start": 313.3,
-   "end": 313.582,
+   "start": 313.8,
+   "end": 314.082,
    "matched": true
   },
   {
    "w": "masa",
    "scene": 18,
-   "start": 313.582,
-   "end": 313.818,
+   "start": 314.082,
+   "end": 314.318,
    "matched": true
   },
   {
    "w": "depan.",
    "scene": 18,
-   "start": 313.818,
-   "end": 314.1,
+   "start": 314.318,
+   "end": 314.6,
    "matched": true
   },
   {
    "w": "Jadi",
    "scene": 18,
-   "start": 314.633,
-   "end": 314.888,
+   "start": 315.133,
+   "end": 315.388,
    "matched": true
   },
   {
    "w": "kita",
    "scene": 18,
-   "start": 314.888,
-   "end": 315.143,
+   "start": 315.388,
+   "end": 315.643,
    "matched": true
   },
   {
    "w": "pelan-pelan",
    "scene": 18,
-   "start": 315.143,
-   "end": 315.755,
+   "start": 315.643,
+   "end": 316.255,
    "matched": true
   },
   {
    "w": "berubah",
    "scene": 18,
-   "start": 315.755,
-   "end": 316.162,
+   "start": 316.255,
+   "end": 316.662,
    "matched": true
   },
   {
    "w": "dari",
    "scene": 18,
-   "start": 316.162,
-   "end": 316.417,
+   "start": 316.662,
+   "end": 316.917,
    "matched": true
   },
   {
    "w": "sekadar",
    "scene": 18,
-   "start": 316.417,
-   "end": 316.825,
+   "start": 316.917,
+   "end": 317.325,
    "matched": true
   },
   {
    "w": "pekerja",
    "scene": 18,
-   "start": 316.825,
-   "end": 317.233,
+   "start": 317.325,
+   "end": 317.733,
    "matched": true
   },
   {
    "w": "menjadi",
    "scene": 18,
-   "start": 317.833,
-   "end": 318.229,
+   "start": 318.333,
+   "end": 318.729,
    "matched": true
   },
   {
    "w": "pekerja",
    "scene": 18,
-   "start": 318.229,
-   "end": 318.626,
+   "start": 318.729,
+   "end": 319.126,
    "matched": true
   },
   {
    "w": "yang",
    "scene": 18,
-   "start": 318.626,
-   "end": 318.873,
+   "start": 319.126,
+   "end": 319.373,
    "matched": true
   },
   {
    "w": "juga",
    "scene": 18,
-   "start": 318.873,
-   "end": 319.121,
+   "start": 319.373,
+   "end": 319.621,
    "matched": true
   },
   {
    "w": "punya",
    "scene": 18,
-   "start": 319.121,
-   "end": 319.418,
+   "start": 319.621,
+   "end": 319.918,
    "matched": true
   },
   {
    "w": "aset.",
    "scene": 18,
-   "start": 319.418,
-   "end": 319.666,
+   "start": 319.918,
+   "end": 320.166,
    "matched": true
   }
  ]

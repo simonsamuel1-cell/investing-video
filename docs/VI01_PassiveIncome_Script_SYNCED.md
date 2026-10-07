@@ -2,10 +2,10 @@
 ## Script re-timed against the recorded VO
 
 **Source of timing:** `INV01 - Main VO.srt` (Premiere STT) → `assets/VI01_PassiveIncome_Sub_CORRECTED.srt`
-**VO file:** `INV01 - Main VO.MP3` → `public/vo/passive-income.mp3` — durasi audio **319.740 s (05:19.739)**
-**VO length (SRT):** kata terakhir keluar 05:19.649 · **f19179 @ 60 fps** · comp length **19,385 f (05:23.083)** — 206 f / 3.4 s tail untuk menahan quote penutup
+**VO file:** `INV01 - Main VO.MP3` → `public/vo/passive-income.mp3` — durasi audio **320.240 s (05:20.239)**
+**VO length (SRT):** kata terakhir keluar 05:20.149 · **f19209 @ 60 fps** · comp length **19,415 f (05:23.583)** — 206 f / 3.4 s tail untuk menahan quote penutup
 **Episode folder:** `src/episodes/vi01-passive-income/` · composition **`VI01-PassiveIncome`** · fps **60**
-**Original script estimate:** 04:10 → rekaman nyata **05:19.7 (termasuk jeda 0,5 s + 0,5 s + 0,33 s + 0,33 s + 0,32 s dan dua rekaman ulang yang lebih panjang), +69.7 s lebih panjang.** Semua timestamp di script asli mati; pakai hanya tabel di bawah. Script dengan timing baru: `docs/VI01_PassiveIncome_Script_RETIMED.txt`.
+**Original script estimate:** 04:10 → rekaman nyata **05:20.2 (termasuk jeda 0,5 s + 0,5 s + 0,33 s + 0,33 s + 0,32 s + 0,5 s dan dua rekaman ulang yang lebih panjang), +70.2 s lebih panjang.** Semua timestamp di script asli mati; pakai hanya tabel di bawah. Script dengan timing baru: `docs/VI01_PassiveIncome_Script_RETIMED.txt`.
 
 ### Cara subtitle dibuat ulang
 `scripts/vi01-align.py` — kata-kata script dicocokkan ke kata-kata SRT (waktunya dari SRT), lalu:
@@ -17,7 +17,7 @@ Hasil: **86 cue dari 65 kalimat**, cue terlebar 1554 px.
 
 Dua timing per scene:
 - **VO** — kata pertama masuk / kata terakhir keluar.
-- **BLOCK** — blok scene kontinu, dipotong di **titik tengah keheningan** antar scene; blok bertemu ujung-ke-ujung, timeline utuh f0 → f19385.
+- **BLOCK** — blok scene kontinu, dipotong di **titik tengah keheningan** antar scene; blok bertemu ujung-ke-ujung, timeline utuh f0 → f19415.
 
 ---
 
@@ -32,6 +32,7 @@ Dua timing per scene:
 | f3316 (00:55.267, sebelum "Bukan berarti investasi hari ini") | **+19 f / 0.32 s** | Simon, 2026-10-07: "3316 beri jeda 30 frame, vo dan visual ikut geser" — dipotong jadi 19 f karena rekaman ulang mulai di f3335 |
 | f3335–3628 | **rekaman ulang** "10 Bukan berarti.MP3" (293 f, menggantikan 277 f) | Simon, 2026-10-07: "3335-3612 Voice over bagian ini, replace dengan 10 Bukan berarti.MP3" |
 | f3628–3867 | **rekaman ulang** "11 Tetap kerja.MP3" (239 f, menggantikan 200 f) | Simon, 2026-10-07: "Kalo durasinya ngga muat untuk replace, geser vo aslinya, buat gap tambahan" — semua setelahnya +55 f |
+| f4150 (01:09.167, setelah "…ubah menjadi aset.") | **+30 f / 0.5 s** | Simon, 2026-10-07: "4150 beri jeda 30 frame" |
 
 Semua angka di dokumen ini sudah termasuk jeda itu. VO dibangun ulang dari file asli oleh `scripts/vi01-vo.py` (daftar jeda: `src/episodes/vi01-passive-income/data/pads.json`); subtitle oleh `scripts/vi01-align.py`, yang membaca daftar yang sama.
 
@@ -42,21 +43,21 @@ Semua angka di dokumen ini sudah termasuk jeda itu. VO dibangun ulang dari file 
 | SC01 | 0 – 1019 | 00:00.000 – 00:16.983 | 16.98 s | 00:00.166 – 00:16.699 | 1–4 | cold open |
 | SC02 | 1019 – 2133 | 00:16.983 – 00:35.549 | 18.57 s | 00:17.266 – 00:34.999 | 5–9 | cold open |
 | SC03 | 2133 – 3125 | 00:35.549 – 00:52.083 | 16.53 s | 00:35.766 – 00:51.932 | 10–14 | cold open |
-| SC04 | 3125 – 4163 | 00:52.083 – 01:09.383 | 17.30 s | 00:52.232 – 01:09.183 | 15–18 | 01 |
-| SC05 | 4163 – 5460 | 01:09.383 – 01:31.000 | 21.62 s | 01:09.583 – 01:30.783 | 19–23 | 01 |
-| SC06 | 5460 – 6542 | 01:31.000 – 01:49.033 | 18.03 s | 01:31.216 – 01:48.983 | 24–28 | 01 |
-| SC07 | 6542 – 7753 | 01:49.033 – 02:09.216 | 20.18 s | 01:49.083 – 02:08.949 | 29–35 | 01 |
-| SC08 | 7753 – 8707 | 02:09.216 – 02:25.116 | 15.90 s | 02:09.483 – 02:24.983 | 36–39 | 01 |
-| SC09 | 8707 – 9729 | 02:25.116 – 02:42.150 | 17.03 s | 02:25.249 – 02:41.949 | 40–43 | 02 |
-| SC10 | 9729 – 10785 | 02:42.150 – 02:59.750 | 17.60 s | 02:42.349 – 02:59.549 | 44–49 | 02 |
-| SC11 | 10785 – 11871 | 02:59.750 – 03:17.850 | 18.10 s | 02:59.949 – 03:17.583 | 50–54 | 02 |
-| SC12 | 11871 – 12658 | 03:17.850 – 03:30.966 | 13.12 s | 03:18.116 – 03:30.783 | 55–58 | 02 |
-| SC13 | 12658 – 13794 | 03:30.966 – 03:49.900 | 18.93 s | 03:31.149 – 03:49.816 | 59–63 | 03 |
-| SC14 | 13794 – 15064 | 03:49.900 – 04:11.066 | 21.17 s | 03:49.983 – 04:10.983 | 64–68 | 03 |
-| SC15 | 15064 – 16103 | 04:11.066 – 04:28.383 | 17.32 s | 04:11.149 – 04:28.216 | 69–72 | 03 |
-| SC16 | 16103 – 16979 | 04:28.383 – 04:42.983 | 14.60 s | 04:28.549 – 04:42.649 | 73–75 | close |
-| SC17 | 16979 – 18191 | 04:42.983 – 05:03.183 | 20.20 s | 04:43.316 – 05:03.083 | 76–82 | close |
-| SC18 | 18191 – 19385 | 05:03.183 – 05:23.083 | 19.90 s | 05:03.283 – 05:19.649 | 83–86 | close |
+| SC04 | 3125 – 4193 | 00:52.083 – 01:09.883 | 17.80 s | 00:52.232 – 01:09.683 | 15–18 | 01 |
+| SC05 | 4193 – 5490 | 01:09.883 – 01:31.500 | 21.62 s | 01:10.083 – 01:31.283 | 19–23 | 01 |
+| SC06 | 5490 – 6572 | 01:31.500 – 01:49.533 | 18.03 s | 01:31.716 – 01:49.483 | 24–28 | 01 |
+| SC07 | 6572 – 7783 | 01:49.533 – 02:09.716 | 20.18 s | 01:49.583 – 02:09.449 | 29–35 | 01 |
+| SC08 | 7783 – 8737 | 02:09.716 – 02:25.616 | 15.90 s | 02:09.983 – 02:25.483 | 36–39 | 01 |
+| SC09 | 8737 – 9759 | 02:25.616 – 02:42.650 | 17.03 s | 02:25.749 – 02:42.449 | 40–43 | 02 |
+| SC10 | 9759 – 10815 | 02:42.650 – 03:00.250 | 17.60 s | 02:42.849 – 03:00.049 | 44–49 | 02 |
+| SC11 | 10815 – 11901 | 03:00.250 – 03:18.350 | 18.10 s | 03:00.449 – 03:18.083 | 50–54 | 02 |
+| SC12 | 11901 – 12688 | 03:18.350 – 03:31.466 | 13.12 s | 03:18.616 – 03:31.283 | 55–58 | 02 |
+| SC13 | 12688 – 13824 | 03:31.466 – 03:50.400 | 18.93 s | 03:31.649 – 03:50.316 | 59–63 | 03 |
+| SC14 | 13824 – 15094 | 03:50.400 – 04:11.566 | 21.17 s | 03:50.483 – 04:11.483 | 64–68 | 03 |
+| SC15 | 15094 – 16133 | 04:11.566 – 04:28.883 | 17.32 s | 04:11.649 – 04:28.716 | 69–72 | 03 |
+| SC16 | 16133 – 17009 | 04:28.883 – 04:43.483 | 14.60 s | 04:29.049 – 04:43.149 | 73–75 | close |
+| SC17 | 17009 – 18221 | 04:43.483 – 05:03.683 | 20.20 s | 04:43.816 – 05:03.583 | 76–82 | close |
+| SC18 | 18221 – 19415 | 05:03.683 – 05:23.583 | 19.90 s | 05:03.783 – 05:20.149 | 83–86 | close |
 
 **Tidak ada batas scene yang jatuh di tengah cue.** Join tersempit: **SC06 → SC07, 0.10 s** udara — potong keras di kata, tanpa transisi. Keheningan terpanjang di seluruh rekaman di batas scene hanya **0.67 s** (SC16 → SC17).
 
@@ -78,8 +79,8 @@ Bentuknya roadmap TA09 (`RoadmapCards` di core): frame scene yang sedang berjala
 | Transisi | Di | Keheningan nyata | Overlay window |
 |---|---|---|---|
 | ST1 — cold open → bab 1 | SC03 → SC04 | 0.30 s | **3090 – 3260** |
-| ST2 — bab 1 → bab 2 | SC08 → SC09 | 0.27 s | **8671 – 8841** |
-| ST3 — bab 2 → bab 3 | SC12 → SC13 | 0.37 s | **12622 – 12792** |
+| ST2 — bab 1 → bab 2 | SC08 → SC09 | 0.27 s | **8701 – 8871** |
+| ST3 — bab 2 → bab 3 | SC12 → SC13 | 0.37 s | **12652 – 12822** |
 
 Tiap overlay mulai ~36 f sebelum kata terakhir scene keluar (scene sudah selesai bicara) dan selesai ~130 f setelahnya, saat scene berikutnya sudah berjalan di bawahnya. Bagian penutup (SC16–SC18) **tidak** punya kartu — bab 3 ditutup dengan CameraCut biasa, karena penutupnya bukan bab baru melainkan kesimpulan.
 
@@ -167,8 +168,8 @@ Akhiri: pertanyaan kedua menyala, pertanyaan pertama redup.
 
 ## PART 01 — UANG YANG IKUT BEKERJA
 
-### SCENE 04 — f3185–4163 · 00:52.083–01:09.383 · **17.30 s**
-**NARRATION** (VO 00:52.232–01:09.183)
+### SCENE 04 — f3185–4193 · 00:52.083–01:09.883 · **17.80 s**
+**NARRATION** (VO 00:52.232–01:09.683)
 Di sinilah konsep passive income mulai masuk.
 Bukan berarti investasi hari ini, lalu besok langsung berhenti kerja.
 Kita tetap kerja, tetap bangun karier, dan tetap belajar.
@@ -189,32 +190,32 @@ f3639: tiga chip ✓ — **Tetap kerja · Tetap bangun karier · Tetap belajar**
 f3893: alur SC01 kembali (**Kerja → Penghasilan**), lalu sebagian Penghasilan terpisah dan mengalir ke node baru **Aset** (cyan) di f4103.
 Akhiri: Kerja → Penghasilan → **Aset**.
 
-### SCENE 05 — f4223–5460 · 01:09.383–01:31.000 · **21.62 s**
-**NARRATION** (VO 01:09.583–01:30.783)
+### SCENE 05 — f4253–5490 · 01:09.883–01:31.500 · **21.62 s**
+**NARRATION** (VO 01:10.083–01:31.283)
 Dan di sini, waktu punya peran besar.
 Kalau sebuah aset menghasilkan keuntungan, keuntungan itu bisa ikut menghasilkan keuntungan berikutnya.
 Misalnya, 100 jadi 110, lalu 121, lalu 133.
 Itulah konsep compounding: hasil yang terus ikut bertumbuh seiring waktu.
 
 **Beat anchors**
-- "waktu punya peran besar" — 01:10.8 · f4253
-- "keuntungan itu" — 01:15.0 · f4503
-- "Misalnya" / "100" — 01:18.4 · f4709
-- **"110"** — 01:20.7 · **f4849**
-- **"121"** — 01:22.3 · **f4943**
-- **"133"** — 01:24.6 · **f5082**
-- "compounding" — 01:27.2 · f5237
+- "waktu punya peran besar" — 01:11.3 · f4283
+- "keuntungan itu" — 01:15.5 · f4533
+- "Misalnya" / "100" — 01:18.9 · f4739
+- **"110"** — 01:21.2 · **f4879**
+- **"121"** — 01:22.8 · **f4973**
+- **"133"** — 01:25.1 · **f5112**
+- "compounding" — 01:27.7 · f5267
 
 > ⚠ Angka **mendarat di kata yang diucapkan** (140 / 94 / 139 f) — tidak rata.
 
 **VISUAL**
-Sumbu waktu horizontal (f4253). Empat batang tumbuh satu per angka: **100 → 110 → 121 → 133**. Tiap batang = batang sebelumnya (cyan pucat) + tambahan baru di atasnya (cyan penuh); dari batang ketiga, tambahan itu dibelah dua: bagian dari modal awal dan bagian **dari keuntungan sebelumnya** — itu yang dinamai f4503 "keuntungan itu bisa ikut menghasilkan keuntungan".
-f5237: judul **Compounding** dan baris di bawahnya — **hasil yang terus ikut bertumbuh seiring waktu**.
+Sumbu waktu horizontal (f4283). Empat batang tumbuh satu per angka: **100 → 110 → 121 → 133**. Tiap batang = batang sebelumnya (cyan pucat) + tambahan baru di atasnya (cyan penuh); dari batang ketiga, tambahan itu dibelah dua: bagian dari modal awal dan bagian **dari keuntungan sebelumnya** — itu yang dinamai f4533 "keuntungan itu bisa ikut menghasilkan keuntungan".
+f5267: judul **Compounding** dan baris di bawahnya — **hasil yang terus ikut bertumbuh seiring waktu**.
 Angka ini ilustrasi (10% per periode, 133,1 dibulatkan) — bukan data pasar.
 Akhiri: empat batang + kata Compounding.
 
-### SCENE 06 — f5520–6542 · 01:31.000–01:49.033 · **18.03 s**
-**NARRATION** (VO 01:31.216–01:48.983)
+### SCENE 06 — f5550–6572 · 01:31.500–01:49.533 · **18.03 s**
+**NARRATION** (VO 01:31.716–01:49.483)
 Makanya, kita nggak harus nunggu punya modal besar dulu.
 Yang penting adalah mulai membangun kebiasaannya.
 Karena investasi bukan cuma soal uang.
@@ -222,271 +223,271 @@ Semakin sering kita belajar dan mengevaluasi keputusan,
 semakin baik juga kemampuan kita mengelola aset.
 
 **Beat anchors**
-- "modal besar" — 01:33.6 · f5621
-- "kebiasaannya" — 01:37.5 · f5856
-- "Karena investasi" — 01:39.0 · f5943
-- "Semakin sering" — 01:41.8 · f6111
-- "semakin baik" — 01:45.5 · f6337
+- "modal besar" — 01:34.1 · f5651
+- "kebiasaannya" — 01:38.0 · f5886
+- "Karena investasi" — 01:39.5 · f5973
+- "Semakin sering" — 01:42.3 · f6141
+- "semakin baik" — 01:46.0 · f6367
 
 **VISUAL**
-f5621: tumpukan uang besar berlabel **Modal besar dulu?** — dicoret.
-f5856: kalender kebiasaan — kotak-kotak bulan terisi ✓ satu per satu (streak), label **Kebiasaan**.
-f6111: siklus tiga node berputar — **Belajar → Evaluasi keputusan → Kelola aset** — dan tiap putaran, bar **Kemampuan** di sampingnya naik satu tingkat (f6337).
+f5651: tumpukan uang besar berlabel **Modal besar dulu?** — dicoret.
+f5886: kalender kebiasaan — kotak-kotak bulan terisi ✓ satu per satu (streak), label **Kebiasaan**.
+f6141: siklus tiga node berputar — **Belajar → Evaluasi keputusan → Kelola aset** — dan tiap putaran, bar **Kemampuan** di sampingnya naik satu tingkat (f6367).
 Akhiri: siklus + bar kemampuan naik.
 
-### SCENE 07 — f6602–7753 · 01:49.033–02:09.216 · **20.18 s**
-**NARRATION** (VO 01:49.083–02:08.949)
+### SCENE 07 — f6632–7783 · 01:49.533–02:09.716 · **20.18 s**
+**NARRATION** (VO 01:49.583–02:09.449)
 Kalau dipikir-pikir, kekayaan kita punya dua bagian.
 Yang pertama, human asset: waktu, kemampuan, dan pengalaman yang membantu kita menghasilkan uang.
 Yang kedua, financial asset: tabungan, investasi, dan aset yang kita bangun dari penghasilan tadi.
 Human asset punya batas. Financial asset bisa terus kita miliki.
 
 **Beat anchors**
-- "dua bagian" — 01:50.9 · f6658
-- "human asset" — 01:52.5 · f6755
-- "financial asset" — 01:59.0 · f7142
-- "punya batas" — 02:05.6 · f7540
-- "Financial asset bisa" — 02:06.4 · f7592
+- "dua bagian" — 01:51.4 · f6688
+- "human asset" — 01:53.0 · f6785
+- "financial asset" — 01:59.5 · f7172
+- "punya batas" — 02:06.1 · f7570
+- "Financial asset bisa" — 02:06.9 · f7622
 
 **VISUAL**
-Satu kartu dibelah dua (f6658): kiri **Human Asset** (indigo), kanan **Financial Asset** (cyan).
-Kiri, di f6755: **Waktu · Kemampuan · Pengalaman** (tiga baris dengan ikon). Kanan, di f7142: **Tabungan · Investasi · Aset**.
-f7540: di bawah Human Asset muncul jam pasir yang menipis — **Punya batas**. f7592: di bawah Financial Asset garis yang terus naik — **Bisa terus dimiliki**.
+Satu kartu dibelah dua (f6688): kiri **Human Asset** (indigo), kanan **Financial Asset** (cyan).
+Kiri, di f6785: **Waktu · Kemampuan · Pengalaman** (tiga baris dengan ikon). Kanan, di f7172: **Tabungan · Investasi · Aset**.
+f7570: di bawah Human Asset muncul jam pasir yang menipis — **Punya batas**. f7622: di bawah Financial Asset garis yang terus naik — **Bisa terus dimiliki**.
 Akhiri: dua kolom, dua nasib.
 
-### SCENE 08 — f7813–8707 · 02:09.216–02:25.116 · **15.90 s**
-**NARRATION** (VO 02:09.483–02:24.983)
+### SCENE 08 — f7843–8737 · 02:09.716–02:25.616 · **15.90 s**
+**NARRATION** (VO 02:09.983–02:25.483)
 Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.
 Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.
 Bayangin seperti estafet: kita kerja untuk menghasilkan uang, lalu sebagian uang itu kita teruskan untuk membangun aset.
 
 **Beat anchors**
-- "Waktu masih muda" — 02:09.4 · f7769
-- "Tapi idealnya" — 02:13.6 · f8019
-- "estafet" — 02:18.7 · f8329
-- "lalu sebagian" — 02:21.3 · f8485
+- "Waktu masih muda" — 02:09.9 · f7799
+- "Tapi idealnya" — 02:14.1 · f8049
+- "estafet" — 02:19.2 · f8359
+- "lalu sebagian" — 02:21.8 · f8515
 
 **VISUAL**
-Dua warna SC07 dibawa ke sumbu umur (**Muda → Tua**): di kiri hampir semua penghasilan indigo (dari kerja); f8019 kedua lapisan naik, lapisan cyan (aset) makin tebal ke kanan. Ilustrasi bentuk, tanpa angka.
-f8329: berganti ke **estafet** — dua pelari: **Kerja** (indigo) membawa tongkat **Uang**, f8485 menyerahkannya ke pelari **Aset** (cyan).
+Dua warna SC07 dibawa ke sumbu umur (**Muda → Tua**): di kiri hampir semua penghasilan indigo (dari kerja); f8049 kedua lapisan naik, lapisan cyan (aset) makin tebal ke kanan. Ilustrasi bentuk, tanpa angka.
+f8359: berganti ke **estafet** — dua pelari: **Kerja** (indigo) membawa tongkat **Uang**, f8515 menyerahkannya ke pelari **Aset** (cyan).
 Akhiri: tongkat berpindah tangan.
 
-**→ SCENE TRANSISI 2 overlay f8731–8841** — SC08 dilipat ke kartu 1, kartu 2 **Ikut Punya Bisnis** menyala, kamera masuk.
+**→ SCENE TRANSISI 2 overlay f8761–8871** — SC08 dilipat ke kartu 1, kartu 2 **Ikut Punya Bisnis** menyala, kamera masuk.
 
 ## PART 02 — IKUT PUNYA BISNIS
 
-### SCENE 09 — f8767–9729 · 02:25.116–02:42.150 · **17.03 s**
-**NARRATION** (VO 02:25.249–02:41.949)
+### SCENE 09 — f8797–9759 · 02:25.616–02:42.650 · **17.03 s**
+**NARRATION** (VO 02:25.749–02:42.449)
 Hal menarik dari investasi adalah:
 kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.
 Ada orang yang bekerja di BCA untuk mendapatkan penghasilan.
 Di sisi lain, sebagai investor, kita juga bisa punya sebagian kecil dari bisnis BCA.
 
 **Beat anchors**
-- "kita nggak harus" — 02:27.5 · f8855
-- "Ada orang" — 02:33.3 · f9205
-- "BCA" — 02:34.6 · f9279
-- "Di sisi lain" — 02:37.1 · f9433
-- "sebagian kecil" — 02:40.2 · f9618
+- "kita nggak harus" — 02:28.0 · f8885
+- "Ada orang" — 02:33.8 · f9235
+- "BCA" — 02:35.1 · f9309
+- "Di sisi lain" — 02:37.6 · f9463
+- "sebagian kecil" — 02:40.7 · f9648
 
 **VISUAL**
 Satu gedung perusahaan di tengah: kartu **Bank Central Asia · BBCA**.
-f9205: di kiri, si pekerja (pose 01) — panah **kerja** masuk ke gedung, panah **gaji** kembali (indigo). Label **Karyawan**.
-f9433: di kanan, orang kedua — tidak ada panah kerja; sebuah irisan kecil gedung terangkat dan mendarat di tangannya (cyan, f9618). Label **Investor**.
+f9235: di kiri, si pekerja (pose 01) — panah **kerja** masuk ke gedung, panah **gaji** kembali (indigo). Label **Karyawan**.
+f9463: di kanan, orang kedua — tidak ada panah kerja; sebuah irisan kecil gedung terangkat dan mendarat di tangannya (cyan, f9648). Label **Investor**.
 Akhiri: satu perusahaan, dua cara terhubung — Karyawan (gaji) / Investor (sebagian kecil bisnis).
 
-### SCENE 10 — f9789–10785 · 02:42.150–02:59.750 · **17.60 s**
-**NARRATION** (VO 02:42.349–02:59.549)
+### SCENE 10 — f9819–10815 · 02:42.650–03:00.250 · **17.60 s**
+**NARRATION** (VO 02:42.849–03:00.049)
 Hal yang sama sebenarnya ada di sekitar kita setiap hari.
 Kita makan Indomie, minum Ultra Milk, dan menggunakan banyak produk dari perusahaan besar.
 Sebagai konsumen, kita menikmati produknya.
 Tapi lewat investasi, kita juga bisa ikut punya sebagian kecil dari bisnis di balik produk-produk itu.
 
 **Beat anchors**
-- "Indomie" — 02:46.5 · f9993
-- "Ultra Milk" — 02:47.4 · f10049
-- "dan menggunakan" — 02:48.2 · f10097
-- "Sebagai konsumen" — 02:50.7 · f10249
-- "Tapi lewat" — 02:54.2 · f10455
-- "di balik" — 02:58.1 · f10689
+- "Indomie" — 02:47.0 · f10023
+- "Ultra Milk" — 02:47.9 · f10079
+- "dan menggunakan" — 02:48.7 · f10127
+- "Sebagai konsumen" — 02:51.2 · f10279
+- "Tapi lewat" — 02:54.7 · f10485
+- "di balik" — 02:58.6 · f10719
 
 **VISUAL**
-Kartu produk mendarat satu per kata: **Indomie** (f9993), **Ultra Milk** (f10049), lalu dua kartu produk generik (f10097). Label kiri atas **Konsumen** (f10249).
-f10455: kartu-kartu itu **berbalik** — di belakangnya perusahaan dan kodenya: **Indofood CBP · ICBP**, **Ultrajaya · ULTJ**. Label berganti **Pemilik (sebagian kecil)** di f10689.
+Kartu produk mendarat satu per kata: **Indomie** (f10023), **Ultra Milk** (f10079), lalu dua kartu produk generik (f10127). Label kiri atas **Konsumen** (f10279).
+f10485: kartu-kartu itu **berbalik** — di belakangnya perusahaan dan kodenya: **Indofood CBP · ICBP**, **Ultrajaya · ULTJ**. Label berganti **Pemilik (sebagian kecil)** di f10719.
 `[NEEDS ASSET: foto/kemasan produk Indomie & Ultra Milk — opsional; tanpa itu kartunya teks + ilustrasi sederhana, bukan logo tiruan]`
 Akhiri: produk di depan, bisnis di belakangnya.
 
-### SCENE 11 — f10845–11871 · 02:59.750–03:17.850 · **18.10 s**
-**NARRATION** (VO 02:59.949–03:17.583)
+### SCENE 11 — f10875–11901 · 03:00.250–03:18.350 · **18.10 s**
+**NARRATION** (VO 03:00.449–03:18.083)
 Dan di sinilah bedanya antara sekadar menghasilkan uang, dengan mulai membangun aset.
 Sebuah bisnis bisa menghasilkan pendapatan, mencetak laba, lalu memakai laba itu untuk berkembang lebih jauh.
 Sebagai pemilik sebagian dari bisnis tersebut, kita ikut punya exposure terhadap pertumbuhan nilainya.
 
 **Beat anchors**
-- "bedanya" — 03:00.6 · f10844
-- "dengan mulai" — 03:04.2 · f11055
-- "pendapatan" — 03:07.8 · f11273
-- "mencetak laba" — 03:08.4 · f11307
-- "lalu memakai" — 03:09.4 · f11371
-- "exposure" — 03:15.1 · f11713
+- "bedanya" — 03:01.1 · f10874
+- "dengan mulai" — 03:04.7 · f11085
+- "pendapatan" — 03:08.3 · f11303
+- "mencetak laba" — 03:08.9 · f11337
+- "lalu memakai" — 03:09.9 · f11401
+- "exposure" — 03:15.6 · f11743
 
 **VISUAL**
-f10844: dua label berhadapan — **Menghasilkan uang** (indigo) vs **Membangun aset** (cyan, f11055).
-f11273: roda bisnis tiga node — **Pendapatan → Laba (f11307) → Berkembang (f11371)** — dan tiap putaran rodanya membesar.
-f11713: irisan kecil roda itu disorot cyan — **Pemilik ikut punya exposure ke pertumbuhan nilainya**. Tanpa angka, tanpa grafik harga.
+f10874: dua label berhadapan — **Menghasilkan uang** (indigo) vs **Membangun aset** (cyan, f11085).
+f11303: roda bisnis tiga node — **Pendapatan → Laba (f11337) → Berkembang (f11401)** — dan tiap putaran rodanya membesar.
+f11743: irisan kecil roda itu disorot cyan — **Pemilik ikut punya exposure ke pertumbuhan nilainya**. Tanpa angka, tanpa grafik harga.
 Akhiri: roda yang tumbuh + irisan pemilik.
 
-### SCENE 12 — f11931–12658 · 03:17.850–03:30.966 · **13.12 s**
-**NARRATION** (VO 03:18.116–03:30.783)
+### SCENE 12 — f11961–12688 · 03:18.350–03:31.466 · **13.12 s**
+**NARRATION** (VO 03:18.616–03:31.283)
 Dan mulainya nggak harus besar. Bisa Rp50 ribu, Rp100 ribu, atau Rp300 ribu.
 Yang paling penting bukan nominal pertamanya, tapi kebiasaan untuk menyisihkan sebagian income dan mulai mengubahnya menjadi aset.
 
 **Beat anchors**
-- **"Rp50"** — 03:20.1 · **f12010**
-- **"Rp100"** — 03:20.6 · **f12038**
-- **"Rp300"** — 03:21.9 · **f12121**
-- "Yang paling" — 03:23.2 · f12199
-- "tapi kebiasaan" — 03:25.6 · f12339
-- "mengubahnya" — 03:29.2 · f12558
+- **"Rp50"** — 03:20.6 · **f12040**
+- **"Rp100"** — 03:21.1 · **f12068**
+- **"Rp300"** — 03:22.4 · **f12151**
+- "Yang paling" — 03:23.7 · f12229
+- "tapi kebiasaan" — 03:26.1 · f12369
+- "mengubahnya" — 03:29.7 · f12588
 
 > ⚠ Tiga nominal hanya 28 f lalu 83 f terpisah — chip harus cepat (pop UI, bukan reveal teks).
 
 **VISUAL**
 Tiga chip nominal: **Rp50 ribu · Rp100 ribu · Rp300 ribu** di kata masing-masing.
-f12199: ketiganya meredup — "bukan nominal pertamanya".
-f12339: barisan bulan (Jan…Des): tiap bulan bar income masuk, sepotong kecil di atasnya dipotong dan jatuh ke toples **Aset** (cyan) — berulang, toples terisi. f12558 label **Kebiasaan menyisihkan**.
+f12229: ketiganya meredup — "bukan nominal pertamanya".
+f12369: barisan bulan (Jan…Des): tiap bulan bar income masuk, sepotong kecil di atasnya dipotong dan jatuh ke toples **Aset** (cyan) — berulang, toples terisi. f12588 label **Kebiasaan menyisihkan**.
 Akhiri: toples yang terisi pelan-pelan.
 
-**→ SCENE TRANSISI 3 overlay f12682–12792** — SC12 dilipat ke kartu 2, kartu 3 **Cerita Lo Kheng Hong** menyala, kamera masuk.
+**→ SCENE TRANSISI 3 overlay f12712–12822** — SC12 dilipat ke kartu 2, kartu 3 **Cerita Lo Kheng Hong** menyala, kamera masuk.
 
 ## PART 03 — CERITA LO KHENG HONG
 
-### SCENE 13 — f12718–13794 · 03:30.966–03:49.900 · **18.93 s**
-**NARRATION** (VO 03:31.149–03:49.816)
+### SCENE 13 — f12748–13824 · 03:31.466–03:50.400 · **18.93 s**
+**NARRATION** (VO 03:31.649–03:50.316)
 Lo Kheng Hong juga nggak langsung mulai sebagai investor besar.
 Sebelum dikenal seperti sekarang, dia pernah bekerja sebagai pegawai bank.
 Sambil bekerja, dia menabung, belajar, membaca laporan perusahaan, dan pelan-pelan mulai berinvestasi.
 Salah satu contoh terkenalnya adalah saat dia membeli saham United Tractors.
 
 **Beat anchors**
-- "Lo Kheng Hong" — 03:31.1 · f12669
-- "pegawai bank" — 03:38.4 · f13111
-- "menabung" — 03:40.2 · f13216
-- "membaca laporan" — 03:41.2 · f13280
-- "pelan-pelan" — 03:43.0 · f13383
-- "United Tractors" — 03:48.3 · f13705
+- "Lo Kheng Hong" — 03:31.6 · f12699
+- "pegawai bank" — 03:38.9 · f13141
+- "menabung" — 03:40.7 · f13246
+- "membaca laporan" — 03:41.7 · f13310
+- "pelan-pelan" — 03:43.5 · f13413
+- "United Tractors" — 03:48.8 · f13735
 
 **VISUAL**
-Kartu nama **Lo Kheng Hong** (f12669). `[NEEDS ASSET: foto Lo Kheng Hong — opsional; tanpa foto, kartu nama saja]`
-Garis waktu kiri → kanan, satu titik per kata: **Pegawai bank** (f13111) → **Menabung** (f13216) → **Belajar & membaca laporan perusahaan** (f13280) → **Mulai berinvestasi** (f13383).
-f13705: titik terakhir — kartu **United Tractors · UNTR**.
+Kartu nama **Lo Kheng Hong** (f12699). `[NEEDS ASSET: foto Lo Kheng Hong — opsional; tanpa foto, kartu nama saja]`
+Garis waktu kiri → kanan, satu titik per kata: **Pegawai bank** (f13141) → **Menabung** (f13246) → **Belajar & membaca laporan perusahaan** (f13310) → **Mulai berinvestasi** (f13413).
+f13735: titik terakhir — kartu **United Tractors · UNTR**.
 Akhiri: garis waktu dengan UNTR di ujungnya (dibawa ke SC14).
 
-### SCENE 14 — f13854–15064 · 03:49.900–04:11.066 · **21.17 s**
-**NARRATION** (VO 03:49.983–04:10.983)
+### SCENE 14 — f13884–15094 · 03:50.400–04:11.566 · **21.17 s**
+**NARRATION** (VO 03:50.483–04:11.483)
 Saat krisis 1998, Lo Kheng Hong membeli United Tractors di harga sekitar Rp250 per saham.
 Beberapa tahun kemudian, nilainya sudah meningkat berkali-kali lipat, bahkan pernah berada di kisaran sekitar Rp15 ribu.
 Tapi tentu saja, ini adalah contoh dari masa lalu.
 Nggak semua investasi akan memberikan hasil seperti ini.
 
 **Beat anchors**
-- "krisis 1998" — 03:50.5 · f13835
-- "Rp250" — 03:55.7 · f14148
-- "berkali-kali lipat" — 03:59.7 · f14385
-- "Rp15 ribu" — 04:03.0 · f14585
-- "Tapi tentu saja" — 04:04.0 · f14645
-- "Nggak semua" — 04:07.7 · f14867
+- "krisis 1998" — 03:51.0 · f13865
+- "Rp250" — 03:56.2 · f14178
+- "berkali-kali lipat" — 04:00.2 · f14415
+- "Rp15 ribu" — 04:03.5 · f14615
+- "Tapi tentu saja" — 04:04.5 · f14675
+- "Nggak semua" — 04:08.2 · f14897
 
 **VISUAL**
 Kartu UNTR dari SC13 pindah ke tengah (continuity).
-f13835: chip tahun **Krisis 1998**. f14148: label harga **± Rp250 / saham**.
-f14385: panah panjang ke kanan atas — **beberapa tahun kemudian** — dan f14585 label **± Rp15 ribu**. Hanya dua angka yang diucapkan narasi; **tanpa grafik harga** (tidak ada data yang diberikan untuk itu).
-f14645: semuanya meredup di balik kotak peringatan — **Contoh dari masa lalu**; f14867 baris **Nggak semua investasi akan memberikan hasil seperti ini.**
+f13865: chip tahun **Krisis 1998**. f14178: label harga **± Rp250 / saham**.
+f14415: panah panjang ke kanan atas — **beberapa tahun kemudian** — dan f14615 label **± Rp15 ribu**. Hanya dua angka yang diucapkan narasi; **tanpa grafik harga** (tidak ada data yang diberikan untuk itu).
+f14675: semuanya meredup di balik kotak peringatan — **Contoh dari masa lalu**; f14897 baris **Nggak semua investasi akan memberikan hasil seperti ini.**
 Akhiri: peringatan di depan, cerita di belakang.
 
-### SCENE 15 — f15124–16103 · 04:11.066–04:28.383 · **17.32 s**
-**NARRATION** (VO 04:11.149–04:28.216)
+### SCENE 15 — f15154–16133 · 04:11.566–04:28.883 · **17.32 s**
+**NARRATION** (VO 04:11.649–04:28.716)
 Yang menarik dari cerita ini sebenarnya bukan: “Cari saham yang bisa naik berkali-kali.”
 Yang lebih penting justru prosesnya.
 Kerja untuk menghasilkan uang, sisihkan sebagian, pelajari asetnya, beli sesuatu yang benar-benar dipahami, lalu beri waktu untuk berkembang.
 
 **Beat anchors**
-- "Cari saham" — 04:13.5 · f15218
-- "Yang lebih penting" — 04:16.5 · f15397
-- **"Kerja untuk"** — 04:19.1 · **f15549**
-- **"sisihkan"** — 04:20.5 · **f15637**
-- **"pelajari"** — 04:22.1 · **f15733**
-- **"beli"** — 04:23.2 · **f15797**
-- **"lalu beri waktu"** — 04:26.1 · **f15969**
+- "Cari saham" — 04:14.0 · f15248
+- "Yang lebih penting" — 04:17.0 · f15427
+- **"Kerja untuk"** — 04:19.6 · **f15579**
+- **"sisihkan"** — 04:21.0 · **f15667**
+- **"pelajari"** — 04:22.6 · **f15763**
+- **"beli"** — 04:23.7 · **f15827**
+- **"lalu beri waktu"** — 04:26.6 · **f15999**
 
 > ⚠ Lima langkah mendarat di kata masing-masing (88 / 96 / 64 / 172 f).
 
 **VISUAL**
-f15218: kotak garis-putus TA07 — **“Cari saham yang bisa naik berkali-kali.”** — lalu dicoret saat "Yang lebih penting" (f15397).
+f15248: kotak garis-putus TA07 — **“Cari saham yang bisa naik berkali-kali.”** — lalu dicoret saat "Yang lebih penting" (f15427).
 Rel lima langkah: **1 Kerja · 2 Sisihkan · 3 Pelajari · 4 Beli yang dipahami · 5 Beri waktu**, tiap langkah menyala di katanya.
 Akhiri: rel lima langkah penuh.
 
 ## PENUTUP
 
-### SCENE 16 — f16163–16979 · 04:28.383–04:42.983 · **14.60 s**
-**NARRATION** (VO 04:28.549–04:42.649)
+### SCENE 16 — f16193–17009 · 04:28.883–04:43.483 · **14.60 s**
+**NARRATION** (VO 04:29.049–04:43.149)
 Jadi membangun passive income bukan berarti kita harus lari dari pekerjaan.
 Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang.
 Bedanya, sebagian hasil kerja kita hari ini mulai ikut disiapkan untuk masa depan.
 
 **Beat anchors**
-- "lari dari" — 04:31.2 · f16277
-- "Kita tetap bisa" — 04:33.2 · f16399
-- "urus keluarga" — 04:34.8 · f16492
-- "menikmati hidup" — 04:36.0 · f16567
-- "Bedanya" — 04:37.8 · f16671
-- "masa depan" — 04:41.9 · f16921
+- "lari dari" — 04:31.7 · f16307
+- "Kita tetap bisa" — 04:33.7 · f16429
+- "urus keluarga" — 04:35.3 · f16522
+- "menikmati hidup" — 04:36.5 · f16597
+- "Bedanya" — 04:38.3 · f16701
+- "masa depan" — 04:42.4 · f16951
 
 **VISUAL**
-Si pekerja (pose 01) di tengah. f16277: label **Lari dari pekerjaan** — dicoret.
+Si pekerja (pose 01) di tengah. f16307: label **Lari dari pekerjaan** — dicoret.
 Tiga chip ✓ di katanya: **Bangun karier · Urus keluarga · Menikmati hidup**.
-f16671: bar **hasil kerja hari ini** dibelah — sebagian besar **Hari ini** (indigo), sepotong **Masa depan** (cyan, f16921).
+f16701: bar **hasil kerja hari ini** dibelah — sebagian besar **Hari ini** (indigo), sepotong **Masa depan** (cyan, f16951).
 Akhiri: bar terbelah dua warna.
 
-### SCENE 17 — f17039–18191 · 04:42.983–05:03.183 · **20.20 s**
-**NARRATION** (VO 04:43.316–05:03.083)
+### SCENE 17 — f17069–18221 · 04:43.483–05:03.683 · **20.20 s**
+**NARRATION** (VO 04:43.816–05:03.583)
 Di awal, aset kita mungkin masih kecil.
 Tapi kalau kemampuan kerja terus berkembang, income bertambah, dan aset juga ikut tumbuh, pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial.
 Kita juga mulai punya lebih banyak pilihan. Jadi setiap kali income masuk, coba tanya: “Berapa yang bisa aku sisihkan untuk mulai punya aset?”
 
 **Beat anchors**
-- "Di awal" — 04:43.2 · f16999
-- "Tapi kalau" — 04:46.0 · f17165
-- "income bertambah" — 04:48.0 · f17283
-- "dan aset juga" — 04:48.9 · f17341
-- "pelan-pelan" — 04:50.6 · f17439
-- "lebih banyak pilihan" — 04:55.1 · f17712
-- "Jadi setiap" — 04:56.8 · f17813
-- “Berapa…” — 04:59.9 · f17997
+- "Di awal" — 04:43.7 · f17029
+- "Tapi kalau" — 04:46.5 · f17195
+- "income bertambah" — 04:48.5 · f17313
+- "dan aset juga" — 04:49.4 · f17371
+- "pelan-pelan" — 04:51.1 · f17469
+- "lebih banyak pilihan" — 04:55.6 · f17742
+- "Jadi setiap" — 04:57.3 · f17843
+- “Berapa…” — 05:00.4 · f18027
 
 **VISUAL**
-Tiga bar: **Kemampuan · Income · Aset**. f16999 Aset masih pendek. f17165 / f17283 / f17341 ketiganya naik bergantian.
-f17439: dua pilar — **Kerja** (indigo) dan **Aset** (cyan) — menopang satu atap **Kekuatan finansial**. f17712: dari atap itu tumbuh beberapa cabang **Pilihan**.
-f17813: kotak garis-putus TA07 diketik — **“Berapa yang bisa aku sisihkan untuk mulai punya aset?”**, **mulai punya aset** ber-tint cyan.
+Tiga bar: **Kemampuan · Income · Aset**. f17029 Aset masih pendek. f17195 / f17313 / f17371 ketiganya naik bergantian.
+f17469: dua pilar — **Kerja** (indigo) dan **Aset** (cyan) — menopang satu atap **Kekuatan finansial**. f17742: dari atap itu tumbuh beberapa cabang **Pilihan**.
+f17843: kotak garis-putus TA07 diketik — **“Berapa yang bisa aku sisihkan untuk mulai punya aset?”**, **mulai punya aset** ber-tint cyan.
 Akhiri: pertanyaan itu, menyala.
 
-### SCENE 18 — f18251–19385 · 05:03.183–05:23.083 · **19.90 s**
-**NARRATION** (VO 05:03.283–05:19.649)
+### SCENE 18 — f18281–19415 · 05:03.683–05:23.583 · **19.90 s**
+**NARRATION** (VO 05:03.783–05:20.149)
 Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.
 Sedangkan investasi, membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.
 Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset.
 
 **Beat anchors**
-- "kerja berarti" — 05:04.4 · f18269
-- "Sedangkan investasi" — 05:08.2 · f18495
-- "ikut bekerja" — 05:12.1 · f18733
-- "Jadi kita" — 05:14.5 · f18877
-- "menjadi pekerja" — 05:17.7 · f19069
+- "kerja berarti" — 05:04.9 · f18299
+- "Sedangkan investasi" — 05:08.7 · f18525
+- "ikut bekerja" — 05:12.6 · f18763
+- "Jadi kita" — 05:15.0 · f18907
+- "menjadi pekerja" — 05:18.2 · f19099
 
 **VISUAL**
-Dua baris, gaya Rules TA11: **Kerja** → *Waktu jadi uang* (indigo) (f18269) · **Investasi** → *Uang ikut bekerja* (cyan) (f18495 / f18733).
-f18877: semuanya bersih; quote card penutup TA09 di atas grid, Tuntun mark melayang di atasnya — **Dari sekadar pekerja, menjadi pekerja yang juga punya aset.** dengan **juga punya aset** ber-tint cyan (f19069). Si pekerja (pose 05) di samping kartu.
-Tahan sampai f19385.
+Dua baris, gaya Rules TA11: **Kerja** → *Waktu jadi uang* (indigo) (f18299) · **Investasi** → *Uang ikut bekerja* (cyan) (f18525 / f18763).
+f18907: semuanya bersih; quote card penutup TA09 di atas grid, Tuntun mark melayang di atasnya — **Dari sekadar pekerja, menjadi pekerja yang juga punya aset.** dengan **juga punya aset** ber-tint cyan (f19099). Si pekerja (pose 05) di samping kartu.
+Tahan sampai f19415.
 
 ---
 
