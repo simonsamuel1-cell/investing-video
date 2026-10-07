@@ -488,7 +488,6 @@ const MONTH = {
   cardW: 560 * MONTH_K,
   cardH: 176 * MONTH_K,
   gapX: 200 * MONTH_K,
-  rowY: [120, 380, 640],
   tagGap: 34 * MONTH_K,
   label: 30 * MONTH_K,
   amount: 36, // "Nominalnya jadi 36 px deh"
@@ -496,6 +495,10 @@ const MONTH = {
   pad: 34 * MONTH_K,
   coinR: 26 * MONTH_K,
 };
+/** "buat jaraknya jadi 40 px" — a card's bottom to the next row's tag, the middle row where it was. */
+const ROW_GAP = 40;
+const ROW_STEP = MONTH.tag / 2 + MONTH.tagGap + MONTH.cardH + ROW_GAP;
+const ROW_Y = [380 - ROW_STEP, 380, 380 + ROW_STEP];
 const MONTH_X = [(theme.canvas.width - 2 * MONTH.cardW - MONTH.gapX) / 2, (theme.canvas.width + MONTH.gapX) / 2];
 const SALARY = 20_000_000;
 const SENT = 5_000_000;
@@ -521,7 +524,7 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   const m = useMotion();
   const life = useLife(at, out);
   if (life <= 0.001) return null;
-  const top = MONTH.rowY[i];
+  const top = ROW_Y[i];
   const cardTop = top + MONTH.tagGap;
   const fly = ease(f, send, m.move);
   const land = ease(f, send + m.move, m.sec(0.4));
