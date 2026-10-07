@@ -248,7 +248,9 @@ export type IconName =
   | "tools"
   | "store"
   | "pen"
-  | "monitor";
+  | "monitor"
+  | "cap"
+  | "cash";
 
 /** Line icons on a 48-unit grid, drawn in `color` at `size` px. */
 export const Icon = ({
@@ -332,6 +334,19 @@ export const Icon = ({
         <path d="M24 33v7M15 41h18" {...p} />
       </>
     ),
+    cap: (
+      <>
+        <path d="M3 18L24 9l21 9-21 9z" {...p} fill={fill} />
+        <path d="M12 22v9c0 3 5 6 12 6s12-3 12-6v-9M45 18v11" {...p} />
+      </>
+    ),
+    cash: (
+      <>
+        <rect x="4" y="12" width="40" height="24" rx="4" {...p} fill={fill} />
+        <circle cx="24" cy="24" r="6" {...p} />
+        <path d="M10 18v0M38 30v0" {...p} />
+      </>
+    ),
     glass: (
       <>
         <path d="M14.1 19h19.8L32 40a3 3 0 0 1-3 3H19a3 3 0 0 1-3-3z" fill={fill} />
@@ -373,7 +388,7 @@ export const Icon = ({
     ),
     building: (
       <>
-        <path d="M10 41V11l14-5 14 5v30" {...p} />
+        <path d="M10 41V11l14-5 14 5v30" {...p} fill={fill} />
         <path
           d="M6 41h36M17 17h4M27 17h4M17 25h4M27 25h4M21 41v-8h6v8"
           {...p}

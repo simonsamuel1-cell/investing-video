@@ -45,69 +45,68 @@ const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 
  */
 const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1417, solidCx: 563 / 1086, from: 330 };
 const RESIGN_H = ((theme.captionBand.top - RESIGN.from) * RESIGN.rows) / (RESIGN.hips - RESIGN.top);
-/** "OrangTuntun2.png", 1622 × 2872: hair from row 190, chest at row 1150, head on column 813 — head to chest, head 300 px left of centre. */
-const TUNTUN4 = { aspect: 1622 / 2872, rows: 2872, top: 190, chest: 1150, headU: 813 / 1622, floor: 2767 / 2872, from: 330, left: 300 };
 /**
- * The three "Tetap …" on his right, top to bottom — no pill: black type typed
- * out beside an empty box, then a green tick drawn into the box.
+ * The three "Tetap …", centred left to right: a to-do box, the words typed in
+ * indigo, then a green tick; an icon bubble on the right of each — Monitor, Tas
+ * kerja, Toga. Text widths measured in the real face at 52 px bold.
  */
-const TODO = { x: 1010, y: [520, 640, 760], size: 52, box: 50, gap: 26, cps: 1 };
-
+const TODO = { y: [420, 540, 660], size: 52, box: 50, gap: 26, cps: 1, textW: 499, bubble: 96, bubbleGap: 44 };
+const TODO_W = TODO.box + TODO.gap + TODO.textW + TODO.bubbleGap + TODO.bubble;
+const TODO_X = (theme.canvas.width - TODO_W) / 2;
+const TODO_BUBBLE_X = TODO_X + TODO_W - TODO.bubble / 2;
+const TODO_ICONS: IconName[] = ["monitor", "briefcase", "cap"];
 /**
- * THE MAP — Simon's sketch: the three on the left, each line running right and
- * bending into one, into "Penghasilan"; from it two branches, "ubah jadi
- * asset" and "Simpan". Text widths measured in the real face at 52 px bold.
+ * THE MAP — at 3856 the rows slide left and only their bubbles stay; lines run
+ * from them into "Penghasilan" (a cash bubble over it); one line on to "Asset"
+ * (a building bubble over it). x of the bubbles, the bend, the hub and Asset.
  */
-const MAP = {
-  x: 100,
-  /* the three keep their spacing once scaled — "Ga perlu di perbesar" */
-  y: [390, 540, 690],
-  textW: [279, 499, 327],
-  cy: 540,
-  col: 790,
-  r: 50,
-  join: 900,
-  hub: 925,
-  hubW: 306,
-  fork: 1315,
-  forkR: 30,
-  branchY: [440, 640],
-  branchEnd: 1410,
-  leaf: 1435,
-  pad: 26,
-  stroke: 4,
-  /** The whole map at 80%, about the frame's centre, so it has room at both sides — "terlalu sempit jadinya". */
-  scale: 0.8,
-};
+const MAP = { bubbleX: 507, cy: 540, col: 677, r: 50, join: 774, hubX: 947, hubW: 306, assetX: 1390, assetW: 150, iconUp: 110, stroke: 4, pad: 22 };
 
 /** A line drawn on from its start: `p` 0 → 1. */
 const Drawn = ({ d, p, color }: { d: string; p: number; color: string }) =>
   p > 0.001 ? <path d={d} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} fill="none" stroke={color} strokeWidth={MAP.stroke} strokeLinecap="round" strokeLinejoin="round" /> : null;
 
-const Todo = ({ label, x, y, at }: { label: string; x: number; y: number; at: number }) => {
+/** An icon on a white disc, easing in (no overshoot). */
+const IconBubble = ({ icon, x, y, at }: { icon: IconName; x: number; y: number; at: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const life = useLife(at, undefined, undefined, m.fade);
+  const shadow = useShadow();
+  const t = ease(f, at, m.reveal);
+  if (t <= 0.001) return null;
+  const D = TODO.bubble;
+  const fills: Partial<Record<IconName, string>> = { monitor: c.indigoTint1, briefcase: c.cyan, cap: c.indigoTint2, cash: c.cyan, building: c.indigoTint1 };
+  return (
+    <div style={{ position: "absolute", left: x - D / 2, top: y - D / 2, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: t, transform: `scale(${(0.85 + 0.15 * t).toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Icon name={icon} size={D * 0.56} color={c.ink} fill={fills[icon]} />
+    </div>
+  );
+};
+
+/** One row: the box, the typed words, then the tick; `fade` takes the box and words away (the bubble is separate). */
+const Todo = ({ label, x, y, at, fade }: { label: string; x: number; y: number; at: number; fade: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const life = useLife(at, undefined, undefined, m.fade) * (1 - fade);
   if (life <= 0.001) return null;
   const shown = Math.max(0, Math.floor((f - at) * TODO.cps));
   const tickAt = at + Math.ceil(label.length / TODO.cps) + m.sec(0.1);
   const tick = ease(f, tickAt, m.sec(0.35));
   const B = TODO.box;
-  const TICK_LEN = 40;
   return (
     <div style={{ position: "absolute", left: x, top: y - B / 2, height: B, display: "flex", alignItems: "center", gap: TODO.gap, opacity: life }}>
       <svg width={B} height={B} viewBox="0 0 50 50" style={{ flex: "none" }}>
-        <rect x={3} y={3} width={44} height={44} rx={10} fill={c.cardBg} stroke={c.ink} strokeWidth={4} />
+        <rect x={3} y={3} width={44} height={44} rx={10} fill={c.cardBg} stroke={c.indigo} strokeWidth={4} />
         {tick > 0.001 ? (
-          <path d="M13 26 L22 35 L38 16" fill="none" stroke={theme.color.checkGreen} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={TICK_LEN} strokeDashoffset={TICK_LEN * (1 - tick)} />
+          <path d="M13 26 L22 35 L38 16" pathLength={1} fill="none" stroke={theme.color.checkGreen} strokeWidth={6} strokeLinecap="round" strokeLinejoin="round" strokeDasharray={1} strokeDashoffset={1 - tick} />
         ) : null}
       </svg>
-      <span style={{ fontFamily: theme.text.family, fontSize: TODO.size, fontWeight: 700, color: c.ink, whiteSpace: "pre", lineHeight: 1 }}>{label.slice(0, shown)}</span>
+      <span style={{ fontFamily: theme.text.family, fontSize: TODO.size, fontWeight: 700, color: c.indigo, whiteSpace: "pre", lineHeight: 1 }}>{label.slice(0, shown)}</span>
     </div>
   );
 };
-const TUNTUN4_H = ((theme.captionBand.top - TUNTUN4.from) * TUNTUN4.rows) / (TUNTUN4.chest - TUNTUN4.top);
+
 /** How far the card and the photo travel: from just off one side of the frame to just off the other. */
 const SLIDE = theme.canvas.width;
 
@@ -193,13 +192,13 @@ export const SC04 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC04);
   const c = usePalette();
-  /* the map: the three move over, their lines run into the hub, the hub
-     branches on "ubah menjadi aset" */
+  /* the map: the rows slide left, only their bubbles stay; lines into the hub,
+     the hub at 3967, one line on to Asset at 4048 */
   const toMap = ease(f, L(B4.map), m.move);
-  const linesAt = L(B4.map) + m.move;
-  const lines = ease(f, linesAt, m.sec(0.6));
-  const hubAt = linesAt + m.sec(0.6) - m.sec(0.15);
-  const branches = ease(f, L(B4.aset) - m.sec(0.6), m.sec(0.6));
+  const rowsOut = ease(f, L(B4.map), m.fade);
+  const lines = ease(f, L(B4.map) + m.move, m.sec(0.6));
+  const branch = ease(f, L(B4.branch), m.sec(0.5));
+  const slide = (MAP.bubbleX - TODO_BUBBLE_X) * toMap;
   /* the title is the word Scene Transisi 1 carried here: it is simply there
      from the hand-off on, never fading in */
   const handoff = L(LIST_TRANS.handoff);
@@ -234,52 +233,29 @@ export const SC04 = () => {
         shadow
         floor={RESIGN.feet / RESIGN.rows}
       />
-      {/* …and the next one in behind it, the same carousel move */}
-      <Cutout
-        src="art/vi01/orang-tuntun-2.png"
-        aspect={TUNTUN4.aspect}
-        x={theme.canvas.width / 2 - TUNTUN4.left - (TUNTUN4.headU - 0.5) * TUNTUN4_H * TUNTUN4.aspect + SLIDE * (1 - ease(f, L(B4.tuntun[0]), m.move)) - SLIDE * ease(f, L(B4.map), m.move)}
-        y={TUNTUN4.from - (TUNTUN4.top / TUNTUN4.rows) * TUNTUN4_H + TUNTUN4_H}
-        h={TUNTUN4_H}
-        at={L(B4.tuntun[0]) - m.reveal}
-        rise={0}
-        shadow
-        floor={TUNTUN4.floor}
-      />
       </div>
-      {/* 3859: the three move left to head the map as the photo goes; the map
-          settles at 80% about the centre as they do */}
-      <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - (1 - MAP.scale) * toMap).toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MAP.cy}px` }}>
+      {/* the three, centred; at 3856 they slide left and only the bubbles stay */}
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
-        <Todo key={label} label={label} x={TODO.x + (MAP.x - TODO.x) * toMap} y={TODO.y[i] + (MAP.y[i] - TODO.y[i]) * toMap} at={L(B4.tetap[i])} />
+        <Todo key={label} label={label} x={TODO_X + slide} y={TODO.y[i]} at={L(B4.tetap[i])} fade={rowsOut} />
+      ))}
+      {TODO_ICONS.map((icon, i) => (
+        <IconBubble key={icon} icon={icon} x={TODO_BUBBLE_X + slide} y={TODO.y[i]} at={L(B4.tetap[i])} />
       ))}
       <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-        {MAP.y.map((y, i) => {
-          const x0 = MAP.x + TODO.box + TODO.gap + MAP.textW[i] + MAP.pad;
+        {TODO.y.map((y, i) => {
+          const x0 = MAP.bubbleX + TODO.bubble / 2 + MAP.pad;
           const bend = y === MAP.cy ? "" : (() => {
-            const s = Math.sign(MAP.cy - y);
-            return ` H ${MAP.col - MAP.r} Q ${MAP.col} ${y} ${MAP.col} ${y + s * MAP.r} V ${MAP.cy - s * MAP.r} Q ${MAP.col} ${MAP.cy} ${MAP.col + MAP.r} ${MAP.cy}`;
+            const sg = Math.sign(MAP.cy - y);
+            return ` H ${MAP.col - MAP.r} Q ${MAP.col} ${y} ${MAP.col} ${y + sg * MAP.r} V ${MAP.cy - sg * MAP.r} Q ${MAP.col} ${MAP.cy} ${MAP.col + MAP.r} ${MAP.cy}`;
           })();
           return <Drawn key={i} d={`M ${x0} ${y}${bend} H ${MAP.join}`} p={lines} color={c.ink} />;
         })}
-        {MAP.branchY.map((y, i) => {
-          const s = Math.sign(y - MAP.cy);
-          const from = MAP.hub + MAP.hubW + MAP.pad;
-          const R = MAP.forkR;
-          return (
-            <Drawn
-              key={i}
-              d={`M ${from} ${MAP.cy} H ${MAP.fork - R} Q ${MAP.fork} ${MAP.cy} ${MAP.fork} ${MAP.cy + s * R} V ${y - s * R} Q ${MAP.fork} ${y} ${MAP.fork + R} ${y} H ${MAP.branchEnd}`}
-              p={branches}
-              color={c.ink}
-            />
-          );
-        })}
+        <Drawn d={`M ${MAP.hubX + MAP.hubW / 2 + MAP.pad} ${MAP.cy} H ${MAP.assetX - MAP.assetW / 2 - MAP.pad}`} p={branch} color={c.ink} />
       </svg>
-      <Say text="Penghasilan" x={MAP.hub} y={MAP.cy} at={hubAt} anchor="left" size={TODO.size} weight={700} />
-      <Say text="ubah jadi asset" x={MAP.leaf} y={MAP.branchY[0]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
-      <Say text="Simpan" x={MAP.leaf} y={MAP.branchY[1]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
-      </div>
+      <IconBubble icon="cash" x={MAP.hubX} y={MAP.cy - MAP.iconUp} at={L(B4.hub)} />
+      <Say text="Penghasilan" x={MAP.hubX} y={MAP.cy} at={L(B4.hub)} size={TODO.size} weight={700} color={c.indigo} />
+      <IconBubble icon="building" x={MAP.assetX} y={MAP.cy - MAP.iconUp} at={L(B4.branch) + m.sec(0.4)} />
+      <Say text="Asset" x={MAP.assetX} y={MAP.cy} at={L(B4.branch) + m.sec(0.4)} size={TODO.size} weight={700} color={c.indigo} />
     </Stage>
   );
 };

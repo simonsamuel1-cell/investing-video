@@ -150,7 +150,7 @@ export const SC04 = {
    * ke kiri dari tengah"; it fades at the end of the range. ("My bad, harusnya
    * Orang Tuntun 2.")
    */
-  tuntun: [3619] as const,
+  tuntun: [3619] as const, // Orang Resign leaves here (OrangTuntun2 itself was taken out again)
   /**
    * "3859 Instead of visual fade out semua, buat Orang Tuntun nya geser ke kiri
    * kluar layar. Lalu yang 3 poin, extend ke kanan membuat mapping seperti
@@ -158,7 +158,17 @@ export const SC04 = {
    * "uang yang kita hasilkan", which branches into "ubah jadi asset" and
    * "Simpan" on "ubah menjadi aset".
    */
-  map: 3859,
+  map: 3856,
+  /**
+   * Then: "yang 3 poin, remove Orang Tuntun nya … di tengah layar … indigo. Di
+   * sebelah kanan tiap poin ada icon (Monitor, Tas kerja, Toga pendidikan)" in
+   * bubbles; "saat transisi di 3856, geser ke kiri dan kotak & check & text nya
+   * fade out kecuali icons nya"; "3967 Text Penghasilannya ada icon uang di
+   * atasnya … indigo"; "4048 Muncul garis ke kanannya … jadi 'Asset' saja
+   * dengan icon perusahaan."
+   */
+  hub: 3967,
+  branch: 4048,
   bukan: 3349, // "Bukan berarti investasi hari ini,"
   strike: 3558, // "…langsung berhenti kerja."
   tetap: [3639, 3706, 3788] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
