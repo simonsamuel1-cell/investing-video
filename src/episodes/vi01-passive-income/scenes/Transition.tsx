@@ -26,6 +26,7 @@ import {
 import {
   LIST_POINTS,
   LIST_TRANS,
+  SC04_TITLE,
   MAP_LABELS,
   TRANS_FADE,
   TRANS_GLOW,
@@ -58,9 +59,16 @@ if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
  * The four points, one under another, and the lens across the middle of the
  * frame: two lines `gap` apart ("jarak antar 2 garis horizontal jadiin 150 px"). Outside the lens a point is small script in
  * light grey; inside it, the same point is Plus Jakarta Sans, indigo and large.
- * `step` puts the neighbours just outside the lines.
  */
-const LIST = { size: 48, step: 130, lensSize: 96, gap: 150, lineW: 900 };
+const LIST = { size: 48, lensSize: 96, gap: 150, lineW: 900, near: 130, step: 72 };
+/**
+ * Where a point sits, `d` points away from the lens — "jarak antar textnya di
+ * deketin, tapi jarak text yang terseleksi dengan yang tidak terseleksi tuh
+ * jauh (ngga nyentuh garis)". The first step out of the lens is `near` (clear of
+ * the rules), every step after that is the tight `step`. Continuous in `d`, so
+ * the scroll runs through it smoothly.
+ */
+const listY = (d: number) => Math.sign(d) * (Math.abs(d) <= 1 ? Math.abs(d) * LIST.near : LIST.near + (Math.abs(d) - 1) * LIST.step);
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -268,10 +276,13 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
   const m = useMotion();
   const T = LIST_TRANS;
   const from = T.freeze + 1;
-  if (f < from || f >= T.end + TRANS_FADE) return null;
+  if (f < from || f >= T.handoff) return null;
   const sceneOut = ease(f, T.out, m.fade);
   const listIn = ease(f, T.out + m.fade, m.fade);
   const leave = ease(f, T.end, TRANS_FADE);
+  /* the word in the lens stays; from `carry` it eases up into SC04's title */
+  const carry = ease(f, T.carry, T.handoff - T.carry);
+  const landed = LIST_POINTS.indexOf("Passive Income");
   /* one point up: Introduction out of the lens, Passive Income into it */
   const k = ease(f, T.scroll, m.move);
   const cy = theme.canvas.height / 2;
@@ -291,7 +302,7 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
             right: 0,
             /* a lens magnifies distance too, so the copy inside it is spaced
                out by the same factor — only one point fits between the lines */
-            top: cy + (i - k) * LIST.step * (inLens ? LIST.lensSize / LIST.size : 1) - size * 0.6,
+            top: cy + listY(i - k) * (inLens ? LIST.lensSize / LIST.size : 1) - size * 0.6,
             textAlign: "center",
             fontFamily: inLens ? theme.text.family : SCRIPT,
             fontSize: size,
@@ -306,6 +317,7 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
     });
   const line = (y: number, flip: boolean) => <OrnateRule y={y} flip={flip} color={c.indigo} />;
   return (
+    <>
     <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
       <div style={{ position: "absolute", inset: 0, background: c.bg }} />
       <div style={{ position: "absolute", inset: 0, opacity: listIn }}>
@@ -317,9 +329,11 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
           {points(false)}
         </div>
         {/* inside it: the magnified copy */}
-        <div style={{ position: "absolute", inset: 0, clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)` }}>
-          {points(true)}
-        </div>
+        {f < T.end ? (
+          <div style={{ position: "absolute", inset: 0, clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)` }}>
+            {points(true)}
+          </div>
+        ) : null}
         {line(lensTop, false)}
         {line(lensBottom, true)}
       </div>
@@ -329,5 +343,26 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
         </div>
       ) : null}
     </div>
+    {/* the word that stays — exactly where the lens had it, then up to SC04's title */}
+    {f >= T.end ? (
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: cy + (SC04_TITLE.y - cy) * carry - (LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry) * 0.6,
+          textAlign: "center",
+          fontFamily: theme.text.family,
+          fontSize: LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry,
+          fontWeight: 800,
+          lineHeight: 1.2,
+          color: c.indigo,
+          whiteSpace: "nowrap",
+        }}
+      >
+        {LIST_POINTS[landed]}
+      </div>
+    ) : null}
+    </>
   );
 };

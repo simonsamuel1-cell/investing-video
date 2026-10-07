@@ -8,7 +8,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { Stage, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
+import { BLOCK, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
 import { ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
@@ -33,12 +33,19 @@ const FLOW: NodeBox[] = [
 ];
 
 export const SC04 = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC04);
   const c = usePalette();
   const clear = L(B4.bedanya) - 20;
+  /* the title is the word Scene Transisi 1 carried here: it is simply there
+     from the hand-off on, never fading in */
+  const handoff = L(LIST_TRANS.handoff);
   return (
     <Stage>
-      <Say text="Passive Income" x={960} y={230} at={L(B4.title)} size={88} weight={800} color={c.indigo} />
+      {f >= handoff ? (
+        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
+      ) : null}
       <Say
         text="Investasi hari ini  →  besok berhenti kerja"
         x={960}

@@ -334,7 +334,17 @@ export const TRANS: Trans[] = [
  * dalamnya terlebih dahulu, lalu akan scroll naik per poin." At `scroll` the
  * list moves up one point, carrying "Passive Income" into the lens.
  */
-export const LIST_TRANS = { freeze: 3124, out: 3155, scroll: 3205, end: 3260 };
+/**
+ * …and its end — Simon: "buat text 'Passive Income' di scene transisi tetap
+ * saja (jangan fade out), lalu buat text lainnya dan background kotak kotaknya
+ * fade out. Next scene yang harusnya ada fade in text Passive Income, tidak
+ * jadi." From `end` everything but the word fades; from `carry` the word eases
+ * up into SC04's title place; at `handoff` SC04's title takes over, already
+ * there — no fade-in of its own.
+ */
+export const LIST_TRANS = { freeze: 3124, out: 3155, scroll: 3205, end: 3260, carry: 3284, handoff: 3324 };
+/** SC04's title, where the carried word lands. */
+export const SC04_TITLE = { y: 230, size: 88 };
 export const LIST_POINTS = ["Introduction", "Passive Income", "Punya Bisnis", "Lo Kheng Hong"];
 
 // ═══ EVERY OTHER SCENE CHANGE — a CameraCut ═══════════════════════════════
