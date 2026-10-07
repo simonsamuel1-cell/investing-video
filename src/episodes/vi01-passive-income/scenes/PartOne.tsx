@@ -32,7 +32,7 @@ const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number
  * tinted square buttons on the right; Available Cash and Total Invested along
  * the bottom. The numbers are his screenshot's, verbatim.
  */
-const ASSET = { w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 54 };
+const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 54 };
 
 const AssetCard = ({ at, out }: { at: number; out: number }) => {
   const f = useCurrentFrame();
@@ -56,7 +56,8 @@ const AssetCard = ({ at, out }: { at: number; out: number }) => {
       style={{
         position: "absolute",
         left: (theme.canvas.width - ASSET.w) / 2,
-        top: (theme.captionBand.top - ASSET.h) / 2 + lift,
+        /* under the title, which stays ("Passive Incomenya harusnya stay aja") */
+        top: ASSET.top + lift,
         width: ASSET.w,
         height: ASSET.h,
         borderRadius: 40,
@@ -126,9 +127,9 @@ export const SC04 = () => {
   const handoff = L(LIST_TRANS.handoff);
   return (
     <Stage>
-      {/* 3338: everything goes for the card — the carried title included */}
+      {/* 3338: everything but the carried title goes for the card */}
       {f >= handoff ? (
-        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} out={L(B4.asset[0])} size={SC04_TITLE.size} weight={800} color={c.indigo} />
+        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
       ) : null}
       <AssetCard at={L(B4.asset[0]) + m.fade} out={L(B4.asset[1])} />
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
