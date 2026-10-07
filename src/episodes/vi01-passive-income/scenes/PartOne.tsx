@@ -7,7 +7,7 @@
  * those colours carry into the life-long picture and the relay.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, theme, useMotion, usePalette } from "../../../core";
+import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
 import { ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
@@ -26,6 +26,89 @@ const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number
 };
 
 // ═══ SC04 — passive income: keep working, and part of it becomes an asset ══
+/**
+ * THE TOTAL ASSET CARD — a remake of Simon's screenshot of the app's balance
+ * card: "Total Asset" with an eye, the total large; Deposit and Withdraw as two
+ * tinted square buttons on the right; Available Cash and Total Invested along
+ * the bottom. The numbers are his screenshot's, verbatim.
+ */
+const ASSET = { w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 54 };
+
+const AssetCard = ({ at, out }: { at: number; out: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const shadow = useShadow();
+  const m = useMotion();
+  const life = useLife(at, out);
+  if (life <= 0.001) return null;
+  const lift = (1 - ease(f, at, m.reveal)) * 24;
+  const type = { fontFamily: theme.text.family, lineHeight: 1, whiteSpace: "nowrap" as const };
+  const button = (label: string, glyph: React.ReactNode) => (
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+      <div style={{ width: ASSET.btn, height: ASSET.btn, borderRadius: 32, background: theme.color.indigoWashStrong, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <svg width={64} height={64} viewBox="0 0 48 48">{glyph}</svg>
+      </div>
+      <div style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.ink }}>{label}</div>
+    </div>
+  );
+  return (
+    <div
+      style={{
+        position: "absolute",
+        left: (theme.canvas.width - ASSET.w) / 2,
+        top: (theme.captionBand.top - ASSET.h) / 2 + lift,
+        width: ASSET.w,
+        height: ASSET.h,
+        borderRadius: 40,
+        background: `linear-gradient(115deg, ${c.indigoSoft} 0%, ${c.cardBg} 55%, ${c.cyanSoft} 100%)`,
+        boxShadow: shadow.soft,
+        opacity: life,
+        padding: ASSET.pad,
+        boxSizing: "border-box",
+      }}
+    >
+      {/* Total Asset and the total */}
+      <div style={{ position: "absolute", left: ASSET.pad, top: ASSET.pad, display: "flex", alignItems: "center", gap: 18 }}>
+        <span style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.slate }}>Total Asset</span>
+        <svg width={38} height={38} viewBox="0 0 24 24" fill="none" stroke={c.slate} strokeWidth={1.8}>
+          <path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" />
+          <circle cx={12} cy={12} r={3} />
+        </svg>
+      </div>
+      <div style={{ ...type, position: "absolute", left: ASSET.pad, top: ASSET.pad + 66, fontSize: ASSET.total, fontWeight: 800, color: c.ink, fontVariantNumeric: "tabular-nums" }}>8,083,652</div>
+
+      {/* Deposit · Withdraw */}
+      <div style={{ position: "absolute", right: ASSET.pad - 10, top: ASSET.pad - 24, display: "flex", gap: 44 }}>
+        {button(
+          "Deposit",
+          <>
+            <rect x={8} y={9} width={32} height={6} rx={2} fill={c.indigo} />
+            <rect x={12} y={15} width={24} height={24} rx={3} fill={c.indigo} />
+            <path d="M24 21v12M18 27h12" stroke={c.cardBg} strokeWidth={3} strokeLinecap="round" />
+          </>,
+        )}
+        {button(
+          "Withdraw",
+          <>
+            <path d="M8 26v10a3 3 0 0 0 3 3h26a3 3 0 0 0 3-3V26" fill="none" stroke={c.indigo} strokeWidth={4} strokeLinejoin="round" />
+            <rect x={13} y={9} width={22} height={22} rx={3} fill={c.indigo} />
+            <path d="M24 26V15M19 20l5-5 5 5" fill="none" stroke={c.cardBg} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+          </>,
+        )}
+      </div>
+
+      {/* Available Cash · Total Invested */}
+      <div style={{ position: "absolute", left: ASSET.pad, bottom: ASSET.pad, display: "flex", flexDirection: "column", gap: 16 }}>
+        <span style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.slate }}>Available Cash</span>
+        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>2,001,150</span>
+      </div>
+      <div style={{ position: "absolute", right: ASSET.pad, bottom: ASSET.pad, display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 16 }}>
+        <span style={{ ...type, fontSize: ASSET.label, fontWeight: 500, color: c.slate }}>Total Invested</span>
+        <span style={{ ...type, fontSize: ASSET.value, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums" }}>7,872,091</span>
+      </div>
+    </div>
+  );
+};
 const FLOW: NodeBox[] = [
   { x: 220, y: 500, w: 330, h: 150 },
   { x: 720, y: 500, w: 420, h: 150 },
@@ -43,20 +126,11 @@ export const SC04 = () => {
   const handoff = L(LIST_TRANS.handoff);
   return (
     <Stage>
+      {/* 3338: everything goes for the card — the carried title included */}
       {f >= handoff ? (
-        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
+        <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} out={L(B4.asset[0])} size={SC04_TITLE.size} weight={800} color={c.indigo} />
       ) : null}
-      <Say
-        text="Investasi hari ini  →  besok berhenti kerja"
-        x={960}
-        y={420}
-        at={L(B4.bukan)}
-        out={clear}
-        size={50}
-        weight={600}
-        color={c.slate}
-        strikeAt={L(B4.strike)}
-      />
+      <AssetCard at={L(B4.asset[0]) + m.fade} out={L(B4.asset[1])} />
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
         <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
       ))}
