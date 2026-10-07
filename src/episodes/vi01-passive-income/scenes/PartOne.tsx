@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Sheet, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -35,17 +35,21 @@ const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number
  */
 const TOTAL_ASSET = 50_000_000;
 const fmtAsset = (n: number) => Math.round(n).toLocaleString("en-US");
-const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 54 };
+const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 56 };
 
-const AssetCard = ({ at, out, moveAt }: { at: number; out: number; moveAt: number }) => {
+/** "Orang Resign.png", 1086 × 1448: solid rows 11–1417, columns 256–870 — standing under the title. */
+const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, feet: 1417, solidCx: 563 / 1086, from: 330, floor: 930 };
+const RESIGN_H = ((RESIGN.floor - RESIGN.from) * RESIGN.rows) / (RESIGN.feet - RESIGN.top);
+/** How far the card and the photo travel: from just off one side of the frame to just off the other. */
+const SLIDE = theme.canvas.width;
+
+const AssetCard = ({ at, moveAt, moveOver, top, dx }: { at: number; moveAt: number; moveOver: number; top: number; dx: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const shadow = useShadow();
-  const m = useMotion();
-  const life = useLife(at, out);
-  if (life <= 0.001) return null;
-  const lift = (1 - ease(f, at, m.reveal)) * 24;
-  const invested = TOTAL_ASSET * ease(f, moveAt, m.sec(1));
+  const life = useLife(at);
+  if (life <= 0.001 || dx <= -SLIDE + 1) return null;
+  const invested = TOTAL_ASSET * ease(f, moveAt, moveOver);
   const type = { fontFamily: theme.text.family, lineHeight: 1, whiteSpace: "nowrap" as const };
   const button = (label: string, glyph: React.ReactNode) => (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
@@ -61,7 +65,8 @@ const AssetCard = ({ at, out, moveAt }: { at: number; out: number; moveAt: numbe
         position: "absolute",
         left: (theme.canvas.width - ASSET.w) / 2,
         /* under the title, which stays ("Passive Incomenya harusnya stay aja") */
-        top: ASSET.top + lift,
+        top,
+        transform: `translateX(${dx.toFixed(2)}px)`,
         width: ASSET.w,
         height: ASSET.h,
         borderRadius: 40,
@@ -135,7 +140,30 @@ export const SC04 = () => {
       {f >= handoff ? (
         <Say text="Passive Income" x={960} y={SC04_TITLE.y} at={handoff - m.reveal} size={SC04_TITLE.size} weight={800} color={c.indigo} />
       ) : null}
-      <AssetCard at={L(B4.asset[0]) + m.fade} out={L(B4.asset[1])} moveAt={L(B4.invest)} />
+      {/* the card rides under the carried title until it lands, then holds —
+          masked above the caption band while it is still low */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+      <AssetCard
+        at={L(B4.asset[0])}
+        moveAt={L(B4.invest[0])}
+        moveOver={L(B4.invest[1]) - L(B4.invest[0])}
+        top={ASSET.top + (theme.canvas.height / 2 - SC04_TITLE.y) * (1 - ease(f, L(LIST_TRANS.carry), L(LIST_TRANS.handoff) - L(LIST_TRANS.carry)))}
+        dx={-SLIDE * ease(f, L(B4.resign), m.move)}
+      />
+      </div>
+      {/* the photo slides in from the right as the card goes, one carousel move; it leaves where the card used to */}
+      <Cutout
+        src="art/vi01/orang-resign.png"
+        aspect={RESIGN.aspect}
+        x={theme.canvas.width / 2 - (RESIGN.solidCx - 0.5) * RESIGN_H * RESIGN.aspect + SLIDE * (1 - ease(f, L(B4.resign), m.move))}
+        y={RESIGN.from - (RESIGN.top / RESIGN.rows) * RESIGN_H + RESIGN_H}
+        h={RESIGN_H}
+        at={L(B4.resign) - m.reveal}
+        out={L(B4.asset[1])}
+        rise={0}
+        shadow
+        floor={RESIGN.feet / RESIGN.rows}
+      />
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
         <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
       ))}
