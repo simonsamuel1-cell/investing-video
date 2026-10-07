@@ -370,6 +370,8 @@ export const theme = {
     calendarRed: "#E5475D",
     /** VI01 SC01, Simon: "icon keranjang kuning" — the shopping basket's body, nothing else. */
     basketYellow: "#F5B82E",
+    /** VI01 SC05, Simon: "Koinnya warna kuning aja" — the coins of the money tree, nothing else. */
+    coinYellow: "#F5B82E",
     /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
     slateWash: "rgba(98, 98, 102, 0.08)",

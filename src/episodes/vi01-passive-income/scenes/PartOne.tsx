@@ -282,9 +282,7 @@ export const SC04 = () => {
 const VALUES = [100, 110, 121, 133];
 /** How much of each step's growth came from earlier growth (profit on profit). */
 const ON_PROFIT = [0, 0, 1, 2.1];
-const BARS = { base: 860, unit: 2.6, w: 180, x: [600, 860, 1120, 1380] };
-/** Each step's growth sits on the old value with a hairline of air, so both keep round corners. */
-const GAP = 5;
+const BARS = { base: 860, unit: 2.6, w: 180, r: 14, x: [600, 860, 1120, 1380] };
 
 /**
  * THE COIN TREE — a remake of Simon's picture: one large coin, arrows out to
@@ -292,29 +290,35 @@ const GAP = 5;
  * Still for now ("Taro dulu aja, jangan animasikan dulu"); it fades in at
  * SC05.tree and out before the time axis.
  */
-type Coin = { x: number; y: number; r: number; parent?: number };
+type Coin = { x: number; y: number; r: number; parent?: number; step: 0 | 1 | 2 };
 const TREE: Coin[] = (() => {
-  const root = { x: 960, y: 620, r: 62 };
+  const root: Coin = { x: 960, y: 620, r: 62, step: 0 };
   const out: Coin[] = [root];
-  const first = [-150, -95, -35, 30, 95, 150];
-  first.forEach((a) => {
+  [36, 108, 180, 252, 324].forEach((a) => {
     const rad = (a * Math.PI) / 180;
     const p = out.length;
-    const c1 = { x: root.x + Math.sin(rad) * 190, y: root.y - Math.cos(rad) * 190, r: 40, parent: 0 };
+    const c1: Coin = { x: root.x + Math.sin(rad) * 190, y: root.y - Math.cos(rad) * 190, r: 40, parent: 0, step: 1 };
     out.push(c1);
-    [-24, 24].forEach((d) => {
+    [-26, 26].forEach((d) => {
       const r2 = ((a + d) * Math.PI) / 180;
-      out.push({ x: c1.x + Math.sin(r2) * 125, y: c1.y - Math.cos(r2) * 125, r: 28, parent: p });
+      out.push({ x: c1.x + Math.sin(r2) * 125, y: c1.y - Math.cos(r2) * 125, r: 28, parent: p, step: 2 });
     });
   });
   return out;
 })();
 
-const CoinTree = ({ at, out }: { at: number; out: number }) => {
+/** Each step: its arrows draw out from the coins before, then its coins ease in. */
+const CoinTree = ({ steps, out }: { steps: readonly number[]; out: number }) => {
+  const f = useCurrentFrame();
   const c = usePalette();
-  const life = useLife(at, out);
-  if (life <= 0.001) return null;
+  const m = useMotion();
+  const gone = ease(f, out, m.fade);
+  if (f < steps[0] || gone >= 0.999) return null;
+  const draw = (s: number) => ease(f, steps[s], m.sec(0.4));
+  const pop = (s: number) => ease(f, steps[s] + (s === 0 ? 0 : m.sec(0.25)), m.reveal);
   const arrow = (a: Coin, b: Coin, i: number) => {
+    const p = draw(b.step);
+    if (p <= 0.001) return null;
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const len = Math.hypot(dx, dy);
@@ -322,9 +326,9 @@ const CoinTree = ({ at, out }: { at: number; out: number }) => {
     const uy = dy / len;
     const x1 = a.x + ux * (a.r + 8);
     const y1 = a.y + uy * (a.r + 8);
-    const x2 = b.x - ux * (b.r + 8);
-    const y2 = b.y - uy * (b.r + 8);
     const h = 9;
+    const x2 = x1 + (b.x - ux * (b.r + 8) - x1) * p;
+    const y2 = y1 + (b.y - uy * (b.r + 8) - y1) * p;
     return (
       <g key={i}>
         <line x1={x1} y1={y1} x2={x2 - ux * h} y2={y2 - uy * h} stroke={c.ink} strokeWidth={3} strokeLinecap="round" />
@@ -333,17 +337,21 @@ const CoinTree = ({ at, out }: { at: number; out: number }) => {
     );
   };
   return (
-    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, opacity: life }}>
+    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, opacity: 1 - gone }}>
       {TREE.map((n, i) => (n.parent === undefined ? null : arrow(TREE[n.parent], n, i)))}
-      {TREE.map((n, i) => (
-        <g key={`c${i}`}>
-          <circle cx={n.x} cy={n.y} r={n.r} fill={c.indigo} />
-          <circle cx={n.x} cy={n.y} r={n.r * 0.8} fill="none" stroke={c.cardBg} strokeWidth={Math.max(2, n.r * 0.06)} />
-          <text x={n.x} y={n.y} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={n.r * 0.72} fill={c.cardBg}>
-            Rp
-          </text>
-        </g>
-      ))}
+      {TREE.map((n, i) => {
+        const t = pop(n.step);
+        if (t <= 0.001) return null;
+        return (
+          <g key={`c${i}`} opacity={t} transform={`translate(${n.x} ${n.y}) scale(${(0.6 + 0.4 * t).toFixed(4)})`}>
+            <circle r={n.r} fill={theme.color.coinYellow} />
+            <circle r={n.r * 0.8} fill="none" stroke={c.cardBg} strokeWidth={Math.max(2, n.r * 0.06)} />
+            <text textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={n.r * 0.72} fill={c.ink}>
+              Rp
+            </text>
+          </g>
+        );
+      })}
     </svg>
   );
 };
@@ -361,38 +369,44 @@ export const SC05 = () => {
       <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC05} paper={c.bg} />
       </div>
-      <CoinTree at={L(B5.tree)} out={L(B5.axis) - m.fade} />
+      <CoinTree steps={B5.tree.map(L)} out={L(B5.axis)} />
       <Say text="Compounding" x={960} y={170} at={L(B5.compounding)} size={84} weight={800} color={theme.color.cyanInk} />
       <Say text="hasil yang terus ikut bertumbuh seiring waktu" x={960} y={262} at={L(B5.line)} size={40} weight={600} color={c.slate} />
 
-      {/* the time axis the bars stand on */}
+      {/* the time axis the bars stand on, the years under it */}
       {axis > 0.001 ? (
-        <>
-          <div style={{ position: "absolute", left: 440, top: BARS.base, width: 1120 * axis, height: theme.shape.rule, background: c.slate }} />
-        </>
+        <div style={{ position: "absolute", left: 440, top: BARS.base, width: 1120 * axis, height: theme.shape.rule, background: c.slate }} />
       ) : null}
+      {BARS.x.map((x, i) => (
+        <Say key={i} text={`Tahun ${i + 1}`} x={x} y={BARS.base + 46} at={L(B5.axis) + m.fade + i * 4} size={34} weight={600} color={c.slate} />
+      ))}
 
+      {/* "kenaikan bar chartnya dijadikan satu bar saja tapi masih beda warna":
+          one bar a year, its parts stacked inside it in their own colours;
+          rounded at the top only — "Garis bawah tiap bar chart juga jangan
+          rounded corner" */}
       {VALUES.map((v, i) => {
         const at = L(B5.bars[i]);
-        const grow = ease(f, at, 22);
+        const grow = ease(f, at, m.move);
         if (grow <= 0.001) return null;
         const prev = i === 0 ? v : VALUES[i - 1];
         const h = v * BARS.unit * grow;
-        const prevH = (i === 0 ? v : prev) * BARS.unit * grow;
+        const base = prev * BARS.unit * grow;
         const extra = ON_PROFIT[i] * BARS.unit * grow;
         const x = BARS.x[i] - BARS.w / 2;
         return (
           <div key={v}>
-            {/* what was already there */}
-            <div style={{ position: "absolute", left: x, top: BARS.base - prevH, width: BARS.w, height: prevH, background: c.cyanSoft, border: `${theme.shape.rule}px solid ${c.cyan}`, borderRadius: 12, boxSizing: "border-box" }} />
-            {/* this step's growth, and the part of it that grew on growth */}
-            {i > 0 ? (
-              <>
-                <div style={{ position: "absolute", left: x, top: BARS.base - h - GAP, width: BARS.w, height: h - prevH, background: c.cyan, borderRadius: 12 }} />
-                {extra > 0.5 ? <div style={{ position: "absolute", left: x, top: BARS.base - h - 2 * GAP - extra, width: BARS.w, height: extra + GAP, background: theme.color.cyanInk, borderRadius: 12 }} /> : null}
-              </>
-            ) : null}
-            <Say text={String(v)} x={BARS.x[i]} y={BARS.base - h - 52} at={at} size={52} weight={800} color={i === 0 ? c.ink : theme.color.cyanInk} />
+            <div style={{ position: "absolute", left: x, top: BARS.base - h, width: BARS.w, height: h, borderRadius: `${BARS.r}px ${BARS.r}px 0 0`, overflow: "hidden", border: `${theme.shape.rule}px solid ${c.cyan}`, borderBottom: "none", boxSizing: "border-box", background: c.cyanSoft }}>
+              {i > 0 ? (
+                <>
+                  {/* this year's growth on top of last year's value… */}
+                  <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: h - base, background: c.cyan }} />
+                  {/* …and the part of it that grew on earlier growth */}
+                  {extra > 0.5 ? <div style={{ position: "absolute", left: 0, right: 0, top: 0, height: extra, background: theme.color.cyanInk }} /> : null}
+                </>
+              ) : null}
+            </div>
+            <Say text={String(v)} x={BARS.x[i]} y={BARS.base - h - 44} at={at} size={52} weight={800} color={i === 0 ? c.ink : theme.color.cyanInk} />
           </div>
         );
       })}

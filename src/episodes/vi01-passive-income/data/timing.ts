@@ -185,14 +185,17 @@ export const SC05 = {
    * nya tetap ada, kecuali Passive Income"), and the grid fades in behind it.
    */
   peran: 4257,
-  /** "Di 4380 Remake gambar yang aku copy. Taro dulu aja, jangan animasikan dulu." — the coin tree. */
-  tree: 4380,
-  /** "Garis waktu di 4321 sudah tepat, tapi 'Waktu' nya remove. Lalu geser timing munculnya di 4698" */
-  axis: 4698,
+  /**
+   * The coin tree, in three steps — "4327 Tahap 1: satu koin di tengah; 4383
+   * Tahap 2: 5 koin dari koin tengah; 4546 Tahap 3: 10 koin di paling luar."
+   */
+  tree: [4327, 4383, 4546] as const,
+  /** "4715 Semua visual hilang kecuali judul, garis waktu muncul, di bawah garis waktu juga ada Tahun 1 … Tahun 4" */
+  axis: 4715,
   kalau: 4401, // "Kalau sebuah aset menghasilkan keuntungan,"
   lagi: 4533, // "keuntungan itu bisa ikut menghasilkan keuntungan"
-  /** "100 … 110 … 121 … 133" — each bar lands on its own number. */
-  bars: [4787, 4879, 4973, 5112] as const,
+  /** Simon: one bar per year — "4768 … Tahun 1, 4850 … Tahun 2, 4946 … Tahun 3, 5045 … Tahun 4". */
+  bars: [4768, 4850, 4946, 5045] as const,
   compounding: 5267, // "compounding:"
   line: 5333, // "hasil yang terus ikut bertumbuh seiring waktu."
 };
