@@ -197,10 +197,20 @@ export const SC05 = {
   /** Simon: one bar per year — "4768 … Tahun 1, 4850 … Tahun 2, 4946 … Tahun 3, 5045 … Tahun 4". */
   bars: [4768, 4850, 4946, 5045] as const,
   compounding: 5267, // "compounding:"
+  /**
+   * Simon: "5462 seluruh visual geser naik hingga keluar layar, kecuali
+   * background kotak kotaknya. At the same time, anchor to visual chart, dari
+   * bawah geser masuk visual baru" — the Bank balance card. That scroll is the
+   * SC05 → SC06 transition: the card rides across the cut, so the cut itself
+   * is gone (CUTS).
+   */
+  scroll: 5462,
   line: 5333, // "hasil yang terus ikut bertumbuh seiring waktu."
 };
 
 export const SC06 = {
+  /** "5578 balancenya dari Rp 0,- jadi Rp 1,000,000,000,- dan UI nya ikut membesar 10%" */
+  balance: 5578,
   modal: 5651, // "modal besar dulu."
   strike: 5698,
   habit: 5823, // "mulai membangun kebiasaannya."
@@ -415,7 +425,6 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC02, axis: "x" },
   { at: BLOCK.SC03, axis: "x" },
   { at: BLOCK.SC05, axis: "x" },
-  { at: BLOCK.SC06, axis: "x" },
   { at: BLOCK.SC07, axis: "x" },
   { at: BLOCK.SC08, axis: "x" },
   { at: BLOCK.SC10, axis: "x" },

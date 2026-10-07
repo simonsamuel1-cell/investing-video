@@ -354,6 +354,56 @@ const CoinTree = ({ steps, out }: { steps: readonly number[]; out: number }) => 
   );
 };
 
+/** How far SC05 scrolls up at SC05.scroll — the chart's base clears the top of the frame. */
+const SCROLL_UP = 1100;
+/**
+ * THE BANK BALANCE CARD — a remake of Simon's screenshot: "Bank balance", and
+ * under it the balance, the currency small and raised before it. It comes up
+ * from below anchored to the chart (the same scroll), counts Rp 0,- →
+ * Rp 1,000,000,000,- at SC06.balance as it grows 10%, and leaves when SC06's
+ * "Karena investasi bukan cuma soal uang" begins. Mounted at the composition
+ * root: it crosses the SC05 → SC06 boundary. Reads the GLOBAL frame.
+ */
+const BANK = { w: 1080, h: 360, pad: 72, label: 50, amount: 100, currency: 46, balance: 1_000_000_000, grow: 0.1 };
+export const BankBalance = () => {
+  const g = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
+  const up = ease(g, B5.scroll, m.move);
+  const out = ease(g, B6.bukanUang - m.fade, m.fade);
+  if (g < B5.scroll || out >= 0.999) return null;
+  const count = ease(g, B6.balance, m.sec(1.5));
+  const scale = 1 + BANK.grow * count;
+  const amount = `${Math.round(BANK.balance * count).toLocaleString("en-US")},-`;
+  const top = (theme.captionBand.top - BANK.h) / 2 + SCROLL_UP * (1 - up);
+  return (
+    <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)`, opacity: 1 - out }}>
+      <div
+        style={{
+          position: "absolute",
+          left: (theme.canvas.width - BANK.w) / 2,
+          top,
+          width: BANK.w,
+          height: BANK.h,
+          borderRadius: 36,
+          background: c.cardBg,
+          boxShadow: shadow.soft,
+          transform: `scale(${scale.toFixed(4)})`,
+          fontFamily: theme.text.family,
+          color: c.ink,
+        }}
+      >
+        <div style={{ position: "absolute", left: BANK.pad, top: BANK.pad, fontSize: BANK.label, fontWeight: 500, lineHeight: 1 }}>Bank balance</div>
+        <div style={{ position: "absolute", left: BANK.pad, bottom: BANK.pad, display: "flex", alignItems: "flex-start", gap: 10, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
+          <span style={{ fontSize: BANK.currency, fontWeight: 500, marginTop: 10 }}>Rp</span>
+          <span style={{ fontSize: BANK.amount, fontWeight: 500 }}>{amount}</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const SC05 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -362,11 +412,14 @@ export const SC05 = () => {
   const axis = ease(f, L(B5.axis), m.move);
   /* the grid comes up once the cut has landed */
   const grid = ease(f, CUT.over / 2, m.fade);
+  /* 5462: everything but the grid scrolls up and out */
+  const up = ease(f, L(B5.scroll), m.move) * SCROLL_UP;
   return (
     <Stage>
       <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC05} paper={c.bg} />
       </div>
+      <div style={{ position: "absolute", inset: 0, transform: `translateY(${(-up).toFixed(2)}px)` }}>
       <CoinTree steps={B5.tree.map(L)} out={L(B5.axis)} />
       <Say text="Compounding" x={960} y={170} at={L(B5.compounding)} size={84} weight={800} color={theme.color.cyanInk} />
       <Say text="hasil yang terus ikut bertumbuh seiring waktu" x={960} y={262} at={L(B5.line)} size={40} weight={600} color={c.slate} />
@@ -406,6 +459,7 @@ export const SC05 = () => {
           </div>
         );
       })}
+      </div>
     </Stage>
   );
 };
@@ -431,6 +485,10 @@ export const SC06 = () => {
   const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * ease(f, L(s), 24), 0);
   return (
     <Stage>
+      {/* the grid carries on from SC05 — it never scrolled */}
+      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC06} paper={c.bg} />
+      </div>
       {/* "modal besar dulu?" — a stack of coins, struck */}
       {lump > 0.001 ? (
         <div style={{ opacity: lump }}>
