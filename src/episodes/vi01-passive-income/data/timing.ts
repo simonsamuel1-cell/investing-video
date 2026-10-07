@@ -20,7 +20,9 @@
  * kasih jeda 20 frame. visual dan vo geser" — and everything from 530 on
  * moved 20 more. Then +20 at 2110 (2030 of the original) — "2110 berikan
  * jeda 20 frame … (transisinya juga geser)" — and everything from 2110 on,
- * the SC02 → SC03 cut included, moved 20 more.
+ * the SC02 → SC03 cut included, moved 20 more. Then +30 at 3316 (3216 of
+ * the original) — "3316 beri jeda 30 frame, vo dan visual ikut geser" — and
+ * everything from 3316 on moved 30 more.
  */
 
 /** Scene-local frame for a beat written in GLOBAL frames. */
@@ -32,16 +34,16 @@ export const local = (beat: number, from: number) => beat - from;
  */
 export const BLOCK = {
   SC01: 0, SC02: 1019, SC03: 2133,
-  SC04: 3125, SC05: 4078, SC06: 5375, SC07: 6457, SC08: 7668,
-  SC09: 8622, SC10: 9644, SC11: 10700, SC12: 11786,
-  SC13: 12573, SC14: 13709, SC15: 14979,
-  SC16: 16018, SC17: 16894, SC18: 18106,
-  /** The VO's last word ends on f19094; 206 frames hold the closing card. */
-  END: 19300,
+  SC04: 3125, SC05: 4108, SC06: 5405, SC07: 6487, SC08: 7698,
+  SC09: 8652, SC10: 9674, SC11: 10730, SC12: 11816,
+  SC13: 12603, SC14: 13739, SC15: 15009,
+  SC16: 16048, SC17: 16924, SC18: 18136,
+  /** The VO's last word ends on f19124; 206 frames hold the closing card. */
+  END: 19330,
 } as const;
 
 /** The last frame of speech, for the guard in Composition.tsx. */
-export const VO_LAST = 19094;
+export const VO_LAST = 19124;
 
 // ═══ COLD OPEN ═════════════════════════════════════════════════════════════
 export const SC01 = {
@@ -124,148 +126,148 @@ export const SC03 = {
 // ═══ PART 01 — UANG YANG IKUT BEKERJA ═════════════════════════════════════
 export const SC04 = {
   title: 3198, // "passive income"
-  bukan: 3324, // "Bukan berarti investasi hari ini,"
-  strike: 3517, // "…langsung berhenti kerja."
-  tetap: [3588, 3650, 3718] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
-  bedanya: 3808, // "Bedanya,"
-  sebagian: 3836, // "sebagian uang yang kita hasilkan"
-  aset: 4018, // "menjadi aset."
+  bukan: 3354, // "Bukan berarti investasi hari ini,"
+  strike: 3547, // "…langsung berhenti kerja."
+  tetap: [3618, 3680, 3748] as const, // "Kita tetap kerja, tetap bangun karier, dan tetap belajar."
+  bedanya: 3838, // "Bedanya,"
+  sebagian: 3866, // "sebagian uang yang kita hasilkan"
+  aset: 4048, // "menjadi aset."
 };
 
 export const SC05 = {
-  axis: 4168, // "waktu punya peran besar."
-  kalau: 4286, // "Kalau sebuah aset menghasilkan keuntungan,"
-  lagi: 4418, // "keuntungan itu bisa ikut menghasilkan keuntungan"
+  axis: 4198, // "waktu punya peran besar."
+  kalau: 4316, // "Kalau sebuah aset menghasilkan keuntungan,"
+  lagi: 4448, // "keuntungan itu bisa ikut menghasilkan keuntungan"
   /** "100 … 110 … 121 … 133" — each bar lands on its own number. */
-  bars: [4672, 4764, 4858, 4997] as const,
-  compounding: 5152, // "compounding:"
-  line: 5218, // "hasil yang terus ikut bertumbuh seiring waktu."
+  bars: [4702, 4794, 4888, 5027] as const,
+  compounding: 5182, // "compounding:"
+  line: 5248, // "hasil yang terus ikut bertumbuh seiring waktu."
 };
 
 export const SC06 = {
-  modal: 5536, // "modal besar dulu."
-  strike: 5583,
-  habit: 5708, // "mulai membangun kebiasaannya."
-  habitName: 5771,
-  bukanUang: 5858, // "Karena investasi bukan cuma soal uang."
-  loop: 6026, // "Semakin sering kita belajar …"
-  belajar: 6094, // "belajar"
-  toEvaluasi: 6122, // the arrow on to "mengevaluasi"
-  toKelola: 6300, // the arrow on to "mengelola aset", under "semakin baik"
-  evaluasi: 6135, // "mengevaluasi keputusan,"
-  baik: 6252, // "semakin baik juga kemampuan kita"
-  kelola: 6384, // "mengelola aset."
+  modal: 5566, // "modal besar dulu."
+  strike: 5613,
+  habit: 5738, // "mulai membangun kebiasaannya."
+  habitName: 5801,
+  bukanUang: 5888, // "Karena investasi bukan cuma soal uang."
+  loop: 6056, // "Semakin sering kita belajar …"
+  belajar: 6124, // "belajar"
+  toEvaluasi: 6152, // the arrow on to "mengevaluasi"
+  toKelola: 6330, // the arrow on to "mengelola aset", under "semakin baik"
+  evaluasi: 6165, // "mengevaluasi keputusan,"
+  baik: 6282, // "semakin baik juga kemampuan kita"
+  kelola: 6414, // "mengelola aset."
 };
 
 export const SC07 = {
-  split: 6573, // "dua bagian."
-  human: 6670, // "human asset:"
-  humanRows: [6724, 6766, 6814] as const, // waktu, kemampuan, pengalaman
-  financial: 7057, // "financial asset:"
-  financialRows: [7128, 7188, 7256] as const, // tabungan, investasi, aset
-  batas: 7455, // "punya batas."
-  terus: 7507, // "Financial asset bisa terus kita miliki."
+  split: 6603, // "dua bagian."
+  human: 6700, // "human asset:"
+  humanRows: [6754, 6796, 6844] as const, // waktu, kemampuan, pengalaman
+  financial: 7087, // "financial asset:"
+  financialRows: [7158, 7218, 7286] as const, // tabungan, investasi, aset
+  batas: 7485, // "punya batas."
+  terus: 7537, // "Financial asset bisa terus kita miliki."
 };
 
 export const SC08 = {
-  muda: 7684, // "Waktu masih muda,"
-  idealnya: 7934, // "Tapi idealnya,"
-  tumbuh: 8078, // "aset kita juga ikut tumbuh."
-  estafet: 8244, // "Bayangin seperti estafet:"
-  kerja: 8297, // "kita kerja untuk menghasilkan uang,"
-  teruskan: 8400, // "lalu sebagian uang itu kita teruskan"
-  aset: 8563, // "untuk membangun aset."
+  muda: 7714, // "Waktu masih muda,"
+  idealnya: 7964, // "Tapi idealnya,"
+  tumbuh: 8108, // "aset kita juga ikut tumbuh."
+  estafet: 8274, // "Bayangin seperti estafet:"
+  kerja: 8327, // "kita kerja untuk menghasilkan uang,"
+  teruskan: 8430, // "lalu sebagian uang itu kita teruskan"
+  aset: 8593, // "untuk membangun aset."
 };
 
 // ═══ PART 02 — IKUT PUNYA BISNIS ══════════════════════════════════════════
 export const SC09 = {
-  company: 8685, // "dari investasi"
-  nggak: 8770, // "kita nggak harus bekerja di sebuah perusahaan"
-  karyawan: 9120, // "Ada orang yang bekerja di BCA"
-  bca: 9194,
-  gaji: 9278, // "penghasilan."
-  investor: 9348, // "Di sisi lain, sebagai investor,"
-  slice: 9533, // "sebagian kecil dari bisnis BCA."
+  company: 8715, // "dari investasi"
+  nggak: 8800, // "kita nggak harus bekerja di sebuah perusahaan"
+  karyawan: 9150, // "Ada orang yang bekerja di BCA"
+  bca: 9224,
+  gaji: 9308, // "penghasilan."
+  investor: 9378, // "Di sisi lain, sebagai investor,"
+  slice: 9563, // "sebagian kecil dari bisnis BCA."
 };
 
 export const SC10 = {
-  around: 9656, // "Hal yang sama sebenarnya ada di sekitar kita"
-  products: [9908, 9964, 10012, 10069] as const, // Indomie, Ultra Milk, dan banyak produk
-  konsumen: 10164, // "Sebagai konsumen,"
-  flip: 10370, // "Tapi lewat investasi,"
-  pemilik: 10519, // "sebagian kecil dari bisnis"
-  balik: 10604, // "di balik produk-produk itu."
+  around: 9686, // "Hal yang sama sebenarnya ada di sekitar kita"
+  products: [9938, 9994, 10042, 10099] as const, // Indomie, Ultra Milk, dan banyak produk
+  konsumen: 10194, // "Sebagai konsumen,"
+  flip: 10400, // "Tapi lewat investasi,"
+  pemilik: 10549, // "sebagian kecil dari bisnis"
+  balik: 10634, // "di balik produk-produk itu."
 };
 
 export const SC11 = {
-  uang: 10759, // "bedanya antara sekadar menghasilkan uang,"
-  aset: 10970, // "dengan mulai membangun aset."
-  wheel: 11100, // "Sebuah bisnis"
-  steps: [11188, 11222, 11355] as const, // pendapatan, laba, berkembang
-  pemilik: 11430, // "Sebagai pemilik sebagian dari bisnis tersebut,"
-  exposure: 11628, // "exposure terhadap pertumbuhan nilainya."
+  uang: 10789, // "bedanya antara sekadar menghasilkan uang,"
+  aset: 11000, // "dengan mulai membangun aset."
+  wheel: 11130, // "Sebuah bisnis"
+  steps: [11218, 11252, 11385] as const, // pendapatan, laba, berkembang
+  pemilik: 11460, // "Sebagai pemilik sebagian dari bisnis tersebut,"
+  exposure: 11658, // "exposure terhadap pertumbuhan nilainya."
 };
 
 export const SC12 = {
-  start: 11837, // "nggak harus besar."
+  start: 11867, // "nggak harus besar."
   /** "Rp50 … Rp100 … Rp300" — 28 f then 83 f apart; pops, not reveals. */
-  amounts: [11925, 11953, 12036] as const,
-  dim: 12165, // "bukan nominal pertamanya,"
-  habit: 12254, // "tapi kebiasaan untuk menyisihkan sebagian income"
-  aset: 12473, // "dan mulai mengubahnya menjadi aset."
+  amounts: [11955, 11983, 12066] as const,
+  dim: 12195, // "bukan nominal pertamanya,"
+  habit: 12284, // "tapi kebiasaan untuk menyisihkan sebagian income"
+  aset: 12503, // "dan mulai mengubahnya menjadi aset."
 };
 
 // ═══ PART 03 — CERITA LO KHENG HONG ═══════════════════════════════════════
 export const SC13 = {
-  name: 12584, // "Lo Kheng Hong"
+  name: 12614, // "Lo Kheng Hong"
   /** The four steps of the timeline, each on its word. */
-  steps: [13026, 13131, 13195, 13298] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan
-  untr: 13620, // "United Tractors."
+  steps: [13056, 13161, 13225, 13328] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan
+  untr: 13650, // "United Tractors."
 };
 
 export const SC14 = {
-  krisis: 13750, // "krisis 1998,"
-  rp250: 14063, // "Rp250 per saham."
-  later: 14168, // "Beberapa tahun kemudian,"
-  lipat: 14300, // "berkali-kali lipat,"
-  rp15: 14500, // "Rp15 ribu."
-  caution: 14560, // "Tapi tentu saja, ini adalah contoh dari masa lalu."
-  nggak: 14782, // "Nggak semua investasi …"
+  krisis: 13780, // "krisis 1998,"
+  rp250: 14093, // "Rp250 per saham."
+  later: 14198, // "Beberapa tahun kemudian,"
+  lipat: 14330, // "berkali-kali lipat,"
+  rp15: 14530, // "Rp15 ribu."
+  caution: 14590, // "Tapi tentu saja, ini adalah contoh dari masa lalu."
+  nggak: 14812, // "Nggak semua investasi …"
 };
 
 export const SC15 = {
-  bukan: 14984, // "Yang menarik dari cerita ini sebenarnya bukan:"
-  quote: 15133, // "“Cari saham …”"
-  strike: 15312, // "Yang lebih penting justru prosesnya."
+  bukan: 15014, // "Yang menarik dari cerita ini sebenarnya bukan:"
+  quote: 15163, // "“Cari saham …”"
+  strike: 15342, // "Yang lebih penting justru prosesnya."
   /** The five steps, each on its word (88 / 96 / 64 / 172). */
-  steps: [15464, 15552, 15648, 15712, 15884] as const,
+  steps: [15494, 15582, 15678, 15742, 15914] as const,
 };
 
 // ═══ PENUTUP ═══════════════════════════════════════════════════════════════
 export const SC16 = {
-  lari: 16192, // "lari dari pekerjaan."
-  strike: 16241,
-  tetap: [16365, 16407, 16482] as const, // karier, keluarga, menikmati hidup
-  bedanya: 16586, // "Bedanya, sebagian hasil kerja kita hari ini"
-  depan: 16836, // "untuk masa depan."
+  lari: 16222, // "lari dari pekerjaan."
+  strike: 16271,
+  tetap: [16395, 16437, 16512] as const, // karier, keluarga, menikmati hidup
+  bedanya: 16616, // "Bedanya, sebagian hasil kerja kita hari ini"
+  depan: 16866, // "untuk masa depan."
 };
 
 export const SC17 = {
-  kecil: 16941, // "aset kita mungkin masih kecil."
-  grow: [17107, 17198, 17270] as const, // kemampuan, income, aset
-  pillars: 17354, // "pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial."
-  pilihan: 17627, // "lebih banyak pilihan."
-  tanya: 17728, // "Jadi setiap kali income masuk, coba tanya:"
-  quote: 17912, // "“Berapa yang bisa aku sisihkan …”"
-  mark: 18040, // "mulai punya aset?"
+  kecil: 16971, // "aset kita mungkin masih kecil."
+  grow: [17137, 17228, 17300] as const, // kemampuan, income, aset
+  pillars: 17384, // "pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial."
+  pilihan: 17657, // "lebih banyak pilihan."
+  tanya: 17758, // "Jadi setiap kali income masuk, coba tanya:"
+  quote: 17942, // "“Berapa yang bisa aku sisihkan …”"
+  mark: 18070, // "mulai punya aset?"
 };
 
 export const SC18 = {
-  kerja: 18184, // "kerja berarti kita menggunakan waktu …"
-  investasi: 18410, // "Sedangkan investasi,"
-  bekerja: 18648, // "ikut bekerja untuk masa depan."
-  close: 18792, // "Jadi kita pelan-pelan berubah …"
-  mark: 19046, // "juga punya aset."
+  kerja: 18214, // "kerja berarti kita menggunakan waktu …"
+  investasi: 18440, // "Sedangkan investasi,"
+  bekerja: 18678, // "ikut bekerja untuk masa depan."
+  close: 18822, // "Jadi kita pelan-pelan berubah …"
+  mark: 19076, // "juga punya aset."
 };
 
 // ═══ SCENE TRANSISI — TA09's roadmap, over the cut ════════════════════════
@@ -305,10 +307,10 @@ export const TRANS_FADE = 24;
 export const TRANS_LEN = 130;
 
 export const TRANS: Trans[] = [
-  // ST2 · SC08 → SC09 (0.27 s; SC08's last word ends f8614)
-  { at: 8586, freeze: 8585, landing: 1, next: 2, cards: [8596, 8604, 8624], thumbs: [3089, null, null, null] },
-  // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12562)
-  { at: 12537, freeze: 12536, landing: 2, next: 3, cards: [12547, 12555, 12575], thumbs: [3089, 8585, null, null] },
+  // ST2 · SC08 → SC09 (0.27 s; SC08's last word ends f8644)
+  { at: 8616, freeze: 8615, landing: 1, next: 2, cards: [8626, 8634, 8654], thumbs: [3089, null, null, null] },
+  // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12592)
+  { at: 12567, freeze: 12566, landing: 2, next: 3, cards: [12577, 12585, 12605], thumbs: [3089, 8615, null, null] },
 ];
 
 /**
