@@ -37,9 +37,14 @@ const TOTAL_ASSET = 50_000_000;
 const fmtAsset = (n: number) => Math.round(n).toLocaleString("en-US");
 const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 56 };
 
-/** "Orang Resign.png", 1086 × 1448: solid rows 11–1417, columns 256–870 — standing under the title. */
-const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, feet: 1417, solidCx: 563 / 1086, from: 330, floor: 930 };
-const RESIGN_H = ((RESIGN.floor - RESIGN.from) * RESIGN.rows) / (RESIGN.feet - RESIGN.top);
+/**
+ * "Orang Resign.png", 1086 × 1448: solid from row 11, feet on row 1417,
+ * columns 256–870. "Perbesar gambarnya di kepala hingga pinggul" — the head
+ * starts under the title and the hips (row 720) meet the caption band, where
+ * the picture is cut off.
+ */
+const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1417, solidCx: 563 / 1086, from: 330 };
+const RESIGN_H = ((theme.captionBand.top - RESIGN.from) * RESIGN.rows) / (RESIGN.hips - RESIGN.top);
 /** How far the card and the photo travel: from just off one side of the frame to just off the other. */
 const SLIDE = theme.canvas.width;
 
@@ -152,6 +157,7 @@ export const SC04 = () => {
       />
       </div>
       {/* the photo slides in from the right as the card goes, one carousel move; it leaves where the card used to */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
       <Cutout
         src="art/vi01/orang-resign.png"
         aspect={RESIGN.aspect}
@@ -164,6 +170,7 @@ export const SC04 = () => {
         shadow
         floor={RESIGN.feet / RESIGN.rows}
       />
+      </div>
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
         <Pill key={label} label={label} x={[520, 960, 1400][i]} y={590} at={L(B4.tetap[i])} out={clear} check size={40} />
       ))}
