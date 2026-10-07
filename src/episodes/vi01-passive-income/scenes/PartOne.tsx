@@ -60,7 +60,8 @@ const TODO = { x: 1010, y: [520, 640, 760], size: 52, box: 50, gap: 26, cps: 1 }
  */
 const MAP = {
   x: 100,
-  y: [350, 540, 730],
+  /* the three keep their spacing once scaled — "Ga perlu di perbesar" */
+  y: [390, 540, 690],
   textW: [279, 499, 327],
   cy: 540,
   col: 790,
@@ -75,6 +76,8 @@ const MAP = {
   leaf: 1435,
   pad: 26,
   stroke: 4,
+  /** The whole map at 80%, about the frame's centre, so it has room at both sides — "terlalu sempit jadinya". */
+  scale: 0.8,
 };
 
 /** A line drawn on from its start: `p` 0 → 1. */
@@ -244,7 +247,9 @@ export const SC04 = () => {
         floor={TUNTUN4.floor}
       />
       </div>
-      {/* 3859: the three move left to head the map as the photo goes */}
+      {/* 3859: the three move left to head the map as the photo goes; the map
+          settles at 80% about the centre as they do */}
+      <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - (1 - MAP.scale) * toMap).toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MAP.cy}px` }}>
       {["Tetap kerja", "Tetap bangun karier", "Tetap belajar"].map((label, i) => (
         <Todo key={label} label={label} x={TODO.x + (MAP.x - TODO.x) * toMap} y={TODO.y[i] + (MAP.y[i] - TODO.y[i]) * toMap} at={L(B4.tetap[i])} />
       ))}
@@ -274,6 +279,7 @@ export const SC04 = () => {
       <Say text="Penghasilan" x={MAP.hub} y={MAP.cy} at={hubAt} anchor="left" size={TODO.size} weight={700} />
       <Say text="ubah jadi asset" x={MAP.leaf} y={MAP.branchY[0]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
       <Say text="Simpan" x={MAP.leaf} y={MAP.branchY[1]} at={L(B4.aset)} anchor="left" size={TODO.size} weight={700} />
+      </div>
     </Stage>
   );
 };
