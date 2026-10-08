@@ -322,6 +322,11 @@ export const SC08 = {
 
 // ═══ PART 02 — IKUT PUNYA BISNIS ══════════════════════════════════════════
 export const SC09 = {
+  /**
+   * "8807 muncul text 'fakta menarik' … di atas fakta menarik, ada visual
+   * Lampu.png. Di belakang lampu png ada visual sunburst".
+   */
+  fakta: 8807,
   company: 8820, // "dari investasi"
   nggak: 8905, // "kita nggak harus bekerja di sebuah perusahaan"
   karyawan: 9255, // "Ada orang yang bekerja di BCA"

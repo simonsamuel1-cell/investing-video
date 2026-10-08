@@ -10,11 +10,52 @@
  * brand's mark redrawn. No price, no recommendation.
  */
 import { useCurrentFrame } from "remotion";
+import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { ease, Pill, Icon, Link, Node, Say, Worker, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, Worker, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+
+/** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
+const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
 
 // ═══ SC09 — one company: the employee and the investor ═══════════════════
+/**
+ * "FAKTA MENARIK" — the lamp on a sunburst, the two words under it: "fakta"
+ * handwritten in ink, "menarik" in Plus Jakarta, indigo. "Lampu.png" is
+ * 5000 × 5000, the bulb solid in rows 253–4757; the sunburst is 30 px wider
+ * than the bulb is tall ("diameternya 30 px lebih besar aja dari Lampu.png").
+ */
+const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, textY: 680 };
+const LAMP_IMG_H = (LAMP.h * 5000) / (4757 - 253);
+const SUN_D = LAMP.h + 30;
+
+const Fakta = ({ at }: { at: number }) => {
+  const c = usePalette();
+  const life = useLife(at);
+  if (life <= 0.001) return null;
+  const R = SUN_D / 2;
+  const wedge = (k: number) => {
+    const a0 = (k / LAMP.rays) * Math.PI * 2;
+    const a1 = ((k + 1) / LAMP.rays) * Math.PI * 2;
+    return `M ${R} ${R} L ${R + Math.cos(a0) * R} ${R + Math.sin(a0) * R} A ${R} ${R} 0 0 1 ${R + Math.cos(a1) * R} ${R + Math.sin(a1) * R} Z`;
+  };
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      {/* the sunburst behind the lamp — alternating rays, cut to a circle */}
+      <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R }}>
+        {Array.from({ length: LAMP.rays }, (_, k) => (
+          <path key={k} d={wedge(k)} fill={k % 2 ? c.indigoSoft : c.indigo} />
+        ))}
+      </svg>
+      <Cutout src="art/vi01/lampu.png" aspect={1} x={LAMP.cx} y={LAMP.cy + LAMP.h / 2 + ((5000 - 4757) / 5000) * LAMP_IMG_H} h={LAMP_IMG_H} at={at} rise={0} />
+      <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1 }}>
+        <span style={{ fontFamily: VIBES, fontSize: LAMP.script, color: c.ink }}>fakta</span>
+        <span style={{ fontFamily: theme.text.family, fontSize: LAMP.sans, fontWeight: 700, color: c.indigo }}>menarik</span>
+      </div>
+    </div>
+  );
+};
+
 const COMPANY: NodeBox = { x: 760, y: 330, w: 400, h: 250 };
 const INVESTOR: NodeBox = { x: 1420, y: 560, w: 340, h: 150 };
 
@@ -61,6 +102,8 @@ export const SC09 = () => {
         />
       ) : null}
       <Say text="sebagian kecil bisnisnya" x={INVESTOR.x + INVESTOR.w / 2} y={INVESTOR.y + INVESTOR.h + 50} at={L(B9.slice) + 30} size={34} weight={700} color={theme.color.cyanInk} />
+      {/* drawn last, over the older SC09 pieces until they are re-directed */}
+      <Fakta at={L(B9.fakta)} />
     </Stage>
   );
 };
