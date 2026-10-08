@@ -497,7 +497,7 @@ const SALARY = 20_000_000;
 const SENT = 5_000_000;
 const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
 
-const MiniBalance = ({ x, y, label, amount, swell = 0 }: { x: number; y: number; label: string; amount: string; swell?: number }) => {
+const MiniBalance = ({ x, y, label, amount, swell = 0, weight = 500 }: { x: number; y: number; label: string; amount: string; swell?: number; weight?: number }) => {
   const c = usePalette();
   const shadow = useShadow();
   return (
@@ -506,7 +506,7 @@ const MiniBalance = ({ x, y, label, amount, swell = 0 }: { x: number; y: number;
       <div style={{ position: "absolute", left: MONTH.pad, top: 0, bottom: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: MONTH.labelGap }}>
         <div style={{ fontSize: MONTH.label, fontWeight: 500, lineHeight: 1 }}>{label}</div>
         {/* `swell` (0 → 1 → 0): the amount grows a little and flushes green, then settles */}
-        <div style={{ position: "relative", fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
+        <div style={{ position: "relative", fontSize: MONTH.amount, fontWeight: weight, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
           {amount}
           {swell > 0.001 ? <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{amount}</span> : null}
         </div>
@@ -794,7 +794,7 @@ const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
  * little and flushes green, then settles back to ink; a green up-triangle
  * comes in beside it as the animation starts.
  */
-const AccountBalance = ({ x, y, at, payAt }: { x: number; y: number; at: number; payAt: number }) => {
+const AccountBalance = ({ x, y, at, payAt, sendAt }: { x: number; y: number; at: number; payAt: number; sendAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -802,6 +802,9 @@ const AccountBalance = ({ x, y, at, payAt }: { x: number; y: number; at: number;
   const life = useLife(at);
   if (life <= 0.001) return null;
   const count = ease(f, payAt, m.sec(1));
+  /* "Account balance juga berkurang jadi Rp 20,000,000" — as the second coin leaves it */
+  const sent = INVEST8 * ease(f, sendAt, m.sec(0.6));
+  const balance = BAL.from + (BAL.to - BAL.from) * count - sent;
   /* up and back, quickly: 0 → 1 → 0 over the count */
   const swell = ease(f, payAt, m.sec(0.3)) * (1 - ease(f, payAt + m.sec(0.35), m.sec(0.45)));
   const tri = ease(f, payAt, m.reveal);
@@ -813,8 +816,8 @@ const AccountBalance = ({ x, y, at, payAt }: { x: number; y: number; at: number;
         <div style={{ fontSize: BAL.amount, fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
           {/* the colour eases through green and back by blending two copies */}
           <span style={{ position: "relative", display: "inline-block" }}>
-            <span style={{ color: c.ink }}>{rp(BAL.from + (BAL.to - BAL.from) * count)}</span>
-            <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{rp(BAL.from + (BAL.to - BAL.from) * count)}</span>
+            <span style={{ color: c.ink }}>{rp(balance)}</span>
+            <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{rp(balance)}</span>
           </span>
         </div>
         {tri > 0.001 ? (
@@ -888,12 +891,12 @@ export const SC08 = () => {
       {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
       <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - MONTH.cardW / 2 + 60, y: investY + MONTH.cardH / 2 }} at={L(B8.invest)} out={BLOCK.END} />
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
-        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} />
+        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} />
       </div>
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
-          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} />
+          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} weight={700} />
         </div>
       ) : null}
     </Stage>
