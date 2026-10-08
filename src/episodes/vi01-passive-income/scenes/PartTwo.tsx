@@ -27,8 +27,11 @@ const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
  */
 /** `gap` puts 35 px of clear space between the sunburst's foot and the words' tops ("jadiin 35 px"). */
 const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, gap: 36, textY: 0 };
-/** "rotate kecil bolak balik … more like stop motion": the rays jump between two angles, held a few frames each. */
-const WOBBLE = { deg: 5, holdSec: 0.15 };
+/**
+ * "pilih 2 fase aja: fase normal dan fase rotate. fase 1, 2 detik; fase 2, 2
+ * detik; balik lagi." — a jump, no in-between frames.
+ */
+const WOBBLE = { deg: 5, holdSec: 2 };
 const LAMP_IMG_H = (LAMP.h * 5000) / (4757 - 253);
 const SUN_D = LAMP.h + 30;
 
@@ -38,7 +41,7 @@ const Fakta = ({ at }: { at: number }) => {
   const m = useMotion();
   const life = useLife(at);
   /* stop motion: no in-between frames, just a jump every hold */
-  const tilt = Math.floor(f / m.sec(WOBBLE.holdSec)) % 2 ? WOBBLE.deg : -WOBBLE.deg;
+  const tilt = Math.floor(f / m.sec(WOBBLE.holdSec)) % 2 ? WOBBLE.deg : 0;
   if (life <= 0.001) return null;
   const R = SUN_D / 2;
   const wedge = (k: number) => {
