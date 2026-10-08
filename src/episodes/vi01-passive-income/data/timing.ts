@@ -285,6 +285,12 @@ export const SC07 = {
 };
 
 export const SC08 = {
+  /**
+   * Simon: "7803 Ada Orang Kerja png di layar bagian kanan, lalu di atasnya
+   * ada UI Account balance, lalu muncul juga GedungKantor.png di bagian layar
+   * sebelah kiri". They hold until the relay ("estafet").
+   */
+  office: 7803,
   muda: 7819, // "Waktu masih muda,"
   idealnya: 8069, // "Tapi idealnya,"
   tumbuh: 8213, // "aset kita juga ikut tumbuh."

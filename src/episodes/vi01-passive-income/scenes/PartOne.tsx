@@ -7,9 +7,9 @@
  * those colours carry into the life-long picture and the relay.
  */
 import { useCurrentFrame } from "remotion";
-import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Icon, Node, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Icon, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -769,103 +769,43 @@ export const SC07 = () => {
 };
 
 // ═══ SC08 — over a working life, then the relay ══════════════════════════
-const LIFE = { x0: 260, x1: 1660, base: 800, top: 300 };
-/** Illustrative shapes, not data: work rises and eases off; assets keep growing. */
-const work = (t: number) => 150 + 120 * Math.sin(Math.PI * Math.min(1, t * 0.95));
-const asset = (t: number) => 18 + 300 * Math.pow(t, 1.7);
-const RELAY: NodeBox[] = [
-  { x: 220, y: 480, w: 360, h: 150 },
-  { x: 1340, y: 480, w: 360, h: 150 },
-];
+
+/**
+ * SC08's opening — the office and the worker. "GedungKantor.png", 1086 × 1448,
+ * standing on row 1444; "Orang Kerja.png", 1312 × 1199, feet on row 1139,
+ * unmirrored, so he faces the office. Both stand on the same floor line.
+ */
+const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1448 };
+const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, cardY: 170 };
+
+/** "UI Account balance" — SC01's balance card, on its own: the label, then the balance. */
+const AccountBalance = ({ x, y, at }: { x: number; y: number; at: number }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const life = useLife(at);
+  if (life <= 0.001) return null;
+  const W = 460;
+  return (
+    <div style={{ position: "absolute", left: x - W / 2, top: y, width: W, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft, padding: "30px 34px", boxSizing: "border-box", opacity: life, fontFamily: theme.text.family, lineHeight: 1 }}>
+      <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
+      <div style={{ marginTop: 18, fontSize: 48, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>Rp {price(50_000_000)}</div>
+    </div>
+  );
+};
 
 export const SC08 = () => {
-  const f = useCurrentFrame();
-  const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC08);
-  const chartOut = L(B8.estafet) - 24;
-  const life = useLife(L(B8.muda) - 10, chartOut);
-  /** Drawn left to right: youth first, then the rest under "Tapi idealnya". */
-  const reach = 0.3 * ease(f, L(B8.muda), 60) + 0.7 * ease(f, L(B8.idealnya), L(B8.tumbuh) - L(B8.idealnya) + 30);
-  const N = 60;
-  const pts = Array.from({ length: N + 1 }, (_, i) => i / N);
-  const X = (t: number) => LIFE.x0 + (LIFE.x1 - LIFE.x0) * t;
-  const workPath = `M${X(0)},${LIFE.base} ` + pts.map((t) => `L${X(t)},${LIFE.base - work(t)}`).join(" ") + ` L${X(1)},${LIFE.base} Z`;
-  const assetPath =
-    `M${X(0)},${LIFE.base - work(0)} ` +
-    pts.map((t) => `L${X(t)},${LIFE.base - work(t) - asset(t)}`).join(" ") +
-    " " +
-    [...pts].reverse().map((t) => `L${X(t)},${LIFE.base - work(t)}`).join(" ") +
-    " Z";
-  /** The baton: from the worker's hand to the asset's, under "kita teruskan". */
-  const pass = ease(f, L(B8.teruskan), L(B8.aset) - L(B8.teruskan));
-  /** The baton's centre, from beside the worker's node to beside the asset's. */
-  const from = RELAY[0].x + RELAY[0].w + 130;
-  const bx = from + (RELAY[1].x - 130 - from) * pass;
-  const baton = ease(f, L(B8.kerja) + 40, m.reveal);
   return (
     <Stage>
-      {life > 0.001 ? (
-        <div style={{ opacity: life }}>
-          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-            <defs>
-              <clipPath id="vi01-life-reach">
-                <rect x={0} y={0} width={X(reach)} height={theme.canvas.height} />
-              </clipPath>
-            </defs>
-            <g clipPath="url(#vi01-life-reach)">
-              <path d={workPath} fill={theme.color.indigoWashStrong} stroke={c.indigo} strokeWidth={3} />
-              <path d={assetPath} fill={theme.color.hlCyan} stroke={theme.color.cyanInk} strokeWidth={3} />
-            </g>
-            <line x1={LIFE.x0} y1={LIFE.base} x2={LIFE.x1} y2={LIFE.base} stroke={c.slate} strokeWidth={theme.shape.rule} />
-          </svg>
-          <Say text="Muda" x={LIFE.x0} y={LIFE.base + 42} at={L(B8.muda)} anchor="left" size={34} weight={600} color={c.slate} />
-          <Say text="Tua" x={LIFE.x1} y={LIFE.base + 42} at={L(B8.idealnya)} anchor="right" size={34} weight={600} color={c.slate} />
-          <Say text="Dari kerja" x={X(0.12)} y={LIFE.base - 80} at={L(B8.muda) + 30} anchor="left" size={36} weight={700} color={c.indigo} />
-          <Say text="Dari aset" x={X(0.86)} y={LIFE.base - work(0.86) - asset(0.86) / 2} at={L(B8.tumbuh)} anchor="right" size={36} weight={700} color={theme.color.cyanInk} />
-          <Say text="Saat income naik, aset ikut tumbuh" x={960} y={180} at={L(B8.idealnya)} size={48} />
-        </div>
-      ) : null}
+      {/* 7803: the office on the left; on the right the worker, his account balance over him —
+          the rest of 7803-8750 removed ("Visual dari 7803-8750 remove aja") */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src="art/vi01/gedung-kantor.png" aspect={OFFICE.aspect} x={OFFICE.x} y={OFFICE.feet + (1 - OFFICE.floor) * OFFICE.h} h={OFFICE.h} at={L(B8.office) + m.sec(0.25)} shadow floor={OFFICE.floor} />
+        <Cutout src="art/vi01/orang-kerja.png" aspect={WORKER8.aspect} x={WORKER8.x} y={WORKER8.feet + (1 - WORKER8.floor) * WORKER8.h} h={WORKER8.h} at={L(B8.office)} shadow floor={WORKER8.floor} />
+      </div>
+      <AccountBalance x={WORKER8.x} y={WORKER8.cardY} at={L(B8.office) + m.sec(0.15)} />
 
-      <Say text="Seperti estafet" x={960} y={220} at={L(B8.estafet)} size={60} weight={800} />
-      <Node box={RELAY[0]} label="Kerja" icon="briefcase" at={L(B8.kerja)} size={42} />
-      {f >= L(B8.estafet) ? (
-        <div
-          style={{
-            position: "absolute",
-            left: RELAY[0].x + RELAY[0].w + 60,
-            top: RELAY[0].y + RELAY[0].h / 2,
-            width: RELAY[1].x - RELAY[0].x - RELAY[0].w - 120,
-            height: 0,
-            borderTop: `${theme.shape.rule}px dashed ${c.muted}`,
-            opacity: ease(f, L(B8.estafet) + 20, m.fade),
-          }}
-        />
-      ) : null}
-      {baton > 0.001 ? (
-        <div style={{ position: "absolute", left: bx - 90, top: RELAY[0].y + 28, opacity: baton }}>
-          <div
-            style={{
-              width: 180,
-              height: 94,
-              borderRadius: 999,
-              background: pass > 0.5 ? theme.color.cyanInk : c.indigo,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 10,
-              color: c.cardBg,
-              fontFamily: theme.text.family,
-              fontSize: 36,
-              fontWeight: 800,
-            }}
-          >
-            <Icon name="coin" size={44} color={c.cardBg} />
-            Uang
-          </div>
-        </div>
-      ) : null}
-      <Node box={RELAY[1]} label="Aset" icon="box" tone="cyan" at={L(B8.teruskan) + 60} size={42} filled={ease(f, L(B8.aset), 20)} />
     </Stage>
   );
 };
