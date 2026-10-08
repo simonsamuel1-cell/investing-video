@@ -331,6 +331,12 @@ export const SC09 = {
   fakta: 8807,
   /** "8908 Buat text di bawah fakta menarik dengan text box garis putus putus indigo" */
   tak: 8908,
+  /**
+   * "9250 visualnya fade out blur, kecuali lampu dan sunburst. lalu fade in
+   * blur … Lampu dan sunburstnya mengecil 50% dan geser naik. Muncul gambar
+   * KerjaKorporat.png, buat gambarnya jadi rounded corner."
+   */
+  korporat: 9250,
   company: 8820, // "dari investasi"
   nggak: 8905, // "kita nggak harus bekerja di sebuah perusahaan"
   karyawan: 9255, // "Ada orang yang bekerja di BCA"

@@ -9,9 +9,9 @@
  * ⚠ NO LOGOS. Companies are a name and their ticker on a card — never a
  * brand's mark redrawn. No price, no recommendation.
  */
-import { useCurrentFrame } from "remotion";
+import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
-import { Stage, theme, useMotion, usePalette } from "../../../core";
+import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
 import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
@@ -36,15 +36,20 @@ const WOBBLE = { deg: 10, holdSec: 1 }; // then "tiap 1 detik aja deh, rotatenya
 const LAMP_IMG_H = (LAMP.h * 5000) / (4757 - 253);
 const SUN_D = LAMP.h + 30;
 
-const Fakta = ({ at }: { at: number }) => {
+const Fakta = ({ at, shrinkAt }: { at: number; shrinkAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const life = useLife(at);
   /* stop motion: no in-between frames, just a jump every hold */
   const tilt = Math.floor(f / m.sec(WOBBLE.holdSec)) % 2 ? WOBBLE.deg : 0;
+  /* 9250: the words blur out; the lamp and its sunburst go to half size, up to the top */
+  const shrink = ease(f, shrinkAt, m.move);
+  const wordsOut = ease(f, shrinkAt, m.move);
   if (life <= 0.001) return null;
   const R = SUN_D / 2;
+  const k = 1 - KORP.lampShrink * shrink;
+  const dy = (KORP.lampY - LAMP.cy) * shrink;
   const wedge = (k: number) => {
     const a0 = (k / LAMP.rays) * Math.PI * 2;
     const a1 = ((k + 1) / LAMP.rays) * Math.PI * 2;
@@ -52,16 +57,40 @@ const Fakta = ({ at }: { at: number }) => {
   };
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      <div style={{ position: "absolute", inset: 0, transform: `translateY(${dy.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${LAMP.cx}px ${LAMP.cy}px` }}>
       {/* the sunburst behind the lamp — alternating rays, cut to a circle */}
       <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R, transform: `rotate(${tilt}deg)` }}>
         {/* yellow rays only — the orange ones taken out, left empty ("biarkan bagian yang dihapus itu kosong") */}
         {Array.from({ length: LAMP.rays }, (_, k) => (k % 2 ? <path key={k} d={wedge(k)} fill={theme.color.sunYellow} /> : null))}
       </svg>
       <Cutout src="art/vi01/lampu.png" aspect={1} x={LAMP.cx} y={LAMP.cy + LAMP.h / 2 + ((5000 - 4757) / 5000) * LAMP_IMG_H} h={LAMP_IMG_H} at={at} rise={0} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.cy + LAMP.h / 2 + LAMP.gap + LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1 }}>
+      </div>
+      {wordsOut < 0.999 ? (
+      <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.cy + LAMP.h / 2 + LAMP.gap + LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1, opacity: 1 - wordsOut, filter: `blur(${(wordsOut * KORP.blur).toFixed(2)}px)` }}>
         <span style={{ fontFamily: VIBES, fontSize: LAMP.script, color: c.ink }}>fakta</span>
         <span style={{ fontFamily: theme.text.family, fontSize: LAMP.sans, fontWeight: 700, color: c.indigo }}>menarik</span>
       </div>
+      ) : null}
+    </div>
+  );
+};
+
+/**
+ * 9250's picture: "KerjaKorporat.png" (1448 × 1086), rounded, blurring in
+ * under the lamp once the words have blurred out.
+ */
+const KORP = { lampShrink: 0.5, lampY: 175, blur: 14, top: 290, h: 640, radius: 32 };
+const KORP_W = (KORP.h * 1448) / 1086;
+
+const Korporat = ({ at }: { at: number }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const shadow = useShadow();
+  const t = ease(f, at, m.move);
+  if (t <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", left: (theme.canvas.width - KORP_W) / 2, top: KORP.top, width: KORP_W, height: KORP.h, borderRadius: KORP.radius, overflow: "hidden", boxShadow: shadow.soft, opacity: t, filter: `blur(${((1 - t) * KORP.blur).toFixed(2)}px)` }}>
+      <Img src={staticFile("art/vi01/kerja-korporat.png")} style={{ width: "100%", height: "100%", objectFit: "cover" }} showInTimeline={false} />
     </div>
   );
 };
@@ -74,13 +103,21 @@ export const SC09 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC09);
+  const f = useCurrentFrame();
+  const out = ease(f, L(B9.korporat), m.move);
   /* "visual yang ada di scene ini sebelumnya, hapus aja (kecuali visual dariku)" */
   return (
     <Stage>
       {/* in from the first frame, so it comes in with the CameraCut */}
-      <Fakta at={-m.reveal} />
-      {/* Simon's short line, under "fakta menarik", in an indigo dashed box */}
-      <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} italic={false} />
+      <Fakta at={-m.reveal} shrinkAt={L(B9.korporat)} />
+      {/* Simon's short line, under "fakta menarik", in an indigo dashed box — blurs out at 9250 */}
+      {out < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - out, filter: `blur(${(out * KORP.blur).toFixed(2)}px)` }}>
+          <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} italic={false} />
+        </div>
+      ) : null}
+      {/* then the office floor blurs in */}
+      <Korporat at={L(B9.korporat) + m.move / 2} />
     </Stage>
   );
 };
