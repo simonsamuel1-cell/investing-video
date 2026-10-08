@@ -225,6 +225,12 @@ export const SC06 = {
   invested: [5800, 5885] as const,
   /** "5931 Muncul text box garis putus putus di atas subtitle, isinya 'Investasi bukan cuma soal uang'" */
   notMoney: 5931,
+  /**
+   * "6127 text dan textbox nya juga ikut hilang, tapi dengan reverse
+   * animation. lalu muncul OrangTuntun2 dari bawah, masuk … diperbesar hingga
+   * perut." The months go with it.
+   */
+  tuntun: 6127,
   modal: 5651, // "modal besar dulu."
   strike: 5698,
   habit: 5823, // "mulai membangun kebiasaannya."

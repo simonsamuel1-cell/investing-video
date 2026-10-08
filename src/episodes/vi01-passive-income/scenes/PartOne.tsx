@@ -565,6 +565,10 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   );
 };
 
+/** "OrangTuntun2.png", 1622 × 2872: hair from row 190, belly at row 1300, head on column 813 — head to belly, head at y 200. */
+const TUNTUN6 = { aspect: 1622 / 2872, rows: 2872, top: 190, belly: 1300, headU: 813 / 1622, floor: 2767 / 2872, from: 200 };
+const TUNTUN6_H = ((theme.captionBand.top - TUNTUN6.from) * TUNTUN6.rows) / (TUNTUN6.belly - TUNTUN6.top);
+
 /** The dashed box, just above the caption band. */
 const NOT_MONEY = { w: 980, h: 110, size: 46, y: theme.captionBand.top - 110 - 24 };
 
@@ -604,7 +608,7 @@ export const SC06 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const L = (g: number) => local(g, BLOCK.SC06);
-  const firstOut = L(B6.loop) - 30;
+  const firstOut = L(B6.tuntun);
   const m = useMotion();
   const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * ease(f, L(s), 24), 0);
   return (
@@ -618,7 +622,22 @@ export const SC06 = () => {
         <MonthRow key={i} i={i} at={L(B6.months) + m.fade + i * 6} send={L(send)} out={firstOut} />
       ))}
       <Invested at={L(B6.months) + m.fade + 6} out={firstOut} count={[L(B6.invested[0]), L(B6.invested[1])]} arrivals={B6.send.map((s) => L(s) + m.move)} />
-      <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} />
+      <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} closeAt={L(B6.tuntun)} />
+      {/* then, once the box has closed, OrangTuntun2 comes up from below, head to belly, cut at the caption band */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout
+          src="art/vi01/orang-tuntun-2.png"
+          aspect={TUNTUN6.aspect}
+          x={theme.canvas.width / 2 - (TUNTUN6.headU - 0.5) * TUNTUN6_H * TUNTUN6.aspect}
+          y={TUNTUN6.from - (TUNTUN6.top / TUNTUN6.rows) * TUNTUN6_H + TUNTUN6_H}
+          h={TUNTUN6_H}
+          at={L(B6.tuntun) + m.sec(1.1)}
+          rise={theme.canvas.height - TUNTUN6.from}
+          riseFrames={m.move}
+          shadow
+          floor={TUNTUN6.floor}
+        />
+      </div>
 
       {/* the loop that makes the skill */}
       <Node box={LOOP[0]} label="Belajar" icon="book" at={L(B6.belajar)} size={38} />
