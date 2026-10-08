@@ -787,7 +787,7 @@ const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
  * The chart at 8310: three columns — the office, the worker with his balance,
  * Total invested — the two pictures at 80%, joined by dashed arrows at `linkY`.
  */
-const CHART8 = { x: [330, 960, 1580], scale: 0.8, linkY: 560, links: [[570, 720], [1195, 1310]] as [number, number][] };
+const CHART8 = { x: [330, 960, 1650], scale: 0.8, linkY: 560, links: [[570, 720], [1195, 1300]] as [number, number][] };
 /** What reaches Total invested at SC08.invest. */
 const INVEST8 = 5_000_000;
 const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
@@ -906,7 +906,8 @@ export const SC08 = () => {
       </div>
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
-        <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
+        /* scaled with the row, about the worker's feet ("scalenya anchor to Orang Kerja") */
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${(WORKER8.x + workerDx - investDx).toFixed(2)}px ${WORKER8.feet}px` }}>
           <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} weight={700} />
         </div>
       ) : null}
