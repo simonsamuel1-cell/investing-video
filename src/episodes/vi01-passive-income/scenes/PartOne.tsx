@@ -694,26 +694,60 @@ export const SC06 = () => {
 
 // ═══ SC07 — human asset vs financial asset ═══════════════════════════════
 const HALF = { y: 210, w: 780, h: 690, left: 140, right: 1000 };
+/** The heading: typed at the frame's centre, then up to the top. */
+const KEKAYAAN = { text: "Kekayaan punya 2 bagian", size: 64, topY: 150, cps: 1 };
+/**
+ * The first card, smaller: a title and its three rows, no rule, the height
+ * fitted to them; it opens out from its own centre, at the frame's centre.
+ */
+const CARD1 = { w: 560, pad: 44, title: 50, gap: 34, row: 74, item: 38, y: 330 };
+const CARD1_H = CARD1.pad + CARD1.title + CARD1.gap + 3 * CARD1.row + CARD1.pad - CARD1.row / 2 + CARD1.item / 2;
 
 export const SC07 = () => {
+  const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC07);
   const rows = (x: number, items: [IconName, string][], ats: readonly number[], tone: "indigo" | "cyan") =>
     items.map(([icon, label], i) => (
       <Item key={label} x={x} y={HALF.y + 220 + i * 105} icon={icon} label={label} tone={tone} at={L(ats[i])} />
     ));
+  /* the heading: typed in the middle, then up */
+  const typedAt = L(B7.heading);
+  const shown = Math.max(0, Math.floor((f - typedAt) * KEKAYAAN.cps));
+  const upAt = typedAt + Math.ceil(KEKAYAAN.text.length / KEKAYAAN.cps) + m.sec(0.3);
+  const up = ease(f, upAt, m.move);
+  const headY = theme.canvas.height / 2 + (KEKAYAAN.topY - theme.canvas.height / 2) * up;
+  /* the first card, opening from its centre */
+  const open = ease(f, L(B7.card1), m.sec(0.6));
+  const cardIn = ease(f, L(B7.card1), m.fade);
+  const cardW = 40 + (CARD1.w - 40) * open;
   return (
     <Stage>
-      <Say text="Kekayaan kita punya dua bagian" x={960} y={122} at={L(B7.split) - 20} size={48} />
-      <Sheet x={HALF.left} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.split)} />
-      <Sheet x={HALF.right} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.split) + 8} />
-      <Say text="Human Asset" x={HALF.left + HALF.w / 2} y={HALF.y + 90} at={L(B7.human)} size={60} weight={800} color={c.indigo} />
+      {f >= typedAt ? (
+        <div style={{ position: "absolute", left: 0, right: 0, top: headY - KEKAYAAN.size * 0.6, textAlign: "center", fontFamily: theme.text.family, fontSize: KEKAYAAN.size, fontWeight: 800, color: c.ink, lineHeight: 1.2, whiteSpace: "pre" }}>
+          {KEKAYAAN.text.slice(0, shown)}
+        </div>
+      ) : null}
+
+      {cardIn > 0.001 ? (
+        <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}`, boxShadow: shadow.rest, opacity: cardIn, overflow: "hidden" }}>
+          {/* the contents keep their place while the card opens around them */}
+          <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2, top: 0, width: CARD1.w, height: CARD1_H }}>
+            <Say text="Human Asset" x={CARD1.w / 2} y={CARD1.pad + CARD1.title / 2} at={L(B7.human)} size={CARD1.title} weight={800} color={c.indigo} />
+            {([["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]] as [IconName, string][]).map(([icon, label], i) => (
+              <Item key={label} x={CARD1.pad + 30} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={L(B7.humanRows[i])} size={CARD1.item} />
+            ))}
+          </div>
+        </div>
+      ) : null}
+
+      {/* the second card — unchanged for now, it waits for its own word */}
+      <Sheet x={HALF.right} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.financial)} />
       <Say text="Financial Asset" x={HALF.right + HALF.w / 2} y={HALF.y + 90} at={L(B7.financial)} size={60} weight={800} color={theme.color.cyanInk} />
-      {rows(HALF.left + 120, [["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]], B7.humanRows, "indigo")}
       {rows(HALF.right + 120, [["jar", "Tabungan"], ["chart", "Investasi"], ["box", "Aset"]], B7.financialRows, "cyan")}
-      <div style={{ position: "absolute", left: HALF.left + 60, top: HALF.y + 548, width: HALF.w - 120, height: theme.shape.hairline, background: c.border }} />
-      <div style={{ position: "absolute", left: HALF.right + 60, top: HALF.y + 548, width: HALF.w - 120, height: theme.shape.hairline, background: c.border }} />
-      <Item x={HALF.left + 120} y={HALF.y + 620} icon="hourglass" label="Punya batas" tone="indigo" at={L(B7.batas)} size={46} />
+      <div style={{ position: "absolute", left: HALF.right + 60, top: HALF.y + 548, width: HALF.w - 120, height: theme.shape.hairline, background: c.border, opacity: ease(f, L(B7.financial), m.reveal) }} />
       <Item x={HALF.right + 120} y={HALF.y + 620} icon="chart" label="Bisa terus dimiliki" tone="cyan" at={L(B7.terus)} size={46} />
     </Stage>
   );

@@ -256,6 +256,15 @@ export const SC06 = {
 };
 
 export const SC07 = {
+  /**
+   * Simon: "6653 mulai muncul text 'Kekayaan punya 2 bagian' di tengah
+   * horizontal vertikal, animasi munculnya adalah ketikan, setelah muncul
+   * textnya geser naik ke bagian atas layar." Then "6761 muncul kartu pertama,
+   * tapi muncul dari tengah dulu secara horizontal … kecilin … fit to 3 poin
+   * dan judul."
+   */
+  heading: 6653,
+  card1: 6761,
   split: 6708, // "dua bagian."
   human: 6805, // "human asset:"
   humanRows: [6859, 6901, 6949] as const, // waktu, kemampuan, pengalaman
