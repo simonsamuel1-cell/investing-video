@@ -26,7 +26,8 @@ const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
  * than the bulb is tall ("diameternya 30 px lebih besar aja dari Lampu.png").
  */
 /** `gap` puts 35 px of clear space between the sunburst's foot and the words' tops ("jadiin 35 px"). */
-const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, gap: 36, textY: 0 };
+/** The whole group — lamp, sunburst, words — 100 px higher than first set ("grup them all, lalu geser naik 100 px"). */
+const LAMP = { cx: 960, cy: 300, h: 300, rays: 24, script: 140, sans: 84, gap: 36, textY: 0 };
 /**
  * "pilih 2 fase aja: fase normal dan fase rotate. fase 1, 2 detik; fase 2, 2
  * detik; balik lagi." — a jump, no in-between frames.
