@@ -497,7 +497,7 @@ const SALARY = 20_000_000;
 const SENT = 5_000_000;
 const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
 
-const MiniBalance = ({ x, y, label, amount }: { x: number; y: number; label: string; amount: string }) => {
+const MiniBalance = ({ x, y, label, amount, swell = 0 }: { x: number; y: number; label: string; amount: string; swell?: number }) => {
   const c = usePalette();
   const shadow = useShadow();
   return (
@@ -505,7 +505,11 @@ const MiniBalance = ({ x, y, label, amount }: { x: number; y: number; label: str
       {/* label and amount 20 px apart ("jaraknya jadi 20 px aja"), the pair centred in the card */}
       <div style={{ position: "absolute", left: MONTH.pad, top: 0, bottom: 0, display: "flex", flexDirection: "column", justifyContent: "center", gap: MONTH.labelGap }}>
         <div style={{ fontSize: MONTH.label, fontWeight: 500, lineHeight: 1 }}>{label}</div>
-        <div style={{ fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{amount}</div>
+        {/* `swell` (0 → 1 → 0): the amount grows a little and flushes green, then settles */}
+        <div style={{ position: "relative", fontSize: MONTH.amount, fontWeight: 500, lineHeight: 1, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
+          {amount}
+          {swell > 0.001 ? <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{amount}</span> : null}
+        </div>
       </div>
     </div>
   );
@@ -864,6 +868,8 @@ export const SC08 = () => {
   /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
   const investY = (theme.captionBand.top - MONTH.cardH) / 2;
   const invested = INVEST8 * ease(f, L(B8.invest) + m.sec(1), m.sec(0.6));
+  /* the same pulse as the balance's: up and back, black → green → black */
+  const investSwell = ease(f, L(B8.invest) + m.sec(1), m.sec(0.3)) * (1 - ease(f, L(B8.invest) + m.sec(1.35), m.sec(0.45)));
   return (
     <Stage>
       {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
@@ -887,7 +893,7 @@ export const SC08 = () => {
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
-          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} />
+          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} />
         </div>
       ) : null}
     </Stage>
