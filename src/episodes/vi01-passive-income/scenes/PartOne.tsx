@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Sheet, Icon, Link, Node, OUTSIDE_RESERVES, Say, TypeBox, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Sheet, Icon, Node, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -466,14 +466,7 @@ export const SC05 = () => {
 };
 
 // ═══ SC06 — the habit, not the lump sum ══════════════════════════════════
-const LOOP: NodeBox[] = [
-  { x: 420, y: 290, w: 360, h: 130 },
-  { x: 700, y: 640, w: 420, h: 130 },
-  { x: 140, y: 640, w: 360, h: 130 },
-];
 /** The skill bar steps up once per turn of the loop — on the loop's own beats. */
-const SKILL = { x: 1380, w: 150, base: 860, heights: [130, 250, 370, 500] };
-const SKILL_STEPS = [B6.belajar, B6.evaluasi, B6.baik, B6.kelola];
 
 /**
  * THE THREE MONTHS — "Bulan 1 … 3", each a small Bank balance card and, after a
@@ -565,9 +558,50 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   );
 };
 
-/** "OrangTuntun2.png", 1622 × 2872: hair from row 190, belly at row 1300, head on column 813 — head to belly, head at y 200. */
-const TUNTUN6 = { aspect: 1622 / 2872, rows: 2872, top: 190, belly: 1300, headU: 813 / 1622, floor: 2767 / 2872, from: 200 };
-const TUNTUN6_H = ((theme.captionBand.top - TUNTUN6.from) * TUNTUN6.rows) / (TUNTUN6.belly - TUNTUN6.top);
+/**
+ * THE WINDING ROAD — after Simon's reference: a dashed path that turns back
+ * and forth, here running left to right; a bright start point and a dot at
+ * every turn, no words. Still for now — "Bikin dulu aja, nnti aku arahin
+ * animasinya".
+ */
+const ROAD = { x0: 230, x1: 1690, top: 330, bottom: 750, turns: 5, dash: 18, gap: 14, width: 6, start: 22, dot: 11 };
+const ROAD_PATH = (() => {
+  /* the start on the mid line, then a turn point alternately high and low,
+     joined by S-curves with level tangents at every turn — one flowing road */
+  const mid = (ROAD.top + ROAD.bottom) / 2;
+  const n = ROAD.turns + 1;
+  const pts = Array.from({ length: n + 1 }, (_, k) => ({
+    x: ROAD.x0 + ((ROAD.x1 - ROAD.x0) * k) / n,
+    y: k === 0 || k === n ? mid : k % 2 ? ROAD.top : ROAD.bottom,
+  }));
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for (let k = 1; k < pts.length; k++) {
+    const a = pts[k - 1];
+    const b = pts[k];
+    const h = (b.x - a.x) * 0.55;
+    d += ` C ${a.x + h} ${a.y} ${b.x - h} ${b.y} ${b.x} ${b.y}`;
+  }
+  return { d, turns: pts.slice(1, -1), start: pts[0] };
+})();
+
+const WindingPath = ({ at }: { at: number }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const life = useLife(at);
+  if (life <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        <path d={ROAD_PATH.d} fill="none" stroke={c.indigo} strokeWidth={ROAD.width} strokeLinecap="round" strokeDasharray={`${ROAD.dash} ${ROAD.gap}`} />
+        {ROAD_PATH.turns.map((p, i) => (
+          <circle key={i} cx={p.x} cy={p.y} r={ROAD.dot} fill={c.cyan} stroke={c.cardBg} strokeWidth={3} />
+        ))}
+      </svg>
+      {/* the start: a bright point with a soft halo */}
+      <div style={{ position: "absolute", left: ROAD_PATH.start.x - ROAD.start, top: ROAD_PATH.start.y - ROAD.start, width: ROAD.start * 2, height: ROAD.start * 2, borderRadius: ROAD.start, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.indigo}`, boxShadow: shadow.glow, boxSizing: "border-box" }} />
+    </div>
+  );
+};
 
 /** The dashed box, just above the caption band. */
 const NOT_MONEY = { w: 980, h: 110, size: 46, y: theme.captionBand.top - 110 - 24 };
@@ -610,7 +644,6 @@ export const SC06 = () => {
   const L = (g: number) => local(g, BLOCK.SC06);
   const firstOut = L(B6.tuntun);
   const m = useMotion();
-  const skillH = SKILL_STEPS.reduce((h, s, i) => h + (SKILL.heights[i] - (SKILL.heights[i - 1] ?? 0)) * ease(f, L(s), 24), 0);
   return (
     <Stage>
       {/* the grid carries on from SC05 — it never scrolled */}
@@ -623,39 +656,9 @@ export const SC06 = () => {
       ))}
       <Invested at={L(B6.months) + m.fade + 6} out={firstOut} count={[L(B6.invested[0]), L(B6.invested[1])]} arrivals={B6.send.map((s) => L(s) + m.move)} />
       <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} closeAt={L(B6.tuntun)} />
-      {/* then, once the box has closed, OrangTuntun2 comes up from below, head to belly, cut at the caption band */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <Cutout
-          src="art/vi01/orang-tuntun-2.png"
-          aspect={TUNTUN6.aspect}
-          x={theme.canvas.width / 2 - (TUNTUN6.headU - 0.5) * TUNTUN6_H * TUNTUN6.aspect}
-          y={TUNTUN6.from - (TUNTUN6.top / TUNTUN6.rows) * TUNTUN6_H + TUNTUN6_H}
-          h={TUNTUN6_H}
-          at={L(B6.tuntun) + m.sec(1.1)}
-          rise={theme.canvas.height - TUNTUN6.from}
-          riseFrames={m.move}
-          shadow
-          floor={TUNTUN6.floor}
-        />
-      </div>
+      {/* then, once the box has closed, the winding road — still for now */}
+      <WindingPath at={L(B6.tuntun) + m.sec(1.1)} />
 
-      {/* the loop that makes the skill */}
-      <Node box={LOOP[0]} label="Belajar" icon="book" at={L(B6.belajar)} size={38} />
-      <Link a={{ x: LOOP[0].x + LOOP[0].w, y: LOOP[0].y + 90 }} b={{ x: LOOP[1].x + LOOP[1].w / 2, y: LOOP[1].y }} at={L(B6.toEvaluasi)} />
-      <Node box={LOOP[1]} label="Evaluasi keputusan" icon="check" at={L(B6.evaluasi)} size={38} />
-      <Link a={nodeEdge(LOOP[1], "l")} b={nodeEdge(LOOP[2], "r")} at={L(B6.toKelola)} />
-      <Node box={LOOP[2]} label="Kelola aset" icon="box" tone="cyan" at={L(B6.kelola)} size={38} />
-      <Link a={{ x: LOOP[2].x + LOOP[2].w / 2, y: LOOP[2].y }} b={{ x: LOOP[0].x, y: LOOP[0].y + 90 }} at={L(B6.kelola) + 20} />
-
-      {/* and the skill, a step per turn */}
-      {skillH > 0.5 ? (
-        <>
-          <div style={{ position: "absolute", left: SKILL.x, top: SKILL.base - skillH - 6, width: SKILL.w, height: skillH, background: c.indigo, borderRadius: 14 }} />
-          <div style={{ position: "absolute", left: SKILL.x - 40, top: SKILL.base, width: SKILL.w + 80, height: theme.shape.rule, background: c.slate }} />
-        </>
-      ) : null}
-      <Say text="Kemampuan" x={SKILL.x + SKILL.w / 2} y={SKILL.base + 44} at={L(SKILL_STEPS[0])} size={36} weight={700} color={c.indigo} />
-      <Say text="semakin baik" x={SKILL.x + SKILL.w + 40} y={SKILL.base - 480} at={L(B6.baik)} anchor="left" size={36} weight={700} color={c.indigo} />
     </Stage>
   );
 };
