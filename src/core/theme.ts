@@ -374,6 +374,8 @@ export const theme = {
     coinYellow: "#F5B82E",
     /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
+    /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
+    gainGreen: "#22B573",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.

@@ -562,9 +562,10 @@ const NOT_MONEY = { w: 980, h: 110, size: 46, y: theme.captionBand.top - 110 - 2
  * each coin goes in behind it. It counts 0 → Rp 15,000,000 over SC06.invested;
  * each time a coin goes in, "+Rp 5,000,000" rises over it and fades.
  */
+/** The stacked gains over the card: the first `gap` above it, each next one a `step` higher. */
+const GAIN = { gap: 18, step: MONTH.tag + 12 };
 const Invested = ({ at, out, count, arrivals }: { at: number; out: number; count: readonly [number, number]; arrivals: number[] }) => {
   const f = useCurrentFrame();
-  const c = usePalette();
   const m = useMotion();
   const life = useLife(at, out);
   if (life <= 0.001) return null;
@@ -574,12 +575,12 @@ const Invested = ({ at, out, count, arrivals }: { at: number; out: number; count
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       <MiniBalance x={MONTH_X[1]} y={top} label="Total invested" amount={rp(total)} />
       {arrivals.map((a, k) => {
-        /* each one gone before the next coin lands (30 frames apart) */
-        const rise = ease(f, a, m.sec(0.45));
-        const show = ease(f, a, m.sec(0.12)) * (1 - ease(f, a + m.sec(0.3), m.sec(0.15)));
-        if (show <= 0.001) return null;
+        /* they stay and stack — each new one above the last ("jangan langsung
+           hilang"), green, the size of "Bulan 1" */
+        const t = ease(f, a, m.reveal);
+        if (t <= 0.001) return null;
         return (
-          <div key={k} style={{ position: "absolute", left: MONTH_X[1] + MONTH.cardW / 2, top: top - 24 - rise * 36, transform: "translate(-50%, -100%)", opacity: show, fontFamily: theme.text.family, fontSize: MONTH.amount, fontWeight: 800, color: c.indigo, whiteSpace: "nowrap", lineHeight: 1 }}>
+          <div key={k} style={{ position: "absolute", left: MONTH_X[1] + MONTH.cardW / 2, top: top - GAIN.gap - k * GAIN.step + (1 - t) * 14, transform: "translate(-50%, -100%)", opacity: t, fontFamily: theme.text.family, fontSize: MONTH.tag, fontWeight: 800, color: theme.color.gainGreen, whiteSpace: "nowrap", lineHeight: 1 }}>
             +{rp(SENT)}
           </div>
         );
