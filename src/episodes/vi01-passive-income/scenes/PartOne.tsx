@@ -797,6 +797,9 @@ const ASSET8 = { h: 440, floor: 1180 / 1254 };
  */
 const HOP = {
   height: 150,
+  /* what each card gains as the coin reaches it: 20M → 45M, 5M → 10M */
+  toBalance: 25_000_000,
+  toInvested: 5_000_000,
   points: [
     { x: 330, y: 524 },
     { x: 960, y: 491 },
@@ -846,12 +849,13 @@ const swellAt = (f: number, at: number, m: { sec: (s: number) => number }) => ea
  * with the swell and the triangle; at `sendAt` the second coin leaves and it
  * drops to Rp 20,000,000.
  */
-const AccountBalance = ({ x, y, at, payAt, sendAt }: { x: number; y: number; at: number; payAt: number; sendAt: number }) => {
+const AccountBalance = ({ x, y, at, payAt, sendAt, hopAt }: { x: number; y: number; at: number; payAt: number; sendAt: number; hopAt: number }) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const life = useLife(at);
-  const balance = BAL.from + (BAL.to - BAL.from) * ease(f, payAt, m.sec(1)) - INVEST8 * ease(f, sendAt, m.sec(0.6));
-  return <BigBalance x={x} y={y} label="ACCOUNT BALANCE:" amount={rp(balance)} life={life} swell={swellAt(f, payAt, m)} tri={ease(f, payAt, m.reveal)} />;
+  /* + the hopping coin: "saat koinnya sampai di Account balance, angkanya naik jadi 45,000,000" */
+  const balance = BAL.from + (BAL.to - BAL.from) * ease(f, payAt, m.sec(1)) - INVEST8 * ease(f, sendAt, m.sec(0.6)) + HOP.toBalance * ease(f, hopAt, m.sec(1));
+  return <BigBalance x={x} y={y} label="ACCOUNT BALANCE:" amount={rp(balance)} life={life} swell={Math.max(swellAt(f, payAt, m), swellAt(f, hopAt, m))} tri={ease(f, payAt, m.reveal)} />;
 };
 
 /** The coin from the office to the balance card, on an arc, leaving a dashed indigo trail. */
@@ -941,7 +945,9 @@ export const SC08 = () => {
   const k = 1 - (1 - CHART8.scale) * row;
   /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
   const landAt = L(B8.invest) + m.sec(1);
-  const invested = INVEST8 * ease(f, landAt, m.sec(0.6));
+  /* + the hopping coin: "saat sampai di total invested angkanya jadi 10,000,000" */
+  const hopLand = L(B8.hopEnd);
+  const invested = INVEST8 * ease(f, landAt, m.sec(0.6)) + HOP.toInvested * ease(f, hopLand, m.sec(0.6));
   return (
     <Stage>
       {/* 8405: a coin hops Gedung → Account balance → Total invested — drawn first, under the
@@ -963,14 +969,14 @@ export const SC08 = () => {
       {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
       <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.invest)} out={L(B8.chart)} />
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${WORKER8.x}px ${WORKER8.feet}px` }}>
-        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} />
+        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} hopAt={(L(B8.hop) + L(B8.hopEnd)) / 2} />
       </div>
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
         /* scaled with the row, about the worker's feet ("scalenya anchor to Orang Kerja") */
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${(WORKER8.x + workerDx - investDx).toFixed(2)}px ${WORKER8.feet}px` }}>
           {/* level with Account balance, in its style, its triangle as it pulses */}
-          <BigBalance x={WORKER8.x} y={BAL_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={1} swell={swellAt(f, landAt, m)} tri={ease(f, landAt, m.reveal)} />
+          <BigBalance x={WORKER8.x} y={BAL_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={1} swell={Math.max(swellAt(f, landAt, m), swellAt(f, hopLand, m))} tri={ease(f, landAt, m.reveal)} />
           {/* "tambahkan Asset.png di bawah UI Total invested" — with the row */}
           <Cutout src="art/vi01/asset.png" aspect={1} x={WORKER8.x} y={WORKER8.feet + (1 - ASSET8.floor) * ASSET8.h} h={ASSET8.h} at={L(B8.chart)} shadow floor={ASSET8.floor} />
         </div>
