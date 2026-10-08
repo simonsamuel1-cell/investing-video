@@ -849,12 +849,14 @@ const swellAt = (f: number, at: number, m: { sec: (s: number) => number }) => ea
  * with the swell and the triangle; at `sendAt` the second coin leaves and it
  * drops to Rp 20,000,000.
  */
-const AccountBalance = ({ x, y, at, payAt, sendAt, hopAt }: { x: number; y: number; at: number; payAt: number; sendAt: number; hopAt: number }) => {
+const AccountBalance = ({ x, y, at, payAt, sendAt, hopAt, hopOutAt }: { x: number; y: number; at: number; payAt: number; sendAt: number; hopAt: number; hopOutAt: number }) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const life = useLife(at);
   /* + the hopping coin: "saat koinnya sampai di Account balance, angkanya naik jadi 45,000,000" */
-  const balance = BAL.from + (BAL.to - BAL.from) * ease(f, payAt, m.sec(1)) - INVEST8 * ease(f, sendAt, m.sec(0.6)) + HOP.toBalance * ease(f, hopAt, m.sec(1));
+  const balance = BAL.from + (BAL.to - BAL.from) * ease(f, payAt, m.sec(1)) - INVEST8 * ease(f, sendAt, m.sec(0.6)) + HOP.toBalance * ease(f, hopAt, m.sec(1))
+    /* "saat sampai di total invested, angka account balance jadi 40,000,000" */
+    - HOP.toInvested * ease(f, hopOutAt, m.sec(0.6));
   return <BigBalance x={x} y={y} label="ACCOUNT BALANCE:" amount={rp(balance)} life={life} swell={Math.max(swellAt(f, payAt, m), swellAt(f, hopAt, m))} tri={ease(f, payAt, m.reveal)} />;
 };
 
@@ -969,7 +971,7 @@ export const SC08 = () => {
       {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
       <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.invest)} out={L(B8.chart)} />
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${WORKER8.x}px ${WORKER8.feet}px` }}>
-        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} hopAt={(L(B8.hop) + L(B8.hopEnd)) / 2} />
+        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} hopAt={(L(B8.hop) + L(B8.hopEnd)) / 2} hopOutAt={L(B8.hopEnd)} />
       </div>
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
