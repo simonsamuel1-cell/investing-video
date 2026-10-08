@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
-import { Cutout, ease, Sheet, Icon, Node, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Icon, Node, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** An icon and a word on one line — a row of a list. */
 const Item = ({ x, y, icon, label, tone, at, size = 44 }: { x: number; y: number; icon: IconName; label: string; tone: "indigo" | "cyan"; at: number; size?: number }) => {
@@ -693,7 +693,6 @@ export const SC06 = () => {
 };
 
 // ═══ SC07 — human asset vs financial asset ═══════════════════════════════
-const HALF = { y: 210, w: 780, h: 690, left: 140, right: 1000 };
 /** SC03's small question label ("Pertanyaan 1", now "Jangan cuma tanya"): size, weight, letter spacing. */
 const QUIZ_LABEL = { size: 36, weight: 700, track: 2 };
 /** The heading: typed at the frame's centre, then up to the top. */
@@ -704,26 +703,47 @@ const KEKAYAAN = { text: "Kekayaan punya 2 bagian", size: 64, topY: 150, cps: 1 
  */
 const CARD1 = { w: 560, pad: 44, inset: 74, title: QUIZ_LABEL.size, gap: 54, row: 74, item: 38, y: 330, border: 3 };
 const CARD1_H = CARD1.pad + CARD1.title + CARD1.gap + 3 * CARD1.row + CARD1.pad - CARD1.row / 2 + CARD1.item / 2;
+/** How the first card steps back when the second arrives. */
+const CARD_BACK = { up: 40, opacity: 0.4, scale: 0.9 };
+
+/** A card in the pair: white, a 3 px indigo border, its title over three rows; it opens out from its own centre. */
+const PairCard = ({ title, rows, at, titleAt, rowAts, style }: { title: string; rows: [IconName, string][]; at: number; titleAt: number; rowAts: readonly number[]; style?: React.CSSProperties }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const open = ease(f, at, m.sec(0.6));
+  const cardIn = ease(f, at, m.fade);
+  if (cardIn <= 0.001) return null;
+  const cardW = 40 + (CARD1.w - 40) * open;
+  return (
+    <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, background: c.cardBg, border: `${CARD1.border}px solid ${c.indigo}`, boxSizing: "border-box", opacity: cardIn, overflow: "hidden", ...style }}>
+      {/* the contents keep their place while the card opens around them */}
+      <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2 - CARD1.border, top: -CARD1.border, width: CARD1.w, height: CARD1_H }}>
+        {/* the title in the "Pertanyaan 1" label's style, left-aligned on the icons */}
+        <div style={{ position: "absolute", left: CARD1.inset, top: CARD1.pad, opacity: ease(f, titleAt, m.reveal), fontFamily: theme.text.family, fontSize: QUIZ_LABEL.size, fontWeight: QUIZ_LABEL.weight, letterSpacing: QUIZ_LABEL.track, color: c.indigo, lineHeight: 1, whiteSpace: "nowrap" }}>
+          {title}
+        </div>
+        {rows.map(([icon, label], i) => (
+          <Item key={label} x={CARD1.inset} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={rowAts[i]} size={CARD1.item} />
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const SC07 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC07);
-  const rows = (x: number, items: [IconName, string][], ats: readonly number[], tone: "indigo" | "cyan") =>
-    items.map(([icon, label], i) => (
-      <Item key={label} x={x} y={HALF.y + 220 + i * 105} icon={icon} label={label} tone={tone} at={L(ats[i])} />
-    ));
   /* the heading: typed in the middle, then up */
   const typedAt = L(B7.heading);
   const shown = Math.max(0, Math.floor((f - typedAt) * KEKAYAAN.cps));
   const upAt = typedAt + Math.ceil(KEKAYAAN.text.length / KEKAYAAN.cps) + m.sec(0.3);
   const up = ease(f, upAt, m.move);
   const headY = theme.canvas.height / 2 + (KEKAYAAN.topY - theme.canvas.height / 2) * up;
-  /* the first card, opening from its centre */
-  const open = ease(f, L(B7.card1), m.sec(0.6));
-  const cardIn = ease(f, L(B7.card1), m.fade);
-  const cardW = 40 + (CARD1.w - 40) * open;
+  /* 7153: the first card steps back — up 40 px, to 40%, 10% smaller — and the second takes its place */
+  const back = ease(f, L(B7.card2), m.move);
   return (
     <Stage>
       {f >= typedAt ? (
@@ -732,29 +752,10 @@ export const SC07 = () => {
         </div>
       ) : null}
 
-      {cardIn > 0.001 ? (
-        /* no fill, a 3 px indigo border ("bikin no fill, border indigo 3 px") */
-        <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, border: `${CARD1.border}px solid ${c.indigo}`, boxSizing: "border-box", opacity: cardIn, overflow: "hidden" }}>
-          {/* the contents keep their place while the card opens around them */}
-          <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2 - CARD1.border, top: -CARD1.border, width: CARD1.w, height: CARD1_H }}>
-            {/* the title in the "Pertanyaan 1" label's style: its size, weight and letter spacing */}
-            {/* left-aligned on the icons below ("align-left pada icon icon") */}
-            <div style={{ position: "absolute", left: CARD1.inset, top: CARD1.pad, textAlign: "left", opacity: ease(f, L(B7.human), m.reveal), fontFamily: theme.text.family, fontSize: QUIZ_LABEL.size, fontWeight: QUIZ_LABEL.weight, letterSpacing: QUIZ_LABEL.track, color: c.indigo, lineHeight: 1 }}>
-              Human Asset
-            </div>
-            {([["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]] as [IconName, string][]).map(([icon, label], i) => (
-              <Item key={label} x={CARD1.inset} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={L(B7.humanRows[i])} size={CARD1.item} />
-            ))}
-          </div>
-        </div>
-      ) : null}
-
-      {/* the second card — unchanged for now, it waits for its own word */}
-      <Sheet x={HALF.right} y={HALF.y} w={HALF.w} h={HALF.h} at={L(B7.financial)} />
-      <Say text="Financial Asset" x={HALF.right + HALF.w / 2} y={HALF.y + 90} at={L(B7.financial)} size={60} weight={800} color={theme.color.cyanInk} />
-      {rows(HALF.right + 120, [["jar", "Tabungan"], ["chart", "Investasi"], ["box", "Aset"]], B7.financialRows, "cyan")}
-      <div style={{ position: "absolute", left: HALF.right + 60, top: HALF.y + 548, width: HALF.w - 120, height: theme.shape.hairline, background: c.border, opacity: ease(f, L(B7.financial), m.reveal) }} />
-      <Item x={HALF.right + 120} y={HALF.y + 620} icon="chart" label="Bisa terus dimiliki" tone="cyan" at={L(B7.terus)} size={46} />
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - (1 - CARD_BACK.opacity) * back, transform: `translateY(${(-CARD_BACK.up * back).toFixed(2)}px) scale(${(1 - (1 - CARD_BACK.scale) * back).toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${CARD1.y + CARD1_H / 2}px` }}>
+        <PairCard title="Human Asset" rows={[["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]]} at={L(B7.card1)} titleAt={L(B7.human)} rowAts={B7.humanRows.map(L)} />
+      </div>
+      <PairCard title="Financial Asset" rows={[["jar", "Tabungan"], ["chart", "Investasi"], ["box", "Aset"]]} at={L(B7.card2) + m.move / 2} titleAt={Math.max(L(B7.card2) + m.move / 2, L(B7.financial))} rowAts={B7.financialRows.map(L)} />
     </Stage>
   );
 };

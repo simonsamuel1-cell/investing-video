@@ -265,6 +265,12 @@ export const SC07 = {
    */
   heading: 6653,
   card1: 6761,
+  /**
+   * "7153 Kartu human asset geser naik 40 px, transparansi jadi 40%, size
+   * mengecil 10%. Lalu di tempat … kartu human asset sebelum geser naik,
+   * muncul kartu kedua Financial Asset. Stylenya samakan."
+   */
+  card2: 7153,
   split: 6708, // "dua bagian."
   human: 6805, // "human asset:"
   humanRows: [6859, 6901, 6949] as const, // waktu, kemampuan, pengalaman
