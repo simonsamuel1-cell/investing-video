@@ -702,7 +702,7 @@ const KEKAYAAN = { text: "Kekayaan punya 2 bagian", size: 64, topY: 150, cps: 1 
  * The first card, smaller: a title and its three rows, no rule, the height
  * fitted to them; it opens out from its own centre, at the frame's centre.
  */
-const CARD1 = { w: 560, pad: 44, title: QUIZ_LABEL.size, gap: 54, row: 74, item: 38, y: 330, border: 3 };
+const CARD1 = { w: 560, pad: 44, inset: 74, title: QUIZ_LABEL.size, gap: 54, row: 74, item: 38, y: 330, border: 3 };
 const CARD1_H = CARD1.pad + CARD1.title + CARD1.gap + 3 * CARD1.row + CARD1.pad - CARD1.row / 2 + CARD1.item / 2;
 
 export const SC07 = () => {
@@ -738,11 +738,12 @@ export const SC07 = () => {
           {/* the contents keep their place while the card opens around them */}
           <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2 - CARD1.border, top: -CARD1.border, width: CARD1.w, height: CARD1_H }}>
             {/* the title in the "Pertanyaan 1" label's style: its size, weight and letter spacing */}
-            <div style={{ position: "absolute", left: 0, right: 0, top: CARD1.pad, textAlign: "center", opacity: ease(f, L(B7.human), m.reveal), fontFamily: theme.text.family, fontSize: QUIZ_LABEL.size, fontWeight: QUIZ_LABEL.weight, letterSpacing: QUIZ_LABEL.track, color: c.indigo, lineHeight: 1 }}>
+            {/* left-aligned on the icons below ("align-left pada icon icon") */}
+            <div style={{ position: "absolute", left: CARD1.inset, top: CARD1.pad, textAlign: "left", opacity: ease(f, L(B7.human), m.reveal), fontFamily: theme.text.family, fontSize: QUIZ_LABEL.size, fontWeight: QUIZ_LABEL.weight, letterSpacing: QUIZ_LABEL.track, color: c.indigo, lineHeight: 1 }}>
               Human Asset
             </div>
             {([["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]] as [IconName, string][]).map(([icon, label], i) => (
-              <Item key={label} x={CARD1.pad + 30} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={L(B7.humanRows[i])} size={CARD1.item} />
+              <Item key={label} x={CARD1.inset} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={L(B7.humanRows[i])} size={CARD1.item} />
             ))}
           </div>
         </div>
