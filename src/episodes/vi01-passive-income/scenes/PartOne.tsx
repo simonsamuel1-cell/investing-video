@@ -779,6 +779,8 @@ const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1
 const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, top: 70 / 1199 };
 /** The worker's solid top, and the balance card 40 px above it ("40 px di atas Orang Kerja"). */
 const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
+/** What reaches Total invested at SC08.invest. */
+const INVEST8 = 5_000_000;
 const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
 const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
 
@@ -859,6 +861,9 @@ export const SC08 = () => {
   const officeDx = -(OFFICE.x + OFFICE.h * OFFICE.aspect) * shift;
   const workerDx = (OFFICE.x - WORKER8.x) * shift;
   const investDx = (theme.canvas.width - WORKER8.x + MONTH.cardW) * (1 - ease(f, L(B8.shift) + m.sec(0.15), m.move));
+  /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
+  const investY = (theme.captionBand.top - MONTH.cardH) / 2;
+  const invested = INVEST8 * ease(f, L(B8.invest) + m.sec(1), m.sec(0.6));
   return (
     <Stage>
       {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
@@ -874,13 +879,15 @@ export const SC08 = () => {
           <Cutout src="art/vi01/orang-kerja.png" aspect={WORKER8.aspect} x={WORKER8.x} y={WORKER8.feet + (1 - WORKER8.floor) * WORKER8.h} h={WORKER8.h} at={L(B8.office)} shadow floor={WORKER8.floor} />
         </div>
       </div>
+      {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
+      <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - MONTH.cardW / 2 + 60, y: investY + MONTH.cardH / 2 }} at={L(B8.invest)} out={BLOCK.END} />
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
         <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} />
       </div>
       {/* …and Total invested, in from the right where the worker was */}
       {f >= L(B8.shift) ? (
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
-          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={(theme.captionBand.top - MONTH.cardH) / 2} label="Total invested" amount={rp(0)} />
+          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} />
         </div>
       ) : null}
     </Stage>
