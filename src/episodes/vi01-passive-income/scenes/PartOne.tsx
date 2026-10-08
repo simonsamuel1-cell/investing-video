@@ -703,11 +703,13 @@ const KEKAYAAN = { text: "Kekayaan punya 2 bagian", size: 64, topY: 150, cps: 1 
  */
 const CARD1 = { w: 560, pad: 44, inset: 74, title: QUIZ_LABEL.size, gap: 54, row: 74, item: 38, y: 330, border: 3 };
 const CARD1_H = CARD1.pad + CARD1.title + CARD1.gap + 3 * CARD1.row + CARD1.pad - CARD1.row / 2 + CARD1.item / 2;
+/** Side by side: the gap between the two cards, and the note under each. */
+const PAIR = { gap: 80, below: 56, note: 40 };
 /** How the first card steps back when the second arrives. */
 const CARD_BACK = { up: 40, opacity: 0.4, scale: 0.9 };
 
 /** A card in the pair: white, a 3 px indigo border, its title over three rows; it opens out from its own centre. */
-const PairCard = ({ title, rows, at, titleAt, rowAts, style }: { title: string; rows: [IconName, string][]; at: number; titleAt: number; rowAts: readonly number[]; style?: React.CSSProperties }) => {
+const PairCard = ({ title, rows, at, titleAt, rowAts, dx = 0, style }: { title: string; rows: [IconName, string][]; at: number; titleAt: number; rowAts: readonly number[]; dx?: number; style?: React.CSSProperties }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -716,7 +718,7 @@ const PairCard = ({ title, rows, at, titleAt, rowAts, style }: { title: string; 
   if (cardIn <= 0.001) return null;
   const cardW = 40 + (CARD1.w - 40) * open;
   return (
-    <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, background: c.cardBg, border: `${CARD1.border}px solid ${c.indigo}`, boxSizing: "border-box", opacity: cardIn, overflow: "hidden", ...style }}>
+    <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2 + dx, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, background: c.cardBg, border: `${CARD1.border}px solid ${c.indigo}`, boxSizing: "border-box", opacity: cardIn, overflow: "hidden", ...style }}>
       {/* the contents keep their place while the card opens around them */}
       <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2 - CARD1.border, top: -CARD1.border, width: CARD1.w, height: CARD1_H }}>
         {/* the title in the "Pertanyaan 1" label's style, left-aligned on the icons */}
@@ -742,8 +744,11 @@ export const SC07 = () => {
   const upAt = typedAt + Math.ceil(KEKAYAAN.text.length / KEKAYAAN.cps) + m.sec(0.3);
   const up = ease(f, upAt, m.move);
   const headY = theme.canvas.height / 2 + (KEKAYAAN.topY - theme.canvas.height / 2) * up;
-  /* 7153: the first card steps back — up 40 px, to 40%, 10% smaller — and the second takes its place */
-  const back = ease(f, L(B7.card2), m.move);
+  /* 7153: the first card steps back — up 40 px, to 40%, 10% smaller — and the second takes its place;
+     7534: side by side, the first back to full on the left, the second on the right */
+  const side = ease(f, L(B7.side), m.move);
+  const back = ease(f, L(B7.card2), m.move) * (1 - side);
+  const spread = (CARD1.w + PAIR.gap) / 2;
   return (
     <Stage>
       {f >= typedAt ? (
@@ -753,9 +758,12 @@ export const SC07 = () => {
       ) : null}
 
       <div style={{ position: "absolute", inset: 0, opacity: 1 - (1 - CARD_BACK.opacity) * back, transform: `translateY(${(-CARD_BACK.up * back).toFixed(2)}px) scale(${(1 - (1 - CARD_BACK.scale) * back).toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${CARD1.y + CARD1_H / 2}px` }}>
-        <PairCard title="Human Asset" rows={[["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]]} at={L(B7.card1)} titleAt={L(B7.human)} rowAts={B7.humanRows.map(L)} />
+        <PairCard title="Human Asset" rows={[["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]]} at={L(B7.card1)} titleAt={L(B7.human)} rowAts={B7.humanRows.map(L)} dx={-spread * side} />
       </div>
-      <PairCard title="Financial Asset" rows={[["jar", "Tabungan"], ["chart", "Investasi"], ["box", "Aset"]]} at={L(B7.card2) + m.move / 2} titleAt={Math.max(L(B7.card2) + m.move / 2, L(B7.financial))} rowAts={B7.financialRows.map(L)} />
+      <PairCard title="Financial Asset" rows={[["jar", "Tabungan"], ["chart", "Investasi"], ["box", "Aset"]]} at={L(B7.card2) + m.move / 2} titleAt={Math.max(L(B7.card2) + m.move / 2, L(B7.financial))} rowAts={B7.financialRows.map(L)} dx={spread * side} />
+      {/* under each, once they stand side by side */}
+      <Say text="punya batas" x={theme.canvas.width / 2 - spread} y={CARD1.y + CARD1_H + PAIR.below} at={L(B7.side) + m.move} size={PAIR.note} weight={700} color={c.indigo} />
+      <Say text="bisa terus dimiliki" x={theme.canvas.width / 2 + spread} y={CARD1.y + CARD1_H + PAIR.below} at={L(B7.forever)} size={PAIR.note} weight={700} color={c.indigo} />
     </Stage>
   );
 };

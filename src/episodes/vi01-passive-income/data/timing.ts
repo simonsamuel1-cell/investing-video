@@ -271,6 +271,10 @@ export const SC07 = {
    * muncul kartu kedua Financial Asset. Stylenya samakan."
    */
   card2: 7153,
+  /** "7534 Kedua kartu dibuat side-by-side … Lalu di bawah kartu human asset muncul text 'punya batas'" */
+  side: 7534,
+  /** "7647 muncul text 'bisa terus dimiliki' di bawah kartu financial asset." */
+  forever: 7647,
   split: 6708, // "dua bagian."
   human: 6805, // "human asset:"
   humanRows: [6859, 6901, 6949] as const, // waktu, kemampuan, pengalaman
