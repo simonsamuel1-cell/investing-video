@@ -564,7 +564,7 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
  * every turn, no words. Still for now — "Bikin dulu aja, nnti aku arahin
  * animasinya".
  */
-const ROAD = { x0: 230, x1: 1690, top: 330, bottom: 750, turns: 5, dash: 18, gap: 14, width: 6, start: 22, dot: 11 };
+const ROAD = { x0: 230, x1: 1690, top: 330, bottom: 750, turns: 5, dash: 18, gap: 14, width: 6, start: 22, dot: 11, label: 62, labelSize: 40 };
 const ROAD_PATH = (() => {
   /* the start on the mid line, then a turn point alternately high and low,
      joined by S-curves with level tangents at every turn — one flowing road */
@@ -574,31 +574,58 @@ const ROAD_PATH = (() => {
     x: ROAD.x0 + ((ROAD.x1 - ROAD.x0) * k) / n,
     y: k === 0 || k === n ? mid : k % 2 ? ROAD.top : ROAD.bottom,
   }));
-  let d = `M ${pts[0].x} ${pts[0].y}`;
-  for (let k = 1; k < pts.length; k++) {
-    const a = pts[k - 1];
-    const b = pts[k];
+  /* each stretch as a cubic, so the walker can be placed on it exactly */
+  const segs = pts.slice(1).map((b, k) => {
+    const a = pts[k];
     const h = (b.x - a.x) * 0.55;
-    d += ` C ${a.x + h} ${a.y} ${b.x - h} ${b.y} ${b.x} ${b.y}`;
-  }
-  return { d, turns: pts.slice(1, -1), start: pts[0] };
+    return [a, { x: a.x + h, y: a.y }, { x: b.x - h, y: b.y }, b];
+  });
+  const d = `M ${pts[0].x} ${pts[0].y}` + segs.map(([, p1, p2, p3]) => ` C ${p1.x} ${p1.y} ${p2.x} ${p2.y} ${p3.x} ${p3.y}`).join("");
+  return { d, segs, stops: pts.slice(1), start: pts[0], mid };
 })();
+const onSeg = (seg: { x: number; y: number }[], t: number) => {
+  const u = 1 - t;
+  const w = [u * u * u, 3 * u * u * t, 3 * u * t * t, t * t * t];
+  return { x: seg.reduce((s, p, i) => s + p.x * w[i], 0), y: seg.reduce((s, p, i) => s + p.y * w[i], 0) };
+};
+/** The six words, one at each stop the walker reaches. */
+const ROAD_WORDS = ["Belajar", "Belajar", "Evaluasi", "Evaluasi", "Skill acquired", "Skill owned"];
 
-const WindingPath = ({ at }: { at: number }) => {
+/**
+ * The road, and the white point walking it: from the start to each stop in
+ * turn, eased into and out of every stop; each stop's word comes up as it
+ * arrives — above a high stop, below a low one and below the end.
+ */
+const WindingPath = ({ at, arrivals }: { at: number; arrivals: number[] }) => {
+  const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const shadow = useShadow();
   const life = useLife(at);
   if (life <= 0.001) return null;
+  /* which stretch the walker is on, and how far along it */
+  const departs = [at + m.reveal, ...arrivals.slice(0, -1)];
+  let pos = ROAD_PATH.start;
+  for (let k = 0; k < ROAD_PATH.segs.length; k++) {
+    if (f >= departs[k]) pos = onSeg(ROAD_PATH.segs[k], ease(f, departs[k], arrivals[k] - departs[k]));
+  }
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
         <path d={ROAD_PATH.d} fill="none" stroke={c.indigo} strokeWidth={ROAD.width} strokeLinecap="round" strokeDasharray={`${ROAD.dash} ${ROAD.gap}`} />
-        {ROAD_PATH.turns.map((p, i) => (
+        {ROAD_PATH.stops.slice(0, -1).map((p, i) => (
           <circle key={i} cx={p.x} cy={p.y} r={ROAD.dot} fill={c.cyan} stroke={c.cardBg} strokeWidth={3} />
         ))}
       </svg>
-      {/* the start: a bright point with a soft halo */}
-      <div style={{ position: "absolute", left: ROAD_PATH.start.x - ROAD.start, top: ROAD_PATH.start.y - ROAD.start, width: ROAD.start * 2, height: ROAD.start * 2, borderRadius: ROAD.start, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.indigo}`, boxShadow: shadow.glow, boxSizing: "border-box" }} />
+      {ROAD_PATH.stops.map((p, i) => {
+        /* low stops and the end take their word underneath, clear of the road */
+        const below = p.y >= ROAD_PATH.mid;
+        return (
+          <Say key={i} text={ROAD_WORDS[i]} x={p.x} y={p.y + (below ? 1 : -1) * ROAD.label} at={arrivals[i]} size={ROAD.labelSize} weight={700} color={c.indigo} />
+        );
+      })}
+      {/* the walker: a bright point with a soft halo */}
+      <div style={{ position: "absolute", left: pos.x - ROAD.start, top: pos.y - ROAD.start, width: ROAD.start * 2, height: ROAD.start * 2, borderRadius: ROAD.start, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.indigo}`, boxShadow: shadow.glow, boxSizing: "border-box" }} />
     </div>
   );
 };
@@ -657,7 +684,7 @@ export const SC06 = () => {
       <Invested at={L(B6.months) + m.fade + 6} out={firstOut} count={[L(B6.invested[0]), L(B6.invested[1])]} arrivals={B6.send.map((s) => L(s) + m.move)} />
       <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} closeAt={L(B6.tuntun)} />
       {/* then, once the box has closed, the winding road — still for now */}
-      <WindingPath at={L(B6.tuntun) + m.sec(1.1)} />
+      <WindingPath at={L(B6.tuntun) + m.sec(1.1)} arrivals={B6.walk.map(L)} />
 
     </Stage>
   );
