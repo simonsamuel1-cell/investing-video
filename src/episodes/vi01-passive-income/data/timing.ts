@@ -329,6 +329,8 @@ export const SC09 = {
    * first frame and rides the cut in, so this beat is no longer read.
    */
   fakta: 8807,
+  /** "8908 Buat text di bawah fakta menarik dengan text box garis putus putus indigo" */
+  tak: 8908,
   company: 8820, // "dari investasi"
   nggak: 8905, // "kita nggak harus bekerja di sebuah perusahaan"
   karyawan: 9255, // "Ada orang yang bekerja di BCA"

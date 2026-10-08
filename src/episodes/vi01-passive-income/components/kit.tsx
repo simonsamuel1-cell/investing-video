@@ -870,6 +870,7 @@ export const TypeBox = ({
   size = 40,
   cps = 1,
   closeAt,
+  boxInk,
 }: {
   cx: number;
   y: number;
@@ -889,6 +890,8 @@ export const TypeBox = ({
   cps?: number;
   /** "animasi reverse": the text un-types, then the box closes back into its centre. */
   closeAt?: number;
+  /** The box's dashes in another colour, e.g. indigo. */
+  boxInk?: string;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -913,7 +916,7 @@ export const TypeBox = ({
   const seg = (s: string, k: string) => <span key={k}>{s}</span>;
   return (
     <div style={{ opacity: (1 - gone) * (1 - 0.6 * dim) }}>
-      <DashBox cx={cx} y={y} w={w} h={h} at={at} closeAt={shutAt}>
+      <DashBox cx={cx} y={y} w={w} h={h} at={at} closeAt={shutAt} ink={boxInk}>
         {/* the box's own coordinates — DashBox positions its children */}
         <div
           style={{
@@ -984,6 +987,7 @@ export const DashBox = ({
   h,
   at,
   closeAt,
+  ink,
   children,
 }: {
   cx: number;
@@ -993,6 +997,8 @@ export const DashBox = ({
   at: number;
   /** The way it came, backwards: back in to its centre, then fades. */
   closeAt?: number;
+  /** The dashes' and corner blocks' colour (default: ink). */
+  ink?: string;
   children?: React.ReactNode;
 }) => {
   const f = useCurrentFrame();
@@ -1037,7 +1043,7 @@ export const DashBox = ({
           height={h - 2}
           rx={r}
           fill="none"
-          stroke={c.ink}
+          stroke={ink ?? c.ink}
           strokeWidth={theme.shape.rule}
           strokeDasharray={DASH.dash}
         />
@@ -1054,7 +1060,7 @@ export const DashBox = ({
             width={DASH.block}
             height={DASH.block}
             rx={4}
-            fill={c.ink}
+            fill={ink ?? c.ink}
           />
         ))}
       </svg>

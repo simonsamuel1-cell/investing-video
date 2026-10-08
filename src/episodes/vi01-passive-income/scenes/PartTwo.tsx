@@ -12,8 +12,8 @@
 import { useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { Stage, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -67,13 +67,20 @@ const Fakta = ({ at }: { at: number }) => {
 };
 
 
+/** The dashed box under "fakta menarik". */
+const TAK = { y: 680, w: 1340, h: 120, size: 44 };
+
 export const SC09 = () => {
+  const c = usePalette();
   const m = useMotion();
+  const L = (g: number) => local(g, BLOCK.SC09);
   /* "visual yang ada di scene ini sebelumnya, hapus aja (kecuali visual dariku)" */
   return (
     <Stage>
       {/* in from the first frame, so it comes in with the CameraCut */}
       <Fakta at={-m.reveal} />
+      {/* Simon's short line, under "fakta menarik", in an indigo dashed box */}
+      <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} />
     </Stage>
   );
 };
