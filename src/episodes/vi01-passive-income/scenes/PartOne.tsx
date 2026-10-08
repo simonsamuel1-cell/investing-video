@@ -787,7 +787,9 @@ const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
  * The chart at 8310: three columns — the office, the worker with his balance,
  * Total invested — the two pictures at 80%, joined by dashed arrows at `linkY`.
  */
-const CHART8 = { x: [330, 960, 1650], scale: 0.8, linkY: 560, links: [[570, 720], [1195, 1300]] as [number, number][] };
+const CHART8 = { x: [330, 960, 1590], scale: 0.8, linkY: 760, links: [[570, 740], [1170, 1280]] as [number, number][] };
+/** "Asset.png", 1254 × 1254, the pile's base on row 1180 — on the worker's floor line, under Total invested. */
+const ASSET8 = { h: 440, floor: 1180 / 1254 };
 /** What reaches Total invested at SC08.invest. */
 const INVEST8 = 5_000_000;
 const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
@@ -799,31 +801,19 @@ const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
  * little and flushes green, then settles back to ink; a green up-triangle
  * comes in beside it as the animation starts.
  */
-const AccountBalance = ({ x, y, at, payAt, sendAt }: { x: number; y: number; at: number; payAt: number; sendAt: number }) => {
-  const f = useCurrentFrame();
+/** The balance card: an uppercase label over the amount, which swells green and back as it changes; an up-triangle beside it. */
+const BigBalance = ({ x, y, label, amount, life, swell, tri }: { x: number; y: number; label: string; amount: string; life: number; swell: number; tri: number }) => {
   const c = usePalette();
-  const m = useMotion();
   const shadow = useShadow();
-  const life = useLife(at);
   if (life <= 0.001) return null;
-  const count = ease(f, payAt, m.sec(1));
-  /* "Account balance juga berkurang jadi Rp 20,000,000" — as the second coin leaves it */
-  const sent = INVEST8 * ease(f, sendAt, m.sec(0.6));
-  const balance = BAL.from + (BAL.to - BAL.from) * count - sent;
-  /* up and back, quickly: 0 → 1 → 0 over the count */
-  const swell = ease(f, payAt, m.sec(0.3)) * (1 - ease(f, payAt + m.sec(0.35), m.sec(0.45)));
-  const tri = ease(f, payAt, m.reveal);
   return (
     <div style={{ position: "absolute", left: x - BAL.w / 2, top: y, width: BAL.w, height: BAL.h, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft, padding: "0 34px", boxSizing: "border-box", opacity: life, fontFamily: theme.text.family, lineHeight: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
-      <div style={{ fontSize: BAL.label, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
+      <div style={{ fontSize: BAL.label, fontWeight: 600, letterSpacing: 1, color: c.slate }}>{label}</div>
       {/* the amount and its triangle swell together, from the left, so they never collide */}
       <div style={{ display: "flex", alignItems: "center", gap: 16, transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
-        <div style={{ fontSize: BAL.amount, fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
-          {/* the colour eases through green and back by blending two copies */}
-          <span style={{ position: "relative", display: "inline-block" }}>
-            <span style={{ color: c.ink }}>{rp(balance)}</span>
-            <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{rp(balance)}</span>
-          </span>
+        <div style={{ position: "relative", fontSize: BAL.amount, fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", color: c.ink }}>
+          {amount}
+          {swell > 0.001 ? <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{amount}</span> : null}
         </div>
         {tri > 0.001 ? (
           <svg width={BAL.tri} height={BAL.tri} viewBox="0 0 30 30" style={{ opacity: tri, transform: `translateY(${((1 - tri) * 8).toFixed(2)}px)` }}>
@@ -833,6 +823,22 @@ const AccountBalance = ({ x, y, at, payAt, sendAt }: { x: number; y: number; at:
       </div>
     </div>
   );
+};
+
+/** A quick swell, 0 → 1 → 0, starting at `at`. */
+const swellAt = (f: number, at: number, m: { sec: (s: number) => number }) => ease(f, at, m.sec(0.3)) * (1 - ease(f, at + m.sec(0.35), m.sec(0.45)));
+
+/**
+ * "UI Account balance" — at `payAt` the coin lands: Rp 5,000,000 → 25,000,000
+ * with the swell and the triangle; at `sendAt` the second coin leaves and it
+ * drops to Rp 20,000,000.
+ */
+const AccountBalance = ({ x, y, at, payAt, sendAt }: { x: number; y: number; at: number; payAt: number; sendAt: number }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const life = useLife(at);
+  const balance = BAL.from + (BAL.to - BAL.from) * ease(f, payAt, m.sec(1)) - INVEST8 * ease(f, sendAt, m.sec(0.6));
+  return <BigBalance x={x} y={y} label="ACCOUNT BALANCE:" amount={rp(balance)} life={life} swell={swellAt(f, payAt, m)} tri={ease(f, payAt, m.reveal)} />;
 };
 
 /** The coin from the office to the balance card, on an arc, leaving a dashed indigo trail. */
@@ -880,10 +886,8 @@ export const SC08 = () => {
   const k = 1 - (1 - CHART8.scale) * row;
   const links = ease(f, L(B8.chart) + m.move, m.sec(0.5));
   /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
-  const investY = (theme.captionBand.top - MONTH.cardH) / 2;
-  const invested = INVEST8 * ease(f, L(B8.invest) + m.sec(1), m.sec(0.6));
-  /* the same pulse as the balance's: up and back, black → green → black */
-  const investSwell = ease(f, L(B8.invest) + m.sec(1), m.sec(0.3)) * (1 - ease(f, L(B8.invest) + m.sec(1.35), m.sec(0.45)));
+  const landAt = L(B8.invest) + m.sec(1);
+  const invested = INVEST8 * ease(f, landAt, m.sec(0.6));
   return (
     <Stage>
       {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
@@ -900,7 +904,7 @@ export const SC08 = () => {
         </div>
       </div>
       {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
-      <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - MONTH.cardW / 2 + 60, y: investY + MONTH.cardH / 2 }} at={L(B8.invest)} out={L(B8.chart)} />
+      <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.invest)} out={L(B8.chart)} />
       <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${WORKER8.x}px ${WORKER8.feet}px` }}>
         <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} />
       </div>
@@ -908,7 +912,10 @@ export const SC08 = () => {
       {f >= L(B8.shift) ? (
         /* scaled with the row, about the worker's feet ("scalenya anchor to Orang Kerja") */
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${(WORKER8.x + workerDx - investDx).toFixed(2)}px ${WORKER8.feet}px` }}>
-          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} weight={700} />
+          {/* level with Account balance, in its style, its triangle as it pulses */}
+          <BigBalance x={WORKER8.x} y={BAL_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={1} swell={swellAt(f, landAt, m)} tri={ease(f, landAt, m.reveal)} />
+          {/* "tambahkan Asset.png di bawah UI Total invested" — with the row */}
+          <Cutout src="art/vi01/asset.png" aspect={1} x={WORKER8.x} y={WORKER8.feet + (1 - ASSET8.floor) * ASSET8.h} h={ASSET8.h} at={L(B8.chart)} shadow floor={ASSET8.floor} />
         </div>
       ) : null}
       {/* the chart's links, once the three stand in a row: dashed indigo arrows, Gedung → Orang Kerja → Asset */}
