@@ -45,7 +45,7 @@ export const local = (beat: number, from: number) => beat - from;
 export const BLOCK = {
   SC01: 0, SC02: 1019, SC03: 2133,
   SC04: 3125, SC05: 4193, SC06: 5490, SC07: 6592, SC08: 7803,
-  SC09: 8757, SC10: 9779, SC11: 10835, SC12: 11921,
+  SC09: 8772, SC10: 9779, SC11: 10835, SC12: 11921,
   SC13: 12708, SC14: 13844, SC15: 15114,
   SC16: 16153, SC17: 17029, SC18: 18241,
   /** The VO's last word ends on f19229; 206 frames hold the closing card. */
@@ -448,8 +448,8 @@ export const TRANS_FADE = 24;
 export const TRANS_LEN = 130;
 
 export const TRANS: Trans[] = [
-  // ST2 · SC08 → SC09 (0.27 s; SC08's last word ends f8749)
-  { at: 8721, freeze: 8720, landing: 1, next: 2, cards: [8731, 8739, 8759], thumbs: [3089, null, null, null] },
+  // ST2 · SC08 → SC09 — cancelled: "batalkan scene transisi, scenenya selesai 8772".
+  // SC08 now runs to 8772 and the cut to SC09 is a CameraCut (CUTS).
   // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12697)
   { at: 12672, freeze: 12671, landing: 2, next: 3, cards: [12682, 12690, 12710], thumbs: [3089, 8720, null, null] },
 ];
@@ -502,6 +502,7 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC05, axis: "x" },
   { at: BLOCK.SC07, axis: "x" },
   { at: BLOCK.SC08, axis: "x" },
+  { at: BLOCK.SC09, axis: "x" }, // in place of ST2, which Simon cancelled
   { at: BLOCK.SC10, axis: "x" },
   { at: BLOCK.SC11, axis: "x" },
   { at: BLOCK.SC12, axis: "x" },

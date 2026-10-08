@@ -48,8 +48,8 @@ Semua angka di dokumen ini sudah termasuk jeda itu. VO dibangun ulang dari file 
 | SC05 | 4193 – 5490 | 01:09.883 – 01:31.500 | 21.62 s | 01:10.083 – 01:31.283 | 19–23 | 01 |
 | SC06 | 5490 – 6592 | 01:31.500 – 01:49.866 | 18.37 s | 01:31.716 – 01:49.483 | 24–28 | 01 |
 | SC07 | 6592 – 7803 | 01:49.866 – 02:10.049 | 20.18 s | 01:49.916 – 02:09.782 | 29–35 | 01 |
-| SC08 | 7803 – 8757 | 02:10.049 – 02:25.949 | 15.90 s | 02:10.316 – 02:25.816 | 36–39 | 01 |
-| SC09 | 8757 – 9779 | 02:25.949 – 02:42.983 | 17.03 s | 02:26.082 – 02:42.782 | 40–43 | 02 |
+| SC08 | 7803 – 8772 | 02:10.049 – 02:26.200 | 16.15 s | 02:10.316 – 02:25.816 | 36–39 | 01 |
+| SC09 | 8772 – 9779 | 02:26.200 – 02:42.983 | 16.78 s | 02:26.082 – 02:42.782 | 40–43 | 02 |
 | SC10 | 9779 – 10835 | 02:42.983 – 03:00.583 | 17.60 s | 02:43.182 – 03:00.382 | 44–49 | 02 |
 | SC11 | 10835 – 11921 | 03:00.583 – 03:18.683 | 18.10 s | 03:00.782 – 03:18.416 | 50–54 | 02 |
 | SC12 | 11921 – 12708 | 03:18.683 – 03:31.799 | 13.12 s | 03:18.949 – 03:31.616 | 55–58 | 02 |
@@ -80,7 +80,7 @@ Bentuknya roadmap TA09 (`RoadmapCards` di core): frame scene yang sedang berjala
 | Transisi | Di | Keheningan nyata | Overlay window |
 |---|---|---|---|
 | ST1 — cold open → bab 1 | SC03 → SC04 | 0.30 s | **3090 – 3260** |
-| ST2 — bab 1 → bab 2 | SC08 → SC09 | 0.27 s | **8721 – 8891** |
+| ST2 — bab 1 → bab 2 | SC08 → SC09 | — | **dibatalkan** (Simon, 2026-10-08: "batalkan scene transisi, scenenya selesai 8772") — CameraCut biasa |
 | ST3 — bab 2 → bab 3 | SC12 → SC13 | 0.37 s | **12672 – 12842** |
 
 Tiap overlay mulai ~36 f sebelum kata terakhir scene keluar (scene sudah selesai bicara) dan selesai ~130 f setelahnya, saat scene berikutnya sudah berjalan di bawahnya. Bagian penutup (SC16–SC18) **tidak** punya kartu — bab 3 ditutup dengan CameraCut biasa, karena penutupnya bukan bab baru melainkan kesimpulan.
@@ -256,7 +256,7 @@ Kiri, di f6805: **Waktu · Kemampuan · Pengalaman** (tiga baris dengan ikon). K
 f7590: di bawah Human Asset muncul jam pasir yang menipis — **Punya batas**. f7642: di bawah Financial Asset garis yang terus naik — **Bisa terus dimiliki**.
 Akhiri: dua kolom, dua nasib.
 
-### SCENE 08 — f7863–8757 · 02:10.049–02:25.949 · **15.90 s**
+### SCENE 08 — f7863–8772 · 02:10.049–02:26.200 · **16.15 s**
 **NARRATION** (VO 02:10.316–02:25.816)
 Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.
 Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.
@@ -273,11 +273,11 @@ Dua warna SC07 dibawa ke sumbu umur (**Muda → Tua**): di kiri hampir semua pen
 f8379: berganti ke **estafet** — dua pelari: **Kerja** (indigo) membawa tongkat **Uang**, f8535 menyerahkannya ke pelari **Aset** (cyan).
 Akhiri: tongkat berpindah tangan.
 
-**→ SCENE TRANSISI 2 overlay f8781–8891** — SC08 dilipat ke kartu 1, kartu 2 **Ikut Punya Bisnis** menyala, kamera masuk.
+**→ SCENE TRANSISI 2 dibatalkan** — SC08 berakhir di f8772, lalu CameraCut biasa ke SC09.
 
 ## PART 02 — IKUT PUNYA BISNIS
 
-### SCENE 09 — f8817–9779 · 02:25.949–02:42.983 · **17.03 s**
+### SCENE 09 — f8817–9779 · 02:26.200–02:42.983 · **16.78 s**
 **NARRATION** (VO 02:26.082–02:42.782)
 Hal menarik dari investasi adalah:
 kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.
