@@ -518,6 +518,9 @@ const MiniBalance = ({ x, y, label, amount }: { x: number; y: number; label: str
   );
 };
 
+/** "panjang tiap garis putusnya coba buat 7 px" */
+const TRAIL = { dash: 7, gap: 7 };
+
 const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; out: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -535,12 +538,20 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   const x1 = MONTH_X[1] + MONTH.coinR * 3;
   const y0 = cardTop + MONTH.cardH / 2;
   const y1 = ROW_Y[1] + MONTH.tagGap + MONTH.cardH / 2;
-  const coinX = x0 + (x1 - x0) * fly;
-  const coinY = y0 + (y1 - y0) * fly - Math.sin(Math.PI * fly) * 60;
+  const arc = (t: number) => ({ x: x0 + (x1 - x0) * t, y: y0 + (y1 - y0) * t - Math.sin(Math.PI * t) * 60 });
+  const coinX = arc(fly).x;
+  const coinY = arc(fly).y;
+  /* the trail it leaves: a dashed indigo line along the arc it has flown, 7 px dashes */
+  const trail = fly > 0.001 ? Array.from({ length: 41 }, (_, k) => arc((fly * k) / 40)).map((p, k) => `${k ? "L" : "M"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ") : "";
   const flying = fly > 0.001 && fly < 0.999;
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       <div style={{ position: "absolute", left: MONTH_X[0], top: top - MONTH.tag / 2, fontFamily: theme.text.family, fontSize: MONTH.tag, fontWeight: 700, color: c.indigo, lineHeight: 1 }}>Bulan {i + 1}</div>
+      {trail ? (
+        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+          <path d={trail} fill="none" stroke={c.indigo} strokeWidth={3} strokeLinecap="round" strokeDasharray={`${TRAIL.dash} ${TRAIL.gap}`} />
+        </svg>
+      ) : null}
       {flying ? (
         <svg width={MONTH.coinR * 2} height={MONTH.coinR * 2} style={{ position: "absolute", left: coinX - MONTH.coinR, top: coinY - MONTH.coinR }}>
           <circle cx={MONTH.coinR} cy={MONTH.coinR} r={MONTH.coinR} fill={theme.color.coinYellow} />
