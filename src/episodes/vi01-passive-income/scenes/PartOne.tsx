@@ -785,22 +785,22 @@ const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 /
 const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
 /**
  * The chart at 8310: three columns — the office, the worker with his balance,
- * Total invested — the two pictures at 80%, joined by dashed arrows at `linkY`.
+ * Total invested — the two pictures at 80% (the straight dashed arrows were taken out).
  */
-const CHART8 = { x: [330, 960, 1590], scale: 0.8, linkY: 760, links: [[570, 740], [1170, 1280]] as [number, number][] };
+const CHART8 = { x: [330, 960, 1590], scale: 0.8 };
 /** "Asset.png", 1254 × 1254, the pile's base on row 1180 — on the worker's floor line, under Total invested. */
 const ASSET8 = { h: 440, floor: 1180 / 1254 };
 /**
- * The hop's stops, in the chart's settled layout: the office's roof, then the
- * top edge of each card — 80% of the card's place,
- * about the worker's feet.
+ * The hop's stops, in the chart's settled layout: inside the office, then the
+ * middle of each card — 80% of the card's place, about the worker's feet — so
+ * the coin is behind each of them at every stop.
  */
 const HOP = {
   height: 150,
   points: [
-    { x: 330, y: 352 - 28 }, // the office's roof, so the trail never crosses the building
-    { x: 960, y: 431 - 28 },
-    { x: 1464, y: 431 - 28 },
+    { x: 330, y: 524 },
+    { x: 960, y: 491 },
+    { x: 1464, y: 491 },
   ],
 };
 /** What reaches Total invested at SC08.invest. */
@@ -884,9 +884,9 @@ const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { 
 };
 
 /**
- * One coin hopping along the chart: from the office onto the Account balance
- * card, then onto Total invested — two arcs, each landing on the card's top
- * edge, a dashed indigo trail behind it; it fades once it has landed.
+ * One coin hopping along the chart: out from behind the office, in behind the
+ * Account balance card, out again and in behind Total invested — two arcs, a
+ * dashed indigo trail behind it.
  */
 const HopCoin = ({ points, at }: { points: { x: number; y: number }[]; at: number }) => {
   const f = useCurrentFrame();
@@ -927,7 +927,6 @@ const HopCoin = ({ points, at }: { points: { x: number; y: number }[]; at: numbe
 
 export const SC08 = () => {
   const f = useCurrentFrame();
-  const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC08);
   /* 8083: the office out to the left, the worker and his balance over to where it stood, Total invested in from the right */
@@ -939,12 +938,14 @@ export const SC08 = () => {
   const workerDx = lerp((OFFICE.x - WORKER8.x) * shift, CHART8.x[1] - WORKER8.x);
   const investDx = (theme.canvas.width - WORKER8.x + MONTH.cardW) * (1 - ease(f, L(B8.shift) + m.sec(0.15), m.move)) + (CHART8.x[2] - WORKER8.x) * row;
   const k = 1 - (1 - CHART8.scale) * row;
-  const links = ease(f, L(B8.chart) + m.move, m.sec(0.5));
   /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
   const landAt = L(B8.invest) + m.sec(1);
   const invested = INVEST8 * ease(f, landAt, m.sec(0.6));
   return (
     <Stage>
+      {/* 8405: a coin hops Gedung → Account balance → Total invested — drawn first, under the
+          office and both cards: out from behind the office, in behind each card */}
+      <HopCoin points={HOP.points} at={L(B8.hop)} />
       {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
           goes in behind the card; its trail goes as the office leaves */}
       <PayCoin from={{ x: OFFICE.x, y: OFFICE.coinY }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.pay)} out={L(B8.shift)} />
@@ -972,22 +973,6 @@ export const SC08 = () => {
           {/* "tambahkan Asset.png di bawah UI Total invested" — with the row */}
           <Cutout src="art/vi01/asset.png" aspect={1} x={WORKER8.x} y={WORKER8.feet + (1 - ASSET8.floor) * ASSET8.h} h={ASSET8.h} at={L(B8.chart)} shadow floor={ASSET8.floor} />
         </div>
-      ) : null}
-      {/* 8405: a coin hops Gedung → Account balance → Total invested, landing on each card's top edge */}
-      <HopCoin points={HOP.points} at={L(B8.hop)} />
-      {/* the chart's links, once the three stand in a row: dashed indigo arrows, Gedung → Orang Kerja → Asset */}
-      {links > 0.001 ? (
-        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-          {CHART8.links.map(([x0, x1], i) => {
-            const x = x0 + (x1 - x0) * links;
-            return (
-              <g key={i}>
-                <line x1={x0} y1={CHART8.linkY} x2={x - 10} y2={CHART8.linkY} stroke={c.indigo} strokeWidth={4} strokeLinecap="round" strokeDasharray={`${TRAIL.dash} ${TRAIL.gap}`} />
-                {links > 0.95 ? <path d={`M ${x1} ${CHART8.linkY} l -16 -10 v 20 z`} fill={c.indigo} /> : null}
-              </g>
-            );
-          })}
-        </svg>
       ) : null}
     </Stage>
   );
