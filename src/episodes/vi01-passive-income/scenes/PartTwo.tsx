@@ -25,13 +25,20 @@ const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
  * 5000 × 5000, the bulb solid in rows 253–4757; the sunburst is 30 px wider
  * than the bulb is tall ("diameternya 30 px lebih besar aja dari Lampu.png").
  */
-const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, textY: 680 };
+/** `gap` puts 35 px of clear space between the sunburst's foot and the words' tops ("jadiin 35 px"). */
+const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, gap: 36, textY: 0 };
+/** "rotate kecil bolak balik … more like stop motion": the rays jump between two angles, held a few frames each. */
+const WOBBLE = { deg: 5, holdSec: 0.15 };
 const LAMP_IMG_H = (LAMP.h * 5000) / (4757 - 253);
 const SUN_D = LAMP.h + 30;
 
 const Fakta = ({ at }: { at: number }) => {
+  const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const life = useLife(at);
+  /* stop motion: no in-between frames, just a jump every hold */
+  const tilt = Math.floor(f / m.sec(WOBBLE.holdSec)) % 2 ? WOBBLE.deg : -WOBBLE.deg;
   if (life <= 0.001) return null;
   const R = SUN_D / 2;
   const wedge = (k: number) => {
@@ -42,13 +49,13 @@ const Fakta = ({ at }: { at: number }) => {
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       {/* the sunburst behind the lamp — alternating rays, cut to a circle */}
-      <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R }}>
+      <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R, transform: `rotate(${tilt}deg)` }}>
         {Array.from({ length: LAMP.rays }, (_, k) => (
           <path key={k} d={wedge(k)} fill={k % 2 ? c.indigoSoft : c.indigo} />
         ))}
       </svg>
       <Cutout src="art/vi01/lampu.png" aspect={1} x={LAMP.cx} y={LAMP.cy + LAMP.h / 2 + ((5000 - 4757) / 5000) * LAMP_IMG_H} h={LAMP_IMG_H} at={at} rise={0} />
-      <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1 }}>
+      <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.cy + LAMP.h / 2 + LAMP.gap + LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1 }}>
         <span style={{ fontFamily: VIBES, fontSize: LAMP.script, color: c.ink }}>fakta</span>
         <span style={{ fontFamily: theme.text.family, fontSize: LAMP.sans, fontWeight: 700, color: c.indigo }}>menarik</span>
       </div>
