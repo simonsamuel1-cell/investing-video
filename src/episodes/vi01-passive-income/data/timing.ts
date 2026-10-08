@@ -218,6 +218,11 @@ export const SC06 = {
    */
   months: 5700,
   send: [5760, 5790, 5820] as const,
+  /**
+   * "Gimana kalo kartu Total Investednya 1 aja, jadi dari 5800-5885 angkanya
+   * naik dari 0 hingga 15,000,000. 1 kartunya ini sejajar dengan row bulan 2."
+   */
+  invested: [5800, 5885] as const,
   /** "5931 Muncul text box garis putus putus di atas subtitle, isinya 'Investasi bukan cuma soal uang'" */
   notMoney: 5931,
   modal: 5651, // "modal besar dulu."

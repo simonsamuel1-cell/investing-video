@@ -528,14 +528,15 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   const cardTop = top + MONTH.tagGap;
   const fly = ease(f, send, m.move);
   const land = ease(f, send + m.move, m.sec(0.4));
-  const before = SENT * i;
-  /* the coin, from behind the left card to behind the right one, on a low arc —
-     it starts and ends well inside them, so the cards hide it at both ends */
+  /* the coin, from behind this month's card to behind the one Total invested
+     card (level with Bulan 2), on a low arc — it starts and ends well inside
+     them, so the cards hide it at both ends */
   const x0 = MONTH_X[0] + MONTH.cardW - MONTH.coinR * 3;
   const x1 = MONTH_X[1] + MONTH.coinR * 3;
-  const cy = cardTop + MONTH.cardH / 2;
+  const y0 = cardTop + MONTH.cardH / 2;
+  const y1 = ROW_Y[1] + MONTH.tagGap + MONTH.cardH / 2;
   const coinX = x0 + (x1 - x0) * fly;
-  const coinY = cy - Math.sin(Math.PI * fly) * 60;
+  const coinY = y0 + (y1 - y0) * fly - Math.sin(Math.PI * fly) * 60;
   const flying = fly > 0.001 && fly < 0.999;
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
@@ -547,15 +548,45 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
           <text x={MONTH.coinR} y={MONTH.coinR} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={MONTH.coinR * 0.72} fill={c.ink}>Rp</text>
         </svg>
       ) : null}
-      {/* the cards drawn over the coin: it comes out from behind one and goes in behind the other */}
+      {/* the card drawn over the coin: it comes out from behind it */}
       <MiniBalance x={MONTH_X[0]} y={cardTop} label="Salary Balance" amount={rp(SALARY - SENT * land)} />
-      <MiniBalance x={MONTH_X[1]} y={cardTop} label="Total invested" amount={rp(before + SENT * land)} />
     </div>
   );
 };
 
 /** The dashed box, just above the caption band. */
 const NOT_MONEY = { w: 980, h: 110, size: 46, y: theme.captionBand.top - 110 - 24 };
+
+/**
+ * The one Total invested card, level with Bulan 2 — drawn after the rows so
+ * each coin goes in behind it. It counts 0 → Rp 15,000,000 over SC06.invested;
+ * each time a coin goes in, "+Rp 5,000,000" rises over it and fades.
+ */
+const Invested = ({ at, out, count, arrivals }: { at: number; out: number; count: readonly [number, number]; arrivals: number[] }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const life = useLife(at, out);
+  if (life <= 0.001) return null;
+  const top = ROW_Y[1] + MONTH.tagGap;
+  const total = SENT * arrivals.length * ease(f, count[0], count[1] - count[0]);
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      <MiniBalance x={MONTH_X[1]} y={top} label="Total invested" amount={rp(total)} />
+      {arrivals.map((a, k) => {
+        /* each one gone before the next coin lands (30 frames apart) */
+        const rise = ease(f, a, m.sec(0.45));
+        const show = ease(f, a, m.sec(0.12)) * (1 - ease(f, a + m.sec(0.3), m.sec(0.15)));
+        if (show <= 0.001) return null;
+        return (
+          <div key={k} style={{ position: "absolute", left: MONTH_X[1] + MONTH.cardW / 2, top: top - 24 - rise * 36, transform: "translate(-50%, -100%)", opacity: show, fontFamily: theme.text.family, fontSize: MONTH.amount, fontWeight: 800, color: c.indigo, whiteSpace: "nowrap", lineHeight: 1 }}>
+            +{rp(SENT)}
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 export const SC06 = () => {
   const f = useCurrentFrame();
@@ -574,6 +605,7 @@ export const SC06 = () => {
       {B6.send.map((send, i) => (
         <MonthRow key={i} i={i} at={L(B6.months) + m.fade + i * 6} send={L(send)} out={firstOut} />
       ))}
+      <Invested at={L(B6.months) + m.fade + 6} out={firstOut} count={[L(B6.invested[0]), L(B6.invested[1])]} arrivals={B6.send.map((s) => L(s) + m.move)} />
       <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} />
 
       {/* the loop that makes the skill */}
