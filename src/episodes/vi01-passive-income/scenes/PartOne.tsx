@@ -529,9 +529,10 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   const fly = ease(f, send, m.move);
   const land = ease(f, send + m.move, m.sec(0.4));
   const before = SENT * i;
-  /* the coin, from the left card's right edge to the right card's left edge, on a low arc */
-  const x0 = MONTH_X[0] + MONTH.cardW - MONTH.coinR;
-  const x1 = MONTH_X[1] + MONTH.coinR;
+  /* the coin, from behind the left card to behind the right one, on a low arc —
+     it starts and ends well inside them, so the cards hide it at both ends */
+  const x0 = MONTH_X[0] + MONTH.cardW - MONTH.coinR * 3;
+  const x1 = MONTH_X[1] + MONTH.coinR * 3;
   const cy = cardTop + MONTH.cardH / 2;
   const coinX = x0 + (x1 - x0) * fly;
   const coinY = cy - Math.sin(Math.PI * fly) * 60;
@@ -539,8 +540,6 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
   return (
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       <div style={{ position: "absolute", left: MONTH_X[0], top: top - MONTH.tag / 2, fontFamily: theme.text.family, fontSize: MONTH.tag, fontWeight: 700, color: c.indigo, lineHeight: 1 }}>Bulan {i + 1}</div>
-      <MiniBalance x={MONTH_X[0]} y={cardTop} label="Salary Balance" amount={rp(SALARY - SENT * land)} />
-      <MiniBalance x={MONTH_X[1]} y={cardTop} label="Total invested" amount={rp(before + SENT * land)} />
       {flying ? (
         <svg width={MONTH.coinR * 2} height={MONTH.coinR * 2} style={{ position: "absolute", left: coinX - MONTH.coinR, top: coinY - MONTH.coinR }}>
           <circle cx={MONTH.coinR} cy={MONTH.coinR} r={MONTH.coinR} fill={theme.color.coinYellow} />
@@ -548,6 +547,9 @@ const MonthRow = ({ i, at, send, out }: { i: number; at: number; send: number; o
           <text x={MONTH.coinR} y={MONTH.coinR} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={MONTH.coinR * 0.72} fill={c.ink}>Rp</text>
         </svg>
       ) : null}
+      {/* the cards drawn over the coin: it comes out from behind one and goes in behind the other */}
+      <MiniBalance x={MONTH_X[0]} y={cardTop} label="Salary Balance" amount={rp(SALARY - SENT * land)} />
+      <MiniBalance x={MONTH_X[1]} y={cardTop} label="Total invested" amount={rp(before + SENT * land)} />
     </div>
   );
 };
