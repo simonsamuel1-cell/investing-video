@@ -11,9 +11,9 @@
  */
 import { useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
-import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { Stage, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, Worker, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -56,53 +56,12 @@ const Fakta = ({ at }: { at: number }) => {
   );
 };
 
-const COMPANY: NodeBox = { x: 760, y: 330, w: 400, h: 250 };
-const INVESTOR: NodeBox = { x: 1420, y: 560, w: 340, h: 150 };
 
 export const SC09 = () => {
-  const f = useCurrentFrame();
-  const c = usePalette();
-  const shadow = useShadow();
-  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC09);
-  /** The slice: lifts off the company's corner and lands in the investor's hands. */
-  const fly = ease(f, L(B9.slice), 40);
-  const slice = ease(f, L(B9.slice) - 10, m.fade);
-  const sx = COMPANY.x + COMPANY.w - 40 + (INVESTOR.x + INVESTOR.w / 2 - 30 - (COMPANY.x + COMPANY.w - 40)) * fly;
-  const sy = COMPANY.y + 20 + (INVESTOR.y - 80 - (COMPANY.y + 20)) * fly;
+  /* "visual yang ada di scene ini sebelumnya, hapus aja (kecuali visual dariku)" */
   return (
     <Stage>
-      <Say text="Ikut memiliki sebagian bisnis" x={960} y={190} at={L(B9.nggak)} size={52} />
-      <Node box={COMPANY} label="Perusahaan" icon="building" layout="column" at={L(B9.company)} out={L(B9.bca) - 4} size={44} />
-      <Node box={COMPANY} label="Bank Central Asia" sub="BBCA" icon="building" layout="column" at={L(B9.bca)} size={42} />
-
-      {/* the employee: work goes in, salary comes back */}
-      <Worker x={330} y={925} h={600} at={L(B9.karyawan)} poses={[[0, 1]]} />
-      <Say text="Karyawan" x={330} y={300} at={L(B9.karyawan)} size={44} weight={800} color={c.indigo} />
-      <Link a={{ x: 520, y: 470 }} b={nodeEdge(COMPANY, "l")} at={L(B9.karyawan) + 30} />
-      <Say text="kerja" x={640} y={430} at={L(B9.karyawan) + 40} size={32} weight={600} color={c.indigo} />
-      <Link a={{ x: COMPANY.x, y: COMPANY.y + COMPANY.h - 50 }} b={{ x: 520, y: 600 }} at={L(B9.gaji)} />
-      <Say text="gaji" x={640} y={600} at={L(B9.gaji) + 10} size={32} weight={600} color={c.indigo} />
-
-      {/* the investor: no work arrow — a small slice of the business */}
-      <Node box={INVESTOR} label="Investor" icon="person" tone="cyan" at={L(B9.investor) + 40} size={42} />
-      {slice > 0.001 ? (
-        <div
-          style={{
-            position: "absolute",
-            left: sx,
-            top: sy,
-            width: 60,
-            height: 60,
-            borderRadius: 12,
-            background: theme.color.cyanInk,
-            opacity: slice,
-            boxShadow: shadow.lift,
-          }}
-        />
-      ) : null}
-      <Say text="sebagian kecil bisnisnya" x={INVESTOR.x + INVESTOR.w / 2} y={INVESTOR.y + INVESTOR.h + 50} at={L(B9.slice) + 30} size={34} weight={700} color={theme.color.cyanInk} />
-      {/* drawn last, over the older SC09 pieces until they are re-directed */}
       <Fakta at={L(B9.fakta)} />
     </Stage>
   );
