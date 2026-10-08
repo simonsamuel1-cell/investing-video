@@ -783,6 +783,11 @@ const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1
 const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, top: 70 / 1199 };
 /** The worker's solid top, and the balance card 40 px above it ("40 px di atas Orang Kerja"). */
 const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
+/**
+ * The chart at 8310: three columns — the office, the worker with his balance,
+ * Total invested — the two pictures at 80%, joined by dashed arrows at `linkY`.
+ */
+const CHART8 = { x: [330, 960, 1580], scale: 0.8, linkY: 560, links: [[570, 720], [1195, 1310]] as [number, number][] };
 /** What reaches Total invested at SC08.invest. */
 const INVEST8 = 5_000_000;
 const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
@@ -861,13 +866,19 @@ const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { 
 
 export const SC08 = () => {
   const f = useCurrentFrame();
+  const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC08);
   /* 8083: the office out to the left, the worker and his balance over to where it stood, Total invested in from the right */
   const shift = ease(f, L(B8.shift), m.move);
-  const officeDx = -(OFFICE.x + OFFICE.h * OFFICE.aspect) * shift;
-  const workerDx = (OFFICE.x - WORKER8.x) * shift;
-  const investDx = (theme.canvas.width - WORKER8.x + MONTH.cardW) * (1 - ease(f, L(B8.shift) + m.sec(0.15), m.move));
+  /* 8310: the office back in, the three in a row — Gedung → Orang Kerja → Asset — the pictures at 80% */
+  const row = ease(f, L(B8.chart), m.move);
+  const lerp = (a: number, b: number) => a + (b - a) * row;
+  const officeDx = lerp(-(OFFICE.x + OFFICE.h * OFFICE.aspect) * shift, CHART8.x[0] - OFFICE.x);
+  const workerDx = lerp((OFFICE.x - WORKER8.x) * shift, CHART8.x[1] - WORKER8.x);
+  const investDx = (theme.canvas.width - WORKER8.x + MONTH.cardW) * (1 - ease(f, L(B8.shift) + m.sec(0.15), m.move)) + (CHART8.x[2] - WORKER8.x) * row;
+  const k = 1 - (1 - CHART8.scale) * row;
+  const links = ease(f, L(B8.chart) + m.move, m.sec(0.5));
   /* 8138: a coin from the balance to Total invested; it lands a second later and the card counts 0 → 5,000,000 */
   const investY = (theme.captionBand.top - MONTH.cardH) / 2;
   const invested = INVEST8 * ease(f, L(B8.invest) + m.sec(1), m.sec(0.6));
@@ -881,16 +892,16 @@ export const SC08 = () => {
       {/* 7803: the office on the left; on the right the worker, his account balance 40 px over him —
           the rest of 7803-8750 removed ("Visual dari 7803-8750 remove aja") */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <div style={{ position: "absolute", inset: 0, transform: `translateX(${officeDx.toFixed(2)}px)` }}>
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${officeDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${OFFICE.x}px ${OFFICE.feet}px` }}>
           <Cutout src="art/vi01/gedung-kantor.png" aspect={OFFICE.aspect} x={OFFICE.x} y={OFFICE.feet + (1 - OFFICE.floor) * OFFICE.h} h={OFFICE.h} at={L(B8.office) + m.sec(0.25)} shadow floor={OFFICE.floor} />
         </div>
-        <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${WORKER8.x}px ${WORKER8.feet}px` }}>
           <Cutout src="art/vi01/orang-kerja.png" aspect={WORKER8.aspect} x={WORKER8.x} y={WORKER8.feet + (1 - WORKER8.floor) * WORKER8.h} h={WORKER8.h} at={L(B8.office)} shadow floor={WORKER8.floor} />
         </div>
       </div>
       {/* the second coin, drawn under both cards: out of the balance, into Total invested */}
-      <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - MONTH.cardW / 2 + 60, y: investY + MONTH.cardH / 2 }} at={L(B8.invest)} out={BLOCK.END} />
-      <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
+      <PayCoin from={{ x: OFFICE.x + BAL.w / 2 - 60, y: BAL_Y + BAL.h / 2 }} to={{ x: WORKER8.x - MONTH.cardW / 2 + 60, y: investY + MONTH.cardH / 2 }} at={L(B8.invest)} out={L(B8.chart)} />
+      <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px) scale(${k.toFixed(4)})`, transformOrigin: `${WORKER8.x}px ${WORKER8.feet}px` }}>
         <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} sendAt={L(B8.invest)} />
       </div>
       {/* …and Total invested, in from the right where the worker was */}
@@ -898,6 +909,20 @@ export const SC08 = () => {
         <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
           <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={investY} label="Total invested" amount={rp(invested)} swell={investSwell} weight={700} />
         </div>
+      ) : null}
+      {/* the chart's links, once the three stand in a row: dashed indigo arrows, Gedung → Orang Kerja → Asset */}
+      {links > 0.001 ? (
+        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+          {CHART8.links.map(([x0, x1], i) => {
+            const x = x0 + (x1 - x0) * links;
+            return (
+              <g key={i}>
+                <line x1={x0} y1={CHART8.linkY} x2={x - 10} y2={CHART8.linkY} stroke={c.indigo} strokeWidth={4} strokeLinecap="round" strokeDasharray={`${TRAIL.dash} ${TRAIL.gap}`} />
+                {links > 0.95 ? <path d={`M ${x1} ${CHART8.linkY} l -16 -10 v 20 z`} fill={c.indigo} /> : null}
+              </g>
+            );
+          })}
+        </svg>
       ) : null}
     </Stage>
   );

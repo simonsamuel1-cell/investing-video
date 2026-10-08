@@ -305,6 +305,8 @@ export const SC08 = {
   shift: 8083,
   /** "8138 Total invested nominalnya jadi Rp 5,000,000. Ada animasi koin dari UI account balance ke UI total invested" (dashed indigo trail). */
   invest: 8138,
+  /** "8310 Gedungnya masuk lagi, membentuk bagan Gedung-OrangKerja-Asset" */
+  chart: 8310,
   muda: 7819, // "Waktu masih muda,"
   idealnya: 8069, // "Tapi idealnya,"
   tumbuh: 8213, // "aset kita juga ikut tumbuh."
