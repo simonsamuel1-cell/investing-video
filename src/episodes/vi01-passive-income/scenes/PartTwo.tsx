@@ -12,7 +12,7 @@
 import { useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { Stage, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
+import { BLOCK, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
 import { Cutout, ease, Pill, Icon, Link, Node, Say, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
@@ -58,11 +58,12 @@ const Fakta = ({ at }: { at: number }) => {
 
 
 export const SC09 = () => {
-  const L = (g: number) => local(g, BLOCK.SC09);
+  const m = useMotion();
   /* "visual yang ada di scene ini sebelumnya, hapus aja (kecuali visual dariku)" */
   return (
     <Stage>
-      <Fakta at={L(B9.fakta)} />
+      {/* in from the first frame, so it comes in with the CameraCut */}
+      <Fakta at={-m.reveal} />
     </Stage>
   );
 };

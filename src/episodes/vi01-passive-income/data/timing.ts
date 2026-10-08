@@ -324,7 +324,9 @@ export const SC08 = {
 export const SC09 = {
   /**
    * "8807 muncul text 'fakta menarik' … di atas fakta menarik, ada visual
-   * Lampu.png. Di belakang lampu png ada visual sunburst".
+   * Lampu.png. Di belakang lampu png ada visual sunburst" — then "visualku
+   * ikut transisi masuk dari camera cut aja": it is there from the scene's
+   * first frame and rides the cut in, so this beat is no longer read.
    */
   fakta: 8807,
   company: 8820, // "dari investasi"
