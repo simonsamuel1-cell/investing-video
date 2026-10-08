@@ -871,6 +871,7 @@ export const TypeBox = ({
   cps = 1,
   closeAt,
   boxInk,
+  italic = true,
 }: {
   cx: number;
   y: number;
@@ -892,6 +893,8 @@ export const TypeBox = ({
   closeAt?: number;
   /** The box's dashes in another colour, e.g. indigo. */
   boxInk?: string;
+  /** Upright type when false. */
+  italic?: boolean;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -931,7 +934,7 @@ export const TypeBox = ({
             fontFamily: theme.text.family,
             fontSize: size,
             fontWeight: 600,
-            fontStyle: "italic",
+            fontStyle: italic ? "italic" : "normal",
             color: c.ink,
             whiteSpace: "pre",
           }}

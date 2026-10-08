@@ -80,7 +80,7 @@ export const SC09 = () => {
       {/* in from the first frame, so it comes in with the CameraCut */}
       <Fakta at={-m.reveal} />
       {/* Simon's short line, under "fakta menarik", in an indigo dashed box */}
-      <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} />
+      <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} italic={false} />
     </Stage>
   );
 };
