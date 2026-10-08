@@ -31,7 +31,7 @@ const LAMP = { cx: 960, cy: 400, h: 300, rays: 24, script: 140, sans: 84, gap: 3
  * "pilih 2 fase aja: fase normal dan fase rotate. fase 1, 2 detik; fase 2, 2
  * detik; balik lagi." — a jump, no in-between frames.
  */
-const WOBBLE = { deg: 5, holdSec: 2 };
+const WOBBLE = { deg: 10, holdSec: 1 }; // then "tiap 1 detik aja deh, rotatenya 10 derajat"
 const LAMP_IMG_H = (LAMP.h * 5000) / (4757 - 253);
 const SUN_D = LAMP.h + 30;
 
@@ -54,7 +54,7 @@ const Fakta = ({ at }: { at: number }) => {
       {/* the sunburst behind the lamp — alternating rays, cut to a circle */}
       <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R, transform: `rotate(${tilt}deg)` }}>
         {Array.from({ length: LAMP.rays }, (_, k) => (
-          <path key={k} d={wedge(k)} fill={k % 2 ? c.indigoSoft : c.indigo} />
+          <path key={k} d={wedge(k)} fill={k % 2 ? theme.color.sunYellow : theme.color.sunOrange} />
         ))}
       </svg>
       <Cutout src="art/vi01/lampu.png" aspect={1} x={LAMP.cx} y={LAMP.cy + LAMP.h / 2 + ((5000 - 4757) / 5000) * LAMP_IMG_H} h={LAMP_IMG_H} at={at} rise={0} />
