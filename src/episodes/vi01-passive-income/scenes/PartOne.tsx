@@ -7,7 +7,7 @@
  * those colours carry into the life-long picture and the relay.
  */
 import { useCurrentFrame } from "remotion";
-import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, LIST_TRANS, SC04_TITLE, SC04 as B4, SC05 as B5, SC06 as B6, SC07 as B7, SC08 as B8, local } from "../data/timing";
 import { Cutout, ease, Icon, OUTSIDE_RESERVES, Say, TypeBox, useLife, type IconName } from "../components/kit";
 
@@ -775,37 +775,114 @@ export const SC07 = () => {
  * standing on row 1444; "Orang Kerja.png", 1312 × 1199, feet on row 1139,
  * unmirrored, so he faces the office. Both stand on the same floor line.
  */
-const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1448 };
-const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, cardY: 170 };
+const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1448, coinY: 420 };
+const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, top: 70 / 1199 };
+/** The worker's solid top, and the balance card 40 px above it ("40 px di atas Orang Kerja"). */
+const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
+const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
+const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
 
-/** "UI Account balance" — SC01's balance card, on its own: the label, then the balance. */
-const AccountBalance = ({ x, y, at }: { x: number; y: number; at: number }) => {
+/**
+ * "UI Account balance" — SC01's balance card on its own. At `payAt` the
+ * coin lands: the balance counts Rp 5,000,000 → 25,000,000 while it swells a
+ * little and flushes green, then settles back to ink; a green up-triangle
+ * comes in beside it as the animation starts.
+ */
+const AccountBalance = ({ x, y, at, payAt }: { x: number; y: number; at: number; payAt: number }) => {
+  const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const shadow = useShadow();
   const life = useLife(at);
   if (life <= 0.001) return null;
-  const W = 460;
+  const count = ease(f, payAt, m.sec(1));
+  /* up and back, quickly: 0 → 1 → 0 over the count */
+  const swell = ease(f, payAt, m.sec(0.3)) * (1 - ease(f, payAt + m.sec(0.35), m.sec(0.45)));
+  const tri = ease(f, payAt, m.reveal);
   return (
-    <div style={{ position: "absolute", left: x - W / 2, top: y, width: W, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft, padding: "30px 34px", boxSizing: "border-box", opacity: life, fontFamily: theme.text.family, lineHeight: 1 }}>
-      <div style={{ fontSize: 22, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
-      <div style={{ marginTop: 18, fontSize: 48, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>Rp {price(50_000_000)}</div>
+    <div style={{ position: "absolute", left: x - BAL.w / 2, top: y, width: BAL.w, height: BAL.h, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft, padding: "0 34px", boxSizing: "border-box", opacity: life, fontFamily: theme.text.family, lineHeight: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
+      <div style={{ fontSize: BAL.label, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
+      {/* the amount and its triangle swell together, from the left, so they never collide */}
+      <div style={{ display: "flex", alignItems: "center", gap: 16, transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
+        <div style={{ fontSize: BAL.amount, fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
+          {/* the colour eases through green and back by blending two copies */}
+          <span style={{ position: "relative", display: "inline-block" }}>
+            <span style={{ color: c.ink }}>{rp(BAL.from + (BAL.to - BAL.from) * count)}</span>
+            <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{rp(BAL.from + (BAL.to - BAL.from) * count)}</span>
+          </span>
+        </div>
+        {tri > 0.001 ? (
+          <svg width={BAL.tri} height={BAL.tri} viewBox="0 0 30 30" style={{ opacity: tri, transform: `translateY(${((1 - tri) * 8).toFixed(2)}px)` }}>
+            <path d="M15 4 L27 25 H3 Z" fill={theme.color.gainGreen} stroke={theme.color.gainGreen} strokeWidth={3} strokeLinejoin="round" />
+          </svg>
+        ) : null}
+      </div>
+    </div>
+  );
+};
+
+/** The coin from the office to the balance card, on an arc, leaving a dashed indigo trail. */
+const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { x: number; y: number }; at: number; out: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const fly = ease(f, at, m.sec(1));
+  if (fly <= 0.001) return null;
+  const gone = ease(f, out, m.fade);
+  if (gone >= 0.999) return null;
+  const arc = (t: number) => ({ x: from.x + (to.x - from.x) * t, y: from.y + (to.y - from.y) * t - Math.sin(Math.PI * t) * 140 });
+  const trail = Array.from({ length: 61 }, (_, k) => arc((fly * k) / 60)).map((p, k) => `${k ? "L" : "M"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+  const p = arc(fly);
+  const R = 28;
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        <path d={trail} fill="none" stroke={c.indigo} strokeWidth={3} strokeLinecap="round" strokeDasharray={`${TRAIL.dash} ${TRAIL.gap}`} />
+      </svg>
+      {fly < 0.999 ? (
+        <svg width={R * 2} height={R * 2} style={{ position: "absolute", left: p.x - R, top: p.y - R }}>
+          <circle cx={R} cy={R} r={R} fill={theme.color.coinYellow} />
+          <circle cx={R} cy={R} r={R * 0.8} fill="none" stroke={c.cardBg} strokeWidth={2} />
+          <text x={R} y={R} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={R * 0.72} fill={c.ink}>Rp</text>
+        </svg>
+      ) : null}
     </div>
   );
 };
 
 export const SC08 = () => {
+  const f = useCurrentFrame();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC08);
+  /* 8083: the office out to the left, the worker and his balance over to where it stood, Total invested in from the right */
+  const shift = ease(f, L(B8.shift), m.move);
+  const officeDx = -(OFFICE.x + OFFICE.h * OFFICE.aspect) * shift;
+  const workerDx = (OFFICE.x - WORKER8.x) * shift;
+  const investDx = (theme.canvas.width - WORKER8.x + MONTH.cardW) * (1 - ease(f, L(B8.shift) + m.sec(0.15), m.move));
   return (
     <Stage>
-      {/* 7803: the office on the left; on the right the worker, his account balance over him —
+      {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
+          goes in behind the card; its trail goes as the office leaves */}
+      <PayCoin from={{ x: OFFICE.x, y: OFFICE.coinY }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.pay)} out={L(B8.shift)} />
+      {/* 7803: the office on the left; on the right the worker, his account balance 40 px over him —
           the rest of 7803-8750 removed ("Visual dari 7803-8750 remove aja") */}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <Cutout src="art/vi01/gedung-kantor.png" aspect={OFFICE.aspect} x={OFFICE.x} y={OFFICE.feet + (1 - OFFICE.floor) * OFFICE.h} h={OFFICE.h} at={L(B8.office) + m.sec(0.25)} shadow floor={OFFICE.floor} />
-        <Cutout src="art/vi01/orang-kerja.png" aspect={WORKER8.aspect} x={WORKER8.x} y={WORKER8.feet + (1 - WORKER8.floor) * WORKER8.h} h={WORKER8.h} at={L(B8.office)} shadow floor={WORKER8.floor} />
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${officeDx.toFixed(2)}px)` }}>
+          <Cutout src="art/vi01/gedung-kantor.png" aspect={OFFICE.aspect} x={OFFICE.x} y={OFFICE.feet + (1 - OFFICE.floor) * OFFICE.h} h={OFFICE.h} at={L(B8.office) + m.sec(0.25)} shadow floor={OFFICE.floor} />
+        </div>
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
+          <Cutout src="art/vi01/orang-kerja.png" aspect={WORKER8.aspect} x={WORKER8.x} y={WORKER8.feet + (1 - WORKER8.floor) * WORKER8.h} h={WORKER8.h} at={L(B8.office)} shadow floor={WORKER8.floor} />
+        </div>
       </div>
-      <AccountBalance x={WORKER8.x} y={WORKER8.cardY} at={L(B8.office) + m.sec(0.15)} />
-
+      <div style={{ position: "absolute", inset: 0, transform: `translateX(${workerDx.toFixed(2)}px)` }}>
+        <AccountBalance x={WORKER8.x} y={BAL_Y} at={L(B8.office) + m.sec(0.15)} payAt={L(B8.pay) + m.sec(1)} />
+      </div>
+      {/* …and Total invested, in from the right where the worker was */}
+      {f >= L(B8.shift) ? (
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${investDx.toFixed(2)}px)` }}>
+          <MiniBalance x={WORKER8.x - MONTH.cardW / 2} y={(theme.captionBand.top - MONTH.cardH) / 2} label="Total invested" amount={rp(0)} />
+        </div>
+      ) : null}
     </Stage>
   );
 };

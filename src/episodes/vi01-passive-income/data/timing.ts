@@ -291,6 +291,18 @@ export const SC08 = {
    * sebelah kiri". They hold until the relay ("estafet").
    */
   office: 7803,
+  /**
+   * "7883 Gedung kantor mengirim koin dan account balance berubah dari
+   * Rp 5,000,000 jadi 25,000,000" — a coin with a dashed trail; the balance
+   * pulses green as it counts, a green up-triangle beside it.
+   */
+  pay: 7883,
+  /**
+   * "8083 GedungKantor nya geser ke kiri hingga keluar layar, Orang Kerjanya
+   * geser ke kiri ke posisi Gedung Kantor. Lalu dari kanan (luar layar), masuk
+   * UI Total Invested."
+   */
+  shift: 8083,
   muda: 7819, // "Waktu masih muda,"
   idealnya: 8069, // "Tapi idealnya,"
   tumbuh: 8213, // "aset kita juga ikut tumbuh."
