@@ -596,7 +596,7 @@ const ROAD_WORDS = ["Belajar", "Belajar", "Evaluasi", "Evaluasi", "Skill acquire
  * turn, eased into and out of every stop; each stop's word comes up as it
  * arrives — above a high stop, below a low one and below the end.
  */
-const WindingPath = ({ at, arrivals }: { at: number; arrivals: number[] }) => {
+const WindingPath = ({ at, arrivals, manageAt }: { at: number; arrivals: number[]; manageAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -624,6 +624,8 @@ const WindingPath = ({ at, arrivals }: { at: number; arrivals: number[] }) => {
           <Say key={i} text={ROAD_WORDS[i]} x={p.x} y={p.y + (below ? 1 : -1) * ROAD.label} at={arrivals[i]} size={ROAD.labelSize} weight={700} color={c.indigo} />
         );
       })}
+      {/* "Di titik terakhir 'Skill owned' lalu di bawahnya 'Manage asset'" — on "mengelola aset." */}
+      <Say text="Manage asset" x={ROAD_PATH.stops[ROAD_PATH.stops.length - 1].x} y={ROAD_PATH.mid + ROAD.label + ROAD.labelSize * 1.3} at={manageAt} size={ROAD.labelSize} weight={700} color={c.indigo} />
       {/* the walker: a bright point with a soft halo */}
       <div style={{ position: "absolute", left: pos.x - ROAD.start, top: pos.y - ROAD.start, width: ROAD.start * 2, height: ROAD.start * 2, borderRadius: ROAD.start, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.indigo}`, boxShadow: shadow.glow, boxSizing: "border-box" }} />
     </div>
@@ -684,7 +686,7 @@ export const SC06 = () => {
       <Invested at={L(B6.months) + m.fade + 6} out={firstOut} count={[L(B6.invested[0]), L(B6.invested[1])]} arrivals={B6.send.map((s) => L(s) + m.move)} />
       <TypeBox cx={theme.canvas.width / 2} y={NOT_MONEY.y} w={NOT_MONEY.w} h={NOT_MONEY.h} at={L(B6.notMoney)} text="Investasi bukan cuma soal uang" size={NOT_MONEY.size} closeAt={L(B6.tuntun)} />
       {/* then, once the box has closed, the winding road — still for now */}
-      <WindingPath at={L(B6.tuntun) + m.sec(1.1)} arrivals={B6.walk.map(L)} />
+      <WindingPath at={L(B6.tuntun) + m.sec(1.1)} arrivals={B6.walk.map(L)} manageAt={L(B6.kelola)} />
 
     </Stage>
   );
