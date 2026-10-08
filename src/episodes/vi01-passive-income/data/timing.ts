@@ -309,6 +309,8 @@ export const SC08 = {
   chart: 8310,
   /** "8405 buat koin melompat dari Gedung ke Account Balance ke Total Invested" */
   hop: 8405,
+  /** "Koinnya selesai di 8682" — the last landing. */
+  hopEnd: 8682,
   muda: 7819, // "Waktu masih muda,"
   idealnya: 8069, // "Tapi idealnya,"
   tumbuh: 8213, // "aset kita juga ikut tumbuh."

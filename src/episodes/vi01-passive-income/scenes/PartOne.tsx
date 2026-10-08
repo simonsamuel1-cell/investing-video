@@ -888,12 +888,13 @@ const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { 
  * Account balance card, out again and in behind Total invested — two arcs, a
  * dashed indigo trail behind it.
  */
-const HopCoin = ({ points, at }: { points: { x: number; y: number }[]; at: number }) => {
+const HopCoin = ({ points, at, end }: { points: { x: number; y: number }[]; at: number; end: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const hop = m.sec(0.8);
   const n = points.length - 1;
+  /* the hops share the time from `at` to `end` evenly */
+  const hop = (end - at) / n;
   const done = ease(f, at + n * hop + m.sec(0.2), m.fade);
   if (f < at || done >= 0.999) return null;
   const arc = (k: number, t: number) => {
@@ -945,7 +946,7 @@ export const SC08 = () => {
     <Stage>
       {/* 8405: a coin hops Gedung → Account balance → Total invested — drawn first, under the
           office and both cards: out from behind the office, in behind each card */}
-      <HopCoin points={HOP.points} at={L(B8.hop)} />
+      <HopCoin points={HOP.points} at={L(B8.hop)} end={L(B8.hopEnd)} />
       {/* 7883: the office pays — drawn first, so the coin comes out from behind the office and
           goes in behind the card; its trail goes as the office leaves */}
       <PayCoin from={{ x: OFFICE.x, y: OFFICE.coinY }} to={{ x: WORKER8.x - BAL.w / 2 + 60, y: BAL_Y + BAL.h / 2 }} at={L(B8.pay)} out={L(B8.shift)} />
