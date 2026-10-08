@@ -237,7 +237,8 @@ export const SC06 = {
    * dilewati lingkaran, muncul text" — when it reaches each of the six:
    * Belajar, Belajar, Evaluasi, Evaluasi, Skill acquired, Skill owned.
    */
-  walk: [6250, 6290, 6330, 6370, 6420, 6510] as const,
+  /* "aku mau animasinya selesai di 6388" — the six evenly from the walker's start */
+  walk: [6246, 6274, 6303, 6331, 6360, 6388] as const,
   modal: 5651, // "modal besar dulu."
   strike: 5698,
   habit: 5823, // "mulai membangun kebiasaannya."
