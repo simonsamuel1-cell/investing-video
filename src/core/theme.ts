@@ -376,9 +376,8 @@ export const theme = {
     checkGreen: "#22B573",
     /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
     gainGreen: "#22B573",
-    /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else. */
+    /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
     sunYellow: "#F7C948",
-    sunOrange: "#F28C28",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.

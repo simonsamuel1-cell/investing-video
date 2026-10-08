@@ -53,9 +53,8 @@ const Fakta = ({ at }: { at: number }) => {
     <div style={{ position: "absolute", inset: 0, opacity: life }}>
       {/* the sunburst behind the lamp — alternating rays, cut to a circle */}
       <svg width={SUN_D} height={SUN_D} style={{ position: "absolute", left: LAMP.cx - R, top: LAMP.cy - R, transform: `rotate(${tilt}deg)` }}>
-        {Array.from({ length: LAMP.rays }, (_, k) => (
-          <path key={k} d={wedge(k)} fill={k % 2 ? theme.color.sunYellow : theme.color.sunOrange} />
-        ))}
+        {/* yellow rays only — the orange ones taken out, left empty ("biarkan bagian yang dihapus itu kosong") */}
+        {Array.from({ length: LAMP.rays }, (_, k) => (k % 2 ? <path key={k} d={wedge(k)} fill={theme.color.sunYellow} /> : null))}
       </svg>
       <Cutout src="art/vi01/lampu.png" aspect={1} x={LAMP.cx} y={LAMP.cy + LAMP.h / 2 + ((5000 - 4757) / 5000) * LAMP_IMG_H} h={LAMP_IMG_H} at={at} rise={0} />
       <div style={{ position: "absolute", left: 0, right: 0, top: LAMP.cy + LAMP.h / 2 + LAMP.gap + LAMP.textY, display: "flex", justifyContent: "center", alignItems: "baseline", gap: 22, lineHeight: 1 }}>
