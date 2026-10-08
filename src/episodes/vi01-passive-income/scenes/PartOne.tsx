@@ -694,20 +694,21 @@ export const SC06 = () => {
 
 // ═══ SC07 — human asset vs financial asset ═══════════════════════════════
 const HALF = { y: 210, w: 780, h: 690, left: 140, right: 1000 };
+/** SC03's small question label ("Pertanyaan 1", now "Jangan cuma tanya"): size, weight, letter spacing. */
+const QUIZ_LABEL = { size: 36, weight: 700, track: 2 };
 /** The heading: typed at the frame's centre, then up to the top. */
 const KEKAYAAN = { text: "Kekayaan punya 2 bagian", size: 64, topY: 150, cps: 1 };
 /**
  * The first card, smaller: a title and its three rows, no rule, the height
  * fitted to them; it opens out from its own centre, at the frame's centre.
  */
-const CARD1 = { w: 560, pad: 44, title: 50, gap: 34, row: 74, item: 38, y: 330 };
+const CARD1 = { w: 560, pad: 44, title: QUIZ_LABEL.size, gap: 54, row: 74, item: 38, y: 330, border: 3 };
 const CARD1_H = CARD1.pad + CARD1.title + CARD1.gap + 3 * CARD1.row + CARD1.pad - CARD1.row / 2 + CARD1.item / 2;
 
 export const SC07 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
-  const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC07);
   const rows = (x: number, items: [IconName, string][], ats: readonly number[], tone: "indigo" | "cyan") =>
     items.map(([icon, label], i) => (
@@ -732,10 +733,14 @@ export const SC07 = () => {
       ) : null}
 
       {cardIn > 0.001 ? (
-        <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}`, boxShadow: shadow.rest, opacity: cardIn, overflow: "hidden" }}>
+        /* no fill, a 3 px indigo border ("bikin no fill, border indigo 3 px") */
+        <div style={{ position: "absolute", left: (theme.canvas.width - cardW) / 2, top: CARD1.y, width: cardW, height: CARD1_H, borderRadius: theme.shape.cardRadius, border: `${CARD1.border}px solid ${c.indigo}`, boxSizing: "border-box", opacity: cardIn, overflow: "hidden" }}>
           {/* the contents keep their place while the card opens around them */}
-          <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2, top: 0, width: CARD1.w, height: CARD1_H }}>
-            <Say text="Human Asset" x={CARD1.w / 2} y={CARD1.pad + CARD1.title / 2} at={L(B7.human)} size={CARD1.title} weight={800} color={c.indigo} />
+          <div style={{ position: "absolute", left: (cardW - CARD1.w) / 2 - CARD1.border, top: -CARD1.border, width: CARD1.w, height: CARD1_H }}>
+            {/* the title in the "Pertanyaan 1" label's style: its size, weight and letter spacing */}
+            <div style={{ position: "absolute", left: 0, right: 0, top: CARD1.pad, textAlign: "center", opacity: ease(f, L(B7.human), m.reveal), fontFamily: theme.text.family, fontSize: QUIZ_LABEL.size, fontWeight: QUIZ_LABEL.weight, letterSpacing: QUIZ_LABEL.track, color: c.indigo, lineHeight: 1 }}>
+              Human Asset
+            </div>
             {([["clock", "Waktu"], ["spark", "Kemampuan"], ["book", "Pengalaman"]] as [IconName, string][]).map(([icon, label], i) => (
               <Item key={label} x={CARD1.pad + 30} y={CARD1.pad + CARD1.title + CARD1.gap + CARD1.item / 2 + i * CARD1.row} icon={icon} label={label} tone="indigo" at={L(B7.humanRows[i])} size={CARD1.item} />
             ))}
