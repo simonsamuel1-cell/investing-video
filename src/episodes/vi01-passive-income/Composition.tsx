@@ -1,5 +1,5 @@
 /**
- * VI01 · Passive Income — 18 scenes, 19,415 frames (05:23.583) at 60fps.
+ * VI01 · Passive Income — 18 scenes, 19,435 frames (05:23.917) at 60fps.
  *
  * Every `from` is a BLOCK boundary from data/timing.ts, which is the sync
  * document's master table (docs/VI01_PassiveIncome_Script_SYNCED.md) — VO-

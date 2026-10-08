@@ -1,8 +1,8 @@
 # VI01 — Passive Income · script RE-TIMED to the recorded VO
 # Timing: INV01 - Main VO.srt (Premiere) → assets/VI01_PassiveIncome_Sub_CORRECTED.srt.
 # Each scene runs from the middle of the silence before its first word to the middle of the
-# silence after its last (the last scene to the end of the video, 05:23.5 = f19415 @ 60fps).
-# Includes Simon's pauses: 0.5 s at 00:02.5 (f150), before "GAJIAN"; 0.5 s at 00:03.8 (f230), after it; 0.33 s at 00:08.8 (f530), after the spending icons; 0.33 s at 00:35.2 (f2110), after "waktu dan tenaga kita."; 0.32 s at 00:55.3 (f3316), before "Bukan berarti investasi hari ini". Then two re-recorded takes replace the original there: "10 Bukan berarti.MP3" from f3335 (293 f) and "11 Tetap kerja.MP3" from f3628 (239 f); everything after moved 55 f. Then 0.5 s at 01:09.2 (f4150), after "…ubah menjadi aset."
+# silence after its last (the last scene to the end of the video, 05:23.8 = f19435 @ 60fps).
+# Includes Simon's pauses: 0.5 s at 00:02.5 (f150), before "GAJIAN"; 0.5 s at 00:03.8 (f230), after it; 0.33 s at 00:08.8 (f530), after the spending icons; 0.33 s at 00:35.2 (f2110), after "waktu dan tenaga kita."; 0.32 s at 00:55.3 (f3316), before "Bukan berarti investasi hari ini". Then two re-recorded takes replace the original there: "10 Bukan berarti.MP3" from f3335 (293 f) and "11 Tetap kerja.MP3" from f3628 (239 f); everything after moved 55 f. Then 0.5 s at 01:09.2 (f4150), after "…ubah menjadi aset."; 0.33 s at 01:49.5 (f6571), after "…mengelola aset."
 # Text is the original's, word for word, except one typo: "asetnya,cbeli" -> "asetnya, beli".
 
 [SCENE 01 | 00:00.0–00:17.0]
@@ -41,66 +41,66 @@ Karena investasi bukan cuma soal uang.
 Semakin sering kita belajar dan mengevaluasi keputusan,
 semakin baik juga kemampuan kita mengelola aset.
 
-[SCENE 07 | 01:49.5–02:09.6]
+[SCENE 07 | 01:49.5–02:09.9]
 Kalau dipikir-pikir, kekayaan kita punya dua bagian.
 Yang pertama, human asset: waktu, kemampuan, dan pengalaman yang membantu kita menghasilkan uang.
 Yang kedua, financial asset: tabungan, investasi, dan aset yang kita bangun dari penghasilan tadi.
 Human asset punya batas. Financial asset bisa terus kita miliki.
 
-[SCENE 08 | 02:09.6–02:25.5]
+[SCENE 08 | 02:09.9–02:25.8]
 Waktu masih muda, wajar kalau sebagian besar penghasilan datang dari kerja.
 Tapi idealnya, saat income kita meningkat, aset kita juga ikut tumbuh.
 Bayangin seperti estafet: kita kerja untuk menghasilkan uang, lalu sebagian uang itu kita teruskan untuk membangun aset.
 
-[SCENE 09 | 02:25.5–02:42.6]
+[SCENE 09 | 02:25.8–02:42.9]
 Hal menarik dari investasi adalah:
 kita nggak harus bekerja di sebuah perusahaan untuk ikut memiliki sebagian dari bisnisnya.
 Ada orang yang bekerja di BCA untuk mendapatkan penghasilan.
 Di sisi lain, sebagai investor, kita juga bisa punya sebagian kecil dari bisnis BCA.
 
-[SCENE 10 | 02:42.6–03:00.2]
+[SCENE 10 | 02:42.9–03:00.5]
 Hal yang sama sebenarnya ada di sekitar kita setiap hari.
 Kita makan Indomie, minum Ultra Milk, dan menggunakan banyak produk dari perusahaan besar.
 Sebagai konsumen, kita menikmati produknya.
 Tapi lewat investasi, kita juga bisa ikut punya sebagian kecil dari bisnis di balik produk-produk itu.
 
-[SCENE 11 | 03:00.2–03:18.3]
+[SCENE 11 | 03:00.5–03:18.6]
 Dan di sinilah bedanya antara sekadar menghasilkan uang, dengan mulai membangun aset.
 Sebuah bisnis bisa menghasilkan pendapatan, mencetak laba, lalu memakai laba itu untuk berkembang lebih jauh.
 Sebagai pemilik sebagian dari bisnis tersebut, kita ikut punya exposure terhadap pertumbuhan nilainya.
 
-[SCENE 12 | 03:18.3–03:31.4]
+[SCENE 12 | 03:18.6–03:31.7]
 Dan mulainya nggak harus besar. Bisa Rp50 ribu, Rp100 ribu, atau Rp300 ribu.
 Yang paling penting bukan nominal pertamanya, tapi kebiasaan untuk menyisihkan sebagian income dan mulai mengubahnya menjadi aset.
 
-[SCENE 13 | 03:31.4–03:50.3]
+[SCENE 13 | 03:31.7–03:50.6]
 Lo Kheng Hong juga nggak langsung mulai sebagai investor besar.
 Sebelum dikenal seperti sekarang, dia pernah bekerja sebagai pegawai bank.
 Sambil bekerja, dia menabung, belajar, membaca laporan perusahaan, dan pelan-pelan mulai berinvestasi.
 Salah satu contoh terkenalnya adalah saat dia membeli saham United Tractors.
 
-[SCENE 14 | 03:50.3–04:11.5]
+[SCENE 14 | 03:50.6–04:11.8]
 Saat krisis 1998, Lo Kheng Hong membeli United Tractors di harga sekitar Rp250 per saham.
 Beberapa tahun kemudian, nilainya sudah meningkat berkali-kali lipat, bahkan pernah berada di kisaran sekitar Rp15 ribu.
 Tapi tentu saja, ini adalah contoh dari masa lalu.
 Nggak semua investasi akan memberikan hasil seperti ini.
 
-[SCENE 15 | 04:11.5–04:28.8]
+[SCENE 15 | 04:11.8–04:29.1]
 Yang menarik dari cerita ini sebenarnya bukan: “Cari saham yang bisa naik berkali-kali.”
 Yang lebih penting justru prosesnya.
 Kerja untuk menghasilkan uang, sisihkan sebagian, pelajari asetnya, beli sesuatu yang benar-benar dipahami, lalu beri waktu untuk berkembang.
 
-[SCENE 16 | 04:28.8–04:43.4]
+[SCENE 16 | 04:29.1–04:43.7]
 Jadi membangun passive income bukan berarti kita harus lari dari pekerjaan.
 Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang.
 Bedanya, sebagian hasil kerja kita hari ini mulai ikut disiapkan untuk masa depan.
 
-[SCENE 17 | 04:43.4–05:03.6]
+[SCENE 17 | 04:43.7–05:03.9]
 Di awal, aset kita mungkin masih kecil.
 Tapi kalau kemampuan kerja terus berkembang, income bertambah, dan aset juga ikut tumbuh, pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial.
 Kita juga mulai punya lebih banyak pilihan. Jadi setiap kali income masuk, coba tanya: “Berapa yang bisa aku sisihkan untuk mulai punya aset?”
 
-[SCENE 18 | 05:03.6–05:23.5]
+[SCENE 18 | 05:03.9–05:23.8]
 Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.
 Sedangkan investasi, membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.
 Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset.
