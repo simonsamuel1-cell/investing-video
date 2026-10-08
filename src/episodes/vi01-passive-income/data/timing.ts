@@ -307,6 +307,8 @@ export const SC08 = {
   invest: 8138,
   /** "8310 Gedungnya masuk lagi, membentuk bagan Gedung-OrangKerja-Asset" */
   chart: 8310,
+  /** "8405 buat koin melompat dari Gedung ke Account Balance ke Total Invested" */
+  hop: 8405,
   muda: 7819, // "Waktu masih muda,"
   idealnya: 8069, // "Tapi idealnya,"
   tumbuh: 8213, // "aset kita juga ikut tumbuh."

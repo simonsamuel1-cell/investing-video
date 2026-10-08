@@ -790,6 +790,19 @@ const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
 const CHART8 = { x: [330, 960, 1590], scale: 0.8, linkY: 760, links: [[570, 740], [1170, 1280]] as [number, number][] };
 /** "Asset.png", 1254 × 1254, the pile's base on row 1180 — on the worker's floor line, under Total invested. */
 const ASSET8 = { h: 440, floor: 1180 / 1254 };
+/**
+ * The hop's stops, in the chart's settled layout: the office's roof, then the
+ * top edge of each card — 80% of the card's place,
+ * about the worker's feet.
+ */
+const HOP = {
+  height: 150,
+  points: [
+    { x: 330, y: 352 - 28 }, // the office's roof, so the trail never crosses the building
+    { x: 960, y: 431 - 28 },
+    { x: 1464, y: 431 - 28 },
+  ],
+};
 /** What reaches Total invested at SC08.invest. */
 const INVEST8 = 5_000_000;
 const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
@@ -870,6 +883,48 @@ const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { 
   );
 };
 
+/**
+ * One coin hopping along the chart: from the office onto the Account balance
+ * card, then onto Total invested — two arcs, each landing on the card's top
+ * edge, a dashed indigo trail behind it; it fades once it has landed.
+ */
+const HopCoin = ({ points, at }: { points: { x: number; y: number }[]; at: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const hop = m.sec(0.8);
+  const n = points.length - 1;
+  const done = ease(f, at + n * hop + m.sec(0.2), m.fade);
+  if (f < at || done >= 0.999) return null;
+  const arc = (k: number, t: number) => {
+    const a = points[k];
+    const b = points[k + 1];
+    return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t - Math.sin(Math.PI * t) * HOP.height };
+  };
+  const steps: { x: number; y: number }[] = [];
+  let pos = points[0];
+  for (let k = 0; k < n; k++) {
+    const t = ease(f, at + k * hop, hop);
+    if (f < at + k * hop) break;
+    for (let j = 0; j <= 30; j++) steps.push(arc(k, (t * j) / 30));
+    pos = arc(k, t);
+  }
+  const trail = steps.map((p, i) => `${i ? "L" : "M"} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(" ");
+  const R = 28;
+  return (
+    <>
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        <path d={trail} fill="none" stroke={c.indigo} strokeWidth={3} strokeLinecap="round" strokeDasharray={`${TRAIL.dash} ${TRAIL.gap}`} />
+      </svg>
+      <svg width={R * 2} height={R * 2} style={{ position: "absolute", left: pos.x - R, top: pos.y - R, opacity: 1 - done }}>
+        <circle cx={R} cy={R} r={R} fill={theme.color.coinYellow} />
+        <circle cx={R} cy={R} r={R * 0.8} fill="none" stroke={c.cardBg} strokeWidth={2} />
+        <text x={R} y={R} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={R * 0.72} fill={c.ink}>Rp</text>
+      </svg>
+    </>
+  );
+};
+
 export const SC08 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -918,6 +973,8 @@ export const SC08 = () => {
           <Cutout src="art/vi01/asset.png" aspect={1} x={WORKER8.x} y={WORKER8.feet + (1 - ASSET8.floor) * ASSET8.h} h={ASSET8.h} at={L(B8.chart)} shadow floor={ASSET8.floor} />
         </div>
       ) : null}
+      {/* 8405: a coin hops Gedung → Account balance → Total invested, landing on each card's top edge */}
+      <HopCoin points={HOP.points} at={L(B8.hop)} />
       {/* the chart's links, once the three stand in a row: dashed indigo arrows, Gedung → Orang Kerja → Asset */}
       {links > 0.001 ? (
         <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
