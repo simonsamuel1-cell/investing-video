@@ -406,7 +406,7 @@ const place = (box: { x: number; y: number }, at: { x: number; y: number }) =>
  * between them, "Sebuah bisnis" in the middle. Each word comes on its own
  * word in the VO; each arc draws on into the next one.
  */
-const CYCLE = { r: 290, pad: 22, word: 52, arrow: 5, head: 18 };
+const CYCLE = { r: 290, pad: 22, word: 52, arrow: 5, head: 18, icon: 150 };
 /** How far round from a word the arc must start (or end) to clear the word's box by `pad`. */
 const clearDeg = (text: string, deg: number, dir: 1 | -1) => {
   const hw = (text.length * CYCLE.word * 0.58) / 2 + CYCLE.pad;
@@ -431,6 +431,7 @@ const Cycle = ({ steps, wheelAt }: { steps: number[]; wheelAt: number }) => {
   const c = usePalette();
   const m = useMotion();
   const { cx, cy } = WHEEL;
+  const mid = ease(f, wheelAt, m.reveal);
   const pt = (deg: number) => ({ x: cx + CYCLE.r * Math.cos((deg * Math.PI) / 180), y: cy + CYCLE.r * Math.sin((deg * Math.PI) / 180) });
   /* each arc leaves one word and reaches the next, drawn on just before that word lands */
   const arcs = CYCLE_WORDS.map((w, i) => {
@@ -465,7 +466,10 @@ const Cycle = ({ steps, wheelAt }: { steps: number[]; wheelAt: number }) => {
         const p = pt(w.deg);
         return <Say key={w.text} text={w.text} x={p.x} y={p.y} at={steps[i]} size={CYCLE.word} weight={800} color={c.indigo} />;
       })}
-      <Say text="Sebuah bisnis" x={cx} y={cy} at={wheelAt} size={36} weight={700} color={c.slate} />
+      {/* "ganti 'Sebuah bisnis' jadi icon aja" — a company, easing in where the words were */}
+      <div style={{ position: "absolute", left: cx - CYCLE.icon / 2, top: cy - CYCLE.icon / 2 + (1 - mid) * 16, opacity: mid }}>
+        <Icon name="building" size={CYCLE.icon} color={c.indigo} stroke={2.6} fill={c.indigoSoft} />
+      </div>
     </>
   );
 };
