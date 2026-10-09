@@ -356,7 +356,7 @@ const OWNER: NodeBox = { x: 1420, y: 520, w: 340, h: 150 };
 const TUNTUN3 = { aspect: 941 / 1672, rows: 1672, top: 115, belly: 880, headU: 466 / 941, from: 220 };
 const TUNTUN3_H = ((theme.captionBand.top - TUNTUN3.from) * TUNTUN3.rows) / (TUNTUN3.belly - TUNTUN3.top);
 /** Shoulder height, where he is narrowest — the phrases close in on either side without leaving the frame. */
-const SIDE = { y: 440, size: 56, left: 760, right: 1160 };
+const SIDE = { y: 490, size: 56, left: 710, right: 1210 }; // then 50 px lower, and 50 px further out each side
 
 /** A phrase typed out letter by letter. */
 const Typed = ({ text, x, y, at, anchor, color }: { text: string; x: number; y: number; at: number; anchor: "left" | "right"; color: string }) => {
