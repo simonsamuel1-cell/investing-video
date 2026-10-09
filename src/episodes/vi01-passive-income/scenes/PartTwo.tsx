@@ -376,7 +376,7 @@ const Typed = ({ text, x, y, at, anchor, color }: { text: string; x: number; y: 
  * margin; his reach goes to column 926; the panel starts 50 px past it and
  * runs to the right margin.
  */
-const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926, band: 854 };
+const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926, feet: 1600 };
 /**
  * "komposisinya jadi 25 75": between the margins, his visible width (columns
  * 160–926), 50 px, then the panel, at 25 : 75. He shrinks while he moves left
@@ -386,7 +386,8 @@ const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926, band: 854 }
 const ROW_W = theme.canvas.width - theme.margin.left - theme.margin.right;
 const PERSON11_W = (ROW_W - 50) * 0.25;
 const K11 = PERSON11_W / (TUNTUN4B.right - TUNTUN4B.left);
-const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.captionBand.top - (TUNTUN4B.band - TUNTUN4B.top) * K11 };
+/* "buat jadi keliatan full body": his shoes stand just over the caption band */
+const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.captionBand.top - 12 - (TUNTUN4B.feet - TUNTUN4B.top) * K11 };
 const PANEL_X = theme.margin.left + PERSON11_W + 50;
 const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 80, border: 4 }; // 80 px over the band: room for its shadow; pad leaves the wheel room to grow
 /** "Rectanglenya boleh panjangin ke kiri, gapapa overlap dengan OrangTuntun" — the drawn frame starts at the left margin; he stands in front of it. */
