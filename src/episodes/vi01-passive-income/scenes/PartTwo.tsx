@@ -126,12 +126,59 @@ const Korporat = ({ at, insetAt }: { at: number; insetAt: number }) => {
 /** The dashed box under "fakta menarik". */
 const TAK = { y: 680, w: 1340, h: 120, size: 44 };
 
+/**
+ * After the slide at 9474: the man looking at his phone on the left
+ * ("LiatHP.png", 1086 × 1448, cut at the waist — his feet are off the file),
+ * the BBCA chart screenshot beside him ("ChartBBCA.png", 4084 × 5834); at 9599
+ * the portfolio screenshot ("Portfolio.jpg", 750 × 512) rises over the chart,
+ * centred on it; at 9662 he becomes "OrangSenang.png".
+ */
+const BBCA = { personH: 660, chartH: 600, top: 330, gap: 60, radius: 24, portW: 560, portTop: 548, portRise: 200 };
+const PERSON_W = (BBCA.personH * 1086) / 1448;
+const CHART_W = (BBCA.chartH * 4084) / 5834;
+const BBCA_LEFT = (theme.canvas.width - (PERSON_W + BBCA.gap + CHART_W)) / 2;
+const PERSON_X = BBCA_LEFT + PERSON_W / 2;
+const CHART_LEFT = BBCA_LEFT + PERSON_W + BBCA.gap;
+const PORT_H = (BBCA.portW * 512) / 750;
+
+const BbcaSet = ({ portfolioAt, senangAt }: { portfolioAt: number; senangAt: number }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const shadow = useShadow();
+  const port = ease(f, portfolioAt, m.move);
+  const swap = ease(f, senangAt, m.fade);
+  const card = (left: number, top: number, w: number, h: number, src: string, extra?: React.CSSProperties) => (
+    <div style={{ position: "absolute", left, top, width: w, height: h, borderRadius: BBCA.radius, overflow: "hidden", boxShadow: shadow.soft, ...extra }}>
+      <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} showInTimeline={false} />
+    </div>
+  );
+  return (
+    <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+      {/* the man, cut at the caption band; he cross-fades to happy at 9662 */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - swap }}>
+        <Cutout src="art/vi01/liat-hp.png" aspect={1086 / 1448} x={PERSON_X} y={theme.captionBand.top} h={BBCA.personH} at={-m.reveal} rise={0} shadow floor={1.2} />
+      </div>
+      {swap > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: swap }}>
+          <Cutout src="art/vi01/orang-senang.png" aspect={1086 / 1448} x={PERSON_X} y={theme.captionBand.top} h={BBCA.personH} at={-m.reveal} rise={0} shadow floor={1.2} />
+        </div>
+      ) : null}
+      {card(CHART_LEFT, BBCA.top, CHART_W, BBCA.chartH, "art/vi01/chart-bbca.png")}
+      {port > 0.001
+        ? card(CHART_LEFT + CHART_W / 2 - BBCA.portW / 2, BBCA.portTop + (1 - port) * BBCA.portRise, BBCA.portW, PORT_H, "art/vi01/portfolio.jpg", { opacity: port })
+        : null}
+    </div>
+  );
+};
+
 export const SC09 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC09);
   const f = useCurrentFrame();
   const out = ease(f, L(B9.korporat), m.move);
+  /* 9474: everything but the lamp slides out left, the BBCA set in from the right */
+  const slide = ease(f, L(B9.slide), m.move);
   /* "visual yang ada di scene ini sebelumnya, hapus aja (kecuali visual dariku)" */
   return (
     <Stage>
@@ -143,8 +190,17 @@ export const SC09 = () => {
           <TypeBox cx={theme.canvas.width / 2} y={TAK.y} w={TAK.w} h={TAK.h} at={L(B9.tak)} text="Tak perlu jadi karyawan untuk ikut memiliki bisnisnya." size={TAK.size} boxInk={c.indigo} italic={false} />
         </div>
       ) : null}
-      {/* then the office floor blurs in */}
-      <Korporat at={L(B9.korporat) + m.move / 2} insetAt={L(B9.korporatInset)} />
+      {/* then the office floor blurs in; at 9474 it slides out to the left */}
+      {slide < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${(-theme.canvas.width * slide).toFixed(2)}px)` }}>
+          <Korporat at={L(B9.korporat) + m.move / 2} insetAt={L(B9.korporatInset)} />
+        </div>
+      ) : null}
+      {slide > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${(theme.canvas.width * (1 - slide)).toFixed(2)}px)` }}>
+          <BbcaSet portfolioAt={L(B9.portfolio)} senangAt={L(B9.senang)} />
+        </div>
+      ) : null}
     </Stage>
   );
 };

@@ -339,6 +339,12 @@ export const SC09 = {
   korporat: 9250,
   /** "9334 image KerjaKorporat nya baru muncul" — the small inset, after GedungBCA. */
   korporatInset: 9334,
+  /** "9474 Transisi geser kiri kecuali lampu dan sunburst. Lalu masuk dari kanan LiatHP.png dan ChartBBCA.png (saling bersebelahan)." */
+  slide: 9474,
+  /** "9599 muncul fade in geser dari bawah Portfolio.jpg, overlap dengan Chart BBCA, posisi akhir … tengah-horizontal terhadap Chart BBCA." */
+  portfolio: 9599,
+  /** "9662 LiatHP.png berubah jadi OrangSenang.png." */
+  senang: 9662,
   company: 8820, // "dari investasi"
   nggak: 8905, // "kita nggak harus bekerja di sebuah perusahaan"
   karyawan: 9255, // "Ada orang yang bekerja di BCA"
