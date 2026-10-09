@@ -365,6 +365,14 @@ export const SC10 = {
   table: [10028, 10082, 10133] as const,
   /** "10293 semua gambar ini mengecil anchor to Orangnya, buat orangnya jadi keliatan full body" */
   fullBody: 10293,
+  /**
+   * "10500 Buatkan template hp muncul geser naik dari bawah luar layar,
+   * widthnya besar hingga menutupi orang dan meja … Lalu ponsel mengecil jadi
+   * heightnya fit to antara judul dan subtitle. 10657 ponselnya terduplikat
+   * jadi ada 4 dalam 1 baris" — each showing one "Saham_" screenshot.
+   */
+  phone: 10500,
+  phones: 10657,
   products: [10043, 10099, 10147, 10204] as const, // Indomie, Ultra Milk, dan banyak produk
   konsumen: 10299, // "Sebagai konsumen,"
   flip: 10505, // "Tapi lewat investasi,"

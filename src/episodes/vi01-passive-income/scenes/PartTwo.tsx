@@ -246,11 +246,69 @@ const OnTable = ({ p, at }: { p: Product; at: number }) => {
   return <Img src={staticFile(p.src)} showInTimeline={false} style={{ position: "absolute", left, top: top - (1 - t) * 30, width: size, height: size, opacity: t }} />;
 };
 
+/**
+ * THE PHONES. One phone template — slate bezel, round corners, an island —
+ * showing a stock page — the whole "Saham_" screenshot (4084 × 8000), uncut
+ * ("ukurannya sesuai aja, jangan di crop"); the screen takes its ratio.
+ */
+const SCREEN_RATIO = 4084 / 8000;
+const PH = { h: 700, top: 250, bezel: 8, radius: 52, big: 1.45, row: 0.82, gap: 40 };
+const PH_SCREEN_H = PH.h - PH.bezel * 2;
+const PH_W = PH_SCREEN_H * SCREEN_RATIO + PH.bezel * 2;
+/** Left to right once there are four; the first phone (ICBP) is second from the left. */
+const SAHAM = ["ultj", "icbp", "myor", "sido"];
+const MAIN = 1;
+
+const PhoneShot = ({ code, cx }: { code: string; cx: number }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  return (
+    <div style={{ position: "absolute", left: cx - PH_W / 2, top: PH.top, width: PH_W, height: PH.h, borderRadius: PH.radius, background: c.slate, boxShadow: shadow.soft, padding: PH.bezel, boxSizing: "border-box" }}>
+      <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: PH.radius - PH.bezel, overflow: "hidden", background: c.cardBg }}>
+        <Img src={staticFile(`art/vi01/saham-${code}.png`)} showInTimeline={false} style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "auto" }} />
+        <div style={{ position: "absolute", left: "50%", top: 10, width: 86, height: 24, marginLeft: -43, borderRadius: 12, background: c.ink }} />
+      </div>
+    </div>
+  );
+};
+
+/**
+ * 10500: one phone rises from below the frame, big enough to cover the man and
+ * the table; once it has, they are gone. It shrinks (about its top centre)
+ * until it fits between the title and the caption band. 10657: three more slide
+ * out from behind it — one to the left, two to the right — and the main one
+ * moves left, all settling a little smaller so four fit in one row.
+ */
+const Phones = ({ at, spreadAt }: { at: number; spreadAt: number }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  if (f < at) return null;
+  const rise = ease(f, at, m.move);
+  const fit = ease(f, at + m.move + m.sec(0.2), m.move);
+  const spread = ease(f, spreadAt, m.move);
+  const scale = PH.big + (1 - PH.big) * fit + (PH.row - 1) * spread;
+  const lift = (1 - rise) * (theme.canvas.height - PH.top + 40);
+  const step = (PH_W * PH.row + PH.gap) / PH.row;
+  const slot = (i: number) => theme.canvas.width / 2 + (i - (SAHAM.length - 1) / 2) * step;
+  const x = (i: number) => theme.canvas.width / 2 + (slot(i) - theme.canvas.width / 2) * spread;
+  const order = SAHAM.map((_, i) => i).filter((i) => i !== MAIN).concat(MAIN);
+  return (
+    <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+      <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px) scale(${scale.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${PH.top}px` }}>
+        {/* the three extras behind the main one until they slide out */}
+        {order.map((i) => (i === MAIN || spread > 0.001 ? <PhoneShot key={SAHAM[i]} code={SAHAM[i]} cx={x(i)} /> : null))}
+      </div>
+    </div>
+  );
+};
+
 export const SC10 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC10);
   const shrink = ease(f, L(B10.fullBody), m.move);
+  /* the man and the products are gone once the rising phone covers them */
+  const covered = f >= L(B10.phone) + m.move;
   const full = 1 - (1 - MEJA_FULL) * shrink;
   const c = usePalette();
   return (
@@ -262,6 +320,7 @@ export const SC10 = () => {
         </div>
       ) : null}
       <Say text="Ada di sekitar kita setiap hari" x={960} y={190} at={L(B10.around)} size={52} />
+      {!covered ? (
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
         <Cutout src="art/vi01/meja-kosong.png" aspect={MEJA.fileW / MEJA.fileH} x={theme.canvas.width / 2} y={MEJA_TOP + MEJA_H} h={MEJA_H} at={L(B10.around)} rise={0} />
@@ -270,6 +329,8 @@ export const SC10 = () => {
         ))}
         </div>
       </div>
+      ) : null}
+      <Phones at={L(B10.phone)} spreadAt={L(B10.phones)} />
     </Stage>
   );
 };
