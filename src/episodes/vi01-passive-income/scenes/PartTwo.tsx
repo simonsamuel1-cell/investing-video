@@ -13,7 +13,7 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type NodeBox } from "../components/kit";
+import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Link, Node, Say, TypeBox, useLife, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -341,11 +341,6 @@ export const SC10 = () => {
 
 // ═══ SC11 — earning money vs building assets; the business wheel ═════════
 const WHEEL = { cx: 900, cy: 620 };
-const SPOKES: NodeBox[] = [
-  { x: WHEEL.cx - 170, y: WHEEL.cy - 250, w: 340, h: 116 },
-  { x: WHEEL.cx + 80, y: WHEEL.cy + 120, w: 300, h: 116 },
-  { x: WHEEL.cx - 380, y: WHEEL.cy + 120, w: 330, h: 116 },
-];
 const OWNER: NodeBox = { x: 1420, y: 520, w: 340, h: 150 };
 
 /**
@@ -395,13 +390,84 @@ const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.ca
 const PANEL_X = theme.margin.left + PERSON11_W + 50;
 const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 80, border: 4 }; // 80 px over the band: room for its shadow; pad leaves the wheel room to grow
 /** "Rectanglenya boleh panjangin ke kiri, gapapa overlap dengan OrangTuntun" — the drawn frame starts at the left margin; he stands in front of it. */
-const FRAME11 = { x: theme.margin.left, w: theme.canvas.width - theme.margin.right - theme.margin.left };
+/* then "Panelnya pendekin widthnya 50 px" — taken off its left end, behind him */
+const FRAME11 = { x: theme.margin.left + 50, w: theme.canvas.width - theme.margin.right - theme.margin.left - 50 };
 /** The wheel and the owner side by side as first drawn (canvas box), scaled into the wide panel. */
 const CONTENT_BOX = { x: 520, y: 370, w: 1260, h: 512 };
 const PANEL_K = Math.min((PANEL.w - 2 * PANEL.pad) / CONTENT_BOX.w, (PANEL.h - 2 * PANEL.pad) / CONTENT_BOX.h);
 const CONTENT_AT = { x: PANEL.x + (PANEL.w - CONTENT_BOX.w * PANEL_K) / 2, y: PANEL.y + (PANEL.h - CONTENT_BOX.h * PANEL_K) / 2 };
 const place = (box: { x: number; y: number }, at: { x: number; y: number }) =>
   `translate(${(at.x - box.x * PANEL_K).toFixed(2)}px, ${(at.y - box.y * PANEL_K).toFixed(2)}px) scale(${PANEL_K.toFixed(4)})`;
+
+/**
+ * The business cycle, after Simon's reference ("Earn → Save → Invest →
+ * Repeat"): the three words on a circle, curved arrows running clockwise
+ * between them, "Sebuah bisnis" in the middle. Each word comes on its own
+ * word in the VO; each arc draws on into the next one.
+ */
+const CYCLE = { r: 290, pad: 22, word: 52, arrow: 5, head: 18 };
+/** How far round from a word the arc must start (or end) to clear the word's box by `pad`. */
+const clearDeg = (text: string, deg: number, dir: 1 | -1) => {
+  const hw = (text.length * CYCLE.word * 0.58) / 2 + CYCLE.pad;
+  const hh = CYCLE.word * 0.6 + CYCLE.pad;
+  const c0 = { x: Math.cos((deg * Math.PI) / 180) * CYCLE.r, y: Math.sin((deg * Math.PI) / 180) * CYCLE.r };
+  for (let d = 1; d < 120; d++) {
+    const a = ((deg + dir * d) * Math.PI) / 180;
+    const x = Math.cos(a) * CYCLE.r - c0.x;
+    const y = Math.sin(a) * CYCLE.r - c0.y;
+    if (Math.abs(x) > hw || Math.abs(y) > hh) return d;
+  }
+  return 60;
+};
+const CYCLE_WORDS: { text: string; deg: number }[] = [
+  { text: "Pendapatan", deg: -90 },
+  { text: "Laba", deg: 30 },
+  { text: "Berkembang", deg: 150 },
+];
+
+const Cycle = ({ steps, wheelAt }: { steps: number[]; wheelAt: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const { cx, cy } = WHEEL;
+  const pt = (deg: number) => ({ x: cx + CYCLE.r * Math.cos((deg * Math.PI) / 180), y: cy + CYCLE.r * Math.sin((deg * Math.PI) / 180) });
+  /* each arc leaves one word and reaches the next, drawn on just before that word lands */
+  const arcs = CYCLE_WORDS.map((w, i) => {
+    const next = CYCLE_WORDS[(i + 1) % CYCLE_WORDS.length];
+    const a0 = w.deg + clearDeg(w.text, w.deg, 1);
+    const a1 = (next.deg <= w.deg ? next.deg + 360 : next.deg) - clearDeg(next.text, next.deg, -1);
+    const at = i < CYCLE_WORDS.length - 1 ? steps[i + 1] - m.sec(0.4) : steps[2] + m.sec(0.2);
+    return { a0, a1, p: ease(f, at, m.sec(0.5)) };
+  });
+  return (
+    <>
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+        {arcs.map(({ a0, a1, p }, i) => {
+          if (p <= 0.001) return null;
+          const s = pt(a0);
+          const e = pt(a1);
+          const end = (a1 * Math.PI) / 180;
+          const tx = -Math.sin(end);
+          const ty = Math.cos(end);
+          const nx = -ty;
+          const ny = tx;
+          const H = CYCLE.head;
+          return (
+            <g key={i}>
+              <path d={`M ${s.x} ${s.y} A ${CYCLE.r} ${CYCLE.r} 0 0 1 ${e.x} ${e.y}`} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} fill="none" stroke={c.indigo} strokeWidth={CYCLE.arrow} strokeLinecap="round" />
+              {p > 0.95 ? <path d={`M ${e.x + tx * H} ${e.y + ty * H} L ${e.x + nx * H * 0.7} ${e.y + ny * H * 0.7} L ${e.x - nx * H * 0.7} ${e.y - ny * H * 0.7} Z`} fill={c.indigo} strokeLinejoin="round" stroke={c.indigo} strokeWidth={2} /> : null}
+            </g>
+          );
+        })}
+      </svg>
+      {CYCLE_WORDS.map((w, i) => {
+        const p = pt(w.deg);
+        return <Say key={w.text} text={w.text} x={p.x} y={p.y} at={steps[i]} size={CYCLE.word} weight={800} color={c.indigo} />;
+      })}
+      <Say text="Sebuah bisnis" x={cx} y={cy} at={wheelAt} size={36} weight={700} color={c.slate} />
+    </>
+  );
+};
 
 export const SC11 = () => {
   const f = useCurrentFrame();
@@ -450,15 +516,9 @@ export const SC11 = () => {
       {/* everything after, inside the panel — the wheel and the owner side by side, as first drawn */}
       <div style={{ position: "absolute", inset: 0, transform: place(CONTENT_BOX, CONTENT_AT), transformOrigin: "0 0" }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${WHEEL.cx}px ${WHEEL.cy}px` }}>
-          <Node box={SPOKES[0]} label="Pendapatan" icon="wallet" at={L(B11.steps[0])} size={38} />
-          <Link a={nodeEdge(SPOKES[0], "r")} b={nodeEdge(SPOKES[1], "t")} at={L(B11.steps[1]) - 20} />
-          <Node box={SPOKES[1]} label="Laba" icon="coin" at={L(B11.steps[1])} size={38} />
-          <Link a={nodeEdge(SPOKES[1], "l")} b={nodeEdge(SPOKES[2], "r")} at={L(B11.steps[2]) - 30} />
-          <Node box={SPOKES[2]} label="Berkembang" icon="chart" at={L(B11.steps[2])} size={38} />
-          <Link a={nodeEdge(SPOKES[2], "t")} b={nodeEdge(SPOKES[0], "l")} at={L(B11.steps[2]) + 10} />
-          <Say text="Sebuah bisnis" x={WHEEL.cx} y={WHEEL.cy + 40} at={L(B11.wheel)} size={34} weight={700} color={c.slate} />
+          <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
         </div>
-        <Link a={{ x: OWNER.x - 20, y: OWNER.y + OWNER.h / 2 }} b={{ x: WHEEL.cx + 250, y: WHEEL.cy - 40 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
+        <Link a={{ x: OWNER.x - 20, y: OWNER.y + OWNER.h / 2 }} b={{ x: WHEEL.cx + CYCLE.r + 30, y: WHEEL.cy - 40 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
         <Node box={OWNER} label="Pemilik" sub="sebagian kecil" icon="person" tone="cyan" at={L(B11.pemilik)} size={40} />
         <Say text="ikut punya exposure ke" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 50} at={L(B11.exposure)} size={34} weight={600} color={theme.color.cyanInk} />
         <Say text="pertumbuhan nilainya" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 96} at={L(B11.exposure) + 12} size={34} weight={800} color={theme.color.cyanInk} />
