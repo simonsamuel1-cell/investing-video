@@ -337,6 +337,8 @@ export const SC09 = {
    * KerjaKorporat.png, buat gambarnya jadi rounded corner."
    */
   korporat: 9250,
+  /** "9334 image KerjaKorporat nya baru muncul" — the small inset, after GedungBCA. */
+  korporatInset: 9334,
   company: 8820, // "dari investasi"
   nggak: 8905, // "kita nggak harus bekerja di sebuah perusahaan"
   karyawan: 9255, // "Ada orang yang bekerja di BCA"

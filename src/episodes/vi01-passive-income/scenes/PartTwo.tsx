@@ -105,7 +105,7 @@ const Photo = ({ src, left, top, w, h, at, children }: { src: string; left: numb
  * dengan GedungBCA di pojok kiri bawah" — and on the small one, bottom left,
  * "AI generated image".
  */
-const Korporat = ({ at }: { at: number }) => {
+const Korporat = ({ at, insetAt }: { at: number; insetAt: number }) => {
   const c = usePalette();
   const left = (theme.canvas.width - BCA_W) / 2;
   const sw = KORP_W * KORP.small;
@@ -113,7 +113,7 @@ const Korporat = ({ at }: { at: number }) => {
   return (
     <>
       <Photo src="art/vi01/gedung-bca.jpg" left={left} top={KORP.top} w={BCA_W} h={KORP.h} at={at} />
-      <Photo src="art/vi01/kerja-korporat.png" left={left - KORP.overhang} top={KORP.top + KORP.h + KORP.drop - sh} w={sw} h={sh} at={at + 8}>
+      <Photo src="art/vi01/kerja-korporat.png" left={left - KORP.overhang} top={KORP.top + KORP.h + KORP.drop - sh} w={sw} h={sh} at={insetAt}>
         <div style={{ position: "absolute", left: 16, bottom: 16, padding: "6px 12px", borderRadius: 10, background: c.ink, opacity: 0.75, fontFamily: theme.text.family, fontSize: 20, fontWeight: 600, color: c.cardBg, lineHeight: 1, whiteSpace: "nowrap" }}>
           AI generated image
         </div>
@@ -144,7 +144,7 @@ export const SC09 = () => {
         </div>
       ) : null}
       {/* then the office floor blurs in */}
-      <Korporat at={L(B9.korporat) + m.move / 2} />
+      <Korporat at={L(B9.korporat) + m.move / 2} insetAt={L(B9.korporatInset)} />
     </Stage>
   );
 };
