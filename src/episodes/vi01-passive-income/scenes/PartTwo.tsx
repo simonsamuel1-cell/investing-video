@@ -13,7 +13,7 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -209,37 +209,53 @@ export const SC09 = () => {
 };
 
 // ═══ SC10 — the products around us, and who is behind them ═══════════════
-const SHELF = { y: 330, w: 330, h: 300, x: [420, 800, 1180, 1560] };
-const FRONT: { label: string; icon: IconName }[] = [
-  { label: "Indomie", icon: "bowl" },
-  { label: "Ultra Milk", icon: "milk" },
-  { label: "Produk lain", icon: "box" },
-  { label: "Produk lain", icon: "box" },
-];
-const BACK: { label: string; sub: string }[] = [
-  { label: "Indofood CBP", sub: "ICBP" },
-  { label: "Ultrajaya", sub: "ULTJ" },
-  { label: "Perusahaan", sub: "Tbk" },
-  { label: "Perusahaan", sub: "Tbk" },
+/**
+ * The worker at an empty table ("Makanan Meja Kosong.png", 1086 × 1448), head
+ * to knee, centred under the title and cut at the caption band; the products
+ * come up on the table where "Makanan Meja Isi.png" has them. Each product is
+ * a 1254 × 1254 file; `at` is its spot in the table file's pixels
+ * (x0–x1, its bottom on the table top), `solid` its own drawn columns/rows.
+ */
+const MEJA = { fileW: 1086, fileH: 1448, top: 31, knee: 1000, from: 250 };
+const MEJA_K = (theme.captionBand.top - MEJA.from) / (MEJA.knee - MEJA.top);
+const MEJA_H = MEJA.fileH * MEJA_K;
+const MEJA_LEFT = (theme.canvas.width - MEJA.fileW * MEJA_K) / 2;
+const MEJA_TOP = MEJA.from - MEJA.top * MEJA_K;
+type Product = { src: string; x0: number; x1: number; y1: number; solid: [number, number, number, number]; beat: 0 | 1 | 2 };
+const PRODUCTS: Product[] = [
+  { src: "art/vi01/indomie.png", x0: 197, x1: 413, y1: 695, solid: [34, 1221, 199, 1053], beat: 0 },
+  { src: "art/vi01/mangkok-mie.png", x0: 420, x1: 660, y1: 698, solid: [24, 1229, 273, 1050], beat: 0 },
+  { src: "art/vi01/susu.png", x0: 82, x1: 200, y1: 680, solid: [324, 930, 42, 1195], beat: 1 },
+  { src: "art/vi01/kopiko.png", x0: 682, x1: 828, y1: 696, solid: [222, 1031, 47, 1202], beat: 2 },
+  { src: "art/vi01/tolak-angin.png", x0: 835, x1: 1033, y1: 696, solid: [37, 1217, 242, 1029], beat: 2 },
 ];
 
+/** A product easing down onto the table. */
+const OnTable = ({ p, at }: { p: Product; at: number }) => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const t = ease(f, at, m.reveal);
+  if (t <= 0.001) return null;
+  const [sx0, sx1, , sy1] = p.solid;
+  const size = ((p.x1 - p.x0) * MEJA_K * 1254) / (sx1 - sx0);
+  const k = size / 1254;
+  const left = MEJA_LEFT + p.x0 * MEJA_K - sx0 * k;
+  const top = MEJA_TOP + p.y1 * MEJA_K - sy1 * k;
+  return <Img src={staticFile(p.src)} showInTimeline={false} style={{ position: "absolute", left, top: top - (1 - t) * 30, width: size, height: size, opacity: t }} />;
+};
+
 export const SC10 = () => {
-  const c = usePalette();
+  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC10);
   return (
     <Stage>
       <Say text="Ada di sekitar kita setiap hari" x={960} y={190} at={L(B10.around)} size={52} />
-      {SHELF.x.map((cx, i) => {
-        const box = { x: cx - SHELF.w / 2, y: SHELF.y, w: SHELF.w, h: SHELF.h };
-        return (
-          <div key={i}>
-            <Node box={box} label={FRONT[i].label} icon={FRONT[i].icon} layout="column" at={L(B10.products[i])} out={L(B10.flip) + i * 6} size={40} />
-            <Node box={box} label={BACK[i].label} sub={BACK[i].sub} icon="building" layout="column" tone="cyan" at={L(B10.flip) + 14 + i * 6} size={38} />
-          </div>
-        );
-      })}
-      <Say text="Sebagai konsumen: kita menikmati produknya" x={960} y={740} at={L(B10.konsumen)} out={L(B10.flip)} size={44} color={c.indigo} />
-      <Say text="Lewat investasi: ikut punya sebagian kecil bisnisnya" x={960} y={740} at={L(B10.pemilik)} size={44} color={theme.color.cyanInk} />
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src="art/vi01/meja-kosong.png" aspect={MEJA.fileW / MEJA.fileH} x={theme.canvas.width / 2} y={MEJA_TOP + MEJA_H} h={MEJA_H} at={L(B10.around)} rise={0} />
+        {PRODUCTS.map((p) => (
+          <OnTable key={p.src} p={p} at={L(B10.table[p.beat]) + (p.src.includes("mangkok") || p.src.includes("tolak") ? m.sec(0.15) : 0)} />
+        ))}
+      </div>
     </Stage>
   );
 };

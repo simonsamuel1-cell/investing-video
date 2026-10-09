@@ -356,6 +356,13 @@ export const SC09 = {
 
 export const SC10 = {
   around: 9791, // "Hal yang sama sebenarnya ada di sekitar kita"
+  /**
+   * Simon: "9779-10834 Hapus semua visual kecuali judul. Instead di tengah di
+   * bawah judul, ada Makanan Meja Kosong.png. Lalu dari 10028, muncul objek-
+   * objek di atas meja: Indomie dan Mangkok Mie. 10082, Susu. 10133, Kopiko
+   * dan [Tolak Angin]." Makanan Meja Isi.png is the placement reference.
+   */
+  table: [10028, 10082, 10133] as const,
   products: [10043, 10099, 10147, 10204] as const, // Indomie, Ultra Milk, dan banyak produk
   konsumen: 10299, // "Sebagai konsumen,"
   flip: 10505, // "Tapi lewat investasi,"
