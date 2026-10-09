@@ -79,19 +79,44 @@ const Fakta = ({ at, shrinkAt }: { at: number; shrinkAt: number }) => {
  * 9250's picture: "KerjaKorporat.png" (1448 × 1086), rounded, blurring in
  * under the lamp once the words have blurred out.
  */
-const KORP = { lampShrink: 0.5, lampY: 175, blur: 14, top: 290, h: 640, radius: 32 };
+const KORP = { lampShrink: 0.5, lampY: 175, blur: 14, top: 290, h: 640, radius: 32, small: 0.6, overhang: 160, drop: -50 };
 const KORP_W = (KORP.h * 1448) / 1086;
 
-const Korporat = ({ at }: { at: number }) => {
+/** One rounded photo, blurring in. */
+const Photo = ({ src, left, top, w, h, at, children }: { src: string; left: number; top: number; w: number; h: number; at: number; children?: React.ReactNode }) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const shadow = useShadow();
   const t = ease(f, at, m.move);
   if (t <= 0.001) return null;
   return (
-    <div style={{ position: "absolute", left: (theme.canvas.width - KORP_W) / 2, top: KORP.top, width: KORP_W, height: KORP.h, borderRadius: KORP.radius, overflow: "hidden", boxShadow: shadow.soft, opacity: t, filter: `blur(${((1 - t) * KORP.blur).toFixed(2)}px)` }}>
-      <Img src={staticFile("art/vi01/kerja-korporat.png")} style={{ width: "100%", height: "100%", objectFit: "cover" }} showInTimeline={false} />
+    <div style={{ position: "absolute", left, top, width: w, height: h, borderRadius: KORP.radius, overflow: "hidden", boxShadow: shadow.soft, opacity: t, filter: `blur(${((1 - t) * KORP.blur).toFixed(2)}px)` }}>
+      <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} showInTimeline={false} />
+      {children}
     </div>
+  );
+};
+
+/**
+ * "dengan posisi dan size yang sama, ada foto GedungBCA.jpg, tapi gambar
+ * KerjaKorporat nya ngga hilang, melainkan ukurannya kecil (60%) overlap
+ * dengan GedungBCA di pojok kiri bawah" — and on the small one, bottom left,
+ * "AI generated image".
+ */
+const Korporat = ({ at }: { at: number }) => {
+  const c = usePalette();
+  const left = (theme.canvas.width - KORP_W) / 2;
+  const sw = KORP_W * KORP.small;
+  const sh = KORP.h * KORP.small;
+  return (
+    <>
+      <Photo src="art/vi01/gedung-bca.jpg" left={left} top={KORP.top} w={KORP_W} h={KORP.h} at={at} />
+      <Photo src="art/vi01/kerja-korporat.png" left={left - KORP.overhang} top={KORP.top + KORP.h + KORP.drop - sh} w={sw} h={sh} at={at + 8}>
+        <div style={{ position: "absolute", left: 16, bottom: 16, padding: "6px 12px", borderRadius: 10, background: c.ink, opacity: 0.75, fontFamily: theme.text.family, fontSize: 20, fontWeight: 600, color: c.cardBg, lineHeight: 1, whiteSpace: "nowrap" }}>
+          AI generated image
+        </div>
+      </Photo>
+    </>
   );
 };
 
