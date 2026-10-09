@@ -363,6 +363,8 @@ export const SC10 = {
    * dan [Tolak Angin]." Makanan Meja Isi.png is the placement reference.
    */
   table: [10028, 10082, 10133] as const,
+  /** "10293 semua gambar ini mengecil anchor to Orangnya, buat orangnya jadi keliatan full body" */
+  fullBody: 10293,
   products: [10043, 10099, 10147, 10204] as const, // Indomie, Ultra Milk, dan banyak produk
   konsumen: 10299, // "Sebagai konsumen,"
   flip: 10505, // "Tapi lewat investasi,"

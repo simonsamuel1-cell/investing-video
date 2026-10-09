@@ -216,7 +216,9 @@ export const SC09 = () => {
  * a 1254 × 1254 file; `at` is its spot in the table file's pixels
  * (x0–x1, its bottom on the table top), `solid` its own drawn columns/rows.
  */
-const MEJA = { fileW: 1086, fileH: 1448, top: 31, knee: 1000, from: 250 };
+const MEJA = { fileW: 1086, fileH: 1448, top: 31, knee: 1000, feet: 1430, from: 250 };
+/** At SC10.fullBody the whole picture shrinks about the top of his head until his feet clear the caption band. */
+const MEJA_FULL = (theme.captionBand.top - 12 - MEJA.from) / (MEJA.feet - MEJA.top) / ((theme.captionBand.top - MEJA.from) / (MEJA.knee - MEJA.top));
 const MEJA_K = (theme.captionBand.top - MEJA.from) / (MEJA.knee - MEJA.top);
 const MEJA_H = MEJA.fileH * MEJA_K;
 const MEJA_LEFT = (theme.canvas.width - MEJA.fileW * MEJA_K) / 2;
@@ -245,16 +247,20 @@ const OnTable = ({ p, at }: { p: Product; at: number }) => {
 };
 
 export const SC10 = () => {
+  const f = useCurrentFrame();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC10);
+  const full = 1 - (1 - MEJA_FULL) * ease(f, L(B10.fullBody), m.move);
   return (
     <Stage>
       <Say text="Ada di sekitar kita setiap hari" x={960} y={190} at={L(B10.around)} size={52} />
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
         <Cutout src="art/vi01/meja-kosong.png" aspect={MEJA.fileW / MEJA.fileH} x={theme.canvas.width / 2} y={MEJA_TOP + MEJA_H} h={MEJA_H} at={L(B10.around)} rise={0} />
         {PRODUCTS.map((p) => (
           <OnTable key={p.src} p={p} at={L(B10.table[p.beat]) + (p.src.includes("mangkok") || p.src.includes("tolak") ? m.sec(0.15) : 0)} />
         ))}
+        </div>
       </div>
     </Stage>
   );
