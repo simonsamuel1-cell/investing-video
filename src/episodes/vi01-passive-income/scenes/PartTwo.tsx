@@ -381,18 +381,23 @@ const Typed = ({ text, x, y, at, anchor, color }: { text: string; x: number; y: 
  * margin; his reach goes to column 926; the panel starts 50 px past it and
  * runs to the right margin.
  */
-const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926 };
-const K11 = TUNTUN3_H / TUNTUN3.rows;
-const HEAD11 = theme.margin.left + (401 - TUNTUN4B.left) * K11;
-const SHIFT11 = theme.canvas.width / 2 - HEAD11;
-const PANEL_X = HEAD11 + (TUNTUN4B.right - 401) * K11 + 50;
-const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 40, border: 4 }; // 80 px over the band: room for its shadow
-/** The two groups' own boxes in canvas pixels, and the one scale that stacks them in the panel. */
-const WHEEL_BOX = { x: 520, y: 370, w: 760, h: 486 };
-const OWNER_BOX = { x: 1420, y: 520, w: 340, h: 362 };
-const PANEL_K = Math.min((PANEL.w - 2 * PANEL.pad) / WHEEL_BOX.w, (PANEL.h - 3 * PANEL.pad) / (WHEEL_BOX.h + OWNER_BOX.h));
-const WHEEL_AT = { x: PANEL.x + (PANEL.w - WHEEL_BOX.w * PANEL_K) / 2, y: PANEL.y + PANEL.pad };
-const OWNER_AT = { x: PANEL.x + (PANEL.w - OWNER_BOX.w * PANEL_K) / 2, y: WHEEL_AT.y + WHEEL_BOX.h * PANEL_K + PANEL.pad * 1.5 };
+const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926, band: 854 };
+/**
+ * "komposisinya jadi 25 75": between the margins, his visible width (columns
+ * 160–926), 50 px, then the panel, at 25 : 75. He shrinks while he moves left
+ * — standing on the caption band, his left edge on the left margin — so
+ * OrangTuntun4 arrives already small.
+ */
+const ROW_W = theme.canvas.width - theme.margin.left - theme.margin.right;
+const PERSON11_W = (ROW_W - 50) * 0.25;
+const K11 = PERSON11_W / (TUNTUN4B.right - TUNTUN4B.left);
+const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.captionBand.top - (TUNTUN4B.band - TUNTUN4B.top) * K11 };
+const PANEL_X = theme.margin.left + PERSON11_W + 50;
+const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 80, border: 4 }; // 80 px over the band: room for its shadow; pad leaves the wheel room to grow
+/** The wheel and the owner side by side as first drawn (canvas box), scaled into the wide panel. */
+const CONTENT_BOX = { x: 520, y: 370, w: 1260, h: 512 };
+const PANEL_K = Math.min((PANEL.w - 2 * PANEL.pad) / CONTENT_BOX.w, (PANEL.h - 2 * PANEL.pad) / CONTENT_BOX.h);
+const CONTENT_AT = { x: PANEL.x + (PANEL.w - CONTENT_BOX.w * PANEL_K) / 2, y: PANEL.y + (PANEL.h - CONTENT_BOX.h * PANEL_K) / 2 };
 const place = (box: { x: number; y: number }, at: { x: number; y: number }) =>
   `translate(${(at.x - box.x * PANEL_K).toFixed(2)}px, ${(at.y - box.y * PANEL_K).toFixed(2)}px) scale(${PANEL_K.toFixed(4)})`;
 
@@ -407,8 +412,12 @@ export const SC11 = () => {
   const shift = ease(f, L(B11.panel), m.move);
   const swapped = f >= L(B11.panel) + m.move;
   const panel = ease(f, L(B11.panel), m.move);
-  const k = TUNTUN3_H / TUNTUN3.rows;
-  const headX = theme.canvas.width / 2 - SHIFT11 * shift;
+  /* his scale, head position and head top, from where he stood to where Tuntun4 stands */
+  const k0 = TUNTUN3_H / TUNTUN3.rows;
+  const k = k0 + (K11 - k0) * shift;
+  const H = TUNTUN3.rows * k;
+  const headX = theme.canvas.width / 2 + (HEAD11.x - theme.canvas.width / 2) * shift;
+  const headY = TUNTUN3.from + (HEAD11.y - TUNTUN3.from) * shift;
   return (
     <Stage>
       {/* the grid carries on from SC10 */}
@@ -417,10 +426,10 @@ export const SC11 = () => {
       </div>
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         {!swapped ? (
-          <Cutout src="art/vi01/orang-tuntun-3.png" aspect={TUNTUN3.aspect} x={headX - (TUNTUN3.headU - 0.5) * TUNTUN3_H * TUNTUN3.aspect} y={TUNTUN3.from - TUNTUN3.top * k + TUNTUN3_H} h={TUNTUN3_H} at={0} rise={theme.canvas.height - TUNTUN3.from} riseFrames={m.move} shadow floor={1.2} />
+          <Cutout src="art/vi01/orang-tuntun-3.png" aspect={TUNTUN3.aspect} x={headX - (TUNTUN3.headU - 0.5) * H * TUNTUN3.aspect} y={headY - TUNTUN3.top * k + H} h={H} at={0} rise={theme.canvas.height - TUNTUN3.from} riseFrames={m.move} shadow floor={1.2} />
         ) : (
           /* "berubah (no fade)": the same scale, his head where it was */
-          <Cutout src="art/vi01/orang-tuntun-4.png" aspect={TUNTUN3.aspect} x={headX - (TUNTUN4B.headU - 0.5) * TUNTUN3_H * TUNTUN3.aspect} y={TUNTUN3.from - TUNTUN4B.top * k + TUNTUN3_H} h={TUNTUN3_H} at={-m.reveal} rise={0} shadow floor={1.2} />
+          <Cutout src="art/vi01/orang-tuntun-4.png" aspect={TUNTUN3.aspect} x={HEAD11.x - (TUNTUN4B.headU - 0.5) * TUNTUN3.rows * K11 * TUNTUN3.aspect} y={HEAD11.y - TUNTUN4B.top * K11 + TUNTUN3.rows * K11} h={TUNTUN3.rows * K11} at={-m.reveal} rise={0} shadow floor={1.2} />
         )}
       </div>
       {/* "Di 11220, kedua text ini fade out" — as he moves */}
@@ -436,8 +445,8 @@ export const SC11 = () => {
         </div>
       ) : null}
 
-      {/* everything after, inside the panel: the wheel above, the owner below */}
-      <div style={{ position: "absolute", inset: 0, transform: place(WHEEL_BOX, WHEEL_AT), transformOrigin: "0 0" }}>
+      {/* everything after, inside the panel — the wheel and the owner side by side, as first drawn */}
+      <div style={{ position: "absolute", inset: 0, transform: place(CONTENT_BOX, CONTENT_AT), transformOrigin: "0 0" }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${WHEEL.cx}px ${WHEEL.cy}px` }}>
           <Node box={SPOKES[0]} label="Pendapatan" icon="wallet" at={L(B11.steps[0])} size={38} />
           <Link a={nodeEdge(SPOKES[0], "r")} b={nodeEdge(SPOKES[1], "t")} at={L(B11.steps[1]) - 20} />
@@ -447,9 +456,7 @@ export const SC11 = () => {
           <Link a={nodeEdge(SPOKES[2], "t")} b={nodeEdge(SPOKES[0], "l")} at={L(B11.steps[2]) + 10} />
           <Say text="Sebuah bisnis" x={WHEEL.cx} y={WHEEL.cy + 40} at={L(B11.wheel)} size={34} weight={700} color={c.slate} />
         </div>
-      </div>
-      <Link a={{ x: PANEL.x + PANEL.w / 2, y: OWNER_AT.y - 6 }} b={{ x: PANEL.x + PANEL.w / 2, y: WHEEL_AT.y + WHEEL_BOX.h * PANEL_K - 10 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
-      <div style={{ position: "absolute", inset: 0, transform: place(OWNER_BOX, OWNER_AT), transformOrigin: "0 0" }}>
+        <Link a={{ x: OWNER.x - 20, y: OWNER.y + OWNER.h / 2 }} b={{ x: WHEEL.cx + 250, y: WHEEL.cy - 40 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
         <Node box={OWNER} label="Pemilik" sub="sebagian kecil" icon="person" tone="cyan" at={L(B11.pemilik)} size={40} />
         <Say text="ikut punya exposure ke" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 50} at={L(B11.exposure)} size={34} weight={600} color={theme.color.cyanInk} />
         <Say text="pertumbuhan nilainya" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 96} at={L(B11.exposure) + 12} size={34} weight={800} color={theme.color.cyanInk} />
