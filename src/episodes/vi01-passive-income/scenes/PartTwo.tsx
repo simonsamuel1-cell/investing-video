@@ -133,11 +133,12 @@ const TAK = { y: 680, w: 1340, h: 120, size: 44 };
  * the portfolio screenshot ("Portfolio.jpg", 750 × 512) rises over the chart,
  * centred on it; at 9662 he becomes "OrangSenang.png".
  */
-const BBCA = { personH: 660, chartH: 600, top: 330, gap: 60, radius: 24, portW: 560, portTop: 548, portRise: 200 };
+/* then "Portfolio nya kecilin 30%, chartnya gedein 15%", and the man 50 px to the left */
+const BBCA = { personH: 660, chartH: 600 * 1.15, top: 268, gap: 60, radius: 24, portW: 560 * 0.7, portBottom: 930, portRise: 200, personShift: -50 };
 const PERSON_W = (BBCA.personH * 1086) / 1448;
 const CHART_W = (BBCA.chartH * 4084) / 5834;
 const BBCA_LEFT = (theme.canvas.width - (PERSON_W + BBCA.gap + CHART_W)) / 2;
-const PERSON_X = BBCA_LEFT + PERSON_W / 2;
+const PERSON_X = BBCA_LEFT + PERSON_W / 2 + BBCA.personShift;
 const CHART_LEFT = BBCA_LEFT + PERSON_W + BBCA.gap;
 const PORT_H = (BBCA.portW * 512) / 750;
 
@@ -146,7 +147,8 @@ const BbcaSet = ({ portfolioAt, senangAt }: { portfolioAt: number; senangAt: num
   const m = useMotion();
   const shadow = useShadow();
   const port = ease(f, portfolioAt, m.move);
-  const swap = ease(f, senangAt, m.fade);
+  /* "transisi antar imagenya jangan fade, tapi no animation aja (jadi patah)" */
+  const swap = f >= senangAt ? 1 : 0;
   const card = (left: number, top: number, w: number, h: number, src: string, extra?: React.CSSProperties) => (
     <div style={{ position: "absolute", left, top, width: w, height: h, borderRadius: BBCA.radius, overflow: "hidden", boxShadow: shadow.soft, ...extra }}>
       <Img src={staticFile(src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} showInTimeline={false} />
@@ -154,7 +156,7 @@ const BbcaSet = ({ portfolioAt, senangAt }: { portfolioAt: number; senangAt: num
   );
   return (
     <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-      {/* the man, cut at the caption band; he cross-fades to happy at 9662 */}
+      {/* the man, cut at the caption band; at 9662 he is simply happy — a hard swap */}
       <div style={{ position: "absolute", inset: 0, opacity: 1 - swap }}>
         <Cutout src="art/vi01/liat-hp.png" aspect={1086 / 1448} x={PERSON_X} y={theme.captionBand.top} h={BBCA.personH} at={-m.reveal} rise={0} shadow floor={1.2} />
       </div>
@@ -165,7 +167,7 @@ const BbcaSet = ({ portfolioAt, senangAt }: { portfolioAt: number; senangAt: num
       ) : null}
       {card(CHART_LEFT, BBCA.top, CHART_W, BBCA.chartH, "art/vi01/chart-bbca.png")}
       {port > 0.001
-        ? card(CHART_LEFT + CHART_W / 2 - BBCA.portW / 2, BBCA.portTop + (1 - port) * BBCA.portRise, BBCA.portW, PORT_H, "art/vi01/portfolio.jpg", { opacity: port })
+        ? card(CHART_LEFT + CHART_W / 2 - BBCA.portW / 2, BBCA.portBottom - PORT_H + (1 - port) * BBCA.portRise, BBCA.portW, PORT_H, "art/vi01/portfolio.jpg", { opacity: port })
         : null}
     </div>
   );
