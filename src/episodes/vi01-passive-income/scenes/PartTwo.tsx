@@ -279,7 +279,7 @@ const PhoneShot = ({ code, cx }: { code: string; cx: number }) => {
  * out from behind it — one to the left, two to the right — and the main one
  * moves left, all settling a little smaller so four fit in one row.
  */
-const Phones = ({ at, spreadAt }: { at: number; spreadAt: number }) => {
+const Phones = ({ at, spreadAt, dropAt }: { at: number; spreadAt: number; dropAt: number }) => {
   const f = useCurrentFrame();
   const m = useMotion();
   if (f < at) return null;
@@ -287,7 +287,9 @@ const Phones = ({ at, spreadAt }: { at: number; spreadAt: number }) => {
   const fit = ease(f, at + m.move + m.sec(0.2), m.move);
   const spread = ease(f, spreadAt, m.move);
   const scale = PH.big + (1 - PH.big) * fit + (PH.row - 1) * spread;
-  const lift = (1 - rise) * (theme.canvas.height - PH.top + 40);
+  /* and at the scene's end they all drop out of the frame */
+  const drop = ease(f, dropAt, m.move);
+  const lift = (1 - rise) * (theme.canvas.height - PH.top + 40) + drop * (theme.canvas.height - PH.top + 40);
   const step = (PH_W * PH.row + PH.gap) / PH.row;
   const slot = (i: number) => theme.canvas.width / 2 + (i - (SAHAM.length - 1) / 2) * step;
   const x = (i: number) => theme.canvas.width / 2 + (slot(i) - theme.canvas.width / 2) * spread;
@@ -321,7 +323,7 @@ export const SC10 = () => {
       ) : null}
       {/* the title in two stages: from the scene's start (9779), then from the phone (10500) */}
       <Say text="Ga perlu beli produk buat jadi investor" x={960} y={190} at={0} out={L(B10.phone)} size={52} color={c.indigo} />
-      <Say text="Investasi jadi pemilik bisnis" x={960} y={190} at={L(B10.phone) + m.fade} size={52} color={c.indigo} />
+      <Say text="Investasi jadi pemilik bisnis" x={960} y={190} at={L(B10.phone) + m.fade} out={BLOCK.SC11 - BLOCK.SC10 - m.move} size={52} color={c.indigo} />
       {!covered ? (
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
@@ -332,7 +334,7 @@ export const SC10 = () => {
         </div>
       </div>
       ) : null}
-      <Phones at={L(B10.phone)} spreadAt={L(B10.phones)} />
+      <Phones at={L(B10.phone)} spreadAt={L(B10.phones)} dropAt={BLOCK.SC11 - BLOCK.SC10 - m.move} />
     </Stage>
   );
 };
@@ -346,17 +348,46 @@ const SPOKES: NodeBox[] = [
 ];
 const OWNER: NodeBox = { x: 1420, y: 520, w: 340, h: 150 };
 
+/**
+ * "OrangTuntun3.png", 941 × 1672: hair from row 115, the belly at about row
+ * 880, head on column 466 — head to belly, rising in from below as SC10's
+ * phones drop away. The two typed phrases sit either side of him.
+ */
+const TUNTUN3 = { aspect: 941 / 1672, rows: 1672, top: 115, belly: 880, headU: 466 / 941, from: 220 };
+const TUNTUN3_H = ((theme.captionBand.top - TUNTUN3.from) * TUNTUN3.rows) / (TUNTUN3.belly - TUNTUN3.top);
+/** Shoulder height, where he is narrowest — the phrases close in on either side without leaving the frame. */
+const SIDE = { y: 440, size: 56, left: 760, right: 1160 };
+
+/** A phrase typed out letter by letter. */
+const Typed = ({ text, x, y, at, anchor, color }: { text: string; x: number; y: number; at: number; anchor: "left" | "right"; color: string }) => {
+  const f = useCurrentFrame();
+  if (f < at) return null;
+  const shown = Math.max(0, Math.floor(f - at));
+  return (
+    <div style={{ position: "absolute", top: y - SIDE.size * 0.6, ...(anchor === "left" ? { left: x } : { right: theme.canvas.width - x }), fontFamily: theme.text.family, fontSize: SIDE.size, fontWeight: 800, color, whiteSpace: "pre", lineHeight: 1.2 }}>
+      {text.slice(0, shown)}
+    </div>
+  );
+};
+
 export const SC11 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC11);
   /** The wheel grows a little with each turn. */
   const grow = 0.92 + 0.05 * B11.steps.reduce((s, g) => s + ease(f, L(g), 30), 0);
   return (
     <Stage>
-      <Say text="Menghasilkan uang" x={560} y={190} at={L(B11.uang)} size={52} weight={800} color={c.indigo} />
-      <Say text="vs" x={960} y={190} at={L(B11.aset) - 20} size={40} weight={600} color={c.slate} />
-      <Say text="Membangun aset" x={1360} y={190} at={L(B11.aset)} size={52} weight={800} color={theme.color.cyanInk} />
+      {/* the grid carries on from SC10 */}
+      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC11} paper={c.bg} />
+      </div>
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src="art/vi01/orang-tuntun-3.png" aspect={TUNTUN3.aspect} x={theme.canvas.width / 2 - (TUNTUN3.headU - 0.5) * TUNTUN3_H * TUNTUN3.aspect} y={TUNTUN3.from - (TUNTUN3.top / TUNTUN3.rows) * TUNTUN3_H + TUNTUN3_H} h={TUNTUN3_H} at={0} rise={theme.canvas.height - TUNTUN3.from} riseFrames={m.move} shadow floor={1.2} />
+      </div>
+      <Typed text="menghasilkan uang" x={SIDE.left} y={SIDE.y} at={L(B11.typeUang)} anchor="right" color={c.indigo} />
+      <Typed text="membangun aset" x={SIDE.right} y={SIDE.y} at={L(B11.typeAset)} anchor="left" color={c.indigo} />
 
       <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${WHEEL.cx}px ${WHEEL.cy}px` }}>
         <Node box={SPOKES[0]} label="Pendapatan" icon="wallet" at={L(B11.steps[0])} size={38} />

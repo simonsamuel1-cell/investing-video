@@ -381,6 +381,14 @@ export const SC10 = {
 };
 
 export const SC11 = {
+  /**
+   * "OrangTuntun3.png masuk dari bawah (preview pada kepala hingga perut
+   * saja) … 10959 muncul text 'menghasilkan uang' dengan animasi ketikan di
+   * sebelah kiri OrangTuntun3. 11090 muncul text 'membangun aset' … di sebelah
+   * kanan".
+   */
+  typeUang: 10959,
+  typeAset: 11090,
   uang: 10894, // "bedanya antara sekadar menghasilkan uang,"
   aset: 11105, // "dengan mulai membangun aset."
   wheel: 11235, // "Sebuah bisnis"
@@ -544,7 +552,7 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC08, axis: "x" },
   { at: BLOCK.SC09, axis: "x" }, // in place of ST2, which Simon cancelled
   { at: BLOCK.SC10, axis: "x" },
-  { at: BLOCK.SC11, axis: "x" },
+  // SC10 → SC11: no cut — "cancel transisi camera cutnya, tapi 4 hp nya turun keluar layar"
   { at: BLOCK.SC12, axis: "x" },
   { at: BLOCK.SC15, axis: "x" },
   { at: BLOCK.SC16, axis: "x" },
