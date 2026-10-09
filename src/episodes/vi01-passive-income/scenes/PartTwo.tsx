@@ -11,9 +11,9 @@
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
-import { Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type NodeBox } from "../components/kit";
+import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Link, Node, Say, TypeBox, nodeEdge, useLife, type NodeBox } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -250,9 +250,17 @@ export const SC10 = () => {
   const f = useCurrentFrame();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC10);
-  const full = 1 - (1 - MEJA_FULL) * ease(f, L(B10.fullBody), m.move);
+  const shrink = ease(f, L(B10.fullBody), m.move);
+  const full = 1 - (1 - MEJA_FULL) * shrink;
+  const c = usePalette();
   return (
     <Stage>
+      {/* "Saat mengecil, muncul background kotak kotak" — the grid comes up with the shrink */}
+      {shrink > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: shrink, clipPath: OUTSIDE_RESERVES }}>
+          <GridGround f={f + BLOCK.SC10} paper={c.bg} />
+        </div>
+      ) : null}
       <Say text="Ada di sekitar kita setiap hari" x={960} y={190} at={L(B10.around)} size={52} />
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
