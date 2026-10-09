@@ -319,7 +319,9 @@ export const SC10 = () => {
           <GridGround f={f + BLOCK.SC10} paper={c.bg} />
         </div>
       ) : null}
-      <Say text="Ada di sekitar kita setiap hari" x={960} y={190} at={L(B10.around)} size={52} />
+      {/* the title in two stages: from the scene's start (9779), then from the phone (10500) */}
+      <Say text="Produk yang Kamu Pakai Tiap Hari" x={960} y={190} at={0} out={L(B10.phone)} size={52} />
+      <Say text="Dari Konsumen jadi Pemilik" x={960} y={190} at={L(B10.phone) + m.fade} size={52} />
       {!covered ? (
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
