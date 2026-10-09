@@ -389,6 +389,12 @@ export const SC11 = {
    */
   typeUang: 10959,
   typeAset: 11090,
+  /**
+   * "11220 OrangTuntun3 geser 300 px ke kiri, lalu berubah (no fade) jadi
+   * OrangTuntun4. Lalu muncul rectangle besar mengisi white space di kanan …
+   * letakkan semua visual yang ada hingga 11920 di dalam rectangle tersebut."
+   */
+  panel: 11220,
   uang: 10894, // "bedanya antara sekadar menghasilkan uang,"
   aset: 11105, // "dengan mulai membangun aset."
   wheel: 11235, // "Sebuah bisnis"
