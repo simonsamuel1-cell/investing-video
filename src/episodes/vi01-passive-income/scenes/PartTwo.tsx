@@ -394,6 +394,8 @@ const K11 = PERSON11_W / (TUNTUN4B.right - TUNTUN4B.left);
 const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.captionBand.top - (TUNTUN4B.band - TUNTUN4B.top) * K11 };
 const PANEL_X = theme.margin.left + PERSON11_W + 50;
 const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 80, border: 4 }; // 80 px over the band: room for its shadow; pad leaves the wheel room to grow
+/** "Rectanglenya boleh panjangin ke kiri, gapapa overlap dengan OrangTuntun" — the drawn frame starts at the left margin; he stands in front of it. */
+const FRAME11 = { x: theme.margin.left, w: theme.canvas.width - theme.margin.right - theme.margin.left };
 /** The wheel and the owner side by side as first drawn (canvas box), scaled into the wide panel. */
 const CONTENT_BOX = { x: 520, y: 370, w: 1260, h: 512 };
 const PANEL_K = Math.min((PANEL.w - 2 * PANEL.pad) / CONTENT_BOX.w, (PANEL.h - 2 * PANEL.pad) / CONTENT_BOX.h);
@@ -424,6 +426,12 @@ export const SC11 = () => {
       <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC11} paper={c.bg} />
       </div>
+      {/* the panel: white, soft shadow, a silver gradient border */}
+      {panel > 0.001 ? (
+        <div style={{ position: "absolute", left: FRAME11.x, top: PANEL.y, width: FRAME11.w, height: PANEL.h, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, boxShadow: shadow.soft, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
+          <div style={{ width: "100%", height: "100%", borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
+        </div>
+      ) : null}
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         {!swapped ? (
           <Cutout src="art/vi01/orang-tuntun-3.png" aspect={TUNTUN3.aspect} x={headX - (TUNTUN3.headU - 0.5) * H * TUNTUN3.aspect} y={headY - TUNTUN3.top * k + H} h={H} at={0} rise={theme.canvas.height - TUNTUN3.from} riseFrames={m.move} shadow floor={1.2} />
@@ -438,12 +446,6 @@ export const SC11 = () => {
         <Typed text="membangun aset" x={SIDE.right} y={SIDE.y} at={L(B11.typeAset)} anchor="left" color={c.indigo} />
       </div>
 
-      {/* the panel: white, soft shadow, a silver gradient border */}
-      {panel > 0.001 ? (
-        <div style={{ position: "absolute", left: PANEL.x, top: PANEL.y, width: PANEL.w, height: PANEL.h, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, boxShadow: shadow.soft, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
-          <div style={{ width: "100%", height: "100%", borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
-        </div>
-      ) : null}
 
       {/* everything after, inside the panel — the wheel and the owner side by side, as first drawn */}
       <div style={{ position: "absolute", inset: 0, transform: place(CONTENT_BOX, CONTENT_AT), transformOrigin: "0 0" }}>
