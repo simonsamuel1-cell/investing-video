@@ -13,7 +13,7 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Link, Node, Say, TypeBox, useLife, type NodeBox } from "../components/kit";
+import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Say, TypeBox, useLife } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -341,7 +341,6 @@ export const SC10 = () => {
 
 // ═══ SC11 — earning money vs building assets; the business wheel ═════════
 const WHEEL = { cx: 900, cy: 620 };
-const OWNER: NodeBox = { x: 1420, y: 520, w: 340, h: 150 };
 
 /**
  * "OrangTuntun3.png", 941 × 1672: hair from row 115, the belly at about row
@@ -388,17 +387,29 @@ const PERSON11_W = (ROW_W - 50) * 0.25;
 const K11 = PERSON11_W / (TUNTUN4B.right - TUNTUN4B.left);
 /* "buat jadi keliatan full body": his shoes stand just over the caption band */
 const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.captionBand.top - 12 - (TUNTUN4B.feet - TUNTUN4B.top) * K11 };
-const PANEL_X = theme.margin.left + PERSON11_W + 50;
-const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 80, border: 4 }; // 80 px over the band: room for its shadow; pad leaves the wheel room to grow
-/** "Rectanglenya boleh panjangin ke kiri, gapapa overlap dengan OrangTuntun" — the drawn frame starts at the left margin; he stands in front of it. */
-/* then "Panelnya pendekin widthnya 50 px" — taken off its left end, behind him */
-const FRAME11 = { x: theme.margin.left + 50, w: theme.canvas.width - theme.margin.right - theme.margin.left - 50 };
-/** The wheel and the owner side by side as first drawn (canvas box), scaled into the wide panel. */
-const CONTENT_BOX = { x: 520, y: 370, w: 1260, h: 512 };
-const PANEL_K = Math.min((PANEL.w - 2 * PANEL.pad) / CONTENT_BOX.w, (PANEL.h - 2 * PANEL.pad) / CONTENT_BOX.h);
-const CONTENT_AT = { x: PANEL.x + (PANEL.w - CONTENT_BOX.w * PANEL_K) / 2, y: PANEL.y + (PANEL.h - CONTENT_BOX.h * PANEL_K) / 2 };
-const place = (box: { x: number; y: number }, at: { x: number; y: number }) =>
-  `translate(${(at.x - box.x * PANEL_K).toFixed(2)}px, ${(at.y - box.y * PANEL_K).toFixed(2)}px) scale(${PANEL_K.toFixed(4)})`;
+/**
+ * The panel, fitted to the cycle: "width panelnya adjust lagi, sesuaikan sama
+ * bagannya, geser juga ke kanan" — the cycle's own extent (its words and arcs)
+ * plus `pad`, centred in the space to his right; it may touch his hand.
+ */
+const CYC = { l: -405, r: 315, t: -325, b: 300 };
+const PANEL_PAD = 70;
+const PANEL = {
+  w: CYC.r - CYC.l + 2 * PANEL_PAD,
+  y: theme.logoZone.height + 20,
+  h: theme.captionBand.top - 80 - (theme.logoZone.height + 20),
+  border: 4,
+  x: 0,
+};
+const FREE_L = theme.margin.left + PERSON11_W;
+PANEL.x = (FREE_L + theme.canvas.width - theme.margin.right) / 2 - PANEL.w / 2;
+/** The cycle sits at the panel's top, its left-right middle on the panel's. */
+const CYCLE_SHIFT = {
+  x: PANEL.x + PANEL.w / 2 - (WHEEL.cx + (CYC.l + CYC.r) / 2),
+  y: PANEL.y + 22 - (WHEEL.cy + CYC.t),
+};
+/** "di bagian bawah panel (overlap), muncul text box garis putus putus" — straddling the panel's bottom edge. */
+const KITA = { h: 104, w: 1260, size: 32, text: "Kita (pemilik bisnis) dapat exposure dari pertumbuhan nilainya", mark: "Kita (pemilik bisnis) dapat exposure" };
 
 /**
  * The business cycle, after Simon's reference ("Earn → Save → Invest →
@@ -497,7 +508,7 @@ export const SC11 = () => {
       </div>
       {/* the panel: white, soft shadow, a silver gradient border */}
       {panel > 0.001 ? (
-        <div style={{ position: "absolute", left: FRAME11.x, top: PANEL.y, width: FRAME11.w, height: PANEL.h, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, boxShadow: shadow.soft, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
+        <div style={{ position: "absolute", left: PANEL.x, top: PANEL.y, width: PANEL.w, height: PANEL.h, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, boxShadow: shadow.soft, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
           <div style={{ width: "100%", height: "100%", borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
         </div>
       ) : null}
@@ -516,15 +527,12 @@ export const SC11 = () => {
       </div>
 
 
-      {/* everything after, inside the panel — the wheel and the owner side by side, as first drawn */}
-      <div style={{ position: "absolute", inset: 0, transform: place(CONTENT_BOX, CONTENT_AT), transformOrigin: "0 0" }}>
-        {/* "bagannya ga perlu membesar" — it stays one size */}
+      {/* the cycle inside the panel; the Pemilik box and its two lines are gone */}
+      <div style={{ position: "absolute", inset: 0, transform: `translate(${CYCLE_SHIFT.x}px, ${CYCLE_SHIFT.y}px)` }}>
         <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
-        <Link a={{ x: OWNER.x - 20, y: OWNER.y + OWNER.h / 2 }} b={{ x: WHEEL.cx + CYCLE.r + 30, y: WHEEL.cy - 40 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
-        <Node box={OWNER} label="Pemilik" sub="sebagian kecil" icon="person" tone="cyan" at={L(B11.pemilik)} size={40} />
-        <Say text="ikut punya exposure ke" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 50} at={L(B11.exposure)} size={34} weight={600} color={theme.color.cyanInk} />
-        <Say text="pertumbuhan nilainya" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 96} at={L(B11.exposure) + 12} size={34} weight={800} color={theme.color.cyanInk} />
       </div>
+      {/* the line that closes it, a dashed box on the panel's bottom edge, "Kita … exposure" highlighted */}
+      <TypeBox cx={PANEL.x + PANEL.w / 2} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.exposure)} text={KITA.text} mark={KITA.mark} markAt={L(B11.exposure) + 90} size={KITA.size} />
     </Stage>
   );
 };
