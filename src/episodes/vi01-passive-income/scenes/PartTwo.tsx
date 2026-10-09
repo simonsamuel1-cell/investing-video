@@ -376,9 +376,17 @@ const Typed = ({ text, x, y, at, anchor, color }: { text: string; x: number; y: 
  * panel fills the space on his right inside the margins and clear of the logo
  * zone. The business wheel and the owner, as they were, are stacked inside it.
  */
-const TUNTUN4B = { top: 89, headU: 401 / 941 };
-const SHIFT11 = 300;
-const PANEL = { x: 1160, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - 1160, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 40, border: 4 }; // 80 px over the band: room for its shadow
+/**
+ * "geser kiri sampe mentok" — his visible left edge (column 160) on the left
+ * margin; his reach goes to column 926; the panel starts 50 px past it and
+ * runs to the right margin.
+ */
+const TUNTUN4B = { top: 89, headU: 401 / 941, left: 160, right: 926 };
+const K11 = TUNTUN3_H / TUNTUN3.rows;
+const HEAD11 = theme.margin.left + (401 - TUNTUN4B.left) * K11;
+const SHIFT11 = theme.canvas.width / 2 - HEAD11;
+const PANEL_X = HEAD11 + (TUNTUN4B.right - 401) * K11 + 50;
+const PANEL = { x: PANEL_X, y: theme.logoZone.height + 20, w: theme.canvas.width - theme.margin.right - PANEL_X, h: theme.captionBand.top - 80 - (theme.logoZone.height + 20), pad: 40, border: 4 }; // 80 px over the band: room for its shadow
 /** The two groups' own boxes in canvas pixels, and the one scale that stacks them in the panel. */
 const WHEEL_BOX = { x: 520, y: 370, w: 760, h: 486 };
 const OWNER_BOX = { x: 1420, y: 520, w: 340, h: 362 };
