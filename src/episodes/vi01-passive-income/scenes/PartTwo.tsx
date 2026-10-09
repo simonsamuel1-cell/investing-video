@@ -79,7 +79,9 @@ const Fakta = ({ at, shrinkAt }: { at: number; shrinkAt: number }) => {
  * 9250's picture: "KerjaKorporat.png" (1448 × 1086), rounded, blurring in
  * under the lamp once the words have blurred out.
  */
-const KORP = { lampShrink: 0.5, lampY: 175, blur: 14, top: 290, h: 640, radius: 32, small: 0.6, overhang: 160, drop: -50 };
+const KORP = { lampShrink: 0.5, lampY: 175, blur: 14, top: 290, h: 640, radius: 32, small: 0.5, overhang: 160, drop: -50 };
+/** "GedungBCA.jpg" (1200 × 675) at its own ratio, the same height — its width follows ("lock ratio"). */
+const BCA_W = (KORP.h * 1200) / 675;
 const KORP_W = (KORP.h * 1448) / 1086;
 
 /** One rounded photo, blurring in. */
@@ -105,12 +107,12 @@ const Photo = ({ src, left, top, w, h, at, children }: { src: string; left: numb
  */
 const Korporat = ({ at }: { at: number }) => {
   const c = usePalette();
-  const left = (theme.canvas.width - KORP_W) / 2;
+  const left = (theme.canvas.width - BCA_W) / 2;
   const sw = KORP_W * KORP.small;
   const sh = KORP.h * KORP.small;
   return (
     <>
-      <Photo src="art/vi01/gedung-bca.jpg" left={left} top={KORP.top} w={KORP_W} h={KORP.h} at={at} />
+      <Photo src="art/vi01/gedung-bca.jpg" left={left} top={KORP.top} w={BCA_W} h={KORP.h} at={at} />
       <Photo src="art/vi01/kerja-korporat.png" left={left - KORP.overhang} top={KORP.top + KORP.h + KORP.drop - sh} w={sw} h={sh} at={at + 8}>
         <div style={{ position: "absolute", left: 16, bottom: 16, padding: "6px 12px", borderRadius: 10, background: c.ink, opacity: 0.75, fontFamily: theme.text.family, fontSize: 20, fontWeight: 600, color: c.cardBg, lineHeight: 1, whiteSpace: "nowrap" }}>
           AI generated image
