@@ -395,7 +395,7 @@ const HEAD11 = { x: theme.margin.left + (401 - TUNTUN4B.left) * K11, y: theme.ca
 const CYC = { l: -405, r: 315, t: -325, b: 300 };
 const PANEL_PAD = 70;
 const PANEL = {
-  w: CYC.r - CYC.l + 2 * PANEL_PAD,
+  w: CYC.r - CYC.l + 2 * PANEL_PAD + 150, // then "gedein widthnya 150 px"
   y: theme.logoZone.height + 20,
   h: theme.captionBand.top - 80 - (theme.logoZone.height + 20),
   border: 4,
@@ -403,9 +403,9 @@ const PANEL = {
 };
 const FREE_L = theme.margin.left + PERSON11_W;
 PANEL.x = (FREE_L + theme.canvas.width - theme.margin.right) / 2 - PANEL.w / 2;
-/** The cycle sits at the panel's top, its left-right middle on the panel's. */
+/** The cycle hangs from the company icon: the icon at the panel's left-right middle, the rest around it. */
 const CYCLE_SHIFT = {
-  x: PANEL.x + PANEL.w / 2 - (WHEEL.cx + (CYC.l + CYC.r) / 2),
+  x: PANEL.x + PANEL.w / 2 - WHEEL.cx, // anchored on the company icon, centred left to right
   y: PANEL.y + 22 - (WHEEL.cy + CYC.t),
 };
 /** "di bagian bawah panel (overlap), muncul text box garis putus putus" — straddling the panel's bottom edge. */
