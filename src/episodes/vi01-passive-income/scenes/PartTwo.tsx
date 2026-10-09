@@ -480,8 +480,6 @@ export const SC11 = () => {
   const m = useMotion();
   const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC11);
-  /** The wheel grows a little with each turn. */
-  const grow = 0.92 + 0.05 * B11.steps.reduce((s, g) => s + ease(f, L(g), 30), 0);
   const shift = ease(f, L(B11.panel), m.move);
   const swapped = f >= L(B11.panel) + m.move;
   const panel = ease(f, L(B11.panel), m.move);
@@ -520,9 +518,8 @@ export const SC11 = () => {
 
       {/* everything after, inside the panel — the wheel and the owner side by side, as first drawn */}
       <div style={{ position: "absolute", inset: 0, transform: place(CONTENT_BOX, CONTENT_AT), transformOrigin: "0 0" }}>
-        <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${WHEEL.cx}px ${WHEEL.cy}px` }}>
-          <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
-        </div>
+        {/* "bagannya ga perlu membesar" — it stays one size */}
+        <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
         <Link a={{ x: OWNER.x - 20, y: OWNER.y + OWNER.h / 2 }} b={{ x: WHEEL.cx + CYCLE.r + 30, y: WHEEL.cy - 40 }} at={L(B11.pemilik) + 20} tone="cyan" dashed head={false} />
         <Node box={OWNER} label="Pemilik" sub="sebagian kecil" icon="person" tone="cyan" at={L(B11.pemilik)} size={40} />
         <Say text="ikut punya exposure ke" x={OWNER.x + OWNER.w / 2} y={OWNER.y + OWNER.h + 50} at={L(B11.exposure)} size={34} weight={600} color={theme.color.cyanInk} />
