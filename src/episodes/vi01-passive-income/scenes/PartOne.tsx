@@ -38,12 +38,12 @@ const fmtAsset = (n: number) => Math.round(n).toLocaleString("en-US");
 const ASSET = { top: 330, w: 1320, h: 500, pad: 64, btn: 132, label: 40, total: 92, value: 56 };
 
 /**
- * "Orang Resign.png", 1086 × 1448: solid from row 11, feet on row 1417,
+ * "OrangResign_1.png" (the polo version), 1086 × 1448: solid from row 11, feet on row 1425,
  * columns 256–870. "Perbesar gambarnya di kepala hingga pinggul" — the head
  * starts under the title and the hips (row 720) meet the caption band, where
  * the picture is cut off.
  */
-const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1417, solidCx: 563 / 1086, from: 330 };
+const RESIGN = { aspect: 1086 / 1448, rows: 1448, top: 11, hips: 720, feet: 1425, solidCx: 583 / 1086, from: 330 }; // OrangResign_1.png
 const RESIGN_H = ((theme.captionBand.top - RESIGN.from) * RESIGN.rows) / (RESIGN.hips - RESIGN.top);
 /**
  * The three "Tetap …", centred left to right: a to-do box, the words typed in
@@ -780,7 +780,7 @@ export const SC07 = () => {
  * unmirrored, so he faces the office. Both stand on the same floor line.
  */
 const OFFICE = { aspect: 1086 / 1448, h: 740, x: 520, feet: 940, floor: 1444 / 1448, coinY: 420 };
-const WORKER8 = { aspect: 1312 / 1199, h: 500, x: 1360, feet: 940, floor: 1139 / 1199, top: 70 / 1199 };
+const WORKER8 = { aspect: 1448 / 1086, h: 500, x: 1360, feet: 940, floor: 1068 / 1086, top: 18 / 1086 }; // OrangKerja_1.png
 /** The worker's solid top, and the balance card 40 px above it ("40 px di atas Orang Kerja"). */
 const WORKER8_TOP = WORKER8.feet - (WORKER8.floor - WORKER8.top) * WORKER8.h;
 /**

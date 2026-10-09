@@ -43,9 +43,9 @@ const WORD_Y = GROUP_BOTTOM - CAL_H_AFTER - SPLIT.gap - SPLIT.word / 2;
 /** Motion blur on the rolling dates: px of vertical blur per px/frame of travel, and its ceiling. */
 const ROLL_BLUR = { perSpeed: 0.35, max: 22 };
 /** "Orang Kerja.png" (INV01 - Passive Income/Gambar), 1312 × 1199. */
-const ORANG_KERJA = 1312 / 1199;
+const ORANG_KERJA = 1448 / 1086; // OrangKerja_1.png — the polo version, 1448 × 1086
 /** …whose solid pixels stop at row 1138: the feet, where its contact shadow goes. */
-const ORANG_KERJA_FLOOR = 1138 / 1199;
+const ORANG_KERJA_FLOOR = 1068 / 1086;
 /** The photo's height: it rises from below the frame, centred left to right ("maksudku tengah horizontal"). */
 const PHOTO_H = 560;
 /** Far enough up that the pair is gone — GAJIAN's top is the highest point. */
@@ -91,8 +91,8 @@ const SPEND_ICONS: IconName[][] = [
 const BAYANGIN = { y: 150, size: 64, weight: 700, gap: 14 };
 /** "Layoff.png" (INV01 - Passive Income/Gambar), 1086 × 1448 — the figure stands in columns 378–840, feet on row 1390. */
 const LAYOFF = 1086 / 1448;
-const LAYOFF_SOLID_CX = (378 + 840) / 2 / 1086;
-const LAYOFF_FLOOR = 1390 / 1448;
+const LAYOFF_SOLID_CX = (392 + 868) / 2 / 1086; // Layoff_1.png
+const LAYOFF_FLOOR = 1431 / 1448;
 /**
  * THE CLOSE-UP: "perbesar orangnya hingga yang muncul di preview dari kepala
  * hingga dada" — rows 40 (above the hair) to 580 (the chest) of the 1448-row
@@ -108,9 +108,9 @@ const CLOSE_FROM = BAYANGIN.y + BAYANGIN.size * 1.1 * 2 + BAYANGIN.gap + 20;
 const CLOSE_H = ((theme.captionBand.top - CLOSE_FROM) * CLOSE.rows) / (CLOSE.chest - CLOSE.top);
 const CLOSE_TOP = CLOSE_FROM - (CLOSE.top / CLOSE.rows) * CLOSE_H;
 /** Head columns (the middle of the head's solid span) in each file. */
-const HEAD_U = { layoff: 515 / 1086, bingung: 595 / 1086 };
+const HEAD_U = { layoff: 533 / 1086, bingung: 615 / 1086 }; // the _1 (polo) files
 /** "OrangBingung.png" — same 1086 × 1448 canvas; feet on row 1416. */
-const BINGUNG_FLOOR = 1416 / 1448;
+const BINGUNG_FLOOR = 1444 / 1448;
 /** TA11's ground (TAMistakes f15104): the grid fades out toward the logo row and the caption band. */
 const GROUND_RAMP =
   `linear-gradient(to bottom, transparent ${theme.logoZone.height}px, black ${theme.logoZone.height * 2}px, ` +
@@ -526,7 +526,7 @@ const CLOCK = { cx: 960, cy: 500, r: 230, label: 72, above: 170, below: 830, exi
  */
 const HANDS = { hour: 65, minute: 60, turn: 120 };
 /** "OrangMikir.png", 1086 × 1448: seated, feet on row 1365, solid from row 64, columns 163–987. */
-const MIKIR = { aspect: 1086 / 1448, h: 620, feet: 930, floor: 1365 / 1448, solidCx: 575 / 1086, top: 64 / 1448, left: 163 / 1086, right: 987 / 1086 };
+const MIKIR = { aspect: 1086 / 1448, h: 620, feet: 930, floor: 1408 / 1448, solidCx: 594 / 1086, top: 66 / 1448, left: 168 / 1086, right: 1020 / 1086 }; // OrangMikir_1.png
 const MIKIR_X = theme.canvas.width / 2 - (MIKIR.solidCx - 0.5) * MIKIR.h * MIKIR.aspect;
 const MIKIR_Y = MIKIR.feet + (1 - MIKIR.floor) * MIKIR.h;
 /** What a grown-up carries — fifty of them, around the man thinking. */
