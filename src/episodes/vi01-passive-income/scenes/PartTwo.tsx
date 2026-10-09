@@ -320,8 +320,8 @@ export const SC10 = () => {
         </div>
       ) : null}
       {/* the title in two stages: from the scene's start (9779), then from the phone (10500) */}
-      <Say text="Ga perlu beli produk buat jadi investor" x={960} y={190} at={0} out={L(B10.phone)} size={52} />
-      <Say text="Investasi jadi pemilik bisnis" x={960} y={190} at={L(B10.phone) + m.fade} size={52} />
+      <Say text="Ga perlu beli produk buat jadi investor" x={960} y={190} at={0} out={L(B10.phone)} size={52} color={c.indigo} />
+      <Say text="Investasi jadi pemilik bisnis" x={960} y={190} at={L(B10.phone) + m.fade} size={52} color={c.indigo} />
       {!covered ? (
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         <div style={{ position: "absolute", inset: 0, transform: `scale(${full.toFixed(4)})`, transformOrigin: `${theme.canvas.width / 2}px ${MEJA.from}px` }}>
