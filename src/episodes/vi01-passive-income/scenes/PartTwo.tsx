@@ -134,7 +134,7 @@ const TAK = { y: 680, w: 1340, h: 120, size: 44 };
  * chart top to bottom, 20% of it over the chart's right edge and 80% beyond; at 9662 he becomes "OrangSenang.png".
  */
 /* then "Portfolio nya kecilin 30%, chartnya gedein 15%", and the man 50 px to the left */
-const BBCA = { personH: 660, chartH: 600 * 1.15, top: 268, gap: 60, radius: 24, portW: 560 * 0.7, portInside: 0.2, portRise: 200, personShift: -50 };
+const BBCA = { personH: 660, chartH: 600 * 1.15, top: 268, gap: 60, radius: 24, portW: 560 * 0.7, portInside: 0.2, portDown: 80, portRise: 200, // portDown: "Geser portofolionya 80 px ke bawah" personShift: -50 };
 const PERSON_W = (BBCA.personH * 1086) / 1448;
 const CHART_W = (BBCA.chartH * 4084) / 5834;
 const BBCA_LEFT = (theme.canvas.width - (PERSON_W + BBCA.gap + CHART_W)) / 2;
@@ -167,7 +167,7 @@ const BbcaSet = ({ portfolioAt, senangAt }: { portfolioAt: number; senangAt: num
       ) : null}
       {card(CHART_LEFT, BBCA.top, CHART_W, BBCA.chartH, "art/vi01/chart-bbca.png")}
       {port > 0.001
-        ? card(CHART_LEFT + CHART_W - BBCA.portInside * BBCA.portW, BBCA.top + BBCA.chartH / 2 - PORT_H / 2 + (1 - port) * BBCA.portRise, BBCA.portW, PORT_H, "art/vi01/portfolio.jpg", { opacity: port })
+        ? card(CHART_LEFT + CHART_W - BBCA.portInside * BBCA.portW, BBCA.top + BBCA.chartH / 2 - PORT_H / 2 + BBCA.portDown + (1 - port) * BBCA.portRise, BBCA.portW, PORT_H, "art/vi01/portfolio.jpg", { opacity: port })
         : null}
     </div>
   );
