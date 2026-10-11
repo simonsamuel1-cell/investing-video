@@ -397,6 +397,13 @@ export const SC11 = {
   panel: 11220,
   /** "Text box nya dibuat mulai dari 11731 aja" — the dashed "Kita …" box; its words fade in, its highlight opens from the middle. */
   kita: 11731,
+  /**
+   * "11921 Orang Tuntunnya dan background kotak kotak, buat transisi out camera
+   * cut. Isi rectangle putih, buat fade out, tapi rectangelnya stay. Text
+   * boxnya transisi out dengan reverse animation. Lalu rectanglenya, geser ke
+   * tengah." SC11 keeps running past its block for this (Composition EXTEND).
+   */
+  out: 11921,
   uang: 10894, // "bedanya antara sekadar menghasilkan uang,"
   aset: 11105, // "dengan mulai membangun aset."
   wheel: 11235, // "Sebuah bisnis"
@@ -561,7 +568,7 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC09, axis: "x" }, // in place of ST2, which Simon cancelled
   { at: BLOCK.SC10, axis: "x" },
   // SC10 → SC11: no cut — "cancel transisi camera cutnya, tapi 4 hp nya turun keluar layar"
-  { at: BLOCK.SC12, axis: "x" },
+  // SC11 → SC12: cancelled — "batalkan transisi camera cut karna aku mau buat scene nya continuous"
   { at: BLOCK.SC15, axis: "x" },
   { at: BLOCK.SC16, axis: "x" },
   { at: BLOCK.SC17, axis: "x" },

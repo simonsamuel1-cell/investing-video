@@ -24,7 +24,7 @@ import { ListTransisi, SceneTransisi, type Mount } from "./scenes/Transition";
 
 export const TOTAL_FRAMES = BLOCK.END;
 
-type Mounted = Mount & { name: string };
+type Mounted = Mount & { name: string; extended?: boolean };
 
 const ORDER = [
   ["SC01", SC01, "SC01 Gajian"],
@@ -48,10 +48,12 @@ const ORDER = [
 ] as const;
 
 const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
+/** Scenes that carry on over the next one's first frames — the continuous cuts: the next scene is drawn on top. */
+const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: 240 };
 const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   const from = BLOCK[key];
   const next = KEYS[KEYS.indexOf(key) + 1];
-  return { from, duration: BLOCK[next] - from, Component, name };
+  return { from, duration: BLOCK[next] - from + (EXTEND[key] ?? 0), Component, name, extended: (EXTEND[key] ?? 0) > 0 };
 });
 
 /* ⚠ EVERY FRAME IS OWNED, and the video outlasts its voice. */
@@ -97,7 +99,8 @@ const ROWS = String(random(null));
 
 const Body = () => (
   <Stage>
-    {SCENES.map(({ from, duration, Component, name }) => (
+    {/* the scenes in order — those that carry on past their block are drawn after the rest, over the next one */}
+    {[...SCENES.filter((s) => !s.extended), ...SCENES.filter((s) => s.extended)].map(({ from, duration, Component, name }) => (
       <Sequence key={`${ROWS}-${name}`} from={from} durationInFrames={duration} name={name}>
         <InCuts from={from} to={from + duration}>
           <Component />

@@ -11,8 +11,8 @@
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
-import { GridGround, Stage, theme, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
+import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { BLOCK, CUT, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
 import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Say, TypeBox, useLife } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
@@ -494,6 +494,16 @@ export const SC11 = () => {
   const shift = ease(f, L(B11.panel), m.move);
   const swapped = f >= L(B11.panel) + m.move;
   const panel = ease(f, L(B11.panel), m.move);
+  /* 11921: the person and the grid leave on a camera cut; the panel's white fades but it stays,
+     the dashed box closes in reverse, and the panel then slides to the middle (leftward) */
+  const out = L(B11.out);
+  const away = cutOutStyle(f + BLOCK.SC11, { at: BLOCK.SC12 + CUT.over / 2, axis: "x", ...CUT });
+  const contentOut = ease(f, out, m.fade);
+  /* the cut's out half over, the person and the grid are gone — the scene beneath is the plain ground */
+  const carried = f + BLOCK.SC11 < BLOCK.SC12 + CUT.over / 2;
+  const slideAt = out + m.sec(0.8);
+  const slide = ease(f, slideAt, m.move);
+  const panelDx = (theme.canvas.width / 2 - (PANEL.x + PANEL.w / 2)) * slide;
   /* his scale, head position and head top, from where he stood to where Tuntun4 stands */
   const k0 = TUNTUN3_H / TUNTUN3.rows;
   const k = k0 + (K11 - k0) * shift;
@@ -501,17 +511,28 @@ export const SC11 = () => {
   const headX = theme.canvas.width / 2 + (HEAD11.x - theme.canvas.width / 2) * shift;
   const headY = TUNTUN3.from + (HEAD11.y - TUNTUN3.from) * shift;
   return (
-    <Stage>
+    <Stage transparent={f >= L(B11.out)}>
       {/* the grid carries on from SC10 */}
-      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
-        <GridGround f={f + BLOCK.SC11} paper={c.bg} />
-      </div>
-      {/* the panel: white, soft shadow, a silver gradient border */}
-      {panel > 0.001 ? (
-        <div style={{ position: "absolute", left: PANEL.x, top: PANEL.y, width: PANEL.w, height: PANEL.h, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, boxShadow: shadow.soft, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
-          <div style={{ width: "100%", height: "100%", borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
+      {carried ? (
+        <div style={{ position: "absolute", inset: 0, ...away }}>
+          <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+            <GridGround f={f + BLOCK.SC11} paper={c.bg} />
+          </div>
         </div>
       ) : null}
+      {/* the panel: white, soft shadow, a silver gradient border */}
+      {panel > 0.001 ? (
+        <div style={{ position: "absolute", left: PANEL.x + panelDx, top: PANEL.y, width: PANEL.w, height: PANEL.h, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
+          {/* the shadow, on an empty box (a box-shadow is never drawn inside its own box) */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft }} />
+          {/* the white — the part that fades */}
+          <div style={{ position: "absolute", inset: PANEL.border, borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg, opacity: 1 - contentOut }} />
+          {/* the silver gradient, as a ring only — it stays */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, WebkitMask: "linear-gradient(white 0 0) content-box, linear-gradient(white 0 0)", WebkitMaskComposite: "xor", mask: "linear-gradient(white 0 0) content-box exclude, linear-gradient(white 0 0)" }} />
+        </div>
+      ) : null}
+      {carried ? (
+      <div style={{ position: "absolute", inset: 0, ...away }}>
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
         {!swapped ? (
           <Cutout src="art/vi01/orang-tuntun-3.png" aspect={TUNTUN3.aspect} x={headX - (TUNTUN3.headU - 0.5) * H * TUNTUN3.aspect} y={headY - TUNTUN3.top * k + H} h={H} at={0} rise={theme.canvas.height - TUNTUN3.from} riseFrames={m.move} shadow floor={1.2} />
@@ -520,6 +541,8 @@ export const SC11 = () => {
           <Cutout src="art/vi01/orang-tuntun-4.png" aspect={TUNTUN3.aspect} x={HEAD11.x - (TUNTUN4B.headU - 0.5) * TUNTUN3.rows * K11 * TUNTUN3.aspect} y={HEAD11.y - TUNTUN4B.top * K11 + TUNTUN3.rows * K11} h={TUNTUN3.rows * K11} at={-m.reveal} rise={0} shadow floor={1.2} />
         )}
       </div>
+      </div>
+      ) : null}
       {/* "Di 11220, kedua text ini fade out" — as he moves */}
       <div style={{ position: "absolute", inset: 0, opacity: 1 - shift }}>
         <Typed text="menghasilkan uang" x={SIDE.left} y={SIDE.y} at={L(B11.typeUang)} anchor="right" color={c.indigo} />
@@ -528,11 +551,11 @@ export const SC11 = () => {
 
 
       {/* the cycle inside the panel; the Pemilik box and its two lines are gone */}
-      <div style={{ position: "absolute", inset: 0, transform: `translate(${CYCLE_SHIFT.x}px, ${CYCLE_SHIFT.y}px)` }}>
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - contentOut, transform: `translate(${CYCLE_SHIFT.x}px, ${CYCLE_SHIFT.y}px)` }}>
         <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
       </div>
       {/* the line that closes it, a dashed box on the panel's bottom edge, "Kita … exposure" highlighted */}
-      <TypeBox cx={PANEL.x + PANEL.w / 2} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn />
+      <TypeBox cx={PANEL.x + PANEL.w / 2 + panelDx} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn closeAt={out} />
     </Stage>
   );
 };

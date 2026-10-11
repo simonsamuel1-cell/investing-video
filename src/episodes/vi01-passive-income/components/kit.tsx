@@ -908,14 +908,16 @@ export const TypeBox = ({
   const start = Math.max(typeAt ?? 0, dashOpenAt(at, m));
   const untyped = closeAt === undefined ? 0 : Math.max(0, Math.floor((f - closeAt) * cps * 2));
   const shown = Math.max(0, Math.min(Math.floor((f - start) * cps), text.length - untyped));
-  const shutAt = closeAt === undefined ? undefined : closeAt + Math.ceil(text.length / (cps * 2));
+  /* reversed, step by step: the highlight closes, the words fade, then the box shuts */
+  const markOut = closeAt === undefined ? closeAt : closeAt + m.sec(0.4);
+  const shutAt = closeAt === undefined ? undefined : fadeIn ? (markOut as number) + m.reveal : closeAt + Math.ceil(text.length / (cps * 2));
   const typed = text.slice(0, shown);
   const mStart = mark ? text.indexOf(mark) : -1;
   const mEnd = mStart >= 0 ? mStart + (mark as string).length : -1;
-  const textIn = fadeIn ? ease(f, start, m.reveal) : 1;
+  const textIn = fadeIn ? ease(f, start, m.reveal) * (markOut === undefined ? 1 : 1 - ease(f, markOut, m.reveal)) : 1;
   const markOn = fadeIn
     ? mStart >= 0
-      ? ease(f, Math.max(markAt ?? 0, start + m.reveal), m.sec(DASH.openSec))
+      ? ease(f, Math.max(markAt ?? 0, start + m.reveal), m.sec(DASH.openSec)) * (closeAt === undefined ? 1 : 1 - ease(f, closeAt, m.sec(0.4)))
       : 0
     : mStart >= 0 && shown >= mEnd
       ? ease(f, Math.max(markAt ?? 0, start + Math.ceil(mEnd / cps)), m.reveal)
