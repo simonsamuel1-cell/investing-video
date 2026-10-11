@@ -525,8 +525,8 @@ export const SC11 = () => {
         <div style={{ position: "absolute", left: PANEL.x + panelDx, top: PANEL.y, width: PANEL.w, height: PANEL.h, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
           {/* the shadow, on an empty box (a box-shadow is never drawn inside its own box) */}
           <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft }} />
-          {/* the white — the part that fades */}
-          <div style={{ position: "absolute", inset: PANEL.border, borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg, opacity: 1 - contentOut }} />
+          {/* the white — stays white ("rectangle kita tetap warna putih"); only what is drawn on it fades */}
+          <div style={{ position: "absolute", inset: PANEL.border, borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
           {/* the silver gradient, as a ring only — it stays */}
           <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, WebkitMask: "linear-gradient(white 0 0) content-box, linear-gradient(white 0 0)", WebkitMaskComposite: "xor", mask: "linear-gradient(white 0 0) content-box exclude, linear-gradient(white 0 0)" }} />
         </div>
