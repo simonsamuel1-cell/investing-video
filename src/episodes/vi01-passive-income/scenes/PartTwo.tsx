@@ -575,7 +575,7 @@ export const SC12 = () => {
   const saved = MONTHS.reduce((s, _, k) => s + ease(f, monthAt(k) + 12, 22), 0);
   return (
     <Stage>
-      <Say text="Mulainya nggak harus besar" x={960} y={190} at={L(B12.start)} size={52} />
+      {/* "hapus judul 'mulainya ga harus besar'" */}
       <div style={{ opacity: 1 - 0.65 * dim }}>
         {["Rp50 ribu", "Rp100 ribu", "Rp300 ribu"].map((label, i) => {
           /* 28 then 83 frames apart: a short ease, so each lands on its word */
