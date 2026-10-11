@@ -872,6 +872,7 @@ export const TypeBox = ({
   closeAt,
   boxInk,
   italic = true,
+  fadeIn = false,
 }: {
   cx: number;
   y: number;
@@ -895,6 +896,8 @@ export const TypeBox = ({
   boxInk?: string;
   /** Upright type when false. */
   italic?: boolean;
+  /** No typing: the words fade in once the box is open, and the highlight opens out from its middle like the box did. */
+  fadeIn?: boolean;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -909,8 +912,12 @@ export const TypeBox = ({
   const typed = text.slice(0, shown);
   const mStart = mark ? text.indexOf(mark) : -1;
   const mEnd = mStart >= 0 ? mStart + (mark as string).length : -1;
-  const markOn =
-    mStart >= 0 && shown >= mEnd
+  const textIn = fadeIn ? ease(f, start, m.reveal) : 1;
+  const markOn = fadeIn
+    ? mStart >= 0
+      ? ease(f, Math.max(markAt ?? 0, start + m.reveal), m.sec(DASH.openSec))
+      : 0
+    : mStart >= 0 && shown >= mEnd
       ? ease(f, Math.max(markAt ?? 0, start + Math.ceil(mEnd / cps)), m.reveal)
       : 0;
   const wash =
@@ -939,7 +946,19 @@ export const TypeBox = ({
             whiteSpace: "pre",
           }}
         >
-          {mStart < 0 || shown <= mStart
+          {fadeIn ? (
+            <span style={{ opacity: textIn }}>
+              {text.slice(0, Math.max(mStart, 0))}
+              {mStart >= 0 ? (
+                <span style={{ position: "relative", display: "inline-block", isolation: "isolate", color: markOn > 0.5 ? ink : undefined, fontWeight: markOn > 0.5 ? 800 : 600 }}>
+                  {/* the wash opens from its middle, outward, like the box */}
+                  <span style={{ position: "absolute", left: -6, right: -6, top: 0, bottom: 0, background: wash, borderRadius: 6, transform: `scaleX(${markOn.toFixed(4)})`, transformOrigin: "center", zIndex: -1 }} />
+                  {text.slice(mStart, mEnd)}
+                </span>
+              ) : null}
+              {text.slice(mEnd >= 0 ? mEnd : 0)}
+            </span>
+          ) : mStart < 0 || shown <= mStart
             ? seg(typed, "a")
             : [
                 seg(typed.slice(0, mStart), "a"),

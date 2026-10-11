@@ -532,7 +532,7 @@ export const SC11 = () => {
         <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
       </div>
       {/* the line that closes it, a dashed box on the panel's bottom edge, "Kita … exposure" highlighted */}
-      <TypeBox cx={PANEL.x + PANEL.w / 2} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.exposure)} text={KITA.text} mark={KITA.mark} markAt={L(B11.exposure) + 90} size={KITA.size} />
+      <TypeBox cx={PANEL.x + PANEL.w / 2} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn />
     </Stage>
   );
 };

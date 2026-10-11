@@ -395,6 +395,8 @@ export const SC11 = {
    * letakkan semua visual yang ada hingga 11920 di dalam rectangle tersebut."
    */
   panel: 11220,
+  /** "Text box nya dibuat mulai dari 11731 aja" — the dashed "Kita …" box; its words fade in, its highlight opens from the middle. */
+  kita: 11731,
   uang: 10894, // "bedanya antara sekadar menghasilkan uang,"
   aset: 11105, // "dengan mulai membangun aset."
   wheel: 11235, // "Sebuah bisnis"
