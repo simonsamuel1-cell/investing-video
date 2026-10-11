@@ -522,9 +522,10 @@ export const SC11 = () => {
     r: theme.shape.cardRadius + (CARD_R - theme.shape.cardRadius) * slide,
   };
   const at = B12.amounts.map((g) => local(g, BLOCK.SC11));
-  const amount = AMOUNTS.reduce((sum, a, i) => sum + a * ease(f, at[i], m.sec(0.4)), 0);
-  const swell = Math.max(...at.map((a) => swellAt(f, a, m)));
-  const tri = ease(f, at[0], m.reveal);
+  /* "langsung mulai dari 50ribu, jangan dari 0": the card is born holding Rp 50,000; only the two rises count */
+  const amount = AMOUNTS.reduce((sum, a, i) => sum + a * (i === 0 ? 1 : ease(f, at[i], m.sec(0.4))), 0);
+  const swell = Math.max(...at.slice(1).map((a) => swellAt(f, a, m)));
+  const tri = ease(f, at[1], m.reveal);
   const dimmed = ease(f, local(B12.dim, BLOCK.SC11), m.fade);
   /* his scale, head position and head top, from where he stood to where Tuntun4 stands */
   const k0 = TUNTUN3_H / TUNTUN3.rows;
