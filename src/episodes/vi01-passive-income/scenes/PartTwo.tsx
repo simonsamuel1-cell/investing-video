@@ -486,8 +486,8 @@ const Cycle = ({ steps, wheelAt }: { steps: number[]; wheelAt: number }) => {
   );
 };
 
-/** The Total Invested card the panel becomes: where SC12's three amounts used to sit, centred. */
-const CARD_Y = 330 - BAL.h / 2;
+/** The Total Invested card the panel becomes: dead centre of the canvas, left to right and top to bottom. */
+const CARD_Y = theme.canvas.height / 2 - BAL.h / 2;
 const CARD_R = 32;
 /** What each amount adds: Rp 50 ribu, then 100 ribu, then 300 ribu. */
 const AMOUNTS = [50_000, 50_000, 200_000];
@@ -508,18 +508,18 @@ export const SC11 = () => {
   const contentOut = ease(f, out, m.fade);
   /* the cut's out half over, the person and the grid are gone — the scene beneath is the plain ground */
   const carried = f + BLOCK.SC11 < BLOCK.SC12 + CUT.over / 2;
-  const slideAt = out + m.sec(0.8);
+  /* once the dashed box has shut (0.4 highlight + 0.4 words + 0.8 box), so it is not left hanging on the shrinking card */
+  const slideAt = out + m.sec(1.6);
   const slide = ease(f, slideAt, m.move);
-  const panelDx = (theme.canvas.width / 2 - (PANEL.x + PANEL.w / 2)) * slide;
-  /* "resize mengecil dan menjadi UI Total Invested": once it is in the middle the panel shrinks to the card,
-     and the amount steps Rp 50 ribu → 100 ribu → 300 ribu on the three words of SC12 */
-  const shrink = ease(f, slideAt + m.move, m.move);
+  /* "geser kiri sekalian mengecil": one move — the panel slides to the middle of the canvas while it
+     shrinks into the Total Invested card; the amount then steps Rp 50 ribu → 100 ribu → 300 ribu */
+  const shrink = slide;
   const box = {
-    x: PANEL.x + panelDx + (theme.canvas.width / 2 - BAL.w / 2 - (PANEL.x + panelDx)) * shrink,
-    y: PANEL.y + (CARD_Y - PANEL.y) * shrink,
-    w: PANEL.w + (BAL.w - PANEL.w) * shrink,
-    h: PANEL.h + (BAL.h - PANEL.h) * shrink,
-    r: theme.shape.cardRadius + (CARD_R - theme.shape.cardRadius) * shrink,
+    x: PANEL.x + (theme.canvas.width / 2 - BAL.w / 2 - PANEL.x) * slide,
+    y: PANEL.y + (CARD_Y - PANEL.y) * slide,
+    w: PANEL.w + (BAL.w - PANEL.w) * slide,
+    h: PANEL.h + (BAL.h - PANEL.h) * slide,
+    r: theme.shape.cardRadius + (CARD_R - theme.shape.cardRadius) * slide,
   };
   const at = B12.amounts.map((g) => local(g, BLOCK.SC11));
   const amount = AMOUNTS.reduce((sum, a, i) => sum + a * ease(f, at[i], m.sec(0.4)), 0);
@@ -594,7 +594,7 @@ export const SC11 = () => {
         <Cycle steps={B11.steps.map(L)} wheelAt={L(B11.wheel)} />
       </div>
       {/* the line that closes it, a dashed box on the panel's bottom edge, "Kita … exposure" highlighted */}
-      <TypeBox cx={PANEL.x + PANEL.w / 2 + panelDx} y={PANEL.y + PANEL.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn closeAt={out} />
+      <TypeBox cx={box.x + box.w / 2} y={box.y + box.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn closeAt={out} />
     </Stage>
   );
 };
