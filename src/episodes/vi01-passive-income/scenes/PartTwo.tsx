@@ -491,6 +491,8 @@ const CARD_Y = theme.canvas.height / 2 - BAL.h / 2;
 const CARD_R = 32;
 /** What each amount adds: Rp 50 ribu, then 100 ribu, then 300 ribu. */
 const AMOUNTS = [50_000, 50_000, 200_000];
+/** The two lines under the card: "Yang penting bukan nominal", then "tapi kebiasaan menyisihkan sebagian income". */
+const UNDER = { size: 56, gap: 70, line: 84 };
 
 export const SC11 = () => {
   const f = useCurrentFrame();
@@ -614,7 +616,9 @@ export const SC12 = () => {
   const saved = MONTHS.reduce((s, _, k) => s + ease(f, monthAt(k) + 12, 22), 0);
   return (
     <Stage>
-      {/* the three amounts are the Total Invested card now, carried over from SC11 */}
+      {/* the three amounts are the Total Invested card now, carried over from SC11; under it, two lines */}
+      <Say text="Yang penting bukan nominal" x={theme.canvas.width / 2} y={CARD_Y + BAL.h + UNDER.gap} at={L(B12.penting)} size={UNDER.size} weight={700} color={c.ink} />
+      <Say text="tapi kebiasaan menyisihkan sebagian income" x={theme.canvas.width / 2} y={CARD_Y + BAL.h + UNDER.gap + UNDER.line} at={L(B12.tapi)} size={UNDER.size} weight={700} color={c.indigo} />
 
       {/* month after month: income comes in, a slice goes to the jar */}
       {MONTHS.map((mo, k) => {

@@ -418,6 +418,9 @@ export const SC12 = {
   start: 11992, // "nggak harus besar."
   /** "Rp50 … Rp100 … Rp300" — 28 f then 83 f apart; pops, not reveals. */
   amounts: [12080, 12108, 12191] as const,
+  /** "12251 muncul text di bawah UI total invested 'Yang penting bukan nominal'"; "12393 … 'tapi kebiasaan menyisihkan sebagian income'" */
+  penting: 12251,
+  tapi: 12393,
   dim: 12320, // "bukan nominal pertamanya,"
   habit: 12409, // "tapi kebiasaan untuk menyisihkan sebagian income"
   aset: 12628, // "dan mulai mengubahnya menjadi aset."
