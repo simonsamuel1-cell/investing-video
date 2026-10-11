@@ -492,7 +492,48 @@ const CARD_R = 32;
 /** What each amount adds: Rp 50 ribu, then 100 ribu, then 300 ribu. */
 const AMOUNTS = [50_000, 50_000, 200_000];
 /** The two lines under the card: "Yang penting bukan nominal", then "tapi kebiasaan menyisihkan sebagian income". */
-const UNDER = { size: 56, gap: 70, line: 84 };
+const UNDER = { size: 56, big: 66, gap: 76, line: 104, lift: 16, wash: 0.8, pad: 12 };
+
+/**
+ * The two lines under the card, set as one statement: the first is the
+ * foil — "nominal" is greyed out, it is not the point — and it steps back
+ * when the second arrives, the payoff, larger and bolder, its two key words
+ * under an indigo wash that opens from the middle outward.
+ */
+const Statement = () => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const L = (g: number) => local(g, BLOCK.SC12);
+  const one = ease(f, L(B12.penting), m.reveal);
+  const two = ease(f, L(B12.tapi), m.reveal);
+  const wash = ease(f, L(B12.tapi) + m.reveal, m.sec(UNDER.wash));
+  const line = (y: number, size: number, p: number, children: React.ReactNode, key: string) => (
+    <div key={key} style={{ position: "absolute", left: 0, width: theme.canvas.width, top: y - size, height: size * 2, display: "flex", alignItems: "center", justifyContent: "center", opacity: p, transform: `translateY(${((1 - p) * UNDER.lift).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: size, whiteSpace: "pre", lineHeight: 1 }}>
+      {children}
+    </div>
+  );
+  const y1 = CARD_Y + BAL.h + UNDER.gap;
+  return (
+    <>
+      {one > 0.001
+        ? line(y1, UNDER.size, one * (1 - 0.45 * two), <span style={{ fontWeight: 700, color: c.ink }}>Yang penting bukan <span style={{ color: c.slate, fontWeight: 600 }}>nominal</span></span>, "a")
+        : null}
+      {two > 0.001
+        ? line(y1 + UNDER.line, UNDER.big, two, (
+            <span style={{ fontWeight: 700, color: c.ink }}>
+              tapi{" "}
+              <span style={{ position: "relative", display: "inline-block", isolation: "isolate", color: c.indigo, fontWeight: 800 }}>
+                <span style={{ position: "absolute", left: -UNDER.pad, right: -UNDER.pad, top: 0, bottom: 0, background: theme.color.indigoWashStrong, borderRadius: 14, transform: `scaleX(${wash.toFixed(4)})`, transformOrigin: "center", zIndex: -1 }} />
+                kebiasaan menyisihkan
+              </span>
+              {" "}sebagian income
+            </span>
+          ), "b")
+        : null}
+    </>
+  );
+};
 
 export const SC11 = () => {
   const f = useCurrentFrame();
@@ -605,6 +646,8 @@ export const SC11 = () => {
 // ═══ SC12 — start small; the habit is the slice ══════════════════════════
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun"];
 const ROW = { x0: 260, step: 190, base: 760, bar: 120, h: 230, slice: 46 };
+/** The first SC12 draft — bars into a jar — which collides with the statement under the card. */
+const OLD_SC12 = false;
 const JAR = { x: 1440, y: 460, size: 300 };
 
 export const SC12 = () => {
@@ -617,9 +660,11 @@ export const SC12 = () => {
   return (
     <Stage>
       {/* the three amounts are the Total Invested card now, carried over from SC11; under it, two lines */}
-      <Say text="Yang penting bukan nominal" x={theme.canvas.width / 2} y={CARD_Y + BAL.h + UNDER.gap} at={L(B12.penting)} size={UNDER.size} weight={700} color={c.ink} />
-      <Say text="tapi kebiasaan menyisihkan sebagian income" x={theme.canvas.width / 2} y={CARD_Y + BAL.h + UNDER.gap + UNDER.line} at={L(B12.tapi)} size={UNDER.size} weight={700} color={c.indigo} />
+      <Statement />
 
+      {/* the bars-and-jar story (12409 on) sat on top of the two lines above, so it is switched off while they are designed; flip OLD_SC12 to bring it back */}
+      {OLD_SC12 ? (
+        <>
       {/* month after month: income comes in, a slice goes to the jar */}
       {MONTHS.map((mo, k) => {
         const at = monthAt(k);
@@ -660,6 +705,8 @@ export const SC12 = () => {
       ) : null}
       <Say text="Aset" x={JAR.x + JAR.size / 2} y={JAR.y + JAR.size + 40} at={L(B12.aset)} size={44} weight={800} color={theme.color.cyanInk} />
       <Say text="Kebiasaan menyisihkan" x={JAR.x + JAR.size / 2} y={JAR.y - 40} at={L(B12.habit) + 40} size={36} weight={700} color={theme.color.cyanInk} />
+        </>
+      ) : null}
     </Stage>
   );
 };
