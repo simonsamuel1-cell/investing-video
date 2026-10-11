@@ -49,7 +49,7 @@ const ORDER = [
 
 const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
 /** Scenes that carry on over the next one's first frames — the continuous cuts: the next scene is drawn on top. */
-const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: 240 };
+const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: BLOCK.SC13 - BLOCK.SC12 };
 const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   const from = BLOCK[key];
   const next = KEYS[KEYS.indexOf(key) + 1];

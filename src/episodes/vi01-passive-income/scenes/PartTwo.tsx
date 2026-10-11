@@ -13,7 +13,8 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { Cutout, OUTSIDE_RESERVES, ease, Pill, Icon, Say, TypeBox, useLife } from "../components/kit";
+import { BAL, rp, swellAt } from "./PartOne";
+import { Cutout, OUTSIDE_RESERVES, ease, Icon, Say, TypeBox, useLife } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
 const { fontFamily: VIBES } = loadVibes("normal", { weights: ["400"] });
@@ -485,6 +486,12 @@ const Cycle = ({ steps, wheelAt }: { steps: number[]; wheelAt: number }) => {
   );
 };
 
+/** The Total Invested card the panel becomes: where SC12's three amounts used to sit, centred. */
+const CARD_Y = 330 - BAL.h / 2;
+const CARD_R = 32;
+/** What each amount adds: Rp 50 ribu, then 100 ribu, then 300 ribu. */
+const AMOUNTS = [50_000, 50_000, 200_000];
+
 export const SC11 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -504,6 +511,21 @@ export const SC11 = () => {
   const slideAt = out + m.sec(0.8);
   const slide = ease(f, slideAt, m.move);
   const panelDx = (theme.canvas.width / 2 - (PANEL.x + PANEL.w / 2)) * slide;
+  /* "resize mengecil dan menjadi UI Total Invested": once it is in the middle the panel shrinks to the card,
+     and the amount steps Rp 50 ribu → 100 ribu → 300 ribu on the three words of SC12 */
+  const shrink = ease(f, slideAt + m.move, m.move);
+  const box = {
+    x: PANEL.x + panelDx + (theme.canvas.width / 2 - BAL.w / 2 - (PANEL.x + panelDx)) * shrink,
+    y: PANEL.y + (CARD_Y - PANEL.y) * shrink,
+    w: PANEL.w + (BAL.w - PANEL.w) * shrink,
+    h: PANEL.h + (BAL.h - PANEL.h) * shrink,
+    r: theme.shape.cardRadius + (CARD_R - theme.shape.cardRadius) * shrink,
+  };
+  const at = B12.amounts.map((g) => local(g, BLOCK.SC11));
+  const amount = AMOUNTS.reduce((sum, a, i) => sum + a * ease(f, at[i], m.sec(0.4)), 0);
+  const swell = Math.max(...at.map((a) => swellAt(f, a, m)));
+  const tri = ease(f, at[0], m.reveal);
+  const dimmed = ease(f, local(B12.dim, BLOCK.SC11), m.fade);
   /* his scale, head position and head top, from where he stood to where Tuntun4 stands */
   const k0 = TUNTUN3_H / TUNTUN3.rows;
   const k = k0 + (K11 - k0) * shift;
@@ -522,13 +544,30 @@ export const SC11 = () => {
       ) : null}
       {/* the panel: white, soft shadow, a silver gradient border */}
       {panel > 0.001 ? (
-        <div style={{ position: "absolute", left: PANEL.x + panelDx, top: PANEL.y, width: PANEL.w, height: PANEL.h, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
+        <div style={{ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h, opacity: panel * (1 - 0.65 * dimmed), transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
           {/* the shadow, on an empty box (a box-shadow is never drawn inside its own box) */}
-          <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft }} />
+          <div style={{ position: "absolute", inset: 0, borderRadius: box.r, boxShadow: shadow.soft }} />
           {/* the white — stays white ("rectangle kita tetap warna putih"); only what is drawn on it fades */}
-          <div style={{ position: "absolute", inset: PANEL.border, borderRadius: theme.shape.cardRadius - PANEL.border, background: c.cardBg }} />
-          {/* the silver gradient, as a ring only — it stays */}
-          <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, padding: PANEL.border, boxSizing: "border-box", background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, WebkitMask: "linear-gradient(white 0 0) content-box, linear-gradient(white 0 0)", WebkitMaskComposite: "xor", mask: "linear-gradient(white 0 0) content-box exclude, linear-gradient(white 0 0)" }} />
+          <div style={{ position: "absolute", inset: PANEL.border * (1 - shrink), borderRadius: box.r - PANEL.border * (1 - shrink), background: c.cardBg }} />
+          {/* the silver gradient, as a ring only — it goes as the panel becomes the card */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: box.r, padding: PANEL.border, boxSizing: "border-box", opacity: 1 - shrink, background: `linear-gradient(135deg, ${c.border}, ${c.muted}, ${c.cardBg}, ${c.muted}, ${c.border})`, WebkitMask: "linear-gradient(white 0 0) content-box, linear-gradient(white 0 0)", WebkitMaskComposite: "xor", mask: "linear-gradient(white 0 0) content-box exclude, linear-gradient(white 0 0)" }} />
+          {/* "UI Total Invested": the label over the amount, which swells green each time it changes */}
+          {shrink > 0.001 ? (
+            <div style={{ position: "absolute", inset: 0, opacity: shrink, padding: "0 34px", boxSizing: "border-box", fontFamily: theme.text.family, lineHeight: 1, display: "flex", flexDirection: "column", justifyContent: "center", gap: 18 }}>
+              <div style={{ fontSize: BAL.label, fontWeight: 600, letterSpacing: 1, color: c.slate }}>TOTAL INVESTED:</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 16, transformOrigin: "left center", transform: `scale(${(1 + BAL.pulse * swell).toFixed(4)})` }}>
+                <div style={{ position: "relative", fontSize: BAL.amount, fontWeight: 700, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums", color: c.ink }}>
+                  {rp(amount)}
+                  {swell > 0.001 ? <span style={{ position: "absolute", left: 0, top: 0, color: theme.color.gainGreen, opacity: swell }}>{rp(amount)}</span> : null}
+                </div>
+                {tri > 0.001 ? (
+                  <svg width={BAL.tri} height={BAL.tri} viewBox="0 0 30 30" style={{ opacity: tri, transform: `translateY(${((1 - tri) * 8).toFixed(2)}px)` }}>
+                    <path d="M15 4 L27 25 H3 Z" fill={theme.color.gainGreen} stroke={theme.color.gainGreen} strokeWidth={3} strokeLinejoin="round" />
+                  </svg>
+                ) : null}
+              </div>
+            </div>
+          ) : null}
         </div>
       ) : null}
       {carried ? (
@@ -570,18 +609,11 @@ export const SC12 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC12);
-  const dim = ease(f, L(B12.dim), m.fade);
-  const monthAt = (k: number) => L(B12.habit) + k * 30;
+    const monthAt = (k: number) => L(B12.habit) + k * 30;
   const saved = MONTHS.reduce((s, _, k) => s + ease(f, monthAt(k) + 12, 22), 0);
   return (
     <Stage>
-      {/* "hapus judul 'mulainya ga harus besar'" */}
-      <div style={{ opacity: 1 - 0.65 * dim }}>
-        {["Rp50 ribu", "Rp100 ribu", "Rp300 ribu"].map((label, i) => {
-          /* 28 then 83 frames apart: a short ease, so each lands on its word */
-          return <Pill key={label} label={label} x={[560, 960, 1360][i]} y={330} at={L(B12.amounts[i])} tone="cyan" size={52} />;
-        })}
-      </div>
+      {/* the three amounts are the Total Invested card now, carried over from SC11 */}
 
       {/* month after month: income comes in, a slice goes to the jar */}
       {MONTHS.map((mo, k) => {

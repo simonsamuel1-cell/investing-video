@@ -495,7 +495,7 @@ const ROW_Y = [380 - ROW_STEP, 380, 380 + ROW_STEP];
 const MONTH_X = [(theme.canvas.width - 2 * MONTH.cardW - MONTH.gapX) / 2, (theme.canvas.width + MONTH.gapX) / 2];
 const SALARY = 20_000_000;
 const SENT = 5_000_000;
-const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
+export const rp = (n: number) => `Rp ${Math.round(n).toLocaleString("en-US")}`;
 
 const MiniBalance = ({ x, y, label, amount, swell = 0, weight = 500 }: { x: number; y: number; label: string; amount: string; swell?: number; weight?: number }) => {
   const c = usePalette();
@@ -808,7 +808,7 @@ const HOP = {
 };
 /** What reaches Total invested at SC08.invest. */
 const INVEST8 = 5_000_000;
-const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
+export const BAL = { w: 520, h: 150, gap: 40, label: 22, amount: 48, from: 5_000_000, to: 25_000_000, pulse: 0.15, tri: 30 };
 const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
 
 /**
@@ -842,7 +842,7 @@ const BigBalance = ({ x, y, label, amount, life, swell, tri }: { x: number; y: n
 };
 
 /** A quick swell, 0 → 1 → 0, starting at `at`. */
-const swellAt = (f: number, at: number, m: { sec: (s: number) => number }) => ease(f, at, m.sec(0.3)) * (1 - ease(f, at + m.sec(0.35), m.sec(0.45)));
+export const swellAt = (f: number, at: number, m: { sec: (s: number) => number }) => ease(f, at, m.sec(0.3)) * (1 - ease(f, at + m.sec(0.35), m.sec(0.45)));
 
 /**
  * "UI Account balance" — at `payAt` the coin lands: Rp 5,000,000 → 25,000,000
