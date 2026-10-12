@@ -492,47 +492,19 @@ const CARD_R = 32;
 /** What each amount adds: Rp 50 ribu, then 100 ribu, then 300 ribu. */
 const AMOUNTS = [50_000, 50_000, 200_000];
 /** The two lines under the card: "Yang penting bukan nominal", then "tapi kebiasaan menyisihkan sebagian income". */
-const UNDER = { size: 56, big: 66, gap: 76, line: 104, lift: 16, wash: 0.8, pad: 12 };
+const UNDER = { size: 56, gap: 76, line: 84, lift: 16 };
 /** "UI Total Invested geser naik dulu biar ada ruang di bawah": the card rises so card + both lines sit centred together. */
-const RISE = (UNDER.gap + UNDER.line + UNDER.big / 2) / 2;
+const RISE = (UNDER.gap + UNDER.line + UNDER.size / 2) / 2;
 
-/**
- * The two lines under the card, set as one statement: the first is the
- * foil — "nominal" is greyed out, it is not the point — and it steps back
- * when the second arrives, the payoff, larger and bolder, its two key words
- * under an indigo wash that opens from the middle outward.
- */
+/** The two lines under the card — plain for now: both black, no highlight. */
 const Statement = () => {
-  const f = useCurrentFrame();
   const c = usePalette();
-  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC12);
-  const one = ease(f, L(B12.penting), m.reveal);
-  const two = ease(f, L(B12.tapi), m.reveal);
-  const wash = ease(f, L(B12.tapi) + m.reveal, m.sec(UNDER.wash));
-  const line = (y: number, size: number, p: number, children: React.ReactNode, key: string) => (
-    <div key={key} style={{ position: "absolute", left: 0, width: theme.canvas.width, top: y - size, height: size * 2, display: "flex", alignItems: "center", justifyContent: "center", opacity: p, transform: `translateY(${((1 - p) * UNDER.lift).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: size, whiteSpace: "pre", lineHeight: 1 }}>
-      {children}
-    </div>
-  );
   const y1 = CARD_Y - RISE + BAL.h + UNDER.gap;
   return (
     <>
-      {one > 0.001
-        ? line(y1, UNDER.size, one * (1 - 0.45 * two), <span style={{ fontWeight: 700, color: c.ink }}>Yang penting bukan <span style={{ color: c.slate, fontWeight: 600 }}>nominal</span></span>, "a")
-        : null}
-      {two > 0.001
-        ? line(y1 + UNDER.line, UNDER.big, two, (
-            <span style={{ fontWeight: 700, color: c.ink }}>
-              tapi{" "}
-              <span style={{ position: "relative", display: "inline-block", isolation: "isolate", color: c.indigo, fontWeight: 800 }}>
-                <span style={{ position: "absolute", left: -UNDER.pad, right: -UNDER.pad, top: 0, bottom: 0, background: theme.color.indigoWashStrong, borderRadius: 14, transform: `scaleX(${wash.toFixed(4)})`, transformOrigin: "center", zIndex: -1 }} />
-                kebiasaan menyisihkan
-              </span>
-              {" "}sebagian income
-            </span>
-          ), "b")
-        : null}
+      <Say text="Yang penting bukan nominal" x={theme.canvas.width / 2} y={y1} at={L(B12.penting)} size={UNDER.size} weight={700} color={c.ink} />
+      <Say text="tapi kebiasaan menyisihkan sebagian income" x={theme.canvas.width / 2} y={y1 + UNDER.line} at={L(B12.tapi)} size={UNDER.size} weight={700} color={c.ink} />
     </>
   );
 };
@@ -573,7 +545,6 @@ export const SC11 = () => {
   const amount = AMOUNTS.reduce((sum, a, i) => sum + a * (i === 0 ? 1 : ease(f, at[i], m.sec(0.4))), 0);
   const swell = Math.max(...at.slice(1).map((a) => swellAt(f, a, m)));
   const tri = ease(f, at[1], m.reveal);
-  const dimmed = ease(f, local(B12.dim, BLOCK.SC11), m.fade);
   /* his scale, head position and head top, from where he stood to where Tuntun4 stands */
   const k0 = TUNTUN3_H / TUNTUN3.rows;
   const k = k0 + (K11 - k0) * shift;
@@ -592,7 +563,7 @@ export const SC11 = () => {
       ) : null}
       {/* the panel: white, soft shadow, a silver gradient border */}
       {panel > 0.001 ? (
-        <div style={{ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h, opacity: panel * (1 - 0.65 * dimmed), transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
+        <div style={{ position: "absolute", left: box.x, top: box.y, width: box.w, height: box.h, opacity: panel, transform: `scale(${(0.97 + 0.03 * panel).toFixed(4)})` }}>
           {/* the shadow, on an empty box (a box-shadow is never drawn inside its own box) */}
           <div style={{ position: "absolute", inset: 0, borderRadius: box.r, boxShadow: shadow.soft }} />
           {/* the white — stays white ("rectangle kita tetap warna putih"); only what is drawn on it fades */}
