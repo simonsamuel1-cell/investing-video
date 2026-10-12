@@ -508,6 +508,13 @@ export const SC16 = {
 };
 
 export const SC17 = {
+  /**
+   * Studio frames − 240. "17312 Muncul judul 'Di awal, aset kita mungkin masih kecil'. Lalu di bawahnya muncul
+   * bar chart mu ini (gambar 1), tapi ganti designnya jadi seperti gambar 2, arahnya pun jadi ke kanan. …
+   * progress bar UI aja." 17312 = episode 17072.
+   */
+  title: 17072,
+  card: 17102,
   kecil: 17096, // "aset kita mungkin masih kecil."
   grow: [17262, 17353, 17425] as const, // kemampuan, income, aset
   pillars: 17509, // "pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial."
@@ -623,10 +630,12 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   // SC11 → SC12: cancelled — "batalkan transisi camera cut karna aku mau buat scene nya continuous"
   { at: BLOCK.SC15, axis: "x" },
   { at: BLOCK.SC16, axis: "x" },
-  { at: BLOCK.SC17, axis: "x" },
+  // SC16 → SC17: cancelled — "17288-17289 Buat scene ini continuous, background kotak2nya stay. Yang lainnya boleh fade out."
   { at: BLOCK.SC18, axis: "x" },
 ];
 /** "background dan garis kotak nya fade in": SC13's grid ground fades in over SC12's last picture, which stays under it this long. */
 export const BG_FADE = 40;
+/** SC16 → SC17 is continuous: the grid stays and SC16's pictures fade out over this many frames, held under SC17. */
+export const HANDOFF_FADE = 20;
 /** How long SC13 takes to clear around the carried card before the cut. */
 export const CARRY_CLEAR = 30;

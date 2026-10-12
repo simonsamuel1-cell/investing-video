@@ -7,8 +7,8 @@
  * TA09's quote card on the grid, the Tuntun mark over it, the worker beside it.
  */
 import { useCurrentFrame } from "remotion";
-import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette } from "../../../core";
-import { BG_FADE, BLOCK, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
+import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
 import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
 import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
@@ -96,6 +96,8 @@ export const SC16 = () => {
       <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC16} paper={c.bg} />
       </div>
+      {/* 17288: the grid stays; everything else gives way over the first frames of SC17, which this scene is held under */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - ease(f, L(BLOCK.SC17), HANDOFF_FADE) }}>
       {out < 0.999 ? (
       <div style={{ position: "absolute", inset: 0, opacity: 1 - out }}>
       {/* Berkeluarga on the left, Healing on the right */}
@@ -124,17 +126,24 @@ export const SC16 = () => {
           <BigBalance x={INV_X} y={CARD_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={inn} swell={swellI} tri={ease(f, send + fly, m.reveal)} />
         </>
       ) : null}
+      </div>
     </Stage>
   );
 };
 
 // ═══ SC17 — growing together; the question to ask every payday ═══════════
-const GROW = { base: 820, w: 150, x: [240, 460, 680] };
+const GROW = { base: 820 };
 const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: number }[] = [
   { label: "Kemampuan", tone: "indigo", from: 130, to: 330 },
   { label: "Income", tone: "indigo", from: 150, to: 380 },
   { label: "Aset", tone: "cyan", from: 50, to: 300 },
 ];
+/**
+ * The three bars as progress-bar UI, after Simon's second picture: one white card, each row a label over a
+ * track of fine ticks, a gradient fill running to the right with a handle at its end. The lengths are the
+ * old bars' heights (130/150/50 growing to 330/380/300 of 400) — sizes, not figures; none is labelled.
+ */
+const PROG = { x: theme.margin.left, y: 250, w: 900, pad: 48, row: 160, label: 38, bar: 56, tick: 8, ticks: 48, gap: 16, knob: 20, top: 175, full: 400, growSecs: 0.7 };
 const ROOF = { x: 1060, w: 700, y: 430, h: 86 };
 const PILLARS = [
   { x: 1140, label: "Kerja", tone: "indigo" as const },
@@ -147,26 +156,49 @@ export const SC17 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC17);
   const clear = L(B17.tanya) - 10;
-  const first = useLife(L(B17.kecil) - 20, clear);
+  const shadow = useShadow();
+  const first = useLife(L(B17.title), clear);
+  const card = ease(f, L(B17.card), m.reveal);
   const ink = (t: "indigo" | "cyan") => (t === "indigo" ? c.indigo : theme.color.cyanInk);
   const pillars = ease(f, L(B17.pillars), m.move);
   const roof = ease(f, L(B17.pillars) + 30, m.move);
   return (
-    <Stage>
+    <Stage transparent={f < HANDOFF_FADE}>
+      {/* the grid carries on from SC16 (same global frame, so the same drift); for the first frames SC16's own is still under us */}
+      {f >= HANDOFF_FADE ? (
+        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+          <GridGround f={f + BLOCK.SC17} paper={c.bg} />
+        </div>
+      ) : null}
       {first > 0.001 ? (
         <div style={{ opacity: first }}>
+          <Say text="Di awal, aset kita mungkin masih kecil" x={PROG.x} y={PROG.top} at={L(B17.title)} anchor="left" size={56} weight={800} />
+          <div style={{ position: "absolute", left: PROG.x, top: PROG.y, width: PROG.w, height: 2 * PROG.pad + 2 * PROG.row + PROG.label + PROG.gap + PROG.bar, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, opacity: card }} />
           {GROW_BARS.map((b, i) => {
-            const h = b.from + (b.to - b.from) * ease(f, L(B17.grow[i]), 40);
+            const grown = b.from + (b.to - b.from) * ease(f, L(B17.grow[i]), m.sec(PROG.growSecs));
+            const p = grown / PROG.full;
+            const inner = PROG.w - 2 * PROG.pad;
+            const rowTop = PROG.y + PROG.pad + i * PROG.row;
+            const barTop = rowTop + PROG.label + PROG.gap;
+            const fillW = Math.max(PROG.bar, inner * p);
+            const tone = ink(b.tone);
+            const from = b.tone === "indigo" ? c.indigoSoft : theme.color.hlCyan;
             return (
               <div key={b.label}>
-                <div style={{ position: "absolute", left: GROW.x[i], top: GROW.base - h, width: GROW.w, height: h, borderRadius: 14, background: b.tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan, border: `${theme.shape.rule}px solid ${ink(b.tone)}`, boxSizing: "border-box" }} />
-                <Say text={b.label} x={GROW.x[i] + GROW.w / 2} y={GROW.base + 40} at={L(B17.kecil) - 20} size={32} weight={700} color={ink(b.tone)} />
+                <div style={{ position: "absolute", left: PROG.x + PROG.pad, top: rowTop, fontFamily: theme.text.family, fontSize: PROG.label, fontWeight: 700, color: tone, lineHeight: 1, opacity: card }}>{b.label}</div>
+                {/* the ticks beyond the fill, the fill, and the handle at its end */}
+                <div style={{ position: "absolute", left: PROG.x + PROG.pad, top: barTop, width: inner, height: PROG.bar, opacity: card, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  {Array.from({ length: PROG.ticks }, (_, k) => (
+                    <div key={k} style={{ width: PROG.tick, height: PROG.bar, borderRadius: PROG.tick, background: c.border }} />
+                  ))}
+                </div>
+                <div style={{ position: "absolute", left: PROG.x + PROG.pad, top: barTop, width: fillW, height: PROG.bar, borderRadius: 14, background: `linear-gradient(to right, ${from}, ${tone})`, opacity: card }} />
+                <div style={{ position: "absolute", left: PROG.x + PROG.pad + fillW + PROG.gap, top: barTop - 14, width: 5, height: PROG.bar + 28, borderRadius: 3, background: tone, opacity: card }}>
+                  <div style={{ position: "absolute", left: -(PROG.knob - 5) / 2, top: -PROG.knob / 2, width: PROG.knob, height: PROG.knob, borderRadius: 99, background: tone }} />
+                </div>
               </div>
             );
           })}
-          <div style={{ position: "absolute", left: GROW.x[0] - 30, top: GROW.base, width: GROW.x[2] + GROW.w - GROW.x[0] + 60, height: theme.shape.rule, background: c.slate }} />
-          <Say text="Aset kita mungkin masih kecil" x={(GROW.x[0] + GROW.x[2] + GROW.w) / 2} y={260} at={L(B17.kecil)} size={40} weight={700} />
-
           {/* two pillars under one roof */}
           {PILLARS.map((p) => (
             <div key={p.label}>
