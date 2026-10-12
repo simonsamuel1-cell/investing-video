@@ -432,8 +432,8 @@ export const SC12 = {
 export const SC13 = {
   /** "Animasi text dan munculnya gambar … di 12778" — the portrait comes up with the lower third. */
   foto: 12778,
-  /** The lower third leaves before the timeline comes up (13181). */
-  ltOut: 13050,
+  /** "12992 semua camera cut kecuali background garis kotaknya" — the portrait and the lower third leave on a camera cut; the grid stays. */
+  cut: 12992,
   name: 12778, // "Lo Kheng Hong" — "Animasi text dan munculnya gambar lo kheng hong sebaiknya di 12778 aja" (earlier 12810; the VO says it at 12739)
   /** The four steps of the timeline, each on its word. */
   steps: [13181, 13286, 13350, 13453] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan

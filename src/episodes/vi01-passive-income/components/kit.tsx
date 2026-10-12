@@ -1390,6 +1390,8 @@ export const QuoteFrame = ({
  * It leaves the same way backwards: fill → outline → gone, right to left, the
  * role erased from its end. Centred on `cx`, its top at `y`.
  */
+/** A frame that never comes — an interpolation cannot take Infinity. */
+const NEVER = 1_000_000;
 const LT = { name: 100, role: 30, gap: 14, step: 0.045, lead: 0.14, fill: 0.1, roleAt: 0.12, perChar: 0.03, stroke: 2.5, track: 3 };
 export const LowerThird = ({ first, last, role, at, out, cx, y }: { first: string; last: string; role: string; at: number; out?: number; cx: number; y: number }) => {
   const f = useCurrentFrame();
@@ -1400,13 +1402,13 @@ export const LowerThird = ({ first, last, role, at, out, cx, y }: { first: strin
   const roleChars = role.split("");
   const life = (i: number) => {
     const inAt = at + m.sec(LT.step) * i;
-    const outAt = (out ?? Infinity) + m.sec(LT.step) * (N - 1 - i);
+    const outAt = (out ?? NEVER) + m.sec(LT.step) * (N - 1 - i);
     const line = ease(f, inAt, m.sec(LT.lead)) * (1 - ease(f, outAt + m.sec(LT.lead), m.sec(LT.lead)));
     const fill = ease(f, inAt + m.sec(LT.lead), m.sec(LT.fill)) * (1 - ease(f, outAt, m.sec(LT.fill)));
     return { line, fill };
   };
   const roleOpacity = (k: number) =>
-    ease(f, at + m.sec(LT.roleAt) + m.sec(LT.perChar) * k, m.sec(LT.perChar)) * (1 - ease(f, (out ?? Infinity) + m.sec(LT.perChar) * (roleChars.length - 1 - k), m.sec(LT.perChar)));
+    ease(f, at + m.sec(LT.roleAt) + m.sec(LT.perChar) * k, m.sec(LT.perChar)) * (1 - ease(f, (out ?? NEVER) + m.sec(LT.perChar) * (roleChars.length - 1 - k), m.sec(LT.perChar)));
   const letter = (ch: string, i: number) => {
     const { line, fill } = life(i);
     const base: React.CSSProperties = { fontFamily: theme.text.family, fontSize: LT.name, fontWeight: 800, letterSpacing: -LT.name * 0.02, lineHeight: 1, whiteSpace: "pre" };

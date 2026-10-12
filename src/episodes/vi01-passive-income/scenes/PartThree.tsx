@@ -7,8 +7,8 @@
  * the narration gives; and the five-step process the story is really about.
  */
 import { useCurrentFrame } from "remotion";
-import { GridGround, Stage, theme, useMotion, usePalette } from "../../../core";
-import { BG_FADE, BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
+import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette } from "../../../core";
+import { BG_FADE, BLOCK, CARRY_CLEAR, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
 import { Cutout, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
@@ -45,12 +45,17 @@ export const SC13 = () => {
         <GridGround f={f + BLOCK.SC13} paper={c.bg} />
       </div>
       <div style={{ position: "absolute", inset: 0, opacity: clear }}>
+      {/* 12992: everything but the grid leaves on a camera cut — the out half, then it is gone */}
+      {f + BLOCK.SC13 < B13.cut + CUT.over / 2 ? (
+        <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + BLOCK.SC13, { at: B13.cut + CUT.over / 2, axis: "x", ...CUT }) }}>
       {/* his portrait, rising a beat after the lower third; its foot fades out so the lower third sits under it */}
       <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${FOTO.solid}%, transparent 100%)`, maskImage: `linear-gradient(to bottom, black ${FOTO.solid}%, transparent 100%)`, WebkitMaskSize: `100% ${FOTO.top + FOTO.h}px`, maskSize: `100% ${FOTO.top + FOTO.h}px`, WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}>
         <Cutout src={FOTO.src} aspect={FOTO.aspect} x={theme.canvas.width / 2} y={FOTO.top + FOTO.h} h={FOTO.h} at={L(B13.foto)} rise={FOTO.rise} riseFrames={m.move} />
       </div>
       {/* the lower third — "Lo Kheng Hong / Warren Buffet-nya Indonesia", bottom centre, in the reference's letter-by-letter move */}
-      <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} out={L(B13.ltOut)} cx={theme.canvas.width / 2} y={LT_Y} />
+      <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} cx={theme.canvas.width / 2} y={LT_Y} />
+        </div>
+      ) : null}
       {reach > 0.5 ? (
         <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - 2, width: reach, height: 4, borderRadius: 4, background: c.indigo }} />
       ) : null}
