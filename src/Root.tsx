@@ -37,6 +37,7 @@ import {
   PassiveIncomeComposition,
   TOTAL_FRAMES as VI01_FRAMES,
 } from "./episodes/vi01-passive-income/Composition";
+import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
 import {
@@ -151,6 +152,15 @@ export const RemotionRoot: React.FC = () => {
         id="VI01-PassiveIncome"
         component={PassiveIncomeComposition}
         durationInFrames={VI01_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI01 finished: Intro + the episode + Outro, with the BGM underneath (FullVideo.tsx). */}
+      <Composition
+        id="VI01-PassiveIncome-Full"
+        component={PassiveIncomeFull}
+        durationInFrames={VI01_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
