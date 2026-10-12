@@ -10,6 +10,7 @@ import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
 import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
+import { QuizStatement } from "./ColdOpen";
 import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
 // ═══ SC16 — not running from work: keep the life ════════════════════════
@@ -221,8 +222,8 @@ export const SC17 = () => {
         </div>
       ) : null}
 
-      <Say text="Setiap kali income masuk, coba tanya:" x={960} y={360} at={L(B17.tanya)} size={44} weight={600} color={c.slate} />
-      <TypeBox cx={960} y={470} w={1560} h={170} at={L(B17.tanya) + 40} typeAt={L(B17.quote)} text="“Berapa yang bisa aku sisihkan untuk mulai punya aset?”" mark="mulai punya aset" markAt={L(B17.mark)} tone="cyan" size={50} />
+      {/* "Pakai design text seperti di 3374" — the "Tanya juga" design */}
+      <QuizStatement f={f} label="Setiap kali income masuk, tanyakan:" labelAt={L(B17.tanya)} lines={[["Berapa", "yang", "bisa", "aku"], ["sisihkan", "untuk"]]} wordAt={B17.words.map(L)} bar="mulai punya aset?" barAt={L(B17.mark)} />
     </Stage>
   );
 };

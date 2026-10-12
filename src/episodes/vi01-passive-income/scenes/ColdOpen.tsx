@@ -5,6 +5,7 @@
  * people add income, all drawing on the same two things; then the 24 hours
  * those two things live in, and the two questions the video is about.
  */
+import React from "react";
 import { random, useCurrentFrame } from "remotion";
 import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
@@ -667,6 +668,53 @@ const QuestionOne = ({ f, L }: { f: number; L: (g: number) => number }) => {
         </span>
       </div>
     </div>
+  );
+};
+
+/**
+ * The "Tanya juga" design for any question (SC17's closing one reuses it): the small indigo label on top,
+ * the lines in heavy black type, left-aligned with the block centred, and the last line — the key words —
+ * white and italic on a solid indigo bar, bracketed by a thin line with a knob at each end.
+ * `lines` are the words of the black lines; `wordAt` is one frame per word, in order; `bar` is the last line.
+ */
+export const QuizStatement = ({ f, label, labelAt, lines, wordAt, bar, barAt }: { f: number; label: string; labelAt: number; lines: string[][]; wordAt: number[]; bar: string; barAt: number }) => {
+  const c = usePalette();
+  const m = useMotion();
+  if (f < labelAt) return null;
+  const barP = ease(f, barAt, m.sec(0.3));
+  const bracket = ease(f, barAt + m.sec(0.15), m.sec(0.3));
+  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, fontWeight: 800, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const };
+  const K = SELECT.knob;
+  const PAD = 28;
+  let k = 0;
+  return (
+    <>
+      <QuizLabel f={f} at={labelAt} text={label} />
+      <div style={{ position: "absolute", left: "50%", top: QUIZ.lineY[0] - QUIZ.size * 0.55, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+        {lines.map((words, i) => (
+          <div key={i} style={line}>
+            {words.map((w, j) => (
+              <React.Fragment key={j}>
+                {j > 0 ? " " : null}
+                <Word f={f} at={wordAt[k++]}>{w}</Word>
+              </React.Fragment>
+            ))}
+          </div>
+        ))}
+        <div style={{ ...line, position: "relative", marginTop: 8 }}>
+          <span style={{ position: "absolute", left: -PAD, top: 0, bottom: 0, width: `calc(${(barP * 100).toFixed(2)}% + ${(2 * PAD * barP).toFixed(2)}px)`, background: c.indigo, borderRadius: 8 }} />
+          {bracket > 0.001 ? (
+            <span style={{ position: "absolute", inset: 0, opacity: bracket }}>
+              <span style={{ position: "absolute", left: -PAD - 2, top: -QUIZ.size * 0.55, height: `calc(100% + ${QUIZ.size * 0.55}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
+              <span style={{ position: "absolute", left: -PAD - K / 2, top: -QUIZ.size * 0.55 - K / 2, width: K, height: K, borderRadius: K, background: c.indigo }} />
+              <span style={{ position: "absolute", right: -PAD - 2, top: 0, height: `calc(100% + ${QUIZ.size * 0.4}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
+              <span style={{ position: "absolute", right: -PAD - K / 2, top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`, width: K, height: K, borderRadius: K, background: c.indigo }} />
+            </span>
+          ) : null}
+          <span style={{ position: "relative", color: c.cardBg, fontStyle: "italic", opacity: barP }}>{bar}</span>
+        </div>
+      </div>
+    </>
   );
 };
 

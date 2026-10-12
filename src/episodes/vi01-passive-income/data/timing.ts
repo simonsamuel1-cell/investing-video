@@ -523,6 +523,12 @@ export const SC17 = {
   pilihan: 17782, // "lebih banyak pilihan."
   tanya: 17883, // "Jadi setiap kali income masuk, coba tanya:"
   quote: 18067, // "“Berapa yang bisa aku sisihkan …”"
+  /**
+   * "18127 Pakai design text seperti di 3374" (Studio − 240 = 17887): the "Tanya juga" design, the label
+   * "Setiap kali income masuk, tanyakan:" in indigo and the question big, its last words on the bar.
+   * The six black words arrive 20 frames apart from `quote`; the bar at `mark`.
+   */
+  words: [18067, 18087, 18107, 18127, 18147, 18167] as const,
   mark: 18195, // "mulai punya aset?"
 };
 
