@@ -143,7 +143,12 @@ const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: num
  * old bars' heights (130/150/50 growing to 330/380/300 of 400) — sizes, not figures; none is labelled.
  */
 const PROG_W = 900;
-const PROG = { x: (theme.canvas.width - PROG_W) / 2, y: 250, w: PROG_W, scale: 0.8, titleSize: 28, pad: 48, row: 160, label: 38, bar: 56, tick: 8, ticks: 48, gap: 16, knob: 20, top: 200, full: 400, growSecs: 0.7 };
+const PROG_SCALE = 0.8;
+const PROG_ROWS = { pad: 48, row: 160, label: 38, bar: 56, gap: 16 };
+/** The card's own height, before the 80%. */
+const PROG_H = 2 * PROG_ROWS.pad + 2 * PROG_ROWS.row + PROG_ROWS.label + PROG_ROWS.gap + PROG_ROWS.bar;
+/** "UI nya buat tengah vertikal juga": the scaled card sits at the middle of the canvas, top to bottom; the title is 50 px above it. */
+const PROG = { ...PROG_ROWS, x: (theme.canvas.width - PROG_W) / 2, y: theme.canvas.height / 2 - (PROG_H * PROG_SCALE) / 2, w: PROG_W, scale: PROG_SCALE, titleSize: 36, tick: 8, ticks: 48, knob: 20, full: 400, growSecs: 0.7, titleGap: 50 };
 export const SC17 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -164,7 +169,7 @@ export const SC17 = () => {
       ) : null}
       {first > 0.001 ? (
         <div style={{ opacity: first }}>
-          <Say text="Di awal, aset kita mungkin masih kecil" x={theme.canvas.width / 2} y={PROG.top} at={L(B17.title)} size={PROG.titleSize} weight={800} color={c.indigo} />
+          <Say text="Di awal, aset kita mungkin masih kecil" x={theme.canvas.width / 2} y={PROG.y - PROG.titleGap} at={L(B17.title)} size={PROG.titleSize} weight={800} color={c.indigo} />
           {/* "UI progress barnya kecilin sizenya 20%. UI nya taro tengah": 80%, hung from its top edge, centred */}
           <div style={{ position: "absolute", inset: 0, transformOrigin: `${theme.canvas.width / 2}px ${PROG.y}px`, transform: `scale(${PROG.scale})` }}>
           <div style={{ position: "absolute", left: PROG.x, top: PROG.y, width: PROG.w, height: 2 * PROG.pad + 2 * PROG.row + PROG.label + PROG.gap + PROG.bar, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, opacity: card }} />
