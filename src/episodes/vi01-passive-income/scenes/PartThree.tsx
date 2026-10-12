@@ -324,14 +324,15 @@ const Badge = ({ mark, fill, p }: { mark: "x" | "check"; fill: string; p: number
  */
 const MF = { w: 1200, h: 250, gap: 60, titleY: 160, top: 270, text: 50, rise: 24, scale: 0.75 };
 /**
- * OrangTuntun.png at the left, standing on the floor — "buat … align-left semua, lalu geser kanan semua,
- * supaya di kiri bisa muat OrangTuntun" — his visible figure from `top` down to the subtitle band, and
- * the boxes beside him: the figure, a gap, and the boxes centred on the canvas together.
+ * OrangTuntun.png at the left — "gedein sampe yang keliatan cuma kepala-perut. Bagian bawahnya di gradient
+ * blur seperti Lo Kheng Hong": his head down to his belly fill the height from `top` to the floor line, and
+ * the foot of that stretch fades out as Lo Kheng Hong's portrait does. The figure, a gap, and the boxes are
+ * centred on the canvas together.
  */
-const MAN15 = { src: "art/vi01/orang-tuntun.png", w: 941, h: 1672, ink: { x0: 233, x1: 794, y0: 84, y1: 1619 }, top: 130, gap: 140, lift: 56 };
-/** His feet stand `lift` above the subtitle band, so the floor shadow under them stays out of it. */
+const MAN15 = { src: "art/vi01/orang-tuntun.png", w: 941, h: 1672, ink: { x0: 233, x1: 794, y0: 84 }, belly: 820, top: 110, gap: 140, lift: 56, foot: 0.28 };
+/** The fade ends this far above the subtitle band. */
 const MAN_FLOOR = theme.captionBand.top - MAN15.lift;
-const MAN_K = (MAN_FLOOR - MAN15.top) / (MAN15.ink.y1 - MAN15.ink.y0);
+const MAN_K = (MAN_FLOOR - MAN15.top) / (MAN15.belly - MAN15.ink.y0);
 const MAN_W = (MAN15.ink.x1 - MAN15.ink.x0) * MAN_K;
 const MAN_LEFT = (theme.canvas.width - (MAN_W + MAN15.gap + MF.w * MF.scale)) / 2;
 /** Left edge of the title and of both boxes. */
@@ -379,8 +380,8 @@ export const SC15 = () => {
     <Stage>
       <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
         {/* OrangTuntun, at the left with his feet on the floor */}
-        <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-          <Cutout src={MAN15.src} aspect={MAN15.w / MAN15.h} x={MAN_LEFT + MAN_W / 2 + (MAN15.w / 2 - (MAN15.ink.x0 + MAN15.ink.x1) / 2) * MAN_K} y={MAN_FLOOR + (MAN15.h - MAN15.ink.y1) * MAN_K} h={MAN15.h * MAN_K} at={L(B15.bukan)} rise={theme.canvas.height - MAN15.top} riseFrames={m.move} shadow floor={MAN15.ink.y1 / MAN15.h} />
+        <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${MAN_FLOOR - MAN15.foot * (MAN_FLOOR - MAN15.top)}px, transparent ${MAN_FLOOR}px)`, maskImage: `linear-gradient(to bottom, black ${MAN_FLOOR - MAN15.foot * (MAN_FLOOR - MAN15.top)}px, transparent ${MAN_FLOOR}px)` }}>
+          <Cutout src={MAN15.src} aspect={MAN15.w / MAN15.h} x={MAN_LEFT + MAN_W / 2 + (MAN15.w / 2 - (MAN15.ink.x0 + MAN15.ink.x1) / 2) * MAN_K} y={MAN_FLOOR + (MAN15.h - MAN15.belly) * MAN_K} h={MAN15.h * MAN_K} at={L(B15.bukan)} rise={theme.canvas.height - MAN15.top} riseFrames={m.move} />
         </div>
         {/* "yang menarik adalah", in the type of "Tanya juga", left-aligned with the boxes */}
         <div style={{ position: "absolute", left: BOX_LEFT, top: MF.titleY, textAlign: "left", whiteSpace: "nowrap", opacity: title, transform: `translateY(${((1 - title) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>yang menarik adalah</div>
