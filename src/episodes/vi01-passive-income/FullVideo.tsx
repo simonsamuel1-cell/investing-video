@@ -12,7 +12,7 @@
  * re-encode, one <Audio> from frame 0 at full volume. The Logo (core Watermark) is left as it is as well.
  */
 import { AbsoluteFill, Audio, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
-import { PaletteProvider, theme, usePalette } from "../../core";
+import { PaletteProvider, theme, useMotion, usePalette } from "../../core";
 import { PassiveIncomeComposition, TOTAL_FRAMES } from "./Composition";
 import { ease } from "./components/kit";
 
@@ -52,6 +52,20 @@ const IntroTitle = () => {
   );
 };
 
+/**
+ * "di scene terakhir kasih fade out": the episode's last half second fades to the paper colour, so the cut
+ * to the Outro does not land on a held card. It covers the picture and the subtitles alike.
+ */
+const FADE_OUT_SECS = 0.5;
+const EpisodeFade = () => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const o = ease(f, TOTAL_FRAMES - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
+  if (o <= 0.001) return null;
+  return <AbsoluteFill style={{ background: c.bg, opacity: o }} />;
+};
+
 export const PassiveIncomeFull = () => (
   <AbsoluteFill>
     <Sequence from={0} durationInFrames={INTRO_FRAMES} name="Intro">
@@ -62,6 +76,9 @@ export const PassiveIncomeFull = () => (
     </Sequence>
     <Sequence from={INTRO_FRAMES} durationInFrames={TOTAL_FRAMES} name="VI01 Passive Income">
       <PassiveIncomeComposition />
+      <PaletteProvider>
+        <EpisodeFade />
+      </PaletteProvider>
     </Sequence>
     <Sequence from={INTRO_FRAMES + TOTAL_FRAMES} durationInFrames={OUTRO_FRAMES} name="Outro">
       <OffthreadVideo src={staticFile("essentials/Outro.mp4")} />
