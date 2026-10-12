@@ -497,6 +497,14 @@ export const SC16 = {
   swap: 16460,
   family: 16567,
   healing: 16622,
+  /**
+   * "16973 Ketiga image dan text box nya fade out, lalu muncul fade in LiatHP.png, UI Account balance, dan UI
+   * Total invested. … dari 50juta berkurang jadi 30juta, ada koin terkirim dari UI Account balance ke UI Total
+   * Invested di kanan." (Studio 16973 = episode 16733.)
+   */
+  out: 16733,
+  phone: 16763,
+  send: 16850,
 };
 
 export const SC17 = {

@@ -9,6 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette } from "../../../core";
 import { BG_FADE, BLOCK, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
+import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
 import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
 // ═══ SC16 — not running from work: keep the life ════════════════════════
@@ -34,6 +35,18 @@ const place = (p: Pic, cx: number) => ({
   floorAt: p.ink.y1 / p.h,
   half: ((p.ink.x1 - p.ink.x0) * S16.k) / 2,
 });
+/**
+ * "LiatHP.png, UI Account balance, UI Total invested": the person looking at his phone, then the two cards to
+ * his right with a gap for the coin between them. Margin to margin, left to right: him, a gap, Account balance,
+ * the coin's gap, Total invested.
+ */
+const P2 = { k: 0.45, gap: 60, coinGap: 180, cardY: 330, from: 50_000_000, to: 30_000_000, sendSecs: 1.0, landSecs: 0.8 };
+const PHONE = { src: "art/vi01/liat-hp.png", w: 1086, h: 1448, ink: { x0: 57, x1: 1022, y0: 39, y1: 1448 } };
+const PHONE_W = (PHONE.ink.x1 - PHONE.ink.x0) * P2.k;
+const P2_LEFT = (theme.canvas.width - (PHONE_W + P2.gap + BAL.w + P2.coinGap + BAL.w)) / 2;
+const PHONE_CX = P2_LEFT + PHONE_W / 2;
+const ACC_X = P2_LEFT + PHONE_W + P2.gap + BAL.w / 2;
+const INV_X = ACC_X + BAL.w + P2.coinGap;
 const SAY16 = ["Membangun passive income bukan berarti lari dari pekerjaan", "Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang."];
 
 export const SC16 = () => {
@@ -57,6 +70,17 @@ export const SC16 = () => {
   const t2 = Math.max(0, Math.min(Math.floor(f - (swap + m.sec(0.25))), SAY16[1].length));
   const gone1 = ease(f, swap, m.fade);
   const boxY = S16.floor - S16.boxFoot;
+  /* 16733: the three pictures and the box fade out; the grid stays, and the phone scene fades in */
+  const out = ease(f, L(B16.out), m.fade);
+  const inn = ease(f, L(B16.phone), m.fade);
+  const send = L(B16.send);
+  const fly = m.sec(P2.sendSecs);
+  const sent = ease(f, send, fly);
+  const landed = ease(f, send + fly, m.sec(P2.landSecs));
+  const account = P2.from + (P2.to - P2.from) * sent;
+  const invested = (P2.from - P2.to) * landed;
+  const swellA = swellAt(f, send, m);
+  const swellI = swellAt(f, send + fly, m);
   const word = (text: string, shown: number, opacity: number, key: string) => (
     <div key={key} style={{ position: "absolute", left: 0, top: 0, width: S16.boxW, height: S16.boxH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: S16.size, fontWeight: 600, color: c.ink, whiteSpace: "pre", opacity }}>
       {text.slice(0, shown)}
@@ -68,6 +92,8 @@ export const SC16 = () => {
       <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC16} paper={c.bg} />
       </div>
+      {out < 0.999 ? (
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - out }}>
       {/* Berkeluarga on the left, Healing on the right */}
       <Cutout src={family.src} aspect={family.aspect} x={family.x} y={family.y} h={family.h} at={L(B16.family)} shadow floor={family.floorAt} />
       <Cutout src={healing.src} aspect={healing.aspect} x={healing.x} y={healing.y} h={healing.h} at={L(B16.healing)} shadow floor={healing.floorAt} />
@@ -79,6 +105,17 @@ export const SC16 = () => {
         {word(SAY16[0], t1, 1 - gone1, "a")}
         {word(SAY16[1], t2, ease(f, swap + m.sec(0.25), m.fade), "b")}
       </DashBox>
+      </div>
+      ) : null}
+      {/* LiatHP.png, then the two cards: Account balance counts down as the coin goes to Total invested */}
+      {inn > 0.001 ? (
+        <>
+          <Cutout src={PHONE.src} aspect={PHONE.w / PHONE.h} x={PHONE_CX + (PHONE.w / 2 - (PHONE.ink.x0 + PHONE.ink.x1) / 2) * P2.k} y={S16.floor + (PHONE.h - PHONE.ink.y1) * P2.k} h={PHONE.h * P2.k} at={L(B16.phone)} rise={0} />
+          <BigBalance x={ACC_X} y={P2.cardY} label="ACCOUNT BALANCE:" amount={rp(account)} life={inn} swell={swellA} tri={0} />
+          <BigBalance x={INV_X} y={P2.cardY} label="TOTAL INVESTED:" amount={rp(invested)} life={inn} swell={swellI} tri={ease(f, send + fly, m.reveal)} />
+          <PayCoin from={{ x: ACC_X + BAL.w / 2, y: P2.cardY + BAL.h / 2 }} to={{ x: INV_X - BAL.w / 2, y: P2.cardY + BAL.h / 2 }} at={send} out={send + fly + m.sec(P2.landSecs)} />
+        </>
+      ) : null}
     </Stage>
   );
 };

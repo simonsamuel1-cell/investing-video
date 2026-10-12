@@ -861,7 +861,7 @@ const AccountBalance = ({ x, y, at, payAt, sendAt, hopAt, hopOutAt }: { x: numbe
 };
 
 /** The coin from the office to the balance card, on an arc, leaving a dashed indigo trail. */
-const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { x: number; y: number }; at: number; out: number }) => {
+export const PayCoin = ({ from, to, at, out }: { from: { x: number; y: number }; to: { x: number; y: number }; at: number; out: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
