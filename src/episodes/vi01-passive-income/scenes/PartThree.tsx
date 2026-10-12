@@ -7,6 +7,7 @@
  * the narration gives; and the five-step process the story is really about.
  */
 import { useCurrentFrame } from "remotion";
+import { quizLabelStyle } from "./ColdOpen";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BG_FADE, BLOCK, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
 import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Link, Node, Say, nodeEdge, type IconName, type NodeBox } from "../components/kit";
@@ -316,8 +317,12 @@ const Badge = ({ mark, fill, p }: { mark: "x" | "check"; fill: string; p: number
     </svg>
   );
 };
-/** "Myth or Fact" layout: a title, then two stacked boxes, each with a badge on its top-left corner. */
-const MF = { w: 1200, h: 250, gap: 60, title: 88, titleY: 150, top: 270, text: 50, textTop2: 0, rise: 24 };
+/**
+ * "Myth or Fact" layout: a title, then two stacked boxes, each with a badge on its top-left corner. The
+ * title is set exactly as "Tanya juga" is (ColdOpen's quiz label); the pair of boxes is 90% of its size,
+ * hung from its top edge.
+ */
+const MF = { w: 1200, h: 250, gap: 60, titleY: 190, top: 270, text: 50, rise: 24, scale: 0.9 };
 
 export const SC15 = () => {
   const f = useCurrentFrame();
@@ -329,28 +334,43 @@ export const SC15 = () => {
   const boxTop = (i: number) => MF.top + i * (MF.h + MF.gap);
   /* the boxes give way when the five steps come up */
   const gone = ease(f, L(B15.steps[0]) - m.fade, m.fade);
-  const box = (i: number, at: number, textAt: number, fill: string, mark: "x" | "check", badge: string, words: string) => {
+  const title = ease(f, L(B15.bukan), m.reveal);
+  /** One box: it comes up, its words after, its badge at `badgeAt`; `mute` (0→1) greys the box and its words. */
+  const box = (i: number, at: number, textAt: number, badgeAt: number, fill: string, mark: "x" | "check", badge: string, words: string, mute: number) => {
     const p = ease(f, at, m.reveal);
     const t = ease(f, textAt, m.reveal);
+    const b = ease(f, badgeAt, m.reveal);
     if (p <= 0.001) return null;
     return (
       <div key={i}>
-        <div style={{ position: "absolute", left: x, top: boxTop(i), width: MF.w, height: MF.h, opacity: p, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)`, background: fill, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MF.text, fontWeight: 700, color: c.ink, textAlign: "center", padding: "0 80px", boxSizing: "border-box" }}>
-          <span style={{ opacity: t, transform: `translateY(${((1 - t) * 12).toFixed(2)}px)` }}>{words}</span>
+        <div style={{ position: "absolute", left: x, top: boxTop(i), width: MF.w, height: MF.h, opacity: p, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)`, background: fill, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MF.text, fontWeight: 700, textAlign: "center", padding: "0 80px", boxSizing: "border-box" }}>
+          {/* the grey it turns to, over the box and under the words */}
+          <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, background: c.border, opacity: mute }} />
+          <span style={{ position: "relative", opacity: t, transform: `translateY(${((1 - t) * 12).toFixed(2)}px)` }}>
+            <span style={{ color: c.ink, opacity: 1 - mute }}>{words}</span>
+            <span style={{ position: "absolute", left: 0, top: 0, width: "100%", color: c.muted, opacity: mute }}>{words}</span>
+          </span>
         </div>
-        <div style={{ position: "absolute", left: x - BADGE.r, top: boxTop(i) - BADGE.r, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)` }}>
-          <Badge mark={mark} fill={badge} p={p} />
-        </div>
+        {b > 0.001 ? (
+          <div style={{ position: "absolute", left: x - BADGE.r, top: boxTop(i) - BADGE.r }}>
+            <Badge mark={mark} fill={badge} p={b} />
+          </div>
+        ) : null}
       </div>
     );
   };
+  /* box 1: its words, then its ✗, then the whole box goes grey */
+  const xAt = L(B15.quote) + m.reveal;
+  const mute1 = ease(f, xAt + m.reveal, m.move);
   return (
     <Stage>
       <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
-        {/* "yang menarik adalah" — then the two boxes, each with its mark, each with its words */}
-        <Say text="yang menarik adalah" x={theme.canvas.width / 2} y={MF.titleY} at={L(B15.bukan)} size={MF.title} weight={800} />
-        {box(0, L(B15.box1), L(B15.quote), c.cardBg, "x", theme.color.calendarRed, "“Cari saham yang bisa naik berkali-kali”")}
-        {box(1, L(B15.box2), L(B15.strike), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang prosesnya")}
+        {/* "yang menarik adalah", in the type of "Tanya juga" */}
+        <div style={{ position: "absolute", left: 0, right: 0, top: MF.titleY, textAlign: "center", opacity: title, transform: `translateY(${((1 - title) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>yang menarik adalah</div>
+        <div style={{ position: "absolute", inset: 0, transformOrigin: `50% ${MF.top}px`, transform: `scale(${MF.scale})` }}>
+          {box(0, L(B15.box1), L(B15.quote), xAt, c.cardBg, "x", theme.color.calendarRed, "“Cari saham yang bisa naik berkali-kali”", mute1)}
+          {box(1, L(B15.box2), L(B15.strike), L(B15.box2), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang penting prosesnya", 0)}
+        </div>
       </div>
       {STEPS.map((s, i) => (
         <div key={s.label}>

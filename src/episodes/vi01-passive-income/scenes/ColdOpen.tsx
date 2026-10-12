@@ -617,12 +617,15 @@ const Word = ({ f, at, children, style }: { f: number; at: number; children: Rea
   return <span style={{ display: "inline-block", opacity: t, transform: `translateY(${((1 - t) * 18).toFixed(2)}px)`, ...style }}>{children}</span>;
 };
 
+/** The small label above a question — "Jangan cuma tanya", "Tanya juga" — whose type other scenes borrow for their titles. */
+export const quizLabelStyle = (c: ReturnType<typeof usePalette>): React.CSSProperties => ({ fontFamily: theme.text.family, fontSize: QUIZ.label, fontWeight: 700, letterSpacing: 2, color: c.indigo });
+
 const QuizLabel = ({ f, at, out, text }: { f: number; at: number; out?: number; text: string }) => {
   const c = usePalette();
   const m = useMotion();
   const t = ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.move));
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.labelY, textAlign: "center", opacity: t, fontFamily: theme.text.family, fontSize: QUIZ.label, fontWeight: 700, letterSpacing: 2, color: c.indigo }}>
+    <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.labelY, textAlign: "center", opacity: t, ...quizLabelStyle(c) }}>
       {text}
     </div>
   );
