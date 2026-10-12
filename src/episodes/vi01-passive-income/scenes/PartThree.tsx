@@ -257,7 +257,7 @@ export const SC14 = () => {
         {f >= L(B14.rp15) ? (
           <>
             <div style={{ position: "absolute", left: dotX(R14.price) - 1, top: R14.y - R14.r - R14.stem, width: 2, height: R14.stem, background: c.ink, transformOrigin: "bottom", transform: `scaleY(${ease(f, L(B14.rp15), m.sec(0.3)).toFixed(4)})` }} />
-            <Say text="Rp 15,000" x={dotX(R14.price)} y={priceY} at={L(B14.rp15) + m.sec(0.15)} size={56} weight={800} />
+            <Say text="Rp 15,000" x={dotX(R14.price)} y={priceY} at={L(B14.rp15)} size={56} weight={800} />
           </>
         ) : null}
       </div>

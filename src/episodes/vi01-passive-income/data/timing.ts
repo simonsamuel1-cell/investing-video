@@ -462,7 +462,7 @@ export const SC14 = {
   rp250: 14218, // "Rp250 per saham."
   later: 14323, // "Beberapa tahun kemudian,"
   lipat: 14455, // "berkali-kali lipat,"
-  rp15: 14655, // "Rp15 ribu."
+  rp15: 14567, // "14567 15,000 nya mulai dari sini" (the VO says "Rp15 ribu" at 14655)
   caution: 14713, // "14713 Ini adalah sesi quote" — "Tapi tentu saja, ini adalah contoh dari masa lalu."
   nggak: 14937, // "Nggak semua investasi …"
 };
