@@ -441,7 +441,7 @@ export const SC13 = {
   name: 12778, // "Lo Kheng Hong" — "Animasi text dan munculnya gambar lo kheng hong sebaiknya di 12778 aja" (earlier 12810; the VO says it at 12739)
   /** The four steps of the timeline, each on its word. */
   steps: [13181, 13286, 13350, 13453] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan
-  untr: 13775, // "United Tractors."
+  untr: 13733, // UNTR.png — "UNTR png nya di 13733" (the VO says "United Tractors" at 13775)
 };
 
 export const SC14 = {
