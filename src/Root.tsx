@@ -33,10 +33,6 @@ import {
   TAMistakesComposition,
   TOTAL_FRAMES as V22_FRAMES,
 } from "./episodes/022-ta-mistakes/Composition";
-import {
-  PassiveIncomeComposition,
-  TOTAL_FRAMES as VI01_FRAMES,
-} from "./episodes/vi01-passive-income/Composition";
 import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
@@ -145,20 +141,10 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* VI01 — Passive Income. Not a TA video: listed after the TA block. Built
-          on src/core at 60fps; every frame number comes from the recorded VO via
-          docs/VI01_PassiveIncome_Script_SYNCED.md. */}
+      {/* VI01 — Passive Income, finished: Intro + the episode + Outro, the BGM underneath (FullVideo.tsx). Not a TA video:
+          built on src/core at 60fps; the episode's frame numbers sit INTRO_FRAMES (240) later in this timeline. */}
       <Composition
         id="VI01-PassiveIncome"
-        component={PassiveIncomeComposition}
-        durationInFrames={VI01_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
-      {/* VI01 finished: Intro + the episode + Outro, with the BGM underneath (FullVideo.tsx). */}
-      <Composition
-        id="VI01-PassiveIncome-Full"
         component={PassiveIncomeFull}
         durationInFrames={VI01_FULL_FRAMES}
         fps={60}
