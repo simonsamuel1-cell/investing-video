@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BG_FADE, BLOCK, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Link, Node, Say, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 /**
@@ -294,14 +294,64 @@ const stepBox = (i: number): NodeBox => ({
   h: STEP.h,
 });
 
-export const SC15 = () => {
+/** The scalloped badge on a box's corner: a starburst, the ✗ or the ✓ drawn across it in the paper's colour. */
+const BADGE = { r: 58, teeth: 18, dip: 0.9, mark: 0.42, stroke: 11 };
+const Badge = ({ mark, fill, p }: { mark: "x" | "check"; fill: string; p: number }) => {
   const c = usePalette();
+  const pts = Array.from({ length: BADGE.teeth * 2 }, (_, i) => {
+    const a = (Math.PI * i) / BADGE.teeth;
+    const r = BADGE.r * (i % 2 === 0 ? 1 : BADGE.dip);
+    return `${(BADGE.r + r * Math.cos(a)).toFixed(2)},${(BADGE.r + r * Math.sin(a)).toFixed(2)}`;
+  }).join(" ");
+  const u = BADGE.r * BADGE.mark;
+  const o = BADGE.r;
+  return (
+    <svg width={2 * BADGE.r} height={2 * BADGE.r} style={{ overflow: "visible", opacity: p, transform: `scale(${(0.8 + 0.2 * p).toFixed(4)})` }}>
+      <polygon points={pts} fill={fill} stroke={fill} strokeWidth={6} strokeLinejoin="round" />
+      {mark === "x" ? (
+        <path d={`M ${o - u} ${o - u} L ${o + u} ${o + u} M ${o + u} ${o - u} L ${o - u} ${o + u}`} stroke={c.cardBg} strokeWidth={BADGE.stroke} strokeLinecap="round" fill="none" />
+      ) : (
+        <path d={`M ${o - u * 1.1} ${o + u * 0.05} L ${o - u * 0.3} ${o + u * 0.85} L ${o + u * 1.15} ${o - u * 0.8}`} stroke={c.cardBg} strokeWidth={BADGE.stroke} strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      )}
+    </svg>
+  );
+};
+/** "Myth or Fact" layout: a title, then two stacked boxes, each with a badge on its top-left corner. */
+const MF = { w: 1200, h: 250, gap: 60, title: 88, titleY: 150, top: 270, text: 50, textTop2: 0, rise: 24 };
+
+export const SC15 = () => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC15);
+  const x = (theme.canvas.width - MF.w) / 2;
+  const boxTop = (i: number) => MF.top + i * (MF.h + MF.gap);
+  /* the boxes give way when the five steps come up */
+  const gone = ease(f, L(B15.steps[0]) - m.fade, m.fade);
+  const box = (i: number, at: number, textAt: number, fill: string, mark: "x" | "check", badge: string, words: string) => {
+    const p = ease(f, at, m.reveal);
+    const t = ease(f, textAt, m.reveal);
+    if (p <= 0.001) return null;
+    return (
+      <div key={i}>
+        <div style={{ position: "absolute", left: x, top: boxTop(i), width: MF.w, height: MF.h, opacity: p, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)`, background: fill, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MF.text, fontWeight: 700, color: c.ink, textAlign: "center", padding: "0 80px", boxSizing: "border-box" }}>
+          <span style={{ opacity: t, transform: `translateY(${((1 - t) * 12).toFixed(2)}px)` }}>{words}</span>
+        </div>
+        <div style={{ position: "absolute", left: x - BADGE.r, top: boxTop(i) - BADGE.r, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)` }}>
+          <Badge mark={mark} fill={badge} p={p} />
+        </div>
+      </div>
+    );
+  };
   return (
     <Stage>
-      <TypeBox cx={960} y={180} w={1180} h={130} at={L(B15.bukan)} typeAt={L(B15.quote)} text="“Cari saham yang bisa naik berkali-kali.”" size={44} />
-      <Strike x={960 - 520} y={180 + 66} w={1040} at={L(B15.strike)} />
-      <Say text="Yang lebih penting: prosesnya" x={960} y={430} at={L(B15.strike) + 20} size={54} weight={800} color={c.indigo} />
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
+        {/* "yang menarik adalah" — then the two boxes, each with its mark, each with its words */}
+        <Say text="yang menarik adalah" x={theme.canvas.width / 2} y={MF.titleY} at={L(B15.bukan)} size={MF.title} weight={800} />
+        {box(0, L(B15.box1), L(B15.quote), c.cardBg, "x", theme.color.calendarRed, "“Cari saham yang bisa naik berkali-kali”")}
+        {box(1, L(B15.box2), L(B15.strike), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang prosesnya")}
+      </div>
       {STEPS.map((s, i) => (
         <div key={s.label}>
           {i > 0 ? <Link a={nodeEdge(stepBox(i - 1), "r")} b={nodeEdge(stepBox(i), "l")} at={L(B15.steps[i]) - 16} tone={s.tone} /> : null}

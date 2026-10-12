@@ -376,6 +376,8 @@ export const theme = {
     checkGreen: "#22B573",
     /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
     gainGreen: "#22B573",
+    /** VI01 SC15, Simon's "Myth or Fact" layout: the second box, the one with the tick — a light wash of `checkGreen`, nothing else. */
+    checkGreenWash: "rgba(34, 181, 115, 0.2)",
     /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
     sunYellow: "#F7C948",
     slateWash: "rgba(98, 98, 102, 0.08)",

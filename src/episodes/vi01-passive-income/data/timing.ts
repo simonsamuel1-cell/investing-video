@@ -468,6 +468,12 @@ export const SC14 = {
 };
 
 export const SC15 = {
+  /**
+   * Simon's "Myth or Fact" layout — title, first box with its ✗, its words, second box with its ✓, its
+   * words — laid over the narration: the title on "Yang menarik …", the first words on the quote.
+   */
+  box1: 15205,
+  box2: 15440,
   bukan: 15139, // "Yang menarik dari cerita ini sebenarnya bukan:"
   quote: 15288, // "“Cari saham …”"
   strike: 15467, // "Yang lebih penting justru prosesnya."
