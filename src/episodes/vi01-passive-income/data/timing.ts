@@ -420,6 +420,8 @@ export const SC12 = {
   amounts: [12080, 12108, 12191] as const,
   /** "12251 muncul text di bawah UI total invested 'Yang penting bukan nominal'"; "12393 … 'tapi kebiasaan menyisihkan sebagian income'" */
   penting: 12251,
+  /** "12556 UI nya geser kiri, lalu di sebelah kanannya muncul garis panah, lalu … UI Total Invested … Rp 350,000" */
+  pair: 12556,
   tapi: 12393,
   dim: 12320, // "bukan nominal pertamanya,"
   habit: 12409, // "tapi kebiasaan untuk menyisihkan sebagian income"

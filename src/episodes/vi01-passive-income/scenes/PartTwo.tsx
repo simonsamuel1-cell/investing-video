@@ -13,7 +13,7 @@ import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, CUT, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
-import { BAL, rp, swellAt } from "./PartOne";
+import { BAL, BigBalance, rp, swellAt } from "./PartOne";
 import { Cutout, OUTSIDE_RESERVES, ease, Icon, Say, TypeBox, useLife } from "../components/kit";
 
 /** "fakta" in a handwriting face, like Simon's "Best" reference — Great Vibes. */
@@ -494,9 +494,12 @@ const AMOUNTS = [50_000, 50_000, 200_000];
 /** The two lines under the card: "Yang penting bukan nominal", then "tapi kebiasaan menyisihkan sebagian income". */
 const UNDER = { size: 56, gap: 76, line: 84, lift: 16 };
 /** "UI Total Invested geser naik dulu biar ada ruang di bawah": the card rises so card + both lines sit centred together. */
+/** "UI nya geser kiri, di sebelah kanannya garis panah, lalu UI Total Invested Rp 350,000": the pair, centred. */
+const PAIR = { arrow: 200, pad: 28, stroke: 5, head: 18, next: 350_000 };
+const PAIR_W = 2 * BAL.w + PAIR.arrow;
 const RISE = (UNDER.gap + UNDER.line + UNDER.size / 2) / 2;
 
-/** The two lines under the card — plain for now: both black, no highlight. */
+/** The two lines under the card — plain for now: no highlight; the second in indigo. */
 const Statement = () => {
   const c = usePalette();
   const L = (g: number) => local(g, BLOCK.SC12);
@@ -504,8 +507,27 @@ const Statement = () => {
   return (
     <>
       <Say text="Yang penting bukan nominal" x={theme.canvas.width / 2} y={y1} at={L(B12.penting)} size={UNDER.size} weight={700} color={c.ink} />
-      <Say text="tapi kebiasaan menyisihkan sebagian income" x={theme.canvas.width / 2} y={y1 + UNDER.line} at={L(B12.tapi)} size={UNDER.size} weight={700} color={c.ink} />
+      <Say text="tapi kebiasaan menyisihkan sebagian income" x={theme.canvas.width / 2} y={y1 + UNDER.line} at={L(B12.tapi)} size={UNDER.size} weight={700} color={c.indigo} />
     </>
+  );
+};
+
+/** A straight arrow that draws on from `x0` to `x1` at height `y`, in the cycle's indigo. */
+const PairArrow = ({ x0, x1, y, at }: { x0: number; x1: number; y: number; at: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const p = ease(f, at, m.sec(0.5));
+  if (p <= 0.001) return null;
+  const tip = x0 + (x1 - x0) * p;
+  const H = PAIR.head;
+  /* the head fades in over the last of the draw, so nothing pops */
+  const head = Math.min(1, Math.max(0, (p - 0.85) / 0.15));
+  return (
+    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+      <path d={`M ${x0} ${y} L ${Math.min(tip, x1 - H * 0.6)} ${y}`} fill="none" stroke={c.indigo} strokeWidth={PAIR.stroke} strokeLinecap="round" />
+      <path d={`M ${x1} ${y} L ${x1 - H} ${y - H * 0.7} L ${x1 - H} ${y + H * 0.7} Z`} opacity={head} fill={c.indigo} stroke={c.indigo} strokeWidth={2} strokeLinejoin="round" />
+    </svg>
   );
 };
 
@@ -532,9 +554,10 @@ export const SC11 = () => {
      shrinks into the Total Invested card; the amount then steps Rp 50 ribu → 100 ribu → 300 ribu */
   /* it rises just before "Yang penting bukan nominal", once the last amount has counted */
   const rise = ease(f, local(B12.penting, BLOCK.SC11) - m.move, m.move);
+  const pair = ease(f, local(B12.pair, BLOCK.SC11), m.move);
   const shrink = slide;
   const box = {
-    x: PANEL.x + (theme.canvas.width / 2 - BAL.w / 2 - PANEL.x) * slide,
+    x: PANEL.x + (theme.canvas.width / 2 - BAL.w / 2 - PANEL.x) * slide - ((BAL.w + PAIR.arrow) / 2) * pair,
     y: PANEL.y + (CARD_Y - PANEL.y) * slide - RISE * rise,
     w: PANEL.w + (BAL.w - PANEL.w) * slide,
     h: PANEL.h + (BAL.h - PANEL.h) * slide,
@@ -589,6 +612,9 @@ export const SC11 = () => {
           ) : null}
         </div>
       ) : null}
+      {/* the arrow runs from the first card to the second, which then arrives holding Rp 350,000 */}
+      <PairArrow x0={(theme.canvas.width - PAIR_W) / 2 + BAL.w + PAIR.pad} x1={(theme.canvas.width + PAIR_W) / 2 - BAL.w - PAIR.pad} y={CARD_Y - RISE + BAL.h / 2} at={local(B12.pair, BLOCK.SC11) + m.move} />
+      <BigBalance x={(theme.canvas.width + PAIR_W) / 2 - BAL.w / 2} y={CARD_Y - RISE} label="TOTAL INVESTED:" amount={rp(PAIR.next)} life={ease(f, local(B12.pair, BLOCK.SC11) + m.move + m.sec(0.5), m.reveal)} swell={0} tri={0} />
       {carried ? (
       <div style={{ position: "absolute", inset: 0, ...away }}>
       <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>

@@ -818,7 +818,7 @@ const BAL_Y = WORKER8_TOP - BAL.gap - BAL.h;
  * comes in beside it as the animation starts.
  */
 /** The balance card: an uppercase label over the amount, which swells green and back as it changes; an up-triangle beside it. */
-const BigBalance = ({ x, y, label, amount, life, swell, tri }: { x: number; y: number; label: string; amount: string; life: number; swell: number; tri: number }) => {
+export const BigBalance = ({ x, y, label, amount, life, swell, tri }: { x: number; y: number; label: string; amount: string; life: number; swell: number; tri: number }) => {
   const c = usePalette();
   const shadow = useShadow();
   if (life <= 0.001) return null;
