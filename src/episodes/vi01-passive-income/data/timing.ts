@@ -520,8 +520,9 @@ export const TRANS_LEN = 130;
 export const TRANS: Trans[] = [
   // ST2 · SC08 → SC09 — cancelled: "batalkan scene transisi, scenenya selesai 8772".
   // SC08 now runs to 8772 and the cut to SC09 is a CameraCut (CUTS).
-  // ST3 · SC12 → SC13 (0.37 s; SC12's last word ends f12697)
-  { at: 12692, freeze: 12691, landing: 2, next: 3, cards: [12702, 12710, 12730], thumbs: [3089, 8720, null, null] },
+  // ST3 · SC12 → SC13 — cancelled: "12727-12728 batalkan scene transisi. Instead transisinya gini aja:
+  // muncul background baru yang menimpa visual 12727, backgroundnya adalah silver dan garis kotak
+  // kotak seperti di 11580." SC13 now opens on its own grid ground, over SC12's last picture.
 ];
 
 /**

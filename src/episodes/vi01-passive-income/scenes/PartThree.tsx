@@ -7,9 +7,9 @@
  * the narration gives; and the five-step process the story is really about.
  */
 import { useCurrentFrame } from "remotion";
-import { Stage, theme, useMotion, usePalette } from "../../../core";
+import { GridGround, Stage, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 const LINE = { y: 560, x0: 200, x1: 1400 };
@@ -33,6 +33,10 @@ export const SC13 = () => {
   const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
   return (
     <Stage>
+      {/* the new background, on SC12's last picture at 12728: silver paper and the grid, as at 11580; it clears with the rest before the card is carried on */}
+      <div style={{ position: "absolute", inset: 0, opacity: clear, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC13} paper={c.bg} />
+      </div>
       <div style={{ position: "absolute", inset: 0, opacity: clear }}>
       <Say text="Lo Kheng Hong" x={960} y={190} at={L(B13.name)} size={76} weight={800} />
       <Say text="nggak langsung mulai sebagai investor besar" x={960} y={270} at={L(B13.name) + 60} size={38} weight={600} color={c.slate} />
