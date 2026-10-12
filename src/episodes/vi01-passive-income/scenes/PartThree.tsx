@@ -13,22 +13,22 @@ import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, She
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 /**
- * "Roadmapnya align-center": the roadmap — its line, its dots and the UNTR card it ends on — is
- * laid out from the left and then moved as one so that the whole span is centred on the canvas.
+ * The roadmap runs margin to margin — "hingga paling kanan" — which also centres it. Its four dots and
+ * the UNTR card sit on it, evenly spaced; the line passes behind the card and ends in a dot beyond it.
  */
-const SPAN = { x0: 200, x1: 1400, card: 1450, cardW: 380 };
-const DX = (theme.canvas.width - (SPAN.x0 + SPAN.card + SPAN.cardW)) / 2;
-const LINE = { y: 560, x0: SPAN.x0 + DX, x1: SPAN.x1 + DX, rule: 3, end: 8, draw: 0.9 };
+const PITCH = 330;
+const FIRST = 260;
+const LINE = { y: 560, x0: theme.margin.left, x1: theme.canvas.width - theme.margin.right, rule: 3, end: 8, draw: 0.9 };
 /** The roadmap after Simon's reference: thin black line, dots of one size on it, a stem to each label, the labels alternating below and above. */
 const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
-  { x: 320 + DX, r: 12, up: false, lines: ["1. Pegawai bank"] },
-  { x: 620 + DX, r: 12, up: true, lines: ["2. Menabung"] },
-  { x: 920 + DX, r: 12, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
-  { x: 1220 + DX, r: 12, up: true, lines: ["4. Mulai", "berinvestasi"] },
+  { x: FIRST, r: 12, up: false, lines: ["1. Pegawai bank"] },
+  { x: FIRST + PITCH, r: 12, up: true, lines: ["2. Menabung"] },
+  { x: FIRST + 2 * PITCH, r: 12, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
+  { x: FIRST + 3 * PITCH, r: 12, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
-const ROAD = { stem: 80, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
-/** UNTR, where SC13 leaves it and where SC14 picks it up. */
-export const UNTR_AT: NodeBox = { x: SPAN.card + DX, y: 470, w: SPAN.cardW, h: 180 };
+/** UNTR, the fifth point, where SC13 leaves it and where SC14 picks it up. */
+export const UNTR_AT: NodeBox = { x: FIRST + 4 * PITCH - 190, y: 470, w: 380, h: 180 };
+const ROAD = { stem: 100, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
 /** The lower third: bottom centre, its foot above the subtitle band. */
@@ -91,7 +91,6 @@ export const SC13 = () => {
           </div>
         );
       })}
-      <Link a={{ x: LINE.x1 + LINE.end, y: LINE.y }} b={nodeEdge(UNTR_AT, "l")} at={L(B13.untr) - 20} tone="cyan" />
       </div>
       <Node box={UNTR_AT} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={L(B13.untr)} size={40} />
     </Stage>
