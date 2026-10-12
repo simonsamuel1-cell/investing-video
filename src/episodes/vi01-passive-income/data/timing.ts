@@ -515,6 +515,8 @@ export const SC17 = {
    */
   title: 17072,
   card: 17102,
+  /** "17755 Di bawahnya muncul text box" (Studio 17755 = episode 17515). */
+  box: 17515,
   kecil: 17096, // "aset kita mungkin masih kecil."
   grow: [17262, 17353, 17425] as const, // kemampuan, income, aset
   pillars: 17509, // "pelan-pelan kita nggak cuma punya satu sumber kekuatan finansial."

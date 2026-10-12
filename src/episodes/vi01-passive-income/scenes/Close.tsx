@@ -143,6 +143,17 @@ const GROW_BARS: { label: string; grown: string; tone: "indigo" | "cyan"; from: 
  * track of fine ticks, a gradient fill running to the right with a handle at its end. The lengths are the
  * old bars' heights (130/150/50 growing to 330/380/300 of 400) — sizes, not figures; none is labelled.
  */
+/** The box under the progress card: it starts 30 px below the card's foot and runs one line, margin to margin at most. */
+const BOX17: { text: string; mark: string; w: number; h: number; size: number; below: number; y: number } = {
+  y: 0,
+  text: "Perlahan jadi punya lebih dari satu sumber kekuatan finansial dan punya banyak pilihan",
+  /** Simon wrote "ebih dari satu sumber kekuatan finansial"; the whole word is meant. */
+  mark: "lebih dari satu sumber kekuatan finansial",
+  w: 1640,
+  h: 130,
+  size: 34,
+  below: 30,
+};
 const PROG_W = 900;
 const PROG_SCALE = 0.8;
 const PROG_ROWS = { pad: 48, row: 176, label: 38, bar: 56, gap: 34 };
@@ -150,6 +161,7 @@ const PROG_ROWS = { pad: 48, row: 176, label: 38, bar: 56, gap: 34 };
 const PROG_H = 2 * PROG_ROWS.pad + 2 * PROG_ROWS.row + PROG_ROWS.label + PROG_ROWS.gap + PROG_ROWS.bar;
 /** "UI nya buat tengah vertikal juga": the scaled card sits at the middle of the canvas, top to bottom; the title is 50 px above it. */
 const PROG = { ...PROG_ROWS, x: (theme.canvas.width - PROG_W) / 2, y: theme.canvas.height / 2 - (PROG_H * PROG_SCALE) / 2, w: PROG_W, scale: PROG_SCALE, titleSize: 36, tick: 8, ticks: 48, knob: 20, full: 400, growSecs: 0.7, titleGap: 50 };
+BOX17.y = PROG.y + PROG_H * PROG.scale + BOX17.below;
 export const SC17 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -204,6 +216,8 @@ export const SC17 = () => {
             );
           })}
           </div>
+          {/* "Di bawahnya muncul text box" — "lebih dari satu sumber kekuatan finansial" highlighted */}
+          <TypeBox cx={theme.canvas.width / 2} y={BOX17.y} w={BOX17.w} h={BOX17.h} at={L(B17.box)} text={BOX17.text} mark={BOX17.mark} size={BOX17.size} />
         </div>
       ) : null}
 
