@@ -28,7 +28,7 @@
  * mistake here, not a style.
  */
 import React from "react";
-import { Img, staticFile, useCurrentFrame } from "remotion";
+import { Img, random, staticFile, useCurrentFrame } from "remotion";
 import {
   progressInOut,
   quoteMarks,
@@ -1438,6 +1438,52 @@ export const LowerThird = ({ first, last, role, at, out, cx, y }: { first: strin
           </span>
         ))}
       </div>
+    </div>
+  );
+};
+
+// ═══ GlitchSwap ═══════════════════════════════════════════════════════════
+/**
+ * A line of text that turns into another through a glitch: for `span` frames it is cut into horizontal slices,
+ * each slice showing the old words or the new ones as the swap progresses (more and more of them the new), each
+ * knocked sideways by a little less every step, with an indigo and a cyan ghost of the line slipping either way;
+ * then it is the new line, still. Centred on (x, y) like WordLine, which it takes over from. Seeded, so every
+ * render of a frame is the same frame.
+ */
+const GLITCH = { slices: 6, every: 2, flicker: 0.12, shift: 26, ghost: 9, ghostOpacity: 0.5, line: 1.25 };
+export const GlitchSwap = ({ from, to, x, y, at, span, size = 54, weight = 700, seed = "glitch" }: { from: string; to: string; x: number; y: number; at: number; span: number; size?: number; weight?: number; seed?: string }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  if (f < at) return null;
+  const p = Math.min(1, (f - at) / span);
+  const step = Math.floor((f - at) / GLITCH.every);
+  const base: React.CSSProperties = { position: "absolute", left: 0, top: 0, width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: size, fontWeight: weight, whiteSpace: "nowrap", lineHeight: GLITCH.line };
+  const box: React.CSSProperties = { position: "absolute", left: x, top: y, transform: "translate(-50%, -50%)", width: size * GLITCH.line * 22, height: size * GLITCH.line };
+  if (p >= 1) {
+    return (
+      <div style={box}>
+        <div style={{ ...base, color: c.ink }}>{to}</div>
+      </div>
+    );
+  }
+  const amp = 1 - p;
+  /* each slice has its own moment to turn (fixed per slice, so the swap only ever goes forward), with a brief flicker back */
+  const pick = (i: number) => random(`${seed}-when-${i}`) * (1 - GLITCH.flicker) < p && random(`${seed}-back-${i}-${step}`) > GLITCH.flicker * (1 - p);
+  return (
+    <div style={box}>
+      {/* the ghosts, one slipping each way */}
+      <div style={{ ...base, color: c.indigo, opacity: GLITCH.ghostOpacity * amp, transform: `translateX(${(-GLITCH.ghost * amp).toFixed(1)}px)` }}>{p > 0.5 ? to : from}</div>
+      <div style={{ ...base, color: theme.color.cyanInk, opacity: GLITCH.ghostOpacity * amp, transform: `translateX(${(GLITCH.ghost * amp).toFixed(1)}px)` }}>{p > 0.5 ? to : from}</div>
+      {Array.from({ length: GLITCH.slices }, (_, i) => {
+        const top = (i / GLITCH.slices) * 100;
+        const bottom = 100 - ((i + 1) / GLITCH.slices) * 100;
+        const dx = (random(`${seed}-dx-${i}-${step}`) - 0.5) * 2 * GLITCH.shift * amp;
+        return (
+          <div key={i} style={{ ...base, color: c.ink, clipPath: `inset(${top.toFixed(2)}% 0 ${bottom.toFixed(2)}% 0)`, transform: `translateX(${dx.toFixed(1)}px)` }}>
+            {pick(i) ? to : from}
+          </div>
+        );
+      })}
     </div>
   );
 };

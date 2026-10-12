@@ -545,7 +545,9 @@ export const SC18 = {
   kerja: 18339, // "kerja berarti kita menggunakan waktu …"
   investasi: 18565, // "Sedangkan investasi,"
   bekerja: 18803, // "ikut bekerja untuk masa depan."
-  close: 18947, // "Jadi kita pelan-pelan berubah …"
+  /** "19358 … transisi efek glitch pada Text line 2, textnya berubah jadi 'jadi pekerja dengan aset'" (Studio − 240). */
+  swap: 19118,
+  close: 18935, // "Jadi kita pelan-pelan berubah …" — "19175 Group ini yang aku ss. Lalu transisi fade ke gambar 2" (Studio − 240)
   mark: 19201, // "juga punya aset."
 };
 

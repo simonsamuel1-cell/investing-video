@@ -11,7 +11,7 @@ import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette
 import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
 import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
 import { QuizStatement, quizLabelStyle } from "./ColdOpen";
-import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
+import { Cutout, DashBox, GlitchSwap, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, useLife } from "../components/kit";
 
 // ═══ SC16 — not running from work: keep the life ════════════════════════
 /**
@@ -242,8 +242,9 @@ const MAN18_K = (MAN18.floor - MAN18.top) / (MAN18.belly - MAN18.ink.y0);
 const MAN18_W = (MAN18.ink.x1 - MAN18.ink.x0) * MAN18_K;
 const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, box: 48, pad: 30, padX: 46, rows: [{ y: 350, label: "Kerja", words: ["Tenaga", "+ waktu", "= Income"] }, { y: 590, label: "Investasi", words: ["Uang", "+ waktu", "= Passive income"] }], boxDy: 56, rise: 22 };
 const CARD_RADIUS_18 = theme.shape.cardRadius;
-const CARD = { x: 560, y: 360, w: 1180, h: 330, size: 54, lead: 76 };
-const LINES = ["Dari sekadar pekerja,", "menjadi pekerja yang juga punya aset."];
+const CARD = { x: (theme.canvas.width - 1180) / 2, y: theme.canvas.height / 2 - 165, w: 1180, h: 330, size: 54, lead: 76 };
+const LINES = ["Pelan-pelan berubah", "dari sekedar pekerja"];
+const SWAPPED = "jadi pekerja dengan aset";
 const CARD_LIST_Y = quoteListY(CARD.y, CARD.h, CARD.lead, LINES.length);
 
 export const SC18 = () => {
@@ -252,7 +253,8 @@ export const SC18 = () => {
   const m = useMotion();
   const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC18);
-  const rulesOut = L(B18.close) - 16;
+  /* "Lalu transisi fade ke gambar 2": the first group fades as the card comes up */
+  const rulesOut = L(B18.close);
   const closing = ease(f, L(B18.close), m.move);
   const g = f + BLOCK.SC18;
   const gone = ease(f, rulesOut, m.fade);
@@ -268,12 +270,12 @@ export const SC18 = () => {
           <GridGround f={g} paper={c.bg} />
         </div>
       ) : null}
+      {/* the mascot, at the top — it stays from first to last, over the closing card too */}
+      <div style={{ opacity: ease(f, L(B18.mascot), m.reveal) }}>
+        <TuntunMark x={theme.canvas.width / 2} y={MAN18.mascotY + bob} height={MAN18.mascotH} />
+      </div>
       {gone < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
-          {/* the mascot, at the top */}
-          <div style={{ opacity: ease(f, L(B18.mascot), m.reveal) }}>
-            <TuntunMark x={theme.canvas.width / 2} y={MAN18.mascotY + bob} height={MAN18.mascotH} />
-          </div>
           {/* OrangTuntun4, head to belly, on the left */}
           <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${MAN18.floor - MAN18.foot * (MAN18.floor - MAN18.top)}px, transparent ${MAN18.floor}px)`, maskImage: `linear-gradient(to bottom, black ${MAN18.floor - MAN18.foot * (MAN18.floor - MAN18.top)}px, transparent ${MAN18.floor}px)` }}>
             <Cutout src={MAN18.src} aspect={MAN18.w / MAN18.h} x={theme.margin.left + (MAN18.w / 2 - MAN18.ink.x0) * MAN18_K} y={MAN18.floor + (MAN18.h - MAN18.belly) * MAN18_K} h={MAN18.h * MAN18_K} at={L(B18.man)} rise={MAN18.top} riseFrames={m.move} />
@@ -308,25 +310,18 @@ export const SC18 = () => {
       {/* the closing card on the grid, the mark floating over it */}
       {closing > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: closing }}>
-          <TuntunMark x={CARD.x + CARD.w / 2} y={CARD.y - 170 + Math.sin(((g - B18.close) / 240) * Math.PI * 2) * 10} height={130} />
           <QuoteFrame x={CARD.x} y={CARD.y} w={CARD.w} h={CARD.h} at={L(B18.close) + 12} listY={CARD_LIST_Y} lead={CARD.lead} count={LINES.length}>
-            {LINES.map((line, n) => (
-              <WordLine
-                key={line}
-                text={line}
-                x={CARD.x + CARD.w / 2}
-                y={CARD_LIST_Y + CARD.lead * n + CARD.size * 0.62}
-                at={L(B18.close) + 40 + n * 60}
-                stagger={6}
-                size={CARD.size}
-                weight={700}
-                mark={n === 1 ? "juga punya aset." : undefined}
-                markColor={theme.color.hlCyan}
-                markAt={L(B18.mark)}
-              />
-            ))}
+            {LINES.map((line, n) => {
+              const y = CARD_LIST_Y + CARD.lead * n + CARD.size * 0.62;
+              const x = CARD.x + CARD.w / 2;
+              /* line 2 turns into "jadi pekerja dengan aset" through a glitch, at 19358 (Studio) */
+              return n === 1 && f >= L(B18.swap) ? (
+                <GlitchSwap key="swap" from={line} to={SWAPPED} x={x} y={y} at={L(B18.swap)} span={m.sec(0.5)} size={CARD.size} weight={700} />
+              ) : (
+                <WordLine key={line} text={line} x={x} y={y} at={L(B18.close) + 40 + n * 60} stagger={6} size={CARD.size} weight={700} />
+              );
+            })}
           </QuoteFrame>
-          <Worker x={300} y={925} h={600} at={L(B18.close) + 20} poses={[[0, 5]]} />
         </div>
       ) : null}
     </Stage>
