@@ -145,7 +145,7 @@ export const SC13 = () => {
  * to 50% and Lo Kheng Hong comes up on its left at the same height; the label "UNTR = Rp 250" follows and a
  * coin and a document change places; at 14305 UNTR moves left and a roadmap fills in beneath it.
  */
-const P14 = { shrink: 0.5, gap: 500, rowCy: 430, below: 56, foot: 0.22, coin: 80, doc: 76, arc: 230, hand: 70, top2: 150 };
+const P14 = { trail: 7, dash: "14 12", samples: 48, trailFade: 0.6, shrink: 0.5, gap: 500, rowCy: 430, below: 56, foot: 0.22, coin: 80, doc: 76, arc: 230, hand: 70, top2: 150 };
 const G14 = (() => {
   const k1 = UNTR_K * P14.shrink;
   const w1 = (UNTR_PX.ink.x1 - UNTR_PX.ink.x0) * k1;
@@ -183,6 +183,14 @@ export const SC14 = () => {
     return { x: u * u * a.x + 2 * u * t * cx + t * t * b.x, y: u * u * a.y + 2 * u * t * cy + t * t * b.y };
   };
   const swapOpacity = Math.min(1, q * 6, (1 - q) * 6);
+  /* "kasih jejak": a dashed trail drawn behind each, left in place a moment after they arrive */
+  const trailOpacity = 1 - ease(f, L(B14.swap) + m.sec(1.4) + m.sec(0.4), m.sec(P14.trailFade));
+  const trail = (a: { x: number; y: number }, b: { x: number; y: number }, bend: number) =>
+    Array.from({ length: P14.samples + 1 }, (_, i) => {
+      const t = (q * i) / P14.samples;
+      const u = bez(a, b, bend, t);
+      return `${i === 0 ? "M" : "L"} ${u.x.toFixed(1)} ${u.y.toFixed(1)}`;
+    }).join(" ");
   const coin = bez(from, to, -P14.arc * 2, q);
   const doc = bez(to, from, P14.arc * 2, q);
   /* the roadmap */
@@ -214,7 +222,13 @@ export const SC14 = () => {
         {/* UNTR.png: from SC13's size to half, then to the left */}
         <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={vx + (UNTR_PX.w / 2 - UNTR_C.ix) * k} y={vy + (UNTR_PX.h - UNTR_C.iy) * k} h={UNTR_PX.h * k} at={-m.sec(2)} rise={0} />
         <Say text="UNTR = Rp 250" x={vx} y={vy + untrH / 2 + P14.below} at={L(B14.label)} size={48} weight={800} />
-        {/* the coin and the document */}
+        {/* the coin and the document, each leaving a dashed trail */}
+        {q > 0.001 && trailOpacity > 0.001 ? (
+          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: trailOpacity }}>
+            <path d={trail(from, to, -P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
+            <path d={trail(to, from, P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
+          </svg>
+        ) : null}
         {q > 0.001 && q < 0.999 ? (
           <>
             <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink, opacity: swapOpacity }}>
