@@ -12,17 +12,23 @@ import { BG_FADE, BLOCK, CARRY_CLEAR, CUT, SC13 as B13, SC14 as B14, SC15 as B15
 import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
-const LINE = { y: 560, x0: 200, x1: 1400, rule: 3, end: 8, draw: 0.9 };
+/**
+ * "Roadmapnya align-center": the roadmap — its line, its dots and the UNTR card it ends on — is
+ * laid out from the left and then moved as one so that the whole span is centred on the canvas.
+ */
+const SPAN = { x0: 200, x1: 1400, card: 1450, cardW: 380 };
+const DX = (theme.canvas.width - (SPAN.x0 + SPAN.card + SPAN.cardW)) / 2;
+const LINE = { y: 560, x0: SPAN.x0 + DX, x1: SPAN.x1 + DX, rule: 3, end: 8, draw: 0.9 };
 /** The roadmap after Simon's reference: thin black line, dots of growing size on it, a stem to each label, the labels alternating below and above. */
 const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
-  { x: 320, r: 12, up: false, lines: ["1. Pegawai bank"] },
-  { x: 620, r: 17, up: true, lines: ["2. Menabung"] },
-  { x: 920, r: 23, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
-  { x: 1220, r: 31, up: true, lines: ["4. Mulai", "berinvestasi"] },
+  { x: 320 + DX, r: 12, up: false, lines: ["1. Pegawai bank"] },
+  { x: 620 + DX, r: 17, up: true, lines: ["2. Menabung"] },
+  { x: 920 + DX, r: 23, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
+  { x: 1220 + DX, r: 31, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
 const ROAD = { stem: 80, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
 /** UNTR, where SC13 leaves it and where SC14 picks it up. */
-export const UNTR_AT: NodeBox = { x: 1450, y: 470, w: 380, h: 180 };
+export const UNTR_AT: NodeBox = { x: SPAN.card + DX, y: 470, w: SPAN.cardW, h: 180 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
 /** The lower third: bottom centre, its foot above the subtitle band. */
@@ -58,8 +64,8 @@ export const SC13 = () => {
       <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} cx={theme.canvas.width / 2} y={LT_Y} />
         </div>
       ) : null}
-      {/* "Sebelum seperti sekarang", 300 px above the line, aligned left with the roadmap, as large as the lower third's name */}
-      <Say text="Sebelum seperti sekarang" x={LINE.x0} y={LINE.y - ROAD.headAbove} at={L(B13.roadmap)} anchor="left" size={LOWER_THIRD_NAME} weight={800} />
+      {/* "Sebelum seperti sekarang", 300 px above the line, aligned left with the roadmap, half the size of the lower third's name */}
+      <Say text="Sebelum seperti sekarang" x={LINE.x0} y={LINE.y - ROAD.headAbove} at={L(B13.roadmap)} anchor="left" size={LOWER_THIRD_NAME / 2} weight={800} />
       {/* the line draws on from its left dot; a dot closes it on the right */}
       {f >= L(B13.roadmap) ? (
         <>
