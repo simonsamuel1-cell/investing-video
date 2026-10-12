@@ -485,11 +485,18 @@ export const SC15 = {
 
 // ═══ PENUTUP ═══════════════════════════════════════════════════════════════
 export const SC16 = {
-  lari: 16347, // "lari dari pekerjaan."
-  strike: 16396,
-  tetap: [16520, 16562, 16637] as const, // karier, keluarga, menikmati hidup
-  bedanya: 16741, // "Bedanya, sebagian hasil kerja kita hari ini"
-  depan: 16991, // "untuk masa depan."
+  /**
+   * Simon, in the finished video's frames (episode + 240): "16413 fade in background kotak kotak, lalu muncul
+   * Orang Resign. lalu di bagian kakinya muncul text box garis putus putus …" — 16413 is this scene's first
+   * frame. "16700 isi text boxnya ganti … lalu imagenya transisi fade dengan Orang Kerja png";
+   * "16807 muncul image Berkeluarga.png di sebelah kiri"; "16862 muncul image Healing.png di sebelah kanan".
+   */
+  grid: 16173,
+  resign: 16213, // after the grid has faded in
+  box: 16249,
+  swap: 16460,
+  family: 16567,
+  healing: 16622,
 };
 
 export const SC17 = {

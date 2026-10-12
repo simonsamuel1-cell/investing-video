@@ -8,48 +8,77 @@
  */
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
-import { ease, Pill, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
+import { BG_FADE, BLOCK, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
+import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
-// ═══ SC16 — keep the life; set part of today aside ═══════════════════════
-const BAR = { x: 820, y: 760, w: 940, h: 74, future: 0.26 };
+// ═══ SC16 — not running from work: keep the life ════════════════════════
+/**
+ * Everyone stands on one floor line at one scale (so the seated worker is smaller than the standing men, as
+ * he would be). `ink` is each picture's opaque extent in its own pixels; `place` puts that extent's
+ * centre on `cx` and its bottom on the floor.
+ */
+type Pic = { src: string; w: number; h: number; ink: { x0: number; x1: number; y0: number; y1: number } };
+const PICS = {
+  resign: { src: "art/vi01/orang-resign.png", w: 1086, h: 1448, ink: { x0: 269, x1: 898, y0: 11, y1: 1426 } },
+  kerja: { src: "art/vi01/orang-kerja.png", w: 1448, h: 1086, ink: { x0: 127, x1: 1335, y0: 18, y1: 1069 } },
+  family: { src: "art/vi01/berkeluarga.png", w: 1024, h: 1536, ink: { x0: 165, x1: 854, y0: 14, y1: 1511 } },
+  healing: { src: "art/vi01/healing.png", w: 1024, h: 1536, ink: { x0: 70, x1: 1007, y0: 114, y1: 1469 } },
+} satisfies Record<string, Pic>;
+const S16 = { floor: 850, k: 0.5, gap: 70, boxH: 120, boxW: 1500, boxFoot: 60, size: 38, resignSecs: 0.6 };
+const place = (p: Pic, cx: number) => ({
+  src: p.src,
+  aspect: p.w / p.h,
+  x: cx + (p.w / 2 - (p.ink.x0 + p.ink.x1) / 2) * S16.k,
+  y: S16.floor + (p.h - p.ink.y1) * S16.k,
+  h: p.h * S16.k,
+  floorAt: p.ink.y1 / p.h,
+  half: ((p.ink.x1 - p.ink.x0) * S16.k) / 2,
+});
+const SAY16 = ["Membangun passive income bukan berarti lari dari pekerjaan", "Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang."];
 
 export const SC16 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC16);
-  const bar = ease(f, L(B16.bedanya), m.move);
-  const split = ease(f, L(B16.depan) - 30, 30);
+  const centre = theme.canvas.width / 2;
+  const resign = place(PICS.resign, centre);
+  const kerja = place(PICS.kerja, centre);
+  /* the two scenes either side stand clear of the widest picture in the middle */
+  const reach = Math.max(resign.half, kerja.half) + S16.gap;
+  const family = place(PICS.family, centre - reach - (((PICS.family.ink.x1 - PICS.family.ink.x0) * S16.k) / 2));
+  const healing = place(PICS.healing, centre + reach + (((PICS.healing.ink.x1 - PICS.healing.ink.x0) * S16.k) / 2));
+  const grid = ease(f, 0, BG_FADE);
+  /* the dashed box over the feet: its words typed, then swapped for the next line */
+  const at = L(B16.box);
+  const typeAt = dashOpenAt(at, m);
+  const swap = L(B16.swap);
+  const t1 = Math.max(0, Math.min(Math.floor(f - typeAt), SAY16[0].length));
+  const t2 = Math.max(0, Math.min(Math.floor(f - (swap + m.sec(0.25))), SAY16[1].length));
+  const gone1 = ease(f, swap, m.fade);
+  const boxY = S16.floor - S16.boxFoot;
+  const word = (text: string, shown: number, opacity: number, key: string) => (
+    <div key={key} style={{ position: "absolute", left: 0, top: 0, width: S16.boxW, height: S16.boxH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: S16.size, fontWeight: 600, color: c.ink, whiteSpace: "pre", opacity }}>
+      {text.slice(0, shown)}
+    </div>
+  );
   return (
     <Stage>
-      <Worker x={380} y={925} h={700} at={0} poses={[[0, 1]]} />
-      <Say text="Lari dari pekerjaan" x={BAR.x} y={260} at={L(B16.lari)} anchor="left" size={60} weight={800} color={c.slate} strikeAt={L(B16.strike)} />
-      {["Bangun karier", "Urus keluarga", "Menikmati hidup"].map((label, i) => (
-        <Pill key={label} label={label} x={BAR.x} y={390 + i * 92} at={L(B16.tetap[i])} anchor="left" check size={42} />
-      ))}
-      <Say text="Hasil kerja hari ini" x={BAR.x} y={BAR.y - 56} at={L(B16.bedanya)} anchor="left" size={40} weight={700} />
-      {bar > 0.001 ? (
-        <>
-          {/* today's share shrinks back by the future's share plus a gap,
-              and the future's share is a rounded bar of its own */}
-          <div style={{ position: "absolute", left: BAR.x, top: BAR.y, width: BAR.w * bar - (BAR.w * BAR.future + 10) * split, height: BAR.h, borderRadius: 16, background: c.indigo }} />
-          <div
-            style={{
-              position: "absolute",
-              left: BAR.x + BAR.w * (1 - BAR.future),
-              top: BAR.y,
-              width: BAR.w * BAR.future,
-              height: BAR.h,
-              borderRadius: 16,
-              background: theme.color.cyanInk,
-              opacity: split,
-            }}
-          />
-        </>
-      ) : null}
-      <Say text="Hari ini" x={BAR.x + 20} y={BAR.y + BAR.h + 42} at={L(B16.depan) - 20} anchor="left" size={34} weight={700} color={c.indigo} />
-      <Say text="Masa depan" x={BAR.x + BAR.w} y={BAR.y + BAR.h + 42} at={L(B16.depan)} anchor="right" size={34} weight={700} color={theme.color.cyanInk} />
+      {/* "fade in background kotak kotak" */}
+      <div style={{ position: "absolute", inset: 0, opacity: grid, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC16} paper={c.bg} />
+      </div>
+      {/* Berkeluarga on the left, Healing on the right */}
+      <Cutout src={family.src} aspect={family.aspect} x={family.x} y={family.y} h={family.h} at={L(B16.family)} shadow floor={family.floorAt} />
+      <Cutout src={healing.src} aspect={healing.aspect} x={healing.x} y={healing.y} h={healing.h} at={L(B16.healing)} shadow floor={healing.floorAt} />
+      {/* Orang Resign, then — at the swap — a fade over to Orang Kerja */}
+      <Cutout src={resign.src} aspect={resign.aspect} x={resign.x} y={resign.y} h={resign.h} at={L(B16.resign)} out={swap} shadow floor={resign.floorAt} />
+      <Cutout src={kerja.src} aspect={kerja.aspect} x={kerja.x} y={kerja.y} h={kerja.h} at={swap} rise={0} shadow floor={kerja.floorAt} />
+      {/* the dashed box, over their feet */}
+      <DashBox cx={centre} y={boxY - S16.boxH / 2} w={S16.boxW} h={S16.boxH} at={at}>
+        {word(SAY16[0], t1, 1 - gone1, "a")}
+        {word(SAY16[1], t2, ease(f, swap + m.sec(0.25), m.fade), "b")}
+      </DashBox>
     </Stage>
   );
 };
