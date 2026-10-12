@@ -493,6 +493,8 @@ const CARD_R = 32;
 const AMOUNTS = [50_000, 50_000, 200_000];
 /** The two lines under the card: "Yang penting bukan nominal", then "tapi kebiasaan menyisihkan sebagian income". */
 const UNDER = { size: 56, big: 66, gap: 76, line: 104, lift: 16, wash: 0.8, pad: 12 };
+/** "UI Total Invested geser naik dulu biar ada ruang di bawah": the card rises so card + both lines sit centred together. */
+const RISE = (UNDER.gap + UNDER.line + UNDER.big / 2) / 2;
 
 /**
  * The two lines under the card, set as one statement: the first is the
@@ -513,7 +515,7 @@ const Statement = () => {
       {children}
     </div>
   );
-  const y1 = CARD_Y + BAL.h + UNDER.gap;
+  const y1 = CARD_Y - RISE + BAL.h + UNDER.gap;
   return (
     <>
       {one > 0.001
@@ -556,10 +558,12 @@ export const SC11 = () => {
   const slide = ease(f, slideAt, m.move);
   /* "geser kiri sekalian mengecil": one move — the panel slides to the middle of the canvas while it
      shrinks into the Total Invested card; the amount then steps Rp 50 ribu → 100 ribu → 300 ribu */
+  /* it rises just before "Yang penting bukan nominal", once the last amount has counted */
+  const rise = ease(f, local(B12.penting, BLOCK.SC11) - m.move, m.move);
   const shrink = slide;
   const box = {
     x: PANEL.x + (theme.canvas.width / 2 - BAL.w / 2 - PANEL.x) * slide,
-    y: PANEL.y + (CARD_Y - PANEL.y) * slide,
+    y: PANEL.y + (CARD_Y - PANEL.y) * slide - RISE * rise,
     w: PANEL.w + (BAL.w - PANEL.w) * slide,
     h: PANEL.h + (BAL.h - PANEL.h) * slide,
     r: theme.shape.cardRadius + (CARD_R - theme.shape.cardRadius) * slide,
