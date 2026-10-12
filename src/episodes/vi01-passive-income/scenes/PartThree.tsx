@@ -155,7 +155,7 @@ const G14 = (() => {
   return { k1, w1, h1, wL, lkhX: left + wL / 2, untrX: left + wL + P14.gap + w1 / 2 };
 })();
 /** The roadmap under UNTR once it has moved left: one line margin to margin, black dots from UNTR's own x to the right end. */
-const R14 = { y: 760, rule: 3, end: 8, r: 12, n: 7, price: 4, stem: 70 };
+const R14 = { y: 760, rule: 3, end: 8, r: 12, n: 7, price: 4, stem: 70, price44: 44 };
 const QUOTE = { w: 1180, pad: 64, badge: 96, icon: 52, gap: 28, title: 54, body: 38, y: 500, blur: 8, dim: 0.6 };
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -170,11 +170,15 @@ export const SC14 = () => {
   /* UNTR's visible centre and scale, from SC13's size to half of it to its place on the left */
   const k = lerp(UNTR_K, G14.k1, p1);
   const vx = lerp(lerp(UNTR_C.x + UNTR_PX.right, G14.untrX, p1), theme.margin.left + G14.w1 / 2, p2);
-  const vy = lerp(lerp(UNTR_C.y, P14.rowCy, p1), P14.top2 + G14.h1 / 2, p2);
+  /* "sejajar bawah dengan Rp 15 ribu": at its place on the left, UNTR's label sits on the price label's line */
+  const priceY = R14.y - R14.r - R14.stem - R14.price44;
+  const vy = lerp(lerp(UNTR_C.y, P14.rowCy, p1), priceY - P14.below - G14.h1 / 2, p2);
   const untrH = (UNTR_PX.ink.y1 - UNTR_PX.ink.y0) * k;
   /* the exchange: the coin goes over the top, the document comes back underneath */
   const q = ease(f, L(B14.swap), m.sec(1.4));
+  /* the document lands at his hand; the coin starts exactly behind his picture */
   const from = { x: G14.lkhX + G14.wL / 2 - P14.hand, y: P14.rowCy };
+  const coinFrom = { x: G14.lkhX, y: P14.rowCy };
   const to = { x: G14.untrX - G14.w1 / 2 + P14.hand, y: P14.rowCy };
   const bez = (a: { x: number; y: number }, b: { x: number; y: number }, bend: number, t: number) => {
     const cx = (a.x + b.x) / 2;
@@ -191,7 +195,8 @@ export const SC14 = () => {
       const u = bez(a, b, bend, t);
       return `${i === 0 ? "M" : "L"} ${u.x.toFixed(1)} ${u.y.toFixed(1)}`;
     }).join(" ");
-  const coin = bez(from, to, -P14.arc * 2, q);
+  const coin = bez(coinFrom, to, -P14.arc * 2, q);
+  const coinOpacity = Math.min(1, (1 - q) * 6);
   const doc = bez(to, from, P14.arc * 2, q);
   /* the roadmap */
   const x0 = theme.margin.left;
@@ -214,6 +219,17 @@ export const SC14 = () => {
             {STOPS[3].lines.join("\n")}
           </div>
         ) : null}
+        {/* the coin, and its trail, start behind Lo Kheng Hong's picture and come out from it */}
+        {q > 0.001 && trailOpacity > 0.001 ? (
+          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: trailOpacity }}>
+            <path d={trail(coinFrom, to, -P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
+          </svg>
+        ) : null}
+        {q > 0.001 && q < 0.999 ? (
+          <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink, opacity: coinOpacity }}>
+            Rp
+          </div>
+        ) : null}
         {/* Lo Kheng Hong, on the left of UNTR at its height, his name beneath him; the foot of the portrait fades */}
         <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)`, maskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)` }}>
           <Cutout src={FOTO.src} aspect={FOTO.aspect} x={G14.lkhX} y={P14.rowCy + G14.h1 / 2} h={G14.h1} at={L(B14.pair)} out={L(B14.shift)} rise={FOTO.rise / 4} riseFrames={m.move} />
@@ -225,15 +241,11 @@ export const SC14 = () => {
         {/* the coin and the document, each leaving a dashed trail */}
         {q > 0.001 && trailOpacity > 0.001 ? (
           <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: trailOpacity }}>
-            <path d={trail(from, to, -P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
             <path d={trail(to, from, P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
           </svg>
         ) : null}
         {q > 0.001 && q < 0.999 ? (
           <>
-            <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink, opacity: swapOpacity }}>
-              Rp
-            </div>
             <div style={{ position: "absolute", left: doc.x - P14.doc / 2, top: doc.y - P14.doc / 2, opacity: swapOpacity }}>
               <Icon name="doc" size={P14.doc} color={c.indigo} stroke={2.6} fill={theme.color.indigoWash} />
             </div>
@@ -255,7 +267,7 @@ export const SC14 = () => {
         {f >= L(B14.rp15) ? (
           <>
             <div style={{ position: "absolute", left: dotX(R14.price) - 1, top: R14.y - R14.r - R14.stem, width: 2, height: R14.stem, background: c.ink, transformOrigin: "bottom", transform: `scaleY(${ease(f, L(B14.rp15), m.sec(0.3)).toFixed(4)})` }} />
-            <Say text="Rp 15 ribu" x={dotX(R14.price)} y={R14.y - R14.r - R14.stem - 44} at={L(B14.rp15) + m.sec(0.15)} size={56} weight={800} />
+            <Say text="Rp 15,000" x={dotX(R14.price)} y={priceY} at={L(B14.rp15) + m.sec(0.15)} size={56} weight={800} />
           </>
         ) : null}
       </div>
