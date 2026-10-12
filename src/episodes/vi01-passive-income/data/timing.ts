@@ -436,6 +436,8 @@ export const SC13 = {
   cut: 12992,
   /** "dari 13036, muncul roadmap/timeline" — the line draws; "Sebelum seperti sekarang" sits 300 px above it. */
   roadmap: 13036,
+  /** "13568 Previewnya zoom in ke text 'Mulai berinvestasi', visual lainnya fade out, kecuali background kotak kotak … di kanannya, muncul UNTR.png" */
+  zoom: 13568,
   name: 12778, // "Lo Kheng Hong" — "Animasi text dan munculnya gambar lo kheng hong sebaiknya di 12778 aja" (earlier 12810; the VO says it at 12739)
   /** The four steps of the timeline, each on its word. */
   steps: [13181, 13286, 13350, 13453] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan

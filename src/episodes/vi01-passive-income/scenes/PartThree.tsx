@@ -13,12 +13,12 @@ import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, She
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 /**
- * The roadmap runs margin to margin — "hingga paling kanan" — which also centres it. Its four dots and
- * the UNTR card sit on it, evenly spaced; the line passes behind the card and ends in a dot beyond it.
+ * The roadmap runs margin to margin — "hingga paling kanan" — which also centres it. Its four dots are
+ * spread evenly along it, with a gap of one pitch at both ends.
  */
-const PITCH = 330;
-const FIRST = 260;
 const LINE = { y: 560, x0: theme.margin.left, x1: theme.canvas.width - theme.margin.right, rule: 3, end: 8, draw: 0.9 };
+const PITCH = (LINE.x1 - LINE.x0) / 5;
+const FIRST = LINE.x0 + PITCH;
 /** The roadmap after Simon's reference: thin black line, dots of one size on it, a stem to each label, the labels alternating below and above. */
 const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
   { x: FIRST, r: 12, up: false, lines: ["1. Pegawai bank"] },
@@ -26,14 +26,25 @@ const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
   { x: FIRST + 2 * PITCH, r: 12, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
   { x: FIRST + 3 * PITCH, r: 12, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
-/** UNTR, the fifth point, where SC13 leaves it and where SC14 picks it up. */
-export const UNTR_AT: NodeBox = { x: FIRST + 4 * PITCH - 190, y: 470, w: 380, h: 180 };
+/** SC14's card enters from here — nothing of it is on screen in SC13 any more. */
+export const UNTR_AT: NodeBox = { x: LINE.x1 - 380, y: 470, w: 380, h: 180 };
 const ROAD = { stem: 100, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
+/**
+ * "Previewnya zoom in ke text 'Mulai berinvestasi'": the last label grows to the size of the lower third's
+ * name and goes to the far left, centred top to bottom; UNTR.png appears to its right.
+ */
+const ZOOM = { scale: LOWER_THIRD_NAME / ROAD.label, outSecs: 0.6, inSecs: 1 };
+const UNTR_IMG = { src: "art/vi01/untr.png", aspect: 1122 / 1402, h: 640, cx: 1290 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
 /** The lower third: bottom centre, its foot above the subtitle band. */
 const LT_Y = theme.captionBand.top - 80 - 170;
 const UNTR_TOP: NodeBox = { x: 770, y: 160, w: 380, h: 180 };
+
+const labelH = (s: { lines: string[] }) => s.lines.length * ROAD.label * ROAD.leading;
+const labelTop = (s: { up: boolean; r: number; lines: string[] }) => (s.up ? LINE.y - s.r - ROAD.stem - labelH(s) : LINE.y + s.r + ROAD.stem);
+/** Where the zoomed label's top-left lands: the left margin, its block centred on the canvas. */
+const ZOOM_TO = { x: theme.margin.left, y: theme.canvas.height / 2 - (labelH(STOPS[3]) * ZOOM.scale) / 2 };
 
 export const SC13 = () => {
   const f = useCurrentFrame();
@@ -41,6 +52,14 @@ export const SC13 = () => {
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC13);
   const lineP = ease(f, L(B13.roadmap), m.sec(LINE.draw));
+  const fadeOthers = 1 - ease(f, L(B13.zoom), m.sec(ZOOM.outSecs));
+  const zoom = ease(f, L(B13.zoom), m.sec(ZOOM.inSecs));
+  /** A label at its stem, moved by (dx, dy) and scaled about its top-left corner. */
+  const label = (s: (typeof STOPS)[number], text: number, dx: number, dy: number, scale: number) => (
+    <div key={`l${s.x}`} style={{ position: "absolute", left: s.x - ROAD.stemW / 2, top: labelTop(s), transformOrigin: "0 0", opacity: text, transform: `translate(${dx.toFixed(2)}px, ${(dy + (1 - text) * (s.up ? 10 : -10)).toFixed(2)}px) scale(${scale.toFixed(4)})`, fontFamily: theme.text.family, fontSize: ROAD.label, fontWeight: 600, lineHeight: ROAD.leading, color: c.ink, whiteSpace: "pre" }}>
+      {s.lines.join("\n")}
+    </div>
+  );
   /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
      so the cut is a move and not a jump (data/timing.ts: CUTS). */
   const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
@@ -64,35 +83,40 @@ export const SC13 = () => {
       <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} cx={theme.canvas.width / 2} y={LT_Y} />
         </div>
       ) : null}
-      {/* "Sebelum seperti sekarang", 300 px above the line, aligned left with the roadmap, half the size of the lower third's name */}
-      <Say text="Sebelum seperti sekarang" x={LINE.x0} y={LINE.y - ROAD.headAbove} at={L(B13.roadmap)} anchor="left" size={LOWER_THIRD_NAME / 2} weight={800} />
-      {/* the line draws on from its left dot; a dot closes it on the right */}
-      {f >= L(B13.roadmap) ? (
-        <>
-          <div style={{ position: "absolute", left: LINE.x0 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink }} />
-          <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - LINE.rule / 2, width: (LINE.x1 - LINE.x0) * lineP, height: LINE.rule, background: c.ink }} />
-          <div style={{ position: "absolute", left: LINE.x1 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink, opacity: ease(f, L(B13.roadmap) + m.sec(LINE.draw), m.fade) }} />
-        </>
+      {/* from 13568 everything but the last label — and the grid — fades out */}
+      {fadeOthers > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: fadeOthers }}>
+          {/* "Sebelum seperti sekarang", 300 px above the line, aligned left with the roadmap, half the size of the lower third's name */}
+          <Say text="Sebelum seperti sekarang" x={LINE.x0} y={LINE.y - ROAD.headAbove} at={L(B13.roadmap)} anchor="left" size={LOWER_THIRD_NAME / 2} weight={800} />
+          {/* the line draws on from its left dot; a dot closes it on the right */}
+          {f >= L(B13.roadmap) ? (
+            <>
+              <div style={{ position: "absolute", left: LINE.x0 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink }} />
+              <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - LINE.rule / 2, width: (LINE.x1 - LINE.x0) * lineP, height: LINE.rule, background: c.ink }} />
+              <div style={{ position: "absolute", left: LINE.x1 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink, opacity: ease(f, L(B13.roadmap) + m.sec(LINE.draw), m.fade) }} />
+            </>
+          ) : null}
+          {STOPS.map((s, i) => {
+            const at = L(B13.steps[i]);
+            const dot = ease(f, at, m.reveal);
+            if (dot <= 0.001) return null;
+            const stem = ease(f, at + m.sec(0.15), m.sec(0.3));
+            const text = ease(f, at + m.sec(0.3), m.reveal);
+            return (
+              <div key={s.x}>
+                <div style={{ position: "absolute", left: s.x - s.r, top: LINE.y - s.r, width: 2 * s.r, height: 2 * s.r, borderRadius: 99, background: c.ink, transform: `scale(${dot.toFixed(4)})` }} />
+                <div style={{ position: "absolute", left: s.x - ROAD.stemW / 2, top: s.up ? LINE.y - s.r - ROAD.stem : LINE.y + s.r, width: ROAD.stemW, height: ROAD.stem, background: c.ink, transformOrigin: s.up ? "bottom" : "top", transform: `scaleY(${stem.toFixed(4)})` }} />
+                {i < STOPS.length - 1 ? label(s, text, 0, 0, 1) : null}
+              </div>
+            );
+          })}
+        </div>
       ) : null}
-      {STOPS.map((s, i) => {
-        const at = L(B13.steps[i]);
-        const dot = ease(f, at, m.reveal);
-        if (dot <= 0.001) return null;
-        const stem = ease(f, at + m.sec(0.15), m.sec(0.3));
-        const text = ease(f, at + m.sec(0.3), m.reveal);
-        const edge = s.up ? LINE.y - s.r - ROAD.stem : LINE.y + s.r + ROAD.stem;
-        return (
-          <div key={s.x}>
-            <div style={{ position: "absolute", left: s.x - s.r, top: LINE.y - s.r, width: 2 * s.r, height: 2 * s.r, borderRadius: 99, background: c.ink, transform: `scale(${dot.toFixed(4)})` }} />
-            <div style={{ position: "absolute", left: s.x - ROAD.stemW / 2, top: s.up ? edge : LINE.y + s.r, width: ROAD.stemW, height: ROAD.stem, background: c.ink, transformOrigin: s.up ? "bottom" : "top", transform: `scaleY(${stem.toFixed(4)})` }} />
-            <div style={{ position: "absolute", left: s.x - ROAD.stemW / 2, ...(s.up ? { bottom: theme.canvas.height - edge } : { top: edge }), opacity: text, transform: `translateY(${((1 - text) * (s.up ? 10 : -10)).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: ROAD.label, fontWeight: 600, lineHeight: ROAD.leading, color: c.ink, whiteSpace: "pre" }}>
-              {s.lines.join("\n")}
-            </div>
-          </div>
-        );
-      })}
+      {/* the last label, kept as the rest goes: it zooms up to the far left, centred top to bottom */}
+      {ease(f, L(B13.steps[3]) + m.sec(0.3), m.reveal) > 0.001 ? label(STOPS[3], ease(f, L(B13.steps[3]) + m.sec(0.3), m.reveal), (ZOOM_TO.x - (STOPS[3].x - ROAD.stemW / 2)) * zoom, (ZOOM_TO.y - labelTop(STOPS[3])) * zoom, 1 + (ZOOM.scale - 1) * zoom) : null}
+      {/* UNTR.png, to its right */}
+      <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={UNTR_IMG.cx} y={theme.canvas.height / 2 + UNTR_IMG.h / 2} h={UNTR_IMG.h} at={L(B13.untr)} />
       </div>
-      <Node box={UNTR_AT} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={L(B13.untr)} size={40} />
     </Stage>
   );
 };
@@ -103,7 +127,7 @@ export const SC14 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC14);
-  /** The card, carried up from where SC13 left it. */
+  /** The card: SC13 no longer shows it, so it comes in at its old place and then lifts. */
   const lift = ease(f, 0, 40);
   const card = {
     x: UNTR_AT.x + (UNTR_TOP.x - UNTR_AT.x) * lift,
@@ -115,7 +139,7 @@ export const SC14 = () => {
   return (
     <Stage>
       <div style={{ opacity: 1 - 0.8 * dim }}>
-        <Node box={card} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={-60} size={40} />
+        <Node box={card} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={0} size={40} />
         <Pill label="Krisis 1998" x={500} y={470} at={L(B14.krisis)} tone="slate" size={42} />
         <Say text="± Rp250 / saham" x={500} y={570} at={L(B14.rp250)} size={60} weight={800} />
         <Link a={{ x: 700, y: 640 }} b={{ x: 1210, y: 470 }} at={L(B14.later)} tone="cyan" width={6} />
