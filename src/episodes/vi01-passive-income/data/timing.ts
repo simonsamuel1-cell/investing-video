@@ -434,6 +434,8 @@ export const SC13 = {
   foto: 12778,
   /** "12992 semua camera cut kecuali background garis kotaknya" — the portrait and the lower third leave on a camera cut; the grid stays. */
   cut: 12992,
+  /** "dari 13036, muncul roadmap/timeline" — the line draws; "Sebelum seperti sekarang" sits 300 px above it. */
+  roadmap: 13036,
   name: 12778, // "Lo Kheng Hong" — "Animasi text dan munculnya gambar lo kheng hong sebaiknya di 12778 aja" (earlier 12810; the VO says it at 12739)
   /** The four steps of the timeline, each on its word. */
   steps: [13181, 13286, 13350, 13453] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan

@@ -1393,6 +1393,8 @@ export const QuoteFrame = ({
 /** A frame that never comes — an interpolation cannot take Infinity. */
 const NEVER = 1_000_000;
 const LT = { name: 100, role: 30, gap: 14, step: 0.045, lead: 0.14, fill: 0.1, roleAt: 0.12, perChar: 0.03, stroke: 2.5, track: 3 };
+/** The lower third's name size, for any heading that must match it. */
+export const LOWER_THIRD_NAME = LT.name;
 export const LowerThird = ({ first, last, role, at, out, cx, y }: { first: string; last: string; role: string; at: number; out?: number; cx: number; y: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();

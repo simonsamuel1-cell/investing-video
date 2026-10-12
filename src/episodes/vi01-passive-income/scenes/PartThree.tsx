@@ -9,16 +9,18 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette } from "../../../core";
 import { BG_FADE, BLOCK, CARRY_CLEAR, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Cutout, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
-const LINE = { y: 560, x0: 200, x1: 1400 };
-const STOPS: { x: number; icon: IconName; lines: string[] }[] = [
-  { x: 280, icon: "building", lines: ["Pegawai bank"] },
-  { x: 620, icon: "jar", lines: ["Menabung"] },
-  { x: 960, icon: "book", lines: ["Belajar & baca", "laporan perusahaan"] },
-  { x: 1300, icon: "chart", lines: ["Mulai", "berinvestasi"] },
+const LINE = { y: 560, x0: 200, x1: 1400, rule: 3, end: 8, draw: 0.9 };
+/** The roadmap after Simon's reference: thin black line, dots of growing size on it, a stem to each label, the labels alternating below and above. */
+const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
+  { x: 320, r: 12, up: false, lines: ["1. Pegawai bank"] },
+  { x: 620, r: 17, up: true, lines: ["2. Menabung"] },
+  { x: 920, r: 23, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
+  { x: 1220, r: 31, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
+const ROAD = { stem: 80, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
 /** UNTR, where SC13 leaves it and where SC14 picks it up. */
 export const UNTR_AT: NodeBox = { x: 1450, y: 470, w: 380, h: 180 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
@@ -32,7 +34,7 @@ export const SC13 = () => {
   const c = usePalette();
   const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC13);
-  const reach = B13.steps.reduce((r, g, i) => Math.max(r, ease(f, L(g) - 10, 30) * (STOPS[i].x - LINE.x0)), 0);
+  const lineP = ease(f, L(B13.roadmap), m.sec(LINE.draw));
   /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
      so the cut is a move and not a jump (data/timing.ts: CUTS). */
   const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
@@ -56,26 +58,34 @@ export const SC13 = () => {
       <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} cx={theme.canvas.width / 2} y={LT_Y} />
         </div>
       ) : null}
-      {reach > 0.5 ? (
-        <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - 2, width: reach, height: 4, borderRadius: 4, background: c.indigo }} />
+      {/* "Sebelum seperti sekarang", 300 px above the line, aligned left with the roadmap, as large as the lower third's name */}
+      <Say text="Sebelum seperti sekarang" x={LINE.x0} y={LINE.y - ROAD.headAbove} at={L(B13.roadmap)} anchor="left" size={LOWER_THIRD_NAME} weight={800} />
+      {/* the line draws on from its left dot; a dot closes it on the right */}
+      {f >= L(B13.roadmap) ? (
+        <>
+          <div style={{ position: "absolute", left: LINE.x0 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink }} />
+          <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - LINE.rule / 2, width: (LINE.x1 - LINE.x0) * lineP, height: LINE.rule, background: c.ink }} />
+          <div style={{ position: "absolute", left: LINE.x1 - LINE.end / 2, top: LINE.y - LINE.end / 2, width: LINE.end, height: LINE.end, borderRadius: 99, background: c.ink, opacity: ease(f, L(B13.roadmap) + m.sec(LINE.draw), m.fade) }} />
+        </>
       ) : null}
       {STOPS.map((s, i) => {
         const at = L(B13.steps[i]);
-        const on = ease(f, at, 14);
-        if (on <= 0.001) return null;
+        const dot = ease(f, at, m.reveal);
+        if (dot <= 0.001) return null;
+        const stem = ease(f, at + m.sec(0.15), m.sec(0.3));
+        const text = ease(f, at + m.sec(0.3), m.reveal);
+        const edge = s.up ? LINE.y - s.r - ROAD.stem : LINE.y + s.r + ROAD.stem;
         return (
           <div key={s.x}>
-            <div style={{ position: "absolute", left: s.x - 18, top: LINE.y - 18, width: 36, height: 36, borderRadius: 99, background: c.indigo, opacity: on, transform: `scale(${0.6 + 0.4 * on})` }} />
-            <div style={{ position: "absolute", left: s.x - 34, top: LINE.y - 120, opacity: on }}>
-              <Icon name={s.icon} size={68} color={c.indigo} />
+            <div style={{ position: "absolute", left: s.x - s.r, top: LINE.y - s.r, width: 2 * s.r, height: 2 * s.r, borderRadius: 99, background: c.ink, transform: `scale(${dot.toFixed(4)})` }} />
+            <div style={{ position: "absolute", left: s.x - ROAD.stemW / 2, top: s.up ? edge : LINE.y + s.r, width: ROAD.stemW, height: ROAD.stem, background: c.ink, transformOrigin: s.up ? "bottom" : "top", transform: `scaleY(${stem.toFixed(4)})` }} />
+            <div style={{ position: "absolute", left: s.x - ROAD.stemW / 2, ...(s.up ? { bottom: theme.canvas.height - edge } : { top: edge }), opacity: text, transform: `translateY(${((1 - text) * (s.up ? 10 : -10)).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: ROAD.label, fontWeight: 600, lineHeight: ROAD.leading, color: c.ink, whiteSpace: "pre" }}>
+              {s.lines.join("\n")}
             </div>
-            {s.lines.map((t, k) => (
-              <Say key={t} text={t} x={s.x} y={LINE.y + 64 + k * 46} at={at} size={36} weight={700} />
-            ))}
           </div>
         );
       })}
-      <Link a={{ x: STOPS[3].x + 30, y: LINE.y }} b={nodeEdge(UNTR_AT, "l")} at={L(B13.untr) - 20} tone="cyan" />
+      <Link a={{ x: LINE.x1 + LINE.end, y: LINE.y }} b={nodeEdge(UNTR_AT, "l")} at={L(B13.untr) - 20} tone="cyan" />
       </div>
       <Node box={UNTR_AT} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={L(B13.untr)} size={40} />
     </Stage>
