@@ -10,7 +10,7 @@ import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
 import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
-import { QuizStatement } from "./ColdOpen";
+import { QuizStatement, quizLabelStyle } from "./ColdOpen";
 import { Cutout, DashBox, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, Worker, useLife } from "../components/kit";
 
 // ═══ SC16 — not running from work: keep the life ════════════════════════
@@ -240,7 +240,7 @@ export const SC17 = () => {
 const MAN18 = { src: "art/vi01/orang-tuntun-4.png", w: 941, h: 1672, ink: { x0: 160, x1: 927, y0: 89 }, belly: 820, top: 250, floor: 850, foot: 0.28, gap: 70, mascotY: 70, mascotH: 130 };
 const MAN18_K = (MAN18.floor - MAN18.top) / (MAN18.belly - MAN18.ink.y0);
 const MAN18_W = (MAN18.ink.x1 - MAN18.ink.x0) * MAN18_K;
-const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, size: 72, box: 48, pad: 30, padX: 46, rows: [{ y: 400, label: "Kerja", sum: "Tenaga + waktu = Income" }, { y: 640, label: "Investasi", sum: "Uang + waktu = Passive income" }], boxDy: 48, rise: 22 };
+const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, box: 48, pad: 30, padX: 46, rows: [{ y: 400, label: "Kerja", sum: "Tenaga + waktu = Income" }, { y: 640, label: "Investasi", sum: "Uang + waktu = Passive income" }], boxDy: 56, rise: 22 };
 const CARD_RADIUS_18 = theme.shape.cardRadius;
 const CARD = { x: 560, y: 360, w: 1180, h: 330, size: 54, lead: 76 };
 const LINES = ["Dari sekadar pekerja,", "menjadi pekerja yang juga punya aset."];
@@ -283,7 +283,8 @@ export const SC18 = () => {
             const pBox = ease(f, boxAt[i], m.reveal);
             return (
               <div key={row.label}>
-                <Say text={row.label} x={TEXT18.x} y={row.y} at={labelAt[i]} anchor="left" size={TEXT18.size} weight={800} color={c.indigo} />
+                {/* "Kerja dan Investasi; sizenya samain dengan 'Setiap kali income masuk…'" — the quiz label's type, whole */}
+                <div style={{ position: "absolute", left: TEXT18.x, top: row.y, opacity: ease(f, labelAt[i], m.reveal), transform: `translateY(${((1 - ease(f, labelAt[i], m.reveal)) * 14).toFixed(2)}px)`, lineHeight: 1, ...quizLabelStyle(c) }}>{row.label}</div>
                 {pBox > 0.001 ? (
                   <div style={{ position: "absolute", left: TEXT18.x, top: row.y + TEXT18.boxDy, padding: `${TEXT18.pad}px ${TEXT18.padX}px`, borderRadius: CARD_RADIUS_18, background: c.cardBg, boxShadow: shadow.soft, opacity: pBox, transform: `translateY(${((1 - pBox) * TEXT18.rise).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: TEXT18.box, fontWeight: 700, color: c.ink, whiteSpace: "nowrap" }}>
                     {row.sum}
