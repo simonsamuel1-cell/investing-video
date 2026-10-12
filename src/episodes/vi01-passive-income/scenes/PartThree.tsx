@@ -176,17 +176,15 @@ export const SC14 = () => {
   const untrH = (UNTR_PX.ink.y1 - UNTR_PX.ink.y0) * k;
   /* the exchange: the coin goes over the top, the document comes back underneath */
   const q = ease(f, L(B14.swap), m.sec(1.4));
-  /* the document lands at his hand; the coin starts exactly behind his picture */
-  const from = { x: G14.lkhX + G14.wL / 2 - P14.hand, y: P14.rowCy };
-  const coinFrom = { x: G14.lkhX, y: P14.rowCy };
-  const to = { x: G14.untrX - G14.w1 / 2 + P14.hand, y: P14.rowCy };
+  /* both icons live BEHIND both pictures: the coin leaves from behind Lo Kheng Hong and goes behind UNTR, the document the other way */
+  const lkh = { x: G14.lkhX, y: P14.rowCy };
+  const untr = { x: G14.untrX, y: P14.rowCy };
   const bez = (a: { x: number; y: number }, b: { x: number; y: number }, bend: number, t: number) => {
     const cx = (a.x + b.x) / 2;
     const cy = (a.y + b.y) / 2 + bend;
     const u = 1 - t;
     return { x: u * u * a.x + 2 * u * t * cx + t * t * b.x, y: u * u * a.y + 2 * u * t * cy + t * t * b.y };
   };
-  const swapOpacity = Math.min(1, q * 6, (1 - q) * 6);
   /* "kasih jejak": a dashed trail drawn behind each, left in place a moment after they arrive */
   const trailOpacity = 1 - ease(f, L(B14.swap) + m.sec(1.4) + m.sec(0.4), m.sec(P14.trailFade));
   const trail = (a: { x: number; y: number }, b: { x: number; y: number }, bend: number) =>
@@ -195,9 +193,8 @@ export const SC14 = () => {
       const u = bez(a, b, bend, t);
       return `${i === 0 ? "M" : "L"} ${u.x.toFixed(1)} ${u.y.toFixed(1)}`;
     }).join(" ");
-  const coin = bez(coinFrom, to, -P14.arc * 2, q);
-  const coinOpacity = Math.min(1, (1 - q) * 6);
-  const doc = bez(to, from, P14.arc * 2, q);
+  const coin = bez(lkh, untr, -P14.arc * 2, q);
+  const doc = bez(untr, lkh, P14.arc * 2, q);
   /* the roadmap */
   const x0 = theme.margin.left;
   const x1 = theme.canvas.width - theme.margin.right;
@@ -219,16 +216,22 @@ export const SC14 = () => {
             {STOPS[3].lines.join("\n")}
           </div>
         ) : null}
-        {/* the coin, and its trail, start behind Lo Kheng Hong's picture and come out from it */}
+        {/* the coin and the document, each leaving a dashed trail — all of it behind both pictures */}
         {q > 0.001 && trailOpacity > 0.001 ? (
           <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: trailOpacity }}>
-            <path d={trail(coinFrom, to, -P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
+            <path d={trail(lkh, untr, -P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
+            <path d={trail(untr, lkh, P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
           </svg>
         ) : null}
         {q > 0.001 && q < 0.999 ? (
-          <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink, opacity: coinOpacity }}>
-            Rp
-          </div>
+          <>
+            <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink }}>
+              Rp
+            </div>
+            <div style={{ position: "absolute", left: doc.x - P14.doc / 2, top: doc.y - P14.doc / 2 }}>
+              <Icon name="doc" size={P14.doc} color={c.indigo} stroke={2.6} fill={theme.color.indigoWash} />
+            </div>
+          </>
         ) : null}
         {/* Lo Kheng Hong, on the left of UNTR at its height, his name beneath him; the foot of the portrait fades */}
         <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)`, maskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)` }}>
@@ -238,19 +241,6 @@ export const SC14 = () => {
         {/* UNTR.png: from SC13's size to half, then to the left */}
         <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={vx + (UNTR_PX.w / 2 - UNTR_C.ix) * k} y={vy + (UNTR_PX.h - UNTR_C.iy) * k} h={UNTR_PX.h * k} at={-m.sec(2)} rise={0} />
         <Say text="UNTR = Rp 250" x={vx} y={vy + untrH / 2 + P14.below} at={L(B14.label)} size={48} weight={800} />
-        {/* the coin and the document, each leaving a dashed trail */}
-        {q > 0.001 && trailOpacity > 0.001 ? (
-          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: trailOpacity }}>
-            <path d={trail(to, from, P14.arc * 2)} fill="none" stroke={c.indigo} strokeWidth={P14.trail} strokeLinecap="round" strokeDasharray={P14.dash} />
-          </svg>
-        ) : null}
-        {q > 0.001 && q < 0.999 ? (
-          <>
-            <div style={{ position: "absolute", left: doc.x - P14.doc / 2, top: doc.y - P14.doc / 2, opacity: swapOpacity }}>
-              <Icon name="doc" size={P14.doc} color={c.indigo} stroke={2.6} fill={theme.color.indigoWash} />
-            </div>
-          </>
-        ) : null}
         {/* the roadmap: the line draws on, the dots come up one by one to its right end; the third from the right carries the price */}
         {f >= L(B14.shift) + m.move ? (
           <>
