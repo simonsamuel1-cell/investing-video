@@ -7,7 +7,8 @@
  *
  * ⚠ THE BGM IS UNTOUCHABLE. Simon: "Jangan ganggu gugat BGM sama sekali, kalau pun suatu saat aku bilang
  * 'ubah semua', BGM tidak boleh disentuh. Termasuk Logo juga." public/essentials/BGM.mp3 is a byte-for-byte
- * copy of Documents/01 Academy/Essentials/BGM.MP3: no trim, no gain, no fade, no loop, no ducking, no
+ * copy of Documents/01 Academy/Essentials/BGM(1).MP3 (Simon's updated BGM, 2026-10-12; 494 s — the video is shorter,
+ * so it simply stops where the video does, "nanti potong aja"): no trim, no gain, no fade, no loop, no ducking, no
  * re-encode, one <Audio> from frame 0 at full volume. The Logo (core Watermark) is left as it is as well.
  */
 import { AbsoluteFill, Audio, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
