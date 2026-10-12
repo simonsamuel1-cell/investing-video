@@ -319,10 +319,10 @@ const Badge = ({ mark, fill, p }: { mark: "x" | "check"; fill: string; p: number
 };
 /**
  * "Myth or Fact" layout: a title, then two stacked boxes, each with a badge on its top-left corner. The
- * title is set exactly as "Tanya juga" is (ColdOpen's quiz label); the pair of boxes is 90% of its size,
+ * title is set exactly as "Tanya juga" is (ColdOpen's quiz label); the pair of boxes is 75% of its size ("kedua kotaknya coba kecilin" after 90%),
  * hung from its top edge.
  */
-const MF = { w: 1200, h: 250, gap: 60, titleY: 190, top: 270, text: 50, rise: 24, scale: 0.9 };
+const MF = { w: 1200, h: 250, gap: 60, titleY: 190, top: 270, text: 50, rise: 24, scale: 0.75 };
 
 export const SC15 = () => {
   const f = useCurrentFrame();
