@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette } from "../../../core";
 import { BG_FADE, BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 const LINE = { y: 560, x0: 200, x1: 1400 };
@@ -21,11 +21,14 @@ const STOPS: { x: number; icon: IconName; lines: string[] }[] = [
 ];
 /** UNTR, where SC13 leaves it and where SC14 picks it up. */
 export const UNTR_AT: NodeBox = { x: 1450, y: 470, w: 380, h: 180 };
+/** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
+const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 330, rise: 160 };
 const UNTR_TOP: NodeBox = { x: 770, y: 160, w: 380, h: 180 };
 
 export const SC13 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
+  const m = useMotion();
   const L = (g: number) => local(g, BLOCK.SC13);
   const reach = B13.steps.reduce((r, g, i) => Math.max(r, ease(f, L(g) - 10, 30) * (STOPS[i].x - LINE.x0)), 0);
   /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
@@ -40,6 +43,10 @@ export const SC13 = () => {
         <GridGround f={f + BLOCK.SC13} paper={c.bg} />
       </div>
       <div style={{ position: "absolute", inset: 0, opacity: clear }}>
+      {/* he rises from behind the subtitle band, a beat after his name */}
+      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+        <Cutout src={FOTO.src} aspect={FOTO.aspect} x={theme.canvas.width / 2} y={theme.captionBand.top} h={theme.captionBand.top - FOTO.top} at={L(B13.foto)} rise={FOTO.rise} riseFrames={m.move} />
+      </div>
       <Say text="Lo Kheng Hong" x={960} y={190} at={L(B13.name)} size={76} weight={800} />
       <Say text="nggak langsung mulai sebagai investor besar" x={960} y={270} at={L(B13.name) + 60} size={38} weight={600} color={c.slate} />
       {reach > 0.5 ? (
