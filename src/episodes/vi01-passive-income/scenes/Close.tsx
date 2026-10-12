@@ -237,10 +237,10 @@ export const SC17 = () => {
  * and on his right, in turn, "Kerja" (indigo) over a white rounded box "Tenaga + waktu = Income", then
  * "Investasi" over "Uang + waktu = Passive income".
  */
-const MAN18 = { src: "art/vi01/orang-tuntun-4.png", w: 941, h: 1672, ink: { x0: 160, x1: 927, y0: 89 }, belly: 820, top: 250, floor: 850, foot: 0.28, gap: 70, mascotY: 70, mascotH: 130 };
+const MAN18 = { src: "art/vi01/orang-tuntun-4.png", w: 941, h: 1672, ink: { x0: 160, x1: 927, y0: 89 }, belly: 820, top: 250, floor: 850, foot: 0.28, gap: 70, mascotY: 120, mascotH: 130 };
 const MAN18_K = (MAN18.floor - MAN18.top) / (MAN18.belly - MAN18.ink.y0);
 const MAN18_W = (MAN18.ink.x1 - MAN18.ink.x0) * MAN18_K;
-const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, box: 48, pad: 30, padX: 46, rows: [{ y: 400, label: "Kerja", sum: "Tenaga + waktu = Income" }, { y: 640, label: "Investasi", sum: "Uang + waktu = Passive income" }], boxDy: 56, rise: 22 };
+const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, box: 48, pad: 30, padX: 46, rows: [{ y: 350, label: "Kerja", words: ["Tenaga", "+ waktu", "= Income"] }, { y: 590, label: "Investasi", words: ["Uang", "+ waktu", "= Passive income"] }], boxDy: 56, rise: 22 };
 const CARD_RADIUS_18 = theme.shape.cardRadius;
 const CARD = { x: 560, y: 360, w: 1180, h: 330, size: 54, lead: 76 };
 const LINES = ["Dari sekadar pekerja,", "menjadi pekerja yang juga punya aset."];
@@ -258,7 +258,7 @@ export const SC18 = () => {
   const gone = ease(f, rulesOut, m.fade);
   /** "Kerja" / "Investasi" come first, their boxes on the words that say what they are. */
   const labelAt = [L(B18.kerja) - 30, L(B18.investasi)];
-  const boxAt = [L(B18.kerja), L(B18.bekerja)];
+  const sumAt = B18.sums.map((row) => row.map(L));
   const bob = Math.sin(((g - B18.mascot) / 240) * Math.PI * 2) * 10;
   return (
     <Stage transparent={f < HANDOFF_FADE}>
@@ -280,14 +280,23 @@ export const SC18 = () => {
           </div>
           {/* the two rules, one after the other, on his right */}
           {TEXT18.rows.map((row, i) => {
-            const pBox = ease(f, boxAt[i], m.reveal);
+            const pBox = ease(f, sumAt[i][0], m.reveal);
             return (
               <div key={row.label}>
                 {/* "Kerja dan Investasi; sizenya samain dengan 'Setiap kali income masuk…'" — the quiz label's type, whole */}
                 <div style={{ position: "absolute", left: TEXT18.x, top: row.y, opacity: ease(f, labelAt[i], m.reveal), transform: `translateY(${((1 - ease(f, labelAt[i], m.reveal)) * 14).toFixed(2)}px)`, lineHeight: 1, ...quizLabelStyle(c) }}>{row.label}</div>
                 {pBox > 0.001 ? (
                   <div style={{ position: "absolute", left: TEXT18.x, top: row.y + TEXT18.boxDy, padding: `${TEXT18.pad}px ${TEXT18.padX}px`, borderRadius: CARD_RADIUS_18, background: c.cardBg, boxShadow: shadow.soft, opacity: pBox, transform: `translateY(${((1 - pBox) * TEXT18.rise).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: TEXT18.box, fontWeight: 700, color: c.ink, whiteSpace: "nowrap" }}>
-                    {row.sum}
+                    {/* the words come one after another, the box already as wide as the whole sum */}
+                    {row.words.map((word, k) => {
+                      const w = ease(f, sumAt[i][k], m.reveal);
+                      return (
+                        <span key={word} style={{ opacity: w, transform: `translateY(${((1 - w) * 10).toFixed(2)}px)`, display: "inline-block", whiteSpace: "pre" }}>
+                          {k > 0 ? " " : ""}
+                          {word}
+                        </span>
+                      );
+                    })}
                   </div>
                 ) : null}
               </div>

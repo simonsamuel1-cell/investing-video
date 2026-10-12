@@ -540,6 +540,8 @@ export const SC18 = {
    */
   mascot: 18261,
   man: 18281,
+  /** Simon, in Studio frames − 240: "18643 Tenaga, 18675 Waktu, 18743 Income" and "18934 Uang, 19019 Waktu, 19084 Passive income". */
+  sums: [[18403, 18435, 18503], [18694, 18779, 18844]] as const,
   kerja: 18339, // "kerja berarti kita menggunakan waktu …"
   investasi: 18565, // "Sedangkan investasi,"
   bekerja: 18803, // "ikut bekerja untuk masa depan."
