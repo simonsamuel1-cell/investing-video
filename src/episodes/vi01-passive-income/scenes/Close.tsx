@@ -132,10 +132,11 @@ export const SC16 = () => {
 };
 
 // ═══ SC17 — growing together; the question to ask every payday ═══════════
-const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: number }[] = [
-  { label: "Kemampuan", tone: "indigo", from: 130, to: 330 },
-  { label: "Income", tone: "indigo", from: 150, to: 380 },
-  { label: "Aset", tone: "cyan", from: 50, to: 300 },
+/** `label` is each row's words at the start, `grown` its words once its bar has grown. */
+const GROW_BARS: { label: string; grown: string; tone: "indigo" | "cyan"; from: number; to: number }[] = [
+  { label: "Kemampuan: staff entry level", grown: "Kemampuan: manager", tone: "indigo", from: 130, to: 330 },
+  { label: "Income: Rp 5,000,000", grown: "Income: Rp 15,000,000", tone: "indigo", from: 150, to: 380 },
+  { label: "Aset: Rp 2,000,000", grown: "Aset: Rp 10,000,000", tone: "cyan", from: 50, to: 300 },
 ];
 /**
  * The three bars as progress-bar UI, after Simon's second picture: one white card, each row a label over a
@@ -144,7 +145,7 @@ const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: num
  */
 const PROG_W = 900;
 const PROG_SCALE = 0.8;
-const PROG_ROWS = { pad: 48, row: 160, label: 38, bar: 56, gap: 16 };
+const PROG_ROWS = { pad: 48, row: 176, label: 38, bar: 56, gap: 34 };
 /** The card's own height, before the 80%. */
 const PROG_H = 2 * PROG_ROWS.pad + 2 * PROG_ROWS.row + PROG_ROWS.label + PROG_ROWS.gap + PROG_ROWS.bar;
 /** "UI nya buat tengah vertikal juga": the scaled card sits at the middle of the canvas, top to bottom; the title is 50 px above it. */
@@ -175,6 +176,7 @@ export const SC17 = () => {
           <div style={{ position: "absolute", left: PROG.x, top: PROG.y, width: PROG.w, height: 2 * PROG.pad + 2 * PROG.row + PROG.label + PROG.gap + PROG.bar, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, opacity: card }} />
           {GROW_BARS.map((b, i) => {
             const grown = b.from + (b.to - b.from) * ease(f, L(B17.grow[i]), m.sec(PROG.growSecs));
+            const swapped = ease(f, L(B17.grow[i]), m.fade);
             const p = grown / PROG.full;
             const inner = PROG.w - 2 * PROG.pad;
             const rowTop = PROG.y + PROG.pad + i * PROG.row;
@@ -184,7 +186,10 @@ export const SC17 = () => {
             const from = b.tone === "indigo" ? c.indigoSoft : theme.color.hlCyan;
             return (
               <div key={b.label}>
-                <div style={{ position: "absolute", left: PROG.x + PROG.pad, top: rowTop, fontFamily: theme.text.family, fontSize: PROG.label, fontWeight: 700, color: tone, lineHeight: 1, opacity: card }}>{b.label}</div>
+                {/* the row's words: as they are, then — as its bar grows — as they become */}
+                {[b.label, b.grown].map((text, k) => (
+                  <div key={text} style={{ position: "absolute", left: PROG.x + PROG.pad, top: rowTop, fontFamily: theme.text.family, fontSize: PROG.label, fontWeight: 700, color: tone, lineHeight: 1, whiteSpace: "nowrap", opacity: card * (k === 0 ? 1 - swapped : swapped) }}>{text}</div>
+                ))}
                 {/* the ticks beyond the fill, the fill, and the handle at its end */}
                 <div style={{ position: "absolute", left: PROG.x + PROG.pad, top: barTop, width: inner, height: PROG.bar, opacity: card, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   {Array.from({ length: PROG.ticks }, (_, k) => (
