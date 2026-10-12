@@ -336,18 +336,18 @@ export const SC15 = () => {
   const gone = ease(f, L(B15.steps[0]) - m.fade, m.fade);
   const title = ease(f, L(B15.bukan), m.reveal);
   /** One box: it comes up, its words after, its badge at `badgeAt`; `mute` (0→1) greys the box and its words. */
-  const box = (i: number, at: number, textAt: number, badgeAt: number, fill: string, mark: "x" | "check", badge: string, words: string, mute: number) => {
+  const box = (i: number, at: number, textAt: number, badgeAt: number, fill: string, mark: "x" | "check", badge: string, words: string, mute: number, type: { ink: string; weight: number; italic: boolean }) => {
     const p = ease(f, at, m.reveal);
     const t = ease(f, textAt, m.reveal);
     const b = ease(f, badgeAt, m.reveal);
     if (p <= 0.001) return null;
     return (
       <div key={i}>
-        <div style={{ position: "absolute", left: x, top: boxTop(i), width: MF.w, height: MF.h, opacity: p, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)`, background: fill, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MF.text, fontWeight: 700, textAlign: "center", padding: "0 80px", boxSizing: "border-box" }}>
+        <div style={{ position: "absolute", left: x, top: boxTop(i), width: MF.w, height: MF.h, opacity: p, transform: `translateY(${((1 - p) * MF.rise).toFixed(2)}px)`, background: fill, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MF.text, fontWeight: type.weight, fontStyle: type.italic ? "italic" : "normal", textAlign: "center", padding: "0 80px", boxSizing: "border-box" }}>
           {/* the grey it turns to, over the box and under the words */}
           <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, background: c.border, opacity: mute }} />
           <span style={{ position: "relative", opacity: t, transform: `translateY(${((1 - t) * 12).toFixed(2)}px)` }}>
-            <span style={{ color: c.ink, opacity: 1 - mute }}>{words}</span>
+            <span style={{ color: type.ink, opacity: 1 - mute }}>{words}</span>
             <span style={{ position: "absolute", left: 0, top: 0, width: "100%", color: c.muted, opacity: mute }}>{words}</span>
           </span>
         </div>
@@ -368,8 +368,8 @@ export const SC15 = () => {
         {/* "yang menarik adalah", in the type of "Tanya juga" */}
         <div style={{ position: "absolute", left: 0, right: 0, top: MF.titleY, textAlign: "center", opacity: title, transform: `translateY(${((1 - title) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>yang menarik adalah</div>
         <div style={{ position: "absolute", inset: 0, transformOrigin: `50% ${MF.top}px`, transform: `scale(${MF.scale})` }}>
-          {box(0, L(B15.box1), L(B15.quote), xAt, c.cardBg, "x", theme.color.calendarRed, "“Cari saham yang bisa naik berkali-kali”", mute1)}
-          {box(1, L(B15.box2), L(B15.strike), L(B15.box2), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang penting prosesnya", 0)}
+          {box(0, L(B15.box1), L(B15.quote), xAt, c.cardBg, "x", theme.color.calendarRed, "Cari saham yang bisa naik berkali-kali", mute1, { ink: c.ink, weight: 400, italic: true })}
+          {box(1, L(B15.box2), L(B15.strike), L(B15.box2), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang penting prosesnya", 0, { ink: theme.color.checkGreenInk, weight: 700, italic: false })}
         </div>
       </div>
       {STEPS.map((s, i) => (

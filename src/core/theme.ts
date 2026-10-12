@@ -378,6 +378,8 @@ export const theme = {
     gainGreen: "#22B573",
     /** VI01 SC15, Simon's "Myth or Fact" layout: the second box, the one with the tick — a light wash of `checkGreen`, nothing else. */
     checkGreenWash: "rgba(34, 181, 115, 0.2)",
+    /** VI01 SC15, "hijau gelap agak 30% mute": the words in the second box — a dark green with 30% of the slate grey mixed in. */
+    checkGreenInk: "#2B573E",
     /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
     sunYellow: "#F7C948",
     slateWash: "rgba(98, 98, 102, 0.08)",
