@@ -1380,3 +1380,54 @@ export const QuoteFrame = ({
     </div>
   );
 };
+
+// ═══ LowerThird ═══════════════════════════════════════════════════════════
+/**
+ * A lower third after Simon's reference (LowerThirds.mp4, 13–17 s): the name
+ * in two sizes — the first part small, the last part large, heavy, tight — and
+ * a line of small capitals under it. Every letter arrives as an OUTLINE, a few
+ * letters ahead of its own fill, left to right; the role types on beside it.
+ * It leaves the same way backwards: fill → outline → gone, right to left, the
+ * role erased from its end. Centred on `cx`, its top at `y`.
+ */
+const LT = { first: 56, last: 128, role: 30, gap: 14, join: 14, step: 0.045, lead: 0.14, fill: 0.1, roleAt: 0.12, perChar: 0.03, stroke: 2.5, track: 3 };
+export const LowerThird = ({ first, last, role, at, out, cx, y }: { first: string; last: string; role: string; at: number; out?: number; cx: number; y: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const letters = [...first.split("").map((ch) => ({ ch, big: false })), ...last.split("").map((ch) => ({ ch, big: true }))];
+  const N = letters.length;
+  const roleChars = role.split("");
+  const life = (i: number) => {
+    const inAt = at + m.sec(LT.step) * i;
+    const outAt = (out ?? Infinity) + m.sec(LT.step) * (N - 1 - i);
+    const line = ease(f, inAt, m.sec(LT.lead)) * (1 - ease(f, outAt + m.sec(LT.lead), m.sec(LT.lead)));
+    const fill = ease(f, inAt + m.sec(LT.lead), m.sec(LT.fill)) * (1 - ease(f, outAt, m.sec(LT.fill)));
+    return { line, fill };
+  };
+  const roleOpacity = (k: number) =>
+    ease(f, at + m.sec(LT.roleAt) + m.sec(LT.perChar) * k, m.sec(LT.perChar)) * (1 - ease(f, (out ?? Infinity) + m.sec(LT.perChar) * (roleChars.length - 1 - k), m.sec(LT.perChar)));
+  const letter = (l: { ch: string; big: boolean }, i: number) => {
+    const { line, fill } = life(i);
+    const size = l.big ? LT.last : LT.first;
+    const base: React.CSSProperties = { fontFamily: theme.text.family, fontSize: size, fontWeight: 800, letterSpacing: l.big ? -size * 0.02 : 0, lineHeight: 1, whiteSpace: "pre" };
+    return (
+      <span key={i} style={{ position: "relative", display: "inline-block", marginLeft: l.big && i === first.length ? LT.join : 0 }}>
+        <span style={{ ...base, color: "transparent", WebkitTextStroke: `${LT.stroke}px ${c.ink}`, opacity: line }}>{l.ch}</span>
+        <span style={{ ...base, position: "absolute", left: 0, top: 0, color: c.ink, opacity: fill }}>{l.ch}</span>
+      </span>
+    );
+  };
+  return (
+    <div style={{ position: "absolute", left: 0, top: y, width: theme.canvas.width, display: "flex", flexDirection: "column", alignItems: "center", gap: LT.gap, transform: `translateX(${cx - theme.canvas.width / 2}px)` }}>
+      <div style={{ display: "flex", alignItems: "baseline" }}>{letters.map(letter)}</div>
+      <div style={{ display: "flex", fontFamily: theme.text.family, fontSize: LT.role, fontWeight: 700, letterSpacing: LT.track, color: c.slate, whiteSpace: "pre", lineHeight: 1 }}>
+        {roleChars.map((ch, k) => (
+          <span key={k} style={{ opacity: roleOpacity(k) }}>
+            {ch.toUpperCase()}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+};

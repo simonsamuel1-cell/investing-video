@@ -9,7 +9,7 @@
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette } from "../../../core";
 import { BG_FADE, BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Cutout, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 const LINE = { y: 560, x0: 200, x1: 1400 };
@@ -22,7 +22,9 @@ const STOPS: { x: number; icon: IconName; lines: string[] }[] = [
 /** UNTR, where SC13 leaves it and where SC14 picks it up. */
 export const UNTR_AT: NodeBox = { x: 1450, y: 470, w: 380, h: 180 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
-const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 330, rise: 160 };
+const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
+/** The lower third: bottom centre, its foot above the subtitle band. */
+const LT_Y = theme.captionBand.top - 80 - 170;
 const UNTR_TOP: NodeBox = { x: 770, y: 160, w: 380, h: 180 };
 
 export const SC13 = () => {
@@ -43,12 +45,12 @@ export const SC13 = () => {
         <GridGround f={f + BLOCK.SC13} paper={c.bg} />
       </div>
       <div style={{ position: "absolute", inset: 0, opacity: clear }}>
-      {/* he rises from behind the subtitle band, a beat after his name */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <Cutout src={FOTO.src} aspect={FOTO.aspect} x={theme.canvas.width / 2} y={theme.captionBand.top} h={theme.captionBand.top - FOTO.top} at={L(B13.foto)} rise={FOTO.rise} riseFrames={m.move} />
+      {/* his portrait, rising a beat after the lower third; its foot fades out so the lower third sits under it */}
+      <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${FOTO.solid}%, transparent 100%)`, maskImage: `linear-gradient(to bottom, black ${FOTO.solid}%, transparent 100%)`, WebkitMaskSize: `100% ${FOTO.top + FOTO.h}px`, maskSize: `100% ${FOTO.top + FOTO.h}px`, WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }}>
+        <Cutout src={FOTO.src} aspect={FOTO.aspect} x={theme.canvas.width / 2} y={FOTO.top + FOTO.h} h={FOTO.h} at={L(B13.foto)} rise={FOTO.rise} riseFrames={m.move} />
       </div>
-      <Say text="Lo Kheng Hong" x={960} y={190} at={L(B13.name)} size={76} weight={800} />
-      <Say text="nggak langsung mulai sebagai investor besar" x={960} y={270} at={L(B13.name) + 60} size={38} weight={600} color={c.slate} />
+      {/* the lower third — "Lo Kheng Hong / Warren Buffet-nya Indonesia", bottom centre, in the reference's letter-by-letter move */}
+      <LowerThird first="Lo Kheng " last="Hong" role="Warren Buffet-nya Indonesia" at={L(B13.name)} out={L(B13.ltOut)} cx={theme.canvas.width / 2} y={LT_Y} />
       {reach > 0.5 ? (
         <div style={{ position: "absolute", left: LINE.x0, top: LINE.y - 2, width: reach, height: 4, borderRadius: 4, background: c.indigo }} />
       ) : null}
