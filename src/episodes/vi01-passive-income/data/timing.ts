@@ -50,8 +50,8 @@ export const BLOCK = {
   SC09: 8772, SC10: 9779, SC11: 10835, SC12: 11921,
   SC13: 12728, SC14: 13864, SC15: 15134,
   SC16: 16173, SC17: 17049, SC18: 18261,
-  /** The VO's last word ends on f19249; 206 frames hold the closing card. */
-  END: 19455,
+  /** The VO's last word ends on f19249; 106 frames hold the closing card ("potong 100 frame" off the 206 it held). */
+  END: 19355,
 } as const;
 
 /** The last frame of speech, for the guard in Composition.tsx. */

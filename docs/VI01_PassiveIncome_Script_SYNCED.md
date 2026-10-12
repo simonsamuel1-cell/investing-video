@@ -3,7 +3,7 @@
 
 **Source of timing:** `INV01 - Main VO.srt` (Premiere STT) → `assets/VI01_PassiveIncome_Sub_CORRECTED.srt`
 **VO file:** `INV01 - Main VO.MP3` → `public/vo/passive-income.mp3` — durasi audio **320.906 s (05:20.905)**
-**VO length (SRT):** kata terakhir keluar 05:20.815 · **f19249 @ 60 fps** · comp length **19,455 f (05:24.250)** — 206 f / 3.4 s tail untuk menahan quote penutup
+**VO length (SRT):** kata terakhir keluar 05:20.815 · **f19249 @ 60 fps** · comp length **19,355 f (05:22.583)** — 106 f / 1.8 s tail untuk menahan quote penutup
 **Episode folder:** `src/episodes/vi01-passive-income/` · composition **`VI01-PassiveIncome`** · fps **60**
 **Original script estimate:** 04:10 → rekaman nyata **05:20.8 (termasuk jeda 0,5 s + 0,5 s + 0,33 s + 0,33 s + 0,32 s + 0,5 s + 0,33 s + 0,33 s dan dua rekaman ulang yang lebih panjang), +70.5 s lebih panjang.** Semua timestamp di script asli mati; pakai hanya tabel di bawah. Script dengan timing baru: `docs/VI01_PassiveIncome_Script_RETIMED.txt`.
 
@@ -58,7 +58,7 @@ Semua angka di dokumen ini sudah termasuk jeda itu. VO dibangun ulang dari file 
 | SC15 | 15134 – 16173 | 04:12.232 – 04:29.549 | 17.32 s | 04:12.315 – 04:29.382 | 69–72 | 03 |
 | SC16 | 16173 – 17049 | 04:29.549 – 04:44.149 | 14.60 s | 04:29.715 – 04:43.815 | 73–75 | close |
 | SC17 | 17049 – 18261 | 04:44.149 – 05:04.349 | 20.20 s | 04:44.482 – 05:04.249 | 76–82 | close |
-| SC18 | 18261 – 19455 | 05:04.349 – 05:24.249 | 19.90 s | 05:04.449 – 05:20.815 | 83–86 | close |
+| SC18 | 18261 – 19355 | 05:04.349 – 05:22.583 | 18.23 s | 05:04.449 – 05:20.815 | 83–86 | close |
 
 **Tidak ada batas scene yang jatuh di tengah cue.** Join tersempit: **SC06 → SC07, 0.10 s** udara — potong keras di kata, tanpa transisi. Keheningan terpanjang di seluruh rekaman di batas scene hanya **0.67 s** (SC16 → SC17).
 
@@ -472,7 +472,7 @@ f17509: dua pilar — **Kerja** (indigo) dan **Aset** (cyan) — menopang satu a
 f17883: kotak garis-putus TA07 diketik — **“Berapa yang bisa aku sisihkan untuk mulai punya aset?”**, **mulai punya aset** ber-tint cyan.
 Akhiri: pertanyaan itu, menyala.
 
-### SCENE 18 — f18321–19455 · 05:04.349–05:24.249 · **19.90 s**
+### SCENE 18 — f18321–19355 · 05:04.349–05:22.583 · **18.23 s**
 **NARRATION** (VO 05:04.449–05:20.815)
 Karena pada akhirnya, kerja berarti kita menggunakan waktu untuk menghasilkan uang.
 Sedangkan investasi, membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan.
