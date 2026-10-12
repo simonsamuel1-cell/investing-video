@@ -582,5 +582,7 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC17, axis: "x" },
   { at: BLOCK.SC18, axis: "x" },
 ];
+/** "background dan garis kotak nya fade in": SC13's grid ground fades in over SC12's last picture, which stays under it this long. */
+export const BG_FADE = 40;
 /** How long SC13 takes to clear around the carried card before the cut. */
 export const CARRY_CLEAR = 30;

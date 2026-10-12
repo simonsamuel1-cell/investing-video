@@ -12,7 +12,7 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { loadFont as loadVibes } from "@remotion/google-fonts/GreatVibes";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK, CUT, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
+import { BG_FADE, BLOCK, CUT, SC09 as B9, SC10 as B10, SC11 as B11, SC12 as B12, local } from "../data/timing";
 import { BAL, BigBalance, rp, swellAt } from "./PartOne";
 import { Cutout, OUTSIDE_RESERVES, ease, Icon, Say, TypeBox, useLife } from "../components/kit";
 
@@ -576,6 +576,8 @@ export const SC11 = () => {
   const headY = TUNTUN3.from + (HEAD11.y - TUNTUN3.from) * shift;
   return (
     <Stage transparent={f >= L(B11.out)}>
+      {/* from 12728 the new background comes up over all of this, so it gives way as that does */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - ease(f, local(BLOCK.SC13, BLOCK.SC11), BG_FADE) }}>
       {/* the grid carries on from SC10 */}
       {carried ? (
         <div style={{ position: "absolute", inset: 0, ...away }}>
@@ -640,6 +642,7 @@ export const SC11 = () => {
       </div>
       {/* the line that closes it, a dashed box on the panel's bottom edge, "Kita … exposure" highlighted */}
       <TypeBox cx={box.x + box.w / 2} y={box.y + box.h - KITA.h / 2} w={KITA.w} h={KITA.h} at={L(B11.kita)} text={KITA.text} mark={KITA.mark} size={KITA.size} fadeIn closeAt={out} />
+      </div>
     </Stage>
   );
 };

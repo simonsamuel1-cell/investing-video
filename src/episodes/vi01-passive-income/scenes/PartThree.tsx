@@ -8,7 +8,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, theme, useMotion, usePalette } from "../../../core";
-import { BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
+import { BG_FADE, BLOCK, CARRY_CLEAR, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
 import { OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
@@ -31,10 +31,12 @@ export const SC13 = () => {
   /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
      so the cut is a move and not a jump (data/timing.ts: CUTS). */
   const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
+  /* the background fades in over SC12's last picture, so until it has the stage is see-through */
+  const bg = ease(f, 0, BG_FADE);
   return (
-    <Stage>
-      {/* the new background, on SC12's last picture at 12728: silver paper and the grid, as at 11580; it clears with the rest before the card is carried on */}
-      <div style={{ position: "absolute", inset: 0, opacity: clear, clipPath: OUTSIDE_RESERVES }}>
+    <Stage transparent={f < BG_FADE}>
+      {/* the new background: silver paper and the grid, as at 11580; it clears with the rest before the card is carried on */}
+      <div style={{ position: "absolute", inset: 0, opacity: clear * bg, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC13} paper={c.bg} />
       </div>
       <div style={{ position: "absolute", inset: 0, opacity: clear }}>

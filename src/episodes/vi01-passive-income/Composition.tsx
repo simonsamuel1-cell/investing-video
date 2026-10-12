@@ -13,7 +13,7 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
-import { BLOCK, CUT, CUTS, TRANS, VO_LAST } from "./data/timing";
+import { BG_FADE, BLOCK, CUT, CUTS, TRANS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
 import { SC01, SC02, SC03 } from "./scenes/ColdOpen";
 import { BankBalance, CarriedTitle, SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
@@ -49,11 +49,13 @@ const ORDER = [
 
 const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
 /** Scenes that carry on over the next one's first frames — the continuous cuts: the next scene is drawn on top. */
-const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: BLOCK.SC13 - BLOCK.SC12 };
+const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: BLOCK.SC13 - BLOCK.SC12 + BG_FADE };
+/** Scenes that run on a little past their block but stay in their place, UNDER the next scene — which fades in over them. */
+const HOLD: Partial<Record<keyof typeof BLOCK, number>> = { SC12: BG_FADE };
 const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   const from = BLOCK[key];
   const next = KEYS[KEYS.indexOf(key) + 1];
-  return { from, duration: BLOCK[next] - from + (EXTEND[key] ?? 0), Component, name, extended: (EXTEND[key] ?? 0) > 0 };
+  return { from, duration: BLOCK[next] - from + (EXTEND[key] ?? 0) + (HOLD[key] ?? 0), Component, name, extended: (EXTEND[key] ?? 0) > 0 };
 });
 
 /* ⚠ EVERY FRAME IS OWNED, and the video outlasts its voice. */
