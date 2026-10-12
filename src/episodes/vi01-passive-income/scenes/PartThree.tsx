@@ -19,12 +19,12 @@ import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, She
 const SPAN = { x0: 200, x1: 1400, card: 1450, cardW: 380 };
 const DX = (theme.canvas.width - (SPAN.x0 + SPAN.card + SPAN.cardW)) / 2;
 const LINE = { y: 560, x0: SPAN.x0 + DX, x1: SPAN.x1 + DX, rule: 3, end: 8, draw: 0.9 };
-/** The roadmap after Simon's reference: thin black line, dots of growing size on it, a stem to each label, the labels alternating below and above. */
+/** The roadmap after Simon's reference: thin black line, dots of one size on it, a stem to each label, the labels alternating below and above. */
 const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
   { x: 320 + DX, r: 12, up: false, lines: ["1. Pegawai bank"] },
-  { x: 620 + DX, r: 17, up: true, lines: ["2. Menabung"] },
-  { x: 920 + DX, r: 23, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
-  { x: 1220 + DX, r: 31, up: true, lines: ["4. Mulai", "berinvestasi"] },
+  { x: 620 + DX, r: 12, up: true, lines: ["2. Menabung"] },
+  { x: 920 + DX, r: 12, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
+  { x: 1220 + DX, r: 12, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
 const ROAD = { stem: 80, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
 /** UNTR, where SC13 leaves it and where SC14 picks it up. */
