@@ -322,7 +322,20 @@ const Badge = ({ mark, fill, p }: { mark: "x" | "check"; fill: string; p: number
  * title is set exactly as "Tanya juga" is (ColdOpen's quiz label); the pair of boxes is 75% of its size ("kedua kotaknya coba kecilin" after 90%),
  * hung from its top edge.
  */
-const MF = { w: 1200, h: 250, gap: 60, titleY: 190, top: 270, text: 50, rise: 24, scale: 0.75 };
+const MF = { w: 1200, h: 250, gap: 60, titleY: 160, top: 270, text: 50, rise: 24, scale: 0.75 };
+/**
+ * OrangTuntun.png at the left, standing on the floor — "buat … align-left semua, lalu geser kanan semua,
+ * supaya di kiri bisa muat OrangTuntun" — his visible figure from `top` down to the subtitle band, and
+ * the boxes beside him: the figure, a gap, and the boxes centred on the canvas together.
+ */
+const MAN15 = { src: "art/vi01/orang-tuntun.png", w: 941, h: 1672, ink: { x0: 233, x1: 794, y0: 84, y1: 1619 }, top: 130, gap: 140, lift: 56 };
+/** His feet stand `lift` above the subtitle band, so the floor shadow under them stays out of it. */
+const MAN_FLOOR = theme.captionBand.top - MAN15.lift;
+const MAN_K = (MAN_FLOOR - MAN15.top) / (MAN15.ink.y1 - MAN15.ink.y0);
+const MAN_W = (MAN15.ink.x1 - MAN15.ink.x0) * MAN_K;
+const MAN_LEFT = (theme.canvas.width - (MAN_W + MAN15.gap + MF.w * MF.scale)) / 2;
+/** Left edge of the title and of both boxes. */
+const BOX_LEFT = MAN_LEFT + MAN_W + MAN15.gap;
 
 export const SC15 = () => {
   const f = useCurrentFrame();
@@ -330,7 +343,7 @@ export const SC15 = () => {
   const m = useMotion();
   const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC15);
-  const x = (theme.canvas.width - MF.w) / 2;
+  const x = BOX_LEFT;
   const boxTop = (i: number) => MF.top + i * (MF.h + MF.gap);
   /* the boxes give way when the five steps come up */
   const gone = ease(f, L(B15.steps[0]) - m.fade, m.fade);
@@ -365,9 +378,13 @@ export const SC15 = () => {
   return (
     <Stage>
       <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
-        {/* "yang menarik adalah", in the type of "Tanya juga" */}
-        <div style={{ position: "absolute", left: 0, right: 0, top: MF.titleY, textAlign: "center", opacity: title, transform: `translateY(${((1 - title) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>yang menarik adalah</div>
-        <div style={{ position: "absolute", inset: 0, transformOrigin: `50% ${MF.top}px`, transform: `scale(${MF.scale})` }}>
+        {/* OrangTuntun, at the left with his feet on the floor */}
+        <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+          <Cutout src={MAN15.src} aspect={MAN15.w / MAN15.h} x={MAN_LEFT + MAN_W / 2 + (MAN15.w / 2 - (MAN15.ink.x0 + MAN15.ink.x1) / 2) * MAN_K} y={MAN_FLOOR + (MAN15.h - MAN15.ink.y1) * MAN_K} h={MAN15.h * MAN_K} at={L(B15.bukan)} rise={theme.canvas.height - MAN15.top} riseFrames={m.move} shadow floor={MAN15.ink.y1 / MAN15.h} />
+        </div>
+        {/* "yang menarik adalah", in the type of "Tanya juga", left-aligned with the boxes */}
+        <div style={{ position: "absolute", left: BOX_LEFT, top: MF.titleY, textAlign: "left", whiteSpace: "nowrap", opacity: title, transform: `translateY(${((1 - title) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>yang menarik adalah</div>
+        <div style={{ position: "absolute", inset: 0, transformOrigin: `${BOX_LEFT}px ${MF.top}px`, transform: `scale(${MF.scale})` }}>
           {box(0, L(B15.box1), L(B15.quote), xAt, c.cardBg, "x", theme.color.calendarRed, "Cari saham yang bisa naik berkali-kali", mute1, { ink: c.ink, weight: 400, italic: true })}
           {box(1, L(B15.box2), L(B15.strike), L(B15.box2), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang penting prosesnya", 0, { ink: theme.color.checkGreenInk, weight: 700, italic: false })}
         </div>
