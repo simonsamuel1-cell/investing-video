@@ -51,7 +51,7 @@ const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
 /** Scenes that carry on over the next one's first frames — the continuous cuts: the next scene is drawn on top. */
 const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: BLOCK.SC13 - BLOCK.SC12 + BG_FADE };
 /** Scenes that run on a little past their block but stay in their place, UNDER the next scene — which fades in over them. */
-const HOLD: Partial<Record<keyof typeof BLOCK, number>> = { SC12: BG_FADE, SC16: HANDOFF_FADE };
+const HOLD: Partial<Record<keyof typeof BLOCK, number>> = { SC12: BG_FADE, SC16: HANDOFF_FADE, SC17: HANDOFF_FADE };
 const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   const from = BLOCK[key];
   const next = KEYS[KEYS.indexOf(key) + 1];

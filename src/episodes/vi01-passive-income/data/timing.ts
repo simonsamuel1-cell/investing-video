@@ -533,6 +533,13 @@ export const SC17 = {
 };
 
 export const SC18 = {
+  /**
+   * "18501 Muncul maskot di bagian atas dan OrangTuntun4 di sebelah kiri … di sebelah kanan OrangTuntun4 ada
+   * text-text ini dengan berurutan: Kerja / Tenaga + waktu = Income / Investasi / Uang + waktu = Passive
+   * income" (Studio 18501 = episode 18261, this scene's first frame).
+   */
+  mascot: 18261,
+  man: 18281,
   kerja: 18339, // "kerja berarti kita menggunakan waktu …"
   investasi: 18565, // "Sedangkan investasi,"
   bekerja: 18803, // "ikut bekerja untuk masa depan."
@@ -639,7 +646,7 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = [
   { at: BLOCK.SC15, axis: "x" },
   { at: BLOCK.SC16, axis: "x" },
   // SC16 → SC17: cancelled — "17288-17289 Buat scene ini continuous, background kotak2nya stay. Yang lainnya boleh fade out."
-  { at: BLOCK.SC18, axis: "x" },
+  // SC17 → SC18: cancelled — "18501 … Background kotak2 nya stay ya": the grid carries on, SC17's picture fades out over it.
 ];
 /** "background dan garis kotak nya fade in": SC13's grid ground fades in over SC12's last picture, which stays under it this long. */
 export const BG_FADE = 40;

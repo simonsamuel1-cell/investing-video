@@ -181,6 +181,8 @@ export const SC17 = () => {
           <GridGround f={f + BLOCK.SC17} paper={c.bg} />
         </div>
       ) : null}
+      {/* 18501: the grid stays; everything here gives way over the first frames of SC18, which this scene is held under */}
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - ease(f, L(BLOCK.SC18), HANDOFF_FADE) }}>
       {first > 0.001 ? (
         <div style={{ opacity: first }}>
           <Say text="Di awal, aset kita mungkin masih kecil" x={theme.canvas.width / 2} y={PROG.y - PROG.titleGap} at={L(B17.title)} size={PROG.titleSize} weight={800} color={c.indigo} />
@@ -224,12 +226,22 @@ export const SC17 = () => {
 
       {/* "Pakai design text seperti di 3374" — the "Tanya juga" design */}
       <QuizStatement f={f} label="Setiap kali income masuk, tanyakan:" labelAt={L(B17.tanya)} lines={[["Berapa", "yang", "bisa", "aku"], ["sisihkan", "untuk"]]} wordAt={B17.words.map(L)} bar="mulai punya aset?" barAt={L(B17.mark)} />
+      </div>
     </Stage>
   );
 };
 
 // ═══ SC18 — the two lines, then the closing card ═════════════════════════
-const RULE = { gutter: 960, y: [400, 560], size: 64 };
+/**
+ * The opening of SC18: the mascot at the top, OrangTuntun4 on the left — head to belly, his foot fading out —
+ * and on his right, in turn, "Kerja" (indigo) over a white rounded box "Tenaga + waktu = Income", then
+ * "Investasi" over "Uang + waktu = Passive income".
+ */
+const MAN18 = { src: "art/vi01/orang-tuntun-4.png", w: 941, h: 1672, ink: { x0: 160, x1: 927, y0: 89 }, belly: 820, top: 250, floor: 850, foot: 0.28, gap: 70, mascotY: 70, mascotH: 130 };
+const MAN18_K = (MAN18.floor - MAN18.top) / (MAN18.belly - MAN18.ink.y0);
+const MAN18_W = (MAN18.ink.x1 - MAN18.ink.x0) * MAN18_K;
+const TEXT18 = { x: theme.margin.left + MAN18_W + MAN18.gap, size: 72, box: 48, pad: 30, padX: 46, rows: [{ y: 400, label: "Kerja", sum: "Tenaga + waktu = Income" }, { y: 640, label: "Investasi", sum: "Uang + waktu = Passive income" }], boxDy: 48, rise: 22 };
+const CARD_RADIUS_18 = theme.shape.cardRadius;
 const CARD = { x: 560, y: 360, w: 1180, h: 330, size: 54, lead: 76 };
 const LINES = ["Dari sekadar pekerja,", "menjadi pekerja yang juga punya aset."];
 const CARD_LIST_Y = quoteListY(CARD.y, CARD.h, CARD.lead, LINES.length);
@@ -238,24 +250,54 @@ export const SC18 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
+  const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC18);
   const rulesOut = L(B18.close) - 16;
   const closing = ease(f, L(B18.close), m.move);
   const g = f + BLOCK.SC18;
+  const gone = ease(f, rulesOut, m.fade);
+  /** "Kerja" / "Investasi" come first, their boxes on the words that say what they are. */
+  const labelAt = [L(B18.kerja) - 30, L(B18.investasi)];
+  const boxAt = [L(B18.kerja), L(B18.bekerja)];
+  const bob = Math.sin(((g - B18.mascot) / 240) * Math.PI * 2) * 10;
   return (
-    <Stage>
-      {/* the two rules, meeting at the gutter (TA11's Rules) */}
-      <Say text="Kerja" x={RULE.gutter - 40} y={RULE.y[0]} at={L(B18.kerja) - 30} out={rulesOut} anchor="right" size={RULE.size} weight={800} />
-      <Say text="waktu jadi uang" x={RULE.gutter + 40} y={RULE.y[0]} at={L(B18.kerja)} out={rulesOut} anchor="left" size={RULE.size} weight={800} color={c.indigo} />
-      <Say text="Investasi" x={RULE.gutter - 40} y={RULE.y[1]} at={L(B18.investasi)} out={rulesOut} anchor="right" size={RULE.size} weight={800} />
-      <Say text="uang ikut bekerja" x={RULE.gutter + 40} y={RULE.y[1]} at={L(B18.bekerja)} out={rulesOut} anchor="left" size={RULE.size} weight={800} color={theme.color.cyanInk} />
+    <Stage transparent={f < HANDOFF_FADE}>
+      {/* the grid stays from SC17 on: for the first frames SC17's own is still under us */}
+      {f >= HANDOFF_FADE ? (
+        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+          <GridGround f={g} paper={c.bg} />
+        </div>
+      ) : null}
+      {gone < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - gone }}>
+          {/* the mascot, at the top */}
+          <div style={{ opacity: ease(f, L(B18.mascot), m.reveal) }}>
+            <TuntunMark x={theme.canvas.width / 2} y={MAN18.mascotY + bob} height={MAN18.mascotH} />
+          </div>
+          {/* OrangTuntun4, head to belly, on the left */}
+          <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${MAN18.floor - MAN18.foot * (MAN18.floor - MAN18.top)}px, transparent ${MAN18.floor}px)`, maskImage: `linear-gradient(to bottom, black ${MAN18.floor - MAN18.foot * (MAN18.floor - MAN18.top)}px, transparent ${MAN18.floor}px)` }}>
+            <Cutout src={MAN18.src} aspect={MAN18.w / MAN18.h} x={theme.margin.left + (MAN18.w / 2 - MAN18.ink.x0) * MAN18_K} y={MAN18.floor + (MAN18.h - MAN18.belly) * MAN18_K} h={MAN18.h * MAN18_K} at={L(B18.man)} rise={MAN18.top} riseFrames={m.move} />
+          </div>
+          {/* the two rules, one after the other, on his right */}
+          {TEXT18.rows.map((row, i) => {
+            const pBox = ease(f, boxAt[i], m.reveal);
+            return (
+              <div key={row.label}>
+                <Say text={row.label} x={TEXT18.x} y={row.y} at={labelAt[i]} anchor="left" size={TEXT18.size} weight={800} color={c.indigo} />
+                {pBox > 0.001 ? (
+                  <div style={{ position: "absolute", left: TEXT18.x, top: row.y + TEXT18.boxDy, padding: `${TEXT18.pad}px ${TEXT18.padX}px`, borderRadius: CARD_RADIUS_18, background: c.cardBg, boxShadow: shadow.soft, opacity: pBox, transform: `translateY(${((1 - pBox) * TEXT18.rise).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: TEXT18.box, fontWeight: 700, color: c.ink, whiteSpace: "nowrap" }}>
+                    {row.sum}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      ) : null}
 
       {/* the closing card on the grid, the mark floating over it */}
       {closing > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: closing }}>
-          <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
-            <GridGround f={g} paper={c.bg} />
-          </div>
           <TuntunMark x={CARD.x + CARD.w / 2} y={CARD.y - 170 + Math.sin(((g - B18.close) / 240) * Math.PI * 2) * 10} height={130} />
           <QuoteFrame x={CARD.x} y={CARD.y} w={CARD.w} h={CARD.h} at={L(B18.close) + 12} listY={CARD_LIST_Y} lead={CARD.lead} count={LINES.length}>
             {LINES.map((line, n) => (
