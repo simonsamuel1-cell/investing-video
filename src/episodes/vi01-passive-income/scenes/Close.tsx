@@ -40,10 +40,14 @@ const place = (p: Pic, cx: number) => ({
  * and under him the two cards side by side — also centred, with the gap Simon approved between them for the
  * coin. The coin leaves from the middle of the first card and lands on the middle of the second.
  */
-const P2 = { k: 0.45, below: 40, coinGap: 180, bottom: 52, from: 50_000_000, to: 30_000_000, sendSecs: 1.0, landSecs: 0.8 };
+const P2 = { edge: 2, foot: 0.28, coinGap: 180, bottom: 52, from: 50_000_000, to: 30_000_000, sendSecs: 1.0, landSecs: 0.8 };
 const PHONE = { src: "art/vi01/liat-hp.png", w: 1086, h: 1448, ink: { x0: 57, x1: 1022, y0: 39, y1: 1448 } };
+/** "height si LiatHP mentok dari atas ke bawah (masih di dalam batas margin)": the picture runs from the top margin to the bottom one, the cards laid over its lower part. */
+const PHONE_K = (theme.canvas.height - theme.margin.top - theme.margin.bottom - 2 * P2.edge) / (PHONE.ink.y1 - PHONE.ink.y0);
+const PHONE_FEET = theme.canvas.height - theme.margin.bottom - P2.edge;
+/** The picture's visible height on screen. */
+const PHONE_H = (PHONE.ink.y1 - PHONE.ink.y0) * PHONE_K;
 const CARD_Y = theme.captionBand.top - P2.bottom - BAL.h;
-const PHONE_FEET = CARD_Y - P2.below;
 const PAIR_LEFT = (theme.canvas.width - (BAL.w + P2.coinGap + BAL.w)) / 2;
 const ACC_X = PAIR_LEFT + BAL.w / 2;
 const INV_X = ACC_X + BAL.w + P2.coinGap;
@@ -110,9 +114,12 @@ export const SC16 = () => {
       {/* LiatHP.png, then the two cards: Account balance counts down as the coin goes to Total invested */}
       {inn > 0.001 ? (
         <>
-          {/* the coin travels behind the person and both cards */}
+          {/* "LiatHP kasih gradient blur di bagian bawahnya": the foot of the picture fades out, as Lo Kheng Hong's does */}
+          <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${PHONE_FEET - P2.foot * PHONE_H}px, transparent ${PHONE_FEET}px)`, maskImage: `linear-gradient(to bottom, black ${PHONE_FEET - P2.foot * PHONE_H}px, transparent ${PHONE_FEET}px)` }}>
+            <Cutout src={PHONE.src} aspect={PHONE.w / PHONE.h} x={theme.canvas.width / 2 + (PHONE.w / 2 - (PHONE.ink.x0 + PHONE.ink.x1) / 2) * PHONE_K} y={PHONE_FEET + (PHONE.h - PHONE.ink.y1) * PHONE_K} h={PHONE.h * PHONE_K} at={L(B16.phone)} rise={0} />
+          </div>
+          {/* the coin: over the person, but out from behind the first card and in behind the second */}
           <PayCoin from={{ x: ACC_X, y: CARD_Y + BAL.h / 2 }} to={{ x: INV_X, y: CARD_Y + BAL.h / 2 }} at={send} out={send + fly + m.sec(P2.landSecs)} />
-          <Cutout src={PHONE.src} aspect={PHONE.w / PHONE.h} x={theme.canvas.width / 2 + (PHONE.w / 2 - (PHONE.ink.x0 + PHONE.ink.x1) / 2) * P2.k} y={PHONE_FEET + (PHONE.h - PHONE.ink.y1) * P2.k} h={PHONE.h * P2.k} at={L(B16.phone)} rise={0} />
           <BigBalance x={ACC_X} y={CARD_Y} label="ACCOUNT BALANCE:" amount={rp(account)} life={inn} swell={swellA} tri={0} />
           <BigBalance x={INV_X} y={CARD_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={inn} swell={swellI} tri={ease(f, send + fly, m.reveal)} />
         </>
