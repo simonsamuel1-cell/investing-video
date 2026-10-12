@@ -250,7 +250,8 @@ export type IconName =
   | "pen"
   | "monitor"
   | "cap"
-  | "cash";
+  | "cash"
+  | "doc";
 
 /** Line icons on a 48-unit grid, drawn in `color` at `size` px. */
 export const Icon = ({
@@ -418,6 +419,12 @@ export const Icon = ({
         d="M13 7h22M13 41h22M15 7c0 9 9 11 9 17s-9 8-9 17M33 7c0 9-9 11-9 17s9 8 9 17"
         {...p}
       />
+    ),
+    doc: (
+      <>
+        <path d="M12 6h17l8 8v28H12z" {...p} fill={fill} />
+        <path d="M29 6v8h8M18 24h14M18 30h14M18 36h8" {...p} />
+      </>
     ),
     book: (
       <path

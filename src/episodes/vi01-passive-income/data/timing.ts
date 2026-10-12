@@ -445,12 +445,25 @@ export const SC13 = {
 };
 
 export const SC14 = {
+  /**
+   * "13863-13864 cancel animasi transisi" — SC13 → SC14 is a plain cut now, the picture carries on.
+   * "13870 … UNTR.png mengecil 50%, di sebelah kirinya image Lo Kheng Hong … termasuk text Lo Kheng Hong"
+   */
+  pair: 13870,
+  /** "14072 Muncul label text di bawah UNTR png 'UNTR = Rp 250'. Lalu … pertukaran koin …" */
+  label: 14072,
+  /** The coin and the document set out a beat after the label. */
+  swap: 14110,
+  /** "14305 UNTR bergeser ke kiri, … garis roadmap lagi, … dot hitam, hingga di ujung kanan garis". */
+  shift: 14305,
+  /** The roadmap's dots come up one by one between these two frames. */
+  dots: [14360, 14620] as const,
   krisis: 13905, // "krisis 1998,"
   rp250: 14218, // "Rp250 per saham."
   later: 14323, // "Beberapa tahun kemudian,"
   lipat: 14455, // "berkali-kali lipat,"
   rp15: 14655, // "Rp15 ribu."
-  caution: 14715, // "Tapi tentu saja, ini adalah contoh dari masa lalu."
+  caution: 14713, // "14713 Ini adalah sesi quote" — "Tapi tentu saja, ini adalah contoh dari masa lalu."
   nggak: 14937, // "Nggak semua investasi …"
 };
 

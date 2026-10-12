@@ -7,9 +7,9 @@
  * the narration gives; and the five-step process the story is really about.
  */
 import { useCurrentFrame } from "remotion";
-import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette } from "../../../core";
-import { BG_FADE, BLOCK, CARRY_CLEAR, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Pill, Sheet, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { BG_FADE, BLOCK, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
+import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Link, Node, Say, Strike, TypeBox, nodeEdge, type IconName, type NodeBox } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 /**
@@ -26,8 +26,6 @@ const STOPS: { x: number; r: number; up: boolean; lines: string[] }[] = [
   { x: FIRST + 2 * PITCH, r: 12, up: false, lines: ["3. Belajar & baca", "laporan perusahaan"] },
   { x: FIRST + 3 * PITCH, r: 12, up: true, lines: ["4. Mulai", "berinvestasi"] },
 ];
-/** SC14's card enters from here — nothing of it is on screen in SC13 any more. */
-export const UNTR_AT: NodeBox = { x: LINE.x1 - 380, y: 470, w: 380, h: 180 };
 const ROAD = { stem: 100, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
 /**
  * "Previewnya zoom in ke text 'Mulai berinvestasi'": the last label grows to the size of the lower third's
@@ -63,7 +61,6 @@ const UNTR_IMG = {
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
 /** The lower third: bottom centre, its foot above the subtitle band. */
 const LT_Y = theme.captionBand.top - 80 - 170;
-const UNTR_TOP: NodeBox = { x: 770, y: 160, w: 380, h: 180 };
 
 const labelH = (s: { lines: string[] }) => s.lines.length * ROAD.label * ROAD.leading;
 const labelTop = (s: { up: boolean; r: number; lines: string[] }) => (s.up ? LINE.y - s.r - ROAD.stem - labelH(s) : LINE.y + s.r + ROAD.stem);
@@ -84,18 +81,15 @@ export const SC13 = () => {
       {s.lines.join("\n")}
     </div>
   );
-  /* ⚠ THE CARD IS CARRIED INTO SC14 — everything else clears around it first,
-     so the cut is a move and not a jump (data/timing.ts: CUTS). */
-  const clear = 1 - ease(f, L(BLOCK.SC14) - CARRY_CLEAR, CARRY_CLEAR - 4);
   /* the background fades in over SC12's last picture, so until it has the stage is see-through */
   const bg = ease(f, 0, BG_FADE);
   return (
     <Stage transparent={f < BG_FADE}>
-      {/* the new background: silver paper and the grid, as at 11580; it clears with the rest before the card is carried on */}
-      <div style={{ position: "absolute", inset: 0, opacity: clear * bg, clipPath: OUTSIDE_RESERVES }}>
+      {/* the new background: silver paper and the grid, as at 11580; */}
+      <div style={{ position: "absolute", inset: 0, opacity: bg, clipPath: OUTSIDE_RESERVES }}>
         <GridGround f={f + BLOCK.SC13} paper={c.bg} />
       </div>
-      <div style={{ position: "absolute", inset: 0, opacity: clear }}>
+      <div style={{ position: "absolute", inset: 0 }}>
       {/* 12992: everything but the grid leaves on a camera cut — the out half, then it is gone */}
       {f + BLOCK.SC13 < B13.cut + CUT.over / 2 ? (
         <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + BLOCK.SC13, { at: B13.cut + CUT.over / 2, axis: "x", ...CUT }) }}>
@@ -145,40 +139,125 @@ export const SC13 = () => {
   );
 };
 
-// ═══ SC14 — the two prices the narration gives, then the caution ═════════
+// ═══ SC14 — what he paid, what it became, and the caution ════════════════
+/**
+ * SC13's picture carries on over a plain cut (the grid, the zoomed label, UNTR.png). At 13870 UNTR shrinks
+ * to 50% and Lo Kheng Hong comes up on its left at the same height; the label "UNTR = Rp 250" follows and a
+ * coin and a document change places; at 14305 UNTR moves left and a roadmap fills in beneath it.
+ */
+const P14 = { shrink: 0.5, gap: 500, rowCy: 430, below: 56, foot: 0.22, coin: 80, doc: 76, arc: 230, hand: 70, top2: 150 };
+const G14 = (() => {
+  const k1 = UNTR_K * P14.shrink;
+  const w1 = (UNTR_PX.ink.x1 - UNTR_PX.ink.x0) * k1;
+  const h1 = (UNTR_PX.ink.y1 - UNTR_PX.ink.y0) * k1;
+  const wL = h1 * FOTO.aspect;
+  const left = (theme.canvas.width - (wL + P14.gap + w1)) / 2;
+  return { k1, w1, h1, wL, lkhX: left + wL / 2, untrX: left + wL + P14.gap + w1 / 2 };
+})();
+/** The roadmap under UNTR once it has moved left: one line margin to margin, black dots from UNTR's own x to the right end. */
+const R14 = { y: 760, rule: 3, end: 8, r: 12, n: 7, price: 4, stem: 70 };
+const QUOTE = { w: 1180, pad: 64, badge: 96, icon: 52, gap: 28, title: 54, body: 38, y: 500, blur: 8, dim: 0.6 };
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
 export const SC14 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
+  const shadow = useShadow();
   const L = (g: number) => local(g, BLOCK.SC14);
-  /** The card: SC13 no longer shows it, so it comes in at its old place and then lifts. */
-  const lift = ease(f, 0, 40);
-  const card = {
-    x: UNTR_AT.x + (UNTR_TOP.x - UNTR_AT.x) * lift,
-    y: UNTR_AT.y + (UNTR_TOP.y - UNTR_AT.y) * lift,
-    w: UNTR_AT.w,
-    h: UNTR_AT.h,
+  const p1 = ease(f, L(B14.pair), m.move);
+  const p2 = ease(f, L(B14.shift), m.move);
+  /* UNTR's visible centre and scale, from SC13's size to half of it to its place on the left */
+  const k = lerp(UNTR_K, G14.k1, p1);
+  const vx = lerp(lerp(UNTR_C.x + UNTR_PX.right, G14.untrX, p1), theme.margin.left + G14.w1 / 2, p2);
+  const vy = lerp(lerp(UNTR_C.y, P14.rowCy, p1), P14.top2 + G14.h1 / 2, p2);
+  const untrH = (UNTR_PX.ink.y1 - UNTR_PX.ink.y0) * k;
+  /* the exchange: the coin goes over the top, the document comes back underneath */
+  const q = ease(f, L(B14.swap), m.sec(1.4));
+  const from = { x: G14.lkhX + G14.wL / 2 - P14.hand, y: P14.rowCy };
+  const to = { x: G14.untrX - G14.w1 / 2 + P14.hand, y: P14.rowCy };
+  const bez = (a: { x: number; y: number }, b: { x: number; y: number }, bend: number, t: number) => {
+    const cx = (a.x + b.x) / 2;
+    const cy = (a.y + b.y) / 2 + bend;
+    const u = 1 - t;
+    return { x: u * u * a.x + 2 * u * t * cx + t * t * b.x, y: u * u * a.y + 2 * u * t * cy + t * t * b.y };
   };
+  const swapOpacity = Math.min(1, q * 6, (1 - q) * 6);
+  const coin = bez(from, to, -P14.arc * 2, q);
+  const doc = bez(to, from, P14.arc * 2, q);
+  /* the roadmap */
+  const x0 = theme.margin.left;
+  const x1 = theme.canvas.width - theme.margin.right;
+  const dotX = (i: number) => lerp(theme.margin.left + G14.w1 / 2, x1, i / (R14.n - 1));
+  const lineP = ease(f, L(B14.shift) + m.move, m.sec(0.8));
+  /* the quote: everything but the grid steps back */
   const dim = ease(f, L(B14.caution), m.move);
+  const card = ease(f, L(B14.caution), m.reveal);
+  const body = ease(f, L(B14.nggak), m.reveal);
   return (
     <Stage>
-      <div style={{ opacity: 1 - 0.8 * dim }}>
-        <Node box={card} label="United Tractors" sub="UNTR" icon="building" tone="cyan" layout="column" at={0} size={40} />
-        <Pill label="Krisis 1998" x={500} y={470} at={L(B14.krisis)} tone="slate" size={42} />
-        <Say text="± Rp250 / saham" x={500} y={570} at={L(B14.rp250)} size={60} weight={800} />
-        <Link a={{ x: 700, y: 640 }} b={{ x: 1210, y: 470 }} at={L(B14.later)} tone="cyan" width={6} />
-        <Say text="beberapa tahun kemudian" x={955} y={640} at={L(B14.later) + 20} size={32} weight={600} color={c.slate} />
-        <Say text="berkali-kali lipat" x={1420} y={520} at={L(B14.lipat)} size={40} weight={700} color={theme.color.cyanInk} />
-        <Say text="± Rp15 ribu" x={1420} y={440} at={L(B14.rp15)} size={60} weight={800} color={theme.color.cyanInk} />
+      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+        <GridGround f={f + BLOCK.SC14} paper={c.bg} />
       </div>
-      <Sheet x={360} y={640} w={1200} h={240} at={L(B14.caution)} />
-      <Say x={960} y={712} at={L(B14.caution) + 6} size={52} weight={800}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: 18 }}>
-          <Icon name="hourglass" size={58} color={c.ink} />
-          Contoh dari masa lalu
-        </span>
-      </Say>
-      <Say text="Nggak semua investasi akan memberikan hasil seperti ini." x={960} y={808} at={L(B14.nggak)} size={38} weight={600} color={c.slate} />
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - QUOTE.dim * dim, filter: dim > 0.01 ? `blur(${(QUOTE.blur * dim).toFixed(2)}px)` : undefined }}>
+        {/* SC13's last label, as it stood, leaving as the pair forms */}
+        {f < L(B14.pair) + m.sec(0.25) ? (
+          <div style={{ position: "absolute", left: ZOOM_TO.x, top: ZOOM_TO.y, opacity: 1 - ease(f, L(B14.pair), m.sec(0.25)), fontFamily: theme.text.family, fontSize: ROAD.label * ZOOM.scale, fontWeight: 600, lineHeight: ROAD.leading, color: c.ink, whiteSpace: "pre" }}>
+            {STOPS[3].lines.join("\n")}
+          </div>
+        ) : null}
+        {/* Lo Kheng Hong, on the left of UNTR at its height, his name beneath him; the foot of the portrait fades */}
+        <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)`, maskImage: `linear-gradient(to bottom, black ${P14.rowCy + G14.h1 / 2 - P14.foot * G14.h1}px, transparent ${P14.rowCy + G14.h1 / 2}px)` }}>
+          <Cutout src={FOTO.src} aspect={FOTO.aspect} x={G14.lkhX} y={P14.rowCy + G14.h1 / 2} h={G14.h1} at={L(B14.pair)} out={L(B14.shift)} rise={FOTO.rise / 4} riseFrames={m.move} />
+        </div>
+        <Say text="Lo Kheng Hong" x={G14.lkhX} y={P14.rowCy + G14.h1 / 2 + P14.below} at={L(B14.pair)} out={L(B14.shift)} size={48} weight={800} />
+        {/* UNTR.png: from SC13's size to half, then to the left */}
+        <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={vx + (UNTR_PX.w / 2 - UNTR_C.ix) * k} y={vy + (UNTR_PX.h - UNTR_C.iy) * k} h={UNTR_PX.h * k} at={-m.sec(2)} rise={0} />
+        <Say text="UNTR = Rp 250" x={vx} y={vy + untrH / 2 + P14.below} at={L(B14.label)} size={48} weight={800} />
+        {/* the coin and the document */}
+        {q > 0.001 && q < 0.999 ? (
+          <>
+            <div style={{ position: "absolute", left: coin.x - P14.coin / 2, top: coin.y - P14.coin / 2, width: P14.coin, height: P14.coin, borderRadius: 99, background: theme.color.coinYellow, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: P14.coin * 0.4, fontWeight: 800, color: c.ink, opacity: swapOpacity }}>
+              Rp
+            </div>
+            <div style={{ position: "absolute", left: doc.x - P14.doc / 2, top: doc.y - P14.doc / 2, opacity: swapOpacity }}>
+              <Icon name="doc" size={P14.doc} color={c.indigo} stroke={2.6} fill={theme.color.indigoWash} />
+            </div>
+          </>
+        ) : null}
+        {/* the roadmap: the line draws on, the dots come up one by one to its right end; the third from the right carries the price */}
+        {f >= L(B14.shift) + m.move ? (
+          <>
+            <div style={{ position: "absolute", left: x0 - R14.end / 2, top: R14.y - R14.end / 2, width: R14.end, height: R14.end, borderRadius: 99, background: c.ink }} />
+            <div style={{ position: "absolute", left: x0, top: R14.y - R14.rule / 2, width: (x1 - x0) * lineP, height: R14.rule, background: c.ink }} />
+          </>
+        ) : null}
+        {Array.from({ length: R14.n }, (_, i) => {
+          const at = L(B14.dots[0]) + ((L(B14.dots[1]) - L(B14.dots[0])) * i) / (R14.n - 1);
+          const dot = ease(f, at, m.reveal);
+          if (dot <= 0.001) return null;
+          return <div key={i} style={{ position: "absolute", left: dotX(i) - R14.r, top: R14.y - R14.r, width: 2 * R14.r, height: 2 * R14.r, borderRadius: 99, background: c.ink, transform: `scale(${dot.toFixed(4)})` }} />;
+        })}
+        {f >= L(B14.rp15) ? (
+          <>
+            <div style={{ position: "absolute", left: dotX(R14.price) - 1, top: R14.y - R14.r - R14.stem, width: 2, height: R14.stem, background: c.ink, transformOrigin: "bottom", transform: `scaleY(${ease(f, L(B14.rp15), m.sec(0.3)).toFixed(4)})` }} />
+            <Say text="Rp 15 ribu" x={dotX(R14.price)} y={R14.y - R14.r - R14.stem - 44} at={L(B14.rp15) + m.sec(0.15)} size={56} weight={800} />
+          </>
+        ) : null}
+      </div>
+      {/* the quote — "Contoh dari masa lalu", then the line it stands for, on one clean card */}
+      {card > 0.001 ? (
+        <div style={{ position: "absolute", left: (theme.canvas.width - QUOTE.w) / 2, top: QUOTE.y, width: QUOTE.w, boxSizing: "border-box", padding: QUOTE.pad, transform: `translateY(calc(-50% + ${((1 - card) * 24).toFixed(2)}px))`, opacity: card, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.border}`, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, fontFamily: theme.text.family }}>
+          <div style={{ display: "flex", alignItems: "center", gap: QUOTE.gap }}>
+            <div style={{ width: QUOTE.badge, height: QUOTE.badge, flex: "none", borderRadius: 99, background: theme.color.indigoWash, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Icon name="hourglass" size={QUOTE.icon} color={c.indigo} />
+            </div>
+            <div style={{ fontSize: QUOTE.title, fontWeight: 800, color: c.ink, lineHeight: 1.15 }}>Contoh dari masa lalu</div>
+          </div>
+          <div style={{ height: theme.shape.rule, background: c.border, margin: `${QUOTE.gap}px 0` }} />
+          <div style={{ fontSize: QUOTE.body, fontWeight: 600, color: c.slate, lineHeight: 1.3, opacity: body, transform: `translateY(${((1 - body) * 12).toFixed(2)}px)` }}>Nggak semua investasi akan memberikan hasil seperti ini.</div>
+        </div>
+      ) : null}
     </Stage>
   );
 };
