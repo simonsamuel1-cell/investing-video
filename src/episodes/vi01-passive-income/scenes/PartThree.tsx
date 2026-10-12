@@ -34,7 +34,21 @@ const ROAD = { stem: 100, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
  * name and goes to the far left, centred top to bottom; UNTR.png appears to its right.
  */
 const ZOOM = { scale: LOWER_THIRD_NAME / ROAD.label, outSecs: 0.6, inSecs: 1 };
-const UNTR_IMG = { src: "art/vi01/untr.png", aspect: 1122 / 1402, h: 640, cx: 1290 };
+/**
+ * "gedein … sampe heightnya menyentuh batas margin": the machine itself — not the transparent frame
+ * around it — runs from the top margin to the bottom margin. Its right edge rests where the logo zone
+ * begins, so the glow around the ring never enters it. `ink` is the picture's opaque extent in its own
+ * pixels; `edge` keeps the antialiased rim a hair inside the margins.
+ */
+const UNTR_PX = { w: 1122, h: 1402, ink: { x1: 1122, y0: 223, y1: 1161 }, edge: 4 };
+const UNTR_K = (theme.canvas.height - theme.margin.top - theme.margin.bottom - 2 * UNTR_PX.edge) / (UNTR_PX.ink.y1 - UNTR_PX.ink.y0);
+const UNTR_IMG = {
+  src: "art/vi01/untr.png",
+  aspect: UNTR_PX.w / UNTR_PX.h,
+  h: UNTR_PX.h * UNTR_K,
+  cx: theme.canvas.width - theme.logoZone.width - UNTR_PX.ink.x1 * UNTR_K + (UNTR_PX.w * UNTR_K) / 2,
+  bottom: theme.margin.top + UNTR_PX.edge - UNTR_PX.ink.y0 * UNTR_K + UNTR_PX.h * UNTR_K,
+};
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
 /** The lower third: bottom centre, its foot above the subtitle band. */
@@ -115,7 +129,7 @@ export const SC13 = () => {
       {/* the last label, kept as the rest goes: it zooms up to the far left, centred top to bottom */}
       {ease(f, L(B13.steps[3]) + m.sec(0.3), m.reveal) > 0.001 ? label(STOPS[3], ease(f, L(B13.steps[3]) + m.sec(0.3), m.reveal), (ZOOM_TO.x - (STOPS[3].x - ROAD.stemW / 2)) * zoom, (ZOOM_TO.y - labelTop(STOPS[3])) * zoom, 1 + (ZOOM.scale - 1) * zoom) : null}
       {/* UNTR.png, to its right */}
-      <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={UNTR_IMG.cx} y={theme.canvas.height / 2 + UNTR_IMG.h / 2} h={UNTR_IMG.h} at={L(B13.untr)} />
+      <Cutout src={UNTR_IMG.src} aspect={UNTR_IMG.aspect} x={UNTR_IMG.cx} y={UNTR_IMG.bottom} h={UNTR_IMG.h} at={L(B13.untr)} />
       </div>
     </Stage>
   );
