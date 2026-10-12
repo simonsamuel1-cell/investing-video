@@ -36,16 +36,16 @@ const place = (p: Pic, cx: number) => ({
   half: ((p.ink.x1 - p.ink.x0) * S16.k) / 2,
 });
 /**
- * "LiatHP.png, UI Account balance, UI Total invested": the person looking at his phone, then the two cards to
- * his right with a gap for the coin between them. Margin to margin, left to right: him, a gap, Account balance,
- * the coin's gap, Total invested.
+ * "LiatHP.png, UI Account balance, UI Total invested": the person looking at his phone, centred left to right,
+ * and under him the two cards side by side — also centred, with the gap Simon approved between them for the
+ * coin. The coin leaves from the middle of the first card and lands on the middle of the second.
  */
-const P2 = { k: 0.45, gap: 60, coinGap: 180, cardY: 330, from: 50_000_000, to: 30_000_000, sendSecs: 1.0, landSecs: 0.8 };
+const P2 = { k: 0.45, below: 40, coinGap: 180, bottom: 52, from: 50_000_000, to: 30_000_000, sendSecs: 1.0, landSecs: 0.8 };
 const PHONE = { src: "art/vi01/liat-hp.png", w: 1086, h: 1448, ink: { x0: 57, x1: 1022, y0: 39, y1: 1448 } };
-const PHONE_W = (PHONE.ink.x1 - PHONE.ink.x0) * P2.k;
-const P2_LEFT = (theme.canvas.width - (PHONE_W + P2.gap + BAL.w + P2.coinGap + BAL.w)) / 2;
-const PHONE_CX = P2_LEFT + PHONE_W / 2;
-const ACC_X = P2_LEFT + PHONE_W + P2.gap + BAL.w / 2;
+const CARD_Y = theme.captionBand.top - P2.bottom - BAL.h;
+const PHONE_FEET = CARD_Y - P2.below;
+const PAIR_LEFT = (theme.canvas.width - (BAL.w + P2.coinGap + BAL.w)) / 2;
+const ACC_X = PAIR_LEFT + BAL.w / 2;
 const INV_X = ACC_X + BAL.w + P2.coinGap;
 const SAY16 = ["Membangun passive income bukan berarti lari dari pekerjaan", "Kita tetap bisa bangun karier, urus keluarga, dan menikmati hidup sekarang."];
 
@@ -110,10 +110,11 @@ export const SC16 = () => {
       {/* LiatHP.png, then the two cards: Account balance counts down as the coin goes to Total invested */}
       {inn > 0.001 ? (
         <>
-          <Cutout src={PHONE.src} aspect={PHONE.w / PHONE.h} x={PHONE_CX + (PHONE.w / 2 - (PHONE.ink.x0 + PHONE.ink.x1) / 2) * P2.k} y={S16.floor + (PHONE.h - PHONE.ink.y1) * P2.k} h={PHONE.h * P2.k} at={L(B16.phone)} rise={0} />
-          <BigBalance x={ACC_X} y={P2.cardY} label="ACCOUNT BALANCE:" amount={rp(account)} life={inn} swell={swellA} tri={0} />
-          <BigBalance x={INV_X} y={P2.cardY} label="TOTAL INVESTED:" amount={rp(invested)} life={inn} swell={swellI} tri={ease(f, send + fly, m.reveal)} />
-          <PayCoin from={{ x: ACC_X + BAL.w / 2, y: P2.cardY + BAL.h / 2 }} to={{ x: INV_X - BAL.w / 2, y: P2.cardY + BAL.h / 2 }} at={send} out={send + fly + m.sec(P2.landSecs)} />
+          {/* the coin travels behind the person and both cards */}
+          <PayCoin from={{ x: ACC_X, y: CARD_Y + BAL.h / 2 }} to={{ x: INV_X, y: CARD_Y + BAL.h / 2 }} at={send} out={send + fly + m.sec(P2.landSecs)} />
+          <Cutout src={PHONE.src} aspect={PHONE.w / PHONE.h} x={theme.canvas.width / 2 + (PHONE.w / 2 - (PHONE.ink.x0 + PHONE.ink.x1) / 2) * P2.k} y={PHONE_FEET + (PHONE.h - PHONE.ink.y1) * P2.k} h={PHONE.h * P2.k} at={L(B16.phone)} rise={0} />
+          <BigBalance x={ACC_X} y={CARD_Y} label="ACCOUNT BALANCE:" amount={rp(account)} life={inn} swell={swellA} tri={0} />
+          <BigBalance x={INV_X} y={CARD_Y} label="TOTAL INVESTED:" amount={rp(invested)} life={inn} swell={swellI} tri={ease(f, send + fly, m.reveal)} />
         </>
       ) : null}
     </Stage>
