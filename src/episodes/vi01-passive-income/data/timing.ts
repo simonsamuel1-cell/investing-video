@@ -430,11 +430,11 @@ export const SC12 = {
 
 // ═══ PART 03 — CERITA LO KHENG HONG ═══════════════════════════════════════
 export const SC13 = {
-  /** "Tempatkan LoKhengHong.png setelah muncul text Lo Kheng Hong" — the portrait comes up a beat after the name. */
-  foto: 12850,
+  /** "Animasi text dan munculnya gambar … di 12778" — the portrait comes up with the lower third. */
+  foto: 12778,
   /** The lower third leaves before the timeline comes up (13181). */
   ltOut: 13050,
-  name: 12810, // "Lo Kheng Hong" — "text Lo Kheng Hong nya buat baru muncul di 12810 aja" (the VO says it at 12739)
+  name: 12778, // "Lo Kheng Hong" — "Animasi text dan munculnya gambar lo kheng hong sebaiknya di 12778 aja" (earlier 12810; the VO says it at 12739)
   /** The four steps of the timeline, each on its word. */
   steps: [13181, 13286, 13350, 13453] as const, // pegawai bank, menabung, membaca laporan, pelan-pelan
   untr: 13775, // "United Tractors."
