@@ -35,19 +35,29 @@ const ROAD = { stem: 100, stemW: 2, label: 36, leading: 1.25, headAbove: 300 };
  */
 const ZOOM = { scale: LOWER_THIRD_NAME / ROAD.label, outSecs: 0.6, inSecs: 1 };
 /**
- * "gedein … sampe heightnya menyentuh batas margin": the machine itself — not the transparent frame
- * around it — runs from the top margin to the bottom margin. Its right edge rests where the logo zone
- * begins, so the glow around the ring never enters it. `ink` is the picture's opaque extent in its own
- * pixels; `edge` keeps the antialiased rim a hair inside the margins.
+ * "gedein … sampe heightnya menyentuh batas margin", then "kecilin 20%": the machine itself — not the
+ * transparent frame around it — was sized to run from the top margin to the bottom margin, its right
+ * edge on the logo zone's left edge so the ring's glow never enters it; it is now 80% of that, about
+ * the same centre. `ink` is the picture's opaque extent in its own pixels; `edge` keeps the antialiased
+ * rim a hair inside the margins.
  */
-const UNTR_PX = { w: 1122, h: 1402, ink: { x1: 1122, y0: 223, y1: 1161 }, edge: 4 };
-const UNTR_K = (theme.canvas.height - theme.margin.top - theme.margin.bottom - 2 * UNTR_PX.edge) / (UNTR_PX.ink.y1 - UNTR_PX.ink.y0);
+const UNTR_PX = { w: 1122, h: 1402, ink: { x0: 24, x1: 1122, y0: 223, y1: 1161 }, edge: 4, shrink: 0.8, right: 250 };
+const UNTR_FULL = (theme.canvas.height - theme.margin.top - theme.margin.bottom - 2 * UNTR_PX.edge) / (UNTR_PX.ink.y1 - UNTR_PX.ink.y0);
+const UNTR_K = UNTR_FULL * UNTR_PX.shrink;
+/** Where the machine's own centre sat at full size, and in its own pixels. */
+const UNTR_C = {
+  x: theme.canvas.width - theme.logoZone.width - ((UNTR_PX.ink.x1 - UNTR_PX.ink.x0) * UNTR_FULL) / 2,
+  y: theme.margin.top + UNTR_PX.edge + ((UNTR_PX.ink.y1 - UNTR_PX.ink.y0) * UNTR_FULL) / 2,
+  ix: (UNTR_PX.ink.x0 + UNTR_PX.ink.x1) / 2,
+  iy: (UNTR_PX.ink.y0 + UNTR_PX.ink.y1) / 2,
+};
 const UNTR_IMG = {
   src: "art/vi01/untr.png",
   aspect: UNTR_PX.w / UNTR_PX.h,
   h: UNTR_PX.h * UNTR_K,
-  cx: theme.canvas.width - theme.logoZone.width - UNTR_PX.ink.x1 * UNTR_K + (UNTR_PX.w * UNTR_K) / 2,
-  bottom: theme.margin.top + UNTR_PX.edge - UNTR_PX.ink.y0 * UNTR_K + UNTR_PX.h * UNTR_K,
+  /* "geser kanan 100 px", then "geser lagi 200 px", then "geser kiri 50 px": 250 in all */
+  cx: UNTR_C.x + UNTR_PX.right + (UNTR_PX.w / 2 - UNTR_C.ix) * UNTR_K,
+  bottom: UNTR_C.y + (UNTR_PX.h - UNTR_C.iy) * UNTR_K,
 };
 /** Lo Kheng Hong's portrait: his head and shoulders, from under the subtitle band up to just below the two lines of text. */
 const FOTO = { src: "art/vi01/lo-kheng-hong.png", aspect: 1199 / 1312, top: 60, h: 640, solid: 78, rise: 120 };
