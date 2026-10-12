@@ -132,7 +132,6 @@ export const SC16 = () => {
 };
 
 // ═══ SC17 — growing together; the question to ask every payday ═══════════
-const GROW = { base: 820 };
 const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: number }[] = [
   { label: "Kemampuan", tone: "indigo", from: 130, to: 330 },
   { label: "Income", tone: "indigo", from: 150, to: 380 },
@@ -143,13 +142,8 @@ const GROW_BARS: { label: string; tone: "indigo" | "cyan"; from: number; to: num
  * track of fine ticks, a gradient fill running to the right with a handle at its end. The lengths are the
  * old bars' heights (130/150/50 growing to 330/380/300 of 400) — sizes, not figures; none is labelled.
  */
-const PROG = { x: theme.margin.left, y: 250, w: 900, pad: 48, row: 160, label: 38, bar: 56, tick: 8, ticks: 48, gap: 16, knob: 20, top: 175, full: 400, growSecs: 0.7 };
-const ROOF = { x: 1060, w: 700, y: 430, h: 86 };
-const PILLARS = [
-  { x: 1140, label: "Kerja", tone: "indigo" as const },
-  { x: 1540, label: "Aset", tone: "cyan" as const },
-];
-
+const PROG_W = 900;
+const PROG = { x: (theme.canvas.width - PROG_W) / 2, y: 250, w: PROG_W, scale: 0.8, titleSize: 28, pad: 48, row: 160, label: 38, bar: 56, tick: 8, ticks: 48, gap: 16, knob: 20, top: 200, full: 400, growSecs: 0.7 };
 export const SC17 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -160,8 +154,6 @@ export const SC17 = () => {
   const first = useLife(L(B17.title), clear);
   const card = ease(f, L(B17.card), m.reveal);
   const ink = (t: "indigo" | "cyan") => (t === "indigo" ? c.indigo : theme.color.cyanInk);
-  const pillars = ease(f, L(B17.pillars), m.move);
-  const roof = ease(f, L(B17.pillars) + 30, m.move);
   return (
     <Stage transparent={f < HANDOFF_FADE}>
       {/* the grid carries on from SC16 (same global frame, so the same drift); for the first frames SC16's own is still under us */}
@@ -172,7 +164,9 @@ export const SC17 = () => {
       ) : null}
       {first > 0.001 ? (
         <div style={{ opacity: first }}>
-          <Say text="Di awal, aset kita mungkin masih kecil" x={PROG.x} y={PROG.top} at={L(B17.title)} anchor="left" size={56} weight={800} />
+          <Say text="Di awal, aset kita mungkin masih kecil" x={theme.canvas.width / 2} y={PROG.top} at={L(B17.title)} size={PROG.titleSize} weight={800} color={c.indigo} />
+          {/* "UI progress barnya kecilin sizenya 20%. UI nya taro tengah": 80%, hung from its top edge, centred */}
+          <div style={{ position: "absolute", inset: 0, transformOrigin: `${theme.canvas.width / 2}px ${PROG.y}px`, transform: `scale(${PROG.scale})` }}>
           <div style={{ position: "absolute", left: PROG.x, top: PROG.y, width: PROG.w, height: 2 * PROG.pad + 2 * PROG.row + PROG.label + PROG.gap + PROG.bar, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, opacity: card }} />
           {GROW_BARS.map((b, i) => {
             const grown = b.from + (b.to - b.from) * ease(f, L(B17.grow[i]), m.sec(PROG.growSecs));
@@ -199,19 +193,7 @@ export const SC17 = () => {
               </div>
             );
           })}
-          {/* two pillars under one roof */}
-          {PILLARS.map((p) => (
-            <div key={p.label}>
-              <div style={{ position: "absolute", left: p.x, top: GROW.base - 300 * pillars, width: 120, height: 300 * pillars, background: ink(p.tone), borderRadius: 12 }} />
-              <Say text={p.label} x={p.x + 60} y={GROW.base + 40} at={L(B17.pillars)} size={32} weight={700} color={ink(p.tone)} />
-            </div>
-          ))}
-          {roof > 0.001 ? (
-            <div style={{ position: "absolute", left: ROOF.x, top: ROOF.y, width: ROOF.w, height: ROOF.h, borderRadius: 18, background: c.cardBg, border: `${theme.shape.rule}px solid ${c.ink}`, opacity: roof, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 38, fontWeight: 800, color: c.ink }}>
-              Kekuatan finansial
-            </div>
-          ) : null}
-          <Say text="Lebih banyak pilihan" x={ROOF.x + ROOF.w / 2} y={ROOF.y - 60} at={L(B17.pilihan)} size={44} weight={800} color={theme.color.cyanInk} />
+          </div>
         </div>
       ) : null}
 
