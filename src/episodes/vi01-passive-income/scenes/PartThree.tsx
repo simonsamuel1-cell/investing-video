@@ -10,7 +10,7 @@ import { useCurrentFrame } from "remotion";
 import { quizLabelStyle } from "./ColdOpen";
 import { GridGround, Stage, cutOutStyle, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { BG_FADE, BLOCK, CUT, SC13 as B13, SC14 as B14, SC15 as B15, local } from "../data/timing";
-import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Link, Node, Say, nodeEdge, type IconName, type NodeBox } from "../components/kit";
+import { Cutout, LOWER_THIRD_NAME, LowerThird, OUTSIDE_RESERVES, ease, Icon, Say, type IconName } from "../components/kit";
 
 // ═══ SC13 — the path, ending on UNTR ═════════════════════════════════════
 /**
@@ -280,20 +280,22 @@ export const SC14 = () => {
 };
 
 // ═══ SC15 — not the jackpot: the process ═════════════════════════════════
-const STEPS: { label: string; icon: IconName; tone: "indigo" | "cyan" }[] = [
-  { label: "Kerja", icon: "briefcase", tone: "indigo" },
-  { label: "Sisihkan", icon: "coin", tone: "cyan" },
-  { label: "Pelajari", icon: "book", tone: "cyan" },
-  { label: "Beli yang dipahami", icon: "check", tone: "cyan" },
-  { label: "Beri waktu", icon: "clock", tone: "cyan" },
+const STEPS: { label: string; icon: IconName }[] = [
+  { label: "Kerja", icon: "briefcase" },
+  { label: "Sisihkan", icon: "coin" },
+  { label: "Pelajari", icon: "book" },
+  { label: "Beli yang dipahami", icon: "check" },
+  { label: "Beri waktu", icon: "clock" },
 ];
-const STEP = { y: 560, w: 300, h: 220, gap: 42 };
-const stepBox = (i: number): NodeBox => ({
-  x: (theme.canvas.width - (5 * STEP.w + 4 * STEP.gap)) / 2 + i * (STEP.w + STEP.gap),
-  y: STEP.y,
-  w: STEP.w,
-  h: STEP.h,
-});
+/**
+ * The five steps as the infographic Simon sent (15617–16172): tall white panels side by side, a yellow
+ * chevron on the edge of each, the icon on top, the title in bold capitals under it. Margin to margin; every
+ * panel is preceded by its chevron's slot.
+ */
+const PANELS = { chev: 44, chevW: 30, chevH: 66, h: 460, icon: 104, title: 40, num: 32, gap: 30, rise: 30, top: 84 };
+const PANEL_W = (theme.canvas.width - theme.margin.left - theme.margin.right) / STEPS.length - PANELS.chev;
+const panelLeft = (i: number) => theme.margin.left + i * (PANEL_W + PANELS.chev) + PANELS.chev;
+const PANEL_TOP = theme.canvas.height / 2 - PANELS.h / 2;
 
 /** The scalloped badge on a box's corner: a starburst, the ✗ or the ✓ drawn across it in the paper's colour. */
 const BADGE = { r: 58, teeth: 18, dip: 0.9, mark: 0.42, stroke: 11 };
@@ -347,7 +349,7 @@ export const SC15 = () => {
   const x = BOX_LEFT;
   const boxTop = (i: number) => MF.top + i * (MF.h + MF.gap);
   /* the boxes give way when the five steps come up */
-  const gone = ease(f, L(B15.steps[0]) - m.fade, m.fade);
+  const gone = ease(f, L(B15.process) - m.fade, m.fade);
   const title = ease(f, L(B15.bukan), m.reveal);
   /** One box: it comes up, its words after, its badge at `badgeAt`; `mute` (0→1) greys the box and its words. */
   const box = (i: number, at: number, textAt: number, badgeAt: number, fill: string, mark: "x" | "check", badge: string, words: string, mute: number, type: { ink: string; weight: number; italic: boolean }) => {
@@ -390,13 +392,25 @@ export const SC15 = () => {
           {box(1, L(B15.box2), L(B15.strike), L(B15.box2), theme.color.checkGreenWash, "check", theme.color.checkGreen, "Yang penting prosesnya", 0, { ink: theme.color.checkGreenInk, weight: 700, italic: false })}
         </div>
       </div>
-      {STEPS.map((s, i) => (
-        <div key={s.label}>
-          {i > 0 ? <Link a={nodeEdge(stepBox(i - 1), "r")} b={nodeEdge(stepBox(i), "l")} at={L(B15.steps[i]) - 16} tone={s.tone} /> : null}
-          <Node box={stepBox(i)} label={s.label} icon={s.icon} tone={s.tone} layout="column" at={L(B15.steps[i])} size={36} />
-          <Say text={String(i + 1)} x={stepBox(i).x + STEP.w / 2} y={STEP.y + STEP.h + 46} at={L(B15.steps[i])} size={40} weight={800} color={s.tone === "indigo" ? c.indigo : theme.color.cyanInk} />
-        </div>
-      ))}
+      {/* the five steps — panels, chevrons, icons and titles, each on its own word */}
+      {STEPS.map((s, i) => {
+        const p = ease(f, L(B15.steps[i]), m.reveal);
+        if (p <= 0.001) return null;
+        const left = panelLeft(i);
+        return (
+          <div key={s.label} style={{ position: "absolute", left: left - PANELS.chev, top: PANEL_TOP, width: PANEL_W + PANELS.chev, height: PANELS.h, opacity: p, transform: `translateY(${((1 - p) * PANELS.rise).toFixed(2)}px)` }}>
+            {/* the chevron, on the panel's left edge */}
+            <svg width={PANELS.chevW} height={PANELS.chevH} viewBox="0 0 30 66" style={{ position: "absolute", left: (PANELS.chev - PANELS.chevW) / 2, top: PANELS.h / 2 - PANELS.chevH / 2 }}>
+              <path d="M2 2 L16 2 L30 33 L16 64 L2 64 L16 33 Z" fill={theme.color.sunYellow} stroke={theme.color.sunYellow} strokeWidth={3} strokeLinejoin="round" />
+            </svg>
+            <div style={{ position: "absolute", left: PANELS.chev, top: 0, width: PANEL_W, height: PANELS.h, background: c.cardBg, borderRadius: theme.shape.cardRadius, boxShadow: shadow.soft, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "flex-start", paddingTop: PANELS.top, boxSizing: "border-box", gap: PANELS.gap, fontFamily: theme.text.family }}>
+              <div style={{ fontSize: PANELS.num, fontWeight: 700, color: c.muted }}>{String(i + 1).padStart(2, "0")}</div>
+              <Icon name={s.icon} size={PANELS.icon} color={c.ink} stroke={2.2} />
+              <div style={{ fontSize: PANELS.title, fontWeight: 800, color: c.ink, textTransform: "uppercase", textAlign: "center", lineHeight: 1.2, padding: "0 20px" }}>{s.label}</div>
+            </div>
+          </div>
+        );
+      })}
     </Stage>
   );
 };

@@ -472,6 +472,8 @@ export const SC15 = {
    * Simon's "Myth or Fact" layout — title, first box with its ✗, its words, second box with its ✓, its
    * words — laid over the narration: the title on "Yang menarik …", the first words on the quote.
    */
+  /** "15617-16172 Gunakan design ini" — the five steps, as an infographic of tall panels with a yellow chevron before each. */
+  process: 15617,
   box1: 15205,
   box2: 15440,
   bukan: 15139, // "Yang menarik dari cerita ini sebenarnya bukan:"
