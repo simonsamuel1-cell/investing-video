@@ -43,7 +43,8 @@ export const VO_LAST = 27964;
 
 /** A camera cut at every scene change unless a scene is built to carry over (house style: no wipes). */
 export const CUT = { over: 40, distance: 120, blur: 10 } as const;
-export const CONTINUOUS: number[] = [];
+/** Scene changes built to carry over, with no cut: SC02 → SC03 (the slots grow into the three cards). */
+export const CONTINUOUS: number[] = [BLOCK.SC03];
 export const CUTS: { at: number; axis: "x" | "y" }[] = (Object.keys(BLOCK) as (keyof typeof BLOCK)[])
   .filter((k) => k !== "SC01" && k !== "END")
   .map((k) => BLOCK[k])
