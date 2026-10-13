@@ -6,7 +6,7 @@ import React from "react";
 import { useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, theme, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Art, Panel3, Tag, Cutout, Ico, KIND, OUTSIDE_RESERVES, Pill, Statement, TypeBox, Wallet, ease, ink, useWords, wash, type Kind } from "../components/kit";
+import { Appear, Art, Panel3, Tag, Cutout, Ico, KIND, OUTSIDE_RESERVES, Pill, Statement, TypeBox, Wallet, ease, ink, useWords, type Kind } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const KINDS: Kind[] = ["aktif", "stabil", "panjang"];
@@ -122,40 +122,19 @@ export const SC01 = () => {
  *          an envelope on each, ≠ between them;
  *       B  each lane turns into its market line: the short one ends in a dip (▼), the long one has time to
  *          come back (▲) — schematic, not data;
- *       C  "sebelum memilih produk": the products pass by, faded; "pisahkan dulu uangnya": one pile of coins
- *          and three empty slots in the three colours, the coins flying into them one by one.
- *  SC03    the slots grow into the three cards, named on their words; "tiga dompet": a wallet drops into each
- *          card and swallows its coins; each card's job and, on a time line under them, its time of use.
+ *       C  "jadi sebelum memilih produk": the statement and one pile of coins; "pisahkan dulu uangnya": the pile
+ *          splits three ways, dashed lines between (Simon preferred this to a version with the products passing
+ *          by and coins flying into slots).
+ *  SC03    the cards grow in around the three piles, named on their words; "tiga dompet": a wallet drops into
+ *          each card and swallows its pile; each card's job and, on a time line under them, its time of use.
  * No mascot here.
  */
 const LANE = { x0: 420, y: [360, 600], end: [660, 1640], bar: 16, env: 150, wave: 60 };
-const SLOT = { w: 340, h: 210, cy: 650 };
 const COLS = { gap: 510 };
 const colX = (i: number) => CX + (i - 1) * COLS.gap;
-const PILE = { cx: CX, cy: 420, h: 220 };
-/** Three coins per slot, a little pyramid at the slot's foot. */
-const COIN_R = 26;
-const STACK = [
-  { dx: -30, dy: 0 },
-  { dx: 30, dy: 0 },
-  { dx: 0, dy: -40 },
-];
-const coinHome = (i: number, j: number) => ({ x: colX(i) + STACK[j].dx, y: SLOT.cy + SLOT.h / 2 - 50 + STACK[j].dy });
-const PRODUCT_ROW = ["Saham", "Reksa dana", "Obligasi", "Emas", "Deposito"];
-const PRODUCT_ICON: Record<string, string> = { Saham: "ph-chart-line-up-duotone", "Reksa dana": "ph-chart-pie-slice-duotone", Obligasi: "ph-scroll-duotone", Emas: "keyline-icons-gold-bars-duotone", Deposito: "ph-bank-duotone" };
-
-/** A coin: a yellow disc, its ring and "Rp". */
-const Coin = ({ x, y, r = COIN_R, opacity = 1 }: { x: number; y: number; r?: number; opacity?: number }) => {
-  const c = usePalette();
-  return (
-    <svg width={r * 2} height={r * 2} style={{ position: "absolute", left: x - r, top: y - r, opacity, overflow: "visible" }}>
-      <circle cx={r} cy={r + 3} r={r} fill={theme.color.walletStabil} />
-      <circle cx={r} cy={r} r={r} fill={theme.color.coinYellow} />
-      <circle cx={r} cy={r} r={r * 0.78} fill="none" stroke={c.cardBg} strokeWidth={2} />
-      <text x={r} y={r} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={r * 0.72} fill={c.ink}>Rp</text>
-    </svg>
-  );
-};
+/** The one pile, then three: at the centre, h 260; split, each h 190 at its column. */
+const PILE = { cy: 520, h: 260, split: 190, rule: { y0: 350, y1: 720 } };
+const pileX = (i: number, split: number) => CX + (colX(i) - CX) * split;
 
 /** A schematic market line along a lane: `o(t)` in −1…1 (negative = up), drawn to `p`. Not data. */
 const lanePath = (x0: number, x1: number, y: number, a: number, o: (t: number) => number, p: number) => {
@@ -170,26 +149,6 @@ const lanePath = (x0: number, x1: number, y: number, a: number, o: (t: number) =
 const SHORT = (t: number) => -0.5 * Math.sin(t * Math.PI * 2.2) + 0.9 * Math.pow(t, 1.5);
 const LONG = (t: number) => 0.45 * Math.sin(t * Math.PI * 1.6) - 0.3 * Math.sin(t * Math.PI * 6) - 0.7 * t * t;
 
-/** SC02's last picture, which SC03 opens on: the statement, three slots, three coins in each. */
-const Slots = ({ life, morph }: { life: number; morph: number }) => {
-  if (life <= 0.001) return null;
-  return (
-    <>
-      {KINDS.map((k, i) => {
-        const w = SLOT.w + (CARD3.w - SLOT.w) * morph;
-        const h = SLOT.h + (CARD3.h - SLOT.h) * morph;
-        const cy = SLOT.cy + (CARD3.top + CARD3.h / 2 - SLOT.cy) * morph;
-        return (
-          <div key={k} style={{ position: "absolute", left: colX(i) - w / 2, top: cy - h / 2, width: w, height: h, opacity: life }}>
-            {/* the dashed slot, filling in to a white card as it grows */}
-            <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, background: wash(k), border: `3px dashed ${ink(k)}`, boxSizing: "border-box", opacity: 1 - morph }} />
-            <Panel3 x={0} y={0} w={w} h={h} style={{ opacity: morph, borderTop: `10px solid ${ink(k)}` }} />
-          </div>
-        );
-      })}
-    </>
-  );
-};
 const CARD3 = { w: 460, top: 230, h: 440, wallet: { cy: 350, h: 170 }, name: 470, task: 540, label: 38 };
 const TASKS: Record<Kind, { icon: string; text: string; time: string }> = {
   aktif: { icon: "check-aktif", text: "Kebutuhan sekarang", time: "Sewaktu-waktu" },
@@ -197,6 +156,30 @@ const TASKS: Record<Kind, { icon: string; text: string; time: string }> = {
   panjang: { icon: "check-indigo", text: "Potensi tumbuh lebih tinggi", time: "3 tahun ke atas" },
 };
 const TIMELINE = { y: 770, x0: theme.margin.left + 40, x1: theme.canvas.width - theme.margin.right - 40 };
+
+/** The coins: one pile, or three (split 0→1), with dashed rules between once split. */
+const Piles = ({ life, split, rules, lift = 0, shrink = 0, swallow = [0, 0, 0] }: { life: number; split: number; rules: number; lift?: number; shrink?: number; swallow?: number[] }) => {
+  const c = usePalette();
+  if (life <= 0.001) return null;
+  const ruleOn = Math.max(0, rules * 2 - 1);
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity: life }}>
+      {[0, 1, 2].map((i) => {
+        if (swallow[i] >= 0.999) return null;
+        const h = (PILE.h + (PILE.split - PILE.h) * split) * (1 - 0.4 * shrink) * (1 - 0.7 * swallow[i]);
+        const cy = PILE.cy + lift;
+        return <Art key={i} src="art/vi03/coins.png" aspect={601 / 452} cx={pileX(i, split)} cy={cy} h={h} style={{ opacity: 1 - swallow[i] }} />;
+      })}
+      {ruleOn > 0.001 ? (
+        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, opacity: ruleOn }}>
+          {[CX - COLS.gap / 2, CX + COLS.gap / 2].map((x) => (
+            <line key={x} x1={x} y1={PILE.rule.y0} x2={x} y2={PILE.rule.y1} stroke={c.muted} strokeWidth={4} strokeDasharray="14 12" strokeLinecap="round" />
+          ))}
+        </svg>
+      ) : null}
+    </div>
+  );
+};
 
 export const SC02 = () => {
   const f = useCurrentFrame();
@@ -206,19 +189,13 @@ export const SC02 = () => {
   const timeAt = W("waktu penggunaannya");
   const waveAt = W("kemampuan");
   const splitAt = W("jadi sebelum");
-  /* the products pass by right after "jadi sebelum", so the frame is never empty between the two halves */
-  const productAt = W("jadi sebelum") + m.fade;
   const pisahAt = W("pisahkan");
   const lanes = 1 - ease(f, splitAt, m.fade);
   const lanesUp = ease(f, splitAt, m.move) * -40;
   const barAt = [W("bulan depan"), W("lima tahun lagi")];
   /* each envelope comes with "uang" — the money that is talked about — before its lane is drawn */
   const envAt = [W("uang"), W("dengan uang")];
-  const pile = ease(f, pisahAt, m.reveal);
-  /* nine coins, one after another, from the pile into the slots */
-  const coinAt = (n: number) => pisahAt + m.sec(0.25) + m.sec(0.11) * n;
-  const flown = Array.from({ length: 9 }, (_, n) => ease(f, coinAt(n), m.sec(0.5)));
-  const left = 1 - flown.reduce((a, b) => a + b, 0) / 9;
+  const split = ease(f, pisahAt, m.move);
   return (
     <Stage>
       <Ground from={BLOCK.SC02} />
@@ -273,29 +250,11 @@ export const SC02 = () => {
         </div>
       ) : null}
 
-      {/* C — "sebelum memilih produk": the products pass by, faded */}
-      {PRODUCT_ROW.map((p, i) => (
-        <Appear key={p} at={productAt + m.sec(0.08) * i} out={pisahAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, opacity: 0.55 }}>
-          <Pill cx={CX + (i - 2) * 300} cy={420} w={270} icon={PRODUCT_ICON[p]} label={p} />
-        </Appear>
-      ))}
-      {/* "pisahkan dulu uangnya berdasarkan kebutuhan" */}
-      <Appear at={pisahAt} style={{ left: 0, width: theme.canvas.width, top: 180 }}>
+      {/* C — the statement and one pile; on "pisahkan" it splits three ways */}
+      <Appear at={splitAt + m.sec(0.2)} style={{ left: 0, width: theme.canvas.width, top: 190 }}>
         <Statement cx={CX} cy={0} text="Pisahkan dulu uangnya berdasarkan kebutuhan" mark="kebutuhan" size={60} maxWidth={1500} />
       </Appear>
-      <Slots life={ease(f, pisahAt + m.sec(0.1), m.reveal)} morph={0} />
-      {pile > 0.001 && left > 0.01 ? (
-        <Art src="art/vi03/coins.png" aspect={601 / 452} cx={PILE.cx} cy={PILE.cy} h={PILE.h * (0.45 + 0.55 * left)} style={{ opacity: pile * Math.min(1, left * 4) }} />
-      ) : null}
-      {flown.map((p, n) => {
-        if (p <= 0.001) return null;
-        const i = n % 3;
-        const j = Math.floor(n / 3);
-        const to = coinHome(i, j);
-        const x = PILE.cx + (to.x - PILE.cx) * p;
-        const y = PILE.cy + (to.y - PILE.cy) * p - Math.sin(Math.PI * p) * 120;
-        return <Coin key={n} x={x} y={y} />;
-      })}
+      {f >= splitAt ? <Piles life={ease(f, splitAt + m.sec(0.2), m.reveal)} split={split} rules={split} /> : null}
     </Stage>
   );
 };
@@ -326,22 +285,20 @@ export const SC03 = () => {
           <div style={{ padding: "12px 28px", borderRadius: 999, background: theme.color.indigoWash, fontFamily: theme.text.family, fontSize: 36, fontWeight: 700, letterSpacing: 2, color: c.indigo }}>Tiga kelompok uang</div>
         </div>
       </Appear>
-      <Slots life={1} morph={morph} />
+      {/* the cards grow in around the piles */}
+      {KINDS.map((k, i) => (
+        <div key={`card-${k}`} style={{ position: "absolute", inset: 0, opacity: morph, transformOrigin: `${colX(i)}px ${CARD3.top + CARD3.h / 2}px`, transform: `scale(${(0.92 + 0.08 * morph).toFixed(4)})` }}>
+          <Panel3 x={colX(i) - CARD3.w / 2} y={CARD3.top} w={CARD3.w} h={CARD3.h} style={{ borderTop: `10px solid ${ink(k)}` }} />
+        </div>
+      ))}
+      {/* the three piles from SC02, rising into the cards, then each swallowed by its wallet */}
+      <Piles life={1} split={1} rules={1 - morph} lift={(CARD3.wallet.cy + 10 - PILE.cy) * morph} shrink={morph} swallow={KINDS.map((_, i) => ease(f, walletAt + m.sec(0.12) * i + m.move * 0.6, m.sec(0.4)))} />
       {KINDS.map((k, i) => {
         const x = colX(i);
         const drop = ease(f, walletAt + m.sec(0.12) * i, m.move);
         const name = ease(f, nameAt[i], m.reveal);
-        /* the coins ride up with the card, then drop into the wallet */
-        const swallow = ease(f, walletAt + m.sec(0.12) * i + m.move * 0.6, m.sec(0.4));
         return (
           <React.Fragment key={k}>
-            {STACK.map((s, j) => {
-              const home = coinHome(i, j);
-              const cardY = home.y + (CARD3.wallet.cy + 20 + s.dy - home.y) * morph;
-              const y = cardY + (CARD3.wallet.cy - cardY) * swallow;
-              const x2 = home.x + (x - home.x) * swallow;
-              return swallow < 0.999 ? <Coin key={j} x={x2} y={y} r={COIN_R * (1 - 0.6 * swallow)} opacity={1 - swallow} /> : null;
-            })}
             {drop > 0.001 ? <Wallet kind={k} cx={x} cy={CARD3.wallet.cy - (1 - drop) * 140} h={CARD3.wallet.h} style={{ opacity: drop }} /> : null}
             <div style={{ position: "absolute", left: x - CARD3.w / 2, width: CARD3.w, top: CARD3.name, opacity: name, transform: `translateY(${((1 - name) * 12).toFixed(2)}px)`, textAlign: "center", fontFamily: theme.text.family, fontSize: CARD3.label, fontWeight: 800, color: ink(k), lineHeight: 1.1 }}>{KIND[k].label}</div>
             {/* its job */}
