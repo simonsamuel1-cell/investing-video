@@ -19,11 +19,12 @@ Script (text), VO (mp3), SRT — as always. The script is right about the words;
 5. **Check** before Simon sees anything: `tsc`, `audit`, stills, `audit-frames`; overlaps and clipping.
    Then the **`vi-reviewer` agent** (`.claude/agents/vi-reviewer.md`) reviews the batch independently —
    one review per batch of scenes, not per element — and its FIXes are applied before Simon sees it.
-6. **Gate.**
-   - **First episode on this system:** the first **5 scenes** go to Simon for approval (storyboard + built
-     stills). Only after that, the rest without approval.
-   - **Afterwards:** build straight from the storyboard. If Simon says it is fine, carry on without
-     approval. If it falls short, **back to the 5-scene approval step**.
+6. **Gate — on the FINISHED result, not on storyboards.** Simon, 13 Oct: *"kalo storyboard gausa persetujuanku,
+   hasil jadinya aja yang perlu persetujuanku."* Storyboards are made and used straight away.
+   - **First episode on this system (VI03):** build the first **4 scenes** and send the built result for
+     approval; once approved, build all the rest and send the finished video.
+   - **The project after:** per scene.
+   - If a result falls short, back to the approval step.
 
 ## ChatGPT
 Claude drives Simon's ChatGPT (already open, already logged in — "biasa" opens it). No API. Claude never
