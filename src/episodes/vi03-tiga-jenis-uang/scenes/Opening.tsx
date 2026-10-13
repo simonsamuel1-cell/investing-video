@@ -70,11 +70,11 @@ export const SC01 = () => {
         </Appear>
       ))}
       <Appear at={W("masuk")} out={askAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-        <Art src="art/vi03/coins.png" aspect={601 / 452} cx={CX + 460} cy={NOTE.top + 3 * (NOTE.h + NOTE.gap) - 40} h={230} />
+        <Art src="art/vi03/coins.png" aspect={601 / 452} cx={CX + 520} cy={NOTE.top + 3 * (NOTE.h + NOTE.gap) - 40} h={230} />
       </Appear>
 
       {/* B — "Uang ini enaknya diinvestasikan ke mana?" with the products around it */}
-      <Appear at={askAt} out={manAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
+      <Appear at={askAt + m.fade} out={manAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
         <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: 330, textAlign: "center", fontFamily: theme.text.family, fontSize: 34, fontWeight: 700, letterSpacing: 2, color: c.indigo }}>Pertanyaan pertama</div>
       </Appear>
       <Appear at={W("uang ini enaknya") - m.sec(0.15)} out={manAt} style={{ left: CX - 470, top: 400 }}>
@@ -98,11 +98,11 @@ export const SC01 = () => {
       <div style={{ position: "absolute", inset: 0, WebkitMaskImage: `linear-gradient(to bottom, black ${MAN.floor - MAN.foot * (MAN.floor - MAN.top)}px, transparent ${MAN.floor}px)`, maskImage: `linear-gradient(to bottom, black ${MAN.floor - MAN.foot * (MAN.floor - MAN.top)}px, transparent ${MAN.floor}px)` }}>
         <Cutout src={MAN.src} aspect={MAN.w / MAN.h} x={theme.margin.left + 40 + (MAN.ink.x1 - MAN.ink.x0) * MAN_K / 2 + (MAN.w / 2 - (MAN.ink.x0 + MAN.ink.x1) / 2) * MAN_K} y={MAN.floor + (MAN.h - MAN.belly) * MAN_K} h={MAN.h * MAN_K} at={manAt} rise={theme.canvas.height - MAN.top} riseFrames={m.move} />
       </div>
-      <Appear at={keyAt - m.sec(0.2)} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+      <Appear at={W("jauh lebih penting")} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <Art src="art/vi03/calendar.png" aspect={568 / 505} cx={1240} cy={310} h={200} />
       </Appear>
       <Appear at={keyAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-        <Statement cx={1240} cy={560} text="Uang ini, kapan akan saya pakai?" mark="kapan" size={76} maxWidth={900} />
+        <Statement cx={1240} cy={590} text="Uang ini, kapan akan saya pakai?" mark="kapan" size={100} maxWidth={900} />
       </Appear>
 
       {/* the mascot, over it all, from the first notification */}
@@ -153,7 +153,7 @@ export const SC02 = () => {
           {line > 0.98 ? <path d={`M ${LINE2.x1 + 18} ${LINE2.y} L ${LINE2.x1 - 4} ${LINE2.y - 14} L ${LINE2.x1 - 4} ${LINE2.y + 14} Z`} fill={c.ink} /> : null}
           <circle cx={LINE2.x0} cy={LINE2.y} r={10} fill={c.ink} />
         </svg>
-        <Tag x={LINE2.x0 - 70} y={LINE2.y + 30} text="Sekarang" tint={theme.color.indigoWash} />
+        <Tag x={LINE2.x0 - 108} y={LINE2.y + 30} text="Sekarang" tint={theme.color.indigoWash} />
         {ENV.map((e, i) => (
           <React.Fragment key={e.label}>
             <Appear at={W(e.word)} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
@@ -165,8 +165,8 @@ export const SC02 = () => {
             </Appear>
           </React.Fragment>
         ))}
-        <Appear at={W("nggak seharusnya")} out={timeAt} style={{ left: CX - 70, top: LINE2.y - 230 }}>
-          <div style={{ fontFamily: theme.text.family, fontSize: 150, fontWeight: 800, color: c.indigo, lineHeight: 1 }}>≠</div>
+        <Appear at={W("lima tahun lagi") + m.sec(0.3)} style={{ left: CX - 100, width: 200, top: LINE2.y - 150 - 75 }}>
+          <div style={{ fontFamily: theme.text.family, fontSize: 150, fontWeight: 800, color: c.indigo, lineHeight: 1, textAlign: "center" }}>≠</div>
         </Appear>
 
         {/* B — over each envelope, a little up-and-down: a short window and a long one */}
@@ -187,14 +187,14 @@ export const SC02 = () => {
         })}
         <Appear at={W("kemampuan")} style={{ left: 0, width: theme.canvas.width, top: LINE2.y + 110 }}>
           <div style={{ textAlign: "center", fontFamily: theme.text.family, fontSize: 40, fontWeight: 800, color: c.ink }}>
-            Daya tahan menghadapi <span style={{ color: c.indigo }}>naik-turun</span> juga berbeda
+            Kemampuan menghadapi <span style={{ color: c.indigo }}>naik-turunnya</span> investasi juga berbeda
           </div>
         </Appear>
       </div>
 
       {/* C — one pile of coins, split three ways by what it is for */}
       <Appear at={splitAt + m.sec(0.2)} style={{ left: 0, width: theme.canvas.width, top: 190 }}>
-        <Statement cx={CX} cy={0} text="Pisahkan dulu berdasarkan kebutuhan" mark="kebutuhan" size={60} maxWidth={1500} />
+        <Statement cx={CX} cy={0} text="Pisahkan dulu uangnya berdasarkan kebutuhan" mark="kebutuhan" size={60} maxWidth={1500} />
       </Appear>
       {f >= splitAt
         ? [0, 1, 2].map((i) => {
@@ -202,7 +202,6 @@ export const SC02 = () => {
             const life = ease(f, splitAt + m.sec(0.2), m.reveal);
             return (
               <div key={i} style={{ position: "absolute", inset: 0, opacity: life }}>
-                {split > 0.02 ? <div style={{ position: "absolute", left: x - 150, top: 640, width: 300, height: 36, borderRadius: 999, background: wash(KINDS[i]), opacity: split }} /> : null}
                 <Art src="art/vi03/coins.png" aspect={601 / 452} cx={x} cy={520} h={260 - 70 * split} />
               </div>
             );
@@ -232,8 +231,11 @@ export const SC03 = () => {
   const walletAt = W("bayangkan");
   const tasksAt = W("setiap dompet");
   const wordAt = [W("uang aktif"), W("uang stabil"), W("uang jangka panjang")];
+  const cardsAt = W("cara");
+  /* the mascot: on the middle wallet as the three wallets come, to the first on "tiga dompet", then along */
+  const toFirst = ease(f, W("tiga dompet"), m.move);
   const glide = ease(f, tasksAt, W("berbeda", 0, "f1") - tasksAt);
-  const mascotX = colX(0) + (colX(2) - colX(0)) * glide;
+  const mascotX = CX + (colX(0) - CX) * toFirst + (colX(2) - colX(0)) * glide;
   return (
     <Stage>
       <Ground from={BLOCK.SC03} />
@@ -243,27 +245,29 @@ export const SC03 = () => {
         </div>
       </Appear>
       {KINDS.map((k, i) => {
+        /* the three cards come together on "cara"; each one's coin and name on its own words */
+        const card = ease(f, cardsAt, m.reveal);
+        if (card <= 0.001) return null;
         const p = ease(f, wordAt[i], m.reveal);
-        if (p <= 0.001) return null;
         const wal = ease(f, walletAt + m.sec(0.1) * i, m.reveal);
         const x = colX(i);
         return (
-          <div key={k} style={{ position: "absolute", inset: 0, opacity: p, transform: `translateY(${((1 - p) * 20).toFixed(2)}px)` }}>
+          <div key={k} style={{ position: "absolute", inset: 0, opacity: card, transform: `translateY(${((1 - card) * 20).toFixed(2)}px)` }}>
             <Panel3 x={x - COL3.w / 2} y={COL3.top} w={COL3.w} h={COL3.h} style={{ borderTop: `10px solid ${ink(k)}` }} />
-            {/* before "bayangkan": a coin icon; after it, the wallet */}
-            <div style={{ position: "absolute", left: x - 60, top: COL3.top + 90, opacity: 1 - wal }}>
+            {/* before "bayangkan": a coin in its colour; after it, the wallet */}
+            <div style={{ position: "absolute", left: x - 60, top: COL3.top + 90, opacity: p * (1 - wal) }}>
               <div style={{ width: 120, height: 120, borderRadius: 999, background: wash(k), display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Ico name="ph-coins-duotone" size={72} />
+                <Ico name={`coins-${k}`} size={72} />
               </div>
             </div>
             <Wallet kind={k} cx={x} cy={COL3.top + 150} h={210} style={{ opacity: wal, transform: `scale(${(0.85 + 0.15 * wal).toFixed(3)})` }} />
-            <div style={{ position: "absolute", left: x - COL3.w / 2, width: COL3.w, top: COL3.top + 280, textAlign: "center", fontFamily: theme.text.family, fontSize: COL3.label, fontWeight: 800, color: ink(k), lineHeight: 1.1 }}>{KIND[k].label}</div>
+            <div style={{ position: "absolute", left: x - COL3.w / 2, width: COL3.w, top: COL3.top + 280, opacity: p, textAlign: "center", fontFamily: theme.text.family, fontSize: COL3.label, fontWeight: 800, color: ink(k), lineHeight: 1.1 }}>{KIND[k].label}</div>
             {/* C — its job and its time */}
             {[
-              { at: W("tugas sendiri"), icon: k === "aktif" ? "check-aktif" : "check-indigo", text: "Punya tugas" },
-              { at: W("waktu penggunaan"), icon: k === "aktif" ? "clock-aktif" : k === "stabil" ? "clock-stabil" : "ph-clock-duotone", text: "Punya waktu pakai" },
+              { at: W("tugas sendiri"), icon: k === "aktif" ? "check-aktif" : k === "stabil" ? "check-stabil" : "check-indigo", text: "Punya tugas sendiri" },
+              { at: W("waktu penggunaan"), icon: k === "aktif" ? "clock-aktif" : k === "stabil" ? "clock-stabil" : "ph-clock-duotone", text: "Punya waktu penggunaan" },
             ].map((row, r) => (
-              <Appear key={row.text} at={row.at + m.sec(0.08) * i} style={{ left: x - COL3.w / 2 + 40, top: COL3.top + 370 + r * 70 }}>
+              <Appear key={row.text} at={row.at + m.sec(0.08) * i} style={{ left: x - COL3.w / 2 + 28, top: COL3.top + 370 + r * 70 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 14, fontFamily: theme.text.family, fontSize: 30, fontWeight: 700, color: c.ink }}>
                   <Ico name={row.icon} size={40} />
                   {row.text}
@@ -274,15 +278,17 @@ export const SC03 = () => {
         );
       })}
       {/* the mascot: over the middle wallet on "bayangkan", then along the three as each one's job is named */}
-      <div style={{ opacity: ease(f, walletAt, m.reveal) }}>
-        <TuntunMark x={tasksAt <= f ? mascotX : CX} y={COL3.top - MASCOT_H - 30 + bob(g)} height={MASCOT_H} />
+      <div style={{ opacity: ease(f, walletAt + m.fade, m.reveal) }}>
+        <TuntunMark x={mascotX} y={COL3.top - MASCOT_H - 30 + bob(g)} height={MASCOT_H} />
       </div>
     </Stage>
   );
 };
 
 // ═══ SC04 — 01 Uang Aktif: what it is, what it pays for, the rule ═══════
-const MAP4 = { cy: 500, hub: 220, pill: 400, row: 200, small: 0.8, lift: -60 };
+const MAP4 = { cy: 500, hub: 220, pill: 400, pillMin: 300, row: 200, small: 0.8, lift: -60 };
+/** Where a need's connector ends: the pill's inner edge, which stays put while the pill grows outward. */
+const innerX = (n: { x: number }) => n.x + (n.x < CX ? 1 : -1) * (MAP4.pill / 2);
 const NEEDS: { label: string; icon: string; word: string; x: number; y: number }[] = [
   { label: "Makan", icon: "ph-fork-knife-duotone", word: "makan", x: CX - 470, y: 330 },
   { label: "Bayar kos / cicilan", icon: "ph-house-line-duotone", word: "bayar kos", x: CX + 470, y: 330 },
@@ -325,13 +331,13 @@ export const SC04 = () => {
           {NEEDS.map((n) => {
             const p = ease(f, W(n.word) - m.sec(0.15), m.sec(0.35));
             if (p <= 0.001) return null;
-            const ex = n.x + (n.x < CX ? 1 : -1) * (MAP4.pill / 2);
+            const ex = innerX(n);
             return <path key={n.label} d={`M ${CX} ${MAP4.cy} C ${CX} ${n.y}, ${(CX + ex) / 2} ${n.y}, ${ex} ${n.y}`} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} fill="none" stroke={theme.color.walletAktif} strokeWidth={4} strokeLinecap="round" />;
           })}
         </svg>
         {NEEDS.map((n) => (
           <Appear key={n.label} at={W(n.word)} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-            <Pill cx={n.x} cy={n.y} w={MAP4.pill} icon={n.icon} label={n.label} tint={theme.color.walletAktifWash} />
+            <Pill cx={innerX(n)} cy={n.y} w={MAP4.pillMin} anchor={n.x < CX ? "right" : "left"} icon={n.icon} label={n.label} tint={theme.color.walletAktifWash} />
           </Appear>
         ))}
         <Wallet kind="aktif" cx={wx} cy={wy} h={wh} />
@@ -347,7 +353,7 @@ export const SC04 = () => {
         <Statement cx={CX} cy={720} text="Uang yang sewaktu-waktu bisa kita butuhkan" mark="sewaktu-waktu" markInk={theme.color.walletAktif} size={56} maxWidth={1400} />
       </Appear>
       {/* C — the rule, in the dashed box */}
-      <TypeBox cx={CX} y={700} w={1000} h={140} at={ruleAt + m.sec(0.2)} text="Saat dibutuhkan, uangnya harus tersedia" mark="harus tersedia" markAt={W("harus tersedia")} size={40} italic={false} fadeIn />
+      <TypeBox cx={CX} y={700} w={1000} h={140} at={ruleAt + m.sec(0.2)} text="Saat dibutuhkan, uangnya harus tersedia" mark="harus tersedia" markAt={W("harus tersedia")} size={40} italic={false} fadeIn markInk={theme.color.walletAktif} markWash={theme.color.walletAktifWash} />
     </Stage>
   );
 };

@@ -61,13 +61,18 @@ export const Panel3 = ({ x, y, w, h, style, children }: { x: number; y: number; 
   return <div style={{ position: "absolute", left: x, top: y, width: w, height: h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, boxSizing: "border-box", ...style }}>{children}</div>;
 };
 
-/** A pill: an icon in a tinted circle, then a label. Centred on (cx, cy). */
-export const Pill = ({ cx, cy, w, icon, label, tint, size = 34, iconSize = 44 }: { cx: number; cy: number; w: number; icon: string; label: string; tint?: string; size?: number; iconSize?: number }) => {
+/**
+ * A pill: an icon in a tinted circle, then a label. Centred on (cx, cy) with width `w`; or, with `anchor`, one
+ * END pinned at cx ("left" = its left edge there, "right" = its right edge) and the pill as wide as its label
+ * needs (at least `w`) — so a long label grows the pill outward instead of running off it.
+ */
+export const Pill = ({ cx, cy, w, icon, label, tint, size = 34, iconSize = 44, anchor }: { cx: number; cy: number; w: number; icon: string; label: string; tint?: string; size?: number; iconSize?: number; anchor?: "left" | "right" }) => {
   const c = usePalette();
   const shadow = useShadow();
   const h = iconSize + 36;
+  const place: React.CSSProperties = anchor === "left" ? { left: cx, minWidth: w } : anchor === "right" ? { right: theme.canvas.width - cx, minWidth: w } : { left: cx - w / 2, width: w };
   return (
-    <div style={{ position: "absolute", left: cx - w / 2, top: cy - h / 2, width: w, height: h, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 16, padding: "0 28px 0 18px", boxSizing: "border-box", fontFamily: theme.text.family, fontSize: size, fontWeight: 700, color: c.ink, whiteSpace: "nowrap" }}>
+    <div style={{ position: "absolute", ...place, top: cy - h / 2, height: h, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 16, padding: "0 28px 0 18px", boxSizing: "border-box", fontFamily: theme.text.family, fontSize: size, fontWeight: 700, color: c.ink, whiteSpace: "nowrap" }}>
       <div style={{ width: iconSize + 16, height: iconSize + 16, borderRadius: 999, background: tint ?? theme.color.indigoWash, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
         <Ico name={icon} size={iconSize} />
       </div>
@@ -87,7 +92,7 @@ export const Statement = ({ cx, cy, text, size, mark, markInk, maxWidth, align =
   const c = usePalette();
   const i = mark ? text.indexOf(mark) : -1;
   return (
-    <div style={{ position: "absolute", left: align === "center" ? cx - (maxWidth ?? 1400) / 2 : cx, top: cy, transform: "translateY(-50%)", width: maxWidth ?? 1400, textAlign: align, fontFamily: theme.text.family, fontSize: size, fontWeight: 800, lineHeight: 1.15, color: c.ink }}>
+    <div style={{ position: "absolute", left: align === "center" ? cx - (maxWidth ?? 1400) / 2 : cx, top: cy, transform: "translateY(-50%)", width: maxWidth ?? 1400, textAlign: align, fontFamily: theme.text.family, fontSize: size, fontWeight: 800, lineHeight: 1.15, letterSpacing: -2, color: c.ink }}>
       {i < 0 ? (
         text
       ) : (

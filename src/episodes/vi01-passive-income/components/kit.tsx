@@ -880,6 +880,8 @@ export const TypeBox = ({
   boxInk,
   italic = true,
   fadeIn = false,
+  markInk,
+  markWash,
 }: {
   cx: number;
   y: number;
@@ -905,6 +907,9 @@ export const TypeBox = ({
   italic?: boolean;
   /** No typing: the words fade in once the box is open, and the highlight opens out from its middle like the box did. */
   fadeIn?: boolean;
+  /** The highlight's ink and wash in another colour (VI03's wallet colours); `tone` otherwise. */
+  markInk?: string;
+  markWash?: string;
 }) => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -930,8 +935,8 @@ export const TypeBox = ({
       ? ease(f, Math.max(markAt ?? 0, start + Math.ceil(mEnd / cps)), m.reveal)
       : 0;
   const wash =
-    tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan;
-  const ink = tone === "indigo" ? c.indigo : theme.color.cyanInk;
+    markWash ?? (tone === "indigo" ? theme.color.indigoWashStrong : theme.color.hlCyan);
+  const ink = markInk ?? (tone === "indigo" ? c.indigo : theme.color.cyanInk);
   const seg = (s: string, k: string) => <span key={k}>{s}</span>;
   return (
     <div style={{ opacity: (1 - gone) * (1 - 0.6 * dim) }}>
