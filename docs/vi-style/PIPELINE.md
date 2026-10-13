@@ -17,6 +17,8 @@ Script (text), VO (mp3), SRT — as always. The script is right about the words;
    with the safe areas, where things sit, how big, what arrives first. Prompt template below.
 4. **Build** each scene from its storyboard, with core templates and the assets (STYLE.md §5).
 5. **Check** before Simon sees anything: `tsc`, `audit`, stills, `audit-frames`; overlaps and clipping.
+   Then the **`vi-reviewer` agent** (`.claude/agents/vi-reviewer.md`) reviews the batch independently —
+   one review per batch of scenes, not per element — and its FIXes are applied before Simon sees it.
 6. **Gate.**
    - **First episode on this system:** the first **5 scenes** go to Simon for approval (storyboard + built
      stills). Only after that, the rest without approval.
