@@ -10,6 +10,9 @@
  * re-cut, re-run the aligner and copy again.
  */
 
+import LAST_WORDS from "./last-scene-words.json";
+import APPENDS from "./appends.json";
+
 /**
  * ⚠ PADDED VO. Every frame below is a frame of the PADDED recording that
  * public/vo/passive-income.mp3 is built as (scripts/vi01-vo.py, from
@@ -50,12 +53,17 @@ export const BLOCK = {
   SC09: 8772, SC10: 9779, SC11: 10835, SC12: 11921,
   SC13: 12728, SC14: 13864, SC15: 15134,
   SC16: 16173, SC17: 17049, SC18: 18261,
-  /** The VO's last word ends on f19249; 106 frames hold the closing card ("potong 100 frame" off the 206 it held). */
-  END: 19355,
+  /**
+   * The added last scene — "ini tambahan untuk VI01, ditempatkan setelah scene terakhir, sebelum outro".
+   * It starts 30 frames after the main VO's last word (f19249); its own VO comes in at f19309 (appends.json).
+   */
+  SC19: 19279,
+  /** Its last word ends on f20005; 60 frames hold, then the episode's half-second fade-out (FullVideo.tsx). */
+  END: 20095,
 } as const;
 
 /** The last frame of speech, for the guard in Composition.tsx. */
-export const VO_LAST = 19249;
+export const VO_LAST = 20005;
 
 // ═══ COLD OPEN ═════════════════════════════════════════════════════════════
 export const SC01 = {
@@ -481,6 +489,36 @@ export const SC15 = {
   strike: 15467, // "Yang lebih penting justru prosesnya."
   /** The five steps, each on its word (88 / 96 / 64 / 172). */
   steps: [15619, 15707, 15803, 15867, 16039] as const,
+};
+
+// ═══ SC19 — THE ADDED LAST SCENE, timed by its words, not by hand ═══════
+/**
+ * Every beat of SC19 is a WORD of "Last Scene.mp3", aligned by scripts/vi/align-words.py
+ * (data/last-scene-words.json) and placed where the passage sits (data/appends.json) — no frame typed here.
+ */
+const LAST_AT = APPENDS[0].at;
+/** The GLOBAL frame a word of the last scene starts (or ends) on; `nth` picks a repeated word. */
+export const lastWord = (w: string, nth = 0, edge: "f0" | "f1" = "f0") => {
+  const hits = LAST_WORDS.words.filter((x) => x.w.toLowerCase().replace(/[^a-z0-9]/g, "") === w.toLowerCase());
+  if (!hits[nth]) throw new Error(`SC19: no word "${w}" #${nth} in last-scene-words.json`);
+  return LAST_AT + hits[nth][edge];
+};
+export const SC19 = {
+  lalu: lastWord("lalu"),
+  aset: lastWord("aset"),
+  bangun: lastWord("bangun"),
+  di: lastWord("di"),
+  bahas: lastWord("bahas"),
+  instrumen: lastWord("instrumen"),
+  investasi: lastWord("investasi"),
+  dan: lastWord("dan"),
+  lihat: lastWord("lihat"),
+  mana: lastWord("mana"),
+  cocok: lastWord("cocok"),
+  tujuanmu: lastWord("tujuanmu"),
+  tujuanmuEnd: lastWord("tujuanmu", 0, "f1"),
+  /** The question's words, in order, each on its own frame. */
+  question: ["aset", "seperti", "apa", "yang", "bisa", "kita", "mulai", "bangun"].map((w) => lastWord(w)),
 };
 
 // ═══ PENUTUP ═══════════════════════════════════════════════════════════════

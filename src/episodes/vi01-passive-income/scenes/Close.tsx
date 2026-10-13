@@ -6,9 +6,9 @@
  * every payday; then the two lines the video is about, and the closing card —
  * TA09's quote card on the grid, the Tuntun mark over it, the worker beside it.
  */
-import { useCurrentFrame } from "remotion";
+import { Img, staticFile, useCurrentFrame } from "remotion";
 import { GridGround, Stage, TuntunMark, quoteListY, theme, useMotion, usePalette, useShadow } from "../../../core";
-import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, local } from "../data/timing";
+import { BG_FADE, BLOCK, HANDOFF_FADE, SC16 as B16, SC17 as B17, SC18 as B18, SC19 as B19, local } from "../data/timing";
 import { BAL, BigBalance, PayCoin, rp, swellAt } from "./PartOne";
 import { QuizStatement, quizLabelStyle } from "./ColdOpen";
 import { Cutout, DashBox, GlitchSwap, dashOpenAt, ease, WordLine, QuoteFrame, OUTSIDE_RESERVES, Say, TypeBox, useLife } from "../components/kit";
@@ -247,6 +247,10 @@ const LINES = ["Pelan-pelan berubah", "dari sekedar pekerja"];
 const SWAPPED = "jadi pekerja dengan aset";
 const CARD_LIST_Y = quoteListY(CARD.y, CARD.h, CARD.lead, LINES.length);
 
+/** The mascot's slow bob, read off the GLOBAL frame so SC18 and SC19 hand it over without a jump. */
+const mascotBob = (g: number) => Math.sin(((g - B18.mascot) / MASCOT.bobLoop) * Math.PI * 2) * MASCOT.bob;
+const MASCOT = { bob: 10, bobLoop: 240 };
+
 export const SC18 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -261,7 +265,7 @@ export const SC18 = () => {
   /** "Kerja" / "Investasi" come first, their boxes on the words that say what they are. */
   const labelAt = [L(B18.kerja) - 30, L(B18.investasi)];
   const sumAt = B18.sums.map((row) => row.map(L));
-  const bob = Math.sin(((g - B18.mascot) / 240) * Math.PI * 2) * 10;
+  const bob = mascotBob(g);
   return (
     <Stage transparent={f < HANDOFF_FADE}>
       {/* the grid stays from SC17 on: for the first frames SC17's own is still under us */}
@@ -270,8 +274,8 @@ export const SC18 = () => {
           <GridGround f={g} paper={c.bg} />
         </div>
       ) : null}
-      {/* the mascot, at the top — it stays from first to last, over the closing card too */}
-      <div style={{ opacity: ease(f, L(B18.mascot), m.reveal) }}>
+      {/* the mascot, at the top — it stays from first to last, over the closing card too; from SC19's first frame SC19 draws it */}
+      <div style={{ opacity: f < L(BLOCK.SC19) ? ease(f, L(B18.mascot), m.reveal) : 0 }}>
         <TuntunMark x={theme.canvas.width / 2} y={MAN18.mascotY + bob} height={MAN18.mascotH} />
       </div>
       {gone < 0.999 ? (
@@ -309,7 +313,7 @@ export const SC18 = () => {
 
       {/* the closing card on the grid, the mark floating over it */}
       {closing > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: closing }}>
+        <div style={{ position: "absolute", inset: 0, opacity: closing * (1 - ease(f, L(BLOCK.SC19), HANDOFF_FADE)) }}>
           <QuoteFrame x={CARD.x} y={CARD.y} w={CARD.w} h={CARD.h} at={L(B18.close) + 12} listY={CARD_LIST_Y} lead={CARD.lead} count={LINES.length}>
             {LINES.map((line, n) => {
               const y = CARD_LIST_Y + CARD.lead * n + CARD.size * 0.62;
@@ -324,6 +328,177 @@ export const SC18 = () => {
           </QuoteFrame>
         </div>
       ) : null}
+    </Stage>
+  );
+};
+
+// ═══ SC19 — the added last scene: which asset to build? ══════════════════
+/**
+ * From the approved storyboard (docs/vi-style/storyboards/VI01-SC19-last-scene.jpg), every beat on a word:
+ *  A "Lalu pertanyaannya, aset seperti apa yang bisa kita mulai bangun?" — a question card, its words on
+ *    their words, the mascot (carried over from SC18) above it.
+ *  B "Di video berikutnya, kita akan bahas berbagai instrumen investasi" — a chip; the card shrinks into the
+ *    centre of a mindmap, "Instrumen investasi", and five instruments branch off it.
+ *  C "dan lihat mana yang paling cocok untuk tujuanmu" — the map moves left, "Tujuanmu" comes up on the
+ *    right, a dashed arrow with a "?" runs to it from each instrument, and the mascot glides over to it.
+ * The five instruments are Claude's pick — the script only says "berbagai instrumen investasi".
+ */
+const Q19 = { w: 1200, h: 320, top: 340, label: 64, size: 60, rise: 16 };
+const NODE19 = { w: 340, h: 200, cx: 665, icon: 64, size: 36, text: 260 };
+const PILL19 = { x: 1085, w: 340, h: 88, gap: 26, icon: 48, size: 34 };
+/** C: the map moves left far enough that the five arrows and their "?" have room; "?" sits 40% along each arrow; arrows land spread over the target's height. */
+const MAP19 = { shift: -399, arrow: 4, head: 14, q: 44, qAlong: 0.4, land: 30 };
+/** `perch`: the gap between the landed mascot and the card, kept clear of the mascot's bob. */
+const TARGET19 = { cx: 1600, w: 300, h: 230, icon: 110, size: 40, perch: 36 };
+const CHIP19 = { y: 110, padX: 26, padY: 12 };
+const INSTRUMENTS: { label: string; icon: string }[] = [
+  { label: "Saham", icon: "icons/vi01/ph-chart-line-up-duotone.svg" },
+  { label: "Reksa dana", icon: "icons/vi01/ph-chart-pie-slice-duotone.svg" },
+  { label: "Obligasi", icon: "icons/vi01/ph-scroll-duotone.svg" },
+  { label: "Emas", icon: "icons/vi01/ph-coins-duotone.svg" },
+  { label: "Deposito", icon: "icons/vi01/ph-bank-duotone.svg" },
+];
+const QUESTION = ["Aset", "seperti", "apa", "yang", "bisa", "kita", "mulai", "bangun?"];
+const pillY = (i: number) => theme.canvas.height / 2 - (INSTRUMENTS.length * PILL19.h + (INSTRUMENTS.length - 1) * PILL19.gap) / 2 + i * (PILL19.h + PILL19.gap) + PILL19.h / 2;
+const lerp19 = (a: number, b: number, t: number) => a + (b - a) * t;
+
+export const SC19 = () => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const shadow = useShadow();
+  const L = (g: number) => local(g, BLOCK.SC19);
+  const g = f + BLOCK.SC19;
+  const cy = theme.canvas.height / 2;
+  /* A → B: the question card shrinks into the mindmap's centre node, on "bahas … instrumen" */
+  const card = ease(f, L(B19.lalu), m.reveal);
+  const morph = ease(f, L(B19.bahas), L(B19.instrumen) - L(B19.bahas));
+  /* B → C: the whole map moves left on "dan" */
+  const dx = MAP19.shift * ease(f, L(B19.dan), m.move);
+  const box = {
+    w: lerp19(Q19.w, NODE19.w, morph),
+    h: lerp19(Q19.h, NODE19.h, morph),
+    cx: lerp19(theme.canvas.width / 2, NODE19.cx, morph) + dx,
+    cy: lerp19(Q19.top + Q19.h / 2, cy, morph),
+  };
+  const target = ease(f, L(B19.lihat), m.reveal);
+  /* the mascot: where SC18 left it, then gliding over to sit above "Tujuanmu" */
+  const glide = ease(f, L(B19.mana), L(B19.tujuanmu) - L(B19.mana));
+  const from = { x: theme.canvas.width / 2, y: MAN18.mascotY };
+  const to = { x: TARGET19.cx, y: cy - TARGET19.h / 2 - MAN18.mascotH - TARGET19.perch };
+  const ctrl = { x: (from.x + to.x) / 2 + 160, y: Math.min(from.y, to.y) - 60 };
+  const u = 1 - glide;
+  const mx = u * u * from.x + 2 * u * glide * ctrl.x + glide * glide * to.x;
+  const my = u * u * from.y + 2 * u * glide * ctrl.y + glide * glide * to.y;
+  const pillAt = (i: number) => L(B19.instrumen) + m.sec(0.15) * (i + 1);
+  const pillLeft = PILL19.x + dx;
+  const nodeRight = box.cx + box.w / 2;
+  return (
+    <Stage transparent={f < HANDOFF_FADE}>
+      {/* the grid carries on from SC18 (same global frame, same drift) */}
+      {f >= HANDOFF_FADE ? (
+        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+          <GridGround f={g} paper={c.bg} />
+        </div>
+      ) : null}
+
+      {/* B: "Di video berikutnya" */}
+      <div style={{ position: "absolute", left: theme.margin.left, top: CHIP19.y, padding: `${CHIP19.padY}px ${CHIP19.padX}px`, borderRadius: 999, background: theme.color.indigoWash, opacity: ease(f, L(B19.di), m.reveal), transform: `translateY(${((1 - ease(f, L(B19.di), m.reveal)) * 12).toFixed(2)}px)`, ...quizLabelStyle(c) }}>Di video berikutnya</div>
+
+      {/* B: the branches, drawn on just before their pills */}
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+        {INSTRUMENTS.map((ins, i) => {
+          const p = ease(f, pillAt(i) - m.sec(0.2), m.sec(0.3));
+          if (p <= 0.001 || morph < 0.999) return null;
+          const y = pillY(i);
+          const midX = (nodeRight + pillLeft) / 2;
+          return <path key={ins.label} d={`M ${nodeRight} ${box.cy} C ${midX} ${box.cy}, ${midX} ${y}, ${pillLeft} ${y}`} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} fill="none" stroke={c.indigo} strokeWidth={MAP19.arrow} strokeLinecap="round" />;
+        })}
+        {/* C: a dashed arrow from every instrument to "Tujuanmu" */}
+        {INSTRUMENTS.map((ins, i) => {
+          const p = ease(f, L(B19.mana) + m.sec(0.12) * i, m.sec(0.4));
+          if (p <= 0.001) return null;
+          const x0 = pillLeft + PILL19.w + 16;
+          const y0 = pillY(i);
+          const x1 = TARGET19.cx - TARGET19.w / 2 - 18;
+          const y1 = cy + (i - (INSTRUMENTS.length - 1) / 2) * MAP19.land;
+          const ex = x0 + (x1 - x0) * p;
+          const ey = y0 + (y1 - y0) * p;
+          const len = Math.hypot(x1 - x0, y1 - y0);
+          const ux = (x1 - x0) / len;
+          const uy = (y1 - y0) / len;
+          const H = MAP19.head;
+          return (
+            <g key={`to-${ins.label}`}>
+              <line x1={x0} y1={y0} x2={ex - ux * H * 0.6 * p} y2={ey - uy * H * 0.6 * p} stroke={c.indigo} strokeWidth={MAP19.arrow - 1} strokeDasharray="12 10" strokeLinecap="round" />
+              {p > 0.95 ? <path d={`M ${x1} ${y1} L ${x1 - ux * H - uy * H * 0.6} ${y1 - uy * H + ux * H * 0.6} L ${x1 - ux * H + uy * H * 0.6} ${y1 - uy * H - ux * H * 0.6} Z`} fill={c.indigo} stroke={c.indigo} strokeWidth={2} strokeLinejoin="round" /> : null}
+            </g>
+          );
+        })}
+      </svg>
+      {/* C: the "?" on each arrow */}
+      {INSTRUMENTS.map((ins, i) => {
+        const p = ease(f, L(B19.mana) + m.sec(0.12) * i + m.sec(0.3), m.reveal);
+        if (p <= 0.001) return null;
+        const x0 = pillLeft + PILL19.w + 16;
+        const x1 = TARGET19.cx - TARGET19.w / 2 - 18;
+        const y1 = cy + (i - (INSTRUMENTS.length - 1) / 2) * MAP19.land;
+        const x = x0 + (x1 - x0) * MAP19.qAlong;
+        const y = pillY(i) + (y1 - pillY(i)) * MAP19.qAlong;
+        return (
+          <div key={`q-${ins.label}`} style={{ position: "absolute", left: x - MAP19.q / 2, top: y - MAP19.q / 2, width: MAP19.q, height: MAP19.q, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: MAP19.q * 0.6, fontWeight: 800, color: c.indigo, opacity: p, transform: `scale(${(0.7 + 0.3 * p).toFixed(3)})` }}>?</div>
+        );
+      })}
+
+      {/* B: the five instruments */}
+      {INSTRUMENTS.map((ins, i) => {
+        const p = ease(f, pillAt(i), m.reveal);
+        if (p <= 0.001) return null;
+        return (
+          <div key={ins.label} style={{ position: "absolute", left: pillLeft, top: pillY(i) - PILL19.h / 2, width: PILL19.w, height: PILL19.h, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 18, padding: "0 28px", boxSizing: "border-box", opacity: p, transform: `translateX(${((1 - p) * -20).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: PILL19.size, fontWeight: 700, color: c.ink }}>
+            <Img src={staticFile(ins.icon)} style={{ width: PILL19.icon, height: PILL19.icon }} />
+            {ins.label}
+          </div>
+        );
+      })}
+
+      {/* A → B: the question card, becoming the centre node */}
+      {card > 0.001 ? (
+        <div style={{ position: "absolute", left: box.cx - box.w / 2, top: box.cy - box.h / 2, width: box.w, height: box.h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, opacity: card, transform: `translateY(${((1 - card) * Q19.rise).toFixed(2)}px)`, overflow: "hidden" }}>
+          {/* the question, word by word on the VO */}
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 22, opacity: 1 - Math.min(1, morph * 2.5) }}>
+            <div style={{ ...quizLabelStyle(c), lineHeight: 1 }}>Lalu pertanyaannya</div>
+            <div style={{ fontFamily: theme.text.family, fontSize: Q19.size, fontWeight: 800, color: c.ink, textAlign: "center", lineHeight: 1.15, maxWidth: Q19.w - 160 }}>
+              {QUESTION.map((w, k) => {
+                const p = ease(f, L(B19.question[k]), m.reveal);
+                return (
+                  <span key={k} style={{ display: "inline-block", opacity: p, transform: `translateY(${((1 - p) * 14).toFixed(2)}px)`, whiteSpace: "pre" }}>
+                    {w}
+                    {k < QUESTION.length - 1 ? " " : ""}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+          {/* the centre node's own content */}
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, opacity: Math.max(0, morph * 2 - 1) }}>
+            <Img src={staticFile("icons/vi01/ph-chart-bar-duotone.svg")} style={{ width: NODE19.icon, height: NODE19.icon }} />
+            <div style={{ fontFamily: theme.text.family, fontSize: NODE19.size, fontWeight: 800, color: c.ink, textAlign: "center", lineHeight: 1.15, maxWidth: NODE19.text }}>Instrumen investasi</div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* C: "Tujuanmu" */}
+      {target > 0.001 ? (
+        <div style={{ position: "absolute", left: TARGET19.cx - TARGET19.w / 2, top: cy - TARGET19.h / 2, width: TARGET19.w, height: TARGET19.h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, border: `${theme.shape.rule}px solid ${c.indigo}`, boxSizing: "border-box", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 12, opacity: target, transform: `scale(${(0.9 + 0.1 * target).toFixed(3)})` }}>
+          <Img src={staticFile("icons/vi01/ph-target-duotone.svg")} style={{ width: TARGET19.icon, height: TARGET19.icon }} />
+          {/* the word itself comes on "tujuanmu", as the mascot lands */}
+          <div style={{ fontFamily: theme.text.family, fontSize: TARGET19.size, fontWeight: 800, color: c.indigo, opacity: ease(f, L(B19.tujuanmu), m.reveal) }}>Tujuanmu</div>
+        </div>
+      ) : null}
+
+      {/* the mascot, carried over from SC18, then gliding to "Tujuanmu" */}
+      <TuntunMark x={mx} y={my + mascotBob(g)} height={MAN18.mascotH} />
     </Stage>
   );
 };

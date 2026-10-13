@@ -58,7 +58,7 @@ Semua angka di dokumen ini sudah termasuk jeda itu. VO dibangun ulang dari file 
 | SC15 | 15134 – 16173 | 04:12.232 – 04:29.549 | 17.32 s | 04:12.315 – 04:29.382 | 69–72 | 03 |
 | SC16 | 16173 – 17049 | 04:29.549 – 04:44.149 | 14.60 s | 04:29.715 – 04:43.815 | 73–75 | close |
 | SC17 | 17049 – 18261 | 04:44.149 – 05:04.349 | 20.20 s | 04:44.482 – 05:04.249 | 76–82 | close |
-| SC18 | 18261 – 19355 | 05:04.349 – 05:22.583 | 18.23 s | 05:04.449 – 05:20.815 | 83–86 | close |
+| SC18 | 18261 – 19279 | 05:04.349 – 05:21.317 | 16.97 s | 05:04.449 – 05:20.815 | 83–86 | close |
 
 **Tidak ada batas scene yang jatuh di tengah cue.** Join tersempit: **SC06 → SC07, 0.10 s** udara — potong keras di kata, tanpa transisi. Keheningan terpanjang di seluruh rekaman di batas scene hanya **0.67 s** (SC16 → SC17).
 
@@ -509,3 +509,14 @@ Tahan sampai f19435.
 - **UNTR**: hanya dua angka dari narasi (± Rp250 di 1998, ± Rp15 ribu kemudian), tanpa grafik.
 - **SC05**: 100 → 110 → 121 → 133 adalah ilustrasi (10% per periode); bukan data pasar.
 - **Label roadmap** (Gaji & Waktu · Uang Yang Ikut Bekerja · Ikut Punya Bisnis · Cerita Lo Kheng Hong) — usulan, silakan ganti.
+
+### SCENE 19 (tambahan) — f19279–20095 · VO "Last Scene.mp3" mulai f19309
+**NARRATION**
+Lalu pertanyaannya, aset seperti apa yang bisa kita mulai bangun?
+Di video berikutnya, kita akan bahas berbagai instrumen investasi,
+dan lihat mana yang paling cocok untuk tujuanmu.
+
+**Timing:** per kata, dari `scripts/vi/align-words.py` (`data/last-scene-words.json`), lewat `lastWord()` di `data/timing.ts` — tanpa nomor frame yang diketik tangan.
+**Storyboard:** `docs/vi-style/storyboards/VI01-SC19-last-scene.jpg` (ChatGPT, disetujui Simon 13 Okt).
+**VISUAL:** kartu pertanyaan + maskot (dibawa dari SC18) → mindmap "Instrumen investasi" (Saham, Reksa dana, Obligasi, Emas, Deposito — pilihan Claude) → target "Tujuanmu", panah putus-putus dengan "?", maskot meluncur ke target.
+

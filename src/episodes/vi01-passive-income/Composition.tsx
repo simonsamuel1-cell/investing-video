@@ -1,5 +1,5 @@
 /**
- * VI01 · Passive Income — 18 scenes, 19,355 frames (05:22.583) at 60fps.
+ * VI01 · Passive Income — 19 scenes, 20,095 frames (05:34.917) at 60fps.
  *
  * Every `from` is a BLOCK boundary from data/timing.ts, which is the sync
  * document's master table (docs/VI01_PassiveIncome_Script_SYNCED.md) — VO-
@@ -19,7 +19,7 @@ import { SC01, SC02, SC03 } from "./scenes/ColdOpen";
 import { BankBalance, CarriedTitle, SC04, SC05, SC06, SC07, SC08 } from "./scenes/PartOne";
 import { SC09, SC10, SC11, SC12 } from "./scenes/PartTwo";
 import { SC13, SC14, SC15 } from "./scenes/PartThree";
-import { SC16, SC17, SC18 } from "./scenes/Close";
+import { SC16, SC17, SC18, SC19 } from "./scenes/Close";
 import { ListTransisi, SceneTransisi, type Mount } from "./scenes/Transition";
 
 export const TOTAL_FRAMES = BLOCK.END;
@@ -45,13 +45,14 @@ const ORDER = [
   ["SC16", SC16, "SC16 Bukan lari dari kerja"],
   ["SC17", SC17, "SC17 Berapa yang bisa disisihkan"],
   ["SC18", SC18, "SC18 Penutup"],
+  ["SC19", SC19, "SC19 Aset apa yang dibangun"],
 ] as const;
 
 const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
 /** Scenes that carry on over the next one's first frames — the continuous cuts: the next scene is drawn on top. */
 const EXTEND: Partial<Record<keyof typeof BLOCK, number>> = { SC11: BLOCK.SC13 - BLOCK.SC12 + BG_FADE };
 /** Scenes that run on a little past their block but stay in their place, UNDER the next scene — which fades in over them. */
-const HOLD: Partial<Record<keyof typeof BLOCK, number>> = { SC12: BG_FADE, SC16: HANDOFF_FADE, SC17: HANDOFF_FADE };
+const HOLD: Partial<Record<keyof typeof BLOCK, number>> = { SC12: BG_FADE, SC16: HANDOFF_FADE, SC17: HANDOFF_FADE, SC18: HANDOFF_FADE };
 const SCENES: Mounted[] = ORDER.map(([key, Component, name]) => {
   const from = BLOCK[key];
   const next = KEYS[KEYS.indexOf(key) + 1];
