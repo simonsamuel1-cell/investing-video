@@ -25,10 +25,13 @@ A scene is usually ONE of these, sometimes two (a character beside a mindmap). N
 
 ## 2. Look
 
-- **Palette.** Indigo `#5F4DEE` (hue 247) and cyan `#5CC8E3` (hue 192), with tints and gradients that keep
-  the hue. Flat icons are violet→indigo or indigo→cyan gradients on lighter tints of themselves (ref-01, 03).
-  Green only for a ✓ or a gain; red only for a ✗ or a loss — sparingly, as accents (ref-01's ✓ badge).
-  Everything is a named `theme` key; no hex in scenes.
+- **Palette.** Indigo `#5F4DEE` (hue 247) and cyan `#5CC8E3` (hue 192) are the brand's main colours and lead
+  every frame. **Other colours are allowed, a little at a time** — Simon, 13 Oct: *"indigo dan cyan memang warna
+  utama brand, tapi bukan berarti kamu tidak bisa menggunakan warna lain. Coba nextnya mulai pakai warna lain,
+  sedikit sedikit. Nanti aku arahkan juga scene mana yang bisa pakai warna lain."* So: an accent colour per scene
+  at most (an icon, a highlighted node, one branch of a mindmap), never a rainbow; he will also say which scenes
+  can take more. Flat icons stay in soft gradients and tints of their colour (ref-01, 03). Every colour is a named
+  `theme` key; no hex in scenes.
 - **Ground.** The light paper `#F5F5F5`; the drifting grid where a scene needs a "board" (mindmaps, paths).
 - **Type.** Plus Jakarta Sans. Labels 36 px / 700 / +2 tracking / indigo (the "Tanya juga" label). Big
   statements 100 px / 800 / −2 tracking. Body 34–48 px. Sentence case; Simon's quoted text exactly as typed.
