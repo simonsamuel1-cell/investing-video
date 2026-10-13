@@ -40,10 +40,13 @@ logs in. Downloads are moved from ~/Downloads into `public/art/<episode>/` throu
 
 ### Image prompt (template)
 > «subject», flat illustration in the style of a fintech icon set: violet-to-indigo gradient (#5F4DEE),
-> soft translucent layered shapes, light soft shadow, no outline, no text. **Transparent background, PNG.**
+> soft translucent layered shapes, light soft shadow, no outline, no text. **background transparan png**
+
+(Simon tested it, 13 Oct: with the words "background transparan png" ChatGPT gives a really transparent PNG.
+`cutout.py` still checks the alpha — it only runs rembg when a picture comes back opaque.)
 
 (For Orang Tuntun: attach the existing `orang-tuntun.png` and ask for the same man, same suit and badge,
-new pose «…», full body, transparent background.)
+new pose «…», full body, background transparan png.)
 
 ## Tools installed (13 Oct)
 - `~/.venvs/tuntun` — Python 3.12 (uv-managed) with faster-whisper (model `small` cached under
