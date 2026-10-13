@@ -15,7 +15,7 @@ const GREEN = theme.color.walletAktif;
 const GREEN_WASH = theme.color.walletAktifWash;
 
 /** A destination card: an illustration or icon at the left, its name, and a tag under it. */
-const Place = ({ x, y, w, h, art, icon, title, tag, tagIcon, titleOn, tagOn }: { x: number; y: number; w: number; h: number; art?: { src: string; aspect: number }; icon?: string; title: string; tag: string; tagIcon: string; titleOn: number; tagOn: number }) => {
+const Place = ({ x, y, w, h, art, icon, title, tag, tagIcon, titleOn, tagOn, dim = 0 }: { x: number; y: number; w: number; h: number; art?: { src: string; aspect: number }; icon?: string; title: string; tag: string; tagIcon: string; titleOn: number; tagOn: number; dim?: number }) => {
   const c = usePalette();
   return (
     <Panel3 x={x} y={y} w={w} h={h} style={{ display: "flex", alignItems: "center", gap: 28, padding: "0 36px" }}>
@@ -28,7 +28,11 @@ const Place = ({ x, y, w, h, art, icon, title, tag, tagIcon, titleOn, tagOn }: {
         ) : null}
       </div>
       <div style={{ fontFamily: theme.text.family, display: "flex", flexDirection: "column", gap: 14 }}>
-        <div style={{ fontSize: 40, fontWeight: 800, color: c.ink, lineHeight: 1.1, whiteSpace: "nowrap", opacity: titleOn, transform: `translateY(${((1 - titleOn) * 10).toFixed(1)}px)` }}>{title}</div>
+        {/* the title row grows in above the tag on its word (the tag sits alone, centred, until then); it greys when the eye should move on */}
+        <div style={{ position: "relative", fontSize: 40, fontWeight: 800, lineHeight: 1.1, whiteSpace: "nowrap", maxHeight: titleOn * 48, marginBottom: (titleOn - 1) * 14, opacity: titleOn, overflow: "hidden" }}>
+          <span style={{ color: c.ink, opacity: 1 - dim }}>{title}</span>
+          <span style={{ position: "absolute", left: 0, top: 0, color: c.slate, opacity: dim }}>{title}</span>
+        </div>
         <div style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 10, padding: "8px 18px 8px 12px", borderRadius: 999, background: GREEN_WASH, fontSize: 28, fontWeight: 700, color: GREEN, opacity: tagOn, transform: `translateY(${((1 - tagOn) * 10).toFixed(1)}px)`, whiteSpace: "nowrap" }}>
           <Ico name={tagIcon} size={30} />
           {tag}
@@ -58,11 +62,13 @@ export const SC05 = () => {
   const fokusAt = W("fokus utamanya");
   const out = ease(f, fokusAt, m.move);
   /* the wallet holds the middle on "uang aktif", then steps left as its money is placed */
-  const walX = CX + (WAL5.x - CX) * ease(f, placeAt - m.sec(0.5), m.move);
+  const walX = CX + (WAL5.x - CX) * ease(f, W("biasanya"), placeAt - W("biasanya"));
   const a1 = { x: walX + 150, y: WAL5.y - 70 };
   const b1 = { x: CARD5.x - 14, y: CARD5.y[0] + CARD5.h / 2 };
   const a2 = { x: walX + 150, y: WAL5.y + 40 };
   const b2 = { x: CARD5.x - 14, y: CARD5.y[1] + CARD5.h / 2 };
+  /* once "sebagian" is said, the bank and its arrow step back to grey: the eye goes to the second card */
+  const back = ease(f, sebagianAt, m.fade);
   /* coins along each arrow, one after another */
   const coins = (from: { x: number; y: number }, to: { x: number; y: number }, at: number, n: number, bend: number) =>
     Array.from({ length: n }, (_, i) => {
@@ -89,23 +95,28 @@ export const SC05 = () => {
             <Wallet kind="aktif" cx={walX} cy={WAL5.y} h={WAL5.h} />
             <div style={{ position: "absolute", left: walX - 200, width: 400, top: WAL5.y + WAL5.h / 2 + 10, textAlign: "center", fontFamily: theme.text.family, fontSize: 40, fontWeight: 800, color: GREEN }}>Uang Aktif</div>
           </Appear>
-          <Arrow a={a1} b={b1} p={ease(f, placeAt, m.sec(0.6))} color={GREEN} bend={80} />
+          <div style={{ position: "absolute", inset: 0, opacity: 1 - back }}>
+            <Arrow a={a1} b={b1} p={ease(f, placeAt, m.sec(0.6))} color={GREEN} bend={80} />
+          </div>
+          <div style={{ position: "absolute", inset: 0, opacity: back }}>
+            <Arrow a={a1} b={b1} p={ease(f, placeAt, m.sec(0.6))} color={c.muted} bend={80} />
+          </div>
           {coins(a1, b1, mudahAt, 3, 80)}
           <Appear at={placeAt + m.sec(0.3)} style={{ left: 0, top: 0 }}>
-            <Place x={CARD5.x} y={CARD5.y[0]} w={CARD5.w} h={CARD5.h} icon="bank-aktif" title="Rekening bank" tag="Mudah dicairkan" tagIcon="cashout-aktif" titleOn={ease(f, bankAt, m.reveal)} tagOn={ease(f, mudahAt, m.reveal)} />
+            <Place x={CARD5.x} y={CARD5.y[0]} w={CARD5.w} h={CARD5.h} icon="bank-aktif" title="Rekening bank" tag="Mudah dicairkan" tagIcon="cashout-aktif" titleOn={ease(f, bankAt, m.reveal)} tagOn={ease(f, mudahAt, m.reveal)} dim={back} />
           </Appear>
           {/* "sebagian yang belum akan dipakai" — a part of it, on the dashed way */}
           <Arrow a={a2} b={b2} p={ease(f, belumAt, m.sec(0.6))} color={GREEN} bend={-60} dashed />
-          {coins(a2, b2, belumAt + m.sec(0.4), 2, -60)}
-          <Appear at={sebagianAt + m.sec(0.2)} style={{ left: 0, top: 0 }}>
+          {coins(a2, b2, W("juga bisa"), 2, -60)}
+          <Appear at={belumAt + m.sec(0.6)} style={{ left: 0, top: 0 }}>
             <Place x={CARD5.x} y={CARD5.y[1]} w={CARD5.w} h={CARD5.h} icon="pie-aktif" title="Reksa dana pasar uang" tag="Likuiditas tinggi" tagIcon="drop-aktif" titleOn={ease(f, rdpuAt, m.reveal)} tagOn={ease(f, likuidAt, m.reveal)} />
           </Appear>
         </div>
       ) : null}
 
       {/* C — not the highest return, but liquidity and stability */}
-      <Appear at={fokusAt + m.sec(0.2)} style={{ left: 0, width: theme.canvas.width, top: 200 }}>
-        <div style={{ textAlign: "center", fontFamily: theme.text.family, fontSize: 36, fontWeight: 700, letterSpacing: 2, color: GREEN }}>Fokus utama</div>
+      <Appear at={fokusAt + m.move} style={{ left: 0, top: 0 }}>
+        <Tag x={0} y={190} text="Fokus utama" tint={GREEN_WASH} color={GREEN} center />
       </Appear>
       {[
         { icon: "trend-slate", label: "Return tertinggi", p: ret, tone: c.slate },
@@ -116,12 +127,13 @@ export const SC05 = () => {
         const x = rowX(i) - CARDS5_ROW.w / 2;
         const dim = i === 0 ? strike : 0;
         return (
-          <div key={card.label} style={{ position: "absolute", inset: 0, opacity: card.p * (1 - 0.45 * dim), transform: `translateY(${((1 - card.p) * 20).toFixed(1)}px)` }}>
+          <div key={card.label} style={{ position: "absolute", inset: 0, opacity: card.p, transform: `translateY(${((1 - card.p) * 20).toFixed(1)}px)` }}>
             <Panel3 x={x} y={CARDS5_ROW.y} w={CARDS5_ROW.w} h={CARDS5_ROW.h} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 26 }}>
-              <div style={{ width: CARDS5_ROW.icon, height: CARDS5_ROW.icon, borderRadius: 999, background: i === 0 ? theme.color.slateWash : GREEN_WASH, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {/* the card stays solid; only what is on it steps back */}
+              <div style={{ width: CARDS5_ROW.icon, height: CARDS5_ROW.icon, borderRadius: 999, background: i === 0 ? theme.color.slateWash : GREEN_WASH, display: "flex", alignItems: "center", justifyContent: "center", opacity: 1 - 0.45 * dim }}>
                 <Ico name={card.icon} size={CARDS5_ROW.icon * 0.6} />
               </div>
-              <div style={{ fontFamily: theme.text.family, fontSize: 44, fontWeight: 800, color: card.tone }}>{card.label}</div>
+              <div style={{ fontFamily: theme.text.family, fontSize: 44, fontWeight: 800, color: card.tone, opacity: 1 - 0.45 * dim }}>{card.label}</div>
             </Panel3>
             {i === 0 && strike > 0.001 ? (
               <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
@@ -159,8 +171,15 @@ const EVENTS: { word: string; label: string; icon: string }[] = [
   { word: "motor rusak", label: "Motor rusak", icon: "motorcycle-indigo" },
   { word: "biaya medis", label: "Biaya medis", icon: "stethoscope-indigo" },
 ];
+const INSIGHT = { size: 72 };
 const EV = { x: theme.margin.left + 60, w: 440, h: 120, y: [290, 460, 630] };
 const INVEST6 = { x: 1300, y: 370, w: 420, h: 220 };
+/** Where each event's arrow lands — on the shield's rim, never under it. */
+const EVENT_END = [
+  { x: 770, y: 396 },
+  { x: 750, y: 470 },
+  { x: 770, y: 544 },
+];
 
 export const SC06 = () => {
   const f = useCurrentFrame();
@@ -174,9 +193,12 @@ export const SC06 = () => {
   const siapkanAt = W("siapkan dana darurat");
   const phaseA = 1 - ease(f, acuanAt, m.fade);
   const phaseB = ease(f, acuanAt, m.reveal) * (1 - ease(f, jadiAt, m.fade));
-  const phaseC = ease(f, jadiAt, m.reveal) * (1 - ease(f, siapkanAt, m.fade));
+  const phaseC = ease(f, jadiAt, m.reveal) * (1 - ease(f, siapkanAt - m.fade, m.fade));
   /* the kit drops into the wallet on "termasuk dalam uang aktif" */
-  const into = ease(f, intoAt, m.move);
+  const landAt = W("aktif");
+  const into = ease(f, intoAt, landAt - intoAt);
+  /* the wallet gives a little as the kit lands in it */
+  const squash = Math.sin(Math.PI * ease(f, landAt, m.sec(0.5))) * 0.04;
   const kitY = 280 + (WAL6.y - 150 - 280) * into;
   const kitH = KIT.h * (1 - 0.25 * into);
   /* each event hits the shield: a little push as its arrow lands */
@@ -193,7 +215,7 @@ export const SC06 = () => {
       {phaseA > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: phaseA }}>
           <Appear at={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-            <Wallet kind="aktif" cx={WAL6.x} cy={WAL6.y} h={WAL6.h} />
+            <Wallet kind="aktif" cx={WAL6.x} cy={WAL6.y} h={WAL6.h} style={{ transform: `scale(${(1 + squash).toFixed(4)}, ${(1 - squash).toFixed(4)})`, transformOrigin: "50% 100%" }} />
             <div style={{ position: "absolute", left: WAL6.x - 200, width: 400, top: WAL6.y + WAL6.h / 2 + 10, textAlign: "center", fontFamily: theme.text.family, fontSize: 40, fontWeight: 800, color: GREEN }}>Uang Aktif</div>
           </Appear>
           <Appear at={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
@@ -206,7 +228,7 @@ export const SC06 = () => {
             { n: "2", label: "Investasi lainnya", at: W("investasi lainnya"), on: false },
           ].map((s, i) => (
             <Appear key={s.n} at={s.at} style={{ left: 0, top: 0 }}>
-              <Panel3 x={STEP6.x[i] - STEP6.w / 2} y={STEP6.y - STEP6.h / 2} w={STEP6.w} h={STEP6.h} style={{ display: "flex", alignItems: "center", gap: 22, padding: "0 30px", border: s.on ? `4px solid ${GREEN}` : undefined, opacity: s.on ? 1 : 0.6 }}>
+              <Panel3 x={STEP6.x[i] - STEP6.w / 2} y={STEP6.y - STEP6.h / 2} w={STEP6.w} h={STEP6.h} style={{ display: "flex", alignItems: "center", gap: 22, padding: "0 30px", border: s.on ? `4px solid ${GREEN}` : undefined }}>
                 <div style={{ width: 72, height: 72, borderRadius: 999, flex: "none", background: s.on ? GREEN : c.muted, color: c.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 38, fontWeight: 800 }}>{s.n}</div>
                 <div style={{ fontFamily: theme.text.family, fontSize: 36, fontWeight: 800, color: s.on ? GREEN : c.slate, lineHeight: 1.1, whiteSpace: "nowrap" }}>{s.label}</div>
               </Panel3>
@@ -219,13 +241,13 @@ export const SC06 = () => {
       {/* B — the usual yardstick: about 1–3 months of living costs */}
       {phaseB > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: phaseB }}>
-          <Appear at={acuanAt} style={{ left: 0, width: theme.canvas.width, top: 230 }}>
-            <div style={{ textAlign: "center", fontFamily: theme.text.family, fontSize: 36, fontWeight: 700, letterSpacing: 2, color: GREEN }}>Acuan umum</div>
+          <Appear at={acuanAt} style={{ left: 0, top: 0 }}>
+            <Tag x={0} y={230} text="Acuan umum" tint={GREEN_WASH} color={GREEN} center />
           </Appear>
           {[0, 1, 2].map((i) => {
             const at = i === 0 ? W("1") : W("sampai 3") + m.sec(0.18) * (i - 1);
             /* all three in place, empty, as the yardstick is named; each fills on its number */
-            const p = ease(f, acuanAt + m.sec(0.3) + m.sec(0.1) * i, m.reveal);
+            const p = ease(f, W("adalah") + m.sec(0.1) * i, m.reveal);
             const fill = ease(f, at, m.sec(0.5));
             const x = CX + (i - 1) * (MONTHS.w + MONTHS.gap) - MONTHS.w / 2;
             return (
@@ -234,7 +256,7 @@ export const SC06 = () => {
                   {/* the month fills up */}
                   <div style={{ position: "absolute", left: 0, right: 0, bottom: 0, height: `${(fill * 100).toFixed(1)}%`, background: GREEN_WASH }} />
                   <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10 }}>
-                    <Ico name="calendar-aktif" size={MONTHS.icon} />
+                    <Ico name="calendar-blank-aktif" size={MONTHS.icon} />
                     <div style={{ fontFamily: theme.text.family, fontSize: 72, fontWeight: 800, color: fill > 0.5 ? GREEN : c.muted, lineHeight: 1 }}>{i + 1}</div>
                   </div>
                 </Panel3>
@@ -262,7 +284,7 @@ export const SC06 = () => {
                     <div style={{ fontFamily: theme.text.family, fontSize: 34, fontWeight: 800, color: c.ink, lineHeight: 1.1 }}>{e.label}</div>
                   </Panel3>
                 </Appear>
-                <Arrow a={{ x: EV.x + EV.w + 14, y: EV.y[i] + EV.h / 2 }} b={{ x: SHIELD.x - SHIELD.h * 0.42, y: SHIELD.y + (i - 1) * 60 }} p={ease(f, at + m.sec(0.15), m.sec(0.35))} color={c.indigo} bend={(1 - i) * 30} />
+                <Arrow a={{ x: EV.x + EV.w + 14, y: EV.y[i] + EV.h / 2 }} b={EVENT_END[i]} p={ease(f, at + m.sec(0.15), m.sec(0.35))} color={c.indigo} bend={(1 - i) * 30} />
               </React.Fragment>
             );
           })}
@@ -286,10 +308,32 @@ export const SC06 = () => {
       ) : null}
 
       {/* D — the insight: Orang Tuntun */}
-      <OrangTuntun at={siapkanAt} />
-      <Appear at={siapkanAt + m.sec(0.2)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-        <Statement cx={ORANG_TUNTUN_RIGHT + 80} cy={500} text="Siapkan dana darurat dulu, baru pikirkan investasi berikutnya." mark="dulu" markInk={GREEN} size={72} maxWidth={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 80} align="left" />
-      </Appear>
+      <OrangTuntun at={siapkanAt - m.fade} />
+      {/* the insight in two beats: "Siapkan dana darurat dulu," — then "baru pikirkan / investasi berikutnya." */}
+      <div style={{ position: "absolute", left: ORANG_TUNTUN_RIGHT + 80, top: 380, fontFamily: theme.text.family, fontSize: INSIGHT.size, fontWeight: 800, lineHeight: 1.15, letterSpacing: -2, color: c.ink }}>
+        <div style={{ opacity: ease(f, siapkanAt + m.sec(0.15), m.reveal), transform: `translateY(${((1 - ease(f, siapkanAt + m.sec(0.15), m.reveal)) * 16).toFixed(1)}px)` }}>
+          Siapkan dana darurat{" "}
+          <span style={{ position: "relative" }}>
+            <span style={{ color: c.ink, opacity: 1 - ease(f, W("dulu"), m.reveal) }}>dulu</span>
+            <span style={{ position: "absolute", left: 0, top: 0, color: GREEN, opacity: ease(f, W("dulu"), m.reveal) }}>dulu</span>
+          </span>
+          <span style={{ marginLeft: "-0.1em" }}>,</span>
+        </div>
+        {["baru pikirkan", "investasi berikutnya."].map((line, k) => {
+          const p = ease(f, W("baru") + m.sec(0.12) * k, m.reveal);
+          return (
+            <div key={line} style={{ opacity: p, transform: `translateY(${((1 - p) * 16).toFixed(1)}px)` }}>
+              {k === 1 ? (
+                <>
+                  investasi berikutnya<span style={{ marginLeft: "-0.1em" }}>.</span>
+                </>
+              ) : (
+                line
+              )}
+            </div>
+          );
+        })}
+      </div>
     </Stage>
   );
 };

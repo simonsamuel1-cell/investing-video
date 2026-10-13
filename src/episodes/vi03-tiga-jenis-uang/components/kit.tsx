@@ -82,9 +82,16 @@ export const Pill = ({ cx, cy, w, icon, label, tint, size = 34, iconSize = 44, a
 };
 
 /** A small label chip — the "Tanya juga" type on a tinted pill. */
-export const Tag = ({ x, y, text, tint, color }: { x: number; y: number; text: string; tint?: string; color?: string }) => {
+export const Tag = ({ x, y, text, tint, color, center }: { x: number; y: number; text: string; tint?: string; color?: string; center?: boolean }) => {
   const c = usePalette();
-  return <div style={{ position: "absolute", left: x, top: y, padding: "12px 26px", borderRadius: 999, background: tint ?? theme.color.indigoWash, fontFamily: theme.text.family, fontSize: 34, fontWeight: 700, letterSpacing: 1, color: color ?? c.indigo, whiteSpace: "nowrap", lineHeight: 1.1 }}>{text}</div>;
+  const pill: React.CSSProperties = { padding: "12px 26px", borderRadius: 999, background: tint ?? theme.color.indigoWash, fontFamily: theme.text.family, fontSize: 34, fontWeight: 700, letterSpacing: 1, color: color ?? c.indigo, whiteSpace: "nowrap", lineHeight: 1.1 };
+  if (center)
+    return (
+      <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: y, display: "flex", justifyContent: "center" }}>
+        <div style={pill}>{text}</div>
+      </div>
+    );
+  return <div style={{ position: "absolute", left: x, top: y, ...pill }}>{text}</div>;
 };
 
 /** Big statement text, centred on cx; `mark` tinted (and underlined by a soft wash) in `markInk`. */
@@ -147,7 +154,7 @@ export const Arrow = ({ a, b, p, color, bend = 0, dashed = false, width = 5 }: {
   const uy = ty / L;
   return (
     <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-      <path d={`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x - ux * H * 0.7} ${b.y - uy * H * 0.7}`} pathLength={1} strokeDasharray={dashed ? undefined : 1} strokeDashoffset={dashed ? undefined : 1 - p} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" style={dashed ? { strokeDasharray: "12 10", opacity: p } : undefined} />
+      <path d={`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x - ux * H * 0.7} ${b.y - uy * H * 0.7}`} pathLength={dashed ? undefined : 1} strokeDasharray={dashed ? undefined : 1} strokeDashoffset={dashed ? undefined : 1 - p} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" style={dashed ? { strokeDasharray: "12 10", opacity: p } : undefined} />
       {p > 0.95 ? <path d={`M ${b.x} ${b.y} L ${b.x - ux * H - uy * H * 0.6} ${b.y - uy * H + ux * H * 0.6} L ${b.x - ux * H + uy * H * 0.6} ${b.y - uy * H - ux * H * 0.6} Z`} fill={color} stroke={color} strokeWidth={2} strokeLinejoin="round" /> : null}
     </svg>
   );
