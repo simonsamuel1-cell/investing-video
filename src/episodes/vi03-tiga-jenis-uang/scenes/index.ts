@@ -3,6 +3,7 @@ import type React from "react";
 import { BLOCK } from "../data/timing";
 import { placeholder } from "./Placeholder";
 import { SC01, SC02, SC03, SC04 } from "./Opening";
+import { SC05, SC06 } from "./UangAktif";
 
 type Key = Exclude<keyof typeof BLOCK, "END">;
 export const SCENE_COMPONENTS: Record<Key, React.FC> = {
@@ -10,8 +11,8 @@ export const SCENE_COMPONENTS: Record<Key, React.FC> = {
   SC02,
   SC03,
   SC04,
-  SC05: placeholder(5, BLOCK.SC05),
-  SC06: placeholder(6, BLOCK.SC06),
+  SC05,
+  SC06,
   SC07: placeholder(7, BLOCK.SC07),
   SC08: placeholder(8, BLOCK.SC08),
   SC09: placeholder(9, BLOCK.SC09),

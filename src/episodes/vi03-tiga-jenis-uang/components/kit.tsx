@@ -11,8 +11,8 @@
  */
 import React from "react";
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { theme, useMotion, usePalette, useShadow } from "../../../core";
-import { ease } from "../../vi01-passive-income/components/kit";
+import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { Cutout, OUTSIDE_RESERVES, ease } from "../../vi01-passive-income/components/kit";
 import { w as wordAt } from "../data/timing";
 
 export { Cutout, OUTSIDE_RESERVES, TypeBox, ease } from "../../vi01-passive-income/components/kit";
@@ -103,5 +103,82 @@ export const Statement = ({ cx, cy, text, size, mark, markInk, maxWidth, align =
         </>
       )}
     </div>
+  );
+};
+
+/** The grid ground every VI03 scene stands on (read off the GLOBAL frame → the same drift across scenes). */
+export const Ground = ({ from }: { from: number }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  return (
+    <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+      <GridGround f={f + from} paper={c.bg} />
+    </div>
+  );
+};
+
+/**
+ * Orang Tuntun (public/art/vi01/orang-tuntun.png) — head to belly at the left, his foot fading out, rising in
+ * on `at`. Cast ONLY on an insight (STYLE.md §3).
+ */
+const MAN = { src: "art/vi01/orang-tuntun.png", w: 941, h: 1672, ink: { x0: 233, x1: 794, y0: 84 }, belly: 820, top: 150, floor: 900, foot: 0.28, left: 40 };
+const MAN_K = (MAN.floor - MAN.top) / (MAN.belly - MAN.ink.y0);
+export const ORANG_TUNTUN_RIGHT = theme.margin.left + MAN.left + (MAN.ink.x1 - MAN.ink.x0) * MAN_K;
+export const OrangTuntun = ({ at }: { at: number }) => {
+  const m = useMotion();
+  const mask = `linear-gradient(to bottom, black ${MAN.floor - MAN.foot * (MAN.floor - MAN.top)}px, transparent ${MAN.floor}px)`;
+  return (
+    <div style={{ position: "absolute", inset: 0, WebkitMaskImage: mask, maskImage: mask }}>
+      <Cutout src={MAN.src} aspect={MAN.w / MAN.h} x={theme.margin.left + MAN.left + ((MAN.ink.x1 - MAN.ink.x0) * MAN_K) / 2 + (MAN.w / 2 - (MAN.ink.x0 + MAN.ink.x1) / 2) * MAN_K} y={MAN.floor + (MAN.h - MAN.belly) * MAN_K} h={MAN.h * MAN_K} at={at} rise={theme.canvas.height - MAN.top} riseFrames={m.move} />
+    </div>
+  );
+};
+
+/** An arrow drawn on from a to b along a gentle curve (bend px sideways); dashed if asked. */
+export const Arrow = ({ a, b, p, color, bend = 0, dashed = false, width = 5 }: { a: { x: number; y: number }; b: { x: number; y: number }; p: number; color: string; bend?: number; dashed?: boolean; width?: number }) => {
+  if (p <= 0.001) return null;
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - bend;
+  const H = 16;
+  const tx = b.x - mx;
+  const ty = b.y - my;
+  const L = Math.hypot(tx, ty) || 1;
+  const ux = tx / L;
+  const uy = ty / L;
+  return (
+    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+      <path d={`M ${a.x} ${a.y} Q ${mx} ${my} ${b.x - ux * H * 0.7} ${b.y - uy * H * 0.7}`} pathLength={1} strokeDasharray={dashed ? undefined : 1} strokeDashoffset={dashed ? undefined : 1 - p} fill="none" stroke={color} strokeWidth={width} strokeLinecap="round" style={dashed ? { strokeDasharray: "12 10", opacity: p } : undefined} />
+      {p > 0.95 ? <path d={`M ${b.x} ${b.y} L ${b.x - ux * H - uy * H * 0.6} ${b.y - uy * H + ux * H * 0.6} L ${b.x - ux * H + uy * H * 0.6} ${b.y - uy * H - ux * H * 0.6} Z`} fill={color} stroke={color} strokeWidth={2} strokeLinejoin="round" /> : null}
+    </svg>
+  );
+};
+
+/** A point on that same curve, t 0→1 — for things travelling along an arrow. */
+export const along = (a: { x: number; y: number }, b: { x: number; y: number }, t: number, bend = 0) => {
+  const mx = (a.x + b.x) / 2;
+  const my = (a.y + b.y) / 2 - bend;
+  const u = 1 - t;
+  return { x: u * u * a.x + 2 * u * t * mx + t * t * b.x, y: u * u * a.y + 2 * u * t * my + t * t * b.y };
+};
+
+/** A coin: a yellow disc, its ring and "Rp". */
+export const Coin = ({ x, y, r = 24, opacity = 1 }: { x: number; y: number; r?: number; opacity?: number }) => {
+  const c = usePalette();
+  return (
+    <svg width={r * 2} height={r * 2 + 3} style={{ position: "absolute", left: x - r, top: y - r, opacity, overflow: "visible" }}>
+      <circle cx={r} cy={r + 3} r={r} fill={theme.color.walletStabil} />
+      <circle cx={r} cy={r} r={r} fill={theme.color.coinYellow} />
+      <circle cx={r} cy={r} r={r * 0.78} fill="none" stroke={c.cardBg} strokeWidth={2} />
+      <text x={r} y={r} textAnchor="middle" dominantBaseline="central" fontFamily={theme.text.family} fontWeight={800} fontSize={r * 0.72} fill={c.ink}>Rp</text>
+    </svg>
+  );
+};
+
+/** A round badge — ✓ (green), ✗ (red) — easing in on `p`. */
+export const Badge = ({ x, y, kind, p, size = 64 }: { x: number; y: number; kind: "check" | "cross"; p: number; size?: number }) => {
+  const c = usePalette();
+  if (p <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", left: x - size / 2, top: y - size / 2, width: size, height: size, borderRadius: 999, background: kind === "check" ? theme.color.checkGreen : theme.color.calendarRed, color: c.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: size * 0.5, fontWeight: 800, opacity: p, transform: `scale(${(0.7 + 0.3 * p).toFixed(3)})`, boxShadow: `0 0 0 6px ${c.cardBg}` }}>{kind === "check" ? "✓" : "✕"}</div>
   );
 };
