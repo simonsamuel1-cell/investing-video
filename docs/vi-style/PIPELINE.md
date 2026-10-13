@@ -27,7 +27,7 @@ Script (text), VO (mp3), SRT — as always. The script is right about the words;
 
 ## ChatGPT
 Claude drives Simon's ChatGPT (already open, already logged in — "biasa" opens it). No API. Claude never
-logs in. Downloads are moved from ~/Downloads into `public/art/<episode>/` through `cutout.py`.
+logs in. **All prompts go to the chat "Storyboard - ChatGPT - Claude"** (Simon made it for this) — no new chats. Downloads are moved from ~/Downloads into `public/art/<episode>/` through `cutout.py`.
 
 ### Storyboard prompt (template)
 > Storyboard frame for an **explanatory motion-graphics video** (not a film): a 16:9 layout wireframe,
