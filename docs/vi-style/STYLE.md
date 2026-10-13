@@ -36,6 +36,9 @@ A scene is usually ONE of these, sometimes two (a character beside a mindmap). N
 - **Type.** Plus Jakarta Sans. Labels 36 px / 700 / +2 tracking / indigo (the "Tanya juga" label). Big
   statements 100 px / 800 / −2 tracking. Body 34–48 px. Sentence case; Simon's quoted text exactly as typed.
 - **Shape.** Round corners on every rectangle. Cards white, soft shadow. Pills for mindmap nodes.
+- **No repeated words in points.** Simon, 13 Oct: *"minimalisir kata-kata berulang di area penjelasan atau poin
+  poin. Kalau masih di area judul masih gapapa."* In bullets, cards and mindmap nodes, don't repeat the same label
+  on every item (e.g. "Tugas" over each wallet's job); say it once in a title, or let the icon carry it.
 - **Space.** The 108 px subtitle band and the 360×150 top-right logo zone stay empty. One focal point per frame.
 
 ## 3. Characters

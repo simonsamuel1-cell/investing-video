@@ -347,13 +347,11 @@ export const SC03 = () => {
             {/* its job */}
             <Appear at={taskAt + m.sec(0.15) * i} style={{ left: x - CARD3.w / 2 + 30, width: CARD3.w - 60, top: CARD3.task }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 14, fontFamily: theme.text.family }}>
-                <div style={{ flex: "none", marginTop: 4 }}>
+                <div style={{ flex: "none", marginTop: 0 }}>
                   <Ico name={TASKS[k].icon} size={40} />
                 </div>
-                <div style={{ lineHeight: 1.2 }}>
-                  <div style={{ fontSize: 24, fontWeight: 700, letterSpacing: 1, color: c.slate }}>Tugas</div>
-                  <div style={{ fontSize: 30, fontWeight: 800, color: c.ink }}>{TASKS[k].text}</div>
-                </div>
+                {/* no "Tugas" label over each one — "minimalisir kata-kata berulang di area penjelasan atau poin" */}
+                <div style={{ lineHeight: 1.2, fontSize: 32, fontWeight: 800, color: c.ink }}>{TASKS[k].text}</div>
               </div>
             </Appear>
             {/* its time, on the line under the cards */}
