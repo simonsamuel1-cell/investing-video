@@ -3,7 +3,7 @@
  * iconify.mjs — icons from Iconify (200k+ open icons, no key) before anything is generated.
  *
  *   node scripts/vi/iconify.mjs search "piggy bank" [--style duotone|color|line] [--limit 24]
- *   node scripts/vi/iconify.mjs get ph:piggy-bank-duotone public/icons/vi02 [--color "#5F4DEE"]
+ *   node scripts/vi/iconify.mjs get ph:piggy-bank-duotone public/icons/vi02 [--color "#5F4DEE"] [--name piggy-green]
  *
  * Only sets whose licence needs NO attribution are offered (MIT, ISC, Apache-2.0, CC0, OFL…) — CC BY sets
  * would oblige a credit on screen. Simon: "Kalau bisa dari iconify, ambil dari iconify dulu. Kalau iconify
@@ -57,7 +57,8 @@ if (cmd === "search") {
   const [prefix, name] = id.split(":");
   const svg = await (await fetch(`${API}/${prefix}/${name}.svg?height=auto`)).text();
   mkdirSync(dir, { recursive: true });
-  const out = join(dir, `${prefix}-${name}.svg`);
+  /* --name: the same icon in two colours needs two file names */
+  const out = join(dir, `${opt("name", `${prefix}-${name}`)}.svg`);
   writeFileSync(out, svg.replaceAll("currentColor", color));
   console.log(out);
 } else {

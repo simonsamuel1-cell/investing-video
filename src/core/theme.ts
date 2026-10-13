@@ -382,6 +382,18 @@ export const theme = {
     checkGreenInk: "#2B573E",
     /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
     sunYellow: "#F7C948",
+    /**
+     * VI03 "Tiga Jenis Uang" — one colour per kind of money, used as a code through the whole video (Simon,
+     * 13 Oct: "indigo dan cyan memang warna utama brand, tapi bukan berarti kamu tidak bisa menggunakan
+     * warna lain"). Uang aktif green, uang stabil amber, uang jangka panjang the brand indigo. Washes are
+     * the same hues, light, for pills and chips.
+     */
+    walletAktif: "#22B573",
+    walletAktifWash: "rgba(34, 181, 115, 0.14)",
+    walletStabil: "#F2A63B",
+    walletStabilWash: "rgba(242, 166, 59, 0.16)",
+    walletPanjang: "#5F4DEE",
+    walletPanjangWash: "rgba(95, 77, 238, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.

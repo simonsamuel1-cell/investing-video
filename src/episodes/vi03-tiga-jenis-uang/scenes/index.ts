@@ -2,13 +2,14 @@
 import type React from "react";
 import { BLOCK } from "../data/timing";
 import { placeholder } from "./Placeholder";
+import { SC01, SC02, SC03, SC04 } from "./Opening";
 
 type Key = Exclude<keyof typeof BLOCK, "END">;
 export const SCENE_COMPONENTS: Record<Key, React.FC> = {
-  SC01: placeholder(1, BLOCK.SC01),
-  SC02: placeholder(2, BLOCK.SC02),
-  SC03: placeholder(3, BLOCK.SC03),
-  SC04: placeholder(4, BLOCK.SC04),
+  SC01,
+  SC02,
+  SC03,
+  SC04,
   SC05: placeholder(5, BLOCK.SC05),
   SC06: placeholder(6, BLOCK.SC06),
   SC07: placeholder(7, BLOCK.SC07),
