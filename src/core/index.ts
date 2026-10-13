@@ -70,3 +70,4 @@ export type { ComboRow } from "./ComboTable";
 export { TimeframeTabs } from "./TimeframeTabs";
 export { DeviceFrame, ScreenClip } from "./Screen";
 export { SplitDivider, SplitLabels, splitRects } from "./Split";
+export { EpisodeWrap, INTRO_FRAMES, OUTRO_FRAMES, fullFrames } from "./EpisodeWrap";

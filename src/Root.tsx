@@ -34,6 +34,7 @@ import {
   TOTAL_FRAMES as V22_FRAMES,
 } from "./episodes/022-ta-mistakes/Composition";
 import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
+import { TigaJenisUangFull, VI03_FULL_FRAMES } from "./episodes/vi03-tiga-jenis-uang/FullVideo";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
 import {
@@ -147,6 +148,15 @@ export const RemotionRoot: React.FC = () => {
         id="VI01-PassiveIncome"
         component={PassiveIncomeFull}
         durationInFrames={VI01_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI03 — Tiga Jenis Uang: Intro + episode + Outro + BGM (core/EpisodeWrap). Timed by the VO's words. */}
+      <Composition
+        id="VI03-TigaJenisUang"
+        component={TigaJenisUangFull}
+        durationInFrames={VI03_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
