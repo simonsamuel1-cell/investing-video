@@ -1,0 +1,9 @@
+[
+  {
+    "at": 19309,
+    "file": "/Users/samuelsurja/Documents/01 Academy/INV01 - Passive Income/Last Scene.mp3",
+    "script": "docs/VI01_LastScene_Script.txt",
+    "words": "src/episodes/vi01-passive-income/data/last-scene-words.json",
+    "why": "Simon 2026-10-13: 'Last Scene.mp3' — 'ini tambahan untuk VI01, ditempatkan setelah scene terakhir, sebelum outro'. Starts 60 frames after the main VO's last word (f19249); its own words carry their frames in `words`."
+  }
+]

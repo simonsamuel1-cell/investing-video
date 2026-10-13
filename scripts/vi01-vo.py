@@ -26,6 +26,9 @@ SRC = Path("/Users/samuelsurja/Documents/01 Academy/INV01 - Passive Income/INV01
 OUT = ROOT / "public" / "vo" / "passive-income.mp3"
 PADS = json.loads((ROOT / "src/episodes/vi01-passive-income/data/pads.json").read_text())
 RETAKES = json.loads((ROOT / "src/episodes/vi01-passive-income/data/retakes.json").read_text())
+# APPENDS (data/appends.json) are whole new passages laid AFTER the main VO, each from `at` (a frame of the
+# finished timeline): the main VO is cut or padded with silence to `at`, then the file follows, whole.
+APPENDS = json.loads((ROOT / "src/episodes/vi01-passive-income/data/appends.json").read_text())
 SR, SPF = 44100, 735
 
 
@@ -61,6 +64,13 @@ for kind, at, e in sorted(events, key=lambda x: x[1]):
         last = e["to"] * SPF
 parts.append(a[last:])
 out = np.concatenate(parts)
+for ap in sorted(APPENDS, key=lambda x: x["at"]):
+    cut = ap["at"] * SPF
+    # only room tone may be cut: nothing louder than a whisper after `at`
+    tail = out[cut:]
+    assert not len(tail) or float(np.abs(tail).max()) < 0.05, f"append at {ap['at']} would cut speech"
+    out = np.concatenate([out[:cut], np.zeros((max(0, cut - len(out)), 2), np.float32), pcm(ap["file"])])
+    print(f"  append {Path(ap['file']).name} at f{ap['at']}")
 subprocess.run(["ffmpeg", "-v", "error", "-y", "-f", "f32le", "-ac", "2", "-ar", str(SR), "-i", "-",
                 "-c:a", "libmp3lame", "-b:a", "192k", str(OUT)], input=out.tobytes(), check=True)
 print(f"{OUT.name}: {len(a) / SR:.3f}s -> {len(out) / SR:.3f}s, +{added} frames")

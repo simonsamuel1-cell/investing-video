@@ -95,7 +95,10 @@ export const CUES: Cue[] = [
   { start: 18566, end: 18630, text: "Sedangkan investasi," },
   { start: 18648, end: 18916, text: "membuat sebagian uang yang sudah kita hasilkan ikut bekerja untuk masa depan." },
   { start: 18948, end: 19250, text: "Jadi kita pelan-pelan berubah dari sekadar pekerja menjadi pekerja yang juga punya aset." },
+  { start: 19319, end: 19604, text: "Lalu pertanyaannya, aset seperti apa yang bisa kita mulai bangun?" },
+  { start: 19627, end: 19807, text: "Di video berikutnya, kita akan bahas berbagai instrumen investasi," },
+  { start: 19807, end: 20005, text: "dan lihat mana yang paling cocok untuk tujuanmu." },
 ];
 
 /** Last cue out — the floor for the Composition's durationInFrames. */
-export const VO_END = 19250;
+export const VO_END = 20005;

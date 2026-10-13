@@ -276,6 +276,33 @@ def _in_take(t):
 padded = lambda t: _in_take(t) if _in_take(t) is not None else _base(t)
 padded_start = lambda t: _in_take(t) if _in_take(t) is not None else _base(t, 0.25)
 
+# appended passages (data/appends.json): one cue per sentence of their own script, timed by their own
+# word alignment (scripts/vi/align-words.py), shifted to where the passage sits on the timeline
+APPENDS = json.loads((ROOT / "src/episodes/vi01-passive-income/data/appends.json").read_text())
+_appended = []
+for ap in APPENDS:
+    ws = json.loads((ROOT / ap["words"]).read_text())["words"]
+    off = ap["at"] / 60
+    def _flush(sent):
+        # too wide for one line: cut at the comma nearest the middle, as the main cues are cut
+        text = " ".join(x["w"] for x in sent)
+        commas = [k for k, x in enumerate(sent[:-1]) if x["w"].endswith(",")]
+        if width(text) > MAX_PX and commas:
+            k = min(commas, key=lambda k: abs(k + 1 - len(sent) / 2))
+            _flush(sent[: k + 1])
+            _flush(sent[k + 1 :])
+            return
+        _appended.append({"start": off + sent[0]["start"], "end": off + sent[-1]["end"], "text": text})
+
+    sent = []
+    for w in ws:
+        sent.append(w)
+        if w["w"].endswith((".", "?", "!")):
+            _flush(sent)
+            sent = []
+    if sent:
+        _flush(sent)
+
 # a cue never runs into the next one
 for a, b in zip(cues, cues[1:]):
     if a["end"] > b["start"]:
@@ -286,6 +313,7 @@ for c in cues:
 for sc in out_scenes:
     for sen in sc["sentences"]:
         sen["start"], sen["end"] = round(padded(sen["start"]), 3), round(padded(sen["end"]), 3)
+cues += [dict(c, start=round(c["start"], 3), end=round(c["end"], 3)) for c in _appended]
 SRT_OUT.parent.mkdir(exist_ok=True)
 SRT_OUT.write_text("\n".join(f"{i + 1}\n{ts(c['start'])} --> {ts(c['end'])}\n{c['text']}\n" for i, c in enumerate(cues)))
 words_out = [{"w": w[4], "scene": w[1], "start": round(padded(starts[i]), 3), "end": round(padded(ends[i]), 3),

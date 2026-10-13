@@ -1,0 +1,250 @@
+{
+ "fps": 60,
+ "words": [
+  {
+   "w": "Lalu",
+   "start": 0.16666666666666666,
+   "end": 0.43333333333333335,
+   "heard": false,
+   "i": 0,
+   "f0": 10,
+   "f1": 26,
+   "fixed": "from audio energy"
+  },
+  {
+   "w": "pertanyaannya,",
+   "start": 0.48333333333333334,
+   "end": 0.96,
+   "heard": true,
+   "i": 1,
+   "f0": 29,
+   "f1": 58,
+   "fixed": "from audio energy"
+  },
+  {
+   "w": "aset",
+   "start": 1.44,
+   "end": 1.84,
+   "heard": true,
+   "i": 2,
+   "f0": 86,
+   "f1": 110
+  },
+  {
+   "w": "seperti",
+   "start": 1.84,
+   "end": 2.08,
+   "heard": true,
+   "i": 3,
+   "f0": 110,
+   "f1": 125
+  },
+  {
+   "w": "apa",
+   "start": 2.08,
+   "end": 2.6,
+   "heard": true,
+   "i": 4,
+   "f0": 125,
+   "f1": 156
+  },
+  {
+   "w": "yang",
+   "start": 2.6,
+   "end": 3.14,
+   "heard": true,
+   "i": 5,
+   "f0": 156,
+   "f1": 188
+  },
+  {
+   "w": "bisa",
+   "start": 3.14,
+   "end": 3.48,
+   "heard": true,
+   "i": 6,
+   "f0": 188,
+   "f1": 209
+  },
+  {
+   "w": "kita",
+   "start": 3.48,
+   "end": 3.86,
+   "heard": true,
+   "i": 7,
+   "f0": 209,
+   "f1": 232
+  },
+  {
+   "w": "mulai",
+   "start": 3.86,
+   "end": 4.42,
+   "heard": true,
+   "i": 8,
+   "f0": 232,
+   "f1": 265
+  },
+  {
+   "w": "bangun?",
+   "start": 4.42,
+   "end": 4.92,
+   "heard": true,
+   "i": 9,
+   "f0": 265,
+   "f1": 295
+  },
+  {
+   "w": "Di",
+   "start": 5.3,
+   "end": 5.42,
+   "heard": true,
+   "i": 10,
+   "f0": 318,
+   "f1": 325
+  },
+  {
+   "w": "video",
+   "start": 5.42,
+   "end": 5.64,
+   "heard": true,
+   "i": 11,
+   "f0": 325,
+   "f1": 338
+  },
+  {
+   "w": "berikutnya,",
+   "start": 5.64,
+   "end": 6.08,
+   "heard": true,
+   "i": 12,
+   "f0": 338,
+   "f1": 365
+  },
+  {
+   "w": "kita",
+   "start": 6.16,
+   "end": 6.3,
+   "heard": true,
+   "i": 13,
+   "f0": 370,
+   "f1": 378
+  },
+  {
+   "w": "akan",
+   "start": 6.3,
+   "end": 6.48,
+   "heard": true,
+   "i": 14,
+   "f0": 378,
+   "f1": 389
+  },
+  {
+   "w": "bahas",
+   "start": 6.48,
+   "end": 6.8,
+   "heard": true,
+   "i": 15,
+   "f0": 389,
+   "f1": 408
+  },
+  {
+   "w": "berbagai",
+   "start": 6.8,
+   "end": 7.14,
+   "heard": true,
+   "i": 16,
+   "f0": 408,
+   "f1": 428
+  },
+  {
+   "w": "instrumen",
+   "start": 7.14,
+   "end": 7.56,
+   "heard": true,
+   "i": 17,
+   "f0": 428,
+   "f1": 454
+  },
+  {
+   "w": "investasi,",
+   "start": 7.56,
+   "end": 8.3,
+   "heard": true,
+   "i": 18,
+   "f0": 454,
+   "f1": 498
+  },
+  {
+   "w": "dan",
+   "start": 8.3,
+   "end": 9.0,
+   "heard": true,
+   "i": 19,
+   "f0": 498,
+   "f1": 540
+  },
+  {
+   "w": "lihat",
+   "start": 9.0,
+   "end": 9.34,
+   "heard": true,
+   "i": 20,
+   "f0": 540,
+   "f1": 560
+  },
+  {
+   "w": "mana",
+   "start": 9.34,
+   "end": 9.62,
+   "heard": true,
+   "i": 21,
+   "f0": 560,
+   "f1": 577
+  },
+  {
+   "w": "yang",
+   "start": 9.62,
+   "end": 9.94,
+   "heard": true,
+   "i": 22,
+   "f0": 577,
+   "f1": 596
+  },
+  {
+   "w": "paling",
+   "start": 9.94,
+   "end": 10.16,
+   "heard": true,
+   "i": 23,
+   "f0": 596,
+   "f1": 610
+  },
+  {
+   "w": "cocok",
+   "start": 10.16,
+   "end": 10.6,
+   "heard": true,
+   "i": 24,
+   "f0": 610,
+   "f1": 636
+  },
+  {
+   "w": "untuk",
+   "start": 10.6,
+   "end": 10.86,
+   "heard": true,
+   "i": 25,
+   "f0": 636,
+   "f1": 652
+  },
+  {
+   "w": "tujuanmu.",
+   "start": 10.86,
+   "end": 11.6,
+   "heard": true,
+   "i": 26,
+   "f0": 652,
+   "f1": 696
+  }
+ ]
+}
