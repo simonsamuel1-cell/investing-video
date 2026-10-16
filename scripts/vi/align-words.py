@@ -22,10 +22,22 @@ import sys
 FPS = 60
 
 
+# the script writes numbers and slang one way, whisper another: "tiga" is heard as "3", "nggak" as "gak"
+NUMBER = {"satu": "1", "dua": "2", "tiga": "3", "empat": "4", "lima": "5", "enam": "6", "tujuh": "7", "delapan": "8", "sembilan": "9", "sepuluh": "10"}
+SPELLING = {"gak": "nggak", "ngga": "nggak", "enggak": "nggak", "ga": "nggak", "nga": "nggak"}
+
+
 def norm(w):
-    """Lower-case letters and digits only; "Rp50" and the heard "50" are the same word."""
+    """Lower-case letters and digits only; "Rp50" and the heard "50" are the same word, so are "tiga" and "3"."""
     t = re.sub(r"[^0-9a-z]", "", w.lower())
-    return re.sub(r"^rp(?=\d)", "", t)
+    t = re.sub(r"^rp(?=\d)", "", t)
+    t = NUMBER.get(t, t)
+    return SPELLING.get(t, t)
+
+
+def parts(w):
+    """A word as the parts whisper hears separately: "naik-turunnya" -> naik, turunnya; "membelinya—diri" -> two."""
+    return [p for p in (norm(x) for x in re.split(r"[-—–]", w)) if p]
 
 
 def hear(audio, model_size, language):
@@ -48,14 +60,25 @@ def hear(audio, model_size, language):
 
 
 def onto_script(heard, script_words):
-    a = [norm(w["w"]) for w in heard]
-    b = [norm(w) for w in script_words]
+    # whisper hears "26,7" as "26" + ",7" and "3%" as "3" + "%": glue those tails back onto their number
+    glued = []
+    for h in heard:
+        if glued and re.match(r"^[,.%]", h["w"]):
+            glued[-1] = {"w": glued[-1]["w"] + h["w"], "start": glued[-1]["start"], "end": h["end"]}
+        else:
+            glued.append(dict(h))
+    # both sides as parts, each part remembering its word, so hyphenated words match whisper's split ones
+    ha = [(p, h) for h in glued for p in parts(h["w"])]
+    sb = [(p, i) for i, w in enumerate(script_words) for p in parts(w)]
+    a = [p for p, _ in ha]
+    b = [p for p, _ in sb]
     times = [None] * len(script_words)
     sm = difflib.SequenceMatcher(a=a, b=b, autojunk=False)
     for blk in sm.get_matching_blocks():
         for k in range(blk.size):
-            h = heard[blk.a + k]
-            times[blk.b + k] = (h["start"], h["end"], True)
+            h, i = ha[blk.a + k][1], sb[blk.b + k][1]
+            s, e = (h["start"], h["end"]) if times[i] is None else (min(times[i][0], h["start"]), max(times[i][1], h["end"]))
+            times[i] = (s, e, True)
     # interpolate the unmatched between matched neighbours
     known = [i for i, t in enumerate(times) if t]
     for i, t in enumerate(times):
@@ -107,9 +130,23 @@ if __name__ == "__main__":
         sys.exit(0)
     heard = hear(a.audio, a.model, a.language)
     if a.script:
-        # scene headers such as "[SCENE 13 | 02:44–02:59]" are not spoken
-        text = re.sub(r"\[[^\]]*\]", " ", open(a.script).read())
-        words = onto_script(heard, text.split())
+        # scene headers ("[SCENE 13 | 02:44–02:59]", or a whole "[SCENE 01] — Title" line) and "NARRATION" lines
+        # are not spoken; a header tells each word below it which scene it belongs to
+        script_words, scenes, scene = [], [], None
+        for line in open(a.script):
+            m = re.match(r"\s*\[SCENE (\d+)[^\]]*\](.*)", line)
+            if m:
+                scene = int(m.group(1))
+                line = "" if "—" in m.group(2) else m.group(2)
+            if line.strip() == "NARRATION":
+                continue
+            for t in re.sub(r"\[[^\]]*\]", " ", line).split():
+                script_words.append(t)
+                scenes.append(scene)
+        words = onto_script(heard, script_words)
+        if scene is not None:
+            for w, s in zip(words, scenes):
+                w["scene"] = s
     else:
         words = [dict(h, heard=True) for h in heard]
     json.dump(finish(words), open(a.out, "w"), ensure_ascii=False, indent=1)

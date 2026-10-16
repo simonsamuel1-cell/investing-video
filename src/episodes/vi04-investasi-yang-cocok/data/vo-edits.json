@@ -1,0 +1,56 @@
+{
+  "_": "VI04's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+  "base": "/Users/samuelsurja/Documents/01 Academy/INV04 - Mencari Investasi Cocok",
+  "source": "VO Cari Investasi cocok.mp3",
+  "out": "public/vo/vi04-investasi-yang-cocok.mp3",
+  "pieces": [
+    {
+      "src": "ORIGINAL",
+      "from": 0,
+      "to": 7.78
+    },
+    {
+      "_": "16 Oct, revisi 3: 'Tapi ada satu hal yang sering justru nggak kita riset, yaitu' (script changed with it)",
+      "src": "Revisi VO/Scene 01 Part 3.mp3",
+      "to": 3.14,
+      "match": "original 7.8-10.7"
+    },
+    {
+      "_": "16 Oct, CEK 1: 'investor yang akan membelinya—diri kita sendiri.'",
+      "src": "Revisi VO/Scene 01 Part 1.mp3",
+      "match": "original 10.9-18.3"
+    },
+    {
+      "silence": 0.2
+    },
+    {
+      "_": "16 Oct, CEK 1: 'Sekarang, investor di Indonesia sudah mencapai sekitar 26,7 juta orang,'",
+      "src": "Revisi VO/Scene 01 Part 2.mp3",
+      "to": 4.72,
+      "match": "original 10.9-18.3"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 18.32,
+      "to": 48.62
+    },
+    {
+      "_": "16 Oct, revisi 4: 'Kebanyakan orang mungkin langsung mikir:' (SC02)",
+      "src": "Revisi VO/Scene 02 Part 2.mp3",
+      "to": 2.7,
+      "match": "original 48.6-50.3"
+    },
+    {
+      "silence": 0.08
+    },
+    {
+      "_": "16 Oct, revisi 2: '“Mana yang paling cepat?”' (SC02)",
+      "src": "Revisi VO/Scene 02 Part 1.mp3",
+      "match": "original 48.5-54.4"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 51.66
+    }
+  ]
+}

@@ -1,0 +1,511 @@
+1
+00:00:00,000 --> 00:00:03,600
+Sebelum beli saham, kita biasanya rajin riset: perusahaannya bagus nggak,
+
+2
+00:00:03,900 --> 00:00:07,433
+harganya murah atau mahal, dan orang lain lagi beli apa.
+
+3
+00:00:07,833 --> 00:00:10,400
+Tapi ada satu hal yang sering justru nggak kita riset,
+
+4
+00:00:10,400 --> 00:00:15,133
+yaitu investor yang akan membelinya—diri kita sendiri.
+
+5
+00:00:15,833 --> 00:00:20,133
+Sekarang, investor di Indonesia sudah mencapai sekitar 26,7 juta orang,
+
+6
+00:00:20,133 --> 00:00:23,300
+dan lebih dari setengahnya berusia di bawah 30 tahun.
+
+7
+00:00:23,300 --> 00:00:25,700
+Banyak yang mulai dari rekomendasi teman,
+
+8
+00:00:25,967 --> 00:00:29,383
+portofolio di video, atau return yang dipamerkan orang lain.
+
+9
+00:00:29,800 --> 00:00:33,617
+Masalahnya, jawaban orang lain dibuat untuk kondisi orang lain.
+
+10
+00:00:33,917 --> 00:00:37,383
+Jadi sebelum tanya: “Aku harus investasi di mana?”
+
+11
+00:00:37,383 --> 00:00:39,800
+tanya dulu: “Aku sebenarnya investor seperti apa?”
+
+12
+00:00:40,367 --> 00:00:46,017
+Karena riset pertama dalam investasi seharusnya dimulai dari diri kita sendiri.
+
+13
+00:00:46,017 --> 00:00:50,800
+Bayangin kamu berdiri di pinggir sungai, dan rumahmu ada di seberang.
+
+14
+00:00:50,800 --> 00:00:54,533
+Kebanyakan orang mungkin langsung mikir: “Mana yang paling cepat?”
+
+15
+00:00:54,983 --> 00:00:57,167
+Padahal pertanyaan pertamanya bukan itu.
+
+16
+00:00:57,567 --> 00:01:01,567
+Yang lebih penting: “Cara mana yang benar-benar bisa aku jalani sampai tujuan?”
+
+17
+00:01:02,067 --> 00:01:05,283
+Sebelum menentukan investasinya, kita perlu kenali diri kita dulu.
+
+18
+00:01:05,600 --> 00:01:09,133
+Ada tiga cara buat sampai ke seberang.
+
+19
+00:01:09,133 --> 00:01:11,617
+Yang pertama, jalan memutar lalu lewat jembatan.
+
+20
+00:01:11,817 --> 00:01:16,117
+Jalurnya pelan dan relatif stabil: return sekitar 3% sampai 5% per tahun,
+
+21
+00:01:16,417 --> 00:01:20,600
+dengan potensi penurunan sekitar 0,5% sampai 1%.
+
+22
+00:01:20,600 --> 00:01:23,183
+Contohnya reksa dana pasar uang atau deposito.
+
+23
+00:01:23,567 --> 00:01:26,900
+Nggak cepat, tapi relatif mudah dijalani.
+
+24
+00:01:26,900 --> 00:01:28,950
+Yang kedua, naik kapal.
+
+25
+00:01:28,950 --> 00:01:32,600
+Return-nya sekitar 8% sampai 12% per tahun,
+
+26
+00:01:32,883 --> 00:01:36,667
+dengan potensi penurunan sekitar 5% sampai 15%.
+
+27
+00:01:36,667 --> 00:01:40,267
+Feri yang lebih stabil bisa kita bayangkan seperti reksa dana indeks.
+
+28
+00:01:40,267 --> 00:01:44,667
+Speedboat lebih cepat, tapi guncangannya juga lebih terasa, seperti reksa dana saham.
+
+29
+00:01:44,817 --> 00:01:46,717
+Dan yang pegang kemudi bukan kita.
+
+30
+00:01:47,100 --> 00:01:48,700
+Yang ketiga, bawa pesawat sendiri.
+
+31
+00:01:49,317 --> 00:01:52,033
+Dalam setahun hasilnya bisa naik 30%,
+
+32
+00:01:52,033 --> 00:01:56,817
+tapi juga bisa turun 30%, dan penurunannya bisa jauh lebih dalam.
+
+33
+00:01:57,283 --> 00:02:01,900
+Ini seperti memilih saham sendiri: kita juga yang harus tahu cara mengendalikannya.
+
+34
+00:02:01,900 --> 00:02:05,400
+Jadi semakin cepat jalurnya, biasanya semakin besar naik-turunnya,
+
+35
+00:02:05,400 --> 00:02:08,383
+dan semakin tinggi kemampuan yang dibutuhkan.
+
+36
+00:02:08,933 --> 00:02:11,583
+Untuk tahu jalur mana yang cocok, ada dua pertanyaan.
+
+37
+00:02:11,833 --> 00:02:15,183
+Pertanyaan pertama: seberapa besar ombak yang sanggup kamu hadapi?
+
+38
+00:02:16,467 --> 00:02:21,800
+“Ombak” adalah seberapa dalam investasi kita sempat turun selama perjalanan.
+
+39
+00:02:22,100 --> 00:02:26,500
+Contohnya, pada Mei 2020 sebuah saham bank dibeli di harga 1.880.
+
+40
+00:02:27,067 --> 00:02:30,083
+Investasi itu sempat turun maksimum sekitar 21%.
+
+41
+00:02:30,083 --> 00:02:34,583
+Artinya, Rp10 juta sempat menjadi sekitar Rp7,9 juta.
+
+42
+00:02:34,600 --> 00:02:38,367
+Kalau tetap dipegang, empat tahun kemudian dijual di harga 7.300,
+
+43
+00:02:38,883 --> 00:02:42,067
+dengan total return sekitar 288%.
+
+44
+00:02:42,067 --> 00:02:43,667
+Tapi saham lain bisa berbeda.
+
+45
+00:02:43,767 --> 00:02:48,400
+Misalnya beli di 600, turun ke 300, dan nggak pernah kembali ke harga beli.
+
+46
+00:02:48,783 --> 00:02:49,900
+Dua-duanya bisa terjadi.
+
+47
+00:02:50,483 --> 00:02:54,217
+Jadi pertanyaannya: “Kalau ini terjadi ke uangku, aku masih sanggup lanjut nggak?”
+
+48
+00:02:54,217 --> 00:02:57,300
+Saat harga naik, semua orang bisa merasa berani.
+
+49
+00:02:57,483 --> 00:03:02,383
+Yang lebih jujur adalah melihat apa yang kita lakukan saat market benar-benar turun.
+
+50
+00:03:02,667 --> 00:03:06,667
+Kalau langsung jual karena panik, mungkin ombaknya memang terlalu besar buat kita.
+
+51
+00:03:07,083 --> 00:03:08,633
+Kalau belum kuat, nggak masalah.
+
+52
+00:03:09,083 --> 00:03:11,317
+Pilih jalur dengan ombak yang lebih kecil.
+
+53
+00:03:11,733 --> 00:03:14,317
+Pertanyaan kedua: kamu sudah bisa mengemudikannya belum?
+
+54
+00:03:15,100 --> 00:03:18,900
+Kalau memilih saham sendiri seperti bawa pesawat, kita perlu punya “lisensi”.
+
+55
+00:03:19,317 --> 00:03:21,217
+Lisensinya dilihat dari tiga hal.
+
+56
+00:03:21,217 --> 00:03:24,133
+Pertama, kamu paham apa yang kamu lihat.
+
+57
+00:03:24,667 --> 00:03:28,883
+Laporan keuangan dan indikator teknikal, kamu benar-benar ngerti atau belum?
+
+58
+00:03:29,283 --> 00:03:31,300
+Kedua, kamu punya logika sendiri.
+
+59
+00:03:31,817 --> 00:03:34,817
+Kenapa beli? Kapan harus jual? Bisa jelasin sendiri nggak?
+
+60
+00:03:35,233 --> 00:03:37,883
+Ketiga, kamu pernah melewati badai.
+
+61
+00:03:38,100 --> 00:03:40,167
+Punya pengalaman beberapa tahun,
+
+62
+00:03:40,167 --> 00:03:45,733
+dan pernah menghadapi market crash tanpa langsung panik di titik terendah.
+
+63
+00:03:46,083 --> 00:03:49,800
+Kalau tiga-tiganya sudah ada, kemampuanmu sudah lebih matang.
+
+64
+00:03:49,800 --> 00:03:52,933
+Baru satu atau dua, masih berkembang. Belum ada?
+
+65
+00:03:53,183 --> 00:03:54,533
+Berarti masih pemula. Dan itu normal.
+
+66
+00:03:55,217 --> 00:03:59,067
+Yang penting diingat: berani menghadapi ombak bukan berarti sudah bisa bawa pesawat.
+
+67
+00:03:59,317 --> 00:04:01,500
+Berani bicara soal toleransi.
+
+68
+00:04:01,700 --> 00:04:04,217
+Bisa mengemudikan bicara soal kemampuan.
+
+69
+00:04:04,700 --> 00:04:07,533
+Sekarang gabungkan dua jawaban tadi.
+
+70
+00:04:07,983 --> 00:04:09,483
+Kalau kamu belum bisa memilih investasi
+
+71
+00:04:09,483 --> 00:04:11,667
+sendiri dan nggak nyaman dengan naik-turun besar,
+
+72
+00:04:12,167 --> 00:04:14,333
+kamu lebih cocok sebagai penjaga kestabilan.
+
+73
+00:04:14,333 --> 00:04:17,133
+Investasi utama bisa di instrumen yang relatif stabil,
+
+74
+00:04:17,417 --> 00:04:19,967
+sementara reksa dana indeks jadi langkah berikutnya.
+
+75
+00:04:20,217 --> 00:04:24,333
+Kalau belum siap memilih saham sendiri, tapi cukup nyaman dengan naik-turun harga,
+
+76
+00:04:24,633 --> 00:04:27,467
+kamu lebih dekat dengan compounder yang stabil.
+
+77
+00:04:27,983 --> 00:04:30,683
+Investasi utama bisa di reksa dana indeks,
+
+78
+00:04:30,683 --> 00:04:33,800
+lalu reksa dana saham jadi pilihan untuk naik level.
+
+79
+00:04:34,200 --> 00:04:38,067
+Kalau ingin belajar saham, gunakan sebagian kecil dana untuk latihan.
+
+80
+00:04:38,783 --> 00:04:41,683
+Kalau kamu sudah punya kemampuan dan sanggup menghadapi naik-turun besar,
+
+81
+00:04:41,683 --> 00:04:44,333
+kamu lebih dekat dengan strategic investor.
+
+82
+00:04:44,800 --> 00:04:46,783
+Saham bisa jadi investasi utama,
+
+83
+00:04:47,067 --> 00:04:50,533
+tapi tetap sisakan dana yang lebih stabil sebagai cadangan,
+
+84
+00:04:50,717 --> 00:04:53,467
+termasuk saat market terasa terlalu mahal.
+
+85
+00:04:53,783 --> 00:04:58,000
+Jadi prinsipnya sederhana: sebagian besar dana untuk yang sudah cocok dan kamu kuasai,
+
+86
+00:04:58,300 --> 00:05:00,600
+sebagian kecil untuk belajar dan berkembang.
+
+87
+00:05:00,883 --> 00:05:03,133
+Nggak perlu membawa semua uang ke satu pesawat.
+
+88
+00:05:03,617 --> 00:05:06,483
+Dan profil kita nggak selalu sama selamanya.
+
+89
+00:05:06,867 --> 00:05:08,933
+Umur 22, baru mulai kerja.
+
+90
+00:05:08,933 --> 00:05:11,417
+Dana belum banyak, pengalaman juga masih sedikit.
+
+91
+00:05:11,717 --> 00:05:13,383
+Fokusnya: belajar dulu.
+
+92
+00:05:13,917 --> 00:05:17,233
+Umur 30, mulai berkeluarga atau menyiapkan rumah.
+
+93
+00:05:17,817 --> 00:05:19,017
+Dana mungkin lebih besar,
+
+94
+00:05:19,267 --> 00:05:23,867
+tapi toleransi terhadap penurunan bisa mengecil karena uangnya akan segera dipakai.
+
+95
+00:05:24,300 --> 00:05:27,667
+Umur 40, karier dan pengalaman lebih matang.
+
+96
+00:05:28,000 --> 00:05:30,133
+Kemampuan meningkat, tapi tujuan juga berubah:
+
+97
+00:05:30,417 --> 00:05:32,633
+pendidikan anak, orang tua, dan keluarga.
+
+98
+00:05:32,633 --> 00:05:36,283
+Mendekati pensiun, kemampuan mungkin masih ada,
+
+99
+00:05:36,583 --> 00:05:40,367
+tapi prioritas bisa berubah menjadi: cash flow yang lebih stabil.
+
+100
+00:05:40,933 --> 00:05:44,617
+Jadi ada empat hal yang terus berubah: toleransi terhadap penurunan,
+
+101
+00:05:44,833 --> 00:05:48,867
+kemampuan investasi, tujuan hidup, dan dana yang bisa diinvestasikan.
+
+102
+00:05:49,417 --> 00:05:52,533
+Karena itu, profil investasi bukan label seumur hidup.
+
+103
+00:05:52,817 --> 00:05:54,483
+Kondisi berubah? Tes lagi.
+
+104
+00:05:54,933 --> 00:05:56,883
+Kalau mau diringkas, ingat tiga hal.
+
+105
+00:05:57,200 --> 00:06:00,017
+Pertama: jangan langsung tanya mana yang paling cepat.
+
+106
+00:06:00,017 --> 00:06:03,517
+Tanya dulu: “Mana yang benar-benar bisa aku jalani?”
+
+107
+00:06:03,517 --> 00:06:06,900
+Kedua: kemampuan menentukan apakah kita siap bawa pesawat sendiri.
+
+108
+00:06:07,467 --> 00:06:11,333
+Toleransi menentukan seberapa besar ombak yang sanggup kita tahan.
+
+109
+00:06:11,717 --> 00:06:14,283
+Dan yang paling penting: berani menghadapi ombak,
+
+110
+00:06:14,283 --> 00:06:17,233
+belum tentu berarti sudah bisa bawa pesawat.
+
+111
+00:06:17,667 --> 00:06:23,183
+Dua pertanyaan tadi akan dibantu lebih dalam lewat fitur Tuntun Personal Investment Plan.
+
+112
+00:06:23,183 --> 00:06:27,433
+Pertama, kamu akan melihat beberapa pilihan return dan drawdown,
+
+113
+00:06:27,433 --> 00:06:30,567
+lalu pilih yang benar-benar masih bisa kamu terima.
+
+114
+00:06:31,233 --> 00:06:34,400
+Setelah itu, kamu akan mencoba simulasi investasi dari produk nyata,
+
+115
+00:06:34,783 --> 00:06:36,467
+berdasarkan data historisnya.
+
+116
+00:06:36,817 --> 00:06:39,133
+Kamu bisa melihat kapan investasi dimulai,
+
+117
+00:06:39,583 --> 00:06:42,600
+seberapa dalam sempat turun, dan bagaimana hasil akhirnya.
+
+118
+00:06:42,967 --> 00:06:47,817
+Dari situ, kamu tinggal pilih: “Saya masih bisa menerima ini” atau “Coba yang lain.”
+
+119
+00:06:47,817 --> 00:06:51,900
+Berikutnya, kamu akan memilih gaya investasimu—jangka pendek atau jangka panjang—
+
+120
+00:06:51,900 --> 00:06:56,467
+dan tingkat pengalamanmu: pemula, berkembang, atau sudah berpengalaman.
+
+121
+00:06:56,917 --> 00:06:57,983
+Dari semua jawaban tadi,
+
+122
+00:06:58,200 --> 00:07:02,117
+Tuntun Personal Investment Plan akan membuat laporan investasi yang personal untukmu:
+
+123
+00:07:02,417 --> 00:07:04,967
+profil investasimu, investasi yang paling sesuai,
+
+124
+00:07:05,267 --> 00:07:10,017
+pilihan untuk naik level, panduan dari Tuntun, simulasi investasi satu tahun,
+
+125
+00:07:10,617 --> 00:07:13,517
+sampai produk yang untuk sekarang mungkin belum cocok.
+
+126
+00:07:13,517 --> 00:07:16,133
+Kalau kondisi hidupmu berubah, tinggal tes ulang.
+
+127
+00:07:16,317 --> 00:07:19,633
+Karena yang perlu kita kenali bukan versi diri kita lima tahun lalu,
+
+128
+00:07:19,700 --> 00:07:21,683
+tapi: diri kita yang sekarang.
