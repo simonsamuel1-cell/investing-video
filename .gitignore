@@ -5,3 +5,6 @@
 dist
 node_modules
 out
+
+# Python bytecode from scripts/vi
+__pycache__/

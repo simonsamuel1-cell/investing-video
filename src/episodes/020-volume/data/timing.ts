@@ -409,6 +409,9 @@ export const CUTS = {
   toLimits: { at: 17848, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /** SC19 out, SC20 in — Simon's frames, "18791-18792 transisi camera cut". */
   toClose: { at: 18792, over: 24, distance: 90, blur: 10, axis: "x" as const },
+  /** SC20 out, the next-video teaser in — on the first word of TA09-Outro.mp3 (Simon, 20 Oct: "Kasih jeda dulu
+   *  30 frame. Setelah itu langsung berikan visual"). */
+  toNext: { at: BLOCK.END + 30, over: 24, distance: 90, blur: 10, axis: "x" as const },
   /**
    * ⚠ SC11 → THE QUIZ, ON f11289 — Simon's frame, "beri transisi 11288-11289".
    *
@@ -2869,3 +2872,27 @@ export const FIELD = {
 } as const;
 
 export const TF_PICK = { over: 24, up: 1.1, dim: 0.7, lead: 18, step: 4 } as const;
+
+/**
+ * ═══ SC21 · THE NEXT VIDEO ═══  (Simon, 20 Oct 2026: "Setelah scene terakhir, tambahkan TA09-Outro.mp3. Kasih jeda
+ * dulu 30 frame. Setelah itu langsung berikan visual. Lalu tutup dengan video Outro mp4 nya.")
+ *
+ * The clip is its own file (public/vo/ta09-outro.mp3, 10.02 s), played from `at` — volume.mp3 is not re-cut. The 30
+ * frames before it are SC20's closing cards, still standing. `words` are faster-whisper's word starts on the clip, in
+ * frames from the clip's own start:
+ *   "Di video selanjutnya kita akan bahas multi time frame analisis.
+ *    Gimana melihat satu saham dari beberapa time frame dan menggabungkan sinyal yang saling mendukung."
+ */
+export const NEXT = {
+  at: CUTS.toNext.at,
+  /** The clip's length, 10.019 s. */
+  vo: 601,
+  /** After the clip, before the episode fades to the paper and Outro.mp4 plays. */
+  hold: 60,
+  words: { next: 0, title: 113, saham: 295, frames: 364, signal: 451, together: 535, last: 589 },
+  /** The three timeframes, one stock. */
+  tabs: ["1W", "1D", "1H"],
+  title: "Multi-Timeframe Analysis",
+  merged: "Sinyal saling mendukung",
+} as const;
+export const NEXT_END = NEXT.at + NEXT.vo + NEXT.hold;

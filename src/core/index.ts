@@ -70,4 +70,15 @@ export type { ComboRow } from "./ComboTable";
 export { TimeframeTabs } from "./TimeframeTabs";
 export { DeviceFrame, ScreenClip } from "./Screen";
 export { SplitDivider, SplitLabels, splitRects } from "./Split";
-export { EpisodeWrap, INTRO_FRAMES, OUTRO_FRAMES, fullFrames } from "./EpisodeWrap";
+export { EpisodeWrap, INTRO_FRAMES, OUTRO_FRAMES, fullFrames, introFrames, outroFrames, NEXT_PAUSE } from "./EpisodeWrap";
+export type { NextVideo } from "./EpisodeWrap";
+/* The "next video" ending of the TA episodes — the same head on every video (Simon, 20 Oct 2026). */
+export { NextVideoHead, NextCheck, NextTab, NEXT_LAYOUT, useNextClip } from "./NextVideo";
+
+/* The VI type scale — five levels, read as a style (Simon, 20 Oct 2026). */
+export { typeStyle, TYPE_LEVELS } from "./typeScale";
+export type { TypeLevel } from "./typeScale";
+
+/* Benchmark v1 (22 Oct 2026): the growing hairline connector and the soft ground. */
+export { Connector, SoftGround, connectorPath, roundedPath } from "./Connector";
+export type { Pt } from "./Connector";

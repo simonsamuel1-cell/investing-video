@@ -126,38 +126,25 @@ Berarti masih pemula.
 Dan itu normal.
 Yang penting diingat:
 berani menghadapi ombak bukan berarti sudah bisa bawa pesawat.
-Berani bicara soal toleransi.
-Bisa mengemudikan bicara soal kemampuan.
+“Berani”, bicara soal toleransi.
+“Bisa mengemudikan”, bicara soal kemampuan.
 
 [SCENE 06] — Gabungkan Dua Jawaban
 NARRATION
-Sekarang gabungkan dua jawaban tadi.
-Kalau kamu belum bisa memilih investasi sendiri
-dan nggak nyaman dengan naik-turun besar,
-kamu lebih cocok sebagai penjaga kestabilan.
-Investasi utama bisa di instrumen yang relatif stabil,
-sementara reksa dana indeks
-jadi langkah berikutnya.
-Kalau belum siap memilih saham sendiri,
-tapi cukup nyaman dengan naik-turun harga,
-kamu lebih dekat dengan compounder yang stabil.
-Investasi utama bisa di reksa dana indeks,
-lalu reksa dana saham
-jadi pilihan untuk naik level.
-Kalau ingin belajar saham,
-gunakan sebagian kecil dana untuk latihan.
-Kalau kamu sudah punya kemampuan
-dan sanggup menghadapi naik-turun besar,
-kamu lebih dekat dengan strategic investor.
-Saham bisa jadi investasi utama,
-tapi tetap sisakan dana yang lebih stabil
-sebagai cadangan,
-termasuk saat market terasa terlalu mahal.
-Jadi prinsipnya sederhana:
-sebagian besar dana untuk yang sudah cocok dan kamu kuasai,
-sebagian kecil untuk belajar dan berkembang.
-Nggak perlu membawa semua uang
-ke satu pesawat.
+Sekarang gabungkan dua jawaban tadi:
+seberapa besar ombak yang bisa kamu tahan, dan seberapa siap kamu mengendalikan investasimu sendiri.
+Dari sini, ada empat jalur yang berbeda.
+Kalau kamu belum siap memilih investasi sendiri dan juga nggak nyaman dengan naik-turun besar, kamu masuk tipe Guardian Achiever.
+Investasi utama bisa ditempatkan di instrumen yang relatif stabil, sementara reksa dana indeks jadi pilihan untuk mulai naik level.
+Kalau kamu belum siap memilih saham sendiri, tapi sudah cukup nyaman menghadapi naik-turun harga, kamu masuk tipe Stable Architect.
+Reksa dana indeks bisa jadi investasi utama, sementara reksa dana saham jadi pilihan berikutnya untuk berkembang.
+Kalau kamu ingin bergerak lebih cepat dan sudah cukup kuat menghadapi volatilitas, kamu masuk tipe Bold Leader.
+Reksa dana saham bisa jadi pilihan utama, sementara saham individual mulai dipelajari dengan porsi yang lebih kecil.
+Terakhir, kalau kamu sudah mampu memilih saham sendiri dan juga sanggup menghadapi naik-turun yang besar, kamu masuk tipe Strategic Master.
+Saham bisa menjadi investasi utama, sementara sebagian dana tetap disimpan di instrumen yang relatif stabil sebagai cadangan.
+Jadi prinsipnya tetap sama:
+sebagian besar dana ditempatkan di jalur yang paling sesuai dengan kemampuanmu sekarang, dan sebagian kecil digunakan untuk belajar menuju tahap berikutnya.
+Kita nggak perlu membawa seluruh uang ke satu kendaraan yang sama.
 
 [SCENE 07] — Profilmu Bisa Berubah
 NARRATION
@@ -222,16 +209,11 @@ kapan investasi dimulai,
 seberapa dalam sempat turun,
 dan bagaimana hasil akhirnya.
 Dari situ, kamu tinggal pilih:
-“Saya masih bisa menerima ini”
+“Saya masih bisa menerima ini.”
 atau
 “Coba yang lain.”
-Berikutnya,
-kamu akan memilih gaya investasimu—
-jangka pendek atau jangka panjang—
-dan tingkat pengalamanmu:
-pemula,
-berkembang,
-atau sudah berpengalaman.
+Berikutnya, kamu akan memilih gaya investasimu: jangka pendek atau jangka panjang.
+dan tingkat pengalamanmu: pemula, berkembang, atau sudah berpengalaman.
 Dari semua jawaban tadi,
 Tuntun Personal Investment Plan akan membuat laporan investasi yang personal untukmu:
 profil investasimu,

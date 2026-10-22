@@ -1,0 +1,939 @@
+{
+ "key": "TA01",
+ "rows": [
+  {
+   "i": 1,
+   "en": "The first time they see a stock chart,",
+   "zh": "第一次看股票图表时，",
+   "ja": "初めて株のチャートを見たとき、",
+   "ko": "주식 차트를 처음 보면"
+  },
+  {
+   "i": 2,
+   "en": "many people immediately think,",
+   "zh": "很多人马上会想：",
+   "ja": "多くの人がすぐにこう思います。",
+   "ko": "많은 사람이 바로 이렇게 생각해요."
+  },
+  {
+   "i": 3,
+   "en": "“This must be something only",
+   "zh": "“这肯定只有",
+   "ja": "「これはきっとプロにしか",
+   "ko": "“이건 분명 전문가만"
+  },
+  {
+   "i": 4,
+   "en": "professionals can read. Not for me.”",
+   "zh": "专业人士才看得懂。不适合我。”",
+   "ja": "読めない。自分向けじゃない」",
+   "ko": "읽을 수 있을 거야. 나를 위한 건 아니야.”"
+  },
+  {
+   "i": 5,
+   "en": "Lines everywhere.",
+   "zh": "到处都是线。",
+   "ja": "どこを見ても線。",
+   "ko": "여기저기 온통 선이에요."
+  },
+  {
+   "i": 6,
+   "en": "Candlesticks.",
+   "zh": "K线。",
+   "ja": "ローソク足。",
+   "ko": "캔들."
+  },
+  {
+   "i": 7,
+   "en": "Indicators piled on top of each other",
+   "zh": "指标层层叠加，",
+   "ja": "インジケーターが重なり合い、",
+   "ko": "지표가 겹겹이 쌓여서"
+  },
+  {
+   "i": 8,
+   "en": "until the chart itself is barely visible.",
+   "zh": "图表本身都快看不见了。",
+   "ja": "チャート自体がほとんど見えないほどです。",
+   "ko": "차트 자체가 거의 안 보일 정도예요."
+  },
+  {
+   "i": 9,
+   "en": "It feels complicated before you even start.",
+   "zh": "还没开始，你就已经觉得很复杂。",
+   "ja": "始める前から、もう複雑に感じてしまいます。",
+   "ko": "시작하기도 전에 복잡하게 느껴지죠."
+  },
+  {
+   "i": 10,
+   "en": "But actually,",
+   "zh": "但其实，",
+   "ja": "でも実は、",
+   "ko": "하지만 사실,"
+  },
+  {
+   "i": 11,
+   "en": "we don't need to understand it all at once.",
+   "zh": "我们不需要一下子全部弄懂。",
+   "ja": "一度にすべてを理解する必要はありません。",
+   "ko": "한 번에 전부 이해할 필요는 없어요."
+  },
+  {
+   "i": 12,
+   "en": "We'll start with the basics,",
+   "zh": "我们从基础开始，",
+   "ja": "まずは基本から始めて、",
+   "ko": "기초부터 시작해서"
+  },
+  {
+   "i": 13,
+   "en": "then slowly see how it all connects.",
+   "zh": "再慢慢看清一切是怎么联系起来的。",
+   "ja": "すべてがどうつながるか、少しずつ見ていきます。",
+   "ko": "모든 게 어떻게 연결되는지 천천히 살펴볼게요."
+  },
+  {
+   "i": 14,
+   "en": "Without realizing it, you've read charts all your life.",
+   "zh": "不知不觉中，你一辈子都在读图表。",
+   "ja": "気づかないうちに、人生でずっとチャートを読んできたのです。",
+   "ko": "깨닫지 못했겠지만, 평생 차트를 읽어 왔어요."
+  },
+  {
+   "i": 15,
+   "en": "Look at chili prices:",
+   "zh": "看看辣椒的价格：",
+   "ja": "唐辛子の値段を見てみましょう。",
+   "ko": "고추 가격을 한번 보세요."
+  },
+  {
+   "i": 16,
+   "en": "40,000 per kilogram,",
+   "zh": "每公斤40,000，",
+   "ja": "1キロあたり40,000、",
+   "ko": "킬로그램당 40,000,"
+  },
+  {
+   "i": 17,
+   "en": "down to 20,000,",
+   "zh": "跌到20,000，",
+   "ja": "20,000に下がり、",
+   "ko": "20,000으로 떨어졌다가"
+  },
+  {
+   "i": 18,
+   "en": "then up again.",
+   "zh": "然后又涨了。",
+   "ja": "また上がります。",
+   "ko": "다시 올라요."
+  },
+  {
+   "i": 19,
+   "en": "Arrange those numbers by time",
+   "zh": "把这些数字按时间排列，",
+   "ja": "その数字を時間順に並べて、",
+   "ko": "이 숫자들을 시간순으로 놓고"
+  },
+  {
+   "i": 20,
+   "en": "and connect the dots.",
+   "zh": "再把点连起来。",
+   "ja": "点をつないでみましょう。",
+   "ko": "점을 이어 보세요."
+  },
+  {
+   "i": 21,
+   "en": "And you've got a chart.",
+   "zh": "就成了一张图表。",
+   "ja": "これでチャートの出来上がりです。",
+   "ko": "그러면 차트가 돼요."
+  },
+  {
+   "i": 22,
+   "en": "A stock chart is the same thing—",
+   "zh": "股票图表也是一样——",
+   "ja": "株のチャートも同じです。",
+   "ko": "주식 차트도 똑같아요."
+  },
+  {
+   "i": 23,
+   "en": "just faster, and involving more people.",
+   "zh": "只是更快，参与的人也更多。",
+   "ja": "ただ、より速く、より多くの人が関わるだけです。",
+   "ko": "다만 더 빠르고, 더 많은 사람이 참여할 뿐이에요."
+  },
+  {
+   "i": 24,
+   "en": "You already know stock prices can go up and down.",
+   "zh": "你已经知道，股价会涨也会跌。",
+   "ja": "株価が上がったり下がったりすることは、もう知っていますよね。",
+   "ko": "주가가 오르내릴 수 있다는 건 이미 알고 있죠."
+  },
+  {
+   "i": 25,
+   "en": "But why do its moves form certain patterns?",
+   "zh": "但为什么它的走势会形成特定的形态？",
+   "ja": "でも、なぜその動きは特定のパターンを描くのでしょうか？",
+   "ko": "그런데 왜 그 움직임은 특정한 패턴을 만들까요?"
+  },
+  {
+   "i": 26,
+   "en": "And how do you read the message behind it?",
+   "zh": "又该怎么解读背后的信息？",
+   "ja": "そして、その裏のメッセージをどう読めばいいのでしょう？",
+   "ko": "그리고 그 이면의 메시지는 어떻게 읽어야 할까요?"
+  },
+  {
+   "i": 27,
+   "en": "A chart isn't just a record of the past.",
+   "zh": "图表不只是过去的记录。",
+   "ja": "チャートは、単なる過去の記録ではありません。",
+   "ko": "차트는 단순한 과거의 기록이 아니에요."
+  },
+  {
+   "i": 28,
+   "en": "It records every decision buyers and sellers make—",
+   "zh": "它记录了买方和卖方的每一个决定——",
+   "ja": "買い手と売り手の判断を、ひとつ残らず記録しています。",
+   "ko": "차트는 매수자와 매도자의 모든 결정을 기록해요."
+  },
+  {
+   "i": 29,
+   "en": "when they dare to get in,",
+   "zh": "他们什么时候敢于入场，",
+   "ja": "いつ思い切ってエントリーしたのか、",
+   "ko": "언제 과감히 진입했는지,"
+  },
+  {
+   "i": 30,
+   "en": "when they hesitate,",
+   "zh": "什么时候犹豫，",
+   "ja": "いつ迷ったのか、",
+   "ko": "언제 망설였는지,"
+  },
+  {
+   "i": 31,
+   "en": "and when they finally get out.",
+   "zh": "又在什么时候最终出场。",
+   "ja": "そして、いつ最終的にエグジットしたのか。",
+   "ko": "그리고 언제 결국 청산했는지."
+  },
+  {
+   "i": 32,
+   "en": "Charts also come in several forms.",
+   "zh": "图表也有好几种形式。",
+   "ja": "チャートにも、いくつかの種類があります。",
+   "ko": "차트에도 여러 가지 형태가 있어요."
+  },
+  {
+   "i": 33,
+   "en": "A line chart connects the closing prices.",
+   "zh": "折线图把收盘价连接起来。",
+   "ja": "ラインチャートは、終値を結んだものです。",
+   "ko": "라인 차트는 종가를 연결해요."
+  },
+  {
+   "i": 34,
+   "en": "It looks clean and is easy to understand,",
+   "zh": "看起来简洁，也容易理解，",
+   "ja": "見た目はすっきりしていて分かりやすいですが、",
+   "ko": "깔끔하고 이해하기 쉽지만,"
+  },
+  {
+   "i": 35,
+   "en": "but a lot of the story",
+   "zh": "但很多故事",
+   "ja": "多くのストーリーが",
+   "ko": "많은 이야기가"
+  },
+  {
+   "i": 36,
+   "en": "isn't visible.",
+   "zh": "都看不出来。",
+   "ja": "見えません。",
+   "ko": "보이지 않아요."
+  },
+  {
+   "i": 37,
+   "en": "Candlesticks give a more complete picture:",
+   "zh": "K线能呈现更完整的画面：",
+   "ja": "ローソク足は、より完全な全体像を見せてくれます。",
+   "ko": "캔들은 더 완전한 그림을 보여 줘요."
+  },
+  {
+   "i": 38,
+   "en": "the opening price,",
+   "zh": "开盘价、",
+   "ja": "始値、",
+   "ko": "시가,"
+  },
+  {
+   "i": 39,
+   "en": "the highest point,",
+   "zh": "最高价、",
+   "ja": "高値、",
+   "ko": "고가,"
+  },
+  {
+   "i": 40,
+   "en": "the lowest point,",
+   "zh": "最低价，",
+   "ja": "安値、",
+   "ko": "저가,"
+  },
+  {
+   "i": 41,
+   "en": "and the closing price.",
+   "zh": "以及收盘价。",
+   "ja": "そして終値です。",
+   "ko": "그리고 종가예요."
+  },
+  {
+   "i": 42,
+   "en": "Four pieces of information in one candle.",
+   "zh": "一根K线，包含四个信息。",
+   "ja": "1本のローソク足に、4つの情報が詰まっています。",
+   "ko": "캔들 하나에 네 가지 정보가 담겨 있어요."
+  },
+  {
+   "i": 43,
+   "en": "That's why",
+   "zh": "正因如此，",
+   "ja": "だからこそ、",
+   "ko": "그렇기 때문에"
+  },
+  {
+   "i": 44,
+   "en": "candlesticks are the main choice for traders",
+   "zh": "想更细致地解读价格走势的交易者，",
+   "ja": "値動きをより詳しく読みたいトレーダーにとって、",
+   "ko": "가격 움직임을 더 자세히 읽고 싶은"
+  },
+  {
+   "i": 45,
+   "en": "who want to read price moves in more detail.",
+   "zh": "首选的就是K线。",
+   "ja": "ローソク足が第一の選択肢になっています。",
+   "ko": "트레이더에게는 캔들이 주된 선택지예요."
+  },
+  {
+   "i": 46,
+   "en": "All right, so",
+   "zh": "好，那么",
+   "ja": "さて、",
+   "ko": "자, 이렇게 해서"
+  },
+  {
+   "i": 47,
+   "en": "we now have the basics for reading charts.",
+   "zh": "我们已经有了看懂图表的基础。",
+   "ja": "これでチャートを読むための基礎ができました。",
+   "ko": "차트를 읽기 위한 기초를 갖췄어요."
+  },
+  {
+   "i": 48,
+   "en": "Now, let's start looking at",
+   "zh": "现在，我们开始来看",
+   "ja": "では、ここからは",
+   "ko": "이제부터"
+  },
+  {
+   "i": 49,
+   "en": "how time and price movement",
+   "zh": "时间和价格走势",
+   "ja": "時間と値動きによって",
+   "ko": "시간과 가격 움직임이"
+  },
+  {
+   "i": 50,
+   "en": "change what we see.",
+   "zh": "如何改变我们看到的画面。",
+   "ja": "見え方がどう変わるのかを見ていきましょう。",
+   "ko": "우리가 보는 것을 어떻게 바꾸는지 살펴볼게요."
+  },
+  {
+   "i": 51,
+   "en": "Every chart has two axes.",
+   "zh": "每张图表都有两条坐标轴。",
+   "ja": "どのチャートにも、2つの軸があります。",
+   "ko": "모든 차트에는 축이 두 개 있어요."
+  },
+  {
+   "i": 52,
+   "en": "The horizontal axis shows time:",
+   "zh": "横轴表示时间：",
+   "ja": "横軸は時間を表します。",
+   "ko": "가로축은 시간을 나타내요."
+  },
+  {
+   "i": 53,
+   "en": "when did the move happen?",
+   "zh": "这段走势是什么时候发生的？",
+   "ja": "その動きはいつ起きたのか？",
+   "ko": "그 움직임은 언제 일어났을까요?"
+  },
+  {
+   "i": 54,
+   "en": "The vertical axis shows price: at what level?",
+   "zh": "纵轴表示价格：在什么价位？",
+   "ja": "縦軸は価格を表します。どの水準なのか？",
+   "ko": "세로축은 가격을 나타내요. 어느 가격대일까요?"
+  },
+  {
+   "i": 55,
+   "en": "So,",
+   "zh": "所以，",
+   "ja": "つまり、",
+   "ko": "그러니까,"
+  },
+  {
+   "i": 56,
+   "en": "each point on a chart always answers two questions",
+   "zh": "图表上的每一个点，总是同时回答",
+   "ja": "チャート上のどの点も、常に2つの問いに",
+   "ko": "차트 위의 모든 점은 항상 두 가지 질문에"
+  },
+  {
+   "i": 57,
+   "en": "at once—what the price is,",
+   "zh": "两个问题——价格是多少，",
+   "ja": "同時に答えています。価格はいくらか、",
+   "ko": "동시에 답해요. 가격이 얼마인지,"
+  },
+  {
+   "i": 58,
+   "en": "and when that price was formed.",
+   "zh": "以及这个价格是什么时候形成的。",
+   "ja": "そして、その価格がいつ形成されたのか。",
+   "ko": "그리고 그 가격이 언제 형성됐는지."
+  },
+  {
+   "i": 59,
+   "en": "Now look at the same stock",
+   "zh": "现在来看同一只股票",
+   "ja": "では、同じ銘柄を",
+   "ko": "이제 같은 종목을"
+  },
+  {
+   "i": 60,
+   "en": "on different timeframes.",
+   "zh": "在不同时间周期下的样子。",
+   "ja": "異なる時間足で見てみましょう。",
+   "ko": "다른 타임프레임으로 한번 보세요."
+  },
+  {
+   "i": 61,
+   "en": "One 5-minute candle sums up 5 minutes of trading.",
+   "zh": "一根5分钟K线，汇总了5分钟的交易。",
+   "ja": "5分足1本は、5分間の取引をまとめたものです。",
+   "ko": "5분봉 캔들 하나는 5분간의 거래를 요약해요."
+  },
+  {
+   "i": 62,
+   "en": "A daily candle sums up one trading day.",
+   "zh": "日K线汇总了一个交易日。",
+   "ja": "日足1本は、1営業日分の取引をまとめたものです。",
+   "ko": "일봉 캔들은 거래일 하루를 요약해요."
+  },
+  {
+   "i": 63,
+   "en": "A weekly candle sums up one week",
+   "zh": "周K线汇总了一周的",
+   "ja": "週足1本は、1週間分の",
+   "ko": "주봉 캔들은 한 주 동안의"
+  },
+  {
+   "i": 64,
+   "en": "of trading.",
+   "zh": "交易。",
+   "ja": "取引をまとめたものです。",
+   "ko": "거래를 요약해요."
+  },
+  {
+   "i": 65,
+   "en": "The stock is the same, and so is its history.",
+   "zh": "股票是同一只，历史也一样。",
+   "ja": "銘柄は同じで、その歴史も同じです。",
+   "ko": "같은 종목이고, 역사도 똑같아요."
+  },
+  {
+   "i": 66,
+   "en": "Yet the picture you see can feel very different.",
+   "zh": "但呈现出的画面，可能感觉非常不同。",
+   "ja": "でも、見えてくる姿は大きく違って感じられることがあります。",
+   "ko": "하지만 나타나는 모습은 매우 다르게 느껴질 수 있어요."
+  },
+  {
+   "i": 67,
+   "en": "It all depends on how close",
+   "zh": "一切都取决于你选择",
+   "ja": "すべては、どれだけ近くから",
+   "ko": "모든 건 얼마나 가까이서,"
+  },
+  {
+   "i": 68,
+   "en": "or how far away",
+   "zh": "离得多近，",
+   "ja": "あるいはどれだけ遠くから",
+   "ko": "또는 얼마나 멀리서"
+  },
+  {
+   "i": 69,
+   "en": "you choose to view it from.",
+   "zh": "还是离得多远去看它。",
+   "ja": "見ることを選ぶかで決まります。",
+   "ko": "보기로 선택하느냐에 달려 있어요."
+  },
+  {
+   "i": 70,
+   "en": "So far,",
+   "zh": "到这里，",
+   "ja": "ここまでで、",
+   "ko": "지금까지"
+  },
+  {
+   "i": 71,
+   "en": "we've seen",
+   "zh": "我们已经看到，",
+   "ja": "私たちが見てきたのは、",
+   "ko": "우리가 본 것은,"
+  },
+  {
+   "i": 72,
+   "en": "that one stock can look different",
+   "zh": "同一只股票可能看起来不一样，",
+   "ja": "同じ1つの銘柄でも、",
+   "ko": "한 종목이 다르게 보일 수 있다는 거예요."
+  },
+  {
+   "i": 73,
+   "en": "just because of how we look at time.",
+   "zh": "只是因为我们看待时间的方式。",
+   "ja": "時間の見方が違うだけで、違って見えるということです。",
+   "ko": "단지 시간을 보는 방식 때문에요."
+  },
+  {
+   "i": 74,
+   "en": "Now, let's go deeper into market behavior.",
+   "zh": "现在，我们更深入地来看市场行为。",
+   "ja": "では、市場の行動にさらに踏み込んでいきましょう。",
+   "ko": "이제 시장의 행동을 더 깊이 들여다볼게요."
+  },
+  {
+   "i": 75,
+   "en": "The shorter the timeframe,",
+   "zh": "时间周期越短，",
+   "ja": "時間足が短いほど、",
+   "ko": "타임프레임이 짧을수록"
+  },
+  {
+   "i": 76,
+   "en": "the more noise you see—",
+   "zh": "看到的噪音就越多——",
+   "ja": "ノイズが多く見えます。",
+   "ko": "노이즈가 더 많이 보여요."
+  },
+  {
+   "i": 77,
+   "en": "every small reaction, momentary",
+   "zh": "每一次小小的反应、",
+   "ja": "小さな反応のひとつひとつ、",
+   "ko": "작은 반응 하나하나,"
+  },
+  {
+   "i": 78,
+   "en": "hesitation, and market panic.",
+   "zh": "短暂的犹豫，以及市场的恐慌。",
+   "ja": "一瞬のためらい、そして市場のパニック。",
+   "ko": "순간의 망설임, 그리고 시장의 패닉이요."
+  },
+  {
+   "i": 79,
+   "en": "The longer the timeframe,",
+   "zh": "时间周期越长，",
+   "ja": "時間足が長いほど、",
+   "ko": "타임프레임이 길수록"
+  },
+  {
+   "i": 80,
+   "en": "the clearer the overall direction usually is.",
+   "zh": "大方向通常就越清晰。",
+   "ja": "大きな方向性は、たいていはっきりしてきます。",
+   "ko": "큰 방향은 보통 더 뚜렷해져요."
+  },
+  {
+   "i": 81,
+   "en": "Intraday charts help you see when to act.",
+   "zh": "日内图表帮助你看清什么时候该行动。",
+   "ja": "日中足（イントラデイ）は、いつ行動すべきかを見るのに役立ちます。",
+   "ko": "장중 차트는 언제 행동해야 할지 보는 데 도움이 돼요."
+  },
+  {
+   "i": 82,
+   "en": "Meanwhile, weekly and monthly charts help you",
+   "zh": "而周线图和月线图，则帮助你理解",
+   "ja": "一方、週足や月足は、",
+   "ko": "반면 주봉과 월봉 차트는"
+  },
+  {
+   "i": 83,
+   "en": "grasp the overall direction that decision is made in.",
+   "zh": "做出这个决定时所处的大方向。",
+   "ja": "その判断を下す際の大きな方向性をつかむのに役立ちます。",
+   "ko": "그 결정이 내려지는 큰 방향을 이해하는 데 도움이 돼요."
+  },
+  {
+   "i": 84,
+   "en": "Both are useful,",
+   "zh": "两者都有用，",
+   "ja": "どちらも役に立ちますが、",
+   "ko": "둘 다 유용하지만,"
+  },
+  {
+   "i": 85,
+   "en": "but they answer",
+   "zh": "但回答的是",
+   "ja": "答えているのは",
+   "ko": "답하는 질문이"
+  },
+  {
+   "i": 86,
+   "en": "different questions.",
+   "zh": "不同的问题。",
+   "ja": "別々の問いです。",
+   "ko": "서로 달라요."
+  },
+  {
+   "i": 87,
+   "en": "Now, this is where",
+   "zh": "好，正是在这里，",
+   "ja": "さて、ここで",
+   "ko": "자, 바로 여기서"
+  },
+  {
+   "i": 88,
+   "en": "charts become important:",
+   "zh": "图表变得重要了：",
+   "ja": "チャートが重要になります。",
+   "ko": "차트가 중요해져요."
+  },
+  {
+   "i": 89,
+   "en": "the market has a memory.",
+   "zh": "市场是有记忆的。",
+   "ja": "市場には記憶があるのです。",
+   "ko": "시장에는 기억이 있거든요."
+  },
+  {
+   "i": 90,
+   "en": "If a price area once drew buyers in,",
+   "zh": "如果某个价格区域曾经吸引买方进场，",
+   "ja": "ある価格帯で、かつて買い手が入ってきたなら、",
+   "ko": "어떤 가격대에서 한때 매수자가 들어왔다면,"
+  },
+  {
+   "i": 91,
+   "en": "that area often draws attention again.",
+   "zh": "这个区域往往会再次引起关注。",
+   "ja": "その価格帯は、再び注目されることがよくあります。",
+   "ko": "그 가격대는 다시 주목받는 경우가 많아요."
+  },
+  {
+   "i": 92,
+   "en": "Some traders bought there before,",
+   "zh": "有些交易者曾在那里买入，",
+   "ja": "そこで買ったことのあるトレーダーもいれば、",
+   "ko": "그곳에서 매수했던 트레이더도 있고,"
+  },
+  {
+   "i": 93,
+   "en": "and some are waiting for a second",
+   "zh": "也有人在等待",
+   "ja": "2度目のチャンスを",
+   "ko": "두 번째 기회를"
+  },
+  {
+   "i": 94,
+   "en": "chance. That collective memory leaves a trace on the chart.",
+   "zh": "第二次机会。这种集体记忆在图表上留下了痕迹。",
+   "ja": "待つ人もいます。こうした集団の記憶が、チャートに跡を残します。",
+   "ko": "기다리는 사람도 있죠. 이런 집단 기억이 차트에 흔적을 남겨요."
+  },
+  {
+   "i": 95,
+   "en": "Because people",
+   "zh": "因为人们",
+   "ja": "人は",
+   "ko": "사람들은"
+  },
+  {
+   "i": 96,
+   "en": "remember prices,",
+   "zh": "会记住价格，",
+   "ja": "価格を覚えているので、",
+   "ko": "가격을 기억하기 때문에,"
+  },
+  {
+   "i": 97,
+   "en": "similar behavior",
+   "zh": "相似的行为",
+   "ja": "似たような行動が",
+   "ko": "비슷한 행동이"
+  },
+  {
+   "i": 98,
+   "en": "sometimes shows up again.",
+   "zh": "有时会再次出现。",
+   "ja": "ときどき再び現れます。",
+   "ko": "가끔 다시 나타나요."
+  },
+  {
+   "i": 99,
+   "en": "Now we've seen",
+   "zh": "现在我们已经看到了",
+   "ja": "これで私たちは、",
+   "ko": "이제 우리는"
+  },
+  {
+   "i": 100,
+   "en": "how charts record market behavior.",
+   "zh": "图表是如何记录市场行为的。",
+   "ja": "チャートが市場の行動をどう記録するかを見てきました。",
+   "ko": "차트가 시장의 행동을 어떻게 기록하는지 봤어요."
+  },
+  {
+   "i": 101,
+   "en": "But there's still one thing to keep in mind:",
+   "zh": "但还有一点需要记住：",
+   "ja": "ただ、まだ覚えておくべきことがひとつあります。",
+   "ko": "하지만 아직 기억해야 할 게 하나 있어요."
+  },
+  {
+   "i": 102,
+   "en": "a pattern that looks clear doesn't necessarily",
+   "zh": "看起来很清晰的形态，",
+   "ja": "はっきり見えるパターンでも、",
+   "ko": "뚜렷하게 보이는 패턴이라도"
+  },
+  {
+   "i": 103,
+   "en": "give certainty about what happens next.",
+   "zh": "也不一定能让你确定接下来会发生什么。",
+   "ja": "次に何が起こるかが確実に分かるとは限りません。",
+   "ko": "다음에 일어날 일을 꼭 확실히 알려 주는 건 아니에요."
+  },
+  {
+   "i": 104,
+   "en": "So, think of",
+   "zh": "所以，把",
+   "ja": "ですから、",
+   "ko": "그러니까"
+  },
+  {
+   "i": 105,
+   "en": "technical analysis as a tool for reading probability,",
+   "zh": "技术分析当作解读概率的工具，",
+   "ja": "テクニカル分析は確率を読むための道具であって、",
+   "ko": "기술적 분석은 확률을 읽는 도구로 생각하세요."
+  },
+  {
+   "i": 106,
+   "en": "not a tool for predicting the future.",
+   "zh": "而不是预测未来的工具。",
+   "ja": "未来を予言する道具ではないと考えましょう。",
+   "ko": "미래를 예측하는 도구가 아니라요."
+  },
+  {
+   "i": 107,
+   "en": "A chart shows what has already happened,",
+   "zh": "图表展示的是已经发生的事、",
+   "ja": "チャートが示すのは、すでに起きたこと、",
+   "ko": "차트는 이미 일어난 일,"
+  },
+  {
+   "i": 108,
+   "en": "patterns that often repeat,",
+   "zh": "经常重复出现的形态、",
+   "ja": "よく繰り返されるパターン、",
+   "ko": "자주 반복되는 패턴,"
+  },
+  {
+   "i": 109,
+   "en": "and where buyers and sellers stand now.",
+   "zh": "以及买卖双方目前所处的位置。",
+   "ja": "そして今の買い手と売り手の立ち位置です。",
+   "ko": "그리고 지금 매수자와 매도자의 위치를 보여 줘요."
+  },
+  {
+   "i": 110,
+   "en": "A chart doesn't guarantee what happens next—",
+   "zh": "图表并不保证接下来会发生什么——",
+   "ja": "チャートは、次に何が起こるかを保証しません。",
+   "ko": "차트는 다음에 무슨 일이 일어날지 보장하지 않아요."
+  },
+  {
+   "i": 111,
+   "en": "no tool can.",
+   "zh": "没有任何工具能做到。",
+   "ja": "どんな道具にもできません。",
+   "ko": "어떤 도구도 그럴 수 없어요."
+  },
+  {
+   "i": 112,
+   "en": "But a chart gives you an edge: making",
+   "zh": "不过，图表能给你一个优势：",
+   "ja": "それでもチャートは、強みを与えてくれます。",
+   "ko": "하지만 차트는 이점을 줘요."
+  },
+  {
+   "i": 113,
+   "en": "decisions based on information,",
+   "zh": "根据信息做决定，",
+   "ja": "それは、情報にもとづいて判断できること。",
+   "ko": "정보를 바탕으로 결정을 내릴 수 있다는 거죠."
+  },
+  {
+   "i": 114,
+   "en": "not just hope or guesswork.",
+   "zh": "而不只是凭希望或猜测。",
+   "ja": "期待や推測だけに頼らずに済むことです。",
+   "ko": "단순한 희망이나 추측이 아니라요."
+  },
+  {
+   "i": 115,
+   "en": "Every candle forms because people",
+   "zh": "每一根K线的形成，都是因为",
+   "ja": "どのローソク足も、",
+   "ko": "모든 캔들은"
+  },
+  {
+   "i": 116,
+   "en": "make real decisions.",
+   "zh": "人们做出了真实的决定。",
+   "ja": "人が本当に決断を下したことで形成されます。",
+   "ko": "사람들이 실제로 결정을 내렸기 때문에 만들어져요."
+  },
+  {
+   "i": 117,
+   "en": "There's fear,",
+   "zh": "有恐惧、",
+   "ja": "恐れ、",
+   "ko": "두려움,"
+  },
+  {
+   "i": 118,
+   "en": "conviction, patience,",
+   "zh": "信念、耐心、",
+   "ja": "確信、忍耐、",
+   "ko": "확신, 인내,"
+  },
+  {
+   "i": 119,
+   "en": "euphoria, and panic—",
+   "zh": "狂热和恐慌——",
+   "ja": "熱狂、そしてパニック。",
+   "ko": "열광, 그리고 패닉."
+  },
+  {
+   "i": 120,
+   "en": "all of it recorded there.",
+   "zh": "全都记录在那里。",
+   "ja": "そのすべてが、そこに記録されています。",
+   "ko": "이 모든 게 거기에 기록돼 있어요."
+  },
+  {
+   "i": 121,
+   "en": "A chart is not the stock itself.",
+   "zh": "图表并不是股票本身。",
+   "ja": "チャートは、銘柄そのものではありません。",
+   "ko": "차트는 종목 그 자체가 아니에요."
+  },
+  {
+   "i": 122,
+   "en": "A chart is the market's memory",
+   "zh": "图表是市场对所有",
+   "ja": "チャートは、それを売買してきた",
+   "ko": "차트는 그 종목을 거래했던"
+  },
+  {
+   "i": 123,
+   "en": "of everyone who has ever traded it.",
+   "zh": "曾经交易过它的人的记忆。",
+   "ja": "すべての人についての、市場の記憶なのです。",
+   "ko": "모든 사람에 대한 시장의 기억이에요."
+  },
+  {
+   "i": 124,
+   "en": "Learn to read that memory before joining in",
+   "zh": "先学会读懂这份记忆，",
+   "ja": "先にその記憶の読み方を学び、",
+   "ko": "그 기억을 읽는 법부터 배우고 나서"
+  },
+  {
+   "i": 125,
+   "en": "and making decisions.",
+   "zh": "再参与做决定。",
+   "ja": "それから判断に加わりましょう。",
+   "ko": "결정에 참여하세요."
+  },
+  {
+   "i": 126,
+   "en": "In the next video, we'll start",
+   "zh": "在下一个视频里，我们将开始",
+   "ja": "次の動画では、",
+   "ko": "다음 영상에서는"
+  },
+  {
+   "i": 127,
+   "en": "breaking down candlesticks from the ground up.",
+   "zh": "从最基础的部分拆解K线。",
+   "ja": "ローソク足を基礎の基礎から分解していきます。",
+   "ko": "가장 기초부터 캔들을 파헤쳐 볼게요."
+  },
+  {
+   "i": 128,
+   "en": "What is a single candle actually telling us?",
+   "zh": "一根K线，到底在讲述什么？",
+   "ja": "1本のローソク足は、実は何を語っているのでしょうか？",
+   "ko": "캔들 하나는 사실 무엇을 말하고 있을까요?"
+  }
+ ],
+ "notes": [
+  {
+   "i": 15,
+   "note": "Rows 16–17: the Indonesian gives 40.000 / 20.000 with no currency, so no “Rp” was added; rendered 40,000 / 20,000 in all languages."
+  },
+  {
+   "i": 29,
+   "note": "Rows 29 and 31: “masuk / keluar” (buyers and sellers getting in / out) use the glossary entry/exit terms in ZH/JA/KO (入场/出场, エントリー/エグジット, 진입/청산)."
+  },
+  {
+   "i": 39,
+   "note": "Rows 39–40: “titik tertinggi / terendah” is the candle's high and low; ZH/JA/KO use the standard OHLC terms (最高价/最低价, 高値/安値, 고가/저가). EN keeps “highest/lowest point”."
+  },
+  {
+   "i": 44,
+   "note": "Rows 44–45 (ZH, JA, KO): the relative clause (“traders who want to read price moves in more detail”) comes before the main clause in these languages, so the content of 44 and 45 is swapped within the sentence."
+  },
+  {
+   "i": 51,
+   "note": "Rows 51–54: “sumbu” here means the chart axes, not the candle wick, so the glossary's wick entry does not apply."
+  },
+  {
+   "i": 61,
+   "note": "Rows 61–64: KO uses the standard 5분봉/일봉/주봉 (5-minute/daily/weekly candle); JA uses 5分足/日足/週足."
+  },
+  {
+   "i": 76,
+   "note": "“noise” is English in the Indonesian and not in the glossary; kept in EN, rendered 噪音 / ノイズ / 노이즈."
+  },
+  {
+   "i": 81,
+   "note": "Glossary rendering for Intraday used as-is in JA (日中足（イントラデイ）), which makes this row ~31 characters."
+  },
+  {
+   "i": 105,
+   "note": "“technical analysis” is English in the Indonesian; kept in EN, translated per glossary in ZH/JA/KO (技术分析 / テクニカル分析 / 기술적 분석)."
+  }
+ ]
+}

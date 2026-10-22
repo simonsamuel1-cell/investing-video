@@ -19,7 +19,7 @@
 import { useCurrentFrame } from "remotion";
 import {
   Stage, GridGround, QuoteCard, Words, TuntunMark, quoteListY,
-  cutInStyle, useMotion, progress, progressInOut, theme,
+  cutInStyle, cutOutStyle, useMotion, progress, progressInOut, theme,
 } from "../../../core";
 import { BLOCK, CLOSE, CUTS, MASCOT, local } from "../data/timing";
 
@@ -57,6 +57,13 @@ export const SC20 = () => {
   const words = local(V.text, FROM);
   const two = local(V.second.at, FROM);
   const ground = progress(f, local(V.ground.at, FROM), V.ground.over);
+  /** ⚠ BOTH HALVES ON ONE ELEMENT (as SC19): in from SC19, out into SC21, the next video. */
+  const cIn = cutInStyle(f + FROM, CUTS.toClose);
+  const cOut = cutOutStyle(f + FROM, CUTS.toNext);
+  const cam = {
+    transform: `${cIn.transform} ${cOut.transform}`,
+    filter: [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") || undefined,
+  };
 
   /** One curve moves the stack and brings the second card in, so the card
    *  cannot land before the room for it exists. */
@@ -69,7 +76,7 @@ export const SC20 = () => {
 
   return (
     <Stage>
-      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toClose) }}>
+      <div style={{ position: "absolute", inset: 0, ...cam }}>
         <GridGround f={f} opacity={ground} />
 
         {f >= at && (

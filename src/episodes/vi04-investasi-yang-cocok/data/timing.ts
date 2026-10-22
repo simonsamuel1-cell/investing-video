@@ -45,14 +45,15 @@ export const BLOCK: Record<string, number> = Object.fromEntries([
   ["END", VO_LAST + END_HOLD],
 ]);
 
+/** A camera cut at every scene change unless a scene is built to carry over (house style: no wipes). */
+export const CUT = { over: 40, distance: 120, blur: 10 } as const;
 /**
- * Where the VO may differ from the script (whisper heard something else three times out of three, 16 Oct).
- * Simon listens to these first; they show as named rows on the Studio timeline. Remove once settled.
+ * Scene changes built to carry over, with no cut (Simon, 22 Oct): SC02 → SC03 is one shot of the islands; SC03 → SC04
+ * one shot of the Ombak card.
  */
-export const VO_CHECKS = [
-  { name: "REVISI 1 · Scene 01 Part 1 + 2", from: w(1, "investor yang akan membelinya—diri"), to: w(1, "26,7 juta orang", 0, "f1") },
-  { name: "REVISI 2 · Scene 02 Part 1", from: w(2, "langsung mikir:"), to: w(2, "Padahal pertanyaan pertamanya", 0, "f1") },
-  { name: "CEK 2 · pegang kemudi", from: w(3, "Dan yang pegang kemudi"), to: w(3, "bukan kita.", 0, "f1") },
-  { name: "CEK 3 · compounder", from: w(6, "kamu lebih dekat dengan compounder"), to: w(6, "compounder yang stabil.", 0, "f1") },
-  { name: "CEK 4 · seumur hidup", from: w(7, "profil investasi bukan label"), to: w(7, "seumur hidup.", 0, "f1") },
-];
+export const CONTINUOUS: number[] = [BLOCK.SC03, BLOCK.SC04];
+export const CUTS: { at: number; axis: "x" | "y" }[] = Object.keys(BLOCK)
+  .filter((k) => k !== "SC01" && k !== "END")
+  .map((k) => BLOCK[k])
+  .filter((at) => !CONTINUOUS.includes(at))
+  .map((at) => ({ at, axis: "x" as const }));

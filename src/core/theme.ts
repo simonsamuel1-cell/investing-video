@@ -396,6 +396,42 @@ export const theme = {
     walletPanjangWash: "rgba(95, 77, 238, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
+     * VI04 "Investasi yang Cocok" — the ONE accent of the video: YOU, the investor who gets researched last
+     * ("diri kita sendiri"). Amber, so the self stands out of an indigo world; everything about other people's
+     * answers stays indigo/slate.
+     */
+    /**
+     * ⚠ "selfAmber*" ARE CYAN NOW (Simon, 22 Oct 2026, VI04: "semua yang warna orange, kasih warna cyan aja"). The
+     * keys keep their names — names are frozen — and only VI04 uses them; the ink is the readable cyan (`cyanInk`).
+     */
+    selfAmber: "#5CC8E3",
+    selfAmberWash: "rgba(92, 200, 227, 0.16)",
+    selfAmberInk: "#2098B6",
+    /** The glow on the one thing that is YOU once it is named (VI04 SC01, Simon 22 Oct: "berikan glow pada labelnya"). */
+    selfAmberGlow: "rgba(92, 200, 227, 0.45)",
+    /**
+     * VI04 isometric islands and house (Simon's sketch, 19 Oct): flat faces, hue-locked to the brand indigo
+     * (247) — the top lightest, the two sides two steps darker so the slab reads as a solid without shading.
+     */
+    isoTop: "#F2F0FF",
+    isoLeft: "#D3CDFB",
+    isoRight: "#B9B0F8",
+    isoWall: "#FFFFFF",
+    isoWallShade: "#E7E3FD",
+    /** VI04 house after Simon's reference (19 Oct), in pastels: sage walls, soft slate-indigo roof, pink frames. */
+    houseWall: "#CBE4D2",
+    houseWallShade: "#A9CDB5",
+    houseRoof: "#8C95C9",
+    houseRoofShade: "#747EB8",
+    houseChimney: "#AECBB7",
+    houseChimneyShade: "#96B9A1",
+    houseGlass: "#E6ECF5",
+    houseFrame: "#F3B8C1",
+    housePlanter: "#D3C2B1",
+    houseBush: "#86C493",
+    /** VI04 app-icon tiles (Simon, 19 Oct: "2D flat design yang simple dan ada UI style"): a white line icon on this. */
+    tileGrad: "linear-gradient(145deg, #8A7CF6 0%, #5F4DEE 62%, #4D3BE0 100%)",
+    /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.
      *
      * Stronger than the washes above on purpose: those sit behind a whole panel
@@ -483,6 +519,48 @@ export const theme = {
      * tight enough that the mark still reads as a line that is lit.
      */
     indigoGlow: "rgba(95, 77, 238, 0.55)",
+    /**
+     * ⚠ THE PAPER-DIORAMA PROTOTYPE (Simon, 21 Oct 2026: "coba bikin prototype 1 shot dulu") — a standee's cast
+     * shadow and contact shadow on a warm wooden desk, the lens vignette, and the comic sticker's ink and fill.
+     * Warm, because the set is lit warm; not for any other kind of scene.
+     */
+    paperShadow: "rgba(48, 30, 12, 0.42)",
+    paperContact: "rgba(40, 24, 8, 0.6)",
+    paperVignette: "rgba(30, 18, 6, 0.55)",
+    stickerInk: "#2A1B12",
+    stickerFill: "#FFD23F",
+    /**
+     * ⚠ BENCHMARK v1 (Simon, 22 Oct 2026): "untuk hal-hal yang obvious, pakai warna netral aja, pakai warna brand
+     * untuk elemen-elemen yang minim terlihat aja seperti border, sebagian text". So the big shapes are these
+     * neutrals, and indigo only reaches a hairline: a connector, a card's border, a word.
+     *
+     * `connector` is the brand hairline — solid indigo (Simon, 22 Oct 2026: "garis ungu nya 100% … samakan semua";
+     * it was thinned to 55% before); `connectorMute` the neutral one for links that have stopped mattering. The two
+     * blooms tint the ground so faintly it reads as light, not as colour.
+     */
+    connector: "rgba(95, 77, 238, 1)",
+    connectorMute: "rgba(30, 32, 48, 0.16)",
+    hairlineBrand: "rgba(95, 77, 238, 0.28)",
+    bloomTintIndigo: "rgba(95, 77, 238, 0.07)",
+    bloomTintCyan: "rgba(92, 200, 227, 0.08)",
+    neutralDisc: "#F0F1F4",
+    neutralIcon: "#5B5E6E",
+    neutralDot: "#D9DBE2",
+    neutralDotOn: "#3A3D4C",
+    /** The isometric islands and house in neutrals (SC02 from 22 Oct). */
+    isoNTop: "#FFFFFF",
+    isoNLeft: "#E6E7EC",
+    isoNRight: "#D8DAE1",
+    houseNWall: "#FBFBFC",
+    houseNWallShade: "#E9EAEF",
+    houseNRoof: "#6B6E7C",
+    houseNRoofShade: "#555866",
+    houseNChimney: "#DADCE3",
+    houseNChimneyShade: "#C7CAD3",
+    houseNGlass: "#E8EDF3",
+    houseNFrame: "#C3C6CF",
+    houseNPlanter: "#CFD2DA",
+    houseNBush: "#B9BDC6",
     marker: "#E8201A",
     /**
      * ⚠ TWO HUES THE PALETTE DOES NOT OWN, AT SIMON'S DIRECTION. SC19 names
@@ -560,6 +638,20 @@ export const theme = {
     chip: { size: 36, weight: 600 },
     tag: { size: 30, weight: 600 },
     axis: { size: 26, weight: 500 },
+  },
+
+  /**
+   * The VI type scale (Simon, 20 Oct 2026: visuals "lebih konsisten sepanjang video, konsisten dari video ke video,
+   * bisa lebih rapi"). FIVE levels, nothing in between — VI04 alone had used 25 font sizes. Weights are normal, not
+   * heavy (Simon, 22 Oct: "tulisannya normal (tidak terlalu tebal)"): 700 only for the hero, 500–600 elsewhere. A level
+   * says how big and how heavy; colour is the scene's call. Read it through `typeStyle(level)`.
+   */
+  type: {
+    hero: { size: 112, weight: 700, tracking: -3, leading: 1.05 },
+    statement: { size: 72, weight: 600, tracking: -1.5, leading: 1.1 },
+    title: { size: 48, weight: 600, tracking: -0.5, leading: 1.15 },
+    body: { size: 36, weight: 500, tracking: 0, leading: 1.3 },
+    label: { size: 28, weight: 500, tracking: 0.3, leading: 1.25 },
   },
 
   shape: {

@@ -1,0 +1,1392 @@
+{
+ "key": "TA09",
+ "name": "Video 09 - Volume_Dub Indo",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.167,
+   "end": 5.667,
+   "text": "Bayangin kamu sudah beberapa minggu",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 5.9,
+   "end": 8.5,
+   "text": "mantau satu saham yang selalu mentok di resistance.",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 9.067,
+   "end": 11.567,
+   "text": "Hari ini, akhirnya tembus dan candle ditutup",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 11.8,
+   "end": 13.0,
+   "text": "di atas level itu.",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 13.267,
+   "end": 14.333,
+   "text": "Kelihatannya valid.",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 14.5,
+   "end": 16.2,
+   "text": "Tapi, apa berarti",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 16.467,
+   "end": 17.267,
+   "text": "langsung beli?",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 17.7,
+   "end": 18.5,
+   "text": "Belum tentu.",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 19.3,
+   "end": 20.1,
+   "text": "Sebelum masuk,",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 20.167,
+   "end": 22.067,
+   "text": "ada satu hal lagi yang perlu kamu cek:",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 22.567,
+   "end": 23.567,
+   "text": "volume. Karena",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 24.1,
+   "end": 25.967,
+   "text": "dua breakout yang kelihatannya sama",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 26.167,
+   "end": 28.1,
+   "text": "bisa punya kekuatan yang sangat berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 29.267,
+   "end": 30.633,
+   "text": "Kita pahami dulu apa itu volume.",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 31.467,
+   "end": 32.567,
+   "text": "Volume menunjukkan",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 32.7,
+   "end": 35.367,
+   "text": "berapa banyak lembar saham yang diperdagangkan",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 35.6,
+   "end": 36.5,
+   "text": "dalam satu periode.",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 36.8,
+   "end": 38.167,
+   "text": "Kalau kamu pakai chart harian,",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 38.267,
+   "end": 40.867,
+   "text": "satu volume bar mewakili transaksi selama satu hari.",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 41.267,
+   "end": 42.4,
+   "text": "Kalau chart-nya lima menit,",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 42.5,
+   "end": 44.533,
+   "text": "satu bar berarti transaksi selama lima menit.",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 45.067,
+   "end": 45.967,
+   "text": "Tapi jangan salah baca.",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 46.4,
+   "end": 48.867,
+   "text": "Volume bukan jumlah orang yang bertransaksi.",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 49.1,
+   "end": 49.867,
+   "text": "Volume tinggi",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 49.867,
+   "end": 51.7,
+   "text": "bisa saja datang dari beberapa pemain besar,",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 52.267,
+   "end": 54.867,
+   "text": "atau dari saham yang sama berpindah tangan berkali-kali.",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 55.333,
+   "end": 56.8,
+   "text": "Jadi, volume menunjukkan seberapa",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 56.967,
+   "end": 58.4,
+   "text": "banyak saham yang diperdagangkan,",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 58.567,
+   "end": 60.567,
+   "text": "bukan berapa banyak orang yang ikut transaksi.",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 60.733,
+   "end": 63.567,
+   "text": "Satu volume bar juga nggak bisa dinilai sendirian.",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 64.133,
+   "end": 66.667,
+   "text": "10 juta lembar bisa sangat besar untuk satu saham,",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 67.067,
+   "end": 68.8,
+   "text": "tapi biasa saja untuk saham lain.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 69.4,
+   "end": 70.933,
+   "text": "Karena itu, bandingkan volume",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 71.067,
+   "end": 72.6,
+   "text": "hari ini dengan periode sebelumnya",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 72.867,
+   "end": 73.5,
+   "text": "atau dengan",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 73.5,
+   "end": 74.9,
+   "text": "average volume-nya.",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 75.1,
+   "end": 76.733,
+   "text": "Cara paling gampang mengingatnya begini:",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 76.9,
+   "end": 78.967,
+   "text": "harga menunjukkan ke mana pasar bergerak.",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 79.267,
+   "end": 80.667,
+   "text": "Volume menunjukkan seberapa ramai",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 80.9,
+   "end": 82.667,
+   "text": "transaksi di balik pergerakan itu.",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 83.167,
+   "end": 85.267,
+   "text": "Jadi, selalu baca volume",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 85.567,
+   "end": 86.367,
+   "text": "bersama harga.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 86.767,
+   "end": 88.6,
+   "text": "Sekarang setelah tahu apa itu volume,",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 89.1,
+   "end": 91.2,
+   "text": "kita lihat cara membacanya bersama harga.",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 91.7,
+   "end": 94.467,
+   "text": "Ada empat kombinasi dasar yang perlu kamu kenali.",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 94.867,
+   "end": 97.267,
+   "text": "Pertama, harga naik dan volume ikut naik.",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 97.8,
+   "end": 100.1,
+   "text": "Ini biasanya membuat kenaikan lebih meyakinkan,",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 100.567,
+   "end": 103.0,
+   "text": "karena aktivitas transaksi ikut meningkat.",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 103.367,
+   "end": 104.7,
+   "text": "Kedua, harga naik",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 104.767,
+   "end": 106.4,
+   "text": "tapi volumenya justru turun.",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 107.0,
+   "end": 109.133,
+   "text": "Harga masih bisa terus naik,",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 109.133,
+   "end": 111.067,
+   "text": "jadi ini bukan otomatis sinyal jual.",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 111.4,
+   "end": 111.667,
+   "text": "Tapi,",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 111.667,
+   "end": 113.933,
+   "text": "aktivitas yang mendukung kenaikannya mulai berkurang.",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 114.467,
+   "end": 114.867,
+   "text": "Artinya,",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 114.867,
+   "end": 117.567,
+   "text": "kamu perlu lebih hati-hati dan lebih disiplin mengelola",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 117.7,
+   "end": 118.767,
+   "text": "posisi. Ketiga,",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 118.967,
+   "end": 121.167,
+   "text": "harga turun dan volume ikut membesar.",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 121.4,
+   "end": 122.133,
+   "text": "Artinya,",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 122.167,
+   "end": 123.467,
+   "text": "penurunan terjadi dengan aktivitas",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 123.567,
+   "end": 124.667,
+   "text": "transaksi yang makin tinggi.",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 125.3,
+   "end": 127.4,
+   "text": "Ini membuat tekanan jual terlihat lebih serius",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 127.6,
+   "end": 129.4,
+   "text": "dan perlu lebih diwaspadai.",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 129.7,
+   "end": 132.333,
+   "text": "Keempat, harga turun tapi volumenya mengecil.",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 132.667,
+   "end": 134.667,
+   "text": "Artinya, tekanan jual mulai mereda.",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 134.9,
+   "end": 136.9,
+   "text": "Tapi jangan langsung menganggap harga pasti berbalik",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 137.1,
+   "end": 138.667,
+   "text": "naik. Seller yang mulai berkurang",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 138.867,
+   "end": 141.333,
+   "text": "belum tentu berarti buyer sudah datang. Nah,",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 141.867,
+   "end": 143.4,
+   "text": "setelah tahu kombinasi dasarnya,",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 143.6,
+   "end": 145.7,
+   "text": "sekarang kita pakai volume untuk mengonfirmasi",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 145.8,
+   "end": 146.9,
+   "text": "breakout dan breakdown.",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 147.2,
+   "end": 148.6,
+   "text": "Kita kembali ke breakout tadi.",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 148.867,
+   "end": 151.1,
+   "text": "Resistance adalah area yang sebelumnya berkali-kali",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 151.367,
+   "end": 152.333,
+   "text": "menahan kenaikan.",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 152.7,
+   "end": 154.2,
+   "text": "Supaya harga bisa menembus resistance,",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 154.367,
+   "end": 155.567,
+   "text": "minat beli harus cukup kuat",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 155.733,
+   "end": 157.8,
+   "text": "untuk menyerap saham yang dijual di area itu.",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 157.933,
+   "end": 158.9,
+   "text": "Kalau breakout terjadi",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 159.1,
+   "end": 160.967,
+   "text": "dengan volume jauh lebih tinggi dari biasanya,",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 161.267,
+   "end": 163.767,
+   "text": "pergerakannya jadi terlihat lebih meyakinkan.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 164.267,
+   "end": 167.0,
+   "text": "Sebaliknya, kalau candle sudah close di atas resistance",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 167.167,
+   "end": 168.867,
+   "text": "tapi volumenya biasa saja,",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 169.167,
+   "end": 170.567,
+   "text": "breakout-nya belum tentu gagal.",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 171.2,
+   "end": 173.367,
+   "text": "Hanya saja, konfirmasinya lebih lemah.",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 173.767,
+   "end": 175.267,
+   "text": "Kamu bisa menunggu candle berikutnya,",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 175.467,
+   "end": 178.333,
+   "text": "retest, atau sinyal tambahan sebelum mengambil keputusan.",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 178.7,
+   "end": 180.7,
+   "text": "Logika yang sama berlaku pada breakdown.",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 180.9,
+   "end": 182.9,
+   "text": "Saat harga menembus support dengan volume besar,",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 183.067,
+   "end": 183.867,
+   "text": "tekanan jual",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 183.933,
+   "end": 184.933,
+   "text": "terlihat lebih serius.",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 185.333,
+   "end": 187.5,
+   "text": "Tapi kalau support ditembus dengan volume tipis,",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 187.6,
+   "end": 188.4,
+   "text": "tetap waspada",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 188.5,
+   "end": 190.5,
+   "text": "tanpa langsung menyimpulkan penurunannya",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 190.567,
+   "end": 191.367,
+   "text": "pasti berlanjut.",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 192.0,
+   "end": 192.8,
+   "text": "Sekarang kita",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 193.3,
+   "end": 194.4,
+   "text": "coba pakai logika tadi",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 194.533,
+   "end": 195.5,
+   "text": "di chart nyata.",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 195.767,
+   "end": 196.567,
+   "text": "Aplikasi menandai",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 196.667,
+   "end": 199.133,
+   "text": "BRPT — harganya baru menembus ke level terendah",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 199.267,
+   "end": 200.067,
+   "text": "sebulan terakhir.",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 200.167,
+   "end": 201.3,
+   "text": "Kelihatannya tekanan jual.",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 201.733,
+   "end": 203.467,
+   "text": "Tapi lihat dua hari terakhir.",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 204.1,
+   "end": 204.933,
+   "text": "Saat breakdown,",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 205.1,
+   "end": 205.967,
+   "text": "volumenya cukup besar,",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 206.167,
+   "end": 208.467,
+   "text": "tapi masih kalah dari hari-hari ramai sebelumnya.",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 209.1,
+   "end": 209.8,
+   "text": "Besoknya",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 209.867,
+   "end": 211.6,
+   "text": "harga malah rebound, dengan volume",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 211.767,
+   "end": 213.6,
+   "text": "yang lebih besar dari hari breakdown.",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 213.8,
+   "end": 215.333,
+   "text": "Menurutmu, harga akan lanjut turun,",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 215.9,
+   "end": 218.567,
+   "text": "atau breakdown-nya cuma jebakan? Tiga…",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 219.533,
+   "end": 220.733,
+   "text": "dua… satu.",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 221.467,
+   "end": 225.0,
+   "text": "Ternyata harga lanjut naik sampai sekitar 1.750.",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 225.367,
+   "end": 227.867,
+   "text": "Clue-nya sudah terlihat dari dua candle tadi.",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 228.0,
+   "end": 229.133,
+   "text": "Volume saat breakdown",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 229.2,
+   "end": 231.133,
+   "text": "tidak terlalu dominan dibanding hari-hari ramai",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 231.4,
+   "end": 233.133,
+   "text": "sebelumnya. Lalu saat harga rebound,",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 233.267,
+   "end": 234.567,
+   "text": "volumenya justru lebih besar.",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 235.167,
+   "end": 238.0,
+   "text": "Artinya, breakdown mulai kehilangan konfirmasi",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 238.133,
+   "end": 240.333,
+   "text": "dan buyer mulai memberi respons.",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 240.6,
+   "end": 241.867,
+   "text": "Bukan jaminan harga pasti naik,",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 241.933,
+   "end": 242.733,
+   "text": "tapi volume",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 242.767,
+   "end": 245.567,
+   "text": "sudah memberi alasan untuk mencurigai breakdown tadi.",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 246.067,
+   "end": 248.367,
+   "text": "Volume bukan cuma berguna saat breakout.",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 248.667,
+   "end": 250.067,
+   "text": "Kita juga bisa memakainya",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 250.333,
+   "end": 252.067,
+   "text": "untuk membaca kesehatan trend.",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 252.2,
+   "end": 253.533,
+   "text": "Dalam uptrend yang sehat,",
+   "part": "episode"
+  },
+  {
+   "i": 127,
+   "start": 253.7,
+   "end": 254.567,
+   "text": "dorongan harga naik",
+   "part": "episode"
+  },
+  {
+   "i": 128,
+   "start": 254.733,
+   "end": 256.467,
+   "text": "biasanya datang dengan volume lebih kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 129,
+   "start": 256.7,
+   "end": 258.967,
+   "text": "sementara pullback atau koreksi sementaranya",
+   "part": "episode"
+  },
+  {
+   "i": 130,
+   "start": 259.1,
+   "end": 260.667,
+   "text": "terjadi dengan volume lebih ringan.",
+   "part": "episode"
+  },
+  {
+   "i": 131,
+   "start": 261.167,
+   "end": 262.167,
+   "text": "Tapi besar kecilnya",
+   "part": "episode"
+  },
+  {
+   "i": 132,
+   "start": 262.367,
+   "end": 263.767,
+   "text": "volume tetap harus dibaca",
+   "part": "episode"
+  },
+  {
+   "i": 133,
+   "start": 264.1,
+   "end": 265.367,
+   "text": "sesuai konteks harga.",
+   "part": "episode"
+  },
+  {
+   "i": 134,
+   "start": 266.1,
+   "end": 267.6,
+   "text": "Misalnya volume spike,",
+   "part": "episode"
+  },
+  {
+   "i": 135,
+   "start": 267.933,
+   "end": 270.0,
+   "text": "yaitu lonjakan volume",
+   "part": "episode"
+  },
+  {
+   "i": 136,
+   "start": 270.267,
+   "end": 271.2,
+   "text": "yang jauh lebih tinggi",
+   "part": "episode"
+  },
+  {
+   "i": 137,
+   "start": 271.467,
+   "end": 272.267,
+   "text": "dari biasanya.",
+   "part": "episode"
+  },
+  {
+   "i": 138,
+   "start": 272.367,
+   "end": 273.333,
+   "text": "Di dekat breakout,",
+   "part": "episode"
+  },
+  {
+   "i": 139,
+   "start": 273.567,
+   "end": 275.4,
+   "text": "volume spike bisa menjadi konfirmasi.",
+   "part": "episode"
+  },
+  {
+   "i": 140,
+   "start": 275.733,
+   "end": 276.767,
+   "text": "Setelah rally panjang,",
+   "part": "episode"
+  },
+  {
+   "i": 141,
+   "start": 276.933,
+   "end": 278.367,
+   "text": "bisa menunjukkan profit taking.",
+   "part": "episode"
+  },
+  {
+   "i": 142,
+   "start": 278.6,
+   "end": 279.733,
+   "text": "Saat harga jatuh tajam,",
+   "part": "episode"
+  },
+  {
+   "i": 143,
+   "start": 279.867,
+   "end": 281.4,
+   "text": "bisa menunjukkan panic selling.",
+   "part": "episode"
+  },
+  {
+   "i": 144,
+   "start": 282.167,
+   "end": 282.967,
+   "text": "Sebelum selesai,",
+   "part": "episode"
+  },
+  {
+   "i": 145,
+   "start": 282.967,
+   "end": 284.633,
+   "text": "ada beberapa hal yang sering salah dibaca",
+   "part": "episode"
+  },
+  {
+   "i": 146,
+   "start": 284.967,
+   "end": 286.933,
+   "text": "saat menggunakan volume. Pertama,",
+   "part": "episode"
+  },
+  {
+   "i": 147,
+   "start": 287.733,
+   "end": 289.167,
+   "text": "warna volume bar.",
+   "part": "episode"
+  },
+  {
+   "i": 148,
+   "start": 289.4,
+   "end": 290.4,
+   "text": "Volume hijau atau merah",
+   "part": "episode"
+  },
+  {
+   "i": 149,
+   "start": 290.733,
+   "end": 292.833,
+   "text": "biasanya hanya mengikuti warna candle.",
+   "part": "episode"
+  },
+  {
+   "i": 150,
+   "start": 293.167,
+   "end": 295.333,
+   "text": "Bukan berarti volume hijau cuma pembelian,",
+   "part": "episode"
+  },
+  {
+   "i": 151,
+   "start": 295.767,
+   "end": 297.667,
+   "text": "atau volume merah cuma penjualan.",
+   "part": "episode"
+  },
+  {
+   "i": 152,
+   "start": 297.967,
+   "end": 299.8,
+   "text": "Nah, setiap transaksi tetap punya",
+   "part": "episode"
+  },
+  {
+   "i": 153,
+   "start": 300.333,
+   "end": 301.2,
+   "text": "pembeli dan penjual.",
+   "part": "episode"
+  },
+  {
+   "i": 154,
+   "start": 301.733,
+   "end": 303.633,
+   "text": "Terakhir, pahami juga batasnya.",
+   "part": "episode"
+  },
+  {
+   "i": 155,
+   "start": 303.967,
+   "end": 306.2,
+   "text": "Volume membantu mengonfirmasi apa yang sudah terjadi,",
+   "part": "episode"
+  },
+  {
+   "i": 156,
+   "start": 306.533,
+   "end": 308.767,
+   "text": "bukan memastikan apa yang akan terjadi berikutnya.",
+   "part": "episode"
+  },
+  {
+   "i": 157,
+   "start": 309.367,
+   "end": 311.8,
+   "text": "Karena itu, tetap baca volume bersama trend,",
+   "part": "episode"
+  },
+  {
+   "i": 158,
+   "start": 312.033,
+   "end": 313.233,
+   "text": "support dan resistance,",
+   "part": "episode"
+  },
+  {
+   "i": 159,
+   "start": 313.4,
+   "end": 314.333,
+   "text": "pola candle,",
+   "part": "episode"
+  },
+  {
+   "i": 160,
+   "start": 314.567,
+   "end": 317.067,
+   "text": "serta kondisi market secara keseluruhan.",
+   "part": "episode"
+  },
+  {
+   "i": 161,
+   "start": 317.333,
+   "end": 319.333,
+   "text": "Ingatlah bahwa harga menunjukkan arahnya,",
+   "part": "episode"
+  },
+  {
+   "i": 162,
+   "start": 319.467,
+   "end": 321.333,
+   "text": "sedangkan volume menunjukkan seberapa ramai",
+   "part": "episode"
+  },
+  {
+   "i": 163,
+   "start": 321.6,
+   "end": 322.833,
+   "text": "transaksi di baliknya.",
+   "part": "episode"
+  },
+  {
+   "i": 164,
+   "start": 323.267,
+   "end": 325.767,
+   "text": "Volume bukan alat untuk menebak candle berikutnya,",
+   "part": "episode"
+  },
+  {
+   "i": 165,
+   "start": 326.267,
+   "end": 327.067,
+   "text": "tapi membantu",
+   "part": "episode"
+  },
+  {
+   "i": 166,
+   "start": 327.167,
+   "end": 329.867,
+   "text": "menilai apakah sebuah pergerakan cukup meyakinkan",
+   "part": "episode"
+  },
+  {
+   "i": 167,
+   "start": 330.2,
+   "end": 332.0,
+   "text": "atau justru perlu diwaspadai.",
+   "part": "episode"
+  },
+  {
+   "i": 168,
+   "start": 335.5,
+   "end": 337.333,
+   "text": "Di video selanjutnya, kita akan bahas",
+   "part": "outro"
+  },
+  {
+   "i": 169,
+   "start": 337.383,
+   "end": 339.233,
+   "text": "multi-timeframe analysis.",
+   "part": "outro"
+  },
+  {
+   "i": 170,
+   "start": 339.633,
+   "end": 341.25,
+   "text": "Gimana melihat satu saham",
+   "part": "outro"
+  },
+  {
+   "i": 171,
+   "start": 341.367,
+   "end": 342.6,
+   "text": "dari beberapa timeframe,",
+   "part": "outro"
+  },
+  {
+   "i": 172,
+   "start": 342.633,
+   "end": 345.717,
+   "text": "dan menggabungkan sinyal yang saling mendukung.",
+   "part": "outro"
+  },
+  {
+   "i": 173,
+   "start": 346.617,
+   "end": 351.667,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 174,
+   "start": 352.367,
+   "end": 353.467,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 175,
+   "start": 353.817,
+   "end": 354.817,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 176,
+   "start": 355.167,
+   "end": 356.367,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 177,
+   "start": 356.617,
+   "end": 359.317,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 178,
+   "start": 359.667,
+   "end": 362.567,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 179,
+   "start": 363.117,
+   "end": 366.267,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 180,
+   "start": 366.267,
+   "end": 369.867,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 181,
+   "start": 370.317,
+   "end": 372.217,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 182,
+   "start": 372.567,
+   "end": 376.017,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 183,
+   "start": 377.367,
+   "end": 380.867,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 184,
+   "start": 380.867,
+   "end": 382.717,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 185,
+   "start": 384.067,
+   "end": 388.017,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 186,
+   "start": 388.017,
+   "end": 390.567,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 187,
+   "start": 391.017,
+   "end": 394.017,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 188,
+   "start": 394.017,
+   "end": 396.867,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 189,
+   "start": 398.317,
+   "end": 400.067,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 190,
+   "start": 400.067,
+   "end": 403.267,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 191,
+   "start": 404.567,
+   "end": 407.367,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 192,
+   "start": 407.367,
+   "end": 409.967,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 193,
+   "start": 410.317,
+   "end": 412.917,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 194,
+   "start": 413.067,
+   "end": 416.367,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 195,
+   "start": 416.917,
+   "end": 419.967,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 196,
+   "start": 421.317,
+   "end": 424.167,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 197,
+   "start": 424.717,
+   "end": 428.567,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 198,
+   "start": 428.567,
+   "end": 431.017,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

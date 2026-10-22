@@ -1,0 +1,1393 @@
+{
+ "key": "TA05",
+ "rows": [
+  {
+   "i": 1,
+   "en": "Ever opened a chart,",
+   "zh": "你是否曾打开图表，",
+   "ja": "チャートを開いて、",
+   "ko": "차트를 열고"
+  },
+  {
+   "i": 2,
+   "en": "stared at it for a few seconds,",
+   "zh": "盯着看了几秒，",
+   "ja": "数秒じっと眺めたものの、",
+   "ko": "몇 초 동안 바라봤는데도"
+  },
+  {
+   "i": 3,
+   "en": "and still felt confused:",
+   "zh": "却还是一头雾水：",
+   "ja": "結局こう迷ったことはありませんか？",
+   "ko": "여전히 헷갈린 적 있나요?"
+  },
+  {
+   "i": 4,
+   "en": "is this price going up, going down,",
+   "zh": "价格是在上涨、下跌，",
+   "ja": "価格は上がっているのか、下がっているのか、",
+   "ko": "가격이 오르는 건지, 내리는 건지,"
+  },
+  {
+   "i": 5,
+   "en": "or just moving with no direction?",
+   "zh": "还是只是漫无方向地波动？",
+   "ja": "それとも方向感なく動いているだけなのか。",
+   "ko": "아니면 그냥 방향 없이 움직이는 건지."
+  },
+  {
+   "i": 6,
+   "en": "That doesn't mean you can't read charts.",
+   "zh": "这并不代表你不会看图表。",
+   "ja": "チャートが読めないわけではありません。",
+   "ko": "차트를 못 읽는다는 뜻은 아니에요."
+  },
+  {
+   "i": 7,
+   "en": "Maybe you just don't have one key habit yet.",
+   "zh": "也许你只是还没养成一个重要的习惯。",
+   "ja": "まだ大事な習慣が一つ足りないだけかもしれません。",
+   "ko": "아직 중요한 습관 하나가 없을 뿐일지도 몰라요."
+  },
+  {
+   "i": 8,
+   "en": "To read it more clearly,",
+   "zh": "为了看得更清楚，",
+   "ja": "もっとはっきり読み取るために、",
+   "ko": "더 명확하게 읽기 위해"
+  },
+  {
+   "i": 9,
+   "en": "we'll start with one simple thing:",
+   "zh": "我们先从一件简单的事开始：",
+   "ja": "ひとつのシンプルなことから始めましょう。",
+   "ko": "간단한 것 하나부터 시작해 볼게요."
+  },
+  {
+   "i": 10,
+   "en": "look at how price",
+   "zh": "观察价格如何",
+   "ja": "価格がどのように",
+   "ko": "가격이 어떻게"
+  },
+  {
+   "i": 11,
+   "en": "forms peaks and troughs.",
+   "zh": "形成高点和低点。",
+   "ja": "高値と安値をつくるかを見ることです。",
+   "ko": "고점과 저점을 만드는지 보는 거예요."
+  },
+  {
+   "i": 12,
+   "en": "Traders call this reading market structure,",
+   "zh": "交易者称之为解读市场结构，",
+   "ja": "トレーダーはこれを相場構造（マーケットストラクチャー）、",
+   "ko": "트레이더들은 이를 시장 구조,"
+  },
+  {
+   "i": 13,
+   "en": "or the structure of price movement.",
+   "zh": "也就是价格走势的结构。",
+   "ja": "つまり値動きの構造を読む、と言います。",
+   "ko": "즉 가격 움직임의 구조를 읽는다고 해요."
+  },
+  {
+   "i": 14,
+   "en": "It's one of the most important basics",
+   "zh": "这是解读图表时",
+   "ja": "これはチャートを読むうえで",
+   "ko": "이건 차트를 읽을 때"
+  },
+  {
+   "i": 15,
+   "en": "of reading a chart.",
+   "zh": "最重要的基础之一。",
+   "ja": "最も重要な基本の一つです。",
+   "ko": "가장 중요한 기초 중 하나예요."
+  },
+  {
+   "i": 16,
+   "en": "But many people go straight to indicators",
+   "zh": "但很多人一上来就找指标，",
+   "ja": "でも多くの人は、すぐにインジケーターを探します。",
+   "ko": "하지만 많은 사람이 곧바로 지표부터 찾아요."
+  },
+  {
+   "i": 17,
+   "en": "before seeing where price actually goes.",
+   "zh": "却没先看价格实际往哪里走。",
+   "ja": "価格が実際にどこへ向かっているかを見る前に。",
+   "ko": "가격이 실제로 어디로 가는지 보기도 전에요."
+  },
+  {
+   "i": 18,
+   "en": "Market structure is",
+   "zh": "市场结构是指",
+   "ja": "相場構造とは、",
+   "ko": "시장 구조란"
+  },
+  {
+   "i": 19,
+   "en": "the shape that price leaves behind",
+   "zh": "价格在运动时",
+   "ja": "価格が動くときに",
+   "ko": "가격이 움직이면서"
+  },
+  {
+   "i": 20,
+   "en": "as it moves.",
+   "zh": "留下的形态。",
+   "ja": "残していく形のことです。",
+   "ko": "남기는 모양이에요."
+  },
+  {
+   "i": 21,
+   "en": "Not indicators,",
+   "zh": "不是指标，",
+   "ja": "インジケーターでもなく、",
+   "ko": "지표도 아니고,"
+  },
+  {
+   "i": 22,
+   "en": "and not the news either.",
+   "zh": "也不是新闻。",
+   "ja": "ニュースでもありません。",
+   "ko": "뉴스도 아니에요."
+  },
+  {
+   "i": 23,
+   "en": "We just look at its peaks and troughs,",
+   "zh": "我们只看它的高点和低点，",
+   "ja": "高値と安値だけを見て、",
+   "ko": "우리는 고점과 저점만 보고"
+  },
+  {
+   "i": 24,
+   "en": "then ask:",
+   "zh": "然后问：",
+   "ja": "こう問いかけます。",
+   "ko": "이렇게 물어봐요."
+  },
+  {
+   "i": 25,
+   "en": "do both keep rising,",
+   "zh": "它们是在持续上升，",
+   "ja": "どちらも上がり続けているか、",
+   "ko": "둘 다 계속 오르는지,"
+  },
+  {
+   "i": 26,
+   "en": "keep falling,",
+   "zh": "持续下降，",
+   "ja": "下がり続けているか、",
+   "ko": "계속 내리는지,"
+  },
+  {
+   "i": 27,
+   "en": "or stay in the same area?",
+   "zh": "还是停留在同一区域？",
+   "ja": "それとも同じ水準にとどまっているか？",
+   "ko": "아니면 같은 구간에 머무는지요?"
+  },
+  {
+   "i": 28,
+   "en": "Why does this shape appear?",
+   "zh": "为什么会出现这种形态？",
+   "ja": "なぜこの形が現れるのでしょうか？",
+   "ko": "왜 이런 모양이 나타날까요?"
+  },
+  {
+   "i": 29,
+   "en": "Price rises when buyers are more aggressive.",
+   "zh": "买方更积极时，价格就会上涨。",
+   "ja": "買い手がより積極的なとき、価格は上がります。",
+   "ko": "매수자가 더 공격적일 때 가격이 올라요."
+  },
+  {
+   "i": 30,
+   "en": "Once it's seen as high enough,",
+   "zh": "当价格被认为够高后，",
+   "ja": "十分に高いと見なされると、",
+   "ko": "충분히 높다고 여겨지면"
+  },
+  {
+   "i": 31,
+   "en": "some traders take profit and price dips",
+   "zh": "部分交易者止盈，价格便会",
+   "ja": "一部のトレーダーが利益確定し、価格は",
+   "ko": "일부 트레이더가 익절하면서 가격이"
+  },
+  {
+   "i": 32,
+   "en": "briefly. If buying interest is still strong,",
+   "zh": "暂时回落。如果买盘依然强劲，",
+   "ja": "一時的に下がります。買い意欲がまだ強ければ、",
+   "ko": "잠시 내려가요. 매수세가 여전히 강하면,"
+  },
+  {
+   "i": 33,
+   "en": "buyers step in before price",
+   "zh": "买方会在价格",
+   "ja": "価格が前回の安値まで",
+   "ko": "가격이 이전 저점으로"
+  },
+  {
+   "i": 34,
+   "en": "returns to the previous low,",
+   "zh": "跌回之前的低点前就进场，",
+   "ja": "戻る前に買い手が入り、",
+   "ko": "돌아가기 전에 매수자가 들어와"
+  },
+  {
+   "i": 35,
+   "en": "then push it to a new peak.",
+   "zh": "再把它推向新的高点。",
+   "ja": "新たな高値へと押し上げます。",
+   "ko": "새로운 고점으로 밀어 올려요."
+  },
+  {
+   "i": 36,
+   "en": "This pattern is called an uptrend.",
+   "zh": "这种形态称为上升趋势。",
+   "ja": "このパターンを上昇トレンドと呼びます。",
+   "ko": "이런 패턴을 상승 추세라고 해요."
+  },
+  {
+   "i": 37,
+   "en": "Each peak forms higher than the last.",
+   "zh": "每个高点都比前一个更高。",
+   "ja": "毎回、高値が前回より高い位置にできます。",
+   "ko": "고점이 매번 이전보다 높게 형성돼요."
+  },
+  {
+   "i": 38,
+   "en": "Each trough also stops higher.",
+   "zh": "每个低点也止于更高的位置。",
+   "ja": "安値も毎回、より高い位置で止まります。",
+   "ko": "저점도 매번 더 높은 곳에서 멈춰요."
+  },
+  {
+   "i": 39,
+   "en": "These are higher highs and higher lows.",
+   "zh": "这就是更高的高点和更高的低点。",
+   "ja": "これが高値切り上げと安値切り上げです。",
+   "ko": "이게 바로 더 높은 고점과 더 높은 저점이에요."
+  },
+  {
+   "i": 40,
+   "en": "So a small dip isn't always a sign of weakness.",
+   "zh": "所以，小幅回落不一定是疲软的信号。",
+   "ja": "つまり、小さな下落が弱さのサインとは限りません。",
+   "ko": "그러니 작은 하락이 꼭 약세 신호는 아니에요."
+  },
+  {
+   "i": 41,
+   "en": "Buyers may simply be",
+   "zh": "也可能只是买方",
+   "ja": "買い手が価格を",
+   "ko": "매수자가"
+  },
+  {
+   "i": 42,
+   "en": "catching their breath before pushing price",
+   "zh": "在再次推高价格之前",
+   "ja": "再び押し上げる前に、一息ついている",
+   "ko": "가격을 다시 밀어 올리기 전에"
+  },
+  {
+   "i": 43,
+   "en": "up again. Let's try it with numbers.",
+   "zh": "先喘口气。我们用数字来看看。",
+   "ja": "だけかもしれません。数字で見てみましょう。",
+   "ko": "숨을 고르는 중일 수도 있어요. 숫자로 볼게요."
+  },
+  {
+   "i": 44,
+   "en": "Price rises to 5,000,",
+   "zh": "价格涨到5,000，",
+   "ja": "価格は5,000まで上がり、",
+   "ko": "가격이 5,000까지 오르고,"
+  },
+  {
+   "i": 45,
+   "en": "drops to 4,600,",
+   "zh": "跌到4,600，",
+   "ja": "4,600まで下がって、",
+   "ko": "4,600까지 내렸다가,"
+  },
+  {
+   "i": 46,
+   "en": "then climbs to 5,400",
+   "zh": "接着涨到5,400，",
+   "ja": "その後5,400まで上がり、",
+   "ko": "5,400까지 오른 뒤"
+  },
+  {
+   "i": 47,
+   "en": "and only falls",
+   "zh": "之后只回落",
+   "ja": "下がっても",
+   "ko": "다시 내려가도"
+  },
+  {
+   "i": 48,
+   "en": "to 4,900.",
+   "zh": "到4,900。",
+   "ja": "4,900までにとどまります。",
+   "ko": "4,900까지만 떨어져요."
+  },
+  {
+   "i": 49,
+   "en": "Its peaks and troughs",
+   "zh": "高点和低点",
+   "ja": "高値と安値が",
+   "ko": "고점과 저점이"
+  },
+  {
+   "i": 50,
+   "en": "are both getting higher.",
+   "zh": "都越来越高。",
+   "ja": "どちらも高くなっています。",
+   "ko": "모두 점점 높아지고 있어요."
+  },
+  {
+   "i": 51,
+   "en": "As long as this pattern holds,",
+   "zh": "只要这个形态保持，",
+   "ja": "このパターンが続く限り、",
+   "ko": "이 패턴이 유지되는 한"
+  },
+  {
+   "i": 52,
+   "en": "the trend is still considered up.",
+   "zh": "趋势仍被视为向上。",
+   "ja": "トレンドはまだ上向きと見なされます。",
+   "ko": "추세는 여전히 상승으로 봐요."
+  },
+  {
+   "i": 53,
+   "en": "Now flip the pattern.",
+   "zh": "现在把形态反过来。",
+   "ja": "では、パターンを逆にしてみましょう。",
+   "ko": "이제 패턴을 뒤집어 볼게요."
+  },
+  {
+   "i": 54,
+   "en": "Price falls, then bounces,",
+   "zh": "价格下跌后反弹，",
+   "ja": "価格は下がってから反発しますが、",
+   "ko": "가격이 내려간 뒤 반등하지만,"
+  },
+  {
+   "i": 55,
+   "en": "but the bounce stops lower.",
+   "zh": "但反弹停在了更低的位置。",
+   "ja": "その反発はより低い位置で止まります。",
+   "ko": "반등이 더 낮은 곳에서 멈춰요."
+  },
+  {
+   "i": 56,
+   "en": "Sellers push price down again",
+   "zh": "卖方再次压低价格，",
+   "ja": "売り手が再び価格を",
+   "ko": "매도자가 다시 가격을"
+  },
+  {
+   "i": 57,
+   "en": "until a new low forms.",
+   "zh": "直到形成新的低点。",
+   "ja": "新たな安値ができるまで押し下げます。",
+   "ko": "새로운 저점이 생길 때까지 끌어내려요."
+  },
+  {
+   "i": 58,
+   "en": "Peaks and troughs that keep falling",
+   "zh": "持续下降的高点和低点，",
+   "ja": "下がり続ける高値と安値を、",
+   "ko": "계속 낮아지는 고점과 저점을"
+  },
+  {
+   "i": 59,
+   "en": "are called lower highs and lower lows.",
+   "zh": "称为更低的高点和更低的低点。",
+   "ja": "高値切り下げ・安値切り下げと呼びます。",
+   "ko": "더 낮은 고점, 더 낮은 저점이라고 해요."
+  },
+  {
+   "i": 60,
+   "en": "This is a downtrend.",
+   "zh": "这就是下降趋势。",
+   "ja": "これが下降トレンドです。",
+   "ko": "이게 하락 추세예요."
+  },
+  {
+   "i": 61,
+   "en": "Hold on to one",
+   "zh": "记住一个",
+   "ja": "ひとつ、",
+   "ko": "간단한 원칙"
+  },
+  {
+   "i": 62,
+   "en": "simple principle:",
+   "zh": "简单的原则：",
+   "ja": "シンプルな原則を覚えておきましょう。",
+   "ko": "하나를 기억하세요."
+  },
+  {
+   "i": 63,
+   "en": "assume the trend continues",
+   "zh": "假设趋势仍在延续，",
+   "ja": "トレンドは続いているものとみなすこと。",
+   "ko": "추세가 계속된다고 보세요,"
+  },
+  {
+   "i": 64,
+   "en": "until the chart truly shows",
+   "zh": "直到图表真正显示",
+   "ja": "チャートがはっきりと",
+   "ko": "차트가 확실하게"
+  },
+  {
+   "i": 65,
+   "en": "that its direction has changed.",
+   "zh": "方向已经改变。",
+   "ja": "方向の変化を示すまでは。",
+   "ko": "방향이 바뀌었다고 보여 줄 때까지요."
+  },
+  {
+   "i": 66,
+   "en": "Our job isn't to guess when a trend ends,",
+   "zh": "我们的任务不是猜测趋势何时结束，",
+   "ja": "私たちの仕事は、トレンドの終わりを当てることではなく、",
+   "ko": "우리가 할 일은 추세가 언제 끝날지 맞히는 게 아니라,"
+  },
+  {
+   "i": 67,
+   "en": "but to recognize when that change truly appears.",
+   "zh": "而是在变化真正出现时认出它。",
+   "ja": "変化が本当に現れたときに気づくことです。",
+   "ko": "변화가 실제로 나타날 때 알아보는 거예요."
+  },
+  {
+   "i": 68,
+   "en": "Besides up and down,",
+   "zh": "除了上涨和下跌，",
+   "ja": "上昇と下降のほかに、",
+   "ko": "상승과 하락 외에도"
+  },
+  {
+   "i": 69,
+   "en": "there's a third condition: sideways.",
+   "zh": "还有第三种状态：横盘。",
+   "ja": "第三の状態があります。横ばい（レンジ）です。",
+   "ko": "세 번째 상태가 있어요. 바로 횡보예요."
+  },
+  {
+   "i": 70,
+   "en": "Peaks and troughs form in almost the same area.",
+   "zh": "高点和低点在几乎相同的区域形成。",
+   "ja": "高値と安値がほぼ同じ水準でつくられます。",
+   "ko": "고점과 저점이 거의 같은 구간에서 만들어져요."
+  },
+  {
+   "i": 71,
+   "en": "Price hasn't chosen a direction yet.",
+   "zh": "价格还没有选择方向。",
+   "ja": "価格はまだ方向を決めていません。",
+   "ko": "가격이 아직 방향을 정하지 않았어요."
+  },
+  {
+   "i": 72,
+   "en": "That doesn't mean",
+   "zh": "这并不代表",
+   "ja": "だからといって",
+   "ko": "그렇다고"
+  },
+  {
+   "i": 73,
+   "en": "the chart is standing still.",
+   "zh": "图表静止不动。",
+   "ja": "チャートが止まっているわけではありません。",
+   "ko": "차트가 멈춰 있는 건 아니에요."
+  },
+  {
+   "i": 74,
+   "en": "It means buyers and sellers",
+   "zh": "这意味着买方和卖方",
+   "ja": "買い手と売り手が",
+   "ko": "매수자와 매도자가"
+  },
+  {
+   "i": 75,
+   "en": "are still equally strong,",
+   "zh": "仍然势均力敌，",
+   "ja": "まだ互角で、",
+   "ko": "아직 비슷하게 강해서"
+  },
+  {
+   "i": 76,
+   "en": "so neither side is in control yet.",
+   "zh": "所以还没有哪一方掌握主导权。",
+   "ja": "どちらも主導権を握っていない、ということです。",
+   "ko": "어느 쪽도 주도권을 잡지 못했다는 뜻이에요."
+  },
+  {
+   "i": 77,
+   "en": "But sideways can appear in different situations.",
+   "zh": "但横盘可能出现在不同的情况下。",
+   "ja": "ただし横ばいは、異なる状況で現れることがあります。",
+   "ko": "하지만 횡보는 서로 다른 상황에서 나타날 수 있어요."
+  },
+  {
+   "i": 78,
+   "en": "After a long decline,",
+   "zh": "在长期下跌之后，",
+   "ja": "長い下落のあとの",
+   "ko": "긴 하락 뒤의"
+  },
+  {
+   "i": 79,
+   "en": "a flat phase can be a sign that buyers",
+   "zh": "走平的阶段可能是买方",
+   "ja": "平らな局面は、買い手が",
+   "ko": "평평한 구간은 매수자가"
+  },
+  {
+   "i": 80,
+   "en": "are slowly starting to step in.",
+   "zh": "开始慢慢进场的信号。",
+   "ja": "少しずつ入り始めたサインかもしれません。",
+   "ko": "천천히 들어오기 시작했다는 신호일 수 있어요."
+  },
+  {
+   "i": 81,
+   "en": "This is often called",
+   "zh": "这通常被称为",
+   "ja": "これはよく",
+   "ko": "이를 흔히"
+  },
+  {
+   "i": 82,
+   "en": "accumulation.",
+   "zh": "吸筹。",
+   "ja": "アキュムレーション（買い集め）と呼ばれます。",
+   "ko": "매집이라고 불러요."
+  },
+  {
+   "i": 83,
+   "en": "Conversely, sideways after a",
+   "zh": "相反，在长期上涨",
+   "ja": "逆に、長く上昇した",
+   "ko": "반대로, 오랜 상승"
+  },
+  {
+   "i": 84,
+   "en": "long rise",
+   "zh": "之后的横盘，",
+   "ja": "あとの横ばいは、",
+   "ko": "이후의 횡보는"
+  },
+  {
+   "i": 85,
+   "en": "can appear when some market players start",
+   "zh": "可能出现在部分市场参与者开始",
+   "ja": "一部の参加者が利益確定を始めると現れることがあります。",
+   "ko": "일부 참여자가 익절을 시작할 때 나타날 수 있어요."
+  },
+  {
+   "i": 86,
+   "en": "taking profit. This is called distribution.",
+   "zh": "止盈时。这被称为派发。",
+   "ja": "これをディストリビューション（売り抜け）と呼びます。",
+   "ko": "이를 분산이라고 해요."
+  },
+  {
+   "i": 87,
+   "en": "Markets also often move in a cycle:",
+   "zh": "市场也常常按周期运行：",
+   "ja": "相場もよくサイクルで動きます。",
+   "ko": "시장도 흔히 사이클을 따라 움직여요."
+  },
+  {
+   "i": 88,
+   "en": "falling, forming a base,",
+   "zh": "下跌，形成底部，",
+   "ja": "下落して底を作り、",
+   "ko": "하락하며 바닥을 다지고,"
+  },
+  {
+   "i": 89,
+   "en": "rising, forming a top,",
+   "zh": "上涨，形成顶部，",
+   "ja": "上昇して天井を作り、",
+   "ko": "상승하며 고점을 만든 뒤,"
+  },
+  {
+   "i": 90,
+   "en": "then falling again.",
+   "zh": "然后再次下跌。",
+   "ja": "また下落します。",
+   "ko": "다시 하락해요."
+  },
+  {
+   "i": 91,
+   "en": "So far,",
+   "zh": "到这里，",
+   "ja": "ここまでで、",
+   "ko": "여기까지 오면"
+  },
+  {
+   "i": 92,
+   "en": "we can tell apart three main conditions:",
+   "zh": "我们已经能分辨三种主要状态：",
+   "ja": "3つの主な状態を見分けられるようになりました。",
+   "ko": "세 가지 주요 상태를 구분할 수 있어요."
+  },
+  {
+   "i": 93,
+   "en": "price is forming an uptrend,",
+   "zh": "价格是在形成上升趋势、",
+   "ja": "価格が上昇トレンドを形成しているのか、",
+   "ko": "가격이 상승 추세를 만드는 중인지,"
+  },
+  {
+   "i": 94,
+   "en": "a downtrend, or moving sideways.",
+   "zh": "下降趋势，还是在横盘。",
+   "ja": "下降トレンドか、それとも横ばいか。",
+   "ko": "하락 추세인지, 아니면 횡보 중인지요."
+  },
+  {
+   "i": 95,
+   "en": "Okay, now,",
+   "zh": "好，现在",
+   "ja": "さて、ここからは",
+   "ko": "자, 이제"
+  },
+  {
+   "i": 96,
+   "en": "let's see how",
+   "zh": "我们来看看",
+   "ja": "この構造が",
+   "ko": "이 구조가"
+  },
+  {
+   "i": 97,
+   "en": "this structure relates to price levels.",
+   "zh": "这个结构和价位有什么关系。",
+   "ja": "価格水準とどう関わるかを見ていきましょう。",
+   "ko": "가격대와 어떻게 연결되는지 볼게요."
+  },
+  {
+   "i": 98,
+   "en": "Trends also have size and speed.",
+   "zh": "趋势也有规模和速度之分。",
+   "ja": "トレンドには大きさと速さもあります。",
+   "ko": "추세에도 크기와 속도가 있어요."
+  },
+  {
+   "i": 99,
+   "en": "There are major trends that last months,",
+   "zh": "有持续数月的主要趋势，",
+   "ja": "数か月続く主要トレンドもあれば、",
+   "ko": "몇 달씩 이어지는 주요 추세가 있고,"
+  },
+  {
+   "i": 100,
+   "en": "and minor swings that happen day to day.",
+   "zh": "也有每天都在发生的小幅波段。",
+   "ja": "日々起きる小さなスイングもあります。",
+   "ko": "매일 일어나는 작은 파동도 있어요."
+  },
+  {
+   "i": 101,
+   "en": "One red candle",
+   "zh": "一根阴线",
+   "ja": "1本の陰線は、",
+   "ko": "음봉 하나는"
+  },
+  {
+   "i": 102,
+   "en": "in a major uptrend may just be noise.",
+   "zh": "在主要上升趋势中可能只是噪音。",
+   "ja": "主要な上昇トレンドの中では、ただのノイズかもしれません。",
+   "ko": "주요 상승 추세 속에서는 노이즈일 수도 있어요."
+  },
+  {
+   "i": 103,
+   "en": "The same goes for speed:",
+   "zh": "速度也是一样：",
+   "ja": "速さについても同じです。",
+   "ko": "속도도 마찬가지예요."
+  },
+  {
+   "i": 104,
+   "en": "a gradually rising trend usually looks",
+   "zh": "逐步上涨的趋势，通常看起来",
+   "ja": "徐々に上がるトレンドは、",
+   "ko": "단계적으로 오르는 추세가 보통"
+  },
+  {
+   "i": 105,
+   "en": "more stable than a nearly vertical climb.",
+   "zh": "比近乎垂直的上涨更稳定。",
+   "ja": "ほぼ垂直の上昇より、たいてい安定して見えます。",
+   "ko": "거의 수직인 상승보다 더 안정적으로 보여요."
+  },
+  {
+   "i": 106,
+   "en": "Remember support and resistance?",
+   "zh": "还记得支撑和阻力吗？",
+   "ja": "サポートとレジスタンスを覚えていますか？",
+   "ko": "지지와 저항, 기억하나요?"
+  },
+  {
+   "i": 107,
+   "en": "Market structure and price levels",
+   "zh": "市场结构和价位",
+   "ja": "相場構造と価格水準は、",
+   "ko": "시장 구조와 가격대는"
+  },
+  {
+   "i": 108,
+   "en": "actually",
+   "zh": "其实",
+   "ja": "実は",
+   "ko": "사실"
+  },
+  {
+   "i": 109,
+   "en": "describe the same event from two sides.",
+   "zh": "是从两个角度讲述同一件事。",
+   "ja": "同じ出来事を2つの側面から語っています。",
+   "ko": "같은 일을 두 측면에서 이야기해요."
+  },
+  {
+   "i": 110,
+   "en": "When price breaks through resistance,",
+   "zh": "当价格突破阻力时，",
+   "ja": "価格がレジスタンスを突破すると、",
+   "ko": "가격이 저항을 돌파하면"
+  },
+  {
+   "i": 111,
+   "en": "the old ceiling can become a new floor.",
+   "zh": "旧的天花板可能变成新的地板。",
+   "ja": "古い天井が新しい床に変わることがあります。",
+   "ko": "예전의 천장이 새로운 바닥이 될 수 있어요."
+  },
+  {
+   "i": 112,
+   "en": "If price comes back and bounces",
+   "zh": "如果价格回落后在那里",
+   "ja": "価格が戻ってきて",
+   "ko": "가격이 되돌아와"
+  },
+  {
+   "i": 113,
+   "en": "there, the next higher low",
+   "zh": "反弹，就形成了下一个",
+   "ja": "そこで反発すると、次の安値切り上げが",
+   "ko": "거기서 반등하면, 다음 더 높은 저점이"
+  },
+  {
+   "i": 114,
+   "en": "forms. The reverse",
+   "zh": "更高的低点。相反的情况",
+   "ja": "形成されます。その逆も",
+   "ko": "만들어져요. 반대 상황도"
+  },
+  {
+   "i": 115,
+   "en": "can happen too. When",
+   "zh": "也可能发生。当",
+   "ja": "起こりえます。",
+   "ko": "생길 수 있어요."
+  },
+  {
+   "i": 116,
+   "en": "support is broken,",
+   "zh": "支撑被跌破时，",
+   "ja": "サポートを下抜けると、",
+   "ko": "지지를 하향 이탈하면,"
+  },
+  {
+   "i": 117,
+   "en": "the old floor can become a new ceiling.",
+   "zh": "旧的地板可能变成新的天花板。",
+   "ja": "古い床が新しい天井に変わることがあります。",
+   "ko": "예전의 바닥이 새로운 천장이 될 수 있어요."
+  },
+  {
+   "i": 118,
+   "en": "When price bounces back to it",
+   "zh": "当价格反弹到那里",
+   "ja": "価格がそこまで反発して",
+   "ko": "가격이 그곳까지 반등했다가"
+  },
+  {
+   "i": 119,
+   "en": "and is held back, a lower high forms.",
+   "zh": "却被压住时，就形成了更低的高点。",
+   "ja": "抑えられると、高値切り下げが形成されます。",
+   "ko": "막히면, 더 낮은 고점이 만들어져요."
+  },
+  {
+   "i": 120,
+   "en": "So breakouts and structure changes",
+   "zh": "所以，突破和结构变化",
+   "ja": "つまり、ブレイクアウトと構造の変化は、",
+   "ko": "그러니까 돌파와 구조 변화는"
+  },
+  {
+   "i": 121,
+   "en": "often show the same event",
+   "zh": "常常反映的是同一件事，",
+   "ja": "同じ出来事を",
+   "ko": "같은 일을"
+  },
+  {
+   "i": 122,
+   "en": "from different angles.",
+   "zh": "只是角度不同。",
+   "ja": "別の角度から示していることが多いのです。",
+   "ko": "다른 각도에서 보여 주는 경우가 많아요."
+  },
+  {
+   "i": 123,
+   "en": "So how do you see an uptrend start losing steam?",
+   "zh": "那么，怎么看出上升趋势开始失去动力？",
+   "ja": "では、上昇トレンドが勢いを失い始めたのは、どう見分けますか？",
+   "ko": "그럼 상승 추세가 힘을 잃기 시작한 건 어떻게 알까요?"
+  },
+  {
+   "i": 124,
+   "en": "Early warnings usually come when price fails",
+   "zh": "早期警示通常出现在价格未能",
+   "ja": "最初の警告は、たいてい価格が",
+   "ko": "초기 경고는 보통 가격이"
+  },
+  {
+   "i": 125,
+   "en": "to make a higher peak.",
+   "zh": "创出更高的高点时。",
+   "ja": "より高い高値をつけられなかったときに現れます。",
+   "ko": "더 높은 고점을 만들지 못할 때 나타나요."
+  },
+  {
+   "i": 126,
+   "en": "Buyers tried to push price up,",
+   "zh": "买方已经尝试推高价格，",
+   "ja": "買い手は価格を押し上げようとしたものの、",
+   "ko": "매수자가 가격을 밀어 올리려 했지만,"
+  },
+  {
+   "i": 127,
+   "en": "but couldn't get past the previous peak.",
+   "zh": "却无法越过前一个高点。",
+   "ja": "前回の高値を超えられませんでした。",
+   "ko": "이전 고점을 넘지 못한 거예요."
+  },
+  {
+   "i": 128,
+   "en": "It's an early sign the uptrend structure is weakening.",
+   "zh": "这是上升趋势结构开始转弱的早期信号。",
+   "ja": "これは上昇トレンドの構造が弱まり始めた初期サインです。",
+   "ko": "상승 추세 구조가 약해지기 시작했다는 초기 신호예요."
+  },
+  {
+   "i": 129,
+   "en": "One lower high isn't automatically a reversal.",
+   "zh": "一个更低的高点，并不自动代表趋势反转。",
+   "ja": "高値切り下げ1回では、まだトレンド転換とは言えません。",
+   "ko": "더 낮은 고점 하나가 곧바로 추세 반전은 아니에요."
+  },
+  {
+   "i": 130,
+   "en": "But it's a sign to start being more careful.",
+   "zh": "但这是该开始提高警惕的信号。",
+   "ja": "ただし、警戒を強め始めるべきサインです。",
+   "ko": "하지만 더 경계하기 시작하라는 신호예요."
+  },
+  {
+   "i": 131,
+   "en": "If the next trough breaks the previous one,",
+   "zh": "如果下一个低点跌破前一个低点，",
+   "ja": "次の安値が前回の安値を割り込んで、",
+   "ko": "다음 저점이 이전 저점을 깨고 내려가야"
+  },
+  {
+   "i": 132,
+   "en": "only then does the structure become a downtrend.",
+   "zh": "结构才算转为下降趋势。",
+   "ja": "初めて構造は下降トレンドに変わります。",
+   "ko": "비로소 구조가 하락 추세로 바뀌어요."
+  },
+  {
+   "i": 133,
+   "en": "Now, this is where",
+   "zh": "这正是",
+   "ja": "まさにここで、",
+   "ko": "바로 여기서"
+  },
+  {
+   "i": 134,
+   "en": "market structure starts being truly useful.",
+   "zh": "市场结构开始真正发挥作用的地方。",
+   "ja": "相場構造が本当に役立ち始めます。",
+   "ko": "시장 구조가 정말 유용해지기 시작해요."
+  },
+  {
+   "i": 135,
+   "en": "We don't just see if price goes up or down,",
+   "zh": "我们不只是看价格在涨还是在跌，",
+   "ja": "価格の上げ下げを見るだけではなく、",
+   "ko": "가격이 오르는지 내리는지만 보는 게 아니라,"
+  },
+  {
+   "i": 136,
+   "en": "but look for evidence that the structure",
+   "zh": "而是寻找这个结构",
+   "ja": "その構造が変わり始めた",
+   "ko": "그 구조가 바뀌기 시작한다는"
+  },
+  {
+   "i": 137,
+   "en": "is starting to change.",
+   "zh": "开始改变的证据。",
+   "ja": "証拠を探すのです。",
+   "ko": "증거를 찾는 거예요."
+  },
+  {
+   "i": 138,
+   "en": "A common beginner mistake is looking at",
+   "zh": "新手常犯的错误，是把图表",
+   "ja": "初心者によくある間違いは、",
+   "ko": "초보자가 흔히 하는 실수는"
+  },
+  {
+   "i": 139,
+   "en": "the chart too closely.",
+   "zh": "看得太近。",
+   "ja": "チャートを近くで見すぎることです。",
+   "ko": "차트를 너무 가까이서 보는 거예요."
+  },
+  {
+   "i": 140,
+   "en": "On a five-minute chart,",
+   "zh": "在5分钟图上，",
+   "ja": "5分足チャートでは、",
+   "ko": "5분 차트에서는"
+  },
+  {
+   "i": 141,
+   "en": "a small dip can look like the end of a trend.",
+   "zh": "小幅回落可能看起来像趋势的结束。",
+   "ja": "小さな下落がトレンドの終わりに見えることがあります。",
+   "ko": "작은 하락도 추세의 끝처럼 보일 수 있어요."
+  },
+  {
+   "i": 142,
+   "en": "When you switch to the daily chart,",
+   "zh": "切换到日线图时，",
+   "ja": "日足チャートに切り替えると、",
+   "ko": "일봉 차트로 바꿔 보면,"
+  },
+  {
+   "i": 143,
+   "en": "the same move might just be a higher low",
+   "zh": "同样的走势可能只是上升趋势中",
+   "ja": "同じ動きが、上昇トレンドの中の",
+   "ko": "같은 움직임이 상승 추세 속"
+  },
+  {
+   "i": 144,
+   "en": "in an uptrend.",
+   "zh": "一个更高的低点。",
+   "ja": "安値切り上げにすぎないこともあります。",
+   "ko": "더 높은 저점일 뿐일 수도 있어요."
+  },
+  {
+   "i": 145,
+   "en": "So look at the bigger timeframe first.",
+   "zh": "所以，先看大的时间周期。",
+   "ja": "だからこそ、まず大きな時間足を見ましょう。",
+   "ko": "그래서 큰 타임프레임을 먼저 보세요."
+  },
+  {
+   "i": 146,
+   "en": "The direction on a higher timeframe",
+   "zh": "更高时间周期上的方向，",
+   "ja": "より上位の時間足の方向のほうが、",
+   "ko": "더 높은 타임프레임의 방향이"
+  },
+  {
+   "i": 147,
+   "en": "usually matters more.",
+   "zh": "通常更重要。",
+   "ja": "たいてい重要です。",
+   "ko": "보통 더 중요해요."
+  },
+  {
+   "i": 148,
+   "en": "In the app,",
+   "zh": "在App里，",
+   "ja": "アプリでは、",
+   "ko": "앱에서는"
+  },
+  {
+   "i": 149,
+   "en": "you can also see trend and momentum summaries",
+   "zh": "你也可以查看趋势和动能的摘要，",
+   "ja": "トレンドやモメンタムの概要も確認できます。",
+   "ko": "추세와 모멘텀 요약도 볼 수 있어요."
+  },
+  {
+   "i": 150,
+   "en": "without having to draw",
+   "zh": "不必自己",
+   "ja": "すべてを自分で",
+   "ko": "전부 직접"
+  },
+  {
+   "i": 151,
+   "en": "everything yourself.",
+   "zh": "把所有东西都画出来。",
+   "ja": "描く必要はありません。",
+   "ko": "그리지 않아도 돼요."
+  },
+  {
+   "i": 152,
+   "en": "Use it as a second opinion,",
+   "zh": "把它当作第二意见来参考，",
+   "ja": "セカンドオピニオンとして使いましょう。",
+   "ko": "세컨드 오피니언으로 활용하세요."
+  },
+  {
+   "i": 153,
+   "en": "after you've tried reading the price",
+   "zh": "在你先自己尝试",
+   "ja": "まずは自分で価格の構造を",
+   "ko": "먼저 직접 가격 구조를"
+  },
+  {
+   "i": 154,
+   "en": "structure on your own first.",
+   "zh": "解读价格结构之后。",
+   "ja": "読み取ってみたあとに。",
+   "ko": "읽어 본 다음에요."
+  },
+  {
+   "i": 155,
+   "en": "Now we know how to read trend direction,",
+   "zh": "现在我们已经知道如何解读趋势方向、",
+   "ja": "これで、トレンドの方向や",
+   "ko": "이제 추세 방향과"
+  },
+  {
+   "i": 156,
+   "en": "structure changes,",
+   "zh": "结构变化，",
+   "ja": "構造の変化の読み方、",
+   "ko": "구조 변화를 읽는 법,"
+  },
+  {
+   "i": 157,
+   "en": "and why looking at the right timeframe matters.",
+   "zh": "以及看对时间周期的重要性。",
+   "ja": "そして適切な時間足を見る大切さがわかりました。",
+   "ko": "알맞은 타임프레임을 보는 게 왜 중요한지도 알았어요."
+  },
+  {
+   "i": 158,
+   "en": "But theory only really sinks in",
+   "zh": "但理论要在图表上",
+   "ja": "ただ、理論が本当に腑に落ちるのは、",
+   "ko": "하지만 이론은"
+  },
+  {
+   "i": 159,
+   "en": "when we see it right on the chart.",
+   "zh": "亲眼看到，才会真正有体会。",
+   "ja": "チャートで直接見たときです。",
+   "ko": "차트에서 직접 볼 때 비로소 와닿아요."
+  },
+  {
+   "i": 160,
+   "en": "Now let's read the ASII chart.",
+   "zh": "现在我们来解读ASII的图表。",
+   "ja": "では、ASIIのチャートを読んでみましょう。",
+   "ko": "이제 ASII 차트를 읽어 볼게요."
+  },
+  {
+   "i": 161,
+   "en": "In early 2025,",
+   "zh": "2025年初，",
+   "ja": "2025年初め、",
+   "ko": "2025년 초,"
+  },
+  {
+   "i": 162,
+   "en": "price moved sideways",
+   "zh": "价格横盘整理，",
+   "ja": "価格は横ばいで、",
+   "ko": "가격은 횡보하며"
+  },
+  {
+   "i": 163,
+   "en": "between about 4,400",
+   "zh": "区间约为4,400",
+   "ja": "およそ4,400から",
+   "ko": "약 4,400에서"
+  },
+  {
+   "i": 164,
+   "en": "and 5,000. In midyear,",
+   "zh": "到5,000。年中，",
+   "ja": "5,000の間で推移しました。年半ばには、",
+   "ko": "5,000 사이를 오갔어요. 그해 중반에는"
+  },
+  {
+   "i": 165,
+   "en": "price broke that range and formed higher highs",
+   "zh": "价格突破该区域，形成更高的高点",
+   "ja": "その範囲を突破し、高値切り上げと",
+   "ko": "그 구간을 돌파해 더 높은 고점과"
+  },
+  {
+   "i": 166,
+   "en": "and higher lows",
+   "zh": "和更高的低点，",
+   "ja": "安値切り上げを形成しながら、",
+   "ko": "더 높은 저점을 만들며"
+  },
+  {
+   "i": 167,
+   "en": "up to around 7,300",
+   "zh": "到2026年初",
+   "ja": "2026年初めには",
+   "ko": "2026년 초에는"
+  },
+  {
+   "i": 168,
+   "en": "in early 2026.",
+   "zh": "已升至约7,300。",
+   "ja": "約7,300に達しました。",
+   "ko": "약 7,300까지 올랐어요."
+  },
+  {
+   "i": 169,
+   "en": "Look at the next peak.",
+   "zh": "看下一个高点。",
+   "ja": "次の高値を見てください。",
+   "ko": "다음 고점을 보세요."
+  },
+  {
+   "i": 170,
+   "en": "Can it get past 7,300?",
+   "zh": "它能越过7,300吗？",
+   "ja": "7,300を超えられるでしょうか？",
+   "ko": "7,300을 넘을 수 있을까요?"
+  },
+  {
+   "i": 171,
+   "en": "Three, two,",
+   "zh": "三、二、",
+   "ja": "3、2、",
+   "ko": "셋, 둘,"
+  },
+  {
+   "i": 172,
+   "en": "one.",
+   "zh": "一。",
+   "ja": "1。",
+   "ko": "하나."
+  },
+  {
+   "i": 173,
+   "en": "Turns out, it failed.",
+   "zh": "结果失败了。",
+   "ja": "結果は、失敗でした。",
+   "ko": "결국 실패했어요."
+  },
+  {
+   "i": 174,
+   "en": "A lower high formed,",
+   "zh": "形成了更低的高点，",
+   "ja": "高値切り下げが形成され、",
+   "ko": "더 낮은 고점이 만들어지고,"
+  },
+  {
+   "i": 175,
+   "en": "then a lower low.",
+   "zh": "接着是更低的低点。",
+   "ja": "続いて安値切り下げも形成されました。",
+   "ko": "이어서 더 낮은 저점이 나왔어요."
+  },
+  {
+   "i": 176,
+   "en": "The structure changed,",
+   "zh": "结构发生了变化，",
+   "ja": "構造が変わり、",
+   "ko": "구조가 바뀌었고,"
+  },
+  {
+   "i": 177,
+   "en": "and price fell back toward the 4,400 area.",
+   "zh": "价格再次向4,400区域回落。",
+   "ja": "価格は再び4,400付近へ向けて下落しました。",
+   "ko": "가격은 다시 4,400 구간을 향해 떨어졌어요."
+  },
+  {
+   "i": 178,
+   "en": "So, there are three main conditions.",
+   "zh": "所以，主要有三种状态。",
+   "ja": "つまり、主な状態は3つです。",
+   "ko": "그러니까 주요 상태는 세 가지예요."
+  },
+  {
+   "i": 179,
+   "en": "Higher highs and higher lows",
+   "zh": "更高的高点和更高的低点",
+   "ja": "高値切り上げと安値切り上げは",
+   "ko": "더 높은 고점과 더 높은 저점은"
+  },
+  {
+   "i": 180,
+   "en": "mean an uptrend.",
+   "zh": "代表上升趋势。",
+   "ja": "上昇トレンドを意味します。",
+   "ko": "상승 추세를 뜻해요."
+  },
+  {
+   "i": 181,
+   "en": "Lower highs and lower lows mean a downtrend.",
+   "zh": "更低的高点和更低的低点代表下降趋势。",
+   "ja": "高値切り下げと安値切り下げは下降トレンドを意味します。",
+   "ko": "더 낮은 고점과 더 낮은 저점은 하락 추세를 뜻해요."
+  },
+  {
+   "i": 182,
+   "en": "If neither forms,",
+   "zh": "如果两者都没有形成，",
+   "ja": "どちらも形成されなければ、",
+   "ko": "둘 다 만들어지지 않으면"
+  },
+  {
+   "i": 183,
+   "en": "price is likely moving sideways.",
+   "zh": "价格很可能在横盘。",
+   "ja": "価格はおそらく横ばいです。",
+   "ko": "가격은 횡보일 가능성이 커요."
+  },
+  {
+   "i": 184,
+   "en": "Sideways doesn't mean nothing is happening.",
+   "zh": "横盘并不代表什么都没发生。",
+   "ja": "横ばいは、何も起きていないという意味ではありません。",
+   "ko": "횡보가 아무 일도 없다는 뜻은 아니에요."
+  },
+  {
+   "i": 185,
+   "en": "The market just hasn't picked a direction yet.",
+   "zh": "市场只是还没决定方向。",
+   "ja": "相場がまだ方向を決めていないだけです。",
+   "ko": "시장이 아직 방향을 정하지 않았을 뿐이에요."
+  },
+  {
+   "i": 186,
+   "en": "Once you can read price structure,",
+   "zh": "当你能读懂价格结构，",
+   "ja": "価格の構造が読めるようになれば、",
+   "ko": "가격 구조를 읽을 수 있게 되면"
+  },
+  {
+   "i": 187,
+   "en": "other analysis tools get far easier to grasp.",
+   "zh": "其他分析工具就会容易理解得多。",
+   "ja": "ほかの分析ツールもずっと理解しやすくなります。",
+   "ko": "다른 분석 도구도 훨씬 이해하기 쉬워져요."
+  },
+  {
+   "i": 188,
+   "en": "So first look at the move's direction and shape.",
+   "zh": "所以，先看走势的方向和形态。",
+   "ja": "ですから、まずは値動きの方向と形を見ましょう。",
+   "ko": "그러니 먼저 움직임의 방향과 모양부터 보세요."
+  },
+  {
+   "i": 189,
+   "en": "Only after that,",
+   "zh": "在那之后，",
+   "ja": "そのあとで初めて、",
+   "ko": "그다음에야"
+  },
+  {
+   "i": 190,
+   "en": "add indicators or other supporting",
+   "zh": "再加上指标或其他",
+   "ja": "インジケーターやほかの補助ツールを",
+   "ko": "지표나 다른 보조 도구를"
+  },
+  {
+   "i": 191,
+   "en": "tools as confirmation.",
+   "zh": "辅助工具作为确认。",
+   "ja": "確認（コンファメーション）として加えましょう。",
+   "ko": "확인용으로 추가하세요."
+  },
+  {
+   "i": 192,
+   "en": "In the next video, we'll talk about",
+   "zh": "下一个视频，我们会讲",
+   "ja": "次の動画では、",
+   "ko": "다음 영상에서는"
+  },
+  {
+   "i": 193,
+   "en": "chart patterns, which are",
+   "zh": "图表形态，也就是",
+   "ja": "チャートパターン、つまり",
+   "ko": "차트 패턴, 즉"
+  },
+  {
+   "i": 194,
+   "en": "patterns formed by price movement.",
+   "zh": "由价格走势形成的形态。",
+   "ja": "値動きから生まれるパターンについてお話しします。",
+   "ko": "가격 움직임으로 만들어지는 패턴을 다룰게요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 12,
+   "note": "JA: glossary long forms (相場構造（マーケットストラクチャー）, 横ばい（レンジ） at 69, 確認（コンファメーション） at 191) used at first occurrence; the head word alone afterwards to keep rows short."
+  },
+  {
+   "i": 82,
+   "note": "Terms not in glossary, chosen here: accumulation = ZH 吸筹 / JA アキュムレーション（買い集め） / KO 매집; distribution (row 86) = ZH 派发 / JA ディストリビューション（売り抜け） / KO 분산."
+  },
+  {
+   "i": 98,
+   "note": "Script flow: rows 95-97 announce how structure relates to price levels, but 98-105 cover trend size/speed first; support/resistance only resumes at 106. Translated as written."
+  },
+  {
+   "i": 99,
+   "note": "Terms not in glossary: major trend = ZH 主要趋势 / JA 主要トレンド / KO 주요 추세; minor swing (row 100) = ZH 小幅波段 / JA 小さなスイング / KO 작은 파동; noise (102) = 噪音 / ノイズ / 노이즈."
+  },
+  {
+   "i": 101,
+   "note": "\"candle merah\" means a bearish (down) candle. In China, Japan and Korea red usually means UP, so ZH/JA/KO use the standard bearish-candle term without the colour: ZH 阴线, JA 陰線, KO 음봉. EN keeps \"red candle\"."
+  },
+  {
+   "i": 152,
+   "note": "second opinion = ZH 第二意见 / JA セカンドオピニオン / KO 세컨드 오피니언 (not in glossary)."
+  },
+  {
+   "i": 167,
+   "note": "ZH/JA/KO: the date (early 2026) and the price (around 7,300) swap places between rows 167 and 168 to fit target word order; same sentence."
+  }
+ ]
+}

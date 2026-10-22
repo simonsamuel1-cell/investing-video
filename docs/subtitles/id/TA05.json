@@ -1,0 +1,1546 @@
+{
+ "key": "TA05",
+ "name": "Video 05 - Market Structure_Dub Indo",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.067,
+   "end": 5.0,
+   "text": "Pernah buka chart,",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 5.1,
+   "end": 6.5,
+   "text": "menatapnya beberapa detik,",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 6.867,
+   "end": 7.733,
+   "text": "lalu tetap bingung:",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 8.2,
+   "end": 9.867,
+   "text": "harga ini sedang naik, turun,",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 10.467,
+   "end": 12.467,
+   "text": "atau cuma bergerak tanpa arah?",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 13.133,
+   "end": 15.467,
+   "text": "Bukan berarti kamu nggak bisa membaca chart.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 15.767,
+   "end": 19.133,
+   "text": "Mungkin kamu hanya belum punya satu kebiasaan penting.",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 19.4,
+   "end": 20.767,
+   "text": "Untuk membacanya lebih jelas,",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 20.9,
+   "end": 22.7,
+   "text": "kita akan mulai dari satu hal sederhana:",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 23.333,
+   "end": 24.267,
+   "text": "lihat bagaimana harga",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 24.5,
+   "end": 26.1,
+   "text": "membentuk puncak dan lembah.",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 26.633,
+   "end": 29.2,
+   "text": "Trader menyebutnya membaca market structure,",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 29.567,
+   "end": 31.7,
+   "text": "atau struktur pergerakan harga.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 32.567,
+   "end": 34.433,
+   "text": "Ini salah satu dasar terpenting",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 34.7,
+   "end": 35.767,
+   "text": "saat membaca chart.",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 36.3,
+   "end": 39.033,
+   "text": "Tapi banyak orang langsung mencari indikator",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 39.4,
+   "end": 41.9,
+   "text": "sebelum melihat ke mana harga sebenarnya bergerak.",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 42.167,
+   "end": 43.7,
+   "text": "Market structure adalah",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 44.1,
+   "end": 46.3,
+   "text": "bentuk yang ditinggalkan harga",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 46.533,
+   "end": 47.333,
+   "text": "saat bergerak.",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 48.133,
+   "end": 49.633,
+   "text": "Bukan indikator,",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 49.8,
+   "end": 50.733,
+   "text": "bukan juga berita.",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 51.033,
+   "end": 53.2,
+   "text": "Kita hanya melihat puncak dan lembahnya,",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 53.5,
+   "end": 54.3,
+   "text": "lalu bertanya:",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 54.533,
+   "end": 56.0,
+   "text": "apakah keduanya terus naik,",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 56.233,
+   "end": 57.033,
+   "text": "terus turun,",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 57.2,
+   "end": 58.833,
+   "text": "atau berada di area yang sama?",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 59.567,
+   "end": 60.7,
+   "text": "Kenapa bentuk ini muncul?",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 61.2,
+   "end": 63.233,
+   "text": "Harga naik saat pembeli lebih agresif.",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 63.567,
+   "end": 64.767,
+   "text": "Setelah dianggap cukup tinggi,",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 65.533,
+   "end": 67.967,
+   "text": "sebagian trader mengambil untung dan harga turun",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 68.167,
+   "end": 70.333,
+   "text": "sementara. Kalau minat beli masih kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 70.633,
+   "end": 71.967,
+   "text": "pembeli masuk sebelum harga",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 72.133,
+   "end": 73.967,
+   "text": "kembali ke titik terendah sebelumnya,",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 74.3,
+   "end": 76.5,
+   "text": "lalu mendorongnya menuju puncak baru.",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 76.733,
+   "end": 78.367,
+   "text": "Pola ini disebut uptrend.",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 78.767,
+   "end": 81.3,
+   "text": "Setiap puncak terbentuk lebih tinggi dari sebelumnya.",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 81.767,
+   "end": 83.733,
+   "text": "Setiap lembah juga berhenti lebih tinggi.",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 84.3,
+   "end": 86.333,
+   "text": "Inilah higher high dan higher low.",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 86.733,
+   "end": 89.367,
+   "text": "Jadi, penurunan kecil belum tentu tanda lemah.",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 89.767,
+   "end": 90.633,
+   "text": "Bisa saja pembeli",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 90.767,
+   "end": 92.9,
+   "text": "sedang mengambil napas sebelum mendorong harga",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 93.0,
+   "end": 95.1,
+   "text": "naik lagi. Coba pakai angka.",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 95.633,
+   "end": 96.833,
+   "text": "Harga naik ke 5.000,",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 97.167,
+   "end": 98.733,
+   "text": "turun ke 4.600,",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 99.233,
+   "end": 100.833,
+   "text": "lalu naik ke 5.400",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 101.133,
+   "end": 101.933,
+   "text": "dan hanya turun",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 102.2,
+   "end": 104.033,
+   "text": "sampai 4.900.",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 105.133,
+   "end": 106.4,
+   "text": "Puncak dan lembahnya",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 106.7,
+   "end": 107.9,
+   "text": "sama-sama makin tinggi.",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 108.6,
+   "end": 109.7,
+   "text": "Selama pola ini terjaga,",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 110.233,
+   "end": 112.2,
+   "text": "trennya masih dianggap naik.",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 112.633,
+   "end": 113.633,
+   "text": "Sekarang balik polanya.",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 113.833,
+   "end": 115.367,
+   "text": "Harga turun lalu memantul,",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 115.433,
+   "end": 117.4,
+   "text": "tetapi pantulannya berhenti lebih rendah.",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 117.767,
+   "end": 119.333,
+   "text": "Penjual kembali menekan harga",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 119.5,
+   "end": 121.633,
+   "text": "sampai terbentuk titik terendah baru.",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 122.0,
+   "end": 123.6,
+   "text": "Puncak dan lembah yang terus turun",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 123.833,
+   "end": 126.1,
+   "text": "disebut lower high dan lower low.",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 126.7,
+   "end": 127.933,
+   "text": "Inilah downtrend.",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 128.167,
+   "end": 128.833,
+   "text": "Pegang satu",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 128.833,
+   "end": 129.9,
+   "text": "prinsip sederhana:",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 130.433,
+   "end": 131.733,
+   "text": "anggap tren masih berlanjut",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 132.0,
+   "end": 133.9,
+   "text": "sampai chart benar-benar menunjukkan",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 134.0,
+   "end": 135.433,
+   "text": "bahwa arahnya sudah berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 136.033,
+   "end": 138.2,
+   "text": "Tugas kita bukan menebak kapan tren berakhir,",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 138.5,
+   "end": 141.133,
+   "text": "tetapi mengenali saat perubahan itu benar-benar muncul.",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 141.7,
+   "end": 142.5,
+   "text": "Selain naik dan turun,",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 142.633,
+   "end": 144.433,
+   "text": "ada kondisi ketiga: sideways.",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 145.033,
+   "end": 148.0,
+   "text": "Puncak dan lembah terbentuk di area yang hampir sama.",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 148.8,
+   "end": 150.0,
+   "text": "Harga belum memilih arah.",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 150.367,
+   "end": 151.1,
+   "text": "Bukan berarti",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 151.1,
+   "end": 152.0,
+   "text": "chart sedang diam.",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 152.733,
+   "end": 154.233,
+   "text": "Artinya, pembeli dan penjual",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 154.567,
+   "end": 155.367,
+   "text": "masih sama kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 155.933,
+   "end": 157.767,
+   "text": "jadi belum ada yang memegang kendali.",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 157.967,
+   "end": 160.533,
+   "text": "Tapi sideways bisa muncul dalam situasi yang berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 161.2,
+   "end": 162.2,
+   "text": "Setelah penurunan panjang,",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 162.4,
+   "end": 164.533,
+   "text": "fase datar bisa menjadi tanda pembeli",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 164.7,
+   "end": 165.767,
+   "text": "mulai masuk perlahan.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 166.367,
+   "end": 167.233,
+   "text": "Ini sering disebut",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 167.7,
+   "end": 168.5,
+   "text": "accumulation.",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 169.167,
+   "end": 171.1,
+   "text": "Sebaliknya, sideways setelah kenaikan",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 171.367,
+   "end": 171.933,
+   "text": "panjang",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 171.933,
+   "end": 174.633,
+   "text": "bisa muncul ketika sebagian pelaku mulai mengambil",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 174.9,
+   "end": 177.2,
+   "text": "untung. Ini disebut distribution.",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 177.533,
+   "end": 179.733,
+   "text": "Pasar pun sering bergerak dalam siklus:",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 180.033,
+   "end": 181.5,
+   "text": "turun, membentuk dasar,",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 181.9,
+   "end": 183.367,
+   "text": "naik, membentuk puncak,",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 183.733,
+   "end": 184.533,
+   "text": "lalu turun lagi.",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 185.1,
+   "end": 185.7,
+   "text": "Sampai di sini,",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 185.7,
+   "end": 187.967,
+   "text": "kita sudah bisa membedakan tiga kondisi utama:",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 188.533,
+   "end": 190.267,
+   "text": "harga sedang membentuk tren naik,",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 190.533,
+   "end": 193.3,
+   "text": "tren turun, atau bergerak sideways.",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 193.767,
+   "end": 194.567,
+   "text": "Nah, sekarang,",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 194.733,
+   "end": 195.567,
+   "text": "kita lihat bagaimana",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 195.667,
+   "end": 197.767,
+   "text": "struktur ini berhubungan dengan level harga.",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 198.5,
+   "end": 200.567,
+   "text": "Tren juga punya ukuran dan kecepatan.",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 201.133,
+   "end": 203.5,
+   "text": "Ada major trend yang berlangsung berbulan-bulan,",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 204.133,
+   "end": 207.1,
+   "text": "lalu ada minor swing yang terjadi dari hari ke hari.",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 207.633,
+   "end": 208.733,
+   "text": "Satu candle merah",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 209.033,
+   "end": 212.167,
+   "text": "di tengah major uptrend bisa saja cuma noise.",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 212.667,
+   "end": 214.067,
+   "text": "Begitu juga dengan kecepatannya:",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 214.267,
+   "end": 217.133,
+   "text": "tren yang naik bertahap biasanya terlihat lebih stabil",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 217.533,
+   "end": 219.667,
+   "text": "daripada kenaikan yang hampir vertikal.",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 219.933,
+   "end": 221.567,
+   "text": "Masih ingat support dan resistance?",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 221.833,
+   "end": 223.633,
+   "text": "Market structure dan level harga",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 223.933,
+   "end": 224.367,
+   "text": "sebenarnya",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 224.367,
+   "end": 226.633,
+   "text": "menceritakan kejadian yang sama dari dua sisi.",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 227.467,
+   "end": 229.067,
+   "text": "Saat harga menembus resistance,",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 229.267,
+   "end": 231.667,
+   "text": "langit-langit lama bisa berubah menjadi lantai baru.",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 232.133,
+   "end": 233.833,
+   "text": "Kalau harga kembali lalu memantul",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 233.9,
+   "end": 235.767,
+   "text": "di sana, terbentuk higher low",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 235.967,
+   "end": 237.433,
+   "text": "berikutnya. Hal sebaliknya",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 237.833,
+   "end": 239.333,
+   "text": "juga bisa terjadi. Saat",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 239.5,
+   "end": 240.5,
+   "text": "support ditembus,",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 240.667,
+   "end": 243.233,
+   "text": "lantai lama dapat berubah menjadi langit-langit baru.",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 243.9,
+   "end": 245.467,
+   "text": "Ketika harga memantul ke sana",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 245.667,
+   "end": 247.767,
+   "text": "lalu tertahan, terbentuk lower high.",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 248.167,
+   "end": 249.867,
+   "text": "Jadi, breakout dan perubahan struktur",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 249.967,
+   "end": 251.533,
+   "text": "sering menunjukkan kejadian yang sama",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 251.667,
+   "end": 252.767,
+   "text": "dari sudut berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 253.133,
+   "end": 255.867,
+   "text": "Lalu, bagaimana melihat uptrend mulai kehilangan tenaga?",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 256.333,
+   "end": 259.1,
+   "text": "Peringatan awal biasanya muncul ketika harga gagal",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 259.433,
+   "end": 260.933,
+   "text": "membuat puncak yang lebih tinggi.",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 261.533,
+   "end": 263.333,
+   "text": "Pembeli sudah mencoba mendorong harga,",
+   "part": "episode"
+  },
+  {
+   "i": 127,
+   "start": 263.667,
+   "end": 265.9,
+   "text": "tetapi tidak mampu melewati puncak sebelumnya.",
+   "part": "episode"
+  },
+  {
+   "i": 128,
+   "start": 266.433,
+   "end": 269.167,
+   "text": "Ini tanda awal struktur uptrend mulai melemah.",
+   "part": "episode"
+  },
+  {
+   "i": 129,
+   "start": 269.567,
+   "end": 272.133,
+   "text": "Satu lower high belum otomatis berarti tren berbalik.",
+   "part": "episode"
+  },
+  {
+   "i": 130,
+   "start": 272.733,
+   "end": 274.833,
+   "text": "Tapi itu tanda untuk mulai lebih waspada.",
+   "part": "episode"
+  },
+  {
+   "i": 131,
+   "start": 275.233,
+   "end": 277.5,
+   "text": "Kalau lembah berikutnya menembus lembah sebelumnya,",
+   "part": "episode"
+  },
+  {
+   "i": 132,
+   "start": 277.667,
+   "end": 280.033,
+   "text": "barulah struktur berubah menjadi downtrend.",
+   "part": "episode"
+  },
+  {
+   "i": 133,
+   "start": 280.2,
+   "end": 281.2,
+   "text": "Nah, di sinilah",
+   "part": "episode"
+  },
+  {
+   "i": 134,
+   "start": 281.6,
+   "end": 283.967,
+   "text": "market structure mulai benar-benar berguna.",
+   "part": "episode"
+  },
+  {
+   "i": 135,
+   "start": 284.367,
+   "end": 286.633,
+   "text": "Kita bukan cuma melihat apakah harga naik atau turun,",
+   "part": "episode"
+  },
+  {
+   "i": 136,
+   "start": 287.0,
+   "end": 289.467,
+   "text": "tapi mencari bukti ketika struktur tersebut",
+   "part": "episode"
+  },
+  {
+   "i": 137,
+   "start": 289.767,
+   "end": 290.567,
+   "text": "mulai berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 138,
+   "start": 291.267,
+   "end": 293.1,
+   "text": "Kesalahan pemula yang umum adalah melihat",
+   "part": "episode"
+  },
+  {
+   "i": 139,
+   "start": 293.3,
+   "end": 294.2,
+   "text": "chart terlalu dekat.",
+   "part": "episode"
+  },
+  {
+   "i": 140,
+   "start": 294.633,
+   "end": 295.533,
+   "text": "Di chart lima menit,",
+   "part": "episode"
+  },
+  {
+   "i": 141,
+   "start": 295.633,
+   "end": 298.267,
+   "text": "penurunan kecil bisa terlihat seperti akhir tren.",
+   "part": "episode"
+  },
+  {
+   "i": 142,
+   "start": 298.467,
+   "end": 299.833,
+   "text": "Saat pindah ke chart harian,",
+   "part": "episode"
+  },
+  {
+   "i": 143,
+   "start": 300.0,
+   "end": 301.867,
+   "text": "gerakan yang sama mungkin hanya higher low",
+   "part": "episode"
+  },
+  {
+   "i": 144,
+   "start": 302.033,
+   "end": 302.867,
+   "text": "dalam uptrend.",
+   "part": "episode"
+  },
+  {
+   "i": 145,
+   "start": 303.1,
+   "end": 305.533,
+   "text": "Karena itu, lihat timeframe besar lebih dulu.",
+   "part": "episode"
+  },
+  {
+   "i": 146,
+   "start": 305.833,
+   "end": 307.433,
+   "text": "Arah pada timeframe yang lebih tinggi",
+   "part": "episode"
+  },
+  {
+   "i": 147,
+   "start": 307.733,
+   "end": 308.7,
+   "text": "biasanya lebih penting.",
+   "part": "episode"
+  },
+  {
+   "i": 148,
+   "start": 309.333,
+   "end": 310.067,
+   "text": "Di aplikasi,",
+   "part": "episode"
+  },
+  {
+   "i": 149,
+   "start": 310.067,
+   "end": 312.533,
+   "text": "kamu juga bisa melihat ringkasan tren dan momentum",
+   "part": "episode"
+  },
+  {
+   "i": 150,
+   "start": 312.833,
+   "end": 313.833,
+   "text": "tanpa harus menggambar",
+   "part": "episode"
+  },
+  {
+   "i": 151,
+   "start": 314.067,
+   "end": 314.867,
+   "text": "semuanya sendiri.",
+   "part": "episode"
+  },
+  {
+   "i": 152,
+   "start": 315.2,
+   "end": 316.733,
+   "text": "Gunakan sebagai second opinion,",
+   "part": "episode"
+  },
+  {
+   "i": 153,
+   "start": 316.933,
+   "end": 318.867,
+   "text": "setelah kamu mencoba membaca struktur",
+   "part": "episode"
+  },
+  {
+   "i": 154,
+   "start": 319.033,
+   "end": 320.267,
+   "text": "harganya sendiri lebih dulu.",
+   "part": "episode"
+  },
+  {
+   "i": 155,
+   "start": 320.667,
+   "end": 322.533,
+   "text": "Sekarang kita sudah tahu cara membaca arah tren,",
+   "part": "episode"
+  },
+  {
+   "i": 156,
+   "start": 322.6,
+   "end": 323.467,
+   "text": "perubahan struktur,",
+   "part": "episode"
+  },
+  {
+   "i": 157,
+   "start": 323.533,
+   "end": 325.667,
+   "text": "dan pentingnya melihat timeframe yang tepat.",
+   "part": "episode"
+  },
+  {
+   "i": 158,
+   "start": 326.0,
+   "end": 327.967,
+   "text": "Tapi teori baru benar-benar terasa",
+   "part": "episode"
+  },
+  {
+   "i": 159,
+   "start": 328.133,
+   "end": 330.167,
+   "text": "ketika kita melihatnya langsung di chart.",
+   "part": "episode"
+  },
+  {
+   "i": 160,
+   "start": 330.7,
+   "end": 333.067,
+   "text": "Sekarang kita baca chart ASII.",
+   "part": "episode"
+  },
+  {
+   "i": 161,
+   "start": 333.6,
+   "end": 334.7,
+   "text": "Di awal 2025,",
+   "part": "episode"
+  },
+  {
+   "i": 162,
+   "start": 334.8,
+   "end": 336.2,
+   "text": "harga bergerak sideways",
+   "part": "episode"
+  },
+  {
+   "i": 163,
+   "start": 336.433,
+   "end": 337.467,
+   "text": "sekitar 4.400",
+   "part": "episode"
+  },
+  {
+   "i": 164,
+   "start": 337.533,
+   "end": 341.233,
+   "text": "sampai 5.000. Pertengahan tahun,",
+   "part": "episode"
+  },
+  {
+   "i": 165,
+   "start": 341.7,
+   "end": 344.4,
+   "text": "harga menembus area itu dan membentuk higher high",
+   "part": "episode"
+  },
+  {
+   "i": 166,
+   "start": 344.533,
+   "end": 345.5,
+   "text": "serta higher low",
+   "part": "episode"
+  },
+  {
+   "i": 167,
+   "start": 345.733,
+   "end": 347.267,
+   "text": "sampai sekitar 7.300",
+   "part": "episode"
+  },
+  {
+   "i": 168,
+   "start": 347.5,
+   "end": 348.867,
+   "text": "pada awal 2026.",
+   "part": "episode"
+  },
+  {
+   "i": 169,
+   "start": 349.433,
+   "end": 350.633,
+   "text": "Lihat puncak berikutnya.",
+   "part": "episode"
+  },
+  {
+   "i": 170,
+   "start": 350.833,
+   "end": 353.0,
+   "text": "Mampukah melewati 7.300?",
+   "part": "episode"
+  },
+  {
+   "i": 171,
+   "start": 353.867,
+   "end": 354.733,
+   "text": "Tiga, dua,",
+   "part": "episode"
+  },
+  {
+   "i": 172,
+   "start": 355.133,
+   "end": 355.933,
+   "text": "satu.",
+   "part": "episode"
+  },
+  {
+   "i": 173,
+   "start": 356.333,
+   "end": 357.133,
+   "text": "Ternyata gagal.",
+   "part": "episode"
+  },
+  {
+   "i": 174,
+   "start": 357.2,
+   "end": 358.467,
+   "text": "Terbentuk lower high,",
+   "part": "episode"
+  },
+  {
+   "i": 175,
+   "start": 358.533,
+   "end": 359.5,
+   "text": "lalu lower low.",
+   "part": "episode"
+  },
+  {
+   "i": 176,
+   "start": 359.867,
+   "end": 361.067,
+   "text": "Strukturnya berubah",
+   "part": "episode"
+  },
+  {
+   "i": 177,
+   "start": 361.5,
+   "end": 365.1,
+   "text": "dan harga turun kembali menuju area 4.400.",
+   "part": "episode"
+  },
+  {
+   "i": 178,
+   "start": 365.867,
+   "end": 367.8,
+   "text": "Jadi, ada tiga kondisi utama.",
+   "part": "episode"
+  },
+  {
+   "i": 179,
+   "start": 368.6,
+   "end": 370.4,
+   "text": "Higher high dan higher low",
+   "part": "episode"
+  },
+  {
+   "i": 180,
+   "start": 370.6,
+   "end": 371.667,
+   "text": "berarti uptrend.",
+   "part": "episode"
+  },
+  {
+   "i": 181,
+   "start": 371.933,
+   "end": 374.333,
+   "text": "Lower high dan lower low berarti downtrend.",
+   "part": "episode"
+  },
+  {
+   "i": 182,
+   "start": 374.633,
+   "end": 376.033,
+   "text": "Kalau keduanya tidak terbentuk,",
+   "part": "episode"
+  },
+  {
+   "i": 183,
+   "start": 376.233,
+   "end": 377.867,
+   "text": "harga kemungkinan sideways.",
+   "part": "episode"
+  },
+  {
+   "i": 184,
+   "start": 378.433,
+   "end": 380.6,
+   "text": "Sideways bukan berarti tidak terjadi apa-apa.",
+   "part": "episode"
+  },
+  {
+   "i": 185,
+   "start": 380.9,
+   "end": 382.667,
+   "text": "Pasar hanya belum menentukan arah.",
+   "part": "episode"
+  },
+  {
+   "i": 186,
+   "start": 382.933,
+   "end": 384.8,
+   "text": "Kalau kamu sudah bisa membaca struktur harga,",
+   "part": "episode"
+  },
+  {
+   "i": 187,
+   "start": 385.033,
+   "end": 387.7,
+   "text": "alat analisis lain akan jauh lebih mudah dipahami.",
+   "part": "episode"
+  },
+  {
+   "i": 188,
+   "start": 388.5,
+   "end": 391.467,
+   "text": "Jadi, lihat dulu arah dan bentuk pergerakannya.",
+   "part": "episode"
+  },
+  {
+   "i": 189,
+   "start": 391.867,
+   "end": 392.4,
+   "text": "Setelah itu,",
+   "part": "episode"
+  },
+  {
+   "i": 190,
+   "start": 392.4,
+   "end": 394.8,
+   "text": "barulah tambahkan indikator atau alat bantu",
+   "part": "episode"
+  },
+  {
+   "i": 191,
+   "start": 395.1,
+   "end": 396.4,
+   "text": "lain sebagai konfirmasi.",
+   "part": "episode"
+  },
+  {
+   "i": 192,
+   "start": 399.4,
+   "end": 401.267,
+   "text": "Di video selanjutnya, kita akan bahas tentang",
+   "part": "outro"
+  },
+  {
+   "i": 193,
+   "start": 401.333,
+   "end": 403.467,
+   "text": "chart patterns, yaitu",
+   "part": "outro"
+  },
+  {
+   "i": 194,
+   "start": 403.5,
+   "end": 406.4,
+   "text": "pola yang terbentuk dari pergerakan harga.",
+   "part": "outro"
+  },
+  {
+   "i": 195,
+   "start": 407.6,
+   "end": 412.65,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 196,
+   "start": 413.35,
+   "end": 414.45,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 197,
+   "start": 414.8,
+   "end": 415.8,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 198,
+   "start": 416.15,
+   "end": 417.35,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 199,
+   "start": 417.6,
+   "end": 420.3,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 200,
+   "start": 420.65,
+   "end": 423.55,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 201,
+   "start": 424.1,
+   "end": 427.25,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 202,
+   "start": 427.25,
+   "end": 430.85,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 203,
+   "start": 431.3,
+   "end": 433.2,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 204,
+   "start": 433.55,
+   "end": 437.0,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 205,
+   "start": 438.35,
+   "end": 441.85,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 206,
+   "start": 441.85,
+   "end": 443.7,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 207,
+   "start": 445.05,
+   "end": 449.0,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 208,
+   "start": 449.0,
+   "end": 451.55,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 209,
+   "start": 452.0,
+   "end": 455.0,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 210,
+   "start": 455.0,
+   "end": 457.85,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 211,
+   "start": 459.3,
+   "end": 461.05,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 212,
+   "start": 461.05,
+   "end": 464.25,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 213,
+   "start": 465.55,
+   "end": 468.35,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 214,
+   "start": 468.35,
+   "end": 470.95,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 215,
+   "start": 471.3,
+   "end": 473.9,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 216,
+   "start": 474.05,
+   "end": 477.35,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 217,
+   "start": 477.9,
+   "end": 480.95,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 218,
+   "start": 482.3,
+   "end": 485.15,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 219,
+   "start": 485.7,
+   "end": 489.55,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 220,
+   "start": 489.55,
+   "end": 492.0,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

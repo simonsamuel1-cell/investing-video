@@ -9,6 +9,61 @@ references are not re-read every scene.
 
 ---
 
+## 0. Benchmark v1 — 22 Oct 2026 (this leads; where it disagrees with the sections below, it wins)
+
+Simon, 22 Oct: *"perbaikan benchmark untuk style video"*, with 7 videos, 6 images and the keywords
+**tech explainer, finance explainer, visual storytelling, flowy, fluid, mindmaps with connectors, subtle visuals**.
+Everything is in `refs/benchmark-2026-10-22/` — `moodboard.png` is the one-page summary; `sheets/` has a frame
+every few seconds of each video and dense strips of three motions; `videos/` and `images/` are the originals.
+
+| Ref | What it teaches |
+|---|---|
+| v1 ancrid (AI receptionist) | Connectors grow out of a centre node, orthogonal with rounded corners, then each end node (icon tile + label) arrives — about 1 s for the whole map. Also: a greyscale storyboard first, then the build (our pipeline). |
+| v2 Gemini | A soft blue gradient with faint concentric rings; ONE continuous camera that dives into the prompt bar; text typed in; the bar glows with the brand gradient. |
+| v3 SCM (construction) | Light sections, a navy section for emphasis; white UI cards with avatar bubbles around them; a kinetic sentence with an object in the gap ("making payroll [coin] faster and easier"). |
+| v4 Jobster | Orbit rings with avatar nodes; the rings spin away and the SAME avatars fly into two list columns — objects carry over between layouts instead of cutting. |
+| v5 Philadelphia wages | Finance explainer on cream paper: a map, cut-out people, mono labels, line charts where the idea (the slope) is shaded; a dark section for the key comparison. |
+| v6 Fractional ownership | One card frame, its content swapping; one big number on one picture; a colour overlay on a photo. |
+| v7 Trovebase | Particles converge into a logo; blurred UI behind; a glowing card stack. |
+| images | SaaS hero layouts: thin lines converging into a glowing focal icon (Lorikeet); orbit arcs with stats; a centre card with tools around it; stats with leader lines to one big radial shape; flow curves between wireframe cards. |
+
+**What they share — the rules:**
+
+1. **Ground: light and airy.** Paper white / very light grey, with one large soft gradient bloom in the brand's
+   indigo→cyan (low saturation) or faint concentric rings. Navy/dark only for an emphasis moment (the key chart, a
+   reveal), then back to light.
+2. **One focal object per frame, and it glows** — a soft brand-gradient glow. Everything else is subdued: white,
+   light grey, hairlines.
+3. **Connectors are the signature.** Hairline (2–3 px), curved or orthogonal with rounded corners; they GROW from the
+   source when the VO says the link; a gradient along them (indigo→cyan) and, where it helps, a pulse of light
+   travelling along. A mindmap = a centre node, connectors, end nodes (icon tile + short label), staggered.
+4. **Cards:** white, rounded (24–28), a very soft shadow, little text — skeleton lines instead of fake copy, an icon or
+   avatar at the left.
+5. **Motion is flow.** Nothing just appears: things arrive along a path; the same object carries over from one layout
+   into the next (v4) instead of a cut; the camera keeps drifting and dives into an element to open the next idea
+   (v2). Easy ease, moves of 0.4–0.8 s, staggers of 60–100 ms. Hard cuts are rare.
+6. **Type:** big, few words, sentence case; one keyword in the brand colour; a kinetic line can hold an object between
+   words; numbers are huge with a small label under them.
+7. **Subtle:** low-contrast secondary elements, lots of empty space, the brand gradient plus at most one accent.
+8. **Minimalist (Simon, 22 Oct, after the benchmark): "Minimalis, banyak white spacenya (antar elemen punya white space
+   atau jarak yang cukup), dan tulisannya normal (tidak terlalu tebal)."** Fewer elements per frame; generous gaps
+   between every element (cards, labels, lines — never crowded); text in regular/medium weights (400–600), with 700
+   at most for a headline and 800 not used.
+9. **Finance specifically (v5, v6):** one number, one picture, one chart per idea; the part of the chart the VO talks
+   about is shaded; real photos may sit under a colour overlay.
+
+**Open with Simon (not decided):**
+- **Avatars as nodes** (v3, v4, images) — real-looking people in circles. §3 below says "no other people" (19 Oct).
+- **Icons:** the references use thin, light line icons in white tiles; §4b says isometric line icons with a dark
+  outline (19 Oct).
+- The paper-diorama prototype (`Proto-PaperShot`, 21 Oct) is a different direction from this benchmark.
+
+**What core needs for it (build only when asked):** `Connector` (growing path, rounded corners, gradient, travelling
+pulse), mindmap `Node`, `OrbitRings`, `GlowFocus`, `SoftGround` (gradient bloom + rings), a carry-over layout
+helper (the same item moving between two layouts), the camera from `Proto-PaperShot`, `KineticLine`, `StatHero`.
+
+---
+
 ## 1. The building blocks
 
 | Block | Use it for | From the references |
@@ -51,12 +106,22 @@ A scene is usually ONE of these, sometimes two (a character beside a mindmap). N
   MOVE: bob up and down, glide along a path, travel a mindmap's connectors.
 - **Retired:** the people in blue / light-blue shirts (Orang Kerja, Orang Resign, LiatHP, the polo series)
   and the yellow office worker.
+- **No other people.** Simon, 19 Oct 2026 (VI04): no generated "kamu"/viewer character and no 3D renders — the
+  style doesn't fit and a second person dilutes Orang Tuntun. "You" is an icon (VI04: the amber self icon).
 
 ## 4. Motion (unchanged house rules)
 
 Easy ease only. No pops except where asked. A transition at every scene change (CameraCut or a continuous
 carry-over); **no wipes**. Dashed boxes open slowly from their centre. Things that belong together arrive
 together; things that are said one after another arrive on their words.
+
+## 4b. Icon style (Simon, 19 Oct 2026 — "lain kali, buat icon design nya seperti ini")
+
+`refs/icon-style-isometric-line.webp`: **isometric line icons** — one even dark outline (rounded joins), white
+fills, ONE accent colour on the key part (the reference uses lime; the colour per video is to confirm), pale
+blue-grey on the side/shadow faces, no gradients, no shading beyond those flat faces. Made with ChatGPT image
+generation (the reference attached, "background transparan png"), or drawn as SVG in code for simple shapes;
+Adobe Illustrator if a set needs vector editing.
 
 ## 5. Assets — where each comes from
 

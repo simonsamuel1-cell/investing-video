@@ -1,0 +1,221 @@
+{
+ "key": "CTA",
+ "rows": [
+  {
+   "i": 1,
+   "en": "On Tuntun, read charts from a glance to full detail.",
+   "zh": "在Tuntun，你看图表可以从一眼速览到细致入微。",
+   "ja": "Tuntunなら、チャートをひと目から、とことん細部まで読めます。",
+   "ko": "Tuntun에서는 차트를 한눈에도, 아주 자세히도 볼 수 있어요."
+  },
+  {
+   "i": 2,
+   "en": "Want to see the price direction quickly?",
+   "zh": "想快速看清价格走向？",
+   "ja": "価格の方向性をすばやく確認したいですか？",
+   "ko": "가격 방향을 빠르게 보고 싶나요?"
+  },
+  {
+   "i": 3,
+   "en": "Use the line chart.",
+   "zh": "就用折线图。",
+   "ja": "ラインチャートを使いましょう。",
+   "ko": "라인 차트를 사용하세요."
+  },
+  {
+   "i": 4,
+   "en": "Want in-depth analysis?",
+   "zh": "想深入分析？",
+   "ja": "じっくり分析したいですか？",
+   "ko": "깊이 있게 분석하고 싶나요?"
+  },
+  {
+   "i": 5,
+   "en": "There's a full-screen chart built on TradingView.",
+   "zh": "有基于TradingView的全屏图表。",
+   "ja": "TradingViewベースのフルスクリーンチャートがあります。",
+   "ko": "TradingView 기반 전체 화면 차트가 있어요."
+  },
+  {
+   "i": 6,
+   "en": "And for fast, accurate analysis, tap Pro.",
+   "zh": "而如果想快速、准确地分析，就点击Pro。",
+   "ja": "そして、速く正確に分析したいなら、Proをタップしましょう。",
+   "ko": "그리고 빠르고 정확한 분석을 원하면 Pro를 탭하세요."
+  },
+  {
+   "i": 7,
+   "en": "Above the chart, pick a period: intraday,",
+   "zh": "在图表上方，你可以选择周期：日内、",
+   "ja": "チャート上部では、期間を日中足（イントラデイ）、",
+   "ko": "차트 위에서는 기간을 장중,"
+  },
+  {
+   "i": 8,
+   "en": "5-day, daily, weekly, all the way to yearly.",
+   "zh": "5日、日线、周线，一直到年线。",
+   "ja": "5日、日足、週足、年足まで選べます。",
+   "ko": "5일, 일간, 주간, 연간까지 고를 수 있어요."
+  },
+  {
+   "i": 9,
+   "en": "For more detail, candlestick intervals can",
+   "zh": "想看得更细，K线周期",
+   "ja": "より細かく見るなら、ローソク足の間隔も",
+   "ko": "더 자세히 보려면 캔들 주기도"
+  },
+  {
+   "i": 10,
+   "en": "also be set by minute, hour, up to quarterly.",
+   "zh": "也可以设为分钟、小时，乃至季度。",
+   "ja": "分単位、時間単位から四半期まで設定できます。",
+   "ko": "분, 시간 단위부터 분기 단위까지 설정할 수 있어요."
+  },
+  {
+   "i": 11,
+   "en": "In intraday mode, order book, running trade,",
+   "zh": "在日内模式下，委托簿、逐笔成交和成交明细",
+   "ja": "日中足モードでは、板情報、歩み値、約定履歴が",
+   "ko": "장중 모드에서는 호가창, 실시간 체결, 체결 내역이"
+  },
+  {
+   "i": 12,
+   "en": "and trade book appear directly right of the chart.",
+   "zh": "会直接显示在图表右侧。",
+   "ja": "チャートの右側に直接表示されます。",
+   "ko": "차트 오른쪽에 바로 표시돼요."
+  },
+  {
+   "i": 13,
+   "en": "Below the chart, the left is for main-chart lines,",
+   "zh": "在图表下方，左侧用于主图上的线条，",
+   "ja": "チャート下部の左側は、メインチャートのライン用で、",
+   "ko": "차트 아래 왼쪽은 메인 차트의 선에 쓰이며,"
+  },
+  {
+   "i": 14,
+   "en": "like moving averages and Bollinger Bands.",
+   "zh": "比如移动平均线（均线）和布林带。",
+   "ja": "移動平均線やボリンジャーバンドなどがあります。",
+   "ko": "이동평균선과 볼린저 밴드 등이 있어요."
+  },
+  {
+   "i": 15,
+   "en": "Meanwhile, the right is for lower-panel indicators,",
+   "zh": "而右侧用于下方副图的指标，",
+   "ja": "一方、右側は下部パネルのインジケーター用で、",
+   "ko": "반면 오른쪽은 하단 패널의 지표에 쓰이며,"
+  },
+  {
+   "i": 16,
+   "en": "like VALUE, MACD, and RSI.",
+   "zh": "比如VALUE、MACD和RSI。",
+   "ja": "VALUE、MACD、RSIなどがあります。",
+   "ko": "VALUE, MACD, RSI 등이 있어요."
+  },
+  {
+   "i": 17,
+   "en": "Press and hold a candlestick",
+   "zh": "长按K线，",
+   "ja": "ローソク足を長押しすると、",
+   "ko": "캔들을 길게 누르면"
+  },
+  {
+   "i": 18,
+   "en": "to see the price details at that time.",
+   "zh": "即可查看该时间点的价格详情。",
+   "ja": "その時点の価格の詳細が見られます。",
+   "ko": "그 시점의 가격 정보를 자세히 볼 수 있어요."
+  },
+  {
+   "i": 19,
+   "en": "In Settings, turn on transaction markers,",
+   "zh": "在设置中，开启交易标记、",
+   "ja": "設定から、取引マーカー、コーポレートアクション、",
+   "ko": "설정에서 매매 표시,"
+  },
+  {
+   "i": 20,
+   "en": "corporate actions, and the average price line.",
+   "zh": "公司行动和平均成本价线。",
+   "ja": "平均取得価格ラインをオンにしましょう。",
+   "ko": "기업 이벤트, 평균 매수가 선을 켜세요."
+  },
+  {
+   "i": 21,
+   "en": "Every time you buy or sell a stock,",
+   "zh": "每当你买入或卖出股票，",
+   "ja": "株を買ったり売ったりするたびに、",
+   "ko": "주식을 매수하거나 매도할 때마다"
+  },
+  {
+   "i": 22,
+   "en": "the buy and sell points are recorded on the chart.",
+   "zh": "买卖交易点都会记录在图表上。",
+   "ja": "買いと売りの取引ポイントがチャートに記録されます。",
+   "ko": "매수·매도 거래 지점이 차트에 기록돼요."
+  },
+  {
+   "i": 23,
+   "en": "Meanwhile, the blue line shows your average cost price.",
+   "zh": "同时，蓝线显示你的平均持仓成本价。",
+   "ja": "一方、青いラインは平均取得価格を示しています。",
+   "ko": "한편, 파란 선은 내 평균 매수가를 보여 줘요."
+  },
+  {
+   "i": 24,
+   "en": "Round blue dots on the chart mark corporate actions.",
+   "zh": "公司行动在图表上以蓝色圆点标示。",
+   "ja": "コーポレートアクションは、チャート上の青い丸で示されます。",
+   "ko": "기업 이벤트는 차트에 파란 동그란 점으로 표시돼요."
+  },
+  {
+   "i": 25,
+   "en": "Open Tuntun, pick a stock, and start practicing",
+   "zh": "打开Tuntun，选一只股票，开始用Chart Pro",
+   "ja": "Tuntunを開き、銘柄を1つ選んで、チャート分析の練習を",
+   "ko": "Tuntun을 열고, 종목 하나를 골라 차트 분석 연습을"
+  },
+  {
+   "i": 26,
+   "en": "chart analysis faster and easier in Chart Pro.",
+   "zh": "更快、更便捷地练习图表分析。",
+   "ja": "Chart Proでもっと速く、手軽に始めましょう。",
+   "ko": "Chart Pro에서 더 빠르고 간편하게 시작해 보세요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 1,
+   "note": "Several EN rows exceed 42 characters (longest: row 23 at 55) where shortening would drop words from the source; the Indonesian rows themselves run up to 66. CJK rows are all within ~30."
+  },
+  {
+   "i": 7,
+   "note": "Intraday is lowercase \"intraday\" in EN per the glossary (rows 7 and 11), although the on-screen tab reads \"Intraday\". JA uses the glossary long form 日中足（イントラデイ） at the first mention (row 7) and the short form 日中足 in row 11."
+  },
+  {
+   "i": 8,
+   "note": "Period list: ZH uses 日线/周线/年线, JA 日足/週足/年足 (the labels Chinese/Japanese broker apps show); KO uses 일간/주간/연간 to avoid the 년봉/연봉 ambiguity."
+  },
+  {
+   "i": 9,
+   "note": "\"interval candlestick\" is not in the glossary: rendered candlestick intervals / K线周期 / ローソク足の間隔 / 캔들 주기."
+  },
+  {
+   "i": 13,
+   "note": "Not in glossary: chart utama / panel bawah = main chart / lower panel; ZH 主图 / 副图 (standard Chinese app terms), JA メインチャート / 下部パネル, KO 메인 차트 / 하단 패널. EN drops the glossary “(MA)” for length; ZH uses the long form 移动平均线（均线） in row 14 because it is the first mention in this clip."
+  },
+  {
+   "i": 19,
+   "note": "Not in glossary: Pengaturan = Settings / 设置 / 設定 / 설정; penanda transaksi = transaction markers / 交易标记 / 取引マーカー / 매매 표시. JA moves コーポレートアクション into row 19 (Japanese verb-final order); same sentence, so allowed."
+  },
+  {
+   "i": 20,
+   "note": "garis harga rata-rata (no \"modal\") = average price line / 平均成本价线 / 平均取得価格ライン / 평균 매수가 선; row 23 (\"harga rata-rata modalmu\") uses the full glossary form average cost price / 平均持仓成本价."
+  },
+  {
+   "i": 25,
+   "note": "“saham” here is one particular stock, so JA 銘柄 / KO 종목 (銘柄を1つ選んで / 종목 하나를 골라); general “saham” stays 株 / 주식. ZH places 用Chart Pro at the end of row 25 so the sentence reads naturally; it still carries the same sentence across rows 25-26."
+  }
+ ]
+}

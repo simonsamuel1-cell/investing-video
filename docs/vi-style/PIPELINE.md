@@ -38,6 +38,11 @@ logs in. **All prompts go to the chat "Storyboard - ChatGPT - Claude"** (Simon m
 > Show: «the block — e.g. a mindmap with a centre node "X" and branches "A", "B", "C"; Orang Tuntun at the
 > left from head to belly, pointing at it». Label every element with its on-screen text. Number the order in
 > which elements appear (1, 2, 3…).
+>
+> **Always add (Simon, 19 Oct 2026, VI04):** *2D flat design, simple, UI style (cards, chips, app-icon tiles);
+> isometric where the scene needs a place (islands, a house); NO 3D renders; NO characters — the only person
+> is Orang Tuntun, and only on an insight line; "you" is an icon.* Images for a scene follow the same rule:
+> icons (Iconify) or shapes drawn in code before anything generated.
 
 ### Image prompt (template)
 > «subject», flat illustration in the style of a fintech icon set: violet-to-indigo gradient (#5F4DEE),

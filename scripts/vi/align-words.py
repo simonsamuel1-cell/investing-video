@@ -96,6 +96,83 @@ def onto_script(heard, script_words):
     return [{"w": w, "start": t[0], "end": t[1], "heard": t[2]} for w, t in zip(script_words, times)]
 
 
+def silences(audio, silent_db=-42.0, hop=0.01, min_len=0.06):
+    """Every pause in the audio as (start, end) seconds: 10 ms frames under silent_db for at least min_len."""
+    import subprocess
+
+    import numpy as np
+
+    raw = subprocess.run(["ffmpeg", "-v", "error", "-i", audio, "-f", "f32le", "-ac", "1", "-ar", "16000", "-"], capture_output=True, check=True).stdout
+    x = np.frombuffer(raw, dtype=np.float32)
+    n = int(hop * 16000)
+    db = 20 * np.log10(np.sqrt((x[: len(x) // n * n].reshape(-1, n) ** 2).mean(axis=1)) + 1e-9)
+    out, run = [], None
+    for i, quiet in enumerate(db < silent_db):
+        if quiet:
+            run = run if run is not None else i
+        elif run is not None:
+            if (i - run) * hop >= min_len:
+                out.append((run * hop, i * hop))
+            run = None
+    if run is not None:
+        out.append((run * hop, len(db) * hop))
+    return out
+
+
+def snap_to_pauses(words, pauses, reach=0.6):
+    """
+    Whisper's word edges drift by up to half a second; the pauses in the audio don't. Where the script pauses
+    (a word ending in . , ? ! : ; or a closing quote), the boundary moves onto the nearest real pause within
+    `reach`: the word before ends where the silence starts, the word after starts where it ends. Words between
+    two such anchors are stretched linearly onto the new span, so they keep their order and proportions.
+    """
+    if not words:
+        return words
+    old = [(w["start"], w["end"]) for w in words]
+    anchors = {}  # word index -> (new start or None, new end or None)
+    for k in range(len(words) - 1):
+        if not re.search(r"[.,?!:;”\"—]$", words[k]["w"]):
+            continue
+        mid = (words[k]["end"] + words[k + 1]["start"]) / 2
+        # the pause must sit between the two words (a comma the voice ran through must not grab the pause
+        # before the sentence), and within reach of where whisper put the boundary
+        near = [p for p in pauses if p[0] - reach <= mid <= p[1] + reach and words[k]["start"] < (p[0] + p[1]) / 2 < words[k + 1]["end"]]
+        if not near:
+            continue
+        p = min(near, key=lambda p: (max(p[0] - mid, mid - p[1], 0), -(p[1] - p[0])))
+        anchors.setdefault(k, [None, None])[1] = p[0]
+        anchors.setdefault(k + 1, [None, None])[0] = p[1]
+    # the voice's first onset and last offset
+    lead = [p for p in pauses if p[0] <= words[0]["start"] + reach and p[1] <= words[0]["start"] + reach]
+    if lead:
+        anchors.setdefault(0, [None, None])[0] = max(p[1] for p in lead)
+    tail = [p for p in pauses if p[1] >= words[-1]["end"] - reach and p[0] >= words[-1]["end"] - reach]
+    if tail:
+        anchors.setdefault(len(words) - 1, [None, None])[1] = min(p[0] for p in tail)
+    # spans between consecutive anchored edges, each mapped old -> new
+    edges = sorted([(k, 0, v[0]) for k, v in anchors.items() if v[0] is not None] + [(k, 1, v[1]) for k, v in anchors.items() if v[1] is not None])
+    pts = [(old[k][side], t) for k, side, t in edges]
+    pts = [pts[0]] + [q for p, q in zip(pts, pts[1:]) if q[0] > p[0] and q[1] > p[1]]
+
+    def warp(t):
+        if t <= pts[0][0]:
+            return t + (pts[0][1] - pts[0][0])
+        if t >= pts[-1][0]:
+            return t + (pts[-1][1] - pts[-1][0])
+        for (a0, b0), (a1, b1) in zip(pts, pts[1:]):
+            if a0 <= t <= a1:
+                return b0 + (t - a0) * (b1 - b0) / (a1 - a0)
+        return t
+
+    for k, w in enumerate(words):
+        s, e = warp(old[k][0]), warp(old[k][1])
+        if k in anchors:
+            s = anchors[k][0] if anchors[k][0] is not None else s
+            e = anchors[k][1] if anchors[k][1] is not None else e
+        w["start"], w["end"] = s, max(e, s + 0.05)
+    return words
+
+
 def finish(words):
     for i, w in enumerate(words):
         w["i"] = i
@@ -143,7 +220,7 @@ if __name__ == "__main__":
             for t in re.sub(r"\[[^\]]*\]", " ", line).split():
                 script_words.append(t)
                 scenes.append(scene)
-        words = onto_script(heard, script_words)
+        words = snap_to_pauses(onto_script(heard, script_words), silences(a.audio))
         if scene is not None:
             for w, s in zip(words, scenes):
                 w["scene"] = s

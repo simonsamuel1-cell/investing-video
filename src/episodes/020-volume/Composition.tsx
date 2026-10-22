@@ -35,7 +35,8 @@ import React from "react";
 import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
-import { BLOCK, BONUS, MISTAKES, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION } from "./data/timing";
+import { BLOCK, BONUS, MISTAKES, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION, CUTS, NEXT, NEXT_END } from "./data/timing";
+import { OUTRO_CUES } from "./outroCues";
 import { MainChartGroup } from "./scenes/MainChartGroup";
 import { UnderstandGroup } from "./scenes/UnderstandGroup";
 import { CombosGroup } from "./scenes/CombosGroup";
@@ -52,6 +53,7 @@ import { SC18 } from "./scenes/SC18";
 import { SC19 } from "./scenes/SC19";
 import { SC20 } from "./scenes/SC20";
 import { Cards } from "./scenes/Cards";
+import { SC21Next, SC21_FROM } from "./scenes/SC21Next";
 
 /** The voice ends on the last cue. `VO_END` is computed from the SRT, so a
  *  re-cut recording fails against the wrong number rather than truncating.
@@ -59,7 +61,7 @@ import { Cards } from "./scenes/Cards";
  *  ⚠ LONGER THAN THE VOICE ON PURPOSE, and it is `BLOCK.END` — the closing
  *  cards hold for three seconds after the last word (see BLOCK.END). The guard
  *  below is a floor, not an equality, precisely so this tail is allowed. */
-export const TOTAL_FRAMES = BLOCK.END;
+export const TOTAL_FRAMES = NEXT_END;
 
 type Mounted = {
   from: number;
@@ -143,9 +145,16 @@ const SCENES: Mounted[] = [
   },
   {
     from: BLOCK.SC20,
-    duration: BLOCK.END - BLOCK.SC20,
+    /** ⚠ PAST BLOCK.END NOW: its cards hold through the 30-frame pause and leave on the camera cut into SC21. */
+    duration: CUTS.toNext.at + CUTS.toNext.over / 2 - BLOCK.SC20,
     Component: SC20,
     name: "SC20 Close",
+  },
+  {
+    from: SC21_FROM,
+    duration: NEXT_END - SC21_FROM,
+    Component: SC21Next,
+    name: "SC21 Next video",
   },
   /**
    * ⚠ CG-B RUNS PAST ITS OWN BLOCK AND IS DRAWN OVER CG-C, on purpose. SC06's
@@ -191,7 +200,7 @@ const SCENES: Mounted[] = [
    render. CG-B and CG-C sit inside CG-A's span, so this checks that every frame
    from 0 to END is owned by something rather than that the rows abut. */
 (() => {
-  const owned = new Array(BLOCK.END).fill(false);
+  const owned = new Array(TOTAL_FRAMES).fill(false);
   SCENES.forEach(({ from, duration }) => {
     for (let i = from; i < from + duration; i++) owned[i] = true;
   });
@@ -254,9 +263,13 @@ const Body = () => (
       <BonusOutro />
     </Sequence>
 
-    <Captions cues={CUES} mute={RUNNING_LINE.mute} />
+    <Captions cues={[...CUES, ...OUTRO_CUES]} mute={RUNNING_LINE.mute} />
     <Watermark totalFrames={TOTAL_FRAMES} />
     <Audio src={staticFile("vo/volume.mp3")} />
+    {/* the outro clip, its own file, after SC20 and a 30-frame pause (Simon, 20 Oct) */}
+    <Sequence from={NEXT.at} durationInFrames={NEXT.vo} name="TA09-Outro.mp3">
+      <Audio src={staticFile("vo/ta09-outro.mp3")} />
+    </Sequence>
   </Stage>
 );
 

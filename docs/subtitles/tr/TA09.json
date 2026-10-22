@@ -1,0 +1,1227 @@
+{
+ "key": "TA09",
+ "rows": [
+  {
+   "i": 1,
+   "en": "Imagine you've spent several weeks watching",
+   "zh": "想象一下，你已经好几周",
+   "ja": "数週間ずっと見ている銘柄が",
+   "ko": "몇 주 동안 지켜본 종목이"
+  },
+  {
+   "i": 2,
+   "en": "a stock that keeps stalling at resistance.",
+   "zh": "一直盯着一只总是卡在阻力位的股票。",
+   "ja": "いつもレジスタンスで頭打ちになるとしましょう。",
+   "ko": "늘 저항에서 막힌다고 상상해 보세요."
+  },
+  {
+   "i": 3,
+   "en": "Today, it finally broke through,",
+   "zh": "今天，它终于突破了，",
+   "ja": "今日、ついに上抜けて、",
+   "ko": "오늘 드디어 뚫고 올라가서"
+  },
+  {
+   "i": 4,
+   "en": "and the candle closed above that level.",
+   "zh": "K线收在了这个价位上方。",
+   "ja": "ローソク足がその水準の上で引けました。",
+   "ko": "캔들이 그 가격대 위에서 마감했어요."
+  },
+  {
+   "i": 5,
+   "en": "It looks valid.",
+   "zh": "看起来是有效的。",
+   "ja": "有効に見えます。",
+   "ko": "유효해 보여요."
+  },
+  {
+   "i": 6,
+   "en": "But does that mean",
+   "zh": "但这是否意味着",
+   "ja": "でも、それは",
+   "ko": "하지만 그렇다고"
+  },
+  {
+   "i": 7,
+   "en": "you should buy right away?",
+   "zh": "要马上买入？",
+   "ja": "すぐに買うべきということでしょうか？",
+   "ko": "바로 매수해야 할까요?"
+  },
+  {
+   "i": 8,
+   "en": "Not necessarily.",
+   "zh": "不一定。",
+   "ja": "そうとは限りません。",
+   "ko": "꼭 그렇진 않아요."
+  },
+  {
+   "i": 9,
+   "en": "Before you enter,",
+   "zh": "在入场之前，",
+   "ja": "エントリーする前に、",
+   "ko": "진입하기 전에"
+  },
+  {
+   "i": 10,
+   "en": "there's one more thing you need to check:",
+   "zh": "你还需要再检查一件事：",
+   "ja": "もう一つ確認すべきことがあります。",
+   "ko": "한 가지 더 확인해야 할 게 있어요."
+  },
+  {
+   "i": 11,
+   "en": "volume. Because",
+   "zh": "成交量。因为",
+   "ja": "それは出来高です。というのも、",
+   "ko": "바로 거래량이에요. 왜냐하면"
+  },
+  {
+   "i": 12,
+   "en": "two breakouts that look the same",
+   "zh": "两个看起来一样的突破，",
+   "ja": "同じように見える2つのブレイクアウトでも、",
+   "ko": "똑같아 보이는 두 돌파도"
+  },
+  {
+   "i": 13,
+   "en": "can have very different strength.",
+   "zh": "强度可能大不相同。",
+   "ja": "強さはまったく違うことがあるからです。",
+   "ko": "힘은 전혀 다를 수 있거든요."
+  },
+  {
+   "i": 14,
+   "en": "First, let's understand what volume is.",
+   "zh": "我们先来了解什么是成交量。",
+   "ja": "まずは、出来高とは何かを理解しましょう。",
+   "ko": "먼저 거래량이 무엇인지 알아볼게요."
+  },
+  {
+   "i": 15,
+   "en": "Volume shows",
+   "zh": "成交量显示的是",
+   "ja": "出来高は、",
+   "ko": "거래량은"
+  },
+  {
+   "i": 16,
+   "en": "how many shares are traded",
+   "zh": "在一个周期内",
+   "ja": "何株が売買されたかを",
+   "ko": "얼마나 많은 주식이 거래됐는지를"
+  },
+  {
+   "i": 17,
+   "en": "within one period.",
+   "zh": "有多少股股票成交。",
+   "ja": "1つの期間単位で示します。",
+   "ko": "한 기간 단위로 보여 줘요."
+  },
+  {
+   "i": 18,
+   "en": "If you use a daily chart,",
+   "zh": "如果你用的是日线图，",
+   "ja": "日足チャートを使うなら、",
+   "ko": "일봉 차트를 쓴다면"
+  },
+  {
+   "i": 19,
+   "en": "one volume bar represents a day of trading.",
+   "zh": "一根成交量柱就代表一天的交易。",
+   "ja": "出来高バー1本が1日分の取引を表します。",
+   "ko": "거래량 막대 하나가 하루치 거래를 나타내요."
+  },
+  {
+   "i": 20,
+   "en": "If it's a five-minute chart,",
+   "zh": "如果是5分钟图，",
+   "ja": "5分足チャートなら、",
+   "ko": "5분 차트라면"
+  },
+  {
+   "i": 21,
+   "en": "one bar means five minutes of trading.",
+   "zh": "一根柱就代表5分钟内的交易。",
+   "ja": "1本のバーは5分間の取引を意味します。",
+   "ko": "막대 하나는 5분 동안의 거래를 뜻해요."
+  },
+  {
+   "i": 22,
+   "en": "But don't misread it.",
+   "zh": "但别看错了。",
+   "ja": "ただし、読み違えないでください。",
+   "ko": "하지만 잘못 읽지 마세요."
+  },
+  {
+   "i": 23,
+   "en": "Volume is not the number of people trading.",
+   "zh": "成交量不是参与交易的人数。",
+   "ja": "出来高は取引した人の数ではありません。",
+   "ko": "거래량은 거래한 사람 수가 아니에요."
+  },
+  {
+   "i": 24,
+   "en": "High volume",
+   "zh": "高成交量",
+   "ja": "出来高が多いのは、",
+   "ko": "거래량이 많은 건"
+  },
+  {
+   "i": 25,
+   "en": "could come from a few big players,",
+   "zh": "可能来自少数几个大户，",
+   "ja": "少数の大口投資家によるものかもしれませんし、",
+   "ko": "몇몇 큰손 때문일 수도 있고,"
+  },
+  {
+   "i": 26,
+   "en": "or the same shares changing hands many times.",
+   "zh": "也可能是同一批股票多次易手。",
+   "ja": "同じ株が何度も持ち主を変えたからかもしれません。",
+   "ko": "같은 주식이 여러 번 손바뀜해서일 수도 있어요."
+  },
+  {
+   "i": 27,
+   "en": "So, volume shows how many",
+   "zh": "所以，成交量显示的是",
+   "ja": "つまり、出来高が示すのは",
+   "ko": "그러니까 거래량은"
+  },
+  {
+   "i": 28,
+   "en": "shares are traded,",
+   "zh": "有多少股票被交易，",
+   "ja": "どれだけの株が売買されたかであって、",
+   "ko": "얼마나 많은 주식이 거래됐는지 보여 주지,"
+  },
+  {
+   "i": 29,
+   "en": "not how many people are trading.",
+   "zh": "而不是有多少人参与交易。",
+   "ja": "何人が取引に参加したかではありません。",
+   "ko": "몇 명이 참여했는지를 보여 주는 게 아니에요."
+  },
+  {
+   "i": 30,
+   "en": "You also can't judge one volume bar alone.",
+   "zh": "单独一根成交量柱，也不能孤立地判断。",
+   "ja": "出来高バー1本だけで判断することもできません。",
+   "ko": "거래량 막대 하나만 따로 판단할 수도 없어요."
+  },
+  {
+   "i": 31,
+   "en": "10 million shares can be huge for one stock,",
+   "zh": "1000万股对某只股票来说可能非常大，",
+   "ja": "1,000万株は、ある銘柄にはとても多くても、",
+   "ko": "1,000만 주가 어떤 종목엔 아주 클 수 있지만,"
+  },
+  {
+   "i": 32,
+   "en": "but nothing special for another.",
+   "zh": "但对另一只股票来说却很普通。",
+   "ja": "別の銘柄ではごく普通ということもあります。",
+   "ko": "다른 종목에는 평범한 수준일 수 있어요."
+  },
+  {
+   "i": 33,
+   "en": "That's why you should compare",
+   "zh": "因此，要把今天的成交量",
+   "ja": "だからこそ、今日の出来高を",
+   "ko": "그래서 오늘의 거래량을"
+  },
+  {
+   "i": 34,
+   "en": "today's volume with previous periods",
+   "zh": "和之前的周期，",
+   "ja": "過去の期間と比べたり、",
+   "ko": "이전 기간과,"
+  },
+  {
+   "i": 35,
+   "en": "or with",
+   "zh": "或者和",
+   "ja": "あるいは",
+   "ko": "또는"
+  },
+  {
+   "i": 36,
+   "en": "its average volume.",
+   "zh": "它的平均成交量做比较。",
+   "ja": "平均出来高と比べたりしましょう。",
+   "ko": "평균 거래량과 비교해 보세요."
+  },
+  {
+   "i": 37,
+   "en": "The easiest way to remember it is this:",
+   "zh": "最简单的记法是这样：",
+   "ja": "いちばん簡単な覚え方はこうです。",
+   "ko": "가장 쉽게 기억하는 방법은 이거예요."
+  },
+  {
+   "i": 38,
+   "en": "price shows where the market is moving.",
+   "zh": "价格显示市场往哪个方向走。",
+   "ja": "価格は、相場がどこへ向かっているかを示します。",
+   "ko": "가격은 시장이 어디로 움직이는지 보여 줘요."
+  },
+  {
+   "i": 39,
+   "en": "Volume shows how active",
+   "zh": "成交量显示的是",
+   "ja": "出来高は、その値動きの裏で",
+   "ko": "거래량은 그 움직임 뒤에서"
+  },
+  {
+   "i": 40,
+   "en": "the trading behind that move is.",
+   "zh": "这波走势背后的交易有多活跃。",
+   "ja": "取引がどれだけ活発かを示します。",
+   "ko": "거래가 얼마나 활발한지 보여 줘요."
+  },
+  {
+   "i": 41,
+   "en": "So always read volume",
+   "zh": "所以，成交量一定要",
+   "ja": "だから、出来高は必ず",
+   "ko": "그러니 거래량은 항상"
+  },
+  {
+   "i": 42,
+   "en": "together with price.",
+   "zh": "和价格一起看。",
+   "ja": "価格と一緒に読みましょう。",
+   "ko": "가격과 함께 읽으세요."
+  },
+  {
+   "i": 43,
+   "en": "Now that you know what volume is,",
+   "zh": "现在你已经知道什么是成交量了，",
+   "ja": "出来高が何かわかったところで、",
+   "ko": "이제 거래량이 뭔지 알았으니"
+  },
+  {
+   "i": 44,
+   "en": "let's see how to read it with price.",
+   "zh": "我们来看看怎么结合价格来解读它。",
+   "ja": "価格と合わせた読み方を見ていきましょう。",
+   "ko": "가격과 함께 읽는 법을 살펴볼게요."
+  },
+  {
+   "i": 45,
+   "en": "You need to know four basic combinations.",
+   "zh": "你需要认识四种基本组合。",
+   "ja": "知っておくべき基本の組み合わせは4つあります。",
+   "ko": "알아 둬야 할 기본 조합은 네 가지예요."
+  },
+  {
+   "i": 46,
+   "en": "First, price rises and volume rises too.",
+   "zh": "第一，价格上涨，成交量也跟着增加。",
+   "ja": "1つ目は、価格が上がり、出来高も増える場合です。",
+   "ko": "첫째, 가격이 오르고 거래량도 함께 늘어요."
+  },
+  {
+   "i": 47,
+   "en": "This usually makes the rise more convincing,",
+   "zh": "这通常会让上涨更有说服力，",
+   "ja": "これは通常、上昇の説得力を高めます。",
+   "ko": "이건 보통 상승을 더 믿을 만하게 만들어요."
+  },
+  {
+   "i": 48,
+   "en": "because trading activity increases too.",
+   "zh": "因为交易活动也随之增加。",
+   "ja": "取引も一緒に活発になっているからです。",
+   "ko": "거래 활동도 함께 늘어나니까요."
+  },
+  {
+   "i": 49,
+   "en": "Second, price rises",
+   "zh": "第二，价格上涨，",
+   "ja": "2つ目は、価格が上がっているのに",
+   "ko": "둘째, 가격은 오르는데"
+  },
+  {
+   "i": 50,
+   "en": "but volume actually falls.",
+   "zh": "但成交量反而下降。",
+   "ja": "出来高はむしろ減っている場合です。",
+   "ko": "거래량은 오히려 줄어요."
+  },
+  {
+   "i": 51,
+   "en": "Price can still keep rising,",
+   "zh": "价格仍然可能继续上涨，",
+   "ja": "価格はまだ上がり続けることもあるので、",
+   "ko": "가격은 여전히 계속 오를 수 있으니"
+  },
+  {
+   "i": 52,
+   "en": "so this isn't automatically a sell signal.",
+   "zh": "所以这并不自动等于卖出信号。",
+   "ja": "自動的に売りシグナルになるわけではありません。",
+   "ko": "이게 자동으로 매도 신호인 건 아니에요."
+  },
+  {
+   "i": 53,
+   "en": "But",
+   "zh": "但是，",
+   "ja": "ただ、",
+   "ko": "하지만"
+  },
+  {
+   "i": 54,
+   "en": "the activity backing the rise starts to fade.",
+   "zh": "支撑这波上涨的交易活动开始减少了。",
+   "ja": "上昇を支える取引は減り始めています。",
+   "ko": "상승을 뒷받침하는 거래 활동은 줄기 시작해요."
+  },
+  {
+   "i": 55,
+   "en": "That means",
+   "zh": "这意味着，",
+   "ja": "つまり、",
+   "ko": "즉,"
+  },
+  {
+   "i": 56,
+   "en": "you need to be more careful and disciplined",
+   "zh": "你需要更加谨慎，并更有纪律地管理",
+   "ja": "より慎重に、そしてより規律を持って",
+   "ko": "더 신중하게, 더 원칙대로"
+  },
+  {
+   "i": 57,
+   "en": "in managing your position. Third,",
+   "zh": "仓位。第三，",
+   "ja": "ポジションを管理する必要があります。3つ目は、",
+   "ko": "포지션을 관리해야 해요. 셋째,"
+  },
+  {
+   "i": 58,
+   "en": "price falls and volume grows with it.",
+   "zh": "价格下跌，成交量也随之放大。",
+   "ja": "価格が下がり、出来高も膨らむ場合です。",
+   "ko": "가격이 내리고 거래량도 함께 커져요."
+  },
+  {
+   "i": 59,
+   "en": "That means",
+   "zh": "这意味着，",
+   "ja": "つまり、",
+   "ko": "즉,"
+  },
+  {
+   "i": 60,
+   "en": "the decline is happening on rising",
+   "zh": "下跌伴随着",
+   "ja": "下落が、ますます活発になる",
+   "ko": "하락이 점점 활발해지는"
+  },
+  {
+   "i": 61,
+   "en": "trading activity.",
+   "zh": "越来越活跃的交易。",
+   "ja": "取引を伴って起きているということです。",
+   "ko": "거래 속에서 일어나고 있다는 뜻이에요."
+  },
+  {
+   "i": 62,
+   "en": "This makes selling pressure look more serious",
+   "zh": "这让卖压看起来更严重，",
+   "ja": "これにより、売り圧力はより深刻に見え、",
+   "ko": "이러면 매도 압력이 더 심각해 보이고"
+  },
+  {
+   "i": 63,
+   "en": "and calls for more caution.",
+   "zh": "也更需要警惕。",
+   "ja": "いっそう警戒が必要です。",
+   "ko": "더 경계해야 해요."
+  },
+  {
+   "i": 64,
+   "en": "Fourth, price falls but volume shrinks.",
+   "zh": "第四，价格下跌，但成交量缩小。",
+   "ja": "4つ目は、価格は下がるのに出来高が減る場合です。",
+   "ko": "넷째, 가격은 내리지만 거래량은 줄어요."
+  },
+  {
+   "i": 65,
+   "en": "So selling pressure is starting to ease.",
+   "zh": "这意味着卖压开始减弱。",
+   "ja": "つまり、売り圧力が和らぎ始めています。",
+   "ko": "즉, 매도 압력이 누그러지기 시작한 거예요."
+  },
+  {
+   "i": 66,
+   "en": "But don't immediately assume price",
+   "zh": "但不要马上认定价格一定会",
+   "ja": "ただし、価格が必ず反転上昇すると",
+   "ko": "하지만 가격이 꼭 상승 반전할 거라고"
+  },
+  {
+   "i": 67,
+   "en": "will surely turn up. Sellers easing off",
+   "zh": "反转上涨。卖方开始减少，",
+   "ja": "すぐに決めつけないでください。売り手が減り始めても、",
+   "ko": "바로 단정하지 마세요. 매도자가 줄기 시작했다고"
+  },
+  {
+   "i": 68,
+   "en": "doesn't necessarily mean buyers came in. So,",
+   "zh": "不一定代表买方已经进场。那么，",
+   "ja": "買い手が入ってきたとは限りません。さて、",
+   "ko": "꼭 매수자가 들어왔다는 뜻은 아니에요. 자,"
+  },
+  {
+   "i": 69,
+   "en": "now that you know the basic combinations,",
+   "zh": "了解了基本组合之后，",
+   "ja": "基本の組み合わせがわかったところで、",
+   "ko": "기본 조합을 알았으니"
+  },
+  {
+   "i": 70,
+   "en": "let's use volume to confirm",
+   "zh": "现在我们用成交量来确认",
+   "ja": "今度は出来高を使って、ブレイクアウトと",
+   "ko": "이제 거래량을 이용해"
+  },
+  {
+   "i": 71,
+   "en": "breakouts and breakdowns.",
+   "zh": "突破和跌破。",
+   "ja": "下抜けを確認していきましょう。",
+   "ko": "돌파와 하향 이탈을 확인해 볼게요."
+  },
+  {
+   "i": 72,
+   "en": "Let's go back to that breakout.",
+   "zh": "我们回到刚才的突破。",
+   "ja": "先ほどのブレイクアウトに戻りましょう。",
+   "ko": "아까 그 돌파로 돌아가 볼게요."
+  },
+  {
+   "i": 73,
+   "en": "Resistance is an area that has repeatedly",
+   "zh": "阻力位是之前曾多次",
+   "ja": "レジスタンスとは、これまで何度も",
+   "ko": "저항은 이전에 여러 번"
+  },
+  {
+   "i": 74,
+   "en": "held back price rises before.",
+   "zh": "压制上涨的区域。",
+   "ja": "上昇を抑えてきた価格帯のことです。",
+   "ko": "상승을 막아 온 구간이에요."
+  },
+  {
+   "i": 75,
+   "en": "For price to break through resistance,",
+   "zh": "价格要突破阻力位，",
+   "ja": "価格がレジスタンスを抜けるには、",
+   "ko": "가격이 저항을 뚫으려면"
+  },
+  {
+   "i": 76,
+   "en": "buying interest has to be strong enough",
+   "zh": "买盘就必须足够强，",
+   "ja": "買い意欲が十分に強く、",
+   "ko": "매수세가 충분히 강해서"
+  },
+  {
+   "i": 77,
+   "en": "to absorb the shares sold in that area.",
+   "zh": "才能消化在那个区域卖出的股票。",
+   "ja": "そこで売られる株を吸収できる必要があります。",
+   "ko": "그 구간에서 나오는 매도 물량을 소화해야 해요."
+  },
+  {
+   "i": 78,
+   "en": "If the breakout happens",
+   "zh": "如果突破时",
+   "ja": "ブレイクアウトが",
+   "ko": "돌파가 일어날 때"
+  },
+  {
+   "i": 79,
+   "en": "on volume much higher than usual,",
+   "zh": "成交量远高于平时，",
+   "ja": "普段よりはるかに多い出来高で起きれば、",
+   "ko": "거래량이 평소보다 훨씬 많다면"
+  },
+  {
+   "i": 80,
+   "en": "the move looks more convincing.",
+   "zh": "这波走势就显得更有说服力。",
+   "ja": "その値動きはより説得力があるように見えます。",
+   "ko": "그 움직임은 더 믿을 만해 보여요."
+  },
+  {
+   "i": 81,
+   "en": "Conversely, if a candle closes above",
+   "zh": "反过来，如果K线已经收在阻力位上方，",
+   "ja": "反対に、ローソク足がレジスタンスの上で",
+   "ko": "반대로 캔들이 저항 위에서 마감했는데"
+  },
+  {
+   "i": 82,
+   "en": "resistance but volume is just ordinary,",
+   "zh": "但成交量平平，",
+   "ja": "引けたものの出来高は普段どおりという場合、",
+   "ko": "거래량이 평범하다면,"
+  },
+  {
+   "i": 83,
+   "en": "the breakout hasn't necessarily failed.",
+   "zh": "突破也不一定就失败了。",
+   "ja": "ブレイクアウトが失敗したとは限りません。",
+   "ko": "돌파가 꼭 실패한 건 아니에요."
+  },
+  {
+   "i": 84,
+   "en": "It's just that the confirmation is weaker.",
+   "zh": "只不过确认的力度更弱。",
+   "ja": "ただ、確認（コンファメーション）としてはより弱くなります。",
+   "ko": "다만 확인이 더 약할 뿐이에요."
+  },
+  {
+   "i": 85,
+   "en": "You can wait for the next candle,",
+   "zh": "你可以等下一根K线、",
+   "ja": "判断する前に、次のローソク足や",
+   "ko": "결정하기 전에 다음 캔들이나"
+  },
+  {
+   "i": 86,
+   "en": "a retest, or extra signals before deciding.",
+   "zh": "回踩或额外的信号，再做决定。",
+   "ja": "リテスト、追加のシグナルを待つこともできます。",
+   "ko": "리테스트, 추가 신호를 기다려도 돼요."
+  },
+  {
+   "i": 87,
+   "en": "The same logic applies to breakdowns.",
+   "zh": "同样的逻辑也适用于跌破。",
+   "ja": "同じ考え方は下抜けにも当てはまります。",
+   "ko": "같은 논리가 하향 이탈에도 적용돼요."
+  },
+  {
+   "i": 88,
+   "en": "When price breaks support on heavy volume,",
+   "zh": "当价格以大成交量跌破支撑位时，",
+   "ja": "価格が大きな出来高を伴ってサポートを下抜けると、",
+   "ko": "가격이 많은 거래량과 함께 지지를 하향 이탈하면"
+  },
+  {
+   "i": 89,
+   "en": "selling pressure",
+   "zh": "卖压",
+   "ja": "売り圧力は",
+   "ko": "매도 압력이"
+  },
+  {
+   "i": 90,
+   "en": "looks more serious.",
+   "zh": "看起来更严重。",
+   "ja": "より深刻に見えます。",
+   "ko": "더 심각해 보여요."
+  },
+  {
+   "i": 91,
+   "en": "But if support breaks on thin volume,",
+   "zh": "但如果是在成交量清淡时跌破支撑位，",
+   "ja": "でも、少ない出来高でサポートを下抜けたなら、",
+   "ko": "하지만 적은 거래량으로 지지를 하향 이탈했다면"
+  },
+  {
+   "i": 92,
+   "en": "stay alert",
+   "zh": "仍要保持警惕，",
+   "ja": "警戒は続けつつも、",
+   "ko": "경계는 유지하되"
+  },
+  {
+   "i": 93,
+   "en": "without immediately concluding the decline",
+   "zh": "但不要马上断定下跌",
+   "ja": "下落が必ず続くと",
+   "ko": "하락이 반드시 이어질 거라고"
+  },
+  {
+   "i": 94,
+   "en": "will surely continue.",
+   "zh": "一定会继续。",
+   "ja": "すぐに決めつけないでください。",
+   "ko": "바로 단정하지는 마세요."
+  },
+  {
+   "i": 95,
+   "en": "Now let's",
+   "zh": "现在我们",
+   "ja": "では、",
+   "ko": "이제"
+  },
+  {
+   "i": 96,
+   "en": "try that logic",
+   "zh": "试着把刚才的逻辑",
+   "ja": "今の考え方を",
+   "ko": "방금 그 논리를"
+  },
+  {
+   "i": 97,
+   "en": "on a real chart.",
+   "zh": "用在真实的图表上。",
+   "ja": "実際のチャートで試してみましょう。",
+   "ko": "실제 차트에 적용해 볼게요."
+  },
+  {
+   "i": 98,
+   "en": "The app flags",
+   "zh": "App标记了",
+   "ja": "アプリがマークしたのは",
+   "ko": "앱이 표시한 종목은"
+  },
+  {
+   "i": 99,
+   "en": "BRPT — its price just broke to its lowest",
+   "zh": "BRPT——价格刚刚跌破",
+   "ja": "BRPTです。価格がちょうど",
+   "ko": "BRPT — 가격이 방금 하향 이탈해"
+  },
+  {
+   "i": 100,
+   "en": "level in a month.",
+   "zh": "近一个月的最低水平。",
+   "ja": "直近1か月の最安値まで下抜けたところです。",
+   "ko": "최근 한 달 중 최저 수준에 닿았어요."
+  },
+  {
+   "i": 101,
+   "en": "Looks like selling pressure.",
+   "zh": "看起来像是卖压。",
+   "ja": "売り圧力のように見えます。",
+   "ko": "매도 압력처럼 보여요."
+  },
+  {
+   "i": 102,
+   "en": "But look at the last two days.",
+   "zh": "但看看最近两天。",
+   "ja": "でも、直近2日間を見てください。",
+   "ko": "하지만 최근 이틀을 보세요."
+  },
+  {
+   "i": 103,
+   "en": "On the breakdown,",
+   "zh": "跌破的那天，",
+   "ja": "下抜けの日、",
+   "ko": "하향 이탈 때"
+  },
+  {
+   "i": 104,
+   "en": "volume was fairly large,",
+   "zh": "成交量相当大，",
+   "ja": "出来高はそれなりに多かったものの、",
+   "ko": "거래량이 꽤 많았지만,"
+  },
+  {
+   "i": 105,
+   "en": "but still lower than the earlier busy days.",
+   "zh": "但仍不及之前那些交投活跃的日子。",
+   "ja": "それ以前の活発な日々にはまだ及びませんでした。",
+   "ko": "이전의 활발했던 날들보다는 여전히 적었어요."
+  },
+  {
+   "i": 106,
+   "en": "The next day,",
+   "zh": "第二天，",
+   "ja": "翌日、",
+   "ko": "다음 날"
+  },
+  {
+   "i": 107,
+   "en": "price rebounded instead, on volume",
+   "zh": "价格反而反弹，而且成交量",
+   "ja": "価格はむしろ反発し、その出来高は",
+   "ko": "가격은 오히려 반등했고, 거래량은"
+  },
+  {
+   "i": 108,
+   "en": "higher than on the breakdown day.",
+   "zh": "比跌破那天还大。",
+   "ja": "下抜けの日よりも多くなっていました。",
+   "ko": "하향 이탈한 날보다 더 많았어요."
+  },
+  {
+   "i": 109,
+   "en": "What do you think? Will price keep falling,",
+   "zh": "你觉得，价格会继续下跌，",
+   "ja": "価格はこのまま下がり続けると思いますか？",
+   "ko": "어떻게 생각하세요? 가격이 계속 내려갈까요,"
+  },
+  {
+   "i": 110,
+   "en": "or is the breakdown just a trap? Three…",
+   "zh": "还是这次跌破只是个陷阱？三……",
+   "ja": "それとも、下抜けはただの罠でしょうか？3…",
+   "ko": "아니면 하향 이탈은 그냥 함정일까요? 셋…"
+  },
+  {
+   "i": 111,
+   "en": "two… one.",
+   "zh": "二……一。",
+   "ja": "2…1。",
+   "ko": "둘… 하나."
+  },
+  {
+   "i": 112,
+   "en": "Turns out, price kept rising to about 1,750.",
+   "zh": "结果，价格继续上涨到1,750左右。",
+   "ja": "結果、価格は1,750前後まで上がり続けました。",
+   "ko": "결국 가격은 1,750 부근까지 계속 올랐어요."
+  },
+  {
+   "i": 113,
+   "en": "The clue was already in those two candles.",
+   "zh": "线索从刚才那两根K线就已经看得出来。",
+   "ja": "手がかりは先ほどの2本のローソク足にもう出ていました。",
+   "ko": "단서는 아까 그 두 캔들에서 이미 보였어요."
+  },
+  {
+   "i": 114,
+   "en": "Volume on the breakdown",
+   "zh": "跌破时的成交量",
+   "ja": "下抜け時の出来高は、",
+   "ko": "하향 이탈 때 거래량은"
+  },
+  {
+   "i": 115,
+   "en": "wasn't very dominant compared to the busy",
+   "zh": "和之前那些交投活跃的日子相比",
+   "ja": "それまでの活発な日々と比べて",
+   "ko": "이전의 활발했던 날들에 비해"
+  },
+  {
+   "i": 116,
+   "en": "days before. Then, when price rebounded,",
+   "zh": "并不算特别突出。然后价格反弹时，",
+   "ja": "それほど圧倒的ではありませんでした。そして反発時には、",
+   "ko": "그다지 압도적이지 않았어요. 그리고 반등할 때"
+  },
+  {
+   "i": 117,
+   "en": "volume was actually higher.",
+   "zh": "成交量反而更大。",
+   "ja": "出来高がむしろ増えていました。",
+   "ko": "거래량은 오히려 더 많았어요."
+  },
+  {
+   "i": 118,
+   "en": "That means the breakdown started losing",
+   "zh": "这意味着，跌破开始失去确认，",
+   "ja": "つまり、下抜けは確認を失い始め、",
+   "ko": "즉, 하향 이탈은 확인을 잃기 시작했고"
+  },
+  {
+   "i": 119,
+   "en": "confirmation, and buyers began to respond.",
+   "zh": "买方也开始做出反应。",
+   "ja": "買い手が反応し始めていたのです。",
+   "ko": "매수자가 반응하기 시작했어요."
+  },
+  {
+   "i": 120,
+   "en": "It's no guarantee price will rise,",
+   "zh": "这并不保证价格一定会涨，",
+   "ja": "価格が必ず上がる保証はありませんが、",
+   "ko": "가격이 꼭 오른다는 보장은 없지만,"
+  },
+  {
+   "i": 121,
+   "en": "but volume",
+   "zh": "但成交量",
+   "ja": "出来高は",
+   "ko": "거래량은"
+  },
+  {
+   "i": 122,
+   "en": "already gave a reason to doubt that breakdown.",
+   "zh": "已经提供了怀疑刚才那次跌破的理由。",
+   "ja": "先ほどの下抜けを疑う理由をすでに示していました。",
+   "ko": "아까 그 하향 이탈을 의심할 이유를 이미 줬어요."
+  },
+  {
+   "i": 123,
+   "en": "Volume isn't only useful for breakouts.",
+   "zh": "成交量不只在突破时有用。",
+   "ja": "出来高が役立つのは、ブレイクアウトだけではありません。",
+   "ko": "거래량은 돌파 때만 유용한 게 아니에요."
+  },
+  {
+   "i": 124,
+   "en": "We can also use it",
+   "zh": "我们也可以用它",
+   "ja": "トレンドの健全性を",
+   "ko": "추세가 건강한지"
+  },
+  {
+   "i": 125,
+   "en": "to read the health of a trend.",
+   "zh": "来解读趋势的健康状况。",
+   "ja": "読み取るのにも使えます。",
+   "ko": "읽는 데도 쓸 수 있어요."
+  },
+  {
+   "i": 126,
+   "en": "In a healthy uptrend,",
+   "zh": "在健康的上升趋势中，",
+   "ja": "健全な上昇トレンドでは、",
+   "ko": "건강한 상승 추세에서는"
+  },
+  {
+   "i": 127,
+   "en": "upward price pushes",
+   "zh": "价格向上推进时",
+   "ja": "価格を押し上げる動きは",
+   "ko": "가격을 밀어 올리는 움직임이"
+  },
+  {
+   "i": 128,
+   "en": "usually come with stronger volume,",
+   "zh": "通常伴随着更大的成交量，",
+   "ja": "通常、より多くの出来高を伴い、",
+   "ko": "보통 더 많은 거래량을 동반하고,"
+  },
+  {
+   "i": 129,
+   "en": "while its pullbacks or temporary corrections",
+   "zh": "而回调或暂时的调整，",
+   "ja": "一方で、押し目や一時的な調整は",
+   "ko": "눌림목이나 일시적인 조정은"
+  },
+  {
+   "i": 130,
+   "en": "happen on lighter volume.",
+   "zh": "成交量则较小。",
+   "ja": "より少ない出来高で起こります。",
+   "ko": "더 적은 거래량으로 나타나요."
+  },
+  {
+   "i": 131,
+   "en": "But the size",
+   "zh": "但成交量是大是小，",
+   "ja": "ただし、出来高の多い少ないは",
+   "ko": "하지만 거래량의 많고 적음은"
+  },
+  {
+   "i": 132,
+   "en": "of volume still has to be read",
+   "zh": "仍然要放在",
+   "ja": "やはり価格の",
+   "ko": "어디까지나 가격의"
+  },
+  {
+   "i": 133,
+   "en": "in the context of price.",
+   "zh": "价格的背景下来解读。",
+   "ja": "文脈に沿って読む必要があります。",
+   "ko": "맥락에 맞춰 읽어야 해요."
+  },
+  {
+   "i": 134,
+   "en": "For example, a volume spike,",
+   "zh": "比如成交量激增，",
+   "ja": "例えば、出来高の急増、",
+   "ko": "예를 들어 거래량 급증,"
+  },
+  {
+   "i": 135,
+   "en": "that is, a surge in volume",
+   "zh": "也就是成交量出现飙升，",
+   "ja": "つまり出来高が",
+   "ko": "즉 거래량이"
+  },
+  {
+   "i": 136,
+   "en": "that's far higher",
+   "zh": "远远高于",
+   "ja": "普段よりはるかに多く",
+   "ko": "평소보다 훨씬 높게"
+  },
+  {
+   "i": 137,
+   "en": "than usual.",
+   "zh": "平时的水平。",
+   "ja": "跳ね上がることです。",
+   "ko": "치솟는 경우예요."
+  },
+  {
+   "i": 138,
+   "en": "Near a breakout,",
+   "zh": "在突破点附近，",
+   "ja": "ブレイクアウト付近では、",
+   "ko": "돌파 부근에서는"
+  },
+  {
+   "i": 139,
+   "en": "a volume spike can be confirmation.",
+   "zh": "成交量激增可以作为确认。",
+   "ja": "出来高の急増が確認になり得ます。",
+   "ko": "거래량 급증이 확인 신호가 될 수 있어요."
+  },
+  {
+   "i": 140,
+   "en": "After a long rally,",
+   "zh": "在一轮持续上涨之后，",
+   "ja": "長い上昇の後なら、",
+   "ko": "긴 상승 랠리 뒤에는"
+  },
+  {
+   "i": 141,
+   "en": "it can indicate profit taking.",
+   "zh": "它可能意味着获利了结。",
+   "ja": "利益確定売りを示すこともあります。",
+   "ko": "차익 실현을 뜻할 수 있어요."
+  },
+  {
+   "i": 142,
+   "en": "When price falls sharply,",
+   "zh": "当价格大幅下跌时，",
+   "ja": "価格が急落しているときは、",
+   "ko": "가격이 급락할 때는"
+  },
+  {
+   "i": 143,
+   "en": "it can indicate panic selling.",
+   "zh": "它可能意味着恐慌性抛售。",
+   "ja": "パニック売りを示すこともあります。",
+   "ko": "패닉 매도를 뜻할 수 있어요."
+  },
+  {
+   "i": 144,
+   "en": "Before we wrap up,",
+   "zh": "在结束之前，",
+   "ja": "終わる前に、",
+   "ko": "마치기 전에"
+  },
+  {
+   "i": 145,
+   "en": "there are a few things often misread",
+   "zh": "有几个在使用成交量时",
+   "ja": "出来高を使うときに",
+   "ko": "거래량을 볼 때"
+  },
+  {
+   "i": 146,
+   "en": "when using volume. First,",
+   "zh": "经常被误读的地方。第一，",
+   "ja": "よく読み間違えるポイントがあります。まず、",
+   "ko": "자주 잘못 읽는 부분이 몇 가지 있어요. 첫째,"
+  },
+  {
+   "i": 147,
+   "en": "the color of the volume bars.",
+   "zh": "成交量柱的颜色。",
+   "ja": "出来高バーの色です。",
+   "ko": "거래량 막대의 색깔이에요."
+  },
+  {
+   "i": 148,
+   "en": "Green or red volume",
+   "zh": "成交量显示绿色或红色，",
+   "ja": "出来高の緑や赤は、",
+   "ko": "거래량의 초록색이나 빨간색은"
+  },
+  {
+   "i": 149,
+   "en": "usually just follows the candle color.",
+   "zh": "通常只是跟随K线的颜色。",
+   "ja": "たいていローソク足の色に合わせているだけです。",
+   "ko": "보통 캔들 색깔을 따라갈 뿐이에요."
+  },
+  {
+   "i": 150,
+   "en": "It doesn't mean green volume is only buying,",
+   "zh": "这并不代表绿色成交量只有买入，",
+   "ja": "緑の出来高が買いだけ、",
+   "ko": "초록색 거래량이 매수만이라거나"
+  },
+  {
+   "i": 151,
+   "en": "or red volume is only selling.",
+   "zh": "或红色成交量只有卖出。",
+   "ja": "赤の出来高が売りだけという意味ではありません。",
+   "ko": "빨간색 거래량이 매도만이라는 뜻은 아니에요."
+  },
+  {
+   "i": 152,
+   "en": "After all, every trade still has",
+   "zh": "毕竟，每一笔交易始终都有",
+   "ja": "そもそも、どの取引にも必ず",
+   "ko": "사실 모든 거래에는 언제나"
+  },
+  {
+   "i": 153,
+   "en": "a buyer and a seller.",
+   "zh": "买方和卖方。",
+   "ja": "買い手と売り手がいます。",
+   "ko": "매수자와 매도자가 있어요."
+  },
+  {
+   "i": 154,
+   "en": "Lastly, understand its limits too.",
+   "zh": "最后，也要了解它的局限。",
+   "ja": "最後に、その限界も理解しておきましょう。",
+   "ko": "마지막으로, 그 한계도 알아 두세요."
+  },
+  {
+   "i": 155,
+   "en": "Volume helps confirm what's already happened,",
+   "zh": "成交量能帮助确认已经发生的事，",
+   "ja": "出来高はすでに起きたことの確認に役立ちますが、",
+   "ko": "거래량은 이미 일어난 일의 확인을 돕지,"
+  },
+  {
+   "i": 156,
+   "en": "not tell you for sure what happens next.",
+   "zh": "而不是断定接下来会发生什么。",
+   "ja": "次に何が起きるかを断定するものではありません。",
+   "ko": "다음에 일어날 일을 확실히 알려 주진 않아요."
+  },
+  {
+   "i": 157,
+   "en": "So keep reading volume alongside the trend,",
+   "zh": "所以，成交量还是要结合趋势、",
+   "ja": "だからこそ、出来高はトレンド、",
+   "ko": "그래서 거래량은 추세,"
+  },
+  {
+   "i": 158,
+   "en": "support and resistance,",
+   "zh": "支撑和阻力、",
+   "ja": "サポートとレジスタンス、",
+   "ko": "지지와 저항,"
+  },
+  {
+   "i": 159,
+   "en": "candlestick patterns,",
+   "zh": "K线形态，",
+   "ja": "ローソク足のパターン、",
+   "ko": "캔들 패턴,"
+  },
+  {
+   "i": 160,
+   "en": "and overall market conditions.",
+   "zh": "以及整体市场状况一起看。",
+   "ja": "そして相場全体の状況と合わせて読みましょう。",
+   "ko": "그리고 시장 전반의 상황과 함께 읽으세요."
+  },
+  {
+   "i": 161,
+   "en": "Remember that price shows the direction,",
+   "zh": "记住，价格显示方向，",
+   "ja": "覚えておいてください。価格は方向を示し、",
+   "ko": "기억하세요. 가격은 방향을 보여 주고,"
+  },
+  {
+   "i": 162,
+   "en": "while volume shows how active",
+   "zh": "而成交量显示",
+   "ja": "出来高はその裏の取引が",
+   "ko": "거래량은 그 뒤의 거래가"
+  },
+  {
+   "i": 163,
+   "en": "the trading behind it is.",
+   "zh": "背后的交易有多活跃。",
+   "ja": "どれだけ活発かを示します。",
+   "ko": "얼마나 활발한지를 보여 줘요."
+  },
+  {
+   "i": 164,
+   "en": "Volume isn't a tool to guess the next candle,",
+   "zh": "成交量不是用来猜下一根K线的工具，",
+   "ja": "出来高は次のローソク足を当てる道具ではありません。",
+   "ko": "거래량은 다음 캔들을 맞히는 도구가 아니에요."
+  },
+  {
+   "i": 165,
+   "en": "but it helps",
+   "zh": "但它能帮助你",
+   "ja": "ですが、ある値動きが",
+   "ko": "하지만 어떤 움직임이"
+  },
+  {
+   "i": 166,
+   "en": "judge whether a move is convincing enough",
+   "zh": "判断一波走势是否足够有说服力，",
+   "ja": "十分に説得力があるのか、",
+   "ko": "충분히 믿을 만한지,"
+  },
+  {
+   "i": 167,
+   "en": "or actually calls for caution.",
+   "zh": "还是反而需要警惕。",
+   "ja": "むしろ警戒すべきなのかを判断する助けになります。",
+   "ko": "오히려 경계해야 하는지 판단하게 도와줘요."
+  },
+  {
+   "i": 168,
+   "en": "In the next video, we'll cover",
+   "zh": "下一个视频，我们会讲",
+   "ja": "次の動画では、",
+   "ko": "다음 영상에서는"
+  },
+  {
+   "i": 169,
+   "en": "multi-timeframe analysis.",
+   "zh": "多周期分析。",
+   "ja": "マルチタイムフレーム分析を解説します。",
+   "ko": "멀티 타임프레임 분석을 다룰 거예요."
+  },
+  {
+   "i": 170,
+   "en": "How to look at one stock",
+   "zh": "如何观察一只股票",
+   "ja": "1つの銘柄を",
+   "ko": "한 종목을"
+  },
+  {
+   "i": 171,
+   "en": "across several timeframes,",
+   "zh": "在多个时间周期上的走势，",
+   "ja": "複数の時間足から見る方法と、",
+   "ko": "여러 타임프레임으로 보는 법과"
+  },
+  {
+   "i": 172,
+   "en": "and combine signals that support each other.",
+   "zh": "并把相互印证的信号结合起来。",
+   "ja": "互いに裏付け合うシグナルを組み合わせる方法です。",
+   "ko": "서로 뒷받침하는 신호를 결합하는 법이에요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 31,
+   "note": "Single-stock sense of 'saham' rendered JA 銘柄 / KO 종목 (here and rows 1, 32, 170) for naturalness; 'shares' stays 株 / 주식 as in the glossary."
+  },
+  {
+   "i": 71,
+   "note": "'breakdown' (and 'menembus/ditembus support'): EN breakdown / ZH 跌破 / JA 下抜け / KO 하향 이탈 throughout (rows 71-122), per the 22 Oct consistency pass (was ブレイクダウン / 하향 돌파)."
+  },
+  {
+   "i": 86,
+   "note": "'retest' not in glossary; used ZH 回踩 / JA リテスト / KO 리테스트."
+  },
+  {
+   "i": 134,
+   "note": "'volume spike' not in glossary; used ZH 成交量激增 / JA 出来高の急増 / KO 거래량 급증. Also: profit taking = 获利了结 / 利益確定売り / 차익 실현; panic selling = 恐慌性抛售 / パニック売り / 패닉 매도; pullback = 回调 / 押し目 / 눌림목."
+  }
+ ]
+}

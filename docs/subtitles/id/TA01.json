@@ -1,0 +1,1084 @@
+{
+ "key": "TA01",
+ "name": "Video 01 - Memahami Pergerakan Pasar dari Grafik",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.1,
+   "end": 5.767,
+   "text": "Pertama kali melihat chart saham,",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 5.933,
+   "end": 7.0,
+   "text": "banyak orang langsung berpikir,",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 7.533,
+   "end": 8.733,
+   "text": "“Ini pasti cuma bisa dibaca",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 8.967,
+   "end": 10.433,
+   "text": "profesional. Bukan buat saya.”",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 10.933,
+   "end": 11.833,
+   "text": "Garis di mana-mana.",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 12.033,
+   "end": 12.9,
+   "text": "Candlestick.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 13.067,
+   "end": 14.333,
+   "text": "Indikator bertumpuk",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 14.5,
+   "end": 17.067,
+   "text": "sampai chart-nya sendiri hampir tidak terlihat.",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 17.5,
+   "end": 19.633,
+   "text": "Rasanya rumit bahkan sebelum kamu mulai.",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 20.4,
+   "end": 21.2,
+   "text": "Tapi sebenarnya,",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 21.5,
+   "end": 24.267,
+   "text": "kita nggak perlu memahami semuanya sekaligus.",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 24.667,
+   "end": 25.7,
+   "text": "Kita mulai dari dasar,",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 25.833,
+   "end": 28.267,
+   "text": "lalu pelan-pelan melihat bagaimana semuanya terhubung.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 29.533,
+   "end": 32.9,
+   "text": "Tanpa disadari, kamu sudah membaca chart sepanjang hidupmu.",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 33.367,
+   "end": 34.6,
+   "text": "Coba lihat harga cabai:",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 35.067,
+   "end": 36.5,
+   "text": "40.000 per kilogram,",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 36.9,
+   "end": 38.0,
+   "text": "turun ke 20.000,",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 38.3,
+   "end": 39.1,
+   "text": "lalu naik lagi.",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 39.467,
+   "end": 41.3,
+   "text": "Susun angka itu berdasarkan waktu",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 41.6,
+   "end": 43.0,
+   "text": "dan hubungkan titiknya.",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 43.467,
+   "end": 44.8,
+   "text": "Jadilah sebuah chart.",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 45.167,
+   "end": 46.867,
+   "text": "Chart saham sama saja—",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 47.933,
+   "end": 49.733,
+   "text": "hanya lebih cepat dan melibatkan lebih banyak orang.",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 50.633,
+   "end": 53.067,
+   "text": "Kamu sudah tahu harga saham bisa naik dan turun.",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 53.5,
+   "end": 56.033,
+   "text": "Tapi kenapa geraknya membentuk pola tertentu?",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 56.7,
+   "end": 59.167,
+   "text": "Dan bagaimana cara membaca pesan di baliknya?",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 59.567,
+   "end": 62.133,
+   "text": "Chart bukan sekadar catatan masa lalu.",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 62.833,
+   "end": 65.067,
+   "text": "Ia merekam setiap keputusan pembeli dan penjual—",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 65.333,
+   "end": 66.467,
+   "text": "kapan mereka berani masuk,",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 66.867,
+   "end": 67.733,
+   "text": "kapan mereka ragu,",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 67.867,
+   "end": 69.433,
+   "text": "dan kapan mereka akhirnya keluar.",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 70.033,
+   "end": 72.433,
+   "text": "Chart juga punya beberapa bentuk.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 72.9,
+   "end": 75.267,
+   "text": "Line chart menghubungkan harga penutupan.",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 75.5,
+   "end": 77.567,
+   "text": "Tampilannya bersih dan mudah dipahami,",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 77.967,
+   "end": 78.767,
+   "text": "tetapi banyak cerita",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 79.3,
+   "end": 80.1,
+   "text": "tidak terlihat.",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 80.467,
+   "end": 82.433,
+   "text": "Candlestick memberi gambaran lebih lengkap:",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 82.767,
+   "end": 83.667,
+   "text": "harga saat dibuka,",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 83.867,
+   "end": 84.667,
+   "text": "titik tertinggi,",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 84.867,
+   "end": 85.767,
+   "text": "titik terendah,",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 85.933,
+   "end": 87.267,
+   "text": "dan harga penutupan.",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 87.9,
+   "end": 89.767,
+   "text": "Empat informasi dalam satu candle.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 90.033,
+   "end": 90.833,
+   "text": "Karena itulah",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 91.033,
+   "end": 93.433,
+   "text": "candlestick menjadi pilihan utama trader",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 93.667,
+   "end": 96.333,
+   "text": "yang ingin membaca pergerakan harga dengan lebih detail.",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 97.067,
+   "end": 97.867,
+   "text": "Ya, jadi",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 98.267,
+   "end": 101.767,
+   "text": "kita sudah punya dasar untuk membaca chart.",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 102.0,
+   "end": 103.033,
+   "text": "Sekarang, kita mulai melihat",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 103.167,
+   "end": 104.833,
+   "text": "bagaimana waktu dan pergerakan harga",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 105.1,
+   "end": 106.467,
+   "text": "mengubah apa yang kita lihat.",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 107.0,
+   "end": 108.833,
+   "text": "Setiap chart punya dua sumbu.",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 109.033,
+   "end": 111.533,
+   "text": "Sumbu mendatar menunjukkan waktu:",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 111.933,
+   "end": 113.567,
+   "text": "kapan pergerakan itu terjadi?",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 114.033,
+   "end": 116.567,
+   "text": "Sumbu tegak menunjukkan harga: di level berapa?",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 117.3,
+   "end": 117.533,
+   "text": "Jadi,",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 117.533,
+   "end": 120.2,
+   "text": "setiap titik pada chart selalu menjawab dua pertanyaan",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 120.367,
+   "end": 121.633,
+   "text": "sekaligus—harganya berapa,",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 122.167,
+   "end": 123.933,
+   "text": "dan kapan harga itu terbentuk.",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 124.4,
+   "end": 125.9,
+   "text": "Sekarang lihat saham yang sama",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 126.1,
+   "end": 127.567,
+   "text": "dalam timeframe berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 127.967,
+   "end": 130.567,
+   "text": "Satu candle 5 menit merangkum 5 menit transaksi.",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 130.9,
+   "end": 133.3,
+   "text": "Candle harian merangkum satu hari bursa.",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 133.533,
+   "end": 135.433,
+   "text": "Candle mingguan merangkum satu minggu",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 135.7,
+   "end": 136.5,
+   "text": "perdagangan.",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 136.833,
+   "end": 138.933,
+   "text": "Sahamnya sama dan sejarahnya juga sama.",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 139.167,
+   "end": 141.733,
+   "text": "Namun gambar yang muncul bisa terasa sangat berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 142.2,
+   "end": 144.2,
+   "text": "Semuanya bergantung pada seberapa dekat",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 144.367,
+   "end": 145.3,
+   "text": "atau seberapa jauh",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 145.833,
+   "end": 147.6,
+   "text": "kamu memilih untuk melihatnya.",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 148.233,
+   "end": 149.0,
+   "text": "Sampai di sini,",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 149.0,
+   "end": 149.8,
+   "text": "kita sudah melihat",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 149.8,
+   "end": 151.833,
+   "text": "bahwa satu saham bisa terlihat berbeda",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 152.0,
+   "end": 154.0,
+   "text": "hanya karena cara kita melihat waktunya.",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 154.767,
+   "end": 157.4,
+   "text": "Sekarang, kita masuk lebih jauh ke perilaku pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 157.8,
+   "end": 159.067,
+   "text": "Semakin pendek timeframe,",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 159.233,
+   "end": 161.033,
+   "text": "semakin banyak noise yang terlihat—",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 161.3,
+   "end": 163.467,
+   "text": "setiap reaksi kecil, keraguan",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 163.567,
+   "end": 165.267,
+   "text": "sesaat, dan kepanikan pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 165.833,
+   "end": 167.0,
+   "text": "Semakin panjang timeframe,",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 167.067,
+   "end": 168.867,
+   "text": "arah besarnya biasanya semakin jelas.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 169.6,
+   "end": 172.433,
+   "text": "Chart intraday membantu melihat kapan harus bertindak.",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 172.667,
+   "end": 175.667,
+   "text": "Sementara chart mingguan dan bulanan membantu memahami",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 176.067,
+   "end": 178.2,
+   "text": "arah besar tempat keputusan itu diambil.",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 178.833,
+   "end": 179.833,
+   "text": "Keduanya berguna,",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 180.033,
+   "end": 180.833,
+   "text": "tetapi menjawab",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 181.067,
+   "end": 182.3,
+   "text": "pertanyaan yang berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 182.867,
+   "end": 183.8,
+   "text": "Nah, di sinilah",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 184.3,
+   "end": 185.4,
+   "text": "chart menjadi penting:",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 185.867,
+   "end": 187.2,
+   "text": "pasar punya ingatan.",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 187.8,
+   "end": 190.033,
+   "text": "Kalau suatu area harga pernah membuat pembeli masuk,",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 190.5,
+   "end": 192.633,
+   "text": "area itu sering kembali menarik perhatian.",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 192.9,
+   "end": 194.767,
+   "text": "Ada trader yang pernah membeli di sana,",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 195.267,
+   "end": 197.067,
+   "text": "dan ada juga yang menunggu kesempatan",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 197.167,
+   "end": 201.2,
+   "text": "kedua. Ingatan kolektif itu meninggalkan jejak pada chart.",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 201.667,
+   "end": 202.433,
+   "text": "Karena manusia",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 202.433,
+   "end": 203.233,
+   "text": "mengingat harga,",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 203.633,
+   "end": 204.767,
+   "text": "perilaku yang mirip",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 205.033,
+   "end": 206.267,
+   "text": "kadang muncul kembali.",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 206.967,
+   "end": 207.933,
+   "text": "Sekarang kita sudah melihat",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 208.133,
+   "end": 210.367,
+   "text": "bagaimana chart merekam perilaku pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 210.867,
+   "end": 212.233,
+   "text": "Tapi satu hal masih perlu diingat:",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 212.6,
+   "end": 215.433,
+   "text": "pola yang terlihat jelas belum tentu memberi kepastian",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 215.6,
+   "end": 217.367,
+   "text": "tentang apa yang terjadi berikutnya.",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 217.767,
+   "end": 218.767,
+   "text": "Jadi, anggap",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 218.967,
+   "end": 222.3,
+   "text": "technical analysis sebagai alat membaca probabilitas,",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 222.933,
+   "end": 224.767,
+   "text": "bukan alat meramal masa depan.",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 225.267,
+   "end": 227.0,
+   "text": "Chart menunjukkan apa yang sudah terjadi,",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 227.3,
+   "end": 228.467,
+   "text": "pola yang sering berulang,",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 228.767,
+   "end": 231.2,
+   "text": "dan posisi pembeli serta penjual saat ini.",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 231.733,
+   "end": 234.467,
+   "text": "Chart tidak menjamin apa yang terjadi berikutnya—",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 234.533,
+   "end": 235.933,
+   "text": "tidak ada alat yang bisa.",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 236.367,
+   "end": 238.4,
+   "text": "Namun chart memberimu keunggulan: mengambil",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 238.533,
+   "end": 239.667,
+   "text": "keputusan dengan informasi,",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 240.2,
+   "end": 242.133,
+   "text": "bukan sekadar harapan atau tebakan.",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 242.9,
+   "end": 245.133,
+   "text": "Setiap candle terbentuk karena manusia",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 245.367,
+   "end": 246.833,
+   "text": "mengambil keputusan nyata.",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 247.633,
+   "end": 248.433,
+   "text": "Ada rasa takut,",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 248.567,
+   "end": 250.033,
+   "text": "keyakinan, kesabaran,",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 250.3,
+   "end": 252.0,
+   "text": "euforia, dan kepanikan—",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 252.167,
+   "end": 253.533,
+   "text": "semuanya terekam di sana.",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 253.833,
+   "end": 255.833,
+   "text": "Chart bukanlah saham itu sendiri.",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 256.5,
+   "end": 257.833,
+   "text": "Chart adalah ingatan pasar",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 258.3,
+   "end": 260.8,
+   "text": "tentang semua orang yang pernah memperdagangkannya.",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 261.167,
+   "end": 263.9,
+   "text": "Belajarlah membaca ingatan itu sebelum ikut mengambil",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 264.1,
+   "end": 264.9,
+   "text": "keputusan.",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 266.9,
+   "end": 268.833,
+   "text": "Di video selanjutnya, kita akan mulai",
+   "part": "outro"
+  },
+  {
+   "i": 127,
+   "start": 268.867,
+   "end": 271.2,
+   "text": "membedah candlestick dari paling dasar.",
+   "part": "outro"
+  },
+  {
+   "i": 128,
+   "start": 271.667,
+   "end": 274.6,
+   "text": "Satu candle sebenarnya sedang menceritakan apa?",
+   "part": "outro"
+  },
+  {
+   "i": 129,
+   "start": 275.867,
+   "end": 280.917,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 130,
+   "start": 281.617,
+   "end": 282.717,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 131,
+   "start": 283.067,
+   "end": 284.067,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 132,
+   "start": 284.417,
+   "end": 285.617,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 133,
+   "start": 285.867,
+   "end": 288.567,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 134,
+   "start": 288.917,
+   "end": 291.817,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 135,
+   "start": 292.367,
+   "end": 295.517,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 136,
+   "start": 295.517,
+   "end": 299.117,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 137,
+   "start": 299.567,
+   "end": 301.467,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 138,
+   "start": 301.817,
+   "end": 305.267,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 139,
+   "start": 306.617,
+   "end": 310.117,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 140,
+   "start": 310.117,
+   "end": 311.967,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 141,
+   "start": 313.317,
+   "end": 317.267,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 142,
+   "start": 317.267,
+   "end": 319.817,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 143,
+   "start": 320.267,
+   "end": 323.267,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 144,
+   "start": 323.267,
+   "end": 326.117,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 145,
+   "start": 327.567,
+   "end": 329.317,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 146,
+   "start": 329.317,
+   "end": 332.517,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 147,
+   "start": 333.817,
+   "end": 336.617,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 148,
+   "start": 336.617,
+   "end": 339.217,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 149,
+   "start": 339.567,
+   "end": 342.167,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 150,
+   "start": 342.317,
+   "end": 345.617,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 151,
+   "start": 346.167,
+   "end": 349.217,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 152,
+   "start": 350.567,
+   "end": 353.417,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 153,
+   "start": 353.967,
+   "end": 357.817,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 154,
+   "start": 357.817,
+   "end": 360.267,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

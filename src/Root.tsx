@@ -21,39 +21,26 @@ import { Composition } from "remotion";
 
 // ── built on src/core ───────────────────────────────────────────────────────
 import { theme } from "./core";
-import {
-  MovingAverageComposition,
-  TOTAL_FRAMES as MA_FRAMES,
-} from "./episodes/019-moving-average/Composition";
-import {
-  VolumeComposition,
-  TOTAL_FRAMES as V20_FRAMES,
-} from "./episodes/020-volume/Composition";
-import {
-  TAMistakesComposition,
-  TOTAL_FRAMES as V22_FRAMES,
-} from "./episodes/022-ta-mistakes/Composition";
+import { MovingAverageFull, TA07_FULL_FRAMES } from "./episodes/019-moving-average/FullVideo";
+import { VolumeFull, TA09_FULL_FRAMES } from "./episodes/020-volume/FullVideo";
+import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/FullVideo";
 import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
 import { TigaJenisUangFull, VI03_FULL_FRAMES } from "./episodes/vi03-tiga-jenis-uang/FullVideo";
 import { InvestasiYangCocokFull, VI04_FULL_FRAMES } from "./episodes/vi04-investasi-yang-cocok/FullVideo";
+import { STICKMAN_WALK_FRAMES, StickmanWalk } from "./episodes/vi04-investasi-yang-cocok/StickmanWalk";
+import { PAPER_SHOT_FRAMES, PaperShot } from "./episodes/proto-paper/PaperShot";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
 import {
   CandlestickComposition,
   TOTAL_FRAMES as CANDLE_FRAMES,
-  INDO_TOTAL_FRAMES as CANDLE_INDO_FRAMES,
 } from "./episodeCandlestick/Composition";
 import { theme as candleTheme } from "./episodeCandlestick/theme";
 import { SUBTITLES as CANDLE_SUBS } from "./episodeCandlestick/subtitles";
-import { SUBTITLES_INDO as CANDLE_SUBS_INDO } from "./episodeCandlestick/subtitlesIndo";
-import {
-  ChartMemoryComposition,
-  TOTAL_FRAMES as CHART_FRAMES,
-} from "./episodeChartMemory/Composition";
-import {
-  MarketStructureComposition,
-  TOTAL_FRAMES as MS_FRAMES,
-} from "./episode20marketstructure/Composition";
+import { CandlestickIndoFull, TA03_FULL_FRAMES } from "./episodeCandlestick/FullVideo";
+import { ChartMemoryFull, TA01_FULL_FRAMES } from "./episodeChartMemory/FullVideo";
+import { MarketStructureFull, TA05_FULL_FRAMES } from "./episode20marketstructure/FullVideo";
+import { VisualLab, LAB_FRAMES } from "./lab/Lab";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -66,29 +53,26 @@ export const RemotionRoot: React.FC = () => {
           a-z A-Z 0-9 and "-" — no spaces, no underscores, not even a full stop.
           The branch name spells it differently for the same reason in reverse:
           git allows "_" and Simon prefers it there. */}
+      {/* Since 20 Oct 2026 the full video: Intro + episode + next-video ending + Outro + BGM (FullVideo.tsx), so a
+          Studio frame here is the episode frame + 120. */}
       <Composition
         id="TA01-MemahamiPergerakanPasarDariGrafik"
-        component={ChartMemoryComposition}
-        durationInFrames={CHART_FRAMES}
+        component={ChartMemoryFull}
+        durationInFrames={TA01_FULL_FRAMES}
         fps={30}
         width={1920}
         height={1080}
       />
       {/* ═══ TA03 — Candlestick Intermediate (Indonesian cut) ═════════════ */}
+      {/* Since 20 Oct 2026 the full video (FullVideo.tsx passes the Indonesian props itself): Studio frame = episode
+          frame + 120. */}
       <Composition
         id="TA03-CandlestickIntermediate"
-        component={CandlestickComposition}
-        durationInFrames={CANDLE_INDO_FRAMES}
+        component={CandlestickIndoFull}
+        durationInFrames={TA03_FULL_FRAMES}
         fps={candleTheme.canvas.fps}
         width={candleTheme.canvas.width}
         height={candleTheme.canvas.height}
-        defaultProps={{
-          subtitles: CANDLE_SUBS_INDO,
-          audioSrc: "vo-indo.mp3",
-          showSubtitles: true,
-          muted: false,
-          timeline: "indo",
-        }}
       />
       {/* ═══ TA03 — Candlestick Intermediate (English cut) ════════════════ */}
       <Composition
@@ -101,10 +85,11 @@ export const RemotionRoot: React.FC = () => {
         defaultProps={{ subtitles: CANDLE_SUBS, audioSrc: "vo.mp3" }}
       />
       {/* ═══ Market Structure ═════════════════════════════════════════════ */}
+      {/* Since 20 Oct 2026 the full video (FullVideo.tsx): Studio frame = episode frame + 120. */}
       <Composition
         id="TA05-MarketStructure"
-        component={MarketStructureComposition}
-        durationInFrames={MS_FRAMES}
+        component={MarketStructureFull}
+        durationInFrames={TA05_FULL_FRAMES}
         fps={30}
         width={1920}
         height={1080}
@@ -113,20 +98,23 @@ export const RemotionRoot: React.FC = () => {
       {/* VIDEO 19 — Moving Averages & Bollinger Bands, migrated onto src/core.
           Still 30fps: the 60fps conversion is a separate pass, so a difference
           that shows up here can only have come from core. */}
+      {/* Since 20 Oct 2026 the full video (FullVideo.tsx): Studio frame = episode frame + 120. */}
       <Composition
         id="TA07-MAdanBB"
-        component={MovingAverageComposition}
-        durationInFrames={MA_FRAMES}
+        component={MovingAverageFull}
+        durationInFrames={TA07_FULL_FRAMES}
         fps={30}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
       {/* VIDEO 20 — Volume. Built on src/core at 60fps; every frame number
-          comes from the corrected SRT via docs/Video20_Volume_Script_SYNCED.md. */}
+          comes from the corrected SRT via docs/Video20_Volume_Script_SYNCED.md.
+          Since 20 Oct 2026 the full video: Intro + episode (+ SC21 over TA09-Outro.mp3) + Outro, so a Studio
+          frame here is the episode frame + 240. */}
       <Composition
         id="TA09-Volume"
-        component={VolumeComposition}
-        durationInFrames={V20_FRAMES}
+        component={VolumeFull}
+        durationInFrames={TA09_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
@@ -134,11 +122,12 @@ export const RemotionRoot: React.FC = () => {
       {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
           number comes from the corrected SRT via
           docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
-          closing card held for three seconds. */}
+          closing card held for three seconds. Since 20 Oct 2026 the closing card fades out
+          into CTA.mp4 (FullVideo.tsx); no intro, so the frame numbers are unchanged. */}
       <Composition
         id="TA11-TAMistakes"
-        component={TAMistakesComposition}
-        durationInFrames={V22_FRAMES}
+        component={TAMistakesFull}
+        durationInFrames={TA11_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
@@ -167,6 +156,35 @@ export const RemotionRoot: React.FC = () => {
         id="VI04-InvestasiYangCocok"
         component={InvestasiYangCocokFull}
         durationInFrames={VI04_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* Test: the VI04 stickman walking (front and profile), to judge the walk on its own. */}
+      <Composition
+        id="Stickman-Walk"
+        component={StickmanWalk}
+        durationInFrames={STICKMAN_WALK_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* Prototype, 21 Oct 2026: one shot in the paper-diorama style of Simon's Threads reference (no VO). */}
+      <Composition
+        id="Proto-PaperShot"
+        component={PaperShot}
+        durationInFrames={PAPER_SHOT_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* ⚠ A BENCH, NOT AN EPISODE — src/lab/Lab.tsx. One visual language at a
+          time, judged on its own before anything is built with it. Nothing
+          here ships; the lever is `TEST` in that file. */}
+      <Composition
+        id="VisualLab"
+        component={VisualLab}
+        durationInFrames={LAB_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}

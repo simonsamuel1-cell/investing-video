@@ -1,0 +1,1161 @@
+{
+ "key": "TA07",
+ "name": "Video 07 - Moving Average_Dub Indo",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.0,
+   "end": 6.633,
+   "text": "Membaca candlestick dan chart pattern memang powerful.",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 7.2,
+   "end": 8.967,
+   "text": "Tapi kalau harus cek saham satu per satu,",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 9.233,
+   "end": 11.8,
+   "text": "prosesnya bisa cukup lama dan butuh mata yang terlatih.",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 11.9,
+   "end": 13.4,
+   "text": "Di sinilah indikator membantu.",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 14.1,
+   "end": 16.2,
+   "text": "Indikator mengolah data harga yang sudah ada",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 16.2,
+   "end": 18.033,
+   "text": "supaya chart lebih cepat dibaca.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 18.567,
+   "end": 20.1,
+   "text": "Bukan menggantikan analisismu,",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 20.233,
+   "end": 23.467,
+   "text": "tapi membantu menyaring chart dan mengonfirmasi apa yang kamu lihat.",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 25.033,
+   "end": 27.033,
+   "text": "Kita mulai dari moving average.",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 27.433,
+   "end": 29.767,
+   "text": "Harga bergerak naik-turun dan penuh noise.",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 30.067,
+   "end": 32.167,
+   "text": "Moving average mengambil rata-rata harga",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 32.3,
+   "end": 33.167,
+   "text": "beberapa hari terakhir,",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 33.467,
+   "end": 36.1,
+   "text": "lalu menggambarkannya sebagai garis yang lebih halus.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 36.833,
+   "end": 38.267,
+   "text": "Setiap hari, garisnya ikut bergerak.",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 38.5,
+   "end": 41.233,
+   "text": "Noise berkurang dan arah trend jadi lebih mudah terlihat.",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 41.667,
+   "end": 43.9,
+   "text": "Angkanya menunjukkan berapa periode yang dihitung.",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 44.2,
+   "end": 45.567,
+   "text": "Moving average pendek,",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 45.9,
+   "end": 47.4,
+   "text": "misalnya MA20,",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 47.833,
+   "end": 49.233,
+   "text": "bergerak lebih dekat dengan harga",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 49.433,
+   "end": 50.767,
+   "text": "dan bereaksi lebih cepat.",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 51.2,
+   "end": 52.233,
+   "text": "Moving average panjang,",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 52.367,
+   "end": 53.367,
+   "text": "seperti MA200,",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 53.667,
+   "end": 55.233,
+   "text": "bergerak lebih lambat dan membantu",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 55.467,
+   "end": 56.9,
+   "text": "melihat trend yang lebih besar.",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 57.567,
+   "end": 59.367,
+   "text": "Jadi, yang pendek lebih responsif.",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 59.467,
+   "end": 60.9,
+   "text": "Yang panjang memberi big picture.",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 61.033,
+   "end": 63.3,
+   "text": "Karena itu, trader sering melihat keduanya.",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 63.633,
+   "end": 64.9,
+   "text": "Ada dua jenis yang sering dipakai:",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 65.567,
+   "end": 67.7,
+   "text": "SMA dan EMA.",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 68.433,
+   "end": 71.367,
+   "text": "SMA memberi bobot yang sama pada setiap harga.",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 72.167,
+   "end": 75.4,
+   "text": "EMA memberi bobot lebih besar pada harga terbaru,",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 75.767,
+   "end": 77.067,
+   "text": "jadi reaksinya lebih cepat.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 77.8,
+   "end": 79.3,
+   "text": "Tapi lebih cepat bukan selalu lebih baik,",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 79.567,
+   "end": 81.767,
+   "text": "karena false signal juga bisa lebih sering muncul.",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 82.267,
+   "end": 84.1,
+   "text": "Cara paling sederhana membacanya begini.",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 84.367,
+   "end": 86.3,
+   "text": "Harga di atas moving average yang menanjak",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 86.4,
+   "end": 87.7,
+   "text": "biasanya menunjukkan uptrend.",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 87.967,
+   "end": 89.867,
+   "text": "Harga di bawah moving average yang menurun",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 90.0,
+   "end": 91.1,
+   "text": "menunjukkan downtrend.",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 91.267,
+   "end": 92.4,
+   "text": "Perhatikan juga slope-nya.",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 92.467,
+   "end": 94.467,
+   "text": "Semakin curam garisnya, semakin kuat trend.",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 94.567,
+   "end": 96.567,
+   "text": "Kalau datar, market belum punya arah yang jelas.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 97.367,
+   "end": 98.5,
+   "text": "Jadi, lihat dua hal:",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 98.867,
+   "end": 101.233,
+   "text": "posisi harga dan arah moving average.",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 101.567,
+   "end": 103.7,
+   "text": "Moving average juga bisa berfungsi sebagai support",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 104.0,
+   "end": 105.633,
+   "text": "atau resistance yang bergerak.",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 105.967,
+   "end": 108.1,
+   "text": "Dalam uptrend, harga sering pullback ke MA",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 108.367,
+   "end": 109.033,
+   "text": "yang menanjak,",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 109.033,
+   "end": 111.2,
+   "text": "lalu memantul seperti lantai yang ikut naik.",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 111.967,
+   "end": 112.9,
+   "text": "Dalam downtrend,",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 113.0,
+   "end": 116.4,
+   "text": "MA bisa menahan harga dari atas seperti langit-langit.",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 116.567,
+   "end": 118.633,
+   "text": "Konsepnya sama seperti support dan resistance,",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 118.867,
+   "end": 121.133,
+   "text": "hanya levelnya ikut bergerak bersama harga.",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 121.133,
+   "end": 122.633,
+   "text": "Saat moving average pendek",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 122.667,
+   "end": 124.4,
+   "text": "menembus moving average panjang dari bawah,",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 124.633,
+   "end": 126.1,
+   "text": "ini disebut golden cross.",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 126.3,
+   "end": 127.8,
+   "text": "Kalau menembus dari atas ke bawah,",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 127.967,
+   "end": 129.2,
+   "text": "disebut death cross.",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 129.767,
+   "end": 132.867,
+   "text": "Tapi jangan anggap crossing sebagai aba-aba entry atau exit.",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 133.067,
+   "end": 134.967,
+   "text": "Moving average bersifat lagging.",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 135.4,
+   "end": 136.4,
+   "text": "Saat crossing muncul,",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 136.633,
+   "end": 138.767,
+   "text": "sebagian pergerakan biasanya sudah terjadi.",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 139.367,
+   "end": 141.1,
+   "text": "Gunakan sebagai konfirmasi trend,",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 141.267,
+   "end": 142.433,
+   "text": "bukan untuk meramal.",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 143.8,
+   "end": 145.633,
+   "text": "Sekarang masuk ke Bollinger Bands.",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 145.967,
+   "end": 148.233,
+   "text": "Di tengahnya ada moving average.",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 148.833,
+   "end": 149.867,
+   "text": "Di atas dan bawahnya,",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 150.033,
+   "end": 152.567,
+   "text": "dua band ikut berubah sesuai volatility —",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 152.667,
+   "end": 155.267,
+   "text": "seberapa besar pergerakan harga dari rata-ratanya.",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 155.6,
+   "end": 157.367,
+   "text": "Saat market tenang, band menyempit.",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 157.5,
+   "end": 159.6,
+   "text": "Saat pergerakan membesar, band ikut melebar.",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 159.867,
+   "end": 162.7,
+   "text": "Bollinger Bands seperti bernapas mengikuti energi pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 163.5,
+   "end": 165.2,
+   "text": "Salah satu kondisi yang paling berguna",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 165.3,
+   "end": 166.633,
+   "text": "diperhatikan adalah squeeze.",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 166.967,
+   "end": 168.033,
+   "text": "Saat band menyempit rapat,",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 168.167,
+   "end": 171.3,
+   "text": "volatility sedang rendah dan harga biasanya bergerak sideways.",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 171.767,
+   "end": 173.2,
+   "text": "Kondisi seperti ini sering muncul",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 173.3,
+   "end": 174.8,
+   "text": "sebelum pergerakan yang lebih besar.",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 175.233,
+   "end": 177.6,
+   "text": "Tapi squeeze tidak memberi tahu arahnya.",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 177.867,
+   "end": 179.9,
+   "text": "Harga bisa breakout ke atas atau ke bawah.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 180.6,
+   "end": 182.067,
+   "text": "Jadi, tetap lihat trend",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 182.067,
+   "end": 184.3,
+   "text": "dan level penting sebelum mengambil kesimpulan.",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 184.667,
+   "end": 187.433,
+   "text": "Ada satu jebakan yang sering terjadi pada pemula.",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 187.8,
+   "end": 188.633,
+   "text": "Dalam trend kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 189.2,
+   "end": 191.267,
+   "text": "harga bisa terus bergerak dekat upper band.",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 191.567,
+   "end": 194.467,
+   "text": "Jadi, menyentuh upper band bukan otomatis sinyal jual.",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 194.833,
+   "end": 196.033,
+   "text": "Dalam uptrend sehat,",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 196.2,
+   "end": 197.667,
+   "text": "kondisi ini justru bisa menunjukkan",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 197.8,
+   "end": 199.8,
+   "text": "harga masih bergerak dengan momentum kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 200.3,
+   "end": 202.233,
+   "text": "Bollinger Bands menunjukkan posisi harga",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 202.233,
+   "end": 205.267,
+   "text": "terhadap rata-ratanya, bukan memberi keputusan entry atau exit.",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 206.767,
+   "end": 208.5,
+   "text": "Lalu, di mana indikator digunakan?",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 209.0,
+   "end": 210.6,
+   "text": "Fondasinya tetap price action:",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 211.3,
+   "end": 212.567,
+   "text": "trend, pattern,",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 212.967,
+   "end": 215.067,
+   "text": "support, dan resistance",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 215.3,
+   "end": 217.033,
+   "text": "yang kamu baca lebih dulu.",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 217.033,
+   "end": 219.067,
+   "text": "Moving average membantu mengonfirmasi trend.",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 219.233,
+   "end": 220.467,
+   "text": "Bollinger Bands membantu",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 220.6,
+   "end": 221.867,
+   "text": "melihat apakah volatility",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 222.0,
+   "end": 223.467,
+   "text": "sedang menyempit atau melebar.",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 223.8,
+   "end": 225.633,
+   "text": "Anggap indikator sebagai second opinion,",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 225.767,
+   "end": 227.8,
+   "text": "bukan alat yang mengambil keputusan untukmu.",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 228.3,
+   "end": 229.867,
+   "text": "Sekarang giliran kamu.",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 229.867,
+   "end": 233.1,
+   "text": "Ini chart GGRM pada Juli 2026.",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 234.667,
+   "end": 236.833,
+   "text": "Harga turun ke moving average yang lebih lambat",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 236.9,
+   "end": 237.7,
+   "text": "dan menanjak,",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 237.833,
+   "end": 238.9,
+   "text": "yaitu garis ungu,",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 239.1,
+   "end": 240.167,
+   "text": "lalu memantul.",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 240.467,
+   "end": 241.233,
+   "text": "Beberapa hari kemudian,",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 241.233,
+   "end": 243.167,
+   "text": "Bollinger Bands menyempit menjadi squeeze,",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 243.3,
+   "end": 246.2,
+   "text": "sementara harga masih bertahan sedikit di atas middle band.",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 246.2,
+   "end": 248.433,
+   "text": "Menurutmu, apakah uptrend-nya masih bertahan?",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 249.167,
+   "end": 251.033,
+   "text": "Dan saat band serapat ini,",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 251.2,
+   "end": 252.933,
+   "text": "apa yang perlu kita antisipasi?",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 252.933,
+   "end": 255.467,
+   "text": "Tiga… dua… satu.",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 255.9,
+   "end": 258.1,
+   "text": "Dan ternyata, harga breakout ke atas.",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 258.467,
+   "end": 260.433,
+   "text": "Moving average yang menanjak sebelumnya",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 260.5,
+   "end": 261.633,
+   "text": "berhasil menjadi support.",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 261.967,
+   "end": 262.767,
+   "text": "Setelah squeeze,",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 262.867,
+   "end": 264.4,
+   "text": "Bollinger Bands kembali melebar",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 264.467,
+   "end": 266.967,
+   "text": "dan harga melanjutkan kenaikan hingga awal Agustus",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 267.2,
+   "end": 269.7,
+   "text": "menuju sekitar 20.350.",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 270.033,
+   "end": 272.9,
+   "text": "Jadi, bullish bias-nya datang dari trend yang masih terjaga.",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 273.533,
+   "end": 275.9,
+   "text": "Squeeze hanya memberi tahu bahwa pergerakan besar",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 276.033,
+   "end": 277.0,
+   "text": "mungkin segera terjadi.",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 277.733,
+   "end": 278.533,
+   "text": "Dalam kasus ini,",
+   "part": "episode"
+  },
+  {
+   "i": 127,
+   "start": 278.533,
+   "end": 281.167,
+   "text": "arah breakout sesuai dengan trend yang sudah terbentuk.",
+   "part": "episode"
+  },
+  {
+   "i": 128,
+   "start": 281.767,
+   "end": 286.667,
+   "text": "Di aplikasi, kamu juga bisa melihat berbagai indikator ini dalam satu tempat",
+   "part": "episode"
+  },
+  {
+   "i": 129,
+   "start": 287.4,
+   "end": 289.667,
+   "text": "Ingat, indikator tidak pernah memimpin harga.",
+   "part": "episode"
+  },
+  {
+   "i": 130,
+   "start": 290.2,
+   "end": 291.9,
+   "text": "Indikator mengikuti data yang sudah terjadi,",
+   "part": "episode"
+  },
+  {
+   "i": 131,
+   "start": 292.267,
+   "end": 295.9,
+   "text": "lalu membantu mengonfirmasi atau mempertanyakan analisismu.",
+   "part": "episode"
+  },
+  {
+   "i": 132,
+   "start": 296.2,
+   "end": 298.5,
+   "text": "Gunakan moving average untuk membaca trend,",
+   "part": "episode"
+  },
+  {
+   "i": 133,
+   "start": 299.0,
+   "end": 301.7,
+   "text": "Bollinger Bands untuk melihat perubahan volatility,",
+   "part": "episode"
+  },
+  {
+   "i": 134,
+   "start": 302.2,
+   "end": 304.2,
+   "text": "dan tetap mulai dari price action.",
+   "part": "episode"
+  },
+  {
+   "i": 135,
+   "start": 304.6,
+   "end": 306.333,
+   "text": "Tapi jangan pernah mengambil keputusan",
+   "part": "episode"
+  },
+  {
+   "i": 136,
+   "start": 306.567,
+   "end": 308.2,
+   "text": "hanya karena satu indikator.",
+   "part": "episode"
+  },
+  {
+   "i": 137,
+   "start": 311.2,
+   "end": 312.867,
+   "text": "Di video selanjutnya, kita lanjut membahas",
+   "part": "outro"
+  },
+  {
+   "i": 138,
+   "start": 312.867,
+   "end": 314.733,
+   "text": "ke indikator momentum seperti RSI,",
+   "part": "outro"
+  },
+  {
+   "i": 139,
+   "start": 314.8,
+   "end": 316.2,
+   "text": "Stochastic, dan MACD.",
+   "part": "outro"
+  },
+  {
+   "i": 140,
+   "start": 317.333,
+   "end": 322.383,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 141,
+   "start": 323.083,
+   "end": 324.183,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 142,
+   "start": 324.533,
+   "end": 325.533,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 143,
+   "start": 325.883,
+   "end": 327.083,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 144,
+   "start": 327.333,
+   "end": 330.033,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 145,
+   "start": 330.383,
+   "end": 333.283,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 146,
+   "start": 333.833,
+   "end": 336.983,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 147,
+   "start": 336.983,
+   "end": 340.583,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 148,
+   "start": 341.033,
+   "end": 342.933,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 149,
+   "start": 343.283,
+   "end": 346.733,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 150,
+   "start": 348.083,
+   "end": 351.583,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 151,
+   "start": 351.583,
+   "end": 353.433,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 152,
+   "start": 354.783,
+   "end": 358.733,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 153,
+   "start": 358.733,
+   "end": 361.283,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 154,
+   "start": 361.733,
+   "end": 364.733,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 155,
+   "start": 364.733,
+   "end": 367.583,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 156,
+   "start": 369.033,
+   "end": 370.783,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 157,
+   "start": 370.783,
+   "end": 373.983,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 158,
+   "start": 375.283,
+   "end": 378.083,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 159,
+   "start": 378.083,
+   "end": 380.683,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 160,
+   "start": 381.033,
+   "end": 383.633,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 161,
+   "start": 383.783,
+   "end": 387.083,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 162,
+   "start": 387.633,
+   "end": 390.683,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 163,
+   "start": 392.033,
+   "end": 394.883,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 164,
+   "start": 395.433,
+   "end": 399.283,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 165,
+   "start": 399.283,
+   "end": 401.733,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

@@ -1,0 +1,1623 @@
+{
+ "key": "TA03",
+ "name": "Video 03 - Candlestick (Adv) - Dub Indo Male",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.1,
+   "end": 6.7,
+   "text": "Satu candle menunjukkan satu pertarungan.",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 7.067,
+   "end": 9.0,
+   "text": "Tapi itu belum cukup untuk tahu siapa yang menang.",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 9.7,
+   "end": 10.5,
+   "text": "Sinyal sebenarnya",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 10.567,
+   "end": 13.2,
+   "text": "muncul saat beberapa candle mulai saling bicara.",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 13.5,
+   "end": 14.3,
+   "text": "Jadi kali ini,",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 14.967,
+   "end": 17.767,
+   "text": "kita nggak cuma melihat satu candle.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 18.133,
+   "end": 19.5,
+   "text": "Kita akan melihat bagaimana beberapa",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 19.667,
+   "end": 21.167,
+   "text": "candle mulai membentuk cerita,",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 21.5,
+   "end": 23.9,
+   "text": "bagaimana konteks membuat cerita itu lebih jelas,",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 24.567,
+   "end": 25.367,
+   "text": "dan bagaimana",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 25.467,
+   "end": 27.333,
+   "text": "membacanya di chart nyata.",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 27.8,
+   "end": 28.933,
+   "text": "Sebelum membahas pola,",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 29.0,
+   "end": 31.0,
+   "text": "belajar dulu membaca satu candle dengan benar.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 31.4,
+   "end": 33.6,
+   "text": "Body hijau yang panjang dengan wick pendek",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 33.767,
+   "end": 35.433,
+   "text": "berarti buyer menguasai harga",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 35.533,
+   "end": 37.367,
+   "text": "dari pembukaan sampai penutupan.",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 37.867,
+   "end": 39.267,
+   "text": "Hampir tidak ada perlawanan.",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 39.8,
+   "end": 41.267,
+   "text": "Itu tanda keyakinan buyer.",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 41.533,
+   "end": 43.0,
+   "text": "Body kecil dengan wick atas yang panjang",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 43.133,
+   "end": 44.333,
+   "text": "berarti harga sempat mencoba naik,",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 44.433,
+   "end": 45.367,
+   "text": "tapi ditolak keras.",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 45.633,
+   "end": 47.0,
+   "text": "Seller sudah menunggu di atas,",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 47.233,
+   "end": 49.6,
+   "text": "lalu mendorong harga turun lagi sebelum penutupan.",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 49.933,
+   "end": 50.933,
+   "text": "Wick itu adalah bukti.",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 51.467,
+   "end": 54.267,
+   "text": "Ada pihak yang memang siap menjual di level tersebut.",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 54.6,
+   "end": 57.033,
+   "text": "Wick bawah yang panjang berarti harga sempat jatuh tajam,",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 57.133,
+   "end": 59.2,
+   "text": "lalu buyer masuk dan mendorongnya kembali naik.",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 59.533,
+   "end": 60.4,
+   "text": "Demand muncul.",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 60.6,
+   "end": 61.733,
+   "text": "Kalau wick atas dan bawah",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 62.067,
+   "end": 62.733,
+   "text": "sama-sama panjang",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 62.733,
+   "end": 63.833,
+   "text": "dengan body kecil di tengah,",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 64.133,
+   "end": 66.4,
+   "text": "buyer dan seller sedang bertarung tanpa pemenang.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 66.967,
+   "end": 68.8,
+   "text": "Pasar belum punya arah. Tunggu.",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 68.933,
+   "end": 70.967,
+   "text": "Tiga candle merah muncul berturut-turut.",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 71.267,
+   "end": 72.6,
+   "text": "Seller memegang kendali,",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 72.733,
+   "end": 74.133,
+   "text": "sementara buyer terus mundur.",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 74.367,
+   "end": 76.933,
+   "text": "Lalu candle keempat turun tajam di tengah sesi.",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 77.367,
+   "end": 79.567,
+   "text": "Seller kembali menekan dan mencoba memperpanjang",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 79.867,
+   "end": 80.667,
+   "text": "penurunan.",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 80.8,
+   "end": 83.033,
+   "text": "Tapi kali ini, buyer menyerap seluruh tekanan jual",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 83.2,
+   "end": 84.267,
+   "text": "dan mendorong harga naik",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 84.4,
+   "end": 85.967,
+   "text": "hingga ditutup dekat titik awal.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 86.267,
+   "end": 88.767,
+   "text": "Penolakan itu meninggalkan wick bawah yang panjang.",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 89.267,
+   "end": 90.267,
+   "text": "Ini bukan sekadar bentuk.",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 90.367,
+   "end": 92.0,
+   "text": "Ini tanda perubahan dalam perilaku pasar—",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 92.267,
+   "end": 95.033,
+   "text": "sinyal pertama bahwa demand mulai mengalahkan supply.",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 95.367,
+   "end": 96.833,
+   "text": "Sekarang kita sudah melihat bahwa",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 97.067,
+   "end": 99.367,
+   "text": "satu candle bisa memberi petunjuk.",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 99.667,
+   "end": 101.867,
+   "text": "Tapi ketika beberapa candle mulai muncul bersama,",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 102.333,
+   "end": 104.567,
+   "text": "ceritanya bisa menjadi jauh lebih jelas.",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 105.133,
+   "end": 107.0,
+   "text": "Ini kesalahan yang paling sering dibuat pemula.",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 107.167,
+   "end": 108.367,
+   "text": "Mereka melihat satu candle,",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 108.467,
+   "end": 109.267,
+   "text": "lalu langsung berkata,",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 109.333,
+   "end": 110.567,
+   "text": "“Sinyal reversal.”",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 111.0,
+   "end": 112.2,
+   "text": "Padahal candle yang sama",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 112.6,
+   "end": 113.733,
+   "text": "bisa punya arti berbeda,",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 113.9,
+   "end": 115.9,
+   "text": "tergantung di mana ia muncul pada chart.",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 116.067,
+   "end": 118.3,
+   "text": "Wick bawah panjang di dasar downtrend yang sudah lama,",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 118.567,
+   "end": 120.1,
+   "text": "setelah seller kehabisan tenaga,",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 120.267,
+   "end": 121.067,
+   "text": "punya makna kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 121.533,
+   "end": 123.267,
+   "text": "Candle yang sama di tengah sideways?",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 123.6,
+   "end": 125.3,
+   "text": "Jauh lebih lemah dan mudah menipu.",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 125.8,
+   "end": 128.1,
+   "text": "Candle dan lokasinya memberi gambaran penuh.",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 128.4,
+   "end": 129.767,
+   "text": "Candle saja baru setengah cerita.",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 130.067,
+   "end": 131.167,
+   "text": "Kalau wick bawah panjang",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 131.367,
+   "end": 133.567,
+   "text": "muncul di area tempat buyer sudah dua kali masuk,",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 134.0,
+   "end": 136.133,
+   "text": "ada tiga sinyal yang mengarah ke arah sama.",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 136.6,
+   "end": 137.6,
+   "text": "Support dan resistance",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 137.733,
+   "end": 140.067,
+   "text": "memberi dasar yang lebih kuat untuk membaca candle.",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 140.467,
+   "end": 142.4,
+   "text": "Tanpanya, kamu seperti membaca satu kalimat",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 142.567,
+   "end": 145.067,
+   "text": "tanpa tahu paragraf tempat kalimat itu berada.",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 145.4,
+   "end": 148.167,
+   "text": "Ada puluhan pola candlestick dengan nama berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 148.533,
+   "end": 149.967,
+   "text": "Kamu tidak perlu menghafal semuanya.",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 150.567,
+   "end": 151.867,
+   "text": "Tapi beberapa pola muncul",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 151.933,
+   "end": 154.267,
+   "text": "berulang kali dan membawa pesan yang cukup jelas,",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 154.567,
+   "end": 156.3,
+   "text": "jadi layak dipahami lebih dalam.",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 156.933,
+   "end": 157.733,
+   "text": "Bukan dari namanya,",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 158.0,
+   "end": 159.267,
+   "text": "tapi dari apa yang sebenarnya",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 159.5,
+   "end": 161.067,
+   "text": "terjadi di dalam pergerakan harga.",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 161.4,
+   "end": 162.3,
+   "text": "Pertama, Hammer.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 162.733,
+   "end": 163.767,
+   "text": "Salah satu sinyal bullish",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 163.867,
+   "end": 165.167,
+   "text": "satu candle yang paling kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 165.8,
+   "end": 166.5,
+   "text": "Harga dibuka,",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 166.5,
+   "end": 167.3,
+   "text": "lalu jatuh tajam",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 167.333,
+   "end": 169.667,
+   "text": "karena seller menekan keras sejak awal sesi.",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 169.933,
+   "end": 171.3,
+   "text": "Tapi buyer masuk dengan kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 171.6,
+   "end": 172.9,
+   "text": "menyerap seluruh tekanan,",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 173.0,
+   "end": 174.5,
+   "text": "lalu mendorong harga kembali naik",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 174.667,
+   "end": 176.5,
+   "text": "hingga ditutup dekat titik tertinggi.",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 176.867,
+   "end": 178.3,
+   "text": "Wick bawah panjang adalah buktinya:",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 178.467,
+   "end": 179.867,
+   "text": "demand muncul, melawan,",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 180.067,
+   "end": 180.8,
+   "text": "lalu menang.",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 180.8,
+   "end": 182.0,
+   "text": "Kalau Hammer muncul setelah",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 182.133,
+   "end": 184.0,
+   "text": "downtrend dan tepat di area support,",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 184.3,
+   "end": 186.167,
+   "text": "seller biasanya mulai kehabisan tenaga.",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 186.7,
+   "end": 188.133,
+   "text": "Buyer mulai mengambil kendali",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 188.167,
+   "end": 190.367,
+   "text": "dan peluang perubahan arah pun mulai terbuka",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 190.567,
+   "end": 191.367,
+   "text": "dengan lebih jelas.",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 191.967,
+   "end": 193.8,
+   "text": "Berikutnya, Bullish Engulfing.",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 194.133,
+   "end": 195.5,
+   "text": "Salah satu sinyal bullish",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 195.667,
+   "end": 197.1,
+   "text": "dua candle yang paling kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 197.533,
+   "end": 198.533,
+   "text": "Candle pertama merah.",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 198.933,
+   "end": 200.167,
+   "text": "Seller mendominasi.",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 200.5,
+   "end": 202.367,
+   "text": "Candle kedua bahkan dibuka lebih rendah,",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 202.533,
+   "end": 204.5,
+   "text": "seolah seller ingin menekan lagi.",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 205.0,
+   "end": 206.733,
+   "text": "Tapi buyer masuk sangat agresif",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 206.9,
+   "end": 209.7,
+   "text": "hingga harga ditutup di atas pembukaan candle pertama.",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 210.333,
+   "end": 211.267,
+   "text": "Seluruh tekanan jual",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 211.5,
+   "end": 214.367,
+   "text": "dari sesi sebelumnya terhapus dalam satu candle penuh.",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 214.6,
+   "end": 215.333,
+   "text": "Ini bukan perubahan",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 215.333,
+   "end": 217.167,
+   "text": "kecil. Buyer benar-benar mengalahkan",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 217.3,
+   "end": 218.867,
+   "text": "seller dalam satu gerakan tegas.",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 219.133,
+   "end": 221.567,
+   "text": "Kalau muncul setelah deretan candle merah dan dekat",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 221.767,
+   "end": 224.367,
+   "text": "support, ini salah satu tanda paling jelas",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 224.5,
+   "end": 226.5,
+   "text": "bahwa keseimbangan kekuatan sudah berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 226.9,
+   "end": 227.7,
+   "text": "Sekarang kita balik.",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 227.933,
+   "end": 228.867,
+   "text": "Ini Shooting Star,",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 228.967,
+   "end": 230.467,
+   "text": "versi bearish dari Hammer.",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 230.667,
+   "end": 231.2,
+   "text": "Harga dibuka,",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 231.2,
+   "end": 232.267,
+   "text": "lalu melesat naik.",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 232.5,
+   "end": 234.933,
+   "text": "Buyer terlihat percaya diri dan terus mengejar harga.",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 235.167,
+   "end": 236.867,
+   "text": "Tapi seller sudah menunggu di atas.",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 237.567,
+   "end": 238.6,
+   "text": "Mereka masuk, menekan",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 238.7,
+   "end": 239.5,
+   "text": "harga kembali turun,",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 239.6,
+   "end": 241.2,
+   "text": "lalu membawa penutupan dekat harga",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 241.267,
+   "end": 242.067,
+   "text": "pembukaan.",
+   "part": "episode"
+  },
+  {
+   "i": 127,
+   "start": 242.1,
+   "end": 244.267,
+   "text": "Wick atas yang panjang menunjukkan penolakan kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 128,
+   "start": 244.533,
+   "end": 245.8,
+   "text": "Pasar mencoba naik lebih tinggi,",
+   "part": "episode"
+  },
+  {
+   "i": 129,
+   "start": 245.967,
+   "end": 246.767,
+   "text": "lalu ditolak.",
+   "part": "episode"
+  },
+  {
+   "i": 130,
+   "start": 247.0,
+   "end": 249.167,
+   "text": "Kalau pola ini muncul setelah uptrend dan dekat",
+   "part": "episode"
+  },
+  {
+   "i": 131,
+   "start": 249.467,
+   "end": 251.6,
+   "text": "resistance, keyakinan buyer mulai habis.",
+   "part": "episode"
+  },
+  {
+   "i": 132,
+   "start": 252.0,
+   "end": 253.367,
+   "text": "Seller mulai mengambil alih",
+   "part": "episode"
+  },
+  {
+   "i": 133,
+   "start": 253.4,
+   "end": 255.0,
+   "text": "dan risiko pembalikan ikut naik.",
+   "part": "episode"
+  },
+  {
+   "i": 134,
+   "start": 255.4,
+   "end": 257.267,
+   "text": "Pasangannya adalah Bearish Engulfing,",
+   "part": "episode"
+  },
+  {
+   "i": 135,
+   "start": 257.367,
+   "end": 259.533,
+   "text": "salah satu sinyal bearish dua candle yang paling kuat.",
+   "part": "episode"
+  },
+  {
+   "i": 136,
+   "start": 260.133,
+   "end": 261.133,
+   "text": "Candle pertama hijau.",
+   "part": "episode"
+  },
+  {
+   "i": 137,
+   "start": 261.367,
+   "end": 262.867,
+   "text": "Buyer masih memegang kendali.",
+   "part": "episode"
+  },
+  {
+   "i": 138,
+   "start": 263.0,
+   "end": 264.267,
+   "text": "Candle kedua dibuka lebih tinggi,",
+   "part": "episode"
+  },
+  {
+   "i": 139,
+   "start": 264.4,
+   "end": 265.767,
+   "text": "seolah kenaikan akan berlanjut,",
+   "part": "episode"
+  },
+  {
+   "i": 140,
+   "start": 266.0,
+   "end": 266.567,
+   "text": "lalu jatuh",
+   "part": "episode"
+  },
+  {
+   "i": 141,
+   "start": 266.567,
+   "end": 268.7,
+   "text": "dan ditutup di bawah pembukaan candle pertama.",
+   "part": "episode"
+  },
+  {
+   "i": 142,
+   "start": 269.067,
+   "end": 271.4,
+   "text": "Seluruh kenaikan buyer berbalik dalam satu sesi.",
+   "part": "episode"
+  },
+  {
+   "i": 143,
+   "start": 271.867,
+   "end": 273.267,
+   "text": "Kalau pola ini muncul di puncak",
+   "part": "episode"
+  },
+  {
+   "i": 144,
+   "start": 273.4,
+   "end": 275.067,
+   "text": "uptrend dan dekat resistance,",
+   "part": "episode"
+  },
+  {
+   "i": 145,
+   "start": 275.167,
+   "end": 276.967,
+   "text": "pergerakannya mulai kehilangan tenaga.",
+   "part": "episode"
+  },
+  {
+   "i": 146,
+   "start": 277.5,
+   "end": 279.2,
+   "text": "Pihak yang sebelumnya mendorong harga naik",
+   "part": "episode"
+  },
+  {
+   "i": 147,
+   "start": 279.367,
+   "end": 281.5,
+   "text": "sekarang mulai melepas saham dan menjual ke pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 148,
+   "start": 281.933,
+   "end": 282.667,
+   "text": "Sekarang kamu sudah melihat",
+   "part": "episode"
+  },
+  {
+   "i": 149,
+   "start": 282.667,
+   "end": 284.2,
+   "text": "Engulfing, Hammer, dan Shooting Star.",
+   "part": "episode"
+  },
+  {
+   "i": 150,
+   "start": 284.533,
+   "end": 285.2,
+   "text": "Ada dua kelompok",
+   "part": "episode"
+  },
+  {
+   "i": 151,
+   "start": 285.2,
+   "end": 287.2,
+   "text": "pola lain yang juga layak untuk dipahami.",
+   "part": "episode"
+  },
+  {
+   "i": 152,
+   "start": 287.5,
+   "end": 288.867,
+   "text": "Morning Star dan Evening Star",
+   "part": "episode"
+  },
+  {
+   "i": 153,
+   "start": 288.967,
+   "end": 290.267,
+   "text": "terdiri dari tiga candle:",
+   "part": "episode"
+  },
+  {
+   "i": 154,
+   "start": 290.5,
+   "end": 291.4,
+   "text": "satu dorongan kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 155,
+   "start": 291.567,
+   "end": 293.0,
+   "text": "satu candle kecil yang ragu,",
+   "part": "episode"
+  },
+  {
+   "i": 156,
+   "start": 293.167,
+   "end": 294.933,
+   "text": "lalu dorongan kuat ke arah sebaliknya.",
+   "part": "episode"
+  },
+  {
+   "i": 157,
+   "start": 295.4,
+   "end": 296.3,
+   "text": "Jeda kecil di tengah",
+   "part": "episode"
+  },
+  {
+   "i": 158,
+   "start": 296.367,
+   "end": 297.667,
+   "text": "itulah saat kendali pasar",
+   "part": "episode"
+  },
+  {
+   "i": 159,
+   "start": 297.933,
+   "end": 299.1,
+   "text": "perlahan berpindah tangan.",
+   "part": "episode"
+  },
+  {
+   "i": 160,
+   "start": 299.5,
+   "end": 301.2,
+   "text": "Three White Soldiers dan Three Black Crows",
+   "part": "episode"
+  },
+  {
+   "i": 161,
+   "start": 301.467,
+   "end": 303.267,
+   "text": "adalah tiga candle kuat ke arah sama.",
+   "part": "episode"
+  },
+  {
+   "i": 162,
+   "start": 303.7,
+   "end": 304.967,
+   "text": "Tiga candle hijau menunjukkan",
+   "part": "episode"
+  },
+  {
+   "i": 163,
+   "start": 305.067,
+   "end": 306.6,
+   "text": "pembelian yang stabil dan yakin.",
+   "part": "episode"
+  },
+  {
+   "i": 164,
+   "start": 307.067,
+   "end": 309.1,
+   "text": "Tiga candle merah menunjukkan kebalikannya.",
+   "part": "episode"
+  },
+  {
+   "i": 165,
+   "start": 309.5,
+   "end": 312.333,
+   "text": "Momentum tumbuh satu candle demi satu candle.",
+   "part": "episode"
+  },
+  {
+   "i": 166,
+   "start": 312.7,
+   "end": 314.1,
+   "text": "Kamu tidak perlu menghafal nama.",
+   "part": "episode"
+  },
+  {
+   "i": 167,
+   "start": 314.5,
+   "end": 316.333,
+   "text": "Pahami cerita dari setiap pola.",
+   "part": "episode"
+  },
+  {
+   "i": 168,
+   "start": 316.7,
+   "end": 319.5,
+   "text": "Itulah yang mengubah chart biasa menjadi sebuah cerita.",
+   "part": "episode"
+  },
+  {
+   "i": 169,
+   "start": 320.1,
+   "end": 322.0,
+   "text": "Jadi, kita sudah tahu cara membaca",
+   "part": "episode"
+  },
+  {
+   "i": 170,
+   "start": 322.167,
+   "end": 324.433,
+   "text": "candle dan mengenali beberapa pola.",
+   "part": "episode"
+  },
+  {
+   "i": 171,
+   "start": 325.133,
+   "end": 327.767,
+   "text": "Sekarang waktunya melihat semuanya bekerja bersama",
+   "part": "episode"
+  },
+  {
+   "i": 172,
+   "start": 328.033,
+   "end": 329.433,
+   "text": "dalam satu chart nyata.",
+   "part": "episode"
+  },
+  {
+   "i": 173,
+   "start": 329.967,
+   "end": 331.1,
+   "text": "Sekarang kita lihat contoh nyata.",
+   "part": "episode"
+  },
+  {
+   "i": 174,
+   "start": 331.533,
+   "end": 334.1,
+   "text": "BBRI, Juni 2026.",
+   "part": "episode"
+  },
+  {
+   "i": 175,
+   "start": 334.567,
+   "end": 336.2,
+   "text": "Tanggal 8 muncul candle merah.",
+   "part": "episode"
+  },
+  {
+   "i": 176,
+   "start": 336.467,
+   "end": 340.967,
+   "text": "Seller memegang kendali dan menutup harga di 2.590.",
+   "part": "episode"
+  },
+  {
+   "i": 177,
+   "start": 341.367,
+   "end": 343.067,
+   "text": "Hari berikutnya dibuka lebih rendah,",
+   "part": "episode"
+  },
+  {
+   "i": 178,
+   "start": 343.333,
+   "end": 346.733,
+   "text": "di 2.540. Lalu buyer masuk kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 179,
+   "start": 347.067,
+   "end": 349.367,
+   "text": "mendorong harga sampai 2.790,",
+   "part": "episode"
+  },
+  {
+   "i": 180,
+   "start": 349.6,
+   "end": 351.733,
+   "text": "dan menelan seluruh body hari sebelumnya.",
+   "part": "episode"
+  },
+  {
+   "i": 181,
+   "start": 352.133,
+   "end": 353.4,
+   "text": "Itulah Bullish Engulfing,",
+   "part": "episode"
+  },
+  {
+   "i": 182,
+   "start": 353.6,
+   "end": 355.733,
+   "text": "tepat setelah rangkaian tekanan jual",
+   "part": "episode"
+  },
+  {
+   "i": 183,
+   "start": 356.1,
+   "end": 356.9,
+   "text": "yang cukup panjang.",
+   "part": "episode"
+  },
+  {
+   "i": 184,
+   "start": 357.167,
+   "end": 358.133,
+   "text": "Kamu sudah tahu artinya.",
+   "part": "episode"
+  },
+  {
+   "i": 185,
+   "start": 358.7,
+   "end": 360.367,
+   "text": "Sekarang coba baca ceritanya sendiri.",
+   "part": "episode"
+  },
+  {
+   "i": 186,
+   "start": 360.767,
+   "end": 362.767,
+   "text": "Jadi, apa yang terjadi berikutnya?",
+   "part": "episode"
+  },
+  {
+   "i": 187,
+   "start": 363.467,
+   "end": 365.6,
+   "text": "Tiga… dua… satu…",
+   "part": "episode"
+  },
+  {
+   "i": 188,
+   "start": 366.0,
+   "end": 367.567,
+   "text": "lihat. Harganya naik.",
+   "part": "episode"
+  },
+  {
+   "i": 189,
+   "start": 368.0,
+   "end": 370.5,
+   "text": "Lebih dari sepuluh persen dalam beberapa hari berikutnya,",
+   "part": "episode"
+  },
+  {
+   "i": 190,
+   "start": 370.667,
+   "end": 373.1,
+   "text": "lalu mencapai puncak pada tanggal 17.",
+   "part": "episode"
+  },
+  {
+   "i": 191,
+   "start": 373.667,
+   "end": 375.1,
+   "text": "Tentu tidak ada jaminan.",
+   "part": "episode"
+  },
+  {
+   "i": 192,
+   "start": 375.533,
+   "end": 377.067,
+   "text": "Pola Engulfing juga bisa gagal",
+   "part": "episode"
+  },
+  {
+   "i": 193,
+   "start": 377.333,
+   "end": 378.2,
+   "text": "tanpa konfirmasi.",
+   "part": "episode"
+  },
+  {
+   "i": 194,
+   "start": 378.533,
+   "end": 379.2,
+   "text": "Tapi beginilah",
+   "part": "episode"
+  },
+  {
+   "i": 195,
+   "start": 379.2,
+   "end": 380.533,
+   "text": "saat ceritanya benar-benar berjalan,",
+   "part": "episode"
+  },
+  {
+   "i": 196,
+   "start": 380.867,
+   "end": 381.6,
+   "text": "dan kamu berhasil",
+   "part": "episode"
+  },
+  {
+   "i": 197,
+   "start": 381.6,
+   "end": 383.933,
+   "text": "membacanya sebelum chart menunjukkan hasil akhirnya.",
+   "part": "episode"
+  },
+  {
+   "i": 198,
+   "start": 384.133,
+   "end": 385.667,
+   "text": "Satu candle adalah satu kalimat.",
+   "part": "episode"
+  },
+  {
+   "i": 199,
+   "start": 385.967,
+   "end": 388.133,
+   "text": "Beberapa candle membentuk satu paragraf.",
+   "part": "episode"
+  },
+  {
+   "i": 200,
+   "start": 388.733,
+   "end": 391.167,
+   "text": "Seluruh chart adalah cerita lengkap yang utuh.",
+   "part": "episode"
+  },
+  {
+   "i": 201,
+   "start": 391.333,
+   "end": 392.667,
+   "text": "Belajarlah membaca ceritanya.",
+   "part": "episode"
+  },
+  {
+   "i": 202,
+   "start": 393.267,
+   "end": 394.767,
+   "text": "Bukan sekadar mengenali bentuk.",
+   "part": "episode"
+  },
+  {
+   "i": 203,
+   "start": 396.267,
+   "end": 398.667,
+   "text": "Di video selanjutnya, kita akan bahas",
+   "part": "outro"
+  },
+  {
+   "i": 204,
+   "start": 398.733,
+   "end": 400.567,
+   "text": "support dan resistance,",
+   "part": "outro"
+  },
+  {
+   "i": 205,
+   "start": 400.633,
+   "end": 403.167,
+   "text": "area di mana harga sering bereaksi.",
+   "part": "outro"
+  },
+  {
+   "i": 206,
+   "start": 404.367,
+   "end": 409.417,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 207,
+   "start": 410.117,
+   "end": 411.217,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 208,
+   "start": 411.567,
+   "end": 412.567,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 209,
+   "start": 412.917,
+   "end": 414.117,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 210,
+   "start": 414.367,
+   "end": 417.067,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 211,
+   "start": 417.417,
+   "end": 420.317,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 212,
+   "start": 420.867,
+   "end": 424.017,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 213,
+   "start": 424.017,
+   "end": 427.617,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 214,
+   "start": 428.067,
+   "end": 429.967,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 215,
+   "start": 430.317,
+   "end": 433.767,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 216,
+   "start": 435.117,
+   "end": 438.617,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 217,
+   "start": 438.617,
+   "end": 440.467,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 218,
+   "start": 441.817,
+   "end": 445.767,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 219,
+   "start": 445.767,
+   "end": 448.317,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 220,
+   "start": 448.767,
+   "end": 451.767,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 221,
+   "start": 451.767,
+   "end": 454.617,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 222,
+   "start": 456.067,
+   "end": 457.817,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 223,
+   "start": 457.817,
+   "end": 461.017,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 224,
+   "start": 462.317,
+   "end": 465.117,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 225,
+   "start": 465.117,
+   "end": 467.717,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 226,
+   "start": 468.067,
+   "end": 470.667,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 227,
+   "start": 470.817,
+   "end": 474.117,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 228,
+   "start": 474.667,
+   "end": 477.717,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 229,
+   "start": 479.067,
+   "end": 481.917,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 230,
+   "start": 482.467,
+   "end": 486.317,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 231,
+   "start": 486.317,
+   "end": 488.767,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

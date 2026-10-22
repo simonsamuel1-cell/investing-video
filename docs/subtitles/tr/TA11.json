@@ -1,0 +1,579 @@
+{
+ "key": "TA11",
+ "rows": [
+  {
+   "i": 1,
+   "en": "Imagine you've found a setup that looks complete.",
+   "zh": "想象一下，你找到了一个看起来很完整的交易形态。",
+   "ja": "条件がそろって見えるセットアップを見つけたと想像してください。",
+   "ko": "모든 조건을 갖춘 것처럼 보이는 셋업을 찾았다고 상상해 보세요."
+  },
+  {
+   "i": 2,
+   "en": "Uptrend, support holding, volume rising, then a breakout.",
+   "zh": "上升趋势、支撑守住、成交量放大，接着出现突破。",
+   "ja": "上昇トレンドでサポートも維持、出来高も増え、そしてブレイクアウト。",
+   "ko": "상승 추세에 지지가 유지되고, 거래량도 늘더니 돌파가 나와요."
+  },
+  {
+   "i": 3,
+   "en": "You enter with confidence.",
+   "zh": "你信心满满地入场。",
+   "ja": "自信を持ってエントリーします。",
+   "ko": "자신 있게 진입해요."
+  },
+  {
+   "i": 4,
+   "en": "But a few candles later, price turns down instead.",
+   "zh": "但几根K线之后，价格反而掉头下跌。",
+   "ja": "ところが数本のローソク足の後、価格は逆に下落に転じます。",
+   "ko": "그런데 캔들 몇 개 뒤, 가격이 오히려 하락으로 돌아서요."
+  },
+  {
+   "i": 5,
+   "en": "Does that mean technical analysis failed?",
+   "zh": "这是否意味着技术分析失败了？",
+   "ja": "これはテクニカル分析が失敗したということでしょうか？",
+   "ko": "그럼 기술적 분석이 실패한 걸까요?"
+  },
+  {
+   "i": 6,
+   "en": "Not necessarily.",
+   "zh": "不一定。",
+   "ja": "そうとは限りません。",
+   "ko": "꼭 그렇진 않아요."
+  },
+  {
+   "i": 7,
+   "en": "The point: technical analysis works with probabilities, not certainty.",
+   "zh": "关键在于：技术分析依靠的是概率，而不是确定性。",
+   "ja": "要するに、テクニカル分析は確実性ではなく、確率で機能するものです。",
+   "ko": "핵심은, 기술적 분석은 확실성이 아니라 확률로 작동한다는 거예요."
+  },
+  {
+   "i": 8,
+   "en": "A good setup helps improve your decisions in a fast-moving market, but it never guarantees results.",
+   "zh": "好的交易形态有助于在快节奏市场中提升决策质量，但从不保证结果。",
+   "ja": "良いセットアップは速い相場での判断の質の向上に役立ちますが、結果は決して保証しません。",
+   "ko": "좋은 셋업은 빠른 시장에서 판단의 질을 높이는 데 도움이 되지만, 결과를 절대 보장하지 않아요."
+  },
+  {
+   "i": 9,
+   "en": "Even a complete setup can still fail.",
+   "zh": "再完整的交易形态，也可能失败。",
+   "ja": "条件がそろったセットアップでも、失敗することはあります。",
+   "ko": "조건을 다 갖춘 셋업도 실패할 수 있어요."
+  },
+  {
+   "i": 10,
+   "en": "Let's start with the most dangerous mistake: entering without knowing when your analysis counts as wrong.",
+   "zh": "我们从最危险的错误说起：入场时不知道分析在什么情况下算错。",
+   "ja": "まずは最も危険なミスから。分析がいつ誤りとみなされるかを知らずにエントリーすることです。",
+   "ko": "가장 위험한 실수부터 볼게요. 분석이 언제 틀린 것으로 판단되는지 모른 채 진입하는 거예요."
+  },
+  {
+   "i": 11,
+   "en": "Say you buy because support is holding.",
+   "zh": "比如，你因为支撑守住而买入。",
+   "ja": "たとえば、サポートが維持されているから買ったとします。",
+   "ko": "예를 들어 지지가 유지돼서 매수했다고 해 볼게요."
+  },
+  {
+   "i": 12,
+   "en": "If price breaks down and closes below support, the main reason for that trade starts to lose its validity.",
+   "zh": "如果价格跌破并收在支撑下方，这笔交易的主要理由就开始不成立了。",
+   "ja": "価格が下抜けてサポートの下で引ければ、そのトレードの主な根拠は崩れ始めます。",
+   "ko": "가격이 하향 이탈해 지지선 아래에서 마감하면, 그 매매의 핵심 근거는 힘을 잃기 시작해요."
+  },
+  {
+   "i": 13,
+   "en": "The setup is starting to turn invalid.",
+   "zh": "交易形态开始失效。",
+   "ja": "セットアップが無効になり始めます。",
+   "ko": "셋업이 무효화되기 시작해요."
+  },
+  {
+   "i": 14,
+   "en": "The problem is, after entry we often start hoping.",
+   "zh": "问题是，入场之后，我们往往开始抱着希望。",
+   "ja": "問題は、エントリー後につい期待を抱き始めがちなことです。",
+   "ko": "문제는, 진입하고 나면 우리가 종종 희망을 걸기 시작한다는 거예요."
+  },
+  {
+   "i": 15,
+   "en": "“Just a little longer.”",
+   "zh": "“再等一等。”",
+   "ja": "「もう少しだけ。」",
+   "ko": "“조금만 더.”"
+  },
+  {
+   "i": 16,
+   "en": "“Maybe it'll come back later.”",
+   "zh": "“说不定等下就回来了。”",
+   "ja": "「そのうち戻るかも。」",
+   "ko": "“나중에 다시 돌아올지도 몰라.”"
+  },
+  {
+   "i": 17,
+   "en": "So set your invalidation before entry, not after the position starts losing.",
+   "zh": "所以，要在入场前就定好失效条件，而不是等持仓开始亏损后再定。",
+   "ja": "だから無効化条件は、含み損が出てからではなく、エントリー前に決めましょう。",
+   "ko": "그래서 무효화 조건은 손실이 나기 시작한 뒤가 아니라, 진입 전에 정하세요."
+  },
+  {
+   "i": 18,
+   "en": "From the start, you already know when the scenario no longer fits the plan.",
+   "zh": "从一开始，你就清楚情景何时不再符合计划。",
+   "ja": "最初から、どこでシナリオが計画と合わなくなるかが分かっています。",
+   "ko": "처음부터 언제 시나리오가 계획에서 벗어나는지 이미 알고 있게 돼요."
+  },
+  {
+   "i": 19,
+   "en": "The next mistake comes from ourselves.",
+   "zh": "下一个错误来自我们自己。",
+   "ja": "次のミスは、自分自身から生まれます。",
+   "ko": "다음 실수는 우리 자신에게서 나와요."
+  },
+  {
+   "i": 20,
+   "en": "Overtrading happens when we feel we always have to hold a position.",
+   "zh": "过度交易，发生在我们觉得必须一直持仓的时候。",
+   "ja": "オーバートレードは、常にポジションを持たねばと感じるときに起きます。",
+   "ko": "과매매는 항상 포지션을 갖고 있어야 한다고 느낄 때 생겨요."
+  },
+  {
+   "i": 21,
+   "en": "But if the trend isn't clear yet, the level isn't attractive yet, or no trigger has appeared, there may be no trade worth taking.",
+   "zh": "但如果趋势还不明朗、价位还不理想，或触发信号还没出现，就未必有值得做的交易。",
+   "ja": "でもトレンドが不明確、水準が魅力的でない、またはトリガーが出ていないなら、価値あるトレードがあるとは限りません。",
+   "ko": "하지만 추세가 불분명하거나, 가격대가 매력적이지 않거나, 트리거가 아직 안 나왔다면 할 만한 매매가 없을 수도 있어요."
+  },
+  {
+   "i": 22,
+   "en": "Not trading is also a decision.",
+   "zh": "不交易，也是一种决定。",
+   "ja": "トレードしないことも、ひとつの判断です。",
+   "ko": "매매하지 않는 것도 하나의 결정이에요."
+  },
+  {
+   "i": 23,
+   "en": "Then there's revenge trading.",
+   "zh": "然后是报复性交易。",
+   "ja": "それから、リベンジトレードもあります。",
+   "ko": "그리고 복수 매매도 있어요."
+  },
+  {
+   "i": 24,
+   "en": "After a loss, we want to win it back fast and rush back in.",
+   "zh": "亏损之后，我们想尽快把亏的赚回来，于是急着再次入场。",
+   "ja": "損失の後、早く取り戻したくて、急いで再びエントリーしてしまいます。",
+   "ko": "손실이 나면 빨리 만회하고 싶어서 서둘러 다시 진입해요."
+  },
+  {
+   "i": 25,
+   "en": "But the previous loss doesn't make the next setup any more valid.",
+   "zh": "可是，之前的亏损并不会让下一个交易形态更有效。",
+   "ja": "でも、前の損失が次のセットアップをより有効にするわけではありません。",
+   "ko": "하지만 이전 손실이 다음 셋업을 더 유효하게 만들어 주지는 않아요."
+  },
+  {
+   "i": 26,
+   "en": "If there's no setup yet, the answer is still: don't trade.",
+   "zh": "如果还没有交易形态，答案依然是：不要交易。",
+   "ja": "セットアップがまだないなら、答えはやはり「トレードしない」です。",
+   "ko": "아직 셋업이 없다면, 답은 여전히 같아요. 매매하지 마세요."
+  },
+  {
+   "i": 27,
+   "en": "Every new trade has to meet the same rules.",
+   "zh": "每一笔新交易，都必须符合同样的规则。",
+   "ja": "新しいトレードはどれも、同じルールを満たす必要があります。",
+   "ko": "새로운 매매는 모두 같은 규칙을 충족해야 해요."
+  },
+  {
+   "i": 28,
+   "en": "The next mistake is confirmation bias.",
+   "zh": "下一个错误是确认偏差。",
+   "ja": "次のミスは確証バイアスです。",
+   "ko": "다음 실수는 확증 편향이에요."
+  },
+  {
+   "i": 29,
+   "en": "We focus too much on what supports our scenario and ignore information that contradicts it.",
+   "zh": "我们过于关注支持自己情景的信息，却忽略了相反的信息。",
+   "ja": "シナリオを支持する材料ばかりに目を向け、反対の情報を無視してしまうのです。",
+   "ko": "시나리오를 뒷받침하는 것에만 너무 집중하고, 반대되는 정보는 무시하게 돼요."
+  },
+  {
+   "i": 30,
+   "en": "Don't just ask, “What makes my analysis right?”",
+   "zh": "别只问：“我的分析为什么是对的？”",
+   "ja": "「自分の分析が正しいと言える理由は？」とだけ問うのはやめましょう。",
+   "ko": "“내 분석이 맞는 이유는 뭘까?”라고만 묻지 마세요."
+  },
+  {
+   "i": 31,
+   "en": "Also ask, “What could prove me wrong?”",
+   "zh": "也要问：“什么能证明我是错的？”",
+   "ja": "「自分が間違っていると証明できるものは何か？」とも問いましょう。",
+   "ko": "“무엇이 내가 틀렸다는 걸 증명할 수 있을까?”라고도 물어보세요."
+  },
+  {
+   "i": 32,
+   "en": "This helps you stay objective.",
+   "zh": "这有助于保持客观。",
+   "ja": "そうすることで、客観性を保ちやすくなります。",
+   "ko": "이렇게 하면 객관성을 유지하는 데 도움이 돼요."
+  },
+  {
+   "i": 33,
+   "en": "Market conditions matter too.",
+   "zh": "市场状况也很重要。",
+   "ja": "相場環境も重要です。",
+   "ko": "시장 상황도 중요해요."
+  },
+  {
+   "i": 34,
+   "en": "A setup that works well in a trending market can fail more often when the market goes sideways or starts to weaken.",
+   "zh": "在趋势行情里表现良好的交易形态，遇到横盘或开始走弱的市场时，可能更常失败。",
+   "ja": "トレンド相場でうまく機能するセットアップも、横ばい（レンジ）や弱まり始めた相場では、より失敗しやすくなることがあります。",
+   "ko": "추세장에서 잘 통하던 셋업도 시장이 횡보하거나 약해지기 시작하면 더 자주 실패할 수 있어요."
+  },
+  {
+   "i": 35,
+   "en": "The setup can be the same, but the context is different.",
+   "zh": "交易形态可以一样，但背景不同。",
+   "ja": "セットアップは同じでも、背景となる状況が違います。",
+   "ko": "셋업은 같을 수 있어도, 맥락은 달라요."
+  },
+  {
+   "i": 36,
+   "en": "So don't read a chart without looking at the broader market.",
+   "zh": "所以，不要脱离更大的市场环境去读图表。",
+   "ja": "だから、より広い相場を見ずにチャートを読むのはやめましょう。",
+   "ko": "그러니 더 넓은 시장을 보지 않고 차트만 읽지는 마세요."
+  },
+  {
+   "i": 37,
+   "en": "Don't get caught in indicator overload.",
+   "zh": "别陷入指标过载。",
+   "ja": "インジケーター過多に陥らないようにしましょう。",
+   "ko": "지표 과부하에 빠지지 마세요."
+  },
+  {
+   "i": 38,
+   "en": "Adding lots of indicators doesn't always add quality to your analysis.",
+   "zh": "添加大量指标，并不总能提升分析质量。",
+   "ja": "インジケーターをたくさん加えても、分析の質が上がるとは限りません。",
+   "ko": "지표를 많이 추가한다고 항상 분석의 질이 높아지는 건 아니에요."
+  },
+  {
+   "i": 39,
+   "en": "If several indicators read similar things, you may just be seeing the same message in a different form.",
+   "zh": "如果几个指标反映的是相似的东西，你可能只是在以不同形式看同一个信息。",
+   "ja": "複数のインジケーターが似たものを示すなら、同じメッセージを別の形で見ているだけかもしれません。",
+   "ko": "여러 지표가 비슷한 것을 읽고 있다면, 같은 메시지를 다른 형태로 보고 있는 것뿐일 수 있어요."
+  },
+  {
+   "i": 40,
+   "en": "More indicators don't necessarily mean more insight.",
+   "zh": "指标更多，不一定意味着洞见更多。",
+   "ja": "インジケーターが増えても、得られる洞察が増えるとは限りません。",
+   "ko": "지표가 많다고 해서 인사이트가 꼭 많아지는 건 아니에요."
+  },
+  {
+   "i": 41,
+   "en": "There's also hindsight bias.",
+   "zh": "还有后见之明偏差。",
+   "ja": "後知恵バイアスもあります。",
+   "ko": "사후 확증 편향도 있어요."
+  },
+  {
+   "i": 42,
+   "en": "After price has moved, the chart often looks very clear.",
+   "zh": "价格走出来之后，图表常常显得非常清楚。",
+   "ja": "価格が動いた後では、チャートがとても明確に見えることがよくあります。",
+   "ko": "가격이 움직이고 나면 차트는 종종 아주 명확해 보여요."
+  },
+  {
+   "i": 43,
+   "en": "But before that candle formed, we didn't know what would happen next.",
+   "zh": "但在那根K线形成之前，我们并不知道接下来会发生什么。",
+   "ja": "でも、そのローソク足ができる前は、次に何が起きるか分かりませんでした。",
+   "ko": "하지만 그 캔들이 만들어지기 전에는 다음에 무슨 일이 일어날지 몰랐어요."
+  },
+  {
+   "i": 44,
+   "en": "So don't judge a decision only by the final result.",
+   "zh": "所以，不要只凭最终结果来评判决策。",
+   "ja": "だから、判断を最終的な結果だけで評価しないようにしましょう。",
+   "ko": "그러니 결정을 최종 결과만으로 평가하지 마세요."
+  },
+  {
+   "i": 45,
+   "en": "Also look at whether the process was right.",
+   "zh": "也要看看过程是否正确。",
+   "ja": "プロセスが正しかったかどうかも見ましょう。",
+   "ko": "과정이 올바랐는지도 살펴보세요."
+  },
+  {
+   "i": 46,
+   "en": "Now let's look at an example with ADMR.",
+   "zh": "现在我们来看ADMR的例子。",
+   "ja": "では、ADMRの例を見てみましょう。",
+   "ko": "이제 ADMR 사례를 살펴볼게요."
+  },
+  {
+   "i": 47,
+   "en": "Over the long term, this stock had still been in an uptrend.",
+   "zh": "从长期来看，这只股票此前仍处于上升趋势中。",
+   "ja": "長期的に見ると、この銘柄はそれまでまだ上昇トレンドの中にありました。",
+   "ko": "장기적으로 보면, 이 종목은 그전까지 여전히 상승 추세에 있었어요."
+  },
+  {
+   "i": 48,
+   "en": "Then a descending triangle formed.",
+   "zh": "随后形成了下降三角形。",
+   "ja": "その後、下降三角形が形成されました。",
+   "ko": "그 후 하강 삼각형이 만들어졌어요."
+  },
+  {
+   "i": 49,
+   "en": "Recent volume was still fairly active, and the MACD histogram was already green.",
+   "zh": "近期成交量仍相当活跃，MACD柱状图也已经转正。",
+   "ja": "直近の出来高はまだそれなりに活発で、MACDヒストグラムもすでにプラス圏でした。",
+   "ko": "최근 거래량은 아직 꽤 활발했고, MACD 히스토그램도 이미 양전환했어요."
+  },
+  {
+   "i": 50,
+   "en": "If you focus too much on one scenario, this can look like a rebound in the making.",
+   "zh": "如果太专注于单一情景，这种状况看起来就像在酝酿反弹。",
+   "ja": "一つのシナリオにこだわりすぎると、この状況は反発への準備のように見えるかもしれません。",
+   "ko": "한 가지 시나리오에만 너무 집중하면, 이 상황이 반등을 준비하는 것처럼 보일 수 있어요."
+  },
+  {
+   "i": 51,
+   "en": "What should you watch out for?",
+   "zh": "需要警惕什么？",
+   "ja": "何に警戒すべきでしょうか？",
+   "ko": "무엇을 경계해야 할까요?"
+  },
+  {
+   "i": 52,
+   "en": "What you actually need to watch for is a change in the scenario.",
+   "zh": "真正需要警惕的，反而是情景的变化。",
+   "ja": "警戒すべきなのは、むしろシナリオの変化です。",
+   "ko": "오히려 경계해야 할 건 시나리오의 변화예요."
+  },
+  {
+   "i": 53,
+   "en": "On May 11, 2026, price broke below MA100.",
+   "zh": "2026年5月11日，价格跌破MA100。",
+   "ja": "2026年5月11日、価格はMA100を下抜けました。",
+   "ko": "2026년 5월 11일, 가격이 MA100을 하향 이탈했어요."
+  },
+  {
+   "i": 54,
+   "en": "The next day, price tried to retest but failed to get back above MA100.",
+   "zh": "第二天，价格试图回踩，但未能重新站上MA100。",
+   "ja": "翌日、価格はリテストを試みましたが、MA100の上には戻れませんでした。",
+   "ko": "다음 날 가격은 리테스트를 시도했지만, MA100 위로 다시 올라서지 못했어요."
+  },
+  {
+   "i": 55,
+   "en": "Then on May 18, the descending triangle's support was broken too.",
+   "zh": "接着在5月18日，下降三角形的支撑也被跌破了。",
+   "ja": "そして5月18日には、下降三角形のサポートも下抜けました。",
+   "ko": "이어서 5월 18일에는 하강 삼각형의 지지선도 하향 이탈했어요."
+  },
+  {
+   "i": 56,
+   "en": "When the evidence changes, the scenario has to change too.",
+   "zh": "证据变了，情景也必须跟着变。",
+   "ja": "証拠が変われば、シナリオも変えなければなりません。",
+   "ko": "증거가 바뀌면 시나리오도 바뀌어야 해요."
+  },
+  {
+   "i": 57,
+   "en": "Another mistake is blindly copying other people's trades.",
+   "zh": "另一个错误是盲目照搬别人的交易。",
+   "ja": "もうひとつのミスは、他人のトレードをそのまま真似することです。",
+   "ko": "또 다른 실수는 남의 매매를 무작정 따라 하는 거예요."
+  },
+  {
+   "i": 58,
+   "en": "The stock may be the same, but the timeframe, entry price, risk limit, and exit plan can differ.",
+   "zh": "股票也许一样，但时间周期、入场价、风险上限和出场计划都可能不同。",
+   "ja": "銘柄は同じでも、時間足、エントリー価格、リスク許容範囲、エグジット計画は違うかもしれません。",
+   "ko": "종목은 같아도 타임프레임, 진입가, 리스크 한도, 청산 계획은 다를 수 있어요."
+  },
+  {
+   "i": 59,
+   "en": "Same stock doesn't necessarily mean same trade.",
+   "zh": "同一只股票，不一定是同一笔交易。",
+   "ja": "同じ銘柄でも、同じトレードとは限りません。",
+   "ko": "같은 종목이라도 같은 매매라는 법은 없어요."
+  },
+  {
+   "i": 60,
+   "en": "So don't just ask, “What stock did they buy?”",
+   "zh": "所以，别只问：“他买了什么股票？”",
+   "ja": "だから、「何の銘柄を買ったの？」とだけ聞くのはやめましょう。",
+   "ko": "그러니 “그 사람은 무슨 종목을 샀지?”라고만 묻지 마세요."
+  },
+  {
+   "i": 61,
+   "en": "It's more important to understand why that trade was taken, and when its logic counts as wrong.",
+   "zh": "更重要的是，弄懂这笔交易为什么做，以及它的逻辑在什么情况下算错。",
+   "ja": "それより大事なのは、なぜそのトレードをしたのか、いつそのロジックが誤りとみなされるのかを理解することです。",
+   "ko": "더 중요한 건 왜 그 매매를 했는지, 그리고 언제 그 논리가 틀린 것으로 보는지를 이해하는 거예요."
+  },
+  {
+   "i": 62,
+   "en": "If you don't understand the logic, don't just jump in.",
+   "zh": "如果你不理解其中的逻辑，就别急着跟。",
+   "ja": "そのロジックが理解できないなら、すぐに追随しないようにしましょう。",
+   "ko": "그 논리를 이해하지 못한다면, 바로 따라 하지 마세요."
+  },
+  {
+   "i": 63,
+   "en": "Before entry, pull everything you've learned into one process.",
+   "zh": "入场前，把学过的所有内容整合成一套流程。",
+   "ja": "エントリーの前に、これまで学んだことをすべてひとつのプロセスにまとめましょう。",
+   "ko": "진입 전에는 지금까지 배운 모든 것을 하나의 과정으로 묶어 보세요."
+  },
+  {
+   "i": 64,
+   "en": "“What's the trend?”",
+   "zh": "“趋势怎么样？”",
+   "ja": "「トレンドはどうか？」",
+   "ko": "“추세는 어떤가?”"
+  },
+  {
+   "i": 65,
+   "en": "“Where are the key levels?”",
+   "zh": "“关键价位在哪里？”",
+   "ja": "「重要な水準はどこか？」",
+   "ko": "“중요한 가격대는 어디인가?”"
+  },
+  {
+   "i": 66,
+   "en": "“What's the setup?”",
+   "zh": "“交易形态是什么？”",
+   "ja": "「セットアップは何か？」",
+   "ko": "“셋업은 무엇인가?”"
+  },
+  {
+   "i": 67,
+   "en": "“Does volume support it?”",
+   "zh": "“成交量支持吗？”",
+   "ja": "「出来高は裏付けているか？」",
+   "ko": "“거래량이 뒷받침하는가?”"
+  },
+  {
+   "i": 68,
+   "en": "“Do other timeframes line up?”",
+   "zh": "“其他时间周期一致吗？”",
+   "ja": "「他の時間足も同じ方向か？」",
+   "ko": "“다른 타임프레임도 같은 방향인가?”"
+  },
+  {
+   "i": 69,
+   "en": "And most importantly: “What's the invalidation?”",
+   "zh": "而最重要的是：“失效条件是什么？”",
+   "ja": "そして最も重要なのが、「無効化条件は何か？」です。",
+   "ko": "그리고 가장 중요한 건 “무효화 조건은 무엇인가?”예요."
+  },
+  {
+   "i": 70,
+   "en": "If one key part isn't clear yet, the trade isn't ready.",
+   "zh": "只要有一个关键部分还不清楚，这笔交易就还没准备好。",
+   "ja": "重要な部分が一つでも不明確なら、そのトレードはまだ準備ができていません。",
+   "ko": "중요한 부분 하나라도 아직 불분명하다면, 그 매매는 아직 준비되지 않은 거예요."
+  },
+  {
+   "i": 71,
+   "en": "Then check yourself, too.",
+   "zh": "然后，也要检查一下你自己。",
+   "ja": "それから、自分自身もチェックしましょう。",
+   "ko": "그다음엔 자기 자신도 점검해 보세요."
+  },
+  {
+   "i": 72,
+   "en": "If you want to enter out of FOMO, frustration, or to avenge a loss, pause first.",
+   "zh": "如果想入场是出于FOMO（怕踏空）、恼火，或想扳回亏损，先停一停。",
+   "ja": "FOMOやイライラ、負けを取り返したい気持ちでエントリーしたくなったら、いったん止まりましょう。",
+   "ko": "FOMO나 짜증 때문에, 혹은 손실을 되갚고 싶어서 진입하고 싶다면 일단 멈추세요."
+  },
+  {
+   "i": 73,
+   "en": "Technical analysis is a decision-making aid, not a tool for finding certainty.",
+   "zh": "技术分析是辅助决策的工具，而不是寻找确定性的工具。",
+   "ja": "テクニカル分析は判断を助ける道具であり、確実性を求めるための道具ではありません。",
+   "ko": "기술적 분석은 결정을 돕는 도구이지, 확실성을 찾는 도구가 아니에요."
+  },
+  {
+   "i": 74,
+   "en": "It's okay to have emotions, but don't let them take over the process.",
+   "zh": "可以有情绪，但不要让情绪接管整个流程。",
+   "ja": "感情があるのは構いませんが、感情にプロセスを支配させないでください。",
+   "ko": "감정이 있는 건 괜찮지만, 감정이 과정을 장악하게 두지는 마세요."
+  },
+  {
+   "i": 75,
+   "en": "So the closing rule is simple.",
+   "zh": "所以，最后的规则很简单。",
+   "ja": "なので、締めくくりのルールはシンプルです。",
+   "ko": "그래서 마지막 규칙은 간단해요."
+  },
+  {
+   "i": 76,
+   "en": "If the conditions aren't complete yet, wait.",
+   "zh": "条件还不齐全，就等待。",
+   "ja": "条件がまだそろっていないなら、待ちましょう。",
+   "ko": "조건이 아직 갖춰지지 않았다면, 기다리세요."
+  },
+  {
+   "i": 77,
+   "en": "If the setup is already invalid, exit.",
+   "zh": "交易形态已经失效，就出场。",
+   "ja": "セットアップが無効になったら、エグジットしましょう。",
+   "ko": "셋업이 이미 무효화됐다면, 청산하세요."
+  },
+  {
+   "i": 78,
+   "en": "If conditions change, reassess.",
+   "zh": "情况变了，就重新评估。",
+   "ja": "状況が変わったら、評価し直しましょう。",
+   "ko": "상황이 바뀌면, 다시 평가하세요."
+  },
+  {
+   "i": 79,
+   "en": "And if your reason for entering is emotional, don't force it.",
+   "zh": "而如果入场理由是出于情绪，就不要勉强。",
+   "ja": "そして、エントリーの理由が感情的なものなら、無理に入らないでください。",
+   "ko": "그리고 진입 이유가 감정적이라면, 억지로 하지 마세요."
+  },
+  {
+   "i": 80,
+   "en": "No trade unless the conditions are met.",
+   "zh": "条件未满足，就不交易。",
+   "ja": "条件が満たされない限り、トレードはしません。",
+   "ko": "조건이 충족되지 않으면 매매하지 않아요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 49,
+   "note": "\"MACD histogram sudah hijau\" means the histogram has turned positive. EN keeps \"green\" (it describes the on-screen bars); ZH/JA/KO say it turned positive (转正 / プラス圏 / 양전환), because green reads as falling in mainland China and Korean apps use red/blue."
+  },
+  {
+   "i": 69,
+   "note": "Indonesian has lowercase \"apa\" at the start of the quoted question (rows 64-68 are capitalised); EN capitalises \"What's\"."
+  },
+  {
+   "i": 80,
+   "note": "Already English on screen: EN kept verbatim; ZH/JA/KO translated."
+  }
+ ]
+}

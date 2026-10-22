@@ -1,56 +1,168 @@
 {
-  "_": "VI04's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
-  "base": "/Users/samuelsurja/Documents/01 Academy/INV04 - Mencari Investasi Cocok",
-  "source": "VO Cari Investasi cocok.mp3",
-  "out": "public/vo/vi04-investasi-yang-cocok.mp3",
-  "pieces": [
-    {
-      "src": "ORIGINAL",
-      "from": 0,
-      "to": 7.78
-    },
-    {
-      "_": "16 Oct, revisi 3: 'Tapi ada satu hal yang sering justru nggak kita riset, yaitu' (script changed with it)",
-      "src": "Revisi VO/Scene 01 Part 3.mp3",
-      "to": 3.14,
-      "match": "original 7.8-10.7"
-    },
-    {
-      "_": "16 Oct, CEK 1: 'investor yang akan membelinya—diri kita sendiri.'",
-      "src": "Revisi VO/Scene 01 Part 1.mp3",
-      "match": "original 10.9-18.3"
-    },
-    {
-      "silence": 0.2
-    },
-    {
-      "_": "16 Oct, CEK 1: 'Sekarang, investor di Indonesia sudah mencapai sekitar 26,7 juta orang,'",
-      "src": "Revisi VO/Scene 01 Part 2.mp3",
-      "to": 4.72,
-      "match": "original 10.9-18.3"
-    },
-    {
-      "src": "ORIGINAL",
-      "from": 18.32,
-      "to": 48.62
-    },
-    {
-      "_": "16 Oct, revisi 4: 'Kebanyakan orang mungkin langsung mikir:' (SC02)",
-      "src": "Revisi VO/Scene 02 Part 2.mp3",
-      "to": 2.7,
-      "match": "original 48.6-50.3"
-    },
-    {
-      "silence": 0.08
-    },
-    {
-      "_": "16 Oct, revisi 2: '“Mana yang paling cepat?”' (SC02)",
-      "src": "Revisi VO/Scene 02 Part 1.mp3",
-      "match": "original 48.5-54.4"
-    },
-    {
-      "src": "ORIGINAL",
-      "from": 51.66
-    }
-  ]
+ "_": "VI04's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+ "base": "/Users/samuelsurja/Documents/01 Academy/INV04 - Mencari Investasi Cocok",
+ "source": "VO Cari Investasi cocok.mp3",
+ "out": "public/vo/vi04-investasi-yang-cocok.mp3",
+ "pieces": [
+  {
+   "src": "ORIGINAL",
+   "from": 0,
+   "to": 7.78
+  },
+  {
+   "_": "16 Oct, revisi 3: 'Tapi ada satu hal yang sering justru nggak kita riset, yaitu' (script changed with it)",
+   "src": "Revisi VO/Scene 01 Part 3.mp3",
+   "to": 3.14,
+   "match": "original 7.8-10.7"
+  },
+  {
+   "_": "16 Oct, CEK 1: 'investor yang akan membelinya—diri kita sendiri.'",
+   "src": "Revisi VO/Scene 01 Part 1.mp3",
+   "match": "original 10.9-18.3"
+  },
+  {
+   "silence": 0.2
+  },
+  {
+   "_": "16 Oct, CEK 1: 'Sekarang, investor di Indonesia sudah mencapai sekitar 26,7 juta orang,'",
+   "src": "Revisi VO/Scene 01 Part 2.mp3",
+   "to": 4.72,
+   "match": "original 10.9-18.3"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 18.32,
+   "to": 48.62
+  },
+  {
+   "_": "16 Oct, revisi 4: 'Kebanyakan orang mungkin langsung mikir:' (SC02)",
+   "src": "Revisi VO/Scene 02 Part 2.mp3",
+   "to": 2.7,
+   "match": "original 48.6-50.3"
+  },
+  {
+   "silence": 0.08
+  },
+  {
+   "_": "16 Oct, revisi 2: '“Mana yang paling cepat?”' (SC02)",
+   "src": "Revisi VO/Scene 02 Part 1.mp3",
+   "match": "original 48.5-54.4"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 51.66,
+   "to": 132.7
+  },
+  {
+   "_": "19 Oct: 0.5 s (30 frames) out of the pause before “Ombak” (Simon: \"8365-8432 kosong, remove 30 frame\")",
+   "src": "ORIGINAL",
+   "from": 133.2,
+   "to": 165.7
+  },
+  {
+   "_": "19 Oct, revisi 5: 'Dua-duanya bisa terjadi.' (SC04)",
+   "src": "Revisi VO/Scene 04 Part 1.mp3",
+   "to": 1.38,
+   "match": "original 165.8-167.25"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 167.3,
+   "to": 168.66
+  },
+  {
+   "_": "19 Oct, revisi 6: '“Kalau ini terjadi ke uangku, aku masih sanggup lanjut nggak?”' (SC04)",
+   "src": "Revisi VO/Scene 04 Part 2.mp3",
+   "to": 3.22,
+   "match": "original 168.75-171.25"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 171.3,
+   "to": 226.84
+  },
+  {
+   "_": "19 Oct, revisi 7 (SC05): 'Baru satu atau dua, masih berkembang.'",
+   "src": "Revisi VO/Scene 05 Part 1.mp3",
+   "to": 2.49,
+   "match": "original 226.95-229.45"
+  },
+  {
+   "silence": 0.15
+  },
+  {
+   "_": "19 Oct, revisi 7 (SC05): 'Belum ada? Berarti masih pemula.'",
+   "src": "Revisi VO/Scene 05 Part 2.mp3",
+   "to": 1.84,
+   "match": "original 229.09-230.95"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 230.94,
+   "to": 236.45
+  },
+  {
+   "_": "19 Oct, revisi 7 (SC05): '“Berani”, bicara soal toleransi.'",
+   "src": "Revisi VO/Scene 05 Part 3.mp3",
+   "to": 2.39,
+   "match": "original 236.58-238.48"
+  },
+  {
+   "silence": 0.1
+  },
+  {
+   "_": "19 Oct, revisi 7 (SC05): '“Bisa mengemudikan”, bicara soal kemampuan.'",
+   "src": "Revisi VO/Scene 05 Part 4.mp3",
+   "to": 2.75,
+   "match": "original 238.81-241.32"
+  },
+  {
+   "_": "the room tone before SC06, kept from the original take",
+   "src": "ORIGINAL",
+   "from": 241.4,
+   "to": 241.62
+  },
+  {
+   "_": "22 Oct: SC06 replaced whole — Simon: \"revisi total scene 06\", new script (Guardian Achiever / Stable Architect / Bold Leader / Strategic Master). Replaces original 241.67–300.15 and Scene 06 Part 1.",
+   "src": "Revisi Scene 6.mp3",
+   "match": "original 241.6-300.1"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 300.35,
+   "to": 401.78
+  },
+  {
+   "_": "19 Oct, revisi 9 (SC09): 'Saya masih bisa menerima ini'",
+   "src": "Revisi VO/Scene 09 Part 1.mp3",
+   "to": 1.56,
+   "match": "original 401.93-403.71"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 403.77,
+   "to": 405.09
+  },
+  {
+   "_": "19 Oct, revisi 9 (SC09): 'Berikutnya, kamu akan memilih gaya investasimu jangka pendek atau jangka panjang dan tingkat pengalamanmu: pemula, berkembang, atau sudah berpengalaman.'",
+   "src": "Revisi VO/Scene 09 Part 2.mp3",
+   "to": 10.15,
+   "match": "original 405.24-413.50"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 413.58,
+   "to": 415.1
+  },
+  {
+   "_": "19 Oct, revisi 9 (SC09): 'Tuntun Personal Investment Plan akan membuat laporan investasi yang personal untukmu: profil investasimu, investasi yang paling sesuai, pilihan untuk naik level, panduan dari Tuntun, simulasi investasi satu tahun, sampai produk yang untuk sekarang mungkin belum cocok.'",
+   "src": "Revisi VO/Scene 09 Part 3.mp3",
+   "to": 16.3,
+   "match": "original 415.10-430.42"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 430.5
+  }
+ ]
 }

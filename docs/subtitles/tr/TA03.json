@@ -1,0 +1,1478 @@
+{
+ "key": "TA03",
+ "rows": [
+  {
+   "i": 1,
+   "en": "One candle shows one battle.",
+   "zh": "一根K线，展现的是一场较量。",
+   "ja": "1本のローソク足が示すのは、1つの戦いです。",
+   "ko": "캔들 하나는 하나의 싸움을 보여줘요."
+  },
+  {
+   "i": 2,
+   "en": "But it's not enough to know who's winning.",
+   "zh": "但这还不足以判断谁是赢家。",
+   "ja": "でも、それだけでは勝者はわかりません。",
+   "ko": "하지만 그것만으로는 누가 이기는지 알 수 없어요."
+  },
+  {
+   "i": 3,
+   "en": "The real signal appears",
+   "zh": "真正的信号",
+   "ja": "本当のシグナルは、",
+   "ko": "진짜 신호는"
+  },
+  {
+   "i": 4,
+   "en": "when several candles start talking to each other.",
+   "zh": "出现在几根K线开始相互对话的时候。",
+   "ja": "複数のローソク足が互いに語り始めたときに現れます。",
+   "ko": "여러 캔들이 서로 대화하기 시작할 때 나타나요."
+  },
+  {
+   "i": 5,
+   "en": "So this time,",
+   "zh": "所以这一次，",
+   "ja": "そこで今回は、",
+   "ko": "그래서 이번에는"
+  },
+  {
+   "i": 6,
+   "en": "we won't just look at one candle.",
+   "zh": "我们不只看一根K线。",
+   "ja": "1本のローソク足だけを見るのではありません。",
+   "ko": "캔들 하나만 보는 게 아니에요."
+  },
+  {
+   "i": 7,
+   "en": "We'll look at how several",
+   "zh": "我们会看看几根",
+   "ja": "見ていくのは、複数の",
+   "ko": "우리가 살펴볼 건, 여러"
+  },
+  {
+   "i": 8,
+   "en": "candles start to form a story,",
+   "zh": "K线如何开始构成一个故事，",
+   "ja": "ローソク足がストーリーを作り始める様子、",
+   "ko": "캔들이 이야기를 만들어 가는 방식,"
+  },
+  {
+   "i": 9,
+   "en": "how context makes that story clearer,",
+   "zh": "背景如何让这个故事更清晰，",
+   "ja": "文脈がそのストーリーをより明確にする仕組み、",
+   "ko": "맥락이 그 이야기를 더 분명하게 만드는 방식,"
+  },
+  {
+   "i": 10,
+   "en": "and how",
+   "zh": "以及如何",
+   "ja": "そして",
+   "ko": "그리고"
+  },
+  {
+   "i": 11,
+   "en": "to read it on a real chart.",
+   "zh": "在真实图表上解读它。",
+   "ja": "実際のチャートでの読み方です。",
+   "ko": "실제 차트에서 그걸 읽는 방법이에요."
+  },
+  {
+   "i": 12,
+   "en": "Before we get into patterns,",
+   "zh": "在讨论形态之前，",
+   "ja": "パターンの話に入る前に、",
+   "ko": "패턴을 다루기 전에,"
+  },
+  {
+   "i": 13,
+   "en": "first, learn to read one candle correctly.",
+   "zh": "先学会正确解读单根K线。",
+   "ja": "まず1本のローソク足を正しく読むことから学びましょう。",
+   "ko": "먼저 캔들 하나를 제대로 읽는 법부터 배워요."
+  },
+  {
+   "i": 14,
+   "en": "A long green body with short wicks",
+   "zh": "实体很长、影线很短的阳线，",
+   "ja": "実体が長くヒゲが短い陽線は、",
+   "ko": "몸통이 길고 꼬리가 짧은 양봉은"
+  },
+  {
+   "i": 15,
+   "en": "means buyers controlled the price",
+   "zh": "意味着买方掌控了价格，",
+   "ja": "始値から終値まで買い手が",
+   "ko": "시가부터 종가까지"
+  },
+  {
+   "i": 16,
+   "en": "from the open to the close.",
+   "zh": "从开盘一直到收盘。",
+   "ja": "価格を支配していたことを意味します。",
+   "ko": "매수자가 가격을 장악했다는 뜻이에요."
+  },
+  {
+   "i": 17,
+   "en": "There's almost no pushback.",
+   "zh": "几乎没有遇到反抗。",
+   "ja": "反撃はほとんどありません。",
+   "ko": "반격이 거의 없어요."
+  },
+  {
+   "i": 18,
+   "en": "That's a sign of buyer conviction.",
+   "zh": "这是买方信心坚定的迹象。",
+   "ja": "買い手の確信の表れです。",
+   "ko": "매수자의 확신을 보여주는 신호예요."
+  },
+  {
+   "i": 19,
+   "en": "A small body with a long upper wick",
+   "zh": "实体小、上影线长，",
+   "ja": "実体が小さく上ヒゲが長い場合、",
+   "ko": "몸통이 작고 윗꼬리가 긴 캔들은"
+  },
+  {
+   "i": 20,
+   "en": "means the price tried to rise",
+   "zh": "意味着价格曾试图上涨，",
+   "ja": "価格は一度上昇を試みたものの、",
+   "ko": "가격이 상승을 시도했지만"
+  },
+  {
+   "i": 21,
+   "en": "but got rejected hard.",
+   "zh": "却遭到强烈拒绝。",
+   "ja": "強く押し戻されたことを意味します。",
+   "ko": "강하게 거부당했다는 뜻이에요."
+  },
+  {
+   "i": 22,
+   "en": "Sellers were already waiting up there,",
+   "zh": "卖方早已在上方等待，",
+   "ja": "売り手が上で待ち構えていて、",
+   "ko": "매도자가 이미 위에서 기다리고 있다가"
+  },
+  {
+   "i": 23,
+   "en": "then pushed it back down before the close.",
+   "zh": "在收盘前又把价格压了下来。",
+   "ja": "引け前に価格を再び押し下げたのです。",
+   "ko": "마감 전에 가격을 다시 끌어내렸어요."
+  },
+  {
+   "i": 24,
+   "en": "That wick is proof.",
+   "zh": "这根影线就是证据。",
+   "ja": "そのヒゲこそが証拠です。",
+   "ko": "그 꼬리가 바로 증거예요."
+  },
+  {
+   "i": 25,
+   "en": "Someone was truly ready to sell at that level.",
+   "zh": "确实有人准备在那个价位卖出。",
+   "ja": "その水準で売る準備ができている人が、確かにいたのです。",
+   "ko": "그 가격대에서 팔 준비가 된 쪽이 분명히 있었어요."
+  },
+  {
+   "i": 26,
+   "en": "A long lower wick means price fell sharply,",
+   "zh": "长下影线意味着价格曾大幅下跌，",
+   "ja": "長い下ヒゲは、価格が一度急落したあと、",
+   "ko": "긴 아랫꼬리는 가격이 한때 급락했다가"
+  },
+  {
+   "i": 27,
+   "en": "then buyers stepped in and pushed it back up.",
+   "zh": "随后买方进场，把价格推回上方。",
+   "ja": "買い手が入って再び押し上げたことを意味します。",
+   "ko": "매수자가 들어와 다시 밀어 올렸다는 뜻이에요."
+  },
+  {
+   "i": 28,
+   "en": "Demand showed up.",
+   "zh": "需求出现了。",
+   "ja": "需要が現れたのです。",
+   "ko": "수요가 나타난 거예요."
+  },
+  {
+   "i": 29,
+   "en": "If the upper and lower wicks",
+   "zh": "如果上下影线",
+   "ja": "上ヒゲと下ヒゲが",
+   "ko": "윗꼬리와 아랫꼬리가"
+  },
+  {
+   "i": 30,
+   "en": "are both long",
+   "zh": "都很长，",
+   "ja": "どちらも長く、",
+   "ko": "둘 다 길고"
+  },
+  {
+   "i": 31,
+   "en": "with a small body in the middle,",
+   "zh": "中间是一个小实体，",
+   "ja": "真ん中の実体が小さい場合、",
+   "ko": "가운데 몸통이 작다면,"
+  },
+  {
+   "i": 32,
+   "en": "buyers and sellers are battling with no winner.",
+   "zh": "说明买卖双方正在交战，没有赢家。",
+   "ja": "買い手と売り手が勝者のないまま戦っています。",
+   "ko": "매수자와 매도자가 승자 없이 싸우는 중이에요."
+  },
+  {
+   "i": 33,
+   "en": "The market has no direction yet. Wait.",
+   "zh": "市场还没有方向。先等等。",
+   "ja": "相場にはまだ方向性がありません。待ちましょう。",
+   "ko": "시장은 아직 방향이 없어요. 기다리세요."
+  },
+  {
+   "i": 34,
+   "en": "Three red candles appear in a row.",
+   "zh": "连续出现三根阴线。",
+   "ja": "陰線が3本連続で現れます。",
+   "ko": "음봉 세 개가 연달아 나타나요."
+  },
+  {
+   "i": 35,
+   "en": "Sellers are in control,",
+   "zh": "卖方掌握主动，",
+   "ja": "売り手が主導権を握り、",
+   "ko": "매도자가 주도권을 쥐고 있고,"
+  },
+  {
+   "i": 36,
+   "en": "while buyers keep retreating.",
+   "zh": "买方则不断后退。",
+   "ja": "買い手は後退を続けます。",
+   "ko": "매수자는 계속 물러나요."
+  },
+  {
+   "i": 37,
+   "en": "Then the fourth candle plunges mid-session.",
+   "zh": "接着，第四根K线在盘中大幅下跌。",
+   "ja": "そして4本目のローソク足が、取引の途中で急落します。",
+   "ko": "그리고 네 번째 캔들이 장 중반에 급락해요."
+  },
+  {
+   "i": 38,
+   "en": "Sellers press again, trying to extend",
+   "zh": "卖方再次施压，试图延续",
+   "ja": "売り手は再び売り込み、",
+   "ko": "매도자가 다시 압박하며 하락을"
+  },
+  {
+   "i": 39,
+   "en": "the decline.",
+   "zh": "跌势。",
+   "ja": "下落を延ばそうとします。",
+   "ko": "이어가려 해요."
+  },
+  {
+   "i": 40,
+   "en": "But this time, buyers absorb all the selling",
+   "zh": "但这一次，买方吸收了全部卖压，",
+   "ja": "しかし今回は、買い手が売り圧力をすべて吸収し、",
+   "ko": "하지만 이번엔 매수자가 매도 압력을 모두 흡수하고"
+  },
+  {
+   "i": 41,
+   "en": "pressure and push the price up",
+   "zh": "并把价格往上推，",
+   "ja": "価格を押し上げて、",
+   "ko": "가격을 밀어 올려"
+  },
+  {
+   "i": 42,
+   "en": "until it closes near its starting point.",
+   "zh": "直到收盘时接近起点。",
+   "ja": "出発点の近くで引けます。",
+   "ko": "시작 지점 근처에서 마감해요."
+  },
+  {
+   "i": 43,
+   "en": "That rejection leaves a long lower wick.",
+   "zh": "这次拒绝留下了一根长长的下影线。",
+   "ja": "その押し戻しが、長い下ヒゲを残します。",
+   "ko": "그 거부가 긴 아랫꼬리를 남겨요."
+  },
+  {
+   "i": 44,
+   "en": "This isn't just a shape.",
+   "zh": "这不只是一个形状。",
+   "ja": "これは単なる形ではありません。",
+   "ko": "이건 단순한 모양이 아니에요."
+  },
+  {
+   "i": 45,
+   "en": "It's a sign of a change in market behavior—",
+   "zh": "这是市场行为改变的迹象——",
+   "ja": "相場の振る舞いが変化したサイン――",
+   "ko": "시장 행동에 변화가 생겼다는 징후—"
+  },
+  {
+   "i": 46,
+   "en": "the first sign demand is starting to beat supply.",
+   "zh": "需求开始压过供给的第一个信号。",
+   "ja": "需要が供給に勝ち始めた最初のシグナルです。",
+   "ko": "수요가 공급을 이기기 시작했다는 첫 신호예요."
+  },
+  {
+   "i": 47,
+   "en": "Now we've seen that",
+   "zh": "现在我们已经看到，",
+   "ja": "ここまでで、",
+   "ko": "이제 우리는"
+  },
+  {
+   "i": 48,
+   "en": "a single candle can offer clues.",
+   "zh": "单根K线也能提供线索。",
+   "ja": "1本のローソク足も手がかりになると見てきました。",
+   "ko": "캔들 하나도 단서를 줄 수 있다는 걸 봤어요."
+  },
+  {
+   "i": 49,
+   "en": "But once several candles appear together,",
+   "zh": "但当几根K线开始一起出现时，",
+   "ja": "しかし複数のローソク足が一緒に現れ始めると、",
+   "ko": "하지만 여러 캔들이 함께 나타나기 시작하면"
+  },
+  {
+   "i": 50,
+   "en": "the story can become much clearer.",
+   "zh": "故事就可能清晰得多。",
+   "ja": "ストーリーはずっと明確になり得ます。",
+   "ko": "이야기가 훨씬 더 분명해질 수 있어요."
+  },
+  {
+   "i": 51,
+   "en": "This is the most common beginner mistake.",
+   "zh": "这是新手最常犯的错误。",
+   "ja": "これは初心者が最もよくやる間違いです。",
+   "ko": "이건 초보자가 가장 자주 하는 실수예요."
+  },
+  {
+   "i": 52,
+   "en": "They see one candle",
+   "zh": "他们看到一根K线，",
+   "ja": "1本のローソク足を見て、",
+   "ko": "캔들 하나를 보고"
+  },
+  {
+   "i": 53,
+   "en": "and immediately say,",
+   "zh": "就马上说：",
+   "ja": "すぐにこう言うのです。",
+   "ko": "바로 이렇게 말하죠."
+  },
+  {
+   "i": 54,
+   "en": "“Reversal signal.”",
+   "zh": "“反转信号。”",
+   "ja": "「反転シグナルだ」",
+   "ko": "“반전 신호다.”"
+  },
+  {
+   "i": 55,
+   "en": "Yet the same candle",
+   "zh": "其实，同一根K线",
+   "ja": "実は、同じローソク足でも",
+   "ko": "사실 같은 캔들이라도"
+  },
+  {
+   "i": 56,
+   "en": "can mean different things,",
+   "zh": "可能有不同的含义，",
+   "ja": "異なる意味を持つことがあります。",
+   "ko": "의미가 달라질 수 있어요."
+  },
+  {
+   "i": 57,
+   "en": "depending on where it appears on the chart.",
+   "zh": "取决于它出现在图表的哪个位置。",
+   "ja": "チャートのどこに現れるか次第です。",
+   "ko": "차트 어디에 나타나느냐에 따라서요."
+  },
+  {
+   "i": 58,
+   "en": "A long lower wick at the bottom of a long downtrend,",
+   "zh": "长期下降趋势底部的长下影线，",
+   "ja": "長く続いた下降トレンドの底で出た長い下ヒゲは、",
+   "ko": "오래 이어진 하락 추세의 바닥에서 나온 긴 아랫꼬리는,"
+  },
+  {
+   "i": 59,
+   "en": "after sellers have run out of steam,",
+   "zh": "出现在卖方力竭之后，",
+   "ja": "売り手が力尽きた後なら、",
+   "ko": "매도자가 힘이 다한 뒤라면"
+  },
+  {
+   "i": 60,
+   "en": "carries strong meaning.",
+   "zh": "意义很强。",
+   "ja": "強い意味を持ちます。",
+   "ko": "강한 의미를 가져요."
+  },
+  {
+   "i": 61,
+   "en": "The same candle amid a sideways market?",
+   "zh": "同样的K线出现在横盘之中呢？",
+   "ja": "同じローソク足が横ばい（レンジ）の最中に出たら？",
+   "ko": "같은 캔들이 횡보 중간에 나온다면요?"
+  },
+  {
+   "i": 62,
+   "en": "Much weaker, and easily misleading.",
+   "zh": "就弱得多，也容易误导人。",
+   "ja": "はるかに弱く、ダマシになりやすいのです。",
+   "ko": "훨씬 약하고, 속임수가 되기 쉬워요."
+  },
+  {
+   "i": 63,
+   "en": "A candle and its location give the full picture.",
+   "zh": "K线和它所在的位置，一起给出完整的画面。",
+   "ja": "ローソク足とその位置で、全体像が見えてきます。",
+   "ko": "캔들과 그 위치가 함께 전체 그림을 보여줘요."
+  },
+  {
+   "i": 64,
+   "en": "The candle alone is only half the story.",
+   "zh": "单看K线，只是故事的一半。",
+   "ja": "ローソク足だけでは、まだ話の半分です。",
+   "ko": "캔들만으로는 아직 이야기의 절반이에요."
+  },
+  {
+   "i": 65,
+   "en": "If a long lower wick",
+   "zh": "如果长下影线",
+   "ja": "長い下ヒゲが、",
+   "ko": "긴 아랫꼬리가"
+  },
+  {
+   "i": 66,
+   "en": "appears where buyers already stepped in twice,",
+   "zh": "出现在买方已经两次进场的区域，",
+   "ja": "買い手がすでに2回入ってきたエリアに現れたら、",
+   "ko": "매수자가 이미 두 번 들어온 구간에서 나타나면,"
+  },
+  {
+   "i": 67,
+   "en": "three signals point the same way.",
+   "zh": "就有三个信号指向同一个方向。",
+   "ja": "3つのシグナルが同じ方向を指していることになります。",
+   "ko": "세 가지 신호가 같은 방향을 가리키는 거예요."
+  },
+  {
+   "i": 68,
+   "en": "Support and resistance",
+   "zh": "支撑和阻力",
+   "ja": "サポートとレジスタンスは、",
+   "ko": "지지와 저항은"
+  },
+  {
+   "i": 69,
+   "en": "give a stronger basis for reading candles.",
+   "zh": "为解读K线提供了更坚实的基础。",
+   "ja": "ローソク足を読むためのより強い土台になります。",
+   "ko": "캔들을 읽는 데 더 탄탄한 기반이 돼요."
+  },
+  {
+   "i": 70,
+   "en": "Without them, it's like reading a sentence",
+   "zh": "没有它们，你就像在读一个句子，",
+   "ja": "それがなければ、1つの文を",
+   "ko": "이게 없으면, 한 문장을"
+  },
+  {
+   "i": 71,
+   "en": "without knowing the paragraph it belongs to.",
+   "zh": "却不知道它属于哪个段落。",
+   "ja": "どの段落にあるのか知らずに読むようなものです。",
+   "ko": "어느 문단에 있는지도 모른 채 읽는 것과 같아요."
+  },
+  {
+   "i": 72,
+   "en": "There are dozens of named candlestick patterns.",
+   "zh": "K线形态有几十种，名称各不相同。",
+   "ja": "名前の異なるローソク足パターンが何十種類もあります。",
+   "ko": "이름이 다른 캔들 패턴이 수십 가지나 있어요."
+  },
+  {
+   "i": 73,
+   "en": "You don't need to memorize them all.",
+   "zh": "你不需要全部背下来。",
+   "ja": "全部覚える必要はありません。",
+   "ko": "전부 외울 필요는 없어요."
+  },
+  {
+   "i": 74,
+   "en": "But some patterns appear",
+   "zh": "但有些形态",
+   "ja": "ただ、いくつかのパターンは",
+   "ko": "하지만 몇몇 패턴은"
+  },
+  {
+   "i": 75,
+   "en": "repeatedly and carry a fairly clear message,",
+   "zh": "会反复出现，而且传达的信息相当明确，",
+   "ja": "何度も現れ、かなり明確なメッセージを持っているので、",
+   "ko": "반복해서 나타나고 꽤 분명한 메시지를 담고 있어서"
+  },
+  {
+   "i": 76,
+   "en": "so they're worth understanding more deeply.",
+   "zh": "所以值得深入理解。",
+   "ja": "深く理解する価値があります。",
+   "ko": "더 깊이 이해할 가치가 있어요."
+  },
+  {
+   "i": 77,
+   "en": "Not by their names,",
+   "zh": "不是看名字，",
+   "ja": "名前からではなく、",
+   "ko": "이름이 아니라,"
+  },
+  {
+   "i": 78,
+   "en": "but by what actually",
+   "zh": "而是看价格走势里",
+   "ja": "値動きの中で実際に",
+   "ko": "가격 움직임 안에서 실제로"
+  },
+  {
+   "i": 79,
+   "en": "happens inside the price movement.",
+   "zh": "实际发生了什么。",
+   "ja": "何が起きているかから理解するのです。",
+   "ko": "무슨 일이 일어나는지로 이해하는 거예요."
+  },
+  {
+   "i": 80,
+   "en": "First, the Hammer.",
+   "zh": "首先是锤子线。",
+   "ja": "まずはハンマーです。",
+   "ko": "첫 번째는 망치형이에요."
+  },
+  {
+   "i": 81,
+   "en": "One of the strongest",
+   "zh": "它是最强的",
+   "ja": "ローソク足1本で出る強気シグナルの中で、",
+   "ko": "단일 캔들로 나타나는 강세 신호 중"
+  },
+  {
+   "i": 82,
+   "en": "single-candle bullish signals.",
+   "zh": "单根K线看涨信号之一。",
+   "ja": "最も強いものの1つです。",
+   "ko": "가장 강력한 것 중 하나예요."
+  },
+  {
+   "i": 83,
+   "en": "The price opens,",
+   "zh": "价格开盘后，",
+   "ja": "価格は寄り付いたあと、",
+   "ko": "장이 시작되고"
+  },
+  {
+   "i": 84,
+   "en": "then drops sharply",
+   "zh": "随即大幅下跌，",
+   "ja": "急落します。",
+   "ko": "가격이 급락해요."
+  },
+  {
+   "i": 85,
+   "en": "as sellers press hard from the open.",
+   "zh": "因为卖方从一开盘就猛烈施压。",
+   "ja": "売り手が取引開始から強く売り込んだためです。",
+   "ko": "장 초반부터 매도자가 강하게 눌렀기 때문이에요."
+  },
+  {
+   "i": 86,
+   "en": "But buyers step in strongly,",
+   "zh": "但买方强势进场，",
+   "ja": "しかし買い手が力強く入り、",
+   "ko": "하지만 매수자가 강하게 들어와"
+  },
+  {
+   "i": 87,
+   "en": "absorb all the pressure,",
+   "zh": "吸收了全部压力，",
+   "ja": "その圧力をすべて吸収して、",
+   "ko": "압력을 모두 흡수하고,"
+  },
+  {
+   "i": 88,
+   "en": "then push the price back up",
+   "zh": "再把价格推回上方，",
+   "ja": "価格を再び押し上げ、",
+   "ko": "가격을 다시 밀어 올려"
+  },
+  {
+   "i": 89,
+   "en": "to close near its highest point.",
+   "zh": "最终收在最高点附近。",
+   "ja": "高値付近で引けます。",
+   "ko": "고가 부근에서 마감해요."
+  },
+  {
+   "i": 90,
+   "en": "The long lower wick is the proof:",
+   "zh": "长下影线就是证据：",
+   "ja": "長い下ヒゲがその証拠です。",
+   "ko": "긴 아랫꼬리가 바로 그 증거예요."
+  },
+  {
+   "i": 91,
+   "en": "demand shows up, fights back,",
+   "zh": "需求出现、反击，",
+   "ja": "需要が現れ、反撃し、",
+   "ko": "수요가 나타나 맞서 싸우고,"
+  },
+  {
+   "i": 92,
+   "en": "then wins.",
+   "zh": "然后获胜。",
+   "ja": "そして勝ったのです。",
+   "ko": "결국 이긴 거죠."
+  },
+  {
+   "i": 93,
+   "en": "If a Hammer appears after",
+   "zh": "如果锤子线出现在",
+   "ja": "ハンマーが下降トレンドの後、",
+   "ko": "망치형이 하락 추세 뒤에,"
+  },
+  {
+   "i": 94,
+   "en": "a downtrend, right at a support area,",
+   "zh": "下降趋势之后，而且正好在支撑区域，",
+   "ja": "ちょうどサポートのエリアで現れたら、",
+   "ko": "그것도 정확히 지지 구간에서 나타나면,"
+  },
+  {
+   "i": 95,
+   "en": "sellers usually start running out of steam.",
+   "zh": "卖方通常就开始力竭了。",
+   "ja": "売り手はたいてい力尽き始めています。",
+   "ko": "매도자는 보통 힘이 빠지기 시작해요."
+  },
+  {
+   "i": 96,
+   "en": "Buyers start taking control,",
+   "zh": "买方开始掌握主动，",
+   "ja": "買い手が主導権を握り始め、",
+   "ko": "매수자가 주도권을 잡기 시작하고,"
+  },
+  {
+   "i": 97,
+   "en": "and the chance of a change in direction",
+   "zh": "方向转变的机会",
+   "ja": "方向転換の可能性も",
+   "ko": "방향이 바뀔 가능성도"
+  },
+  {
+   "i": 98,
+   "en": "opens up more clearly.",
+   "zh": "也开始更清晰地显现。",
+   "ja": "よりはっきりと開け始めます。",
+   "ko": "더 분명하게 열리기 시작해요."
+  },
+  {
+   "i": 99,
+   "en": "Next, the Bullish Engulfing.",
+   "zh": "接下来是看涨吞没。",
+   "ja": "次は陽の包み足です。",
+   "ko": "다음은 상승 장악형이에요."
+  },
+  {
+   "i": 100,
+   "en": "One of the strongest",
+   "zh": "它是最强的",
+   "ja": "ローソク足2本で出る強気シグナルの中で、",
+   "ko": "두 캔들로 이루어진 강세 신호 중"
+  },
+  {
+   "i": 101,
+   "en": "two-candle bullish signals.",
+   "zh": "双K线看涨信号之一。",
+   "ja": "最も強いものの1つです。",
+   "ko": "가장 강력한 것 중 하나예요."
+  },
+  {
+   "i": 102,
+   "en": "The first candle is red.",
+   "zh": "第一根是阴线。",
+   "ja": "1本目は陰線です。",
+   "ko": "첫 번째 캔들은 음봉이에요."
+  },
+  {
+   "i": 103,
+   "en": "Sellers dominate.",
+   "zh": "卖方占据主导。",
+   "ja": "売り手が優勢です。",
+   "ko": "매도자가 우세해요."
+  },
+  {
+   "i": 104,
+   "en": "The second candle even opens lower,",
+   "zh": "第二根甚至低开，",
+   "ja": "2本目はさらに安く寄り付き、",
+   "ko": "두 번째 캔들은 심지어 더 낮게 출발해서"
+  },
+  {
+   "i": 105,
+   "en": "as if sellers want to press again.",
+   "zh": "仿佛卖方还想再次打压。",
+   "ja": "売り手がまた売り込むかのようです。",
+   "ko": "매도자가 다시 누르려는 것처럼 보여요."
+  },
+  {
+   "i": 106,
+   "en": "But buyers come in so aggressively",
+   "zh": "但买方非常积极地进场，",
+   "ja": "しかし買い手が非常に積極的に入り、",
+   "ko": "하지만 매수자가 아주 공격적으로 들어와"
+  },
+  {
+   "i": 107,
+   "en": "that price closes above the first candle's open.",
+   "zh": "让价格收在第一根K线的开盘价之上。",
+   "ja": "1本目の始値を上回って引けます。",
+   "ko": "첫 번째 캔들의 시가보다 높게 마감해요."
+  },
+  {
+   "i": 108,
+   "en": "All the selling pressure",
+   "zh": "前一交易时段的全部卖压，",
+   "ja": "直前のセッションの売り圧力すべてが、",
+   "ko": "이전 세션의 매도 압력 전부가"
+  },
+  {
+   "i": 109,
+   "en": "from the prior session is erased in one full candle.",
+   "zh": "在一根完整的K线里被彻底抹去。",
+   "ja": "まるごと1本のローソク足で消し去られます。",
+   "ko": "온전한 캔들 하나로 지워져요."
+  },
+  {
+   "i": 110,
+   "en": "This isn't a small",
+   "zh": "这不是",
+   "ja": "これは小さな",
+   "ko": "이건 작은"
+  },
+  {
+   "i": 111,
+   "en": "change. Buyers truly beat",
+   "zh": "小变化。买方真正",
+   "ja": "変化ではありません。買い手が本当に",
+   "ko": "변화가 아니에요. 매수자가 정말로"
+  },
+  {
+   "i": 112,
+   "en": "sellers in one decisive move.",
+   "zh": "以一次果断的走势击败了卖方。",
+   "ja": "一度の決定的な動きで売り手に勝ったのです。",
+   "ko": "한 번의 단호한 움직임으로 매도자를 이긴 거예요."
+  },
+  {
+   "i": 113,
+   "en": "If it comes after a run of red candles and near",
+   "zh": "如果它出现在一连串阴线之后，并且靠近",
+   "ja": "陰線が続いた後、サポート付近で",
+   "ko": "음봉이 연달아 나온 뒤 지지 근처에서"
+  },
+  {
+   "i": 114,
+   "en": "support, it's one of the clearest signs",
+   "zh": "支撑，这就是最清楚的迹象之一，",
+   "ja": "これが出現した場合、力関係が",
+   "ko": "나타난다면, 힘의 균형이"
+  },
+  {
+   "i": 115,
+   "en": "that the balance of power has shifted.",
+   "zh": "表明力量对比已经改变。",
+   "ja": "変わったことを示す最も明確なサインの1つです。",
+   "ko": "바뀌었다는 가장 분명한 신호 중 하나예요."
+  },
+  {
+   "i": 116,
+   "en": "Now let's flip it.",
+   "zh": "现在我们反过来看。",
+   "ja": "今度は逆を見てみましょう。",
+   "ko": "이번엔 반대로 볼게요."
+  },
+  {
+   "i": 117,
+   "en": "This is the Shooting Star,",
+   "zh": "这是射击之星，",
+   "ja": "これはシューティングスター、",
+   "ko": "이건 유성형,"
+  },
+  {
+   "i": 118,
+   "en": "the bearish version of the Hammer.",
+   "zh": "也就是锤子线的看跌版本。",
+   "ja": "ハンマーの弱気版です。",
+   "ko": "망치형의 약세 버전이에요."
+  },
+  {
+   "i": 119,
+   "en": "The price opens,",
+   "zh": "价格开盘后，",
+   "ja": "価格は寄り付いたあと、",
+   "ko": "장이 시작되고"
+  },
+  {
+   "i": 120,
+   "en": "then shoots up.",
+   "zh": "随即快速冲高。",
+   "ja": "一気に上昇します。",
+   "ko": "가격이 치솟아요."
+  },
+  {
+   "i": 121,
+   "en": "Buyers look confident and keep chasing price.",
+   "zh": "买方看起来信心十足，不断追高。",
+   "ja": "買い手は自信ありげに価格を追いかけ続けます。",
+   "ko": "매수자는 자신감 있어 보이고, 계속 가격을 쫓아가요."
+  },
+  {
+   "i": 122,
+   "en": "But sellers are already waiting above.",
+   "zh": "但卖方早已在上方等着。",
+   "ja": "しかし売り手が上で待ち構えています。",
+   "ko": "하지만 매도자가 이미 위에서 기다리고 있어요."
+  },
+  {
+   "i": 123,
+   "en": "They step in, push",
+   "zh": "他们入场，把价格",
+   "ja": "売り手が入り、",
+   "ko": "매도자가 들어와"
+  },
+  {
+   "i": 124,
+   "en": "the price back down,",
+   "zh": "重新压下来，",
+   "ja": "価格を押し下げて、",
+   "ko": "가격을 다시 끌어내리고,"
+  },
+  {
+   "i": 125,
+   "en": "and bring the close back near",
+   "zh": "让收盘价回到",
+   "ja": "終値を始値の",
+   "ko": "종가를 시가"
+  },
+  {
+   "i": 126,
+   "en": "the opening price.",
+   "zh": "开盘价附近。",
+   "ja": "近くまで戻します。",
+   "ko": "근처로 되돌려요."
+  },
+  {
+   "i": 127,
+   "en": "The long upper wick shows strong rejection.",
+   "zh": "长上影线显示出强烈的拒绝。",
+   "ja": "長い上ヒゲは、強い押し戻しを示しています。",
+   "ko": "긴 윗꼬리는 강한 거부를 보여줘요."
+  },
+  {
+   "i": 128,
+   "en": "The market tries to go higher,",
+   "zh": "市场试图走得更高，",
+   "ja": "相場はさらに上を目指しますが、",
+   "ko": "시장은 더 오르려 하지만"
+  },
+  {
+   "i": 129,
+   "en": "then gets rejected.",
+   "zh": "随后遭到拒绝。",
+   "ja": "押し戻されます。",
+   "ko": "거부당해요."
+  },
+  {
+   "i": 130,
+   "en": "If this pattern appears after an uptrend and near",
+   "zh": "如果这个形态出现在上升趋势之后，并且靠近",
+   "ja": "このパターンが上昇トレンドの後、レジスタンス",
+   "ko": "이 패턴이 상승 추세 뒤, 저항 근처에서"
+  },
+  {
+   "i": 131,
+   "en": "resistance, buyer conviction starts to run out.",
+   "zh": "阻力，买方的信心就开始耗尽。",
+   "ja": "付近で出たら、買い手の確信は尽き始めています。",
+   "ko": "나타나면, 매수자의 확신이 바닥나기 시작해요."
+  },
+  {
+   "i": 132,
+   "en": "Sellers start to take over,",
+   "zh": "卖方开始接管，",
+   "ja": "売り手が主導権を奪い始め、",
+   "ko": "매도자가 주도권을 넘겨받기 시작하고,"
+  },
+  {
+   "i": 133,
+   "en": "and the risk of a reversal rises too.",
+   "zh": "反转的风险也随之上升。",
+   "ja": "反転のリスクも高まります。",
+   "ko": "반전 위험도 함께 커져요."
+  },
+  {
+   "i": 134,
+   "en": "Its counterpart is the Bearish Engulfing,",
+   "zh": "与之对应的是看跌吞没，",
+   "ja": "これと対になるのが陰の包み足。",
+   "ko": "이와 짝을 이루는 게 하락 장악형이에요."
+  },
+  {
+   "i": 135,
+   "en": "one of the strongest two-candle bearish signals.",
+   "zh": "最强的双K线看跌信号之一。",
+   "ja": "2本のローソク足による、最も強い弱気シグナルの1つです。",
+   "ko": "가장 강력한 두 캔들 약세 신호 중 하나죠."
+  },
+  {
+   "i": 136,
+   "en": "The first candle is green.",
+   "zh": "第一根是阳线。",
+   "ja": "1本目は陽線です。",
+   "ko": "첫 번째 캔들은 양봉이에요."
+  },
+  {
+   "i": 137,
+   "en": "Buyers are still in control.",
+   "zh": "买方仍然掌握主动。",
+   "ja": "まだ買い手が主導権を握っています。",
+   "ko": "매수자가 아직 주도권을 쥐고 있어요."
+  },
+  {
+   "i": 138,
+   "en": "The second candle opens higher,",
+   "zh": "第二根高开，",
+   "ja": "2本目は高く寄り付き、",
+   "ko": "두 번째 캔들은 더 높게 출발해"
+  },
+  {
+   "i": 139,
+   "en": "as if the rise will continue,",
+   "zh": "仿佛涨势还会延续，",
+   "ja": "上昇が続くかに見えますが、",
+   "ko": "상승이 이어질 것처럼 보이다가,"
+  },
+  {
+   "i": 140,
+   "en": "then falls",
+   "zh": "随后下跌，",
+   "ja": "その後下落し、",
+   "ko": "떨어지면서"
+  },
+  {
+   "i": 141,
+   "en": "and closes below the first candle's open.",
+   "zh": "收在第一根K线的开盘价之下。",
+   "ja": "1本目の始値を下回って引けます。",
+   "ko": "첫 번째 캔들의 시가 아래에서 마감해요."
+  },
+  {
+   "i": 142,
+   "en": "All the buyers' gains reverse in one session.",
+   "zh": "买方的全部涨幅，在一个交易时段内就被逆转。",
+   "ja": "買い手の上昇分が、1回のセッションですべて反転します。",
+   "ko": "매수자가 만든 상승분 전체가 한 세션 만에 뒤집혀요."
+  },
+  {
+   "i": 143,
+   "en": "If this pattern appears at the peak",
+   "zh": "如果这个形态出现在",
+   "ja": "このパターンが上昇トレンドの",
+   "ko": "이 패턴이 상승 추세의"
+  },
+  {
+   "i": 144,
+   "en": "of an uptrend and near resistance,",
+   "zh": "上升趋势的高点，并且靠近阻力，",
+   "ja": "高値で、しかもレジスタンス付近で出たら、",
+   "ko": "고점, 그것도 저항 근처에서 나타나면,"
+  },
+  {
+   "i": 145,
+   "en": "the move is starting to lose steam.",
+   "zh": "这波走势就开始失去动力。",
+   "ja": "その動きは勢いを失い始めています。",
+   "ko": "그 움직임은 힘을 잃기 시작한 거예요."
+  },
+  {
+   "i": 146,
+   "en": "Those who had been pushing the price up",
+   "zh": "之前推高价格的一方，",
+   "ja": "それまで価格を押し上げていた側が、",
+   "ko": "그동안 가격을 밀어 올리던 쪽이"
+  },
+  {
+   "i": 147,
+   "en": "now start unloading shares into the market.",
+   "zh": "现在开始减持股票，向市场卖出。",
+   "ja": "今度は株を手放し、市場で売り始めます。",
+   "ko": "이제 주식을 내놓고 시장에 팔기 시작해요."
+  },
+  {
+   "i": 148,
+   "en": "Now you've seen",
+   "zh": "现在你已经看过了",
+   "ja": "ここまでで、",
+   "ko": "지금까지"
+  },
+  {
+   "i": 149,
+   "en": "the Engulfing, Hammer, and Shooting Star.",
+   "zh": "吞没形态、锤子线和射击之星。",
+   "ja": "包み足、ハンマー、シューティングスターを見てきました。",
+   "ko": "장악형, 망치형, 유성형을 살펴봤어요."
+  },
+  {
+   "i": 150,
+   "en": "There are two other groups",
+   "zh": "还有另外两组",
+   "ja": "ほかにも2つのグループの",
+   "ko": "다른 패턴 두 그룹도"
+  },
+  {
+   "i": 151,
+   "en": "of patterns also worth understanding.",
+   "zh": "形态也值得了解。",
+   "ja": "パターンを理解しておく価値があります。",
+   "ko": "이해해 둘 만한 가치가 있어요."
+  },
+  {
+   "i": 152,
+   "en": "The Morning Star and Evening Star",
+   "zh": "早晨之星和黄昏之星",
+   "ja": "明けの明星と宵の明星は、",
+   "ko": "샛별형과 석별형은"
+  },
+  {
+   "i": 153,
+   "en": "are made of three candles:",
+   "zh": "由三根K线组成：",
+   "ja": "3本のローソク足でできています。",
+   "ko": "세 개의 캔들로 이루어져요."
+  },
+  {
+   "i": 154,
+   "en": "one strong push,",
+   "zh": "先是一次强劲推动，",
+   "ja": "1本目は強い勢い、",
+   "ko": "강하게 밀어붙이는 캔들 하나,"
+  },
+  {
+   "i": 155,
+   "en": "one small, hesitant candle,",
+   "zh": "接着是一根犹豫的小K线，",
+   "ja": "2本目はためらいを示す小さな足、",
+   "ko": "망설이는 작은 캔들 하나,"
+  },
+  {
+   "i": 156,
+   "en": "then a strong push the opposite way.",
+   "zh": "然后是反方向的强劲推动。",
+   "ja": "3本目は反対方向への強い勢いです。",
+   "ko": "그리고 반대 방향으로 강하게 밀어붙이는 캔들이에요."
+  },
+  {
+   "i": 157,
+   "en": "That small pause in the middle",
+   "zh": "中间那个小小的停顿，",
+   "ja": "真ん中の小さな休止こそ、",
+   "ko": "가운데의 작은 멈춤,"
+  },
+  {
+   "i": 158,
+   "en": "is when control of the market",
+   "zh": "正是市场控制权",
+   "ja": "相場の主導権が",
+   "ko": "그때가 바로 시장의 주도권이"
+  },
+  {
+   "i": 159,
+   "en": "slowly changes hands.",
+   "zh": "慢慢易手的时刻。",
+   "ja": "ゆっくりと入れ替わる瞬間です。",
+   "ko": "서서히 넘어가는 순간이에요."
+  },
+  {
+   "i": 160,
+   "en": "Three White Soldiers and Three Black Crows",
+   "zh": "红三兵和三只乌鸦",
+   "ja": "赤三兵と黒三兵は、",
+   "ko": "적삼병과 흑삼병은"
+  },
+  {
+   "i": 161,
+   "en": "are three strong candles going the same way.",
+   "zh": "都是三根同方向的强势K线。",
+   "ja": "同じ方向に続く3本の強いローソク足です。",
+   "ko": "같은 방향으로 이어지는 강한 캔들 세 개예요."
+  },
+  {
+   "i": 162,
+   "en": "Three green candles show",
+   "zh": "三根阳线显示出",
+   "ja": "3本の陽線は、",
+   "ko": "양봉 세 개는"
+  },
+  {
+   "i": 163,
+   "en": "steady, confident buying.",
+   "zh": "稳定而坚定的买入。",
+   "ja": "安定した、確信のある買いを示します。",
+   "ko": "꾸준하고 확신에 찬 매수를 보여줘요."
+  },
+  {
+   "i": 164,
+   "en": "Three red candles show the opposite.",
+   "zh": "三根阴线则显示相反的情况。",
+   "ja": "3本の陰線はその逆を示します。",
+   "ko": "음봉 세 개는 그 반대를 보여줘요."
+  },
+  {
+   "i": 165,
+   "en": "Momentum builds one candle at a time.",
+   "zh": "动能随着一根根K线逐步增强。",
+   "ja": "ローソク足1本ごとにモメンタムが増していきます。",
+   "ko": "캔들 하나하나를 거치며 모멘텀이 커져요."
+  },
+  {
+   "i": 166,
+   "en": "You don't need to memorize names.",
+   "zh": "你不需要背名字。",
+   "ja": "名前を覚える必要はありません。",
+   "ko": "이름을 외울 필요는 없어요."
+  },
+  {
+   "i": 167,
+   "en": "Understand the story behind each pattern.",
+   "zh": "要理解每个形态背后的故事。",
+   "ja": "それぞれのパターンのストーリーを理解しましょう。",
+   "ko": "각 패턴의 이야기를 이해하세요."
+  },
+  {
+   "i": 168,
+   "en": "That's what turns a plain chart into a story.",
+   "zh": "正是这一点，让普通的图表变成一个故事。",
+   "ja": "それこそが、ただのチャートをストーリーに変えるのです。",
+   "ko": "그게 평범한 차트를 하나의 이야기로 바꿔줘요."
+  },
+  {
+   "i": 169,
+   "en": "So, we now know how to read",
+   "zh": "所以，我们已经知道如何解读",
+   "ja": "これで、ローソク足の読み方と",
+   "ko": "자, 이제 캔들을 읽는 법과"
+  },
+  {
+   "i": 170,
+   "en": "candles and spot a few patterns.",
+   "zh": "K线，以及识别一些形态。",
+   "ja": "いくつかのパターンの見分け方がわかりました。",
+   "ko": "몇 가지 패턴을 알아보는 법을 알게 됐어요."
+  },
+  {
+   "i": 171,
+   "en": "Now it's time to see it all working together",
+   "zh": "现在，是时候看看这一切",
+   "ja": "では、これらすべてが一緒に機能する様子を",
+   "ko": "이제 이 모든 게 함께 작동하는 모습을"
+  },
+  {
+   "i": 172,
+   "en": "on one real chart.",
+   "zh": "如何在一张真实图表里协同运作了。",
+   "ja": "実際のチャートで見てみましょう。",
+   "ko": "실제 차트 하나에서 볼 차례예요."
+  },
+  {
+   "i": 173,
+   "en": "Now let's look at a real example.",
+   "zh": "现在我们来看一个真实案例。",
+   "ja": "実際の例を見ていきます。",
+   "ko": "이제 실제 사례를 볼게요."
+  },
+  {
+   "i": 174,
+   "en": "BBRI, June 2026.",
+   "zh": "BBRI，2026年6月。",
+   "ja": "BBRI、2026年6月。",
+   "ko": "BBRI, 2026년 6월."
+  },
+  {
+   "i": 175,
+   "en": "On the 8th, a red candle appears.",
+   "zh": "8日出现了一根阴线。",
+   "ja": "8日に陰線が出ます。",
+   "ko": "8일에 음봉이 나와요."
+  },
+  {
+   "i": 176,
+   "en": "Sellers are in control and close it at 2,590.",
+   "zh": "卖方掌握主动，把价格收在2,590。",
+   "ja": "売り手が主導権を握り、価格は2,590で引けます。",
+   "ko": "매도자가 주도권을 쥐고 2,590에 마감시켜요."
+  },
+  {
+   "i": 177,
+   "en": "The next day opens lower,",
+   "zh": "第二天低开，",
+   "ja": "翌日はそれより安い",
+   "ko": "다음 날은 더 낮은"
+  },
+  {
+   "i": 178,
+   "en": "at 2,540. Then buyers come in strong,",
+   "zh": "开在2,540。随后买方强势进场，",
+   "ja": "2,540で寄り付きます。その後、買い手が強く入り、",
+   "ko": "2,540에서 시작해요. 그리고 매수자가 강하게 들어와"
+  },
+  {
+   "i": 179,
+   "en": "pushing the price up to 2,790,",
+   "zh": "把价格推高到2,790，",
+   "ja": "価格を2,790まで押し上げ、",
+   "ko": "가격을 2,790까지 밀어 올리고,"
+  },
+  {
+   "i": 180,
+   "en": "and swallowing the prior day's entire body.",
+   "zh": "吞没了前一天的整个实体。",
+   "ja": "前日の実体をまるごと飲み込みます。",
+   "ko": "전날 몸통 전체를 집어삼켜요."
+  },
+  {
+   "i": 181,
+   "en": "That's a Bullish Engulfing,",
+   "zh": "这就是看涨吞没，",
+   "ja": "これが陽の包み足です。",
+   "ko": "이게 바로 상승 장악형이에요."
+  },
+  {
+   "i": 182,
+   "en": "right after a run of selling pressure",
+   "zh": "恰好出现在一段相当长的",
+   "ja": "一連の売り圧力が",
+   "ko": "매도 압력이 꽤 오래"
+  },
+  {
+   "i": 183,
+   "en": "that lasted quite a while.",
+   "zh": "卖压之后。",
+   "ja": "かなり長く続いた直後です。",
+   "ko": "이어진 직후에 나왔죠."
+  },
+  {
+   "i": 184,
+   "en": "You already know what it means.",
+   "zh": "你已经知道它的含义了。",
+   "ja": "その意味は、もうわかりますね。",
+   "ko": "무슨 뜻인지 이미 알고 있죠."
+  },
+  {
+   "i": 185,
+   "en": "Now try reading the story yourself.",
+   "zh": "现在试着自己读一读这个故事。",
+   "ja": "では、自分でストーリーを読んでみてください。",
+   "ko": "이제 직접 이야기를 읽어 보세요."
+  },
+  {
+   "i": 186,
+   "en": "So, what happens next?",
+   "zh": "那么，接下来会发生什么？",
+   "ja": "さて、次に何が起きるでしょう？",
+   "ko": "자, 다음엔 무슨 일이 일어날까요?"
+  },
+  {
+   "i": 187,
+   "en": "Three… two… one…",
+   "zh": "三……二……一……",
+   "ja": "3…2…1…",
+   "ko": "셋… 둘… 하나…"
+  },
+  {
+   "i": 188,
+   "en": "look. The price went up.",
+   "zh": "看，价格上涨了。",
+   "ja": "見てください。価格は上がりました。",
+   "ko": "보세요. 가격이 올랐어요."
+  },
+  {
+   "i": 189,
+   "en": "More than 10% over the next few days,",
+   "zh": "在接下来几天里涨幅超过10%，",
+   "ja": "その後数日間で10%を超えて上昇し、",
+   "ko": "이후 며칠 동안 10% 넘게 오르며"
+  },
+  {
+   "i": 190,
+   "en": "then it peaked on the 17th.",
+   "zh": "并在17日到达高点。",
+   "ja": "17日に高値をつけました。",
+   "ko": "17일에 고점을 찍었어요."
+  },
+  {
+   "i": 191,
+   "en": "Of course, there's no guarantee.",
+   "zh": "当然，这并没有保证。",
+   "ja": "もちろん、保証はありません。",
+   "ko": "물론 보장은 없어요."
+  },
+  {
+   "i": 192,
+   "en": "The Engulfing pattern can also fail",
+   "zh": "吞没形态在没有确认时",
+   "ja": "包み足のパターンも、",
+   "ko": "장악형 패턴도"
+  },
+  {
+   "i": 193,
+   "en": "without confirmation.",
+   "zh": "也可能失败。",
+   "ja": "確認（コンファメーション）がなければ失敗し得ます。",
+   "ko": "확인 없이는 실패할 수 있어요."
+  },
+  {
+   "i": 194,
+   "en": "But this is what it looks like",
+   "zh": "但这正是",
+   "ja": "ただ、これこそが",
+   "ko": "하지만 이게 바로"
+  },
+  {
+   "i": 195,
+   "en": "when the story really plays out,",
+   "zh": "故事真正上演，",
+   "ja": "ストーリーが実際に展開し、",
+   "ko": "이야기가 실제로 펼쳐지고,"
+  },
+  {
+   "i": 196,
+   "en": "and you manage",
+   "zh": "而你也成功地",
+   "ja": "しかもそれを",
+   "ko": "그걸 직접,"
+  },
+  {
+   "i": 197,
+   "en": "to read it before the chart shows the outcome.",
+   "zh": "在图表给出最终结果前读懂它时的样子。",
+   "ja": "チャートが最終結果を示す前に読み取れたときの姿です。",
+   "ko": "차트가 최종 결과를 보여주기 전에 읽어낸 모습이에요."
+  },
+  {
+   "i": 198,
+   "en": "One candle is one sentence.",
+   "zh": "一根K线是一个句子。",
+   "ja": "1本のローソク足は、1つの文です。",
+   "ko": "캔들 하나는 한 문장이에요."
+  },
+  {
+   "i": 199,
+   "en": "Several candles form a paragraph.",
+   "zh": "几根K线组成一个段落。",
+   "ja": "複数のローソク足は、1つの段落を作ります。",
+   "ko": "여러 캔들은 한 문단을 이뤄요."
+  },
+  {
+   "i": 200,
+   "en": "The whole chart is the complete story.",
+   "zh": "整张图表，就是一个完整的故事。",
+   "ja": "チャート全体が、ひとつの完全なストーリーです。",
+   "ko": "차트 전체는 완전한 하나의 이야기예요."
+  },
+  {
+   "i": 201,
+   "en": "Learn to read the story.",
+   "zh": "要学会读懂这个故事。",
+   "ja": "ストーリーを読めるようになりましょう。",
+   "ko": "그 이야기를 읽는 법을 배우세요."
+  },
+  {
+   "i": 202,
+   "en": "Not just recognize shapes.",
+   "zh": "而不只是认出形状。",
+   "ja": "形を見分けるだけではなく。",
+   "ko": "단순히 모양을 알아보는 게 아니라요."
+  },
+  {
+   "i": 203,
+   "en": "In the next video, we'll cover",
+   "zh": "下一期视频，我们会讲",
+   "ja": "次の動画では、",
+   "ko": "다음 영상에서는"
+  },
+  {
+   "i": 204,
+   "en": "support and resistance,",
+   "zh": "支撑和阻力，",
+   "ja": "サポートとレジスタンス、",
+   "ko": "지지와 저항,"
+  },
+  {
+   "i": 205,
+   "en": "the areas where price often reacts.",
+   "zh": "也就是价格经常出现反应的区域。",
+   "ja": "つまり価格がよく反応するエリアについて解説します。",
+   "ko": "즉 가격이 자주 반응하는 구간을 다룰게요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 14,
+   "note": "Green/red candles: EN keeps the colors. ZH/JA/KO use the standard bullish/bearish candle terms (阳线/阴线, 陽線/陰線, 양봉/음봉) instead of colors, because in China, Korea and on many Japanese charts red means UP; saying 'red candle' there would invert the meaning. Applies to rows 14, 34, 102, 113, 136, 162, 164, 175."
+  },
+  {
+   "i": 15,
+   "note": "Not in glossary at the time — buyer/seller rendered as ZH 买方/卖方, JA 買い手/売り手, KO 매수자/매도자 (consistency pass 22 Oct: was 매수세/매도세; 매수세 now kept only for “minat beli” = buying interest); demand/supply as ZH 需求/供给, JA 需要/供給, KO 수요/공급; bullish/bearish as ZH 看涨/看跌, JA 強気/弱気, KO 강세/약세. Added to glossary."
+  },
+  {
+   "i": 17,
+   "note": "'perlawanan' (opposition) rendered as pushback / 反抗 / 反撃 / 반격, not 'resistance', to avoid confusion with the support/resistance term."
+  },
+  {
+   "i": 21,
+   "note": "Rejection ('ditolak', 'penolakan') rendered as ZH 拒绝, JA 押し戻し / 押し戻される, KO 거부 throughout (rows 21, 43, 127, 129). Row 88 JA now says 再び押し上げ so 押し戻し is reserved for rejection."
+  },
+  {
+   "i": 62,
+   "note": "JA uses ダマシ, the standard Japanese trader word for a false/misleading signal ('mudah menipu')."
+  },
+  {
+   "i": 80,
+   "note": "Pattern names translated to the standard local names (not left in English): Hammer = 锤子线 / ハンマー / 망치형; Bullish Engulfing = 看涨吞没 / 陽の包み足 / 상승 장악형; Shooting Star = 射击之星 / シューティングスター / 유성형; Bearish Engulfing = 看跌吞没 / 陰の包み足 / 하락 장악형; Engulfing = 吞没形态 / 包み足 / 장악형; Morning/Evening Star = 早晨之星/黄昏之星 / 明けの明星/宵の明星 / 샛별형/석별형; Three White Soldiers/Three Black Crows = 红三兵/三只乌鸦 / 赤三兵/黒三兵 / 적삼병/흑삼병. If the video shows English pattern labels on screen, consider whether an English name in parentheses is wanted."
+  },
+  {
+   "i": 111,
+   "note": "Row contains the end of one sentence ('...perubahan kecil.') and the start of the next; the translations keep the same split. Same for row 178 ('...di 2.540. Lalu buyer...')."
+  },
+  {
+   "i": 160,
+   "note": "ZH 红三兵 / JA 赤三兵 / KO 적삼병 are the established names for Three White Soldiers in those markets, even though the candles are green in this video."
+  },
+  {
+   "i": 176,
+   "note": "Prices 2.590 / 2.540 / 2.790 have no 'Rp' in the source; written as plain numbers with a thousands comma (2,590 etc.) in all languages."
+  }
+ ]
+}

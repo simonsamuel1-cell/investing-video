@@ -1,0 +1,748 @@
+{
+ "key": "TA11",
+ "name": "Video 11 - TA Mistakes - Dub Indo",
+ "rows": [
+  {
+   "i": 1,
+   "start": 0.2,
+   "end": 3.783,
+   "text": "Bayangin kamu sudah menemukan setup yang kelihatannya lengkap.",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 3.783,
+   "end": 8.867,
+   "text": "Trend naik, support bertahan, volume menguat, lalu breakout terjadi.",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 9.2,
+   "end": 10.367,
+   "text": "Kamu masuk dengan yakin.",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 11.167,
+   "end": 14.9,
+   "text": "Tapi beberapa candle kemudian, harga justru berbalik turun.",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 15.467,
+   "end": 17.667,
+   "text": "Apa berarti Technical Analysis-nya gagal?",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 18.067,
+   "end": 18.867,
+   "text": "Belum tentu.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 19.133,
+   "end": 23.8,
+   "text": "Intinya: Technical Analysis bekerja dengan probabilitas, bukan kepastian.",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 24.333,
+   "end": 30.1,
+   "text": "Setup yang bagus membantu meningkatkan kualitas keputusan di pasar yang bergerak cepat, tapi tidak pernah menjamin hasil.",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 30.8,
+   "end": 32.9,
+   "text": "Setup lengkap tetap bisa gagal.",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 33.6,
+   "end": 39.4,
+   "text": "Kita mulai dari kesalahan paling berbahaya: masuk tanpa tahu kapan analisis dianggap salah.",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 39.867,
+   "end": 43.6,
+   "text": "Misalnya kamu beli karena support bertahan.",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 44.167,
+   "end": 49.167,
+   "text": "Kalau harga breakdown dan close di bawah support, alasan utama trade itu mulai tidak berlaku.",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 49.6,
+   "end": 51.267,
+   "text": "Setup mulai invalid.",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 51.533,
+   "end": 54.5,
+   "text": "Masalahnya, setelah entry kita sering mulai berharap.",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 55.133,
+   "end": 55.933,
+   "text": "“Sedikit lagi.”",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 56.267,
+   "end": 57.2,
+   "text": "“Mungkin nanti balik.”",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 57.7,
+   "end": 63.333,
+   "text": "Karena itu, tentukan invalidation sebelum entry, bukan setelah posisi mulai rugi.",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 63.8,
+   "end": 67.3,
+   "text": "Sejak awal kamu sudah tahu kapan skenario tidak lagi sesuai rencana.",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 67.6,
+   "end": 69.933,
+   "text": "Kesalahan berikutnya datang dari diri kita.",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 70.5,
+   "end": 74.067,
+   "text": "Overtrading terjadi saat kita merasa harus selalu punya posisi.",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 74.8,
+   "end": 81.667,
+   "text": "Padahal kalau trend belum jelas, level belum menarik, atau trigger belum muncul, belum tentu ada trade yang layak.",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 81.667,
+   "end": 83.7,
+   "text": "Tidak trading, juga keputusan.",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 84.5,
+   "end": 86.2,
+   "text": "Lalu ada revenge trading.",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 86.933,
+   "end": 90.8,
+   "text": "Setelah loss, kita ingin cepat mengembalikan kerugian dan buru-buru masuk lagi.",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 91.3,
+   "end": 94.467,
+   "text": "Padahal loss sebelumnya tidak membuat setup berikutnya lebih valid.",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 94.733,
+   "end": 97.333,
+   "text": "Kalau belum ada setup, jawabannya tetap: jangan trade.",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 97.567,
+   "end": 100.067,
+   "text": "Setiap trade baru harus memenuhi aturan yang sama.",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 100.4,
+   "end": 103.133,
+   "text": "Kesalahan berikutnya adalah confirmation bias.",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 103.6,
+   "end": 109.7,
+   "text": "Kita terlalu fokus pada hal yang mendukung skenario, lalu mengabaikan informasi yang berlawanan.",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 110.2,
+   "end": 113.167,
+   "text": "Jangan cuma bertanya: “Apa yang membuat analisisku benar?”",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 113.4,
+   "end": 116.283,
+   "text": "Tanya juga: “Apa yang bisa membuktikan aku salah?”",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 116.283,
+   "end": 118.067,
+   "text": "Ini membantu tetap objektif.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 118.9,
+   "end": 120.267,
+   "text": "Kondisi market juga penting.",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 121.0,
+   "end": 127.033,
+   "text": "Setup yang berjalan baik saat market trending bisa lebih sering gagal saat market sideways atau mulai melemah.",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 127.4,
+   "end": 129.967,
+   "text": "Setup-nya bisa sama, tapi konteksnya berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 130.367,
+   "end": 133.9,
+   "text": "Jadi jangan membaca chart tanpa melihat market yang lebih luas.",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 135.1,
+   "end": 137.067,
+   "text": "Jangan terjebak indicator overload.",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 137.7,
+   "end": 142.267,
+   "text": "Menambahkan banyak indikator tidak selalu menambah kualitas analisis.",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 142.767,
+   "end": 147.6,
+   "text": "Kalau beberapa indikator membaca hal yang mirip, kamu mungkin hanya melihat pesan yang sama dalam bentuk berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 148.067,
+   "end": 151.767,
+   "text": "Lebih banyak indikator belum tentu berarti lebih banyak insight.",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 152.167,
+   "end": 154.467,
+   "text": "Ada juga hindsight bias.",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 155.333,
+   "end": 157.8,
+   "text": "Setelah harga bergerak, chart sering terlihat sangat jelas.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 158.333,
+   "end": 163.1,
+   "text": "Padahal saat candle itu belum terbentuk, kita belum tahu apa yang terjadi berikutnya.",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 163.7,
+   "end": 166.467,
+   "text": "Jadi jangan nilai keputusan hanya dari hasil akhir.",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 167.067,
+   "end": 169.333,
+   "text": "Lihat juga apakah prosesnya sudah benar.",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 170.167,
+   "end": 172.267,
+   "text": "Sekarang kita lihat contohnya di ADMR.",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 172.667,
+   "end": 176.133,
+   "text": "Secara jangka panjang, saham ini sebelumnya masih berada dalam uptrend.",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 176.3,
+   "end": 178.267,
+   "text": "Lalu terbentuk descending triangle.",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 178.5,
+   "end": 182.267,
+   "text": "Volume terakhir masih cukup aktif, dan MACD histogram sudah hijau.",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 182.667,
+   "end": 186.967,
+   "text": "Kalau terlalu fokus pada satu skenario, kondisi ini bisa terlihat seperti persiapan rebound.",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 187.167,
+   "end": 188.5,
+   "text": "Apa yang perlu diwaspadai?",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 188.733,
+   "end": 191.567,
+   "text": "Yang perlu diwaspadai justru perubahan skenario.",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 191.8,
+   "end": 195.567,
+   "text": "Pada 11 Mei 2026, harga break di bawah MA100.",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 196.167,
+   "end": 200.367,
+   "text": "Besoknya, harga mencoba retest, tapi gagal kembali ke atas MA100.",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 201.0,
+   "end": 205.133,
+   "text": "Lalu pada 18 Mei, support descending triangle ikut ditembus.",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 205.367,
+   "end": 207.967,
+   "text": "Kalau bukti berubah, skenario juga harus berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 209.317,
+   "end": 212.017,
+   "text": "Kesalahan lain adalah asal copy trade orang lain.",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 212.017,
+   "end": 218.65,
+   "text": "Sahamnya mungkin sama, tapi timeframe, harga entry, batas risiko, dan rencana exit bisa berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 219.017,
+   "end": 220.85,
+   "text": "Saham sama belum tentu trade-nya sama.",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 221.317,
+   "end": 224.417,
+   "text": "Jadi jangan cuma bertanya: “Dia beli saham apa?”",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 224.617,
+   "end": 228.417,
+   "text": "Lebih penting pahami kenapa trade itu diambil, dan kapan logikanya dianggap salah.",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 228.617,
+   "end": 231.417,
+   "text": "Kalau logikanya tidak kamu pahami, jangan langsung ikut.",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 231.75,
+   "end": 235.483,
+   "text": "Sebelum entry, tarik semua yang sudah dipelajari menjadi satu proses.",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 236.083,
+   "end": 237.017,
+   "text": "“Trend-nya bagaimana?”",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 237.25,
+   "end": 238.35,
+   "text": "“Level pentingnya di mana?”",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 238.717,
+   "end": 239.517,
+   "text": "“Setup-nya apa?”",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 239.65,
+   "end": 240.683,
+   "text": "“Volume mendukung?”",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 240.883,
+   "end": 242.05,
+   "text": "“Timeframe lain sejalan?”",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 242.883,
+   "end": 245.817,
+   "text": "Dan yang paling penting: “apa invalidation-nya?”",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 246.117,
+   "end": 249.283,
+   "text": "Kalau satu bagian penting belum jelas, trade belum siap.",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 249.883,
+   "end": 251.617,
+   "text": "Lalu cek juga dirimu sendiri.",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 252.083,
+   "end": 257.05,
+   "text": "Kalau ingin entry karena FOMO, kesal, atau ingin membalas loss, berhenti dulu.",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 257.117,
+   "end": 261.55,
+   "text": "Technical Analysis adalah alat bantu keputusan, bukan alat untuk mencari kepastian.",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 262.05,
+   "end": 265.617,
+   "text": "Emosi boleh ada, tapi jangan biarkan emosi mengambil alih proses.",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 266.017,
+   "end": 267.65,
+   "text": "Jadi rule penutupnya sederhana.",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 267.95,
+   "end": 269.483,
+   "text": "Kalau kondisi belum lengkap, tunggu.",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 269.65,
+   "end": 271.617,
+   "text": "Kalau setup sudah invalid, keluar.",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 271.817,
+   "end": 273.683,
+   "text": "Kalau kondisi berubah, evaluasi ulang.",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 274.317,
+   "end": 277.283,
+   "text": "Dan kalau alasan masuknya emosional, jangan dipaksakan.",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 278.05,
+   "end": 281.25,
+   "text": "No trade unless the conditions are met.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 282.85,
+   "end": 287.9,
+   "text": "Di Tuntun, grafik bisa kamu baca dari sekilas sampai sedetail mungkin.",
+   "part": "cta"
+  },
+  {
+   "i": 82,
+   "start": 288.6,
+   "end": 289.7,
+   "text": "Mau lihat arah harga dengan cepat?",
+   "part": "cta"
+  },
+  {
+   "i": 83,
+   "start": 290.05,
+   "end": 291.05,
+   "text": "Pakai line chart.",
+   "part": "cta"
+  },
+  {
+   "i": 84,
+   "start": 291.4,
+   "end": 292.6,
+   "text": "Mau analisis mendalam?",
+   "part": "cta"
+  },
+  {
+   "i": 85,
+   "start": 292.85,
+   "end": 295.55,
+   "text": "Ada fullscreen chart berbasis TradingView.",
+   "part": "cta"
+  },
+  {
+   "i": 86,
+   "start": 295.9,
+   "end": 298.8,
+   "text": "Dan kalau mau analisis cepat dan akurat, ketuk Pro.",
+   "part": "cta"
+  },
+  {
+   "i": 87,
+   "start": 299.35,
+   "end": 302.5,
+   "text": "Di atas grafik, kamu bisa pilih periode Intraday,",
+   "part": "cta"
+  },
+  {
+   "i": 88,
+   "start": 302.5,
+   "end": 306.1,
+   "text": "5 hari, harian, mingguan, hingga tahunan.",
+   "part": "cta"
+  },
+  {
+   "i": 89,
+   "start": 306.55,
+   "end": 308.45,
+   "text": "Untuk melihat lebih detail, interval candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 90,
+   "start": 308.8,
+   "end": 312.25,
+   "text": "juga bisa diatur per menit, per jam, sampai kuartalan.",
+   "part": "cta"
+  },
+  {
+   "i": 91,
+   "start": 313.6,
+   "end": 317.1,
+   "text": "Pada mode Intraday, orderbook, running trade, dan tradebook",
+   "part": "cta"
+  },
+  {
+   "i": 92,
+   "start": 317.1,
+   "end": 318.95,
+   "text": "tampil langsung di sisi kanan grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 93,
+   "start": 320.3,
+   "end": 324.25,
+   "text": "Di bawah grafik, bagian kiri digunakan untuk garis pada chart utama,",
+   "part": "cta"
+  },
+  {
+   "i": 94,
+   "start": 324.25,
+   "end": 326.8,
+   "text": "seperti moving average dan Bollinger Bands.",
+   "part": "cta"
+  },
+  {
+   "i": 95,
+   "start": 327.25,
+   "end": 330.25,
+   "text": "Sedangkan bagian kanan untuk indikator di panel bawah,",
+   "part": "cta"
+  },
+  {
+   "i": 96,
+   "start": 330.25,
+   "end": 333.1,
+   "text": "seperti VALUE, MACD, dan RSI.",
+   "part": "cta"
+  },
+  {
+   "i": 97,
+   "start": 334.55,
+   "end": 336.3,
+   "text": "Tekan dan tahan candlestick",
+   "part": "cta"
+  },
+  {
+   "i": 98,
+   "start": 336.3,
+   "end": 339.5,
+   "text": "untuk melihat detail harga pada waktu tersebut.",
+   "part": "cta"
+  },
+  {
+   "i": 99,
+   "start": 340.8,
+   "end": 343.6,
+   "text": "Lewat Pengaturan, aktifkan penanda transaksi,",
+   "part": "cta"
+  },
+  {
+   "i": 100,
+   "start": 343.6,
+   "end": 346.2,
+   "text": "corporate action, dan garis harga rata-rata.",
+   "part": "cta"
+  },
+  {
+   "i": 101,
+   "start": 346.55,
+   "end": 349.15,
+   "text": "Setiap kali kamu membeli atau menjual saham,",
+   "part": "cta"
+  },
+  {
+   "i": 102,
+   "start": 349.3,
+   "end": 352.6,
+   "text": "titik transaksi beli dan jual akan tercatat di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 103,
+   "start": 353.15,
+   "end": 356.2,
+   "text": "Sementara itu, garis biru menunjukkan harga rata-rata modalmu.",
+   "part": "cta"
+  },
+  {
+   "i": 104,
+   "start": 357.55,
+   "end": 360.4,
+   "text": "Corporate action ditandai dengan titik bulat biru di grafik.",
+   "part": "cta"
+  },
+  {
+   "i": 105,
+   "start": 360.95,
+   "end": 364.8,
+   "text": "Buka Tuntun, pilih satu saham, dan mulai latihan analisis grafik",
+   "part": "cta"
+  },
+  {
+   "i": 106,
+   "start": 364.8,
+   "end": 367.25,
+   "text": "dengan lebih cepat dan praktis di Chart Pro.",
+   "part": "cta"
+  }
+ ]
+}

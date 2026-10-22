@@ -1,0 +1,984 @@
+{
+ "key": "TA07",
+ "rows": [
+  {
+   "i": 1,
+   "en": "Reading candlesticks and chart patterns is truly powerful.",
+   "zh": "解读K线和图表形态确实很强大。",
+   "ja": "ローソク足やチャートパターンを読むのは、確かに強力です。",
+   "ko": "캔들과 차트 패턴을 읽는 건 확실히 강력해요."
+  },
+  {
+   "i": 2,
+   "en": "But if you have to check stocks one by one,",
+   "zh": "但如果要一只一只地查看股票，",
+   "ja": "でも、銘柄を一つずつチェックするとなると、",
+   "ko": "하지만 종목을 하나하나 확인해야 한다면"
+  },
+  {
+   "i": 3,
+   "en": "it can take quite a while and needs a trained eye.",
+   "zh": "过程可能相当耗时，而且需要老练的眼光。",
+   "ja": "かなり時間がかかり、鍛えられた目も必要です。",
+   "ko": "과정이 꽤 오래 걸리고 숙련된 눈이 필요해요."
+  },
+  {
+   "i": 4,
+   "en": "This is where indicators help.",
+   "zh": "这时，指标就能帮上忙。",
+   "ja": "そこで役立つのがインジケーターです。",
+   "ko": "바로 여기서 지표가 도움이 돼요."
+  },
+  {
+   "i": 5,
+   "en": "Indicators process existing price data",
+   "zh": "指标会处理已有的价格数据，",
+   "ja": "インジケーターは既存の価格データを加工し、",
+   "ko": "지표는 이미 있는 가격 데이터를 가공해서"
+  },
+  {
+   "i": 6,
+   "en": "so the chart is quicker to read.",
+   "zh": "让图表读起来更快。",
+   "ja": "チャートを素早く読めるようにします。",
+   "ko": "차트를 더 빨리 읽을 수 있게 해 줘요."
+  },
+  {
+   "i": 7,
+   "en": "Not to replace your analysis,",
+   "zh": "不是取代你的分析，",
+   "ja": "分析に取って代わるものではなく、",
+   "ko": "분석을 대신하는 게 아니라"
+  },
+  {
+   "i": 8,
+   "en": "but to help filter charts and confirm what you see.",
+   "zh": "而是帮你筛选图表，并确认你看到的东西。",
+   "ja": "チャートを絞り込み、見たものを確かめる手助けをします。",
+   "ko": "차트를 걸러 내고, 눈으로 본 것을 확인하게 도와줘요."
+  },
+  {
+   "i": 9,
+   "en": "Let's start with the moving average.",
+   "zh": "我们先从移动平均线（均线）开始。",
+   "ja": "まずは移動平均線から始めましょう。",
+   "ko": "이동평균선부터 시작해 볼게요."
+  },
+  {
+   "i": 10,
+   "en": "Price moves up and down, full of noise.",
+   "zh": "价格上下波动，充满噪音。",
+   "ja": "価格は上下に動き、ノイズだらけです。",
+   "ko": "가격은 오르내리고 노이즈로 가득해요."
+  },
+  {
+   "i": 11,
+   "en": "A moving average takes the average price",
+   "zh": "均线会计算价格的平均值，",
+   "ja": "移動平均線は価格の平均を、",
+   "ko": "이동평균선은 가격의 평균을"
+  },
+  {
+   "i": 12,
+   "en": "of the last few days,",
+   "zh": "取最近几天的数据，",
+   "ja": "直近数日分で計算し、",
+   "ko": "최근 며칠 기준으로 구하고,"
+  },
+  {
+   "i": 13,
+   "en": "then draws it as a smoother line.",
+   "zh": "再把它画成一条更平滑的线。",
+   "ja": "それを滑らかな線として描きます。",
+   "ko": "더 부드러운 선으로 그려요."
+  },
+  {
+   "i": 14,
+   "en": "Every day, the line moves along.",
+   "zh": "每天，这条线都会跟着移动。",
+   "ja": "毎日、線も一緒に動いていきます。",
+   "ko": "매일 선도 함께 움직여요."
+  },
+  {
+   "i": 15,
+   "en": "Noise drops and the trend direction is easier to see.",
+   "zh": "噪音减少，趋势方向也更容易看清。",
+   "ja": "ノイズが減り、トレンドの方向が見やすくなります。",
+   "ko": "노이즈가 줄고 추세의 방향이 더 잘 보여요."
+  },
+  {
+   "i": 16,
+   "en": "The number shows how many periods are counted.",
+   "zh": "数字表示计算了多少个周期。",
+   "ja": "数字は、計算に使う期間の数を表します。",
+   "ko": "숫자는 몇 개의 기간을 계산했는지 나타내요."
+  },
+  {
+   "i": 17,
+   "en": "A short moving average,",
+   "zh": "短期均线，",
+   "ja": "短期の移動平均線、",
+   "ko": "짧은 이동평균선,"
+  },
+  {
+   "i": 18,
+   "en": "for example, MA20,",
+   "zh": "比如MA20，",
+   "ja": "たとえばMA20は、",
+   "ko": "예를 들어 MA20은"
+  },
+  {
+   "i": 19,
+   "en": "moves closer to price",
+   "zh": "走势更贴近价格，",
+   "ja": "価格の近くを動き、",
+   "ko": "가격에 더 가깝게 움직이고"
+  },
+  {
+   "i": 20,
+   "en": "and reacts faster.",
+   "zh": "反应也更快。",
+   "ja": "反応も速くなります。",
+   "ko": "더 빠르게 반응해요."
+  },
+  {
+   "i": 21,
+   "en": "A long moving average,",
+   "zh": "长期均线，",
+   "ja": "長期の移動平均線、",
+   "ko": "긴 이동평균선,"
+  },
+  {
+   "i": 22,
+   "en": "like MA200,",
+   "zh": "例如MA200，",
+   "ja": "MA200などは、",
+   "ko": "MA200 같은 선은"
+  },
+  {
+   "i": 23,
+   "en": "moves more slowly and helps",
+   "zh": "移动得更慢，有助于",
+   "ja": "ゆっくり動き、",
+   "ko": "더 느리게 움직이며"
+  },
+  {
+   "i": 24,
+   "en": "you see the bigger trend.",
+   "zh": "看清更大的趋势。",
+   "ja": "より大きなトレンドを見る助けになります。",
+   "ko": "더 큰 추세를 보도록 도와줘요."
+  },
+  {
+   "i": 25,
+   "en": "So the short one is more responsive.",
+   "zh": "所以，短期均线更灵敏。",
+   "ja": "つまり、短いほうが反応が敏感です。",
+   "ko": "그러니까 짧은 쪽이 더 민감하게 반응해요."
+  },
+  {
+   "i": 26,
+   "en": "The long one gives the big picture.",
+   "zh": "长期均线则提供全局视角。",
+   "ja": "長いほうは全体像を示します。",
+   "ko": "긴 쪽은 큰 그림을 보여 줘요."
+  },
+  {
+   "i": 27,
+   "en": "That's why traders often watch both.",
+   "zh": "所以，交易者常常两者都看。",
+   "ja": "だからトレーダーは両方をよく見ます。",
+   "ko": "그래서 트레이더들은 둘 다 자주 봐요."
+  },
+  {
+   "i": 28,
+   "en": "Two types are commonly used:",
+   "zh": "常用的有两种：",
+   "ja": "よく使われる種類が2つあります。",
+   "ko": "자주 쓰이는 건 두 가지,"
+  },
+  {
+   "i": 29,
+   "en": "SMA and EMA.",
+   "zh": "SMA和EMA。",
+   "ja": "SMAとEMAです。",
+   "ko": "SMA와 EMA예요."
+  },
+  {
+   "i": 30,
+   "en": "SMA gives every price the same weight.",
+   "zh": "SMA对每个价格给予相同的权重。",
+   "ja": "SMAはすべての価格に同じ重みをつけます。",
+   "ko": "SMA는 모든 가격에 같은 가중치를 줘요."
+  },
+  {
+   "i": 31,
+   "en": "EMA gives more weight to the latest prices,",
+   "zh": "EMA对最新价格给予更大的权重，",
+   "ja": "EMAは直近の価格により大きな重みをつけるので、",
+   "ko": "EMA는 최근 가격에 더 큰 가중치를 줘서"
+  },
+  {
+   "i": 32,
+   "en": "so it reacts faster.",
+   "zh": "所以反应更快。",
+   "ja": "反応がより速くなります。",
+   "ko": "더 빠르게 반응해요."
+  },
+  {
+   "i": 33,
+   "en": "But faster isn't always better,",
+   "zh": "但更快不一定更好，",
+   "ja": "でも、速いほど良いとは限りません。",
+   "ko": "하지만 빠르다고 항상 좋은 건 아니에요."
+  },
+  {
+   "i": 34,
+   "en": "because false signals can also appear more often.",
+   "zh": "因为假信号也可能更频繁地出现。",
+   "ja": "ダマシ（偽のシグナル）も増えることがあるからです。",
+   "ko": "거짓 신호도 더 자주 나타날 수 있거든요."
+  },
+  {
+   "i": 35,
+   "en": "Here's the simplest way to read it.",
+   "zh": "最简单的解读方法是这样的。",
+   "ja": "いちばんシンプルな読み方はこうです。",
+   "ko": "가장 간단하게 읽는 방법은 이래요."
+  },
+  {
+   "i": 36,
+   "en": "Price above a rising moving average",
+   "zh": "价格位于上行的均线之上，",
+   "ja": "上向きの移動平均線より価格が上にあれば、",
+   "ko": "가격이 상승하는 이동평균선 위에 있으면"
+  },
+  {
+   "i": 37,
+   "en": "usually indicates an uptrend.",
+   "zh": "通常代表上升趋势。",
+   "ja": "たいてい上昇トレンドを示します。",
+   "ko": "보통 상승 추세를 뜻해요."
+  },
+  {
+   "i": 38,
+   "en": "Price below a falling moving average",
+   "zh": "价格位于下行的均线之下，",
+   "ja": "下向きの移動平均線より価格が下にあれば、",
+   "ko": "가격이 하락하는 이동평균선 아래에 있으면"
+  },
+  {
+   "i": 39,
+   "en": "indicates a downtrend.",
+   "zh": "代表下降趋势。",
+   "ja": "下降トレンドを示します。",
+   "ko": "하락 추세를 뜻해요."
+  },
+  {
+   "i": 40,
+   "en": "Also pay attention to its slope.",
+   "zh": "也要留意它的斜率。",
+   "ja": "傾きにも注目しましょう。",
+   "ko": "기울기도 잘 살펴보세요."
+  },
+  {
+   "i": 41,
+   "en": "The steeper the line, the stronger the trend.",
+   "zh": "线越陡，趋势越强。",
+   "ja": "線が急であるほど、トレンドは強くなります。",
+   "ko": "선이 가파를수록 추세가 강해요."
+  },
+  {
+   "i": 42,
+   "en": "If it's flat, the market has no clear direction yet.",
+   "zh": "如果走平，说明市场还没有明确的方向。",
+   "ja": "線が平らなら、相場にはまだ明確な方向がありません。",
+   "ko": "평평하다면 시장은 아직 뚜렷한 방향이 없어요."
+  },
+  {
+   "i": 43,
+   "en": "So, look at two things:",
+   "zh": "所以，要看两点：",
+   "ja": "つまり、見るべきポイントは2つです。",
+   "ko": "그러니까 두 가지를 보세요."
+  },
+  {
+   "i": 44,
+   "en": "price position and moving average direction.",
+   "zh": "价格的位置和均线的方向。",
+   "ja": "価格の位置と、移動平均線の向きです。",
+   "ko": "가격의 위치와 이동평균선의 방향이에요."
+  },
+  {
+   "i": 45,
+   "en": "A moving average can also act as support",
+   "zh": "均线也可以充当会移动的",
+   "ja": "移動平均線は、動くサポート",
+   "ko": "이동평균선은 움직이는 지지"
+  },
+  {
+   "i": 46,
+   "en": "or resistance that moves.",
+   "zh": "支撑或阻力。",
+   "ja": "やレジスタンスとしても機能します。",
+   "ko": "또는 저항 역할도 할 수 있어요."
+  },
+  {
+   "i": 47,
+   "en": "In an uptrend, price often pulls back",
+   "zh": "在上升趋势中，价格常常回调到",
+   "ja": "上昇トレンドでは、価格はよく",
+   "ko": "상승 추세에서는 가격이 종종"
+  },
+  {
+   "i": 48,
+   "en": "to the rising MA,",
+   "zh": "上行的均线，",
+   "ja": "上向きのMAまで押し目をつけ、",
+   "ko": "상승하는 MA까지 눌림목을 만든 뒤"
+  },
+  {
+   "i": 49,
+   "en": "then bounces off it, like a rising floor.",
+   "zh": "然后反弹，就像一块跟着上升的地板。",
+   "ja": "一緒に上がる床のように反発します。",
+   "ko": "함께 올라가는 바닥처럼 반등해요."
+  },
+  {
+   "i": 50,
+   "en": "In a downtrend,",
+   "zh": "在下降趋势中，",
+   "ja": "下降トレンドでは、",
+   "ko": "하락 추세에서는"
+  },
+  {
+   "i": 51,
+   "en": "the MA can cap price from above, like a ceiling.",
+   "zh": "均线可以像天花板一样从上方压住价格。",
+   "ja": "MAが天井のように上から価格を抑えることがあります。",
+   "ko": "MA가 천장처럼 위에서 가격을 누를 수 있어요."
+  },
+  {
+   "i": 52,
+   "en": "The idea is the same as support and resistance,",
+   "zh": "概念和支撑、阻力一样，",
+   "ja": "考え方はサポートやレジスタンスと同じで、",
+   "ko": "개념은 지지와 저항과 같지만,"
+  },
+  {
+   "i": 53,
+   "en": "except the level moves along with price.",
+   "zh": "只是这个价位会跟着价格移动。",
+   "ja": "ただ、その水準が価格と一緒に動くだけです。",
+   "ko": "그 가격대가 가격을 따라 움직인다는 점만 달라요."
+  },
+  {
+   "i": 54,
+   "en": "When a short moving average",
+   "zh": "当短期均线",
+   "ja": "短期の移動平均線が",
+   "ko": "짧은 이동평균선이"
+  },
+  {
+   "i": 55,
+   "en": "crosses above a long moving average,",
+   "zh": "自下而上穿过长期均线，",
+   "ja": "長期の移動平均線を下から上に抜けると、",
+   "ko": "긴 이동평균선을 아래에서 위로 뚫으면"
+  },
+  {
+   "i": 56,
+   "en": "it's called a golden cross.",
+   "zh": "这就叫金叉。",
+   "ja": "これをゴールデンクロスと呼びます。",
+   "ko": "이를 골든크로스라고 해요."
+  },
+  {
+   "i": 57,
+   "en": "If it crosses from above to below,",
+   "zh": "如果自上而下穿过，",
+   "ja": "上から下に抜けると、",
+   "ko": "위에서 아래로 뚫으면"
+  },
+  {
+   "i": 58,
+   "en": "it's called a death cross.",
+   "zh": "就叫死叉。",
+   "ja": "デッドクロスと呼びます。",
+   "ko": "데드크로스라고 해요."
+  },
+  {
+   "i": 59,
+   "en": "But don't treat a crossover as an entry or exit cue.",
+   "zh": "但别把交叉当成入场或出场的信号。",
+   "ja": "でも、クロスをエントリーやエグジットの合図と考えないでください。",
+   "ko": "하지만 크로스를 진입이나 청산 신호로 여기지는 마세요."
+  },
+  {
+   "i": 60,
+   "en": "Moving averages are lagging.",
+   "zh": "均线具有滞后性。",
+   "ja": "移動平均線には遅行性があります。",
+   "ko": "이동평균선은 후행성이 있어요."
+  },
+  {
+   "i": 61,
+   "en": "By the time a crossover appears,",
+   "zh": "当交叉出现时，",
+   "ja": "クロスが出たときには、",
+   "ko": "크로스가 나타날 때쯤이면"
+  },
+  {
+   "i": 62,
+   "en": "part of the move has usually already happened.",
+   "zh": "通常一部分行情已经走完了。",
+   "ja": "たいてい値動きの一部はすでに終わっています。",
+   "ko": "보통 움직임의 일부는 이미 지나간 뒤예요."
+  },
+  {
+   "i": 63,
+   "en": "Use it as trend confirmation,",
+   "zh": "把它当作趋势的确认，",
+   "ja": "トレンドの確認（コンファメーション）に使いましょう。",
+   "ko": "추세 확인용으로 쓰세요."
+  },
+  {
+   "i": 64,
+   "en": "not for predicting.",
+   "zh": "而不是用来预测。",
+   "ja": "予測するためではありません。",
+   "ko": "예측용이 아니에요."
+  },
+  {
+   "i": 65,
+   "en": "Now, on to Bollinger Bands.",
+   "zh": "接下来看布林带。",
+   "ja": "次はボリンジャーバンドです。",
+   "ko": "이제 볼린저 밴드로 넘어갈게요."
+  },
+  {
+   "i": 66,
+   "en": "In the middle is a moving average.",
+   "zh": "中间是一条均线。",
+   "ja": "真ん中には移動平均線があります。",
+   "ko": "가운데에는 이동평균선이 있어요."
+  },
+  {
+   "i": 67,
+   "en": "Above and below it,",
+   "zh": "在它的上方和下方，",
+   "ja": "その上下にある",
+   "ko": "그 위와 아래의"
+  },
+  {
+   "i": 68,
+   "en": "two bands shift with volatility —",
+   "zh": "两条轨道随波动性变化——",
+   "ja": "2本のバンドは、ボラティリティ、",
+   "ko": "두 밴드는 변동성,"
+  },
+  {
+   "i": 69,
+   "en": "how much price moves away from its average.",
+   "zh": "也就是价格偏离平均值的幅度。",
+   "ja": "つまり価格が平均からどれだけ動くかで変化します。",
+   "ko": "즉 가격이 평균에서 얼마나 움직이는지에 따라 변해요."
+  },
+  {
+   "i": 70,
+   "en": "When the market is calm, the bands narrow.",
+   "zh": "市场平静时，布林带收窄。",
+   "ja": "相場が落ち着いているとき、バンドは狭まります。",
+   "ko": "시장이 조용할 때는 밴드가 좁아져요."
+  },
+  {
+   "i": 71,
+   "en": "When moves get bigger, the bands widen too.",
+   "zh": "价格波动变大时，布林带也随之变宽。",
+   "ja": "値動きが大きくなると、バンドも広がります。",
+   "ko": "움직임이 커지면 밴드도 함께 넓어져요."
+  },
+  {
+   "i": 72,
+   "en": "Bollinger Bands seem to breathe with market energy.",
+   "zh": "布林带就像随着市场能量在呼吸。",
+   "ja": "ボリンジャーバンドは、相場のエネルギーと共に呼吸するようです。",
+   "ko": "볼린저 밴드는 시장 에너지에 맞춰 숨 쉬는 것 같아요."
+  },
+  {
+   "i": 73,
+   "en": "One of the most useful conditions",
+   "zh": "最值得留意的情况之一，",
+   "ja": "特に注目すると役立つ状態の一つが、",
+   "ko": "주목하면 가장 유용한 상황 중 하나는"
+  },
+  {
+   "i": 74,
+   "en": "to watch is the squeeze.",
+   "zh": "就是收口。",
+   "ja": "スクイーズです。",
+   "ko": "스퀴즈예요."
+  },
+  {
+   "i": 75,
+   "en": "When the bands narrow tightly,",
+   "zh": "当布林带收得很紧时，",
+   "ja": "バンドがぎゅっと狭まると、",
+   "ko": "밴드가 바짝 좁아지면"
+  },
+  {
+   "i": 76,
+   "en": "volatility is low and price usually moves sideways.",
+   "zh": "波动性较低，价格通常横盘。",
+   "ja": "ボラティリティが低く、価格はたいてい横ばい（レンジ）です。",
+   "ko": "변동성이 낮고 가격은 보통 횡보해요."
+  },
+  {
+   "i": 77,
+   "en": "This condition often shows up",
+   "zh": "这种情况常常出现在",
+   "ja": "こうした状態は、",
+   "ko": "이런 상황은 종종"
+  },
+  {
+   "i": 78,
+   "en": "before a bigger move.",
+   "zh": "更大的行情之前。",
+   "ja": "より大きな値動きの前によく現れます。",
+   "ko": "더 큰 움직임 전에 나타나요."
+  },
+  {
+   "i": 79,
+   "en": "But a squeeze doesn't tell you which way.",
+   "zh": "但收口不会告诉你方向。",
+   "ja": "でも、スクイーズは方向までは教えてくれません。",
+   "ko": "하지만 스퀴즈는 방향을 알려 주지 않아요."
+  },
+  {
+   "i": 80,
+   "en": "Price can break out upward or downward.",
+   "zh": "价格可能向上突破，也可能向下突破。",
+   "ja": "価格は上にも下にもブレイクアウトする可能性があります。",
+   "ko": "가격은 위로도, 아래로도 돌파할 수 있어요."
+  },
+  {
+   "i": 81,
+   "en": "So still check the trend",
+   "zh": "所以，还是要看趋势",
+   "ja": "なので、やはりトレンドと",
+   "ko": "그러니 추세와"
+  },
+  {
+   "i": 82,
+   "en": "and key levels before drawing conclusions.",
+   "zh": "和关键价位，再下结论。",
+   "ja": "重要な水準を確認してから結論を出しましょう。",
+   "ko": "주요 가격대를 먼저 보고 결론을 내리세요."
+  },
+  {
+   "i": 83,
+   "en": "There's one trap beginners often fall into.",
+   "zh": "有一个新手常掉进的陷阱。",
+   "ja": "初心者がよく陥る落とし穴が一つあります。",
+   "ko": "초보자가 자주 빠지는 함정이 하나 있어요."
+  },
+  {
+   "i": 84,
+   "en": "In a strong trend,",
+   "zh": "在强势趋势中，",
+   "ja": "強いトレンドでは、",
+   "ko": "강한 추세에서는"
+  },
+  {
+   "i": 85,
+   "en": "price can keep moving near the upper band.",
+   "zh": "价格可能持续贴近上轨运行。",
+   "ja": "価格がアッパーバンド付近を動き続けることがあります。",
+   "ko": "가격이 상단 밴드 근처에서 계속 움직일 수 있어요."
+  },
+  {
+   "i": 86,
+   "en": "So hitting the upper band isn't an automatic sell signal.",
+   "zh": "所以，触及上轨并不自动就是卖出信号。",
+   "ja": "なので、アッパーバンドに触れても即売りシグナルではありません。",
+   "ko": "그러니 상단 밴드 터치가 곧 매도 신호는 아니에요."
+  },
+  {
+   "i": 87,
+   "en": "In a healthy uptrend,",
+   "zh": "在健康的上升趋势中，",
+   "ja": "健全な上昇トレンドでは、",
+   "ko": "건강한 상승 추세에서는"
+  },
+  {
+   "i": 88,
+   "en": "this can actually show",
+   "zh": "这种情况反而可能说明",
+   "ja": "むしろこの状態は、",
+   "ko": "이런 상황은 오히려"
+  },
+  {
+   "i": 89,
+   "en": "price is still moving with strong momentum.",
+   "zh": "价格仍以强劲的动能在运行。",
+   "ja": "価格にまだ強いモメンタムがあることを示す場合があります。",
+   "ko": "가격에 아직 강한 모멘텀이 있다는 뜻일 수 있어요."
+  },
+  {
+   "i": 90,
+   "en": "Bollinger Bands show where price sits",
+   "zh": "布林带显示的是价格",
+   "ja": "ボリンジャーバンドは平均に対する価格の位置を示すもので、",
+   "ko": "볼린저 밴드는 평균 대비 가격의 위치를 보여 주지,"
+  },
+  {
+   "i": 91,
+   "en": "relative to its average, not entry or exit decisions.",
+   "zh": "相对于平均值的位置，而不是给出入场或出场的决定。",
+   "ja": "エントリーやエグジットを決めるものではありません。",
+   "ko": "진입이나 청산 결정을 내려 주지는 않아요."
+  },
+  {
+   "i": 92,
+   "en": "So where do indicators fit in?",
+   "zh": "那么，指标该用在哪里？",
+   "ja": "では、インジケーターはどこで使うのでしょうか？",
+   "ko": "그럼 지표는 어디에 쓰일까요?"
+  },
+  {
+   "i": 93,
+   "en": "The foundation is still price action:",
+   "zh": "基础仍然是价格行为：",
+   "ja": "土台はやはりプライスアクションです。",
+   "ko": "기반은 여전히 프라이스 액션이에요."
+  },
+  {
+   "i": 94,
+   "en": "the trend, patterns,",
+   "zh": "趋势、形态、",
+   "ja": "トレンド、パターン、",
+   "ko": "추세, 패턴,"
+  },
+  {
+   "i": 95,
+   "en": "support, and resistance",
+   "zh": "支撑和阻力，",
+   "ja": "そしてサポートとレジスタンス。",
+   "ko": "지지와 저항,"
+  },
+  {
+   "i": 96,
+   "en": "that you read first.",
+   "zh": "这些是你要先读懂的。",
+   "ja": "これらを最初に読み取ります。",
+   "ko": "가장 먼저 읽는 것들이에요."
+  },
+  {
+   "i": 97,
+   "en": "Moving averages help confirm the trend.",
+   "zh": "均线帮助确认趋势。",
+   "ja": "移動平均線はトレンドの確認に役立ちます。",
+   "ko": "이동평균선은 추세를 확인하는 데 도움이 돼요."
+  },
+  {
+   "i": 98,
+   "en": "Bollinger Bands help you",
+   "zh": "布林带则帮助你",
+   "ja": "ボリンジャーバンドは、",
+   "ko": "볼린저 밴드는"
+  },
+  {
+   "i": 99,
+   "en": "see whether volatility",
+   "zh": "看出波动性",
+   "ja": "ボラティリティが",
+   "ko": "변동성이"
+  },
+  {
+   "i": 100,
+   "en": "is contracting or expanding.",
+   "zh": "正在收缩还是扩大。",
+   "ja": "縮小しているか拡大しているかを見るのに役立ちます。",
+   "ko": "줄어드는지 커지는지 보는 데 도움이 돼요."
+  },
+  {
+   "i": 101,
+   "en": "Think of indicators as a second opinion,",
+   "zh": "把指标当作第二意见，",
+   "ja": "インジケーターはセカンドオピニオンだと考えましょう。",
+   "ko": "지표는 세컨드 오피니언으로 생각하세요."
+  },
+  {
+   "i": 102,
+   "en": "not a tool that makes decisions for you.",
+   "zh": "而不是替你做决定的工具。",
+   "ja": "代わりに判断してくれる道具ではありません。",
+   "ko": "여러분 대신 결정을 내려 주는 도구가 아니에요."
+  },
+  {
+   "i": 103,
+   "en": "Now it's your turn.",
+   "zh": "现在轮到你了。",
+   "ja": "さあ、今度はあなたの番です。",
+   "ko": "이제 여러분 차례예요."
+  },
+  {
+   "i": 104,
+   "en": "Here's the GGRM chart from July 2026.",
+   "zh": "这是GGRM在2026年7月的图表。",
+   "ja": "これは2026年7月のGGRMのチャートです。",
+   "ko": "이건 2026년 7월 GGRM 차트예요."
+  },
+  {
+   "i": 105,
+   "en": "Price falls to the slower moving average,",
+   "zh": "价格回落到较慢的那条",
+   "ja": "価格は、より遅い移動平均線、",
+   "ko": "가격이 더 느린 이동평균선,"
+  },
+  {
+   "i": 106,
+   "en": "which is rising,",
+   "zh": "上行均线，",
+   "ja": "それも上向きの線、",
+   "ko": "그것도 상승 중인 선,"
+  },
+  {
+   "i": 107,
+   "en": "the purple line,",
+   "zh": "也就是紫色的线，",
+   "ja": "つまり紫の線まで下がり、",
+   "ko": "바로 보라색 선까지 내려온 뒤"
+  },
+  {
+   "i": 108,
+   "en": "and then bounces.",
+   "zh": "然后反弹。",
+   "ja": "そこから反発します。",
+   "ko": "반등해요."
+  },
+  {
+   "i": 109,
+   "en": "A few days later,",
+   "zh": "几天后，",
+   "ja": "数日後、",
+   "ko": "며칠 뒤"
+  },
+  {
+   "i": 110,
+   "en": "the Bollinger Bands narrow into a squeeze,",
+   "zh": "布林带收窄，形成收口，",
+   "ja": "ボリンジャーバンドが狭まってスクイーズになり、",
+   "ko": "볼린저 밴드가 좁아지며 스퀴즈가 되고,"
+  },
+  {
+   "i": 111,
+   "en": "while price still holds just above the middle band.",
+   "zh": "而价格仍守在中轨略上方。",
+   "ja": "価格はまだミドルバンドのわずかに上で踏みとどまっています。",
+   "ko": "가격은 여전히 중심선 바로 위에서 버티고 있어요."
+  },
+  {
+   "i": 112,
+   "en": "Do you think the uptrend is still holding?",
+   "zh": "你觉得，这个上升趋势还在延续吗？",
+   "ja": "上昇トレンドはまだ続いていると思いますか？",
+   "ko": "여러분 생각엔 상승 추세가 아직 유지되고 있나요?"
+  },
+  {
+   "i": 113,
+   "en": "And with the bands this tight,",
+   "zh": "还有，布林带收得这么紧时，",
+   "ja": "そして、バンドがここまで狭いとき、",
+   "ko": "그리고 밴드가 이렇게 좁을 때"
+  },
+  {
+   "i": 114,
+   "en": "what should we be ready for?",
+   "zh": "我们需要预判什么？",
+   "ja": "何に備えるべきでしょうか？",
+   "ko": "우리는 무엇을 대비해야 할까요?"
+  },
+  {
+   "i": 115,
+   "en": "Three… two… one.",
+   "zh": "三……二……一。",
+   "ja": "3…2…1。",
+   "ko": "셋… 둘… 하나."
+  },
+  {
+   "i": 116,
+   "en": "And as it turns out, price broke out upward.",
+   "zh": "结果，价格向上突破了。",
+   "ja": "そして実際、価格は上にブレイクアウトしました。",
+   "ko": "그리고 실제로 가격은 위로 돌파했어요."
+  },
+  {
+   "i": 117,
+   "en": "The moving average that was rising earlier",
+   "zh": "之前上行的均线",
+   "ja": "先ほどの上向きの移動平均線が",
+   "ko": "앞서 상승하던 이동평균선이"
+  },
+  {
+   "i": 118,
+   "en": "successfully acted as support.",
+   "zh": "成功起到了支撑作用。",
+   "ja": "サポートとしてしっかり機能しました。",
+   "ko": "지지 역할을 제대로 해냈어요."
+  },
+  {
+   "i": 119,
+   "en": "After the squeeze,",
+   "zh": "收口之后，",
+   "ja": "スクイーズの後、",
+   "ko": "스퀴즈 이후"
+  },
+  {
+   "i": 120,
+   "en": "the Bollinger Bands widened again",
+   "zh": "布林带再次张开，",
+   "ja": "ボリンジャーバンドは再び広がり、",
+   "ko": "볼린저 밴드는 다시 넓어졌고"
+  },
+  {
+   "i": 121,
+   "en": "and price kept rising until early August,",
+   "zh": "价格持续上涨到8月初，",
+   "ja": "価格は8月上旬まで上昇を続け、",
+   "ko": "가격은 8월 초까지 상승을 이어 가며"
+  },
+  {
+   "i": 122,
+   "en": "toward around 20,350.",
+   "zh": "一路涨向20,350左右。",
+   "ja": "20,350付近へと向かいました。",
+   "ko": "20,350 부근을 향해 갔어요."
+  },
+  {
+   "i": 123,
+   "en": "So the bullish bias came from the still-intact trend.",
+   "zh": "所以，看涨倾向来自依然完好的趋势。",
+   "ja": "つまり、強気バイアスの根拠は、まだ保たれていたトレンドです。",
+   "ko": "즉, 강세 관점은 아직 유지되던 추세에서 나온 거예요."
+  },
+  {
+   "i": 124,
+   "en": "A squeeze only tells you a big move",
+   "zh": "收口只是告诉你，大行情",
+   "ja": "スクイーズが示すのは、大きな値動きが",
+   "ko": "스퀴즈는 큰 움직임이"
+  },
+  {
+   "i": 125,
+   "en": "may be coming soon.",
+   "zh": "可能即将出现。",
+   "ja": "近く起こるかもしれない、ということだけです。",
+   "ko": "곧 나타날 수 있다는 것만 알려 줘요."
+  },
+  {
+   "i": 126,
+   "en": "In this case,",
+   "zh": "在这个例子中，",
+   "ja": "今回のケースでは、",
+   "ko": "이번 사례에서는"
+  },
+  {
+   "i": 127,
+   "en": "the breakout matched the trend already in place.",
+   "zh": "突破方向与已形成的趋势一致。",
+   "ja": "ブレイクアウトの方向が既存のトレンドと一致しました。",
+   "ko": "돌파 방향이 이미 형성된 추세와 일치했어요."
+  },
+  {
+   "i": 128,
+   "en": "In the app, you can also see these indicators in one place.",
+   "zh": "在App里，你也可以在同一个地方看到这些指标。",
+   "ja": "アプリでは、これらのインジケーターを1か所で見ることもできます。",
+   "ko": "앱에서는 이런 다양한 지표를 한곳에서 볼 수도 있어요."
+  },
+  {
+   "i": 129,
+   "en": "Remember, indicators never lead price.",
+   "zh": "记住，指标永远不会领先于价格。",
+   "ja": "覚えておきましょう。インジケーターは決して価格に先行しません。",
+   "ko": "기억하세요, 지표는 절대 가격을 앞서지 않아요."
+  },
+  {
+   "i": 130,
+   "en": "Indicators follow data that already happened,",
+   "zh": "指标跟随的是已经发生的数据，",
+   "ja": "インジケーターは、すでに起きたデータを追いかけ、",
+   "ko": "지표는 이미 일어난 데이터를 따라가고,"
+  },
+  {
+   "i": 131,
+   "en": "then help confirm or question your analysis.",
+   "zh": "然后帮助你确认或质疑自己的分析。",
+   "ja": "分析を確認したり、問い直したりする助けになります。",
+   "ko": "분석을 확인하거나 다시 따져 보게 도와줘요."
+  },
+  {
+   "i": 132,
+   "en": "Use moving averages to read the trend,",
+   "zh": "用均线来读趋势，",
+   "ja": "トレンドを読むなら移動平均線、",
+   "ko": "이동평균선으로 추세를 읽고,"
+  },
+  {
+   "i": 133,
+   "en": "Bollinger Bands to spot changes in volatility,",
+   "zh": "用布林带看波动性的变化，",
+   "ja": "ボラティリティの変化を見るならボリンジャーバンド。",
+   "ko": "볼린저 밴드로 변동성의 변화를 보고,"
+  },
+  {
+   "i": 134,
+   "en": "and still start with price action.",
+   "zh": "并且依然从价格行为出发。",
+   "ja": "そして、出発点はあくまでプライスアクションです。",
+   "ko": "그래도 시작은 프라이스 액션에서 하세요."
+  },
+  {
+   "i": 135,
+   "en": "But never make a decision",
+   "zh": "但永远不要只凭",
+   "ja": "でも、判断を下すときは決して",
+   "ko": "하지만 절대로"
+  },
+  {
+   "i": 136,
+   "en": "based on just one indicator.",
+   "zh": "一个指标就做决定。",
+   "ja": "1つのインジケーターだけに頼らないでください。",
+   "ko": "지표 하나만 보고 결정을 내리지 마세요."
+  },
+  {
+   "i": 137,
+   "en": "In the next video, we'll move on",
+   "zh": "在下一个视频中，我们将继续探讨",
+   "ja": "次の動画では引き続き、モメンタム系の",
+   "ko": "다음 영상에서는 이어서"
+  },
+  {
+   "i": 138,
+   "en": "to momentum indicators like RSI,",
+   "zh": "动能指标，比如RSI、",
+   "ja": "インジケーター、たとえばRSI、",
+   "ko": "모멘텀 지표, 예를 들어 RSI,"
+  },
+  {
+   "i": 139,
+   "en": "Stochastic, and MACD.",
+   "zh": "随机指标（Stochastic）和MACD。",
+   "ja": "ストキャスティクス、MACDを見ていきます。",
+   "ko": "스토캐스틱, MACD를 다뤄 볼게요."
+  }
+ ],
+ "notes": [
+  {
+   "i": 128,
+   "note": "Indonesian row has no closing period; treated as a complete sentence and a period was added in all four languages."
+  }
+ ]
+}

@@ -1,0 +1,10225 @@
+{
+ "fps": 60,
+ "words": [
+  {
+   "w": "Sebelum",
+   "start": 0.0,
+   "end": 0.38,
+   "heard": true,
+   "i": 0,
+   "f0": 0,
+   "f1": 23,
+   "scene": 1
+  },
+  {
+   "w": "beli",
+   "start": 0.38,
+   "end": 0.56,
+   "heard": true,
+   "i": 1,
+   "f0": 23,
+   "f1": 34,
+   "scene": 1
+  },
+  {
+   "w": "saham,",
+   "start": 0.56,
+   "end": 0.94,
+   "heard": true,
+   "i": 2,
+   "f0": 34,
+   "f1": 56,
+   "scene": 1
+  },
+  {
+   "w": "kita",
+   "start": 1.04,
+   "end": 1.16,
+   "heard": true,
+   "i": 3,
+   "f0": 62,
+   "f1": 70,
+   "scene": 1
+  },
+  {
+   "w": "biasanya",
+   "start": 1.16,
+   "end": 1.58,
+   "heard": true,
+   "i": 4,
+   "f0": 70,
+   "f1": 95,
+   "scene": 1
+  },
+  {
+   "w": "rajin",
+   "start": 1.58,
+   "end": 1.92,
+   "heard": true,
+   "i": 5,
+   "f0": 95,
+   "f1": 115,
+   "scene": 1
+  },
+  {
+   "w": "riset:",
+   "start": 1.92,
+   "end": 2.51,
+   "heard": false,
+   "i": 6,
+   "f0": 115,
+   "f1": 151,
+   "scene": 1
+  },
+  {
+   "w": "perusahaannya",
+   "start": 2.51,
+   "end": 3.1,
+   "heard": false,
+   "i": 7,
+   "f0": 151,
+   "f1": 186,
+   "scene": 1
+  },
+  {
+   "w": "bagus",
+   "start": 3.1,
+   "end": 3.32,
+   "heard": true,
+   "i": 8,
+   "f0": 186,
+   "f1": 199,
+   "scene": 1
+  },
+  {
+   "w": "nggak,",
+   "start": 3.32,
+   "end": 3.6,
+   "heard": true,
+   "i": 9,
+   "f0": 199,
+   "f1": 216,
+   "scene": 1
+  },
+  {
+   "w": "harganya",
+   "start": 3.9,
+   "end": 4.26,
+   "heard": true,
+   "i": 10,
+   "f0": 234,
+   "f1": 256,
+   "scene": 1
+  },
+  {
+   "w": "murah",
+   "start": 4.26,
+   "end": 4.62,
+   "heard": true,
+   "i": 11,
+   "f0": 256,
+   "f1": 277,
+   "scene": 1
+  },
+  {
+   "w": "atau",
+   "start": 4.62,
+   "end": 4.9,
+   "heard": true,
+   "i": 12,
+   "f0": 277,
+   "f1": 294,
+   "scene": 1
+  },
+  {
+   "w": "mahal,",
+   "start": 4.9,
+   "end": 5.54,
+   "heard": true,
+   "i": 13,
+   "f0": 294,
+   "f1": 332,
+   "scene": 1
+  },
+  {
+   "w": "dan",
+   "start": 5.8,
+   "end": 6.12,
+   "heard": true,
+   "i": 14,
+   "f0": 348,
+   "f1": 367,
+   "scene": 1
+  },
+  {
+   "w": "orang",
+   "start": 6.12,
+   "end": 6.4,
+   "heard": true,
+   "i": 15,
+   "f0": 367,
+   "f1": 384,
+   "scene": 1
+  },
+  {
+   "w": "lain",
+   "start": 6.4,
+   "end": 6.7,
+   "heard": true,
+   "i": 16,
+   "f0": 384,
+   "f1": 402,
+   "scene": 1
+  },
+  {
+   "w": "lagi",
+   "start": 6.7,
+   "end": 6.96,
+   "heard": true,
+   "i": 17,
+   "f0": 402,
+   "f1": 418,
+   "scene": 1
+  },
+  {
+   "w": "beli",
+   "start": 6.96,
+   "end": 7.2,
+   "heard": true,
+   "i": 18,
+   "f0": 418,
+   "f1": 432,
+   "scene": 1
+  },
+  {
+   "w": "apa.",
+   "start": 7.2,
+   "end": 7.44,
+   "heard": true,
+   "i": 19,
+   "f0": 432,
+   "f1": 446,
+   "scene": 1
+  },
+  {
+   "w": "Tapi",
+   "start": 7.84,
+   "end": 8.0,
+   "heard": true,
+   "i": 20,
+   "f0": 470,
+   "f1": 480,
+   "scene": 1
+  },
+  {
+   "w": "ada",
+   "start": 8.0,
+   "end": 8.16,
+   "heard": true,
+   "i": 21,
+   "f0": 480,
+   "f1": 490,
+   "scene": 1
+  },
+  {
+   "w": "satu",
+   "start": 8.16,
+   "end": 8.4,
+   "heard": true,
+   "i": 22,
+   "f0": 490,
+   "f1": 504,
+   "scene": 1
+  },
+  {
+   "w": "hal",
+   "start": 8.4,
+   "end": 8.66,
+   "heard": true,
+   "i": 23,
+   "f0": 504,
+   "f1": 520,
+   "scene": 1
+  },
+  {
+   "w": "yang",
+   "start": 8.66,
+   "end": 8.88,
+   "heard": true,
+   "i": 24,
+   "f0": 520,
+   "f1": 533,
+   "scene": 1
+  },
+  {
+   "w": "sering",
+   "start": 8.88,
+   "end": 9.4,
+   "heard": true,
+   "i": 25,
+   "f0": 533,
+   "f1": 564,
+   "scene": 1
+  },
+  {
+   "w": "justru",
+   "start": 9.4,
+   "end": 9.92,
+   "heard": true,
+   "i": 26,
+   "f0": 564,
+   "f1": 595,
+   "scene": 1
+  },
+  {
+   "w": "nggak",
+   "start": 9.92,
+   "end": 10.04,
+   "heard": true,
+   "i": 27,
+   "f0": 595,
+   "f1": 602,
+   "scene": 1
+  },
+  {
+   "w": "kita",
+   "start": 10.04,
+   "end": 10.24,
+   "heard": true,
+   "i": 28,
+   "f0": 602,
+   "f1": 614,
+   "scene": 1
+  },
+  {
+   "w": "riset:",
+   "start": 10.24,
+   "end": 10.96,
+   "heard": false,
+   "i": 29,
+   "f0": 614,
+   "f1": 658,
+   "scene": 1
+  },
+  {
+   "w": "investor",
+   "start": 10.96,
+   "end": 11.3,
+   "heard": true,
+   "i": 30,
+   "f0": 658,
+   "f1": 678,
+   "scene": 1
+  },
+  {
+   "w": "yang",
+   "start": 11.3,
+   "end": 11.66,
+   "heard": true,
+   "i": 31,
+   "f0": 678,
+   "f1": 700,
+   "scene": 1
+  },
+  {
+   "w": "akan",
+   "start": 11.66,
+   "end": 11.96,
+   "heard": true,
+   "i": 32,
+   "f0": 700,
+   "f1": 718,
+   "scene": 1
+  },
+  {
+   "w": "membelinya—diri",
+   "start": 11.96,
+   "end": 12.84,
+   "heard": true,
+   "i": 33,
+   "f0": 718,
+   "f1": 770,
+   "scene": 1
+  },
+  {
+   "w": "kita",
+   "start": 12.84,
+   "end": 13.04,
+   "heard": true,
+   "i": 34,
+   "f0": 770,
+   "f1": 782,
+   "scene": 1
+  },
+  {
+   "w": "sendiri.",
+   "start": 13.04,
+   "end": 13.38,
+   "heard": true,
+   "i": 35,
+   "f0": 782,
+   "f1": 803,
+   "scene": 1
+  },
+  {
+   "w": "Sekarang,",
+   "start": 13.98,
+   "end": 14.54,
+   "heard": true,
+   "i": 36,
+   "f0": 839,
+   "f1": 872,
+   "scene": 1
+  },
+  {
+   "w": "investor",
+   "start": 14.82,
+   "end": 15.18,
+   "heard": true,
+   "i": 37,
+   "f0": 889,
+   "f1": 911,
+   "scene": 1
+  },
+  {
+   "w": "di",
+   "start": 15.18,
+   "end": 15.23,
+   "heard": false,
+   "i": 38,
+   "f0": 911,
+   "f1": 914,
+   "scene": 1
+  },
+  {
+   "w": "Indonesia",
+   "start": 15.18,
+   "end": 15.48,
+   "heard": true,
+   "i": 39,
+   "f0": 911,
+   "f1": 929,
+   "scene": 1
+  },
+  {
+   "w": "sudah",
+   "start": 15.48,
+   "end": 15.82,
+   "heard": true,
+   "i": 40,
+   "f0": 929,
+   "f1": 949,
+   "scene": 1
+  },
+  {
+   "w": "mencapai",
+   "start": 15.82,
+   "end": 16.24,
+   "heard": true,
+   "i": 41,
+   "f0": 949,
+   "f1": 974,
+   "scene": 1
+  },
+  {
+   "w": "sekitar",
+   "start": 16.24,
+   "end": 16.5,
+   "heard": true,
+   "i": 42,
+   "f0": 974,
+   "f1": 990,
+   "scene": 1
+  },
+  {
+   "w": "26,7",
+   "start": 16.5,
+   "end": 17.58,
+   "heard": true,
+   "i": 43,
+   "f0": 990,
+   "f1": 1055,
+   "scene": 1
+  },
+  {
+   "w": "juta",
+   "start": 17.58,
+   "end": 17.88,
+   "heard": true,
+   "i": 44,
+   "f0": 1055,
+   "f1": 1073,
+   "scene": 1
+  },
+  {
+   "w": "orang,",
+   "start": 17.88,
+   "end": 18.14,
+   "heard": true,
+   "i": 45,
+   "f0": 1073,
+   "f1": 1088,
+   "scene": 1
+  },
+  {
+   "w": "dan",
+   "start": 18.44,
+   "end": 18.64,
+   "heard": true,
+   "i": 46,
+   "f0": 1106,
+   "f1": 1118,
+   "scene": 1
+  },
+  {
+   "w": "lebih",
+   "start": 18.64,
+   "end": 18.94,
+   "heard": true,
+   "i": 47,
+   "f0": 1118,
+   "f1": 1136,
+   "scene": 1
+  },
+  {
+   "w": "dari",
+   "start": 18.94,
+   "end": 19.14,
+   "heard": true,
+   "i": 48,
+   "f0": 1136,
+   "f1": 1148,
+   "scene": 1
+  },
+  {
+   "w": "setengahnya",
+   "start": 19.14,
+   "end": 19.74,
+   "heard": true,
+   "i": 49,
+   "f0": 1148,
+   "f1": 1184,
+   "scene": 1
+  },
+  {
+   "w": "berusia",
+   "start": 19.74,
+   "end": 20.16,
+   "heard": true,
+   "i": 50,
+   "f0": 1184,
+   "f1": 1210,
+   "scene": 1
+  },
+  {
+   "w": "di",
+   "start": 20.16,
+   "end": 20.28,
+   "heard": true,
+   "i": 51,
+   "f0": 1210,
+   "f1": 1217,
+   "scene": 1
+  },
+  {
+   "w": "bawah",
+   "start": 20.28,
+   "end": 20.5,
+   "heard": true,
+   "i": 52,
+   "f0": 1217,
+   "f1": 1230,
+   "scene": 1
+  },
+  {
+   "w": "30",
+   "start": 20.5,
+   "end": 20.84,
+   "heard": true,
+   "i": 53,
+   "f0": 1230,
+   "f1": 1250,
+   "scene": 1
+  },
+  {
+   "w": "tahun.",
+   "start": 20.84,
+   "end": 21.18,
+   "heard": true,
+   "i": 54,
+   "f0": 1250,
+   "f1": 1271,
+   "scene": 1
+  },
+  {
+   "w": "Banyak",
+   "start": 21.64,
+   "end": 21.84,
+   "heard": true,
+   "i": 55,
+   "f0": 1298,
+   "f1": 1310,
+   "scene": 1
+  },
+  {
+   "w": "yang",
+   "start": 21.84,
+   "end": 22.04,
+   "heard": true,
+   "i": 56,
+   "f0": 1310,
+   "f1": 1322,
+   "scene": 1
+  },
+  {
+   "w": "mulai",
+   "start": 22.04,
+   "end": 22.32,
+   "heard": true,
+   "i": 57,
+   "f0": 1322,
+   "f1": 1339,
+   "scene": 1
+  },
+  {
+   "w": "dari",
+   "start": 22.32,
+   "end": 22.52,
+   "heard": true,
+   "i": 58,
+   "f0": 1339,
+   "f1": 1351,
+   "scene": 1
+  },
+  {
+   "w": "rekomendasi",
+   "start": 22.52,
+   "end": 23.08,
+   "heard": true,
+   "i": 59,
+   "f0": 1351,
+   "f1": 1385,
+   "scene": 1
+  },
+  {
+   "w": "teman,",
+   "start": 23.08,
+   "end": 23.5,
+   "heard": true,
+   "i": 60,
+   "f0": 1385,
+   "f1": 1410,
+   "scene": 1
+  },
+  {
+   "w": "portofolio",
+   "start": 23.88,
+   "end": 24.44,
+   "heard": true,
+   "i": 61,
+   "f0": 1433,
+   "f1": 1466,
+   "scene": 1
+  },
+  {
+   "w": "di",
+   "start": 24.44,
+   "end": 24.54,
+   "heard": true,
+   "i": 62,
+   "f0": 1466,
+   "f1": 1472,
+   "scene": 1
+  },
+  {
+   "w": "video,",
+   "start": 24.54,
+   "end": 24.96,
+   "heard": true,
+   "i": 63,
+   "f0": 1472,
+   "f1": 1498,
+   "scene": 1
+  },
+  {
+   "w": "atau",
+   "start": 25.34,
+   "end": 25.56,
+   "heard": true,
+   "i": 64,
+   "f0": 1520,
+   "f1": 1534,
+   "scene": 1
+  },
+  {
+   "w": "return",
+   "start": 25.56,
+   "end": 25.92,
+   "heard": true,
+   "i": 65,
+   "f0": 1534,
+   "f1": 1555,
+   "scene": 1
+  },
+  {
+   "w": "yang",
+   "start": 25.92,
+   "end": 26.14,
+   "heard": true,
+   "i": 66,
+   "f0": 1555,
+   "f1": 1568,
+   "scene": 1
+  },
+  {
+   "w": "dipamerkan",
+   "start": 26.14,
+   "end": 26.68,
+   "heard": true,
+   "i": 67,
+   "f0": 1568,
+   "f1": 1601,
+   "scene": 1
+  },
+  {
+   "w": "orang",
+   "start": 26.68,
+   "end": 26.92,
+   "heard": true,
+   "i": 68,
+   "f0": 1601,
+   "f1": 1615,
+   "scene": 1
+  },
+  {
+   "w": "lain.",
+   "start": 26.92,
+   "end": 27.26,
+   "heard": true,
+   "i": 69,
+   "f0": 1615,
+   "f1": 1636,
+   "scene": 1
+  },
+  {
+   "w": "Masalahnya,",
+   "start": 27.26,
+   "end": 28.36,
+   "heard": true,
+   "i": 70,
+   "f0": 1636,
+   "f1": 1702,
+   "scene": 1
+  },
+  {
+   "w": "jawaban",
+   "start": 28.8,
+   "end": 29.14,
+   "heard": true,
+   "i": 71,
+   "f0": 1728,
+   "f1": 1748,
+   "scene": 1
+  },
+  {
+   "w": "orang",
+   "start": 29.14,
+   "end": 29.32,
+   "heard": true,
+   "i": 72,
+   "f0": 1748,
+   "f1": 1759,
+   "scene": 1
+  },
+  {
+   "w": "lain",
+   "start": 29.32,
+   "end": 29.62,
+   "heard": true,
+   "i": 73,
+   "f0": 1759,
+   "f1": 1777,
+   "scene": 1
+  },
+  {
+   "w": "dibuat",
+   "start": 29.62,
+   "end": 30.18,
+   "heard": true,
+   "i": 74,
+   "f0": 1777,
+   "f1": 1811,
+   "scene": 1
+  },
+  {
+   "w": "untuk",
+   "start": 30.18,
+   "end": 30.46,
+   "heard": true,
+   "i": 75,
+   "f0": 1811,
+   "f1": 1828,
+   "scene": 1
+  },
+  {
+   "w": "kondisi",
+   "start": 30.46,
+   "end": 30.9,
+   "heard": true,
+   "i": 76,
+   "f0": 1828,
+   "f1": 1854,
+   "scene": 1
+  },
+  {
+   "w": "orang",
+   "start": 30.9,
+   "end": 31.16,
+   "heard": true,
+   "i": 77,
+   "f0": 1854,
+   "f1": 1870,
+   "scene": 1
+  },
+  {
+   "w": "lain.",
+   "start": 31.16,
+   "end": 31.5,
+   "heard": true,
+   "i": 78,
+   "f0": 1870,
+   "f1": 1890,
+   "scene": 1
+  },
+  {
+   "w": "Jadi",
+   "start": 31.82,
+   "end": 32.14,
+   "heard": true,
+   "i": 79,
+   "f0": 1909,
+   "f1": 1928,
+   "scene": 1
+  },
+  {
+   "w": "sebelum",
+   "start": 32.72,
+   "end": 33.18,
+   "heard": true,
+   "i": 80,
+   "f0": 1963,
+   "f1": 1991,
+   "scene": 1
+  },
+  {
+   "w": "tanya:",
+   "start": 33.18,
+   "end": 33.44,
+   "heard": true,
+   "i": 81,
+   "f0": 1991,
+   "f1": 2006,
+   "scene": 1
+  },
+  {
+   "w": "“Aku",
+   "start": 33.74,
+   "end": 33.86,
+   "heard": true,
+   "i": 82,
+   "f0": 2024,
+   "f1": 2032,
+   "scene": 1
+  },
+  {
+   "w": "harus",
+   "start": 33.86,
+   "end": 34.06,
+   "heard": true,
+   "i": 83,
+   "f0": 2032,
+   "f1": 2044,
+   "scene": 1
+  },
+  {
+   "w": "investasi",
+   "start": 34.06,
+   "end": 34.56,
+   "heard": true,
+   "i": 84,
+   "f0": 2044,
+   "f1": 2074,
+   "scene": 1
+  },
+  {
+   "w": "di",
+   "start": 34.56,
+   "end": 34.68,
+   "heard": true,
+   "i": 85,
+   "f0": 2074,
+   "f1": 2081,
+   "scene": 1
+  },
+  {
+   "w": "mana?”",
+   "start": 34.68,
+   "end": 34.92,
+   "heard": true,
+   "i": 86,
+   "f0": 2081,
+   "f1": 2095,
+   "scene": 1
+  },
+  {
+   "w": "tanya",
+   "start": 35.34,
+   "end": 35.54,
+   "heard": true,
+   "i": 87,
+   "f0": 2120,
+   "f1": 2132,
+   "scene": 1
+  },
+  {
+   "w": "dulu:",
+   "start": 35.54,
+   "end": 35.8,
+   "heard": true,
+   "i": 88,
+   "f0": 2132,
+   "f1": 2148,
+   "scene": 1
+  },
+  {
+   "w": "“Aku",
+   "start": 36.02,
+   "end": 36.2,
+   "heard": true,
+   "i": 89,
+   "f0": 2161,
+   "f1": 2172,
+   "scene": 1
+  },
+  {
+   "w": "sebenarnya",
+   "start": 36.2,
+   "end": 36.58,
+   "heard": false,
+   "i": 90,
+   "f0": 2172,
+   "f1": 2195,
+   "scene": 1
+  },
+  {
+   "w": "investor",
+   "start": 36.58,
+   "end": 36.94,
+   "heard": true,
+   "i": 91,
+   "f0": 2195,
+   "f1": 2216,
+   "scene": 1
+  },
+  {
+   "w": "seperti",
+   "start": 36.94,
+   "end": 37.26,
+   "heard": true,
+   "i": 92,
+   "f0": 2216,
+   "f1": 2236,
+   "scene": 1
+  },
+  {
+   "w": "apa?”",
+   "start": 37.26,
+   "end": 37.68,
+   "heard": true,
+   "i": 93,
+   "f0": 2236,
+   "f1": 2261,
+   "scene": 1
+  },
+  {
+   "w": "Karena",
+   "start": 38.24,
+   "end": 38.56,
+   "heard": true,
+   "i": 94,
+   "f0": 2294,
+   "f1": 2314,
+   "scene": 1
+  },
+  {
+   "w": "riset",
+   "start": 38.56,
+   "end": 39.04,
+   "heard": false,
+   "i": 95,
+   "f0": 2314,
+   "f1": 2342,
+   "scene": 1
+  },
+  {
+   "w": "pertama",
+   "start": 39.04,
+   "end": 39.44,
+   "heard": true,
+   "i": 96,
+   "f0": 2342,
+   "f1": 2366,
+   "scene": 1
+  },
+  {
+   "w": "dalam",
+   "start": 39.44,
+   "end": 39.68,
+   "heard": true,
+   "i": 97,
+   "f0": 2366,
+   "f1": 2381,
+   "scene": 1
+  },
+  {
+   "w": "investasi",
+   "start": 39.68,
+   "end": 40.38,
+   "heard": true,
+   "i": 98,
+   "f0": 2381,
+   "f1": 2423,
+   "scene": 1
+  },
+  {
+   "w": "seharusnya",
+   "start": 40.38,
+   "end": 41.16,
+   "heard": true,
+   "i": 99,
+   "f0": 2423,
+   "f1": 2470,
+   "scene": 1
+  },
+  {
+   "w": "dimulai",
+   "start": 41.16,
+   "end": 42.12,
+   "heard": true,
+   "i": 100,
+   "f0": 2470,
+   "f1": 2527,
+   "scene": 1
+  },
+  {
+   "w": "dari",
+   "start": 42.12,
+   "end": 42.72,
+   "heard": true,
+   "i": 101,
+   "f0": 2527,
+   "f1": 2563,
+   "scene": 1
+  },
+  {
+   "w": "diri",
+   "start": 42.72,
+   "end": 43.24,
+   "heard": true,
+   "i": 102,
+   "f0": 2563,
+   "f1": 2594,
+   "scene": 1
+  },
+  {
+   "w": "kita",
+   "start": 43.24,
+   "end": 43.5,
+   "heard": true,
+   "i": 103,
+   "f0": 2594,
+   "f1": 2610,
+   "scene": 1
+  },
+  {
+   "w": "sendiri.",
+   "start": 43.5,
+   "end": 43.9,
+   "heard": true,
+   "i": 104,
+   "f0": 2610,
+   "f1": 2634,
+   "scene": 1
+  },
+  {
+   "w": "Bayangin",
+   "start": 44.4,
+   "end": 44.82,
+   "heard": true,
+   "i": 105,
+   "f0": 2664,
+   "f1": 2689,
+   "scene": 2
+  },
+  {
+   "w": "kamu",
+   "start": 44.82,
+   "end": 45.06,
+   "heard": true,
+   "i": 106,
+   "f0": 2689,
+   "f1": 2704,
+   "scene": 2
+  },
+  {
+   "w": "berdiri",
+   "start": 45.06,
+   "end": 45.4,
+   "heard": true,
+   "i": 107,
+   "f0": 2704,
+   "f1": 2724,
+   "scene": 2
+  },
+  {
+   "w": "di",
+   "start": 45.4,
+   "end": 45.58,
+   "heard": true,
+   "i": 108,
+   "f0": 2724,
+   "f1": 2735,
+   "scene": 2
+  },
+  {
+   "w": "pinggir",
+   "start": 45.58,
+   "end": 45.9,
+   "heard": true,
+   "i": 109,
+   "f0": 2735,
+   "f1": 2754,
+   "scene": 2
+  },
+  {
+   "w": "sungai,",
+   "start": 45.9,
+   "end": 46.4,
+   "heard": true,
+   "i": 110,
+   "f0": 2754,
+   "f1": 2784,
+   "scene": 2
+  },
+  {
+   "w": "dan",
+   "start": 46.96,
+   "end": 47.04,
+   "heard": true,
+   "i": 111,
+   "f0": 2818,
+   "f1": 2822,
+   "scene": 2
+  },
+  {
+   "w": "rumahmu",
+   "start": 47.04,
+   "end": 47.54,
+   "heard": true,
+   "i": 112,
+   "f0": 2822,
+   "f1": 2852,
+   "scene": 2
+  },
+  {
+   "w": "ada",
+   "start": 47.54,
+   "end": 47.72,
+   "heard": true,
+   "i": 113,
+   "f0": 2852,
+   "f1": 2863,
+   "scene": 2
+  },
+  {
+   "w": "di",
+   "start": 47.72,
+   "end": 47.9,
+   "heard": true,
+   "i": 114,
+   "f0": 2863,
+   "f1": 2874,
+   "scene": 2
+  },
+  {
+   "w": "seberang.",
+   "start": 47.9,
+   "end": 48.72,
+   "heard": false,
+   "i": 115,
+   "f0": 2874,
+   "f1": 2923,
+   "scene": 2
+  },
+  {
+   "w": "Kebanyakan",
+   "start": 48.72,
+   "end": 49.08,
+   "heard": true,
+   "i": 116,
+   "f0": 2923,
+   "f1": 2945,
+   "scene": 2
+  },
+  {
+   "w": "orang",
+   "start": 49.08,
+   "end": 49.32,
+   "heard": true,
+   "i": 117,
+   "f0": 2945,
+   "f1": 2959,
+   "scene": 2
+  },
+  {
+   "w": "mungkin",
+   "start": 49.32,
+   "end": 49.7,
+   "heard": true,
+   "i": 118,
+   "f0": 2959,
+   "f1": 2982,
+   "scene": 2
+  },
+  {
+   "w": "langsung",
+   "start": 49.7,
+   "end": 50.02,
+   "heard": true,
+   "i": 119,
+   "f0": 2982,
+   "f1": 3001,
+   "scene": 2
+  },
+  {
+   "w": "mikir:",
+   "start": 50.02,
+   "end": 50.44,
+   "heard": true,
+   "i": 120,
+   "f0": 3001,
+   "f1": 3026,
+   "scene": 2
+  },
+  {
+   "w": "“Mana",
+   "start": 50.44,
+   "end": 50.68,
+   "heard": true,
+   "i": 121,
+   "f0": 3026,
+   "f1": 3041,
+   "scene": 2
+  },
+  {
+   "w": "yang",
+   "start": 50.68,
+   "end": 50.9,
+   "heard": true,
+   "i": 122,
+   "f0": 3041,
+   "f1": 3054,
+   "scene": 2
+  },
+  {
+   "w": "paling",
+   "start": 50.9,
+   "end": 51.1,
+   "heard": true,
+   "i": 123,
+   "f0": 3054,
+   "f1": 3066,
+   "scene": 2
+  },
+  {
+   "w": "cepat?”",
+   "start": 51.1,
+   "end": 51.58,
+   "heard": true,
+   "i": 124,
+   "f0": 3066,
+   "f1": 3095,
+   "scene": 2
+  },
+  {
+   "w": "Padahal",
+   "start": 51.94,
+   "end": 52.42,
+   "heard": true,
+   "i": 125,
+   "f0": 3116,
+   "f1": 3145,
+   "scene": 2
+  },
+  {
+   "w": "pertanyaan",
+   "start": 52.42,
+   "end": 52.92,
+   "heard": true,
+   "i": 126,
+   "f0": 3145,
+   "f1": 3175,
+   "scene": 2
+  },
+  {
+   "w": "pertamanya",
+   "start": 52.92,
+   "end": 53.42,
+   "heard": true,
+   "i": 127,
+   "f0": 3175,
+   "f1": 3205,
+   "scene": 2
+  },
+  {
+   "w": "bukan",
+   "start": 53.42,
+   "end": 53.7,
+   "heard": true,
+   "i": 128,
+   "f0": 3205,
+   "f1": 3222,
+   "scene": 2
+  },
+  {
+   "w": "itu.",
+   "start": 53.7,
+   "end": 54.1,
+   "heard": true,
+   "i": 129,
+   "f0": 3222,
+   "f1": 3246,
+   "scene": 2
+  },
+  {
+   "w": "Yang",
+   "start": 54.1,
+   "end": 54.66,
+   "heard": true,
+   "i": 130,
+   "f0": 3246,
+   "f1": 3280,
+   "scene": 2
+  },
+  {
+   "w": "lebih",
+   "start": 54.66,
+   "end": 54.84,
+   "heard": true,
+   "i": 131,
+   "f0": 3280,
+   "f1": 3290,
+   "scene": 2
+  },
+  {
+   "w": "penting:",
+   "start": 54.84,
+   "end": 55.34,
+   "heard": true,
+   "i": 132,
+   "f0": 3290,
+   "f1": 3320,
+   "scene": 2
+  },
+  {
+   "w": "“Cara",
+   "start": 55.5,
+   "end": 55.68,
+   "heard": true,
+   "i": 133,
+   "f0": 3330,
+   "f1": 3341,
+   "scene": 2
+  },
+  {
+   "w": "mana",
+   "start": 55.68,
+   "end": 55.88,
+   "heard": true,
+   "i": 134,
+   "f0": 3341,
+   "f1": 3353,
+   "scene": 2
+  },
+  {
+   "w": "yang",
+   "start": 55.88,
+   "end": 56.08,
+   "heard": true,
+   "i": 135,
+   "f0": 3353,
+   "f1": 3365,
+   "scene": 2
+  },
+  {
+   "w": "benar-benar",
+   "start": 56.08,
+   "end": 56.68,
+   "heard": true,
+   "i": 136,
+   "f0": 3365,
+   "f1": 3401,
+   "scene": 2
+  },
+  {
+   "w": "bisa",
+   "start": 56.68,
+   "end": 56.86,
+   "heard": true,
+   "i": 137,
+   "f0": 3401,
+   "f1": 3412,
+   "scene": 2
+  },
+  {
+   "w": "aku",
+   "start": 56.86,
+   "end": 57.08,
+   "heard": true,
+   "i": 138,
+   "f0": 3412,
+   "f1": 3425,
+   "scene": 2
+  },
+  {
+   "w": "jalani",
+   "start": 57.08,
+   "end": 57.5,
+   "heard": true,
+   "i": 139,
+   "f0": 3425,
+   "f1": 3450,
+   "scene": 2
+  },
+  {
+   "w": "sampai",
+   "start": 57.5,
+   "end": 57.94,
+   "heard": true,
+   "i": 140,
+   "f0": 3450,
+   "f1": 3476,
+   "scene": 2
+  },
+  {
+   "w": "tujuan?”",
+   "start": 57.94,
+   "end": 58.52,
+   "heard": true,
+   "i": 141,
+   "f0": 3476,
+   "f1": 3511,
+   "scene": 2
+  },
+  {
+   "w": "Sebelum",
+   "start": 58.98,
+   "end": 59.32,
+   "heard": true,
+   "i": 142,
+   "f0": 3539,
+   "f1": 3559,
+   "scene": 2
+  },
+  {
+   "w": "menentukan",
+   "start": 59.32,
+   "end": 59.66,
+   "heard": true,
+   "i": 143,
+   "f0": 3559,
+   "f1": 3580,
+   "scene": 2
+  },
+  {
+   "w": "investasinya,",
+   "start": 59.66,
+   "end": 60.32,
+   "heard": true,
+   "i": 144,
+   "f0": 3580,
+   "f1": 3619,
+   "scene": 2
+  },
+  {
+   "w": "kita",
+   "start": 60.58,
+   "end": 60.74,
+   "heard": true,
+   "i": 145,
+   "f0": 3635,
+   "f1": 3644,
+   "scene": 2
+  },
+  {
+   "w": "perlu",
+   "start": 60.74,
+   "end": 61.06,
+   "heard": true,
+   "i": 146,
+   "f0": 3644,
+   "f1": 3664,
+   "scene": 2
+  },
+  {
+   "w": "kenali",
+   "start": 61.06,
+   "end": 61.48,
+   "heard": true,
+   "i": 147,
+   "f0": 3664,
+   "f1": 3689,
+   "scene": 2
+  },
+  {
+   "w": "diri",
+   "start": 61.48,
+   "end": 61.82,
+   "heard": true,
+   "i": 148,
+   "f0": 3689,
+   "f1": 3709,
+   "scene": 2
+  },
+  {
+   "w": "kita",
+   "start": 61.82,
+   "end": 61.98,
+   "heard": true,
+   "i": 149,
+   "f0": 3709,
+   "f1": 3719,
+   "scene": 2
+  },
+  {
+   "w": "dulu.",
+   "start": 61.98,
+   "end": 62.24,
+   "heard": true,
+   "i": 150,
+   "f0": 3719,
+   "f1": 3734,
+   "scene": 2
+  },
+  {
+   "w": "Ada",
+   "start": 62.56,
+   "end": 62.78,
+   "heard": true,
+   "i": 151,
+   "f0": 3754,
+   "f1": 3767,
+   "scene": 3
+  },
+  {
+   "w": "tiga",
+   "start": 62.78,
+   "end": 63.24,
+   "heard": true,
+   "i": 152,
+   "f0": 3767,
+   "f1": 3794,
+   "scene": 3
+  },
+  {
+   "w": "cara",
+   "start": 63.24,
+   "end": 63.58,
+   "heard": true,
+   "i": 153,
+   "f0": 3794,
+   "f1": 3815,
+   "scene": 3
+  },
+  {
+   "w": "buat",
+   "start": 63.58,
+   "end": 64.16,
+   "heard": true,
+   "i": 154,
+   "f0": 3815,
+   "f1": 3850,
+   "scene": 3
+  },
+  {
+   "w": "sampai",
+   "start": 64.16,
+   "end": 64.72,
+   "heard": true,
+   "i": 155,
+   "f0": 3850,
+   "f1": 3883,
+   "scene": 3
+  },
+  {
+   "w": "ke",
+   "start": 64.72,
+   "end": 65.48,
+   "heard": true,
+   "i": 156,
+   "f0": 3883,
+   "f1": 3929,
+   "scene": 3
+  },
+  {
+   "w": "seberang.",
+   "start": 65.48,
+   "end": 66.46,
+   "heard": false,
+   "i": 157,
+   "f0": 3929,
+   "f1": 3988,
+   "scene": 3
+  },
+  {
+   "w": "Yang",
+   "start": 66.46,
+   "end": 66.56,
+   "heard": true,
+   "i": 158,
+   "f0": 3988,
+   "f1": 3994,
+   "scene": 3
+  },
+  {
+   "w": "pertama,",
+   "start": 66.56,
+   "end": 66.84,
+   "heard": true,
+   "i": 159,
+   "f0": 3994,
+   "f1": 4010,
+   "scene": 3
+  },
+  {
+   "w": "jalan",
+   "start": 67.06,
+   "end": 67.14,
+   "heard": true,
+   "i": 160,
+   "f0": 4024,
+   "f1": 4028,
+   "scene": 3
+  },
+  {
+   "w": "memutar",
+   "start": 67.14,
+   "end": 67.54,
+   "heard": true,
+   "i": 161,
+   "f0": 4028,
+   "f1": 4052,
+   "scene": 3
+  },
+  {
+   "w": "lalu",
+   "start": 67.54,
+   "end": 67.84,
+   "heard": true,
+   "i": 162,
+   "f0": 4052,
+   "f1": 4070,
+   "scene": 3
+  },
+  {
+   "w": "lewat",
+   "start": 67.84,
+   "end": 68.08,
+   "heard": true,
+   "i": 163,
+   "f0": 4070,
+   "f1": 4085,
+   "scene": 3
+  },
+  {
+   "w": "jembatan.",
+   "start": 68.08,
+   "end": 68.56,
+   "heard": true,
+   "i": 164,
+   "f0": 4085,
+   "f1": 4114,
+   "scene": 3
+  },
+  {
+   "w": "Jalurnya",
+   "start": 68.86,
+   "end": 69.1,
+   "heard": true,
+   "i": 165,
+   "f0": 4132,
+   "f1": 4146,
+   "scene": 3
+  },
+  {
+   "w": "pelan",
+   "start": 69.1,
+   "end": 69.22999999999999,
+   "heard": false,
+   "i": 166,
+   "f0": 4146,
+   "f1": 4154,
+   "scene": 3
+  },
+  {
+   "w": "dan",
+   "start": 69.22999999999999,
+   "end": 69.36,
+   "heard": false,
+   "i": 167,
+   "f0": 4154,
+   "f1": 4162,
+   "scene": 3
+  },
+  {
+   "w": "relatif",
+   "start": 69.36,
+   "end": 69.96,
+   "heard": true,
+   "i": 168,
+   "f0": 4162,
+   "f1": 4198,
+   "scene": 3
+  },
+  {
+   "w": "stabil:",
+   "start": 69.96,
+   "end": 70.18,
+   "heard": true,
+   "i": 169,
+   "f0": 4198,
+   "f1": 4211,
+   "scene": 3
+  },
+  {
+   "w": "return",
+   "start": 70.62,
+   "end": 70.9,
+   "heard": true,
+   "i": 170,
+   "f0": 4237,
+   "f1": 4254,
+   "scene": 3
+  },
+  {
+   "w": "sekitar",
+   "start": 70.9,
+   "end": 71.22,
+   "heard": true,
+   "i": 171,
+   "f0": 4254,
+   "f1": 4273,
+   "scene": 3
+  },
+  {
+   "w": "3%",
+   "start": 71.22,
+   "end": 71.78,
+   "heard": true,
+   "i": 172,
+   "f0": 4273,
+   "f1": 4307,
+   "scene": 3
+  },
+  {
+   "w": "sampai",
+   "start": 71.78,
+   "end": 72.06,
+   "heard": true,
+   "i": 173,
+   "f0": 4307,
+   "f1": 4324,
+   "scene": 3
+  },
+  {
+   "w": "5%",
+   "start": 72.06,
+   "end": 72.68,
+   "heard": true,
+   "i": 174,
+   "f0": 4324,
+   "f1": 4361,
+   "scene": 3
+  },
+  {
+   "w": "per",
+   "start": 72.68,
+   "end": 72.84,
+   "heard": true,
+   "i": 175,
+   "f0": 4361,
+   "f1": 4370,
+   "scene": 3
+  },
+  {
+   "w": "tahun,",
+   "start": 72.84,
+   "end": 73.08,
+   "heard": true,
+   "i": 176,
+   "f0": 4370,
+   "f1": 4385,
+   "scene": 3
+  },
+  {
+   "w": "dengan",
+   "start": 73.4,
+   "end": 73.68,
+   "heard": true,
+   "i": 177,
+   "f0": 4404,
+   "f1": 4421,
+   "scene": 3
+  },
+  {
+   "w": "potensi",
+   "start": 73.68,
+   "end": 74.14,
+   "heard": true,
+   "i": 178,
+   "f0": 4421,
+   "f1": 4448,
+   "scene": 3
+  },
+  {
+   "w": "penurunan",
+   "start": 74.14,
+   "end": 74.62,
+   "heard": true,
+   "i": 179,
+   "f0": 4448,
+   "f1": 4477,
+   "scene": 3
+  },
+  {
+   "w": "sekitar",
+   "start": 74.62,
+   "end": 74.96,
+   "heard": true,
+   "i": 180,
+   "f0": 4477,
+   "f1": 4498,
+   "scene": 3
+  },
+  {
+   "w": "0,5%",
+   "start": 74.96,
+   "end": 76.2,
+   "heard": true,
+   "i": 181,
+   "f0": 4498,
+   "f1": 4572,
+   "scene": 3
+  },
+  {
+   "w": "sampai",
+   "start": 76.2,
+   "end": 76.58,
+   "heard": true,
+   "i": 182,
+   "f0": 4572,
+   "f1": 4595,
+   "scene": 3
+  },
+  {
+   "w": "1%.",
+   "start": 76.58,
+   "end": 77.52,
+   "heard": true,
+   "i": 183,
+   "f0": 4595,
+   "f1": 4651,
+   "scene": 3
+  },
+  {
+   "w": "Contohnya",
+   "start": 77.52,
+   "end": 78.04,
+   "heard": true,
+   "i": 184,
+   "f0": 4651,
+   "f1": 4682,
+   "scene": 3
+  },
+  {
+   "w": "reksa",
+   "start": 78.04,
+   "end": 78.3,
+   "heard": true,
+   "i": 185,
+   "f0": 4682,
+   "f1": 4698,
+   "scene": 3
+  },
+  {
+   "w": "dana",
+   "start": 78.3,
+   "end": 78.53999999999999,
+   "heard": false,
+   "i": 186,
+   "f0": 4698,
+   "f1": 4712,
+   "scene": 3
+  },
+  {
+   "w": "pasar",
+   "start": 78.53999999999999,
+   "end": 78.78,
+   "heard": false,
+   "i": 187,
+   "f0": 4712,
+   "f1": 4727,
+   "scene": 3
+  },
+  {
+   "w": "uang",
+   "start": 78.78,
+   "end": 79.16,
+   "heard": true,
+   "i": 188,
+   "f0": 4727,
+   "f1": 4750,
+   "scene": 3
+  },
+  {
+   "w": "atau",
+   "start": 79.16,
+   "end": 79.5,
+   "heard": true,
+   "i": 189,
+   "f0": 4750,
+   "f1": 4770,
+   "scene": 3
+  },
+  {
+   "w": "deposito.",
+   "start": 79.5,
+   "end": 80.14,
+   "heard": true,
+   "i": 190,
+   "f0": 4770,
+   "f1": 4808,
+   "scene": 3
+  },
+  {
+   "w": "Nggak",
+   "start": 80.14,
+   "end": 80.8,
+   "heard": true,
+   "i": 191,
+   "f0": 4808,
+   "f1": 4848,
+   "scene": 3
+  },
+  {
+   "w": "cepat,",
+   "start": 80.8,
+   "end": 81.16,
+   "heard": true,
+   "i": 192,
+   "f0": 4848,
+   "f1": 4870,
+   "scene": 3
+  },
+  {
+   "w": "tapi",
+   "start": 81.28,
+   "end": 81.58,
+   "heard": true,
+   "i": 193,
+   "f0": 4877,
+   "f1": 4895,
+   "scene": 3
+  },
+  {
+   "w": "relatif",
+   "start": 81.58,
+   "end": 82.26,
+   "heard": true,
+   "i": 194,
+   "f0": 4895,
+   "f1": 4936,
+   "scene": 3
+  },
+  {
+   "w": "mudah",
+   "start": 82.26,
+   "end": 82.76,
+   "heard": true,
+   "i": 195,
+   "f0": 4936,
+   "f1": 4966,
+   "scene": 3
+  },
+  {
+   "w": "dijalani.",
+   "start": 82.76,
+   "end": 83.82,
+   "heard": false,
+   "i": 196,
+   "f0": 4966,
+   "f1": 5029,
+   "scene": 3
+  },
+  {
+   "w": "Yang",
+   "start": 83.82,
+   "end": 84.06,
+   "heard": true,
+   "i": 197,
+   "f0": 5029,
+   "f1": 5044,
+   "scene": 3
+  },
+  {
+   "w": "kedua,",
+   "start": 84.06,
+   "end": 84.4,
+   "heard": true,
+   "i": 198,
+   "f0": 5044,
+   "f1": 5064,
+   "scene": 3
+  },
+  {
+   "w": "naik",
+   "start": 84.9,
+   "end": 85.12,
+   "heard": true,
+   "i": 199,
+   "f0": 5094,
+   "f1": 5107,
+   "scene": 3
+  },
+  {
+   "w": "kapal.",
+   "start": 85.12,
+   "end": 85.56,
+   "heard": true,
+   "i": 200,
+   "f0": 5107,
+   "f1": 5134,
+   "scene": 3
+  },
+  {
+   "w": "Return-nya",
+   "start": 85.56,
+   "end": 86.68,
+   "heard": false,
+   "i": 201,
+   "f0": 5134,
+   "f1": 5201,
+   "scene": 3
+  },
+  {
+   "w": "sekitar",
+   "start": 86.68,
+   "end": 87.1,
+   "heard": true,
+   "i": 202,
+   "f0": 5201,
+   "f1": 5226,
+   "scene": 3
+  },
+  {
+   "w": "8%",
+   "start": 87.1,
+   "end": 87.78,
+   "heard": true,
+   "i": 203,
+   "f0": 5226,
+   "f1": 5267,
+   "scene": 3
+  },
+  {
+   "w": "sampai",
+   "start": 87.78,
+   "end": 88.16,
+   "heard": true,
+   "i": 204,
+   "f0": 5267,
+   "f1": 5290,
+   "scene": 3
+  },
+  {
+   "w": "12%",
+   "start": 88.16,
+   "end": 89.08,
+   "heard": true,
+   "i": 205,
+   "f0": 5290,
+   "f1": 5345,
+   "scene": 3
+  },
+  {
+   "w": "per",
+   "start": 89.08,
+   "end": 89.24,
+   "heard": true,
+   "i": 206,
+   "f0": 5345,
+   "f1": 5354,
+   "scene": 3
+  },
+  {
+   "w": "tahun,",
+   "start": 89.24,
+   "end": 89.56,
+   "heard": true,
+   "i": 207,
+   "f0": 5354,
+   "f1": 5374,
+   "scene": 3
+  },
+  {
+   "w": "dengan",
+   "start": 89.76,
+   "end": 90.04,
+   "heard": true,
+   "i": 208,
+   "f0": 5386,
+   "f1": 5402,
+   "scene": 3
+  },
+  {
+   "w": "potensi",
+   "start": 90.04,
+   "end": 90.54,
+   "heard": true,
+   "i": 209,
+   "f0": 5402,
+   "f1": 5432,
+   "scene": 3
+  },
+  {
+   "w": "penurunan",
+   "start": 90.54,
+   "end": 91.06,
+   "heard": true,
+   "i": 210,
+   "f0": 5432,
+   "f1": 5464,
+   "scene": 3
+  },
+  {
+   "w": "sekitar",
+   "start": 91.06,
+   "end": 91.44,
+   "heard": true,
+   "i": 211,
+   "f0": 5464,
+   "f1": 5486,
+   "scene": 3
+  },
+  {
+   "w": "5%",
+   "start": 91.44,
+   "end": 92.22,
+   "heard": true,
+   "i": 212,
+   "f0": 5486,
+   "f1": 5533,
+   "scene": 3
+  },
+  {
+   "w": "sampai",
+   "start": 92.22,
+   "end": 92.52,
+   "heard": true,
+   "i": 213,
+   "f0": 5533,
+   "f1": 5551,
+   "scene": 3
+  },
+  {
+   "w": "15%.",
+   "start": 92.52,
+   "end": 93.66,
+   "heard": true,
+   "i": 214,
+   "f0": 5551,
+   "f1": 5620,
+   "scene": 3
+  },
+  {
+   "w": "Feri",
+   "start": 93.66,
+   "end": 94.14,
+   "heard": false,
+   "i": 215,
+   "f0": 5620,
+   "f1": 5648,
+   "scene": 3
+  },
+  {
+   "w": "yang",
+   "start": 94.14,
+   "end": 94.3,
+   "heard": true,
+   "i": 216,
+   "f0": 5648,
+   "f1": 5658,
+   "scene": 3
+  },
+  {
+   "w": "lebih",
+   "start": 94.3,
+   "end": 94.44,
+   "heard": true,
+   "i": 217,
+   "f0": 5658,
+   "f1": 5666,
+   "scene": 3
+  },
+  {
+   "w": "stabil",
+   "start": 94.44,
+   "end": 94.7,
+   "heard": true,
+   "i": 218,
+   "f0": 5666,
+   "f1": 5682,
+   "scene": 3
+  },
+  {
+   "w": "bisa",
+   "start": 94.7,
+   "end": 95.02,
+   "heard": true,
+   "i": 219,
+   "f0": 5682,
+   "f1": 5701,
+   "scene": 3
+  },
+  {
+   "w": "kita",
+   "start": 95.02,
+   "end": 95.22,
+   "heard": true,
+   "i": 220,
+   "f0": 5701,
+   "f1": 5713,
+   "scene": 3
+  },
+  {
+   "w": "bayangkan",
+   "start": 95.22,
+   "end": 95.64,
+   "heard": true,
+   "i": 221,
+   "f0": 5713,
+   "f1": 5738,
+   "scene": 3
+  },
+  {
+   "w": "seperti",
+   "start": 95.64,
+   "end": 95.88,
+   "heard": true,
+   "i": 222,
+   "f0": 5738,
+   "f1": 5753,
+   "scene": 3
+  },
+  {
+   "w": "reksa",
+   "start": 95.88,
+   "end": 96.36,
+   "heard": true,
+   "i": 223,
+   "f0": 5753,
+   "f1": 5782,
+   "scene": 3
+  },
+  {
+   "w": "dana",
+   "start": 96.36,
+   "end": 96.5,
+   "heard": true,
+   "i": 224,
+   "f0": 5782,
+   "f1": 5790,
+   "scene": 3
+  },
+  {
+   "w": "indeks.",
+   "start": 96.5,
+   "end": 97.2,
+   "heard": false,
+   "i": 225,
+   "f0": 5790,
+   "f1": 5832,
+   "scene": 3
+  },
+  {
+   "w": "Speedboat",
+   "start": 97.2,
+   "end": 97.66,
+   "heard": true,
+   "i": 226,
+   "f0": 5832,
+   "f1": 5860,
+   "scene": 3
+  },
+  {
+   "w": "lebih",
+   "start": 97.66,
+   "end": 97.86,
+   "heard": true,
+   "i": 227,
+   "f0": 5860,
+   "f1": 5872,
+   "scene": 3
+  },
+  {
+   "w": "cepat,",
+   "start": 97.86,
+   "end": 98.28,
+   "heard": true,
+   "i": 228,
+   "f0": 5872,
+   "f1": 5897,
+   "scene": 3
+  },
+  {
+   "w": "tapi",
+   "start": 98.44,
+   "end": 98.7,
+   "heard": true,
+   "i": 229,
+   "f0": 5906,
+   "f1": 5922,
+   "scene": 3
+  },
+  {
+   "w": "guncangannya",
+   "start": 98.7,
+   "end": 99.36,
+   "heard": true,
+   "i": 230,
+   "f0": 5922,
+   "f1": 5962,
+   "scene": 3
+  },
+  {
+   "w": "juga",
+   "start": 99.36,
+   "end": 99.54,
+   "heard": true,
+   "i": 231,
+   "f0": 5962,
+   "f1": 5972,
+   "scene": 3
+  },
+  {
+   "w": "lebih",
+   "start": 99.54,
+   "end": 99.74,
+   "heard": true,
+   "i": 232,
+   "f0": 5972,
+   "f1": 5984,
+   "scene": 3
+  },
+  {
+   "w": "terasa,",
+   "start": 99.74,
+   "end": 100.12,
+   "heard": true,
+   "i": 233,
+   "f0": 5984,
+   "f1": 6007,
+   "scene": 3
+  },
+  {
+   "w": "seperti",
+   "start": 100.12,
+   "end": 100.52,
+   "heard": true,
+   "i": 234,
+   "f0": 6007,
+   "f1": 6031,
+   "scene": 3
+  },
+  {
+   "w": "reksa",
+   "start": 100.52,
+   "end": 101.02,
+   "heard": true,
+   "i": 235,
+   "f0": 6031,
+   "f1": 6061,
+   "scene": 3
+  },
+  {
+   "w": "dana",
+   "start": 101.02,
+   "end": 101.18,
+   "heard": true,
+   "i": 236,
+   "f0": 6061,
+   "f1": 6071,
+   "scene": 3
+  },
+  {
+   "w": "saham.",
+   "start": 101.18,
+   "end": 101.58,
+   "heard": true,
+   "i": 237,
+   "f0": 6071,
+   "f1": 6095,
+   "scene": 3
+  },
+  {
+   "w": "Dan",
+   "start": 101.92,
+   "end": 102.18,
+   "heard": true,
+   "i": 238,
+   "f0": 6115,
+   "f1": 6131,
+   "scene": 3
+  },
+  {
+   "w": "yang",
+   "start": 102.18,
+   "end": 102.38,
+   "heard": true,
+   "i": 239,
+   "f0": 6131,
+   "f1": 6143,
+   "scene": 3
+  },
+  {
+   "w": "pegang",
+   "start": 102.38,
+   "end": 102.74,
+   "heard": true,
+   "i": 240,
+   "f0": 6143,
+   "f1": 6164,
+   "scene": 3
+  },
+  {
+   "w": "kemudi",
+   "start": 102.74,
+   "end": 103.1,
+   "heard": false,
+   "i": 241,
+   "f0": 6164,
+   "f1": 6186,
+   "scene": 3
+  },
+  {
+   "w": "bukan",
+   "start": 103.1,
+   "end": 103.28,
+   "heard": true,
+   "i": 242,
+   "f0": 6186,
+   "f1": 6197,
+   "scene": 3
+  },
+  {
+   "w": "kita.",
+   "start": 103.28,
+   "end": 103.64,
+   "heard": true,
+   "i": 243,
+   "f0": 6197,
+   "f1": 6218,
+   "scene": 3
+  },
+  {
+   "w": "Yang",
+   "start": 104.04,
+   "end": 104.2,
+   "heard": true,
+   "i": 244,
+   "f0": 6242,
+   "f1": 6252,
+   "scene": 3
+  },
+  {
+   "w": "ketiga,",
+   "start": 104.2,
+   "end": 104.54,
+   "heard": true,
+   "i": 245,
+   "f0": 6252,
+   "f1": 6272,
+   "scene": 3
+  },
+  {
+   "w": "bawa",
+   "start": 104.84,
+   "end": 104.98,
+   "heard": true,
+   "i": 246,
+   "f0": 6290,
+   "f1": 6299,
+   "scene": 3
+  },
+  {
+   "w": "pesawat",
+   "start": 104.98,
+   "end": 105.28,
+   "heard": true,
+   "i": 247,
+   "f0": 6299,
+   "f1": 6317,
+   "scene": 3
+  },
+  {
+   "w": "sendiri.",
+   "start": 105.28,
+   "end": 105.64,
+   "heard": true,
+   "i": 248,
+   "f0": 6317,
+   "f1": 6338,
+   "scene": 3
+  },
+  {
+   "w": "Dalam",
+   "start": 105.64,
+   "end": 106.56,
+   "heard": true,
+   "i": 249,
+   "f0": 6338,
+   "f1": 6394,
+   "scene": 3
+  },
+  {
+   "w": "setahun",
+   "start": 106.56,
+   "end": 107.08,
+   "heard": true,
+   "i": 250,
+   "f0": 6394,
+   "f1": 6425,
+   "scene": 3
+  },
+  {
+   "w": "hasilnya",
+   "start": 107.08,
+   "end": 107.64,
+   "heard": true,
+   "i": 251,
+   "f0": 6425,
+   "f1": 6458,
+   "scene": 3
+  },
+  {
+   "w": "bisa",
+   "start": 107.64,
+   "end": 107.84,
+   "heard": true,
+   "i": 252,
+   "f0": 6458,
+   "f1": 6470,
+   "scene": 3
+  },
+  {
+   "w": "naik",
+   "start": 107.84,
+   "end": 108.22,
+   "heard": true,
+   "i": 253,
+   "f0": 6470,
+   "f1": 6493,
+   "scene": 3
+  },
+  {
+   "w": "30%,",
+   "start": 108.22,
+   "end": 108.96,
+   "heard": true,
+   "i": 254,
+   "f0": 6493,
+   "f1": 6538,
+   "scene": 3
+  },
+  {
+   "w": "tapi",
+   "start": 108.96,
+   "end": 109.42,
+   "heard": true,
+   "i": 255,
+   "f0": 6538,
+   "f1": 6565,
+   "scene": 3
+  },
+  {
+   "w": "juga",
+   "start": 109.42,
+   "end": 109.66,
+   "heard": true,
+   "i": 256,
+   "f0": 6565,
+   "f1": 6580,
+   "scene": 3
+  },
+  {
+   "w": "bisa",
+   "start": 109.66,
+   "end": 109.9,
+   "heard": true,
+   "i": 257,
+   "f0": 6580,
+   "f1": 6594,
+   "scene": 3
+  },
+  {
+   "w": "turun",
+   "start": 109.9,
+   "end": 110.3,
+   "heard": true,
+   "i": 258,
+   "f0": 6594,
+   "f1": 6618,
+   "scene": 3
+  },
+  {
+   "w": "30%,",
+   "start": 110.3,
+   "end": 111.1,
+   "heard": true,
+   "i": 259,
+   "f0": 6618,
+   "f1": 6666,
+   "scene": 3
+  },
+  {
+   "w": "dan",
+   "start": 111.1,
+   "end": 111.76,
+   "heard": true,
+   "i": 260,
+   "f0": 6666,
+   "f1": 6706,
+   "scene": 3
+  },
+  {
+   "w": "penurunannya",
+   "start": 111.76,
+   "end": 112.4,
+   "heard": true,
+   "i": 261,
+   "f0": 6706,
+   "f1": 6744,
+   "scene": 3
+  },
+  {
+   "w": "bisa",
+   "start": 112.4,
+   "end": 112.78,
+   "heard": true,
+   "i": 262,
+   "f0": 6744,
+   "f1": 6767,
+   "scene": 3
+  },
+  {
+   "w": "jauh",
+   "start": 112.78,
+   "end": 113.26,
+   "heard": true,
+   "i": 263,
+   "f0": 6767,
+   "f1": 6796,
+   "scene": 3
+  },
+  {
+   "w": "lebih",
+   "start": 113.26,
+   "end": 113.46,
+   "heard": true,
+   "i": 264,
+   "f0": 6796,
+   "f1": 6808,
+   "scene": 3
+  },
+  {
+   "w": "dalam.",
+   "start": 113.46,
+   "end": 113.78,
+   "heard": true,
+   "i": 265,
+   "f0": 6808,
+   "f1": 6827,
+   "scene": 3
+  },
+  {
+   "w": "Ini",
+   "start": 114.14,
+   "end": 114.4,
+   "heard": true,
+   "i": 266,
+   "f0": 6848,
+   "f1": 6864,
+   "scene": 3
+  },
+  {
+   "w": "seperti",
+   "start": 114.4,
+   "end": 114.7,
+   "heard": true,
+   "i": 267,
+   "f0": 6864,
+   "f1": 6882,
+   "scene": 3
+  },
+  {
+   "w": "memilih",
+   "start": 114.7,
+   "end": 115.18,
+   "heard": true,
+   "i": 268,
+   "f0": 6882,
+   "f1": 6911,
+   "scene": 3
+  },
+  {
+   "w": "saham",
+   "start": 115.18,
+   "end": 115.44,
+   "heard": true,
+   "i": 269,
+   "f0": 6911,
+   "f1": 6926,
+   "scene": 3
+  },
+  {
+   "w": "sendiri:",
+   "start": 115.44,
+   "end": 115.78,
+   "heard": true,
+   "i": 270,
+   "f0": 6926,
+   "f1": 6947,
+   "scene": 3
+  },
+  {
+   "w": "kita",
+   "start": 116.22,
+   "end": 116.46,
+   "heard": true,
+   "i": 271,
+   "f0": 6973,
+   "f1": 6988,
+   "scene": 3
+  },
+  {
+   "w": "juga",
+   "start": 116.46,
+   "end": 116.74,
+   "heard": true,
+   "i": 272,
+   "f0": 6988,
+   "f1": 7004,
+   "scene": 3
+  },
+  {
+   "w": "yang",
+   "start": 116.74,
+   "end": 116.9,
+   "heard": true,
+   "i": 273,
+   "f0": 7004,
+   "f1": 7014,
+   "scene": 3
+  },
+  {
+   "w": "harus",
+   "start": 116.9,
+   "end": 117.1,
+   "heard": true,
+   "i": 274,
+   "f0": 7014,
+   "f1": 7026,
+   "scene": 3
+  },
+  {
+   "w": "tahu",
+   "start": 117.1,
+   "end": 117.46,
+   "heard": true,
+   "i": 275,
+   "f0": 7026,
+   "f1": 7048,
+   "scene": 3
+  },
+  {
+   "w": "cara",
+   "start": 117.46,
+   "end": 117.94,
+   "heard": true,
+   "i": 276,
+   "f0": 7048,
+   "f1": 7076,
+   "scene": 3
+  },
+  {
+   "w": "mengendalikannya.",
+   "start": 117.94,
+   "end": 118.88,
+   "heard": true,
+   "i": 277,
+   "f0": 7076,
+   "f1": 7133,
+   "scene": 3
+  },
+  {
+   "w": "Jadi",
+   "start": 119.18,
+   "end": 119.32,
+   "heard": true,
+   "i": 278,
+   "f0": 7151,
+   "f1": 7159,
+   "scene": 3
+  },
+  {
+   "w": "semakin",
+   "start": 119.32,
+   "end": 119.58,
+   "heard": true,
+   "i": 279,
+   "f0": 7159,
+   "f1": 7175,
+   "scene": 3
+  },
+  {
+   "w": "cepat",
+   "start": 119.58,
+   "end": 119.86,
+   "heard": true,
+   "i": 280,
+   "f0": 7175,
+   "f1": 7192,
+   "scene": 3
+  },
+  {
+   "w": "jalurnya,",
+   "start": 119.86,
+   "end": 120.34,
+   "heard": true,
+   "i": 281,
+   "f0": 7192,
+   "f1": 7220,
+   "scene": 3
+  },
+  {
+   "w": "biasanya",
+   "start": 120.5,
+   "end": 120.76,
+   "heard": true,
+   "i": 282,
+   "f0": 7230,
+   "f1": 7246,
+   "scene": 3
+  },
+  {
+   "w": "semakin",
+   "start": 120.76,
+   "end": 121.14,
+   "heard": true,
+   "i": 283,
+   "f0": 7246,
+   "f1": 7268,
+   "scene": 3
+  },
+  {
+   "w": "besar",
+   "start": 121.14,
+   "end": 121.52,
+   "heard": true,
+   "i": 284,
+   "f0": 7268,
+   "f1": 7291,
+   "scene": 3
+  },
+  {
+   "w": "naik-turunnya,",
+   "start": 121.52,
+   "end": 122.38,
+   "heard": true,
+   "i": 285,
+   "f0": 7291,
+   "f1": 7343,
+   "scene": 3
+  },
+  {
+   "w": "dan",
+   "start": 122.38,
+   "end": 122.98,
+   "heard": true,
+   "i": 286,
+   "f0": 7343,
+   "f1": 7379,
+   "scene": 3
+  },
+  {
+   "w": "semakin",
+   "start": 122.98,
+   "end": 123.56,
+   "heard": true,
+   "i": 287,
+   "f0": 7379,
+   "f1": 7414,
+   "scene": 3
+  },
+  {
+   "w": "tinggi",
+   "start": 123.56,
+   "end": 124.1,
+   "heard": true,
+   "i": 288,
+   "f0": 7414,
+   "f1": 7446,
+   "scene": 3
+  },
+  {
+   "w": "kemampuan",
+   "start": 124.1,
+   "end": 124.54,
+   "heard": true,
+   "i": 289,
+   "f0": 7446,
+   "f1": 7472,
+   "scene": 3
+  },
+  {
+   "w": "yang",
+   "start": 124.54,
+   "end": 124.72,
+   "heard": true,
+   "i": 290,
+   "f0": 7472,
+   "f1": 7483,
+   "scene": 3
+  },
+  {
+   "w": "dibutuhkan.",
+   "start": 124.72,
+   "end": 125.32,
+   "heard": true,
+   "i": 291,
+   "f0": 7483,
+   "f1": 7519,
+   "scene": 3
+  },
+  {
+   "w": "Untuk",
+   "start": 125.98,
+   "end": 126.22,
+   "heard": true,
+   "i": 292,
+   "f0": 7559,
+   "f1": 7573,
+   "scene": 3
+  },
+  {
+   "w": "tahu",
+   "start": 126.22,
+   "end": 126.36,
+   "heard": true,
+   "i": 293,
+   "f0": 7573,
+   "f1": 7582,
+   "scene": 3
+  },
+  {
+   "w": "jalur",
+   "start": 126.36,
+   "end": 126.6,
+   "heard": true,
+   "i": 294,
+   "f0": 7582,
+   "f1": 7596,
+   "scene": 3
+  },
+  {
+   "w": "mana",
+   "start": 126.6,
+   "end": 126.76,
+   "heard": true,
+   "i": 295,
+   "f0": 7596,
+   "f1": 7606,
+   "scene": 3
+  },
+  {
+   "w": "yang",
+   "start": 126.76,
+   "end": 126.98,
+   "heard": true,
+   "i": 296,
+   "f0": 7606,
+   "f1": 7619,
+   "scene": 3
+  },
+  {
+   "w": "cocok,",
+   "start": 126.98,
+   "end": 127.4,
+   "heard": true,
+   "i": 297,
+   "f0": 7619,
+   "f1": 7644,
+   "scene": 3
+  },
+  {
+   "w": "ada",
+   "start": 127.54,
+   "end": 127.7,
+   "heard": true,
+   "i": 298,
+   "f0": 7652,
+   "f1": 7662,
+   "scene": 3
+  },
+  {
+   "w": "dua",
+   "start": 127.7,
+   "end": 127.92,
+   "heard": true,
+   "i": 299,
+   "f0": 7662,
+   "f1": 7675,
+   "scene": 3
+  },
+  {
+   "w": "pertanyaan.",
+   "start": 127.92,
+   "end": 128.58,
+   "heard": true,
+   "i": 300,
+   "f0": 7675,
+   "f1": 7715,
+   "scene": 3
+  },
+  {
+   "w": "Pertanyaan",
+   "start": 128.78,
+   "end": 129.12,
+   "heard": true,
+   "i": 301,
+   "f0": 7727,
+   "f1": 7747,
+   "scene": 4
+  },
+  {
+   "w": "pertama:",
+   "start": 129.12,
+   "end": 129.42,
+   "heard": true,
+   "i": 302,
+   "f0": 7747,
+   "f1": 7765,
+   "scene": 4
+  },
+  {
+   "w": "seberapa",
+   "start": 129.88,
+   "end": 130.16,
+   "heard": true,
+   "i": 303,
+   "f0": 7793,
+   "f1": 7810,
+   "scene": 4
+  },
+  {
+   "w": "besar",
+   "start": 130.16,
+   "end": 130.4,
+   "heard": true,
+   "i": 304,
+   "f0": 7810,
+   "f1": 7824,
+   "scene": 4
+  },
+  {
+   "w": "ombak",
+   "start": 130.4,
+   "end": 130.82,
+   "heard": true,
+   "i": 305,
+   "f0": 7824,
+   "f1": 7849,
+   "scene": 4
+  },
+  {
+   "w": "yang",
+   "start": 130.82,
+   "end": 131.06,
+   "heard": true,
+   "i": 306,
+   "f0": 7849,
+   "f1": 7864,
+   "scene": 4
+  },
+  {
+   "w": "sanggup",
+   "start": 131.06,
+   "end": 131.5,
+   "heard": true,
+   "i": 307,
+   "f0": 7864,
+   "f1": 7890,
+   "scene": 4
+  },
+  {
+   "w": "kamu",
+   "start": 131.5,
+   "end": 131.76,
+   "heard": true,
+   "i": 308,
+   "f0": 7890,
+   "f1": 7906,
+   "scene": 4
+  },
+  {
+   "w": "hadapi?",
+   "start": 131.76,
+   "end": 132.14,
+   "heard": true,
+   "i": 309,
+   "f0": 7906,
+   "f1": 7928,
+   "scene": 4
+  },
+  {
+   "w": "“Ombak”",
+   "start": 133.33999999999997,
+   "end": 134.14,
+   "heard": true,
+   "i": 310,
+   "f0": 8000,
+   "f1": 8048,
+   "scene": 4
+  },
+  {
+   "w": "adalah",
+   "start": 134.14,
+   "end": 134.8,
+   "heard": true,
+   "i": 311,
+   "f0": 8048,
+   "f1": 8088,
+   "scene": 4
+  },
+  {
+   "w": "seberapa",
+   "start": 134.8,
+   "end": 135.46,
+   "heard": true,
+   "i": 312,
+   "f0": 8088,
+   "f1": 8128,
+   "scene": 4
+  },
+  {
+   "w": "dalam",
+   "start": 135.46,
+   "end": 135.8,
+   "heard": true,
+   "i": 313,
+   "f0": 8128,
+   "f1": 8148,
+   "scene": 4
+  },
+  {
+   "w": "investasi",
+   "start": 135.8,
+   "end": 136.54,
+   "heard": true,
+   "i": 314,
+   "f0": 8148,
+   "f1": 8192,
+   "scene": 4
+  },
+  {
+   "w": "kita",
+   "start": 136.54,
+   "end": 136.86,
+   "heard": true,
+   "i": 315,
+   "f0": 8192,
+   "f1": 8212,
+   "scene": 4
+  },
+  {
+   "w": "sempat",
+   "start": 136.86,
+   "end": 137.4,
+   "heard": true,
+   "i": 316,
+   "f0": 8212,
+   "f1": 8244,
+   "scene": 4
+  },
+  {
+   "w": "turun",
+   "start": 137.4,
+   "end": 137.7,
+   "heard": true,
+   "i": 317,
+   "f0": 8244,
+   "f1": 8262,
+   "scene": 4
+  },
+  {
+   "w": "selama",
+   "start": 137.7,
+   "end": 138.04,
+   "heard": true,
+   "i": 318,
+   "f0": 8262,
+   "f1": 8282,
+   "scene": 4
+  },
+  {
+   "w": "perjalanan.",
+   "start": 138.04,
+   "end": 138.86,
+   "heard": true,
+   "i": 319,
+   "f0": 8282,
+   "f1": 8332,
+   "scene": 4
+  },
+  {
+   "w": "Contohnya,",
+   "start": 138.96,
+   "end": 139.52,
+   "heard": true,
+   "i": 320,
+   "f0": 8338,
+   "f1": 8371,
+   "scene": 4
+  },
+  {
+   "w": "pada",
+   "start": 139.52,
+   "end": 139.8,
+   "heard": true,
+   "i": 321,
+   "f0": 8371,
+   "f1": 8388,
+   "scene": 4
+  },
+  {
+   "w": "Mei",
+   "start": 139.8,
+   "end": 140.0,
+   "heard": true,
+   "i": 322,
+   "f0": 8388,
+   "f1": 8400,
+   "scene": 4
+  },
+  {
+   "w": "2020",
+   "start": 140.0,
+   "end": 140.42,
+   "heard": true,
+   "i": 323,
+   "f0": 8400,
+   "f1": 8425,
+   "scene": 4
+  },
+  {
+   "w": "sebuah",
+   "start": 140.42,
+   "end": 141.1,
+   "heard": true,
+   "i": 324,
+   "f0": 8425,
+   "f1": 8466,
+   "scene": 4
+  },
+  {
+   "w": "saham",
+   "start": 141.1,
+   "end": 141.3,
+   "heard": false,
+   "i": 325,
+   "f0": 8466,
+   "f1": 8478,
+   "scene": 4
+  },
+  {
+   "w": "bank",
+   "start": 141.3,
+   "end": 141.5,
+   "heard": false,
+   "i": 326,
+   "f0": 8478,
+   "f1": 8490,
+   "scene": 4
+  },
+  {
+   "w": "dibeli",
+   "start": 141.5,
+   "end": 141.78,
+   "heard": true,
+   "i": 327,
+   "f0": 8490,
+   "f1": 8507,
+   "scene": 4
+  },
+  {
+   "w": "di",
+   "start": 141.78,
+   "end": 141.92,
+   "heard": true,
+   "i": 328,
+   "f0": 8507,
+   "f1": 8515,
+   "scene": 4
+  },
+  {
+   "w": "harga",
+   "start": 141.92,
+   "end": 142.18,
+   "heard": true,
+   "i": 329,
+   "f0": 8515,
+   "f1": 8531,
+   "scene": 4
+  },
+  {
+   "w": "1.880.",
+   "start": 142.18,
+   "end": 143.54,
+   "heard": true,
+   "i": 330,
+   "f0": 8531,
+   "f1": 8612,
+   "scene": 4
+  },
+  {
+   "w": "Investasi",
+   "start": 143.94,
+   "end": 144.58,
+   "heard": true,
+   "i": 331,
+   "f0": 8636,
+   "f1": 8675,
+   "scene": 4
+  },
+  {
+   "w": "itu",
+   "start": 144.58,
+   "end": 144.72,
+   "heard": true,
+   "i": 332,
+   "f0": 8675,
+   "f1": 8683,
+   "scene": 4
+  },
+  {
+   "w": "sempat",
+   "start": 144.72,
+   "end": 144.98,
+   "heard": true,
+   "i": 333,
+   "f0": 8683,
+   "f1": 8699,
+   "scene": 4
+  },
+  {
+   "w": "turun",
+   "start": 144.98,
+   "end": 145.24,
+   "heard": true,
+   "i": 334,
+   "f0": 8699,
+   "f1": 8714,
+   "scene": 4
+  },
+  {
+   "w": "maksimum",
+   "start": 145.24,
+   "end": 145.72,
+   "heard": true,
+   "i": 335,
+   "f0": 8714,
+   "f1": 8743,
+   "scene": 4
+  },
+  {
+   "w": "sekitar",
+   "start": 145.72,
+   "end": 146.12,
+   "heard": true,
+   "i": 336,
+   "f0": 8743,
+   "f1": 8767,
+   "scene": 4
+  },
+  {
+   "w": "21%.",
+   "start": 146.12,
+   "end": 147.02,
+   "heard": true,
+   "i": 337,
+   "f0": 8767,
+   "f1": 8821,
+   "scene": 4
+  },
+  {
+   "w": "Artinya,",
+   "start": 147.02,
+   "end": 147.84,
+   "heard": true,
+   "i": 338,
+   "f0": 8821,
+   "f1": 8870,
+   "scene": 4
+  },
+  {
+   "w": "Rp10",
+   "start": 147.84,
+   "end": 148.3,
+   "heard": true,
+   "i": 339,
+   "f0": 8870,
+   "f1": 8898,
+   "scene": 4
+  },
+  {
+   "w": "juta",
+   "start": 148.3,
+   "end": 148.58,
+   "heard": true,
+   "i": 340,
+   "f0": 8898,
+   "f1": 8915,
+   "scene": 4
+  },
+  {
+   "w": "sempat",
+   "start": 148.98,
+   "end": 149.4,
+   "heard": true,
+   "i": 341,
+   "f0": 8939,
+   "f1": 8964,
+   "scene": 4
+  },
+  {
+   "w": "menjadi",
+   "start": 149.4,
+   "end": 149.64,
+   "heard": true,
+   "i": 342,
+   "f0": 8964,
+   "f1": 8978,
+   "scene": 4
+  },
+  {
+   "w": "sekitar",
+   "start": 149.64,
+   "end": 150.06,
+   "heard": true,
+   "i": 343,
+   "f0": 8978,
+   "f1": 9004,
+   "scene": 4
+  },
+  {
+   "w": "Rp7,9",
+   "start": 150.06,
+   "end": 150.86,
+   "heard": true,
+   "i": 344,
+   "f0": 9004,
+   "f1": 9052,
+   "scene": 4
+  },
+  {
+   "w": "juta.",
+   "start": 150.86,
+   "end": 151.26000000000002,
+   "heard": true,
+   "i": 345,
+   "f0": 9052,
+   "f1": 9076,
+   "scene": 4
+  },
+  {
+   "w": "Kalau",
+   "start": 151.66,
+   "end": 151.86,
+   "heard": true,
+   "i": 346,
+   "f0": 9100,
+   "f1": 9112,
+   "scene": 4
+  },
+  {
+   "w": "tetap",
+   "start": 151.86,
+   "end": 152.14,
+   "heard": true,
+   "i": 347,
+   "f0": 9112,
+   "f1": 9128,
+   "scene": 4
+  },
+  {
+   "w": "dipegang,",
+   "start": 152.14,
+   "end": 152.58,
+   "heard": true,
+   "i": 348,
+   "f0": 9128,
+   "f1": 9155,
+   "scene": 4
+  },
+  {
+   "w": "empat",
+   "start": 152.76,
+   "end": 152.92,
+   "heard": true,
+   "i": 349,
+   "f0": 9166,
+   "f1": 9175,
+   "scene": 4
+  },
+  {
+   "w": "tahun",
+   "start": 152.92,
+   "end": 153.04,
+   "heard": true,
+   "i": 350,
+   "f0": 9175,
+   "f1": 9182,
+   "scene": 4
+  },
+  {
+   "w": "kemudian",
+   "start": 153.04,
+   "end": 153.54,
+   "heard": true,
+   "i": 351,
+   "f0": 9182,
+   "f1": 9212,
+   "scene": 4
+  },
+  {
+   "w": "dijual",
+   "start": 153.54,
+   "end": 153.96,
+   "heard": true,
+   "i": 352,
+   "f0": 9212,
+   "f1": 9238,
+   "scene": 4
+  },
+  {
+   "w": "di",
+   "start": 153.96,
+   "end": 154.14,
+   "heard": true,
+   "i": 353,
+   "f0": 9238,
+   "f1": 9248,
+   "scene": 4
+  },
+  {
+   "w": "harga",
+   "start": 154.14,
+   "end": 154.42,
+   "heard": true,
+   "i": 354,
+   "f0": 9248,
+   "f1": 9265,
+   "scene": 4
+  },
+  {
+   "w": "7.300,",
+   "start": 154.42,
+   "end": 155.3,
+   "heard": true,
+   "i": 355,
+   "f0": 9265,
+   "f1": 9318,
+   "scene": 4
+  },
+  {
+   "w": "dengan",
+   "start": 155.3,
+   "end": 156.04,
+   "heard": true,
+   "i": 356,
+   "f0": 9318,
+   "f1": 9362,
+   "scene": 4
+  },
+  {
+   "w": "total",
+   "start": 156.04,
+   "end": 156.26,
+   "heard": true,
+   "i": 357,
+   "f0": 9362,
+   "f1": 9376,
+   "scene": 4
+  },
+  {
+   "w": "return",
+   "start": 156.26,
+   "end": 156.62,
+   "heard": true,
+   "i": 358,
+   "f0": 9376,
+   "f1": 9397,
+   "scene": 4
+  },
+  {
+   "w": "sekitar",
+   "start": 156.62,
+   "end": 157.02,
+   "heard": true,
+   "i": 359,
+   "f0": 9397,
+   "f1": 9421,
+   "scene": 4
+  },
+  {
+   "w": "288%.",
+   "start": 157.02,
+   "end": 158.96,
+   "heard": true,
+   "i": 360,
+   "f0": 9421,
+   "f1": 9538,
+   "scene": 4
+  },
+  {
+   "w": "Tapi",
+   "start": 158.96,
+   "end": 159.5,
+   "heard": true,
+   "i": 361,
+   "f0": 9538,
+   "f1": 9570,
+   "scene": 4
+  },
+  {
+   "w": "saham",
+   "start": 159.5,
+   "end": 159.74,
+   "heard": true,
+   "i": 362,
+   "f0": 9570,
+   "f1": 9584,
+   "scene": 4
+  },
+  {
+   "w": "lain",
+   "start": 159.74,
+   "end": 159.92,
+   "heard": true,
+   "i": 363,
+   "f0": 9584,
+   "f1": 9595,
+   "scene": 4
+  },
+  {
+   "w": "bisa",
+   "start": 159.92,
+   "end": 160.16,
+   "heard": true,
+   "i": 364,
+   "f0": 9595,
+   "f1": 9610,
+   "scene": 4
+  },
+  {
+   "w": "berbeda.",
+   "start": 160.16,
+   "end": 160.62,
+   "heard": true,
+   "i": 365,
+   "f0": 9610,
+   "f1": 9637,
+   "scene": 4
+  },
+  {
+   "w": "Misalnya",
+   "start": 160.72,
+   "end": 161.04,
+   "heard": true,
+   "i": 366,
+   "f0": 9643,
+   "f1": 9662,
+   "scene": 4
+  },
+  {
+   "w": "beli",
+   "start": 161.04,
+   "end": 161.48,
+   "heard": true,
+   "i": 367,
+   "f0": 9662,
+   "f1": 9689,
+   "scene": 4
+  },
+  {
+   "w": "di",
+   "start": 161.48,
+   "end": 161.58,
+   "heard": true,
+   "i": 368,
+   "f0": 9689,
+   "f1": 9695,
+   "scene": 4
+  },
+  {
+   "w": "600,",
+   "start": 161.58,
+   "end": 162.04,
+   "heard": true,
+   "i": 369,
+   "f0": 9695,
+   "f1": 9722,
+   "scene": 4
+  },
+  {
+   "w": "turun",
+   "start": 162.04,
+   "end": 162.56,
+   "heard": true,
+   "i": 370,
+   "f0": 9722,
+   "f1": 9754,
+   "scene": 4
+  },
+  {
+   "w": "ke",
+   "start": 162.56,
+   "end": 162.66,
+   "heard": true,
+   "i": 371,
+   "f0": 9754,
+   "f1": 9760,
+   "scene": 4
+  },
+  {
+   "w": "300,",
+   "start": 162.66,
+   "end": 163.12,
+   "heard": true,
+   "i": 372,
+   "f0": 9760,
+   "f1": 9787,
+   "scene": 4
+  },
+  {
+   "w": "dan",
+   "start": 163.12,
+   "end": 163.54,
+   "heard": true,
+   "i": 373,
+   "f0": 9787,
+   "f1": 9812,
+   "scene": 4
+  },
+  {
+   "w": "nggak",
+   "start": 163.54,
+   "end": 163.78,
+   "heard": true,
+   "i": 374,
+   "f0": 9812,
+   "f1": 9827,
+   "scene": 4
+  },
+  {
+   "w": "pernah",
+   "start": 163.78,
+   "end": 164.08,
+   "heard": true,
+   "i": 375,
+   "f0": 9827,
+   "f1": 9845,
+   "scene": 4
+  },
+  {
+   "w": "kembali",
+   "start": 164.08,
+   "end": 164.54,
+   "heard": true,
+   "i": 376,
+   "f0": 9845,
+   "f1": 9872,
+   "scene": 4
+  },
+  {
+   "w": "ke",
+   "start": 164.54,
+   "end": 164.72,
+   "heard": true,
+   "i": 377,
+   "f0": 9872,
+   "f1": 9883,
+   "scene": 4
+  },
+  {
+   "w": "harga",
+   "start": 164.72,
+   "end": 165.04,
+   "heard": true,
+   "i": 378,
+   "f0": 9883,
+   "f1": 9902,
+   "scene": 4
+  },
+  {
+   "w": "beli.",
+   "start": 165.04,
+   "end": 165.64,
+   "heard": true,
+   "i": 379,
+   "f0": 9902,
+   "f1": 9938,
+   "scene": 4
+  },
+  {
+   "w": "Dua-duanya",
+   "start": 165.68,
+   "end": 166.12,
+   "heard": true,
+   "i": 380,
+   "f0": 9941,
+   "f1": 9967,
+   "scene": 4
+  },
+  {
+   "w": "bisa",
+   "start": 166.12,
+   "end": 166.36,
+   "heard": true,
+   "i": 381,
+   "f0": 9967,
+   "f1": 9982,
+   "scene": 4
+  },
+  {
+   "w": "terjadi.",
+   "start": 166.36,
+   "end": 166.86,
+   "heard": true,
+   "i": 382,
+   "f0": 9982,
+   "f1": 10012,
+   "scene": 4
+  },
+  {
+   "w": "Jadi",
+   "start": 167.4,
+   "end": 167.64,
+   "heard": true,
+   "i": 383,
+   "f0": 10044,
+   "f1": 10058,
+   "scene": 4
+  },
+  {
+   "w": "pertanyaannya:",
+   "start": 167.64,
+   "end": 168.38,
+   "heard": true,
+   "i": 384,
+   "f0": 10058,
+   "f1": 10103,
+   "scene": 4
+  },
+  {
+   "w": "“Kalau",
+   "start": 168.74,
+   "end": 168.9,
+   "heard": true,
+   "i": 385,
+   "f0": 10124,
+   "f1": 10134,
+   "scene": 4
+  },
+  {
+   "w": "ini",
+   "start": 168.9,
+   "end": 169.1,
+   "heard": true,
+   "i": 386,
+   "f0": 10134,
+   "f1": 10146,
+   "scene": 4
+  },
+  {
+   "w": "terjadi",
+   "start": 169.1,
+   "end": 169.44,
+   "heard": true,
+   "i": 387,
+   "f0": 10146,
+   "f1": 10166,
+   "scene": 4
+  },
+  {
+   "w": "ke",
+   "start": 169.44,
+   "end": 169.69,
+   "heard": false,
+   "i": 388,
+   "f0": 10166,
+   "f1": 10181,
+   "scene": 4
+  },
+  {
+   "w": "uangku,",
+   "start": 169.69,
+   "end": 169.94,
+   "heard": false,
+   "i": 389,
+   "f0": 10181,
+   "f1": 10196,
+   "scene": 4
+  },
+  {
+   "w": "aku",
+   "start": 169.94,
+   "end": 170.14,
+   "heard": true,
+   "i": 390,
+   "f0": 10196,
+   "f1": 10208,
+   "scene": 4
+  },
+  {
+   "w": "masih",
+   "start": 170.14,
+   "end": 170.42,
+   "heard": true,
+   "i": 391,
+   "f0": 10208,
+   "f1": 10225,
+   "scene": 4
+  },
+  {
+   "w": "sanggup",
+   "start": 170.42,
+   "end": 170.68,
+   "heard": true,
+   "i": 392,
+   "f0": 10225,
+   "f1": 10241,
+   "scene": 4
+  },
+  {
+   "w": "lanjut",
+   "start": 170.68,
+   "end": 171.0,
+   "heard": true,
+   "i": 393,
+   "f0": 10241,
+   "f1": 10260,
+   "scene": 4
+  },
+  {
+   "w": "nggak?”",
+   "start": 171.0,
+   "end": 171.2,
+   "heard": true,
+   "i": 394,
+   "f0": 10260,
+   "f1": 10272,
+   "scene": 4
+  },
+  {
+   "w": "Saat",
+   "start": 171.66,
+   "end": 171.9,
+   "heard": true,
+   "i": 395,
+   "f0": 10300,
+   "f1": 10314,
+   "scene": 4
+  },
+  {
+   "w": "harga",
+   "start": 171.9,
+   "end": 172.08,
+   "heard": true,
+   "i": 396,
+   "f0": 10314,
+   "f1": 10325,
+   "scene": 4
+  },
+  {
+   "w": "naik,",
+   "start": 172.08,
+   "end": 172.48,
+   "heard": true,
+   "i": 397,
+   "f0": 10325,
+   "f1": 10349,
+   "scene": 4
+  },
+  {
+   "w": "semua",
+   "start": 172.62,
+   "end": 172.76,
+   "heard": true,
+   "i": 398,
+   "f0": 10357,
+   "f1": 10366,
+   "scene": 4
+  },
+  {
+   "w": "orang",
+   "start": 172.76,
+   "end": 173.06,
+   "heard": true,
+   "i": 399,
+   "f0": 10366,
+   "f1": 10384,
+   "scene": 4
+  },
+  {
+   "w": "bisa",
+   "start": 173.06,
+   "end": 173.36,
+   "heard": true,
+   "i": 400,
+   "f0": 10384,
+   "f1": 10402,
+   "scene": 4
+  },
+  {
+   "w": "merasa",
+   "start": 173.36,
+   "end": 173.8,
+   "heard": true,
+   "i": 401,
+   "f0": 10402,
+   "f1": 10428,
+   "scene": 4
+  },
+  {
+   "w": "berani.",
+   "start": 173.8,
+   "end": 174.24,
+   "heard": true,
+   "i": 402,
+   "f0": 10428,
+   "f1": 10454,
+   "scene": 4
+  },
+  {
+   "w": "Yang",
+   "start": 174.68,
+   "end": 174.82,
+   "heard": true,
+   "i": 403,
+   "f0": 10481,
+   "f1": 10489,
+   "scene": 4
+  },
+  {
+   "w": "lebih",
+   "start": 174.82,
+   "end": 175.02,
+   "heard": true,
+   "i": 404,
+   "f0": 10489,
+   "f1": 10501,
+   "scene": 4
+  },
+  {
+   "w": "jujur",
+   "start": 175.02,
+   "end": 175.38,
+   "heard": true,
+   "i": 405,
+   "f0": 10501,
+   "f1": 10523,
+   "scene": 4
+  },
+  {
+   "w": "adalah",
+   "start": 175.38,
+   "end": 175.62,
+   "heard": true,
+   "i": 406,
+   "f0": 10523,
+   "f1": 10537,
+   "scene": 4
+  },
+  {
+   "w": "melihat",
+   "start": 175.62,
+   "end": 176.22,
+   "heard": true,
+   "i": 407,
+   "f0": 10537,
+   "f1": 10573,
+   "scene": 4
+  },
+  {
+   "w": "apa",
+   "start": 176.22,
+   "end": 176.46,
+   "heard": true,
+   "i": 408,
+   "f0": 10573,
+   "f1": 10588,
+   "scene": 4
+  },
+  {
+   "w": "yang",
+   "start": 176.46,
+   "end": 176.62,
+   "heard": true,
+   "i": 409,
+   "f0": 10588,
+   "f1": 10597,
+   "scene": 4
+  },
+  {
+   "w": "kita",
+   "start": 176.62,
+   "end": 176.8,
+   "heard": true,
+   "i": 410,
+   "f0": 10597,
+   "f1": 10608,
+   "scene": 4
+  },
+  {
+   "w": "lakukan",
+   "start": 176.8,
+   "end": 177.24,
+   "heard": true,
+   "i": 411,
+   "f0": 10608,
+   "f1": 10634,
+   "scene": 4
+  },
+  {
+   "w": "saat",
+   "start": 177.24,
+   "end": 177.68,
+   "heard": true,
+   "i": 412,
+   "f0": 10634,
+   "f1": 10661,
+   "scene": 4
+  },
+  {
+   "w": "market",
+   "start": 177.68,
+   "end": 178.22,
+   "heard": true,
+   "i": 413,
+   "f0": 10661,
+   "f1": 10693,
+   "scene": 4
+  },
+  {
+   "w": "benar-benar",
+   "start": 178.22,
+   "end": 178.9,
+   "heard": true,
+   "i": 414,
+   "f0": 10693,
+   "f1": 10734,
+   "scene": 4
+  },
+  {
+   "w": "turun.",
+   "start": 178.9,
+   "end": 179.34,
+   "heard": true,
+   "i": 415,
+   "f0": 10734,
+   "f1": 10760,
+   "scene": 4
+  },
+  {
+   "w": "Kalau",
+   "start": 179.62,
+   "end": 179.86,
+   "heard": true,
+   "i": 416,
+   "f0": 10777,
+   "f1": 10792,
+   "scene": 4
+  },
+  {
+   "w": "langsung",
+   "start": 179.86,
+   "end": 180.12,
+   "heard": true,
+   "i": 417,
+   "f0": 10792,
+   "f1": 10807,
+   "scene": 4
+  },
+  {
+   "w": "jual",
+   "start": 180.12,
+   "end": 180.36,
+   "heard": true,
+   "i": 418,
+   "f0": 10807,
+   "f1": 10822,
+   "scene": 4
+  },
+  {
+   "w": "karena",
+   "start": 180.36,
+   "end": 180.58,
+   "heard": true,
+   "i": 419,
+   "f0": 10822,
+   "f1": 10835,
+   "scene": 4
+  },
+  {
+   "w": "panik,",
+   "start": 180.58,
+   "end": 181.1,
+   "heard": true,
+   "i": 420,
+   "f0": 10835,
+   "f1": 10866,
+   "scene": 4
+  },
+  {
+   "w": "mungkin",
+   "start": 181.36,
+   "end": 181.62,
+   "heard": true,
+   "i": 421,
+   "f0": 10882,
+   "f1": 10897,
+   "scene": 4
+  },
+  {
+   "w": "ombaknya",
+   "start": 181.62,
+   "end": 182.12,
+   "heard": true,
+   "i": 422,
+   "f0": 10897,
+   "f1": 10927,
+   "scene": 4
+  },
+  {
+   "w": "memang",
+   "start": 182.12,
+   "end": 182.32,
+   "heard": true,
+   "i": 423,
+   "f0": 10927,
+   "f1": 10939,
+   "scene": 4
+  },
+  {
+   "w": "terlalu",
+   "start": 182.32,
+   "end": 182.78,
+   "heard": true,
+   "i": 424,
+   "f0": 10939,
+   "f1": 10967,
+   "scene": 4
+  },
+  {
+   "w": "besar",
+   "start": 182.78,
+   "end": 183.04,
+   "heard": true,
+   "i": 425,
+   "f0": 10967,
+   "f1": 10982,
+   "scene": 4
+  },
+  {
+   "w": "buat",
+   "start": 183.04,
+   "end": 183.26,
+   "heard": true,
+   "i": 426,
+   "f0": 10982,
+   "f1": 10996,
+   "scene": 4
+  },
+  {
+   "w": "kita.",
+   "start": 183.26,
+   "end": 183.6,
+   "heard": true,
+   "i": 427,
+   "f0": 10996,
+   "f1": 11016,
+   "scene": 4
+  },
+  {
+   "w": "Kalau",
+   "start": 184.04,
+   "end": 184.28,
+   "heard": true,
+   "i": 428,
+   "f0": 11042,
+   "f1": 11057,
+   "scene": 4
+  },
+  {
+   "w": "belum",
+   "start": 184.28,
+   "end": 184.5,
+   "heard": true,
+   "i": 429,
+   "f0": 11057,
+   "f1": 11070,
+   "scene": 4
+  },
+  {
+   "w": "kuat,",
+   "start": 184.5,
+   "end": 184.9,
+   "heard": true,
+   "i": 430,
+   "f0": 11070,
+   "f1": 11094,
+   "scene": 4
+  },
+  {
+   "w": "nggak",
+   "start": 185.08,
+   "end": 185.18,
+   "heard": true,
+   "i": 431,
+   "f0": 11105,
+   "f1": 11111,
+   "scene": 4
+  },
+  {
+   "w": "masalah.",
+   "start": 185.18,
+   "end": 185.58,
+   "heard": true,
+   "i": 432,
+   "f0": 11111,
+   "f1": 11135,
+   "scene": 4
+  },
+  {
+   "w": "Pilih",
+   "start": 186.04,
+   "end": 186.42,
+   "heard": true,
+   "i": 433,
+   "f0": 11162,
+   "f1": 11185,
+   "scene": 4
+  },
+  {
+   "w": "jalur",
+   "start": 186.42,
+   "end": 186.68,
+   "heard": true,
+   "i": 434,
+   "f0": 11185,
+   "f1": 11201,
+   "scene": 4
+  },
+  {
+   "w": "dengan",
+   "start": 186.68,
+   "end": 186.96,
+   "heard": true,
+   "i": 435,
+   "f0": 11201,
+   "f1": 11218,
+   "scene": 4
+  },
+  {
+   "w": "ombak",
+   "start": 186.96,
+   "end": 187.38,
+   "heard": true,
+   "i": 436,
+   "f0": 11218,
+   "f1": 11243,
+   "scene": 4
+  },
+  {
+   "w": "yang",
+   "start": 187.38,
+   "end": 187.58,
+   "heard": true,
+   "i": 437,
+   "f0": 11243,
+   "f1": 11255,
+   "scene": 4
+  },
+  {
+   "w": "lebih",
+   "start": 187.58,
+   "end": 187.82,
+   "heard": true,
+   "i": 438,
+   "f0": 11255,
+   "f1": 11269,
+   "scene": 4
+  },
+  {
+   "w": "kecil.",
+   "start": 187.82,
+   "end": 188.24,
+   "heard": true,
+   "i": 439,
+   "f0": 11269,
+   "f1": 11294,
+   "scene": 4
+  },
+  {
+   "w": "Pertanyaan",
+   "start": 188.24,
+   "end": 189.06,
+   "heard": true,
+   "i": 440,
+   "f0": 11294,
+   "f1": 11344,
+   "scene": 5
+  },
+  {
+   "w": "kedua:",
+   "start": 189.06,
+   "end": 189.3,
+   "heard": true,
+   "i": 441,
+   "f0": 11344,
+   "f1": 11358,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 189.64,
+   "end": 189.88,
+   "heard": true,
+   "i": 442,
+   "f0": 11378,
+   "f1": 11393,
+   "scene": 5
+  },
+  {
+   "w": "sudah",
+   "start": 189.88,
+   "end": 190.08,
+   "heard": true,
+   "i": 443,
+   "f0": 11393,
+   "f1": 11405,
+   "scene": 5
+  },
+  {
+   "w": "bisa",
+   "start": 190.08,
+   "end": 190.32,
+   "heard": true,
+   "i": 444,
+   "f0": 11405,
+   "f1": 11419,
+   "scene": 5
+  },
+  {
+   "w": "mengemudikannya",
+   "start": 190.32,
+   "end": 191.0,
+   "heard": true,
+   "i": 445,
+   "f0": 11419,
+   "f1": 11460,
+   "scene": 5
+  },
+  {
+   "w": "belum?",
+   "start": 191.0,
+   "end": 191.26,
+   "heard": true,
+   "i": 446,
+   "f0": 11460,
+   "f1": 11476,
+   "scene": 5
+  },
+  {
+   "w": "Kalau",
+   "start": 191.98,
+   "end": 192.26,
+   "heard": true,
+   "i": 447,
+   "f0": 11519,
+   "f1": 11536,
+   "scene": 5
+  },
+  {
+   "w": "memilih",
+   "start": 192.26,
+   "end": 192.64,
+   "heard": true,
+   "i": 448,
+   "f0": 11536,
+   "f1": 11558,
+   "scene": 5
+  },
+  {
+   "w": "saham",
+   "start": 192.64,
+   "end": 192.82,
+   "heard": true,
+   "i": 449,
+   "f0": 11558,
+   "f1": 11569,
+   "scene": 5
+  },
+  {
+   "w": "sendiri",
+   "start": 192.82,
+   "end": 193.1,
+   "heard": true,
+   "i": 450,
+   "f0": 11569,
+   "f1": 11586,
+   "scene": 5
+  },
+  {
+   "w": "seperti",
+   "start": 193.1,
+   "end": 193.36,
+   "heard": true,
+   "i": 451,
+   "f0": 11586,
+   "f1": 11602,
+   "scene": 5
+  },
+  {
+   "w": "bawa",
+   "start": 193.36,
+   "end": 193.66,
+   "heard": true,
+   "i": 452,
+   "f0": 11602,
+   "f1": 11620,
+   "scene": 5
+  },
+  {
+   "w": "pesawat,",
+   "start": 193.66,
+   "end": 194.14,
+   "heard": true,
+   "i": 453,
+   "f0": 11620,
+   "f1": 11648,
+   "scene": 5
+  },
+  {
+   "w": "kita",
+   "start": 194.34,
+   "end": 194.54,
+   "heard": true,
+   "i": 454,
+   "f0": 11660,
+   "f1": 11672,
+   "scene": 5
+  },
+  {
+   "w": "perlu",
+   "start": 194.54,
+   "end": 194.82,
+   "heard": true,
+   "i": 455,
+   "f0": 11672,
+   "f1": 11689,
+   "scene": 5
+  },
+  {
+   "w": "punya",
+   "start": 194.82,
+   "end": 195.16,
+   "heard": true,
+   "i": 456,
+   "f0": 11689,
+   "f1": 11710,
+   "scene": 5
+  },
+  {
+   "w": "“lisensi”.",
+   "start": 195.16,
+   "end": 195.88,
+   "heard": true,
+   "i": 457,
+   "f0": 11710,
+   "f1": 11753,
+   "scene": 5
+  },
+  {
+   "w": "Lisensinya",
+   "start": 196.3,
+   "end": 196.88,
+   "heard": true,
+   "i": 458,
+   "f0": 11778,
+   "f1": 11813,
+   "scene": 5
+  },
+  {
+   "w": "dilihat",
+   "start": 196.88,
+   "end": 197.34,
+   "heard": true,
+   "i": 459,
+   "f0": 11813,
+   "f1": 11840,
+   "scene": 5
+  },
+  {
+   "w": "dari",
+   "start": 197.34,
+   "end": 197.58,
+   "heard": true,
+   "i": 460,
+   "f0": 11840,
+   "f1": 11855,
+   "scene": 5
+  },
+  {
+   "w": "tiga",
+   "start": 197.58,
+   "end": 197.84,
+   "heard": true,
+   "i": 461,
+   "f0": 11855,
+   "f1": 11870,
+   "scene": 5
+  },
+  {
+   "w": "hal.",
+   "start": 197.84,
+   "end": 198.2,
+   "heard": true,
+   "i": 462,
+   "f0": 11870,
+   "f1": 11892,
+   "scene": 5
+  },
+  {
+   "w": "Pertama,",
+   "start": 198.58,
+   "end": 198.82,
+   "heard": true,
+   "i": 463,
+   "f0": 11915,
+   "f1": 11929,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 199.28,
+   "end": 199.44,
+   "heard": true,
+   "i": 464,
+   "f0": 11957,
+   "f1": 11966,
+   "scene": 5
+  },
+  {
+   "w": "paham",
+   "start": 199.44,
+   "end": 199.9,
+   "heard": true,
+   "i": 465,
+   "f0": 11966,
+   "f1": 11994,
+   "scene": 5
+  },
+  {
+   "w": "apa",
+   "start": 199.9,
+   "end": 200.26,
+   "heard": true,
+   "i": 466,
+   "f0": 11994,
+   "f1": 12016,
+   "scene": 5
+  },
+  {
+   "w": "yang",
+   "start": 200.26,
+   "end": 200.5,
+   "heard": true,
+   "i": 467,
+   "f0": 12016,
+   "f1": 12030,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 200.5,
+   "end": 200.76,
+   "heard": true,
+   "i": 468,
+   "f0": 12030,
+   "f1": 12046,
+   "scene": 5
+  },
+  {
+   "w": "lihat.",
+   "start": 200.76,
+   "end": 201.1,
+   "heard": true,
+   "i": 469,
+   "f0": 12046,
+   "f1": 12066,
+   "scene": 5
+  },
+  {
+   "w": "Laporan",
+   "start": 201.7,
+   "end": 202.04,
+   "heard": true,
+   "i": 470,
+   "f0": 12102,
+   "f1": 12122,
+   "scene": 5
+  },
+  {
+   "w": "keuangan",
+   "start": 202.04,
+   "end": 202.42,
+   "heard": true,
+   "i": 471,
+   "f0": 12122,
+   "f1": 12145,
+   "scene": 5
+  },
+  {
+   "w": "dan",
+   "start": 202.42,
+   "end": 202.7,
+   "heard": true,
+   "i": 472,
+   "f0": 12145,
+   "f1": 12162,
+   "scene": 5
+  },
+  {
+   "w": "indikator",
+   "start": 202.7,
+   "end": 203.12,
+   "heard": true,
+   "i": 473,
+   "f0": 12162,
+   "f1": 12187,
+   "scene": 5
+  },
+  {
+   "w": "teknikal,",
+   "start": 203.12,
+   "end": 203.66,
+   "heard": true,
+   "i": 474,
+   "f0": 12187,
+   "f1": 12220,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 203.66,
+   "end": 204.14,
+   "heard": true,
+   "i": 475,
+   "f0": 12220,
+   "f1": 12248,
+   "scene": 5
+  },
+  {
+   "w": "benar-benar",
+   "start": 204.14,
+   "end": 204.62,
+   "heard": true,
+   "i": 476,
+   "f0": 12248,
+   "f1": 12277,
+   "scene": 5
+  },
+  {
+   "w": "ngerti",
+   "start": 204.62,
+   "end": 205.08,
+   "heard": true,
+   "i": 477,
+   "f0": 12277,
+   "f1": 12305,
+   "scene": 5
+  },
+  {
+   "w": "atau",
+   "start": 205.08,
+   "end": 205.44,
+   "heard": true,
+   "i": 478,
+   "f0": 12305,
+   "f1": 12326,
+   "scene": 5
+  },
+  {
+   "w": "belum?",
+   "start": 205.44,
+   "end": 205.82,
+   "heard": true,
+   "i": 479,
+   "f0": 12326,
+   "f1": 12349,
+   "scene": 5
+  },
+  {
+   "w": "Kedua,",
+   "start": 206.22,
+   "end": 206.52,
+   "heard": true,
+   "i": 480,
+   "f0": 12373,
+   "f1": 12391,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 207.0,
+   "end": 207.3,
+   "heard": true,
+   "i": 481,
+   "f0": 12420,
+   "f1": 12438,
+   "scene": 5
+  },
+  {
+   "w": "punya",
+   "start": 207.3,
+   "end": 207.6,
+   "heard": true,
+   "i": 482,
+   "f0": 12438,
+   "f1": 12456,
+   "scene": 5
+  },
+  {
+   "w": "logika",
+   "start": 207.6,
+   "end": 207.96,
+   "heard": true,
+   "i": 483,
+   "f0": 12456,
+   "f1": 12478,
+   "scene": 5
+  },
+  {
+   "w": "sendiri.",
+   "start": 207.96,
+   "end": 208.26,
+   "heard": true,
+   "i": 484,
+   "f0": 12478,
+   "f1": 12496,
+   "scene": 5
+  },
+  {
+   "w": "Kenapa",
+   "start": 208.8,
+   "end": 209.04,
+   "heard": true,
+   "i": 485,
+   "f0": 12528,
+   "f1": 12542,
+   "scene": 5
+  },
+  {
+   "w": "beli?",
+   "start": 209.04,
+   "end": 209.32,
+   "heard": true,
+   "i": 486,
+   "f0": 12542,
+   "f1": 12559,
+   "scene": 5
+  },
+  {
+   "w": "Kapan",
+   "start": 209.74,
+   "end": 209.98,
+   "heard": true,
+   "i": 487,
+   "f0": 12584,
+   "f1": 12599,
+   "scene": 5
+  },
+  {
+   "w": "harus",
+   "start": 209.98,
+   "end": 210.2,
+   "heard": true,
+   "i": 488,
+   "f0": 12599,
+   "f1": 12612,
+   "scene": 5
+  },
+  {
+   "w": "jual?",
+   "start": 210.2,
+   "end": 210.5,
+   "heard": true,
+   "i": 489,
+   "f0": 12612,
+   "f1": 12630,
+   "scene": 5
+  },
+  {
+   "w": "Bisa",
+   "start": 210.8,
+   "end": 210.94,
+   "heard": true,
+   "i": 490,
+   "f0": 12648,
+   "f1": 12656,
+   "scene": 5
+  },
+  {
+   "w": "jelasin",
+   "start": 210.94,
+   "end": 211.3,
+   "heard": true,
+   "i": 491,
+   "f0": 12656,
+   "f1": 12678,
+   "scene": 5
+  },
+  {
+   "w": "sendiri",
+   "start": 211.3,
+   "end": 211.56,
+   "heard": true,
+   "i": 492,
+   "f0": 12678,
+   "f1": 12694,
+   "scene": 5
+  },
+  {
+   "w": "nggak?",
+   "start": 211.56,
+   "end": 211.78,
+   "heard": true,
+   "i": 493,
+   "f0": 12694,
+   "f1": 12707,
+   "scene": 5
+  },
+  {
+   "w": "Ketiga,",
+   "start": 212.2,
+   "end": 212.6,
+   "heard": true,
+   "i": 494,
+   "f0": 12732,
+   "f1": 12756,
+   "scene": 5
+  },
+  {
+   "w": "kamu",
+   "start": 213.22,
+   "end": 213.5,
+   "heard": true,
+   "i": 495,
+   "f0": 12793,
+   "f1": 12810,
+   "scene": 5
+  },
+  {
+   "w": "pernah",
+   "start": 213.5,
+   "end": 213.82,
+   "heard": true,
+   "i": 496,
+   "f0": 12810,
+   "f1": 12829,
+   "scene": 5
+  },
+  {
+   "w": "melewati",
+   "start": 213.82,
+   "end": 214.24,
+   "heard": true,
+   "i": 497,
+   "f0": 12829,
+   "f1": 12854,
+   "scene": 5
+  },
+  {
+   "w": "badai.",
+   "start": 214.24,
+   "end": 214.84,
+   "heard": true,
+   "i": 498,
+   "f0": 12854,
+   "f1": 12890,
+   "scene": 5
+  },
+  {
+   "w": "Punya",
+   "start": 214.84,
+   "end": 215.72,
+   "heard": true,
+   "i": 499,
+   "f0": 12890,
+   "f1": 12943,
+   "scene": 5
+  },
+  {
+   "w": "pengalaman",
+   "start": 215.72,
+   "end": 216.32,
+   "heard": true,
+   "i": 500,
+   "f0": 12943,
+   "f1": 12979,
+   "scene": 5
+  },
+  {
+   "w": "beberapa",
+   "start": 216.32,
+   "end": 216.76,
+   "heard": true,
+   "i": 501,
+   "f0": 12979,
+   "f1": 13006,
+   "scene": 5
+  },
+  {
+   "w": "tahun,",
+   "start": 216.76,
+   "end": 217.12,
+   "heard": true,
+   "i": 502,
+   "f0": 13006,
+   "f1": 13027,
+   "scene": 5
+  },
+  {
+   "w": "dan",
+   "start": 217.12,
+   "end": 217.84,
+   "heard": true,
+   "i": 503,
+   "f0": 13027,
+   "f1": 13070,
+   "scene": 5
+  },
+  {
+   "w": "pernah",
+   "start": 217.84,
+   "end": 218.26,
+   "heard": true,
+   "i": 504,
+   "f0": 13070,
+   "f1": 13096,
+   "scene": 5
+  },
+  {
+   "w": "menghadapi",
+   "start": 218.26,
+   "end": 218.78,
+   "heard": true,
+   "i": 505,
+   "f0": 13096,
+   "f1": 13127,
+   "scene": 5
+  },
+  {
+   "w": "market",
+   "start": 218.78,
+   "end": 219.22,
+   "heard": true,
+   "i": 506,
+   "f0": 13127,
+   "f1": 13153,
+   "scene": 5
+  },
+  {
+   "w": "crash",
+   "start": 219.22,
+   "end": 219.82,
+   "heard": true,
+   "i": 507,
+   "f0": 13153,
+   "f1": 13189,
+   "scene": 5
+  },
+  {
+   "w": "tanpa",
+   "start": 219.82,
+   "end": 220.78,
+   "heard": true,
+   "i": 508,
+   "f0": 13189,
+   "f1": 13247,
+   "scene": 5
+  },
+  {
+   "w": "langsung",
+   "start": 220.78,
+   "end": 221.28,
+   "heard": true,
+   "i": 509,
+   "f0": 13247,
+   "f1": 13277,
+   "scene": 5
+  },
+  {
+   "w": "panik",
+   "start": 221.28,
+   "end": 221.76,
+   "heard": true,
+   "i": 510,
+   "f0": 13277,
+   "f1": 13306,
+   "scene": 5
+  },
+  {
+   "w": "di",
+   "start": 221.76,
+   "end": 221.94,
+   "heard": true,
+   "i": 511,
+   "f0": 13306,
+   "f1": 13316,
+   "scene": 5
+  },
+  {
+   "w": "titik",
+   "start": 221.94,
+   "end": 222.22,
+   "heard": true,
+   "i": 512,
+   "f0": 13316,
+   "f1": 13333,
+   "scene": 5
+  },
+  {
+   "w": "terendah.",
+   "start": 222.22,
+   "end": 222.7,
+   "heard": true,
+   "i": 513,
+   "f0": 13333,
+   "f1": 13362,
+   "scene": 5
+  },
+  {
+   "w": "Kalau",
+   "start": 222.94,
+   "end": 223.32,
+   "heard": true,
+   "i": 514,
+   "f0": 13376,
+   "f1": 13399,
+   "scene": 5
+  },
+  {
+   "w": "tiga-tiganya",
+   "start": 223.32,
+   "end": 223.78,
+   "heard": true,
+   "i": 515,
+   "f0": 13399,
+   "f1": 13427,
+   "scene": 5
+  },
+  {
+   "w": "sudah",
+   "start": 223.78,
+   "end": 223.98,
+   "heard": true,
+   "i": 516,
+   "f0": 13427,
+   "f1": 13439,
+   "scene": 5
+  },
+  {
+   "w": "ada,",
+   "start": 223.98,
+   "end": 224.3,
+   "heard": true,
+   "i": 517,
+   "f0": 13439,
+   "f1": 13458,
+   "scene": 5
+  },
+  {
+   "w": "kemampuanmu",
+   "start": 224.96,
+   "end": 225.7,
+   "heard": true,
+   "i": 518,
+   "f0": 13498,
+   "f1": 13542,
+   "scene": 5
+  },
+  {
+   "w": "sudah",
+   "start": 225.7,
+   "end": 225.88,
+   "heard": true,
+   "i": 519,
+   "f0": 13542,
+   "f1": 13553,
+   "scene": 5
+  },
+  {
+   "w": "lebih",
+   "start": 225.88,
+   "end": 226.2,
+   "heard": true,
+   "i": 520,
+   "f0": 13553,
+   "f1": 13572,
+   "scene": 5
+  },
+  {
+   "w": "matang.",
+   "start": 226.2,
+   "end": 226.74,
+   "heard": true,
+   "i": 521,
+   "f0": 13572,
+   "f1": 13604,
+   "scene": 5
+  },
+  {
+   "w": "Baru",
+   "start": 226.96,
+   "end": 227.12,
+   "heard": true,
+   "i": 522,
+   "f0": 13618,
+   "f1": 13627,
+   "scene": 5
+  },
+  {
+   "w": "satu",
+   "start": 227.12,
+   "end": 227.36,
+   "heard": true,
+   "i": 523,
+   "f0": 13627,
+   "f1": 13642,
+   "scene": 5
+  },
+  {
+   "w": "atau",
+   "start": 227.36,
+   "end": 227.54,
+   "heard": true,
+   "i": 524,
+   "f0": 13642,
+   "f1": 13652,
+   "scene": 5
+  },
+  {
+   "w": "dua,",
+   "start": 227.54,
+   "end": 227.86,
+   "heard": true,
+   "i": 525,
+   "f0": 13652,
+   "f1": 13672,
+   "scene": 5
+  },
+  {
+   "w": "masih",
+   "start": 228.4,
+   "end": 228.66,
+   "heard": true,
+   "i": 526,
+   "f0": 13704,
+   "f1": 13720,
+   "scene": 5
+  },
+  {
+   "w": "berkembang.",
+   "start": 228.66,
+   "end": 229.42,
+   "heard": true,
+   "i": 527,
+   "f0": 13720,
+   "f1": 13765,
+   "scene": 5
+  },
+  {
+   "w": "Belum",
+   "start": 229.56,
+   "end": 229.68,
+   "heard": true,
+   "i": 528,
+   "f0": 13774,
+   "f1": 13781,
+   "scene": 5
+  },
+  {
+   "w": "ada?",
+   "start": 229.68,
+   "end": 229.9,
+   "heard": true,
+   "i": 529,
+   "f0": 13781,
+   "f1": 13794,
+   "scene": 5
+  },
+  {
+   "w": "Berarti",
+   "start": 230.12,
+   "end": 230.28,
+   "heard": true,
+   "i": 530,
+   "f0": 13807,
+   "f1": 13817,
+   "scene": 5
+  },
+  {
+   "w": "masih",
+   "start": 230.28,
+   "end": 230.48,
+   "heard": true,
+   "i": 531,
+   "f0": 13817,
+   "f1": 13829,
+   "scene": 5
+  },
+  {
+   "w": "pemula.",
+   "start": 230.48,
+   "end": 230.88,
+   "heard": true,
+   "i": 532,
+   "f0": 13829,
+   "f1": 13853,
+   "scene": 5
+  },
+  {
+   "w": "Dan",
+   "start": 231.04,
+   "end": 231.08,
+   "heard": true,
+   "i": 533,
+   "f0": 13862,
+   "f1": 13865,
+   "scene": 5
+  },
+  {
+   "w": "itu",
+   "start": 231.08,
+   "end": 231.26,
+   "heard": true,
+   "i": 534,
+   "f0": 13865,
+   "f1": 13876,
+   "scene": 5
+  },
+  {
+   "w": "normal.",
+   "start": 231.26,
+   "end": 231.5,
+   "heard": true,
+   "i": 535,
+   "f0": 13876,
+   "f1": 13890,
+   "scene": 5
+  },
+  {
+   "w": "Yang",
+   "start": 232.14,
+   "end": 232.28,
+   "heard": true,
+   "i": 536,
+   "f0": 13928,
+   "f1": 13937,
+   "scene": 5
+  },
+  {
+   "w": "penting",
+   "start": 232.28,
+   "end": 232.44,
+   "heard": true,
+   "i": 537,
+   "f0": 13937,
+   "f1": 13946,
+   "scene": 5
+  },
+  {
+   "w": "diingat:",
+   "start": 232.44,
+   "end": 232.9,
+   "heard": true,
+   "i": 538,
+   "f0": 13946,
+   "f1": 13974,
+   "scene": 5
+  },
+  {
+   "w": "berani",
+   "start": 233.18,
+   "end": 233.3,
+   "heard": true,
+   "i": 539,
+   "f0": 13991,
+   "f1": 13998,
+   "scene": 5
+  },
+  {
+   "w": "menghadapi",
+   "start": 233.3,
+   "end": 233.7,
+   "heard": true,
+   "i": 540,
+   "f0": 13998,
+   "f1": 14022,
+   "scene": 5
+  },
+  {
+   "w": "ombak",
+   "start": 233.7,
+   "end": 234.12,
+   "heard": true,
+   "i": 541,
+   "f0": 14022,
+   "f1": 14047,
+   "scene": 5
+  },
+  {
+   "w": "bukan",
+   "start": 234.12,
+   "end": 234.36,
+   "heard": true,
+   "i": 542,
+   "f0": 14047,
+   "f1": 14062,
+   "scene": 5
+  },
+  {
+   "w": "berarti",
+   "start": 234.36,
+   "end": 234.74,
+   "heard": true,
+   "i": 543,
+   "f0": 14062,
+   "f1": 14084,
+   "scene": 5
+  },
+  {
+   "w": "sudah",
+   "start": 234.74,
+   "end": 235.0,
+   "heard": true,
+   "i": 544,
+   "f0": 14084,
+   "f1": 14100,
+   "scene": 5
+  },
+  {
+   "w": "bisa",
+   "start": 235.0,
+   "end": 235.28,
+   "heard": true,
+   "i": 545,
+   "f0": 14100,
+   "f1": 14117,
+   "scene": 5
+  },
+  {
+   "w": "bawa",
+   "start": 235.28,
+   "end": 235.54,
+   "heard": true,
+   "i": 546,
+   "f0": 14117,
+   "f1": 14132,
+   "scene": 5
+  },
+  {
+   "w": "pesawat.",
+   "start": 235.54,
+   "end": 236.02,
+   "heard": true,
+   "i": 547,
+   "f0": 14132,
+   "f1": 14161,
+   "scene": 5
+  },
+  {
+   "w": "Berani",
+   "start": 236.4,
+   "end": 236.88,
+   "heard": true,
+   "i": 548,
+   "f0": 14184,
+   "f1": 14213,
+   "scene": 5
+  },
+  {
+   "w": "bicara",
+   "start": 236.88,
+   "end": 237.36,
+   "heard": true,
+   "i": 549,
+   "f0": 14213,
+   "f1": 14242,
+   "scene": 5
+  },
+  {
+   "w": "soal",
+   "start": 237.36,
+   "end": 237.72,
+   "heard": true,
+   "i": 550,
+   "f0": 14242,
+   "f1": 14263,
+   "scene": 5
+  },
+  {
+   "w": "toleransi.",
+   "start": 237.72,
+   "end": 238.42,
+   "heard": true,
+   "i": 551,
+   "f0": 14263,
+   "f1": 14305,
+   "scene": 5
+  },
+  {
+   "w": "Bisa",
+   "start": 238.72,
+   "end": 239.1,
+   "heard": true,
+   "i": 552,
+   "f0": 14323,
+   "f1": 14346,
+   "scene": 5
+  },
+  {
+   "w": "mengemudikan",
+   "start": 239.1,
+   "end": 239.7,
+   "heard": false,
+   "i": 553,
+   "f0": 14346,
+   "f1": 14382,
+   "scene": 5
+  },
+  {
+   "w": "bicara",
+   "start": 239.7,
+   "end": 240.16,
+   "heard": true,
+   "i": 554,
+   "f0": 14382,
+   "f1": 14410,
+   "scene": 5
+  },
+  {
+   "w": "soal",
+   "start": 240.16,
+   "end": 240.62,
+   "heard": true,
+   "i": 555,
+   "f0": 14410,
+   "f1": 14437,
+   "scene": 5
+  },
+  {
+   "w": "kemampuan.",
+   "start": 240.62,
+   "end": 241.22,
+   "heard": true,
+   "i": 556,
+   "f0": 14437,
+   "f1": 14473,
+   "scene": 5
+  },
+  {
+   "w": "Sekarang",
+   "start": 241.22,
+   "end": 242.1,
+   "heard": true,
+   "i": 557,
+   "f0": 14473,
+   "f1": 14526,
+   "scene": 6
+  },
+  {
+   "w": "gabungkan",
+   "start": 242.1,
+   "end": 242.92,
+   "heard": true,
+   "i": 558,
+   "f0": 14526,
+   "f1": 14575,
+   "scene": 6
+  },
+  {
+   "w": "dua",
+   "start": 242.92,
+   "end": 243.24,
+   "heard": true,
+   "i": 559,
+   "f0": 14575,
+   "f1": 14594,
+   "scene": 6
+  },
+  {
+   "w": "jawaban",
+   "start": 243.24,
+   "end": 244.0,
+   "heard": true,
+   "i": 560,
+   "f0": 14594,
+   "f1": 14640,
+   "scene": 6
+  },
+  {
+   "w": "tadi.",
+   "start": 244.0,
+   "end": 244.54,
+   "heard": true,
+   "i": 561,
+   "f0": 14640,
+   "f1": 14672,
+   "scene": 6
+  },
+  {
+   "w": "Kalau",
+   "start": 244.92,
+   "end": 245.02,
+   "heard": true,
+   "i": 562,
+   "f0": 14695,
+   "f1": 14701,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 245.02,
+   "end": 245.22,
+   "heard": true,
+   "i": 563,
+   "f0": 14701,
+   "f1": 14713,
+   "scene": 6
+  },
+  {
+   "w": "belum",
+   "start": 245.22,
+   "end": 245.38,
+   "heard": true,
+   "i": 564,
+   "f0": 14713,
+   "f1": 14723,
+   "scene": 6
+  },
+  {
+   "w": "bisa",
+   "start": 245.38,
+   "end": 245.62,
+   "heard": true,
+   "i": 565,
+   "f0": 14723,
+   "f1": 14737,
+   "scene": 6
+  },
+  {
+   "w": "memilih",
+   "start": 245.62,
+   "end": 245.98,
+   "heard": true,
+   "i": 566,
+   "f0": 14737,
+   "f1": 14759,
+   "scene": 6
+  },
+  {
+   "w": "investasi",
+   "start": 245.98,
+   "end": 246.44,
+   "heard": true,
+   "i": 567,
+   "f0": 14759,
+   "f1": 14786,
+   "scene": 6
+  },
+  {
+   "w": "sendiri",
+   "start": 246.44,
+   "end": 246.78,
+   "heard": true,
+   "i": 568,
+   "f0": 14786,
+   "f1": 14807,
+   "scene": 6
+  },
+  {
+   "w": "dan",
+   "start": 246.78,
+   "end": 246.98,
+   "heard": true,
+   "i": 569,
+   "f0": 14807,
+   "f1": 14819,
+   "scene": 6
+  },
+  {
+   "w": "nggak",
+   "start": 246.98,
+   "end": 247.18,
+   "heard": true,
+   "i": 570,
+   "f0": 14819,
+   "f1": 14831,
+   "scene": 6
+  },
+  {
+   "w": "nyaman",
+   "start": 247.18,
+   "end": 247.48,
+   "heard": true,
+   "i": 571,
+   "f0": 14831,
+   "f1": 14849,
+   "scene": 6
+  },
+  {
+   "w": "dengan",
+   "start": 247.48,
+   "end": 247.82,
+   "heard": true,
+   "i": 572,
+   "f0": 14849,
+   "f1": 14869,
+   "scene": 6
+  },
+  {
+   "w": "naik-turun",
+   "start": 247.82,
+   "end": 248.32,
+   "heard": true,
+   "i": 573,
+   "f0": 14869,
+   "f1": 14899,
+   "scene": 6
+  },
+  {
+   "w": "besar,",
+   "start": 248.32,
+   "end": 248.64,
+   "heard": true,
+   "i": 574,
+   "f0": 14899,
+   "f1": 14918,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 249.06,
+   "end": 249.32,
+   "heard": true,
+   "i": 575,
+   "f0": 14944,
+   "f1": 14959,
+   "scene": 6
+  },
+  {
+   "w": "lebih",
+   "start": 249.32,
+   "end": 249.52,
+   "heard": true,
+   "i": 576,
+   "f0": 14959,
+   "f1": 14971,
+   "scene": 6
+  },
+  {
+   "w": "cocok",
+   "start": 249.52,
+   "end": 249.84,
+   "heard": true,
+   "i": 577,
+   "f0": 14971,
+   "f1": 14990,
+   "scene": 6
+  },
+  {
+   "w": "sebagai",
+   "start": 249.84,
+   "end": 250.08,
+   "heard": true,
+   "i": 578,
+   "f0": 14990,
+   "f1": 15005,
+   "scene": 6
+  },
+  {
+   "w": "penjaga",
+   "start": 250.08,
+   "end": 250.6,
+   "heard": true,
+   "i": 579,
+   "f0": 15005,
+   "f1": 15036,
+   "scene": 6
+  },
+  {
+   "w": "kestabilan.",
+   "start": 250.6,
+   "end": 251.28,
+   "heard": true,
+   "i": 580,
+   "f0": 15036,
+   "f1": 15077,
+   "scene": 6
+  },
+  {
+   "w": "Investasi",
+   "start": 251.54,
+   "end": 252.0,
+   "heard": true,
+   "i": 581,
+   "f0": 15092,
+   "f1": 15120,
+   "scene": 6
+  },
+  {
+   "w": "utama",
+   "start": 252.0,
+   "end": 252.24,
+   "heard": true,
+   "i": 582,
+   "f0": 15120,
+   "f1": 15134,
+   "scene": 6
+  },
+  {
+   "w": "bisa",
+   "start": 252.24,
+   "end": 252.46,
+   "heard": true,
+   "i": 583,
+   "f0": 15134,
+   "f1": 15148,
+   "scene": 6
+  },
+  {
+   "w": "di",
+   "start": 252.46,
+   "end": 252.7,
+   "heard": true,
+   "i": 584,
+   "f0": 15148,
+   "f1": 15162,
+   "scene": 6
+  },
+  {
+   "w": "instrumen",
+   "start": 252.7,
+   "end": 253.04,
+   "heard": false,
+   "i": 585,
+   "f0": 15162,
+   "f1": 15182,
+   "scene": 6
+  },
+  {
+   "w": "yang",
+   "start": 253.04,
+   "end": 253.36,
+   "heard": true,
+   "i": 586,
+   "f0": 15182,
+   "f1": 15202,
+   "scene": 6
+  },
+  {
+   "w": "relatif",
+   "start": 253.36,
+   "end": 253.76,
+   "heard": true,
+   "i": 587,
+   "f0": 15202,
+   "f1": 15226,
+   "scene": 6
+  },
+  {
+   "w": "stabil,",
+   "start": 253.76,
+   "end": 254.06,
+   "heard": true,
+   "i": 588,
+   "f0": 15226,
+   "f1": 15244,
+   "scene": 6
+  },
+  {
+   "w": "sementara",
+   "start": 254.36,
+   "end": 254.84,
+   "heard": true,
+   "i": 589,
+   "f0": 15262,
+   "f1": 15290,
+   "scene": 6
+  },
+  {
+   "w": "reksa",
+   "start": 254.84,
+   "end": 255.28,
+   "heard": true,
+   "i": 590,
+   "f0": 15290,
+   "f1": 15317,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 255.28,
+   "end": 255.44,
+   "heard": true,
+   "i": 591,
+   "f0": 15317,
+   "f1": 15326,
+   "scene": 6
+  },
+  {
+   "w": "indeks",
+   "start": 255.44,
+   "end": 255.72,
+   "heard": false,
+   "i": 592,
+   "f0": 15326,
+   "f1": 15343,
+   "scene": 6
+  },
+  {
+   "w": "jadi",
+   "start": 255.72,
+   "end": 255.98,
+   "heard": true,
+   "i": 593,
+   "f0": 15343,
+   "f1": 15359,
+   "scene": 6
+  },
+  {
+   "w": "langkah",
+   "start": 255.98,
+   "end": 256.3,
+   "heard": true,
+   "i": 594,
+   "f0": 15359,
+   "f1": 15378,
+   "scene": 6
+  },
+  {
+   "w": "berikutnya.",
+   "start": 256.3,
+   "end": 256.88,
+   "heard": true,
+   "i": 595,
+   "f0": 15378,
+   "f1": 15413,
+   "scene": 6
+  },
+  {
+   "w": "Kalau",
+   "start": 257.14,
+   "end": 257.38,
+   "heard": true,
+   "i": 596,
+   "f0": 15428,
+   "f1": 15443,
+   "scene": 6
+  },
+  {
+   "w": "belum",
+   "start": 257.38,
+   "end": 257.6,
+   "heard": true,
+   "i": 597,
+   "f0": 15443,
+   "f1": 15456,
+   "scene": 6
+  },
+  {
+   "w": "siap",
+   "start": 257.6,
+   "end": 257.84,
+   "heard": true,
+   "i": 598,
+   "f0": 15456,
+   "f1": 15470,
+   "scene": 6
+  },
+  {
+   "w": "memilih",
+   "start": 257.84,
+   "end": 258.22,
+   "heard": true,
+   "i": 599,
+   "f0": 15470,
+   "f1": 15493,
+   "scene": 6
+  },
+  {
+   "w": "saham",
+   "start": 258.22,
+   "end": 258.44,
+   "heard": true,
+   "i": 600,
+   "f0": 15493,
+   "f1": 15506,
+   "scene": 6
+  },
+  {
+   "w": "sendiri,",
+   "start": 258.44,
+   "end": 258.8,
+   "heard": true,
+   "i": 601,
+   "f0": 15506,
+   "f1": 15528,
+   "scene": 6
+  },
+  {
+   "w": "tapi",
+   "start": 259.34,
+   "end": 259.56,
+   "heard": true,
+   "i": 602,
+   "f0": 15560,
+   "f1": 15574,
+   "scene": 6
+  },
+  {
+   "w": "cukup",
+   "start": 259.56,
+   "end": 259.86,
+   "heard": true,
+   "i": 603,
+   "f0": 15574,
+   "f1": 15592,
+   "scene": 6
+  },
+  {
+   "w": "nyaman",
+   "start": 259.86,
+   "end": 260.1,
+   "heard": true,
+   "i": 604,
+   "f0": 15592,
+   "f1": 15606,
+   "scene": 6
+  },
+  {
+   "w": "dengan",
+   "start": 260.1,
+   "end": 260.4,
+   "heard": true,
+   "i": 605,
+   "f0": 15606,
+   "f1": 15624,
+   "scene": 6
+  },
+  {
+   "w": "naik-turun",
+   "start": 260.4,
+   "end": 260.94,
+   "heard": true,
+   "i": 606,
+   "f0": 15624,
+   "f1": 15656,
+   "scene": 6
+  },
+  {
+   "w": "harga,",
+   "start": 260.94,
+   "end": 261.3,
+   "heard": true,
+   "i": 607,
+   "f0": 15656,
+   "f1": 15678,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 261.62,
+   "end": 261.98,
+   "heard": true,
+   "i": 608,
+   "f0": 15697,
+   "f1": 15719,
+   "scene": 6
+  },
+  {
+   "w": "lebih",
+   "start": 261.98,
+   "end": 262.32,
+   "heard": true,
+   "i": 609,
+   "f0": 15719,
+   "f1": 15739,
+   "scene": 6
+  },
+  {
+   "w": "dekat",
+   "start": 262.32,
+   "end": 262.74,
+   "heard": true,
+   "i": 610,
+   "f0": 15739,
+   "f1": 15764,
+   "scene": 6
+  },
+  {
+   "w": "dengan",
+   "start": 262.74,
+   "end": 263.12,
+   "heard": true,
+   "i": 611,
+   "f0": 15764,
+   "f1": 15787,
+   "scene": 6
+  },
+  {
+   "w": "compounder",
+   "start": 263.12,
+   "end": 263.74,
+   "heard": false,
+   "i": 612,
+   "f0": 15787,
+   "f1": 15824,
+   "scene": 6
+  },
+  {
+   "w": "yang",
+   "start": 263.74,
+   "end": 264.04,
+   "heard": true,
+   "i": 613,
+   "f0": 15824,
+   "f1": 15842,
+   "scene": 6
+  },
+  {
+   "w": "stabil.",
+   "start": 264.04,
+   "end": 264.42,
+   "heard": true,
+   "i": 614,
+   "f0": 15842,
+   "f1": 15865,
+   "scene": 6
+  },
+  {
+   "w": "Investasi",
+   "start": 264.88,
+   "end": 265.46,
+   "heard": true,
+   "i": 615,
+   "f0": 15893,
+   "f1": 15928,
+   "scene": 6
+  },
+  {
+   "w": "utama",
+   "start": 265.46,
+   "end": 265.82,
+   "heard": true,
+   "i": 616,
+   "f0": 15928,
+   "f1": 15949,
+   "scene": 6
+  },
+  {
+   "w": "bisa",
+   "start": 265.82,
+   "end": 266.2,
+   "heard": true,
+   "i": 617,
+   "f0": 15949,
+   "f1": 15972,
+   "scene": 6
+  },
+  {
+   "w": "di",
+   "start": 266.2,
+   "end": 266.4,
+   "heard": true,
+   "i": 618,
+   "f0": 15972,
+   "f1": 15984,
+   "scene": 6
+  },
+  {
+   "w": "reksa",
+   "start": 266.4,
+   "end": 266.72,
+   "heard": true,
+   "i": 619,
+   "f0": 15984,
+   "f1": 16003,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 266.72,
+   "end": 266.94,
+   "heard": true,
+   "i": 620,
+   "f0": 16003,
+   "f1": 16016,
+   "scene": 6
+  },
+  {
+   "w": "indeks,",
+   "start": 266.94,
+   "end": 267.6,
+   "heard": false,
+   "i": 621,
+   "f0": 16016,
+   "f1": 16056,
+   "scene": 6
+  },
+  {
+   "w": "lalu",
+   "start": 267.6,
+   "end": 267.88,
+   "heard": true,
+   "i": 622,
+   "f0": 16056,
+   "f1": 16073,
+   "scene": 6
+  },
+  {
+   "w": "reksa",
+   "start": 267.88,
+   "end": 268.26,
+   "heard": true,
+   "i": 623,
+   "f0": 16073,
+   "f1": 16096,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 268.26,
+   "end": 268.46,
+   "heard": true,
+   "i": 624,
+   "f0": 16096,
+   "f1": 16108,
+   "scene": 6
+  },
+  {
+   "w": "saham",
+   "start": 268.46,
+   "end": 268.92,
+   "heard": true,
+   "i": 625,
+   "f0": 16108,
+   "f1": 16135,
+   "scene": 6
+  },
+  {
+   "w": "jadi",
+   "start": 268.92,
+   "end": 269.28,
+   "heard": true,
+   "i": 626,
+   "f0": 16135,
+   "f1": 16157,
+   "scene": 6
+  },
+  {
+   "w": "pilihan",
+   "start": 269.28,
+   "end": 269.86,
+   "heard": true,
+   "i": 627,
+   "f0": 16157,
+   "f1": 16192,
+   "scene": 6
+  },
+  {
+   "w": "untuk",
+   "start": 269.86,
+   "end": 270.1,
+   "heard": true,
+   "i": 628,
+   "f0": 16192,
+   "f1": 16206,
+   "scene": 6
+  },
+  {
+   "w": "naik",
+   "start": 270.1,
+   "end": 270.4,
+   "heard": true,
+   "i": 629,
+   "f0": 16206,
+   "f1": 16224,
+   "scene": 6
+  },
+  {
+   "w": "level.",
+   "start": 270.4,
+   "end": 270.74,
+   "heard": true,
+   "i": 630,
+   "f0": 16224,
+   "f1": 16244,
+   "scene": 6
+  },
+  {
+   "w": "Kalau",
+   "start": 270.74,
+   "end": 271.4,
+   "heard": true,
+   "i": 631,
+   "f0": 16244,
+   "f1": 16284,
+   "scene": 6
+  },
+  {
+   "w": "ingin",
+   "start": 271.4,
+   "end": 271.6,
+   "heard": true,
+   "i": 632,
+   "f0": 16284,
+   "f1": 16296,
+   "scene": 6
+  },
+  {
+   "w": "belajar",
+   "start": 271.6,
+   "end": 271.9,
+   "heard": true,
+   "i": 633,
+   "f0": 16296,
+   "f1": 16314,
+   "scene": 6
+  },
+  {
+   "w": "saham,",
+   "start": 271.9,
+   "end": 272.32,
+   "heard": true,
+   "i": 634,
+   "f0": 16314,
+   "f1": 16339,
+   "scene": 6
+  },
+  {
+   "w": "gunakan",
+   "start": 272.46,
+   "end": 272.7,
+   "heard": true,
+   "i": 635,
+   "f0": 16348,
+   "f1": 16362,
+   "scene": 6
+  },
+  {
+   "w": "sebagian",
+   "start": 272.7,
+   "end": 273.22,
+   "heard": true,
+   "i": 636,
+   "f0": 16362,
+   "f1": 16393,
+   "scene": 6
+  },
+  {
+   "w": "kecil",
+   "start": 273.22,
+   "end": 273.52,
+   "heard": true,
+   "i": 637,
+   "f0": 16393,
+   "f1": 16411,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 273.52,
+   "end": 273.82,
+   "heard": true,
+   "i": 638,
+   "f0": 16411,
+   "f1": 16429,
+   "scene": 6
+  },
+  {
+   "w": "untuk",
+   "start": 273.82,
+   "end": 274.32,
+   "heard": true,
+   "i": 639,
+   "f0": 16429,
+   "f1": 16459,
+   "scene": 6
+  },
+  {
+   "w": "latihan.",
+   "start": 274.32,
+   "end": 275.04,
+   "heard": true,
+   "i": 640,
+   "f0": 16459,
+   "f1": 16502,
+   "scene": 6
+  },
+  {
+   "w": "Kalau",
+   "start": 275.8,
+   "end": 276.06,
+   "heard": true,
+   "i": 641,
+   "f0": 16548,
+   "f1": 16564,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 276.06,
+   "end": 276.24,
+   "heard": true,
+   "i": 642,
+   "f0": 16564,
+   "f1": 16574,
+   "scene": 6
+  },
+  {
+   "w": "sudah",
+   "start": 276.24,
+   "end": 276.38,
+   "heard": true,
+   "i": 643,
+   "f0": 16574,
+   "f1": 16583,
+   "scene": 6
+  },
+  {
+   "w": "punya",
+   "start": 276.38,
+   "end": 276.56,
+   "heard": true,
+   "i": 644,
+   "f0": 16583,
+   "f1": 16594,
+   "scene": 6
+  },
+  {
+   "w": "kemampuan",
+   "start": 276.56,
+   "end": 276.94,
+   "heard": true,
+   "i": 645,
+   "f0": 16594,
+   "f1": 16616,
+   "scene": 6
+  },
+  {
+   "w": "dan",
+   "start": 276.94,
+   "end": 277.12,
+   "heard": true,
+   "i": 646,
+   "f0": 16616,
+   "f1": 16627,
+   "scene": 6
+  },
+  {
+   "w": "sanggup",
+   "start": 277.12,
+   "end": 277.46,
+   "heard": true,
+   "i": 647,
+   "f0": 16627,
+   "f1": 16648,
+   "scene": 6
+  },
+  {
+   "w": "menghadapi",
+   "start": 277.46,
+   "end": 277.88,
+   "heard": true,
+   "i": 648,
+   "f0": 16648,
+   "f1": 16673,
+   "scene": 6
+  },
+  {
+   "w": "naik-turun",
+   "start": 277.88,
+   "end": 278.32,
+   "heard": true,
+   "i": 649,
+   "f0": 16673,
+   "f1": 16699,
+   "scene": 6
+  },
+  {
+   "w": "besar,",
+   "start": 278.32,
+   "end": 278.6,
+   "heard": true,
+   "i": 650,
+   "f0": 16699,
+   "f1": 16716,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 279.02,
+   "end": 279.2,
+   "heard": true,
+   "i": 651,
+   "f0": 16741,
+   "f1": 16752,
+   "scene": 6
+  },
+  {
+   "w": "lebih",
+   "start": 279.2,
+   "end": 279.42,
+   "heard": true,
+   "i": 652,
+   "f0": 16752,
+   "f1": 16765,
+   "scene": 6
+  },
+  {
+   "w": "dekat",
+   "start": 279.42,
+   "end": 279.76,
+   "heard": true,
+   "i": 653,
+   "f0": 16765,
+   "f1": 16786,
+   "scene": 6
+  },
+  {
+   "w": "dengan",
+   "start": 279.76,
+   "end": 280.12,
+   "heard": true,
+   "i": 654,
+   "f0": 16786,
+   "f1": 16807,
+   "scene": 6
+  },
+  {
+   "w": "strategic",
+   "start": 280.12,
+   "end": 280.88,
+   "heard": false,
+   "i": 655,
+   "f0": 16807,
+   "f1": 16853,
+   "scene": 6
+  },
+  {
+   "w": "investor.",
+   "start": 280.88,
+   "end": 281.3,
+   "heard": true,
+   "i": 656,
+   "f0": 16853,
+   "f1": 16878,
+   "scene": 6
+  },
+  {
+   "w": "Saham",
+   "start": 281.96,
+   "end": 282.3,
+   "heard": true,
+   "i": 657,
+   "f0": 16918,
+   "f1": 16938,
+   "scene": 6
+  },
+  {
+   "w": "bisa",
+   "start": 282.3,
+   "end": 282.46,
+   "heard": true,
+   "i": 658,
+   "f0": 16938,
+   "f1": 16948,
+   "scene": 6
+  },
+  {
+   "w": "jadi",
+   "start": 282.46,
+   "end": 282.76,
+   "heard": true,
+   "i": 659,
+   "f0": 16948,
+   "f1": 16966,
+   "scene": 6
+  },
+  {
+   "w": "investasi",
+   "start": 282.76,
+   "end": 283.24,
+   "heard": true,
+   "i": 660,
+   "f0": 16966,
+   "f1": 16994,
+   "scene": 6
+  },
+  {
+   "w": "utama,",
+   "start": 283.24,
+   "end": 283.72,
+   "heard": true,
+   "i": 661,
+   "f0": 16994,
+   "f1": 17023,
+   "scene": 6
+  },
+  {
+   "w": "tapi",
+   "start": 284.02,
+   "end": 284.36,
+   "heard": true,
+   "i": 662,
+   "f0": 17041,
+   "f1": 17062,
+   "scene": 6
+  },
+  {
+   "w": "tetap",
+   "start": 284.36,
+   "end": 284.86,
+   "heard": true,
+   "i": 663,
+   "f0": 17062,
+   "f1": 17092,
+   "scene": 6
+  },
+  {
+   "w": "sisakan",
+   "start": 284.86,
+   "end": 285.16,
+   "heard": true,
+   "i": 664,
+   "f0": 17092,
+   "f1": 17110,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 285.16,
+   "end": 285.5,
+   "heard": true,
+   "i": 665,
+   "f0": 17110,
+   "f1": 17130,
+   "scene": 6
+  },
+  {
+   "w": "yang",
+   "start": 285.5,
+   "end": 285.78,
+   "heard": true,
+   "i": 666,
+   "f0": 17130,
+   "f1": 17147,
+   "scene": 6
+  },
+  {
+   "w": "lebih",
+   "start": 285.78,
+   "end": 286.0,
+   "heard": true,
+   "i": 667,
+   "f0": 17147,
+   "f1": 17160,
+   "scene": 6
+  },
+  {
+   "w": "stabil",
+   "start": 286.0,
+   "end": 286.46,
+   "heard": true,
+   "i": 668,
+   "f0": 17160,
+   "f1": 17188,
+   "scene": 6
+  },
+  {
+   "w": "sebagai",
+   "start": 286.46,
+   "end": 286.84,
+   "heard": true,
+   "i": 669,
+   "f0": 17188,
+   "f1": 17210,
+   "scene": 6
+  },
+  {
+   "w": "cadangan,",
+   "start": 286.84,
+   "end": 287.5,
+   "heard": true,
+   "i": 670,
+   "f0": 17210,
+   "f1": 17250,
+   "scene": 6
+  },
+  {
+   "w": "termasuk",
+   "start": 287.88,
+   "end": 288.3,
+   "heard": true,
+   "i": 671,
+   "f0": 17273,
+   "f1": 17298,
+   "scene": 6
+  },
+  {
+   "w": "saat",
+   "start": 288.3,
+   "end": 288.56,
+   "heard": true,
+   "i": 672,
+   "f0": 17298,
+   "f1": 17314,
+   "scene": 6
+  },
+  {
+   "w": "market",
+   "start": 288.56,
+   "end": 289.1,
+   "heard": true,
+   "i": 673,
+   "f0": 17314,
+   "f1": 17346,
+   "scene": 6
+  },
+  {
+   "w": "terasa",
+   "start": 289.1,
+   "end": 289.54,
+   "heard": true,
+   "i": 674,
+   "f0": 17346,
+   "f1": 17372,
+   "scene": 6
+  },
+  {
+   "w": "terlalu",
+   "start": 289.54,
+   "end": 289.96,
+   "heard": true,
+   "i": 675,
+   "f0": 17372,
+   "f1": 17398,
+   "scene": 6
+  },
+  {
+   "w": "mahal.",
+   "start": 289.96,
+   "end": 290.4,
+   "heard": true,
+   "i": 676,
+   "f0": 17398,
+   "f1": 17424,
+   "scene": 6
+  },
+  {
+   "w": "Jadi",
+   "start": 290.72,
+   "end": 290.94,
+   "heard": true,
+   "i": 677,
+   "f0": 17443,
+   "f1": 17456,
+   "scene": 6
+  },
+  {
+   "w": "prinsipnya",
+   "start": 290.94,
+   "end": 291.34,
+   "heard": false,
+   "i": 678,
+   "f0": 17456,
+   "f1": 17480,
+   "scene": 6
+  },
+  {
+   "w": "sederhana:",
+   "start": 291.34,
+   "end": 291.74,
+   "heard": true,
+   "i": 679,
+   "f0": 17480,
+   "f1": 17504,
+   "scene": 6
+  },
+  {
+   "w": "sebagian",
+   "start": 291.96,
+   "end": 292.22,
+   "heard": true,
+   "i": 680,
+   "f0": 17518,
+   "f1": 17533,
+   "scene": 6
+  },
+  {
+   "w": "besar",
+   "start": 292.22,
+   "end": 292.46,
+   "heard": true,
+   "i": 681,
+   "f0": 17533,
+   "f1": 17548,
+   "scene": 6
+  },
+  {
+   "w": "dana",
+   "start": 292.46,
+   "end": 292.84,
+   "heard": true,
+   "i": 682,
+   "f0": 17548,
+   "f1": 17570,
+   "scene": 6
+  },
+  {
+   "w": "untuk",
+   "start": 292.84,
+   "end": 293.16,
+   "heard": true,
+   "i": 683,
+   "f0": 17570,
+   "f1": 17590,
+   "scene": 6
+  },
+  {
+   "w": "yang",
+   "start": 293.16,
+   "end": 293.36,
+   "heard": true,
+   "i": 684,
+   "f0": 17590,
+   "f1": 17602,
+   "scene": 6
+  },
+  {
+   "w": "sudah",
+   "start": 293.36,
+   "end": 293.58,
+   "heard": true,
+   "i": 685,
+   "f0": 17602,
+   "f1": 17615,
+   "scene": 6
+  },
+  {
+   "w": "cocok",
+   "start": 293.58,
+   "end": 294.04,
+   "heard": true,
+   "i": 686,
+   "f0": 17615,
+   "f1": 17642,
+   "scene": 6
+  },
+  {
+   "w": "dan",
+   "start": 294.04,
+   "end": 294.24,
+   "heard": true,
+   "i": 687,
+   "f0": 17642,
+   "f1": 17654,
+   "scene": 6
+  },
+  {
+   "w": "kamu",
+   "start": 294.24,
+   "end": 294.48,
+   "heard": true,
+   "i": 688,
+   "f0": 17654,
+   "f1": 17669,
+   "scene": 6
+  },
+  {
+   "w": "kuasai,",
+   "start": 294.48,
+   "end": 294.96,
+   "heard": true,
+   "i": 689,
+   "f0": 17669,
+   "f1": 17698,
+   "scene": 6
+  },
+  {
+   "w": "sebagian",
+   "start": 295.12,
+   "end": 295.82,
+   "heard": true,
+   "i": 690,
+   "f0": 17707,
+   "f1": 17749,
+   "scene": 6
+  },
+  {
+   "w": "kecil",
+   "start": 295.82,
+   "end": 296.16,
+   "heard": true,
+   "i": 691,
+   "f0": 17749,
+   "f1": 17770,
+   "scene": 6
+  },
+  {
+   "w": "untuk",
+   "start": 296.16,
+   "end": 296.4,
+   "heard": true,
+   "i": 692,
+   "f0": 17770,
+   "f1": 17784,
+   "scene": 6
+  },
+  {
+   "w": "belajar",
+   "start": 296.4,
+   "end": 296.88,
+   "heard": true,
+   "i": 693,
+   "f0": 17784,
+   "f1": 17813,
+   "scene": 6
+  },
+  {
+   "w": "dan",
+   "start": 296.88,
+   "end": 297.08,
+   "heard": true,
+   "i": 694,
+   "f0": 17813,
+   "f1": 17825,
+   "scene": 6
+  },
+  {
+   "w": "berkembang.",
+   "start": 297.08,
+   "end": 297.56,
+   "heard": true,
+   "i": 695,
+   "f0": 17825,
+   "f1": 17854,
+   "scene": 6
+  },
+  {
+   "w": "Nggak",
+   "start": 297.56,
+   "end": 298.06,
+   "heard": true,
+   "i": 696,
+   "f0": 17854,
+   "f1": 17884,
+   "scene": 6
+  },
+  {
+   "w": "perlu",
+   "start": 298.06,
+   "end": 298.3,
+   "heard": true,
+   "i": 697,
+   "f0": 17884,
+   "f1": 17898,
+   "scene": 6
+  },
+  {
+   "w": "membawa",
+   "start": 298.3,
+   "end": 298.7,
+   "heard": true,
+   "i": 698,
+   "f0": 17898,
+   "f1": 17922,
+   "scene": 6
+  },
+  {
+   "w": "semua",
+   "start": 298.7,
+   "end": 298.94,
+   "heard": true,
+   "i": 699,
+   "f0": 17922,
+   "f1": 17936,
+   "scene": 6
+  },
+  {
+   "w": "uang",
+   "start": 298.94,
+   "end": 299.36,
+   "heard": true,
+   "i": 700,
+   "f0": 17936,
+   "f1": 17962,
+   "scene": 6
+  },
+  {
+   "w": "ke",
+   "start": 299.36,
+   "end": 299.5,
+   "heard": true,
+   "i": 701,
+   "f0": 17962,
+   "f1": 17970,
+   "scene": 6
+  },
+  {
+   "w": "satu",
+   "start": 299.5,
+   "end": 299.72,
+   "heard": true,
+   "i": 702,
+   "f0": 17970,
+   "f1": 17983,
+   "scene": 6
+  },
+  {
+   "w": "pesawat.",
+   "start": 299.72,
+   "end": 300.14,
+   "heard": true,
+   "i": 703,
+   "f0": 17983,
+   "f1": 18008,
+   "scene": 6
+  },
+  {
+   "w": "Dan",
+   "start": 300.32,
+   "end": 300.84,
+   "heard": true,
+   "i": 704,
+   "f0": 18019,
+   "f1": 18050,
+   "scene": 7
+  },
+  {
+   "w": "profil",
+   "start": 300.84,
+   "end": 301.28,
+   "heard": true,
+   "i": 705,
+   "f0": 18050,
+   "f1": 18077,
+   "scene": 7
+  },
+  {
+   "w": "kita",
+   "start": 301.28,
+   "end": 301.56,
+   "heard": true,
+   "i": 706,
+   "f0": 18077,
+   "f1": 18094,
+   "scene": 7
+  },
+  {
+   "w": "nggak",
+   "start": 301.56,
+   "end": 302.12,
+   "heard": true,
+   "i": 707,
+   "f0": 18094,
+   "f1": 18127,
+   "scene": 7
+  },
+  {
+   "w": "selalu",
+   "start": 302.12,
+   "end": 302.52,
+   "heard": true,
+   "i": 708,
+   "f0": 18127,
+   "f1": 18151,
+   "scene": 7
+  },
+  {
+   "w": "sama",
+   "start": 302.52,
+   "end": 302.78,
+   "heard": true,
+   "i": 709,
+   "f0": 18151,
+   "f1": 18167,
+   "scene": 7
+  },
+  {
+   "w": "selamanya.",
+   "start": 302.78,
+   "end": 303.5,
+   "heard": true,
+   "i": 710,
+   "f0": 18167,
+   "f1": 18210,
+   "scene": 7
+  },
+  {
+   "w": "Umur",
+   "start": 303.76,
+   "end": 304.14,
+   "heard": true,
+   "i": 711,
+   "f0": 18226,
+   "f1": 18248,
+   "scene": 7
+  },
+  {
+   "w": "22,",
+   "start": 304.14,
+   "end": 304.54,
+   "heard": true,
+   "i": 712,
+   "f0": 18248,
+   "f1": 18272,
+   "scene": 7
+  },
+  {
+   "w": "baru",
+   "start": 304.54,
+   "end": 305.2,
+   "heard": true,
+   "i": 713,
+   "f0": 18272,
+   "f1": 18312,
+   "scene": 7
+  },
+  {
+   "w": "mulai",
+   "start": 305.2,
+   "end": 305.56,
+   "heard": true,
+   "i": 714,
+   "f0": 18312,
+   "f1": 18334,
+   "scene": 7
+  },
+  {
+   "w": "kerja.",
+   "start": 305.56,
+   "end": 305.94,
+   "heard": true,
+   "i": 715,
+   "f0": 18334,
+   "f1": 18356,
+   "scene": 7
+  },
+  {
+   "w": "Dana",
+   "start": 306.22,
+   "end": 306.42,
+   "heard": true,
+   "i": 716,
+   "f0": 18373,
+   "f1": 18385,
+   "scene": 7
+  },
+  {
+   "w": "belum",
+   "start": 306.42,
+   "end": 306.6,
+   "heard": true,
+   "i": 717,
+   "f0": 18385,
+   "f1": 18396,
+   "scene": 7
+  },
+  {
+   "w": "banyak,",
+   "start": 306.6,
+   "end": 306.98,
+   "heard": true,
+   "i": 718,
+   "f0": 18396,
+   "f1": 18419,
+   "scene": 7
+  },
+  {
+   "w": "pengalaman",
+   "start": 306.98,
+   "end": 307.5,
+   "heard": true,
+   "i": 719,
+   "f0": 18419,
+   "f1": 18450,
+   "scene": 7
+  },
+  {
+   "w": "juga",
+   "start": 307.5,
+   "end": 307.7,
+   "heard": true,
+   "i": 720,
+   "f0": 18450,
+   "f1": 18462,
+   "scene": 7
+  },
+  {
+   "w": "masih",
+   "start": 307.7,
+   "end": 307.94,
+   "heard": true,
+   "i": 721,
+   "f0": 18462,
+   "f1": 18476,
+   "scene": 7
+  },
+  {
+   "w": "sedikit.",
+   "start": 307.94,
+   "end": 308.38,
+   "heard": true,
+   "i": 722,
+   "f0": 18476,
+   "f1": 18503,
+   "scene": 7
+  },
+  {
+   "w": "Fokusnya:",
+   "start": 308.72,
+   "end": 309.34,
+   "heard": true,
+   "i": 723,
+   "f0": 18523,
+   "f1": 18560,
+   "scene": 7
+  },
+  {
+   "w": "belajar",
+   "start": 309.34,
+   "end": 310.04,
+   "heard": true,
+   "i": 724,
+   "f0": 18560,
+   "f1": 18602,
+   "scene": 7
+  },
+  {
+   "w": "dulu.",
+   "start": 310.04,
+   "end": 310.34,
+   "heard": true,
+   "i": 725,
+   "f0": 18602,
+   "f1": 18620,
+   "scene": 7
+  },
+  {
+   "w": "Umur",
+   "start": 310.78,
+   "end": 311.06,
+   "heard": true,
+   "i": 726,
+   "f0": 18647,
+   "f1": 18664,
+   "scene": 7
+  },
+  {
+   "w": "30,",
+   "start": 311.06,
+   "end": 311.36,
+   "heard": true,
+   "i": 727,
+   "f0": 18664,
+   "f1": 18682,
+   "scene": 7
+  },
+  {
+   "w": "mulai",
+   "start": 312.04,
+   "end": 312.5,
+   "heard": true,
+   "i": 728,
+   "f0": 18722,
+   "f1": 18750,
+   "scene": 7
+  },
+  {
+   "w": "berkeluarga",
+   "start": 312.5,
+   "end": 313.06,
+   "heard": true,
+   "i": 729,
+   "f0": 18750,
+   "f1": 18784,
+   "scene": 7
+  },
+  {
+   "w": "atau",
+   "start": 313.06,
+   "end": 313.46,
+   "heard": true,
+   "i": 730,
+   "f0": 18784,
+   "f1": 18808,
+   "scene": 7
+  },
+  {
+   "w": "menyiapkan",
+   "start": 313.46,
+   "end": 313.94,
+   "heard": true,
+   "i": 731,
+   "f0": 18808,
+   "f1": 18836,
+   "scene": 7
+  },
+  {
+   "w": "rumah.",
+   "start": 313.94,
+   "end": 314.2,
+   "heard": true,
+   "i": 732,
+   "f0": 18836,
+   "f1": 18852,
+   "scene": 7
+  },
+  {
+   "w": "Dana",
+   "start": 314.78,
+   "end": 315.14,
+   "heard": true,
+   "i": 733,
+   "f0": 18887,
+   "f1": 18908,
+   "scene": 7
+  },
+  {
+   "w": "mungkin",
+   "start": 315.14,
+   "end": 315.4,
+   "heard": true,
+   "i": 734,
+   "f0": 18908,
+   "f1": 18924,
+   "scene": 7
+  },
+  {
+   "w": "lebih",
+   "start": 315.4,
+   "end": 315.6,
+   "heard": true,
+   "i": 735,
+   "f0": 18924,
+   "f1": 18936,
+   "scene": 7
+  },
+  {
+   "w": "besar,",
+   "start": 315.6,
+   "end": 315.98,
+   "heard": true,
+   "i": 736,
+   "f0": 18936,
+   "f1": 18959,
+   "scene": 7
+  },
+  {
+   "w": "tapi",
+   "start": 316.24,
+   "end": 316.52,
+   "heard": true,
+   "i": 737,
+   "f0": 18974,
+   "f1": 18991,
+   "scene": 7
+  },
+  {
+   "w": "toleransi",
+   "start": 316.52,
+   "end": 317.1,
+   "heard": true,
+   "i": 738,
+   "f0": 18991,
+   "f1": 19026,
+   "scene": 7
+  },
+  {
+   "w": "terhadap",
+   "start": 317.1,
+   "end": 317.44,
+   "heard": true,
+   "i": 739,
+   "f0": 19026,
+   "f1": 19046,
+   "scene": 7
+  },
+  {
+   "w": "penurunan",
+   "start": 317.44,
+   "end": 317.96,
+   "heard": true,
+   "i": 740,
+   "f0": 19046,
+   "f1": 19078,
+   "scene": 7
+  },
+  {
+   "w": "bisa",
+   "start": 317.96,
+   "end": 318.22,
+   "heard": true,
+   "i": 741,
+   "f0": 19078,
+   "f1": 19093,
+   "scene": 7
+  },
+  {
+   "w": "mengecil",
+   "start": 318.22,
+   "end": 318.72,
+   "heard": true,
+   "i": 742,
+   "f0": 19093,
+   "f1": 19123,
+   "scene": 7
+  },
+  {
+   "w": "karena",
+   "start": 318.72,
+   "end": 319.06,
+   "heard": true,
+   "i": 743,
+   "f0": 19123,
+   "f1": 19144,
+   "scene": 7
+  },
+  {
+   "w": "uangnya",
+   "start": 319.06,
+   "end": 319.64,
+   "heard": true,
+   "i": 744,
+   "f0": 19144,
+   "f1": 19178,
+   "scene": 7
+  },
+  {
+   "w": "akan",
+   "start": 319.64,
+   "end": 319.86,
+   "heard": true,
+   "i": 745,
+   "f0": 19178,
+   "f1": 19192,
+   "scene": 7
+  },
+  {
+   "w": "segera",
+   "start": 319.86,
+   "end": 320.26,
+   "heard": true,
+   "i": 746,
+   "f0": 19192,
+   "f1": 19216,
+   "scene": 7
+  },
+  {
+   "w": "dipakai.",
+   "start": 320.26,
+   "end": 320.82,
+   "heard": true,
+   "i": 747,
+   "f0": 19216,
+   "f1": 19249,
+   "scene": 7
+  },
+  {
+   "w": "Umur",
+   "start": 321.2,
+   "end": 321.58,
+   "heard": true,
+   "i": 748,
+   "f0": 19272,
+   "f1": 19295,
+   "scene": 7
+  },
+  {
+   "w": "40,",
+   "start": 321.58,
+   "end": 321.96,
+   "heard": true,
+   "i": 749,
+   "f0": 19295,
+   "f1": 19318,
+   "scene": 7
+  },
+  {
+   "w": "karier",
+   "start": 322.5,
+   "end": 323.2,
+   "heard": true,
+   "i": 750,
+   "f0": 19350,
+   "f1": 19392,
+   "scene": 7
+  },
+  {
+   "w": "dan",
+   "start": 323.2,
+   "end": 323.38,
+   "heard": true,
+   "i": 751,
+   "f0": 19392,
+   "f1": 19403,
+   "scene": 7
+  },
+  {
+   "w": "pengalaman",
+   "start": 323.38,
+   "end": 323.86,
+   "heard": true,
+   "i": 752,
+   "f0": 19403,
+   "f1": 19432,
+   "scene": 7
+  },
+  {
+   "w": "lebih",
+   "start": 323.86,
+   "end": 324.2,
+   "heard": true,
+   "i": 753,
+   "f0": 19432,
+   "f1": 19452,
+   "scene": 7
+  },
+  {
+   "w": "matang.",
+   "start": 324.2,
+   "end": 324.64,
+   "heard": true,
+   "i": 754,
+   "f0": 19452,
+   "f1": 19478,
+   "scene": 7
+  },
+  {
+   "w": "Kemampuan",
+   "start": 324.9,
+   "end": 325.22,
+   "heard": true,
+   "i": 755,
+   "f0": 19494,
+   "f1": 19513,
+   "scene": 7
+  },
+  {
+   "w": "meningkat,",
+   "start": 325.22,
+   "end": 325.64,
+   "heard": true,
+   "i": 756,
+   "f0": 19513,
+   "f1": 19538,
+   "scene": 7
+  },
+  {
+   "w": "tapi",
+   "start": 325.64,
+   "end": 326.08,
+   "heard": true,
+   "i": 757,
+   "f0": 19538,
+   "f1": 19565,
+   "scene": 7
+  },
+  {
+   "w": "tujuan",
+   "start": 326.08,
+   "end": 326.44,
+   "heard": true,
+   "i": 758,
+   "f0": 19565,
+   "f1": 19586,
+   "scene": 7
+  },
+  {
+   "w": "juga",
+   "start": 326.44,
+   "end": 326.62,
+   "heard": true,
+   "i": 759,
+   "f0": 19586,
+   "f1": 19597,
+   "scene": 7
+  },
+  {
+   "w": "berubah:",
+   "start": 326.62,
+   "end": 327.06,
+   "heard": true,
+   "i": 760,
+   "f0": 19597,
+   "f1": 19624,
+   "scene": 7
+  },
+  {
+   "w": "pendidikan",
+   "start": 327.06,
+   "end": 327.78,
+   "heard": true,
+   "i": 761,
+   "f0": 19624,
+   "f1": 19667,
+   "scene": 7
+  },
+  {
+   "w": "anak,",
+   "start": 327.78,
+   "end": 328.14,
+   "heard": true,
+   "i": 762,
+   "f0": 19667,
+   "f1": 19688,
+   "scene": 7
+  },
+  {
+   "w": "orang",
+   "start": 328.38,
+   "end": 328.48,
+   "heard": true,
+   "i": 763,
+   "f0": 19703,
+   "f1": 19709,
+   "scene": 7
+  },
+  {
+   "w": "tua,",
+   "start": 328.48,
+   "end": 328.72,
+   "heard": true,
+   "i": 764,
+   "f0": 19709,
+   "f1": 19723,
+   "scene": 7
+  },
+  {
+   "w": "dan",
+   "start": 328.72,
+   "end": 328.98,
+   "heard": true,
+   "i": 765,
+   "f0": 19723,
+   "f1": 19739,
+   "scene": 7
+  },
+  {
+   "w": "keluarga.",
+   "start": 328.98,
+   "end": 329.28000000000003,
+   "heard": true,
+   "i": 766,
+   "f0": 19739,
+   "f1": 19757,
+   "scene": 7
+  },
+  {
+   "w": "Mendekati",
+   "start": 329.86,
+   "end": 330.34,
+   "heard": true,
+   "i": 767,
+   "f0": 19792,
+   "f1": 19820,
+   "scene": 7
+  },
+  {
+   "w": "pensiun,",
+   "start": 330.34,
+   "end": 330.96,
+   "heard": true,
+   "i": 768,
+   "f0": 19820,
+   "f1": 19858,
+   "scene": 7
+  },
+  {
+   "w": "kemampuan",
+   "start": 331.78,
+   "end": 332.38,
+   "heard": true,
+   "i": 769,
+   "f0": 19907,
+   "f1": 19943,
+   "scene": 7
+  },
+  {
+   "w": "mungkin",
+   "start": 332.38,
+   "end": 332.68,
+   "heard": true,
+   "i": 770,
+   "f0": 19943,
+   "f1": 19961,
+   "scene": 7
+  },
+  {
+   "w": "masih",
+   "start": 332.68,
+   "end": 332.96,
+   "heard": true,
+   "i": 771,
+   "f0": 19961,
+   "f1": 19978,
+   "scene": 7
+  },
+  {
+   "w": "ada,",
+   "start": 332.96,
+   "end": 333.24,
+   "heard": true,
+   "i": 772,
+   "f0": 19978,
+   "f1": 19994,
+   "scene": 7
+  },
+  {
+   "w": "tapi",
+   "start": 333.54,
+   "end": 333.8,
+   "heard": true,
+   "i": 773,
+   "f0": 20012,
+   "f1": 20028,
+   "scene": 7
+  },
+  {
+   "w": "prioritas",
+   "start": 333.8,
+   "end": 334.36,
+   "heard": true,
+   "i": 774,
+   "f0": 20028,
+   "f1": 20062,
+   "scene": 7
+  },
+  {
+   "w": "bisa",
+   "start": 334.36,
+   "end": 334.66,
+   "heard": true,
+   "i": 775,
+   "f0": 20062,
+   "f1": 20080,
+   "scene": 7
+  },
+  {
+   "w": "berubah",
+   "start": 334.66,
+   "end": 335.06,
+   "heard": true,
+   "i": 776,
+   "f0": 20080,
+   "f1": 20104,
+   "scene": 7
+  },
+  {
+   "w": "menjadi:",
+   "start": 335.06,
+   "end": 335.48,
+   "heard": true,
+   "i": 777,
+   "f0": 20104,
+   "f1": 20129,
+   "scene": 7
+  },
+  {
+   "w": "cash",
+   "start": 335.48,
+   "end": 336.12,
+   "heard": true,
+   "i": 778,
+   "f0": 20129,
+   "f1": 20167,
+   "scene": 7
+  },
+  {
+   "w": "flow",
+   "start": 336.12,
+   "end": 336.44,
+   "heard": true,
+   "i": 779,
+   "f0": 20167,
+   "f1": 20186,
+   "scene": 7
+  },
+  {
+   "w": "yang",
+   "start": 336.44,
+   "end": 336.72,
+   "heard": true,
+   "i": 780,
+   "f0": 20186,
+   "f1": 20203,
+   "scene": 7
+  },
+  {
+   "w": "lebih",
+   "start": 336.72,
+   "end": 336.96,
+   "heard": true,
+   "i": 781,
+   "f0": 20203,
+   "f1": 20218,
+   "scene": 7
+  },
+  {
+   "w": "stabil.",
+   "start": 336.96,
+   "end": 337.32,
+   "heard": true,
+   "i": 782,
+   "f0": 20218,
+   "f1": 20239,
+   "scene": 7
+  },
+  {
+   "w": "Jadi",
+   "start": 337.9,
+   "end": 338.06,
+   "heard": true,
+   "i": 783,
+   "f0": 20274,
+   "f1": 20284,
+   "scene": 7
+  },
+  {
+   "w": "ada",
+   "start": 338.22,
+   "end": 338.36,
+   "heard": true,
+   "i": 784,
+   "f0": 20293,
+   "f1": 20302,
+   "scene": 7
+  },
+  {
+   "w": "empat",
+   "start": 338.36,
+   "end": 338.56,
+   "heard": true,
+   "i": 785,
+   "f0": 20302,
+   "f1": 20314,
+   "scene": 7
+  },
+  {
+   "w": "hal",
+   "start": 338.56,
+   "end": 338.8,
+   "heard": true,
+   "i": 786,
+   "f0": 20314,
+   "f1": 20328,
+   "scene": 7
+  },
+  {
+   "w": "yang",
+   "start": 338.8,
+   "end": 338.98,
+   "heard": true,
+   "i": 787,
+   "f0": 20328,
+   "f1": 20339,
+   "scene": 7
+  },
+  {
+   "w": "terus",
+   "start": 338.98,
+   "end": 339.16,
+   "heard": true,
+   "i": 788,
+   "f0": 20339,
+   "f1": 20350,
+   "scene": 7
+  },
+  {
+   "w": "berubah:",
+   "start": 339.16,
+   "end": 339.66,
+   "heard": true,
+   "i": 789,
+   "f0": 20350,
+   "f1": 20380,
+   "scene": 7
+  },
+  {
+   "w": "toleransi",
+   "start": 340.0,
+   "end": 340.54,
+   "heard": true,
+   "i": 790,
+   "f0": 20400,
+   "f1": 20432,
+   "scene": 7
+  },
+  {
+   "w": "terhadap",
+   "start": 340.54,
+   "end": 340.9,
+   "heard": true,
+   "i": 791,
+   "f0": 20432,
+   "f1": 20454,
+   "scene": 7
+  },
+  {
+   "w": "penurunan,",
+   "start": 340.9,
+   "end": 341.2,
+   "heard": true,
+   "i": 792,
+   "f0": 20454,
+   "f1": 20472,
+   "scene": 7
+  },
+  {
+   "w": "kemampuan",
+   "start": 341.78,
+   "end": 342.2,
+   "heard": true,
+   "i": 793,
+   "f0": 20507,
+   "f1": 20532,
+   "scene": 7
+  },
+  {
+   "w": "investasi,",
+   "start": 342.2,
+   "end": 342.98,
+   "heard": true,
+   "i": 794,
+   "f0": 20532,
+   "f1": 20579,
+   "scene": 7
+  },
+  {
+   "w": "tujuan",
+   "start": 343.38,
+   "end": 343.66,
+   "heard": true,
+   "i": 795,
+   "f0": 20603,
+   "f1": 20620,
+   "scene": 7
+  },
+  {
+   "w": "hidup,",
+   "start": 343.66,
+   "end": 343.94,
+   "heard": true,
+   "i": 796,
+   "f0": 20620,
+   "f1": 20636,
+   "scene": 7
+  },
+  {
+   "w": "dan",
+   "start": 343.94,
+   "end": 344.18,
+   "heard": true,
+   "i": 797,
+   "f0": 20636,
+   "f1": 20651,
+   "scene": 7
+  },
+  {
+   "w": "dana",
+   "start": 344.18,
+   "end": 344.42,
+   "heard": true,
+   "i": 798,
+   "f0": 20651,
+   "f1": 20665,
+   "scene": 7
+  },
+  {
+   "w": "yang",
+   "start": 344.42,
+   "end": 344.74,
+   "heard": true,
+   "i": 799,
+   "f0": 20665,
+   "f1": 20684,
+   "scene": 7
+  },
+  {
+   "w": "bisa",
+   "start": 344.74,
+   "end": 344.96,
+   "heard": true,
+   "i": 800,
+   "f0": 20684,
+   "f1": 20698,
+   "scene": 7
+  },
+  {
+   "w": "diinvestasikan.",
+   "start": 344.96,
+   "end": 345.82,
+   "heard": true,
+   "i": 801,
+   "f0": 20698,
+   "f1": 20749,
+   "scene": 7
+  },
+  {
+   "w": "Karena",
+   "start": 346.36,
+   "end": 346.6,
+   "heard": true,
+   "i": 802,
+   "f0": 20782,
+   "f1": 20796,
+   "scene": 7
+  },
+  {
+   "w": "itu,",
+   "start": 346.6,
+   "end": 346.96,
+   "heard": true,
+   "i": 803,
+   "f0": 20796,
+   "f1": 20818,
+   "scene": 7
+  },
+  {
+   "w": "profil",
+   "start": 346.96,
+   "end": 347.42,
+   "heard": true,
+   "i": 804,
+   "f0": 20818,
+   "f1": 20845,
+   "scene": 7
+  },
+  {
+   "w": "investasi",
+   "start": 347.42,
+   "end": 348.08,
+   "heard": true,
+   "i": 805,
+   "f0": 20845,
+   "f1": 20885,
+   "scene": 7
+  },
+  {
+   "w": "bukan",
+   "start": 348.08,
+   "end": 348.36,
+   "heard": true,
+   "i": 806,
+   "f0": 20885,
+   "f1": 20902,
+   "scene": 7
+  },
+  {
+   "w": "label",
+   "start": 348.36,
+   "end": 348.74,
+   "heard": true,
+   "i": 807,
+   "f0": 20902,
+   "f1": 20924,
+   "scene": 7
+  },
+  {
+   "w": "seumur",
+   "start": 348.74,
+   "end": 349.14,
+   "heard": false,
+   "i": 808,
+   "f0": 20924,
+   "f1": 20948,
+   "scene": 7
+  },
+  {
+   "w": "hidup.",
+   "start": 349.14,
+   "end": 349.46,
+   "heard": true,
+   "i": 809,
+   "f0": 20948,
+   "f1": 20968,
+   "scene": 7
+  },
+  {
+   "w": "Kondisi",
+   "start": 349.76,
+   "end": 350.0,
+   "heard": true,
+   "i": 810,
+   "f0": 20986,
+   "f1": 21000,
+   "scene": 7
+  },
+  {
+   "w": "berubah?",
+   "start": 350.0,
+   "end": 350.4,
+   "heard": true,
+   "i": 811,
+   "f0": 21000,
+   "f1": 21024,
+   "scene": 7
+  },
+  {
+   "w": "Tes",
+   "start": 350.4,
+   "end": 351.06,
+   "heard": false,
+   "i": 812,
+   "f0": 21024,
+   "f1": 21064,
+   "scene": 7
+  },
+  {
+   "w": "lagi.",
+   "start": 351.06,
+   "end": 351.44,
+   "heard": true,
+   "i": 813,
+   "f0": 21064,
+   "f1": 21086,
+   "scene": 7
+  },
+  {
+   "w": "Kalau",
+   "start": 351.9,
+   "end": 352.1,
+   "heard": true,
+   "i": 814,
+   "f0": 21114,
+   "f1": 21126,
+   "scene": 8
+  },
+  {
+   "w": "mau",
+   "start": 352.1,
+   "end": 352.28,
+   "heard": true,
+   "i": 815,
+   "f0": 21126,
+   "f1": 21137,
+   "scene": 8
+  },
+  {
+   "w": "diringkas,",
+   "start": 352.28,
+   "end": 352.78,
+   "heard": true,
+   "i": 816,
+   "f0": 21137,
+   "f1": 21167,
+   "scene": 8
+  },
+  {
+   "w": "ingat",
+   "start": 353.08,
+   "end": 353.34,
+   "heard": true,
+   "i": 817,
+   "f0": 21185,
+   "f1": 21200,
+   "scene": 8
+  },
+  {
+   "w": "tiga",
+   "start": 353.34,
+   "end": 353.52,
+   "heard": true,
+   "i": 818,
+   "f0": 21200,
+   "f1": 21211,
+   "scene": 8
+  },
+  {
+   "w": "hal.",
+   "start": 353.52,
+   "end": 353.84,
+   "heard": true,
+   "i": 819,
+   "f0": 21211,
+   "f1": 21230,
+   "scene": 8
+  },
+  {
+   "w": "Pertama:",
+   "start": 354.18,
+   "end": 354.5,
+   "heard": true,
+   "i": 820,
+   "f0": 21251,
+   "f1": 21270,
+   "scene": 8
+  },
+  {
+   "w": "jangan",
+   "start": 355.14,
+   "end": 355.4,
+   "heard": true,
+   "i": 821,
+   "f0": 21308,
+   "f1": 21324,
+   "scene": 8
+  },
+  {
+   "w": "langsung",
+   "start": 355.4,
+   "end": 355.66,
+   "heard": true,
+   "i": 822,
+   "f0": 21324,
+   "f1": 21340,
+   "scene": 8
+  },
+  {
+   "w": "tanya",
+   "start": 355.66,
+   "end": 355.96,
+   "heard": true,
+   "i": 823,
+   "f0": 21340,
+   "f1": 21358,
+   "scene": 8
+  },
+  {
+   "w": "mana",
+   "start": 355.96,
+   "end": 356.18,
+   "heard": true,
+   "i": 824,
+   "f0": 21358,
+   "f1": 21371,
+   "scene": 8
+  },
+  {
+   "w": "yang",
+   "start": 356.18,
+   "end": 356.42,
+   "heard": true,
+   "i": 825,
+   "f0": 21371,
+   "f1": 21385,
+   "scene": 8
+  },
+  {
+   "w": "paling",
+   "start": 356.42,
+   "end": 356.62,
+   "heard": true,
+   "i": 826,
+   "f0": 21385,
+   "f1": 21397,
+   "scene": 8
+  },
+  {
+   "w": "cepat.",
+   "start": 356.62,
+   "end": 356.94,
+   "heard": true,
+   "i": 827,
+   "f0": 21397,
+   "f1": 21416,
+   "scene": 8
+  },
+  {
+   "w": "Tanya",
+   "start": 356.94,
+   "end": 357.38,
+   "heard": true,
+   "i": 828,
+   "f0": 21416,
+   "f1": 21443,
+   "scene": 8
+  },
+  {
+   "w": "dulu:",
+   "start": 357.38,
+   "end": 357.66,
+   "heard": true,
+   "i": 829,
+   "f0": 21443,
+   "f1": 21460,
+   "scene": 8
+  },
+  {
+   "w": "“Mana",
+   "start": 357.94,
+   "end": 358.2,
+   "heard": true,
+   "i": 830,
+   "f0": 21476,
+   "f1": 21492,
+   "scene": 8
+  },
+  {
+   "w": "yang",
+   "start": 358.2,
+   "end": 358.52,
+   "heard": true,
+   "i": 831,
+   "f0": 21492,
+   "f1": 21511,
+   "scene": 8
+  },
+  {
+   "w": "benar-benar",
+   "start": 358.52,
+   "end": 359.08,
+   "heard": true,
+   "i": 832,
+   "f0": 21511,
+   "f1": 21545,
+   "scene": 8
+  },
+  {
+   "w": "bisa",
+   "start": 359.08,
+   "end": 359.28,
+   "heard": true,
+   "i": 833,
+   "f0": 21545,
+   "f1": 21557,
+   "scene": 8
+  },
+  {
+   "w": "aku",
+   "start": 359.28,
+   "end": 359.54,
+   "heard": true,
+   "i": 834,
+   "f0": 21557,
+   "f1": 21572,
+   "scene": 8
+  },
+  {
+   "w": "jalani?”",
+   "start": 359.54,
+   "end": 360.48,
+   "heard": false,
+   "i": 835,
+   "f0": 21572,
+   "f1": 21629,
+   "scene": 8
+  },
+  {
+   "w": "Kedua:",
+   "start": 360.48,
+   "end": 360.78,
+   "heard": true,
+   "i": 836,
+   "f0": 21629,
+   "f1": 21647,
+   "scene": 8
+  },
+  {
+   "w": "kemampuan",
+   "start": 361.14,
+   "end": 361.54,
+   "heard": true,
+   "i": 837,
+   "f0": 21668,
+   "f1": 21692,
+   "scene": 8
+  },
+  {
+   "w": "menentukan",
+   "start": 361.54,
+   "end": 361.94,
+   "heard": true,
+   "i": 838,
+   "f0": 21692,
+   "f1": 21716,
+   "scene": 8
+  },
+  {
+   "w": "apakah",
+   "start": 361.94,
+   "end": 362.28,
+   "heard": true,
+   "i": 839,
+   "f0": 21716,
+   "f1": 21737,
+   "scene": 8
+  },
+  {
+   "w": "kita",
+   "start": 362.28,
+   "end": 362.54,
+   "heard": true,
+   "i": 840,
+   "f0": 21737,
+   "f1": 21752,
+   "scene": 8
+  },
+  {
+   "w": "siap",
+   "start": 362.54,
+   "end": 362.86,
+   "heard": true,
+   "i": 841,
+   "f0": 21752,
+   "f1": 21772,
+   "scene": 8
+  },
+  {
+   "w": "bawa",
+   "start": 362.86,
+   "end": 363.12,
+   "heard": true,
+   "i": 842,
+   "f0": 21772,
+   "f1": 21787,
+   "scene": 8
+  },
+  {
+   "w": "pesawat",
+   "start": 363.12,
+   "end": 363.46,
+   "heard": true,
+   "i": 843,
+   "f0": 21787,
+   "f1": 21808,
+   "scene": 8
+  },
+  {
+   "w": "sendiri.",
+   "start": 363.46,
+   "end": 363.88,
+   "heard": true,
+   "i": 844,
+   "f0": 21808,
+   "f1": 21833,
+   "scene": 8
+  },
+  {
+   "w": "Toleransi",
+   "start": 364.42,
+   "end": 365.08,
+   "heard": true,
+   "i": 845,
+   "f0": 21865,
+   "f1": 21905,
+   "scene": 8
+  },
+  {
+   "w": "menentukan",
+   "start": 365.08,
+   "end": 365.72,
+   "heard": true,
+   "i": 846,
+   "f0": 21905,
+   "f1": 21943,
+   "scene": 8
+  },
+  {
+   "w": "seberapa",
+   "start": 365.72,
+   "end": 366.2,
+   "heard": true,
+   "i": 847,
+   "f0": 21943,
+   "f1": 21972,
+   "scene": 8
+  },
+  {
+   "w": "besar",
+   "start": 366.2,
+   "end": 366.44,
+   "heard": true,
+   "i": 848,
+   "f0": 21972,
+   "f1": 21986,
+   "scene": 8
+  },
+  {
+   "w": "ombak",
+   "start": 366.44,
+   "end": 366.9,
+   "heard": true,
+   "i": 849,
+   "f0": 21986,
+   "f1": 22014,
+   "scene": 8
+  },
+  {
+   "w": "yang",
+   "start": 366.9,
+   "end": 367.16,
+   "heard": true,
+   "i": 850,
+   "f0": 22014,
+   "f1": 22030,
+   "scene": 8
+  },
+  {
+   "w": "sanggup",
+   "start": 367.16,
+   "end": 367.6,
+   "heard": true,
+   "i": 851,
+   "f0": 22030,
+   "f1": 22056,
+   "scene": 8
+  },
+  {
+   "w": "kita",
+   "start": 367.6,
+   "end": 367.9,
+   "heard": true,
+   "i": 852,
+   "f0": 22056,
+   "f1": 22074,
+   "scene": 8
+  },
+  {
+   "w": "tahan.",
+   "start": 367.9,
+   "end": 368.3,
+   "heard": true,
+   "i": 853,
+   "f0": 22074,
+   "f1": 22098,
+   "scene": 8
+  },
+  {
+   "w": "Dan",
+   "start": 368.68,
+   "end": 368.96,
+   "heard": true,
+   "i": 854,
+   "f0": 22121,
+   "f1": 22138,
+   "scene": 8
+  },
+  {
+   "w": "yang",
+   "start": 368.96,
+   "end": 369.16,
+   "heard": true,
+   "i": 855,
+   "f0": 22138,
+   "f1": 22150,
+   "scene": 8
+  },
+  {
+   "w": "paling",
+   "start": 369.16,
+   "end": 369.36,
+   "heard": true,
+   "i": 856,
+   "f0": 22150,
+   "f1": 22162,
+   "scene": 8
+  },
+  {
+   "w": "penting:",
+   "start": 369.36,
+   "end": 369.82,
+   "heard": true,
+   "i": 857,
+   "f0": 22162,
+   "f1": 22189,
+   "scene": 8
+  },
+  {
+   "w": "berani",
+   "start": 370.24,
+   "end": 370.46,
+   "heard": true,
+   "i": 858,
+   "f0": 22214,
+   "f1": 22228,
+   "scene": 8
+  },
+  {
+   "w": "menghadapi",
+   "start": 370.46,
+   "end": 370.84,
+   "heard": true,
+   "i": 859,
+   "f0": 22228,
+   "f1": 22250,
+   "scene": 8
+  },
+  {
+   "w": "ombak,",
+   "start": 370.84,
+   "end": 371.22,
+   "heard": true,
+   "i": 860,
+   "f0": 22250,
+   "f1": 22273,
+   "scene": 8
+  },
+  {
+   "w": "belum",
+   "start": 371.22,
+   "end": 371.64,
+   "heard": true,
+   "i": 861,
+   "f0": 22273,
+   "f1": 22298,
+   "scene": 8
+  },
+  {
+   "w": "tentu",
+   "start": 371.64,
+   "end": 372.04,
+   "heard": true,
+   "i": 862,
+   "f0": 22298,
+   "f1": 22322,
+   "scene": 8
+  },
+  {
+   "w": "berarti",
+   "start": 372.04,
+   "end": 372.42,
+   "heard": true,
+   "i": 863,
+   "f0": 22322,
+   "f1": 22345,
+   "scene": 8
+  },
+  {
+   "w": "sudah",
+   "start": 372.42,
+   "end": 372.7,
+   "heard": true,
+   "i": 864,
+   "f0": 22345,
+   "f1": 22362,
+   "scene": 8
+  },
+  {
+   "w": "bisa",
+   "start": 372.7,
+   "end": 373.1,
+   "heard": true,
+   "i": 865,
+   "f0": 22362,
+   "f1": 22386,
+   "scene": 8
+  },
+  {
+   "w": "bawa",
+   "start": 373.1,
+   "end": 373.6,
+   "heard": true,
+   "i": 866,
+   "f0": 22386,
+   "f1": 22416,
+   "scene": 8
+  },
+  {
+   "w": "pesawat.",
+   "start": 373.6,
+   "end": 374.2,
+   "heard": true,
+   "i": 867,
+   "f0": 22416,
+   "f1": 22452,
+   "scene": 8
+  },
+  {
+   "w": "Dua",
+   "start": 374.62,
+   "end": 374.84,
+   "heard": true,
+   "i": 868,
+   "f0": 22477,
+   "f1": 22490,
+   "scene": 9
+  },
+  {
+   "w": "pertanyaan",
+   "start": 374.84,
+   "end": 375.36,
+   "heard": true,
+   "i": 869,
+   "f0": 22490,
+   "f1": 22522,
+   "scene": 9
+  },
+  {
+   "w": "tadi",
+   "start": 375.36,
+   "end": 375.58,
+   "heard": true,
+   "i": 870,
+   "f0": 22522,
+   "f1": 22535,
+   "scene": 9
+  },
+  {
+   "w": "akan",
+   "start": 375.58,
+   "end": 375.92,
+   "heard": true,
+   "i": 871,
+   "f0": 22535,
+   "f1": 22555,
+   "scene": 9
+  },
+  {
+   "w": "dibantu",
+   "start": 375.92,
+   "end": 376.44,
+   "heard": true,
+   "i": 872,
+   "f0": 22555,
+   "f1": 22586,
+   "scene": 9
+  },
+  {
+   "w": "lebih",
+   "start": 376.44,
+   "end": 376.76,
+   "heard": true,
+   "i": 873,
+   "f0": 22586,
+   "f1": 22606,
+   "scene": 9
+  },
+  {
+   "w": "dalam",
+   "start": 376.76,
+   "end": 377.1,
+   "heard": true,
+   "i": 874,
+   "f0": 22606,
+   "f1": 22626,
+   "scene": 9
+  },
+  {
+   "w": "lewat",
+   "start": 377.1,
+   "end": 377.56,
+   "heard": true,
+   "i": 875,
+   "f0": 22626,
+   "f1": 22654,
+   "scene": 9
+  },
+  {
+   "w": "fitur",
+   "start": 377.56,
+   "end": 378.04,
+   "heard": true,
+   "i": 876,
+   "f0": 22654,
+   "f1": 22682,
+   "scene": 9
+  },
+  {
+   "w": "Tuntun",
+   "start": 378.04,
+   "end": 378.76,
+   "heard": true,
+   "i": 877,
+   "f0": 22682,
+   "f1": 22726,
+   "scene": 9
+  },
+  {
+   "w": "Personal",
+   "start": 378.76,
+   "end": 379.16,
+   "heard": true,
+   "i": 878,
+   "f0": 22726,
+   "f1": 22750,
+   "scene": 9
+  },
+  {
+   "w": "Investment",
+   "start": 379.16,
+   "end": 379.62,
+   "heard": true,
+   "i": 879,
+   "f0": 22750,
+   "f1": 22777,
+   "scene": 9
+  },
+  {
+   "w": "Plan.",
+   "start": 379.62,
+   "end": 380.16,
+   "heard": true,
+   "i": 880,
+   "f0": 22777,
+   "f1": 22810,
+   "scene": 9
+  },
+  {
+   "w": "Pertama,",
+   "start": 380.52,
+   "end": 380.9,
+   "heard": true,
+   "i": 881,
+   "f0": 22831,
+   "f1": 22854,
+   "scene": 9
+  },
+  {
+   "w": "kamu",
+   "start": 381.4,
+   "end": 381.56,
+   "heard": true,
+   "i": 882,
+   "f0": 22884,
+   "f1": 22894,
+   "scene": 9
+  },
+  {
+   "w": "akan",
+   "start": 381.56,
+   "end": 381.76,
+   "heard": true,
+   "i": 883,
+   "f0": 22894,
+   "f1": 22906,
+   "scene": 9
+  },
+  {
+   "w": "melihat",
+   "start": 381.76,
+   "end": 382.12,
+   "heard": true,
+   "i": 884,
+   "f0": 22906,
+   "f1": 22927,
+   "scene": 9
+  },
+  {
+   "w": "beberapa",
+   "start": 382.12,
+   "end": 382.66,
+   "heard": true,
+   "i": 885,
+   "f0": 22927,
+   "f1": 22960,
+   "scene": 9
+  },
+  {
+   "w": "pilihan",
+   "start": 382.66,
+   "end": 383.14,
+   "heard": true,
+   "i": 886,
+   "f0": 22960,
+   "f1": 22988,
+   "scene": 9
+  },
+  {
+   "w": "return",
+   "start": 383.14,
+   "end": 383.52,
+   "heard": true,
+   "i": 887,
+   "f0": 22988,
+   "f1": 23011,
+   "scene": 9
+  },
+  {
+   "w": "dan",
+   "start": 383.52,
+   "end": 383.8,
+   "heard": true,
+   "i": 888,
+   "f0": 23011,
+   "f1": 23028,
+   "scene": 9
+  },
+  {
+   "w": "drawdown,",
+   "start": 383.8,
+   "end": 384.4,
+   "heard": true,
+   "i": 889,
+   "f0": 23028,
+   "f1": 23064,
+   "scene": 9
+  },
+  {
+   "w": "lalu",
+   "start": 384.4,
+   "end": 384.86,
+   "heard": true,
+   "i": 890,
+   "f0": 23064,
+   "f1": 23092,
+   "scene": 9
+  },
+  {
+   "w": "pilih",
+   "start": 384.86,
+   "end": 385.28,
+   "heard": true,
+   "i": 891,
+   "f0": 23092,
+   "f1": 23117,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 385.28,
+   "end": 385.46,
+   "heard": true,
+   "i": 892,
+   "f0": 23117,
+   "f1": 23128,
+   "scene": 9
+  },
+  {
+   "w": "benar-benar",
+   "start": 385.46,
+   "end": 386.02,
+   "heard": true,
+   "i": 893,
+   "f0": 23128,
+   "f1": 23161,
+   "scene": 9
+  },
+  {
+   "w": "masih",
+   "start": 386.02,
+   "end": 386.44,
+   "heard": true,
+   "i": 894,
+   "f0": 23161,
+   "f1": 23186,
+   "scene": 9
+  },
+  {
+   "w": "bisa",
+   "start": 386.44,
+   "end": 386.78,
+   "heard": true,
+   "i": 895,
+   "f0": 23186,
+   "f1": 23207,
+   "scene": 9
+  },
+  {
+   "w": "kamu",
+   "start": 386.78,
+   "end": 387.1,
+   "heard": true,
+   "i": 896,
+   "f0": 23207,
+   "f1": 23226,
+   "scene": 9
+  },
+  {
+   "w": "terima.",
+   "start": 387.1,
+   "end": 387.5,
+   "heard": true,
+   "i": 897,
+   "f0": 23226,
+   "f1": 23250,
+   "scene": 9
+  },
+  {
+   "w": "Setelah",
+   "start": 388.18,
+   "end": 388.78,
+   "heard": true,
+   "i": 898,
+   "f0": 23291,
+   "f1": 23327,
+   "scene": 9
+  },
+  {
+   "w": "itu,",
+   "start": 388.78,
+   "end": 388.92,
+   "heard": true,
+   "i": 899,
+   "f0": 23327,
+   "f1": 23335,
+   "scene": 9
+  },
+  {
+   "w": "kamu",
+   "start": 388.96,
+   "end": 389.1,
+   "heard": true,
+   "i": 900,
+   "f0": 23338,
+   "f1": 23346,
+   "scene": 9
+  },
+  {
+   "w": "akan",
+   "start": 389.1,
+   "end": 389.28,
+   "heard": true,
+   "i": 901,
+   "f0": 23346,
+   "f1": 23357,
+   "scene": 9
+  },
+  {
+   "w": "mencoba",
+   "start": 389.28,
+   "end": 389.58,
+   "heard": true,
+   "i": 902,
+   "f0": 23357,
+   "f1": 23375,
+   "scene": 9
+  },
+  {
+   "w": "simulasi",
+   "start": 389.58,
+   "end": 390.0,
+   "heard": true,
+   "i": 903,
+   "f0": 23375,
+   "f1": 23400,
+   "scene": 9
+  },
+  {
+   "w": "investasi",
+   "start": 390.0,
+   "end": 390.52,
+   "heard": true,
+   "i": 904,
+   "f0": 23400,
+   "f1": 23431,
+   "scene": 9
+  },
+  {
+   "w": "dari",
+   "start": 390.52,
+   "end": 390.7,
+   "heard": true,
+   "i": 905,
+   "f0": 23431,
+   "f1": 23442,
+   "scene": 9
+  },
+  {
+   "w": "produk",
+   "start": 390.7,
+   "end": 390.96,
+   "heard": true,
+   "i": 906,
+   "f0": 23442,
+   "f1": 23458,
+   "scene": 9
+  },
+  {
+   "w": "nyata,",
+   "start": 390.96,
+   "end": 391.36,
+   "heard": true,
+   "i": 907,
+   "f0": 23458,
+   "f1": 23482,
+   "scene": 9
+  },
+  {
+   "w": "berdasarkan",
+   "start": 391.84,
+   "end": 392.34,
+   "heard": true,
+   "i": 908,
+   "f0": 23510,
+   "f1": 23540,
+   "scene": 9
+  },
+  {
+   "w": "data",
+   "start": 392.34,
+   "end": 392.66,
+   "heard": true,
+   "i": 909,
+   "f0": 23540,
+   "f1": 23560,
+   "scene": 9
+  },
+  {
+   "w": "historisnya.",
+   "start": 392.66,
+   "end": 393.4,
+   "heard": true,
+   "i": 910,
+   "f0": 23560,
+   "f1": 23604,
+   "scene": 9
+  },
+  {
+   "w": "Kamu",
+   "start": 393.84,
+   "end": 394.06,
+   "heard": true,
+   "i": 911,
+   "f0": 23630,
+   "f1": 23644,
+   "scene": 9
+  },
+  {
+   "w": "bisa",
+   "start": 394.06,
+   "end": 394.24,
+   "heard": true,
+   "i": 912,
+   "f0": 23644,
+   "f1": 23654,
+   "scene": 9
+  },
+  {
+   "w": "melihat",
+   "start": 394.24,
+   "end": 394.54,
+   "heard": true,
+   "i": 913,
+   "f0": 23654,
+   "f1": 23672,
+   "scene": 9
+  },
+  {
+   "w": "kapan",
+   "start": 394.54,
+   "end": 394.84,
+   "heard": true,
+   "i": 914,
+   "f0": 23672,
+   "f1": 23690,
+   "scene": 9
+  },
+  {
+   "w": "investasi",
+   "start": 394.84,
+   "end": 395.52,
+   "heard": true,
+   "i": 915,
+   "f0": 23690,
+   "f1": 23731,
+   "scene": 9
+  },
+  {
+   "w": "dimulai,",
+   "start": 395.52,
+   "end": 396.12,
+   "heard": true,
+   "i": 916,
+   "f0": 23731,
+   "f1": 23767,
+   "scene": 9
+  },
+  {
+   "w": "seberapa",
+   "start": 396.54,
+   "end": 396.88,
+   "heard": true,
+   "i": 917,
+   "f0": 23792,
+   "f1": 23813,
+   "scene": 9
+  },
+  {
+   "w": "dalam",
+   "start": 396.88,
+   "end": 397.1,
+   "heard": true,
+   "i": 918,
+   "f0": 23813,
+   "f1": 23826,
+   "scene": 9
+  },
+  {
+   "w": "sempat",
+   "start": 397.1,
+   "end": 397.44,
+   "heard": true,
+   "i": 919,
+   "f0": 23826,
+   "f1": 23846,
+   "scene": 9
+  },
+  {
+   "w": "turun,",
+   "start": 397.44,
+   "end": 397.88,
+   "heard": true,
+   "i": 920,
+   "f0": 23846,
+   "f1": 23873,
+   "scene": 9
+  },
+  {
+   "w": "dan",
+   "start": 398.22,
+   "end": 398.24,
+   "heard": true,
+   "i": 921,
+   "f0": 23893,
+   "f1": 23894,
+   "scene": 9
+  },
+  {
+   "w": "bagaimana",
+   "start": 398.24,
+   "end": 398.76,
+   "heard": true,
+   "i": 922,
+   "f0": 23894,
+   "f1": 23926,
+   "scene": 9
+  },
+  {
+   "w": "hasil",
+   "start": 398.76,
+   "end": 399.06,
+   "heard": true,
+   "i": 923,
+   "f0": 23926,
+   "f1": 23944,
+   "scene": 9
+  },
+  {
+   "w": "akhirnya.",
+   "start": 399.06,
+   "end": 399.56,
+   "heard": true,
+   "i": 924,
+   "f0": 23944,
+   "f1": 23974,
+   "scene": 9
+  },
+  {
+   "w": "Dari",
+   "start": 399.9,
+   "end": 400.1,
+   "heard": true,
+   "i": 925,
+   "f0": 23994,
+   "f1": 24006,
+   "scene": 9
+  },
+  {
+   "w": "situ,",
+   "start": 400.1,
+   "end": 400.36,
+   "heard": true,
+   "i": 926,
+   "f0": 24006,
+   "f1": 24022,
+   "scene": 9
+  },
+  {
+   "w": "kamu",
+   "start": 400.66,
+   "end": 400.8,
+   "heard": true,
+   "i": 927,
+   "f0": 24040,
+   "f1": 24048,
+   "scene": 9
+  },
+  {
+   "w": "tinggal",
+   "start": 400.8,
+   "end": 401.08,
+   "heard": true,
+   "i": 928,
+   "f0": 24048,
+   "f1": 24065,
+   "scene": 9
+  },
+  {
+   "w": "pilih:",
+   "start": 401.08,
+   "end": 401.78,
+   "heard": true,
+   "i": 929,
+   "f0": 24065,
+   "f1": 24107,
+   "scene": 9
+  },
+  {
+   "w": "“Saya",
+   "start": 401.9,
+   "end": 402.08,
+   "heard": true,
+   "i": 930,
+   "f0": 24114,
+   "f1": 24125,
+   "scene": 9
+  },
+  {
+   "w": "masih",
+   "start": 402.08,
+   "end": 402.32,
+   "heard": true,
+   "i": 931,
+   "f0": 24125,
+   "f1": 24139,
+   "scene": 9
+  },
+  {
+   "w": "bisa",
+   "start": 402.32,
+   "end": 402.6,
+   "heard": true,
+   "i": 932,
+   "f0": 24139,
+   "f1": 24156,
+   "scene": 9
+  },
+  {
+   "w": "menerima",
+   "start": 402.6,
+   "end": 403.0,
+   "heard": true,
+   "i": 933,
+   "f0": 24156,
+   "f1": 24180,
+   "scene": 9
+  },
+  {
+   "w": "ini”",
+   "start": 403.0,
+   "end": 403.34,
+   "heard": true,
+   "i": 934,
+   "f0": 24180,
+   "f1": 24200,
+   "scene": 9
+  },
+  {
+   "w": "atau",
+   "start": 403.34,
+   "end": 403.84,
+   "heard": true,
+   "i": 935,
+   "f0": 24200,
+   "f1": 24230,
+   "scene": 9
+  },
+  {
+   "w": "“Coba",
+   "start": 403.84,
+   "end": 404.42,
+   "heard": true,
+   "i": 936,
+   "f0": 24230,
+   "f1": 24265,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 404.42,
+   "end": 404.56,
+   "heard": true,
+   "i": 937,
+   "f0": 24265,
+   "f1": 24274,
+   "scene": 9
+  },
+  {
+   "w": "lain.”",
+   "start": 404.56,
+   "end": 404.78,
+   "heard": true,
+   "i": 938,
+   "f0": 24274,
+   "f1": 24287,
+   "scene": 9
+  },
+  {
+   "w": "Berikutnya,",
+   "start": 405.2,
+   "end": 405.58,
+   "heard": true,
+   "i": 939,
+   "f0": 24312,
+   "f1": 24335,
+   "scene": 9
+  },
+  {
+   "w": "kamu",
+   "start": 405.72,
+   "end": 405.84,
+   "heard": true,
+   "i": 940,
+   "f0": 24343,
+   "f1": 24350,
+   "scene": 9
+  },
+  {
+   "w": "akan",
+   "start": 405.84,
+   "end": 406.02,
+   "heard": true,
+   "i": 941,
+   "f0": 24350,
+   "f1": 24361,
+   "scene": 9
+  },
+  {
+   "w": "memilih",
+   "start": 406.02,
+   "end": 406.36,
+   "heard": true,
+   "i": 942,
+   "f0": 24361,
+   "f1": 24382,
+   "scene": 9
+  },
+  {
+   "w": "gaya",
+   "start": 406.36,
+   "end": 406.54,
+   "heard": true,
+   "i": 943,
+   "f0": 24382,
+   "f1": 24392,
+   "scene": 9
+  },
+  {
+   "w": "investasimu—",
+   "start": 406.54,
+   "end": 407.38,
+   "heard": true,
+   "i": 944,
+   "f0": 24392,
+   "f1": 24443,
+   "scene": 9
+  },
+  {
+   "w": "jangka",
+   "start": 407.38,
+   "end": 407.66,
+   "heard": true,
+   "i": 945,
+   "f0": 24443,
+   "f1": 24460,
+   "scene": 9
+  },
+  {
+   "w": "pendek",
+   "start": 407.66,
+   "end": 407.98,
+   "heard": true,
+   "i": 946,
+   "f0": 24460,
+   "f1": 24479,
+   "scene": 9
+  },
+  {
+   "w": "atau",
+   "start": 407.98,
+   "end": 408.18,
+   "heard": true,
+   "i": 947,
+   "f0": 24479,
+   "f1": 24491,
+   "scene": 9
+  },
+  {
+   "w": "jangka",
+   "start": 408.18,
+   "end": 408.46,
+   "heard": true,
+   "i": 948,
+   "f0": 24491,
+   "f1": 24508,
+   "scene": 9
+  },
+  {
+   "w": "panjang—",
+   "start": 408.46,
+   "end": 408.84,
+   "heard": true,
+   "i": 949,
+   "f0": 24508,
+   "f1": 24530,
+   "scene": 9
+  },
+  {
+   "w": "dan",
+   "start": 408.84,
+   "end": 409.1,
+   "heard": true,
+   "i": 950,
+   "f0": 24530,
+   "f1": 24546,
+   "scene": 9
+  },
+  {
+   "w": "tingkat",
+   "start": 409.1,
+   "end": 409.54,
+   "heard": true,
+   "i": 951,
+   "f0": 24546,
+   "f1": 24572,
+   "scene": 9
+  },
+  {
+   "w": "pengalamanmu:",
+   "start": 409.54,
+   "end": 410.22,
+   "heard": true,
+   "i": 952,
+   "f0": 24572,
+   "f1": 24613,
+   "scene": 9
+  },
+  {
+   "w": "pemula,",
+   "start": 410.46,
+   "end": 410.86,
+   "heard": true,
+   "i": 953,
+   "f0": 24628,
+   "f1": 24652,
+   "scene": 9
+  },
+  {
+   "w": "berkembang,",
+   "start": 411.34,
+   "end": 411.76,
+   "heard": true,
+   "i": 954,
+   "f0": 24680,
+   "f1": 24706,
+   "scene": 9
+  },
+  {
+   "w": "atau",
+   "start": 411.88,
+   "end": 412.12,
+   "heard": true,
+   "i": 955,
+   "f0": 24713,
+   "f1": 24727,
+   "scene": 9
+  },
+  {
+   "w": "sudah",
+   "start": 412.12,
+   "end": 412.54,
+   "heard": true,
+   "i": 956,
+   "f0": 24727,
+   "f1": 24752,
+   "scene": 9
+  },
+  {
+   "w": "berpengalaman.",
+   "start": 412.54,
+   "end": 413.38,
+   "heard": true,
+   "i": 957,
+   "f0": 24752,
+   "f1": 24803,
+   "scene": 9
+  },
+  {
+   "w": "Dari",
+   "start": 413.38,
+   "end": 414.08,
+   "heard": true,
+   "i": 958,
+   "f0": 24803,
+   "f1": 24845,
+   "scene": 9
+  },
+  {
+   "w": "semua",
+   "start": 414.08,
+   "end": 414.26,
+   "heard": true,
+   "i": 959,
+   "f0": 24845,
+   "f1": 24856,
+   "scene": 9
+  },
+  {
+   "w": "jawaban",
+   "start": 414.26,
+   "end": 414.6,
+   "heard": true,
+   "i": 960,
+   "f0": 24856,
+   "f1": 24876,
+   "scene": 9
+  },
+  {
+   "w": "tadi,",
+   "start": 414.6,
+   "end": 414.94,
+   "heard": true,
+   "i": 961,
+   "f0": 24876,
+   "f1": 24896,
+   "scene": 9
+  },
+  {
+   "w": "Tuntun",
+   "start": 415.14,
+   "end": 415.34,
+   "heard": true,
+   "i": 962,
+   "f0": 24908,
+   "f1": 24920,
+   "scene": 9
+  },
+  {
+   "w": "Personal",
+   "start": 415.34,
+   "end": 415.56,
+   "heard": true,
+   "i": 963,
+   "f0": 24920,
+   "f1": 24934,
+   "scene": 9
+  },
+  {
+   "w": "Investment",
+   "start": 415.56,
+   "end": 415.86,
+   "heard": true,
+   "i": 964,
+   "f0": 24934,
+   "f1": 24952,
+   "scene": 9
+  },
+  {
+   "w": "Plan",
+   "start": 415.86,
+   "end": 416.18,
+   "heard": true,
+   "i": 965,
+   "f0": 24952,
+   "f1": 24971,
+   "scene": 9
+  },
+  {
+   "w": "akan",
+   "start": 416.18,
+   "end": 416.56,
+   "heard": true,
+   "i": 966,
+   "f0": 24971,
+   "f1": 24994,
+   "scene": 9
+  },
+  {
+   "w": "membuat",
+   "start": 416.56,
+   "end": 416.98,
+   "heard": true,
+   "i": 967,
+   "f0": 24994,
+   "f1": 25019,
+   "scene": 9
+  },
+  {
+   "w": "laporan",
+   "start": 416.98,
+   "end": 417.46,
+   "heard": true,
+   "i": 968,
+   "f0": 25019,
+   "f1": 25048,
+   "scene": 9
+  },
+  {
+   "w": "investasi",
+   "start": 417.46,
+   "end": 418.02,
+   "heard": true,
+   "i": 969,
+   "f0": 25048,
+   "f1": 25081,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 418.02,
+   "end": 418.18,
+   "heard": true,
+   "i": 970,
+   "f0": 25081,
+   "f1": 25091,
+   "scene": 9
+  },
+  {
+   "w": "personal",
+   "start": 418.18,
+   "end": 418.5,
+   "heard": true,
+   "i": 971,
+   "f0": 25091,
+   "f1": 25110,
+   "scene": 9
+  },
+  {
+   "w": "untukmu:",
+   "start": 418.5,
+   "end": 419.08,
+   "heard": true,
+   "i": 972,
+   "f0": 25110,
+   "f1": 25145,
+   "scene": 9
+  },
+  {
+   "w": "profil",
+   "start": 419.38,
+   "end": 419.68,
+   "heard": true,
+   "i": 973,
+   "f0": 25163,
+   "f1": 25181,
+   "scene": 9
+  },
+  {
+   "w": "investasimu,",
+   "start": 419.68,
+   "end": 420.56,
+   "heard": false,
+   "i": 974,
+   "f0": 25181,
+   "f1": 25234,
+   "scene": 9
+  },
+  {
+   "w": "investasi",
+   "start": 420.56,
+   "end": 421.02,
+   "heard": true,
+   "i": 975,
+   "f0": 25234,
+   "f1": 25261,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 421.02,
+   "end": 421.16,
+   "heard": true,
+   "i": 976,
+   "f0": 25261,
+   "f1": 25270,
+   "scene": 9
+  },
+  {
+   "w": "paling",
+   "start": 421.16,
+   "end": 421.36,
+   "heard": true,
+   "i": 977,
+   "f0": 25270,
+   "f1": 25282,
+   "scene": 9
+  },
+  {
+   "w": "sesuai,",
+   "start": 421.36,
+   "end": 421.96,
+   "heard": true,
+   "i": 978,
+   "f0": 25282,
+   "f1": 25318,
+   "scene": 9
+  },
+  {
+   "w": "pilihan",
+   "start": 422.22,
+   "end": 422.56,
+   "heard": true,
+   "i": 979,
+   "f0": 25333,
+   "f1": 25354,
+   "scene": 9
+  },
+  {
+   "w": "untuk",
+   "start": 422.56,
+   "end": 422.7,
+   "heard": true,
+   "i": 980,
+   "f0": 25354,
+   "f1": 25362,
+   "scene": 9
+  },
+  {
+   "w": "naik",
+   "start": 422.7,
+   "end": 422.96,
+   "heard": true,
+   "i": 981,
+   "f0": 25362,
+   "f1": 25378,
+   "scene": 9
+  },
+  {
+   "w": "level,",
+   "start": 422.96,
+   "end": 423.3,
+   "heard": true,
+   "i": 982,
+   "f0": 25378,
+   "f1": 25398,
+   "scene": 9
+  },
+  {
+   "w": "panduan",
+   "start": 423.48,
+   "end": 423.78,
+   "heard": true,
+   "i": 983,
+   "f0": 25409,
+   "f1": 25427,
+   "scene": 9
+  },
+  {
+   "w": "dari",
+   "start": 423.78,
+   "end": 424.02,
+   "heard": true,
+   "i": 984,
+   "f0": 25427,
+   "f1": 25441,
+   "scene": 9
+  },
+  {
+   "w": "Tuntun,",
+   "start": 424.02,
+   "end": 424.52,
+   "heard": true,
+   "i": 985,
+   "f0": 25441,
+   "f1": 25471,
+   "scene": 9
+  },
+  {
+   "w": "simulasi",
+   "start": 425.08,
+   "end": 425.54,
+   "heard": true,
+   "i": 986,
+   "f0": 25505,
+   "f1": 25532,
+   "scene": 9
+  },
+  {
+   "w": "investasi",
+   "start": 425.54,
+   "end": 426.24,
+   "heard": true,
+   "i": 987,
+   "f0": 25532,
+   "f1": 25574,
+   "scene": 9
+  },
+  {
+   "w": "satu",
+   "start": 426.24,
+   "end": 426.56,
+   "heard": true,
+   "i": 988,
+   "f0": 25574,
+   "f1": 25594,
+   "scene": 9
+  },
+  {
+   "w": "tahun,",
+   "start": 426.56,
+   "end": 426.94,
+   "heard": true,
+   "i": 989,
+   "f0": 25594,
+   "f1": 25616,
+   "scene": 9
+  },
+  {
+   "w": "sampai",
+   "start": 427.56,
+   "end": 428.1,
+   "heard": true,
+   "i": 990,
+   "f0": 25654,
+   "f1": 25686,
+   "scene": 9
+  },
+  {
+   "w": "produk",
+   "start": 428.1,
+   "end": 428.34,
+   "heard": true,
+   "i": 991,
+   "f0": 25686,
+   "f1": 25700,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 428.34,
+   "end": 428.64,
+   "heard": true,
+   "i": 992,
+   "f0": 25700,
+   "f1": 25718,
+   "scene": 9
+  },
+  {
+   "w": "untuk",
+   "start": 428.64,
+   "end": 428.94,
+   "heard": true,
+   "i": 993,
+   "f0": 25718,
+   "f1": 25736,
+   "scene": 9
+  },
+  {
+   "w": "sekarang",
+   "start": 428.94,
+   "end": 429.3,
+   "heard": true,
+   "i": 994,
+   "f0": 25736,
+   "f1": 25758,
+   "scene": 9
+  },
+  {
+   "w": "mungkin",
+   "start": 429.3,
+   "end": 429.7,
+   "heard": true,
+   "i": 995,
+   "f0": 25758,
+   "f1": 25782,
+   "scene": 9
+  },
+  {
+   "w": "belum",
+   "start": 429.7,
+   "end": 430.0,
+   "heard": true,
+   "i": 996,
+   "f0": 25782,
+   "f1": 25800,
+   "scene": 9
+  },
+  {
+   "w": "cocok.",
+   "start": 430.0,
+   "end": 430.5,
+   "heard": true,
+   "i": 997,
+   "f0": 25800,
+   "f1": 25830,
+   "scene": 9
+  },
+  {
+   "w": "Kalau",
+   "start": 430.66,
+   "end": 430.84,
+   "heard": true,
+   "i": 998,
+   "f0": 25840,
+   "f1": 25850,
+   "scene": 9
+  },
+  {
+   "w": "kondisi",
+   "start": 430.84,
+   "end": 431.16,
+   "heard": true,
+   "i": 999,
+   "f0": 25850,
+   "f1": 25870,
+   "scene": 9
+  },
+  {
+   "w": "hidupmu",
+   "start": 431.16,
+   "end": 431.5,
+   "heard": true,
+   "i": 1000,
+   "f0": 25870,
+   "f1": 25890,
+   "scene": 9
+  },
+  {
+   "w": "berubah,",
+   "start": 431.5,
+   "end": 431.94,
+   "heard": true,
+   "i": 1001,
+   "f0": 25890,
+   "f1": 25916,
+   "scene": 9
+  },
+  {
+   "w": "tinggal",
+   "start": 432.24,
+   "end": 432.48,
+   "heard": true,
+   "i": 1002,
+   "f0": 25934,
+   "f1": 25949,
+   "scene": 9
+  },
+  {
+   "w": "tes",
+   "start": 432.48,
+   "end": 432.64,
+   "heard": true,
+   "i": 1003,
+   "f0": 25949,
+   "f1": 25958,
+   "scene": 9
+  },
+  {
+   "w": "ulang.",
+   "start": 432.64,
+   "end": 433.08,
+   "heard": true,
+   "i": 1004,
+   "f0": 25958,
+   "f1": 25985,
+   "scene": 9
+  },
+  {
+   "w": "Karena",
+   "start": 433.28,
+   "end": 433.5,
+   "heard": true,
+   "i": 1005,
+   "f0": 25997,
+   "f1": 26010,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 433.5,
+   "end": 433.68,
+   "heard": true,
+   "i": 1006,
+   "f0": 26010,
+   "f1": 26021,
+   "scene": 9
+  },
+  {
+   "w": "perlu",
+   "start": 433.68,
+   "end": 433.9,
+   "heard": true,
+   "i": 1007,
+   "f0": 26021,
+   "f1": 26034,
+   "scene": 9
+  },
+  {
+   "w": "kita",
+   "start": 433.9,
+   "end": 434.12,
+   "heard": true,
+   "i": 1008,
+   "f0": 26034,
+   "f1": 26047,
+   "scene": 9
+  },
+  {
+   "w": "kenali",
+   "start": 434.12,
+   "end": 434.52,
+   "heard": true,
+   "i": 1009,
+   "f0": 26047,
+   "f1": 26071,
+   "scene": 9
+  },
+  {
+   "w": "bukan",
+   "start": 434.52,
+   "end": 434.82,
+   "heard": true,
+   "i": 1010,
+   "f0": 26071,
+   "f1": 26089,
+   "scene": 9
+  },
+  {
+   "w": "versi",
+   "start": 434.82,
+   "end": 435.36,
+   "heard": true,
+   "i": 1011,
+   "f0": 26089,
+   "f1": 26122,
+   "scene": 9
+  },
+  {
+   "w": "diri",
+   "start": 435.36,
+   "end": 435.6,
+   "heard": true,
+   "i": 1012,
+   "f0": 26122,
+   "f1": 26136,
+   "scene": 9
+  },
+  {
+   "w": "kita",
+   "start": 435.6,
+   "end": 435.8,
+   "heard": true,
+   "i": 1013,
+   "f0": 26136,
+   "f1": 26148,
+   "scene": 9
+  },
+  {
+   "w": "lima",
+   "start": 435.8,
+   "end": 436.0,
+   "heard": true,
+   "i": 1014,
+   "f0": 26148,
+   "f1": 26160,
+   "scene": 9
+  },
+  {
+   "w": "tahun",
+   "start": 436.0,
+   "end": 436.22,
+   "heard": true,
+   "i": 1015,
+   "f0": 26160,
+   "f1": 26173,
+   "scene": 9
+  },
+  {
+   "w": "lalu,",
+   "start": 436.22,
+   "end": 436.58,
+   "heard": true,
+   "i": 1016,
+   "f0": 26173,
+   "f1": 26195,
+   "scene": 9
+  },
+  {
+   "w": "tapi:",
+   "start": 436.66,
+   "end": 436.98,
+   "heard": true,
+   "i": 1017,
+   "f0": 26200,
+   "f1": 26219,
+   "scene": 9
+  },
+  {
+   "w": "diri",
+   "start": 436.98,
+   "end": 437.68,
+   "heard": true,
+   "i": 1018,
+   "f0": 26219,
+   "f1": 26261,
+   "scene": 9
+  },
+  {
+   "w": "kita",
+   "start": 437.68,
+   "end": 437.9,
+   "heard": true,
+   "i": 1019,
+   "f0": 26261,
+   "f1": 26274,
+   "scene": 9
+  },
+  {
+   "w": "yang",
+   "start": 437.9,
+   "end": 438.18,
+   "heard": true,
+   "i": 1020,
+   "f0": 26274,
+   "f1": 26291,
+   "scene": 9
+  },
+  {
+   "w": "sekarang.",
+   "start": 438.18,
+   "end": 438.62,
+   "heard": true,
+   "i": 1021,
+   "f0": 26291,
+   "f1": 26317,
+   "scene": 9
+  }
+ ]
+}
