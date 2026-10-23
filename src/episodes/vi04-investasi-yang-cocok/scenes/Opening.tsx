@@ -22,7 +22,7 @@
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Card, IconDot, Ico, Line, ORANG_TUNTUN_RIGHT, OrangTuntun, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, ease, Ico, IconDot, Line, ORANG_TUNTUN_RIGHT, OrangTuntun, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -134,6 +134,8 @@ export const SC01 = () => {
   return (
     <Stage>
       <SoftGround f={g} />
+      {/* the grid, the whole scene (Simon, 22 Oct) */}
+      <BoardGrid g={g} on={1} />
 
       {/* A + B — what we research, and the one thing we don't */}
       {mapOut < 0.999 && f >= listAt ? (

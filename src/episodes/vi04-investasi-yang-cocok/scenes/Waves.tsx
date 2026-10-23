@@ -18,9 +18,9 @@
  *  H  "nggak masalah": the three routes again, and the one with the smallest waves is picked.
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
+import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Card, Heading, IsoIcon, Line, ROUTE_CARD, ROUTE_CARDS, RouteCard, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, dockStyle, ease, IsoIcon, Line, QUESTION_CARD, ROUTE_CARD, ROUTE_CARDS, RouteCard, useWords } from "../components/kit";
 import { ASK as SC03_ASK, AskCard, AskLead, AskMain, askX } from "./Routes";
 
 const CX = theme.canvas.width / 2;
@@ -57,7 +57,7 @@ const jag = (knots: Knot[], clamp: (t: number, v: number) => number, per = 4, am
 };
 
 // A — the question card SC03's Ombak card grows into
-const Q_CARD = { x: CX - 560, y: 360, w: 1120, h: 230 };
+const Q_CARD = QUESTION_CARD;
 /** SC03's card text, measured from the type scale (label line + 4 px + title line), so the hand-over doesn't jump. */
 const SC03_TEXT = { titleTop: theme.type.label.size * theme.type.label.leading + 4, h: theme.type.label.size * theme.type.label.leading + 4 + theme.type.title.size * theme.type.title.leading };
 
@@ -104,8 +104,11 @@ const UPDN = { w: 600, h: 300, y: 330, gap: 120 };
 const updnX = (i: number) => CX + (i === 0 ? -UPDN.gap / 2 - UPDN.w : UPDN.gap / 2);
 
 // H — the routes again
-const PICK = { y: 370, gap: 60 };
-const pickX = (i: number) => CX + (i - 1) * (ROUTE_CARD.w + PICK.gap) - ROUTE_CARD.w / 2;
+// the three cards scaled up to fill the room the closing line used to take (Simon, 22 Oct)
+const PICK = { y: 395, gap: 56, k: 1.35 };
+const pickX = (i: number) => CX + (i - 1) * (ROUTE_CARD.w * PICK.k + PICK.gap) - (ROUTE_CARD.w * PICK.k) / 2;
+/** H's title: one line that rolls up into the next. */
+const ROLL = { y: 290, h: 70 };
 
 /**
  * A chart line: knots in a plot box, drawn up to x = `upTo` (px from the plot's left). `fill`: a soft brand wash under
@@ -180,11 +183,13 @@ export const SC04 = () => {
   const c = usePalette();
   const m = useMotion();
   const W = useWords(4, BLOCK.SC04);
+  const shadow = useShadow();
   const g = f + BLOCK.SC04;
 
   /** SC03's Ombak card growing into this scene's question card; SC03's other pieces letting go. */
   const morph = ease(f, 0, m.sec(0.8));
   const leave = ease(f, 0, m.fade);
+  const dock = ease(f, W("“Ombak” adalah"), m.move);
   const lerp = (a: number, b: number) => a + (b - a) * morph;
   const defAt = W("“Ombak” adalah");
   const exAt = W("Contohnya");
@@ -235,13 +240,17 @@ export const SC04 = () => {
 
   // G
   const honest = ease(f, honestAt, m.move);
+  /** "Market turun" is the card that matters: it glows indigo once it is up (Simon, 22 Oct). */
+  const downGlow = ease(f, honestAt + m.sec(0.3), m.reveal);
 
   // H
   const pick = ease(f, W("lebih kecil"), m.reveal);
+  const roll = ease(f, W("Pilih jalur"), m.move);
 
   return (
     <Stage>
       <SoftGround f={g} />
+      <BoardGrid g={g} on={1} />
 
       {/* A — ONE shot with SC03 (no cut; Simon, 22 Oct): it opens on SC03's last picture; the lines and the Kemudi
           card let go, and the Ombak card itself grows into the question — "Pertanyaan 1 · Ombak" becoming
@@ -251,7 +260,9 @@ export const SC04 = () => {
         <AskMain />
         <AskCard i={1} />
       </div>
-      <div style={{ position: "absolute", inset: 0, opacity: 1 - ease(f, defAt, m.fade) }}>
+      {/* on "“Ombak” adalah" the question card shrinks into the top left and stays there as the scene's heading
+          (Simon, 22 Oct: instead of a separate heading line) */}
+      <div style={dockStyle(dock)}>
         <Card x={lerp(askX(0), Q_CARD.x)} y={lerp(SC03_ASK.y, Q_CARD.y)} w={lerp(SC03_ASK.w, Q_CARD.w)} h={lerp(SC03_ASK.h, Q_CARD.h)} style={{ display: "flex", alignItems: "center", gap: lerp(30, 40), padding: `0 ${lerp(40, 56).toFixed(1)}px` }}>
           <IsoIcon name="waves" h={lerp(100, 120)} />
           <div style={{ position: "relative", flex: 1, height: lerp(SC03_TEXT.h, 150) }}>
@@ -262,9 +273,6 @@ export const SC04 = () => {
           </div>
         </Card>
       </div>
-      <Appear at={defAt} style={{ left: 0, top: 0 }}>
-        <Heading n={1} text="Seberapa besar ombak yang sanggup kamu hadapi?" />
-      </Appear>
 
       {/* B — what a wave is */}
       <Appear at={defAt} out={exAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
@@ -286,9 +294,7 @@ export const SC04 = () => {
       <Appear at={exAt} out={askAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <Card x={bb.x} y={bb.y} w={bb.w} h={bb.h} />
         <Appear at={W("Mei 2020")} style={{ left: bb.x + CARD_PAD.l, top: bb.y + 36 }}>
-          <div style={{ ...typeStyle("label"), color: c.slate, whiteSpace: "nowrap" }}>
-            Mei 2020 · <span style={{ color: c.ink }}>sebuah saham bank</span>
-          </div>
+          <div style={{ ...typeStyle("label"), color: c.ink, whiteSpace: "nowrap" }}>Saham bank, 2020</div>
         </Appear>
         <ChartLine pts={BANK_PTS} yOf={bankY} area={ba} upTo={bUpTo} id="vi04-sc04-bank" fill />
         <Dash x1={bx(0)} y1={by(BANK.buy)} x2={bx(BANK.lowAt) + 40} y2={by(BANK.buy)} p={drop * (1 - aside)} />
@@ -337,8 +343,12 @@ export const SC04 = () => {
       <Appear at={askAt} out={upAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <div style={{ position: "absolute", left: CX - (ASK.w * open) / 2, top: ASK.y, width: ASK.w * open, height: ASK.h, borderRadius: theme.shape.cardRadius, border: `2px dashed ${theme.color.selfAmber}`, background: c.cardBg, boxSizing: "border-box", opacity: Math.min(1, open * 3) }} />
         <div style={{ position: "absolute", left: CX - ASK.w / 2, top: ASK.y, width: ASK.w, height: ASK.h, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 10, opacity: ease(f, askAt + m.sec(0.5), m.reveal) }}>
-          <div style={{ ...typeStyle("label"), color: theme.color.selfAmberInk }}>Jadi pertanyaannya:</div>
-          <div style={{ width: ASK.w - 160, textAlign: "center", ...typeStyle("title"), fontWeight: 500, lineHeight: 1.25, color: c.ink, opacity: ease(f, W("“Kalau ini"), m.reveal) }}>“Kalau ini terjadi ke uangku, aku masih sanggup lanjut nggak?”</div>
+          {/* Simon's two lines, as typed (22 Oct) — no "Jadi pertanyaannya" over them */}
+          <div style={{ width: ASK.w - 160, textAlign: "center", ...typeStyle("title"), fontWeight: 500, lineHeight: 1.25, color: c.ink, opacity: ease(f, W("“Kalau ini"), m.reveal) }}>
+            Kalau ini terjadi ke uangku,
+            <br />
+            masih sanggup lanjut ngga?
+          </div>
         </div>
       </Appear>
 
@@ -346,44 +356,50 @@ export const SC04 = () => {
       <Appear at={upAt} out={okAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         {(
           [
-            { at: upAt, lead: "Saat harga naik", text: "semua orang bisa merasa berani.", textAt: "semua orang", rise: true },
-            { at: honestAt, lead: "Saat market benar-benar turun", text: "apa yang kita lakukan?", textAt: "apa yang kita", rise: false },
+            { at: upAt, lead: "Market naik", text: "Orang merasa berani", textAt: "semua orang", rise: true, strong: false },
+            { at: honestAt, lead: "Market turun", text: "apa yang kita lakukan?", textAt: "apa yang kita", rise: false, strong: true },
           ] as const
         ).map((k, i) => (
           <Appear key={k.lead} at={k.at} style={{ left: 0, top: 0 }}>
-            <Card x={updnX(i)} y={UPDN.y} w={UPDN.w} h={UPDN.h} style={{ opacity: i === 0 ? 1 - 0.5 * honest : 1 }}>
+            <Card x={updnX(i)} y={UPDN.y} w={UPDN.w} h={UPDN.h} style={i === 0 ? { opacity: 1 - 0.5 * honest } : { boxShadow: `${shadow.soft}, 0 0 ${(44 * downGlow).toFixed(1)}px ${(10 * downGlow).toFixed(1)}px ${theme.color.indigoGlow}` }}>
               <svg width={UPDN.w} height={120} style={{ position: "absolute", left: 0, top: 36 }}>
                 <polyline points={(k.rise ? [[60, 96], [150, 70], [210, 84], [300, 46], [360, 58], [440, 18]] : [[60, 18], [150, 44], [210, 32], [300, 70], [360, 58], [440, 100]]).map((p) => p.join(",")).join(" ")} fill="none" stroke={theme.color.neutralDotOn} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
                 <circle cx={440} cy={k.rise ? 18 : 100} r={8} fill={c.cardBg} stroke={theme.color.connector} strokeWidth={3} />
               </svg>
               <div style={{ position: "absolute", left: 60, top: 170, width: UPDN.w - 120 }}>
                 <div style={{ ...typeStyle("label"), color: c.slate }}>{k.lead}</div>
-                <div style={{ marginTop: 6, ...typeStyle("body"), color: c.ink, opacity: ease(f, W(k.textAt), m.reveal) }}>{k.text}</div>
+                <div style={{ marginTop: 6, ...typeStyle("body"), fontWeight: k.strong ? 700 : 500, color: k.strong ? c.indigo : c.ink, opacity: ease(f, W(k.textAt), m.reveal) }}>{k.text}</div>
               </div>
             </Card>
           </Appear>
         ))}
         <Connector a={{ x: updnX(0) + UPDN.w, y: UPDN.y + UPDN.h / 2 }} b={{ x: updnX(1), y: UPDN.y + UPDN.h / 2 }} p={ease(f, honestAt, m.sec(0.5))} shape="curve" />
-        <Connector a={{ x: updnX(1) + UPDN.w / 2, y: UPDN.y + UPDN.h }} b={{ x: updnX(1) + UPDN.w / 2, y: 750 }} p={ease(f, panicAt, m.sec(0.5))} shape="curve" axis="y" />
+        {/* from "Market turun" down into the middle, over the line it leads to (Simon, 22 Oct: "mengarah ke tengah … curve") */}
+        <Connector a={{ x: updnX(1) + UPDN.w / 2, y: UPDN.y + UPDN.h }} b={{ x: CX, y: 772 }} p={ease(f, panicAt, m.sec(0.6))} shape="curve" axis="y" />
         <Appear at={panicAt + m.sec(0.3)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-          <Line x={updnX(0)} y={830} w={updnX(1) + UPDN.w - updnX(0)} align="center" size={40} weight={500} text="Kalau langsung jual karena panik, mungkin ombaknya memang terlalu besar buat kita." mark="terlalu besar" />
+          {/* Simon's two lines, as typed (22 Oct); the second bold indigo */}
+          <div style={{ position: "absolute", left: updnX(0), top: 785, width: updnX(1) + UPDN.w - updnX(0), textAlign: "center", fontFamily: theme.text.family, fontSize: 40, lineHeight: 1.25 }}>
+            <div style={{ fontWeight: 500, color: c.ink }}>Kalau langsung jual karena panik,</div>
+            <div style={{ fontWeight: 700, color: c.indigo, opacity: ease(f, W("mungkin ombaknya"), m.reveal) }}>mungkin ombak terlalu besar buat kita</div>
+          </div>
         </Appear>
       </Appear>
 
       {/* H — no problem: the smaller waves */}
-      <Appear at={okAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-        <Line x={0} y={290} w={theme.canvas.width} align="center" size={44} weight={500} text="Kalau belum kuat, nggak masalah." />
+      {/* "Kalau belum kuat, nggak masalah." rolls up and away; "Pilih jalur …" rolls up into its place */}
+      <Appear at={okAt} style={{ left: 0, top: ROLL.y - ROLL.h / 2, width: theme.canvas.width, height: ROLL.h, overflow: "hidden" }}>
+        <div style={{ position: "absolute", inset: 0, textAlign: "center", lineHeight: `${ROLL.h}px`, fontFamily: theme.text.family, fontSize: 44, fontWeight: 500, color: c.ink, opacity: 1 - roll, transform: `translateY(${(-roll * ROLL.h).toFixed(2)}px)` }}>Kalau belum kuat, nggak masalah.</div>
+        <div style={{ position: "absolute", inset: 0, textAlign: "center", lineHeight: `${ROLL.h}px`, fontFamily: theme.text.family, fontSize: 44, fontWeight: 500, color: c.ink, opacity: roll, transform: `translateY(${((1 - roll) * ROLL.h).toFixed(2)}px)` }}>
+          Pilih jalur dengan <span style={{ color: c.indigo }}>ombak yang lebih kecil</span>.
+        </div>
       </Appear>
       {ROUTE_CARDS.map((r, i) => (
         <Appear key={r.name} at={W("Pilih jalur") - m.sec(0.3) + m.sec(0.1) * i} style={{ left: 0, top: 0 }}>
-          <div style={{ position: "absolute", left: 0, top: 0, opacity: i === 0 ? 1 : 1 - 0.55 * pick }}>
-            <RouteCard i={i} x={pickX(i)} y={PICK.y} draw={1} line={i === 0 && pick > 0.5 ? theme.color.connector : undefined} />
+          <div style={{ position: "absolute", left: pickX(i), top: PICK.y, transformOrigin: "0 0", transform: `scale(${PICK.k})`, opacity: i === 0 ? 1 : 1 - 0.55 * pick }}>
+            <RouteCard i={i} x={0} y={0} draw={1} />
           </div>
         </Appear>
       ))}
-      <Appear at={W("Pilih jalur")} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-        <Line x={0} y={820} w={theme.canvas.width} align="center" size={44} weight={500} text="Pilih jalur dengan ombak yang lebih kecil." mark="ombak yang lebih kecil" />
-      </Appear>
     </Stage>
   );
 };

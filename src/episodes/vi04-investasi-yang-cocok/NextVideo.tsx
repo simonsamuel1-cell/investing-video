@@ -15,7 +15,7 @@
  */
 import { Connector, NextVideoHead, SoftGround, Stage, progressInOut, theme, typeStyle, useMotion, useNextClip, usePalette } from "../../core";
 import type { NextVideo } from "../../core";
-import { Card, IsoIcon } from "./components/kit";
+import { BoardGrid, Card, IsoIcon } from "./components/kit";
 
 const CLIP = { seconds: 6.358 };
 const WORD = { title: 3.1, grow: 3.68, rise: 4.74, time: 5.38 };
@@ -33,6 +33,7 @@ const Scene = () => {
   return (
     <Stage>
       <SoftGround f={f} />
+      <BoardGrid g={f} on={1} />
       <NextVideoHead title="Perjalanan investasi dari waktu ke waktu" chipAt={at(0)} titleAt={at(WORD.title)} light />
       {STEPS.slice(0, -1).map((_, i) => (
         <Connector key={i} a={{ x: STEP.xs[i] + STEP.size / 2, y: STEP.ys[i] }} b={{ x: STEP.xs[i + 1] - STEP.size / 2, y: STEP.ys[i + 1] }} p={progressInOut(f, at(WORD.grow) + m.sec(0.3) * (i + 1), m.sec(0.4))} shape="curve" dashed dot={false} />

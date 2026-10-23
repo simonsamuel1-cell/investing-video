@@ -14,9 +14,9 @@
  *     same two icons and words SC06 opens with.
  */
 import { useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
+import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Card, Heading, IsoIcon, Line, NumRing, Vehicle, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, dockStyle, ease, IsoIcon, Line, NumRing, QUESTION_CARD, useWords, Vehicle } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -26,17 +26,17 @@ const HUB_OUT = { x: HUB.x + HUB.w, y: HUB.y + HUB.h / 2 };
 const NODE = { x: 780, w: 1000, h: 170, ys: [280, 490, 700] };
 type Row = { title: string; at: string; titleAt: string; chips: { text: string; at: string }[] };
 const ROWS: Row[] = [
-  { title: "Paham apa yang kamu lihat", at: "Pertama", titleAt: "kamu paham", chips: [{ text: "Laporan keuangan", at: "Laporan keuangan" }, { text: "Indikator teknikal", at: "indikator teknikal" }] },
+  { title: "Paham apa yang dilihat", at: "Pertama", titleAt: "kamu paham", chips: [{ text: "Laporan keuangan", at: "Laporan keuangan" }, { text: "Indikator teknikal", at: "indikator teknikal" }] },
   { title: "Punya logika sendiri", at: "Kedua, kamu punya", titleAt: "punya logika", chips: [{ text: "Kenapa beli?", at: "Kenapa beli" }, { text: "Kapan harus jual?", at: "Kapan harus jual" }, { text: "Bisa jelasin sendiri?", at: "Bisa jelasin" }] },
-  { title: "Pernah melewati badai", at: "Ketiga", titleAt: "pernah melewati badai", chips: [{ text: "Pengalaman beberapa tahun", at: "Punya pengalaman" }, { text: "Market crash tanpa panik", at: "market crash" }] },
+  { title: "Pernah melewati “badai”", at: "Ketiga", titleAt: "pernah melewati badai", chips: [{ text: "Punya pengalaman", at: "Punya pengalaman" }, { text: "Market crash tanpa panik", at: "market crash" }] },
 ];
 
 // D — the levels
 const LV = { w: 900, h: 130, ys: [300, 460, 620], tick: 52 };
 
 // E — daring is not steering
-const ANS = { w: 680, h: 200, y: 420, gap: 100 };
-const ansX = (i: number) => CX + (i === 0 ? -ANS.gap / 2 - ANS.w : ANS.gap / 2);
+// stacked, one line each (Simon, 22 Oct: "atas bawah aja", no ≠)
+const ANS = { w: 960, h: 160, ys: [400, 600], icon: 124 };
 
 /** An empty box with a hairline — for you to tick, not us. */
 const OpenBox = ({ size }: { size: number }) => <div style={{ width: size, height: size, borderRadius: size * 0.28, boxShadow: `inset 0 0 0 2px ${theme.color.connectorMute}`, flex: "none" }} />;
@@ -59,6 +59,7 @@ export const SC05 = () => {
   const c = usePalette();
   const m = useMotion();
   const W = useWords(5, BLOCK.SC05);
+  const shadow = useShadow();
   const g = f + BLOCK.SC05;
 
   const qAt = W("Pertanyaan kedua");
@@ -70,27 +71,28 @@ export const SC05 = () => {
   const rowAt = ROWS.map((r) => W(r.at));
 
   const levels = [
-    { ticks: [W("tiga-tiganya"), W("tiga-tiganya") + m.sec(0.15), W("tiga-tiganya") + m.sec(0.3)], at: levelAt, label: "Lebih matang", labelAt: W("lebih matang") },
-    { ticks: [W("Baru satu"), W("atau dua")], at: W("Baru satu"), label: "Berkembang", labelAt: W("masih berkembang") },
+    { ticks: [W("tiga-tiganya"), W("tiga-tiganya") + m.sec(0.15), W("tiga-tiganya") + m.sec(0.3)], at: levelAt, label: "Kemampuan matang", labelAt: W("lebih matang") },
+    { ticks: [W("Baru satu"), W("atau dua")], at: W("Baru satu"), label: "Masih berkembang", labelAt: W("masih berkembang") },
     { ticks: [], at: W("Belum ada"), label: "Pemula", labelAt: W("masih pemula") },
   ];
 
   return (
     <Stage>
       <SoftGround f={g} />
+      <BoardGrid g={g} on={1} />
 
       {/* A — the question */}
-      <Appear at={qAt + m.sec(0.15)} out={planeAt} style={{ left: 0, top: 0 }}>
-        <Card x={CX - 560} y={360} w={1120} h={230} style={{ display: "flex", alignItems: "center", gap: 40, padding: "0 56px" }}>
-          <IsoIcon name="wheel" h={120} />
-          <div>
-            <div style={{ ...typeStyle("label"), color: c.slate }}>Pertanyaan kedua</div>
-            <div style={{ marginTop: 8, ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, W("kamu sudah bisa"), m.reveal) }}>Kamu sudah bisa mengemudikannya belum?</div>
-          </div>
-        </Card>
-      </Appear>
-      <Appear at={planeAt} out={keyAt} style={{ left: 0, top: 0 }}>
-        <Heading n={2} text="Kamu sudah bisa mengemudikannya belum?" />
+      {/* …then, on "Kalau memilih saham", it shrinks into the top left and stays as the heading — as SC04's does */}
+      <Appear at={qAt + m.sec(0.15)} out={keyAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+        <div style={dockStyle(ease(f, planeAt, m.move))}>
+          <Card x={QUESTION_CARD.x} y={QUESTION_CARD.y} w={QUESTION_CARD.w} h={QUESTION_CARD.h} style={{ display: "flex", alignItems: "center", gap: 40, padding: "0 56px" }}>
+            <IsoIcon name="wheel" h={120} />
+            <div>
+              <div style={{ ...typeStyle("label"), color: c.slate }}>Pertanyaan kedua</div>
+              <div style={{ marginTop: 8, ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, W("kamu sudah bisa"), m.reveal) }}>Kamu sudah bisa mengemudikannya belum?</div>
+            </div>
+          </Card>
+        </div>
       </Appear>
 
       {/* B–C — the licence, and what it is made of */}
@@ -98,7 +100,7 @@ export const SC05 = () => {
         <Appear at={W("bawa pesawat")} style={{ left: 0, top: 0 }}>
           <Card x={HUB.x} y={HUB.y} w={HUB.w} h={HUB.h} line={ease(f, licAt, m.reveal) > 0.5 ? theme.color.hairlineBrand : undefined}>
             <Vehicle name="plane" cx={HUB.w / 2} cy={170} h={170} />
-            <div style={{ position: "absolute", left: 0, top: 300, width: HUB.w, textAlign: "center", ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, licAt, m.reveal) }}>Lisensi</div>
+            <div style={{ position: "absolute", left: 0, top: 300, width: HUB.w, textAlign: "center", ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, licAt, m.reveal) }}>Perlu lisensi</div>
           </Card>
         </Appear>
         {ROWS.map((r, i) => {
@@ -107,11 +109,13 @@ export const SC05 = () => {
           const active = ease(f, rowAt[i], m.move);
           const later = i < 2 ? ease(f, rowAt[i + 1], m.move) : 0;
           const focus = 1 - 0.5 * (1 - active) * ease(f, rowAt[0], m.move) - 0.5 * later;
+          /** the row being said glows indigo (Simon, 22 Oct) — until the next one takes over, or the levels come */
+          const glow = ease(f, rowAt[i] + m.sec(0.2), m.reveal) * (1 - later) * (1 - ease(f, levelAt, m.fade));
           return (
             <div key={r.title} style={{ position: "absolute", inset: 0, opacity: focus }}>
               <Connector a={HUB_OUT} b={{ x: NODE.x, y: y + NODE.h / 2 }} p={ease(f, threeAt + m.sec(0.15) * i, m.sec(0.55))} shape="elbow" dot={i === 0} />
               <Appear at={threeAt + m.sec(0.15) * i + m.sec(0.3)} style={{ left: 0, top: 0 }}>
-                <Card x={NODE.x} y={y} w={NODE.w} h={NODE.h}>
+                <Card x={NODE.x} y={y} w={NODE.w} h={NODE.h} style={{ boxShadow: `${shadow.soft}, 0 0 ${(40 * glow).toFixed(1)}px ${(9 * glow).toFixed(1)}px ${theme.color.indigoGlow}` }}>
                   <div style={{ position: "absolute", left: 30, top: 28, display: "flex", alignItems: "center", gap: 22 }}>
                     <NumRing n={i + 1} size={46} />
                     <div style={{ position: "relative", height: 46, display: "flex", alignItems: "center" }}>
@@ -162,25 +166,22 @@ export const SC05 = () => {
       </Appear>
       {(
         [
-          { icon: "waves", title: "“Berani”", word: "toleransi", at: W("berani", 1), wordAt: W("toleransi") },
-          { icon: "wheel", title: "“Bisa mengemudikan”", word: "kemampuan", at: W("bisa mengemudikan"), wordAt: W("kemampuan") },
+          { icon: "waves", title: "“Berani”", word: "Toleransi", at: W("berani", 1), wordAt: W("toleransi") },
+          { icon: "wheel", title: "“Mengemudikan”", word: "Kemampuan", at: W("bisa mengemudikan"), wordAt: W("kemampuan") },
         ] as const
       ).map((a, i) => (
         <Appear key={a.title} at={a.at} style={{ left: 0, top: 0 }}>
-          <Card x={ansX(i)} y={ANS.y} w={ANS.w} h={ANS.h} style={{ display: "flex", alignItems: "center", gap: 30, padding: "0 40px" }}>
-            <IsoIcon name={a.icon} h={96} />
-            <div>
-              <div style={{ ...typeStyle("title"), fontSize: 44, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>{a.title}</div>
-              <div style={{ marginTop: 6, ...typeStyle("body"), color: c.slate, opacity: ease(f, a.wordAt - m.sec(0.3), m.reveal) }}>
-                bicara soal <span style={{ color: c.indigo }}>{a.word}</span>.
-              </div>
+          <Card x={CX - ANS.w / 2} y={ANS.ys[i]} w={ANS.w} h={ANS.h} style={{ display: "flex", alignItems: "center", gap: 34, padding: "0 48px" }}>
+            {/* one slot for both icons, so the two lines start at the same x */}
+            <div style={{ width: ANS.icon, display: "flex", justifyContent: "center", flex: "none" }}>
+              <IsoIcon name={a.icon} h={96} />
+            </div>
+            <div style={{ ...typeStyle("title"), fontSize: 44, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>
+              {a.title} = <span style={{ color: c.indigo, opacity: ease(f, a.wordAt - m.sec(0.3), m.reveal) }}>{a.word}</span>
             </div>
           </Card>
         </Appear>
       ))}
-      <Appear at={W("bisa mengemudikan")} style={{ left: CX - 40, top: ANS.y + ANS.h / 2 - 40, width: 80, height: 80, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <div style={{ ...typeStyle("statement"), fontWeight: 400, color: c.slate }}>≠</div>
-      </Appear>
     </Stage>
   );
 };

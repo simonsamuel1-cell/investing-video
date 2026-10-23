@@ -1,7 +1,7 @@
 /**
  * VI04 · SC08 — "Ingat Tiga Hal Ini", rebuilt to Benchmark v1 + minimal (STYLE.md §0; Simon, 22 Oct 2026) from
  * the ChatGPT storyboard docs/vi-style/storyboards/VI04-SC08-v2.jpg. A stepper 1·2·3 at the top marks the point
- * being said.
+ * being said; it stays through point 3 too (Simon, 22 Oct).
  *
  *  1  "jangan langsung tanya mana yang paling cepat" ✕ → a connector → "Tanya dulu: “Mana yang benar-benar bisa
  *     aku jalani?”" ✓ (amber: the question about YOU).
@@ -12,7 +12,7 @@
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Card, IconDot, IsoIcon, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, ease, IconDot, IsoIcon, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const STEPPER = { y: 270, gap: 160, size: 56 };
@@ -46,12 +46,13 @@ export const SC08 = () => {
   return (
     <Stage>
       <SoftGround f={g} />
+      <BoardGrid g={g} on={1} />
 
       {/* the stepper: "ingat tiga hal" */}
-      <Appear at={W("Kalau mau diringkas")} out={three} style={{ left: 0, top: 0, width: theme.canvas.width }}>
+      <Appear at={W("Kalau mau diringkas")} style={{ left: 0, top: 0, width: theme.canvas.width }}>
         <Line x={0} y={170} w={theme.canvas.width} align="center" size={44} weight={500} text="Ingat tiga hal." mark="tiga hal" />
       </Appear>
-      <Appear at={W("ingat tiga hal")} out={three} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+      <Appear at={W("ingat tiga hal")} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
           <line x1={CX - STEPPER.gap + STEPPER.size / 2} y1={STEPPER.y} x2={CX - STEPPER.size / 2} y2={STEPPER.y} stroke={theme.color.connectorMute} strokeWidth={2.5} />
           <line x1={CX + STEPPER.size / 2} y1={STEPPER.y} x2={CX + STEPPER.gap - STEPPER.size / 2} y2={STEPPER.y} stroke={theme.color.connectorMute} strokeWidth={2.5} />
@@ -91,8 +92,8 @@ export const SC08 = () => {
       {/* 2 — skill and tolerance */}
       {(
         [
-          { icon: "wheel", title: "Kemampuan", text: "menentukan apakah kita siap bawa pesawat sendiri.", at: "kemampuan menentukan" },
-          { icon: "waves", title: "Toleransi", text: "menentukan seberapa besar ombak yang sanggup kita tahan.", at: "Toleransi menentukan" },
+          { icon: "wheel", title: "Kemampuan", text: "menentukan siap atau tidak", at: "kemampuan menentukan" },
+          { icon: "waves", title: "Toleransi", text: "menentukan besar ombak yang sanggup ditahan.", at: "Toleransi menentukan" },
         ] as const
       ).map((k, i) => (
         <Appear key={k.title} at={W(k.at)} out={three} style={{ left: 0, top: 0 }}>
@@ -108,13 +109,11 @@ export const SC08 = () => {
 
       {/* 3 — the insight */}
       <OrangTuntun at={three} />
-      <Appear at={three + m.sec(0.2)} style={{ left: 0, top: 0 }}>
-        <div style={{ position: "absolute", left: ORANG_TUNTUN_RIGHT + 90, top: 290, ...typeStyle("body"), color: c.slate, whiteSpace: "nowrap" }}>Dan yang paling penting:</div>
-      </Appear>
+      {/* "Dan yang paling penting" removed (Simon, 22 Oct); the line, then the two icons under it */}
       <Appear at={W("berani menghadapi ombak")} style={{ left: 0, top: 0 }}>
-        <Line x={ORANG_TUNTUN_RIGHT + 90} y={450} w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160} size={60} text="berani menghadapi ombak, belum tentu berarti sudah bisa bawa pesawat." mark="belum tentu" />
+        <Line x={ORANG_TUNTUN_RIGHT + 90} y={530} w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160} size={60} text="berani menghadapi ombak, belum tentu berarti sudah bisa bawa pesawat." mark="belum tentu" />
       </Appear>
-      <Appear at={W("belum tentu")} style={{ left: ORANG_TUNTUN_RIGHT + 90, top: 660, display: "flex", alignItems: "center", gap: 40 }}>
+      <Appear at={W("belum tentu")} style={{ left: ORANG_TUNTUN_RIGHT + 90, top: 710, display: "flex", alignItems: "center", gap: 40 }}>
         <IsoIcon name="waves" h={100} />
         <div style={{ ...typeStyle("statement"), fontWeight: 400, color: c.slate }}>≠</div>
         <IsoIcon name="wheel" h={100} />

@@ -8,8 +8,8 @@
  * nobody researches. Other people's answers, products and numbers stay indigo/slate.
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { theme, useMotion, usePalette, useShadow } from "../../../core";
-import { ease } from "../../vi03-tiga-jenis-uang/components/kit";
+import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { OUTSIDE_RESERVES, ease } from "../../vi03-tiga-jenis-uang/components/kit";
 import { w as wordAt } from "../data/timing";
 
 export { Appear, Badge, Ground, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, Panel3, Statement, ease, useAppear } from "../../vi03-tiga-jenis-uang/components/kit";
@@ -235,3 +235,30 @@ export const Typed = ({ text, at, cps = 34, mark, markInk }: { text: string; at:
     </span>
   );
 };
+
+/**
+ * The two question cards (SC04 Ombak, SC05 Kemudi): where they stand big in the middle, and where they dock — half
+ * size, top left — to stay on as the scene's heading (Simon, 22 Oct: "mengecil ke kiri atas", for both).
+ */
+export const QUESTION_CARD = { x: 960 - 560, y: 360, w: 1120, h: 230 };
+export const QUESTION_DOCK = { x: 140, y: 100, s: 0.5 };
+/** The transform that takes a layer holding the card from the middle (p = 0) to its dock (p = 1). */
+export const dockStyle = (p: number): React.CSSProperties => ({
+  position: "absolute",
+  inset: 0,
+  transformOrigin: `${QUESTION_CARD.x}px ${QUESTION_CARD.y}px`,
+  transform: `translate(${((QUESTION_DOCK.x - QUESTION_CARD.x) * p).toFixed(2)}px, ${((QUESTION_DOCK.y - QUESTION_CARD.y) * p).toFixed(2)}px) scale(${(1 - (1 - QUESTION_DOCK.s) * p).toFixed(4)})`,
+});
+
+/**
+ * The drifting grid, for the BOARD parts of VI04 — mindmaps, charts, timelines, the recap (Simon, 22 Oct: "background
+ * kotak-kotak bergerak"). Not under the islands, the phone/app or Orang Tuntun. Lines only (the paper is the scene's
+ * SoftGround under it), kept out of the subtitle band and the logo zone. `g` = the global frame, so the drift carries
+ * across a cut; `on` 0..1 fades it in and out inside a scene.
+ */
+export const BoardGrid = ({ g, on }: { g: number; on: number }) =>
+  on <= 0.001 ? null : (
+    <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+      <GridGround f={g} opacity={Math.min(1, on)} paper="transparent" />
+    </div>
+  );

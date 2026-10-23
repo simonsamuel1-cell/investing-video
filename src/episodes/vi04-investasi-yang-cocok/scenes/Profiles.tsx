@@ -17,18 +17,19 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Sketch, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, ease, Sketch, useWords } from "../components/kit";
 import { PhoneScreens } from "../components/PhoneScreens";
 
 const CX = theme.canvas.width / 2;
 const ICON = (n: string) => `art/vi04/ic-${n}.png`;
 
 // A — the two answers and where they meet
-const ANS = { w: 460, h: 168, y: 230, xs: [600, 1320] };
+// just the two names (Simon, 22 Oct: the "seberapa …" lines removed)
+const ANS = { w: 480, h: 140, y: 240, xs: [600, 1320] };
 const MEET = { x: CX, y: 520 };
 const ANSWERS = [
-  { icon: "waves", title: "Toleransi", sub: "seberapa besar ombak yang bisa kamu tahan", at: "seberapa besar ombak" },
-  { icon: "wheel", title: "Kemampuan", sub: "seberapa siap kamu mengendalikan investasimu", at: "seberapa siap" },
+  { icon: "waves", title: "Toleransi", at: "seberapa besar ombak" },
+  { icon: "wheel", title: "Kemampuan", at: "seberapa siap" },
 ];
 
 // B → C–F — four nodes: as steps, then as the stepper at the top
@@ -109,6 +110,8 @@ export const SC06 = () => {
   return (
     <Stage>
       <SoftGround f={g} />
+      {/* the grid under the answers and paths, and the bar — not under the phone with the four types */}
+      <BoardGrid g={g} on={1 - ease(f, typeAt[0], m.fade) + ease(f, ruleAt, m.reveal)} />
 
       {/* A — the two answers meet */}
       {abOut < 0.999 ? (
@@ -119,11 +122,10 @@ export const SC06 = () => {
             return (
               <div key={a.title}>
                 <Appear at={i === 0 ? startAt : at} style={{ left: 0, top: 0 }}>
-                  <div style={{ position: "absolute", left: x, top: ANS.y, width: ANS.w, height: ANS.h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 26, padding: "0 30px", boxSizing: "border-box" }}>
+                  <div style={{ position: "absolute", left: x, top: ANS.y, width: ANS.w, height: ANS.h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", gap: 26, padding: "0 30px", boxSizing: "border-box" }}>
                     <Img src={staticFile(ICON(a.icon))} style={{ height: 96, width: 96, objectFit: "contain", maxWidth: "none", flex: "none" }} />
                     <div>
                       <div style={{ ...typeStyle("title"), fontSize: 44, color: c.ink }}>{a.title}</div>
-                      <div style={{ marginTop: 6, ...typeStyle("label"), fontWeight: 400, color: c.slate, lineHeight: 1.3, opacity: ease(f, at, m.reveal) }}>{a.sub}</div>
                     </div>
                   </div>
                 </Appear>
@@ -199,16 +201,16 @@ export const SC06 = () => {
       {/* G — the principle: most of it where you fit now, a little to learn the next step */}
       {f >= ruleAt && barOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: (1 - barOut) * ease(f, ruleAt + m.sec(0.2), m.reveal) }}>
-          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: 250, textAlign: "center", ...typeStyle("title"), color: c.ink }}>Prinsipnya tetap sama</div>
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: 250, textAlign: "center", ...typeStyle("title"), fontWeight: 700, color: c.indigo }}>Prinsip</div>
           <div style={{ position: "absolute", left: BAR.x, top: BAR.y, width: BAR.w, height: BAR.h, borderRadius: 999, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrand}` }} />
           <div style={{ position: "absolute", left: BAR.x, top: BAR.y, width: BAR.w * BAR.big * ease(f, bigAt, m.sec(0.9)), height: BAR.h, borderRadius: 999, background: theme.color.neutralDotOn }} />
           <div style={{ position: "absolute", left: BAR.x, top: BAR.y - 150, width: BAR.w * BAR.big, opacity: ease(f, bigAt, m.reveal) }}>
             <div style={{ ...typeStyle("label"), color: c.slate }}>Sebagian besar</div>
-            <div style={{ marginTop: 4, ...typeStyle("body"), color: c.ink }}>jalur yang paling sesuai dengan kemampuanmu sekarang</div>
+            <div style={{ marginTop: 4, ...typeStyle("body"), color: c.ink }}>Yang paling sesuai dengan kemampuan sekarang</div>
           </div>
           <div style={{ position: "absolute", left: BAR.x + BAR.w * BAR.big + 24, top: BAR.y + BAR.h + 34, width: BAR.w * (1 - BAR.big) + 120, opacity: ease(f, smallAt, m.reveal) }}>
             <div style={{ ...typeStyle("label"), color: c.indigo }}>Sebagian kecil</div>
-            <div style={{ marginTop: 4, ...typeStyle("body"), color: c.ink }}>belajar menuju tahap berikutnya</div>
+            <div style={{ marginTop: 4, ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>Digunakan untuk belajar</div>
           </div>
           <div style={{ position: "absolute", left: BAR.x + BAR.w * BAR.big + 10, top: BAR.y + 12, width: BAR.w * (1 - BAR.big) - 22, height: BAR.h - 24, borderRadius: 999, background: theme.color.indigoWash, opacity: ease(f, smallAt, m.reveal) }} />
         </div>

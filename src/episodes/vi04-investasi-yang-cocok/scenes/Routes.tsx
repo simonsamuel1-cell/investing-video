@@ -19,7 +19,7 @@
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, Card, Heading, Ico, IconDot, IsoIcon, Line, NumRing, OUTSIDE_RESERVES, ROUGH, Typed, ROUTE_CARD, ROUTE_CARDS, RouteCard, Vehicle, ease, useWords, wavePts, type SketchName } from "../components/kit";
+import { Appear, BoardGrid, Card, ease, Heading, Ico, IconDot, IsoIcon, Line, NumRing, OUTSIDE_RESERVES, ROUGH, ROUTE_CARD, ROUTE_CARDS, RouteCard, Typed, useWords, Vehicle, wavePts, type SketchName } from "../components/kit";
 import { ISLE_FRAME, Islands, RiverLines, WAY_DISC_R, frameStyle, mixFrame, wayDisc } from "../components/Islands";
 import { KenaliLine } from "./River";
 
@@ -192,6 +192,8 @@ export const SC03 = () => {
   return (
     <Stage>
       <SoftGround f={g} />
+      {/* the grid, the whole scene (Simon, 22 Oct) — fading in at its start, since SC02 (no grid) runs into it without a cut */}
+      <BoardGrid g={g} on={ease(f, 0, m.sec(0.8))} />
 
       {/* A — three ways across. ONE shot with SC02 (no cut): it opens on SC02's last frame — the camera dived onto
           Kamu, the house faded, the line on screen — and pulls back to the whole picture as the routes draw. */}
@@ -224,8 +226,10 @@ export const SC03 = () => {
       {f >= enter1 && f < enter1 + m.reveal + 1 ? (
         <div style={{ position: "absolute", inset: 0, opacity: ease(f, enter1, m.reveal) }}>
           <SoftGround f={g} />
+          <BoardGrid g={g} on={1} />
         </div>
       ) : null}
+
 
       {/* B–D — the frame that stays: the vehicle card, the numbers card and its curve */}
       <Appear at={enter1} out={sumAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
