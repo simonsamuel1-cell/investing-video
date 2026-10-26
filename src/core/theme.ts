@@ -547,6 +547,48 @@ export const theme = {
     neutralIcon: "#5B5E6E",
     neutralDot: "#D9DBE2",
     neutralDotOn: "#3A3D4C",
+    /** A skeleton line standing in for text on a drawn app screen (Benchmark v1: skeleton lines instead of fake copy). */
+    skeleton: "#E4E5EA",
+    /**
+     * VI07's one accent: the red of a market that is falling, on the drawn PHONE only — a down chip, the sell button,
+     * the screen flooding red (SC01 "Layar ponselmu penuh warna merah"). Same red as the candles, so the video still
+     * has one red. Never on a chart that stands for real data.
+     */
+    alarmRed: "#E5475D",
+    alarmWash: "rgba(229, 71, 93, 0.16)",
+    /**
+     * The isometric "exploded view" (VI07 SC04, Simon's Pinterest reference 26 Oct 2026: abstract objects that mean
+     * something): the side of an indigo slab, the side of an ink slab, and the hairline round every slab.
+     */
+    isoIndigoSide: "#4636C9",
+    isoInkTop: "#1E2030",
+    isoInkSide: "#0B0C12",
+    isoEdge: "rgba(30, 32, 48, 0.28)",
+    /**
+     * Benchmark v2 (Simon, 26 Oct 2026: Ray Dalio's explainers — "grafik data dan foto arsip, itu bisa ditiru
+     * style nya"): newsprint for an archival clipping, its ink, the halftone dots of its picture, and the ink line of a
+     * hand-drawn metaphor object (a balance, a lens).
+     */
+    newsPaper: "#F3EDDD",
+    newsInk: "#2B2722",
+    newsHalftone: "rgba(43, 39, 34, 0.42)",
+    sketchInk: "#2E2F3A",
+    sketchFill: "#FBF8F0",
+    /**
+     * ⚠ NO TRANSPARENT FILLS (Simon, 26 Oct 2026: "Untuk beberapa elemen yang fillnya transparan di bawah 100%, tolong
+     * dibuat 100%. Biar aku aja yang buat transparan, jangan buat transparan lagi.") — the opaque twins of the rgba keys
+     * above, each the same colour laid on white (the newsprint ones on newsPaper). New work uses these; transparency is
+     * Simon's to add in the edit. The rgba originals stay for the episodes already approved with them.
+     */
+    indigoWashSolid: "#F1EFFD",
+    indigoWashStrongSolid: "#E5E3FC",
+    alarmWashSolid: "#FBE2E5",
+    selfAmberWashSolid: "#E5F6FB",
+    connectorMuteSolid: "#DBDBDE",
+    hairlineBrandSolid: "#D2CDFA",
+    isoEdgeSolid: "#C0C1C5",
+    newsHalftoneSolid: "#9F9A8E",
+    newsTape: "#D6D0C2",
     /** The isometric islands and house in neutrals (SC02 from 22 Oct). */
     isoNTop: "#FFFFFF",
     isoNLeft: "#E6E7EC",

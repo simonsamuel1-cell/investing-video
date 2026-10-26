@@ -51,6 +51,40 @@ every few seconds of each video and dense strips of three motions; `videos/` and
    at most for a headline and 800 not used.
 9. **Finance specifically (v5, v6):** one number, one picture, one chart per idea; the part of the chart the VO talks
    about is shaded; real photos may sit under a colour overlay.
+10. **Text has to earn its place (Simon, 26 Oct, after VI04's text revisions): "Ga semua poin2 bisa kamu tulis langsung
+   aja begitu, harus dipikirin lagi apakah worth it untuk ditulis?"** The subtitles already carry the VO, so a card
+   that repeats it adds nothing. Write a number, a keyword that names the picture, a label that tells things apart,
+   or the scene's ONE key line — nothing else; everything else is a picture, an icon or a motion. What stays is
+   rephrased short: labels 1–3 words, a phrase over a sentence, one sentence per scene at most. Never a script
+   sentence pasted onto a card.
+
+### 0b. Benchmark v2 — 26 Oct 2026 (Ray Dalio's explainers; adds to v1, doesn't replace it)
+
+Simon sent four links — "How The Economic Machine Works" (PHe0bXAIuk0) and "Principles for Dealing with the Changing
+World Order" (xguam0TKMw8, its 5-minute cut BB2r_eOjsPw, and R34NjxDnhi4, the same film in Spanish). Contact sheets in
+`refs/benchmark-2026-10-26-dalio/`. His call: *"Coba terapkan yang ga melanggar aturan. Yang bentrok, buang aja, kecuali
+grafik data dan foto arsip, itu bisa ditiru style nya."*
+
+**Taken (first used in VI07; pieces in `src/episodes/vi07-…/components/Dalio.tsx`):**
+1. **Metaphor objects that carry the argument** — a lens that dives into a line to show what it is made of (volume →
+   transactions), drawn in ink line (`sketchInk` on `sketchFill`). ⚠ NOT a balance/scale: tried in VI07 SC04 and
+   rejected (Simon, 26 Oct: "hapus timbangannya, malah jadi sampah") — a big drawn prop next to the scene's objects
+   reads as clutter.
+2. **Lines that draw on behind a pen-tip dot.**
+3. **Real-data charts in an editorial style** — serif title (Libre Baskerville), hairline grid, value axis on the right,
+   month ticks, one event marked with a dashed rule, the source in small type. REAL DATA ONLY (VI07: IHSG closes from
+   Yahoo Finance in `data/ihsg.ts`).
+4. **Archival clipping style** — newsprint, serif headline, columns, a halftone picture, tape. Its words come from the
+   script; it never names or imitates a real newspaper.
+5. **One recurring thread** where an episode has one (Dalio's Big Cycle arc): the same object returning across scenes.
+
+**Dropped as clashing with our rules:** crowds and figures of people (only Orang Tuntun and the mascot), dark textured
+grounds (we stay light; dark only for a moment of emphasis), and real archive photos/footage (copyright — the STYLE is
+imitated, the assets are not).
+
+10b. **No transparent fills (Simon, 26 Oct: "Biar aku aja yang buat transparan, jangan buat transparan lagi").** Every
+   fill and line is 100% opaque — use the `…Solid` theme keys, never the rgba washes; a "dimmed" state is shown by
+   desaturating (grayscale), not by opacity. Opacity is only for fading in and out.
 
 **Open with Simon (not decided):**
 - **Avatars as nodes** (v3, v4, images) — real-looking people in circles. §3 below says "no other people" (19 Oct).

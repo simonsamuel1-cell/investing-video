@@ -46,11 +46,8 @@ export const BLOCK: Record<string, number> = Object.fromEntries([
 
 /** A camera cut at every scene change unless a scene is built to carry over (house style: no wipes). */
 export const CUT = { over: 40, distance: 120, blur: 10 } as const;
-/**
- * Scene changes built to carry over, with no cut (Simon, 22 Oct): SC02 → SC03 is one shot of the islands; SC03 → SC04
- * one shot of the Ombak card.
- */
-export const CONTINUOUS: number[] = [BLOCK.SC03, BLOCK.SC04];
+/** Scene changes built to carry over, with no cut — none yet. */
+export const CONTINUOUS: number[] = [];
 export const CUTS: { at: number; axis: "x" | "y" }[] = Object.keys(BLOCK)
   .filter((k) => k !== "SC01" && k !== "END")
   .map((k) => BLOCK[k])
