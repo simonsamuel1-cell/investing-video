@@ -207,15 +207,16 @@ if __name__ == "__main__":
         sys.exit(0)
     heard = hear(a.audio, a.model, a.language)
     if a.script:
-        # scene headers ("[SCENE 13 | 02:44–02:59]", or a whole "[SCENE 01] — Title" line) and "NARRATION" lines
+        # scene headers ("[SCENE 13 | 02:44–02:59]", or a whole "[SCENE 01] — Title" line) and "NARRATION"/"NARASI" lines
         # are not spoken; a header tells each word below it which scene it belongs to
         script_words, scenes, scene = [], [], None
         for line in open(a.script):
             m = re.match(r"\s*\[SCENE (\d+)[^\]]*\](.*)", line)
             if m:
                 scene = int(m.group(1))
-                line = "" if "—" in m.group(2) else m.group(2)
-            if line.strip() == "NARRATION":
+                # a title after the bracket ("— Title", or ", Title" once the dash became a comma) is not spoken
+                line = "" if re.match(r"\s*[—,]", m.group(2)) or "—" in m.group(2) else m.group(2)
+            if line.strip() in ("NARRATION", "NARASI"):
                 continue
             for t in re.sub(r"\[[^\]]*\]", " ", line).split():
                 script_words.append(t)

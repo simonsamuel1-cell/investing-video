@@ -1,0 +1,145 @@
+[SCENE 01], Saat Semua Orang Bilang, “Cepat Jual”
+NARASI
+28 Januari 2026, pukul 13.43 WIB.
+IHSG turun 8 persen, lalu perdagangan dihentikan sementara selama 30 menit.
+Layar ponselmu penuh warna merah.
+Di grup, temanmu mengirim tiga voice note: “Cepat jual.”
+“Cepat jual.”
+“Cepat jual.”
+Jempolmu sudah berada di atas tombol Jual.
+Tapi sebelum menekannya, ada satu pertanyaan: di saat seperti ini, apa yang perlu kamu lihat?
+Di video sebelumnya, kita membahas tiga kesalahan yang sering dilakukan investor.
+Dalam praktiknya, kesalahan itu biasanya muncul dalam empat situasi: panik karena harga, mengambil keputusan terlalu cepat, mengejar topik yang sedang ramai, dan memperbesar risiko saat terlalu percaya diri.
+Sekarang, kita akan melihat bagaimana Tuntun membantu kita berhenti sejenak, memeriksa faktanya, lalu mengambil keputusan dengan lebih jernih.
+
+[SCENE 02], Beda Situasi, Beda Pertanyaan
+NARASI
+Di saat seperti itu, kita sering mencari satu jawaban sederhana: jual, tahan, atau beli.
+Padahal, setiap situasi membutuhkan hal yang berbeda untuk diperiksa.
+Saat harga membuatmu panik, pertanyaannya adalah: yang berubah hanya harganya, atau kondisi perusahaannya juga berubah?
+Saat satu informasi terdengar sangat meyakinkan, tanyakan: apa dasar lengkap di balik kesimpulan itu?
+Saat sebuah topik sedang ramai, cari tahu: apakah benar ada dampak, dana yang masuk, dan aktivitas transaksi yang meningkat?
+Dan saat kamu merasa sangat yakin sampai ingin memperbesar posisi, berhenti sebentar dan lihat: seberapa besar risiko yang sedang diambil, dan seperti apa kondisi market saat ini?
+Jadi, bukan soal membuka semua halaman sekaligus.
+Tapi membuka informasi yang tepat, untuk pertanyaan yang tepat.
+
+[SCENE 03], Harga Berubah, Belum Tentu Perusahaannya Berubah
+NARASI
+Kita mulai dari situasi pertama: saat keputusan hanya dibuat dari pergerakan harga.
+Ketika harga naik, saham terasa semakin bagus.
+Ketika harga turun, saham terasa semakin buruk.
+Padahal: harga berubah, belum tentu perusahaannya ikut berubah.
+Karena itu, di halaman saham Tuntun kamu bisa melihat dua hal.
+Pertama, Company Quality, untuk memahami kualitas bisnis dan fundamental perusahaannya.
+Kedua, Fair Value, sebagai referensi untuk melihat apakah harga sekarang masih masuk akal dibandingkan nilainya.
+Saat harga naik jauh di atas fair value, kamu punya alasan untuk nggak langsung ikut mengejar.
+Saat harga turun, cek dulu apakah kualitas perusahaan dan fair value-nya ikut berubah.
+Kalau keduanya masih sama, mungkin yang berubah baru harganya, bukan bisnisnya.
+Bukan berarti sahamnya pasti aman.
+Tapi setidaknya, kamu tahu apa yang perlu diperiksa sebelum bereaksi.
+
+[SCENE 04], Saat Nggak Punya Waktu Melakukan Semua Riset Sendiri
+NARASI
+Lalu bagaimana kalau masalahnya bukan harga, tapi informasi yang kita punya terlalu sedikit?
+Keputusan terburu-buru sering muncul karena waktunya terbatas, dasarnya belum cukup, lalu ada satu kalimat atau indikator yang terdengar sangat meyakinkan.
+Solusinya bukan cuma bilang: “Coba pikirkan lebih lama.”
+Kita juga perlu informasi yang sudah disusun agar lebih mudah dipahami.
+Tim riset Tuntun membaca laporan keuangan, membuat model, menilai kualitas perusahaan, menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.
+Riset juga dilakukan untuk saham dan produk seperti reksa dana.
+Bukan berarti tim riset selalu benar.
+Tapi mereka punya lebih banyak waktu, proses, dan data untuk menguji sebuah kesimpulan.
+Jadi keputusanmu punya dasar yang lebih lengkap daripada hanya satu voice note dari temanmu.
+
+[SCENE 05], Kalau Belum Paham, Tanyakan Lagi
+NARASI
+Kalau laporan risetnya masih belum jelas, atau kamu ingin memahami satu bagian lebih dalam, gunakan Tuntun AI.
+Kamu bisa mulai dari pertanyaan sederhana: “Perusahaan ini sebenarnya menghasilkan uang dari mana?”
+“Kenapa harga sekarang dianggap murah atau mahal?”
+“Apa risiko terbesarnya?”
+Tuntun AI membantu merangkum kualitas perusahaan dan valuasinya, lalu memberi konteks tambahan seperti pergerakan dana, kondisi teknikal, dan peristiwa terbaru.
+Tujuannya bukan supaya AI mengambil keputusan untukmu.
+Tujuannya supaya kamu nggak menekan tombol sebelum memahami apa yang sedang dibeli.
+
+[SCENE 06], Ramai di Grup Belum Tentu Ramai di Pasar
+NARASI
+Situasi berikutnya muncul saat satu topik atau berita tiba-tiba ramai.
+Temanmu mengirim voice note: “Masuk sekarang.”
+Tapi topik yang ramai belum tentu benar-benar berdampak pada perusahaan.
+Sebelum ikut masuk, cek tiga hal.
+Pertama: apakah peristiwanya benar-benar memengaruhi bisnis dan laba perusahaan?
+Kedua: apakah dana benar-benar masuk?
+Ketiga: apakah aktivitas transaksinya memang meningkat?
+Event Research membantu melihat dampaknya terhadap bisnis.
+Fund Flow menunjukkan arah pergerakan dana.
+Sementara volume menunjukkan apakah aktivitas pasar benar-benar meningkat.
+Semakin banyak yang sejalan, semakin kuat dasar di balik pergerakannya.
+Tapi tetap bukan jaminan bahwa harga pasti naik.
+Kalau buktinya belum cukup, nggak ada salahnya menunggu.
+Karena ramai di grup belum tentu berarti ramai di pasar.
+
+[SCENE 07], Saat Lagi Paling Yakin, Justru Perlu Berhenti
+NARASI
+Masalah berikutnya bukan kekurangan informasi, tapi rasa percaya diri yang terlalu besar.
+Tiga kali untung, lalu mulai merasa: “Saya sudah mengerti market.”
+Posisi diperbesar, kemudian mulai mempertimbangkan dana pinjaman.
+Di saat seperti ini, Tuntun Guidance bisa berfungsi sebagai pengingat.
+Kalau harga sudah jauh di atas fair price, pertimbangkan kembali sebelum menambah posisi.
+Kalau alasan investasinya belum cukup kuat, jangan memperbesar ketidakpastian dengan leverage.
+Peringatan ini bukan larangan.
+Ini adalah jeda singkat agar rasa percaya diri nggak langsung berubah menjadi keputusan besar.
+
+[SCENE 08], Lihat Kondisi Market Sebelum Menambah Risiko
+NARASI
+Selain melihat satu saham, kita juga perlu melihat kondisi market secara keseluruhan.
+Karena leverage sering terasa paling menggoda saat semua orang sedang menghasilkan uang.
+Sebelum memperbesar posisi, lihat di mana valuasi IHSG berada dibandingkan sejarahnya, dan apakah sentimen pasar sedang didominasi ketakutan atau keserakahan.
+Prinsipnya sederhana.
+Saat valuasi dan optimisme sudah terlalu tinggi, kita perlu lebih waspada.
+Saat valuasi rendah dan market dipenuhi ketakutan, jangan biarkan rasa takut menutup mata dari peluang.
+Market Valuation nggak memilihkan saham untukmu.
+Fitur ini hanya membantu memberikan konteks: apakah suasana pasar sedang mendukung keputusan yang tenang, atau justru sedang mendorong semua orang bergerak ke arah yang sama?
+
+[SCENE 09], Hari yang Sama, Dua Cara Mengambil Keputusan
+NARASI
+Sekarang kita kembali ke 28 Januari.
+Orangnya sama.
+Market-nya sama.
+Tapi proses mengambil keputusannya berbeda.
+Di skenario pertama, layar penuh warna merah, temanmu terus bilang “cepat jual”, dan saat perdagangan dibuka kembali, tombol jual langsung ditekan.
+Di skenario kedua, rasa takutnya tetap ada.
+Tapi sebelum bertindak, dia membuka analisis portofolio: apakah yang turun hanya harga, atau kualitas dan fair value-nya juga berubah?
+Dia melihat Market Valuation, membuka Event Research, lalu menanyakan bagian yang belum dipahami kepada Tuntun AI.
+Setelah itu, dia mungkin tetap menjual.
+Mungkin menahan.
+Atau mungkin membeli secara bertahap.
+Yang membedakan bukan hasil akhirnya.
+Yang membedakan adalah keputusan itu dibuat setelah memeriksa informasi, bukan hanya karena desakan teman di grup.
+
+[SCENE 10], Harga Sama-Sama Turun, Konteksnya Bisa Berbeda
+NARASI
+Tapi nggak semua penurunan punya konteks yang sama.
+Pada April 2025, berita kenaikan tarif terhadap Indonesia membuat IHSG turun tajam dan perdagangan sempat dihentikan sementara.
+Bedanya, saat itu valuasi market sudah relatif rendah dan sentimen sudah dipenuhi ketakutan.
+Jadi pertanyaannya bukan lagi sekadar: “Harus jual atau nggak?”
+Tapi: “Apakah dampaknya benar-benar mengubah investasi saya, atau market sedang bereaksi terlalu jauh?”
+Di sinilah informasi yang tadi kita bahas dibaca bersama: apakah kualitas perusahaan berubah, apakah harganya sudah berada jauh di bawah fair value, dan apakah berita tersebut benar-benar berdampak pada bisnisnya.
+Kalau alasan investasinya masih berlaku, penurunan harga belum tentu menjadi alasan untuk ikut panik.
+Bahkan untuk dana jangka panjang yang memang disiapkan mencari peluang, kondisi seperti ini bisa mulai diperhatikan secara bertahap.
+Bukan dana darurat, bukan uang yang segera dipakai, dan tetap bukan keputusan otomatis.
+Harga sama-sama turun, tapi konteksnya bisa sangat berbeda.
+
+[SCENE 11], Kamu Memutuskan, Tuntun Membantu
+NARASI
+Jadi, hubungan kita sederhana: Tuntun membantu, kamu yang memutuskan.
+Tuntun nggak menekan tombol beli untukmu.
+Tuntun juga nggak menekan tombol jual.
+Tuntun membantu menampilkan informasi yang bisa kamu gunakan untuk berpikir lebih jernih: kualitas perusahaan, fair value, dampak sebuah peristiwa, aktivitas transaksi, dan kondisi market.
+Tapi semua informasi itu tetap bukan kepastian.
+Harga masih bisa turun di bawah fair value.
+Market yang sudah murah juga masih bisa menjadi lebih murah.
+Karena itu, Tuntun nggak menjanjikan harga pasti naik atau memberi keputusan yang harus kamu ikuti.
+Tujuannya sederhana: saat temanmu menyuruhmu segera bertindak, kamu punya sesuatu untuk dilihat lebih dulu.
+Tuntun membantu memberi konteks.
+Keputusan tetap ada di tanganmu.
+Jadi sebelum menekan tombol berikutnya: lihat dulu.
+Baru putuskan.

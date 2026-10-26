@@ -28,6 +28,7 @@ import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/v
 import { TigaJenisUangFull, VI03_FULL_FRAMES } from "./episodes/vi03-tiga-jenis-uang/FullVideo";
 import { InvestasiYangCocokFull, VI04_FULL_FRAMES } from "./episodes/vi04-investasi-yang-cocok/FullVideo";
 import { STICKMAN_WALK_FRAMES, StickmanWalk } from "./episodes/vi04-investasi-yang-cocok/StickmanWalk";
+import { CaraTuntunMembantuFull, VI07_FULL_FRAMES } from "./episodes/vi07-cara-tuntun-membantu-investor/FullVideo";
 import { PAPER_SHOT_FRAMES, PaperShot } from "./episodes/proto-paper/PaperShot";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
@@ -156,6 +157,15 @@ export const RemotionRoot: React.FC = () => {
         id="VI04-InvestasiYangCocok"
         component={InvestasiYangCocokFull}
         durationInFrames={VI04_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. VO + subtitles, no visuals yet. */}
+      <Composition
+        id="VI07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+        component={CaraTuntunMembantuFull}
+        durationInFrames={VI07_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
