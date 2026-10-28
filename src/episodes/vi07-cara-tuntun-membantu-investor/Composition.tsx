@@ -6,7 +6,8 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
-import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
+import { BLOCK, CUT, CUTS, VO_LAST, heldAt } from "./data/timing";
+import { BoardGrid, Heading, SITUATION } from "./components/kit";
 import { CUES } from "./subtitles";
 import { SC01 } from "./scenes/Opening";
 import { SC02 } from "./scenes/Questions";
@@ -57,11 +58,25 @@ const ROWS = String(random(null));
 /** The paper under the scenes not built yet. */
 const Ground = () => <SoftGround f={useCurrentFrame()} />;
 
+/** Through a cut inside one situation (timing.ts `HELD`), the grid and the heading, still, under the moving content. */
+const Held = () => {
+  const g = useCurrentFrame();
+  const h = heldAt(g);
+  if (!h || !SHOW_VISUALS) return null;
+  return (
+    <>
+      <BoardGrid g={g} on={1} />
+      <Heading n={h.n} text={SITUATION[h.n - 1].label} />
+    </>
+  );
+};
+
 export const CaraTuntunMembantuComposition = () => (
   <AbsoluteFill>
     <PaletteProvider>
       <Stage>
         <Ground />
+        <Held />
         {SCENES.map(({ key, from, duration }) => (
           <Sequence key={`${ROWS}-${key}`} from={from} durationInFrames={duration} name={key}>
             {SCENE_COMPONENTS[key] ? (

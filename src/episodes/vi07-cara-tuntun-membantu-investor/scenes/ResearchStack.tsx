@@ -9,8 +9,8 @@
  *  · five slabs, one per job: Laporan keuangan (a sheet of lines), Model (a grid), Kualitas (the solid indigo body of
  *    the business), Harga wajar (a scale with one mark), Peristiwa (dark, with scattered dots — events);
  *  · two small stacks — the same work for Saham and Reksa dana;
- *  · a circle, a hexagon, a cylinder dropping down the axis — Waktu, Proses, Data — and the slabs pressing into one
- *    block with a check: a tested conclusion;
+ *  · on "Tapi mereka" the slabs press into one block (labels and lens gone), with Waktu, Proses, Data as three
+ *    points under it, then a check: a tested conclusion;
  *  · that block beside one thin sheet with a sound wave — one voice note. (A balance was tried here and removed —
  *    Simon, 26 Oct: "hapus timbangannya, malah jadi sampah".)
  */
@@ -18,8 +18,8 @@ import React from "react";
 import { useCurrentFrame } from "remotion";
 import { theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Ico, Mark, ease, useWords } from "../components/kit";
-import { AxisShape, IsoSlab, isoHalfWidth, type Slab } from "../components/Iso";
+import { Card, Disc, Ico, Mark, ease, useWords } from "../components/kit";
+import { IsoSlab, isoHalfWidth, type Slab } from "../components/Iso";
 
 const AXIS_X = 860;
 /** Where the stack sits once the voice note joins it (D). */
@@ -30,7 +30,8 @@ const L = isoHalfWidth(H, R);
 const TOP_Y = 270;
 const GAP = 130;
 const MID_Y = TOP_Y + 2 * GAP;
-const LABEL_X = 1150;
+/** The layer names sit LEFT of the stack, right-aligned to this x, in indigo (Simon 28 Oct: "buat jadi di sebelah kiri aja", "jadi indigo aja"). */
+const LABEL_RIGHT = AXIS_X - L - 116;
 
 type Layer = { label: string; at: string; nth?: number; slab: Slab; face: (c: ReturnType<typeof usePalette>) => React.ReactNode };
 
@@ -91,14 +92,20 @@ const KINDS = [
   { text: "Saham", at: "saham", y: 360 },
   { text: "Reksa dana", at: "reksa dana", y: 610 },
 ] as const;
-const MINI = { x: 1600, h: 48, r: 11 };
+/** Saham and Reksa dana, brought in towards the stack now that its right side is free (Simon 28 Oct). */
+const MINI = { x: AXIS_X + L + 260, h: 48, r: 11 };
 
-/** Waktu, Proses, Data: dropping down the axis into the stack. */
+/**
+ * Waktu, Proses, Data: three points in a row under the pressed stack, each on its word (Simon 28 Oct: "5 lapisannya
+ * saling menumpuk (label textnya dan kaca pembesar hilang), lalu muncul 3 poin: waktu, proses, data di bawah
+ * tumpukan").
+ */
 const BASIS = [
-  { text: "Waktu", at: "waktu,", kind: "circle" as const },
-  { text: "Proses", at: "proses,", kind: "hexagon" as const },
-  { text: "Data", at: "data", kind: "cylinder" as const },
-];
+  { text: "Waktu", at: "waktu,", icon: "time" },
+  { text: "Proses", at: "proses,", icon: "flow" },
+  { text: "Data", at: "data", icon: "database" },
+] as const;
+const POINT = { w: 270, h: 96, gap: 28, y: MID_Y + 215 };
 
 /** The voice note: one thin sheet with a sound wave on it. */
 const VOICE = { x: 620, y: MID_Y + 20 };
@@ -112,7 +119,8 @@ export const ResearchStack = () => {
 
   const startAt = W("Tim riset");
   const doubtAt = W("Bukan berarti");
-  const pressAt = W("menguji");
+  /** The five press into one block on "Tapi mereka" — labels and lens go with it. */
+  const pressAt = W("Tapi mereka");
   const sideAt = W("Jadi keputusanmu");
   const voiceAt = W("satu voice note");
 
@@ -152,6 +160,9 @@ export const ResearchStack = () => {
   const kindsP = KINDS.map((k) => ease(f, W(k.at) - m.sec(0.1), m.reveal) * (1 - ease(f, doubtAt, m.fade)));
   const badge = ease(f, W("kesimpulan."), m.pop);
   const voiceP = ease(f, voiceAt - m.sec(0.1), m.reveal);
+  /** Two short lines right of the stack (Simon 28 Oct: "kasih text di sebelah kanannya"): one per sentence, out as D shifts. */
+  const notP = ease(f, doubtAt + m.sec(0.2), m.reveal) * (1 - ease(f, sideAt, m.fade));
+  const testedP = ease(f, W("Tapi mereka") + m.sec(0.2), m.reveal) * (1 - ease(f, sideAt, m.fade));
 
   if (f < startAt - m.sec(0.1)) return null;
 
@@ -187,36 +198,19 @@ export const ResearchStack = () => {
           ) : null,
         )}
 
-        {/* Waktu, Proses, Data drop down the axis into the stack */}
-        {BASIS.map((b) => {
-          const at = W(b.at);
-          const p = ease(f, at - m.sec(0.1), m.sec(0.7));
-          const gone = ease(f, at + m.sec(0.45), m.fade);
-          if (p <= 0.001 || gone >= 0.999) return null;
-          return <AxisShape key={b.text} kind={b.kind} cx={AXIS_X} cy={TOP_Y - 140 + p * 130} size={60} fill={c.indigo} opacity={Math.min(1, p * 3) * (1 - gone)} />;
-        })}
-
         {/* the lens: the team, at work on the layer being named */}
         {lensP > 0.001 ? (
           <g transform={`translate(${lensX.toFixed(1)} ${lensY.toFixed(1)})`} opacity={lensP}>
-            <clipPath id="vi07-sc04-lens">
-              <circle cx={0} cy={0} r={34} />
-            </clipPath>
             <line x1={24} y1={24} x2={46} y2={46} stroke={theme.color.neutralDotOn} strokeWidth={6} strokeLinecap="round" />
             <circle cx={0} cy={0} r={36} fill={c.cardBg} stroke={theme.color.neutralDotOn} strokeWidth={3} />
-            <g clipPath="url(#vi07-sc04-lens)">
-              {[-30, -12, 6, 24].map((d) => (
-                <line key={d} x1={d - 40} y1={40} x2={d + 40} y2={-40} stroke={c.indigo} strokeWidth={7} />
-              ))}
-            </g>
           </g>
         ) : null}
 
         {/* leader lines to the labels */}
         {LAYERS.map((l, i) => (
           <g key={l.label} opacity={layerP[i] * (1 - labelsOut)}>
-            <line x1={AXIS_X + L + 10} y1={layerY(i) + l.slab.depth / 2} x2={LABEL_X - 16} y2={layerY(i) + l.slab.depth / 2} stroke={theme.color.connectorMuteSolid} strokeWidth={1.5} />
-            <circle cx={AXIS_X + L + 10} cy={layerY(i) + l.slab.depth / 2} r={4} fill={theme.color.neutralDotOn} />
+            <line x1={AXIS_X - L - 10} y1={layerY(i) + l.slab.depth / 2} x2={LABEL_RIGHT + 16} y2={layerY(i) + l.slab.depth / 2} stroke={theme.color.connectorMuteSolid} strokeWidth={1.5} />
+            <circle cx={AXIS_X - L - 10} cy={layerY(i) + l.slab.depth / 2} r={4} fill={theme.color.neutralDotOn} />
           </g>
         ))}
 
@@ -240,7 +234,7 @@ export const ResearchStack = () => {
       {/* the layer names */}
       {LAYERS.map((l, i) =>
         layerP[i] * (1 - labelsOut) > 0.001 ? (
-          <div key={l.label} style={{ position: "absolute", left: LABEL_X, top: layerY(i) + l.slab.depth / 2 - 21, ...typeStyle("body"), fontSize: 32, color: c.ink, whiteSpace: "nowrap", opacity: layerP[i] * (1 - labelsOut) }}>{l.label}</div>
+          <div key={l.label} style={{ position: "absolute", left: LABEL_RIGHT - 400, width: 400, textAlign: "right", top: layerY(i) + l.slab.depth / 2 - 21, ...typeStyle("body"), fontSize: 32, color: c.indigo, whiteSpace: "nowrap", opacity: layerP[i] * (1 - labelsOut) }}>{l.label}</div>
         ) : null,
       )}
 
@@ -251,14 +245,25 @@ export const ResearchStack = () => {
         ) : null,
       )}
 
-      {/* Waktu, Proses, Data — named as they drop */}
-      {BASIS.map((b) => {
-        const at = W(b.at);
-        const p = ease(f, at - m.sec(0.1), m.reveal) * (1 - ease(f, at + m.sec(0.45), m.fade));
+      {/* Waktu, Proses, Data — three points under the pressed stack */}
+      {BASIS.map((b, i) => {
+        const p = ease(f, W(b.at) - m.sec(0.1), m.reveal) * (1 - ease(f, sideAt, m.fade));
+        const x = AXIS_X - (3 * POINT.w + 2 * POINT.gap) / 2 + i * (POINT.w + POINT.gap);
         return p > 0.001 ? (
-          <div key={b.text} style={{ position: "absolute", left: AXIS_X + 60, top: TOP_Y - 160 + ease(f, at - m.sec(0.1), m.sec(0.7)) * 130, ...typeStyle("body"), fontSize: 32, color: c.indigo, opacity: p }}>{b.text}</div>
+          <Card key={b.text} x={x} y={POINT.y + (1 - p) * 16} w={POINT.w} h={POINT.h} style={{ opacity: p, display: "flex", alignItems: "center", gap: 20, padding: "0 28px" }}>
+            <Disc icon={b.icon} size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+            <div style={{ ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>{b.text}</div>
+          </Card>
         ) : null;
       })}
+
+      {/* "Bukan berarti selalu benar," / "tapi lebih teruji." — beside the stack (Simon 28 Oct) */}
+      {notP > 0.001 ? (
+        <div style={{ position: "absolute", left: AXIS_X + L + 82, top: MID_Y - 73, ...typeStyle("title"), fontSize: 56, fontWeight: 500, lineHeight: 1.3, whiteSpace: "nowrap" }}>
+          <div style={{ color: c.ink, opacity: notP, transform: `translateY(${((1 - notP) * 12).toFixed(2)}px)` }}>Bukan berarti selalu benar,</div>
+          <div style={{ color: c.indigo, opacity: testedP, transform: `translateY(${((1 - testedP) * 12).toFixed(2)}px)` }}>tapi lebih teruji.</div>
+        </div>
+      ) : null}
 
       {/* the tested conclusion */}
       {badge > 0.001 ? (

@@ -11,7 +11,7 @@
  */
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK } from "../data/timing";
+import { BLOCK, heldAt } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, Heading, Mark, SITUATION, Skel, Typed, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
@@ -53,6 +53,7 @@ export const SC05 = () => {
   const shadow = useShadow();
   const W = useWords(5, BLOCK.SC05);
   const g = f + BLOCK.SC05;
+  const held = heldAt(g) !== null;
 
   const unclear = ease(f, W("belum jelas"), m.pop);
   const aiAt = W("gunakan Tuntun AI");
@@ -63,10 +64,11 @@ export const SC05 = () => {
   const youRowAt = W("Tujuannya supaya");
 
   return (
-    <Stage>
-      <SoftGround f={g} />
-      <BoardGrid g={g} on={1} />
-      <Heading n={2} text={SITUATION[1].label} />
+    <Stage transparent={held}>
+      {/* the paper, grid and heading stay put through the cut from SC04 (the Composition draws them then) */}
+      {held ? null : <SoftGround f={g} />}
+      {held ? null : <BoardGrid g={g} on={1} />}
+      {held ? null : <Heading n={2} text={SITUATION[1].label} />}
 
       {/* A–C — the report, and Tuntun AI */}
       {chatOut < 0.999 ? (

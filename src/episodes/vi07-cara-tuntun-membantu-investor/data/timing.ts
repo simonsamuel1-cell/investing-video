@@ -46,6 +46,14 @@ export const BLOCK: Record<string, number> = Object.fromEntries([
 
 /** A camera cut at every scene change unless a scene is built to carry over (house style: no wipes). */
 export const CUT = { over: 40, distance: 120, blur: 10 } as const;
+/**
+ * Scene changes inside one situation: the paper, the grid and the heading stay put through the cut and only the content
+ * moves (Simon 28 Oct: "Dari scene 4 ke scene 5 masih ngomongin Terburu-buru ya? Kalo gitu background dan judulnya ga
+ * perlu ikut transisi"). The scenes either side leave those out while `heldAt` says so; the Composition draws them.
+ * (SC07 → SC08 is not one: SC07 ends on Orang Tuntun with no heading.)
+ */
+export const HELD = [{ at: BLOCK.SC05, n: 2 }] as const;
+export const heldAt = (g: number) => HELD.find((h) => g >= h.at - CUT.over / 2 && g < h.at + CUT.over / 2) ?? null;
 /** Scene changes built to carry over, with no cut — none yet. */
 export const CONTINUOUS: number[] = [];
 export const CUTS: { at: number; axis: "x" | "y" }[] = Object.keys(BLOCK)

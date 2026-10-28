@@ -21,11 +21,12 @@ export const HEADING_OPEN = { y: 520, scale: 1.7, subGap: 96, ringGap: 16 };
  * docks to its usual place top left (Simon 28 Oct: "judulnya mulai dari tengah dulu lalu ada subtitlenya"). Opened, the
  * number ring sits above the line; docking, it swings back to its place left of the line ("angka 1 nya dari atas Panik
  * dulu, lalu nanti pas ke pojok kiri atas, balik ke posisi semula"), in a straight line. `dock` 0 → 1 moves it; at 1 it is exactly
- * `Heading`. `subP` shows the subjudul, which leaves as the heading docks.
+ * `Heading`. `subP` shows the subjudul, which leaves as the heading docks. The subjudul is a line of text, or any row of
+ * things (SC04: its three cause chips), centred under the line.
  */
-export const OpeningHeading = ({ n, text, sub, p, dock, subP }: { n: number; text: string; sub: string; p: number; dock: number; subP: number }) => {
+export const OpeningHeading = ({ n, text, sub, p, dock, subP, hidden = false }: { n: number; text: string; sub: React.ReactNode; p: number; dock: number; subP: number; hidden?: boolean }) => {
   const c = usePalette();
-  if (p <= 0.001) return null;
+  if (p <= 0.001 || hidden) return null;
   const cx = theme.canvas.width / 2;
   const d = HEADING.disc;
   const k = HEADING_OPEN.scale + (1 - HEADING_OPEN.scale) * dock;
@@ -50,7 +51,11 @@ export const OpeningHeading = ({ n, text, sub, p, dock, subP }: { n: number; tex
         <div style={{ fontFamily: theme.text.family, fontSize: theme.type.title.size, fontWeight: 500, letterSpacing: theme.type.title.tracking, color: c.ink, whiteSpace: "nowrap" }}>{text}</div>
       </div>
       {sub1 > 0.001 ? (
-        <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: HEADING_OPEN.y + HEADING_OPEN.subGap + (1 - subP) * 12 - dock * 30, textAlign: "center", opacity: sub1 * p, fontFamily: theme.text.family, fontSize: 40, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{sub}</div>
+        typeof sub === "string" ? (
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: HEADING_OPEN.y + HEADING_OPEN.subGap + (1 - subP) * 12 - dock * 30, textAlign: "center", opacity: sub1 * p, fontFamily: theme.text.family, fontSize: 40, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{sub}</div>
+        ) : (
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: HEADING_OPEN.y + HEADING_OPEN.subGap - dock * 30, display: "flex", justifyContent: "center", opacity: (1 - dock) * p }}>{sub}</div>
+        )
       ) : null}
     </>
   );
