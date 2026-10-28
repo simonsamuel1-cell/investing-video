@@ -1,24 +1,26 @@
 /**
  * PhoneScreens — the phone frame VI04 shows app screens in (SC06's four investor types; the same frame as SC09's).
  * The screen takes the screenshots' own shape (1125×2436), so a capture fills it without cropping; each screen
- * fades up over the one before it on its `at`.
+ * fades up over the one before it on its `at`. `ratio` (screen width / height) defaults to those captures; VI07 passes
+ * its own for a stitched shot.
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { theme, useMotion, usePalette, useShadow } from "../../../core";
 import { ease } from "./kit";
 
 export const SHOT_RATIO = 1125 / 2436;
-const BEZEL = 12;
+export const PHONE_BEZEL = 12;
+const BEZEL = PHONE_BEZEL;
 
 export const phoneWidth = (h: number) => Math.round((h - 2 * BEZEL) * SHOT_RATIO) + 2 * BEZEL;
 
-export const PhoneScreens = ({ cx, y, h, screens }: { cx: number; y: number; h: number; screens: { src: string; at: number }[] }) => {
+export const PhoneScreens = ({ cx, y, h, screens, ratio = SHOT_RATIO }: { cx: number; y: number; h: number; screens: { src: string; at: number }[]; ratio?: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const shadow = useShadow();
   const sh = h - 2 * BEZEL;
-  const sw = Math.round(sh * SHOT_RATIO);
+  const sw = Math.round(sh * ratio);
   const w = sw + 2 * BEZEL;
   return (
     <div style={{ position: "absolute", left: cx - w / 2, top: y, width: w, height: h, borderRadius: 52, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrand}` }}>

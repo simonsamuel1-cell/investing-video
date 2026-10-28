@@ -7,17 +7,25 @@
  *     Perusahaan card slides up under it, with one line — "Bisnisnya tetap jalan." — and stays perfectly still. Simon 28 Oct: "jangan
  *     dibuat berubah2 liquid", "serabutan aja", and the old Harga ≠ Perusahaan pair "ganti visual" — storyboard
  *     docs/vi-style/storyboards/VI07-SC03-harga-perusahaan.jpg.
- *  C  the stock page in Tuntun and its two things: Company Quality, then Fair Value — a scale with the fair value
- *     marked and the price as a dot. The dot runs far above (a hand: don't chase), drops below; both cards are
- *     checked, both still ✓ — only the price moved.
+ *  C  "Karena itu, di halaman saham Tuntun …" to "… bukan bisnisnya": the REAL Tuntun stock page (Simon 28 Oct:
+ *     "bisa divisualisasikan dengan screenshot aplikasi Tuntun real nya"). BUMI_1 is the shot; its Company Quality /
+ *     Fair Value / Bullish Signals card is cut by the Buy bar, so the card comes whole from BUMI_2, stitched in
+ *     (public/art/vi07/app/BUMI-halaman-saham.png). The phone comes in on "Karena itu"; on "dua hal" the card is
+ *     marked and its sharp copy (BUMI_3 → BUMI-kartu.png) flies out of the phone to the right, Bullish Signals
+ *     greyed — the two things are the other two. Then on the big card (Simon 28 Oct): "Pertama, Company Quality" →
+ *     a box on that column with "Company Quality" over it; "Kedua, Fair Value" → the same on Fair Value; the gauge's
+ *     black pointer, redrawn (the original painted out of BUMI-kartu.png), slides into the red on "Saat harga naik
+ *     jauh" and back on "Saat harga turun"; "Kalau keduanya" → both boxes. Under the card, one summary line for each
+ *     of those three sentences.
  *  D  Orang Tuntun: "Periksa dulu, baru bereaksi."
  *
- * No figures anywhere: the line is a shape, the scale has no numbers (nothing here is a real stock).
+ * No figures anywhere: the line is a shape (nothing here is a real stock).
  */
 import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
-import { SoftGround, Stage, seeded, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { HighlightBox, SoftGround, Stage, seeded, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { PHONE_BEZEL, PhoneScreens } from "../../vi04-investasi-yang-cocok/components/PhoneScreens";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Line, Mark, ORANG_TUNTUN_RIGHT, OpeningHeading, OrangTuntun, SITUATION, Skel, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, Disc, HEADING, Line, ORANG_TUNTUN_RIGHT, OpeningHeading, OrangTuntun, SITUATION, ease, useWords } from "../components/kit";
 
 type Box = { x: number; y: number; w: number; h: number };
 const mix = (a: Box, b: Box, t: number): Box => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, w: a.w + (b.w - a.w) * t, h: a.h + (b.h - a.h) * t });
@@ -68,11 +76,6 @@ const tapeSlice = (t: number, o: number) => {
   return pts;
 };
 
-// C — the stock page
-const PAGE: Box = { x: 220, y: 230, w: 1480, h: 640 };
-const CQ: Box = { x: PAGE.x + 50, y: PAGE.y + 140, w: 660, h: 450 };
-const FV: Box = { x: PAGE.x + PAGE.w - 50 - 660, y: PAGE.y + 140, w: 660, h: 450 };
-const SCALE = { x: 60, w: 540, y: 290 };
 
 /**
  * The company: a hand-drawn ink sketch in VI04's bridge/ferry/plane style (Simon 28 Oct: "balik lagi ke chatgpt buat
@@ -124,6 +127,69 @@ const SpinCoin = ({ t, p, x, y, phase, id }: { t: number; p: number; x: number; 
   );
 };
 
+// C — the real stock page in a phone, and its card enlarged beside it
+/** The stitched shot: BUMI_1 rows 110–1790 (status bar cut, Simon 22 Oct), BUMI_2 rows 1401–1800, BUMI_1 from 2002. */
+const SHOT = { w: 1080, h: 2417 };
+/** Where the card sits in the shot, and in BUMI-kartu.png (2160 × 752): measured on the PNGs. */
+const SHOT_CARD = { x: 46, y: 1731, w: 987, h: 304 };
+const ART = {
+  w: 2160,
+  card: { x: 93, y: 93, w: 1974, h: 608 },
+  radius: 54,
+  signals: { x0: 1484, x1: 2063, y0: 96, y1: 532 },
+  /** The two columns' contents, and the gauge with its pointer (apex row 382, centre x 835 — 14% along, in the green). */
+  cq: { x1: 130, y1: 154, x2: 617, y2: 469 },
+  fv: { x1: 734, y1: 154, x2: 1425, y2: 471 },
+  gauge: { x0: 737, x1: 1423, y: 382, at: (835 - 737) / (1423 - 737), red: 0.86 },
+  pointer: { w: 23, h: 16 },
+};
+/**
+ * The phone fills the height between the "Panik" heading and the caption band, left edge on the word "Panik" (Simon
+ * 28 Oct: "tinggi hp nya dibuat fit di antara batas margin bawah dengan judul Panik … align-left terhadap Panik").
+ */
+const PHONE_TOP = HEADING.y + HEADING.disc / 2 + 40;
+const PHONE_H = theme.captionBand.top - PHONE_TOP;
+const SCREEN_W = Math.round((PHONE_H - 2 * PHONE_BEZEL) * (SHOT.w / SHOT.h));
+const SCREEN_K = SCREEN_W / SHOT.w;
+const PHONE_W = SCREEN_W + 2 * PHONE_BEZEL;
+const PHONE = { cx: HEADING.x + HEADING.disc + 24 + PHONE_W / 2, y: PHONE_TOP, h: PHONE_H };
+/** The card where the phone shows it, in canvas pixels. */
+const CARD_IN_PHONE: Box = { x: PHONE.cx - PHONE_W / 2 + PHONE_BEZEL + SHOT_CARD.x * SCREEN_K, y: PHONE.y + PHONE_BEZEL + SHOT_CARD.y * SCREEN_K, w: SHOT_CARD.w * SCREEN_K, h: SHOT_CARD.h * SCREEN_K };
+/**
+ * Its enlarged copy in the free space on the right, sized to it; the labels over it, the card and the two-line
+ * summary under it sit as one block, centred on the phone.
+ */
+const ZOOM_TYPE = { label: 40, labelGap: 70, summary: 48, summaryGap: 36, leading: 1.3 };
+const ZOOM_W = 1160;
+const ZOOM_H = (ZOOM_W * SHOT_CARD.h) / SHOT_CARD.w;
+const ZOOM_BLOCK = ZOOM_TYPE.labelGap + ZOOM_H + ZOOM_TYPE.summaryGap + 2 * ZOOM_TYPE.summary * ZOOM_TYPE.leading;
+const CARD_ZOOM: Box = { x: theme.canvas.width - theme.margin.right - 24 - ZOOM_W, w: ZOOM_W, h: ZOOM_H, y: PHONE.y + PHONE.h / 2 - ZOOM_BLOCK / 2 + ZOOM_TYPE.labelGap };
+const ZK = CARD_ZOOM.w / ART.card.w;
+/** A rectangle of BUMI-kartu.png's pixels, on the canvas where the big card shows it, padded. */
+const onZoom = (r: { x1: number; y1: number; x2: number; y2: number }, pad = 16) => ({ x1: CARD_ZOOM.x + (r.x1 - ART.card.x) * ZK - pad, y1: CARD_ZOOM.y + (r.y1 - ART.card.y) * ZK - pad, x2: CARD_ZOOM.x + (r.x2 - ART.card.x) * ZK + pad, y2: CARD_ZOOM.y + (r.y2 - ART.card.y) * ZK + pad });
+/** The redrawn pointer is half again the original's size, so its slide reads on the big card. */
+const POINTER_K = 1.5;
+/** Simon's rule for a box over a phone: 20 px wider than the phone on each side. */
+const CARD_HL = { x1: PHONE.cx - PHONE_W / 2 - 20, x2: PHONE.cx + PHONE_W / 2 + 20, y1: CARD_IN_PHONE.y - 10, y2: CARD_IN_PHONE.y + CARD_IN_PHONE.h + 10 };
+
+/** BUMI_3's card at box `b` (its white margin cropped), with the Bullish Signals column greyed by `mute`. */
+const BigCard = ({ b, mute, lift }: { b: Box; mute: number; lift: number }) => {
+  const shadow = useShadow();
+  const k = b.w / ART.card.w;
+  const src = staticFile("art/vi07/app/BUMI-kartu.png");
+  const sg = ART.signals;
+  return (
+    <div style={{ position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h, borderRadius: ART.radius * k, overflow: "hidden", boxShadow: lift > 0.001 ? shadow.soft : undefined }}>
+      <Img src={src} style={{ position: "absolute", left: -ART.card.x * k, top: -ART.card.y * k, width: ART.w * k, maxWidth: "none" }} />
+      {mute > 0.001 ? (
+        <div style={{ position: "absolute", left: (sg.x0 - ART.card.x) * k, top: (sg.y0 - ART.card.y) * k, width: (sg.x1 - sg.x0) * k, height: (sg.y1 - sg.y0) * k, overflow: "hidden", opacity: mute }}>
+          <Img src={src} style={{ position: "absolute", left: -sg.x0 * k, top: -sg.y0 * k, width: ART.w * k, maxWidth: "none", filter: "grayscale(1)" }} />
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
 export const SC03 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
@@ -157,21 +223,28 @@ export const SC03 = () => {
   const firmOn = ease(f, W("perusahaannya ikut"), m.reveal);
   const coinAt = restAt + m.sec(0.8);
 
-  // C — the page and its two things
-  const pageAt = W("Karena itu,");
-  const pageP = ease(f, pageAt + m.sec(0.2), m.reveal);
-  const slotsAt = W("dua hal");
-  const cqAt = W("Company Quality");
-  const fvAt = W("Fair Value");
-  /** The price dot on the scale (0 = left, 1 = right): near the fair value, far above, then far below. */
-  const dotX = interpolate(ease(f, W("naik jauh"), m.move), [0, 1], [0.44, 0.9]) - 0.72 * ease(f, W("Saat harga turun"), m.move);
-  const dotP = ease(f, W("harga sekarang"), m.pop);
-  const chase = ease(f, W("nggak langsung"), m.pop) * (1 - ease(f, W("Saat harga turun"), m.fade));
-  const checkCq = ease(f, W("kualitas perusahaan"), m.reveal) * (1 - ease(f, W("Kalau keduanya"), m.fade));
-  const checkFv = ease(f, W("fair value-nya"), m.reveal) * (1 - ease(f, W("Kalau keduanya"), m.fade));
-  const same = ease(f, W("masih sama"), m.pop);
-  const onlyPrice = ease(f, W("baru harganya"), m.reveal);
+  // C — the stock page
+  const phoneP = ease(f, W("Karena itu,") + m.sec(0.25), m.reveal);
+  const hlP = ease(f, W("dua hal"), m.reveal);
+  const flyAt = W("dua hal") + m.sec(0.35);
+  const fly = ease(f, flyAt, m.move);
+  const muteP = ease(f, flyAt + m.move, m.reveal);
   const pageOut = ease(f, W("Bukan berarti"), m.fade);
+  const bothAt = W("Kalau keduanya");
+  const cqOn = ease(f, W("Pertama, Company"), m.reveal) * (1 - ease(f, W("Kedua, Fair"), m.fade)) + ease(f, bothAt, m.reveal);
+  const fvOn = ease(f, W("Kedua, Fair"), m.reveal);
+  /** The pointer: into the red on "Saat harga naik jauh", back on "Saat harga turun". */
+  const toRed = ease(f, W("Saat harga naik"), m.sec(1)) - ease(f, W("Saat harga turun"), m.sec(1));
+  const pointerAt = ART.gauge.at + (ART.gauge.red - ART.gauge.at) * toRed;
+  /** One summary line under the card at a time (Simon 28 Oct): on "Saat harga naik", "Saat harga turun", "Kalau keduanya". */
+  const upAt = W("Saat harga naik");
+  const downAt = W("Saat harga turun");
+  const summaries = [
+    { p: ease(f, upAt + m.sec(0.3), m.reveal) * (1 - ease(f, downAt, m.fade)), lead: "Terlalu mahal? ", mark: "Jangan langsung dikejar." },
+    { p: ease(f, downAt + m.sec(0.3), m.reveal) * (1 - ease(f, bothAt, m.fade)), lead: "Harga turun? ", mark: "Cek kualitas & fair value." },
+    // two lines, Simon's wording verbatim: "Kalau keduanya sama," / "cuma harga yang bergerak, bisnis masih sama."
+    { p: ease(f, bothAt + m.sec(0.3), m.reveal), lead: "Kalau keduanya sama,", mark: "cuma harga yang bergerak, bisnis masih sama.", twoLines: true },
+  ];
 
   const insightAt = W("Bukan berarti");
 
@@ -228,65 +301,52 @@ export const SC03 = () => {
         </div>
       ) : null}
 
-      {/* C — the stock page: Company Quality, Fair Value */}
-      {pageP > 0.001 && pageOut < 0.999 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: pageP * (1 - pageOut) }}>
-          <Card x={PAGE.x} y={PAGE.y + (1 - pageP) * 20} w={PAGE.w} h={PAGE.h} line={theme.color.hairlineBrandSolid}>
-            <div style={{ position: "absolute", left: 50, top: 44, width: 64, height: 64, borderRadius: 999, background: theme.color.neutralDisc }} />
-            <Skel w={160} h={20} style={{ left: 134, top: 50 }} />
-            <Skel w={110} h={14} style={{ left: 134, top: 84 }} />
-          </Card>
-          {[CQ, FV].map((b, i) => {
-            const slot = ease(f, slotsAt + i * m.sec(0.1), m.pop);
-            const fill = ease(f, (i === 0 ? cqAt : fvAt) - m.sec(0.1), m.reveal);
-            const look = i === 0 ? checkCq : checkFv;
-            return slot > 0.001 ? (
-              <div key={i} style={{ position: "absolute", left: b.x, top: b.y, width: b.w, height: b.h, opacity: slot }}>
-                <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, border: `2px dashed ${theme.color.connectorMuteSolid}`, opacity: 1 - fill }} />
-                <Card x={0} y={(1 - fill) * 14} w={b.w} h={b.h} style={{ opacity: fill, background: c.bg, boxShadow: `inset 0 0 0 ${(2 * Math.max(look, same)).toFixed(2)}px ${theme.color.connector}, 0 0 ${(40 * look).toFixed(1)}px ${(8 * look).toFixed(1)}px ${theme.color.indigoGlow}` }}>
-                  <div style={{ position: "absolute", left: 40, top: 36, display: "flex", alignItems: "center", gap: 20 }}>
-                    <Disc icon={i === 0 ? "company" : "scale"} size={64} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-                    <div style={{ ...typeStyle("title"), fontWeight: 500, color: c.ink }}>{i === 0 ? "Company Quality" : "Fair Value"}</div>
-                  </div>
-                  {i === 0
-                    ? [0, 1, 2].map((r) => {
-                        const p = ease(f, (r === 0 ? W("kualitas bisnis") : r === 1 ? W("fundamental") : W("fundamental") + m.sec(0.2)) - m.sec(0.1), m.reveal);
-                        return (
-                          <div key={r} style={{ position: "absolute", left: 40, top: 170 + r * 84, opacity: p, display: "flex", alignItems: "center", gap: 20 }}>
-                            <Disc icon="tick" size={44} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-                            <div style={{ position: "relative", width: 380, height: 20 }}>
-                              <Skel w={[300, 250, 340][r]} h={18} style={{ left: 0, top: 1 }} />
-                            </div>
-                          </div>
-                        );
-                      })
-                    : (
-                      <>
-                        {/* the scale: the fair value marked, the price as a dot */}
-                        <div style={{ position: "absolute", left: SCALE.x, top: SCALE.y - 5, width: SCALE.w, height: 10, borderRadius: 5, background: theme.color.neutralDot }} />
-                        {dotP > 0.001 ? (
-                          <div style={{ position: "absolute", left: SCALE.x + Math.min(0.5, dotX) * SCALE.w, top: SCALE.y - 5, width: Math.abs(dotX - 0.5) * SCALE.w, height: 10, borderRadius: 5, background: theme.color.indigoWashStrongSolid, opacity: dotP }} />
-                        ) : null}
-                        <div style={{ position: "absolute", left: SCALE.x + 0.5 * SCALE.w - 3, top: SCALE.y - 40, width: 6, height: 80, borderRadius: 3, background: c.indigo }} />
-                        <div style={{ position: "absolute", left: SCALE.x + 0.5 * SCALE.w - 100, top: SCALE.y + 56, width: 200, textAlign: "center", ...typeStyle("label"), color: c.indigo }}>Fair value</div>
-                        {dotP > 0.001 ? (
-                          <div style={{ position: "absolute", left: SCALE.x + dotX * SCALE.w - 70, top: SCALE.y - 110, width: 140, opacity: dotP, display: "flex", flexDirection: "column", alignItems: "center", gap: 18 }}>
-                            <div style={{ ...typeStyle("label"), color: c.ink }}>Harga</div>
-                            <div style={{ width: 30, height: 30, borderRadius: 999, background: c.ink, boxShadow: `0 0 0 ${(10 * onlyPrice).toFixed(1)}px ${theme.color.indigoWashSolid}` }} />
-                          </div>
-                        ) : null}
-                        {chase > 0.001 ? (
-                          <div style={{ position: "absolute", left: SCALE.x + dotX * SCALE.w - 34, top: SCALE.y - 200, opacity: chase, transform: `translateY(${((1 - chase) * 10).toFixed(2)}px)` }}>
-                            <Disc icon="stop" size={68} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                </Card>
-                <Mark kind="check" p={same} x={b.w - 36} y={36} />
+      {/* C — the real stock page, then its card */}
+      {phoneP > 0.001 && pageOut < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: phoneP * (1 - pageOut) }}>
+          <div style={{ position: "absolute", inset: 0, transform: `translateY(${((1 - phoneP) * 20).toFixed(2)}px)` }}>
+            <PhoneScreens cx={PHONE.cx} y={PHONE.y} h={PHONE.h} ratio={SHOT.w / SHOT.h} screens={[{ src: "art/vi07/app/BUMI-halaman-saham.png", at: 0 }]} />
+          </div>
+          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+            <HighlightBox rect={CARD_HL} grow={hlP} fill="none" width={4} radius={18} />
+          </svg>
+          {fly > 0.001 ? <BigCard b={mix(CARD_IN_PHONE, CARD_ZOOM, fly)} mute={muteP} lift={fly} /> : null}
+          {fly > 0.001 ? (
+            <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+              {/* the gauge's pointer, redrawn so it can move; it rides the card while it flies out */}
+              {(() => {
+                const b = mix(CARD_IN_PHONE, CARD_ZOOM, fly);
+                const k = b.w / ART.card.w;
+                const x = b.x + (ART.gauge.x0 + (ART.gauge.x1 - ART.gauge.x0) * pointerAt - ART.card.x) * k;
+                const y = b.y + (ART.gauge.y - ART.card.y) * k;
+                const w = ART.pointer.w * k * POINTER_K;
+                const h = ART.pointer.h * k * POINTER_K;
+                return <path d={`M ${x} ${y} L ${x + w / 2} ${y + h} L ${x - w / 2} ${y + h} Z`} fill={c.ink} stroke={c.ink} strokeWidth={Math.max(1, 3 * k)} strokeLinejoin="round" />;
+              })()}
+              <HighlightBox rect={onZoom(ART.cq)} grow={Math.min(1, cqOn)} opacity={Math.min(1, cqOn)} fill="none" width={4} radius={18} />
+              <HighlightBox rect={onZoom(ART.fv)} grow={fvOn} opacity={fvOn} fill="none" width={4} radius={18} />
+            </svg>
+          ) : null}
+          {[
+            { p: Math.min(1, cqOn), r: onZoom(ART.cq), text: "Company Quality" },
+            { p: fvOn, r: onZoom(ART.fv), text: "Fair Value" },
+          ].map((l) =>
+            l.p > 0.001 ? (
+              <div key={l.text} style={{ position: "absolute", left: l.r.x1, width: l.r.x2 - l.r.x1, top: CARD_ZOOM.y - ZOOM_TYPE.labelGap + (1 - l.p) * 10, textAlign: "center", opacity: l.p, ...typeStyle("body"), fontSize: ZOOM_TYPE.label, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>
+                {l.text}
               </div>
-            ) : null;
-          })}
+            ) : null,
+          )}
+          {/* the summary under the card (Simon: "kasih text ringkasan deh di bawahnya") */}
+          {summaries.map((l) =>
+            l.p > 0.001 ? (
+              <div key={l.mark} style={{ position: "absolute", left: CARD_ZOOM.x, width: CARD_ZOOM.w, top: CARD_ZOOM.y + CARD_ZOOM.h + ZOOM_TYPE.summaryGap + (1 - l.p) * 12, textAlign: "center", opacity: l.p, ...typeStyle("title"), fontSize: ZOOM_TYPE.summary, fontWeight: 500, lineHeight: ZOOM_TYPE.leading, color: c.ink, whiteSpace: "nowrap" }}>
+                {l.lead}
+                {"twoLines" in l ? <br /> : null}
+                <span style={{ color: c.indigo }}>{l.mark}</span>
+              </div>
+            ) : null,
+          )}
         </div>
       ) : null}
 
