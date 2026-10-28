@@ -1,0 +1,781 @@
+{
+  "_": "Pustaka Referensi — every style reference Simon has sent, newest first. Built into a page by scripts/vi/ref-library.py and published as an Artifact (URL in the memory file pustaka-referensi.md). Add a reference: put the file under docs/vi-style/refs/, add an item (or a collection) here, rerun the script, republish to the same URL. src is relative to the repo root, or absolute for files outside it.",
+  "collections": [
+    {
+      "id": "business-sustainability",
+      "date": "2026-10-28",
+      "title": "Ikon \"Business sustainability\" · ilustrasi detail",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · hanya untuk momen tertentu",
+      "quote": "Aku hanya memperbolehkan menggunakan icon yang rumit untuk momen2 tertentu aja, jadi ngga perlu dijadikan style utama.",
+      "taken": [
+        "Ide: ilustrasi perusahaan yang lebih detail untuk satu momen",
+        "Dipakai sekali di momen penting, bukan gaya ikon utama"
+      ],
+      "dropped": [
+        "Gaya flat berwarna + oranye; diganti sketsa tinta indigo gaya VI04",
+        "Teks di bawah ikon"
+      ],
+      "usedIn": [
+        "VI07 SC03 · kartu Perusahaan, \"Bisnisnya tetap jalan.\""
+      ],
+      "items": [
+        {
+          "id": "business-sustainability-icon",
+          "type": "image",
+          "title": "Business sustainability",
+          "src": "docs/vi-style/refs/vi07-business-sustainability.png",
+          "note": "Dikirim Simon di chat VI07, 28 Okt 2026. Versi akhirnya: sketsa tinta indigo gaya VI04 (jembatan/kapal/pesawat), dari ChatGPT.",
+          "tags": [
+            "Ikon",
+            "Ilustrasi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "charlie-effects",
+      "date": "2026-10-27",
+      "title": "16 motion effects · charlie947",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · resepnya diadopsi",
+      "quote": "Motion effects boleh tuh diadopsi.",
+      "folder": "github.com/charlie947/motion-graphics-skills (MIT)",
+      "taken": [
+        "Satu objek berubah bentuk, bukan pudar dari satu gambar ke gambar lain",
+        "Garis putus-putus di posisi awal supaya mata mengikuti perubahan",
+        "Bertahap satu ketukan per elemen; saat hold tetap ada yang bergerak sedikit",
+        "Resep: chart morph, dashboard zoom, search → results, card → workspace, tabs → panels, glass focus, flowing paths, perspective shift, dll."
+      ],
+      "dropped": [
+        "Elastic type (huruf ditarik = di-stretch)",
+        "Loop 8 detik (kita pakai hold di bawah VO)",
+        "Pegas yang memantul, dock transparan, latar gelap",
+        "Label \"illustrative\"; partikel tidak boleh membentuk logo"
+      ],
+      "usedIn": [
+        "Skill editing · references/motion-techniques.md §5"
+      ],
+      "items": [
+        {
+          "id": "charlie-motion-effects",
+          "type": "link",
+          "title": "motion-effects · 16 resep",
+          "url": "https://github.com/charlie947/motion-graphics-skills/tree/main/skills/motion-effects",
+          "note": "Resep tertulis tanpa video contoh: awal, akhir, timing, dan satu detail yang membuatnya terasa premium.",
+          "tags": [
+            "Motion",
+            "Grafik",
+            "Mindmap"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "barty",
+      "date": "2026-10-27",
+      "title": "Skill motion graphics · Barty-Bart",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · tekniknya diadopsi",
+      "quote": "Kayaknya yang relevan: motion-broll, explainer-high-energy, explainer-default, explainer-engaging",
+      "folder": "github.com/Barty-Bart/motion-graphics (MIT)",
+      "taken": [
+        "Satu bentuk yang terus berubah wujud, tanpa potongan, isinya berganti dengan blur singkat",
+        "Satu objek pahlawan berjalan melewati langkah-langkah yang bereaksi; kamera mengikuti, lalu mundur memperlihatkan semuanya",
+        "Kamera sebagai editor: masuk ke satu baris teks, highlight menyapu satu kata, ikut kursor saat mengetik, mundur ke layar penuh",
+        "Transisi berupa objek: titik atau bentuk dari scene sebelumnya menjadi awal scene berikutnya",
+        "Kursor yang datang sesaat sebelum klik, dengan tekanan kecil dan riak lembut"
+      ],
+      "dropped": [
+        "Latar gelap, flood warna satu layar, bingkai ala kamera (HUD), film grain",
+        "Gerakan memantul / overshoot dan potongan keras di ketukan musik",
+        "Highlight transparan 15–20 % (diganti warna solid)",
+        "Musik dan efek suara buatan kode",
+        "Mesin HTML + Playwright mereka (dibangun ulang di Remotion)"
+      ],
+      "usedIn": [
+        "Skill editing · references/motion-techniques.md"
+      ],
+      "items": [
+        {
+          "id": "barty-broll-cutaway",
+          "type": "video",
+          "title": "motion-broll · cutaway",
+          "src": "docs/vi-style/refs/barty-motion-graphics-2026-10-27/demo-cutaway.gif",
+          "url": "https://github.com/Barty-Bart/motion-graphics/tree/main/skills/motion-broll",
+          "note": "Satu bentuk berubah dari pil ke kartu ke kontrol, tiap perubahan jatuh di satu kata.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "barty-broll-panel",
+          "type": "video",
+          "title": "motion-broll · panel",
+          "src": "docs/vi-style/refs/barty-motion-graphics-2026-10-27/demo-panel.gif",
+          "url": "https://github.com/Barty-Bart/motion-graphics/tree/main/skills/motion-broll",
+          "note": "Panel yang terus berubah di ruang kosong samping pembicara, digerakkan kursor.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "barty-default",
+          "type": "video",
+          "title": "explainer-default",
+          "src": "docs/vi-style/refs/barty-motion-graphics-2026-10-27/explainer-default.gif",
+          "url": "https://github.com/Barty-Bart/motion-graphics/tree/main/skills/explainer-default",
+          "note": "Kanvas terang, satu baris teks yang didekati kamera, UI produk dibangun ulang dan difilmkan dari dekat.",
+          "tags": [
+            "Motion",
+            "Gaya",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "barty-engaging",
+          "type": "video",
+          "title": "explainer-engaging",
+          "src": "docs/vi-style/refs/barty-motion-graphics-2026-10-27/explainer-engaging.gif",
+          "url": "https://github.com/Barty-Bart/motion-graphics/tree/main/skills/explainer-engaging",
+          "note": "Satu bola berjalan melewati toggle, slider, notifikasi dan keyboard dalam satu shot; kamera mundur di akhir.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "barty-high-energy",
+          "type": "video",
+          "title": "explainer-high-energy",
+          "src": "docs/vi-style/refs/barty-motion-graphics-2026-10-27/explainer-high-energy.gif",
+          "url": "https://github.com/Barty-Bart/motion-graphics/tree/main/skills/explainer-high-energy",
+          "note": "Promo cepat: tipografi kinetik dan bentuk yang menjadi transisi. Hanya teknik transisinya yang diambil.",
+          "tags": [
+            "Motion",
+            "Tipografi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dalio",
+      "date": "2026-10-26",
+      "title": "Benchmark v2 · film penjelasan Ray Dalio",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · menambah v1",
+      "quote": "Coba terapkan yang ga melanggar aturan. Yang bentrok, buang aja.",
+      "taken": [
+        "Objek metafora yang membawa argumen: lensa yang menyelam ke dalam garis",
+        "Garis yang tergambar di belakang titik ujung pena",
+        "Grafik data asli bergaya editorial: judul serif, grid tipis, sumber kecil",
+        "Gaya kliping arsip: kertas koran, foto halftone, selotip",
+        "Satu benang merah yang kembali di beberapa scene"
+      ],
+      "dropped": [
+        "Kerumunan dan figur orang",
+        "Latar gelap bertekstur",
+        "Foto dan footage arsip asli (hak cipta: gayanya ditiru, asetnya tidak)",
+        "Timbangan: dicoba di VI07 SC04 lalu dihapus (\"malah jadi sampah\")"
+      ],
+      "usedIn": [
+        "VI07 SC01 · garis + titik pena",
+        "VI07 SC06 · lensa ke volume",
+        "VI07 SC10 · grafik IHSG + kliping"
+      ],
+      "items": [
+        {
+          "id": "dalio-machine",
+          "type": "link",
+          "title": "How The Economic Machine Works",
+          "thumb": "docs/vi-style/refs/benchmark-2026-10-26-dalio/economic-machine-PHe0bXAIuk0.png",
+          "url": "https://www.youtube.com/watch?v=PHe0bXAIuk0",
+          "note": "Mesin ekonomi dijelaskan dengan objek sederhana yang bergerak. Gambar: contact sheet frame.",
+          "tags": [
+            "Gaya",
+            "Grafik"
+          ]
+        },
+        {
+          "id": "dalio-order",
+          "type": "link",
+          "title": "Principles for Dealing with the Changing World Order",
+          "thumb": "docs/vi-style/refs/benchmark-2026-10-26-dalio/changing-world-order-xguam0TKMw8.png",
+          "url": "https://www.youtube.com/watch?v=xguam0TKMw8",
+          "note": "Grafik data editorial, kliping arsip, siklus besar sebagai benang merah.",
+          "tags": [
+            "Gaya",
+            "Grafik"
+          ]
+        },
+        {
+          "id": "dalio-order-5min",
+          "type": "link",
+          "title": "Changing World Order · versi 5 menit",
+          "thumb": "docs/vi-style/refs/benchmark-2026-10-26-dalio/changing-world-order-5min-BB2r_eOjsPw.png",
+          "url": "https://www.youtube.com/watch?v=BB2r_eOjsPw",
+          "note": "Potongan pendek dari film yang sama.",
+          "tags": [
+            "Gaya"
+          ]
+        },
+        {
+          "id": "dalio-order-es",
+          "type": "link",
+          "title": "Changing World Order · versi Spanyol",
+          "url": "https://www.youtube.com/watch?v=R34NjxDnhi4",
+          "note": "Film yang sama dalam bahasa Spanyol.",
+          "tags": [
+            "Gaya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "iso",
+      "date": "2026-10-26",
+      "title": "Explainer isometrik · objek abstrak yang bermakna",
+      "status": "dipakai",
+      "statusLabel": "Dipakai di VI07",
+      "quote": "bisa ga, ada 1 scene yang ada explainer kayak gini? Pake objek2 abstrak tapi ada makna nya",
+      "taken": [
+        "Tumpukan lempeng isometrik yang terurai di atas sumbu bertitik",
+        "Bentuk abstrak yang punya arti: lingkaran, heksagon, silinder",
+        "Lempeng-lempeng menekan jadi satu blok"
+      ],
+      "usedIn": [
+        "VI07 SC04 · Tim riset: lima lempeng = lima pekerjaan riset; Waktu / Proses / Data"
+      ],
+      "items": [
+        {
+          "id": "iso-pin",
+          "type": "image",
+          "title": "Tumpukan isometrik di sumbu bertitik",
+          "src": "docs/vi-style/refs/pinterest-152278031144271984-iso-explainer.png",
+          "url": "https://id.pinterest.com/pin/152278031144271984/",
+          "note": "Frame dari video pin-nya.",
+          "tags": [
+            "Isometrik",
+            "Motion"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bench-v1",
+      "date": "2026-10-22",
+      "title": "Benchmark v1 · explainer yang ringan dan mengalir",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · memimpin",
+      "quote": "Ok, perbaikan benchmark untuk style video.",
+      "keywords": [
+        "tech explainer",
+        "finance explainer",
+        "visual storytelling",
+        "flowy",
+        "fluid",
+        "mindmaps with connectors",
+        "subtle visuals"
+      ],
+      "quote2": "Minimalis, banyak white spacenya (antar elemen punya white space atau jarak yang cukup), dan tulisannya normal (tidak terlalu tebal).",
+      "taken": [
+        "Latar terang dengan satu bloom lembut indigo ke cyan",
+        "Satu objek fokus per frame, yang lain redup",
+        "Konektor garis tipis yang tumbuh saat VO menyambungkan (mindmap)",
+        "Kartu putih, sudut membulat, bayangan sangat lembut, sedikit teks",
+        "Gerak mengalir: objek terbawa antar layout, kamera menyelam ke elemen",
+        "Teks besar, sedikit kata, berat normal; warna brand hanya di elemen kecil"
+      ],
+      "open": [
+        "Avatar orang sebagai node",
+        "Ikon garis tipis vs ikon isometrik"
+      ],
+      "usedIn": [
+        "VI04 SC01–09 (dibangun ulang)",
+        "VI07 seluruh scene"
+      ],
+      "items": [
+        {
+          "id": "v1-moodboard",
+          "type": "image",
+          "title": "Moodboard ringkasan",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/moodboard.png",
+          "note": "Satu halaman yang merangkum semua referensi di bawah (disusun Claude).",
+          "tags": [
+            "Gaya"
+          ]
+        },
+        {
+          "id": "v1-ancrid",
+          "type": "video",
+          "title": "ancrid · AI receptionist",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v1.mp4",
+          "url": "https://id.pinterest.com/pin/619596861275808837/",
+          "note": "Konektor tumbuh dari node tengah dengan siku membulat, lalu node ujung datang. Juga: storyboard abu-abu dulu, baru dibangun.",
+          "tags": [
+            "Mindmap",
+            "Motion"
+          ]
+        },
+        {
+          "id": "v1-gemini",
+          "type": "video",
+          "title": "Gemini",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v2.mp4",
+          "url": "https://id.pinterest.com/pin/1125618500643780102/",
+          "note": "Gradien biru lembut dan cincin samar; satu kamera kontinu menyelam ke prompt bar; teks diketik.",
+          "tags": [
+            "Motion",
+            "Gaya"
+          ]
+        },
+        {
+          "id": "v1-scm",
+          "type": "video",
+          "title": "SCM · konstruksi",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v3.mp4",
+          "url": "https://id.pinterest.com/pin/333759022408165463/",
+          "note": "Bagian terang, satu bagian navy untuk penekanan; kalimat kinetik dengan objek di celah kata.",
+          "tags": [
+            "Motion",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "v1-jobster",
+          "type": "video",
+          "title": "Jobster",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v4.mp4",
+          "url": "https://id.pinterest.com/pin/1008595279044969505/",
+          "note": "Cincin orbit berputar menjauh dan isinya terbang ke dua kolom: objek terbawa antar layout, bukan dipotong.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "v1-wages",
+          "type": "video",
+          "title": "Upah di Philadelphia",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v5.mp4",
+          "url": "https://id.pinterest.com/pin/852587773249037310/",
+          "note": "Explainer keuangan: peta, label mono, grafik garis dengan bagian yang dibahas diarsir.",
+          "tags": [
+            "Grafik",
+            "Gaya"
+          ]
+        },
+        {
+          "id": "v1-fractional",
+          "type": "video",
+          "title": "Fractional ownership",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v6.mp4",
+          "url": "https://id.pinterest.com/pin/881157483363986432/",
+          "note": "Satu bingkai kartu yang isinya berganti; satu angka besar di satu gambar.",
+          "tags": [
+            "Motion",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "v1-trovebase",
+          "type": "video",
+          "title": "Trovebase",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/videos/v7.mp4",
+          "url": "https://id.pinterest.com/pin/933230354044193934/",
+          "note": "Partikel berkumpul jadi logo; UI buram di belakang; tumpukan kartu yang bersinar.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "v1-lorikeet",
+          "type": "image",
+          "title": "Lorikeet · Your tools. Your rules.",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/images/i0-lorikeet.png",
+          "url": "https://id.pinterest.com/pin/576179346101082428/",
+          "note": "Garis tipis berwarna berkumpul ke satu ikon fokus yang bersinar.",
+          "tags": [
+            "Mindmap",
+            "Gaya"
+          ]
+        },
+        {
+          "id": "v1-orbit",
+          "type": "image",
+          "title": "Busur orbit dengan angka",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/images/i1.jpg",
+          "url": "https://id.pinterest.com/pin/338966309472305541/",
+          "note": "Avatar di atas busur, tiga angka besar dengan label kecil.",
+          "tags": [
+            "Gaya",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "v1-centre-card",
+          "type": "image",
+          "title": "Kartu tengah, alat di sekeliling",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/images/i3.jpg",
+          "url": "https://id.pinterest.com/pin/1027242996274844507/",
+          "note": "Satu kartu fokus, konektor ke ikon-ikon di kiri dan kanan.",
+          "tags": [
+            "Mindmap"
+          ]
+        },
+        {
+          "id": "v1-radial",
+          "type": "image",
+          "title": "Angka dengan garis penunjuk",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/images/i4.jpg",
+          "url": "https://id.pinterest.com/pin/1022246815445472906/",
+          "note": "Persentase besar di kiri, garis penunjuk ke satu bentuk radial besar.",
+          "tags": [
+            "Grafik",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "v1-flow",
+          "type": "image",
+          "title": "Kurva aliran antar kartu",
+          "src": "docs/vi-style/refs/benchmark-2026-10-22/images/i5.jpg",
+          "url": "https://id.pinterest.com/pin/1027454102503654856/",
+          "note": "Kurva lembut mengalir di antara kartu wireframe.",
+          "tags": [
+            "Mindmap",
+            "Gaya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "icons",
+      "date": "2026-10-19",
+      "title": "Gaya ikon · isometrik garis",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · untuk ikon",
+      "quote": "Lain kali, buat icon design nya seperti ini deh. Bisa ga? Kalo gabisa buat langsung, kamu bisa buat dulu di Adobe Illustrator.",
+      "taken": [
+        "Isometrik, satu garis gelap yang rata dengan sambungan membulat",
+        "Isi putih, satu warna aksen di bagian kunci",
+        "Sisi samping abu-biru pucat, datar tanpa gradien"
+      ],
+      "open": [
+        "Benchmark v1 memakai ikon garis tipis: belum diputuskan mana yang dipakai"
+      ],
+      "items": [
+        {
+          "id": "icon-sheet",
+          "type": "image",
+          "title": "Lembar ikon isometrik",
+          "src": "docs/vi-style/refs/icon-style-isometric-line.webp",
+          "note": "Kamera, ransel, gembok, piala, roda gigi, monitor, koper, jam, toga, target, kotak perkakas, mikrofon, jam pasir.",
+          "tags": [
+            "Ikon",
+            "Isometrik"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi-start",
+      "date": "2026-10-13",
+      "title": "Gaya VI awal · flat, mindmap, perjalanan",
+      "status": "sebagian",
+      "statusLabel": "Dasar · v1 menang kalau beda",
+      "quote": "lebih banyak flat design/icon, adanya karakter dan maskot, text, dan mindmap.",
+      "taken": [
+        "Ikon flat satu keluarga warna, gradien lembut, bayangan ringan",
+        "Mindmap: node tengah, konektor melengkung, node berbentuk pil",
+        "Hub: pusat dengan konektor putus-putus ke satelit",
+        "Perjalanan: kurva S dengan titik, ikon dan label; langkah aktif besar dan berwarna, sisanya abu"
+      ],
+      "items": [
+        {
+          "id": "ref-01",
+          "type": "image",
+          "title": "Ikon fintech ungu",
+          "src": "docs/vi-style/refs/ref-01.png",
+          "note": "Satu keluarga warna, bentuk berlapis, bayangan ringan.",
+          "tags": [
+            "Ikon"
+          ]
+        },
+        {
+          "id": "ref-02",
+          "type": "image",
+          "title": "Ikon flat biru",
+          "src": "docs/vi-style/refs/ref-02.png",
+          "note": "Bentuk sederhana, gradien tipis.",
+          "tags": [
+            "Ikon"
+          ]
+        },
+        {
+          "id": "ref-03",
+          "type": "image",
+          "title": "Set ikon biru",
+          "src": "docs/vi-style/refs/ref-03.webp",
+          "note": "Satu set besar dengan gaya yang konsisten.",
+          "tags": [
+            "Ikon"
+          ]
+        },
+        {
+          "id": "ref-04",
+          "type": "image",
+          "title": "Ikon isometrik garis + isi",
+          "src": "docs/vi-style/refs/ref-04.webp",
+          "note": "Garis biru dengan isi terang, sudut isometrik.",
+          "tags": [
+            "Ikon",
+            "Isometrik"
+          ]
+        },
+        {
+          "id": "ref-05",
+          "type": "image",
+          "title": "Ikon garis ringan",
+          "src": "docs/vi-style/refs/ref-05.webp",
+          "note": "Garis tipis dengan sedikit aksen warna.",
+          "tags": [
+            "Ikon"
+          ]
+        },
+        {
+          "id": "ref-06",
+          "type": "image",
+          "title": "Mindmap catatan tempel",
+          "src": "docs/vi-style/refs/ref-06.png",
+          "note": "Konektor melengkung, warna per cabang.",
+          "tags": [
+            "Mindmap"
+          ]
+        },
+        {
+          "id": "ref-07",
+          "type": "image",
+          "title": "Hub line art",
+          "src": "docs/vi-style/refs/ref-07.png",
+          "note": "Pusat dengan konektor putus-putus ke satelit.",
+          "tags": [
+            "Mindmap"
+          ]
+        },
+        {
+          "id": "ref-08",
+          "type": "image",
+          "title": "Mindmap dengan karakter",
+          "src": "docs/vi-style/refs/ref-08.png",
+          "note": "Karakter duduk di atas peta; node berbentuk pil.",
+          "tags": [
+            "Mindmap"
+          ]
+        },
+        {
+          "id": "ref-09",
+          "type": "image",
+          "title": "Infografis mindmap",
+          "src": "docs/vi-style/refs/ref-09.png",
+          "note": "Lingkaran tengah, node pil di dua sisi.",
+          "tags": [
+            "Mindmap"
+          ]
+        },
+        {
+          "id": "ref-10",
+          "type": "image",
+          "title": "Timeline kurva S",
+          "src": "docs/vi-style/refs/ref-10.png",
+          "note": "Titik, ikon dan tahun di sepanjang kurva.",
+          "tags": [
+            "Perjalanan"
+          ]
+        },
+        {
+          "id": "ref-11",
+          "type": "image",
+          "title": "Jalur S dengan ikon",
+          "src": "docs/vi-style/refs/ref-11.webp",
+          "note": "Perjalanan panjang yang berkelok, ikon di tiap tikungan.",
+          "tags": [
+            "Perjalanan"
+          ]
+        },
+        {
+          "id": "ref-12",
+          "type": "image",
+          "title": "Langkah bernomor",
+          "src": "docs/vi-style/refs/ref-12.png",
+          "note": "Langkah aktif besar dan berwarna, sisanya abu.",
+          "tags": [
+            "Perjalanan"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "motion-21",
+      "date": "2026-09-07",
+      "title": "Referensi motion · VIDEO 21",
+      "status": "dipakai",
+      "statusLabel": "Dipakai di 020 SC11",
+      "folder": "01 Academy/VIDEO 21 - Volume/Video Reference",
+      "taken": [
+        "Tidak ada yang diam: selalu dua lapis gerak, satu lambat terus-menerus, satu cepat per kejadian",
+        "Tiga cara chart terus bergerak: kamera bergerak, data maju, anotasi tergambar",
+        "Drift kamera berkecepatan tetap; easing hanya untuk yang mulai dan berhenti di layar",
+        "Teks berganti di tempat; penekanan dengan gradien yang menyapu huruf",
+        "Aktif vs nonaktif: dua perlakuan warna, bukan opacity yang diturunkan"
+      ],
+      "items": [
+        {
+          "id": "m21-nsave",
+          "type": "video",
+          "title": "nsave · fintech",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/Motion Graphics Explainer Video For Fintech Platform _ nsave.mp4",
+          "note": "Penekanan berupa gradien yang menyapu huruf, satu aksen warna.",
+          "tags": [
+            "Motion",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "m21-conversbank",
+          "type": "video",
+          "title": "ConversBank · app bank",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/Best Motion Graphics Product Launch Video for Banking App _ ConversBank.mp4",
+          "note": "Latar gradien terang, layar ponsel dan kartu UI yang melayang.",
+          "tags": [
+            "Motion",
+            "Gaya"
+          ]
+        },
+        {
+          "id": "m21-artisan",
+          "type": "video",
+          "title": "Artisan · SaaS",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/Motion Graphics Explainer Video for SaaS Product _ Artisan.mp4",
+          "note": "Judul diam sementara panel di bawahnya beranimasi; satu item menyala, sisanya abu.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-flux",
+          "type": "video",
+          "title": "fluxcharts",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/fluxcharts_pindown.io_1788754926.mp4",
+          "note": "Kamera bergerak: dolly dan pan pelan di bidang chart yang sedikit miring.",
+          "tags": [
+            "Grafik",
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-65cdc0",
+          "type": "video",
+          "title": "Chart · anotasi tergambar",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/65cdc0e90eeff478e1603b82a1f1954d_720w.mp4",
+          "note": "Kursor berjalan, garis mengikuti kaki demi kaki, label mendarat di ujung kaki.",
+          "tags": [
+            "Grafik",
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-3260",
+          "type": "video",
+          "title": "Chart · struktur pasar",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/3260ec0b5e07799d7dd66cb21da5237d_720w.mp4",
+          "note": "Data maju: garis tumbuh dengan label HH / HL, sumbu ikut menyesuaikan.",
+          "tags": [
+            "Grafik",
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-bitcoin",
+          "type": "video",
+          "title": "Harga Bitcoin 2010–2023",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/Bitcoin Historical Price 2010-2023 in 2 minutes.mp4",
+          "note": "Data maju hari demi hari; kedua sumbu terus menyesuaikan, angka ikut berhitung.",
+          "tags": [
+            "Grafik",
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-c9b805",
+          "type": "video",
+          "title": "Kartu Gross Volume",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/c9b805e1cb918c2b9caca4775d2ff5b1_720w.mp4",
+          "note": "Angka berhitung sementara sparkline di kartu tergambar.",
+          "tags": [
+            "Grafik",
+            "Motion"
+          ]
+        },
+        {
+          "id": "m21-terminal",
+          "type": "video",
+          "title": "Mockup layar trading",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/Stock Market Trading Screen Mockup #stockmarket #stockfootage.mp4",
+          "note": "Terminal trading gelap dengan candlestick dan panel samping yang terus hidup.",
+          "tags": [
+            "Grafik"
+          ]
+        },
+        {
+          "id": "m21-thumb",
+          "type": "image",
+          "title": "From Side Hustle to Full-Time Income",
+          "src": "/Users/samuelsurja/Documents/01 Academy/VIDEO 21 - Volume/Video Reference/From Side Hustle to Full-Time Income_ Trading Edition.jpeg",
+          "note": "Candlestick dalam perspektif di latar gelap.",
+          "tags": [
+            "Grafik"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "early",
+      "date": "2026-08-06",
+      "title": "Motion graphics awal · tanpa potongan keras",
+      "status": "arsip",
+      "statusLabel": "Arsip · masa ChartMemory2",
+      "folder": "01 Academy/Claude/Reference",
+      "taken": [
+        "Tidak ada potongan keras: elemen bertransformasi dari satu bentuk ke bentuk berikutnya",
+        "Satu benda membawa seluruh cerita",
+        "Angka besar dengan pil kecil menempel; angka yang terus berhitung"
+      ],
+      "dropped": [
+        "Palet monokrom dan lavender + kuning asam (bentrok dengan warna brand)",
+        "Format persegi 720×720"
+      ],
+      "items": [
+        {
+          "id": "early-compound",
+          "type": "video",
+          "title": "The Power of Compound Interest",
+          "src": "/Users/samuelsurja/Documents/01 Academy/Claude/Reference/Motion Graphics - The Power of Compound Interest.mp4",
+          "note": "Monokrom. Satu titik putih berjalan, jadi garis, jadi batang chart, jadi bandul. Teks kecil kapital.",
+          "tags": [
+            "Motion"
+          ]
+        },
+        {
+          "id": "early-pint",
+          "type": "video",
+          "title": "Pint",
+          "src": "/Users/samuelsurja/Documents/01 Academy/Claude/Reference/Motion Graphics_Pint.mp4",
+          "note": "Angka besar dengan pil, kartu gelap dengan sparkline, ponsel wireframe, stabilo di belakang teks.",
+          "tags": [
+            "Motion",
+            "Tipografi"
+          ]
+        }
+      ]
+    }
+  ]
+}

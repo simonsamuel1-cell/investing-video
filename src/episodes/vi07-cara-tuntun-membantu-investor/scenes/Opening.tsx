@@ -4,7 +4,7 @@
  * One phone carries the first half, its screen changing with the VO: the lock screen (13.43, IHSG −8%, trading halt) →
  * the watchlist flooding red → the group's three voice notes → the sell page, a finger over "Jual". On "Tapi sebelum
  * menekannya" it freezes and blurs back behind the scene's one line, "Apa yang perlu kamu lihat?", which docks top left
- * and stays as the heading. The second half is a board: the previous video's 3 mistakes → the four situations they show
+ * and stays as the heading. The second half is a board: the previous video (a player, watched) and its 3 mistakes → the four situations they show
  * up in → the three steps Tuntun helps with.
  *
  * Text kept to what earns its place (STYLE.md §0.10): the time and the two numbers, "Jual", the question, four short
@@ -14,7 +14,7 @@ import React from "react";
 import { interpolateColors, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Ico, SITUATION, Skel, Typed, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, Disc, Ico, NumRing, SITUATION, Skel, Typed, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -35,7 +35,20 @@ const TIP = { x: (116 / 256) * FINGER, y: (16 / 256) * FINGER };
 // ── the board ──────────────────────────────────────────────────────────────────────────────────────────────────────
 const QC = { w: 1060, h: 200, x: CX - 530, y: 420 };
 const DOCK = { x: 140, y: 96, s: 0.5 };
-const VIDEO = { w: 560, h: 220, x: CX - 280, y: 410 };
+/**
+ * "Di video sebelumnya" (Simon 28 Oct: a play icon and "3 kesalahan" alone don't say WHICH video — storyboard
+ * VI07-SC01-video-sebelumnya.jpg): the previous video as a player, watched to the end, chip "Video sebelumnya" on top,
+ * the current video smaller on its right; inside it the three mistakes, then "3 kesalahan".
+ */
+const VIDEO = { w: 600, h: 400, x: CX - 300, y: 330 };
+const THUMB = { x: 20, y: 20, w: VIDEO.w - 40, h: 300 };
+/** The player's bar: the previous-episode icon, then the progress track (filled — already watched). */
+const BAR = { y: THUMB.y + THUMB.h + 40, icon: 34, x0: 82, x1: VIDEO.w - 28, h: 10 };
+/** The current video, to the right — smaller, nothing watched yet; it steps aside before the connectors grow. */
+const NOW = { w: 300, h: 210, x: VIDEO.x + VIDEO.w + 70, y: VIDEO.y + (VIDEO.h - 210) / 2 };
+/** The three mistakes in the thumbnail: centred on arrival, then packed left for the arrow and "3 kesalahan". */
+const MISTAKE = { h: 172, wide: { w: 136, gap: 30 }, packed: { w: 92, gap: 12, x: 22 } };
+const TOTAL = { x: 384, w: 160, h: 196 };
 const NODE = { w: 390, h: 116 };
 const SITUATIONS = [
   { ...SITUATION[0], at: "panik", cx: CX - 600, cy: 300 },
@@ -49,6 +62,16 @@ const STEPS = [
   { label: "Periksa", icon: "magnifier", at: "memeriksa" },
   { label: "Putuskan", icon: "check", at: "mengambil keputusan" },
 ] as const;
+
+const WIDE_X0 = (THUMB.w - (3 * MISTAKE.wide.w + 2 * MISTAKE.wide.gap)) / 2;
+/** A mistake card's left edge at `pack` 0 (centred) → 1 (packed left). */
+const mistakeX = (k: number, pack: number) => {
+  const wide = WIDE_X0 + k * (MISTAKE.wide.w + MISTAKE.wide.gap);
+  const packed = MISTAKE.packed.x + k * (MISTAKE.packed.w + MISTAKE.packed.gap);
+  return wide + (packed - wide) * pack;
+};
+/** The arrow from the packed cards to "3 kesalahan". */
+const ARROW = { x0: MISTAKE.packed.x + 3 * MISTAKE.packed.w + 2 * MISTAKE.packed.gap + 14, x1: TOTAL.x - 14 };
 
 /** A lock-screen notification sliding down into place on `at`. */
 const Notice = ({ y, at, children }: { y: number; at: number; children: React.ReactNode }) => {
@@ -150,6 +173,20 @@ export const SC01 = () => {
   // the board
   const grid = ease(f, boardAt, m.reveal);
   const mapOut = ease(f, pathAt, m.fade);
+
+  // "Di video sebelumnya": the current video first, the previous one slides in from the left, already watched
+  const nowP = ease(f, boardAt, m.reveal);
+  const nowOut = ease(f, fourAt - m.sec(0.35), m.fade);
+  const vidAt = W("sebelumnya") - m.sec(0.1);
+  const vidP = ease(f, vidAt, m.move);
+  const chipP = ease(f, vidAt + m.sec(0.25), m.reveal);
+  const watched = 0.5 + 0.5 * ease(f, vidAt + m.sec(0.2), m.sec(0.8));
+  // "tiga kesalahan": the three mistakes, one by one, then packed left beside "→ 3 kesalahan"
+  const mistakeP = [0, 1, 2].map((k) => ease(f, W("tiga kesalahan") + k * m.sec(0.16), m.reveal));
+  const playP = 1 - ease(f, W("tiga kesalahan") - m.sec(0.15), m.fade);
+  const pack = ease(f, W("yang sering"), m.move);
+  // the cards finish packing before "3 kesalahan" takes the room they left
+  const totalP = ease(f, W("yang sering") + m.move, m.reveal);
 
   return (
     <Stage>
@@ -281,7 +318,7 @@ export const SC01 = () => {
           ) : null}
           {fingerIn > 0.001 ? (
             <div style={{ position: "absolute", left: HOVER.x - TIP.x + (1 - fingerIn) * 260, top: HOVER.y - TIP.y + 26 + (1 - fingerIn) * 300 + bob, opacity: fingerIn }}>
-              <Ico name="finger" size={FINGER} tone={c.ink} />
+              <Ico name="finger" size={FINGER} tone={c.ink} fill={c.cardBg} />
             </div>
           ) : null}
         </div>
@@ -309,18 +346,61 @@ export const SC01 = () => {
               <Connector key={s.label} a={{ x: left ? VIDEO.x : VIDEO.x + VIDEO.w, y: VIDEO.y + VIDEO.h / 2 + (s.cy < 500 ? -40 : 40) }} b={{ x: s.cx + (left ? NODE.w / 2 : -NODE.w / 2), y: s.cy }} p={grow} shape="curve" />
             );
           })}
-          <Appear at={W("sebelumnya") - m.sec(0.1)} style={{ left: 0, top: 0 }}>
-            <Card x={VIDEO.x} y={VIDEO.y} w={VIDEO.w} h={VIDEO.h}>
-              <div style={{ position: "absolute", left: 40, top: 50 }}>
-                <Disc icon="play" size={120} tone={theme.color.neutralIcon} tint={theme.color.neutralDisc} />
+          {/* the current video, smaller, on the right — out of the way before the connectors grow */}
+          {nowP * (1 - nowOut) > 0.001 ? (
+            <Card x={NOW.x + 40 * nowOut} y={NOW.y} w={NOW.w} h={NOW.h} style={{ opacity: nowP * (1 - nowOut) }}>
+              <div style={{ position: "absolute", left: 14, top: 14, width: NOW.w - 28, height: 140, borderRadius: 14, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <Disc icon="play" size={64} tone={theme.color.neutralDot} tint={c.cardBg} />
               </div>
-              <div style={{ position: "absolute", left: 200, top: 40, width: 2, height: VIDEO.h - 80, background: c.border }} />
-              <div style={{ position: "absolute", left: 202, top: 0, width: VIDEO.w - 202, height: VIDEO.h, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-                <div style={{ ...typeStyle("hero"), fontSize: 120, fontWeight: 600, lineHeight: 1, color: c.ink, opacity: ease(f, W("tiga kesalahan"), m.reveal) }}>3</div>
-                <div style={{ marginTop: 8, ...typeStyle("body"), color: c.slate, opacity: ease(f, W("kesalahan"), m.reveal) }}>kesalahan</div>
-              </div>
+              <div style={{ position: "absolute", left: 18, top: 174, width: NOW.w - 36, height: 8, borderRadius: 4, background: theme.color.skeleton }} />
             </Card>
-          </Appear>
+          ) : null}
+
+          {/* the previous video: in from the left, watched to the end */}
+          {vidP > 0.001 ? (
+            <div style={{ position: "absolute", inset: 0, opacity: vidP, transform: `translateX(${(-(1 - vidP) * 260).toFixed(2)}px)` }}>
+              <div style={{ position: "absolute", left: CX, top: VIDEO.y - 84 + (1 - chipP) * 10, transform: "translateX(-50%)", opacity: chipP, padding: "10px 26px", borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connector}`, ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>Video sebelumnya</div>
+              <Card x={VIDEO.x} y={VIDEO.y} w={VIDEO.w} h={VIDEO.h}>
+                <div style={{ position: "absolute", left: THUMB.x, top: THUMB.y, width: THUMB.w, height: THUMB.h, borderRadius: 20, background: theme.color.neutralDisc, overflow: "hidden" }}>
+                  {playP > 0.001 ? (
+                    <div style={{ position: "absolute", left: THUMB.w / 2 - 60, top: THUMB.h / 2 - 60, opacity: playP, transform: `scale(${(0.85 + 0.15 * playP).toFixed(3)})` }}>
+                      <Disc icon="play" size={120} tone={theme.color.neutralIcon} tint={c.cardBg} />
+                    </div>
+                  ) : null}
+                  {[0, 1, 2].map((k) => {
+                    const p = mistakeP[k];
+                    if (p <= 0.001) return null;
+                    const x = mistakeX(k, pack);
+                    const w = MISTAKE.wide.w + (MISTAKE.packed.w - MISTAKE.wide.w) * pack;
+                    return (
+                      <div key={k} style={{ position: "absolute", left: x, top: (THUMB.h - MISTAKE.h) / 2 + (1 - p) * 14, width: w, height: MISTAKE.h, borderRadius: 16, background: c.cardBg, boxShadow: shadow.soft, opacity: p, display: "flex", flexDirection: "column", alignItems: "center", paddingTop: 22, gap: 14, boxSizing: "border-box" }}>
+                        <NumRing n={k + 1} size={50} />
+                        {[0.7, 0.55, 0.62].map((r, j) => (
+                          <div key={j} style={{ width: w * r, height: 10, borderRadius: 5, background: theme.color.skeleton, marginTop: j === 0 ? 6 : 0 }} />
+                        ))}
+                      </div>
+                    );
+                  })}
+                  {totalP > 0.001 ? (
+                    <>
+                      <svg style={{ position: "absolute", left: 0, top: 0 }} width={THUMB.w} height={THUMB.h}>
+                        <path d={`M ${ARROW.x0} ${THUMB.h / 2} H ${ARROW.x0 + (ARROW.x1 - ARROW.x0) * totalP} M ${ARROW.x0 + (ARROW.x1 - ARROW.x0) * totalP - 10} ${THUMB.h / 2 - 10} L ${ARROW.x0 + (ARROW.x1 - ARROW.x0) * totalP} ${THUMB.h / 2} L ${ARROW.x0 + (ARROW.x1 - ARROW.x0) * totalP - 10} ${THUMB.h / 2 + 10}`} fill="none" stroke={theme.color.neutralIcon} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                      <div style={{ position: "absolute", left: TOTAL.x, top: (THUMB.h - TOTAL.h) / 2 + (1 - totalP) * 14, width: TOTAL.w, height: TOTAL.h, borderRadius: 18, background: c.cardBg, boxShadow: shadow.soft, opacity: totalP, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+                        <div style={{ ...typeStyle("hero"), fontSize: 104, fontWeight: 600, lineHeight: 1, color: c.ink }}>3</div>
+                        <div style={{ marginTop: 6, ...typeStyle("body"), fontSize: 28, color: c.slate }}>kesalahan</div>
+                      </div>
+                    </>
+                  ) : null}
+                </div>
+                <div style={{ position: "absolute", left: 26, top: BAR.y - BAR.icon / 2 }}>
+                  <Ico name="previous" size={BAR.icon} tone={c.ink} />
+                </div>
+                <div style={{ position: "absolute", left: BAR.x0, top: BAR.y - BAR.h / 2, width: BAR.x1 - BAR.x0, height: BAR.h, borderRadius: BAR.h / 2, background: theme.color.skeleton }} />
+                <div style={{ position: "absolute", left: BAR.x0, top: BAR.y - BAR.h / 2, width: (BAR.x1 - BAR.x0) * watched, height: BAR.h, borderRadius: BAR.h / 2, background: c.indigo }} />
+              </Card>
+            </div>
+          ) : null}
           {SITUATIONS.map((s, i) => {
             const slot = ease(f, fourAt + i * m.sec(0.08) + m.sec(0.35), m.pop);
             const fill = ease(f, W(s.at) - m.sec(0.1), m.reveal);

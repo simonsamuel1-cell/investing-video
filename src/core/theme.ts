@@ -280,6 +280,11 @@ export const theme = {
      * verdict rather than as somebody being quoted.
      */
     ok: "#22B573",
+    /**
+     * VI07, Simon 28 Oct 2026: "icon x: lingkarannya merah, X nya putih" — the ✕ mark's solid disc (its ✓ twin is
+     * `ok`: "lingkarannya hijau, centangnya putih"). Same red as `warn`, named for the mark so neither leaks.
+     */
+    crossRed: "#E5475D",
     indigoWash: "rgba(95, 77, 238, 0.09)",
     /**
      * ⚠ THE WASH BEHIND A CHIP THAT NAMES A MISTAKE, and the only place `warn`
@@ -372,6 +377,15 @@ export const theme = {
     basketYellow: "#F5B82E",
     /** VI01 SC05, Simon: "Koinnya warna kuning aja" — the coins of the money tree, nothing else. */
     coinYellow: "#F5B82E",
+    /**
+     * VI07 SC03, Simon 28 Oct 2026: "aku ambil koinnya aja … koinnya pun warna kuning juga", spinning like his Pinterest
+     * pin 215046950940139624 — the spinning coin by the company sketch, nothing else. Sampled from the pin: ring,
+     * face, the edge seen as it turns, the shine across the face.
+     */
+    coinSpinRing: "#FFE783",
+    coinSpinFace: "#FFD327",
+    coinSpinEdge: "#FFC52D",
+    coinSpinShine: "#FFF1B5",
     /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
     /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */

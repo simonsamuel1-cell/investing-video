@@ -63,7 +63,7 @@ Tujuannya supaya kamu nggak menekan tombol sebelum memahami apa yang sedang dibe
 [SCENE 06], Ramai di Grup Belum Tentu Ramai di Pasar
 NARASI
 Situasi berikutnya muncul saat satu topik atau berita tiba-tiba ramai.
-Temanmu mengirim voice note: “Masuk sekarang.”
+Temanmu mengirim voice note: “Masuk sekarang!”
 Tapi topik yang ramai belum tentu benar-benar berdampak pada perusahaan.
 Sebelum ikut masuk, cek tiga hal.
 Pertama: apakah peristiwanya benar-benar memengaruhi bisnis dan laba perusahaan?

@@ -82,6 +82,16 @@ grafik data dan foto arsip, itu bisa ditiru style nya."*
 grounds (we stay light; dark only for a moment of emphasis), and real archive photos/footage (copyright — the STYLE is
 imitated, the assets are not).
 
+### 0c. Motion techniques — 27 Oct 2026 (Barty-Bart/motion-graphics skills)
+
+Simon picked four skills from https://github.com/Barty-Bart/motion-graphics as relevant: motion-broll, explainer-high-energy,
+explainer-default, explainer-engaging (MIT). Their HTML engine is not used; their motion ideas are, rebuilt in Remotion and
+filtered by these rules — one shape that morphs instead of cutting, one hero travelling through stations with a following camera
+and a pull-out reveal, the camera as the editor (push into a line, ride the typing, pull back), objects as transitions. Full
+notes: the `tuntun-remotion-episode` skill, `references/motion-techniques.md`. GIFs in `refs/barty-motion-graphics-2026-10-27/`. Same day, Simon also adopted the 16 effect recipes of
+charlie947/motion-graphics-skills' `motion-effects` (*"Motion effects boleh tuh diadopsi"*) — in hold mode under the VO, opaque, light ground;
+elastic type dropped (it stretches type). Same file, §5.
+
 10b. **No transparent fills (Simon, 26 Oct: "Biar aku aja yang buat transparan, jangan buat transparan lagi").** Every
    fill and line is 100% opaque — use the `…Solid` theme keys, never the rgba washes; a "dimmed" state is shown by
    desaturating (grayscale), not by opacity. Opacity is only for fading in and out.

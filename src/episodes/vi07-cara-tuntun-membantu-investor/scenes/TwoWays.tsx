@@ -118,7 +118,7 @@ export const SC09 = () => {
         ) : null}
         {fingerIn > 0.001 ? (
           <div style={{ position: "absolute", left: colX(0) + COL.w / 2 + 60 + (1 - fingerIn) * 160, top: COL.y + COL.h - 120 + (1 - fingerIn) * 140 + 10 * press, opacity: fingerIn * (1 - ease(f, pressAt + m.sec(0.6), m.fade)) }}>
-            <Ico name="finger" size={120} tone={c.ink} />
+            <Ico name="finger" size={120} tone={c.ink} fill={c.cardBg} />
           </div>
         ) : null}
       </div>

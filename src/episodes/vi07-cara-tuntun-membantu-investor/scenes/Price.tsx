@@ -1,8 +1,12 @@
 /**
  * VI07 · SC03 — "Harga Berubah, Belum Tentu Perusahaannya Berubah". Situation 1, Panik.
  *
- *  A  a price line rises ("terasa semakin bagus") and falls ("semakin buruk"), the feeling riding its tip.
- *  B  "Padahal": the line shrinks to the left as Harga, still moving; Perusahaan beside it, flat.
+ *  A  a jagged price line, like a real daily chart, rises ("terasa semakin bagus") and falls ("semakin buruk"), the
+ *     feeling — a thumb — riding its tip.
+ *  B  "Padahal": the Harga card slims to a strip on top and keeps ticking (new points come in from the right); the
+ *     Perusahaan card slides up under it, with one line — "Bisnisnya tetap jalan." — and stays perfectly still. Simon 28 Oct: "jangan
+ *     dibuat berubah2 liquid", "serabutan aja", and the old Harga ≠ Perusahaan pair "ganti visual" — storyboard
+ *     docs/vi-style/storyboards/VI07-SC03-harga-perusahaan.jpg.
  *  C  the stock page in Tuntun and its two things: Company Quality, then Fair Value — a scale with the fair value
  *     marked and the price as a dot. The dot runs far above (a hand: don't chase), drops below; both cards are
  *     checked, both still ✓ — only the price moved.
@@ -10,28 +14,115 @@
  *
  * No figures anywhere: the line is a shape, the scale has no numbers (nothing here is a real stock).
  */
-import { interpolate, useCurrentFrame } from "remotion";
-import { SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+import { SoftGround, Stage, seeded, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Heading, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, SITUATION, Skel, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, Disc, Line, Mark, ORANG_TUNTUN_RIGHT, OpeningHeading, OrangTuntun, SITUATION, Skel, ease, useWords } from "../components/kit";
 
 type Box = { x: number; y: number; w: number; h: number };
 const mix = (a: Box, b: Box, t: number): Box => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, w: a.w + (b.w - a.w) * t, h: a.h + (b.h - a.h) * t });
 
-// A/B — the price line: big in the middle, then the left half
-const BIG: Box = { x: 360, y: 300, w: 1200, h: 440 };
-const HALF: Box = { x: 180, y: 330, w: 640, h: 380 };
-const FIRM = { x: 1100, y: 330, w: 640, h: 380 };
-/** Knots (0..1 across, 0..1 down) — up to a high, down to a low, then on. */
-const KNOTS: [number, number][] = [[0, 0.62], [0.08, 0.55], [0.16, 0.48], [0.24, 0.36], [0.32, 0.28], [0.4, 0.14], [0.47, 0.2], [0.54, 0.36], [0.62, 0.5], [0.7, 0.66], [0.78, 0.82], [0.86, 0.74], [0.93, 0.6], [1, 0.66]];
-const HIGH = 5;
-const LOW = 10;
+// A/B — the price line: a wide card, then a strip on top with Perusahaan under it
+const CARD_BIG: Box = { x: 260, y: 290, w: 1400, h: 540 };
+const CARD_STRIP: Box = { x: 260, y: 270, w: 1400, h: 260 };
+const PLOT_BIG: Box = { x: 320, y: 430, w: 1280, h: 350 };
+const PLOT_STRIP: Box = { x: 320, y: 355, w: 1280, h: 150 };
+const FIRM: Box = { x: 260, y: 560, w: 1400, h: 360 };
+
+/**
+ * The price, jagged like a real daily chart: points 0..N−1 fill the card (0..1 across, 0..1 down), the EXTRA after
+ * them come in from the right once it is a strip. A trend (up to a high, down to a low, a little back) plus two
+ * mean-reverting random walks — a fast one for the day-to-day zigzag, a slow one for the swings — and the odd jump;
+ * seeded, so every render is the same. A shape, not data: no numbers anywhere.
+ */
+const N = 160;
+const EXTRA = 56;
+const HIGH_X = 0.48;
+const LOW_X = 0.86;
+const TAPE: number[] = (() => {
+  const rnd = seeded(703);
+  const trend = (x: number) =>
+    x < HIGH_X ? 0.72 - (0.72 - 0.16) * (x / HIGH_X) : x < LOW_X ? 0.16 + (0.76 - 0.16) * ((x - HIGH_X) / (LOW_X - HIGH_X)) : x <= 1 ? 0.76 - 0.1 * ((x - LOW_X) / (1 - LOW_X)) : 0.64 + 0.06 * Math.sin((x - 1) * 9);
+  let fast = 0;
+  let slow = 0;
+  return Array.from({ length: N + EXTRA }, (_, i) => {
+    fast = 0.6 * fast + (rnd() - 0.5) * 0.12 + (rnd() < 0.08 ? (rnd() - 0.5) * 0.14 : 0);
+    slow = 0.93 * slow + (rnd() - 0.5) * 0.04;
+    return trend(i / (N - 1)) + fast + slow;
+  });
+})();
+/** The tape from window x 0 to `t` (0..1), slid `o` (0..1 of EXTRA) to the left, with exact ends. */
+const tapeSlice = (t: number, o: number) => {
+  const shift = (o * EXTRA) / (N - 1);
+  const at = (x: number) => {
+    const u = (x + shift) * (N - 1);
+    const i = Math.min(Math.floor(u), N + EXTRA - 2);
+    return TAPE[i] + (TAPE[i + 1] - TAPE[i]) * (u - i);
+  };
+  const pts: [number, number][] = [[0, at(0)]];
+  for (let i = 0; i < N + EXTRA; i++) {
+    const x = i / (N - 1) - shift;
+    if (x > 0 && x < t) pts.push([x, TAPE[i]]);
+  }
+  pts.push([t, at(t)]);
+  return pts;
+};
 
 // C — the stock page
 const PAGE: Box = { x: 220, y: 230, w: 1480, h: 640 };
 const CQ: Box = { x: PAGE.x + 50, y: PAGE.y + 140, w: 660, h: 450 };
 const FV: Box = { x: PAGE.x + PAGE.w - 50 - 660, y: PAGE.y + 140, w: 660, h: 450 };
 const SCALE = { x: 60, w: 540, y: 290 };
+
+/**
+ * The company: a hand-drawn ink sketch in VI04's bridge/ferry/plane style (Simon 28 Oct: "balik lagi ke chatgpt buat
+ * generate image business icon, stylenya sama seperti di VI04"), ChatGPT from sk-bridge.png. The one detailed drawing in
+ * the episode, for this moment only. Outer white cut away; the whites inside the drawing stay opaque.
+ */
+const SK_BUSINESS = 1200 / 694;
+
+/**
+ * By the sketch, one yellow coin spinning on its upright axis — the business still earning (Simon 28 Oct: "aku ambil
+ * koinnya aja … animasinya gini aja", his Pinterest pin 215046950940139624; "koinnya pun warna kuning"). A flat disc
+ * squeezed by |cos θ|, its edge drawn as a stack of discs between the two faces, so edge-on it is a bar like the pin's.
+ * Half a turn every 0.66 s, as in the pin; the spin never starts or stops on screen, so it runs at an even speed.
+ * Three of them round the sketch, half the first size (Simon: "50% lebih kecil, lalu duplikat 2x dan sebar … jangan
+ * jauh2"), each a little out of step so they don't flip together.
+ */
+const COIN = { d: 46, thick: 0.17, halfTurn: 0.66 };
+const COINS = [
+  { x: 1191, y: 80, phase: 0 }, // above the short tower
+  { x: 960, y: 192, phase: 0.35 }, // under the cloud
+  { x: 1320, y: 214, phase: 0.7 },
+];
+const SpinCoin = ({ t, p, x, y, phase, id }: { t: number; p: number; x: number; y: number; phase: number; id: string }) => {
+  const c = usePalette();
+  const r = COIN.d / 2;
+  const th = (t / COIN.halfTurn + phase) * Math.PI;
+  const sq = Math.abs(Math.cos(th));
+  const e = ((COIN.thick * COIN.d) / 2) * Math.sin(th) * Math.sign(Math.cos(th) || 1);
+  const star = (x: number, y: number, k: number) => `M ${x} ${y - k} Q ${x} ${y} ${x + k} ${y} Q ${x} ${y} ${x} ${y + k} Q ${x} ${y} ${x - k} ${y} Q ${x} ${y} ${x} ${y - k} Z`;
+  const w = COIN.d + COIN.thick * COIN.d;
+  return (
+    <svg width={w} height={COIN.d} viewBox={`${-w / 2} ${-r} ${w} ${COIN.d}`} style={{ position: "absolute", left: x - w / 2, top: y - r, opacity: p, transform: `scale(${(0.75 + 0.25 * p).toFixed(3)})` }}>
+      <clipPath id={id}>
+        <circle cx={0} cy={0} r={r * 0.74} />
+      </clipPath>
+      {Array.from({ length: 9 }, (_, k) => (
+        <ellipse key={k} cx={-e + (2 * e * k) / 8} cy={0} rx={r * sq} ry={r} fill={theme.color.coinSpinEdge} />
+      ))}
+      <g transform={`translate(${e.toFixed(2)} 0) scale(${Math.max(sq, 0.001).toFixed(4)} 1)`}>
+        <circle cx={0} cy={0} r={r} fill={theme.color.coinSpinRing} />
+        <circle cx={0} cy={0} r={r * 0.74} fill={theme.color.coinSpinFace} />
+        <g clipPath={`url(#${id})`}>
+          <path d={`M ${-r * 0.2} ${-r} L ${r * 0.25} ${-r} L ${-r * 0.55} ${r} L ${-r} ${r} Z M ${r * 0.42} ${-r} L ${r * 0.58} ${-r} L ${-r * 0.22} ${r} L ${-r * 0.38} ${r} Z`} fill={theme.color.coinSpinShine} />
+        </g>
+        <text x={0} y={r * 0.17} textAnchor="middle" fontFamily={theme.text.family} fontWeight={800} fontSize={r * 0.62} fill={c.cardBg}>Rp</text>
+        <path d={`${star(-r * 0.6, -r * 0.62, r * 0.13)} ${star(r * 0.66, r * 0.56, r * 0.1)}`} fill={c.cardBg} />
+      </g>
+    </svg>
+  );
+};
 
 export const SC03 = () => {
   const f = useCurrentFrame();
@@ -41,29 +132,30 @@ export const SC03 = () => {
   const W = useWords(3, BLOCK.SC03);
   const g = f + BLOCK.SC03;
 
+  // the heading docks just before "Ketika harga naik", so the line has the stage
+  const dockAt = W("Ketika harga naik") - m.sec(0.4);
+  const dock = ease(f, dockAt, m.move);
+
   // A — rise and fall
   const upP = ease(f, W("Ketika harga naik"), W("bagus.", 0, "f1") - W("Ketika harga naik"));
   const downP = ease(f, W("Ketika harga turun"), W("buruk.", 0, "f1") - W("Ketika harga turun"));
-  const draw = interpolate(upP + downP, [0, 1, 2], [0.04, KNOTS[HIGH][0], KNOTS[LOW][0] + 0.02]);
+  const draw = interpolate(upP + downP, [0, 1, 2], [0.02, HIGH_X, LOW_X]);
   const restAt = W("Padahal:");
   const rest = ease(f, restAt, m.move);
   const drawAll = draw + (1 - draw) * ease(f, restAt, m.sec(0.8));
-  const box = mix(BIG, HALF, rest);
-  /** After "Padahal" the price keeps moving — the company does not. */
-  const live = ease(f, restAt + m.sec(0.4), m.reveal);
-  const pts = KNOTS.map(([x, y], k) => [box.x + x * box.w, box.y + (y + live * 0.06 * Math.sin(g / m.sec(0.9) + k * 1.3)) * box.h] as const);
+  const card = mix(CARD_BIG, CARD_STRIP, rest);
+  const plot = mix(PLOT_BIG, PLOT_STRIP, rest);
   const lineOut = ease(f, W("Karena itu,"), m.fade);
-  const tip = (() => {
-    const t = Math.min(drawAll, 1);
-    let k = 0;
-    while (k < KNOTS.length - 2 && KNOTS[k + 1][0] < t) k++;
-    const [x0, y0] = pts[k];
-    const [x1, y1] = pts[k + 1];
-    const u = Math.max(0, Math.min(1, (t - KNOTS[k][0]) / (KNOTS[k + 1][0] - KNOTS[k][0])));
-    return { x: x0 + (x1 - x0) * u, y: y0 + (y1 - y0) * u };
-  })();
+  /** After "Padahal" the price keeps ticking — new points from the right; the company does not move. */
+  const tickAt = restAt + m.move;
+  const tick = ease(f, tickAt, W("Karena itu,") + m.fade - tickAt);
+  const pts = tapeSlice(Math.min(1, drawAll), tick).map(([x, y]) => [plot.x + x * plot.w, plot.y + y * plot.h] as const);
+  const tip = { x: pts[pts.length - 1][0], y: pts[pts.length - 1][1] };
   const goodP = ease(f, W("semakin bagus"), m.pop) * (1 - ease(f, W("Ketika harga turun"), m.fade));
   const badP = ease(f, W("semakin buruk"), m.pop) * (1 - rest);
+  const firmP = ease(f, restAt + m.sec(0.35), m.reveal);
+  const firmOn = ease(f, W("perusahaannya ikut"), m.reveal);
+  const coinAt = restAt + m.sec(0.8);
 
   // C — the page and its two things
   const pageAt = W("Karena itu,");
@@ -88,53 +180,51 @@ export const SC03 = () => {
       <SoftGround f={g} />
       <BoardGrid g={g} on={1 - ease(f, insightAt, m.fade)} />
 
-      <Appear at={W("situasi pertama")} out={insightAt} style={{ left: 0, top: 0 }}>
-        <Heading n={1} text={SITUATION[0].label} />
-      </Appear>
+      {/* the heading opens big in the middle with its subjudul, then docks top left as the price line comes in */}
+      <OpeningHeading n={1} text={SITUATION[0].label} sub="Keputusan hanya dari pergerakan harga" p={ease(f, W("situasi pertama"), m.reveal) * (1 - ease(f, insightAt, m.fade))} dock={dock} subP={ease(f, W("saat keputusan"), m.reveal)} />
 
-      {/* A/B — the price line, then Harga beside Perusahaan */}
+      {/* A/B — the price line, then the strip with Perusahaan under it */}
       {lineOut < 0.999 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: (1 - lineOut) * ease(f, W("saat keputusan"), m.reveal) }}>
-          {rest > 0.001 ? (
-            <Card x={box.x - 40} y={box.y - 80} w={box.w + 80} h={box.h + 120} style={{ opacity: rest }}>
-              <div style={{ position: "absolute", left: 40, top: 28, ...typeStyle("body"), color: c.ink }}>Harga</div>
-            </Card>
-          ) : null}
+        <div style={{ position: "absolute", inset: 0, opacity: (1 - lineOut) * ease(f, dockAt + m.sec(0.25), m.reveal) }}>
+          <Card x={card.x} y={card.y} w={card.w} h={card.h}>
+            <div style={{ position: "absolute", left: 40, top: 28, display: "flex", alignItems: "center", gap: 18 }}>
+              <Disc icon="chart-line" size={52} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+              <div style={{ ...typeStyle("body"), color: c.ink }}>Harga</div>
+            </div>
+          </Card>
           <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-            <clipPath id="vi07-sc03-draw">
-              <rect x={0} y={0} width={box.x + box.w * Math.min(1, drawAll) + 4} height={theme.canvas.height} />
-            </clipPath>
-            <polyline points={pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")} fill="none" stroke={c.indigo} strokeWidth={5} strokeLinecap="round" strokeLinejoin="round" clipPath="url(#vi07-sc03-draw)" />
-            <circle cx={tip.x} cy={tip.y} r={10} fill={c.cardBg} stroke={c.indigo} strokeWidth={4} opacity={1 - rest} />
+            <polyline points={pts.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(" ")} fill="none" stroke={c.indigo} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx={tip.x} cy={tip.y} r={10} fill={c.cardBg} stroke={c.indigo} strokeWidth={4} />
           </svg>
           {/* the feeling rides the tip */}
           {[
-            { p: goodP, icon: "good", text: "Bagus" },
-            { p: badP, icon: "bad", text: "Buruk" },
+            { p: goodP, icon: "thumbs-up", text: "Bagus" },
+            { p: badP, icon: "thumbs-down", text: "Buruk" },
           ].map((k) =>
             k.p > 0.001 ? (
-              <div key={k.text} style={{ position: "absolute", left: tip.x - 110, top: tip.y + (k.icon === "good" ? -150 : 50), width: 220, height: 84, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, opacity: k.p, display: "flex", alignItems: "center", justifyContent: "center", gap: 14, transform: `translateY(${((1 - k.p) * 12).toFixed(2)}px)` }}>
+              <div key={k.text} style={{ position: "absolute", left: Math.min(tip.x - 110, card.x + card.w - 250), top: tip.y + (k.icon === "thumbs-up" ? -140 : 40), width: 220, height: 84, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, opacity: k.p, display: "flex", alignItems: "center", justifyContent: "center", gap: 14, transform: `translateY(${((1 - k.p) * 12).toFixed(2)}px)` }}>
                 <Disc icon={k.icon} size={52} tone={theme.color.neutralIcon} tint={theme.color.neutralDisc} />
                 <div style={{ ...typeStyle("body"), color: c.ink }}>{k.text}</div>
               </div>
             ) : null,
           )}
-          {/* ≠ between them on "belum tentu" (the storyboard's B) */}
-          <Appear at={W("belum tentu")} style={{ left: (HALF.x + HALF.w + 40 + FIRM.x - 40) / 2 - 30, top: HALF.y + HALF.h / 2 - 60 }}>
-            <div style={{ width: 60, textAlign: "center", ...typeStyle("statement"), fontWeight: 400, color: c.indigo }}>≠</div>
-          </Appear>
-          {/* the company: flat */}
-          <Appear at={W("perusahaannya ikut")} style={{ left: 0, top: 0 }}>
-            <Card x={FIRM.x - 40} y={FIRM.y - 80} w={FIRM.w + 80} h={FIRM.h + 120}>
+          {/* the company: still, its checks still ticked */}
+          {firmP > 0.001 ? (
+            <Card x={FIRM.x} y={FIRM.y + (1 - firmP) * 40} w={FIRM.w} h={FIRM.h} style={{ opacity: firmP, boxShadow: `${shadow.soft}, inset 0 0 0 ${(2 * firmOn).toFixed(2)}px ${theme.color.connector}, 0 0 ${(40 * firmOn).toFixed(1)}px ${(8 * firmOn).toFixed(1)}px ${theme.color.indigoGlow}` }}>
               <div style={{ position: "absolute", left: 40, top: 28, display: "flex", alignItems: "center", gap: 18 }}>
                 <Disc icon="company" size={52} tone={c.indigo} tint={theme.color.indigoWashSolid} />
                 <div style={{ ...typeStyle("body"), color: c.ink }}>Perusahaan</div>
               </div>
-              <svg width={FIRM.w} height={FIRM.h} style={{ position: "absolute", left: 40, top: 80 }}>
-                <line x1={0} y1={FIRM.h * 0.5} x2={FIRM.w * ease(f, W("perusahaannya ikut"), m.sec(0.8))} y2={FIRM.h * 0.5} stroke={c.indigo} strokeWidth={5} strokeLinecap="round" />
-              </svg>
+              <Img src={staticFile("art/vi07/sk-business.png")} style={{ position: "absolute", right: 60, top: 30, height: 300, width: 300 * SK_BUSINESS }} />
+              {COINS.map((k, i) => (
+                <SpinCoin key={i} id={`vi07-sc03-coin-${i}`} x={k.x} y={k.y} phase={k.phase} t={Math.max(0, f - coinAt) / m.sec(1)} p={ease(f, coinAt + m.sec(0.12 * i), m.pop)} />
+              ))}
+              {/* one line instead of check rows (Simon 28 Oct: "remove aja, lalu ganti tulisan … pendek, ringkas, memorable") */}
+              <div style={{ position: "absolute", left: 40 + 52 + 18, top: 170, opacity: ease(f, restAt + m.sec(0.5), m.reveal), transform: `translateY(${((1 - ease(f, restAt + m.sec(0.5), m.reveal)) * 12).toFixed(2)}px)`, ...typeStyle("title"), fontSize: 64, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>
+                Bisnisnya <span style={{ color: c.indigo }}>tetap jalan.</span>
+              </div>
             </Card>
-          </Appear>
+          ) : null}
         </div>
       ) : null}
 

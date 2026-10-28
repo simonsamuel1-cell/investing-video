@@ -20,8 +20,14 @@ import { SC09 } from "./scenes/TwoWays";
 import { SC10 } from "./scenes/Context";
 import { SC11 } from "./scenes/Decide";
 
+/**
+ * Visuals were hidden on 27 Oct 2026 while Simon re-recorded the VO, and turned back on on 28 Oct 2026 once the new VO was
+ * in (every anchor re-checked against the new words.json). Set to false to hide them again — paper, subtitles and VO stay.
+ */
+const SHOW_VISUALS = true;
+
 /** The scenes, all built (SC01–SC11). */
-const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08, SC09, SC10, SC11 };
+const SCENE_COMPONENTS: Record<string, React.FC | undefined> = SHOW_VISUALS ? { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08, SC09, SC10, SC11 } : {};
 
 export const VI07_FRAMES = BLOCK.END;
 const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];

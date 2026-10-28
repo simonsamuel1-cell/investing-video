@@ -7,7 +7,7 @@ JSON spec, so every revision is reproducible and the original file is never edit
 
 Spec: {"base": dir the paths are relative to, "source": original VO, "out": public/vo/… (repo-relative),
        "pieces": [ {"src": "ORIGINAL", "from": s, "to": s}            a stretch of the original
-                 | {"src": "Revisi VO/x.mp3", "from"?, "to"?, "match": "original 10.9-18.3"}   a new line
+                 | {"src": "Revisi VO/x.mp3", "from"?, "to"?, "match": "original 10.9-18.3", "level"?}   a new line
                  | {"silence": s} ]}
 A new line's gain is set so its loudness (EBU R128) equals the stretch of the original it replaces ("match"),
 because the re-recordings come back quieter or louder than the take around them. Cuts sit in silences; each
@@ -65,7 +65,9 @@ def main():
         x = load(path, p.get("from", 0.0), p.get("to"))
         if "match" in p:
             a, b = map(float, p["match"].split()[1].split("-"))
-            gain = lufs(load(source, a, b)) - lufs(x)
+            # "level": [from, to] of the clip to measure instead of this piece — a clip split in parts (to lengthen
+            # its own pauses) keeps ONE gain for all of them
+            gain = lufs(load(source, a, b)) - lufs(load(path, *p["level"]) if "level" in p else x)
             x *= 10 ** (gain / 20)
             peak = 20 * np.log10(np.abs(x).max())
             if peak > PEAK_DB:

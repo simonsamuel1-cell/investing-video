@@ -7,7 +7,7 @@
  *  D  "not every page at once" (a messy stack, ✕) → one question linked to one page (✓), and the scene's one line.
  */
 import React from "react";
-import { useCurrentFrame } from "remotion";
+import { interpolateColors, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, Ico, Line, Mark, SITUATION, Skel, ease, useWords } from "../components/kit";
@@ -26,8 +26,13 @@ const pillX = (i: number) => CX - (3 * PILL.w + 2 * PILL.gap) / 2 + i * (PILL.w 
 
 // B/C — situation → what to check
 const ROW = { y0: 270, pitch: 152, h: 112 };
-const SIT_COL = { x: 320, w: 400 };
-const CHECK_COL = { x: 1080, w: 520 };
+/** The gap between the columns, halved from 360 (Simon 28 Oct: "kurangi jarak antara kedua kolom, deketin 50%"); the pair stays centred. */
+const COL_GAP = 180;
+const SIT_COL = { x: CX - (400 + COL_GAP + 536) / 2, w: 400 };
+/** Wide enough for the longest line ("Dampak, dana, transaksi") with the same 28 px either side (Simon 28 Oct: "marginnya ga rata"). */
+const CHECK_COL = { x: SIT_COL.x + SIT_COL.w + COL_GAP, w: 536 };
+/** Each column's heading, above its first row, in indigo (Simon 28 Oct: "Jika..." over the situations, "cari tahu..." over the checks). */
+const COL_HEAD = { y: ROW.y0 - 66 };
 const rowY = (i: number) => ROW.y0 + i * ROW.pitch;
 const CHECKS = [
   { text: "Harga atau bisnis?", icon: "company", on: "Saat", nth: 1, at: "yang berubah hanya harganya" },
@@ -47,7 +52,8 @@ const MESS = [
   { x: 380, y: 420, r: -9 },
   { x: 520, y: 400, r: 2 },
 ];
-const PAIR = { qx: 1000, qw: 300, qh: 190, px: 1440, y: 340 };
+/** The right page on the left, then the question on its right — left to right in the order the VO says them ("informasi" → "pertanyaan"); Simon 28 Oct swapped them. */
+const PAIR = { px: 1000, qx: 1350, qw: 300, qh: 190, y: 340 };
 
 /** A page with skeleton lines — no copy. */
 const Page = ({ icon }: { icon?: string }) => {
@@ -122,26 +128,39 @@ export const SC02 = () => {
       {/* B/C — each situation, and the thing to check for it */}
       {rowsOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - rowsOut }}>
+          {[
+            { text: "Jika...", x: SIT_COL.x, p: ease(f, rowsAt + m.sec(0.15), m.reveal) },
+            { text: "cari tahu...", x: CHECK_COL.x, p: ease(f, slotsAt, m.reveal) },
+          ].map((h) =>
+            h.p > 0.001 ? (
+              <div key={h.text} style={{ position: "absolute", left: h.x + 4, top: COL_HEAD.y + (1 - h.p) * 10, opacity: h.p, ...typeStyle("body"), fontSize: 36, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>{h.text}</div>
+            ) : null,
+          )}
           {SITUATION.map((s, i) => {
+            const anyOn = Math.max(...SITUATION.map((_, j) => rowOn(j)));
             const inP = ease(f, rowsAt + m.sec(0.25) + i * m.sec(0.1), m.reveal);
             const grow = ease(f, slotsAt + i * m.sec(0.08), m.sec(0.5));
             const fill = ease(f, W(CHECKS[i].at) - m.sec(0.1), m.reveal);
             const on = rowOn(i);
+            // the row being talked about glows and turns indigo; while one is lit, the others go mute (−1 mute · 0 rest · 1 lit)
+            const state = on - Math.max(0, anyOn - on);
+            const ink = interpolateColors(state, [-1, 0, 1], [theme.color.mute, c.ink, c.indigo]);
+            const glow = `${shadow.soft}, 0 0 ${(40 * on).toFixed(1)}px ${(8 * on).toFixed(1)}px ${theme.color.indigoGlow}`;
             const y = rowY(i);
             if (inP <= 0.001) return null;
             return (
               <React.Fragment key={s.label}>
-                <Connector a={{ x: SIT_COL.x + SIT_COL.w, y: y + ROW.h / 2 }} b={{ x: CHECK_COL.x, y: y + ROW.h / 2 }} p={grow} shape="curve" tone={fill > 0.5 ? theme.color.connector : theme.color.connectorMuteSolid} />
-                <Card x={SIT_COL.x - (1 - inP) * 40} y={y} w={SIT_COL.w} h={ROW.h} line={on > 0.5 ? theme.color.connector : undefined} style={{ opacity: inP, display: "flex", alignItems: "center", gap: 22, padding: "0 28px" }}>
-                  <Disc icon={s.icon} size={64} tone={theme.color.neutralIcon} tint={theme.color.neutralDisc} />
-                  <div style={{ ...typeStyle("body"), fontSize: 34, color: c.ink, whiteSpace: "nowrap" }}>{s.label}</div>
+                <Connector a={{ x: SIT_COL.x + SIT_COL.w, y: y + ROW.h / 2 }} b={{ x: CHECK_COL.x, y: y + ROW.h / 2 }} p={grow} shape="curve" tone={fill > 0.5 && state > -0.5 ? theme.color.connector : theme.color.connectorMuteSolid} />
+                <Card x={SIT_COL.x - (1 - inP) * 40} y={y} w={SIT_COL.w} h={ROW.h} line={on > 0.5 ? theme.color.connector : undefined} style={{ opacity: inP, display: "flex", alignItems: "center", gap: 22, padding: "0 28px", boxShadow: glow }}>
+                  <Disc icon={s.icon} size={64} tone={interpolateColors(state, [-1, 0, 1], [theme.color.mute, theme.color.neutralIcon, c.indigo])} tint={interpolateColors(Math.max(0, state), [0, 1], [theme.color.neutralDisc, theme.color.indigoWashSolid])} />
+                  <div style={{ ...typeStyle("body"), fontSize: 34, color: ink, whiteSpace: "nowrap" }}>{s.label}</div>
                 </Card>
                 {grow > 0.001 ? (
                   <div style={{ position: "absolute", left: CHECK_COL.x, top: y, width: CHECK_COL.w, height: ROW.h, opacity: ease(f, slotsAt + i * m.sec(0.08) + m.sec(0.35), m.pop) }}>
                     <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, border: `2px dashed ${theme.color.connectorMuteSolid}`, opacity: 1 - fill }} />
-                    <Card x={0} y={(1 - fill) * 12} w={CHECK_COL.w} h={ROW.h} style={{ opacity: fill, display: "flex", alignItems: "center", gap: 22, padding: "0 28px" }}>
-                      <Disc icon={CHECKS[i].icon} size={64} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-                      <div style={{ ...typeStyle("body"), fontSize: 34, color: c.ink, whiteSpace: "nowrap" }}>{CHECKS[i].text}</div>
+                    <Card x={0} y={(1 - fill) * 12} w={CHECK_COL.w} h={ROW.h} line={on > 0.5 ? theme.color.connector : undefined} style={{ opacity: fill, display: "flex", alignItems: "center", gap: 22, padding: "0 28px", boxShadow: glow }}>
+                      <Disc icon={CHECKS[i].icon} size={64} tone={interpolateColors(state, [-1, 0], [theme.color.mute, c.indigo])} tint={interpolateColors(state, [-1, 0], [theme.color.neutralDisc, theme.color.indigoWashSolid])} />
+                      <div style={{ ...typeStyle("body"), fontSize: 34, color: ink, whiteSpace: "nowrap" }}>{CHECKS[i].text}</div>
                     </Card>
                   </div>
                 ) : null}
@@ -170,7 +189,7 @@ export const SC02 = () => {
           <Disc icon="question" size={104} tone={c.indigo} tint={theme.color.indigoWashSolid} />
         </Card>
       </Appear>
-      <Connector a={{ x: PAIR.qx + PAIR.qw, y: PAIR.y + PAGE.h / 2 }} b={{ x: PAIR.px, y: PAIR.y + PAGE.h / 2 }} p={ease(f, askAt, m.sec(0.5))} shape="curve" />
+      <Connector a={{ x: PAIR.px + PAGE.w, y: PAIR.y + PAGE.h / 2 }} b={{ x: PAIR.qx, y: PAIR.y + PAGE.h / 2 }} p={ease(f, askAt, m.sec(0.5))} shape="curve" />
       <Appear at={pageAt - m.sec(0.1)} style={{ left: PAIR.px, top: PAIR.y }}>
         <Page icon="page" />
       </Appear>

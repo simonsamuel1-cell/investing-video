@@ -1,0 +1,849 @@
+{
+ "_": "VI07's VO = the original take (INV07/VI07_VO.mp3) with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+ "base": "/Users/samuelsurja/Documents/01 Academy/INV07",
+ "source": "VI07_VO.mp3",
+ "out": "public/vo/vi07-cara-tuntun-membantu-investor.mp3",
+ "pieces": [
+  {
+   "src": "ORIGINAL",
+   "from": 0,
+   "to": 12.02
+  },
+  {
+   "_": "27 Oct, revisi SC01: 'Di grup, temanmu mengirim tiga voice note: “Cepat jual.” “Cepat jual.” “Cepat jual.”'",
+   "src": "Revisi VO/Scene 01 Part 01.mp3",
+   "to": 5.45,
+   "match": "original 12.16-16.66"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 16.74,
+   "to": 19.87
+  },
+  {
+   "_": "27 Oct, revisi SC01: 'Tapi sebelum menekannya, ada satu pertanyaan: di saat seperti ini, apa yang perlu kamu lihat?'",
+   "src": "Revisi VO/Scene 01 Part 02.mp3",
+   "to": 5.44,
+   "match": "original 20.00-24.78"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 24.86,
+   "to": 29.22
+  },
+  {
+   "_": "27 Oct, revisi SC01: 'Dalam praktiknya, kesalahan itu biasanya muncul dalam empat situasi: panik karena harga, mengambil keputusan terlalu cepat, mengejar topik yang sedang ramai, dan memperbesar risiko saat terlalu percaya diri.'",
+   "src": "Revisi VO/Scene 01 Part 03.mp3",
+   "to": 11.01,
+   "match": "original 29.36-40.84"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 40.92,
+   "to": 48.47
+  },
+  {
+   "_": "27 Oct: a 30-frame (0.5 s) pause between SC01 and SC02 (Simon)",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 48.47,
+   "to": 53.92
+  },
+  {
+   "_": "27 Oct, SC02:+10f after 'jual, tahan, atau beli.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 53.92,
+   "to": 58.11
+  },
+  {
+   "_": "27 Oct, SC02:+15f after 'hal yang berbeda untuk diperiksa.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 58.11,
+   "to": 71.035
+  },
+  {
+   "_": "27 Oct, SC02:+15f after 'apa dasar lengkap di balik kesimpulan itu?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 71.035,
+   "to": 77.735
+  },
+  {
+   "_": "27 Oct, SC02:+10f after 'dan aktivitas transaksi yang meningkat?'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 77.735,
+   "to": 88.285
+  },
+  {
+   "_": "27 Oct, SC02:+10f after 'dan seperti apa kondisi market saat ini?'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 88.285,
+   "to": 95.745
+  },
+  {
+   "_": "27 Oct, SC02:+20f after 'untuk pertanyaan yang tepat.'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 95.745,
+   "to": 100.27
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'dibuat dari pergerakan harga.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 100.27,
+   "to": 110.0
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'belum tentu perusahaannya ikut berubah.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 110.0,
+   "to": 113.45
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'kamu bisa melihat dua hal.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 113.45,
+   "to": 119.675
+  },
+  {
+   "_": "27 Oct, SC03:+20f after 'kualitas bisnis dan fundamental perusahaannya.'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 119.675,
+   "to": 126.02
+  },
+  {
+   "_": "27 Oct, SC03:+20f after 'masih masuk akal dibandingkan nilainya.'",
+   "silence": 0.3333
+  },
+  {
+   "_": "27 Oct, revisi SC03: 'Saat harga naik jauh di atas fair value, kamu punya alasan untuk nggak langsung ikut mengejar.'",
+   "src": "Revisi VO/Scene 03 Part 01.mp3",
+   "to": 4.76,
+   "match": "original 126.16-130.33"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 130.41,
+   "to": 130.48
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'untuk nggak langsung ikut mengejar.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 130.48,
+   "to": 135.665
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'fair value-nya ikut berubah.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 135.665,
+   "to": 140.19
+  },
+  {
+   "_": "27 Oct, SC03:+15f after 'yang berubah baru harganya, bukan bisnisnya.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 140.19,
+   "to": 143.08
+  },
+  {
+   "_": "27 Oct, SC03:+10f after 'Bukan berarti sahamnya pasti aman.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 143.08,
+   "to": 148.035
+  },
+  {
+   "_": "27 Oct, SC03:+20f after 'apa yang perlu diperiksa sebelum bereaksi.'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 148.035,
+   "to": 148.13
+  },
+  {
+   "_": "27 Oct, SC04: 'Lalu bagaimana kalau masalahnya bukan harga, tapi informasi yang kita punya terlalu sedikit?'",
+   "src": "Revisi VO/Scene 04 Part 01.mp3",
+   "to": 5.23,
+   "match": "original 148.27-152.04"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 152.12,
+   "to": 152.17
+  },
+  {
+   "_": "27 Oct, SC04: +10f after 'punya terlalu sedikit?'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 152.17,
+   "to": 161.28
+  },
+  {
+   "_": "27 Oct, SC04: +15f after 'indikator yang terdengar sangat meyakinkan.'",
+   "silence": 0.25
+  },
+  {
+   "_": "27 Oct, SC04: 'Solusinya bukan cuma bilang: Coba pikirkan lebih lama.'",
+   "src": "Revisi VO/Scene 04 Part 02.mp3",
+   "to": 3.16,
+   "match": "original 161.42-164.94"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 165.02,
+   "to": 169.31
+  },
+  {
+   "_": "27 Oct, SC04: +15f after 'agar lebih mudah dipahami.'",
+   "silence": 0.25
+  },
+  {
+   "_": "27 Oct, SC04: 'Tim riset Tuntun membaca laporan keuangan, membuat model, menilai kualitas perusahaan, menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.'",
+   "src": "Revisi VO/Scene 04 Part 03.mp3",
+   "to": 9.26,
+   "match": "original 169.45-178.50"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 178.58,
+   "to": 178.64
+  },
+  {
+   "_": "27 Oct, SC04: +15f after 'yang bisa memengaruhi bisnis.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 178.64,
+   "to": 182.1
+  },
+  {
+   "_": "27 Oct, SC04: +10f after 'produk seperti reksa dana.'",
+   "silence": 0.1667
+  },
+  {
+   "_": "27 Oct, SC04: 'Bukan berarti tim riset selalu benar.'",
+   "src": "Revisi VO/Scene 04 Part 04.mp3",
+   "to": 2.38,
+   "match": "original 182.22-184.53"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 184.61,
+   "to": 184.635
+  },
+  {
+   "_": "27 Oct, SC04: +10f after 'tim riset selalu benar.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 184.635,
+   "to": 189.325
+  },
+  {
+   "_": "27 Oct, SC04: +10f after 'menguji sebuah kesimpulan.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 189.325,
+   "to": 189.34
+  },
+  {
+   "_": "27 Oct, SC04: 'Jadi keputusanmu punya dasar yang lebih lengkap daripada hanya satu voice note dari temanmu.'",
+   "src": "Revisi VO/Scene 04 Part 05.mp3",
+   "to": 5.71,
+   "match": "original 189.49-193.73"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 193.81,
+   "to": 193.87
+  },
+  {
+   "_": "27 Oct, SC04: +30f after 'voice note dari temanmu.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 193.87,
+   "to": 200.265
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'gunakan Tuntun AI.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 200.265,
+   "to": 202.3
+  },
+  {
+   "src": "Revisi VO/Scene 05 Part 01.mp3",
+   "match": "original 202.33-208.87",
+   "level": [
+    0,
+    7.03
+   ],
+   "_": "27 Oct, SC05: 'Perusahaan ini sebenarnya menghasilkan uang dari mana? Kenapa harga sekarang dianggap murah atau mahal? Apa risiko terbesarnya?' (1/3)",
+   "to": 2.765
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'menghasilkan uang dari mana?'",
+   "silence": 0.25
+  },
+  {
+   "src": "Revisi VO/Scene 05 Part 01.mp3",
+   "match": "original 202.33-208.87",
+   "level": [
+    0,
+    7.03
+   ],
+   "_": "27 Oct, SC05: 'Perusahaan ini sebenarnya menghasilkan uang dari mana? Kenapa harga sekarang dianggap murah atau mahal? Apa risiko terbesarnya?' (2/3)",
+   "from": 2.765,
+   "to": 5.52
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'dianggap murah atau mahal?'",
+   "silence": 0.25
+  },
+  {
+   "src": "Revisi VO/Scene 05 Part 01.mp3",
+   "match": "original 202.33-208.87",
+   "level": [
+    0,
+    7.03
+   ],
+   "_": "27 Oct, SC05: 'Perusahaan ini sebenarnya menghasilkan uang dari mana? Kenapa harga sekarang dianggap murah atau mahal? Apa risiko terbesarnya?' (3/3) — ends 0.10 s early: the clip's room-tone tail made the pause after 'terbesarnya?' 8 f longer than asked",
+   "from": 5.52,
+   "to": 6.93
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 208.9,
+   "to": 209.03
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'Apa risiko terbesarnya?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 209.03,
+   "to": 217.655
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'dan peristiwa terbaru.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 217.655,
+   "to": 221.18
+  },
+  {
+   "_": "27 Oct, SC05: +15f after 'mengambil keputusan untukmu.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 221.18,
+   "to": 226.765
+  },
+  {
+   "_": "27 Oct, SC05: +30f after 'apa yang sedang dibeli.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 226.765,
+   "to": 230.425
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'tiba-tiba ramai.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 230.425,
+   "to": 230.44
+  },
+  {
+   "_": "27 Oct, SC06: 'Temanmu mengirim voice note: Masuk sekarang.' — ends at 2.48 s: the file's last 30 ms is a click (−4.5 dB) — cut off",
+   "src": "Revisi VO/Scene 06 Part 01.mp3",
+   "to": 2.48,
+   "match": "original 230.57-232.94"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 232.94,
+   "to": 233.1
+  },
+  {
+   "_": "27 Oct, SC06: +20f after 'mengirim voice note: Masuk sekarang'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 233.1,
+   "to": 237.055
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'berdampak pada perusahaan.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 237.055,
+   "to": 239.23
+  },
+  {
+   "_": "27 Oct, SC06: +10f after 'cek tiga hal.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 239.23,
+   "to": 243.715
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'dan laba perusahaan?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 243.715,
+   "to": 246.35
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'apakah dana benar-benar masuk?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 246.35,
+   "to": 249.67
+  },
+  {
+   "_": "27 Oct, SC06: +30f after 'transaksinya memang meningkat?'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 249.67,
+   "to": 252.94
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'dampaknya terhadap bisnis.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 252.94,
+   "to": 255.205
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'arah pergerakan dana.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 255.205,
+   "to": 260.23
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'aktivitas pasar benar-benar meningkat.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 260.23,
+   "to": 263.92
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'dasar di balik pergerakannya.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 263.92,
+   "to": 268.165
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'bahwa harga pasti naik.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 268.165,
+   "to": 270.955
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'nggak ada salahnya menunggu.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 270.955,
+   "to": 275.32
+  },
+  {
+   "_": "27 Oct, SC06: +15f after 'berarti ramai di pasar.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 275.32,
+   "to": 280.2
+  },
+  {
+   "_": "27 Oct, SC07: +30f after 'percaya diri yang terlalu besar.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 280.2,
+   "to": 280.25
+  },
+  {
+   "_": "27 Oct, SC07: 'Tiga kali untung, lalu mulai merasa: Saya sudah mengerti market.'",
+   "src": "Revisi VO/Scene 07 Part 01.mp3",
+   "to": 3.92,
+   "match": "original 280.38-284.39"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 284.47,
+   "to": 284.575
+  },
+  {
+   "_": "27 Oct, SC07: +15f after 'sudah mengerti market.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 284.575,
+   "to": 289.32
+  },
+  {
+   "_": "27 Oct, SC07: +15f after 'mempertimbangkan dana pinjaman.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 289.32,
+   "to": 289.55
+  },
+  {
+   "_": "27 Oct, SC07: 'Di saat seperti ini, Tuntun Guidance bisa berfungsi sebagai pengingat.' — ends at 3.41 s: its room-tone tail made the pause after 'pengingat.' 9 f longer than asked",
+   "src": "Revisi VO/Scene 07 Part 02.mp3",
+   "to": 3.41,
+   "match": "original 289.60-293.34"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 293.4,
+   "to": 293.475
+  },
+  {
+   "_": "27 Oct, SC07: +20f after 'berfungsi sebagai pengingat.'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 293.475,
+   "to": 297.815
+  },
+  {
+   "_": "27 Oct, SC07: +15f after 'sebelum menambah posisi.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 297.815,
+   "to": 302.995
+  },
+  {
+   "_": "27 Oct, SC07: +15f after 'ketidakpastian dengan leverage.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 302.995,
+   "to": 305.045
+  },
+  {
+   "_": "27 Oct, SC07: +15f after 'Peringatan ini bukan larangan.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 305.045,
+   "to": 309.76
+  },
+  {
+   "_": "27 Oct, SC07: +30f after 'berubah menjadi keputusan besar.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 309.76,
+   "to": 356.95
+  },
+  {
+   "_": "27 Oct, SC09: 'Orangnya sama. Market-nya sama. Tapi proses mengambil keputusannya berbeda.'",
+   "src": "Revisi VO/Scene 09 Part 01.mp3",
+   "to": 4.96,
+   "match": "original 357.08-362.16"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 362.24,
+   "to": 370.5
+  },
+  {
+   "_": "27 Oct, SC09: +15f after 'tombol jual langsung ditekan.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 370.5,
+   "to": 373.075
+  },
+  {
+   "_": "27 Oct, SC09: +15f after 'rasa takutnya tetap ada.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 373.075,
+   "to": 380.14
+  },
+  {
+   "_": "27 Oct, SC09: +15f after 'dan fair value-nya juga berubah?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 380.14,
+   "to": 385.995
+  },
+  {
+   "_": "27 Oct, SC09: +15f after 'dipahami kepada Tuntun AI.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 385.995,
+   "to": 386.05
+  },
+  {
+   "_": "27 Oct, SC09: 'Setelah itu, dia mungkin tetap menjual. Mungkin menahan. Atau mungkin membeli secara bertahap.'",
+   "src": "Revisi VO/Scene 09 Part 02.mp3",
+   "to": 5.13,
+   "match": "original 386.19-394.23"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 394.31,
+   "to": 396.245
+  },
+  {
+   "_": "27 Oct, SC09: +15f after 'bukan hasil akhirnya.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 396.245,
+   "to": 402.7
+  },
+  {
+   "_": "27 Oct, SC09: +30f after 'karena desakan teman di grup.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 402.7,
+   "to": 413.435
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'sempat dihentikan sementara.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 413.435,
+   "to": 428.22
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'bereaksi terlalu jauh?'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 428.22,
+   "to": 445.84
+  },
+  {
+   "_": "27 Oct, SC10–11: +20f after 'alasan untuk ikut panik.'",
+   "silence": 0.3333
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 445.84,
+   "to": 453.34
+  },
+  {
+   "_": "27 Oct, SC10–11: 'Bukan dana darurat, bukan uang yang segera dipakai, dan tetap bukan keputusan otomatis.'",
+   "src": "Revisi VO/Scene 10 Part 01.mp3",
+   "to": 5.51,
+   "match": "original 453.43-458.89"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 458.97,
+   "to": 462.84
+  },
+  {
+   "_": "27 Oct, SC10–11: +30f after 'konteksnya bisa sangat berbeda.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 462.84,
+   "to": 462.88
+  },
+  {
+   "_": "27 Oct, SC10–11: 'Jadi, hubungan kita sederhana: Tuntun membantu, kamu yang memutuskan.'",
+   "src": "Revisi VO/Scene 11 Part 01.mp3",
+   "to": 5.19,
+   "match": "original 463.03-467.34"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 467.42,
+   "to": 472.835
+  },
+  {
+   "_": "27 Oct, SC10–11: +10f after 'juga nggak menekan tombol jual.'",
+   "silence": 0.1667
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 472.835,
+   "to": 483.445
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'aktivitas transaksi, dan kondisi market.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 483.445,
+   "to": 486.01
+  },
+  {
+   "_": "27 Oct, SC10–11: 'Harga masih bisa turun di bawah fair value. Market yang sudah murah juga masih bisa menjadi lebih murah.'",
+   "src": "Revisi VO/Scene 11 Part 02.mp3",
+   "to": 5.53,
+   "match": "original 486.09-492.43"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 492.49,
+   "to": 492.555
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'masih bisa menjadi lebih murah.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 492.555,
+   "to": 498.68
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'keputusan yang harus kamu ikuti.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 498.68,
+   "to": 504.62
+  },
+  {
+   "_": "27 Oct, SC10–11: +15f after 'untuk dilihat lebih dulu.'",
+   "silence": 0.25
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 504.62,
+   "to": 504.64
+  },
+  {
+   "_": "27 Oct, SC10–11: 'Tuntun membantu memberi konteks. Keputusan tetap ada di tanganmu.'",
+   "src": "Revisi VO/Scene 11 Part 03.mp3",
+   "to": 3.86,
+   "match": "original 504.77-509.74"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 509.82,
+   "to": 512.51
+  },
+  {
+   "_": "27 Oct, SC10–11: 'Baru putuskan.'",
+   "src": "Revisi VO/Scene 11 Part 04.mp3",
+   "to": 1.38,
+   "match": "original 512.62-513.50"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 513.56
+  }
+ ]
+}

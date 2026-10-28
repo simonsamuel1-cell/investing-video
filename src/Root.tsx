@@ -161,7 +161,7 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* VI07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. VO + subtitles, no visuals yet. */}
+      {/* VI07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. Visuals, VO + subtitles. */}
       <Composition
         id="VI07-CaraTuntunMembantuInvestorMengurangiKesalahan"
         component={CaraTuntunMembantuFull}
