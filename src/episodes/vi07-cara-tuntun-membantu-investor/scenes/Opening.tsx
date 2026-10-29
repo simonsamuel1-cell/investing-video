@@ -2,7 +2,9 @@
  * VI07 · SC01 — "Saat Semua Orang Bilang, Cepat Jual", from the ChatGPT storyboard docs/vi-style/storyboards/VI07-SC01.jpg.
  *
  * One phone carries the first half, its screen changing with the VO: the lock screen (13.43, IHSG −8%, trading halt) →
- * the watchlist flooding red → the group's three voice notes → the sell page, a finger over "Jual". On "Tapi sebelum
+ * the watchlist flooding red — then, in a 3 s pause after "…penuh warna merah." (Simon 29 Oct: "kasih jeda 3 detik di 960,
+ * lalu masukin meme ini selama 3 detik aja"), the laughing-frog meme on the phone's right, the phone sliding left so the
+ * two stand centred together, and back — → the group's three voice notes → the sell page, a finger over "Jual". On "Tapi sebelum
  * menekannya" it freezes and blurs back behind the scene's one line, "Apa yang perlu kamu lihat?", which docks top left
  * and stays as the heading. The second half is a board: the previous video (a player, watched) and its 3 mistakes → the four situations they show
  * up in → the three steps Tuntun helps with.
@@ -11,7 +13,7 @@
  * situation labels, three one-word steps. Everything else is skeleton lines, icons and motion.
  */
 import React from "react";
-import { interpolateColors, useCurrentFrame } from "remotion";
+import { OffthreadVideo, Sequence, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, Ico, NumRing, SITUATION, Skel, Typed, ease, useWords } from "../components/kit";
@@ -23,6 +25,16 @@ const PHONE = { w: 390, h: 780, y: 96, r: 56, bezel: 12 };
 const SCREEN = { w: PHONE.w - 2 * PHONE.bezel, h: PHONE.h - 2 * PHONE.bezel, r: PHONE.r - PHONE.bezel };
 /** The screen's top-left on the canvas. */
 const SX = CX - PHONE.w / 2 + PHONE.bezel;
+/**
+ * The laughing-frog meme (youtube.com/watch?v=_OMFqXy3j1g, "frog laughing meme"): 3 s from 1.2 s in, where its laugh
+ * starts (Simon 29 Oct: "harus ada suaranya … masukin klipnya langsung yang pas ada suaranya"), the black bars left
+ * and right cropped off (picture x 474–1446 of 1920), WITH its sound → public/art/vi07/meme-frog.mp4 (648 × 720). Shown
+ * `show` tall, `gap` right of the phone, at `volume` (the laugh is ~22 dB over FAHHH's file; this puts it about where
+ * Simon set FAHHH); while it shows the phone is moved left, so phone and frog are centred as one.
+ */
+const FROG = { src: "art/vi07/meme-frog.mp4", w: 648, h: 720, show: 560, gap: 80, secs: 3, volume: 0.08 };
+const FROG_W = (FROG.show * FROG.w) / FROG.h;
+const FROG_SHIFT = (FROG.gap + FROG_W) / 2;
 const SY = PHONE.y + PHONE.bezel;
 /** The sell button, in screen px. */
 const BUTTON = { x: 20, y: SCREEN.h - 124, w: SCREEN.w - 40, h: 84 };
@@ -157,6 +169,12 @@ export const SC01 = () => {
   const toSell = ease(f, sellAt, m.move);
   const ihsg = Math.round(8 * ease(f, W("turun"), W("persen", 0, "f1") - W("turun")));
   const flood = ease(f, W("merah"), m.reveal);
+  // the frog, from the end of "merah." into the pause after it (Simon 29 Oct: "memenya mulai muncul di 931")
+  const frogAt = W("merah.", 0, "f1") - m.sec(0.3);
+  const frogEnd = frogAt + m.sec(FROG.secs);
+  const frogP = ease(f, frogAt, m.reveal) * (1 - ease(f, frogEnd - m.fade, m.fade));
+  /** The phone makes room early, from "Layar" (Simon 29 Oct: "mulai geser ke kiri di 825 aja"), and comes back after the frog. */
+  const aside = ease(f, W("Layar") - m.sec(0.07), m.move) - ease(f, frogEnd - m.sec(0.2), m.move);
 
   // the finger: in on "sudah berada", over the button by "tombol"; it stops on "Tapi"
   const fingerIn = ease(f, W("sudah"), W("tombol") - W("sudah"));
@@ -193,9 +211,18 @@ export const SC01 = () => {
       <SoftGround f={g} />
       <BoardGrid g={g} on={grid} />
 
+      {/* ── the frog, right of the phone while the phone is aside ── */}
+      {frogP > 0.001 ? (
+        <div style={{ position: "absolute", left: CX - FROG_SHIFT + PHONE.w / 2 + FROG.gap + (1 - frogP) * 40, top: PHONE.y + PHONE.h / 2 - FROG.show / 2, width: FROG_W, height: FROG.show, borderRadius: theme.shape.cardRadius, overflow: "hidden", boxShadow: shadow.soft, opacity: frogP }}>
+          <Sequence from={frogAt} durationInFrames={m.sec(FROG.secs)} layout="none">
+            <OffthreadVideo src={staticFile(FROG.src)} volume={FROG.volume} style={{ width: FROG_W, height: FROG.show, display: "block" }} />
+          </Sequence>
+        </div>
+      ) : null}
+
       {/* ── the phone, its screens, and the finger ── */}
       {phoneShow > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: phoneShow, filter: freeze > 0.001 ? `blur(${(8 * freeze).toFixed(2)}px)` : undefined, transform: `translateY(${((1 - inP) * 60 + leave * 160).toFixed(2)}px) scale(${(1 - 0.04 * freeze).toFixed(4)})`, transformOrigin: `${CX}px ${PHONE.y + PHONE.h / 2}px` }}>
+        <div style={{ position: "absolute", inset: 0, opacity: phoneShow, filter: freeze > 0.001 ? `blur(${(8 * freeze).toFixed(2)}px)` : undefined, transform: `translateX(${(-FROG_SHIFT * aside).toFixed(2)}px) translateY(${((1 - inP) * 60 + leave * 160).toFixed(2)}px) scale(${(1 - 0.04 * freeze).toFixed(4)})`, transformOrigin: `${CX}px ${PHONE.y + PHONE.h / 2}px` }}>
           <div style={{ position: "absolute", left: CX - PHONE.w / 2, top: PHONE.y, width: PHONE.w, height: PHONE.h, borderRadius: PHONE.r, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}` }}>
             <div style={{ position: "absolute", left: PHONE.bezel, top: PHONE.bezel, width: SCREEN.w, height: SCREEN.h, borderRadius: SCREEN.r, overflow: "hidden", background: c.bg }}>
               {/* 1 · the lock screen */}

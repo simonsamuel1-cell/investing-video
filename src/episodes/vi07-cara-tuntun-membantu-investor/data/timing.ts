@@ -50,9 +50,12 @@ export const CUT = { over: 40, distance: 120, blur: 10 } as const;
  * Scene changes inside one situation: the paper, the grid and the heading stay put through the cut and only the content
  * moves (Simon 28 Oct: "Dari scene 4 ke scene 5 masih ngomongin Terburu-buru ya? Kalo gitu background dan judulnya ga
  * perlu ikut transisi"). The scenes either side leave those out while `heldAt` says so; the Composition draws them.
- * (SC07 → SC08 is not one: SC07 ends on Orang Tuntun with no heading.)
+ * SC07 → SC08 is one since SC07 was rebuilt (29 Oct) with "Terlalu yakin" held to its end.
  */
-export const HELD = [{ at: BLOCK.SC05, n: 2 }] as const;
+export const HELD = [
+  { at: BLOCK.SC05, n: 2 },
+  { at: BLOCK.SC08, n: 4 },
+] as const;
 export const heldAt = (g: number) => HELD.find((h) => g >= h.at - CUT.over / 2 && g < h.at + CUT.over / 2) ?? null;
 /** Scene changes built to carry over, with no cut — none yet. */
 export const CONTINUOUS: number[] = [];
@@ -61,3 +64,17 @@ export const CUTS: { at: number; axis: "x" | "y" }[] = Object.keys(BLOCK)
   .map((k) => BLOCK[k])
   .filter((at) => !CONTINUOUS.includes(at))
   .map((at) => ({ at, axis: "x" as const }));
+
+/**
+ * Sound effects, each on the frame its picture lands — a track of their own beside the VO, never the BGM (which the
+ * Composition does not even hold). `volume` is set by ear against the voice.
+ *   fah  SC07's "Fahhh" (Simon 29 Oct: "masukin sfx FAHHH nya"): remotion.media/fah.wav, the @remotion/sfx copy of the
+ *        meme (credited there to myinstants.com, not under a free licence — Simon was told), 0.1 s (6 f) after "market."
+ */
+export const SFX = {
+  /**
+   * 0.5 first; then 30 % of that ("volume FAHH nya kecilin 70%, jadi existingnya cuma 30% aja"); then 10 % of it
+   * ("Masih terlalu besar, buat jadi 10% deh") — Simon 29 Oct.
+   */
+  fah: { src: "sfx/vi07/fah.wav", at: w(7, "market.") + 6, volume: 0.05 },
+} as const;

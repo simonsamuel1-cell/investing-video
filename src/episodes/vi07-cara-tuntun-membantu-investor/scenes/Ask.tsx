@@ -14,7 +14,7 @@
  *       the word turns red (it doesn't decide for you). Under it, on "Tujuannya supaya", one summary line in a text box
  *       (Simon 29 Oct: the "you press it" row went).
  */
-import { OffthreadVideo, interpolateColors, staticFile, useCurrentFrame } from "remotion";
+import { OffthreadVideo, Sequence, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { Connector, HighlightBox, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { PHONE_BEZEL, PhoneScreens } from "../../vi04-investasi-yang-cocok/components/PhoneScreens";
 import CLIP from "../data/tanya-ai.retime.json";
@@ -85,7 +85,21 @@ const BUTTON = { w: 230, h: 92 };
 const AI_X = CX - (AI_DISC / 2 + 80 + LINE + BUTTON.w) / 2 + AI_DISC / 2;
 const LINE_MID = AI_X + 80 + LINE / 2;
 const WORD = { size: 40, gap: 18 };
-const SUMMARY = { top: ROW.y + AI_DISC / 2 + 48, size: 48 };
+/**
+ * On "Tujuannya supaya" the row goes, and the DiCaprio toast comes with the summary under it (Simon 29 Oct: "icon
+ * robot, memutuskan, dan beli, menghilang; lalu muncul meme Leonardo dicaprio toast barengan 'Pahami dulu,…'. Posisi
+ * memenya di atas text"; "Memenya pake Leo Meme.mp4 aja"): the clip is INV07/Revisi VO/Leo Meme.mp4 with its
+ * letterbox cropped off (852 × 352, which takes the bottom bar's VLIPSY mark with it), slowed 1.645× with motion
+ * interpolation to 60 fps (ffmpeg minterpolate mci) so it runs to the scene's end instead of stopping halfway (Simon 29
+ * Oct: "di buat slow motion sampe akhir script"), no sound → public/art/vi07/meme-leo.mp4, `frames` long; its playback
+ * rate fits it to whatever is left of the scene. Shown `w` wide, the summary `gap` under it, the two centred between
+ * heading and subtitles.
+ */
+const TOAST_CLIP = { src: "art/vi07/meme-leo.mp4", w: 852, h: 352, frames: 309 };
+const TOAST = { w: 760, h: (760 * TOAST_CLIP.h) / TOAST_CLIP.w, gap: 40 };
+const SUMMARY_H = 48 * 1.3 + 2 * 28;
+const TOAST_TOP = (HEADING.y + HEADING.disc / 2 + theme.captionBand.top) / 2 - (TOAST.h + TOAST.gap + SUMMARY_H) / 2;
+const SUMMARY = { top: TOAST_TOP + TOAST.h + TOAST.gap, size: 48 };
 
 /** The buy button, grey: not the AI's to press. */
 const BuyButton = ({ x, y }: { x: number; y: number }) => {
@@ -120,7 +134,9 @@ export const SC05 = () => {
 
   const aiRowAt = W("Tujuannya bukan");
   const lineAt = W("mengambil keputusan");
-  const notYours = ease(f, W("untukmu."), m.pop);
+  const goalAt = W("Tujuannya supaya");
+  const rowOut = ease(f, goalAt, m.fade);
+  const notYours = ease(f, W("untukmu."), m.pop) * (1 - rowOut);
 
   return (
     <Stage transparent={held}>
@@ -163,7 +179,7 @@ export const SC05 = () => {
       ) : null}
 
       {/* D — AI doesn't press it for you */}
-      <Appear at={aiRowAt} style={{ left: 0, top: 0 }}>
+      <Appear at={aiRowAt} out={goalAt} style={{ left: 0, top: 0 }}>
         <div style={{ position: "absolute", left: AI_X - AI_DISC / 2, top: ROW.y - AI_DISC / 2 }}>
           <Disc icon="ai" size={AI_DISC} tone={c.cardBg} tint={c.indigo} />
         </div>
@@ -172,7 +188,12 @@ export const SC05 = () => {
         {f >= lineAt ? <BuyButton x={AI_X + 80 + LINE} y={ROW.y} /> : null}
       </Appear>
       <Mark kind="cross" p={notYours} x={LINE_MID} y={ROW.y - WORD.gap - WORD.size * 1.2 - 16 - 28} />
-      <Appear at={W("Tujuannya supaya")} style={{ left: 0, top: SUMMARY.top, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
+      <Appear at={goalAt + m.fade} style={{ left: CX - TOAST.w / 2, top: TOAST_TOP, width: TOAST.w, height: TOAST.h, borderRadius: theme.shape.cardRadius, overflow: "hidden", boxShadow: shadow.soft }}>
+        <Sequence from={goalAt + m.fade} layout="none">
+          <OffthreadVideo src={staticFile(TOAST_CLIP.src)} muted playbackRate={TOAST_CLIP.frames / (BLOCK.SC06 - BLOCK.SC05 - goalAt - m.fade)} style={{ width: TOAST.w, height: TOAST.h, display: "block" }} />
+        </Sequence>
+      </Appear>
+      <Appear at={goalAt + m.fade} style={{ left: 0, top: SUMMARY.top, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
         <div style={{ padding: "28px 48px", borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, fontFamily: theme.text.family, fontSize: SUMMARY.size, fontWeight: 500, lineHeight: 1.3, whiteSpace: "nowrap", color: c.ink }}>
           <span style={{ color: c.indigo }}>Pahami dulu,</span> baru tekan Beli.
         </div>

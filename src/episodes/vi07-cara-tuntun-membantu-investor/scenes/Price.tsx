@@ -24,6 +24,7 @@
 import { Img, interpolate, staticFile, useCurrentFrame } from "remotion";
 import { HighlightBox, SoftGround, Stage, seeded, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { PHONE_BEZEL, PhoneScreens } from "../../vi04-investasi-yang-cocok/components/PhoneScreens";
+import { BUMI_CARD } from "../data/bumi-card";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, HEADING, Line, ORANG_TUNTUN_RIGHT, OpeningHeading, OrangTuntun, SITUATION, ease, useWords } from "../components/kit";
 import { SpinCoin } from "../components/SpinCoin";
@@ -104,17 +105,8 @@ const COINS = [
 const SHOT = { w: 1080, h: 2417 };
 /** Where the card sits in the shot, and in BUMI-kartu.png (2160 × 752): measured on the PNGs. */
 const SHOT_CARD = { x: 46, y: 1731, w: 987, h: 304 };
-const ART = {
-  w: 2160,
-  card: { x: 93, y: 93, w: 1974, h: 608 },
-  radius: 54,
-  signals: { x0: 1484, x1: 2063, y0: 96, y1: 532 },
-  /** The two columns' contents, and the gauge with its pointer (apex row 382, centre x 835 — 14% along, in the green). */
-  cq: { x1: 130, y1: 154, x2: 617, y2: 469 },
-  fv: { x1: 734, y1: 154, x2: 1425, y2: 471 },
-  gauge: { x0: 737, x1: 1423, y: 382, at: (835 - 737) / (1423 - 737), red: 0.86 },
-  pointer: { w: 23, h: 16 },
-};
+/** BUMI-kartu.png, measured (data/bumi-card.ts — SC07 shows its Fair Value too). */
+const ART = BUMI_CARD;
 /**
  * The phone fills the height between the "Panik" heading and the caption band, left edge on the word "Panik" (Simon
  * 28 Oct: "tinggi hp nya dibuat fit di antara batas margin bawah dengan judul Panik … align-left terhadap Panik").

@@ -386,6 +386,24 @@ export const theme = {
     coinSpinFace: "#FFD327",
     coinSpinEdge: "#FFC52D",
     coinSpinShine: "#FFF1B5",
+    /** The side of a coin in a stack (VI07 SC07's position tower) — the edge colour a shade down, so stacked coins read apart. */
+    coinSpinShade: "#E9A916",
+    /**
+     * VI07 SC07, Simon 29 Oct 2026: "Rasa percaya dirinya pake ini aja" — a confidence gauge, red (low) round to green
+     * (high), its six bands sampled from his reference picture.
+     */
+    gaugeRed: "#FD0001",
+    gaugeOrange: "#FF8601",
+    gaugeAmber: "#FFA901",
+    gaugeYellow: "#FDE700",
+    gaugeLime: "#E0DC01",
+    gaugeGreen: "#76C206",
+    /** A warning sign's yellow, under a black "!" (VI07 SC07, Simon 29 Oct: "warna kuning dan tanda seru warna hitam"). */
+    cautionYellow: "#FFCC00",
+    /** The "Awesome Face" meme, drawn (VI07 SC07, Simon 29 Oct, his reference): its yellow, its mouth, its tongue. */
+    memeAwesomeYellow: "#F9D84A",
+    memeAwesomeMouth: "#6E0B35",
+    memeAwesomeTongue: "#EFB0CC",
     /** VI07 SC05, Simon: "Dynamic islandnya dibuat hitam" — the pill on a drawn phone, hardware, so black in every palette. */
     phoneIsland: "#000000",
     /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */

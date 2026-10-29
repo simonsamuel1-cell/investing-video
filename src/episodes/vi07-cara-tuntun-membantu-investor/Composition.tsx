@@ -1,12 +1,12 @@
 /**
  * VI07 · Cara Tuntun Membantu Investor Mengurangi Kesalahan — 11 scenes at 60 fps, timed by the VO's own words
- * (data/timing.ts). ONE root <Audio>. Scenes are built from their ChatGPT storyboards in VI04's style
- * (docs/vi-style/STYLE.md §0); the ones not built yet are empty rows that only mark their blocks on the Studio timeline.
+ * (data/timing.ts). ONE root <Audio> for the VO, plus timing.ts `SFX`, each on its frame. Scenes are built from their
+ * ChatGPT storyboards in VI04's style (docs/vi-style/STYLE.md §0); the ones not built yet are empty rows that only mark their blocks on the Studio timeline.
  */
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
-import { BLOCK, CUT, CUTS, VO_LAST, heldAt } from "./data/timing";
+import { BLOCK, CUT, CUTS, SFX, VO_LAST, heldAt } from "./data/timing";
 import { BoardGrid, Heading, SITUATION } from "./components/kit";
 import { CUES } from "./subtitles";
 import { SC01 } from "./scenes/Opening";
@@ -89,6 +89,11 @@ export const CaraTuntunMembantuComposition = () => (
         <Captions cues={CUES} show={chrome} />
         {chrome && <Watermark totalFrames={VI07_FRAMES} />}
         <Audio key={ROWS} src={staticFile("vo/vi07-cara-tuntun-membantu-investor.mp3")} />
+        {Object.entries(SFX).map(([name, s]) => (
+          <Sequence key={`${ROWS}-sfx-${name}`} from={s.at} name={`sfx ${name}`}>
+            <Audio src={staticFile(s.src)} volume={s.volume} />
+          </Sequence>
+        ))}
       </Stage>
     </PaletteProvider>
   </AbsoluteFill>

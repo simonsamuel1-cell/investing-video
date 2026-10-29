@@ -22,22 +22,23 @@ export const HEADING_OPEN = { y: 520, scale: 1.7, subGap: 96, ringGap: 16 };
  * number ring sits above the line; docking, it swings back to its place left of the line ("angka 1 nya dari atas Panik
  * dulu, lalu nanti pas ke pojok kiri atas, balik ke posisi semula"), in a straight line. `dock` 0 → 1 moves it; at 1 it is exactly
  * `Heading`. `subP` shows the subjudul, which leaves as the heading docks. The subjudul is a line of text, or any row of
- * things (SC04: its three cause chips), centred under the line.
+ * things (SC04: its three cause chips), centred under the line. `openY` moves the opened line up for a tall subjudul
+ * (SC07's gauge), so the block stays centred.
  */
-export const OpeningHeading = ({ n, text, sub, p, dock, subP, hidden = false }: { n: number; text: string; sub: React.ReactNode; p: number; dock: number; subP: number; hidden?: boolean }) => {
+export const OpeningHeading = ({ n, text, sub, p, dock, subP, hidden = false, openY = HEADING_OPEN.y }: { n: number; text: string; sub: React.ReactNode; p: number; dock: number; subP: number; hidden?: boolean; openY?: number }) => {
   const c = usePalette();
   if (p <= 0.001 || hidden) return null;
   const cx = theme.canvas.width / 2;
   const d = HEADING.disc;
   const k = HEADING_OPEN.scale + (1 - HEADING_OPEN.scale) * dock;
-  const y = HEADING_OPEN.y + (HEADING.y - HEADING_OPEN.y) * dock;
+  const y = openY + (HEADING.y - openY) * dock;
   // the line: centred on the canvas at dock 0 (−50 % of its own width, scaled about its centre), left-aligned where
   // `Heading` puts it at 1
   const tx = cx + (HEADING.x + d + 24 - cx) * dock;
   const o = 50 * (1 - dock);
   // the ring: above the line at 0, left of it at 1, on a straight path (Simon 28 Oct: "lurus aja, ngga usa curving").
   // It runs ahead of the line along that path — in step with it, it crosses the "P" midway.
-  const ry0 = HEADING_OPEN.y - HEADING_OPEN.scale * (d + HEADING_OPEN.ringGap);
+  const ry0 = openY - HEADING_OPEN.scale * (d + HEADING_OPEN.ringGap);
   const r = 1 - (1 - dock) ** 2;
   const rx = cx + (HEADING.x + d / 2 - cx) * r;
   const ry = ry0 + (HEADING.y - ry0) * r;
@@ -52,9 +53,9 @@ export const OpeningHeading = ({ n, text, sub, p, dock, subP, hidden = false }: 
       </div>
       {sub1 > 0.001 ? (
         typeof sub === "string" ? (
-          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: HEADING_OPEN.y + HEADING_OPEN.subGap + (1 - subP) * 12 - dock * 30, textAlign: "center", opacity: sub1 * p, fontFamily: theme.text.family, fontSize: 40, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{sub}</div>
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: openY + HEADING_OPEN.subGap + (1 - subP) * 12 - dock * 30, textAlign: "center", opacity: sub1 * p, fontFamily: theme.text.family, fontSize: 40, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{sub}</div>
         ) : (
-          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: HEADING_OPEN.y + HEADING_OPEN.subGap - dock * 30, display: "flex", justifyContent: "center", opacity: (1 - dock) * p }}>{sub}</div>
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: openY + HEADING_OPEN.subGap - dock * 30, display: "flex", justifyContent: "center", opacity: (1 - dock) * p }}>{sub}</div>
         )
       ) : null}
     </>

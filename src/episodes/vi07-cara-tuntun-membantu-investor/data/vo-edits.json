@@ -7,6 +7,15 @@
   {
    "src": "ORIGINAL",
    "from": 0,
+   "to": 11.985
+  },
+  {
+   "_": "29 Oct, SC01 (Simon: \"kasih jeda 3 detik di 960\" — for the frog meme): +180f after 'Layar ponselmu penuh warna merah.'",
+   "silence": 3.0
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 11.985,
    "to": 12.02
   },
   {
@@ -541,8 +550,8 @@
    "to": 280.2
   },
   {
-   "_": "27 Oct, SC07: +30f after 'percaya diri yang terlalu besar.'",
-   "silence": 0.5
+   "_": "27 Oct, SC07: +30f after 'percaya diri yang terlalu besar.'; 29 Oct +30f more (Simon: \"di 17969 kasih jeda 30 frame deh, biar animasinya tunggu kelar dulu\") = 60f",
+   "silence": 1.0
   },
   {
    "src": "ORIGINAL",
@@ -561,8 +570,8 @@
    "to": 284.575
   },
   {
-   "_": "27 Oct, SC07: +15f after 'sudah mengerti market.'",
-   "silence": 0.25
+   "_": "27 Oct, SC07: +15f after 'sudah mengerti market.'; 29 Oct +30f more (Simon: \"Di 18268 kasih jeda 30 frame, biar kasih waktu buat meme nya tercerna\") = 45f",
+   "silence": 0.75
   },
   {
    "src": "ORIGINAL",

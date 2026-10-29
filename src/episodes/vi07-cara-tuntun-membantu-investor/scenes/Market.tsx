@@ -3,18 +3,19 @@
  * storyboard docs/vi-style/storyboards/VI07-SC08.jpg.
  *
  *  A  one stock → the whole market (a mosaic of cards round it); the loan coin glows; everyone's cards tick up.
- *  B  two instruments in one card: Valuasi IHSG on its historical range (Murah … Mahal) and a Sentimen gauge
- *     (Takut … Serakah).
- *  C  both high → Waspada; both low → Peluang.
- *  D  the card is named Market Valuation; it doesn't pick a stock (✕); it shows whether everyone is moving the same
- *     way — a field of arrows turning to one direction.
- *
- * No figures: the range and the gauge have no numbers (nothing here is a real reading).
+ *  B  the two real Tuntun screens, side by side (Simon 29 Oct: "ganti dengan gambar Sentiment.jpg dan Valuation.jpg"):
+ *     IHSG Valuation, then Sentiment, each boxed in indigo round its whole picture while the VO names it.
+ *  C  the pictures are one reading (Cheap; 42, Neutral) and the VO talks about both extremes, so nothing moves on them
+ *     — the part it means is boxed instead (Simon: "kamu berikan highlight indigo aja, gausa gerakin jarum"): Expensive
+ *     + the greed end with "Valuation & sentiment tinggi = waspada", then Cheap + the fear end with "Valuation &
+ *     sentiment rendah = peluang" (Simon 29 Oct: summary lines instead of the two badges).
+ *  D  "Market Valuation" named over them; it doesn't pick a stock (✕); then one summary line instead of the field of
+ *     arrows (Simon 29 Oct: "jadi text ringkasan aja"): "Tenang, atau ikut arus?"
  */
-import { interpolate, useCurrentFrame } from "remotion";
-import { SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Heading, Mark, SITUATION, Skel, ease, useWords } from "../components/kit";
+import { Img, staticFile, useCurrentFrame } from "remotion";
+import { HighlightBox, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { BLOCK, heldAt } from "../data/timing";
+import { Appear, BoardGrid, Card, Disc, Heading, Line, Mark, SITUATION, Skel, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -26,10 +27,24 @@ const tileX = (col: number) => CX - (COLS * TILE.w + (COLS - 1) * TILE.gap) / 2 
 const tileY = (row: number) => 540 - (ROWS_N * TILE.h + (ROWS_N - 1) * TILE.gap) / 2 + row * (TILE.h + TILE.gap);
 const CENTER = { col: 3, row: 2 };
 
-// B–D — the Market Valuation card
-const MV = { x: CX - 680, y: 250, w: 1360, h: 420 };
-const RANGE = { x: 90, w: 520, y: 250 };
-const GAUGE = { cx: 1010, cy: 300, r: 170 };
+// B–D — the two Tuntun screens (INV07/Revisi VO → public/art/vi07/app), `h` tall side by side, centred; the zones the VO
+// names, in each picture's own pixels (measured on a grid)
+const SHOT = { top: 290, h: 460, gap: 48, nameAbove: 94 };
+const VAL = { src: "art/vi07/app/IHSG-valuation.jpg", w: 1080, h: 853, cheap: { x1: 130, y1: 270, x2: 340, y2: 540 }, dear: { x1: 730, y1: 250, x2: 940, y2: 480 } };
+const SEN = { src: "art/vi07/app/IHSG-sentiment.jpg", w: 1080, h: 1073, fear: { x1: 270, y1: 330, x2: 430, y2: 570 }, greed: { x1: 650, y1: 330, x2: 810, y2: 570 } };
+const VAL_W = (VAL.w * SHOT.h) / VAL.h;
+const SEN_W = (SEN.w * SHOT.h) / SEN.h;
+const VAL_X = CX - (VAL_W + SHOT.gap + SEN_W) / 2;
+const SEN_X = VAL_X + VAL_W + SHOT.gap;
+/** A zone of a picture (its pixels) as a box on the canvas, padded. */
+const onShot = (x: number, w: number, srcW: number, r: { x1: number; y1: number; x2: number; y2: number }, pad = 6) => {
+  const k = w / srcW;
+  return { x1: x + r.x1 * k - pad, y1: SHOT.top + r.y1 * k - pad, x2: x + r.x2 * k + pad, y2: SHOT.top + r.y2 * k + pad };
+};
+/** A whole picture as a box, `pad` outside its edge (Simon 29 Oct: the first two boxes go round the screenshots, "ga usa spesifik di parameternya"). */
+const aroundShot = (x: number, w: number, pad = 12) => ({ x1: x - pad, y1: SHOT.top - pad, x2: x + w + pad, y2: SHOT.top + SHOT.h + pad });
+/** Where C and D put their things: under the pictures. */
+const BELOW = SHOT.top + SHOT.h + 50;
 
 /** A small stock card: a skeleton name and a sparkline. */
 const StockTile = ({ up }: { up: number }) => (
@@ -49,6 +64,8 @@ export const SC08 = () => {
   const shadow = useShadow();
   const W = useWords(8, BLOCK.SC08);
   const g = f + BLOCK.SC08;
+  /** Through the cut from SC07 (same situation) the ground and the heading are the Composition's, held still. */
+  const held = heldAt(g) !== null;
 
   // A
   const oneAt = W("satu saham");
@@ -57,28 +74,26 @@ export const SC08 = () => {
   const upAt = W("semua orang sedang");
   const aOut = ease(f, W("Sebelum memperbesar"), m.fade);
 
-  // B/C
+  // B/C — the screens, then the boxes on the zones the VO names
   const rangeAt = W("valuasi IHSG");
   const gaugeAt = W("sentimen pasar");
-  const high = ease(f, W("Saat valuasi dan"), m.move);
-  const low = ease(f, W("Saat valuasi rendah"), m.move);
-  const marker = interpolate(ease(f, W("berada dibandingkan"), m.move), [0, 1], [0.2, 0.5]) + 0.38 * high - 0.76 * low;
-  const needleSwing = ease(f, W("ketakutan atau"), m.move) - 2 * ease(f, W("keserakahan."), m.move) + ease(f, W("keserakahan.") + m.sec(0.6), m.move);
-  const needle = 0.5 - 0.38 * needleSwing + 0.38 * high - 0.76 * low;
-  const careP = ease(f, W("lebih waspada"), m.pop) * (1 - ease(f, W("Saat valuasi rendah"), m.fade));
-  const chanceP = ease(f, W("dari peluang"), m.pop) * (1 - ease(f, W("Market Valuation"), m.fade));
+  const highAt = W("Saat valuasi dan");
+  const lowAt = W("Saat valuasi rendah");
+  const box = (at: number, out: number) => ease(f, at, m.reveal) * (1 - ease(f, out, m.fade));
+  const valBox = box(W("berada dibandingkan"), W("dan apakah"));
+  const senBox = box(W("didominasi"), W("Prinsipnya"));
+  const highBox = box(highAt, lowAt);
+  const lowBox = box(lowAt, W("Market Valuation"));
 
   // D
-  const nameP = ease(f, W("Market Valuation"), m.reveal);
   const pickP = ease(f, W("memilihkan saham"), m.reveal) * (1 - ease(f, W("Fitur ini"), m.fade));
   const fieldAt = W("suasana pasar");
-  const align = ease(f, W("mendorong semua"), W("sama?", 0, "f1") - W("mendorong semua"));
 
   return (
-    <Stage>
-      <SoftGround f={g} />
-      <BoardGrid g={g} on={1} />
-      <Heading n={4} text={SITUATION[3].label} />
+    <Stage transparent={held}>
+      {held ? null : <SoftGround f={g} />}
+      {held ? null : <BoardGrid g={g} on={1} />}
+      {held ? null : <Heading n={4} text={SITUATION[3].label} />}
 
       {/* A — one stock, then the whole market round it */}
       {aOut < 0.999 ? (
@@ -106,94 +121,55 @@ export const SC08 = () => {
         </div>
       ) : null}
 
-      {/* B–D — the two instruments, in one card that is named when the VO names it */}
-      <Appear at={rangeAt - m.sec(0.15)} style={{ left: 0, top: 0 }}>
-        <Card x={MV.x} y={MV.y} w={MV.w} h={MV.h} line={theme.color.hairlineBrandSolid}>
-          <div style={{ position: "absolute", left: 50, top: 26, display: "flex", alignItems: "center", gap: 18, opacity: nameP }}>
-            <Disc icon="gauge" size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-            <div style={{ ...typeStyle("title"), fontWeight: 500, color: c.ink }}>Market Valuation</div>
-          </div>
-          {/* the valuation's range over its history */}
-          <div style={{ position: "absolute", left: RANGE.x, top: RANGE.y - 90, ...typeStyle("body"), color: c.ink }}>Valuasi IHSG</div>
-          <div style={{ position: "absolute", left: RANGE.x, top: RANGE.y - 8, width: RANGE.w, height: 16, borderRadius: 8, background: `linear-gradient(90deg, ${theme.color.indigoWashSolid}, ${theme.color.indigoWashStrongSolid})` }} />
-          <div style={{ position: "absolute", left: RANGE.x, top: RANGE.y + 30, ...typeStyle("label"), color: c.slate }}>Murah</div>
-          <div style={{ position: "absolute", left: RANGE.x + RANGE.w - 100, top: RANGE.y + 30, width: 100, textAlign: "right", ...typeStyle("label"), color: c.slate }}>Mahal</div>
-          {f >= W("berada dibandingkan") - m.sec(0.1) ? <div style={{ position: "absolute", left: RANGE.x + marker * RANGE.w - 16, top: RANGE.y - 16, width: 32, height: 32, borderRadius: 999, background: c.indigo, boxShadow: shadow.soft, opacity: ease(f, W("berada dibandingkan") - m.sec(0.1), m.pop) }} /> : null}
-          {/* the sentiment gauge */}
-          {f >= gaugeAt - m.sec(0.1) ? (
-            <div style={{ position: "absolute", inset: 0, opacity: ease(f, gaugeAt - m.sec(0.1), m.reveal) }}>
-              <div style={{ position: "absolute", left: GAUGE.cx - 120, top: GAUGE.cy - GAUGE.r - 90, width: 240, textAlign: "center", ...typeStyle("body"), color: c.ink }}>Sentimen</div>
-              <svg width={MV.w} height={MV.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-                <path d={`M ${GAUGE.cx - GAUGE.r} ${GAUGE.cy} A ${GAUGE.r} ${GAUGE.r} 0 0 1 ${GAUGE.cx + GAUGE.r} ${GAUGE.cy}`} fill="none" stroke={theme.color.indigoWashStrongSolid} strokeWidth={22} strokeLinecap="round" />
-                {(() => {
-                  const a = Math.PI * (1 - Math.max(0.02, Math.min(0.98, needle)));
-                  return (
-                    <>
-                      <line x1={GAUGE.cx} y1={GAUGE.cy} x2={GAUGE.cx + (GAUGE.r - 30) * Math.cos(a)} y2={GAUGE.cy - (GAUGE.r - 30) * Math.sin(a)} stroke={c.ink} strokeWidth={6} strokeLinecap="round" />
-                      <circle cx={GAUGE.cx} cy={GAUGE.cy} r={12} fill={c.ink} />
-                    </>
-                  );
-                })()}
-              </svg>
-              <div style={{ position: "absolute", left: GAUGE.cx - GAUGE.r - 60, top: GAUGE.cy + 30, width: 120, textAlign: "center", ...typeStyle("label"), color: c.slate }}>Takut</div>
-              <div style={{ position: "absolute", left: GAUGE.cx + GAUGE.r - 60, top: GAUGE.cy + 30, width: 120, textAlign: "center", ...typeStyle("label"), color: c.slate }}>Serakah</div>
-            </div>
-          ) : null}
-        </Card>
+      {/* B–D — the two real screens, named when the VO names them */}
+      <Appear at={W("Market Valuation")} style={{ left: 0, top: SHOT.top - SHOT.nameAbove, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <Disc icon="gauge" size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+          <div style={{ ...typeStyle("title"), fontWeight: 500, color: c.ink }}>Market Valuation</div>
+        </div>
       </Appear>
+      {[
+        { at: rangeAt - m.sec(0.15), x: VAL_X, w: VAL_W, s: VAL },
+        { at: gaugeAt - m.sec(0.1), x: SEN_X, w: SEN_W, s: SEN },
+      ].map((p) => (
+        <Appear key={p.s.src} at={p.at} style={{ left: p.x, top: SHOT.top, width: p.w, height: SHOT.h, borderRadius: theme.shape.cardRadius, overflow: "hidden", boxShadow: shadow.soft, background: c.cardBg }}>
+          <Img src={staticFile(p.s.src)} style={{ width: p.w, height: SHOT.h, display: "block" }} />
+        </Appear>
+      ))}
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+        {[
+          { p: valBox, r: aroundShot(VAL_X, VAL_W), radius: theme.shape.cardRadius + 12 },
+          { p: senBox, r: aroundShot(SEN_X, SEN_W), radius: theme.shape.cardRadius + 12 },
+          { p: highBox, r: onShot(VAL_X, VAL_W, VAL.w, VAL.dear) },
+          { p: highBox, r: onShot(SEN_X, SEN_W, SEN.w, SEN.greed) },
+          { p: lowBox, r: onShot(VAL_X, VAL_W, VAL.w, VAL.cheap) },
+          { p: lowBox, r: onShot(SEN_X, SEN_W, SEN.w, SEN.fear) },
+        ].map((b, k) => (b.p > 0.001 ? <HighlightBox key={k} rect={b.r} grow={b.p} opacity={b.p} fill="none" width={4} radius={"radius" in b ? b.radius : 18} /> : null))}
+      </svg>
 
-      {/* C — what each reading asks of you */}
-      {careP > 0.001 ? (
-        <div style={{ position: "absolute", left: CX - 160, top: MV.y + MV.h + 50, width: 320, height: 98, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.alarmRed}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 18, opacity: careP }}>
-          <Disc icon="panic" size={60} tone={theme.color.alarmRed} tint={theme.color.alarmWashSolid} />
-          <div style={{ ...typeStyle("title"), fontWeight: 500, color: theme.color.alarmRed }}>Waspada</div>
-        </div>
-      ) : null}
-      {chanceP > 0.001 ? (
-        <div style={{ position: "absolute", left: CX - 160, top: MV.y + MV.h + 50, width: 320, height: 98, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connector}`, display: "flex", alignItems: "center", justifyContent: "center", gap: 18, opacity: chanceP }}>
-          <Disc icon="eye" size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-          <div style={{ ...typeStyle("title"), fontWeight: 500, color: c.indigo }}>Peluang</div>
-        </div>
-      ) : null}
+      {/* C — what each reading asks of you, as one line under the pictures (Simon's words) */}
+      {/* in with their sentences (Simon 29 Oct: "mulai di 21310", "mulai di 21594") */}
+      <Appear at={highAt + m.sec(0.1)} out={lowAt} style={{ left: 0, top: 0 }}>
+        <Line x={0} y={BELOW + 49} w={theme.canvas.width} align="center" size={48} weight={500} text="Valuation & sentiment tinggi = waspada" mark="waspada" markInk={theme.color.alarmRed} />
+      </Appear>
+      <Appear at={W("valuasi rendah") + m.sec(0.17)} out={W("Market Valuation")} style={{ left: 0, top: 0 }}>
+        <Line x={0} y={BELOW + 49} w={theme.canvas.width} align="center" size={48} weight={500} text="Valuation & sentiment rendah = peluang" mark="peluang" />
+      </Appear>
 
       {/* D — it doesn't pick a stock for you */}
       {pickP > 0.001 ? (
         <>
-          <Card x={CX - TILE.w / 2} y={MV.y + MV.h + 50} w={TILE.w} h={TILE.h} style={{ opacity: pickP, borderRadius: 18 }}>
+          <Card x={CX - TILE.w / 2} y={BELOW} w={TILE.w} h={TILE.h} style={{ opacity: pickP, borderRadius: 18 }}>
             <StockTile up={0} />
           </Card>
-          <Mark kind="cross" p={pickP} x={CX + TILE.w / 2} y={MV.y + MV.h + 50} />
+          <Mark kind="cross" p={pickP} x={CX + TILE.w / 2} y={BELOW} />
         </>
       ) : null}
 
-      {/* … it shows whether everyone is moving the same way */}
-      {f >= fieldAt - m.sec(0.2) ? (
-        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, opacity: ease(f, fieldAt - m.sec(0.2), m.reveal) }}>
-          {Array.from({ length: 2 * 16 }, (_, k) => {
-            const col = k % 16;
-            const row = Math.floor(k / 16);
-            const x = CX - 15 * 38 + col * 76;
-            const y = MV.y + MV.h + 80 + row * 90;
-            const scatter = ((k * 137) % 360) - 180;
-            const target = -40;
-            const ang = scatter + (target - scatter) * align + 8 * (1 - align) * Math.sin(f / m.sec(1.4) + k);
-            const rad = (ang * Math.PI) / 180;
-            const len = 22;
-            const x2 = x + len * Math.cos(rad);
-            const y2 = y + len * Math.sin(rad);
-            const hx = x2 - 12 * Math.cos(rad - 0.5);
-            const hy = y2 - 12 * Math.sin(rad - 0.5);
-            const kx = x2 - 12 * Math.cos(rad + 0.5);
-            const ky = y2 - 12 * Math.sin(rad + 0.5);
-            return (
-              <g key={k} stroke={align > 0.6 ? c.indigo : theme.color.neutralIcon} strokeWidth={3.5} strokeLinecap="round" fill="none">
-                <line x1={x - len * Math.cos(rad)} y1={y - len * Math.sin(rad)} x2={x2} y2={y2} />
-                <polyline points={`${hx},${hy} ${x2},${y2} ${kx},${ky}`} strokeLinejoin="round" />
-              </g>
-            );
-          })}
-        </svg>
-      ) : null}
+      {/* … calm, or everyone moving the same way: one line (my wording of the VO's question) */}
+      <Appear at={fieldAt} style={{ left: 0, top: 0 }}>
+        <Line x={0} y={BELOW + 49} w={theme.canvas.width} align="center" size={48} weight={500} text="Tenang, atau ikut arus?" mark="ikut arus" />
+      </Appear>
     </Stage>
   );
 };
