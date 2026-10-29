@@ -386,6 +386,8 @@ export const theme = {
     coinSpinFace: "#FFD327",
     coinSpinEdge: "#FFC52D",
     coinSpinShine: "#FFF1B5",
+    /** VI07 SC05, Simon: "Dynamic islandnya dibuat hitam" — the pill on a drawn phone, hardware, so black in every palette. */
+    phoneIsland: "#000000",
     /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
     /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
@@ -598,6 +600,9 @@ export const theme = {
     indigoWashStrongSolid: "#E5E3FC",
     alarmWashSolid: "#FBE2E5",
     selfAmberWashSolid: "#E5F6FB",
+    /** Indigo and cyan at 30 % on white — a fill that has to read beside type, e.g. an orderbook's depth bars (VI07 SC06). */
+    indigoWashDeepSolid: "#CFCAFA",
+    cyanWashDeepSolid: "#CEEEF7",
     connectorMuteSolid: "#DBDBDE",
     hairlineBrandSolid: "#D2CDFA",
     isoEdgeSolid: "#C0C1C5",

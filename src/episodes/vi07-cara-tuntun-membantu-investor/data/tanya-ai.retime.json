@@ -1,0 +1,128 @@
+{
+  "scene": 5,
+  "start": 12159,
+  "fps": 60,
+  "frames": 1605,
+  "src": "art/vi07/app/tanya-tuntun-ai.mp4",
+  "width": 972,
+  "height": 1920,
+  "pairs": [
+    {
+      "id": "freeze",
+      "say": "gunakan",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 16,
+      "out": 326,
+      "src": 5.0667
+    },
+    {
+      "id": "unfreeze",
+      "say": "mulai",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 468,
+      "src": 5.1
+    },
+    {
+      "id": "",
+      "say": "sederhana:",
+      "nth": 0,
+      "edge": "f1",
+      "plus": 0,
+      "out": 535,
+      "src": 7
+    },
+    {
+      "id": "",
+      "say": "Perusahaan ini",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 544,
+      "src": 9
+    },
+    {
+      "id": "typing",
+      "say": "sebenarnya",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 578,
+      "src": 9.55
+    },
+    {
+      "id": "",
+      "say": "mana?",
+      "nth": 0,
+      "edge": "f1",
+      "plus": 0,
+      "out": 697,
+      "src": 13
+    },
+    {
+      "id": "",
+      "say": "Kenapa harga",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 724,
+      "src": 15.25
+    },
+    {
+      "id": "",
+      "say": "mahal?",
+      "nth": 0,
+      "edge": "f1",
+      "plus": 0,
+      "out": 874,
+      "src": 18.5
+    },
+    {
+      "id": "",
+      "say": "Apa risiko",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 907,
+      "src": 21.15
+    },
+    {
+      "id": "",
+      "say": "terbesarnya?",
+      "nth": 0,
+      "edge": "f1",
+      "plus": 0,
+      "out": 980,
+      "src": 24.8
+    },
+    {
+      "id": "sent",
+      "say": "Tuntun AI membantu",
+      "nth": 0,
+      "edge": "f0",
+      "plus": -10,
+      "out": 1004,
+      "src": 25.95
+    },
+    {
+      "id": "",
+      "say": "Tuntun AI membantu",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 1014,
+      "src": 27.1
+    },
+    {
+      "id": "",
+      "say": "Tujuannya bukan",
+      "nth": 0,
+      "edge": "f0",
+      "plus": 0,
+      "out": 1545,
+      "src": 32.95
+    }
+  ]
+}

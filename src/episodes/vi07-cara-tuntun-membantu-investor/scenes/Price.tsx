@@ -26,6 +26,7 @@ import { HighlightBox, SoftGround, Stage, seeded, theme, typeStyle, useMotion, u
 import { PHONE_BEZEL, PhoneScreens } from "../../vi04-investasi-yang-cocok/components/PhoneScreens";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, HEADING, Line, ORANG_TUNTUN_RIGHT, OpeningHeading, OrangTuntun, SITUATION, ease, useWords } from "../components/kit";
+import { SpinCoin } from "../components/SpinCoin";
 
 type Box = { x: number; y: number; w: number; h: number };
 const mix = (a: Box, b: Box, t: number): Box => ({ x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t, w: a.w + (b.w - a.w) * t, h: a.h + (b.h - a.h) * t });
@@ -92,40 +93,11 @@ const SK_BUSINESS = 1200 / 694;
  * Three of them round the sketch, half the first size (Simon: "50% lebih kecil, lalu duplikat 2x dan sebar … jangan
  * jauh2"), each a little out of step so they don't flip together.
  */
-const COIN = { d: 46, thick: 0.17, halfTurn: 0.66 };
 const COINS = [
   { x: 1191, y: 80, phase: 0 }, // above the short tower
   { x: 960, y: 192, phase: 0.35 }, // under the cloud
   { x: 1320, y: 214, phase: 0.7 },
 ];
-const SpinCoin = ({ t, p, x, y, phase, id }: { t: number; p: number; x: number; y: number; phase: number; id: string }) => {
-  const c = usePalette();
-  const r = COIN.d / 2;
-  const th = (t / COIN.halfTurn + phase) * Math.PI;
-  const sq = Math.abs(Math.cos(th));
-  const e = ((COIN.thick * COIN.d) / 2) * Math.sin(th) * Math.sign(Math.cos(th) || 1);
-  const star = (x: number, y: number, k: number) => `M ${x} ${y - k} Q ${x} ${y} ${x + k} ${y} Q ${x} ${y} ${x} ${y + k} Q ${x} ${y} ${x - k} ${y} Q ${x} ${y} ${x} ${y - k} Z`;
-  const w = COIN.d + COIN.thick * COIN.d;
-  return (
-    <svg width={w} height={COIN.d} viewBox={`${-w / 2} ${-r} ${w} ${COIN.d}`} style={{ position: "absolute", left: x - w / 2, top: y - r, opacity: p, transform: `scale(${(0.75 + 0.25 * p).toFixed(3)})` }}>
-      <clipPath id={id}>
-        <circle cx={0} cy={0} r={r * 0.74} />
-      </clipPath>
-      {Array.from({ length: 9 }, (_, k) => (
-        <ellipse key={k} cx={-e + (2 * e * k) / 8} cy={0} rx={r * sq} ry={r} fill={theme.color.coinSpinEdge} />
-      ))}
-      <g transform={`translate(${e.toFixed(2)} 0) scale(${Math.max(sq, 0.001).toFixed(4)} 1)`}>
-        <circle cx={0} cy={0} r={r} fill={theme.color.coinSpinRing} />
-        <circle cx={0} cy={0} r={r * 0.74} fill={theme.color.coinSpinFace} />
-        <g clipPath={`url(#${id})`}>
-          <path d={`M ${-r * 0.2} ${-r} L ${r * 0.25} ${-r} L ${-r * 0.55} ${r} L ${-r} ${r} Z M ${r * 0.42} ${-r} L ${r * 0.58} ${-r} L ${-r * 0.22} ${r} L ${-r * 0.38} ${r} Z`} fill={theme.color.coinSpinShine} />
-        </g>
-        <text x={0} y={r * 0.17} textAnchor="middle" fontFamily={theme.text.family} fontWeight={800} fontSize={r * 0.62} fill={c.cardBg}>Rp</text>
-        <path d={`${star(-r * 0.6, -r * 0.62, r * 0.13)} ${star(r * 0.66, r * 0.56, r * 0.1)}`} fill={c.cardBg} />
-      </g>
-    </svg>
-  );
-};
 
 // C — the real stock page in a phone, and its card enlarged beside it
 /** The stitched shot: BUMI_1 rows 110–1790 (status bar cut, Simon 22 Oct), BUMI_2 rows 1401–1800, BUMI_1 from 2002. */

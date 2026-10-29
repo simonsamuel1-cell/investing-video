@@ -1,0 +1,25 @@
+{
+  "_": "SC05 — Simon's screen recording of Tuntun AI, re-timed onto the VO by scripts/vi/retime-clip.mjs. src = second of the recording (30 fps): frozen on frame 152 (the AI icon, eyes open, before the press) from Studio 12725 to 12867 while it is highlighted; then the press and the chat sheet, each question typed on the spoken one, the answer on 'Tuntun AI membantu', the end.",
+  "in": "/Users/samuelsurja/Documents/01 Academy/INV07/Revisi VO/drive-download-20261029T034452Z-1-001/TanyaTuntunAI.mp4",
+  "out": "public/art/vi07/app/tanya-tuntun-ai.mp4",
+  "public": "art/vi07/app/tanya-tuntun-ai.mp4",
+  "scene": 5,
+  "crop": "972:1920:4:0",
+  "_crop": "the recording carries 3 black columns at each edge (and a darker 4th on the right) — Simon 29 Oct: \"ada garis hitam bawaan … hilangin\"",
+  "tail": 1,
+  "pairs": [
+    { "id": "freeze", "say": "gunakan", "plus": 16, "src": 5.0667, "_": "Simon: \"Di 12725 … freeze frame\"" },
+    { "id": "unfreeze", "say": "mulai", "src": 5.1, "_": "Simon: \"di 12867 unfreeze\"" },
+    { "say": "sederhana:", "edge": "f1", "src": 7.0 },
+    { "say": "Perusahaan ini", "src": 9.0 },
+    { "id": "typing", "say": "sebenarnya", "src": 9.55, "_": "the first letter — the typed text opens enlarged" },
+    { "say": "mana?", "edge": "f1", "src": 13.0 },
+    { "say": "Kenapa harga", "src": 15.25 },
+    { "say": "mahal?", "edge": "f1", "src": 18.5 },
+    { "say": "Apa risiko", "src": 21.15 },
+    { "say": "terbesarnya?", "edge": "f1", "src": 24.8 },
+    { "id": "sent", "say": "Tuntun AI membantu", "plus": -10, "src": 25.95, "_": "the last moment before the question is sent — the enlarged text closes by here" },
+    { "say": "Tuntun AI membantu", "src": 27.1 },
+    { "say": "Tujuannya bukan", "src": 32.95 }
+  ]
+}
