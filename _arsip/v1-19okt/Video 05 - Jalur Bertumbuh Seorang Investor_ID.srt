@@ -1,0 +1,623 @@
+﻿1
+00:00:00,150 --> 00:00:03,650
+<font color=#5F4DEEFF>Di pelajaran sebelumnya, kita sudah belajar mengenali diri sendiri.</font>
+
+2
+00:00:03,867 --> 00:00:08,750
+<font color=#5F4DEEFF>Sekarang pertanyaannya: sebagai investor biasa, sebaiknya kita mulai dari mana?</font>
+
+3
+00:00:09,000 --> 00:00:10,750
+<font color=#5F4DEEFF>Masih ingat sungai yang kemarin?</font>
+
+4
+00:00:11,017 --> 00:00:15,083
+<font color=#5F4DEEFF>Ada banyak cara untuk sampai ke seberang.</font>
+
+5
+00:00:15,467 --> 00:00:18,583
+<font color=#5F4DEEFF>Jalan kaki menggambarkan investasi yang relatif stabil.</font>
+
+6
+00:00:18,883 --> 00:00:22,083
+<font color=#5F4DEEFF>Naik feri menggambarkan reksa dana indeks.</font>
+
+7
+00:00:22,467 --> 00:00:25,817
+<font color=#5F4DEEFF>Naik speedboat dengan kapten menggambarkan reksa dana saham.</font>
+
+8
+00:00:26,067 --> 00:00:29,267
+<font color=#5F4DEEFF>Sedangkan menerbangkan pesawat sendiri berarti memilih saham sendiri.</font>
+
+9
+00:00:29,633 --> 00:00:32,483
+<font color=#5F4DEEFF>Tapi buat kebanyakan orang,</font>
+
+10
+00:00:32,483 --> 00:00:39,167
+<font color=#5F4DEEFF>dua jalur yang paling masuk akal untuk jadi dasar adalah: jalan kaki dan naik feri.</font>
+
+11
+00:00:39,450 --> 00:00:40,133
+<font color=#5F4DEEFF>Kenapa?</font>
+
+12
+00:00:40,450 --> 00:00:44,617
+<font color=#5F4DEEFF>Karena kebanyakan orang belum punya “lisensi” untuk memilih saham sendiri,</font>
+
+13
+00:00:44,617 --> 00:00:47,650
+<font color=#5F4DEEFF>atau belum punya cukup waktu untuk benar-benar mempelajarinya.</font>
+
+14
+00:00:48,200 --> 00:00:52,867
+<font color=#5F4DEEFF>Sementara jalan kaki dan naik feri lebih mudah dijalani secara konsisten.</font>
+
+15
+00:00:53,183 --> 00:00:59,183
+<font color=#5F4DEEFF>Nanti, ketika kemampuan investasimu sudah berkembang, baru belajar terbang.</font>
+
+16
+00:00:59,533 --> 00:01:00,617
+<font color=#5F4DEEFF>Urutannya jangan dibalik.</font>
+
+17
+00:01:00,883 --> 00:01:07,583
+<font color=#5F4DEEFF>Jadi di pelajaran ini kita akan bahas tiga hal: apa itu investasi yang relatif stabil,</font>
+
+18
+00:01:07,583 --> 00:01:14,717
+<font color=#5F4DEEFF>kenapa indeks cocok untuk banyak orang, dan kapan kita mulai siap memilih saham sendiri.</font>
+
+19
+00:01:15,133 --> 00:01:17,017
+<font color=#5F4DEEFF>Kita mulai dari jalan kaki.</font>
+
+20
+00:01:17,217 --> 00:01:21,300
+<font color=#5F4DEEFF>Investasi yang relatif stabil biasanya menempatkan dana</font>
+
+21
+00:01:21,300 --> 00:01:28,983
+<font color=#5F4DEEFF>di aset seperti deposito, obligasi pemerintah, dan sebagian obligasi perusahaan.</font>
+
+22
+00:01:29,250 --> 00:01:30,667
+<font color=#5F4DEEFF>Kenapa relatif stabil?</font>
+
+23
+00:01:30,983 --> 00:01:37,917
+<font color=#5F4DEEFF>Karena saat kita meminjamkan uang, risikonya banyak bergantung pada siapa yang menerima uang itu.</font>
+
+24
+00:01:38,133 --> 00:01:43,767
+<font color=#5F4DEEFF>Kalau ke pemerintah, risikonya banyak bergantung pada kemampuan pemerintah membayar kembali.</font>
+
+25
+00:01:44,167 --> 00:01:48,400
+<font color=#5F4DEEFF>Kalau lewat bank, risikonya banyak bergantung pada kondisi banknya.</font>
+
+26
+00:01:48,583 --> 00:01:52,467
+<font color=#5F4DEEFF>Dibandingkan saham, pergerakan nilainya biasanya lebih kecil.</font>
+
+27
+00:01:52,717 --> 00:01:58,717
+<font color=#5F4DEEFF>Dalam asumsi yang kita gunakan, return-nya sekitar 3% sampai 5% per tahun.</font>
+
+28
+00:01:59,133 --> 00:02:02,567
+<font color=#5F4DEEFF>Memang nggak tinggi, tapi ada dua fungsi penting.</font>
+
+29
+00:02:02,817 --> 00:02:06,317
+<font color=#5F4DEEFF>Pertama, sebagai fondasi portofolio.</font>
+
+30
+00:02:06,517 --> 00:02:11,067
+<font color=#5F4DEEFF>Saat baru mulai investasi, sebagian besar dana bisa dimulai dari sini.</font>
+
+31
+00:02:11,350 --> 00:02:14,700
+<font color=#5F4DEEFF>Kedua, untuk uang yang akan dipakai dalam waktu dekat.</font>
+
+32
+00:02:15,017 --> 00:02:23,150
+<font color=#5F4DEEFF>Misalnya uang sewa, sekolah, atau dana darurat dalam enam bulan sampai satu tahun.</font>
+
+33
+00:02:23,433 --> 00:02:30,017
+<font color=#5F4DEEFF>Uang seperti ini jangan dipaksa masuk ke indeks, apalagi ke saham.</font>
+
+34
+00:02:30,317 --> 00:02:34,367
+<font color=#5F4DEEFF>Karena indeks bisa turun tepat saat kita sedang butuh uang.</font>
+
+35
+00:02:34,700 --> 00:02:39,550
+<font color=#5F4DEEFF>Jadi fungsi investasi stabil bukan untuk mengejar return tertinggi,</font>
+
+36
+00:02:39,550 --> 00:02:44,100
+<font color=#5F4DEEFF>tapi untuk menjaga uang yang memang nggak boleh terlalu banyak bergejolak.</font>
+
+37
+00:02:44,350 --> 00:02:47,350
+<font color=#5F4DEEFF>Jalannya memang lebih lambat, tapi justru itu fungsinya.</font>
+
+38
+00:02:47,667 --> 00:02:51,417
+<font color=#5F4DEEFF>Sekarang kita naik feri: reksa dana indeks.</font>
+
+39
+00:02:51,783 --> 00:02:58,483
+<font color=#5F4DEEFF>Indeks adalah sekumpulan perusahaan yang dipilih berdasarkan aturan tertentu.</font>
+
+40
+00:02:58,800 --> 00:03:01,033
+<font color=#5F4DEEFF>Di Indonesia ada banyak indeks.</font>
+
+41
+00:03:01,267 --> 00:03:06,567
+<font color=#5F4DEEFF>LQ45 dan IDX30 fokus pada saham-saham besar dan aktif.</font>
+
+42
+00:03:06,900 --> 00:03:09,883
+<font color=#5F4DEEFF>IDX Value30 (IDXV30) lebih melihat valuasi.</font>
+
+43
+00:03:10,183 --> 00:03:13,983
+<font color=#5F4DEEFF>IDX Quality 30 (IDXQ30) fokus pada kualitas perusahaan.</font>
+
+44
+00:03:14,283 --> 00:03:17,517
+<font color=#5F4DEEFF>IDX Growth30 (IDXG30) melihat pertumbuhan.</font>
+
+45
+00:03:17,817 --> 00:03:22,150
+<font color=#5F4DEEFF>IDX High Dividend 20 (IDXHIDIV20) fokus pada perusahaan pembagi dividen.</font>
+
+46
+00:03:22,433 --> 00:03:26,367
+<font color=#5F4DEEFF>Dan IDX BUMN20 berisi perusahaan yang berkaitan dengan BUMN.</font>
+
+47
+00:03:26,633 --> 00:03:33,750
+<font color=#5F4DEEFF>Aturannya berbeda-beda, tapi prinsipnya sama: isinya dievaluasi secara berkala.</font>
+
+48
+00:03:34,183 --> 00:03:38,517
+<font color=#5F4DEEFF>Perusahaan yang nggak lagi memenuhi kriteria bisa keluar,</font>
+
+49
+00:03:38,517 --> 00:03:40,967
+<font color=#5F4DEEFF>dan perusahaan yang memenuhi kriteria bisa masuk.</font>
+
+50
+00:03:41,200 --> 00:03:46,050
+<font color=#5F4DEEFF>Jadi isi indeks bisa terus berubah mengikuti aturannya.</font>
+
+51
+00:03:46,333 --> 00:03:48,767
+<font color=#5F4DEEFF>Kenapa ini menarik buat investor biasa?</font>
+
+52
+00:03:49,050 --> 00:03:51,967
+<font color=#5F4DEEFF>Pertama, risikonya lebih tersebar.</font>
+
+53
+00:03:52,250 --> 00:03:58,250
+<font color=#5F4DEEFF>Kalau satu perusahaan bermasalah, dampaknya nggak langsung menentukan seluruh investasi kita.</font>
+
+54
+00:03:58,583 --> 00:04:03,283
+<font color=#5F4DEEFF>Kedua, kita ikut punya bagian dari banyak sektor sekaligus:</font>
+
+55
+00:04:03,283 --> 00:04:09,750
+<font color=#5F4DEEFF>bank, telekomunikasi, konsumsi, energi, dan sektor lainnya.</font>
+
+56
+00:04:10,050 --> 00:04:15,867
+<font color=#5F4DEEFF>Artinya, kita nggak perlu terus menebak: “Saham mana yang akan jadi pemenang berikutnya?”</font>
+
+57
+00:04:16,250 --> 00:04:18,100
+<font color=#5F4DEEFF>Indeks tetap bisa turun.</font>
+
+58
+00:04:18,417 --> 00:04:20,817
+<font color=#5F4DEEFF>Indeks tetap punya risiko.</font>
+
+59
+00:04:21,133 --> 00:04:24,733
+<font color=#5F4DEEFF>Tapi kita nggak menggantungkan semuanya pada satu perusahaan.</font>
+
+60
+00:04:25,017 --> 00:04:27,400
+<font color=#5F4DEEFF>Itulah kenapa buat banyak orang,</font>
+
+61
+00:04:27,400 --> 00:04:32,233
+<font color=#5F4DEEFF>feri adalah kendaraan yang masuk akal untuk perjalanan jangka panjang.</font>
+
+62
+00:04:32,517 --> 00:04:38,267
+<font color=#5F4DEEFF>Tapi mungkin muncul pertanyaan: kalau yang pilih sahamnya profesional, bukannya harus lebih bagus?</font>
+
+63
+00:04:38,633 --> 00:04:42,533
+<font color=#5F4DEEFF>Ada satu contoh terkenal: taruhan Warren Buffett.</font>
+
+64
+00:04:42,967 --> 00:04:48,467
+<font color=#5F4DEEFF>Pada akhir 2007, Buffett bertaruh bahwa selama sepuluh tahun,</font>
+
+65
+00:04:48,467 --> 00:04:56,317
+<font color=#5F4DEEFF>satu indeks S&P 500 sederhana bisa mengalahkan kumpulan hedge fund pilihan profesional.</font>
+
+66
+00:04:56,650 --> 00:04:59,017
+<font color=#5F4DEEFF>Protégé Partners menerima tantangannya.</font>
+
+67
+00:04:59,283 --> 00:05:06,667
+<font color=#5F4DEEFF>Periode berjalan dari 2008 sampai 2017, bahkan melewati krisis finansial 2008.</font>
+
+68
+00:05:06,967 --> 00:05:07,683
+<font color=#5F4DEEFF>Hasil akhirnya?</font>
+
+69
+00:05:08,017 --> 00:05:15,183
+<font color=#5F4DEEFF>Indeks naik sekitar 125,8%, atau sekitar 7,1% per tahun.</font>
+
+70
+00:05:15,467 --> 00:05:19,017
+<font color=#5F4DEEFF>Sementara lima kumpulan hedge fund lawannya</font>
+
+71
+00:05:19,017 --> 00:05:26,517
+<font color=#5F4DEEFF>rata-rata hanya naik sekitar 36,3%, atau sekitar 2,2% per tahun.</font>
+
+72
+00:05:26,950 --> 00:05:30,267
+<font color=#5F4DEEFF>Bahkan yang terbaik pun tetap nggak mengalahkan indeks.</font>
+
+73
+00:05:30,600 --> 00:05:31,417
+<font color=#5F4DEEFF>Kenapa?</font>
+
+74
+00:05:31,683 --> 00:05:33,333
+<font color=#5F4DEEFF>Karena memilih saham memang sulit.</font>
+
+75
+00:05:33,667 --> 00:05:35,367
+<font color=#5F4DEEFF>Profesional pun bisa salah.</font>
+
+76
+00:05:35,600 --> 00:05:40,533
+<font color=#5F4DEEFF>Belum lagi biaya pengelolaan dan biaya transaksi yang ikut mengurangi hasil.</font>
+
+77
+00:05:40,883 --> 00:05:45,100
+<font color=#5F4DEEFF>Jadi menaruh sebagian besar dana jangka panjang di indeks</font>
+
+78
+00:05:45,100 --> 00:05:49,317
+<font color=#5F4DEEFF>bukan berarti kita malas atau terlalu konservatif.</font>
+
+79
+00:05:49,667 --> 00:05:53,783
+<font color=#5F4DEEFF>Buat banyak orang, itu justru pilihan yang rasional.</font>
+
+80
+00:05:54,033 --> 00:05:56,817
+<font color=#5F4DEEFF>Profesional pun nggak selalu bisa mengalahkan indeks.</font>
+
+81
+00:05:57,100 --> 00:06:03,167
+<font color=#5F4DEEFF>Indeks juga punya fungsi lain: jadi tempat belajar menghadapi naik-turunnya pasar.</font>
+
+82
+00:06:03,483 --> 00:06:07,833
+<font color=#5F4DEEFF>Di pelajaran sebelumnya, kita bicara soal “melewati badai”.</font>
+
+83
+00:06:08,217 --> 00:06:14,617
+<font color=#5F4DEEFF>Artinya, pernah mengalami market turun dan tetap bisa menjalankan rencana.</font>
+
+84
+00:06:14,967 --> 00:06:19,100
+<font color=#5F4DEEFF>Sebelum menghadapi risiko satu saham, kita bisa belajar dulu lewat indeks.</font>
+
+85
+00:06:19,483 --> 00:06:20,967
+<font color=#5F4DEEFF>Lihat bagaimana market turun.</font>
+
+86
+00:06:21,267 --> 00:06:23,350
+<font color=#5F4DEEFF>Seberapa dalam.</font>
+
+87
+00:06:23,683 --> 00:06:25,733
+<font color=#5F4DEEFF>Berapa lama.</font>
+
+88
+00:06:26,067 --> 00:06:30,233
+<font color=#5F4DEEFF>Dan yang paling penting: lihat bagaimana reaksi diri kita sendiri.</font>
+
+89
+00:06:30,483 --> 00:06:32,200
+<font color=#5F4DEEFF>Apakah langsung panik dan menjual?</font>
+
+90
+00:06:32,467 --> 00:06:34,117
+<font color=#5F4DEEFF>Atau masih bisa tetap disiplin?</font>
+
+91
+00:06:34,517 --> 00:06:41,950
+<font color=#5F4DEEFF>Saat kita berhasil melewati penurunan tanpa mengambil keputusan hanya karena takut,</font>
+
+92
+00:06:41,950 --> 00:06:44,850
+<font color=#5F4DEEFF>kita mulai punya pengalaman nyata menghadapi volatilitas.</font>
+
+93
+00:06:45,217 --> 00:06:47,217
+<font color=#5F4DEEFF>Bukan berarti indeks selalu cepat pulih.</font>
+
+94
+00:06:47,567 --> 00:06:54,767
+<font color=#5F4DEEFF>Tapi karena risikonya lebih tersebar, indeks jadi tempat belajar yang lebih masuk akal</font>
+
+95
+00:06:54,767 --> 00:06:57,033
+<font color=#5F4DEEFF>sebelum masuk ke risiko satu perusahaan.</font>
+
+96
+00:06:57,333 --> 00:07:03,883
+<font color=#5F4DEEFF>Jadi buat investor yang sedang berkembang, indeks bukan cuma alat investasi.</font>
+
+97
+00:07:04,167 --> 00:07:08,400
+<font color=#5F4DEEFF>Indeks juga bisa jadi kelas untuk belajar menghadapi market.</font>
+
+98
+00:07:08,633 --> 00:07:11,283
+<font color=#5F4DEEFF>Lalu kapan kita boleh mulai memilih saham sendiri?</font>
+
+99
+00:07:11,667 --> 00:07:12,483
+<font color=#5F4DEEFF>Bukan nggak boleh.</font>
+
+100
+00:07:12,717 --> 00:07:14,650
+<font color=#5F4DEEFF>Yang penting: urutannya.</font>
+
+101
+00:07:15,067 --> 00:07:15,667
+<font color=#5F4DEEFF>Ada tiga hal.</font>
+
+102
+00:07:15,983 --> 00:07:17,633
+<font color=#5F4DEEFF>Pertama: kapan mulai?</font>
+
+103
+00:07:17,950 --> 00:07:23,550
+<font color=#5F4DEEFF>Setelah kamu pernah mengalami market turun tanpa langsung panik,</font>
+
+104
+00:07:23,550 --> 00:07:29,250
+<font color=#5F4DEEFF>dan sudah mulai memahami cara melihat kualitas perusahaan dan valuasinya.</font>
+
+105
+00:07:29,533 --> 00:07:31,100
+<font color=#5F4DEEFF>Kedua: pakai berapa banyak?</font>
+
+106
+00:07:31,417 --> 00:07:33,450
+<font color=#5F4DEEFF>Mulai dari sebagian kecil dana.</font>
+
+107
+00:07:33,800 --> 00:07:36,550
+<font color=#5F4DEEFF>Sebagian besar uang tetap berada di jalur utama.</font>
+
+108
+00:07:36,783 --> 00:07:41,783
+<font color=#5F4DEEFF>Jadi kalau saham yang kita pilih ternyata salah, seluruh portofolio nggak ikut terganggu.</font>
+
+109
+00:07:42,033 --> 00:07:43,533
+<font color=#5F4DEEFF>Ketiga: beli apa?</font>
+
+110
+00:07:43,783 --> 00:07:51,150
+<font color=#5F4DEEFF>Mulai dari dua syarat: perusahaan yang bagus, dan harga yang bagus.</font>
+
+111
+00:07:51,517 --> 00:07:57,767
+<font color=#5F4DEEFF>Bisnisnya harus berkualitas, dan valuasinya juga harus masuk akal atau menarik.</font>
+
+112
+00:07:57,983 --> 00:07:59,333
+<font color=#5F4DEEFF>Dua-duanya harus ada.</font>
+
+113
+00:07:59,733 --> 00:08:01,917
+<font color=#5F4DEEFF>Bukan cuma karena sahamnya sedang ramai.</font>
+
+114
+00:08:02,250 --> 00:08:04,333
+<font color=#5F4DEEFF>Bukan karena ada rumor.</font>
+
+115
+00:08:04,583 --> 00:08:09,017
+<font color=#5F4DEEFF>Dan bukan karena: “Katanya sebentar lagi naik.”</font>
+
+116
+00:08:09,317 --> 00:08:14,333
+<font color=#5F4DEEFF>Kalau cuma punya satu saham, risikonya jauh lebih menumpuk di satu perusahaan.</font>
+
+117
+00:08:14,717 --> 00:08:20,333
+<font color=#5F4DEEFF>Jadi belajar saham boleh, tapi mulai kecil dan tahu alasan kita membelinya.</font>
+
+118
+00:08:20,667 --> 00:08:26,067
+<font color=#5F4DEEFF>Cara menilai kualitas perusahaan dan apakah harganya masih menarik,</font>
+
+119
+00:08:26,067 --> 00:08:29,350
+<font color=#5F4DEEFF>akan kita bahas di pelajaran berikutnya.</font>
+
+120
+00:08:29,767 --> 00:08:34,167
+<font color=#5F4DEEFF>Kalau semuanya digabung, jalur kebanyakan investor sebenarnya sederhana.</font>
+
+121
+00:08:34,517 --> 00:08:35,233
+<font color=#5F4DEEFF>Ada tiga langkah.</font>
+
+122
+00:08:35,617 --> 00:08:37,933
+<font color=#5F4DEEFF>Langkah pertama: bangun fondasi.</font>
+
+123
+00:08:38,267 --> 00:08:42,167
+<font color=#5F4DEEFF>Uang jangka pendek tetap di instrumen yang relatif stabil.</font>
+
+124
+00:08:42,483 --> 00:08:47,367
+<font color=#5F4DEEFF>Sambil itu, mulai rutin masuk ke indeks sedikit demi sedikit.</font>
+
+125
+00:08:47,733 --> 00:08:49,050
+<font color=#5F4DEEFF>Langkah kedua: naik feri.</font>
+
+126
+00:08:49,417 --> 00:08:55,567
+<font color=#5F4DEEFF>Saat semakin paham indeks dan sudah pernah melewati market turun tanpa panik,</font>
+
+127
+00:08:55,567 --> 00:09:02,033
+<font color=#5F4DEEFF>dana jangka panjang bisa mulai lebih banyak ditempatkan di indeks.</font>
+
+128
+00:09:02,333 --> 00:09:08,067
+<font color=#5F4DEEFF>Indeks kemudian menjadi bagian utama untuk perjalanan investasi jangka panjang.</font>
+
+129
+00:09:08,383 --> 00:09:10,767
+<font color=#5F4DEEFF>Langkah ketiga: mulai latihan terbang.</font>
+
+130
+00:09:11,050 --> 00:09:17,833
+<font color=#5F4DEEFF>Kalau sudah paham perusahaan, paham valuasi, dan punya pengalaman menghadapi volatilitas,</font>
+
+131
+00:09:17,833 --> 00:09:23,017
+<font color=#5F4DEEFF>baru gunakan sebagian kecil dana untuk memilih saham sendiri.</font>
+
+132
+00:09:23,333 --> 00:09:26,850
+<font color=#5F4DEEFF>Fokusnya tetap: perusahaan berkualitas di harga yang masuk akal.</font>
+
+133
+00:09:27,167 --> 00:09:28,567
+<font color=#5F4DEEFF>Tiga langkah ini jangan dibalik.</font>
+
+134
+00:09:28,817 --> 00:09:36,150
+<font color=#5F4DEEFF>Jangan mulai dengan membeli banyak saham, lalu setelah rugi, baru mencari tahu apa itu indeks.</font>
+
+135
+00:09:36,450 --> 00:09:39,683
+<font color=#5F4DEEFF>Yang penting bukan seberapa cepat naik level.</font>
+
+136
+00:09:39,983 --> 00:09:44,567
+<font color=#5F4DEEFF>Yang penting: apakah kita benar-benar siap untuk langkah berikutnya.</font>
+
+137
+00:09:44,867 --> 00:09:45,933
+<font color=#5F4DEEFF>Fondasi dulu.</font>
+
+138
+00:09:46,183 --> 00:09:46,767
+<font color=#5F4DEEFF>Naik feri.</font>
+
+139
+00:09:47,117 --> 00:09:48,700
+<font color=#5F4DEEFF>Baru belajar terbang.</font>
+
+140
+00:09:48,983 --> 00:09:51,233
+<font color=#5F4DEEFF>Terakhir, ingat tiga hal.</font>
+
+141
+00:09:51,550 --> 00:09:52,417
+<font color=#5F4DEEFF>Pertama,</font>
+
+142
+00:09:52,417 --> 00:09:58,533
+<font color=#5F4DEEFF>uang yang akan dipakai dalam waktu dekat dan fondasi portofolio, taruh di instrumen yang relatif stabil.</font>
+
+143
+00:09:58,783 --> 00:10:03,650
+<font color=#5F4DEEFF>Kedua, untuk sebagian besar dana jangka panjang, indeks bisa jadi jalur utama.</font>
+
+144
+00:10:03,933 --> 00:10:10,133
+<font color=#5F4DEEFF>Karena kita punya satu keranjang perusahaan, bukan bergantung pada satu saham.</font>
+
+145
+00:10:10,367 --> 00:10:11,383
+<font color=#5F4DEEFF>Ketiga,</font>
+
+146
+00:10:11,383 --> 00:10:13,433
+<font color=#5F4DEEFF>setelah punya kemampuan dan pengalaman,</font>
+
+147
+00:10:13,433 --> 00:10:16,917
+<font color=#5F4DEEFF>baru gunakan sebagian kecil dana untuk belajar memilih saham.</font>
+
+148
+00:10:17,183 --> 00:10:21,783
+<font color=#5F4DEEFF>Mulai dari: perusahaan yang bagus di harga yang bagus.</font>
+
+149
+00:10:22,167 --> 00:10:24,417
+<font color=#5F4DEEFF>Sekarang kita kembali ke sungai tadi.</font>
+
+150
+00:10:24,733 --> 00:10:26,317
+<font color=#5F4DEEFF>Rumah di seberang tetap ada.</font>
+
+151
+00:10:26,583 --> 00:10:30,317
+<font color=#5F4DEEFF>Jalur tercepat belum tentu jalur terbaik buat kita.</font>
+
+152
+00:10:30,717 --> 00:10:33,717
+<font color=#5F4DEEFF>Yang penting, kita terus bergerak ke arah yang benar.</font>
+
+153
+00:10:34,017 --> 00:10:35,083
+<font color=#5F4DEEFF>Jalan kaki dulu.</font>
+
+154
+00:10:35,433 --> 00:10:36,017
+<font color=#5F4DEEFF>Naik feri.</font>
+
+155
+00:10:36,417 --> 00:10:39,250
+<font color=#5F4DEEFF>Dan kalau memang sudah siap, baru belajar terbang.</font>
+
+156
+00:10:39,250 --> 00:10:41,267
+<font color=#5F4DEEFF>Sampai ketemu di pelajaran berikutnya.</font>

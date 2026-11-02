@@ -1,0 +1,94 @@
+{
+ "outro_at": 29112,
+ "n": 485,
+ "vo_at": 28,
+ "kata": [
+  {
+   "w": "Di",
+   "a": 46.0,
+   "b": 49.6
+  },
+  {
+   "w": "video",
+   "a": 52.0,
+   "b": 61.6
+  },
+  {
+   "w": "selanjutnya,",
+   "a": 64.0,
+   "b": 89.3
+  },
+  {
+   "w": "kita",
+   "a": 102.5,
+   "b": 115.7
+  },
+  {
+   "w": "akan",
+   "a": 120.5,
+   "b": 132.5
+  },
+  {
+   "w": "bahas",
+   "a": 136.2,
+   "b": 161.4
+  },
+  {
+   "w": "kesalahan-kesalahan",
+   "a": 163.8,
+   "b": 232.3
+  },
+  {
+   "w": "apa",
+   "a": 238.3,
+   "b": 249.1
+  },
+  {
+   "w": "saja",
+   "a": 254.0,
+   "b": 270.8
+  },
+  {
+   "w": "yang",
+   "a": 297.2,
+   "b": 310.4
+  },
+  {
+   "w": "sering",
+   "a": 312.8,
+   "b": 329.7
+  },
+  {
+   "w": "bikin",
+   "a": 335.7,
+   "b": 354.9
+  },
+  {
+   "w": "investor",
+   "a": 359.7,
+   "b": 389.8
+  },
+  {
+   "w": "salah",
+   "a": 392.2,
+   "b": 404.2
+  },
+  {
+   "w": "langkah.",
+   "a": 406.6,
+   "b": 424.6
+  }
+ ],
+ "cues": [
+  {
+   "a": 44,
+   "b": 295,
+   "t": "Di video selanjutnya, kita akan bahas kesalahan-kesalahan apa saja"
+  },
+  {
+   "a": 295,
+   "b": 445,
+   "t": "yang sering bikin investor salah langkah."
+  }
+ ]
+}

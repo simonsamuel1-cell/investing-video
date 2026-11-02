@@ -1,0 +1,2 @@
+/* DIBANGKITKAN oleh scripts/gen-sorot.py — semua kata judul + kata sorot (diukur di komposisi Ukur-Sorot). Jangan diedit tangan. */
+export const JUDUL_KATA: string[] = ["buru-buru", "kapan", "Penempatan", "tugas", "kapan saja", "likuiditas", "1–3 bulan", "sebelum", "jelas", "pasar", "waktu", "waktunya", "menjual", "dekat", "pertumbuhan", "sesuai", "baru", "tugasnya", "tempatnya", "Masih", "ingat", "sungai", "yang", "kemarin?"];
