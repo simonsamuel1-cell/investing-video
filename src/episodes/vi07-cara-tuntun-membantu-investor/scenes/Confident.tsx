@@ -25,6 +25,7 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BUMI_CARD } from "../data/bumi-card";
+import { PERSON, Person, personCy } from "../components/Person";
 import { BLOCK, SFX, heldAt } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, HEADING, Mark, OpeningHeading, SITUATION, ease, useAppear, useWords } from "../components/kit";
 
@@ -54,10 +55,10 @@ const NEEDLE = { low: 18, high: 150, past: 198, shake: 2.5 };
  * kepala hingga badan"): at `ME_S` the caption band cuts you just under the belt (picture row 446); the circle's left
  * edge is on the heading's word, as SC03's phone.
  */
-const PIC = { src: "art/vi07/orang-1.png", w: 370, h: 1000, cx: 152, top: 150, d: 420 };
+const PIC = PERSON;
 const ME_TOP = HEADING.y + HEADING.disc / 2 + 40;
 const ME_S = (theme.captionBand.top - ME_TOP) / 446;
-const ME = { d: PIC.d * ME_S, cx: HEADING.x + HEADING.disc + 24 + (PIC.d * ME_S) / 2, cy: ME_TOP + (PIC.top + PIC.d / 2) * ME_S };
+const ME = { d: PIC.d * ME_S, cx: HEADING.x + HEADING.disc + 24 + (PIC.d * ME_S) / 2, cy: personCy(ME_TOP, ME_S) };
 /**
  * With the bubble, the meme over your face (Simon 29 Oct: "bareng sama thought bubble, timpa muka orangnya dengan meme
  * ini" — his picture, cut out of its white to public/art/vi07/meme-senyum.png, 377 × 315). In its pixels the dome's tip
@@ -72,7 +73,6 @@ const MEME_AT = { x: ME.cx - PIC.cx * ME_S + 178 * ME_S, y: ME_TOP - MEME.lift }
  * filter, done as a warp of the photo itself (scripts/vi/face-filter.py → orang-1-filter.png), cross-faded in.
  */
 const FACE_MEME = "filter" as "senyum" | "awesome" | "filter";
-const PIC_FILTER = "art/vi07/orang-1-filter.png";
 const AWESOME = { d: 310, x: ME.cx - PIC.cx * ME_S + 178 * ME_S, y: ME_TOP + 80 * ME_S };
 /** The stack on the right, centred on x `cx`: the bubble, "Fahhh" under it, the profits at the bottom. */
 const RIGHT = { cx: 1340 };
@@ -176,26 +176,6 @@ const Profit = () => {
       <div style={{ width: 56, height: 56, borderRadius: 999, background: c.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 32, fontWeight: 700, lineHeight: 1, color: theme.color.ok }}>✓</div>
       <div style={{ fontFamily: theme.text.family, fontSize: 28, fontWeight: 600, color: c.cardBg }}>Profit</div>
     </div>
-  );
-};
-
-/** You, in front of your circle: the picture shows above the circle's middle, and below it only inside the circle. */
-const Me = ({ cx, cy, filter = 0 }: { cx: number; cy: number; filter?: number }) => {
-  const s = ME_S;
-  const w = PIC.w * s;
-  const h = PIC.h * s;
-  const ox = PIC.cx * s;
-  const oy = (PIC.top + PIC.d / 2) * s;
-  const r = ME.d / 2;
-  // one path, both parts clockwise so they add up: the band above the circle's middle, and the circle
-  const clip = `path('M 0 0 H ${w.toFixed(1)} V ${oy.toFixed(1)} H 0 Z M ${(ox - r).toFixed(1)} ${oy.toFixed(1)} A ${r} ${r} 0 1 1 ${(ox + r).toFixed(1)} ${oy.toFixed(1)} A ${r} ${r} 0 1 1 ${(ox - r).toFixed(1)} ${oy.toFixed(1)} Z')`;
-  return (
-    <>
-      <div style={{ position: "absolute", left: cx - r, top: cy - r, width: ME.d, height: ME.d, borderRadius: 999, background: theme.color.selfAmber }} />
-      <Img src={staticFile(PIC.src)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip }} />
-      {/* the face filter: the same picture warped, faded in over it (identical outside the face) */}
-      {filter > 0.001 ? <Img src={staticFile(PIC_FILTER)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip, opacity: filter }} /> : null}
-    </>
   );
 };
 
@@ -357,7 +337,7 @@ export const SC07 = () => {
           <div style={{ position: "absolute", left: 0, top: 0, width: theme.canvas.width, height: theme.captionBand.top, overflow: "hidden" }}>
             {meP > 0.001 ? (
               <div style={{ position: "absolute", inset: 0, opacity: meP, transform: `translateY(${((1 - meP) * 20).toFixed(2)}px)` }}>
-                <Me cx={ME.cx} cy={ME.cy} filter={FACE_MEME === "filter" ? bubbleP : 0} />
+                <Person cx={ME.cx} cy={ME.cy} s={ME_S} filter={FACE_MEME === "filter" ? bubbleP : 0} />
                 {bubbleP > 0.001 && FACE_MEME === "awesome" ? (
                   <div style={{ position: "absolute", left: AWESOME.x - AWESOME.d / 2, top: AWESOME.y - AWESOME.d / 2, opacity: bubbleP, transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})` }}>
                     <AwesomeFace d={AWESOME.d} />

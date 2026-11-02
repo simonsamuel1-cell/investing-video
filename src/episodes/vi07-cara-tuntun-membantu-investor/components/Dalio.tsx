@@ -117,9 +117,10 @@ export const NewsClipping = ({ x, y, w, h, dateline, headline, p }: { x: number;
     <div style={{ position: "absolute", left: x, top: y + (1 - p) * 20, width: w, height: h, opacity: p, background: theme.color.newsPaper, boxShadow: shadow.soft, borderRadius: 6 }}>
       {/* tape */}
       <div style={{ position: "absolute", left: w / 2 - 50, top: -16, width: 100, height: 32, borderRadius: 4, background: theme.color.newsTape }} />
-      <div style={{ position: "absolute", left: 22, top: 20, fontFamily: SERIF, fontSize: 16, letterSpacing: 2, color: theme.color.newsInk, textTransform: "uppercase" }}>{dateline}</div>
-      <div style={{ position: "absolute", left: 22, top: 32, width: w - 44, height: 2, background: theme.color.newsInk }} />
-      <div style={{ position: "absolute", left: 22, top: 46, width: w - 44, fontFamily: SERIF, fontSize: 30, fontWeight: 700, lineHeight: 1.15, color: theme.color.newsInk }}>{headline}</div>
+      {/* the dateline sits above its rule, clear of it (Simon 30 Oct: "ada text bentrok sama garis") */}
+      <div style={{ position: "absolute", left: 22, top: 16, fontFamily: SERIF, fontSize: 16, lineHeight: 1, letterSpacing: 2, color: theme.color.newsInk, textTransform: "uppercase" }}>{dateline}</div>
+      <div style={{ position: "absolute", left: 22, top: 38, width: w - 44, height: 2, background: theme.color.newsInk }} />
+      <div style={{ position: "absolute", left: 22, top: 48, width: w - 44, fontFamily: SERIF, fontSize: 30, fontWeight: 700, lineHeight: 1.15, color: theme.color.newsInk }}>{headline}</div>
       <div style={{ position: "absolute", left: 22, top: h - 128, width: 160, height: 106, overflow: "hidden", borderRadius: 2 }}>
         <Halftone w={160} h={106} />
       </div>
