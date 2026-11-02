@@ -1,0 +1,133 @@
+{
+ "lembar-tangan": {
+  "kertas": "#90D9EC",
+  "peta": {
+   "#90D9EC": "#7EC151",
+   "#4793A7": "#45791C"
+  }
+ },
+ "bundel": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#80D4E9": "#68A53D",
+   "#BEE9F4": "#7EC151",
+   "#4793A7": "#36660B"
+  }
+ },
+ "hujan-uang": {
+  "kertas": "#89D7EB",
+  "peta": {
+   "#89D7EB": "#7EC151",
+   "#BEE9F4": "#A2D385",
+   "#90DAEC": "#83C459",
+   "#4793A7": "#477C1E"
+  }
+ },
+ "kantong-uang": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#4793A7": "#36660B"
+  }
+ },
+ "lembar-1": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-2": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#6DCEE6": "#629E37",
+   "#4793A7": "#36660B",
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-3": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#6DCEE6": "#629E37",
+   "#4793A7": "#36660B",
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-4": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#6DCEE6": "#629E37",
+   "#4793A7": "#36660B",
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-5": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-6": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#6DCEE6": "#629E37",
+   "#4793A7": "#36660B",
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-7": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#8DD8EB": "#6CAB41",
+   "#4793A7": "#36660B",
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-8": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425"
+  }
+ },
+ "lembar-9": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425",
+   "#6DCEE6": "#629E37",
+   "#4793A7": "#36660B"
+  }
+ },
+ "tangan-uang": {
+  "kertas": "#90D9EC",
+  "peta": {
+   "#90D9EC": "#7EC151",
+   "#4793A7": "#45791C"
+  }
+ },
+ "uang-terbang": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#BEE9F4": "#7EC151",
+   "#54B4CC": "#4E8425",
+   "#8DD8EB": "#6CAB41",
+   "#4793A7": "#36660B",
+   "#6DCEE6": "#629E37"
+  }
+ },
+ "uang-tumpuk": {
+  "kertas": "#BEE9F4",
+  "peta": {
+   "#80D4E9": "#68A53D",
+   "#BEE9F4": "#7EC151",
+   "#4793A7": "#36660B"
+  }
+ }
+}

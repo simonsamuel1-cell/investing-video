@@ -1,0 +1,62 @@
+{
+ "G_v3": {
+  "S1->S2": 0.36,
+  "S2->S3": 0.32,
+  "S3->S4": 0.31,
+  "S4->S5": 0.3,
+  "S5->S6": 0.31
+ },
+ "potong_a": 47.15,
+ "potong_b": 193.645,
+ "scene": {
+  "S2": {
+   "suara_berkas": [
+    0.16,
+    30.49
+   ],
+   "gain_dB": 1.42,
+   "sampel_dibatasi": 115,
+   "mulai_di_v4": 47.33,
+   "durasi_suara": 30.33,
+   "durasi_suara_v3": 30.55
+  },
+  "S3": {
+   "suara_berkas": [
+    0.15,
+    30.61
+   ],
+   "gain_dB": -0.25,
+   "sampel_dibatasi": 0,
+   "mulai_di_v4": 77.98,
+   "durasi_suara": 30.46,
+   "durasi_suara_v3": 34.85
+  },
+  "S4": {
+   "suara_berkas": [
+    0.17,
+    29.46
+   ],
+   "gain_dB": 0.78,
+   "sampel_dibatasi": 0,
+   "mulai_di_v4": 108.75,
+   "durasi_suara": 29.29,
+   "durasi_suara_v3": 37.82
+  },
+  "S5": {
+   "suara_berkas": [
+    0.16,
+    40.43
+   ],
+   "gain_dB": 0.04,
+   "sampel_dibatasi": 0,
+   "mulai_di_v4": 138.34,
+   "durasi_suara": 40.27,
+   "durasi_suara_v3": 42.01
+  }
+ },
+ "delta_hilir_s": -14.88,
+ "delta_hilir_frame60": -892.8,
+ "durasi_v3": 466.756,
+ "durasi_v4": 451.876,
+ "keluar": "inv02_vo_v4.wav"
+}

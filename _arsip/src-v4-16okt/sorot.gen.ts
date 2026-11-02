@@ -1,0 +1,21 @@
+/* DIBANGKITKAN oleh scripts/gen-sorot.py — kotak tinta tiap kata sorot terhadap kotak barisnya (px, judul 52px). Jangan diedit tangan. */
+export const SOROT_UKUR: Record<string, { lebar: number; tinggi: number; kiri: number; kanan: number; atas: number; bawah: number }> = {
+  "return": { lebar: 150, tinggi: 66, kiri: 3, kanan: 149, atas: 19, bawah: 55 },
+  "bunga": { lebar: 156, tinggi: 66, kiri: 3, kanan: 154, atas: 14, bawah: 65 },
+  "laba": { lebar: 105, tinggi: 66, kiri: 3, kanan: 103, atas: 14, bawah: 55 },
+  "perubahan harga": { lebar: 415, tinggi: 66, kiri: 3, kanan: 414, atas: 14, bawah: 65 },
+  "naik tinggi": { lebar: 251, tinggi: 66, kiri: 3, kanan: 249, atas: 14, bawah: 65 },
+  "tetap sama": { lebar: 276, tinggi: 66, kiri: 1, kanan: 274, atas: 19, bawah: 64 },
+  "kenaikan nilai": { lebar: 325, tinggi: 66, kiri: 3, kanan: 324, atas: 14, bawah: 55 },
+  "kupon": { lebar: 156, tinggi: 66, kiri: 3, kanan: 155, atas: 14, bawah: 64 },
+  "reksa dana": { lebar: 265, tinggi: 66, kiri: 3, kanan: 263, atas: 14, bawah: 55 },
+  "isi investasinya": { lebar: 363, tinggi: 66, kiri: 3, kanan: 361, atas: 15, bawah: 65 },
+  "kepemilikan bisnis": { lebar: 447, tinggi: 66, kiri: 3, kanan: 446, atas: 14, bawah: 64 },
+  "menciptakan nilai": { lebar: 429, tinggi: 66, kiri: 3, kanan: 427, atas: 14, bawah: 64 },
+  "secara permanen": { lebar: 424, tinggi: 66, kiri: 1, kanan: 423, atas: 24, bawah: 64 },
+  "berubah": { lebar: 207, tinggi: 66, kiri: 3, kanan: 206, atas: 14, bawah: 55 },
+  "alasan investasinya": { lebar: 468, tinggi: 66, kiri: 1, kanan: 467, atas: 14, bawah: 65 },
+  "beda kebutuhan": { lebar: 400, tinggi: 66, kiri: 3, kanan: 399, atas: 14, bawah: 55 },
+  "fungsi uangnya": { lebar: 370, tinggi: 66, kiri: 1, kanan: 368, atas: 14, bawah: 65 },
+  "investasinya": { lebar: 304, tinggi: 66, kiri: 3, kanan: 302, atas: 15, bawah: 65 },
+};
