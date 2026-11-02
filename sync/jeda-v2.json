@@ -1,0 +1,1013 @@
+{
+ "ekor_f": 60,
+ "sisip": [
+  {
+   "cue": 2,
+   "teks": "Ibu Sari membuka warungnya.",
+   "detik_v1": 2.842,
+   "frame_v1": 170.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 4,
+   "teks": "dia cek stok dan lihat catatan hari sebelumnya:",
+   "detik_v1": 7.241,
+   "frame_v1": 434.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 5,
+   "teks": "barang apa yang paling laku,",
+   "detik_v1": 9.687,
+   "frame_v1": 581.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 6,
+   "teks": "berapa penjualan yang masuk,",
+   "detik_v1": 12.105,
+   "frame_v1": 726.3,
+   "jeda_f": 20
+  },
+  {
+   "cue": 7,
+   "teks": "dan setelah dikurangi semua biaya,",
+   "detik_v1": 14.246,
+   "frame_v1": 854.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 8,
+   "teks": "berapa laba yang benar-benar tersisa.",
+   "detik_v1": 17.924,
+   "frame_v1": 1075.4,
+   "jeda_f": 30
+  },
+  {
+   "cue": 10,
+   "teks": "warung ini saya beli lima puluh juta ya”",
+   "detik_v1": 22.553,
+   "frame_v1": 1353.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 11,
+   "teks": "Ibu Sari nggak langsung menjawab.",
+   "detik_v1": 24.895,
+   "frame_v1": 1493.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 13,
+   "teks": "dia sudah tahu bisnisnya menghasilkan berapa.",
+   "detik_v1": 32.21,
+   "frame_v1": 1932.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 16,
+   "teks": "tangannya langsung gelisah.",
+   "detik_v1": 37.979,
+   "frame_v1": 2278.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 18,
+   "teks": "sementara investor tadi langsung panik?",
+   "detik_v1": 43.773,
+   "frame_v1": 2626.4,
+   "jeda_f": 20
+  },
+  {
+   "cue": 19,
+   "teks": "Karena Ibu Sari melihat bisnisnya.",
+   "detik_v1": 47.31,
+   "frame_v1": 2838.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 20,
+   "teks": "Sementara investor tadi hanya melihat harganya.",
+   "detik_v1": 50.952,
+   "frame_v1": 3057.1,
+   "jeda_f": 30
+  },
+  {
+   "cue": 21,
+   "teks": "Di sinilah perbedaan investasi dan spekulasi mulai terlihat.",
+   "detik_v1": 54.399,
+   "frame_v1": 3263.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 23,
+   "teks": "kita sedang berinvestasi.",
+   "detik_v1": 61.343,
+   "frame_v1": 3680.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 26,
+   "teks": "kita sedang berspekulasi.",
+   "detik_v1": 71.645,
+   "frame_v1": 4298.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 28,
+   "teks": "dan mulai melihatnya sebagai bisnis.",
+   "detik_v1": 77.952,
+   "frame_v1": 4677.1,
+   "jeda_f": 45
+  },
+  {
+   "cue": 29,
+   "teks": "Cara berpikir ini bukan sesuatu yang baru.",
+   "detik_v1": 80.268,
+   "frame_v1": 4816.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 31,
+   "teks": "Benjamin Graham mulai membangun pendekatan investasi yang lebih berfokus pada bisnis dan nilai.",
+   "detik_v1": 92.438,
+   "frame_v1": 5546.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 32,
+   "teks": "Intinya bisa dirangkum menjadi empat prinsip.",
+   "detik_v1": 95.98,
+   "frame_v1": 5758.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 34,
+   "teks": "membeli saham berarti membeli sebagian dari sebuah perusahaan.",
+   "detik_v1": 100.507,
+   "frame_v1": 6030.4,
+   "jeda_f": 20
+  },
+  {
+   "cue": 36,
+   "teks": "bukan pergerakan harga hariannya.",
+   "detik_v1": 105.588,
+   "frame_v1": 6335.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 38,
+   "teks": "harga yang kita bayar sebaiknya berada di bawah nilai wajarnya.",
+   "detik_v1": 110.275,
+   "frame_v1": 6616.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 39,
+   "teks": "Perusahaan bagus pun bisa menjadi investasi yang buruk kalau dibeli terlalu mahal.",
+   "detik_v1": 116.808,
+   "frame_v1": 7008.5,
+   "jeda_f": 30
+  },
+  {
+   "cue": 42,
+   "teks": "bukan kita ikuti emosinya.",
+   "detik_v1": 122.95,
+   "frame_v1": 7377.0,
+   "jeda_f": 20
+  },
+  {
+   "cue": 44,
+   "teks": "harga bisa bergerak jauh dari kondisi bisnis sebenarnya.",
+   "detik_v1": 130.552,
+   "frame_v1": 7833.1,
+   "jeda_f": 30
+  },
+  {
+   "cue": 46,
+   "teks": "hanya berinvestasi pada bisnis yang benar-benar kita pahami.",
+   "detik_v1": 135.143,
+   "frame_v1": 8108.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 47,
+   "teks": "Kita nggak harus punya pendapat tentang semua saham.",
+   "detik_v1": 138.043,
+   "frame_v1": 8282.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 48,
+   "teks": "Empat prinsip inilah yang akan menjadi fondasi untuk video-video berikutnya.",
+   "detik_v1": 143.224,
+   "frame_v1": 8593.4,
+   "jeda_f": 45
+  },
+  {
+   "cue": 50,
+   "teks": "cara berpikir ini nggak berhenti di Graham.",
+   "detik_v1": 146.065,
+   "frame_v1": 8763.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 51,
+   "teks": "Pendekatan serupa kemudian digunakan oleh berbagai investor dari generasi yang berbeda.",
+   "detik_v1": 150.623,
+   "frame_v1": 9037.4,
+   "jeda_f": 20
+  },
+  {
+   "cue": 52,
+   "teks": "Walter Schloss menjalankannya selama lebih dari empat dekade.",
+   "detik_v1": 153.93,
+   "frame_v1": 9235.8,
+   "jeda_f": 30
+  },
+  {
+   "cue": 54,
+   "teks": "selama puluhan tahun melalui Berkshire Hathaway.",
+   "detik_v1": 159.278,
+   "frame_v1": 9556.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 56,
+   "teks": "berbagai investor dan fund lain juga menggunakan prinsip yang serupa.",
+   "detik_v1": 163.355,
+   "frame_v1": 9801.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 57,
+   "teks": "Mereka nggak membeli perusahaan yang sama.",
+   "detik_v1": 165.412,
+   "frame_v1": 9924.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 58,
+   "teks": "Cara menghitung nilainya juga nggak selalu persis sama.",
+   "detik_v1": 168.263,
+   "frame_v1": 10095.8,
+   "jeda_f": 30
+  },
+  {
+   "cue": 59,
+   "teks": "Tapi ada satu pola yang terus muncul:",
+   "detik_v1": 170.094,
+   "frame_v1": 10205.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 60,
+   "teks": "pahami bisnisnya,",
+   "detik_v1": 171.285,
+   "frame_v1": 10277.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 61,
+   "teks": "perkirakan nilai wajarnya,",
+   "detik_v1": 172.786,
+   "frame_v1": 10367.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 62,
+   "teks": "lalu bandingkan dengan harga yang ditawarkan market.",
+   "detik_v1": 175.632,
+   "frame_v1": 10537.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 64,
+   "teks": "yang hanya bergantung pada satu investor atau satu periode tertentu.",
+   "detik_v1": 180.91,
+   "frame_v1": 10854.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 65,
+   "teks": "Prinsip dasarnya sudah digunakan lintas generasi.",
+   "detik_v1": 183.397,
+   "frame_v1": 11003.8,
+   "jeda_f": 45
+  },
+  {
+   "cue": 66,
+   "teks": "Lalu kenapa pendekatan seperti ini relevan untuk investor Indonesia?",
+   "detik_v1": 189.701,
+   "frame_v1": 11382.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 67,
+   "teks": "Ada tiga alasan.",
+   "detik_v1": 190.792,
+   "frame_v1": 11447.5,
+   "jeda_f": 30
+  },
+  {
+   "cue": 69,
+   "teks": "harga di pasar bisa berubah jauh lebih cepat daripada bisnisnya.",
+   "detik_v1": 194.965,
+   "frame_v1": 11697.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 71,
+   "teks": "sementara dana asing juga bisa masuk dan keluar dengan cepat.",
+   "detik_v1": 202.145,
+   "frame_v1": 12128.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 74,
+   "teks": "meskipun kondisi perusahaan belum berubah sebesar itu.",
+   "detik_v1": 209.616,
+   "frame_v1": 12577.0,
+   "jeda_f": 30
+  },
+  {
+   "cue": 76,
+   "teks": "jarak antara harga dan nilai inilah yang perlu diperhatikan.",
+   "detik_v1": 214.897,
+   "frame_v1": 12893.8,
+   "jeda_f": 40
+  },
+  {
+   "cue": 78,
+   "teks": "Indonesia punya bisnis yang bisa dipelajari dalam jangka panjang.",
+   "detik_v1": 219.083,
+   "frame_v1": 13145.0,
+   "jeda_f": 20
+  },
+  {
+   "cue": 79,
+   "teks": "Ada perusahaan di sektor perbankan,",
+   "detik_v1": 221.734,
+   "frame_v1": 13304.0,
+   "jeda_f": 20
+  },
+  {
+   "cue": 80,
+   "teks": "consumer,",
+   "detik_v1": 222.809,
+   "frame_v1": 13368.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 81,
+   "teks": "telekomunikasi,",
+   "detik_v1": 224.559,
+   "frame_v1": 13473.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 83,
+   "teks": "yang sudah menjalankan bisnis selama puluhan tahun.",
+   "detik_v1": 229.255,
+   "frame_v1": 13755.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 85,
+   "teks": "kita punya sejarah pendapatan,",
+   "detik_v1": 233.201,
+   "frame_v1": 13992.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 86,
+   "teks": "laba,",
+   "detik_v1": 234.086,
+   "frame_v1": 14045.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 87,
+   "teks": "dividen,",
+   "detik_v1": 235.011,
+   "frame_v1": 14100.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 88,
+   "teks": "dan siklus bisnis yang bisa dipelajari.",
+   "detik_v1": 238.667,
+   "frame_v1": 14320.0,
+   "jeda_f": 40
+  },
+  {
+   "cue": 90,
+   "teks": "kita nggak harus menjadi orang tercepat.",
+   "detik_v1": 242.768,
+   "frame_v1": 14566.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 91,
+   "teks": "Value investing nggak mengharuskan kita melihat layar sepanjang hari.",
+   "detik_v1": 246.309,
+   "frame_v1": 14778.5,
+   "jeda_f": 30
+  },
+  {
+   "cue": 92,
+   "teks": "Kita bisa tetap bekerja dan menjalani aktivitas sehari-hari.",
+   "detik_v1": 251.79,
+   "frame_v1": 15107.4,
+   "jeda_f": 30
+  },
+  {
+   "cue": 93,
+   "teks": "Kita hanya perlu menyediakan waktu untuk memahami bisnis dan memperbarui analisis kita.",
+   "detik_v1": 258.651,
+   "frame_v1": 15519.1,
+   "jeda_f": 45
+  },
+  {
+   "cue": 95,
+   "teks": "value investing punya tiga kelebihan utama.",
+   "detik_v1": 264.458,
+   "frame_v1": 15867.5,
+   "jeda_f": 30
+  },
+  {
+   "cue": 97,
+   "teks": "keputusan dimulai dari bisnis nyata:",
+   "detik_v1": 267.578,
+   "frame_v1": 16054.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 98,
+   "teks": "apa yang dijual,",
+   "detik_v1": 270.069,
+   "frame_v1": 16204.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 99,
+   "teks": "berapa yang dihasilkan,",
+   "detik_v1": 271.909,
+   "frame_v1": 16314.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 100,
+   "teks": "dan apakah bisnisnya bisa terus berkembang.",
+   "detik_v1": 275.155,
+   "frame_v1": 16509.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 102,
+   "teks": "pendekatannya sudah digunakan oleh berbagai generasi investor selama puluhan tahun.",
+   "detik_v1": 283.005,
+   "frame_v1": 16980.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 104,
+   "teks": "kemampuannya bisa dipelajari dan diakumulasi.",
+   "detik_v1": 288.478,
+   "frame_v1": 17308.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 105,
+   "teks": "Semakin banyak perusahaan yang kita pelajari,",
+   "detik_v1": 291.785,
+   "frame_v1": 17507.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 106,
+   "teks": "semakin banyak pola bisnis yang kita kenal,",
+   "detik_v1": 294.712,
+   "frame_v1": 17682.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 107,
+   "teks": "dan semakin baik dasar keputusan kita berikutnya.",
+   "detik_v1": 297.848,
+   "frame_v1": 17870.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 108,
+   "teks": "Tapi kelemahannya juga nyata.",
+   "detik_v1": 300.105,
+   "frame_v1": 18006.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 109,
+   "teks": "Yang pertama: risetnya sulit dan makan waktu.",
+   "detik_v1": 303.277,
+   "frame_v1": 18196.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 111,
+   "teks": "kita perlu membaca laporan keuangan,",
+   "detik_v1": 309.31,
+   "frame_v1": 18558.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 112,
+   "teks": "memahami model bisnis,",
+   "detik_v1": 311.331,
+   "frame_v1": 18679.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 113,
+   "teks": "kompetisi,",
+   "detik_v1": 312.777,
+   "frame_v1": 18766.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 114,
+   "teks": "risiko,",
+   "detik_v1": 313.792,
+   "frame_v1": 18827.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 115,
+   "teks": "sampai valuasinya.",
+   "detik_v1": 315.689,
+   "frame_v1": 18941.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 116,
+   "teks": "Yang kedua: hasilnya bisa terasa lambat.",
+   "detik_v1": 318.56,
+   "frame_v1": 19113.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 118,
+   "teks": "tapi market belum tentu langsung setuju.",
+   "detik_v1": 326.825,
+   "frame_v1": 19609.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 120,
+   "teks": "atau bahkan lebih lama.",
+   "detik_v1": 331.167,
+   "frame_v1": 19870.0,
+   "jeda_f": 30
+  },
+  {
+   "cue": 123,
+   "teks": "sambil tetap mengecek apakah alasan kita membeli masih masuk akal.",
+   "detik_v1": 346.603,
+   "frame_v1": 20796.2,
+   "jeda_f": 45
+  },
+  {
+   "cue": 124,
+   "teks": "Jadi apakah pendekatan ini cocok untuk semua orang?",
+   "detik_v1": 349.649,
+   "frame_v1": 20978.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 125,
+   "teks": "Belum tentu.",
+   "detik_v1": 351.45,
+   "frame_v1": 21087.0,
+   "jeda_f": 30
+  },
+  {
+   "cue": 126,
+   "teks": "Setiap metode membutuhkan kemampuan yang berbeda.",
+   "detik_v1": 355.221,
+   "frame_v1": 21313.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 127,
+   "teks": "Trading jangka pendek membutuhkan kecepatan,",
+   "detik_v1": 358.001,
+   "frame_v1": 21480.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 128,
+   "teks": "disiplin,",
+   "detik_v1": 359.161,
+   "frame_v1": 21549.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 129,
+   "teks": "dan kemampuan mengambil banyak keputusan dalam waktu singkat.",
+   "detik_v1": 362.682,
+   "frame_v1": 21760.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 130,
+   "teks": "Pendekatan kuantitatif membutuhkan data,",
+   "detik_v1": 366.088,
+   "frame_v1": 21965.3,
+   "jeda_f": 20
+  },
+  {
+   "cue": 131,
+   "teks": "sistem,",
+   "detik_v1": 367.388,
+   "frame_v1": 22043.3,
+   "jeda_f": 20
+  },
+  {
+   "cue": 132,
+   "teks": "dan kemampuan membangun model.",
+   "detik_v1": 369.498,
+   "frame_v1": 22169.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 134,
+   "teks": "membaca perubahan informasi dengan cepat.",
+   "detik_v1": 376.76,
+   "frame_v1": 22605.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 135,
+   "teks": "Value investing punya permainan yang berbeda.",
+   "detik_v1": 379.566,
+   "frame_v1": 22774.0,
+   "jeda_f": 20
+  },
+  {
+   "cue": 136,
+   "teks": "Kita nggak harus menjadi yang tercepat.",
+   "detik_v1": 382.348,
+   "frame_v1": 22940.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 137,
+   "teks": "Tapi kita harus mau memahami bisnis,",
+   "detik_v1": 386.28,
+   "frame_v1": 23176.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 138,
+   "teks": "menggunakan data sebagai dasar keputusan,",
+   "detik_v1": 388.832,
+   "frame_v1": 23329.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 139,
+   "teks": "dan memberi waktu agar perkembangan bisnisnya terlihat dalam hasil investasi.",
+   "detik_v1": 393.67,
+   "frame_v1": 23620.2,
+   "jeda_f": 30
+  },
+  {
+   "cue": 140,
+   "teks": "Jadi pendekatan ini paling masuk akal kalau kamu ingin benar-benar memahami apa yang dibeli,",
+   "detik_v1": 401.492,
+   "frame_v1": 24089.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 141,
+   "teks": "ingin mengambil keputusan berdasarkan bisnis dan data,",
+   "detik_v1": 405.461,
+   "frame_v1": 24327.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 142,
+   "teks": "dan lebih memilih hasil yang konsisten dalam jangka panjang daripada keuntungan cepat.",
+   "detik_v1": 411.402,
+   "frame_v1": 24684.1,
+   "jeda_f": 30
+  },
+  {
+   "cue": 143,
+   "teks": "Nggak harus menjadi ahli dari hari pertama.",
+   "detik_v1": 414.355,
+   "frame_v1": 24861.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 144,
+   "teks": "Karena kemampuan memahami perusahaan bisa dibangun sedikit demi sedikit.",
+   "detik_v1": 420.822,
+   "frame_v1": 25249.3,
+   "jeda_f": 45
+  },
+  {
+   "cue": 145,
+   "teks": "Ini bagian yang sering dilupakan.",
+   "detik_v1": 423.653,
+   "frame_v1": 25419.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 147,
+   "teks": "benar belum tentu langsung menghasilkan uang.",
+   "detik_v1": 428.794,
+   "frame_v1": 25727.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 148,
+   "teks": "IHSG sendiri sudah melewati banyak periode penurunan besar:",
+   "detik_v1": 432.641,
+   "frame_v1": 25958.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 149,
+   "teks": "2008,",
+   "detik_v1": 434.221,
+   "frame_v1": 26053.3,
+   "jeda_f": 20
+  },
+  {
+   "cue": 150,
+   "teks": "2013,",
+   "detik_v1": 436.072,
+   "frame_v1": 26164.3,
+   "jeda_f": 20
+  },
+  {
+   "cue": 151,
+   "teks": "2015,",
+   "detik_v1": 437.752,
+   "frame_v1": 26265.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 152,
+   "teks": "2020,",
+   "detik_v1": 440.063,
+   "frame_v1": 26403.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 153,
+   "teks": "2025,",
+   "detik_v1": 441.678,
+   "frame_v1": 26500.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 154,
+   "teks": "dan kembali mengalami tekanan besar pada 2026.",
+   "detik_v1": 446.38,
+   "frame_v1": 26782.8,
+   "jeda_f": 40
+  },
+  {
+   "cue": 155,
+   "teks": "Setiap periode punya cerita dan ketakutannya sendiri.",
+   "detik_v1": 449.797,
+   "frame_v1": 26987.8,
+   "jeda_f": 30
+  },
+  {
+   "cue": 156,
+   "teks": "Tapi ada sesuatu yang perlu dibedakan:",
+   "detik_v1": 452.199,
+   "frame_v1": 27131.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 157,
+   "teks": "harga yang turun dan nilai bisnis yang benar-benar turun bukan hal yang sama.",
+   "detik_v1": 460.844,
+   "frame_v1": 27650.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 159,
+   "teks": "prosesnya nggak selalu cepat.",
+   "detik_v1": 465.692,
+   "frame_v1": 27941.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 160,
+   "teks": "Bisa berbulan-bulan,",
+   "detik_v1": 467.493,
+   "frame_v1": 28049.6,
+   "jeda_f": 20
+  },
+  {
+   "cue": 161,
+   "teks": "bahkan bertahun-tahun.",
+   "detik_v1": 469.545,
+   "frame_v1": 28172.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 162,
+   "teks": "Itulah konsekuensi dari pendekatan ini.",
+   "detik_v1": 472.836,
+   "frame_v1": 28370.2,
+   "jeda_f": 30
+  },
+  {
+   "cue": 163,
+   "teks": "Kita nggak hanya harus bisa menemukan bisnis yang bagus dengan harga yang menarik.",
+   "detik_v1": 478.323,
+   "frame_v1": 28699.4,
+   "jeda_f": 20
+  },
+  {
+   "cue": 164,
+   "teks": "Kita juga harus sabar menunggu harga mendekati nilai wajarnya.",
+   "detik_v1": 482.329,
+   "frame_v1": 28939.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 166,
+   "teks": "value investing bukan cara untuk cepat kaya.",
+   "detik_v1": 488.122,
+   "frame_v1": 29287.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 168,
+   "teks": "lalu memberi waktu agar perkembangan bisnisnya tercermin di harga.",
+   "detik_v1": 497.36,
+   "frame_v1": 29841.6,
+   "jeda_f": 45
+  },
+  {
+   "cue": 170,
+   "teks": "bagian tersulit dari value investing justru ada di riset.",
+   "detik_v1": 501.576,
+   "frame_v1": 30094.6,
+   "jeda_f": 30
+  },
+  {
+   "cue": 171,
+   "teks": "Membaca laporan keuangan,",
+   "detik_v1": 502.882,
+   "frame_v1": 30172.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 172,
+   "teks": "memahami bisnis,",
+   "detik_v1": 503.732,
+   "frame_v1": 30223.9,
+   "jeda_f": 20
+  },
+  {
+   "cue": 173,
+   "teks": "menilai kualitas,",
+   "detik_v1": 504.692,
+   "frame_v1": 30281.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 174,
+   "teks": "mengikuti perubahan perusahaan,",
+   "detik_v1": 506.578,
+   "frame_v1": 30394.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 175,
+   "teks": "sampai memperkirakan fair value bisa memakan banyak waktu.",
+   "detik_v1": 509.619,
+   "frame_v1": 30577.1,
+   "jeda_f": 30
+  },
+  {
+   "cue": 178,
+   "teks": "untuk membantu investor memahami perusahaan dan valuasinya.",
+   "detik_v1": 518.721,
+   "frame_v1": 31123.3,
+   "jeda_f": 30
+  },
+  {
+   "cue": 182,
+   "teks": "untuk memahami bisnis,",
+   "detik_v1": 525.614,
+   "frame_v1": 31536.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 183,
+   "teks": "kualitas,",
+   "detik_v1": 526.329,
+   "frame_v1": 31579.7,
+   "jeda_f": 20
+  },
+  {
+   "cue": 184,
+   "teks": "keunggulan,",
+   "detik_v1": 527.109,
+   "frame_v1": 31626.5,
+   "jeda_f": 20
+  },
+  {
+   "cue": 186,
+   "teks": "dan dasar valuasinya.",
+   "detik_v1": 529.115,
+   "frame_v1": 31746.9,
+   "jeda_f": 30
+  },
+  {
+   "cue": 187,
+   "teks": "Lalu gunakan Tuntun AI untuk menanyakan bagian yang masih belum kamu pahami.",
+   "detik_v1": 533.556,
+   "frame_v1": 32013.4,
+   "jeda_f": 30
+  },
+  {
+   "cue": 185,
+   "teks": "risiko,",
+   "detik_v1": 537.43,
+   "frame_v1": 32245.8,
+   "jeda_f": 20
+  },
+  {
+   "cue": 189,
+   "teks": "kamu bisa membandingkan harga market dengan referensi nilai perusahaan.",
+   "detik_v1": 540.613,
+   "frame_v1": 32436.8,
+   "jeda_f": 30
+  },
+  {
+   "cue": 190,
+   "teks": "Ini bukan berarti hasil riset atau perkiraan fair value itu selalu benar.",
+   "detik_v1": 545.145,
+   "frame_v1": 32708.7,
+   "jeda_f": 30
+  },
+  {
+   "cue": 191,
+   "teks": "Dan bukan berarti metode lain nggak boleh digunakan.",
+   "detik_v1": 549.201,
+   "frame_v1": 32952.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 192,
+   "teks": "Technical analysis,",
+   "detik_v1": 550.451,
+   "frame_v1": 33027.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 193,
+   "teks": "momentum,",
+   "detik_v1": 551.136,
+   "frame_v1": 33068.2,
+   "jeda_f": 20
+  },
+  {
+   "cue": 194,
+   "teks": "dan data transaksi tetap bisa dijadikan referensi tambahan.",
+   "detik_v1": 554.668,
+   "frame_v1": 33280.1,
+   "jeda_f": 30
+  },
+  {
+   "cue": 195,
+   "teks": "Tapi fondasinya tetap sama:",
+   "detik_v1": 556.968,
+   "frame_v1": 33418.1,
+   "jeda_f": 20
+  },
+  {
+   "cue": 197,
+   "teks": "pahami dulu apa yang sebenarnya kita beli.",
+   "detik_v1": 561.69,
+   "frame_v1": 33701.4,
+   "jeda_f": 30
+  },
+  {
+   "cue": 199,
+   "teks": "kita mulai dari pilar pertama:",
+   "detik_v1": 564.876,
+   "frame_v1": 33892.6,
+   "jeda_f": 20
+  }
+ ]
+}
