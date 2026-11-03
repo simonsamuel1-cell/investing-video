@@ -22,6 +22,8 @@ import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, ease, Heading, Ico, IconDot, IsoIcon, Line, NumRing, OUTSIDE_RESERVES, ROUGH, ROUTE_CARD, ROUTE_CARDS, RouteCard, Typed, useWords, Vehicle, wavePts, type SketchName } from "../components/kit";
 import { ISLE_FRAME, Islands, RiverLines, WAY_DISC_R, frameStyle, mixFrame, wayDisc } from "../components/Islands";
 import { KenaliLine } from "./River";
+import { MAP_DISC_R, MAP_FRAME, MapCamera, mapDisc } from "../components/RouteMap";
+import { usePetaBaru } from "../components/PetaSwitch";
 
 const CX = theme.canvas.width / 2;
 const LEFT = 140;
@@ -161,6 +163,8 @@ export const SC03 = () => {
   const m = useMotion();
   const W = useWords(3, BLOCK.SC03);
   const g = f + BLOCK.SC03;
+  /** The opening on the master route map (2 Nov) or on the islands, as before — components/PetaSwitch.tsx. */
+  const baru = usePetaBaru();
 
   const starts = ROUTES.map((r) => W(r.start));
   /** The camera pulling back from where SC02 left it. */
@@ -174,8 +178,11 @@ export const SC03 = () => {
   const irisAt = starts[0] + m.sec(0.35);
   const iris = ease(f, irisAt, m.sec(0.6));
   const enter1 = irisAt + m.sec(0.6);
-  const [irisX, irisY] = wayDisc(1);
-  const irisR = WAY_DISC_R * 1.2 + (Math.hypot(Math.max(irisX, theme.canvas.width - irisX), Math.max(irisY, theme.canvas.height - irisY)) + 40 - WAY_DISC_R * 1.2) * iris;
+  const [irisX, irisY] = baru ? mapDisc(1) : wayDisc(1);
+  /** The disc as drawn where the iris starts: the map draws its discs smaller than the islands did (RouteMap MARK). */
+  const discR = baru ? MAP_DISC_R : WAY_DISC_R;
+  const dk = discR / WAY_DISC_R;
+  const irisR = discR * 1.2 + (Math.hypot(Math.max(irisX, theme.canvas.width - irisX), Math.max(irisY, theme.canvas.height - irisY)) + 40 - discR * 1.2) * iris;
   const sumAt = W("Jadi semakin cepat");
   const askAt = W("Untuk tahu jalur");
   const until = (i: number) => (i + 1 < starts.length ? starts[i + 1] : sumAt);
@@ -198,7 +205,10 @@ export const SC03 = () => {
       {/* A — three ways across. ONE shot with SC02 (no cut): it opens on SC02's last frame — the camera dived onto
           Kamu, the house faded, the line on screen — and pulls back to the whole picture as the routes draw. */}
       {/* gone the frame route 1's disc has covered the screen — nothing of it may show through as the disc fades */}
-      {f < enter1 ? (
+      {f < enter1 && baru ? (
+        <MapCamera fr={mixFrame(MAP_FRAME.dive, MAP_FRAME.full, back)} g={g} landAt={-1000} riverAt={-1000} youAt={-1000} goalAt={-1000} routesAt={W("tiga cara")} focus={{ n: 1, p: focus1, lifted: iris > 0.001 }} />
+      ) : null}
+      {f < enter1 && !baru ? (
         <div style={{ position: "absolute", left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: OUTSIDE_RESERVES }}>
           <div style={frameStyle(mixFrame(ISLE_FRAME.dive, ISLE_FRAME.full, back))}>
             <RiverLines g={g} p={() => 1} />
@@ -215,11 +225,11 @@ export const SC03 = () => {
       {iris > 0.001 && f < enter1 + m.reveal + 1 ? (
         <div style={{ position: "absolute", left: irisX - irisR, top: irisY - irisR, width: irisR * 2, height: irisR * 2, borderRadius: "50%", background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.connector}, 0 0 ${(40 * (1 - iris)).toFixed(1)}px ${(10 * (1 - iris)).toFixed(1)}px ${theme.color.indigoGlow}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ opacity: Math.max(0, 1 - iris * 4) }}>
-            <Ico name="t-bridge-i" size={72} tone={theme.color.neutralIcon} />
+            <Ico name="t-bridge-i" size={72 * dk} tone={theme.color.neutralIcon} />
           </div>
           {/* the number, where the islands drew it on the disc (its corner, ×1.2 with the disc) */}
-          <div style={{ position: "absolute", left: irisR + irisR * 0.8 - 24, top: irisR - irisR * 0.8 - 24, opacity: Math.max(0, 1 - iris * 4) }}>
-            <NumRing n={1} size={48} />
+          <div style={{ position: "absolute", left: irisR + irisR * 0.8 - 24 * dk, top: irisR - irisR * 0.8 - 24 * dk, opacity: Math.max(0, 1 - iris * 4) }}>
+            <NumRing n={1} size={48 * dk} />
           </div>
         </div>
       ) : null}

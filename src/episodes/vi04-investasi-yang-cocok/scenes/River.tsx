@@ -38,47 +38,15 @@ export const KenaliLine = ({ main = 1, opacity = 1 }: { main?: number; opacity?:
   );
 };
 
-export const SC02 = () => {
+/** B and C — the two question cards (shared with SC02Baru, scenes/RiverMap.tsx). `W` = the scene's useWords. */
+export const QuestionCards = ({ W, askAt, notAt, betterAt, lineAt }: { W: (phrase: string) => number; askAt: number; notAt: number; betterAt: number; lineAt: number }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const shadow = useShadow();
-  const W = useWords(2, BLOCK.SC02);
-  const g = f + BLOCK.SC02;
-
-  const picAt = W("Bayangin");
-  const riverAt = W("pinggir sungai");
-  const askAt = W("Kebanyakan");
-  const notAt = W("bukan itu");
-  const betterAt = W("Yang lebih penting");
-  const wayAt = W("“Cara");
-  const goalAt = W("tujuan");
-  const lineAt = W("Sebelum menentukan");
-
   const no = ease(f, notAt, m.pop);
-  const yes = ease(f, goalAt, m.pop);
-  const settle = ease(f, askAt, m.move);
-  const dive = ease(f, lineAt, m.sec(1.2));
-  const fr = mixFrame(mixFrame(ISLE_FRAME.full, ISLE_FRAME.low, settle), ISLE_FRAME.dive, dive);
-  const route = ease(f, wayAt, m.sec(1.6));
-
   return (
-    <Stage>
-      <SoftGround f={g} />
-
-      {/* A–D — the islands, framed by a camera that never cuts away */}
-      <Appear at={picAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: OUTSIDE_RESERVES }}>
-        <div style={frameStyle(fr)}>
-          {/* the river: long hairline ripples running across, under both islands */}
-          <RiverLines g={g} p={(i) => ease(f, riverAt + m.sec(0.1) * i, m.reveal)} />
-          <Islands youAt={W("kamu berdiri")} homeAt={W("rumahmu")} neutral homeFade={dive} />
-          <div style={{ position: "absolute", inset: 0, opacity: 1 - dive }}>
-            <Connector a={ROUTE.a} b={ROUTE.b} p={route} shape="arc" bend={ROUTE.bend} dashed width={6} />
-          </div>
-          <Mark kind="check" p={yes * (1 - dive)} x={ROUTE.b.x + 10} y={ROUTE.b.y - 60} />
-        </div>
-      </Appear>
-
+    <>
       {/* B — the question most people ask */}
       <Appear at={askAt + m.sec(0.2)} out={lineAt} style={{ left: CX - CARDS.w / 2, top: CARDS.top[0], width: CARDS.w, height: CARDS.h[0] }}>
         <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 28, padding: "0 44px", opacity: 1 - 0.45 * no }}>
@@ -101,6 +69,50 @@ export const SC02 = () => {
           </div>
         </div>
       </Appear>
+    </>
+  );
+};
+
+/** SC02 before the 2 Nov route-map revision (the switch's "lama" side) — on the new VO, so "Rumahmu" now rises on "tujuan investasimu". */
+export const SC02Lama = () => {
+  const f = useCurrentFrame();
+  const m = useMotion();
+  const W = useWords(2, BLOCK.SC02);
+  const g = f + BLOCK.SC02;
+
+  const picAt = W("Bayangin");
+  const riverAt = W("satu sisi sungai");
+  const askAt = W("Kebanyakan");
+  const notAt = W("bukan itu");
+  const betterAt = W("Yang lebih penting");
+  const wayAt = W("“Cara");
+  const goalAt = W("tujuan", 1);
+  const lineAt = W("Sebelum menentukan");
+
+  const yes = ease(f, goalAt, m.pop);
+  const settle = ease(f, askAt, m.move);
+  const dive = ease(f, lineAt, m.sec(1.2));
+  const fr = mixFrame(mixFrame(ISLE_FRAME.full, ISLE_FRAME.low, settle), ISLE_FRAME.dive, dive);
+  const route = ease(f, wayAt, m.sec(1.6));
+
+  return (
+    <Stage>
+      <SoftGround f={g} />
+
+      {/* A–D — the islands, framed by a camera that never cuts away */}
+      <Appear at={picAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: OUTSIDE_RESERVES }}>
+        <div style={frameStyle(fr)}>
+          {/* the river: long hairline ripples running across, under both islands */}
+          <RiverLines g={g} p={(i) => ease(f, riverAt + m.sec(0.1) * i, m.reveal)} />
+          <Islands youAt={W("kamu berdiri")} homeAt={W("tujuan investasimu")} neutral homeFade={dive} />
+          <div style={{ position: "absolute", inset: 0, opacity: 1 - dive }}>
+            <Connector a={ROUTE.a} b={ROUTE.b} p={route} shape="arc" bend={ROUTE.bend} dashed width={6} />
+          </div>
+          <Mark kind="check" p={yes * (1 - dive)} x={ROUTE.b.x + 10} y={ROUTE.b.y - 60} />
+        </div>
+      </Appear>
+
+      <QuestionCards W={W} askAt={askAt} notAt={notAt} betterAt={betterAt} lineAt={lineAt} />
 
       {/* D — the line, while the camera dives onto Kamu (SC03 opens on it and lets it go) */}
       <Appear at={lineAt + m.sec(0.3)} style={{ left: 0, top: 0, width: theme.canvas.width }}>

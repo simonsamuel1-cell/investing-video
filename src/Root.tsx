@@ -161,6 +161,16 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
+      {/* VI04 before the 2 Nov route-map revision — the switch's "before" side (components/PetaSwitch.tsx). */}
+      <Composition
+        id="VI04-InvestasiYangCocok-Sebelum"
+        component={InvestasiYangCocokFull}
+        durationInFrames={VI04_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+        defaultProps={{ petaBaru: false }}
+      />
       {/* VI07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. Visuals, VO + subtitles. */}
       <Composition
         id="VI07-CaraTuntunMembantuInvestorMengurangiKesalahan"

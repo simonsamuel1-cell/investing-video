@@ -27,14 +27,14 @@ const originOf = (isle: { cx: number; cy: number; a: number }): P => [isle.cx, i
  * Two palettes for the same drawing: the pastels Simon approved on 19 Oct, and the neutrals of Benchmark v1
  * (22 Oct: "untuk hal-hal yang obvious, pakai warna netral aja") — white tops, grey sides, a grey house.
  */
-type Pal = { top: string; left: string; right: string; wall: string; wallShade: string; roof: string; roofShade: string; chimney: string; chimneyShade: string; glass: string; frame: string; planter: string; bush: string };
+export type Pal = { top: string; left: string; right: string; wall: string; wallShade: string; roof: string; roofShade: string; chimney: string; chimneyShade: string; glass: string; frame: string; planter: string; bush: string };
 const PASTEL: Pal = {
   top: theme.color.isoTop, left: theme.color.isoLeft, right: theme.color.isoRight,
   wall: theme.color.houseWall, wallShade: theme.color.houseWallShade, roof: theme.color.houseRoof, roofShade: theme.color.houseRoofShade,
   chimney: theme.color.houseChimney, chimneyShade: theme.color.houseChimneyShade, glass: theme.color.houseGlass, frame: theme.color.houseFrame,
   planter: theme.color.housePlanter, bush: theme.color.houseBush,
 };
-const NEUTRAL: Pal = {
+export const NEUTRAL: Pal = {
   top: theme.color.isoNTop, left: theme.color.isoNLeft, right: theme.color.isoNRight,
   wall: theme.color.houseNWall, wallShade: theme.color.houseNWallShade, roof: theme.color.houseNRoof, roofShade: theme.color.houseNRoofShade,
   chimney: theme.color.houseNChimney, chimneyShade: theme.color.houseNChimneyShade, glass: theme.color.houseNGlass, frame: theme.color.houseNFrame,
@@ -104,9 +104,8 @@ const houseOrigin = (): P => {
   const isle = ISLES.home;
   return iso(originOf(isle), (isle.a - HOUSE.a) / 2, (isle.a - HOUSE.b) / 2 + 10, 0);
 };
-const House = ({ pal }: { pal: Pal }) => {
+export const House = ({ pal, o = houseOrigin() }: { pal: Pal; o?: P }) => {
   const { a: A, b: B, h: H, r: R, ov } = HOUSE;
-  const o = houseOrigin();
   const eave = H - (ov * R) / (A / 2);
   const q = (x: number, y: number, z: number) => iso(o, x, y, z);
   const gable = [q(0, B, 0), q(A, B, 0), q(A, B, H), q(A / 2, B, H + R), q(0, B, H)];
@@ -150,6 +149,9 @@ const House = ({ pal }: { pal: Pal }) => {
     </>
   );
 };
+/** The house's origin that puts the middle of its footprint at `c`, and its width on screen (for drawing it elsewhere). */
+export const houseOn = (c: P): P => [c[0] - ((HOUSE.a - HOUSE.b) / 2) * COS, c[1] - ((HOUSE.a + HOUSE.b) / 2) * SIN];
+export const HOUSE_W = (HOUSE.a + HOUSE.b + 2 * HOUSE.ov) * COS;
 /** Over the middle of the ridge, for the house's name. */
 export const HOUSE_TOP: P = (() => {
   const [x, y] = iso(houseOrigin(), HOUSE.a / 2, HOUSE.b / 2, HOUSE.h + HOUSE.r);
@@ -163,9 +165,10 @@ export const HOUSE_TOP: P = (() => {
  */
 const STICK = { h: 160 };
 export const STICK_TOP: P = [ISLES.you.cx, ISLES.you.cy - STICK.h - 18];
-const Stickman = ({ pal }: { pal: Pal }) => {
+/** Kamu. `at` = the feet (RouteMap stands it elsewhere); without it, on its island. */
+export const Stickman = ({ pal, at }: { pal: Pal; at?: P }) => {
   const c = usePalette();
-  const [x, y] = [ISLES.you.cx, ISLES.you.cy - 4];
+  const [x, y] = at ?? [ISLES.you.cx, ISLES.you.cy - 4];
   // the body, in px from the feet (y) and the centre line (x); mirrored left/right
   const B = { top: -118, sh: 34, r: 14, arm: 22, armEnd: -60, leg: 4, crotch: -54, foot: 7 };
   const X = (v: number) => (x + v).toFixed(1);
@@ -195,7 +198,8 @@ const Stickman = ({ pal }: { pal: Pal }) => {
   const armLines = [-1, 1].map((k) => `M ${X(k * B.arm)} ${Y(B.top + 18)} L ${X(k * B.arm)} ${Y(B.armEnd - 6)}`);
   return (
     <>
-      <ellipse cx={x} cy={y + 2} rx={42} ry={13} fill={pal.left} opacity={0.6} />
+      {/* on the route map (`at`) the shadow is opaque — no transparency since 26 Oct; the islands keep theirs */}
+      <ellipse cx={x} cy={y + 2} rx={42} ry={13} fill={pal.left} opacity={at ? 1 : 0.6} />
       <path d={body} fill={c.cardBg} stroke={c.ink} strokeWidth={5} strokeLinejoin="round" />
       {armLines.map((d) => (
         <path key={d} d={d} stroke={c.ink} strokeWidth={5} strokeLinecap="round" fill="none" />

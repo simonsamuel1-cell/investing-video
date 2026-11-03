@@ -9,7 +9,9 @@ import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, t
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
 import { SC01 } from "./scenes/Opening";
-import { SC02 } from "./scenes/River";
+import { SC02Lama } from "./scenes/River";
+import { SC02Baru } from "./scenes/RiverMap";
+import { PETA_BARU, PetaProvider, usePetaBaru } from "./components/PetaSwitch";
 import { SC03 } from "./scenes/Routes";
 import { SC04 } from "./scenes/Waves";
 import { SC05 } from "./scenes/License";
@@ -17,6 +19,9 @@ import { SC06 } from "./scenes/Profiles";
 import { SC07 } from "./scenes/Changes";
 import { SC08 } from "./scenes/Recap";
 import { SC09 } from "./scenes/Plan";
+
+/** SC02 before/after the 2 Nov route-map revision (components/PetaSwitch.tsx); SC03 switches its own opening. */
+const SC02 = () => (usePetaBaru() ? <SC02Baru /> : <SC02Lama />);
 
 /** Built scenes; the rest are still empty rows on the timeline. */
 const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08, SC09 };
@@ -63,10 +68,12 @@ const Body = () => (
   </Stage>
 );
 
-export const InvestasiYangCocokComposition = () => (
+export const InvestasiYangCocokComposition = ({ petaBaru = PETA_BARU }: { petaBaru?: boolean }) => (
   <AbsoluteFill>
     <PaletteProvider>
-      <Body />
+      <PetaProvider baru={petaBaru}>
+        <Body />
+      </PetaProvider>
     </PaletteProvider>
   </AbsoluteFill>
 );

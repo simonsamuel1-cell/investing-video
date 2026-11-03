@@ -2,6 +2,74 @@
   "_": "Pustaka Referensi — every style reference Simon has sent, newest first. Built into a page by scripts/vi/ref-library.py and published as an Artifact (URL in the memory file pustaka-referensi.md). Add a reference: put the file under docs/vi-style/refs/, add an item (or a collection) here, rerun the script, republish to the same URL. src is relative to the repo root, or absolute for files outside it.",
   "collections": [
     {
+      "id": "starry-harbour-map",
+      "date": "2026-11-02",
+      "title": "Peta ilustrasi pelabuhan · Starry Harbour Cruise",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · di-retrace utuh di Stickman-Walk",
+      "quote": "Bikin still object dulu deh, taro dulu di stickman walk … Retrace semuanya, nanti aku arahkan mana aja yang perlu di buang.",
+      "taken": [
+        "Seluruh peta di-retrace jadi vektor dulu: daratan, air, jalan, pohon, bangunan, kapal, pin, rute, label, judul, kompas"
+      ],
+      "dropped": [],
+      "open": [
+        "Bagian mana yang dibuang — menunggu arahan Simon"
+      ],
+      "usedIn": [
+        "Stickman-Walk · still object (2 Nov 2026) — public/art/vi04/harbour-map.svg, components/HarbourMap.tsx"
+      ],
+      "items": [
+        {
+          "id": "starry-harbour-map-img",
+          "type": "image",
+          "title": "Starry Harbour Cruise · peta",
+          "src": "docs/vi-style/refs/starry-harbour-map.webp",
+          "note": "Peta ilustrasi Victoria Harbour: daratan krem dengan jaringan jalan tipis, air biru keabuan, landmark flat (M+, K11 Musea, Palace Museum, Kai Tak, Golden Bauhinia, bianglala), kapal pesiar dan yacht, pin bernomor, rute emas dengan panah, label tempat dua bahasa, judul serif + script, kompas.",
+          "tags": [
+            "Peta",
+            "Ilustrasi",
+            "Still"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "vi04-route-map",
+      "date": "2026-11-02",
+      "title": "Peta datar · kamera ikut perjalanan lalu zoom out",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · master route map VI04",
+      "quote": "Ini bisa dipake nih … jadi referensi",
+      "taken": [
+        "Peta 2D datar dengan jaringan jalan tipis",
+        "Kamera mulai dekat, menempuh jarak, lalu zoom out ke seluruh perjalanan",
+        "Pin dan label tetap seukuran saat peta mengecil"
+      ],
+      "dropped": [
+        "Warna kuning peta; diganti netral Benchmark v1",
+        "Sepeda yang bergerak; di VI04 kameranya sendiri yang menempuh jarak"
+      ],
+      "usedIn": [
+        "VI04 SC02 · Kamu → TUJUAN INVESTASI, jarak jauh (2 Nov 2026)",
+        "VI04 SC03 awal · tiga rute di peta yang sama"
+      ],
+      "items": [
+        {
+          "id": "vi04-route-map-pin",
+          "type": "video",
+          "title": "Map animation · zoom out",
+          "src": "docs/vi-style/refs/vi04-route-map-2026-11-02/map-zoom-out.mp4",
+          "url": "https://id.pinterest.com/pin/704109723021765798/",
+          "note": "Kamera menempel pada sepeda di peta datar sambil pelan-pelan zoom out, garis rute tergambar di belakangnya; berakhir di gambar lebar dengan dua pin di ujung rute.",
+          "tags": [
+            "Peta",
+            "Motion",
+            "Kamera"
+          ]
+        }
+      ]
+    },
+    {
       "id": "business-sustainability",
       "date": "2026-10-28",
       "title": "Ikon \"Business sustainability\" · ilustrasi detail",

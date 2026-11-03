@@ -5,12 +5,96 @@
  *
  * Also the sandbox for the VI style tokens (Simon, 20 Oct: "coba bikin dulu di stickman-walk mulai dari nomor 1.
  * Tulis Lorem Ipsum dengan 5 kategori tersebut"): the type scale, one line per level, at the top.
+ *
+ * And, from 2 Nov, the place for a still object (Simon: "Bikin still object dulu deh, taro dulu di stickman walk"):
+ * `SHOW` switches between the walking test and the traced harbour map (components/HarbourMap.tsx).
  */
+import { useMemo } from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import { GridGround, PaletteProvider, Stage, TYPE_LEVELS, theme, typeStyle, useMotion, usePalette } from "../../core";
+import { HOUSE_W, House, NEUTRAL, Stickman, houseOn } from "./components/Islands";
+import { HarbourRouteDiscs, HarbourRoutePaths, harbourHouse } from "./components/HarbourRoutes";
+import { MAP_FRAME, MARK, Name } from "./components/RouteMap";
 import { Walker } from "./components/Walker";
+import { HARBOUR_SIZE, HarbourMap, type HarbourHide } from "./components/HarbourMap";
 
 export const STICKMAN_WALK_FRAMES = 600;
+
+/** What the composition shows: the walking test, or the still object — the traced harbour map. */
+const SHOW = "map" as "walk" | "map";
+/** What Simon has said to drop from the map (names and families in components/HarbourMap.tsx). */
+const HIDE: HarbourHide[] = [
+  // 2 Nov: "hapus Judul ("The pinnacle of luxury yachting" dan bahasa mandarinnya), semua nama template, semua pohon,
+  // semua gedung dan kapal, semua angka" + "hapus semua angka tuh termasuk icon pinpoint mapnya" — the whole title
+  // block, every place name (and "Route 2"), the trees, the buildings and ships, and every pin with its number
+  // (the gold "S" pin too)
+  "title-*",
+  "label-*",
+  "trees",
+  "bld-*",
+  "ship-*",
+  "pin-*",
+  "num-*",
+  // + "hapus gambar 1 [the compass], lalu di gambar 2 ada kayak garis hijau gelap gitu [the route], hapus juga"
+  "compass",
+  "route",
+];
+/**
+ * Which drawing: the trace with HIDE applied, or — Simon's next step, 2 Nov: "lurusin garis-garis yang zigzag …
+ * pathways yang putus … simplify aja mapnya" — the ground alone, redrawn smooth (HIDE's objects aren't in it at all).
+ */
+const VERSION = "simple" as "traced" | "simple";
+/** Where Kamu stands: on the road at mid-height on the far left, west of the river, in the simple drawing's own units
+ *  (measured off a still). */
+const KAMU_ON_ROAD = { x: 222, y: 1188 }; // scripts/vi/harbour-routes.py starts the routes here too
+/** The house as wide as Simon's red box for it (sketch 4, docs/vi-style/refs/starry-harbour-route-34-simon.png), in
+ *  the drawing's units. */
+const HOUSE_SPAN = 420;
+
+/** The map, whole, as big as the canvas holds it, in the middle. */
+const MapStill = () => {
+  const c = usePalette();
+  const size = HARBOUR_SIZE[VERSION];
+  const k = Math.min(theme.canvas.width / size.w, theme.canvas.height / size.h);
+  const w = size.w * k;
+  const h = size.h * k;
+  // in VI04's route-map colours (components/RouteMap.tsx), not the reference's own (Simon, 2 Nov: "peta yang di
+  // stickman walk yang dibenerin ke warna peta yang di VI04") — white land, grey water with white ripples, pale grey
+  // roads, the bridge in the route map's bridge grey
+  const paint = useMemo(
+    () => ({ land: c.cardBg, water: NEUTRAL.right, waves: NEUTRAL.top, road: NEUTRAL.left, bridge: theme.color.houseNFrame }),
+    [c.cardBg],
+  );
+  const left = (theme.canvas.width - w) / 2;
+  const top = (theme.canvas.height - h) / 2;
+  // Kamu — VI04's, at the size it has when VI04 shows its whole map (Simon, 2 Nov: "kasih icon Kamu"), standing on
+  // a road ("icon Kamunya dibuat dari jalan di tengah paling kiri luar sungai")
+  const kamuK = MARK(MAP_FRAME.full.s);
+  const kamu: [number, number] = [left + KAMU_ON_ROAD.x * k, top + KAMU_ON_ROAD.y * k];
+  // the three ways to the house (Simon, 2 Nov: "berikan highlight ke 3 jalur ini … Gambar 4 adalah lokasi rumahnya"):
+  // VI04's dotted routes, and VI04's house where his red box is
+  const place = { left, top, k };
+  const house = harbourHouse(place);
+  const houseK = (HOUSE_SPAN * k) / HOUSE_W;
+  const scaleAt = (p: [number, number], s: number) => `translate(${p[0]} ${p[1]}) scale(${s.toFixed(4)}) translate(${-p[0]} ${-p[1]})`;
+  return (
+    <Stage>
+      <AbsoluteFill style={{ background: c.bg }} />
+      <HarbourMap x={left} y={top} h={h} hide={HIDE} paint={paint} version={VERSION} />
+      <HarbourRoutePaths {...place} />
+      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+        <g transform={scaleAt(house, houseK)}>
+          <House pal={NEUTRAL} o={houseOn(house)} />
+        </g>
+        <g transform={scaleAt(kamu, kamuK)}>
+          <Stickman pal={NEUTRAL} at={kamu} />
+        </g>
+      </svg>
+      <HarbourRouteDiscs {...place} mark={kamuK} />
+      <Name at={[kamu[0] + 36 * kamuK, kamu[1] - 178 * kamuK]} k={kamuK} text="Kamu" />
+    </Stage>
+  );
+};
 
 const SAMPLE: Record<(typeof TYPE_LEVELS)[number], string> = {
   hero: "Lorem Ipsum",
@@ -92,7 +176,7 @@ const Body = () => {
 export const StickmanWalk = () => (
   <AbsoluteFill>
     <PaletteProvider>
-      <Body />
+      {SHOW === "map" ? <MapStill /> : <Body />}
     </PaletteProvider>
   </AbsoluteFill>
 );
