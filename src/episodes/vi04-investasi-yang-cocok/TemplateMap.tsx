@@ -1,7 +1,8 @@
 /**
- * Stickman-Walk — a test composition, only to look at the walking stickman (Simon, 19 Oct: "coba buat
- * composition baru, khusus buat liat animasi stickman jalan"). Left: facing the viewer, walking on the spot on
- * an island. Right: in profile, walking across a ground line, turning round at each end.
+ * Template-map — named Stickman-Walk until 3 Nov (Simon: "Stickman-Walk ganti nama jadi Template-map"). Born as a test
+ * composition, only to look at the walking stickman (Simon, 19 Oct: "coba buat composition baru, khusus buat liat
+ * animasi stickman jalan"). Left: facing the viewer, walking on the spot on an island. Right: in profile, walking
+ * across a ground line, turning round at each end.
  *
  * Also the sandbox for the VI style tokens (Simon, 20 Oct: "coba bikin dulu di stickman-walk mulai dari nomor 1.
  * Tulis Lorem Ipsum dengan 5 kategori tersebut"): the type scale, one line per level, at the top.
@@ -18,7 +19,7 @@ import { MAP_FRAME, MARK, Name } from "./components/RouteMap";
 import { Walker } from "./components/Walker";
 import { HARBOUR_SIZE, HarbourMap, type HarbourHide } from "./components/HarbourMap";
 
-export const STICKMAN_WALK_FRAMES = 600;
+export const TEMPLATE_MAP_FRAMES = 600;
 
 /** What the composition shows: the walking test, or the still object — the traced harbour map. */
 const SHOW = "map" as "walk" | "map";
@@ -173,7 +174,7 @@ const Body = () => {
   );
 };
 
-export const StickmanWalk = () => (
+export const TemplateMap = () => (
   <AbsoluteFill>
     <PaletteProvider>
       {SHOW === "map" ? <MapStill /> : <Body />}

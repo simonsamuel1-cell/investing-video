@@ -20,6 +20,9 @@ import { continueRender, delayRender, staticFile } from "remotion";
  *  2 Nov: "rotate 90 derajat ke kanan"). */
 export const HARBOUR_SIZE = { traced: { w: 2398, h: 3598 }, simple: { w: 3598, h: 2398 } } as const;
 
+/** The simple drawing's road width, in its own units (scripts/vi/simplify-harbour-map.py ROAD_W). */
+export const HARBOUR_ROAD_W = 28;
+
 /** The two drawings: the full trace, and the ground alone redrawn simple. */
 export const HARBOUR_SRC = { traced: "art/vi04/harbour-map.svg", simple: "art/vi04/harbour-map-simple.svg" } as const;
 

@@ -27,7 +27,7 @@ import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/Ful
 import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
 import { TigaJenisUangFull, VI03_FULL_FRAMES } from "./episodes/vi03-tiga-jenis-uang/FullVideo";
 import { InvestasiYangCocokFull, VI04_FULL_FRAMES } from "./episodes/vi04-investasi-yang-cocok/FullVideo";
-import { STICKMAN_WALK_FRAMES, StickmanWalk } from "./episodes/vi04-investasi-yang-cocok/StickmanWalk";
+import { TEMPLATE_MAP_FRAMES, TemplateMap } from "./episodes/vi04-investasi-yang-cocok/TemplateMap";
 import { CaraTuntunMembantuFull, VI07_FULL_FRAMES } from "./episodes/vi07-cara-tuntun-membantu-investor/FullVideo";
 import { PAPER_SHOT_FRAMES, PaperShot } from "./episodes/proto-paper/PaperShot";
 
@@ -180,11 +180,12 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* Test: the VI04 stickman walking (front and profile), to judge the walk on its own. */}
+      {/* The VI04 template map (the harbour map, its three routes and the house); its SHOW lever still has the
+          stickman walk test (front and profile). Was "Stickman-Walk" until 3 Nov. */}
       <Composition
-        id="Stickman-Walk"
-        component={StickmanWalk}
-        durationInFrames={STICKMAN_WALK_FRAMES}
+        id="Template-map"
+        component={TemplateMap}
+        durationInFrames={TEMPLATE_MAP_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}

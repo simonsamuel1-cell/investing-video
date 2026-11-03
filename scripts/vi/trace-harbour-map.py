@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 trace-harbour-map.py — Simon's reference map (docs/vi-style/refs/starry-harbour-map.webp, 2 Nov 2026) to the tagged
-vector the Stickman-Walk still uses (public/art/vi04/harbour-map.svg, components/HarbourMap.tsx).
+vector the Template-map still uses (public/art/vi04/harbour-map.svg, components/HarbourMap.tsx).
 
   ~/.venvs/tuntun/bin/python -I scripts/vi/trace-harbour-map.py
 
@@ -10,7 +10,7 @@ Two traces of the picture at 2x, joined:
     against the land, and traced as-is half of them merge into it;
   · every OBJECT from the picture as-is (fine layers), so trees, buildings, pins and type keep their colours.
 Each path is tagged data-g="<object>" by the region boxes below (the picture's own pixels), in the trace's own
-stacking order — hide one by its name in Stickman-Walk's HIDE.
+stacking order — hide one by its name in Template-map's HIDE.
 """
 import json, os, re, sys, tempfile
 import numpy as np

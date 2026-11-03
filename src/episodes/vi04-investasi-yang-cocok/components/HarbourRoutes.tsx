@@ -1,15 +1,16 @@
 /**
  * HarbourRoutes — the three ways from Kamu to the house on the simple harbour map (Simon, 2 Nov 2026: "berikan
  * highlight ke 3 jalur ini. Gambar 1 (jembatan), gambar 2 (kapal), Gambar 3 (PEsawat). Gambar 4 adalah lokasi
- * rumahnya"), drawn as VI04's routes are (components/RouteMap.tsx): a dotted indigo line, and a disc on it with the
- * way's icon and its number. The lines come from scripts/vi/harbour-routes.py (data/harbour-routes.json): the walk
- * follows the map's own roads.
+ * rumahnya"): each a solid indigo line a little wider than the road it runs on, and — as VI04's routes
+ * (RouteMap.tsx) — a disc on it with the way's icon and its number. The lines come from scripts/vi/harbour-routes.py
+ * (data/harbour-routes.json): the walk follows the map's own roads.
  *
  * `paths` are drawn under the house and Kamu, `discs` over them; both place the drawing's units (3598 × 2398, as
  * shown) at (left, top), `k` canvas px per unit, and draw the discs at `mark` of VI04's size.
  */
 import { theme, usePalette } from "../../../core";
 import ROUTES from "../data/harbour-routes.json";
+import { HARBOUR_ROAD_W } from "./HarbourMap";
 import { Ico, NumRing } from "./kit";
 
 type P = [number, number];
@@ -17,6 +18,9 @@ type Place = { left: number; top: number; k: number };
 
 const ICON = { 1: "t-bridge-i", 2: "t-ferry-i", 3: "t-plane-i" } as Record<number, string>;
 const DISC_R = 50;
+/** A route is one solid line, this much wider than a road on each side (Simon, 3 Nov: "daripada jadi titik2, mending
+ *  langsung garis aja, sedikit lebih tebal dari jalanan (tambah 2px di kiri 2px di kanan …)"), canvas px. */
+const OVER_ROAD = 2;
 
 const on = ({ left, top, k }: Place, [x, y]: number[]): P => [left + x * k, top + y * k];
 
@@ -31,10 +35,9 @@ export const HarbourRoutePaths = (place: Place) => (
         d={r.pts.map((q, i) => `${i ? "L" : "M"}${on(place, q).map((v) => v.toFixed(1)).join(" ")}`).join("")}
         fill="none"
         stroke={theme.color.connector}
-        strokeWidth={5}
+        strokeWidth={HARBOUR_ROAD_W * place.k + 2 * OVER_ROAD}
         strokeLinecap="round"
         strokeLinejoin="round"
-        strokeDasharray="2 13"
       />
     ))}
   </svg>

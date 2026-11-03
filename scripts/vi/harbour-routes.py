@@ -7,12 +7,12 @@ rumahnya"; his four sketches are docs/vi-style/refs/starry-harbour-route-3{1,2,3
   ~/.venvs/tuntun/bin/python -I scripts/vi/harbour-routes.py
 
   1 jembatan — on foot, ON the roads: the shortest way along the road network through the stops his sketch goes by
-               (over the bridge, up to the top, down the long road, along the coast road to the house);
+               (over the bridge, up to the top, down the long road, along the coast road), then up to the house;
   2 kapal    — along his road to the west bank, then by water, his curve smoothed, and up the pier to the house;
   3 pesawat  — one straight line.
 Reads public/art/vi04/harbour-map-simple.svg (run simplify-harbour-map.py first) and writes
 src/episodes/vi04-investasi-yang-cocok/data/harbour-routes.json, in the drawing's own units as it is shown (turned:
-3598 × 2398), the same units as StickmanWalk.tsx's KAMU_ON_ROAD.
+3598 × 2398), the same units as TemplateMap.tsx's KAMU_ON_ROAD.
 """
 import json
 import os
@@ -30,8 +30,9 @@ OUT = os.path.join(ROOT, "src/episodes/vi04-investasi-yang-cocok/data/harbour-ro
 W, H = 3598, 2398  # the drawing as shown (turned 90° clockwise from the trace)
 SKETCH = (1782, 1192)  # Simon's sketches: the shown drawing, whole, at this size
 
-KAMU = (222, 1188)  # StickmanWalk.tsx KAMU_ON_ROAD
+KAMU = (222, 1188)  # TemplateMap.tsx KAMU_ON_ROAD
 HOUSE = (1436, 750)  # his red box in sketch 4 (sketch px): its middle, raised so the footprint ends at its foot
+DOOR = (1415, 800)  # the house's foot, where routes 1 and 2 end (sketch 2's pier comes up to it)
 # where each route's disc sits (sketch px; the route's nearest point): 1 on the bridge, 2 on the water, 3 midway
 DISC = {1: (506, 193), 2: (880, 855), 3: (748, 690)}
 
@@ -134,13 +135,17 @@ def catmull(pts, n=16):
 def main():
     pts, g = network()
     house = sk(HOUSE)[0]
-    # 1 — his sketch 1's stops: the bridge, the top, the long road down, the coast road in front of the house
-    walk = along_roads(pts, g, [KAMU, *sk((480, 180), (1100, 32), (1215, 320), (1265, 580), (1240, 840), (1510, 840))])
+    # every way ends AT the house (Simon, 3 Nov: "tiap ujung end jalur, harus berhenti di rumah"): the foot of the house,
+    # where the pier comes up
+    door = sk(DOOR)[0]
+    # 1 — his sketch 1's stops: the bridge, the top, the long road down, the coast road to below the house; then up to it
+    walk = along_roads(pts, g, [KAMU, *sk((480, 180), (1100, 32), (1215, 320), (1265, 580), (1240, 840), (DOOR[0], 840))])
     walk = smooth(resample(walk, 6), 3)
+    walk = np.vstack([walk, resample([walk[-1], door], 6)[1:]])
     # 2 — on foot to the west bank (sketch 2), then his curve over the water, then up the pier
     to_bank = along_roads(pts, g, [KAMU, sk((230, 570))[0]])
     water = catmull([to_bank[-1], *sk((420, 680), (600, 780), (900, 860), (1200, 895), (1415, 900))])
-    pier = np.array([water[-1], sk((1415, 800))[0]])
+    pier = np.array([water[-1], door])
     boat = np.vstack([resample(to_bank, 6), smooth(resample(water, 6), 4)[1:], resample(pier, 6)[1:]])
     # 3 — straight from Kamu to the house (sketch 3 ends at its left foot)
     plane = resample([KAMU, sk((1385, 790))[0]], 6)
