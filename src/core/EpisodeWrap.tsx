@@ -11,9 +11,12 @@
  *
  * ⚠ THE BGM AND THE LOGO ARE UNTOUCHABLE (Simon): public/essentials/BGM.mp3 is a byte-for-byte copy of
  * Simon's BGM — no trim, gain, fade, loop or re-encode; it plays from frame 0 and stops where the video ends.
+ * `bgmSrc` puts an episode's own bed there instead, when Simon asks for one (VI04, 3 Nov 2026: his "Background
+ * Music.mp3" looped and levelled by scripts/vi/bgm-loop.py, longer than any video): it plays from frame 0 and is
+ * faded out over the video's last BGM_FADE seconds, so it never stops dead. Essentials/BGM.mp3 is not touched.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Freeze, Img, OffthreadVideo, Sequence, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, Audio, Freeze, Img, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Cue } from "./Captions";
 import { Captions } from "./Captions";
 import { cutInStyle, cutOutStyle } from "./CameraCut";
@@ -45,6 +48,8 @@ export type NextVideo = { vo: string; seconds: number; scene: React.ReactNode; c
 export const NEXT_PAUSE = 30;
 const NEXT_HOLD_SECS = 1;
 const NEXT_CUT_SECS = 0.4;
+/** An episode's own bed (`bgmSrc`) fades out over the video's last seconds. */
+const BGM_FADE = 2;
 const nextTail = (next: NextVideo, fps: number) => NEXT_PAUSE + Math.round(next.seconds * fps) + Math.round(NEXT_HOLD_SECS * fps);
 
 /**
@@ -88,13 +93,13 @@ const EndingLogo = ({ frames }: { frames: number }) => {
     </AbsoluteFill>
   );
 };
-const EpisodeFade = ({ frames }: { frames: number }) => {
+const EpisodeFade = ({ frames, to }: { frames: number; to?: string }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const o = progressInOut(f, frames - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
   if (o <= 0.001) return null;
-  return <AbsoluteFill style={{ background: c.bg, opacity: o }} />;
+  return <AbsoluteFill style={{ background: to ?? c.bg, opacity: o }} />;
 };
 
 export const fullFrames = (
@@ -109,6 +114,18 @@ export const fullFrames = (
   (extra.outro === false ? 0 : outroFrames(fps));
 
 /** Cut a picture in or out on `cut`; `from` = the global frame this Sequence starts on. */
+/**
+ * The incoming half of a cut is shown only from the cut's midpoint on (as every cut inside an episode is: its scene's
+ * Sequence starts there). Before it the next-video scene is mounted — its clocks run from `nextFrom` — but not seen,
+ * so the frozen last frame stays on screen through the first half of the move instead of vanishing under the next
+ * scene's paper on the move's first frame (Simon, 3 Nov 2026: "dari scene terakhir ke scene 'video selanjutnya' tuh
+ * kayak ga smooth"). `at` is local to the enclosing Sequence.
+ */
+const FromMidpoint = ({ at, children }: { at: number; children: React.ReactNode }) => <AbsoluteFill style={{ opacity: useCurrentFrame() >= at ? 1 : 0 }}>{children}</AbsoluteFill>;
+
+/** The paper under the ending's cut, so the frozen frame moving aside never shows the black behind it. */
+const Paper = () => <AbsoluteFill style={{ background: usePalette().bg }} />;
+
 const CutLayer = ({ cut, from, dir, children }: { cut: Cut; from: number; dir: "in" | "out"; children: React.ReactNode }) => {
   const g = useCurrentFrame() + from;
   /** No transform at all outside the move: the episode under it renders exactly as it does on its own. */
@@ -124,8 +141,8 @@ const CutLayer = ({ cut, from, dir, children }: { cut: Cut; from: number; dir: "
  * `intro={false}` / `outro={false}` leave either clip out (TA11, 20 Oct 2026: "kasih video CTA aja" — the episode,
  * its fade, CTA.mp4, and nothing else).
  */
-export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; frames: number; name: string; bgm?: boolean; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
-  const { fps } = useVideoConfig();
+export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; frames: number; name: string; bgm?: boolean; bgmSrc?: string; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
+  const { fps, durationInFrames } = useVideoConfig();
   const I = intro ? introFrames(fps) : 0;
   const O = outro ? outroFrames(fps) : 0;
   const tail = next ? nextTail(next, fps) : 0;
@@ -136,6 +153,8 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
   const nextFrom = clipAt - half;
   const nextDur = I + frames + tail - nextFrom;
   const C = cta ? ctaFrames(fps) : 0;
+  /** The fade ends on what comes next: the Outro's own grey when the Outro follows straight on. */
+  const fadeTo = outro && !cta ? theme.color.outroGround : undefined;
   return (
     <AbsoluteFill>
       {intro ? (
@@ -154,6 +173,11 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
               level on purpose: inside a later Sequence, Remotion adds that Sequence's start to the frozen frame,
               the sum runs past the composition's length and is clamped — and the pause showed a frame from the
               first minute instead. */}
+          <Sequence from={I + frames} durationInFrames={tail} name="Paper · ending" layout="none">
+            <PaletteProvider>
+              <Paper />
+            </PaletteProvider>
+          </Sequence>
           <CutLayer cut={cut} from={0} dir="out">
             <Freeze frame={I + frames - 1} active={(f) => f >= I + frames}>
               <Sequence from={I} durationInFrames={frames + NEXT_PAUSE + half} name={name}>
@@ -170,9 +194,11 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
           {/* the next video, over the outro clip */}
           <Sequence from={nextFrom} durationInFrames={nextDur} name="Next video">
             <PaletteProvider>
-              <CutLayer cut={cut} from={nextFrom} dir="in">
-                <NextClipProvider value={{ lead: half }}>{next.scene}</NextClipProvider>
-              </CutLayer>
+              <FromMidpoint at={half}>
+                <CutLayer cut={cut} from={nextFrom} dir="in">
+                  <NextClipProvider value={{ lead: half }}>{next.scene}</NextClipProvider>
+                </CutLayer>
+              </FromMidpoint>
               <Sequence from={half} durationInFrames={Math.round(next.seconds * fps)} name="Outro clip">
                 <Audio src={staticFile(next.vo)} />
               </Sequence>
@@ -181,7 +207,7 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
                   <Captions cues={next.cues} />
                 </Sequence>
               ) : null}
-              <EpisodeFade frames={nextDur} />
+              <EpisodeFade frames={nextDur} to={fadeTo} />
             </PaletteProvider>
           </Sequence>
         </>
@@ -189,7 +215,7 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
         <Sequence from={I} durationInFrames={frames} name={name}>
           {children}
           <PaletteProvider>
-            <EpisodeFade frames={frames} />
+            <EpisodeFade frames={frames} to={fadeTo} />
           </PaletteProvider>
         </Sequence>
       )}
@@ -203,8 +229,12 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, next, cta = false
           <OffthreadVideo src={staticFile("essentials/Outro.mp4")} />
         </Sequence>
       ) : null}
-      {/* the BGM, as it is, under all of it */}
-      {bgm ? <Audio src={staticFile("essentials/BGM.mp3")} /> : null}
+      {/* the BGM, as it is, under all of it — or the episode's own bed, faded out at the very end */}
+      {bgm && bgmSrc ? (
+        <Audio src={staticFile(bgmSrc)} volume={(f) => interpolate(f, [durationInFrames - Math.round(BGM_FADE * fps), durationInFrames - 1], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+      ) : bgm ? (
+        <Audio src={staticFile("essentials/BGM.mp3")} />
+      ) : null}
     </AbsoluteFill>
   );
 };

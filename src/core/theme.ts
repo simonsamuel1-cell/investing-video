@@ -638,6 +638,11 @@ export const theme = {
     houseNChimneyShade: "#C7CAD3",
     houseNGlass: "#E8EDF3",
     houseNFrame: "#C3C6CF",
+    /**
+     * Essentials/Outro.mp4's own ground on its first frame (measured, 3 Nov 2026): the end fade goes to this, not to
+     * the paper, so the cut into the Outro has no step in brightness. The Outro itself is untouched.
+     */
+    outroGround: "#EEEEEE",
     houseNPlanter: "#CFD2DA",
     houseNBush: "#B9BDC6",
     marker: "#E8201A",
