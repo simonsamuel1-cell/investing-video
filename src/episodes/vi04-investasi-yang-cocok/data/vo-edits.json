@@ -62,19 +62,65 @@
     {
       "src": "ORIGINAL",
       "from": 51.66,
+      "to": 66.445
+    },
+    {
+      "_": "3 Nov, SC03 (Simon: 'Di 4480, tambahin jeda 30 frame'): +30f after 'tiga cara buat sampai ke seberang.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 66.445,
       "to": 132.7
     },
     {
       "_": "19 Oct: 0.5 s (30 frames) out of the pause before “Ombak” (Simon: \"8365-8432 kosong, remove 30 frame\")",
       "src": "ORIGINAL",
       "from": 133.2,
-      "to": 165.7
+      "to": 138.98
     },
     {
-      "_": "19 Oct, revisi 5: 'Dua-duanya bisa terjadi.' (SC04)",
-      "src": "Revisi VO/Scene 04 Part 1.mp3",
-      "to": 1.38,
-      "match": "original 165.8-167.25"
+      "_": "3 Nov, SC04 (Simon: 'RevisiBaru_02 adalah VO utamanya. 03 dan 04 adalah untuk memperbaiki 02'): 'Kita lihat dua contoh nyata. … di harga sekitar Rp4.400,' (02)",
+      "src": "Revisi VO/RevisiBaru_02.mp3",
+      "to": 6.52,
+      "match": "original 139.11-166.86",
+      "level": [
+        0,
+        54.19
+      ]
+    },
+    {
+      "_": "3 Nov, SC04 (Simon: 'RevisiBaru_02 adalah VO utamanya. 03 dan 04 adalah untuk memperbaiki 02'): 'saat market jatuh pada 2020, harganya sempat turun ke sekitar Rp2.170.' (03, the re-take)",
+      "src": "Revisi VO/RevisiBaru_03.mp3",
+      "to": 5.16,
+      "match": "original 139.11-166.86"
+    },
+    {
+      "_": "3 Nov, SC04 (Simon: 'RevisiBaru_02 adalah VO utamanya. 03 dan 04 adalah untuk memperbaiki 02'): 'Artinya, … Tapi saham lain bisa punya perjalanan yang berbeda.' (02)",
+      "src": "Revisi VO/RevisiBaru_02.mp3",
+      "from": 12.45,
+      "to": 35.08,
+      "match": "original 139.11-166.86",
+      "level": [
+        0,
+        54.19
+      ]
+    },
+    {
+      "_": "3 Nov, SC04 (Simon: 'RevisiBaru_02 adalah VO utamanya. 03 dan 04 adalah untuk memperbaiki 02'): 'Kalau membeli UNVR pada akhir 2019 di harga sekitar Rp8.400,' (04, the re-take — 02 says “8.400.000”)",
+      "src": "Revisi VO/RevisiBaru_04.mp3",
+      "to": 5.83,
+      "match": "original 139.11-166.86"
+    },
+    {
+      "_": "3 Nov, SC04 (Simon: 'RevisiBaru_02 adalah VO utamanya. 03 dan 04 adalah untuk memperbaiki 02'): 'pada akhir Maret 2024 … Dua-duanya adalah kejadian nyata.' (02)",
+      "src": "Revisi VO/RevisiBaru_02.mp3",
+      "from": 40.08,
+      "match": "original 139.11-166.86",
+      "level": [
+        0,
+        54.19
+      ]
     },
     {
       "src": "ORIGINAL",
@@ -90,6 +136,17 @@
     {
       "src": "ORIGINAL",
       "from": 171.3,
+      "to": 179.58
+    },
+    {
+      "_": "3 Nov, SC04 (Simon: 'Selanjutnya replace vo pake ini'): new line 'Kalau penurunan sebesar itu membuat kita langsung panik,' + the same 'mungkin ombaknya memang terlalu besar buat kita. Kalau belum kuat, nggak masalah. Pilih jalur dengan ombak yang lebih kecil.'",
+      "src": "Revisi VO/RevisiBaru_05.mp3",
+      "to": 12.04,
+      "match": "original 179.71-188.34"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 188.42,
       "to": 226.84
     },
     {

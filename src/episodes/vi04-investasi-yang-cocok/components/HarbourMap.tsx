@@ -15,6 +15,8 @@
  */
 import { useEffect, useMemo, useState } from "react";
 import { continueRender, delayRender, staticFile } from "remotion";
+import { theme } from "../../../core";
+import { NEUTRAL } from "./Islands";
 
 /** Each drawing's own size: the trace is the reference at 2x; the simple one is that turned 90° clockwise (Simon,
  *  2 Nov: "rotate 90 derajat ke kanan"). */
@@ -83,11 +85,17 @@ export const HARBOUR_LAYERS = [
 ] as const;
 export type HarbourLayer = (typeof HARBOUR_LAYERS)[number];
 /** One object by name, or a family by its prefix. */
-export type HarbourHide = HarbourLayer | "title-*" | "label-*" | "bld-*" | "ship-*" | "pin-*" | "num-*";
+export type HarbourHide = HarbourLayer | "title-*" | "label-*" | "bld-*" | "ship-*" | "pin-*" | "num-*" | SimpleLayer;
+/** The simple drawing's tags. */
+type SimpleLayer = "land" | "water" | "road" | "bridge";
 
 /** A colour per tag (`land`, `water`, `waves`, `road`, `bridge` …): every fill and stroke of that tag's paths. */
 export type HarbourPaint = Readonly<Record<string, string>>;
 const NO_PAINT: HarbourPaint = {};
+/** The simple drawing in VI04's route-map colours, not the reference's own (Simon, 2 Nov: "peta yang di stickman walk
+ *  yang dibenerin ke warna peta yang di VI04"): `land` (the card's white), grey water with white ripples, pale grey
+ *  roads, the bridge in the old route map's bridge grey. */
+export const harbourPaint = (land: string): HarbourPaint => ({ land, water: NEUTRAL.right, waves: NEUTRAL.top, road: NEUTRAL.left, bridge: theme.color.houseNFrame });
 
 /** The map `h` tall at its own aspect, its top-left at (x, y); `hide` drops objects by name; `paint` recolours by tag. */
 export const HarbourMap = ({ x, y, h, hide = [], paint = NO_PAINT, version = "traced" }: { x: number; y: number; h: number; hide?: readonly HarbourHide[]; paint?: HarbourPaint; version?: keyof typeof HARBOUR_SRC }) => {

@@ -17,7 +17,8 @@ import { HOUSE_W, House, NEUTRAL, Stickman, houseOn } from "./components/Islands
 import { HarbourRouteDiscs, HarbourRoutePaths, harbourHouse } from "./components/HarbourRoutes";
 import { MAP_FRAME, MARK, Name } from "./components/RouteMap";
 import { Walker } from "./components/Walker";
-import { HARBOUR_SIZE, HarbourMap, type HarbourHide } from "./components/HarbourMap";
+import { HARBOUR_SIZE, HarbourMap, harbourPaint, type HarbourHide } from "./components/HarbourMap";
+import ROUTES from "./data/harbour-routes.json";
 
 export const TEMPLATE_MAP_FRAMES = 600;
 
@@ -47,7 +48,7 @@ const HIDE: HarbourHide[] = [
 const VERSION = "simple" as "traced" | "simple";
 /** Where Kamu stands: on the road at mid-height on the far left, west of the river, in the simple drawing's own units
  *  (measured off a still). */
-const KAMU_ON_ROAD = { x: 222, y: 1188 }; // scripts/vi/harbour-routes.py starts the routes here too
+const KAMU_ON_ROAD = { x: ROUTES.kamu[0], y: ROUTES.kamu[1] }; // set in scripts/vi/harbour-routes.py, where the routes start
 /** The house as wide as Simon's red box for it (sketch 4, docs/vi-style/refs/starry-harbour-route-34-simon.png), in
  *  the drawing's units. */
 const HOUSE_SPAN = 420;
@@ -59,13 +60,7 @@ const MapStill = () => {
   const k = Math.min(theme.canvas.width / size.w, theme.canvas.height / size.h);
   const w = size.w * k;
   const h = size.h * k;
-  // in VI04's route-map colours (components/RouteMap.tsx), not the reference's own (Simon, 2 Nov: "peta yang di
-  // stickman walk yang dibenerin ke warna peta yang di VI04") — white land, grey water with white ripples, pale grey
-  // roads, the bridge in the route map's bridge grey
-  const paint = useMemo(
-    () => ({ land: c.cardBg, water: NEUTRAL.right, waves: NEUTRAL.top, road: NEUTRAL.left, bridge: theme.color.houseNFrame }),
-    [c.cardBg],
-  );
+  const paint = useMemo(() => harbourPaint(c.cardBg), [c.cardBg]);
   const left = (theme.canvas.width - w) / 2;
   const top = (theme.canvas.height - h) / 2;
   // Kamu — VI04's, at the size it has when VI04 shows its whole map (Simon, 2 Nov: "kasih icon Kamu"), standing on

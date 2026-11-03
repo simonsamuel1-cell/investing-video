@@ -7,18 +7,22 @@
  *     it then stays as the heading.
  *  B  "“Ombak” adalah seberapa dalam investasi kita sempat turun": a line that rises, falls and recovers; its fall
  *     below the earlier high is shaded and measured — that depth is the wave.
- *  C/D the bank stock (unnamed, as the script): 1.880 in Mei 2020 → down about 21% (Rp10 juta → Rp7,9 juta) →
- *     7.300 four years on, total return about 288%. The line is SCHEMATIC — a shape through the script's own
- *     figures, never above the buy price before its low nor below the low after it — so no figure appears that
- *     the script doesn't say.
- *  E  the same chart moves aside (its box shrinks — a new grid, not a scale) for another stock: 600 → 300, never
- *     back to the buy price. "Dua-duanya bisa terjadi."
+ *  C/D "Kita lihat dua contoh nyata." (3 Nov 2026, Simon's new lines and VO): BBRI, its REAL daily closes from the end
+ *     of 2019 to the end of March 2024 (data/sc04-prices.json, scripts/vi/sc04-prices.py): bought at 4.400, down to
+ *     2.170 in the 2020 fall (Rp10 juta → Rp4,9 juta), 6.050 at the end of March 2024 (→ Rp13,75 juta, "belum
+ *     termasuk dividen"). Only the figures the VO says are written on it.
+ *  E  "Tapi saham lain bisa punya perjalanan yang berbeda.": the BBRI chart moves aside (its box shrinks — a new
+ *     grid, not a scale) for UNVR, its real closes too: bought at 8.400, 2.700 at the end of March 2024 (Rp10 juta →
+ *     Rp3,2 juta), still under the buy price. Each card keeps its outcome at its foot. "Dua-duanya adalah kejadian
+ *     nyata."
  *  F  the question for YOU: a dashed amber box opening from its centre.
- *  G  "saat harga naik … berani" and "saat market benar-benar turun", linked; "jual karena panik" hangs off the second.
+ *  G  "saat harga naik … berani" and "saat market benar-benar turun", linked; "Kalau penurunan sebesar itu membuat kita langsung panik," hangs off the
+ *     second (3 Nov: the line and VO RevisiBaru_05).
  *  H  "nggak masalah": the three routes again, and the one with the smallest waves is picked.
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { Connector, SoftGround, SourceTag, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import PRICES from "../data/sc04-prices.json";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, dockStyle, ease, IsoIcon, Line, QUESTION_CARD, ROUTE_CARD, ROUTE_CARDS, RouteCard, useWords } from "../components/kit";
 import { ASK as SC03_ASK, AskCard, AskLead, AskMain, askX } from "./Routes";
@@ -72,29 +76,59 @@ const DEF_LOW = 0.55;
 /** Where the line first gets back above the high it fell from. */
 const DEF_BACK = 0.74;
 
-// C–E — the bank stock (the script's figures) and another one
-const BANK = { buy: 1880, low: 1880 * (1 - 0.21), sell: 7300, lowAt: 0.2 };
-const BANK_PTS = jag(
-  [[0, BANK.buy], [0.1, 1700], [BANK.lowAt, BANK.low], [0.32, 2050], [0.42, 1850], [0.58, 3300], [0.68, 3050], [0.82, 5100], [0.9, 4800], [1, BANK.sell]],
-  (t, v) => (t < BANK.lowAt ? Math.min(v, BANK.buy) : Math.max(v, BANK.low * 1.03)),
-);
-const bankY = (v: number) => (Math.log(v) - Math.log(BANK.low * 0.92)) / (Math.log(BANK.sell * 1.04) - Math.log(BANK.low * 0.92));
-const OTHER = { buy: 600, low: 300, lowAt: 0.4 };
-const OTHER_PTS = jag(
-  [[0, OTHER.buy], [0.12, 520], [0.22, 555], [OTHER.lowAt, OTHER.low], [0.55, 380], [0.68, 345], [0.82, 430], [1, 395]],
-  (t, v) => (t < OTHER.lowAt ? Math.min(v, OTHER.buy) : Math.min(Math.max(v, OTHER.low * 1.03), OTHER.buy * 0.82)),
-);
-const otherY = (v: number) => (v - 260) / (700 - 260);
+// C–E — two real stocks, their daily closes (scripts/vi/sc04-prices.py); the figures on screen are the series' own,
+// the very ones the VO says
+type Series = { t: number[]; close: number[]; low: { t: number; close: number } };
+const knots = (x: Series): Knot[] => x.t.map((t, i) => [t, x.close[i]]);
+/** A chart's height on a log scale, from just under its lowest close to over its highest — room above it for the
+ *  buy price's tag under the card's name. */
+const logY = (x: Series) => {
+  const lo = Math.log(Math.min(...x.close) * 0.92);
+  const hi = Math.log(Math.max(...x.close) * 1.3);
+  return (v: number) => (Math.log(v) - lo) / (hi - lo);
+};
+const STOCKS = {
+  bbri: { s: PRICES.BBRI as Series, pts: knots(PRICES.BBRI), y: logY(PRICES.BBRI), buy: PRICES.BBRI.close[0], end: PRICES.BBRI.close[PRICES.BBRI.close.length - 1] },
+  unvr: { s: PRICES.UNVR as Series, pts: knots(PRICES.UNVR), y: logY(PRICES.UNVR), buy: PRICES.UNVR.close[0], end: PRICES.UNVR.close[PRICES.UNVR.close.length - 1] },
+};
+/** The series' first and last day as "Des 2019" / "Mar 2024": the month in three letters, the year in four (Simon,
+ *  3 Nov 2026: "Di bawah grafik, di atas angka, kasih angka bulan dan tahunnya. 3 huruf bulan, 4 angka tahun"). */
+const BULAN = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+const monthYear = (iso: string) => `${BULAN[Number(iso.slice(5, 7)) - 1]} ${iso.slice(0, 4)}`;
+const SPAN = [monthYear(PRICES.from), monthYear(PRICES.to)] as const;
+/** A price as Indonesians write it: 4.400. */
+const idr = (v: number) => Math.round(v).toLocaleString("id-ID");
+/** Rp10 juta through a stock, at a price: what it became — and how the VO says it (Rp4,9 / Rp13,75 / Rp3,2 juta). */
+const STAKE = 10;
+const worth = (buy: number, at: number) => (STAKE * at) / buy;
+const juta = (v: number, places = 1) => `Rp${(Math.round(v * 10 ** places) / 10 ** places).toString().replace(".", ",")} juta`;
+const BBRI_BAL = { low: worth(STOCKS.bbri.buy, STOCKS.bbri.s.low.close), end: worth(STOCKS.bbri.buy, STOCKS.bbri.end) };
+const UNVR_BAL = { end: worth(STOCKS.unvr.buy, STOCKS.unvr.end) };
 
 const BIG: Box = { x: LEFT, y: 270, w: 1080, h: 610 };
 const HALF_L: Box = { x: LEFT, y: 270, w: 800, h: 560 };
 const HALF_R: Box = { x: 980, y: 270, w: 800, h: 560 };
-const SIDE = { x: 1280, w: 500, h: 200, ys: [330, 590] };
+/**
+ * BBRI's balance as three cards down the right of its chart (Simon, 3 Nov 2026: "dari Balance 10 juta, lalu muncul
+ * tanda panah ke bawah muncul balance baru 4,9juta, lalu muncul lagi tanda panah ke bawah muncul balance baru
+ * 13,75juta. Ukurannya dibuat biar fit ketiganya termasuk tanda panah"): the column spans the chart card's own height,
+ * each card hugs its lines with the same padding, and the two arrows share what is left.
+ */
+const BAL = { x: 1280, w: 500, top: BIG.y, bottom: BIG.y + BIG.h, pad: 24, value: 52, note: 24, gap: 12 };
+const BAL_LABEL_H = theme.type.label.size * theme.type.label.leading;
+const BAL_VALUE_H = BAL.value * theme.type.statement.leading;
+const BAL_NOTE_H = BAL.note * theme.type.label.leading;
+const BAL_H = [0, 1, 2].map((i) => 2 * BAL.pad + BAL_LABEL_H + 4 + BAL_VALUE_H + (i === 2 ? 2 + BAL_NOTE_H : 0));
+const BAL_ARROW = (BAL.bottom - BAL.top - BAL_H[0] - BAL_H[1] - BAL_H[2]) / 2;
+const BAL_Y = [BAL.top, BAL.top + BAL_H[0] + BAL_ARROW, BAL.top + BAL_H[0] + BAL_H[1] + 2 * BAL_ARROW];
 
-/** "Rp10 juta" counting down to "Rp7,9 juta". */
-const rupiahJuta = (v: number) => `Rp${Math.abs(v - 10) < 0.05 ? "10" : v.toFixed(1).replace(".", ",")} juta`;
-/** Rp10 juta held from 1.880 to 7.300 — the script's "total return sekitar 288%" — is Rp10 juta × 7.300 / 1.880. */
-const BALANCE = { start: 10, low: 10 * (1 - 0.21), end: (10 * BANK.sell) / BANK.buy };
+/** The balance as it counts: one decimal on the way, the VO's own figure once it lands (13,75 has two). */
+const balanceText = (v: number, landed: number | null, places = 1) => (landed !== null && Math.abs(v - landed) < 1e-6 ? juta(landed, places) : Math.abs(v - STAKE) < 0.05 ? `Rp${STAKE} juta` : juta(v));
+/** The outcome at a card's foot, once the card has gone half-width: one row, left to right (Simon, 3 Nov: "ganti aja
+ *  layoutnya, jadi ke kanan. 10juta nya sama besar aja dengan 13.75juta"). `dy`: its top, up from the card's bottom. */
+const FOOT = { dy: 62, gap: 16, arrow: 40 };
+/** The dates under a chart's plot, over its foot: `dy` below the plot's floor. */
+const DATES = { dy: 6, size: 20 };
 
 // F — the question for you
 const ASK = { w: 1300, h: 250, y: 400 };
@@ -145,12 +179,13 @@ const Dot = ({ x, y, p }: { x: number; y: number; p: number }) => {
 };
 
 /** A figure by a point: a small word over it, the number under. `anchor` says which side of (x, y) it sits on. */
-const Tag = ({ x, y, lead, value, p, anchor = "above" }: { x: number; y: number; lead?: string; value: string; p: number; anchor?: "above" | "right" | "below" }) => {
+const Tag = ({ x, y, lead, value, p, anchor = "above" }: { x: number; y: number; lead?: string; value: string; p: number; anchor?: "above" | "right" | "below" | "left" }) => {
   const c = usePalette();
   if (p <= 0.001) return null;
   const pos =
     anchor === "above" ? { left: x, top: y - 24, transform: "translate(-50%, -100%)", textAlign: "center" as const }
     : anchor === "below" ? { left: x, top: y + 22, transform: "translateX(-50%)", textAlign: "center" as const }
+    : anchor === "left" ? { left: x - 26, top: y, transform: "translate(-100%, -50%)", textAlign: "right" as const }
     : { left: x + 26, top: y, transform: "translateY(-50%)", textAlign: "left" as const };
   return (
     <div style={{ position: "absolute", ...pos, opacity: p, whiteSpace: "nowrap" }}>
@@ -167,6 +202,61 @@ const Dash = ({ x1, y1, x2, y2, p = 1 }: { x1: number; y1: number; x2: number; y
       <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={theme.color.connector} strokeWidth={2.5} strokeDasharray="2 9" strokeLinecap="round" />
     </svg>
   );
+
+/** An arrow growing straight down from y0 to y1, its head riding the tip (SC03's arrow, turned). */
+const DownArrow = ({ x, y0, y1, p }: { x: number; y0: number; y1: number; p: number }) => {
+  if (p <= 0.001) return null;
+  const y = y0 + (y1 - y0) * p;
+  return (
+    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+      <line x1={x} y1={y0} x2={x} y2={y} stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" />
+      <path d={`M ${x - 11} ${y - 13} L ${x} ${y} L ${x + 11} ${y - 13}`} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+};
+
+/** One of BBRI's balance cards: "Balance" and the figure; the last one also has room for "belum termasuk dividen"
+ *  (`note`, its opacity). */
+const BalanceCard = ({ i, value, color, note }: { i: number; value: string; color: string; note?: number }) => {
+  const c = usePalette();
+  return (
+    <Card x={BAL.x} y={BAL_Y[i]} w={BAL.w} h={BAL_H[i]} style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 44px" }}>
+      <div style={{ ...typeStyle("label"), color: c.slate }}>Balance</div>
+      <div style={{ marginTop: 4, ...typeStyle("statement"), fontSize: BAL.value, color, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{value}</div>
+      {note !== undefined ? <div style={{ marginTop: 2, ...typeStyle("label"), fontSize: BAL.note, color: c.slate, opacity: note }}>belum termasuk dividen</div> : null}
+    </Card>
+  );
+};
+
+/** The first and last month under a plot: one at its left edge, one at its right. */
+const Dates = ({ area, opacity }: { area: Box; opacity: number }) => {
+  const c = usePalette();
+  if (opacity <= 0.001) return null;
+  const st = { position: "absolute", top: area.y + area.h + DATES.dy, ...typeStyle("label"), fontSize: DATES.size, color: c.slate, whiteSpace: "nowrap", opacity } as const;
+  return (
+    <>
+      <div style={{ ...st, left: area.x }}>{SPAN[0]}</div>
+      <div style={{ ...st, left: area.x + area.w, transform: "translateX(-100%)" }}>{SPAN[1]}</div>
+    </>
+  );
+};
+
+/** "Rp10 juta → Rp…": the stake and what it became at the same size, an arrow between them (Simon, 3 Nov: "'Jadi'
+ *  ganti jadi tanda panah aja") — the balance arrows' line and head, turned to the right. */
+const Foot = ({ value, color }: { value: string; color: string }) => {
+  const c = usePalette();
+  const big = { ...typeStyle("body"), fontWeight: 600, fontVariantNumeric: "tabular-nums" } as const;
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: FOOT.gap, whiteSpace: "nowrap" }}>
+      <div style={{ ...big, color: c.ink }}>Rp{STAKE} juta</div>
+      <svg width={FOOT.arrow} height={24} style={{ overflow: "visible", flex: "none" }}>
+        <line x1={2} y1={12} x2={FOOT.arrow - 2} y2={12} stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" />
+        <path d={`M ${FOOT.arrow - 13} 3 L ${FOOT.arrow - 2} 12 L ${FOOT.arrow - 13} 21`} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <div style={{ ...big, color }}>{value}</div>
+    </div>
+  );
+};
 
 /** The depth of a fall: a bracket from the earlier level down to the low. */
 const Depth = ({ x, y0, y1, p }: { x: number; y0: number; y1: number; p: number }) =>
@@ -192,12 +282,12 @@ export const SC04 = () => {
   const dock = ease(f, W("“Ombak” adalah"), m.move);
   const lerp = (a: number, b: number) => a + (b - a) * morph;
   const defAt = W("“Ombak” adalah");
-  const exAt = W("Contohnya");
+  const exAt = W("Kita lihat dua contoh");
   const otherAt = W("Tapi saham lain");
   const askAt = W("Jadi pertanyaannya");
   const upAt = W("Saat harga naik");
   const honestAt = W("Yang lebih jujur");
-  const panicAt = W("Kalau langsung jual");
+  const panicAt = W("Kalau penurunan sebesar");
   const okAt = W("Kalau belum kuat");
 
   // B
@@ -210,30 +300,35 @@ export const SC04 = () => {
   const lowV = DEF_KNOTS[4][1];
   const shade = DEF_PTS.filter(([t]) => t >= DEF_PEAK && t <= DEF_BACK);
 
-  // C–E: the bank chart, big, then moved aside
+  // C–E: BBRI, big, then moved aside for UNVR
   const aside = ease(f, otherAt, m.move);
   const bb = mixBox(BIG, HALF_L, aside);
   const ba = plot(bb, CARD_PAD);
+  const B = STOCKS.bbri;
   const bx = (t: number) => ba.x + t * ba.w;
-  const by = (v: number) => ba.y + (1 - bankY(v)) * ba.h;
-  const leg1 = ease(f, W("sempat turun maksimum"), m.sec(0.8));
-  const leg2 = ease(f, W("empat tahun kemudian"), m.sec(1.6));
-  const lowX = BANK.lowAt * ba.w;
+  const by = (v: number) => ba.y + (1 - B.y(v)) * ba.h;
+  const buyB = ease(f, W("Rp4.400"), m.reveal);
+  const leg1 = ease(f, W("saat market jatuh"), m.sec(1.6));
+  const leg2 = ease(f, W("Tapi kalau tetap dipegang"), m.sec(2.0));
+  const lowX = B.s.low.t * ba.w;
   const bUpTo = leg2 > 0 ? lowX + (ba.w - lowX) * leg2 : lowX * leg1;
-  const drop = ease(f, W("21%"), m.reveal);
-  const count = ease(f, W("sempat menjadi"), m.sec(1.0));
-  /**
-   * The balance: Rp10 juta down to Rp7,9 juta (red), then — as the line climbs to 7.300 — up to Rp38,8 juta (green),
-   * the script's +288% (Simon, 22 Oct: "harusnya jadi naik sesuai dengan perhitungan return 288%").
-   */
-  const balance = BALANCE.start + (BALANCE.low - BALANCE.start) * count + (BALANCE.end - BALANCE.low) * leg2;
+  const lowB = ease(f, W("Rp2.170"), m.reveal);
+  const endB = ease(f, W("Rp6.050"), m.reveal);
+  /** Rp10 juta, then an arrow down to Rp4,9 juta (red), then another down to Rp13,75 juta (green): each arrow grows
+   *  into place just before its figure is said, and the new card comes up on it. */
+  const balAt = [W("investasi Rp10 juta"), W("Rp4,9"), W("Rp13,75")];
+  const arrowFor = m.sec(0.6);
+  const balArrow = [1, 2].map((i) => ease(f, balAt[i] - arrowFor, arrowFor));
+  const U = STOCKS.unvr;
   const oa = plot(HALF_R, CARD_PAD);
   const ox = (t: number) => oa.x + t * oa.w;
-  const oy = (v: number) => oa.y + (1 - otherY(v)) * oa.h;
-  const oLeg1 = ease(f, W("turun ke 300"), m.sec(0.7));
-  const oLeg2 = ease(f, W("nggak pernah kembali"), m.sec(1.0));
-  const oLowX = OTHER.lowAt * oa.w;
-  const oUpTo = oLeg2 > 0 ? oLowX + (oa.w - oLowX) * oLeg2 : oLowX * oLeg1;
+  const oy = (v: number) => oa.y + (1 - U.y(v)) * oa.h;
+  const buyU = ease(f, W("Rp8.400"), m.reveal);
+  const oUpTo = oa.w * ease(f, W("pada akhir Maret"), m.sec(1.6));
+  const endU = ease(f, W("Rp2.700"), m.reveal);
+  const toLowU = ease(f, W("tinggal sekitar"), m.sec(1.0));
+  const balanceU = STAKE + (UNVR_BAL.end - STAKE) * toLowU;
+  const balColor = (v: number) => interpolateColors(v, [STAKE - 0.7, STAKE - 0.05, STAKE + 0.05, STAKE + 0.7], [theme.color.calendarRed, c.ink, c.ink, theme.color.checkGreen]);
 
   // F
   const open = ease(f, askAt + m.sec(0.1), m.sec(0.9));
@@ -290,52 +385,74 @@ export const SC04 = () => {
         </Appear>
       </Appear>
 
-      {/* C–E — the bank stock, then beside another one */}
+      {/* C–E — BBRI, then beside it UNVR: real closes, the VO's figures on them */}
       <Appear at={exAt} out={askAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <Card x={bb.x} y={bb.y} w={bb.w} h={bb.h} />
-        <Appear at={W("Mei 2020")} style={{ left: bb.x + CARD_PAD.l, top: bb.y + 36 }}>
-          <div style={{ ...typeStyle("label"), color: c.ink, whiteSpace: "nowrap" }}>Saham bank, 2020</div>
+        <Appear at={W("BBRI")} style={{ left: bb.x + CARD_PAD.l, top: bb.y + 36 }}>
+          <div style={{ ...typeStyle("label"), color: c.ink, whiteSpace: "nowrap" }}>BBRI</div>
         </Appear>
-        <ChartLine pts={BANK_PTS} yOf={bankY} area={ba} upTo={bUpTo} id="vi04-sc04-bank" fill />
-        <Dash x1={bx(0)} y1={by(BANK.buy)} x2={bx(BANK.lowAt) + 40} y2={by(BANK.buy)} p={drop * (1 - aside)} />
-        <Depth x={bx(BANK.lowAt)} y0={by(BANK.buy)} y1={by(BANK.low)} p={drop * (1 - aside)} />
-        <Dot x={bx(0)} y={by(BANK.buy)} p={ease(f, W("1.880"), m.reveal)} />
-        <Tag x={bx(0) + 10} y={by(BANK.buy)} lead="Beli" value="1.880" p={ease(f, W("1.880"), m.reveal)} />
-        <Dot x={bx(BANK.lowAt)} y={by(BANK.low)} p={drop} />
-        <Tag x={bx(BANK.lowAt)} y={by(BANK.low)} lead="turun maks. sekitar" value="21%" p={drop * (1 - aside)} anchor="below" />
-        <Dot x={bx(1)} y={by(BANK.sell)} p={ease(f, W("7.300"), m.reveal)} />
-        <Tag x={bx(1) - 10} y={by(BANK.sell)} lead="Dijual" value="7.300" p={ease(f, W("7.300"), m.reveal)} />
+        <Appear at={W("BBRI")} rise={0} style={{ left: 0, top: 0 }}>
+          <SourceTag kind="market" label="BBRI · 1D · IDX" x={bb.x + bb.w - 40} y={bb.y + 66} />
+        </Appear>
+        <Dash x1={bx(0)} y1={by(B.buy)} x2={bx(1)} y2={by(B.buy)} p={buyB} />
+        <ChartLine pts={B.pts} yOf={B.y} area={ba} upTo={bUpTo} id="vi04-sc04-bbri" fill />
+        <Depth x={bx(B.s.low.t)} y0={by(B.buy)} y1={by(B.s.low.close)} p={lowB * (1 - aside)} />
+        <Dot x={bx(0)} y={by(B.buy)} p={buyB} />
+        <Tag x={bx(0) + 10} y={by(B.buy)} lead="Beli" value={idr(B.buy)} p={buyB} />
+        <Dot x={bx(B.s.low.t)} y={by(B.s.low.close)} p={lowB} />
+        <Tag x={bx(B.s.low.t)} y={by(B.s.low.close)} value={idr(B.s.low.close)} p={lowB * (1 - Math.min(1, aside * 2))} anchor="below" />
+        <Dot x={bx(1)} y={by(B.end)} p={endB} />
+        <Tag x={bx(1) - 10} y={by(B.end)} value={idr(B.end)} p={endB} />
+        <Dates area={ba} opacity={Math.max(0, aside * 2 - 1)} />
+        {/* its outcome at its foot once it has moved aside — in the second half of the move, after the low's tag
+            has gone from the same spot */}
+        <div style={{ position: "absolute", left: bb.x + CARD_PAD.l, top: bb.y + bb.h - FOOT.dy, opacity: Math.max(0, aside * 2 - 1), whiteSpace: "nowrap" }}>
+          <Foot value={juta(BBRI_BAL.end, 2)} color={theme.color.checkGreen} />
+        </div>
 
-        <Appear at={W("Rp10 juta")} out={otherAt} style={{ left: 0, top: 0 }}>
-          <Card x={SIDE.x} y={SIDE.ys[0]} w={SIDE.w} h={SIDE.h} style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 44px" }}>
-            <div style={{ ...typeStyle("label"), color: c.slate }}>Balance</div>
-            {/* turns red as it falls (Simon, 22 Oct), the same red as SC03's −30% */}
-            <div style={{ marginTop: 6, ...typeStyle("statement"), fontSize: 64, color: interpolateColors(balance, [BALANCE.start - 0.7, BALANCE.start - 0.05, BALANCE.start + 0.05, BALANCE.start + 0.7], [theme.color.calendarRed, c.ink, c.ink, theme.color.checkGreen]), whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>{rupiahJuta(balance)}</div>
-          </Card>
-        </Appear>
-        <Appear at={W("total return") + m.sec(0.3)} out={otherAt} style={{ left: 0, top: 0 }}>
-          <Card x={SIDE.x} y={SIDE.ys[1]} w={SIDE.w} h={SIDE.h} style={{ display: "flex", flexDirection: "column", justifyContent: "center", padding: "0 44px" }}>
-            <div style={{ ...typeStyle("label"), color: c.slate }}>Total return sekitar</div>
-            <div style={{ marginTop: 6, ...typeStyle("statement"), fontSize: 64, color: c.indigo, opacity: ease(f, W("288%"), m.reveal) }}>+288%</div>
-          </Card>
-        </Appear>
+        {/* red under the stake, green above it (Simon, 22 Oct) */}
+        <div style={{ position: "absolute", left: 0, top: 0, opacity: 1 - ease(f, otherAt, m.fade) }}>
+          <Appear at={balAt[0]} style={{ left: 0, top: 0 }}>
+            <BalanceCard i={0} value={`Rp${STAKE} juta`} color={c.ink} />
+          </Appear>
+          {[0, 1].map((i) => (
+            <DownArrow key={i} x={BAL.x + BAL.w / 2} y0={BAL_Y[i] + BAL_H[i] + BAL.gap} y1={BAL_Y[i + 1] - BAL.gap} p={balArrow[i]} />
+          ))}
+          <Appear at={balAt[1]} style={{ left: 0, top: 0 }}>
+            <BalanceCard i={1} value={juta(BBRI_BAL.low)} color={theme.color.calendarRed} />
+          </Appear>
+          <Appear at={balAt[2]} style={{ left: 0, top: 0 }}>
+            <BalanceCard i={2} value={juta(BBRI_BAL.end, 2)} color={theme.color.checkGreen} note={ease(f, W("belum termasuk"), m.reveal)} />
+          </Appear>
+        </div>
 
-        {/* E — another stock */}
+        {/* E — UNVR */}
         <Appear at={otherAt + m.sec(0.3)} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
           <Card x={HALF_R.x} y={HALF_R.y} w={HALF_R.w} h={HALF_R.h} />
-          <div style={{ position: "absolute", left: HALF_R.x + CARD_PAD.l, top: HALF_R.y + 36, ...typeStyle("label"), color: c.ink, whiteSpace: "nowrap" }}>Saham lain</div>
-          <Dash x1={ox(0)} y1={oy(OTHER.buy)} x2={ox(1)} y2={oy(OTHER.buy)} p={ease(f, W("beli di 600"), m.reveal)} />
-          <Appear at={W("harga beli")} style={{ left: ox(1), top: oy(OTHER.buy) - 12, transform: "translate(-100%, -100%)" }}>
+          <Appear at={W("UNVR")} style={{ left: HALF_R.x + CARD_PAD.l, top: HALF_R.y + 36 }}>
+            <div style={{ ...typeStyle("label"), color: c.ink, whiteSpace: "nowrap" }}>UNVR</div>
+          </Appear>
+          <Appear at={W("UNVR")} rise={0} style={{ left: 0, top: 0 }}>
+            <SourceTag kind="market" label="UNVR · 1D · IDX" x={HALF_R.x + HALF_R.w - 40} y={HALF_R.y + 66} />
+          </Appear>
+          <Dash x1={ox(0)} y1={oy(U.buy)} x2={ox(1)} y2={oy(U.buy)} p={buyU} />
+          <Appear at={W("harga beli")} style={{ left: ox(1), top: oy(U.buy) - 12, transform: "translate(-100%, -100%)" }}>
             <div style={{ ...typeStyle("label"), color: c.indigo, whiteSpace: "nowrap" }}>Harga beli</div>
           </Appear>
-          <ChartLine pts={OTHER_PTS} yOf={otherY} area={oa} upTo={oUpTo} id="vi04-sc04-other" fill />
-          <Dot x={ox(0)} y={oy(OTHER.buy)} p={ease(f, W("beli di 600"), m.reveal)} />
-          <Tag x={ox(0) + 10} y={oy(OTHER.buy)} lead="Beli" value="600" p={ease(f, W("beli di 600"), m.reveal)} />
-          <Dot x={ox(OTHER.lowAt)} y={oy(OTHER.low)} p={ease(f, W("turun ke 300"), m.reveal)} />
-          <Tag x={ox(OTHER.lowAt)} y={oy(OTHER.low)} value="300" p={ease(f, W("turun ke 300"), m.reveal)} anchor="right" />
+          <ChartLine pts={U.pts} yOf={U.y} area={oa} upTo={oUpTo} id="vi04-sc04-unvr" fill />
+          <Dates area={oa} opacity={ease(f, W("UNVR"), m.reveal)} />
+          <Dot x={ox(0)} y={oy(U.buy)} p={buyU} />
+          <Tag x={ox(0) + 10} y={oy(U.buy)} lead="Beli" value={idr(U.buy)} p={buyU} />
+          <Dot x={ox(1)} y={oy(U.end)} p={endU} />
+          {/* left of its dot, under the line coming down into it (Simon, 3 Nov: "jangan bentrok, taro di sebelah kiri
+              titiknya aja") */}
+          <Tag x={ox(1)} y={oy(U.end)} value={idr(U.end)} p={endU} anchor="left" />
+          <Appear at={W("investasi Rp10 juta", 1)} style={{ left: HALF_R.x + CARD_PAD.l, top: HALF_R.y + HALF_R.h - FOOT.dy }}>
+            <Foot value={balanceText(balanceU, toLowU >= 1 ? UNVR_BAL.end : null)} color={balColor(balanceU)} />
+          </Appear>
         </Appear>
         <Appear at={W("Dua-duanya")} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-          <Line x={0} y={900} w={theme.canvas.width} align="center" size={48} weight={500} text="Dua-duanya bisa terjadi." mark="bisa terjadi" />
+          <Line x={0} y={900} w={theme.canvas.width} align="center" size={48} weight={500} text="Dua-duanya adalah kejadian nyata." mark="kejadian nyata" />
         </Appear>
       </Appear>
 
@@ -377,9 +494,9 @@ export const SC04 = () => {
         {/* from "Market turun" down into the middle, over the line it leads to (Simon, 22 Oct: "mengarah ke tengah … curve") */}
         <Connector a={{ x: updnX(1) + UPDN.w / 2, y: UPDN.y + UPDN.h }} b={{ x: CX, y: 772 }} p={ease(f, panicAt, m.sec(0.6))} shape="curve" axis="y" />
         <Appear at={panicAt + m.sec(0.3)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-          {/* Simon's two lines, as typed (22 Oct); the second bold indigo */}
+          {/* Simon's two lines, as typed (22 Oct; the first his new line of 3 Nov); the second bold indigo */}
           <div style={{ position: "absolute", left: updnX(0), top: 785, width: updnX(1) + UPDN.w - updnX(0), textAlign: "center", fontFamily: theme.text.family, fontSize: 40, lineHeight: 1.25 }}>
-            <div style={{ fontWeight: 500, color: c.ink }}>Kalau langsung jual karena panik,</div>
+            <div style={{ fontWeight: 500, color: c.ink }}>Kalau penurunan sebesar itu membuat kita langsung panik,</div>
             <div style={{ fontWeight: 700, color: c.indigo, opacity: ease(f, W("mungkin ombaknya"), m.reveal) }}>mungkin ombak terlalu besar buat kita</div>
           </div>
         </Appear>

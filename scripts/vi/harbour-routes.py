@@ -12,7 +12,7 @@ rumahnya"; his four sketches are docs/vi-style/refs/starry-harbour-route-3{1,2,3
   3 pesawat  — one straight line.
 Reads public/art/vi04/harbour-map-simple.svg (run simplify-harbour-map.py first) and writes
 src/episodes/vi04-investasi-yang-cocok/data/harbour-routes.json, in the drawing's own units as it is shown (turned:
-3598 × 2398), the same units as TemplateMap.tsx's KAMU_ON_ROAD.
+3598 × 2398), with Kamu's spot and the house's (and its door, where the routes end).
 """
 import json
 import os
@@ -30,7 +30,7 @@ OUT = os.path.join(ROOT, "src/episodes/vi04-investasi-yang-cocok/data/harbour-ro
 W, H = 3598, 2398  # the drawing as shown (turned 90° clockwise from the trace)
 SKETCH = (1782, 1192)  # Simon's sketches: the shown drawing, whole, at this size
 
-KAMU = (222, 1188)  # TemplateMap.tsx KAMU_ON_ROAD
+KAMU = (222, 1188)  # where Kamu stands, on the far-left road (drawing units); TemplateMap.tsx and RouteMap.tsx read it back
 HOUSE = (1436, 750)  # his red box in sketch 4 (sketch px): its middle, raised so the footprint ends at its foot
 DOOR = (1415, 800)  # the house's foot, where routes 1 and 2 end (sketch 2's pier comes up to it)
 # where each route's disc sits (sketch px; the route's nearest point): 1 on the bridge, 2 on the water, 3 midway
@@ -153,7 +153,9 @@ def main():
     json.dump(
         {
             "_": "Written by scripts/vi/harbour-routes.py — the three ways from Kamu to the house on the simple harbour map, in its own units as shown (3598 × 2398).",
+            "kamu": list(KAMU),
             "house": [round(house[0], 1), round(house[1], 1)],
+            "door": [round(door[0], 1), round(door[1], 1)],
             "routes": [
                 {"n": n, "way": way, "disc": r([p[cKDTree(p).query(sk(DISC[n])[0])[1]]])[0], "pts": r(p)}
                 for n, way, p in ((1, "jembatan", walk), (2, "kapal", boat), (3, "pesawat", plane))

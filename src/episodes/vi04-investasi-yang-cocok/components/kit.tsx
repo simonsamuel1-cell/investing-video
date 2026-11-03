@@ -10,6 +10,9 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
 import { OUTSIDE_RESERVES, ease } from "../../vi03-tiga-jenis-uang/components/kit";
+import JEMBATAN from "../data/return-jembatan.json";
+import KAPAL from "../data/return-kapal.json";
+import PESAWAT from "../data/return-pesawat.json";
 import { w as wordAt } from "../data/timing";
 
 export { Appear, Badge, Ground, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, Panel3, Statement, ease, useAppear } from "../../vi03-tiga-jenis-uang/components/kit";
@@ -157,27 +160,35 @@ export const Vehicle = ({ name, cx, cy, h }: { name: SketchName; cx: number; cy:
 /** One of the isometric icons (art/vi04/ic-*.png — waves, wheel, stable, index, equity, stock), `h` tall. */
 export const IsoIcon = ({ name, h }: { name: string; h: number }) => <Img src={staticFile(`art/vi04/ic-${name}.png`)} style={{ height: h, width: "auto", maxWidth: "none", display: "block", flex: "none" }} />;
 
-/** How rough each route's path is (SC03 → SC04): the swell in px and the number of waves across. */
-export const ROUGH = [
-  { amp: 5, freq: 3 },
-  { amp: 17, freq: 3.5 },
-  { amp: 34, freq: 4 },
-];
-/** A sine path `w` wide about y = 0, as polyline points. */
-export const wavePts = (amp: number, freq: number, w: number) => {
-  const pts: string[] = [];
-  for (let i = 0; i <= 160; i++) {
-    const t = i / 160;
-    pts.push(`${(t * w).toFixed(1)},${(-Math.sin(t * Math.PI * 2 * freq) * amp).toFixed(1)}`);
-  }
-  return pts.join(" ");
-};
+/**
+ * The return paths, one per route (Simon, 3 Nov, SC03's revision notes: "Semua garis harus memiliki arah umum menanjak
+ * dari kiri ke kanan, bukan sekadar bergerak horizontal"), each traced from a real return chart he chose — "pake grafik
+ * ini buat 'Jembatan'", "pake ini buat kapal", "pake ini buat Pesawat" — by scripts/vi/trace-return-curve.py, on ONE
+ * scale (RETURN_RANGE):
+ *   jembatan — a money-market fund's year: naik perlahan, fluktuasi sangat kecil
+ *   kapal    — a fund from 2020: the fall, the long way back, ending up
+ *   pesawat  — IHSG's year from Jun 2014: the deepest swings of the three, a fall after its peak, then on to a new high
+ *              that ends highest of all (Simon, 3 Nov: "buat ujungnya di atas higher high deh (skalian bikin jadi paling
+ *              tinggi)") — still no smooth line ("Kurva saham individual tidak boleh dibuat seperti garis naik mulus")
+ */
+export const RETURNS = { jembatan: JEMBATAN.values, kapal: KAPAL.values, pesawat: PESAWAT.values };
+export type ReturnName = keyof typeof RETURNS;
+/** The one value scale every path is drawn on: its lowest dip and its highest peak. */
+export const RETURN_RANGE = { lo: -0.3, hi: 1 };
+const RETURN_N = 160;
+const RETURN_VALUES: Record<ReturnName, number[]> = RETURNS;
+/** A path `w` × `h` (y down), as points. */
+export const returnPts = (name: ReturnName, w: number, h: number) =>
+  RETURN_VALUES[name].map((v, i) => `${((i / RETURN_N) * w).toFixed(1)},${(h - ((v - RETURN_RANGE.lo) / (RETURN_RANGE.hi - RETURN_RANGE.lo)) * h).toFixed(1)}`).join(" ");
+/** The small print under every return path (the same notes: "Tambahkan disclaimer visual kecil") — the one place the
+ *  word "Ilustrasi" is on screen, against the 1 Sep rule, because the notes ask for exactly this line. */
+export const RETURN_NOTE = "Ilustrasi potensi return dan volatilitas, bukan jaminan hasil.";
 
 /** The three routes as small cards (SC03's summary, SC04's choice): the vehicle, its name, its path drawn by `draw`. */
 export const ROUTE_CARDS = [
-  { art: "bridge" as SketchName, h: 120, name: "Jembatan", rough: ROUGH[0] },
-  { art: "ferry" as SketchName, h: 110, name: "Kapal", rough: ROUGH[1] },
-  { art: "plane" as SketchName, h: 112, name: "Pesawat", rough: ROUGH[2] },
+  { art: "bridge" as SketchName, h: 120, name: "Jembatan", ret: "jembatan" as ReturnName },
+  { art: "ferry" as SketchName, h: 110, name: "Kapal", ret: "kapal" as ReturnName },
+  { art: "plane" as SketchName, h: 112, name: "Pesawat", ret: "pesawat" as ReturnName },
 ];
 export const ROUTE_CARD = { w: 380, h: 330 };
 export const RouteCard = ({ i, x, y, draw, line }: { i: number; x: number; y: number; draw: number; line?: string }) => {
@@ -190,9 +201,9 @@ export const RouteCard = ({ i, x, y, draw, line }: { i: number; x: number; y: nu
       <div style={{ position: "absolute", left: 0, top: 180, width: w - (line ? 4 : 0), textAlign: "center", fontFamily: theme.text.family, fontSize: theme.type.label.size, fontWeight: theme.type.label.weight, color: c.slate }}>{r.name}</div>
       <svg width={w - 80} height={80} style={{ position: "absolute", left: 40 - (line ? 2 : 0), top: 230, overflow: "visible" }}>
         <clipPath id={`vi04-route-card-${i}`}>
-          <rect x={-10} y={-40} width={(w - 60) * draw} height={160} />
+          <rect x={-10} y={-20} width={(w - 60) * draw} height={120} />
         </clipPath>
-        <polyline transform="translate(0 40)" points={wavePts(r.rough.amp, r.rough.freq, w - 80)} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" clipPath={`url(#vi04-route-card-${i})`} />
+        <polyline points={returnPts(r.ret, w - 80, 80)} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" clipPath={`url(#vi04-route-card-${i})`} />
       </svg>
     </Card>
   );

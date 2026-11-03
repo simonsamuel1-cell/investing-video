@@ -4,9 +4,15 @@
  * obvious things (islands, vehicles, cards), the brand only on hairlines — connectors, the path curve, a word.
  *
  *  A  "Ada tiga cara buat sampai ke seberang": ONE shot with SC02 (no cut) — it opens on SC02's last frame and the
- *     camera pulls back to the islands, while three dashed routes grow across, each with its vehicle on a disc.
- *  B–D one MINDMAP, the same three times: the vehicle in a card at the left, and connectors growing on their words
- *     to what the VO says about it — the numbers (with the path drawn as a curve that grows rougher route by route),
+ *     camera pulls back to the whole map (or the islands), while the three routes draw across, each with its disc.
+ *     On the map, "Yang pertama" slides it left into the mindmap's left slot — no iris (Simon, 3 Nov: "transisinya
+ *     ganti jadi peta yang sekarang yang bergeser ke kiri, skalian menggantikan gambar Jembatan, Kapal, dan
+ *     Pesawat"), route 1 lighting up as it goes: an indigo glow, the other two gone. Each later route lights on
+ *     its own start. On the islands ("lama"), as before: route 1's disc opens into an iris.
+ *  B–D one MINDMAP, the same three times: the map (or the vehicle in a card) at the left, and connectors growing on their words
+ *     to what the VO says about it — the numbers (with a return path under them, each route's traced from a real
+ *     chart Simon chose, and the small print "Ilustrasi potensi return dan volatilitas, bukan jaminan hasil."; his
+ *     notes, 3 Nov),
  *     the examples, and the closing line. The frame stays; only its content swaps (the benchmark's card whose
  *     content changes). B jembatan · C kapal (feri → reksa dana indeks, speedboat → reksa dana saham, "yang pegang
  *     kemudi bukan kita") · D pesawat (+30% / −30%, "kita juga yang harus tahu cara mengendalikannya" — YOU, amber).
@@ -19,10 +25,10 @@
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, ease, Heading, Ico, IconDot, IsoIcon, Line, NumRing, OUTSIDE_RESERVES, ROUGH, ROUTE_CARD, ROUTE_CARDS, RouteCard, Typed, useWords, Vehicle, wavePts, type SketchName } from "../components/kit";
+import { Appear, BoardGrid, Card, ease, Heading, Ico, IconDot, IsoIcon, Line, NumRing, OUTSIDE_RESERVES, RETURN_NOTE, returnPts, ROUTE_CARD, ROUTE_CARDS, RouteCard, Typed, useWords, Vehicle, type SketchName } from "../components/kit";
 import { ISLE_FRAME, Islands, RiverLines, WAY_DISC_R, frameStyle, mixFrame, wayDisc } from "../components/Islands";
 import { KenaliLine } from "./River";
-import { MAP_DISC_R, MAP_FRAME, MapCamera, mapDisc } from "../components/RouteMap";
+import { MAP_FRAME, MapCamera, mapInto } from "../components/RouteMap";
 import { usePetaBaru } from "../components/PetaSwitch";
 
 const CX = theme.canvas.width / 2;
@@ -32,13 +38,18 @@ const LEFT = 140;
 const HUB = { x: LEFT, y: 300, w: 520, h: 460 };
 const HUB_OUT = { x: HUB.x + HUB.w, y: HUB.y + HUB.h / 2 };
 const NODE_X = 820;
-const STATS = { y: 250, w: 960, h: 350, col: 470 };
+const STATS = { y: 250, w: 960, h: 370, col: 470 };
 const EX = { y: 660, h: 110, w: 466, gap: 28 };
 const END_Y = 862;
 const IN = { stats: { x: NODE_X, y: STATS.y + STATS.h / 2 }, ex: { x: NODE_X, y: EX.y + EX.h / 2 }, end: { x: NODE_X, y: END_Y } };
+/** The map in the vehicle's place (it is wider than the vehicle's card, so it reaches closer to the nodes), its middle
+ *  where the connectors leave from. The vehicle pictures stay below, on the islands' side (Simon: "Gambarnya simpen
+ *  dulu, takutnya masih bisa dipake"). */
+const MAP_HUB = { x: LEFT, w: 600, cy: HUB_OUT.y };
+const MAP_HUB_OUT = { x: MAP_HUB.x + MAP_HUB.w, y: MAP_HUB.cy };
 
-/** The path under the numbers: one hairline curve whose swell grows from route to route. */
-const CURVE = { x: 48, y: 290, w: STATS.w - 96 };
+/** The return path under the numbers (kit RETURNS — Simon's three charts). */
+const CURVE = { x: 48, y: 240, w: STATS.w - 96, h: 100 };
 
 type Ex = { icon?: string; art?: SketchName; lead?: string; text: string; at: string };
 type Route = {
@@ -119,6 +130,9 @@ const ARROWS = [
   { label: "Kemampuan", from: "rendah", to: "tinggi", at: "tinggi kemampuan" },
 ];
 const ARROW = { x: triX(0), ys: [650, 750, 850], line0: triX(0) + 420, line1: triX(2) + TRI_W - 150, tag: { w: 250, h: 70 } };
+/** The small print for the return paths, in the screen's bottom-left corner just above the subtitles (Simon, 3 Nov:
+ *  "disclaimer ilustrasinya taro di pojok kiri bawah layar aja"), from the first path to the last card's. */
+const NOTE = { x: theme.margin.left, size: 20, gap: 14 };
 
 // F — the two questions
 export const ASK = { y: 560, w: 440, h: 190, gap: 80 };
@@ -177,24 +191,37 @@ export const SC03 = () => {
   const focus1 = ease(f, starts[0], m.sec(0.4));
   const irisAt = starts[0] + m.sec(0.35);
   const iris = ease(f, irisAt, m.sec(0.6));
-  const enter1 = irisAt + m.sec(0.6);
-  const [irisX, irisY] = baru ? mapDisc(1) : wayDisc(1);
-  /** The disc as drawn where the iris starts: the map draws its discs smaller than the islands did (RouteMap MARK). */
-  const discR = baru ? MAP_DISC_R : WAY_DISC_R;
-  const dk = discR / WAY_DISC_R;
+  const [irisX, irisY] = wayDisc(1);
+  const discR = WAY_DISC_R;
+  const dk = 1;
   const irisR = discR * 1.2 + (Math.hypot(Math.max(irisX, theme.canvas.width - irisX), Math.max(irisY, theme.canvas.height - irisY)) + 40 - discR * 1.2) * iris;
+  /** On the map: the slide left into the mindmap, from just before "Yang pertama"; the route being told is lit. */
+  const shiftAt = starts[0] - m.sec(0.3);
+  const shiftFor = m.sec(1.2);
+  const shift = ease(f, shiftAt, shiftFor);
+  const lit = [shift * (1 - ease(f, starts[1], m.sec(0.5))), ease(f, starts[1], m.sec(0.5)) * (1 - ease(f, starts[2], m.sec(0.5))), ease(f, starts[2], m.sec(0.5))];
+  const enter1 = baru ? shiftAt + shiftFor : irisAt + m.sec(0.6);
+  /** The three routes draw one after another from "tiga cara", the last done a little before "Yang pertama" (Simon,
+   *  3 Nov: "Animasinya kelar di 4491 aja. Jadi sedikit ga buru2" — with the 30-frame pause he had put before it). */
+  const routesAt = W("tiga cara");
+  const routesDone = starts[0] - m.sec(0.4);
+  const hubOut = baru ? MAP_HUB_OUT : HUB_OUT;
   const sumAt = W("Jadi semakin cepat");
   const askAt = W("Untuk tahu jalur");
   const until = (i: number) => (i + 1 < starts.length ? starts[i + 1] : sumAt);
   const grow = (at: number) => ease(f, at, m.sec(0.55));
 
-  // the path curve: drawn on "Jalurnya pelan dan relatif stabil", rougher on each later route's name
+  // the return paths (kit RETURNS, Simon's three charts), one per route, each drawn left to right — the bridge's on
+  // "Jalurnya pelan dan relatif stabil", the boat's on "naik kapal", the plane's on "bawa pesawat". At each later
+  // route's start the one before fades out first (Simon, 3 Nov: "Saat transisi dari 1-2 dan 2-3, buat garis grafiknya
+  // tuh fade dulu, lalu muncul baru dengan trim path").
   const pathAt = W("Jalurnya");
-  const draw = ease(f, pathAt, m.sec(1.0));
-  const k1 = ease(f, W(ROUTES[1].titleAt), m.sec(0.9));
-  const k2 = ease(f, W(ROUTES[2].titleAt), m.sec(0.9));
-  const amp = ROUGH[0].amp + (ROUGH[1].amp - ROUGH[0].amp) * k1 + (ROUGH[2].amp - ROUGH[1].amp) * k2;
-  const freq = ROUGH[0].freq + (ROUGH[1].freq - ROUGH[0].freq) * k1 + (ROUGH[2].freq - ROUGH[1].freq) * k2;
+  const PATHS = (["jembatan", "kapal", "pesawat"] as const).map((name, i) => {
+    const drawAt = i === 0 ? pathAt : Math.max(W(ROUTES[i].titleAt), starts[i] + m.fade);
+    // the last stays until the whole mindmap goes
+    const shown = i + 1 < starts.length ? 1 - ease(f, starts[i + 1], m.fade) : 1;
+    return { name, drawn: ease(f, drawAt, m.sec(1.0)), shown };
+  });
 
   return (
     <Stage>
@@ -205,8 +232,11 @@ export const SC03 = () => {
       {/* A — three ways across. ONE shot with SC02 (no cut): it opens on SC02's last frame — the camera dived onto
           Kamu, the house faded, the line on screen — and pulls back to the whole picture as the routes draw. */}
       {/* gone the frame route 1's disc has covered the screen — nothing of it may show through as the disc fades */}
-      {f < enter1 && baru ? (
-        <MapCamera fr={mixFrame(MAP_FRAME.dive, MAP_FRAME.full, back)} g={g} landAt={-1000} riverAt={-1000} youAt={-1000} goalAt={-1000} routesAt={W("tiga cara")} focus={{ n: 1, p: focus1, lifted: iris > 0.001 }} />
+      {/* on the map it stays through B–D, in the vehicle's place, and goes with them */}
+      {baru && f < sumAt + m.fade + 1 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - ease(f, sumAt, m.fade) }}>
+          <MapCamera fr={mixFrame(mixFrame(MAP_FRAME.dive, MAP_FRAME.full, back), mapInto(MAP_HUB), shift)} g={g} landAt={-1000} riverAt={-1000} youAt={-1000} goalAt={-1000} routesAt={routesAt} drawFor={(routesDone - routesAt) / 3} lit={lit} />
+        </div>
       ) : null}
       {f < enter1 && !baru ? (
         <div style={{ position: "absolute", left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: OUTSIDE_RESERVES }}>
@@ -222,7 +252,7 @@ export const SC03 = () => {
           icon, bukan buat baru"): lifted out of the islands at the same place and look, its icon and number let go
           as it grows, its glow fading. Once it covers everything the screen STAYS white (Simon, 22 Oct: "dah biarin
           putih aja") and the next layout — its ground too — fades in over it. */}
-      {iris > 0.001 && f < enter1 + m.reveal + 1 ? (
+      {!baru && iris > 0.001 && f < enter1 + m.reveal + 1 ? (
         <div style={{ position: "absolute", left: irisX - irisR, top: irisY - irisR, width: irisR * 2, height: irisR * 2, borderRadius: "50%", background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.connector}, 0 0 ${(40 * (1 - iris)).toFixed(1)}px ${(10 * (1 - iris)).toFixed(1)}px ${theme.color.indigoGlow}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
           <div style={{ opacity: Math.max(0, 1 - iris * 4) }}>
             <Ico name="t-bridge-i" size={72 * dk} tone={theme.color.neutralIcon} />
@@ -233,7 +263,7 @@ export const SC03 = () => {
           </div>
         </div>
       ) : null}
-      {f >= enter1 && f < enter1 + m.reveal + 1 ? (
+      {!baru && f >= enter1 && f < enter1 + m.reveal + 1 ? (
         <div style={{ position: "absolute", inset: 0, opacity: ease(f, enter1, m.reveal) }}>
           <SoftGround f={g} />
           <BoardGrid g={g} on={1} />
@@ -241,18 +271,24 @@ export const SC03 = () => {
       ) : null}
 
 
-      {/* B–D — the frame that stays: the vehicle card, the numbers card and its curve */}
+      {/* B–D — the frame that stays: the map (or the vehicle card), the numbers card and its curve */}
       <Appear at={enter1} out={sumAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-        <Card x={HUB.x} y={HUB.y} w={HUB.w} h={HUB.h} />
-        <Connector a={HUB_OUT} b={IN.stats} p={grow(pathAt)} shape="elbow" />
+        {!baru ? <Card x={HUB.x} y={HUB.y} w={HUB.w} h={HUB.h} /> : null}
+        <Connector a={hubOut} b={IN.stats} p={grow(pathAt)} shape="elbow" />
         <Appear at={pathAt + m.sec(0.3)} style={{ left: NODE_X, top: STATS.y }}>
           <Card x={0} y={0} w={STATS.w} h={STATS.h}>
             <div style={{ position: "absolute", left: STATS.col - 2, top: 44, width: 2, height: 130, background: c.border }} />
-            <svg width={CURVE.w} height={100} style={{ position: "absolute", left: CURVE.x, top: CURVE.y - 50, overflow: "visible" }}>
-              <clipPath id="vi04-sc03-path">
-                <rect x={-10} y={-60} width={(CURVE.w + 20) * draw} height={220} />
-              </clipPath>
-              <polyline transform="translate(0 50)" points={wavePts(amp, freq, CURVE.w)} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" clipPath="url(#vi04-sc03-path)" />
+            <svg width={CURVE.w} height={CURVE.h} style={{ position: "absolute", left: CURVE.x, top: CURVE.y, overflow: "visible" }}>
+              {PATHS.map((p) =>
+                p.drawn > 0.001 && p.shown > 0.001 ? (
+                  <g key={p.name} opacity={p.shown}>
+                    <clipPath id={`vi04-sc03-path-${p.name}`}>
+                      <rect x={-10} y={-20} width={(CURVE.w + 20) * p.drawn} height={CURVE.h + 40} />
+                    </clipPath>
+                    <polyline points={returnPts(p.name, CURVE.w, CURVE.h)} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" clipPath={`url(#vi04-sc03-path-${p.name})`} />
+                  </g>
+                ) : null,
+              )}
             </svg>
           </Card>
         </Appear>
@@ -269,11 +305,13 @@ export const SC03 = () => {
               <Heading n={i + 1} text={r.title} />
             </Appear>
 
-            {/* the vehicle */}
-            <Appear at={from} style={{ left: HUB.x, top: HUB.y, width: HUB.w, height: HUB.h }}>
-              <Vehicle name={r.art} cx={HUB.w / 2} cy={205} h={r.artH} />
-              <div style={{ position: "absolute", left: 0, top: 370, width: HUB.w, textAlign: "center", ...typeStyle("label"), color: c.slate }}>{r.name}</div>
-            </Appear>
+            {/* the vehicle — on the islands only; on the map, the map is in its place */}
+            {!baru ? (
+              <Appear at={from} style={{ left: HUB.x, top: HUB.y, width: HUB.w, height: HUB.h }}>
+                <Vehicle name={r.art} cx={HUB.w / 2} cy={205} h={r.artH} />
+                <div style={{ position: "absolute", left: 0, top: 370, width: HUB.w, textAlign: "center", ...typeStyle("label"), color: c.slate }}>{r.name}</div>
+              </Appear>
+            ) : null}
 
             {/* the numbers */}
             {r.stats.map((s, k) => (
@@ -301,7 +339,7 @@ export const SC03 = () => {
             ) : null}
 
             {/* the examples */}
-            <Connector a={HUB_OUT} b={IN.ex} p={grow(W(r.ex[0].at) - m.sec(0.3))} shape="elbow" />
+            <Connector a={hubOut} b={IN.ex} p={grow(W(r.ex[0].at) - m.sec(0.3))} shape="elbow" />
             {r.ex.map((e, k) => {
               const w = r.ex.length === 1 ? STATS.w : EX.w;
               return (
@@ -325,7 +363,7 @@ export const SC03 = () => {
             })}
 
             {/* the closing line */}
-            <Connector a={HUB_OUT} b={IN.end} p={grow(W(r.end.at) - m.sec(0.3))} shape="elbow" tone={r.end.amber ? theme.color.selfAmber : undefined} />
+            <Connector a={hubOut} b={IN.end} p={grow(W(r.end.at) - m.sec(0.3))} shape="elbow" tone={r.end.amber ? theme.color.selfAmber : undefined} />
             {/* in a label like the examples — same icon slot, same gap — and typed (Simon, 22 Oct) */}
             <Appear at={W(r.end.at)} rise={0} style={{ left: NODE_X, top: END_Y - EX.h / 2 }}>
               <Card x={0} y={0} w={STATS.w} h={EX.h} line={r.end.amber ? theme.color.selfAmber : undefined} style={{ display: "flex", alignItems: "center", gap: 20, padding: "0 26px" }}>
@@ -368,6 +406,11 @@ export const SC03 = () => {
             </Appear>
           );
         })}
+      </Appear>
+
+      {/* the small print, while any return path is on screen (B–D and E) */}
+      <Appear at={pathAt} out={askAt} rise={0} style={{ left: NOTE.x, top: theme.captionBand.top - NOTE.gap - NOTE.size * 1.3 }}>
+        <div style={{ ...typeStyle("label"), fontSize: NOTE.size, lineHeight: 1.3, color: c.slate, whiteSpace: "nowrap" }}>{RETURN_NOTE}</div>
       </Appear>
 
       {/* F — two questions */}

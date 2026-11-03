@@ -16,13 +16,33 @@
 import { useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
+import { mixFrame } from "../components/Islands";
 import { Appear, BoardGrid, Card, dockStyle, ease, IsoIcon, Line, NumRing, QUESTION_CARD, useWords, Vehicle } from "../components/kit";
+import { HARBOUR_SIZE } from "../components/HarbourMap";
+import { usePetaBaru } from "../components/PetaSwitch";
+import { MapCamera, mapInto } from "../components/RouteMap";
 
 const CX = theme.canvas.width / 2;
 
 // B–C — the licence and its three parts
-const HUB = { x: 140, y: 320, w: 480, h: 420 };
-const HUB_OUT = { x: HUB.x + HUB.w, y: HUB.y + HUB.h / 2 };
+const HUB_PIC = { x: 140, y: 320, w: 480, h: 420 };
+/**
+ * On the master route map (the boss's SC05 notes, 3 Nov 2026 — only the picture changes, the licence stays): on "Kalau
+ * memilih saham sendiri seperti bawa pesawat" the whole map comes up under the docked question — Kamu at one end,
+ * TUJUAN INVESTASI far away at the other — and the plane's way draws, the most direct one, taking off right by Kamu;
+ * the other two stay hidden. On "kita perlu punya lisensi" the map moves into the licence card, in the plane
+ * picture's place (kept, for PETA_BARU = false), with "Perlu lisensi" under it. The card is wider than the picture's
+ * so the map is not too small, and centred on the three nodes.
+ */
+const HUB_MAP = { x: 140, y: 340, w: 560, h: 470, pad: 20, textTop: 388 };
+const MAP_ASPECT = HARBOUR_SIZE.simple.w / HARBOUR_SIZE.simple.h;
+const MAP_IN_HUB = { x: HUB_MAP.x + HUB_MAP.pad, w: HUB_MAP.w - 2 * HUB_MAP.pad, cy: HUB_MAP.y + HUB_MAP.pad + (HUB_MAP.w - 2 * HUB_MAP.pad) / MAP_ASPECT / 2 };
+/** The whole map, between the docked question card and the subtitle band. */
+const MAP_WHOLE = { top: 240, bottom: theme.captionBand.top - 22 };
+const MAP_SHOWN_W = (MAP_WHOLE.bottom - MAP_WHOLE.top) * MAP_ASPECT;
+const MAP_SHOWN = { x: (theme.canvas.width - MAP_SHOWN_W) / 2, w: MAP_SHOWN_W, cy: (MAP_WHOLE.top + MAP_WHOLE.bottom) / 2 };
+/** Only the plane's way is told here: the other two stay hidden. */
+const PLANE_ONLY = [0, 0, 1];
 const NODE = { x: 780, w: 1000, h: 170, ys: [280, 490, 700] };
 type Row = { title: string; at: string; titleAt: string; chips: { text: string; at: string }[] };
 const ROWS: Row[] = [
@@ -61,6 +81,9 @@ export const SC05 = () => {
   const W = useWords(5, BLOCK.SC05);
   const shadow = useShadow();
   const g = f + BLOCK.SC05;
+  const baru = usePetaBaru();
+  const HUB = baru ? HUB_MAP : HUB_PIC;
+  const HUB_OUT = { x: HUB.x + HUB.w, y: HUB.y + HUB.h / 2 };
 
   const qAt = W("Pertanyaan kedua");
   const planeAt = W("Kalau memilih saham");
@@ -69,6 +92,13 @@ export const SC05 = () => {
   const levelAt = W("Kalau tiga-tiganya");
   const keyAt = W("Yang penting diingat");
   const rowAt = ROWS.map((r) => W(r.at));
+  // B on the map: up once the question has docked; the plane's way draws on "bawa pesawat"; into the card on "kita perlu"
+  const mapOn = ease(f, planeAt + m.move, m.reveal);
+  const flyFor = m.sec(0.9);
+  const flyAt = W("bawa pesawat");
+  const intoAt = W("kita perlu");
+  const into = ease(f, intoAt, m.sec(1.0));
+  const hubAt = baru ? intoAt + m.sec(0.5) : W("bawa pesawat");
 
   const levels = [
     { ticks: [W("tiga-tiganya"), W("tiga-tiganya") + m.sec(0.15), W("tiga-tiganya") + m.sec(0.3)], at: levelAt, label: "Kemampuan matang", labelAt: W("lebih matang") },
@@ -97,12 +127,17 @@ export const SC05 = () => {
 
       {/* B–C — the licence, and what it is made of */}
       <Appear at={planeAt} out={levelAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-        <Appear at={W("bawa pesawat")} style={{ left: 0, top: 0 }}>
+        <Appear at={hubAt} style={{ left: 0, top: 0 }}>
           <Card x={HUB.x} y={HUB.y} w={HUB.w} h={HUB.h} line={ease(f, licAt, m.reveal) > 0.5 ? theme.color.hairlineBrand : undefined}>
-            <Vehicle name="plane" cx={HUB.w / 2} cy={170} h={170} />
-            <div style={{ position: "absolute", left: 0, top: 300, width: HUB.w, textAlign: "center", ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, licAt, m.reveal) }}>Perlu lisensi</div>
+            {baru ? null : <Vehicle name="plane" cx={HUB.w / 2} cy={170} h={170} />}
+            <div style={{ position: "absolute", left: 0, top: baru ? HUB_MAP.textTop : 300, width: HUB.w, textAlign: "center", ...typeStyle("title"), fontWeight: 500, color: c.ink, opacity: ease(f, licAt, m.reveal) }}>Perlu lisensi</div>
           </Card>
         </Appear>
+        {baru && mapOn > 0.001 ? (
+          <div style={{ position: "absolute", inset: 0, opacity: mapOn }}>
+            <MapCamera fr={mixFrame(mapInto(MAP_SHOWN), mapInto(MAP_IN_HUB), into)} g={g} landAt={-1000} riverAt={-1000} youAt={-1000} goalAt={-1000} routesAt={flyAt - 2 * flyFor} drawFor={flyFor} lit={PLANE_ONLY} />
+          </div>
+        ) : null}
         {ROWS.map((r, i) => {
           const y = NODE.ys[i];
           const filled = ease(f, W(r.titleAt), m.reveal);
