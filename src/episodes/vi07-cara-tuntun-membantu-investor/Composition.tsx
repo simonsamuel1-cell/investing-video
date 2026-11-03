@@ -6,7 +6,7 @@
 import React from "react";
 import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
-import { BLOCK, CUT, CUTS, SFX, VO_LAST, heldAt } from "./data/timing";
+import { BLOCK, CUT, CUTS, KODOK, KODOK_PAUSE, SFX, VO_LAST, heldAt, onTimeline } from "./data/timing";
 import { BoardGrid, Heading, SITUATION } from "./components/kit";
 import { CUES } from "./subtitles";
 import { SC01 } from "./scenes/Opening";
@@ -50,6 +50,10 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
   return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
 };
 
+const VO_SRC = "vo/vi07-cara-tuntun-membantu-investor.mp3";
+/** The cues on the episode's timeline (the SRT keeps the VO's own times; timing.ts KODOK). */
+const TIMELINE_CUES = KODOK ? CUES : CUES.map((q) => ({ ...q, start: onTimeline(q.start), end: onTimeline(q.end) })).filter((q) => q.end > q.start);
+
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
 const chrome = (getInputProps() as { chrome?: boolean }).chrome !== false;
 /** Keyed per module load so Studio keeps its timeline rows in order (VI01's fix). */
@@ -86,9 +90,21 @@ export const CaraTuntunMembantuComposition = () => (
             ) : null}
           </Sequence>
         ))}
-        <Captions cues={CUES} show={chrome} />
+        <Captions cues={TIMELINE_CUES} show={chrome} />
         {chrome && <Watermark totalFrames={VI07_FRAMES} />}
-        <Audio key={ROWS} src={staticFile("vo/vi07-cara-tuntun-membantu-investor.mp3")} />
+        {KODOK ? (
+          <Audio key={ROWS} src={staticFile(VO_SRC)} />
+        ) : (
+          <>
+            {/* the frog's pause cut out: the VO up to it, then on from its end (timing.ts KODOK) */}
+            <Sequence key={`${ROWS}-a`} durationInFrames={KODOK_PAUSE.at} layout="none">
+              <Audio src={staticFile(VO_SRC)} />
+            </Sequence>
+            <Sequence key={`${ROWS}-b`} from={KODOK_PAUSE.at} layout="none">
+              <Audio src={staticFile(VO_SRC)} startFrom={KODOK_PAUSE.at + KODOK_PAUSE.len} />
+            </Sequence>
+          </>
+        )}
         {Object.entries(SFX).map(([name, s]) => (
           <Sequence key={`${ROWS}-sfx-${name}`} from={s.at} name={`sfx ${name}`}>
             <Audio src={staticFile(s.src)} volume={s.volume} />

@@ -15,7 +15,7 @@
 import React from "react";
 import { OffthreadVideo, Sequence, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK } from "../data/timing";
+import { BLOCK, KODOK } from "../data/timing";
 import { Appear, BoardGrid, Card, Disc, Ico, NumRing, SITUATION, Skel, Typed, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
@@ -172,9 +172,10 @@ export const SC01 = () => {
   // the frog, from the end of "merah." into the pause after it (Simon 29 Oct: "memenya mulai muncul di 931")
   const frogAt = W("merah.", 0, "f1") - m.sec(0.3);
   const frogEnd = frogAt + m.sec(FROG.secs);
-  const frogP = ease(f, frogAt, m.reveal) * (1 - ease(f, frogEnd - m.fade, m.fade));
+  // switched off (timing.ts KODOK, Simon 3 Nov): no frog, and the phone stays in the middle
+  const frogP = KODOK ? ease(f, frogAt, m.reveal) * (1 - ease(f, frogEnd - m.fade, m.fade)) : 0;
   /** The phone makes room early, from "Layar" (Simon 29 Oct: "mulai geser ke kiri di 825 aja"), and comes back after the frog. */
-  const aside = ease(f, W("Layar") - m.sec(0.07), m.move) - ease(f, frogEnd - m.sec(0.2), m.move);
+  const aside = KODOK ? ease(f, W("Layar") - m.sec(0.07), m.move) - ease(f, frogEnd - m.sec(0.2), m.move) : 0;
 
   // the finger: in on "sudah berada", over the button by "tombol"; it stops on "Tapi"
   const fingerIn = ease(f, W("sudah"), W("tombol") - W("sudah"));
