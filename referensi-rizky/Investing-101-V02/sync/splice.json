@@ -1,0 +1,13 @@
+{
+ "n_s1_token": 110,
+ "celah_G": 0.36,
+ "potong_lama": 53.85,
+ "potong_baru": 47.15,
+ "delta_s": -6.7,
+ "delta_frame60": -402.0,
+ "durasi_lama": 473.456,
+ "durasi_baru": 466.756,
+ "ujung_suara_s1_lama": 53.67,
+ "ujung_suara_s1_baru": 46.97,
+ "awal_suara_s1_baru": 0.14
+}

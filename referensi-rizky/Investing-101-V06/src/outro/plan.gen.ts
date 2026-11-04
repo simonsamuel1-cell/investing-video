@@ -1,0 +1,9 @@
+// DIBANGKITKAN scripts/gen-outro.py (outro 'Di video selanjutnya', Video 06 23 Okt) — jangan edit tangan.
+// Frame LOKAL outro (0 = awal blok = OUTRO_AT global); VO outro dipasang di frame lokal OUTRO_VO.at. Ketukan = onset kata MMS_FA.
+export const OUTRO_AT = 31254;
+export const OUTRO_N = 523;
+export const OUTRO_VO = {"at": 28, "frames": 462} as const;
+export const OUTRO_KATA: { w: string; a: number; b: number }[] = [{"w": "Di", "a": 46.0, "b": 49.6}, {"w": "video", "a": 50.8, "b": 60.4}, {"w": "selanjutnya,", "a": 64.1, "b": 86.9}, {"w": "kita", "a": 108.6, "b": 118.2}, {"w": "akan", "a": 120.6, "b": 127.8}, {"w": "lihat", "a": 129.0, "b": 141.1}, {"w": "bagaimana", "a": 143.5, "b": 162.7}, {"w": "Tuntun", "a": 166.3, "b": 182.0}, {"w": "membantu", "a": 184.4, "b": 203.6}, {"w": "investor", "a": 207.2, "b": 236.1}, {"w": "berpikir", "a": 238.5, "b": 265.0}, {"w": "lebih", "a": 267.4, "b": 278.2}, {"w": "jernih", "a": 279.4, "b": 298.7}, {"w": "dan", "a": 313.1, "b": 320.4}, {"w": "mengurangi", "a": 322.8, "b": 344.4}, {"w": "kesalahan", "a": 346.8, "b": 379.3}, {"w": "sebelum", "a": 384.1, "b": 403.4}, {"w": "mengambil", "a": 404.6, "b": 427.5}, {"w": "keputusan.", "a": 431.1, "b": 462.4}];
+/** cue subtitle = baris Simon (1 baris = 1 cue), frame LOKAL; b inklusif seperti CUES */
+export const OUTRO_CUES: { a: number; b: number; t: string }[] = [{"a": 44, "b": 311, "t": "Di video selanjutnya, kita akan lihat bagaimana Tuntun membantu investor berpikir lebih jernih"}, {"a": 311, "b": 483, "t": "dan mengurangi kesalahan sebelum mengambil keputusan."}];
+export const OUTRO_BEAT = {"judul": [{"teks": "Bagaimana Tuntun Membantu", "at": 164}, {"teks": "Investor Mengurangi Kesalahan", "at": 277}], "putar": 144, "k": {"selanjutnya": 64, "lihat": 129, "bagaimana": 144, "tuntun": 166, "membantu": 184, "investor": 207, "berpikir": 238, "jernih": 279, "mengurangi": 323, "kesalahan": 347, "keputusan": 431}};

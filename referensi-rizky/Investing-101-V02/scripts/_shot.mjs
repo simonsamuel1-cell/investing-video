@@ -1,0 +1,10 @@
+import { openBrowser } from '@remotion/renderer';
+const [,, url, out, w = '1900', h = '900'] = process.argv;
+const b = await openBrowser('chrome', { chromiumOptions: { gl: 'swangle' } });
+const p = await b.newPage({ context: () => null, logLevel: 'info', indent: false, pageIndex: 0, onBrowserLog: null, onLog: () => {} });
+await p.setViewport({ width: +w, height: +h, deviceScaleFactor: 1 });
+await p.goto({ url, timeout: 30000 });
+await new Promise((r) => setTimeout(r, 800));
+const { value } = await p._client().send('Page.captureScreenshot', { format: 'png' }); (await import('node:fs')).writeFileSync(out, Buffer.from(value.data, 'base64'));
+await b.close({ silent: true });
+console.log(out);

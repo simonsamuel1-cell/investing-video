@@ -1,0 +1,531 @@
+﻿1
+00:00:00,650 --> 00:00:05,900
+<font color=#5F4DEEFF>Kalau kita taruh berbagai instrumen investasi berdampingan dan melihat hasilnya dalam jangka panjang,</font>
+
+2
+00:00:05,900 --> 00:00:08,867
+<font color=#5F4DEEFF>kelihatan jelas bahwa perbedaannya bisa cukup jauh.</font>
+
+3
+00:00:09,183 --> 00:00:11,700
+<font color=#5F4DEEFF>Ada yang punya ruang pertumbuhan lebih besar,</font>
+
+4
+00:00:11,700 --> 00:00:14,600
+<font color=#5F4DEEFF>ada yang hasilnya cenderung lebih stabil,</font>
+
+5
+00:00:14,600 --> 00:00:17,867
+<font color=#5F4DEEFF>dan ada juga yang kenaikan harganya tidak terlalu tinggi,</font>
+
+6
+00:00:17,867 --> 00:00:19,983
+<font color=#5F4DEEFF>tapi bisa memberikan sumber penghasilan lain.</font>
+
+7
+00:00:20,217 --> 00:00:23,083
+<font color=#5F4DEEFF>Jadi saat melihat perbandingan seperti ini,</font>
+
+8
+00:00:23,083 --> 00:00:25,750
+<font color=#5F4DEEFF>pertanyaan yang penting bukan cuma:</font>
+
+9
+00:00:25,750 --> 00:00:27,217
+<font color=#5F4DEEFF>“Mana yang return-nya paling tinggi?”</font>
+
+10
+00:00:27,550 --> 00:00:28,767
+<font color=#5F4DEEFF>Tapi juga:</font>
+
+11
+00:00:28,767 --> 00:00:31,500
+<font color=#5F4DEEFF>return itu sebenarnya datang dari mana?</font>
+
+12
+00:00:31,750 --> 00:00:34,033
+<font color=#5F4DEEFF>Seberapa besar harganya bisa naik dan turun?</font>
+
+13
+00:00:34,267 --> 00:00:37,233
+<font color=#5F4DEEFF>Kalau sewaktu-waktu butuh uang, mudah dicairkan atau tidak?</font>
+
+14
+00:00:37,583 --> 00:00:40,050
+<font color=#5F4DEEFF>Dan berapa modal yang dibutuhkan untuk mulai?</font>
+
+15
+00:00:40,400 --> 00:00:44,417
+<font color=#5F4DEEFF>Di video ini, kita akan lihat satu per satu</font>
+
+16
+00:00:44,417 --> 00:00:47,483
+<font color=#5F4DEEFF>apa yang sebenarnya membedakan tiap instrumen investasi.</font>
+
+17
+00:00:47,850 --> 00:00:50,100
+<font color=#5F4DEEFF>Kita mulai dari yang paling familiar:</font>
+
+18
+00:00:50,100 --> 00:00:51,767
+<font color=#5F4DEEFF>tabungan dan deposito.</font>
+
+19
+00:00:52,000 --> 00:00:56,100
+<font color=#5F4DEEFF>Cara menghasilkan return-nya cukup sederhana, yaitu dari bunga.</font>
+
+20
+00:00:56,367 --> 00:00:58,817
+<font color=#5F4DEEFF>Tabungan biasa lebih fleksibel</font>
+
+21
+00:00:58,817 --> 00:01:01,633
+<font color=#5F4DEEFF>karena uangnya relatif mudah digunakan kapan saja.</font>
+
+22
+00:01:01,850 --> 00:01:06,650
+<font color=#5F4DEEFF>Sementara deposito biasanya mengharuskan kita menyimpan dana selama periode tertentu,</font>
+
+23
+00:01:06,650 --> 00:01:10,033
+<font color=#5F4DEEFF>dengan imbalan tingkat bunga yang relatif lebih tinggi.</font>
+
+24
+00:01:10,300 --> 00:01:14,517
+<font color=#5F4DEEFF>Karakter utamanya bukan untuk mengejar return paling tinggi, tapi lebih ke:</font>
+
+25
+00:01:14,517 --> 00:01:18,183
+<font color=#5F4DEEFF>sederhana, relatif stabil, dan mudah dipahami.</font>
+
+26
+00:01:18,500 --> 00:01:21,767
+<font color=#5F4DEEFF>Sekarang kita masuk ke aset yang karakternya cukup berbeda:</font>
+
+27
+00:01:21,767 --> 00:01:22,400
+<font color=#5F4DEEFF>emas.</font>
+
+28
+00:01:22,750 --> 00:01:25,333
+<font color=#5F4DEEFF>Kalau hari ini kita membeli satu gram emas,</font>
+
+29
+00:01:25,333 --> 00:01:26,800
+<font color=#5F4DEEFF>sepuluh tahun lagi,</font>
+
+30
+00:01:26,800 --> 00:01:29,050
+<font color=#5F4DEEFF>secara fisik emas itu tetap satu gram.</font>
+
+31
+00:01:29,383 --> 00:01:31,483
+<font color=#5F4DEEFF>Emas tidak membayar bunga,</font>
+
+32
+00:01:31,483 --> 00:01:33,233
+<font color=#5F4DEEFF>tidak menghasilkan sewa,</font>
+
+33
+00:01:33,233 --> 00:01:35,583
+<font color=#5F4DEEFF>dan juga tidak menjalankan bisnis yang mencetak laba.</font>
+
+34
+00:01:36,033 --> 00:01:40,083
+<font color=#5F4DEEFF>Jadi sumber return utamanya datang dari:</font>
+
+35
+00:01:40,083 --> 00:01:41,650
+<font color=#5F4DEEFF>perubahan harga.</font>
+
+36
+00:01:42,050 --> 00:01:44,900
+<font color=#5F4DEEFF>Harga emas sendiri terbentuk dari supply dan demand.</font>
+
+37
+00:01:45,250 --> 00:01:47,883
+<font color=#5F4DEEFF>Kalau permintaan naik lebih kuat daripada pasokan,</font>
+
+38
+00:01:47,883 --> 00:01:48,933
+<font color=#5F4DEEFF>harganya bisa naik.</font>
+
+39
+00:01:49,267 --> 00:01:50,783
+<font color=#5F4DEEFF>Kalau permintaan melemah,</font>
+
+40
+00:01:50,783 --> 00:01:52,000
+<font color=#5F4DEEFF>harganya juga bisa turun.</font>
+
+41
+00:01:52,333 --> 00:01:54,133
+<font color=#5F4DEEFF>Jadi selama kita memegang emas,</font>
+
+42
+00:01:54,133 --> 00:01:57,133
+<font color=#5F4DEEFF>emas itu sendiri tidak menghasilkan cash flow.</font>
+
+43
+00:01:57,450 --> 00:01:59,250
+<font color=#5F4DEEFF>Selanjutnya, kita lihat properti.</font>
+
+44
+00:01:59,600 --> 00:02:02,517
+<font color=#5F4DEEFF>Properti punya dua sumber return yang cukup mudah dipahami.</font>
+
+45
+00:02:02,817 --> 00:02:05,250
+<font color=#5F4DEEFF>Pertama, pendapatan sewa.</font>
+
+46
+00:02:05,567 --> 00:02:09,400
+<font color=#5F4DEEFF>Kedua, potensi kenaikan nilai properti itu sendiri.</font>
+
+47
+00:02:09,767 --> 00:02:13,167
+<font color=#5F4DEEFF>Artinya, properti bisa menghasilkan cash flow,</font>
+
+48
+00:02:13,167 --> 00:02:16,117
+<font color=#5F4DEEFF>sekaligus berpotensi naik nilainya seiring waktu.</font>
+
+49
+00:02:16,333 --> 00:02:18,383
+<font color=#5F4DEEFF>Tapi ada trade-off yang perlu diperhatikan.</font>
+
+50
+00:02:18,700 --> 00:02:23,333
+<font color=#5F4DEEFF>Modal awalnya biasanya lebih besar, dan likuiditasnya juga lebih rendah.</font>
+
+51
+00:02:23,617 --> 00:02:26,500
+<font color=#5F4DEEFF>Rumah tidak bisa dijual semudah menekan tombol sell.</font>
+
+52
+00:02:26,800 --> 00:02:32,533
+<font color=#5F4DEEFF>Selain itu, ada biaya agen, administrasi, dan biaya transaksi lainnya.</font>
+
+53
+00:02:32,817 --> 00:02:37,700
+<font color=#5F4DEEFF>Kalau harus cepat dijual, kadang kita juga perlu menerima harga yang lebih rendah.</font>
+
+54
+00:02:38,033 --> 00:02:39,633
+<font color=#5F4DEEFF>Berikutnya, obligasi.</font>
+
+55
+00:02:39,883 --> 00:02:42,050
+<font color=#5F4DEEFF>Cara paling gampang memahaminya:</font>
+
+56
+00:02:42,050 --> 00:02:45,550
+<font color=#5F4DEEFF>kita meminjamkan uang kepada pemerintah atau perusahaan.</font>
+
+57
+00:02:45,950 --> 00:02:47,250
+<font color=#5F4DEEFF>Sebagai imbalannya,</font>
+
+58
+00:02:47,250 --> 00:02:50,083
+<font color=#5F4DEEFF>kita menerima kupon secara berkala.</font>
+
+59
+00:02:50,483 --> 00:02:52,517
+<font color=#5F4DEEFF>Dan saat obligasi jatuh tempo,</font>
+
+60
+00:02:52,517 --> 00:02:55,650
+<font color=#5F4DEEFF>pokok nominalnya dibayarkan kembali sesuai ketentuan.</font>
+
+61
+00:02:56,083 --> 00:02:57,417
+<font color=#5F4DEEFF>Tapi sebelum jatuh tempo,</font>
+
+62
+00:02:57,417 --> 00:03:00,150
+<font color=#5F4DEEFF>harga obligasi di pasar bisa naik dan turun.</font>
+
+63
+00:03:00,467 --> 00:03:04,683
+<font color=#5F4DEEFF>Nah, ini contoh sederhana dari volatilitas:</font>
+
+64
+00:03:04,683 --> 00:03:06,750
+<font color=#5F4DEEFF>harga di tengah perjalanan bisa berubah,</font>
+
+65
+00:03:06,750 --> 00:03:09,850
+<font color=#5F4DEEFF>meskipun kalau obligasinya dipegang sampai jatuh tempo,</font>
+
+66
+00:03:09,850 --> 00:03:11,133
+<font color=#5F4DEEFF>kita tetap menerima kupon</font>
+
+67
+00:03:11,133 --> 00:03:13,283
+<font color=#5F4DEEFF>dan pokok nominal sesuai ketentuannya.</font>
+
+68
+00:03:13,633 --> 00:03:14,083
+<font color=#5F4DEEFF>Jadi,</font>
+
+69
+00:03:14,083 --> 00:03:18,050
+<font color=#5F4DEEFF>harga yang naik-turun tidak otomatis berarti investasinya gagal.</font>
+
+70
+00:03:18,367 --> 00:03:20,250
+<font color=#5F4DEEFF>Sekarang kita masuk ke reksa dana.</font>
+
+71
+00:03:20,467 --> 00:03:23,133
+<font color=#5F4DEEFF>Hal paling penting saat melihat reksa dana</font>
+
+72
+00:03:23,133 --> 00:03:26,000
+<font color=#5F4DEEFF>bukan sekadar melihat label “reksa dana”-nya,</font>
+
+73
+00:03:26,000 --> 00:03:28,033
+<font color=#5F4DEEFF>tapi melihat:</font>
+
+74
+00:03:28,033 --> 00:03:30,433
+<font color=#5F4DEEFF>sebenarnya dana itu diinvestasikan ke apa.</font>
+
+75
+00:03:30,733 --> 00:03:32,100
+<font color=#5F4DEEFF>Karena pada dasarnya,</font>
+
+76
+00:03:32,100 --> 00:03:34,050
+<font color=#5F4DEEFF>reksa dana adalah sebuah keranjang investasi.</font>
+
+77
+00:03:34,417 --> 00:03:37,633
+<font color=#5F4DEEFF>Kalau sebagian besar isinya obligasi,</font>
+
+78
+00:03:37,633 --> 00:03:39,933
+<font color=#5F4DEEFF>karakternya akan lebih mirip obligasi.</font>
+
+79
+00:03:40,150 --> 00:03:42,050
+<font color=#5F4DEEFF>Kalau sebagian besar isinya saham,</font>
+
+80
+00:03:42,050 --> 00:03:43,767
+<font color=#5F4DEEFF>pergerakannya akan lebih mirip saham.</font>
+
+81
+00:03:43,933 --> 00:03:46,067
+<font color=#5F4DEEFF>Kalau mengikuti sebuah indeks saham,</font>
+
+82
+00:03:46,067 --> 00:03:49,200
+<font color=#5F4DEEFF>kinerjanya juga akan banyak dipengaruhi oleh indeks tersebut.</font>
+
+83
+00:03:49,450 --> 00:03:55,100
+<font color=#5F4DEEFF>Jadi return, volatilitas, dan risikonya</font>
+
+84
+00:03:55,100 --> 00:03:57,750
+<font color=#5F4DEEFF>pada akhirnya sangat bergantung pada underlying asset-nya.</font>
+
+85
+00:03:58,067 --> 00:04:01,133
+<font color=#5F4DEEFF>Terakhir, kita masuk ke saham.</font>
+
+86
+00:04:01,383 --> 00:04:02,717
+<font color=#5F4DEEFF>Saat membeli saham,</font>
+
+87
+00:04:02,717 --> 00:04:06,183
+<font color=#5F4DEEFF>kita membeli sebagian kepemilikan dari sebuah perusahaan.</font>
+
+88
+00:04:06,500 --> 00:04:09,350
+<font color=#5F4DEEFF>Dan di sini ada dua hal yang harus dibedakan.</font>
+
+89
+00:04:09,700 --> 00:04:10,517
+<font color=#5F4DEEFF>Pertama,</font>
+
+90
+00:04:10,517 --> 00:04:11,283
+<font color=#5F4DEEFF>bisnisnya.</font>
+
+91
+00:04:11,617 --> 00:04:14,317
+<font color=#5F4DEEFF>Perusahaan menjual produk atau layanan,</font>
+
+92
+00:04:14,317 --> 00:04:15,967
+<font color=#5F4DEEFF>menghasilkan pendapatan,</font>
+
+93
+00:04:15,967 --> 00:04:17,283
+<font color=#5F4DEEFF>lalu mencetak laba.</font>
+
+94
+00:04:17,683 --> 00:04:18,550
+<font color=#5F4DEEFF>Kedua,</font>
+
+95
+00:04:18,550 --> 00:04:19,650
+<font color=#5F4DEEFF>harga sahamnya.</font>
+
+96
+00:04:20,017 --> 00:04:22,567
+<font color=#5F4DEEFF>Harga saham adalah harga yang diberikan pasar</font>
+
+97
+00:04:22,567 --> 00:04:24,233
+<font color=#5F4DEEFF>untuk kepemilikan tersebut,</font>
+
+98
+00:04:24,233 --> 00:04:27,433
+<font color=#5F4DEEFF>dan nilainya bisa berubah dari waktu ke waktu.</font>
+
+99
+00:04:27,833 --> 00:04:29,450
+<font color=#5F4DEEFF>Kalau perusahaan terus berkembang,</font>
+
+100
+00:04:29,450 --> 00:04:32,083
+<font color=#5F4DEEFF>pendapatan dan labanya juga bisa ikut tumbuh.</font>
+
+101
+00:04:32,433 --> 00:04:34,400
+<font color=#5F4DEEFF>Sebagian laba itu bisa digunakan kembali</font>
+
+102
+00:04:34,400 --> 00:04:36,283
+<font color=#5F4DEEFF>untuk memperbesar bisnis,</font>
+
+103
+00:04:36,283 --> 00:04:37,500
+<font color=#5F4DEEFF>mengembangkan produk,</font>
+
+104
+00:04:37,500 --> 00:04:38,883
+<font color=#5F4DEEFF>atau masuk ke pasar baru.</font>
+
+105
+00:04:39,283 --> 00:04:41,300
+<font color=#5F4DEEFF>Inilah yang membuat sebuah bisnis</font>
+
+106
+00:04:41,300 --> 00:04:44,617
+<font color=#5F4DEEFF>bisa terus menciptakan nilai dari waktu ke waktu.</font>
+
+107
+00:04:45,000 --> 00:04:46,133
+<font color=#5F4DEEFF>Tapi perlu diingat,</font>
+
+108
+00:04:46,133 --> 00:04:50,533
+<font color=#5F4DEEFF>pertumbuhan bisnis dan pergerakan harga saham adalah dua hal yang berbeda.</font>
+
+109
+00:04:50,950 --> 00:04:53,150
+<font color=#5F4DEEFF>Harga saham tidak harus bergerak sama persis</font>
+
+110
+00:04:53,150 --> 00:04:55,100
+<font color=#5F4DEEFF>dengan laba perusahaan setiap hari.</font>
+
+111
+00:04:55,533 --> 00:04:57,400
+<font color=#5F4DEEFF>Karena harga juga dipengaruhi oleh</font>
+
+112
+00:04:57,400 --> 00:04:59,700
+<font color=#5F4DEEFF>bagaimana pasar menilai perusahaan tersebut.</font>
+
+113
+00:05:00,133 --> 00:05:01,733
+<font color=#5F4DEEFF>Jadi bagi investor saham,</font>
+
+114
+00:05:01,733 --> 00:05:04,150
+<font color=#5F4DEEFF>potensi return bisa datang dari dua hal:</font>
+
+115
+00:05:04,150 --> 00:05:05,733
+<font color=#5F4DEEFF>hasil yang dihasilkan bisnis,</font>
+
+116
+00:05:05,733 --> 00:05:07,533
+<font color=#5F4DEEFF>dan perubahan harga saham di pasar.</font>
+
+117
+00:05:07,983 --> 00:05:11,633
+<font color=#5F4DEEFF>Kalau sekarang semua instrumen tadi kita taruh berdampingan,</font>
+
+118
+00:05:11,633 --> 00:05:13,967
+<font color=#5F4DEEFF>perbedaannya jadi lebih jelas.</font>
+
+119
+00:05:14,350 --> 00:05:18,267
+<font color=#5F4DEEFF>Ada yang menghasilkan dividen, kupon, atau bunga,</font>
+
+120
+00:05:18,267 --> 00:05:20,650
+<font color=#5F4DEEFF>ada yang mengandalkan perubahan harga,</font>
+
+121
+00:05:20,650 --> 00:05:22,333
+<font color=#5F4DEEFF>dan ada juga yang punya keduanya.</font>
+
+122
+00:05:22,650 --> 00:05:23,850
+<font color=#5F4DEEFF>Selain return,</font>
+
+123
+00:05:23,850 --> 00:05:25,500
+<font color=#5F4DEEFF>kita juga perlu melihat:</font>
+
+124
+00:05:25,500 --> 00:05:28,083
+<font color=#5F4DEEFF>seberapa besar harganya bisa bergerak,</font>
+
+125
+00:05:28,083 --> 00:05:30,283
+<font color=#5F4DEEFF>dan seberapa besar potensi risikonya.</font>
+
+126
+00:05:30,583 --> 00:05:33,883
+<font color=#5F4DEEFF>Tidak ada satu instrumen yang unggul di semuanya.</font>
+
+127
+00:05:34,217 --> 00:05:38,483
+<font color=#5F4DEEFF>Setelah memahami perbedaannya, langkah berikutnya adalah memahami:</font>
+
+128
+00:05:38,483 --> 00:05:40,967
+<font color=#5F4DEEFF>uang kita sendiri sebaiknya dibagi seperti apa.</font>
+
+129
+00:05:41,317 --> 00:05:45,517
+<font color=#5F4DEEFF>Mana yang memang dibutuhkan untuk kebutuhan sehari-hari,</font>
+
+130
+00:05:45,517 --> 00:05:48,967
+<font color=#5F4DEEFF>mana yang harus disiapkan untuk kondisi darurat,</font>
+
+131
+00:05:48,967 --> 00:05:54,633
+<font color=#5F4DEEFF>dan mana yang bisa disimpan lebih lama untuk mengejar pertumbuhan jangka panjang.</font>
+
+132
+00:05:54,900 --> 00:05:57,767
+<font color=#5F4DEEFF>Di video berikutnya, kita akan bahas:</font>
+
+133
+00:05:57,767 --> 00:06:00,117
+<font color=#5F4DEEFF>gimana cara membagi uang untuk tujuan yang berbeda.</font>

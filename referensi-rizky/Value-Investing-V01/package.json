@@ -1,0 +1,23 @@
+{
+  "name": "tuntun-value-investing-v01",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "remotion studio --port 3021",
+    "build": "remotion bundle",
+    "render": "remotion render ApaItuValueInvesting out/apa-itu-value-investing.mp4",
+    "still": "remotion still ApaItuValueInvesting",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.454",
+    "@remotion/google-fonts": "4.0.454",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "remotion": "4.0.454"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.3",
+    "typescript": "5.5.4"
+  }
+}

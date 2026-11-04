@@ -1,0 +1,69 @@
+<!doctype html>
+<meta charset="utf-8"><title>CTA Chart Pro — cek subtitle</title>
+<style>
+:root{--bg:#F5F5F5;--fg:#16181B;--mut:#6B7280;--line:#E3E5E9;--card:#fff;--ac:#4F46E5;--warn:#B45309}
+@media(prefers-color-scheme:dark){:root{--bg:#111317;--fg:#ECEDEF;--mut:#9AA1AC;--line:#262A31;--card:#181B20;--ac:#818CF8;--warn:#F0B429}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+header{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:16px 20px 12px;z-index:5}
+h1{margin:0 0 10px;font-size:15px;font-weight:600;letter-spacing:-.01em}
+h1 span{color:var(--mut);font-weight:400}
+audio{width:100%;height:34px}
+#now{margin-top:12px;min-height:62px;background:var(--card);border:1px solid var(--line);border-radius:10px;
+     padding:12px 14px;font-size:20px;font-weight:500;white-space:pre-line;line-height:1.35}
+#meta{margin-top:6px;color:var(--mut);font-size:12px;font-variant-numeric:tabular-nums}
+#list{padding:8px 12px 60px;max-width:900px;margin:0 auto}
+.row{display:grid;grid-template-columns:44px 62px 82px 1fr;gap:10px;align-items:start;
+     padding:7px 10px;border-radius:8px;cursor:pointer;border:1px solid transparent}
+.row:hover{background:var(--card)}
+.row.on{background:var(--card);border-color:var(--ac)}
+.n{color:var(--mut);font-size:12px;font-variant-numeric:tabular-nums;text-align:right}
+.tc{color:var(--ac);font-size:12px;font-variant-numeric:tabular-nums}
+.sc{color:var(--mut);font-size:11px;letter-spacing:.04em}
+.tx{white-space:pre-line}
+.row.soft .n::after{content:"~";color:var(--warn);margin-left:3px;font-weight:700}
+.hdr{grid-column:1/-1;margin:16px 0 4px;color:var(--mut);font-size:11px;letter-spacing:.08em;
+     text-transform:uppercase;border-top:1px solid var(--line);padding-top:10px}
+footer{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);
+       padding:7px 20px;font-size:11px;color:var(--mut)}
+b.w{color:var(--warn)}
+</style>
+<header>
+  <h1>CTA Chart Pro — cek subtitle <span>{{N}} cue &middot; VO {{DUR}} &middot; klik baris untuk lompat</span></h1>
+  <audio id="au" controls src="{{AUDIO}}"></audio>
+  <div id="now">&mdash;</div><div id="meta"></div>
+</header>
+<div id="list"></div>
+<footer><b class="w">~</b> = batas cue diinterpolasi (tidak ada jeda napas jelas di titik itu) &mdash; {{NSOFT}} cue, paling layak dicek.</footer>
+<script>
+const CUES={{CUES}}, au=document.getElementById('au'),
+      now=document.getElementById('now'), meta=document.getElementById('meta'),
+      list=document.getElementById('list');
+const tc=t=>`${Math.floor(t/60)}:${String((t%60).toFixed(2)).padStart(5,'0')}`;
+let cur=-1, sc=null;
+CUES.forEach((c,i)=>{
+  if(c.sc!==sc){sc=c.sc;const h=document.createElement('div');h.className='hdr';h.textContent=sc;list.appendChild(h);}
+  const r=document.createElement('div');
+  r.className='row'+(c.soft?' soft':''); r.dataset.i=i;
+  r.innerHTML=`<div class="n">${c.n}</div><div class="tc">${tc(c.a)}</div>`+
+              `<div class="sc">${(c.b-c.a).toFixed(1)}s</div><div class="tx"></div>`;
+  r.querySelector('.tx').textContent=c.t;
+  r.onclick=()=>{au.currentTime=c.a;au.play();};
+  list.appendChild(r);
+});
+const rows=[...document.querySelectorAll('.row')];
+function tick(){
+  const t=au.currentTime;
+  let k=CUES.findIndex(c=>t>=c.a&&t<c.b);
+  if(k!==cur){
+    if(cur>=0)rows[cur].classList.remove('on');
+    cur=k;
+    if(k>=0){rows[k].classList.add('on');now.textContent=CUES[k].t;
+      meta.textContent=`#${CUES[k].n} · ${CUES[k].sc} · ${tc(CUES[k].a)} → ${tc(CUES[k].b)} · ${(CUES[k].b-CUES[k].a).toFixed(2)}s`;
+      rows[k].scrollIntoView({block:'center',behavior:'smooth'});}
+    else{now.textContent='—';meta.textContent=`${tc(t)} — jeda`;}
+  }
+  requestAnimationFrame(tick);
+}
+tick();
+</script>

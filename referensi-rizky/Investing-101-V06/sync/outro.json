@@ -1,0 +1,114 @@
+{
+ "outro_at": 31254,
+ "n": 523,
+ "vo_at": 28,
+ "kata": [
+  {
+   "w": "Di",
+   "a": 46.0,
+   "b": 49.6
+  },
+  {
+   "w": "video",
+   "a": 50.8,
+   "b": 60.4
+  },
+  {
+   "w": "selanjutnya,",
+   "a": 64.1,
+   "b": 86.9
+  },
+  {
+   "w": "kita",
+   "a": 108.6,
+   "b": 118.2
+  },
+  {
+   "w": "akan",
+   "a": 120.6,
+   "b": 127.8
+  },
+  {
+   "w": "lihat",
+   "a": 129.0,
+   "b": 141.1
+  },
+  {
+   "w": "bagaimana",
+   "a": 143.5,
+   "b": 162.7
+  },
+  {
+   "w": "Tuntun",
+   "a": 166.3,
+   "b": 182.0
+  },
+  {
+   "w": "membantu",
+   "a": 184.4,
+   "b": 203.6
+  },
+  {
+   "w": "investor",
+   "a": 207.2,
+   "b": 236.1
+  },
+  {
+   "w": "berpikir",
+   "a": 238.5,
+   "b": 265.0
+  },
+  {
+   "w": "lebih",
+   "a": 267.4,
+   "b": 278.2
+  },
+  {
+   "w": "jernih",
+   "a": 279.4,
+   "b": 298.7
+  },
+  {
+   "w": "dan",
+   "a": 313.1,
+   "b": 320.4
+  },
+  {
+   "w": "mengurangi",
+   "a": 322.8,
+   "b": 344.4
+  },
+  {
+   "w": "kesalahan",
+   "a": 346.8,
+   "b": 379.3
+  },
+  {
+   "w": "sebelum",
+   "a": 384.1,
+   "b": 403.4
+  },
+  {
+   "w": "mengambil",
+   "a": 404.6,
+   "b": 427.5
+  },
+  {
+   "w": "keputusan.",
+   "a": 431.1,
+   "b": 462.4
+  }
+ ],
+ "cues": [
+  {
+   "a": 44,
+   "b": 311,
+   "t": "Di video selanjutnya, kita akan lihat bagaimana Tuntun membantu investor berpikir lebih jernih"
+  },
+  {
+   "a": 311,
+   "b": 483,
+   "t": "dan mengurangi kesalahan sebelum mengambil keputusan."
+  }
+ ]
+}

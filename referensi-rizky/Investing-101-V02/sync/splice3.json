@@ -1,0 +1,145 @@
+{
+ "celah_sambungan_s": 0.32,
+ "level_lama_dB": -22.8,
+ "blok": [
+  {
+   "nama": "S01–S02 (v4 S01–S02)",
+   "sumber": "lama",
+   "scene_baru": [
+    1,
+    2
+   ],
+   "potong_sumber_s": [
+    0.0,
+    77.82
+   ],
+   "suara_sumber_s": [
+    0.0,
+    77.66
+   ],
+   "mulai_di_v5_s": 0.0,
+   "geser_s": 0.0,
+   "gain_dB": 0.0,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S03 Emas (baru)",
+   "sumber": "baru",
+   "scene_baru": [
+    3
+   ],
+   "potong_sumber_s": [
+    -0.09,
+    38.87
+   ],
+   "suara_sumber_s": [
+    0.07,
+    38.71
+   ],
+   "mulai_di_v5_s": 77.82,
+   "geser_s": 77.91,
+   "gain_dB": 3.56,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S04 Properti (v4 S05)",
+   "sumber": "lama",
+   "scene_baru": [
+    4
+   ],
+   "potong_sumber_s": [
+    138.18,
+    178.75
+   ],
+   "suara_sumber_s": [
+    138.34,
+    178.59
+   ],
+   "mulai_di_v5_s": 116.78,
+   "geser_s": -21.4,
+   "gain_dB": 0.0,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S05 Obligasi (baru)",
+   "sumber": "baru",
+   "scene_baru": [
+    5
+   ],
+   "potong_sumber_s": [
+    38.83,
+    79.18
+   ],
+   "suara_sumber_s": [
+    38.99,
+    79.02
+   ],
+   "mulai_di_v5_s": 157.35,
+   "geser_s": 118.52,
+   "gain_dB": 3.78,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S06 Reksa Dana (v4 S07)",
+   "sumber": "lama",
+   "scene_baru": [
+    6
+   ],
+   "potong_sumber_s": [
+    208.23,
+    247.93
+   ],
+   "suara_sumber_s": [
+    208.39,
+    247.77
+   ],
+   "mulai_di_v5_s": 197.7,
+   "geser_s": -10.53,
+   "gain_dB": 0.0,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S07–S09 (baru)",
+   "sumber": "baru",
+   "scene_baru": [
+    7,
+    8,
+    9
+   ],
+   "potong_sumber_s": [
+    79.25,
+    175.01
+   ],
+   "suara_sumber_s": [
+    79.41,
+    174.85
+   ],
+   "mulai_di_v5_s": 237.4,
+   "geser_s": 158.15,
+   "gain_dB": 3.65,
+   "sampel_dibatasi": 0
+  },
+  {
+   "nama": "S10 Penutup (v4 S13)",
+   "sumber": "lama",
+   "scene_baru": [
+    10
+   ],
+   "potong_sumber_s": [
+    425.65,
+    451.876
+   ],
+   "suara_sumber_s": [
+    425.81,
+    451.876
+   ],
+   "mulai_di_v5_s": 333.16,
+   "geser_s": -92.49,
+   "gain_dB": 0.0,
+   "sampel_dibatasi": 0
+  }
+ ],
+ "durasi_v4_s": 451.876,
+ "durasi_v5_s": 359.386,
+ "keluar": "inv02_vo_v5.wav"
+}
