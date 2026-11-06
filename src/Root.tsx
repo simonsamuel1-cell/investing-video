@@ -24,12 +24,14 @@ import { theme } from "./core";
 import { MovingAverageFull, TA07_FULL_FRAMES } from "./episodes/019-moving-average/FullVideo";
 import { VolumeFull, TA09_FULL_FRAMES } from "./episodes/020-volume/FullVideo";
 import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/FullVideo";
-import { PassiveIncomeFull, FULL_FRAMES as VI01_FULL_FRAMES } from "./episodes/vi01-passive-income/FullVideo";
-import { TigaJenisUangFull, VI03_FULL_FRAMES } from "./episodes/vi03-tiga-jenis-uang/FullVideo";
-import { InvestasiYangCocokFull, VI04_FULL_FRAMES } from "./episodes/vi04-investasi-yang-cocok/FullVideo";
-import { TEMPLATE_MAP_FRAMES, TemplateMap } from "./episodes/vi04-investasi-yang-cocok/TemplateMap";
-import { CaraTuntunMembantuFull, VI07_FULL_FRAMES } from "./episodes/vi07-cara-tuntun-membantu-investor/FullVideo";
-import { PAPER_SHOT_FRAMES, PaperShot } from "./episodes/proto-paper/PaperShot";
+import { PassiveIncomeFull, FULL_FRAMES as IN01_FULL_FRAMES } from "./episodes/in01-passive-income/FullVideo";
+import { MembeliSahamFull, VI02_FULL_FRAMES } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/FullVideo";
+import { RizkyComps } from "./RizkyComps";
+import { InvestasiYangCocokFull, IN04_FULL_FRAMES } from "./episodes/in04-investasi-yang-cocok/FullVideo";
+import { TEMPLATE_MAP_FRAMES, TemplateMap } from "./episodes/in04-investasi-yang-cocok/TemplateMap";
+import { IsoFactory } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/components/IsoFactory";
+import { IsoPlant } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/components/IsoPlant";
+import { CaraTuntunMembantuFull, IN07_FULL_FRAMES } from "./episodes/in07-cara-tuntun-membantu-investor/FullVideo";
 
 // ── migrated: self-contained projects ───────────────────────────────────────
 import {
@@ -133,55 +135,73 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* VI01 — Passive Income, finished: Intro + the episode + Outro, the BGM underneath (FullVideo.tsx). Not a TA video:
+      {/* IN01 — Passive Income, finished: Intro + the episode + Outro, the BGM underneath (FullVideo.tsx). Not a TA video:
           built on src/core at 60fps; the episode's frame numbers sit INTRO_FRAMES (240) later in this timeline. */}
       <Composition
-        id="VI01-PassiveIncome"
+        id="IN01-PassiveIncome"
         component={PassiveIncomeFull}
-        durationInFrames={VI01_FULL_FRAMES}
+        durationInFrames={IN01_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* VI03 — Tiga Jenis Uang: Intro + episode + Outro + BGM (core/EpisodeWrap). Timed by the VO's words. */}
+      {/* IN04 — Investasi yang Cocok: Intro + episode + Outro + BGM. VO + subtitles only for now (no visuals). */}
       <Composition
-        id="VI03-TigaJenisUang"
-        component={TigaJenisUangFull}
-        durationInFrames={VI03_FULL_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
-      {/* VI04 — Investasi yang Cocok: Intro + episode + Outro + BGM. VO + subtitles only for now (no visuals). */}
-      <Composition
-        id="VI04-InvestasiYangCocok"
+        id="IN04-InvestasiYangCocok"
         component={InvestasiYangCocokFull}
-        durationInFrames={VI04_FULL_FRAMES}
+        durationInFrames={IN04_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* VI04 before the 2 Nov route-map revision — the switch's "before" side (components/PetaSwitch.tsx). */}
+      {/* IN04 before the 2 Nov route-map revision — the switch's "before" side (components/PetaSwitch.tsx). */}
       <Composition
-        id="VI04-InvestasiYangCocok-Sebelum"
+        id="IN04-InvestasiYangCocok-Sebelum"
         component={InvestasiYangCocokFull}
-        durationInFrames={VI04_FULL_FRAMES}
+        durationInFrames={IN04_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
         defaultProps={{ petaBaru: false }}
       />
-      {/* VI07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. Visuals, VO + subtitles. */}
+      {/* IN07 — Cara Tuntun Membantu Investor Mengurangi Kesalahan: Intro + episode + Outro + BGM. Visuals, VO + subtitles. */}
       <Composition
-        id="VI07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+        id="IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
         component={CaraTuntunMembantuFull}
-        durationInFrames={VI07_FULL_FRAMES}
+        durationInFrames={IN07_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* The VI04 template map (the harbour map, its three routes and the house); its SHOW lever still has the
+      {/* VI02 — Membeli Saham Berarti Membeli Perusahaan: Intro + episode + Outro + BGM. */}
+      <Composition
+        id="VI02-MembeliSahamBerartiMembeliPerusahaan"
+        component={MembeliSahamFull}
+        durationInFrames={VI02_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* The IN04 template map (the harbour map, its three routes and the house); its SHOW lever still has the
           stickman walk test (front and profile). Was "Stickman-Walk" until 3 Nov. */}
+      {/* The isometric plant Simon asked to recreate (6 Nov), on its own until he says where it goes. */}
+      <Composition
+        id="Template-iso-plant"
+        component={IsoPlant}
+        durationInFrames={300}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* Simon's factory.svg in the plant's style (6 Nov). */}
+      <Composition
+        id="Template-iso-factory"
+        component={IsoFactory}
+        durationInFrames={300}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
       <Composition
         id="Template-map"
         component={TemplateMap}
@@ -190,26 +210,18 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* Prototype, 21 Oct 2026: one shot in the paper-diorama style of Simon's Threads reference (no VO). */}
-      <Composition
-        id="Proto-PaperShot"
-        component={PaperShot}
-        durationInFrames={PAPER_SHOT_FRAMES}
-        fps={60}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
-      />
       {/* ⚠ A BENCH, NOT AN EPISODE — src/lab/Lab.tsx. One visual language at a
           time, judged on its own before anything is built with it. Nothing
           here ships; the lever is `TEST` in that file. */}
       <Composition
-        id="VisualLab"
+        id="AI-Motion-Experiment"
         component={VisualLab}
         durationInFrames={LAB_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
+      <RizkyComps />
     </>
   );
 };

@@ -1,0 +1,275 @@
+/**
+ * kit.tsx — the pieces IN04 is drawn from.
+ *
+ * VI style (docs/vi-style/STYLE.md): Iconify icons (public/icons/in04), white rounded cards, text, the mascot,
+ * Orang Tuntun only on insights. IN03's tested pieces are reused rather than copied (IN03 itself reuses IN01's).
+ *
+ * ⚠ ONE ACCENT FOR THE WHOLE VIDEO: amber (theme.color.selfAmber*) is YOU — "diri kita sendiri", the investor
+ * nobody researches. Other people's answers, products and numbers stay indigo/slate.
+ */
+import { Img, staticFile, useCurrentFrame } from "remotion";
+import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { OUTSIDE_RESERVES, ease } from "./base";
+import JEMBATAN from "../data/return-jembatan.json";
+import KAPAL from "../data/return-kapal.json";
+import PESAWAT from "../data/return-pesawat.json";
+import { w as wordAt } from "../data/timing";
+
+export { Appear, Badge, Ground, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, Panel3, Statement, ease, useAppear } from "./base";
+
+/** Scene-local frame of a phrase in a scene: `W("diri kita sendiri")`. */
+export const useWords = (scene: number, block: number) => (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") => wordAt(scene, phrase, nth, edge) - block;
+
+/**
+ * An icon. With `tone` it is painted in that colour through the SVG's own shape (a CSS mask), so the single-colour
+ * Iconify files can go neutral (Benchmark v1, Simon 22 Oct: the obvious things neutral, the brand only on hairlines).
+ */
+export const Ico = ({ name, size, tone }: { name: string; size: number; tone?: string }) =>
+  tone ? (
+    <div style={{ width: size, height: size, flex: "none", background: tone, WebkitMaskImage: `url(${staticFile(`icons/in04/${name}.svg`)})`, maskImage: `url(${staticFile(`icons/in04/${name}.svg`)})`, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }} />
+  ) : (
+    <Img src={staticFile(`icons/in04/${name}.svg`)} style={{ width: size, height: size, maxWidth: "none", display: "block", flex: "none" }} />
+  );
+
+/** An icon on a tinted disc. `neutral`: a light grey disc and a grey icon. */
+export const IconDot = ({ name, size, tint, neutral = false, tone }: { name: string; size: number; tint?: string; neutral?: boolean; tone?: string }) => (
+  <div style={{ width: size * 1.55, height: size * 1.55, borderRadius: 999, background: tint ?? (neutral ? theme.color.neutralDisc : theme.color.indigoWash), display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+    <Ico name={name} size={size} tone={tone ?? (neutral ? theme.color.neutralIcon : undefined)} />
+  </div>
+);
+
+/**
+ * A checkbox: an indigo outline that fills and ticks on `checkAt`; or, `open`, an amber dashed box that stays
+ * empty and breathes — the one thing on the list nobody checked.
+ */
+export const CheckBox = ({ size, checkAt, open = false }: { size: number; checkAt?: number; open?: boolean }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const p = checkAt === undefined ? 0 : ease(f, checkAt, m.pop);
+  const breathe = open ? 1 + 0.06 * Math.sin((f / m.sec(1.2)) * Math.PI) ** 2 : 1;
+  const r = size * 0.28;
+  return (
+    <div style={{ position: "relative", width: size, height: size, borderRadius: r, boxSizing: "border-box", border: `5px ${open ? "dashed" : "solid"} ${open ? theme.color.selfAmber : c.indigo}`, background: open ? theme.color.selfAmberWash : "transparent", transform: `scale(${breathe.toFixed(3)})`, flex: "none" }}>
+      {p > 0.001 ? (
+        <div style={{ position: "absolute", inset: -5, borderRadius: r, background: c.indigo, opacity: p, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <span style={{ fontFamily: theme.text.family, fontWeight: 800, fontSize: size * 0.6, lineHeight: 1, color: c.cardBg, transform: `scale(${(0.6 + 0.4 * p).toFixed(3)})` }}>✓</span>
+        </div>
+      ) : null}
+    </div>
+  );
+};
+
+/** A numbered disc (1, 2…) — the order of two questions. */
+export const Num = ({ n, size, tint, color }: { n: number; size: number; tint: string; color: string }) => (
+  <div style={{ width: size, height: size, borderRadius: 999, background: tint, color, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontWeight: 800, fontSize: size * 0.52, flex: "none" }}>{n}</div>
+);
+
+/** A name over something — a pill centred on `cx` (in its parent), its top at `y`. */
+export const Label = ({ cx, y, text, tint, color }: { cx: number; y: number; text: string; tint?: string; color?: string }) => {
+  const c = usePalette();
+  return (
+    <div style={{ position: "absolute", left: cx, top: y, transform: "translateX(-50%)", padding: "10px 26px", borderRadius: 999, background: tint ?? theme.color.indigoWash, fontFamily: theme.text.family, fontSize: 34, fontWeight: 800, color: color ?? c.indigo, whiteSpace: "nowrap", lineHeight: 1.1 }}>{text}</div>
+  );
+};
+
+/**
+ * An app-icon tile — a white line icon on the indigo gradient, round corners, soft shadow. The flat, UI-style
+ * stand-in for every vehicle (Simon, 19 Oct: "remove semua 3D, ganti jadi 2D flat design yang simple dan ada
+ * UI style"). `icon` names the white file without its "-w".
+ */
+export const Tile = ({ icon, size }: { icon: string; size: number }) => {
+  const shadow = useShadow();
+  return (
+    <div style={{ width: size, height: size, borderRadius: size * 0.28, background: theme.color.tileGrad, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+      <Ico name={`${icon}-w`} size={size * 0.56} />
+    </div>
+  );
+};
+
+/**
+ * The vehicles as hand-drawn sketches (ChatGPT, one sheet split by scripts/vi/split-sprites.py; Simon, 19 Oct:
+ * "icon jembatan, perahu, pesawat; coba buat jadi ilustrasi sketch"). `h` is the drawing's height; `neutral` draws it in grey.
+ */
+export const SKETCH = { bridge: 563 / 377, ferry: 522 / 317, speedboat: 452 / 197, plane: 453 / 279, waves: 2000 / 553 } as const;
+export type SketchName = keyof typeof SKETCH;
+export const Sketch = ({ name, h, neutral = false }: { name: SketchName; h: number; neutral?: boolean }) => (
+  <Img src={staticFile(`art/in04/sk-${name}.png`)} style={{ height: h, width: h * SKETCH[name], maxWidth: "none", display: "block", flex: "none", filter: neutral ? NEUTRAL_INK : undefined }} />
+);
+/** The indigo sketches redrawn in grey ink (Benchmark v1: the obvious things neutral) — their white fills stay white. */
+const NEUTRAL_INK = "grayscale(1) brightness(1.18)";
+
+/**
+ * A statement in normal weight (Simon, 22 Oct: "tulisannya normal (tidak terlalu tebal)") — the IN04 replacement
+ * for IN03's heavy Statement. `mark` is said in `markInk` (indigo by default): a word, not a block of colour.
+ */
+export const Line = ({ x, y, w, text, size = 64, mark, markInk, align = "left", weight = 600 }: { x: number; y: number; w: number; text: string; size?: number; mark?: string; markInk?: string; align?: "left" | "center"; weight?: number }) => {
+  const c = usePalette();
+  const i = mark ? text.indexOf(mark) : -1;
+  return (
+    <div style={{ position: "absolute", left: x, top: y, width: w, transform: "translateY(-50%)", textAlign: align, fontFamily: theme.text.family, fontSize: size, fontWeight: weight, letterSpacing: -0.5, lineHeight: 1.22, color: c.ink }}>
+      {i < 0 ? text : (
+        <>
+          {text.slice(0, i)}
+          <span style={{ color: markInk ?? c.indigo }}>{mark}</span>
+          {text.slice(i + (mark as string).length)}
+        </>
+      )}
+    </div>
+  );
+};
+
+/** A white card: a soft shadow, and — when it matters — a brand (or amber) hairline instead of a fill. */
+export const Card = ({ x, y, w, h, line, dashed = false, children, style }: { x: number; y: number; w: number; h: number; line?: string; dashed?: boolean; children?: React.ReactNode; style?: React.CSSProperties }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  return (
+    <div style={{ position: "absolute", left: x, top: y, width: w, height: h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: dashed ? undefined : shadow.soft, border: line ? `2px ${dashed ? "dashed" : "solid"} ${line}` : undefined, boxSizing: "border-box", ...style }}>
+      {children}
+    </div>
+  );
+};
+
+/** A number on a white disc with a brand hairline — the order of things (the routes, the two questions). */
+export const NumRing = ({ n, size }: { n: number; size: number }) => {
+  const c = usePalette();
+  return (
+    <div style={{ width: size, height: size, borderRadius: 999, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.connector}`, display: "flex", alignItems: "center", justifyContent: "center", flex: "none", fontFamily: theme.text.family, fontSize: size * 0.46, fontWeight: 600, color: c.indigo }}>{n}</div>
+  );
+};
+
+/** A scene's heading at the top left: the number ring, then the line in normal weight. `y` is its middle. */
+export const HEADING = { x: 140, y: 190, disc: 56 };
+export const Heading = ({ n, text }: { n: number; text: string }) => {
+  const c = usePalette();
+  return (
+    <div style={{ position: "absolute", left: HEADING.x, top: HEADING.y - HEADING.disc / 2, height: HEADING.disc, display: "flex", alignItems: "center", gap: 24 }}>
+      <NumRing n={n} size={HEADING.disc} />
+      <div style={{ fontFamily: theme.text.family, fontSize: theme.type.title.size, fontWeight: 500, letterSpacing: theme.type.title.tracking, color: c.ink, whiteSpace: "nowrap" }}>{text}</div>
+    </div>
+  );
+};
+
+/** A vehicle sketch in grey ink, `h` tall, centred on (cx, cy) in its parent. */
+export const Vehicle = ({ name, cx, cy, h }: { name: SketchName; cx: number; cy: number; h: number }) => (
+  <div style={{ position: "absolute", left: cx - (h * SKETCH[name]) / 2, top: cy - h / 2 }}>
+    <Sketch name={name} h={h} neutral />
+  </div>
+);
+
+/** One of the isometric icons (art/in04/ic-*.png — waves, wheel, stable, index, equity, stock), `h` tall. */
+export const IsoIcon = ({ name, h }: { name: string; h: number }) => <Img src={staticFile(`art/in04/ic-${name}.png`)} style={{ height: h, width: "auto", maxWidth: "none", display: "block", flex: "none" }} />;
+
+/**
+ * The return paths, one per route (Simon, 3 Nov, SC03's revision notes: "Semua garis harus memiliki arah umum menanjak
+ * dari kiri ke kanan, bukan sekadar bergerak horizontal"), each traced from a real return chart he chose — "pake grafik
+ * ini buat 'Jembatan'", "pake ini buat kapal", "pake ini buat Pesawat" — by scripts/vi/trace-return-curve.py, on ONE
+ * scale (RETURN_RANGE):
+ *   jembatan — a money-market fund's year: naik perlahan, fluktuasi sangat kecil
+ *   kapal    — a fund from 2020: the fall, the long way back, ending up
+ *   pesawat  — IHSG's year from Jun 2014: the deepest swings of the three, a fall after its peak, then on to a new high
+ *              that ends highest of all (Simon, 3 Nov: "buat ujungnya di atas higher high deh (skalian bikin jadi paling
+ *              tinggi)") — still no smooth line ("Kurva saham individual tidak boleh dibuat seperti garis naik mulus")
+ */
+export const RETURNS = { jembatan: JEMBATAN.values, kapal: KAPAL.values, pesawat: PESAWAT.values };
+export type ReturnName = keyof typeof RETURNS;
+/** The one value scale every path is drawn on: its lowest dip and its highest peak. */
+export const RETURN_RANGE = { lo: -0.3, hi: 1 };
+const RETURN_N = 160;
+const RETURN_VALUES: Record<ReturnName, number[]> = RETURNS;
+/** A path `w` × `h` (y down), as points. */
+export const returnPts = (name: ReturnName, w: number, h: number) =>
+  RETURN_VALUES[name].map((v, i) => `${((i / RETURN_N) * w).toFixed(1)},${(h - ((v - RETURN_RANGE.lo) / (RETURN_RANGE.hi - RETURN_RANGE.lo)) * h).toFixed(1)}`).join(" ");
+/** The small print under every return path (the same notes: "Tambahkan disclaimer visual kecil") — the one place the
+ *  word "Ilustrasi" is on screen, against the 1 Sep rule, because the notes ask for exactly this line. */
+export const RETURN_NOTE = "Ilustrasi potensi return dan volatilitas, bukan jaminan hasil.";
+
+/** The three routes as small cards (SC03's summary, SC04's choice): the vehicle, its name, its path drawn by `draw`. */
+export const ROUTE_CARDS = [
+  { art: "bridge" as SketchName, h: 120, name: "Jembatan", ret: "jembatan" as ReturnName },
+  { art: "ferry" as SketchName, h: 110, name: "Kapal", ret: "kapal" as ReturnName },
+  { art: "plane" as SketchName, h: 112, name: "Pesawat", ret: "pesawat" as ReturnName },
+];
+export const ROUTE_CARD = { w: 380, h: 330 };
+export const RouteCard = ({ i, x, y, draw, line }: { i: number; x: number; y: number; draw: number; line?: string }) => {
+  const c = usePalette();
+  const r = ROUTE_CARDS[i];
+  const w = ROUTE_CARD.w;
+  return (
+    <Card x={x} y={y} w={w} h={ROUTE_CARD.h} line={line}>
+      <Vehicle name={r.art} cx={w / 2 - (line ? 2 : 0)} cy={100} h={r.h} />
+      <div style={{ position: "absolute", left: 0, top: 180, width: w - (line ? 4 : 0), textAlign: "center", fontFamily: theme.text.family, fontSize: theme.type.label.size, fontWeight: theme.type.label.weight, color: c.slate }}>{r.name}</div>
+      <svg width={w - 80} height={80} style={{ position: "absolute", left: 40 - (line ? 2 : 0), top: 230, overflow: "visible" }}>
+        <clipPath id={`in04-route-card-${i}`}>
+          <rect x={-10} y={-20} width={(w - 60) * draw} height={120} />
+        </clipPath>
+        <polyline points={returnPts(r.ret, w - 80, 80)} fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round" clipPath={`url(#in04-route-card-${i})`} />
+      </svg>
+    </Card>
+  );
+};
+
+/** A small mark on a white disc: ✕ in grey, ✓ in indigo — each with a hairline ring. */
+export const Mark = ({ kind, p, x, y }: { kind: "check" | "cross"; p: number; x: number; y: number }) => {
+  const c = usePalette();
+  if (p <= 0.001) return null;
+  return (
+    <div style={{ position: "absolute", left: x - 28, top: y - 28, width: 56, height: 56, borderRadius: 999, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${kind === "check" ? theme.color.connector : theme.color.connectorMute}`, display: "flex", alignItems: "center", justifyContent: "center", opacity: p, transform: `scale(${(0.75 + 0.25 * p).toFixed(3)})` }}>
+      <span style={{ fontFamily: theme.text.family, fontWeight: 600, fontSize: 28, lineHeight: 1, color: kind === "check" ? c.indigo : theme.color.neutralIcon }}>{kind === "check" ? "✓" : "✕"}</span>
+    </div>
+  );
+};
+
+/**
+ * Text typed out a character at a time from `at` (Simon, 22 Oct: "animasi ngetik"), with a thin caret while it
+ * types; `mark` is said in `markInk` (indigo by default). Nothing is reserved before `at`, so it starts empty.
+ */
+export const Typed = ({ text, at, cps = 34, mark, markInk }: { text: string; at: number; cps?: number; mark?: string; markInk?: string }) => {
+  const f = useCurrentFrame();
+  const c = usePalette();
+  const m = useMotion();
+  const n = Math.max(0, Math.min(text.length, Math.floor(((f - at) * cps) / m.sec(1))));
+  const i0 = mark ? text.indexOf(mark) : -1;
+  const i1 = i0 < 0 ? -1 : i0 + (mark as string).length;
+  const part = (a: number, b: number) => text.slice(Math.min(a, n), Math.min(b, n));
+  const typing = f >= at && n < text.length;
+  return (
+    <span style={{ whiteSpace: "nowrap" }}>
+      {i0 < 0 ? part(0, text.length) : (
+        <>
+          {part(0, i0)}
+          <span style={{ color: markInk ?? c.indigo }}>{part(i0, i1)}</span>
+          {part(i1, text.length)}
+        </>
+      )}
+      {typing ? <span style={{ display: "inline-block", width: 3, height: "0.95em", marginLeft: 2, verticalAlign: "-0.12em", background: c.indigo }} /> : null}
+    </span>
+  );
+};
+
+/**
+ * The two question cards (SC04 Ombak, SC05 Kemudi): where they stand big in the middle, and where they dock — half
+ * size, top left — to stay on as the scene's heading (Simon, 22 Oct: "mengecil ke kiri atas", for both).
+ */
+export const QUESTION_CARD = { x: 960 - 560, y: 360, w: 1120, h: 230 };
+export const QUESTION_DOCK = { x: 140, y: 100, s: 0.5 };
+/** The transform that takes a layer holding the card from the middle (p = 0) to its dock (p = 1). */
+export const dockStyle = (p: number): React.CSSProperties => ({
+  position: "absolute",
+  inset: 0,
+  transformOrigin: `${QUESTION_CARD.x}px ${QUESTION_CARD.y}px`,
+  transform: `translate(${((QUESTION_DOCK.x - QUESTION_CARD.x) * p).toFixed(2)}px, ${((QUESTION_DOCK.y - QUESTION_CARD.y) * p).toFixed(2)}px) scale(${(1 - (1 - QUESTION_DOCK.s) * p).toFixed(4)})`,
+});
+
+/**
+ * The drifting grid, for the BOARD parts of IN04 — mindmaps, charts, timelines, the recap (Simon, 22 Oct: "background
+ * kotak-kotak bergerak"). Not under the islands, the phone/app or Orang Tuntun. Lines only (the paper is the scene's
+ * SoftGround under it), kept out of the subtitle band and the logo zone. `g` = the global frame, so the drift carries
+ * across a cut; `on` 0..1 fades it in and out inside a scene.
+ */
+export const BoardGrid = ({ g, on }: { g: number; on: number }) =>
+  on <= 0.001 ? null : (
+    <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+      <GridGround f={g} opacity={Math.min(1, on)} paper="transparent" />
+    </div>
+  );

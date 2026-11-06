@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-face-filter.py — the "wide face, wide grin" phone filter (Simon's reference, VI07 SC07, 29 Oct 2026), done as a warp of
+face-filter.py — the "wide face, wide grin" phone filter (Simon's reference, IN07 SC07, 29 Oct 2026), done as a warp of
 the picture itself: the face widened from its middle, the smile stretched and its corners pulled up, the eyes squeezed
 a little. Nothing is drawn in; every pixel comes from the original.
 
-  ~/.venvs/tuntun/bin/python scripts/vi/face-filter.py public/art/vi07/orang-1.png public/art/vi07/orang-1-filter.png
+  ~/.venvs/tuntun/bin/python scripts/vi/face-filter.py public/art/in07/orang-1.png public/art/in07/orang-1-filter.png
 
 The face's landmarks are in that picture's pixels (measured on a 4x crop): change them for another picture.
 """

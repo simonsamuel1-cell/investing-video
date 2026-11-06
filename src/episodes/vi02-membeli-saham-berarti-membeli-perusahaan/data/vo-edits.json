@@ -1,0 +1,161 @@
+{
+  "_": "VI02's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+  "base": "/Users/samuelsurja/Documents/01 Academy/VI02 - Membeli Saham Berarti Membeli Perusahaan",
+  "source": "VI02 VO.mp3",
+  "out": "public/vo/vi02-membeli-saham-berarti-membeli-perusahaan.mp3",
+  "pieces": [
+    {
+      "src": "ORIGINAL",
+      "from": 0,
+      "to": 22.73
+    },
+    {
+      "_": "5 Nov:'bahkan saat kita sedang tidur.'",
+      "src": "Scene 01-01.mp3",
+      "to": 1.64,
+      "match": "original 22.83-24.68"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 24.75,
+      "to": 41.13
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'kepemilikan dari bisnis yang ada di belakangnya.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 41.13,
+      "to": 86.33
+    },
+    {
+      "_": "5 Nov:'Jadi sebelum bertanya: “Harga sahamnya akan naik nggak?”' (cut before the −27 dB noise at 3.08 s of the clip)",
+      "src": "Scene 02-01.mp3",
+      "to": 2.97,
+      "match": "original 86.49-88.80"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 88.83,
+      "to": 92.92
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'Bisnis yang saya miliki ini sebenarnya menghasilkan apa?'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 92.92,
+      "to": 144.6
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'Penonton hanya melihat harganya.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 144.6,
+      "to": 149.68
+    },
+    {
+      "_": "5 Nov:'Pada 2025, perusahaan menghasilkan pendapatan sekitar Rp74,85 triliun dan laba bersih yang menjadi bagian pemegang saham sekitar Rp9,22 triliun. Kalau laba itu dibagi berdasarkan seluruh saham yang beredar, hasilnya sekitar Rp791 per saham.'",
+      "src": "Scene 04-01.mp3",
+      "to": 20.11,
+      "match": "original 149.75-166.08"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 166.16,
+      "to": 202.605
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'yang sebenarnya kita miliki.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 202.605,
+      "to": 243.79
+    },
+    {
+      "_": "5 Nov:'Kalau seseorang datang dan bilang: “Supplier kamu mau bangkrut.”'",
+      "src": "Scene 05-01.mp3",
+      "to": 3.12,
+      "match": "original 243.91-247.01"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 247.09,
+      "to": 260.225
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'hanya membuat kita bereaksi.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 260.225,
+      "to": 310.305
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'apa yang sedang dibeli.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 310.305,
+      "to": 323.24
+    },
+    {
+      "_": "5 Nov:'Kedua, uangnya datang dari mana? Bisnis mana yang menghasilkan sebagian besar pendapatannya?' (up to its 5.56 s: Simon re-recorded the rest of this take as 07-02)",
+      "src": "Scene 07-01.mp3",
+      "to": 5.64,
+      "match": "original 323.37-328.73"
+    },
+    {
+      "silence": 0.19
+    },
+    {
+      "_": "5 Nov:'Ketiga, laba yang dihasilkan digunakan untuk apa?' (cut before the −5 dB click at the end of the clip)",
+      "src": "Scene 07-02.mp3",
+      "to": 3.26,
+      "match": "original 328.97-332.00"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 332.03,
+      "to": 350.205
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'sekadar kode saham saja.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 350.205,
+      "to": 354.2
+    },
+    {
+      "_": "5 Nov:'Di video ini, kita sudah melihat apa artinya: membeli saham berarti memiliki sebagian dari perusahaan.'",
+      "src": "Scene 08-01.mp3",
+      "to": 6.24,
+      "match": "original 354.35-359.12"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 359.2,
+      "to": 373.52
+    },
+    {
+      "_": "5 Nov:'Di Tuntun, kamu bisa mulai dari Revenue Breakdown untuk melihat uang perusahaan datang dari bisnis yang mana, lihat perkembangan labanya, lalu buka Deep Research Report untuk memahami model bisnis, kualitas, keunggulan, dan risikonya lebih jauh.'",
+      "src": "Scene 08-02.mp3",
+      "to": 14.99,
+      "match": "original 373.66-388.24"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 388.32
+    }
+  ]
+}

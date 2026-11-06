@@ -24,6 +24,9 @@ import { usePalette } from "./palette";
 
 export type Cue = { start: number; end: number; text: string };
 
+/** `<i>…</i>` in a cue is italic, as an SRT writes it. */
+const cueText = (text: string) => text.split(/<i>(.*?)<\/i>/).map((t, i) => (i % 2 ? <i key={i}>{t}</i> : t));
+
 export const Captions = ({
   cues,
   show = true,
@@ -65,7 +68,7 @@ export const Captions = ({
           textAlign: "center",
         }}
       >
-        {cue.text}
+        {cueText(cue.text)}
       </span>
     </div>
   );

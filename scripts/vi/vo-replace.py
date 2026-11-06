@@ -93,9 +93,11 @@ def main():
     reps = []
     for line, clip in zip(a.pairs[::2], a.pairs[1::2]):
         i, j = find_line(words, line)
-        lead, off, dur = clip_edges(base / "Revisi VO" / clip)
+        # his clips sit in "Revisi VO/", or (VI02) loose next to the take
+        rel = f"Revisi VO/{clip}" if (base / "Revisi VO" / clip).exists() else clip
+        lead, off, dur = clip_edges(base / rel)
         tail = min(TAIL, dur - off)
-        reps.append(dict(line=line, clip=clip, i=i, j=j, lead=lead, keep=off + tail, tail=tail))
+        reps.append(dict(line=line, clip=clip, rel=rel, i=i, j=j, lead=lead, keep=off + tail, tail=tail))
     reps.sort(key=lambda r: r["i"])
 
     groups = [[reps[0]]]
@@ -115,7 +117,7 @@ def main():
                 p = g[k - 1]
                 gap = p["n1"] - p["e1"] if p["n1"] - p["e1"] > 0.1 else SENTENCE_PAUSE
                 new.append({"silence": round(max(0.0, gap - p["tail"] - r["lead"]), 3)})
-            new.append({"_": f"{a.note}'{r['line']}'".strip(), "src": f"Revisi VO/{r['clip']}", "to": round(r["keep"], 3), "match": f"original {r['s0']:.2f}-{r['e1']:.2f}"})
+            new.append({"_": f"{a.note}'{r['line']}'".strip(), "src": r["rel"], "to": round(r["keep"], 3), "match": f"original {r['s0']:.2f}-{r['e1']:.2f}"})
         at = [k for k, p in enumerate(pieces) if p.get("src") == "ORIGINAL" and p.get("from", 0) <= cut_in and resume <= p.get("to", 1e9)]
         if len(at) != 1:
             raise SystemExit(f"{g[0]['line']!r}: {cut_in:.2f}-{resume:.2f}s is not inside one untouched stretch of the original")

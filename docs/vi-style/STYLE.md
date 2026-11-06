@@ -51,7 +51,7 @@ every few seconds of each video and dense strips of three motions; `videos/` and
    at most for a headline and 800 not used.
 9. **Finance specifically (v5, v6):** one number, one picture, one chart per idea; the part of the chart the VO talks
    about is shaded; real photos may sit under a colour overlay.
-10. **Text has to earn its place (Simon, 26 Oct, after VI04's text revisions): "Ga semua poin2 bisa kamu tulis langsung
+10. **Text has to earn its place (Simon, 26 Oct, after IN04's text revisions): "Ga semua poin2 bisa kamu tulis langsung
    aja begitu, harus dipikirin lagi apakah worth it untuk ditulis?"** The subtitles already carry the VO, so a card
    that repeats it adds nothing. Write a number, a keyword that names the picture, a label that tells things apart,
    or the scene's ONE key line — nothing else; everything else is a picture, an icon or a motion. What stays is
@@ -65,14 +65,14 @@ World Order" (xguam0TKMw8, its 5-minute cut BB2r_eOjsPw, and R34NjxDnhi4, the sa
 `refs/benchmark-2026-10-26-dalio/`. His call: *"Coba terapkan yang ga melanggar aturan. Yang bentrok, buang aja, kecuali
 grafik data dan foto arsip, itu bisa ditiru style nya."*
 
-**Taken (first used in VI07; pieces in `src/episodes/vi07-…/components/Dalio.tsx`):**
+**Taken (first used in IN07; pieces in `src/episodes/in07-…/components/Dalio.tsx`):**
 1. **Metaphor objects that carry the argument** — a lens that dives into a line to show what it is made of (volume →
-   transactions), drawn in ink line (`sketchInk` on `sketchFill`). ⚠ NOT a balance/scale: tried in VI07 SC04 and
+   transactions), drawn in ink line (`sketchInk` on `sketchFill`). ⚠ NOT a balance/scale: tried in IN07 SC04 and
    rejected (Simon, 26 Oct: "hapus timbangannya, malah jadi sampah") — a big drawn prop next to the scene's objects
    reads as clutter.
 2. **Lines that draw on behind a pen-tip dot.**
 3. **Real-data charts in an editorial style** — serif title (Libre Baskerville), hairline grid, value axis on the right,
-   month ticks, one event marked with a dashed rule, the source in small type. REAL DATA ONLY (VI07: IHSG closes from
+   month ticks, one event marked with a dashed rule, the source in small type. REAL DATA ONLY (IN07: IHSG closes from
    Yahoo Finance in `data/ihsg.ts`).
 4. **Archival clipping style** — newsprint, serif headline, columns, a halftone picture, tape. Its words come from the
    script; it never names or imitates a real newspaper.
@@ -100,11 +100,10 @@ elastic type dropped (it stretches type). Same file, §5.
 - **Avatars as nodes** (v3, v4, images) — real-looking people in circles. §3 below says "no other people" (19 Oct).
 - **Icons:** the references use thin, light line icons in white tiles; §4b says isometric line icons with a dark
   outline (19 Oct).
-- The paper-diorama prototype (`Proto-PaperShot`, 21 Oct) is a different direction from this benchmark.
 
 **What core needs for it (build only when asked):** `Connector` (growing path, rounded corners, gradient, travelling
 pulse), mindmap `Node`, `OrbitRings`, `GlowFocus`, `SoftGround` (gradient bloom + rings), a carry-over layout
-helper (the same item moving between two layouts), the camera from `Proto-PaperShot`, `KineticLine`, `StatHero`.
+helper (the same item moving between two layouts), `KineticLine`, `StatHero`.
 
 ---
 
@@ -142,7 +141,7 @@ A scene is usually ONE of these, sometimes two (a character beside a mindmap). N
 
 ## 3. Characters
 
-- **Orang Tuntun** — the man in the grey suit with the Tuntun name badge (`public/art/vi01/orang-tuntun*.png`).
+- **Orang Tuntun** — the man in the grey suit with the Tuntun name badge (`public/art/in01/orang-tuntun*.png`).
   *Berwibawa.* Cast him **only where the VO delivers an insight** — a conclusion, a principle, "yang penting…".
   Not for everyday situations. Head-to-belly framing with a fading foot when he sits beside text; full body
   when he stands in a scene. New poses come from ChatGPT (transparent PNG), kept identical in face and suit.
@@ -150,8 +149,8 @@ A scene is usually ONE of these, sometimes two (a character beside a mindmap). N
   MOVE: bob up and down, glide along a path, travel a mindmap's connectors.
 - **Retired:** the people in blue / light-blue shirts (Orang Kerja, Orang Resign, LiatHP, the polo series)
   and the yellow office worker.
-- **No other people.** Simon, 19 Oct 2026 (VI04): no generated "kamu"/viewer character and no 3D renders — the
-  style doesn't fit and a second person dilutes Orang Tuntun. "You" is an icon (VI04: the amber self icon).
+- **No other people.** Simon, 19 Oct 2026 (IN04): no generated "kamu"/viewer character and no 3D renders — the
+  style doesn't fit and a second person dilutes Orang Tuntun. "You" is an icon (IN04: the amber self icon).
 
 ## 4. Motion (unchanged house rules)
 

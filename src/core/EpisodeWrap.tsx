@@ -2,7 +2,7 @@
  * core/EpisodeWrap.tsx — the finished-video wrapper every VI episode shares: Intro (Essentials/Intro.mp4 with
  * the two title lines), the episode, a half-second fade-out to the paper colour, Outro, and the BGM under all.
  *
- * Lifted from VI01's FullVideo.tsx so VI03 on don't copy it. The episode keeps its own frame numbers; it is
+ * Lifted from IN01's FullVideo.tsx so IN03 on don't copy it. The episode keeps its own frame numbers; it is
  * simply mounted after the intro (4 s: 240 frames at 60fps, 120 at 30fps — the TA videos before TA09 are 30fps).
  *
  * `next` (Simon, 20 Oct 2026, the TA endings "sama seperti di TA09"): after the episode's last frame, a 30-frame
@@ -11,7 +11,7 @@
  *
  * ⚠ THE BGM AND THE LOGO ARE UNTOUCHABLE (Simon): public/essentials/BGM.mp3 is a byte-for-byte copy of
  * Simon's BGM — no trim, gain, fade, loop or re-encode; it plays from frame 0 and stops where the video ends.
- * `bgmSrc` puts an episode's own bed there instead, when Simon asks for one (VI04, 3 Nov 2026: his "Background
+ * `bgmSrc` puts an episode's own bed there instead, when Simon asks for one (IN04, 3 Nov 2026: his "Background
  * Music.mp3" looped and levelled by scripts/vi/bgm-loop.py, longer than any video): it plays from frame 0 and is
  * faded out over the video's last BGM_FADE seconds, so it never stops dead. Essentials/BGM.mp3 is not touched.
  */

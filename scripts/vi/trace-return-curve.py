@@ -1,18 +1,18 @@
 #!/usr/bin/env python3
 """
-trace-return-curve.py — Simon's return charts → the three return paths of kit RETURNS (VI04 SC03), one per route,
-each to src/episodes/vi04-investasi-yang-cocok/data/return-<name>.json, on kit RETURN_RANGE's scale (LO … HI).
+trace-return-curve.py — Simon's return charts → the three return paths of kit RETURNS (IN04 SC03), one per route,
+each to src/episodes/in04-investasi-yang-cocok/data/return-<name>.json, on kit RETURN_RANGE's scale (LO … HI).
 
   ~/.venvs/tuntun/bin/python -I scripts/vi/trace-return-curve.py
 
-  jembatan — docs/vi-style/refs/vi04-jembatan-chart-simon.png (3 Nov 2026: "pake grafik ini buat 'Jembatan'"): a return
+  jembatan — docs/vi-style/refs/in04-jembatan-chart-simon.png (3 Nov 2026: "pake grafik ini buat 'Jembatan'"): a return
              comparison with two lines; the DARK one is taken (the one with the small dips — the light blue is nearly a
              ruler), followed column by column inside the plot so the axis labels never join it.
   kapal    — "Grafik Kinerja Reksa Dana vs Benchmark Sejak Peluncuran (Kumulatif)" (3 Nov: "pake ini buat kapal"): the
              fund's line, monthly, Jan 2020 – Feb 2023 — the 2020 fall, the long way back, ending up.
   pesawat  — "Return Performance" (3 Nov: "pake ini buat Pesawat, yang tadi ganti aja"): the green COMPOSITE line,
              11 Jun 2014 – 11 Jun 2015 — the dips, the climb, the fall after its peak; its last days are redrawn to end
-             on a new high, the highest of the three. It replaced a candlestick screenshot (vi04-pesawat-chart-simon.png).
+             on a new high, the highest of the three. It replaced a candlestick screenshot (in04-pesawat-chart-simon.png).
 The last two reached this machine only as pictures in the chat, so their points are read off by eye (`points`: x
 across, % up); the plane's daily zigzag comes back as a little seeded jitter.
 
@@ -30,13 +30,13 @@ from scipy import ndimage as ndi
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
 REFS = os.path.join(ROOT, "docs/vi-style/refs")
-DATA = os.path.join(ROOT, "src/episodes/vi04-investasi-yang-cocok/data")
+DATA = os.path.join(ROOT, "src/episodes/in04-investasi-yang-cocok/data")
 SAMPLES = 161  # kit RETURN_N + 1
 LO, HI = -0.3, 1.0  # kit RETURN_RANGE
 
 TRACES = {
     "jembatan": {
-        "src": "vi04-jembatan-chart-simon.png",
+        "src": "in04-jembatan-chart-simon.png",
         "said": "pake grafik ini buat 'Jembatan'",
         "kind": "line",
         "plot": (18, 752, 80, 330),

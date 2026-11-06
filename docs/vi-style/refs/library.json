@@ -2,6 +2,88 @@
   "_": "Pustaka Referensi — every style reference Simon has sent, newest first. Built into a page by scripts/vi/ref-library.py and published as an Artifact (URL in the memory file pustaka-referensi.md). Add a reference: put the file under docs/vi-style/refs/, add an item (or a collection) here, rerun the script, republish to the same URL. src is relative to the repo root, or absolute for files outside it.",
   "collections": [
     {
+      "id": "line-art-standard",
+      "date": "2026-11-06",
+      "title": "Standar ilustrasi · garis tipis satu warna",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · standar ilustrasi",
+      "quote": "Ok ganti ilustrasinya hehe. Standard nya begini ya, monochrome, minimalist, UI",
+      "taken": [
+        "Satu hue: garis gelap tipis, bidang putih, dan tint dari warna yang sama",
+        "Arsir diagonal di bagian atap dan bidang besar",
+        "Siluet pucat tanpa garis di belakang objek utama",
+        "Lantai berupa satu garis tipis",
+        "Karakter: garis sederhana, sedikit bidang hitam, tanpa shading"
+      ],
+      "dropped": [
+        "Warna pink: diganti indigo"
+      ],
+      "open": [],
+      "usedIn": [
+        "VI02 SC01, SC02, SC06 · dunia pabrik, contoh pertama (6 Nov 2026) — components/World.tsx"
+      ],
+      "items": [
+        {
+          "id": "line-art-gedung",
+          "type": "image",
+          "title": "Gedung garis tipis",
+          "src": "docs/vi-style/refs/line-art-gedung-2026-11-06.png",
+          "note": "Gedung modern dengan garis gelap tipis, bidang pink dua tingkat, arsir, lingkaran pucat dan siluet kota di belakangnya, pohon, lampu, bangku.",
+          "tags": [
+            "Gaya",
+            "Ilustrasi"
+          ]
+        },
+        {
+          "id": "line-art-karakter",
+          "type": "image",
+          "title": "Karakter garis sederhana",
+          "src": "docs/vi-style/refs/line-art-karakter-2026-11-06.png",
+          "note": "Moodboard Midjourney: perempuan celemek membawa piring ikan, garis hitam sederhana dengan sedikit bidang hitam.",
+          "tags": [
+            "Gaya",
+            "Ilustrasi"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fan-chart",
+      "date": "2026-11-06",
+      "title": "Pie chart kipas setengah lingkaran",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · VI02 SC07 poin 2",
+      "quote": "buat pie chart nya jadi begini deh, lalu buat hingga 5 bisnis",
+      "taken": [
+        "Setengah lingkaran dengan alas datar dan lubang kecil di tengah",
+        "Tiap irisan punya jari-jari sendiri: makin besar porsinya, makin jauh jangkauannya",
+        "Garis tunjuk tipis hitam dengan titik di irisan, naik lalu belok berujung bulat; irisan kecil keluar lurus dari tepinya",
+        "Angka besar dengan % kecil duduk di atas garis, rata kanan"
+      ],
+      "dropped": [
+        "Latar krem dan warna biru-oranye: tetap card putih dan palet kita",
+        "Font angka referensi: tetap font house"
+      ],
+      "open": [],
+      "usedIn": [
+        "VI02 SC07 poin 2 · 5 bisnis, nama bisnis di bawah garis (6 Nov 2026) — scenes/FourQuestions.tsx, FAN"
+      ],
+      "items": [
+        {
+          "id": "fan-chart-img",
+          "type": "image",
+          "title": "Pie chart kipas · 48%, 36%, 16%",
+          "src": "docs/vi-style/refs/fan-chart-2026-11-06.png",
+          "note": "Tiga irisan setengah lingkaran di latar krem: biru muda, biru, oranye, tiap irisan beda panjang, dengan garis tunjuk dan angka persen.",
+          "tags": [
+            "chart",
+            "pie",
+            "label"
+          ]
+        }
+      ]
+    },
+    {
       "id": "starry-harbour-map",
       "date": "2026-11-02",
       "title": "Peta ilustrasi pelabuhan · Starry Harbour Cruise",
@@ -16,7 +98,7 @@
         "Bagian mana yang dibuang — menunggu arahan Simon"
       ],
       "usedIn": [
-        "Stickman-Walk · still object (2 Nov 2026) — public/art/vi04/harbour-map.svg, components/HarbourMap.tsx"
+        "Stickman-Walk · still object (2 Nov 2026) — public/art/in04/harbour-map.svg, components/HarbourMap.tsx"
       ],
       "items": [
         {
@@ -34,11 +116,11 @@
       ]
     },
     {
-      "id": "vi04-route-map",
+      "id": "in04-route-map",
       "date": "2026-11-02",
       "title": "Peta datar · kamera ikut perjalanan lalu zoom out",
       "status": "dipakai",
-      "statusLabel": "Dipakai · master route map VI04",
+      "statusLabel": "Dipakai · master route map IN04",
       "quote": "Ini bisa dipake nih … jadi referensi",
       "taken": [
         "Peta 2D datar dengan jaringan jalan tipis",
@@ -47,18 +129,18 @@
       ],
       "dropped": [
         "Warna kuning peta; diganti netral Benchmark v1",
-        "Sepeda yang bergerak; di VI04 kameranya sendiri yang menempuh jarak"
+        "Sepeda yang bergerak; di IN04 kameranya sendiri yang menempuh jarak"
       ],
       "usedIn": [
-        "VI04 SC02 · Kamu → TUJUAN INVESTASI, jarak jauh (2 Nov 2026)",
-        "VI04 SC03 awal · tiga rute di peta yang sama"
+        "IN04 SC02 · Kamu → TUJUAN INVESTASI, jarak jauh (2 Nov 2026)",
+        "IN04 SC03 awal · tiga rute di peta yang sama"
       ],
       "items": [
         {
-          "id": "vi04-route-map-pin",
+          "id": "in04-route-map-pin",
           "type": "video",
           "title": "Map animation · zoom out",
-          "src": "docs/vi-style/refs/vi04-route-map-2026-11-02/map-zoom-out.mp4",
+          "src": "docs/vi-style/refs/in04-route-map-2026-11-02/map-zoom-out.mp4",
           "url": "https://id.pinterest.com/pin/704109723021765798/",
           "note": "Kamera menempel pada sepeda di peta datar sambil pelan-pelan zoom out, garis rute tergambar di belakangnya; berakhir di gambar lebar dengan dua pin di ujung rute.",
           "tags": [
@@ -81,19 +163,19 @@
         "Dipakai sekali di momen penting, bukan gaya ikon utama"
       ],
       "dropped": [
-        "Gaya flat berwarna + oranye; diganti sketsa tinta indigo gaya VI04",
+        "Gaya flat berwarna + oranye; diganti sketsa tinta indigo gaya IN04",
         "Teks di bawah ikon"
       ],
       "usedIn": [
-        "VI07 SC03 · kartu Perusahaan, \"Bisnisnya tetap jalan.\""
+        "IN07 SC03 · kartu Perusahaan, \"Bisnisnya tetap jalan.\""
       ],
       "items": [
         {
           "id": "business-sustainability-icon",
           "type": "image",
           "title": "Business sustainability",
-          "src": "docs/vi-style/refs/vi07-business-sustainability.png",
-          "note": "Dikirim Simon di chat VI07, 28 Okt 2026. Versi akhirnya: sketsa tinta indigo gaya VI04 (jembatan/kapal/pesawat), dari ChatGPT.",
+          "src": "docs/vi-style/refs/in07-business-sustainability.png",
+          "note": "Dikirim Simon di chat IN07, 28 Okt 2026. Versi akhirnya: sketsa tinta indigo gaya IN04 (jembatan/kapal/pesawat), dari ChatGPT.",
           "tags": [
             "Ikon",
             "Ilustrasi"
@@ -243,12 +325,12 @@
         "Kerumunan dan figur orang",
         "Latar gelap bertekstur",
         "Foto dan footage arsip asli (hak cipta: gayanya ditiru, asetnya tidak)",
-        "Timbangan: dicoba di VI07 SC04 lalu dihapus (\"malah jadi sampah\")"
+        "Timbangan: dicoba di IN07 SC04 lalu dihapus (\"malah jadi sampah\")"
       ],
       "usedIn": [
-        "VI07 SC01 · garis + titik pena",
-        "VI07 SC06 · lensa ke volume",
-        "VI07 SC10 · grafik IHSG + kliping"
+        "IN07 SC01 · garis + titik pena",
+        "IN07 SC06 · lensa ke volume",
+        "IN07 SC10 · grafik IHSG + kliping"
       ],
       "items": [
         {
@@ -303,7 +385,7 @@
       "date": "2026-10-26",
       "title": "Explainer isometrik · objek abstrak yang bermakna",
       "status": "dipakai",
-      "statusLabel": "Dipakai di VI07",
+      "statusLabel": "Dipakai di IN07",
       "quote": "bisa ga, ada 1 scene yang ada explainer kayak gini? Pake objek2 abstrak tapi ada makna nya",
       "taken": [
         "Tumpukan lempeng isometrik yang terurai di atas sumbu bertitik",
@@ -311,7 +393,7 @@
         "Lempeng-lempeng menekan jadi satu blok"
       ],
       "usedIn": [
-        "VI07 SC04 · Tim riset: lima lempeng = lima pekerjaan riset; Waktu / Proses / Data"
+        "IN07 SC04 · Tim riset: lima lempeng = lima pekerjaan riset; Waktu / Proses / Data"
       ],
       "items": [
         {
@@ -358,8 +440,8 @@
         "Ikon garis tipis vs ikon isometrik"
       ],
       "usedIn": [
-        "VI04 SC01–09 (dibangun ulang)",
-        "VI07 seluruh scene"
+        "IN04 SC01–09 (dibangun ulang)",
+        "IN07 seluruh scene"
       ],
       "items": [
         {

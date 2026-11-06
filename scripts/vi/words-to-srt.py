@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 words-to-srt.py — subtitles straight from the word alignment: one cue per sentence, a sentence too wide for
-one line cut at the comma (or colon) nearest its middle, else at its middle word. Text is the SCRIPT's.
+one line cut at the comma (or colon) nearest its middle, else at its middle word. Text is the SCRIPT's; *a phrase* in the
+script is italic, written <i>a phrase</i> as SRT has it.
 
   ~/.venvs/tuntun/bin/python scripts/vi/words-to-srt.py words.json out.srt [--max-px 1560] [--offset-frames 0] [--min-frames 72]
 """
 import argparse
 import json
+import re
 from pathlib import Path
 
 from PIL import ImageFont
@@ -72,7 +74,8 @@ def main():
     cues = merged
     for c, d in zip(cues, cues[1:]):
         c[1] = min(c[1], d[0])
-    Path(a.out).write_text("\n".join(f"{i + 1}\n{ts(s)} --> {ts(e)}\n{t}\n" for i, (s, e, t) in enumerate(cues)))
+    italic = lambda t: re.sub(r"\*([^*]+)\*", r"<i>\1</i>", t)
+    Path(a.out).write_text("\n".join(f"{i + 1}\n{ts(s)} --> {ts(e)}\n{italic(t)}\n" for i, (s, e, t) in enumerate(cues)))
     print(f"{len(cues)} cues -> {a.out}; widest {max(width(t) for _, _, t in cues):.0f}px")
 
 

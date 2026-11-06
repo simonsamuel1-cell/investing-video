@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-sc04-prices.py — the two real stocks of VI04 SC04 (Simon's new SC04 lines, 3 Nov 2026: "Kalau membeli BBRI pada akhir
+sc04-prices.py — the two real stocks of IN04 SC04 (Simon's new SC04 lines, 3 Nov 2026: "Kalau membeli BBRI pada akhir
 2019 di harga sekitar Rp4.400 … UNVR … Rp8.400"), as the daily closes from the last trading day of 2019 to the last
 of March 2024, in the prices people saw then — the ones the VO says.
 
   ~/.venvs/tuntun/bin/python -I scripts/vi/sc04-prices.py
 
-Reads Yahoo Finance's public chart data (src/episodes/vi04-investasi-yang-cocok/data/yahoo/*.JK.json — fetched
+Reads Yahoo Finance's public chart data (src/episodes/in04-investasi-yang-cocok/data/yahoo/*.JK.json — fetched
 3 Nov 2026 from query1.finance.yahoo.com/v8/finance/chart/<ticker>.JK, interval 1d, no login) and writes
 data/sc04-prices.json: per stock, each day's place across the chart (t, 0 → 1 over the period) and its close.
   · BBRI's closes before its rights issue (ex-date 8 Sep 2021) come back adjusted by Yahoo (×0.909075); they are
@@ -19,7 +19,7 @@ import json
 import os
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
-EP = os.path.join(ROOT, "src/episodes/vi04-investasi-yang-cocok/data")
+EP = os.path.join(ROOT, "src/episodes/in04-investasi-yang-cocok/data")
 START, END = dt.date(2019, 12, 30), dt.date(2024, 3, 28)
 BBRI_EX, BBRI_FACTOR = dt.date(2021, 9, 8), 0.9090752064098011
 CHECK = {"BBRI": {START: 4400, dt.date(2020, 5, 18): 2170, END: 6050}, "UNVR": {START: 8400, END: 2700}}

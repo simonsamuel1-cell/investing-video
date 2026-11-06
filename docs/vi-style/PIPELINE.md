@@ -21,7 +21,7 @@ Script (text), VO (mp3), SRT — as always. The script is right about the words;
    one review per batch of scenes, not per element — and its FIXes are applied before Simon sees it.
 6. **Gate — on the FINISHED result, not on storyboards.** Simon, 13 Oct: *"kalo storyboard gausa persetujuanku,
    hasil jadinya aja yang perlu persetujuanku."* Storyboards are made and used straight away.
-   - **First episode on this system (VI03):** build the first **4 scenes** and send the built result for
+   - **First episode on this system (IN03):** build the first **4 scenes** and send the built result for
      approval; once approved, build all the rest and send the finished video.
    - **The project after:** per scene.
    - If a result falls short, back to the approval step.
@@ -39,7 +39,7 @@ logs in. **All prompts go to the chat "Storyboard - ChatGPT - Claude"** (Simon m
 > left from head to belly, pointing at it». Label every element with its on-screen text. Number the order in
 > which elements appear (1, 2, 3…).
 >
-> **Always add (Simon, 19 Oct 2026, VI04):** *2D flat design, simple, UI style (cards, chips, app-icon tiles);
+> **Always add (Simon, 19 Oct 2026, IN04):** *2D flat design, simple, UI style (cards, chips, app-icon tiles);
 > isometric where the scene needs a place (islands, a house); NO 3D renders; NO characters — the only person
 > is Orang Tuntun, and only on an insight line; "you" is an icon.* Images for a scene follow the same rule:
 > icons (Iconify) or shapes drawn in code before anything generated.

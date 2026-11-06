@@ -1,0 +1,523 @@
+1
+00:00:00,150 --> 00:00:03,417
+Di video sebelumnya, kita belajar satu prinsip dasar value investing:
+
+2
+00:00:03,767 --> 00:00:07,350
+sebelum melihat saham sebagai harga, lihat dulu bisnis yang ada di belakangnya.
+
+3
+00:00:07,700 --> 00:00:09,583
+Sekarang kita lihat apa maksudnya.
+
+4
+00:00:09,883 --> 00:00:12,617
+Jam empat pagi, sebuah pabrik sudah mulai bekerja.
+
+5
+00:00:12,900 --> 00:00:15,833
+Produk keluar dari jalur produksi, masuk ke kardus,
+
+6
+00:00:16,017 --> 00:00:19,417
+dikirim dengan truk, lalu sampai ke toko-toko di berbagai kota.
+
+7
+00:00:19,733 --> 00:00:24,300
+Semua aktivitas itu terus berjalan, bahkan saat kita sedang tidur.
+
+8
+00:00:24,683 --> 00:00:26,617
+Tapi ketika masuk ke aplikasi saham,
+
+9
+00:00:27,217 --> 00:00:31,183
+seluruh bisnis tadi akhirnya hanya terlihat sebagai empat huruf: ICBP.
+
+10
+00:00:31,533 --> 00:00:35,517
+Padahal ketika membeli sahamnya, kita nggak membeli "<i>empat huruf</i>".
+
+11
+00:00:35,933 --> 00:00:40,617
+Kita membeli sebagian kecil kepemilikan dari bisnis yang ada di belakangnya.
+
+12
+00:00:41,383 --> 00:00:43,283
+Inilah pilar pertama value investing:
+
+13
+00:00:43,600 --> 00:00:47,083
+membeli saham berarti membeli sebagian dari sebuah perusahaan.
+
+14
+00:00:47,483 --> 00:00:50,667
+Bayangkan dirimu sebagai salah satu pemilik bisnis tersebut.
+
+15
+00:00:51,017 --> 00:00:52,867
+Kamu nggak harus datang ke pabrik.
+
+16
+00:00:53,200 --> 00:00:54,933
+Nggak harus ikut menjual produknya.
+
+17
+00:00:55,233 --> 00:00:58,017
+Dan nggak harus bekerja di sana setiap hari.
+
+18
+00:00:58,467 --> 00:01:01,617
+Tapi bisnisnya tetap bekerja.
+
+19
+00:01:01,933 --> 00:01:05,700
+Saat perusahaan menjual lebih banyak produk, menghasilkan laba lebih besar,
+
+20
+00:01:05,833 --> 00:01:07,400
+atau memperluas bisnisnya,
+
+21
+00:01:07,683 --> 00:01:10,550
+sebagai pemegang saham kamu punya bagian dari hasil tersebut.
+
+22
+00:01:11,017 --> 00:01:13,233
+Kalau sebagian laba dibagikan sebagai dividen,
+
+23
+00:01:13,233 --> 00:01:16,417
+sebagian hasil bisnis itu sampai langsung ke pemegang saham.
+
+24
+00:01:16,867 --> 00:01:20,000
+Kalau labanya nggak dibagikan dan digunakan kembali untuk mengembangkan bisnis,
+
+25
+00:01:20,250 --> 00:01:23,200
+uang tersebut tetap bekerja di dalam perusahaan dengan
+
+26
+00:01:23,200 --> 00:01:26,217
+harapan menghasilkan laba yang lebih besar di masa depan.
+
+27
+00:01:26,600 --> 00:01:29,400
+Jadi sebelum bertanya: “Harga sahamnya akan naik nggak?”
+
+28
+00:01:29,583 --> 00:01:33,350
+biasakan bertanya lebih dulu: “Bisnis yang saya miliki ini sebenarnya menghasilkan apa?”
+
+29
+00:01:34,167 --> 00:01:36,283
+Kita pakai contoh yang lebih sederhana.
+
+30
+00:01:36,600 --> 00:01:39,633
+Bayangkan Ibu Sari adalah pemilik sebuah warung sederhana.
+
+31
+00:01:39,933 --> 00:01:41,917
+Sekarang anggap kamu membeli sepuluh persen
+
+32
+00:01:41,917 --> 00:01:44,367
+dari warung tersebut dan menjadi partner bisnisnya.
+
+33
+00:01:44,650 --> 00:01:47,867
+Sebagai salah satu pemilik, apa yang paling ingin kamu tahu?
+
+34
+00:01:48,133 --> 00:01:51,600
+Bukan berapa harga warungnya setiap lima menit.
+
+35
+00:01:51,717 --> 00:01:53,250
+Yang lebih penting adalah:
+
+36
+00:01:53,250 --> 00:01:56,333
+berapa pelanggan yang datang, berapa penjualan yang dihasilkan,
+
+37
+00:01:56,633 --> 00:02:00,567
+dan setelah membayar stok, sewa, serta pegawai, berapa laba yang tersisa.
+
+38
+00:02:00,883 --> 00:02:04,817
+Lalu suatu hari, ada orang datang dan menawarkan harga untuk membeli bagianmu.
+
+39
+00:02:05,133 --> 00:02:06,450
+Harga itu tentu penting.
+
+40
+00:02:06,617 --> 00:02:09,767
+Tapi kalau hari ini penawarannya tiba-tiba turun dua puluh persen,
+
+41
+00:02:09,767 --> 00:02:11,233
+sementara pelanggan nggak berkurang,
+
+42
+00:02:11,433 --> 00:02:14,183
+penjualan tetap sama, dan laba juga nggak berubah,
+
+43
+00:02:14,483 --> 00:02:17,967
+apakah bisnisnya otomatis menjadi dua puluh persen lebih buruk? Belum tentu.
+
+44
+00:02:18,417 --> 00:02:21,867
+Itulah perbedaan antara pemilik bisnis dan orang yang hanya melihat harga.
+
+45
+00:02:22,083 --> 00:02:23,633
+Pemilik melihat bisnisnya dulu.
+
+46
+00:02:23,883 --> 00:02:25,533
+Penonton hanya melihat harganya.
+
+47
+00:02:26,350 --> 00:02:28,267
+Sekarang kita terapkan ke perusahaan nyata.
+
+48
+00:02:28,583 --> 00:02:31,017
+Misalnya ICBP.
+
+49
+00:02:31,333 --> 00:02:38,200
+Pada 2025, perusahaan menghasilkan pendapatan sekitar Rp74,85 triliun dan
+
+50
+00:02:38,200 --> 00:02:44,233
+laba bersih yang menjadi bagian pemegang saham sekitar Rp9,22 triliun.
+
+51
+00:02:44,667 --> 00:02:47,533
+Kalau laba itu dibagi berdasarkan seluruh saham yang beredar,
+
+52
+00:02:47,533 --> 00:02:51,300
+hasilnya sekitar Rp791 per saham.
+
+53
+00:02:51,600 --> 00:02:52,833
+Artinya, secara sederhana,
+
+54
+00:02:53,033 --> 00:02:56,300
+setiap lembar saham mewakili sebagian kecil dari laba perusahaan tersebut.
+
+55
+00:02:56,683 --> 00:02:57,983
+Kalau kamu punya seratus saham,
+
+56
+00:02:58,183 --> 00:03:01,867
+bagian ekonomisnya setara dengan sekitar seratus kali laba per saham tadi.
+
+57
+00:03:02,217 --> 00:03:05,533
+Tapi laba perusahaan nggak berarti semuanya langsung masuk ke rekening kita.
+
+58
+00:03:05,883 --> 00:03:07,983
+Sebagian bisa dibagikan sebagai dividen.
+
+59
+00:03:08,283 --> 00:03:10,550
+Sebagian lainnya tetap berada di perusahaan untuk modal kerja,
+
+60
+00:03:10,733 --> 00:03:12,717
+ekspansi, atau investasi berikutnya.
+
+61
+00:03:12,833 --> 00:03:17,000
+Jadi saat memiliki saham, yang perlu kita ikuti bukan hanya perubahan harganya.
+
+62
+00:03:17,350 --> 00:03:20,333
+Kita juga perlu melihat: pendapatannya, labanya,
+
+63
+00:03:20,433 --> 00:03:23,633
+laba per sahamnya, dan bagaimana laba itu digunakan.
+
+64
+00:03:23,883 --> 00:03:27,633
+Itulah “buku bisnis” yang sebenarnya kita miliki.
+
+65
+00:03:28,517 --> 00:03:30,183
+Sekarang bayangkan kebalikannya.
+
+66
+00:03:30,583 --> 00:03:33,833
+Seseorang membeli saham, tapi yang dia tahu hanya kode dan chart-nya.
+
+67
+00:03:34,167 --> 00:03:37,800
+Minggu pertama muncul pesan: “Katanya perusahaan ini mau diakuisisi.”
+
+68
+00:03:38,150 --> 00:03:39,767
+Dia langsung menambah posisi.
+
+69
+00:03:40,033 --> 00:03:43,533
+Minggu berikutnya muncul kabar: “Pemegang saham besarnya mulai menjual.”
+
+70
+00:03:43,883 --> 00:03:45,167
+Dia mulai panik.
+
+71
+00:03:45,483 --> 00:03:48,917
+Lalu muncul rumor lain: “Laporan keuangannya bermasalah.”
+
+72
+00:03:49,183 --> 00:03:51,217
+Dia langsung menjual rugi.
+
+73
+00:03:51,350 --> 00:03:54,083
+Masalah utamanya bukan karena rumor selalu salah.
+
+74
+00:03:54,417 --> 00:03:56,417
+Rumor bisa benar, bisa juga salah.
+
+75
+00:03:56,833 --> 00:04:00,483
+Masalahnya adalah: dia nggak punya dasar untuk menilainya.
+
+76
+00:04:00,767 --> 00:04:03,017
+Dia nggak tahu perusahaan menjual apa.
+
+77
+00:04:03,317 --> 00:04:04,917
+Nggak tahu uangnya datang dari mana.
+
+78
+00:04:05,183 --> 00:04:07,167
+Nggak tahu seberapa sehat bisnisnya.
+
+79
+00:04:07,483 --> 00:04:09,267
+Bandingkan dengan Ibu Sari.
+
+80
+00:04:09,633 --> 00:04:12,550
+Kalau seseorang datang dan bilang: “Supplier kamu mau bangkrut.”
+
+81
+00:04:12,883 --> 00:04:17,667
+Dia bisa buka catatannya, cek nama supplier, lalu bilang: “Itu bukan supplier saya.”
+
+82
+00:04:18,200 --> 00:04:19,467
+Semakin kita memahami bisnis,
+
+83
+00:04:19,617 --> 00:04:22,250
+semakin mudah membedakan mana informasi yang benar-benar
+
+84
+00:04:22,250 --> 00:04:25,617
+penting dan mana yang hanya membuat kita bereaksi.
+
+85
+00:04:26,417 --> 00:04:29,383
+Benjamin Graham menggambarkan market dengan cara yang sederhana.
+
+86
+00:04:29,817 --> 00:04:32,533
+Dalam jangka pendek, market seperti voting machine.
+
+87
+00:04:32,767 --> 00:04:36,883
+Harga banyak dipengaruhi oleh apa yang sedang disukai atau ditakuti orang.
+
+88
+00:04:37,017 --> 00:04:40,667
+Tapi dalam jangka panjang, market lebih menyerupai weighing machine.
+
+89
+00:04:41,050 --> 00:04:45,133
+Bisnis yang terus menghasilkan laba akhirnya punya sesuatu yang nyata untuk “ditimbang”.
+
+90
+00:04:45,450 --> 00:04:46,717
+Karena itu, sebelum membeli saham,
+
+91
+00:04:46,717 --> 00:04:49,083
+jangan cuma bertanya: “Besok harganya naik nggak?”
+
+92
+00:04:49,417 --> 00:04:52,717
+Coba pikirkan: sepuluh tahun lagi, bisnis ini akan seperti apa?
+
+93
+00:04:53,017 --> 00:04:54,417
+Produknya masih dibutuhkan?
+
+94
+00:04:54,767 --> 00:04:57,783
+Pasarnya semakin besar atau mengecil? Kompetitornya semakin kuat?
+
+95
+00:04:58,017 --> 00:05:00,383
+Perusahaan masih punya kemampuan menghasilkan laba?
+
+96
+00:05:00,717 --> 00:05:03,717
+Kita nggak harus benar-benar memegang saham selama sepuluh tahun.
+
+97
+00:05:04,067 --> 00:05:06,467
+Intinya: sebelum membeli untuk sepuluh menit,
+
+98
+00:05:06,533 --> 00:05:09,217
+kita harus pernah memikirkan bisnisnya untuk sepuluh tahun.
+
+99
+00:05:09,383 --> 00:05:10,867
+Kalau kita bahkan nggak bisa membayangkan
+
+100
+00:05:10,867 --> 00:05:13,417
+bagaimana perusahaan menghasilkan uang di masa depan,
+
+101
+00:05:13,717 --> 00:05:16,200
+mungkin kita belum cukup memahami apa yang sedang dibeli.
+
+102
+00:05:17,117 --> 00:05:20,517
+Jadi ketika melihat sebuah saham, jangan mulai dari: “Target harganya berapa?”
+
+103
+00:05:20,600 --> 00:05:22,567
+Mulai dari empat pertanyaan sederhana.
+
+104
+00:05:22,883 --> 00:05:25,233
+Pertama, perusahaan ini menjual apa?
+
+105
+00:05:25,567 --> 00:05:29,533
+Produk atau layanan apa yang sebenarnya dibayar pelanggan?
+
+106
+00:05:29,917 --> 00:05:32,283
+Kedua, uangnya datang dari mana?
+
+107
+00:05:32,667 --> 00:05:35,333
+Bisnis mana yang menghasilkan sebagian besar pendapatannya?
+
+108
+00:05:35,767 --> 00:05:38,850
+Ketiga, laba yang dihasilkan digunakan untuk apa?
+
+109
+00:05:39,150 --> 00:05:43,633
+Dibagikan sebagai dividen, atau ditanam kembali untuk memperbesar bisnis?
+
+110
+00:05:43,900 --> 00:05:44,767
+Dan yang paling sulit:
+
+111
+00:05:44,883 --> 00:05:48,683
+apakah perusahaan ini punya peluang menghasilkan lebih banyak di masa depan?
+
+112
+00:05:48,833 --> 00:05:50,483
+Kalau empat pertanyaan ini bisa dijawab,
+
+113
+00:05:50,550 --> 00:05:53,467
+harga saham mulai punya sesuatu untuk dibandingkan.
+
+114
+00:05:53,683 --> 00:05:56,867
+Kalau belum, mungkin yang kita beli masih sekadar kode saham saja.
+
+115
+00:05:57,717 --> 00:06:01,300
+Di video sebelumnya, kita belajar kenapa value investing dimulai dari bisnis.
+
+116
+00:06:01,683 --> 00:06:03,617
+Di video ini, kita sudah melihat apa artinya:
+
+117
+00:06:03,617 --> 00:06:07,700
+membeli saham yang berarti memiliki sebagian dari perusahaan.
+
+118
+00:06:07,983 --> 00:06:11,200
+Di balik satu kode, ada produk, pelanggan, pendapatan,
+
+119
+00:06:11,200 --> 00:06:14,733
+laba, dan uang yang akhirnya menjadi bagian pemegang saham.
+
+120
+00:06:15,133 --> 00:06:16,533
+Semakin kita memahami bisnisnya,
+
+121
+00:06:16,683 --> 00:06:18,683
+semakin kecil kemungkinan keputusan kita hanya
+
+122
+00:06:18,683 --> 00:06:21,683
+ditentukan oleh rumor atau pergerakan harga.
+
+123
+00:06:22,233 --> 00:06:24,950
+Di Tuntun, kamu bisa mulai dari Revenue Breakdown
+
+124
+00:06:24,950 --> 00:06:28,467
+untuk melihat uang perusahaan datang dari bisnis yang mana,
+
+125
+00:06:28,633 --> 00:06:29,883
+lihat perkembangan labanya,
+
+126
+00:06:29,883 --> 00:06:33,650
+lalu buka Deep Research Report untuk memahami model bisnis,
+
+127
+00:06:33,750 --> 00:06:37,017
+kualitas, keunggulan, dan risikonya lebih jauh.
+
+128
+00:06:37,317 --> 00:06:40,950
+Tapi setelah memahami perusahaannya, masih ada satu pertanyaan penting:
+
+129
+00:06:41,317 --> 00:06:45,183
+perusahaan bagus belum tentu investasi bagus kalau kita membayar terlalu mahal.
+
+130
+00:06:45,533 --> 00:06:47,183
+Jadi di video selanjutnya, kita akan bahas:
+
+131
+00:06:47,183 --> 00:06:50,850
+berapa harga yang sebenarnya layak kita bayar untuk sebuah perusahaan?

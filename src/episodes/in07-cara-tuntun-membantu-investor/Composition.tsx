@@ -1,0 +1,116 @@
+/**
+ * IN07 · Cara Tuntun Membantu Investor Mengurangi Kesalahan — 11 scenes at 60 fps, timed by the VO's own words
+ * (data/timing.ts). ONE root <Audio> for the VO, plus timing.ts `SFX`, each on its frame. Scenes are built from their
+ * ChatGPT storyboards in IN04's style (docs/vi-style/STYLE.md §0); the ones not built yet are empty rows that only mark their blocks on the Studio timeline.
+ */
+import React from "react";
+import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
+import { BLOCK, CUT, CUTS, KODOK, KODOK_PAUSE, SFX, VO_LAST, heldAt, onTimeline } from "./data/timing";
+import { BoardGrid, Heading, SITUATION } from "./components/kit";
+import { CUES } from "./subtitles";
+import { SC01 } from "./scenes/Opening";
+import { SC02 } from "./scenes/Questions";
+import { SC03 } from "./scenes/Price";
+import { SC04 } from "./scenes/Research";
+import { SC05 } from "./scenes/Ask";
+import { SC06 } from "./scenes/Hype";
+import { SC07 } from "./scenes/Confident";
+import { SC08 } from "./scenes/Market";
+import { SC09 } from "./scenes/TwoWays";
+import { SC10 } from "./scenes/Context";
+import { SC11 } from "./scenes/Decide";
+
+/**
+ * Visuals were hidden on 27 Oct 2026 while Simon re-recorded the VO, and turned back on on 28 Oct 2026 once the new VO was
+ * in (every anchor re-checked against the new words.json). Set to false to hide them again — paper, subtitles and VO stay.
+ */
+const SHOW_VISUALS = true;
+
+/** The scenes, all built (SC01–SC11). */
+const SCENE_COMPONENTS: Record<string, React.FC | undefined> = SHOW_VISUALS ? { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08, SC09, SC10, SC11 } : {};
+
+export const IN07_FRAMES = BLOCK.END;
+const KEYS = Object.keys(BLOCK) as (keyof typeof BLOCK)[];
+const SCENES = KEYS.filter((k) => k !== "END").map((k, i) => ({ key: k, from: BLOCK[k], duration: BLOCK[KEYS[i + 1]] - BLOCK[k] }));
+
+(() => {
+  if (IN07_FRAMES < VO_LAST) throw new Error("in07: the video ends before its voice");
+})();
+
+const cutAt = (at: number): Cut | null => {
+  const c = CUTS.find((k) => k.at === at);
+  return c ? { at: c.at, axis: c.axis, ...CUT } : null;
+};
+const InCuts = ({ from, to, children }: { from: number; to: number; children: React.ReactNode }) => {
+  const g = useCurrentFrame() + from;
+  const cin = cutAt(from);
+  const cout = cutAt(to);
+  const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
+  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+};
+
+const VO_SRC = "vo/in07-cara-tuntun-membantu-investor.mp3";
+/** The cues on the episode's timeline (the SRT keeps the VO's own times; timing.ts KODOK). */
+const TIMELINE_CUES = KODOK ? CUES : CUES.map((q) => ({ ...q, start: onTimeline(q.start), end: onTimeline(q.end) })).filter((q) => q.end > q.start);
+
+/** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
+const chrome = (getInputProps() as { chrome?: boolean }).chrome !== false;
+/** Keyed per module load so Studio keeps its timeline rows in order (IN01's fix). */
+const ROWS = String(random(null));
+
+/** The paper under the scenes not built yet. */
+const Ground = () => <SoftGround f={useCurrentFrame()} />;
+
+/** Through a cut inside one situation (timing.ts `HELD`), the grid and the heading, still, under the moving content. */
+const Held = () => {
+  const g = useCurrentFrame();
+  const h = heldAt(g);
+  if (!h || !SHOW_VISUALS) return null;
+  return (
+    <>
+      <BoardGrid g={g} on={1} />
+      <Heading n={h.n} text={SITUATION[h.n - 1].label} />
+    </>
+  );
+};
+
+export const CaraTuntunMembantuComposition = () => (
+  <AbsoluteFill>
+    <PaletteProvider>
+      <Stage>
+        <Ground />
+        <Held />
+        {SCENES.map(({ key, from, duration }) => (
+          <Sequence key={`${ROWS}-${key}`} from={from} durationInFrames={duration} name={key}>
+            {SCENE_COMPONENTS[key] ? (
+              <InCuts from={from} to={from + duration}>
+                {React.createElement(SCENE_COMPONENTS[key] as React.FC)}
+              </InCuts>
+            ) : null}
+          </Sequence>
+        ))}
+        <Captions cues={TIMELINE_CUES} show={chrome} />
+        {chrome && <Watermark totalFrames={IN07_FRAMES} />}
+        {KODOK ? (
+          <Audio key={ROWS} src={staticFile(VO_SRC)} />
+        ) : (
+          <>
+            {/* the frog's pause cut out: the VO up to it, then on from its end (timing.ts KODOK) */}
+            <Sequence key={`${ROWS}-a`} durationInFrames={KODOK_PAUSE.at} layout="none">
+              <Audio src={staticFile(VO_SRC)} />
+            </Sequence>
+            <Sequence key={`${ROWS}-b`} from={KODOK_PAUSE.at} layout="none">
+              <Audio src={staticFile(VO_SRC)} startFrom={KODOK_PAUSE.at + KODOK_PAUSE.len} />
+            </Sequence>
+          </>
+        )}
+        {Object.entries(SFX).map(([name, s]) => (
+          <Sequence key={`${ROWS}-sfx-${name}`} from={s.at} name={`sfx ${name}`}>
+            <Audio src={staticFile(s.src)} volume={s.volume} />
+          </Sequence>
+        ))}
+      </Stage>
+    </PaletteProvider>
+  </AbsoluteFill>
+);

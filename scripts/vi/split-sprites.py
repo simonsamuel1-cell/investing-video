@@ -3,7 +3,7 @@
 split-sprites.py — one transparent PNG holding several objects side by side (ChatGPT draws several at once)
 → one PNG per object, cut along the empty columns between them, each then trimmed by cutout rules.
 
-  ~/.venvs/tuntun/bin/python scripts/vi/split-sprites.py IN.png name1 name2 … --out public/art/vi03
+  ~/.venvs/tuntun/bin/python scripts/vi/split-sprites.py IN.png name1 name2 … --out public/art/in03
 """
 import argparse
 import os

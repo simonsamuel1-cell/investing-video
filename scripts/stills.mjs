@@ -12,6 +12,7 @@ import { bundle } from "@remotion/bundler";
 import { selectComposition, renderStill } from "@remotion/renderer";
 import { mkdirSync } from "node:fs";
 import { join, resolve } from "node:path";
+import { withRizky } from "../referensi-rizky/_studio/webpack.mjs";
 
 const [, , dir, compId, outDir, frameList, propsJson] = process.argv;
 const root = resolve(dir);
@@ -31,7 +32,7 @@ mkdirSync(outDir, { recursive: true });
 const gl = process.env.REMOTION_GL;
 const chromiumOptions = gl ? { gl } : undefined;
 
-const serveUrl = await bundle({ entryPoint: join(root, "src/index.ts") });
+const serveUrl = await bundle({ entryPoint: join(root, "src/index.ts"), webpackOverride: withRizky });
 const composition = await selectComposition({ serveUrl, id: compId, inputProps, chromiumOptions });
 console.log(`${compId}  ${composition.width}x${composition.height} @${composition.fps}  ${composition.durationInFrames}f`);
 

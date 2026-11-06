@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-bgm-loop.py — Simon's "Background Music.mp3" as one long, seamless, quiet bed for a full video (VI04 first; Simon,
+bgm-loop.py — Simon's "Background Music.mp3" as one long, seamless, quiet bed for a full video (IN04 first; Simon,
 3 Nov 2026: "pake ini Background Music.mp3 lalu buat looping, dan bikin volumenya lebih rendah daripada voice overnya
 … yang penting volume lebih rendah dari voice over dan gaada dead air", and "teknik pengurangan volumenya, bisa kamu
 pake ceiling aja … biar pokoknya volumenya ga melebihi batas tertentu").
 
-  ~/.venvs/tuntun/bin/python -I scripts/vi/bgm-loop.py [--minutes 15] [--out public/bgm/vi04-bgm.mp3]
+  ~/.venvs/tuntun/bin/python -I scripts/vi/bgm-loop.py [--minutes 15] [--out public/bgm/background-music-bed.mp3]
 
 The source is read, never written (01 Academy/Background Music.mp3, 2:54). Nor is the Essentials BGM touched.
 
@@ -70,7 +70,7 @@ def lag_of(x):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--minutes", type=float, default=15)
-    ap.add_argument("--out", default="public/bgm/vi04-bgm.mp3")
+    ap.add_argument("--out", default="public/bgm/background-music-bed.mp3")
     a = ap.parse_args()
     x = read(SRC)
     lag, r = lag_of(x)

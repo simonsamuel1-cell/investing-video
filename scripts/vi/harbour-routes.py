@@ -10,8 +10,8 @@ rumahnya"; his four sketches are docs/vi-style/refs/starry-harbour-route-3{1,2,3
                (over the bridge, up to the top, down the long road, along the coast road), then up to the house;
   2 kapal    — along his road to the west bank, then by water, his curve smoothed, and up the pier to the house;
   3 pesawat  — one straight line.
-Reads public/art/vi04/harbour-map-simple.svg (run simplify-harbour-map.py first) and writes
-src/episodes/vi04-investasi-yang-cocok/data/harbour-routes.json, in the drawing's own units as it is shown (turned:
+Reads public/art/in04/harbour-map-simple.svg (run simplify-harbour-map.py first) and writes
+src/episodes/in04-investasi-yang-cocok/data/harbour-routes.json, in the drawing's own units as it is shown (turned:
 3598 × 2398), with Kamu's spot and the house's (and its door, where the routes end).
 """
 import json
@@ -25,8 +25,8 @@ from scipy.sparse.csgraph import dijkstra
 from scipy.spatial import cKDTree
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../.."))
-SVG = os.path.join(ROOT, "public/art/vi04/harbour-map-simple.svg")
-OUT = os.path.join(ROOT, "src/episodes/vi04-investasi-yang-cocok/data/harbour-routes.json")
+SVG = os.path.join(ROOT, "public/art/in04/harbour-map-simple.svg")
+OUT = os.path.join(ROOT, "src/episodes/in04-investasi-yang-cocok/data/harbour-routes.json")
 W, H = 3598, 2398  # the drawing as shown (turned 90° clockwise from the trace)
 SKETCH = (1782, 1192)  # Simon's sketches: the shown drawing, whole, at this size
 

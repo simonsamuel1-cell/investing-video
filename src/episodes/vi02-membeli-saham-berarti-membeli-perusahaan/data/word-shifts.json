@@ -1,0 +1,129 @@
+{
+ "_": "VI02, 5 Nov: measured by ear with scripts/vi/sub-check.py. Re-measure a line's entries when that line is re-recorded.",
+ "shifts": [
+  {
+   "scene": 3,
+   "at": "Yang lebih",
+   "shift": 21
+  },
+  {
+   "scene": 3,
+   "at": "lebih penting",
+   "shift": 15
+  },
+  {
+   "scene": 3,
+   "at": "penting adalah:",
+   "shift": 20
+  },
+  {
+   "scene": 3,
+   "at": "adalah: berapa",
+   "shift": 25,
+   "grow": 11
+  },
+  {
+   "scene": 3,
+   "at": "berapa pelanggan",
+   "shift": 36
+  },
+  {
+   "scene": 3,
+   "at": "pelanggan yang",
+   "shift": 19
+  },
+  {
+   "scene": 4,
+   "at": "dan laba bersih",
+   "shift": 13
+  },
+  {
+   "scene": 4,
+   "at": "laba bersih yang",
+   "shift": -8
+  },
+  {
+   "scene": 8,
+   "at": "artinya: membeli",
+   "shift": -10
+  },
+  {
+   "scene": 8,
+   "at": "membeli saham yang",
+   "shift": -16
+  },
+  {
+   "scene": 8,
+   "at": "pendapatan,",
+   "shift": -28,
+   "grow": 33
+  },
+  {
+   "scene": 8,
+   "at": "laba, dan",
+   "shift": 8
+  },
+  {
+   "scene": 8,
+   "at": "perkembangan labanya,",
+   "shift": -28
+  },
+  {
+   "scene": 8,
+   "at": "labanya, lalu",
+   "shift": -31
+  },
+  {
+   "scene": 8,
+   "at": "lalu buka",
+   "shift": -50,
+   "grow": 24
+  },
+  {
+   "scene": 8,
+   "at": "buka Deep",
+   "shift": -26
+  },
+  {
+   "scene": 8,
+   "at": "Deep Research",
+   "shift": -24
+  },
+  {
+   "scene": 8,
+   "at": "Research Report",
+   "shift": -23
+  },
+  {
+   "scene": 8,
+   "at": "Report untuk",
+   "shift": -25
+  },
+  {
+   "scene": 8,
+   "at": "untuk memahami",
+   "shift": -25
+  },
+  {
+   "scene": 8,
+   "at": "memahami model",
+   "shift": -25
+  },
+  {
+   "scene": 8,
+   "at": "model bisnis,",
+   "shift": -26
+  },
+  {
+   "scene": 8,
+   "at": "bisnis, kualitas,",
+   "shift": -19
+  },
+  {
+   "scene": 8,
+   "at": "kualitas, keunggulan,",
+   "shift": -17,
+   "grow": 17
+  }
+ ]
+}

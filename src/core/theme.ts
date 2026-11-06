@@ -281,7 +281,7 @@ export const theme = {
      */
     ok: "#22B573",
     /**
-     * VI07, Simon 28 Oct 2026: "icon x: lingkarannya merah, X nya putih" — the ✕ mark's solid disc (its ✓ twin is
+     * IN07, Simon 28 Oct 2026: "icon x: lingkarannya merah, X nya putih" — the ✕ mark's solid disc (its ✓ twin is
      * `ok`: "lingkarannya hijau, centangnya putih"). Same red as `warn`, named for the mark so neither leaks.
      */
     crossRed: "#E5475D",
@@ -363,22 +363,22 @@ export const theme = {
     /**
      * Cyan for TYPE and strokes on white. The brand cyan (#5CC8E3) is a fill:
      * as a word on a white card it is too light to read. Same hue (192), darker
-     * — added for VI01, where cyan is "financial asset" and has to be read.
+     * — added for IN01, where cyan is "financial asset" and has to be read.
      */
     cyanInk: "#2098B6",
     /**
      * ⚠ A SIMON-REQUESTED EXCEPTION to "red only in candles": the red a wall
-     * calendar prints its month and its paydays in. VI01's opening — "Design
+     * calendar prints its month and its paydays in. IN01's opening — "Design
      * 'Gajian' nya … Buat lebih bold dan warna merah. Januari juga buat merah."
      * Same hex as `warn`, named for what it is so neither use leaks into the other.
      */
     calendarRed: "#E5475D",
-    /** VI01 SC01, Simon: "icon keranjang kuning" — the shopping basket's body, nothing else. */
+    /** IN01 SC01, Simon: "icon keranjang kuning" — the shopping basket's body, nothing else. */
     basketYellow: "#F5B82E",
-    /** VI01 SC05, Simon: "Koinnya warna kuning aja" — the coins of the money tree, nothing else. */
+    /** IN01 SC05, Simon: "Koinnya warna kuning aja" — the coins of the money tree, nothing else. */
     coinYellow: "#F5B82E",
     /**
-     * VI07 SC03, Simon 28 Oct 2026: "aku ambil koinnya aja … koinnya pun warna kuning juga", spinning like his Pinterest
+     * IN07 SC03, Simon 28 Oct 2026: "aku ambil koinnya aja … koinnya pun warna kuning juga", spinning like his Pinterest
      * pin 215046950940139624 — the spinning coin by the company sketch, nothing else. Sampled from the pin: ring,
      * face, the edge seen as it turns, the shine across the face.
      */
@@ -386,10 +386,10 @@ export const theme = {
     coinSpinFace: "#FFD327",
     coinSpinEdge: "#FFC52D",
     coinSpinShine: "#FFF1B5",
-    /** The side of a coin in a stack (VI07 SC07's position tower) — the edge colour a shade down, so stacked coins read apart. */
+    /** The side of a coin in a stack (IN07 SC07's position tower) — the edge colour a shade down, so stacked coins read apart. */
     coinSpinShade: "#E9A916",
     /**
-     * VI07 SC07, Simon 29 Oct 2026: "Rasa percaya dirinya pake ini aja" — a confidence gauge, red (low) round to green
+     * IN07 SC07, Simon 29 Oct 2026: "Rasa percaya dirinya pake ini aja" — a confidence gauge, red (low) round to green
      * (high), its six bands sampled from his reference picture.
      */
     gaugeRed: "#FD0001",
@@ -398,26 +398,26 @@ export const theme = {
     gaugeYellow: "#FDE700",
     gaugeLime: "#E0DC01",
     gaugeGreen: "#76C206",
-    /** A warning sign's yellow, under a black "!" (VI07 SC07, Simon 29 Oct: "warna kuning dan tanda seru warna hitam"). */
+    /** A warning sign's yellow, under a black "!" (IN07 SC07, Simon 29 Oct: "warna kuning dan tanda seru warna hitam"). */
     cautionYellow: "#FFCC00",
-    /** The "Awesome Face" meme, drawn (VI07 SC07, Simon 29 Oct, his reference): its yellow, its mouth, its tongue. */
+    /** The "Awesome Face" meme, drawn (IN07 SC07, Simon 29 Oct, his reference): its yellow, its mouth, its tongue. */
     memeAwesomeYellow: "#F9D84A",
     memeAwesomeMouth: "#6E0B35",
     memeAwesomeTongue: "#EFB0CC",
-    /** VI07 SC05, Simon: "Dynamic islandnya dibuat hitam" — the pill on a drawn phone, hardware, so black in every palette. */
+    /** IN07 SC05, Simon: "Dynamic islandnya dibuat hitam" — the pill on a drawn phone, hardware, so black in every palette. */
     phoneIsland: "#000000",
-    /** VI01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
+    /** IN01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
-    /** VI01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
+    /** IN01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */
     gainGreen: "#22B573",
-    /** VI01 SC15, Simon's "Myth or Fact" layout: the second box, the one with the tick — a light wash of `checkGreen`, nothing else. */
+    /** IN01 SC15, Simon's "Myth or Fact" layout: the second box, the one with the tick — a light wash of `checkGreen`, nothing else. */
     checkGreenWash: "rgba(34, 181, 115, 0.2)",
-    /** VI01 SC15, "hijau gelap agak 30% mute": the words in the second box — a dark green with 30% of the slate grey mixed in. */
+    /** IN01 SC15, "hijau gelap agak 30% mute": the words in the second box — a dark green with 30% of the slate grey mixed in. */
     checkGreenInk: "#2B573E",
-    /** VI01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
+    /** IN01 SC09, Simon: "sunburstnya ubah jadi warna kuning-orange aja" — the rays behind the lamp, nothing else (the orange rays were then removed). */
     sunYellow: "#F7C948",
     /**
-     * VI03 "Tiga Jenis Uang" — one colour per kind of money, used as a code through the whole video (Simon,
+     * IN03 "Tiga Jenis Uang" — one colour per kind of money, used as a code through the whole video (Simon,
      * 13 Oct: "indigo dan cyan memang warna utama brand, tapi bukan berarti kamu tidak bisa menggunakan
      * warna lain"). Uang aktif green, uang stabil amber, uang jangka panjang the brand indigo. Washes are
      * the same hues, light, for pills and chips.
@@ -430,21 +430,21 @@ export const theme = {
     walletPanjangWash: "rgba(95, 77, 238, 0.12)",
     slateWash: "rgba(98, 98, 102, 0.08)",
     /**
-     * VI04 "Investasi yang Cocok" — the ONE accent of the video: YOU, the investor who gets researched last
+     * IN04 "Investasi yang Cocok" — the ONE accent of the video: YOU, the investor who gets researched last
      * ("diri kita sendiri"). Amber, so the self stands out of an indigo world; everything about other people's
      * answers stays indigo/slate.
      */
     /**
-     * ⚠ "selfAmber*" ARE CYAN NOW (Simon, 22 Oct 2026, VI04: "semua yang warna orange, kasih warna cyan aja"). The
-     * keys keep their names — names are frozen — and only VI04 uses them; the ink is the readable cyan (`cyanInk`).
+     * ⚠ "selfAmber*" ARE CYAN NOW (Simon, 22 Oct 2026, IN04: "semua yang warna orange, kasih warna cyan aja"). The
+     * keys keep their names — names are frozen — and only IN04 uses them; the ink is the readable cyan (`cyanInk`).
      */
     selfAmber: "#5CC8E3",
     selfAmberWash: "rgba(92, 200, 227, 0.16)",
     selfAmberInk: "#2098B6",
-    /** The glow on the one thing that is YOU once it is named (VI04 SC01, Simon 22 Oct: "berikan glow pada labelnya"). */
+    /** The glow on the one thing that is YOU once it is named (IN04 SC01, Simon 22 Oct: "berikan glow pada labelnya"). */
     selfAmberGlow: "rgba(92, 200, 227, 0.45)",
     /**
-     * VI04 isometric islands and house (Simon's sketch, 19 Oct): flat faces, hue-locked to the brand indigo
+     * IN04 isometric islands and house (Simon's sketch, 19 Oct): flat faces, hue-locked to the brand indigo
      * (247) — the top lightest, the two sides two steps darker so the slab reads as a solid without shading.
      */
     isoTop: "#F2F0FF",
@@ -452,7 +452,7 @@ export const theme = {
     isoRight: "#B9B0F8",
     isoWall: "#FFFFFF",
     isoWallShade: "#E7E3FD",
-    /** VI04 house after Simon's reference (19 Oct), in pastels: sage walls, soft slate-indigo roof, pink frames. */
+    /** IN04 house after Simon's reference (19 Oct), in pastels: sage walls, soft slate-indigo roof, pink frames. */
     houseWall: "#CBE4D2",
     houseWallShade: "#A9CDB5",
     houseRoof: "#8C95C9",
@@ -463,7 +463,7 @@ export const theme = {
     houseFrame: "#F3B8C1",
     housePlanter: "#D3C2B1",
     houseBush: "#86C493",
-    /** VI04 app-icon tiles (Simon, 19 Oct: "2D flat design yang simple dan ada UI style"): a white line icon on this. */
+    /** IN04 app-icon tiles (Simon, 19 Oct: "2D flat design yang simple dan ada UI style"): a white line icon on this. */
     tileGrad: "linear-gradient(145deg, #8A7CF6 0%, #5F4DEE 62%, #4D3BE0 100%)",
     /**
      * ⚠ HIGHLIGHTER WASHES — for WORDS ONLY, never for chart content.
@@ -584,14 +584,14 @@ export const theme = {
     /** A skeleton line standing in for text on a drawn app screen (Benchmark v1: skeleton lines instead of fake copy). */
     skeleton: "#E4E5EA",
     /**
-     * VI07's one accent: the red of a market that is falling, on the drawn PHONE only — a down chip, the sell button,
+     * IN07's one accent: the red of a market that is falling, on the drawn PHONE only — a down chip, the sell button,
      * the screen flooding red (SC01 "Layar ponselmu penuh warna merah"). Same red as the candles, so the video still
      * has one red. Never on a chart that stands for real data.
      */
     alarmRed: "#E5475D",
     alarmWash: "rgba(229, 71, 93, 0.16)",
     /**
-     * The isometric "exploded view" (VI07 SC04, Simon's Pinterest reference 26 Oct 2026: abstract objects that mean
+     * The isometric "exploded view" (IN07 SC04, Simon's Pinterest reference 26 Oct 2026: abstract objects that mean
      * something): the side of an indigo slab, the side of an ink slab, and the hairline round every slab.
      */
     isoIndigoSide: "#4636C9",
@@ -618,9 +618,11 @@ export const theme = {
     indigoWashStrongSolid: "#E5E3FC",
     alarmWashSolid: "#FBE2E5",
     selfAmberWashSolid: "#E5F6FB",
-    /** Indigo and cyan at 30 % on white — a fill that has to read beside type, e.g. an orderbook's depth bars (VI07 SC06). */
+    /** Indigo and cyan at 30 % on white — a fill that has to read beside type, e.g. an orderbook's depth bars (IN07 SC06). */
     indigoWashDeepSolid: "#CFCAFA",
     cyanWashDeepSolid: "#CEEEF7",
+    /** Between cyan and its deep wash: VI02 SC07's one-hue fan needs a step there. */
+    cyanTintSolid: "#94DBED",
     connectorMuteSolid: "#DBDBDE",
     hairlineBrandSolid: "#D2CDFA",
     isoEdgeSolid: "#C0C1C5",
@@ -643,6 +645,31 @@ export const theme = {
      * the paper, so the cut into the Outro has no step in brightness. The Outro itself is untouched.
      */
     outroGround: "#EEEEEE",
+    /**
+     * VI02 SC01's world: a factory and its road to the shops, from before sunrise (Simon's direction: "Mulai dari pabrik
+     * sebelum matahari terbit"). The sky runs night → dawn → morning, in pale indigo since 6 Nov. Only VI02 uses these.
+     */
+    /** VI02's line art (Simon's standard, 6 Nov: "monochrome, minimalist, UI"): one hue, a thin dark outline, white and tints inside. */
+    artInk: "#2F2A7A",
+    artStrong: "#8F82F4",
+    artMid: "#C3BCF9",
+    artPale: "#E5E3FC",
+    /** The isometric plant Simon asked to recreate (6 Nov): grey paper, white surfaces. */
+    plantPaper: "#ECEDEF",
+    plantShade: "#E0E3EA",
+    plantLine: "#737B8A",
+    worldNight: "#CFCAFA",
+    worldDawn: "#E5E3FC",
+    worldMorning: "#F4F3FE",
+    worldGlow: "#F1EFFD",
+    worldLight: "#FFFFFF",
+    worldBuilding: "#9FA2AD",
+    worldBuildingLit: "#B4B7C0",
+    worldGround: "#FFFFFF",
+    worldRoad: "#F4F3FE",
+    worldCarton: "#D9DBE2",
+    worldCartonDark: "#B9BDC6",
+    worldWall: "#FFFFFF",
     houseNPlanter: "#CFD2DA",
     houseNBush: "#B9BDC6",
     marker: "#E8201A",
@@ -726,7 +753,7 @@ export const theme = {
 
   /**
    * The VI type scale (Simon, 20 Oct 2026: visuals "lebih konsisten sepanjang video, konsisten dari video ke video,
-   * bisa lebih rapi"). FIVE levels, nothing in between — VI04 alone had used 25 font sizes. Weights are normal, not
+   * bisa lebih rapi"). FIVE levels, nothing in between — IN04 alone had used 25 font sizes. Weights are normal, not
    * heavy (Simon, 22 Oct: "tulisannya normal (tidak terlalu tebal)"): 700 only for the hero, 500–600 elsewhere. A level
    * says how big and how heavy; colour is the scene's call. Read it through `typeStyle(level)`.
    */
@@ -769,7 +796,7 @@ export const theme = {
       "drop-shadow(0 -6px 14px rgba(236, 92, 168, 0.38)) " +
       "drop-shadow(0 36px 28px rgba(92, 200, 227, 0.46))",
     /**
-     * A plain shadow for a PHOTO cut out of its background (VI01's "Orang
+     * A plain shadow for a PHOTO cut out of its background (IN01's "Orang
      * Kerja") — Simon: "shadownya normal aja, blurnya kira-kira 5, arahnya ke
      * kiri 10 px". `artShadow` is a coloured glow for drawn art.
      */

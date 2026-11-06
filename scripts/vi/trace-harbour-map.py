@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 trace-harbour-map.py — Simon's reference map (docs/vi-style/refs/starry-harbour-map.webp, 2 Nov 2026) to the tagged
-vector the Template-map still uses (public/art/vi04/harbour-map.svg, components/HarbourMap.tsx).
+vector the Template-map still uses (public/art/in04/harbour-map.svg, components/HarbourMap.tsx).
 
   ~/.venvs/tuntun/bin/python -I scripts/vi/trace-harbour-map.py
 
@@ -19,7 +19,7 @@ import vtracer
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 SRC = os.path.join(ROOT, "docs/vi-style/refs/starry-harbour-map.webp")
-OUT = os.path.join(ROOT, "public/art/vi04/harbour-map.svg")
+OUT = os.path.join(ROOT, "public/art/in04/harbour-map.svg")
 TRACE = dict(colormode="color", hierarchical="stacked", mode="spline", corner_threshold=60, length_threshold=4.0,
              max_iterations=10, splice_threshold=45, path_precision=2)
 

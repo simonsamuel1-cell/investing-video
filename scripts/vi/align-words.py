@@ -9,7 +9,7 @@ align-words.py — every spoken word of a VO on the 60 fps frame grid, so a beat
 faster-whisper (local, CPU) hears the words with their times. With --script, the SCRIPT's words are what
 is written out — matched to the heard ones (difflib over normalised tokens), and any the model misheard
 or skipped take a time interpolated between their matched neighbours — because the script is right
-about the text and the audio is right about the time (the same split as vi01-align.py).
+about the text and the audio is right about the time (the same split as in01-align.py).
 
 Output: {"fps": 60, "words": [{"i", "w", "start", "end", "f0", "f1", "heard"}]}  (seconds and frames).
 """

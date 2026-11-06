@@ -15,7 +15,7 @@ out (trace-harbour-map.py's clear_objects), each pixel is land, road or water; t
     the road they were heading for, ends at the edge run off the canvas), smoothed, and stroked at one width;
   · and no road runs straight into the river, only a bridge (coast_roads): coast roads along the west bank and the
     east arm's north bank take the roads that met the shore, and a short dead end at the shore goes.
-Writes public/art/vi04/harbour-map-simple.svg in the traced map's own coordinates (components/HarbourMap.tsx).
+Writes public/art/in04/harbour-map-simple.svg in the traced map's own coordinates (components/HarbourMap.tsx).
 """
 import importlib.util
 import json
@@ -35,8 +35,8 @@ spec = importlib.util.spec_from_file_location("trace_harbour_map", os.path.join(
 thm = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(thm)
 W, H = thm.W, thm.H
-OUT = os.path.join(thm.ROOT, "public/art/vi04/harbour-map-simple.svg")
-TRACED = os.path.join(thm.ROOT, "public/art/vi04/harbour-map.svg")
+OUT = os.path.join(thm.ROOT, "public/art/in04/harbour-map-simple.svg")
+TRACED = os.path.join(thm.ROOT, "public/art/in04/harbour-map.svg")
 # Simon's own shore (2 Nov: "Edge yang sekarang, dibuat garis smooth banget. Se-smooth yang aku coret garis merah"):
 # when it is there, the water is the band between his two lines, not the smoothed trace
 SHORE = os.path.join(thm.ROOT, "docs/vi-style/refs/starry-harbour-shore.json")

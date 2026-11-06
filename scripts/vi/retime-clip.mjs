@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * retime-clip.mjs — fit a supplied screen recording to the VO by re-timing it piecewise, so what happens in the
- * recording lands on the words that talk about it (VI07 SC05: each typed question on the spoken one, the answer on
+ * recording lands on the words that talk about it (IN07 SC05: each typed question on the spoken one, the answer on
  * "Tuntun AI membantu"). The pixels are untouched; only time is remapped.
  *
  *   node scripts/vi/retime-clip.mjs src/episodes/<ep>/data/<clip>.clip.json
