@@ -31,9 +31,10 @@ export const useNextClip = () => {
 /**
  * "Video selanjutnya" on `chipAt`, the next video's title on `titleAt` — frames of the scene. `light` is the VI
  * look (Benchmark v1, Simon 22 Oct 2026: neutral, the brand on hairlines, normal-weight type) at the same place, so
- * the VI endings read as one series too; the TA endings keep the default.
+ * the VI endings read as one series too; the TA endings keep the default. `titleTone` recolours the title alone (IN07,
+ * Simon 9 Nov: "ubah jadi indigo"); left out, every ending looks as it did.
  */
-export const NextVideoHead = ({ title, chipAt, titleAt, light = false }: { title: string; chipAt: number; titleAt: number; light?: boolean }) => {
+export const NextVideoHead = ({ title, chipAt, titleAt, light = false, titleTone }: { title: string; chipAt: number; titleAt: number; light?: boolean; titleTone?: string }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -45,6 +46,7 @@ export const NextVideoHead = ({ title, chipAt, titleAt, light = false }: { title
   const titleLook = light
     ? { fontSize: theme.type.statement.size, fontWeight: theme.type.statement.weight, letterSpacing: theme.type.statement.tracking, color: c.ink }
     : { fontSize: theme.text.display.size, fontWeight: theme.text.display.weight, letterSpacing: -2, color: c.indigo };
+  if (titleTone) titleLook.color = titleTone;
   return (
     <>
       <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: NEXT_LAYOUT.chip.y, display: "flex", justifyContent: "center", opacity: chip, transform: `translateY(${((1 - chip) * 14).toFixed(2)}px)` }}>

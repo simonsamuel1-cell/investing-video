@@ -10,6 +10,8 @@ import { staticFile } from "remotion";
 import { theme, usePalette, useShadow } from "../../../core";
 import { w as wordAt } from "../data/timing";
 import { HEADING, NumRing } from "../../in04-investasi-yang-cocok/components/kit";
+/** A text box is always the dashed one, opening from its centre (Simon 9 Nov: "next time aku minta bikin text box, harus garis putus putus"). */
+export { DashBox, dashOpenAt } from "../../in01-passive-income/components/kit";
 
 export { Appear, BoardGrid, Card, Heading, HEADING, Line, NumRing, OrangTuntun, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, Typed, ease, useAppear } from "../../in04-investasi-yang-cocok/components/kit";
 
@@ -83,9 +85,9 @@ export const Ico = ({ name, size, tone, fill }: { name: string; size: number; to
     masked(name, size, tone)
   );
 
-/** An icon on a round disc. */
-export const Disc = ({ icon, size, tone, tint }: { icon: string; size: number; tone: string; tint: string }) => (
-  <div style={{ width: size, height: size, borderRadius: 999, background: tint, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+/** An icon on a round disc; `ring` gives it a border in that colour (SC04's Deep Research label, Simon 9 Nov). */
+export const Disc = ({ icon, size, tone, tint, ring }: { icon: string; size: number; tone: string; tint: string; ring?: string }) => (
+  <div style={{ width: size, height: size, borderRadius: 999, background: tint, border: ring ? `${theme.shape.rule}px solid ${ring}` : undefined, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
     <Ico name={icon} size={size * 0.56} tone={tone} />
   </div>
 );

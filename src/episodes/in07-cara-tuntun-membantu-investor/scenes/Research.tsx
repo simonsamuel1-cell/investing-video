@@ -12,13 +12,18 @@
  *     informasi" — loose bits of information around (a chart, a news card, a page, a chat, a table, bars); "sudah
  *     disusun" — they fly into one tidy card, three rows; "lebih mudah dipahami" — the bubble's clock and question
  *     marks give way to a lightbulb.
- *  C  Tuntun's research team as an isometric exploded view (Simon's Pinterest reference, 26 Oct): one slab per job —
- *     laporan keuangan, model, kualitas, harga wajar, peristiwa — the same for saham and reksa dana (ResearchStack).
+ *  C  Tuntun's research team: each job — laporan keuangan, model, kualitas, harga wajar, peristiwa — as a real screen,
+ *     the five piled into a folder (ResearchFiles, 9 Nov; it replaced the isometric exploded view of 26 Oct); the same
+ *     for saham and reksa dana (ResearchStack).
  *  D  waktu, proses, data drop down the axis; the slabs press into one tested block, beside one thin voice note.
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import { SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK, heldAt } from "../data/timing";
+import { Coverage } from "./Coverage";
+import { Awards } from "./Awards";
+import { DeepResearch } from "./DeepResearch";
+import { ResearchFiles } from "./ResearchFiles";
 import { ResearchStack } from "./ResearchStack";
 import { BoardGrid, Card, Disc, Ico, OpeningHeading, SITUATION, Skel, ease, useWords } from "../components/kit";
 
@@ -127,7 +132,8 @@ export const SC04 = () => {
   const clearAt = W("lebih mudah");
   const clear = ease(f, clearAt, m.reveal);
   const tidyP = ease(f, sortAt - m.sec(0.2), m.reveal);
-  const bOut = ease(f, W("Tim riset"), m.fade);
+  /** Out on "Di sinilah" since 9 Nov — the Deep Research stills take the stage (scenes/DeepResearch.tsx). */
+  const bOut = ease(f, W("Di sinilah"), m.fade);
   /** Seconds since the bubble came in — the clock's hands spin from then: time going by. */
   const tThink = Math.max(0, f - thinkAt) / m.sec(1);
   const bubbleTone = interpolateColors(clear, [0, 1], [theme.color.neutralIcon, c.indigo]);
@@ -247,8 +253,20 @@ export const SC04 = () => {
         </div>
       ) : null}
 
-      {/* C/D — the research team as an isometric exploded view (scenes/ResearchStack.tsx) */}
+      {/* "Di sinilah Tuntun Deep Research Report berperan …" — the app, the report, its contents (scenes/DeepResearch.tsx) */}
+      <DeepResearch />
+
+      {/* C/D — Saham and Reksa dana, then the five as one block (scenes/ResearchStack.tsx) */}
       <ResearchStack />
+
+      {/* "… penghargaan dari CNBC Indonesia pada 2025 dan Media Asuransi pada 2024" — either side of the folder (scenes/Awards.tsx) */}
+      <Awards />
+
+      {/* "… membaca laporan keuangan, membuat model …" — the five as real screens, piled into a folder (scenes/ResearchFiles.tsx) */}
+      <ResearchFiles />
+
+      {/* "Setiap perusahaan dipantau oleh analis khusus …" — right of the stack (scenes/Coverage.tsx) */}
+      <Coverage />
     </Stage>
   );
 };

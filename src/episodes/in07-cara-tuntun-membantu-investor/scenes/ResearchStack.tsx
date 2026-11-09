@@ -1,285 +1,147 @@
 /**
- * IN07 · SC04, from "Tim riset Tuntun" to the end — the isometric "exploded view" (Simon, 26 Oct 2026, with a Pinterest
- * reference: "ada 1 scene yang ada explainer kayak gini … pake objek2 abstrak tapi ada maknanya"). Storyboard
- * docs/vi-style/storyboards/IN07-SC04-iso.jpg.
+ * IN07 · SC04, from "Riset Tuntun mencakup" to the end. (The isometric exploded stack this file is named after — Simon's
+ * Pinterest reference of 26 Oct, docs/vi-style/storyboards/IN07-SC04-iso.jpg — is gone: its five slabs became real
+ * screens in a folder on 9 Nov, scenes/ResearchFiles.tsx, and its pressed block went too.)
  *
- * What each abstract object means:
- *  · the dotted axis — one company, looked at from top to bottom;
- *  · the lens — the research team, moving to the layer it is working on;
- *  · five slabs, one per job: Laporan keuangan (a sheet of lines), Model (a grid), Kualitas (the solid indigo body of
- *    the business), Harga wajar (a scale with one mark), Peristiwa (dark, with scattered dots — events);
- *  · two small stacks — the same work for Saham and Reksa dana;
- *  · on "Tapi mereka" the slabs press into one block (labels and lens gone), with Waktu, Proses, Data as three
- *    points under it, then a check: a tested conclusion;
- *  · that block beside one thin sheet with a sound wave — one voice note. (A balance was tried here and removed —
- *    Simon, 26 Oct: "hapus timbangannya, malah jadi sampah".)
+ *  · Saham and Reksa dana: two small copies of the research folder beside the big one (Simon 9 Nov: "icon saham dan
+ *    reksa dananya perlu diganti, karna ilustrasi sebelumnya uda diganti"), off to the left with it for the awards.
+ *  · "Bukan berarti tim riset selalu benar." — the camera cuts from the awards to its line, alone and centred (Simon
+ *    9 Nov: "remove 2 visual ini" — the folder and the block — "lalu textnya pindahin ke tengah, jangan terlalu
+ *    kanan"); "tapi lebih teruji." under it on "Tapi mereka", and Waktu, Proses, Data under that, each on its word
+ *    ("juga pindahin ke tengah aja, di bawah text 'Bukan berarti selalu benar, tapi lebih teruji'").
+ *  · "Jadi keputusanmu punya dasar yang lebih lengkap daripada hanya satu voice note dari temanmu." — a new picture now
+ *    the block is gone ("ganti visual deh, karna gambar pendukungnya kan uda ngga dipake"): the five research screens
+ *    again, fanned out and named Riset, glowing on "lebih lengkap"; beside them one voice note, crossed on
+ *    "temanmu.". (A balance was tried in this spot on 26 Oct and removed — "hapus timbangannya, malah jadi sampah".)
  */
-import React from "react";
-import { useCurrentFrame } from "remotion";
-import { theme, typeStyle, useMotion, usePalette } from "../../../core";
+import { Img, staticFile, useCurrentFrame } from "remotion";
+import { cutInStyle, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Card, Disc, Ico, Mark, ease, useWords } from "../components/kit";
-import { IsoSlab, isoHalfWidth, type Slab } from "../components/Iso";
-
-const AXIS_X = 860;
-/** Where the stack sits once the voice note joins it (D). */
-const AXIS_X_D = 1180;
-const H = 110;
-const R = 24;
-const L = isoHalfWidth(H, R);
-const TOP_Y = 270;
-const GAP = 130;
-const MID_Y = TOP_Y + 2 * GAP;
-/** The layer names sit LEFT of the stack, right-aligned to this x, in indigo (Simon 28 Oct: "buat jadi di sebelah kiri aja", "jadi indigo aja"). */
-const LABEL_RIGHT = AXIS_X - L - 116;
-
-type Layer = { label: string; at: string; nth?: number; slab: Slab; face: (c: ReturnType<typeof usePalette>) => React.ReactNode };
-
-/** Deterministic dots for Peristiwa (plan coordinates). */
-const EVENTS = [[-70, -40], [-30, -80], [20, -50], [60, -10], [-80, 30], [-20, 10], [40, 50], [80, -70], [-50, 80], [10, 90], [70, 30], [-90, -90]];
-
-const LAYERS: Layer[] = [
-  {
-    label: "Laporan keuangan",
-    at: "laporan keuangan",
-    slab: { h: H, r: R, depth: 10, top: theme.color.isoNTop, side: theme.color.isoNLeft },
-    face: () =>
-      [-60, -25, 10, 45].map((y, k) => <rect key={k} x={-75} y={y} width={[150, 120, 140, 90][k]} height={9} rx={4.5} fill={theme.color.skeleton} />),
-  },
-  {
-    label: "Model",
-    at: "membuat model",
-    slab: { h: H, r: R, depth: 10, top: theme.color.isoNTop, side: theme.color.isoNLeft },
-    face: () => (
-      <g stroke={theme.color.hairlineBrandSolid} strokeWidth={1.5} vectorEffect="non-scaling-stroke">
-        {[-60, -20, 20, 60].map((v) => (
-          <React.Fragment key={v}>
-            <line x1={v} y1={-90} x2={v} y2={90} vectorEffect="non-scaling-stroke" />
-            <line x1={-90} y1={v} x2={90} y2={v} vectorEffect="non-scaling-stroke" />
-          </React.Fragment>
-        ))}
-      </g>
-    ),
-  },
-  {
-    label: "Kualitas",
-    at: "kualitas perusahaan",
-    /* top "" = the palette's indigo, filled in at draw time */
-    slab: { h: H, r: R, depth: 30, top: "", side: theme.color.isoIndigoSide },
-    face: () => <rect x={-H + 18} y={-H + 18} width={2 * H - 36} height={2 * H - 36} rx={R - 8} fill="none" stroke={theme.color.isoNTop} strokeOpacity={0.35} strokeWidth={1.5} vectorEffect="non-scaling-stroke" />,
-  },
-  {
-    label: "Harga wajar",
-    at: "harga wajar",
-    slab: { h: H, r: R, depth: 10, top: theme.color.isoNTop, side: theme.color.isoNLeft },
-    face: (c) => (
-      <>
-        <rect x={-85} y={-5} width={170} height={10} rx={5} fill={theme.color.neutralDot} />
-        <rect x={6} y={-30} width={10} height={60} rx={5} fill={c.indigo} />
-      </>
-    ),
-  },
-  {
-    label: "Peristiwa",
-    at: "peristiwa",
-    slab: { h: H, r: R, depth: 16, top: theme.color.isoInkTop, side: theme.color.isoInkSide },
-    face: (c) => EVENTS.map(([x, y], k) => <circle key={k} cx={x} cy={y} r={k % 3 ? 5 : 8} fill={k % 4 ? c.indigo : c.cyan} />),
-  },
-];
-
-/** The two small stacks: the same work for Saham and Reksa dana. */
-const KINDS = [
-  { text: "Saham", at: "saham", y: 360 },
-  { text: "Reksa dana", at: "reksa dana", y: 610 },
-] as const;
-/** Saham and Reksa dana, brought in towards the stack now that its right side is free (Simon 28 Oct). */
-const MINI = { x: AXIS_X + L + 260, h: 48, r: 11 };
+import { Card, Disc, Mark, VoiceBubble, ease, useWords } from "../components/kit";
+import { MID_Y, MiniFolder, SLIDE, awardsCut } from "../components/Folder";
+import { SHOTS } from "./ResearchFiles";
 
 /**
- * Waktu, Proses, Data: three points in a row under the pressed stack, each on its word (Simon 28 Oct: "5 lapisannya
- * saling menumpuk (label textnya dan kaca pembesar hilang), lalu muncul 3 poin: waktu, proses, data di bawah
- * tumpukan").
+ * The same research for Saham and Reksa dana: two small copies of the research folder, each with its icon, right of
+ * the big one (centred on x 860). `y` is a folder's middle; the pair, from Saham's tab (`h`/2 above) to the foot of the
+ * "Reksa dana" label, is centred on MID_Y, level with the big folder.
  */
+const KINDS = [
+  { text: "Saham", at: "saham", icon: "saham", y: MID_Y - 140 },
+  { text: "Reksa dana", at: "reksa dana", icon: "reksa-dana", y: MID_Y + 90 },
+] as const;
+/** `h` is a mini folder's height, tab included. */
+const MINI = { x: 1298, w: 170, h: 135, labelGap: 14 };
+
+/** The two lines, centred, and Waktu, Proses, Data in a row under them — the group centred on MID_Y. */
+const LINES = { size: 56, lead: 1.3, gap: 56 };
+const LINES_H = 2 * LINES.size * LINES.lead;
 const BASIS = [
   { text: "Waktu", at: "waktu,", icon: "time" },
   { text: "Proses", at: "proses,", icon: "flow" },
   { text: "Data", at: "data", icon: "database" },
 ] as const;
-const POINT = { w: 270, h: 96, gap: 28, y: MID_Y + 215 };
+const POINT = { w: 270, h: 96, gap: 28 };
+const LINES_TOP = MID_Y - (LINES_H + LINES.gap + POINT.h) / 2;
+const POINT_Y = LINES_TOP + LINES_H + LINES.gap;
 
-/** The voice note: one thin sheet with a sound wave on it. */
-const VOICE = { x: 620, y: MID_Y + 20 };
-const WAVE = [10, 22, 34, 18, 40, 28, 14, 36, 24, 12];
+/**
+ * "Jadi keputusanmu …": the five screens fanned out about their foot (each fitted inside `box`; 20 % bigger since
+ * Simon's "agak diperbesar lagi 20%"), and one voice note beside them, the pair centred on the canvas, each named
+ * under it.
+ */
+const FAN = { cx: 704, foot: MID_Y + 140, box: 288, step: 132, turn: 7, drop: 17 };
+const VOICE = { cx: 1454, cy: MID_Y, scale: 1.4 };
+const NAME_Y = MID_Y + 220;
 
 export const ResearchStack = () => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
+  const shadow = useShadow();
   const W = useWords(4, BLOCK.SC04);
 
-  const startAt = W("Tim riset");
-  const doubtAt = W("Bukan berarti");
-  /** The five press into one block on "Tapi mereka" — labels and lens go with it. */
-  const pressAt = W("Tapi mereka");
   const sideAt = W("Jadi keputusanmu");
-  const voiceAt = W("satu voice note");
-
-  const axis = ease(f, startAt, m.sec(0.7));
-  const press = ease(f, pressAt, m.move);
-  const shift = ease(f, sideAt, m.move);
-  const ax = AXIS_X + (AXIS_X_D - AXIS_X) * shift;
+  /** Off to the left with the big folder on "melalui penghargaan", for the awards (components/Folder.tsx SLIDE); they stay gone. */
+  const kindsAway = ease(f, W(SLIDE.at), m.move);
+  const kindsP = KINDS.map((k) => ease(f, W(k.at) - m.sec(0.1), m.reveal) * (kindsAway >= 0.999 ? 0 : 1));
+  /** "Bukan berarti selalu benar," is there when the camera cuts in from the awards, and comes in with it. */
+  const cut = awardsCut(W);
+  const cutIn = f >= cut.at && f < cut.at + cut.over / 2 ? cutInStyle(f, cut) : {};
+  const linesOut = ease(f, sideAt, m.fade);
+  const notP = (f >= cut.at ? 1 : 0) * (1 - linesOut);
+  const testedP = ease(f, W("Tapi mereka") + m.sec(0.2), m.reveal) * (1 - linesOut);
   const fuller = ease(f, W("lebih lengkap"), m.reveal);
+  const voiceP = ease(f, W("satu voice note") - m.sec(0.1), m.reveal);
 
-  /** Each slab's top-face centre: spread along the axis, then pressed together into one block round MID_Y. */
-  const pressedTops = (() => {
-    const sizes = LAYERS.map((l) => l.slab.depth + 3);
-    const total = sizes.reduce((a, b) => a + b, 0);
-    const out: number[] = [];
-    let y = MID_Y - total / 2;
-    for (const s of sizes) {
-      out.push(y);
-      y += s;
-    }
-    return out;
-  })();
-  const layerY = (i: number) => TOP_Y + i * GAP + (pressedTops[i] - (TOP_Y + i * GAP)) * press;
-  /** "Bukan berarti … selalu benar": the layers are not perfectly certain — a small wobble, then still. */
-  const wobble = (i: number) => {
-    const p = ease(f, doubtAt, m.reveal) * (1 - ease(f, W("Tapi mereka"), m.reveal));
-    return p * 9 * Math.sin((f / m.sec(0.5)) * Math.PI * 2 + i * 1.7);
-  };
-
-  const layerP = LAYERS.map((l) => ease(f, W(l.at, l.nth ?? 0) - m.sec(0.15), m.reveal));
-  /** The lens sits on the layer being named; before the first one, where it will be. */
-  const lensI = LAYERS.reduce((acc, l, i) => acc + ease(f, W(l.at, l.nth ?? 0) - m.sec(0.35), m.sec(0.35)) * (i === 0 ? 0 : 1), 0);
-  const lensY = TOP_Y + lensI * GAP - 62;
-  const lensX = AXIS_X - L / 2 - 6;
-  const lensP = ease(f, startAt, m.pop) * (1 - ease(f, pressAt, m.fade));
-
-  const labelsOut = ease(f, pressAt, m.fade);
-  const kindsP = KINDS.map((k) => ease(f, W(k.at) - m.sec(0.1), m.reveal) * (1 - ease(f, doubtAt, m.fade)));
-  const badge = ease(f, W("kesimpulan."), m.pop);
-  const voiceP = ease(f, voiceAt - m.sec(0.1), m.reveal);
-  /** Two short lines right of the stack (Simon 28 Oct: "kasih text di sebelah kanannya"): one per sentence, out as D shifts. */
-  const notP = ease(f, doubtAt + m.sec(0.2), m.reveal) * (1 - ease(f, sideAt, m.fade));
-  const testedP = ease(f, W("Tapi mereka") + m.sec(0.2), m.reveal) * (1 - ease(f, sideAt, m.fade));
-
-  if (f < startAt - m.sec(0.1)) return null;
+  if (f < W(KINDS[0].at) - m.sec(0.2)) return null;
 
   return (
     <>
-      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-        {/* the axis, and the two edges the slabs hang on */}
-        <g opacity={1 - shift}>
-          <line x1={AXIS_X} y1={TOP_Y - 150} x2={AXIS_X} y2={TOP_Y - 150 + (4 * GAP + 300) * axis} stroke={theme.color.hairlineBrandSolid} strokeWidth={2.5} strokeDasharray="2 9" strokeLinecap="round" />
-          {[-L, L].map((dx) => (
-            <line key={dx} x1={AXIS_X + dx} y1={TOP_Y} x2={AXIS_X + dx} y2={TOP_Y + 4 * GAP} stroke={theme.color.connectorMuteSolid} strokeWidth={1.5} strokeDasharray="2 8" opacity={layerP[4] * (1 - press)} />
+      {/* the same work, for Saham and Reksa dana: a small folder each, named under it */}
+      {kindsAway < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, transform: `translateX(${(-SLIDE.by * kindsAway).toFixed(2)}px)` }}>
+          {KINDS.map((k, i) => (
+            <MiniFolder key={k.text} cx={MINI.x} cy={k.y} w={MINI.w} icon={k.icon} p={kindsP[i]} />
           ))}
-        </g>
-
-        {/* the slabs, bottom first so the upper ones sit in front */}
-        <g style={{ filter: fuller > 0.01 ? `drop-shadow(0 0 ${(28 * fuller).toFixed(1)}px ${theme.color.indigoGlow})` : undefined }}>
-          {[...LAYERS.keys()].reverse().map((i) => {
-            const p = layerP[i];
-            if (p <= 0.001) return null;
-            const slab = LAYERS[i].slab.top ? LAYERS[i].slab : { ...LAYERS[i].slab, top: c.indigo };
-            return <IsoSlab key={i} cx={ax + wobble(i)} cy={layerY(i) - (1 - p) * 70} s={slab} face={LAYERS[i].face(c)} opacity={p} />;
-          })}
-        </g>
-
-        {/* the same work, for Saham and Reksa dana */}
-        {KINDS.map((k, i) =>
-          kindsP[i] > 0.001 ? (
-            <g key={k.text}>
-              {[2, 1, 0].map((j) => (
-                <IsoSlab key={j} cx={MINI.x} cy={k.y + j * 26 - (1 - kindsP[i]) * 30} s={{ h: MINI.h, r: MINI.r, depth: j === 1 ? 12 : 6, top: j === 1 ? c.indigo : j === 2 ? theme.color.isoInkTop : theme.color.isoNTop, side: j === 1 ? theme.color.isoIndigoSide : j === 2 ? theme.color.isoInkSide : theme.color.isoNLeft }} opacity={kindsP[i]} />
-              ))}
-            </g>
-          ) : null,
-        )}
-
-        {/* the lens: the team, at work on the layer being named */}
-        {lensP > 0.001 ? (
-          <g transform={`translate(${lensX.toFixed(1)} ${lensY.toFixed(1)})`} opacity={lensP}>
-            <line x1={24} y1={24} x2={46} y2={46} stroke={theme.color.neutralDotOn} strokeWidth={6} strokeLinecap="round" />
-            <circle cx={0} cy={0} r={36} fill={c.cardBg} stroke={theme.color.neutralDotOn} strokeWidth={3} />
-          </g>
-        ) : null}
-
-        {/* leader lines to the labels */}
-        {LAYERS.map((l, i) => (
-          <g key={l.label} opacity={layerP[i] * (1 - labelsOut)}>
-            <line x1={AXIS_X - L - 10} y1={layerY(i) + l.slab.depth / 2} x2={LABEL_RIGHT + 16} y2={layerY(i) + l.slab.depth / 2} stroke={theme.color.connectorMuteSolid} strokeWidth={1.5} />
-            <circle cx={AXIS_X - L - 10} cy={layerY(i) + l.slab.depth / 2} r={4} fill={theme.color.neutralDotOn} />
-          </g>
-        ))}
-
-        {/* the voice note: one thin sheet */}
-        {voiceP > 0.001 ? (
-          <IsoSlab
-            cx={VOICE.x}
-            cy={VOICE.y - (1 - voiceP) * 40}
-            s={{ h: H, r: R, depth: 5, top: theme.color.isoNTop, side: theme.color.isoNLeft }}
-            opacity={voiceP}
-            face={WAVE.map((h, k) => <rect key={k} x={-72 + k * 16} y={-h / 2} width={7} height={h} rx={3.5} fill={theme.color.neutralDot} />)}
-          />
-        ) : null}
-      </svg>
-
-      {/* "Tim riset" beside the lens */}
-      {lensP > 0.001 ? (
-        <div style={{ position: "absolute", left: lensX - 60 - 260, top: lensY - 22, width: 260, textAlign: "right", ...typeStyle("body"), fontSize: 32, color: c.ink, opacity: lensP * (1 - ease(f, W("laporan keuangan") + m.sec(0.6), m.fade)) }}>Tim riset</div>
+          {KINDS.map((k, i) =>
+            kindsP[i] > 0.001 ? (
+              <div key={k.text} style={{ position: "absolute", left: MINI.x - 150, top: k.y + MINI.h / 2 + MINI.labelGap + (1 - kindsP[i]) * 20, width: 300, textAlign: "center", ...typeStyle("label"), fontSize: 30, color: c.ink, opacity: kindsP[i] }}>{k.text}</div>
+            ) : null,
+          )}
+        </div>
       ) : null}
 
-      {/* the layer names */}
-      {LAYERS.map((l, i) =>
-        layerP[i] * (1 - labelsOut) > 0.001 ? (
-          <div key={l.label} style={{ position: "absolute", left: LABEL_RIGHT - 400, width: 400, textAlign: "right", top: layerY(i) + l.slab.depth / 2 - 21, ...typeStyle("body"), fontSize: 32, color: c.indigo, whiteSpace: "nowrap", opacity: layerP[i] * (1 - labelsOut) }}>{l.label}</div>
-        ) : null,
-      )}
-
-      {/* Saham, Reksa dana */}
-      {KINDS.map((k, i) =>
-        kindsP[i] > 0.001 ? (
-          <div key={k.text} style={{ position: "absolute", left: MINI.x - 150, top: k.y + 110, width: 300, textAlign: "center", ...typeStyle("label"), fontSize: 30, color: c.ink, opacity: kindsP[i] }}>{k.text}</div>
-        ) : null,
-      )}
-
-      {/* Waktu, Proses, Data — three points under the pressed stack */}
-      {BASIS.map((b, i) => {
-        const p = ease(f, W(b.at) - m.sec(0.1), m.reveal) * (1 - ease(f, sideAt, m.fade));
-        const x = AXIS_X - (3 * POINT.w + 2 * POINT.gap) / 2 + i * (POINT.w + POINT.gap);
-        return p > 0.001 ? (
-          <Card key={b.text} x={x} y={POINT.y + (1 - p) * 16} w={POINT.w} h={POINT.h} style={{ opacity: p, display: "flex", alignItems: "center", gap: 20, padding: "0 28px" }}>
-            <Disc icon={b.icon} size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-            <div style={{ ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>{b.text}</div>
-          </Card>
-        ) : null;
-      })}
-
-      {/* "Bukan berarti selalu benar," / "tapi lebih teruji." — beside the stack (Simon 28 Oct) */}
+      {/* "Bukan berarti selalu benar," / "tapi lebih teruji." — centred; Waktu, Proses, Data under them */}
       {notP > 0.001 ? (
-        <div style={{ position: "absolute", left: AXIS_X + L + 82, top: MID_Y - 73, ...typeStyle("title"), fontSize: 56, fontWeight: 500, lineHeight: 1.3, whiteSpace: "nowrap" }}>
-          <div style={{ color: c.ink, opacity: notP, transform: `translateY(${((1 - notP) * 12).toFixed(2)}px)` }}>Bukan berarti selalu benar,</div>
-          <div style={{ color: c.indigo, opacity: testedP, transform: `translateY(${((1 - testedP) * 12).toFixed(2)}px)` }}>tapi lebih teruji.</div>
+        <div style={{ position: "absolute", inset: 0, ...cutIn }}>
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: LINES_TOP, textAlign: "center", ...typeStyle("title"), fontSize: LINES.size, fontWeight: 500, lineHeight: LINES.lead, whiteSpace: "nowrap" }}>
+            <div style={{ color: c.ink, opacity: notP }}>Bukan berarti selalu benar,</div>
+            <div style={{ color: c.indigo, opacity: testedP, transform: `translateY(${((1 - testedP) * 12).toFixed(2)}px)` }}>tapi lebih teruji.</div>
+          </div>
+          {BASIS.map((b, i) => {
+            const p = ease(f, W(b.at) - m.sec(0.1), m.reveal) * (1 - linesOut);
+            const x = theme.canvas.width / 2 - (3 * POINT.w + 2 * POINT.gap) / 2 + i * (POINT.w + POINT.gap);
+            return p > 0.001 ? (
+              <Card key={b.text} x={x} y={POINT_Y + (1 - p) * 16} w={POINT.w} h={POINT.h} style={{ opacity: p, display: "flex", alignItems: "center", gap: 20, padding: "0 28px" }}>
+                <Disc icon={b.icon} size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+                <div style={{ ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>{b.text}</div>
+              </Card>
+            ) : null;
+          })}
         </div>
       ) : null}
 
-      {/* the tested conclusion */}
-      {badge > 0.001 ? (
-        <div style={{ position: "absolute", left: ax + L - 30, top: MID_Y - 150, width: 92, height: 92, borderRadius: 999, background: c.cardBg, border: `2px dashed ${theme.color.connector}`, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", opacity: badge, transform: `scale(${(0.8 + 0.2 * badge).toFixed(3)})` }}>
-          <Ico name="tick" size={40} tone={c.indigo} />
-        </div>
+      {/* "Jadi keputusanmu punya dasar yang lebih lengkap …": the research, fanned out */}
+      <div style={{ position: "absolute", inset: 0, filter: fuller > 0.01 ? `drop-shadow(0 0 ${(28 * fuller).toFixed(1)}px ${theme.color.indigoGlow})` : undefined }}>
+        {SHOTS.map((s, i) => {
+          const p = ease(f, sideAt + m.fade + m.sec(0.06 * i), m.reveal);
+          if (p <= 0.001) return null;
+          const k = Math.min(FAN.box / (s.iw + 2 * s.pad), FAN.box / (s.ih + 2 * s.pad));
+          const w = (s.iw + 2 * s.pad) * k;
+          const h = (s.ih + 2 * s.pad) * k;
+          const o = i - (SHOTS.length - 1) / 2;
+          return (
+            <div key={s.src} style={{ position: "absolute", left: FAN.cx + o * FAN.step - w / 2, top: FAN.foot - h + Math.abs(o) * FAN.drop + (1 - p) * 24, width: w, height: h, borderRadius: 12, overflow: "hidden", background: c.cardBg, boxShadow: shadow.soft, boxSizing: "border-box", padding: s.pad * k, opacity: p, transformOrigin: "50% 100%", transform: `rotate(${(o * FAN.turn * p).toFixed(2)}deg)` }}>
+              <Img src={staticFile(`art/in07/app/${s.src}.jpg`)} style={{ width: "100%", height: "100%", display: "block" }} />
+            </div>
+          );
+        })}
+      </div>
+      {ease(f, sideAt + m.fade, m.reveal) > 0.001 ? (
+        <div style={{ position: "absolute", left: FAN.cx - 150, width: 300, top: NAME_Y, textAlign: "center", ...typeStyle("body"), color: c.ink, opacity: ease(f, sideAt + m.fade, m.reveal) }}>Riset</div>
       ) : null}
 
-      {/* D — the two, named */}
-      {shift > 0.001 ? (
-        <div style={{ position: "absolute", left: ax - 150, top: MID_Y + 170, width: 300, textAlign: "center", ...typeStyle("body"), color: c.ink, opacity: shift }}>Riset</div>
-      ) : null}
+      {/* "… daripada hanya satu voice note dari temanmu." */}
       {voiceP > 0.001 ? (
-        <div style={{ position: "absolute", left: VOICE.x - 150, top: MID_Y + 170, width: 300, textAlign: "center", ...typeStyle("body"), color: theme.color.neutralIcon, opacity: voiceP }}>Voice note</div>
+        <>
+          <div style={{ position: "absolute", left: VOICE.cx - (280 * VOICE.scale) / 2, top: VOICE.cy - (76 * VOICE.scale) / 2 + (1 - voiceP) * 20, opacity: voiceP }}>
+            <VoiceBubble scale={VOICE.scale} />
+          </div>
+          <div style={{ position: "absolute", left: VOICE.cx - 150, width: 300, top: NAME_Y, textAlign: "center", ...typeStyle("body"), color: theme.color.neutralIcon, opacity: voiceP }}>Voice note</div>
+        </>
       ) : null}
-      <Mark kind="cross" p={ease(f, W("temanmu."), m.pop)} x={VOICE.x + L - 10} y={VOICE.y - 90} />
+      <Mark kind="cross" p={ease(f, W("temanmu."), m.pop)} x={VOICE.cx + (280 * VOICE.scale) / 2 - 6} y={VOICE.cy - (76 * VOICE.scale) / 2 + 4} />
     </>
   );
 };

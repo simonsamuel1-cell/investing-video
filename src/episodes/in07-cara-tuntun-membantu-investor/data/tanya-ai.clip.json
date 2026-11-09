@@ -1,6 +1,6 @@
 {
   "_": "SC05 — Simon's screen recording of Tuntun AI, re-timed onto the VO by scripts/vi/retime-clip.mjs. src = second of the recording (30 fps): frozen on frame 152 (the AI icon, eyes open, before the press) from Studio 12725 to 12867 while it is highlighted; then the press and the chat sheet, each question typed on the spoken one, the answer on 'Tuntun AI membantu', the end.",
-  "in": "/Users/samuelsurja/Documents/01 Academy/INV07/Revisi VO/drive-download-20261029T034452Z-1-001/TanyaTuntunAI.mp4",
+  "in": "/Users/samuelsurja/Documents/01 Academy/INV07/Revisi VO/Tuntun AI/TanyaTuntunAI.mp4",
   "out": "public/art/in07/app/tanya-tuntun-ai.mp4",
   "public": "art/in07/app/tanya-tuntun-ai.mp4",
   "scene": 5,

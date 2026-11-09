@@ -9,28 +9,31 @@
  *  C  none of it is certain: the line goes dashed; the price can fall further below the fair value; a cheap market can
  *     get cheaper; no promise of a rise, no decision to follow.
  *  D  as Simon directed (30 Oct): "Saat temanmu menyuruhmu, kamu bisa lihat dulu" at the top, every app screenshot
- *     under it, one highlight round them all, Beli and Jual under that; then Orang Tuntun and the script's line,
- *     "Jadi sebelum menekan tombol berikutnya: lihat dulu. Baru putuskan."
+ *     under it, one highlight round them all, Beli and Jual under that; then Orang Tuntun and the script's line —
+ *     "Itulah arti Invest with Guidance bersama Tuntun." since the 9 Nov VO (it replaced "Jadi sebelum menekan tombol
+ *     berikutnya: lihat dulu. Baru putuskan.").
+ *  E  "Di lesson berikutnya …": a camera cut into the next lesson, Value Investing (scenes/NextLesson.tsx; Simon 9 Nov:
+ *     "buat ulang visual untuk script baru di scene 11").
  */
 import React from "react";
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { Connector, HighlightBox, SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK } from "../data/timing";
+import { Connector, HighlightBox, SoftGround, Stage, TuntunMark, cutOutStyle, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { BLOCK, CUT } from "../data/timing";
+import { NextLesson } from "./NextLesson";
 import { Appear, BoardGrid, Disc, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, ease, useWords } from "../components/kit";
 import { BUMI_CARD } from "../data/bumi-card";
 import { BumiCrop, cropW } from "../components/BumiCrop";
 import { PERSON_2, Person } from "../components/Person";
 
 const CX = theme.canvas.width / 2;
-/** Simon reads frames off the finished video, which opens with a 240-frame intro (core/EpisodeWrap). */
-const atFull = (full: number) => full - 240 - BLOCK.SC11;
 const ROW_Y = 470;
 const HELP_X = 400;
 const YOU_X = 1520;
 /**
  * A's two buttons: side by side in the middle, each filled its own colour, and both gone at Simon's f29939 — the
  * frame B's information starts arriving (30 Oct: "saling bersebelahan ... di tengah horizontal ... warna fillnya
- * masing2 hijau dan merah, lalu keduanya hilang di 29939").
+ * masing2 hijau dan merah, lalu keduanya hilang di 29939"). That frame was the word "menampilkan", so `BUTTONS_OUT`
+ * is that word: as a frame number it went 3 s late when the frog pause left the timeline and 26 s early when SC04 grew.
  */
 const BUTTONS = [
   { text: "Beli", sign: "▲", fill: theme.color.gainGreen, at: "tombol beli", cross: "untukmu." },
@@ -38,7 +41,7 @@ const BUTTONS = [
 ] as const;
 const BTN = { w: 300, h: 96, gap: 40, y: 724 };
 const btnX = (i: number) => CX - (2 * BTN.w + BTN.gap) / 2 + i * (BTN.w + BTN.gap);
-const BUTTONS_OUT = atFull(29939);
+const BUTTONS_OUT = "menampilkan informasi";
 /** You: Orang_2 on the self circle (Simon 30 Oct), the circle `YOU_D` across — the mascot's weight on the other end. */
 const YOU_D = 200;
 const YOU_S = YOU_D / PERSON_2.d;
@@ -65,7 +68,7 @@ const SUMMARY_Y = 756;
  * D, as Simon directed it (30 Oct, after two versions he rejected): the summary line at the top in two steps — "Saat
  * temanmu menyuruhmu," then "kamu bisa lihat dulu"; with the second, every app screenshot the episode has, in two
  * rows; on "Tuntun membantu memberi konteks" one highlight round all of them; on "Keputusan tetap ada di tanganmu" Beli
- * and Jual under them; on "Jadi sebelum…" the picture changes to Orang Tuntun and the script's line.
+ * and Jual under them; on "Itulah arti…" the picture changes to Orang Tuntun and the script's line.
  */
 const D_TEXT_Y = theme.logoZone.height + 6;
 type Pic = { src: string; w: number; h: number; bumi?: true };
@@ -152,15 +155,19 @@ export const SC11 = () => {
   const seeAt = W("kamu punya");
   const hlAt = W("Tuntun membantu memberi");
   const handsAt = W("Keputusan tetap");
-  const jadiAt = W("Jadi sebelum");
-  const lookAt = W("lihat dulu.");
-  const thenAt = W("Baru putuskan.");
+  const jadiAt = W("Itulah arti");
+  const guideAt = W("Invest with Guidance");
+  const withAt = W("bersama Tuntun.");
   const dOut = ease(f, jadiAt - m.sec(0.1), m.fade);
+
+  // E — the cut into the next lesson; the close leaves through it
+  const lessonCut = { at: W("Di lesson berikutnya"), axis: "x" as const, ...CUT };
+  const closeOut = f >= lessonCut.at - lessonCut.over / 2 ? cutOutStyle(f, lessonCut) : {};
 
   return (
     <Stage>
       <SoftGround f={g} />
-      <BoardGrid g={g} on={1 - ease(f, jadiAt, m.fade)} />
+      <BoardGrid g={g} on={f >= lessonCut.at ? 1 : 1 - ease(f, jadiAt, m.fade)} />
 
       {/* A–C — the two of you, and what passes between */}
       {abOut < 0.999 ? (
@@ -184,7 +191,7 @@ export const SC11 = () => {
           {/* the two buttons, in the middle; the mascot's reach to them is crossed out, and both go at BUTTONS_OUT */}
           {BUTTONS.map((b, i) => {
             const at = W(b.at);
-            const out = 1 - ease(f, BUTTONS_OUT - m.fade, m.fade);
+            const out = 1 - ease(f, W(BUTTONS_OUT) - m.fade, m.fade);
             const p = ease(f, at - m.sec(0.1), m.pop) * out;
             const x = btnX(i);
             return (
@@ -267,15 +274,24 @@ export const SC11 = () => {
         </div>
       ) : null}
 
-      {/* the close: Orang Tuntun and the script's line */}
-      {f >= jadiAt - 1 ? <OrangTuntun at={jadiAt} /> : null}
-      <div style={{ position: "absolute", left: ORANG_TUNTUN_RIGHT + 90, top: 500, width: theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 90, transform: "translateY(-50%)", fontFamily: theme.text.family, fontWeight: 500, letterSpacing: -0.5, lineHeight: 1.22 }}>
-        <div style={{ fontSize: 48, color: c.slate, marginBottom: 18, opacity: ease(f, jadiAt + m.sec(0.2), m.reveal) }}>Jadi sebelum menekan tombol berikutnya:</div>
-        <div style={{ fontSize: 72, color: c.ink }}>
-          <span style={{ color: c.indigo, opacity: ease(f, lookAt - m.sec(0.1), m.reveal) }}>lihat dulu.</span>{" "}
-          <span style={{ opacity: ease(f, thenAt - m.sec(0.1), m.reveal) }}>Baru putuskan.</span>
+      {/* the close: Orang Tuntun and the script's line, out through the cut into the next lesson */}
+      {f >= jadiAt - 1 && f < lessonCut.at ? (
+        <div style={{ position: "absolute", inset: 0, ...closeOut }}>
+          <OrangTuntun at={jadiAt} />
+          <div style={{ position: "absolute", left: ORANG_TUNTUN_RIGHT + 90, top: 500, width: theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 90, transform: "translateY(-50%)", fontFamily: theme.text.family, fontWeight: 500, letterSpacing: -0.5, lineHeight: 1.22 }}>
+            {/* "Itulah arti" in black, the rest in indigo (Simon 9 Nov) */}
+            <div style={{ fontSize: 48, color: c.ink, marginBottom: 18, opacity: ease(f, jadiAt + m.sec(0.2), m.reveal) }}>Itulah arti</div>
+            <div style={{ fontSize: 72, color: c.indigo }}>
+              <span style={{ opacity: ease(f, guideAt - m.sec(0.1), m.reveal) }}>Invest with Guidance</span>
+              <br />
+              <span style={{ opacity: ease(f, withAt - m.sec(0.1), m.reveal) }}>bersama Tuntun.</span>
+            </div>
+          </div>
         </div>
-      </div>
+      ) : null}
+
+      {/* E — the next lesson */}
+      <NextLesson cut={lessonCut} />
     </Stage>
   );
 };

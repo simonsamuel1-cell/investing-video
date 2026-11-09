@@ -195,449 +195,493 @@ Solusinya bukan cuma bilang: “Coba pikirkan lebih lama.”
 Kita juga perlu informasi yang sudah disusun agar lebih mudah dipahami.
 
 50
-00:02:59,133 --> 00:03:01,050
-Tim riset Tuntun membaca laporan keuangan,
+00:02:59,133 --> 00:03:01,217
+Di sinilah Tuntun Deep Research Report berperan,
 
 51
-00:03:01,283 --> 00:03:03,617
-membuat model, menilai kualitas perusahaan,
+00:03:01,367 --> 00:03:05,467
+membantu investor memahami perusahaan melalui penelitian yang lebih menyeluruh.
 
 52
-00:03:03,733 --> 00:03:08,183
-menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.
+00:03:06,000 --> 00:03:07,917
+Tim riset Tuntun membaca laporan keuangan,
 
 53
-00:03:08,683 --> 00:03:12,017
-Riset juga dilakukan untuk saham dan produk seperti reksa dana.
+00:03:08,150 --> 00:03:10,483
+membuat model, menilai kualitas perusahaan,
 
 54
-00:03:12,317 --> 00:03:14,500
-Bukan berarti tim riset selalu benar.
+00:03:10,600 --> 00:03:15,050
+menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.
 
 55
-00:03:14,867 --> 00:03:16,333
-Tapi mereka punya lebih banyak waktu,
+00:03:15,567 --> 00:03:19,083
+Setiap perusahaan dipantau oleh analis khusus melalui fundamental research,
 
 56
-00:03:16,467 --> 00:03:19,283
-proses, dan data untuk menguji sebuah kesimpulan.
+00:03:19,433 --> 00:03:22,500
+industry research, dan kunjungan langsung ke perusahaan.
 
 57
-00:03:19,783 --> 00:03:22,867
-Jadi keputusanmu punya dasar yang lebih lengkap
+00:03:22,567 --> 00:03:26,183
+Analisisnya juga terus diperbarui mengikuti perkembangan terbaru.
 
 58
-00:03:23,033 --> 00:03:25,267
-daripada hanya satu voice note dari temanmu.
+00:03:26,667 --> 00:03:28,983
+Riset Tuntun mencakup saham dan reksa dana,
 
 59
-00:03:26,050 --> 00:03:28,033
-Kalau laporan risetnya masih belum jelas,
+00:03:29,083 --> 00:03:32,717
+serta telah mendapatkan pengakuan industri melalui penghargaan dari
 
 60
-00:03:28,150 --> 00:03:32,267
-atau kamu ingin memahami satu bagian lebih dalam, gunakan Tuntun AI.
+00:03:32,717 --> 00:03:38,217
+CNBC Indonesia pada 2025 dan Media Asuransi pada 2024.
 
 61
-00:03:32,583 --> 00:03:34,567
-Kamu bisa mulai dari pertanyaan sederhana:
+00:03:38,550 --> 00:03:40,733
+Bukan berarti tim riset selalu benar.
 
 62
-00:03:34,717 --> 00:03:37,267
-“Perusahaan ini sebenarnya menghasilkan uang dari mana?”
+00:03:41,100 --> 00:03:42,567
+Tapi mereka punya lebih banyak waktu,
 
 63
-00:03:37,717 --> 00:03:40,217
-“Kenapa harga sekarang dianggap murah atau mahal?”
+00:03:42,700 --> 00:03:45,517
+proses, dan data untuk menguji sebuah kesimpulan.
 
 64
-00:03:40,767 --> 00:03:41,983
-“Apa risiko terbesarnya?”
+00:03:46,017 --> 00:03:49,100
+Jadi keputusanmu punya dasar yang lebih lengkap
 
 65
-00:03:42,550 --> 00:03:45,567
-Tuntun AI membantu merangkum kualitas perusahaan dan valuasinya,
+00:03:49,267 --> 00:03:51,500
+daripada hanya satu voice note dari temanmu.
 
 66
-00:03:45,817 --> 00:03:48,633
-lalu memberi konteks tambahan seperti pergerakan dana,
+00:03:52,283 --> 00:03:54,267
+Kalau laporan risetnya masih belum jelas,
 
 67
-00:03:48,767 --> 00:03:50,900
-kondisi teknikal, dan peristiwa terbaru.
+00:03:54,383 --> 00:03:58,500
+atau kamu ingin memahami satu bagian lebih dalam, gunakan Tuntun AI.
 
 68
-00:03:51,400 --> 00:03:54,583
-Tujuannya bukan supaya AI mengambil keputusan untukmu.
+00:03:58,817 --> 00:04:00,800
+Kamu bisa mulai dari pertanyaan sederhana:
 
 69
-00:03:55,267 --> 00:03:58,017
-Tujuannya supaya kamu nggak menekan tombol
+00:04:00,950 --> 00:04:03,500
+“Perusahaan ini sebenarnya menghasilkan uang dari mana?”
 
 70
-00:03:58,017 --> 00:04:00,483
-sebelum memahami apa yang sedang dibeli.
+00:04:03,950 --> 00:04:06,450
+“Kenapa harga sekarang dianggap murah atau mahal?”
 
 71
-00:04:01,283 --> 00:04:04,650
-Situasi berikutnya muncul saat satu topik atau berita tiba-tiba ramai.
+00:04:07,000 --> 00:04:08,217
+“Apa risiko terbesarnya?”
 
 72
-00:04:05,183 --> 00:04:07,467
-Temanmu mengirim voice note: “Masuk sekarang!”
+00:04:08,783 --> 00:04:11,800
+Tuntun AI membantu merangkum kualitas perusahaan dan valuasinya,
 
 73
-00:04:08,183 --> 00:04:11,867
-Tapi topik yang ramai belum tentu benar-benar berdampak pada perusahaan.
+00:04:12,050 --> 00:04:14,867
+lalu memberi konteks tambahan seperti pergerakan dana,
 
 74
-00:04:12,367 --> 00:04:14,350
-Sebelum ikut masuk, cek tiga hal.
+00:04:15,000 --> 00:04:17,133
+kondisi teknikal, dan peristiwa terbaru.
 
 75
-00:04:14,633 --> 00:04:18,900
-Pertama: apakah peristiwanya benar-benar memengaruhi bisnis dan laba perusahaan?
+00:04:17,633 --> 00:04:20,817
+Tujuannya bukan supaya AI mengambil keputusan untukmu.
 
 76
-00:04:19,467 --> 00:04:21,783
-Kedua: apakah dana benar-benar masuk?
+00:04:21,500 --> 00:04:24,250
+Tujuannya supaya kamu nggak menekan tombol
 
 77
-00:04:22,367 --> 00:04:25,333
-Ketiga: apakah aktivitas transaksinya memang meningkat?
+00:04:24,250 --> 00:04:26,717
+sebelum memahami apa yang sedang dibeli.
 
 78
-00:04:26,183 --> 00:04:29,117
-Event Research membantu melihat dampaknya terhadap bisnis.
+00:04:27,517 --> 00:04:30,883
+Situasi berikutnya muncul saat satu topik atau berita tiba-tiba ramai.
 
 79
-00:04:29,717 --> 00:04:31,667
-Fund Flow menunjukkan arah pergerakan dana.
+00:04:31,417 --> 00:04:33,700
+Temanmu mengirim voice note: “Masuk sekarang!”
 
 80
-00:04:32,183 --> 00:04:36,883
-Sementara volume menunjukkan apakah aktivitas pasar benar-benar meningkat.
+00:04:34,417 --> 00:04:38,100
+Tapi topik yang ramai belum tentu benar-benar berdampak pada perusahaan.
 
 81
-00:04:37,517 --> 00:04:40,850
-Semakin banyak yang sejalan, semakin kuat dasar di balik pergerakannya.
+00:04:38,600 --> 00:04:40,583
+Sebelum ikut masuk, cek tiga hal.
 
 82
-00:04:41,433 --> 00:04:45,367
-Tapi tetap bukan jaminan bahwa harga pasti naik.
+00:04:40,867 --> 00:04:45,133
+Pertama: apakah peristiwanya benar-benar memengaruhi bisnis dan laba perusahaan?
 
 83
-00:04:45,900 --> 00:04:48,333
-Kalau buktinya belum cukup, nggak ada salahnya menunggu.
+00:04:45,700 --> 00:04:48,017
+Kedua: apakah dana benar-benar masuk?
 
 84
-00:04:49,017 --> 00:04:53,083
-Karena ramai di grup belum tentu berarti ramai di pasar.
+00:04:48,600 --> 00:04:51,567
+Ketiga: apakah aktivitas transaksinya memang meningkat?
 
 85
-00:04:53,500 --> 00:04:58,117
-Masalah berikutnya bukan kekurangan informasi, tapi rasa percaya diri yang terlalu besar.
+00:04:52,417 --> 00:04:55,350
+Event Research membantu melihat dampaknya terhadap bisnis.
 
 86
-00:04:59,483 --> 00:05:03,183
-Tiga kali untung, lalu mulai merasa: “Saya sudah mengerti market.”
+00:04:55,950 --> 00:04:57,900
+Fund Flow menunjukkan arah pergerakan dana.
 
 87
-00:05:04,317 --> 00:05:08,833
-Posisi diperbesar, kemudian mulai mempertimbangkan dana pinjaman.
+00:04:58,417 --> 00:05:03,117
+Sementara volume menunjukkan apakah aktivitas pasar benar-benar meningkat.
 
 88
-00:05:09,217 --> 00:05:12,683
-Di saat seperti ini, Tuntun Guidance bisa berfungsi sebagai pengingat.
+00:05:03,750 --> 00:05:07,083
+Semakin banyak yang sejalan, semakin kuat dasar di balik pergerakannya.
 
 89
-00:05:13,300 --> 00:05:14,933
-Kalau harga sudah jauh di atas fair price,
+00:05:07,667 --> 00:05:11,600
+Tapi tetap bukan jaminan bahwa harga pasti naik.
 
 90
-00:05:15,067 --> 00:05:17,300
-pertimbangkan kembali sebelum menambah posisi.
+00:05:12,133 --> 00:05:14,567
+Kalau buktinya belum cukup, nggak ada salahnya menunggu.
 
 91
-00:05:17,967 --> 00:05:19,850
-Kalau alasan investasinya belum cukup kuat,
+00:05:15,250 --> 00:05:19,317
+Karena ramai di grup belum tentu berarti ramai di pasar.
 
 92
-00:05:20,167 --> 00:05:22,733
-jangan memperbesar ketidakpastian dengan leverage.
+00:05:19,733 --> 00:05:24,350
+Masalah berikutnya bukan kekurangan informasi, tapi rasa percaya diri yang terlalu besar.
 
 93
-00:05:23,383 --> 00:05:25,083
-Peringatan ini bukan larangan.
+00:05:25,717 --> 00:05:29,417
+Tiga kali untung, lalu mulai merasa: “Saya sudah mengerti market.”
 
 94
-00:05:25,633 --> 00:05:27,617
-Ini adalah jeda singkat agar rasa percaya
+00:05:30,550 --> 00:05:35,067
+Posisi diperbesar, kemudian mulai mempertimbangkan dana pinjaman.
 
 95
-00:05:27,617 --> 00:05:29,967
-diri nggak langsung berubah menjadi keputusan besar.
+00:05:35,450 --> 00:05:38,917
+Di saat seperti ini, Tuntun Guidance bisa berfungsi sebagai pengingat.
 
 96
-00:05:30,933 --> 00:05:35,283
-Selain melihat satu saham, kita juga perlu melihat kondisi market secara keseluruhan.
+00:05:39,533 --> 00:05:41,167
+Kalau harga sudah jauh di atas fair price,
 
 97
-00:05:35,600 --> 00:05:37,700
-Karena leverage sering terasa paling menggoda
+00:05:41,300 --> 00:05:43,533
+pertimbangkan kembali sebelum menambah posisi.
 
 98
-00:05:37,700 --> 00:05:39,433
-saat semua orang sedang menghasilkan uang.
+00:05:44,200 --> 00:05:46,083
+Kalau alasan investasinya belum cukup kuat,
 
 99
-00:05:39,783 --> 00:05:44,133
-Sebelum memperbesar posisi, lihat di mana valuasi IHSG berada dibandingkan sejarahnya,
+00:05:46,400 --> 00:05:48,967
+jangan memperbesar ketidakpastian dengan leverage.
 
 100
-00:05:44,467 --> 00:05:49,083
-dan apakah sentimen pasar sedang didominasi ketakutan atau keserakahan.
+00:05:49,617 --> 00:05:51,317
+Peringatan ini bukan larangan.
 
 101
-00:05:49,283 --> 00:05:50,700
-Prinsipnya sederhana.
+00:05:51,867 --> 00:05:53,850
+Ini adalah jeda singkat agar rasa percaya
 
 102
-00:05:51,067 --> 00:05:55,017
-Saat valuasi dan optimisme sudah terlalu tinggi, kita perlu lebih waspada.
+00:05:53,850 --> 00:05:56,200
+diri nggak langsung berubah menjadi keputusan besar.
 
 103
-00:05:55,183 --> 00:05:58,717
-Saat valuasi rendah dan market dipenuhi ketakutan,
+00:05:57,167 --> 00:06:01,517
+Selain melihat satu saham, kita juga perlu melihat kondisi market secara keseluruhan.
 
 104
-00:05:59,117 --> 00:06:02,233
-jangan biarkan rasa takut menutup mata dari peluang.
+00:06:01,833 --> 00:06:03,933
+Karena leverage sering terasa paling menggoda
 
 105
-00:06:02,617 --> 00:06:05,200
-Market Valuation nggak memilihkan saham untukmu.
+00:06:03,933 --> 00:06:05,667
+saat semua orang sedang menghasilkan uang.
 
 106
-00:06:05,500 --> 00:06:07,333
-Fitur ini hanya membantu memberikan konteks:
+00:06:06,017 --> 00:06:10,367
+Sebelum memperbesar posisi, lihat di mana valuasi IHSG berada dibandingkan sejarahnya,
 
 107
-00:06:07,617 --> 00:06:10,450
-apakah suasana pasar sedang mendukung keputusan yang tenang,
+00:06:10,700 --> 00:06:15,317
+dan apakah sentimen pasar sedang didominasi ketakutan atau keserakahan.
 
 108
-00:06:10,517 --> 00:06:14,283
-atau justru sedang mendorong semua orang bergerak ke arah yang sama?
+00:06:15,517 --> 00:06:16,933
+Prinsipnya sederhana.
 
 109
-00:06:14,717 --> 00:06:17,733
-Sekarang kita kembali ke 28 Januari.
+00:06:17,300 --> 00:06:21,250
+Saat valuasi dan optimisme sudah terlalu tinggi, kita perlu lebih waspada.
 
 110
-00:06:18,017 --> 00:06:20,150
-Orangnya sama. Market-nya sama.
+00:06:21,417 --> 00:06:24,950
+Saat valuasi rendah dan market dipenuhi ketakutan,
 
 111
-00:06:20,417 --> 00:06:22,767
-Tapi proses mengambil keputusannya berbeda.
+00:06:25,350 --> 00:06:28,467
+jangan biarkan rasa takut menutup mata dari peluang.
 
 112
-00:06:23,183 --> 00:06:27,367
-Di skenario pertama, layar penuh warna merah, temanmu terus bilang “cepat jual”,
+00:06:28,850 --> 00:06:31,433
+Market Valuation nggak memilihkan saham untukmu.
 
 113
-00:06:27,533 --> 00:06:30,933
-dan saat perdagangan dibuka kembali, tombol jual langsung ditekan.
+00:06:31,733 --> 00:06:33,567
+Fitur ini hanya membantu memberikan konteks:
 
 114
-00:06:31,533 --> 00:06:33,750
-Di skenario kedua, rasa takutnya tetap ada.
+00:06:33,850 --> 00:06:36,683
+apakah suasana pasar sedang mendukung keputusan yang tenang,
 
 115
-00:06:34,367 --> 00:06:37,033
-Tapi sebelum bertindak, dia membuka analisis portofolio:
+00:06:36,750 --> 00:06:40,517
+atau justru sedang mendorong semua orang bergerak ke arah yang sama?
 
 116
-00:06:37,333 --> 00:06:41,067
-apakah yang turun hanya harga, atau kualitas dan fair value-nya juga berubah?
+00:06:40,950 --> 00:06:43,967
+Sekarang kita kembali ke 28 Januari.
 
 117
-00:06:41,683 --> 00:06:44,183
-Dia melihat Market Valuation, membuka Event Research,
+00:06:44,250 --> 00:06:46,383
+Orangnya sama. Market-nya sama.
 
 118
-00:06:44,533 --> 00:06:47,167
-lalu menanyakan bagian yang belum dipahami kepada Tuntun AI.
+00:06:46,650 --> 00:06:49,000
+Tapi proses mengambil keputusannya berbeda.
 
 119
-00:06:47,800 --> 00:06:50,817
-Setelah itu, dia mungkin tetap menjual. Mungkin menahan.
+00:06:49,417 --> 00:06:53,600
+Di skenario pertama, layar penuh warna merah, temanmu terus bilang “cepat jual”,
 
 120
-00:06:50,817 --> 00:06:52,717
-Atau mungkin membeli secara bertahap.
+00:06:53,767 --> 00:06:57,167
+dan saat perdagangan dibuka kembali, tombol jual langsung ditekan.
 
 121
-00:06:52,883 --> 00:06:54,517
-Yang membedakan bukan hasil akhirnya.
+00:06:57,767 --> 00:06:59,983
+Di skenario kedua, rasa takutnya tetap ada.
 
 122
-00:06:55,183 --> 00:06:59,200
-Yang membedakan adalah keputusan itu dibuat setelah memeriksa informasi,
+00:07:00,600 --> 00:07:03,267
+Tapi sebelum bertindak, dia membuka analisis portofolio:
 
 123
-00:06:59,550 --> 00:07:01,300
-bukan hanya karena desakan teman di grup.
+00:07:03,567 --> 00:07:07,300
+apakah yang turun hanya harga, atau kualitas dan fair value-nya juga berubah?
 
 124
-00:07:02,067 --> 00:07:04,367
-Tapi nggak semua penurunan punya konteks yang sama.
+00:07:07,917 --> 00:07:10,417
+Dia melihat Market Valuation, membuka Event Research,
 
 125
-00:07:04,833 --> 00:07:06,567
-Pada April 2025,
+00:07:10,767 --> 00:07:13,400
+lalu menanyakan bagian yang belum dipahami kepada Tuntun AI.
 
 126
-00:07:06,633 --> 00:07:09,400
-berita kenaikan tarif terhadap Indonesia membuat IHSG
+00:07:14,033 --> 00:07:17,050
+Setelah itu, dia mungkin tetap menjual. Mungkin menahan.
 
 127
-00:07:09,400 --> 00:07:12,567
-turun tajam dan perdagangan sempat dihentikan sementara.
+00:07:17,050 --> 00:07:18,950
+Atau mungkin membeli secara bertahap.
 
 128
-00:07:13,017 --> 00:07:15,067
-Bedanya, saat itu valuasi market sudah
+00:07:19,117 --> 00:07:20,750
+Yang membedakan bukan hasil akhirnya.
 
 129
-00:07:15,067 --> 00:07:18,283
-relatif rendah dan sentimen sudah dipenuhi ketakutan.
+00:07:21,417 --> 00:07:25,433
+Yang membedakan adalah keputusan itu dibuat setelah memeriksa informasi,
 
 130
-00:07:18,717 --> 00:07:21,817
-Jadi pertanyaannya bukan lagi sekadar: “Harus jual atau nggak?”
+00:07:25,783 --> 00:07:27,533
+bukan hanya karena desakan teman di grup.
 
 131
-00:07:22,167 --> 00:07:25,283
-Tapi: “Apakah dampaknya benar-benar mengubah investasi saya,
+00:07:28,300 --> 00:07:30,600
+Tapi nggak semua penurunan punya konteks yang sama.
 
 132
-00:07:25,283 --> 00:07:27,550
-atau market sedang bereaksi terlalu jauh?”
+00:07:31,067 --> 00:07:32,800
+Pada April 2025,
 
 133
-00:07:28,100 --> 00:07:31,067
-Di sinilah informasi yang tadi kita bahas dibaca bersama:
+00:07:32,867 --> 00:07:35,633
+berita kenaikan tarif terhadap Indonesia membuat IHSG
 
 134
-00:07:31,367 --> 00:07:32,983
-apakah kualitas perusahaan berubah,
+00:07:35,633 --> 00:07:38,800
+turun tajam dan perdagangan sempat dihentikan sementara.
 
 135
-00:07:33,133 --> 00:07:35,883
-apakah harganya sudah berada jauh di bawah fair value,
+00:07:39,250 --> 00:07:41,300
+Bedanya, saat itu valuasi market sudah
 
 136
-00:07:36,217 --> 00:07:39,483
-dan apakah berita tersebut benar-benar berdampak pada bisnisnya.
+00:07:41,300 --> 00:07:44,517
+relatif rendah dan sentimen sudah dipenuhi ketakutan.
 
 137
-00:07:39,850 --> 00:07:41,817
-Kalau alasan investasinya masih berlaku,
+00:07:44,950 --> 00:07:48,050
+Jadi pertanyaannya bukan lagi sekadar: “Harus jual atau nggak?”
 
 138
-00:07:42,150 --> 00:07:45,450
-penurunan harga belum tentu menjadi alasan untuk ikut panik.
+00:07:48,400 --> 00:07:51,517
+Tapi: “Apakah dampaknya benar-benar mengubah investasi saya,
 
 139
-00:07:46,017 --> 00:07:49,767
-Bahkan untuk dana jangka panjang yang memang disiapkan mencari peluang,
+00:07:51,517 --> 00:07:53,783
+atau market sedang bereaksi terlalu jauh?”
 
 140
-00:07:50,033 --> 00:07:53,217
-kondisi seperti ini bisa mulai diperhatikan secara bertahap.
+00:07:54,333 --> 00:07:57,300
+Di sinilah informasi yang tadi kita bahas dibaca bersama:
 
 141
-00:07:53,483 --> 00:07:56,000
-Bukan dana darurat, bukan uang yang segera dipakai,
+00:07:57,600 --> 00:07:59,217
+apakah kualitas perusahaan berubah,
 
 142
-00:07:56,083 --> 00:07:58,833
-dan tetap bukan keputusan otomatis.
+00:07:59,367 --> 00:08:02,117
+apakah harganya sudah berada jauh di bawah fair value,
 
 143
-00:07:59,033 --> 00:08:02,583
-Harga sama-sama turun, tapi konteksnya bisa sangat berbeda.
+00:08:02,450 --> 00:08:05,717
+dan apakah berita tersebut benar-benar berdampak pada bisnisnya.
 
 144
-00:08:03,450 --> 00:08:08,483
-Jadi, hubungan kita sederhana: Tuntun membantu, kamu yang memutuskan.
+00:08:06,083 --> 00:08:08,050
+Kalau alasan investasinya masih berlaku,
 
 145
-00:08:08,833 --> 00:08:11,267
-Tuntun nggak menekan tombol beli untukmu.
+00:08:08,383 --> 00:08:11,683
+penurunan harga belum tentu menjadi alasan untuk ikut panik.
 
 146
-00:08:11,517 --> 00:08:13,733
-Tuntun juga nggak menekan tombol jual.
+00:08:12,250 --> 00:08:16,000
+Bahkan untuk dana jangka panjang yang memang disiapkan mencari peluang,
 
 147
-00:08:14,233 --> 00:08:16,300
-Tuntun membantu menampilkan informasi yang bisa
+00:08:16,267 --> 00:08:19,450
+kondisi seperti ini bisa mulai diperhatikan secara bertahap.
 
 148
-00:08:16,300 --> 00:08:18,383
-kamu gunakan untuk berpikir lebih jernih:
+00:08:19,717 --> 00:08:22,233
+Bukan dana darurat, bukan uang yang segera dipakai,
 
 149
-00:08:18,683 --> 00:08:21,767
-kualitas perusahaan, fair value, dampak sebuah peristiwa,
+00:08:22,317 --> 00:08:25,067
+dan tetap bukan keputusan otomatis.
 
 150
-00:08:21,983 --> 00:08:24,567
-aktivitas transaksi, dan kondisi market.
+00:08:25,267 --> 00:08:28,817
+Harga sama-sama turun, tapi konteksnya bisa sangat berbeda.
 
 151
-00:08:25,083 --> 00:08:27,300
-Tapi semua informasi itu tetap bukan kepastian.
+00:08:29,683 --> 00:08:34,717
+Jadi, hubungan kita sederhana: Tuntun membantu, kamu yang memutuskan.
 
 152
-00:08:27,583 --> 00:08:29,883
-Harga masih bisa turun di bawah fair value.
+00:08:35,067 --> 00:08:37,500
+Tuntun nggak menekan tombol beli untukmu.
 
 153
-00:08:30,217 --> 00:08:33,017
-Market yang sudah murah juga masih bisa menjadi lebih murah.
+00:08:37,750 --> 00:08:39,967
+Tuntun juga nggak menekan tombol jual.
 
 154
-00:08:33,483 --> 00:08:35,933
-Karena itu, Tuntun nggak menjanjikan harga pasti
+00:08:40,467 --> 00:08:42,533
+Tuntun membantu menampilkan informasi yang bisa
 
 155
-00:08:35,933 --> 00:08:39,300
-naik atau memberi keputusan yang harus kamu ikuti.
+00:08:42,533 --> 00:08:44,617
+kamu gunakan untuk berpikir lebih jernih:
 
 156
-00:08:39,933 --> 00:08:43,033
-Tujuannya sederhana: saat temanmu menyuruhmu segera bertindak,
+00:08:44,917 --> 00:08:48,000
+kualitas perusahaan, fair value, dampak sebuah peristiwa,
 
 157
-00:08:43,150 --> 00:08:45,533
-kamu punya sesuatu untuk dilihat lebih dulu.
+00:08:48,217 --> 00:08:50,800
+aktivitas transaksi, dan kondisi market.
 
 158
-00:08:46,083 --> 00:08:47,700
-Tuntun membantu memberi konteks.
+00:08:51,317 --> 00:08:53,533
+Tapi semua informasi itu tetap bukan kepastian.
 
 159
-00:08:48,067 --> 00:08:49,733
-Keputusan tetap ada di tanganmu.
+00:08:53,817 --> 00:08:56,117
+Harga masih bisa turun di bawah fair value.
 
 160
-00:08:50,067 --> 00:08:52,267
-Jadi sebelum menekan tombol berikutnya: lihat dulu.
+00:08:56,450 --> 00:08:59,250
+Market yang sudah murah juga masih bisa menjadi lebih murah.
 
 161
-00:08:52,383 --> 00:08:53,800
-Baru putuskan.
+00:08:59,717 --> 00:09:02,167
+Karena itu, Tuntun nggak menjanjikan harga pasti
+
+162
+00:09:02,167 --> 00:09:05,533
+naik atau memberi keputusan yang harus kamu ikuti.
+
+163
+00:09:06,167 --> 00:09:09,267
+Tujuannya sederhana: saat temanmu menyuruhmu segera bertindak,
+
+164
+00:09:09,383 --> 00:09:11,767
+kamu punya sesuatu untuk dilihat lebih dulu.
+
+165
+00:09:12,317 --> 00:09:13,933
+Tuntun membantu memberi konteks.
+
+166
+00:09:14,300 --> 00:09:15,967
+Keputusan tetap ada di tanganmu.
+
+167
+00:09:16,317 --> 00:09:19,000
+Itulah arti Invest with Guidance bersama Tuntun.
+
+168
+00:09:19,517 --> 00:09:22,617
+Di lesson berikutnya, kita akan mulai mempelajari pendekatan yang menjadi
+
+169
+00:09:22,617 --> 00:09:26,567
+fondasi pembelajaran investasi di Tuntun: Value Investing.
+
+170
+00:09:26,983 --> 00:09:30,817
+Kita akan belajar memahami bisnis, menilai harga yang layak dibayar,
+
+171
+00:09:31,167 --> 00:09:32,283
+menghadapi pergerakan market,
+
+172
+00:09:32,367 --> 00:09:35,050
+dan mengenali perusahaan yang benar-benar kita pahami.

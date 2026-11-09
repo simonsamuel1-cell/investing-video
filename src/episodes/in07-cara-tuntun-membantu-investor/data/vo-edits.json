@@ -250,6 +250,15 @@
    "silence": 0.25
   },
   {
+   "_": "9 Nov, SC04 tambahan (new line): 'Di sinilah Tuntun Deep Research Report berperan, membantu investor memahami perusahaan melalui penelitian yang lebih menyeluruh.' — level matched to the line before it",
+   "src": "Revisi VO/Scene 04 tambahan_1.mp3",
+   "match": "original 165.41-169.12"
+  },
+  {
+   "_": "9 Nov, SC04: +15.6f after 'penelitian yang lebih menyeluruh.' (0.60 s from word to word, like the seams around it) — 0.26057 s so this line and its pause are exactly 412 frames: the 'Tim riset' words after it keep their approved frames",
+   "silence": 0.26057
+  },
+  {
    "_": "27 Oct, SC04: 'Tim riset Tuntun membaca laporan keuangan, membuat model, menilai kualitas perusahaan, menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.'",
    "src": "Revisi VO/Scene 04 Part 03.mp3",
    "to": 9.26,
@@ -265,12 +274,23 @@
    "silence": 0.25
   },
   {
-   "src": "ORIGINAL",
-   "from": 178.64,
-   "to": 182.1
+   "_": "9 Nov, SC04 tambahan (new line): 'Setiap perusahaan dipantau oleh analis khusus melalui fundamental research, industry research, dan kunjungan langsung ke perusahaan. Analisisnya juga terus diperbarui mengikuti perkembangan terbaru.' — from 0.27 s: its first 0.41 s is room tone, trimmed so the seam is 0.55 s like the others; level matched to the 'Tim riset' line it follows",
+   "src": "Revisi VO/Scene 04 tambahan_2.mp3",
+   "from": 0.27,
+   "match": "original 169.45-178.50"
   },
   {
-   "_": "27 Oct, SC04: +10f after 'produk seperti reksa dana.'",
+   "_": "9 Nov, SC04: +14.7f after 'mengikuti perkembangan terbaru.' — 0.24463 s so the whole SC04 addition is exactly 1574 frames: every word after it moves by a whole number of frames",
+   "silence": 0.24463
+  },
+  {
+   "_": "9 Nov, revisi SC04: 'Riset Tuntun mencakup saham dan reksa dana, serta telah mendapatkan pengakuan industri melalui penghargaan dari CNBC Indonesia pada 2025 dan Media Asuransi pada 2024.' replaces 'Riset juga dilakukan untuk saham dan produk seperti reksa dana.' (original 178.64-182.10) — ends at 11.66 s, 60 ms after the speech, so the seam into 'Bukan berarti' stays 0.36 s",
+   "src": "Revisi VO/Scene 04 tambahan_3.mp3",
+   "to": 11.66,
+   "match": "original 178.78-182.04"
+  },
+  {
+   "_": "27 Oct, SC04: +10f after 'produk seperti reksa dana.' — 9 Nov: now after 'Media Asuransi pada 2024.'",
    "silence": 0.1667
   },
   {
@@ -840,15 +860,19 @@
    "match": "original 504.77-509.74"
   },
   {
-   "src": "ORIGINAL",
-   "from": 509.82,
-   "to": 512.51
+   "_": "9 Nov, SC11: the pause after 'Keputusan tetap ada di tanganmu.' — 0.35 s from word to word, as it was before 'Jadi sebelum'",
+   "silence": 0.11
   },
   {
-   "_": "27 Oct, SC10–11: 'Baru putuskan.'",
-   "src": "Revisi VO/Scene 11 Part 04.mp3",
-   "to": 1.38,
-   "match": "original 512.62-513.50"
+   "_": "9 Nov, revisi SC11: 'Itulah arti Invest with Guidance bersama Tuntun.' — Tambahan_2, the separate re-take of this line (Tambahan_1 says it too, run into the next); with Tambahan_1 below, replaces 'Jadi sebelum menekan tombol berikutnya: lihat dulu. Baru putuskan.' (original 509.82-513.56)",
+   "src": "Revisi VO/Scene 11 Tambahan_2.mp3",
+   "match": "original 510.08-513.48"
+  },
+  {
+   "_": "9 Nov, revisi SC11: 'Di lesson berikutnya, kita akan mulai mempelajari pendekatan yang menjadi fondasi pembelajaran investasi di Tuntun: Value Investing. Kita akan belajar memahami bisnis, menilai harga yang layak dibayar, menghadapi pergerakan market, dan mengenali perusahaan yang benar-benar kita pahami.' — Tambahan_1 from 4.00 s (its own 'Itulah arti…' left out; the pause before 'Di' is its own, 0.54 s), its own pauses kept",
+   "src": "Revisi VO/Scene 11 Tambahan_1.mp3",
+   "from": 4.0,
+   "match": "original 510.08-513.48"
   },
   {
    "src": "ORIGINAL",
