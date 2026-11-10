@@ -13,7 +13,7 @@
 import { staticFile, useCurrentFrame } from "remotion";
 import { theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { ART, Bubble, Card, Figure, Glyph, LedgerCard, Line, Pic, ease, useWords } from "../components/kit";
+import { ART, Bubble, Card, Figure, Glyph, LedgerCard, Line, PhotoTile, Pic, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -210,7 +210,10 @@ export const SC05 = () => {
       {faces > 0.001
         ? (["graham", "buffett", "schloss", "munger"] as const).map((n, i) => {
             const p = ease(f, W("Semua investor") + i * 8, m.reveal);
-            return <Pic key={n} src={staticFile(`art/vi01/${n}.png`)} style={{ position: "absolute", left: CX - 2 * 150 - 45 + i * 160, top: 780 + (1 - p) * 16, width: 130, height: (130 * ART[n].h) / ART[n].w, opacity: p }} />;
+            const at = { left: CX - 2 * 150 - 45 + i * 160, top: 780 + (1 - p) * 16, opacity: p };
+            // Graham and Buffett as their real photos (Simon 10 Nov); Schloss and Munger stay drawn
+            if (n === "graham" || n === "buffett") return <PhotoTile key={n} name={n} d={130} style={at} />;
+            return <Pic key={n} src={staticFile(`art/vi01/${n}.png`)} style={{ position: "absolute", ...at, width: 130, height: (130 * ART[n].h) / ART[n].w }} />;
           })
         : null}
     </>

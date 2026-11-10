@@ -182,3 +182,26 @@ export const Column = ({ w, h, tone }: { w: number; h: number; tone: string }) =
     </svg>
   );
 };
+
+/**
+ * Graham and Buffett as their real photos (Simon 10 Nov: "ganti ilustrasi B.G. dan W.B. jadi yang gambar real"), cropped to
+ * head and shoulders in a white rounded tile the shape of the drawn faces, both heads the same size in the same place.
+ * Graham: his photo used as-is; Buffett: his colour photo, recreated by ChatGPT with the head whole, never made monochrome.
+ */
+const PHOTOS = {
+  graham: { src: "art/vi01/graham-overcoat.png", w: 1165, h: 1350, head: { cx: 525, top: 20, w: 350 } },
+  buffett: { src: "art/vi01/buffett-photo.png", w: 1345, h: 1169, head: { cx: 665, top: 51, w: 540 } },
+} as const;
+
+export const PhotoTile = ({ name, d, style }: { name: keyof typeof PHOTOS; d: number; style?: React.CSSProperties }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const ph = PHOTOS[name];
+  const h = (d * ART.graham.h) / ART.graham.w;
+  const k = (0.52 * d) / ph.head.w;
+  return (
+    <div style={{ position: "absolute", width: d, height: h, borderRadius: d * 0.13, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", flex: "none", ...style }}>
+      <Pic src={staticFile(ph.src)} style={{ position: "absolute", left: d / 2 - ph.head.cx * k, top: h * 0.1 - ph.head.top * k, width: ph.w * k, height: ph.h * k }} />
+    </div>
+  );
+};

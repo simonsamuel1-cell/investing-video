@@ -14,7 +14,7 @@
 import { Img, staticFile, useCurrentFrame } from "remotion";
 import { theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { ART, Card, Glyph, Line, Pic, ease, useWords } from "../components/kit";
+import { ART, Card, Glyph, Line, PhotoTile, ease, useWords } from "../components/kit";
 import { Timeline, type MasterName } from "../components/Timeline";
 
 const CX = theme.canvas.width / 2;
@@ -28,7 +28,8 @@ const STATS: Stat[] = [
   { at: "Nomad Investment", name: "Nomad", title: "Nomad Investment Partnership", period: "12 tahun", main: 20.8, mainText: "20,8%", bench: "MSCI World", benchV: 6.5, benchText: "6,5%" },
   { at: "Dan Fundsmith", name: "Fundsmith", title: "Fundsmith", period: "2010 – Sep 2026", main: 13, mainText: "13%", bench: "MSCI World (GBP)", benchV: 12.4, benchText: "12,4%" },
 ];
-const CARD = { x: CX - 560, y: 120, w: 1120, h: 380, face: 220, barMax: 21, barW: 400, barH: 30 };
+// wide enough for the face, the 260 px label, the bar and the figure (Simon 10 Nov: the figures ran out of the card)
+const CARD = { x: CX - 600, y: 120, w: 1200, h: 380, face: 220, barMax: 21, barW: 380, barH: 30, label: 260, figure: 120 };
 const STEPS = [
   { icon: "magnifying-glass", text: "Pahami bisnis", at: "pahami" },
   { icon: "coins", text: "Hitung nilai", at: "hitung" },
@@ -40,11 +41,11 @@ const Bar = ({ label, v, text, tone, p }: { label: string; v: number; text: stri
   const c = usePalette();
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 24, height: 48 }}>
-      <div style={{ width: 250, ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{label}</div>
-      <div style={{ position: "relative", width: CARD.barW, height: CARD.barH, borderRadius: CARD.barH / 2, background: theme.color.neutralDisc }}>
+      <div style={{ width: CARD.label, flex: "none", ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{label}</div>
+      <div style={{ position: "relative", width: CARD.barW, flex: "none", height: CARD.barH, borderRadius: CARD.barH / 2, background: theme.color.neutralDisc }}>
         <div style={{ position: "absolute", left: 0, top: 0, height: CARD.barH, width: (CARD.barW * v * p) / CARD.barMax, borderRadius: CARD.barH / 2, background: tone }} />
       </div>
-      <div style={{ ...typeStyle("label"), fontSize: 36, fontWeight: 600, color: tone === theme.color.neutralDotOn ? c.slate : c.indigo, fontVariantNumeric: "tabular-nums", opacity: p }}>{text}</div>
+      <div style={{ width: CARD.figure, flex: "none", ...typeStyle("label"), fontSize: 36, fontWeight: 600, color: tone === theme.color.neutralDotOn ? c.slate : c.indigo, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap", opacity: p }}>{text}</div>
     </div>
   );
 };
@@ -75,7 +76,7 @@ export const SC03 = () => {
   return (
     <>
       {/* A: Graham, big, then at the start of the line */}
-      {bigGraham > 0.001 ? <Pic src={staticFile("art/vi01/graham.png")} style={{ position: "absolute", left: CX - 200, top: 220, width: 400, opacity: bigGraham }} /> : null}
+      {bigGraham > 0.001 ? <PhotoTile name="graham" d={400} style={{ left: CX - 200, top: 220, opacity: bigGraham }} /> : null}
       <Timeline grow={grow} lit={st?.name} litP={cardP} opacity={1 - tlOut} graham={smallGraham} />
 
       {/* B: the card */}
@@ -83,7 +84,9 @@ export const SC03 = () => {
         <div style={{ position: "absolute", left: CARD.x, top: CARD.y, width: CARD.w, height: CARD.h, opacity: cardShow }}>
           <Card x={0} y={0} w={CARD.w} h={CARD.h}>
             <div key={st.name} style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", gap: 48, padding: "0 56px", opacity: cardP }}>
-              {st.face ? (
+              {st.face === "buffett" ? (
+                <PhotoTile name="buffett" d={CARD.face} style={{ position: "relative" }} />
+              ) : st.face ? (
                 <Img src={staticFile(`art/vi01/${st.face}.png`)} style={{ width: CARD.face, height: (CARD.face * ART[st.face].h) / ART[st.face].w, flex: "none" }} />
               ) : (
                 <div style={{ width: CARD.face, height: CARD.face, borderRadius: 40, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>

@@ -14,7 +14,7 @@
 import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { cutInStyle, cutOutStyle, theme, typeStyle, useMotion, usePalette, useShadow, type Cut } from "../../../core";
 import { BLOCK, CUT } from "../data/timing";
-import { ART, Card, Column, Pic, ease, useWords } from "../components/kit";
+import { ART, Card, Column, PhotoTile, Pic, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -116,32 +116,9 @@ const BOTTOM = LABEL_Y + PILLAR.label + PILLAR.h;
 /** F — the heading, where his reference has its title. */
 const HEADING = { y: 250, size: 64 };
 
-/** Where his head sits in graham-overcoat.png: centred on x 525, from y 20, 350 px wide. */
-const HEAD = { cx: 525, top: 20, w: 350 };
-/** The two tiles' photos, each with where the head sits in it. Buffett's is his real photo in colour, recreated by ChatGPT
- *  so the head is whole and cut out on transparent (Simon 10 Nov: "jangan buat monochrome… berwarna as is aja"). */
-const TILE_PHOTO = {
-  graham: { src: "art/vi01/graham-overcoat.png", w: PHOTO.w, h: PHOTO.h, head: HEAD },
-  buffett: { src: "art/vi01/buffett-photo.png", w: 1345, h: 1169, head: { cx: 665, top: 51, w: 540 } },
-} as const;
-
-/**
- * A portrait tile: the real photo (Simon 10 Nov: Graham "ganti dengan gambar real nya", Buffett his colour photo instead of the
- * drawing), cropped to head and shoulders in a white rounded tile, both heads the same size in the same place.
- */
-const Portrait = ({ name, x, y, d, p = 1 }: { name: "graham" | "buffett"; x: number; y: number; d: number; p?: number }) => {
-  const shadow = useShadow();
-  const c = usePalette();
-  if (p <= 0.001) return null;
-  const h = (d * ART.graham.h) / ART.graham.w;
-  const ph = TILE_PHOTO[name];
-  const k = (0.52 * d) / ph.head.w;
-  return (
-    <div style={{ position: "absolute", left: x, top: y, width: d, height: h, borderRadius: d * 0.13, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", opacity: p }}>
-      <Pic src={staticFile(ph.src)} style={{ position: "absolute", left: d / 2 - ph.head.cx * k, top: h * 0.1 - ph.head.top * k, width: ph.w * k, height: ph.h * k }} />
-    </div>
-  );
-};
+/** A portrait tile: the real photo, from the kit (Simon 10 Nov). */
+const Portrait = ({ name, x, y, d, p = 1 }: { name: "graham" | "buffett"; x: number; y: number; d: number; p?: number }) =>
+  p <= 0.001 ? null : <PhotoTile name={name} d={d} style={{ left: x, top: y, opacity: p }} />;
 
 export const SC02 = () => {
   const f = useCurrentFrame();

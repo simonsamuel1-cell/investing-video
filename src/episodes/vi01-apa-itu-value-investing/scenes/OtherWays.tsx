@@ -10,10 +10,10 @@
  *
  * Simon's note: never say technical analysis is "tidak valid" — nothing here does.
  */
-import { staticFile, useCurrentFrame } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { ART, Card, Glyph, Line, Pic, ease, useWords } from "../components/kit";
+import { Card, Glyph, Line, PhotoTile, ease, useWords } from "../components/kit";
 
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 const LANES = [
@@ -163,7 +163,7 @@ export const SC06 = () => {
       {/* Buffett, and Simon's two lines */}
       {buffett > 0.001 ? (
         <>
-          <Pic src={staticFile("art/vi01/buffett.png")} style={{ position: "absolute", left: 240, top: 300 + (1 - buffett) * 18, width: 380, height: (380 * ART.buffett.h) / ART.buffett.w, opacity: buffett * quote }} />
+          <PhotoTile name="buffett" d={380} style={{ left: 240, top: 300 + (1 - buffett) * 18, opacity: buffett * quote }} />
           <div style={{ position: "absolute", left: 240, top: 720, width: 380, textAlign: "center", ...typeStyle("label"), fontSize: 38, fontWeight: 600, color: c.ink, opacity: buffett * quote }}>Warren Buffett</div>
         </>
       ) : null}
