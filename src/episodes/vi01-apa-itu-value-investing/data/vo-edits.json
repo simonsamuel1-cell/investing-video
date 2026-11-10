@@ -1,0 +1,31 @@
+{
+ "_": "VI01's VO = Simon's take (VI01_New VO.mp3) cut before its spoken disclaimer, with his pauses (scripts/vi/vo-pause.py, scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+ "base": "/Users/samuelsurja/Documents/01 Academy/VI01 - Apa Itu Value Investing dan Kenapa Cocok untuk Investor Indonesia?",
+ "source": "VI01_New VO.mp3",
+ "out": "public/vo/vi01-apa-itu-value-investing.mp3",
+ "pieces": [
+  {
+   "src": "ORIGINAL",
+   "from": 0,
+   "to": 26.91
+  },
+  {
+   "_": "10 Nov, SC01 (Studio 1855): +30f after 'langsung melihatnya.'",
+   "silence": 0.5
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 26.91,
+   "to": 58.48
+  },
+  {
+   "_": "10 Nov, SC02 (Studio 3779): +60f after 'mengalami crash besar.'",
+   "silence": 1.0
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 58.48,
+   "to": 560.66
+  }
+ ]
+}

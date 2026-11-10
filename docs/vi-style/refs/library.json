@@ -2,6 +2,193 @@
   "_": "Pustaka Referensi — every style reference Simon has sent, newest first. Built into a page by scripts/vi/ref-library.py and published as an Artifact (URL in the memory file pustaka-referensi.md). Add a reference: put the file under docs/vi-style/refs/, add an item (or a collection) here, rerun the script, republish to the same URL. src is relative to the repo root, or absolute for files outside it.",
   "collections": [
     {
+      "id": "pillar-infographic-2026-11-10",
+      "date": "2026-11-10",
+      "title": "Pilar infografis",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · VI01 SC02 empat pilar",
+      "quote": "jelek ternyata hasilnya. recreate jadi begini deh. size keseluruhan juga kecilin 10%",
+      "taken": [
+        "Kepala dan alas pilar warna penuh: slab lebar + slab lebih sempit",
+        "Badan pilar warna muda dengan alur runcing",
+        "Empat warna bergradasi (di kita: cyan → indigo)",
+        "Teks berwarna di atas tiap pilar",
+        "Judul besar di atas empat pilar"
+      ],
+      "dropped": [
+        "Hijau/teal/biru tua: diganti cyan → indigo",
+        "Tinggi selang-seling: Simon minta sama tinggi, teks rata bawah",
+        "Teks deskripsi abu-abu dan TITLE 01–04",
+        "Subjudul di bawah judul"
+      ],
+      "open": [],
+      "usedIn": [
+        "VI01 SC02 · empat pilar + judul Value Investing (10 Nov 2026)",
+        "VI01 SC08 · pilar kecil video selanjutnya"
+      ],
+      "items": [
+        {
+          "id": "pillar-infographic",
+          "type": "image",
+          "title": "Pillar Infographic",
+          "src": "docs/vi-style/refs/pillar-infographic-2026-11-10.png",
+          "note": "Empat pilar warna hijau → biru tua, judul berwarna dan deskripsi di atas tiap pilar, tinggi selang-seling.",
+          "tags": [
+            "Infografis",
+            "Gaya"
+          ]
+        },
+        {
+          "id": "pillar-siluet",
+          "type": "image",
+          "title": "Empat siluet pilar (ditolak)",
+          "src": "docs/vi-style/refs/pillar-siluet-2026-11-10.png",
+          "note": "Pilihan pertama Simon (Doric no. 1), dipakai sebentar lalu dinilai jelek setelah jadi.",
+          "tags": [
+            "Infografis",
+            "Arsip"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "line-chart-fill-2026-11-10",
+      "date": "2026-11-10",
+      "title": "Line chart halus dengan fill gradasi",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · VI01 SC02 kartu 1929",
+      "quote": "buat line chartnya begini, tebal bordernya tipisin, bikin jadi 2px aja. lalu ada fill gradasi transparan ke bawah warna indigo.",
+      "taken": [
+        "Garis halus 2 px",
+        "Fill gradasi ke bawah sampai transparan",
+        "Titik bercincin dengan garis putus-putus vertikal",
+        "Sumbu x"
+      ],
+      "dropped": [
+        "Hijau: diganti indigo",
+        "Tab 1D/1W/1M"
+      ],
+      "open": [],
+      "usedIn": [
+        "VI01 SC02 · Pasar Saham Amerika 1929 (10 Nov 2026)"
+      ],
+      "items": [
+        {
+          "id": "line-chart-fill",
+          "type": "image",
+          "title": "Kartu harga dengan line chart",
+          "src": "docs/vi-style/refs/line-chart-fill-2026-11-10.png",
+          "note": "Kartu putih, tanggal dan harga di atas, kurva hijau halus dengan fill gradasi, penanda titik bercincin dan garis putus-putus.",
+          "tags": [
+            "Grafik",
+            "Gaya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cover-2026-11-10",
+      "date": "2026-11-10",
+      "title": "Cover majalah · tokoh di atas lingkaran",
+      "status": "dipakai",
+      "statusLabel": "Dipakai · VI01 SC02 cover Benjamin Graham",
+      "quote": "ganti visualnya jadi cover aja, dengan layout seperti gambar 1 … kasih elemen warna di belakang Benjamin Graham seperti gambar 3",
+      "taken": [
+        "Nama belakang besar di atas, nama depan sangat besar di bawah menimpa foto",
+        "Foto tokoh hitam-putih",
+        "Lingkaran warna solid di belakang kepala dan bahu, dengan beberapa cincin tipis",
+        "Info kecil di kiri dan kanan di atas nama depan (tahun hidup, julukan)"
+      ],
+      "dropped": [
+        "Paragraf caption kecil",
+        "Merah: diganti indigo"
+      ],
+      "open": [],
+      "usedIn": [
+        "VI01 SC02 · Benjamin Graham, \"Bapak Value Investing\", 1894–1976 (10 Nov 2026)"
+      ],
+      "items": [
+        {
+          "id": "cover-denzel",
+          "type": "image",
+          "title": "Cover DENZEL WASHINGTON",
+          "src": "docs/vi-style/refs/cover-denzel-2026-11-10.png",
+          "note": "Poster abu-abu: WASHINGTON di atas, DENZEL raksasa di bawah menimpa foto hitam-putih, caption kecil di sisi.",
+          "tags": [
+            "Gaya",
+            "Tipografi"
+          ]
+        },
+        {
+          "id": "cover-lingkaran",
+          "type": "image",
+          "title": "Potret di atas lingkaran merah",
+          "src": "docs/vi-style/refs/cover-lingkaran-2026-11-10.webp",
+          "note": "Foto hitam-putih di depan lingkaran merah solid dengan beberapa busur tipis, nama dan jabatan di kiri atas.",
+          "tags": [
+            "Gaya"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "tokoh-garis-2026-11-10",
+      "date": "2026-11-10",
+      "title": "Tokoh · garis hitam sederhana",
+      "status": "berlaku",
+      "statusLabel": "Berlaku · gaya tokoh VI01",
+      "quote": "Tokoh-tokoh... kamu coba buat dulu deh pake gambar yang stylenya kayak yang aku upload.",
+      "taken": [
+        "Garis hitam rata yang sederhana, isi putih, tanpa shading",
+        "Sedikit bidang hitam penuh: rambut, celana, jaket, pintu",
+        "Wajah minimal: mata titik, hidung satu garis, telinga bentuk C",
+        "Potret setengah badan di kartu putih membulat (avatar)",
+        "Keywords di moodboard: character illustrations, simplified line work, flat illustration"
+      ],
+      "dropped": [],
+      "open": [
+        "Warna: tetap hitam-putih, atau aksen indigo di satu bagian?"
+      ],
+      "usedIn": [
+        "VI01 · tokoh: Ibu Sari, Mr. Market, investor, Graham, Buffett, Schloss, Munger (10 Nov 2026, percobaan pertama)"
+      ],
+      "items": [
+        {
+          "id": "tokoh-garis-moodboard",
+          "type": "image",
+          "title": "Moodboard Midjourney · kerja di meja",
+          "src": "docs/vi-style/refs/tokoh-garis-moodboard-2026-11-10.png",
+          "note": "Satu tokoh dengan laptop di dapur, garis hitam sederhana, pintu dan celana hitam penuh. Keywords: character illustrations, simplified line work, flat illustration.",
+          "tags": [
+            "Gaya",
+            "Tokoh"
+          ]
+        },
+        {
+          "id": "tokoh-garis-tim",
+          "type": "image",
+          "title": "Tim di meja rapat",
+          "src": "docs/vi-style/refs/tokoh-garis-tim-2026-11-10.png",
+          "note": "Tiga orang, gir, layar chart; garis hitam dengan bidang hitam penuh, tanpa wajah detail.",
+          "tags": [
+            "Gaya",
+            "Tokoh"
+          ]
+        },
+        {
+          "id": "tokoh-garis-avatar",
+          "type": "image",
+          "title": "Grid avatar garis",
+          "src": "docs/vi-style/refs/tokoh-garis-avatar-2026-11-10.webp",
+          "note": "15 potret setengah badan di kartu putih membulat; wajah minimal, rambut/kacamata/jaket hitam penuh.",
+          "tags": [
+            "Gaya",
+            "Tokoh"
+          ]
+        }
+      ]
+    },
+    {
       "id": "line-art-standard",
       "date": "2026-11-06",
       "title": "Standar ilustrasi · garis tipis satu warna",

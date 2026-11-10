@@ -1,0 +1,615 @@
+1
+00:00:00,150 --> 00:00:02,483
+Jam lima pagi, Ibu Sari sudah membuka warungnya.
+
+2
+00:00:02,733 --> 00:00:05,683
+Dia cek stok, menyapu, lalu membuka buku kas.
+
+3
+00:00:06,050 --> 00:00:07,600
+Berapa pelanggan yang datang kemarin?
+
+4
+00:00:07,917 --> 00:00:09,367
+Berapa penjualannya?
+
+5
+00:00:09,683 --> 00:00:13,300
+Setelah bayar barang dan sewa, berapa yang benar-benar tersisa?
+
+6
+00:00:13,767 --> 00:00:17,467
+Di depan warung, seorang pria berbaju batik datang dan menawarkan:
+
+7
+00:00:17,583 --> 00:00:20,600
+“Bu, warung ini saya beli Rp50 juta.”
+
+8
+00:00:20,883 --> 00:00:24,350
+Orang ini nantinya akan kita kenal sebagai Mr. Market.
+
+9
+00:00:24,700 --> 00:00:26,700
+Ibu Sari bahkan nggak langsung melihatnya.
+
+10
+00:00:27,617 --> 00:00:31,200
+Di tempat lain, seorang investor melihat sahamnya turun 3%.
+
+11
+00:00:31,450 --> 00:00:32,917
+Tangannya mulai gelisah.
+
+12
+00:00:33,167 --> 00:00:36,517
+Kenapa Ibu Sari bisa tetap tenang saat ada orang menawar bisnisnya,
+
+13
+00:00:36,767 --> 00:00:40,667
+sementara investor tadi langsung panik ketika harga sahamnya berubah?
+
+14
+00:00:41,100 --> 00:00:43,633
+Karena Ibu Sari tahu buku kas bisnisnya.
+
+15
+00:00:43,967 --> 00:00:46,817
+Sementara investor tadi hanya tahu harga sahamnya.
+
+16
+00:00:47,000 --> 00:00:49,767
+Value investing dimulai saat kita mengembalikan saham
+
+17
+00:00:49,767 --> 00:00:52,150
+menjadi sebuah bisnis yang punya buku kas.
+
+18
+00:00:52,450 --> 00:00:54,283
+Pendekatan ini bukan sesuatu yang baru.
+
+19
+00:00:54,683 --> 00:00:58,783
+Pada 1929, pasar saham Amerika mengalami crash besar.
+
+20
+00:00:59,883 --> 00:01:02,817
+Benjamin Graham kehilangan sebagian besar kekayaannya.
+
+21
+00:01:03,133 --> 00:01:05,483
+Setelah itu, dia menghabiskan bertahun-tahun membangun sebuah
+
+22
+00:01:05,483 --> 00:01:08,233
+cara berpikir yang lebih disiplin tentang investasi.
+
+23
+00:01:08,683 --> 00:01:12,617
+Prinsipnya kemudian ditulis dalam Security Analysis dan The Intelligent Investor.
+
+24
+00:01:12,933 --> 00:01:15,717
+Tiga gagasan utamanya sederhana.
+
+25
+00:01:16,017 --> 00:01:19,017
+Pertama: membeli saham berarti membeli sebagian perusahaan.
+
+26
+00:01:19,350 --> 00:01:22,600
+Kedua: beli saat harga berada cukup jauh di bawah value-nya.
+
+27
+00:01:23,033 --> 00:01:27,183
+Ketiga: harga yang diberikan market bisa dimanfaatkan, tapi nggak harus kita ikuti.
+
+28
+00:01:27,383 --> 00:01:31,700
+Muridnya, Warren Buffett, menggunakan pendekatan ini selama lebih dari enam dekade.
+
+29
+00:01:32,033 --> 00:01:35,033
+Kemudian dia menambahkan satu prinsip penting:
+
+30
+00:01:35,317 --> 00:01:38,733
+hanya berinvestasi pada bisnis yang benar-benar kita pahami.
+
+31
+00:01:38,900 --> 00:01:42,817
+Empat prinsip inilah yang menjadi empat pilar utama value investing.
+
+32
+00:01:42,883 --> 00:01:45,983
+Yang menarik, pendekatan ini nggak berhenti di Graham.
+
+33
+00:01:46,383 --> 00:01:49,350
+Dari satu orang, value investing berkembang menjadi pendekatan yang
+
+34
+00:01:49,350 --> 00:01:52,417
+digunakan investor dan institusi selama puluhan tahun.
+
+35
+00:01:52,867 --> 00:01:55,417
+Walter Schloss menjalankannya selama 45 tahun,
+
+36
+00:01:55,517 --> 00:02:02,033
+dengan annualized return sekitar 15,3%, dibanding sekitar 10% untuk S&P 500.
+
+37
+00:02:02,417 --> 00:02:08,583
+Berkshire Hathaway, dari 1965 sampai 2025, sekitar 61 tahun,
+
+38
+00:02:08,683 --> 00:02:15,017
+mencatat sekitar 19,7% per tahun, dibanding sekitar 10,5% untuk S&P 500.
+
+39
+00:02:15,117 --> 00:02:23,767
+Sequoia Fund berjalan sekitar 55 tahun, dengan sekitar 13,5%, dibanding sekitar 11,5%.
+
+40
+00:02:24,150 --> 00:02:27,417
+Fairfax Financial menjalankannya sekitar 40 tahun,
+
+41
+00:02:27,750 --> 00:02:32,717
+dengan pertumbuhan book value per share sekitar 18,7% per tahun.
+
+42
+00:02:33,083 --> 00:02:38,800
+Nomad Investment Partnership mencatat sekitar 20,8% per tahun selama 12 tahun,
+
+43
+00:02:39,100 --> 00:02:42,667
+dibanding sekitar 6,5% untuk MSCI World.
+
+44
+00:02:43,083 --> 00:02:48,367
+Dan Fundsmith, dari 2010 sampai September 2026, sekitar 13% per tahun,
+
+45
+00:02:48,633 --> 00:02:53,167
+dibanding sekitar 12,4% untuk MSCI World dalam sterling.
+
+46
+00:02:53,333 --> 00:02:55,217
+Mereka hidup di era berbeda.
+
+47
+00:02:55,567 --> 00:02:56,933
+Negaranya berbeda.
+
+48
+00:02:57,317 --> 00:02:59,033
+Saham yang dibeli juga berbeda.
+
+49
+00:02:59,317 --> 00:03:03,117
+Tapi pola pikir dasarnya sama: pahami bisnisnya,
+
+50
+00:03:03,417 --> 00:03:09,417
+hitung kira-kira berapa nilainya, lalu bandingkan dengan harga market.
+
+51
+00:03:09,833 --> 00:03:13,217
+Value investing bukan metode dari satu orang atau satu zaman.
+
+52
+00:03:13,567 --> 00:03:16,333
+Pendekatan ini sudah digunakan lintas generasi.
+
+53
+00:03:16,517 --> 00:03:19,867
+Lalu kenapa pendekatan seperti ini relevan untuk investor Indonesia?
+
+54
+00:03:20,217 --> 00:03:22,100
+Ada tiga alasan.
+
+55
+00:03:22,483 --> 00:03:26,183
+Pertama, harga di pasar Indonesia sering bergerak lebih cepat daripada bisnisnya.
+
+56
+00:03:26,467 --> 00:03:31,733
+Investor ritel menyumbang lebih dari separuh transaksi, dengan angka sekitar 52%.
+
+57
+00:03:32,183 --> 00:03:34,933
+Investor asing juga punya porsi sekitar 30%,
+
+58
+00:03:35,033 --> 00:03:37,367
+dan aliran dananya bisa berubah dengan cepat.
+
+59
+00:03:37,533 --> 00:03:41,667
+Saat sentimen berubah, harga bisa bergerak jauh dari value perusahaan.
+
+60
+00:03:41,917 --> 00:03:46,483
+Bagi value investor: ini berarti lebih banyak opportunity, bukan lebih banyak risk.
+
+61
+00:03:46,850 --> 00:03:50,533
+Kedua, Indonesia punya banyak bisnis yang bisa dipelajari dalam jangka panjang.
+
+62
+00:03:50,800 --> 00:03:51,950
+Bank. Consumer.
+
+63
+00:03:52,267 --> 00:03:54,700
+Telekomunikasi.
+
+64
+00:03:55,133 --> 00:03:57,050
+Ada perusahaan yang sudah menghasilkan laba
+
+65
+00:03:57,050 --> 00:03:59,333
+dan membayar dividen selama puluhan tahun.
+
+66
+00:03:59,667 --> 00:04:05,883
+Artinya, konsep “memiliki sebuah bisnis” benar-benar punya objek yang bisa dipelajari.
+
+67
+00:04:06,317 --> 00:04:10,200
+Ketiga, value investing nggak menuntut kita untuk terus menatap layar.
+
+68
+00:04:10,533 --> 00:04:12,833
+Kita tetap bisa bekerja di siang hari.
+
+69
+00:04:13,050 --> 00:04:16,883
+Lalu malamnya membaca laporan dan memperbarui analisis.
+
+70
+00:04:17,233 --> 00:04:21,467
+Pengetahuan yang kita bangun hari ini bisa digunakan lagi di masa depan.
+
+71
+00:04:21,800 --> 00:04:25,267
+Dan kesalahan analisis sebelumnya juga bisa diperbaiki.
+
+72
+00:04:25,633 --> 00:04:28,700
+Tapi ada tiga pintu yang harus dilewati seorang value investor.
+
+73
+00:04:29,033 --> 00:04:33,167
+Dan sebenarnya, semuanya bisa dipelajari.
+
+74
+00:04:33,367 --> 00:04:36,600
+Pintu pertama: percaya pada proses jangka panjang.
+
+75
+00:04:36,883 --> 00:04:38,917
+Menjadi kaya dalam semalam sulit.
+
+76
+00:04:39,267 --> 00:04:43,233
+Tapi pertumbuhan yang konsisten bisa sangat besar.
+
+77
+00:04:43,550 --> 00:04:49,317
+Return 15% per tahun selama 20 tahun kira-kira membuat uang menjadi 16 kali lipat.
+
+78
+00:04:49,483 --> 00:04:52,450
+Ibu Sari juga nggak membangun tiga warung dalam semalam.
+
+79
+00:04:52,817 --> 00:04:54,950
+Dia mulai dari satu.
+
+80
+00:04:55,250 --> 00:04:57,483
+Pintu kedua: independent thinking.
+
+81
+00:04:57,733 --> 00:05:00,700
+Kadang keputusan kita akan berbeda dari kebanyakan orang.
+
+82
+00:05:00,983 --> 00:05:03,467
+Tapi yang dibutuhkan bukan sekadar keberanian.
+
+83
+00:05:03,533 --> 00:05:06,567
+Yang dibutuhkan adalah: buku kas.
+
+84
+00:05:06,967 --> 00:05:09,717
+Ketika orang menawarkan Rp50 juta untuk warungnya,
+
+85
+00:05:10,017 --> 00:05:13,967
+Ibu Sari melihat buku kas, bukan ekspresi orang yang menawar.
+
+86
+00:05:14,317 --> 00:05:17,833
+Pintu ketiga: benar-benar meluangkan waktu untuk memahami perusahaan.
+
+87
+00:05:18,217 --> 00:05:20,233
+Bukan semua perusahaan. Cukup beberapa.
+
+88
+00:05:20,300 --> 00:05:23,783
+Munger pernah menggunakan gagasan bahwa sepanjang hidup,
+
+89
+00:05:24,117 --> 00:05:27,733
+memahami sekitar dua puluh bisnis dengan sangat baik sudah bisa cukup.
+
+90
+00:05:28,033 --> 00:05:30,100
+Kalau kamu menyediakan dua jam per minggu,
+
+91
+00:05:30,283 --> 00:05:35,017
+dalam setahun kamu bisa mempelajari sekitar sepuluh perusahaan secara serius.
+
+92
+00:05:35,433 --> 00:05:40,400
+Tiga pintu ini adalah: kebiasaan, bukan bakat.
+
+93
+00:05:40,767 --> 00:05:44,317
+Semua investor di timeline tadi juga memulai dari perusahaan pertama mereka.
+
+94
+00:05:44,650 --> 00:05:47,700
+Kenapa value investing bisa dipelajari investor biasa?
+
+95
+00:05:48,100 --> 00:05:50,650
+Coba bandingkan dengan beberapa pendekatan lain.
+
+96
+00:05:50,833 --> 00:05:54,783
+Day trading atau short-term trading membutuhkan kecepatan,
+
+97
+00:05:54,850 --> 00:05:57,050
+disiplin, dan waktu melihat market.
+
+98
+00:05:57,533 --> 00:05:59,850
+Sebuah studi di pasar Brasil menemukan bahwa dari
+
+99
+00:05:59,850 --> 00:06:02,483
+mereka yang bertahan day trading lebih dari 300 hari,
+
+100
+00:06:02,900 --> 00:06:05,717
+sekitar 97% kehilangan uang,
+
+101
+00:06:06,067 --> 00:06:11,617
+dan hanya sekitar 1,1% yang menghasilkan lebih dari minimum wage.
+
+102
+00:06:12,000 --> 00:06:14,483
+Penelitian di Taiwan selama bertahun-tahun juga
+
+103
+00:06:14,483 --> 00:06:18,067
+menunjukkan bahwa mayoritas day trader kehilangan uang,
+
+104
+00:06:18,417 --> 00:06:21,683
+dan mereka yang bisa terus menang hanya sebagian sangat kecil.
+
+105
+00:06:21,883 --> 00:06:26,467
+Quantitative trading membutuhkan data, programming, kecepatan, dan modal.
+
+106
+00:06:26,733 --> 00:06:28,950
+Dan lawanmu adalah server institusi.
+
+107
+00:06:29,267 --> 00:06:31,583
+Mengikuti berita atau influencer?
+
+108
+00:06:32,000 --> 00:06:34,983
+Masalahnya sederhana: ketika informasi sampai ke kamu,
+
+109
+00:06:35,250 --> 00:06:38,300
+sering kali kamu sudah menjadi orang terakhir yang mengetahuinya.
+
+110
+00:06:38,583 --> 00:06:40,967
+Value investing bermain dengan cara berbeda.
+
+111
+00:06:41,067 --> 00:06:44,667
+Metodenya sudah dipublikasikan sejak 1930-an.
+
+112
+00:06:45,017 --> 00:06:47,133
+Tidak bergantung pada kecepatan.
+
+113
+00:06:47,350 --> 00:06:50,150
+Tidak bergantung pada insider information.
+
+114
+00:06:50,433 --> 00:06:54,467
+Dan nggak membutuhkan kita berada di depan layar sepanjang hari.
+
+115
+00:06:54,700 --> 00:06:56,933
+Buffett pernah menulis bahwa keberhasilan investasi
+
+116
+00:06:56,933 --> 00:06:59,433
+seumur hidup tidak membutuhkan IQ luar biasa,
+
+117
+00:06:59,483 --> 00:07:03,233
+insight bisnis yang tidak biasa, atau informasi orang dalam.
+
+118
+00:07:03,433 --> 00:07:06,283
+Yang dibutuhkan adalah: kerangka berpikir yang sehat,
+
+119
+00:07:06,600 --> 00:07:11,233
+dan disiplin emosional untuk tetap mengikuti kerangka itu.
+
+120
+00:07:11,583 --> 00:07:15,633
+Kalau kerangkanya sudah dipahami, sebagian besar orang bisa mempelajarinya.
+
+121
+00:07:15,883 --> 00:07:17,567
+Nggak harus full-time.
+
+122
+00:07:17,883 --> 00:07:20,150
+Nggak harus selalu paling cepat.
+
+123
+00:07:20,583 --> 00:07:24,333
+Sekarang lihat IHSG selama dua puluh tahun.
+
+124
+00:07:24,633 --> 00:07:28,033
+Ada enam periode penurunan besar: 2008.
+
+125
+00:07:28,283 --> 00:07:30,850
+2013. 2015.
+
+126
+00:07:30,917 --> 00:07:33,567
+Maret 2020.
+
+127
+00:07:33,950 --> 00:07:35,817
+April 2025.
+
+128
+00:07:36,133 --> 00:07:39,133
+Dan: 2026. Dalam master ini,
+
+129
+00:07:39,133 --> 00:07:42,667
+keenam periode tersebut ditampilkan sebagai market yang kemudian kembali,
+
+130
+00:07:42,950 --> 00:07:46,417
+dan setiap kali tetap ada investor yang menjual di titik terendah.
+
+131
+00:07:46,833 --> 00:07:52,517
+Pada 2026 sendiri, market mengalami trading halt pada 28 Januari,
+
+132
+00:07:52,833 --> 00:07:57,183
+dan pada Juni sempat berada di sekitar 5.342.
+
+133
+00:07:57,400 --> 00:08:00,717
+Kenapa pembelajaran ini justru penting saat market sedang bearish?
+
+134
+00:08:01,167 --> 00:08:07,550
+Karena: bear market adalah ujian bagi value investor, sekaligus salah satu kelas terbaiknya.
+
+135
+00:08:07,800 --> 00:08:11,150
+Tiga kalimat untuk mengingat seluruh video ini.
+
+136
+00:08:11,483 --> 00:08:13,883
+Saham adalah buku kas, bukan sekadar kode.
+
+137
+00:08:14,317 --> 00:08:16,533
+Harga adalah yang kamu bayar.
+
+138
+00:08:16,917 --> 00:08:19,150
+Value adalah yang kamu dapatkan.
+
+139
+00:08:19,450 --> 00:08:23,217
+Dan: investor yang bertahan paling lama di dunia melakukan satu hal yang sama:
+
+140
+00:08:23,383 --> 00:08:24,850
+melihat bisnis di balik saham.
+
+141
+00:08:25,017 --> 00:08:31,433
+Timeline tadi berjalan sekali lagi: 1934 sampai 2026.
+
+142
+00:08:31,717 --> 00:08:33,733
+Untuk mulai memahami sebuah perusahaan,
+
+143
+00:08:34,000 --> 00:08:37,733
+kamu juga nggak harus membaca annual report dari halaman pertama sendirian.
+
+144
+00:08:38,033 --> 00:08:41,550
+Di Tuntun, kamu bisa mulai dari Deep Research Report.
+
+145
+00:08:41,867 --> 00:08:50,083
+Tim riset merangkum: bisnis perusahaan, Company Quality, competitive advantage, risiko,
+
+146
+00:08:50,167 --> 00:08:57,000
+dan Reference Fair Value dalam satu laporan yang bisa dibaca gratis.
+
+147
+00:08:57,267 --> 00:08:59,650
+Report ini membantu mengerjakan bagian paling memakan
+
+148
+00:08:59,650 --> 00:09:02,767
+waktu dari pintu ketiga tadi: memahami perusahaan.
+
+149
+00:09:03,133 --> 00:09:05,117
+Baca report-nya terlebih dahulu.
+
+150
+00:09:05,217 --> 00:09:07,717
+Lalu tentukan sendiri apakah perusahaan itu layak masuk
+
+151
+00:09:07,717 --> 00:09:10,667
+ke daftar perusahaan yang benar-benar ingin kamu pahami.
+
+152
+00:09:11,017 --> 00:09:14,917
+Di video selanjutnya, kita mulai dari pilar pertama value investing:
+
+153
+00:09:15,317 --> 00:09:18,150
+kalau membeli saham berarti membeli sebagian perusahaan,
+
+154
+00:09:18,433 --> 00:09:21,683
+apa sebenarnya yang perlu kita pahami dari perusahaan itu?

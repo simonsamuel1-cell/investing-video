@@ -53,7 +53,10 @@ def hear(audio, model_size, language):
     model = WhisperModel(model_size, device="cpu", compute_type="int8")
     segments, _ = model.transcribe(pcm, language=language, word_timestamps=True, vad_filter=False)
     out = []
+    dur = len(pcm) / 16000
     for seg in segments:
+        # progress to stderr, so a long VO can be followed in its log
+        print(f"heard {seg.end:.0f}/{dur:.0f}s ({seg.end / dur * 100:.0f}%)", file=sys.stderr, flush=True)
         for w in seg.words or []:
             out.append({"w": w.word.strip(), "start": float(w.start), "end": float(w.end)})
     return out

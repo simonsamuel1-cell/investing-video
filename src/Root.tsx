@@ -25,6 +25,7 @@ import { MovingAverageFull, TA07_FULL_FRAMES } from "./episodes/019-moving-avera
 import { VolumeFull, TA09_FULL_FRAMES } from "./episodes/020-volume/FullVideo";
 import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/FullVideo";
 import { PassiveIncomeFull, FULL_FRAMES as IN01_FULL_FRAMES } from "./episodes/in01-passive-income/FullVideo";
+import { ApaItuValueInvestingFull, VI01_FULL_FRAMES } from "./episodes/vi01-apa-itu-value-investing/FullVideo";
 import { MembeliSahamFull, VI02_FULL_FRAMES } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/FullVideo";
 import { RizkyComps } from "./RizkyComps";
 import { InvestasiYangCocokFull, IN04_FULL_FRAMES } from "./episodes/in04-investasi-yang-cocok/FullVideo";
@@ -169,6 +170,15 @@ export const RemotionRoot: React.FC = () => {
         id="IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
         component={CaraTuntunMembantuFull}
         durationInFrames={IN07_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI01 — Apa Itu Value Investing dan Kenapa Cocok untuk Investor Indonesia?: Intro + episode + Outro + BGM. */}
+      <Composition
+        id="VI01-ApaItuValueInvesting"
+        component={ApaItuValueInvestingFull}
+        durationInFrames={VI01_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}
