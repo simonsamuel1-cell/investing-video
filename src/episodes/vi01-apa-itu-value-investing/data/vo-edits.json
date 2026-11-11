@@ -61,6 +61,30 @@
   {
    "src": "ORIGINAL",
    "from": 142.34,
+   "to": 229.17
+  },
+  {
+   "_": "11 Nov, revisi SC04: 'Bank. Consumer. Telekomunikasi.' — Scene 04_Tambahan 1, the three words in one breath",
+   "src": "Scene 04_Tambahan 1.mp3",
+   "to": 2.5,
+   "match": "original 229.30-233.20"
+  },
+  {
+   "_": "11 Nov: 0.01 s so SC04's revision moves every later word by exactly −93 frames (it was −93.6)",
+   "silence": 0.01
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 233.23,
+   "to": 387.61
+  },
+  {
+   "_": "11 Nov, SC06 (Simon: \"Antara poin 2 dan 3, kasih jeda 45 frame\"): +45f after 'Dan lawanmu adalah server institusi.', cut in its pause (original 387.45–387.77)",
+   "silence": 0.75
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 387.61,
    "to": 560.66
   }
  ]

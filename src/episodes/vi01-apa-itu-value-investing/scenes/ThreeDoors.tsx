@@ -1,221 +1,424 @@
 /**
- * VI01 · SC05 — "Tiga Pintu yang Harus Dilewati", from Simon's VISUAL / TEKS LAYAR notes and the ChatGPT storyboard
- * docs/vi-style/storyboards/VI01-SC05.png.
+ * VI01 · SC05 — "Tiga Pintu yang Harus Dilewati", rebuilt in IN07's look (Simon 11 Nov: "Skalian ubah scene selanjutnya ya,
+ * scene 5-akhir" — as SC04: grid paper, a numbered heading per door, one big picture at a time, a camera cut between them,
+ * charts as SC02's) from the ChatGPT storyboard docs/vi-style/storyboards/VI01-SC05-v2.png.
  *
- *  A  three closed doors, numbered.
- *  1  "Percaya": the door opens and steps left; 15% a year for 20 years climbs to ≈16× (1.15^20 = 16.4); then Ibu Sari's
- *     warung — one drawn, two more still faint: she started with one.
- *  2  "Independent thinking": a crowd of grey people, the cash book beside it — Ledger > Crowd; Ibu Sari with her book while
- *     the Rp50 juta offer goes pale.
- *  3  "Pahami perusahaan": many companies, then twenty; 2 jam / minggu → 10 perusahaan / tahun.
- *  E  the three doors open in a row, "Habit, not talent.", and the investors of the timeline under it.
+ *  A   three closed doors, numbered; "Bisa dipelajari".
+ *  1   "Proses jangka panjang" — "Kaya dalam semalam" crossed out beside a steady staircase; 15% a year for 20 years as
+ *      SC02's chart, ending at 16× (1.15^20 = 16.4); Ibu Sari and three warung, the first one hers, two still faint.
+ *  2   "Independent thinking" — door 2 docks; a group chat saying sell while you type something else, then the cash book;
+ *      Ibu Sari reads it while the Rp50 juta offer goes pale.
+ *  3   "Memahami perusahaan" — many companies, a few kept; Munger and a card of twenty; Orang Tuntun with 2 jam / minggu →
+ *      10 perusahaan / tahun.
+ *  E   the doors open, "Kebiasaan, bukan bakat"; then SC03's timeline once more.
  */
 import { staticFile, useCurrentFrame } from "remotion";
-import { theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { Connector, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { ART, Bubble, Card, Figure, Glyph, LedgerCard, Line, PhotoTile, Pic, ease, useWords } from "../components/kit";
+import { ART, AreaLine, BoardGrid, Bubble, Card, Figure, Glyph, HEADING, LedgerCard, Line, NumRing, ORANG_TUNTUN_RIGHT, OrangTuntun, Pic, RingMark, Shot, Skel, ease, inBox, useWords, type Box } from "../components/kit";
+import { Timeline } from "../components/Timeline";
 
 const CX = theme.canvas.width / 2;
-const mix = (a: number, b: number, t: number) => a + (b - a) * t;
+const CY = 590;
 
-const DOORS = [
-  { label: "Percaya", at: "Pintu pertama" },
-  { label: "Independent thinking", at: "Pintu kedua" },
-  { label: "Pahami perusahaan", at: "Pintu ketiga" },
-] as const;
-const DOOR = { w: 250, h: 420, gap: 150, y: 300 };
-const rowX = (i: number) => CX - DOOR.w / 2 + (i - 1) * (DOOR.w + DOOR.gap);
-const SIDE = { x: 170, y: 250, k: 0.9 };
-const END = { y: 170, k: 0.72 };
-const PANE = { x: 700, y: 210, w: 1080, h: 640 };
+// A / E — the doors
+const DOOR = { w: 230, h: 360, gap: 110, top: CY - 360 / 2 + 40 };
+/**
+ * A's group — the numbers 110 px above the doors, the doors, "Bisa dipelajari" 40 px under them — centred on the frame's
+ * middle (Simon 11 Nov: "ini bisa center-vertikal"). The caption is 56 px type (≈ 67 px line).
+ */
+const A_GROUP = { above: 110, below: 40, caption: 67 };
+const A_TOP = theme.canvas.height / 2 - (A_GROUP.above + DOOR.h + A_GROUP.below + A_GROUP.caption) / 2 + A_GROUP.above;
+const doorX = (i: number) => CX - DOOR.w / 2 + (i - 1) * (DOOR.w + DOOR.gap);
 
-const Door = ({ n, open, label, labelP = 1 }: { n: number; open: number; label: string; labelP?: number }) => {
-  const c = usePalette();
-  const inset = 22;
-  return (
-    <div style={{ position: "relative", width: DOOR.w, height: DOOR.h }}>
-      <div style={{ position: "absolute", inset: 0, borderRadius: "120px 120px 10px 10px", background: open > 0.001 ? theme.color.indigoWashSolid : c.cardBg, border: `5px solid ${c.ink}`, boxSizing: "border-box", overflow: "hidden" }}>
-        {open > 0.001 ? <div style={{ position: "absolute", left: "50%", top: "45%", width: 200, height: 200, transform: "translate(-50%, -50%)", borderRadius: 999, background: c.cardBg, opacity: open }} /> : null}
-        <div style={{ position: "absolute", left: inset - 5, top: inset - 5, right: inset - 5, bottom: -5, borderRadius: "100px 100px 0 0", background: c.cardBg, border: `4px solid ${c.ink}`, boxSizing: "border-box", transformOrigin: "0 50%", transform: `perspective(900px) rotateY(${(-78 * open).toFixed(2)}deg)` }}>
-          <div style={{ position: "absolute", right: 24, top: "52%", width: 22, height: 22, borderRadius: 999, background: c.ink }} />
-          <div style={{ position: "absolute", left: 26, right: 56, top: 70, height: 120, borderRadius: "70px 70px 10px 10px", border: `3px solid ${theme.color.skeleton}` }} />
-          <div style={{ position: "absolute", left: 26, right: 56, bottom: 40, height: 110, borderRadius: 10, border: `3px solid ${theme.color.skeleton}` }} />
-        </div>
-      </div>
-      <div style={{ position: "absolute", left: "50%", top: -84, transform: "translateX(-50%)", width: 64, height: 64, borderRadius: 999, background: open > 0.5 ? c.indigo : c.cardBg, boxShadow: `inset 0 0 0 3px ${c.indigo}`, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("label"), fontSize: 32, fontWeight: 600, color: open > 0.5 ? c.cardBg : c.indigo }}>{n}</div>
-      {labelP > 0.001 ? <div style={{ position: "absolute", left: "50%", top: DOOR.h + 28, transform: "translateX(-50%)", opacity: labelP, ...typeStyle("label"), fontSize: 40, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{label}</div> : null}
-    </div>
-  );
-};
+// 1
+/**
+ * 1 — Simon 11 Nov: after the three doors, door 1 moves to the middle and its title is written under it; on "Menjadi kaya
+ * dalam semalam sulit. Tapi pertumbuhan yang konsisten…" a one-line summary under the title; then the title and its number go
+ * up to the heading's place top left (IN07's opening heading), and only the growth chart stays: Rp10 juta at 15 % a year
+ * through 5, 10, 15, 20 years (1,15^n: 2,01 · 4,05 · 8,14 · 16,37). Rp10 juta is only a starting sum, not anyone's money.
+ */
+const OPEN = { ringTop: 210, doorTop: 320, titleY: 752, size: 64, sumY: 812 };
+const CHART1: Box = { x: CX - 520, y: 290, w: 1040, h: 650 };
+const PLOT: Box = { x: CHART1.x + 90, y: CHART1.y + 200, w: CHART1.w - 300, h: 320 };
+const START = 10;
+const rp = (jt: number) => `Rp${jt.toFixed(1).replace(".", ",")} jt`;
+const MILES = [5, 10, 15, 20].map((y) => ({ y, t: y / 20, v: START * 1.15 ** y }));
+/** 15% a year for 20 years, 1 → 16.4. */
+const GROWTH = Array.from({ length: 121 }, (_, i) => {
+  const t = i / 120;
+  return [t, ((1.15 ** (20 * t) - 1) / (1.15 ** 20 - 1)) * 0.92 + 0.04] as [number, number];
+});
+
+// 2
+/**
+ * 2 — Simon 11 Nov ("uda diganti belom visualnya jadi lebih valuable?"): one frame — a group chat in the middle where everyone
+ * says sell and you type something else (not sent); on "buku kas" the chat moves left and the cash book comes in on the right,
+ * a line from it to what you typed. ("Keberanian" came out.) The chat is made up; no ticker.
+ */
+const CHAT: Box = { x: 140, y: 290, w: 760, h: 650 };
+const MSGS = ["Jual semua!", "Udah pada cut loss", "Ikut yang lain aja", "Semua lagi jual"];
+const MSG = { top: 130, h: 64, gap: 20, avatar: 48 };
+/** Your answer, typed but not sent (Simon 11 Nov: "ganti jadi menjadi ketikan yang belum terkirim"), in the chat's input bar. */
+const MINE = { text: "Cek buku kasnya dulu", barTop: 540, barH: 76, cps: 18 };
+/** The chat opens in the middle and moves left to make room for the cash book (Simon 11 Nov). */
+const CHAT_X = { mid: CX - 760 / 2, left: 140 };
+const RIGHT2 = { cx: 1360, ledgerTop: 330 };
+const LEDGER = { w: 560, h: 560 };
+
+// 3
+const MOSAIC = { cols: 8, rows: 4, w: 140, h: 92, gap: 22, keep: [9, 12, 18, 22, 27] };
+const PUNCH = { cols: 5, rows: 4, d: 64, gap: 26 };
 
 export const SC05 = () => {
   const f = useCurrentFrame();
   const c = usePalette();
-  const shadow = useShadow();
   const m = useMotion();
+  const shadow = useShadow();
   const W = useWords(5, BLOCK.SC05);
+  const g = f + BLOCK.SC05;
+  const B = BLOCK.SC05;
+  const cut = (phrase: string) => W(phrase) - m.sec(0.15);
+  const END = BLOCK.SC06 - BLOCK.SC05;
 
-  const at = DOORS.map((d) => W(d.at));
-  const endAt = W("Tiga pintu ini");
-  const doorIn = DOORS.map((_, i) => ease(f, W("Tapi ada tiga") + i * 10, m.reveal));
-  const active = f < at[0] ? -1 : f < at[1] ? 0 : f < at[2] ? 1 : f < endAt ? 2 : 3;
-  const toEnd = ease(f, endAt, m.move);
+  const IS = cut("Ibu Sari juga");
+  const P2 = cut("Pintu kedua");
+  const BK = cut("Ketika orang");
+  const P3 = cut("Pintu ketiga");
+  const MG = cut("Munger pernah");
+  const DJ = cut("Kalau kamu menyediakan");
+  const KB = cut("Tiga pintu ini");
+  const TL = cut("Semua investor");
+
+  /** A door, closed or opened by `open` (0–1), its number above it. */
+  const Door = ({ i, p, open = 0, top = DOOR.top, left = doorX(i), ring = true }: { i: number; p: number; open?: number; top?: number; left?: number; ring?: boolean }) =>
+    p <= 0.001 ? null : (
+      <div style={{ position: "absolute", left, top: top + (1 - p) * 20, width: DOOR.w, height: DOOR.h, opacity: p }}>
+        {ring ? (
+          <div style={{ position: "absolute", left: DOOR.w / 2 - 40, top: -110 }}>
+            <NumRing n={i + 1} size={80} />
+          </div>
+        ) : null}
+        {/* the opening: the light behind the door */}
+        <div style={{ position: "absolute", inset: 0, borderRadius: 26, background: theme.color.indigoWashSolid, boxShadow: `inset 0 0 0 3px ${theme.color.hairlineBrandSolid}` }} />
+        <div style={{ position: "absolute", inset: 0, borderRadius: 26, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 3px ${theme.color.skeleton}`, transformOrigin: "left center", transform: `perspective(900px) rotateY(${(-70 * open).toFixed(2)}deg)` }}>
+          <div style={{ position: "absolute", left: 28, right: 28, top: 30, height: 130, borderRadius: 16, boxShadow: `inset 0 0 0 3px ${theme.color.skeleton}` }} />
+          <div style={{ position: "absolute", left: 28, right: 28, top: 186, height: 140, borderRadius: 16, boxShadow: `inset 0 0 0 3px ${theme.color.skeleton}` }} />
+          <div style={{ position: "absolute", right: 30, top: DOOR.h / 2 - 10, width: 20, height: 20, borderRadius: 999, background: theme.color.neutralDotOn }} />
+        </div>
+      </div>
+    );
+
+  /**
+   * Doors 2 and 3 in door 1's format (Simon 11 Nov: "kasih format dan layout pintu juga"): the door in the middle with its
+   * number above and its title under it; then number and title dock to the heading's place top left and the door goes.
+   */
+  const DockDoor = ({ n, title, at, titleAt, dockAt }: { n: number; title: string; at: number; titleAt: number; dockAt: number }) => {
+    const p = ease(f, at, m.reveal);
+    const tp = ease(f, titleAt, m.reveal);
+    const dk = ease(f, dockAt, m.move);
+    const r2 = 1 - (1 - dk) ** 2;
+    const open = { x: CX, y: OPEN.doorTop + (1 - p) * 20 - 70 };
+    const rg = { x: open.x + (HEADING.x + HEADING.disc / 2 - open.x) * r2, y: open.y + (HEADING.y - open.y) * r2, d: 80 + (HEADING.disc - 80) * dk };
+    const k = OPEN.size / theme.type.title.size + (1 - OPEN.size / theme.type.title.size) * dk;
+    const tx = CX + (HEADING.x + HEADING.disc + 24 - CX) * dk;
+    const o = 50 * (1 - dk);
+    const ty = OPEN.titleY + (HEADING.y - OPEN.titleY) * dk;
+    return (
+      <>
+        {dk < 0.999 ? (
+          <div style={{ position: "absolute", inset: 0, opacity: 1 - dk, transform: `translateY(${(dk * 24).toFixed(1)}px)` }}>
+            <Door i={n - 1} p={p} top={OPEN.doorTop} left={CX - DOOR.w / 2} ring={false} />
+          </div>
+        ) : null}
+        {p > 0.001 ? (
+          <div style={{ position: "absolute", left: rg.x - rg.d / 2, top: rg.y - rg.d / 2, opacity: p }}>
+            <NumRing n={n} size={rg.d} />
+          </div>
+        ) : null}
+        {tp > 0.001 ? (
+          <div style={{ position: "absolute", left: tx, top: ty - HEADING.disc / 2, height: HEADING.disc, display: "flex", alignItems: "center", opacity: tp, transformOrigin: `${o}% 50%`, transform: `translateX(${-o}%) scale(${k.toFixed(4)})` }}>
+            <div style={{ fontFamily: theme.text.family, fontSize: theme.type.title.size, fontWeight: 500, letterSpacing: theme.type.title.tracking, color: c.ink, whiteSpace: "nowrap" }}>{title}</div>
+          </div>
+        ) : null}
+      </>
+    );
+  };
 
   // 1
-  const climb = ease(f, W("Return"), W("lipat") - W("Return") + m.sec(0.4));
-  const chartP = ease(f, W("Tapi pertumbuhan"), m.reveal) * (1 - ease(f, W("Ibu Sari") - m.fade, m.fade));
-  const shops = ease(f, W("Ibu Sari"), m.reveal) * (1 - ease(f, at[1] - m.fade, m.fade));
-  const one = ease(f, W("Dia mulai"), m.pop);
-  // 2
-  const crowd = ease(f, W("Kadang"), m.reveal);
-  const ledger = ease(f, W("buku kas"), m.reveal);
-  const offer = ease(f, W("Ketika orang"), m.reveal);
-  const pale = ease(f, W("bukan ekspresi"), m.sec(0.6));
-  // 3
-  const many = ease(f, W("Bukan semua"), m.reveal);
-  const few = ease(f, W("Cukup beberapa"), m.move);
-  const twenty = ease(f, W("dua puluh"), m.reveal);
-  const plan = ease(f, W("Kalau kamu"), m.reveal);
-  const ten = ease(f, W("sepuluh"), m.sec(1));
-  const habit = ease(f, W("kebiasaan"), m.reveal);
-  const faces = ease(f, W("Semua investor"), m.reveal);
+  const door0P = ease(f, W("tiga pintu"), m.pop);
+  const othersOut = ease(f, W("Pintu pertama") - m.sec(0.1), m.fade);
+  const toMiddle = ease(f, W("Pintu pertama") - m.sec(0.1), m.move);
+  const titleP = ease(f, W("percaya pada"), m.reveal);
+  const sumA = ease(f, W("Menjadi kaya"), m.reveal);
+  const sumB = ease(f, W("Tapi pertumbuhan"), m.reveal);
+  const dockAt = W("Return 15%") - m.sec(0.4);
+  const dock = ease(f, dockAt, m.move);
+  const chartP = ease(f, W("Return 15%"), m.reveal);
+  const drawFrom = W("Return 15%") + m.sec(0.3);
+  const drawLen = W("16 kali") - drawFrom;
+  const growDraw = ease(f, drawFrom, drawLen);
+  const timesP = ease(f, W("16 kali"), m.pop);
+  const growEnd = inBox(PLOT, GROWTH[GROWTH.length - 1]);
+  // door 1 on its way to the middle, and its number (the heading's ring) riding above it until the heading docks
+  const door0Left = doorX(0) + (CX - DOOR.w / 2 - doorX(0)) * toMiddle;
+  const door0Top = A_TOP + (OPEN.doorTop - A_TOP) * toMiddle;
+  const ringOpen = { x: door0Left + DOOR.w / 2, y: door0Top + (1 - door0P) * 20 - 110 + 40 };
+  const rr = 1 - (1 - dock) ** 2;
+  const ring = { x: ringOpen.x + (HEADING.x + HEADING.disc / 2 - ringOpen.x) * rr, y: ringOpen.y + (HEADING.y - ringOpen.y) * rr, d: 80 + (HEADING.disc - 80) * dock };
+  const titleK = OPEN.size / theme.type.title.size + (1 - OPEN.size / theme.type.title.size) * dock;
+  const titleX = CX + (HEADING.x + HEADING.disc + 24 - CX) * dock;
+  const titleO = 50 * (1 - dock);
+  const titleY = OPEN.titleY + (HEADING.y - OPEN.titleY) * dock;
+  // Ibu Sari: the three warung, then one
+  const one = ease(f, W("mulai dari satu"), m.move);
 
-  const paneP = (i: number) => (active === i ? ease(f, at[i] + m.move / 2, m.reveal) : active > i ? 1 - ease(f, (i < 2 ? at[i + 1] : endAt) - m.fade, m.fade) : 0);
+  // 2
+  const chatSlide = ease(f, W("buku kas.") - m.sec(0.7), m.move);
+  const chatX = CHAT_X.mid + (CHAT_X.left - CHAT_X.mid) * chatSlide;
+  const typeAt = W("berbeda dari");
+  const typedN = Math.max(0, Math.min(MINE.text.length, Math.floor(((f - typeAt) * MINE.cps) / m.sec(1))));
+  const caretOn = f >= typeAt && (typedN < MINE.text.length || Math.floor(g / m.sec(0.5)) % 2 === 0);
+  const ledgerP = ease(f, W("buku kas.") - m.sec(0.2), m.reveal);
+  const linkP = ease(f, W("buku kas.") + m.sec(0.2), m.sec(0.6));
+  const dock2At = W("Kadang keputusan") - m.sec(0.4);
+  const dock3At = W("Bukan semua") - m.sec(0.4);
+  const offerP = ease(f, W("menawarkan Rp50"), m.pop);
+  const offerPale = ease(f, W("bukan ekspresi"), m.fade);
+  const readP = ease(f, W("Ibu Sari melihat"), m.reveal);
+
+  // 3
+  const fewP = ease(f, W("Bukan semua") + m.sec(0.6), m.fade);
+  const keepP = ease(f, W("Cukup beberapa"), m.pop);
+
+  // E
+  const openP = ease(f, W("Tiga pintu ini"), m.sec(1));
 
   return (
     <>
-      {/* the doors */}
-      {DOORS.map((d, i) => {
-        if (doorIn[i] <= 0.001) return null;
-        const open = ease(f, at[i], m.move);
-        const endX = CX - (DOOR.w * END.k) / 2 + (i - 1) * 420;
-        const mine = ease(f, at[i], m.move);
-        const side = { x: mix(rowX(i), SIDE.x, mine), y: mix(DOOR.y, SIDE.y, mine), k: mix(1, SIDE.k, mine) };
-        let op = 0;
-        let pos = { x: rowX(i), y: DOOR.y, k: 1 };
-        if (active === -1) op = doorIn[i];
-        else if (active === 3) {
-          // the last door walks back into the row; the other two come back beside it
-          op = i === 2 ? 1 : toEnd;
-          pos = i === 2 ? { x: mix(SIDE.x, endX, toEnd), y: mix(SIDE.y, END.y, toEnd), k: mix(SIDE.k, END.k, toEnd) } : { x: endX, y: END.y, k: END.k };
-        } else if (active === i) {
-          op = 1;
-          pos = side;
-        } else if (active === 0) op = 1 - ease(f, at[0], m.fade);
-        else if (active === i + 1) {
-          op = 1 - ease(f, at[i + 1], m.fade);
-          pos = { x: SIDE.x, y: SIDE.y, k: SIDE.k };
-        }
-        const { x, y, k } = pos;
-        return op > 0.001 ? (
-          <div key={d.label} style={{ position: "absolute", left: x, top: y, opacity: op, transform: `scale(${k.toFixed(4)})`, transformOrigin: "0 0" }}>
-            <Door n={i + 1} open={open} label={d.label} labelP={open} />
+      <BoardGrid g={g} on={1} />
+
+      {/* A + 1 — three doors; door 1 to the middle, its title and summary; the title docks; the growth chart */}
+      <Shot from={0} to={IS} block={B} cutIn={false}>
+        {[1, 2].map((i) => {
+          const p = ease(f, W("tiga pintu") + i * m.sec(0.15), m.pop) * (1 - othersOut);
+          return p > 0.001 ? <div key={i} style={{ position: "absolute", inset: 0, transform: `translateY(${(othersOut * 30).toFixed(1)}px)` }}><Door i={i} p={p} top={A_TOP} /></div> : null;
+        })}
+        {dock < 0.999 ? (
+          <div style={{ position: "absolute", inset: 0, opacity: 1 - dock, transform: `translateY(${(dock * 24).toFixed(1)}px)` }}>
+            <Door i={0} p={door0P} top={door0Top} left={door0Left} ring={false} />
           </div>
-        ) : null;
-      })}
-
-      {/* 1 — compounding, then the warung */}
-      {chartP > 0.001 ? (
-        <div style={{ position: "absolute", left: PANE.x, top: PANE.y, width: PANE.w, height: PANE.h, opacity: chartP * paneP(0) }}>
-          <Card x={0} y={0} w={PANE.w} h={PANE.h}>
-            {Array.from({ length: 20 }, (_, t) => {
-              const v = Math.pow(1.15, t + 1);
-              const p = Math.min(1, Math.max(0, climb * 20 - t));
-              const h = (v / 16.4) * 380 * p;
-              return <div key={t} style={{ position: "absolute", left: 90 + t * 46, top: 500 - h, width: 32, height: h, borderRadius: "8px 8px 0 0", background: t === 19 ? c.indigo : theme.color.hairlineBrandSolid }} />;
-            })}
-            <div style={{ position: "absolute", left: 90, top: 520, ...typeStyle("label"), fontSize: 30, fontWeight: 500, color: c.slate }}>Tahun 1</div>
-            <div style={{ position: "absolute", left: 90 + 19 * 46 + 32, top: 520, transform: "translateX(-100%)", ...typeStyle("label"), fontSize: 30, fontWeight: 500, color: c.slate }}>Tahun 20</div>
-            <div style={{ position: "absolute", left: 90, top: 60, ...typeStyle("title"), fontSize: 64, fontWeight: 600, color: c.ink, fontVariantNumeric: "tabular-nums" }}>
-              15% × 20 tahun ≈ <span style={{ color: c.indigo }}>{Math.max(1, Math.round(Math.pow(1.15, 20 * climb)))}×</span>
-            </div>
-          </Card>
-        </div>
-      ) : null}
-      {shops > 0.001
-        ? [0, 1, 2].map((i) => (
-            <Figure key={i} name="warung" cx={PANE.x + 200 + i * 340} floor={700} h={300} faint={i === 0 ? 1 - one : 1} style={{ opacity: shops * paneP(0) * (i === 0 ? 1 : 0.999) }} />
-          ))
-        : null}
-
-      {/* 2 — the crowd and the book */}
-      {crowd > 0.001 && paneP(1) > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: paneP(1) }}>
-          {Array.from({ length: 12 }, (_, i) => {
-            const p = ease(f, W("Kadang") + i * 3, m.pop) * (1 - offer);
-            return p > 0.001 ? (
-              <div key={i} style={{ position: "absolute", left: 760 + (i % 4) * 120, top: 300 + Math.floor(i / 4) * 130, opacity: p }}>
-                <Glyph icon="user-circle" size={96} tone={theme.color.neutralDot} />
+        ) : null}
+        {ease(f, W("bisa dipelajari"), m.reveal) * (1 - othersOut) > 0.001 ? (
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: A_TOP + DOOR.h + A_GROUP.below, textAlign: "center", ...typeStyle("title"), fontSize: 56, fontWeight: 500, color: c.indigo, opacity: ease(f, W("bisa dipelajari"), m.reveal) * (1 - othersOut) }}>Bisa dipelajari</div>
+        ) : null}
+        {/* the summary under the title, in two steps on its two sentences */}
+        {(sumA + sumB) * (1 - dock) > 0.001 ? (
+          <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: OPEN.sumY, textAlign: "center", fontFamily: theme.text.family, fontSize: 40, fontWeight: 500, color: c.slate, whiteSpace: "pre", opacity: 1 - dock }}>
+            <span style={{ opacity: sumA }}>Bukan kaya semalam, </span>
+            <span style={{ color: c.indigo, opacity: sumB }}>tapi tumbuh konsisten</span>
+          </div>
+        ) : null}
+        {/* the growth chart, the only card that stays (Simon 11 Nov: "Keep gambar ini, lainnya remove") */}
+        <Card x={CHART1.x} y={CHART1.y} w={CHART1.w} h={CHART1.h} style={{ opacity: chartP, transform: `translateY(${((1 - chartP) * 18).toFixed(1)}px)` }}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 28, textAlign: "center", ...typeStyle("title"), fontSize: 36, fontWeight: 700, color: c.ink }}>Pertumbuhan konsisten</div>
+          <div style={{ position: "absolute", left: 90, top: 96, display: "flex", gap: 14 }}>
+            {[
+              { text: "Modal Rp10 juta", at: "Return 15%" },
+              { text: "15% / tahun", at: "15% per" },
+            ].map((chip) => (
+              <div key={chip.text} style={{ height: 52, padding: "0 22px", borderRadius: 999, background: theme.color.indigoWashSolid, display: "flex", alignItems: "center", ...typeStyle("label"), fontSize: 26, fontWeight: 600, color: c.indigo, opacity: ease(f, W(chip.at) - m.sec(0.1), m.reveal) }}>{chip.text}</div>
+            ))}
+          </div>
+          <svg width={CHART1.w} height={CHART1.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+            <g transform={`translate(${-CHART1.x} ${-CHART1.y})`}>
+              <AreaLine box={PLOT} pts={GROWTH} upto={growDraw} id="sc05-growth" />
+              {MILES.slice(0, -1).map((mi) => {
+                const [x, y] = inBox(PLOT, GROWTH[Math.round(mi.t * (GROWTH.length - 1))]);
+                const p = growDraw >= mi.t ? ease(f, drawFrom + mi.t * drawLen, m.pop) : 0;
+                return p > 0.001 ? <circle key={mi.y} cx={x} cy={y} r={8 * p} fill={c.indigo} stroke={c.cardBg} strokeWidth={3} /> : null;
+              })}
+              <RingMark x={growEnd[0]} y={growEnd[1]} y2={PLOT.y + PLOT.h} p={timesP} />
+            </g>
+          </svg>
+          {/* the sum at each milestone, and the years under the axis */}
+          {MILES.map((mi) => {
+            const [x, y] = inBox(PLOT, GROWTH[Math.round(mi.t * (GROWTH.length - 1))]);
+            const p = growDraw >= mi.t - 0.001 ? ease(f, drawFrom + mi.t * drawLen, m.reveal) : 0;
+            return (
+              <div key={mi.y}>
+                {/* above-left of its dot, where the rising line isn't */}
+                {p > 0.001 ? <div style={{ position: "absolute", left: x - CHART1.x - 12, top: y - CHART1.y - 16, transform: "translate(-100%, -100%)", padding: "2px 10px", borderRadius: 999, background: c.cardBg, ...typeStyle("label"), fontSize: 26, fontWeight: 600, color: mi.y === 20 ? c.indigo : c.ink, whiteSpace: "nowrap", opacity: p, fontVariantNumeric: "tabular-nums" }}>{rp(mi.v)}</div> : null}
+                <div style={{ position: "absolute", left: x - CHART1.x - 60, width: 120, top: PLOT.y - CHART1.y + PLOT.h + 18, textAlign: "center", ...typeStyle("label"), fontSize: 24, fontWeight: 500, color: c.slate }}>{mi.y === 20 ? "20 tahun" : mi.y}</div>
               </div>
-            ) : null;
+            );
           })}
-          {ledger > 0.001 ? (
-            <div style={{ position: "absolute", left: mix(1330, 1260, offer), top: 300, width: 470, height: 360, opacity: ledger, transform: `translateY(${((1 - ledger) * 18).toFixed(1)}px)` }}>
-              <Card x={0} y={0} w={470} h={360} style={{ boxShadow: shadow.glow }}>
-                <LedgerCard title="Buku kas" s={0.66} />
-              </Card>
-            </div>
-          ) : null}
-          {ledger > 0.001 && offer < 0.5 ? <div style={{ position: "absolute", left: 1495, top: 700, transform: "translateX(-50%)", opacity: ledger * (1 - offer * 2), ...typeStyle("title"), fontSize: 48, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>Ledger <span style={{ color: c.indigo }}>&gt;</span> Crowd</div> : null}
-          {offer > 0.001 ? (
-            <>
-              <Figure name="ibu-sari" cx={1000} floor={860} h={480} style={{ opacity: offer }} />
-              <div style={{ position: "absolute", left: 0, top: 0, opacity: offer, filter: pale > 0.001 ? `contrast(${(1 - 0.5 * pale).toFixed(3)}) brightness(${(1 + 0.4 * pale).toFixed(3)})` : undefined }}>
-                <Bubble x={720} y={230} w={340} h={110}>
-                  <div style={{ ...typeStyle("title"), fontSize: 50, fontWeight: 600, color: c.ink }}>Rp50 juta</div>
-                </Bubble>
-              </div>
-            </>
-          ) : null}
-        </div>
-      ) : null}
+          <div style={{ position: "absolute", left: PLOT.x - CHART1.x + 10, top: PLOT.y - CHART1.y - 10, width: 260, textAlign: "left", ...typeStyle("title"), fontSize: 96, fontWeight: 600, lineHeight: 1, color: c.indigo, opacity: timesP, fontVariantNumeric: "tabular-nums" }}>16×</div>
+        </Card>
+      </Shot>
+      {/* door 1's number and title: opened under the door, then docked top left; held still through the cut to Ibu Sari */}
+      <Shot from={0} to={P2} block={B} cutIn={false}>
+        {door0P > 0.001 ? (
+          <div style={{ position: "absolute", left: ring.x - ring.d / 2, top: ring.y - ring.d / 2, opacity: door0P }}>
+            <NumRing n={1} size={ring.d} />
+          </div>
+        ) : null}
+        {titleP > 0.001 ? (
+          <div style={{ position: "absolute", left: titleX, top: titleY - HEADING.disc / 2, height: HEADING.disc, display: "flex", alignItems: "center", opacity: titleP, transformOrigin: `${titleO}% 50%`, transform: `translateX(${-titleO}%) scale(${titleK.toFixed(4)})` }}>
+            <div style={{ fontFamily: theme.text.family, fontSize: theme.type.title.size, fontWeight: 500, letterSpacing: theme.type.title.tracking, color: c.ink, whiteSpace: "nowrap" }}>Proses jangka panjang</div>
+          </div>
+        ) : null}
+      </Shot>
+      <Shot from={IS} to={P2} block={B}>
+        {/* Ibu Sari as tall as a warung (Simon 11 Nov); "3 warung ngga dalam semalam" over the three; then one stays, the others slide down and go */}
+        <Figure name="ibu-sari" cx={420} floor={820} h={330} style={{ opacity: ease(f, W("Ibu Sari juga") - m.sec(0.1), m.reveal) }} />
+        {ease(f, W("tiga warung") - m.sec(0.1), m.reveal) * (1 - one) > 0.001 ? (
+          <div style={{ position: "absolute", left: 820 - 190, width: 2 * 380 + 380, top: 400, textAlign: "center", fontFamily: theme.text.family, fontSize: 48, fontWeight: 500, color: c.ink, opacity: ease(f, W("tiga warung") - m.sec(0.1), m.reveal) * (1 - one) }}>3 warung ngga dalam semalam</div>
+        ) : null}
+        {[0, 1, 2].map((i) => {
+          const p = ease(f, W("tiga warung") + i * m.sec(0.12), m.reveal) * (i === 0 ? 1 : 1 - one);
+          return p > 0.001 ? <div key={i} style={{ position: "absolute", inset: 0, transform: `translateY(${(i === 0 ? 0 : one * 60).toFixed(1)}px)` }}><Figure name="warung" cx={820 + i * 380} floor={820} h={330} style={{ opacity: p }} /></div> : null;
+        })}
+      </Shot>
 
-      {/* 3 — many companies, then twenty; then the plan */}
-      {many > 0.001 && paneP(2) > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: paneP(2) }}>
-          {Array.from({ length: 40 }, (_, i) => {
-            const keep = i < 20;
-            const p = ease(f, W("Bukan semua") + i, m.pop) * (keep ? 1 : 1 - few);
-            const lit = keep ? twenty : 0;
-            const col = i % 8;
-            const row = Math.floor(i / 8);
-            const k = mix(1, 0.62, plan);
-            const x = mix(760 + col * 130, 760 + (i % 5) * 92, plan);
-            const y = mix(250 + row * 120, 250 + Math.floor(i / 5) * 92, plan);
-            const on = ten > (i / 10) && i < 10 && plan > 0.5;
-            return p > 0.001 ? (
-              <div key={i} style={{ position: "absolute", left: x, top: y, width: 100, height: 100, transform: `scale(${k.toFixed(3)})`, transformOrigin: "0 0", borderRadius: 26, background: on ? c.indigo : lit > 0.5 ? theme.color.indigoWashSolid : c.cardBg, boxShadow: shadow.soft, opacity: p, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Glyph icon="storefront" size={52} tone={on ? c.cardBg : lit > 0.5 ? c.indigo : theme.color.neutralDot} />
-              </div>
-            ) : null;
-          })}
-          {twenty > 0.001 && plan < 0.999 ? <div style={{ position: "absolute", left: 1280, top: 800, transform: "translateX(-50%)", opacity: twenty * (1 - plan), ...typeStyle("title"), fontSize: 52, fontWeight: 600, color: c.indigo }}>≈ 20 bisnis</div> : null}
-          {plan > 0.001 ? (
-            <div style={{ position: "absolute", left: 1240, top: 300, opacity: plan, display: "flex", flexDirection: "column", gap: 40 }}>
-              {[{ icon: "clock", text: "2 jam / minggu", p: plan }, { icon: "storefront", text: "10 perusahaan / tahun", p: ten }].map((r, i) => (
-                <div key={r.text} style={{ display: "flex", alignItems: "center", gap: 26, opacity: r.p }}>
-                  <div style={{ width: 110, height: 110, borderRadius: 999, background: i ? c.indigo : theme.color.indigoWashSolid, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Glyph icon={r.icon} size={60} tone={i ? c.cardBg : c.indigo} />
-                  </div>
-                  <div style={{ ...typeStyle("title"), fontSize: 50, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{r.text}</div>
+      {/* 2 — Independent thinking: door 2, then one frame — the chat, what you type, the cash book under it */}
+      <Shot from={P2} to={P3} block={B}>
+        <DockDoor n={2} title="Independent thinking" at={P2} titleAt={W("independent thinking")} dockAt={dock2At} />
+      </Shot>
+      <Shot from={P2} to={BK} block={B}>
+        <Card x={chatX} y={CHAT.y} w={CHAT.w} h={CHAT.h} style={{ opacity: ease(f, W("Kadang keputusan") - m.sec(0.1), m.reveal), transform: `translateY(${((1 - ease(f, W("Kadang keputusan") - m.sec(0.1), m.reveal)) * 18).toFixed(1)}px)` }}>
+          <div style={{ position: "absolute", left: 36, right: 36, top: 26, height: 70, display: "flex", alignItems: "center", gap: 16, borderBottom: `2px solid ${theme.color.skeleton}`, paddingBottom: 14 }}>
+            <div style={{ width: 56, height: 56, borderRadius: 999, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Glyph icon="users-three" size={34} tone={c.slate} />
+            </div>
+            <div style={{ ...typeStyle("title"), fontSize: 32, fontWeight: 700, color: c.ink }}>Grup Saham</div>
+          </div>
+          {/* everyone says sell */}
+          {MSGS.map((t, k) => {
+            const q = ease(f, W("Kadang keputusan") + k * m.sec(0.3), m.pop);
+            return q > 0.001 ? (
+              <div key={t} style={{ position: "absolute", left: 36, top: MSG.top + k * (MSG.h + MSG.gap), display: "flex", alignItems: "center", gap: 14, opacity: q, transform: `translateY(${((1 - q) * 12).toFixed(1)}px)` }}>
+                <div style={{ width: MSG.avatar, height: MSG.avatar, borderRadius: 999, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+                  <Glyph icon="user-circle" size={34} tone={theme.color.neutralDotOn} />
                 </div>
-              ))}
+                <div style={{ height: MSG.h, padding: "0 24px", borderRadius: 22, background: theme.color.neutralDisc, display: "flex", alignItems: "center", ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>{t}</div>
+              </div>
+            ) : null;
+          })}
+          {/* and you, typing something else — not sent */}
+          <div style={{ position: "absolute", left: 36, right: 36, top: MINE.barTop, height: MINE.barH, display: "flex", alignItems: "center", gap: 16 }}>
+            <div style={{ flex: 1, height: MINE.barH, borderRadius: MINE.barH / 2, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${typedN > 0 ? theme.color.selfAmber : theme.color.skeleton}`, display: "flex", alignItems: "center", padding: "0 28px", ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.ink, whiteSpace: "nowrap", overflow: "hidden" }}>
+              {MINE.text.slice(0, typedN)}
+              {caretOn ? <span style={{ display: "inline-block", width: 3, height: 32, marginLeft: 2, background: theme.color.selfAmberInk }} /> : null}
             </div>
-          ) : null}
-        </div>
-      ) : null}
+            <div style={{ width: MINE.barH, height: MINE.barH, borderRadius: 999, background: typedN > 0 ? theme.color.selfAmber : theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+              <svg width={34} height={34} viewBox="0 0 34 34"><path d="M 7 17 L 27 17 M 19 9 L 27 17 L 19 25" fill="none" stroke={c.cardBg} strokeWidth={3.4} strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </div>
+          </div>
+        </Card>
+        {/* the cash book, and the line from it to your answer */}
+        {ledgerP > 0.001 ? (
+          <Card x={RIGHT2.cx - LEDGER.w / 2} y={RIGHT2.ledgerTop + (1 - ledgerP) * 18} w={LEDGER.w} h={LEDGER.h} style={{ opacity: ledgerP }}>
+            <LedgerCard title="Buku kas" lit={[linkP, linkP, linkP]} />
+          </Card>
+        ) : null}
+        {linkP > 0.001 ? <Connector a={{ x: chatX + CHAT.w - 36, y: CHAT.y + MINE.barTop + MINE.barH / 2 }} b={{ x: RIGHT2.cx - LEDGER.w / 2, y: RIGHT2.ledgerTop + LEDGER.h / 2 }} p={linkP} shape="curve" tone={theme.color.connector} dot={false} /> : null}
+      </Shot>
+      <Shot from={BK} to={P3} block={B}>
+        <Card x={CX - LEDGER.w / 2} y={CY - LEDGER.h / 2 + 20} w={LEDGER.w} h={LEDGER.h} style={{ opacity: ease(f, W("buku kas.") - m.sec(0.2), m.reveal) }}>
+          <LedgerCard title="Buku kas" lit={[readP, readP, readP]} />
+        </Card>
+        {/* Ibu Sari standing, facing right — toward her cash book and the offer (Simon 11 Nov: "pose yang menghadap kanan") */}
+        <Figure name="ibu-sari" cx={330} floor={900} h={560} style={{ opacity: readP }} />
+        {/* the offer, from Mr Market (Simon 11 Nov: "balikin mr market"), turned to face her; it goes pale on "bukan ekspresi" */}
+        {offerP > 0.001 ? (
+          <div style={{ position: "absolute", inset: 0, opacity: offerP }}>
+            <div style={{ position: "absolute", inset: 0, filter: offerPale > 0.001 ? `grayscale(${offerPale.toFixed(3)}) brightness(${(1 + 0.12 * offerPale).toFixed(3)})` : undefined }}>
+              <Bubble x={1270} y={250} w={380} h={120}>
+                <div style={{ ...typeStyle("title"), fontSize: 52, fontWeight: 600, color: c.ink }}>Rp50 juta</div>
+              </Bubble>
+            </div>
+            <Figure name="mr-market" cx={1630} floor={900} h={500} flip faint={offerPale} />
+          </div>
+        ) : null}
+      </Shot>
 
-      {/* E — habit, and the investors who started with one */}
-      {habit > 0.001 ? <div style={{ opacity: habit }}><Line x={0} y={700} w={theme.canvas.width} text="Habit, not talent." size={64} align="center" weight={500} mark="Habit" /></div> : null}
-      {faces > 0.001
-        ? (["graham", "buffett", "schloss", "munger"] as const).map((n, i) => {
-            const p = ease(f, W("Semua investor") + i * 8, m.reveal);
-            const at = { left: CX - 2 * 150 - 45 + i * 160, top: 780 + (1 - p) * 16, opacity: p };
-            // Graham and Buffett as their real photos (Simon 10 Nov); Schloss and Munger stay drawn
-            if (n === "graham" || n === "buffett") return <PhotoTile key={n} name={n} d={130} style={at} />;
-            return <Pic key={n} src={staticFile(`art/vi01/${n}.png`)} style={{ position: "absolute", ...at, width: 130, height: (130 * ART[n].h) / ART[n].w }} />;
-          })
-        : null}
+      {/* 3 — Memahami perusahaan */}
+      <Shot from={P3} to={DJ} block={B}>
+        <DockDoor n={3} title="Memahami perusahaan" at={P3} titleAt={W("benar-benar meluangkan")} dockAt={dock3At} />
+      </Shot>
+      <Shot from={P3} to={MG} block={B}>
+        {Array.from({ length: MOSAIC.cols * MOSAIC.rows }, (_, k) => {
+          const col = k % MOSAIC.cols;
+          const row = Math.floor(k / MOSAIC.cols);
+          const dist = Math.hypot(col - (MOSAIC.cols - 1) / 2, row - (MOSAIC.rows - 1) / 2);
+          const p = ease(f, dock3At + m.move * 0.6 + dist * m.sec(0.04), m.reveal);
+          if (p <= 0.001) return null;
+          const kept = MOSAIC.keep.includes(k);
+          const x = CX - (MOSAIC.cols * MOSAIC.w + (MOSAIC.cols - 1) * MOSAIC.gap) / 2 + col * (MOSAIC.w + MOSAIC.gap);
+          const y = CY - (MOSAIC.rows * MOSAIC.h + (MOSAIC.rows - 1) * MOSAIC.gap) / 2 + row * (MOSAIC.h + MOSAIC.gap);
+          // "Bukan semua": all go pale; "Cukup beberapa": a few come back, ringed
+          const pale = kept ? fewP * (1 - keepP) : fewP;
+          return (
+            <Card key={k} x={x} y={y + (1 - p) * 12} w={MOSAIC.w} h={MOSAIC.h} line={kept && keepP > 0.5 ? c.indigo : undefined} style={{ opacity: p, borderRadius: 18, filter: pale > 0.001 ? `grayscale(1) brightness(${(1 + 0.04 * pale).toFixed(3)}) contrast(${(1 - 0.35 * pale).toFixed(3)})` : undefined }}>
+              <Skel w={64} h={10} style={{ left: 16, top: 18, background: kept && keepP > 0.5 ? theme.color.hairlineBrandSolid : undefined }} />
+              <Skel w={100} h={10} style={{ left: 16, top: 40 }} />
+              <Skel w={46} h={10} style={{ left: 16, top: 62 }} />
+            </Card>
+          );
+        })}
+      </Shot>
+      <Shot from={MG} to={DJ} block={B}>
+        <div style={{ position: "absolute", left: 300, top: CY - 190, width: 360, height: (360 * ART.munger.h) / ART.munger.w, borderRadius: 46, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", opacity: ease(f, W("Munger pernah") - m.sec(0.1), m.reveal) }}>
+          <Pic src={staticFile("art/vi01/munger.png")} style={{ position: "absolute", left: 0, top: 0, width: 360, height: (360 * ART.munger.h) / ART.munger.w }} />
+        </div>
+        <div style={{ position: "absolute", left: 300, width: 360, top: CY + 210, textAlign: "center", ...typeStyle("title"), fontSize: 40, fontWeight: 600, color: c.ink, opacity: ease(f, W("Munger pernah"), m.reveal) }}>Charlie Munger</div>
+        {/* twenty, filled one by one */}
+        <Card x={860} y={CY - 260} w={PUNCH.cols * PUNCH.d + (PUNCH.cols - 1) * PUNCH.gap + 120} h={PUNCH.rows * PUNCH.d + (PUNCH.rows - 1) * PUNCH.gap + 220} style={{ opacity: ease(f, W("sepanjang hidup"), m.reveal) }}>
+          <div style={{ position: "absolute", left: 0, right: 0, top: 44, textAlign: "center", ...typeStyle("title"), fontSize: 48, fontWeight: 600, color: c.indigo }}>20 bisnis</div>
+          {Array.from({ length: PUNCH.cols * PUNCH.rows }, (_, k) => {
+            const on = ease(f, W("dua puluh") + k * m.sec(0.07), m.pop);
+            return (
+              <div key={k} style={{ position: "absolute", left: 60 + (k % PUNCH.cols) * (PUNCH.d + PUNCH.gap), top: 140 + Math.floor(k / PUNCH.cols) * (PUNCH.d + PUNCH.gap), width: PUNCH.d, height: PUNCH.d, borderRadius: 999, background: on > 0.5 ? c.indigo : theme.color.neutralDisc, boxShadow: `inset 0 0 0 2px ${on > 0.5 ? c.indigo : theme.color.skeleton}`, transform: `scale(${(1 + 0.12 * Math.sin(Math.PI * on)).toFixed(3)})` }} />
+            );
+          })}
+        </Card>
+      </Shot>
+      <Shot from={DJ} to={KB} block={B}>
+        <OrangTuntun at={DJ} />
+        <div style={{ position: "absolute", left: ORANG_TUNTUN_RIGHT + 90, top: 330, width: theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 90 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 22, opacity: ease(f, W("dua jam"), m.reveal) }}>
+            <div style={{ width: 96, height: 96, borderRadius: 999, background: theme.color.indigoWashSolid, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Glyph icon="clock" size={58} tone={c.indigo} />
+            </div>
+            <div style={{ ...typeStyle("title"), fontSize: 64, fontWeight: 500, color: c.ink }}>2 jam / minggu</div>
+          </div>
+          <div style={{ marginTop: 26, marginLeft: 30, fontFamily: theme.text.family, fontSize: 56, color: c.slate, opacity: ease(f, W("dalam setahun"), m.reveal) }}>↓</div>
+          <div style={{ marginTop: 20, ...typeStyle("title"), fontSize: 72, fontWeight: 600, color: c.indigo, opacity: ease(f, W("sepuluh perusahaan"), m.reveal) }}>10 perusahaan / tahun</div>
+          <div style={{ position: "relative", height: 90, marginTop: 30 }}>
+            {Array.from({ length: 10 }, (_, k) => {
+              const p = ease(f, W("sepuluh perusahaan") + k * m.sec(0.06), m.pop);
+              return p > 0.001 ? (
+                <Card key={k} x={k * 92} y={(1 - p) * 10} w={76} h={76} style={{ opacity: p, borderRadius: 18, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Glyph icon="storefront" size={40} tone={c.indigo} />
+                </Card>
+              ) : null;
+            })}
+          </div>
+        </div>
+      </Shot>
+
+      {/* E — habit, not talent; and the investors who started with one company */}
+      <Shot from={KB} to={TL} block={B}>
+        <Line x={0} y={250} w={theme.canvas.width} align="center" size={72} weight={500} text="Kebiasaan, bukan bakat" mark="Kebiasaan" />
+        {[0, 1, 2].map((i) => (
+          <Door key={i} i={i} p={ease(f, KB + i * m.sec(0.08), m.reveal)} open={ease(f, W("Tiga pintu ini") + i * m.sec(0.2), m.sec(0.9)) * openP} />
+        ))}
+      </Shot>
+      <Shot from={TL} to={END} block={B} cutOut={false}>
+        <Line x={0} y={300} w={theme.canvas.width} align="center" size={64} weight={500} text="Semua mulai dari perusahaan pertama" mark="perusahaan pertama" />
+        <Timeline grow={ease(f, TL, m.sec(1.4))} />
+      </Shot>
     </>
   );
 };

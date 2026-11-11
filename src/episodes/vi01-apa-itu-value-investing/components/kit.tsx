@@ -5,11 +5,11 @@
  * Pustaka "Tokoh · garis hitam sederhana"): public/art/vi01, cut from one sheet by scripts/vi/split-sprites.py.
  */
 import type React from "react";
-import { Img, interpolateColors, staticFile } from "remotion";
-import { theme, typeStyle, usePalette, useShadow } from "../../../core";
-import { w } from "../data/timing";
+import { Img, interpolateColors, staticFile, useCurrentFrame } from "remotion";
+import { cutInStyle, cutOutStyle, theme, typeStyle, usePalette, useShadow } from "../../../core";
+import { CUT, w } from "../data/timing";
 
-export { Appear, Card, Line, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
+export { Appear, BoardGrid, Card, Gauge, Heading, HEADING, Line, Mark, NumRing, OpeningHeading, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, Skel, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
 
 /** A scene's word clock: the frame a phrase starts on, scene-local. */
 export const useWords = (scene: number, block: number) => (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") => w(scene, phrase, nth, edge) - block;
@@ -232,5 +232,83 @@ export const LogoTile = ({ name, d, style }: { name: LogoName; d: number; style?
     <div style={{ position: "absolute", width: d, height: h, borderRadius: d * 0.13, background: c.cardBg, boxShadow: shadow.soft, flex: "none", ...style }}>
       <Pic src={staticFile(lg.src)} style={{ position: "absolute", left: (d - lg.w * k) / 2, top: (h - lg.h * k) / 2, width: lg.w * k, height: lg.h * k }} />
     </div>
+  );
+};
+
+/**
+ * One shot of a scene, on screen over [from, to) of the scene's frames, with a camera cut in at `from` and out at `to` —
+ * IN07's way (Simon 11 Nov: "samain kayak IN07"): one picture at a time, a cut between them. `cutIn`/`cutOut` false where
+ * the Composition's own scene cut, or an enclosing shot, already moves it.
+ */
+export const Shot = ({ from, to, block, cutIn = true, cutOut = true, children }: { from: number; to: number; block: number; cutIn?: boolean; cutOut?: boolean; children: React.ReactNode }) => {
+  const f = useCurrentFrame();
+  if (f < from || f >= to) return null;
+  const g = f + block;
+  const style = cutIn && f < from + CUT.over / 2 ? cutInStyle(g, { at: from + block, axis: "x", ...CUT }) : cutOut && f >= to - CUT.over / 2 ? cutOutStyle(g, { at: to + block, axis: "x", ...CUT }) : {};
+  return <div style={{ position: "absolute", inset: 0, ...style }}>{children}</div>;
+};
+
+/** Monotone cubic (Fritsch–Carlson) through `pts`, sampled `n` times — it never overshoots a turning point. */
+export const smooth = (pts: [number, number][], n: number) => {
+  const k = pts.length;
+  const d = pts.slice(0, -1).map((p, i) => (pts[i + 1][1] - p[1]) / (pts[i + 1][0] - p[0]));
+  const m = pts.map((_, i) => (i === 0 ? d[0] : i === k - 1 ? d[k - 2] : d[i - 1] * d[i] <= 0 ? 0 : (d[i - 1] + d[i]) / 2));
+  const out: [number, number][] = [];
+  for (let j = 0; j < n; j++) {
+    const x = pts[0][0] + ((pts[k - 1][0] - pts[0][0]) * j) / (n - 1);
+    let i = 0;
+    while (i < k - 2 && x > pts[i + 1][0]) i++;
+    const h = pts[i + 1][0] - pts[i][0];
+    const t = (x - pts[i][0]) / h;
+    const h00 = 2 * t ** 3 - 3 * t ** 2 + 1, h10 = t ** 3 - 2 * t ** 2 + t, h01 = -2 * t ** 3 + 3 * t ** 2, h11 = t ** 3 - t ** 2;
+    out.push([x, h00 * pts[i][1] + h10 * h * m[i] + h01 * pts[i + 1][1] + h11 * h * m[i + 1]]);
+  }
+  return out;
+};
+
+export type Box = { x: number; y: number; w: number; h: number };
+/** A point of a 0–1 series in `box` (y = 1 at the top). */
+export const inBox = (box: Box, [x, y]: [number, number]): [number, number] => [box.x + x * box.w, box.y + (1 - y) * box.h];
+
+/**
+ * SC02's chart (Simon 10 Nov, after his reference; 11 Nov: "kalau mau nunjukkin chart, samain kayak di scene 2"): a 2 px
+ * indigo line drawn up to `upto` (0–1 of its length), an indigo fill fading to nothing under it, one x-axis, a dot at
+ * its tip. `pts` are 0–1 both ways. Goes inside an <svg>.
+ */
+export const AreaLine = ({ box, pts, upto, id, axis = true, tone }: { box: Box; pts: [number, number][]; upto: number; id: string; axis?: boolean; tone?: string }) => {
+  const c = usePalette();
+  const ink = tone ?? c.indigo;
+  const n = Math.max(2, Math.round(upto * (pts.length - 1)) + 1);
+  const xy = pts.slice(0, n).map((p) => inBox(box, p));
+  const base = box.y + box.h;
+  const line = xy.map(([x, y], i) => `${i ? "L" : "M"} ${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+  const tip = xy[xy.length - 1];
+  return (
+    <g>
+      <defs>
+        <linearGradient id={id} x1="0" y1={box.y} x2="0" y2={base} gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor={ink} stopOpacity={0.32} />
+          <stop offset="1" stopColor={ink} stopOpacity={0} />
+        </linearGradient>
+      </defs>
+      {/* Simon asked for this fill to be transparent in SC02 (an exception to the opaque-fills rule) */}
+      {upto > 0.001 ? <path d={`${line} L ${tip[0].toFixed(1)} ${base} L ${xy[0][0].toFixed(1)} ${base} Z`} fill={`url(#${id})`} /> : null}
+      {axis ? <line x1={box.x} y1={base} x2={box.x + box.w} y2={base} stroke={theme.color.skeleton} strokeWidth={2} /> : null}
+      {upto > 0.001 ? <path d={line} fill="none" stroke={ink} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /> : null}
+      {upto > 0.001 ? <circle cx={tip[0]} cy={tip[1]} r={6.3} fill={ink} /> : null}
+    </g>
+  );
+};
+
+/** SC02's marker: a dashed line down from (x, y) to `y2`, and a ringed dot at (x, y). Inside an <svg>. */
+export const RingMark = ({ x, y, y2, p }: { x: number; y: number; y2: number; p: number }) => {
+  const c = usePalette();
+  if (p <= 0.001) return null;
+  return (
+    <g opacity={p}>
+      <line x1={x} y1={y} x2={x} y2={y + (y2 - y) * p} stroke={c.indigo} strokeWidth={2} strokeDasharray="6 8" />
+      <circle cx={x} cy={y} r={15.3} fill={c.cardBg} stroke={c.indigo} strokeWidth={2} />
+      <circle cx={x} cy={y} r={8.1} fill={c.indigo} />
+    </g>
   );
 };

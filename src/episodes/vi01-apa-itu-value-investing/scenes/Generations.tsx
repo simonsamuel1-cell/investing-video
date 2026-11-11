@@ -4,7 +4,8 @@
  *
  *  A  "nggak berhenti di Graham": Graham big, then a line 1934 → 2026 with the names the VO says popping along it.
  *  B  six names, one at a time: the name grows on the line and a card above it gives the VO's own figures — the years, and
- *     the return against what it was compared with (Fairfax: book value per share, no comparison).
+ *     the return against what it was compared with (Fairfax: no comparison — its own letter compares with nothing, and
+ *     Simon 11 Nov dropped its "Book value per share" note; the empty row keeps every card's text in one place).
  *  C  "Mereka hidup di era berbeda": the card closes, Simon's first line over the timeline.
  *  D  "pahami bisnisnya, hitung… nilainya, bandingkan… harga": Orang Tuntun rises at the left (Simon 11 Nov), three steps
  *     joined by arrows beside him.
@@ -20,12 +21,12 @@ import { Timeline, type MasterName } from "../components/Timeline";
 
 const CX = theme.canvas.width / 2;
 
-type Stat = { at: string; name: MasterName; title: string; period: string; face?: "schloss" | "buffett"; logo?: LogoName; main: number; mainText: string; bench?: string; benchV?: number; benchText?: string; note?: string };
+type Stat = { at: string; name: MasterName; title: string; period: string; face?: "schloss" | "buffett"; logo?: LogoName; main: number; mainText: string; bench?: string; benchV?: number; benchText?: string };
 const STATS: Stat[] = [
   { at: "Walter Schloss", name: "Walter Schloss", title: "Walter Schloss", period: "45 tahun", face: "schloss", main: 15.3, mainText: "15,3%", bench: "S&P 500", benchV: 10, benchText: "10%" },
   { at: "Berkshire Hathaway", name: "Berkshire Hathaway", title: "Berkshire Hathaway", period: "61 tahun", face: "buffett", main: 19.7, mainText: "19,7%", bench: "S&P 500", benchV: 10.5, benchText: "10,5%" },
   { at: "Sequoia Fund", name: "Sequoia Fund", title: "Sequoia Fund", period: "55 tahun", logo: "sequoia", main: 13.5, mainText: "13,5%", bench: "S&P 500", benchV: 11.5, benchText: "11,5%" },
-  { at: "Fairfax Financial", name: "Fairfax Financial", title: "Fairfax Financial", period: "40 tahun", logo: "fairfax", main: 18.7, mainText: "18,7%", note: "Book value per share" },
+  { at: "Fairfax Financial", name: "Fairfax Financial", title: "Fairfax Financial", period: "40 tahun", logo: "fairfax", main: 18.7, mainText: "18,7%" },
   { at: "Nomad Investment", name: "Nomad", title: "Nomad Investment Partnership", period: "12 tahun", logo: "nomad", main: 20.8, mainText: "20,8%", bench: "MSCI World", benchV: 6.5, benchText: "6,5%" },
   { at: "Dan Fundsmith", name: "Fundsmith", title: "Fundsmith", period: "16 tahun", logo: "fundsmith", main: 13, mainText: "13%", bench: "MSCI World (GBP)", benchV: 12.4, benchText: "12,4%" },
 ];
@@ -103,7 +104,7 @@ export const SC03 = () => {
                 <div style={{ ...typeStyle("title"), fontSize: 50, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{st.title}</div>
                 <div style={{ ...typeStyle("label"), fontSize: 32, fontWeight: 500, color: c.slate, marginBottom: 14 }}>{st.period}</div>
                 <Bar label="Pertumbuhan per tahun" v={st.main} text={st.mainText} tone={c.indigo} p={bars} />
-                {st.bench ? <Bar label={st.bench} v={st.benchV as number} text={st.benchText as string} tone={theme.color.neutralDotOn} p={bars} /> : <div style={{ ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.slate, height: 48, display: "flex", alignItems: "center" }}>{st.note}</div>}
+                {st.bench ? <Bar label={st.bench} v={st.benchV as number} text={st.benchText as string} tone={theme.color.neutralDotOn} p={bars} /> : <div style={{ height: 48 }} />}
               </div>
             </div>
           </Card>

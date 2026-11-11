@@ -138,3 +138,43 @@ export const Mark = ({ kind, p, x, y, size = 56 }: { kind: "check" | "cross"; p:
     </div>
   );
 };
+
+/**
+ * The "Percaya diri" gauge of SC07 (Simon's reference: a half ring of six bands, red round to green, both ends round), the needle at
+ * `angle` (0 = on the red end, 180 = on the green end). Shared since 11 Nov 2026: VI01 SC04's sentiment card uses it.
+ */
+/** A half ring of six bands (degrees, 180 = the red end on the left, 0 = the green end). */
+export const GAUGE = { r: 170, band: 54, needle: 150, knob: 28 };
+const BANDS = [
+  { from: 180, to: 157, tone: theme.color.gaugeRed },
+  { from: 157, to: 124, tone: theme.color.gaugeOrange },
+  { from: 124, to: 90, tone: theme.color.gaugeAmber },
+  { from: 90, to: 56, tone: theme.color.gaugeYellow },
+  { from: 56, to: 23, tone: theme.color.gaugeLime },
+  { from: 23, to: 0, tone: theme.color.gaugeGreen },
+];
+export const Gauge = ({ angle }: { angle: number }) => {
+  const c = usePalette();
+  const R = GAUGE.r + GAUGE.band / 2;
+  const r = GAUGE.r - GAUGE.band / 2;
+  const w = 2 * (R + 10);
+  const h = R + GAUGE.band / 2 + 12;
+  const at = (rad: number, deg: number) => `${(rad * Math.cos((deg * Math.PI) / 180)).toFixed(2)} ${(-rad * Math.sin((deg * Math.PI) / 180)).toFixed(2)}`;
+  const band = (from: number, to: number) => `M ${at(R, from)} A ${R} ${R} 0 0 1 ${at(R, to)} L ${at(r, to)} A ${r} ${r} 0 0 0 ${at(r, from)} Z`;
+  return (
+    <svg width={w} height={h} viewBox={`${-w / 2} ${-R - 6} ${w} ${h}`} style={{ display: "block", overflow: "visible" }}>
+      {/* the two ends are round, as in the reference */}
+      <circle cx={-GAUGE.r} cy={0} r={GAUGE.band / 2} fill={BANDS[0].tone} />
+      <circle cx={GAUGE.r} cy={0} r={GAUGE.band / 2} fill={BANDS[BANDS.length - 1].tone} />
+      {BANDS.map((b) => (
+        <path key={b.from} d={band(b.from, b.to)} fill={b.tone} />
+      ))}
+      <g transform={`rotate(${angle.toFixed(2)})`}>
+        <path d={`M 0 -15 L ${-GAUGE.needle} -6 L ${-GAUGE.needle} 6 L 0 15 Z`} fill={theme.color.neutralIcon} />
+        <circle cx={-GAUGE.needle} cy={0} r={6} fill={theme.color.neutralIcon} />
+      </g>
+      <circle cx={0} cy={0} r={GAUGE.knob} fill={c.ink} />
+    </svg>
+  );
+};
+
