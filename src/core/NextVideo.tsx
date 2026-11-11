@@ -32,9 +32,10 @@ export const useNextClip = () => {
  * "Video selanjutnya" on `chipAt`, the next video's title on `titleAt` — frames of the scene. `light` is the VI
  * look (Benchmark v1, Simon 22 Oct 2026: neutral, the brand on hairlines, normal-weight type) at the same place, so
  * the VI endings read as one series too; the TA endings keep the default. `titleTone` recolours the title alone (IN07,
- * Simon 9 Nov: "ubah jadi indigo"); left out, every ending looks as it did.
+ * Simon 9 Nov: "ubah jadi indigo"); left out, every ending looks as it did. `chip` renames the chip where the VO
+ * points somewhere else than the next video (IN07's 11 Nov VO: "melanjutkan ke Module Value Investing").
  */
-export const NextVideoHead = ({ title, chipAt, titleAt, light = false, titleTone }: { title: string; chipAt: number; titleAt: number; light?: boolean; titleTone?: string }) => {
+export const NextVideoHead = ({ title, chipAt, titleAt, light = false, titleTone, chip: chipText = "Video selanjutnya" }: { title: string; chipAt: number; titleAt: number; light?: boolean; titleTone?: string; chip?: string }) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -51,7 +52,7 @@ export const NextVideoHead = ({ title, chipAt, titleAt, light = false, titleTone
     <>
       <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: NEXT_LAYOUT.chip.y, display: "flex", justifyContent: "center", opacity: chip, transform: `translateY(${((1 - chip) * 14).toFixed(2)}px)` }}>
         <div style={{ height: NEXT_LAYOUT.chip.h, padding: "0 28px", borderRadius: 999, display: "flex", alignItems: "center", fontFamily: theme.text.family, ...chipLook }}>
-          Video selanjutnya
+          {chipText}
         </div>
       </div>
       <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: NEXT_LAYOUT.titleY, textAlign: "center", fontFamily: theme.text.family, lineHeight: 1.1, ...titleLook, opacity: head, transform: `translateY(${((1 - head) * 18).toFixed(2)}px)` }}>

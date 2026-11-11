@@ -12,8 +12,9 @@
  *     under it, one highlight round them all, Beli and Jual under that; then Orang Tuntun and the script's line —
  *     "Itulah arti Invest with Guidance bersama Tuntun." since the 9 Nov VO (it replaced "Jadi sebelum menekan tombol
  *     berikutnya: lihat dulu. Baru putuskan.").
- *  E  "Di lesson berikutnya …": a camera cut into the next lesson, Value Investing (scenes/NextLesson.tsx; Simon 9 Nov:
- *     "buat ulang visual untuk script baru di scene 11").
+ *  E  "Kalau kalian ingin belajar lebih lanjut …": a camera cut into the next module, Value Investing
+ *     (scenes/NextLesson.tsx; Simon 9 Nov: "buat ulang visual untuk script baru di scene 11"; the 11 Nov VO replaced
+ *     "Di lesson berikutnya …" with it).
  */
 import React from "react";
 import { Img, staticFile, useCurrentFrame } from "remotion";
@@ -160,8 +161,8 @@ export const SC11 = () => {
   const withAt = W("bersama Tuntun.");
   const dOut = ease(f, jadiAt - m.sec(0.1), m.fade);
 
-  // E — the cut into the next lesson; the close leaves through it
-  const lessonCut = { at: W("Di lesson berikutnya"), axis: "x" as const, ...CUT };
+  // E — the cut into the next module; the close leaves through it
+  const lessonCut = { at: W("Kalau kalian ingin"), axis: "x" as const, ...CUT };
   const closeOut = f >= lessonCut.at - lessonCut.over / 2 ? cutOutStyle(f, lessonCut) : {};
 
   return (

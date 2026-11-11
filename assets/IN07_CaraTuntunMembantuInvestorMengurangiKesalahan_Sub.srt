@@ -667,21 +667,25 @@ Keputusan tetap ada di tanganmu.
 Itulah arti Invest with Guidance bersama Tuntun.
 
 168
-00:09:18,867 --> 00:09:21,967
-Di lesson berikutnya, kita akan mulai mempelajari pendekatan yang menjadi
+00:09:19,000 --> 00:09:20,767
+Kalau kalian ingin belajar lebih lanjut dan
 
 169
-00:09:21,967 --> 00:09:25,917
-fondasi pembelajaran investasi di Tuntun: Value Investing.
+00:09:20,767 --> 00:09:23,533
+memahami investasi dengan pendekatan yang lebih mendalam,
 
 170
-00:09:26,333 --> 00:09:30,167
-Kita akan belajar memahami bisnis, menilai harga yang layak dibayar,
+00:09:23,883 --> 00:09:26,450
+kalian bisa melanjutkan ke Module Value Investing.
 
 171
-00:09:30,517 --> 00:09:31,633
-menghadapi pergerakan market,
+00:09:26,950 --> 00:09:30,733
+Di sana, kita akan belajar memahami bisnis di balik sebuah saham,
 
 172
-00:09:31,717 --> 00:09:34,400
+00:09:30,983 --> 00:09:34,067
+menilai harga yang layak dibayar, menghadapi pergerakan market,
+
+173
+00:09:34,333 --> 00:09:37,200
 dan mengenali perusahaan yang benar-benar kita pahami.

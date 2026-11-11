@@ -875,9 +875,12 @@
    "match": "original 510.08-513.48"
   },
   {
-   "_": "9 Nov, revisi SC11: 'Di lesson berikutnya, kita akan mulai mempelajari pendekatan yang menjadi fondasi pembelajaran investasi di Tuntun: Value Investing. Kita akan belajar memahami bisnis, menilai harga yang layak dibayar, menghadapi pergerakan market, dan mengenali perusahaan yang benar-benar kita pahami.' — Tambahan_1 from 4.00 s (its own 'Itulah arti…' left out; the pause before 'Di' is its own, 0.54 s), its own pauses kept",
-   "src": "Revisi VO/Scene 11 Tambahan_1.mp3",
-   "from": 4.0,
+   "_": "11 Nov, revisi SC11: the pause after 'Itulah arti Invest with Guidance bersama Tuntun.' — about the 0.5 s it was before 'Di lesson berikutnya'",
+   "silence": 0.45
+  },
+  {
+   "_": "11 Nov, revisi SC11: 'Kalau kalian ingin belajar lebih lanjut dan memahami investasi dengan pendekatan yang lebih mendalam, kalian bisa melanjutkan ke Module Value Investing. Di sana, kita akan belajar memahami bisnis di balik sebuah saham, menilai harga yang layak dibayar, menghadapi pergerakan market, dan mengenali perusahaan yang benar-benar kita pahami.' — Scene 11_001, whole, its own pauses kept; replaces 9 Nov's 'Di lesson berikutnya…' (Tambahan_1 from 4.00 s)",
+   "src": "Revisi VO/Scene 11_001.mp3",
    "match": "original 510.08-513.48"
   },
   {

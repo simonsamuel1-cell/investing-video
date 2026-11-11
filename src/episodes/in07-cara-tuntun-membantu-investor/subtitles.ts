@@ -176,12 +176,13 @@ export const CUES: Cue[] = [
   { start: 33100, end: 33197, text: "Tuntun membantu memberi konteks." },
   { start: 33219, end: 33319, text: "Keputusan tetap ada di tanganmu." },
   { start: 33340, end: 33501, text: "Itulah arti Invest with Guidance bersama Tuntun." },
-  { start: 33532, end: 33718, text: "Di lesson berikutnya, kita akan mulai mempelajari pendekatan yang menjadi" },
-  { start: 33718, end: 33955, text: "fondasi pembelajaran investasi di Tuntun: Value Investing." },
-  { start: 33980, end: 34210, text: "Kita akan belajar memahami bisnis, menilai harga yang layak dibayar," },
-  { start: 34231, end: 34298, text: "menghadapi pergerakan market," },
-  { start: 34303, end: 34464, text: "dan mengenali perusahaan yang benar-benar kita pahami." },
+  { start: 33540, end: 33646, text: "Kalau kalian ingin belajar lebih lanjut dan" },
+  { start: 33646, end: 33812, text: "memahami investasi dengan pendekatan yang lebih mendalam," },
+  { start: 33833, end: 33987, text: "kalian bisa melanjutkan ke Module Value Investing." },
+  { start: 34017, end: 34244, text: "Di sana, kita akan belajar memahami bisnis di balik sebuah saham," },
+  { start: 34259, end: 34444, text: "menilai harga yang layak dibayar, menghadapi pergerakan market," },
+  { start: 34460, end: 34632, text: "dan mengenali perusahaan yang benar-benar kita pahami." },
 ];
 
 /** Last cue out — the floor for the Composition's durationInFrames. */
-export const VO_END = 34464;
+export const VO_END = 34632;
