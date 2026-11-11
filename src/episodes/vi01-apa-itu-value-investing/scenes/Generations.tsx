@@ -8,12 +8,12 @@
  *  C  "Mereka hidup di era berbeda": the card closes, Simon's first line over the timeline.
  *  D  "pahami bisnisnya, hitung… nilainya, bandingkan… harga": Orang Tuntun rises at the left (Simon 11 Nov), three steps
  *     joined by arrows beside him.
- *  E  "Value investing bukan metode dari satu orang": Simon's closing line.
+ *  E  "Value investing bukan metode dari satu orang": the Tuntun mascot over Simon's closing line.
  *
  * The figures are the script's, word for word (Simon: verify before final); the card prints nothing the VO doesn't say.
  */
 import { useCurrentFrame } from "remotion";
-import { theme, typeStyle, useMotion, usePalette } from "../../../core";
+import { TuntunMark, theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { Card, Glyph, Line, LogoTile, ORANG_TUNTUN_RIGHT, OrangTuntun, PhotoTile, ease, useWords, type LogoName } from "../components/kit";
 import { Timeline, type MasterName } from "../components/Timeline";
@@ -24,7 +24,7 @@ type Stat = { at: string; name: MasterName; title: string; period: string; face?
 const STATS: Stat[] = [
   { at: "Walter Schloss", name: "Walter Schloss", title: "Walter Schloss", period: "45 tahun", face: "schloss", main: 15.3, mainText: "15,3%", bench: "S&P 500", benchV: 10, benchText: "10%" },
   { at: "Berkshire Hathaway", name: "Berkshire Hathaway", title: "Berkshire Hathaway", period: "61 tahun", face: "buffett", main: 19.7, mainText: "19,7%", bench: "S&P 500", benchV: 10.5, benchText: "10,5%" },
-  { at: "Sequoia Fund", name: "Sequoia Fund", title: "Sequoia Fund", period: "55 tahun", logo: "sequoia", main: 13.5, mainText: "13,5%", bench: "Pembanding", benchV: 11.5, benchText: "11,5%" },
+  { at: "Sequoia Fund", name: "Sequoia Fund", title: "Sequoia Fund", period: "55 tahun", logo: "sequoia", main: 13.5, mainText: "13,5%", bench: "S&P 500", benchV: 11.5, benchText: "11,5%" },
   { at: "Fairfax Financial", name: "Fairfax Financial", title: "Fairfax Financial", period: "40 tahun", logo: "fairfax", main: 18.7, mainText: "18,7%", note: "Book value per share" },
   { at: "Nomad Investment", name: "Nomad", title: "Nomad Investment Partnership", period: "12 tahun", logo: "nomad", main: 20.8, mainText: "20,8%", bench: "MSCI World", benchV: 6.5, benchText: "6,5%" },
   { at: "Dan Fundsmith", name: "Fundsmith", title: "Fundsmith", period: "16 tahun", logo: "fundsmith", main: 13, mainText: "13%", bench: "MSCI World (GBP)", benchV: 12.4, benchText: "12,4%" },
@@ -39,6 +39,8 @@ const STEPS = [
   { icon: "scales", text: "Bandingkan harga", at: "bandingkan" },
 ] as const;
 // D — Orang Tuntun at the left (Simon 11 Nov: "di visual ini, kasih Orang Tuntun"), the three steps in the room right of him
+// E — the mascot, centred over the closing line
+const MASCOT = { y: 280, h: 170, float: 3, line: 570 };
 const STEP_ROW = { left: ORANG_TUNTUN_RIGHT + 40, right: theme.canvas.width - theme.margin.right };
 const STEP = { w: 316, h: 270, y: 345, gap: (STEP_ROW.right - STEP_ROW.left - 3 * 316) / 2, disc: 110, icon: 60, text: 30 };
 
@@ -149,10 +151,11 @@ export const SC03 = () => {
         );
       })}
 
-      {/* E */}
+      {/* E — the Tuntun mascot over Simon's closing line (Simon 11 Nov: "Tambahin maskot tuntun"), floating as in IN07 SC11 */}
       {closing > 0.001 ? (
         <div style={{ opacity: closing, transform: `translateY(${((1 - closing) * 16).toFixed(1)}px)` }}>
-          <Line x={CX - 750} y={500} w={1500} text="Value Investing adalah salah satu pendekatan utama investor profesional dunia." size={60} align="center" weight={500} mark="Value Investing" />
+          <TuntunMark x={CX} y={MASCOT.y + MASCOT.float * Math.sin((f / m.sec(1.6)) * Math.PI * 2)} height={MASCOT.h} />
+          <Line x={CX - 750} y={MASCOT.line} w={1500} text="Value Investing adalah salah satu pendekatan utama investor profesional dunia." size={60} align="center" weight={500} mark="Value Investing" />
         </div>
       ) : null}
     </>
