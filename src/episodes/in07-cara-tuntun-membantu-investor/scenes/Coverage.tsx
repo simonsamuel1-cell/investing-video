@@ -1,5 +1,5 @@
 /**
- * IN07 · SC04 — "… melalui fundamental research, industry research, dan kunjungan langsung ke perusahaan. Analisisnya
+ * IN07 · SC04 — "… melalui fundamental research, industry research, dan company research. Analisisnya
  * juga terus diperbarui mengikuti perkembangan terbaru." Simon, 9 Nov (it replaced the analyst-tiles block built from
  * docs/vi-style/storyboards/IN07-SC04-analis.png):
  *
@@ -21,7 +21,8 @@ import { UNDER_DOCK } from "./ResearchFiles";
 const WAYS = [
   { src: "sc04-cara-1-fundamental", title: "Fundamental research", at: "fundamental research" },
   { src: "sc04-cara-2-industry", title: "Industry research", at: "industry research" },
-  { src: "sc04-cara-3-kunjungan", title: "Kunjungan langsung\nke perusahaan", at: "kunjungan langsung" },
+  // "Company research" (Simon 11 Nov 2026), on screen and in the VO — it was "kunjungan langsung ke perusahaan"
+  { src: "sc04-cara-3-kunjungan", title: "Company research", at: "company research" },
 ] as const;
 
 /** The diagram: three circles in a row, centred, under the analyst row; each comes in `big` across, in the middle. */

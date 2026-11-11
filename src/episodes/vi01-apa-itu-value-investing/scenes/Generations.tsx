@@ -2,46 +2,51 @@
  * VI01 · SC03 — "Dari Satu Investor Menjadi Banyak Generasi", from Simon's VISUAL / TEKS LAYAR notes and the ChatGPT
  * storyboard docs/vi-style/storyboards/VI01-SC03.png.
  *
- *  A  "nggak berhenti di Graham": Graham at the start of a line 1934 → 2026; his whole master list pops along it.
+ *  A  "nggak berhenti di Graham": Graham big, then a line 1934 → 2026 with the names the VO says popping along it.
  *  B  six names, one at a time: the name grows on the line and a card above it gives the VO's own figures — the years, and
  *     the return against what it was compared with (Fairfax: book value per share, no comparison).
  *  C  "Mereka hidup di era berbeda": the card closes, Simon's first line over the timeline.
- *  D  "pahami bisnisnya, hitung… nilainya, bandingkan… harga": three steps joined by arrows.
+ *  D  "pahami bisnisnya, hitung… nilainya, bandingkan… harga": Orang Tuntun rises at the left (Simon 11 Nov), three steps
+ *     joined by arrows beside him.
  *  E  "Value investing bukan metode dari satu orang": Simon's closing line.
  *
  * The figures are the script's, word for word (Simon: verify before final); the card prints nothing the VO doesn't say.
  */
-import { Img, staticFile, useCurrentFrame } from "remotion";
+import { useCurrentFrame } from "remotion";
 import { theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { ART, Card, Glyph, Line, PhotoTile, ease, useWords } from "../components/kit";
+import { Card, Glyph, Line, LogoTile, ORANG_TUNTUN_RIGHT, OrangTuntun, PhotoTile, ease, useWords, type LogoName } from "../components/kit";
 import { Timeline, type MasterName } from "../components/Timeline";
 
 const CX = theme.canvas.width / 2;
 
-type Stat = { at: string; name: MasterName; title: string; period: string; face?: "schloss" | "buffett"; main: number; mainText: string; bench?: string; benchV?: number; benchText?: string; note?: string };
+type Stat = { at: string; name: MasterName; title: string; period: string; face?: "schloss" | "buffett"; logo?: LogoName; main: number; mainText: string; bench?: string; benchV?: number; benchText?: string; note?: string };
 const STATS: Stat[] = [
   { at: "Walter Schloss", name: "Walter Schloss", title: "Walter Schloss", period: "45 tahun", face: "schloss", main: 15.3, mainText: "15,3%", bench: "S&P 500", benchV: 10, benchText: "10%" },
-  { at: "Berkshire Hathaway", name: "Berkshire Hathaway", title: "Berkshire Hathaway", period: "1965–2025 · 61 tahun", face: "buffett", main: 19.7, mainText: "19,7%", bench: "S&P 500", benchV: 10.5, benchText: "10,5%" },
-  { at: "Sequoia Fund", name: "Sequoia Fund", title: "Sequoia Fund", period: "55 tahun", main: 13.5, mainText: "13,5%", bench: "Pembanding", benchV: 11.5, benchText: "11,5%" },
-  { at: "Fairfax Financial", name: "Fairfax Financial", title: "Fairfax Financial", period: "40 tahun", main: 18.7, mainText: "18,7%", note: "Book value per share" },
-  { at: "Nomad Investment", name: "Nomad", title: "Nomad Investment Partnership", period: "12 tahun", main: 20.8, mainText: "20,8%", bench: "MSCI World", benchV: 6.5, benchText: "6,5%" },
-  { at: "Dan Fundsmith", name: "Fundsmith", title: "Fundsmith", period: "2010 – Sep 2026", main: 13, mainText: "13%", bench: "MSCI World (GBP)", benchV: 12.4, benchText: "12,4%" },
+  { at: "Berkshire Hathaway", name: "Berkshire Hathaway", title: "Berkshire Hathaway", period: "61 tahun", face: "buffett", main: 19.7, mainText: "19,7%", bench: "S&P 500", benchV: 10.5, benchText: "10,5%" },
+  { at: "Sequoia Fund", name: "Sequoia Fund", title: "Sequoia Fund", period: "55 tahun", logo: "sequoia", main: 13.5, mainText: "13,5%", bench: "Pembanding", benchV: 11.5, benchText: "11,5%" },
+  { at: "Fairfax Financial", name: "Fairfax Financial", title: "Fairfax Financial", period: "40 tahun", logo: "fairfax", main: 18.7, mainText: "18,7%", note: "Book value per share" },
+  { at: "Nomad Investment", name: "Nomad", title: "Nomad Investment Partnership", period: "12 tahun", logo: "nomad", main: 20.8, mainText: "20,8%", bench: "MSCI World", benchV: 6.5, benchText: "6,5%" },
+  { at: "Dan Fundsmith", name: "Fundsmith", title: "Fundsmith", period: "16 tahun", logo: "fundsmith", main: 13, mainText: "13%", bench: "MSCI World (GBP)", benchV: 12.4, benchText: "12,4%" },
 ];
-// wide enough for the face, the 260 px label, the bar and the figure (Simon 10 Nov: the figures ran out of the card)
-const CARD = { x: CX - 600, y: 120, w: 1200, h: 380, face: 220, barMax: 21, barW: 380, barH: 30, label: 260, figure: 120 };
+// wide enough for the face, the 320 px label ("Pertumbuhan per tahun", Simon 11 Nov), the bar and the figure (Simon 10 Nov:
+// the figures ran out of the card). Every card says its length in years only (Simon 11 Nov: "range waktunya ga usah");
+// Fundsmith's "2010 sampai September 2026" is about 16.
+const CARD = { x: CX - 600, y: 120, w: 1200, h: 380, face: 220, barMax: 21, barW: 320, barH: 30, label: 320, figure: 120 };
 const STEPS = [
   { icon: "magnifying-glass", text: "Pahami bisnis", at: "pahami" },
   { icon: "coins", text: "Hitung nilai", at: "hitung" },
   { icon: "scales", text: "Bandingkan harga", at: "bandingkan" },
 ] as const;
-const STEP = { w: 400, h: 300, gap: 120, y: 330 };
+// D — Orang Tuntun at the left (Simon 11 Nov: "di visual ini, kasih Orang Tuntun"), the three steps in the room right of him
+const STEP_ROW = { left: ORANG_TUNTUN_RIGHT + 40, right: theme.canvas.width - theme.margin.right };
+const STEP = { w: 316, h: 270, y: 345, gap: (STEP_ROW.right - STEP_ROW.left - 3 * 316) / 2, disc: 110, icon: 60, text: 30 };
 
 const Bar = ({ label, v, text, tone, p }: { label: string; v: number; text: string; tone: string; p: number }) => {
   const c = usePalette();
   return (
     <div style={{ display: "flex", alignItems: "center", gap: 24, height: 48 }}>
-      <div style={{ width: CARD.label, flex: "none", ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>{label}</div>
+      <div style={{ width: CARD.label, flex: "none", ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: tone === theme.color.neutralDotOn ? c.slate : c.indigo, whiteSpace: "nowrap" }}>{label}</div>
       <div style={{ position: "relative", width: CARD.barW, flex: "none", height: CARD.barH, borderRadius: CARD.barH / 2, background: theme.color.neutralDisc }}>
         <div style={{ position: "absolute", left: 0, top: 0, height: CARD.barH, width: (CARD.barW * v * p) / CARD.barMax, borderRadius: CARD.barH / 2, background: tone }} />
       </div>
@@ -58,7 +63,6 @@ export const SC03 = () => {
 
   const bigGraham = ease(f, 0, m.reveal) * (1 - ease(f, W("Dari satu") - m.move, m.move));
   const grow = ease(f, W("Dari satu"), W("puluhan tahun") - W("Dari satu"));
-  const smallGraham = ease(f, W("Dari satu"), m.move);
   const era = ease(f, W("Mereka hidup"), m.reveal);
   const tlOut = ease(f, W("pahami") - m.move, m.move);
   const steps = STEPS.map((s) => ease(f, W(s.at), m.reveal));
@@ -75,19 +79,19 @@ export const SC03 = () => {
 
   return (
     <>
-      {/* A: Graham, big, then at the start of the line */}
+      {/* A: Graham, big, until the line starts (Simon 11 Nov: no small Graham on the line) */}
       {bigGraham > 0.001 ? <PhotoTile name="graham" d={400} style={{ left: CX - 200, top: 220, opacity: bigGraham }} /> : null}
-      <Timeline grow={grow} lit={st?.name} litP={cardP} opacity={1 - tlOut} graham={smallGraham} />
+      <Timeline grow={grow} lit={st?.name} litP={cardP} opacity={1 - tlOut} />
 
       {/* B: the card */}
       {st && cardShow > 0.001 ? (
         <div style={{ position: "absolute", left: CARD.x, top: CARD.y, width: CARD.w, height: CARD.h, opacity: cardShow }}>
           <Card x={0} y={0} w={CARD.w} h={CARD.h}>
             <div key={st.name} style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", gap: 48, padding: "0 56px", opacity: cardP }}>
-              {st.face === "buffett" ? (
-                <PhotoTile name="buffett" d={CARD.face} style={{ position: "relative" }} />
-              ) : st.face ? (
-                <Img src={staticFile(`art/vi01/${st.face}.png`)} style={{ width: CARD.face, height: (CARD.face * ART[st.face].h) / ART[st.face].w, flex: "none" }} />
+              {st.face ? (
+                <PhotoTile name={st.face} d={CARD.face} style={{ position: "relative" }} />
+              ) : st.logo ? (
+                <LogoTile name={st.logo} d={CARD.face} style={{ position: "relative" }} />
               ) : (
                 <div style={{ width: CARD.face, height: CARD.face, borderRadius: 40, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
                   <Glyph icon="bank" size={110} tone={theme.color.neutralIcon} />
@@ -96,7 +100,7 @@ export const SC03 = () => {
               <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
                 <div style={{ ...typeStyle("title"), fontSize: 50, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{st.title}</div>
                 <div style={{ ...typeStyle("label"), fontSize: 32, fontWeight: 500, color: c.slate, marginBottom: 14 }}>{st.period}</div>
-                <Bar label="Per tahun" v={st.main} text={st.mainText} tone={c.indigo} p={bars} />
+                <Bar label="Pertumbuhan per tahun" v={st.main} text={st.mainText} tone={c.indigo} p={bars} />
                 {st.bench ? <Bar label={st.bench} v={st.benchV as number} text={st.benchText as string} tone={theme.color.neutralDotOn} p={bars} /> : <div style={{ ...typeStyle("label"), fontSize: 28, fontWeight: 500, color: c.slate, height: 48, display: "flex", alignItems: "center" }}>{st.note}</div>}
               </div>
             </div>
@@ -111,20 +115,25 @@ export const SC03 = () => {
         </div>
       ) : null}
 
-      {/* D: three steps */}
+      {/* D: Orang Tuntun, and the three steps beside him */}
+      {f >= W(STEPS[0].at) - 1 && stepsOut < 0.999 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: 1 - stepsOut }}>
+          <OrangTuntun at={W(STEPS[0].at)} />
+        </div>
+      ) : null}
       {STEPS.map((s, i) => {
         const p = steps[i] * (1 - stepsOut);
         if (p <= 0.001) return null;
-        const x = CX - (3 * STEP.w + 2 * STEP.gap) / 2 + i * (STEP.w + STEP.gap);
+        const x = STEP_ROW.left + i * (STEP.w + STEP.gap);
         return (
           <div key={s.text}>
             <div style={{ position: "absolute", left: x, top: STEP.y, width: STEP.w, height: STEP.h, opacity: p, transform: `translateY(${((1 - p) * 20).toFixed(1)}px)` }}>
               <Card x={0} y={0} w={STEP.w} h={STEP.h}>
-                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 30 }}>
-                  <div style={{ width: 130, height: 130, borderRadius: 999, background: theme.color.indigoWashSolid, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Glyph icon={s.icon} size={70} tone={c.indigo} />
+                <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 26 }}>
+                  <div style={{ width: STEP.disc, height: STEP.disc, borderRadius: 999, background: theme.color.indigoWashSolid, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <Glyph icon={s.icon} size={STEP.icon} tone={c.indigo} />
                   </div>
-                  <div style={{ ...typeStyle("label"), fontSize: 42, fontWeight: 600, color: c.ink }}>{s.text}</div>
+                  <div style={{ ...typeStyle("label"), fontSize: STEP.text, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{s.text}</div>
                 </div>
               </Card>
             </div>

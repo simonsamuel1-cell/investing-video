@@ -1,6 +1,6 @@
 {
  "_": "IN07's VO = the original take (INV07/VI07_VO.mp3) with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
- "base": "/Users/samuelsurja/Documents/01 Academy/INV07",
+ "base": "/Users/samuelsurja/Documents/01 Academy/INV07 - Cara Tuntun Membantu Investor Mengurangi Kesalahan",
  "source": "VI07_VO.mp3",
  "out": "public/vo/in07-cara-tuntun-membantu-investor.mp3",
  "pieces": [
@@ -274,13 +274,19 @@
    "silence": 0.25
   },
   {
-   "_": "9 Nov, SC04 tambahan (new line): 'Setiap perusahaan dipantau oleh analis khusus melalui fundamental research, industry research, dan kunjungan langsung ke perusahaan. Analisisnya juga terus diperbarui mengikuti perkembangan terbaru.' — from 0.27 s: its first 0.41 s is room tone, trimmed so the seam is 0.55 s like the others; level matched to the 'Tim riset' line it follows",
-   "src": "Revisi VO/Scene 04 tambahan_2.mp3",
-   "from": 0.27,
+   "_": "11 Nov, revisi SC04 (Simon: \"Harusnya bukan 'Kunjungan…' tapi 'Company Research'\"): 'Setiap perusahaan dipantau oleh analis khusus melalui fundamental research, industry research, dan company research.' — Scene 4_New to 6.48 s (speech 0.14-6.40), level matched as the line it replaces",
+   "src": "Revisi VO/Scene 4_New.mp3",
+   "to": 6.48,
    "match": "original 169.45-178.50"
   },
   {
-   "_": "9 Nov, SC04: +14.7f after 'mengikuti perkembangan terbaru.' — 0.24463 s so the whole SC04 addition is exactly 1574 frames: every word after it moves by a whole number of frames",
+   "_": "9 Nov, SC04 tambahan: '… Analisisnya juga terus diperbarui mengikuti perkembangan terbaru.' — the rest of tambahan_2, from 7.40 s inside its 7.32-7.84 s pause, so the pause between the two sentences stays 0.52 s",
+   "src": "Revisi VO/Scene 04 tambahan_2.mp3",
+   "from": 7.4,
+   "match": "original 169.45-178.50"
+  },
+  {
+   "_": "9 Nov, SC04: +14.7f after 'mengikuti perkembangan terbaru.' — 0.24463 s so the whole SC04 addition is exactly 1574 frames: every word after it moves by a whole number of frames; 11 Nov: 0.24463 s after the Company research revision, so SC04 still moves every later word by a whole number of frames",
    "silence": 0.24463
   },
   {

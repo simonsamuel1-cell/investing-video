@@ -1,11 +1,11 @@
 /**
- * The master timeline, 1934 → 2026 (Simon's VISUAL for SC03, replayed in SC08): Graham's photo at 1934, then only the six
+ * The master timeline, 1934 → 2026 (Simon's VISUAL for SC03, replayed in SC08): no photo at 1934 (Simon 11 Nov: "B.G.
+ * remove aja"), then only the six
  * names the VO says (Simon 10 Nov: "yang di sebut di script aja"), in its order, evenly spaced on one row under the line — a
  * sequence, not a scale, so no name is pinned to a year it may not own. The line grows from the left; each name pops as the
  * line reaches it; a name the VO is on grows a little and turns indigo.
  */
 import { theme, typeStyle, usePalette, useShadow } from "../../../core";
-import { ART, PhotoTile } from "./kit";
 
 export const MASTER = [
   "Walter Schloss",
@@ -17,13 +17,13 @@ export const MASTER = [
 ] as const;
 export type MasterName = (typeof MASTER)[number];
 
-/** Graham sits at x0 (1934); the names follow evenly, the last one half a step short of the arrow. `row` is how far under
+/** The line starts at x0 (1934); the names follow evenly, the last one half a step short of the arrow. `row` is how far under
  *  the line the names hang. */
 export const AXIS = { x0: 200, x1: 1720, y: 700, row: 64 };
 export const nodeX = (i: number) => AXIS.x0 + ((i + 1) / (MASTER.length + 0.5)) * (AXIS.x1 - AXIS.x0);
 
 /** `grow` 0..1 draws the line and its names; `lit` is the name the VO is on and how far it has grown (0..1). */
-export const Timeline = ({ grow, lit, litP = 0, opacity = 1, graham = 1 }: { grow: number; lit?: MasterName; litP?: number; opacity?: number; graham?: number }) => {
+export const Timeline = ({ grow, lit, litP = 0, opacity = 1 }: { grow: number; lit?: MasterName; litP?: number; opacity?: number }) => {
   const c = usePalette();
   const shadow = useShadow();
   if (grow <= 0.001 || opacity <= 0.001) return null;
@@ -54,7 +54,6 @@ export const Timeline = ({ grow, lit, litP = 0, opacity = 1, graham = 1 }: { gro
           </div>
         );
       })}
-      {graham > 0.001 ? <PhotoTile name="graham" d={150} style={{ left: AXIS.x0 - 75, top: AXIS.y - 104 - 150 * (ART.graham.h / ART.graham.w), opacity: graham }} /> : null}
-    </div>
+          </div>
   );
 };

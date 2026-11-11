@@ -25,6 +25,42 @@
   {
    "src": "ORIGINAL",
    "from": 58.48,
+   "to": 111.2
+  },
+  {
+   "_": "11 Nov, revisi SC03: 'Walter Schloss menjalankannya selama 45 tahun, dengan annualized return sekitar 15,3%, dibanding sekitar 10% untuk S&P 500.'",
+   "src": "Scene 03_1.mp3",
+   "to": 10.18,
+   "match": "original 111.36-120.53"
+  },
+  {
+   "silence": 0.19
+  },
+  {
+   "_": "11 Nov, revisi SC03: 'Berkshire Hathaway,' — the name from Scene 03_3 (Simon: \"Scene 03_3 adalah perbaikan pengucapan nama untuk Scene 03_2\"), whole clip (speech 0.10-1.93 s)",
+   "src": "Scene 03_3.mp3",
+   "match": "original 120.92-133.93"
+  },
+  {
+   "_": "11 Nov, revisi SC03: '… dari 1965 sampai 2025, sekitar 61 tahun, mencatat sekitar 19,7% per tahun, dibanding sekitar 10,5% untuk S&P 500.' — Scene 03_2 after its own mispronounced name: from 1.10 s, inside its 1.04-1.48 s pause, so the pause after the name stays 0.44 s",
+   "src": "Scene 03_2.mp3",
+   "from": 1.1,
+   "to": 14.13,
+   "match": "original 120.92-133.93"
+  },
+  {
+   "silence": 0.07639,
+   "_": "11 Nov: the pause before 'Sequoia Fund' as vo-replace measured it (0.07 s), plus 0.00639 s so SC03's revision moves every later word by exactly 116 frames"
+  },
+  {
+   "_": "11 Nov, revisi SC03: 'Sequoia Fund berjalan sekitar 55 tahun, dengan sekitar 13,5%, dibanding sekitar 11,5%.'",
+   "src": "Scene 03_4.mp3",
+   "to": 7.6,
+   "match": "original 133.62-142.26"
+  },
+  {
+   "src": "ORIGINAL",
+   "from": 142.34,
    "to": 560.66
   }
  ]

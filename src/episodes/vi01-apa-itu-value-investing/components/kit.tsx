@@ -9,7 +9,7 @@ import { Img, interpolateColors, staticFile } from "remotion";
 import { theme, typeStyle, usePalette, useShadow } from "../../../core";
 import { w } from "../data/timing";
 
-export { Appear, Card, Line, OUTSIDE_RESERVES, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
+export { Appear, Card, Line, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
 
 /** A scene's word clock: the frame a phrase starts on, scene-local. */
 export const useWords = (scene: number, block: number) => (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") => w(scene, phrase, nth, edge) - block;
@@ -184,13 +184,15 @@ export const Column = ({ w, h, tone }: { w: number; h: number; tone: string }) =
 };
 
 /**
- * Graham and Buffett as their real photos (Simon 10 Nov: "ganti ilustrasi B.G. dan W.B. jadi yang gambar real"), cropped to
+ * Graham, Buffett and Schloss as their real photos (Simon 10–11 Nov: "ganti ilustrasi B.G. dan W.B. jadi yang gambar real"), cropped to
  * head and shoulders in a white rounded tile the shape of the drawn faces, both heads the same size in the same place.
  * Graham: his photo used as-is; Buffett: his colour photo, recreated by ChatGPT with the head whole, never made monochrome.
  */
 const PHOTOS = {
   graham: { src: "art/vi01/graham-overcoat.png", w: 1165, h: 1350, head: { cx: 525, top: 20, w: 350 } },
   buffett: { src: "art/vi01/buffett-photo.png", w: 1345, h: 1169, head: { cx: 665, top: 51, w: 540 } },
+  /** Walter Schloss: Simon's photo (11 Nov), recreated by ChatGPT the same way — head whole, colour as is, transparent. */
+  schloss: { src: "art/vi01/schloss-photo.png", w: 1345, h: 1169, head: { cx: 625, top: 56, w: 490 } },
 } as const;
 
 export const PhotoTile = ({ name, d, style }: { name: keyof typeof PHOTOS; d: number; style?: React.CSSProperties }) => {
@@ -202,6 +204,33 @@ export const PhotoTile = ({ name, d, style }: { name: keyof typeof PHOTOS; d: nu
   return (
     <div style={{ position: "absolute", width: d, height: h, borderRadius: d * 0.13, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", flex: "none", ...style }}>
       <Pic src={staticFile(ph.src)} style={{ position: "absolute", left: d / 2 - ph.head.cx * k, top: h * 0.1 - ph.head.top * k, width: ph.w * k, height: ph.h * k }} />
+    </div>
+  );
+};
+
+/**
+ * The funds' own logos (Simon 11 Nov: Sequoia Fund, Fairfax Financial, Nomad Investment Partnership, Fundsmith), each cleaned
+ * to its one colour on transparent (scripts: the flat logo's lightness becomes its alpha), in the same white tile as the
+ * photos so every card's left slot reads alike.
+ */
+const LOGOS = {
+  sequoia: { src: "art/vi01/logo-sequoia.png", w: 1600, h: 614 },
+  fairfax: { src: "art/vi01/logo-fairfax.png", w: 658, h: 240 },
+  nomad: { src: "art/vi01/logo-nomad.png", w: 1501, h: 349 },
+  fundsmith: { src: "art/vi01/logo-fundsmith.png", w: 1502, h: 532 },
+} as const;
+export type LogoName = keyof typeof LOGOS;
+
+export const LogoTile = ({ name, d, style }: { name: LogoName; d: number; style?: React.CSSProperties }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const lg = LOGOS[name];
+  const h = (d * ART.graham.h) / ART.graham.w;
+  const pad = d * 0.09;
+  const k = Math.min((d - 2 * pad) / lg.w, (h - 2 * pad) / lg.h);
+  return (
+    <div style={{ position: "absolute", width: d, height: h, borderRadius: d * 0.13, background: c.cardBg, boxShadow: shadow.soft, flex: "none", ...style }}>
+      <Pic src={staticFile(lg.src)} style={{ position: "absolute", left: (d - lg.w * k) / 2, top: (h - lg.h * k) / 2, width: lg.w * k, height: lg.h * k }} />
     </div>
   );
 };
