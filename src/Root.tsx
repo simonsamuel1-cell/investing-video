@@ -126,8 +126,8 @@ export const RemotionRoot: React.FC = () => {
       {/* VIDEO 22 — Common Mistakes in Technical Analysis. 60fps; every frame
           number comes from the corrected SRT via
           docs/Video22_TA_Mistakes_Script_SYNCED.md. The tail past 16620 is the
-          closing card held for three seconds. Since 20 Oct 2026 the closing card fades out
-          into CTA.mp4 (FullVideo.tsx); no intro, so the frame numbers are unchanged. */}
+          closing card held for three seconds. Since 12 Nov 2026 the full video: Intro + episode
+          + CTA.mp4 + Outro + BGM (FullVideo.tsx), so a Studio frame is the episode's frame + 240. */}
       <Composition
         id="TA11-TAMistakes"
         component={TAMistakesFull}
