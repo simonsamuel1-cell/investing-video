@@ -7,9 +7,13 @@ import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCu
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
-import { SC01 } from "./scenes/BehindTheCode";
-import { SC02 } from "./scenes/Owner";
-import { SC03 } from "./scenes/IbuSariBusiness";
+import { SC01 as SC01_OLD } from "./scenes/BehindTheCode";
+import { SC02 as SC02_OLD } from "./scenes/Owner";
+import { SC03 as SC03_OLD } from "./scenes/IbuSariBusiness";
+import { SC01 as SC01_VI01 } from "./scenes/CodeAndBusiness";
+import { SC02 as SC02_VI01 } from "./scenes/PillarOwner";
+import { SC03 as SC03_VI01 } from "./scenes/IbuSariLedger";
+import { VI01_LOOK } from "./data/switches";
 import { SC04 } from "./scenes/PerShare";
 import { SC05 } from "./scenes/Rumours";
 import { SC06 } from "./scenes/VoteOrWeigh";
@@ -20,6 +24,10 @@ import { SC08 } from "./scenes/FromWhyToPrice";
 const VISUALS: boolean = true;
 
 /** The scenes built so far. */
+/** SC01–SC03 in VI01's look (12 Nov) or the 6 Nov scenes, by VI01_LOOK. */
+const SC01 = VI01_LOOK ? SC01_VI01 : SC01_OLD;
+const SC02 = VI01_LOOK ? SC02_VI01 : SC02_OLD;
+const SC03 = VI01_LOOK ? SC03_VI01 : SC03_OLD;
 const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08 };
 
 export const VI02_FRAMES = BLOCK.END;

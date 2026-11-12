@@ -10,12 +10,17 @@
  *     green on its words, each point's screen joining the row, cropped of the status bar, the BBCA header and the Buy row.
  *  E  "Tapi setelah memahami": two UI cards: High Quality Company ✓ with its three checks, Value ? with a gauge; his line split under them.
  *  F  "Jadi di video selanjutnya": the next player, Next Video.
+ *
+ *  12 Nov 2026: Simon re-recorded SC08 (Scene 08_1, new script). A–D are the 5 Nov picture laid on the nearest new words
+ *  (A on "Tiga hal yang perlu diingat", B on "kode saham, pabrik, pelanggan, laba", C on "Rumor nggak berguna …", D's pills
+ *  on "Revenue Composition" / "Profit Chart" / "Deep Research"); the investors' returns and the four-questions mapping have
+ *  no picture of their own yet.
  */
 import type React from "react";
 import { Img, interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Glyph, GrowArrow, Ico, Line, Mark, WordPill, ease, useWords } from "../components/kit";
+import { Appear, AvatarFace, BoardGrid, Card, Disc, Glyph, GrowArrow, Ico, Line, Mark, WordPill, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -36,8 +41,8 @@ const APP = { headX: theme.margin.left, mascot: 84, mascotGap: 22, bob: 3, bobFo
 const APP_H = theme.captionBand.top - 12 - APP.top;
 const APP_W = APP_H * APP.ratio;
 const SCREENS = [
-  { text: "Revenue Breakdown", src: "art/vi02/app/sc08-revenue-breakdown.jpg", at: "Revenue Breakdown" },
-  { text: "Perkembangan Laba", src: "art/vi02/app/sc08-perkembangan-laba.jpg", at: "lihat perkembangan" },
+  { text: "Revenue Composition", src: "art/vi02/app/sc08-revenue-breakdown.jpg", at: "Revenue Composition" },
+  { text: "Profit Chart", src: "art/vi02/app/sc08-perkembangan-laba.jpg", at: "Profit Chart" },
   { text: "Deep Research", src: "art/vi02/app/sc08-deep-research.jpg", at: "Deep Research" },
 ];
 
@@ -80,22 +85,22 @@ export const SC08 = () => {
   const appAt = W("Di Tuntun");
   const twoAt = W("Tapi setelah");
   const nextAt = W("Jadi di");
-  const stepUp = ease(f, W("Semakin kita") - m.sec(0.2), m.move);
-  const knowAt = W("memahami bisnisnya");
-  const know = ease(f, knowAt, W("semakin kecil") - knowAt);
-  const shrinkAt = W("semakin kecil");
-  const noise = ease(f, shrinkAt, W("pergerakan harga", 0, "f1") - shrinkAt);
+  const stepUp = ease(f, W("Rumor") - m.sec(0.2), m.move);
+  const knowAt = W("memahami buku");
+  const know = ease(f, knowAt, W("buku bisnisnya", 0, "f1") - knowAt);
+  const shrinkAt = W("nggak berguna");
+  const noise = ease(f, shrinkAt, knowAt - shrinkAt);
 
   const LESSONS = [
-    { tag: "Video sebelumnya", icon: "factory", word: "Mulai dari bisnis", at: -m.reveal, wordAt: W("dimulai dari"), watched: 1 },
-    { tag: "Video ini", icon: "user", word: "Memiliki sebagian perusahaan", at: W("Di video", 1), wordAt: W("memiliki sebagian"), watched: ease(f, W("Di video", 1), chainAt - W("Di video", 1)) * 0.85 },
+    { tag: "Video sebelumnya", icon: "factory", word: "Mulai dari bisnis", at: -m.reveal, wordAt: W("Tiga hal"), watched: 1 },
+    { tag: "Video ini", icon: "user", word: "Memiliki sebagian perusahaan", at: W("perlu diingat"), wordAt: W("perlu diingat"), watched: ease(f, W("perlu diingat"), chainAt - W("perlu diingat")) * 0.85 },
   ];
   const LINKS = [
-    { label: "CODE", icon: "tag", at: W("satu kode") },
-    { label: "BUSINESS", icon: "factory", at: W("produk") },
-    { label: "REVENUE", icon: "coins", at: W("pendapatan") },
+    { label: "CODE", icon: "tag", at: W("kode saham") },
+    { label: "BUSINESS", icon: "factory", at: W("pabrik") },
+    { label: "REVENUE", icon: "coins", at: W("pelanggan") },
     { label: "PROFIT", icon: "chart-line-up", at: W("laba") },
-    { label: "SHAREHOLDER", icon: "user", at: W("pemegang saham") },
+    { label: "SHAREHOLDER", icon: "user", at: W("laba", 0, "f1") },
   ];
   const expensive = ease(f, W("terlalu mahal"), m.move);
 
@@ -111,14 +116,14 @@ export const SC08 = () => {
           <Player x={playerX(i)} y={PLAYER.y} w={PLAYER.w} h={PLAYER.h} thumb={PLAYER.thumb} progress={l.watched}>
             {f < l.wordAt ? <Disc icon="play" size={PLAYER.play} tone={theme.color.neutralIcon} tint={c.cardBg} /> : null}
             <div style={{ position: "absolute", left: (PLAYER.w - 2 * PLAYER.pad - PLAYER.word) / 2, top: (PLAYER.thumb - PLAYER.wordH) / 2 + (1 - ease(f, l.wordAt, m.reveal)) * 14, width: PLAYER.word, height: PLAYER.wordH, borderRadius: 18, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", gap: 16, padding: "0 20px", boxSizing: "border-box", opacity: ease(f, l.wordAt, m.reveal) }}>
-              <Glyph icon={l.icon} size={40} tone={c.indigo} />
+              {l.icon === "user" ? <AvatarFace size={44} /> : <Glyph icon={l.icon} size={40} tone={c.indigo} />}
               <div style={{ ...typeStyle("title"), fontSize: PLAYER.wordSize - (i ? 6 : 0), fontWeight: 500, lineHeight: 1.2, color: c.ink, whiteSpace: "nowrap" }}>{l.word}</div>
             </div>
           </Player>
         </Appear>
       ))}
-      <Appear at={W("Di video", 1)} out={chainAt - m.sec(0.3)} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-        <GrowArrow x0={playerX(0) + PLAYER.w + 14} y0={PLAYER.y + PLAYER.h / 2} x1={playerX(1) - 14} y1={PLAYER.y + PLAYER.h / 2} p={ease(f, W("Di video", 1), m.sec(0.4))} />
+      <Appear at={W("perlu diingat")} out={chainAt - m.sec(0.3)} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+        <GrowArrow x0={playerX(0) + PLAYER.w + 14} y0={PLAYER.y + PLAYER.h / 2} x1={playerX(1) - 14} y1={PLAYER.y + PLAYER.h / 2} p={ease(f, W("perlu diingat"), m.sec(0.4))} />
       </Appear>
 
       {/* B — the chain */}
@@ -133,23 +138,21 @@ export const SC08 = () => {
             return (
               <Card key={l.label} x={chainX(i)} y={CHAIN.y - CHAIN.h / 2 + (1 - inP) * 12} w={CHAIN.w} h={CHAIN.h} line={on > 0.5 ? theme.color.connector : undefined} style={{ opacity: inP, display: "flex", alignItems: "center", gap: 16, padding: "0 20px", boxShadow: `${shadow.soft}, 0 0 ${(40 * on).toFixed(1)}px ${(8 * on).toFixed(1)}px ${theme.color.indigoGlow}` }}>
                 <div style={{ width: CHAIN.disc, height: CHAIN.disc, flex: "none", borderRadius: 999, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <Glyph icon={l.icon} size={CHAIN.disc * 0.56} tone={tone} />
+                  {l.icon === "user" ? <AvatarFace size={CHAIN.disc * 0.92} /> : <Glyph icon={l.icon} size={CHAIN.disc * 0.56} tone={tone} />}
                 </div>
                 <div style={{ ...typeStyle("title"), fontSize: CHAIN.size, fontWeight: 500, color: interpolateColors(on, [0, 1], [c.ink, c.indigo]), whiteSpace: "nowrap" }}>{l.label}</div>
               </Card>
             );
           })}
           {LINKS.slice(1).map((l, i) => {
-            // the last arrow takes all of "uang yang akhirnya menjadi bagian" to reach the shareholder
-            const last = i === LINKS.length - 2;
-            const reach = last ? ease(f, W("uang"), l.at - W("uang")) : ease(f, l.at - m.sec(0.25), m.sec(0.25));
+            const reach = ease(f, l.at - m.sec(0.25), m.sec(0.25));
             return <GrowArrow key={l.label} x0={chainX(i) + CHAIN.w + 6} y0={CHAIN.y} x1={chainX(i + 1) - 6} y1={CHAIN.y} p={reach} />;
           })}
         </div>
       </Appear>
 
       {/* C — the bars */}
-      <Appear at={W("Semakin kita")} out={appAt - m.sec(0.3)} style={{ left: 0, top: 0 }}>
+      <Appear at={W("Rumor")} out={appAt - m.sec(0.3)} style={{ left: 0, top: 0 }}>
         <Card x={CX - BARS.w / 2} y={BARS.y} w={BARS.w} h={BARS.h}>
           {[
             { label: "Pemahaman bisnis", share: BARS.small + (1 - BARS.small) * know, tone: c.indigo },

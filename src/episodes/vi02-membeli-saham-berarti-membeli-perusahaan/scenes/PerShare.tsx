@@ -6,16 +6,19 @@
  *  A  "Misalnya ICBP": the chain down from the code: Revenue 2025, then Net Profit, in the middle.
  *  B  "dibagi berdasarkan seluruh saham": the chain makes room; the profit becomes a field of small squares, one of them
  *     leaving for the EPS card. SC02's square again: a share.
- *  C  "seratus saham": a hundred squares of that same field light up → 100 Shares → 100 × EPS → Bagian ekonomis dari laba.
- *  D  "nggak berarti semuanya langsung masuk": the way straight to "Kamu" is crossed; the profit branches into DIVIDEND and
- *     RETAINED / REINVESTED.
+ *  C  "100 saham": a hundred squares of that same field light up → 100 Shares → 100 × EPS ("100 × Rp791") → Bagian
+ *     ekonomis dari laba ("= Rp79.100").
+ *  D  "bukan berarti seluruh Rp79.100 langsung masuk": the way straight to "Kamu" is crossed; the profit branches into
+ *     DIVIDEND ("membagikan … Rp265") and RETAINED / REINVESTED ("sisa labanya").
+ *  12 Nov 2026: C and D follow Simon's new VO (Scene 04_1/04_2) on their nearest words; the new figures (Rp79.100, Rp265,
+ *  Rp26.500) and the closing "profit ≠ cash" line (Scene 04_3) have no picture of their own yet.
  *  E  "Jadi saat memiliki saham": the point in one line. "Kita juga perlu melihat": the row to follow, each lit on its word,
  *     and it is the "buku bisnis".
  */
 import { interpolateColors, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, SourceTag, Stage, theme, typeStyle, useMotion, usePalette } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, GrowArrow, IconDisc, Line, WordPill, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, GrowArrow, IconDisc, KamuAvatar, Line, WordPill, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -45,7 +48,7 @@ const GO = { from: CHAIN.left + CHAIN.w, y: chainY(1) + CHAIN.h / 2, up: 330, do
 const BOOK = { w: 1560, h: 420, y: 300, disc: 130, line: 500 };
 const FOLLOW = [
   { icon: "coins", label: "Revenue", at: "pendapatannya" },
-  { icon: "chart-line-up", label: "Profit", at: "labanya" },
+  { icon: "chart-line-up", label: "Profit", at: "labanya, laba" },
   { icon: "package", label: "EPS", at: "laba per sahamnya" },
   { icon: "arrows-clockwise", label: "Dividend / Reinvestment", at: "bagaimana laba" },
 ] as const;
@@ -65,16 +68,16 @@ export const SC04 = () => {
   const cardAt = [W("menghasilkan pendapatan"), W("laba bersih"), W("hasilnya sekitar")];
 
   const ownAt = W("Kalau kamu punya");
-  const tapiAt = W("Tapi laba");
+  const tapiAt = W("Tapi bukan");
   const bookAt = W("Jadi saat");
   const rowAt = W("Kita juga perlu");
   const fieldP = ease(f, splitAt + m.sec(0.15), m.sec(0.9));
   const lift = ease(f, W("hasilnya sekitar"), m.sec(0.8));
-  const own = ease(f, W("seratus saham"), m.sec(0.9));
+  const own = ease(f, W("100 saham"), m.sec(0.9));
   const liftX = mix(FIELD.x + FIELD.lift.col * step + FIELD.cell / 2, chainX + CHAIN.w + 26, lift);
   const liftY = mix(FIELD.y + FIELD.lift.row * step + FIELD.cell / 2, chainY(2) + CHAIN.h / 2, lift);
 
-  const paid = ease(f, W("Sebagian bisa"), m.move);
+  const paid = ease(f, W("Perusahaan membagikan"), m.move);
   const youX = GO.you;
   const youY = mix(GO.y, GO.up, paid);
 
@@ -126,15 +129,15 @@ export const SC04 = () => {
         <Appear at={W("setiap lembar")} out={ownAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
           <Line x={0} y={OWN.line} w={theme.canvas.width} align="center" size={44} weight={500} text="Satu saham = bagian kecil dari bisnis yang nyata" mark="bagian kecil" />
         </Appear>
-        <Appear at={W("seratus saham")} style={{ left: 0, top: 0 }}>
+        <Appear at={W("100 saham")} style={{ left: 0, top: 0 }}>
           <WordPill x={OWN.cx} y={OWN.ys[0]} text="100 Shares" />
         </Appear>
-        <GrowArrow x0={OWN.cx} y0={OWN.ys[0] + 42} x1={OWN.cx} y1={OWN.ys[1] - 42} p={ease(f, W("bagian ekonomisnya") - m.sec(0.25), m.sec(0.3))} />
-        <Appear at={W("bagian ekonomisnya")} style={{ left: 0, top: 0 }}>
+        <GrowArrow x0={OWN.cx} y0={OWN.ys[0] + 42} x1={OWN.cx} y1={OWN.ys[1] - 42} p={ease(f, W("100", 1) - m.sec(0.25), m.sec(0.3))} />
+        <Appear at={W("100", 1)} style={{ left: 0, top: 0 }}>
           <WordPill x={OWN.cx} y={OWN.ys[1]} text="100 × EPS" />
         </Appear>
-        <GrowArrow x0={OWN.cx} y0={OWN.ys[1] + 42} x1={OWN.cx} y1={OWN.ys[2] - 42} p={ease(f, W("seratus kali") - m.sec(0.25), m.sec(0.3))} />
-        <Appear at={W("seratus kali")} style={{ left: 0, top: 0 }}>
+        <GrowArrow x0={OWN.cx} y0={OWN.ys[1] + 42} x1={OWN.cx} y1={OWN.ys[2] - 42} p={ease(f, W("Rp79.100") - m.sec(0.25), m.sec(0.3))} />
+        <Appear at={W("Rp79.100")} style={{ left: 0, top: 0 }}>
           <WordPill x={OWN.cx} y={OWN.ys[2]} text="Bagian ekonomis dari laba" />
         </Appear>
       </Appear>
@@ -143,25 +146,25 @@ export const SC04 = () => {
       <Appear at={tapiAt} out={bookAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
         <div style={{ position: "absolute", inset: 0, opacity: 1 - paid }}>
           <GrowArrow x0={GO.from + 50} y0={GO.y} x1={youX - GO.d / 2 - 14} y1={GO.y} p={ease(f, tapiAt + m.sec(0.1), m.sec(0.6))} />
-          <svg width={64} height={64} style={{ position: "absolute", left: GO.crossX - 32, top: GO.y - 32, opacity: ease(f, W("rekening kita"), m.reveal) }}>
+          <svg width={64} height={64} style={{ position: "absolute", left: GO.crossX - 32, top: GO.y - 32, opacity: ease(f, W("rekeningmu"), m.reveal) }}>
             <g stroke={theme.color.calendarRed} strokeWidth={8} strokeLinecap="round">
               <line x1={14} y1={14} x2={50} y2={50} />
               <line x1={50} y1={14} x2={14} y2={50} />
             </g>
           </svg>
         </div>
-        <IconDisc x={youX} y={youY} d={GO.d} icon="user" ring={theme.color.selfAmber} />
+        <KamuAvatar x={youX} y={youY} d={GO.d} />
         <Connector a={{ x: GO.from + 6, y: GO.y - 16 }} b={{ x: GO.pillX - 110, y: GO.up }} p={paid} shape="elbow" />
         <Appear at={W("dividen")} style={{ left: 0, top: 0 }}>
           <WordPill x={GO.pillX} y={GO.up} text="DIVIDEND" />
         </Appear>
         <GrowArrow x0={GO.pillX + 110} y0={GO.up} x1={youX - GO.d / 2 - 14} y1={GO.up} p={ease(f, W("dividen") + m.sec(0.2), m.sec(0.4))} />
-        <Connector a={{ x: GO.from + 6, y: GO.y + 16 }} b={{ x: GO.retainX - 200, y: GO.down }} p={ease(f, W("Sebagian lainnya"), m.sec(0.6))} shape="elbow" />
+        <Connector a={{ x: GO.from + 6, y: GO.y + 16 }} b={{ x: GO.retainX - 200, y: GO.down }} p={ease(f, W("Sementara sisa"), m.sec(0.6))} shape="elbow" />
         <Appear at={W("tetap berada")} style={{ left: 0, top: 0 }}>
           <WordPill x={GO.retainX} y={GO.down} text="RETAINED / REINVESTED" />
         </Appear>
-        <GrowArrow x0={GO.retainX + 196} y0={GO.down} x1={GO.keep - GO.d / 2 - 14} y1={GO.down} p={ease(f, W("modal kerja") - m.sec(0.25), m.sec(0.3))} />
-        <IconDisc x={GO.keep} y={GO.down} d={GO.d} logo={ICBP_LOGO} opacity={ease(f, W("modal kerja"), m.reveal)} />
+        <GrowArrow x0={GO.retainX + 196} y0={GO.down} x1={GO.keep - GO.d / 2 - 14} y1={GO.down} p={ease(f, W("terus menjalankan") - m.sec(0.25), m.sec(0.3))} />
+        <IconDisc x={GO.keep} y={GO.down} d={GO.d} logo={ICBP_LOGO} opacity={ease(f, W("terus menjalankan"), m.reveal)} />
       </Appear>
 
       {/* E — the point, then the row to follow */}

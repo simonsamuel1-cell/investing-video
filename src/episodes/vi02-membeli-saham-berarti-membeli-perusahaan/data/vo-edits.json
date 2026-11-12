@@ -27,6 +27,23 @@
     {
       "src": "ORIGINAL",
       "from": 41.13,
+      "to": 47.17
+    },
+    {
+      "_": "12 Nov, SC02 insert: 'Benjamin Graham menulis dalam The Intelligent Investor: “Investment is most intelligent when it is most businesslike.” Investasi menjadi paling masuk akal … Warren Buffett bahkan menyebutnya sebagai kalimat paling penting tentang investasi.'",
+      "silence": 0.04
+    },
+    {
+      "src": "Revisi VO/Scene 02_1.mp3",
+      "to": 15.68,
+      "match": "original 41.27-46.97"
+    },
+    {
+      "silence": 0.1633447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 47.17,
       "to": 86.33
     },
     {
@@ -67,7 +84,47 @@
     {
       "src": "ORIGINAL",
       "from": 166.16,
-      "to": 202.605
+      "to": 171.16
+    },
+    {
+      "_": "12 Nov, SC04: 'Kalau kamu punya 100 saham, bagian ekonomismu … sekitar: 100 × Rp791 = Rp79.100.' from Scene 04_2 (his fix take for 04_1's first sentence)",
+      "silence": 0.16
+    },
+    {
+      "src": "Revisi VO/Scene 04_2.mp3",
+      "to": 12.12,
+      "match": "original 171.47-176.65"
+    },
+    {
+      "_": "04_1's own pause before 'Tapi'",
+      "silence": 0.42
+    },
+    {
+      "_": "12 Nov, SC04: 'Tapi bukan berarti seluruh Rp79.100 … Rp265 per saham sebagai dividen. Jadi untuk 100 saham, cash dividend … Rp26.500. Sementara sisa labanya … mengembangkan bisnis.' (04_1 from 'Tapi'; its first sentence is 04_2)",
+      "src": "Revisi VO/Scene 04_1.mp3",
+      "from": 12.65,
+      "to": 35.86,
+      "match": "original 176.99-187.49"
+    },
+    {
+      "silence": 0.2333447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 187.72,
+      "to": 202.5
+    },
+    {
+      "_": "12 Nov, SC04 insert: 'Dan satu hal penting: profit perusahaan tidak sama dengan seluruh cash yang langsung kita terima.'",
+      "silence": 0.18
+    },
+    {
+      "src": "Revisi VO/Scene 04_3.mp3",
+      "to": 6.18,
+      "match": "original 198.67-202.42"
+    },
+    {
+      "silence": 0.1616667
     },
     {
       "_": "5 Nov, end of scene: +30f after 'yang sebenarnya kita miliki.'",
@@ -76,6 +133,57 @@
     {
       "src": "ORIGINAL",
       "from": 202.605,
+      "to": 208.19
+    },
+    {
+      "_": "12 Nov, SC05: 'Minggu pertama muncul pesan: “Katanya perusahaan ini mau diakuisisi investor asing.”' (cut before the −5 dB click at 4.38 s of the clip)",
+      "silence": 0.11
+    },
+    {
+      "src": "Revisi VO/Scene 05_1.mp3",
+      "to": 4.3,
+      "match": "original 208.44-212.08"
+    },
+    {
+      "silence": 0.2433447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 212.36,
+      "to": 214.12
+    },
+    {
+      "_": "12 Nov, SC05: 'Minggu berikutnya muncul kabar: “Pemegang saham besarnya diam-diam mulai menjual.”' (cut before the −6 dB click at 4.64 s of the clip)",
+      "silence": 0.03
+    },
+    {
+      "src": "Revisi VO/Scene 05_2.mp3",
+      "to": 4.5,
+      "match": "original 214.31-217.82"
+    },
+    {
+      "silence": 0.2500113
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 218.1,
+      "to": 219.52
+    },
+    {
+      "_": "12 Nov, SC05: 'Lalu muncul rumor lain: “Laporan keuangannya bermasalah. Bisa-bisa perusahaan ini delisting.”'",
+      "silence": 0.12
+    },
+    {
+      "src": "Revisi VO/Scene 05_3.mp3",
+      "to": 5.58,
+      "match": "original 219.77-223.19"
+    },
+    {
+      "silence": 0.196678
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 223.4,
       "to": 243.79
     },
     {
@@ -96,6 +204,57 @@
     {
       "src": "ORIGINAL",
       "from": 260.225,
+      "to": 279.18
+    },
+    {
+      "_": "12 Nov, SC06 insert: 'Warren Buffett kemudian mengatakan: kalau kamu nggak bersedia memiliki sebuah perusahaan selama sepuluh tahun, jangan berpikir untuk memilikinya selama sepuluh menit.'",
+      "silence": 0.09
+    },
+    {
+      "src": "Revisi VO/Scene 06_1.mp3",
+      "to": 8.3,
+      "match": "original 275.0-279.1"
+    },
+    {
+      "silence": 0.0433673
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 279.18,
+      "to": 288.45
+    },
+    {
+      "_": "12 Nov, SC06 insert: 'Pelanggannya masih ada?'",
+      "silence": 0.14
+    },
+    {
+      "src": "Revisi VO/Scene 06_2.mp3",
+      "to": 0.98,
+      "match": "original 286.98-288.37"
+    },
+    {
+      "silence": 0.0633447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 288.45,
+      "to": 291.82
+    },
+    {
+      "_": "12 Nov, SC06: 'Perusahaan masih punya pricing power dan kemampuan menghasilkan laba?'",
+      "silence": 0.01
+    },
+    {
+      "src": "Revisi VO/Scene 06_3.mp3",
+      "to": 3.64,
+      "match": "original 291.98-294.35"
+    },
+    {
+      "silence": 0.2300113
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 294.6,
       "to": 310.305
     },
     {
@@ -134,28 +293,20 @@
     {
       "src": "ORIGINAL",
       "from": 350.205,
-      "to": 354.2
+      "to": 350.245
     },
     {
-      "_": "5 Nov:'Di video ini, kita sudah melihat apa artinya: membeli saham berarti memiliki sebagian dari perusahaan.'",
-      "src": "Scene 08-01.mp3",
-      "to": 6.24,
-      "match": "original 354.35-359.12"
+      "_": "12 Nov, SC08 rewritten: 'Tiga hal yang perlu diingat. … Di situlah Deep Research Report membantu memberikan analisis awal yang lebih lengkap.' (replaces the original's 'Di video sebelumnya …' and the 5 Nov Scene 08-01 / 08-02)",
+      "src": "Revisi VO/Scene 08_1.mp3",
+      "to": 82.4,
+      "match": "original 350.38-388.24"
     },
     {
-      "src": "ORIGINAL",
-      "from": 359.2,
-      "to": 373.52
-    },
-    {
-      "_": "5 Nov:'Di Tuntun, kamu bisa mulai dari Revenue Breakdown untuk melihat uang perusahaan datang dari bisnis yang mana, lihat perkembangan labanya, lalu buka Deep Research Report untuk memahami model bisnis, kualitas, keunggulan, dan risikonya lebih jauh.'",
-      "src": "Scene 08-02.mp3",
-      "to": 14.99,
-      "match": "original 373.66-388.24"
+      "silence": 0.238356
     },
     {
       "src": "ORIGINAL",
-      "from": 388.32
+      "from": 388.47
     }
   ]
 }

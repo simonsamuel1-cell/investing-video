@@ -7,7 +7,14 @@ import { w } from "../data/timing";
 /** Illustrations go grey and soft (Simon 6 Nov: "minimalis, monochrome, dan UI", the same pictures, only their colour and style). */
 export const MONO = "grayscale(1) contrast(0.72) brightness(1.18)";
 
-export { Appear, BoardGrid, Card, Disc, HEADING, Ico, Line, Mark, NumRing, OpeningHeading, ORANG_TUNTUN_RIGHT, OrangTuntun, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
+export { Appear, BoardGrid, Card, DashBox, Disc, HEADING, Ico, Line, Mark, NumRing, OpeningHeading, ORANG_TUNTUN_RIGHT, OrangTuntun, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
+
+/**
+ * VI01's look (Simon 12 Nov: "redesign dan revamp scene 1-3 dulu. Pelajari style design dari VI01"): its black line-art
+ * drawings, the cash book, the price card, the columns, the real photos and its one-shot-at-a-time camera.
+ */
+export { ART, Figure, IconPill, LEDGER_ROWS, LedgerCard, Column, PhotoTile, Pic, PriceFace, Shot } from "../../vi01-apa-itu-value-investing/components/kit";
+export { PriceCandles } from "../../vi01-apa-itu-value-investing/components/PriceCandles";
 
 /** A scene's word clock: the frame a phrase starts on, scene-local. */
 export const useWords = (scene: number, block: number) => (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") => w(scene, phrase, nth, edge) - block;
@@ -70,4 +77,71 @@ export const PriceTag = ({ x, y, w, h, nose, hole, children }: { x: number; y: n
 export const Glyph = ({ icon, size, tone }: { icon: string; size: number; tone: string }) => {
   const url = `url(${staticFile(`icons/vi02/ph-${icon}.svg`)})`;
   return <div style={{ width: size, height: size, flex: "none", background: tone, WebkitMaskImage: url, maskImage: url, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center" }} />;
+};
+
+/**
+ * SC01's black line-art drawings (ChatGPT, 12 Nov 2026, in VI01's warung style; public/art/vi02/line), with their pixel size —
+ * the ratio is what matters. `Drawing` puts one `h` tall, centred on `cx`, standing on `floor`, its box (and any fade) on a
+ * wrapper div: Remotion's <Img> drops its own opacity in Studio (VI01's Pic).
+ */
+export const LINE_ART = {
+  factory: { w: 524, h: 463 },
+  conveyor: { w: 402, h: 218 },
+  box: { w: 195, h: 244 },
+  truck: { w: 371, h: 254 },
+  shops: { w: 561, h: 253 },
+} as const;
+export type LineArtName = keyof typeof LINE_ART;
+export const lineArtW = (name: LineArtName, h: number) => (h * LINE_ART[name].w) / LINE_ART[name].h;
+export const Drawing = ({ name, cx, floor, h, style }: { name: LineArtName; cx: number; floor: number; h: number; style?: React.CSSProperties }) => {
+  const wd = lineArtW(name, h);
+  return (
+    <div style={{ position: "absolute", left: cx - wd / 2, top: floor - h, width: wd, height: h, ...style }}>
+      <Img src={staticFile(`art/vi02/line/${name}.png`)} style={{ width: "100%", height: "100%", display: "block" }} />
+    </div>
+  );
+};
+
+/**
+ * "Kamu" as a line-art bust in a white rounded tile, after Simon's avatar grid (12 Nov 2026; ChatGPT, public/art/vi02/kamu-avatar.png,
+ * 812 × 1019): the bust `fill` of the tile's height, standing on its bottom, centred. Centred on (x, y).
+ */
+export const KAMU_AVATAR = { src: "art/vi02/kamu-avatar.png", w: 812, h: 1019, fill: 0.88 } as const;
+export const AvatarTile = ({ x, y, d, style }: { x: number; y: number; d: number; style?: React.CSSProperties }) => {
+  const c = usePalette();
+  const shadow = useShadow();
+  const ah = d * KAMU_AVATAR.fill;
+  const aw = (ah * KAMU_AVATAR.w) / KAMU_AVATAR.h;
+  return (
+    <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, height: d, borderRadius: d * 0.16, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", ...style }}>
+      <div style={{ position: "absolute", left: (d - aw) / 2, top: d - ah, width: aw, height: ah }}>
+        <Img src={staticFile(KAMU_AVATAR.src)} style={{ width: "100%", height: "100%", display: "block" }} />
+      </div>
+    </div>
+  );
+};
+
+/** The avatar tile with "Kamu" (or another `label`) under it, where IconDisc's user icon used to be — same centre, same label place. */
+export const KamuAvatar = ({ x, y, d, label, labelSize = 30, opacity = 1 }: { x: number; y: number; d: number; label?: string; labelSize?: number; opacity?: number }) => {
+  const c = usePalette();
+  return (
+    <div style={{ position: "absolute", inset: 0, opacity }}>
+      <AvatarTile x={x} y={y} d={d} />
+      {label ? <div style={{ position: "absolute", left: x - 200, width: 400, top: y + d / 2 + 14, textAlign: "center", ...typeStyle("label"), fontSize: labelSize, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{label}</div> : null}
+    </div>
+  );
+};
+
+/** The avatar in a small round face, for the places a user glyph sat inside a disc or a chip. */
+export const AvatarFace = ({ size }: { size: number }) => {
+  const c = usePalette();
+  const ah = size * 0.92;
+  const aw = (ah * KAMU_AVATAR.w) / KAMU_AVATAR.h;
+  return (
+    <div style={{ position: "relative", width: size, height: size, flex: "none", borderRadius: 999, background: c.cardBg, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: (size - aw) / 2, top: size - ah, width: aw, height: ah }}>
+        <Img src={staticFile(KAMU_AVATAR.src)} style={{ width: "100%", height: "100%", display: "block" }} />
+      </div>
+    </div>
+  );
 };
