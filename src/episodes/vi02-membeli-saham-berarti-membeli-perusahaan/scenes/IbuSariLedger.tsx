@@ -5,9 +5,9 @@
  *
  *  A  "Kita pakai contoh": the frame and the warung in the middle from the first frame; "Ibu Sari": she comes in with her
  *     book at its left, her name under her.
- *  B  "kamu membeli sepuluh persen … partner": "Kamu" at the right, 10%, tied to the warung, "Partner".
- *  C  "Bukan berapa harga warungnya setiap lima menit": a price over the warung, flicking through Simon's figures
- *     (Rp50 → 45 → 55 juta), crossed.
+ *  B  "kamu membeli sepuluh persen … partner": "Kamu" full body at Ibu Sari's left, "Partner / 10%" over him.
+ *  C  "Bukan berapa harga warungnya setiap lima menit": a 5-minute candlestick chart of the warung's price, running, a new bar
+ *     every beat, at the frame's right; crossed (Simon 12 Nov).
  *  D  "berapa pelanggan … penjualan … stok, sewa, pegawai … laba": her book opens as VI01's card; each line lights on its words,
  *     the three costs come in as chips under Sales.
  *  E  "ada orang datang dan menawarkan harga": the warung and Ibu Sari step left, Mr. Market walks in from the frame's edge,
@@ -18,10 +18,10 @@
  *
  * Ibu Sari's book carries VI01's figures (made up, the same wherever her book appears); the offers are Simon's (6 Nov).
  */
-import { interpolateColors, useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
+import { Candles, SoftGround, Stage, gridOf, seeded, theme, typeStyle, useMotion, usePalette, useShadow, type Bar } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Figure, Glyph, KamuAvatar, LEDGER_ROWS, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, Ring, Shot, WordPill, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, Figure, Glyph, LEDGER_ROWS, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, Pic, Ring, Shot, WordPill, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -34,12 +34,38 @@ const IBU = { h: 336, cx: 650, aside: 280 };
 const NAME_Y = 790;
 
 // B — you, a tenth of it
-const KAMU = { x: 1450, y: 470, d: 140 };
+/**
+ * "Kamu" full body (Simon 12 Nov: "coba buat icon avatarnya full body deh"): the avatar's young man standing, turned to the
+ * warung (ChatGPT, public/art/vi02/kamu-full.png, 453 × 1451), on the same floor as Ibu Sari and Mr. Market; at her LEFT
+ * (Simon 12 Nov: "posisi avatarnya di sebelah kiri ibu sari"), flipped to face her and the warung; "Partner / 10%" over him.
+ */
+const KAMU = { x: 462, h: 350, src: "art/vi02/kamu-full.png", w0: 453, h0: 1451, tie: 560 };
+const KAMU_W = (KAMU.h * KAMU.w0) / KAMU.h0;
+const KAMU_TOP = FLOOR - KAMU.h;
 
 // C — the price, every five minutes
-const PRICE = { w: 330, h: 116, y: 214 };
-/** Simon's own figures (6 Nov), round and round until the price is crossed out. */
-const FLICK = ["Rp50 juta", "Rp45 juta", "Rp55 juta"];
+/**
+ * The warung's price as a 5-minute candlestick chart that keeps running (Simon 12 Nov: "ganti aja, jadi grafik candlestick yang
+ * berjalan terus tiap 5 menit"): `n` bars in view, a new one every `every` s, the oldest leaving at the left. Made-up tape (a
+ * seeded walk), so no source tag; at the right of the frame, clear of the people and the warung.
+ */
+const PRICE = { x: 1180, y: 290, w: 500, h: 310, n: 14, every: 0.3, pad: 26, head: 74 };
+const RUN_BARS: Bar[] = (() => {
+  const r = seeded(305);
+  let p = 100;
+  return Array.from({ length: 60 }, () => {
+    const o = p;
+    // a walk that keeps coming back to its level, so the bars stay big in the card instead of drifting off
+    const c = o + (r() - 0.5) * 3.2 + (100 - o) * 0.25;
+    const bar = { o, c, h: Math.max(o, c) + r() * 1.1, l: Math.min(o, c) - r() * 1.1 };
+    p = c;
+    return bar;
+  });
+})();
+/** The price scale: the bars that can be on screen while the chart is up (about 26), so the candles fill the card's height. */
+const RUN_SEEN = RUN_BARS.slice(0, 30);
+const RUN_LO = Math.min(...RUN_SEEN.map((b) => b.l));
+const RUN_HI = Math.max(...RUN_SEEN.map((b) => b.h));
 
 // D — her book
 const BOOK = { x: 1220, y: 236, w: 500, s: 1 };
@@ -105,14 +131,14 @@ export const SC03 = () => {
   // A–B
   const ibuAt = W("Ibu Sari");
   const kamuAt = W("sepuluh persen");
-  const partnerAt = W("partner");
   const askAt = W("apa yang paling");
 
   // C
   const priceAt = W("Bukan berapa");
   const crossAt = W("lima menit");
   const priceP = ease(f, priceAt, m.reveal) * (1 - ease(f, W("lebih penting"), m.fade));
-  const flick = FLICK[Math.max(0, Math.floor((Math.min(f, crossAt) - priceAt) / m.sec(0.3))) % FLICK.length];
+  /** a new bar every 5 "minutes" from the moment the chart is there; it never stops while it is on screen */
+  const runEnd = Math.min(RUN_BARS.length, PRICE.n + Math.max(0, Math.floor((f - priceAt) / m.sec(PRICE.every))));
 
   // D
   const bookAt = W("lebih penting");
@@ -151,27 +177,35 @@ export const SC03 = () => {
 
         {/* B: you, a tenth of the warung */}
         <Appear at={kamuAt} out={bookAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-          <Connector a={{ x: WARUNG.cx + 200, y: KAMU.y }} b={{ x: KAMU.x - KAMU.d / 2 - 14, y: KAMU.y }} p={ease(f, kamuAt + m.sec(0.2), m.sec(0.6))} />
-          <KamuAvatar x={KAMU.x} y={KAMU.y} d={KAMU.d} label="Kamu" labelSize={32} />
-          <WordPill x={KAMU.x} y={KAMU.y - KAMU.d / 2 - 46} text="10%" size={34} />
-        </Appear>
-        <Appear at={partnerAt} out={bookAt} style={{ left: 0, top: 0 }}>
-          <WordPill x={KAMU.x} y={KAMU.y + KAMU.d / 2 + 110} text="Partner" size={30} />
+          <Pic src={staticFile(KAMU.src)} style={{ position: "absolute", left: KAMU.x - KAMU_W / 2, top: KAMU_TOP, width: KAMU_W, height: KAMU.h, transform: "scaleX(-1)" }} />
+          {/* one label over him, two lines (Simon 12 Nov: "10% di ganti jadi 'Partner / 10%'"), whole from the start: no empty line */}
+          <div style={{ position: "absolute", left: KAMU.x, top: KAMU_TOP - 18, transform: "translate(-50%, -100%)", padding: "10px 30px", borderRadius: 20, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, textAlign: "center", ...typeStyle("label"), fontWeight: 600, color: c.indigo, whiteSpace: "nowrap", lineHeight: 1.2 }}>
+            <div style={{ fontSize: 30 }}>Partner</div>
+            <div style={{ fontSize: 36 }}>10%</div>
+          </div>
+          <WordPill x={KAMU.x} y={NAME_Y} text="Kamu" size={32} />
         </Appear>
         <Appear at={askAt} out={priceAt} style={{ left: 0, top: 0 }}>
-          <div style={{ position: "absolute", left: KAMU.x + KAMU.d / 2 - 10, top: KAMU.y - KAMU.d / 2 - 70, width: 70, height: 70, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontSize: 42, fontWeight: 600, color: c.indigo }}>?</div>
+          <div style={{ position: "absolute", left: KAMU.x - KAMU_W / 2 - 80, top: KAMU_TOP + 6, width: 70, height: 70, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontSize: 42, fontWeight: 600, color: c.indigo }}>?</div>
         </Appear>
 
-        {/* C: the price every five minutes, crossed */}
-        {priceP > 0.001 ? (
-          <div style={{ position: "absolute", left: WARUNG.cx - PRICE.w / 2, top: PRICE.y + (1 - priceP) * 12, width: PRICE.w, height: PRICE.h, opacity: priceP }}>
-            <Card x={0} y={0} w={PRICE.w} h={PRICE.h}>
-              <div style={{ position: "absolute", left: 30, top: 18, ...typeStyle("label"), fontSize: 26, fontWeight: 500, color: c.slate }}>Harga warung</div>
-              <div style={{ position: "absolute", left: 30, top: 50, ...typeStyle("title"), fontSize: 46, fontWeight: 600, color: c.ink, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>{flick}</div>
-              <Mark kind="cross" p={ease(f, crossAt, m.pop)} x={PRICE.w - 48} y={PRICE.h / 2} size={56} />
-            </Card>
-          </div>
-        ) : null}
+        {/* C: the price every five minutes — a running 5-minute chart — crossed */}
+        {priceP > 0.001 ? (() => {
+          const shownBars = RUN_BARS.slice(runEnd - PRICE.n, runEnd);
+          const grid = gridOf(shownBars.map((b) => b.c), [RUN_LO, RUN_HI], { x: PRICE.pad, y: PRICE.head, w: PRICE.w - 2 * PRICE.pad, h: PRICE.h - PRICE.head - PRICE.pad }, 0.06);
+          return (
+            <div style={{ position: "absolute", left: PRICE.x, top: PRICE.y + (1 - priceP) * 12, width: PRICE.w, height: PRICE.h, opacity: priceP }}>
+              <Card x={0} y={0} w={PRICE.w} h={PRICE.h}>
+                <div style={{ position: "absolute", left: PRICE.pad + 4, top: 22, display: "flex", alignItems: "center", gap: 14 }}>
+                  <div style={{ ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>Harga warung</div>
+                  <div style={{ padding: "4px 14px", borderRadius: 999, background: theme.color.neutralDisc, ...typeStyle("label"), fontSize: 24, fontWeight: 600, color: c.slate }}>5m</div>
+                </div>
+                <Candles bars={shownBars} grid={grid} />
+                <Mark kind="cross" p={ease(f, crossAt, m.pop)} x={PRICE.w - 44} y={44} size={56} />
+              </Card>
+            </div>
+          );
+        })() : null}
 
         {/* D: her book, open */}
         {bookIn > 0.001 ? (
