@@ -15,10 +15,14 @@ import { SC02 as SC02_VI01 } from "./scenes/PillarOwner";
 import { SC03 as SC03_VI01 } from "./scenes/IbuSariLedger";
 import { VI01_LOOK } from "./data/switches";
 import { SC04 } from "./scenes/PerShare";
-import { SC05 } from "./scenes/Rumours";
-import { SC06 } from "./scenes/VoteOrWeigh";
-import { SC07 } from "./scenes/FourQuestions";
-import { SC08 } from "./scenes/FromWhyToPrice";
+import { SC05 as SC05_OLD } from "./scenes/Rumours";
+import { SC05 as SC05_VI01 } from "./scenes/RumoursBook";
+import { SC06 as SC06_OLD } from "./scenes/VoteOrWeigh";
+import { SC06 as SC06_VI01 } from "./scenes/TenYears";
+import { SC07 as SC07_OLD } from "./scenes/FourQuestions";
+import { SC07 as SC07_VI01 } from "./scenes/FourCards";
+import { SC08 as SC08_OLD } from "./scenes/FromWhyToPrice";
+import { SC08 as SC08_VI01 } from "./scenes/WhyToPrice";
 
 /** `false` while the VO is being revised (Simon, 5 Nov): the blocks, VO, subtitles and BGM stay, the scenes draw nothing. */
 const VISUALS: boolean = true;
@@ -28,6 +32,11 @@ const VISUALS: boolean = true;
 const SC01 = VI01_LOOK ? SC01_VI01 : SC01_OLD;
 const SC02 = VI01_LOOK ? SC02_VI01 : SC02_OLD;
 const SC03 = VI01_LOOK ? SC03_VI01 : SC03_OLD;
+/** SC05 in VI01's look too (13 Nov, Simon: "revamp visual untuk scene 5-8"). */
+const SC05 = VI01_LOOK ? SC05_VI01 : SC05_OLD;
+const SC06 = VI01_LOOK ? SC06_VI01 : SC06_OLD;
+const SC07 = VI01_LOOK ? SC07_VI01 : SC07_OLD;
+const SC08 = VI01_LOOK ? SC08_VI01 : SC08_OLD;
 const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08 };
 
 export const VI02_FRAMES = BLOCK.END;
