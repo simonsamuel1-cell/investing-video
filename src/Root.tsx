@@ -27,6 +27,7 @@ import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/Ful
 import { PassiveIncomeFull, FULL_FRAMES as IN01_FULL_FRAMES } from "./episodes/in01-passive-income/FullVideo";
 import { ApaItuValueInvestingFull, VI01_FULL_FRAMES } from "./episodes/vi01-apa-itu-value-investing/FullVideo";
 import { MembeliSahamFull, VI02_FULL_FRAMES } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/FullVideo";
+import { MembeliCukupMurahFull, VI03_FULL_FRAMES } from "./episodes/vi03-membeli-dengan-harga-yang-cukup-murah/FullVideo";
 import { RizkyComps } from "./RizkyComps";
 import { InvestasiYangCocokFull, IN04_FULL_FRAMES } from "./episodes/in04-investasi-yang-cocok/FullVideo";
 import { TEMPLATE_MAP_FRAMES, TemplateMap } from "./episodes/in04-investasi-yang-cocok/TemplateMap";
@@ -188,6 +189,15 @@ export const RemotionRoot: React.FC = () => {
         id="VI02-MembeliSahamBerartiMembeliPerusahaan"
         component={MembeliSahamFull}
         durationInFrames={VI02_FULL_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* VI03 — Membeli dengan Harga yang Cukup Murah: Intro + episode + Outro + BGM. */}
+      <Composition
+        id="VI03-MembeliDenganHargaYangCukupMurah"
+        component={MembeliCukupMurahFull}
+        durationInFrames={VI03_FULL_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}

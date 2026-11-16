@@ -201,7 +201,14 @@ export const Words = ({
    * elements so they can arrive one at a time. A phrase that is not found is
    * simply not marked — it never silently marks the wrong words.
    */
-  marks?: readonly { text: string; color: string }[];
+  marks?: readonly {
+    text: string;
+    color: string;
+    /** This mark's own frame (absolute), when the marks land at different
+     *  moments. Wins over `markAt`. Two neighbouring marks with different
+     *  frames stay two marks; with the same frame and colour they are one run. */
+    at?: number;
+  }[];
   /**
    * The frame the marks arrive on, when that is NOT when their words do.
    *
@@ -235,8 +242,12 @@ export const Words = ({
    * and its dot RIDE the sweep, because that is what a cursor does; a selection
    * whose right edge is already waiting where the drag will finish is not a
    * drag, it is a rectangle fading in.
+   *
+   * `underline` — a rounded line drawn under the words, left to right, in the
+   * mark's colour (VI03 SC02, Simon 16 Nov: the quote's sentences underlined as
+   * the VO explains each one).
    */
-  markStyle?: "highlighter" | "selection";
+  markStyle?: "highlighter" | "selection" | "underline";
   /** Leading as a multiple of `size`, for text that wraps. */
   lineHeight?: number;
   /** Defaults to the brand face. `theme.text.mono` is the only other one. */
@@ -255,8 +266,10 @@ export const Words = ({
   const m = useMotion();
   const step = stagger ?? Math.max(1, Math.round(m.reveal / 4));
   const words = text.split(" ");
-  /** colour per word index, from the phrases in `marks` */
-  const marked: (string | undefined)[] = new Array(words.length).fill(undefined);
+  /** the mark per word index, from the phrases in `marks` */
+  type MarkSpec = { color: string; at?: number };
+  const marked: (MarkSpec | undefined)[] = new Array(words.length).fill(undefined);
+  const sameMark = (a?: MarkSpec, b?: MarkSpec) => a === b || (!!a && !!b && a.color === b.color && a.at === b.at);
   /* ⚠ TRAILING PUNCTUATION IS IGNORED WHEN MATCHING. A phrase that ends a
      clause carries the comma in the sentence but not in the phrase someone
      writes down, and a mark that silently does not appear because of a comma is
@@ -266,17 +279,18 @@ export const Words = ({
     const want = mk.text.split(" ").map(bare);
     for (let i = 0; i + want.length <= words.length; i++) {
       if (want.every((w, k) => bare(words[i + k]) === w)) {
-        for (let k = 0; k < want.length; k++) marked[i + k] = mk.color;
+        for (let k = 0; k < want.length; k++) marked[i + k] = { color: mk.color, at: mk.at };
       }
     }
   });
   /** Runs of neighbouring words that share a mark (or share having none). */
-  const groups: { color?: string; from: number; to: number }[] = [];
+  const groups: { mark?: MarkSpec; color?: string; from: number; to: number }[] = [];
   words.forEach((_, i) => {
     const last = groups[groups.length - 1];
-    if (last && last.color === marked[i]) last.to = i;
-    else groups.push({ color: marked[i], from: i, to: i });
+    if (last && sameMark(last.mark, marked[i])) last.to = i;
+    else groups.push({ mark: marked[i], color: marked[i]?.color, from: i, to: i });
   });
+  const underline = markStyle === "underline";
   return (
     <div
       style={{
@@ -328,14 +342,15 @@ export const Words = ({
            note. It follows the run's LAST word, so a two-word phrase is marked
            once it is whole rather than being washed while it is still arriving
            and reading as a highlight of a word that is not there yet. */
-        const mark = textReveal(f, markAt ?? atEach?.[g.to] ?? at + g.to * step, m.reveal).opacity;
+        const mark = textReveal(f, g.mark?.at ?? markAt ?? atEach?.[g.to] ?? at + g.to * step, m.reveal).opacity;
         return (
           <span
             key={g.from}
             style={{
               position: "relative",
               display: "inline-block",
-              padding: "0.04em 0.18em",
+              /* an underline adds no width: the line spans the words themselves */
+              padding: underline ? "0.04em 0" : "0.04em 0.18em",
               marginRight: "0.3em",
               /* ⚠ A MARKED RUN NEVER WRAPS. Its band, its carets and its dots
                  are one rectangle; letting the phrase break across lines would
@@ -354,11 +369,13 @@ export const Words = ({
               style={{
                 position: "absolute",
                 left: 0,
-                top: markStyle === "selection" ? -SEL.pad : 0,
-                bottom: markStyle === "selection" ? -SEL.pad : 0,
+                top: markStyle === "selection" ? -SEL.pad : underline ? undefined : 0,
+                /* an underline sits clear of the descenders (y, p, g) */
+                bottom: markStyle === "selection" ? -SEL.pad : underline ? "-0.1em" : 0,
+                height: underline ? "0.09em" : undefined,
                 width: `${(mark * 100).toFixed(1)}%`,
                 background: g.color,
-                borderRadius: markStyle === "selection" ? 0 : 6,
+                borderRadius: markStyle === "selection" ? 0 : underline ? 999 : 6,
               }}
             />
             {markStyle === "selection" && mark > 0.001 ? (

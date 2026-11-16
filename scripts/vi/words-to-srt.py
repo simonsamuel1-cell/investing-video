@@ -56,7 +56,8 @@ def main():
     sent = []
     for w in ws:
         sent.append(w)
-        if w["w"].rstrip("”\"’'").endswith((".", "?", "!")):
+        # "Mr." / "Dr." end with a full stop but not a sentence: "Mr. Market" stays on one cue
+        if w["w"].rstrip("”\"’'").endswith((".", "?", "!")) and w["w"] not in ("Mr.", "Mrs.", "Ms.", "Dr.", "St."):
             flush(sent)
             sent = []
     if sent:
