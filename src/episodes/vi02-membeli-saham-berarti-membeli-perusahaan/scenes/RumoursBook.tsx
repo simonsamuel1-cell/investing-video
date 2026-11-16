@@ -7,11 +7,12 @@
  *     public/art/vi02/investor: tenang, senang, panik, lesu) with his phone; "Seseorang membeli saham": a card with nothing
  *     but ABCD, its candles drawn on "kode dan chart-nya". ABCD is not a real code (V01: "Contoh saham jangan gunakan ICBP") and its tape is a shape.
  *  B  the three weeks: each message comes in as a chat bubble under its week; his pose and the pill over him change on his
- *     reaction (Tambah posisi → Panik → Jual rugi), the candles climb, then fall.
+ *     reaction (Tambah posisi → Panik → Jual rugi), the candles climb, then fall, an arrow over each week's move (Simon 16 Nov:
+ *     up green, then down red twice).
  *  C  "Masalah utamanya bukan karena rumor selalu salah" (a cut): the three messages small in a row, Simon's line under them,
  *     and on "Rumor bisa benar, bisa juga salah" a tick, a cross and a question mark.
- *  D  "Masalahnya adalah" (a cut): an empty "Buku bisnis", its three rows coming in on their sentences, each a "?";
- *     Simon's line "Masalahnya: ngga punya standar penilaian".
+ *  D  "Masalahnya adalah" (a cut): one card headed by Simon's line "Masalahnya: ngga punya standar penilaian" (16 Nov, in
+ *     place of "Buku bisnis" and its icon), its three rows coming in on their sentences, each a "?".
  *  E  "Bandingkan dengan Ibu Sari" (a cut): VI01's frame, warung and Ibu Sari (as in SC03); the rumour comes in at the frame's
  *     edge, her supplier book opens, its rows are checked one by one, and she answers.
  *  F  "Semakin kita memahami bisnis" (a cut): messages flow into the "Buku bisnis", now filled, and come out sorted: a short
@@ -41,6 +42,19 @@ const TAPE = { y: 250, h: 520, x0: 640, w0: 760, x1: 590, w1: 600, pad: 40, head
 /** The tape's shape, week by week: quiet, up on the first message, down on the next two. */
 const SHAPE = [0.46, 0.5, 0.45, 0.52, 0.48, 0.55, 0.5, 0.56, 0.72, 0.68, 0.84, 0.8, 0.9, 0.62, 0.66, 0.46, 0.5, 0.3, 0.36, 0.16, 0.2, 0.06];
 const REACH = [8, 12, 17, 21];
+/**
+ * Each week's move, as an arrow beside its candles (Simon 16 Nov): up on the first message (green), down on the second and the
+ * third (red). From one REACH point of the shape to the next, lifted off the candles, growing as they come in.
+ */
+const TRENDS = [
+  { from: 8, to: 12, up: true },
+  { from: 12, to: 17, up: false },
+  { from: 17, to: 21, up: false },
+] as const;
+/** `lift`: how far the arrow stands off its candles, square to its own direction (up-left of a rise, up-right of a fall) */
+const TREND = { lift: 62, stroke: 7, head: 20, trim: 0.12 };
+/** the red (falling) arrows, moved up 10 px and right 10 px (Simon 16 Nov: first 15, then "bukan 15 px tapi 10 px") */
+const FALL_SHIFT = { x: 10, y: -10 };
 const shapeAt = (t: number) => {
   const i = Math.min(Math.floor(t), SHAPE.length - 2);
   return SHAPE[i] + (SHAPE[i + 1] - SHAPE[i]) * (t - i);
@@ -50,6 +64,12 @@ const TAPE_BARS = Array.from({ length: TAPE.bars }).reduce<Bar[]>((bars, _, i) =
   const c = shapeAt((i / (TAPE.bars - 1)) * (SHAPE.length - 1)) + (random(`abcd-close-${i}`) - 0.5) * TAPE.noise;
   return [...bars, { o, c, h: Math.max(o, c) + random(`abcd-high-${i}`) * TAPE.noise, l: Math.min(o, c) - random(`abcd-low-${i}`) * TAPE.noise }];
 }, []);
+
+/**
+ * "hanya ilustrasi" under the chart card, left-aligned with it (Simon 16 Nov, his words and case — an exception he asked for
+ * to the no-"Ilustrasi" rule), set as VI01's: an indigo dot and the words.
+ */
+const TAG = { dot: 14, gap: 12, size: 26, below: 18 };
 
 const BUB = { x: 1250, w: 510, y: 360, h: 230, chipY: 312, size: 40 };
 const WEEKS = [
@@ -64,8 +84,14 @@ const MINI = { w: 470, h: 210, gap: 50, y: 330, chipY: 284, size: 34, badge: 76,
 const miniX = (i: number) => CX - (3 * MINI.w + 2 * MINI.gap) / 2 + i * (MINI.w + MINI.gap);
 
 // D — the empty book
-const BOOK = { w: 780, y: 190, head: 110, rowH: 116, gap: 22, pad: 40, line: 830 };
-const BOOK_H = BOOK.head + 3 * BOOK.rowH + 2 * BOOK.gap + BOOK.pad;
+/**
+ * D's card: Simon's line is its heading (16 Nov: "replace 'Buku bisnis' dengan 'Masalahnya: ngga…'", the book icon removed),
+ * on two lines, the second all indigo ("Buat jadi 2 text line").
+ */
+/** as wide as the heading (Simon 16 Nov: "width kartu fit ke judul aja"): its longer line is 596 px at 44 px, plus `pad` each side */
+const BOOK = { w: 680, y: 200, head: 110, rowH: 116, gap: 22, pad: 42 };
+const BOOK_HEAD = 170;
+const BOOK_H = BOOK_HEAD + 3 * BOOK.rowH + 2 * BOOK.gap + BOOK.pad;
 const UNKNOWN = [
   { icon: "package", label: "Jual apa?", at: "perusahaan menjual" },
   { icon: "coins", label: "Income source?", at: "uangnya datang" },
@@ -93,6 +119,25 @@ const Bubble = ({ x, y, w, h, text, size, tone }: { x: number; y: number; w: num
     <Card x={x} y={y} w={w} h={h} style={{ display: "flex", alignItems: "center", padding: "0 36px", borderRadius: inRadius, background: tone ?? c.cardBg }}>
       <div style={{ ...typeStyle("title"), fontSize: size, fontWeight: 500, lineHeight: 1.25, color: c.ink, textWrap: "balance" }}>{text}</div>
     </Card>
+  );
+};
+
+/**
+ * The reaction's sign on its disc, drawn (Simon 16 Nov: the typed "+" and "−" sat off the disc's vertical centre — a font's
+ * glyph box isn't centred on its stroke), so it is centred exactly.
+ */
+const Sign = ({ kind, tone }: { kind: "+" | "!" | "−"; tone: string }) => {
+  const c = usePalette();
+  return (
+    <svg width={48} height={48} viewBox="0 0 48 48" style={{ flex: "none" }}>
+      <circle cx={24} cy={24} r={24} fill={tone} />
+      <g stroke={c.cardBg} strokeWidth={5} strokeLinecap="round">
+        {kind !== "!" ? <line x1={14} y1={24} x2={34} y2={24} /> : null}
+        {kind === "+" ? <line x1={24} y1={14} x2={24} y2={34} /> : null}
+        {kind === "!" ? <line x1={24} y1={12} x2={24} y2={27} /> : null}
+      </g>
+      {kind === "!" ? <circle cx={24} cy={35} r={3.2} fill={c.cardBg} /> : null}
+    </svg>
   );
 };
 
@@ -193,7 +238,7 @@ export const SC05 = () => {
           const p = ease(f, thenAt[i], m.reveal) * (i < WEEKS.length - 1 ? 1 - ease(f, thenAt[i + 1], m.sec(0.15)) : 1);
           return p > 0.001 ? (
             <div key={k.then} style={{ position: "absolute", left: MAN.cx, top: PILL_Y + (1 - p) * 10, transform: "translate(-50%, -50%)", display: "flex", alignItems: "center", gap: 14, padding: "10px 30px 10px 12px", borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, opacity: p, whiteSpace: "nowrap" }}>
-              <div style={{ width: 48, height: 48, borderRadius: 999, background: k.tone, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontSize: 34, lineHeight: 1, color: c.cardBg }}>{k.sign}</div>
+              <Sign kind={k.sign} tone={k.tone} />
               <div style={{ ...typeStyle("label"), fontSize: 34, fontWeight: 600, color: c.ink }}>{k.then}</div>
             </div>
           ) : null;
@@ -202,8 +247,34 @@ export const SC05 = () => {
           <Card x={tapeX} y={TAPE.y} w={tapeW} h={TAPE.h}>
             <div style={{ position: "absolute", left: TAPE.pad, top: 36, fontFamily: theme.text.family, fontSize: TAPE.code, fontWeight: 700, letterSpacing: 1, color: c.indigo }}>ABCD</div>
             <Candles bars={TAPE_BARS} grid={tapeGrid} shown={reach / (SHAPE.length - 1)} opacity={ease(f, codeAt, m.fade)} />
+            <svg width={tapeW} height={TAPE.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+              {TRENDS.map((t, i) => {
+                const p = ease(f, saidAt[i], m.sec(0.9));
+                if (p <= 0.001) return null;
+                const bar = (k: number) => (k / (SHAPE.length - 1)) * (TAPE.bars - 1);
+                const span = t.to - t.from;
+                const a0 = { x: tapeGrid.x(bar(t.from + span * TREND.trim)), y: tapeGrid.y(shapeAt(t.from + span * TREND.trim)) };
+                const b0 = { x: tapeGrid.x(bar(t.to - span * TREND.trim)), y: tapeGrid.y(t.up ? Math.max(SHAPE[t.to], shapeAt(t.to - span * TREND.trim)) : shapeAt(t.to - span * TREND.trim)) };
+                const ang = Math.atan2(b0.y - a0.y, b0.x - a0.x);
+                const n = { x: Math.sin(ang) * TREND.lift + (t.up ? 0 : FALL_SHIFT.x), y: -Math.cos(ang) * TREND.lift + (t.up ? 0 : FALL_SHIFT.y) };
+                const a = { x: a0.x + n.x, y: a0.y + n.y };
+                const b = { x: b0.x + n.x, y: b0.y + n.y };
+                const tip = { x: mix(a.x, b.x, p), y: mix(a.y, b.y, p) };
+                const head = (d: number) => `${(tip.x - TREND.head * Math.cos(ang + d)).toFixed(1)} ${(tip.y - TREND.head * Math.sin(ang + d)).toFixed(1)}`;
+                return (
+                  <g key={i} fill="none" stroke={t.up ? theme.color.ok : theme.color.crossRed} strokeWidth={TREND.stroke} strokeLinecap="round" strokeLinejoin="round">
+                    <line x1={a.x} y1={a.y} x2={tip.x} y2={tip.y} />
+                    <path d={`M ${head(0.6)} L ${tip.x.toFixed(1)} ${tip.y.toFixed(1)} L ${head(-0.6)}`} />
+                  </g>
+                );
+              })}
+            </svg>
             <SourceTag kind="synthetic" />
           </Card>
+          <div style={{ position: "absolute", left: tapeX + 6, top: TAPE.y + TAPE.h + TAG.below, display: "flex", alignItems: "center", gap: TAG.gap }}>
+            <div style={{ width: TAG.dot, height: TAG.dot, borderRadius: 999, background: c.indigo, flex: "none" }} />
+            <div style={{ ...typeStyle("label"), fontSize: TAG.size, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>hanya ilustrasi</div>
+          </div>
         </Appear>
         {WEEKS.map((k, i) => {
           const out = i < WEEKS.length - 1 ? W(WEEKS[i + 1].at) - m.sec(0.15) : 1e6;
@@ -238,19 +309,16 @@ export const SC05 = () => {
       <Shot from={noBasisAt} to={sariAt} block={BLOCK.SC05}>
         <Appear at={noBasisAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
           <Card x={CX - BOOK.w / 2} y={BOOK.y} w={BOOK.w} h={BOOK_H}>
-            <div style={{ position: "absolute", left: BOOK.pad, top: 30, display: "flex", alignItems: "center", gap: 18 }}>
-              <Glyph icon="book-open" size={56} tone={c.ink} />
-              <div style={{ ...typeStyle("title"), fontSize: 46, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>Buku bisnis</div>
+            <div style={{ position: "absolute", left: BOOK.pad, top: 30, ...typeStyle("title"), fontSize: 44, fontWeight: 600, lineHeight: 1.25, color: c.ink, whiteSpace: "nowrap" }}>
+              <div>Masalahnya:</div>
+              <div style={{ color: c.indigo }}>ngga punya standar penilaian</div>
             </div>
             {UNKNOWN.map((u, i) => (
-              <div key={u.icon} style={{ position: "absolute", left: BOOK.pad, top: BOOK.head + i * (BOOK.rowH + BOOK.gap), width: BOOK.w - 2 * BOOK.pad, height: BOOK.rowH }}>
+              <div key={u.icon} style={{ position: "absolute", left: BOOK.pad, top: BOOK_HEAD + i * (BOOK.rowH + BOOK.gap), width: BOOK.w - 2 * BOOK.pad, height: BOOK.rowH }}>
                 <BookRow icon={u.icon} label={u.label} p={ease(f, W(u.at), m.reveal)} open />
               </div>
             ))}
           </Card>
-        </Appear>
-        <Appear at={W("nggak punya dasar")} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-          <Line x={0} y={BOOK.line} w={theme.canvas.width} align="center" size={48} weight={500} text="Masalahnya: ngga punya standar penilaian" mark="standar penilaian" />
         </Appear>
       </Shot>
 

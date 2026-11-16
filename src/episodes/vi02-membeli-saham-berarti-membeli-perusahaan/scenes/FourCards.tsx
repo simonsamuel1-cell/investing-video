@@ -2,27 +2,34 @@
  * VI02 · SC07 — "Empat Pertanyaan sebelum Membeli" in VI01's look (Simon 13 Nov: "revamp visual untuk scene 5-8"), from the
  * ChatGPT storyboard docs/vi-style/storyboards/VI02-SC07-v3.png. The old scene is scenes/FourQuestions.tsx (VI01_LOOK = false).
  *
- *  A  "jangan mulai dari: “Target harganya berapa?”": a big price tag, crossed, gone grey.
+ *  A  "jangan mulai dari: “Target harganya berapa?”": the sentence in short, nothing else (Simon 16 Nov: no X, no tag).
  *  B  "empat pertanyaan sederhana" (a cut): four tall cards, numbered; each lights on its ordinal ("Pertama" …) with its
  *     question, and its picture comes on the next sentence: SC01's box (what it sells), one bar in three parts (where the money
  *     comes from — a shape, no figures), Laba → Dividen / Reinvestasi, bars rising into dashed ones (the future).
  *  C  "Kalau empat pertanyaan ini bisa dijawab": the cards fold into four ticked tiles at the top; under them SC06's balance
  *     scale with Harga on one pan and Bisnis on the other — now the price has something to be weighed against.
- *  D  "Kalau belum" (a cut): all of it goes; a small grey code, ABCD (SC05's), alone.
+ *  D  "Kalau belum": the scale stays; its point in one line under it (Simon 16 Nov: the lone ABCD was "gabut").
  */
 import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { BoardGrid, Card, Drawing, Glyph, Pic, Shot, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, Drawing, Glyph, Line, Pic, Shot, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 
 // A — the tag
-const TAG = { w: 860, h: 320, y: 330, nose: 120, hole: 40, size: 92 };
+const OPENER = { y: 480, size: 68 };
+const CLOSING = { y: 898, size: 48 };
 
 // B — four cards
-const CARD = { w: 360, h: 560, gap: 40, y: 250, disc: 76, ask: 42, art: 470 };
+const CARD = { w: 360, h: 560, gap: 40, y: 290, disc: 76, ask: 42, art: 470 };
+/**
+ * The heading over the cards (Simon 16 Nov): "Mulai dari 4 pertanyaan", then on "Pertama" it turns over to "Perusahaan ini ..." —
+ * the words every card finishes. It leaves as the cards fold into tiles.
+ */
+const HEAD = { y: 168, size: 60, shift: 34 };
+const HEADS = ["Mulai dari 4 pertanyaan", "Perusahaan ini ..."] as const;
 const cardX = (i: number) => CX - (4 * CARD.w + 3 * CARD.gap) / 2 + i * (CARD.w + CARD.gap);
 const QUESTIONS = [
   { ask: "Jual apa?", at: "Pertama", artAt: "Produk atau" },
@@ -73,9 +80,6 @@ export const SC07 = () => {
   const notAt = W("Kalau belum");
 
   // A
-  const tagIn = ease(f, W("jangan mulai") - m.sec(0.2), m.reveal);
-  const cross = ease(f, W("Target harganya"), m.sec(0.3));
-  const grey = ease(f, W("Target harganya") + m.sec(0.25), m.fade);
 
   // B–C
   const lightAt = QUESTIONS.map((q) => W(q.at));
@@ -96,21 +100,28 @@ export const SC07 = () => {
 
       {/* A: the question to skip */}
       <Shot from={-1} to={cardsAt} block={BLOCK.SC07} cutIn={false}>
-        <div style={{ position: "absolute", left: CX - TAG.w / 2, top: TAG.y + (1 - tagIn) * 16, width: TAG.w, height: TAG.h, opacity: tagIn }}>
-          <Tag w={TAG.w} h={TAG.h} nose={TAG.nose} hole={TAG.hole} grey={grey}>
-            <div style={{ ...typeStyle("title"), fontSize: TAG.size, fontWeight: 600, color: interpolateColors(grey, [0, 1], [c.ink, theme.color.mute]), whiteSpace: "nowrap" }}>Target harga?</div>
-          </Tag>
-          <svg width={TAG.w} height={TAG.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-            <g stroke={theme.color.crossRed} strokeWidth={16} strokeLinecap="round">
-              <line x1={TAG.w / 2 - 170} y1={-30} x2={TAG.w / 2 - 170 + 340 * cross} y2={-30 + (TAG.h + 60) * cross} />
-              <line x1={TAG.w / 2 + 170} y1={-30} x2={TAG.w / 2 + 170 - 340 * cross} y2={-30 + (TAG.h + 60) * cross} />
-            </g>
-          </svg>
-        </div>
+        <Appear at={W("Jadi ketika") + m.sec(0.15)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
+          <Line x={0} y={OPENER.y} w={theme.canvas.width} align="center" size={OPENER.size} weight={500} text="Jangan mulai dari “Target harganya berapa?”" mark="Jangan mulai" />
+        </Appear>
       </Shot>
 
       {/* B–C: four questions, then what they make possible */}
-      <Shot from={cardsAt} to={notAt} block={BLOCK.SC07}>
+      <Shot from={cardsAt} to={1e6} block={BLOCK.SC07} cutOut={false}>
+        {/* B: the heading over the cards, turning over once */}
+        {(() => {
+          const swap = ease(f, W("Pertama"), m.move);
+          const gone = ease(f, W("Kalau empat"), m.fade);
+          return HEADS.map((text, i) => {
+            const inP = i === 0 ? ease(f, cardsAt + m.sec(0.1), m.reveal) : swap;
+            const outP = i === 0 ? swap : 0;
+            const p = inP * (1 - outP) * (1 - gone);
+            if (p <= 0.001) return null;
+            const dy = (1 - inP) * HEAD.shift - outP * HEAD.shift;
+            return (
+              <div key={text} style={{ position: "absolute", left: 0, top: HEAD.y + dy, width: theme.canvas.width, transform: "translateY(-50%)", textAlign: "center", ...typeStyle("title"), fontSize: HEAD.size, fontWeight: 600, color: c.ink, opacity: p, whiteSpace: "nowrap" }}>{text}</div>
+            );
+          });
+        })()}
         {QUESTIONS.map((q, i) => {
           const p = ease(f, cardsAt + i * m.sec(0.1), m.reveal);
           const asked = ease(f, lightAt[i], m.reveal);
@@ -200,15 +211,10 @@ export const SC07 = () => {
         ) : null}
       </Shot>
 
-      {/* D: without the answers, only the code is left */}
-      <Shot from={notAt} to={1e6} block={BLOCK.SC07} cutOut={false}>
-        {(() => {
-          const p = ease(f, notAt + m.sec(0.25), m.reveal);
-          return (
-            <div style={{ position: "absolute", left: CX, top: 470 + (1 - p) * 12, transform: "translate(-50%, -50%)", padding: "18px 56px", borderRadius: 999, background: theme.color.neutralDisc, boxShadow: `inset 0 0 0 2px ${theme.color.skeleton}`, fontFamily: theme.text.family, fontSize: 64, fontWeight: 700, letterSpacing: 1, color: theme.color.mute, opacity: p }}>ABCD</div>
-          );
-        })()}
-      </Shot>
+      {/* D: "Kalau belum…" — the scale stays, its point in one line under it (Simon 16 Nov: no lone ABCD) */}
+      <Appear at={notAt + m.sec(0.15)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
+        <Line x={0} y={CLOSING.y} w={theme.canvas.width} align="center" size={CLOSING.size} weight={500} text="Belum bisa dijawab? Yang dibeli masih sekadar kode saham." mark="sekadar kode saham" />
+      </Appear>
     </Stage>
   );
 };

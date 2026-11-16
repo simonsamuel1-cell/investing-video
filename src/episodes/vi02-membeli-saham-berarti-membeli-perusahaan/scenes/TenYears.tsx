@@ -8,17 +8,17 @@
  *     assembled here so its beam can tip); a block of Laba lands on its pan on each phrase and the beam tips its way.
  *  D  "Warren Buffett kemudian mengatakan" (a cut): his photo tile and his own sentence (Berkshire Hathaway's 1996 letter) in
  *     the dashed text box, "ten years" and "ten minutes" lit on their Indonesian words.
- *  E  "Karena itu … “Besok harganya naik nggak?”" (a cut): the question in a big bubble, crossed, gone grey; it holds
- *     through "Coba pikirkan:".
- *  F  "sepuluh tahun lagi" (a cut): 10 menit → 10 tahun; SC01's factory at the far end; on "Produknya" it
- *     comes to the middle and the five questions come round it, one per sentence.
+ *  E  "Karena itu … “Besok harganya naik nggak?”" (a cut): a big bubble, the lead-in and the question typed on their words
+ *     (Simon 16 Nov: no X, a longer line, typing), gone grey on "Coba pikirkan:" and held through it.
+ *  F  "sepuluh tahun lagi" (a cut): SC01's factory in the middle, "10 tahun ke depan" under it (Simon 16 Nov: no
+ *     10 menit → 10 tahun line); the five questions come round it, one per sentence.
  *  G  "Kita nggak harus…" (a cut): Orang Tuntun and the lines as speech bubbles; on "Kalau kita bahkan" the last pair.
  * The candles are a shape (no figures, no source tag text).
  */
 import { interpolateColors, random, staticFile, useCurrentFrame } from "remotion";
 import { Candles, SoftGround, SourceTag, Stage, gridOf, theme, typeStyle, useMotion, usePalette, useShadow, type Bar } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, DashBox, Drawing, Glyph, GrowArrow, IconDisc, ORANG_TUNTUN_RIGHT, OrangTuntun, PhotoTile, Pic, Shot, WordPill, ease, useWords } from "../components/kit";
+import { Appear, BoardGrid, Card, DashBox, Drawing, Glyph, IconDisc, ORANG_TUNTUN_RIGHT, OrangTuntun, PhotoTile, Pic, Shot, WordPill, ease, useWords } from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -32,9 +32,10 @@ const NAME_GAP = 26;
 const PANEL = { y: 200, h: 640, w: 600, xs: [520, 1160], pill: 50, label: 588 };
 
 // B — the ballot box, the thumbs, the price
-const BALLOT = { src: "art/vi02/scale-line/ballot.png", w0: 446, h0: 358, w: 300, y: 330, slot: 51 };
+/** `slot`: the lid's slot line in the drawing's own pixels (its centre row; x is the drawing's middle) */
+const BALLOT = { src: "art/vi02/scale-line/ballot.png", w0: 446, h0: 358, w: 300, y: 330, slot: 55 };
 const BALLOT_H = (BALLOT.w * BALLOT.h0) / BALLOT.w0;
-const THUMBS = 10;
+const THUMBS = 6;
 const TAPE = { x: 50, y: 96, w: 500, h: 150, shown: 30, step: 5, length: 320 };
 const TAPE_BARS = Array.from({ length: TAPE.length }).reduce<Bar[]>((bars, _, i) => {
   const o = bars.length ? bars[bars.length - 1].c : 0.5;
@@ -59,11 +60,19 @@ const BUFFETT = { x: 150, y: 250 };
 const QUOTE = { cx: 1180, y: 230, w: 1060, h: 400, size: 48, source: 712 };
 
 // E — the short question
-const ASK = { w: 1100, h: 300, y: 330, size: 80, cross: 300 };
+/**
+ * The question, typed on its words (Simon 16 Nov: "remove X. Buat teks ringkasannya lebih panjang dan kasih animasi ngetik"):
+ * the VO's lead-in on the first line, the question itself on the second, each typed across its own words, a caret at its end.
+ */
+const ASK = { w: 1260, h: 300, y: 330, gap: 14 };
+const ASK_LINES = [
+  { text: "Sebelum membeli, jangan cuma bertanya:", size: 52, weight: 500, from: "sebelum membeli", to: "Besok harganya" },
+  { text: "“Besok harganya naik nggak?”", size: 76, weight: 600, from: "Besok harganya", to: "Coba pikirkan" },
+] as const;
 
 // F — ten minutes, ten years, the business, five questions
-const TIME = { y: 300, x0: 420, x1: 1500, d: 150, label: 34 };
-const FACTORY = { far: { cx: 1500, floor: 820, h: 300 }, mid: { cx: CX, floor: 760, h: 320 } };
+/** SC01's factory in the middle from the shot's first frame (Simon 16 Nov: the 10 menit → 10 tahun line dropped), its label under it */
+const FACTORY = { cx: CX, floor: 760, h: 320, labelY: 812, labelSize: 40 };
 const QUESTIONS = [
   { icon: "package", text: "Produk?", at: "Produknya masih", x: 470, y: 380 },
   { icon: "users-three", text: "Pelanggan?", at: "Pelanggannya masih", x: CX, y: 250 },
@@ -97,7 +106,6 @@ export const SC06 = () => {
   const askAt = W("Karena itu");
   /** the crossed question holds through "Coba pikirkan:"; the line from 10 minutes to 10 years starts on "sepuluh tahun lagi" */
   const timeAt = W("sepuluh tahun lagi");
-  const qAt = W("Produknya masih");
   const sayAt = W("Kita nggak harus");
   const lastAt = W("Kalau kita bahkan");
 
@@ -119,9 +127,6 @@ export const SC06 = () => {
   const minutes = ease(f, W("sepuluh menit"), m.reveal);
 
   // F
-  const reach = ease(f, timeAt + m.sec(0.15), m.sec(0.9));
-  const toMid = ease(f, qAt - m.sec(0.5), m.move);
-  const fac = { cx: mix(FACTORY.far.cx, FACTORY.mid.cx, toMid), floor: mix(FACTORY.far.floor, FACTORY.mid.floor, toMid), h: mix(FACTORY.far.h, FACTORY.mid.h, toMid) };
   const qShown = QUESTIONS.map((q) => ease(f, W(q.at), m.reveal));
   const lit = QUESTIONS.map((q, i) => ease(f, W(q.at), m.pop) * (i < QUESTIONS.length - 1 ? 1 - ease(f, W(QUESTIONS[i + 1].at), m.pop) : 1 - ease(f, sayAt - m.sec(0.3), m.fade)));
 
@@ -146,14 +151,20 @@ export const SC06 = () => {
                 <Appear at={voteAt} rise={0} style={{ left: 0, top: 0, width: PANEL.w, height: PANEL.h }}>
                   <Candles bars={bars} grid={tapeGrid} />
                   <SourceTag kind="synthetic" />
-                  {Array.from({ length: THUMBS }, (_, k) => {
-                    if (f < voteAt) return null;
-                    const t = (((f - voteAt) / m.sec(1.3) + k / THUMBS) % 1 + 1) % 1;
-                    const up = k % 2 === 0;
-                    const x = PANEL.w / 2 + Math.sin(k * 2.3) * 130 * (1 - t);
-                    return <IconDisc key={k} x={x} y={mix(TAPE.y + TAPE.h + 36, slotY - 6, t)} d={66} icon={up ? "thumbs-up" : "thumbs-down"} opacity={Math.min(1, t * 5, (1 - t) * 5)} />;
-                  })}
                   <Pic src={staticFile(BALLOT.src)} style={{ position: "absolute", left: ballotX, top: BALLOT.y, width: BALLOT.w, height: BALLOT_H }} />
+                  {/* the votes go INTO the slot (Simon 16 Nov: "masuk ke garis hitam di tengahnya, bukan ke belakang box"): in front of
+                      the box, lined up on the slot, and cut off at the slot line as they pass it */}
+                  <div style={{ position: "absolute", inset: 0, clipPath: `inset(0px 0px ${(PANEL.h - slotY).toFixed(1)}px 0px)` }}>
+                    {Array.from({ length: THUMBS }, (_, k) => {
+                      if (f < voteAt) return null;
+                      const t = (((f - voteAt) / m.sec(1.3) + k / THUMBS) % 1 + 1) % 1;
+                      const up = k % 2 === 0;
+                      // over the slot before they reach it, so none is cut off on the lid beside it
+                      const line = Math.min(1, t / 0.4);
+                      const x = PANEL.w / 2 + Math.sin(k * 2.3) * 130 * (1 - line * line * (3 - 2 * line));
+                      return <IconDisc key={k} x={x} y={mix(TAPE.y + TAPE.h + 36, slotY + 40, t)} d={mix(66, 56, t)} icon={up ? "thumbs-up" : "thumbs-down"} opacity={Math.min(1, t * 5)} />;
+                    })}
+                  </div>
                 </Appear>
               ) : (
                 <Appear at={weighAt} rise={0} style={{ left: 0, top: 0, width: PANEL.w, height: PANEL.h }}>
@@ -205,23 +216,38 @@ export const SC06 = () => {
         </Appear>
       </Shot>
 
-      {/* E: the question to drop */}
+      {/* E: the question to drop, typed as it is said */}
       <Shot from={askAt} to={timeAt} block={BLOCK.SC06}>
         {(() => {
-          const p = ease(f, askAt + m.sec(0.2), m.reveal);
-          const cross = ease(f, W("naik nggak"), m.sec(0.3));
-          const grey = ease(f, W("naik nggak") + m.sec(0.2), m.fade);
+          const p = ease(f, askAt + m.sec(0.1), m.reveal);
+          const doneAt = W("Coba pikirkan");
+          const grey = ease(f, doneAt, m.fade);
+          const ink = interpolateColors(grey, [0, 1], [c.ink, theme.color.mute]);
+          /** the line being typed carries the caret; once both are typed it stays on the second, blinking, until it goes grey */
+          const typed = ASK_LINES.map((l) => {
+            const a = W(l.from);
+            const b = W(l.to);
+            return Math.round(l.text.length * Math.max(0, Math.min(1, (f - a) / Math.max(1, b - a - m.sec(0.1)))));
+          });
+          const caretOn = typed[1] > 0 ? 1 : 0;
+          const blink = Math.floor(f / m.sec(0.5)) % 2 === 0;
           return (
             <div style={{ position: "absolute", left: CX - ASK.w / 2, top: ASK.y + (1 - p) * 16, width: ASK.w, height: ASK.h, opacity: p }}>
-              <Card x={0} y={0} w={ASK.w} h={ASK.h} style={{ display: "flex", alignItems: "center", justifyContent: "center", borderRadius: `${R * 2}px ${R * 2}px ${R * 2}px 10px`, background: interpolateColors(grey, [0, 1], [c.cardBg, theme.color.neutralDisc]) }}>
-                <div style={{ ...typeStyle("title"), fontSize: ASK.size, fontWeight: 600, color: interpolateColors(grey, [0, 1], [c.ink, theme.color.mute]), whiteSpace: "nowrap" }}>Besok harganya naik nggak?</div>
+              <Card x={0} y={0} w={ASK.w} h={ASK.h} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: ASK.gap, borderRadius: `${R * 2}px ${R * 2}px ${R * 2}px 10px`, background: interpolateColors(grey, [0, 1], [c.cardBg, theme.color.neutralDisc]) }}>
+                {ASK_LINES.map((l, i) => {
+                  const typing = typed[i] > 0 && typed[i] < l.text.length;
+                  const showCaret = i === caretOn && grey < 0.5 && (typing || blink);
+                  return (
+                    <div key={l.text} style={{ position: "relative", ...typeStyle("title"), fontSize: l.size, fontWeight: l.weight, lineHeight: 1.15, whiteSpace: "nowrap" }}>
+                      <span style={{ visibility: "hidden" }}>{l.text}</span>
+                      <span style={{ position: "absolute", left: 0, top: 0, color: i === 0 ? interpolateColors(grey, [0, 1], [c.slate, theme.color.mute]) : ink }}>
+                        {l.text.slice(0, typed[i])}
+                        {showCaret ? <span style={{ display: "inline-block", width: 5, height: "0.9em", marginLeft: 4, verticalAlign: "-0.12em", borderRadius: 3, background: c.indigo }} /> : null}
+                      </span>
+                    </div>
+                  );
+                })}
               </Card>
-              <svg width={ASK.w} height={ASK.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-                <g stroke={theme.color.crossRed} strokeWidth={14} strokeLinecap="round" fill="none">
-                  <line x1={ASK.w / 2 - ASK.cross / 2} y1={-20} x2={ASK.w / 2 - ASK.cross / 2 + ASK.cross * cross} y2={-20 + (ASK.h + 40) * cross} />
-                  <line x1={ASK.w / 2 + ASK.cross / 2} y1={-20} x2={ASK.w / 2 + ASK.cross / 2 - ASK.cross * cross} y2={-20 + (ASK.h + 40) * cross} />
-                </g>
-              </svg>
             </div>
           );
         })()}
@@ -229,13 +255,12 @@ export const SC06 = () => {
 
       {/* F: ten minutes, ten years — and what ten years asks of the business */}
       <Shot from={timeAt} to={sayAt} block={BLOCK.SC06}>
-        <div style={{ position: "absolute", inset: 0, opacity: 1 - toMid }}>
-          <IconDisc x={TIME.x0} y={TIME.y} d={TIME.d} icon="clock" label="10 menit" labelSize={TIME.label} opacity={ease(f, timeAt, m.reveal)} />
-          <GrowArrow x0={TIME.x0 + TIME.d / 2 + 16} y0={TIME.y} x1={TIME.x1 - TIME.d / 2 - 16} y1={TIME.y} p={reach} />
-          <IconDisc x={TIME.x1} y={TIME.y} d={TIME.d} icon="calendar-blank" label="10 tahun" labelSize={TIME.label} opacity={ease(f, timeAt + m.sec(0.8), m.reveal)} />
-        </div>
-        <Appear at={W("bisnis ini akan")} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-          <Drawing name="factory" cx={fac.cx} floor={fac.floor} h={fac.h} />
+        <Appear at={timeAt} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+          <Drawing name="factory" cx={FACTORY.cx} floor={FACTORY.floor} h={FACTORY.h} />
+        </Appear>
+        {/* "sepuluh tahun lagi, bisnis ini akan seperti apa?" — under the factory */}
+        <Appear at={timeAt + m.sec(0.2)} style={{ left: 0, top: FACTORY.labelY, width: theme.canvas.width, textAlign: "center" }}>
+          <div style={{ ...typeStyle("title"), fontSize: FACTORY.labelSize, fontWeight: 600, color: c.ink }}>10 tahun ke depan</div>
         </Appear>
         {QUESTIONS.map((q, i) => {
           const p = qShown[i];
@@ -256,7 +281,7 @@ export const SC06 = () => {
       <Shot from={sayAt} to={1e6} block={BLOCK.SC06} cutOut={false}>
         <OrangTuntun at={sayAt} />
         {[
-          { lines: [{ text: "Bukan harus pegang 10 tahun.", mark: "Bukan harus", at: sayAt + m.sec(0.3) }, { text: "Tapi pikirkan bisnisnya 10 tahun sebelum membeli.", mark: "pikirkan bisnisnya", at: W("Intinya") }], out: lastAt - m.sec(0.2) },
+          { lines: [{ text: "Bukan harus pegang 10 tahun.", mark: "Bukan harus", at: sayAt + m.sec(0.3) }, { text: "Sebelum beli untuk 10 menit, pikirkan bisnisnya 10 tahun.", mark: "pikirkan bisnisnya", at: W("Intinya") }], out: lastAt - m.sec(0.2) },
           { lines: [{ text: "Belum terbayang cara perusahaan menghasilkan uang?", mark: "menghasilkan uang", at: lastAt }, { text: "Mungkin kita belum cukup paham apa yang dibeli.", mark: "belum cukup paham", at: W("mungkin kita") }], out: undefined },
         ].map((pair, k) => {
           const gone = pair.out === undefined ? 0 : ease(f, pair.out, m.sec(0.2));

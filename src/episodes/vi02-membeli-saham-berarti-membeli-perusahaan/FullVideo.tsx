@@ -7,7 +7,7 @@ import { EpisodeWrap, fullFrames } from "../../core";
 import { MembeliSahamComposition, VI02_FRAMES } from "./Composition";
 
 /** `false` while the visuals are reviewed (Simon, 5 Nov): the bed is left out, its file untouched. Back to `true` before a render. */
-const BGM: boolean = false;
+const BGM: boolean = true;
 
 export const VI02_FULL_FRAMES = fullFrames(VI02_FRAMES, 60);
 export const MembeliSahamFull = () => (
