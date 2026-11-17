@@ -107,10 +107,10 @@ export const SC03 = () => {
   // C
   const lineAt = W("berapa kali laba");
   const oneAt = W("Satu kali");
-  const oneRp = W("Rp20 juta", 1);
+  const oneRp = W("dua puluh juta");
   const cheapAt = W("Terlalu murah");
   const thirtyAt = W("Tiga puluh kali");
-  const thirtyRp = W("Rp600");
+  const thirtyRp = W("enam ratus");
   const backAt = W("tiga puluh tahun");
   const bandAt = W("warung sejenis");
   const band = ease(f, bandAt, m.reveal);

@@ -18,7 +18,7 @@
  * price from Yahoo Finance.
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { SoftGround, SourceTag, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Drawing, Figure, Glyph, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, Ring, Shot, WordPill, ease, useWords } from "../components/kit";
 
@@ -295,7 +295,6 @@ export const SC06 = () => {
         <Card x={COAL.x} y={COAL.y} w={COAL.w} h={COAL.h}>
           <div style={{ position: "absolute", left: 50, top: 40, ...typeStyle("title"), fontSize: 64, fontWeight: 700, color: c.ink }}>PTBA</div>
           <div style={{ position: "absolute", left: 50, top: 120, ...typeStyle("label"), fontSize: 32, fontWeight: 500, color: c.slate }}>Bukit Asam · batu bara</div>
-          <SourceTag kind="market" label="PTBA · laporan keuangan 2022–2023" x={COAL.w - 40} y={60} />
         </Card>
         <Appear at={W("harga batu bara")} style={{ left: COAL.x + 50, top: COAL.y + 210 }}>
           <div style={{ padding: "10px 26px", borderRadius: 999, background: theme.color.neutralDisc, ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.slate, whiteSpace: "nowrap" }}>2022 · harga batu bara tinggi</div>

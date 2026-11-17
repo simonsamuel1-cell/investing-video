@@ -1,0 +1,10 @@
+{
+ "_": "VI03, 17 Nov: corrections to align-words.py for the re-recorded 'Satu kali laba, dua puluh juta rupiah? Terlalu murah.', measured from the clips' own loudness and word times (Scene 03_01 at 77.22 s, Scene 03_03 at 79.85 s of the spliced VO). Re-measure when that line is re-recorded.",
+ "shifts": [
+  { "scene": 3, "at": "dua puluh juta rupiah", "shift": 5 },
+  { "scene": 3, "at": "juta rupiah", "shift": 11 },
+  { "_": "'rupiah?' 78.94-79.53 s", "scene": 3, "at": "rupiah", "shift": 14, "grow": 15 },
+  { "_": "'Terlalu' starts at 79.87 s", "scene": 3, "at": "Terlalu murah", "shift": 45, "grow": -40 },
+  { "scene": 3, "at": "murah.", "shift": 5, "grow": -5 }
+ ]
+}

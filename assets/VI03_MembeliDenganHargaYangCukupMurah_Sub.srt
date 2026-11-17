@@ -20,7 +20,7 @@ Ada yang rusak atau nggak.
 
 6
 00:00:13,183 --> 00:00:17,817
-Baru setelah itu kamu menilai: “Dengan kondisi seperti ini, harganya sepadan nggak?”
+Baru setelah itu kamu menilai, “Dengan kondisi seperti ini, harganya sepadan nggak?”
 
 7
 00:00:18,083 --> 00:00:19,683
@@ -40,11 +40,11 @@ Padahal harga nggak sama dengan value.
 
 11
 00:00:30,983 --> 00:00:34,683
-Pilar kedua value investing adalah: membeli dengan harga yang cukup murah.
+Pilar kedua value investing adalah membeli dengan harga yang cukup murah.
 
 12
 00:00:35,000 --> 00:00:37,817
-Warren Buffett menulis: “Price is what you pay.
+Warren Buffett menulis, “Price is what you pay.
 
 13
 00:00:38,250 --> 00:00:39,517
@@ -103,505 +103,501 @@ Kalau kamu ingin membeli warung itu,
 kamu bersedia membayar berapa kali laba tahunannya?
 
 27
-00:01:17,333 --> 00:01:19,500
-Satu kali laba? Rp20 juta?
+00:01:17,833 --> 00:01:20,033
+Satu kali laba, dua puluh juta rupiah?
 
 28
-00:01:19,567 --> 00:01:21,383
+00:01:20,367 --> 00:01:21,083
 Terlalu murah.
 
 29
-00:01:21,733 --> 00:01:23,833
+00:01:21,433 --> 00:01:23,367
 Ibu Sari tentu nggak mau menjualnya.
 
 30
-00:01:24,217 --> 00:01:27,267
-Tiga puluh kali laba?
+00:01:23,683 --> 00:01:26,433
+Tiga puluh kali laba, enam ratus juta rupiah?
 
 31
-00:01:27,450 --> 00:01:28,883
-Rp600 juta?
-
-32
-00:01:29,033 --> 00:01:33,917
+00:01:26,500 --> 00:01:31,383
 Artinya kamu membutuhkan sekitar tiga puluh tahun untuk mendapatkan kembali uangmu.
 
-33
-00:01:34,317 --> 00:01:39,533
+32
+00:01:31,783 --> 00:01:37,017
 Sementara warung sejenis biasanya diperjualbelikan sekitar 8–12 kali laba tahunan.
 
-34
-00:01:39,983 --> 00:01:43,650
+33
+00:01:37,467 --> 00:01:41,117
 Inti valuasi sebenarnya sederhana: bisnis menghasilkan berapa banyak,
 
-35
-00:01:44,017 --> 00:01:49,017
+34
+00:01:41,483 --> 00:01:46,483
 bisa menghasilkan selama berapa lama, dan seberapa yakin kita terhadap hasil tersebut.
 
-36
-00:01:49,283 --> 00:01:52,933
+35
+00:01:46,750 --> 00:01:50,417
 Dalam dunia keuangan, proses ini disebut discounting.
 
-37
-00:01:53,283 --> 00:01:55,617
+36
+00:01:50,767 --> 00:01:53,083
 Buffett menghitung dengan prinsip seperti ini.
 
-38
-00:01:55,917 --> 00:01:58,283
+37
+00:01:53,383 --> 00:01:55,750
 Ibu Sari secara sederhana juga begitu.
 
-39
-00:01:58,433 --> 00:02:02,583
+38
+00:01:55,917 --> 00:02:00,050
 Dan Tuntun Research Institute menggunakan prinsip yang sama.
 
-40
-00:02:02,917 --> 00:02:05,867
-Hasil estimasinya disebut: Reference Fair Value.
+39
+00:02:00,383 --> 00:02:03,333
+Hasil estimasinya disebut Reference Fair Value.
 
-41
-00:02:06,150 --> 00:02:08,283
+40
+00:02:03,617 --> 00:02:05,750
 Kalau kita sudah punya estimasi harga wajar,
 
-42
-00:02:08,500 --> 00:02:10,783
+41
+00:02:05,983 --> 00:02:08,250
 kenapa nggak langsung membeli tepat di harga itu?
 
-43
-00:02:10,967 --> 00:02:13,183
+42
+00:02:08,933 --> 00:02:11,167
 Karena harga wajar tetap hasil perhitungan.
 
-44
-00:02:13,433 --> 00:02:15,317
+43
+00:02:11,417 --> 00:02:13,283
 Dan kita bisa salah.
 
-45
-00:02:15,400 --> 00:02:18,450
-Benjamin Graham menyebut jawabannya: Margin of Safety.
+44
+00:02:13,367 --> 00:02:16,417
+Benjamin Graham menyebut jawabannya Margin of Safety.
 
-46
-00:02:18,567 --> 00:02:21,017
+45
+00:02:16,533 --> 00:02:18,983
 Bayangkan jembatan yang mampu menahan sepuluh ton.
 
-47
-00:02:21,367 --> 00:02:24,083
+46
+00:02:19,333 --> 00:02:22,067
 Kita hanya melewatkan kendaraan tiga ton.
 
-48
-00:02:24,417 --> 00:02:25,183
+47
+00:02:22,383 --> 00:02:23,150
 Logikanya sama.
 
-49
-00:02:25,533 --> 00:02:30,233
+48
+00:02:23,500 --> 00:02:29,517
 Kalau perusahaan kita perkirakan bernilai 100, lalu dibeli di 95, ruang kesalahannya kecil.
 
-50
-00:02:30,667 --> 00:02:36,067
+49
+00:02:29,933 --> 00:02:35,317
 Kalau dibeli di 70, ada ruang lebih besar kalau perhitungan kita ternyata terlalu optimistis.
 
-51
-00:02:36,417 --> 00:02:38,700
+50
+00:02:35,683 --> 00:02:37,967
 Margin of Safety bukan jaminan nggak rugi.
 
-52
-00:02:38,933 --> 00:02:43,467
-Margin of Safety berarti: kita mengakui bahwa kita mungkin salah.
+51
+00:02:38,183 --> 00:02:42,733
+Margin of Safety berarti kita mengakui bahwa kita mungkin salah.
 
-53
-00:02:43,917 --> 00:02:46,633
+52
+00:02:43,167 --> 00:02:45,900
 Kalau harga sekarang belum memberi Margin of Safety? Tunggu.
 
-54
-00:02:46,983 --> 00:02:48,650
+53
+00:02:46,233 --> 00:02:47,917
 Mr. Market datang setiap hari.
 
-55
-00:02:48,717 --> 00:02:50,267
+54
+00:02:47,967 --> 00:02:49,517
 Kamu nggak harus membeli hari ini.
 
-56
-00:02:50,600 --> 00:02:53,367
+55
+00:02:49,867 --> 00:02:52,617
 Sekarang lihat kejadian nyata di 2026.
 
-57
-00:02:53,617 --> 00:02:56,833
+56
+00:02:52,867 --> 00:02:56,100
 BBCA adalah salah satu bank paling dipercaya di Indonesia.
 
-58
-00:02:57,283 --> 00:02:59,850
+57
+00:02:56,550 --> 00:02:59,117
 Biaya dananya termasuk yang terendah di antara bank besar,
 
-59
-00:02:59,933 --> 00:03:02,667
+58
+00:02:59,200 --> 00:03:01,917
 sementara margin bunganya termasuk yang tertinggi.
 
-60
-00:03:03,017 --> 00:03:05,900
+59
+00:03:02,283 --> 00:03:05,167
 Di Tuntun, Company Quality-nya tetap berada di kategori Best,
 
-61
-00:03:06,033 --> 00:03:08,967
+60
+00:03:05,283 --> 00:03:08,217
 dan penilaian kualitas bisnisnya tidak berubah.
 
-62
-00:03:09,267 --> 00:03:15,283
+61
+00:03:08,533 --> 00:03:14,533
 Pada 23 September 2024, harga BBCA berada di sekitar Rp11.000.
 
-63
-00:03:15,367 --> 00:03:17,417
+62
+00:03:14,633 --> 00:03:16,667
 Saat itu market sangat optimistis.
 
-64
-00:03:17,517 --> 00:03:23,883
+63
+00:03:16,767 --> 00:03:23,150
 Kemudian pada 8 Juni 2026, harganya turun sampai di bawah Rp5.000.
 
-65
-00:03:23,950 --> 00:03:26,483
+64
+00:03:23,217 --> 00:03:25,750
 Suasananya berubah total.
 
-66
-00:03:26,767 --> 00:03:29,133
+65
+00:03:26,033 --> 00:03:28,400
 Berita foreign outflow muncul di mana-mana.
 
-67
-00:03:29,483 --> 00:03:31,533
+66
+00:03:28,750 --> 00:03:30,800
 Orang yang membeli justru merasa takut.
 
-68
-00:03:31,967 --> 00:03:33,633
-Padahal: perusahaannya sama.
+67
+00:03:31,217 --> 00:03:32,900
+Padahal, perusahaannya sama.
 
-69
-00:03:33,767 --> 00:03:35,333
+68
+00:03:33,033 --> 00:03:34,600
 kualitasnya tidak berubah.
 
-70
-00:03:35,567 --> 00:03:37,767
+69
+00:03:34,833 --> 00:03:37,017
 Reference Fair Value-nya juga tidak berubah.
 
-71
-00:03:37,967 --> 00:03:42,033
+70
+00:03:37,233 --> 00:03:41,283
 Sampai 13 November 2026, hasil kedua investor itu sangat berbeda.
 
-72
-00:03:42,367 --> 00:03:45,417
+71
+00:03:41,617 --> 00:03:44,667
 Investor di sekitar Rp11.000 masih rugi sekitar 44%.
 
-73
-00:03:45,483 --> 00:03:49,833
+72
+00:03:44,733 --> 00:03:49,100
 Investor di bawah Rp5.000 sudah untung sekitar 14%.
 
-74
-00:03:50,167 --> 00:03:53,600
-Seberapa bagus pun perusahaannya: tetap harus dibeli cukup murah.
+73
+00:03:49,433 --> 00:03:52,867
+Seberapa bagus pun perusahaannya, tetap harus dibeli cukup murah.
 
-75
-00:03:53,967 --> 00:03:55,767
+74
+00:03:53,217 --> 00:03:55,017
 Membeli murah memberi ruang untuk return,
 
-76
-00:03:55,833 --> 00:03:58,433
+75
+00:03:55,083 --> 00:03:57,683
 sekaligus memberi ruang kalau penilaian kita ternyata salah.
 
-77
-00:03:58,883 --> 00:04:03,267
+76
+00:03:58,150 --> 00:04:02,533
 Dan sering kali, orang membeli terlalu mahal bukan karena nggak paham perusahaannya.
 
-78
-00:04:03,617 --> 00:04:05,733
-Justru karena: terlalu menyukainya.
+77
+00:04:02,867 --> 00:04:05,000
+Justru karena terlalu menyukainya.
 
-79
-00:04:06,083 --> 00:04:09,883
+78
+00:04:05,350 --> 00:04:09,133
 Tapi sesuatu yang terlihat murah belum tentu benar-benar murah.
 
-80
-00:04:10,200 --> 00:04:11,917
+79
+00:04:09,467 --> 00:04:11,183
 Kembali ke warung Ibu Sari.
 
-81
-00:04:12,117 --> 00:04:15,467
+80
+00:04:11,367 --> 00:04:14,733
 Murah yang sebenarnya berarti menghitung kira-kira berapa total nilai yang
 
-82
-00:04:15,467 --> 00:04:18,633
+81
+00:04:14,733 --> 00:04:17,900
 bisa diciptakan bisnis selama sepuluh atau dua puluh tahun ke depan,
 
-83
-00:04:18,700 --> 00:04:21,117
+82
+00:04:17,967 --> 00:04:20,367
 lalu membandingkannya dengan harga hari ini.
 
+83
+00:04:20,617 --> 00:04:23,800
+Cara yang terlihat lebih mudah adalah mengambil laba hari ini,
+
 84
-00:04:21,350 --> 00:04:22,767
-Cara yang terlihat lebih mudah adalah:
+00:04:24,233 --> 00:04:26,717
+lalu mengalikannya dengan suatu kelipatan.
 
 85
-00:04:22,767 --> 00:04:27,467
-mengambil laba hari ini, lalu mengalikannya dengan suatu kelipatan.
-
-86
-00:04:27,717 --> 00:04:31,033
+00:04:26,967 --> 00:04:30,300
 Atau hanya melihat berapa besar aset bersih yang dimiliki bisnis saat ini.
 
-87
-00:04:31,483 --> 00:04:35,917
+86
+00:04:30,750 --> 00:04:35,183
 Masalahnya, dua angka tersebut hanya menggambarkan kondisi hari ini.
 
-88
-00:04:36,100 --> 00:04:39,450
+87
+00:04:35,367 --> 00:04:38,717
 Bayangkan besok ada warung baru yang buka tepat di seberang.
 
-89
-00:04:39,683 --> 00:04:42,483
+88
+00:04:38,950 --> 00:04:41,733
 Tempatnya lebih besar. Ada AC.
 
-90
-00:04:42,800 --> 00:04:44,467
+89
+00:04:42,067 --> 00:04:43,733
 Dan menyediakan layanan pesan antar.
 
-91
-00:04:44,867 --> 00:04:46,933
+90
+00:04:44,133 --> 00:04:46,183
 Laba Ibu Sari hari ini belum berubah.
 
-92
-00:04:47,133 --> 00:04:50,133
+91
+00:04:46,400 --> 00:04:49,400
 Aset bersihnya juga belum berubah.
 
-93
-00:04:50,417 --> 00:04:53,300
+92
+00:04:49,667 --> 00:04:52,567
 Tapi jumlah pelanggan yang datang di masa depan bisa berkurang.
 
-94
-00:04:53,433 --> 00:04:57,467
-Artinya: laba yang bisa dihasilkan warungnya di masa depan sudah berubah.
+93
+00:04:52,700 --> 00:04:56,733
+Artinya, laba yang bisa dihasilkan warungnya di masa depan sudah berubah.
 
-95
-00:04:57,867 --> 00:05:03,117
+94
+00:04:57,117 --> 00:05:02,383
 Dan kalau laba masa depannya berubah, nilai bisnisnya juga ikut berubah.
 
-96
-00:05:03,333 --> 00:05:04,717
+95
+00:05:02,600 --> 00:05:03,967
 Inilah inti masalahnya.
 
-97
-00:05:04,850 --> 00:05:08,333
+96
+00:05:04,117 --> 00:05:07,600
 Investasi menguji kemampuan kita untuk menilai masa depan.
 
-98
-00:05:08,833 --> 00:05:12,250
+97
+00:05:08,100 --> 00:05:11,517
 Contohnya terlihat pada perusahaan batu bara pada 2022.
 
-99
-00:05:12,550 --> 00:05:14,200
+98
+00:05:11,817 --> 00:05:13,450
 Saat harga batu bara sedang tinggi,
 
-100
-00:05:14,350 --> 00:05:18,283
+99
+00:05:13,617 --> 00:05:17,550
 beberapa perusahaan terlihat hanya memiliki PE sekitar tiga sampai empat kali.
 
-101
-00:05:18,583 --> 00:05:19,567
+100
+00:05:17,833 --> 00:05:18,833
 Kelihatannya sangat murah.
 
-102
-00:05:19,983 --> 00:05:23,533
+101
+00:05:19,233 --> 00:05:22,800
 Tapi pada tahun berikutnya, labanya turun sekitar separuh.
 
-103
-00:05:23,833 --> 00:05:26,183
+102
+00:05:23,083 --> 00:05:25,433
 Itulah alasan Tuntun melakukan riset mendalam
 
-104
-00:05:26,183 --> 00:05:29,133
+103
+00:05:25,433 --> 00:05:28,400
 dan terus mengikuti perkembangan setiap perusahaan.
 
-105
-00:05:29,383 --> 00:05:31,383
+104
+00:05:28,650 --> 00:05:30,633
 Bukan sekadar melihat beberapa rasio keuangan,
 
-106
-00:05:31,633 --> 00:05:34,033
+105
+00:05:30,900 --> 00:05:33,283
 lalu langsung menyimpulkan bahwa sebuah saham murah.
 
-107
-00:05:34,383 --> 00:05:38,833
+106
+00:05:33,633 --> 00:05:38,100
 Ada lima ilusi yang sering membuat kita salah menilai sebuah saham sebagai murah.
 
+107
+00:05:38,383 --> 00:05:40,767
+Pertama, cerita bisnisnya terlalu bagus.
+
 108
-00:05:39,133 --> 00:05:41,517
-Pertama: cerita bisnisnya terlalu bagus.
+00:05:41,067 --> 00:05:45,117
+Karena bisnisnya menarik, kita jadi merasa, “Harga berapa pun, beli saja.”
 
 109
-00:05:41,817 --> 00:05:45,850
-Karena bisnisnya menarik, kita jadi merasa: “Harga berapa pun, beli saja.”
-
-110
-00:05:46,267 --> 00:05:49,633
+00:05:45,533 --> 00:05:48,883
 Padahal cerita yang bagus bukan berarti semua harga layak dibayar.
 
-111
-00:05:49,917 --> 00:05:52,683
-Kedua: harganya sudah turun sangat banyak.
+110
+00:05:49,167 --> 00:05:51,933
+Kedua, harganya sudah turun sangat banyak.
 
-112
-00:05:53,017 --> 00:05:57,283
+111
+00:05:52,267 --> 00:05:56,533
 Saham yang turun 50% nggak otomatis berarti sedang mendapat diskon 50%.
 
-113
-00:05:57,683 --> 00:06:01,417
+112
+00:05:56,950 --> 00:06:00,683
 Yang harus dibandingkan bukan harga sekarang dengan harga tertingginya.
 
+113
+00:06:00,800 --> 00:06:04,650
+Tapi harga sekarang dengan nilai bisnisnya saat ini.
+
 114
-00:06:01,533 --> 00:06:05,383
-Tapi: harga sekarang dengan nilai bisnisnya saat ini.
+00:06:05,017 --> 00:06:09,767
+Ketiga, rasio valuasinya semakin rendah, tapi bisnisnya juga semakin buruk.
 
 115
-00:06:05,750 --> 00:06:10,500
-Ketiga: rasio valuasinya semakin rendah, tapi bisnisnya juga semakin buruk.
-
-116
-00:06:10,917 --> 00:06:13,483
+00:06:10,167 --> 00:06:12,733
 Kalau laba terus turun, keunggulan bisnis melemah,
 
-117
-00:06:13,567 --> 00:06:16,633
+116
+00:06:12,833 --> 00:06:15,900
 dan nilai perusahaannya ikut menurun, itu bukan kesempatan.
 
+117
+00:06:16,117 --> 00:06:19,117
+Itu bisa menjadi jebakan nilai.
+
 118
-00:06:16,867 --> 00:06:19,867
-Itu bisa menjadi: jebakan nilai.
+00:06:19,367 --> 00:06:21,583
+Keempat, imbal hasil dividennya tinggi.
 
 119
-00:06:20,117 --> 00:06:22,333
-Keempat: imbal hasil dividennya tinggi.
-
-120
-00:06:22,717 --> 00:06:26,383
+00:06:21,983 --> 00:06:25,650
 Dividen yang besar hari ini nggak otomatis berarti sahamnya murah.
 
-121
-00:06:26,583 --> 00:06:30,083
+120
+00:06:25,850 --> 00:06:29,350
 Kalau dividen tersebut berasal dari laba saat siklus bisnis sedang berada di puncak,
 
-122
-00:06:30,250 --> 00:06:32,733
+121
+00:06:29,517 --> 00:06:32,000
 tahun depan jumlahnya belum tentu masih sama.
 
-123
-00:06:33,050 --> 00:06:35,750
-Dan yang kelima, sekaligus yang paling sering terjadi:
+122
+00:06:32,317 --> 00:06:35,017
+Dan yang kelima, sekaligus yang paling sering terjadi,
 
-124
-00:06:36,033 --> 00:06:40,633
+123
+00:06:35,283 --> 00:06:39,883
 perusahaannya sangat bagus, jadi beli saja lalu simpan untuk jangka panjang.
 
-125
-00:06:41,067 --> 00:06:44,617
+124
+00:06:40,333 --> 00:06:43,883
 Ingat investor yang membeli BBCA di sekitar Rp11.000 tadi.
 
-126
-00:06:44,950 --> 00:06:46,717
+125
+00:06:44,217 --> 00:06:45,983
 Perusahaannya memang bagus.
 
-127
-00:06:47,083 --> 00:06:50,250
-Tapi: perusahaan bagus juga harus dibeli dengan harga yang cukup murah.
+126
+00:06:46,350 --> 00:06:49,517
+Tapi perusahaan bagus juga harus dibeli dengan harga yang cukup murah.
 
-128
-00:06:50,533 --> 00:06:52,267
+127
+00:06:49,800 --> 00:06:51,533
 Sebelum membeli, tanyakan tiga hal.
 
-129
-00:06:52,617 --> 00:06:54,917
+128
+00:06:51,867 --> 00:06:54,183
 Apakah perusahaan ini memang layak untuk dimiliki?
 
-130
-00:06:55,333 --> 00:06:57,383
+129
+00:06:54,600 --> 00:06:56,633
 Kira-kira berapa harga wajarnya?
 
-131
-00:06:57,667 --> 00:06:59,850
-Dan: apakah harga sekarang memberi ruang
+130
+00:06:56,933 --> 00:06:59,100
+Dan apakah harga sekarang memberi ruang
 
-132
-00:06:59,850 --> 00:07:02,767
+131
+00:06:59,100 --> 00:07:02,033
 yang cukup kalau ternyata perhitungan kita salah?
 
-133
-00:07:03,050 --> 00:07:06,367
+132
+00:07:02,317 --> 00:07:05,617
 Lalu ingat tiga kalimat. Harga adalah yang kamu bayar.
 
-134
-00:07:06,567 --> 00:07:08,517
+133
+00:07:05,833 --> 00:07:07,767
 Value adalah yang kamu dapatkan.
 
-135
-00:07:08,800 --> 00:07:12,217
+134
+00:07:08,067 --> 00:07:11,467
 Barang bernilai 100 dibeli di 70 bukan karena kita serakah,
 
-136
-00:07:12,367 --> 00:07:15,067
+135
+00:07:11,633 --> 00:07:14,333
 tapi karena kita tahu bahwa kita mungkin salah menghitung.
 
+136
+00:07:14,600 --> 00:07:17,133
+Dan perusahaan bagus juga harus dibeli murah.
+
 137
-00:07:15,333 --> 00:07:17,867
-Dan: perusahaan bagus juga harus dibeli murah.
+00:07:17,367 --> 00:07:21,633
+John Templeton pernah mengatakan bahwa pasar bullish lahir dari pesimisme.
 
 138
-00:07:18,100 --> 00:07:22,367
-John Templeton pernah mengatakan bahwa: pasar bullish lahir dari pesimisme.
-
-139
-00:07:22,800 --> 00:07:27,833
+00:07:22,067 --> 00:07:27,100
 Templeton Growth Fund mencatat sekitar 15% per tahun selama 38 tahun.
 
-140
-00:07:28,067 --> 00:07:32,583
+139
+00:07:27,317 --> 00:07:31,833
 Value investing adalah pilihan yang konsisten digunakan oleh investor profesional dunia,
 
-141
-00:07:32,683 --> 00:07:36,767
+140
+00:07:31,933 --> 00:07:36,033
 dan merupakan pendekatan yang paling sesuai bagi investor ritel Indonesia.
 
-142
-00:07:37,067 --> 00:07:41,467
+141
+00:07:36,333 --> 00:07:40,733
 Di Tuntun, kamu bisa melihat Reference Fair Value dan Valuation Status.
 
-143
-00:07:41,867 --> 00:07:44,450
-Reference Fair Value dihitung dengan mempertimbangkan:
+142
+00:07:41,133 --> 00:07:43,700
+Reference Fair Value dihitung dengan mempertimbangkan
 
-144
-00:07:44,450 --> 00:07:46,917
+143
+00:07:43,700 --> 00:07:46,167
 berapa banyak laba yang bisa dihasilkan perusahaan,
 
-145
-00:07:47,083 --> 00:07:52,050
+144
+00:07:46,350 --> 00:07:51,317
 berapa lama perusahaan bisa terus menghasilkannya, dan seberapa pasti hasil tersebut.
 
-146
-00:07:52,467 --> 00:07:56,133
+145
+00:07:51,733 --> 00:07:55,400
 Kemudian Most Undervalued membantu menemukan saham yang memiliki
 
-147
-00:07:56,133 --> 00:07:59,900
+146
+00:07:55,400 --> 00:07:59,167
 selisih besar antara harga pasar dan Reference Fair Value.
 
-148
-00:08:00,000 --> 00:08:04,783
-Tapi ingat: Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
+147
+00:07:59,267 --> 00:08:04,033
+Tapi ingat, Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
 
-149
-00:08:05,217 --> 00:08:07,867
+148
+00:08:04,483 --> 00:08:07,133
 Daftar tersebut membantu kita menemukan kandidat.
 
-150
-00:08:08,267 --> 00:08:11,733
+149
+00:08:07,533 --> 00:08:10,983
 Analisis membantu kita menentukan apakah sahamnya memang layak dimiliki.
 
-151
-00:08:12,150 --> 00:08:15,550
+150
+00:08:11,417 --> 00:08:14,800
 Di video selanjutnya, kita akan membahas cara menghadapi pasar yang kadang
 
-152
-00:08:15,550 --> 00:08:20,267
+151
+00:08:14,800 --> 00:08:19,533
 terlalu takut dan kadang terlalu optimistis—tanpa ikut terbawa emosinya.

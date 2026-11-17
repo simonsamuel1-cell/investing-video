@@ -12,11 +12,16 @@ import { SC01 as SC01_BUILD } from "./scenes/MangoBuild";
 import { SC02 as SC02_SHOTS } from "./scenes/SecondPillar";
 import { SC02 as SC02_ONE_TAKE } from "./scenes/SecondPillarFlow";
 import { SC02 as SC02_BUILD } from "./scenes/SecondPillarBuild";
-import { SC01_LOOK, SC02_LOOK } from "./data/switches";
-import { SC03 } from "./scenes/IbuSariValue";
-import { SC04 } from "./scenes/MarginOfSafety";
-import { SC05 } from "./scenes/BbcaTwoPrices";
-import { SC06 } from "./scenes/RealCheap";
+import { SC01_LOOK, SC02_LOOK, SC03_LOOK, SC04_LOOK, SC05_LOOK, SC06_LOOK } from "./data/switches";
+import { SC03 as SC03_SHOTS } from "./scenes/IbuSariValue";
+import { SC03 as SC03_BUILD } from "./scenes/IbuSariBuild";
+import { SC03 as SC03_SENDIRI } from "./scenes/IbuSariSendiri";
+import { SC04 as SC04_SHOTS } from "./scenes/MarginOfSafety";
+import { SC04 as SC04_BUILD } from "./scenes/MarginBuild";
+import { SC05 as SC05_SHOTS } from "./scenes/BbcaTwoPrices";
+import { SC05 as SC05_BUILD } from "./scenes/BbcaBuild";
+import { SC06 as SC06_SHOTS } from "./scenes/RealCheap";
+import { SC06 as SC06_BUILD } from "./scenes/FutureValueBuild";
 import { SC07 } from "./scenes/FiveIllusions";
 import { SC08 } from "./scenes/ThreeQuestions";
 
@@ -24,6 +29,14 @@ import { SC08 } from "./scenes/ThreeQuestions";
 const SC01 = SC01_LOOK === "build" ? SC01_BUILD : SC01_SHOTS;
 /** SC02: built in VI01/VI02's language (16 Nov, v3), or its two rejected earlier builds. */
 const SC02 = SC02_LOOK === "build" ? SC02_BUILD : SC02_LOOK === "take" ? SC02_ONE_TAKE : SC02_SHOTS;
+/** SC03: Simon's own from Studio 3802 (17 Nov), the one-layout build (17 Nov), or its first, cut-up build. */
+const SC03 = SC03_LOOK === "sendiri" ? SC03_SENDIRI : SC03_LOOK === "build" ? SC03_BUILD : SC03_SHOTS;
+/** SC04: told the way SC03 was (17 Nov), or its first, cut-up build. */
+const SC04 = SC04_LOOK === "build" ? SC04_BUILD : SC04_SHOTS;
+/** SC05: told the way SC03/SC04 were (17 Nov), or its first build. */
+const SC05 = SC05_LOOK === "build" ? SC05_BUILD : SC05_SHOTS;
+/** SC06: told the way SC01–SC03 were (17 Nov), or its first, cut-up build. */
+const SC06 = SC06_LOOK === "build" ? SC06_BUILD : SC06_SHOTS;
 /** The scenes built so far. Add each as `SCnn` when it is built. */
 const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08 };
 
@@ -55,20 +68,24 @@ const ROWS = String(random(null));
 /** The paper under the scenes not built yet. */
 const Ground = () => <SoftGround f={useCurrentFrame()} />;
 
-export const MembeliCukupMurahComposition = () => (
+/** `scenes` swaps a scene for another build of it (VI03-Scene03: SC03's v3 next to Simon's own). */
+export const MembeliCukupMurahComposition = ({ scenes = {} }: { scenes?: Record<string, React.FC> }) => (
   <AbsoluteFill>
     <PaletteProvider>
       <Stage>
         <Ground />
-        {SCENES.map(({ key, from, duration }) => (
-          <Sequence key={`${ROWS}-${key}`} from={from} durationInFrames={duration} name={key}>
-            {SCENE_COMPONENTS[key] ? (
-              <InCuts from={from} to={from + duration}>
-                {React.createElement(SCENE_COMPONENTS[key] as React.FC)}
-              </InCuts>
-            ) : null}
-          </Sequence>
-        ))}
+        {SCENES.map(({ key, from, duration }) => {
+          const Scene = scenes[key] ?? SCENE_COMPONENTS[key];
+          return (
+            <Sequence key={`${ROWS}-${key}`} from={from} durationInFrames={duration} name={key}>
+              {Scene ? (
+                <InCuts from={from} to={from + duration}>
+                  <Scene />
+                </InCuts>
+              ) : null}
+            </Sequence>
+          );
+        })}
         <Captions cues={CUES} show={chrome} />
         {chrome && <Watermark totalFrames={VI03_FRAMES} />}
         <Audio key={ROWS} src={staticFile("vo/vi03-membeli-dengan-harga-yang-cukup-murah.mp3")} />

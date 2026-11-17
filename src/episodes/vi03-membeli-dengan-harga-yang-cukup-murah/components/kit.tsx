@@ -7,7 +7,7 @@ import { Img, staticFile } from "remotion";
 import { w } from "../data/timing";
 
 export {
-  Appear, AvatarFace, AvatarTile, BoardGrid, Card, Column, DashBox, Figure, GrowArrow, IconPill, KamuAvatar, Line, Mark,
+  ART, Appear, AvatarFace, AvatarTile, BoardGrid, Card, Column, DashBox, Figure, GrowArrow, IconPill, KamuAvatar, Line, Mark,
   LedgerCard, ORANG_TUNTUN_RIGHT, OrangTuntun, PhotoTile, Pic, PriceCandles, Ring, Shot, WordPill, ease,
 } from "../../vi02-membeli-saham-berarti-membeli-perusahaan/components/kit";
 /** VI01's numbered heading at the top left (IN04's), as VI01 SC04–SC05 use it. */
@@ -34,6 +34,8 @@ export const LINE_ART = {
   "fruit-stall": { w: 756, h: 721 },
   mango: { w: 533, h: 568 },
   bridge: { w: 576, h: 293 },
+  /** SC04: Simon's stone arch bridge (17 Nov, his reference redrawn by ChatGPT in this line style) */
+  "bridge-stone": { w: 2000, h: 705 },
   minimarket: { w: 510, h: 325 },
   scooter: { w: 380, h: 295 },
 } as const;

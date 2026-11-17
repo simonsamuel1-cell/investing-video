@@ -8,10 +8,12 @@ import { MembeliCukupMurahComposition, VI03_FRAMES } from "./Composition";
 
 /** The BGM switch. Simon turns it on or off; the bed's file is never touched. */
 const BGM: boolean = true;
+/** The bed 10 dB down (Simon 17 Nov: "bgm nya turunin 10 db … peaknya"): its peak −30.1 → −40.1 dBFS. The file is untouched. */
+const BGM_GAIN_DB = -10;
 
 export const VI03_FULL_FRAMES = fullFrames(VI03_FRAMES, 60);
 export const MembeliCukupMurahFull = () => (
-  <EpisodeWrap title={["Value Investing", "Membeli dengan Harga yang Cukup Murah"]} frames={VI03_FRAMES} name="VI03 Membeli dengan Harga yang Cukup Murah" bgm={BGM} bgmSrc="bgm/background-music-bed.mp3">
+  <EpisodeWrap title={["Value Investing", "Membeli dengan Harga yang Cukup Murah"]} frames={VI03_FRAMES} name="VI03 Membeli dengan Harga yang Cukup Murah" bgm={BGM} bgmSrc="bgm/background-music-bed.mp3" bgmGainDb={BGM_GAIN_DB}>
     <MembeliCukupMurahComposition />
   </EpisodeWrap>
 );

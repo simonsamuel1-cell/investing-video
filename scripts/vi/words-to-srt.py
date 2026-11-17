@@ -63,12 +63,15 @@ def main():
     if sent:
         flush(sent)
     # a short sentence ("Belum ada?", "Kenapa beli?") is too quick to read alone: it shares a line with its
-    # neighbour when the two fit one line and follow each other closely
+    # neighbour when the two fit one line and follow each other closely — unless Simon set it on a line of its own
+    # (data/srt-apart.json next to words.json: {"apart": ["Terlalu murah."]}; VI03, 17 Nov)
+    apart_file = Path(a.words).with_name("srt-apart.json")
+    apart = set(json.loads(apart_file.read_text())["apart"]) if apart_file.exists() else set()
     merged = []
     for c in cues:
         p = merged[-1] if merged else None
         short = lambda x: x[1] - x[0] < a.min_frames
-        if p and (short(p) or short(c)) and c[0] - p[1] <= FPS // 2 and c[1] - p[0] <= FPS * 7 // 2 and width(p[2] + " " + c[2]) <= a.max_px:
+        if p and p[2] not in apart and c[2] not in apart and (short(p) or short(c)) and c[0] - p[1] <= FPS // 2 and c[1] - p[0] <= FPS * 7 // 2 and width(p[2] + " " + c[2]) <= a.max_px:
             p[1], p[2] = c[1], p[2] + " " + c[2]
         else:
             merged.append(list(c))

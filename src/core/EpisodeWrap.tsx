@@ -135,13 +135,15 @@ const CutLayer = ({ cut, from, dir, children }: { cut: Cut; from: number; dir: "
 
 /**
  * `bgm={false}` leaves the BGM out altogether (TA09, 20 Oct: Simon asked for the intro and the outro, not the BGM).
+ * `bgmGainDb` turns an episode's own bed (`bgmSrc`) up or down by that many dB as it plays (VI03, 17 Nov: "bgm nya turunin
+ * 10 db … peaknya"); the file is not touched and nor is any other episode's level. It never applies to Essentials/BGM.mp3.
  * It never changes the BGM itself — the file plays as it is, or not at all.
  */
 /**
  * `intro={false}` / `outro={false}` leave either clip out (TA11, 20 Oct 2026: "kasih video CTA aja" — the episode,
  * its fade, CTA.mp4, and nothing else).
  */
-export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; frames: number; name: string; bgm?: boolean; bgmSrc?: string; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
+export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, bgmGainDb = 0, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; frames: number; name: string; bgm?: boolean; bgmSrc?: string; bgmGainDb?: number; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const I = intro ? introFrames(fps) : 0;
   const O = outro ? outroFrames(fps) : 0;
@@ -231,7 +233,7 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, next, cta
       ) : null}
       {/* the BGM, as it is, under all of it — or the episode's own bed, faded out at the very end */}
       {bgm && bgmSrc ? (
-        <Audio src={staticFile(bgmSrc)} volume={(f) => interpolate(f, [durationInFrames - Math.round(BGM_FADE * fps), durationInFrames - 1], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
+        <Audio src={staticFile(bgmSrc)} volume={(f) => 10 ** (bgmGainDb / 20) * interpolate(f, [durationInFrames - Math.round(BGM_FADE * fps), durationInFrames - 1], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" })} />
       ) : bgm ? (
         <Audio src={staticFile("essentials/BGM.mp3")} />
       ) : null}

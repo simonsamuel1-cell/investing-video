@@ -86,8 +86,9 @@ export const LEDGER_ROWS = [
 /**
  * The cash book as a card, drawn at scale `s` (1 = the full card, 560 px tall). `lit` per row 0..1: an indigo ring and a
  * soft wash on the row the VO is asking about. Children of the card sit inside it (a fade, a flip) — its own box only.
+ * `rows` replaces the book's own lines (VI03 SC03: the script's three facts); `show` per row 0..1 brings a line in on its word.
  */
-export const LedgerCard = ({ title, s = 1, lit = [0, 0, 0] }: { title: string; s?: number; lit?: number[] }) => {
+export const LedgerCard = ({ title, s = 1, lit = [0, 0, 0], rows = LEDGER_ROWS, show }: { title: string; s?: number; lit?: number[]; rows?: readonly { label: string; value: string }[]; show?: number[] }) => {
   const c = usePalette();
   return (
     <div style={{ position: "absolute", inset: 0, padding: `${40 * s}px ${44 * s}px`, display: "flex", flexDirection: "column", gap: 22 * s }}>
@@ -95,8 +96,8 @@ export const LedgerCard = ({ title, s = 1, lit = [0, 0, 0] }: { title: string; s
         <Glyph icon="book-open" size={64 * s} tone={c.ink} />
         <div style={{ ...typeStyle("title"), fontSize: 50 * s, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{title}</div>
       </div>
-      {LEDGER_ROWS.map((r, i) => (
-        <div key={r.label} style={{ position: "relative", height: 104 * s, borderRadius: 22 * s, background: lit[i] > 0.5 ? theme.color.indigoWashSolid : c.cardBg, boxShadow: `inset 0 0 0 ${2 * s}px ${theme.color.skeleton}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${34 * s}px` }}>
+      {rows.map((r, i) => (
+        <div key={r.label} style={{ position: "relative", opacity: show?.[i] ?? 1, transform: show ? `translateY(${((1 - show[i]) * 10 * s).toFixed(1)}px)` : undefined, height: 104 * s, borderRadius: 22 * s, background: lit[i] > 0.5 ? theme.color.indigoWashSolid : c.cardBg, boxShadow: `inset 0 0 0 ${2 * s}px ${theme.color.skeleton}`, display: "flex", alignItems: "center", justifyContent: "space-between", padding: `0 ${34 * s}px` }}>
           <div style={{ position: "absolute", inset: 0, borderRadius: 22 * s, boxShadow: `inset 0 0 0 ${3 * s}px ${c.indigo}`, opacity: lit[i] }} />
           <div style={{ ...typeStyle("label"), fontSize: 38 * s, fontWeight: 600, color: c.ink }}>{r.label}</div>
           <div style={{ ...typeStyle("label"), fontSize: 38 * s, fontWeight: 500, color: lit[i] > 0.5 ? c.indigo : c.slate, fontVariantNumeric: "tabular-nums" }}>{r.value}</div>

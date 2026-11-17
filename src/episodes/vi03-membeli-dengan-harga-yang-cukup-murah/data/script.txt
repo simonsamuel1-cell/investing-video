@@ -4,15 +4,15 @@ Kalau beli mangga di pasar tradisional, kamu nggak akan langsung membayar hanya 
 Kamu ambil dulu mangganya.
 Cek matang atau belum.
 Ada yang rusak atau nggak.
-Baru setelah itu kamu menilai: “Dengan kondisi seperti ini, harganya sepadan nggak?”
+Baru setelah itu kamu menilai, “Dengan kondisi seperti ini, harganya sepadan nggak?”
 Tapi begitu masuk ke pasar saham, banyak orang justru melupakan kebiasaan sederhana ini.
 Begitu melihat satu harga di layar, harga itu langsung dianggap sebagai nilai perusahaan.
 Padahal harga nggak sama dengan value.
 
 [SCENE 02] — Pilar Kedua: Beli Cukup Murah
 NARASI
-Pilar kedua value investing adalah: membeli dengan harga yang cukup murah.
-Warren Buffett menulis: “Price is what you pay. Value is what you get.”
+Pilar kedua value investing adalah membeli dengan harga yang cukup murah.
+Warren Buffett menulis, “Price is what you pay. Value is what you get.”
 Harga adalah yang kamu bayar.
 Value adalah yang kamu dapatkan.
 Jadi saham Rp5.000 belum tentu murah.
@@ -26,12 +26,10 @@ Kita kembali ke Ibu Sari, pemilik warung sederhana yang kita gunakan sebagai con
 Warungnya menghasilkan laba bersih sekitar Rp20 juta per tahun.
 Sudah berjalan sepuluh tahun, dan pelanggannya relatif stabil.
 Kalau kamu ingin membeli warung itu, kamu bersedia membayar berapa kali laba tahunannya?
-Satu kali laba?
-Rp20 juta?
+Satu kali laba, dua puluh juta rupiah?
 Terlalu murah.
 Ibu Sari tentu nggak mau menjualnya.
-Tiga puluh kali laba?
-Rp600 juta?
+Tiga puluh kali laba, enam ratus juta rupiah?
 Artinya kamu membutuhkan sekitar tiga puluh tahun untuk mendapatkan kembali uangmu.
 Sementara warung sejenis biasanya diperjualbelikan sekitar 8–12 kali laba tahunan.
 Inti valuasi sebenarnya sederhana: bisnis menghasilkan berapa banyak, bisa menghasilkan selama berapa lama, dan seberapa yakin kita terhadap hasil tersebut.
@@ -39,21 +37,21 @@ Dalam dunia keuangan, proses ini disebut discounting.
 Buffett menghitung dengan prinsip seperti ini.
 Ibu Sari secara sederhana juga begitu.
 Dan Tuntun Research Institute menggunakan prinsip yang sama.
-Hasil estimasinya disebut: Reference Fair Value.
+Hasil estimasinya disebut Reference Fair Value.
 
 [SCENE 04] — Margin of Safety
 NARASI
 Kalau kita sudah punya estimasi harga wajar, kenapa nggak langsung membeli tepat di harga itu?
 Karena harga wajar tetap hasil perhitungan.
 Dan kita bisa salah.
-Benjamin Graham menyebut jawabannya: Margin of Safety.
+Benjamin Graham menyebut jawabannya Margin of Safety.
 Bayangkan jembatan yang mampu menahan sepuluh ton.
 Kita hanya melewatkan kendaraan tiga ton.
 Logikanya sama.
 Kalau perusahaan kita perkirakan bernilai 100, lalu dibeli di 95, ruang kesalahannya kecil.
 Kalau dibeli di 70, ada ruang lebih besar kalau perhitungan kita ternyata terlalu optimistis.
 Margin of Safety bukan jaminan nggak rugi.
-Margin of Safety berarti: kita mengakui bahwa kita mungkin salah.
+Margin of Safety berarti kita mengakui bahwa kita mungkin salah.
 Kalau harga sekarang belum memberi Margin of Safety?
 Tunggu.
 Mr. Market datang setiap hari.
@@ -71,23 +69,23 @@ Kemudian pada 8 Juni 2026, harganya turun sampai di bawah Rp5.000.
 Suasananya berubah total.
 Berita foreign outflow muncul di mana-mana.
 Orang yang membeli justru merasa takut.
-Padahal: perusahaannya sama.
+Padahal, perusahaannya sama.
 kualitasnya tidak berubah.
 Reference Fair Value-nya juga tidak berubah.
 Sampai 13 November 2026, hasil kedua investor itu sangat berbeda.
 Investor di sekitar Rp11.000 masih rugi sekitar 44%.
 Investor di bawah Rp5.000 sudah untung sekitar 14%.
-Seberapa bagus pun perusahaannya: tetap harus dibeli cukup murah.
+Seberapa bagus pun perusahaannya, tetap harus dibeli cukup murah.
 Membeli murah memberi ruang untuk return, sekaligus memberi ruang kalau penilaian kita ternyata salah.
 Dan sering kali, orang membeli terlalu mahal bukan karena nggak paham perusahaannya.
-Justru karena: terlalu menyukainya.
+Justru karena terlalu menyukainya.
 
 [SCENE 06] — Murah Asli vs Murah Palsu
 NARASI
 Tapi sesuatu yang terlihat murah belum tentu benar-benar murah.
 Kembali ke warung Ibu Sari.
 Murah yang sebenarnya berarti menghitung kira-kira berapa total nilai yang bisa diciptakan bisnis selama sepuluh atau dua puluh tahun ke depan, lalu membandingkannya dengan harga hari ini.
-Cara yang terlihat lebih mudah adalah: mengambil laba hari ini, lalu mengalikannya dengan suatu kelipatan.
+Cara yang terlihat lebih mudah adalah mengambil laba hari ini, lalu mengalikannya dengan suatu kelipatan.
 Atau hanya melihat berapa besar aset bersih yang dimiliki bisnis saat ini.
 Masalahnya, dua angka tersebut hanya menggambarkan kondisi hari ini.
 Bayangkan besok ada warung baru yang buka tepat di seberang.
@@ -97,7 +95,7 @@ Dan menyediakan layanan pesan antar.
 Laba Ibu Sari hari ini belum berubah.
 Aset bersihnya juga belum berubah.
 Tapi jumlah pelanggan yang datang di masa depan bisa berkurang.
-Artinya: laba yang bisa dihasilkan warungnya di masa depan sudah berubah.
+Artinya, laba yang bisa dihasilkan warungnya di masa depan sudah berubah.
 Dan kalau laba masa depannya berubah, nilai bisnisnya juga ikut berubah.
 Inilah inti masalahnya.
 Investasi menguji kemampuan kita untuk menilai masa depan.
@@ -111,42 +109,42 @@ Bukan sekadar melihat beberapa rasio keuangan, lalu langsung menyimpulkan bahwa 
 [SCENE 07] — Lima Ilusi
 NARASI
 Ada lima ilusi yang sering membuat kita salah menilai sebuah saham sebagai murah.
-Pertama: cerita bisnisnya terlalu bagus.
-Karena bisnisnya menarik, kita jadi merasa: “Harga berapa pun, beli saja.”
+Pertama, cerita bisnisnya terlalu bagus.
+Karena bisnisnya menarik, kita jadi merasa, “Harga berapa pun, beli saja.”
 Padahal cerita yang bagus bukan berarti semua harga layak dibayar.
-Kedua: harganya sudah turun sangat banyak.
+Kedua, harganya sudah turun sangat banyak.
 Saham yang turun 50% nggak otomatis berarti sedang mendapat diskon 50%.
 Yang harus dibandingkan bukan harga sekarang dengan harga tertingginya.
-Tapi: harga sekarang dengan nilai bisnisnya saat ini.
-Ketiga: rasio valuasinya semakin rendah, tapi bisnisnya juga semakin buruk.
+Tapi harga sekarang dengan nilai bisnisnya saat ini.
+Ketiga, rasio valuasinya semakin rendah, tapi bisnisnya juga semakin buruk.
 Kalau laba terus turun, keunggulan bisnis melemah, dan nilai perusahaannya ikut menurun, itu bukan kesempatan.
-Itu bisa menjadi: jebakan nilai.
-Keempat: imbal hasil dividennya tinggi.
+Itu bisa menjadi jebakan nilai.
+Keempat, imbal hasil dividennya tinggi.
 Dividen yang besar hari ini nggak otomatis berarti sahamnya murah.
 Kalau dividen tersebut berasal dari laba saat siklus bisnis sedang berada di puncak, tahun depan jumlahnya belum tentu masih sama.
-Dan yang kelima, sekaligus yang paling sering terjadi: perusahaannya sangat bagus, jadi beli saja lalu simpan untuk jangka panjang.
+Dan yang kelima, sekaligus yang paling sering terjadi, perusahaannya sangat bagus, jadi beli saja lalu simpan untuk jangka panjang.
 Ingat investor yang membeli BBCA di sekitar Rp11.000 tadi.
 Perusahaannya memang bagus.
-Tapi: perusahaan bagus juga harus dibeli dengan harga yang cukup murah.
+Tapi perusahaan bagus juga harus dibeli dengan harga yang cukup murah.
 
 [SCENE 08] — Tiga Pertanyaan
 NARASI
 Sebelum membeli, tanyakan tiga hal.
 Apakah perusahaan ini memang layak untuk dimiliki?
 Kira-kira berapa harga wajarnya?
-Dan: apakah harga sekarang memberi ruang yang cukup kalau ternyata perhitungan kita salah?
+Dan apakah harga sekarang memberi ruang yang cukup kalau ternyata perhitungan kita salah?
 Lalu ingat tiga kalimat.
 Harga adalah yang kamu bayar.
 Value adalah yang kamu dapatkan.
 Barang bernilai 100 dibeli di 70 bukan karena kita serakah, tapi karena kita tahu bahwa kita mungkin salah menghitung.
-Dan: perusahaan bagus juga harus dibeli murah.
-John Templeton pernah mengatakan bahwa: pasar bullish lahir dari pesimisme.
+Dan perusahaan bagus juga harus dibeli murah.
+John Templeton pernah mengatakan bahwa pasar bullish lahir dari pesimisme.
 Templeton Growth Fund mencatat sekitar 15% per tahun selama 38 tahun.
 Value investing adalah pilihan yang konsisten digunakan oleh investor profesional dunia, dan merupakan pendekatan yang paling sesuai bagi investor ritel Indonesia.
 Di Tuntun, kamu bisa melihat Reference Fair Value dan Valuation Status.
-Reference Fair Value dihitung dengan mempertimbangkan: berapa banyak laba yang bisa dihasilkan perusahaan, berapa lama perusahaan bisa terus menghasilkannya, dan seberapa pasti hasil tersebut.
+Reference Fair Value dihitung dengan mempertimbangkan berapa banyak laba yang bisa dihasilkan perusahaan, berapa lama perusahaan bisa terus menghasilkannya, dan seberapa pasti hasil tersebut.
 Kemudian Most Undervalued membantu menemukan saham yang memiliki selisih besar antara harga pasar dan Reference Fair Value.
-Tapi ingat: Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
+Tapi ingat, Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
 Daftar tersebut membantu kita menemukan kandidat.
 Analisis membantu kita menentukan apakah sahamnya memang layak dimiliki.
 Di video selanjutnya, kita akan membahas cara menghadapi pasar yang kadang terlalu takut dan kadang terlalu optimistis—tanpa ikut terbawa emosinya.

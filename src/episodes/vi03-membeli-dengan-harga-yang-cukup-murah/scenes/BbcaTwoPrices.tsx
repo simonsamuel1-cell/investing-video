@@ -15,7 +15,7 @@
  * Net foreign sell: Kontan (Jun 2026), Rp31,34 T year to date. Results: data/bbca.ts.
  */
 import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
-import { SoftGround, SourceTag, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { SoftGround, Stage, TuntunMark, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BBCA_MARKS, BBCA_RESULT, BBCA_WEEKLY } from "../data/bbca";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Glyph, Line, Mark, ORANG_TUNTUN_RIGHT, OrangTuntun, Pic, Ring, Shot, WordPill, ease, useWords } from "../components/kit";
@@ -141,7 +141,6 @@ export const SC05 = () => {
       <Shot from={chartAt} to={lessonAt} block={BLOCK.SC05}>
         <Card x={CHART.x} y={CHART.y} w={CHART.w} h={CHART.h}>
           <div style={{ position: "absolute", left: 40, top: 30, ...typeStyle("title"), fontSize: 40, fontWeight: 600, color: c.ink }}>BBCA</div>
-          <SourceTag kind="market" label="BBCA · 2024–2026 · Yahoo Finance" x={CHART.w - 40} y={52} />
         </Card>
         <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
           {Y.ticks.map((t) => (
@@ -206,7 +205,7 @@ export const SC05 = () => {
                 </div>
                 <div style={{ position: "absolute", left: 110, top: 30, ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.ink, lineHeight: 1.2 }}>Foreign outflow</div>
                 <div style={{ position: "absolute", left: 28, right: 20, top: 112, ...typeStyle("title"), fontSize: 40, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>Net sell ±Rp31 T</div>
-                <div style={{ position: "absolute", left: 28, top: 164, ...typeStyle("label"), fontSize: 24, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>Jan–Jun 2026 · Kontan</div>
+                <div style={{ position: "absolute", left: 28, top: 164, ...typeStyle("label"), fontSize: 24, fontWeight: 500, color: c.slate, whiteSpace: "nowrap" }}>Jan–Jun 2026</div>
               </Card>
             </Appear>
             <Appear at={W("Orang yang membeli")} style={{ left: COL.x + COL.w / 2 - (PANIC.h * PANIC.w0) / PANIC.h0 / 2, top: CHART.y + CHART.h - PANIC.h, width: (PANIC.h * PANIC.w0) / PANIC.h0, height: PANIC.h }}>

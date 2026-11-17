@@ -1,0 +1,86 @@
+{
+  "_": "VI03's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+  "base": "/Users/samuelsurja/Documents/01 Academy/VI03",
+  "source": "VO VI03.mp3",
+  "out": "public/vo/vi03-membeli-dengan-harga-yang-cukup-murah.mp3",
+  "pieces": [
+    {
+      "src": "ORIGINAL",
+      "from": 0,
+      "to": 77.165
+    },
+    {
+      "_": "17 Nov, SC03 (Studio 4869): +30f after 'membayar berapa kali laba tahunannya?'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 77.165,
+      "to": 77.22
+    },
+    {
+      "_": "17 Nov:'Satu kali laba, dua puluh juta rupiah?' — the clip's first sentence only (it goes on with 'Tiga puluh kali laba…')",
+      "src": "Scene 03_01.mp3",
+      "to": 2.38,
+      "match": "original 77.33-83.84"
+    },
+    {
+      "_": "after a question, as in Simon's own take of the line (Scene 03_02)",
+      "silence": 0.25
+    },
+    {
+      "_": "17 Nov:'Terlalu murah.'",
+      "src": "Scene 03_03.mp3",
+      "from": 0.1,
+      "to": 0.91,
+      "match": "original 77.33-83.84"
+    },
+    {
+      "_": "the original's pause between 'murah.' and 'Ibu' (0.35 s)",
+      "silence": 0.18
+    },
+    {
+      "_": "17 Nov:'Ibu Sari tentu nggak mau menjualnya.' — the clip's last sentence only (it opens with 'Satu kali laba… terlalu murah.')",
+      "src": "Scene 03_02.mp3",
+      "from": 3.82,
+      "to": 5.86,
+      "match": "original 77.33-83.84"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 83.91,
+      "to": 84.09
+    },
+    {
+      "_": "17 Nov:'Tiga puluh kali laba, enam ratus juta rupiah?'",
+      "src": "Scene 03_04.mp3",
+      "to": 2.88,
+      "match": "original 84.22-88.89"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 88.97,
+      "to": 130.875
+    },
+    {
+      "_": "17 Nov, SC04 (Studio 7936): +30f after 'membeli tepat di harga itu?'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 130.875,
+      "to": 145.39
+    },
+    {
+      "_": "17 Nov: 'Kalau perusahaan kita perkirakan bernilai 100, lalu dibeli di 95, ruang kesalahannya kecil.' — cut at 6.23 s: the clip ends in a click (−5 dB at 6.38 s)",
+      "src": "Scene 04_01.mp3",
+      "to": 6.23,
+      "match": "original 145.53-150.24"
+    },
+    {
+      "_": "resumes 0.08 s after 'kecil.' ends (150.25 s), so the pause before 'Kalau dibeli' stays the original's 0.44 s",
+      "src": "ORIGINAL",
+      "from": 150.33
+    }
+  ]
+}
