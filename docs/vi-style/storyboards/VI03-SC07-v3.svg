@@ -1,0 +1,276 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="2440" viewBox="0 0 1440 2440" font-family="Arial,sans-serif">
+<rect x="0" y="0" width="1440" height="2440" rx="0" fill="#ececec" stroke="none"/>
+<text x="56" y="70" font-size="20" fill="#555" font-weight="700" text-anchor="start">VI03  /  SC07</text>
+<text x="56" y="130" font-size="54" fill="#222" font-weight="700" text-anchor="start">Lima ilusi murah</text>
+<text x="56" y="173" font-size="20" fill="#444" font-weight="400" text-anchor="start">Storyboard gerak   •   Komposisi utama   •   60 fps</text>
+<text x="56" y="211" font-size="20" fill="#444" font-weight="400" text-anchor="start">Pembuka: judul naik, lalu panggung putih memperlihatkan Kamu mengamati warung.</text>
+<rect x="56" y="233" width="1328" height="2" rx="0" fill="#c7c7c7" stroke="none"/>
+<text x="56" y="288" font-size="26" fill="#222" font-weight="700" text-anchor="start">01   Cerita bisnis</text>
+<text x="1384" y="288" font-size="17" fill="#555" font-weight="400" text-anchor="end">20543 → 21189</text>
+<text x="720" y="473" font-size="37" fill="#555" font-weight="700" text-anchor="middle">→</text>
+<text x="56" y="648" font-size="18" fill="#444" font-weight="400" text-anchor="start">Pada “Padahal”, nilai bisnis menjadi acuan. Penanda harga bertahan ke ilusi kedua.</text>
+<g transform="translate(56 318)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Kamu melihat bisnis dan penanda harga</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#333"/>
+<text x="236" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<g transform="translate(48 146)" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round">
+<circle cx="20" cy="12" r="11" fill="#fff"/><path d="M 20 24 V 62 M 20 31 L 5 52 M 20 31 L 38 48 M 20 62 L 10 86 M 20 62 L 30 86"/>
+<text x="20" y="109" fill="#333" stroke="none" font-size="14" text-anchor="middle">Kamu</text>
+</g>
+<g transform="translate(109 130) scale(1)">
+<rect x="8" y="34" width="110" height="63" rx="3" fill="#fff" stroke="#444"/>
+<path d="M 0 34 L 16 8 H 110 L 126 34 Z" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 26 8 L 20 34 M 54 8 L 52 34 M 76 8 L 78 34 M 100 8 L 106 34" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="24" y="49" width="44" height="29" rx="1" fill="#e4e4e4" stroke="#444"/>
+<rect x="80" y="49" width="24" height="47" rx="1" fill="#eee" stroke="#444"/>
+</g>
+<path d="M 310 214 H 510" fill="none" stroke="#999" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="431" cy="214" r="8" fill="#333"/>
+<text x="431" y="244" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Harga</text>
+</g>
+<g transform="translate(774 318)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Harga dibandingkan dengan nilai bisnis</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#333"/>
+<text x="236" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<g transform="translate(48 146)" stroke="#333" stroke-width="3" fill="none" stroke-linecap="round">
+<circle cx="20" cy="12" r="11" fill="#fff"/><path d="M 20 24 V 62 M 20 31 L 5 52 M 20 31 L 38 48 M 20 62 L 10 86 M 20 62 L 30 86"/>
+<text x="20" y="109" fill="#333" stroke="none" font-size="14" text-anchor="middle">Kamu</text>
+</g>
+<g transform="translate(109 130) scale(1)">
+<rect x="8" y="34" width="110" height="63" rx="3" fill="#fff" stroke="#444"/>
+<path d="M 0 34 L 16 8 H 110 L 126 34 Z" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 26 8 L 20 34 M 54 8 L 52 34 M 76 8 L 78 34 M 100 8 L 106 34" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="24" y="49" width="44" height="29" rx="1" fill="#e4e4e4" stroke="#444"/>
+<rect x="80" y="49" width="24" height="47" rx="1" fill="#eee" stroke="#444"/>
+</g>
+<path d="M 306 214 H 510" fill="none" stroke="#999" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="343" cy="214" r="8" fill="#999"/>
+<circle cx="481" cy="214" r="8" fill="#333"/>
+<path d="M 343 175 V 163 H 481 V 175" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="343" y="244" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Nilai bisnis</text>
+<text x="481" y="244" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Harga</text>
+</g>
+<text x="56" y="705" font-size="26" fill="#222" font-weight="700" text-anchor="start">02   Harga turun</text>
+<text x="1384" y="705" font-size="17" fill="#555" font-weight="400" text-anchor="end">21190 → 22140</text>
+<text x="720" y="890" font-size="37" fill="#555" font-weight="700" text-anchor="middle">→</text>
+<text x="56" y="1065" font-size="18" fill="#444" font-weight="400" text-anchor="start">Garis −50% menunjukkan jarak terhadap puncak. Ujung pembanding turun dan menempel pada nilai bisnis saat ini.</text>
+<g transform="translate(56 735)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Harga bergerak menjauhi puncak</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#333"/>
+<text x="270" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<path d="M 110 213 H 495" fill="none" stroke="#999" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="212" cy="213" r="8" fill="#333"/>
+<circle cx="463" cy="213" r="8" fill="#aaa"/>
+<path d="M 212 196 V 165 H 463 V 196" fill="none" stroke="#444" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="337" y="154" font-size="25" fill="#222" font-weight="700" text-anchor="middle">−50%</text>
+<text x="212" y="241" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Harga sekarang</text>
+<text x="463" y="241" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Harga puncak</text>
+</g>
+<g transform="translate(774 735)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Pembanding berpindah</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#333"/>
+<text x="270" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<path d="M 110 198 H 495" fill="none" stroke="#aaa" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="212" cy="198" r="8" fill="#333"/>
+<circle cx="463" cy="198" r="8" fill="#aaa"/>
+<text x="212" y="172" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Harga sekarang</text>
+<text x="463" y="172" font-size="16" fill="#777" font-weight="400" text-anchor="middle">Harga puncak</text>
+<path d="M 212 198 V 235 H 327" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="327" y="218" width="172" height="34" rx="12" fill="#fff" stroke="#999"/>
+<text x="413" y="241" font-size="16" fill="#222" font-weight="400" text-anchor="middle">Nilai bisnis saat ini</text>
+</g>
+<text x="56" y="1122" font-size="26" fill="#222" font-weight="700" text-anchor="start">03   Jebakan nilai</text>
+<text x="1384" y="1122" font-size="17" fill="#555" font-weight="400" text-anchor="end">22141 → 23001</text>
+<text x="720" y="1307" font-size="37" fill="#555" font-weight="700" text-anchor="middle">→</text>
+<text x="56" y="1482" font-size="18" fill="#444" font-weight="400" text-anchor="start">Laba dan keunggulan menyusut. Kedua jalur mengalir ke nilai bisnis, yang turun setelahnya.</text>
+<g transform="translate(56 1152)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Rasio terlihat makin rendah</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#333"/>
+<text x="304" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<text x="304" y="170" font-size="19" fill="#222" font-weight="400" text-anchor="middle">Rasio valuasi</text>
+<rect x="168" y="190" width="272" height="16" rx="8" fill="#d4d4d4" stroke="none"/>
+<rect x="168" y="190" width="136" height="16" rx="8" fill="#444" stroke="none"/>
+</g>
+<g transform="translate(774 1152)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Bisnis ikut melemah</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#333"/>
+<text x="304" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<text x="95" y="165" font-size="16" fill="#222" font-weight="400" text-anchor="start">Rasio valuasi</text>
+<rect x="95" y="181" width="157" height="12" rx="6" fill="#d4d4d4" stroke="none"/>
+<rect x="95" y="181" width="67" height="12" rx="6" fill="#777" stroke="none"/>
+<text x="337" y="139" font-size="15" fill="#222" font-weight="400" text-anchor="start">Laba</text>
+<rect x="337" y="149" width="189" height="9" rx="5" fill="#ddd" stroke="none"/>
+<rect x="337" y="149" width="103" height="9" rx="5" fill="#333" stroke="none"/>
+<text x="337" y="190" font-size="15" fill="#222" font-weight="400" text-anchor="start">Keunggulan bisnis</text>
+<rect x="337" y="200" width="189" height="9" rx="5" fill="#ddd" stroke="none"/>
+<rect x="337" y="200" width="103" height="9" rx="5" fill="#333" stroke="none"/>
+<path d="M 324 153 H 311 V 227 H 325 M 324 204 H 311" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="337" y="226" font-size="15" fill="#222" font-weight="700" text-anchor="start">Nilai bisnis</text>
+<rect x="337" y="236" width="189" height="10" rx="5" fill="#ddd" stroke="none"/>
+<rect x="337" y="236" width="71" height="10" rx="5" fill="#333" stroke="none"/>
+<text x="95" y="242" font-size="21" fill="#222" font-weight="700" text-anchor="start">Jebakan nilai</text>
+</g>
+<text x="56" y="1539" font-size="26" fill="#222" font-weight="700" text-anchor="start">04   Dividen di puncak siklus</text>
+<text x="1384" y="1539" font-size="17" fill="#555" font-weight="400" text-anchor="end">23002 → 23778</text>
+<text x="720" y="1724" font-size="37" fill="#555" font-weight="700" text-anchor="middle">→</text>
+<text x="56" y="1899" font-size="18" fill="#444" font-weight="400" text-anchor="start">Kurva laba berhenti di puncak. Alirannya masuk ke dividen hari ini, sementara kolom tahun depan tetap tanda tanya.</text>
+<g transform="translate(56 1569)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Dividen hari ini jadi sorotan</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#333"/>
+<text x="338" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<rect x="190" y="150" width="230" height="83" rx="14" fill="#373737" stroke="none"/>
+<text x="305" y="201" font-size="21" fill="#fff" font-weight="700" text-anchor="middle">Dividen hari ini</text>
+</g>
+<g transform="translate(774 1569)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Puncak mengalir ke dividen hari ini</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#333"/>
+<text x="338" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#dfdfdf"/>
+<text x="372" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">5</text>
+<path d="M 108 184 C 205 184 214 128 297 128" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="297" cy="128" r="8" fill="#333"/>
+<text x="321" y="135" font-size="15" fill="#222" font-weight="400" text-anchor="start">Puncak siklus</text>
+<path d="M 297 128 V 206 H 276" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="103" y="191" width="172" height="43" rx="12" fill="#393939" stroke="none"/>
+<text x="189" y="217" font-size="16" fill="#fff" font-weight="700" text-anchor="middle">Dividen hari ini</text>
+<path d="M 275 215 H 371" fill="none" stroke="#777" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="7 7"/>
+<rect x="371" y="191" width="143" height="43" rx="12" fill="#fcfcfc" stroke="#888"/>
+<text x="443" y="180" font-size="15" fill="#222" font-weight="400" text-anchor="middle">Tahun depan</text>
+<text x="443" y="220" font-size="25" fill="#222" font-weight="700" text-anchor="middle">?</text>
+</g>
+<text x="56" y="1956" font-size="26" fill="#222" font-weight="700" text-anchor="start">05   Perusahaan bagus</text>
+<text x="1384" y="1956" font-size="17" fill="#555" font-weight="400" text-anchor="end">23779 → 24818</text>
+<text x="720" y="2141" font-size="37" fill="#555" font-weight="700" text-anchor="middle">→</text>
+<text x="56" y="2316" font-size="18" fill="#444" font-weight="400" text-anchor="start">Penanda beli tetap di tempat saat jalur harga memanjang. Kualitas perusahaan bertahan di samping chart.</text>
+<g transform="translate(56 1986)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Kualitas dan masa simpan</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#333"/>
+<text x="372" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">5</text>
+<rect x="134" y="158" width="216" height="52" rx="12" fill="#ddd" stroke="none"/>
+<text x="242" y="191" font-size="19" fill="#222" font-weight="400" text-anchor="middle">Perusahaan bagus</text>
+<path d="M 353 184 H 529" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="440" y="215" font-size="15" fill="#222" font-weight="400" text-anchor="middle">Jangka panjang</text>
+</g>
+<g transform="translate(774 1986)">
+<rect x="0" y="0" width="610" height="292" rx="12" fill="#fdfdfd" stroke="#c9c9c9"/>
+<text x="24" y="34" font-size="16" fill="#555" font-weight="700" text-anchor="start">Kembali ke kejadian BBCA</text>
+<rect x="24" y="57" width="562" height="211" rx="8" fill="#ffffff" stroke="#383838"/>
+<text x="304" y="81" font-size="16" fill="#222" font-weight="700" text-anchor="middle">Lima ilusi murah</text>
+<circle cx="236" cy="100" r="11" fill="#dfdfdf"/>
+<text x="236" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">1</text>
+<circle cx="270" cy="100" r="11" fill="#dfdfdf"/>
+<text x="270" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">2</text>
+<circle cx="304" cy="100" r="11" fill="#dfdfdf"/>
+<text x="304" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">3</text>
+<circle cx="338" cy="100" r="11" fill="#dfdfdf"/>
+<text x="338" y="104" font-size="11" fill="#444" font-weight="700" text-anchor="middle">4</text>
+<circle cx="372" cy="100" r="11" fill="#333"/>
+<text x="372" y="104" font-size="11" fill="#fff" font-weight="700" text-anchor="middle">5</text>
+<rect x="80" y="137" width="137" height="74" rx="12" fill="#ddd" stroke="none"/>
+<text x="148" y="167" font-size="22" fill="#222" font-weight="700" text-anchor="middle">BBCA</text>
+<text x="148" y="193" font-size="15" fill="#222" font-weight="400" text-anchor="middle">Best</text>
+<path d="M 246 170 L 273 158 L 292 177 L 318 173 L 345 191 L 369 183 L 396 207 L 412 199 L 430 218 L 470 205 L 497 214 L 531 207" fill="none" stroke="#333" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<circle cx="246" cy="170" r="6" fill="#333"/>
+<text x="246" y="152" font-size="14" fill="#222" font-weight="400" text-anchor="middle">10.950</text>
+<text x="533" y="194" font-size="14" fill="#222" font-weight="400" text-anchor="middle">5.500</text>
+<text x="304" y="246" font-size="17" fill="#222" font-weight="700" text-anchor="middle">Perusahaan bagus, beli cukup murah</text>
+</g>
+<text x="56" y="2408" font-size="17" fill="#444" font-weight="400" text-anchor="start">Kurva pada papan ini sketsa tata letak. Visual BBCA menggunakan data yang sama dengan scene 5.</text>
+</svg>

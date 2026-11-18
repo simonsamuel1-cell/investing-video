@@ -391,3 +391,50 @@ export const WorkingBusiness = ({ f, from }: { f: number; from: number }) => {
     </>
   );
 };
+
+/**
+ * The same business without its frame, for a card elsewhere (VI03 SC07 "Cerita bisnis", Simon 18 Nov: "ganti deh kantor tadi,
+ * jadi prosedur ini di VI02"): the factory faint behind, Produksi · Kardus · Truk · Toko on the dashed path, the packs running
+ * down it — in this scene's own screen coordinates; BUSINESS_CHAIN_BOX is what it covers, to fit it somewhere else.
+ * `factory` and `chain` (0–1) bring the two layers in; `from` is when the packs set off.
+ */
+const FAC_W = lineArtW("factory", FAC_STEP.h);
+export const BUSINESS_CHAIN_BOX = {
+  x0: Math.min(FAC_STEP.cx - FAC_W / 2, CHAIN[1].cx - lineArtW(CHAIN[1].name, CHAIN[1].h) / 2),
+  y0: FAC_STEP.floor - FAC_STEP.h,
+  x1: CHAIN[4].cx + lineArtW(CHAIN[4].name, CHAIN[4].h) / 2,
+  y1: LABEL_Y + 24,
+};
+export const BusinessChain = ({ f, from, factory = 1, chain = 1 }: { f: number; from: number; factory?: number; chain?: number }) => {
+  const c = usePalette();
+  const x0 = CHAIN[1].cx + lineArtW("conveyor", CHAIN[1].h) / 2 + 14;
+  const x1 = CHAIN[4].cx - lineArtW("shops", CHAIN[4].h) / 2 - 14;
+  return (
+    <>
+      {factory > 0.001 ? <Drawing name="factory" cx={FAC_STEP.cx} floor={FAC_STEP.floor} h={FAC_STEP.h} style={{ opacity: 0.1 * factory }} /> : null}
+      {chain > 0.001 ? (
+        <div style={{ position: "absolute", inset: 0, opacity: chain, transform: `translateY(${((1 - chain) * 16).toFixed(1)}px)` }}>
+          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+            {CHAIN.slice(2).map((q, i) => {
+              const a = CHAIN[i + 1];
+              return <line key={q.name} x1={a.cx + lineArtW(a.name, a.h) / 2 + 14} y1={PATH_Y} x2={q.cx - lineArtW(q.name, q.h) / 2 - 14} y2={PATH_Y} stroke={c.ink} strokeWidth={3} strokeDasharray="10 12" strokeLinecap="round" />;
+            })}
+          </svg>
+          {Array.from({ length: 12 }, (_, i) => {
+            const run = (f - from) * PACK.speed - i * PACK.every * PACK.speed;
+            if (run < 0) return null;
+            const x = x0 + (run % (x1 - x0));
+            const edge = Math.min(1, (x - x0) / 40, (x1 - x) / 40);
+            return <div key={i} style={{ position: "absolute", left: x - PACK.d / 2, top: PATH_Y - PACK.d / 2, width: PACK.d, height: PACK.d, borderRadius: 6, background: c.cardBg, boxShadow: `inset 0 0 0 3px ${c.ink}`, opacity: Math.max(0, edge) }} />;
+          })}
+          {CHAIN.slice(1).map((q) => (
+            <div key={q.name}>
+              <Drawing name={q.name} cx={q.cx} floor={FLOOR} h={q.h} />
+              <div style={{ position: "absolute", left: q.cx - 150, width: 300, top: LABEL_Y, transform: "translateY(-50%)", textAlign: "center", ...typeStyle("label"), fontSize: 38, fontWeight: 500, color: c.ink }}>{q.word}</div>
+            </div>
+          ))}
+        </div>
+      ) : null}
+    </>
+  );
+};

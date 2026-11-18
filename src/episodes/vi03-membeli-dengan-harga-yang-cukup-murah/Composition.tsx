@@ -12,7 +12,7 @@ import { SC01 as SC01_BUILD } from "./scenes/MangoBuild";
 import { SC02 as SC02_SHOTS } from "./scenes/SecondPillar";
 import { SC02 as SC02_ONE_TAKE } from "./scenes/SecondPillarFlow";
 import { SC02 as SC02_BUILD } from "./scenes/SecondPillarBuild";
-import { SC01_LOOK, SC02_LOOK, SC03_LOOK, SC04_LOOK, SC05_LOOK, SC06_LOOK } from "./data/switches";
+import { SC01_LOOK, SC02_LOOK, SC03_LOOK, SC04_LOOK, SC05_LOOK, SC06_LOOK, SC07_LOOK } from "./data/switches";
 import { SC03 as SC03_SHOTS } from "./scenes/IbuSariValue";
 import { SC03 as SC03_BUILD } from "./scenes/IbuSariBuild";
 import { SC03 as SC03_SENDIRI } from "./scenes/IbuSariSendiri";
@@ -22,7 +22,8 @@ import { SC05 as SC05_SHOTS } from "./scenes/BbcaTwoPrices";
 import { SC05 as SC05_BUILD } from "./scenes/BbcaBuild";
 import { SC06 as SC06_SHOTS } from "./scenes/RealCheap";
 import { SC06 as SC06_BUILD } from "./scenes/FutureValueBuild";
-import { SC07 } from "./scenes/FiveIllusions";
+import { SC07 as SC07_SHOTS } from "./scenes/FiveIllusions";
+import { SC07 as SC07_BUILD } from "./scenes/IllusionsMindmap";
 import { SC08 } from "./scenes/ThreeQuestions";
 
 /** SC01: one story frame built sentence by sentence (16 Nov) or its first, cut-up build. */
@@ -37,6 +38,7 @@ const SC04 = SC04_LOOK === "build" ? SC04_BUILD : SC04_SHOTS;
 const SC05 = SC05_LOOK === "build" ? SC05_BUILD : SC05_SHOTS;
 /** SC06: told the way SC01–SC03 were (17 Nov), or its first, cut-up build. */
 const SC06 = SC06_LOOK === "build" ? SC06_BUILD : SC06_SHOTS;
+const SC07 = SC07_LOOK === "build" ? SC07_BUILD : SC07_SHOTS;
 /** The scenes built so far. Add each as `SCnn` when it is built. */
 const SCENE_COMPONENTS: Record<string, React.FC | undefined> = { SC01, SC02, SC03, SC04, SC05, SC06, SC07, SC08 };
 

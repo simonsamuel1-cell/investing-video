@@ -37,6 +37,11 @@ export const VO_LAST = speech(SCENE_NUMBERS[SCENE_NUMBERS.length - 1]).last;
 
 /** Frames of pause at each scene's end, in the VO. None yet (the previous episode's 30 f was asked for there only). */
 const SCENE_PAUSE = 0;
+/**
+ * A pause asked for at one scene's end, keyed by the scene that FOLLOWS it (Simon 18 Nov, SC07: "Akhir scene, kasih jeda 30
+ * frame"): the VO carries the silence (data/vo-edits.json), and the cut moves past it so the scene before holds the whole of it.
+ */
+const PAUSE_BEFORE: Record<number, number> = { 8: 30 };
 
 /**
  * Scene starts — the midpoint of the silence between one scene's last word and the next one's first, moved past
@@ -44,7 +49,7 @@ const SCENE_PAUSE = 0;
  * from words.json rather than typed, so a VO revision (scripts/vi/vo-refresh.sh) moves every block by itself.
  */
 export const BLOCK: Record<string, number> = Object.fromEntries([
-  ...SCENE_NUMBERS.map((n, i) => [`SC${String(n).padStart(2, "0")}`, i === 0 ? 0 : Math.floor((speech(SCENE_NUMBERS[i - 1]).last + speech(n).first) / 2) + SCENE_PAUSE / 2]),
+  ...SCENE_NUMBERS.map((n, i) => [`SC${String(n).padStart(2, "0")}`, i === 0 ? 0 : Math.floor((speech(SCENE_NUMBERS[i - 1]).last + speech(n).first) / 2) + (SCENE_PAUSE + (PAUSE_BEFORE[n] ?? 0)) / 2]),
   ["END", VO_LAST + END_HOLD],
 ]);
 

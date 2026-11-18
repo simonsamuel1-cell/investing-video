@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2050" width="1200" height="2050" font-family="Arial, sans-serif">
+<rect width="1200" height="2050" fill="#f4f4f4"/>
+<text x="600" y="60" font-size="35" font-weight="700" fill="#292929" text-anchor="middle">VI03  /  Lima ilusi murah</text>
+<g transform="translate(0 105)">
+<text x="600" y="22" font-size="21" font-weight="700" fill="#292929" text-anchor="middle">Lima ilusi murah</text>
+<path d="M600 30 V49 H600.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="520.0" y="64" width="160" height="36" rx="12" fill="#d7d7d7" stroke="#999"/>
+<text x="600.0" y="88" font-size="16" font-weight="700" fill="#292929" text-anchor="middle">Cerita bisnis</text>
+<path d="M600.0 100 V126" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="124" y="126" width="952" height="192" rx="12" fill="#fff" stroke="#999"/>
+<path d="M255 195 L275 171 H373 L391 195 Z M264 196 V265 H382 V196 M300 200 V235 H338 V200" fill="none" stroke="#595959" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="328" y="296" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Warung</text>
+<text x="682" y="202" font-size="22" font-weight="700" fill="#292929" text-anchor="middle">“Harga berapa pun, beli saja.”</text>
+<text x="682" y="268" font-size="24" font-weight="400" fill="#292929" text-anchor="middle">Harga     ↔     Nilai bisnis</text>
+<text x="600" y="350" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Kamu melihat warung. Kutipan memudar saat harga dan nilai mulai dibandingkan.</text>
+</g>
+<g transform="translate(0 488)">
+<text x="600" y="22" font-size="21" font-weight="700" fill="#292929" text-anchor="middle">Lima ilusi murah</text>
+<path d="M600 30 V49 H507.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="427.5" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="507.5" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Cerita bisnis</text>
+<path d="M600 30 V49 H692.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="612.5" y="64" width="160" height="36" rx="12" fill="#d7d7d7" stroke="#999"/>
+<text x="692.5" y="88" font-size="16" font-weight="700" fill="#292929" text-anchor="middle">Harga turun</text>
+<path d="M692.5 100 V126" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="124" y="126" width="952" height="192" rx="12" fill="#fff" stroke="#999"/>
+<text x="335" y="196" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Harga puncak</text>
+<rect x="451" y="177" width="421" height="22" rx="12" fill="#ccc" stroke="#999"/>
+<text x="335" y="256" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Harga sekarang</text>
+<rect x="451" y="238" width="211" height="22" rx="12" fill="#555" stroke="#999"/>
+<text x="938" y="259" font-size="32" font-weight="700" fill="#292929" text-anchor="middle">−50%</text>
+<text x="600" y="350" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Batang harga sekarang memendek sampai separuh. Acuan berganti dari puncak ke nilai bisnis.</text>
+</g>
+<g transform="translate(0 871)">
+<text x="600" y="22" font-size="21" font-weight="700" fill="#292929" text-anchor="middle">Lima ilusi murah</text>
+<path d="M600 30 V49 H415.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="335.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="415.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Cerita bisnis</text>
+<path d="M600 30 V49 H600.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="520.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="600.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Harga turun</text>
+<path d="M600 30 V49 H785.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="705.0" y="64" width="160" height="36" rx="12" fill="#d7d7d7" stroke="#999"/>
+<text x="785.0" y="88" font-size="16" font-weight="700" fill="#292929" text-anchor="middle">Rasio rendah</text>
+<path d="M785.0 100 V126" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="124" y="126" width="952" height="192" rx="12" fill="#fff" stroke="#999"/>
+<text x="310" y="223" font-size="24" font-weight="700" fill="#292929" text-anchor="middle">Rasio valuasi ↓</text>
+<text x="586" y="179" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Laba ↓</text>
+<text x="586" y="270" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Keunggulan bisnis ↓</text>
+<path d="M677 175 H695 V220 H748 M677 265 H695 V220" fill="none" stroke="#595959" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="850" y="226" font-size="23" font-weight="700" fill="#292929" text-anchor="middle">Nilai bisnis ↓</text>
+<text x="850" y="276" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Jebakan nilai</text>
+<text x="600" y="350" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Rasio mengecil. Telusuri laba dan keunggulan yang ikut melemah hingga ke nilai bisnis.</text>
+</g>
+<g transform="translate(0 1254)">
+<text x="600" y="22" font-size="21" font-weight="700" fill="#292929" text-anchor="middle">Lima ilusi murah</text>
+<path d="M600 30 V49 H322.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="242.5" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="322.5" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Cerita bisnis</text>
+<path d="M600 30 V49 H507.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="427.5" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="507.5" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Harga turun</text>
+<path d="M600 30 V49 H692.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="612.5" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="692.5" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Rasio rendah</text>
+<path d="M600 30 V49 H877.5 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="797.5" y="64" width="160" height="36" rx="12" fill="#d7d7d7" stroke="#999"/>
+<text x="877.5" y="88" font-size="16" font-weight="700" fill="#292929" text-anchor="middle">Dividen tinggi</text>
+<path d="M877.5 100 V126" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="124" y="126" width="952" height="192" rx="12" fill="#fff" stroke="#999"/>
+<path d="M270 224 C340 224 354 157 436 157 V230" fill="none" stroke="#595959" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="520" y="172" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Puncak siklus</text>
+<rect x="380" y="235" width="108" height="16" rx="12" fill="#999" stroke="#999"/>
+<rect x="380" y="256" width="108" height="16" rx="12" fill="#999" stroke="#999"/>
+<text x="435" y="296" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Dividen hari ini</text>
+<path d="M515 251 H730" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="800" y="255" font-size="38" font-weight="700" fill="#292929" text-anchor="middle">?</text>
+<text x="800" y="296" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Tahun depan</text>
+<text x="600" y="350" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Tumpukan dividen berpindah ke bawah puncak laba. Tahun depan masih terbuka.</text>
+</g>
+<g transform="translate(0 1637)">
+<text x="600" y="22" font-size="21" font-weight="700" fill="#292929" text-anchor="middle">Lima ilusi murah</text>
+<path d="M600 30 V49 H230.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="150.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="230.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Cerita bisnis</text>
+<path d="M600 30 V49 H415.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="335.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="415.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Harga turun</text>
+<path d="M600 30 V49 H600.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="520.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="600.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Rasio rendah</text>
+<path d="M600 30 V49 H785.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="705.0" y="64" width="160" height="36" rx="12" fill="#fff" stroke="#999"/>
+<text x="785.0" y="88" font-size="16" font-weight="400" fill="#292929" text-anchor="middle">Dividen tinggi</text>
+<path d="M600 30 V49 H970.0 V65" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="890.0" y="64" width="160" height="36" rx="12" fill="#d7d7d7" stroke="#999"/>
+<text x="970.0" y="88" font-size="16" font-weight="700" fill="#292929" text-anchor="middle">Beli dan simpan</text>
+<path d="M970.0 100 V126" fill="none" stroke="#595959" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<rect x="124" y="126" width="952" height="192" rx="12" fill="#fff" stroke="#999"/>
+<text x="351" y="211" font-size="35" font-weight="700" fill="#292929" text-anchor="middle">BBCA</text>
+<text x="351" y="254" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Company Quality • Best</text>
+<path d="M522 181 L555 191 590 176 650 222 684 203 750 236 806 222 870 263 924 239" fill="none" stroke="#595959" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="536" y="160" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">10.950</text>
+<text x="928" y="216" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">5.500</text>
+<text x="600" y="350" font-size="17" font-weight="400" fill="#292929" text-anchor="middle">Penanda beli diam saat waktu dan harga bergerak. Kualitas perusahaan tetap di sebelah grafik.</text>
+</g>
+</svg>

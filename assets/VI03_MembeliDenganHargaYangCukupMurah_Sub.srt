@@ -503,101 +503,101 @@ Perusahaannya memang bagus.
 Tapi perusahaan bagus juga harus dibeli dengan harga yang cukup murah.
 
 127
-00:06:49,800 --> 00:06:51,533
+00:06:50,300 --> 00:06:52,033
 Sebelum membeli, tanyakan tiga hal.
 
 128
-00:06:51,867 --> 00:06:54,183
+00:06:52,367 --> 00:06:54,683
 Apakah perusahaan ini memang layak untuk dimiliki?
 
 129
-00:06:54,600 --> 00:06:56,633
+00:06:55,100 --> 00:06:57,133
 Kira-kira berapa harga wajarnya?
 
 130
-00:06:56,933 --> 00:06:59,100
+00:06:57,433 --> 00:06:59,600
 Dan apakah harga sekarang memberi ruang
 
 131
-00:06:59,100 --> 00:07:02,033
+00:06:59,600 --> 00:07:02,533
 yang cukup kalau ternyata perhitungan kita salah?
 
 132
-00:07:02,317 --> 00:07:05,617
+00:07:02,817 --> 00:07:06,117
 Lalu ingat tiga kalimat. Harga adalah yang kamu bayar.
 
 133
-00:07:05,833 --> 00:07:07,767
+00:07:06,333 --> 00:07:08,267
 Value adalah yang kamu dapatkan.
 
 134
-00:07:08,067 --> 00:07:11,467
+00:07:08,567 --> 00:07:11,967
 Barang bernilai 100 dibeli di 70 bukan karena kita serakah,
 
 135
-00:07:11,633 --> 00:07:14,333
+00:07:12,133 --> 00:07:14,833
 tapi karena kita tahu bahwa kita mungkin salah menghitung.
 
 136
-00:07:14,600 --> 00:07:17,133
+00:07:15,100 --> 00:07:17,633
 Dan perusahaan bagus juga harus dibeli murah.
 
 137
-00:07:17,367 --> 00:07:21,633
+00:07:17,867 --> 00:07:22,133
 John Templeton pernah mengatakan bahwa pasar bullish lahir dari pesimisme.
 
 138
-00:07:22,067 --> 00:07:27,100
+00:07:22,483 --> 00:07:26,850
 Templeton Growth Fund mencatat sekitar 15% per tahun selama 38 tahun.
 
 139
-00:07:27,317 --> 00:07:31,833
+00:07:27,600 --> 00:07:32,117
 Value investing adalah pilihan yang konsisten digunakan oleh investor profesional dunia,
 
 140
-00:07:31,933 --> 00:07:36,033
+00:07:32,217 --> 00:07:36,317
 dan merupakan pendekatan yang paling sesuai bagi investor ritel Indonesia.
 
 141
-00:07:36,333 --> 00:07:40,733
+00:07:36,617 --> 00:07:41,017
 Di Tuntun, kamu bisa melihat Reference Fair Value dan Valuation Status.
 
 142
-00:07:41,133 --> 00:07:43,700
+00:07:41,417 --> 00:07:43,983
 Reference Fair Value dihitung dengan mempertimbangkan
 
 143
-00:07:43,700 --> 00:07:46,167
+00:07:43,983 --> 00:07:46,450
 berapa banyak laba yang bisa dihasilkan perusahaan,
 
 144
-00:07:46,350 --> 00:07:51,317
+00:07:46,633 --> 00:07:51,583
 berapa lama perusahaan bisa terus menghasilkannya, dan seberapa pasti hasil tersebut.
 
 145
-00:07:51,733 --> 00:07:55,400
-Kemudian Most Undervalued membantu menemukan saham yang memiliki
+00:07:51,950 --> 00:07:55,350
+Kemudian Top Undervalued membantu menemukan saham yang memiliki
 
 146
-00:07:55,400 --> 00:07:59,167
+00:07:55,350 --> 00:07:58,717
 selisih besar antara harga pasar dan Reference Fair Value.
 
 147
-00:07:59,267 --> 00:08:04,033
-Tapi ingat, Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
+00:07:59,367 --> 00:08:04,117
+Tapi ingat, Top Undervalued adalah kumpulan kandidat, bukan daftar beli.
 
 148
-00:08:04,483 --> 00:08:07,133
+00:08:04,600 --> 00:08:07,250
 Daftar tersebut membantu kita menemukan kandidat.
 
 149
-00:08:07,533 --> 00:08:10,983
+00:08:07,650 --> 00:08:11,117
 Analisis membantu kita menentukan apakah sahamnya memang layak dimiliki.
 
 150
-00:08:11,417 --> 00:08:14,800
+00:08:11,533 --> 00:08:14,917
 Di video selanjutnya, kita akan membahas cara menghadapi pasar yang kadang
 
 151
-00:08:14,800 --> 00:08:19,533
+00:08:14,917 --> 00:08:19,650
 terlalu takut dan kadang terlalu optimistis—tanpa ikut terbawa emosinya.

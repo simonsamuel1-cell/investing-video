@@ -406,6 +406,12 @@ export const theme = {
     memeAwesomeTongue: "#EFB0CC",
     /** IN07 SC05, Simon: "Dynamic islandnya dibuat hitam" — the pill on a drawn phone, hardware, so black in every palette. */
     phoneIsland: "#000000",
+    /**
+     * Tuntun's own app card, redrawn over its screenshot (VI03 SC07, Simon 18 Nov: Company Quality "fade transition dari Best ke
+     * Good"): the quality green and the empty meter grey, read off public/art/vi03/app/bbca-rfv.svg. Only on the app card.
+     */
+    appQualityGreen: "#16B388",
+    appMeterEmpty: "#C1C1C1",
     /** IN01 SC04, Simon: "Checknya warna hijau" — the tick in a to-do box, nothing else. */
     checkGreen: "#22B573",
     /** IN01 SC06, Simon: "Semua +Rp 5,000,000 warna hijau" — the gain over the Total invested card, nothing else. */

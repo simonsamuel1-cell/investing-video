@@ -143,8 +143,8 @@ Templeton Growth Fund mencatat sekitar 15% per tahun selama 38 tahun.
 Value investing adalah pilihan yang konsisten digunakan oleh investor profesional dunia, dan merupakan pendekatan yang paling sesuai bagi investor ritel Indonesia.
 Di Tuntun, kamu bisa melihat Reference Fair Value dan Valuation Status.
 Reference Fair Value dihitung dengan mempertimbangkan berapa banyak laba yang bisa dihasilkan perusahaan, berapa lama perusahaan bisa terus menghasilkannya, dan seberapa pasti hasil tersebut.
-Kemudian Most Undervalued membantu menemukan saham yang memiliki selisih besar antara harga pasar dan Reference Fair Value.
-Tapi ingat, Most Undervalued adalah kumpulan kandidat, bukan daftar beli.
+Kemudian Top Undervalued membantu menemukan saham yang memiliki selisih besar antara harga pasar dan Reference Fair Value.
+Tapi ingat, Top Undervalued adalah kumpulan kandidat, bukan daftar beli.
 Daftar tersebut membantu kita menemukan kandidat.
 Analisis membantu kita menentukan apakah sahamnya memang layak dimiliki.
 Di video selanjutnya, kita akan membahas cara menghadapi pasar yang kadang terlalu takut dan kadang terlalu optimistis—tanpa ikut terbawa emosinya.

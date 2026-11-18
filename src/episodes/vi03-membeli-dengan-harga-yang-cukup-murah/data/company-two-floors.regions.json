@@ -1,0 +1,408 @@
+{
+ "source": "public/art/vi03/line/company-two-floors.png (1752 x 897)",
+ "groups": [
+  {
+   "id": "sisi-kiri",
+   "label": "Robot, resepsionis, kotak samping (dibuang, Simon 18 Nov)",
+   "drop": true,
+   "rects": [
+    [
+     140,
+     180,
+     327,
+     897
+    ]
+   ]
+  },
+  {
+   "id": "lampu-atas-1",
+   "label": "Lampu atas 1",
+   "rects": [
+    [
+     600,
+     94,
+     732,
+     190
+    ]
+   ]
+  },
+  {
+   "id": "lampu-atas-2",
+   "label": "Lampu atas 2",
+   "rects": [
+    [
+     938,
+     94,
+     1066,
+     190
+    ]
+   ]
+  },
+  {
+   "id": "lampu-atas-3",
+   "label": "Lampu atas 3",
+   "rects": [
+    [
+     1278,
+     94,
+     1406,
+     190
+    ]
+   ]
+  },
+  {
+   "id": "lampu-bawah-1",
+   "label": "Lampu bawah 1",
+   "rects": [
+    [
+     596,
+     536,
+     726,
+     610
+    ]
+   ]
+  },
+  {
+   "id": "lampu-bawah-2",
+   "label": "Lampu bawah 2",
+   "rects": [
+    [
+     950,
+     536,
+     1062,
+     582
+    ]
+   ]
+  },
+  {
+   "id": "lampu-bawah-3",
+   "label": "Lampu bawah 3",
+   "rects": [
+    [
+     1278,
+     536,
+     1406,
+     610
+    ]
+   ]
+  },
+  {
+   "id": "ventilasi",
+   "label": "Ventilasi atap",
+   "rects": [
+    [
+     335,
+     5,
+     550,
+     46
+    ],
+    [
+     685,
+     5,
+     905,
+     46
+    ],
+    [
+     1050,
+     5,
+     1280,
+     46
+    ],
+    [
+     1435,
+     5,
+     1670,
+     46
+    ]
+   ]
+  },
+  {
+   "id": "meja-laptop",
+   "label": "Meja laptop (atas)",
+   "rects": [
+    [
+     366,
+     334,
+     542,
+     505
+    ]
+   ]
+  },
+  {
+   "id": "ilmuwan",
+   "label": "Ilmuwan + kotak",
+   "rects": [
+    [
+     598,
+     306,
+     772,
+     410
+    ],
+    [
+     598,
+     410,
+     694,
+     508
+    ]
+   ],
+   "smooth": true
+  },
+  {
+   "id": "konveyor",
+   "label": "Konveyor",
+   "rects": [
+    [
+     694,
+     404,
+     1474,
+     508
+    ]
+   ]
+  },
+  {
+   "id": "meja-bawah",
+   "label": "Meja + laptop (bawah)",
+   "rects": [
+    [
+     378,
+     744,
+     614,
+     773
+    ],
+    [
+     383,
+     771,
+     414,
+     852
+    ],
+    [
+     571,
+     771,
+     602,
+     852
+    ],
+    [
+     503,
+     699,
+     593,
+     754
+    ]
+   ]
+  },
+  {
+   "id": "pekerja-meja",
+   "label": "Pekerja di meja",
+   "rects": [
+    [
+     374,
+     640,
+     616,
+     852
+    ]
+   ],
+   "smooth": true
+  },
+  {
+   "id": "wanita-tablet",
+   "label": "Wanita dengan tablet",
+   "rects": [
+    [
+     626,
+     626,
+     744,
+     856
+    ]
+   ],
+   "smooth": true
+  },
+  {
+   "id": "jam",
+   "label": "Jam dinding",
+   "rects": [
+    [
+     856,
+     576,
+     1152,
+     636
+    ]
+   ]
+  },
+  {
+   "id": "presenter",
+   "label": "Presenter",
+   "rects": [
+    [
+     840,
+     644,
+     966,
+     856
+    ],
+    [
+     816,
+     722,
+     840,
+     856
+    ]
+   ],
+   "smooth": true
+  },
+  {
+   "id": "papan",
+   "label": "Papan presentasi",
+   "rects": [
+    [
+     768,
+     636,
+     1214,
+     790
+    ]
+   ]
+  },
+  {
+   "id": "tamu",
+   "label": "Tiga orang berjas",
+   "rects": [
+    [
+     1218,
+     636,
+     1460,
+     856
+    ]
+   ],
+   "smooth": true
+  },
+  {
+   "id": "pintu",
+   "label": "Pintu",
+   "rects": [
+    [
+     1510,
+     612,
+     1646,
+     838
+    ]
+   ]
+  },
+  {
+   "id": "mesin",
+   "label": "Mesin dan pipa (atas)",
+   "rects": [
+    [
+     372,
+     92,
+     1668,
+     406
+    ],
+    [
+     1500,
+     406,
+     1630,
+     508
+    ]
+   ]
+  },
+  {
+   "id": "gedung",
+   "label": "Gedung (dinding, lantai, atap)",
+   "rest": true
+  }
+ ],
+ "claims": [
+  {
+   "id": "gedung",
+   "rows": [
+    76,
+    90
+   ],
+   "minRun": 60,
+   "heal": true
+  },
+  {
+   "id": "gedung",
+   "rows": [
+    477,
+    491
+   ],
+   "minRun": 60,
+   "heal": true
+  },
+  {
+   "id": "gedung",
+   "rows": [
+    516,
+    533
+   ],
+   "minRun": 60,
+   "heal": true
+  },
+  {
+   "id": "gedung",
+   "rows": [
+    826,
+    837
+   ],
+   "minRun": 60,
+   "heal": true
+  },
+  {
+   "id": "mesin",
+   "rows": [
+    148,
+    169
+   ],
+   "cols": [
+    372,
+    1668
+   ],
+   "minRun": 30
+  },
+  {
+   "id": "papan",
+   "rows": [
+    640,
+    652
+   ],
+   "cols": [
+    768,
+    1214
+   ],
+   "minRun": 60,
+   "heal": true
+  },
+  {
+   "id": "papan",
+   "rows": [
+    772,
+    786
+   ],
+   "cols": [
+    768,
+    1214
+   ],
+   "minRun": 60,
+   "heal": true
+  }
+ ],
+ "draw": [
+  "latar",
+  "gedung",
+  "ventilasi",
+  "mesin",
+  "konveyor",
+  "lampu-atas-1",
+  "lampu-atas-2",
+  "lampu-atas-3",
+  "meja-laptop",
+  "lampu-bawah-1",
+  "lampu-bawah-2",
+  "lampu-bawah-3",
+  "jam",
+  "papan",
+  "pintu",
+  "ilmuwan",
+  "pekerja-meja",
+  "wanita-tablet",
+  "presenter",
+  "tamu"
+ ]
+}

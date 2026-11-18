@@ -26,3 +26,6 @@ export const SC05_LOOK: "build" | "shots" = "build";
 /** SC06_LOOK — "build": told the way SC01–SC03 were (17 Nov, "Habis ini langsung revisi scene 06"; FutureValueBuild.tsx);
  * "shots": the first build (RealCheap.tsx). */
 export const SC06_LOOK: "build" | "shots" = "build";
+
+/** SC07: live mindmap with one worked example per branch (IllusionsMindmap). */
+export const SC07_LOOK: "build" | "shots" = "build";

@@ -194,6 +194,8 @@ const PHOTOS = {
   buffett: { src: "art/vi01/buffett-photo.png", w: 1345, h: 1169, head: { cx: 665, top: 51, w: 540 } },
   /** Walter Schloss: Simon's photo (11 Nov), recreated by ChatGPT the same way — head whole, colour as is, transparent. */
   schloss: { src: "art/vi01/schloss-photo.png", w: 1345, h: 1169, head: { cx: 625, top: 56, w: 490 } },
+  /** John Templeton (VI03 SC08): Simon's photo, 01 Academy/VI03/John Templeton_1.png (18 Nov; it replaced "John Templeton.png"), already transparent. */
+  templeton: { src: "art/vi03/templeton-photo.png", w: 1254, h: 1254, head: { cx: 640, top: 15, w: 570 } },
 } as const;
 
 export const PhotoTile = ({ name, d, style }: { name: keyof typeof PHOTOS; d: number; style?: React.CSSProperties }) => {
