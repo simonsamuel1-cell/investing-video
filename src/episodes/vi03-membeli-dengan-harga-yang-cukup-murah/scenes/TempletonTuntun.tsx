@@ -18,7 +18,7 @@
  *  4  Tuntun's real BBCA card (VIDEO 09's screen, the one SC05 shows) under a Tuntun heading; a highlight box on Reference Fair
  *     Value, then one on its status line "15 - 27% Undervalued" (Valuation Status);
  *  5  the card rises and shrinks; from its Reference Fair Value three columns come down, each on its word, each with Tuntun's
- *     own screen: Laba (the 9M earning card), Waktu (the revenue years), Keyakinan (Tuntun Research's BBCA report);
+ *     own screen: Laba (the 9M earning card), Waktu (the revenue years), Keyakinan (Tuntun Research's fair value by case);
  *  6  Tuntun's Top Undervalued screen, its home-screen card over it (30 % bigger, 400 px right); on "selisih besar" a box on the
  *     card's Undervalued (%) column; the card goes as the list steps left;
  *  7  the list steps left; Kandidat → Analisis → Layak dimiliki? come down beside it, each on its word, the list joined to
@@ -259,10 +259,10 @@ const COL_X = (i: number) => CX - (3 * COL.w + 2 * COL.gap) / 2 + i * (COL.w + C
 const COL_SHOTS = [
   { label: "Laba", src: "art/vi03/app/bbca-earning-9m.jpg", w: 2040, h: 760 },
   { label: "Waktu", src: "art/vi03/app/bbca-revenue.jpg", w: 1028, h: 922 },
-  /** then (Simon 18 Nov: "ganti ke screenshot Tuntun Research Report"): the BBCA In-Depth Research report IN07 and VI02 show
-   * (public/art/in07/app/sc04-deep-research-report.jpg), its top — the header, Key Takeaways and the figures table — down to just
-   * above "Valuation Summary" (public/art/vi03/app/bbca-research-report.jpg) */
-  { label: "Keyakinan", src: "art/vi03/app/bbca-research-report.jpg", w: 1080, h: 718 },
+  /** then the Research Report's top, then (Simon 18 Nov: "ganti jadi gambar 1 deh. Nama filenya Keyakinan.jpg") his table of
+   * fair value by case (01 Academy/VI03/Keyakinan.jpg), its "Source: …" line cut off (no source on screen), at half
+   * (public/art/vi03/app/keyakinan-fair-value-cases.jpg) */
+  { label: "Keyakinan", src: "art/vi03/app/keyakinan-fair-value-cases.jpg", w: 1847, h: 485 },
 ] as const;
 /**
  * Top Undervalued: Tuntun's own screen (Simon 18 Nov: "ganti dengan Top Undervalued.jpg"), status and navigation bars and the
@@ -351,9 +351,10 @@ export const TuntunPart = () => {
               <Pic src={staticFile(BBCA_CARD.src)} style={{ position: "absolute", left: APP.pad - 2, top: APP.head - 2, width: APP.screenW, height: BBCA_CARD.h * APP_K }} />
             </Card>
           </div>
-          {/* the boxes shrink with the card — their margin, line and corners too (Simon 18 Nov: "HL box nya mengecil aja") */}
-          <HighlightBox rect={box(RFV_COL, 6 * s)} grow={hlRfv} opacity={hlRfv} fill="none" width={4 * s} radius={18 * s} />
-          <HighlightBox rect={box(RFV_STATUS, 4 * s)} grow={hlStatus} opacity={hlStatus} fill="none" width={4 * s} radius={14 * s} />
+          {/* the boxes shrink with the card — their margin, line and corners too (Simon 18 Nov: "HL box nya mengecil aja") — and
+              fade out as it rises, gone once it has landed ("dibuat hilang saat sudah geser naik dan mengecil") */}
+          <HighlightBox rect={box(RFV_COL, 6 * s)} grow={hlRfv} opacity={hlRfv * (1 - up)} fill="none" width={4 * s} radius={18 * s} />
+          <HighlightBox rect={box(RFV_STATUS, 4 * s)} grow={hlStatus} opacity={hlStatus * (1 - up)} fill="none" width={4 * s} radius={14 * s} />
           {/* the two terms under the card */}
           {labelOut < 0.999 ? (
             <div style={{ position: "absolute", left: CX, top: APP_LABEL_Y, transform: "translate(-50%, -50%)", display: "flex", gap: APP_LABEL.between, opacity: 1 - labelOut, ...typeStyle("title"), fontSize: APP_LABEL.size, fontWeight: 700, color: c.indigo, whiteSpace: "nowrap" }}>
