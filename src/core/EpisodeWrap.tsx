@@ -22,6 +22,7 @@ import { Captions } from "./Captions";
 import { cutInStyle, cutOutStyle } from "./CameraCut";
 import type { Cut } from "./CameraCut";
 import { progressInOut } from "./helpers";
+import { QUOTE } from "./QuoteCard";
 import { NextClipProvider } from "./NextVideo";
 import { PaletteProvider, usePalette } from "./palette";
 import { theme } from "./theme";
@@ -57,22 +58,68 @@ const nextTail = (next: NextVideo, fps: number) => NEXT_PAUSE + Math.round(next.
  * right behind a soft edge, the second line 12 frames behind the first — measured off that video.
  */
 const TITLE = { starts: [71, 83], span: 26, y: [698, 764], size: 56, weight: 600, soft: 28, leading: 1.4 };
+/** The intro title's type size, for an episode that sets a line relative to it (`titleStyle`). */
+export const INTRO_TITLE = { size: TITLE.size, weight: TITLE.weight };
+/**
+ * An episode's own look for its two title lines, laid over the shared one (VI03, Simon 19 Nov: "Value Investingnya buat all
+ * caps dan bold", the subtitle 6 px lower, both in Montserrat at 44 px). Type — face, size, weight, style, case, spacing — and `dy`, a line's shift
+ * down from its place in px.
+ */
+export type IntroTitleStyle = Pick<React.CSSProperties, "fontSize" | "fontWeight" | "fontStyle" | "textTransform" | "letterSpacing" | "fontFamily"> & {
+  dy?: number;
+  /** the line's colour, a palette slot: indigo (default) or ink (VI03, Simon 19 Nov: "ketiganya jadi warna hitam") */
+  tone?: "indigo" | "ink" | "cyan";
+  /** a short rule each side of the line, `length` long, `gap` off the type (VI03: "di kiri dan kanan value investing di kasih
+   *  garis 30 px") */
+  rule?: { length: number; gap: number; thickness: number };
+};
 
-const IntroTitle = ({ lines }: { lines: [string, string] }) => {
+/** a line's type, without its `dy` */
+const typeOf = (st?: IntroTitleStyle): React.CSSProperties => {
+  if (!st) return {};
+  const { dy: _dy, rule: _rule, tone: _tone, ...type } = st;
+  return type;
+};
+
+/**
+ * An optional text box behind the two lines, in the quote card's look (VI03, Simon 19 Nov: "kalo di kasih textbox kayak di
+ * 2660"): white, a black border, a solid indigo block down and right; `w` × `h`, centred on the two lines; it fades in with
+ * the first line's reveal.
+ */
+export type IntroTitleBox = { w: number; h: number };
+const TitleBox = ({ box, p }: { box: IntroTitleBox; p: number }) => {
+  const c = usePalette();
+  const cy = (TITLE.y[0] + TITLE.y[1]) / 2;
+  const shell = { position: "absolute" as const, left: theme.canvas.width / 2 - box.w / 2, top: cy - box.h / 2, width: box.w, height: box.h, borderRadius: theme.shape.panelRadius };
+  return p > 0.001 ? (
+    <div style={{ position: "absolute", inset: 0, opacity: p }}>
+      <div style={{ ...shell, left: shell.left + QUOTE.drop, top: shell.top + QUOTE.drop, background: c.indigo }} />
+      <div style={{ ...shell, background: c.cardBg, border: `${QUOTE.border}px solid ${c.ink}`, boxSizing: "border-box" }} />
+    </div>
+  ) : null;
+};
+
+const IntroTitle = ({ lines, styles, box }: { lines: [string, string]; styles?: [IntroTitleStyle?, IntroTitleStyle?]; box?: IntroTitleBox }) => {
   const { fps } = useVideoConfig();
   /** TITLE is measured in 60fps frames. */
   const f = useCurrentFrame() * (60 / fps);
   const c = usePalette();
   return (
     <>
+      {box ? <TitleBox box={box} p={progressInOut(f, TITLE.starts[0] - 12, TITLE.span)} /> : null}
       {lines.map((text, i) => {
         const p = progressInOut(f, TITLE.starts[i], TITLE.span);
         if (p <= 0.001) return null;
         const edge = p * (100 + TITLE.soft);
         const mask = `linear-gradient(to right, black ${(edge - TITLE.soft).toFixed(2)}%, transparent ${edge.toFixed(2)}%)`;
         return (
-          <div key={text} style={{ position: "absolute", left: 0, width: theme.canvas.width, top: TITLE.y[i] - (TITLE.size * TITLE.leading) / 2, height: TITLE.size * TITLE.leading, display: "flex", justifyContent: "center", alignItems: "center" }}>
-            <span style={{ fontFamily: theme.text.family, fontSize: TITLE.size, fontWeight: TITLE.weight, lineHeight: TITLE.leading, color: c.indigo, whiteSpace: "nowrap", WebkitMaskImage: mask, maskImage: mask }}>{text}</span>
+          <div key={text} style={{ position: "absolute", left: 0, width: theme.canvas.width, top: TITLE.y[i] + (styles?.[i]?.dy ?? 0) - (TITLE.size * TITLE.leading) / 2, height: TITLE.size * TITLE.leading, display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <span style={{ fontFamily: theme.text.family, fontSize: TITLE.size, fontWeight: TITLE.weight, lineHeight: TITLE.leading, color: c[styles?.[i]?.tone ?? "indigo"], whiteSpace: "nowrap", ...typeOf(styles?.[i]), WebkitMaskImage: mask, maskImage: mask, display: "inline-flex", alignItems: "center", gap: styles?.[i]?.rule?.gap ?? 0 }}>
+              {styles?.[i]?.rule ? <span style={{ width: styles[i]!.rule!.length, height: styles[i]!.rule!.thickness, borderRadius: styles[i]!.rule!.thickness, background: "currentColor", flex: "none" }} /> : null}
+              {/* letter-spacing also follows the last letter: taken back so the text stays centred between its rules */}
+              <span style={{ marginRight: styles?.[i]?.letterSpacing ? `-${styles[i]!.letterSpacing}` : undefined }}>{text}</span>
+              {styles?.[i]?.rule ? <span style={{ width: styles[i]!.rule!.length, height: styles[i]!.rule!.thickness, borderRadius: styles[i]!.rule!.thickness, background: "currentColor", flex: "none" }} /> : null}
+            </span>
           </div>
         );
       })}
@@ -143,7 +190,7 @@ const CutLayer = ({ cut, from, dir, children }: { cut: Cut; from: number; dir: "
  * `intro={false}` / `outro={false}` leave either clip out (TA11, 20 Oct 2026: "kasih video CTA aja" — the episode,
  * its fade, CTA.mp4, and nothing else).
  */
-export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, bgmGainDb = 0, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; frames: number; name: string; bgm?: boolean; bgmSrc?: string; bgmGainDb?: number; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
+export const EpisodeWrap = ({ title, titleStyle, titleBox, frames, name, bgm = true, bgmSrc, bgmGainDb = 0, next, cta = false, intro = true, outro = true, children }: { title?: [string, string]; titleStyle?: [IntroTitleStyle?, IntroTitleStyle?]; titleBox?: IntroTitleBox; frames: number; name: string; bgm?: boolean; bgmSrc?: string; bgmGainDb?: number; next?: NextVideo; cta?: boolean; intro?: boolean; outro?: boolean; children: React.ReactNode }) => {
   const { fps, durationInFrames } = useVideoConfig();
   const I = intro ? introFrames(fps) : 0;
   const O = outro ? outroFrames(fps) : 0;
@@ -164,7 +211,7 @@ export const EpisodeWrap = ({ title, frames, name, bgm = true, bgmSrc, bgmGainDb
           <OffthreadVideo src={staticFile("essentials/Intro.mp4")} />
           {title ? (
             <PaletteProvider>
-              <IntroTitle lines={title} />
+              <IntroTitle lines={title} styles={titleStyle} box={titleBox} />
             </PaletteProvider>
           ) : null}
         </Sequence>

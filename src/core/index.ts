@@ -70,8 +70,8 @@ export type { ComboRow } from "./ComboTable";
 export { TimeframeTabs } from "./TimeframeTabs";
 export { DeviceFrame, ScreenClip } from "./Screen";
 export { SplitDivider, SplitLabels, splitRects } from "./Split";
-export { EpisodeWrap, INTRO_FRAMES, OUTRO_FRAMES, fullFrames, introFrames, outroFrames, NEXT_PAUSE } from "./EpisodeWrap";
-export type { NextVideo } from "./EpisodeWrap";
+export { EpisodeWrap, INTRO_FRAMES, INTRO_TITLE, OUTRO_FRAMES, fullFrames, introFrames, outroFrames, NEXT_PAUSE } from "./EpisodeWrap";
+export type { IntroTitleBox, IntroTitleStyle, NextVideo } from "./EpisodeWrap";
 /* The "next video" ending of the TA episodes — the same head on every video (Simon, 20 Oct 2026). */
 export { NextVideoHead, NextCheck, NextTab, NEXT_LAYOUT, useNextClip } from "./NextVideo";
 
