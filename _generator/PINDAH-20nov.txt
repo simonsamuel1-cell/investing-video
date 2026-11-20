@@ -1,0 +1,14 @@
+Thumbnail - Candlestick.svg -> Thumbnail/
+Thumbnail - Chart Pattern.svg -> Thumbnail/
+Thumbnail - Oscillator.svg -> Thumbnail/
+Thumbnail - Multi-Timeframe & Confluence.svg -> Thumbnail/
+Thumbnail - Support & Resistance.svg -> Thumbnail/
+1.jpg -> Thumbnail/_latar/
+Background_A_asli.png -> Thumbnail/_latar/
+Background_B_diagonal.png -> Thumbnail/_latar/
+Background_C_sorot.png -> Thumbnail/_latar/
+Background_D_grid.png -> Thumbnail/_latar/
+Background_H_titik.png -> Thumbnail/_latar/
+Thumbnail - Support & Resistance.jpg -> Thumbnail/_generator/arsip_sr_simon/ (menimpa salinan identik, md5 sama)
+_thumbnail/pratinjau -> Thumbnail/Pratinjau PNG
+_thumbnail -> Thumbnail/_generator
