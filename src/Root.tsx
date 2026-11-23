@@ -47,6 +47,7 @@ import { CandlestickIndoFull, TA03_FULL_FRAMES } from "./episodeCandlestick/Full
 import { ChartMemoryFull, TA01_FULL_FRAMES } from "./episodeChartMemory/FullVideo";
 import { MarketStructureFull, TA05_FULL_FRAMES } from "./episode20marketstructure/FullVideo";
 import { VisualLab, LAB_FRAMES } from "./lab/Lab";
+import { Thumbnails, THUMBNAILS_FRAMES } from "./thumbnails/Thumbnails";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -236,6 +237,15 @@ export const RemotionRoot: React.FC = () => {
         id="Template-map"
         component={TemplateMap}
         durationInFrames={TEMPLATE_MAP_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
+      {/* YouTube thumbnails, 60 frames each — src/thumbnails/Thumbnails.tsx. Stills, not a video: frame i × 60 is thumbnail i. */}
+      <Composition
+        id="Thumbnails"
+        component={Thumbnails}
+        durationInFrames={THUMBNAILS_FRAMES}
         fps={60}
         width={theme.canvas.width}
         height={theme.canvas.height}

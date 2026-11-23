@@ -1,0 +1,1218 @@
+{
+ "key": "IN07",
+ "name": "Investing 101_Video 07 - Cara Tuntun Membantu Investor",
+ "mp4": "IN07_CaraTuntunMembantuInvestorMengurangiKesalahan",
+ "rows": [
+  {
+   "i": 1,
+   "start": 4.133,
+   "end": 8.9,
+   "text": "28 Januari 2026, pukul 13.43 WIB.",
+   "part": "episode"
+  },
+  {
+   "i": 2,
+   "start": 9.083,
+   "end": 13.467,
+   "text": "IHSG turun 8 persen, lalu perdagangan dihentikan sementara selama 30 menit.",
+   "part": "episode"
+  },
+  {
+   "i": 3,
+   "start": 13.817,
+   "end": 15.817,
+   "text": "Layar ponselmu penuh warna merah.",
+   "part": "episode"
+  },
+  {
+   "i": 4,
+   "start": 16.167,
+   "end": 19.25,
+   "text": "Di grup, temanmu mengirim tiga voice note: “Cepat jual.”",
+   "part": "episode"
+  },
+  {
+   "i": 5,
+   "start": 19.567,
+   "end": 21.4,
+   "text": "“Cepat jual.” “Cepat jual.”",
+   "part": "episode"
+  },
+  {
+   "i": 6,
+   "start": 21.683,
+   "end": 24.417,
+   "text": "Jempolmu sudah berada di atas tombol Jual.",
+   "part": "episode"
+  },
+  {
+   "i": 7,
+   "start": 24.733,
+   "end": 27.35,
+   "text": "Tapi sebelum menekannya, ada satu pertanyaan:",
+   "part": "episode"
+  },
+  {
+   "i": 8,
+   "start": 27.55,
+   "end": 29.967,
+   "text": "di saat seperti ini, apa yang perlu kamu lihat?",
+   "part": "episode"
+  },
+  {
+   "i": 9,
+   "start": 30.433,
+   "end": 34.083,
+   "text": "Di video sebelumnya, kita membahas tiga kesalahan yang sering dilakukan investor.",
+   "part": "episode"
+  },
+  {
+   "i": 10,
+   "start": 34.533,
+   "end": 39.167,
+   "text": "Dalam praktiknya, kesalahan itu biasanya muncul dalam empat situasi: panik karena harga,",
+   "part": "episode"
+  },
+  {
+   "i": 11,
+   "start": 39.25,
+   "end": 42.783,
+   "text": "mengambil keputusan terlalu cepat, mengejar topik yang sedang ramai,",
+   "part": "episode"
+  },
+  {
+   "i": 12,
+   "start": 42.883,
+   "end": 45.333,
+   "text": "dan memperbesar risiko saat terlalu percaya diri.",
+   "part": "episode"
+  },
+  {
+   "i": 13,
+   "start": 45.583,
+   "end": 49.383,
+   "text": "Sekarang, kita akan melihat bagaimana Tuntun membantu kita berhenti sejenak,",
+   "part": "episode"
+  },
+  {
+   "i": 14,
+   "start": 49.683,
+   "end": 52.85,
+   "text": "memeriksa faktanya, lalu mengambil keputusan dengan lebih jernih.",
+   "part": "episode"
+  },
+  {
+   "i": 15,
+   "start": 53.583,
+   "end": 58.7,
+   "text": "Di saat seperti itu, kita sering mencari satu jawaban sederhana: jual, tahan, atau beli.",
+   "part": "episode"
+  },
+  {
+   "i": 16,
+   "start": 59.283,
+   "end": 63.117,
+   "text": "Padahal, setiap situasi membutuhkan hal yang berbeda untuk diperiksa.",
+   "part": "episode"
+  },
+  {
+   "i": 17,
+   "start": 63.667,
+   "end": 65.783,
+   "text": "Saat harga membuatmu panik, pertanyaannya adalah:",
+   "part": "episode"
+  },
+  {
+   "i": 18,
+   "start": 65.783,
+   "end": 69.833,
+   "text": "yang berubah hanya harganya, atau kondisi perusahaannya juga berubah?",
+   "part": "episode"
+  },
+  {
+   "i": 19,
+   "start": 70.3,
+   "end": 73.467,
+   "text": "Saat satu informasi terdengar sangat meyakinkan, tanyakan:",
+   "part": "episode"
+  },
+  {
+   "i": 20,
+   "start": 73.55,
+   "end": 76.267,
+   "text": "apa dasar lengkap di balik kesimpulan itu?",
+   "part": "episode"
+  },
+  {
+   "i": 21,
+   "start": 76.867,
+   "end": 80.333,
+   "text": "Saat sebuah topik sedang ramai, cari tahu: apakah benar ada dampak,",
+   "part": "episode"
+  },
+  {
+   "i": 22,
+   "start": 80.4,
+   "end": 83.183,
+   "text": "dana yang masuk, dan aktivitas transaksi yang meningkat?",
+   "part": "episode"
+  },
+  {
+   "i": 23,
+   "start": 83.767,
+   "end": 87.55,
+   "text": "Dan saat kamu merasa sangat yakin sampai ingin memperbesar posisi,",
+   "part": "episode"
+  },
+  {
+   "i": 24,
+   "start": 87.783,
+   "end": 89.083,
+   "text": "berhenti sebentar dan lihat:",
+   "part": "episode"
+  },
+  {
+   "i": 25,
+   "start": 89.6,
+   "end": 93.967,
+   "text": "seberapa besar risiko yang sedang diambil, dan seperti apa kondisi market saat ini?",
+   "part": "episode"
+  },
+  {
+   "i": 26,
+   "start": 94.433,
+   "end": 97.817,
+   "text": "Jadi, bukan soal membuka semua halaman sekaligus.",
+   "part": "episode"
+  },
+  {
+   "i": 27,
+   "start": 98.25,
+   "end": 101.567,
+   "text": "Tapi membuka informasi yang tepat, untuk pertanyaan yang tepat.",
+   "part": "episode"
+  },
+  {
+   "i": 28,
+   "start": 102.233,
+   "end": 106.467,
+   "text": "Kita mulai dari situasi pertama: saat keputusan hanya dibuat dari pergerakan harga.",
+   "part": "episode"
+  },
+  {
+   "i": 29,
+   "start": 106.983,
+   "end": 109.617,
+   "text": "Ketika harga naik, saham terasa semakin bagus.",
+   "part": "episode"
+  },
+  {
+   "i": 30,
+   "start": 109.967,
+   "end": 112.45,
+   "text": "Ketika harga turun, saham terasa semakin buruk.",
+   "part": "episode"
+  },
+  {
+   "i": 31,
+   "start": 112.867,
+   "end": 116.417,
+   "text": "Padahal: harga berubah, belum tentu perusahaannya ikut berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 32,
+   "start": 116.983,
+   "end": 120.067,
+   "text": "Karena itu, di halaman saham Tuntun kamu bisa melihat dua hal.",
+   "part": "episode"
+  },
+  {
+   "i": 33,
+   "start": 120.75,
+   "end": 122.517,
+   "text": "Pertama, Company Quality,",
+   "part": "episode"
+  },
+  {
+   "i": 34,
+   "start": 122.85,
+   "end": 126.567,
+   "text": "untuk memahami kualitas bisnis dan fundamental perusahaannya.",
+   "part": "episode"
+  },
+  {
+   "i": 35,
+   "start": 127.267,
+   "end": 128.6,
+   "text": "Kedua, Fair Value,",
+   "part": "episode"
+  },
+  {
+   "i": 36,
+   "start": 128.85,
+   "end": 130.85,
+   "text": "sebagai referensi untuk melihat apakah harga",
+   "part": "episode"
+  },
+  {
+   "i": 37,
+   "start": 130.85,
+   "end": 133.333,
+   "text": "sekarang masih masuk akal dibandingkan nilainya.",
+   "part": "episode"
+  },
+  {
+   "i": 38,
+   "start": 133.9,
+   "end": 135.95,
+   "text": "Saat harga naik jauh di atas fair value,",
+   "part": "episode"
+  },
+  {
+   "i": 39,
+   "start": 136.033,
+   "end": 138.433,
+   "text": "kamu punya alasan untuk nggak langsung ikut mengejar.",
+   "part": "episode"
+  },
+  {
+   "i": 40,
+   "start": 138.983,
+   "end": 143.9,
+   "text": "Saat harga turun, cek dulu apakah kualitas perusahaan dan fair value-nya ikut berubah.",
+   "part": "episode"
+  },
+  {
+   "i": 41,
+   "start": 144.4,
+   "end": 148.65,
+   "text": "Kalau keduanya masih sama, mungkin yang berubah baru harganya, bukan bisnisnya.",
+   "part": "episode"
+  },
+  {
+   "i": 42,
+   "start": 149.2,
+   "end": 151.817,
+   "text": "Bukan berarti sahamnya pasti aman.",
+   "part": "episode"
+  },
+  {
+   "i": 43,
+   "start": 152.233,
+   "end": 156.817,
+   "text": "Tapi setidaknya, kamu tahu apa yang perlu diperiksa sebelum bereaksi.",
+   "part": "episode"
+  },
+  {
+   "i": 44,
+   "start": 157.633,
+   "end": 159.883,
+   "text": "Lalu bagaimana kalau masalahnya bukan harga,",
+   "part": "episode"
+  },
+  {
+   "i": 45,
+   "start": 159.95,
+   "end": 162.65,
+   "text": "tapi informasi yang kita punya terlalu sedikit?",
+   "part": "episode"
+  },
+  {
+   "i": 46,
+   "start": 163.067,
+   "end": 167.667,
+   "text": "Keputusan terburu-buru sering muncul karena waktunya terbatas, dasarnya belum cukup,",
+   "part": "episode"
+  },
+  {
+   "i": 47,
+   "start": 167.967,
+   "end": 171.917,
+   "text": "lalu ada satu kalimat atau indikator yang terdengar sangat meyakinkan.",
+   "part": "episode"
+  },
+  {
+   "i": 48,
+   "start": 172.433,
+   "end": 175.367,
+   "text": "Solusinya bukan cuma bilang: “Coba pikirkan lebih lama.”",
+   "part": "episode"
+  },
+  {
+   "i": 49,
+   "start": 175.817,
+   "end": 179.567,
+   "text": "Kita juga perlu informasi yang sudah disusun agar lebih mudah dipahami.",
+   "part": "episode"
+  },
+  {
+   "i": 50,
+   "start": 180.133,
+   "end": 182.217,
+   "text": "Di sinilah Tuntun Deep Research Report berperan,",
+   "part": "episode"
+  },
+  {
+   "i": 51,
+   "start": 182.367,
+   "end": 186.467,
+   "text": "membantu investor memahami perusahaan melalui penelitian yang lebih menyeluruh.",
+   "part": "episode"
+  },
+  {
+   "i": 52,
+   "start": 187.0,
+   "end": 188.917,
+   "text": "Tim riset Tuntun membaca laporan keuangan,",
+   "part": "episode"
+  },
+  {
+   "i": 53,
+   "start": 189.15,
+   "end": 191.483,
+   "text": "membuat model, menilai kualitas perusahaan,",
+   "part": "episode"
+  },
+  {
+   "i": 54,
+   "start": 191.6,
+   "end": 196.05,
+   "text": "menghitung referensi harga wajar, dan mengkaji peristiwa yang bisa memengaruhi bisnis.",
+   "part": "episode"
+  },
+  {
+   "i": 55,
+   "start": 196.567,
+   "end": 200.45,
+   "text": "Setiap perusahaan dipantau oleh analis khusus melalui fundamental research,",
+   "part": "episode"
+  },
+  {
+   "i": 56,
+   "start": 200.567,
+   "end": 202.833,
+   "text": "industry research, dan company research.",
+   "part": "episode"
+  },
+  {
+   "i": 57,
+   "start": 203.117,
+   "end": 206.533,
+   "text": "Analisisnya juga terus diperbarui mengikuti perkembangan terbaru.",
+   "part": "episode"
+  },
+  {
+   "i": 58,
+   "start": 207.017,
+   "end": 209.333,
+   "text": "Riset Tuntun mencakup saham dan reksa dana,",
+   "part": "episode"
+  },
+  {
+   "i": 59,
+   "start": 209.433,
+   "end": 213.067,
+   "text": "serta telah mendapatkan pengakuan industri melalui penghargaan dari",
+   "part": "episode"
+  },
+  {
+   "i": 60,
+   "start": 213.067,
+   "end": 218.567,
+   "text": "CNBC Indonesia pada 2025 dan Media Asuransi pada 2024.",
+   "part": "episode"
+  },
+  {
+   "i": 61,
+   "start": 218.9,
+   "end": 221.083,
+   "text": "Bukan berarti tim riset selalu benar.",
+   "part": "episode"
+  },
+  {
+   "i": 62,
+   "start": 221.45,
+   "end": 222.917,
+   "text": "Tapi mereka punya lebih banyak waktu,",
+   "part": "episode"
+  },
+  {
+   "i": 63,
+   "start": 223.05,
+   "end": 225.867,
+   "text": "proses, dan data untuk menguji sebuah kesimpulan.",
+   "part": "episode"
+  },
+  {
+   "i": 64,
+   "start": 226.367,
+   "end": 229.45,
+   "text": "Jadi keputusanmu punya dasar yang lebih lengkap",
+   "part": "episode"
+  },
+  {
+   "i": 65,
+   "start": 229.617,
+   "end": 231.85,
+   "text": "daripada hanya satu voice note dari temanmu.",
+   "part": "episode"
+  },
+  {
+   "i": 66,
+   "start": 232.633,
+   "end": 234.617,
+   "text": "Kalau laporan risetnya masih belum jelas,",
+   "part": "episode"
+  },
+  {
+   "i": 67,
+   "start": 234.733,
+   "end": 238.85,
+   "text": "atau kamu ingin memahami satu bagian lebih dalam, gunakan Tuntun AI.",
+   "part": "episode"
+  },
+  {
+   "i": 68,
+   "start": 239.167,
+   "end": 241.15,
+   "text": "Kamu bisa mulai dari pertanyaan sederhana:",
+   "part": "episode"
+  },
+  {
+   "i": 69,
+   "start": 241.3,
+   "end": 243.85,
+   "text": "“Perusahaan ini sebenarnya menghasilkan uang dari mana?”",
+   "part": "episode"
+  },
+  {
+   "i": 70,
+   "start": 244.3,
+   "end": 246.8,
+   "text": "“Kenapa harga sekarang dianggap murah atau mahal?”",
+   "part": "episode"
+  },
+  {
+   "i": 71,
+   "start": 247.35,
+   "end": 248.567,
+   "text": "“Apa risiko terbesarnya?”",
+   "part": "episode"
+  },
+  {
+   "i": 72,
+   "start": 249.133,
+   "end": 252.15,
+   "text": "Tuntun AI membantu merangkum kualitas perusahaan dan valuasinya,",
+   "part": "episode"
+  },
+  {
+   "i": 73,
+   "start": 252.4,
+   "end": 255.217,
+   "text": "lalu memberi konteks tambahan seperti pergerakan dana,",
+   "part": "episode"
+  },
+  {
+   "i": 74,
+   "start": 255.35,
+   "end": 257.483,
+   "text": "kondisi teknikal, dan peristiwa terbaru.",
+   "part": "episode"
+  },
+  {
+   "i": 75,
+   "start": 257.983,
+   "end": 261.167,
+   "text": "Tujuannya bukan supaya AI mengambil keputusan untukmu.",
+   "part": "episode"
+  },
+  {
+   "i": 76,
+   "start": 261.85,
+   "end": 264.6,
+   "text": "Tujuannya supaya kamu nggak menekan tombol",
+   "part": "episode"
+  },
+  {
+   "i": 77,
+   "start": 264.6,
+   "end": 267.067,
+   "text": "sebelum memahami apa yang sedang dibeli.",
+   "part": "episode"
+  },
+  {
+   "i": 78,
+   "start": 267.867,
+   "end": 271.233,
+   "text": "Situasi berikutnya muncul saat satu topik atau berita tiba-tiba ramai.",
+   "part": "episode"
+  },
+  {
+   "i": 79,
+   "start": 271.767,
+   "end": 274.05,
+   "text": "Temanmu mengirim voice note: “Masuk sekarang!”",
+   "part": "episode"
+  },
+  {
+   "i": 80,
+   "start": 274.767,
+   "end": 278.45,
+   "text": "Tapi topik yang ramai belum tentu benar-benar berdampak pada perusahaan.",
+   "part": "episode"
+  },
+  {
+   "i": 81,
+   "start": 278.95,
+   "end": 280.933,
+   "text": "Sebelum ikut masuk, cek tiga hal.",
+   "part": "episode"
+  },
+  {
+   "i": 82,
+   "start": 281.217,
+   "end": 285.483,
+   "text": "Pertama: apakah peristiwanya benar-benar memengaruhi bisnis dan laba perusahaan?",
+   "part": "episode"
+  },
+  {
+   "i": 83,
+   "start": 286.05,
+   "end": 288.367,
+   "text": "Kedua: apakah dana benar-benar masuk?",
+   "part": "episode"
+  },
+  {
+   "i": 84,
+   "start": 288.95,
+   "end": 291.917,
+   "text": "Ketiga: apakah aktivitas transaksinya memang meningkat?",
+   "part": "episode"
+  },
+  {
+   "i": 85,
+   "start": 292.767,
+   "end": 295.7,
+   "text": "Event Research membantu melihat dampaknya terhadap bisnis.",
+   "part": "episode"
+  },
+  {
+   "i": 86,
+   "start": 296.3,
+   "end": 298.25,
+   "text": "Fund Flow menunjukkan arah pergerakan dana.",
+   "part": "episode"
+  },
+  {
+   "i": 87,
+   "start": 298.767,
+   "end": 303.467,
+   "text": "Sementara volume menunjukkan apakah aktivitas pasar benar-benar meningkat.",
+   "part": "episode"
+  },
+  {
+   "i": 88,
+   "start": 304.1,
+   "end": 307.433,
+   "text": "Semakin banyak yang sejalan, semakin kuat dasar di balik pergerakannya.",
+   "part": "episode"
+  },
+  {
+   "i": 89,
+   "start": 308.017,
+   "end": 311.95,
+   "text": "Tapi tetap bukan jaminan bahwa harga pasti naik.",
+   "part": "episode"
+  },
+  {
+   "i": 90,
+   "start": 312.483,
+   "end": 314.917,
+   "text": "Kalau buktinya belum cukup, nggak ada salahnya menunggu.",
+   "part": "episode"
+  },
+  {
+   "i": 91,
+   "start": 315.6,
+   "end": 319.667,
+   "text": "Karena ramai di grup belum tentu berarti ramai di pasar.",
+   "part": "episode"
+  },
+  {
+   "i": 92,
+   "start": 320.083,
+   "end": 324.7,
+   "text": "Masalah berikutnya bukan kekurangan informasi, tapi rasa percaya diri yang terlalu besar.",
+   "part": "episode"
+  },
+  {
+   "i": 93,
+   "start": 326.067,
+   "end": 329.767,
+   "text": "Tiga kali untung, lalu mulai merasa: “Saya sudah mengerti market.”",
+   "part": "episode"
+  },
+  {
+   "i": 94,
+   "start": 330.9,
+   "end": 335.417,
+   "text": "Posisi diperbesar, kemudian mulai mempertimbangkan dana pinjaman.",
+   "part": "episode"
+  },
+  {
+   "i": 95,
+   "start": 335.8,
+   "end": 339.267,
+   "text": "Di saat seperti ini, Tuntun Guidance bisa berfungsi sebagai pengingat.",
+   "part": "episode"
+  },
+  {
+   "i": 96,
+   "start": 339.883,
+   "end": 341.517,
+   "text": "Kalau harga sudah jauh di atas fair price,",
+   "part": "episode"
+  },
+  {
+   "i": 97,
+   "start": 341.65,
+   "end": 343.883,
+   "text": "pertimbangkan kembali sebelum menambah posisi.",
+   "part": "episode"
+  },
+  {
+   "i": 98,
+   "start": 344.55,
+   "end": 346.433,
+   "text": "Kalau alasan investasinya belum cukup kuat,",
+   "part": "episode"
+  },
+  {
+   "i": 99,
+   "start": 346.75,
+   "end": 349.317,
+   "text": "jangan memperbesar ketidakpastian dengan leverage.",
+   "part": "episode"
+  },
+  {
+   "i": 100,
+   "start": 349.967,
+   "end": 351.667,
+   "text": "Peringatan ini bukan larangan.",
+   "part": "episode"
+  },
+  {
+   "i": 101,
+   "start": 352.217,
+   "end": 354.2,
+   "text": "Ini adalah jeda singkat agar rasa percaya",
+   "part": "episode"
+  },
+  {
+   "i": 102,
+   "start": 354.2,
+   "end": 356.55,
+   "text": "diri nggak langsung berubah menjadi keputusan besar.",
+   "part": "episode"
+  },
+  {
+   "i": 103,
+   "start": 357.517,
+   "end": 361.867,
+   "text": "Selain melihat satu saham, kita juga perlu melihat kondisi market secara keseluruhan.",
+   "part": "episode"
+  },
+  {
+   "i": 104,
+   "start": 362.183,
+   "end": 364.283,
+   "text": "Karena leverage sering terasa paling menggoda",
+   "part": "episode"
+  },
+  {
+   "i": 105,
+   "start": 364.283,
+   "end": 366.017,
+   "text": "saat semua orang sedang menghasilkan uang.",
+   "part": "episode"
+  },
+  {
+   "i": 106,
+   "start": 366.367,
+   "end": 370.717,
+   "text": "Sebelum memperbesar posisi, lihat di mana valuasi IHSG berada dibandingkan sejarahnya,",
+   "part": "episode"
+  },
+  {
+   "i": 107,
+   "start": 371.05,
+   "end": 375.667,
+   "text": "dan apakah sentimen pasar sedang didominasi ketakutan atau keserakahan.",
+   "part": "episode"
+  },
+  {
+   "i": 108,
+   "start": 375.867,
+   "end": 377.283,
+   "text": "Prinsipnya sederhana.",
+   "part": "episode"
+  },
+  {
+   "i": 109,
+   "start": 377.65,
+   "end": 381.6,
+   "text": "Saat valuasi dan optimisme sudah terlalu tinggi, kita perlu lebih waspada.",
+   "part": "episode"
+  },
+  {
+   "i": 110,
+   "start": 381.767,
+   "end": 385.3,
+   "text": "Saat valuasi rendah dan market dipenuhi ketakutan,",
+   "part": "episode"
+  },
+  {
+   "i": 111,
+   "start": 385.7,
+   "end": 388.817,
+   "text": "jangan biarkan rasa takut menutup mata dari peluang.",
+   "part": "episode"
+  },
+  {
+   "i": 112,
+   "start": 389.2,
+   "end": 391.783,
+   "text": "Market Valuation nggak memilihkan saham untukmu.",
+   "part": "episode"
+  },
+  {
+   "i": 113,
+   "start": 392.083,
+   "end": 393.917,
+   "text": "Fitur ini hanya membantu memberikan konteks:",
+   "part": "episode"
+  },
+  {
+   "i": 114,
+   "start": 394.2,
+   "end": 397.033,
+   "text": "apakah suasana pasar sedang mendukung keputusan yang tenang,",
+   "part": "episode"
+  },
+  {
+   "i": 115,
+   "start": 397.1,
+   "end": 400.867,
+   "text": "atau justru sedang mendorong semua orang bergerak ke arah yang sama?",
+   "part": "episode"
+  },
+  {
+   "i": 116,
+   "start": 401.3,
+   "end": 404.317,
+   "text": "Sekarang kita kembali ke 28 Januari.",
+   "part": "episode"
+  },
+  {
+   "i": 117,
+   "start": 404.6,
+   "end": 406.733,
+   "text": "Orangnya sama. Market-nya sama.",
+   "part": "episode"
+  },
+  {
+   "i": 118,
+   "start": 407.0,
+   "end": 409.35,
+   "text": "Tapi proses mengambil keputusannya berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 119,
+   "start": 409.767,
+   "end": 413.95,
+   "text": "Di skenario pertama, layar penuh warna merah, temanmu terus bilang “cepat jual”,",
+   "part": "episode"
+  },
+  {
+   "i": 120,
+   "start": 414.117,
+   "end": 417.517,
+   "text": "dan saat perdagangan dibuka kembali, tombol jual langsung ditekan.",
+   "part": "episode"
+  },
+  {
+   "i": 121,
+   "start": 418.117,
+   "end": 420.333,
+   "text": "Di skenario kedua, rasa takutnya tetap ada.",
+   "part": "episode"
+  },
+  {
+   "i": 122,
+   "start": 420.95,
+   "end": 423.617,
+   "text": "Tapi sebelum bertindak, dia membuka analisis portofolio:",
+   "part": "episode"
+  },
+  {
+   "i": 123,
+   "start": 423.917,
+   "end": 427.65,
+   "text": "apakah yang turun hanya harga, atau kualitas dan fair value-nya juga berubah?",
+   "part": "episode"
+  },
+  {
+   "i": 124,
+   "start": 428.267,
+   "end": 430.767,
+   "text": "Dia melihat Market Valuation, membuka Event Research,",
+   "part": "episode"
+  },
+  {
+   "i": 125,
+   "start": 431.117,
+   "end": 433.75,
+   "text": "lalu menanyakan bagian yang belum dipahami kepada Tuntun AI.",
+   "part": "episode"
+  },
+  {
+   "i": 126,
+   "start": 434.383,
+   "end": 437.4,
+   "text": "Setelah itu, dia mungkin tetap menjual. Mungkin menahan.",
+   "part": "episode"
+  },
+  {
+   "i": 127,
+   "start": 437.4,
+   "end": 439.3,
+   "text": "Atau mungkin membeli secara bertahap.",
+   "part": "episode"
+  },
+  {
+   "i": 128,
+   "start": 439.467,
+   "end": 441.1,
+   "text": "Yang membedakan bukan hasil akhirnya.",
+   "part": "episode"
+  },
+  {
+   "i": 129,
+   "start": 441.767,
+   "end": 445.783,
+   "text": "Yang membedakan adalah keputusan itu dibuat setelah memeriksa informasi,",
+   "part": "episode"
+  },
+  {
+   "i": 130,
+   "start": 446.133,
+   "end": 447.883,
+   "text": "bukan hanya karena desakan teman di grup.",
+   "part": "episode"
+  },
+  {
+   "i": 131,
+   "start": 448.65,
+   "end": 450.95,
+   "text": "Tapi nggak semua penurunan punya konteks yang sama.",
+   "part": "episode"
+  },
+  {
+   "i": 132,
+   "start": 451.417,
+   "end": 453.15,
+   "text": "Pada April 2025,",
+   "part": "episode"
+  },
+  {
+   "i": 133,
+   "start": 453.217,
+   "end": 455.983,
+   "text": "berita kenaikan tarif terhadap Indonesia membuat IHSG",
+   "part": "episode"
+  },
+  {
+   "i": 134,
+   "start": 455.983,
+   "end": 459.15,
+   "text": "turun tajam dan perdagangan sempat dihentikan sementara.",
+   "part": "episode"
+  },
+  {
+   "i": 135,
+   "start": 459.6,
+   "end": 461.65,
+   "text": "Bedanya, saat itu valuasi market sudah",
+   "part": "episode"
+  },
+  {
+   "i": 136,
+   "start": 461.65,
+   "end": 464.867,
+   "text": "relatif rendah dan sentimen sudah dipenuhi ketakutan.",
+   "part": "episode"
+  },
+  {
+   "i": 137,
+   "start": 465.3,
+   "end": 468.4,
+   "text": "Jadi pertanyaannya bukan lagi sekadar: “Harus jual atau nggak?”",
+   "part": "episode"
+  },
+  {
+   "i": 138,
+   "start": 468.75,
+   "end": 471.867,
+   "text": "Tapi: “Apakah dampaknya benar-benar mengubah investasi saya,",
+   "part": "episode"
+  },
+  {
+   "i": 139,
+   "start": 471.867,
+   "end": 474.133,
+   "text": "atau market sedang bereaksi terlalu jauh?”",
+   "part": "episode"
+  },
+  {
+   "i": 140,
+   "start": 474.683,
+   "end": 477.65,
+   "text": "Di sinilah informasi yang tadi kita bahas dibaca bersama:",
+   "part": "episode"
+  },
+  {
+   "i": 141,
+   "start": 477.95,
+   "end": 479.567,
+   "text": "apakah kualitas perusahaan berubah,",
+   "part": "episode"
+  },
+  {
+   "i": 142,
+   "start": 479.717,
+   "end": 482.467,
+   "text": "apakah harganya sudah berada jauh di bawah fair value,",
+   "part": "episode"
+  },
+  {
+   "i": 143,
+   "start": 482.8,
+   "end": 486.067,
+   "text": "dan apakah berita tersebut benar-benar berdampak pada bisnisnya.",
+   "part": "episode"
+  },
+  {
+   "i": 144,
+   "start": 486.433,
+   "end": 488.4,
+   "text": "Kalau alasan investasinya masih berlaku,",
+   "part": "episode"
+  },
+  {
+   "i": 145,
+   "start": 488.733,
+   "end": 492.033,
+   "text": "penurunan harga belum tentu menjadi alasan untuk ikut panik.",
+   "part": "episode"
+  },
+  {
+   "i": 146,
+   "start": 492.6,
+   "end": 496.35,
+   "text": "Bahkan untuk dana jangka panjang yang memang disiapkan mencari peluang,",
+   "part": "episode"
+  },
+  {
+   "i": 147,
+   "start": 496.617,
+   "end": 499.8,
+   "text": "kondisi seperti ini bisa mulai diperhatikan secara bertahap.",
+   "part": "episode"
+  },
+  {
+   "i": 148,
+   "start": 500.067,
+   "end": 502.583,
+   "text": "Bukan dana darurat, bukan uang yang segera dipakai,",
+   "part": "episode"
+  },
+  {
+   "i": 149,
+   "start": 502.667,
+   "end": 505.417,
+   "text": "dan tetap bukan keputusan otomatis.",
+   "part": "episode"
+  },
+  {
+   "i": 150,
+   "start": 505.617,
+   "end": 509.167,
+   "text": "Harga sama-sama turun, tapi konteksnya bisa sangat berbeda.",
+   "part": "episode"
+  },
+  {
+   "i": 151,
+   "start": 510.033,
+   "end": 515.067,
+   "text": "Jadi, hubungan kita sederhana: Tuntun membantu, kamu yang memutuskan.",
+   "part": "episode"
+  },
+  {
+   "i": 152,
+   "start": 515.417,
+   "end": 517.85,
+   "text": "Tuntun nggak menekan tombol beli untukmu.",
+   "part": "episode"
+  },
+  {
+   "i": 153,
+   "start": 518.1,
+   "end": 520.317,
+   "text": "Tuntun juga nggak menekan tombol jual.",
+   "part": "episode"
+  },
+  {
+   "i": 154,
+   "start": 520.817,
+   "end": 522.883,
+   "text": "Tuntun membantu menampilkan informasi yang bisa",
+   "part": "episode"
+  },
+  {
+   "i": 155,
+   "start": 522.883,
+   "end": 524.967,
+   "text": "kamu gunakan untuk berpikir lebih jernih:",
+   "part": "episode"
+  },
+  {
+   "i": 156,
+   "start": 525.267,
+   "end": 528.35,
+   "text": "kualitas perusahaan, fair value, dampak sebuah peristiwa,",
+   "part": "episode"
+  },
+  {
+   "i": 157,
+   "start": 528.567,
+   "end": 531.15,
+   "text": "aktivitas transaksi, dan kondisi market.",
+   "part": "episode"
+  },
+  {
+   "i": 158,
+   "start": 531.667,
+   "end": 533.883,
+   "text": "Tapi semua informasi itu tetap bukan kepastian.",
+   "part": "episode"
+  },
+  {
+   "i": 159,
+   "start": 534.167,
+   "end": 536.467,
+   "text": "Harga masih bisa turun di bawah fair value.",
+   "part": "episode"
+  },
+  {
+   "i": 160,
+   "start": 536.8,
+   "end": 539.6,
+   "text": "Market yang sudah murah juga masih bisa menjadi lebih murah.",
+   "part": "episode"
+  },
+  {
+   "i": 161,
+   "start": 540.067,
+   "end": 542.517,
+   "text": "Karena itu, Tuntun nggak menjanjikan harga pasti",
+   "part": "episode"
+  },
+  {
+   "i": 162,
+   "start": 542.517,
+   "end": 545.883,
+   "text": "naik atau memberi keputusan yang harus kamu ikuti.",
+   "part": "episode"
+  },
+  {
+   "i": 163,
+   "start": 546.517,
+   "end": 549.617,
+   "text": "Tujuannya sederhana: saat temanmu menyuruhmu segera bertindak,",
+   "part": "episode"
+  },
+  {
+   "i": 164,
+   "start": 549.733,
+   "end": 552.117,
+   "text": "kamu punya sesuatu untuk dilihat lebih dulu.",
+   "part": "episode"
+  },
+  {
+   "i": 165,
+   "start": 552.667,
+   "end": 554.283,
+   "text": "Tuntun membantu memberi konteks.",
+   "part": "episode"
+  },
+  {
+   "i": 166,
+   "start": 554.65,
+   "end": 556.317,
+   "text": "Keputusan tetap ada di tanganmu.",
+   "part": "episode"
+  },
+  {
+   "i": 167,
+   "start": 556.667,
+   "end": 559.35,
+   "text": "Itulah arti Invest with Guidance bersama Tuntun.",
+   "part": "episode"
+  },
+  {
+   "i": 168,
+   "start": 560.0,
+   "end": 561.767,
+   "text": "Kalau kalian ingin belajar lebih lanjut dan",
+   "part": "episode"
+  },
+  {
+   "i": 169,
+   "start": 561.767,
+   "end": 564.533,
+   "text": "memahami investasi dengan pendekatan yang lebih mendalam,",
+   "part": "episode"
+  },
+  {
+   "i": 170,
+   "start": 564.883,
+   "end": 567.45,
+   "text": "kalian bisa melanjutkan ke Module Value Investing.",
+   "part": "episode"
+  },
+  {
+   "i": 171,
+   "start": 567.95,
+   "end": 571.733,
+   "text": "Di sana, kita akan belajar memahami bisnis di balik sebuah saham,",
+   "part": "episode"
+  },
+  {
+   "i": 172,
+   "start": 571.983,
+   "end": 575.067,
+   "text": "menilai harga yang layak dibayar, menghadapi pergerakan market,",
+   "part": "episode"
+  },
+  {
+   "i": 173,
+   "start": 575.333,
+   "end": 578.2,
+   "text": "dan mengenali perusahaan yang benar-benar kita pahami.",
+   "part": "episode"
+  }
+ ]
+}

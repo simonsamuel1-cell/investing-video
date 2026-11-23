@@ -733,6 +733,19 @@ export const theme = {
     bulbGlass: "rgba(242, 166, 59, 0.16)",
     /** The halo behind a lit bulb. Warm, and only ever behind that glyph. */
     bulbGlow: "rgba(247, 188, 94, 0.55)",
+    /**
+     * Candles standing bare on a thumbnail's indigo ground (TA01). The episode pair sinks into indigo and the dark-palette pair
+     * was still not enough (Simon 20 Nov: "warna candlesticknya buat lebih contrast lagi"), so these are the same two hues at a
+     * much higher lightness. For thumbnails only — never in a video, where candles stand on a white card.
+     */
+    thumbCandleUp: "#5CFFB0",
+    thumbCandleDown: "#FF6F80",
+    /** The inside of a band on a thumbnail (TA07's Bollinger Bands, Simon 20 Nov: "fill area bollinger bandnya dibuat indigo gelap"): the thumbnail ground's own indigo, taken well down. */
+    thumbBandFill: "#2A1D6E",
+    /** The glass card's own tint on a thumbnail (TA07): a light indigo, so at its low strength the card sits a little LIGHTER than the ground behind it (Simon 20 Nov: "sedikit lebih terang dari backgroundnya"; it had been a dark tint). */
+    thumbCardFill: "#B9ADFF",
+    /** The lit end of a glass card's graded border on a thumbnail (TA07). indigoTint2 read as white from a distance (Simon 20 Nov), so this is a light indigo that still has its colour. */
+    thumbRimLight: "#9A8BFF",
   },
 
   text: {
@@ -807,6 +820,12 @@ export const theme = {
      * kiri 10 px". `artShadow` is a coloured glow for drawn art.
      */
     photoShadow: "drop-shadow(-10px 0px 5px rgba(0, 0, 0, 0.3))",
+    /** The same shadow with a wide blur, for the same cut-out standing large on a thumbnail (Simon 20 Nov: "shadownya di tambah blurnya"): 5 px → 30 px. */
+    photoShadowWide: "drop-shadow(-10px 0px 30px rgba(0, 0, 0, 0.3))",
+    /** A soft shadow under bare artwork on a thumbnail (TA01's candles standing on the indigo ground, Simon 20 Nov: "jangan glow, tapi kasih shadow"): falls straight down. Black 40 %, then 20 % darker = 48 %. */
+    thumbShadow: "drop-shadow(0px 16px 22px rgba(0, 0, 0, 0.48))",
+    /** A glass card's shadow on a thumbnail (TA07, Simon 20 Nov: "kartunya kasih shadow"). A box-shadow, so it falls outside the card only and the glass stays clear. */
+    thumbCardShadow: "0px 28px 56px rgba(0, 0, 0, 0.38)",
     /** …and the contact shadow it stands on — "tadi ada shadow di bawah, adain lagi". */
     floorShadow: "radial-gradient(closest-side, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0))",
   },

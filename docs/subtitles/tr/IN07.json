@@ -1,0 +1,1216 @@
+{
+ "key": "IN07",
+ "rows": [
+  {
+   "i": 1,
+   "en": "January 28, 2026, 1:43 p.m. WIB.",
+   "zh": "2026年1月28日，13:43（WIB）。",
+   "ja": "2026年1月28日、13時43分（WIB）。",
+   "ko": "2026년 1월 28일, 오후 1시 43분(WIB)."
+  },
+  {
+   "i": 2,
+   "en": "The IHSG drops 8 percent, and trading is halted for 30 minutes.",
+   "zh": "IHSG下跌8%，随后暂停交易30分钟。",
+   "ja": "IHSGが8%下落し、取引が30分間停止されます。",
+   "ko": "IHSG가 8% 하락하고, 거래가 30분간 일시 정지돼요."
+  },
+  {
+   "i": 3,
+   "en": "Your phone screen is all red.",
+   "zh": "你的手机屏幕上一片下跌。",
+   "ja": "スマホの画面は下落一色です。",
+   "ko": "휴대폰 화면이 온통 하락이에요."
+  },
+  {
+   "i": 4,
+   "en": "In your group chat, a friend sends three voice notes: “Sell now.”",
+   "zh": "群里，朋友发来三条语音：“快卖。”",
+   "ja": "グループで、友だちが3件のボイスメッセージを送ってきます。「早く売って」",
+   "ko": "단톡방에서 친구가 음성 메시지 세 개를 보내요. “빨리 팔아.”"
+  },
+  {
+   "i": 5,
+   "en": "“Sell now.” “Sell now.”",
+   "zh": "“快卖。”“快卖。”",
+   "ja": "「早く売って」「早く売って」",
+   "ko": "“빨리 팔아.” “빨리 팔아.”"
+  },
+  {
+   "i": 6,
+   "en": "Your thumb is already over the Sell button.",
+   "zh": "你的拇指已经放在“卖出”按钮上。",
+   "ja": "親指はもう「売り」ボタンの上にあります。",
+   "ko": "엄지는 이미 매도 버튼 위에 있어요."
+  },
+  {
+   "i": 7,
+   "en": "But before you press it, there's one question:",
+   "zh": "但在按下之前，有一个问题：",
+   "ja": "でも押す前に、一つ問いがあります。",
+   "ko": "하지만 누르기 전에, 질문이 하나 있어요."
+  },
+  {
+   "i": 8,
+   "en": "at a moment like this, what do you need to look at?",
+   "zh": "在这种时刻，你需要看什么？",
+   "ja": "こんなとき、何を見ればいいのでしょうか？",
+   "ko": "이럴 때, 무엇을 봐야 할까요?"
+  },
+  {
+   "i": 9,
+   "en": "In the previous video, we covered three mistakes investors often make.",
+   "zh": "上一个视频里，我们讲了投资者常犯的三个错误。",
+   "ja": "前回の動画では、投資家がよくする3つの間違いを取り上げました。",
+   "ko": "지난 영상에서는 투자자들이 자주 하는 세 가지 실수를 다뤘어요."
+  },
+  {
+   "i": 10,
+   "en": "In practice, they usually show up in four situations: panicking over price,",
+   "zh": "实际上，这些错误通常出现在四种情况中：因价格而恐慌，",
+   "ja": "実際には、それは主に4つの場面で起こります。価格に慌てること、",
+   "ko": "실제로 이런 실수는 보통 네 가지 상황에서 나와요. 가격 때문에 패닉하고,"
+  },
+  {
+   "i": 11,
+   "en": "deciding too fast, chasing hot topics,",
+   "zh": "决定做得太快，追逐热门话题，",
+   "ja": "決断を急ぎすぎること、話題のテーマを追いかけること、",
+   "ko": "너무 빨리 결정하고, 뜨거운 화제를 쫓고,"
+  },
+  {
+   "i": 12,
+   "en": "and taking on more risk when overconfident.",
+   "zh": "以及过度自信时放大风险。",
+   "ja": "そして自信過剰になってリスクを大きくすることです。",
+   "ko": "자신감이 지나칠 때 위험을 키우는 거예요."
+  },
+  {
+   "i": 13,
+   "en": "Now, let's see how Tuntun helps us pause for a moment,",
+   "zh": "现在，我们来看看Tuntun如何帮助我们先停一停，",
+   "ja": "では、Tuntunがどう助けてくれるか見ていきましょう。一度立ち止まり、",
+   "ko": "이제 Tuntun이 어떻게 도와주는지 볼게요. 잠깐 멈추고,"
+  },
+  {
+   "i": 14,
+   "en": "check the facts, and then decide more clearly.",
+   "zh": "核实事实，然后更清醒地做决定。",
+   "ja": "事実を確かめ、よりクリアに判断できるように。",
+   "ko": "사실을 확인한 다음, 더 명확하게 결정하도록요."
+  },
+  {
+   "i": 15,
+   "en": "At times like that, we often look for one simple answer: sell, hold, or buy.",
+   "zh": "在那种时候，我们常常想要一个简单的答案：卖出、持有，还是买入。",
+   "ja": "そんなとき、私たちはつい一つの簡単な答えを探します。売るか、持つか、買うか。",
+   "ko": "그럴 때 우리는 흔히 간단한 답 하나를 찾아요. 팔지, 버틸지, 살지."
+  },
+  {
+   "i": 16,
+   "en": "But every situation calls for checking something different.",
+   "zh": "但其实，每种情况需要检查的东西都不一样。",
+   "ja": "でも実は、場面ごとに確かめるべきことは違います。",
+   "ko": "하지만 상황마다 확인해야 할 것은 달라요."
+  },
+  {
+   "i": 17,
+   "en": "When price makes you panic, the question is:",
+   "zh": "当价格让你恐慌时，要问的是：",
+   "ja": "価格に慌てたときの問いは、",
+   "ko": "가격 때문에 패닉일 때, 질문은 이거예요."
+  },
+  {
+   "i": 18,
+   "en": "did only the price change, or did the company's condition change too?",
+   "zh": "变的只是价格，还是公司的状况也变了？",
+   "ja": "変わったのは価格だけか、それとも会社の状態も変わったのか？",
+   "ko": "가격만 바뀌었나요, 아니면 회사 상황도 바뀌었나요?"
+  },
+  {
+   "i": 19,
+   "en": "When a piece of information sounds very convincing, ask:",
+   "zh": "当某条信息听起来很有说服力时，问一问：",
+   "ja": "ある情報がとても説得力ありげに聞こえたら、こう問いましょう。",
+   "ko": "어떤 정보가 아주 그럴듯하게 들리면, 물어보세요."
+  },
+  {
+   "i": 20,
+   "en": "what's the full basis behind that conclusion?",
+   "zh": "这个结论背后完整的依据是什么？",
+   "ja": "その結論の裏にある根拠の全体は何か？",
+   "ko": "그 결론 뒤에 있는 근거 전체는 무엇인가?"
+  },
+  {
+   "i": 21,
+   "en": "When a topic is buzzing, find out: is there really an impact,",
+   "zh": "当某个话题正火时，去查清楚：是否真的有影响，",
+   "ja": "あるテーマが盛り上がっているときは、確かめましょう。本当に影響があるのか、",
+   "ko": "어떤 화제가 뜨거울 때는 알아보세요. 정말 영향이 있는지,"
+  },
+  {
+   "i": 22,
+   "en": "money flowing in, and rising trading activity?",
+   "zh": "是否有资金流入，交易活跃度是否上升？",
+   "ja": "資金は流入しているか、売買は活発になっているか？",
+   "ko": "자금이 들어오는지, 거래가 늘고 있는지요."
+  },
+  {
+   "i": 23,
+   "en": "And when you feel so sure that you want to increase your position,",
+   "zh": "当你非常有把握，想要加仓时，",
+   "ja": "そして、確信のあまりポジションを増やしたくなったら、",
+   "ko": "그리고 너무 확신해서 포지션을 늘리고 싶을 때는,"
+  },
+  {
+   "i": 24,
+   "en": "stop for a moment and look:",
+   "zh": "先停一下，看看：",
+   "ja": "少し立ち止まって見てください。",
+   "ko": "잠깐 멈추고 보세요."
+  },
+  {
+   "i": 25,
+   "en": "how much risk are you taking, and what's the market like right now?",
+   "zh": "你承担了多大的风险，当前的市场状况又如何？",
+   "ja": "どれだけのリスクを取っているのか、今の相場はどんな状況か？",
+   "ko": "지금 얼마나 큰 위험을 지고 있는지, 지금 시장은 어떤 상태인지요."
+  },
+  {
+   "i": 26,
+   "en": "So it's not about opening every page at once.",
+   "zh": "所以，重点不是一次打开所有页面，",
+   "ja": "つまり、すべてのページを一度に開くことではありません。",
+   "ko": "그러니까 모든 페이지를 한꺼번에 여는 게 아니에요."
+  },
+  {
+   "i": 27,
+   "en": "It's about opening the right information for the right question.",
+   "zh": "而是针对对的问题，打开对的信息。",
+   "ja": "正しい問いに対して、正しい情報を開くことです。",
+   "ko": "맞는 질문에 맞는 정보를 여는 거예요."
+  },
+  {
+   "i": 28,
+   "en": "Let's start with the first situation: when decisions are based only on price moves.",
+   "zh": "我们从第一种情况开始：只根据价格波动做决定。",
+   "ja": "最初の場面から始めましょう。値動きだけで判断してしまうときです。",
+   "ko": "첫 번째 상황부터 볼게요. 가격 움직임만 보고 결정할 때예요."
+  },
+  {
+   "i": 29,
+   "en": "When the price rises, the stock feels better and better.",
+   "zh": "价格上涨时，这只股票感觉越来越好。",
+   "ja": "株価が上がると、その銘柄がどんどん良く見えます。",
+   "ko": "가격이 오르면, 그 종목이 점점 좋아 보여요."
+  },
+  {
+   "i": 30,
+   "en": "When the price falls, the stock feels worse and worse.",
+   "zh": "价格下跌时，这只股票感觉越来越差。",
+   "ja": "株価が下がると、その銘柄がどんどん悪く見えます。",
+   "ko": "가격이 내리면, 그 종목이 점점 나빠 보여요."
+  },
+  {
+   "i": 31,
+   "en": "But: the price changing doesn't mean the company has changed.",
+   "zh": "但其实：价格变了，公司不一定跟着变。",
+   "ja": "でも、価格が変わっても、会社まで変わったとは限りません。",
+   "ko": "하지만 가격이 변했다고 회사도 변한 건 아닐 수 있어요."
+  },
+  {
+   "i": 32,
+   "en": "That's why, on Tuntun's stock page, you can see two things.",
+   "zh": "所以，在Tuntun的个股页面，你可以看到两样东西。",
+   "ja": "だからTuntunの銘柄ページでは、2つのことが確認できます。",
+   "ko": "그래서 Tuntun 종목 페이지에서는 두 가지를 볼 수 있어요."
+  },
+  {
+   "i": 33,
+   "en": "First, Company Quality,",
+   "zh": "第一，Company Quality，",
+   "ja": "1つ目は、Company Quality。",
+   "ko": "첫째, Company Quality,"
+  },
+  {
+   "i": 34,
+   "en": "to understand the company's business quality and fundamentals.",
+   "zh": "用来了解公司的业务质量和基本面。",
+   "ja": "会社のビジネスの質とファンダメンタルズを理解するためのものです。",
+   "ko": "회사의 사업 품질과 펀더멘털을 이해하기 위한 거예요."
+  },
+  {
+   "i": 35,
+   "en": "Second, Fair Value,",
+   "zh": "第二，Fair Value，",
+   "ja": "2つ目は、Fair Value。",
+   "ko": "둘째, Fair Value,"
+  },
+  {
+   "i": 36,
+   "en": "as a reference to see whether the current price",
+   "zh": "作为参考，用来判断当前价格",
+   "ja": "現在の価格が、その価値と比べて",
+   "ko": "지금 가격이 가치에 비해"
+  },
+  {
+   "i": 37,
+   "en": "still makes sense compared to its value.",
+   "zh": "相对于它的价值是否仍然合理。",
+   "ja": "まだ妥当かどうかを見るための目安です。",
+   "ko": "아직 합리적인지 보는 참고 기준이에요."
+  },
+  {
+   "i": 38,
+   "en": "When the price rises far above Fair Value,",
+   "zh": "当价格涨到远高于Fair Value时，",
+   "ja": "価格がFair Valueを大きく上回ったら、",
+   "ko": "가격이 Fair Value보다 훨씬 높게 오르면,"
+  },
+  {
+   "i": 39,
+   "en": "you have a reason not to rush in and chase it.",
+   "zh": "你就有理由不急着追高。",
+   "ja": "すぐに飛びついて追いかけない理由になります。",
+   "ko": "바로 따라 사지 않을 이유가 생겨요."
+  },
+  {
+   "i": 40,
+   "en": "When the price falls, first check whether the company's quality and Fair Value have changed too.",
+   "zh": "价格下跌时，先看看公司质量和Fair Value是否也变了。",
+   "ja": "価格が下がったら、まず会社の質とFair Valueも変わったかを確認しましょう。",
+   "ko": "가격이 내리면, 먼저 회사 품질과 Fair Value도 바뀌었는지 확인하세요."
+  },
+  {
+   "i": 41,
+   "en": "If both are the same, maybe only the price has changed, not the business.",
+   "zh": "如果两者都没变，也许变的只是价格，而不是业务。",
+   "ja": "どちらも変わらないなら、変わったのは価格だけで、ビジネスではないのかもしれません。",
+   "ko": "둘 다 그대로라면, 바뀐 건 가격뿐이고 사업은 아닐 수 있어요."
+  },
+  {
+   "i": 42,
+   "en": "That doesn't mean the stock is definitely safe.",
+   "zh": "这不代表这只股票一定安全。",
+   "ja": "その銘柄が必ず安全という意味ではありません。",
+   "ko": "그 종목이 반드시 안전하다는 뜻은 아니에요."
+  },
+  {
+   "i": 43,
+   "en": "But at least you know what to check before you react.",
+   "zh": "但至少，你知道在做出反应前该检查什么。",
+   "ja": "でも少なくとも、反応する前に何を確かめるべきかが分かります。",
+   "ko": "하지만 적어도 반응하기 전에 뭘 확인해야 할지는 알게 돼요."
+  },
+  {
+   "i": 44,
+   "en": "So what if the problem isn't the price,",
+   "zh": "那如果问题不在价格，",
+   "ja": "では、問題が価格ではなく、",
+   "ko": "그럼 문제가 가격이 아니라,"
+  },
+  {
+   "i": 45,
+   "en": "but that we have too little information?",
+   "zh": "而是我们掌握的信息太少呢？",
+   "ja": "手元の情報が少なすぎることだったら？",
+   "ko": "우리가 가진 정보가 너무 적은 거라면요?"
+  },
+  {
+   "i": 46,
+   "en": "Rushed decisions often come from limited time and not enough basis,",
+   "zh": "仓促的决定往往是因为时间有限、依据不足，",
+   "ja": "慌てた判断は、時間が限られ、根拠も足りないところに、",
+   "ko": "성급한 결정은 시간이 부족하고 근거도 모자란데,"
+  },
+  {
+   "i": 47,
+   "en": "and then one line or indicator that sounds very convincing.",
+   "zh": "再加上一句话或一个指标听起来非常有说服力。",
+   "ja": "とても説得力のある一言やインジケーターが現れて生まれがちです。",
+   "ko": "아주 그럴듯한 말 한마디나 지표가 나타날 때 자주 생겨요."
+  },
+  {
+   "i": 48,
+   "en": "The fix isn't just saying: “Try thinking about it longer.”",
+   "zh": "解决办法不只是说：“再多想一想。”",
+   "ja": "解決策は「もっと時間をかけて考えよう」と言うだけではありません。",
+   "ko": "해결책은 그냥 “좀 더 오래 생각해 봐”라고 말하는 것만이 아니에요."
+  },
+  {
+   "i": 49,
+   "en": "We also need information that's organized to be easier to understand.",
+   "zh": "我们还需要经过整理、更容易理解的信息。",
+   "ja": "分かりやすく整理された情報も必要です。",
+   "ko": "이해하기 쉽게 정리된 정보도 필요해요."
+  },
+  {
+   "i": 50,
+   "en": "This is where the Tuntun Deep Research Report comes in,",
+   "zh": "这就是Tuntun Deep Research Report发挥作用的地方，",
+   "ja": "ここで役立つのがTuntun Deep Research Reportです。",
+   "ko": "여기서 Tuntun Deep Research Report가 역할을 해요."
+  },
+  {
+   "i": 51,
+   "en": "helping investors understand companies through more thorough research.",
+   "zh": "通过更全面的研究，帮助投资者了解公司。",
+   "ja": "より徹底したリサーチで、投資家が企業を理解するのを助けます。",
+   "ko": "더 꼼꼼한 리서치로 투자자가 기업을 이해하도록 도와줘요."
+  },
+  {
+   "i": 52,
+   "en": "Tuntun's research team reads financial reports,",
+   "zh": "Tuntun研究团队会阅读财务报告，",
+   "ja": "Tuntunのリサーチチームは決算書を読み、",
+   "ko": "Tuntun 리서치팀은 재무제표를 읽고,"
+  },
+  {
+   "i": 53,
+   "en": "builds models, assesses company quality,",
+   "zh": "建立模型，评估公司质量，",
+   "ja": "モデルを作り、企業の質を評価し、",
+   "ko": "모델을 만들고, 기업 품질을 평가하고,"
+  },
+  {
+   "i": 54,
+   "en": "calculates a fair price reference, and studies events that could affect the business.",
+   "zh": "计算合理价格参考，并研究可能影响业务的事件。",
+   "ja": "適正価格の目安を算出し、ビジネスに影響しうる出来事を調べます。",
+   "ko": "적정 가격 참고치를 계산하고, 사업에 영향을 줄 수 있는 사건을 검토해요."
+  },
+  {
+   "i": 55,
+   "en": "Each company is monitored by a dedicated analyst through fundamental research,",
+   "zh": "每家公司都有专门的分析师跟踪，通过基本面研究、",
+   "ja": "各企業は専任アナリストが、ファンダメンタル調査、",
+   "ko": "기업마다 전담 애널리스트가 펀더멘털 리서치,"
+  },
+  {
+   "i": 56,
+   "en": "industry research, and company research.",
+   "zh": "行业研究和公司研究。",
+   "ja": "業界調査、企業調査を通じてウォッチしています。",
+   "ko": "산업 리서치, 기업 리서치로 모니터링해요."
+  },
+  {
+   "i": 57,
+   "en": "The analysis is also kept up to date with the latest developments.",
+   "zh": "分析也会根据最新进展持续更新。",
+   "ja": "分析も最新の動きに合わせて更新され続けます。",
+   "ko": "분석도 최신 상황에 맞춰 계속 업데이트돼요."
+  },
+  {
+   "i": 58,
+   "en": "Tuntun's research covers stocks and mutual funds,",
+   "zh": "Tuntun的研究涵盖股票和基金，",
+   "ja": "Tuntunのリサーチは株式と投資信託をカバーし、",
+   "ko": "Tuntun 리서치는 주식과 펀드를 다루고,"
+  },
+  {
+   "i": 59,
+   "en": "and has earned industry recognition through awards from",
+   "zh": "并获得了业界认可，荣获",
+   "ja": "業界からも評価され、",
+   "ko": "업계에서도 인정받아"
+  },
+  {
+   "i": 60,
+   "en": "CNBC Indonesia in 2025 and Media Asuransi in 2024.",
+   "zh": "2025年CNBC Indonesia和2024年Media Asuransi的奖项。",
+   "ja": "2025年にCNBC Indonesia、2024年にMedia Asuransiから賞を受けています。",
+   "ko": "2025년 CNBC Indonesia와 2024년 Media Asuransi에서 상을 받았어요."
+  },
+  {
+   "i": 61,
+   "en": "That doesn't mean the research team is always right.",
+   "zh": "这不代表研究团队总是对的。",
+   "ja": "リサーチチームが常に正しいわけではありません。",
+   "ko": "리서치팀이 항상 옳다는 뜻은 아니에요."
+  },
+  {
+   "i": 62,
+   "en": "But they have more time,",
+   "zh": "但他们有更多的时间、",
+   "ja": "でも彼らには、結論を検証するための",
+   "ko": "하지만 결론을 검증할"
+  },
+  {
+   "i": 63,
+   "en": "process, and data to test a conclusion.",
+   "zh": "流程和数据来检验一个结论。",
+   "ja": "より多くの時間、プロセス、データがあります。",
+   "ko": "시간, 과정, 데이터가 더 많아요."
+  },
+  {
+   "i": 64,
+   "en": "So your decision has a more complete basis",
+   "zh": "所以你的决定会有更完整的依据，",
+   "ja": "だから判断の根拠は、",
+   "ko": "그래서 결정의 근거가"
+  },
+  {
+   "i": 65,
+   "en": "than just one voice note from your friend.",
+   "zh": "而不只是朋友的一条语音。",
+   "ja": "友だちのボイスメッセージ1件よりずっと充実します。",
+   "ko": "친구의 음성 메시지 하나보다 훨씬 탄탄해져요."
+  },
+  {
+   "i": 66,
+   "en": "If the research report still isn't clear,",
+   "zh": "如果研究报告还不够清楚，",
+   "ja": "リサーチレポートでまだよく分からないときや、",
+   "ko": "리서치 리포트가 아직 잘 이해되지 않거나,"
+  },
+  {
+   "i": 67,
+   "en": "or you want to understand one part more deeply, use Tuntun AI.",
+   "zh": "或者你想更深入了解某个部分，就用Tuntun AI。",
+   "ja": "ある部分をもっと深く理解したいときは、Tuntun AIを使いましょう。",
+   "ko": "어떤 부분을 더 깊이 알고 싶다면, Tuntun AI를 쓰세요."
+  },
+  {
+   "i": 68,
+   "en": "You can start with simple questions:",
+   "zh": "你可以从简单的问题开始：",
+   "ja": "シンプルな質問から始められます。",
+   "ko": "간단한 질문부터 시작하면 돼요."
+  },
+  {
+   "i": 69,
+   "en": "“Where does this company actually make its money?”",
+   "zh": "“这家公司到底靠什么赚钱？”",
+   "ja": "「この会社は実際、何で稼いでいるの？」",
+   "ko": "“이 회사는 실제로 어디서 돈을 벌어?”"
+  },
+  {
+   "i": 70,
+   "en": "“Why is the current price considered cheap or expensive?”",
+   "zh": "“为什么现在的价格被认为便宜或贵？”",
+   "ja": "「なぜ今の価格は割安、または割高とされるの？」",
+   "ko": "“왜 지금 가격이 싸다고, 혹은 비싸다고 보는 거야?”"
+  },
+  {
+   "i": 71,
+   "en": "“What's the biggest risk?”",
+   "zh": "“最大的风险是什么？”",
+   "ja": "「最大のリスクは何？」",
+   "ko": "“가장 큰 위험은 뭐야?”"
+  },
+  {
+   "i": 72,
+   "en": "Tuntun AI helps summarize the company's quality and valuation,",
+   "zh": "Tuntun AI帮你总结公司的质量和估值，",
+   "ja": "Tuntun AIは企業の質とバリュエーションを要約し、",
+   "ko": "Tuntun AI는 기업 품질과 밸류에이션을 요약해 주고,"
+  },
+  {
+   "i": 73,
+   "en": "then adds extra context like fund flows,",
+   "zh": "再提供额外的背景，比如资金流向、",
+   "ja": "さらに資金の流れ、",
+   "ko": "자금 흐름,"
+  },
+  {
+   "i": 74,
+   "en": "technical conditions, and recent events.",
+   "zh": "技术面状况和最新事件。",
+   "ja": "テクニカルの状況、最近の出来事といった背景も加えます。",
+   "ko": "기술적 상황, 최근 사건 같은 추가 맥락도 줘요."
+  },
+  {
+   "i": 75,
+   "en": "The goal isn't for AI to make decisions for you.",
+   "zh": "目的不是让AI替你做决定。",
+   "ja": "目的は、AIに判断を任せることではありません。",
+   "ko": "목적은 AI가 대신 결정하게 하는 게 아니에요."
+  },
+  {
+   "i": 76,
+   "en": "The goal is that you don't press the button",
+   "zh": "目的是让你不要在",
+   "ja": "目的は、何を買おうとしているのか理解する前に",
+   "ko": "목적은 무엇을 사는지 이해하기 전에"
+  },
+  {
+   "i": 77,
+   "en": "before understanding what you're buying.",
+   "zh": "弄懂自己买的是什么之前就按下按钮。",
+   "ja": "ボタンを押さないようにすることです。",
+   "ko": "버튼을 누르지 않게 하는 거예요."
+  },
+  {
+   "i": 78,
+   "en": "The next situation comes when a topic or news story suddenly goes viral.",
+   "zh": "下一种情况，是某个话题或新闻突然爆火的时候。",
+   "ja": "次の場面は、あるテーマやニュースが急に話題になるときです。",
+   "ko": "다음 상황은 어떤 화제나 뉴스가 갑자기 떠들썩해질 때예요."
+  },
+  {
+   "i": 79,
+   "en": "Your friend sends a voice note: “Get in now!”",
+   "zh": "朋友发来语音：“现在就上车！”",
+   "ja": "友だちからボイスメッセージ。「今すぐ買って！」",
+   "ko": "친구가 음성 메시지를 보내요. “지금 들어가!”"
+  },
+  {
+   "i": 80,
+   "en": "But a hot topic doesn't necessarily affect the company.",
+   "zh": "但热门话题不一定真的会影响公司。",
+   "ja": "でも話題のテーマが、本当に会社に影響するとは限りません。",
+   "ko": "하지만 뜨거운 화제가 꼭 회사에 영향을 주는 건 아니에요."
+  },
+  {
+   "i": 81,
+   "en": "Before jumping in, check three things.",
+   "zh": "在跟进之前，先检查三件事。",
+   "ja": "乗る前に、3つ確認しましょう。",
+   "ko": "따라 들어가기 전에, 세 가지를 확인하세요."
+  },
+  {
+   "i": 82,
+   "en": "First: does the event really affect the company's business and profits?",
+   "zh": "第一：这件事真的会影响公司的业务和利润吗？",
+   "ja": "1つ目：その出来事は本当に会社のビジネスと利益に影響するか？",
+   "ko": "첫째, 그 사건이 정말 회사의 사업과 이익에 영향을 주나요?"
+  },
+  {
+   "i": 83,
+   "en": "Second: is money really flowing in?",
+   "zh": "第二：资金真的在流入吗？",
+   "ja": "2つ目：資金は本当に流入しているか？",
+   "ko": "둘째, 자금이 정말 들어오고 있나요?"
+  },
+  {
+   "i": 84,
+   "en": "Third: is trading activity actually rising?",
+   "zh": "第三：交易活跃度真的在上升吗？",
+   "ja": "3つ目：売買は本当に活発になっているか？",
+   "ko": "셋째, 거래가 실제로 늘고 있나요?"
+  },
+  {
+   "i": 85,
+   "en": "Event Research helps you see the impact on the business.",
+   "zh": "Event Research帮助你看清对业务的影响。",
+   "ja": "Event Researchはビジネスへの影響を見るのに役立ちます。",
+   "ko": "Event Research는 사업에 미치는 영향을 보게 해 줘요."
+  },
+  {
+   "i": 86,
+   "en": "Fund Flow shows which way money is moving.",
+   "zh": "Fund Flow显示资金的流向。",
+   "ja": "Fund Flowは資金の流れの方向を示します。",
+   "ko": "Fund Flow는 자금이 움직이는 방향을 보여 줘요."
+  },
+  {
+   "i": 87,
+   "en": "And volume shows whether market activity is really increasing.",
+   "zh": "而成交量显示市场活跃度是否真的在增加。",
+   "ja": "そして出来高は、市場の売買が本当に増えているかを示します。",
+   "ko": "그리고 거래량은 시장 활동이 정말 늘고 있는지 보여 줘요."
+  },
+  {
+   "i": 88,
+   "en": "The more they line up, the stronger the basis behind the move.",
+   "zh": "越多信号一致，这波走势背后的依据就越强。",
+   "ja": "そろう材料が多いほど、その値動きの裏付けは強くなります。",
+   "ko": "더 많이 맞아떨어질수록, 그 움직임의 근거는 더 탄탄해져요."
+  },
+  {
+   "i": 89,
+   "en": "But it's still no guarantee the price will rise.",
+   "zh": "但这仍不能保证价格一定上涨。",
+   "ja": "それでも、価格が必ず上がる保証ではありません。",
+   "ko": "그래도 가격이 반드시 오른다는 보장은 아니에요."
+  },
+  {
+   "i": 90,
+   "en": "If the evidence isn't enough yet, there's nothing wrong with waiting.",
+   "zh": "如果证据还不够，等一等也无妨。",
+   "ja": "証拠がまだ足りないなら、待つのも悪くありません。",
+   "ko": "증거가 아직 부족하다면, 기다려도 괜찮아요."
+  },
+  {
+   "i": 91,
+   "en": "Because buzz in the group doesn't necessarily mean buzz in the market.",
+   "zh": "因为群里热闹，不代表市场也热闹。",
+   "ja": "グループで盛り上がっていても、市場で盛り上がっているとは限らないからです。",
+   "ko": "단톡방에서 떠들썩하다고 시장도 떠들썩한 건 아니니까요."
+  },
+  {
+   "i": 92,
+   "en": "The next problem isn't a lack of information, but too much confidence.",
+   "zh": "下一个问题不是信息不足，而是过度自信。",
+   "ja": "次の問題は、情報不足ではなく、自信過剰です。",
+   "ko": "다음 문제는 정보 부족이 아니라, 지나친 자신감이에요."
+  },
+  {
+   "i": 93,
+   "en": "Three wins, and you start to feel: “I've figured out the market.”",
+   "zh": "赚了三次，就开始觉得：“我已经看懂市场了。”",
+   "ja": "3回利益が出ると、こう思い始めます。「もう相場が分かった」",
+   "ko": "세 번 수익을 내고 나면 이런 생각이 들어요. “이제 시장을 알겠어.”"
+  },
+  {
+   "i": 94,
+   "en": "The position gets bigger, then you start considering borrowed money.",
+   "zh": "仓位加大，接着开始考虑借钱投资。",
+   "ja": "ポジションを増やし、やがて借りたお金まで考え始めます。",
+   "ko": "포지션을 키우고, 이어서 빌린 돈까지 생각하기 시작해요."
+  },
+  {
+   "i": 95,
+   "en": "At times like this, Tuntun Guidance can act as a reminder.",
+   "zh": "这种时候，Tuntun Guidance可以起到提醒作用。",
+   "ja": "そんなとき、Tuntun Guidanceがリマインダーの役割を果たします。",
+   "ko": "이럴 때 Tuntun Guidance가 알림 역할을 할 수 있어요."
+  },
+  {
+   "i": 96,
+   "en": "If the price is already far above the fair price,",
+   "zh": "如果价格已经远高于合理价格，",
+   "ja": "価格がすでに適正価格を大きく上回っているなら、",
+   "ko": "가격이 이미 적정 가격보다 훨씬 높다면,"
+  },
+  {
+   "i": 97,
+   "en": "reconsider before adding to your position.",
+   "zh": "加仓前请再考虑一下。",
+   "ja": "買い増す前にもう一度考えましょう。",
+   "ko": "포지션을 늘리기 전에 다시 생각해 보세요."
+  },
+  {
+   "i": 98,
+   "en": "If your investment reasons aren't strong enough yet,",
+   "zh": "如果你的投资理由还不够充分，",
+   "ja": "投資の理由がまだ十分に強くないなら、",
+   "ko": "투자 이유가 아직 충분히 탄탄하지 않다면,"
+  },
+  {
+   "i": 99,
+   "en": "don't magnify the uncertainty with leverage.",
+   "zh": "就不要用杠杆放大不确定性。",
+   "ja": "レバレッジで不確実性を大きくしないでください。",
+   "ko": "레버리지로 불확실성을 키우지 마세요."
+  },
+  {
+   "i": 100,
+   "en": "This warning isn't a ban.",
+   "zh": "这个提醒不是禁令。",
+   "ja": "この警告は禁止ではありません。",
+   "ko": "이 경고는 금지가 아니에요."
+  },
+  {
+   "i": 101,
+   "en": "It's a short pause so that confidence",
+   "zh": "而是一个短暂的停顿，让自信",
+   "ja": "自信がそのまま大きな判断に",
+   "ko": "자신감이 곧바로 큰 결정으로"
+  },
+  {
+   "i": 102,
+   "en": "doesn't instantly turn into a big decision.",
+   "zh": "不会马上变成重大的决定。",
+   "ja": "すぐ変わらないための、短い間です。",
+   "ko": "바뀌지 않도록 하는 짧은 멈춤이에요."
+  },
+  {
+   "i": 103,
+   "en": "Besides looking at one stock, we also need to look at the overall market.",
+   "zh": "除了看单只股票，我们也需要看整体市场状况。",
+   "ja": "1つの銘柄だけでなく、相場全体の状況も見る必要があります。",
+   "ko": "한 종목만이 아니라 시장 전체 상황도 봐야 해요."
+  },
+  {
+   "i": 104,
+   "en": "Because leverage often feels most tempting",
+   "zh": "因为杠杆往往在",
+   "ja": "レバレッジが最も魅力的に感じられるのは、",
+   "ko": "레버리지가 가장 끌리는 때는"
+  },
+  {
+   "i": 105,
+   "en": "when everyone is making money.",
+   "zh": "人人都在赚钱的时候最诱人。",
+   "ja": "たいてい、みんなが儲かっているときだからです。",
+   "ko": "대개 모두가 돈을 벌고 있을 때니까요."
+  },
+  {
+   "i": 106,
+   "en": "Before increasing your position, see where the IHSG's valuation sits compared to its history,",
+   "zh": "加仓之前，看看IHSG的估值相对于历史处在什么位置，",
+   "ja": "ポジションを増やす前に、IHSGのバリュエーションが過去と比べてどこにあるか、",
+   "ko": "포지션을 늘리기 전에, IHSG 밸류에이션이 과거에 비해 어디쯤인지,"
+  },
+  {
+   "i": 107,
+   "en": "and whether market sentiment is dominated by fear or greed.",
+   "zh": "以及市场情绪是被恐惧还是贪婪主导。",
+   "ja": "そして市場心理が恐怖と強欲のどちらに支配されているかを見ましょう。",
+   "ko": "그리고 시장 심리가 공포와 탐욕 중 무엇에 지배되고 있는지 보세요."
+  },
+  {
+   "i": 108,
+   "en": "The principle is simple.",
+   "zh": "原则很简单。",
+   "ja": "原則はシンプルです。",
+   "ko": "원칙은 간단해요."
+  },
+  {
+   "i": 109,
+   "en": "When valuations and optimism are already too high, we need to be more careful.",
+   "zh": "当估值和乐观情绪已经过高时，我们需要更加警惕。",
+   "ja": "バリュエーションと楽観が高くなりすぎたら、より慎重になるべきです。",
+   "ko": "밸류에이션과 낙관이 너무 높아졌을 때는 더 조심해야 해요."
+  },
+  {
+   "i": 110,
+   "en": "When valuations are low and the market is full of fear,",
+   "zh": "当估值偏低、市场充满恐惧时，",
+   "ja": "バリュエーションが低く、相場が恐怖に満ちているときは、",
+   "ko": "밸류에이션이 낮고 시장이 공포로 가득할 때는,"
+  },
+  {
+   "i": 111,
+   "en": "don't let fear blind you to opportunities.",
+   "zh": "别让恐惧蒙住双眼，看不见机会。",
+   "ja": "恐怖でチャンスから目をそらさないでください。",
+   "ko": "두려움 때문에 기회를 못 보는 일은 없게 하세요."
+  },
+  {
+   "i": 112,
+   "en": "Market Valuation doesn't pick stocks for you.",
+   "zh": "Market Valuation不会替你选股。",
+   "ja": "Market Valuationが銘柄を選んでくれるわけではありません。",
+   "ko": "Market Valuation이 종목을 대신 골라 주지는 않아요."
+  },
+  {
+   "i": 113,
+   "en": "This feature only helps give context:",
+   "zh": "这个功能只是帮助提供背景：",
+   "ja": "この機能は、背景を示す手助けをするだけです。",
+   "ko": "이 기능은 맥락을 보여 주는 걸 도울 뿐이에요."
+  },
+  {
+   "i": 114,
+   "en": "is the market mood supporting calm decisions,",
+   "zh": "市场氛围是在支持冷静的决策，",
+   "ja": "相場の空気は落ち着いた判断を後押ししているのか、",
+   "ko": "시장 분위기가 차분한 결정을 돕고 있는지,"
+  },
+  {
+   "i": 115,
+   "en": "or pushing everyone to move in the same direction?",
+   "zh": "还是在推动所有人朝同一个方向走？",
+   "ja": "それとも全員を同じ方向へ動かそうとしているのか？",
+   "ko": "아니면 모두를 같은 방향으로 몰고 있는지요."
+  },
+  {
+   "i": 116,
+   "en": "Now let's go back to January 28.",
+   "zh": "现在，我们回到1月28日。",
+   "ja": "では、1月28日に戻りましょう。",
+   "ko": "이제 1월 28일로 돌아가 볼게요."
+  },
+  {
+   "i": 117,
+   "en": "Same person. Same market.",
+   "zh": "同一个人。同一个市场。",
+   "ja": "同じ人。同じ相場。",
+   "ko": "같은 사람. 같은 시장."
+  },
+  {
+   "i": 118,
+   "en": "But a different decision-making process.",
+   "zh": "但做决定的过程不一样。",
+   "ja": "でも、判断のプロセスが違います。",
+   "ko": "하지만 결정을 내리는 과정이 달라요."
+  },
+  {
+   "i": 119,
+   "en": "In the first scenario, the screen is all red, your friend keeps saying “sell now,”",
+   "zh": "在第一个情景里，满屏下跌，朋友一直说“快卖”，",
+   "ja": "1つ目のシナリオでは、画面は下落一色、友だちは「早く売って」と言い続け、",
+   "ko": "첫 번째 시나리오에서는 화면이 온통 하락이고, 친구는 계속 “빨리 팔아”라고 하고,"
+  },
+  {
+   "i": 120,
+   "en": "and when trading reopens, the sell button gets pressed right away.",
+   "zh": "交易一恢复，就立刻按下了卖出按钮。",
+   "ja": "取引が再開されると、すぐに売りボタンが押されます。",
+   "ko": "거래가 재개되자마자 매도 버튼을 바로 눌러요."
+  },
+  {
+   "i": 121,
+   "en": "In the second scenario, the fear is still there.",
+   "zh": "在第二个情景里，恐惧依然存在。",
+   "ja": "2つ目のシナリオでも、恐怖はあります。",
+   "ko": "두 번째 시나리오에서도 두려움은 여전히 있어요."
+  },
+  {
+   "i": 122,
+   "en": "But before acting, they open their portfolio analysis:",
+   "zh": "但在行动之前，他先打开投资组合分析：",
+   "ja": "でも行動する前に、ポートフォリオ分析を開きます。",
+   "ko": "하지만 행동하기 전에 포트폴리오 분석을 열어요."
+  },
+  {
+   "i": 123,
+   "en": "did only the price drop, or did quality and Fair Value change too?",
+   "zh": "下跌的只是价格，还是质量和Fair Value也变了？",
+   "ja": "下がったのは価格だけか、それとも質やFair Valueも変わったのか？",
+   "ko": "떨어진 건 가격뿐인지, 아니면 품질과 Fair Value도 바뀌었는지요."
+  },
+  {
+   "i": 124,
+   "en": "They check Market Valuation, open Event Research,",
+   "zh": "他查看Market Valuation，打开Event Research，",
+   "ja": "Market Valuationを見て、Event Researchを開き、",
+   "ko": "Market Valuation을 보고, Event Research를 열고,"
+  },
+  {
+   "i": 125,
+   "en": "then ask Tuntun AI about the parts they don't understand yet.",
+   "zh": "再把还没弄懂的部分拿去问Tuntun AI。",
+   "ja": "まだ分からない部分をTuntun AIに質問します。",
+   "ko": "아직 이해 못 한 부분은 Tuntun AI에게 물어봐요."
+  },
+  {
+   "i": 126,
+   "en": "After that, they might still sell. Might hold.",
+   "zh": "之后，他也许还是会卖出。也许持有。",
+   "ja": "そのあと、やはり売るかもしれません。持ち続けるかもしれません。",
+   "ko": "그 후에도 여전히 팔 수도 있어요. 버틸 수도 있고요."
+  },
+  {
+   "i": 127,
+   "en": "Or maybe buy gradually.",
+   "zh": "也可能分批买入。",
+   "ja": "あるいは、少しずつ買うかもしれません。",
+   "ko": "아니면 조금씩 나눠 살 수도 있어요."
+  },
+  {
+   "i": 128,
+   "en": "What makes the difference isn't the end result.",
+   "zh": "区别不在于最终结果。",
+   "ja": "違いは、最終的な結果ではありません。",
+   "ko": "차이를 만드는 건 최종 결과가 아니에요."
+  },
+  {
+   "i": 129,
+   "en": "What makes the difference is that the decision was made after checking the information,",
+   "zh": "区别在于，这个决定是在核实信息之后做出的，",
+   "ja": "違いは、その判断が情報を確かめたうえで下されたこと。",
+   "ko": "차이는 그 결정이 정보를 확인한 뒤에 내려졌다는 거예요."
+  },
+  {
+   "i": 130,
+   "en": "not just because of pressure from friends in the group.",
+   "zh": "而不只是因为群里朋友的催促。",
+   "ja": "グループの友だちに急かされただけではないことです。",
+   "ko": "단톡방 친구들의 재촉 때문만이 아니라요."
+  },
+  {
+   "i": 131,
+   "en": "But not every drop has the same context.",
+   "zh": "但并不是每一次下跌的背景都一样。",
+   "ja": "でも、すべての下落が同じ背景を持つわけではありません。",
+   "ko": "하지만 모든 하락의 맥락이 같은 건 아니에요."
+  },
+  {
+   "i": 132,
+   "en": "In April 2025,",
+   "zh": "2025年4月，",
+   "ja": "2025年4月、",
+   "ko": "2025년 4월,"
+  },
+  {
+   "i": 133,
+   "en": "news of higher tariffs on Indonesia sent the IHSG",
+   "zh": "对印尼加征关税的消息让IHSG",
+   "ja": "インドネシアへの関税引き上げのニュースで、IHSGは",
+   "ko": "인도네시아에 대한 관세 인상 소식에 IHSG가"
+  },
+  {
+   "i": 134,
+   "en": "falling sharply, and trading was briefly halted.",
+   "zh": "大幅下跌，交易一度暂停。",
+   "ja": "急落し、取引が一時停止されました。",
+   "ko": "급락했고, 거래가 잠시 정지됐어요."
+  },
+  {
+   "i": 135,
+   "en": "The difference was, back then the market's valuation was already",
+   "zh": "不同的是，当时市场估值已经",
+   "ja": "違いは、そのとき市場のバリュエーションがすでに",
+   "ko": "차이는, 그때 시장 밸류에이션이 이미"
+  },
+  {
+   "i": 136,
+   "en": "relatively low, and sentiment was already full of fear.",
+   "zh": "相对较低，市场情绪也已充满恐惧。",
+   "ja": "比較的低く、市場心理も恐怖に満ちていたことです。",
+   "ko": "비교적 낮았고, 심리도 이미 공포로 가득했다는 거예요."
+  },
+  {
+   "i": 137,
+   "en": "So the question is no longer simply: “Should I sell or not?”",
+   "zh": "所以问题不再只是：“该不该卖？”",
+   "ja": "だから問いは、もはや「売るべきか否か」だけではありません。",
+   "ko": "그래서 질문은 더 이상 “팔아야 하나, 말아야 하나?”만이 아니에요."
+  },
+  {
+   "i": 138,
+   "en": "But: “Does the impact really change my investment,",
+   "zh": "而是：“这次的影响真的改变了我的投资吗，",
+   "ja": "「この影響は本当に自分の投資を変えるのか、",
+   "ko": "“이 영향이 정말 내 투자를 바꾸는 걸까,"
+  },
+  {
+   "i": 139,
+   "en": "or is the market overreacting?”",
+   "zh": "还是市场反应过度了？”",
+   "ja": "それとも相場が過剰反応しているのか？」です。",
+   "ko": "아니면 시장이 과하게 반응하는 걸까?”예요."
+  },
+  {
+   "i": 140,
+   "en": "This is where the information we just covered is read together:",
+   "zh": "这时，就要把刚才讲的信息放在一起看：",
+   "ja": "ここで、これまでの情報を合わせて読みます。",
+   "ko": "여기서 앞서 다룬 정보를 함께 읽어요."
+  },
+  {
+   "i": 141,
+   "en": "has the company's quality changed,",
+   "zh": "公司质量有没有变化，",
+   "ja": "企業の質は変わったか、",
+   "ko": "기업 품질이 바뀌었는지,"
+  },
+  {
+   "i": 142,
+   "en": "is the price already far below Fair Value,",
+   "zh": "价格是否已经远低于Fair Value，",
+   "ja": "価格はすでにFair Valueを大きく下回っているか、",
+   "ko": "가격이 이미 Fair Value보다 훨씬 낮은지,"
+  },
+  {
+   "i": 143,
+   "en": "and does the news really affect the business?",
+   "zh": "以及这条新闻是否真的影响到业务。",
+   "ja": "そのニュースは本当にビジネスに影響するか。",
+   "ko": "그 뉴스가 정말 사업에 영향을 주는지요."
+  },
+  {
+   "i": 144,
+   "en": "If the investment reasons still hold,",
+   "zh": "如果投资理由依然成立，",
+   "ja": "投資の理由がまだ有効なら、",
+   "ko": "투자 이유가 여전히 유효하다면,"
+  },
+  {
+   "i": 145,
+   "en": "a price drop isn't necessarily a reason to panic too.",
+   "zh": "价格下跌不一定是跟着恐慌的理由。",
+   "ja": "価格の下落は、一緒に慌てる理由になるとは限りません。",
+   "ko": "가격 하락이 꼭 같이 패닉할 이유는 아니에요."
+  },
+  {
+   "i": 146,
+   "en": "Even for long-term money set aside to look for opportunities,",
+   "zh": "甚至对于专门用来寻找机会的长期资金来说，",
+   "ja": "さらに、チャンスを探すために用意した長期資金なら、",
+   "ko": "더 나아가, 기회를 찾으려고 마련해 둔 장기 자금이라면,"
+  },
+  {
+   "i": 147,
+   "en": "conditions like these can start to be watched, step by step.",
+   "zh": "这样的情况可以开始逐步关注。",
+   "ja": "こうした状況に少しずつ目を向け始めてもいいでしょう。",
+   "ko": "이런 상황을 조금씩 눈여겨보기 시작할 수도 있어요."
+  },
+  {
+   "i": 148,
+   "en": "Not emergency funds, not money you'll need soon,",
+   "zh": "不是应急资金，不是马上要用的钱，",
+   "ja": "生活防衛資金でも、すぐ使うお金でもなく、",
+   "ko": "비상금도, 곧 써야 할 돈도 아니고,"
+  },
+  {
+   "i": 149,
+   "en": "and still not an automatic decision.",
+   "zh": "而且这仍然不是一个自动的决定。",
+   "ja": "それでも自動的に決まる判断ではありません。",
+   "ko": "그래도 자동으로 내리는 결정은 아니에요."
+  },
+  {
+   "i": 150,
+   "en": "Prices fall either way, but the context can be very different.",
+   "zh": "价格同样在跌，但背景可能截然不同。",
+   "ja": "どちらも価格は下がっていますが、背景は大きく違うことがあります。",
+   "ko": "가격이 떨어지는 건 같아도, 맥락은 아주 다를 수 있어요."
+  },
+  {
+   "i": 151,
+   "en": "So our relationship is simple: Tuntun helps, you decide.",
+   "zh": "所以，我们的关系很简单：Tuntun来帮忙，你来做决定。",
+   "ja": "つまり関係はシンプル。Tuntunが手助けし、決めるのはあなたです。",
+   "ko": "그러니까 우리 관계는 간단해요. Tuntun은 돕고, 결정은 여러분이 해요."
+  },
+  {
+   "i": 152,
+   "en": "Tuntun doesn't press the buy button for you.",
+   "zh": "Tuntun不会替你按下买入键。",
+   "ja": "Tuntunがあなたの代わりに買いボタンを押すことはありません。",
+   "ko": "Tuntun이 대신 매수 버튼을 누르지 않아요."
+  },
+  {
+   "i": 153,
+   "en": "Tuntun doesn't press the sell button either.",
+   "zh": "Tuntun也不会替你按下卖出键。",
+   "ja": "Tuntunが売りボタンを押すこともありません。",
+   "ko": "Tuntun이 매도 버튼을 누르지도 않아요."
+  },
+  {
+   "i": 154,
+   "en": "Tuntun helps show information you can",
+   "zh": "Tuntun帮助你呈现一些信息，",
+   "ja": "Tuntunは、よりクリアに考えるために",
+   "ko": "Tuntun은 더 명확하게 생각하는 데"
+  },
+  {
+   "i": 155,
+   "en": "use to think more clearly:",
+   "zh": "让你能更清醒地思考：",
+   "ja": "使える情報を示す手助けをします。",
+   "ko": "쓸 수 있는 정보를 보여 주도록 도와요."
+  },
+  {
+   "i": 156,
+   "en": "company quality, Fair Value, the impact of an event,",
+   "zh": "公司质量、Fair Value、事件的影响、",
+   "ja": "企業の質、Fair Value、出来事の影響、",
+   "ko": "기업 품질, Fair Value, 사건의 영향,"
+  },
+  {
+   "i": 157,
+   "en": "trading activity, and market conditions.",
+   "zh": "交易活跃度和市场状况。",
+   "ja": "売買の活発さ、そして相場の状況です。",
+   "ko": "거래 활동, 그리고 시장 상황이요."
+  },
+  {
+   "i": 158,
+   "en": "But none of that information is a certainty.",
+   "zh": "但所有这些信息都不是确定的答案。",
+   "ja": "でも、そうした情報はどれも確実なものではありません。",
+   "ko": "하지만 그 모든 정보도 확실한 건 아니에요."
+  },
+  {
+   "i": 159,
+   "en": "Prices can still fall below Fair Value.",
+   "zh": "价格仍可能跌破Fair Value。",
+   "ja": "価格はFair Valueを下回ることもあります。",
+   "ko": "가격은 Fair Value 아래로 떨어질 수도 있어요."
+  },
+  {
+   "i": 160,
+   "en": "A market that's already cheap can still get cheaper.",
+   "zh": "已经便宜的市场，也可能变得更便宜。",
+   "ja": "すでに割安な相場が、さらに割安になることもあります。",
+   "ko": "이미 싼 시장도 더 싸질 수 있어요."
+  },
+  {
+   "i": 161,
+   "en": "That's why Tuntun doesn't promise prices will definitely",
+   "zh": "所以，Tuntun不承诺价格一定",
+   "ja": "だからTuntunは、価格が必ず上がると約束したり、",
+   "ko": "그래서 Tuntun은 가격이 반드시 오른다고 약속하거나"
+  },
+  {
+   "i": 162,
+   "en": "rise, or give you decisions you have to follow.",
+   "zh": "上涨，也不会给出你必须照做的决定。",
+   "ja": "従うべき判断を押しつけたりはしません。",
+   "ko": "따라야 할 결정을 내려 주지 않아요."
+  },
+  {
+   "i": 163,
+   "en": "The goal is simple: when your friend tells you to act fast,",
+   "zh": "目的很简单：当朋友催你马上行动时，",
+   "ja": "目的はシンプルです。友だちに今すぐ動けと言われたとき、",
+   "ko": "목적은 간단해요. 친구가 당장 움직이라고 할 때,"
+  },
+  {
+   "i": 164,
+   "en": "you have something to look at first.",
+   "zh": "你有可以先看一看的东西。",
+   "ja": "まず見るべきものが手元にあること。",
+   "ko": "먼저 볼 수 있는 무언가가 있도록요."
+  },
+  {
+   "i": 165,
+   "en": "Tuntun helps provide context.",
+   "zh": "Tuntun帮助提供背景。",
+   "ja": "Tuntunは背景を示す手助けをします。",
+   "ko": "Tuntun은 맥락을 제공하도록 도와요."
+  },
+  {
+   "i": 166,
+   "en": "The decision stays in your hands.",
+   "zh": "决定权仍在你手中。",
+   "ja": "決めるのは、あなた自身です。",
+   "ko": "결정은 여전히 여러분의 손에 있어요."
+  },
+  {
+   "i": 167,
+   "en": "That's what it means to Invest with Guidance with Tuntun.",
+   "zh": "这就是和Tuntun一起Invest with Guidance的意义。",
+   "ja": "それが、Tuntunとの「Invest with Guidance」の意味です。",
+   "ko": "이것이 Tuntun과 함께하는 Invest with Guidance의 의미예요."
+  },
+  {
+   "i": 168,
+   "en": "If you want to learn more and",
+   "zh": "如果你想进一步学习，",
+   "ja": "もっと学びたい、",
+   "ko": "더 배우고 싶고,"
+  },
+  {
+   "i": 169,
+   "en": "understand investing with a deeper approach,",
+   "zh": "用更深入的方法理解投资，",
+   "ja": "より深いアプローチで投資を理解したいなら、",
+   "ko": "더 깊이 있는 방식으로 투자를 이해하고 싶다면,"
+  },
+  {
+   "i": 170,
+   "en": "you can continue to Module Value Investing.",
+   "zh": "可以继续学习Module Value Investing。",
+   "ja": "Module Value Investingに進んでください。",
+   "ko": "Module Value Investing으로 넘어가 보세요."
+  },
+  {
+   "i": 171,
+   "en": "There, we'll learn to understand the business behind a stock,",
+   "zh": "在那里，我们会学习理解一只股票背后的业务，",
+   "ja": "そこでは、株の裏にあるビジネスを理解し、",
+   "ko": "거기서는 주식 뒤에 있는 사업을 이해하고,"
+  },
+  {
+   "i": 172,
+   "en": "judge a fair price to pay, deal with market moves,",
+   "zh": "判断值得付出的合理价格，应对市场波动，",
+   "ja": "払う価値のある価格を見極め、相場の動きに向き合い、",
+   "ko": "지불할 만한 가격을 판단하고, 시장 움직임에 대처하고,"
+  },
+  {
+   "i": 173,
+   "en": "and recognize companies we truly understand.",
+   "zh": "并识别出我们真正了解的公司。",
+   "ja": "本当に理解できる企業を見分ける方法を学びます。",
+   "ko": "우리가 정말 이해하는 기업을 알아보는 법을 배울 거예요."
+  }
+ ]
+}

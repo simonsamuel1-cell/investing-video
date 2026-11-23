@@ -2,6 +2,8 @@
 
   python3 docs/subtitles/build.py            check, then write the SRTs + the review PDF
   python3 docs/subtitles/build.py --check    only check
+  python3 docs/subtitles/build.py --keys IN01,IN04,IN07    another set (Simon, 19 Nov 2026: the Investing 101 videos;
+                                                            their id/ JSONs come from extract_in.py)
 
 In:  id/<KEY>.json (extract_id.py), tr/<KEY>.json (translations), tr/CTA.json (the shared CTA clip), glossary.md
 Out: ~/Documents/01 Academy/SRT/<Video name>_<ID|EN|CH|JP|KR>.srt, and one review PDF comparing every language.
@@ -11,6 +13,11 @@ import html, json, os, subprocess, sys, tempfile
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.expanduser("~/Documents/01 Academy/SRT")
 KEYS = ["TA01", "TA03", "TA05", "TA07", "TA09", "TA11"]
+# --no-split: every language keeps the video's own cues 1:1 (same count, same timestamps), as the Investing 101 crosscheck
+# reference does (Simon, 19 Nov 2026); a long line wraps onto two lines instead of becoming two subtitles.
+NO_SPLIT = "--no-split" in sys.argv
+if "--keys" in sys.argv:
+    KEYS = sys.argv[sys.argv.index("--keys") + 1].split(",")
 LANGS = [("id", "ID"), ("en", "EN"), ("zh", "CH"), ("ja", "JP"), ("ko", "KR")]
 CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 # Terms that must not survive untranslated in ZH/JA/KO (Simon: "Terjemahkan").
@@ -82,7 +89,7 @@ def pieces(r, lang):
     the middle, the time shared by text length, so each half still fits two lines."""
     t = r[lang].strip()
     # the Indonesian stays exactly as burned into the video: same cues, same timing
-    if lang == "id" or len(t) <= 2 * LIMIT[lang]:
+    if lang == "id" or NO_SPLIT or len(t) <= 2 * LIMIT[lang]:
         return [(r["start"], r["end"], t)]
     mid = len(t) / 2
     seps = "。！？，、；：" if lang in ("zh", "ja") else ".!?,;:"
@@ -146,16 +153,17 @@ def write_pdf():
     for key in KEYS:
         name, rows = load(key)
         names.append((key, name, rows))
-    cover = ["<h1>Review Subtitle — TA01, TA03, TA05, TA07, TA09, TA11</h1>",
-             "<p>Perbandingan subtitle tiap video dalam 5 bahasa: Indonesia (ID), Inggris US (EN), Mandarin simplified (CH), Jepang (JP), Korea (KR). Setiap baris = satu subtitle di file SRT, dengan waktu yang sama persis di semua bahasa (mengikuti file video final di Hasil/: intro, episode, outro &ldquo;Di video selanjutnya&rdquo;, lalu CTA).</p>",
+    has_cta = any(r["part"] == "cta" for _, _, rows in names for r in rows)
+    cover = [f"<h1>Review Subtitle — {', '.join(KEYS)}</h1>",
+             "<p>Perbandingan subtitle tiap video dalam 5 bahasa: Indonesia (ID), Inggris US (EN), Mandarin simplified (CH), Jepang (JP), Korea (KR). Setiap baris = satu subtitle di file SRT, dengan waktu yang sama persis di semua bahasa (mengikuti video final: intro, episode, outro &ldquo;Di video selanjutnya&rdquo;" + (", lalu CTA" if has_cta else "") + ").</p>",
              "<ul>"]
     for key, name, rows in names:
         n = {p: sum(1 for r in rows if r["part"] == p) for p in ("episode", "outro", "cta")}
         cover.append(f"<li><b>{key}</b> — {html.escape(name)}: {len(rows)} baris ({n['episode']} episode, {n['outro']} outro, {n['cta']} CTA)</li>")
     cover += ["</ul>",
               "<p><b>Catatan:</b></p><ul>",
-              "<li>Baris CTA (Chart Pro) sama di semua video, jadi ditampilkan sekali di bagian terakhir; di file SRT tiap video tetap lengkap.</li>",
-              "<li>TA05: tiga baris dengan kata &ldquo;timeframe&rdquo; yang salah tempat di subtitle video sudah diperbaiki di SRT (video belum diubah).</li>",
+              *(["<li>Baris CTA (Chart Pro) sama di semua video, jadi ditampilkan sekali di bagian terakhir; di file SRT tiap video tetap lengkap.</li>"] if has_cta else []),
+              *(["<li>TA05: tiga baris dengan kata &ldquo;timeframe&rdquo; yang salah tempat di subtitle video sudah diperbaiki di SRT (video belum diubah).</li>"] if "TA05" in KEYS else []),
               "<li>Istilah teknikal diterjemahkan ke istilah lokal (glossary terlampir di repo: docs/subtitles/glossary.md). Terjemahan dibuat oleh AI — disarankan dicek native speaker untuk CH/JP/KR; kolom Catatan kosong untuk itu.</li>",
               "<li>Baris berlatar ungu muda = outro &ldquo;Di video selanjutnya&rdquo;.</li></ul>"]
     parts.append("".join(cover))
@@ -163,14 +171,15 @@ def write_pdf():
         body = "".join(row_html(r["i"], r) for r in rows if r["part"] != "cta")
         parts.append(f"<h2>{key} — {html.escape(name)}</h2><table>{cols}{head}<tbody>{body}</tbody></table>")
     cta_rows = [r for r in names[0][2] if r["part"] == "cta"]
-    first = cta_rows[0]["start"]
-    body = "".join(row_html(i + 1, dict(r, start=r["start"] - first, end=r["end"] - first)) for i, r in enumerate(cta_rows))
-    parts.append(f"<h2>CTA — Chart Pro (sama di semua video; waktu dari awal klip CTA)</h2><table>{cols}{head}<tbody>{body}</tbody></table>")
+    if cta_rows:
+        first = cta_rows[0]["start"]
+        body = "".join(row_html(i + 1, dict(r, start=r["start"] - first, end=r["end"] - first)) for i, r in enumerate(cta_rows))
+        parts.append(f"<h2>CTA — Chart Pro (sama di semua video; waktu dari awal klip CTA)</h2><table>{cols}{head}<tbody>{body}</tbody></table>")
     doc = f"<!doctype html><html><head><meta charset='utf-8'><style>{css}</style></head><body>{''.join(parts)}</body></html>"
     os.makedirs(OUT, exist_ok=True)
     tmp = os.path.join(tempfile.mkdtemp(), "review.html")
     open(tmp, "w", encoding="utf-8").write(doc)
-    pdf = os.path.join(OUT, "Review Subtitle - TA01 TA03 TA05 TA07 TA09 TA11.pdf")
+    pdf = os.path.join(OUT, f"Review Subtitle - {' '.join(KEYS)}.pdf")
     subprocess.run([CHROME, "--headless=new", "--disable-gpu", "--no-pdf-header-footer", f"--user-data-dir={tempfile.mkdtemp()}",
                     f"--print-to-pdf={pdf}", "file://" + tmp], check=True, capture_output=True)
     print("PDF →", pdf)
@@ -183,4 +192,5 @@ if __name__ == "__main__":
     print(f"{len(probs)} problem(s)")
     if "--check" not in sys.argv:
         write_srts()
-        write_pdf()
+        if "--no-pdf" not in sys.argv:  # IN videos: one crosscheck PDF each from review_in.py instead
+            write_pdf()
