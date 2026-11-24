@@ -12,7 +12,7 @@
  * a card that is being dealt, one that is opening into a chart, and one that is
  * standing there already done.
  */
-import { interpolateColors } from "remotion";
+import { interpolateColors, Interactive } from "remotion";
 import { theme, useMotion, usePalette, useShadow } from "../../../core";
 import { CARD_ROW } from "../data/layout";
 
@@ -74,7 +74,8 @@ export const MistakeCard = ({
   const digit = done ? theme.color.liquidCyanInk : theme.color.liquidInk;
 
   return (
-    <div
+    <Interactive.Div
+      name="Objek"
       style={{
         position: "absolute",
         left: box.x,
@@ -95,7 +96,13 @@ export const MistakeCard = ({
         <>
           {/* ⚠ FULL FILL, NOT A BLOB. A blob is ink spreading; this card is
               simply this colour now. */}
-          <div style={{ position: "absolute", inset: 0, background: theme.color.liquidCyan }} />
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: theme.color.liquidCyan,
+            }}
+          />
           {/* ⚠ AND A LITTLE WHITE OFF THE TOP — Simon. It keeps the bottom-up
               reading every other card in this row has, so a finished card still
               belongs to the same set of objects. */}
@@ -109,7 +116,8 @@ export const MistakeCard = ({
         </>
       )}
       {!done && wet * drain > 0.001 && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             opacity: drain,
@@ -129,7 +137,8 @@ export const MistakeCard = ({
           masking is FOR — a numeral this size placed safely inside the card is
           just a big grey digit, while one the card crops reads as a page
           number printed under everything else. */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: box.w / 2 + NUM.dx,
@@ -142,17 +151,20 @@ export const MistakeCard = ({
           fontWeight: 800,
           lineHeight: 1,
           /** ⚠ IT TAKES THE FLOOD'S COLOUR ON THE SAME CURVE AS THE FLOOD. */
-          color: done ? digit : interpolateColors(wet, [0, 1], [c.muted, digit]),
+          color: done
+            ? digit
+            : interpolateColors(wet, [0, 1], [c.muted, digit]),
           opacity: drain,
         }}
       >
         {n}
-      </div>
+      </Interactive.Div>
 
       {/* ⚠ THE TITLE STAYS DARK. The flood is a bottom-up thing and the title is
           at the top; a white copy cross-faded in under it would be white type on
           the pale part of the card, which is type that is not there. */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: m.sec(0.4),
@@ -168,7 +180,7 @@ export const MistakeCard = ({
         }}
       >
         {title}
-      </div>
-    </div>
+      </Interactive.Div>
+    </Interactive.Div>
   );
 };

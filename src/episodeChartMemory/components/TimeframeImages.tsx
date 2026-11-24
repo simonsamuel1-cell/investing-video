@@ -154,7 +154,7 @@ export const BbcaImage = ({
   if (opacity <= 0.001) return null;
   const w = slot.h * ASPECT;
   return (
-    <Img
+    <Img showInTimeline={false}
       src={staticFile(BBCA[index])}
       style={{
         position: "absolute",

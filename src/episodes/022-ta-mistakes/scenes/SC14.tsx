@@ -15,9 +15,16 @@
  * ⚠ f12526 HAS NO AIR. "…copy trade orang lain." runs straight into "Sahamnya
  * mungkin sama," — the two cards must already be standing there.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Card, Line, Stage, textReveal, progress, theme, useMotion, usePalette,
+  Card,
+  Stage,
+  textReveal,
+  progress,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, COPY, local } from "../data/timing";
 import { tradeCards } from "../data/layout";
@@ -93,7 +100,9 @@ export const SC14 = () => {
                   transform: `translateY(${rv.dy}px)`,
                 }}
               >
-                <span style={{ fontSize: theme.text.tag.size, color: c.muted }}>{r.label}</span>
+                <span style={{ fontSize: theme.text.tag.size, color: c.muted }}>
+                  {r.label}
+                </span>
                 <span
                   style={{
                     fontSize: theme.text.body.size,

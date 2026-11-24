@@ -5,7 +5,8 @@
  * things that make it round three: the platform is the picture that leaves, it
  * leaves UPWARD (Simon), and the pointer picks the third card.
  */
-import { Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+
 import { BLOCK, ROW3 } from "../data/timing";
 import { SceneTransition, assertTransition } from "./SceneTransition";
 import { Platform } from "./Platform";

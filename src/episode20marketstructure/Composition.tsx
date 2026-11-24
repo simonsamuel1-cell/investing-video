@@ -25,15 +25,8 @@
  * CSV) and components/AppSummaryPanel.tsx (SC17's screen recording).
  */
 import React, { useContext } from "react";
-import {
-  AbsoluteFill,
-  Audio,
-  Freeze,
-  random,
-  Sequence,
-  staticFile,
-  useCurrentFrame,
-} from "remotion";
+import { LockedSequence as Sequence } from "../core/nudge";
+import { AbsoluteFill, Audio, Freeze, random, staticFile, useCurrentFrame } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";

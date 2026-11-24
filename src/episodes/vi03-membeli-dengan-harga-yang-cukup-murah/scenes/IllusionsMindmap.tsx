@@ -1,8 +1,14 @@
 /** Motion board: docs/vi-style/storyboards/VI03-SC07-mindmap.svg.
  * The branch tips retain their identity as the map grows (Jobster); the active
  * connection traces from the root to the example (Ancrid). */
+import { CardE as Card, PicE as Pic } from "../../../editable";
 import type { ReactNode } from "react";
-import { staticFile, useCurrentFrame, interpolateColors } from "remotion";
+import {
+  staticFile,
+  useCurrentFrame,
+  interpolateColors,
+  Interactive,
+} from "remotion";
 import {
   HighlightBox,
   INTRO_FRAMES,
@@ -13,16 +19,23 @@ import {
   useMotion,
   usePalette,
 } from "../../../core";
-import {
-  BoardGrid,
-  Card,
-  Pic,
-  ease,
-  useWords,
-} from "../components/kit";
+import { BoardGrid, ease, useWords } from "../components/kit";
 import { BLOCK } from "../data/timing";
-import { CandleRun, RUN, RUN_LAST, RUN_TOP, runX, runY } from "../components/CandleRunChart";
-import { APP_PART, BBCA_FAIR_VALUE, CompanyQualityCut, FairValueCut, appPartSize } from "../components/AppCardParts";
+import {
+  CandleRun,
+  RUN,
+  RUN_LAST,
+  RUN_TOP,
+  runX,
+  runY,
+} from "../components/CandleRunChart";
+import {
+  APP_PART,
+  BBCA_FAIR_VALUE,
+  CompanyQualityCut,
+  FairValueCut,
+  appPartSize,
+} from "../components/AppCardParts";
 import {
   BUSINESS_CHAIN_BOX,
   BusinessChain,
@@ -58,7 +71,13 @@ const OFFICE = { pad: 30, left: 40 };
 const BUSINESS_ART: "chain" | "office" = "chain";
 /** the chain: its box 30 px clear of the card's top and bottom, centred; on "Karena bisnisnya" it shrinks into the card's left,
  * 40 px in, clear of the quote (767); the factory first, the chain 0.45 s later, the packs running from 0.9 s */
-const CHAIN_FIT = { pad: 30, left: 40, right: 727, chainAt: 0.45, packsAt: 0.9 };
+const CHAIN_FIT = {
+  pad: 30,
+  left: 40,
+  right: 727,
+  chainAt: 0.45,
+  packsAt: 0.9,
+};
 const ink = theme.color;
 const branches = [
   ["Pertama", "Cerita bisnis"],
@@ -193,7 +212,8 @@ function Business() {
   return (
     <>
       {BUSINESS_ART === "office" ? (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: officeX - ((x0 + x1) / 2) * k,
@@ -201,9 +221,10 @@ function Business() {
           }}
         >
           <CompanyTwoFloors width={COMPANY_TWO_FLOORS.w * k} parts={parts} />
-        </div>
+        </Interactive.Div>
       ) : (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: 0,
@@ -220,7 +241,7 @@ function Business() {
             factory={ease(f, buildAt, m.reveal)}
             chain={ease(f, buildAt + m.sec(CHAIN_FIT.chainAt), m.reveal)}
           />
-        </div>
+        </Interactive.Div>
       )}
       <div style={{ position: "absolute", inset: 0, opacity: quote * fade }}>
         <Card
@@ -298,7 +319,12 @@ const RUN_SIDE = {
 const RUN_LABEL_X = RUN_BOX.x + 200;
 /** each line starts at its label's "H" (Simon 18 Nov: "paling kirinya berhenti di huruf H"): the labels' half widths at 30 px,
  * measured on the rendered frame (left edges 518 / 513 in the card); the lines long dashes, not dots ("panjang dan putus putus") */
-const RUN_LINE = { topFrom: RUN_LABEL_X - 102, nowFrom: RUN_LABEL_X - 107, dash: "14 10", value: 50 };
+const RUN_LINE = {
+  topFrom: RUN_LABEL_X - 102,
+  nowFrom: RUN_LABEL_X - 107,
+  dash: "14 10",
+  value: 50,
+};
 function Price() {
   const c = usePalette(),
     { on } = useBeat();
@@ -320,41 +346,114 @@ function Price() {
         {/* the top and today: dotted lines across the chart */}
         {topLine > 0.001 ? (
           <g opacity={old}>
-            <line x1={RUN_LINE.topFrom} y1={yTop} x2={mix(RUN_LINE.topFrom, RUN_SIDE.bracket + 14, topLine)} y2={yTop} stroke={c.ink} strokeWidth={2.5} strokeDasharray={RUN_LINE.dash} />
+            <line
+              x1={RUN_LINE.topFrom}
+              y1={yTop}
+              x2={mix(RUN_LINE.topFrom, RUN_SIDE.bracket + 14, topLine)}
+              y2={yTop}
+              stroke={c.ink}
+              strokeWidth={2.5}
+              strokeDasharray={RUN_LINE.dash}
+            />
           </g>
         ) : null}
         {nowLine > 0.001 ? (
-          <line x1={RUN_LINE.nowFrom} y1={yNow} x2={mix(RUN_LINE.nowFrom, RUN_SIDE.bracket + 14, nowLine)} y2={yNow} stroke={c.ink} strokeWidth={2.5} strokeDasharray={RUN_LINE.dash} />
+          <line
+            x1={RUN_LINE.nowFrom}
+            y1={yNow}
+            x2={mix(RUN_LINE.nowFrom, RUN_SIDE.bracket + 14, nowLine)}
+            y2={yNow}
+            stroke={c.ink}
+            strokeWidth={2.5}
+            strokeDasharray={RUN_LINE.dash}
+          />
         ) : null}
         <CandleRun box={RUN_BOX} upto={upto} />
         {/* the last candle's close, marked */}
-        <circle cx={xNow} cy={yNow} r={7} fill={c.cardBg} stroke={c.ink} strokeWidth={3} opacity={nowLine} />
+        <circle
+          cx={xNow}
+          cy={yNow}
+          r={7}
+          fill={c.cardBg}
+          stroke={c.ink}
+          strokeWidth={3}
+          opacity={nowLine}
+        />
         {/* the fall from the top, measured */}
         {/* the bracket drawn as one stroke with a trim path (Simon 18 Nov: "garis ini dikasih animasi trim path"): the top tick,
             down the side, the bottom tick */}
         {pct > 0.001 ? (
           <g opacity={old}>
-            <Trace d={`M ${RUN_SIDE.bracket - 10} ${yTop} H ${RUN_SIDE.bracket + 10}`} p={unit(pct / 0.15)} tone={ink.crossRed} weight={3} />
-            <Trace d={`M ${RUN_SIDE.bracket} ${yTop} V ${yNow}`} p={unit((pct - 0.15) / 0.7)} tone={ink.crossRed} weight={3} />
-            <Trace d={`M ${RUN_SIDE.bracket - 10} ${yNow} H ${RUN_SIDE.bracket + 10}`} p={unit((pct - 0.85) / 0.15)} tone={ink.crossRed} weight={3} />
+            <Trace
+              d={`M ${RUN_SIDE.bracket - 10} ${yTop} H ${RUN_SIDE.bracket + 10}`}
+              p={unit(pct / 0.15)}
+              tone={ink.crossRed}
+              weight={3}
+            />
+            <Trace
+              d={`M ${RUN_SIDE.bracket} ${yTop} V ${yNow}`}
+              p={unit((pct - 0.15) / 0.7)}
+              tone={ink.crossRed}
+              weight={3}
+            />
+            <Trace
+              d={`M ${RUN_SIDE.bracket - 10} ${yNow} H ${RUN_SIDE.bracket + 10}`}
+              p={unit((pct - 0.85) / 0.15)}
+              tone={ink.crossRed}
+              weight={3}
+            />
           </g>
         ) : null}
         {/* the business's value today: a dashed indigo line 50 px under today's price, drawn from the same "H" across to its
             name at the right (Simon 18 Nov: "buat garisnya 50px di bawah Harga sekarang … Label (?) nya gausah") */}
         {current > 0.001 ? (
-          <line x1={RUN_LINE.nowFrom} y1={yNow + RUN_LINE.value} x2={mix(RUN_LINE.nowFrom, RUN_SIDE.valueLineTo, current)} y2={yNow + RUN_LINE.value} stroke={c.indigo} strokeWidth={2.5} strokeDasharray={RUN_LINE.dash} />
+          <line
+            x1={RUN_LINE.nowFrom}
+            y1={yNow + RUN_LINE.value}
+            x2={mix(RUN_LINE.nowFrom, RUN_SIDE.valueLineTo, current)}
+            y2={yNow + RUN_LINE.value}
+            stroke={c.indigo}
+            strokeWidth={2.5}
+            strokeDasharray={RUN_LINE.dash}
+          />
         ) : null}
       </Svg>
-      <Text x={RUN_LABEL_X} y={yTop - 24 + (1 - topLine) * 10} size={30} weight={600} opacity={topLine * old}>
+      <Text
+        x={RUN_LABEL_X}
+        y={yTop - 24 + (1 - topLine) * 10}
+        size={30}
+        weight={600}
+        opacity={topLine * old}
+      >
         Harga tertinggi
       </Text>
-      <Text x={RUN_LABEL_X} y={yNow - 24 + (1 - nowLine) * 10} size={30} weight={600} opacity={nowLine}>
+      <Text
+        x={RUN_LABEL_X}
+        y={yNow - 24 + (1 - nowLine) * 10}
+        size={30}
+        weight={600}
+        opacity={nowLine}
+      >
         Harga sekarang
       </Text>
-      <Text x={RUN_SIDE.label} y={(yTop + yNow) / 2 + (1 - pct) * 10} size={55} weight={700} color={ink.crossRed} opacity={pct * old}>
+      <Text
+        x={RUN_SIDE.label}
+        y={(yTop + yNow) / 2 + (1 - pct) * 10}
+        size={55}
+        weight={700}
+        color={ink.crossRed}
+        opacity={pct * old}
+      >
         −50%
       </Text>
-      <Text x={RUN_SIDE.value} y={yNow + RUN_LINE.value} size={30} weight={600} color={c.indigo} opacity={current}>
+      <Text
+        x={RUN_SIDE.value}
+        y={yNow + RUN_LINE.value}
+        size={30}
+        weight={600}
+        color={c.indigo}
+        opacity={current}
+      >
         Nilai bisnis saat ini
       </Text>
     </>
@@ -386,19 +485,49 @@ const TRAP = {
   /** the app card at 2.5 px a unit, on a card 14 px round it */
   k: 2.5,
   pad: 14,
-  chart: { barW: 70, barGap: 44, overhang: 22, full: 160, title: 34, titleTop: 20, titleGap: 42, label: 28, labelGap: 30, labelBottom: 16 },
+  chart: {
+    barW: 70,
+    barGap: 44,
+    overhang: 22,
+    full: 160,
+    title: 34,
+    titleTop: 20,
+    titleGap: 42,
+    label: 28,
+    labelGap: 30,
+    labelBottom: 16,
+  },
 };
-const TRAP_CHART_W = 3 * TRAP.chart.barW + 2 * TRAP.chart.barGap + 2 * TRAP.chart.overhang;
-const TRAP_CHART_H = TRAP.chart.titleTop + TRAP.chart.titleGap + TRAP.chart.full + TRAP.chart.labelGap + TRAP.chart.labelBottom;
+const TRAP_CHART_W =
+  3 * TRAP.chart.barW + 2 * TRAP.chart.barGap + 2 * TRAP.chart.overhang;
+const TRAP_CHART_H =
+  TRAP.chart.titleTop +
+  TRAP.chart.titleGap +
+  TRAP.chart.full +
+  TRAP.chart.labelGap +
+  TRAP.chart.labelBottom;
 const TRAP_CQ = appPartSize(APP_PART.cq, TRAP.k);
 const TRAP_FV = appPartSize(APP_PART.rfv, TRAP.k);
 const TRAP_CARD_H = TRAP_CQ.h + 2 * TRAP.pad;
-const TRAP_ROW_W = TRAP_CHART_W + TRAP.gap + TRAP_CQ.w + 2 * TRAP.pad + TRAP.gapCards + TRAP_FV.w + 2 * TRAP.pad;
+const TRAP_ROW_W =
+  TRAP_CHART_W +
+  TRAP.gap +
+  TRAP_CQ.w +
+  2 * TRAP.pad +
+  TRAP.gapCards +
+  TRAP_FV.w +
+  2 * TRAP.pad;
 const TRAP_Y = { row: panel.h / 2 };
 const TRAP_X = {
   chart: (panel.w - TRAP_ROW_W) / 2 + TRAP_CHART_W / 2,
   cq: (panel.w - TRAP_ROW_W) / 2 + TRAP_CHART_W + TRAP.gap,
-  fv: (panel.w - TRAP_ROW_W) / 2 + TRAP_CHART_W + TRAP.gap + TRAP_CQ.w + 2 * TRAP.pad + TRAP.gapCards,
+  fv:
+    (panel.w - TRAP_ROW_W) / 2 +
+    TRAP_CHART_W +
+    TRAP.gap +
+    TRAP_CQ.w +
+    2 * TRAP.pad +
+    TRAP.gapCards,
 };
 /** the chart's title, baseline and year labels, its height centred on the row */
 const TRAP_TITLE_Y = TRAP_Y.row - TRAP_CHART_H / 2 + TRAP.chart.titleTop;
@@ -410,9 +539,11 @@ const TRAP_YEARS = [
 ] as const;
 /** "Jebakan nilai" under the row, the two centred in the card: how far the row rises, where the name sits */
 const TRAP_NAME_H = TRAP.trap.size * 1.15;
-const TRAP_PAIR_TOP = (panel.h - (TRAP_CHART_H + TRAP.trap.gap + TRAP_NAME_H)) / 2;
+const TRAP_PAIR_TOP =
+  (panel.h - (TRAP_CHART_H + TRAP.trap.gap + TRAP_NAME_H)) / 2;
 const TRAP_RISE = TRAP_Y.row - (TRAP_PAIR_TOP + TRAP_CHART_H / 2);
-const TRAP_NAME_Y = TRAP_PAIR_TOP + TRAP_CHART_H + TRAP.trap.gap + TRAP_NAME_H / 2;
+const TRAP_NAME_Y =
+  TRAP_PAIR_TOP + TRAP_CHART_H + TRAP.trap.gap + TRAP_NAME_H / 2;
 function Trap() {
   const c = usePalette(),
     { f, m, W, on } = useBeat();
@@ -430,44 +561,112 @@ function Trap() {
   const cardTop = TRAP_Y.row - TRAP_CARD_H / 2;
   return (
     <>
-      <Text x={center} y={panel.h / 2} size={TRAP.sum.size} weight={700} color={c.indigo} opacity={sumIn * (1 - sumOut)}>
+      <Text
+        x={center}
+        y={panel.h / 2}
+        size={TRAP.sum.size}
+        weight={700}
+        color={c.indigo}
+        opacity={sumIn * (1 - sumOut)}
+      >
         Rasio makin rendah,
         <br />
         bisnis makin buruk
       </Text>
-      <div style={{ position: "absolute", inset: 0, transform: `translateY(${(-TRAP_RISE * trap).toFixed(2)}px)` }}>
-      {/* "Laba": 2024, 2025, 2026, each half the year before, all growing from 0 at once */}
-      <Text x={TRAP_X.chart} y={TRAP_TITLE_Y} size={ch.title} weight={700} opacity={chartIn}>
-        Laba
-      </Text>
-      <Svg>
-        <line
-          x1={TRAP_X.chart - TRAP_CHART_W / 2}
-          y1={TRAP_BASE}
-          x2={TRAP_X.chart + TRAP_CHART_W / 2}
-          y2={TRAP_BASE}
-          stroke={c.ink}
-          strokeWidth={2.5}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${(-TRAP_RISE * trap).toFixed(2)}px)`,
+        }}
+      >
+        {/* "Laba": 2024, 2025, 2026, each half the year before, all growing from 0 at once */}
+        <Text
+          x={TRAP_X.chart}
+          y={TRAP_TITLE_Y}
+          size={ch.title}
+          weight={700}
           opacity={chartIn}
-        />
-        {TRAP_YEARS.map(({ year, share }, i) => {
-          const h = ch.full * share * grow;
-          return h > 0.5 ? <rect key={year} x={barX(i) - ch.barW / 2} y={TRAP_BASE - h} width={ch.barW} height={h} rx={Math.min(12, h / 2)} fill={c.indigo} /> : null;
-        })}
-      </Svg>
-      {TRAP_YEARS.map(({ year }, i) => (
-        <Text key={year} x={barX(i)} y={TRAP_BASE + ch.labelGap} size={ch.label} opacity={chartIn}>
-          {year}
+        >
+          Laba
         </Text>
-      ))}
-      <Card x={TRAP_X.cq} y={cardTop} w={TRAP_CQ.w + 2 * TRAP.pad} h={TRAP_CARD_H} line={ink.skeleton} style={{ opacity: cqIn }}>
-        <CompanyQualityCut k={TRAP.k} x={TRAP.pad - 2} y={TRAP.pad - 2} good={good} />
-      </Card>
-      <Card x={TRAP_X.fv} y={cardTop} w={TRAP_FV.w + 2 * TRAP.pad} h={TRAP_CARD_H} line={ink.skeleton} style={{ opacity: fvIn }}>
-        <FairValueCut k={TRAP.k} x={TRAP.pad - 2} y={TRAP.pad - 2} from={BBCA_FAIR_VALUE} to={[BBCA_FAIR_VALUE[0] / 2, BBCA_FAIR_VALUE[1] / 2]} p={down} />
-      </Card>
+        <Svg>
+          <line
+            x1={TRAP_X.chart - TRAP_CHART_W / 2}
+            y1={TRAP_BASE}
+            x2={TRAP_X.chart + TRAP_CHART_W / 2}
+            y2={TRAP_BASE}
+            stroke={c.ink}
+            strokeWidth={2.5}
+            opacity={chartIn}
+          />
+          {TRAP_YEARS.map(({ year, share }, i) => {
+            const h = ch.full * share * grow;
+            return h > 0.5 ? (
+              <rect
+                key={year}
+                x={barX(i) - ch.barW / 2}
+                y={TRAP_BASE - h}
+                width={ch.barW}
+                height={h}
+                rx={Math.min(12, h / 2)}
+                fill={c.indigo}
+              />
+            ) : null;
+          })}
+        </Svg>
+        {TRAP_YEARS.map(({ year }, i) => (
+          <Text
+            key={year}
+            x={barX(i)}
+            y={TRAP_BASE + ch.labelGap}
+            size={ch.label}
+            opacity={chartIn}
+          >
+            {year}
+          </Text>
+        ))}
+        <Card
+          x={TRAP_X.cq}
+          y={cardTop}
+          w={TRAP_CQ.w + 2 * TRAP.pad}
+          h={TRAP_CARD_H}
+          line={ink.skeleton}
+          style={{ opacity: cqIn }}
+        >
+          <CompanyQualityCut
+            k={TRAP.k}
+            x={TRAP.pad - 2}
+            y={TRAP.pad - 2}
+            good={good}
+          />
+        </Card>
+        <Card
+          x={TRAP_X.fv}
+          y={cardTop}
+          w={TRAP_FV.w + 2 * TRAP.pad}
+          h={TRAP_CARD_H}
+          line={ink.skeleton}
+          style={{ opacity: fvIn }}
+        >
+          <FairValueCut
+            k={TRAP.k}
+            x={TRAP.pad - 2}
+            y={TRAP.pad - 2}
+            from={BBCA_FAIR_VALUE}
+            to={[BBCA_FAIR_VALUE[0] / 2, BBCA_FAIR_VALUE[1] / 2]}
+            p={down}
+          />
+        </Card>
       </div>
-      <Text x={center} y={TRAP_NAME_Y + (1 - trap) * 10} size={TRAP.trap.size} weight={700} color={c.indigo} opacity={trap}>
+      <Text
+        x={center}
+        y={TRAP_NAME_Y + (1 - trap) * 10}
+        size={TRAP.trap.size}
+        weight={700}
+        color={c.indigo}
+        opacity={trap}
+      >
         Jebakan nilai
       </Text>
     </>
@@ -492,12 +691,40 @@ const SHOTS = {
 };
 const SHOT_K = (DIV_CARD_H - 2 * SHOTS.margin) / SHOTS.revenue.h;
 const SHOT_W = SHOTS.dividend.w * SHOT_K;
-const SHOT_X = { alone: center - SHOT_W / 2, left: center - SHOT_W - SHOTS.gap / 2, right: center + SHOTS.gap / 2 };
-function AppShot({ shot, x, opacity }: { shot: typeof SHOTS.dividend; x: number; opacity: number }) {
+const SHOT_X = {
+  alone: center - SHOT_W / 2,
+  left: center - SHOT_W - SHOTS.gap / 2,
+  right: center + SHOTS.gap / 2,
+};
+function AppShot({
+  shot,
+  x,
+  opacity,
+}: {
+  shot: typeof SHOTS.dividend;
+  x: number;
+  opacity: number;
+}) {
   const h = shot.h * SHOT_K;
   return opacity > 0.001 ? (
-    <Card x={x} y={SHOTS.margin} w={SHOT_W} h={h} line={ink.skeleton} style={{ opacity, overflow: "hidden" }}>
-      <Pic src={staticFile(shot.src)} style={{ position: "absolute", left: -2, top: -2, width: SHOT_W, height: h }} />
+    <Card
+      x={x}
+      y={SHOTS.margin}
+      w={SHOT_W}
+      h={h}
+      line={ink.skeleton}
+      style={{ opacity, overflow: "hidden" }}
+    >
+      <Pic
+        src={staticFile(shot.src)}
+        style={{
+          position: "absolute",
+          left: -2,
+          top: -2,
+          width: SHOT_W,
+          height: h,
+        }}
+      />
     </Card>
   ) : null;
 }
@@ -524,7 +751,12 @@ function Dividend() {
       <AppShot shot={SHOTS.dividend} x={x} opacity={dividend} />
       <AppShot shot={SHOTS.revenue} x={SHOT_X.right} opacity={revenue} />
       <HighlightBox
-        rect={{ x1: x + DIV_2026.x1 * SHOT_K, y1: SHOTS.margin + DIV_2026.y1 * SHOT_K, x2: x + DIV_2026.x2 * SHOT_K, y2: SHOTS.margin + DIV_2026.y2 * SHOT_K }}
+        rect={{
+          x1: x + DIV_2026.x1 * SHOT_K,
+          y1: SHOTS.margin + DIV_2026.y1 * SHOT_K,
+          x2: x + DIV_2026.x2 * SHOT_K,
+          y2: SHOTS.margin + DIV_2026.y2 * SHOT_K,
+        }}
         opacity={hl}
         fill="none"
         width={4}
@@ -574,7 +806,11 @@ function Hold() {
         h={q.h + 2 * HOLD_CQ.pad * kq}
         line={ink.skeleton}
       >
-        <CompanyQualityCut k={kq} x={HOLD_CQ.pad * kq - 2} y={HOLD_CQ.pad * kq - 2} />
+        <CompanyQualityCut
+          k={kq}
+          x={HOLD_CQ.pad * kq - 2}
+          y={HOLD_CQ.pad * kq - 2}
+        />
       </Card>
       <Pic
         src={staticFile("art/vi03/app/bbca-logo.png")}
@@ -683,10 +919,12 @@ export function SC07() {
   const mapOffset = rootY - 109;
   const spacing = 310,
     nodeY = 255 + mapOffset;
-  const narrow = ease(f, times[1], m.sec(0.6)) * (1 - ease(f, times[2] - m.fade, m.fade));
+  const narrow =
+    ease(f, times[1], m.sec(0.6)) * (1 - ease(f, times[2] - m.fade, m.fade));
   const cardW = mix(panel.w, PRICE_CARD_W, narrow);
   /** taller for "Dividen tinggi": from "Keempat" (once "Rasio rendah" has gone), back as the screens fade out */
-  const tall = ease(f, times[3], m.sec(0.6)) * (1 - ease(f, times[4] - m.fade, m.fade));
+  const tall =
+    ease(f, times[3], m.sec(0.6)) * (1 - ease(f, times[4] - m.fade, m.fade));
   const cardH = mix(panel.h, DIV_CARD_H, tall);
   const nodes = branches.map(([, label], i) => ({
     label,
@@ -709,83 +947,99 @@ export function SC07() {
       {/* everything over the background, 60 px lower: the white space above the title and under the card even within the safe
           area (title top 74 → 134, card foot 833 → 893, 80 px each from 54 and 972; Simon 18 Nov: "di geser turun deh, biar balance
           white space atas dan bawahnya"). The closing line is gone ("remove aja"). */}
-      <div style={{ position: "absolute", inset: 0, transform: `translateY(${LAYOUT_DY}px)` }}>
-      <Text
-        x={mid}
-        y={rootY}
-        size={mix(106, 64, dock)}
-        color={c.indigo}
-        weight={700}
-        opacity={on("Ada lima", 0.52)}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${LAYOUT_DY}px)`,
+        }}
       >
-        Lima ilusi murah
-      </Text>
-      <Svg full>
-        {nodes.map(({ x }, i) => {
-          return (
-            <g key={i} transform={`translate(0 ${mapOffset})`}>
-              <Trace d={branchPath(x)} p={1} tone={ink.mute} weight={2} />
-            </g>
-          );
-        })}
-        {nodes.map(({ x, p, lit }, i) => {
-          return (
-            <g key={i} opacity={lit}>
-              <Trace d={branchPath(x)} p={p} tone={c.indigo} />
-              <Trace d={`M ${x} 289 V ${panel.y}`} p={p} tone={c.indigo} />
-            </g>
-          );
-        })}
-      </Svg>
-      {nodes.map(({ label, x, p, lit }, i) => (
-        <div key={label} style={{ position: "absolute", inset: 0 }}>
-          <Card
-            x={x - 143}
-            y={nodeY - 36}
-            w={286}
-            h={72}
-            style={{
-              background: interpolateColors(lit, [0, 1], [c.cardBg, c.indigo]),
-              boxShadow: `inset 0 0 0 2px ${interpolateColors(lit, [0, 1], [ink.skeleton, c.indigo])}`,
-            }}
-          />
-          <Text
-            x={x}
-            y={nodeY}
-            size={30}
-            color={interpolateColors(lit, [0, 1], [c.slate, c.cardBg])}
-          >
-            <span style={{ opacity: Math.abs(1 - 2 * p) }}>
-              {p < 0.5 ? i + 1 : label}
-            </span>
-          </Text>
-        </div>
-      ))}
-      {/* the card narrows round "Harga turun" (after "Cerita bisnis" has gone) and is back to full width as "Rasio rendah"
-          comes in (Simon 18 Nov) */}
-      <Card x={mid - cardW / 2} y={panel.y} w={cardW} h={cardH} style={{ opacity: opens[0] }} />
-      {views.map((View, i) => {
-        const t = times[i],
-          next = times[i + 1];
-        const p =
-          ease(f, t, m.fade) *
-          (next === undefined ? 1 : 1 - ease(f, next - m.fade, m.fade));
-        return p > 0 ? (
-          <div
-            key={t}
-            style={{
-              position: "absolute",
-              left: panel.x,
-              top: panel.y + mix(12, 0, p),
-              width: panel.w,
-              height: panel.h,
-              opacity: p,
-            }}
-          >
-            <View />
+        <Text
+          x={mid}
+          y={rootY}
+          size={mix(106, 64, dock)}
+          color={c.indigo}
+          weight={700}
+          opacity={on("Ada lima", 0.52)}
+        >
+          Lima ilusi murah
+        </Text>
+        <Svg full>
+          {nodes.map(({ x }, i) => {
+            return (
+              <g key={i} transform={`translate(0 ${mapOffset})`}>
+                <Trace d={branchPath(x)} p={1} tone={ink.mute} weight={2} />
+              </g>
+            );
+          })}
+          {nodes.map(({ x, p, lit }, i) => {
+            return (
+              <g key={i} opacity={lit}>
+                <Trace d={branchPath(x)} p={p} tone={c.indigo} />
+                <Trace d={`M ${x} 289 V ${panel.y}`} p={p} tone={c.indigo} />
+              </g>
+            );
+          })}
+        </Svg>
+        {nodes.map(({ label, x, p, lit }, i) => (
+          <div key={label} style={{ position: "absolute", inset: 0 }}>
+            <Card
+              x={x - 143}
+              y={nodeY - 36}
+              w={286}
+              h={72}
+              style={{
+                background: interpolateColors(
+                  lit,
+                  [0, 1],
+                  [c.cardBg, c.indigo],
+                ),
+                boxShadow: `inset 0 0 0 2px ${interpolateColors(lit, [0, 1], [ink.skeleton, c.indigo])}`,
+              }}
+            />
+            <Text
+              x={x}
+              y={nodeY}
+              size={30}
+              color={interpolateColors(lit, [0, 1], [c.slate, c.cardBg])}
+            >
+              <span style={{ opacity: Math.abs(1 - 2 * p) }}>
+                {p < 0.5 ? i + 1 : label}
+              </span>
+            </Text>
           </div>
-        ) : null;
-      })}
+        ))}
+        {/* the card narrows round "Harga turun" (after "Cerita bisnis" has gone) and is back to full width as "Rasio rendah"
+          comes in (Simon 18 Nov) */}
+        <Card
+          x={mid - cardW / 2}
+          y={panel.y}
+          w={cardW}
+          h={cardH}
+          style={{ opacity: opens[0] }}
+        />
+        {views.map((View, i) => {
+          const t = times[i],
+            next = times[i + 1];
+          const p =
+            ease(f, t, m.fade) *
+            (next === undefined ? 1 : 1 - ease(f, next - m.fade, m.fade));
+          return p > 0 ? (
+            <div
+              key={t}
+              style={{
+                position: "absolute",
+                left: panel.x,
+                top: panel.y + mix(12, 0, p),
+                width: panel.w,
+                height: panel.h,
+                opacity: p,
+              }}
+            >
+              <View />
+            </div>
+          ) : null;
+        })}
       </div>
     </Stage>
   );

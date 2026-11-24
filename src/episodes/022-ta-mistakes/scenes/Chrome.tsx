@@ -12,8 +12,9 @@
  * ⚠ TOP-LEFT, NEVER TOP-RIGHT. The 360×150 top-right belongs to the logo and
  * this chip is on screen for most of the episode.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { useCurrentFrame } from "remotion";
-import { Chip, Line, theme, useMotion, textReveal, usePalette } from "../../../core";
+import { Chip, theme, useMotion, textReveal, usePalette } from "../../../core";
 import { COUNTER, local } from "../data/timing";
 import { COUNTER_AT } from "../data/layout";
 
@@ -42,7 +43,10 @@ export const MistakeCounter = () => {
 
   return (
     /* keyed on the entry so each one arrives rather than morphing */
-    <div key={item.n} style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}>
+    <div
+      key={item.n}
+      style={{ opacity: r.opacity, transform: `translateY(${r.dy}px)` }}
+    >
       <Line
         text={`MISTAKE ${item.n}`}
         x={COUNTER_AT.x}

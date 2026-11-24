@@ -27,7 +27,7 @@ const NameBoard = () => {
 export const ShopWindow = ({ x, f, close = 1, shadow, children }: { x: number; f: number; close?: number; shadow: string; children?: React.ReactNode }) => (
   <div style={{ position: "absolute", left: x, top: SHOP.y, width: SHOP.w, height: SHOP.h, borderRadius: theme.shape.cardRadius, overflow: "hidden", boxShadow: shadow, background: `linear-gradient(to bottom, ${theme.color.worldMorning}, ${theme.color.worldWall})` }}>
     <div style={{ position: "absolute", inset: 0, filter: MONO, transform: `scale(${close.toFixed(4)})`, transformOrigin: `${artX(ART.her) + 80}px ${artTop + ART.pavement * ART.k}px` }}>
-      <Img src={staticFile("rizky/Value-Investing-V01/public/flat/toko/toko-dunia.svg")} style={{ position: "absolute", left: artX(ART.x0), top: artTop, width: ART.w * ART.k, height: ART.h * ART.k, maxWidth: "none" }} />
+      <Img showInTimeline={false} src={staticFile("rizky/Value-Investing-V01/public/flat/toko/toko-dunia.svg")} style={{ position: "absolute", left: artX(ART.x0), top: artTop, width: ART.w * ART.k, height: ART.h * ART.k, maxWidth: "none" }} />
       <NameBoard />
       <IbuSari x={artX(ART.her)} ground={artTop + ART.pavement * ART.k} s={ART.rig * ART.k} f={f} />
     </div>

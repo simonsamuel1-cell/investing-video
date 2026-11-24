@@ -1,6 +1,11 @@
 import type React from "react";
+import { Interactive } from "remotion";
 import { theme } from "../core";
-import { BAL, BigBalance, rp } from "../episodes/in01-passive-income/scenes/PartOne";
+import {
+  BAL,
+  BigBalance,
+  rp,
+} from "../episodes/in01-passive-income/scenes/PartOne";
 
 /**
  * IN01's thumbnail extra: the video's own "Total Invested" pair — a card, an arrow, the card it becomes (PartTwo SC11, where it
@@ -29,15 +34,63 @@ export const In01ThumbBalancePair: React.FC = () => {
   const x0 = BAL.w + ARROW.pad,
     x1 = BAL.w + ARROW.w - ARROW.pad;
   return (
-    <div style={{ position: "absolute", left: AT.right - IN01_PAIR.w, top: AT.top, width: IN01_PAIR.w, height: IN01_PAIR.h }}>
-      <div style={{ position: "absolute", left: 0, top: 0, width: W, height: BAL.h, transform: `scale(${SCALE})`, transformOrigin: "0 0" }}>
-        <BigBalance x={BAL.w / 2} y={0} label="TOTAL INVESTED:" amount={rp(FROM)} life={1} swell={0} tri={1} />
-        <svg width={W} height={BAL.h} style={{ position: "absolute", left: 0, top: 0 }}>
-          <path d={`M ${x0} ${y} L ${x1 - ARROW.head * 0.6} ${y}`} fill="none" stroke={theme.color.cardBg} strokeWidth={ARROW.stroke} strokeLinecap="round" />
-          <path d={`M ${x1} ${y} L ${x1 - ARROW.head} ${y - ARROW.head * 0.62} L ${x1 - ARROW.head} ${y + ARROW.head * 0.62} Z`} fill={theme.color.cardBg} />
+    <Interactive.Div
+      name="Kartu saldo"
+      style={{
+        position: "absolute",
+        left: AT.right - IN01_PAIR.w,
+        top: AT.top,
+        width: IN01_PAIR.w,
+        height: IN01_PAIR.h,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: W,
+          height: BAL.h,
+          transform: `scale(${SCALE})`,
+          transformOrigin: "0 0",
+        }}
+      >
+        <BigBalance
+          x={BAL.w / 2}
+          y={0}
+          label="TOTAL INVESTED:"
+          amount={rp(FROM)}
+          life={1}
+          swell={0}
+          tri={1}
+        />
+        <svg
+          width={W}
+          height={BAL.h}
+          style={{ position: "absolute", left: 0, top: 0 }}
+        >
+          <path
+            d={`M ${x0} ${y} L ${x1 - ARROW.head * 0.6} ${y}`}
+            fill="none"
+            stroke={theme.color.cardBg}
+            strokeWidth={ARROW.stroke}
+            strokeLinecap="round"
+          />
+          <path
+            d={`M ${x1} ${y} L ${x1 - ARROW.head} ${y - ARROW.head * 0.62} L ${x1 - ARROW.head} ${y + ARROW.head * 0.62} Z`}
+            fill={theme.color.cardBg}
+          />
         </svg>
-        <BigBalance x={W - BAL.w / 2} y={0} label="TOTAL INVESTED:" amount={rp(TO)} life={1} swell={0} tri={0} />
+        <BigBalance
+          x={W - BAL.w / 2}
+          y={0}
+          label="TOTAL INVESTED:"
+          amount={rp(TO)}
+          life={1}
+          swell={0}
+          tri={0}
+        />
       </div>
-    </div>
+    </Interactive.Div>
   );
 };

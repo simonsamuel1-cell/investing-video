@@ -9,6 +9,7 @@
  * therefore measured ONCE, in the close-up's own grid, and converted into a
  * price — after which the band is a level, flat and fixed to the tape.
  */
+import { Interactive } from "remotion";
 import { theme, type Grid } from "../../../core";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -66,7 +67,8 @@ export const ResistanceArea = ({
 
   return (
     <>
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: box.x,
@@ -82,7 +84,8 @@ export const ResistanceArea = ({
         }}
       />
       {label && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: box.x,
@@ -96,7 +99,7 @@ export const ResistanceArea = ({
           }}
         >
           {label.text}
-        </div>
+        </Interactive.Div>
       )}
     </>
   );

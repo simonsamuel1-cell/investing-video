@@ -22,12 +22,36 @@
  *
  * No figures: the scale, the bars and the coins are shapes.
  */
-import { Img, staticFile, useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import {
+  AppearE as Appear,
+  CardE as Card,
+  DiscE as Disc,
+} from "../../../editable";
+import { Img, staticFile, useCurrentFrame, Interactive } from "remotion";
+import {
+  Connector,
+  SoftGround,
+  Stage,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BUMI_CARD } from "../data/bumi-card";
 import { PERSON, Person, personCy } from "../components/Person";
 import { BLOCK, SFX, heldAt } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Gauge, HEADING, Mark, OpeningHeading, SITUATION, ease, useAppear, useWords } from "../components/kit";
+import {
+  BoardGrid,
+  Gauge,
+  HEADING,
+  Mark,
+  OpeningHeading,
+  SITUATION,
+  ease,
+  useAppear,
+  useWords,
+} from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 
@@ -49,14 +73,28 @@ const NEEDLE = { low: 18, high: 150, past: 198, shake: 2.5 };
 const PIC = PERSON;
 const ME_TOP = HEADING.y + HEADING.disc / 2 + 40;
 const ME_S = (theme.captionBand.top - ME_TOP) / 446;
-const ME = { d: PIC.d * ME_S, cx: HEADING.x + HEADING.disc + 24 + (PIC.d * ME_S) / 2, cy: personCy(ME_TOP, ME_S) };
+const ME = {
+  d: PIC.d * ME_S,
+  cx: HEADING.x + HEADING.disc + 24 + (PIC.d * ME_S) / 2,
+  cy: personCy(ME_TOP, ME_S),
+};
 /**
  * With the bubble, the meme over your face (Simon 29 Oct: "bareng sama thought bubble, timpa muka orangnya dengan meme
  * ini" — his picture, cut out of its white to public/art/in07/meme-senyum.png, 377 × 315). In its pixels the dome's tip
  * is at (dome.x, dome.y); it lands on the top of your hair (picture x 178, row 0), `lift` higher, at `k`.
  */
-const MEME = { src: "art/in07/meme-senyum.png", w: 377, h: 315, dome: { x: 205, y: 45 }, k: 1.6, lift: 70 };
-const MEME_AT = { x: ME.cx - PIC.cx * ME_S + 178 * ME_S, y: ME_TOP - MEME.lift };
+const MEME = {
+  src: "art/in07/meme-senyum.png",
+  w: 377,
+  h: 315,
+  dome: { x: 205, y: 45 },
+  k: 1.6,
+  lift: 70,
+};
+const MEME_AT = {
+  x: ME.cx - PIC.cx * ME_S + 178 * ME_S,
+  y: ME_TOP - MEME.lift,
+};
 /**
  * Which face meme (Simon 29 Oct: "coba aku mau liat kalo pake gambar ini sebagai meme muka nya. Jadiin switch aja"):
  * "senyum" = his first picture over the head; "awesome" = the Awesome Face, drawn, a disc `d` across on the head's
@@ -64,7 +102,11 @@ const MEME_AT = { x: ME.cx - PIC.cx * ME_S + 178 * ME_S, y: ME_TOP - MEME.lift }
  * filter, done as a warp of the photo itself (scripts/vi/face-filter.py → orang-1-filter.png), cross-faded in.
  */
 const FACE_MEME = "filter" as "senyum" | "awesome" | "filter";
-const AWESOME = { d: 310, x: ME.cx - PIC.cx * ME_S + 178 * ME_S, y: ME_TOP + 80 * ME_S };
+const AWESOME = {
+  d: 310,
+  x: ME.cx - PIC.cx * ME_S + 178 * ME_S,
+  y: ME_TOP + 80 * ME_S,
+};
 /** The stack on the right, centred on x `cx`: the bubble, "Fahhh" under it, the profits at the bottom. */
 const RIGHT = { cx: 1340 };
 /**
@@ -84,7 +126,8 @@ const PROFIT = { d: 150, gap: 50, cy: 820 };
 const profitCx = (i: number) => RIGHT.cx + (i - 1) * (PROFIT.d + PROFIT.gap);
 /** First, on their words, big and vertically centred in the right column; then down to their place at PROFIT size (Simon 29 Oct). */
 const PROFIT_BIG = { k: 1.6, gap: 50, cy: theme.canvas.height / 2 };
-const profitBigCx = (i: number) => RIGHT.cx + (i - 1) * (PROFIT.d * PROFIT_BIG.k + PROFIT_BIG.gap);
+const profitBigCx = (i: number) =>
+  RIGHT.cx + (i - 1) * (PROFIT.d * PROFIT_BIG.k + PROFIT_BIG.gap);
 
 // B/C — the tower: coins seen from the side, `t` thick, their tops ellipses `ry` deep
 const COIN = { w: 200, t: 28, ry: 20 };
@@ -119,14 +162,46 @@ const StackCoin = ({ y, borrowed }: { y: number; borrowed?: boolean }) => {
   const side = `M ${-r} ${y} L ${-r} ${y + COIN.t} A ${r} ${COIN.ry} 0 0 0 ${r} ${y + COIN.t} L ${r} ${y} Z`;
   return borrowed ? (
     <g>
-      <path d={side} fill={theme.color.alarmWashSolid} stroke={theme.color.alarmRed} strokeWidth={3} strokeDasharray="10 8" />
-      <ellipse cx={0} cy={y} rx={r} ry={COIN.ry} fill={theme.color.alarmWashSolid} stroke={theme.color.alarmRed} strokeWidth={3} strokeDasharray="10 8" />
+      <path
+        d={side}
+        fill={theme.color.alarmWashSolid}
+        stroke={theme.color.alarmRed}
+        strokeWidth={3}
+        strokeDasharray="10 8"
+      />
+      <ellipse
+        cx={0}
+        cy={y}
+        rx={r}
+        ry={COIN.ry}
+        fill={theme.color.alarmWashSolid}
+        stroke={theme.color.alarmRed}
+        strokeWidth={3}
+        strokeDasharray="10 8"
+      />
     </g>
   ) : (
     <g>
-      <path d={side} fill={theme.color.coinSpinShade} stroke={theme.color.coinSpinRing} strokeWidth={2} />
-      <ellipse cx={0} cy={y} rx={r} ry={COIN.ry} fill={theme.color.coinSpinRing} />
-      <ellipse cx={0} cy={y} rx={r * 0.78} ry={COIN.ry * 0.74} fill={theme.color.coinSpinFace} />
+      <path
+        d={side}
+        fill={theme.color.coinSpinShade}
+        stroke={theme.color.coinSpinRing}
+        strokeWidth={2}
+      />
+      <ellipse
+        cx={0}
+        cy={y}
+        rx={r}
+        ry={COIN.ry}
+        fill={theme.color.coinSpinRing}
+      />
+      <ellipse
+        cx={0}
+        cy={y}
+        rx={r * 0.78}
+        ry={COIN.ry * 0.74}
+        fill={theme.color.coinSpinFace}
+      />
     </g>
   );
 };
@@ -137,9 +212,47 @@ const coinTop = (k: number) => TOWER.base - COIN.t - k * COIN.t;
 const Profit = () => {
   const c = usePalette();
   return (
-    <div style={{ width: PROFIT.d, height: PROFIT.d, borderRadius: 999, background: theme.color.ok, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8 }}>
-      <div style={{ width: 56, height: 56, borderRadius: 999, background: c.cardBg, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 32, fontWeight: 700, lineHeight: 1, color: theme.color.ok }}>✓</div>
-      <div style={{ fontFamily: theme.text.family, fontSize: 28, fontWeight: 600, color: c.cardBg }}>Profit</div>
+    <div
+      style={{
+        width: PROFIT.d,
+        height: PROFIT.d,
+        borderRadius: 999,
+        background: theme.color.ok,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: 8,
+      }}
+    >
+      <div
+        style={{
+          width: 56,
+          height: 56,
+          borderRadius: 999,
+          background: c.cardBg,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontFamily: theme.text.family,
+          fontSize: 32,
+          fontWeight: 700,
+          lineHeight: 1,
+          color: theme.color.ok,
+        }}
+      >
+        ✓
+      </div>
+      <div
+        style={{
+          fontFamily: theme.text.family,
+          fontSize: 28,
+          fontWeight: 600,
+          color: c.cardBg,
+        }}
+      >
+        Profit
+      </div>
     </div>
   );
 };
@@ -157,25 +270,61 @@ const AwesomeFace = ({ d }: { d: number }) => {
     const rx = (x1 - x0) / 2;
     return `M ${x0} ${bottom} V ${top + rx} A ${rx} ${rx} 0 0 1 ${x1} ${top + rx} V ${bottom} Z`;
   };
-  const mouth = "M -0.69 0.13 L 0.56 0.13 C 0.56 0.5 0.35 0.77 0 0.77 C -0.38 0.77 -0.62 0.5 -0.69 0.13 Z";
+  const mouth =
+    "M -0.69 0.13 L 0.56 0.13 C 0.56 0.5 0.35 0.77 0 0.77 C -0.38 0.77 -0.62 0.5 -0.69 0.13 Z";
   return (
-    <svg width={d} height={d} viewBox="-1 -1 2 2" style={{ display: "block", overflow: "visible" }}>
+    <svg
+      width={d}
+      height={d}
+      viewBox="-1 -1 2 2"
+      style={{ display: "block", overflow: "visible" }}
+    >
       <defs>
         <clipPath id="in07-awesome-mouth">
           <path d={mouth} />
         </clipPath>
       </defs>
-      <circle cx={0} cy={0} r={1 - line / 2} fill={theme.color.memeAwesomeYellow} stroke={c.ink} strokeWidth={line} />
+      <circle
+        cx={0}
+        cy={0}
+        r={1 - line / 2}
+        fill={theme.color.memeAwesomeYellow}
+        stroke={c.ink}
+        strokeWidth={line}
+      />
       {[eye(-0.8, -0.3), eye(0.04, 0.58)].map((e, k) => (
-        <path key={k} d={e} fill={c.cardBg} stroke={c.ink} strokeWidth={0.045} strokeLinejoin="round" />
+        <path
+          key={k}
+          d={e}
+          fill={c.cardBg}
+          stroke={c.ink}
+          strokeWidth={0.045}
+          strokeLinejoin="round"
+        />
       ))}
       <circle cx={-0.45} cy={-0.38} r={0.1} fill={c.ink} />
       <circle cx={0.44} cy={-0.38} r={0.1} fill={c.ink} />
       <path d={mouth} fill={theme.color.memeAwesomeMouth} />
-      <ellipse cx={0.08} cy={0.74} rx={0.31} ry={0.2} fill={theme.color.memeAwesomeTongue} clipPath="url(#in07-awesome-mouth)" />
-      <path d={mouth} fill="none" stroke={c.ink} strokeWidth={0.045} strokeLinejoin="round" />
+      <ellipse
+        cx={0.08}
+        cy={0.74}
+        rx={0.31}
+        ry={0.2}
+        fill={theme.color.memeAwesomeTongue}
+        clipPath="url(#in07-awesome-mouth)"
+      />
+      <path
+        d={mouth}
+        fill="none"
+        stroke={c.ink}
+        strokeWidth={0.045}
+        strokeLinejoin="round"
+      />
       {/* the bar over the mouth, with its little step at the left end */}
-      <path d="M -0.76 0.07 H -0.69 V 0.11 H 0.58 V 0.155 H -0.76 Z" fill={c.ink} />
+      <path
+        d="M -0.76 0.07 H -0.69 V 0.11 H 0.58 V 0.155 H -0.76 Z"
+        fill={c.ink}
+      />
     </svg>
   );
 };
@@ -184,9 +333,29 @@ const AwesomeFace = ({ d }: { d: number }) => {
 const Chip = ({ icon, text }: { icon: string; text: string }) => {
   const c = usePalette();
   return (
-    <Card x={0} y={0} w={0} h={CHIP.h} style={{ position: "relative", width: "auto", display: "flex", alignItems: "center", gap: 20, padding: "0 32px 0 22px" }}>
-      <Disc icon={icon} size={CHIP.disc} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-      <div style={{ ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>{text}</div>
+    <Card
+      x={0}
+      y={0}
+      w={0}
+      h={CHIP.h}
+      style={{
+        position: "relative",
+        width: "auto",
+        display: "flex",
+        alignItems: "center",
+        gap: 20,
+        padding: "0 32px 0 22px",
+      }}
+    >
+      <Disc
+        icon={icon}
+        size={CHIP.disc}
+        tone={c.indigo}
+        tint={theme.color.indigoWashSolid}
+      />
+      <div style={{ ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap" }}>
+        {text}
+      </div>
     </Card>
   );
 };
@@ -235,19 +404,30 @@ export const SC07 = () => {
 
   // B — the tower
   const stackAt = W("diperbesar,");
-  const ownP = Array.from({ length: TOWER.own }, (_, k) => ease(f, stackAt + k * m.sec(0.08), m.pop));
+  const ownP = Array.from({ length: TOWER.own }, (_, k) =>
+    ease(f, stackAt + k * m.sec(0.08), m.pop),
+  );
   const loanAt = W("dana pinjaman");
-  const loanP = Array.from({ length: TOWER.borrowed }, (_, k) => ease(f, loanAt + k * m.sec(0.1), m.pop));
+  const loanP = Array.from({ length: TOWER.borrowed }, (_, k) =>
+    ease(f, loanAt + k * m.sec(0.1), m.pop),
+  );
   const leverAt = W("leverage.");
-  const offP = Array.from({ length: TOWER.borrowed }, (_, k) => ease(f, leverAt + (TOWER.borrowed - 1 - k) * m.sec(0.06), m.move));
+  const offP = Array.from({ length: TOWER.borrowed }, (_, k) =>
+    ease(f, leverAt + (TOWER.borrowed - 1 - k) * m.sec(0.06), m.move),
+  );
   /**
    * Once the borrowed coins are on, the stack leans and sways like a pile about to go: each coin is pushed sideways by
    * the square of its height, so the foot stays put and the top swings.
    */
   const lean = ease(f, W("pinjaman."), m.move) * (1 - ease(f, leverAt, m.move));
   const sway = Math.sin(((f - W("pinjaman.")) / m.sec(1.4)) * 2 * Math.PI);
-  const coinDx = (k: number) => lean * TOWER.lean * (1 + 0.35 * sway) * (k / (TOWER.own + TOWER.borrowed - 1)) ** 2;
-  const towerX = TOWER.cx + (TOWER.left - TOWER.cx) * ease(f, W("Di saat"), m.move);
+  const coinDx = (k: number) =>
+    lean *
+    TOWER.lean *
+    (1 + 0.35 * sway) *
+    (k / (TOWER.own + TOWER.borrowed - 1)) ** 2;
+  const towerX =
+    TOWER.cx + (TOWER.left - TOWER.cx) * ease(f, W("Di saat"), m.move);
 
   // C — Tuntun Guidance
   const guideAt = W("Tuntun Guidance");
@@ -256,7 +436,11 @@ export const SC07 = () => {
   const open = ease(f, W("Kalau harga") - m.sec(0.35), m.move);
   const guideH = GUIDE.head + (GUIDE.h - GUIDE.head) * open;
   const ring = W("pengingat.");
-  const bell = 14 * Math.sin(((f - ring) / m.sec(0.18)) * Math.PI) * (1 - ease(f, ring, m.sec(0.9))) * (f >= ring ? 1 : 0);
+  const bell =
+    14 *
+    Math.sin(((f - ring) / m.sec(0.18)) * Math.PI) *
+    (1 - ease(f, ring, m.sec(0.9))) *
+    (f >= ring ? 1 : 0);
   const row1 = ease(f, W("Kalau harga") - m.sec(0.1), m.reveal);
   const far = ease(f, W("jauh di atas"), m.move);
   const row2 = ease(f, W("Kalau alasan") - m.sec(0.1), m.reveal);
@@ -288,9 +472,27 @@ export const SC07 = () => {
         dock={dock}
         subP={ease(f, meterAt - m.sec(0.15), m.reveal)}
         sub={
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 34, opacity: ease(f, meterAt - m.sec(0.15), m.reveal) }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: 34,
+              opacity: ease(f, meterAt - m.sec(0.15), m.reveal),
+            }}
+          >
             <Gauge angle={needle} />
-            <div style={{ fontFamily: theme.text.family, fontSize: 44, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>Percaya diri</div>
+            <div
+              style={{
+                fontFamily: theme.text.family,
+                fontSize: 44,
+                fontWeight: 500,
+                color: c.ink,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Percaya diri
+            </div>
           </div>
         }
       />
@@ -299,29 +501,85 @@ export const SC07 = () => {
       {aOut < 0.999 && meP > 0.001 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - aOut }}>
           {/* you, cut at the caption band */}
-          <div style={{ position: "absolute", left: 0, top: 0, width: theme.canvas.width, height: theme.captionBand.top, overflow: "hidden" }}>
+          <Interactive.Div
+            name="Objek"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: theme.canvas.width,
+              height: theme.captionBand.top,
+              overflow: "hidden",
+            }}
+          >
             {meP > 0.001 ? (
-              <div style={{ position: "absolute", inset: 0, opacity: meP, transform: `translateY(${((1 - meP) * 20).toFixed(2)}px)` }}>
-                <Person cx={ME.cx} cy={ME.cy} s={ME_S} filter={FACE_MEME === "filter" ? bubbleP : 0} />
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  opacity: meP,
+                  transform: `translateY(${((1 - meP) * 20).toFixed(2)}px)`,
+                }}
+              >
+                <Person
+                  cx={ME.cx}
+                  cy={ME.cy}
+                  s={ME_S}
+                  filter={FACE_MEME === "filter" ? bubbleP : 0}
+                />
                 {bubbleP > 0.001 && FACE_MEME === "awesome" ? (
-                  <div style={{ position: "absolute", left: AWESOME.x - AWESOME.d / 2, top: AWESOME.y - AWESOME.d / 2, opacity: bubbleP, transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})` }}>
+                  <Interactive.Div
+                    name="Objek"
+                    style={{
+                      position: "absolute",
+                      left: AWESOME.x - AWESOME.d / 2,
+                      top: AWESOME.y - AWESOME.d / 2,
+                      opacity: bubbleP,
+                      transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})`,
+                    }}
+                  >
                     <AwesomeFace d={AWESOME.d} />
-                  </div>
+                  </Interactive.Div>
                 ) : null}
                 {bubbleP > 0.001 && FACE_MEME === "senyum" ? (
-                  <Img src={staticFile(MEME.src)} style={{ position: "absolute", left: MEME_AT.x - MEME.dome.x * MEME.k, top: MEME_AT.y - MEME.dome.y * MEME.k, width: MEME.w * MEME.k, height: MEME.h * MEME.k, maxWidth: "none", opacity: bubbleP, transformOrigin: `${MEME.dome.x * MEME.k}px ${MEME.dome.y * MEME.k}px`, transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})` }} />
+                  <Img
+                    src={staticFile(MEME.src)}
+                    style={{
+                      position: "absolute",
+                      left: MEME_AT.x - MEME.dome.x * MEME.k,
+                      top: MEME_AT.y - MEME.dome.y * MEME.k,
+                      width: MEME.w * MEME.k,
+                      height: MEME.h * MEME.k,
+                      maxWidth: "none",
+                      opacity: bubbleP,
+                      transformOrigin: `${MEME.dome.x * MEME.k}px ${MEME.dome.y * MEME.k}px`,
+                      transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})`,
+                    }}
+                  />
                 ) : null}
               </div>
             ) : null}
-          </div>
+          </Interactive.Div>
           <div style={{ position: "absolute", inset: 0 }}>
             {winsAt.map((_, i) => {
               if (profitP[i] <= 0.001) return null;
-              const x = profitBigCx(i) + (profitCx(i) - profitBigCx(i)) * settle;
+              const x =
+                profitBigCx(i) + (profitCx(i) - profitBigCx(i)) * settle;
               const y = PROFIT_BIG.cy + (PROFIT.cy - PROFIT_BIG.cy) * settle;
-              const k = (PROFIT_BIG.k + (1 - PROFIT_BIG.k) * settle) * (0.7 + 0.3 * profitP[i]);
+              const k =
+                (PROFIT_BIG.k + (1 - PROFIT_BIG.k) * settle) *
+                (0.7 + 0.3 * profitP[i]);
               return (
-                <div key={i} style={{ position: "absolute", left: x - PROFIT.d / 2, top: y - PROFIT.d / 2, opacity: profitP[i], transform: `scale(${k.toFixed(4)})` }}>
+                <div
+                  key={i}
+                  style={{
+                    position: "absolute",
+                    left: x - PROFIT.d / 2,
+                    top: y - PROFIT.d / 2,
+                    opacity: profitP[i],
+                    transform: `scale(${k.toFixed(4)})`,
+                  }}
+                >
                   <Profit />
                 </div>
               );
@@ -332,8 +590,30 @@ export const SC07 = () => {
       {/* A — what you think (Simon's words and case: "Jago banget gua"), in an iMessage-shaped bubble, tail towards you;
           then "Fahhh" under it, on its sound */}
       {bubbleP > 0.001 ? (
-        <div style={{ position: "absolute", left: RIGHT.cx - THOUGHT.w / 2, top: THOUGHT.cy - THOUGHT.h / 2, width: THOUGHT.w, height: THOUGHT.h, opacity: bubbleP, transformOrigin: "0% 100%", transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})`, filter: asDropShadow(shadow.soft) }}>
-          <svg width={THOUGHT.w} height={THOUGHT.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+        <Interactive.Div
+          name="Jago banget gua"
+          style={{
+            position: "absolute",
+            left: RIGHT.cx - THOUGHT.w / 2,
+            top: THOUGHT.cy - THOUGHT.h / 2,
+            width: THOUGHT.w,
+            height: THOUGHT.h,
+            opacity: bubbleP,
+            transformOrigin: "0% 100%",
+            transform: `scale(${(0.8 + 0.2 * bubbleP).toFixed(3)})`,
+            filter: asDropShadow(shadow.soft),
+          }}
+        >
+          <svg
+            width={THOUGHT.w}
+            height={THOUGHT.h}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              overflow: "visible",
+            }}
+          >
             {(() => {
               const { w, h, r, tail: t } = THOUGHT;
               // the pill, its bottom-left corner swapped for the tail: along the bottom, out to the tip, back up the side
@@ -341,117 +621,457 @@ export const SC07 = () => {
               return <path d={d} fill={c.cardBg} />;
             })()}
           </svg>
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: THOUGHT.size, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>Jago banget gua</div>
-        </div>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontFamily: theme.text.family,
+              fontSize: THOUGHT.size,
+              fontWeight: 500,
+              color: c.ink,
+              whiteSpace: "nowrap",
+            }}
+          >
+            Jago banget gua
+          </div>
+        </Interactive.Div>
       ) : null}
       {fahP > 0.001 ? (
-        <div style={{ position: "absolute", left: RIGHT.cx - 300, top: FAH_Y, width: 600, textAlign: "center", opacity: fahP, transform: `translateY(${((1 - fahP) * 18).toFixed(2)}px)`, fontFamily: theme.text.family, fontSize: 88, fontWeight: 500, lineHeight: 1, color: c.ink }}>Fahhh</div>
+        <Interactive.Div
+          name="Fahhh"
+          style={{
+            position: "absolute",
+            left: RIGHT.cx - 300,
+            top: FAH_Y,
+            width: 600,
+            textAlign: "center",
+            opacity: fahP,
+            transform: `translateY(${((1 - fahP) * 18).toFixed(2)}px)`,
+            fontFamily: theme.text.family,
+            fontSize: 88,
+            fontWeight: 500,
+            lineHeight: 1,
+            color: c.ink,
+          }}
+        >
+          Fahhh
+        </Interactive.Div>
       ) : null}
 
       {/* B/C — the tower: own coins, then borrowed ones on top; it leans while they are on */}
       {f >= posAt && cOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - cOut }}>
-          <svg width={COIN.w + 400} height={TOWER.base + COIN.ry + 40} viewBox={`${-r - 200} 0 ${COIN.w + 400} ${TOWER.base + COIN.ry + 40}`} style={{ position: "absolute", left: towerX - r - 200, top: 0, overflow: "visible" }}>
+          <svg
+            width={COIN.w + 400}
+            height={TOWER.base + COIN.ry + 40}
+            viewBox={`${-r - 200} 0 ${COIN.w + 400} ${TOWER.base + COIN.ry + 40}`}
+            style={{
+              position: "absolute",
+              left: towerX - r - 200,
+              top: 0,
+              overflow: "visible",
+            }}
+          >
             <g>
-              {ownP.map((p, k) => (p > 0.001 ? <g key={k} opacity={p} transform={`translate(${coinDx(k).toFixed(2)} ${((1 - p) * -60).toFixed(2)})`}><StackCoin y={coinTop(k)} /></g> : null))}
+              {ownP.map((p, k) =>
+                p > 0.001 ? (
+                  <g
+                    key={k}
+                    opacity={p}
+                    transform={`translate(${coinDx(k).toFixed(2)} ${((1 - p) * -60).toFixed(2)})`}
+                  >
+                    <StackCoin y={coinTop(k)} />
+                  </g>
+                ) : null,
+              )}
               {loanP.map((p, k) => {
                 const off = offP[k];
                 if (p <= 0.001 || off >= 0.999) return null;
                 return (
-                  <g key={k} opacity={p * (1 - off)} transform={`translate(${(coinDx(TOWER.own + k) - 180 * off).toFixed(2)} ${((1 - p) * -60 - 90 * off).toFixed(2)}) rotate(${(-24 * off).toFixed(2)} 0 ${coinTop(TOWER.own + k)})`}>
+                  <g
+                    key={k}
+                    opacity={p * (1 - off)}
+                    transform={`translate(${(coinDx(TOWER.own + k) - 180 * off).toFixed(2)} ${((1 - p) * -60 - 90 * off).toFixed(2)}) rotate(${(-24 * off).toFixed(2)} 0 ${coinTop(TOWER.own + k)})`}
+                  >
                     <StackCoin y={coinTop(TOWER.own + k)} borrowed />
                   </g>
                 );
               })}
             </g>
           </svg>
-          <div style={{ position: "absolute", left: towerX - 150, top: TOWER.base + COIN.ry + 18, width: 300, textAlign: "center", ...typeStyle("body"), color: c.ink, opacity: ease(f, stackAt, m.reveal) }}>Posisi</div>
+          <Interactive.Div
+            name="Posisi"
+            style={{
+              position: "absolute",
+              left: towerX - 150,
+              top: TOWER.base + COIN.ry + 18,
+              width: 300,
+              textAlign: "center",
+              ...typeStyle("body"),
+              color: c.ink,
+              opacity: ease(f, stackAt, m.reveal),
+            }}
+          >
+            Posisi
+          </Interactive.Div>
           {/* over the top of the pile, riding its sway, clear of the Guidance card */}
-          <div style={{ position: "absolute", left: towerX + coinDx(TOWER.own + TOWER.borrowed - 1) - 150, top: coinTop(TOWER.own + TOWER.borrowed - 1) - COIN.ry - 64, width: 300, textAlign: "center", ...typeStyle("body"), color: theme.color.alarmRed, whiteSpace: "nowrap", opacity: loanP[TOWER.borrowed - 1] * (1 - offP[0]) }}>Pinjaman</div>
+          <Interactive.Div
+            name="Pinjaman"
+            style={{
+              position: "absolute",
+              left: towerX + coinDx(TOWER.own + TOWER.borrowed - 1) - 150,
+              top: coinTop(TOWER.own + TOWER.borrowed - 1) - COIN.ry - 64,
+              width: 300,
+              textAlign: "center",
+              ...typeStyle("body"),
+              color: theme.color.alarmRed,
+              whiteSpace: "nowrap",
+              opacity: loanP[TOWER.borrowed - 1] * (1 - offP[0]),
+            }}
+          >
+            Pinjaman
+          </Interactive.Div>
         </div>
       ) : null}
 
       {/* C — Tuntun Guidance, two reminders */}
       {guideP > 0.001 && cOut < 0.999 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: guideP * (1 - cOut) }}>
-          <Card x={GUIDE.x} y={GUIDE.y - (1 - guideP) * 80} w={GUIDE.w} h={guideH} line={theme.color.hairlineBrandSolid} style={{ overflow: "hidden", boxShadow: `${shadow.soft}, 0 0 40px 8px ${theme.color.indigoGlow}` }}>
-            <div style={{ position: "absolute", left: 48, top: 36, display: "flex", alignItems: "center", gap: 22 }}>
-              <div style={{ transform: `rotate(${bell.toFixed(2)}deg)`, transformOrigin: "50% 15%" }}>
-                <Disc icon="bell" size={72} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: guideP * (1 - cOut),
+          }}
+        >
+          <Card
+            x={GUIDE.x}
+            y={GUIDE.y - (1 - guideP) * 80}
+            w={GUIDE.w}
+            h={guideH}
+            line={theme.color.hairlineBrandSolid}
+            style={{
+              overflow: "hidden",
+              boxShadow: `${shadow.soft}, 0 0 40px 8px ${theme.color.indigoGlow}`,
+            }}
+          >
+            <Interactive.Div
+              name="Tuntun Guidance"
+              style={{
+                position: "absolute",
+                left: 48,
+                top: 36,
+                display: "flex",
+                alignItems: "center",
+                gap: 22,
+              }}
+            >
+              <div
+                style={{
+                  transform: `rotate(${bell.toFixed(2)}deg)`,
+                  transformOrigin: "50% 15%",
+                }}
+              >
+                <Disc
+                  icon="bell"
+                  size={72}
+                  tone={c.indigo}
+                  tint={theme.color.indigoWashSolid}
+                />
               </div>
-              <div style={{ ...typeStyle("title"), fontWeight: 500, color: c.ink }}>Tuntun Guidance</div>
-            </div>
-            <div style={{ position: "absolute", left: 0, top: GUIDE.head, width: GUIDE.w, height: 2, background: c.border, opacity: open }} />
+              <div
+                style={{ ...typeStyle("title"), fontWeight: 500, color: c.ink }}
+              >
+                Tuntun Guidance
+              </div>
+            </Interactive.Div>
+            <Interactive.Div
+              name="Objek"
+              style={{
+                position: "absolute",
+                left: 0,
+                top: GUIDE.head,
+                width: GUIDE.w,
+                height: 2,
+                background: c.border,
+                opacity: open,
+              }}
+            />
 
             {/* 1 — SC03's real BUMI card; the price slides far past the fair value, into the red */}
-            <div style={{ position: "absolute", left: (GUIDE.w - FV.w) / 2, top: ROW1, width: FV.w, height: FV_H, overflow: "hidden", opacity: row1, transform: `translateY(${((1 - row1) * 14).toFixed(2)}px)` }}>
-              <Img src={staticFile(BUMI_CARD.src)} style={{ position: "absolute", left: -BUMI_CARD.framed.x1 * FV_K, top: -BUMI_CARD.framed.y1 * FV_K, width: BUMI_CARD.w * FV_K, maxWidth: "none" }} />
+            <Interactive.Div
+              name="Objek"
+              style={{
+                position: "absolute",
+                left: (GUIDE.w - FV.w) / 2,
+                top: ROW1,
+                width: FV.w,
+                height: FV_H,
+                overflow: "hidden",
+                opacity: row1,
+                transform: `translateY(${((1 - row1) * 14).toFixed(2)}px)`,
+              }}
+            >
+              <Img
+                src={staticFile(BUMI_CARD.src)}
+                style={{
+                  position: "absolute",
+                  left: -BUMI_CARD.framed.x1 * FV_K,
+                  top: -BUMI_CARD.framed.y1 * FV_K,
+                  width: BUMI_CARD.w * FV_K,
+                  maxWidth: "none",
+                }}
+              />
               {/* "60% - 66% Undervalued" would say the opposite of a pointer in the red */}
-              <div style={{ position: "absolute", left: (BUMI_CARD.fvNote.x1 - BUMI_CARD.framed.x1) * FV_K, top: (BUMI_CARD.fvNote.y1 - BUMI_CARD.framed.y1) * FV_K, width: (BUMI_CARD.fvNote.x2 - BUMI_CARD.fvNote.x1) * FV_K, height: (BUMI_CARD.fvNote.y2 - BUMI_CARD.fvNote.y1) * FV_K, background: c.cardBg, opacity: far }} />
+              <Interactive.Div
+                name="Objek"
+                style={{
+                  position: "absolute",
+                  left: (BUMI_CARD.fvNote.x1 - BUMI_CARD.framed.x1) * FV_K,
+                  top: (BUMI_CARD.fvNote.y1 - BUMI_CARD.framed.y1) * FV_K,
+                  width: (BUMI_CARD.fvNote.x2 - BUMI_CARD.fvNote.x1) * FV_K,
+                  height: (BUMI_CARD.fvNote.y2 - BUMI_CARD.fvNote.y1) * FV_K,
+                  background: c.cardBg,
+                  opacity: far,
+                }}
+              />
               {(() => {
                 const g = BUMI_CARD.gauge;
                 const at = g.at + (FV.far - g.at) * far;
-                const x = (g.x0 + (g.x1 - g.x0) * at - BUMI_CARD.framed.x1) * FV_K;
+                const x =
+                  (g.x0 + (g.x1 - g.x0) * at - BUMI_CARD.framed.x1) * FV_K;
                 const y = (g.y - BUMI_CARD.framed.y1) * FV_K;
                 const w = BUMI_CARD.pointer.w * FV_K * FV.pointerK;
                 const h = BUMI_CARD.pointer.h * FV_K * FV.pointerK;
                 return (
-                  <svg width={FV.w} height={FV_H} style={{ position: "absolute", left: 0, top: 0 }}>
-                    <path d={`M ${x} ${y} L ${x + w / 2} ${y + h} L ${x - w / 2} ${y + h} Z`} fill={c.ink} stroke={c.ink} strokeWidth={2} strokeLinejoin="round" />
+                  <svg
+                    width={FV.w}
+                    height={FV_H}
+                    style={{ position: "absolute", left: 0, top: 0 }}
+                  >
+                    <path
+                      d={`M ${x} ${y} L ${x + w / 2} ${y + h} L ${x - w / 2} ${y + h} Z`}
+                      fill={c.ink}
+                      stroke={c.ink}
+                      strokeWidth={2}
+                      strokeLinejoin="round"
+                    />
                   </svg>
                 );
               })()}
-            </div>
-            <div style={{ position: "absolute", left: 48, top: ROW2 - 10, width: GUIDE.w - 2 * 48, height: 2, background: c.border, opacity: row2 }} />
+            </Interactive.Div>
+            <Interactive.Div
+              name="Objek"
+              style={{
+                position: "absolute",
+                left: 48,
+                top: ROW2 - 10,
+                width: GUIDE.w - 2 * 48,
+                height: 2,
+                background: c.border,
+                opacity: row2,
+              }}
+            />
 
             {/* 2 — a thin reason: not with leverage */}
-            <div style={{ position: "absolute", left: 0, top: ROW2, width: GUIDE.w, height: 200, opacity: row2, transform: `translateY(${((1 - row2) * 14).toFixed(2)}px)` }}>
-              <div style={{ position: "absolute", left: SIDE, top: 64, display: "flex", alignItems: "center", gap: 24 }}>
-                <Disc icon="report" size={72} tone={theme.color.neutralIcon} tint={theme.color.neutralDisc} />
+            <Interactive.Div
+              name="Alasan"
+              style={{
+                position: "absolute",
+                left: 0,
+                top: ROW2,
+                width: GUIDE.w,
+                height: 200,
+                opacity: row2,
+                transform: `translateY(${((1 - row2) * 14).toFixed(2)}px)`,
+              }}
+            >
+              <Interactive.Div
+                name="Alasan"
+                style={{
+                  position: "absolute",
+                  left: SIDE,
+                  top: 64,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 24,
+                }}
+              >
+                <Disc
+                  icon="report"
+                  size={72}
+                  tone={theme.color.neutralIcon}
+                  tint={theme.color.neutralDisc}
+                />
                 <div>
-                  <div style={{ ...typeStyle("body"), color: c.ink }}>Alasan</div>
-                  <div style={{ position: "relative", marginTop: 12, width: 300, height: 14, borderRadius: 7, background: theme.color.neutralDot }}>
-                    <div style={{ position: "absolute", left: 0, top: 0, width: 300 * (0.62 - 0.36 * weak), height: 14, borderRadius: 7, background: theme.color.neutralIcon }} />
+                  <div style={{ ...typeStyle("body"), color: c.ink }}>
+                    Alasan
+                  </div>
+                  <div
+                    style={{
+                      position: "relative",
+                      marginTop: 12,
+                      width: 300,
+                      height: 14,
+                      borderRadius: 7,
+                      background: theme.color.neutralDot,
+                    }}
+                  >
+                    <Interactive.Div
+                      name="Objek"
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        width: 300 * (0.62 - 0.36 * weak),
+                        height: 14,
+                        borderRadius: 7,
+                        background: theme.color.neutralIcon,
+                      }}
+                    />
                   </div>
                 </div>
-              </div>
-              <div style={{ position: "absolute", left: SPLIT, top: 30, width: 2, height: 150, background: c.border }} />
-              <div style={{ position: "absolute", left: SPLIT + 40, top: 56, display: "flex", alignItems: "center", gap: 22, opacity: leverP }}>
+              </Interactive.Div>
+              <Interactive.Div
+                name="Objek"
+                style={{
+                  position: "absolute",
+                  left: SPLIT,
+                  top: 30,
+                  width: 2,
+                  height: 150,
+                  background: c.border,
+                }}
+              />
+              <Interactive.Div
+                name="Leverage"
+                style={{
+                  position: "absolute",
+                  left: SPLIT + 40,
+                  top: 56,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 22,
+                  opacity: leverP,
+                }}
+              >
                 <div style={{ position: "relative" }}>
-                  <Disc icon="loan" size={88} tone={theme.color.alarmRed} tint={theme.color.alarmWashSolid} />
+                  <Disc
+                    icon="loan"
+                    size={88}
+                    tone={theme.color.alarmRed}
+                    tint={theme.color.alarmWashSolid}
+                  />
                   <Mark kind="cross" p={cross} x={78} y={12} size={46} />
                 </div>
-                <div style={{ ...typeStyle("body"), color: c.ink }}>Leverage</div>
-              </div>
-            </div>
+                <div style={{ ...typeStyle("body"), color: c.ink }}>
+                  Leverage
+                </div>
+              </Interactive.Div>
+            </Interactive.Div>
           </Card>
         </div>
       ) : null}
 
       {/* D — the warning: yellow, a black "!" (Simon 29 Oct, at "Peringatan ini") */}
       {warnP > 0.001 ? (
-        <div style={{ position: "absolute", left: WARN.x - WARN.size / 2, top: WARN.y - WARN.size / 2, width: WARN.size, height: WARN.size, borderRadius: 999, background: theme.color.cautionYellow, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center", opacity: warnP, transform: `scale(${(0.7 + 0.3 * warnP).toFixed(3)})`, fontFamily: theme.text.family, fontSize: WARN.size * 0.62, fontWeight: 700, lineHeight: 1, color: c.ink }}>!</div>
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: WARN.x - WARN.size / 2,
+            top: WARN.y - WARN.size / 2,
+            width: WARN.size,
+            height: WARN.size,
+            borderRadius: 999,
+            background: theme.color.cautionYellow,
+            boxShadow: shadow.soft,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: warnP,
+            transform: `scale(${(0.7 + 0.3 * warnP).toFixed(3)})`,
+            fontFamily: theme.text.family,
+            fontSize: WARN.size * 0.62,
+            fontWeight: 700,
+            lineHeight: 1,
+            color: c.ink,
+          }}
+        >
+          !
+        </Interactive.Div>
       ) : null}
 
       {/* D — confidence → warning → a big decision, each on its word */}
-      <Appear at={confAt - m.sec(0.1)} style={{ right: theme.canvas.width - (WARN.x - WARN.size / 2 - CHIP.gap), top: WARN.y - CHIP.h / 2 }}>
+      <Appear
+        at={confAt - m.sec(0.1)}
+        style={{
+          right: theme.canvas.width - (WARN.x - WARN.size / 2 - CHIP.gap),
+          top: WARN.y - CHIP.h / 2,
+        }}
+      >
         <Chip icon="confident" text="Percaya diri" />
       </Appear>
-      <Connector a={{ x: WARN.x - WARN.size / 2 - CHIP.gap, y: WARN.y }} b={{ x: WARN.x - WARN.size / 2 - 8, y: WARN.y }} p={ease(f, confAt + m.sec(0.15), m.sec(0.4))} />
-      <Connector a={{ x: WARN.x + WARN.size / 2 + 8, y: WARN.y }} b={{ x: WARN.x + WARN.size / 2 + CHIP.gap, y: WARN.y }} p={ease(f, decideAt - m.sec(0.35), m.sec(0.4))} />
-      <Appear at={decideAt - m.sec(0.1)} style={{ left: WARN.x + WARN.size / 2 + CHIP.gap, top: WARN.y - CHIP.h / 2 }}>
+      <Connector
+        a={{ x: WARN.x - WARN.size / 2 - CHIP.gap, y: WARN.y }}
+        b={{ x: WARN.x - WARN.size / 2 - 8, y: WARN.y }}
+        p={ease(f, confAt + m.sec(0.15), m.sec(0.4))}
+      />
+      <Connector
+        a={{ x: WARN.x + WARN.size / 2 + 8, y: WARN.y }}
+        b={{ x: WARN.x + WARN.size / 2 + CHIP.gap, y: WARN.y }}
+        p={ease(f, decideAt - m.sec(0.35), m.sec(0.4))}
+      />
+      <Appear
+        at={decideAt - m.sec(0.1)}
+        style={{
+          left: WARN.x + WARN.size / 2 + CHIP.gap,
+          top: WARN.y - CHIP.h / 2,
+        }}
+      >
         <Chip icon="decide" text="Keputusan besar" />
       </Appear>
       <Appear at={W("bukan larangan")} style={{ left: 0, top: 0 }}>
-        <div style={{ position: "absolute", left: 0, top: LINE_Y, width: theme.canvas.width, transform: "translateY(-50%)", display: "flex", justifyContent: "center", fontFamily: theme.text.family, fontSize: 64, fontWeight: 500, letterSpacing: -0.5, lineHeight: 1.22, color: c.ink, whiteSpace: "nowrap" }}>
+        <Interactive.Div
+          name="Bukan larangan,"
+          style={{
+            position: "absolute",
+            left: 0,
+            top: LINE_Y,
+            width: theme.canvas.width,
+            transform: "translateY(-50%)",
+            display: "flex",
+            justifyContent: "center",
+            fontFamily: theme.text.family,
+            fontSize: 64,
+            fontWeight: 500,
+            letterSpacing: -0.5,
+            lineHeight: 1.22,
+            color: c.ink,
+            whiteSpace: "nowrap",
+          }}
+        >
           <span>Bukan larangan,</span>
           {/* "tapi jeda." opens its own room, so the first half slides left for it (as SC06's "Tunggu dulu.") */}
-          <div style={{ display: "grid", gridTemplateColumns: `minmax(0, ${jedaP.toFixed(4)}fr)` }}>
-            <span style={{ paddingLeft: "0.28em", opacity: jedaP, transform: `translateY(${((1 - jedaP) * 14).toFixed(2)}px)` }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: `minmax(0, ${jedaP.toFixed(4)}fr)`,
+            }}
+          >
+            <span
+              style={{
+                paddingLeft: "0.28em",
+                opacity: jedaP,
+                transform: `translateY(${((1 - jedaP) * 14).toFixed(2)}px)`,
+              }}
+            >
               tapi <span style={{ color: c.indigo }}>jeda.</span>
             </span>
           </div>
-        </div>
+        </Interactive.Div>
       </Appear>
     </Stage>
   );

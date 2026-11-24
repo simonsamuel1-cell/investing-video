@@ -13,6 +13,7 @@
  * TextBlock did that Market-Structure's Text did not, and it is the treatment the
  * brand spec asks for on longer on-screen sentences.
  */
+import { useNudge } from "./nudge";
 import React from "react";
 import { useCurrentFrame } from "remotion";
 import { theme } from "./theme";
@@ -53,6 +54,7 @@ export const Title = ({
    */
   align?: "center" | "left";
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -60,14 +62,14 @@ export const Title = ({
   const tail = textReveal(f, subAt ?? at + m.fade, m.reveal);
 
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
         top: y,
         transform: align === "left" ? undefined : "translate(-50%, -50%)",
         textAlign: align,
-        opacity,
+        opacity, ...nd.style,
       }}
     >
       <div
@@ -121,12 +123,13 @@ export const Line = ({
   weight?: number;
   color?: string;
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
   const r = textReveal(f, at, m.reveal);
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
@@ -137,7 +140,7 @@ export const Line = ({
         fontSize: size,
         fontWeight: weight,
         color: color ?? c.ink,
-        whiteSpace: "nowrap",
+        whiteSpace: "nowrap", ...nd.style,
       }}
     >
       {text}
@@ -261,6 +264,7 @@ export const Words = ({
    */
   vAlign?: "center" | "top";
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -292,7 +296,7 @@ export const Words = ({
   });
   const underline = markStyle === "underline";
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
@@ -305,7 +309,7 @@ export const Words = ({
         lineHeight,
         maxWidth,
         textAlign: anchor === "center" ? "center" : anchor === "right" ? "right" : "left",
-        whiteSpace: maxWidth ? "normal" : "nowrap",
+        whiteSpace: maxWidth ? "normal" : "nowrap", ...nd.style,
       }}
     >
       {/* ⚠ CONSECUTIVE MARKED WORDS SHARE ONE WASH. Painting each word

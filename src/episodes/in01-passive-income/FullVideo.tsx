@@ -11,7 +11,8 @@
  * so it simply stops where the video does, "nanti potong aja"): no trim, no gain, no fade, no loop, no ducking, no
  * re-encode, one <Audio> from frame 0 at full volume. The Logo (core Watermark) is left as it is as well.
  */
-import { AbsoluteFill, Audio, OffthreadVideo, Sequence, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, OffthreadVideo, staticFile, useCurrentFrame } from "remotion";
 import { PaletteProvider, theme, useMotion, usePalette } from "../../core";
 import { PassiveIncomeComposition, TOTAL_FRAMES } from "./Composition";
 import { ease } from "./components/kit";
@@ -69,7 +70,7 @@ const EpisodeFade = () => {
 export const PassiveIncomeFull = () => (
   <AbsoluteFill>
     <Sequence from={0} durationInFrames={INTRO_FRAMES} name="Intro">
-      <OffthreadVideo src={staticFile("essentials/Intro.mp4")} />
+      <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Intro.mp4")} />
       <PaletteProvider>
         <IntroTitle />
       </PaletteProvider>
@@ -81,7 +82,7 @@ export const PassiveIncomeFull = () => (
       </PaletteProvider>
     </Sequence>
     <Sequence from={INTRO_FRAMES + TOTAL_FRAMES} durationInFrames={OUTRO_FRAMES} name="Outro">
-      <OffthreadVideo src={staticFile("essentials/Outro.mp4")} />
+      <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Outro.mp4")} />
     </Sequence>
     {/* the BGM, as it is, under all of it */}
     <Audio src={staticFile("essentials/BGM.mp3")} />

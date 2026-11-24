@@ -5,11 +5,26 @@
  * people add income, all drawing on the same two things; then the 24 hours
  * those two things live in, and the two questions the video is about.
  */
+import { IN01CutoutE as Cutout, IN01SayE as Say } from "../../../editable";
 import React from "react";
-import { random, useCurrentFrame } from "remotion";
-import { GridGround, Stage, price, theme, useMotion, usePalette, useShadow } from "../../../core";
-import { BLOCK, SC01 as B1, SC02 as B2, SC03 as B3, local } from "../data/timing";
-import { Cutout, ease, Icon, Say, TypeBox, useLife, type IconName } from "../components/kit";
+import { random, useCurrentFrame, Interactive } from "remotion";
+import {
+  GridGround,
+  Stage,
+  price,
+  theme,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
+import {
+  BLOCK,
+  SC01 as B1,
+  SC02 as B2,
+  SC03 as B3,
+  local,
+} from "../data/timing";
+import { ease, Icon, TypeBox, useLife, type IconName } from "../components/kit";
 
 // ═══ SC01 — payday, and the flow behind it ═════════════════════════════════
 /**
@@ -57,13 +72,27 @@ const EXIT_RISE = 1000;
  * animasi, tapi re-positioning)". The label sits `gap` above the photo's top.
  */
 /** "Kerja nya font size sama dengan Gajian aja. Bold, Indigo." */
-const WORK = { shift: -200, feet: 940, label: SPLIT.word, weight: 700, gap: 110 };
+const WORK = {
+  shift: -200,
+  feet: 940,
+  label: SPLIT.word,
+  weight: 700,
+  gap: 110,
+};
 /**
  * …and on their right, the pay landing: a phone holding Simon's balance card,
  * the balance counting Rp 0 → Rp 50.000.000 as it fades in.
  */
 /** "Border template hp nya tipisin, jadi 2 px aja"; the UI centred top to bottom on the screen. */
-const PHONE = { cx: 1380, top: 180, w: 380, h: 760, bezel: 5, radius: 64, ui: { top: 70, bottom: 468 } };
+const PHONE = {
+  cx: 1380,
+  top: 180,
+  w: 380,
+  h: 760,
+  bezel: 5,
+  radius: 64,
+  ui: { top: 70, bottom: 468 },
+};
 const BALANCE = 50_000_000;
 /** "transparan 40%" — the top row and the history pill, so the balance card leads. */
 const PHONE_QUIET = 0.4;
@@ -71,7 +100,8 @@ const PHONE_QUIET = 0.4;
  * "Kelompokkan Kerja, Orang Kerja png, template hp dan isinya, lalu buat tengah
  * horizontal": the photo's left edge to the phone's right edge, centred on the frame.
  */
-const GROUP_LEFT = theme.canvas.width / 2 + WORK.shift - (PHOTO_H * ORANG_KERJA) / 2;
+const GROUP_LEFT =
+  theme.canvas.width / 2 + WORK.shift - (PHOTO_H * ORANG_KERJA) / 2;
 const GROUP_RIGHT = PHONE.cx + PHONE.w / 2;
 const GROUP_DX = theme.canvas.width / 2 - (GROUP_LEFT + GROUP_RIGHT) / 2;
 /**
@@ -106,7 +136,9 @@ const CLOSE = { top: 40, chest: 580, rows: 1448 };
  * sama text di atas": the head starts 20 px under the two-line text.
  */
 const CLOSE_FROM = BAYANGIN.y + BAYANGIN.size * 1.1 * 2 + BAYANGIN.gap + 20;
-const CLOSE_H = ((theme.captionBand.top - CLOSE_FROM) * CLOSE.rows) / (CLOSE.chest - CLOSE.top);
+const CLOSE_H =
+  ((theme.captionBand.top - CLOSE_FROM) * CLOSE.rows) /
+  (CLOSE.chest - CLOSE.top);
 const CLOSE_TOP = CLOSE_FROM - (CLOSE.top / CLOSE.rows) * CLOSE_H;
 /** Head columns (the middle of the head's solid span) in each file. */
 const HEAD_U = { layoff: 533 / 1086, bingung: 615 / 1086 }; // the _1 (polo) files
@@ -122,42 +154,145 @@ const GROUND_RAMP =
  * fractional — the dates are one strip that rolls up through the window, so
  * 1 → 25 is a scroll, not a swap.
  */
-const Calendar = ({ month, date, last, speed }: { month: string; date: number; last: number; speed: number }) => {
+const Calendar = ({
+  month,
+  date,
+  last,
+  speed,
+}: {
+  month: string;
+  date: number;
+  last: number;
+  speed: number;
+}) => {
   const c = usePalette();
   const shadow = useShadow();
   /* A vertical-only blur, as fast as the strip is moving — motion blur, not a soft focus. */
   const rowH = CAL.h - CAL.band;
-  const blur = Math.min(ROLL_BLUR.max, Math.abs(speed) * rowH * ROLL_BLUR.perSpeed);
+  const blur = Math.min(
+    ROLL_BLUR.max,
+    Math.abs(speed) * rowH * ROLL_BLUR.perSpeed,
+  );
   const left = CAL.cx - CAL.w / 2;
   const r = theme.shape.cardRadius;
   return (
     <>
-      <div style={{ position: "absolute", left, top: CAL.y, width: CAL.w, height: CAL.h, borderRadius: r, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden" }}>
-        <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, height: CAL.band, display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 22, boxSizing: "border-box", fontFamily: theme.text.family, fontSize: 40, fontWeight: 800, color: theme.color.calendarRed, letterSpacing: 1 }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left,
+          top: CAL.y,
+          width: CAL.w,
+          height: CAL.h,
+          borderRadius: r,
+          background: c.cardBg,
+          boxShadow: shadow.soft,
+          overflow: "hidden",
+        }}
+      >
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: 0,
+            top: 0,
+            width: CAL.w,
+            height: CAL.band,
+            display: "flex",
+            alignItems: "flex-end",
+            justifyContent: "center",
+            paddingBottom: 22,
+            boxSizing: "border-box",
+            fontFamily: theme.text.family,
+            fontSize: 40,
+            fontWeight: 800,
+            color: theme.color.calendarRed,
+            letterSpacing: 1,
+          }}
+        >
           {month}
-        </div>
-        <div style={{ position: "absolute", left: CAL.rule, top: CAL.band, width: CAL.w - CAL.rule * 2, height: theme.shape.hairline * 2, borderRadius: 2, background: c.border }} />
-        <div style={{ position: "absolute", left: 0, top: CAL.band, width: CAL.w, height: CAL.h - CAL.band, overflow: "hidden" }}>
+        </Interactive.Div>
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: CAL.rule,
+            top: CAL.band,
+            width: CAL.w - CAL.rule * 2,
+            height: theme.shape.hairline * 2,
+            borderRadius: 2,
+            background: c.border,
+          }}
+        />
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: 0,
+            top: CAL.band,
+            width: CAL.w,
+            height: CAL.h - CAL.band,
+            overflow: "hidden",
+          }}
+        >
           <svg width={0} height={0} style={{ position: "absolute" }}>
-            <filter id="in01-roll-blur" x="-10%" y="-20%" width="120%" height="140%">
+            <filter
+              id="in01-roll-blur"
+              x="-10%"
+              y="-20%"
+              width="120%"
+              height="140%"
+            >
               <feGaussianBlur stdDeviation={`0 ${blur.toFixed(2)}`} />
             </filter>
           </svg>
-          <div style={{ position: "absolute", left: 0, top: 0, width: CAL.w, transform: `translateY(${(-(date - 1) * rowH).toFixed(2)}px)`, filter: blur > 0.3 ? "url(#in01-roll-blur)" : undefined }}>
+          <Interactive.Div
+            name="Objek"
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              width: CAL.w,
+              transform: `translateY(${(-(date - 1) * rowH).toFixed(2)}px)`,
+              filter: blur > 0.3 ? "url(#in01-roll-blur)" : undefined,
+            }}
+          >
             {Array.from({ length: last }, (_, i) => (
-              <div key={i} style={{ height: rowH, display: "flex", alignItems: "center", justifyContent: "center", fontFamily: theme.text.family, fontSize: 240, fontWeight: 700, color: c.slate, lineHeight: 1 }}>
+              <div
+                key={i}
+                style={{
+                  height: rowH,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: 240,
+                  fontWeight: 700,
+                  color: c.slate,
+                  lineHeight: 1,
+                }}
+              >
                 {i + 1}
               </div>
             ))}
-          </div>
-        </div>
-      </div>
+          </Interactive.Div>
+        </Interactive.Div>
+      </Interactive.Div>
     </>
   );
 };
 
 /** The phone and the card inside it — a remake of Simon's reference, in palette colours. */
-const BalancePhone = ({ at, countOver, centre }: { at: number; countOver: number; centre: number }) => {
+const BalancePhone = ({
+  at,
+  countOver,
+  centre,
+}: {
+  at: number;
+  countOver: number;
+  centre: number;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const shadow = useShadow();
@@ -171,60 +306,280 @@ const BalancePhone = ({ at, countOver, centre }: { at: number; countOver: number
   const drop = (sh - (P.ui.bottom - P.ui.top)) / 2 - P.ui.top;
   const type = { fontFamily: theme.text.family, lineHeight: 1 } as const;
   const circle = (d: number, bg: string) =>
-    ({ width: d, height: d, borderRadius: d / 2, background: bg, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: shadow.rest }) as const;
+    ({
+      width: d,
+      height: d,
+      borderRadius: d / 2,
+      background: bg,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      boxShadow: shadow.rest,
+    }) as const;
   const pill = (bg: string, color: string) =>
-    ({ ...type, height: 56, borderRadius: 28, background: bg, color, display: "flex", alignItems: "center", justifyContent: "center", gap: 6, fontSize: 18, fontWeight: 700, boxShadow: shadow.rest }) as const;
-  const line = { fill: "none", stroke: c.ink, strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round" } as const;
+    ({
+      ...type,
+      height: 56,
+      borderRadius: 28,
+      background: bg,
+      color,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      gap: 6,
+      fontSize: 18,
+      fontWeight: 700,
+      boxShadow: shadow.rest,
+    }) as const;
+  const line = {
+    fill: "none",
+    stroke: c.ink,
+    strokeWidth: 2.2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  } as const;
   return (
-    <div style={{ position: "absolute", left: P.cx + GROUP_DX + (theme.canvas.width / 2 - P.cx - GROUP_DX) * centre - P.w / 2, top: P.top, width: P.w, height: P.h, borderRadius: P.radius, background: c.slate, boxShadow: shadow.rest, opacity: life }}>
-      <div style={{ position: "absolute", left: P.bezel, top: P.bezel, width: sw, height: sh, borderRadius: P.radius - P.bezel, background: c.border, overflow: "hidden" }}>
+    <Interactive.Div
+      name="Overview"
+      style={{
+        position: "absolute",
+        left:
+          P.cx +
+          GROUP_DX +
+          (theme.canvas.width / 2 - P.cx - GROUP_DX) * centre -
+          P.w / 2,
+        top: P.top,
+        width: P.w,
+        height: P.h,
+        borderRadius: P.radius,
+        background: c.slate,
+        boxShadow: shadow.rest,
+        opacity: life,
+      }}
+    >
+      <Interactive.Div
+        name="Overview"
+        style={{
+          position: "absolute",
+          left: P.bezel,
+          top: P.bezel,
+          width: sw,
+          height: sh,
+          borderRadius: P.radius - P.bezel,
+          background: c.border,
+          overflow: "hidden",
+        }}
+      >
         {/* the island */}
-        <div style={{ position: "absolute", left: sw / 2 - 52, top: 14, width: 104, height: 30, borderRadius: 15, background: c.ink }} />
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: sw / 2 - 52,
+            top: 14,
+            width: 104,
+            height: 30,
+            borderRadius: 15,
+            background: c.ink,
+          }}
+        />
 
-        <div style={{ position: "absolute", left: 0, right: 0, top: drop, height: sh }}>
-        {/* avatar · Overview · bell */}
-        <div style={{ position: "absolute", left: 22, right: 22, top: 70, display: "flex", alignItems: "center", justifyContent: "space-between", opacity: PHONE_QUIET }}>
-          <div style={circle(52, c.indigoTint2)}>
-            <svg width={26} height={26} viewBox="0 0 24 24"><circle cx={12} cy={9} r={4} {...line} stroke={c.cardBg} /><path d="M4.5 20c1.5-3.6 4.2-5 7.5-5s6 1.4 7.5 5" {...line} stroke={c.cardBg} /></svg>
-          </div>
-          <div style={{ ...pill(c.cardBg, c.ink), width: 150, height: 52, fontSize: 19, fontWeight: 600 }}>Overview</div>
-          <div style={circle(52, c.cardBg)}>
-            <svg width={24} height={24} viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" {...line} /><path d="M10 20.5a2 2 0 0 0 4 0" {...line} /></svg>
-          </div>
-        </div>
-
-        {/* the balance card */}
-        <div style={{ position: "absolute", left: 18, right: 18, top: 148, height: 236, borderRadius: 32, background: c.cardBg, boxShadow: shadow.soft }}>
-          <div style={{ ...type, position: "absolute", left: 26, top: 34, fontSize: 15, fontWeight: 600, letterSpacing: 1, color: c.slate }}>ACCOUNT BALANCE:</div>
-          <div style={{ ...type, position: "absolute", left: 26, top: 66, fontSize: 36, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
-            Rp {price(amount)}
-          </div>
-          <div style={{ position: "absolute", right: 22, top: 26, ...circle(42, c.bg), boxShadow: "none" }}>
-            <svg width={22} height={22} viewBox="0 0 24 24"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z" {...line} /><circle cx={12} cy={12} r={3} {...line} /></svg>
-          </div>
-          <div style={{ position: "absolute", left: 22, right: 22, bottom: 24, display: "flex", gap: 10 }}>
-            <div style={{ ...pill(c.ink, c.cardBg), flex: 1.1 }}>
-              <svg width={18} height={18} viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8" {...line} stroke={c.cardBg} /></svg>
-              Send
+        <Interactive.Div
+          name="Overview"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top: drop,
+            height: sh,
+          }}
+        >
+          {/* avatar · Overview · bell */}
+          <Interactive.Div
+            name="Overview"
+            style={{
+              position: "absolute",
+              left: 22,
+              right: 22,
+              top: 70,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              opacity: PHONE_QUIET,
+            }}
+          >
+            <div style={circle(52, c.indigoTint2)}>
+              <svg width={26} height={26} viewBox="0 0 24 24">
+                <circle cx={12} cy={9} r={4} {...line} stroke={c.cardBg} />
+                <path
+                  d="M4.5 20c1.5-3.6 4.2-5 7.5-5s6 1.4 7.5 5"
+                  {...line}
+                  stroke={c.cardBg}
+                />
+              </svg>
             </div>
-            <div style={{ ...pill(c.cardBg, c.ink), flex: 1.3, border: `${theme.shape.hairline * 2}px solid ${c.border}`, boxShadow: "none" }}>Withdraw</div>
-            <div style={{ ...pill(c.bg, c.ink), width: 56, boxShadow: "none", fontSize: 22, letterSpacing: 1 }}>•••</div>
-          </div>
-        </div>
+            <div
+              style={{
+                ...pill(c.cardBg, c.ink),
+                width: 150,
+                height: 52,
+                fontSize: 19,
+                fontWeight: 600,
+              }}
+            >
+              Overview
+            </div>
+            <div style={circle(52, c.cardBg)}>
+              <svg width={24} height={24} viewBox="0 0 24 24">
+                <path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z" {...line} />
+                <path d="M10 20.5a2 2 0 0 0 4 0" {...line} />
+              </svg>
+            </div>
+          </Interactive.Div>
 
-        {/* the history, faded */}
-        <div style={{ ...pill(c.cardBg, c.ink), position: "absolute", left: 18, right: 18, top: 408, height: 60, justifyContent: "space-between", padding: "0 24px", fontWeight: 600, opacity: PHONE_QUIET }}>
-          Transaction History
-          <svg width={18} height={18} viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" {...line} /></svg>
-        </div>
-        </div>
-      </div>
-    </div>
+          {/* the balance card */}
+          <Interactive.Div
+            name="ACCOUNT BALANCE:"
+            style={{
+              position: "absolute",
+              left: 18,
+              right: 18,
+              top: 148,
+              height: 236,
+              borderRadius: 32,
+              background: c.cardBg,
+              boxShadow: shadow.soft,
+            }}
+          >
+            <Interactive.Div
+              name="ACCOUNT BALANCE:"
+              style={{
+                ...type,
+                position: "absolute",
+                left: 26,
+                top: 34,
+                fontSize: 15,
+                fontWeight: 600,
+                letterSpacing: 1,
+                color: c.slate,
+              }}
+            >
+              ACCOUNT BALANCE:
+            </Interactive.Div>
+            <Interactive.Div
+              name="Rp"
+              style={{
+                ...type,
+                position: "absolute",
+                left: 26,
+                top: 66,
+                fontSize: 36,
+                fontWeight: 700,
+                color: c.ink,
+                whiteSpace: "nowrap",
+                fontVariantNumeric: "tabular-nums",
+              }}
+            >
+              Rp {price(amount)}
+            </Interactive.Div>
+            <Interactive.Div
+              name="Objek"
+              style={{
+                position: "absolute",
+                right: 22,
+                top: 26,
+                ...circle(42, c.bg),
+                boxShadow: "none",
+              }}
+            >
+              <svg width={22} height={22} viewBox="0 0 24 24">
+                <path
+                  d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12z"
+                  {...line}
+                />
+                <circle cx={12} cy={12} r={3} {...line} />
+              </svg>
+            </Interactive.Div>
+            <Interactive.Div
+              name="Send"
+              style={{
+                position: "absolute",
+                left: 22,
+                right: 22,
+                bottom: 24,
+                display: "flex",
+                gap: 10,
+              }}
+            >
+              <div style={{ ...pill(c.ink, c.cardBg), flex: 1.1 }}>
+                <svg width={18} height={18} viewBox="0 0 24 24">
+                  <path d="M7 17L17 7M9 7h8v8" {...line} stroke={c.cardBg} />
+                </svg>
+                Send
+              </div>
+              <div
+                style={{
+                  ...pill(c.cardBg, c.ink),
+                  flex: 1.3,
+                  border: `${theme.shape.hairline * 2}px solid ${c.border}`,
+                  boxShadow: "none",
+                }}
+              >
+                Withdraw
+              </div>
+              <div
+                style={{
+                  ...pill(c.bg, c.ink),
+                  width: 56,
+                  boxShadow: "none",
+                  fontSize: 22,
+                  letterSpacing: 1,
+                }}
+              >
+                •••
+              </div>
+            </Interactive.Div>
+          </Interactive.Div>
+
+          {/* the history, faded */}
+          <Interactive.Div
+            name="Transaction History"
+            style={{
+              ...pill(c.cardBg, c.ink),
+              position: "absolute",
+              left: 18,
+              right: 18,
+              top: 408,
+              height: 60,
+              justifyContent: "space-between",
+              padding: "0 24px",
+              fontWeight: 600,
+              opacity: PHONE_QUIET,
+            }}
+          >
+            Transaction History
+            <svg width={18} height={18} viewBox="0 0 24 24">
+              <path d="M9 6l6 6-6 6" {...line} />
+            </svg>
+          </Interactive.Div>
+        </Interactive.Div>
+      </Interactive.Div>
+    </Interactive.Div>
   );
 };
 
 /** One of the things the pay goes on: a white disc, the glyph in ink, settling up into place. */
-const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; at: number }) => {
+const SpendIcon = ({
+  name,
+  x,
+  y,
+  at,
+}: {
+  name: IconName;
+  x: number;
+  y: number;
+  at: number;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -243,18 +598,56 @@ const SpendIcon = ({ name, x, y, at }: { name: IconName; x: number; y: number; a
     glass: c.cyan,
   };
   return (
-    <div style={{ position: "absolute", left: x - D / 2, top: y - D / 2 + lift, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: life, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <Interactive.Div
+      name="Objek"
+      style={{
+        position: "absolute",
+        left: x - D / 2,
+        top: y - D / 2 + lift,
+        width: D,
+        height: D,
+        borderRadius: D / 2,
+        background: c.cardBg,
+        boxShadow: shadow.soft,
+        opacity: life,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Icon name={name} size={SPEND.icon} color={c.ink} fill={fills[name]} />
-    </div>
+    </Interactive.Div>
   );
 };
 
 /** One piece of a line, easing in on its own frame; it holds its place while hidden, so the line never reflows. */
-const Piece = ({ text, at, out, color }: { text: string; at: number; out?: number; color: string }) => {
+const Piece = ({
+  text,
+  at,
+  out,
+  color,
+}: {
+  text: string;
+  at: number;
+  out?: number;
+  color: string;
+}) => {
   const f = useCurrentFrame();
   const m = useMotion();
-  const t = ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.fade));
-  return <span style={{ display: "inline-block", color, opacity: t, transform: `translateY(${((1 - t) * 14).toFixed(2)}px)` }}>{text}</span>;
+  const t =
+    ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.fade));
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        color,
+        opacity: t,
+        transform: `translateY(${((1 - t) * 14).toFixed(2)}px)`,
+      }}
+    >
+      {text}
+    </span>
+  );
 };
 
 export const SC01 = () => {
@@ -268,13 +661,19 @@ export const SC01 = () => {
   const gone = exit >= 0.999;
   const calIn = ease(f, L(B1.calendar), m.move);
   const cal = gone ? 0 : calIn;
-  const grow = 1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.gajian) - L(B1.calendar));
+  const grow =
+    1 + CAL_GROW * ease(f, L(B1.calendar), L(B1.gajian) - L(B1.calendar));
   /** GAJIAN up and bigger, the calendar down and smaller — one move, one curve. */
   const split = ease(f, L(B1.gajian), L(B1.settled) - L(B1.gajian));
-  const roll = (t: number) => 1 + (B1.payday - 1) * ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
+  const roll = (t: number) =>
+    1 +
+    (B1.payday - 1) *
+      ease(t, L(B1.scroll[0]), L(B1.scroll[1]) - L(B1.scroll[0]));
   const wordIn = ease(f, L(B1.gajian), m.reveal);
   /** The photo's rise from below — "Kerja" rides on it, as one group. */
-  const lift = (1 - ease(f, L(B1.photo[0]), m.move)) * (theme.canvas.height - WORK.feet + PHOTO_H);
+  const lift =
+    (1 - ease(f, L(B1.photo[0]), m.move)) *
+    (theme.canvas.height - WORK.feet + PHOTO_H);
   const ground = ease(f, L(B1.photo[0]), m.move);
   /** 395: Kerja and the photo leave to the left; the phone takes the middle; the six icons follow. */
   const leave = ease(f, L(B1.spend), m.move);
@@ -289,18 +688,39 @@ export const SC01 = () => {
   const swapAt = L(B1.closeUp) + m.move;
   const swapped = f >= swapAt;
   const w0 = PHOTO_H * LAYOFF;
-  const start = { left: theme.canvas.width / 2 - (LAYOFF_SOLID_CX - 0.5) * w0 - w0 / 2, top: WORK.feet - PHOTO_H };
+  const start = {
+    left: theme.canvas.width / 2 - (LAYOFF_SOLID_CX - 0.5) * w0 - w0 / 2,
+    top: WORK.feet - PHOTO_H,
+  };
   const k = CLOSE_H / PHOTO_H;
-  const end = { left: theme.canvas.width / 2 - HEAD_U.layoff * CLOSE_H * LAYOFF, top: CLOSE_TOP };
-  const pivot = { x: (k * start.left - end.left) / (k - 1), y: (k * start.top - end.top) / (k - 1) };
+  const end = {
+    left: theme.canvas.width / 2 - HEAD_U.layoff * CLOSE_H * LAYOFF,
+    top: CLOSE_TOP,
+  };
+  const pivot = {
+    x: (k * start.left - end.left) / (k - 1),
+    y: (k * start.top - end.top) / (k - 1),
+  };
   const s = 1 + (k - 1) * push;
-  const shot = { h: PHOTO_H * s, left: pivot.x + s * (start.left - pivot.x), top: pivot.y + s * (start.top - pivot.y) };
+  const shot = {
+    h: PHOTO_H * s,
+    left: pivot.x + s * (start.left - pivot.x),
+    top: pivot.y + s * (start.top - pivot.y),
+  };
 
   return (
     <Stage>
       {/* TA11's grid behind everything, coming in with the photo */}
       {ground > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: ground, maskImage: GROUND_RAMP, WebkitMaskImage: GROUND_RAMP }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: ground,
+            maskImage: GROUND_RAMP,
+            WebkitMaskImage: GROUND_RAMP,
+          }}
+        >
           <GridGround f={f + BLOCK.SC01} paper={c.bg} vignette={false} />
         </div>
       ) : null}
@@ -309,11 +729,15 @@ export const SC01 = () => {
           so it rises from BEHIND the page ("secara layer harusnya dari belakang
           kalender") */}
       {!gone && wordIn > 0.001 ? (
-        <div
+        <Interactive.Div
+          name="GAJIAN"
           style={{
             position: "absolute",
             left: theme.canvas.width / 2,
-            top: theme.canvas.height / 2 + (WORD_Y - theme.canvas.height / 2) * split - exit * EXIT_RISE,
+            top:
+              theme.canvas.height / 2 +
+              (WORD_Y - theme.canvas.height / 2) * split -
+              exit * EXIT_RISE,
             transform: `translate(-50%, -50%) scale(${(SPLIT.from + (1 - SPLIT.from) * split).toFixed(4)})`,
             opacity: wordIn,
             fontFamily: theme.text.family,
@@ -326,15 +750,41 @@ export const SC01 = () => {
           }}
         >
           GAJIAN
-        </div>
+        </Interactive.Div>
       ) : null}
 
       {/* the calendar: grows, then shrinks about its bottom edge and drops */}
       {cal > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: cal, transform: `translateY(${((1 - calIn) * 30 + split * CAL_DOWN - exit * EXIT_RISE).toFixed(2)}px)` }}>
-          <div style={{ position: "absolute", inset: 0, transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px` }}>
-            <div style={{ position: "absolute", inset: 0, transform: `scale(${grow.toFixed(4)})`, transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px` }}>
-              <Calendar month="Januari" date={roll(f)} last={B1.payday} speed={roll(f) - roll(f - 1)} />
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: cal,
+            transform: `translateY(${((1 - calIn) * 30 + split * CAL_DOWN - exit * EXIT_RISE).toFixed(2)}px)`,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `scale(${(1 - CAL_SHRINK * split).toFixed(4)})`,
+              transformOrigin: `${CAL.cx}px ${CAL_BOTTOM}px`,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                transform: `scale(${grow.toFixed(4)})`,
+                transformOrigin: `${CAL.cx}px ${CAL.y + CAL.h / 2}px`,
+              }}
+            >
+              <Calendar
+                month="Januari"
+                date={roll(f)}
+                last={B1.payday}
+                speed={roll(f) - roll(f - 1)}
+              />
             </div>
           </div>
         </div>
@@ -346,64 +796,208 @@ export const SC01 = () => {
           the yellow worker takes over after */}
       {/* it comes up from below, but never through the caption band — the frame
           is clipped there, so it rises out from behind the band's top edge */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
-        <div style={{ position: "absolute", inset: 0, opacity: 1 - leave, transform: `translateX(${(WORK.shift + GROUP_DX - LEAVE_X * leave).toFixed(2)}px)` }}>
-          <div style={{ position: "absolute", inset: 0, transform: `translateY(${lift.toFixed(2)}px)` }}>
-            <Say text="Kerja" x={theme.canvas.width / 2} y={WORK.feet - PHOTO_H - WORK.gap} at={L(B1.photo[0])} out={L(B1.photo[1])} size={WORK.label} weight={WORK.weight} color={c.indigo} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          clipPath: `inset(0 0 ${theme.captionBand.height}px 0)`,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: 1 - leave,
+            transform: `translateX(${(WORK.shift + GROUP_DX - LEAVE_X * leave).toFixed(2)}px)`,
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translateY(${lift.toFixed(2)}px)`,
+            }}
+          >
+            <Say
+              text="Kerja"
+              x={theme.canvas.width / 2}
+              y={WORK.feet - PHOTO_H - WORK.gap}
+              at={L(B1.photo[0])}
+              out={L(B1.photo[1])}
+              size={WORK.label}
+              weight={WORK.weight}
+              color={c.indigo}
+            />
           </div>
-          <Cutout src="art/in01/orang-kerja.png" aspect={ORANG_KERJA} x={theme.canvas.width / 2} y={WORK.feet} h={PHOTO_H} at={L(B1.photo[0])} out={L(B1.photo[1])} rise={theme.canvas.height - WORK.feet + PHOTO_H} riseFrames={m.move} mirror shadow floor={ORANG_KERJA_FLOOR} />
+          <Cutout
+            src="art/in01/orang-kerja.png"
+            aspect={ORANG_KERJA}
+            x={theme.canvas.width / 2}
+            y={WORK.feet}
+            h={PHOTO_H}
+            at={L(B1.photo[0])}
+            out={L(B1.photo[1])}
+            rise={theme.canvas.height - WORK.feet + PHOTO_H}
+            riseFrames={m.move}
+            mirror
+            shadow
+            floor={ORANG_KERJA_FLOOR}
+          />
         </div>
       </div>
       {/* 555: the phone, its lines and the six icons fade out together */}
       {spent < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - spent }}>
-      {/* the lines, under the phone and the discs */}
-      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-        {SPEND_ICONS.map((col, i) =>
-          col.map((name, j) => {
-            const at = iconsAt + m.sec(0.12) * (i * 3 + j);
-            const p = ease(f, at, m.sec(SPEND_LINE.drawSec));
-            if (p <= 0.001) return null;
-            const x0 = theme.canvas.width / 2;
-            const y0 = PHONE.top + PHONE.h / 2;
-            const dx = SPEND.x[i] - x0;
-            const dy = SPEND.y[j] - y0;
-            const len = Math.hypot(dx, dy);
-            const reach = (len - SPEND.disc / 2) * p;
-            return <line key={name} x1={x0} y1={y0} x2={x0 + (dx / len) * reach} y2={y0 + (dy / len) * reach} stroke={c.slate} strokeWidth={SPEND_LINE.width} strokeLinecap="round" />;
-          }),
-        )}
-      </svg>
-      <BalancePhone at={L(B1.penghasilan)} countOver={m.sec(1.5)} centre={centre} />
-      {SPEND_ICONS.map((col, i) =>
-        col.map((name, j) => <SpendIcon key={name} name={name} x={SPEND.x[i]} y={SPEND.y[j]} at={iconsAt + m.sec(0.12) * (i * 3 + j) + m.sec(SPEND_LINE.drawSec * 0.7)} />),
-      )}
-
+          {/* the lines, under the phone and the discs */}
+          <svg
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+            style={{ position: "absolute", left: 0, top: 0 }}
+          >
+            {SPEND_ICONS.map((col, i) =>
+              col.map((name, j) => {
+                const at = iconsAt + m.sec(0.12) * (i * 3 + j);
+                const p = ease(f, at, m.sec(SPEND_LINE.drawSec));
+                if (p <= 0.001) return null;
+                const x0 = theme.canvas.width / 2;
+                const y0 = PHONE.top + PHONE.h / 2;
+                const dx = SPEND.x[i] - x0;
+                const dy = SPEND.y[j] - y0;
+                const len = Math.hypot(dx, dy);
+                const reach = (len - SPEND.disc / 2) * p;
+                return (
+                  <line
+                    key={name}
+                    x1={x0}
+                    y1={y0}
+                    x2={x0 + (dx / len) * reach}
+                    y2={y0 + (dy / len) * reach}
+                    stroke={c.slate}
+                    strokeWidth={SPEND_LINE.width}
+                    strokeLinecap="round"
+                  />
+                );
+              }),
+            )}
+          </svg>
+          <BalancePhone
+            at={L(B1.penghasilan)}
+            countOver={m.sec(1.5)}
+            centre={centre}
+          />
+          {SPEND_ICONS.map((col, i) =>
+            col.map((name, j) => (
+              <SpendIcon
+                key={name}
+                name={name}
+                x={SPEND.x[i]}
+                y={SPEND.y[j]}
+                at={
+                  iconsAt +
+                  m.sec(0.12) * (i * 3 + j) +
+                  m.sec(SPEND_LINE.drawSec * 0.7)
+                }
+              />
+            )),
+          )}
         </div>
       ) : null}
 
       {/* the picture first, so the line reads over the close-up; never into the caption band */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.captionBand.height}px 0)` }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          clipPath: `inset(0 0 ${theme.captionBand.height}px 0)`,
+        }}
+      >
         {!swapped ? (
-          <Cutout src="art/in01/layoff.png" aspect={LAYOFF} x={shot.left + (shot.h * LAYOFF) / 2} y={shot.top + shot.h} h={shot.h} at={L(B1.bayangin[2])} shadow floor={LAYOFF_FLOOR} />
+          <Cutout
+            src="art/in01/layoff.png"
+            aspect={LAYOFF}
+            x={shot.left + (shot.h * LAYOFF) / 2}
+            y={shot.top + shot.h}
+            h={shot.h}
+            at={L(B1.bayangin[2])}
+            shadow
+            floor={LAYOFF_FLOOR}
+          />
         ) : (
-          <Cutout src="art/in01/orang-bingung.png" aspect={LAYOFF} x={theme.canvas.width / 2 - (HEAD_U.bingung - 0.5) * CLOSE_H * LAYOFF} y={CLOSE_TOP + CLOSE_H} h={CLOSE_H} at={swapAt - m.reveal} rise={0} shadow floor={BINGUNG_FLOOR} />
+          <Cutout
+            src="art/in01/orang-bingung.png"
+            aspect={LAYOFF}
+            x={
+              theme.canvas.width / 2 - (HEAD_U.bingung - 0.5) * CLOSE_H * LAYOFF
+            }
+            y={CLOSE_TOP + CLOSE_H}
+            h={CLOSE_H}
+            at={swapAt - m.reveal}
+            rise={0}
+            shadow
+            floor={BINGUNG_FLOOR}
+          />
         )}
       </div>
 
       {/* then the line, piece by piece, across the top — "Tapi" and "coba
           bayangin:" in indigo, the rest in black — and Layoff.png under it */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: BAYANGIN.y, display: "flex", flexDirection: "column", alignItems: "center", gap: BAYANGIN.gap, fontFamily: theme.text.family, fontSize: BAYANGIN.size, fontWeight: BAYANGIN.weight, lineHeight: 1.1, whiteSpace: "pre" }}>
+      <Interactive.Div
+        name="Tapi"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: BAYANGIN.y,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: BAYANGIN.gap,
+          fontFamily: theme.text.family,
+          fontSize: BAYANGIN.size,
+          fontWeight: BAYANGIN.weight,
+          lineHeight: 1.1,
+          whiteSpace: "pre",
+        }}
+      >
         <div>
           <Piece text="Tapi" at={tapiAt} out={swapAt} color={c.indigo} />
-          <Piece text=" coba bayangin:" at={L(B1.bayangin[1])} out={swapAt} color={c.indigo} />
+          <Piece
+            text=" coba bayangin:"
+            at={L(B1.bayangin[1])}
+            out={swapAt}
+            color={c.indigo}
+          />
         </div>
-        <Piece text="suatu hari harus berhenti kerja sementara" at={L(B1.bayangin[2])} out={swapAt} color={c.ink} />
-      </div>
+        <Piece
+          text="suatu hari harus berhenti kerja sementara"
+          at={L(B1.bayangin[2])}
+          out={swapAt}
+          color={c.ink}
+        />
+      </Interactive.Div>
       {/* …and in its place, as the picture swaps */}
-      <div style={{ position: "absolute", left: 0, right: 0, top: BAYANGIN.y, display: "flex", justifyContent: "center", fontFamily: theme.text.family, fontSize: BAYANGIN.size, fontWeight: BAYANGIN.weight, lineHeight: 1.1, whiteSpace: "pre" }}>
-        <Piece text="Apakah penghasilan kita juga ikut berhenti?" at={swapAt} color={c.ink} />
-      </div>
+      <Interactive.Div
+        name="Apakah penghasilan kita juga"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: BAYANGIN.y,
+          display: "flex",
+          justifyContent: "center",
+          fontFamily: theme.text.family,
+          fontSize: BAYANGIN.size,
+          fontWeight: BAYANGIN.weight,
+          lineHeight: 1.1,
+          whiteSpace: "pre",
+        }}
+      >
+        <Piece
+          text="Apakah penghasilan kita juga ikut berhenti?"
+          at={swapAt}
+          color={c.ink}
+        />
+      </Interactive.Div>
     </Stage>
   );
 };
@@ -418,7 +1012,14 @@ export const SC01 = () => {
  * (naik jabatan, skill baru, bangun bisnis, freelance, side hustle).
  */
 /** "OrangTuntun.png", 941 × 1672: hair from row 70, chest at row 620, head centred on column 466. */
-const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466 / 941, floor: 1618 / 1672 };
+const TUNTUN = {
+  aspect: 941 / 1672,
+  rows: 1672,
+  top: 70,
+  chest: 620,
+  headU: 466 / 941,
+  floor: 1618 / 1672,
+};
 /**
  * The head starts here, leaving the top of the frame to the bubbles; then
  * "Orangnya perbesar lagi dan geser naik sedikit" — 30% larger, 60 px higher;
@@ -427,12 +1028,20 @@ const TUNTUN = { aspect: 941 / 1672, rows: 1672, top: 70, chest: 620, headU: 466
 const TUNTUN_FROM = 270;
 /** …and then "Orangnya kecilin 15%" — the head stays where it starts. */
 const TUNTUN_ZOOM = 1.3 * 0.85;
-const TUNTUN_H = (((theme.captionBand.top - 400) * TUNTUN.rows) / (TUNTUN.chest - TUNTUN.top)) * TUNTUN_ZOOM;
+const TUNTUN_H =
+  (((theme.captionBand.top - 400) * TUNTUN.rows) /
+    (TUNTUN.chest - TUNTUN.top)) *
+  TUNTUN_ZOOM;
 const TUNTUN_TOP = TUNTUN_FROM - (TUNTUN.top / TUNTUN.rows) * TUNTUN_H;
 /** "Lalu di bawahnya muncul text box garis putus putus" — TA07's dashed box over the chest, clear of the caption band. */
 /** "Text box dan isinya kecilin 20%" — box and type at 0.8, about the same centre. */
 const MAKANYA_SCALE = 0.8;
-const MAKANYA = { y: 870 - (140 * MAKANYA_SCALE) / 2, w: 1560 * MAKANYA_SCALE, h: 140 * MAKANYA_SCALE, size: 50 * MAKANYA_SCALE };
+const MAKANYA = {
+  y: 870 - (140 * MAKANYA_SCALE) / 2,
+  w: 1560 * MAKANYA_SCALE,
+  h: 140 * MAKANYA_SCALE,
+  size: 50 * MAKANYA_SCALE,
+};
 /**
  * The five bubbles on an arc over the head, each named under it — "Di bawah
  * setiap icon, berikan label namanya, sesuai subtitle". The arc sits 60 px
@@ -446,7 +1055,17 @@ const BUBBLES: { icon: IconName; label: string; x: number; y: number }[] = [
   { icon: "monitor", label: "Side hustle", x: 1420, y: 270 },
 ];
 /** Disc and glyph size; the drift (px) and its two periods (s); the overshoot on arrival. */
-const BUBBLE = { label: 30, labelGap: 18, disc: 150, icon: 82, bob: 12, sway: 6, bobSec: 2.4, swaySec: 3.3, peak: 1.15 };
+const BUBBLE = {
+  label: 30,
+  labelGap: 18,
+  disc: 150,
+  icon: 82,
+  bob: 12,
+  sway: 6,
+  bobSec: 2.4,
+  swaySec: 3.3,
+  peak: 1.15,
+};
 
 /** Where the five gather: the middle bubble, "Bangun bisnis". */
 const GATHER = { x: 960, y: 140 };
@@ -454,7 +1073,23 @@ const GATHER = { x: 960, y: 140 };
 const WAKTU = { y: 200 };
 
 /** One bubble: small → past full size → full size, then drifting for as long as it is up. */
-const Bubble = ({ icon, label, x: x0, y: y0, at, i, gatherAt }: { icon: IconName; label: string; x: number; y: number; at: number; i: number; gatherAt: number }) => {
+const Bubble = ({
+  icon,
+  label,
+  x: x0,
+  y: y0,
+  at,
+  i,
+  gatherAt,
+}: {
+  icon: IconName;
+  label: string;
+  x: number;
+  y: number;
+  at: number;
+  i: number;
+  gatherAt: number;
+}) => {
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -471,8 +1106,10 @@ const Bubble = ({ icon, label, x: x0, y: y0, at, i, gatherAt }: { icon: IconName
   const settle = ease(f, at + m.reveal, m.reveal);
   const scale = grow * BUBBLE.peak - (BUBBLE.peak - 1) * settle;
   const t = (f - at) / m.sec(1);
-  const dy = Math.sin((t / BUBBLE.bobSec + i * 0.23) * Math.PI * 2) * BUBBLE.bob;
-  const dx = Math.sin((t / BUBBLE.swaySec + i * 0.37) * Math.PI * 2) * BUBBLE.sway;
+  const dy =
+    Math.sin((t / BUBBLE.bobSec + i * 0.23) * Math.PI * 2) * BUBBLE.bob;
+  const dx =
+    Math.sin((t / BUBBLE.swaySec + i * 0.37) * Math.PI * 2) * BUBBLE.sway;
   const fills: Partial<Record<IconName, string>> = {
     briefcase: c.indigoTint1,
     tools: c.cyan,
@@ -483,13 +1120,45 @@ const Bubble = ({ icon, label, x: x0, y: y0, at, i, gatherAt }: { icon: IconName
   const D = BUBBLE.disc;
   return (
     <>
-      <div style={{ position: "absolute", left: x - D / 2 + dx, top: y - D / 2 + dy, width: D, height: D, borderRadius: D / 2, background: c.cardBg, boxShadow: shadow.soft, opacity: grow * (1 - gone), transform: `scale(${scale.toFixed(4)})`, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: x - D / 2 + dx,
+          top: y - D / 2 + dy,
+          width: D,
+          height: D,
+          borderRadius: D / 2,
+          background: c.cardBg,
+          boxShadow: shadow.soft,
+          opacity: grow * (1 - gone),
+          transform: `scale(${scale.toFixed(4)})`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <Icon name={icon} size={BUBBLE.icon} color={c.ink} fill={fills[icon]} />
-      </div>
+      </Interactive.Div>
       {/* the name rides with its bubble but is not scaled with it */}
-      <div style={{ position: "absolute", left: x + dx, top: y + D / 2 + BUBBLE.labelGap + dy, transform: "translateX(-50%)", opacity: grow * (1 - nameOut), fontFamily: theme.text.family, fontSize: BUBBLE.label, fontWeight: 700, color: c.ink, whiteSpace: "nowrap", lineHeight: 1 }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: x + dx,
+          top: y + D / 2 + BUBBLE.labelGap + dy,
+          transform: "translateX(-50%)",
+          opacity: grow * (1 - nameOut),
+          fontFamily: theme.text.family,
+          fontSize: BUBBLE.label,
+          fontWeight: 700,
+          color: c.ink,
+          whiteSpace: "nowrap",
+          lineHeight: 1,
+        }}
+      >
         {label}
-      </div>
+      </Interactive.Div>
     </>
   );
 };
@@ -502,24 +1171,79 @@ export const SC02 = () => {
     <Stage>
       {/* head to chest, centred on the head; masked off at the dashed box's
           bottom edge — "Masking bawah orangnya, buat naik sampe di bawah text box nya" */}
-      <div style={{ position: "absolute", inset: 0, clipPath: `inset(0 0 ${theme.canvas.height - (MAKANYA.y + MAKANYA.h)}px 0)` }}>
-        <Cutout src="art/in01/orang-tuntun.png" aspect={TUNTUN.aspect} x={theme.canvas.width / 2 - (TUNTUN.headU - 0.5) * TUNTUN_H * TUNTUN.aspect} y={TUNTUN_TOP + TUNTUN_H} h={TUNTUN_H} at={L(B2.title)} riseFrames={m.move} shadow floor={TUNTUN.floor} />
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          clipPath: `inset(0 0 ${theme.canvas.height - (MAKANYA.y + MAKANYA.h)}px 0)`,
+        }}
+      >
+        <Cutout
+          src="art/in01/orang-tuntun.png"
+          aspect={TUNTUN.aspect}
+          x={
+            theme.canvas.width / 2 -
+            (TUNTUN.headU - 0.5) * TUNTUN_H * TUNTUN.aspect
+          }
+          y={TUNTUN_TOP + TUNTUN_H}
+          h={TUNTUN_H}
+          at={L(B2.title)}
+          riseFrames={m.move}
+          shadow
+          floor={TUNTUN.floor}
+        />
       </div>
-      <TypeBox cx={theme.canvas.width / 2} y={MAKANYA.y} w={MAKANYA.w} h={MAKANYA.h} at={L(B2.title)} text="Makanya, banyak orang berusaha menambah penghasilan" size={MAKANYA.size} closeAt={L(B2.gather)} />
+      <TypeBox
+        cx={theme.canvas.width / 2}
+        y={MAKANYA.y}
+        w={MAKANYA.w}
+        h={MAKANYA.h}
+        at={L(B2.title)}
+        text="Makanya, banyak orang berusaha menambah penghasilan"
+        size={MAKANYA.size}
+        closeAt={L(B2.gather)}
+      />
       {/* "Bangun bisnis" drawn last, so the others gather under it */}
       {BUBBLES.map((b, i) => ({ b, i }))
-        .sort((p, q) => Number(p.b.icon === "store") - Number(q.b.icon === "store"))
+        .sort(
+          (p, q) => Number(p.b.icon === "store") - Number(q.b.icon === "store"),
+        )
         .map(({ b, i }) => (
-        <Bubble key={b.icon} icon={b.icon} label={b.label} x={b.x} y={b.y} at={L(B2.ways[i])} i={i} gatherAt={L(B2.gather)} />
-      ))}
-      <Say text="Waktu + Tenaga" x={theme.canvas.width / 2} y={WAKTU.y} at={L(B2.gather) + m.fade * 2 + m.move} size={SPLIT.word} weight={800} color={c.indigo} />
+          <Bubble
+            key={b.icon}
+            icon={b.icon}
+            label={b.label}
+            x={b.x}
+            y={b.y}
+            at={L(B2.ways[i])}
+            i={i}
+            gatherAt={L(B2.gather)}
+          />
+        ))}
+      <Say
+        text="Waktu + Tenaga"
+        x={theme.canvas.width / 2}
+        y={WAKTU.y}
+        at={L(B2.gather) + m.fade * 2 + m.move}
+        size={SPLIT.word}
+        weight={800}
+        color={c.indigo}
+      />
     </Stage>
   );
 };
 
 // ═══ SC03 — 24 hours, and the two questions ═══════════════════════════════
 /** The wall clock, and its two lines — indigo, over and under it. */
-const CLOCK = { cx: 960, cy: 500, r: 230, label: 72, above: 170, below: 830, exit: 1100 };
+const CLOCK = {
+  cx: 960,
+  cy: 500,
+  r: 230,
+  label: 72,
+  above: 170,
+  below: 830,
+  exit: 1100,
+};
 /**
  * Hands from 02.10 (hour 65°, minute 60° from twelve). The minute hand turns
  * 120° — twenty minutes — and the hour hand moves as a wall clock's would,
@@ -527,20 +1251,74 @@ const CLOCK = { cx: 960, cy: 500, r: 230, label: 72, above: 170, below: 830, exi
  */
 const HANDS = { hour: 65, minute: 60, turn: 120 };
 /** "OrangMikir.png", 1086 × 1448: seated, feet on row 1365, solid from row 64, columns 163–987. */
-const MIKIR = { aspect: 1086 / 1448, h: 620, feet: 930, floor: 1408 / 1448, solidCx: 594 / 1086, top: 66 / 1448, left: 168 / 1086, right: 1020 / 1086 }; // OrangMikir_1.png
-const MIKIR_X = theme.canvas.width / 2 - (MIKIR.solidCx - 0.5) * MIKIR.h * MIKIR.aspect;
+const MIKIR = {
+  aspect: 1086 / 1448,
+  h: 620,
+  feet: 930,
+  floor: 1408 / 1448,
+  solidCx: 594 / 1086,
+  top: 66 / 1448,
+  left: 168 / 1086,
+  right: 1020 / 1086,
+}; // OrangMikir_1.png
+const MIKIR_X =
+  theme.canvas.width / 2 - (MIKIR.solidCx - 0.5) * MIKIR.h * MIKIR.aspect;
 const MIKIR_Y = MIKIR.feet + (1 - MIKIR.floor) * MIKIR.h;
 /** What a grown-up carries — fifty of them, around the man thinking. */
 const LOADS = [
-  "Rumah", "Keluarga", "Financial freedom", "Cicilan", "KPR", "Cicilan mobil", "Biaya sekolah anak", "Tagihan listrik",
-  "Asuransi", "Dana darurat", "Orang tua", "Pernikahan", "Kesehatan", "Pajak", "Liburan", "Kontrakan",
-  "Uang belanja", "Biaya rumah sakit", "Pensiun", "Tabungan", "Investasi", "Kartu kredit", "Utang", "Biaya hidup",
-  "Transportasi", "Bensin", "Internet", "Pulsa", "Arisan", "Kondangan", "Zakat", "Hadiah ulang tahun",
-  "Biaya kuliah", "Renovasi rumah", "Servis mobil", "Popok bayi", "Susu anak", "Les anak", "Dana pensiun", "Rawat orang tua",
-  "Asisten rumah tangga", "Iuran lingkungan", "BPJS", "Tagihan air", "Paylater", "Cicilan HP", "Gaya hidup", "Dana pendidikan",
-  "Sewa kantor", "Biaya nikah",
+  "Rumah",
+  "Keluarga",
+  "Financial freedom",
+  "Cicilan",
+  "KPR",
+  "Cicilan mobil",
+  "Biaya sekolah anak",
+  "Tagihan listrik",
+  "Asuransi",
+  "Dana darurat",
+  "Orang tua",
+  "Pernikahan",
+  "Kesehatan",
+  "Pajak",
+  "Liburan",
+  "Kontrakan",
+  "Uang belanja",
+  "Biaya rumah sakit",
+  "Pensiun",
+  "Tabungan",
+  "Investasi",
+  "Kartu kredit",
+  "Utang",
+  "Biaya hidup",
+  "Transportasi",
+  "Bensin",
+  "Internet",
+  "Pulsa",
+  "Arisan",
+  "Kondangan",
+  "Zakat",
+  "Hadiah ulang tahun",
+  "Biaya kuliah",
+  "Renovasi rumah",
+  "Servis mobil",
+  "Popok bayi",
+  "Susu anak",
+  "Les anak",
+  "Dana pensiun",
+  "Rawat orang tua",
+  "Asisten rumah tangga",
+  "Iuran lingkungan",
+  "BPJS",
+  "Tagihan air",
+  "Paylater",
+  "Cicilan HP",
+  "Gaya hidup",
+  "Dana pendidikan",
+  "Sewa kantor",
+  "Biaya nikah",
 ];
-if (LOADS.length !== 50) throw new Error(`IN01 SC03: ${LOADS.length} loads, Simon asked for 50`);
+if (LOADS.length !== 50)
+  throw new Error(`IN01 SC03: ${LOADS.length} loads, Simon asked for 50`);
 /**
  * Where each one sits: drawn from a seeded random, kept only where it clears
  * the man, the logo zone, the caption band and every word placed before it.
@@ -555,19 +1333,41 @@ const LOAD_PLACES = (() => {
     b: theme.captionBand.top,
   };
   const placed: { l: number; r: number; t: number; b: number }[] = [];
-  const hit = (a: typeof man, b: typeof man) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
-  const logo = { l: W - theme.logoZone.width, r: W, t: 0, b: theme.logoZone.height };
+  const hit = (a: typeof man, b: typeof man) =>
+    a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+  const logo = {
+    l: W - theme.logoZone.width,
+    r: W,
+    t: 0,
+    b: theme.logoZone.height,
+  };
   return LOADS.map((text, i) => {
     for (let k = 0; k < 4000; k++) {
       const size = 26 + Math.floor(random(`in01-load-size-${i}-${k}`) * 20);
       const w = text.length * size * 0.56 + 10;
       const h = size * 1.3;
       const x = 70 + w / 2 + random(`in01-load-x-${i}-${k}`) * (W - 140 - w);
-      const y = 70 + h / 2 + random(`in01-load-y-${i}-${k}`) * (theme.captionBand.top - 30 - 70 - h);
-      const box = { l: x - w / 2 - 12, r: x + w / 2 + 12, t: y - h / 2 - 6, b: y + h / 2 + 6 };
-      if (hit(box, man) || hit(box, logo) || placed.some((p) => hit(box, p))) continue;
+      const y =
+        70 +
+        h / 2 +
+        random(`in01-load-y-${i}-${k}`) * (theme.captionBand.top - 30 - 70 - h);
+      const box = {
+        l: x - w / 2 - 12,
+        r: x + w / 2 + 12,
+        t: y - h / 2 - 6,
+        b: y + h / 2 + 6,
+      };
+      if (hit(box, man) || hit(box, logo) || placed.some((p) => hit(box, p)))
+        continue;
       placed.push(box);
-      return { text, x, y, size, order: random(`in01-load-order-${i}`), slate: random(`in01-load-tone-${i}`) < 0.5 };
+      return {
+        text,
+        x,
+        y,
+        size,
+        order: random(`in01-load-order-${i}`),
+        slate: random(`in01-load-tone-${i}`) < 0.5,
+      };
     }
     throw new Error(`IN01 SC03: no room for "${text}"`);
   });
@@ -579,22 +1379,64 @@ const WallClock = ({ turn }: { turn: number }) => {
   const shadow = useShadow();
   const R = CLOCK.r;
   const hand = (deg: number, len: number, w: number) => (
-    <line x1={R} y1={R} x2={R + Math.sin((deg * Math.PI) / 180) * len} y2={R - Math.cos((deg * Math.PI) / 180) * len} stroke={c.ink} strokeWidth={w} strokeLinecap="round" />
+    <line
+      x1={R}
+      y1={R}
+      x2={R + Math.sin((deg * Math.PI) / 180) * len}
+      y2={R - Math.cos((deg * Math.PI) / 180) * len}
+      stroke={c.ink}
+      strokeWidth={w}
+      strokeLinecap="round"
+    />
   );
   return (
-    <div style={{ position: "absolute", left: CLOCK.cx - R, top: CLOCK.cy - R, width: R * 2, height: R * 2, borderRadius: R, background: c.cardBg, boxShadow: shadow.soft }}>
-      <svg width={R * 2} height={R * 2} style={{ position: "absolute", left: 0, top: 0 }}>
-        <circle cx={R} cy={R} r={R - 6} fill="none" stroke={c.ink} strokeWidth={8} />
+    <Interactive.Div
+      name="Objek"
+      style={{
+        position: "absolute",
+        left: CLOCK.cx - R,
+        top: CLOCK.cy - R,
+        width: R * 2,
+        height: R * 2,
+        borderRadius: R,
+        background: c.cardBg,
+        boxShadow: shadow.soft,
+      }}
+    >
+      <svg
+        width={R * 2}
+        height={R * 2}
+        style={{ position: "absolute", left: 0, top: 0 }}
+      >
+        <circle
+          cx={R}
+          cy={R}
+          r={R - 6}
+          fill="none"
+          stroke={c.ink}
+          strokeWidth={8}
+        />
         {Array.from({ length: 12 }, (_, i) => {
           const a = (i * 30 * Math.PI) / 180;
           const r0 = i % 3 === 0 ? R - 52 : R - 40;
-          return <line key={i} x1={R + Math.sin(a) * r0} y1={R - Math.cos(a) * r0} x2={R + Math.sin(a) * (R - 24)} y2={R - Math.cos(a) * (R - 24)} stroke={i % 3 === 0 ? c.ink : c.slate} strokeWidth={i % 3 === 0 ? 8 : 5} strokeLinecap="round" />;
+          return (
+            <line
+              key={i}
+              x1={R + Math.sin(a) * r0}
+              y1={R - Math.cos(a) * r0}
+              x2={R + Math.sin(a) * (R - 24)}
+              y2={R - Math.cos(a) * (R - 24)}
+              stroke={i % 3 === 0 ? c.ink : c.slate}
+              strokeWidth={i % 3 === 0 ? 8 : 5}
+              strokeLinecap="round"
+            />
+          );
         })}
         {hand(HANDS.hour + turn / 12, R * 0.5, 14)}
         {hand(HANDS.minute + turn, R * 0.72, 9)}
         <circle cx={R} cy={R} r={14} fill={c.indigo} />
       </svg>
-    </div>
+    </Interactive.Div>
   );
 };
 
@@ -608,25 +1450,81 @@ const WallClock = ({ turn }: { turn: number }) => {
  * Each word arrives as it is spoken; the small label comes first — Simon renamed them
  * "Jangan cuma tanya" and "Tanya juga".
  */
-const QUIZ = { label: 36, size: 100, track: -2, labelY: 300, lineY: [440, 560, 680] };
+const QUIZ = {
+  label: 36,
+  size: 100,
+  track: -2,
+  labelY: 300,
+  lineY: [440, 560, 680],
+};
 const SELECT = { caret: 5, knob: 22 };
 
 /** One word, easing up into place on its own frame. */
-const Word = ({ f, at, children, style }: { f: number; at: number; children: React.ReactNode; style?: React.CSSProperties }) => {
+const Word = ({
+  f,
+  at,
+  children,
+  style,
+}: {
+  f: number;
+  at: number;
+  children: React.ReactNode;
+  style?: React.CSSProperties;
+}) => {
   const m = useMotion();
   const t = ease(f, at, m.reveal);
-  return <span style={{ display: "inline-block", opacity: t, transform: `translateY(${((1 - t) * 18).toFixed(2)}px)`, ...style }}>{children}</span>;
+  return (
+    <span
+      style={{
+        display: "inline-block",
+        opacity: t,
+        transform: `translateY(${((1 - t) * 18).toFixed(2)}px)`,
+        ...style,
+      }}
+    >
+      {children}
+    </span>
+  );
 };
 
 /** The small label above a question — "Jangan cuma tanya", "Tanya juga" — whose type other scenes borrow for their titles. */
-export const quizLabelStyle = (c: ReturnType<typeof usePalette>): React.CSSProperties => ({ fontFamily: theme.text.family, fontSize: QUIZ.label, fontWeight: 700, letterSpacing: 2, color: c.indigo });
+export const quizLabelStyle = (
+  c: ReturnType<typeof usePalette>,
+): React.CSSProperties => ({
+  fontFamily: theme.text.family,
+  fontSize: QUIZ.label,
+  fontWeight: 700,
+  letterSpacing: 2,
+  color: c.indigo,
+});
 
-const QuizLabel = ({ f, at, out, text }: { f: number; at: number; out?: number; text: string }) => {
+const QuizLabel = ({
+  f,
+  at,
+  out,
+  text,
+}: {
+  f: number;
+  at: number;
+  out?: number;
+  text: string;
+}) => {
   const c = usePalette();
   const m = useMotion();
-  const t = ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.move));
+  const t =
+    ease(f, at, m.reveal) * (out === undefined ? 1 : 1 - ease(f, out, m.move));
   return (
-    <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.labelY, textAlign: "center", opacity: t, ...quizLabelStyle(c) }}>
+    <div
+      style={{
+        position: "absolute",
+        left: 0,
+        right: 0,
+        top: QUIZ.labelY,
+        textAlign: "center",
+        opacity: t,
+        ...quizLabelStyle(c),
+      }}
+    >
       {text}
     </div>
   );
@@ -641,32 +1539,136 @@ const QuestionOne = ({ f, L }: { f: number; L: (g: number) => number }) => {
   if (f < L(B3.label1) || out >= 0.999) return null;
   /* the selection runs across the two words while they are spoken */
   const sel = ease(f, W[5], W[6] + m.reveal - W[5]);
-  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const, textAlign: "center" as const };
+  const line = {
+    fontFamily: theme.text.family,
+    fontSize: QUIZ.size,
+    letterSpacing: QUIZ.track,
+    lineHeight: 1.1,
+    color: c.ink,
+    whiteSpace: "pre" as const,
+    textAlign: "center" as const,
+  };
   return (
-    <div style={{ position: "absolute", inset: 0, opacity: 1 - out, transform: `translateY(${(-out * 60).toFixed(2)}px)` }}>
+    <div
+      style={{
+        position: "absolute",
+        inset: 0,
+        opacity: 1 - out,
+        transform: `translateY(${(-out * 60).toFixed(2)}px)`,
+      }}
+    >
       <QuizLabel f={f} at={L(B3.label1)} text="Jangan cuma tanya" />
-      <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.lineY[0] - QUIZ.size * 0.55, ...line }}>
-        <Word f={f} at={W[0]} style={{ fontWeight: 800 }}>Gimana</Word> <Word f={f} at={W[1]} style={{ fontWeight: 800 }}>caranya</Word>{" "}
-        <Word f={f} at={W[2]} style={{ fontWeight: 400 }}>aku</Word> <Word f={f} at={W[3]} style={{ fontWeight: 400 }}>bisa</Word>
-      </div>
-      <div style={{ position: "absolute", left: 0, right: 0, top: QUIZ.lineY[1] - QUIZ.size * 0.55, ...line }}>
-        <Word f={f} at={W[4]} style={{ fontWeight: 400 }}>menghasilkan</Word>{" "}
+      <Interactive.Div
+        name="Gimana"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: QUIZ.lineY[0] - QUIZ.size * 0.55,
+          ...line,
+        }}
+      >
+        <Word f={f} at={W[0]} style={{ fontWeight: 800 }}>
+          Gimana
+        </Word>{" "}
+        <Word f={f} at={W[1]} style={{ fontWeight: 800 }}>
+          caranya
+        </Word>{" "}
+        <Word f={f} at={W[2]} style={{ fontWeight: 400 }}>
+          aku
+        </Word>{" "}
+        <Word f={f} at={W[3]} style={{ fontWeight: 400 }}>
+          bisa
+        </Word>
+      </Interactive.Div>
+      <Interactive.Div
+        name="menghasilkan"
+        style={{
+          position: "absolute",
+          left: 0,
+          right: 0,
+          top: QUIZ.lineY[1] - QUIZ.size * 0.55,
+          ...line,
+        }}
+      >
+        <Word f={f} at={W[4]} style={{ fontWeight: 400 }}>
+          menghasilkan
+        </Word>{" "}
         <span style={{ position: "relative", display: "inline-block" }}>
           {/* the selection: a pale wash swept left to right, a caret at each end */}
-          <span style={{ position: "absolute", left: -6, top: "8%", height: "88%", width: `calc(${(sel * 100).toFixed(2)}% + ${(12 * sel).toFixed(2)}px)`, background: theme.color.indigoWashStrong, borderRadius: 4 }} />
+          <span
+            style={{
+              position: "absolute",
+              left: -6,
+              top: "8%",
+              height: "88%",
+              width: `calc(${(sel * 100).toFixed(2)}% + ${(12 * sel).toFixed(2)}px)`,
+              background: theme.color.indigoWashStrong,
+              borderRadius: 4,
+            }}
+          />
           {sel > 0.001 ? (
             <>
-              <span style={{ position: "absolute", left: -6 - SELECT.caret / 2, top: "4%", width: SELECT.caret, height: "92%", borderRadius: SELECT.caret, background: c.indigo }} />
-              <span style={{ position: "absolute", left: -6 - SELECT.knob / 2, top: "100%", width: SELECT.knob, height: SELECT.knob, borderRadius: SELECT.knob, background: c.indigo, marginTop: -SELECT.knob / 2 - 4 }} />
-              <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`, top: "4%", width: SELECT.caret, height: "92%", marginLeft: -SELECT.caret / 2, borderRadius: SELECT.caret, background: c.indigo }} />
-              <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`, top: "4%", width: SELECT.knob, height: SELECT.knob, marginLeft: -SELECT.knob / 2, marginTop: -SELECT.knob / 2, borderRadius: SELECT.knob, background: c.indigo }} />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -6 - SELECT.caret / 2,
+                  top: "4%",
+                  width: SELECT.caret,
+                  height: "92%",
+                  borderRadius: SELECT.caret,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -6 - SELECT.knob / 2,
+                  top: "100%",
+                  width: SELECT.knob,
+                  height: SELECT.knob,
+                  borderRadius: SELECT.knob,
+                  background: c.indigo,
+                  marginTop: -SELECT.knob / 2 - 4,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`,
+                  top: "4%",
+                  width: SELECT.caret,
+                  height: "92%",
+                  marginLeft: -SELECT.caret / 2,
+                  borderRadius: SELECT.caret,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: `calc(${(sel * 100).toFixed(2)}% + ${(6 * sel).toFixed(2)}px)`,
+                  top: "4%",
+                  width: SELECT.knob,
+                  height: SELECT.knob,
+                  marginLeft: -SELECT.knob / 2,
+                  marginTop: -SELECT.knob / 2,
+                  borderRadius: SELECT.knob,
+                  background: c.indigo,
+                }}
+              />
             </>
           ) : null}
           <span style={{ position: "relative" }}>
-            <Word f={f} at={W[5]} style={{ fontWeight: 800 }}>lebih</Word> <Word f={f} at={W[6]} style={{ fontWeight: 800 }}>banyak?</Word>
+            <Word f={f} at={W[5]} style={{ fontWeight: 800 }}>
+              lebih
+            </Word>{" "}
+            <Word f={f} at={W[6]} style={{ fontWeight: 800 }}>
+              banyak?
+            </Word>
           </span>
         </span>
-      </div>
+      </Interactive.Div>
     </div>
   );
 };
@@ -677,43 +1679,139 @@ const QuestionOne = ({ f, L }: { f: number; L: (g: number) => number }) => {
  * white and italic on a solid indigo bar, bracketed by a thin line with a knob at each end.
  * `lines` are the words of the black lines; `wordAt` is one frame per word, in order; `bar` is the last line.
  */
-export const QuizStatement = ({ f, label, labelAt, lines, wordAt, bar, barAt }: { f: number; label: string; labelAt: number; lines: string[][]; wordAt: number[]; bar: string; barAt: number }) => {
+export const QuizStatement = ({
+  f,
+  label,
+  labelAt,
+  lines,
+  wordAt,
+  bar,
+  barAt,
+}: {
+  f: number;
+  label: string;
+  labelAt: number;
+  lines: string[][];
+  wordAt: number[];
+  bar: string;
+  barAt: number;
+}) => {
   const c = usePalette();
   const m = useMotion();
   if (f < labelAt) return null;
   const barP = ease(f, barAt, m.sec(0.3));
   const bracket = ease(f, barAt + m.sec(0.15), m.sec(0.3));
-  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, fontWeight: 800, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const };
+  const line = {
+    fontFamily: theme.text.family,
+    fontSize: QUIZ.size,
+    fontWeight: 800,
+    letterSpacing: QUIZ.track,
+    lineHeight: 1.1,
+    color: c.ink,
+    whiteSpace: "pre" as const,
+  };
   const K = SELECT.knob;
   const PAD = 28;
   let k = 0;
   return (
     <>
       <QuizLabel f={f} at={labelAt} text={label} />
-      <div style={{ position: "absolute", left: "50%", top: QUIZ.lineY[0] - QUIZ.size * 0.55, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: QUIZ.lineY[0] - QUIZ.size * 0.55,
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+      >
         {lines.map((words, i) => (
           <div key={i} style={line}>
             {words.map((w, j) => (
               <React.Fragment key={j}>
                 {j > 0 ? " " : null}
-                <Word f={f} at={wordAt[k++]}>{w}</Word>
+                <Word f={f} at={wordAt[k++]}>
+                  {w}
+                </Word>
               </React.Fragment>
             ))}
           </div>
         ))}
         <div style={{ ...line, position: "relative", marginTop: 8 }}>
-          <span style={{ position: "absolute", left: -PAD, top: 0, bottom: 0, width: `calc(${(barP * 100).toFixed(2)}% + ${(2 * PAD * barP).toFixed(2)}px)`, background: c.indigo, borderRadius: 8 }} />
+          <span
+            style={{
+              position: "absolute",
+              left: -PAD,
+              top: 0,
+              bottom: 0,
+              width: `calc(${(barP * 100).toFixed(2)}% + ${(2 * PAD * barP).toFixed(2)}px)`,
+              background: c.indigo,
+              borderRadius: 8,
+            }}
+          />
           {bracket > 0.001 ? (
             <span style={{ position: "absolute", inset: 0, opacity: bracket }}>
-              <span style={{ position: "absolute", left: -PAD - 2, top: -QUIZ.size * 0.55, height: `calc(100% + ${QUIZ.size * 0.55}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
-              <span style={{ position: "absolute", left: -PAD - K / 2, top: -QUIZ.size * 0.55 - K / 2, width: K, height: K, borderRadius: K, background: c.indigo }} />
-              <span style={{ position: "absolute", right: -PAD - 2, top: 0, height: `calc(100% + ${QUIZ.size * 0.4}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
-              <span style={{ position: "absolute", right: -PAD - K / 2, top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`, width: K, height: K, borderRadius: K, background: c.indigo }} />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -PAD - 2,
+                  top: -QUIZ.size * 0.55,
+                  height: `calc(100% + ${QUIZ.size * 0.55}px)`,
+                  width: 4,
+                  borderRadius: 2,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -PAD - K / 2,
+                  top: -QUIZ.size * 0.55 - K / 2,
+                  width: K,
+                  height: K,
+                  borderRadius: K,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  right: -PAD - 2,
+                  top: 0,
+                  height: `calc(100% + ${QUIZ.size * 0.4}px)`,
+                  width: 4,
+                  borderRadius: 2,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  right: -PAD - K / 2,
+                  top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`,
+                  width: K,
+                  height: K,
+                  borderRadius: K,
+                  background: c.indigo,
+                }}
+              />
             </span>
           ) : null}
-          <span style={{ position: "relative", color: c.cardBg, fontStyle: "italic", opacity: barP }}>{bar}</span>
+          <span
+            style={{
+              position: "relative",
+              color: c.cardBg,
+              fontStyle: "italic",
+              opacity: barP,
+            }}
+          >
+            {bar}
+          </span>
         </div>
-      </div>
+      </Interactive.Div>
     </>
   );
 };
@@ -727,7 +1825,15 @@ const QuestionTwo = ({ f, L }: { f: number; L: (g: number) => number }) => {
   if (f < at) return null;
   const bar = ease(f, W[7], m.sec(0.3));
   const bracket = ease(f, W[7] + m.sec(0.15), m.sec(0.3));
-  const line = { fontFamily: theme.text.family, fontSize: QUIZ.size, fontWeight: 800, letterSpacing: QUIZ.track, lineHeight: 1.1, color: c.ink, whiteSpace: "pre" as const };
+  const line = {
+    fontFamily: theme.text.family,
+    fontSize: QUIZ.size,
+    fontWeight: 800,
+    letterSpacing: QUIZ.track,
+    lineHeight: 1.1,
+    color: c.ink,
+    whiteSpace: "pre" as const,
+  };
   const K = SELECT.knob;
   /** The bar reaches this far past the words, so its bracket stands clear of the lines above. */
   const PAD = 28;
@@ -735,27 +1841,116 @@ const QuestionTwo = ({ f, L }: { f: number; L: (g: number) => number }) => {
     <>
       <QuizLabel f={f} at={at} text="Tanya juga" />
       {/* left-aligned, the block as a whole centred on the frame */}
-      <div style={{ position: "absolute", left: "50%", top: QUIZ.lineY[0] - QUIZ.size * 0.55, transform: "translateX(-50%)", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+      <Interactive.Div
+        name="Gimana"
+        style={{
+          position: "absolute",
+          left: "50%",
+          top: QUIZ.lineY[0] - QUIZ.size * 0.55,
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-start",
+        }}
+      >
         <div style={line}>
-          <Word f={f} at={W[0]}>Gimana</Word> <Word f={f} at={W[1]}>caranya</Word> <Word f={f} at={W[2]}>uang</Word>
+          <Word f={f} at={W[0]}>
+            Gimana
+          </Word>{" "}
+          <Word f={f} at={W[1]}>
+            caranya
+          </Word>{" "}
+          <Word f={f} at={W[2]}>
+            uang
+          </Word>
         </div>
         <div style={line}>
-          <Word f={f} at={W[3]}>yang</Word> <Word f={f} at={W[4]}>sudah</Word> <Word f={f} at={W[5]}>aku</Word> <Word f={f} at={W[6]}>hasilkan</Word>
+          <Word f={f} at={W[3]}>
+            yang
+          </Word>{" "}
+          <Word f={f} at={W[4]}>
+            sudah
+          </Word>{" "}
+          <Word f={f} at={W[5]}>
+            aku
+          </Word>{" "}
+          <Word f={f} at={W[6]}>
+            hasilkan
+          </Word>
         </div>
         <div style={{ ...line, position: "relative", marginTop: 8 }}>
           {/* the bar grows out from its left edge, the bracket and knobs after it */}
-          <span style={{ position: "absolute", left: -PAD, top: 0, bottom: 0, width: `calc(${(bar * 100).toFixed(2)}% + ${(2 * PAD * bar).toFixed(2)}px)`, background: c.indigo, borderRadius: 8 }} />
+          <span
+            style={{
+              position: "absolute",
+              left: -PAD,
+              top: 0,
+              bottom: 0,
+              width: `calc(${(bar * 100).toFixed(2)}% + ${(2 * PAD * bar).toFixed(2)}px)`,
+              background: c.indigo,
+              borderRadius: 8,
+            }}
+          />
           {bracket > 0.001 ? (
             <span style={{ position: "absolute", inset: 0, opacity: bracket }}>
-              <span style={{ position: "absolute", left: -PAD - 2, top: -QUIZ.size * 0.55, height: `calc(100% + ${QUIZ.size * 0.55}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
-              <span style={{ position: "absolute", left: -PAD - K / 2, top: -QUIZ.size * 0.55 - K / 2, width: K, height: K, borderRadius: K, background: c.indigo }} />
-              <span style={{ position: "absolute", right: -PAD - 2, top: 0, height: `calc(100% + ${QUIZ.size * 0.4}px)`, width: 4, borderRadius: 2, background: c.indigo }} />
-              <span style={{ position: "absolute", right: -PAD - K / 2, top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`, width: K, height: K, borderRadius: K, background: c.indigo }} />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -PAD - 2,
+                  top: -QUIZ.size * 0.55,
+                  height: `calc(100% + ${QUIZ.size * 0.55}px)`,
+                  width: 4,
+                  borderRadius: 2,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  left: -PAD - K / 2,
+                  top: -QUIZ.size * 0.55 - K / 2,
+                  width: K,
+                  height: K,
+                  borderRadius: K,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  right: -PAD - 2,
+                  top: 0,
+                  height: `calc(100% + ${QUIZ.size * 0.4}px)`,
+                  width: 4,
+                  borderRadius: 2,
+                  background: c.indigo,
+                }}
+              />
+              <span
+                style={{
+                  position: "absolute",
+                  right: -PAD - K / 2,
+                  top: `calc(100% + ${QUIZ.size * 0.4 - K / 2}px)`,
+                  width: K,
+                  height: K,
+                  borderRadius: K,
+                  background: c.indigo,
+                }}
+              />
             </span>
           ) : null}
-          <span style={{ position: "relative", color: c.cardBg, fontStyle: "italic", opacity: bar }}>ikut bekerja?</span>
+          <span
+            style={{
+              position: "relative",
+              color: c.cardBg,
+              fontStyle: "italic",
+              opacity: bar,
+            }}
+          >
+            ikut bekerja?
+          </span>
         </div>
-      </div>
+      </Interactive.Div>
     </>
   );
 };
@@ -769,7 +1964,9 @@ export const SC03 = () => {
   const clockIn = ease(f, L(B3.clock), m.move);
   /* "Jamnya buat continuous deh, jangan berhenti": a steady rate — 120° by
      2300 — that keeps going while the clock scrolls away */
-  const turn = (HANDS.turn * Math.max(0, f - L(B3.clock))) / (L(B3.clockOut) - L(B3.clock));
+  const turn =
+    (HANDS.turn * Math.max(0, f - L(B3.clock))) /
+    (L(B3.clockOut) - L(B3.clock));
   const up = ease(f, L(B3.clockOut), m.move);
   const mikirAt = L(B3.clockOut) + m.move / 2;
   /* the fifty, one after another, from "Semakin dewasa" to "…makin banyak." */
@@ -780,18 +1977,59 @@ export const SC03 = () => {
   return (
     <Stage>
       {up < 0.999 && clockIn > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: clockIn, transform: `translateY(${((1 - clockIn) * 30 - up * CLOCK.exit).toFixed(2)}px)` }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: clockIn,
+            transform: `translateY(${((1 - clockIn) * 30 - up * CLOCK.exit).toFixed(2)}px)`,
+          }}
+        >
           <WallClock turn={turn} />
-          <Say text="1 hari" x={CLOCK.cx} y={CLOCK.above} at={L(B3.clock)} size={CLOCK.label} weight={800} color={c.indigo} />
-          <Say text="24 jam" x={CLOCK.cx} y={CLOCK.below} at={L(B3.clock)} size={CLOCK.label} weight={800} color={c.indigo} />
+          <Say
+            text="1 hari"
+            x={CLOCK.cx}
+            y={CLOCK.above}
+            at={L(B3.clock)}
+            size={CLOCK.label}
+            weight={800}
+            color={c.indigo}
+          />
+          <Say
+            text="24 jam"
+            x={CLOCK.cx}
+            y={CLOCK.below}
+            at={L(B3.clock)}
+            size={CLOCK.label}
+            weight={800}
+            color={c.indigo}
+          />
         </div>
       ) : null}
 
       {clear < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - clear }}>
-          <Cutout src="art/in01/orang-mikir.png" aspect={MIKIR.aspect} x={MIKIR_X} y={MIKIR_Y} h={MIKIR.h} at={mikirAt} shadow floor={MIKIR.floor} />
+          <Cutout
+            src="art/in01/orang-mikir.png"
+            aspect={MIKIR.aspect}
+            x={MIKIR_X}
+            y={MIKIR_Y}
+            h={MIKIR.h}
+            at={mikirAt}
+            shadow
+            floor={MIKIR.floor}
+          />
           {LOAD_PLACES.map((w) => (
-            <Say key={w.text} text={w.text} x={w.x} y={w.y} at={loadsFrom + Math.round(w.order * loadsOver)} size={w.size} weight={700} color={w.slate ? c.slate : c.ink} />
+            <Say
+              key={w.text}
+              text={w.text}
+              x={w.x}
+              y={w.y}
+              at={loadsFrom + Math.round(w.order * loadsOver)}
+              size={w.size}
+              weight={700}
+              color={w.slate ? c.slate : c.ink}
+            />
           ))}
         </div>
       ) : null}

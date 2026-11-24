@@ -1,0 +1,1289 @@
+[
+ {
+  "id": "CH-07",
+  "group": "Chart",
+  "name": "Line jadi candlestick",
+  "how": "Garis berubah jadi candle, anatomi muncul",
+  "video": "TA01",
+  "start": 81,
+  "comp": "TA01-MemahamiPergerakanPasarDariGrafik"
+ },
+ {
+  "id": "CH-08",
+  "group": "Chart",
+  "name": "Sumbu lalu chart",
+  "how": "Sumbu harga dan waktu tumbuh, chart menyusul",
+  "video": "TA01",
+  "start": 116,
+  "comp": "TA01-MemahamiPergerakanPasarDariGrafik"
+ },
+ {
+  "id": "KM-01",
+  "group": "Kamera",
+  "name": "Daftar isi, kamera masuk",
+  "how": "Kamera masuk ke satu kartu daftar isi",
+  "video": "TA01",
+  "start": 26,
+  "comp": "TA01-MemahamiPergerakanPasarDariGrafik"
+ },
+ {
+  "id": "CH-09",
+  "group": "Chart",
+  "name": "Area diuji berulang",
+  "how": "Zona menyala tiap harga kembali",
+  "video": "TA01",
+  "start": 191,
+  "comp": "TA01-MemahamiPergerakanPasarDariGrafik"
+ },
+ {
+  "id": "CH-10",
+  "group": "Chart",
+  "name": "Emosi di candle",
+  "how": "Label emosi menempel di candle",
+  "video": "TA01",
+  "start": 249,
+  "comp": "TA01-MemahamiPergerakanPasarDariGrafik"
+ },
+ {
+  "id": "KM-02",
+  "group": "Kamera",
+  "name": "Zoom ke beberapa candle",
+  "how": "Kamera masuk ke candle yang dikotaki",
+  "video": "TA03",
+  "start": 16,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "CH-11",
+  "group": "Chart",
+  "name": "Ukuran bagian candle",
+  "how": "Garis ukur di samping satu candle",
+  "video": "TA03",
+  "start": 31,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "CH-12",
+  "group": "Chart",
+  "name": "Garis intraday jadi candle",
+  "how": "Garis harian membentuk candle di sampingnya",
+  "video": "TA03",
+  "start": 41,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "KT-07",
+  "group": "Kotak & sorotan",
+  "name": "Bingkai fokus",
+  "how": "Kotak fokus ke satu candle di chart",
+  "video": "TA03",
+  "start": 116,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "TK-12",
+  "group": "Teks",
+  "name": "Kalimat di atas chart redup",
+  "how": "Chart memudar, kalimat besar di depan",
+  "video": "TA03",
+  "start": 122,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "UI-12",
+  "group": "UI",
+  "name": "Grid pola",
+  "how": "Banyak kartu pola muncul bersama",
+  "video": "TA03",
+  "start": 146,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "CH-13",
+  "group": "Chart",
+  "name": "Pola di konteks support",
+  "how": "Candle kecil dan posisinya di chart",
+  "video": "TA03",
+  "start": 222,
+  "comp": "TA03-CandlestickIntermediate"
+ },
+ {
+  "id": "CH-14",
+  "group": "Chart",
+  "name": "HH HL bertahap",
+  "how": "Puncak dan lembah dilabeli berurutan",
+  "video": "TA05",
+  "start": 81,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "TK-13",
+  "group": "Teks",
+  "name": "Angka besar dan kata",
+  "how": "Angka besar, kata di bawahnya berganti",
+  "video": "TA05",
+  "start": 129,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "DT-04",
+  "group": "Angka & data",
+  "name": "Adu dua batang",
+  "how": "Batang pembeli dan penjual saling dorong",
+  "video": "TA05",
+  "start": 151,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "KM-03",
+  "group": "Kamera",
+  "name": "Kamera berjalan di chart",
+  "how": "Kamera mengikuti chart lalu mundur",
+  "video": "TA05",
+  "start": 176,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "CH-15",
+  "group": "Chart",
+  "name": "Panah dua arah tren",
+  "how": "Panah naik dan turun di atas kurva",
+  "video": "TA05",
+  "start": 281,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "CH-16",
+  "group": "Chart",
+  "name": "Kuis dengan hasil",
+  "how": "Chart dilanjutkan setelah pertanyaan",
+  "video": "TA05",
+  "start": 361,
+  "comp": "TA05-MarketStructure"
+ },
+ {
+  "id": "UI-13",
+  "group": "UI",
+  "name": "Dashboard dan watchlist",
+  "how": "Dashboard berganti saham dari watchlist",
+  "video": "TA07",
+  "start": 6,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "KT-08",
+  "group": "Kotak & sorotan",
+  "name": "Tiga kotak fase",
+  "how": "Tiga fase chart dikotaki",
+  "video": "TA07",
+  "start": 161,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "KM-04",
+  "group": "Kamera",
+  "name": "Fokus, sisanya redup",
+  "how": "Satu area terang, sisanya kabur",
+  "video": "TA07",
+  "start": 166,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "CH-17",
+  "group": "Chart",
+  "name": "Kerucut kemungkinan",
+  "how": "Dua arah terbuka dengan tanda tanya",
+  "video": "TA07",
+  "start": 176,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "UI-14",
+  "group": "UI",
+  "name": "Kotak tebak dan hitung mundur",
+  "how": "Area tertutup, hitung mundur, lalu terbuka",
+  "video": "TA07",
+  "start": 251,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "UI-15",
+  "group": "UI",
+  "name": "Barisan layar app",
+  "how": "Beberapa layar app berjajar",
+  "video": "TA07",
+  "start": 281,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "TK-14",
+  "group": "Teks",
+  "name": "Kartu kutipan tiga baris",
+  "how": "Baris kutipan muncul satu per satu",
+  "video": "TA07",
+  "start": 301,
+  "comp": "TA07-MAdanBB"
+ },
+ {
+  "id": "LT-03",
+  "group": "Latar & maskot",
+  "name": "Maskot dapat ide",
+  "how": "Maskot dan bohlam, kalimat di bawah",
+  "video": "TA09",
+  "start": 16,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "OR-01",
+  "group": "Orang & ilustrasi",
+  "name": "Orang saling tukar",
+  "how": "Ikon orang berjajar lalu bertransaksi",
+  "video": "TA09",
+  "start": 41,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "UI-16",
+  "group": "UI",
+  "name": "Callout dari layar",
+  "how": "Kotak detail keluar dari layar app",
+  "video": "TA09",
+  "start": 61,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "UI-17",
+  "group": "UI",
+  "name": "Rel pilihan dan chart",
+  "how": "Pilihan kiri menyala, chart berganti",
+  "video": "TA09",
+  "start": 106,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "CH-18",
+  "group": "Chart",
+  "name": "Chart dan kesimpulan",
+  "how": "Area disorot, kesimpulan di kanan",
+  "video": "TA09",
+  "start": 159,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "UI-18",
+  "group": "UI",
+  "name": "Dua panel, satu redup",
+  "how": "Panel aktif terang, pasangannya abu",
+  "video": "TA09",
+  "start": 181,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "CH-19",
+  "group": "Chart",
+  "name": "Panah hasil kuis",
+  "how": "Panah menunjukkan arah yang terjadi",
+  "video": "TA09",
+  "start": 221,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "CH-20",
+  "group": "Chart",
+  "name": "Sorot lonjakan volume",
+  "how": "Satu batang berwarna, sisanya abu",
+  "video": "TA09",
+  "start": 261,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "UI-19",
+  "group": "UI",
+  "name": "Kartu melayang berlapis",
+  "how": "Kartu di depan kartu kabur",
+  "video": "TA09",
+  "start": 276,
+  "comp": "TA09-Volume"
+ },
+ {
+  "id": "UI-20",
+  "group": "UI",
+  "name": "Checklist di bawah chart",
+  "how": "Centang menyala satu per satu",
+  "video": "TA11",
+  "start": 6,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "KM-05",
+  "group": "Kamera",
+  "name": "Chart membesar jadi latar",
+  "how": "Chart jadi latar, judul di depan",
+  "video": "TA11",
+  "start": 16,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "UI-21",
+  "group": "UI",
+  "name": "Deret kartu bernomor",
+  "how": "Kartu bernomor bergeser ke nomor berikut",
+  "video": "TA11",
+  "start": 71.3,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "CH-21",
+  "group": "Chart",
+  "name": "Penanda beli jual banyak",
+  "how": "Penanda bermunculan di chart",
+  "video": "TA11",
+  "start": 76,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "UI-22",
+  "group": "UI",
+  "name": "Dua jendela",
+  "how": "Satu jendela dipilih, satu redup",
+  "video": "TA11",
+  "start": 110,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "CH-22",
+  "group": "Chart",
+  "name": "Skenario candle kosong",
+  "how": "Candle perkiraan bergaris tepi",
+  "video": "TA11",
+  "start": 191,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "UI-23",
+  "group": "UI",
+  "name": "Bandingkan dua rencana",
+  "how": "Dua kartu rencana baris demi baris",
+  "video": "TA11",
+  "start": 216,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "TK-15",
+  "group": "Teks",
+  "name": "Aturan dua kolom",
+  "how": "Kondisi kiri, tindakan kanan",
+  "video": "TA11",
+  "start": 276,
+  "comp": "TA11-TAMistakes"
+ },
+ {
+  "id": "UI-24",
+  "group": "UI",
+  "name": "HP dan cabang",
+  "how": "Garis dari HP ke ikon pengeluaran",
+  "video": "IN01",
+  "start": 8.5,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "DT-05",
+  "group": "Angka & data",
+  "name": "Jam berputar",
+  "how": "Jarum jam berputar, teks atas bawah",
+  "video": "IN01",
+  "start": 36,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "TK-16",
+  "group": "Teks",
+  "name": "Awan kata",
+  "how": "Kata bermunculan mengelilingi orang",
+  "video": "IN01",
+  "start": 41,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "TK-17",
+  "group": "Teks",
+  "name": "Pertanyaan diketik ganti",
+  "how": "Kata kunci pertanyaan berganti",
+  "video": "IN01",
+  "start": 46,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "UI-25",
+  "group": "UI",
+  "name": "Kartu saldo",
+  "how": "Kartu aset dengan angka",
+  "video": "IN01",
+  "start": 56,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-05",
+  "group": "Penghubung",
+  "name": "Tiga jadi satu",
+  "how": "Tiga ikon menyatu ke satu kata",
+  "video": "IN01",
+  "start": 66,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-06",
+  "group": "Penghubung",
+  "name": "Koin menyebar",
+  "how": "Koin pusat bercabang ke koin kecil",
+  "video": "IN01",
+  "start": 76,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "DT-06",
+  "group": "Angka & data",
+  "name": "Batang majemuk",
+  "how": "Batang naik, tambahan di puncaknya",
+  "video": "IN01",
+  "start": 81,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-07",
+  "group": "Penghubung",
+  "name": "Kartu mengirim nilai",
+  "how": "Kartu bulanan mengalir ke satu total",
+  "video": "IN01",
+  "start": 101,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-08",
+  "group": "Penghubung",
+  "name": "Jalur gelombang",
+  "how": "Titik berjalan di jalur naik turun",
+  "video": "IN01",
+  "start": 106,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "OR-02",
+  "group": "Orang & ilustrasi",
+  "name": "Uang dikirim antar gambar",
+  "how": "Koin berpindah dari gedung ke orang",
+  "video": "IN01",
+  "start": 131,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "LT-04",
+  "group": "Latar & maskot",
+  "name": "Fakta menarik",
+  "how": "Bohlam, tulisan, lalu kotak teks",
+  "video": "IN01",
+  "start": 151,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "OR-03",
+  "group": "Orang & ilustrasi",
+  "name": "Produk muncul di meja",
+  "how": "Produk berdatangan di depan orang",
+  "video": "IN01",
+  "start": 171,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-09",
+  "group": "Penghubung",
+  "name": "Siklus berputar",
+  "how": "Tiga kata terhubung panah melingkar",
+  "video": "IN01",
+  "start": 196,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "DT-07",
+  "group": "Angka & data",
+  "name": "Angka naik dua kartu",
+  "how": "Nilai pindah dari kartu ke kartu",
+  "video": "IN01",
+  "start": 211,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-10",
+  "group": "Penghubung",
+  "name": "Garis waktu bercabang",
+  "how": "Titik waktu muncul dengan label",
+  "video": "IN01",
+  "start": 226,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-11",
+  "group": "Penghubung",
+  "name": "Elips putus-putus",
+  "how": "Dua gambar dihubungkan elips",
+  "video": "IN01",
+  "start": 236,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "DT-08",
+  "group": "Angka & data",
+  "name": "Bar kemampuan naik",
+  "how": "Beberapa bar mengisi bertahap",
+  "video": "IN01",
+  "start": 291,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "OR-04",
+  "group": "Orang & ilustrasi",
+  "name": "Orang Tuntun dan rumus",
+  "how": "Orang Tuntun menunjuk dua rumus",
+  "video": "IN01",
+  "start": 311,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-12",
+  "group": "Penghubung",
+  "name": "Mind map instrumen",
+  "how": "Satu kartu bercabang ke banyak pilihan",
+  "video": "IN01",
+  "start": 331,
+  "comp": "IN01-PassiveIncome"
+ },
+ {
+  "id": "PH-13",
+  "group": "Penghubung",
+  "name": "Mind map satu ditambah",
+  "how": "Cabang muncul satu per satu",
+  "video": "IN04",
+  "start": 11,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "DT-09",
+  "group": "Angka & data",
+  "name": "Penghitung dan titik",
+  "how": "Angka naik, titik memenuhi layar",
+  "video": "IN04",
+  "start": 21,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "OR-05",
+  "group": "Orang & ilustrasi",
+  "name": "Insight Orang Tuntun",
+  "how": "Orang Tuntun dan kalimat kunci",
+  "video": "IN04",
+  "start": 41,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "KM-06",
+  "group": "Kamera",
+  "name": "Kamera peta",
+  "how": "Kamera bergerak di atas peta",
+  "video": "IN04",
+  "start": 51,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "PH-14",
+  "group": "Penghubung",
+  "name": "Tiga rute digambar",
+  "how": "Tiga rute tumbuh di peta",
+  "video": "IN04",
+  "start": 71,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-26",
+  "group": "UI",
+  "name": "Kartu rute",
+  "how": "Peta kecil terhubung ke kartu angka",
+  "video": "IN04",
+  "start": 81,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "PH-15",
+  "group": "Penghubung",
+  "name": "Rantai saldo",
+  "how": "Saldo turun lalu naik berurutan",
+  "video": "IN04",
+  "start": 161,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "CH-23",
+  "group": "Chart",
+  "name": "Dua chart nyata",
+  "how": "Dua chart sejajar dengan hasilnya",
+  "video": "IN04",
+  "start": 181,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "OR-06",
+  "group": "Orang & ilustrasi",
+  "name": "Tiga kendaraan",
+  "how": "Tiga ikon isometrik dengan garisnya",
+  "video": "IN04",
+  "start": 221,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-27",
+  "group": "UI",
+  "name": "Daftar menyala bergantian",
+  "how": "Baris aktif menyala, lainnya redup",
+  "video": "IN04",
+  "start": 246,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "PH-16",
+  "group": "Penghubung",
+  "name": "Jalur bercabang empat",
+  "how": "Dua kartu menyatu lalu bercabang",
+  "video": "IN04",
+  "start": 285.5,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-28",
+  "group": "UI",
+  "name": "Ganti layar HP",
+  "how": "Layar HP berganti dengan nomor aktif",
+  "video": "IN04",
+  "start": 301,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "DT-10",
+  "group": "Angka & data",
+  "name": "Bar porsi",
+  "how": "Satu bar mengisi sesuai porsi",
+  "video": "IN04",
+  "start": 351,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "DT-11",
+  "group": "Angka & data",
+  "name": "Garis umur dan kartu",
+  "how": "Titik umur berpindah, isi kartu berubah",
+  "video": "IN04",
+  "start": 371,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-29",
+  "group": "UI",
+  "name": "Tiga lingkaran nomor",
+  "how": "Lingkaran nomor mengantar kartu",
+  "video": "IN04",
+  "start": 421,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-30",
+  "group": "UI",
+  "name": "HP dan label kiri kanan",
+  "how": "Bagian HP disorot, label di sampingnya",
+  "video": "IN04",
+  "start": 486,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-31",
+  "group": "UI",
+  "name": "Ikon bertangga",
+  "how": "Ikon naik bertahap seperti tangga",
+  "video": "IN04",
+  "start": 508.25,
+  "comp": "IN04-InvestasiYangCocok"
+ },
+ {
+  "id": "UI-32",
+  "group": "UI",
+  "name": "HP jadi latar panik",
+  "how": "Layar HP berubah warna, pesan masuk",
+  "video": "IN07",
+  "start": 11,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-33",
+  "group": "UI",
+  "name": "Jari menekan tombol",
+  "how": "Jari menekan tombol di HP",
+  "video": "IN07",
+  "start": 21,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "TK-18",
+  "group": "Teks",
+  "name": "Pertanyaan keluar dari HP",
+  "how": "Kartu tanya membesar dan diketik",
+  "video": "IN07",
+  "start": 26,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "PH-17",
+  "group": "Penghubung",
+  "name": "Kartu pusat empat sudut",
+  "how": "Kartu tengah dengan empat cabang sudut",
+  "video": "IN07",
+  "start": 36,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "LT-05",
+  "group": "Latar & maskot",
+  "name": "Maskot dan rantai ikon",
+  "how": "Maskot terhubung ke langkah-langkah",
+  "video": "IN07",
+  "start": 46,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "PH-18",
+  "group": "Penghubung",
+  "name": "Jika lalu cari",
+  "how": "Pasangan kiri kanan menyala berurutan",
+  "video": "IN07",
+  "start": 61,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "OR-07",
+  "group": "Orang & ilustrasi",
+  "name": "Tumpukan kertas",
+  "how": "Kertas menumpuk, satu dipilih",
+  "video": "IN07",
+  "start": 96,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-34",
+  "group": "UI",
+  "name": "Potongan UI keluar dari HP",
+  "how": "Bagian layar membesar ke samping",
+  "video": "IN07",
+  "start": 116,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "OR-08",
+  "group": "Orang & ilustrasi",
+  "name": "Gelembung pikiran",
+  "how": "Gelembung berubah ikon",
+  "video": "IN07",
+  "start": 171,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "PH-19",
+  "group": "Penghubung",
+  "name": "Tiga lingkaran proses",
+  "how": "Tiga lingkaran terhubung berurutan",
+  "video": "IN07",
+  "start": 201,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "OR-09",
+  "group": "Orang & ilustrasi",
+  "name": "Kipas kertas riset",
+  "how": "Kertas terbuka seperti kipas",
+  "video": "IN07",
+  "start": 226,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-35",
+  "group": "UI",
+  "name": "Mengetik di chat",
+  "how": "Kolom chat membesar dan diketik",
+  "video": "IN07",
+  "start": 241,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "DT-12",
+  "group": "Angka & data",
+  "name": "Tiga kartu jadi dasar",
+  "how": "Tiga cabang mengisi satu bar",
+  "video": "IN07",
+  "start": 306,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "DT-13",
+  "group": "Angka & data",
+  "name": "Menara koin goyah",
+  "how": "Tumpukan koin miring",
+  "video": "IN07",
+  "start": 331,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-36",
+  "group": "UI",
+  "name": "Dinding kartu",
+  "how": "Banyak kartu kecil, satu menyala",
+  "video": "IN07",
+  "start": 361,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "DT-14",
+  "group": "Angka & data",
+  "name": "Dua gauge pasar",
+  "how": "Dua gauge bersebelahan",
+  "video": "IN07",
+  "start": 371,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-37",
+  "group": "UI",
+  "name": "Dua skenario, orang di tengah",
+  "how": "Dua sisi keputusan dengan orang di tengah",
+  "video": "IN07",
+  "start": 431,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "TK-19",
+  "group": "Teks",
+  "name": "Pertanyaan diketik lalu bercabang",
+  "how": "Kartu tanya diketik, lalu cabang",
+  "video": "IN07",
+  "start": 477,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "OR-10",
+  "group": "Orang & ilustrasi",
+  "name": "Koin bertahap",
+  "how": "Koin berpindah dengan lompatan kecil",
+  "video": "IN07",
+  "start": 501,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "LT-06",
+  "group": "Latar & maskot",
+  "name": "Maskot ke orang",
+  "how": "Garis dari maskot ke pengguna",
+  "video": "IN07",
+  "start": 516,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "UI-38",
+  "group": "UI",
+  "name": "Papan potongan UI",
+  "how": "Banyak UI dalam satu bingkai",
+  "video": "IN07",
+  "start": 551,
+  "comp": "IN07-CaraTuntunMembantuInvestorMengurangiKesalahan"
+ },
+ {
+  "id": "OR-11",
+  "group": "Orang & ilustrasi",
+  "name": "Warung dan buku kas",
+  "how": "Dunia garis hitam dengan kartu data",
+  "video": "VI01",
+  "start": 11,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "CH-24",
+  "group": "Chart",
+  "name": "Area naik lalu jatuh",
+  "how": "Area tumbuh, angka naik, lalu patah",
+  "video": "VI01",
+  "start": 56,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "OR-12",
+  "group": "Orang & ilustrasi",
+  "name": "Perkenalan tokoh",
+  "how": "Kartu tokoh besar dengan busur",
+  "video": "VI01",
+  "start": 61,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-15",
+  "group": "Angka & data",
+  "name": "Tahun bergulir",
+  "how": "Tahun bergeser di garis vertikal",
+  "video": "VI01",
+  "start": 71,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "OR-13",
+  "group": "Orang & ilustrasi",
+  "name": "Pilar tumbuh",
+  "how": "Pilar naik satu per satu",
+  "video": "VI01",
+  "start": 86,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-16",
+  "group": "Angka & data",
+  "name": "Garis waktu investor",
+  "how": "Titik waktu aktif, kartu berganti",
+  "video": "VI01",
+  "start": 116,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "CH-25",
+  "group": "Chart",
+  "name": "Harga dan value",
+  "how": "Garis harga berayun di sekitar value",
+  "video": "VI01",
+  "start": 206,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-17",
+  "group": "Angka & data",
+  "name": "Bar dua bagian",
+  "how": "Satu bar terbagi dua warna",
+  "video": "VI01",
+  "start": 211,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-18",
+  "group": "Angka & data",
+  "name": "Angka dan titik banyak",
+  "how": "Angka besar dengan grid titik",
+  "video": "VI01",
+  "start": 236,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-19",
+  "group": "Angka & data",
+  "name": "Jadwal jam",
+  "how": "Bar waktu dengan dua ujung",
+  "video": "VI01",
+  "start": 256,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "OR-14",
+  "group": "Orang & ilustrasi",
+  "name": "Tiga pintu",
+  "how": "Pintu bernomor, satu maju ke tengah",
+  "video": "VI01",
+  "start": 277,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-20",
+  "group": "Angka & data",
+  "name": "Grid abu jadi sedikit",
+  "how": "Banyak kotak menyusut ke pilihan",
+  "video": "VI01",
+  "start": 326,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "DT-21",
+  "group": "Angka & data",
+  "name": "Titik persentase",
+  "how": "Seratus titik terisi sesuai persen",
+  "video": "VI01",
+  "start": 366,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "UI-39",
+  "group": "UI",
+  "name": "Tabel kebutuhan",
+  "how": "Baris tabel muncul dengan status",
+  "video": "VI01",
+  "start": 411,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "CH-26",
+  "group": "Chart",
+  "name": "Chart dan tabel kejadian",
+  "how": "Titik di chart terhubung ke tabel",
+  "video": "VI01",
+  "start": 461,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "UI-40",
+  "group": "UI",
+  "name": "Laporan dan daftar isi",
+  "how": "Layar laporan dengan daftar centang",
+  "video": "VI01",
+  "start": 531,
+  "comp": "VI01-ApaItuValueInvesting"
+ },
+ {
+  "id": "OR-15",
+  "group": "Orang & ilustrasi",
+  "name": "Alur pabrik ke toko",
+  "how": "Produksi, kardus, truk, toko",
+  "video": "VI02",
+  "start": 16,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "TK-20",
+  "group": "Teks",
+  "name": "Kode saham besar",
+  "how": "Kode saham berubah jadi makna",
+  "video": "VI02",
+  "start": 31,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "TK-21",
+  "group": "Teks",
+  "name": "Kutipan dua tokoh",
+  "how": "Kotak kutipan di antara dua tokoh",
+  "video": "VI02",
+  "start": 61,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "PH-20",
+  "group": "Penghubung",
+  "name": "Alur hasil ke pemilik",
+  "how": "Kartu berurutan, hasil turun ke pemilik",
+  "video": "VI02",
+  "start": 86,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "UI-41",
+  "group": "UI",
+  "name": "Buku kas diperiksa",
+  "how": "Baris buku disorot dan dicentang",
+  "video": "VI02",
+  "start": 146,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "UI-42",
+  "group": "UI",
+  "name": "Tiga tabel app",
+  "how": "Kolom tahun disorot di tiap layar",
+  "video": "VI02",
+  "start": 181,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "DT-22",
+  "group": "Angka & data",
+  "name": "Bidang kotak kecil",
+  "how": "Ribuan kotak, sebagian menyala",
+  "video": "VI02",
+  "start": 201,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "PH-21",
+  "group": "Penghubung",
+  "name": "Laba dibagi dua",
+  "how": "Garis laba bercabang dua tujuan",
+  "video": "VI02",
+  "start": 226,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "OR-16",
+  "group": "Orang & ilustrasi",
+  "name": "Reaksi terhadap rumor",
+  "how": "Orang dan chart bereaksi pada kabar",
+  "video": "VI02",
+  "start": 261,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "OR-17",
+  "group": "Orang & ilustrasi",
+  "name": "Kotak suara dan timbangan",
+  "how": "Dua mesin digambar garis hitam",
+  "video": "VI02",
+  "start": 326,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "PH-22",
+  "group": "Penghubung",
+  "name": "Pertanyaan mengelilingi",
+  "how": "Label tanya muncul di sekitar gambar",
+  "video": "VI02",
+  "start": 351,
+  "comp": "VI02-MembeliSahamBerartiMembeliPerusahaan"
+ },
+ {
+  "id": "OR-18",
+  "group": "Orang & ilustrasi",
+  "name": "Beli mangga",
+  "how": "Pembeli memeriksa barang di kartu",
+  "video": "VI03",
+  "start": 11,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "TK-22",
+  "group": "Teks",
+  "name": "Kutipan digaris bawah",
+  "how": "Kalimat digarisbawahi bergantian",
+  "video": "VI03",
+  "start": 41,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "CH-27",
+  "group": "Chart",
+  "name": "Harga terhadap value",
+  "how": "Garis harga mendekati garis value",
+  "video": "VI03",
+  "start": 46,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "DT-23",
+  "group": "Angka & data",
+  "name": "Slider kelipatan",
+  "how": "Slider bergeser, total ikut naik",
+  "video": "VI03",
+  "start": 86,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "DT-24",
+  "group": "Angka & data",
+  "name": "Tiga bahan hitungan",
+  "how": "Laba, waktu, keyakinan berurutan",
+  "video": "VI03",
+  "start": 106,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "OR-19",
+  "group": "Orang & ilustrasi",
+  "name": "Jembatan dan beban",
+  "how": "Truk lewat, batas beban ditunjukkan",
+  "video": "VI03",
+  "start": 142,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "DT-25",
+  "group": "Angka & data",
+  "name": "Jarak aman",
+  "how": "Bar jarak dari harga wajar",
+  "video": "VI03",
+  "start": 156,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "CH-28",
+  "group": "Chart",
+  "name": "Chart nyata dan kartu app",
+  "how": "Harga berjalan, kartu app mengikuti",
+  "video": "VI03",
+  "start": 211,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "DT-26",
+  "group": "Angka & data",
+  "name": "Batang masa depan turun",
+  "how": "Batang baru turun, lama jadi bayangan",
+  "video": "VI03",
+  "start": 299,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "PH-23",
+  "group": "Penghubung",
+  "name": "Tab dan cabang",
+  "how": "Tab aktif terhubung ke isi",
+  "video": "VI03",
+  "start": 341,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "CH-29",
+  "group": "Chart",
+  "name": "Turun dari puncak",
+  "how": "Jarak turun ditandai di chart",
+  "video": "VI03",
+  "start": 356,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "UI-43",
+  "group": "UI",
+  "name": "Tiga kartu tanya",
+  "how": "Kartu tanya menyala berurutan",
+  "video": "VI03",
+  "start": 416,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "TK-23",
+  "group": "Teks",
+  "name": "Tiga kalimat bertumpuk",
+  "how": "Kalimat lama meredup saat baru muncul",
+  "video": "VI03",
+  "start": 431,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "DT-27",
+  "group": "Angka & data",
+  "name": "Batang eksponensial",
+  "how": "Batang tumbuh makin cepat",
+  "video": "VI03",
+  "start": 446,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "PH-24",
+  "group": "Penghubung",
+  "name": "Pohon tiga kartu",
+  "how": "Satu kartu bercabang ke tiga",
+  "video": "VI03",
+  "start": 471,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ },
+ {
+  "id": "UI-44",
+  "group": "UI",
+  "name": "Popup dari daftar",
+  "how": "Baris daftar membesar jadi kartu",
+  "video": "VI03",
+  "start": 476,
+  "comp": "VI03-MembeliDenganHargaYangCukupMurah"
+ }
+]

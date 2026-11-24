@@ -16,10 +16,20 @@
  * them — the voice ends on 16650 and the card is still standing there, and
  * ending on that frame would cut the sentence off as it lands.
  */
+import { CoreLineE as Line, CoreWordsE as Words } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  GridGround, Line, QuoteCard, Stage, TuntunMark, Words,
-  fadeOut, progress, quoteListY, textReveal, theme, useMotion, usePalette,
+  GridGround,
+  QuoteCard,
+  Stage,
+  TuntunMark,
+  fadeOut,
+  progress,
+  quoteListY,
+  textReveal,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, CLOSE, local } from "../data/timing";
 import { QUOTE_BAND, QUOTE_CARD, RULES } from "../data/layout";
@@ -48,7 +58,12 @@ export const SC18 = () => {
   const ground = progress(f, local(V.ground.at, FROM), V.ground.over);
   const gone = fadeOut(f, local(V.collapse.at, FROM), V.collapse.over);
   const at = local(V.card, FROM);
-  const listY = quoteListY(BOX_Y, QUOTE_CARD.h, QUOTE_CARD.lead, V.lines.length);
+  const listY = quoteListY(
+    BOX_Y,
+    QUOTE_CARD.h,
+    QUOTE_CARD.lead,
+    V.lines.length,
+  );
   const rowH = RULES.h / V.rules.length;
 
   return (
@@ -89,9 +104,17 @@ export const SC18 = () => {
                 whiteSpace: "nowrap",
               }}
             >
-              <span style={{ color: c.slate, fontWeight: theme.text.body.weight }}>{r.cond}</span>
+              <span
+                style={{ color: c.slate, fontWeight: theme.text.body.weight }}
+              >
+                {r.cond}
+              </span>
               <span style={{ color: c.muted }}>→</span>
-              <span style={{ color: c.indigo, fontWeight: theme.text.title.weight }}>{r.act}</span>
+              <span
+                style={{ color: c.indigo, fontWeight: theme.text.title.weight }}
+              >
+                {r.act}
+              </span>
             </div>
           );
         })}
@@ -99,7 +122,11 @@ export const SC18 = () => {
 
       {g >= V.card && (
         <>
-          <TuntunMark x={theme.canvas.width / 2} y={TOP} height={QUOTE_CARD.markH} />
+          <TuntunMark
+            x={theme.canvas.width / 2}
+            y={TOP}
+            height={QUOTE_CARD.markH}
+          />
           <QuoteCard
             x={X}
             y={BOX_Y}

@@ -16,7 +16,7 @@
  * Tuntun AI mark. Nothing is left to read but the sentence, which is the point:
  * the two names the scene has been juggling turn out to be one thing.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage, Card } from "../components/Stage";
 import { StructureLine } from "../components/StructureLine";
 import { RangeBand } from "../components/RangeBand";
@@ -266,7 +266,8 @@ const QuoteCard = ({ f }: { f: number }) => {
           </div>
         );
       })}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: cx - QUOTE.ruleW / 2,

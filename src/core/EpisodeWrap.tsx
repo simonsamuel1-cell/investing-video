@@ -16,7 +16,8 @@
  * faded out over the video's last BGM_FADE seconds, so it never stops dead. Essentials/BGM.mp3 is not touched.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Freeze, Img, OffthreadVideo, Sequence, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import { LockedSequence as Sequence } from "./nudge";
+import { AbsoluteFill, Audio, Freeze, Img, OffthreadVideo, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import type { Cue } from "./Captions";
 import { Captions } from "./Captions";
 import { cutInStyle, cutOutStyle } from "./CameraCut";
@@ -136,7 +137,7 @@ const EndingLogo = ({ frames }: { frames: number }) => {
   const o = 1 - progressInOut(f, frames - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
   return (
     <AbsoluteFill style={{ zIndex: 100, opacity: o }}>
-      <Img src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
+      <Img showInTimeline={false} src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
     </AbsoluteFill>
   );
 };
@@ -208,7 +209,7 @@ export const EpisodeWrap = ({ title, titleStyle, titleBox, frames, name, bgm = t
     <AbsoluteFill>
       {intro ? (
         <Sequence from={0} durationInFrames={I} name="Intro">
-          <OffthreadVideo src={staticFile("essentials/Intro.mp4")} />
+          <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Intro.mp4")} />
           {title ? (
             <PaletteProvider>
               <IntroTitle lines={title} styles={titleStyle} box={titleBox} />
@@ -270,12 +271,12 @@ export const EpisodeWrap = ({ title, titleStyle, titleBox, frames, name, bgm = t
       )}
       {cta ? (
         <Sequence from={I + frames + tail} durationInFrames={C} name="CTA">
-          <OffthreadVideo src={staticFile("essentials/CTA.mp4")} />
+          <OffthreadVideo showInTimeline={false} src={staticFile("essentials/CTA.mp4")} />
         </Sequence>
       ) : null}
       {outro ? (
         <Sequence from={I + frames + tail + C} durationInFrames={O} name="Outro">
-          <OffthreadVideo src={staticFile("essentials/Outro.mp4")} />
+          <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Outro.mp4")} />
         </Sequence>
       ) : null}
       {/* the BGM, as it is, under all of it — or the episode's own bed, faded out at the very end */}

@@ -16,12 +16,37 @@
  *  P4 T03  the report — six connectors grow from the phone to the six things in it
  *  P5      Orang Tuntun: "tinggal tes ulang … bukan versi diri kita lima tahun lalu, tapi: diri kita yang sekarang."
  */
+import {
+  AppearE as Appear,
+  CardE as Card,
+  LineE as Line,
+} from "../../../editable";
 import React from "react";
-import { Img, staticFile, useCurrentFrame } from "remotion";
-import { Connector, HighlightBox, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { Img, staticFile, useCurrentFrame, Interactive } from "remotion";
+import {
+  Connector,
+  HighlightBox,
+  SoftGround,
+  Stage,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import type { HLRect } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, ease, IconDot, IsoIcon, Line, NumRing, ORANG_TUNTUN_RIGHT, OrangTuntun, OUTSIDE_RESERVES, useWords } from "../components/kit";
+import {
+  BoardGrid,
+  ease,
+  IconDot,
+  IsoIcon,
+  NumRing,
+  ORANG_TUNTUN_RIGHT,
+  OrangTuntun,
+  OUTSIDE_RESERVES,
+  useWords,
+} from "../components/kit";
 
 /** The screenshots are 1125×2436 and 1080×2340: the screen takes their shape so nothing is cropped. */
 const SHOT = { w: 1125, h: 2436 };
@@ -33,8 +58,18 @@ const SHOT = { w: 1125, h: 2436 };
 const STATUS_CROP = 130;
 const BEZEL = 14;
 const SCREEN_W = Math.round((832 * SHOT.w) / SHOT.h);
-const SCREEN = { w: SCREEN_W, h: Math.round((SCREEN_W * (SHOT.h - STATUS_CROP)) / SHOT.w), r: 50 };
-const PHONE = { cx: 495, y: 122, w: SCREEN.w + 2 * BEZEL, h: SCREEN.h + 2 * BEZEL, r: SCREEN.r + BEZEL };
+const SCREEN = {
+  w: SCREEN_W,
+  h: Math.round((SCREEN_W * (SHOT.h - STATUS_CROP)) / SHOT.w),
+  r: 50,
+};
+const PHONE = {
+  cx: 495,
+  y: 122,
+  w: SCREEN.w + 2 * BEZEL,
+  h: SCREEN.h + 2 * BEZEL,
+  r: SCREEN.r + BEZEL,
+};
 /**
  * A highlight over rows `y1`–`y2` of a screenshot (its own pixels, measured on the PNG). Simon's rule for a box
  * over a phone: 20px wider than the phone on each side; only its height is scoped to what it marks.
@@ -43,7 +78,12 @@ const HL_PAD = { side: 20, rows: 10 };
 const hlRows = (y1: number, y2: number, cx: number = PHONE.cx): HLRect => {
   const k = SCREEN.w / SHOT.w;
   const top = PHONE.y + BEZEL - STATUS_CROP * k;
-  return { x1: cx - PHONE.w / 2 - HL_PAD.side, x2: cx + PHONE.w / 2 + HL_PAD.side, y1: top + y1 * k - HL_PAD.rows, y2: top + y2 * k + HL_PAD.rows };
+  return {
+    x1: cx - PHONE.w / 2 - HL_PAD.side,
+    x2: cx + PHONE.w / 2 + HL_PAD.side,
+    y1: top + y1 * k - HL_PAD.rows,
+    y2: top + y2 * k + HL_PAD.rows,
+  };
 };
 /** T01: the "FREE! Personal Investment Plan" banner — rows of the shot. (T02's highlight removed, Simon 22 Oct.) */
 const HL_ROWS = { banner: [504, 701] } as const;
@@ -68,15 +108,24 @@ const T04_MARKS = [
   { box: [705, 750, 872, 846], at: "bagaimana hasil akhirnya" },
 ] as const;
 /** A box in a shot's pixels → the screen, for the phone at centre `cx` (unscaled frame); `w`/`crop` = that shot's. */
-const shotBox = (b: readonly number[], cx: number, w: number = SHOT.w, crop: number = STATUS_CROP): HLRect => {
+const shotBox = (
+  b: readonly number[],
+  cx: number,
+  w: number = SHOT.w,
+  crop: number = STATUS_CROP,
+): HLRect => {
   const k = SCREEN.w / w;
   const x0 = cx - PHONE.w / 2 + BEZEL;
   const y0 = PHONE.y + BEZEL - crop * k;
-  return { x1: x0 + b[0] * k, y1: y0 + b[1] * k, x2: x0 + b[2] * k, y2: y0 + b[3] * k };
+  return {
+    x1: x0 + b[0] * k,
+    y1: y0 + b[1] * k,
+    x2: x0 + b[2] * k,
+    y2: y0 + b[3] * k,
+  };
 };
 
 const CX = theme.canvas.width / 2;
-
 
 /**
  * P0, in order (Simon, 22 Oct): the two questions in the middle; the phone slides in from off the right and stops to
@@ -98,20 +147,44 @@ const OFF_RIGHT_CX = theme.canvas.width + PHONE.w / 2 + 40;
 /** The report's six parts as labels either side of the centred phone (Simon, 22 Oct): 1–3 left, 4–6 right, each on its words. */
 const REPORT_LABELS = [
   { icon: "t-profile-w", text: "Profil investasimu", at: "profil investasimu" },
-  { icon: "t-fit-w", text: "Investasi yang paling sesuai", at: "investasi yang paling sesuai" },
-  { icon: "t-levelup-w", text: "Pilihan untuk naik level", at: "pilihan untuk naik level" },
+  {
+    icon: "t-fit-w",
+    text: "Investasi yang paling sesuai",
+    at: "investasi yang paling sesuai",
+  },
+  {
+    icon: "t-levelup-w",
+    text: "Pilihan untuk naik level",
+    at: "pilihan untuk naik level",
+  },
   { icon: "t-guide-w", text: "Panduan dari Tuntun", at: "panduan dari Tuntun" },
-  { icon: "t-sim-w", text: "Simulasi investasi satu tahun", at: "simulasi investasi satu tahun" },
-  { icon: "t-notyet-w", text: "Produk yang untuk sekarang mungkin belum cocok", at: "sampai produk" },
+  {
+    icon: "t-sim-w",
+    text: "Simulasi investasi satu tahun",
+    at: "simulasi investasi satu tahun",
+  },
+  {
+    icon: "t-notyet-w",
+    text: "Produk yang untuk sekarang mungkin belum cocok",
+    at: "sampai produk",
+  },
 ];
 const RL = { w: 470, h: 136, gap: 40, ys: [310, 476, 642] };
 const PDF_H = 7969;
 const PDF_VIEW = 1620;
 const REPORT_PARTS = [
   { at: "profil investasimu", top: 0, box: [25, 195, 1100, 655] },
-  { at: "investasi yang paling sesuai", top: 1250, box: [30, 1365, 1095, 2500] },
+  {
+    at: "investasi yang paling sesuai",
+    top: 1250,
+    box: [30, 1365, 1095, 2500],
+  },
   { at: "pilihan untuk naik level", top: 2450, box: [30, 2565, 1095, 3797] },
-  { at: "simulasi investasi satu tahun", top: 4570, box: [30, 4582, 1095, 6184] },
+  {
+    at: "simulasi investasi satu tahun",
+    top: 4570,
+    box: [30, 4582, 1095, 6184],
+  },
   { at: "sampai produk", top: PDF_H - PDF_VIEW, box: [30, 6945, 1095, 7595] },
 ] as const;
 
@@ -146,28 +219,82 @@ const TEXT_X = L.x + HEAD.ring + 26;
 const SEE_X = TEXT_X;
 
 /** The phone frame — the same light frame as SC06's (components/PhoneScreens); the screenshots sit in its screen. */
-const Phone = ({ cx = PHONE.cx, children }: { cx?: number; children: React.ReactNode }) => {
+const Phone = ({
+  cx = PHONE.cx,
+  children,
+}: {
+  cx?: number;
+  children: React.ReactNode;
+}) => {
   const c = usePalette();
   const shadow = useShadow();
   return (
-    <div style={{ position: "absolute", left: cx - PHONE.w / 2, top: PHONE.y, width: PHONE.w, height: PHONE.h, borderRadius: PHONE.r, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrand}` }}>
-      <div style={{ position: "absolute", left: BEZEL, top: BEZEL, width: SCREEN.w, height: SCREEN.h, borderRadius: SCREEN.r, overflow: "hidden", background: theme.color.neutralDisc }}>{children}</div>
+    <Interactive.Div
+      name="Objek"
+      style={{
+        position: "absolute",
+        left: cx - PHONE.w / 2,
+        top: PHONE.y,
+        width: PHONE.w,
+        height: PHONE.h,
+        borderRadius: PHONE.r,
+        background: c.cardBg,
+        boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrand}`,
+      }}
+    >
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: BEZEL,
+          top: BEZEL,
+          width: SCREEN.w,
+          height: SCREEN.h,
+          borderRadius: SCREEN.r,
+          overflow: "hidden",
+          background: theme.color.neutralDisc,
+        }}
+      >
+        {children}
+      </Interactive.Div>
       {/* no notch: with the status bar cropped off, it would sit on the app's own header */}
-    </div>
+    </Interactive.Div>
   );
 };
 
 /** One screenshot filling the screen, fading up over the one before it on `at`. */
 /** `cut`: no fade, the screen just changes (a tap in the app — Simon, 22 Oct). */
-const Shot = ({ file, at, still = false, cut = false }: { file: string; at: number; still?: boolean; cut?: boolean }) => {
+const Shot = ({
+  file,
+  at,
+  still = false,
+  cut = false,
+}: {
+  file: string;
+  at: number;
+  still?: boolean;
+  cut?: boolean;
+}) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const p = still ? 1 : cut ? (f >= at ? 1 : 0) : ease(f, at, m.reveal);
   if (p <= 0.001) return null;
   return (
     <Img
+      showInTimeline={false}
       src={staticFile(`art/in04/app/${file}`)}
-      style={{ position: "absolute", left: 0, top: 0, width: SCREEN.w, height: SCREEN.h, maxWidth: "none", objectFit: "cover", objectPosition: "top", opacity: p, transform: `translateY(${((1 - p) * 16).toFixed(2)}px)` }}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: 0,
+        width: SCREEN.w,
+        height: SCREEN.h,
+        maxWidth: "none",
+        objectFit: "cover",
+        objectPosition: "top",
+        opacity: p,
+        transform: `translateY(${((1 - p) * 16).toFixed(2)}px)`,
+      }}
     />
   );
 };
@@ -179,24 +306,79 @@ const ReportPdf = ({ at, top }: { at: number; top: number }) => {
   const p = ease(f, at, m.reveal);
   if (p <= 0.001) return null;
   const k = SCREEN.w / SHOT.w;
-  return <Img src={staticFile("art/in04/app/stable-architech-full.jpg")} style={{ position: "absolute", left: 0, top: -top * k, width: SCREEN.w, height: PDF_H * k, maxWidth: "none", opacity: p }} />;
+  return (
+    <Img
+      showInTimeline={false}
+      src={staticFile("art/in04/app/stable-architech-full.jpg")}
+      style={{
+        position: "absolute",
+        left: 0,
+        top: -top * k,
+        width: SCREEN.w,
+        height: PDF_H * k,
+        maxWidth: "none",
+        opacity: p,
+      }}
+    />
+  );
 };
 /**
  * A part of the PDF → the screen (unscaled frame), with the PDF scrolled to `top`. Its rows are the part's; its sides
  * are the PHONE's plus 20 px each way on screen (Simon's rule for a box over a phone) — `scale` is the phone's now.
  */
-const pdfBox = (b: readonly number[], top: number, cx: number, scale: number): HLRect => {
+const pdfBox = (
+  b: readonly number[],
+  top: number,
+  cx: number,
+  scale: number,
+): HLRect => {
   const k = SCREEN.w / SHOT.w;
   const y0 = PHONE.y + BEZEL;
   const side = HL_PAD.side / scale;
-  return { x1: cx - PHONE.w / 2 - side, y1: y0 + (b[1] - top) * k, x2: cx + PHONE.w / 2 + side, y2: y0 + (b[3] - top) * k };
+  return {
+    x1: cx - PHONE.w / 2 - side,
+    y1: y0 + (b[1] - top) * k,
+    x2: cx + PHONE.w / 2 + side,
+    y2: y0 + (b[3] - top) * k,
+  };
 };
 
 /** A small pill on a word: `solid` = an indigo button (white words, no border); `line` = white with an indigo border; else grey. */
-const Pill = ({ text, p, line = false, solid = false }: { text: string; p: number; line?: boolean; solid?: boolean }) => {
+const Pill = ({
+  text,
+  p,
+  line = false,
+  solid = false,
+}: {
+  text: string;
+  p: number;
+  line?: boolean;
+  solid?: boolean;
+}) => {
   const c = usePalette();
   return (
-    <div style={{ padding: "10px 24px", borderRadius: 999, background: solid ? c.indigo : line ? c.cardBg : theme.color.neutralDisc, boxShadow: line ? `inset 0 0 0 2px ${theme.color.connector}` : undefined, ...typeStyle("label"), fontWeight: solid ? 600 : 500, color: solid ? c.cardBg : c.ink, whiteSpace: "nowrap", opacity: p, transform: `translateY(${((1 - p) * 8).toFixed(2)}px)` }}>{text}</div>
+    <div
+      style={{
+        padding: "10px 24px",
+        borderRadius: 999,
+        background: solid
+          ? c.indigo
+          : line
+            ? c.cardBg
+            : theme.color.neutralDisc,
+        boxShadow: line
+          ? `inset 0 0 0 2px ${theme.color.connector}`
+          : undefined,
+        ...typeStyle("label"),
+        fontWeight: solid ? 600 : 500,
+        color: solid ? c.cardBg : c.ink,
+        whiteSpace: "nowrap",
+        opacity: p,
+        transform: `translateY(${((1 - p) * 8).toFixed(2)}px)`,
+      }}
+    >
+      {text}
+    </div>
   );
 };
 
@@ -226,7 +408,10 @@ export const SC09 = () => {
   const headAt = [p1, p2, p3];
   const roll = (i: number) => {
     const inn = ease(f, headAt[i], m.move);
-    const out = i + 1 < headAt.length ? ease(f, headAt[i + 1], m.move) : ease(f, p4, m.move);
+    const out =
+      i + 1 < headAt.length
+        ? ease(f, headAt[i + 1], m.move)
+        : ease(f, p4, m.move);
     return { y: (1 - inn) * HEAD.h - out * HEAD.h, o: inn * (1 - out) };
   };
   /** Big from point 1, back to its P0 size on point 3 (Simon, 22 Oct). */
@@ -239,7 +424,13 @@ export const SC09 = () => {
   const phoneScale = 1 + (BIG.s - 1) * (grow + grow4);
   // the PDF's scroll, and when each part is boxed
   const partAt = REPORT_PARTS.map((r) => W(r.at));
-  const pdfTop = REPORT_PARTS.reduce((acc, r, i) => acc + (r.top - (i ? REPORT_PARTS[i - 1].top : 0)) * (i ? ease(f, partAt[i] - m.sec(0.15), m.sec(0.6)) : 0), 0);
+  const pdfTop = REPORT_PARTS.reduce(
+    (acc, r, i) =>
+      acc +
+      (r.top - (i ? REPORT_PARTS[i - 1].top : 0)) *
+        (i ? ease(f, partAt[i] - m.sec(0.15), m.sec(0.6)) : 0),
+    0,
+  );
 
   return (
     <Stage>
@@ -248,37 +439,125 @@ export const SC09 = () => {
       <BoardGrid g={g} on={ease(f, p5, m.reveal)} />
 
       {/* the phone, through P0–P4 */}
-      <Appear at={slideAt} out={p5} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height, clipPath: OUTSIDE_RESERVES }}>
-        <div style={{ position: "absolute", inset: 0, transformOrigin: `${P0_PHONE_CX}px ${PHONE.y}px`, transform: `translate(${phoneDx.toFixed(2)}px, ${phoneDy.toFixed(2)}px) scale(${phoneScale.toFixed(4)})` }}>
-        <Phone cx={phoneCx}>
-          <Shot file="T01-nostatus.png" at={p0} still />
-          <Shot file="T02-nostatus.png" at={p1} />
-          <Shot file="T04-nostatus.png" at={p2} />
-          {/* P3, each screen on the words it shows (Simon, 22 Oct): Trading · Combine · Investing, then Newbie · Rising · Pro */}
-          <Shot file="InvestingStrategy-nostatus.png" at={W("gaya investasimu")} />
-          <Shot file="InvestingStrategy_1-nostatus.png" at={W("atau jangka panjang")} cut />
-          <Shot file="InvestingStrategy_2-nostatus.png" at={W("jangka panjang")} cut />
-          <Shot file="InvestingLevel-nostatus.png" at={W("tingkat pengalamanmu")} />
-          <Shot file="InvestingLevel_1-nostatus.png" at={W("berkembang")} cut />
-          <Shot file="InvestingLevel_2-nostatus.png" at={W("sudah berpengalaman")} cut />
-          {/* the report: the Stable Architech PDF, whole, scrolling */}
-          <ReportPdf at={p4} top={pdfTop} />
-        </Phone>
-        <HighlightBox rect={banner} grow={ease(f, linkAt + m.sec(0.25), m.reveal)} opacity={1 - ease(f, p1, m.fade)} width={4} radius={18} />
-        {T04_MARKS.map((mk) => (
-          <HighlightBox key={mk.at} rect={shotBox(mk.box, phoneCx, 1080, 115)} grow={ease(f, W(mk.at), m.reveal)} opacity={1 - ease(f, p3, m.fade)} width={3 / (1 + (BIG.s - 1) * grow)} radius={12} stroke={theme.color.cyanInk} fill={theme.color.cyanWash} />
-        ))}
-        {REPORT_PARTS.map((r, i) => (
-          <HighlightBox key={r.at} rect={pdfBox(r.box, pdfTop, phoneCx, phoneScale)} grow={ease(f, partAt[i] + (i ? m.sec(0.5) : 0), m.reveal)} opacity={i + 1 < partAt.length ? 1 - ease(f, partAt[i + 1] - m.sec(0.2), m.fade) : 1} width={3 / phoneScale} radius={16} />
-        ))}
-        {T02_STATS.map((st, i) => (
-          <HighlightBox key={i} rect={shotBox(st.box, phoneCx)} grow={ease(f, W(st.kind === "return" ? "return dan" : "drawdown,") + m.sec(0.1) * (i >> 1), m.reveal)} opacity={1 - ease(f, p2, m.fade)} width={3 / (1 + (BIG.s - 1) * grow)} radius={12} />
-        ))}
+      <Appear
+        at={slideAt}
+        out={p5}
+        rise={0}
+        style={{
+          left: 0,
+          top: 0,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+          clipPath: OUTSIDE_RESERVES,
+        }}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transformOrigin: `${P0_PHONE_CX}px ${PHONE.y}px`,
+            transform: `translate(${phoneDx.toFixed(2)}px, ${phoneDy.toFixed(2)}px) scale(${phoneScale.toFixed(4)})`,
+          }}
+        >
+          <Phone cx={phoneCx}>
+            <Shot file="T01-nostatus.png" at={p0} still />
+            <Shot file="T02-nostatus.png" at={p1} />
+            <Shot file="T04-nostatus.png" at={p2} />
+            {/* P3, each screen on the words it shows (Simon, 22 Oct): Trading · Combine · Investing, then Newbie · Rising · Pro */}
+            <Shot
+              file="InvestingStrategy-nostatus.png"
+              at={W("gaya investasimu")}
+            />
+            <Shot
+              file="InvestingStrategy_1-nostatus.png"
+              at={W("atau jangka panjang")}
+              cut
+            />
+            <Shot
+              file="InvestingStrategy_2-nostatus.png"
+              at={W("jangka panjang")}
+              cut
+            />
+            <Shot
+              file="InvestingLevel-nostatus.png"
+              at={W("tingkat pengalamanmu")}
+            />
+            <Shot
+              file="InvestingLevel_1-nostatus.png"
+              at={W("berkembang")}
+              cut
+            />
+            <Shot
+              file="InvestingLevel_2-nostatus.png"
+              at={W("sudah berpengalaman")}
+              cut
+            />
+            {/* the report: the Stable Architech PDF, whole, scrolling */}
+            <ReportPdf at={p4} top={pdfTop} />
+          </Phone>
+          <HighlightBox
+            rect={banner}
+            grow={ease(f, linkAt + m.sec(0.25), m.reveal)}
+            opacity={1 - ease(f, p1, m.fade)}
+            width={4}
+            radius={18}
+          />
+          {T04_MARKS.map((mk) => (
+            <HighlightBox
+              key={mk.at}
+              rect={shotBox(mk.box, phoneCx, 1080, 115)}
+              grow={ease(f, W(mk.at), m.reveal)}
+              opacity={1 - ease(f, p3, m.fade)}
+              width={3 / (1 + (BIG.s - 1) * grow)}
+              radius={12}
+              stroke={theme.color.cyanInk}
+              fill={theme.color.cyanWash}
+            />
+          ))}
+          {REPORT_PARTS.map((r, i) => (
+            <HighlightBox
+              key={r.at}
+              rect={pdfBox(r.box, pdfTop, phoneCx, phoneScale)}
+              grow={ease(f, partAt[i] + (i ? m.sec(0.5) : 0), m.reveal)}
+              opacity={
+                i + 1 < partAt.length
+                  ? 1 - ease(f, partAt[i + 1] - m.sec(0.2), m.fade)
+                  : 1
+              }
+              width={3 / phoneScale}
+              radius={16}
+            />
+          ))}
+          {T02_STATS.map((st, i) => (
+            <HighlightBox
+              key={i}
+              rect={shotBox(st.box, phoneCx)}
+              grow={ease(
+                f,
+                W(st.kind === "return" ? "return dan" : "drawdown,") +
+                  m.sec(0.1) * (i >> 1),
+                m.reveal,
+              )}
+              opacity={1 - ease(f, p2, m.fade)}
+              width={3 / (1 + (BIG.s - 1) * grow)}
+              radius={12}
+            />
+          ))}
         </div>
       </Appear>
 
       {/* P0 — the two questions, into the app */}
-      <Appear at={p0} out={p1} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+      <Appear
+        at={p0}
+        out={p1}
+        rise={0}
+        style={{
+          left: 0,
+          top: 0,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+        }}
+      >
         {(
           [
             { icon: "waves", title: "Ombak" },
@@ -286,13 +565,45 @@ export const SC09 = () => {
           ] as const
         ).map((q, i) => (
           <div key={q.title}>
-            <Connector a={{ x: askX + ASK.w, y: ASK.ys[i] + ASK.h / 2 }} b={{ x: banner.x1 - 6, y: (banner.y1 + banner.y2) / 2 }} p={ease(f, linkAt + m.sec(0.15) * i, m.sec(0.6))} shape="curve" />
+            <Connector
+              a={{ x: askX + ASK.w, y: ASK.ys[i] + ASK.h / 2 }}
+              b={{ x: banner.x1 - 6, y: (banner.y1 + banner.y2) / 2 }}
+              p={ease(f, linkAt + m.sec(0.15) * i, m.sec(0.6))}
+              shape="curve"
+            />
             <Appear at={p0 + m.sec(0.15) * i} style={{ left: 0, top: 0 }}>
-              <Card x={askX} y={ASK.ys[i]} w={ASK.w} h={ASK.h} style={{ display: "flex", alignItems: "center", gap: 22, padding: "0 26px" }}>
+              <Card
+                x={askX}
+                y={ASK.ys[i]}
+                w={ASK.w}
+                h={ASK.h}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 22,
+                  padding: "0 26px",
+                }}
+              >
                 <IsoIcon name={q.icon} h={60} />
                 <div>
-                  <div style={{ ...typeStyle("label"), fontSize: 24, color: c.slate }}>Pertanyaan {i + 1}</div>
-                  <div style={{ ...typeStyle("body"), fontWeight: 600, color: c.ink }}>{q.title}</div>
+                  <div
+                    style={{
+                      ...typeStyle("label"),
+                      fontSize: 24,
+                      color: c.slate,
+                    }}
+                  >
+                    Pertanyaan {i + 1}
+                  </div>
+                  <div
+                    style={{
+                      ...typeStyle("body"),
+                      fontWeight: 600,
+                      color: c.ink,
+                    }}
+                  >
+                    {q.title}
+                  </div>
                 </div>
               </Card>
             </Appear>
@@ -300,64 +611,215 @@ export const SC09 = () => {
         ))}
       </Appear>
       {/* …then the feature's name, as it is said */}
-      <Appear at={bannerAt - m.sec(0.1)} out={p1} style={{ left: P0_X, top: ASK.ys[1] + ASK.h + 70, width: P0_COL.w }}>
-        <div style={{ ...typeStyle("title"), fontWeight: 600, lineHeight: 1.2, color: c.indigo }}>Tuntun Personal Investment Plan</div>
+      <Appear
+        at={bannerAt - m.sec(0.1)}
+        out={p1}
+        style={{ left: P0_X, top: ASK.ys[1] + ASK.h + 70, width: P0_COL.w }}
+      >
+        <div
+          style={{
+            ...typeStyle("title"),
+            fontWeight: 600,
+            lineHeight: 1.2,
+            color: c.indigo,
+          }}
+        >
+          Tuntun Personal Investment Plan
+        </div>
       </Appear>
 
       {/* P1–P3 — the heading slot, each heading scrolling up into the next */}
-      <div style={{ position: "absolute", left: L.x, top: HEAD.y, width: BIG_LEFT - 30 - L.x, height: HEAD.h, overflow: "hidden" }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: L.x,
+          top: HEAD.y,
+          width: BIG_LEFT - 30 - L.x,
+          height: HEAD.h,
+          overflow: "hidden",
+        }}
+      >
         {HEADINGS.map((h, i) => {
           const r = roll(i);
           if (r.o <= 0.001) return null;
           return (
-            <div key={h.n} style={{ position: "absolute", left: 0, top: 0, height: HEAD.h, display: "flex", alignItems: "center", gap: 26, opacity: r.o, transform: `translateY(${r.y.toFixed(2)}px)` }}>
+            <div
+              key={h.n}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                height: HEAD.h,
+                display: "flex",
+                alignItems: "center",
+                gap: 26,
+                opacity: r.o,
+                transform: `translateY(${r.y.toFixed(2)}px)`,
+              }}
+            >
               <NumRing n={h.n} size={HEAD.ring} />
-              <div style={{ fontFamily: theme.text.family, fontSize: HEAD.size, fontWeight: 600, letterSpacing: -1, color: c.indigo, whiteSpace: "nowrap" }}>{h.title}</div>
+              <div
+                style={{
+                  fontFamily: theme.text.family,
+                  fontSize: HEAD.size,
+                  fontWeight: 600,
+                  letterSpacing: -1,
+                  color: c.indigo,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {h.title}
+              </div>
             </div>
           );
         })}
-      </div>
+      </Interactive.Div>
 
       {/* P1 — return and drawdown */}
-      <Appear at={W("return dan drawdown")} out={p2} style={{ left: TEXT_X, top: BODY_Y, width: BIG_LEFT - 40 - TEXT_X }}>
-        <div style={{ ...typeStyle("body"), fontSize: 48, color: c.ink, lineHeight: 1.3 }}>Pilih berdasarkan return dan drawdown, sesuai yang bisa kamu terima</div>
+      <Appear
+        at={W("return dan drawdown")}
+        out={p2}
+        style={{ left: TEXT_X, top: BODY_Y, width: BIG_LEFT - 40 - TEXT_X }}
+      >
+        <div
+          style={{
+            ...typeStyle("body"),
+            fontSize: 48,
+            color: c.ink,
+            lineHeight: 1.3,
+          }}
+        >
+          Pilih berdasarkan return dan drawdown, sesuai yang bisa kamu terima
+        </div>
       </Appear>
 
       {/* P2 — the simulation: three things, each hanging off the heading's line; then the choice */}
-      <Appear at={p2} out={p3} rise={0} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
+      <Appear
+        at={p2}
+        out={p3}
+        rise={0}
+        style={{
+          left: 0,
+          top: 0,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+        }}
+      >
         {SEE.map((it, i) => {
           const at = W(it.at);
           return (
             <div key={it.text}>
-              <Connector a={{ x: L.x + HEAD.ring / 2, y: HEAD.y + HEAD.h / 2 + HEAD.ring / 2 }} b={{ x: SEE_X - 14, y: SEE_Y(i) }} p={ease(f, at - m.sec(0.3), m.sec(0.5))} shape="elbow" axis="y" mid={1} radius={22} dot={i === 0} />
-              <div style={{ position: "absolute", left: SEE_X, top: SEE_Y(i) - 24, height: 48, display: "flex", alignItems: "center", ...typeStyle("body"), color: c.ink, whiteSpace: "nowrap", opacity: ease(f, at, m.reveal) }}>{it.text}</div>
+              <Connector
+                a={{
+                  x: L.x + HEAD.ring / 2,
+                  y: HEAD.y + HEAD.h / 2 + HEAD.ring / 2,
+                }}
+                b={{ x: SEE_X - 14, y: SEE_Y(i) }}
+                p={ease(f, at - m.sec(0.3), m.sec(0.5))}
+                shape="elbow"
+                axis="y"
+                mid={1}
+                radius={22}
+                dot={i === 0}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  left: SEE_X,
+                  top: SEE_Y(i) - 24,
+                  height: 48,
+                  display: "flex",
+                  alignItems: "center",
+                  ...typeStyle("body"),
+                  color: c.ink,
+                  whiteSpace: "nowrap",
+                  opacity: ease(f, at, m.reveal),
+                }}
+              >
+                {it.text}
+              </div>
             </div>
           );
         })}
       </Appear>
-      <Appear at={pickAt} out={p3} style={{ left: SEE_X, top: SEE_Y(2) + 90, width: L.w }}>
-        <div style={{ ...typeStyle("body"), fontWeight: 600, color: c.indigo }}>Lalu putuskan</div>
+      <Appear
+        at={pickAt}
+        out={p3}
+        style={{ left: SEE_X, top: SEE_Y(2) + 90, width: L.w }}
+      >
+        <div style={{ ...typeStyle("body"), fontWeight: 600, color: c.indigo }}>
+          Lalu putuskan
+        </div>
         <div style={{ marginTop: 18, display: "flex", gap: 16 }}>
-          <Pill text="Bisa diterima" p={ease(f, W("“Saya masih"), m.reveal)} solid />
-          <Pill text="Coba yang lain" p={ease(f, W("“Coba yang lain"), m.reveal)} line />
+          <Pill
+            text="Bisa diterima"
+            p={ease(f, W("“Saya masih"), m.reveal)}
+            solid
+          />
+          <Pill
+            text="Coba yang lain"
+            p={ease(f, W("“Coba yang lain"), m.reveal)}
+            line
+          />
         </div>
       </Appear>
 
       {/* P3 — style and experience: one line under the heading (as point 1's), the app's own screens say the rest */}
-      <Appear at={W("memilih gaya")} out={p4} style={{ left: TEXT_X, top: BODY_Y, width: BIG_LEFT - 40 - TEXT_X }}>
-        <div style={{ ...typeStyle("body"), fontSize: 48, color: c.ink, lineHeight: 1.3 }}>Pilih gaya investasimu dan tingkat pengalaman</div>
+      <Appear
+        at={W("memilih gaya")}
+        out={p4}
+        style={{ left: TEXT_X, top: BODY_Y, width: BIG_LEFT - 40 - TEXT_X }}
+      >
+        <div
+          style={{
+            ...typeStyle("body"),
+            fontSize: 48,
+            color: c.ink,
+            lineHeight: 1.3,
+          }}
+        >
+          Pilih gaya investasimu dan tingkat pengalaman
+        </div>
       </Appear>
 
       {/* P4 — the report: the PDF walks in the phone; its six parts as labels, three each side */}
       {REPORT_LABELS.map((r, i) => {
         const left = i < 3;
         const phoneHalf = (PHONE.w * BIG.s) / 2;
-        const x = left ? CX - phoneHalf - RL.gap - RL.w : CX + phoneHalf + RL.gap;
+        const x = left
+          ? CX - phoneHalf - RL.gap - RL.w
+          : CX + phoneHalf + RL.gap;
         return (
-          <Appear key={r.text} at={W(r.at)} out={p5} style={{ left: 0, top: 0 }}>
-            <Card x={x} y={RL.ys[i % 3]} w={RL.w} h={RL.h} style={{ display: "flex", alignItems: "center", gap: 18, padding: "0 26px" }}>
+          <Appear
+            key={r.text}
+            at={W(r.at)}
+            out={p5}
+            style={{ left: 0, top: 0 }}
+          >
+            <Card
+              x={x}
+              y={RL.ys[i % 3]}
+              w={RL.w}
+              h={RL.h}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 18,
+                padding: "0 26px",
+              }}
+            >
               <IconDot name={r.icon} size={26} neutral />
-              <div style={{ ...typeStyle("body"), fontSize: 30, lineHeight: 1.25, color: c.ink }}>{r.text}</div>
+              <div
+                style={{
+                  ...typeStyle("body"),
+                  fontSize: 30,
+                  lineHeight: 1.25,
+                  color: c.ink,
+                }}
+              >
+                {r.text}
+              </div>
             </Card>
           </Appear>
         );
@@ -367,10 +829,26 @@ export const SC09 = () => {
       <OrangTuntun at={p5} />
       {/* two lines, both at the closing size (Simon, 22 Oct); the VO says them in full */}
       <Appear at={p5 + m.sec(0.2)} style={{ left: 0, top: 0 }}>
-        <Line x={ORANG_TUNTUN_RIGHT + 90} y={320} w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160} size={72} text="Tes ulang kalau kondisi hidup berubah" mark="Tes ulang" markInk={theme.color.selfAmberInk} />
+        <Line
+          x={ORANG_TUNTUN_RIGHT + 90}
+          y={320}
+          w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160}
+          size={72}
+          text="Tes ulang kalau kondisi hidup berubah"
+          mark="Tes ulang"
+          markInk={theme.color.selfAmberInk}
+        />
       </Appear>
       <Appear at={W("Karena yang perlu")} style={{ left: 0, top: 0 }}>
-        <Line x={ORANG_TUNTUN_RIGHT + 90} y={650} w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160} size={72} text="Karena kita perlu kenali diri kita yang sekarang" mark="diri kita yang sekarang" markInk={theme.color.selfAmberInk} />
+        <Line
+          x={ORANG_TUNTUN_RIGHT + 90}
+          y={650}
+          w={theme.canvas.width - theme.margin.right - ORANG_TUNTUN_RIGHT - 160}
+          size={72}
+          text="Karena kita perlu kenali diri kita yang sekarang"
+          mark="diri kita yang sekarang"
+          markInk={theme.color.selfAmberInk}
+        />
       </Appear>
     </Stage>
   );

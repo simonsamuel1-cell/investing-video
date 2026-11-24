@@ -19,10 +19,18 @@
  * putihnya". The title, the two chips, the colour key and the reading were all
  * saying in type what the loop now says by moving.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  Stage, Card, SourceTag, cutOutStyle, usePalette, gridOf, domainOf,
-  ramp, textReveal, theme,
+  Stage,
+  Card,
+  SourceTag,
+  cutOutStyle,
+  usePalette,
+  gridOf,
+  domainOf,
+  ramp,
+  textReveal,
+  theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC18_TICK, local } from "../data/timing";
 import { TAG_Y } from "../data/layout";
@@ -68,8 +76,18 @@ const PANEL = {
   w: CARD_W,
   h: theme.stage.card.h,
 };
-const CHART = { x: PANEL.x + 56, y: PANEL.y + 70, w: PANEL.w - 112, h: PANEL.h * 0.46 };
-const VOLBOX = { x: CHART.x, y: CHART.y + CHART.h + 46, w: CHART.w, h: PANEL.h * 0.2 };
+const CHART = {
+  x: PANEL.x + 56,
+  y: PANEL.y + 70,
+  w: PANEL.w - 112,
+  h: PANEL.h * 0.46,
+};
+const VOLBOX = {
+  x: CHART.x,
+  y: CHART.y + CHART.h + 46,
+  w: CHART.w,
+  h: PANEL.h * 0.2,
+};
 
 /**
  * ⚠ THE DOMAIN COVERS THE OSCILLATION, NOT JUST THE NINE DRAWN BARS. Built from
@@ -114,7 +132,6 @@ export const SC18 = () => {
   /** ⚠ THE BAR'S HEIGHT IS THE NINTH'S, FIXED. Same volume, either colour. */
   const vh = (TICK_VOL[LIVE] / PEAK) * VOLBOX.h;
 
-
   /** ⚠ LINEAR, AND COUNTED IN CHARACTERS. Typing that eases is a machine
    *  warming up; a hand goes at one speed. */
   const typed = Math.floor(
@@ -124,144 +141,215 @@ export const SC18 = () => {
 
   return (
     <Stage transparent>
-      <div style={{ position: "absolute", inset: 0, ...cutOutStyle(f + FROM, CUTS.toLimits) }}>
-      <SourceTag kind={TICK.kind} y={TAG_Y} />
-      {/* ⚠ ONE GROUP: the panel and the column beside it travel together. The
-          heading is deliberately outside it — it belongs to the margin. */}
-      <div style={{ position: "absolute", inset: 0, transform: `translateX(${-V.group}px)` }}>
-      {/* the white panel Simon kept, at a third of the frame */}
-      <Card rect={PANEL} />
-
-      {/* ── the nine that stand still ──────────────────────────────────── */}
-      <svg
-        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-        width={theme.canvas.width}
-        height={theme.canvas.height}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...cutOutStyle(f + FROM, CUTS.toLimits),
+        }}
       >
-        {TICK.bars.map((b, i) => {
-          const bx = G.x(i);
-          const bfill = b.c >= b.o ? c.candleGreen : c.candleRed;
-          const bt = Math.min(G.y(b.o), G.y(b.c));
-          const bh = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
-          const bv = (TICK_VOL[i] / PEAK) * VOLBOX.h;
-          return (
-            <g key={i}>
-              <line x1={bx} y1={G.y(b.h)} x2={bx} y2={G.y(b.l)} stroke={bfill} strokeWidth={theme.shape.rule} />
-              <rect x={bx - w / 2} y={bt} width={w} height={bh} rx={Math.min(w * 0.22, 5)} fill={bfill} />
-              <rect
-                x={bx - w / 2}
-                y={VOLBOX.y + VOLBOX.h - bv}
-                width={w}
-                height={Math.max(1, bv)}
-                rx={Math.min(w * 0.28, 8)}
-                fill={bfill}
-                opacity={0.72}
-              />
-            </g>
-          );
-        })}
+        <SourceTag kind={TICK.kind} y={TAG_Y} />
+        {/* ⚠ ONE GROUP: the panel and the column beside it travel together. The
+          heading is deliberately outside it — it belongs to the margin. */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: `translateX(${-V.group}px)`,
+          }}
+        >
+          {/* the white panel Simon kept, at a third of the frame */}
+          <Card rect={PANEL} />
 
-        {/* ── and the one that does not ──────────────────────────────────
+          {/* ── the nine that stand still ──────────────────────────────────── */}
+          <svg
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              overflow: "visible",
+            }}
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+          >
+            {TICK.bars.map((b, i) => {
+              const bx = G.x(i);
+              const bfill = b.c >= b.o ? c.candleGreen : c.candleRed;
+              const bt = Math.min(G.y(b.o), G.y(b.c));
+              const bh = Math.max(1.5, Math.abs(G.y(b.c) - G.y(b.o)));
+              const bv = (TICK_VOL[i] / PEAK) * VOLBOX.h;
+              return (
+                <g key={i}>
+                  <line
+                    x1={bx}
+                    y1={G.y(b.h)}
+                    x2={bx}
+                    y2={G.y(b.l)}
+                    stroke={bfill}
+                    strokeWidth={theme.shape.rule}
+                  />
+                  <rect
+                    x={bx - w / 2}
+                    y={bt}
+                    width={w}
+                    height={bh}
+                    rx={Math.min(w * 0.22, 5)}
+                    fill={bfill}
+                  />
+                  <rect
+                    x={bx - w / 2}
+                    y={VOLBOX.y + VOLBOX.h - bv}
+                    width={w}
+                    height={Math.max(1, bv)}
+                    rx={Math.min(w * 0.28, 8)}
+                    fill={bfill}
+                    opacity={0.72}
+                  />
+                </g>
+              );
+            })}
+
+            {/* ── and the one that does not ──────────────────────────────────
             ⚠ ITS WICK IS A FIXED ENVELOPE. High and low do not follow the
             close, so this reads as one candle updating rather than as a
             different candle every half-second. */}
-        <line x1={x} y1={G.y(OPEN + REACH)} x2={x} y2={G.y(OPEN - REACH)} stroke={fill} strokeWidth={theme.shape.rule} />
-        <rect x={x - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 5)} fill={fill} />
-        <rect
-          x={x - w / 2}
-          y={VOLBOX.y + VOLBOX.h - vh}
-          width={w}
-          height={Math.max(1, vh)}
-          rx={Math.min(w * 0.28, 8)}
-          fill={fill}
-          opacity={0.72}
-        />
-      </svg>
+            <line
+              x1={x}
+              y1={G.y(OPEN + REACH)}
+              x2={x}
+              y2={G.y(OPEN - REACH)}
+              stroke={fill}
+              strokeWidth={theme.shape.rule}
+            />
+            <rect
+              x={x - w / 2}
+              y={top}
+              width={w}
+              height={h}
+              rx={Math.min(w * 0.22, 5)}
+              fill={fill}
+            />
+            <rect
+              x={x - w / 2}
+              y={VOLBOX.y + VOLBOX.h - vh}
+              width={w}
+              height={Math.max(1, vh)}
+              rx={Math.min(w * 0.28, 8)}
+              fill={fill}
+              opacity={0.72}
+            />
+          </svg>
 
-      {/* ── the reading, typed out beside the loop ──────────────────────── */}
-      {typed > 0 && (
-        <>
-          <Mark x={C.x} y={OK_Y} d={C.icon} fill={c.candleGreen} kind="check" />
-          <div
-            style={{
-              position: "absolute",
-              left: C.x,
-              top: OK_TEXT,
-              fontFamily: theme.text.family,
-              fontSize: V.right.size,
-              fontWeight: 700,
-              lineHeight: 1,
-              color: theme.color.indigo,
-              whiteSpace: "nowrap",
-            }}
-          >
-            {V.right.text.slice(0, typed)}
-          </div>
-        </>
-      )}
-
-      {/* ── and the misreading it rules out ─────────────────────────────── */}
-      {f >= local(V.wrong.at, FROM) && (
-        <>
-          <Mark x={C.x} y={BAD_Y} d={C.icon} fill={theme.color.warn} kind="cross" />
-          {V.wrong.lines.map((line, i) => {
-            const r = textReveal(f, local(V.wrong.at, FROM) + i * V.wrong.stagger, V.wrong.over, 12);
-            return (
-              <div
-                key={line}
+          {/* ── the reading, typed out beside the loop ──────────────────────── */}
+          {typed > 0 && (
+            <>
+              <Mark
+                x={C.x}
+                y={OK_Y}
+                d={C.icon}
+                fill={c.candleGreen}
+                kind="check"
+              />
+              <Interactive.Div
+                name="Objek"
                 style={{
                   position: "absolute",
                   left: C.x,
-                  top: BAD_TEXT + i * V.right.size * 1.5,
+                  top: OK_TEXT,
                   fontFamily: theme.text.family,
-                  /* ⚠ THE SAME SIZE AND WEIGHT AS THE LINE ABOVE — Simon, and
-                     it is read from `right.size` rather than repeated, so the
-                     three cannot drift apart again. */
                   fontSize: V.right.size,
                   fontWeight: 700,
                   lineHeight: 1,
-                  /* ⚠ INDIGO, LIKE EVERY OTHER WORD HERE — Simon: "semua warna
-                     text di scene ini, indigo, tidak ada yang hitam". */
                   color: theme.color.indigo,
                   whiteSpace: "nowrap",
-                  opacity: r.opacity,
-                  transform: `translateY(${r.dy.toFixed(1)}px)`,
                 }}
               >
-                {line}
-              </div>
-            );
-          })}
-        </>
-      )}
+                {V.right.text.slice(0, typed)}
+              </Interactive.Div>
+            </>
+          )}
 
-      {/* ── the aside, in the only handwriting in the episode ───────────── */}
-      {f >= local(V.note.at, FROM) && (() => {
-        const r = textReveal(f, local(V.note.at, FROM), V.note.over, 12);
-        return (
-          <>
-            <Mark x={C.x} y={NOTE_Y} d={C.icon} fill={theme.color.indigo} kind="info" />
-            <div
-              style={{
-                position: "absolute",
-                left: C.x,
-                top: NOTE_TEXT,
-                fontFamily: theme.text.family,
-                fontSize: V.right.size,
-                fontWeight: 700,
-                lineHeight: 1,
-                color: theme.color.indigo,
-                whiteSpace: "nowrap",
-                opacity: r.opacity,
-                transform: `translateY(${r.dy.toFixed(1)}px)`,
-              }}
-            >
-              {V.note.text}
-            </div>
-          </>
-        );
-      })()}
-      </div>
+          {/* ── and the misreading it rules out ─────────────────────────────── */}
+          {f >= local(V.wrong.at, FROM) && (
+            <>
+              <Mark
+                x={C.x}
+                y={BAD_Y}
+                d={C.icon}
+                fill={theme.color.warn}
+                kind="cross"
+              />
+              {V.wrong.lines.map((line, i) => {
+                const r = textReveal(
+                  f,
+                  local(V.wrong.at, FROM) + i * V.wrong.stagger,
+                  V.wrong.over,
+                  12,
+                );
+                return (
+                  <div
+                    key={line}
+                    style={{
+                      position: "absolute",
+                      left: C.x,
+                      top: BAD_TEXT + i * V.right.size * 1.5,
+                      fontFamily: theme.text.family,
+                      /* ⚠ THE SAME SIZE AND WEIGHT AS THE LINE ABOVE — Simon, and
+                     it is read from `right.size` rather than repeated, so the
+                     three cannot drift apart again. */
+                      fontSize: V.right.size,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      /* ⚠ INDIGO, LIKE EVERY OTHER WORD HERE — Simon: "semua warna
+                     text di scene ini, indigo, tidak ada yang hitam". */
+                      color: theme.color.indigo,
+                      whiteSpace: "nowrap",
+                      opacity: r.opacity,
+                      transform: `translateY(${r.dy.toFixed(1)}px)`,
+                    }}
+                  >
+                    {line}
+                  </div>
+                );
+              })}
+            </>
+          )}
+
+          {/* ── the aside, in the only handwriting in the episode ───────────── */}
+          {f >= local(V.note.at, FROM) &&
+            (() => {
+              const r = textReveal(f, local(V.note.at, FROM), V.note.over, 12);
+              return (
+                <>
+                  <Mark
+                    x={C.x}
+                    y={NOTE_Y}
+                    d={C.icon}
+                    fill={theme.color.indigo}
+                    kind="info"
+                  />
+                  <Interactive.Div
+                    name="Objek"
+                    style={{
+                      position: "absolute",
+                      left: C.x,
+                      top: NOTE_TEXT,
+                      fontFamily: theme.text.family,
+                      fontSize: V.right.size,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      color: theme.color.indigo,
+                      whiteSpace: "nowrap",
+                      opacity: r.opacity,
+                      transform: `translateY(${r.dy.toFixed(1)}px)`,
+                    }}
+                  >
+                    {V.note.text}
+                  </Interactive.Div>
+                </>
+              );
+            })()}
+        </div>
       </div>
     </Stage>
   );
@@ -277,12 +365,26 @@ export const SC18 = () => {
  * a mistake, which is exactly what the cross does.
  */
 const Mark = ({
-  x, y, d, fill, kind,
-}: { x: number; y: number; d: number; fill: string; kind: "check" | "cross" | "info" }) => {
+  x,
+  y,
+  d,
+  fill,
+  kind,
+}: {
+  x: number;
+  y: number;
+  d: number;
+  fill: string;
+  kind: "check" | "cross" | "info";
+}) => {
   const r = d / 2;
   const a = d * 0.24;
   return (
-    <svg style={{ position: "absolute", left: x, top: y, overflow: "visible" }} width={d} height={d}>
+    <svg
+      style={{ position: "absolute", left: x, top: y, overflow: "visible" }}
+      width={d}
+      height={d}
+    >
       <circle cx={r} cy={r} r={r} fill={fill} />
       {/* ⚠ THE "i" IS A GLYPH, NOT A PATH — and a Times italic, at Simon's
           word. The two marks above are drawn because a tick and a cross are

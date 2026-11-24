@@ -26,10 +26,18 @@
  * it. A tick, a cross and a sentence say the same thing and are true.
  */
 import React from "react";
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  DashedBox, Stage, VerdictMark,
-  dashOpenAt, progress, ramp, textReveal, theme, useMotion, usePalette,
+  DashedBox,
+  Stage,
+  VerdictMark,
+  dashOpenAt,
+  progress,
+  ramp,
+  textReveal,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, PREMISE, local } from "../data/timing";
 import { NOTE_BOX, READINGS } from "../data/layout";
@@ -47,14 +55,9 @@ const V = PREMISE;
 const ROW_Y = theme.stage.card.y + theme.stage.card.h * 0.58;
 const MARK = theme.text.title.size;
 
-const Row = ({
-  children,
-  y,
-}: {
-  children: React.ReactNode;
-  y: number;
-}) => (
-  <div
+const Row = ({ children, y }: { children: React.ReactNode; y: number }) => (
+  <Interactive.Div
+    name="Objek"
     style={{
       position: "absolute",
       left: 0,
@@ -68,10 +71,18 @@ const Row = ({
     }}
   >
     {children}
-  </div>
+  </Interactive.Div>
 );
 
-const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at: number }) => {
+const Mark = ({
+  kind,
+  label,
+  at,
+}: {
+  kind: "check" | "cross";
+  label: string;
+  at: number;
+}) => {
   const f = useCurrentFrame();
   const m = useMotion();
   const c = usePalette();
@@ -80,7 +91,8 @@ const Mark = ({ kind, label, at }: { kind: "check" | "cross"; label: string; at:
    *  text fade out". The reading has been made; what the scene hands back to is
    *  the trade it was made about. */
   const out = progress(f, local(PREMISE.resume.at, FROM), m.fade);
-  if (r.opacity <= 0.001 || out >= 0.999) return <span style={{ visibility: "hidden" }} />;
+  if (r.opacity <= 0.001 || out >= 0.999)
+    return <span style={{ visibility: "hidden" }} />;
   return (
     <span
       style={{
@@ -133,7 +145,14 @@ const Note = () => {
     return { text, shown, warn };
   });
   return (
-    <DashedBox x={NOTE_BOX.x} y={NOTE_BOX.y} w={NOTE_BOX.w} h={NOTE_BOX.h} at={at} origin="center">
+    <DashedBox
+      x={NOTE_BOX.x}
+      y={NOTE_BOX.y}
+      w={NOTE_BOX.w}
+      h={NOTE_BOX.h}
+      at={at}
+      origin="center"
+    >
       <div
         style={{
           position: "absolute",
@@ -153,7 +172,10 @@ const Note = () => {
         }}
       >
         {lines.map((line) => (
-          <span key={line.text} style={line.warn ? { color: theme.color.warn } : undefined}>
+          <span
+            key={line.text}
+            style={line.warn ? { color: theme.color.warn } : undefined}
+          >
             {line.shown}
           </span>
         ))}
@@ -174,13 +196,16 @@ export const SC03 = () => (
         over, which is not a number anyone can set. The sentences are their own
         centred pair underneath. */}
     <Row y={ROW_Y}>
-      <Mark kind="check" label="Probabilitas" at={local(V.probabilitas, FROM)} />
+      <Mark
+        kind="check"
+        label="Probabilitas"
+        at={local(V.probabilitas, FROM)}
+      />
       <Mark kind="cross" label="Kepastian" at={local(V.kepastian, FROM)} />
     </Row>
     {/* ⚠ STAMPED, NOT PLACED — a dashed frame is a note written on the chart,
         which is what this sentence is: the reading the scene just made, left on
         the picture it was made about. */}
     <Note />
-
   </Stage>
 );

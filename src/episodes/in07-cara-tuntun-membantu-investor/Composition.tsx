@@ -4,7 +4,8 @@
  * ChatGPT storyboards in IN04's style (docs/vi-style/STYLE.md §0); the ones not built yet are empty rows that only mark their blocks on the Studio timeline.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, KODOK, KODOK_PAUSE, SFX, VO_LAST, heldAt, onTimeline } from "./data/timing";
 import { BoardGrid, Heading, SITUATION } from "./components/kit";

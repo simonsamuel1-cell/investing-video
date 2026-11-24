@@ -73,7 +73,7 @@ export const DeviceFrame = ({
         }}
       >
         {kind === "video" ? (
-          <OffthreadVideo
+          <OffthreadVideo showInTimeline={false}
             src={staticFile(src)}
             startFrom={startFrom}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
@@ -113,7 +113,7 @@ export const ScreenClip = ({
   return (
     <AbsoluteFill style={{ opacity: op }}>
       {kind === "video" ? (
-        <OffthreadVideo
+        <OffthreadVideo showInTimeline={false}
           src={staticFile(src)}
           startFrom={startFrom}
           style={{ width: "100%", height: "100%", objectFit: fit }}

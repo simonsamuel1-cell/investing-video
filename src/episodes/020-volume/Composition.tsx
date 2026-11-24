@@ -32,7 +32,8 @@
  * mid-sentence cut reads as a mistake.
  */
 import React from "react";
-import { AbsoluteFill, Sequence, Audio, staticFile } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, staticFile } from "remotion";
 import { PaletteProvider, Stage, Captions, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
 import { BLOCK, BONUS, MISTAKES, TRANS, TRANS2, RUNNING_LINE, COMBOS_VERSION, SC16_VERSION, CUTS, NEXT, NEXT_END } from "./data/timing";

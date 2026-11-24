@@ -1,0 +1,52 @@
+{
+ "_": "VI02, 5 Nov: measured by ear with scripts/vi/sub-check.py. Re-measure a line's entries when that line is re-recorded. 12 Nov: SC08's entries dropped, its lines were re-recorded (Scene 08_1).",
+ "shifts": [
+  {
+   "scene": 3,
+   "at": "Yang lebih",
+   "shift": 21
+  },
+  {
+   "scene": 3,
+   "at": "lebih penting",
+   "shift": 15
+  },
+  {
+   "scene": 3,
+   "at": "penting adalah:",
+   "shift": 20
+  },
+  {
+   "scene": 3,
+   "at": "adalah: berapa",
+   "shift": 25,
+   "grow": 11
+  },
+  {
+   "scene": 3,
+   "at": "berapa pelanggan",
+   "shift": 36
+  },
+  {
+   "scene": 3,
+   "at": "pelanggan yang",
+   "shift": 19
+  },
+  {
+   "scene": 4,
+   "at": "dan laba bersih",
+   "shift": 13
+  },
+  {
+   "scene": 4,
+   "at": "laba bersih yang",
+   "shift": -8
+  },
+  {
+   "scene": 6,
+   "at": "Pelanggannya masih",
+   "shift": 45,
+   "grow": -45
+  }
+ ]
+}

@@ -43,9 +43,9 @@ export const Person = ({ cx, cy, s, filter = 0, pic = PERSON, tone = theme.color
   return (
     <>
       <div style={{ position: "absolute", left: cx - r, top: cy - r, width: 2 * r, height: 2 * r, borderRadius: 999, background: tone }} />
-      <Img src={staticFile(pic.src)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip }} />
+      <Img showInTimeline={false} src={staticFile(pic.src)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip }} />
       {/* the face filter: the same picture warped, faded in over it (identical outside the face) */}
-      {filter > 0.001 && pic.filtered ? <Img src={staticFile(pic.filtered)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip, opacity: filter }} /> : null}
+      {filter > 0.001 && pic.filtered ? <Img showInTimeline={false} src={staticFile(pic.filtered)} style={{ position: "absolute", left: cx - ox, top: cy - oy, width: w, height: h, maxWidth: "none", clipPath: clip, opacity: filter }} /> : null}
     </>
   );
 };

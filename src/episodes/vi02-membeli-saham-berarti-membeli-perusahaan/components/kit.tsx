@@ -1,4 +1,5 @@
 /** VI02's shared pieces: the kit of the videos before it, on this episode's words. */
+import { useNudge } from "../../../core/nudge";
 import type React from "react";
 import { Img, staticFile } from "remotion";
 import { theme, typeStyle, usePalette, useShadow } from "../../../core";
@@ -7,76 +8,318 @@ import { w } from "../data/timing";
 /** Illustrations go grey and soft (Simon 6 Nov: "minimalis, monochrome, dan UI", the same pictures, only their colour and style). */
 export const MONO = "grayscale(1) contrast(0.72) brightness(1.18)";
 
-export { Appear, BoardGrid, Card, DashBox, Disc, HEADING, Ico, Line, Mark, NumRing, OpeningHeading, ORANG_TUNTUN_RIGHT, OrangTuntun, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
+export {
+  Appear,
+  BoardGrid,
+  Card,
+  DashBox,
+  Disc,
+  HEADING,
+  Ico,
+  Line,
+  Mark,
+  NumRing,
+  OpeningHeading,
+  ORANG_TUNTUN_RIGHT,
+  OrangTuntun,
+  ease,
+} from "../../in07-cara-tuntun-membantu-investor/components/kit";
 
 /**
  * VI01's look (Simon 12 Nov: "redesign dan revamp scene 1-3 dulu. Pelajari style design dari VI01"): its black line-art
  * drawings, the cash book, the price card, the columns, the real photos and its one-shot-at-a-time camera.
  */
-export { ART, Figure, IconPill, LEDGER_ROWS, LedgerCard, Column, PhotoTile, Pic, PriceFace, Shot } from "../../vi01-apa-itu-value-investing/components/kit";
+export {
+  ART,
+  Figure,
+  IconPill,
+  LEDGER_ROWS,
+  LedgerCard,
+  Column,
+  PhotoTile,
+  Pic,
+  PriceFace,
+  Shot,
+} from "../../vi01-apa-itu-value-investing/components/kit";
 export { PriceCandles } from "../../vi01-apa-itu-value-investing/components/PriceCandles";
 
 /** A scene's word clock: the frame a phrase starts on, scene-local. */
-export const useWords = (scene: number, block: number) => (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") => w(scene, phrase, nth, edge) - block;
+export const useWords =
+  (scene: number, block: number) =>
+  (phrase: string, nth = 0, edge: "f0" | "f1" = "f0") =>
+    w(scene, phrase, nth, edge) - block;
 
 /** A round white node, its icon inside (or a round `logo` filling it) and its label under it, centred on (x, y). */
-export const IconDisc = ({ x, y, d, icon, logo, label, ring, opacity = 1, labelSize = 30 }: { x: number; y: number; d: number; icon?: string; logo?: string; label?: string; ring?: string; opacity?: number; labelSize?: number }) => {
+export const IconDisc = ({
+  x,
+  y,
+  d,
+  icon,
+  logo,
+  label,
+  ring,
+  opacity = 1,
+  labelSize = 30,
+}: {
+  x: number;
+  y: number;
+  d: number;
+  icon?: string;
+  logo?: string;
+  label?: string;
+  ring?: string;
+  opacity?: number;
+  labelSize?: number;
+}) => {
+  const nd = useNudge();
   const c = usePalette();
   const shadow = useShadow();
   return (
-    <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, opacity }}>
-      <div style={{ width: d, height: d, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 ${ring ? 4 : 2}px ${ring ?? theme.color.hairlineBrandSolid}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        {logo ? <Img src={staticFile(logo)} style={{ width: d, height: d, borderRadius: 999 }} /> : <Img src={staticFile(`icons/vi02/ph-${icon}.svg`)} style={{ width: d * 0.5, height: d * 0.5 }} />}
+    <div ref={nd.ref}
+      style={{
+        position: "absolute",
+        left: x - d / 2,
+        top: y - d / 2,
+        width: d,
+        opacity, ...nd.style,
+      }}
+    >
+      <div
+        style={{
+          width: d,
+          height: d,
+          borderRadius: 999,
+          background: c.cardBg,
+          boxShadow: `${shadow.soft}, inset 0 0 0 ${ring ? 4 : 2}px ${ring ?? theme.color.hairlineBrandSolid}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {logo ? (
+          <Img showInTimeline={false}
+            src={staticFile(logo)}
+            style={{ width: d, height: d, borderRadius: 999 }}
+          />
+        ) : (
+          <Img showInTimeline={false}
+            src={staticFile(`icons/vi02/ph-${icon}.svg`)}
+            style={{ width: d * 0.5, height: d * 0.5 }}
+          />
+        )}
       </div>
-      {label ? <div style={{ position: "absolute", left: "50%", top: d + 14, transform: "translateX(-50%)", ...typeStyle("label"), fontSize: labelSize, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{label}</div> : null}
+      {label ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            top: d + 14,
+            transform: "translateX(-50%)",
+            ...typeStyle("label"),
+            fontSize: labelSize,
+            fontWeight: 600,
+            color: c.ink,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {label}
+        </div>
+      ) : null}
     </div>
   );
 };
 
 /** The ring round a card the VO is on, easing in and out: a Card `line` would pop, and shift what is inside it by its width. */
-export const Ring = ({ p, tone = theme.color.connector }: { p: number; tone?: string }) => <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, boxShadow: `inset 0 0 0 2px ${tone}`, opacity: p }} />;
+export const Ring = ({
+  p,
+  tone = theme.color.connector,
+}: {
+  p: number;
+  tone?: string;
+}) => (
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      borderRadius: theme.shape.cardRadius,
+      boxShadow: `inset 0 0 0 2px ${tone}`,
+      opacity: p,
+    }}
+  />
+);
 
 /** A word in a pill. */
-export const WordPill = ({ x, y, text, opacity = 1, size = 30 }: { x: number; y: number; text: string; opacity?: number; size?: number }) => {
+export const WordPill = ({
+  x,
+  y,
+  text,
+  opacity = 1,
+  size = 30,
+}: {
+  x: number;
+  y: number;
+  text: string;
+  opacity?: number;
+  size?: number;
+}) => {
+  const nd = useNudge();
   const c = usePalette();
-  return <div style={{ position: "absolute", left: x, top: y, transform: "translate(-50%, -50%)", padding: "12px 30px", borderRadius: 999, background: c.cardBg, boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, ...typeStyle("label"), fontSize: size, fontWeight: 600, letterSpacing: 0.5, color: c.indigo, whiteSpace: "nowrap", opacity }}>{text}</div>;
+  return (
+    <div ref={nd.ref}
+      style={{
+        position: "absolute",
+        left: x,
+        top: y,
+        transform: "translate(-50%, -50%)",
+        padding: "12px 30px",
+        borderRadius: 999,
+        background: c.cardBg,
+        boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`,
+        ...typeStyle("label"),
+        fontSize: size,
+        fontWeight: 600,
+        letterSpacing: 0.5,
+        color: c.indigo,
+        whiteSpace: "nowrap",
+        opacity, ...nd.style,
+      }}
+    >
+      {text}
+    </div>
+  );
 };
 
 /** An arrow growing from (x0, y0) to (x1, y1), its head riding the tip. */
-export const GrowArrow = ({ x0, y0, x1, y1, p }: { x0: number; y0: number; x1: number; y1: number; p: number }) => {
+export const GrowArrow = ({
+  x0,
+  y0,
+  x1,
+  y1,
+  p,
+}: {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  p: number;
+}) => {
   if (p <= 0.001) return null;
   const x = x0 + (x1 - x0) * p;
   const y = y0 + (y1 - y0) * p;
   const a = Math.atan2(y1 - y0, x1 - x0);
-  const head = (t: number) => `${(x - 14 * Math.cos(a + t)).toFixed(1)} ${(y - 14 * Math.sin(a + t)).toFixed(1)}`;
+  const head = (t: number) =>
+    `${(x - 14 * Math.cos(a + t)).toFixed(1)} ${(y - 14 * Math.sin(a + t)).toFixed(1)}`;
   return (
-    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-      <g fill="none" stroke={theme.color.connector} strokeWidth={3} strokeLinecap="round" strokeLinejoin="round">
+    <svg
+      width={theme.canvas.width}
+      height={theme.canvas.height}
+      style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+    >
+      <g
+        fill="none"
+        stroke={theme.color.connector}
+        strokeWidth={3}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
         <line x1={x0} y1={y0} x2={x} y2={y} />
-        <path d={`M ${head(0.6)} L ${x.toFixed(1)} ${y.toFixed(1)} L ${head(-0.6)}`} />
+        <path
+          d={`M ${head(0.6)} L ${x.toFixed(1)} ${y.toFixed(1)} L ${head(-0.6)}`}
+        />
       </g>
     </svg>
   );
 };
 
 /** A price tag, its nose to the left, a hole in it; `children` sit in its middle. */
-export const PriceTag = ({ x, y, w, h, nose, hole, children }: { x: number; y: number; w: number; h: number; nose: number; hole: number; children: React.ReactNode }) => {
+export const PriceTag = ({
+  x,
+  y,
+  w,
+  h,
+  nose,
+  hole,
+  children,
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  nose: number;
+  hole: number;
+  children: React.ReactNode;
+}) => {
   const c = usePalette();
   return (
     <div style={{ position: "absolute", left: x, top: y, width: w, height: h }}>
-      <svg width={w} height={h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-        <path d={`M ${nose} 12 Q ${nose + 6} 0 ${nose + 22} 0 L ${w - 34} 0 Q ${w} 0 ${w} 34 L ${w} ${h - 34} Q ${w} ${h} ${w - 34} ${h} L ${nose + 22} ${h} Q ${nose + 6} ${h} ${nose} ${h - 12} L 14 ${h / 2 + 14} Q 0 ${h / 2} 14 ${h / 2 - 14} Z`} fill={c.cardBg} stroke={theme.color.hairlineBrandSolid} strokeWidth={2} strokeLinejoin="round" />
-        <circle cx={nose - 6} cy={h / 2} r={hole / 2} fill={theme.color.neutralDisc} stroke={theme.color.hairlineBrandSolid} strokeWidth={2} />
+      <svg
+        width={w}
+        height={h}
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+      >
+        <path
+          d={`M ${nose} 12 Q ${nose + 6} 0 ${nose + 22} 0 L ${w - 34} 0 Q ${w} 0 ${w} 34 L ${w} ${h - 34} Q ${w} ${h} ${w - 34} ${h} L ${nose + 22} ${h} Q ${nose + 6} ${h} ${nose} ${h - 12} L 14 ${h / 2 + 14} Q 0 ${h / 2} 14 ${h / 2 - 14} Z`}
+          fill={c.cardBg}
+          stroke={theme.color.hairlineBrandSolid}
+          strokeWidth={2}
+          strokeLinejoin="round"
+        />
+        <circle
+          cx={nose - 6}
+          cy={h / 2}
+          r={hole / 2}
+          fill={theme.color.neutralDisc}
+          stroke={theme.color.hairlineBrandSolid}
+          strokeWidth={2}
+        />
       </svg>
-      <div style={{ position: "absolute", left: nose + 10, right: 20, top: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>{children}</div>
+      <div
+        style={{
+          position: "absolute",
+          left: nose + 10,
+          right: 20,
+          top: 0,
+          bottom: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {children}
+      </div>
     </div>
   );
 };
 
 /** One of this episode's icons painted in `tone` through its own shape, so it can go grey at rest and indigo when lit. */
-export const Glyph = ({ icon, size, tone }: { icon: string; size: number; tone: string }) => {
+export const Glyph = ({
+  icon,
+  size,
+  tone,
+}: {
+  icon: string;
+  size: number;
+  tone: string;
+}) => {
   const url = `url(${staticFile(`icons/vi02/ph-${icon}.svg`)})`;
-  return <div style={{ width: size, height: size, flex: "none", background: tone, WebkitMaskImage: url, maskImage: url, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center" }} />;
+  return (
+    <div
+      style={{
+        width: size,
+        height: size,
+        flex: "none",
+        background: tone,
+        WebkitMaskImage: url,
+        maskImage: url,
+        WebkitMaskSize: "contain",
+        maskSize: "contain",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+        WebkitMaskPosition: "center",
+        maskPosition: "center",
+      }}
+    />
+  );
 };
 
 /**
@@ -92,12 +335,38 @@ export const LINE_ART = {
   shops: { w: 561, h: 253 },
 } as const;
 export type LineArtName = keyof typeof LINE_ART;
-export const lineArtW = (name: LineArtName, h: number) => (h * LINE_ART[name].w) / LINE_ART[name].h;
-export const Drawing = ({ name, cx, floor, h, style }: { name: LineArtName; cx: number; floor: number; h: number; style?: React.CSSProperties }) => {
+export const lineArtW = (name: LineArtName, h: number) =>
+  (h * LINE_ART[name].w) / LINE_ART[name].h;
+export const Drawing = ({
+  name,
+  cx,
+  floor,
+  h,
+  style,
+}: {
+  name: LineArtName;
+  cx: number;
+  floor: number;
+  h: number;
+  style?: React.CSSProperties;
+}) => {
+  const nd = useNudge();
   const wd = lineArtW(name, h);
   return (
-    <div style={{ position: "absolute", left: cx - wd / 2, top: floor - h, width: wd, height: h, ...style }}>
-      <Img src={staticFile(`art/vi02/line/${name}.png`)} style={{ width: "100%", height: "100%", display: "block" }} />
+    <div ref={nd.ref}
+      style={{
+        position: "absolute",
+        left: cx - wd / 2,
+        top: floor - h,
+        width: wd,
+        height: h,
+        ...style, ...nd.style,
+      }}
+    >
+      <Img showInTimeline={false}
+        src={staticFile(`art/vi02/line/${name}.png`)}
+        style={{ width: "100%", height: "100%", display: "block" }}
+      />
     </div>
   );
 };
@@ -106,28 +375,99 @@ export const Drawing = ({ name, cx, floor, h, style }: { name: LineArtName; cx: 
  * "Kamu" as a line-art bust in a white rounded tile, after Simon's avatar grid (12 Nov 2026; ChatGPT, public/art/vi02/kamu-avatar.png,
  * 812 × 1019): the bust `fill` of the tile's height, standing on its bottom, centred. Centred on (x, y).
  */
-export const KAMU_AVATAR = { src: "art/vi02/kamu-avatar.png", w: 812, h: 1019, fill: 0.88 } as const;
-export const AvatarTile = ({ x, y, d, style }: { x: number; y: number; d: number; style?: React.CSSProperties }) => {
+export const KAMU_AVATAR = {
+  src: "art/vi02/kamu-avatar.png",
+  w: 812,
+  h: 1019,
+  fill: 0.88,
+} as const;
+export const AvatarTile = ({
+  x,
+  y,
+  d,
+  style,
+}: {
+  x: number;
+  y: number;
+  d: number;
+  style?: React.CSSProperties;
+}) => {
   const c = usePalette();
   const shadow = useShadow();
   const ah = d * KAMU_AVATAR.fill;
   const aw = (ah * KAMU_AVATAR.w) / KAMU_AVATAR.h;
   return (
-    <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, height: d, borderRadius: d * 0.16, background: c.cardBg, boxShadow: shadow.soft, overflow: "hidden", ...style }}>
-      <div style={{ position: "absolute", left: (d - aw) / 2, top: d - ah, width: aw, height: ah }}>
-        <Img src={staticFile(KAMU_AVATAR.src)} style={{ width: "100%", height: "100%", display: "block" }} />
+    <div
+      style={{
+        position: "absolute",
+        left: x - d / 2,
+        top: y - d / 2,
+        width: d,
+        height: d,
+        borderRadius: d * 0.16,
+        background: c.cardBg,
+        boxShadow: shadow.soft,
+        overflow: "hidden",
+        ...style,
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: (d - aw) / 2,
+          top: d - ah,
+          width: aw,
+          height: ah,
+        }}
+      >
+        <Img showInTimeline={false}
+          src={staticFile(KAMU_AVATAR.src)}
+          style={{ width: "100%", height: "100%", display: "block" }}
+          from={-4}
+        />
       </div>
     </div>
   );
 };
 
 /** The avatar tile with "Kamu" (or another `label`) under it, where IconDisc's user icon used to be — same centre, same label place. */
-export const KamuAvatar = ({ x, y, d, label, labelSize = 30, opacity = 1 }: { x: number; y: number; d: number; label?: string; labelSize?: number; opacity?: number }) => {
+export const KamuAvatar = ({
+  x,
+  y,
+  d,
+  label,
+  labelSize = 30,
+  opacity = 1,
+}: {
+  x: number;
+  y: number;
+  d: number;
+  label?: string;
+  labelSize?: number;
+  opacity?: number;
+}) => {
   const c = usePalette();
   return (
     <div style={{ position: "absolute", inset: 0, opacity }}>
       <AvatarTile x={x} y={y} d={d} />
-      {label ? <div style={{ position: "absolute", left: x - 200, width: 400, top: y + d / 2 + 14, textAlign: "center", ...typeStyle("label"), fontSize: labelSize, fontWeight: 600, color: c.ink, whiteSpace: "nowrap" }}>{label}</div> : null}
+      {label ? (
+        <div
+          style={{
+            position: "absolute",
+            left: x - 200,
+            width: 400,
+            top: y + d / 2 + 14,
+            textAlign: "center",
+            ...typeStyle("label"),
+            fontSize: labelSize,
+            fontWeight: 600,
+            color: c.ink,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {label}
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -138,9 +478,30 @@ export const AvatarFace = ({ size }: { size: number }) => {
   const ah = size * 0.92;
   const aw = (ah * KAMU_AVATAR.w) / KAMU_AVATAR.h;
   return (
-    <div style={{ position: "relative", width: size, height: size, flex: "none", borderRadius: 999, background: c.cardBg, overflow: "hidden" }}>
-      <div style={{ position: "absolute", left: (size - aw) / 2, top: size - ah, width: aw, height: ah }}>
-        <Img src={staticFile(KAMU_AVATAR.src)} style={{ width: "100%", height: "100%", display: "block" }} />
+    <div
+      style={{
+        position: "relative",
+        width: size,
+        height: size,
+        flex: "none",
+        borderRadius: 999,
+        background: c.cardBg,
+        overflow: "hidden",
+      }}
+    >
+      <div
+        style={{
+          position: "absolute",
+          left: (size - aw) / 2,
+          top: size - ah,
+          width: aw,
+          height: ah,
+        }}
+      >
+        <Img showInTimeline={false}
+          src={staticFile(KAMU_AVATAR.src)}
+          style={{ width: "100%", height: "100%", display: "block" }}
+        />
       </div>
     </div>
   );

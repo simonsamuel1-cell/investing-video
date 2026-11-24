@@ -10,21 +10,45 @@
  * lines (components/Folder.tsx `awardsCut`).
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { cutOutStyle, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import {
+  cutOutStyle,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
 import { ease, useWords } from "../components/kit";
 import { MID_Y, awardsCut } from "../components/Folder";
 
 /** Each award: its picture and size (px), its height on the card, its words, who gave it and when. */
 const AWARDS = [
-  { src: "award-cnbc-2025", iw: 720, ih: 1947, h: 290, at: "CNBC Indonesia", name: "CNBC Indonesia", year: "2025" },
-  { src: "award-media-asuransi-2024", iw: 1844, ih: 2000, h: 240, at: "Media Asuransi", name: "Media Asuransi", year: "2024" },
+  {
+    src: "award-cnbc-2025",
+    iw: 720,
+    ih: 1947,
+    h: 290,
+    at: "CNBC Indonesia",
+    name: "CNBC Indonesia",
+    year: "2025",
+  },
+  {
+    src: "award-media-asuransi-2024",
+    iw: 1844,
+    ih: 2000,
+    h: 240,
+    at: "Media Asuransi",
+    name: "Media Asuransi",
+    year: "2024",
+  },
 ] as const;
 
 /** The card, centred on MID_Y; the two side by side round the canvas's middle; the two under it each `layer` lower. */
 const CARD = { w: 460, h: 500, gap: 80, r: 32, layer: 16, inset: 22 };
 const TOP = MID_Y - CARD.h / 2;
-const cxOf = (i: number) => theme.canvas.width / 2 + (i - 0.5) * (CARD.w + CARD.gap);
+const cxOf = (i: number) =>
+  theme.canvas.width / 2 + (i - 0.5) * (CARD.w + CARD.gap);
 /** Inside, from the card's top: the disc and the award standing on its lower part, the name, the year's pill. */
 const DISC = { cy: 180, d: 260, foot: 315 };
 const NAME_Y = 338;
@@ -52,16 +76,110 @@ export const Awards = () => {
         const cx = cxOf(i);
         const w = (a.h * a.iw) / a.ih;
         return (
-          <div key={a.src} style={{ position: "absolute", inset: 0, opacity: p, transformOrigin: `${cx}px ${MID_Y}px`, transform: `translateY(${((1 - p) * 30).toFixed(2)}px) scale(${(0.94 + 0.06 * p).toFixed(4)})` }}>
+          <div
+            key={a.src}
+            style={{
+              position: "absolute",
+              inset: 0,
+              opacity: p,
+              transformOrigin: `${cx}px ${MID_Y}px`,
+              transform: `translateY(${((1 - p) * 30).toFixed(2)}px) scale(${(0.94 + 0.06 * p).toFixed(4)})`,
+            }}
+          >
             {/* the two cards stacked under it, the farther one deeper in tint */}
             {[2, 1].map((k) => (
-              <div key={k} style={{ position: "absolute", left: cx - CARD.w / 2 + k * CARD.inset, top: TOP + k * CARD.layer, width: CARD.w - 2 * k * CARD.inset, height: CARD.h, borderRadius: CARD.r, background: k === 2 ? theme.color.indigoWashStrongSolid : theme.color.indigoWashSolid, boxShadow: shadow.soft }} />
+              <div
+                key={k}
+                style={{
+                  position: "absolute",
+                  left: cx - CARD.w / 2 + k * CARD.inset,
+                  top: TOP + k * CARD.layer,
+                  width: CARD.w - 2 * k * CARD.inset,
+                  height: CARD.h,
+                  borderRadius: CARD.r,
+                  background:
+                    k === 2
+                      ? theme.color.indigoWashStrongSolid
+                      : theme.color.indigoWashSolid,
+                  boxShadow: shadow.soft,
+                }}
+              />
             ))}
-            <div style={{ position: "absolute", left: cx - CARD.w / 2, top: TOP, width: CARD.w, height: CARD.h, borderRadius: CARD.r, background: c.cardBg, boxShadow: shadow.soft }}>
-              <div style={{ position: "absolute", left: CARD.w / 2 - DISC.d / 2, top: DISC.cy - DISC.d / 2, width: DISC.d, height: DISC.d, borderRadius: 999, background: theme.color.indigoWashSolid }} />
-              <Img src={staticFile(`art/in07/${a.src}.png`)} style={{ position: "absolute", left: CARD.w / 2 - w / 2, top: DISC.foot - a.h, width: w, height: a.h, opacity: pic, transformOrigin: "50% 100%", transform: `scale(${(0.88 + 0.12 * pic).toFixed(4)})` }} />
-              <div style={{ position: "absolute", left: 0, width: CARD.w, top: NAME_Y + (1 - words) * 10, textAlign: "center", ...typeStyle("title"), fontSize: 38, fontWeight: 600, color: c.ink, opacity: words, whiteSpace: "nowrap" }}>{a.name}</div>
-              <div style={{ position: "absolute", left: CARD.w / 2 - PILL.w / 2, top: PILL.y + (1 - words) * 10, width: PILL.w, height: PILL.h, borderRadius: 999, background: c.indigo, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("body"), fontSize: 28, fontWeight: 600, color: c.cardBg, opacity: words }}>{a.year}</div>
+            <div
+              style={{
+                position: "absolute",
+                left: cx - CARD.w / 2,
+                top: TOP,
+                width: CARD.w,
+                height: CARD.h,
+                borderRadius: CARD.r,
+                background: c.cardBg,
+                boxShadow: shadow.soft,
+              }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: CARD.w / 2 - DISC.d / 2,
+                  top: DISC.cy - DISC.d / 2,
+                  width: DISC.d,
+                  height: DISC.d,
+                  borderRadius: 999,
+                  background: theme.color.indigoWashSolid,
+                }}
+              />
+              <Img
+                showInTimeline={false}
+                src={staticFile(`art/in07/${a.src}.png`)}
+                style={{
+                  position: "absolute",
+                  left: CARD.w / 2 - w / 2,
+                  top: DISC.foot - a.h,
+                  width: w,
+                  height: a.h,
+                  opacity: pic,
+                  transformOrigin: "50% 100%",
+                  transform: `scale(${(0.88 + 0.12 * pic).toFixed(4)})`,
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  width: CARD.w,
+                  top: NAME_Y + (1 - words) * 10,
+                  textAlign: "center",
+                  ...typeStyle("title"),
+                  fontSize: 38,
+                  fontWeight: 600,
+                  color: c.ink,
+                  opacity: words,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {a.name}
+              </div>
+              <div
+                style={{
+                  position: "absolute",
+                  left: CARD.w / 2 - PILL.w / 2,
+                  top: PILL.y + (1 - words) * 10,
+                  width: PILL.w,
+                  height: PILL.h,
+                  borderRadius: 999,
+                  background: c.indigo,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  ...typeStyle("body"),
+                  fontSize: 28,
+                  fontWeight: 600,
+                  color: c.cardBg,
+                  opacity: words,
+                }}
+              >
+                {a.year}
+              </div>
             </div>
           </div>
         );

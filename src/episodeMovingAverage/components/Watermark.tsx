@@ -40,7 +40,7 @@ export const Watermark = () => {
     <AbsoluteFill style={{ opacity: fade, zIndex: 100 }}>
       {/* Ukurannya pas dengan kanvas, jadi diregangkan penuh - tidak ada
           sisa yang perlu dipusatkan. */}
-      <Img
+      <Img showInTimeline={false}
         src={staticFile("watermark.png")}
         style={{
           width: "100%",

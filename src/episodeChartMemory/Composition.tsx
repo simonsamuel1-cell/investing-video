@@ -8,7 +8,8 @@
  * retime these against the recorded VO and cascade the downstream values.
  */
 import React from "react";
-import { AbsoluteFill, Sequence, Audio, Img, staticFile, useCurrentFrame, interpolate } from "remotion";
+import { LockedSequence as Sequence } from "../core/nudge";
+import { AbsoluteFill, Audio, Img, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "./theme";
 import { ChartContinuity } from "./continuity/ChartContinuity";
 import { Scene01 } from "./scenes/Scene01";
@@ -205,7 +206,7 @@ const Episode = ({
 
     {/* Brand watermark — above everything, present for the whole episode. */}
     <AbsoluteFill style={{ opacity: watermarkOpacity, zIndex: 100 }}>
-      <Img src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
+      <Img showInTimeline={false} src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
     </AbsoluteFill>
 
     {HAS_VO && <Audio src={staticFile(audioSrc)} muted={muted} />}

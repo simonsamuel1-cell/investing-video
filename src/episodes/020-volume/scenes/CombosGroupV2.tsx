@@ -22,13 +22,37 @@
  * "posisi." and "Ketiga," — the chart changes on the word, and a transition on
  * a mid-word cut reads as a mistake.
  */
-import { AbsoluteFill, useCurrentFrame, interpolate, interpolateColors } from "remotion";
+import { CoreWordsE as Words } from "../../../editable";
 import {
-  Stage, Chart, VolumeBars, SourceTag, RollList, DashedBox, Words,
-  cardPushed, dashOpenAt,
-  gridOf, useMotion, usePalette, progressInOut, theme,
+  AbsoluteFill,
+  useCurrentFrame,
+  interpolate,
+  interpolateColors,
+  Interactive,
+} from "remotion";
+import {
+  Stage,
+  Chart,
+  VolumeBars,
+  SourceTag,
+  RollList,
+  DashedBox,
+  cardPushed,
+  dashOpenAt,
+  gridOf,
+  useMotion,
+  usePalette,
+  progressInOut,
+  theme,
 } from "../../../core";
-import { BLOCK, COMBO_TABS, COMBOS, COMBOS_V2, TRANS, local } from "../data/timing";
+import {
+  BLOCK,
+  COMBO_TABS,
+  COMBOS,
+  COMBOS_V2,
+  TRANS,
+  local,
+} from "../data/timing";
 import { TAG_Y } from "../data/layout";
 import { COMBO, COMBO_DOMAIN } from "../data/series";
 
@@ -44,16 +68,39 @@ const WIN = COMBOS_V2.win;
 const BOX = COMBOS_V2.box;
 
 const PRICE = { x: WIN.x + 40, y: WIN.y + 36, w: WIN.w - 80, h: WIN.h * 0.56 };
-const VOLBOX = { x: PRICE.x, y: WIN.y + 36 + WIN.h * 0.62, w: PRICE.w, h: WIN.h * 0.24 };
+const VOLBOX = {
+  x: PRICE.x,
+  y: WIN.y + 36 + WIN.h * 0.62,
+  w: PRICE.w,
+  h: WIN.h * 0.24,
+};
 
 /** ⚠ ONE GRID PER COMBINATION. The four no longer share two tapes, so they
  *  cannot share two scales — a shared domain would draw one of them against
  *  another's high and low. */
 const GRID = {
   upUp: gridOf(COMBO.upUp.series.closes, COMBO_DOMAIN.upUp, PRICE, 0.12, 0),
-  upDown: gridOf(COMBO.upDown.series.closes, COMBO_DOMAIN.upDown, PRICE, 0.12, 0),
-  downUp: gridOf(COMBO.downUp.series.closes, COMBO_DOMAIN.downUp, PRICE, 0.12, 0),
-  downDown: gridOf(COMBO.downDown.series.closes, COMBO_DOMAIN.downDown, PRICE, 0.12, 0),
+  upDown: gridOf(
+    COMBO.upDown.series.closes,
+    COMBO_DOMAIN.upDown,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downUp: gridOf(
+    COMBO.downUp.series.closes,
+    COMBO_DOMAIN.downUp,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downDown: gridOf(
+    COMBO.downDown.series.closes,
+    COMBO_DOMAIN.downDown,
+    PRICE,
+    0.12,
+    0,
+  ),
 };
 
 const STAGES = [
@@ -100,7 +147,13 @@ export const CombosGroupV2 = () => {
       {/* ⚠ THE PAGE ARRIVES WHITE AND COOLS TO THE EPISODE'S PAPER while the
           card grows — the chapter before this one is white to its edges. */}
       <AbsoluteFill
-        style={{ backgroundColor: interpolateColors(o, [0, 1], [c.cardBg, theme.color.bg]) }}
+        style={{
+          backgroundColor: interpolateColors(
+            o,
+            [0, 1],
+            [c.cardBg, theme.color.bg],
+          ),
+        }}
       />
 
       {/* ── the four, rolling ──────────────────────────────────────────── */}
@@ -122,7 +175,8 @@ export const CombosGroupV2 = () => {
 
       {/* ── the window, and the tape inside it ─────────────────────────── */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: box.x,
@@ -157,13 +211,22 @@ export const CombosGroupV2 = () => {
 
       {/* ── the reading ────────────────────────────────────────────────── */}
       {lines && (
-        <DashedBox key={`box-${k}`} x={BOX.x} y={BOX.y} w={BOX.w} h={BOX.h} at={quoteAt}>
+        <DashedBox
+          key={`box-${k}`}
+          x={BOX.x}
+          y={BOX.y}
+          w={BOX.w}
+          h={BOX.h}
+          at={quoteAt}
+        >
           {lines.map((line, n) => (
             <Words
               key={n}
               text={line}
               x={BOX.w / 2}
-              y={BOX.h / 2 + (n - (lines.length - 1) / 2) * COMBOS_V2.quote.lead}
+              y={
+                BOX.h / 2 + (n - (lines.length - 1) / 2) * COMBOS_V2.quote.lead
+              }
               at={dashOpenAt(quoteAt, m) + n * 6}
               stagger={4}
               anchor="center"

@@ -10,7 +10,8 @@
  * stamp is still on the tool — which is the difference between a scene leaving
  * and a screenshot of one sliding away.
  */
-import { Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+
 import { REVENGE_T, ROW4 } from "../data/timing";
 import { SceneTransition, assertTransition } from "./SceneTransition";
 import { Revenge } from "./Revenge";

@@ -13,16 +13,34 @@
  * Under the analyst and the folder (scenes/ResearchFiles.tsx); out on "Riset Tuntun mencakup".
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import {
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
 import { DashBox, dashOpenAt, ease, useWords } from "../components/kit";
 import { UNDER_DOCK } from "./ResearchFiles";
 
 const WAYS = [
-  { src: "sc04-cara-1-fundamental", title: "Fundamental research", at: "fundamental research" },
-  { src: "sc04-cara-2-industry", title: "Industry research", at: "industry research" },
+  {
+    src: "sc04-cara-1-fundamental",
+    title: "Fundamental research",
+    at: "fundamental research",
+  },
+  {
+    src: "sc04-cara-2-industry",
+    title: "Industry research",
+    at: "industry research",
+  },
   // "Company research" (Simon 11 Nov 2026), on screen and in the VO — it was "kunjungan langsung ke perusahaan"
-  { src: "sc04-cara-3-kunjungan", title: "Company research", at: "company research" },
+  {
+    src: "sc04-cara-3-kunjungan",
+    title: "Company research",
+    at: "company research",
+  },
 ] as const;
 
 /** The diagram: three circles in a row, centred, under the analyst row; each comes in `big` across, in the middle. */
@@ -57,7 +75,11 @@ export const Coverage = () => {
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - out }}>
       {/* the arrows, each drawn as the next circle lands */}
-      <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
+      <svg
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+        style={{ position: "absolute", left: 0, top: 0 }}
+      >
         {[0, 1].map((i) => {
           const p = ease(f, shrinkAt[i + 1] + m.move * 0.6, m.sec(0.4));
           if (p <= 0.001) return null;
@@ -65,8 +87,25 @@ export const Coverage = () => {
           const b = cxOf(i + 1) - D / 2 - ARROW.gap;
           return (
             <g key={i}>
-              <line x1={a} y1={CY} x2={a + (b - a) * p} y2={CY} stroke={theme.color.connector} strokeWidth={4} strokeLinecap="round" />
-              {p > 0.95 ? <polyline points={`${b - ARROW.head},${CY - ARROW.head} ${b},${CY} ${b - ARROW.head},${CY + ARROW.head}`} fill="none" stroke={theme.color.connector} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" /> : null}
+              <line
+                x1={a}
+                y1={CY}
+                x2={a + (b - a) * p}
+                y2={CY}
+                stroke={theme.color.connector}
+                strokeWidth={4}
+                strokeLinecap="round"
+              />
+              {p > 0.95 ? (
+                <polyline
+                  points={`${b - ARROW.head},${CY - ARROW.head} ${b},${CY} ${b - ARROW.head},${CY + ARROW.head}`}
+                  fill="none"
+                  stroke={theme.color.connector}
+                  strokeWidth={4}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ) : null}
             </g>
           );
         })}
@@ -77,25 +116,88 @@ export const Coverage = () => {
         if (p <= 0.001) return null;
         const t = ease(f, shrinkAt[i], m.move);
         const d = BIG.d + (D - BIG.d) * t;
-        const cx = theme.canvas.width / 2 + (cxOf(i) - theme.canvas.width / 2) * t;
+        const cx =
+          theme.canvas.width / 2 + (cxOf(i) - theme.canvas.width / 2) * t;
         const cy = BIG.cy + (CY - BIG.cy) * t;
         const titleP = ease(f, shrinkAt[i] + m.move * 0.6, m.reveal);
         return (
           <div key={w.src}>
-            <div style={{ position: "absolute", left: cx - d / 2, top: cy - d / 2, width: d, height: d, borderRadius: 999, overflow: "hidden", background: c.cardBg, border: `4px solid ${c.indigo}`, boxSizing: "border-box", boxShadow: shadow.soft, opacity: p, transform: `scale(${(0.92 + 0.08 * p).toFixed(3)})` }}>
-              <Img src={staticFile(`art/in07/${w.src}.png`)} style={{ width: "100%", height: "100%", display: "block", objectFit: "cover" }} />
+            <div
+              style={{
+                position: "absolute",
+                left: cx - d / 2,
+                top: cy - d / 2,
+                width: d,
+                height: d,
+                borderRadius: 999,
+                overflow: "hidden",
+                background: c.cardBg,
+                border: `4px solid ${c.indigo}`,
+                boxSizing: "border-box",
+                boxShadow: shadow.soft,
+                opacity: p,
+                transform: `scale(${(0.92 + 0.08 * p).toFixed(3)})`,
+              }}
+            >
+              <Img
+                showInTimeline={false}
+                src={staticFile(`art/in07/${w.src}.png`)}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "block",
+                  objectFit: "cover",
+                }}
+              />
             </div>
             {titleP > 0.001 ? (
-              <div style={{ position: "absolute", left: cxOf(i) - TITLE.w / 2, width: TITLE.w, top: TITLE.y + (1 - titleP) * 12, textAlign: "center", ...typeStyle("body"), fontSize: 30, lineHeight: 1.2, color: c.ink, whiteSpace: "pre-line", opacity: titleP }}>{w.title}</div>
+              <div
+                style={{
+                  position: "absolute",
+                  left: cxOf(i) - TITLE.w / 2,
+                  width: TITLE.w,
+                  top: TITLE.y + (1 - titleP) * 12,
+                  textAlign: "center",
+                  ...typeStyle("body"),
+                  fontSize: 30,
+                  lineHeight: 1.2,
+                  color: c.ink,
+                  whiteSpace: "pre-line",
+                  opacity: titleP,
+                }}
+              >
+                {w.title}
+              </div>
             ) : null}
           </div>
         );
       })}
 
       {/* "Analisisnya juga terus diperbarui mengikuti perkembangan terbaru." — under the diagram */}
-      <DashBox cx={theme.canvas.width / 2} y={LINE_Y} w={BOX.w} h={BOX.h} at={boxAt}>
-        <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("body"), fontSize: 36, color: c.ink, whiteSpace: "nowrap", opacity: lineP }}>
-          Analisisnya juga&nbsp;<span style={{ color: c.indigo }}>terus diperbarui</span>&nbsp;mengikuti perkembangan terbaru.
+      <DashBox
+        cx={theme.canvas.width / 2}
+        y={LINE_Y}
+        w={BOX.w}
+        h={BOX.h}
+        at={boxAt}
+      >
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            ...typeStyle("body"),
+            fontSize: 36,
+            color: c.ink,
+            whiteSpace: "nowrap",
+            opacity: lineP,
+          }}
+        >
+          Analisisnya juga&nbsp;
+          <span style={{ color: c.indigo }}>terus diperbarui</span>
+          &nbsp;mengikuti perkembangan terbaru.
         </div>
       </DashBox>
     </div>

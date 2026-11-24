@@ -5,6 +5,7 @@
  * Text on screen has to earn its place (STYLE.md §0.10, Simon 26 Oct): a number, a keyword, a label, or the scene's one
  * key line — the subtitles already carry the VO.
  */
+import { useNudge } from "../../../core/nudge";
 import React from "react";
 import { staticFile } from "remotion";
 import { theme, usePalette, useShadow } from "../../../core";
@@ -86,11 +87,14 @@ export const Ico = ({ name, size, tone, fill }: { name: string; size: number; to
   );
 
 /** An icon on a round disc; `ring` gives it a border in that colour (SC04's Deep Research label, Simon 9 Nov). */
-export const Disc = ({ icon, size, tone, tint, ring }: { icon: string; size: number; tone: string; tint: string; ring?: string }) => (
-  <div style={{ width: size, height: size, borderRadius: 999, background: tint, border: ring ? `${theme.shape.rule}px solid ${ring}` : undefined, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flex: "none" }}>
+export const Disc = ({ icon, size, tone, tint, ring }: { icon: string; size: number; tone: string; tint: string; ring?: string }) => {
+  const nd = useNudge();
+  return (
+  <div ref={nd.ref} style={{ width: size, height: size, borderRadius: 999, background: tint, border: ring ? `${theme.shape.rule}px solid ${ring}` : undefined, boxSizing: "border-box", display: "flex", alignItems: "center", justifyContent: "center", flex: "none", ...nd.style }}>
     <Ico name={icon} size={size * 0.56} tone={tone} />
   </div>
 );
+};
 
 /** A grey bar standing in for text (Benchmark v1: skeleton lines instead of fake copy). */
 export const Skel = ({ w, h = 14, style }: { w: number; h?: number; style?: React.CSSProperties }) => (

@@ -3,7 +3,7 @@
  * The chart drops to texture; the statement resolves in two lines, then the
  * three things a chart can actually show, then the honest limit.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart } from "../components/CandlestickChart";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
@@ -76,7 +76,8 @@ const CHIP_GAP = 20;
 
 /** Centre-x per chip, packed CHIP_GAP apart and centred on the canvas. */
 const chipXs = (() => {
-  const total = CHIP_W.reduce((a, b) => a + b, 0) + CHIP_GAP * (CHIP_W.length - 1);
+  const total =
+    CHIP_W.reduce((a, b) => a + b, 0) + CHIP_GAP * (CHIP_W.length - 1);
   // rounded so every chip edge lands on a whole pixel — a fractional origin
   // makes the rendered gaps read 19/21 instead of 20/20
   let left = Math.round((theme.canvas.width - total) / 2);
@@ -94,7 +95,11 @@ const GROUP_DY = theme.layout.safeTop - GROUP_TOP + BLOCK_DROP;
  * exactly this, then eases into its own framing — keep the two in sync by
  * importing from here rather than copying the numbers.
  */
-export const SC09_EXIT = { box: CHART, win: WIN.sc01, dim: TEXTURE * TEXTURE_LIFT };
+export const SC09_EXIT = {
+  box: CHART,
+  win: WIN.sc01,
+  dim: TEXTURE * TEXTURE_LIFT,
+};
 
 export const Scene09 = () => {
   const pal = usePalette();
@@ -110,17 +115,26 @@ export const Scene09 = () => {
   const taText = textReveal(f, dashOpenAt(T.prob), 26, 26);
   const info = textReveal(f, T.info);
   const hope = textReveal(f, T.hope);
-  const texturePlus = texture * (1 + (TEXTURE_LIFT - 1) * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
+  const texturePlus =
+    texture *
+    (1 +
+      (TEXTURE_LIFT - 1) * (f >= CHIP_AT[2] ? progress(f, CHIP_AT[2], 26) : 0));
   const clearOp = f >= T.clear ? fadeOut(f, T.clear, T.clearDur) : 1;
-
 
   return (
     <SafeArea>
-      <CandlestickChart data={bmriDaily} window={win} box={box} showAxes={false} dimOpacity={texturePlus} />
+      <CandlestickChart
+        data={bmriDaily}
+        window={win}
+        box={box}
+        showAxes={false}
+        dimOpacity={texturePlus}
+      />
 
       {/* what comes next is left blank — no projected path, ever */}
       {future > 0.001 && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: box.x + box.w * 0.82,
@@ -136,40 +150,60 @@ export const Scene09 = () => {
       {/* The statement and the chips, as one block near the top.
           "Probabilitas." now leads and "Bukan Prediksi." sits under it. */}
       <div style={{ transform: `translateY(${GROUP_DY}px)`, opacity: clearOp }}>
-      <DashedFrame x={(theme.canvas.width - TA_BOX.w) / 2} y={TA_BOX.y - GROUP_DY} w={TA_BOX.w} h={TA_BOX.h} at={T.prob}>
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: 6,
-            fontFamily: theme.type.family,
-            color: pal.ink,
-            whiteSpace: "nowrap",
-            opacity: taText.opacity,
-            transform: `translateY(${taText.y}px)`,
-          }}
+        <DashedFrame
+          x={(theme.canvas.width - TA_BOX.w) / 2}
+          y={TA_BOX.y - GROUP_DY}
+          w={TA_BOX.w}
+          h={TA_BOX.h}
+          at={T.prob}
         >
-          <div style={{ fontSize: TA_BOX.titleSize, fontWeight: 800 }}>Technical Analysis</div>
-          <div style={{ fontSize: theme.type.chip.size, fontWeight: 500 }}>alat bantu baca probabilitas, bukan ramalan masa depan</div>
-        </div>
-      </DashedFrame>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 6,
+              fontFamily: theme.type.family,
+              color: pal.ink,
+              whiteSpace: "nowrap",
+              opacity: taText.opacity,
+              transform: `translateY(${taText.y}px)`,
+            }}
+          >
+            <div style={{ fontSize: TA_BOX.titleSize, fontWeight: 800 }}>
+              Technical Analysis
+            </div>
+            <div style={{ fontSize: theme.type.chip.size, fontWeight: 500 }}>
+              alat bantu baca probabilitas, bukan ramalan masa depan
+            </div>
+          </div>
+        </DashedFrame>
 
-      {CHIPS.map((c, i) => (
-        /* ⚠ THEY STAY WHERE THEY LAND — Simon: "ga usa geser naik". */
-        <Chip key={c} label={c} x={chipXs[i]} y={CHIP_Y} variant="indigo" anchor="center" startFrame={CHIP_AT[i]} opacity={1 - 0.45 * dim} />
-      ))}
+        {CHIPS.map((c, i) => (
+          /* ⚠ THEY STAY WHERE THEY LAND — Simon: "ga usa geser naik". */
+          <Chip
+            key={c}
+            label={c}
+            x={chipXs[i]}
+            y={CHIP_Y}
+            variant="indigo"
+            anchor="center"
+            startFrame={CHIP_AT[i]}
+            opacity={1 - 0.45 * dim}
+          />
+        ))}
 
-      {/* ⚠ NO GREY RULE UNDER THE CHIPS — Simon: "hapus juga garis horizontal
+        {/* ⚠ NO GREY RULE UNDER THE CHIPS — Simon: "hapus juga garis horizontal
           abu abu nya". */}
       </div>
 
       {/* what the chart actually buys you, set against what it replaces —
           below the chart, not part of the block above */}
-      <div
+      <Interactive.Div
+        name="Informasi"
         style={{
           position: "absolute",
           left: 0,
@@ -185,8 +219,9 @@ export const Scene09 = () => {
         }}
       >
         Informasi
-      </div>
-      <div
+      </Interactive.Div>
+      <Interactive.Div
+        name="Harapan · Tebakan"
         style={{
           position: "absolute",
           left: 0,
@@ -204,7 +239,7 @@ export const Scene09 = () => {
         }}
       >
         Harapan · Tebakan
-      </div>
+      </Interactive.Div>
     </SafeArea>
   );
 };

@@ -17,7 +17,7 @@
  * second pair of side-by-side windows that were merely a similar size would be
  * two devices where the video has one.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
   Candles,
   Card,
@@ -443,7 +443,8 @@ const Prove = () => {
       {/* ⚠ PINNED TO THE TOP, NOT CENTRED IN THE BOX. Centred, the first line
           would slide down as the box grew — which is exactly the thing "anchor
           atas" rules out. */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: 0,
@@ -458,13 +459,17 @@ const Prove = () => {
           return (
             <div
               key={text}
-              style={{ ...row, opacity: r.opacity, transform: `translateY(${r.dy}px)` }}
+              style={{
+                ...row,
+                opacity: r.opacity,
+                transform: `translateY(${r.dy}px)`,
+              }}
             >
               {text}
             </div>
           );
         })}
-      </div>
+      </Interactive.Div>
       {/* ═══ AND WHAT THE TWO QUESTIONS WERE FOR ═══  Simon, 6967: "Stay
           objective", green, as big as the two lines it replaces.
 

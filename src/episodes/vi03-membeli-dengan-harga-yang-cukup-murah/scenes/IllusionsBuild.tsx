@@ -1,4 +1,9 @@
 /** VI03 SC07 v3. The before/after poses are in docs/vi-style/storyboards/VI03-SC07-v3.svg. */
+import {
+  CardE as Card,
+  FigureE as Figure,
+  PicE as Pic,
+} from "../../../editable";
 import type { ReactNode } from "react";
 import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import {
@@ -12,15 +17,7 @@ import {
 } from "../../../core";
 import { BBCA_MARKS, BBCA_WEEKLY } from "../data/bbca";
 import { BLOCK } from "../data/timing";
-import {
-  BoardGrid,
-  Card,
-  Figure,
-  KAMU_FULL,
-  Pic,
-  ease,
-  useWords,
-} from "../components/kit";
+import { BoardGrid, KAMU_FULL, ease, useWords } from "../components/kit";
 
 const { width, height } = theme.canvas;
 const mid = width / 2;

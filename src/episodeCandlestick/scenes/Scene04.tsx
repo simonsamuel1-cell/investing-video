@@ -8,13 +8,14 @@
  * 96/96/54/108, bottom 108px empty, deterministic (no Math.random),
  * textReveal for type, IllustrationTag mounted.
  */
-import { useCurrentFrame } from "remotion";
+import { TA03ChipE as Chip } from "../../editable";
+import { useCurrentFrame, Interactive } from "remotion";
 import { theme } from "../theme";
 import { sec, fadeIn, fadeOut, clampProgress, textReveal } from "../helpers";
 import type { SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { SessionView, sessionGeom } from "../components/SessionView";
-import { Chip } from "../components/Chip";
+
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══
@@ -48,8 +49,15 @@ const BENCH_GAP = 20;
 const BENCH_NUDGE = 30;
 const BENCH_TIME = 30;
 // Live daily candle center in the centered group — so the result chip lands under it.
-const BENCH_GEOM = sessionGeom({ x: VIEW_X, width: VIEW_W, panelGap: BENCH_GAP, centered: true, centerNudge: BENCH_NUDGE });
-const CANDLE_CX = BENCH_GEOM.rightX + BENCH_GEOM.rightW / 2 + BENCH_GEOM.centerOffset;
+const BENCH_GEOM = sessionGeom({
+  x: VIEW_X,
+  width: VIEW_W,
+  panelGap: BENCH_GAP,
+  centered: true,
+  centerNudge: BENCH_NUDGE,
+});
+const CANDLE_CX =
+  BENCH_GEOM.rightX + BENCH_GEOM.rightW / 2 + BENCH_GEOM.centerOffset;
 
 const RUN1: SessionPoint[] = [
   { t: 0, price: 1302 },
@@ -146,7 +154,8 @@ export const Scene04 = () => {
       )}
 
       {/* closing line + Wait chip on the cleared canvas */}
-      <div
+      <Interactive.Div
+        name="Same tool, different story —"
         style={{
           position: "absolute",
           left: theme.layout.safeLeft,
@@ -161,8 +170,14 @@ export const Scene04 = () => {
         }}
       >
         Same tool, different story — read the path, not the shape.
-      </div>
-      <Chip label="Wait" x={theme.canvas.width / 2} y={WAIT_CHIP_Y} variant="indigo" startFrame={sec(T.wait)} />
+      </Interactive.Div>
+      <Chip
+        label="Wait"
+        x={theme.canvas.width / 2}
+        y={WAIT_CHIP_Y}
+        variant="indigo"
+        startFrame={sec(T.wait)}
+      />
 
       <IllustrationTag />
     </SafeArea>

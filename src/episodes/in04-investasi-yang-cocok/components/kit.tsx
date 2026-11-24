@@ -8,7 +8,7 @@
  * nobody researches. Other people's answers, products and numbers stay indigo/slate.
  */
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, NudgeEnd, theme, useMotion, useNudge, usePalette, useShadow } from "../../../core";
 import { OUTSIDE_RESERVES, ease } from "./base";
 import JEMBATAN from "../data/return-jembatan.json";
 import KAPAL from "../data/return-kapal.json";
@@ -28,7 +28,7 @@ export const Ico = ({ name, size, tone }: { name: string; size: number; tone?: s
   tone ? (
     <div style={{ width: size, height: size, flex: "none", background: tone, WebkitMaskImage: `url(${staticFile(`icons/in04/${name}.svg`)})`, maskImage: `url(${staticFile(`icons/in04/${name}.svg`)})`, WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat" }} />
   ) : (
-    <Img src={staticFile(`icons/in04/${name}.svg`)} style={{ width: size, height: size, maxWidth: "none", display: "block", flex: "none" }} />
+    <Img showInTimeline={false} src={staticFile(`icons/in04/${name}.svg`)} style={{ width: size, height: size, maxWidth: "none", display: "block", flex: "none" }} />
   );
 
 /** An icon on a tinted disc. `neutral`: a light grey disc and a grey icon. */
@@ -94,7 +94,7 @@ export const Tile = ({ icon, size }: { icon: string; size: number }) => {
 export const SKETCH = { bridge: 563 / 377, ferry: 522 / 317, speedboat: 452 / 197, plane: 453 / 279, waves: 2000 / 553 } as const;
 export type SketchName = keyof typeof SKETCH;
 export const Sketch = ({ name, h, neutral = false }: { name: SketchName; h: number; neutral?: boolean }) => (
-  <Img src={staticFile(`art/in04/sk-${name}.png`)} style={{ height: h, width: h * SKETCH[name], maxWidth: "none", display: "block", flex: "none", filter: neutral ? NEUTRAL_INK : undefined }} />
+  <Img showInTimeline={false} src={staticFile(`art/in04/sk-${name}.png`)} style={{ height: h, width: h * SKETCH[name], maxWidth: "none", display: "block", flex: "none", filter: neutral ? NEUTRAL_INK : undefined }} />
 );
 /** The indigo sketches redrawn in grey ink (Benchmark v1: the obvious things neutral) — their white fills stay white. */
 const NEUTRAL_INK = "grayscale(1) brightness(1.18)";
@@ -105,9 +105,10 @@ const NEUTRAL_INK = "grayscale(1) brightness(1.18)";
  */
 export const Line = ({ x, y, w, text, size = 64, mark, markInk, align = "left", weight = 600 }: { x: number; y: number; w: number; text: string; size?: number; mark?: string; markInk?: string; align?: "left" | "center"; weight?: number }) => {
   const c = usePalette();
+  const n = useNudge();
   const i = mark ? text.indexOf(mark) : -1;
   return (
-    <div style={{ position: "absolute", left: x, top: y, width: w, transform: "translateY(-50%)", textAlign: align, fontFamily: theme.text.family, fontSize: size, fontWeight: weight, letterSpacing: -0.5, lineHeight: 1.22, color: c.ink }}>
+    <div ref={n.ref} style={{ position: "absolute", left: x, top: y, width: w, transform: "translateY(-50%)", textAlign: align, fontFamily: theme.text.family, fontSize: size, fontWeight: weight, letterSpacing: -0.5, lineHeight: 1.22, color: c.ink, ...n.style }}>
       {i < 0 ? text : (
         <>
           {text.slice(0, i)}
@@ -122,10 +123,11 @@ export const Line = ({ x, y, w, text, size = 64, mark, markInk, align = "left", 
 /** A white card: a soft shadow, and — when it matters — a brand (or amber) hairline instead of a fill. */
 export const Card = ({ x, y, w, h, line, dashed = false, children, style }: { x: number; y: number; w: number; h: number; line?: string; dashed?: boolean; children?: React.ReactNode; style?: React.CSSProperties }) => {
   const c = usePalette();
+  const n = useNudge();
   const shadow = useShadow();
   return (
-    <div style={{ position: "absolute", left: x, top: y, width: w, height: h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: dashed ? undefined : shadow.soft, border: line ? `2px ${dashed ? "dashed" : "solid"} ${line}` : undefined, boxSizing: "border-box", ...style }}>
-      {children}
+    <div ref={n.ref} style={{ position: "absolute", left: x, top: y, width: w, height: h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: dashed ? undefined : shadow.soft, border: line ? `2px ${dashed ? "dashed" : "solid"} ${line}` : undefined, boxSizing: "border-box", ...style, ...n.style }}>
+      <NudgeEnd>{children}</NudgeEnd>
     </div>
   );
 };
@@ -158,7 +160,7 @@ export const Vehicle = ({ name, cx, cy, h }: { name: SketchName; cx: number; cy:
 );
 
 /** One of the isometric icons (art/in04/ic-*.png — waves, wheel, stable, index, equity, stock), `h` tall. */
-export const IsoIcon = ({ name, h }: { name: string; h: number }) => <Img src={staticFile(`art/in04/ic-${name}.png`)} style={{ height: h, width: "auto", maxWidth: "none", display: "block", flex: "none" }} />;
+export const IsoIcon = ({ name, h }: { name: string; h: number }) => <Img showInTimeline={false} src={staticFile(`art/in04/ic-${name}.png`)} style={{ height: h, width: "auto", maxWidth: "none", display: "block", flex: "none" }} />;
 
 /**
  * The return paths, one per route (Simon, 3 Nov, SC03's revision notes: "Semua garis harus memiliki arah umum menanjak

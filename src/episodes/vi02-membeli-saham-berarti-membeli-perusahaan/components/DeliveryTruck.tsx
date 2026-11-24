@@ -14,7 +14,7 @@ const WHEEL = { at: [166.5, 302.5, 449.5], y: 390, rx: 11, ry: 18, spokes: 3, tu
 const BOB = [{ size: 1.2, rate: 0.21 }, { size: 0.6, rate: 0.53 }];
 
 const Layer = ({ name, opacity = 1 }: { name: string; opacity?: number }) => (
-  <Img src={staticFile(`art/vi02/truck/${name}.svg`)} style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", opacity }} />
+  <Img showInTimeline={false} src={staticFile(`art/vi02/truck/${name}.svg`)} style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", opacity }} />
 );
 
 /** The truck, its middle on (`cx`, `cy`). */

@@ -13,7 +13,7 @@
  * indicators arrive on top of them. That sequence IS the point — the tools are
  * added to a reading, never used instead of one.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
 import { Chip } from "../components/Chip";
@@ -112,7 +112,9 @@ const maPath = (period: number) => {
   for (let i = period - 1; i < BARS.length; i++) {
     let sum = 0;
     for (let k = 0; k < period; k++) sum += BARS[i - k].c;
-    pts.push(`${pts.length ? "L" : "M"}${G.x(i).toFixed(1)},${G.scale(sum / period).toFixed(1)}`);
+    pts.push(
+      `${pts.length ? "L" : "M"}${G.x(i).toFixed(1)},${G.scale(sum / period).toFixed(1)}`,
+    );
   }
   return pts.join(" ");
 };
@@ -127,8 +129,7 @@ export const Scene20 = () => {
       ? Math.sin(Math.PI * ((f - BREATH.at) / BREATH.over))
       : 0;
   const title = textReveal(f, T.chart);
-  const arrowsGone =
-    f >= T.arrowsGone ? fadeOut(f, T.arrowsGone, 16) : 1;
+  const arrowsGone = f >= T.arrowsGone ? fadeOut(f, T.arrowsGone, 16) : 1;
   /** Everything goes together — the closer is one picture, not a list. */
   const out = f >= T.out ? fadeOut(f, T.out, OUT_OVER) : 1;
 
@@ -243,7 +244,8 @@ export const Scene20 = () => {
           ))}
         </Card>
 
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: theme.canvas.width / 2,
@@ -258,7 +260,7 @@ export const Scene20 = () => {
           }}
         >
           {TITLE.text}
-        </div>
+        </Interactive.Div>
       </div>
     </Stage>
   );

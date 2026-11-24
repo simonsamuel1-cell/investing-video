@@ -18,10 +18,20 @@
  * two setups"; one title over both says "here is one setup, twice", which is
  * the only reason the two outcomes mean anything.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  Candles, Card, Layer, Level, VerdictMark, candleWidth, gridOf, progressInOut,
-  textReveal, theme, useMotion, usePalette,
+  Candles,
+  Card,
+  Layer,
+  Level,
+  VerdictMark,
+  candleWidth,
+  gridOf,
+  progressInOut,
+  textReveal,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BREAKOUT_BOX } from "../data/layout";
 import { BREAKOUT } from "../data/timing";
@@ -45,7 +55,10 @@ const TAPES = [SETUP_WORKS, SETUP_FAILS];
 const GRIDS = B.boxes.map((r, i) =>
   gridOf(
     TAPES[i].map((b) => b.c),
-    [Math.min(...TAPES[i].map((b) => b.l)), Math.max(...TAPES[i].map((b) => b.h))],
+    [
+      Math.min(...TAPES[i].map((b) => b.l)),
+      Math.max(...TAPES[i].map((b) => b.h)),
+    ],
     {
       x: r.x + B.pad[i].x,
       y: r.y + B.pad[i].top,
@@ -123,7 +136,13 @@ const markBox = (i: number, bar: number, note: boolean) => {
 
 /** A pulsing dot on a wick and the label that hangs off it. */
 const Mark = ({
-  i, bar, at, word, fill, note, show,
+  i,
+  bar,
+  at,
+  word,
+  fill,
+  note,
+  show,
 }: {
   i: number;
   bar: number;
@@ -145,7 +164,10 @@ const Mark = ({
   const rings = [0, m.sec(PULSE.lag)]
     .map((lag) => (phase - lag) / m.sec(PULSE.ring))
     .filter((q) => q >= 0 && q <= 1)
-    .map((q) => ({ r: M.dot * (1 + q * (PULSE.to - 1)), op: (1 - q) * PULSE.peak }));
+    .map((q) => ({
+      r: M.dot * (1 + q * (PULSE.to - 1)),
+      op: (1 - q) * PULSE.peak,
+    }));
 
   return (
     <>
@@ -280,7 +302,8 @@ export const Breakout = () => {
       {/* ⚠ THE TITLE SITS ON THE RULE with the ground showing through behind it,
           so the brace reads as broken by the words rather than crossed out by
           them. */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: 0,
@@ -307,7 +330,7 @@ export const Breakout = () => {
               one indigo phrase in the title. */}
           <span style={{ color: c.indigo }}>{V.setup.term}</span>
         </span>
-      </div>
+      </Interactive.Div>
 
       {B.boxes.map((r, i) => {
         const col = V.cols[i];
@@ -343,7 +366,13 @@ export const Breakout = () => {
               <Candles
                 bars={TAPES[i]}
                 grid={GRIDS[i]}
-                wipe={(k) => progressInOut(g, col.tape.at + k * col.tape.step, col.tape.over)}
+                wipe={(k) =>
+                  progressInOut(
+                    g,
+                    col.tape.at + k * col.tape.step,
+                    col.tape.over,
+                  )
+                }
               />
               {/* ═══ THE LEVEL THE TRADE WAS READ AGAINST ═══  Simon: a
                   support line on the lowest wick of the trending chart, and on
@@ -428,14 +457,19 @@ export const Breakout = () => {
    *  period never leaves a gap between one ring and the next, and the rest is
    *  the half of a pulse that reads as a pulse. */
   if (PULSE.ring + PULSE.lag >= PULSE.every) {
-    fail(`the pulse rings overlap: ${PULSE.ring}s + ${PULSE.lag}s lag in a ${PULSE.every}s loop`);
+    fail(
+      `the pulse rings overlap: ${PULSE.ring}s + ${PULSE.lag}s lag in a ${PULSE.every}s loop`,
+    );
   }
   /** ⚠ AND THE LEVEL WAITS FOR ITS OWN TAPE. timing.ts can only bound this with
    *  a guessed bar count; the real length lives here, so the check does too. */
   V.cols.forEach((col, i) => {
-    const drawn = col.tape.at + (TAPES[i].length - 1) * col.tape.step + col.tape.over;
+    const drawn =
+      col.tape.at + (TAPES[i].length - 1) * col.tape.step + col.tape.over;
     if (V.marks[i].support.at < drawn) {
-      fail(`window ${i + 1}'s support is drawn at ${V.marks[i].support.at}, while its tape is still building until ${drawn.toFixed(0)}`);
+      fail(
+        `window ${i + 1}'s support is drawn at ${V.marks[i].support.at}, while its tape is still building until ${drawn.toFixed(0)}`,
+      );
     }
   });
 
@@ -454,7 +488,15 @@ export const Breakout = () => {
   const marks = [0, 1].flatMap((i) => {
     const one = (bar: number, note: boolean, name: string) => {
       const q = markBox(i, bar, note);
-      return { i, name, card: q.card, x0: q.left, x1: q.left + M.group, y0: q.top, y1: q.top + q.h };
+      return {
+        i,
+        name,
+        card: q.card,
+        x0: q.left,
+        x1: q.left + M.group,
+        y0: q.top,
+        y1: q.top + q.h,
+      };
     };
     return [
       one(BUY_AT[i], false, `window ${i + 1}'s Buy`),
@@ -464,9 +506,14 @@ export const Breakout = () => {
   for (const m of marks) {
     const r = m.card;
     if (m.y1 > r.y + r.h) {
-      fail(`${m.name} reaches ${m.y1.toFixed(0)}, past its card's floor at ${r.y + r.h}`);
+      fail(
+        `${m.name} reaches ${m.y1.toFixed(0)}, past its card's floor at ${r.y + r.h}`,
+      );
     }
-    if (m.y0 < r.y) fail(`${m.name} starts at ${m.y0.toFixed(0)}, above its card's top at ${r.y}`);
+    if (m.y0 < r.y)
+      fail(
+        `${m.name} starts at ${m.y0.toFixed(0)}, above its card's top at ${r.y}`,
+      );
     if (m.x0 < r.x || m.x1 > r.x + r.w) fail(`${m.name} runs outside its card`);
     const g = GRIDS[m.i];
     const w = candleWidth(g);
@@ -480,6 +527,7 @@ export const Breakout = () => {
     /** ⚠ AND NOT ON ITS OWN LEVEL EITHER — the push above is only worth having
      *  if something proves it happened. */
     const level = GRIDS[m.i].y(SUPPORT[m.i]);
-    if (level > m.y0 && level < m.y1) fail(`${m.name} lies across its support line`);
+    if (level > m.y0 && level < m.y1)
+      fail(`${m.name} lies across its support line`);
   }
 }

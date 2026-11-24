@@ -41,7 +41,7 @@ const Pack = ({ x, y, size }: { x: number; y: number; size: number }) => {
   const d = PACK.d * size;
   return (
     <div style={{ position: "absolute", left: x - d / 2, top: y - d / 2, width: d, height: d, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connector}`, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <Img src={staticFile("icons/vi02/ph-package.svg")} style={{ width: d * 0.56, height: d * 0.56 }} />
+      <Img showInTimeline={false} src={staticFile("icons/vi02/ph-package.svg")} style={{ width: d * 0.56, height: d * 0.56 }} />
     </div>
   );
 };
@@ -62,7 +62,7 @@ export const FactoryStills = ({ f, W, w, h, scale }: { f: number; W: (phrase: st
     <div style={{ position: "absolute", left: 0, top: 0, width: w, height: h, transform: `scale(${scale.toFixed(4)})`, transformOrigin: "0 0" }}>
       {STILLS.map((s) => {
         const p = ease(f, W(s.at) - m.sec(0.2), m.reveal);
-        return <Img key={s.name} src={staticFile(`art/vi02/sketch/${s.name}.png`)} style={{ position: "absolute", left: s.x - s.w / 2, top: s.y - s.h / 2, width: s.w, height: s.h, objectFit: "contain", opacity: p, transform: `scale(${mix(0.94, 1, p).toFixed(4)})` }} />;
+        return <Img showInTimeline={false} key={s.name} src={staticFile(`art/vi02/sketch/${s.name}.png`)} style={{ position: "absolute", left: s.x - s.w / 2, top: s.y - s.h / 2, width: s.w, height: s.h, objectFit: "contain", opacity: p, transform: `scale(${mix(0.94, 1, p).toFixed(4)})` }} />;
       })}
       {LEGS.map((leg, i) => <Connector key={i} a={leg.a} b={leg.b} p={ease(f, legs[i].at, m.sec(0.4))} width={PACK.line} dot={false} />)}
       {/* the first pack, on its words */}

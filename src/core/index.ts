@@ -22,6 +22,7 @@ export * from "./helpers";
 
 export { Stage, Card, Layer } from "./Stage";
 export { Title, Line, Words } from "./Text";
+export { EDITABLE, Handle, Keyed, NDiv, NudgeEnd, nudgeable, useNudge } from "./nudge";
 export { Chip } from "./Chip";
 export type { Tone } from "./Chip";
 export { Ping } from "./Ping";

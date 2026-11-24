@@ -1,0 +1,290 @@
+{
+  "_": "VI02's VO = the original take with Simon's re-recorded lines spliced in (scripts/vi/vo-splice.py). Times in seconds of the ORIGINAL; cuts sit in its silences.",
+  "base": "/Users/samuelsurja/Documents/01 Academy/VI02 - Membeli Saham Berarti Membeli Perusahaan",
+  "source": "VI02 VO.mp3",
+  "out": "public/vo/vi02-membeli-saham-berarti-membeli-perusahaan.mp3",
+  "pieces": [
+    {
+      "src": "ORIGINAL",
+      "from": 0,
+      "to": 22.73
+    },
+    {
+      "_": "5 Nov:'bahkan saat kita sedang tidur.'",
+      "src": "Scene 01-01.mp3",
+      "to": 1.64,
+      "match": "original 22.83-24.68"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 24.75,
+      "to": 41.13
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'kepemilikan dari bisnis yang ada di belakangnya.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 41.13,
+      "to": 47.17
+    },
+    {
+      "_": "12 Nov, SC02 insert: 'Benjamin Graham menulis dalam The Intelligent Investor: “Investment is most intelligent when it is most businesslike.” Investasi menjadi paling masuk akal … Warren Buffett bahkan menyebutnya sebagai kalimat paling penting tentang investasi.'",
+      "silence": 0.04
+    },
+    {
+      "src": "Revisi VO/Scene 02_1.mp3",
+      "to": 15.68,
+      "match": "original 41.27-46.97"
+    },
+    {
+      "silence": 0.1633447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 47.17,
+      "to": 86.33
+    },
+    {
+      "_": "5 Nov:'Jadi sebelum bertanya: “Harga sahamnya akan naik nggak?”' (cut before the −27 dB noise at 3.08 s of the clip)",
+      "src": "Scene 02-01.mp3",
+      "to": 2.97,
+      "match": "original 86.49-88.80"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 88.83,
+      "to": 92.92
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'Bisnis yang saya miliki ini sebenarnya menghasilkan apa?'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 92.92,
+      "to": 144.6
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'Penonton hanya melihat harganya.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 144.6,
+      "to": 149.68
+    },
+    {
+      "_": "5 Nov:'Pada 2025, perusahaan menghasilkan pendapatan sekitar Rp74,85 triliun dan laba bersih yang menjadi bagian pemegang saham sekitar Rp9,22 triliun. Kalau laba itu dibagi berdasarkan seluruh saham yang beredar, hasilnya sekitar Rp791 per saham.'",
+      "src": "Scene 04-01.mp3",
+      "to": 20.11,
+      "match": "original 149.75-166.08"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 166.16,
+      "to": 171.16
+    },
+    {
+      "_": "12 Nov, SC04: 'Kalau kamu punya 100 saham, bagian ekonomismu … sekitar: 100 × Rp791 = Rp79.100.' from Scene 04_2 (his fix take for 04_1's first sentence)",
+      "silence": 0.16
+    },
+    {
+      "src": "Revisi VO/Scene 04_2.mp3",
+      "to": 12.12,
+      "match": "original 171.47-176.65"
+    },
+    {
+      "_": "04_1's own pause before 'Tapi'",
+      "silence": 0.42
+    },
+    {
+      "_": "12 Nov, SC04: 'Tapi bukan berarti seluruh Rp79.100 … Rp265 per saham sebagai dividen. Jadi untuk 100 saham, cash dividend … Rp26.500. Sementara sisa labanya … mengembangkan bisnis.' (04_1 from 'Tapi'; its first sentence is 04_2)",
+      "src": "Revisi VO/Scene 04_1.mp3",
+      "from": 12.65,
+      "to": 35.86,
+      "match": "original 176.99-187.49"
+    },
+    {
+      "silence": 0.2333447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 187.72,
+      "to": 202.5
+    },
+    {
+      "_": "12 Nov, SC04 insert: 'Dan satu hal penting: profit perusahaan tidak sama dengan seluruh cash yang langsung kita terima.'",
+      "silence": 0.18
+    },
+    {
+      "src": "Revisi VO/Scene 04_3.mp3",
+      "to": 6.18,
+      "match": "original 198.67-202.42"
+    },
+    {
+      "silence": 0.1616667
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'yang sebenarnya kita miliki.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 202.605,
+      "to": 208.19
+    },
+    {
+      "_": "12 Nov, SC05: 'Minggu pertama muncul pesan: “Katanya perusahaan ini mau diakuisisi investor asing.”' (cut before the −5 dB click at 4.38 s of the clip)",
+      "silence": 0.11
+    },
+    {
+      "src": "Revisi VO/Scene 05_1.mp3",
+      "to": 4.3,
+      "match": "original 208.44-212.08"
+    },
+    {
+      "silence": 0.2433447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 212.36,
+      "to": 214.12
+    },
+    {
+      "_": "12 Nov, SC05: 'Minggu berikutnya muncul kabar: “Pemegang saham besarnya diam-diam mulai menjual.”' (cut before the −6 dB click at 4.64 s of the clip)",
+      "silence": 0.03
+    },
+    {
+      "src": "Revisi VO/Scene 05_2.mp3",
+      "to": 4.5,
+      "match": "original 214.31-217.82"
+    },
+    {
+      "silence": 0.2500113
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 218.1,
+      "to": 219.52
+    },
+    {
+      "_": "12 Nov, SC05: 'Lalu muncul rumor lain: “Laporan keuangannya bermasalah. Bisa-bisa perusahaan ini delisting.”'",
+      "silence": 0.12
+    },
+    {
+      "src": "Revisi VO/Scene 05_3.mp3",
+      "to": 5.58,
+      "match": "original 219.77-223.19"
+    },
+    {
+      "silence": 0.196678
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 223.4,
+      "to": 243.79
+    },
+    {
+      "_": "5 Nov:'Kalau seseorang datang dan bilang: “Supplier kamu mau bangkrut.”'",
+      "src": "Scene 05-01.mp3",
+      "to": 3.12,
+      "match": "original 243.91-247.01"
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 247.09,
+      "to": 260.225
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'hanya membuat kita bereaksi.'",
+      "silence": 0.5
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 260.225,
+      "to": 279.18
+    },
+    {
+      "_": "12 Nov, SC06 insert: 'Warren Buffett kemudian mengatakan: kalau kamu nggak bersedia memiliki sebuah perusahaan selama sepuluh tahun, jangan berpikir untuk memilikinya selama sepuluh menit.'",
+      "silence": 0.09
+    },
+    {
+      "src": "Revisi VO/Scene 06_1.mp3",
+      "to": 8.3,
+      "match": "original 275.0-279.1"
+    },
+    {
+      "silence": 0.0433673
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 279.18,
+      "to": 288.45
+    },
+    {
+      "_": "12 Nov, SC06 insert: 'Pelanggannya masih ada?'",
+      "silence": 0.14
+    },
+    {
+      "src": "Revisi VO/Scene 06_2.mp3",
+      "to": 0.98,
+      "match": "original 286.98-288.37"
+    },
+    {
+      "silence": 0.0633447
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 288.45,
+      "to": 291.82
+    },
+    {
+      "_": "12 Nov, SC06: 'Perusahaan masih punya pricing power dan kemampuan menghasilkan laba?'",
+      "silence": 0.01
+    },
+    {
+      "src": "Revisi VO/Scene 06_3.mp3",
+      "to": 3.64,
+      "match": "original 291.98-294.35"
+    },
+    {
+      "silence": 0.2300113
+    },
+    {
+      "src": "ORIGINAL",
+      "from": 294.6,
+      "to": 310.305
+    },
+    {
+      "_": "5 Nov, end of scene: +30f after 'apa yang sedang dibeli.'",
+      "silence": 0.5
+    },
+    {
+      "_": "24 Nov: SC07 and SC08 re-recorded whole, with new wording (one take, cut between 'kode saham' and 'Ada tiga hal')",
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 0,
+      "to": 63.59,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "_": "24 Nov, end of scene: +30f after 'sekadar kode saham.'",
+      "silence": 0.5
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 63.59,
+      "to": 202.36,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    }
+  ]
+}

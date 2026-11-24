@@ -9,10 +9,16 @@
  * case included: “Dia beli saham apa?”. The two that replace it are set in
  * caps because they are the scene's own headings, not quotations.
  */
+import { CoreLineE as Line, CoreWordsE as Words } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Chip, Line, Stage, Words,
-  fadeOut, progress, theme, useMotion, usePalette,
+  Chip,
+  Stage,
+  fadeOut,
+  progress,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { ASK, BLOCK, local } from "../data/timing";
 
@@ -33,7 +39,12 @@ export const SC15 = () => {
   return (
     <Stage>
       {/* the wrong question, struck, on its way out */}
-      <div style={{ opacity: drop, transform: `translateY(${(1 - drop) * theme.text.title.size}px)` }}>
+      <div
+        style={{
+          opacity: drop,
+          transform: `translateY(${(1 - drop) * theme.text.title.size}px)`,
+        }}
+      >
         <Chip
           label="“Dia beli saham apa?”"
           x={theme.canvas.width / 2}

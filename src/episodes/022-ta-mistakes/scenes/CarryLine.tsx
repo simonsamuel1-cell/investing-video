@@ -16,9 +16,16 @@
  * the remaining words across exactly — no text measuring, and nothing to redo
  * when the wording changes.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  gridOf, progress, ramp, textReveal, ticksOf, theme, useMotion, usePalette,
+  gridOf,
+  progress,
+  ramp,
+  textReveal,
+  ticksOf,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, PREMISE, REVERSE, local } from "../data/timing";
 import { MA } from "../data/layout";
@@ -49,7 +56,9 @@ const ASK_Y = (() => {
   return (
     ticksOf([grid.lo, grid.hi])
       .map((v) => zoomed(grid.y(v)))
-      .reduce((best, y) => (Math.abs(y - mid) < Math.abs(best - mid) ? y : best)) -
+      .reduce((best, y) =>
+        Math.abs(y - mid) < Math.abs(best - mid) ? y : best,
+      ) -
     SIZE * 0.75
   );
 })();
@@ -77,12 +86,17 @@ export const CarryLine = () => {
    *  is on screen again. */
   const out = progress(f, local(PREMISE.resume.at, FROM), m.fade);
 
-  const typed = ramp(f, local(REVERSE.notYet, FROM), ANSWER.length * REVERSE.perChar);
+  const typed = ramp(
+    f,
+    local(REVERSE.notYet, FROM),
+    ANSWER.length * REVERSE.perChar,
+  );
   const answer = ANSWER.slice(0, Math.floor(typed * ANSWER.length));
 
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: 0,
@@ -99,7 +113,13 @@ export const CarryLine = () => {
           opacity: 1 - out,
         }}
       >
-        <span style={{ fontSize: SIZE, opacity: lead.opacity, transform: `translateY(${lead.dy}px)` }}>
+        <span
+          style={{
+            fontSize: SIZE,
+            opacity: lead.opacity,
+            transform: `translateY(${lead.dy}px)`,
+          }}
+        >
           {LEAD}
         </span>
         <span
@@ -111,12 +131,13 @@ export const CarryLine = () => {
         >
           {TAIL}
         </span>
-      </div>
+      </Interactive.Div>
 
       {/* ⚠ THE ANSWER LEAVES WITH THE QUESTION IT ANSWERS. It belongs to SC02 —
           what carries into SC03 is the subject, not the verdict. */}
       {g >= REVERSE.notYet && gone < 0.999 && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: theme.canvas.width / 2,
@@ -131,7 +152,7 @@ export const CarryLine = () => {
           }}
         >
           {answer}
-        </div>
+        </Interactive.Div>
       )}
     </div>
   );
@@ -141,9 +162,13 @@ export const CarryLine = () => {
  *  heading it carries would vanish mid-scene. */
 {
   if (PREMISE.carry.at < REVERSE.notYet) {
-    throw new Error("022-ta-mistakes/CarryLine: the carry starts before the answer has been typed");
+    throw new Error(
+      "022-ta-mistakes/CarryLine: the carry starts before the answer has been typed",
+    );
   }
   if (BLOCK.SC04 <= PREMISE.kepastian) {
-    throw new Error("022-ta-mistakes/CarryLine: SC03's last beat falls outside the layer's window");
+    throw new Error(
+      "022-ta-mistakes/CarryLine: SC03's last beat falls outside the layer's window",
+    );
   }
 }

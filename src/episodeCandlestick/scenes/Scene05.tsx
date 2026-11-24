@@ -9,8 +9,9 @@
  * 96/96/54/108 respected; bottom 108px empty; top-150px content ends x ≤ 1368;
  * deterministic (no Math.random); fictional data — IllustrationTag + Ticker.
  */
+import { TA03ChipE as Chip } from "../../editable";
 import { useContext } from "react";
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Cut } from "../cut";
 import { theme } from "../theme";
 import {
@@ -29,7 +30,7 @@ import { Candle } from "../components/Candle";
 import { LiveCandle } from "../components/LiveCandle";
 import { PricePanel } from "../components/PricePanel";
 import { ReferenceLine } from "../components/ReferenceLine";
-import { Chip } from "../components/Chip";
+
 import { Ping } from "../components/Ping";
 import { IllustrationTag } from "../components/IllustrationTag";
 import {
@@ -135,7 +136,10 @@ export const Scene05 = () => {
   return (
     <SafeArea>
       {/* ── daily panel (left) ── */}
-      <div style={{ position: "absolute", left: 0, top: 0, opacity: dailyOp }}>
+      <Interactive.Div
+        name="Objek"
+        style={{ position: "absolute", left: 0, top: 0, opacity: dailyOp }}
+      >
         <PricePanel
           x={DAILY_X}
           y={DAILY_TOP}
@@ -229,7 +233,7 @@ export const Scene05 = () => {
             />
           )}
         </svg>
-      </div>
+      </Interactive.Div>
 
       {/* ── intraday session panel (right) ── */}
       {f >= sec(T.sessionIn) && (
@@ -282,7 +286,8 @@ export const Scene05 = () => {
       />
 
       {/* caption */}
-      <div
+      <Interactive.Div
+        name="Demand is starting to outwei"
         style={{
           position: "absolute",
           left: 0,
@@ -297,7 +302,7 @@ export const Scene05 = () => {
         }}
       >
         Demand is starting to outweigh supply.
-      </div>
+      </Interactive.Div>
 
       <IllustrationTag />
     </SafeArea>

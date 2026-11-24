@@ -7,12 +7,14 @@
  * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets.
  */
+import { TA03ChipE as Chip } from "../../editable";
 import { useContext } from "react";
 import {
   Freeze,
   interpolate,
   interpolateColors,
   useCurrentFrame,
+  Interactive,
 } from "remotion";
 import { theme } from "../theme";
 import {
@@ -28,7 +30,7 @@ import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
 import { PricePanel, Ticker } from "../components/PricePanel";
 import { FocusFrame } from "../components/FocusFrame";
-import { Chip } from "../components/Chip";
+
 import { IllustrationTag } from "../components/IllustrationTag";
 import { Cut, IndoClock } from "../cut";
 
@@ -130,7 +132,8 @@ const Scene01Classic = () => {
 
   return (
     <SafeArea>
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{ position: "absolute", left: 0, top: 0, opacity: chartOpacity }}
       >
         <PricePanel
@@ -161,7 +164,7 @@ const Scene01Classic = () => {
             />
           ))}
         </svg>
-      </div>
+      </Interactive.Div>
 
       {f >= sec(T.focus) && (
         <FocusFrame
@@ -411,7 +414,8 @@ const Scene01App = () => {
         }}
       >
         {/* ── the panel, and the chart's wash under its header ── */}
-        <div
+        <Interactive.Div
+          name="ABCD"
           style={{
             position: "absolute",
             left: PANEL.x,
@@ -424,7 +428,8 @@ const Scene01App = () => {
             overflow: "hidden",
           }}
         >
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: 0,
@@ -435,7 +440,8 @@ const Scene01App = () => {
             }}
           />
           {/* header: avatar, ticker */}
-          <div
+          <Interactive.Div
+            name="ABCD"
             style={{
               position: "absolute",
               left: HEAD.x,
@@ -472,9 +478,10 @@ const Scene01App = () => {
             >
               ABCD
             </span>
-          </div>
+          </Interactive.Div>
           {/* the price and the day's change, left edge on the ticker */}
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: HEAD.x + HEAD.avatar + HEAD.gap,
@@ -508,9 +515,10 @@ const Scene01App = () => {
             >
               {CHANGE_TXT}
             </span>
-          </div>
+          </Interactive.Div>
           {/* timeframe pills — a daily chart, so 1D is live */}
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               right: 40,
@@ -535,8 +543,8 @@ const Scene01App = () => {
                 {t}
               </span>
             ))}
-          </div>
-        </div>
+          </Interactive.Div>
+        </Interactive.Div>
 
         {/* ── the chart ── */}
         <svg
@@ -688,7 +696,8 @@ const Scene01App = () => {
           })}
         </svg>
         {lastIn > 0.001 && (
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: AXIS_CX,
@@ -705,7 +714,7 @@ const Scene01App = () => {
             }}
           >
             {idNum(LAST)}
-          </div>
+          </Interactive.Div>
         )}
       </div>
 

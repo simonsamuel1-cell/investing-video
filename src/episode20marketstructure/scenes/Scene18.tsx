@@ -12,7 +12,7 @@
  * opens on, then the climb that breaks out of it. The first is fully gone on
  * the frame the second starts, so the frame is only ever making one claim.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage, Layer } from "../components/Stage";
 import { ScreenClip } from "../components/ScreenClip";
 import {
@@ -745,7 +745,8 @@ export const Scene18 = () => {
             }}
           >
             {/* the question, in the strip above the clips */}
-            <div
+            <Interactive.Div
+              name="Objek"
               style={{
                 position: "absolute",
                 left: 0,
@@ -762,12 +763,13 @@ export const Scene18 = () => {
             >
               <span style={{ color: theme.color.indigo }}>{QUIZ_LEAD}</span>
               {QUIZ_TEXT}
-            </div>
+            </Interactive.Div>
 
             {/* the count, dead centre. Numerals POP — see Chip. A number that
               faded in would still be arriving when the next one is due. */}
             {counting && (
-              <div
+              <Interactive.Div
+                name="Objek"
                 style={{
                   position: "absolute",
                   left: 0,
@@ -782,12 +784,13 @@ export const Scene18 = () => {
                 }}
               >
                 {counting.label}
-              </div>
+              </Interactive.Div>
             )}
 
             {/* the verdict, in the strip below the clips */}
             {result && (
-              <div
+              <Interactive.Div
+                name="Objek"
                 style={{
                   position: "absolute",
                   left: 0,
@@ -803,7 +806,7 @@ export const Scene18 = () => {
                 }}
               >
                 {RESULT.text}
-              </div>
+              </Interactive.Div>
             )}
           </div>
         )}

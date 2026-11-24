@@ -9,7 +9,8 @@
  * chips/pings only, mulberry32 determinism, safe area 96/96/54/108 respected,
  * bottom 108px empty, TallyStrip ends at x 1360 ≤ 1368, IllustrationTag mounted.
  */
-import { useCurrentFrame } from "remotion";
+import { TA03ChipE as Chip } from "../../editable";
+import { useCurrentFrame, Interactive } from "remotion";
 import { theme } from "../theme";
 import {
   sec,
@@ -26,7 +27,7 @@ import { PricePanel } from "../components/PricePanel";
 import { ReferenceLine } from "../components/ReferenceLine";
 import { TallyStrip } from "../components/TallyStrip";
 import { Ping } from "../components/Ping";
-import { Chip } from "../components/Chip";
+
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -124,7 +125,8 @@ export const Scene07 = () => {
 
   const panelOpacity = fadeIn(f, sec(T.panelIn));
   const constructQ = progress(f, sec(T.construct), sec(T.constructDur));
-  const extendQ = f >= sec(T.extend) ? progress(f, sec(T.extend), sec(T.extendDur)) : 0;
+  const extendQ =
+    f >= sec(T.extend) ? progress(f, sec(T.extend), sec(T.extendDur)) : 0;
   const caption = textReveal(f, sec(T.caption));
 
   return (
@@ -143,7 +145,15 @@ export const Scene07 = () => {
       {/* Everything below (candles, pings, support/resistance lines + chips) is
           grouped and shifted so the candle band centers vertically in the panel.
           The lines move with the candles so the support/resistance touches hold. */}
-      <div style={{ position: "absolute", left: 0, top: 0, transform: `translateY(${GROUP_DY}px)` }}>
+      <Interactive.Div
+        name="Resistance"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          transform: `translateY(${GROUP_DY}px)`,
+        }}
+      >
         {/* Support line: constructed between the two touches, then extended to both panel edges. */}
         {f >= sec(T.construct) && (
           <ReferenceLine
@@ -165,7 +175,13 @@ export const Scene07 = () => {
             drawProgress={progress(f, sec(T.resistance), sec(0.6))}
           />
         )}
-        <Chip label="Resistance" x={CHIP_X} y={resY - 80} anchor="left" startFrame={sec(T.resistance) + 8} />
+        <Chip
+          label="Resistance"
+          x={CHIP_X}
+          y={resY - 80}
+          anchor="left"
+          startFrame={sec(T.resistance) + 8}
+        />
 
         {/* Candles — own full-canvas svg over the panel. */}
         <svg
@@ -187,7 +203,11 @@ export const Scene07 = () => {
                 close={c.close}
                 scale={scale}
                 buildProgress={progress(f, start, sec(T.wipeBodyDur))}
-                wickProgress={progress(f, start + Math.round(sec(T.wipeBodyDur) / 2), sec(T.wipeWickDur))}
+                wickProgress={progress(
+                  f,
+                  start + Math.round(sec(T.wipeBodyDur) / 2),
+                  sec(T.wipeWickDur),
+                )}
               />
             );
           })}
@@ -207,12 +227,36 @@ export const Scene07 = () => {
           )}
         </svg>
 
-        <Ping cx={cx(4)} cy={scale(SERIES[4].low)} startFrame={sec(T.ping1)} numberLabel="1" labelBelow />
-        <Ping cx={cx(13)} cy={scale(SERIES[13].low)} startFrame={sec(T.ping2)} numberLabel="2" labelBelow />
-        <Ping cx={cx(23)} cy={scale(SERIES[23].low)} startFrame={sec(T.ping3)} numberLabel="3" labelBelow />
+        <Ping
+          cx={cx(4)}
+          cy={scale(SERIES[4].low)}
+          startFrame={sec(T.ping1)}
+          numberLabel="1"
+          labelBelow
+        />
+        <Ping
+          cx={cx(13)}
+          cy={scale(SERIES[13].low)}
+          startFrame={sec(T.ping2)}
+          numberLabel="2"
+          labelBelow
+        />
+        <Ping
+          cx={cx(23)}
+          cy={scale(SERIES[23].low)}
+          startFrame={sec(T.ping3)}
+          numberLabel="3"
+          labelBelow
+        />
 
-        <Chip label="Support" x={CHIP_X} y={lineY + CHIP_GAP} anchor="left" startFrame={sec(T.chip)} />
-      </div>
+        <Chip
+          label="Support"
+          x={CHIP_X}
+          y={lineY + CHIP_GAP}
+          anchor="left"
+          startFrame={sec(T.chip)}
+        />
+      </Interactive.Div>
 
       {/* Tally — right-aligned, ends at x 1360 (≤ 1368). */}
       <TallyStrip
@@ -226,7 +270,8 @@ export const Scene07 = () => {
       />
 
       {/* Caption — sentence case, 40px, centered. */}
-      <div
+      <Interactive.Div
+        name="Three signals, one direction"
         style={{
           position: "absolute",
           left: theme.layout.safeLeft,
@@ -241,7 +286,7 @@ export const Scene07 = () => {
         }}
       >
         Three signals, one direction.
-      </div>
+      </Interactive.Div>
 
       <IllustrationTag />
     </SafeArea>

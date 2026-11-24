@@ -18,17 +18,40 @@
  * whose teal runs the full width. See SS1 in data/series.ts, which also asserts
  * that the thing really does break out.
  */
-import { interpolate, useCurrentFrame } from "remotion";
+import { interpolate, useCurrentFrame, Interactive } from "remotion";
 import {
-  Stage, Candles, VolumeBars, HighlightBox, cutInStyle, gridOf, domainOf,
-  progress, progressInOut, textReveal, candleWidth, ticksOf, usePalette,
-  cutOutStyle, GRID_PAD_X, theme,
+  Stage,
+  Candles,
+  VolumeBars,
+  HighlightBox,
+  cutInStyle,
+  gridOf,
+  domainOf,
+  progress,
+  progressInOut,
+  textReveal,
+  candleWidth,
+  ticksOf,
+  usePalette,
+  cutOutStyle,
+  GRID_PAD_X,
+  theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SC16_V2, local } from "../data/timing";
 import { ResistanceArea, resistanceTop } from "./ResistanceArea";
 import {
-  SS2, SS2_DOMAIN, SS_BAND, SS_GROWN, SS_GROWN_DOMAIN, SS_GROWN_VOL, SS_KEEP,
-  SS_NEW, SS_VIEW, SS_VOL_TOP2, SS_ZIG, trendThrough,
+  SS2,
+  SS2_DOMAIN,
+  SS_BAND,
+  SS_GROWN,
+  SS_GROWN_DOMAIN,
+  SS_GROWN_VOL,
+  SS_KEEP,
+  SS_NEW,
+  SS_VIEW,
+  SS_VOL_TOP2,
+  SS_ZIG,
+  trendThrough,
 } from "../data/series";
 
 /* ⚠ THE MARKS ARE SLOTS IN THE GROWN TAPE, AND `SS_HIDE` CAN SHORTEN IT. A box
@@ -38,7 +61,9 @@ import {
  * ⚠ FITTED ONCE, AT MODULE SCOPE. A hull and a pair search inside a component
  * is that search run sixty times a second, on data that cannot change.
  */
-const TRENDS = SC16_V2.marks.map((m) => trendThrough(m.from, m.to, m.trend === "support"));
+const TRENDS = SC16_V2.marks.map((m) =>
+  trendThrough(m.from, m.to, m.trend === "support"),
+);
 
 /** The price lines, as round levels of the tape's own finished domain. */
 const RULES = ticksOf(SS_GROWN_DOMAIN, SC16_V2.rules.want);
@@ -93,7 +118,11 @@ export const SC16v2 = () => {
   const py0 = interpolate(open, [0, 1], [y, 0]);
   const pw = interpolate(open, [0, 1], [w, theme.canvas.width]);
   const ph = interpolate(open, [0, 1], [h, theme.canvas.height]);
-  const radius = interpolate(open, [0, 1], [Math.min(V.win.radius, w / 2, h / 2), 0]);
+  const radius = interpolate(
+    open,
+    [0, 1],
+    [Math.min(V.win.radius, w / 2, h / 2), 0],
+  );
 
   /**
    * ⚠ THE PLOT IS BUILT FROM THE FINISHED RECT, NOT THE CURRENT ONE. While the
@@ -104,16 +133,28 @@ export const SC16v2 = () => {
   /** The window's FINISHED position, which is where the tape is laid out. */
   const X0 = theme.canvas.width / 2 - V.win.w / 2;
   const Y0 = theme.canvas.height / 2 - V.win.h / 2;
-  const near = { x: X0 + V.plot.x, y: Y0 + V.plot.y, w: V.win.w - V.plot.x * 2, h: V.win.h - V.plot.y * 2 };
+  const near = {
+    x: X0 + V.plot.x,
+    y: Y0 + V.plot.y,
+    w: V.win.w - V.plot.x * 2,
+    h: V.win.h - V.plot.y * 2,
+  };
   const far = V.full;
   const N = SS2.bars.length;
   const SPAN = SS_VIEW.to - SS_VIEW.from;
   /** The close-up, written as a grid: wide enough that `SPAN` bars fill the
    *  plot, and slid so `SS_VIEW.from` sits on its left edge. */
   const zoomW = (near.w * (N - 1)) / (SPAN - 1);
-  const boxNear = { ...near, x: near.x - (zoomW * SS_VIEW.from) / (N - 1), w: zoomW };
+  const boxNear = {
+    ...near,
+    x: near.x - (zoomW * SS_VIEW.from) / (N - 1),
+    w: zoomW,
+  };
   const win = SS2.bars.slice(SS_VIEW.from, SS_VIEW.to);
-  const domNear = domainOf(win.map((b) => b.c), win);
+  const domNear = domainOf(
+    win.map((b) => b.c),
+    win,
+  );
   const mix = (a: number, b: number) => a + (b - a) * open;
 
   /**
@@ -181,7 +222,12 @@ export const SC16v2 = () => {
   const FX = x0 + V.zoom.centre * PITCH;
   const ZX = (p: number) => theme.canvas.width / 2 + (p - FX) * K;
   const ZY = (p: number) => BASE + (p - BASE) * K;
-  const boxZoom = { x: ZX(boxPan.x), y: ZY(boxPan.y), w: boxPan.w * K, h: boxPan.h * K };
+  const boxZoom = {
+    x: ZX(boxPan.x),
+    y: ZY(boxPan.y),
+    w: boxPan.w * K,
+    h: boxPan.h * K,
+  };
   const dive = (a: number, b: number) => a + (b - a) * near2;
 
   const box = {
@@ -264,9 +310,12 @@ export const SC16v2 = () => {
    */
   const drawn = progressInOut(f, local(V.trend.at, FROM), V.trend.over);
   const zig = SS_ZIG.map((q) => ({ x: G.x(q.i), y: G.y(q.v) }));
-  const segs = zig.slice(1).map((q, k) => Math.hypot(q.x - zig[k].x, q.y - zig[k].y));
+  const segs = zig
+    .slice(1)
+    .map((q, k) => Math.hypot(q.x - zig[k].x, q.y - zig[k].y));
   const zigLen = segs.reduce((a, b2) => a + b2, 0);
-  const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
+  const zigPath =
+    "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
   /** The head takes the LAST leg's direction — that is the way the trend is
    *  pointing when it arrives. */
   const last = zig[zig.length - 1];
@@ -277,8 +326,14 @@ export const SC16v2 = () => {
   const ny = tDir.x;
   const headPts = [
     [last.x, last.y],
-    [last.x - tDir.x * V.trend.head.len + nx * V.trend.head.half, last.y - tDir.y * V.trend.head.len + ny * V.trend.head.half],
-    [last.x - tDir.x * V.trend.head.len - nx * V.trend.head.half, last.y - tDir.y * V.trend.head.len - ny * V.trend.head.half],
+    [
+      last.x - tDir.x * V.trend.head.len + nx * V.trend.head.half,
+      last.y - tDir.y * V.trend.head.len + ny * V.trend.head.half,
+    ],
+    [
+      last.x - tDir.x * V.trend.head.len - nx * V.trend.head.half,
+      last.y - tDir.y * V.trend.head.len - ny * V.trend.head.half,
+    ],
   ]
     .map((q) => q.map((v) => v.toFixed(1)).join(","))
     .join(" ");
@@ -299,13 +354,19 @@ export const SC16v2 = () => {
    */
   const S = V.spikes;
   const grey =
-    progress(f, local(S.at, FROM), S.fade) * (1 - progress(f, local(S.gone, FROM), S.fade));
+    progress(f, local(S.at, FROM), S.fade) *
+    (1 - progress(f, local(S.gone, FROM), S.fade));
   /** ⚠ ONE SLOW BREATH. `Math.sin` unclamped would keep pulsing after the beat
    *  is over; it is multiplied by `grey`, so it stops when the grey does. */
-  const pulse = (1 - Math.cos((2 * Math.PI * (f - local(S.at, FROM))) / S.beat)) / 2;
+  const pulse =
+    (1 - Math.cos((2 * Math.PI * (f - local(S.at, FROM))) / S.beat)) / 2;
 
   const ruled = progress(f, local(V.rules.at, FROM), V.rules.over);
-  const trendGone = progress(f, local(V.swingLine.gone.at, FROM), V.swingLine.gone.over);
+  const trendGone = progress(
+    f,
+    local(V.swingLine.gone.at, FROM),
+    V.swingLine.gone.over,
+  );
 
   const P = V.markPad;
   const L = V.markLabel;
@@ -326,7 +387,9 @@ export const SC16v2 = () => {
     /** The straight line through this range's swings — drawn from its left end
      *  on the same frame the box opens from that same edge. */
     const t = TRENDS[i];
-    const swept = progressInOut(f, local(m.in.at, FROM), V.swingLine.over) * (1 - trendGone);
+    const swept =
+      progressInOut(f, local(m.in.at, FROM), V.swingLine.over) *
+      (1 - trendGone);
     const a = { x: Gvol.x(t.i1), y: G.y(t.v1) };
     const b = { x: Gvol.x(t.i2), y: G.y(t.v2) };
     return {
@@ -348,7 +411,9 @@ export const SC16v2 = () => {
   const cOut = cutOutStyle(f + FROM, CUTS.toSpikes);
   const cam = {
     transform: `${cIn.transform} ${cOut.transform}`,
-    filter: [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") || undefined,
+    filter:
+      [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") ||
+      undefined,
   };
 
   return (
@@ -361,10 +426,11 @@ export const SC16v2 = () => {
             position: "absolute",
             inset: -120,
             background: theme.color.glassBg,
-            transform:
-              `translate(${(d * U.drift.ground.x).toFixed(2)}px, ${(
-                d * U.drift.ground.y
-              ).toFixed(2)}px) scale(${(1 + d * U.drift.ground.zoom).toFixed(4)})`,
+            transform: `translate(${(d * U.drift.ground.x).toFixed(2)}px, ${(
+              d * U.drift.ground.y
+            ).toFixed(
+              2,
+            )}px) scale(${(1 + d * U.drift.ground.zoom).toFixed(4)})`,
           }}
         />
         <div
@@ -401,7 +467,8 @@ export const SC16v2 = () => {
                 rect, so it follows the frame open without being scaled by it —
                 a chart inside a growing box would stretch, and a stretched
                 candle is a lie about its price. */}
-            <div
+            <Interactive.Div
+              name="Objek"
               style={{
                 position: "absolute",
                 left: px0,
@@ -419,7 +486,8 @@ export const SC16v2 = () => {
             {/* ⚠ CLIPPED TO THE WINDOW. Until the frame has finished opening the
                 plot rect is taller than the box it is inside; without this the
                 first candles would be drawn on the ground beside it. */}
-            <div
+            <Interactive.Div
+              name="Objek"
               style={{
                 position: "absolute",
                 left: px0,
@@ -430,242 +498,304 @@ export const SC16v2 = () => {
                 overflow: "hidden",
               }}
             >
-              <div style={{ position: "absolute", left: -px0, top: -py0, width: theme.canvas.width, height: theme.canvas.height }}>
-               {/* ⚠ THE PLOT'S EDGE — see `clipX`. Two divs, because the outer
+              <div
+                style={{
+                  position: "absolute",
+                  left: -px0,
+                  top: -py0,
+                  width: theme.canvas.width,
+                  height: theme.canvas.height,
+                }}
+              >
+                {/* ⚠ THE PLOT'S EDGE — see `clipX`. Two divs, because the outer
                    one moves and everything inside it is written in CANVAS
                    coordinates; the inner one puts that origin back. */}
-               <div style={{ position: "absolute", left: clipX, top: 0, width: clipW, height: theme.canvas.height, overflow: "hidden" }}>
-                <div style={{ position: "absolute", left: -clipX, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-                {/* ── the area price kept failing at ─────────────────────── */}
-                {/* ⚠ NO ENTRANCE — Simon: "sudah ada sejak awal". The level is
+                <Interactive.Div
+                  name="Objek"
+                  style={{
+                    position: "absolute",
+                    left: clipX,
+                    top: 0,
+                    width: clipW,
+                    height: theme.canvas.height,
+                    overflow: "hidden",
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: -clipX,
+                      top: 0,
+                      width: theme.canvas.width,
+                      height: theme.canvas.height,
+                    }}
+                  >
+                    {/* ── the area price kept failing at ─────────────────────── */}
+                    {/* ⚠ NO ENTRANCE — Simon: "sudah ada sejak awal". The level is
                     on the chart from its first frame and the window opening
                     over it is what reveals it; its position lives in
                     ResistanceArea.tsx, where DROP is the one number to change.
                     It LEAVES at f14893, before the view moves, so it never has
                     to be dragged across the screen on its way out. */}
-                {clear < 0.999 && (
-                  <div style={{ opacity: 1 - clear }}>
-                    <ResistanceArea
-                      grid={G}
-                      box={box}
-                      band={SS_BAND}
-                      closeUp={G0}
-                      label={V.label}
-                    />
-                  </div>
-                )}
+                    {clear < 0.999 && (
+                      <div style={{ opacity: 1 - clear }}>
+                        <ResistanceArea
+                          grid={G}
+                          box={box}
+                          band={SS_BAND}
+                          closeUp={G0}
+                          label={V.label}
+                        />
+                      </div>
+                    )}
 
-                {/* ── the price lines ────────────────────────────────────
+                    {/* ── the price lines ────────────────────────────────────
                     ⚠ UNDER THE TAPE, and drawn across the plot's own rect
                     rather than the grid's box — during the pan that box is
                     3800px wide, and a gridline as long as it would leave the
                     screen on both sides. */}
-                {ruled > 0.001 && (
-                  <svg
-                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-                    width={theme.canvas.width}
-                    height={theme.canvas.height}
-                    opacity={ruled}
-                  >
-                    {RULES.map((p) => (
-                      <line
-                        key={p}
-                        x1={V.full.x}
-                        y1={G.y(p)}
-                        x2={V.full.x + V.full.w}
-                        y2={G.y(p)}
-                        stroke={c.border}
-                        strokeWidth={theme.shape.hairline}
-                      />
-                    ))}
-                  </svg>
-                )}
+                    {ruled > 0.001 && (
+                      <svg
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          overflow: "visible",
+                        }}
+                        width={theme.canvas.width}
+                        height={theme.canvas.height}
+                        opacity={ruled}
+                      >
+                        {RULES.map((p) => (
+                          <line
+                            key={p}
+                            x1={V.full.x}
+                            y1={G.y(p)}
+                            x2={V.full.x + V.full.w}
+                            y2={G.y(p)}
+                            stroke={c.border}
+                            strokeWidth={theme.shape.hairline}
+                          />
+                        ))}
+                      </svg>
+                    )}
 
-                {/* ⚠ ALL 232, ALWAYS — the twenty that stay are simply the ones
+                    {/* ⚠ ALL 232, ALWAYS — the twenty that stay are simply the ones
                     the plot's edge does not cut. Drawing "the survivors" as
                     their own array would mean creating twenty candles at the
                     moment 212 others are destroyed, and the seam would show. */}
-                <Candles bars={SS2.bars} grid={G} />
+                    <Candles bars={SS2.bars} grid={G} />
 
-                {/* ── and the tape that grows out of them ─────────────────── */}
-                {built > 0.001 && <Candles bars={SS_NEW} grid={Gnew} shown={built} />}
+                    {/* ── and the tape that grows out of them ─────────────────── */}
+                    {built > 0.001 && (
+                      <Candles bars={SS_NEW} grid={Gnew} shown={built} />
+                    )}
 
-                {/* ⚠ THE HISTOGRAM STARTS UNDER THE SURVIVORS AND FOLLOWS THE
+                    {/* ⚠ THE HISTOGRAM STARTS UNDER THE SURVIVORS AND FOLLOWS THE
                     NEW BARS IN. `shown` is the fraction of all 140 slots that
                     exist, so the twenty are there from the moment the panel
                     fades up and every newcomer's bar arrives with its own
                     candle rather than a beat behind it. */}
-                {/* ⚠ SATURATE AND BRIGHTEN — Simon: "bisa dibuat lebih abu abu
+                    {/* ⚠ SATURATE AND BRIGHTEN — Simon: "bisa dibuat lebih abu abu
                     terang?". Desaturating alone lands a candle red and a candle
                     green on almost the same mid grey, which is heavy enough to
                     still compete with the two bars that are supposed to be the
                     only thing lit. Lifting the brightness with it puts the
                     whole histogram a step back instead of merely draining it. */}
-                <div
-                  style={{
-                    filter: grey > 0.001
-                      ? `saturate(${(1 - grey * 0.95).toFixed(3)}) brightness(${(1 + grey * 0.3).toFixed(3)})`
-                      : undefined,
-                  }}
-                >
-                  <VolumeBars
-                    bars={SS_GROWN}
-                    volume={SS_GROWN_VOL}
-                    grid={Gvol}
-                    box={volBox}
-                    shown={grown}
-                    opacity={volIn}
-                  />
-                </div>
-                {grey > 0.001 && (
-                  <svg
-                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-                    width={theme.canvas.width}
-                    height={theme.canvas.height}
-                  >
-                    {SS_VOL_TOP2.map((i) => {
-                      const w = candleWidth(Gvol);
-                      const h = (SS_GROWN_VOL[i] / Math.max(...SS_GROWN_VOL)) * volBox.h;
-                      const fill = SS_GROWN[i].c >= SS_GROWN[i].o ? c.candleGreen : c.candleRed;
-                      const g = S.glow.min + (S.glow.max - S.glow.min) * pulse;
-                      return (
-                        <rect
-                          key={i}
-                          x={Gvol.x(i) - w / 2}
-                          y={volBox.y + volBox.h - h}
-                          width={w}
-                          height={Math.max(1, h)}
-                          rx={Math.min(w * 0.28, 8)}
-                          fill={fill}
-                          opacity={0.72 * grey}
-                          style={{ filter: `drop-shadow(0 0 ${(g * 0.4).toFixed(1)}px ${fill}) drop-shadow(0 0 ${g.toFixed(1)}px ${fill})` }}
-                        />
-                      );
-                    })}
-                  </svg>
-                )}
+                    <div
+                      style={{
+                        filter:
+                          grey > 0.001
+                            ? `saturate(${(1 - grey * 0.95).toFixed(3)}) brightness(${(1 + grey * 0.3).toFixed(3)})`
+                            : undefined,
+                      }}
+                    >
+                      <VolumeBars
+                        bars={SS_GROWN}
+                        volume={SS_GROWN_VOL}
+                        grid={Gvol}
+                        box={volBox}
+                        shown={grown}
+                        opacity={volIn}
+                      />
+                    </div>
+                    {grey > 0.001 && (
+                      <svg
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          overflow: "visible",
+                        }}
+                        width={theme.canvas.width}
+                        height={theme.canvas.height}
+                      >
+                        {SS_VOL_TOP2.map((i) => {
+                          const w = candleWidth(Gvol);
+                          const h =
+                            (SS_GROWN_VOL[i] / Math.max(...SS_GROWN_VOL)) *
+                            volBox.h;
+                          const fill =
+                            SS_GROWN[i].c >= SS_GROWN[i].o
+                              ? c.candleGreen
+                              : c.candleRed;
+                          const g =
+                            S.glow.min + (S.glow.max - S.glow.min) * pulse;
+                          return (
+                            <rect
+                              key={i}
+                              x={Gvol.x(i) - w / 2}
+                              y={volBox.y + volBox.h - h}
+                              width={w}
+                              height={Math.max(1, h)}
+                              rx={Math.min(w * 0.28, 8)}
+                              fill={fill}
+                              opacity={0.72 * grey}
+                              style={{
+                                filter: `drop-shadow(0 0 ${(g * 0.4).toFixed(1)}px ${fill}) drop-shadow(0 0 ${g.toFixed(1)}px ${fill})`,
+                              }}
+                            />
+                          );
+                        })}
+                      </svg>
+                    )}
 
-                {/* ── one straight line per range ──────────────────────────
+                    {/* ── one straight line per range ──────────────────────────
                     ⚠ INDIGO, BOTH OF THEM. The boxes are cyan and indigo to
                     separate two readings of VOLUME; giving the price lines the
                     same two colours would make the pair look like the same
                     distinction one panel up, which it is not. */}
-                {marks.map((mk, i) =>
-                  mk === null || mk.trend.swept <= 0.001 ? null : (
-                    <svg
-                      key={`t${i}`}
-                      style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
-                      width={theme.canvas.width}
-                      height={theme.canvas.height}
-                    >
-                      <line
-                        x1={mk.trend.a.x}
-                        y1={mk.trend.a.y}
-                        x2={mk.trend.b.x}
-                        y2={mk.trend.b.y}
-                        stroke={c.indigo}
-                        strokeWidth={V.swingLine.width}
-                        strokeLinecap="round"
-                        strokeDasharray={mk.trend.len}
-                        strokeDashoffset={mk.trend.len * (1 - mk.trend.swept)}
-                      />
-                    </svg>
-                  ),
-                )}
+                    {marks.map((mk, i) =>
+                      mk === null || mk.trend.swept <= 0.001 ? null : (
+                        <svg
+                          key={`t${i}`}
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: 0,
+                            overflow: "visible",
+                          }}
+                          width={theme.canvas.width}
+                          height={theme.canvas.height}
+                        >
+                          <line
+                            x1={mk.trend.a.x}
+                            y1={mk.trend.a.y}
+                            x2={mk.trend.b.x}
+                            y2={mk.trend.b.y}
+                            stroke={c.indigo}
+                            strokeWidth={V.swingLine.width}
+                            strokeLinecap="round"
+                            strokeDasharray={mk.trend.len}
+                            strokeDashoffset={
+                              mk.trend.len * (1 - mk.trend.swept)
+                            }
+                          />
+                        </svg>
+                      ),
+                    )}
 
-                {/* ── the two marks on the histogram ─────────────────────── */}
-                {marks.map((mk, i) =>
-                  mk === null ? null : (
-                    <HighlightBox
-                      key={i}
-                      rect={mk.rect}
-                      grow={mk.grow}
-                      stroke={mk.hue}
-                      fill={`${mk.hue}1F`}
-                    />
-                  ),
-                )}
-                {/* ⚠ THE WORD TAKES ITS BOX'S COLOUR, and sits flush with the
+                    {/* ── the two marks on the histogram ─────────────────────── */}
+                    {marks.map((mk, i) =>
+                      mk === null ? null : (
+                        <HighlightBox
+                          key={i}
+                          rect={mk.rect}
+                          grow={mk.grow}
+                          stroke={mk.hue}
+                          fill={`${mk.hue}1F`}
+                        />
+                      ),
+                    )}
+                    {/* ⚠ THE WORD TAKES ITS BOX'S COLOUR, and sits flush with the
                     box's left edge — the edge the wipe opens from, so the label
                     and the mark start in the same place. */}
-                {marks.map((mk, i) =>
-                  mk === null ? null : (
-                    <div
-                      key={`l${i}`}
-                      style={{
-                        position: "absolute",
-                        left: mk.rect.x1,
-                        top: mk.rect.y1 - L.gap - L.size,
-                        fontFamily: theme.text.family,
-                        fontSize: L.size,
-                        fontWeight: 700,
-                        lineHeight: 1,
-                        color: mk.hue,
-                        whiteSpace: "nowrap",
-                        opacity: mk.grow,
-                      }}
-                    >
-                      {mk.label}
-                    </div>
-                  ),
-                )}
+                    {marks.map((mk, i) =>
+                      mk === null ? null : (
+                        <div
+                          key={`l${i}`}
+                          style={{
+                            position: "absolute",
+                            left: mk.rect.x1,
+                            top: mk.rect.y1 - L.gap - L.size,
+                            fontFamily: theme.text.family,
+                            fontSize: L.size,
+                            fontWeight: 700,
+                            lineHeight: 1,
+                            color: mk.hue,
+                            whiteSpace: "nowrap",
+                            opacity: mk.grow,
+                          }}
+                        >
+                          {mk.label}
+                        </div>
+                      ),
+                    )}
 
-                {/* ── the trend leg ────────────────────────────────────────
+                    {/* ── the trend leg ────────────────────────────────────────
                     ⚠ INDIGO — Simon's call. The reference draws it white on a
                     dark chart; on this pale ground the episode's own marking
                     colour is the reading of that, and it puts the trend in the
                     same voice as the level it breaks. */}
-                {drawn > 0.001 && clear < 0.999 && (
-                  <svg
-                    style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: 1 - clear }}
-                    width={theme.canvas.width}
-                    height={theme.canvas.height}
-                  >
-                    <path
-                      d={zigPath}
-                      fill="none"
-                      stroke={theme.color.indigo}
-                      strokeWidth={V.trend.width}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeDasharray={zigLen}
-                      strokeDashoffset={zigLen * (1 - drawn)}
-                    />
-                    {drawn > 0.995 && <polygon points={headPts} fill={theme.color.indigo} />}
-                  </svg>
-                )}
-                </div>
-               </div>
+                    {drawn > 0.001 && clear < 0.999 && (
+                      <svg
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          overflow: "visible",
+                          opacity: 1 - clear,
+                        }}
+                        width={theme.canvas.width}
+                        height={theme.canvas.height}
+                      >
+                        <path
+                          d={zigPath}
+                          fill="none"
+                          stroke={theme.color.indigo}
+                          strokeWidth={V.trend.width}
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeDasharray={zigLen}
+                          strokeDashoffset={zigLen * (1 - drawn)}
+                        />
+                        {drawn > 0.995 && (
+                          <polygon points={headPts} fill={theme.color.indigo} />
+                        )}
+                      </svg>
+                    )}
+                  </div>
+                </Interactive.Div>
 
-               {/* ⚠ OUTSIDE THE PLOT'S CLIP. The line is type about the chart,
+                {/* ⚠ OUTSIDE THE PLOT'S CLIP. The line is type about the chart,
                    not part of the tape, and clipping it at x=120 would shave
                    its ends the moment the pan closes that edge in. */}
-               {cap.opacity > 0.001 && capOut < 0.999 && (
-                 <div
-                   style={{
-                     position: "absolute",
-                     /* ⚠ FLUSH LEFT ON THE PLOT'S EDGE, under the same x as
+                {cap.opacity > 0.001 && capOut < 0.999 && (
+                  <Interactive.Div
+                    name="Objek"
+                    style={{
+                      position: "absolute",
+                      /* ⚠ FLUSH LEFT ON THE PLOT'S EDGE, under the same x as
                         the "Resistance" label. Centred, a 60px line of this
                         length ends at x≈1650 and lands on the tape's own high
                         — type over candles, which is the one thing a caption
                         about a chart must not be. */
-                     left: V.full.x,
-                     top: capY,
-                     fontFamily: theme.text.family,
-                     fontSize: C.size,
-                     fontWeight: 700,
-                     lineHeight: 1,
-                     color: theme.color.glassInk,
-                     opacity: cap.opacity * (1 - capOut),
-                     transform: `translateY(${cap.dy.toFixed(1)}px)`,
-                   }}
-                 >
-                   {C.text}
-                 </div>
-               )}
+                      left: V.full.x,
+                      top: capY,
+                      fontFamily: theme.text.family,
+                      fontSize: C.size,
+                      fontWeight: 700,
+                      lineHeight: 1,
+                      color: theme.color.glassInk,
+                      opacity: cap.opacity * (1 - capOut),
+                      transform: `translateY(${cap.dy.toFixed(1)}px)`,
+                    }}
+                  >
+                    {C.text}
+                  </Interactive.Div>
+                )}
               </div>
-            </div>
-
+            </Interactive.Div>
           </>
         )}
       </div>

@@ -30,7 +30,7 @@ export const PhoneScreens = ({ cx, y, h, screens = [], ratio = SHOT_RATIO, islan
         {screens.map((s, i) => {
           const p = i === 0 ? 1 : ease(f, s.at, m.reveal);
           if (p <= 0.001) return null;
-          return <Img key={s.src} src={staticFile(s.src)} style={{ position: "absolute", left: 0, top: 0, width: sw, height: sh, maxWidth: "none", objectFit: "cover", opacity: p, transform: `translateY(${((1 - p) * 14).toFixed(2)}px)` }} />;
+          return <Img showInTimeline={false} key={s.src} src={staticFile(s.src)} style={{ position: "absolute", left: 0, top: 0, width: sw, height: sh, maxWidth: "none", objectFit: "cover", opacity: p, transform: `translateY(${((1 - p) * 14).toFixed(2)}px)` }} />;
         })}
         {children}
       </div>

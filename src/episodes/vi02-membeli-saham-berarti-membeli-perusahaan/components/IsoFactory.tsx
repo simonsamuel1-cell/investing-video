@@ -9,6 +9,6 @@ const ART = { h: 980 };
 
 export const IsoFactory = () => (
   <AbsoluteFill style={{ background: theme.color.plantPaper, display: "flex", alignItems: "center", justifyContent: "center" }}>
-    <Img src={staticFile("art/vi02/plant/factory.svg")} style={{ height: ART.h, width: "auto" }} />
+    <Img showInTimeline={false} src={staticFile("art/vi02/plant/factory.svg")} style={{ height: ART.h, width: "auto" }} />
   </AbsoluteFill>
 );

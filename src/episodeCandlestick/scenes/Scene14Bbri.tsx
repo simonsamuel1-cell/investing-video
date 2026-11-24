@@ -9,16 +9,31 @@
  * 10018–10176 slide left, bullish-engulfing pattern + caveats · 10177–10206
  * fade the caveats and return to center. Everything fades out by 10385.
  */
-import { useCurrentFrame, interpolate } from "remotion";
+import { useCurrentFrame, interpolate, Interactive } from "remotion";
 import { theme } from "../theme";
 import { PatternCard } from "../components/PatternCard";
 import { BbriVideo, videoBox, END } from "../components/BbriVideo";
 import { HighlightBox } from "../components/HighlightBox";
 
 const ramp = (f: number, a: number, b: number, c: number, d: number) =>
-  interpolate(f, [a, b, c, d], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  interpolate(f, [a, b, c, d], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
-const Arrow = ({ x1, y1, x2, y2, opacity }: { x1: number; y1: number; x2: number; y2: number; opacity: number }) => {
+const Arrow = ({
+  x1,
+  y1,
+  x2,
+  y2,
+  opacity,
+}: {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  opacity: number;
+}) => {
   const a = Math.atan2(y2 - y1, x2 - x1);
   const HL = 24;
   const HW = 13;
@@ -26,7 +41,15 @@ const Arrow = ({ x1, y1, x2, y2, opacity }: { x1: number; y1: number; x2: number
   const by = y2 - HL * Math.sin(a);
   return (
     <g opacity={opacity}>
-      <line x1={x1} y1={y1} x2={bx} y2={by} stroke={theme.colors.indigo} strokeWidth={theme.stroke.standard} strokeLinecap="round" />
+      <line
+        x1={x1}
+        y1={y1}
+        x2={bx}
+        y2={by}
+        stroke={theme.colors.indigo}
+        strokeWidth={theme.stroke.standard}
+        strokeLinecap="round"
+      />
       <polygon
         points={`${x2},${y2} ${bx - HW * Math.sin(a)},${by + HW * Math.cos(a)} ${bx + HW * Math.sin(a)},${by - HW * Math.cos(a)}`}
         fill={theme.colors.indigo}
@@ -38,7 +61,10 @@ const Arrow = ({ x1, y1, x2, y2, opacity }: { x1: number; y1: number; x2: number
 export const Scene14Bbri = () => {
   const f = useCurrentFrame();
   const box = videoBox(f);
-  const opacity = interpolate(f, [0, 12, END - 15, END], [0, 1, 1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const opacity = interpolate(f, [0, 12, END - 15, END], [0, 1, 1, 0], {
+    extrapolateLeft: "clamp",
+    extrapolateRight: "clamp",
+  });
 
   // Overlay opacities (scene-local frames = abs − 9044).
   const arrowOp = ramp(f, 156, 168, 288, 300); // 9200–9300
@@ -59,22 +85,49 @@ export const Scene14Bbri = () => {
       <BbriVideo />
 
       {/* Scrim behind the "What happens next?" text + countdown, for readability. */}
-      {scrimOp > 0.001 && <div style={{ position: "absolute", inset: 0, background: theme.colors.bg, opacity: scrimOp }} />}
+      {scrimOp > 0.001 && (
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            background: theme.colors.bg,
+            opacity: scrimOp,
+          }}
+        />
+      )}
 
       {/* Arrow at the rightmost red candle. */}
-      <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-        {arrowOp > 0.001 && <Arrow x1={1112} y1={835} x2={1225} y2={835} opacity={arrowOp} />}
+      <svg
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      >
+        {arrowOp > 0.001 && (
+          <Arrow x1={1112} y1={835} x2={1225} y2={835} opacity={arrowOp} />
+        )}
       </svg>
 
       {/* Highlight the Open / Close readout (top-left of the chart). */}
-      {hl2Op > 0.001 && <HighlightBox x={604} y={573} w={202} h={57} opacity={hl2Op} />}
+      {hl2Op > 0.001 && (
+        <HighlightBox x={604} y={573} w={202} h={57} opacity={hl2Op} />
+      )}
 
       {/* Recovery highlight + "+10%" (the frame-9990 box). */}
-      {box10Op > 0.001 && <HighlightBox x={B10.x} y={B10.y} w={B10.w} h={B10.h} opacity={box10Op} label="+10%" />}
+      {box10Op > 0.001 && (
+        <HighlightBox
+          x={B10.x}
+          y={B10.y}
+          w={B10.w}
+          h={B10.h}
+          opacity={box10Op}
+          label="+10%"
+        />
+      )}
 
       {/* "What happens next?" — as big as the closing-scene text. */}
       {whatOp > 0.001 && (
-        <div
+        <Interactive.Div
+          name="What happens next?"
           style={{
             position: "absolute",
             left: 0,
@@ -89,7 +142,7 @@ export const Scene14Bbri = () => {
           }}
         >
           What happens next?
-        </div>
+        </Interactive.Div>
       )}
 
       {/* 3-2-1 countdown, centered. */}
@@ -124,10 +177,19 @@ export const Scene14Bbri = () => {
 
       {/* Bullish-engulfing pattern + caveats beside the moved video, left-aligned to the chart. */}
       {asideOp > 0.001 && (
-        <div style={{ position: "absolute", left: 0, top: 0, opacity: asideOp }}>
+        <Interactive.Div
+          name="Bullish Engulfing"
+          style={{ position: "absolute", left: 0, top: 0, opacity: asideOp }}
+        >
           {/* white pattern card (same as frame 3887) */}
-          <PatternCard pattern="bullishEngulfing" name="Bullish Engulfing" cx={asideLeft + 150} cy={380} />
-          <div
+          <PatternCard
+            pattern="bullishEngulfing"
+            name="Bullish Engulfing"
+            cx={asideLeft + 150}
+            cy={380}
+          />
+          <Interactive.Div
+            name="No guarantee"
             style={{
               position: "absolute",
               left: asideLeft,
@@ -141,8 +203,9 @@ export const Scene14Bbri = () => {
             }}
           >
             No guarantee
-          </div>
-          <div
+          </Interactive.Div>
+          <Interactive.Div
+            name="Unconfirmed engulfing patter"
             style={{
               position: "absolute",
               left: asideLeft,
@@ -156,8 +219,8 @@ export const Scene14Bbri = () => {
             }}
           >
             Unconfirmed engulfing patterns often fail
-          </div>
-        </div>
+          </Interactive.Div>
+        </Interactive.Div>
       )}
     </div>
   );

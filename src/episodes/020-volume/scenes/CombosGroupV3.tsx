@@ -18,13 +18,39 @@
  * reads the same labels and readings out of `COMBOS_V2`. The words belong to
  * the chapter, not to a version of it.
  */
-import { AbsoluteFill, useCurrentFrame, interpolate, interpolateColors } from "remotion";
+import { CoreWordsE as Words } from "../../../editable";
 import {
-  Stage, Chart, VolumeBars, SourceTag, PickRail, DashedBox, Words,
-  cardPushed, dashOpenAt,
-  gridOf, useMotion, usePalette, progress, progressInOut, theme,
+  AbsoluteFill,
+  useCurrentFrame,
+  interpolate,
+  interpolateColors,
+  Interactive,
+} from "remotion";
+import {
+  Stage,
+  Chart,
+  VolumeBars,
+  SourceTag,
+  PickRail,
+  DashedBox,
+  cardPushed,
+  dashOpenAt,
+  gridOf,
+  useMotion,
+  usePalette,
+  progress,
+  progressInOut,
+  theme,
 } from "../../../core";
-import { BLOCK, COMBO_TABS, COMBOS, COMBOS_V2, COMBOS_V3, TRANS, local } from "../data/timing";
+import {
+  BLOCK,
+  COMBO_TABS,
+  COMBOS,
+  COMBOS_V2,
+  COMBOS_V3,
+  TRANS,
+  local,
+} from "../data/timing";
 import { TAG_Y } from "../data/layout";
 import { COMBO, COMBO_DOMAIN } from "../data/series";
 
@@ -62,7 +88,10 @@ const EDGE = {
 /** ⚠ THE BOX MUST CLEAR THE SUBTITLE BAND, shadow included. The band is left
  *  empty in every episode; a reading that dips into it collides with burned-in
  *  type that is not in this render. */
-if (COMBOS_V3.box.y + COMBOS_V3.box.h + COMBOS_V3.shadow.y > theme.captionBand.top) {
+if (
+  COMBOS_V3.box.y + COMBOS_V3.box.h + COMBOS_V3.shadow.y >
+  theme.captionBand.top
+) {
   throw new Error("CG-C v3: the reading box enters the subtitle band");
 }
 const BOARD = {
@@ -73,16 +102,39 @@ const BOARD = {
 };
 
 const PRICE = { x: WIN.x + 40, y: WIN.y + 32, w: WIN.w - 80, h: WIN.h * 0.52 };
-const VOLBOX = { x: PRICE.x, y: WIN.y + 32 + WIN.h * 0.58, w: PRICE.w, h: WIN.h * 0.30 };
+const VOLBOX = {
+  x: PRICE.x,
+  y: WIN.y + 32 + WIN.h * 0.58,
+  w: PRICE.w,
+  h: WIN.h * 0.3,
+};
 
 /** ⚠ ONE GRID PER COMBINATION. The four no longer share two tapes, so they
  *  cannot share two scales — a shared domain would draw one of them against
  *  another's high and low. */
 const GRID = {
   upUp: gridOf(COMBO.upUp.series.closes, COMBO_DOMAIN.upUp, PRICE, 0.12, 0),
-  upDown: gridOf(COMBO.upDown.series.closes, COMBO_DOMAIN.upDown, PRICE, 0.12, 0),
-  downUp: gridOf(COMBO.downUp.series.closes, COMBO_DOMAIN.downUp, PRICE, 0.12, 0),
-  downDown: gridOf(COMBO.downDown.series.closes, COMBO_DOMAIN.downDown, PRICE, 0.12, 0),
+  upDown: gridOf(
+    COMBO.upDown.series.closes,
+    COMBO_DOMAIN.upDown,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downUp: gridOf(
+    COMBO.downUp.series.closes,
+    COMBO_DOMAIN.downUp,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downDown: gridOf(
+    COMBO.downDown.series.closes,
+    COMBO_DOMAIN.downDown,
+    PRICE,
+    0.12,
+    0,
+  ),
 };
 
 const STAGES = [
@@ -116,8 +168,16 @@ const SWAP = 12;
  * row rather than picked.
  */
 const Reading = ({
-  text, at, mark, markAt,
-}: { text: string; at: number; mark: string | null; markAt?: number }) => (
+  text,
+  at,
+  mark,
+  markAt,
+}: {
+  text: string;
+  at: number;
+  mark: string | null;
+  markAt?: number;
+}) => (
   <Words
     text={text}
     x={BOX.w / 2}
@@ -191,14 +251,21 @@ export const CombosGroupV3 = () => {
   return (
     <Stage transparent>
       <AbsoluteFill
-        style={{ backgroundColor: interpolateColors(o, [0, 1], [c.cardBg, theme.color.bg]) }}
+        style={{
+          backgroundColor: interpolateColors(
+            o,
+            [0, 1],
+            [c.cardBg, theme.color.bg],
+          ),
+        }}
       />
 
       {/* ⚠ THE BOARD IS WHITE AND THE PICKED ROW IS GREY — Simon's call, and
           the reverse of what the tint did. On a white board the only thing that
           carries a fill is the selection, so the fill means "this one" and
           nothing else has to explain itself. */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: BOARD.x,
@@ -235,7 +302,8 @@ export const CombosGroupV3 = () => {
 
       {/* ── the window, and the tape inside it ─────────────────────────── */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: win.x,
@@ -287,7 +355,12 @@ export const CombosGroupV3 = () => {
         >
           {before && gone > 0.001 ? (
             <div style={{ position: "absolute", inset: 0, opacity: gone }}>
-              <Reading key={`out-${k}`} text={before.join(" ")} at={beforeAt} mark={null} />
+              <Reading
+                key={`out-${k}`}
+                text={before.join(" ")}
+                at={beforeAt}
+                mark={null}
+              />
             </div>
           ) : null}
           {lines && (

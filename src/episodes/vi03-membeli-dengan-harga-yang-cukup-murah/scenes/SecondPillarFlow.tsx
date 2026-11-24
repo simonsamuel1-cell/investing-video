@@ -15,10 +15,28 @@
  *
  * Saham A / B are the script's own example prices; their value bars carry no figures.
  */
-import { interpolateColors, useCurrentFrame } from "remotion";
-import { SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import { CardE as Card, WordPillE as WordPill } from "../../../editable";
+import { interpolateColors, useCurrentFrame, Interactive } from "remotion";
+import {
+  SoftGround,
+  Stage,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
-import { BoardGrid, Card, Column, DashBox, Glyph, PhotoTile, Ring, WordPill, ease, useWords } from "../components/kit";
+import {
+  BoardGrid,
+  Column,
+  DashBox,
+  Glyph,
+  PhotoTile,
+  Ring,
+  ease,
+  useWords,
+} from "../components/kit";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -27,9 +45,21 @@ const SCREEN = { x: CX, y: 500 };
 
 // 1 — the columns (VI02 SC02's)
 const K = 0.81;
-const PILLAR = { w: 340 * K, gap: 50 * K, col: 150, h: 340, text: 34 * K, label: 92 };
+const PILLAR = {
+  w: 340 * K,
+  gap: 50 * K,
+  col: 150,
+  h: 340,
+  text: 34 * K,
+  label: 92,
+};
 const LABEL_Y = 423;
-const PILLARS = ["Beli saham =\nBeli perusahaan", "Beli murah", "Manfaatkan market", "Investasi pada bisnis yang dipahami"] as const;
+const PILLARS = [
+  "Beli saham =\nBeli perusahaan",
+  "Beli murah",
+  "Manfaatkan market",
+  "Investasi pada bisnis yang dipahami",
+] as const;
 const ROW = 4 * PILLAR.w + 3 * PILLAR.gap;
 const pillarX = (i: number) => CX - ROW / 2 + i * (PILLAR.w + PILLAR.gap);
 const BOTTOM = LABEL_Y + PILLAR.label + PILLAR.h;
@@ -49,8 +79,24 @@ const HEAD_Y = PANEL.y + 70;
 const LEGEND = { y: 1222, xs: [2760, 3020] };
 const BARS = { base: 470, max: 300, w: 130, xs: [200, 400] };
 const STOCKS = [
-  { name: "Saham A", price: "Rp5.000", harga: 0.82, value: 0.5, note: "belum tentu murah", at: "Jadi saham", noteAt: "belum tentu murah" },
-  { name: "Saham B", price: "Rp50.000", harga: 0.58, value: 0.98, note: "belum tentu mahal", at: "Dan saham", noteAt: "belum tentu mahal" },
+  {
+    name: "Saham A",
+    price: "Rp5.000",
+    harga: 0.82,
+    value: 0.5,
+    note: "belum tentu murah",
+    at: "Jadi saham",
+    noteAt: "belum tentu murah",
+  },
+  {
+    name: "Saham B",
+    price: "Rp50.000",
+    harga: 0.58,
+    value: 0.98,
+    note: "belum tentu mahal",
+    at: "Dan saham",
+    noteAt: "belum tentu mahal",
+  },
 ] as const;
 const GETS = [
   { icon: "coins", text: "Laba" },
@@ -79,14 +125,33 @@ export const SC02 = () => {
   const pin: Cam = { x: pillarX(OURS) + PILLAR.w / 2, y: 640, s: 1.7 };
   const moves: { at: number; dur: number; to: Cam }[] = [
     { at: W("membeli dengan harga") - m.sec(0.2), dur: m.sec(1.2), to: pin },
-    { at: buffettAt - m.sec(0.45), dur: m.sec(1.1), to: { x: 2900, y: 520, s: 1 } },
-    { at: hargaAt - m.sec(0.35), dur: m.sec(1.0), to: { x: 2880, y: 1590, s: 1 } },
-    { at: murahAt - m.sec(0.1), dur: m.sec(1.1), to: { x: pcx(1), y: 1615, s: 1.3 } },
+    {
+      at: buffettAt - m.sec(0.45),
+      dur: m.sec(1.1),
+      to: { x: 2900, y: 520, s: 1 },
+    },
+    {
+      at: hargaAt - m.sec(0.35),
+      dur: m.sec(1.0),
+      to: { x: 2880, y: 1590, s: 1 },
+    },
+    {
+      at: murahAt - m.sec(0.1),
+      dur: m.sec(1.1),
+      to: { x: pcx(1), y: 1615, s: 1.3 },
+    },
   ];
-  const cam = moves.reduce<Cam>((cur, mv) => {
-    const p = ease(f, mv.at, mv.dur);
-    return { x: mix(cur.x, mv.to.x, p), y: mix(cur.y, mv.to.y, p), s: mix(cur.s, mv.to.s, p) };
-  }, { x: CX, y: 520, s: 1 });
+  const cam = moves.reduce<Cam>(
+    (cur, mv) => {
+      const p = ease(f, mv.at, mv.dur);
+      return {
+        x: mix(cur.x, mv.to.x, p),
+        y: mix(cur.y, mv.to.y, p),
+        s: mix(cur.s, mv.to.s, p),
+      };
+    },
+    { x: CX, y: 520, s: 1 },
+  );
 
   // 1
   const greyed = ease(f, W("Pilar kedua"), m.move);
@@ -110,8 +175,14 @@ export const SC02 = () => {
     return { x, y, size, fly };
   };
   // the panels' first content leaves as each card arrives
-  const panelOut = [ease(f, aAt - m.sec(0.15), m.sec(0.15)), ease(f, bAt - m.sec(0.15), m.sec(0.15))];
-  const cardIn = [ease(f, aAt + m.sec(0.1), m.sec(0.3)), ease(f, bAt + m.sec(0.1), m.sec(0.3))];
+  const panelOut = [
+    ease(f, aAt - m.sec(0.15), m.sec(0.15)),
+    ease(f, bAt - m.sec(0.15), m.sec(0.15)),
+  ];
+  const cardIn = [
+    ease(f, aAt + m.sec(0.1), m.sec(0.3)),
+    ease(f, bAt + m.sec(0.1), m.sec(0.3)),
+  ];
 
   // 5
   const aGrey = ease(f, murahAt, m.move);
@@ -126,88 +197,380 @@ export const SC02 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* the world, under the camera */}
-      <div style={{ position: "absolute", left: 0, top: 0, width: 0, height: 0, transformOrigin: "0 0", transform: `translate(${SCREEN.x}px, ${SCREEN.y}px) scale(${cam.s.toFixed(4)}) translate(${(-cam.x).toFixed(2)}px, ${(-cam.y).toFixed(2)}px)` }}>
+      <Interactive.Div
+        name="Value Investing"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          width: 0,
+          height: 0,
+          transformOrigin: "0 0",
+          transform: `translate(${SCREEN.x}px, ${SCREEN.y}px) scale(${cam.s.toFixed(4)}) translate(${(-cam.x).toFixed(2)}px, ${(-cam.y).toFixed(2)}px)`,
+        }}
+      >
         {/* 1 — the columns */}
-        <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: 250, textAlign: "center", ...typeStyle("title"), fontSize: 64, fontWeight: 700, color: c.ink }}>Value Investing</div>
+        <Interactive.Div
+          name="Value Investing"
+          style={{
+            position: "absolute",
+            left: 0,
+            width: theme.canvas.width,
+            top: 250,
+            textAlign: "center",
+            ...typeStyle("title"),
+            fontSize: 64,
+            fontWeight: 700,
+            color: c.ink,
+          }}
+        >
+          Value Investing
+        </Interactive.Div>
         {PILLARS.map((text, i) => {
           const tone = interpolateColors(i / 3, [0, 1], [c.cyan, c.indigo]);
-          const ink = interpolateColors(i / 3, [0, 1], [theme.color.cyanInk, c.indigo]);
+          const ink = interpolateColors(
+            i / 3,
+            [0, 1],
+            [theme.color.cyanInk, c.indigo],
+          );
           const g0 = i === OURS ? 0 : greyed;
           const x = pillarX(i);
           const lift = i === OURS ? ownLit : 0;
           return (
-            <div key={text} style={{ position: "absolute", left: 0, top: -14 * lift }}>
-              <div style={{ position: "absolute", left: x + (PILLAR.w - PILLAR.col) / 2, top: BOTTOM - PILLAR.h, width: PILLAR.col, height: PILLAR.h }}>
-                <Column w={PILLAR.col} h={PILLAR.h} tone={interpolateColors(g0, [0, 1], [tone, theme.color.skeleton])} />
+            <div
+              key={text}
+              style={{ position: "absolute", left: 0, top: -14 * lift }}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  left: x + (PILLAR.w - PILLAR.col) / 2,
+                  top: BOTTOM - PILLAR.h,
+                  width: PILLAR.col,
+                  height: PILLAR.h,
+                }}
+              >
+                <Column
+                  w={PILLAR.col}
+                  h={PILLAR.h}
+                  tone={interpolateColors(
+                    g0,
+                    [0, 1],
+                    [tone, theme.color.skeleton],
+                  )}
+                />
               </div>
-              <div style={{ position: "absolute", left: x - PILLAR.gap / 2 + 5, width: PILLAR.w + PILLAR.gap - 10, top: LABEL_Y, height: PILLAR.label - 14, display: "flex", alignItems: "flex-end", justifyContent: "center", textAlign: "center", whiteSpace: "pre-line", ...typeStyle("label"), fontSize: PILLAR.text * (1 + 0.18 * lift), fontWeight: 600, lineHeight: 1.25, color: interpolateColors(g0, [0, 1], [ink, theme.color.mute]) }}>{text}</div>
+              <div
+                style={{
+                  position: "absolute",
+                  left: x - PILLAR.gap / 2 + 5,
+                  width: PILLAR.w + PILLAR.gap - 10,
+                  top: LABEL_Y,
+                  height: PILLAR.label - 14,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  whiteSpace: "pre-line",
+                  ...typeStyle("label"),
+                  fontSize: PILLAR.text * (1 + 0.18 * lift),
+                  fontWeight: 600,
+                  lineHeight: 1.25,
+                  color: interpolateColors(g0, [0, 1], [ink, theme.color.mute]),
+                }}
+              >
+                {text}
+              </div>
             </div>
           );
         })}
 
         {/* 2 — Buffett and his sentence */}
-        <PhotoTile name="buffett" d={TILE.d} style={{ left: TILE.x, top: TILE.y }} />
-        <div style={{ position: "absolute", left: TILE.x - 40, width: TILE.d + 80, top: TILE.y + TILE_H + 26, textAlign: "center", ...typeStyle("label"), fontSize: 36, fontWeight: 600, color: c.ink }}>Warren Buffett</div>
+        <PhotoTile
+          name="buffett"
+          d={TILE.d}
+          style={{ left: TILE.x, top: TILE.y }}
+        />
+        <Interactive.Div
+          name="Warren Buffett"
+          style={{
+            position: "absolute",
+            left: TILE.x - 40,
+            width: TILE.d + 80,
+            top: TILE.y + TILE_H + 26,
+            textAlign: "center",
+            ...typeStyle("label"),
+            fontSize: 36,
+            fontWeight: 600,
+            color: c.ink,
+          }}
+        >
+          Warren Buffett
+        </Interactive.Div>
         {f >= W("menulis") ? (
-          <div style={{ position: "absolute", left: 0, top: 0 }}>
-            <DashBox cx={QUOTE.cx} y={QUOTE.y} w={QUOTE.w} h={QUOTE.h} at={W("menulis")}>
-              <div style={{ position: "absolute", inset: 0, padding: "0 60px", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", ...typeStyle("title"), fontSize: QUOTE.size, fontWeight: 500, fontStyle: "italic", lineHeight: 1.3, color: c.ink }}>
+          <Interactive.Div
+            name="Price"
+            style={{ position: "absolute", left: 0, top: 0 }}
+          >
+            <DashBox
+              cx={QUOTE.cx}
+              y={QUOTE.y}
+              w={QUOTE.w}
+              h={QUOTE.h}
+              at={W("menulis")}
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  padding: "0 60px",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  ...typeStyle("title"),
+                  fontSize: QUOTE.size,
+                  fontWeight: 500,
+                  fontStyle: "italic",
+                  lineHeight: 1.3,
+                  color: c.ink,
+                }}
+              >
                 <span>
-                  “<span style={{ color: interpolateColors(priceLit, [0, 1], [c.ink, c.indigo]), background: priceLit > 0.001 ? theme.color.indigoWashSolid : undefined, borderRadius: 8 }}>Price</span> is what you pay.
+                  “
+                  <span
+                    style={{
+                      color: interpolateColors(
+                        priceLit,
+                        [0, 1],
+                        [c.ink, c.indigo],
+                      ),
+                      background:
+                        priceLit > 0.001
+                          ? theme.color.indigoWashSolid
+                          : undefined,
+                      borderRadius: 8,
+                    }}
+                  >
+                    Price
+                  </span>{" "}
+                  is what you pay.
                 </span>
                 <span>
-                  <span style={{ color: interpolateColors(valueLit, [0, 1], [c.ink, c.indigo]), background: valueLit > 0.001 ? theme.color.indigoWashSolid : undefined, borderRadius: 8 }}>Value</span> is what you get.”
+                  <span
+                    style={{
+                      color: interpolateColors(
+                        valueLit,
+                        [0, 1],
+                        [c.ink, c.indigo],
+                      ),
+                      background:
+                        valueLit > 0.001
+                          ? theme.color.indigoWashSolid
+                          : undefined,
+                      borderRadius: 8,
+                    }}
+                  >
+                    Value
+                  </span>{" "}
+                  is what you get.”
                 </span>
               </div>
             </DashBox>
-          </div>
+          </Interactive.Div>
         ) : null}
-        <div style={{ position: "absolute", left: QUOTE.cx, top: QUOTE.y + QUOTE.h + 50, opacity: ease(f, W("Value is") + m.sec(0.3), m.reveal) }}>
+        <Interactive.Div
+          name="Berkshire Hathaway · 2008"
+          style={{
+            position: "absolute",
+            left: QUOTE.cx,
+            top: QUOTE.y + QUOTE.h + 50,
+            opacity: ease(f, W("Value is") + m.sec(0.3), m.reveal),
+          }}
+        >
           <WordPill x={0} y={0} text="Berkshire Hathaway · 2008" size={30} />
-        </div>
+        </Interactive.Div>
 
         {/* 3–5 — the two panels, then the two stock cards */}
         {[0, 1].map((i) => {
-          const pIn = ease(f, hargaAt + (i === 0 ? 0 : valueAt - hargaAt) - m.sec(0.2), m.reveal);
+          const pIn = ease(
+            f,
+            hargaAt + (i === 0 ? 0 : valueAt - hargaAt) - m.sec(0.2),
+            m.reveal,
+          );
           if (pIn <= 0.001) return null;
           const x = PANEL.xs[i];
           const st = STOCKS[i];
           const grey = i === 0 ? aGrey : 0;
           return (
-            <div key={i} style={{ position: "absolute", left: x, top: PANEL.y + (1 - pIn) * 16, width: PANEL.w, height: PANEL.h, opacity: pIn, filter: grey > 0.001 ? `grayscale(${grey.toFixed(3)}) contrast(${(1 - 0.35 * grey).toFixed(3)}) brightness(${(1 + 0.1 * grey).toFixed(3)})` : undefined }}>
-              <Card x={0} y={0} w={PANEL.w} h={PANEL.h} style={{ boxShadow: i === 1 && murahAt <= f ? shadow.glow : shadow.soft }}>
-                {i === 1 ? <Ring p={ease(f, murahAt, m.pop)} tone={c.indigo} /> : null}
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: x,
+                top: PANEL.y + (1 - pIn) * 16,
+                width: PANEL.w,
+                height: PANEL.h,
+                opacity: pIn,
+                filter:
+                  grey > 0.001
+                    ? `grayscale(${grey.toFixed(3)}) contrast(${(1 - 0.35 * grey).toFixed(3)}) brightness(${(1 + 0.1 * grey).toFixed(3)})`
+                    : undefined,
+              }}
+            >
+              <Card
+                x={0}
+                y={0}
+                w={PANEL.w}
+                h={PANEL.h}
+                style={{
+                  boxShadow:
+                    i === 1 && murahAt <= f ? shadow.glow : shadow.soft,
+                }}
+              >
+                {i === 1 ? (
+                  <Ring p={ease(f, murahAt, m.pop)} tone={c.indigo} />
+                ) : null}
 
                 {/* 3 — what you pay / what you get */}
                 {panelOut[i] < 0.999 ? (
-                  <div style={{ position: "absolute", inset: 0, opacity: 1 - panelOut[i], filter: panelOut[i] > 0.001 ? `blur(${(8 * panelOut[i]).toFixed(1)}px)` : undefined }}>
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      opacity: 1 - panelOut[i],
+                      filter:
+                        panelOut[i] > 0.001
+                          ? `blur(${(8 * panelOut[i]).toFixed(1)}px)`
+                          : undefined,
+                    }}
+                  >
                     {i === 0 ? (
                       <>
-                        <div style={{ position: "absolute", left: (PANEL.w - 190) / 2, top: 190, width: 190, height: 190, borderRadius: 999, background: theme.color.neutralDisc, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: (PANEL.w - 190) / 2,
+                            top: 190,
+                            width: 190,
+                            height: 190,
+                            borderRadius: 999,
+                            background: theme.color.neutralDisc,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
                           <Glyph icon="wallet" size={104} tone={c.ink} />
                         </div>
                         {/* coins leaving the wallet, one after another */}
                         {[0, 1, 2].map((k) => {
-                          const p = ease(f, hargaAt + m.sec(0.4) + k * m.sec(0.35), m.sec(0.9));
+                          const p = ease(
+                            f,
+                            hargaAt + m.sec(0.4) + k * m.sec(0.35),
+                            m.sec(0.9),
+                          );
                           if (p <= 0.001 || p >= 0.999) return null;
                           return (
-                            <div key={k} style={{ position: "absolute", left: PANEL.w / 2 + 40 + p * 250, top: 240 + k * 26 - p * 30, width: 92, height: 92, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 4px ${c.slate}`, display: "flex", alignItems: "center", justifyContent: "center", opacity: Math.min(1, (1 - p) * 3, p * 6), ...typeStyle("label"), fontSize: 30, fontWeight: 700, color: c.slate }}>Rp</div>
+                            <div
+                              key={k}
+                              style={{
+                                position: "absolute",
+                                left: PANEL.w / 2 + 40 + p * 250,
+                                top: 240 + k * 26 - p * 30,
+                                width: 92,
+                                height: 92,
+                                borderRadius: 999,
+                                background: c.cardBg,
+                                boxShadow: `${shadow.soft}, inset 0 0 0 4px ${c.slate}`,
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                opacity: Math.min(1, (1 - p) * 3, p * 6),
+                                ...typeStyle("label"),
+                                fontSize: 30,
+                                fontWeight: 700,
+                                color: c.slate,
+                              }}
+                            >
+                              Rp
+                            </div>
                           );
                         })}
-                        <div style={{ position: "absolute", left: 0, width: PANEL.w, top: 430, textAlign: "center", ...typeStyle("title"), fontSize: 44, fontWeight: 500, color: c.slate }}>yang kamu bayar</div>
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            width: PANEL.w,
+                            top: 430,
+                            textAlign: "center",
+                            ...typeStyle("title"),
+                            fontSize: 44,
+                            fontWeight: 500,
+                            color: c.slate,
+                          }}
+                        >
+                          yang kamu bayar
+                        </div>
                       </>
                     ) : (
                       <>
                         {GETS.map((k, j) => {
-                          const p = ease(f, valueAt + m.sec(0.3) + j * m.sec(0.25), m.reveal);
+                          const p = ease(
+                            f,
+                            valueAt + m.sec(0.3) + j * m.sec(0.25),
+                            m.reveal,
+                          );
                           return p > 0.001 ? (
-                            <div key={k.text} style={{ position: "absolute", left: (PANEL.w - 420) / 2, top: 160 + j * 96 + (1 - p) * 14, width: 420, height: 80, opacity: p, display: "flex", alignItems: "center", gap: 16, padding: "0 20px", borderRadius: 999, background: theme.color.indigoWashSolid, boxShadow: `inset 0 0 0 2px ${c.indigo}` }}>
+                            <div
+                              key={k.text}
+                              style={{
+                                position: "absolute",
+                                left: (PANEL.w - 420) / 2,
+                                top: 160 + j * 96 + (1 - p) * 14,
+                                width: 420,
+                                height: 80,
+                                opacity: p,
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 16,
+                                padding: "0 20px",
+                                borderRadius: 999,
+                                background: theme.color.indigoWashSolid,
+                                boxShadow: `inset 0 0 0 2px ${c.indigo}`,
+                              }}
+                            >
                               <Glyph icon={k.icon} size={40} tone={c.indigo} />
-                              <div style={{ ...typeStyle("title"), fontSize: 36, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>{k.text}</div>
+                              <div
+                                style={{
+                                  ...typeStyle("title"),
+                                  fontSize: 36,
+                                  fontWeight: 600,
+                                  color: c.indigo,
+                                  whiteSpace: "nowrap",
+                                }}
+                              >
+                                {k.text}
+                              </div>
                             </div>
                           ) : null;
                         })}
-                        <div style={{ position: "absolute", left: 0, width: PANEL.w, top: 470, textAlign: "center", ...typeStyle("title"), fontSize: 44, fontWeight: 500, color: c.slate }}>yang kamu dapatkan</div>
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            width: PANEL.w,
+                            top: 470,
+                            textAlign: "center",
+                            ...typeStyle("title"),
+                            fontSize: 44,
+                            fontWeight: 500,
+                            color: c.slate,
+                          }}
+                        >
+                          yang kamu dapatkan
+                        </div>
                       </>
                     )}
                   </div>
@@ -215,52 +578,240 @@ export const SC02 = () => {
 
                 {/* 4 — the stock card */}
                 {cardIn[i] > 0.001 ? (
-                  <div style={{ position: "absolute", inset: 0, opacity: cardIn[i], filter: cardIn[i] < 0.999 ? `blur(${(8 * (1 - cardIn[i])).toFixed(1)}px)` : undefined }}>
-                    <div style={{ position: "absolute", left: 44, top: 36, ...typeStyle("title"), fontSize: 46, fontWeight: 700, color: c.ink }}>{st.name}</div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      opacity: cardIn[i],
+                      filter:
+                        cardIn[i] < 0.999
+                          ? `blur(${(8 * (1 - cardIn[i])).toFixed(1)}px)`
+                          : undefined,
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 44,
+                        top: 36,
+                        ...typeStyle("title"),
+                        fontSize: 46,
+                        fontWeight: 700,
+                        color: c.ink,
+                      }}
+                    >
+                      {st.name}
+                    </div>
                     {/* the two bars */}
                     {(["harga", "value"] as const).map((key, j) => {
-                      const h = BARS.max * st[key] * ease(f, W(st.at) + m.sec(0.2 + 0.25 * j), m.sec(0.7));
+                      const h =
+                        BARS.max *
+                        st[key] *
+                        ease(f, W(st.at) + m.sec(0.2 + 0.25 * j), m.sec(0.7));
                       const x0 = BARS.xs[j];
                       const lit = key === "harga" && i === 1 ? payLit : 0;
                       return (
                         <div key={key}>
-                          <div style={{ position: "absolute", left: x0, top: BARS.base - h, width: BARS.w, height: h, borderRadius: 18, background: key === "harga" ? c.slate : c.indigo, boxShadow: lit > 0.5 ? `0 0 0 6px ${theme.color.indigoWashStrongSolid}` : undefined }} />
-                          <div style={{ position: "absolute", left: x0 - 30, width: BARS.w + 60, top: BARS.base + 14, textAlign: "center", ...typeStyle("label"), fontSize: 32, fontWeight: 600, color: key === "harga" ? c.slate : c.indigo }}>{key === "harga" ? "Harga" : "Value"}</div>
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: x0,
+                              top: BARS.base - h,
+                              width: BARS.w,
+                              height: h,
+                              borderRadius: 18,
+                              background: key === "harga" ? c.slate : c.indigo,
+                              boxShadow:
+                                lit > 0.5
+                                  ? `0 0 0 6px ${theme.color.indigoWashStrongSolid}`
+                                  : undefined,
+                            }}
+                          />
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: x0 - 30,
+                              width: BARS.w + 60,
+                              top: BARS.base + 14,
+                              textAlign: "center",
+                              ...typeStyle("label"),
+                              fontSize: 32,
+                              fontWeight: 600,
+                              color: key === "harga" ? c.slate : c.indigo,
+                            }}
+                          >
+                            {key === "harga" ? "Harga" : "Value"}
+                          </div>
                         </div>
                       );
                     })}
-                    <div style={{ position: "absolute", left: BARS.xs[0] - 40, width: BARS.w + 80, top: BARS.base - BARS.max * st.harga - 56, textAlign: "center", opacity: ease(f, W(st.at) + m.sec(0.7), m.reveal), ...typeStyle("title"), fontSize: 36, fontWeight: 700, color: c.ink, fontVariantNumeric: "tabular-nums", whiteSpace: "nowrap" }}>{st.price}</div>
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: BARS.xs[0] - 40,
+                        width: BARS.w + 80,
+                        top: BARS.base - BARS.max * st.harga - 56,
+                        textAlign: "center",
+                        opacity: ease(f, W(st.at) + m.sec(0.7), m.reveal),
+                        ...typeStyle("title"),
+                        fontSize: 36,
+                        fontWeight: 700,
+                        color: c.ink,
+                        fontVariantNumeric: "tabular-nums",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {st.price}
+                    </div>
                     {/* the verdict */}
-                    <div style={{ position: "absolute", right: 40, top: 40, opacity: ease(f, W(st.noteAt), m.reveal) * (1 - (i === 1 ? below : 0)), padding: "10px 24px", borderRadius: 999, background: theme.color.neutralDisc, ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.slate, whiteSpace: "nowrap" }}>{st.note}</div>
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: 40,
+                        top: 40,
+                        opacity:
+                          ease(f, W(st.noteAt), m.reveal) *
+                          (1 - (i === 1 ? below : 0)),
+                        padding: "10px 24px",
+                        borderRadius: 999,
+                        background: theme.color.neutralDisc,
+                        ...typeStyle("label"),
+                        fontSize: 30,
+                        fontWeight: 600,
+                        color: c.slate,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {st.note}
+                    </div>
 
                     {/* 5 — on B only: the fair value line, the gap, the base */}
                     {i === 1 ? (
                       <>
                         {fair > 0.001 ? (
                           <>
-                            <div style={{ position: "absolute", left: 170, top: BARS.base - BARS.max * st.value - 2, width: 390 * fair, height: 0, borderTop: `4px dashed ${c.indigo}` }} />
-                            <div style={{ position: "absolute", left: 572, top: BARS.base - BARS.max * st.value - 24, opacity: fair, ...typeStyle("label"), fontSize: 30, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>Harga wajar</div>
+                            <div
+                              style={{
+                                position: "absolute",
+                                left: 170,
+                                top: BARS.base - BARS.max * st.value - 2,
+                                width: 390 * fair,
+                                height: 0,
+                                borderTop: `4px dashed ${c.indigo}`,
+                              }}
+                            />
+                            <div
+                              style={{
+                                position: "absolute",
+                                left: 572,
+                                top: BARS.base - BARS.max * st.value - 24,
+                                opacity: fair,
+                                ...typeStyle("label"),
+                                fontSize: 30,
+                                fontWeight: 600,
+                                color: c.indigo,
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              Harga wajar
+                            </div>
                           </>
                         ) : null}
                         {below > 0.001 ? (
-                          <div style={{ position: "absolute", inset: 0, opacity: below }}>
-                            <svg width={PANEL.w} height={PANEL.h} style={{ position: "absolute", left: 0, top: 0 }}>
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              opacity: below,
+                            }}
+                          >
+                            <svg
+                              width={PANEL.w}
+                              height={PANEL.h}
+                              style={{ position: "absolute", left: 0, top: 0 }}
+                            >
                               {(() => {
                                 const yt = BARS.base - BARS.max * st.value;
                                 const yb = BARS.base - BARS.max * st.harga;
                                 const x = 352;
-                                return <path d={`M ${x + 22} ${yt} Q ${x} ${yt} ${x} ${yt + 22} L ${x} ${(yt + yb) / 2 - 18} Q ${x} ${(yt + yb) / 2} ${x - 18} ${(yt + yb) / 2} Q ${x} ${(yt + yb) / 2} ${x} ${(yt + yb) / 2 + 18} L ${x} ${yb - 22} Q ${x} ${yb} ${x + 22} ${yb}`} fill="none" stroke={c.indigo} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />;
+                                return (
+                                  <path
+                                    d={`M ${x + 22} ${yt} Q ${x} ${yt} ${x} ${yt + 22} L ${x} ${(yt + yb) / 2 - 18} Q ${x} ${(yt + yb) / 2} ${x - 18} ${(yt + yb) / 2} Q ${x} ${(yt + yb) / 2} ${x} ${(yt + yb) / 2 + 18} L ${x} ${yb - 22} Q ${x} ${yb} ${x + 22} ${yb}`}
+                                    fill="none"
+                                    stroke={c.indigo}
+                                    strokeWidth={4}
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  />
+                                );
                               })()}
                             </svg>
-                            <div style={{ position: "absolute", left: 560, top: (2 * BARS.base - BARS.max * (st.value + st.harga)) / 2 + 6, padding: "10px 26px", borderRadius: 999, background: theme.color.indigoWashSolid, boxShadow: `inset 0 0 0 3px ${c.indigo}`, ...typeStyle("title"), fontSize: 38, fontWeight: 700, color: c.indigo, whiteSpace: "nowrap" }}>Murah</div>
+                            <div
+                              style={{
+                                position: "absolute",
+                                left: 560,
+                                top:
+                                  (2 * BARS.base -
+                                    BARS.max * (st.value + st.harga)) /
+                                    2 +
+                                  6,
+                                padding: "10px 26px",
+                                borderRadius: 999,
+                                background: theme.color.indigoWashSolid,
+                                boxShadow: `inset 0 0 0 3px ${c.indigo}`,
+                                ...typeStyle("title"),
+                                fontSize: 38,
+                                fontWeight: 700,
+                                color: c.indigo,
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              Murah
+                            </div>
                           </div>
                         ) : null}
                         {base > 0.001 ? (
-                          <div style={{ position: "absolute", left: 400, top: 560, display: "flex", gap: 12, opacity: base, transform: `translateY(${((1 - base) * 12).toFixed(1)}px)` }}>
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: 400,
+                              top: 560,
+                              display: "flex",
+                              gap: 12,
+                              opacity: base,
+                              transform: `translateY(${((1 - base) * 12).toFixed(1)}px)`,
+                            }}
+                          >
                             {GETS.slice(0, 2).map((k) => (
-                              <div key={k.text} style={{ display: "flex", alignItems: "center", gap: 10, height: 56, padding: "0 18px", borderRadius: 999, background: theme.color.indigoWashSolid, boxShadow: `inset 0 0 0 2px ${c.indigo}` }}>
-                                <Glyph icon={k.icon} size={28} tone={c.indigo} />
-                                <div style={{ ...typeStyle("label"), fontSize: 26, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>{k.text} ✓</div>
+                              <div
+                                key={k.text}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  gap: 10,
+                                  height: 56,
+                                  padding: "0 18px",
+                                  borderRadius: 999,
+                                  background: theme.color.indigoWashSolid,
+                                  boxShadow: `inset 0 0 0 2px ${c.indigo}`,
+                                }}
+                              >
+                                <Glyph
+                                  icon={k.icon}
+                                  size={28}
+                                  tone={c.indigo}
+                                />
+                                <div
+                                  style={{
+                                    ...typeStyle("label"),
+                                    fontSize: 26,
+                                    fontWeight: 600,
+                                    color: c.indigo,
+                                    whiteSpace: "nowrap",
+                                  }}
+                                >
+                                  {k.text} ✓
+                                </div>
                               </div>
                             ))}
                           </div>
@@ -276,18 +827,57 @@ export const SC02 = () => {
 
         {/* the flying words: Price → Harga, Value → Value; headers, then the legend */}
         {[0, 1].map((i) => {
-              if (f < flyAt[i]) return null;
-              const h = head(i);
-              const legend = toLegend[i];
-              const label = i === 0 ? (h.fly > 0.5 ? "Harga" : "Price") : "Value";
-              return (
-                <div key={i} style={{ position: "absolute", left: h.x, top: h.y, transform: "translate(-50%, -50%)", opacity: 1 - aGrey, display: "flex", alignItems: "center", gap: 12, padding: legend > 0.5 ? "8px 22px" : 0, borderRadius: 999, background: legend > 0.5 ? c.cardBg : undefined, boxShadow: legend > 0.5 ? `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}` : undefined}}>
-                  {legend > 0.5 ? <div style={{ width: 22, height: 22, borderRadius: 6, background: i === 0 ? c.slate : c.indigo }} /> : null}
-                  <div style={{ ...typeStyle("title"), fontSize: h.size, fontWeight: 600, fontStyle: h.fly < 0.3 ? "italic" : "normal", color: i === 0 ? c.ink : c.indigo, whiteSpace: "nowrap" }}>{label}</div>
-                </div>
-              );
-            })}
-      </div>
+          if (f < flyAt[i]) return null;
+          const h = head(i);
+          const legend = toLegend[i];
+          const label = i === 0 ? (h.fly > 0.5 ? "Harga" : "Price") : "Value";
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: h.x,
+                top: h.y,
+                transform: "translate(-50%, -50%)",
+                opacity: 1 - aGrey,
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: legend > 0.5 ? "8px 22px" : 0,
+                borderRadius: 999,
+                background: legend > 0.5 ? c.cardBg : undefined,
+                boxShadow:
+                  legend > 0.5
+                    ? `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`
+                    : undefined,
+              }}
+            >
+              {legend > 0.5 ? (
+                <div
+                  style={{
+                    width: 22,
+                    height: 22,
+                    borderRadius: 6,
+                    background: i === 0 ? c.slate : c.indigo,
+                  }}
+                />
+              ) : null}
+              <div
+                style={{
+                  ...typeStyle("title"),
+                  fontSize: h.size,
+                  fontWeight: 600,
+                  fontStyle: h.fly < 0.3 ? "italic" : "normal",
+                  color: i === 0 ? c.ink : c.indigo,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {label}
+              </div>
+            </div>
+          );
+        })}
+      </Interactive.Div>
     </Stage>
   );
 };

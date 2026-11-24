@@ -12,7 +12,7 @@
  * Those two arrows are the thing the scene rejects: they are struck out, never
  * offered. No entry, no target, no direction claimed.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage, Card, Layer } from "../components/Stage";
 import { CandleChart, barGrid } from "../components/CandleChart";
 import { Chip } from "../components/Chip";
@@ -229,7 +229,8 @@ export const Scene08 = () => {
     Math.round(DESC_BARS.length * front) +
     Math.round((AFTER_HALF - RISE.bars) * extended) +
     Math.round(RISE.bars * risen);
-  const scroll = f >= SHIFT.at ? SHIFT.px * progress(f, SHIFT.at, SHIFT.over) : 0;
+  const scroll =
+    f >= SHIFT.at ? SHIFT.px * progress(f, SHIFT.at, SHIFT.over) : 0;
   const hollow = 1 - (f >= SHIFT.at ? progress(f, SHIFT.at, FILL_OVER) : 0);
 
   const dim = f >= T.dim ? progress(f, T.dim, 20) : 0;
@@ -360,7 +361,8 @@ export const Scene08 = () => {
 
           {/* the principle, stated over the chart before it is stated under it */}
           {before && bigOut > 0.001 && (
-            <div
+            <Interactive.Div
+              name="Objek"
               style={{
                 position: "absolute",
                 left: theme.canvas.width / 2,
@@ -387,7 +389,7 @@ export const Scene08 = () => {
                 f,
                 bigOut,
               )}
-            </div>
+            </Interactive.Div>
           )}
 
           {/* and then above it, where it is read without the chart in the way */}

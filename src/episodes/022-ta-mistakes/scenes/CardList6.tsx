@@ -10,7 +10,8 @@
  * text is those two words. So SC10 does not have to introduce itself to a
  * viewer who has just read its name off the list.
  */
-import { Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+
 import { BREAKOUT, ROW6 } from "../data/timing";
 import { SceneTransition, assertTransition } from "./SceneTransition";
 import { Breakout } from "./Breakout";

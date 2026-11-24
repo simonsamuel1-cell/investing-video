@@ -16,7 +16,7 @@
  * is why the panel carries a visible "Ilustrasi" tag. The tag comes off when
  * real OHLC exports land; nothing else in the scene has to change.
  */
-import { AbsoluteFill, useCurrentFrame } from "remotion";
+import { AbsoluteFill, useCurrentFrame, Interactive } from "remotion";
 import { ReadingCard, READING_BOX } from "../components/ReadingCard";
 import { theme } from "../theme";
 import {
@@ -233,7 +233,6 @@ export const STUDY = (() => {
     pillPad: 16,
   };
 })();
-
 
 {
   /** ⚠ THE PANEL MAY NOT REACH VIDEO 22'S SUBTITLE BAND. This panel is drawn at
@@ -971,10 +970,10 @@ export const BrokerPanel = ({
    *  below. */
   const plotSpan = bare ? 0.84 : 0.8;
 
-
   /** Which chart the window is on, and therefore which row is selected. */
   const pick = chart ? CHARTS.findIndex((c) => c.t === chart) : -1;
-  const active = pick < 0 ? CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0) : pick;
+  const active =
+    pick < 0 ? CHARTS.reduce((k, c, i) => (f >= c.at ? i : k), 0) : pick;
   /**
    * A chart is up from its own frame until the next one takes over — unless a
    * caller has NAMED one, in which case there is no cross-fade to be in the
@@ -1057,167 +1056,167 @@ export const BrokerPanel = ({
 
         {/* the chart's own ground — a wash, hue-locked to the palette */}
         {!bare && (
-        <div
-          style={{
-            position: "absolute",
-            left: 0,
-            top: 168,
-            width: PANEL.w,
-            height: panelH - 168,
-            background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
-          }}
-        />
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 168,
+              width: PANEL.w,
+              height: panelH - 168,
+              background: `linear-gradient(180deg, ${C.indigo12} 0%, ${C.cyan12} 46%, ${C.surface} 100%)`,
+            }}
+          />
         )}
 
         {/* ── header: it belongs to whichever chart is up ──
             ⚠ GONE IN BARE MODE — Simon deleted the ticker group. See BARE. */}
         {!bare &&
-        CHARTS.map((ch, i) => {
-          const o = alpha(i);
-          if (o <= 0.001) return null;
-          return (
-            <div key={ch.t} style={{ opacity: o }}>
-              <div
-                style={{
-                  position: "absolute",
-                  left: HEAD.x,
-                  top: 36,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: HEAD.gap,
-                }}
-              >
+          CHARTS.map((ch, i) => {
+            const o = alpha(i);
+            if (o <= 0.001) return null;
+            return (
+              <div key={ch.t} style={{ opacity: o }}>
                 <div
                   style={{
-                    width: HEAD.avatar,
-                    height: HEAD.avatar,
-                    borderRadius: HEAD.avatar / 2,
-                    background: C.indigo,
-                    color: C.surface,
-                    fontFamily: font,
-                    fontSize: UI.size,
-                    fontWeight: 800,
+                    position: "absolute",
+                    left: HEAD.x,
+                    top: 36,
                     display: "flex",
                     alignItems: "center",
-                    justifyContent: "center",
+                    gap: HEAD.gap,
                   }}
                 >
-                  {ch.t[0]}
+                  <div
+                    style={{
+                      width: HEAD.avatar,
+                      height: HEAD.avatar,
+                      borderRadius: HEAD.avatar / 2,
+                      background: C.indigo,
+                      color: C.surface,
+                      fontFamily: font,
+                      fontSize: UI.size,
+                      fontWeight: 800,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {ch.t[0]}
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: font,
+                      fontSize: UI.name,
+                      fontWeight: UI.weight,
+                      color: C.text,
+                    }}
+                  >
+                    {ch.t}
+                  </span>
+                  <span
+                    style={{
+                      fontFamily: font,
+                      fontSize: UI.size,
+                      fontWeight: UI.weight,
+                      color: C.textMuted,
+                    }}
+                  >
+                    {ch.name}
+                  </span>
+                  {/* real ticker, traced candles — see the header note */}
+                  <span
+                    style={{
+                      fontFamily: font,
+                      fontSize: UI.size,
+                      fontWeight: UI.weight,
+                      color: C.textMuted,
+                      border: `${theme.layout.border.thin}px solid ${C.border}`,
+                      borderRadius: theme.layout.radius.sm,
+                      padding: "4px 14px",
+                    }}
+                  >
+                    Ilustrasi
+                  </span>
                 </div>
-                <span
-                  style={{
-                    fontFamily: font,
-                    fontSize: UI.name,
-                    fontWeight: UI.weight,
-                    color: C.text,
-                  }}
-                >
-                  {ch.t}
-                </span>
-                <span
-                  style={{
-                    fontFamily: font,
-                    fontSize: UI.size,
-                    fontWeight: UI.weight,
-                    color: C.textMuted,
-                  }}
-                >
-                  {ch.name}
-                </span>
-                {/* real ticker, traced candles — see the header note */}
-                <span
-                  style={{
-                    fontFamily: font,
-                    fontSize: UI.size,
-                    fontWeight: UI.weight,
-                    color: C.textMuted,
-                    border: `${theme.layout.border.thin}px solid ${C.border}`,
-                    borderRadius: theme.layout.radius.sm,
-                    padding: "4px 14px",
-                  }}
-                >
-                  Ilustrasi
-                </span>
-              </div>
 
-              {/* left edge on the ticker, not on the avatar beside it */}
-              {!bare && (
-              <div
-                style={{
-                  position: "absolute",
-                  left: HEAD.x + HEAD.avatar + HEAD.gap,
-                  top: 92,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 20,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: font,
-                    fontSize: UI.price,
-                    fontWeight: 800,
-                    color: C.text,
-                    lineHeight: 1,
-                  }}
-                >
-                  {fmtRp(ch.price)}
-                </span>
-                <span
-                  style={{
-                    fontFamily: font,
-                    fontSize: UI.size,
-                    fontWeight: UI.weight,
-                    color: ch.up ? C.candleGreen : C.candleRed,
-                    background: ch.up
-                      ? "rgba(34, 181, 115, 0.12)"
-                      : "rgba(229, 71, 93, 0.12)",
-                    borderRadius: theme.layout.radius.sm,
-                    padding: "6px 16px",
-                  }}
-                >
-                  {ch.change}
-                </span>
+                {/* left edge on the ticker, not on the avatar beside it */}
+                {!bare && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: HEAD.x + HEAD.avatar + HEAD.gap,
+                      top: 92,
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 20,
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: font,
+                        fontSize: UI.price,
+                        fontWeight: 800,
+                        color: C.text,
+                        lineHeight: 1,
+                      }}
+                    >
+                      {fmtRp(ch.price)}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: font,
+                        fontSize: UI.size,
+                        fontWeight: UI.weight,
+                        color: ch.up ? C.candleGreen : C.candleRed,
+                        background: ch.up
+                          ? "rgba(34, 181, 115, 0.12)"
+                          : "rgba(229, 71, 93, 0.12)",
+                        borderRadius: theme.layout.radius.sm,
+                        padding: "6px 16px",
+                      }}
+                    >
+                      {ch.change}
+                    </span>
+                  </div>
+                )}
               </div>
-              )}
-            </div>
-          );
-        })}
+            );
+          })}
 
         {/* Timeframe pills. They belong to the CHART WINDOW, not to the
         panel, so they travel left with its right edge when the extension
         opens: without that the chart appears to shrink under its own
         controls instead of making room beside them. */}
         {!bare && (
-        <div
-          style={{
-            position: "absolute",
-            right: 40 + LIST.take * open,
-            top: 40,
-            display: "flex",
-            gap: 8,
-          }}
-        >
-          {FRAMES.map((t) => {
-            const live = t === ACTIVE;
-            return (
-              <span
-                key={t}
-                style={{
-                  fontFamily: font,
-                  fontSize: UI.size,
-                  fontWeight: UI.weight,
-                  color: live ? C.surface : C.textMuted,
-                  background: live ? C.indigo : C.indigo12,
-                  borderRadius: theme.layout.radius.sm,
-                  padding: "8px 20px",
-                }}
-              >
-                {t}
-              </span>
-            );
-          })}
-        </div>
+          <div
+            style={{
+              position: "absolute",
+              right: 40 + LIST.take * open,
+              top: 40,
+              display: "flex",
+              gap: 8,
+            }}
+          >
+            {FRAMES.map((t) => {
+              const live = t === ACTIVE;
+              return (
+                <span
+                  key={t}
+                  style={{
+                    fontFamily: font,
+                    fontSize: UI.size,
+                    fontWeight: UI.weight,
+                    color: live ? C.surface : C.textMuted,
+                    background: live ? C.indigo : C.indigo12,
+                    borderRadius: theme.layout.radius.sm,
+                    padding: "8px 20px",
+                  }}
+                >
+                  {t}
+                </span>
+              );
+            })}
+          </div>
         )}
 
         {/* ── the two indicator buttons, under the timeframes ── */}
@@ -1270,7 +1269,11 @@ export const BrokerPanel = ({
           /** ⚠ THE CALLER'S CURVE WINS. `zig` hands the draw in, which is the
            *  only way a panel held on one frame can have a line arrive on it. */
           const own = structure && zt && f >= zt.from;
-          const drawn = zig ? zig.drawn : zt ? progressInOut(f, zt.from, zt.dur) : 0;
+          const drawn = zig
+            ? zig.drawn
+            : zt
+              ? progressInOut(f, zt.from, zt.dur)
+              : 0;
           const zigOn = zig ? n === active && zig.drawn > 0.001 : own;
           const zigLabels = zig ? !!zig.labels : true;
           const isBmri = n === 2;
@@ -1340,17 +1343,17 @@ export const BrokerPanel = ({
                       read against the one before it, and they say nothing the
                       numbers were saying. */}
                   {!bare && (
-                  <text
-                    x={AXIS_CX}
-                    y={Y(v) + 10}
-                    textAnchor="middle"
-                    fontFamily={font}
-                    fontSize={UI.size}
-                    fontWeight={UI.axis}
-                    fill={C.textMuted}
-                  >
-                    {fmtRp(v)}
-                  </text>
+                    <text
+                      x={AXIS_CX}
+                      y={Y(v) + 10}
+                      textAnchor="middle"
+                      fontFamily={font}
+                      fontSize={UI.size}
+                      fontWeight={UI.axis}
+                      fill={C.textMuted}
+                    >
+                      {fmtRp(v)}
+                    </text>
                   )}
                 </g>
               ))}
@@ -1361,32 +1364,32 @@ export const BrokerPanel = ({
                   by bar is a market happening; this one is a chart being put on
                   screen, and the scene is about what gets piled on it after. */}
               <g opacity={build ? build.tape : 1}>
-              {ch.bars.map((b, i) => {
-                const x = X(i);
-                const top = Math.min(Y(b.o), Y(b.c));
-                const h = Math.max(2, Math.abs(Y(b.c) - Y(b.o)));
-                const up = b.c >= b.o;
-                return (
-                  <g key={i}>
-                    <line
-                      x1={x}
-                      y1={Y(b.h)}
-                      x2={x}
-                      y2={Y(b.l)}
-                      stroke={up ? C.candleGreen : C.candleRed}
-                      strokeWidth={theme.layout.stroke.wick}
-                    />
-                    <rect
-                      x={x - bodyW(plotW) / 2}
-                      y={top}
-                      width={bodyW(plotW)}
-                      height={h}
-                      rx={2}
-                      fill={up ? C.candleGreen : C.candleRed}
-                    />
-                  </g>
-                );
-              })}
+                {ch.bars.map((b, i) => {
+                  const x = X(i);
+                  const top = Math.min(Y(b.o), Y(b.c));
+                  const h = Math.max(2, Math.abs(Y(b.c) - Y(b.o)));
+                  const up = b.c >= b.o;
+                  return (
+                    <g key={i}>
+                      <line
+                        x1={x}
+                        y1={Y(b.h)}
+                        x2={x}
+                        y2={Y(b.l)}
+                        stroke={up ? C.candleGreen : C.candleRed}
+                        strokeWidth={theme.layout.stroke.wick}
+                      />
+                      <rect
+                        x={x - bodyW(plotW) / 2}
+                        y={top}
+                        width={bodyW(plotW)}
+                        height={h}
+                        rx={2}
+                        fill={up ? C.candleGreen : C.candleRed}
+                      />
+                    </g>
+                  );
+                })}
               </g>
 
               {/* ── the market structure, traced by hand ── */}
@@ -1410,9 +1413,7 @@ export const BrokerPanel = ({
                   {pts.map((pv, k) => {
                     /* a point waits for the LINE to reach it, not for a frame
                    number guessed off the easing curve */
-                    const a = clamp01(
-                      (drawn - (zAt[k] / zLen) * ZIG_LEAD) * 9,
-                    );
+                    const a = clamp01((drawn - (zAt[k] / zLen) * ZIG_LEAD) * 9);
                     if (a <= 0.001) return null;
                     const w = 74;
                     const cx = X(pv.i);
@@ -1541,7 +1542,11 @@ export const BrokerPanel = ({
 
               {/* ── the bands, under the average ── */}
               {isBmri && bbOn && (
-                <g opacity={build ? build.bb : progress(f, T.bb, theme.motion.revealF)}>
+                <g
+                  opacity={
+                    build ? build.bb : progress(f, T.bb, theme.motion.revealF)
+                  }
+                >
                   <path
                     d={`${pathOf(ch.bb.upper, X, Y)} ${ch.bb.lower
                       .map((v, i) =>
@@ -1635,7 +1640,10 @@ export const BrokerPanel = ({
                    * and the line kept its own height rather than paying for it.
                    */
                   const py = (t: number) =>
-                    top + STUDY.pane - STUDY.inset - t * (STUDY.pane - STUDY.inset * 2);
+                    top +
+                    STUDY.pane -
+                    STUDY.inset -
+                    t * (STUDY.pane - STUDY.inset * 2);
                   /**
                    * ⚠ A CURVE, NOT A POLYLINE — Simon: "dibuat smooth aja,
                    * jangan berantakan". Straight segments between 105 points
@@ -1649,9 +1657,14 @@ export const BrokerPanel = ({
                    * sharp turn, and this pane has a hard ceiling and floor —
                    * an overshoot at 99 would draw above the top of its own box.
                    */
-                  const path = (vs: (number | null)[], t: (v: number) => number) => {
+                  const path = (
+                    vs: (number | null)[],
+                    t: (v: number) => number,
+                  ) => {
                     const pt = vs
-                      .map((v, i) => (v === null ? null : { x: X(i), y: py(t(v)) }))
+                      .map((v, i) =>
+                        v === null ? null : { x: X(i), y: py(t(v)) },
+                      )
                       .filter((q): q is { x: number; y: number } => q !== null);
                     if (pt.length < 2) return "";
                     let d = `M${pt[0].x.toFixed(1)},${pt[0].y.toFixed(1)}`;
@@ -1693,10 +1706,13 @@ export const BrokerPanel = ({
                    * the middle of its own pane by series nobody can see. On this
                    * tape that is the difference between ±213 and −56…+74.
                    */
-                  const vals = [...ch.study.hist, 0].filter((v): v is number => v !== null);
+                  const vals = [...ch.study.hist, 0].filter(
+                    (v): v is number => v !== null,
+                  );
                   const mLo = Math.min(...vals);
                   const mHi = Math.max(...vals);
-                  const sig = (v: number) => (v - mLo) / Math.max(1e-9, mHi - mLo);
+                  const sig = (v: number) =>
+                    (v - mLo) / Math.max(1e-9, mHi - mLo);
                   return (
                     <g key={label} opacity={on}>
                       {/* ═══ THE SEPARATOR ═══  Simon: "tambahkan separator
@@ -1731,18 +1747,39 @@ export const BrokerPanel = ({
                       {k === 0 && (
                         <>
                           {[30, 70].map((v) => band(pct(v)))}
-                          <path d={path(cut(ch.study.rsi), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path
+                            d={path(cut(ch.study.rsi), pct)}
+                            fill="none"
+                            stroke={ink}
+                            strokeWidth={theme.layout.stroke.ma}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                          />
                         </>
                       )}
                       {k === 1 && (
                         <>
                           {[20, 80].map((v) => band(pct(v)))}
-                          <path d={path(cut(ch.study.k), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeLinejoin="round" strokeLinecap="round" />
+                          <path
+                            d={path(cut(ch.study.k), pct)}
+                            fill="none"
+                            stroke={ink}
+                            strokeWidth={theme.layout.stroke.ma}
+                            strokeLinejoin="round"
+                            strokeLinecap="round"
+                          />
                           {/* ⚠ THE SIGNAL IS DASHED, NOT A SECOND COLOUR. One
                               colour per study is what Simon asked for, and a
                               stochastic needs two lines — so the difference
                               between them is the pattern. */}
-                          <path d={path(cut(ch.study.d), pct)} fill="none" stroke={ink} strokeWidth={theme.layout.stroke.ma} strokeDasharray="7 7" strokeLinecap="round" />
+                          <path
+                            d={path(cut(ch.study.d), pct)}
+                            fill="none"
+                            stroke={ink}
+                            strokeWidth={theme.layout.stroke.ma}
+                            strokeDasharray="7 7"
+                            strokeLinecap="round"
+                          />
                         </>
                       )}
                       {k === 2 && (
@@ -1755,7 +1792,10 @@ export const BrokerPanel = ({
                                 x={X(i) - bodyW(plotW) / 2}
                                 y={Math.min(py(sig(0)), py(sig(v)))}
                                 width={bodyW(plotW)}
-                                height={Math.max(1, Math.abs(py(sig(v)) - py(sig(0))))}
+                                height={Math.max(
+                                  1,
+                                  Math.abs(py(sig(v)) - py(sig(0))),
+                                )}
                                 /** ⚠ ONE COLOUR, BOTH SIDES. The bar's sign is
                                  *  already which side of the zero line it is
                                  *  on; colouring it as well would make the
@@ -1781,22 +1821,20 @@ export const BrokerPanel = ({
                   Jul Agu Sep". */}
               {!bare &&
                 AXIS.map((t, i) => (
-                <text
-                  key={t}
-                  x={
-                    px0 + 14 + ((plotW - 28) * i) / (AXIS.length - 1)
-                  }
-                  /* the panel clips: a baseline below its height is a label
+                  <text
+                    key={t}
+                    x={px0 + 14 + ((plotW - 28) * i) / (AXIS.length - 1)}
+                    /* the panel clips: a baseline below its height is a label
                  cut in half */
-                  y={plotTop + plotH + 34}
-                  textAnchor="middle"
-                  fontFamily={font}
-                  fontSize={UI.size}
-                  fontWeight={UI.axis}
-                  fill={C.textMuted}
-                >
-                  {t}
-                </text>
+                    y={plotTop + plotH + 34}
+                    textAnchor="middle"
+                    fontFamily={font}
+                    fontSize={UI.size}
+                    fontWeight={UI.axis}
+                    fill={C.textMuted}
+                  >
+                    {t}
+                  </text>
                 ))}
             </svg>
           );
@@ -1846,31 +1884,31 @@ export const BrokerPanel = ({
 
         {/* the price the crosshair sits on, on the axis */}
         {!bare &&
-        CHARTS.map((ch, i) => {
-          const o = alpha(i);
-          if (o <= 0.001) return null;
-          return (
-            <div
-              key={ch.t}
-              style={{
-                position: "absolute",
-                left: AXIS_CX,
-                transform: "translateX(-50%)",
-                top: ch.yAt(ch.price, plotH, plotTop, plotSpan) - 22,
-                opacity: o,
-                background: C.text,
-                color: C.surface,
-                fontFamily: font,
-                fontSize: UI.size,
-                fontWeight: UI.weight,
-                borderRadius: theme.layout.radius.sm,
-                padding: "6px 16px",
-              }}
-            >
-              {fmtRp(ch.price)}
-            </div>
-          );
-        })}
+          CHARTS.map((ch, i) => {
+            const o = alpha(i);
+            if (o <= 0.001) return null;
+            return (
+              <div
+                key={ch.t}
+                style={{
+                  position: "absolute",
+                  left: AXIS_CX,
+                  transform: "translateX(-50%)",
+                  top: ch.yAt(ch.price, plotH, plotTop, plotSpan) - 22,
+                  opacity: o,
+                  background: C.text,
+                  color: C.surface,
+                  fontFamily: font,
+                  fontSize: UI.size,
+                  fontWeight: UI.weight,
+                  borderRadius: theme.layout.radius.sm,
+                  padding: "6px 16px",
+                }}
+              >
+                {fmtRp(ch.price)}
+              </div>
+            );
+          })}
 
         {/* ── the watchlist, an extension of this same window ── */}
         {open > 0.001 && (
@@ -1942,7 +1980,8 @@ export const BrokerPanel = ({
                   style={{
                     position: "absolute",
                     left: 0,
-                    top: LIST.rowTop + (portfolio ? PF.drop : 0) + i * LIST.rowH,
+                    top:
+                      LIST.rowTop + (portfolio ? PF.drop : 0) + i * LIST.rowH,
                     width: LIST.w,
                     height: LIST.rowH,
                     boxSizing: "border-box",
@@ -2475,7 +2514,8 @@ export const RoadmapCards = ({
 
       {/* ── the called-out card's extra border + glow ── */}
       {glow > 0.001 && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: CARDS[glowOn].x - 3,

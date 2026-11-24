@@ -30,7 +30,7 @@ export const PriceTicker = ({ f, from, x }: { f: number; from: number; x: number
     <Card x={x - TICKER.w / 2} y={(theme.canvas.height - TICKER.h) / 2} w={TICKER.w} h={TICKER.h}>
       <div style={{ position: "absolute", inset: 0, padding: `0 ${TICKER.pad}px`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          <Img src={staticFile("icons/vi02/ICBP.png")} style={{ width: TICKER.logo, height: TICKER.logo, borderRadius: 999 }} />
+          <Img showInTimeline={false} src={staticFile("icons/vi02/ICBP.png")} style={{ width: TICKER.logo, height: TICKER.logo, borderRadius: 999 }} />
           <div style={{ ...typeStyle("title"), fontSize: TICKER.code, fontWeight: 600, color: c.ink }}>ICBP</div>
         </div>
         <div style={{ textAlign: "right", fontVariantNumeric: "tabular-nums" }}>

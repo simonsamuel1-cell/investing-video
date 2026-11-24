@@ -11,7 +11,8 @@
  * frame. ONE root <Audio>; no scene has audio of its own.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BG_FADE, BLOCK, CUT, CUTS, HANDOFF_FADE, TRANS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";

@@ -17,7 +17,7 @@
  * across the whole file. Studio lists them in the order they appear here.
  */
 import "./index.css";
-import { Composition } from "remotion";
+import { Composition, Folder } from "remotion";
 
 // ── built on src/core ───────────────────────────────────────────────────────
 import { theme } from "./core";
@@ -27,6 +27,7 @@ import { TAMistakesFull, TA11_FULL_FRAMES } from "./episodes/022-ta-mistakes/Ful
 import { PassiveIncomeFull, FULL_FRAMES as IN01_FULL_FRAMES } from "./episodes/in01-passive-income/FullVideo";
 import { ApaItuValueInvestingFull, VI01_FULL_FRAMES } from "./episodes/vi01-apa-itu-value-investing/FullVideo";
 import { MembeliSahamFull, VI02_FULL_FRAMES } from "./episodes/vi02-membeli-saham-berarti-membeli-perusahaan/FullVideo";
+import { MembeliSahamFull as MembeliSahamFullSebelum, VI02_FULL_FRAMES as VI02_SEBELUM_FRAMES } from "./episodes/sebelum-interactive-vi02/FullVideo";
 import { MembeliCukupMurahFull, VI03_FULL_FRAMES } from "./episodes/vi03-membeli-dengan-harga-yang-cukup-murah/FullVideo";
 import { MembeliCukupMurahScene03, VI03_SC03_FRAMES } from "./episodes/vi03-membeli-dengan-harga-yang-cukup-murah/Scene03";
 import { RizkyComps } from "./RizkyComps";
@@ -48,6 +49,8 @@ import { ChartMemoryFull, TA01_FULL_FRAMES } from "./episodeChartMemory/FullVide
 import { MarketStructureFull, TA05_FULL_FRAMES } from "./episode20marketstructure/FullVideo";
 import { VisualLab, LAB_FRAMES } from "./lab/Lab";
 import { Thumbnails, THUMBNAILS_FRAMES } from "./thumbnails/Thumbnails";
+import { TemplateInteractive } from "./thumbnails/TemplateInteractive";
+import { EFFECT_COMPS, effectFrames } from "./effects-library/effects";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -195,6 +198,15 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
+      {/* VI02 as it was before the Studio handles (Simon, 24 Nov: two versions). Frozen: revisions go to the one above. */}
+      <Composition
+        id="VI02-MembeliSaham-SebelumInteractive"
+        component={MembeliSahamFullSebelum}
+        durationInFrames={VI02_SEBELUM_FRAMES}
+        fps={60}
+        width={theme.canvas.width}
+        height={theme.canvas.height}
+      />
       {/* VI03 — Membeli dengan Harga yang Cukup Murah: Intro + episode + Outro + BGM. */}
       <Composition
         id="VI03-MembeliDenganHargaYangCukupMurah"
@@ -250,6 +262,14 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
+      {/* The Effects Library's entries, one composition each — src/effects-library. Picked from its panel. */}
+      <Folder name="Effects-Library">
+        {EFFECT_COMPS.map(({ e, Comp }) => (
+          <Composition key={e.id} id={`FX-${e.id}`} component={Comp} durationInFrames={effectFrames(e)} fps={60} width={theme.canvas.width} height={theme.canvas.height} />
+        ))}
+      </Folder>
+      {/* A trial of Remotion's in-Studio editing (24 Nov) — src/thumbnails/TemplateInteractive.tsx. */}
+      <Composition id="Template-Interactive" component={TemplateInteractive} durationInFrames={120} fps={60} width={1920} height={1080} />
       {/* ⚠ A BENCH, NOT AN EPISODE — src/lab/Lab.tsx. One visual language at a
           time, judged on its own before anything is built with it. Nothing
           here ships; the lever is `TEST` in that file. */}

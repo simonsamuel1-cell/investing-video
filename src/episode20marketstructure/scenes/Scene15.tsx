@@ -7,6 +7,7 @@
  * SC14's last frame and SC15's first, so no path is re-issued and nothing
  * re-animates. Price resumes only when "menembus lembah sebelumnya" lands.
  */
+import { Interactive } from "remotion";
 import { Layer } from "../components/Stage";
 import { Reference } from "../components/StructureLine";
 import { PivotLabel } from "../components/PivotLabel";
@@ -38,10 +39,26 @@ const STATE = { x: theme.stage.card.x + 56, y: theme.stage.card.y + 56 };
  * gap between the end of that leader and the first line, and matches SC14's so
  * the two halves are built the same way.
  */
-const WARY = { lines: ["Mulai", "waspada"], dy: 150, lead: 44, labelDy: 30, outOver: 30 };
+const WARY = {
+  lines: ["Mulai", "waspada"],
+  dy: 150,
+  lead: 44,
+  labelDy: 30,
+  outOver: 30,
+};
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: number; plotRight: number }) => {
+export const Scene15 = ({
+  f,
+  p,
+  draw,
+  plotRight,
+}: {
+  f: number;
+  p: Plot;
+  draw: number;
+  plotRight: number;
+}) => {
   const priorLow = p.turn(FAIL_PRIOR_LOW);
   const stalled = p.turn(FAIL_STALL);
   const wary = f >= SC15.wary ? progress(f, SC15.wary, 20) : 0;
@@ -52,7 +69,8 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
    * reading — but it was true a moment ago, so it dissolves out of the frame
    * instead of being deleted from it.
    */
-  const waryShown = wary * (f >= SC15.flip ? fadeOut(f, SC15.flip, WARY.outOver) : 1);
+  const waryShown =
+    wary * (f >= SC15.flip ? fadeOut(f, SC15.flip, WARY.outOver) : 1);
   const flip = f >= SC15.flip ? progress(f, SC15.flip, 26) : 0;
   const flipped = flip > 0.5;
 
@@ -66,7 +84,10 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
           y={priorLow.y}
           draw={progress(f, SC15.breakLow - 40, 26)}
           color={theme.color.cyan}
-          pierce={{ x: p.along(0.72).x, amount: f >= SC15.breakLow ? clamp01((f - SC15.breakLow) / 30) : 0 }}
+          pierce={{
+            x: p.along(0.72).x,
+            amount: f >= SC15.breakLow ? clamp01((f - SC15.breakLow) / 30) : 0,
+          }}
         />
       )}
 
@@ -77,7 +98,14 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
             a single point, so they cannot be two colours — the slate stays on
             the label, which is the muted part */}
           <Layer opacity={waryShown}>
-            <line x1={stalled.x} y1={stalled.y} x2={stalled.x} y2={waryEnd} stroke={theme.color.indigo} strokeWidth={theme.shape.rule} />
+            <line
+              x1={stalled.x}
+              y1={stalled.y}
+              x2={stalled.x}
+              y2={waryEnd}
+              stroke={theme.color.indigo}
+              strokeWidth={theme.shape.rule}
+            />
             <polygon
               points={`${stalled.x},${waryEnd} ${stalled.x - LEADER_ARROW.w / 2},${waryEnd - LEADER_ARROW.h} ${stalled.x + LEADER_ARROW.w / 2},${waryEnd - LEADER_ARROW.h}`}
               fill={theme.color.indigo}
@@ -98,10 +126,20 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
         </>
       )}
 
-      {draw >= 0.79 && <PivotLabel x={p.turn(FAIL_LOWER_LOW).x} y={p.turn(FAIL_LOWER_LOW).y} label="Lower low" tone="cyan" side="below" at={SC15.breakLow + 50} />}
+      {draw >= 0.79 && (
+        <PivotLabel
+          x={p.turn(FAIL_LOWER_LOW).x}
+          y={p.turn(FAIL_LOWER_LOW).y}
+          label="Lower low"
+          tone="cyan"
+          side="below"
+          at={SC15.breakLow + 50}
+        />
+      )}
 
       {/* the state, turned over on the word that changes it */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: STATE.x,
@@ -115,8 +153,15 @@ export const Scene15 = ({ f, p, draw, plotRight }: { f: number; p: Plot; draw: n
           whiteSpace: "nowrap",
         }}
       >
-        <span style={{ display: "inline-block", transform: flipped ? "rotateY(180deg)" : undefined }}>{flipped ? "Downtrend" : "Uptrend"}</span>
-      </div>
+        <span
+          style={{
+            display: "inline-block",
+            transform: flipped ? "rotateY(180deg)" : undefined,
+          }}
+        >
+          {flipped ? "Downtrend" : "Uptrend"}
+        </span>
+      </Interactive.Div>
     </>
   );
 };

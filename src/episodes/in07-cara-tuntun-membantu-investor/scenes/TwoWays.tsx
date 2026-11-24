@@ -13,10 +13,31 @@
  *  D  three possible outcomes, all neutral (Jual · Tahan · Beli bertahap) — then they dim, column 2's process glows,
  *     column 1 dims, and the one line: "Bedanya di proses, bukan hasil."
  */
-import { useCurrentFrame } from "remotion";
-import { SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import {
+  AppearE as Appear,
+  DiscE as Disc,
+  LineE as Line,
+} from "../../../editable";
+import { useCurrentFrame, Interactive } from "remotion";
+import {
+  SoftGround,
+  Stage,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Disc, Ico, Line, Mark, NumRing, VoiceBubble, ease, useWords } from "../components/kit";
+import {
+  BoardGrid,
+  Ico,
+  Mark,
+  NumRing,
+  VoiceBubble,
+  ease,
+  useWords,
+} from "../components/kit";
 import { PERSON, Person, personCy } from "../components/Person";
 
 const CX = theme.canvas.width / 2;
@@ -29,7 +50,8 @@ const YOU = { top: 330, s: 0.8, marketGap: 22, marketH: 64 };
 /** Narrower since 30 Oct (Simon: "width keseluruhannya bisa di pendekin"); `pad` the inset of what sits inside. */
 const COL = { w: 480, y: 340, h: 540, gap: 40, pad: 36 };
 const YOU_R = (PERSON.d * YOU.s) / 2;
-const colX = (i: number) => (i === 0 ? CX - YOU_R - COL.gap - COL.w : CX + YOU_R + COL.gap);
+const colX = (i: number) =>
+  i === 0 ? CX - YOU_R - COL.gap - COL.w : CX + YOU_R + COL.gap;
 
 const STEPS = [
   { text: "Portofolio", icon: "model", at: "analisis portofolio" },
@@ -65,7 +87,9 @@ export const SC09 = () => {
   // B — column 1
   const red = ease(f, W("layar penuh"), m.reveal);
   const pressAt = W("ditekan.");
-  const press = ease(f, pressAt, m.sec(0.2)) * (1 - ease(f, pressAt + m.sec(0.25), m.sec(0.25)));
+  const press =
+    ease(f, pressAt, m.sec(0.2)) *
+    (1 - ease(f, pressAt + m.sec(0.25), m.sec(0.25)));
   const pressed = ease(f, pressAt, m.pop);
   const fingerIn = ease(f, W("tombol jual"), W("ditekan.") - W("tombol jual"));
 
@@ -81,9 +105,29 @@ export const SC09 = () => {
 
       {/* A — the same day again */}
       {dateOut < 0.999 ? (
-        <Appear at={dateAt - m.sec(0.1)} style={{ left: 0, width: theme.canvas.width, top: 110, display: "flex", justifyContent: "center", opacity: 1 - dateOut }}>
+        <Appear
+          at={dateAt - m.sec(0.1)}
+          style={{
+            left: 0,
+            width: theme.canvas.width,
+            top: 110,
+            display: "flex",
+            justifyContent: "center",
+            opacity: 1 - dateOut,
+          }}
+        >
           {/* the date alone, bold and indigo, no pill (Simon 30 Oct: "bold dan indigo. 13.43 nya remove", "remove pill design nya") */}
-          <div style={{ height: 76, display: "flex", alignItems: "center", gap: 16, ...typeStyle("body"), fontWeight: 700, color: c.indigo }}>
+          <div
+            style={{
+              height: 76,
+              display: "flex",
+              alignItems: "center",
+              gap: 16,
+              ...typeStyle("body"),
+              fontWeight: 700,
+              color: c.indigo,
+            }}
+          >
             <Ico name="date" size={34} tone={c.indigo} />
             28 Januari 2026
           </div>
@@ -91,56 +135,188 @@ export const SC09 = () => {
       ) : null}
       {/* the one line, where the date was */}
       <Appear at={linesAt + m.sec(0.2)} style={{ left: 0, top: 0 }}>
-        <Line x={0} y={150} w={theme.canvas.width} align="center" size={56} weight={500} text="Bedanya di proses, bukan hasil." mark="proses" />
+        <Line
+          x={0}
+          y={150}
+          w={theme.canvas.width}
+          align="center"
+          size={56}
+          weight={500}
+          text="Bedanya di proses, bukan hasil."
+          mark="proses"
+        />
       </Appear>
 
       {/* A — the one you, the same market over the head */}
       {youP > 0.001 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: youP, transform: `translateY(${((1 - youP) * 20).toFixed(2)}px)` }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            opacity: youP,
+            transform: `translateY(${((1 - youP) * 20).toFixed(2)}px)`,
+          }}
+        >
           <Person cx={CX} cy={personCy(YOU.top, YOU.s)} s={YOU.s} />
           {marketP > 0.001 ? (
-            <div style={{ position: "absolute", left: 0, width: theme.canvas.width, top: YOU.top - YOU.marketGap - YOU.marketH + (1 - marketP) * 12, display: "flex", justifyContent: "center", opacity: marketP }}>
-              <div style={{ height: YOU.marketH, padding: "0 26px", borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", gap: 12, ...typeStyle("body"), fontSize: 32 }}>
+            <Interactive.Div
+              name="IHSG"
+              style={{
+                position: "absolute",
+                left: 0,
+                width: theme.canvas.width,
+                top: YOU.top - YOU.marketGap - YOU.marketH + (1 - marketP) * 12,
+                display: "flex",
+                justifyContent: "center",
+                opacity: marketP,
+              }}
+            >
+              <div
+                style={{
+                  height: YOU.marketH,
+                  padding: "0 26px",
+                  borderRadius: 999,
+                  background: c.cardBg,
+                  boxShadow: shadow.soft,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  ...typeStyle("body"),
+                  fontSize: 32,
+                }}
+              >
                 <span style={{ color: c.ink }}>IHSG</span>
                 <span style={{ color: theme.color.alarmRed }}>−8%</span>
               </div>
-            </div>
+            </Interactive.Div>
           ) : null}
         </div>
       ) : null}
-
 
       {[0, 1].map((i) => {
         const x = colX(i);
         const dim = i === 0 ? col1Dim : 0;
         return (
-          <div key={i} style={{ position: "absolute", inset: 0, filter: dim > 0.001 ? `grayscale(${dim.toFixed(3)})` : undefined }}>
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              inset: 0,
+              filter: dim > 0.001 ? `grayscale(${dim.toFixed(3)})` : undefined,
+            }}
+          >
             {/* the head: the number (the one you and the market were shown once, in the middle) */}
-            <Appear at={W(i === 0 ? "skenario pertama" : "skenario kedua") - m.sec(0.1)} style={{ left: x + (COL.w - NUM) / 2, top: HEAD_Y - NUM / 2 }}>
+            <Appear
+              at={
+                W(i === 0 ? "skenario pertama" : "skenario kedua") - m.sec(0.1)
+              }
+              style={{ left: x + (COL.w - NUM) / 2, top: HEAD_Y - NUM / 2 }}
+            >
               <NumRing n={i + 1} size={NUM} />
             </Appear>
             {/* the column itself — flat, no shadow, so it stays clear of the subtitle band */}
-            <div style={{ position: "absolute", left: x, top: COL.y, width: COL.w, height: COL.h, borderRadius: 28, boxShadow: `inset 0 0 0 2px ${i === 1 && processGlow > 0.5 ? theme.color.connector : theme.color.connectorMuteSolid}`, background: i === 0 ? "transparent" : c.cardBg, opacity: ease(f, W(i === 0 ? "skenario pertama" : "skenario kedua") - m.sec(0.1), m.reveal) }}>
-              {i === 0 ? <div style={{ position: "absolute", inset: 0, borderRadius: 28, background: theme.color.alarmWashSolid, opacity: red }} /> : null}
+            <div
+              style={{
+                position: "absolute",
+                left: x,
+                top: COL.y,
+                width: COL.w,
+                height: COL.h,
+                borderRadius: 28,
+                boxShadow: `inset 0 0 0 2px ${i === 1 && processGlow > 0.5 ? theme.color.connector : theme.color.connectorMuteSolid}`,
+                background: i === 0 ? "transparent" : c.cardBg,
+                opacity: ease(
+                  f,
+                  W(i === 0 ? "skenario pertama" : "skenario kedua") -
+                    m.sec(0.1),
+                  m.reveal,
+                ),
+              }}
+            >
+              {i === 0 ? (
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: 28,
+                    background: theme.color.alarmWashSolid,
+                    opacity: red,
+                  }}
+                />
+              ) : null}
             </div>
           </div>
         );
       })}
 
       {/* B — column 1: voice notes, then "Jual" pressed at once */}
-      <div style={{ position: "absolute", inset: 0, filter: col1Dim > 0.001 ? `grayscale(${col1Dim.toFixed(3)})` : undefined }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          filter:
+            col1Dim > 0.001 ? `grayscale(${col1Dim.toFixed(3)})` : undefined,
+        }}
+      >
         {[0, 1, 2].map((k) => (
-          <Appear key={k} at={W("terus bilang") + k * m.sec(0.18)} style={{ left: colX(0) + COL.pad, top: NOTE.y0 + k * NOTE.pitch }}>
-            <VoiceBubble played={ease(f, W("terus bilang") + k * m.sec(0.18) + m.sec(0.2), m.sec(0.6))} />
+          <Appear
+            key={k}
+            at={W("terus bilang") + k * m.sec(0.18)}
+            style={{ left: colX(0) + COL.pad, top: NOTE.y0 + k * NOTE.pitch }}
+          >
+            <VoiceBubble
+              played={ease(
+                f,
+                W("terus bilang") + k * m.sec(0.18) + m.sec(0.2),
+                m.sec(0.6),
+              )}
+            />
           </Appear>
         ))}
         {f >= W("perdagangan dibuka") - m.sec(0.1) ? (
-          <div style={{ position: "absolute", left: colX(0) + COL.pad, top: COL.y + COL.h - COL.pad - SELL.h + 4 * press, width: SELL.w, height: SELL.h, borderRadius: 20, background: theme.color.alarmRed, filter: pressed > 0.5 ? "brightness(0.82)" : undefined, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontSize: SELL.size, color: c.cardBg, opacity: ease(f, W("perdagangan dibuka") - m.sec(0.1), m.reveal), transform: `scale(${(1 - 0.03 * press).toFixed(3)})` }}>Jual</div>
+          <Interactive.Div
+            name="Jual"
+            style={{
+              position: "absolute",
+              left: colX(0) + COL.pad,
+              top: COL.y + COL.h - COL.pad - SELL.h + 4 * press,
+              width: SELL.w,
+              height: SELL.h,
+              borderRadius: 20,
+              background: theme.color.alarmRed,
+              filter: pressed > 0.5 ? "brightness(0.82)" : undefined,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              ...typeStyle("title"),
+              fontSize: SELL.size,
+              color: c.cardBg,
+              opacity: ease(f, W("perdagangan dibuka") - m.sec(0.1), m.reveal),
+              transform: `scale(${(1 - 0.03 * press).toFixed(3)})`,
+            }}
+          >
+            Jual
+          </Interactive.Div>
         ) : null}
         {fingerIn > 0.001 ? (
-          <div style={{ position: "absolute", left: colX(0) + COL.pad + SELL.w * 0.55 + (1 - fingerIn) * 160, top: COL.y + COL.h - COL.pad - SELL.h + 20 + (1 - fingerIn) * 140 + 10 * press, opacity: fingerIn * (1 - ease(f, pressAt + m.sec(0.6), m.fade)) }}>
+          <Interactive.Div
+            name="finger"
+            style={{
+              position: "absolute",
+              left: colX(0) + COL.pad + SELL.w * 0.55 + (1 - fingerIn) * 160,
+              top:
+                COL.y +
+                COL.h -
+                COL.pad -
+                SELL.h +
+                20 +
+                (1 - fingerIn) * 140 +
+                10 * press,
+              opacity: fingerIn * (1 - ease(f, pressAt + m.sec(0.6), m.fade)),
+            }}
+          >
             <Ico name="finger" size={120} tone={c.ink} fill={c.cardBg} />
-          </div>
+          </Interactive.Div>
         ) : null}
       </div>
 
@@ -151,9 +327,45 @@ export const SC09 = () => {
         if (p <= 0.001) return null;
         const y = STEP.y0 + k * (STEP.h + STEP.gap);
         return (
-          <div key={s.text} style={{ position: "absolute", left: colX(1) + COL.pad, top: y + (1 - p) * 12, width: COL.w - 2 * COL.pad, height: STEP.h, borderRadius: 20, background: c.bg, opacity: p, display: "flex", alignItems: "center", gap: 18, padding: "0 18px", boxSizing: "border-box", boxShadow: processGlow > 0.01 ? `0 0 ${(30 * processGlow).toFixed(1)}px ${(4 * processGlow).toFixed(1)}px ${theme.color.indigoWashSolid}` : undefined }}>
-            <Disc icon={s.icon} size={STEP.disc} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-            <div style={{ ...typeStyle("body"), fontSize: STEP.size, color: c.ink, flex: 1, whiteSpace: "nowrap" }}>{s.text}</div>
+          <div
+            key={s.text}
+            style={{
+              position: "absolute",
+              left: colX(1) + COL.pad,
+              top: y + (1 - p) * 12,
+              width: COL.w - 2 * COL.pad,
+              height: STEP.h,
+              borderRadius: 20,
+              background: c.bg,
+              opacity: p,
+              display: "flex",
+              alignItems: "center",
+              gap: 18,
+              padding: "0 18px",
+              boxSizing: "border-box",
+              boxShadow:
+                processGlow > 0.01
+                  ? `0 0 ${(30 * processGlow).toFixed(1)}px ${(4 * processGlow).toFixed(1)}px ${theme.color.indigoWashSolid}`
+                  : undefined,
+            }}
+          >
+            <Disc
+              icon={s.icon}
+              size={STEP.disc}
+              tone={c.indigo}
+              tint={theme.color.indigoWashSolid}
+            />
+            <div
+              style={{
+                ...typeStyle("body"),
+                fontSize: STEP.size,
+                color: c.ink,
+                flex: 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              {s.text}
+            </div>
             <div style={{ opacity: ease(f, at + m.sec(0.35), m.pop) }}>
               <Ico name="tick" size={30} tone={c.indigo} />
             </div>
@@ -162,15 +374,56 @@ export const SC09 = () => {
       })}
 
       {/* D — any of three outcomes; what differs is how it was reached */}
-      <div style={{ position: "absolute", left: colX(1) + COL.pad, top: OUT.y, width: COL.w - 2 * COL.pad, display: "flex", justifyContent: "space-between", gap: OUT.gap, filter: outcomesDim > 0.001 ? `grayscale(${outcomesDim.toFixed(3)})` : undefined }}>
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: colX(1) + COL.pad,
+          top: OUT.y,
+          width: COL.w - 2 * COL.pad,
+          display: "flex",
+          justifyContent: "space-between",
+          gap: OUT.gap,
+          filter:
+            outcomesDim > 0.001
+              ? `grayscale(${outcomesDim.toFixed(3)})`
+              : undefined,
+        }}
+      >
         {OUTCOMES.map((o) => {
           const p = ease(f, W(o.at) - m.sec(0.1), m.pop);
           return (
-            <div key={o.text} style={{ flex: "1 1 auto", height: OUT.h, padding: "0 14px", borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("body"), fontSize: OUT.size, color: c.ink, whiteSpace: "nowrap", opacity: p, transform: `translateY(${((1 - p) * 12).toFixed(2)}px)` }}>{o.text}</div>
+            <div
+              key={o.text}
+              style={{
+                flex: "1 1 auto",
+                height: OUT.h,
+                padding: "0 14px",
+                borderRadius: 999,
+                background: c.cardBg,
+                boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                ...typeStyle("body"),
+                fontSize: OUT.size,
+                color: c.ink,
+                whiteSpace: "nowrap",
+                opacity: p,
+                transform: `translateY(${((1 - p) * 12).toFixed(2)}px)`,
+              }}
+            >
+              {o.text}
+            </div>
           );
         })}
-      </div>
-      <Mark kind="check" p={processGlow} x={colX(1) + COL.w - 30} y={COL.y + 30} />
+      </Interactive.Div>
+      <Mark
+        kind="check"
+        p={processGlow}
+        x={colX(1) + COL.w - 30}
+        y={COL.y + 30}
+      />
     </Stage>
   );
 };

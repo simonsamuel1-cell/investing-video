@@ -262,51 +262,29 @@
       "silence": 0.5
     },
     {
-      "src": "ORIGINAL",
-      "from": 310.305,
-      "to": 323.24
+      "_": "24 Nov: SC07 and SC08 re-recorded whole, with new wording (one take, cut between 'kode saham' and 'Ada tiga hal')",
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 0,
+      "to": 63.59,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
     },
     {
-      "_": "5 Nov:'Kedua, uangnya datang dari mana? Bisnis mana yang menghasilkan sebagian besar pendapatannya?' (up to its 5.56 s: Simon re-recorded the rest of this take as 07-02)",
-      "src": "Scene 07-01.mp3",
-      "to": 5.64,
-      "match": "original 323.37-328.73"
-    },
-    {
-      "silence": 0.19
-    },
-    {
-      "_": "5 Nov:'Ketiga, laba yang dihasilkan digunakan untuk apa?' (cut before the −5 dB click at the end of the clip)",
-      "src": "Scene 07-02.mp3",
-      "to": 3.26,
-      "match": "original 328.97-332.00"
-    },
-    {
-      "src": "ORIGINAL",
-      "from": 332.03,
-      "to": 350.205
-    },
-    {
-      "_": "5 Nov, end of scene: +30f after 'sekadar kode saham saja.'",
+      "_": "24 Nov, end of scene: +30f after 'sekadar kode saham.'",
       "silence": 0.5
     },
     {
-      "src": "ORIGINAL",
-      "from": 350.205,
-      "to": 350.245
-    },
-    {
-      "_": "12 Nov, SC08 rewritten: 'Tiga hal yang perlu diingat. … Di situlah Deep Research Report membantu memberikan analisis awal yang lebih lengkap.' (replaces the original's 'Di video sebelumnya …' and the 5 Nov Scene 08-01 / 08-02)",
-      "src": "Revisi VO/Scene 08_1.mp3",
-      "to": 82.4,
-      "match": "original 350.38-388.24"
-    },
-    {
-      "silence": 0.238356
-    },
-    {
-      "src": "ORIGINAL",
-      "from": 388.47
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 63.59,
+      "to": 202.36,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
     }
   ]
 }

@@ -9,7 +9,8 @@
  *   Phase C (local 1190–2299) SC04  line mask-wipes into candlesticks + anatomy
  *   Phase D (local 2299–2821) SC05  candles de-emphasize; axes + crosshair
  */
-import { useCurrentFrame, interpolate, Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { useCurrentFrame, interpolate } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { SLIDES, slideOut, slideBlur } from "../transitions/SlideCut";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";

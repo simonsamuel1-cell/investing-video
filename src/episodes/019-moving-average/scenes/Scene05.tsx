@@ -31,7 +31,7 @@
  * not traced: it is computed from these closes, because a hand-drawn curve
  * that merely looks like the mean of the bars under it is not one.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage } from "../../../core";
 import { Layer, gridOf, pathOf, lengthOf } from "../components/ChartFrame";
 import { TitleChip } from "../components/TitleChip";
@@ -683,7 +683,8 @@ export const Scene05 = () => {
     <Stage>
       <div style={{ position: "absolute", inset: 0, ...cut }}>
         {/* the white card every chart in this episode is drawn on */}
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: BOX.x,
@@ -886,7 +887,8 @@ export const Scene05 = () => {
 
         {/* ── the closing summary, at the top of the chart ── */}
         {f >= SUM.at && f < T.clear + theme.motion.revealF && (
-          <div
+          <Interactive.Div
+            name="Perhatikan"
             style={{
               position: "absolute",
               opacity:
@@ -934,7 +936,7 @@ export const Scene05 = () => {
                 </span>
               ))}
             </div>
-          </div>
+          </Interactive.Div>
         )}
 
         {/* ── the readings, a 2 × 2 grid in the card's own bottom band ── */}

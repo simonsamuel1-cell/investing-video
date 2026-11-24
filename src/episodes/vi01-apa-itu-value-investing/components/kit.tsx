@@ -6,7 +6,7 @@
  */
 import type React from "react";
 import { Img, interpolateColors, staticFile, useCurrentFrame } from "remotion";
-import { cutInStyle, cutOutStyle, theme, typeStyle, usePalette, useShadow } from "../../../core";
+import { cutInStyle, cutOutStyle, theme, typeStyle, useNudge, usePalette, useShadow } from "../../../core";
 import { CUT, w } from "../data/timing";
 
 export { Appear, BoardGrid, Card, Gauge, Heading, HEADING, Line, Mark, NumRing, OpeningHeading, ORANG_TUNTUN_RIGHT, OUTSIDE_RESERVES, OrangTuntun, Skel, ease } from "../../in07-cara-tuntun-membantu-investor/components/kit";
@@ -49,11 +49,14 @@ export const Figure = ({ name, cx, floor, h, faint = 0, flip = false, style }: {
  * export but never shows while scrubbing in Studio (Simon 10 Nov: "transparansinya 100%, langsung 0%, langsung 100% lagi").
  * So every faded picture goes through here. Without a height in `style` the picture keeps its own ratio.
  */
-export const Pic = ({ src, style }: { src: string; style: React.CSSProperties }) => (
-  <div style={style}>
-    <Img src={src} style={{ width: "100%", height: style.height === undefined ? "auto" : "100%", display: "block", maxWidth: "none" }} />
+export const Pic = ({ src, style }: { src: string; style: React.CSSProperties }) => {
+  const n = useNudge();
+  return (
+  <div ref={n.ref} style={{ ...style, ...n.style }}>
+    <Img showInTimeline={false} src={src} style={{ width: "100%", height: style.height === undefined ? "auto" : "100%", display: "block", maxWidth: "none" }} />
   </div>
-);
+  );
+};
 
 /** One of this episode's icons (Phosphor, public/icons/vi01) painted in `tone` through its own shape. */
 export const Glyph = ({ icon, size, tone }: { icon: string; size: number; tone: string }) => {

@@ -19,13 +19,25 @@
  * cuts at 16078 from a chart on this ground to two windows on the same ground:
  * the room does not change, only what is standing in it.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  Stage, cutInStyle, gridOf, popIn, progress, textReveal, usePalette, theme,
+  Stage,
+  cutInStyle,
+  gridOf,
+  popIn,
+  progress,
+  textReveal,
+  usePalette,
+  theme,
 } from "../../../core";
 import { BLOCK, CUTS, SC16_UI, SPIKES, local } from "../data/timing";
 import {
-  SS4, SS4_DOMAIN, SS4_VOL, SS5, SS5_DOMAIN, SS5_VOL,
+  SS4,
+  SS4_DOMAIN,
+  SS4_VOL,
+  SS5,
+  SS5_DOMAIN,
+  SS5_VOL,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -65,7 +77,8 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
   const head = textReveal(f, at + V.words.after, V.words.over, 12);
 
   return (
-    <div
+    <Interactive.Div
+      name="Objek"
       style={{
         position: "absolute",
         left: card.x,
@@ -81,7 +94,8 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
       }}
     >
       {/* ── the product display ─────────────────────────────────────────── */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: U.display.x,
@@ -102,37 +116,60 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
         height={V.win.h}
       >
         <clipPath id={`d${card.at}`}>
-          <rect x={U.display.x} y={U.display.y} width={U.display.w} height={U.display.h} rx={U.display.radius} />
+          <rect
+            x={U.display.x}
+            y={U.display.y}
+            width={U.display.w}
+            height={U.display.h}
+            rx={U.display.radius}
+          />
         </clipPath>
         <g clipPath={`url(#d${card.at})`}>
-          {card.series.bars.slice(0, Math.ceil(card.series.bars.length * built)).map((b, i) => {
-            const x = g.x(i);
-            const w = Math.max(3, g.slot * 0.66);
-            const top = Math.min(g.y(b.o), g.y(b.c));
-            const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
-            const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
-            const vh = (card.vol[i] / Math.max(...card.vol)) * U.volume.h;
-            return (
-              <g key={i}>
-                <line x1={x} y1={g.y(b.h)} x2={x} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.hairline} />
-                <rect x={x - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 4)} fill={fill} />
-                <rect
-                  x={x - w / 2}
-                  y={U.volume.y + U.volume.h - vh}
-                  width={w}
-                  height={Math.max(1, vh)}
-                  rx={Math.min(w * 0.28, 4)}
-                  fill={fill}
-                  opacity={0.72}
-                />
-              </g>
-            );
-          })}
+          {card.series.bars
+            .slice(0, Math.ceil(card.series.bars.length * built))
+            .map((b, i) => {
+              const x = g.x(i);
+              const w = Math.max(3, g.slot * 0.66);
+              const top = Math.min(g.y(b.o), g.y(b.c));
+              const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
+              const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
+              const vh = (card.vol[i] / Math.max(...card.vol)) * U.volume.h;
+              return (
+                <g key={i}>
+                  <line
+                    x1={x}
+                    y1={g.y(b.h)}
+                    x2={x}
+                    y2={g.y(b.l)}
+                    stroke={fill}
+                    strokeWidth={theme.shape.hairline}
+                  />
+                  <rect
+                    x={x - w / 2}
+                    y={top}
+                    width={w}
+                    height={h}
+                    rx={Math.min(w * 0.22, 4)}
+                    fill={fill}
+                  />
+                  <rect
+                    x={x - w / 2}
+                    y={U.volume.y + U.volume.h - vh}
+                    width={w}
+                    height={Math.max(1, vh)}
+                    rx={Math.min(w * 0.28, 4)}
+                    fill={fill}
+                    opacity={0.72}
+                  />
+                </g>
+              );
+            })}
         </g>
       </svg>
 
       {/* ── name and paragraph ──────────────────────────────────────────── */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: U.pad + 14,
@@ -147,7 +184,7 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
         }}
       >
         {card.title}
-      </div>
+      </Interactive.Div>
       {card.desc.map((line, i) => (
         <div
           key={line}
@@ -169,8 +206,7 @@ const Window = ({ card }: { card: (typeof CARDS)[number] }) => {
           {line}
         </div>
       ))}
-
-    </div>
+    </Interactive.Div>
   );
 };
 
@@ -184,7 +220,13 @@ export const SC17 = () => {
 
   return (
     <Stage transparent>
-      <div style={{ position: "absolute", inset: 0, ...cutInStyle(f + FROM, CUTS.toSpikes) }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...cutInStyle(f + FROM, CUTS.toSpikes),
+        }}
+      >
         <div
           style={{
             position: "absolute",
@@ -234,7 +276,9 @@ export const SC17 = () => {
   SPIKES.cards.forEach((card) =>
     card.desc.forEach((line) => {
       if (line.length > MAX) {
-        throw new Error(`SC17: "${line}" is ${line.length} characters and will not fit a ${SPIKES.win.w}px window at ${SPIKES.ui.desc.size}px`);
+        throw new Error(
+          `SC17: "${line}" is ${line.length} characters and will not fit a ${SPIKES.win.w}px window at ${SPIKES.ui.desc.size}px`,
+        );
       }
     }),
   );

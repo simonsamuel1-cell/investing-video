@@ -16,10 +16,20 @@
  * ⚠ AND THE GROUND ARRIVES BEFORE THE MASCOT, as it does at 2461: the grid is
  * the room the closing happens in, not something the card brings with it.
  */
+import { CoreWordsE as Words } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Stage, GridGround, QuoteCard, Words, TuntunMark, quoteListY,
-  cutInStyle, cutOutStyle, useMotion, progress, progressInOut, theme,
+  Stage,
+  GridGround,
+  QuoteCard,
+  TuntunMark,
+  quoteListY,
+  cutInStyle,
+  cutOutStyle,
+  useMotion,
+  progress,
+  progressInOut,
+  theme,
 } from "../../../core";
 import { BLOCK, CLOSE, CUTS, MASCOT, local } from "../data/timing";
 
@@ -48,7 +58,10 @@ const BAND = (theme.logoZone.height + theme.captionBand.top) / 2;
  */
 const stackTop = (total: number, lift: number) => BAND - total / 2 - lift;
 const TOP_ONE = stackTop(CARD.markH + CARD.gap + CARD.h, CARD.lift);
-const TOP_TWO = stackTop(CARD.markH + CARD.gap + CARD.h + V.second.gap + H2, V.second.lift);
+const TOP_TWO = stackTop(
+  CARD.markH + CARD.gap + CARD.h + V.second.gap + H2,
+  V.second.lift,
+);
 
 export const SC20 = () => {
   const f = useCurrentFrame();
@@ -62,7 +75,9 @@ export const SC20 = () => {
   const cOut = cutOutStyle(f + FROM, CUTS.toNext);
   const cam = {
     transform: `${cIn.transform} ${cOut.transform}`,
-    filter: [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") || undefined,
+    filter:
+      [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") ||
+      undefined,
   };
 
   /** One curve moves the stack and brings the second card in, so the card
@@ -88,7 +103,8 @@ export const SC20 = () => {
               x={theme.canvas.width / 2}
               y={
                 markY +
-                Math.sin(((f - at) / MASCOT.float.period) * Math.PI * 2) * MASCOT.float.amount
+                Math.sin(((f - at) / MASCOT.float.period) * Math.PI * 2) *
+                  MASCOT.float.amount
               }
               height={CARD.markH}
             />

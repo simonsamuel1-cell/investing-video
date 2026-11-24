@@ -7,7 +7,7 @@
  * TODO [NEEDS DATA: confirm zone from BMRI daily CSV; widen window rather than
  * force a band]
  */
-import { useCurrentFrame, interpolate } from "remotion";
+import { useCurrentFrame, interpolate, Interactive } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { ZoneBand } from "../components/ZoneBand";
@@ -70,7 +70,10 @@ export const Scene08 = () => {
   const bandDraw = f >= T.band ? progress(f, T.band, 46) : 0;
   const deepen = f >= T.deepen ? progress(f, T.deepen, 30) : 0;
   const trace = f >= T.trace ? progress(f, T.trace, 46) : 0;
-  const ghosts = f >= T.ghosts && f < T.ghosts + 60 ? Math.sin(((f - T.ghosts) / 60) * Math.PI) : 0;
+  const ghosts =
+    f >= T.ghosts && f < T.ghosts + 60
+      ? Math.sin(((f - T.ghosts) / 60) * Math.PI)
+      : 0;
   const fill = interpolate(deepen, [0, 1], [0.08, 0.14]);
   const clearOp = f >= T.clear ? fadeOut(f, T.clear, T.clearDur) : 1;
 
@@ -79,110 +82,145 @@ export const Scene08 = () => {
 
   return (
     <SafeArea>
-      <div style={{ transform: `translateX(${dx}px)`, filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined }}>
-      <div>
       <div
         style={{
-          position: "absolute",
-          left: card.x,
-          top: card.y,
-          width: card.w,
-          height: card.h,
-          borderRadius: theme.radius.cardLg,
-          background: pal.cardBg,
-          border: `${theme.stroke.hair}px solid ${pal.border}`,
-          opacity: clearOp,
-        }}
-      />
-
-      {bandDraw > 0.001 && (
-        <div style={{ opacity: clearOp }}>
-          <ZoneBand x={chart.x} w={chart.w} yTop={yTop} yBottom={yBot} fillOpacity={fill} drawProgress={bandDraw} />
-        </div>
-      )}
-
-      {/* the candles stay to the last frame — only their axes clear */}
-      <CandlestickChart data={bmriDaily} window={WINDOW} box={chart} revealProgress={reveal} axesOpacity={clearOp} />
-      </div>
-
-      {/* the moment the memory is named */}
-      <div
-        style={{
-          position: "absolute",
-          left: chart.x,
-          top: 200,
-          fontFamily: theme.type.family,
-          fontSize: theme.type.header.size,
-          fontWeight: theme.type.header.weight,
-          color: pal.ink,
-          opacity: progress(f, T.header, 24) * clearOp,
-          transform: `translateY(${(1 - progress(f, T.header, 24)) * 14}px)`,
+          transform: `translateX(${dx}px)`,
+          filter: slideFx > 0.05 ? `blur(${slideFx}px)` : undefined,
         }}
       >
-        Pasar punya ingatan.
-      </div>
+        <div>
+          <Interactive.Div
+            name="Objek"
+            style={{
+              position: "absolute",
+              left: card.x,
+              top: card.y,
+              width: card.w,
+              height: card.h,
+              borderRadius: theme.radius.cardLg,
+              background: pal.cardBg,
+              border: `${theme.stroke.hair}px solid ${pal.border}`,
+              opacity: clearOp,
+            }}
+          />
 
-      {/* the trace the area leaves, and the shape the three bounces share */}
-      {(trace > 0.001 || ghosts > 0.001) && (
-        <svg
-          style={{ position: "absolute", left: 0, top: 0, overflow: "visible", opacity: clearOp }}
-          width={theme.canvas.width}
-          height={theme.canvas.height}
-        >
-          {/* the trace the three touches leave along the band */}
-          {trace > 0.001 && (
-            <line
-              x1={g.cx(ZONE_TOUCH_IDX[0])}
-              y1={(yTop + yBot) / 2}
-              x2={g.cx(ZONE_TOUCH_IDX[0]) + (g.cx(ZONE_TOUCH_IDX[2]) - g.cx(ZONE_TOUCH_IDX[0])) * trace}
-              y2={(yTop + yBot) / 2}
-              stroke={pal.indigo}
-              strokeWidth={theme.stroke.rule}
-              strokeDasharray="10 8"
-              opacity={0.8}
-            />
-          )}
-          {/* the three bounces, outlined so their similarity reads */}
-          {ghosts > 0.001 &&
-            ZONE_TOUCH_IDX.map((idx) => (
-              <rect
-                key={`g${idx}`}
-                x={g.cx(idx) - g.slot * 2.5}
-                y={yTop - 30}
-                width={g.slot * 5}
-                height={yBot - yTop + 60}
-                rx={10}
-                fill="none"
-                stroke={pal.indigo}
-                strokeWidth={theme.stroke.hair}
-                opacity={0.7 * ghosts}
+          {bandDraw > 0.001 && (
+            <div style={{ opacity: clearOp }}>
+              <ZoneBand
+                x={chart.x}
+                w={chart.w}
+                yTop={yTop}
+                yBottom={yBot}
+                fillOpacity={fill}
+                drawProgress={bandDraw}
               />
-            ))}
-        </svg>
-      )}
+            </div>
+          )}
 
-      {/* the three genuine touches */}
-      <div style={{ opacity: clearOp }}>
-        {ZONE_TOUCH_IDX.map((idx, i) => (
-          <Ping key={idx} x={g.cx(idx)} y={g.scale(bmriDaily[idx].l)} startFrame={[T.t1, T.t2, T.t3][i]} variant="cyan" />
-        ))}
-      </div>
+          {/* the candles stay to the last frame — only their axes clear */}
+          <CandlestickChart
+            data={bmriDaily}
+            window={WINDOW}
+            box={chart}
+            revealProgress={reveal}
+            axesOpacity={clearOp}
+          />
+        </div>
 
-      {/* the one chip on the band — below it, hanging off the first touch */}
-      {/* ⚠ A FILLED INDIGO PILL, WHITE TYPE, LOWER CASE — Simon: "ubah style
+        {/* the moment the memory is named */}
+        <Interactive.Div
+          name="Pasar punya ingatan."
+          style={{
+            position: "absolute",
+            left: chart.x,
+            top: 200,
+            fontFamily: theme.type.family,
+            fontSize: theme.type.header.size,
+            fontWeight: theme.type.header.weight,
+            color: pal.ink,
+            opacity: progress(f, T.header, 24) * clearOp,
+            transform: `translateY(${(1 - progress(f, T.header, 24)) * 14}px)`,
+          }}
+        >
+          Pasar punya ingatan.
+        </Interactive.Div>
+
+        {/* the trace the area leaves, and the shape the three bounces share */}
+        {(trace > 0.001 || ghosts > 0.001) && (
+          <svg
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              overflow: "visible",
+              opacity: clearOp,
+            }}
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+          >
+            {/* the trace the three touches leave along the band */}
+            {trace > 0.001 && (
+              <line
+                x1={g.cx(ZONE_TOUCH_IDX[0])}
+                y1={(yTop + yBot) / 2}
+                x2={
+                  g.cx(ZONE_TOUCH_IDX[0]) +
+                  (g.cx(ZONE_TOUCH_IDX[2]) - g.cx(ZONE_TOUCH_IDX[0])) * trace
+                }
+                y2={(yTop + yBot) / 2}
+                stroke={pal.indigo}
+                strokeWidth={theme.stroke.rule}
+                strokeDasharray="10 8"
+                opacity={0.8}
+              />
+            )}
+            {/* the three bounces, outlined so their similarity reads */}
+            {ghosts > 0.001 &&
+              ZONE_TOUCH_IDX.map((idx) => (
+                <rect
+                  key={`g${idx}`}
+                  x={g.cx(idx) - g.slot * 2.5}
+                  y={yTop - 30}
+                  width={g.slot * 5}
+                  height={yBot - yTop + 60}
+                  rx={10}
+                  fill="none"
+                  stroke={pal.indigo}
+                  strokeWidth={theme.stroke.hair}
+                  opacity={0.7 * ghosts}
+                />
+              ))}
+          </svg>
+        )}
+
+        {/* the three genuine touches */}
+        <div style={{ opacity: clearOp }}>
+          {ZONE_TOUCH_IDX.map((idx, i) => (
+            <Ping
+              key={idx}
+              x={g.cx(idx)}
+              y={g.scale(bmriDaily[idx].l)}
+              startFrame={[T.t1, T.t2, T.t3][i]}
+              variant="cyan"
+            />
+          ))}
+        </div>
+
+        {/* the one chip on the band — below it, hanging off the first touch */}
+        {/* ⚠ A FILLED INDIGO PILL, WHITE TYPE, LOWER CASE — Simon: "ubah style
           jadi background indigo, text putih. Textnya huruf kecil semua." */}
-      <Chip
-        label="pembeli masuk"
-        x={g.cx(ZONE_TOUCH_IDX[0])}
-        y={yBot + 76}
-        variant="indigo"
-        solid
-        anchor="center"
-        startFrame={T.t1 + 8}
-        opacity={clearOp}
-        connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yBot + 8 }}
-      />
+        <Chip
+          label="pembeli masuk"
+          x={g.cx(ZONE_TOUCH_IDX[0])}
+          y={yBot + 76}
+          variant="indigo"
+          solid
+          anchor="center"
+          startFrame={T.t1 + 8}
+          opacity={clearOp}
+          connectorTo={{ x: g.cx(ZONE_TOUCH_IDX[0]), y: yBot + 8 }}
+        />
       </div>
-        </SafeArea>
+    </SafeArea>
   );
 };

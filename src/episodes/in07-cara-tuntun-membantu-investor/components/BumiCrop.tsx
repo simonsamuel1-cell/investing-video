@@ -32,7 +32,7 @@ export const BumiCrop = ({ r, h }: { r: Rect; h: number }) => {
   const ph = BUMI_CARD.pointer.h * k * POINTER_K;
   return (
     <div style={{ position: "relative", width: w, height: h, overflow: "hidden" }}>
-      <Img src={staticFile(BUMI_CARD.src)} style={{ position: "absolute", left: -r.x1 * k, top: -r.y1 * k, width: BUMI_CARD.w * k, maxWidth: "none" }} />
+      <Img showInTimeline={false} src={staticFile(BUMI_CARD.src)} style={{ position: "absolute", left: -r.x1 * k, top: -r.y1 * k, width: BUMI_CARD.w * k, maxWidth: "none" }} />
       {gauge ? (
         <svg width={w} height={h} style={{ position: "absolute", left: 0, top: 0 }}>
           <path d={`M ${px} ${py} L ${px + pw / 2} ${py + ph} L ${px - pw / 2} ${py + ph} Z`} fill={c.ink} stroke={c.ink} strokeWidth={Math.max(1, 3 * k)} strokeLinejoin="round" />

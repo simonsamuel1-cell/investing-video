@@ -18,10 +18,18 @@
  * gets closed. It is left to read that way, with no line of narration spent
  * pointing at it.
  */
+import { CoreLineE as Line, CoreWordsE as Words } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Card, Chip, Line, Stage, Words,
-  fadeOut, progress, textReveal, theme, useMotion, usePalette,
+  Card,
+  Chip,
+  Stage,
+  fadeOut,
+  progress,
+  textReveal,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, PROCESS, SELF, local } from "../data/timing";
 import { RAIL, RAIL_LEFT, SELF_PANEL } from "../data/layout";
@@ -68,14 +76,19 @@ export const ProcessGroup = () => {
         color={c.slate}
       />
 
-      <Card rect={rect} opacity={progress(f, local(V.rail.at, FROM), m.fade)} soft />
+      <Card
+        rect={rect}
+        opacity={progress(f, local(V.rail.at, FROM), m.fade)}
+        soft
+      />
 
       {items.map((q, i) => {
         const at = local(q.at, FROM);
         const r = textReveal(f, at, m.reveal);
         const isSixth = i === ROWS - 1;
         /* one row goes blank to show "satu bagian penting belum jelas" */
-        const blank = !isSixth && i === 2 ? fadeOut(f, local(V.blank, FROM), m.fade) : 1;
+        const blank =
+          !isSixth && i === 2 ? fadeOut(f, local(V.blank, FROM), m.fade) : 1;
         return (
           <div
             key={q.text}
@@ -88,7 +101,9 @@ export const ProcessGroup = () => {
               gap: size * 0.6,
               fontFamily: theme.text.family,
               fontSize: isSixth ? size * 1.16 : size,
-              fontWeight: isSixth ? theme.text.title.weight : theme.text.body.weight,
+              fontWeight: isSixth
+                ? theme.text.title.weight
+                : theme.text.body.weight,
               color: isSixth ? c.indigo : c.ink,
               /* ⚠ THE ROW STAYS, THE ANSWER GOES. Fading the whole row made 03
                  vanish, which reads as a list of five — the point is that a
@@ -98,8 +113,12 @@ export const ProcessGroup = () => {
               whiteSpace: "nowrap",
             }}
           >
-            <span style={{ color: c.muted, fontSize: size * 0.8 }}>{`0${i + 1}`}</span>
-            <span style={{ opacity: blank > 0.5 ? 1 : 0.55 }}>{blank > 0.5 ? q.text : "—"}</span>
+            <span
+              style={{ color: c.muted, fontSize: size * 0.8 }}
+            >{`0${i + 1}`}</span>
+            <span style={{ opacity: blank > 0.5 ? 1 : 0.55 }}>
+              {blank > 0.5 ? q.text : "—"}
+            </span>
           </div>
         );
       })}
@@ -136,7 +155,11 @@ const SelfCheck = ({ f }: { f: number }) => {
 
   return (
     <>
-      <Card rect={P} opacity={progress(f, local(SELF.panel, FROM), m.fade)} soft />
+      <Card
+        rect={P}
+        opacity={progress(f, local(SELF.panel, FROM), m.fade)}
+        soft
+      />
       <Line
         text="CEK DIRIMU SENDIRI"
         x={P.x + P.w / 2}
@@ -150,7 +173,13 @@ const SelfCheck = ({ f }: { f: number }) => {
       {/* ⚠ EACH FLAG LANDS ON ITS OWN WORD — 15029 / 15054 / 15129. The first
           two are 25 frames apart because "FOMO, kesal," is said that fast. */}
       {SELF.flags.map((q, i) => (
-        <div key={q.label} style={{ transform: `translateX(${aside * P.w * 0.06}px)`, opacity: 1 - aside * 0.55 }}>
+        <div
+          key={q.label}
+          style={{
+            transform: `translateX(${aside * P.w * 0.06}px)`,
+            opacity: 1 - aside * 0.55,
+          }}
+        >
           <Chip
             label={q.label}
             x={P.x + P.w * 0.5}

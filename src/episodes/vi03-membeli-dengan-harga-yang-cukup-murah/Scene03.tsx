@@ -9,7 +9,8 @@
  * height fit ke layar (awas safe margin)"): its lines from the logo zone's foot (the roof runs past the zone's maxX, so it
  * cannot rise into the top 150 px) to the subtitle band's top, centred across.
  */
-import { Sequence, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { useCurrentFrame } from "remotion";
 import { SoftGround, Stage, theme, useMotion } from "../../core";
 import { MembeliCukupMurahComposition } from "./Composition";
 import { BoardGrid, ease } from "./components/kit";

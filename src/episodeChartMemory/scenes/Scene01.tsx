@@ -6,7 +6,7 @@
  * Every overlay is COMPUTED from the daily series — no arbitrary squiggles.
  * TODO [NEEDS DATA: BMRI daily OHLC CSV]
  */
-import { useCurrentFrame, interpolate } from "remotion";
+import { useCurrentFrame, interpolate, Interactive } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CandlestickChart, chartGeom } from "../components/CandlestickChart";
 import { IndicatorOverlays } from "../components/IndicatorOverlays";
@@ -14,7 +14,13 @@ import { SubPane } from "../components/SubPane";
 import { Chip } from "../components/Chip";
 import { DashedFrame, dashOpenAt } from "../components/DashedFrame";
 import { theme } from "../theme";
-import { progress, progressInOut, fadeIn, fadeOut, textReveal } from "../helpers";
+import {
+  progress,
+  progressInOut,
+  fadeIn,
+  fadeOut,
+  textReveal,
+} from "../helpers";
 import { bmriDaily, WIN } from "../data/bmri";
 import { usePalette } from "../palette";
 
@@ -90,7 +96,8 @@ const T = {
  */
 const R = { start: 531, step: 8, dur: 26 };
 /** 0 → still there, 1 → gone. `i` is DEPARTURE order, not arrival order. */
-const leaves = (f: number, i: number) => progress(f, R.start + i * R.step, R.dur);
+const leaves = (f: number, i: number) =>
+  progress(f, R.start + i * R.step, R.dur);
 
 /** The doubt's box. Fixed, like every marquee in this film. */
 const DOUBT = { w: 560, h: 96 };
@@ -191,7 +198,12 @@ export const Scene01 = () => {
   const g = chartGeom(bmriDaily, WINDOW, priceBox);
 
   const rsiBox = { x: INNER.x, y: INNER.y + priceH + 46, w: INNER.w, h: 118 };
-  const macdBox = { x: INNER.x, y: rsiBox.y + rsiBox.h + 46, w: INNER.w, h: 118 };
+  const macdBox = {
+    x: INNER.x,
+    y: rsiBox.y + rsiBox.h + 46,
+    w: INNER.w,
+    h: 118,
+  };
 
   const chartOp = fadeIn(f, T.chartIn, 26);
   /** The candles, one at a time, once the paper is there to put them on. */
@@ -235,7 +247,8 @@ export const Scene01 = () => {
     easing: theme.motion.ease,
   });
 
-  const trendDraw = (f >= T.trend ? progressInOut(f, T.trend, TRIM) : 0) * keep.trend;
+  const trendDraw =
+    (f >= T.trend ? progressInOut(f, T.trend, TRIM) : 0) * keep.trend;
   const thoughtOut = f >= T.thoughtOut ? fadeOut(f, T.thoughtOut, 14) : 1;
   /** The words wait for the frame — see DashedFrame. */
   const doubt = textReveal(f, dashOpenAt(T.thought), 14);
@@ -243,8 +256,10 @@ export const Scene01 = () => {
   const cardScale = interpolate(lookBack, [0, 1], [1, 0.985]);
 
   /** The band's middle line — the 20-day average — drawn with its area. */
-  const ma20 = (f >= T.bbMid ? progressInOut(f, T.bbMid, TRIM) : 0) * keep.bbMid;
-  const ma100 = (f >= T.ma100 ? progressInOut(f, T.ma100, TRIM) : 0) * keep.ma100;
+  const ma20 =
+    (f >= T.bbMid ? progressInOut(f, T.bbMid, TRIM) : 0) * keep.bbMid;
+  const ma100 =
+    (f >= T.ma100 ? progressInOut(f, T.ma100, TRIM) : 0) * keep.ma100;
   const bb = (f >= T.bb ? progress(f, T.bb, 30) : 0) * keep.bb;
 
   const trendLine = (ia: number, ib: number, useLow: boolean) => {
@@ -260,7 +275,10 @@ export const Scene01 = () => {
   };
   // the price gridlines CandlestickChart draws; the doubt chip sits above the
   // 4.997 line (index 2 counting up from the bottom).
-  const tickPrices = Array.from({ length: 4 }, (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4);
+  const tickPrices = Array.from(
+    { length: 4 },
+    (_, i) => g.min + ((g.max - g.min) * (i + 0.5)) / 4,
+  );
   const thoughtY = g.scale(tickPrices[2]) - 42;
 
   const tLow = trendLine(P.loA, P.loB, true);
@@ -277,7 +295,8 @@ export const Scene01 = () => {
         }}
       >
         {/* chart card */}
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: CARD.x,
@@ -292,63 +311,96 @@ export const Scene01 = () => {
         />
 
         <div style={{ position: "absolute", inset: 0, clipPath: CLIP }}>
-        <div style={{ position: "absolute", inset: 0, transform: `translateY(${rise}px)` }}>
-          {/* ⚠ NO GLOW. It went brightness lift → glow + 10% swell → glow on the
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transform: `translateY(${rise}px)`,
+            }}
+          >
+            {/* ⚠ NO GLOW. It went brightness lift → glow + 10% swell → glow on the
               candles only → gone: Simon, "glow indigo di candlesticks nya
               cancel deh." On "Candlestick" the spotlight alone carries the
               beat — the candles hold full opacity while the trendlines drop to
               half and thin to 1px. */}
-          <div style={{ position: "absolute", inset: 0, opacity: candleLvl }}>
-            <CandlestickChart
+            <div style={{ position: "absolute", inset: 0, opacity: candleLvl }}>
+              <CandlestickChart
+                data={bmriDaily}
+                window={WINDOW}
+                box={priceBox}
+                axesOpacity={chartOp}
+                revealProgress={candlesIn}
+              />
+            </div>
+
+            <div style={{ position: "absolute", inset: 0, opacity: indLvl }}>
+              <IndicatorOverlays
+                data={bmriDaily}
+                window={WINDOW}
+                box={priceBox}
+                cx={g.cx}
+                scale={g.scale}
+                ma20Progress={ma20}
+                ma100Progress={ma100}
+                bbProgress={bb}
+                strokeWidth={strokeOf(indLvl)}
+              />
+            </div>
+
+            {/* trendlines anchored to real pivots */}
+            {trendDraw > 0.001 && (
+              <svg
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: 0,
+                  overflow: "visible",
+                }}
+                width={theme.canvas.width}
+                height={theme.canvas.height}
+              >
+                {[tLow, tHigh].map((t, i) => {
+                  const len = Math.hypot(t.x2 - t.x1, t.y2 - t.y1);
+                  return (
+                    <line
+                      key={i}
+                      x1={t.x1}
+                      y1={t.y1}
+                      x2={t.x2}
+                      y2={t.y2}
+                      stroke={pal.indigo}
+                      strokeWidth={strokeOf(trendLvl)}
+                      strokeLinecap="round"
+                      strokeDasharray={len}
+                      strokeDashoffset={len * (1 - trendDraw)}
+                      opacity={0.8 * trendLvl}
+                    />
+                  );
+                })}
+              </svg>
+            )}
+
+            <SubPane
+              kind="rsi"
               data={bmriDaily}
               window={WINDOW}
-              box={priceBox}
-              axesOpacity={chartOp}
-              revealProgress={candlesIn}
+              box={rsiBox}
+              cx={g.cx}
+              slideProgress={rsiIn}
+              title="RSI 14"
+              strokeWidth={strokeOf(indLvl)}
+            />
+            <SubPane
+              kind="macd"
+              data={bmriDaily}
+              window={WINDOW}
+              box={macdBox}
+              cx={g.cx}
+              slideProgress={macdIn}
+              title="MACD 12 26 9"
+              strokeWidth={strokeOf(indLvl)}
             />
           </div>
-
-          <div style={{ position: "absolute", inset: 0, opacity: indLvl }}>
-          <IndicatorOverlays
-            data={bmriDaily}
-            window={WINDOW}
-            box={priceBox}
-            cx={g.cx}
-            scale={g.scale}
-            ma20Progress={ma20}
-            ma100Progress={ma100}
-            bbProgress={bb}
-            strokeWidth={strokeOf(indLvl)}
-          />
-          </div>
-
-          {/* trendlines anchored to real pivots */}
-          {trendDraw > 0.001 && (
-            <svg style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }} width={theme.canvas.width} height={theme.canvas.height}>
-              {[tLow, tHigh].map((t, i) => {
-                const len = Math.hypot(t.x2 - t.x1, t.y2 - t.y1);
-                return (
-                  <line
-                    key={i}
-                    x1={t.x1}
-                    y1={t.y1}
-                    x2={t.x2}
-                    y2={t.y2}
-                    stroke={pal.indigo}
-                    strokeWidth={strokeOf(trendLvl)}
-                    strokeLinecap="round"
-                    strokeDasharray={len}
-                    strokeDashoffset={len * (1 - trendDraw)}
-                    opacity={0.8 * trendLvl}
-                  />
-                );
-              })}
-            </svg>
-          )}
-
-          <SubPane kind="rsi" data={bmriDaily} window={WINDOW} box={rsiBox} cx={g.cx} slideProgress={rsiIn} title="RSI 14" strokeWidth={strokeOf(indLvl)} />
-          <SubPane kind="macd" data={bmriDaily} window={WINDOW} box={macdBox} cx={g.cx} slideProgress={macdIn} title="MACD 12 26 9" strokeWidth={strokeOf(indLvl)} />
-        </div>
         </div>
 
         {/* accumulating legend chips — top-left, stepped opacity so text stays legible */}

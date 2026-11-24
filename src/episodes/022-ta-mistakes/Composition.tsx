@@ -43,7 +43,8 @@
  * entrance that needs a run-up.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, staticFile } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, getInputProps, staticFile } from "remotion";
 import { Captions, PaletteProvider, Stage, Watermark } from "../../core";
 import { CUES, VO_END } from "./subtitles";
 import { BLOCK, CARD_LIST, COUNTER, MIND, PANEL10, PLANS, PREP, RULES, RECALL, REVENGE_T, REVERSE, BREAKOUT, ROW3, ROW4, ROW5, ROW6, ROW7, ROW8, TWIN, WINDOW11 } from "./data/timing";

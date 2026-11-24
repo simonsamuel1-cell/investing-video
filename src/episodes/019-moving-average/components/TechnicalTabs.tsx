@@ -90,7 +90,7 @@ export const TechnicalTabs = ({
               background: C.surface,
             }}
           >
-            <Img
+            <Img showInTimeline={false}
               src={staticFile(tab.src)}
               style={{ width: "100%", height: "100%", display: "block" }}
             />

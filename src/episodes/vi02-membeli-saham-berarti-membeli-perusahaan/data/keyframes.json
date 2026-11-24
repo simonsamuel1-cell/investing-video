@@ -1,0 +1,868 @@
+[
+ {
+  "file": "CodeAndBusiness",
+  "name": "Value Investing = melihat saha",
+  "frames": [
+   9,
+   33,
+   227,
+   247
+  ],
+  "at": "W(\"Di video\")",
+  "out": "(W(\"melihat saham\")) - m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Video sebelumnya",
+  "frames": [
+   9,
+   33,
+   462,
+   482
+  ],
+  "at": "W(\"Di video\")",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Sebelum lihat...",
+  "frames": [
+   239,
+   263,
+   462,
+   482
+  ],
+  "at": "(W(\"melihat saham\"))",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Lihat dulu...",
+  "frames": [
+   324,
+   348,
+   462,
+   482
+  ],
+  "at": "(W(\"lihat dulu\"))",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Harga",
+  "frames": [
+   239,
+   263,
+   462,
+   482
+  ],
+  "at": "(W(\"melihat saham\"))",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Objek 6",
+  "frames": [
+   324,
+   348,
+   462,
+   482
+  ],
+  "at": "(W(\"lihat dulu\"))",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Kartu ICBP",
+  "frames": [
+   324,
+   348
+  ],
+  "expr": [
+   "(W(\"lihat dulu\"))",
+   "m.reveal"
+  ]
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Bisnis",
+  "frames": [
+   324,
+   348,
+   462,
+   482
+  ],
+  "at": "(W(\"lihat dulu\"))",
+  "out": "(W(\"Sekarang kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "clock",
+  "frames": [
+   593,
+   617,
+   1184,
+   1204
+  ],
+  "at": "(W(\"Jam empat\"))",
+  "out": "(W(\"Semua aktivitas\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "moon",
+  "frames": [
+   1184,
+   1208
+  ],
+  "at": "(W(\"Semua aktivitas\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "ICBP",
+  "frames": [
+   1820,
+   1844
+  ],
+  "expr": [
+   "(W(\"ICBP.\"))",
+   "m.reveal"
+  ]
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "Bukan sekadar empat huruf.",
+  "frames": [
+   1892,
+   1916,
+   2156,
+   2176
+  ],
+  "at": "(W(\"Padahal\"))",
+  "out": "(W(\"Kita membeli\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "CodeAndBusiness",
+  "name": "1%",
+  "frames": [
+   2359,
+   2383
+  ],
+  "at": "(W(\"kepemilikan\")) + m.sec(0.15) + m.sec(1)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "book-open",
+  "frames": [
+   441,
+   465
+  ],
+  "at": "W(\"The Intelligent\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "buffett",
+  "frames": [
+   1073,
+   1097
+  ],
+  "at": "(W(\"Warren Buffett\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "approved",
+  "frames": [
+   1175,
+   1199
+  ],
+  "at": "W(\"kalimat paling\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "Pemilik 1%",
+  "frames": [
+   1444,
+   1468
+  ],
+  "at": "W(\"pemilik bisnis\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "Objek 5",
+  "frames": [
+   2563,
+   2587
+  ],
+  "at": "(W(\"sebagai pemegang saham\")) + m.sec(0.4)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "Bagianmu",
+  "frames": [
+   2619,
+   2643
+  ],
+  "at": "W(\"punya bagian\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PillarOwner",
+  "name": "Kamu",
+  "frames": [
+   2972,
+   2996
+  ],
+  "at": "(W(\"langsung ke\")) + m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Bingkai",
+  "frames": [
+   -24,
+   0
+  ],
+  "expr": [
+   "-m.reveal",
+   "m.reveal"
+  ]
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Ibu Sari",
+  "frames": [
+   196,
+   220
+  ],
+  "at": "(W(\"Ibu Sari\")) + m.sec(0.3)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Partner",
+  "frames": [
+   428,
+   452,
+   1096,
+   1116
+  ],
+  "at": "(W(\"sepuluh persen\"))",
+  "out": "(W(\"lebih penting\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Objek",
+  "frames": [
+   719,
+   743,
+   848,
+   868
+  ],
+  "at": "(W(\"apa yang paling\"))",
+  "out": "(W(\"Bukan berapa\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Harga warung",
+  "frames": [
+   848,
+   872,
+   1096,
+   1116
+  ],
+  "expr": [
+   "(W(\"Bukan berapa\"))",
+   "m.reveal",
+   "W(\"lebih penting\")",
+   "m.fade"
+  ]
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Buku kas",
+  "frames": [
+   1096,
+   1120,
+   1613,
+   1633
+  ],
+  "expr": [
+   "(W(\"lebih penting\"))",
+   "m.reveal",
+   "(W(\"Lalu suatu\"))",
+   "m.fade"
+  ]
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "−20%",
+  "frames": [
+   1716,
+   1740
+  ],
+  "at": "(W(\"menawarkan harga\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "IbuSariLedger",
+  "name": "Buku kas akhir",
+  "frames": [
+   1957,
+   1997
+  ],
+  "expr": [
+   "(W(\"Tapi kalau\"))",
+   "m.move"
+  ]
+ },
+ {
+  "file": "PerShare",
+  "name": "Objek 1",
+  "frames": [
+   -24,
+   0,
+   309,
+   329
+  ],
+  "at": "-m.reveal",
+  "out": "W(\"Pada 2025\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "ICBP",
+  "frames": [
+   144,
+   168,
+   3985,
+   4005
+  ],
+  "at": "W(\"Misalnya ICBP\")",
+  "out": "(W(\"Jadi saat\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "100 Shares",
+  "frames": [
+   1827,
+   1851,
+   2569,
+   2589
+  ],
+  "at": "(W(\"Kalau kamu punya\"))",
+  "out": "(W(\"Tapi bukan\")) - m.sec(0.15)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "100 Shares",
+  "frames": [
+   1866,
+   1890
+  ],
+  "at": "W(\"100 saham\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "100 × Rp791",
+  "frames": [
+   2110,
+   2134
+  ],
+  "at": "W(\"100\", 1)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "= Rp79.100",
+  "frames": [
+   2417,
+   2441
+  ],
+  "at": "W(\"Rp79.100\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "1 saham = sebagian kecil dari ",
+  "frames": [
+   1525,
+   1549,
+   1815,
+   1835
+  ],
+  "at": "W(\"Artinya\")",
+  "out": "(W(\"Kalau kamu punya\")) - m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "Objek 8",
+  "frames": [
+   1791,
+   1815,
+   2887,
+   2907
+  ],
+  "at": "(W(\"Kalau kamu punya\")) - m.sec(0.2) - m.reveal",
+  "out": "(W(\"Perusahaan membagikan\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "Objek 9",
+  "frames": [
+   2887,
+   2911,
+   3985,
+   4005
+  ],
+  "at": "(W(\"Perusahaan membagikan\"))",
+  "out": "(W(\"Jadi saat\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "DIVIDEND",
+  "frames": [
+   2578,
+   2602,
+   3985,
+   4005
+  ],
+  "at": "(W(\"Tapi bukan\"))",
+  "out": "(W(\"Jadi saat\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "DIVIDEND",
+  "frames": [
+   3141,
+   3165
+  ],
+  "at": "W(\"dividen\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "100 × Rp265 = Rp26.500",
+  "frames": [
+   3207,
+   3231
+  ],
+  "at": "W(\"Jadi untuk\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "RETAINED / REINVESTED",
+  "frames": [
+   3698,
+   3722
+  ],
+  "at": "W(\"tetap berada\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "Bukan cuma harga yang perlu di",
+  "frames": [
+   3985,
+   4009,
+   4233,
+   4253
+  ],
+  "at": "(W(\"Jadi saat\"))",
+  "out": "(W(\"Kita juga perlu\")) - m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "“Buku bisnis”",
+  "frames": [
+   4245,
+   4269
+  ],
+  "at": "(W(\"Kita juga perlu\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "PerShare",
+  "name": "“Buku bisnis”",
+  "frames": [
+   4637,
+   4661
+  ],
+  "expr": [
+   "W(\"Itulah\")",
+   "m.reveal"
+  ]
+ },
+ {
+  "file": "RumoursBook",
+  "name": "ABCD",
+  "frames": [
+   135,
+   159
+  ],
+  "at": "W(\"Seseorang\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Masalahnya bukan rumornya.",
+  "frames": [
+   1603,
+   1627
+  ],
+  "at": "(W(\"Masalah utamanya\")) + m.sec(0.4)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Masalahnya:",
+  "frames": [
+   1908,
+   1932
+  ],
+  "at": "(W(\"Masalahnya adalah\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Ibu Sari",
+  "frames": [
+   2565,
+   2589
+  ],
+  "at": "(W(\"Bandingkan\")) + m.sec(0.3)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Supplier kamu mau bangkrut.",
+  "frames": [
+   2752,
+   2776
+  ],
+  "at": "(W(\"Supplier kamu\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Supplier",
+  "frames": [
+   2888,
+   2912
+  ],
+  "at": "(W(\"buka catatannya\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Itu bukan supplier saya.",
+  "frames": [
+   3074,
+   3098
+  ],
+  "at": "(W(\"Itu bukan\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Buku bisnis",
+  "frames": [
+   3190,
+   3214
+  ],
+  "at": "(W(\"Semakin kita\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Penting",
+  "frames": [
+   3401,
+   3425
+  ],
+  "at": "(W(\"benar-benar penting\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "RumoursBook",
+  "name": "Cuma bikin",
+  "frames": [
+   3531,
+   3555
+  ],
+  "at": "(W(\"hanya membuat\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "TenYears",
+  "name": "graham",
+  "frames": [
+   -24,
+   0
+  ],
+  "at": "-m.reveal",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "TenYears",
+  "name": "buffett",
+  "frames": [
+   1152,
+   1176
+  ],
+  "at": "(W(\"Warren Buffett\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "TenYears",
+  "name": "Berkshire Hathaway · 1996",
+  "frames": [
+   1233,
+   1257
+  ],
+  "at": "W(\"kemudian mengatakan\") + m.sec(0.6)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "TenYears",
+  "name": "Kotak pertanyaan",
+  "frames": [
+   1664,
+   1688
+  ],
+  "expr": [
+   "(W(\"Karena itu\")) + m.sec(0.1)",
+   "m.reveal"
+  ]
+ },
+ {
+  "file": "TenYears",
+  "name": "factory",
+  "frames": [
+   1953,
+   1977
+  ],
+  "at": "(W(\"sepuluh tahun lagi\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "TenYears",
+  "name": "10 tahun ke depan",
+  "frames": [
+   1965,
+   1989
+  ],
+  "at": "(W(\"sepuluh tahun lagi\")) + m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "FourCards",
+  "name": "Jangan mulai dari “Target harg",
+  "frames": [
+   20,
+   44
+  ],
+  "at": "W(\"Jadi ketika\") + m.sec(0.15)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "FourCards",
+  "name": "Belum bisa dijawab? Yang dibel",
+  "frames": [
+   3511,
+   3535
+  ],
+  "at": "(W(\"Kalau belum\")) + m.sec(0.15)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "3 hal yang perlu diingat",
+  "frames": [
+   12,
+   36
+  ],
+  "at": "W(\"Ada tiga hal\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Objek 2",
+  "frames": [
+   1149,
+   1173
+  ],
+  "at": "(W(\"Prinsip yang\")) + m.sec(0.1)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Objek 3",
+  "frames": [
+   1155,
+   1179
+  ],
+  "at": "(W(\"Prinsip yang\")) + m.sec(0.2)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "factory",
+  "frames": [
+   7240,
+   7264
+  ],
+  "at": "(W(\"Namun, setelah\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Objek",
+  "frames": [
+   7387,
+   7411
+  ],
+  "at": "(W(\"satu pertanyaan\"))",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Penutup teks Undervalued",
+  "frames": [
+   7690,
+   7708
+  ],
+  "expr": [
+   "W(\"kalau kita\")",
+   "m.sec(0.3)"
+  ]
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Terlalu mahal",
+  "frames": [
+   7749,
+   7773
+  ],
+  "at": "W(\"terlalu mahal\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Perusahaan bagus belum tentu i",
+  "frames": [
+   7491,
+   7515
+  ],
+  "at": "W(\"Perusahaan yang bagus\")",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Video selanjutnya",
+  "frames": [
+   7833,
+   7857
+  ],
+  "at": "(W(\"Karena itu\")) + m.sec(0.15)",
+  "reveal": 24,
+  "fade": 20
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Berapa harga yang",
+  "frames": [
+   8066,
+   8090
+  ],
+  "at": "W(\"berapa harga\")",
+  "reveal": 24,
+  "fade": 20
+ }
+]

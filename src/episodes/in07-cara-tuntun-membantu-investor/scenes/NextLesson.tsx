@@ -15,10 +15,19 @@
  *     teach come in one by one on their words.
  * The storyboard's words on the roof and the long base caption are left out: the title already names it.
  */
+import { CardE as Card, DiscE as Disc } from "../../../editable";
 import { Img, staticFile, useCurrentFrame } from "remotion";
-import { NextVideoHead, cutInStyle, theme, typeStyle, useMotion, usePalette, type Cut } from "../../../core";
+import {
+  NextVideoHead,
+  cutInStyle,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  type Cut,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Card, Disc, ease, useWords } from "../components/kit";
+import { ease, useWords } from "../components/kit";
 
 /** The building's picture (px). */
 const PIC = { src: "art/in07/sc11-fondasi.png", w: 1148, h: 897 };
@@ -31,7 +40,11 @@ const LEARN = [
   { text: "Memahami\nbisnis", icon: "factory", at: "memahami bisnis" },
   { text: "Harga yang\nlayak", icon: "tag", at: "menilai harga" },
   { text: "Pergerakan\nmarket", icon: "chart-up", at: "menghadapi pergerakan" },
-  { text: "Perusahaan\nyang dipahami", icon: "office", at: "mengenali perusahaan" },
+  {
+    text: "Perusahaan\nyang dipahami",
+    icon: "office",
+    at: "mengenali perusahaan",
+  },
 ] as const;
 const CARD = { w: 230, h: 240, gap: 22, x0: 720 };
 const ARROW = { x0: 620, x1: 690, head: 14 };
@@ -50,7 +63,11 @@ export const NextLesson = ({ cut }: { cut: Cut }) => {
   /** Shown from the ground up: the foundation first, the roof last. */
   const rise = ease(f, buildAt, m.sec(1));
   const aside = ease(f, W("kita akan belajar"), m.move);
-  const at = { cx: SOLO.cx + (ASIDE.cx - SOLO.cx) * aside, cy: SOLO.cy + (ASIDE.cy - SOLO.cy) * aside, k: SOLO.k + (ASIDE.k - SOLO.k) * aside };
+  const at = {
+    cx: SOLO.cx + (ASIDE.cx - SOLO.cx) * aside,
+    cy: SOLO.cy + (ASIDE.cy - SOLO.cy) * aside,
+    k: SOLO.k + (ASIDE.k - SOLO.k) * aside,
+  };
   const s = (PIC_H * at.k) / PIC.h;
   const left = at.cx - (PIC.w * s) / 2;
   const top = at.cy - (PIC.h * s) / 2;
@@ -59,28 +76,104 @@ export const NextLesson = ({ cut }: { cut: Cut }) => {
 
   return (
     <div style={{ position: "absolute", inset: 0, ...cutIn }}>
-      <NextVideoHead title="Value Investing" chip="Module" chipAt={cut.at} titleAt={W("Value Investing.") - m.sec(0.1)} light titleTone={c.indigo} />
+      <NextVideoHead
+        title="Value Investing"
+        chip="Module"
+        chipAt={cut.at}
+        titleAt={W("Value Investing.") - m.sec(0.1)}
+        light
+        titleTone={c.indigo}
+      />
 
       {/* the building, from the ground up */}
       {rise > 0.001 ? (
-        <Img src={staticFile(PIC.src)} style={{ position: "absolute", left, top, width: PIC.w * s, height: PIC.h * s, clipPath: `inset(${((1 - rise) * 100).toFixed(2)}% 0 0 0)` }} />
+        <Img
+          src={staticFile(PIC.src)}
+          style={{
+            position: "absolute",
+            left,
+            top,
+            width: PIC.w * s,
+            height: PIC.h * s,
+            clipPath: `inset(${((1 - rise) * 100).toFixed(2)}% 0 0 0)`,
+          }}
+        />
       ) : null}
 
       {/* out of it, the four things the module teaches */}
       {arrow > 0.001 ? (
-        <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0 }}>
-          <line x1={ARROW.x0} y1={ASIDE.cy} x2={ARROW.x0 + (ARROW.x1 - ARROW.x0) * arrow} y2={ASIDE.cy} stroke={theme.color.connector} strokeWidth={4} strokeLinecap="round" />
-          {arrow > 0.95 ? <polyline points={`${ARROW.x1 - ARROW.head},${ASIDE.cy - ARROW.head} ${ARROW.x1},${ASIDE.cy} ${ARROW.x1 - ARROW.head},${ASIDE.cy + ARROW.head}`} fill="none" stroke={theme.color.connector} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" /> : null}
+        <svg
+          width={theme.canvas.width}
+          height={theme.canvas.height}
+          style={{ position: "absolute", left: 0, top: 0 }}
+        >
+          <line
+            x1={ARROW.x0}
+            y1={ASIDE.cy}
+            x2={ARROW.x0 + (ARROW.x1 - ARROW.x0) * arrow}
+            y2={ASIDE.cy}
+            stroke={theme.color.connector}
+            strokeWidth={4}
+            strokeLinecap="round"
+          />
+          {arrow > 0.95 ? (
+            <polyline
+              points={`${ARROW.x1 - ARROW.head},${ASIDE.cy - ARROW.head} ${ARROW.x1},${ASIDE.cy} ${ARROW.x1 - ARROW.head},${ASIDE.cy + ARROW.head}`}
+              fill="none"
+              stroke={theme.color.connector}
+              strokeWidth={4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          ) : null}
         </svg>
       ) : null}
       {LEARN.map((l, i) => {
         const p = ease(f, W(l.at) - m.sec(0.1), m.reveal);
         if (p <= 0.001) return null;
         return (
-          <div key={l.icon} style={{ position: "absolute", left: 0, top: 0, opacity: p, transform: lift(p) }}>
-            <Card x={CARD.x0 + i * (CARD.w + CARD.gap)} y={ASIDE.cy - CARD.h / 2} w={CARD.w} h={CARD.h} line={theme.color.hairlineBrandSolid} style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18 }}>
-              <Disc icon={l.icon} size={96} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-              <div style={{ ...typeStyle("label"), fontSize: 27, lineHeight: 1.2, color: c.ink, textAlign: "center", whiteSpace: "pre-line" }}>{l.text}</div>
+          <div
+            key={l.icon}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              opacity: p,
+              transform: lift(p),
+            }}
+          >
+            <Card
+              x={CARD.x0 + i * (CARD.w + CARD.gap)}
+              y={ASIDE.cy - CARD.h / 2}
+              w={CARD.w}
+              h={CARD.h}
+              line={theme.color.hairlineBrandSolid}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 18,
+              }}
+            >
+              <Disc
+                icon={l.icon}
+                size={96}
+                tone={c.indigo}
+                tint={theme.color.indigoWashSolid}
+              />
+              <div
+                style={{
+                  ...typeStyle("label"),
+                  fontSize: 27,
+                  lineHeight: 1.2,
+                  color: c.ink,
+                  textAlign: "center",
+                  whiteSpace: "pre-line",
+                }}
+              >
+                {l.text}
+              </div>
             </Card>
           </div>
         );

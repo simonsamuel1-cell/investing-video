@@ -8,13 +8,14 @@
  * 96/96/54/108, bottom 108px empty, deterministic (no Math.random),
  * IllustrationTag + Ticker mounted, clampProgress drives session playback.
  */
+import { TA03ChipE as Chip } from "../../editable";
 import { useCurrentFrame } from "remotion";
 import { theme } from "../theme";
 import { sec, fadeIn, clampProgress } from "../helpers";
 import type { SessionPoint } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { SessionView, sessionScale } from "../components/SessionView";
-import { Chip } from "../components/Chip";
+
 import { IllustrationTag } from "../components/IllustrationTag";
 
 // ═══ EDIT ═══
@@ -51,7 +52,9 @@ const PATH: SessionPoint[] = [
 ];
 
 // marker line y (shared scale) — the "Sellers were here" chip sits above it
-const markerY = sessionScale([PATH], VIEW_Y, VIEW_Y + VIEW_H - 72, [MARKER_PRICE])(MARKER_PRICE);
+const markerY = sessionScale([PATH], VIEW_Y, VIEW_Y + VIEW_H - 72, [
+  MARKER_PRICE,
+])(MARKER_PRICE);
 
 export const Scene03 = () => {
   const f = useCurrentFrame();

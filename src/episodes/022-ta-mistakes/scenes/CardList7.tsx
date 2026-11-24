@@ -16,7 +16,8 @@
  * seven's own text is those two words — so the pick and the naming happen
  * together and SC11 opens already introduced.
  */
-import { Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+
 import { PANEL10, ROW7 } from "../data/timing";
 import { SceneTransition, assertTransition } from "./SceneTransition";
 import { Overload } from "./Overload";

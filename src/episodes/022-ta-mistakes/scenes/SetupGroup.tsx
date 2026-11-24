@@ -39,19 +39,54 @@
  * gets pressed and a status chip that appears — the story's own event. Nothing
  * is ever marked on the price itself. This is the compliance line, not taste.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Chart, Chip, DashRule, InstrumentHeader,
-  InstrumentRow, Layer, Level, Line, SpeechBubble, Stage, StatTiles, TickerStrip,
+  Candles,
+  Card,
+  Chart,
+  Chip,
+  DashRule,
+  InstrumentHeader,
+  InstrumentRow,
+  Layer,
+  Level,
+  SpeechBubble,
+  Stage,
+  StatTiles,
+  TickerStrip,
   VolumeBars,
-  gridOf, fadeOut, price, progress, ramp, sma, GRID_PAD_X,
-  theme, useMotion, usePalette,
+  gridOf,
+  fadeOut,
+  price,
+  progress,
+  ramp,
+  sma,
+  GRID_PAD_X,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
-import { BLOCK, CHART_STYLE, INVALID, OPEN, PREMISE, REVERSE, local } from "../data/timing";
+import {
+  BLOCK,
+  CHART_STYLE,
+  INVALID,
+  OPEN,
+  PREMISE,
+  REVERSE,
+  local,
+} from "../data/timing";
 import { BUBBLE, DASH, MA } from "../data/layout";
 import {
-  SETUP, SETUP_BREAK_FROM, SETUP_DOMAIN, SETUP_LEVELS, SETUP_STEPS, SETUP_TREND,
-  SETUP_VOL, TICKERS, XYZ,
+  SETUP,
+  SETUP_BREAK_FROM,
+  SETUP_DOMAIN,
+  SETUP_LEVELS,
+  SETUP_STEPS,
+  SETUP_TREND,
+  SETUP_VOL,
+  TICKERS,
+  XYZ,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -115,7 +150,10 @@ const readout = (seen: number) => {
       { label: "Terendah", value: price(Math.min(...win.map((b) => b.l))) },
       { label: "Close kemarin", value: price(prev) },
       { label: "Perubahan", value: signed(now - prev) },
-      { label: "Rata-rata 20", value: MA20[i] === null ? "—" : price(MA20[i] as number) },
+      {
+        label: "Rata-rata 20",
+        value: MA20[i] === null ? "—" : price(MA20[i] as number),
+      },
     ],
   };
 };
@@ -133,7 +171,9 @@ export const SetupGroup = () => {
    * out, while the two carried words slide to the middle over the top of it.
    */
   const leaving =
-    g >= PREMISE.carry.at ? progress(f, local(PREMISE.carry.at, FROM), PREMISE.carry.over) : 0;
+    g >= PREMISE.carry.at
+      ? progress(f, local(PREMISE.carry.at, FROM), PREMISE.carry.over)
+      : 0;
   /**
    * ⚠ AND IT COMES BACK MID-SC03 — Simon's 1460, "from last we left off". The
    * window returns in the state it went out in, half strength and still pushed
@@ -141,10 +181,15 @@ export const SetupGroup = () => {
    * second chart arriving rather than as the one the scene has been about.
    */
   const resume =
-    g >= PREMISE.resume.at ? progress(f, local(PREMISE.resume.at, FROM), PREMISE.resume.over) : 0;
+    g >= PREMISE.resume.at
+      ? progress(f, local(PREMISE.resume.at, FROM), PREMISE.resume.over)
+      : 0;
   const normal =
-    g >= PREMISE.normal.at ? progress(f, local(PREMISE.normal.at, FROM), PREMISE.normal.over) : 0;
-  if (g >= BLOCK.SC03 && g < BLOCK.SC04 && leaving >= 0.999 && resume <= 0.001) return null;
+    g >= PREMISE.normal.at
+      ? progress(f, local(PREMISE.normal.at, FROM), PREMISE.normal.over)
+      : 0;
+  if (g >= BLOCK.SC03 && g < BLOCK.SC04 && leaving >= 0.999 && resume <= 0.001)
+    return null;
 
   const grid = gridOf(SETUP.closes, SETUP_DOMAIN, L.plot, 0.12, L.gutter);
 
@@ -165,7 +210,10 @@ export const SetupGroup = () => {
   /** Out on the carry, back on the resume, and up to full as the push undoes. */
   const gate = Math.min(1, 1 - leaving + resume);
   const quiet =
-    (1 - 0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over) + 0.5 * normal) * gate;
+    (1 -
+      0.5 * progress(f, local(REVERSE.fade.at, FROM), REVERSE.fade.over) +
+      0.5 * normal) *
+    gate;
   /**
    * ⚠ THE PICTURE PUSHES IN; THE PANEL DOES NOT MOVE. Only what is inside the
    * white card scales, anchored on the card's TOP edge so it grows downward —
@@ -175,7 +223,8 @@ export const SetupGroup = () => {
   const push =
     g >= BLOCK.SC04
       ? 0
-      : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over) * (1 - normal);
+      : progress(f, local(REVERSE.zoom.at, FROM), REVERSE.zoom.over) *
+        (1 - normal);
   /** Everything the setup claimed, leaving on one frame. Back at full for SC04,
    *  which the group is dark in front of. */
   const cleared = 1 - progress(f, local(REVERSE.clear, FROM), m.fade);
@@ -188,7 +237,6 @@ export const SetupGroup = () => {
   const back = progress(f, local(INVALID.danger, FROM), m.fade);
   const chartOp = g < BLOCK.SC04 ? quiet : 0.28 + 0.72 * back;
 
-
   /** How much of the tape exists on this frame — the number every readout on
    *  the screen is derived from. During SC01 the head is still drawing, so it
    *  is the head's own progress that decides; afterwards `shown` carries it. */
@@ -200,7 +248,9 @@ export const SetupGroup = () => {
    * everything that MOVES — this is a count of arrivals, not a move.)
    */
   const printed = ramp(f, local(OPEN.print.at, FROM), OPEN.print.over);
-  const head = upto(SETUP_BREAK_FROM - 1) + (upto(SETUP_STEPS.open) - upto(SETUP_BREAK_FROM - 1)) * printed;
+  const head =
+    upto(SETUP_BREAK_FROM - 1) +
+    (upto(SETUP_STEPS.open) - upto(SETUP_BREAK_FROM - 1)) * printed;
   /**
    * ⚠ THE HISTOGRAM AND THE READOUT FOLLOW THE SAME NUMBER AS THE CANDLES.
    * `shown` is already at the head's full length during SC01, so a volume pane
@@ -252,7 +302,10 @@ export const SetupGroup = () => {
     <Stage>
       <Card
         rect={theme.stage.card}
-        opacity={progress(f, local(OPEN.shell.at, FROM), OPEN.shell.over) * (g < BLOCK.SC04 ? quiet : 1)}
+        opacity={
+          progress(f, local(OPEN.shell.at, FROM), OPEN.shell.over) *
+          (g < BLOCK.SC04 ? quiet : 1)
+        }
         soft
       />
       {/* ═══ WHAT IS INSIDE THE PANEL ═══ — chrome and tape, as one picture.
@@ -262,170 +315,192 @@ export const SetupGroup = () => {
           ⚠ AND THE CLIP ONLY EXISTS WHILE THE PUSH DOES. A clipping container
           rasterises the same shapes on a different sub-pixel grid, so leaving
           it on would nudge every frame of SC01 and SC04 for nothing. */}
-      <div style={{ position: "absolute", inset: 0, clipPath: push > 0.001 ? CARD_CLIP : undefined }}>
       <div
         style={{
           position: "absolute",
           inset: 0,
-          transform: `scale(${(1 + REVERSE.zoom.by * push).toFixed(4)})`,
-          transformOrigin: `${theme.canvas.width / 2}px ${theme.stage.card.y}px`,
+          clipPath: push > 0.001 ? CARD_CLIP : undefined,
         }}
       >
-
-      {/* ── the screen's own furniture ─────────────────────────────────────
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            transform: `scale(${(1 + REVERSE.zoom.by * push).toFixed(4)})`,
+            transformOrigin: `${theme.canvas.width / 2}px ${theme.stage.card.y}px`,
+          }}
+        >
+          {/* ── the screen's own furniture ─────────────────────────────────────
           ⚠ IT LOADS IN THE ORDER A SCREEN LOADS — strip, rules, header, then
           the tape. Reversed, the chrome reads as decoration added to a chart
           that was already finished. */}
-      {CHART_STYLE === "ma" ? (
-        <div style={{ opacity: dash }}>
-          {/* ⚠ THE TICKER ALONE — Simon: "hapus … 'Saham ABCD'". The name said
+          {CHART_STYLE === "ma" ? (
+            <div style={{ opacity: dash }}>
+              {/* ⚠ THE TICKER ALONE — Simon: "hapus … 'Saham ABCD'". The name said
               the same thing the code says, one size smaller. */}
-          <InstrumentRow
-            ticker="ABCD"
-            x={MA.headX}
-            y={MA.headY}
-            at={local(OPEN.header, FROM)}
-          />
-          {/* ⚠ THE INDICATOR PILLS ARE GONE — Simon: "label pill volume dan
+              <InstrumentRow
+                ticker="ABCD"
+                x={MA.headX}
+                y={MA.headY}
+                at={local(OPEN.header, FROM)}
+              />
+              {/* ⚠ THE INDICATOR PILLS ARE GONE — Simon: "label pill volume dan
               resistance hapus aja". They named what the chart was already
               showing: the histogram IS the volume, and the level carries the
               word "Resistance" at its own right end. Two names for one thing
               is what made the header busy. */}
-        </div>
-      ) : (
-      <div style={{ opacity: dash }}>
-        <TickerStrip
-          rect={DASH.strip}
-          at={local(OPEN.strip.at, FROM)}
-          stagger={OPEN.strip.step}
-          active={0}
-          items={TICKERS.map((t, i) =>
-            /* ⚠ THE ACTIVE TILE IS THE TAPE, not a stored number. */
-            i === 0
-              ? { symbol: t.symbol, price: price(R.now), pct: R.pct }
-              : { symbol: t.symbol, price: price(t.price), pct: t.pct },
+            </div>
+          ) : (
+            <div style={{ opacity: dash }}>
+              <TickerStrip
+                rect={DASH.strip}
+                at={local(OPEN.strip.at, FROM)}
+                stagger={OPEN.strip.step}
+                active={0}
+                items={TICKERS.map((t, i) =>
+                  /* ⚠ THE ACTIVE TILE IS THE TAPE, not a stored number. */
+                  i === 0
+                    ? { symbol: t.symbol, price: price(R.now), pct: R.pct }
+                    : { symbol: t.symbol, price: price(t.price), pct: t.pct },
+                )}
+              />
+              <DashRule
+                x={DASH.strip.x}
+                y={DASH.rule1}
+                w={DASH.strip.w}
+                at={local(OPEN.rules.at, FROM)}
+                over={OPEN.rules.over}
+              />
+              <InstrumentHeader
+                rect={DASH.header}
+                at={local(OPEN.header, FROM)}
+                name={XYZ.name}
+                sub={XYZ.sub}
+                unit={XYZ.unit}
+                price={price(R.now)}
+                change={signed(R.change)}
+                pct={R.pct}
+                note="Hari ini"
+              />
+              <DashRule
+                x={DASH.strip.x}
+                y={DASH.rule2}
+                w={DASH.strip.w}
+                at={local(OPEN.rules.at, FROM) + m.reveal}
+                over={OPEN.rules.over}
+              />
+              <StatTiles
+                rect={DASH.tiles}
+                cols={2}
+                at={local(OPEN.tiles.at, FROM)}
+                stagger={OPEN.tiles.step}
+                stats={R.tiles}
+              />
+            </div>
           )}
-        />
-        <DashRule
-          x={DASH.strip.x}
-          y={DASH.rule1}
-          w={DASH.strip.w}
-          at={local(OPEN.rules.at, FROM)}
-          over={OPEN.rules.over}
-        />
-        <InstrumentHeader
-          rect={DASH.header}
-          at={local(OPEN.header, FROM)}
-          name={XYZ.name}
-          sub={XYZ.sub}
-          unit={XYZ.unit}
-          price={price(R.now)}
-          change={signed(R.change)}
-          pct={R.pct}
-          note="Hari ini"
-        />
-        <DashRule
-          x={DASH.strip.x}
-          y={DASH.rule2}
-          w={DASH.strip.w}
-          at={local(OPEN.rules.at, FROM) + m.reveal}
-          over={OPEN.rules.over}
-        />
-        <StatTiles
-          rect={DASH.tiles}
-          cols={2}
-          at={local(OPEN.tiles.at, FROM)}
-          stagger={OPEN.tiles.step}
-          stats={R.tiles}
-        />
-      </div>
-      )}
 
-      <div style={{ opacity: dash }}>
-        <Chart
-          series={HEAD}
-          grid={grid}
-          at={local(OPEN.chart.at, FROM)}
-          over={OPEN.chart.over}
-          baseline={false}
-          /* ⚠ NO PRICE SCALE — Simon: "tulisan label harganya hapus aja". The
+          <div style={{ opacity: dash }}>
+            <Chart
+              series={HEAD}
+              grid={grid}
+              at={local(OPEN.chart.at, FROM)}
+              over={OPEN.chart.over}
+              baseline={false}
+              /* ⚠ NO PRICE SCALE — Simon: "tulisan label harganya hapus aja". The
              gridlines stay: they are what makes the tape readable as levels.
              What went is the column of numbers, and with it the reason the
              plot began 150px inside the card. */
-          tickLabels={false}
-          tickSide={CHART_STYLE === "ma" ? "left" : "right"}
-          tickSize={CHART_STYLE === "ma" ? MA.tickSize : undefined}
-        />
-        {/* ⚠ THE BREAKOUT, PRINTED ON ITS OWN WORD — Simon's f441. Four bars,
+              tickLabels={false}
+              tickSide={CHART_STYLE === "ma" ? "left" : "right"}
+              tickSize={CHART_STYLE === "ma" ? MA.tickSize : undefined}
+            />
+            {/* ⚠ THE BREAKOUT, PRINTED ON ITS OWN WORD — Simon's f441. Four bars,
             one at a time, the last landing on f464. */}
-        {printed > 0.001 && (
-          <Candles bars={SETUP.bars} grid={grid} from={SETUP_BREAK_FROM} shown={head} />
-        )}
-        <Candles bars={SETUP.bars} grid={grid} from={SETUP_STEPS.open + 1} shown={shown} />
-        {/* ⚠ THE ONE THING THAT STILL ARRIVES — Simon: "365 muncul volume bar
+            {printed > 0.001 && (
+              <Candles
+                bars={SETUP.bars}
+                grid={grid}
+                from={SETUP_BREAK_FROM}
+                shown={head}
+              />
+            )}
+            <Candles
+              bars={SETUP.bars}
+              grid={grid}
+              from={SETUP_STEPS.open + 1}
+              shown={shown}
+            />
+            {/* ⚠ THE ONE THING THAT STILL ARRIVES — Simon: "365 muncul volume bar
             nya". The price is already there; the histogram appearing under it
             is what the words "volume menguat" have to land on. */}
-        <VolumeBars
-          bars={SETUP.bars}
-          volume={SETUP_VOL}
-          grid={grid}
-          box={L.vol}
-          shown={tape}
-          opacity={progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over) * turn(OPEN.broken)}
-        />
+            <VolumeBars
+              bars={SETUP.bars}
+              volume={SETUP_VOL}
+              grid={grid}
+              box={L.vol}
+              shown={tape}
+              opacity={
+                progress(f, local(OPEN.vol.at, FROM), OPEN.vol.over) *
+                turn(OPEN.broken)
+              }
+            />
 
-        {/* ── the lows' own line, drawn under them ─────────────────────────
+            {/* ── the lows' own line, drawn under them ─────────────────────────
             ⚠ TRIMMED, NOT FADED. A trend line that fades on is a line that was
             always there; drawn from its first low to its last it is a reading
             being made. The geometry is SETUP_TREND — measured off the hull of
             the lows, never typed. */}
-        {(() => {
-          const drawn = progress(f, local(OPEN.trend.at, FROM), OPEN.trend.over);
-          if (drawn <= 0.001) return null;
-          const x1 = grid.x(SETUP_TREND.from);
-          const y1 = grid.y(SETUP_TREND.v0);
-          const x2 = grid.x(SETUP_TREND.to);
-          const y2 = grid.y(SETUP_TREND.v1);
-          const len = Math.hypot(x2 - x1, y2 - y1);
-          return (
-            <Layer opacity={dash * turn(OPEN.support.at)}>
-              <line
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke={c.indigo}
-                strokeWidth={theme.shape.line}
-                strokeLinecap="round"
-                strokeDasharray={len}
-                strokeDashoffset={len * (1 - drawn)}
-              />
-            </Layer>
-          );
-        })()}
-        {/* ⚠ NO TIME AXIS — Simon: "timeframe 3 bln 2 bln 1 bln sekarang,
+            {(() => {
+              const drawn = progress(
+                f,
+                local(OPEN.trend.at, FROM),
+                OPEN.trend.over,
+              );
+              if (drawn <= 0.001) return null;
+              const x1 = grid.x(SETUP_TREND.from);
+              const y1 = grid.y(SETUP_TREND.v0);
+              const x2 = grid.x(SETUP_TREND.to);
+              const y2 = grid.y(SETUP_TREND.v1);
+              const len = Math.hypot(x2 - x1, y2 - y1);
+              return (
+                <Layer opacity={dash * turn(OPEN.support.at)}>
+                  <line
+                    x1={x1}
+                    y1={y1}
+                    x2={x2}
+                    y2={y2}
+                    stroke={c.indigo}
+                    strokeWidth={theme.shape.line}
+                    strokeLinecap="round"
+                    strokeDasharray={len}
+                    strokeDashoffset={len * (1 - drawn)}
+                  />
+                </Layer>
+              );
+            })()}
+            {/* ⚠ NO TIME AXIS — Simon: "timeframe 3 bln 2 bln 1 bln sekarang,
             hapus". The story is "it looked complete, then it failed"; how many
             months the tape covers is not part of it. */}
 
-        {/* ⚠ RESTYLED WHEN BROKEN, NOT REDRAWN — `broken` is what core/Level
+            {/* ⚠ RESTYLED WHEN BROKEN, NOT REDRAWN — `broken` is what core/Level
             takes, and it is the difference between "the level failed" and "a
             different line appeared". */}
-        <Level
-          value={SETUP_LEVELS.resistance}
-          grid={grid}
-          at={local(OPEN.resistance.at, FROM)}
-          over={OPEN.resistance.over}
-          label="Resistance"
-          /* ⚠ ON THE LEFT — Simon. The right-hand end of this plot is where the
+            <Level
+              value={SETUP_LEVELS.resistance}
+              grid={grid}
+              at={local(OPEN.resistance.at, FROM)}
+              over={OPEN.resistance.over}
+              label="Resistance"
+              /* ⚠ ON THE LEFT — Simon. The right-hand end of this plot is where the
              breakout, the bubble and the newest bars all are; a label there is
              standing in the middle of the story. */
-          labelSide="left"
-          opacity={marks}
-          /* ⚠ IT NEVER RESTYLES — Simon: "garis resistancenya ga usa berubah
+              labelSide="left"
+              opacity={marks}
+              /* ⚠ IT NEVER RESTYLES — Simon: "garis resistancenya ga usa berubah
              warna dan bentuk". The break is already told by the four candles
              printing through it; saying it a second time in the line's own
              colour made the level look like a different object afterwards. */
-          /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
+              /* ⚠ IT ENDS ON THE LAST BAR THAT EXISTS, and moves with it. Run to
              the box edge and the label sits on the price scale; pinned to the
              final bar it hangs in empty space until the tape catches up. Level
              puts its label at the line's right end, so the right end has to be
@@ -434,33 +509,33 @@ export const SetupGroup = () => {
              the empty margin. Six bars was enough on the dashboard's narrower
              plot and not on this one; fourteen clears both. A level projected
              a little way forward is also what a level actually is. */
-          to={Math.min(N - 1, seen + 14)}
-        />
-        {/* ⚠ IT ARRIVES IN SC01 NOW — Simon: "301 tambah 1 garis support di low
+              to={Math.min(N - 1, seen + 14)}
+            />
+            {/* ⚠ IT ARRIVES IN SC01 NOW — Simon: "301 tambah 1 garis support di low
             kedua". It is the reason the trade was taken, so it has to be on
             screen while the reason is being given; SC04 does not introduce it,
             it BREAKS it. */}
-        {g >= OPEN.support.at && (
-          <Level
-            value={SETUP_LEVELS.support}
-            grid={grid}
-            at={local(OPEN.support.at, FROM)}
-            over={OPEN.support.over}
-            label="Support"
-            broken={g >= INVALID.broken}
-            /* ⚠ RUN BACK TO THE PLOT'S EDGE — Simon. It used to start on the
+            {g >= OPEN.support.at && (
+              <Level
+                value={SETUP_LEVELS.support}
+                grid={grid}
+                at={local(OPEN.support.at, FROM)}
+                over={OPEN.support.over}
+                label="Support"
+                broken={g >= INVALID.broken}
+                /* ⚠ RUN BACK TO THE PLOT'S EDGE — Simon. It used to start on the
                bar that made it, which is truer about where the level came from
                and reads as a line that begins in the middle of a chart. A
                level is a price, and a price is true across the frame. */
-            from={EDGE}
-            to={Math.min(N - 1, seen + 14)}
-            width={theme.shape.line}
-            labelSide="left"
-            opacity={turn(OPEN.vol.at) * marks}
-          />
-        )}
-      </div>
-      </div>
+                from={EDGE}
+                to={Math.min(N - 1, seen + 14)}
+                width={theme.shape.line}
+                labelSide="left"
+                opacity={turn(OPEN.vol.at) * marks}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* ── SC01 · the four things that made it look complete ───────────────
@@ -469,31 +544,36 @@ export const SetupGroup = () => {
           needs it — by then the four chips have been read, struck, and are
           finished. */}
       {g < BLOCK.SC05 && (
-      <div style={{ opacity: fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) * chips }}>
-        {OPEN.checks.map((q, i) => (
-          <Chip
-            key={q.label}
-            label={q.label}
-            /* ⚠ THE SUPPORT CHIP IS THE ONE SC04 STRIKES. Found by label, not
+        <div
+          style={{
+            opacity:
+              fadeOut(f, local(INVALID.close, FROM) - m.fade, m.fade) * chips,
+          }}
+        >
+          {OPEN.checks.map((q, i) => (
+            <Chip
+              key={q.label}
+              label={q.label}
+              /* ⚠ THE SUPPORT CHIP IS THE ONE SC04 STRIKES. Found by label, not
                by index: re-ordering the row must move the frames with the
                words, not leave the strike on whatever is now third. */
-            x={theme.stage.card.x + colW * (i + 0.5)}
-            y={checkRow}
-            at={local(q.at, FROM)}
-            tone={g >= REVERSE.dim ? "slate" : "indigo"}
-            check
-            /* ⚠ A GREEN DISC WITH A WHITE TICK — Simon. An ink ✓ is the same
+              x={theme.stage.card.x + colW * (i + 0.5)}
+              y={checkRow}
+              at={local(q.at, FROM)}
+              tone={g >= REVERSE.dim ? "slate" : "indigo"}
+              check
+              /* ⚠ A GREEN DISC WITH A WHITE TICK — Simon. An ink ✓ is the same
                weight as the word it precedes; a filled disc reads as a box
                someone ticked, which is what these four are. */
-            checkDisc
-            strike={
-              q.label === "Support bertahan"
-                ? progress(f, local(INVALID.strike, FROM), m.reveal)
-                : 0
-            }
-          />
-        ))}
-      </div>
+              checkDisc
+              strike={
+                q.label === "Support bertahan"
+                  ? progress(f, local(INVALID.strike, FROM), m.reveal)
+                  : 0
+              }
+            />
+          ))}
+        </div>
       )}
 
       {/* ── SC01 · the decision, spoken ───────────────────────────────────
@@ -559,4 +639,3 @@ export const SetupGroup = () => {
     </Stage>
   );
 };
-

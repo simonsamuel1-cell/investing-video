@@ -8,13 +8,14 @@
  * Compliance: fictional $ABCD, illustrative data only — no arrows, entry
  * markers, or price targets.
  */
+import { TA03ChipE as Chip } from "../../editable";
 import { useContext } from "react";
-import { useCurrentFrame, interpolateColors } from "remotion";
+import { useCurrentFrame, interpolateColors, Interactive } from "remotion";
 import { theme } from "../theme";
 import { sec, progress, textReveal, priceScale } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
-import { Chip } from "../components/Chip";
+
 import { IllustrationTag } from "../components/IllustrationTag";
 import { Cut } from "../cut";
 import { ANATOMY, AnatomyCandleShape } from "../continuity/RoadmapCards";
@@ -97,7 +98,8 @@ const Scene02Classic = () => {
 
   return (
     <SafeArea>
-      <div
+      <Interactive.Div
+        name="Open → close"
         style={{
           position: "absolute",
           left: 0,
@@ -237,7 +239,7 @@ const Scene02Classic = () => {
           variant="indigo"
           startFrame={sec(T.chip)}
         />
-      </div>
+      </Interactive.Div>
 
       <IllustrationTag />
     </SafeArea>

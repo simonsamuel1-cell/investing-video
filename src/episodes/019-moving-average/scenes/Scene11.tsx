@@ -7,7 +7,7 @@
  * is already there. Reverse the order and the scene argues the opposite — so
  * `mark1/2/3` must stay ahead of `layer2/3`, whatever else moves.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage } from "../../../core";
 import { ChartFrame, gridOf, Layer } from "../components/ChartFrame";
 import { MALine } from "../components/MALine";
@@ -270,17 +270,23 @@ const TREND = (() => {
   }
   if (!highs.length) return null;
   const top = highs.reduce((a, b) => (b.v > a.v ? b : a));
-  let best: { a: number; b: number; at: (i: number) => number; n: number } | null =
-    null;
+  let best: {
+    a: number;
+    b: number;
+    at: (i: number) => number;
+    n: number;
+  } | null = null;
   for (const B of highs) {
     if (B.i <= top.i || B.v >= top.v) continue;
     const m = (B.v - top.v) / (B.i - top.i);
     const line = (i: number) => top.v + m * (i - top.i);
     let clean = true;
-    for (let i = top.i; i <= B.i && clean; i++) if (BARS[i].h > line(i) + 8) clean = false;
+    for (let i = top.i; i <= B.i && clean; i++)
+      if (BARS[i].h > line(i) + 8) clean = false;
     if (!clean) continue;
     const n = highs.filter(
-      (h) => h.i >= top.i && h.i <= B.i && Math.abs(h.v - line(h.i)) <= TOUCH_TOL,
+      (h) =>
+        h.i >= top.i && h.i <= B.i && Math.abs(h.v - line(h.i)) <= TOUCH_TOL,
     ).length;
     if (n < 3) continue;
     /* more touches first, then the longer line */
@@ -485,7 +491,8 @@ export const Scene11 = () => {
         )}
 
         {/* ── the four labels, level, under the chart ── */}
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: theme.layout.safeLeft,
@@ -531,7 +538,7 @@ export const Scene11 = () => {
               </div>
             );
           })}
-        </div>
+        </Interactive.Div>
 
         <TitleChip text="Cara Baca Indikator" f={f} at={T.title} />
 

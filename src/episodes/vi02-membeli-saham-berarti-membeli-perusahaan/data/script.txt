@@ -100,36 +100,42 @@ Kalau kita bahkan nggak bisa membayangkan bagaimana perusahaan menghasilkan uang
 
 [SCENE 07], Empat Pertanyaan sebelum Membeli
 NARASI
-Jadi ketika melihat sebuah saham, jangan mulai dari: “Target harganya berapa?”
-Mulai dari empat pertanyaan sederhana.
-Pertama, perusahaan ini menjual apa?
-Produk atau layanan apa yang sebenarnya dibayar pelanggan?
-Kedua, uangnya datang dari mana?
-Bisnis mana yang menghasilkan sebagian besar pendapatannya?
+Jadi ketika melihat sebuah saham, jangan mulai dari pertanyaan: “Target harganya berapa?”
+Mulailah dari empat pertanyaan sederhana.
+Pertama, perusahaan ini menjual produk atau layanan apa yang sebenarnya dibayar oleh pelanggan?
+Kedua, apakah produk atau layanan tersebut benar-benar menghasilkan laba?
+Apakah bisnisnya benar-benar bisa menghasilkan uang?
+Dan bagaimana perkembangan profitabilitasnya dari waktu ke waktu?
 Ketiga, laba yang dihasilkan digunakan untuk apa?
-Dibagikan sebagai dividen, atau ditanam kembali untuk memperbesar bisnis?
-Dan yang paling sulit: apakah perusahaan ini punya peluang menghasilkan lebih banyak di masa depan?
-Kalau empat pertanyaan ini bisa dijawab, harga saham mulai punya sesuatu untuk dibandingkan.
-Kalau belum, mungkin yang kita beli masih sekadar kode saham saja.
+Apakah dibagikan kepada pemegang saham sebagai dividen?
+Atau ditanam kembali ke dalam perusahaan untuk mengembangkan bisnis?
+Terakhir, dan ini adalah pertanyaan yang paling sulit.
+Apakah laba perusahaan bisa terus berkelanjutan di masa depan?
+Apakah ke depannya akan menjadi lebih baik atau justru lebih buruk?
+Kalau keempat pertanyaan ini bisa dijawab, barulah kita punya dasar untuk menilai apakah harga sahamnya masuk akal.
+Kalau belum, mungkin yang kita beli masih sekadar kode saham.
 
 [SCENE 08], Dari “Kenapa” ke “Berapa Harganya?”
 NARASI
-Tiga hal yang perlu diingat.
+Ada tiga hal yang perlu diingat.
 Di balik sebuah kode saham, ada pabrik, pelanggan, dan laba.
-Rumor nggak berguna bagi orang yang memahami buku bisnisnya.
-Dan: sebelum membeli untuk sepuluh menit, pikirkan dulu bisnisnya sepuluh tahun ke depan.
-Prinsip ini digunakan oleh investor dari generasi yang berbeda.
-Walter Schloss mencatat annualized return sekitar 15,3% selama 45 tahun.
-Charlie Munger sekitar 19,8% selama 14 tahun.
-Dan Peter Lynch sekitar 29,2% selama 13 tahun.
-Gaya mereka berbeda.
-Tapi yang mereka beli pertama-tama tetap: perusahaan, bukan kode saham.
+Bagi orang yang memahami buku bisnis perusahaan, rumor tidak bisa menggantikan analisis.
+Dan sebelum membeli saham untuk sepuluh menit, pikirkan lebih dulu seperti apa bisnisnya sepuluh tahun ke depan.
+Prinsip yang sama telah digunakan oleh investor dari generasi yang berbeda.
+Walter Schloss mencatat return tahunan sekitar 15,3% selama kurang lebih 45 tahun.
+Warren Buffett melalui Berkshire Hathaway mencatat return tahunan sekitar 19,7% selama lebih dari enam dekade.
+Sementara Peter Lynch mencatat sekitar 29,2% per tahun selama 13 tahun.
+Investor seperti John Templeton dan Nick Sleep juga menggunakan prinsip investasi yang serupa dalam jangka panjang.
+Gaya investasi mereka berbeda.
+Perusahaan yang mereka beli juga berbeda.
+Namun, hal pertama yang mereka beli tetap sama.
+Sebuah bisnis, bukan sekadar kode saham.
 Di Tuntun, kamu bisa mulai membaca “buku bisnis” perusahaan langsung dari halaman sahamnya.
-Lewat Revenue Composition, kamu bisa melihat uang perusahaan datang dari bisnis yang mana.
-Lewat Profit Chart, kamu bisa melihat bagaimana laba perusahaan bergerak dari tahun ke tahun.
-Dari empat pertanyaan tadi, dua pertanyaan pertama bisa mulai dijawab lewat Revenue Composition.
-Pertanyaan ketiga bisa dilihat dari dividen dan laba yang tetap berada di perusahaan.
-Sedangkan pertanyaan keempat: “Apakah perusahaan ini akan menghasilkan lebih banyak di masa depan?” adalah pertanyaan yang paling sulit.
-Di situlah Deep Research Report membantu memberikan analisis awal yang lebih lengkap.
-Tapi setelah memahami perusahaannya, masih ada satu pertanyaan penting: perusahaan bagus belum tentu investasi bagus kalau kita membayar terlalu mahal.
-Jadi di video selanjutnya, kita akan bahas: berapa harga yang sebenarnya layak kita bayar untuk sebuah perusahaan?
+Melalui Revenue Breakdown, kamu bisa melihat perusahaan menjual apa dan lini bisnis mana yang membentuk pendapatannya.
+Melalui Profitability Chart, kamu bisa melihat apakah bisnis tersebut benar-benar menghasilkan laba dan bagaimana perkembangan labanya dari tahun ke tahun.
+Pertanyaan ketiga bisa mulai dipahami dengan melihat berapa besar dividen yang dibagikan kepada pemegang saham, serta berapa besar laba yang tetap disimpan dan ditanam kembali di dalam perusahaan.
+Sementara pertanyaan keempat: “Apakah laba perusahaan bisa terus berkelanjutan? Apakah ke depannya akan menjadi lebih baik atau lebih buruk?” adalah pertanyaan yang paling sulit dijawab.
+Di sinilah Deep Research Report membantu memberikan analisis awal yang lebih lengkap mengenai prospek industri, kekuatan perusahaan, keunggulan kompetitif, serta berbagai risiko yang dapat memengaruhi laba perusahaan di masa depan.
+Namun, setelah memahami perusahaannya, masih ada satu pertanyaan penting.
+Perusahaan yang bagus belum tentu menjadi investasi yang bagus kalau kita membelinya terlalu mahal.
+Karena itu, di video berikutnya kita akan membahas: berapa harga yang sebenarnya layak kita bayar untuk memiliki sebuah perusahaan?

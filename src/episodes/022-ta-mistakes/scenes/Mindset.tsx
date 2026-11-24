@@ -25,10 +25,20 @@
  * slow enough that the eye reads it as texture and only notices the motion if
  * it goes looking. It is a ground: the figure is the subject.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
 import {
-  Chip, GridGround, Line, Stage, TuntunMark, cutInStyle, cutOutStyle, progress,
-  progressInOut, theme, useMotion, usePalette,
+  Chip,
+  GridGround,
+  Stage,
+  TuntunMark,
+  cutInStyle,
+  cutOutStyle,
+  progress,
+  progressInOut,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { CUT16, CUT17, MIND, local } from "../data/timing";
 import { GROUND_FADE, MIND_SHOT } from "../data/layout";
@@ -102,9 +112,11 @@ export const Mindset = () => {
   const fell = progressInOut(g, V.mark.at, m.move);
   const markX = S.mark.x + (S.slide.mark.x - S.mark.x) * slid;
   const markY =
-    S.mark.from + (S.mark.y + (S.slide.mark.y - S.mark.y) * slid - S.mark.from) * fell +
+    S.mark.from +
+    (S.mark.y + (S.slide.mark.y - S.mark.y) * slid - S.mark.from) * fell +
     (fell >= 0.999
-      ? Math.sin(((g - V.mark.at) / S.mark.float.period) * Math.PI * 2) * S.mark.float.amount
+      ? Math.sin(((g - V.mark.at) / S.mark.float.period) * Math.PI * 2) *
+        S.mark.float.amount
       : 0);
 
   /**
@@ -138,78 +150,83 @@ export const Mindset = () => {
           <GridGround f={g} paper={c.bg} vignette={false} />
         </div>
 
-      <AbsoluteFill style={cutOutStyle(g, CUT17)}>
-      <AbsoluteFill style={cutInStyle(g, CUT16)}>
-        <Img
-          src={staticFile(S.srcs[pose])}
-          style={{
-            position: "absolute",
-            left: S.rect.x - S.slide.left * slid,
-            top: S.rect.y + dropped - S.slide.up * slid,
-            width: S.rect.w,
-            height: S.rect.h,
-          }}
-        />
-        {/* ── the three names the voice lists ──────────────────────────── */}
-        <div style={{ opacity: 1 - answered }}>
-          {V.labels.map((l, i) => {
-            const at = S.labels.at(l.side, S.labels.steps[i]);
-            return (
-              <Chip
-                key={l.text}
-                label={l.text}
-                x={at.x}
-                y={at.y}
-                at={upBy(l.at)}
-                anchor={at.anchor}
-                tone="warn"
-                size={S.labels.size}
-                pill
-                solid
-              />
-            );
-          })}
-        </div>
-
-        {/* ⚠ NO PILL, AND THAT IS THE POINT. The three above are things being
-            named; this is the instruction about them. */}
-        {g >= V.stop.at && (
-          <div style={{ opacity: answered * (1 - marked) }}>
-            <Line
-              text={V.stop.text}
-              x={S.stop.x}
-              y={S.stop.y}
-              at={local(V.stop.at, V.at)}
-              size={S.stop.size}
-              weight={theme.text.display.weight}
-              color={theme.color.warn}
+        <AbsoluteFill style={cutOutStyle(g, CUT17)}>
+          <AbsoluteFill style={cutInStyle(g, CUT16)}>
+            <Img
+              src={staticFile(S.srcs[pose])}
+              style={{
+                position: "absolute",
+                left: S.rect.x - S.slide.left * slid,
+                top: S.rect.y + dropped - S.slide.up * slid,
+                width: S.rect.w,
+                height: S.rect.h,
+              }}
             />
-          </div>
-        )}
+            {/* ── the three names the voice lists ──────────────────────────── */}
+            <div style={{ opacity: 1 - answered }}>
+              {V.labels.map((l, i) => {
+                const at = S.labels.at(l.side, S.labels.steps[i]);
+                return (
+                  <Chip
+                    key={l.text}
+                    label={l.text}
+                    x={at.x}
+                    y={at.y}
+                    at={upBy(l.at)}
+                    anchor={at.anchor}
+                    tone="warn"
+                    size={S.labels.size}
+                    pill
+                    solid
+                  />
+                );
+              })}
+            </div>
 
-        {/* ── the mark, level with the logo, and the sentence under it ───── */}
-        {g >= V.mark.at && (
-          <>
-            <TuntunMark x={markX} y={markY} height={S.mark.h} opacity={fell} />
-            {/* ⚠ TWO Lines, NOT ONE WRAPPED BLOCK. Simon chose where the break
+            {/* ⚠ NO PILL, AND THAT IS THE POINT. The three above are things being
+            named; this is the instruction about them. */}
+            {g >= V.stop.at && (
+              <div style={{ opacity: answered * (1 - marked) }}>
+                <Line
+                  text={V.stop.text}
+                  x={S.stop.x}
+                  y={S.stop.y}
+                  at={local(V.stop.at, V.at)}
+                  size={S.stop.size}
+                  weight={theme.text.display.weight}
+                  color={theme.color.warn}
+                />
+              </div>
+            )}
+
+            {/* ── the mark, level with the logo, and the sentence under it ───── */}
+            {g >= V.mark.at && (
+              <>
+                <TuntunMark
+                  x={markX}
+                  y={markY}
+                  height={S.mark.h}
+                  opacity={fell}
+                />
+                {/* ⚠ TWO Lines, NOT ONE WRAPPED BLOCK. Simon chose where the break
                 falls; a wrap would put it wherever the width happens to. */}
-            {/* ⚠ THE SECOND SENTENCE ARRIVES WHEN THE DIAGONAL STOPS, which is
+                {/* ⚠ THE SECOND SENTENCE ARRIVES WHEN THE DIAGONAL STOPS, which is
                 useMotion's duration and not a beat — Simon gave none, and one
                 written down could land while the mark it sits under is still
                 travelling. */}
-            {V.slide.lines.map((row, i) => (
-              <Line
-                key={row}
-                text={row}
-                x={S.slide.line.x}
-                y={S.slide.line.y0 + i * S.slide.line.lead}
-                at={local(V.slide.at, V.at) + m.move}
-                size={S.slide.line.size}
-                weight={theme.text.title.weight}
-                color={c.indigo}
-              />
-            ))}
-            {/* ⚠ IT LEAVES WITH THE MARK, NOT WHERE IT STOOD — Simon: "text
+                {V.slide.lines.map((row, i) => (
+                  <Line
+                    key={row}
+                    text={row}
+                    x={S.slide.line.x}
+                    y={S.slide.line.y0 + i * S.slide.line.lead}
+                    at={local(V.slide.at, V.at) + m.move}
+                    size={S.slide.line.size}
+                    weight={theme.text.title.weight}
+                    color={c.indigo}
+                  />
+                ))}
+                {/* ⚠ IT LEAVES WITH THE MARK, NOT WHERE IT STOOD — Simon: "text
                 'Technical analysis adalah…' fade out tapi ikut pindah bareng
                 maskot". The wrapper carries the mark's OWN travel, so the two
                 cannot come apart: one translate and one opacity on one curve.
@@ -217,35 +234,35 @@ export const Mindset = () => {
                 ⚠ AND IT IS THE MARK'S RESTING TRAVEL, NOT ITS DRAWN POSITION.
                 The mark also breathes; a sentence that breathed with it would
                 be a second thing moving rather than the same thing leaving. */}
-            {slid < 0.999 && (
-              <div
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  opacity: 1 - slid,
-                  transform:
-                    `translate(${((S.slide.mark.x - S.mark.x) * slid).toFixed(1)}px,` +
-                    ` ${((S.slide.mark.y - S.mark.y) * slid).toFixed(1)}px)`,
-                }}
-              >
-                {V.mark.lines.map((row, i) => (
-                  <Line
-                    key={row}
-                    text={row}
-                    x={S.line.x}
-                    y={S.line.y0 + i * S.line.lead}
-                    at={local(V.mark.at, V.at) + m.move}
-                    size={S.line.size}
-                    weight={theme.text.title.weight}
-                    color={c.indigo}
-                  />
-                ))}
-              </div>
+                {slid < 0.999 && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      opacity: 1 - slid,
+                      transform:
+                        `translate(${((S.slide.mark.x - S.mark.x) * slid).toFixed(1)}px,` +
+                        ` ${((S.slide.mark.y - S.mark.y) * slid).toFixed(1)}px)`,
+                    }}
+                  >
+                    {V.mark.lines.map((row, i) => (
+                      <Line
+                        key={row}
+                        text={row}
+                        x={S.line.x}
+                        y={S.line.y0 + i * S.line.lead}
+                        at={local(V.mark.at, V.at) + m.move}
+                        size={S.line.size}
+                        weight={theme.text.title.weight}
+                        color={c.indigo}
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             )}
-          </>
-        )}
-      </AbsoluteFill>
-      </AbsoluteFill>
+          </AbsoluteFill>
+        </AbsoluteFill>
       </AbsoluteFill>
     </Stage>
   );

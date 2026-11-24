@@ -19,13 +19,17 @@
  *
  * The price lines are shapes (no figures but the VO's own two prices); no source tag.
  */
-import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  Line,
+  CoreLineE as Line,
+  CoreWordsE as Words,
+  CardE as Card,
+  LineE as Statement,
+} from "../../../editable";
+import { interpolateColors, useCurrentFrame, Interactive } from "remotion";
+import {
   QuoteCard,
   SoftGround,
   Stage,
-  Words,
   quoteListY,
   theme,
   typeStyle,
@@ -36,10 +40,8 @@ import {
 import { BLOCK } from "../data/timing";
 import {
   BoardGrid,
-  Card,
   Column,
   HEADING,
-  Line as Statement,
   NumRing,
   PhotoTile,
   ease,
@@ -361,7 +363,8 @@ export const SC02 = () => {
             transform: `translateY(${(away * 24).toFixed(1)}px)`,
           }}
         >
-          <div
+          <Interactive.Div
+            name="Value Investing"
             style={{
               position: "absolute",
               left: 0,
@@ -375,7 +378,7 @@ export const SC02 = () => {
             }}
           >
             Value Investing
-          </div>
+          </Interactive.Div>
           {PILLARS.map((text, i) => {
             const tone = interpolateColors(i / 3, [0, 1], [c.cyan, c.indigo]);
             const ink = interpolateColors(
@@ -448,7 +451,8 @@ export const SC02 = () => {
       ) : null}
 
       {/* "Beli murah": the column's label, then the heading */}
-      <div
+      <Interactive.Div
+        name="Beli murah"
         style={{
           position: "absolute",
           left: labX,
@@ -466,9 +470,10 @@ export const SC02 = () => {
         }}
       >
         Beli murah
-      </div>
+      </Interactive.Div>
       {ringIn > 0.001 ? (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: HEADING.x,
@@ -478,7 +483,7 @@ export const SC02 = () => {
           }}
         >
           <NumRing n={2} size={HEADING.disc} />
-        </div>
+        </Interactive.Div>
       ) : null}
 
       {/* B — Buffett's sentence */}
@@ -504,7 +509,8 @@ export const SC02 = () => {
               d={TILE.d}
               style={{ left: TILE.x, top: TILE.y }}
             />
-            <div
+            <Interactive.Div
+              name="Warren Buffett"
               style={{
                 position: "absolute",
                 left: TILE.x - 40,
@@ -518,7 +524,7 @@ export const SC02 = () => {
               }}
             >
               Warren Buffett
-            </div>
+            </Interactive.Div>
           </div>
           <QuoteCard
             x={QUOTE.x}

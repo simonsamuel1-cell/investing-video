@@ -4,7 +4,8 @@
  * yet is an empty row on the Studio timeline over the paper, with the subtitles and the logo.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";

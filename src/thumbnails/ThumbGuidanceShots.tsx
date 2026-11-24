@@ -1,5 +1,5 @@
 import type React from "react";
-import { Img, staticFile } from "remotion";
+import { Img, Interactive, staticFile } from "remotion";
 import { theme } from "../core";
 import { BUMI_CARD } from "../episodes/in07-cara-tuntun-membantu-investor/data/bumi-card";
 
@@ -32,12 +32,44 @@ export const In07ThumbGuidanceShots: React.FC = () => {
   const { w: pw, h: ph } = BUMI_CARD.pointer;
   return (
     <>
-      <div style={{ position: "absolute", left: CARD.left, top: CARD.top, width: CARD.w, height: fh * k, borderRadius: BUMI_CARD.radius * k, overflow: "hidden", boxShadow: theme.shape.thumbCardShadow, background: theme.color.cardBg }}>
-        <Img src={staticFile(BUMI_CARD.src)} style={{ position: "absolute", left: -f.x1 * k, top: -f.y1 * k, width: BUMI_CARD.w * k, maxWidth: "none", display: "block" }} />
-        <svg width={CARD.w} height={fh * k} viewBox={`${f.x1} ${f.y1} ${fw} ${fh}`} style={{ position: "absolute", left: 0, top: 0 }}>
-          <path d={`M ${px} ${g.y} L ${px + pw / 2} ${g.y + ph} H ${px - pw / 2} Z`} fill={theme.color.ink} />
+      <Interactive.Div
+        name="Kartu Fair Value"
+        style={{
+          position: "absolute",
+          left: CARD.left,
+          top: CARD.top,
+          width: CARD.w,
+          height: fh * k,
+          borderRadius: BUMI_CARD.radius * k,
+          overflow: "hidden",
+          boxShadow: theme.shape.thumbCardShadow,
+          background: theme.color.cardBg,
+        }}
+      >
+        <Img
+          showInTimeline={false}
+          src={staticFile(BUMI_CARD.src)}
+          style={{
+            position: "absolute",
+            left: -f.x1 * k,
+            top: -f.y1 * k,
+            width: BUMI_CARD.w * k,
+            maxWidth: "none",
+            display: "block",
+          }}
+        />
+        <svg
+          width={CARD.w}
+          height={fh * k}
+          viewBox={`${f.x1} ${f.y1} ${fw} ${fh}`}
+          style={{ position: "absolute", left: 0, top: 0 }}
+        >
+          <path
+            d={`M ${px} ${g.y} L ${px + pw / 2} ${g.y + ph} H ${px - pw / 2} Z`}
+            fill={theme.color.ink}
+          />
         </svg>
-      </div>
+      </Interactive.Div>
     </>
   );
 };

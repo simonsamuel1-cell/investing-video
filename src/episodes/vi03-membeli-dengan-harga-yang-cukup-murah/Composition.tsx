@@ -3,7 +3,8 @@
  * ONE root <Audio> for the VO. A scene not built yet is an empty row that only marks its block on the Studio timeline.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";

@@ -29,7 +29,8 @@
  * ONE ROOT <Audio>. The VO is a single file mounted here; no scene has audio.
  */
 import React from "react";
-import { Sequence, Audio, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
+import { Audio, staticFile, useCurrentFrame } from "remotion";
 import { Scene01 } from "./scenes/Scene01";
 import { ExplainerGroup } from "./continuity/ExplainerGroup";
 import { Scene05 } from "./scenes/Scene05";

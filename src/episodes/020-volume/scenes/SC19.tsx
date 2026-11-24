@@ -41,15 +41,35 @@
  * which spans this scene and SC18 — see the cut at 17847 that neither of them
  * takes part in.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
-  Stage, cutInStyle, cutOutStyle, gridOf, pathOf, popIn, progress,
-  progressInOut, sma, textReveal, usePalette, GRID_PAD_X, theme,
+  Stage,
+  cutInStyle,
+  cutOutStyle,
+  gridOf,
+  pathOf,
+  popIn,
+  progress,
+  progressInOut,
+  sma,
+  textReveal,
+  usePalette,
+  GRID_PAD_X,
+  theme,
 } from "../../../core";
 import { BLOCK, CUTS, LIMITS, local } from "../data/timing";
 import {
-  SS4, SS4_DOMAIN, SS4_VOL, SS4_LEAD, SS4_KEEP, SS4_RUNUP, SS4_RUNUP_VOL, COLOUR, COLOUR_VOL,
-  domainOfColour, zigzagOf,
+  SS4,
+  SS4_DOMAIN,
+  SS4_VOL,
+  SS4_LEAD,
+  SS4_KEEP,
+  SS4_RUNUP,
+  SS4_RUNUP_VOL,
+  COLOUR,
+  COLOUR_VOL,
+  domainOfColour,
+  zigzagOf,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -69,7 +89,10 @@ const mixRect = (a: Rect, b: Rect, t: number): Rect => ({
 /** Where each window rests: the first alone in the middle, then the pair. */
 const PAIR_W = V.win.w * 2 + V.win.gap;
 const SOLO_X = theme.canvas.width / 2 - V.win.w / 2;
-const PAIR_X = [theme.canvas.width / 2 - PAIR_W / 2, theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap];
+const PAIR_X = [
+  theme.canvas.width / 2 - PAIR_W / 2,
+  theme.canvas.width / 2 - PAIR_W / 2 + V.win.w + V.win.gap,
+];
 
 /**
  * ═══ THE SMALL STATE AND THE FULL ONE, BOTH WRITTEN AS BOXES ═══
@@ -86,9 +109,24 @@ const PAIR_X = [theme.canvas.width / 2 - PAIR_W / 2, theme.canvas.width / 2 - PA
  */
 const small = (x: number): Record<string, Rect> => ({
   win: { x, y: V.win.y, w: V.win.w, h: V.win.h },
-  display: { x: x + V.ui.display.x, y: V.win.y + V.ui.display.y, w: V.ui.display.w, h: V.ui.display.h },
-  price: { x: x + V.ui.price.x, y: V.win.y + V.ui.price.y, w: V.ui.price.w, h: V.ui.price.h },
-  volume: { x: x + V.ui.volume.x, y: V.win.y + V.ui.volume.y, w: V.ui.volume.w, h: V.ui.volume.h },
+  display: {
+    x: x + V.ui.display.x,
+    y: V.win.y + V.ui.display.y,
+    w: V.ui.display.w,
+    h: V.ui.display.h,
+  },
+  price: {
+    x: x + V.ui.price.x,
+    y: V.win.y + V.ui.price.y,
+    w: V.ui.price.w,
+    h: V.ui.price.h,
+  },
+  volume: {
+    x: x + V.ui.volume.x,
+    y: V.win.y + V.ui.volume.y,
+    w: V.ui.volume.w,
+    h: V.ui.volume.h,
+  },
 });
 /**
  * ⚠ 25 ON THREE SIDES AND A LINE OF TEXT AT THE BOTTOM — Simon's numbers, and
@@ -102,8 +140,18 @@ const DISPLAY_H = CARD.h - P - ROW_H;
 const FULL: Record<string, Rect> = {
   win: { x: CARD.x, y: CARD.y, w: CARD.w, h: CARD.h },
   display: { x: CARD.x + P, y: CARD.y + P, w: CARD.w - P * 2, h: DISPLAY_H },
-  price: { x: CARD.x + P + 34, y: CARD.y + P + 30, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.6 },
-  volume: { x: CARD.x + P + 34, y: CARD.y + P + DISPLAY_H * 0.68, w: CARD.w - P * 2 - 68, h: DISPLAY_H * 0.26 },
+  price: {
+    x: CARD.x + P + 34,
+    y: CARD.y + P + 30,
+    w: CARD.w - P * 2 - 68,
+    h: DISPLAY_H * 0.6,
+  },
+  volume: {
+    x: CARD.x + P + 34,
+    y: CARD.y + P + DISPLAY_H * 0.68,
+    w: CARD.w - P * 2 - 68,
+    h: DISPLAY_H * 0.26,
+  },
 };
 const ROW_Y = CARD.y + P + DISPLAY_H + V.full.gap;
 
@@ -133,7 +181,12 @@ const chartBoxes = (S: Record<string, Rect>, open: number) => {
 
   const k = LIMITS.grow.scale;
   const small = {
-    price: { x: x0 - GRID_PAD_X - p * SS4_LEAD, y: S.price.y, w: p * (N - 1) + GRID_PAD_X * 2, h: S.price.h },
+    price: {
+      x: x0 - GRID_PAD_X - p * SS4_LEAD,
+      y: S.price.y,
+      w: p * (N - 1) + GRID_PAD_X * 2,
+      h: S.price.h,
+    },
     volume: { x: 0, y: S.volume.y, w: 0, h: S.volume.h },
   };
   const gp = p * k;
@@ -142,7 +195,12 @@ const chartBoxes = (S: Record<string, Rect>, open: number) => {
   const bottom = FULL.display.y + FULL.display.h - LIMITS.grow.bottom;
   const gy = bottom - dropY * k;
   const grown = {
-    price: { x: right - GRID_PAD_X - innerG, y: gy, w: innerG + GRID_PAD_X * 2, h: S.price.h * k },
+    price: {
+      x: right - GRID_PAD_X - innerG,
+      y: gy,
+      w: innerG + GRID_PAD_X * 2,
+      h: S.price.h * k,
+    },
     volume: { x: 0, y: gy + gapY * k, w: 0, h: S.volume.h * k },
   };
   return {
@@ -151,7 +209,7 @@ const chartBoxes = (S: Record<string, Rect>, open: number) => {
     /** ⚠ THE CANDLE'S WIDTH COMES FROM THE PITCH, not from `grid.slot`. `slot`
      *  divides by the BAR COUNT, so lengthening the tape would have thinned the
      *  twenty locked candles by half a pixel — enough to break the lock. */
-    w: lerp(p, gp, open) * (0.66 * (SS4.bars.length - 1)) / SS4.bars.length,
+    w: (lerp(p, gp, open) * (0.66 * (SS4.bars.length - 1))) / SS4.bars.length,
   };
 };
 
@@ -171,7 +229,8 @@ const Window = ({ i }: { i: number }) => {
 
   /** ⚠ ONLY THE LEFT ONE OPENS OUT, and its words leave as it does — Simon:
    *  "text dan iconnya fade out". What is being enlarged is the chart. */
-  const open = i === 0 ? progressInOut(f, local(V.grow.at, FROM), V.grow.over) : 0;
+  const open =
+    i === 0 ? progressInOut(f, local(V.grow.at, FROM), V.grow.over) : 0;
   const S = small(x);
   /**
    * ⚠ ONLY THE WINDOW AND ITS DISPLAY ARE INTERPOLATED AS RECTS. The chart
@@ -197,7 +256,13 @@ const Window = ({ i }: { i: number }) => {
   const series = i === 1 ? COLOUR : long ? SS4_RUNUP : SS4;
   const domain = i === 0 ? SS4_DOMAIN : COLOUR_DOMAIN;
   const vol = i === 1 ? COLOUR_VOL : long ? SS4_RUNUP_VOL : SS4_VOL;
-  const g = gridOf(series.closes, domain, R.price, 0.08, i === 1 ? V.fan.gutter : 0);
+  const g = gridOf(
+    series.closes,
+    domain,
+    R.price,
+    0.08,
+    i === 1 ? V.fan.gutter : 0,
+  );
   const built = progress(f, at + V.build.after, V.build.over);
   const head = textReveal(f, at + V.words.after, V.words.over, 12);
   const w = CB ? CB.w : Math.max(3, g.slot * 0.66);
@@ -216,8 +281,11 @@ const Window = ({ i }: { i: number }) => {
    * drawing can never disagree about which reading is being spoken.
    */
   let live = -1;
-  V.read.items.forEach((q, k) => { if (f >= local(q.at, FROM)) live = k; });
-  const on = (k: number) => (k === live ? progress(f, local(V.read.items[k].at, FROM), V.read.over) : 0);
+  V.read.items.forEach((q, k) => {
+    if (f >= local(q.at, FROM)) live = k;
+  });
+  const on = (k: number) =>
+    k === live ? progress(f, local(V.read.items[k].at, FROM), V.read.over) : 0;
   /** ⚠ THE MARKS ARE LOOKED UP BY NAME, not by position. They were indexed by
    *  slot, so swapping two items in timing.ts would have swapped their FRAMES
    *  and left the drawings where they were. */
@@ -226,8 +294,11 @@ const Window = ({ i }: { i: number }) => {
     return on(k);
   };
   const bars = series.bars;
-  const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map((q) => ({ x: g.x(q.i), y: g.y(q.v) }));
-  const zigPath = "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
+  const zig = zigzagOf(bars, (domain[1] - domain[0]) * V.read.zigThr).map(
+    (q) => ({ x: g.x(q.i), y: g.y(q.v) }),
+  );
+  const zigPath =
+    "M " + zig.map((q) => `${q.x.toFixed(1)} ${q.y.toFixed(1)}`).join(" L ");
   /**
    * ⚠ BOTH BANDS ARE THE SAME HEIGHT — Simon. Left to their own extremes they
    * came out different depths, which reads as one level being a stronger claim
@@ -238,7 +309,10 @@ const Window = ({ i }: { i: number }) => {
   const top3 = [...bars.map((b) => b.h)].sort((a, b) => b - a).slice(0, 3);
   const bot3 = [...bars.map((b) => b.l)].sort((a, b) => a - b).slice(0, 3);
   const mid = (a: number[]) => a.reduce((x, y) => x + y, 0) / a.length;
-  const zones = [mid(top3), mid(bot3)].map((v) => ({ hi: v + zoneH / 2, lo: v - zoneH / 2 }));
+  const zones = [mid(top3), mid(bot3)].map((v) => ({
+    hi: v + zoneH / 2,
+    lo: v - zoneH / 2,
+  }));
   /** ⚠ EACH LINE IS ASKED FOR ITS OWN SIDE — deriving it by comparing the pair
    *  back to its hull passes for both when they share an endpoint. */
   const hull = (key: "l" | "h", under: boolean) => {
@@ -247,7 +321,9 @@ const Window = ({ i }: { i: number }) => {
       while (h.length >= 2) {
         const a = h[h.length - 2];
         const b = h[h.length - 1];
-        const cross = (b - a) * (bars[k][key] - bars[a][key]) - (bars[b][key] - bars[a][key]) * (k - a);
+        const cross =
+          (b - a) * (bars[k][key] - bars[a][key]) -
+          (bars[b][key] - bars[a][key]) * (k - a);
         if (under ? cross <= 0 : cross >= 0) h.pop();
         else break;
       }
@@ -263,7 +339,10 @@ const Window = ({ i }: { i: number }) => {
     let best = [h[0], h[1] ?? h[0]];
     let bestSpan = -1;
     for (let k = 1; k < h.length; k++) {
-      if (h[k] - h[k - 1] > bestSpan) { bestSpan = h[k] - h[k - 1]; best = [h[k - 1], h[k]]; }
+      if (h[k] - h[k - 1] > bestSpan) {
+        bestSpan = h[k] - h[k - 1];
+        best = [h[k - 1], h[k]];
+      }
     }
     return best;
   };
@@ -282,8 +361,17 @@ const Window = ({ i }: { i: number }) => {
     const [a, b2] = hull(key, true);
     const m = (bars[b2][key] - bars[a][key]) / (b2 - a);
     let from = a;
-    while (from > 0 && bars[from - 1][key] >= bars[a][key] + m * (from - 1 - a) - 1e-9) from--;
-    return { a: from, b: b2, v0: bars[a][key] + m * (from - a), v1: bars[b2][key] };
+    while (
+      from > 0 &&
+      bars[from - 1][key] >= bars[a][key] + m * (from - 1 - a) - 1e-9
+    )
+      from--;
+    return {
+      a: from,
+      b: b2,
+      v0: bars[a][key] + m * (from - a),
+      v1: bars[b2][key],
+    };
   });
   const maPath = pathOf(sma(series.closes, V.read.maPeriod), g);
 
@@ -301,7 +389,8 @@ const Window = ({ i }: { i: number }) => {
         transformOrigin: `${(x + V.win.w / 2).toFixed(1)}px ${(V.win.y + V.win.h / 2).toFixed(1)}px`,
       }}
     >
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: R.win.x,
@@ -314,7 +403,8 @@ const Window = ({ i }: { i: number }) => {
           boxShadow: theme.color.glassShadow,
         }}
       />
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: R.display.x,
@@ -340,115 +430,164 @@ const Window = ({ i }: { i: number }) => {
         {CB && (
           <defs>
             <clipPath id={`d${i}`}>
-              <rect x={R.display.x} y={R.display.y} width={R.display.w} height={R.display.h} rx={V.ui.display.radius} />
+              <rect
+                x={R.display.x}
+                y={R.display.y}
+                width={R.display.w}
+                height={R.display.h}
+                rx={V.ui.display.radius}
+              />
             </clipPath>
           </defs>
         )}
         <g clipPath={CB ? `url(#d${i})` : undefined}>
-        {/* ⚠ THE BUILD COUNTS ONLY THE TWENTY. Counting all 61 would spend two
+          {/* ⚠ THE BUILD COUNTS ONLY THE TWENTY. Counting all 61 would spend two
             thirds of the entrance drawing bars that are off the left edge, and
             the window would look empty while it filled. */}
-        {series.bars
-          .slice(0, long ? SS4_LEAD + Math.ceil(SS4_KEEP.length * built) : Math.ceil(series.bars.length * built))
-          .map((b, k) => {
-          const bx = g.x(k);
-          const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
-          const top = Math.min(g.y(b.o), g.y(b.c));
-          const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
-          const vh = (vol[k] / peak) * R.volume.h;
-          return (
-            <g key={k}>
-              <line x1={bx} y1={g.y(b.h)} x2={bx} y2={g.y(b.l)} stroke={fill} strokeWidth={theme.shape.hairline} />
-              <rect x={bx - w / 2} y={top} width={w} height={h} rx={Math.min(w * 0.22, 4)} fill={fill} />
-              <rect
-                x={bx - w / 2}
-                y={R.volume.y + R.volume.h - vh}
-                width={w}
-                height={Math.max(1, vh)}
-                rx={Math.min(w * 0.28, 4)}
-                fill={fill}
-                opacity={0.72}
-              />
-            </g>
-          );
-        })}
+          {series.bars
+            .slice(
+              0,
+              long
+                ? SS4_LEAD + Math.ceil(SS4_KEEP.length * built)
+                : Math.ceil(series.bars.length * built),
+            )
+            .map((b, k) => {
+              const bx = g.x(k);
+              const fill = b.c >= b.o ? c.candleGreen : c.candleRed;
+              const top = Math.min(g.y(b.o), g.y(b.c));
+              const h = Math.max(1.5, Math.abs(g.y(b.c) - g.y(b.o)));
+              const vh = (vol[k] / peak) * R.volume.h;
+              return (
+                <g key={k}>
+                  <line
+                    x1={bx}
+                    y1={g.y(b.h)}
+                    x2={bx}
+                    y2={g.y(b.l)}
+                    stroke={fill}
+                    strokeWidth={theme.shape.hairline}
+                  />
+                  <rect
+                    x={bx - w / 2}
+                    y={top}
+                    width={w}
+                    height={h}
+                    rx={Math.min(w * 0.22, 4)}
+                    fill={fill}
+                  />
+                  <rect
+                    x={bx - w / 2}
+                    y={R.volume.y + R.volume.h - vh}
+                    width={w}
+                    height={Math.max(1, vh)}
+                    rx={Math.min(w * 0.28, 4)}
+                    fill={fill}
+                    opacity={0.72}
+                  />
+                </g>
+              );
+            })}
 
-        {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
+          {/* ⚠ THREE ARROWS, NOT TWO — "di antaranya ada tanda panah". Up and
             down alone is a choice between two things, which is still a
             prediction; the one straight through the middle is what turns it
             into "nobody knows". */}
-        {i === 1 &&
-          built > 0.99 &&
-          [-V.fan.spread, 0, V.fan.spread].map((dy) => {
-            const ex = tip.x + V.fan.len;
-            const ey = tip.y + dy;
-            const a = Math.atan2(ey - tip.y, ex - tip.x);
-            const hx = ex - Math.cos(a) * V.fan.head;
-            const hy = ey - Math.sin(a) * V.fan.head;
-            const nx = -Math.sin(a) * V.fan.head * 0.5;
-            const ny = Math.cos(a) * V.fan.head * 0.5;
-            return (
-              <g key={dy} opacity={head.opacity}>
-                <line x1={tip.x} y1={tip.y} x2={hx} y2={hy} stroke={theme.color.indigo} strokeWidth={V.fan.width} strokeLinecap="round" />
-                <polygon
-                  points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`}
-                  fill={theme.color.indigo}
-                />
-              </g>
-            );
-          })}
+          {i === 1 &&
+            built > 0.99 &&
+            [-V.fan.spread, 0, V.fan.spread].map((dy) => {
+              const ex = tip.x + V.fan.len;
+              const ey = tip.y + dy;
+              const a = Math.atan2(ey - tip.y, ex - tip.x);
+              const hx = ex - Math.cos(a) * V.fan.head;
+              const hy = ey - Math.sin(a) * V.fan.head;
+              const nx = -Math.sin(a) * V.fan.head * 0.5;
+              const ny = Math.cos(a) * V.fan.head * 0.5;
+              return (
+                <g key={dy} opacity={head.opacity}>
+                  <line
+                    x1={tip.x}
+                    y1={tip.y}
+                    x2={hx}
+                    y2={hy}
+                    stroke={theme.color.indigo}
+                    strokeWidth={V.fan.width}
+                    strokeLinecap="round"
+                  />
+                  <polygon
+                    points={`${ex},${ey} ${hx + nx},${hy + ny} ${hx - nx},${hy - ny}`}
+                    fill={theme.color.indigo}
+                  />
+                </g>
+              );
+            })}
 
-        {/* ── the four things to read volume against ──────────────────
+          {/* ── the four things to read volume against ──────────────────
             ⚠ ONLY ONCE THE WINDOW IS OPEN, so none of them can appear in the
             display SS6 locks. Each is DERIVED from the tape — a zigzag through
             its own swings, zones on its own extremes, a channel on its own
             hull, an average of its own closes — and drawn in the colour of the
             word that named it. */}
-        {i === 0 && open > 0.99 && (
-          <>
-            {markOn("zig") > 0.001 && (
-              <path d={zigPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" strokeLinejoin="round" opacity={markOn("zig")} />
-            )}
-            {markOn("zone") > 0.001 &&
-              zones.map((z, k) => (
-                <rect
-                  key={k}
-                  x={R.price.x}
-                  y={g.y(z.hi)}
-                  width={R.price.w}
-                  height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
-                  fill={theme.color.indigoWash}
-                  stroke={theme.color.indigo}
-                  strokeWidth={theme.shape.rule}
-                  rx={10}
-                  opacity={markOn("zone")}
-                />
-              ))}
-            {markOn("channel") > 0.001 &&
-              chan.map((q, k) => (
-                <line
-                  key={k}
-                  x1={g.x(q.a)}
-                  y1={g.y(q.v0)}
-                  x2={g.x(q.b)}
-                  y2={g.y(q.v1)}
+          {i === 0 && open > 0.99 && (
+            <>
+              {markOn("zig") > 0.001 && (
+                <path
+                  d={zigPath}
+                  fill="none"
                   stroke={theme.color.indigo}
                   strokeWidth={V.read.width}
                   strokeLinecap="round"
-                  opacity={markOn("channel")}
+                  strokeLinejoin="round"
+                  opacity={markOn("zig")}
                 />
-              ))}
-            {markOn("ma") > 0.001 && (
-              <path d={maPath} fill="none" stroke={theme.color.indigo} strokeWidth={V.read.width} strokeLinecap="round" opacity={markOn("ma")} />
-            )}
-          </>
-        )}
+              )}
+              {markOn("zone") > 0.001 &&
+                zones.map((z, k) => (
+                  <rect
+                    key={k}
+                    x={R.price.x}
+                    y={g.y(z.hi)}
+                    width={R.price.w}
+                    height={Math.max(2, g.y(z.lo) - g.y(z.hi))}
+                    fill={theme.color.indigoWash}
+                    stroke={theme.color.indigo}
+                    strokeWidth={theme.shape.rule}
+                    rx={10}
+                    opacity={markOn("zone")}
+                  />
+                ))}
+              {markOn("channel") > 0.001 &&
+                chan.map((q, k) => (
+                  <line
+                    key={k}
+                    x1={g.x(q.a)}
+                    y1={g.y(q.v0)}
+                    x2={g.x(q.b)}
+                    y2={g.y(q.v1)}
+                    stroke={theme.color.indigo}
+                    strokeWidth={V.read.width}
+                    strokeLinecap="round"
+                    opacity={markOn("channel")}
+                  />
+                ))}
+              {markOn("ma") > 0.001 && (
+                <path
+                  d={maPath}
+                  fill="none"
+                  stroke={theme.color.indigo}
+                  strokeWidth={V.read.width}
+                  strokeLinecap="round"
+                  opacity={markOn("ma")}
+                />
+              )}
+            </>
+          )}
         </g>
       </svg>
 
       {/* ── the row of words under the display ──────────────────────────── */}
       {i === 0 && open > 0.5 && (
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             /* ⚠ IT FILLS THE WHITE BAND AND CENTRES ITSELF IN IT — Simon. The
                band is exactly the room the display gave up for the row, so
@@ -472,7 +611,7 @@ const Window = ({ i }: { i: number }) => {
           {[V.read.lead, ...V.read.items].map((q, k) => {
             const r = textReveal(f, local(q.at, FROM), V.read.over, 12);
             const lead = k === 0;
-/* ⚠ NEVER THE LEAD — Simon: "'Baca volume dengan' ga perlu di
+            /* ⚠ NEVER THE LEAD — Simon: "'Baca volume dengan' ga perlu di
                  highlight". Before the first reading arrives `live` is -1, and
                  `k - 1 === live` is true for k = 0: the label wore the pill for
                  the 84 frames it stood alone. */
@@ -487,7 +626,11 @@ const Window = ({ i }: { i: number }) => {
                   padding: lead ? 0 : `${V.read.pill.y}px ${V.read.pill.x}px`,
                   borderRadius: V.read.pill.radius,
                   background: lit ? theme.color.indigo : undefined,
-                  color: lead ? c.ink : lit ? theme.color.onIndigo : theme.color.mute,
+                  color: lead
+                    ? c.ink
+                    : lit
+                      ? theme.color.onIndigo
+                      : theme.color.mute,
                   whiteSpace: "nowrap",
                   opacity: r.opacity,
                   transform: `translateY(${r.dy.toFixed(1)}px)`,
@@ -497,7 +640,7 @@ const Window = ({ i }: { i: number }) => {
               </span>
             );
           })}
-        </div>
+        </Interactive.Div>
       )}
 
       {/* ── the mark at the top, and the name under the display ─────────── */}
@@ -511,7 +654,8 @@ const Window = ({ i }: { i: number }) => {
             kind={card.tone === "ok" ? "check" : "cross"}
             opacity={chrome}
           />
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: x,
@@ -528,7 +672,7 @@ const Window = ({ i }: { i: number }) => {
             }}
           >
             {card.title}
-          </div>
+          </Interactive.Div>
         </>
       )}
     </div>
@@ -536,12 +680,29 @@ const Window = ({ i }: { i: number }) => {
 };
 
 const Disc = ({
-  x, y, d, fill, kind, opacity,
-}: { x: number; y: number; d: number; fill: string; kind: "check" | "cross"; opacity: number }) => {
+  x,
+  y,
+  d,
+  fill,
+  kind,
+  opacity,
+}: {
+  x: number;
+  y: number;
+  d: number;
+  fill: string;
+  kind: "check" | "cross";
+  opacity: number;
+}) => {
   const r = d / 2;
   const a = d * 0.24;
   return (
-    <svg style={{ position: "absolute", left: x, top: y, overflow: "visible" }} width={d} height={d} opacity={opacity}>
+    <svg
+      style={{ position: "absolute", left: x, top: y, overflow: "visible" }}
+      width={d}
+      height={d}
+      opacity={opacity}
+    >
       <circle cx={r} cy={r} r={r} fill={fill} />
       <path
         d={
@@ -567,7 +728,9 @@ export const SC19 = () => {
   const cOut = cutOutStyle(f + FROM, CUTS.toClose);
   const cam = {
     transform: `${cIn.transform} ${cOut.transform}`,
-    filter: [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") || undefined,
+    filter:
+      [cIn.filter, cOut.filter].filter((q) => q && q !== "none").join(" ") ||
+      undefined,
   };
   return (
     <Stage transparent>
@@ -598,16 +761,28 @@ export const SC19 = () => {
     }
   };
   eq("LIMITS.win", V.win, { w: 440, h: 640, radius: 46, y: 220, gap: 160 });
-  eq("LIMITS.ui.display", V.ui.display, { x: 20, y: 110, w: 400, h: 400, radius: 30 });
+  eq("LIMITS.ui.display", V.ui.display, {
+    x: 20,
+    y: 110,
+    w: 400,
+    h: 400,
+    radius: 30,
+  });
   eq("LIMITS.ui.price", V.ui.price, { x: 34, y: 124, w: 372, h: 250 });
   eq("LIMITS.ui.volume", V.ui.volume, { x: 34, y: 392, w: 372, h: 104 });
-  eq("the frames the two windows arrive on", V.cards.map((q) => q.at), [17996, 18148]);
+  eq(
+    "the frames the two windows arrive on",
+    V.cards.map((q) => q.at),
+    [17996, 18148],
+  );
   eq("SS4's bar count", SS4.bars.length, 20);
   eq("COLOUR's bar count", COLOUR.bars.length, 14);
   /* the tapes themselves, at the ends — enough to catch a reseed or a retrace */
   eq(
     "SS4's first and last close",
-    [SS4.closes[0], SS4.closes[SS4.closes.length - 1]].map((v) => Math.round(v * 1e3)),
-    [276000,645000],
+    [SS4.closes[0], SS4.closes[SS4.closes.length - 1]].map((v) =>
+      Math.round(v * 1e3),
+    ),
+    [276000, 645000],
   );
 }

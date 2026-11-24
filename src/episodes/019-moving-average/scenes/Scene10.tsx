@@ -7,7 +7,7 @@
  * The chip is pinned to the touch it was made on and the price runs away from
  * it. The growing distance is the argument — so the chip must not follow.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { Stage } from "../../../core";
 import { ChartFrame, gridOf } from "../components/ChartFrame";
 import { BollingerBands } from "../components/BollingerBands";
@@ -16,7 +16,14 @@ import { TitleChip } from "../components/TitleChip";
 import { Strike } from "../components/Strike";
 import { TextBlock, assertBlocks } from "../components/TextBlock";
 import { theme } from "../theme";
-import { sec, bollinger, layoutMode, textReveal, progressInOut, fadeOut } from "../helpers";
+import {
+  sec,
+  bollinger,
+  layoutMode,
+  textReveal,
+  progressInOut,
+  fadeOut,
+} from "../helpers";
 import { SERIES_UPTREND, BARS_UPTREND, domainOf } from "../series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -92,7 +99,8 @@ export const Scene10 = () => {
       {/* COMPLIANCE: struck misconception, never a statement.
           Fixed at the touch it was made on — the price runs away from it. */}
       {f >= T.sell && f < T.modeC && (
-        <div
+        <Interactive.Div
+          name="Sell?"
           style={{
             position: "absolute",
             left: G.x(FIRST_TOUCH),
@@ -109,7 +117,7 @@ export const Scene10 = () => {
           <Strike f={f} at={T.strike}>
             Sell?
           </Strike>
-        </div>
+        </Interactive.Div>
       )}
 
       <LabelChip
@@ -130,8 +138,17 @@ export const Scene10 = () => {
         from={T.block}
         until={633}
         lines={[
-          { text: "UPPER BAND = SELL", size: "h2", color: "muted", struck: T.blockStrike },
-          { text: "STRONG TREND CAN STAY NEAR UPPER BAND", size: "h2", color: "indigo" },
+          {
+            text: "UPPER BAND = SELL",
+            size: "h2",
+            color: "muted",
+            struck: T.blockStrike,
+          },
+          {
+            text: "STRONG TREND CAN STAY NEAR UPPER BAND",
+            size: "h2",
+            color: "indigo",
+          },
           { text: "BAND TOUCH ≠ ENTRY / EXIT", size: "h2", color: "text" },
         ]}
       />

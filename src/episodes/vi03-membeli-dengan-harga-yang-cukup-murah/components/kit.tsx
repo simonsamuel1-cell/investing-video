@@ -2,6 +2,7 @@
  * VI03's shared pieces: VI02's kit (itself VI01's look on IN07's UI: line-art people, photo tiles, dashed text boxes, one
  * shot at a time), on this episode's words.
  */
+import { useNudge } from "../../../core/nudge";
 import type React from "react";
 import { Img, staticFile } from "remotion";
 import { w } from "../data/timing";
@@ -41,11 +42,12 @@ export const LINE_ART = {
 } as const;
 export type LineArtName = keyof typeof LINE_ART;
 export const Drawing = ({ name, cx, floor, h, style }: { name: LineArtName; cx: number; floor: number; h: number; style?: React.CSSProperties }) => {
+  const nd = useNudge();
   const a = LINE_ART[name];
   const wd = (h * a.w) / a.h;
   return (
-    <div style={{ position: "absolute", left: cx - wd / 2, top: floor - h, width: wd, height: h, ...style }}>
-      <Img src={staticFile(`art/vi03/line/${name}.png`)} style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }} />
+    <div ref={nd.ref} style={{ position: "absolute", left: cx - wd / 2, top: floor - h, width: wd, height: h, ...style, ...nd.style }}>
+      <Img showInTimeline={false} src={staticFile(`art/vi03/line/${name}.png`)} style={{ width: "100%", height: "100%", display: "block", maxWidth: "none" }} />
     </div>
   );
 };

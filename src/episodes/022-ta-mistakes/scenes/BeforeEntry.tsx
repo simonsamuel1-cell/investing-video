@@ -25,10 +25,27 @@
  * the slide finishes, which is `useMotion`'s duration; written down as a second
  * number the two would drift apart the day the motion is retuned.
  */
-import { AbsoluteFill, Img, staticFile, useCurrentFrame } from "remotion";
+import { CoreLineE as Line } from "../../../editable";
 import {
-  DashedBox, HighlightBox, Line, Stage, cutInStyle, cutOutStyle, progress,
-  progressInOut, ramp, theme, useMotion, usePalette, useShadow,
+  AbsoluteFill,
+  Img,
+  staticFile,
+  useCurrentFrame,
+  Interactive,
+} from "remotion";
+import {
+  DashedBox,
+  HighlightBox,
+  Stage,
+  cutInStyle,
+  cutOutStyle,
+  progress,
+  progressInOut,
+  ramp,
+  theme,
+  useMotion,
+  usePalette,
+  useShadow,
 } from "../../../core";
 import { CUT15, CUT16, PREP, local } from "../data/timing";
 import { PREP_SHOT } from "../data/layout";
@@ -41,7 +58,10 @@ const APPLY = "apply semua yang sudah dipelajari";
 /** Which beat each screen arrives on, GLOBAL. 02 is missing on purpose: it
  *  lands when the slide finishes, which only `useMotion` knows. */
 const AT: Record<string, number> = {
-  "01": V.one, "03": V.three, "05": V.five, "04": V.four,
+  "01": V.one,
+  "03": V.three,
+  "05": V.five,
+  "04": V.four,
 };
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -91,7 +111,8 @@ const Slot = ({ tile, at, x }: { tile: Tile; at: number; x?: number }) => {
   const r = tile.rect;
 
   return (
-    <div
+    <Interactive.Div
+      name="Objek"
       style={{
         position: "absolute",
         left: x ?? r.x,
@@ -107,10 +128,11 @@ const Slot = ({ tile, at, x }: { tile: Tile; at: number; x?: number }) => {
       }}
     >
       <Img
+        showInTimeline={false}
         src={staticFile(tile.src)}
         style={{ width: "100%", height: "100%", objectFit: "contain" }}
       />
-    </div>
+    </Interactive.Div>
   );
 };
 
@@ -134,7 +156,8 @@ export const BeforeEntry = () => {
    * moves, the picture does not. Anything arriving later still gets its own
    * entrance, because nothing is carrying it.
    */
-  const born = (beat: number) => (beat === V.at ? -m.reveal : local(beat, V.at));
+  const born = (beat: number) =>
+    beat === V.at ? -m.reveal : local(beat, V.at);
 
   /**
    * 01's journey out of the middle. `progressInOut` rather than `progress`
@@ -183,120 +206,125 @@ export const BeforeEntry = () => {
           and nesting is what lets the outgoing move carry the incoming one's
           result rather than fight it. */}
       <AbsoluteFill style={FENCE}>
-      <AbsoluteFill style={cutOutStyle(g, CUT16)}>
-      <AbsoluteFill style={cutInStyle(g, CUT15)}>
-        {/* ⚠ EVERYTHING THE PUSH-IN CARRIES IS IN HERE, AND THE SENTENCE AFTER
+        <AbsoluteFill style={cutOutStyle(g, CUT16)}>
+          <AbsoluteFill style={cutInStyle(g, CUT15)}>
+            {/* ⚠ EVERYTHING THE PUSH-IN CARRIES IS IN HERE, AND THE SENTENCE AFTER
             IT IS NOT. The move is a camera, so it takes the whole picture —
             type, screens, mark and question box alike — and leaves only the
             ground behind for what types next. */}
-        <AbsoluteFill
-          style={{
-            /* ⚠ DOWN, BECAUSE `pan` IS THE CAMERA'S. A camera that rises puts
+            <AbsoluteFill
+              style={{
+                /* ⚠ DOWN, BECAUSE `pan` IS THE CAMERA'S. A camera that rises puts
                its subject lower in the frame — Simon: "preview kameranya yang
                geser naik, which is imagenya jadi turun". */
-            transform: `translateY(${(S.zoom.pan * zoom).toFixed(1)}px) scale(${k.toFixed(4)})`,
-            transformOrigin: `${S.zoom.x}px ${S.zoom.y}px`,
-          }}
-        >
-        {/* ⚠ THE TWO LINES GO ON THE MOVE'S OWN CURVE — "buat kedua text itu
+                transform: `translateY(${(S.zoom.pan * zoom).toFixed(1)}px) scale(${k.toFixed(4)})`,
+                transformOrigin: `${S.zoom.x}px ${S.zoom.y}px`,
+              }}
+            >
+              {/* ⚠ THE TWO LINES GO ON THE MOVE'S OWN CURVE — "buat kedua text itu
             fade out saat sedang membesar previewnya". One curve, so the type
             cannot still be there when the move stops, whatever the move is
             retimed to. */}
-        <div style={{ opacity: 1 - zoom }}>
-        <Line
-          text={LEAD}
-          x={S.lead.x}
-          y={S.lead.y}
-          at={born(V.lead)}
-          size={S.size}
-          weight={theme.text.title.weight}
-        />
-        {/* ⚠ INDIGO, AND IT IS THE SECOND HALF OF ONE SENTENCE. Simon gave it
+              <div style={{ opacity: 1 - zoom }}>
+                <Line
+                  text={LEAD}
+                  x={S.lead.x}
+                  y={S.lead.y}
+                  at={born(V.lead)}
+                  size={S.size}
+                  weight={theme.text.title.weight}
+                />
+                {/* ⚠ INDIGO, AND IT IS THE SECOND HALF OF ONE SENTENCE. Simon gave it
             its own frame at 13971, 76 after the first — the line is held open
             for it from the start rather than appearing and pushing the screens
             down, which is what "sediakan space 1 text line di bawahnya" asks
             for. */}
-        <Line
-          text={APPLY}
-          x={S.apply.x}
-          y={S.apply.y}
-          at={born(V.apply)}
-          size={S.size}
-          weight={theme.text.title.weight}
-          color={c.indigo}
-        />
-        </div>
-        {S.tiles.map((t) => (
-          <Slot
-            key={t.key}
-            tile={t}
-            at={t.key === "02" ? local(V.pair, V.at) + m.move : born(AT[t.key])}
-            x={t.key === "01" ? oneX : undefined}
-          />
-        ))}
-        {/* ⚠ OUTSIDE THE CARD, NOT INSIDE IT. A Slot clips its own contents so
+                <Line
+                  text={APPLY}
+                  x={S.apply.x}
+                  y={S.apply.y}
+                  at={born(V.apply)}
+                  size={S.size}
+                  weight={theme.text.title.weight}
+                  color={c.indigo}
+                />
+              </div>
+              {S.tiles.map((t) => (
+                <Slot
+                  key={t.key}
+                  tile={t}
+                  at={
+                    t.key === "02"
+                      ? local(V.pair, V.at) + m.move
+                      : born(AT[t.key])
+                  }
+                  x={t.key === "01" ? oneX : undefined}
+                />
+              ))}
+              {/* ⚠ OUTSIDE THE CARD, NOT INSIDE IT. A Slot clips its own contents so
             the picture's corners follow the card's; a mark drawn in there would
             be clipped with them, and this one is meant to sit ON the picture
             rather than in it. It is given 01's CURRENT left edge, so it travels
             with the screen instead of jumping when the screen does. */}
-        {marked > 0.001 && (
-          <HighlightBox rect={mark} grow={marked} opacity={marked} />
-        )}
-        {/* ⚠ THE SAME MARQUEE SC15 CLOSES ON, and it opens from its middle like
+              {marked > 0.001 && (
+                <HighlightBox rect={mark} grow={marked} opacity={marked} />
+              )}
+              {/* ⚠ THE SAME MARQUEE SC15 CLOSES ON, and it opens from its middle like
             every dashed box in this episode now does. */}
-        {g >= V.ask.at && (
-          <DashedBox
-            x={S.ask.x}
-            y={S.ask.y}
-            w={S.ask.w}
-            h={S.ask.h}
-            at={local(V.ask.at, V.at)}
-            block={S.ask.block}
-            origin="center"
-          >
-            <div
-              style={{
-                position: "absolute",
-                inset: 0,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontFamily: theme.text.family,
-                fontSize: S.ask.size,
-                fontWeight: theme.text.title.weight,
-                color: c.ink,
-                whiteSpace: "pre",
-              }}
-            >
-              {V.ask.text}
-            </div>
-          </DashedBox>
-        )}
-        </AbsoluteFill>
-        {/* ⚠ IT TYPES, on the white the push-in uncovers — same two frames a
+              {g >= V.ask.at && (
+                <DashedBox
+                  x={S.ask.x}
+                  y={S.ask.y}
+                  w={S.ask.w}
+                  h={S.ask.h}
+                  at={local(V.ask.at, V.at)}
+                  block={S.ask.block}
+                  origin="center"
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontFamily: theme.text.family,
+                      fontSize: S.ask.size,
+                      fontWeight: theme.text.title.weight,
+                      color: c.ink,
+                      whiteSpace: "pre",
+                    }}
+                  >
+                    {V.ask.text}
+                  </div>
+                </DashedBox>
+              )}
+            </AbsoluteFill>
+            {/* ⚠ IT TYPES, on the white the push-in uncovers — same two frames a
             character SC10 and SC11 use. It starts on the frame the move ENDS
             on, which is that move's own duration and not a second number. */}
-        {typed.length > 0 && (
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              right: 0,
-              top: S.say.y,
-              transform: "translateY(-50%)",
-              textAlign: "center",
-              fontFamily: theme.text.family,
-              fontSize: S.say.size,
-              fontWeight: theme.text.title.weight,
-              color: c.ink,
-              whiteSpace: "pre",
-            }}
-          >
-            {typed}
-          </div>
-        )}
-      </AbsoluteFill>
-      </AbsoluteFill>
+            {typed.length > 0 && (
+              <Interactive.Div
+                name="Objek"
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  right: 0,
+                  top: S.say.y,
+                  transform: "translateY(-50%)",
+                  textAlign: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: S.say.size,
+                  fontWeight: theme.text.title.weight,
+                  color: c.ink,
+                  whiteSpace: "pre",
+                }}
+              >
+                {typed}
+              </Interactive.Div>
+            )}
+          </AbsoluteFill>
+        </AbsoluteFill>
       </AbsoluteFill>
     </Stage>
   );

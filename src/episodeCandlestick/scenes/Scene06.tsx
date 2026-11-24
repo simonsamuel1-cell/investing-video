@@ -11,7 +11,8 @@
  * Compliance: theme tokens only; SafeArea; bottom 108px empty; mulberry32(46);
  * fictional data — IllustrationTag mounted.
  */
-import { useCurrentFrame } from "remotion";
+import { TA03ChipE as Chip } from "../../editable";
+import { useCurrentFrame, Interactive } from "remotion";
 import { theme } from "../theme";
 import {
   sec,
@@ -26,7 +27,7 @@ import type { OHLC } from "../helpers";
 import { SafeArea } from "../components/SafeArea";
 import { Candle } from "../components/Candle";
 import { PricePanel } from "../components/PricePanel";
-import { Chip } from "../components/Chip";
+
 import { MagnifierLens } from "../components/MagnifierLens";
 import { IllustrationTag } from "../components/IllustrationTag";
 
@@ -117,7 +118,13 @@ const A2 = anchor(33);
  * Chart + candles JSX — rendered once in the scene and once inside the lens.
  * When `revealFrom` is set, candles fade in one-by-one from that frame.
  */
-const ChartLayer = ({ opacity = 1, revealFrom }: { opacity?: number; revealFrom?: number }) => {
+const ChartLayer = ({
+  opacity = 1,
+  revealFrom,
+}: {
+  opacity?: number;
+  revealFrom?: number;
+}) => {
   const f = useCurrentFrame();
   return (
     <div style={{ position: "absolute", left: 0, top: 0, opacity }}>
@@ -137,11 +144,22 @@ const ChartLayer = ({ opacity = 1, revealFrom }: { opacity?: number; revealFrom?
         height={theme.canvas.height}
       >
         {SERIES.map((d, i) => {
-          const op = revealFrom === undefined ? 1 : fadeIn(f, revealFrom + i * sec(T.candleStagger), 6);
+          const op =
+            revealFrom === undefined
+              ? 1
+              : fadeIn(f, revealFrom + i * sec(T.candleStagger), 6);
           if (op <= 0.001) return null;
           return (
             <g key={i} opacity={op}>
-              <Candle x={cx(i)} width={BODY_W} open={d.open} high={d.high} low={d.low} close={d.close} scale={scale} />
+              <Candle
+                x={cx(i)}
+                width={BODY_W}
+                open={d.open}
+                high={d.high}
+                low={d.low}
+                close={d.close}
+                scale={scale}
+              />
             </g>
           );
         })}
@@ -168,7 +186,8 @@ export const Scene06 = () => {
   const revLabel = textReveal(f, sec(T.revLabel));
   const revLabelOp = revLabel.opacity * fadeOut(f, sec(T.hlEnd), 8);
   const boxTop = scale(SERIES[HL_IDX].high) - HL_PAD_Y;
-  const boxH = scale(SERIES[HL_IDX].low) - scale(SERIES[HL_IDX].high) + HL_PAD_Y * 2;
+  const boxH =
+    scale(SERIES[HL_IDX].low) - scale(SERIES[HL_IDX].high) + HL_PAD_Y * 2;
 
   const l1 = textReveal(f, sec(T.line1));
   const l2 = textReveal(f, sec(T.line2));
@@ -198,7 +217,8 @@ export const Scene06 = () => {
         </svg>
       )}
       {f >= sec(T.revLabel) && (
-        <div
+        <Interactive.Div
+          name="Reversal signal"
           style={{
             position: "absolute",
             left: cx(HL_IDX),
@@ -212,7 +232,7 @@ export const Scene06 = () => {
           }}
         >
           Reversal signal
-        </div>
+        </Interactive.Div>
       )}
 
       {lensVisible && (
@@ -250,7 +270,8 @@ export const Scene06 = () => {
 
       {/* lesson type */}
       {f >= sec(T.line1) && (
-        <div
+        <Interactive.Div
+          name="Candle + location = the full"
           style={{
             position: "absolute",
             left: 0,
@@ -265,10 +286,11 @@ export const Scene06 = () => {
           }}
         >
           Candle + location = the full read.
-        </div>
+        </Interactive.Div>
       )}
       {f >= sec(T.line2) && (
-        <div
+        <Interactive.Div
+          name="Candle alone = half."
           style={{
             position: "absolute",
             left: 0,
@@ -283,7 +305,7 @@ export const Scene06 = () => {
           }}
         >
           Candle alone = half.
-        </div>
+        </Interactive.Div>
       )}
 
       <IllustrationTag />

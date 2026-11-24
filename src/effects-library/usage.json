@@ -1,0 +1,161 @@
+{
+ "cutInStyle": [
+  "TA07",
+  "TA09",
+  "TA11",
+  "IN01",
+  "IN04",
+  "IN07",
+  "VI01",
+  "VI02",
+  "VI03"
+ ],
+ "SplitDivider": [
+  "TA09"
+ ],
+ "Title": [
+  "TA09"
+ ],
+ "Words": [
+  "TA09",
+  "TA11",
+  "VI03"
+ ],
+ "TypeBox": [
+  "IN01"
+ ],
+ "GlitchSwap": [
+  "IN01"
+ ],
+ "LowerThird": [
+  "IN01"
+ ],
+ "QuizTitle": [
+  "TA07"
+ ],
+ "KeyPoint": [
+  "TA09"
+ ],
+ "RollList": [
+  "TA09"
+ ],
+ "DashBox": [
+  "IN01",
+  "IN07",
+  "VI02",
+  "VI03"
+ ],
+ "DashedBox": [
+  "TA09",
+  "TA11"
+ ],
+ "HighlightBox": [
+  "TA07",
+  "TA09",
+  "TA11",
+  "IN04",
+  "IN07",
+  "VI02",
+  "VI03"
+ ],
+ "HighlightCircle": [
+  "TA09"
+ ],
+ "Ping": [
+  "TA01",
+  "TA03"
+ ],
+ "MarkerArrow": [
+  "TA09"
+ ],
+ "Connector": [
+  "IN04",
+  "IN07",
+  "VI01",
+  "VI02"
+ ],
+ "Candles": [
+  "TA09",
+  "TA11",
+  "VI01",
+  "VI02",
+  "VI03"
+ ],
+ "IndicatorLine": [
+  "TA11"
+ ],
+ "BollingerBands": [
+  "TA07"
+ ],
+ "Level": [
+  "TA09",
+  "TA11"
+ ],
+ "Zone": [
+  "TA09"
+ ],
+ "VolumeBars": [
+  "TA09",
+  "TA11"
+ ],
+ "Chip": [
+  "TA09",
+  "TA11"
+ ],
+ "Panel": [
+  "TA07",
+  "TA09"
+ ],
+ "StepRail": [
+  "TA11"
+ ],
+ "TabRow": [
+  "TA09"
+ ],
+ "SpeechBubble": [
+  "TA11",
+  "VI03"
+ ],
+ "VoiceBubble": [
+  "IN07"
+ ],
+ "Cursor": [
+  "TA11"
+ ],
+ "CheckBox": [
+  "IN04"
+ ],
+ "VerdictMark": [
+  "TA11"
+ ],
+ "Countdown": [
+  "TA09"
+ ],
+ "fmtRp": [
+  "TA07"
+ ],
+ "Gauge": [
+  "IN07",
+  "VI01"
+ ],
+ "SpinCoin": [
+  "IN07"
+ ],
+ "SoftGround": [
+  "IN04",
+  "IN07",
+  "VI01",
+  "VI02",
+  "VI03"
+ ],
+ "TuntunMark": [
+  "TA07",
+  "TA09",
+  "TA11",
+  "IN01",
+  "IN07",
+  "VI01",
+  "VI02",
+  "VI03"
+ ]
+}

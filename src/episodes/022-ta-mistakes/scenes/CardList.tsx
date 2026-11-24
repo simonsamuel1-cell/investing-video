@@ -30,20 +30,50 @@
  * middle and opens out. See `exit` in data/timing.ts for why that is not a
  * fade.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { interpolateColors, useCurrentFrame } from "remotion";
 import {
-  BUBBLE_TIP, Candles, Chip, Cursor, DashedBox, Level, Line, PositionTool,
-  SpeechBubble, candleWidth, dashOpenAt, extendGrid, gridOf, lerpBox, lerpGrid,
-  progress, progressInOut, ramp, textReveal, theme, useMotion, usePalette,
+  BUBBLE_TIP,
+  Candles,
+  Chip,
+  Cursor,
+  DashedBox,
+  Level,
+  PositionTool,
+  SpeechBubble,
+  candleWidth,
+  dashOpenAt,
+  extendGrid,
+  gridOf,
+  lerpBox,
+  lerpGrid,
+  progress,
+  progressInOut,
+  ramp,
+  textReveal,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import type { Grid } from "../../../core";
 import { BLOCK, CARD_LIST } from "../data/timing";
-import { BUBBLE, CARD_GROWN, CARD_OPEN, CARD_ROW, CARD_ZOOM } from "../data/layout";
+import {
+  BUBBLE,
+  CARD_GROWN,
+  CARD_OPEN,
+  CARD_ROW,
+  CARD_ZOOM,
+} from "../data/layout";
 import { MistakeCard, TOUCH } from "./MistakeCard";
 import { MistakeRow } from "./MistakeRow";
 import { assertRowArrival } from "./SceneTransition";
 import {
-  CARD_ALL, CARD_ENTRY, CARD_FULL, CARD_HEAD_N, CARD_SUPPORT, CARD_TAPE,
+  CARD_ALL,
+  CARD_ENTRY,
+  CARD_FULL,
+  CARD_HEAD_N,
+  CARD_SUPPORT,
+  CARD_TAPE,
 } from "../data/series";
 
 // ═══ EDIT ═══════════════════════════════════════════════════════════════════
@@ -160,7 +190,8 @@ const PILL = { h: SAID_TYPE.size * 1.8, gap: 10 };
 /** Rough, and it only has to be generous: it decides how many bars the pill is
  *  checked against, so over-estimating costs nothing and under-estimating is
  *  caught by the assertion at the bottom of this file. */
-const pillWidth = (s: string) => s.length * SAID_TYPE.size * 0.5 + SAID_TYPE.size * 1.24;
+const pillWidth = (s: string) =>
+  s.length * SAID_TYPE.size * 0.5 + SAID_TYPE.size * 1.24;
 
 /** How many bars sit BELOW the level and behind the window — the ones the
  *  reveal has to hand over one at a time. The history is above it and is not
@@ -281,8 +312,14 @@ const SAID = V.hopes.said.map((q) => {
  */
 const BUY_AT = (() => {
   const last = CARD_TAPE.length - 1;
-  const tip = { x: TAPE_GRID.x(BUY_I) + 14, y: TAPE_GRID.y(CARD_TAPE[last].h) - 12 };
-  return { x: tip.x - BUBBLE.w * BUBBLE_TIP.x, y: tip.y - BUBBLE.h * BUBBLE_TIP.y };
+  const tip = {
+    x: TAPE_GRID.x(BUY_I) + 14,
+    y: TAPE_GRID.y(CARD_TAPE[last].h) - 12,
+  };
+  return {
+    x: tip.x - BUBBLE.w * BUBBLE_TIP.x,
+    y: tip.y - BUBBLE.h * BUBBLE_TIP.y,
+  };
 })();
 
 /**
@@ -303,7 +340,10 @@ const BUY_AT = (() => {
  * edge, and Simon's six is a cap — and any of them landing mid-candle would
  * show half a bar, which reads as a rendering fault rather than as a window.
  */
-const windowOf = (g: Grid, box: { x: number; y: number; w: number; h: number }) => {
+const windowOf = (
+  g: Grid,
+  box: { x: number; y: number; w: number; h: number },
+) => {
   const half = candleWidth(g) / 2;
   /** The clear air between bar i and bar i+1. */
   const gap = (i: number) => (g.x(i) + half + (g.x(i + 1) - half)) / 2;
@@ -353,8 +393,12 @@ const Card = ({ i, title }: { i: number; title: string }) => {
    * frame, which is 5486 pixels of a picture Simon has already signed off.
    */
   const travel = progressInOut(f, V.away.at, V.away.over) * AWAY;
-  const sweep = picked ? 0 : progressInOut(f, V.exit.at, V.exit.row) * SWEEP + travel;
-  const open = picked ? progressInOut(f, V.exit.at + V.exit.lead, V.exit.one) : 0;
+  const sweep = picked
+    ? 0
+    : progressInOut(f, V.exit.at, V.exit.row) * SWEEP + travel;
+  const open = picked
+    ? progressInOut(f, V.exit.at + V.exit.lead, V.exit.one)
+    : 0;
   /** ⚠ AND THEN A THIRD SIZE — Simon: the preview grows to the size of the
    *  chart at 286, which is the ordinary card every other scene draws in. Two
    *  blends rather than one number, so each stage keeps its own curve. */
@@ -363,7 +407,11 @@ const Card = ({ i, title }: { i: number; title: string }) => {
       progressInOut(f, V.rev.card.at, V.rev.card.over)
     : 0;
   const box = lerpBox(
-    lerpBox({ x: R.x(i), y: R.y, w: R.w, h: R.h }, { x: O.x, y: O.y, w: O.w, h: O.h }, open),
+    lerpBox(
+      { x: R.x(i), y: R.y, w: R.w, h: R.h },
+      { x: O.x, y: O.y, w: O.w, h: O.h },
+      open,
+    ),
     CARD_GROWN,
     grown,
   );
@@ -402,9 +450,19 @@ const Note = () => {
    *  answer to "when may my content start"; guessed, it arrives while the box
    *  is still a sliver. */
   const open = dashOpenAt(V.note.at, m);
-  const shown = NOTE.slice(0, Math.floor(ramp(f, open, NOTE.length * V.note.perChar) * NOTE.length));
+  const shown = NOTE.slice(
+    0,
+    Math.floor(ramp(f, open, NOTE.length * V.note.perChar) * NOTE.length),
+  );
   return (
-    <DashedBox x={CARD_NOTE.x} y={CARD_NOTE.y} w={CARD_NOTE.w} h={CARD_NOTE.h} at={V.note.at} origin="center">
+    <DashedBox
+      x={CARD_NOTE.x}
+      y={CARD_NOTE.y}
+      w={CARD_NOTE.w}
+      h={CARD_NOTE.h}
+      at={V.note.at}
+      origin="center"
+    >
       <div
         style={{
           position: "absolute",
@@ -497,7 +555,12 @@ export const CardList = ({
     progressInOut(f, V.rev.card.at, V.rev.card.over);
   /** ⚠ RIGHT TO LEFT, which is the only order a rewind has. */
   const gone = (i: number) =>
-    1 - progressInOut(f, V.rev.at + (CARD_ALL.length - 1 - i) * V.rev.step, V.rev.over);
+    1 -
+    progressInOut(
+      f,
+      V.rev.at + (CARD_ALL.length - 1 - i) * V.rev.step,
+      V.rev.over,
+    );
   /**
    * ⚠ THE CARD'S LIVE BOX, AND EVERY ANNOTATION SPANS IT. A level drawn across
    * "the card" while the card is growing has to be told what the card currently
@@ -507,7 +570,11 @@ export const CardList = ({
   const inner: [number, number] = [card.x + O.pad, card.x + card.w - O.pad];
   /** The chart's own scale, mid-zoom. See ZOOM_GRID for why this is a blend of
    *  two grids and not a transform. */
-  const grid = lerpGrid(TAPE_GRID, ZOOM_GRID, progressInOut(f, V.zoom.at, V.zoom.over));
+  const grid = lerpGrid(
+    TAPE_GRID,
+    ZOOM_GRID,
+    progressInOut(f, V.zoom.at, V.zoom.over),
+  );
   /**
    * ⚠ THE WINDOW THE TAPE IS SEEN THROUGH — Simon: the extra candles exist from
    * the start and are simply masked until the preview opens out. It is solved
@@ -515,7 +582,11 @@ export const CardList = ({
    * the card opens; widened to the grown card, it stops hiding what was always
    * laid out rather than adding anything.
    */
-  const mask = lerpBox(windowOf(grid, { x: O.x, y: O.y, w: O.w, h: O.h }), CARD_GROWN, grown);
+  const mask = lerpBox(
+    windowOf(grid, { x: O.x, y: O.y, w: O.w, h: O.h }),
+    CARD_GROWN,
+    grown,
+  );
 
   /**
    * ⚠ THREE FLASHES AS THE LEVEL GOES — Simon, from 2751. A half-sine per beat,
@@ -527,7 +598,8 @@ export const CardList = ({
    * line doing one thing.
    */
   const beat = (f - V.blink.at) / V.blink.over;
-  const k = beat < 0 || beat >= V.blink.times ? 0 : Math.sin(Math.PI * (beat % 1));
+  const k =
+    beat < 0 || beat >= V.blink.times ? 0 : Math.sin(Math.PI * (beat % 1));
   const hot = {
     ink: interpolateColors(k, [0, 1], [c.indigo, theme.color.warn]),
     /** ⚠ +3, NOT →3 — see `blink` in data/timing.ts. */
@@ -563,115 +635,123 @@ export const CardList = ({
           transform: `translateX(${-progressInOut(f, V.away.at, V.away.over) * AWAY}px)`,
         }}
       >
-      {V.titles.map((title, i) =>
-        deck || i === V.cursor.card ? (
-          <Card key={title} i={i} title={title} />
-        ) : null,
-      )}
-      <Cursor x={cursor.x} y={cursor.y} opacity={walk > 0.001 ? put : 0} />
+        {V.titles.map((title, i) =>
+          deck || i === V.cursor.card ? (
+            <Card key={title} i={i} title={title} />
+          ) : null,
+        )}
+        <Cursor x={cursor.x} y={cursor.y} opacity={walk > 0.001 ? put : 0} />
 
-      {/* ═══ THE TAPE ═══  Simon, 2261 → 2372.
+        {/* ═══ THE TAPE ═══  Simon, 2261 → 2372.
           ⚠ NOT CLIPPED, AND IT DOES NOT NEED TO BE: the plot box is solved to
           sit inside the opened card, so nothing drawn against it can reach the
           card's edge. A clip here would only be hiding a geometry bug.
           ⚠ AND THE SUPPORT IS STILL NOT DRAWN — Simon's "jangan digambarkan
           dulu". The tape resting on it three times is what puts it there. */}
-      <Candles
-        bars={CARD_ALL}
-        grid={grid}
-        clip={mask}
-        /** ⚠ ONE SERIES, TWO SCHEDULES. The fall is the same tape continuing —
-         *  drawn from one grid so the join cannot land a bar in the wrong
-         *  place — but it arrives on its own beat, long after the first ten. */
-        wipe={(i) => {
-          /**
-           * ⚠ TWO SCHEDULES, AND WHICH ONE A BAR IS ON IS DECIDED BY THE
-           * WINDOW. Everything the small card can show arrives while it is
-           * small, on the beats it was locked to. Everything it cannot show
-           * waits for the card to open and then comes out one at a time —
-           * Simon: "tidak langsung muncul semua".
-           */
-          /** ⚠ THE HISTORY DOES NOT ARRIVE, IT IS UNCOVERED — Simon: the one
-           *  at a time is for what is below the level. Nothing happened to
-           *  these bars; they were out of frame, and the card opening is the
-           *  whole of their story. */
-          if (i < SEEN_FROM) return progressInOut(f, V.tape.at, V.tape.over);
-          const k = i - SEEN_FROM;
-          /** ⚠ THE TEN BARS OF THE SETUP NEVER LEAVE. They are what the rewind
-           *  is rewinding TO, so nothing that happens after 3517 touches them. */
-          if (k < CARD_TAPE.length) {
-            return progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over);
-          }
-          const arrive =
-            i <= SEEN_TO
-              ? progressInOut(f, V.fall.at + (k - CARD_TAPE.length) * V.fall.step, V.fall.over)
-              : /** ⚠ WHAT IS BELOW THE LEVEL ARRIVES IN ORDER, left to right,
-                 *  because it is the trade going wrong and that is worth
-                 *  watching happen. */
-                progressInOut(f, V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step, V.reveal.over);
-          /**
-           * ⚠ AND THE TWELVE COME BACK — Simon, from 3832. `max` rather than a
-           * branch: the rewind has taken this bar to nothing by then, so
-           * whichever of the two runs is showing more of it IS the bar, and
-           * neither run has to know about the other.
-           */
-          const again =
-            i <= SEEN_TO
-              ? progressInOut(
-                  f,
-                  V.again.at + (k - CARD_TAPE.length) * V.again.step,
-                  V.again.over,
-                )
-              : 0;
-          return Math.max(arrive * gone(i), again);
-        }}
-      />
+        <Candles
+          bars={CARD_ALL}
+          grid={grid}
+          clip={mask}
+          /** ⚠ ONE SERIES, TWO SCHEDULES. The fall is the same tape continuing —
+           *  drawn from one grid so the join cannot land a bar in the wrong
+           *  place — but it arrives on its own beat, long after the first ten. */
+          wipe={(i) => {
+            /**
+             * ⚠ TWO SCHEDULES, AND WHICH ONE A BAR IS ON IS DECIDED BY THE
+             * WINDOW. Everything the small card can show arrives while it is
+             * small, on the beats it was locked to. Everything it cannot show
+             * waits for the card to open and then comes out one at a time —
+             * Simon: "tidak langsung muncul semua".
+             */
+            /** ⚠ THE HISTORY DOES NOT ARRIVE, IT IS UNCOVERED — Simon: the one
+             *  at a time is for what is below the level. Nothing happened to
+             *  these bars; they were out of frame, and the card opening is the
+             *  whole of their story. */
+            if (i < SEEN_FROM) return progressInOut(f, V.tape.at, V.tape.over);
+            const k = i - SEEN_FROM;
+            /** ⚠ THE TEN BARS OF THE SETUP NEVER LEAVE. They are what the rewind
+             *  is rewinding TO, so nothing that happens after 3517 touches them. */
+            if (k < CARD_TAPE.length) {
+              return progressInOut(f, V.tape.at + k * V.tape.step, V.tape.over);
+            }
+            const arrive =
+              i <= SEEN_TO
+                ? progressInOut(
+                    f,
+                    V.fall.at + (k - CARD_TAPE.length) * V.fall.step,
+                    V.fall.over,
+                  )
+                : /** ⚠ WHAT IS BELOW THE LEVEL ARRIVES IN ORDER, left to right,
+                   *  because it is the trade going wrong and that is worth
+                   *  watching happen. */
+                  progressInOut(
+                    f,
+                    V.reveal.at + (i - SEEN_TO - 1) * V.reveal.step,
+                    V.reveal.over,
+                  );
+            /**
+             * ⚠ AND THE TWELVE COME BACK — Simon, from 3832. `max` rather than a
+             * branch: the rewind has taken this bar to nothing by then, so
+             * whichever of the two runs is showing more of it IS the bar, and
+             * neither run has to know about the other.
+             */
+            const again =
+              i <= SEEN_TO
+                ? progressInOut(
+                    f,
+                    V.again.at + (k - CARD_TAPE.length) * V.again.step,
+                    V.again.over,
+                  )
+                : 0;
+            return Math.max(arrive * gone(i), again);
+          }}
+        />
 
-      {/* ⚠ NOW IT MAY BE DRAWN. Held back until the tape had finished, so the
+        {/* ⚠ NOW IT MAY BE DRAWN. Held back until the tape had finished, so the
           line arrives as the confirmation of something already watched rather
           than as an instruction about what to watch. Indigo and 3px, the same
           weight every other level in this episode is drawn at. */}
-      <Level
-        value={CARD_SUPPORT}
-        grid={grid}
-        span={inner}
-        at={V.support.at}
-        over={V.support.over}
-        ink={hot.ink}
-        glow={hot.glow}
-        label="Support"
-        /**
-         * ⚠ BACK ON THE LEFT, AND IT HAS TO BE. The right-hand end is where the
-         * break happens: once the fall arrives the label is standing in the six
-         * bars Simon wants seen. The left end is clear at BOTH scales — the
-         * small card's leftmost bars are the tape's high ones and the grown
-         * card's are ss02's quiet range, and neither comes near a level this
-         * far below them.
-         */
-        labelSide="left"
-        labelAt="below"
-        width={hot.width}
-      />
+        <Level
+          value={CARD_SUPPORT}
+          grid={grid}
+          span={inner}
+          at={V.support.at}
+          over={V.support.over}
+          ink={hot.ink}
+          glow={hot.glow}
+          label="Support"
+          /**
+           * ⚠ BACK ON THE LEFT, AND IT HAS TO BE. The right-hand end is where the
+           * break happens: once the fall arrives the label is standing in the six
+           * bars Simon wants seen. The left end is clear at BOTH scales — the
+           * small card's leftmost bars are the tape's high ones and the grown
+           * card's are ss02's quiet range, and neither comes near a level this
+           * far below them.
+           */
+          labelSide="left"
+          labelAt="below"
+          width={hot.width}
+        />
 
-      {/* ⚠ THE ENTRY, AS A DASHED LINE FROM THE BUY BAR — Simon. Dashed rather
+        {/* ⚠ THE ENTRY, AS A DASHED LINE FROM THE BUY BAR — Simon. Dashed rather
           than solid because it is not a level the market knows about: it is one
           person's price, and the whole scene is about what happens to it. It
           starts ON the bar that was bought and runs to the card's edge, so
           everything that comes after is read against it. */}
-      <Level
-        value={CARD_ENTRY}
-        grid={grid}
-        span={[grid.x(BUY_I), inner[1]]}
-        at={V.entry.at}
-        over={V.entry.over}
-        dashed
-        /** ⚠ IT DOES NOT COME BACK WITH THE CARD — Simon: the rewind stops at
-         *  2721 "tanpa garis putus putus indigo". It leaves when the card
-         *  shrinks, and the position tool marks the same price properly. */
-        opacity={1 - progress(f, V.rev.card.at, V.rev.card.over)}
-      />
+        <Level
+          value={CARD_ENTRY}
+          grid={grid}
+          span={[grid.x(BUY_I), inner[1]]}
+          at={V.entry.at}
+          over={V.entry.over}
+          dashed
+          /** ⚠ IT DOES NOT COME BACK WITH THE CARD — Simon: the rewind stops at
+           *  2721 "tanpa garis putus putus indigo". It leaves when the card
+           *  shrinks, and the position tool marks the same price properly. */
+          opacity={1 - progress(f, V.rev.card.at, V.rev.card.over)}
+        />
 
-      {/* ═══ THE NOTE ═══  Simon, over the card's empty lower half.
+        {/* ═══ THE NOTE ═══  Simon, over the card's empty lower half.
           ⚠ IT CAN BE LEFT OUT. The scene that recalls this picture at 5247
           wants the chart and not the sentence — "kecuali text box, jangan
           di-include" — and the way to have the same picture minus one thing is
@@ -680,24 +760,24 @@ export const CardList = ({
           that treatment the last time this object appeared, and a frame that
           snaps open onto finished text reads as a caption rather than as
           something being written down. */}
-      {note && <Note />}
+        {note && <Note />}
 
-      {/* ═══ THE TOOL ═══  Simon's screenshot, after the rewind.
+        {/* ═══ THE TOOL ═══  Simon's screenshot, after the rewind.
           ⚠ IT IS THE ANSWER TO THE MISTAKE, not decoration. Everything before
           this has been a trade taken without a line saying when it was wrong;
           this is that line, drawn where the reason for the trade lives. */}
-      <PositionTool
-        grid={grid}
-        entry={TOOL.entry}
-        target={TOOL.target}
-        stop={TOOL.stop}
-        x1={TOOL.x1}
-        x2={inner[1]}
-        at={V.tool.at}
-        over={V.tool.over}
-      />
+        <PositionTool
+          grid={grid}
+          entry={TOOL.entry}
+          target={TOOL.target}
+          stop={TOOL.stop}
+          x1={TOOL.x1}
+          x2={inner[1]}
+          at={V.tool.at}
+          over={V.tool.over}
+        />
 
-      {/* ═══ WHAT THE POSITION SAYS TO ITSELF ═══  Simon, 3294 and 3367.
+        {/* ═══ WHAT THE POSITION SAYS TO ITSELF ═══  Simon, 3294 and 3367.
           ⚠ INDIGO, NOT RED. These are not the mistake being named — they are
           the reasoning that keeps it going, and reasoning gets the colour
           everything else in this video thinks in. The red is saved for the word
@@ -707,27 +787,32 @@ export const CardList = ({
           annotation ON the chart; these are not about the candles behind them,
           they are somebody talking over the top of them, and a solid block of
           the brand colour is what says that. */}
-      {SAID.map(
-        (q) =>
-          f >= q.at &&
-          f < V.hopes.out && (
-            <div key={q.text} style={{ opacity: 1 - progress(f, V.hopes.out - m.fade, m.fade) }}>
-              <Chip
-                label={q.text}
-                x={q.x}
-                y={q.y}
-                at={q.at}
-                tone="indigo"
-                pill
-                solid
-                size={SAID_TYPE.size}
-                weight={SAID_TYPE.weight}
-              />
-            </div>
-          ),
-      )}
+        {SAID.map(
+          (q) =>
+            f >= q.at &&
+            f < V.hopes.out && (
+              <div
+                key={q.text}
+                style={{
+                  opacity: 1 - progress(f, V.hopes.out - m.fade, m.fade),
+                }}
+              >
+                <Chip
+                  label={q.text}
+                  x={q.x}
+                  y={q.y}
+                  at={q.at}
+                  tone="indigo"
+                  pill
+                  solid
+                  size={SAID_TYPE.size}
+                  weight={SAID_TYPE.weight}
+                />
+              </div>
+            ),
+        )}
 
-      {/* ═══ THE VERDICT ═══  Simon, 2966 → 3102.
+        {/* ═══ THE VERDICT ═══  Simon, 2966 → 3102.
           ⚠ INSIDE THE CARD NOW, 30px off its bottom edge — and it rides the
           card's LIVE box, because the card grows out from under it at 3083.
           Pinned to where the small card's floor was, it would be left hanging
@@ -742,41 +827,43 @@ export const CardList = ({
           its own type scale; this word is bold because Simon asked for bold,
           and Line is the component that takes a weight. It also enters the way
           every word in this project enters — fade and rise, never a pop. */}
-      {f >= V.invalid.at && f < V.invalid.out && (
-        /** ⚠ IT FADES OUT, like the Buy bubble did once Simon saw that one pop.
-         *  The fade LANDS on his frame rather than starting there, so 3102 is
-         *  still the frame the word is gone on. */
-        <div style={{ opacity: 1 - progress(f, V.invalid.out - m.fade, m.fade) }}>
-          <Line
-            text="Invalid"
-            x={theme.canvas.width / 2}
-            y={card.y + card.h - INVALID.up - INVALID.size * INVALID.ink}
-            at={V.invalid.at}
-            size={INVALID.size}
-            weight={800}
-            color={theme.color.warn}
-          />
-        </div>
-      )}
+        {f >= V.invalid.at && f < V.invalid.out && (
+          /** ⚠ IT FADES OUT, like the Buy bubble did once Simon saw that one pop.
+           *  The fade LANDS on his frame rather than starting there, so 3102 is
+           *  still the frame the word is gone on. */
+          <div
+            style={{ opacity: 1 - progress(f, V.invalid.out - m.fade, m.fade) }}
+          >
+            <Line
+              text="Invalid"
+              x={theme.canvas.width / 2}
+              y={card.y + card.h - INVALID.up - INVALID.size * INVALID.ink}
+              at={V.invalid.at}
+              size={INVALID.size}
+              weight={800}
+              color={theme.color.warn}
+            />
+          </div>
+        )}
 
-      {/* ⚠ THE SAME BUBBLE, NOT A NEW ONE — Simon's "copy and paste". Same
+        {/* ⚠ THE SAME BUBBLE, NOT A NEW ONE — Simon's "copy and paste". Same
           component, same size, same tone as SC01's, because this is the same
           act being made a second time and a different picture of it would read
           as a different mistake. */}
-      {f >= V.buy && f < V.buyGone && (
-        <SpeechBubble
-          label="BUY"
-          x={BUY_AT.x}
-          y={BUY_AT.y}
-          w={BUBBLE.w}
-          h={BUBBLE.h}
-          at={V.buy}
-          /** ⚠ IT FADES OUT — Simon. The fade LANDS on his frame rather than
-           *  starting there, so 2644 is still the frame the bubble is gone on
-           *  and not the frame it begins leaving. */
-          opacity={1 - progress(f, V.buyGone - m.fade, m.fade)}
-        />
-      )}
+        {f >= V.buy && f < V.buyGone && (
+          <SpeechBubble
+            label="BUY"
+            x={BUY_AT.x}
+            y={BUY_AT.y}
+            w={BUBBLE.w}
+            h={BUBBLE.h}
+            at={V.buy}
+            /** ⚠ IT FADES OUT — Simon. The fade LANDS on his frame rather than
+             *  starting there, so 2644 is still the frame the bubble is gone on
+             *  and not the frame it begins leaving. */
+            opacity={1 - progress(f, V.buyGone - m.fade, m.fade)}
+          />
+        )}
       </div>
 
       {/* ⚠ ON TOP, AND OUTSIDE THE TRAVELLING GROUP. The new row is arriving
@@ -791,16 +878,22 @@ export const CardList = ({
  *  starts to flood, or the card responds to nothing. */
 {
   if (CARD_LIST.hover.at < CARD_LIST.cursor.at + CARD_LIST.cursor.over - 4) {
-    throw new Error("022-ta-mistakes/CardList: the flood starts before the pointer arrives");
+    throw new Error(
+      "022-ta-mistakes/CardList: the flood starts before the pointer arrives",
+    );
   }
   if (CARD_LIST.hover.at + CARD_LIST.hover.over > CARD_LIST.exit.at) {
-    throw new Error("022-ta-mistakes/CardList: the row starts leaving while the flood is still spreading");
+    throw new Error(
+      "022-ta-mistakes/CardList: the row starts leaving while the flood is still spreading",
+    );
   }
   /** And the window has to outlast the exit, or the card would be cut off
    *  mid-move — which is the one thing a continuous join may not do. */
   const settled = CARD_LIST.exit.at + CARD_LIST.exit.lead + CARD_LIST.exit.one;
   if (settled > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the picked card is still moving when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the picked card is still moving when the window ends",
+    );
   }
   /** ⚠ THE ONE ASSERTION THAT TIES THE TWO FILES TOGETHER. series.ts says the
    *  tape rests on 0.25 of the card; layout.ts says the support is the line
@@ -814,43 +907,69 @@ export const CardList = ({
   /** The tape has to be drawn in a card that has finished moving — bars wiping
    *  on while the card is still opening would be two motions arguing. */
   if (CARD_LIST.tape.at < settled) {
-    throw new Error("022-ta-mistakes/CardList: the tape starts before the card has settled");
+    throw new Error(
+      "022-ta-mistakes/CardList: the tape starts before the card has settled",
+    );
   }
-  const lastBar = CARD_LIST.tape.at + (CARD_TAPE.length - 1) * CARD_LIST.tape.step + CARD_LIST.tape.over;
+  const lastBar =
+    CARD_LIST.tape.at +
+    (CARD_TAPE.length - 1) * CARD_LIST.tape.step +
+    CARD_LIST.tape.over;
   if (lastBar > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the last bar is still wiping on when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the last bar is still wiping on when the window ends",
+    );
   }
   /** ⚠ SIMON'S ORDER, ENFORCED. The level is a confirmation of what the tape
    *  did; drawn while the tape is still building it becomes an instruction. */
   if (CARD_LIST.support.at < lastBar) {
-    throw new Error("022-ta-mistakes/CardList: the support is drawn while the tape is still building");
+    throw new Error(
+      "022-ta-mistakes/CardList: the support is drawn while the tape is still building",
+    );
   }
   if (CARD_LIST.support.at + CARD_LIST.support.over > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the support is still drawing when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the support is still drawing when the window ends",
+    );
   }
   if (CARD_LIST.grow.at < CARD_LIST.buyGone) {
-    throw new Error("022-ta-mistakes/CardList: the card starts growing before the Buy bubble has gone");
+    throw new Error(
+      "022-ta-mistakes/CardList: the card starts growing before the Buy bubble has gone",
+    );
   }
   const lastFall =
-    CARD_LIST.fall.at + (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step + CARD_LIST.fall.over;
+    CARD_LIST.fall.at +
+    (CARD_FULL.length - CARD_TAPE.length - 1) * CARD_LIST.fall.step +
+    CARD_LIST.fall.over;
   if (lastFall > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the fall is still running when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the fall is still running when the window ends",
+    );
   }
-  const lastReveal = CARD_LIST.reveal.at + (HIDDEN - 1) * CARD_LIST.reveal.step + CARD_LIST.reveal.over;
+  const lastReveal =
+    CARD_LIST.reveal.at +
+    (HIDDEN - 1) * CARD_LIST.reveal.step +
+    CARD_LIST.reveal.over;
   if (lastReveal > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the reveal is still running when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the reveal is still running when the window ends",
+    );
   }
   /** ⚠ NOTHING MAY BE REVEALED BEFORE THERE IS ROOM FOR IT. The bars the window
    *  was hiding can only start arriving once the window has started opening. */
   if (CARD_LIST.reveal.at < CARD_LIST.grow.at) {
-    throw new Error("022-ta-mistakes/CardList: hidden bars arrive before the card opens");
+    throw new Error(
+      "022-ta-mistakes/CardList: hidden bars arrive before the card opens",
+    );
   }
   /** ⚠ AND THE REVEAL IS EXACTLY WHAT IS BELOW THE LEVEL. Simon's rule is about
    *  the level, not about the window, so the split has to be checked against
    *  the tape rather than trusted to line up. */
   for (let i = SEEN_TO + 1; i < CARD_ALL.length; i++) {
     if (CARD_ALL[i].h > CARD_SUPPORT) {
-      throw new Error(`022-ta-mistakes/CardList: bar ${i} arrives one at a time but is not below the support`);
+      throw new Error(
+        `022-ta-mistakes/CardList: bar ${i} arrives one at a time but is not below the support`,
+      );
     }
   }
   /** ⚠ THE TOOL HAS TO FIT THE CARD IT IS DRAWN IN — the small one, since the
@@ -872,18 +991,24 @@ export const CardList = ({
     const top = q.y - PILL.h / 2;
     const bot = q.y + PILL.h / 2;
     if (top < CARD_GROWN.y || bot > CARD_GROWN.y + CARD_GROWN.h) {
-      throw new Error(`022-ta-mistakes/CardList: the pill "${q.text}" leaves the card`);
+      throw new Error(
+        `022-ta-mistakes/CardList: the pill "${q.text}" leaves the card`,
+      );
     }
     CARD_ALL.forEach((b, k) => {
       if (Math.abs(ZOOM_GRID.x(k) - q.x) > q.half) return;
       if (ZOOM_GRID.y(b.h) < bot && ZOOM_GRID.y(b.l) > top) {
-        throw new Error(`022-ta-mistakes/CardList: the pill "${q.text}" sits on bar ${k}`);
+        throw new Error(
+          `022-ta-mistakes/CardList: the pill "${q.text}" sits on bar ${k}`,
+        );
       }
     });
   }
   for (let i = 0; i < SEEN_FROM; i++) {
     if (CARD_ALL[i].l < CARD_SUPPORT) {
-      throw new Error(`022-ta-mistakes/CardList: history bar ${i} is below the support but is only uncovered`);
+      throw new Error(
+        `022-ta-mistakes/CardList: history bar ${i} is below the support but is only uncovered`,
+      );
     }
   }
   /** ⚠ NO BAR MAY LAND WHILE THE GRID IS MOVING. Where the zoom sits relative
@@ -892,28 +1017,47 @@ export const CardList = ({
    *  mid-zoom arrives somewhere that does not exist a frame later. */
   const zoomStart = CARD_LIST.zoom.at;
   const zoomEnd = zoomStart + CARD_LIST.zoom.over;
-  const tapeEnd = CARD_LIST.tape.at + (CARD_TAPE.length - 1) * CARD_LIST.tape.step + CARD_LIST.tape.over;
+  const tapeEnd =
+    CARD_LIST.tape.at +
+    (CARD_TAPE.length - 1) * CARD_LIST.tape.step +
+    CARD_LIST.tape.over;
   if (tapeEnd > zoomStart) {
-    throw new Error("022-ta-mistakes/CardList: the tape is still building when the chart starts zooming");
+    throw new Error(
+      "022-ta-mistakes/CardList: the tape is still building when the chart starts zooming",
+    );
   }
   if (CARD_LIST.fall.at < zoomEnd) {
-    throw new Error("022-ta-mistakes/CardList: the fall starts while the chart is still zooming");
+    throw new Error(
+      "022-ta-mistakes/CardList: the fall starts while the chart is still zooming",
+    );
   }
   /** ⚠ AND THE SIX HAVE TO BE SIX, AT BOTH SCALES THE SMALL CARD EVER HOLDS.
    *  The window is solved per frame, so what is checked here is that the solve
    *  lands where it is supposed to: inside the card, cutting between bars, and
    *  never showing a seventh bar below the support. */
-  for (const [name, g] of [["before the zoom", TAPE_GRID], ["after it", ZOOM_GRID]] as const) {
-    const box = { x: CARD_OPEN.x, y: CARD_OPEN.y, w: CARD_OPEN.w, h: CARD_OPEN.h };
+  for (const [name, g] of [
+    ["before the zoom", TAPE_GRID],
+    ["after it", ZOOM_GRID],
+  ] as const) {
+    const box = {
+      x: CARD_OPEN.x,
+      y: CARD_OPEN.y,
+      w: CARD_OPEN.w,
+      h: CARD_OPEN.h,
+    };
     const win = windowOf(g, box);
     const half = candleWidth(g) / 2;
     const right = win.x + win.w;
     if (win.x < box.x - 0.5 || right > box.x + box.w + 0.5) {
-      throw new Error(`022-ta-mistakes/CardList: the window ${name} leaves the small card`);
+      throw new Error(
+        `022-ta-mistakes/CardList: the window ${name} leaves the small card`,
+      );
     }
     const seventh = CARD_HEAD_N + CARD_TAPE.length + CARD_LIST.seen;
     if (g.x(seventh) - half < right) {
-      throw new Error(`022-ta-mistakes/CardList: a seventh bar below the support shows ${name}`);
+      throw new Error(
+        `022-ta-mistakes/CardList: a seventh bar below the support shows ${name}`,
+      );
     }
     if (g.x(CARD_HEAD_N - 1) + half > win.x) {
       throw new Error(`022-ta-mistakes/CardList: the history shows ${name}`);
@@ -923,12 +1067,16 @@ export const CardList = ({
   {
     const right = ZOOM_GRID.x(CARD_ALL.length - 1) + ZOOM_GRID.slot / 2;
     if (right > CARD_GROWN.x + CARD_GROWN.w - CARD_OPEN.pad) {
-      throw new Error(`022-ta-mistakes/CardList: the tail ends at ${right.toFixed(0)}, off the right of the card`);
+      throw new Error(
+        `022-ta-mistakes/CardList: the tail ends at ${right.toFixed(0)}, off the right of the card`,
+      );
     }
     const low = ZOOM_GRID.y(Math.min(...CARD_ALL.map((b) => b.l)));
     const high = ZOOM_GRID.y(Math.max(...CARD_ALL.map((b) => b.h)));
     if (high < CARD_GROWN.y || low > CARD_GROWN.y + CARD_GROWN.h) {
-      throw new Error(`022-ta-mistakes/CardList: the tape runs ${high.toFixed(0)}..${low.toFixed(0)}, outside the card`);
+      throw new Error(
+        `022-ta-mistakes/CardList: the tape runs ${high.toFixed(0)}..${low.toFixed(0)}, outside the card`,
+      );
     }
   }
   /**
@@ -941,13 +1089,22 @@ export const CardList = ({
     ["small", CARD_OPEN.plot, CARD_TAPE, TAPE_GRID],
     ["zoomed", CARD_ZOOM.plot, CARD_FULL, ZOOM_GRID],
   ] as const) {
-    const was = gridOf(bars.map((b) => b.c), [0, 1], box, 0);
+    const was = gridOf(
+      bars.map((b) => b.c),
+      [0, 1],
+      box,
+      0,
+    );
     if (Math.abs(was.slot - ext.slot) > 1e-9) {
-      throw new Error(`022-ta-mistakes/CardList: the ${name} candles changed width when history was added`);
+      throw new Error(
+        `022-ta-mistakes/CardList: the ${name} candles changed width when history was added`,
+      );
     }
     for (let i = 0; i < bars.length; i++) {
       if (Math.abs(was.x(i) - ext.x(CARD_HEAD_N + i)) > 1e-9) {
-        throw new Error(`022-ta-mistakes/CardList: ${name} bar ${i} moved when history was added`);
+        throw new Error(
+          `022-ta-mistakes/CardList: ${name} bar ${i} moved when history was added`,
+        );
       }
     }
   }
@@ -956,11 +1113,15 @@ export const CardList = ({
   {
     const edge = TAPE_GRID.x(CARD_HEAD_N - 1) + TAPE_GRID.slot / 2;
     if (edge > CARD_OPEN.plot.x) {
-      throw new Error("022-ta-mistakes/CardList: the newest history bar pokes into the small card");
+      throw new Error(
+        "022-ta-mistakes/CardList: the newest history bar pokes into the small card",
+      );
     }
     const left = ZOOM_GRID.x(0) - ZOOM_GRID.slot / 2;
     if (left < CARD_GROWN.x + CARD_OPEN.pad) {
-      throw new Error("022-ta-mistakes/CardList: the oldest history bar runs off the left of the grown card");
+      throw new Error(
+        "022-ta-mistakes/CardList: the oldest history bar runs off the left of the grown card",
+      );
     }
   }
   /** ⚠ AND IT ENDS EXACTLY ON THE NEXT SCENE'S FIRST FRAME. One frame short and
@@ -970,19 +1131,27 @@ export const CardList = ({
    *  to this layer too. */
   const round2 = CARD_LIST.row2.hover.at + CARD_LIST.row2.hover.over;
   if (round2 > CARD_LIST.row2.out.at) {
-    throw new Error("022-ta-mistakes/CardList: the row starts leaving while its flood is still spreading");
+    throw new Error(
+      "022-ta-mistakes/CardList: the row starts leaving while its flood is still spreading",
+    );
   }
   const lastOut =
     CARD_LIST.row2.out.at +
     (CARD_LIST.titles.length - 1) * CARD_LIST.row2.out.step +
     CARD_LIST.row2.out.over;
   if (lastOut > CARD_LIST.over) {
-    throw new Error("022-ta-mistakes/CardList: the row is still leaving when the window ends");
+    throw new Error(
+      "022-ta-mistakes/CardList: the row is still leaving when the window ends",
+    );
   }
   if (CARD_LIST.away.at < CARD_LIST.note.at) {
-    throw new Error("022-ta-mistakes/CardList: the picture leaves before its own note has been written");
+    throw new Error(
+      "022-ta-mistakes/CardList: the picture leaves before its own note has been written",
+    );
   }
   if (CARD_LIST.at + CARD_LIST.away.at < BLOCK.SC06 - 4) {
-    throw new Error("022-ta-mistakes/CardList: the second transition starts well before SC06 — check the join");
+    throw new Error(
+      "022-ta-mistakes/CardList: the second transition starts well before SC06 — check the join",
+    );
   }
 }

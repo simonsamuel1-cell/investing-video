@@ -12,7 +12,14 @@
  * as it was on global frame n.
  */
 import React from "react";
-import { Freeze, Sequence, continueRender, delayRender, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+import {
+  Freeze,
+  continueRender,
+  delayRender,
+  useCurrentFrame,
+  Interactive,
+} from "remotion";
 import {
   GridGround,
   ROADMAP_CARD,
@@ -44,7 +51,8 @@ import { useMotion } from "../../../core";
  * render held until it has loaded.
  */
 const SCRIPT = "Playwrite GB J";
-const SCRIPT_URL = "https://fonts.gstatic.com/s/playwritegbj/v11/k3kEo8wSPe9dzQ1UGbvobAPhY5iG-fsubxedDheGdc9Hbd7X9HBZ8Q.woff2";
+const SCRIPT_URL =
+  "https://fonts.gstatic.com/s/playwritegbj/v11/k3kEo8wSPe9dzQ1UGbvobAPhY5iG-fsubxedDheGdc9Hbd7X9HBZ8Q.woff2";
 if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
   const hold = delayRender(`font ${SCRIPT}`);
   new FontFace(SCRIPT, `url(${SCRIPT_URL}) format("woff2")`, { weight: "400" })
@@ -60,7 +68,14 @@ if (typeof document !== "undefined" && typeof FontFace !== "undefined") {
  * frame: two lines `gap` apart ("jarak antar 2 garis horizontal jadiin 150 px"). Outside the lens a point is small script in
  * light grey; inside it, the same point is Plus Jakarta Sans, indigo and large.
  */
-const LIST = { size: 48, lensSize: 96, gap: 150, lineW: 900, near: 130, step: 72 };
+const LIST = {
+  size: 48,
+  lensSize: 96,
+  gap: 150,
+  lineW: 900,
+  near: 130,
+  step: 72,
+};
 /**
  * Where a point sits, `d` points away from the lens — "jarak antar textnya di
  * deketin, tapi jarak text yang terseleksi dengan yang tidak terseleksi tuh
@@ -68,7 +83,11 @@ const LIST = { size: 48, lensSize: 96, gap: 150, lineW: 900, near: 130, step: 72
  * the rules), every step after that is the tight `step`. Continuous in `d`, so
  * the scroll runs through it smoothly.
  */
-const listY = (d: number) => Math.sign(d) * (Math.abs(d) <= 1 ? Math.abs(d) * LIST.near : LIST.near + (Math.abs(d) - 1) * LIST.step);
+const listY = (d: number) =>
+  Math.sign(d) *
+  (Math.abs(d) <= 1
+    ? Math.abs(d) * LIST.near
+    : LIST.near + (Math.abs(d) - 1) * LIST.step);
 
 export type Mount = { from: number; duration: number; Component: React.FC };
 
@@ -78,7 +97,11 @@ const SceneAt = ({ g, scenes }: { g: number; scenes: Mount[] }) => {
   if (!s) return null;
   return (
     <Freeze frame={g}>
-      <Sequence from={s.from} durationInFrames={s.duration} showInTimeline={false}>
+      <Sequence
+        from={s.from}
+        durationInFrames={s.duration}
+        showInTimeline={false}
+      >
         <s.Component />
       </Sequence>
     </Freeze>
@@ -132,14 +155,30 @@ const Board = ({
   return (
     <div style={{ position: "absolute", inset: 0 }}>
       {ROADMAP_SLOTS.map((slot, n) => {
-        const a = n === landing ? reveal : ease(f, cardsAt[others.indexOf(n)], 22);
+        const a =
+          n === landing ? reveal : ease(f, cardsAt[others.indexOf(n)], 22);
         if (a <= 0.001) return null;
         const lit = glow.card === n ? ease(f, glow.at, glow.over) : 0;
-        const box = { position: "absolute" as const, left: slot.x, top: slot.y, width: ROADMAP_CARD.w, height: ROADMAP_CARD.h, borderRadius: theme.shape.panelRadius };
+        const box = {
+          position: "absolute" as const,
+          left: slot.x,
+          top: slot.y,
+          width: ROADMAP_CARD.w,
+          height: ROADMAP_CARD.h,
+          borderRadius: theme.shape.panelRadius,
+        };
         return (
           <div key={n} style={{ opacity: a }}>
-            {lit > 0.001 ? <div style={{ ...box, boxShadow: shadow.glow, opacity: lit }} /> : null}
-            <div style={{ ...box, background: c.cardBg, border: `${theme.shape.hairline}px solid ${c.border}` }} />
+            {lit > 0.001 ? (
+              <div style={{ ...box, boxShadow: shadow.glow, opacity: lit }} />
+            ) : null}
+            <div
+              style={{
+                ...box,
+                background: c.cardBg,
+                border: `${theme.shape.hairline}px solid ${c.border}`,
+              }}
+            />
             {contents[n] ? (
               <div
                 style={{
@@ -192,16 +231,27 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
      its slot, clipped on an OUTER element (core/Roadmap's warning). */
   const slot = ROADMAP_SLOTS[t.landing];
   const k = 1 + (ROADMAP_CARD.w / theme.canvas.width - 1) * map;
-  const topOff = (ROADMAP_CARD.h - theme.canvas.height * (ROADMAP_CARD.w / theme.canvas.width)) / 2;
+  const topOff =
+    (ROADMAP_CARD.h -
+      theme.canvas.height * (ROADMAP_CARD.w / theme.canvas.width)) /
+    2;
 
   return (
     <div style={{ position: "absolute", inset: 0, opacity: 1 - fade }}>
       {/* the grid stays put while the camera pushes past it, so its notch
           around both reserves never moves */}
-      <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
+      <div
+        style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}
+      >
         <GridGround f={f} opacity={map} paper={c.bg} />
       </div>
-      <div style={{ position: "absolute", inset: 0, ...cardPush(push, t.next, TRANS_PUSH.amount) }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          ...cardPush(push, t.next, TRANS_PUSH.amount),
+        }}
+      >
         <Board
           reveal={map}
           landing={t.landing}
@@ -215,7 +265,13 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
             ),
           )}
         />
-        <div style={{ position: "absolute", inset: 0, clipPath: shrinkClip(map, t.landing) }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: shrinkClip(map, t.landing),
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -243,25 +299,58 @@ export const SceneTransisi = ({ t, scenes }: { t: Trans; scenes: Mount[] }) => {
  * bead at each end, a bead at its middle, and a small flourish over the middle
  * — above the top rule, mirrored below the bottom one.
  */
-const OrnateRule = ({ y, flip, color }: { y: number; flip: boolean; color: string }) => {
+const OrnateRule = ({
+  y,
+  flip,
+  color,
+}: {
+  y: number;
+  flip: boolean;
+  color: string;
+}) => {
   const w = LIST.lineW;
   const h = 60;
   const mid = w / 2;
   const cy = h / 2;
   const end = (x: number, dir: 1 | -1) => (
     <>
-      <path d={`M${x} ${cy} l${dir * 7} -5 l${dir * 7} 5 l${-dir * 7} 5 z`} fill={color} />
+      <path
+        d={`M${x} ${cy} l${dir * 7} -5 l${dir * 7} 5 l${-dir * 7} 5 z`}
+        fill={color}
+      />
       <circle cx={x + dir * 20} cy={cy} r={2.6} fill={color} />
     </>
   );
   return (
-    <svg width={w} height={h} style={{ position: "absolute", left: (theme.canvas.width - w) / 2, top: y - cy, overflow: "visible" }}>
-      <line x1={14} y1={cy} x2={w - 14} y2={cy} stroke={color} strokeWidth={2} />
+    <svg
+      width={w}
+      height={h}
+      style={{
+        position: "absolute",
+        left: (theme.canvas.width - w) / 2,
+        top: y - cy,
+        overflow: "visible",
+      }}
+    >
+      <line
+        x1={14}
+        y1={cy}
+        x2={w - 14}
+        y2={cy}
+        stroke={color}
+        strokeWidth={2}
+      />
       {end(0, 1)}
       {end(w, -1)}
       <circle cx={mid} cy={cy} r={4} fill={color} />
       {/* the flourish: two curls out from a small leaf, mirrored for the bottom rule */}
-      <g transform={`translate(${mid} ${cy}) scale(1 ${flip ? -1 : 1})`} fill="none" stroke={color} strokeWidth={2.4} strokeLinecap="round">
+      <g
+        transform={`translate(${mid} ${cy}) scale(1 ${flip ? -1 : 1})`}
+        fill="none"
+        stroke={color}
+        strokeWidth={2.4}
+        strokeLinecap="round"
+      >
         <path d="M0 -10 C -6 -20 -18 -24 -26 -16 C -31 -11 -27 -4 -21 -7 C -18 -9 -19 -13 -22 -13" />
         <path d="M0 -10 C 6 -20 18 -24 26 -16 C 31 -11 27 -4 21 -7 C 18 -9 19 -13 22 -13" />
         <path d="M0 -12 L 4 -18 L 0 -26 L -4 -18 Z" fill={color} />
@@ -302,7 +391,10 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
             right: 0,
             /* a lens magnifies distance too, so the copy inside it is spaced
                out by the same factor — only one point fits between the lines */
-            top: cy + listY(i - k) * (inLens ? LIST.lensSize / LIST.size : 1) - size * 0.6,
+            top:
+              cy +
+              listY(i - k) * (inLens ? LIST.lensSize / LIST.size : 1) -
+              size * 0.6,
             textAlign: "center",
             fontFamily: inLens ? theme.text.family : SCRIPT,
             fontSize: size,
@@ -315,54 +407,80 @@ export const ListTransisi = ({ scenes }: { scenes: Mount[] }) => {
         </div>
       );
     });
-  const line = (y: number, flip: boolean) => <OrnateRule y={y} flip={flip} color={c.indigo} />;
+  const line = (y: number, flip: boolean) => (
+    <OrnateRule y={y} flip={flip} color={c.indigo} />
+  );
   return (
     <>
-    <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
-      <div style={{ position: "absolute", inset: 0, background: c.bg }} />
-      <div style={{ position: "absolute", inset: 0, opacity: listIn }}>
-        <div style={{ position: "absolute", inset: 0, clipPath: OUTSIDE_RESERVES }}>
-          <GridGround f={f} paper={c.bg} />
+      <div style={{ position: "absolute", inset: 0, opacity: 1 - leave }}>
+        <div style={{ position: "absolute", inset: 0, background: c.bg }} />
+        <div style={{ position: "absolute", inset: 0, opacity: listIn }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              clipPath: OUTSIDE_RESERVES,
+            }}
+          >
+            <GridGround f={f} paper={c.bg} />
+          </div>
+          {/* outside the lens: everything above the top line and below the bottom one */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              clipPath: `polygon(0 0, ${W}px 0, ${W}px ${lensTop}px, 0 ${lensTop}px, 0 ${lensBottom}px, ${W}px ${lensBottom}px, ${W}px ${H}px, 0 ${H}px)`,
+            }}
+          >
+            {points(false)}
+          </div>
+          {/* inside it: the magnified copy */}
+          {f < T.end ? (
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)`,
+              }}
+            >
+              {points(true)}
+            </div>
+          ) : null}
+          {line(lensTop, false)}
+          {line(lensBottom, true)}
         </div>
-        {/* outside the lens: everything above the top line and below the bottom one */}
-        <div style={{ position: "absolute", inset: 0, clipPath: `polygon(0 0, ${W}px 0, ${W}px ${lensTop}px, 0 ${lensTop}px, 0 ${lensBottom}px, ${W}px ${lensBottom}px, ${W}px ${H}px, 0 ${H}px)` }}>
-          {points(false)}
-        </div>
-        {/* inside it: the magnified copy */}
-        {f < T.end ? (
-          <div style={{ position: "absolute", inset: 0, clipPath: `inset(${lensTop}px 0 ${H - lensBottom}px 0)` }}>
-            {points(true)}
+        {sceneOut < 0.999 ? (
+          <div
+            style={{ position: "absolute", inset: 0, opacity: 1 - sceneOut }}
+          >
+            <SceneAt g={T.freeze} scenes={scenes} />
           </div>
         ) : null}
-        {line(lensTop, false)}
-        {line(lensBottom, true)}
       </div>
-      {sceneOut < 0.999 ? (
-        <div style={{ position: "absolute", inset: 0, opacity: 1 - sceneOut }}>
-          <SceneAt g={T.freeze} scenes={scenes} />
-        </div>
+      {/* the word that stays — exactly where the lens had it, then up to SC04's title */}
+      {f >= T.end ? (
+        <Interactive.Div
+          name="Objek"
+          style={{
+            position: "absolute",
+            left: 0,
+            right: 0,
+            top:
+              cy +
+              (SC04_TITLE.y - cy) * carry -
+              (LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry) * 0.6,
+            textAlign: "center",
+            fontFamily: theme.text.family,
+            fontSize: LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry,
+            fontWeight: 800,
+            lineHeight: 1.2,
+            color: c.indigo,
+            whiteSpace: "nowrap",
+          }}
+        >
+          {LIST_POINTS[landed]}
+        </Interactive.Div>
       ) : null}
-    </div>
-    {/* the word that stays — exactly where the lens had it, then up to SC04's title */}
-    {f >= T.end ? (
-      <div
-        style={{
-          position: "absolute",
-          left: 0,
-          right: 0,
-          top: cy + (SC04_TITLE.y - cy) * carry - (LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry) * 0.6,
-          textAlign: "center",
-          fontFamily: theme.text.family,
-          fontSize: LIST.lensSize + (SC04_TITLE.size - LIST.lensSize) * carry,
-          fontWeight: 800,
-          lineHeight: 1.2,
-          color: c.indigo,
-          whiteSpace: "nowrap",
-        }}
-      >
-        {LIST_POINTS[landed]}
-      </div>
-    ) : null}
     </>
   );
 };

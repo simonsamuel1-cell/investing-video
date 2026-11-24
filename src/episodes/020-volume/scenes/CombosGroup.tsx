@@ -21,11 +21,26 @@
  * between "posisi." and "Ketiga," — the chart simply changes on the word. No
  * wipe, no fade: a transition on a mid-word cut reads as a mistake.
  */
-import { AbsoluteFill, useCurrentFrame, interpolate, interpolateColors } from "remotion";
+import { CoreWordsE as Words } from "../../../editable";
 import {
-  Stage, Chart, VolumeBars, SourceTag, TabRow, Words,
+  AbsoluteFill,
+  useCurrentFrame,
+  interpolate,
+  interpolateColors,
+  Interactive,
+} from "remotion";
+import {
+  Stage,
+  Chart,
+  VolumeBars,
+  SourceTag,
+  TabRow,
   cardPushed,
-  gridOf, useMotion, usePalette, progressInOut, theme,
+  gridOf,
+  useMotion,
+  usePalette,
+  progressInOut,
+  theme,
 } from "../../../core";
 import { BLOCK, COMBO_TABS, COMBOS, TRANS, local } from "../data/timing";
 import { TAG_Y } from "../data/layout";
@@ -62,16 +77,39 @@ const TITLE_Y = COMBOS.win.y + 150;
 const BODY_Y = TITLE_Y + (COMBOS.text.title * 1.3) / 2 + COMBOS.text.gap;
 
 const PRICE = { x: WIN.x + 40, y: WIN.y + 40, w: WIN.w - 80, h: WIN.h * 0.58 };
-const VOLBOX = { x: PRICE.x, y: WIN.y + 40 + WIN.h * 0.64, w: PRICE.w, h: WIN.h * 0.22 };
+const VOLBOX = {
+  x: PRICE.x,
+  y: WIN.y + 40 + WIN.h * 0.64,
+  w: PRICE.w,
+  h: WIN.h * 0.22,
+};
 
 /** ⚠ ONE GRID PER COMBINATION. The four no longer share two tapes, so they
  *  cannot share two scales — a shared domain would draw one of them against
  *  another's high and low. */
 const GRID = {
   upUp: gridOf(COMBO.upUp.series.closes, COMBO_DOMAIN.upUp, PRICE, 0.12, 0),
-  upDown: gridOf(COMBO.upDown.series.closes, COMBO_DOMAIN.upDown, PRICE, 0.12, 0),
-  downUp: gridOf(COMBO.downUp.series.closes, COMBO_DOMAIN.downUp, PRICE, 0.12, 0),
-  downDown: gridOf(COMBO.downDown.series.closes, COMBO_DOMAIN.downDown, PRICE, 0.12, 0),
+  upDown: gridOf(
+    COMBO.upDown.series.closes,
+    COMBO_DOMAIN.upDown,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downUp: gridOf(
+    COMBO.downUp.series.closes,
+    COMBO_DOMAIN.downUp,
+    PRICE,
+    0.12,
+    0,
+  ),
+  downDown: gridOf(
+    COMBO.downDown.series.closes,
+    COMBO_DOMAIN.downDown,
+    PRICE,
+    0.12,
+    0,
+  ),
 };
 
 /** Which combination owns the frame, by the word that introduces it. */
@@ -124,7 +162,13 @@ export const CombosGroup = () => {
           cutting straight to #F5F5F5 on the hand-over frame flipped the whole
           background a shade — the card matched and the page did not. */}
       <AbsoluteFill
-        style={{ backgroundColor: interpolateColors(o, [0, 1], [c.cardBg, theme.color.bg]) }}
+        style={{
+          backgroundColor: interpolateColors(
+            o,
+            [0, 1],
+            [c.cardBg, theme.color.bg],
+          ),
+        }}
       />
       {/* ⚠ ONE ROW, ALWAYS ON, ONE OF THEM CURRENT — it replaces the chapter
           card that used to name the four combinations. A card says it once and
@@ -144,7 +188,8 @@ export const CombosGroup = () => {
 
       {/* ── the window, and the tape inside it ─────────────────────────── */}
       <div style={{ position: "absolute", inset: 0 }}>
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: box.x,

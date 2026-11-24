@@ -10,7 +10,7 @@
  * Compliance: all tokens from theme.ts, no raw hex/sizes/easing; SafeArea;
  * bottom 108px empty; IllustrationTag + Ticker mounted; deterministic.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { SafeArea } from "../components/SafeArea";
 import { CaseStudyLayout } from "../components/CaseStudyLayout";
 import { SessionView, sessionGeom } from "../components/SessionView";
@@ -35,7 +35,13 @@ const SV_X = 96; // SessionView left
 const SV_Y = 240; // SessionView top (benchmark = SC03)
 const SV_W = 1536; // SessionView width
 const SV_H = 440; // SessionView height → 480px rect
-const CTX_GEOM = sessionGeom({ x: SV_X, width: SV_W, panelGap: 20, centered: true, centerNudge: 30 });
+const CTX_GEOM = sessionGeom({
+  x: SV_X,
+  width: SV_W,
+  panelGap: 20,
+  centered: true,
+  centerNudge: 30,
+});
 // Collapse (4801): shrink the candle panel 30% and align its LEFT edge to the
 // left (intraday) panel's left edge; the intraday panel + prices fade away.
 const COLLAPSE_SCALE = 0.7;
@@ -91,8 +97,15 @@ const HAMMER_PATH: SessionPoint[] = [
 // Shared vertical scale of the candle panel (matches SessionView's sessionScale).
 const HAMMER_MIN = Math.min(...HAMMER_PATH.map((p) => p.price));
 const HAMMER_MAX = Math.max(...HAMMER_PATH.map((p) => p.price));
-const SV_SCALE = priceScale(HAMMER_MIN, HAMMER_MAX, SV_Y, SV_Y + SV_H - 72, 0.1);
-const HAMMER_CX = CTX_GEOM.rightX + CTX_GEOM.rightW * 0.5 + CTX_GEOM.centerOffset;
+const SV_SCALE = priceScale(
+  HAMMER_MIN,
+  HAMMER_MAX,
+  SV_Y,
+  SV_Y + SV_H - 72,
+  0.1,
+);
+const HAMMER_CX =
+  CTX_GEOM.rightX + CTX_GEOM.rightW * 0.5 + CTX_GEOM.centerOffset;
 const WICK_TOP_Y = SV_SCALE(1412); // body bottom (open) — top of the long lower wick
 const WICK_LOW_Y = SV_SCALE(1246); // low — bottom of the long lower wick
 const MEASURE_X = HAMMER_CX + 55; // measure bracket just right of the candle
@@ -118,7 +131,9 @@ const CONTEXT_DATA: OHLC[] = (() => {
 // Finished hammer candle, sized/placed at the downtrend's support level so it
 // reads as the reversal candle at the end of the sequence (small green body just
 // above support, long lower wick down to it).
-const DOCK_CANDLES: OHLC[] = [{ open: 1272, high: 1286, low: 1246, close: 1282 }];
+const DOCK_CANDLES: OHLC[] = [
+  { open: 1272, high: 1286, low: 1246, close: 1282 },
+];
 
 export const Scene09 = () => {
   const f = useCurrentFrame();
@@ -127,7 +142,10 @@ export const Scene09 = () => {
   const dockProgress = easedProgress(f, sec(T.dock), sec(T.dockDur));
 
   // Collapse choreography (identity before 4801).
-  const collapseP = f >= sec(T.collapse) ? easedProgress(f, sec(T.collapse), sec(T.collapseDur)) : 0;
+  const collapseP =
+    f >= sec(T.collapse)
+      ? easedProgress(f, sec(T.collapse), sec(T.collapseDur))
+      : 0;
   const intradayOpacity = 1 - collapseP;
   const axisOpacity = 1 - collapseP;
   const rightScale = 1 - collapseP * (1 - COLLAPSE_SCALE);
@@ -179,17 +197,41 @@ export const Scene09 = () => {
         {showWickHi && (
           <>
             <svg
-              style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                overflow: "visible",
+              }}
               width={theme.canvas.width}
               height={theme.canvas.height}
             >
-              <g stroke={theme.colors.indigo} strokeWidth={theme.stroke.standard}>
-                <line x1={MEASURE_X} y1={WICK_TOP_Y} x2={MEASURE_X} y2={measureEnd} />
-                <line x1={MEASURE_X - TICK_HALF} y1={WICK_TOP_Y} x2={MEASURE_X + TICK_HALF} y2={WICK_TOP_Y} />
-                <line x1={MEASURE_X - TICK_HALF} y1={measureEnd} x2={MEASURE_X + TICK_HALF} y2={measureEnd} />
+              <g
+                stroke={theme.colors.indigo}
+                strokeWidth={theme.stroke.standard}
+              >
+                <line
+                  x1={MEASURE_X}
+                  y1={WICK_TOP_Y}
+                  x2={MEASURE_X}
+                  y2={measureEnd}
+                />
+                <line
+                  x1={MEASURE_X - TICK_HALF}
+                  y1={WICK_TOP_Y}
+                  x2={MEASURE_X + TICK_HALF}
+                  y2={WICK_TOP_Y}
+                />
+                <line
+                  x1={MEASURE_X - TICK_HALF}
+                  y1={measureEnd}
+                  x2={MEASURE_X + TICK_HALF}
+                  y2={measureEnd}
+                />
               </g>
             </svg>
-            <div
+            <Interactive.Div
+              name="Long wick"
               style={{
                 position: "absolute",
                 left: MEASURE_X + 20,
@@ -203,7 +245,7 @@ export const Scene09 = () => {
               }}
             >
               Long wick
-            </div>
+            </Interactive.Div>
           </>
         )}
 
@@ -213,7 +255,10 @@ export const Scene09 = () => {
           dockCandles={DOCK_CANDLES}
           dockProgress={dockProgress}
           dockInline
-          dockLabel={{ lines: ["Buyers taking", "control"], startFrame: sec(T.buyersText) }}
+          dockLabel={{
+            lines: ["Buyers taking", "control"],
+            startFrame: sec(T.buyersText),
+          }}
           revealFrame={sec(T.collapse)}
           lineFrame={sec(T.ctxLine)}
           x={CTX_X}

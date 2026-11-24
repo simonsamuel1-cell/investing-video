@@ -27,6 +27,7 @@
  * ⚠ EVERY RECTANGLE HAS ROUND CORNERS — bars included. A square corner is a
  * mistake here, not a style.
  */
+import { useNudge } from "../../../core/nudge";
 import React from "react";
 import { Img, random, staticFile, useCurrentFrame } from "remotion";
 import {
@@ -161,6 +162,7 @@ export const Cutout = ({
   /** How long the entrance takes (defaults to the episode's reveal). */
   riseFrames?: number;
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const m = useMotion();
   const life = useLife(at, out, undefined, riseFrames);
@@ -171,14 +173,14 @@ export const Cutout = ({
     /* ⚠ THE SHADOW ON THE WRAPPER, THE MIRROR ON THE PICTURE. On one element
        the filter is drawn first and the flip applied after, so a shadow cast
        to the left lands on the right. */
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x - w / 2,
         top: y - h + lift,
         width: w,
         height: h,
-        opacity: life,
+        opacity: life, ...nd.style,
       }}
     >
       {shadow ? (
@@ -809,6 +811,7 @@ export const Say = ({
   strikeAt?: number;
   children?: React.ReactNode;
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -819,7 +822,7 @@ export const Say = ({
   if (f < at || o <= 0.001) return null;
   const tx = anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0";
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
@@ -831,7 +834,7 @@ export const Say = ({
         fontWeight: weight,
         color: color ?? c.ink,
         whiteSpace: "nowrap",
-        lineHeight: 1.2,
+        lineHeight: 1.2, ...nd.style,
       }}
     >
       <span style={{ position: "relative", display: "inline-block" }}>
@@ -1134,6 +1137,7 @@ export const Pill = ({
   size?: number;
   dim?: number;
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   const c = usePalette();
   const m = useMotion();
@@ -1143,7 +1147,7 @@ export const Pill = ({
   if (f < at || o <= 0.001) return null;
   const t = toneOf(c, tone);
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
@@ -1161,7 +1165,7 @@ export const Pill = ({
         fontSize: size,
         fontWeight: 600,
         color: t.ink,
-        whiteSpace: "nowrap",
+        whiteSpace: "nowrap", ...nd.style,
       }}
     >
       {check ? (

@@ -11,10 +11,22 @@
  * real case, so it has to be a thing the viewer has already seen work rather
  * than a trick that arrives with the example.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, Chart, Chip, Level, Line, Stage,
-  domainOf, fadeOut, gridOf, progress, theme, useMotion, usePalette,
+  Candles,
+  Card,
+  Chart,
+  Chip,
+  Level,
+  Stage,
+  domainOf,
+  fadeOut,
+  gridOf,
+  progress,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { BLOCK, HINDSIGHT, local } from "../data/timing";
 import { FULL } from "../data/layout";
@@ -52,7 +64,11 @@ export const SC11 = () => {
   return (
     <Stage>
       <Line
-        text={g >= V.hide.at ? "…dan ini yang sebenarnya kamu punya" : "chart sering terlihat sangat jelas"}
+        text={
+          g >= V.hide.at
+            ? "…dan ini yang sebenarnya kamu punya"
+            : "chart sering terlihat sangat jelas"
+        }
         key={g >= V.hide.at ? "b" : "a"}
         x={theme.canvas.width / 2}
         y={theme.stage.title.y}
@@ -61,7 +77,11 @@ export const SC11 = () => {
         weight={theme.text.body.weight}
         color={c.slate}
       />
-      <Card rect={theme.stage.card} opacity={progress(f, local(V.chart.at, FROM), m.fade)} soft />
+      <Card
+        rect={theme.stage.card}
+        opacity={progress(f, local(V.chart.at, FROM), m.fade)}
+        soft
+      />
 
       {/* the tape the viewer actually had — it never leaves */}
       <Chart

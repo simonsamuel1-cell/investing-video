@@ -1,0 +1,143 @@
+TA01	17	CH	Line jadi candlestick	Garis berubah jadi candle, anatomi muncul
+TA01	24	CH	Sumbu lalu chart	Sumbu harga dan waktu tumbuh, chart menyusul
+TA01	6	KM	Daftar isi, kamera masuk	Kamera masuk ke satu kartu daftar isi
+TA01	39	CH	Area diuji berulang	Zona menyala tiap harga kembali
+TA01	50.6	CH	Emosi di candle	Label emosi menempel di candle
+TA03	4	KM	Zoom ke beberapa candle	Kamera masuk ke candle yang dikotaki
+TA03	7	CH	Ukuran bagian candle	Garis ukur di samping satu candle
+TA03	9	CH	Garis intraday jadi candle	Garis harian membentuk candle di sampingnya
+TA03	24	KT	Bingkai fokus	Kotak fokus ke satu candle di chart
+TA03	25.2	TK	Kalimat di atas chart redup	Chart memudar, kalimat besar di depan
+TA03	30	UI	Grid pola	Banyak kartu pola muncul bersama
+TA03	45.2	CH	Pola di konteks support	Candle kecil dan posisinya di chart
+TA05	17	CH	HH HL bertahap	Puncak dan lembah dilabeli berurutan
+TA05	26.6	TK	Angka besar dan kata	Angka besar, kata di bawahnya berganti
+TA05	31	DT	Adu dua batang	Batang pembeli dan penjual saling dorong
+TA05	36	KM	Kamera berjalan di chart	Kamera mengikuti chart lalu mundur
+TA05	57	CH	Panah dua arah tren	Panah naik dan turun di atas kurva
+TA05	73	CH	Kuis dengan hasil	Chart dilanjutkan setelah pertanyaan
+TA07	2	UI	Dashboard dan watchlist	Dashboard berganti saham dari watchlist
+TA07	33	KT	Tiga kotak fase	Tiga fase chart dikotaki
+TA07	34	KM	Fokus, sisanya redup	Satu area terang, sisanya kabur
+TA07	36	CH	Kerucut kemungkinan	Dua arah terbuka dengan tanda tanya
+TA07	51	UI	Kotak tebak dan hitung mundur	Area tertutup, hitung mundur, lalu terbuka
+TA07	57	UI	Barisan layar app	Beberapa layar app berjajar
+TA07	61	TK	Kartu kutipan tiga baris	Baris kutipan muncul satu per satu
+TA09	4	LT	Maskot dapat ide	Maskot dan bohlam, kalimat di bawah
+TA09	9	OR	Orang saling tukar	Ikon orang berjajar lalu bertransaksi
+TA09	13	UI	Callout dari layar	Kotak detail keluar dari layar app
+TA09	22	UI	Rel pilihan dan chart	Pilihan kiri menyala, chart berganti
+TA09	32.6	CH	Chart dan kesimpulan	Area disorot, kesimpulan di kanan
+TA09	37	UI	Dua panel, satu redup	Panel aktif terang, pasangannya abu
+TA09	45	CH	Panah hasil kuis	Panah menunjukkan arah yang terjadi
+TA09	53	CH	Sorot lonjakan volume	Satu batang berwarna, sisanya abu
+TA09	56	UI	Kartu melayang berlapis	Kartu di depan kartu kabur
+TA11	2	UI	Checklist di bawah chart	Centang menyala satu per satu
+TA11	4	KM	Chart membesar jadi latar	Chart jadi latar, judul di depan
+TA11	15.06	UI	Deret kartu bernomor	Kartu bernomor bergeser ke nomor berikut
+TA11	16	CH	Penanda beli jual banyak	Penanda bermunculan di chart
+TA11	22.8	UI	Dua jendela	Satu jendela dipilih, satu redup
+TA11	39	CH	Skenario candle kosong	Candle perkiraan bergaris tepi
+TA11	44	UI	Bandingkan dua rencana	Dua kartu rencana baris demi baris
+TA11	56	TK	Aturan dua kolom	Kondisi kiri, tindakan kanan
+IN01	2.5	UI	HP dan cabang	Garis dari HP ke ikon pengeluaran
+IN01	8	DT	Jam berputar	Jarum jam berputar, teks atas bawah
+IN01	9	TK	Awan kata	Kata bermunculan mengelilingi orang
+IN01	10	TK	Pertanyaan diketik ganti	Kata kunci pertanyaan berganti
+IN01	12	UI	Kartu saldo	Kartu aset dengan angka
+IN01	14	PH	Tiga jadi satu	Tiga ikon menyatu ke satu kata
+IN01	16	PH	Koin menyebar	Koin pusat bercabang ke koin kecil
+IN01	17	DT	Batang majemuk	Batang naik, tambahan di puncaknya
+IN01	21	PH	Kartu mengirim nilai	Kartu bulanan mengalir ke satu total
+IN01	22	PH	Jalur gelombang	Titik berjalan di jalur naik turun
+IN01	27	OR	Uang dikirim antar gambar	Koin berpindah dari gedung ke orang
+IN01	31	LT	Fakta menarik	Bohlam, tulisan, lalu kotak teks
+IN01	35	OR	Produk muncul di meja	Produk berdatangan di depan orang
+IN01	40	PH	Siklus berputar	Tiga kata terhubung panah melingkar
+IN01	43	DT	Angka naik dua kartu	Nilai pindah dari kartu ke kartu
+IN01	46	PH	Garis waktu bercabang	Titik waktu muncul dengan label
+IN01	48	PH	Elips putus-putus	Dua gambar dihubungkan elips
+IN01	59	DT	Bar kemampuan naik	Beberapa bar mengisi bertahap
+IN01	63	OR	Orang Tuntun dan rumus	Orang Tuntun menunjuk dua rumus
+IN01	67	PH	Mind map instrumen	Satu kartu bercabang ke banyak pilihan
+IN04	3	PH	Mind map satu ditambah	Cabang muncul satu per satu
+IN04	5	DT	Penghitung dan titik	Angka naik, titik memenuhi layar
+IN04	9	OR	Insight Orang Tuntun	Orang Tuntun dan kalimat kunci
+IN04	11	KM	Kamera peta	Kamera bergerak di atas peta
+IN04	15	PH	Tiga rute digambar	Tiga rute tumbuh di peta
+IN04	17	UI	Kartu rute	Peta kecil terhubung ke kartu angka
+IN04	33	PH	Rantai saldo	Saldo turun lalu naik berurutan
+IN04	37	CH	Dua chart nyata	Dua chart sejajar dengan hasilnya
+IN04	45	OR	Tiga kendaraan	Tiga ikon isometrik dengan garisnya
+IN04	50	UI	Daftar menyala bergantian	Baris aktif menyala, lainnya redup
+IN04	57.9	PH	Jalur bercabang empat	Dua kartu menyatu lalu bercabang
+IN04	61	UI	Ganti layar HP	Layar HP berganti dengan nomor aktif
+IN04	71	DT	Bar porsi	Satu bar mengisi sesuai porsi
+IN04	75	DT	Garis umur dan kartu	Titik umur berpindah, isi kartu berubah
+IN04	85	UI	Tiga lingkaran nomor	Lingkaran nomor mengantar kartu
+IN04	98	UI	HP dan label kiri kanan	Bagian HP disorot, label di sampingnya
+IN04	102.45	UI	Ikon bertangga	Ikon naik bertahap seperti tangga
+IN07	3	UI	HP jadi latar panik	Layar HP berubah warna, pesan masuk
+IN07	5	UI	Jari menekan tombol	Jari menekan tombol di HP
+IN07	6	TK	Pertanyaan keluar dari HP	Kartu tanya membesar dan diketik
+IN07	8	PH	Kartu pusat empat sudut	Kartu tengah dengan empat cabang sudut
+IN07	10	LT	Maskot dan rantai ikon	Maskot terhubung ke langkah-langkah
+IN07	13	PH	Jika lalu cari	Pasangan kiri kanan menyala berurutan
+IN07	20	OR	Tumpukan kertas	Kertas menumpuk, satu dipilih
+IN07	24	UI	Potongan UI keluar dari HP	Bagian layar membesar ke samping
+IN07	35	OR	Gelembung pikiran	Gelembung berubah ikon
+IN07	41	PH	Tiga lingkaran proses	Tiga lingkaran terhubung berurutan
+IN07	46	OR	Kipas kertas riset	Kertas terbuka seperti kipas
+IN07	49	UI	Mengetik di chat	Kolom chat membesar dan diketik
+IN07	62	DT	Tiga kartu jadi dasar	Tiga cabang mengisi satu bar
+IN07	67	DT	Menara koin goyah	Tumpukan koin miring
+IN07	73	UI	Dinding kartu	Banyak kartu kecil, satu menyala
+IN07	75	DT	Dua gauge pasar	Dua gauge bersebelahan
+IN07	87	UI	Dua skenario, orang di tengah	Dua sisi keputusan dengan orang di tengah
+IN07	96.2	TK	Pertanyaan diketik lalu bercabang	Kartu tanya diketik, lalu cabang
+IN07	101	OR	Koin bertahap	Koin berpindah dengan lompatan kecil
+IN07	104	LT	Maskot ke orang	Garis dari maskot ke pengguna
+IN07	111	UI	Papan potongan UI	Banyak UI dalam satu bingkai
+VI01	3	OR	Warung dan buku kas	Dunia garis hitam dengan kartu data
+VI01	12	CH	Area naik lalu jatuh	Area tumbuh, angka naik, lalu patah
+VI01	13	OR	Perkenalan tokoh	Kartu tokoh besar dengan busur
+VI01	15	DT	Tahun bergulir	Tahun bergeser di garis vertikal
+VI01	18	OR	Pilar tumbuh	Pilar naik satu per satu
+VI01	24	DT	Garis waktu investor	Titik waktu aktif, kartu berganti
+VI01	42	CH	Harga dan value	Garis harga berayun di sekitar value
+VI01	43	DT	Bar dua bagian	Satu bar terbagi dua warna
+VI01	48	DT	Angka dan titik banyak	Angka besar dengan grid titik
+VI01	52	DT	Jadwal jam	Bar waktu dengan dua ujung
+VI01	56.2	OR	Tiga pintu	Pintu bernomor, satu maju ke tengah
+VI01	66	DT	Grid abu jadi sedikit	Banyak kotak menyusut ke pilihan
+VI01	74	DT	Titik persentase	Seratus titik terisi sesuai persen
+VI01	83	UI	Tabel kebutuhan	Baris tabel muncul dengan status
+VI01	93	CH	Chart dan tabel kejadian	Titik di chart terhubung ke tabel
+VI01	107	UI	Laporan dan daftar isi	Layar laporan dengan daftar centang
+VI02	4	OR	Alur pabrik ke toko	Produksi, kardus, truk, toko
+VI02	7	TK	Kode saham besar	Kode saham berubah jadi makna
+VI02	13	TK	Kutipan dua tokoh	Kotak kutipan di antara dua tokoh
+VI02	18	PH	Alur hasil ke pemilik	Kartu berurutan, hasil turun ke pemilik
+VI02	30	UI	Buku kas diperiksa	Baris buku disorot dan dicentang
+VI02	37	UI	Tiga tabel app	Kolom tahun disorot di tiap layar
+VI02	41	DT	Bidang kotak kecil	Ribuan kotak, sebagian menyala
+VI02	46	PH	Laba dibagi dua	Garis laba bercabang dua tujuan
+VI02	53	OR	Reaksi terhadap rumor	Orang dan chart bereaksi pada kabar
+VI02	66	OR	Kotak suara dan timbangan	Dua mesin digambar garis hitam
+VI02	71	PH	Pertanyaan mengelilingi	Label tanya muncul di sekitar gambar
+VI03	3	OR	Beli mangga	Pembeli memeriksa barang di kartu
+VI03	9	TK	Kutipan digaris bawah	Kalimat digarisbawahi bergantian
+VI03	10	CH	Harga terhadap value	Garis harga mendekati garis value
+VI03	18	DT	Slider kelipatan	Slider bergeser, total ikut naik
+VI03	22	DT	Tiga bahan hitungan	Laba, waktu, keyakinan berurutan
+VI03	29.2	OR	Jembatan dan beban	Truk lewat, batas beban ditunjukkan
+VI03	32	DT	Jarak aman	Bar jarak dari harga wajar
+VI03	43	CH	Chart nyata dan kartu app	Harga berjalan, kartu app mengikuti
+VI03	60.6	DT	Batang masa depan turun	Batang baru turun, lama jadi bayangan
+VI03	69	PH	Tab dan cabang	Tab aktif terhubung ke isi
+VI03	72	CH	Turun dari puncak	Jarak turun ditandai di chart
+VI03	84	UI	Tiga kartu tanya	Kartu tanya menyala berurutan
+VI03	87	TK	Tiga kalimat bertumpuk	Kalimat lama meredup saat baru muncul
+VI03	90	DT	Batang eksponensial	Batang tumbuh makin cepat
+VI03	95	PH	Pohon tiga kartu	Satu kartu bercabang ke tiga
+VI03	96	UI	Popup dari daftar	Baris daftar membesar jadi kartu

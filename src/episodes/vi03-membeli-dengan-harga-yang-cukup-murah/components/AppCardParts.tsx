@@ -38,7 +38,7 @@ const Cut = ({ part, k, x, y, opacity = 1, children }: { part: Part; k: number; 
   if (opacity <= 0.001) return null;
   return (
     <div style={{ position: "absolute", left: x, top: y, width: w, height: h, overflow: "hidden", opacity }}>
-      <Img src={staticFile(BBCA_CARD.src)} style={{ position: "absolute", left: -part.x0 * k, top: -part.y0 * k, width: BBCA_CARD.w * k, height: BBCA_CARD.h * k, maxWidth: "none", display: "block" }} />
+      <Img showInTimeline={false} src={staticFile(BBCA_CARD.src)} style={{ position: "absolute", left: -part.x0 * k, top: -part.y0 * k, width: BBCA_CARD.w * k, height: BBCA_CARD.h * k, maxWidth: "none", display: "block" }} />
       {children ? (
         <svg width={w} height={h} viewBox={`${part.x0} ${part.y0} ${part.x1 - part.x0} ${part.y1 - part.y0}`} style={{ position: "absolute", left: 0, top: 0 }}>
           {children}

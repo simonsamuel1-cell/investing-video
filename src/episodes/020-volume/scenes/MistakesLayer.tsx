@@ -13,7 +13,7 @@
  * what makes it one surface rather than a thing each scene has to remember to
  * draw.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import { AbsoluteFill } from "remotion";
 import { progress, ramp, useMotion, usePalette, theme } from "../../../core";
 import { MISTAKES, local } from "../data/timing";
@@ -48,7 +48,14 @@ export const MistakesLayer = () => {
   return (
     <AbsoluteFill style={{ background: c.bg }}>
       {/* ── the drifting blooms ─────────────────────────────────────────── */}
-      <div style={{ position: "absolute", inset: 0, filter: `blur(${V.ground.blur}px)`, overflow: "hidden" }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          filter: `blur(${V.ground.blur}px)`,
+          overflow: "hidden",
+        }}
+      >
         {V.ground.blobs.map((b, i) => (
           <div
             key={i}
@@ -67,7 +74,8 @@ export const MistakesLayer = () => {
       </div>
 
       {/* ── the heading the cut does not touch ──────────────────────────── */}
-      <div
+      <Interactive.Div
+        name="Objek"
         style={{
           position: "absolute",
           left: theme.margin.left,
@@ -81,12 +89,12 @@ export const MistakesLayer = () => {
           /* ⚠ EASED, AND ITS LENGTH COMES FROM THE THEME — it was a linear ramp
            over a frame count typed in here, which is the one thing a component
            may never do (see helpers.ts). */
-        opacity: progress(f, 0, m.fade),
+          opacity: progress(f, 0, m.fade),
         }}
       >
         {V.head.lead}
         {tail ? tail.text.slice(0, tail.chars) : ""}
-      </div>
+      </Interactive.Div>
     </AbsoluteFill>
   );
 };

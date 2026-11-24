@@ -22,10 +22,33 @@
  * valuation and fear are the script's words (drawn as positions, not numbers); 28 Januari's context is left blank on
  * purpose.
  */
-import { useCurrentFrame } from "remotion";
-import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
+import {
+  AppearE as Appear,
+  CardE as Card,
+  DiscE as Disc,
+  LineE as Line,
+} from "../../../editable";
+import { useCurrentFrame, Interactive } from "remotion";
+import {
+  Connector,
+  SoftGround,
+  Stage,
+  theme,
+  typeStyle,
+  useMotion,
+  usePalette,
+  useShadow,
+} from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, BoardGrid, Card, Disc, Ico, Line, Mark, SITUATION, Typed, ease, useWords } from "../components/kit";
+import {
+  BoardGrid,
+  Ico,
+  Mark,
+  SITUATION,
+  Typed,
+  ease,
+  useWords,
+} from "../components/kit";
 import { DataChart, NewsClipping } from "../components/Dalio";
 import { BUMI_CQ, BUMI_FV, BumiCrop, cropW } from "../components/BumiCrop";
 import { APR_2025, JAN_2026 } from "../data/ihsg";
@@ -45,8 +68,22 @@ const BAR = { top: 110, h: 14, dot: 28, labelTop: 142 };
 const GAUGE = { cy: 168, r: 80, labelW: 110, labelTop: 182 };
 /** The two real series (data/ihsg.ts): their window, axis and the day each dropped. */
 const CHARTS = [
-  { title: "28 Januari 2026", series: JAN_2026, lo: 7500, hi: 9500, ticks: [8000, 9000], event: { d: "2026-01-28", label: "28 Jan" } },
-  { title: "April 2025", series: APR_2025, lo: 5600, hi: 7400, ticks: [6000, 7000], event: { d: "2025-04-08", label: "8 Apr" } },
+  {
+    title: "28 Januari 2026",
+    series: JAN_2026,
+    lo: 7500,
+    hi: 9500,
+    ticks: [8000, 9000],
+    event: { d: "2026-01-28", label: "28 Jan" },
+  },
+  {
+    title: "April 2025",
+    series: APR_2025,
+    lo: 5600,
+    hi: 7400,
+    ticks: [6000, 7000],
+    event: { d: "2025-04-08", label: "8 Apr" },
+  },
 ];
 
 // C — the question and its three tools
@@ -61,7 +98,8 @@ const TOOL = { w: 460, h: 280, y: 500, gap: 50 };
  * its own in the episode, so it stays drawn.
  */
 const TOOL_SHOT = { top: 112, h: 140 };
-const toolX = (i: number) => CX - (3 * TOOL.w + 2 * TOOL.gap) / 2 + i * (TOOL.w + TOOL.gap);
+const toolX = (i: number) =>
+  CX - (3 * TOOL.w + 2 * TOOL.gap) / 2 + i * (TOOL.w + TOOL.gap);
 const TOOLS = [
   { text: "Company Quality", icon: "company", at: "kualitas perusahaan" },
   { text: "Fair Value", icon: "scale", at: "harganya sudah" },
@@ -69,13 +107,41 @@ const TOOLS = [
 ] as const;
 
 // D1 — the jar of long-term money, and the steps under it
-const JAR = { chipY: 160, chipH: 60, lidY: 300, lidW: 190, lidH: 34, bodyY: 326, bodyW: 260, bodyH: 250, r: 56, sprout: 54 };
-const STACK = { chipY: 620, base: 850, gap: 160, r: 44, t: 20, ry: 12, coins: [2, 3, 4] };
+const JAR = {
+  chipY: 160,
+  chipH: 60,
+  lidY: 300,
+  lidW: 190,
+  lidH: 34,
+  bodyY: 326,
+  bodyW: 260,
+  bodyH: 250,
+  r: 56,
+  sprout: 54,
+};
+const STACK = {
+  chipY: 620,
+  base: 850,
+  gap: 160,
+  r: 44,
+  t: 20,
+  ry: 12,
+  coins: [2, 3, 4],
+};
 // D2 — the jar steps back to this size (from its top), the three exclusions under it
 const SHRINK = 0.8;
 const EX = { y: 610, d: 150, gap: 340, chipH: 56 };
 // D3 — the two drops, small, and the line they lead to
-const END = { y: 200, w: 520, h: 300, gap: 60, braceY: 520, braceH: 60, lineY: 640, lineH: 104 };
+const END = {
+  y: 200,
+  w: 520,
+  h: 300,
+  gap: 60,
+  braceY: 520,
+  braceH: 60,
+  lineY: 640,
+  lineH: 104,
+};
 const endX = (i: number) => CX - END.gap / 2 - END.w + i * (END.w + END.gap);
 const NOT = [
   { text: "Dana darurat", icon: "emergency", at: "dana darurat" },
@@ -84,33 +150,112 @@ const NOT = [
 ] as const;
 
 /** A small chip: an icon and a word. */
-const Chip = ({ icon, text, tone, p }: { icon: string; text: string; tone?: string; p: number }) => {
+const Chip = ({
+  icon,
+  text,
+  tone,
+  p,
+}: {
+  icon: string;
+  text: string;
+  tone?: string;
+  p: number;
+}) => {
   const c = usePalette();
   const shadow = useShadow();
   if (p <= 0.001) return null;
   return (
-    <div style={{ height: 56, padding: "0 22px 0 10px", borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`, display: "flex", alignItems: "center", gap: 12, opacity: p, transform: `translateY(${((1 - p) * 10).toFixed(2)}px)`, ...typeStyle("label"), fontSize: 28, color: c.ink, whiteSpace: "nowrap" }}>
-      <Disc icon={icon} size={40} tone={tone ?? theme.color.neutralIcon} tint={theme.color.neutralDisc} />
+    <div
+      style={{
+        height: 56,
+        padding: "0 22px 0 10px",
+        borderRadius: 999,
+        background: c.cardBg,
+        boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`,
+        display: "flex",
+        alignItems: "center",
+        gap: 12,
+        opacity: p,
+        transform: `translateY(${((1 - p) * 10).toFixed(2)}px)`,
+        ...typeStyle("label"),
+        fontSize: 28,
+        color: c.ink,
+        whiteSpace: "nowrap",
+      }}
+    >
+      <Disc
+        icon={icon}
+        size={40}
+        tone={tone ?? theme.color.neutralIcon}
+        tint={theme.color.neutralDisc}
+      />
       {text}
     </div>
   );
 };
 
 /** A white pill with one word or two (the storyboard's labels). */
-const Pill = ({ text, h, size = 34 }: { text: string; h: number; size?: number }) => {
+const Pill = ({
+  text,
+  h,
+  size = 34,
+}: {
+  text: string;
+  h: number;
+  size?: number;
+}) => {
   const c = usePalette();
   const shadow = useShadow();
   return (
-    <div style={{ height: h, padding: `0 ${h / 2}px`, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`, display: "flex", alignItems: "center", ...typeStyle("body"), fontSize: size, color: c.ink, whiteSpace: "nowrap" }}>{text}</div>
+    <div
+      style={{
+        height: h,
+        padding: `0 ${h / 2}px`,
+        borderRadius: 999,
+        background: c.cardBg,
+        boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`,
+        display: "flex",
+        alignItems: "center",
+        ...typeStyle("body"),
+        fontSize: size,
+        color: c.ink,
+        whiteSpace: "nowrap",
+      }}
+    >
+      {text}
+    </div>
   );
 };
 
 /** One coin seen from the side, its top face centred on (cx, y). */
-const Coin = ({ cx, y, r, t, ry }: { cx: number; y: number; r: number; t: number; ry: number }) => (
+const Coin = ({
+  cx,
+  y,
+  r,
+  t,
+  ry,
+}: {
+  cx: number;
+  y: number;
+  r: number;
+  t: number;
+  ry: number;
+}) => (
   <g>
-    <path d={`M ${cx - r} ${y} v ${t} A ${r} ${ry} 0 0 0 ${cx + r} ${y + t} v ${-t} Z`} fill={theme.color.coinSpinShade} stroke={theme.color.coinSpinRing} strokeWidth={2} />
+    <path
+      d={`M ${cx - r} ${y} v ${t} A ${r} ${ry} 0 0 0 ${cx + r} ${y + t} v ${-t} Z`}
+      fill={theme.color.coinSpinShade}
+      stroke={theme.color.coinSpinRing}
+      strokeWidth={2}
+    />
     <ellipse cx={cx} cy={y} rx={r} ry={ry} fill={theme.color.coinSpinRing} />
-    <ellipse cx={cx} cy={y} rx={r * 0.78} ry={ry * 0.74} fill={theme.color.coinSpinFace} />
+    <ellipse
+      cx={cx}
+      cy={y}
+      rx={r * 0.78}
+      ry={ry * 0.74}
+      fill={theme.color.coinSpinFace}
+    />
   </g>
 );
 
@@ -123,15 +268,75 @@ const Jar = ({ sprout }: { sprout: number }) => {
     { cx: CX + 50, n: 6 },
   ];
   return (
-    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-      <rect x={CX - JAR.bodyW / 2} y={JAR.bodyY} width={JAR.bodyW} height={JAR.bodyH} rx={JAR.r} fill={theme.color.indigoWashSolid} stroke={theme.color.hairlineBrandSolid} strokeWidth={4} />
-      {stacks.map((st) => Array.from({ length: st.n }, (_, k) => <Coin key={`${st.cx}-${k}`} cx={st.cx} y={bottom - k * STACK.t} r={STACK.r} t={STACK.t} ry={STACK.ry} />))}
-      <rect x={CX - JAR.lidW / 2} y={JAR.lidY} width={JAR.lidW} height={JAR.lidH} rx={12} fill={theme.color.indigoWashStrongSolid} stroke={theme.color.hairlineBrandSolid} strokeWidth={4} />
+    <svg
+      width={theme.canvas.width}
+      height={theme.canvas.height}
+      style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+    >
+      <rect
+        x={CX - JAR.bodyW / 2}
+        y={JAR.bodyY}
+        width={JAR.bodyW}
+        height={JAR.bodyH}
+        rx={JAR.r}
+        fill={theme.color.indigoWashSolid}
+        stroke={theme.color.hairlineBrandSolid}
+        strokeWidth={4}
+      />
+      {stacks.map((st) =>
+        Array.from({ length: st.n }, (_, k) => (
+          <Coin
+            key={`${st.cx}-${k}`}
+            cx={st.cx}
+            y={bottom - k * STACK.t}
+            r={STACK.r}
+            t={STACK.t}
+            ry={STACK.ry}
+          />
+        )),
+      )}
+      <rect
+        x={CX - JAR.lidW / 2}
+        y={JAR.lidY}
+        width={JAR.lidW}
+        height={JAR.lidH}
+        rx={12}
+        fill={theme.color.indigoWashStrongSolid}
+        stroke={theme.color.hairlineBrandSolid}
+        strokeWidth={4}
+      />
       {/* the sprout: opportunity, growing from the lid */}
-      <g style={{ transformOrigin: `${CX}px ${JAR.lidY}px`, transform: `scale(${sprout.toFixed(3)})` }}>
-        <line x1={CX} y1={JAR.lidY} x2={CX} y2={JAR.lidY - JAR.sprout} stroke={c.indigo} strokeWidth={6} strokeLinecap="round" />
-        <ellipse cx={CX - 26} cy={JAR.lidY - JAR.sprout + 6} rx={28} ry={13} fill={c.indigo} transform={`rotate(30 ${CX - 26} ${JAR.lidY - JAR.sprout + 6})`} />
-        <ellipse cx={CX + 26} cy={JAR.lidY - JAR.sprout + 6} rx={28} ry={13} fill={c.indigo} transform={`rotate(-30 ${CX + 26} ${JAR.lidY - JAR.sprout + 6})`} />
+      <g
+        style={{
+          transformOrigin: `${CX}px ${JAR.lidY}px`,
+          transform: `scale(${sprout.toFixed(3)})`,
+        }}
+      >
+        <line
+          x1={CX}
+          y1={JAR.lidY}
+          x2={CX}
+          y2={JAR.lidY - JAR.sprout}
+          stroke={c.indigo}
+          strokeWidth={6}
+          strokeLinecap="round"
+        />
+        <ellipse
+          cx={CX - 26}
+          cy={JAR.lidY - JAR.sprout + 6}
+          rx={28}
+          ry={13}
+          fill={c.indigo}
+          transform={`rotate(30 ${CX - 26} ${JAR.lidY - JAR.sprout + 6})`}
+        />
+        <ellipse
+          cx={CX + 26}
+          cy={JAR.lidY - JAR.sprout + 6}
+          rx={28}
+          ry={13}
+          fill={c.indigo}
+          transform={`rotate(-30 ${CX + 26} ${JAR.lidY - JAR.sprout + 6})`}
+        />
       </g>
     </svg>
   );
@@ -140,15 +345,36 @@ const Jar = ({ sprout }: { sprout: number }) => {
 /** D1's steps: three stacks, each a coin taller, coming one after another with an arrow between. */
 const Steps = ({ f, at }: { f: number; at: number }) => {
   const m = useMotion();
-  const top = (i: number) => STACK.base - (STACK.coins[i] - 1) * STACK.t - STACK.ry;
+  const top = (i: number) =>
+    STACK.base - (STACK.coins[i] - 1) * STACK.t - STACK.ry;
   return (
-    <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+    <svg
+      width={theme.canvas.width}
+      height={theme.canvas.height}
+      style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+    >
       {STACK.coins.map((n, i) => {
         const cx = CX + (i - 1) * STACK.gap;
         const p = ease(f, at + i * m.sec(0.3), m.reveal);
         return (
-          <g key={i} opacity={p} style={{ transformOrigin: `${cx}px ${STACK.base}px`, transform: `translateY(${((1 - p) * 16).toFixed(2)}px)` }}>
-            {Array.from({ length: n }, (_, k) => <Coin key={k} cx={cx} y={STACK.base - k * STACK.t} r={STACK.r} t={STACK.t} ry={STACK.ry} />)}
+          <g
+            key={i}
+            opacity={p}
+            style={{
+              transformOrigin: `${cx}px ${STACK.base}px`,
+              transform: `translateY(${((1 - p) * 16).toFixed(2)}px)`,
+            }}
+          >
+            {Array.from({ length: n }, (_, k) => (
+              <Coin
+                key={k}
+                cx={cx}
+                y={STACK.base - k * STACK.t}
+                r={STACK.r}
+                t={STACK.t}
+                ry={STACK.ry}
+              />
+            ))}
           </g>
         );
       })}
@@ -160,8 +386,25 @@ const Steps = ({ f, at }: { f: number; at: number }) => {
         const p = ease(f, at + i * m.sec(0.3) + m.sec(0.15), m.sec(0.35));
         return (
           <g key={i} opacity={p > 0.001 ? 1 : 0}>
-            <path d={`M ${x0} ${y0} Q ${(x0 + x1) / 2} ${Math.min(y0, y1) - 46} ${x1} ${y1}`} fill="none" stroke={theme.color.neutralIcon} strokeWidth={4} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} />
-            <path d={`M ${x1 - 14} ${y1 - 12} L ${x1} ${y1} L ${x1 - 17} ${y1 + 5}`} fill="none" stroke={theme.color.neutralIcon} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" opacity={p > 0.95 ? 1 : 0} />
+            <path
+              d={`M ${x0} ${y0} Q ${(x0 + x1) / 2} ${Math.min(y0, y1) - 46} ${x1} ${y1}`}
+              fill="none"
+              stroke={theme.color.neutralIcon}
+              strokeWidth={4}
+              strokeLinecap="round"
+              pathLength={1}
+              strokeDasharray={1}
+              strokeDashoffset={1 - p}
+            />
+            <path
+              d={`M ${x1 - 14} ${y1 - 12} L ${x1} ${y1} L ${x1 - 17} ${y1 + 5}`}
+              fill="none"
+              stroke={theme.color.neutralIcon}
+              strokeWidth={4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              opacity={p > 0.95 ? 1 : 0}
+            />
           </g>
         );
       })}
@@ -176,11 +419,49 @@ const NoSign = ({ icon, d, p }: { icon: string; d: number; p: number }) => {
   const r = d / 2 - 5;
   const k = r * Math.SQRT1_2;
   return (
-    <div style={{ position: "relative", width: d, height: d, borderRadius: 999, background: c.cardBg, boxShadow: shadow.soft, display: "flex", alignItems: "center", justifyContent: "center" }}>
+    <div
+      style={{
+        position: "relative",
+        width: d,
+        height: d,
+        borderRadius: 999,
+        background: c.cardBg,
+        boxShadow: shadow.soft,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <Ico name={icon} size={d * 0.48} tone={theme.color.neutralIcon} />
-      <svg width={d} height={d} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
-        <circle cx={d / 2} cy={d / 2} r={r} fill="none" stroke={theme.color.crossRed} strokeWidth={8} pathLength={1} strokeDasharray={1} strokeDashoffset={1 - p} transform={`rotate(-135 ${d / 2} ${d / 2})`} />
-        <line x1={d / 2 - k} y1={d / 2 - k} x2={d / 2 + k} y2={d / 2 + k} stroke={theme.color.crossRed} strokeWidth={8} strokeLinecap="round" pathLength={1} strokeDasharray={1} strokeDashoffset={1 - Math.max(0, (p - 0.5) * 2)} />
+      <svg
+        width={d}
+        height={d}
+        style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+      >
+        <circle
+          cx={d / 2}
+          cy={d / 2}
+          r={r}
+          fill="none"
+          stroke={theme.color.crossRed}
+          strokeWidth={8}
+          pathLength={1}
+          strokeDasharray={1}
+          strokeDashoffset={1 - p}
+          transform={`rotate(-135 ${d / 2} ${d / 2})`}
+        />
+        <line
+          x1={d / 2 - k}
+          y1={d / 2 - k}
+          x2={d / 2 + k}
+          y2={d / 2 + k}
+          stroke={theme.color.crossRed}
+          strokeWidth={8}
+          strokeLinecap="round"
+          pathLength={1}
+          strokeDasharray={1}
+          strokeDashoffset={1 - Math.max(0, (p - 0.5) * 2)}
+        />
       </svg>
     </div>
   );
@@ -198,15 +479,64 @@ const DropCard = ({ i }: { i: number }) => {
   const py = (v: number) => pad.t + (1 - (v - lo) / (hi - lo)) * ph;
   const ei = series.findIndex((s) => s.d === event.d);
   return (
-    <div style={{ position: "relative", width: END.w, height: END.h, borderRadius: theme.shape.cardRadius, background: c.cardBg, boxShadow: shadow.soft }}>
-      <div style={{ position: "absolute", left: 0, top: 26, width: END.w, display: "flex", justifyContent: "center" }}>
+    <div
+      style={{
+        position: "relative",
+        width: END.w,
+        height: END.h,
+        borderRadius: theme.shape.cardRadius,
+        background: c.cardBg,
+        boxShadow: shadow.soft,
+      }}
+    >
+      <Interactive.Div
+        name="Objek"
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 26,
+          width: END.w,
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Pill text={title} h={48} size={26} />
-      </div>
-      <svg width={END.w} height={END.h} style={{ position: "absolute", left: 0, top: 0 }}>
-        <polyline points={series.map((s, k) => `${px(k).toFixed(1)},${py(s.c).toFixed(1)}`).join(" ")} fill="none" stroke={theme.color.alarmRed} strokeWidth={4} strokeLinecap="round" strokeLinejoin="round" />
-        <circle cx={px(ei)} cy={py(series[ei].c)} r={8} fill={theme.color.alarmRed} />
+      </Interactive.Div>
+      <svg
+        width={END.w}
+        height={END.h}
+        style={{ position: "absolute", left: 0, top: 0 }}
+      >
+        <polyline
+          points={series
+            .map((s, k) => `${px(k).toFixed(1)},${py(s.c).toFixed(1)}`)
+            .join(" ")}
+          fill="none"
+          stroke={theme.color.alarmRed}
+          strokeWidth={4}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+        <circle
+          cx={px(ei)}
+          cy={py(series[ei].c)}
+          r={8}
+          fill={theme.color.alarmRed}
+        />
       </svg>
-      <div style={{ position: "absolute", right: 20, bottom: 14, fontFamily: theme.text.family, fontSize: 16, color: c.slate }}>^JKSE · Yahoo Finance</div>
+      <Interactive.Div
+        name="^JKSE · Yahoo Finance"
+        style={{
+          position: "absolute",
+          right: 20,
+          bottom: 14,
+          fontFamily: theme.text.family,
+          fontSize: 16,
+          color: c.slate,
+        }}
+      >
+        ^JKSE · Yahoo Finance
+      </Interactive.Div>
     </div>
   );
 };
@@ -233,7 +563,9 @@ export const SC10 = () => {
   const crossAt = W("Tapi:", 1);
   const newAt = W("Apakah dampaknya");
   const toolsAt = W("dibaca bersama");
-  const qy = QUESTION.y + (QUESTION_MID_Y - QUESTION.y) * (1 - ease(f, toolsAt - m.sec(0.4), m.move));
+  const qy =
+    QUESTION.y +
+    (QUESTION_MID_Y - QUESTION.y) * (1 - ease(f, toolsAt - m.sec(0.4), m.move));
   const cOut = ease(f, W("Bahkan untuk"), m.fade);
   const holds = ease(f, W("masih berlaku"), m.pop);
 
@@ -255,12 +587,31 @@ export const SC10 = () => {
       {aOut < 0.999 ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - aOut }}>
           {/* A — the opening line, summarised */}
-          <Appear at={0} out={aprAt} style={{ left: 0, top: 0, width: theme.canvas.width }}>
-            <Line x={0} y={SUMMARY_Y} w={theme.canvas.width} align="center" size={64} weight={500} text="Beda penurunan, beda konteks." mark="beda konteks" />
+          <Appear
+            at={0}
+            out={aprAt}
+            style={{ left: 0, top: 0, width: theme.canvas.width }}
+          >
+            <Line
+              x={0}
+              y={SUMMARY_Y}
+              w={theme.canvas.width}
+              align="center"
+              size={64}
+              weight={500}
+              text="Beda penurunan, beda konteks."
+              mark="beda konteks"
+            />
           </Appear>
           {/* … then April 2025: real IHSG closes (data/ihsg.ts), drawn on like an editorial chart */}
           {f >= aprAt ? (
-            <div style={{ position: "absolute", inset: 0, opacity: ease(f, aprAt, m.fade) }}>
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                opacity: ease(f, aprAt, m.fade),
+              }}
+            >
               <DataChart
                 x={DROP_X}
                 y={DROP.y}
@@ -279,30 +630,150 @@ export const SC10 = () => {
             </div>
           ) : null}
           {/* the news, as an archival clipping (Benchmark v2) — the script's own words, no real paper named */}
-          <NewsClipping x={DROP_X + 120} y={MINI.y} w={440} h={250} dateline="April 2025" headline="Kenaikan tarif terhadap Indonesia" p={ease(f, W("kenaikan tarif"), m.reveal) * (1 - miniP)} />
+          <NewsClipping
+            x={DROP_X + 120}
+            y={MINI.y}
+            w={440}
+            h={250}
+            dateline="April 2025"
+            headline="Kenaikan tarif terhadap Indonesia"
+            p={ease(f, W("kenaikan tarif"), m.reveal) * (1 - miniP)}
+          />
           {/* B — April 2025's context, in its own words: valuation low, fear high */}
           {miniP > 0.001 ? (
-            <div style={{ position: "absolute", left: 0, top: (1 - miniP) * 14, width: theme.canvas.width, opacity: miniP }}>
+            <Interactive.Div
+              name="Valuasi"
+              style={{
+                position: "absolute",
+                left: 0,
+                top: (1 - miniP) * 14,
+                width: theme.canvas.width,
+                opacity: miniP,
+              }}
+            >
               {/* valuation: low */}
-              <Card x={DROP_X} y={MINI.y} w={MINI_W} h={MINI.h} line={theme.color.hairlineBrandSolid}>
-                <div style={{ position: "absolute", left: 0, top: MINI.titleTop, width: MINI_W, textAlign: "center", ...typeStyle("label"), color: c.ink }}>Valuasi</div>
-                <div style={{ position: "absolute", left: MINI.pad, top: BAR.top, width: MINI_W - 2 * MINI.pad, height: BAR.h, borderRadius: BAR.h / 2, background: `linear-gradient(90deg, ${theme.color.indigoWashSolid}, ${theme.color.indigoWashStrongSolid})` }} />
-                <div style={{ position: "absolute", left: MINI.pad + marker * (MINI_W - 2 * MINI.pad) - BAR.dot / 2, top: BAR.top + BAR.h / 2 - BAR.dot / 2, width: BAR.dot, height: BAR.dot, borderRadius: 999, background: c.indigo }} />
-                <div style={{ position: "absolute", left: MINI.pad, top: BAR.labelTop, ...typeStyle("label"), fontSize: 24, color: c.slate }}>Murah</div>
-                <div style={{ position: "absolute", right: MINI.pad, top: BAR.labelTop, ...typeStyle("label"), fontSize: 24, color: c.slate }}>Mahal</div>
+              <Card
+                x={DROP_X}
+                y={MINI.y}
+                w={MINI_W}
+                h={MINI.h}
+                line={theme.color.hairlineBrandSolid}
+              >
+                <Interactive.Div
+                  name="Valuasi"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: MINI.titleTop,
+                    width: MINI_W,
+                    textAlign: "center",
+                    ...typeStyle("label"),
+                    color: c.ink,
+                  }}
+                >
+                  Valuasi
+                </Interactive.Div>
+                <Interactive.Div
+                  name="Objek"
+                  style={{
+                    position: "absolute",
+                    left: MINI.pad,
+                    top: BAR.top,
+                    width: MINI_W - 2 * MINI.pad,
+                    height: BAR.h,
+                    borderRadius: BAR.h / 2,
+                    background: `linear-gradient(90deg, ${theme.color.indigoWashSolid}, ${theme.color.indigoWashStrongSolid})`,
+                  }}
+                />
+                <Interactive.Div
+                  name="Objek"
+                  style={{
+                    position: "absolute",
+                    left:
+                      MINI.pad + marker * (MINI_W - 2 * MINI.pad) - BAR.dot / 2,
+                    top: BAR.top + BAR.h / 2 - BAR.dot / 2,
+                    width: BAR.dot,
+                    height: BAR.dot,
+                    borderRadius: 999,
+                    background: c.indigo,
+                  }}
+                />
+                <Interactive.Div
+                  name="Murah"
+                  style={{
+                    position: "absolute",
+                    left: MINI.pad,
+                    top: BAR.labelTop,
+                    ...typeStyle("label"),
+                    fontSize: 24,
+                    color: c.slate,
+                  }}
+                >
+                  Murah
+                </Interactive.Div>
+                <Interactive.Div
+                  name="Mahal"
+                  style={{
+                    position: "absolute",
+                    right: MINI.pad,
+                    top: BAR.labelTop,
+                    ...typeStyle("label"),
+                    fontSize: 24,
+                    color: c.slate,
+                  }}
+                >
+                  Mahal
+                </Interactive.Div>
               </Card>
               {/* sentiment: fear */}
-              <Card x={DROP_X + MINI_W + MINI.gap} y={MINI.y} w={MINI_W} h={MINI.h} line={theme.color.hairlineBrandSolid}>
-                <div style={{ position: "absolute", left: 0, top: MINI.titleTop, width: MINI_W, textAlign: "center", ...typeStyle("label"), color: c.ink }}>Sentimen</div>
-                <svg width={MINI_W} height={MINI.h} style={{ position: "absolute", left: 0, top: 0 }}>
+              <Card
+                x={DROP_X + MINI_W + MINI.gap}
+                y={MINI.y}
+                w={MINI_W}
+                h={MINI.h}
+                line={theme.color.hairlineBrandSolid}
+              >
+                <Interactive.Div
+                  name="Sentimen"
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: MINI.titleTop,
+                    width: MINI_W,
+                    textAlign: "center",
+                    ...typeStyle("label"),
+                    color: c.ink,
+                  }}
+                >
+                  Sentimen
+                </Interactive.Div>
+                <svg
+                  width={MINI_W}
+                  height={MINI.h}
+                  style={{ position: "absolute", left: 0, top: 0 }}
+                >
                   {(() => {
                     const cx = MINI_W / 2;
                     const { cy, r } = GAUGE;
                     const a = Math.PI * (1 - needle);
                     return (
                       <>
-                        <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`} fill="none" stroke={theme.color.indigoWashStrongSolid} strokeWidth={14} strokeLinecap="round" />
-                        <line x1={cx} y1={cy} x2={cx + (r - 18) * Math.cos(a)} y2={cy - (r - 18) * Math.sin(a)} stroke={c.ink} strokeWidth={5} strokeLinecap="round" />
+                        <path
+                          d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+                          fill="none"
+                          stroke={theme.color.indigoWashStrongSolid}
+                          strokeWidth={14}
+                          strokeLinecap="round"
+                        />
+                        <line
+                          x1={cx}
+                          y1={cy}
+                          x2={cx + (r - 18) * Math.cos(a)}
+                          y2={cy - (r - 18) * Math.sin(a)}
+                          stroke={c.ink}
+                          strokeWidth={5}
+                          strokeLinecap="round"
+                        />
                         <circle cx={cx} cy={cy} r={9} fill={c.ink} />
                       </>
                     );
@@ -310,10 +781,27 @@ export const SC10 = () => {
                 </svg>
                 {/* each end's word centred under it */}
                 {(["Takut", "Serakah"] as const).map((t, k) => (
-                  <div key={t} style={{ position: "absolute", left: MINI_W / 2 + (k === 0 ? -1 : 1) * GAUGE.r - GAUGE.labelW / 2, top: GAUGE.labelTop, width: GAUGE.labelW, textAlign: "center", ...typeStyle("label"), fontSize: 24, color: c.slate }}>{t}</div>
+                  <div
+                    key={t}
+                    style={{
+                      position: "absolute",
+                      left:
+                        MINI_W / 2 +
+                        (k === 0 ? -1 : 1) * GAUGE.r -
+                        GAUGE.labelW / 2,
+                      top: GAUGE.labelTop,
+                      width: GAUGE.labelW,
+                      textAlign: "center",
+                      ...typeStyle("label"),
+                      fontSize: 24,
+                      color: c.slate,
+                    }}
+                  >
+                    {t}
+                  </div>
                 ))}
               </Card>
-            </div>
+            </Interactive.Div>
           ) : null}
         </div>
       ) : null}
@@ -322,16 +810,75 @@ export const SC10 = () => {
       {cOut < 0.999 && f >= oldAt - m.sec(0.2) ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - cOut }}>
           {/* the old question, crossed out, giving way */}
-          <Appear at={oldAt - m.sec(0.1)} out={newAt} style={{ left: CX - 260, top: qy + 20 }}>
-            <div style={{ width: 520, height: 110, borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontWeight: 500, color: c.slate }}>Jual atau nggak?</div>
+          <Appear
+            at={oldAt - m.sec(0.1)}
+            out={newAt}
+            style={{ left: CX - 260, top: qy + 20 }}
+          >
+            <div
+              style={{
+                width: 520,
+                height: 110,
+                borderRadius: 999,
+                background: c.cardBg,
+                boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connectorMuteSolid}`,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                ...typeStyle("title"),
+                fontWeight: 500,
+                color: c.slate,
+              }}
+            >
+              Jual atau nggak?
+            </div>
           </Appear>
-          {f < newAt + m.fade ? <Mark kind="cross" p={ease(f, crossAt, m.pop) * (1 - ease(f, newAt, m.fade))} x={CX + 250} y={qy + 30} /> : null}
+          {f < newAt + m.fade ? (
+            <Mark
+              kind="cross"
+              p={ease(f, crossAt, m.pop) * (1 - ease(f, newAt, m.fade))}
+              x={CX + 250}
+              y={qy + 30}
+            />
+          ) : null}
           {/* the new one */}
           {f >= newAt - m.sec(0.1) ? (
-            <Card x={CX - QUESTION.w / 2} y={qy} w={QUESTION.w} h={QUESTION.h} line={theme.color.hairlineBrandSolid} style={{ display: "flex", alignItems: "center", gap: 30, padding: "0 48px", opacity: ease(f, newAt - m.sec(0.1), m.reveal), boxShadow: `${shadow.soft}, 0 0 40px 8px ${theme.color.indigoGlow}` }}>
-              <Disc icon="question" size={88} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-              <div style={{ fontFamily: theme.text.family, fontSize: 54, fontWeight: 500, letterSpacing: -0.5, color: c.ink }}>
-                <Typed text="Dampak nyata, atau reaksi berlebihan?" at={newAt} cps={30} mark="Dampak nyata" />
+            <Card
+              x={CX - QUESTION.w / 2}
+              y={qy}
+              w={QUESTION.w}
+              h={QUESTION.h}
+              line={theme.color.hairlineBrandSolid}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 30,
+                padding: "0 48px",
+                opacity: ease(f, newAt - m.sec(0.1), m.reveal),
+                boxShadow: `${shadow.soft}, 0 0 40px 8px ${theme.color.indigoGlow}`,
+              }}
+            >
+              <Disc
+                icon="question"
+                size={88}
+                tone={c.indigo}
+                tint={theme.color.indigoWashSolid}
+              />
+              <div
+                style={{
+                  fontFamily: theme.text.family,
+                  fontSize: 54,
+                  fontWeight: 500,
+                  letterSpacing: -0.5,
+                  color: c.ink,
+                }}
+              >
+                <Typed
+                  text="Dampak nyata, atau reaksi berlebihan?"
+                  at={newAt}
+                  cps={30}
+                  mark="Dampak nyata"
+                />
               </div>
             </Card>
           ) : null}
@@ -340,26 +887,126 @@ export const SC10 = () => {
             const p = ease(f, W(t.at) - m.sec(0.1), m.reveal);
             return (
               <div key={t.text}>
-                <Connector a={{ x: CX, y: qy + QUESTION.h }} b={{ x: x + TOOL.w / 2, y: TOOL.y }} p={ease(f, toolsAt + i * m.sec(0.1), m.sec(0.5))} shape="curve" axis="y" />
+                <Connector
+                  a={{ x: CX, y: qy + QUESTION.h }}
+                  b={{ x: x + TOOL.w / 2, y: TOOL.y }}
+                  p={ease(f, toolsAt + i * m.sec(0.1), m.sec(0.5))}
+                  shape="curve"
+                  axis="y"
+                />
                 {f >= toolsAt + i * m.sec(0.1) + m.sec(0.3) ? (
-                  <div style={{ position: "absolute", left: x, top: TOOL.y, width: TOOL.w, height: TOOL.h, opacity: ease(f, toolsAt + i * m.sec(0.1) + m.sec(0.3), m.pop) }}>
-                    <div style={{ position: "absolute", inset: 0, borderRadius: theme.shape.cardRadius, border: `2px dashed ${theme.color.connectorMuteSolid}`, opacity: 1 - p }} />
-                    <Card x={0} y={(1 - p) * 12} w={TOOL.w} h={TOOL.h} style={{ opacity: p }}>
-                      <div style={{ position: "absolute", left: 30, top: 28, display: "flex", alignItems: "center", gap: 16 }}>
-                        <Disc icon={t.icon} size={56} tone={c.indigo} tint={theme.color.indigoWashSolid} />
-                        <div style={{ ...typeStyle("body"), fontSize: 32, color: c.ink, whiteSpace: "nowrap" }}>{t.text}</div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: x,
+                      top: TOOL.y,
+                      width: TOOL.w,
+                      height: TOOL.h,
+                      opacity: ease(
+                        f,
+                        toolsAt + i * m.sec(0.1) + m.sec(0.3),
+                        m.pop,
+                      ),
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        borderRadius: theme.shape.cardRadius,
+                        border: `2px dashed ${theme.color.connectorMuteSolid}`,
+                        opacity: 1 - p,
+                      }}
+                    />
+                    <Card
+                      x={0}
+                      y={(1 - p) * 12}
+                      w={TOOL.w}
+                      h={TOOL.h}
+                      style={{ opacity: p }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 30,
+                          top: 28,
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 16,
+                        }}
+                      >
+                        <Disc
+                          icon={t.icon}
+                          size={56}
+                          tone={c.indigo}
+                          tint={theme.color.indigoWashSolid}
+                        />
+                        <div
+                          style={{
+                            ...typeStyle("body"),
+                            fontSize: 32,
+                            color: c.ink,
+                            whiteSpace: "nowrap",
+                          }}
+                        >
+                          {t.text}
+                        </div>
                       </div>
                       {i < 2 ? (
                         /* the app's own column: quality Good; the price 60–66 % under its fair value */
-                        <div style={{ position: "absolute", left: (TOOL.w - cropW(i === 0 ? BUMI_CQ : BUMI_FV, TOOL_SHOT.h)) / 2, top: TOOL_SHOT.top }}>
-                          <BumiCrop r={i === 0 ? BUMI_CQ : BUMI_FV} h={TOOL_SHOT.h} />
+                        <div
+                          style={{
+                            position: "absolute",
+                            left:
+                              (TOOL.w -
+                                cropW(
+                                  i === 0 ? BUMI_CQ : BUMI_FV,
+                                  TOOL_SHOT.h,
+                                )) /
+                              2,
+                            top: TOOL_SHOT.top,
+                          }}
+                        >
+                          <BumiCrop
+                            r={i === 0 ? BUMI_CQ : BUMI_FV}
+                            h={TOOL_SHOT.h}
+                          />
                         </div>
                       ) : (
                         /* the news, and whether it reaches the business */
-                        <div style={{ position: "absolute", left: 0, top: TOOL_SHOT.top + TOOL_SHOT.h / 2 - 30, width: TOOL.w, display: "flex", alignItems: "center", justifyContent: "center", gap: 18 }}>
-                          <Disc icon="news" size={60} tone={theme.color.neutralIcon} tint={theme.color.neutralDisc} />
-                          <div style={{ width: 90 * ease(f, W("berdampak pada"), m.sec(0.6)), height: 3, borderRadius: 2, background: c.indigo }} />
-                          <Disc icon="company" size={60} tone={c.indigo} tint={theme.color.indigoWashSolid} />
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: 0,
+                            top: TOOL_SHOT.top + TOOL_SHOT.h / 2 - 30,
+                            width: TOOL.w,
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: 18,
+                          }}
+                        >
+                          <Disc
+                            icon="news"
+                            size={60}
+                            tone={theme.color.neutralIcon}
+                            tint={theme.color.neutralDisc}
+                          />
+                          <div
+                            style={{
+                              width:
+                                90 * ease(f, W("berdampak pada"), m.sec(0.6)),
+                              height: 3,
+                              borderRadius: 2,
+                              background: c.indigo,
+                            }}
+                          />
+                          <Disc
+                            icon="company"
+                            size={60}
+                            tone={c.indigo}
+                            tint={theme.color.indigoWashSolid}
+                          />
                         </div>
                       )}
                     </Card>
@@ -370,10 +1017,23 @@ export const SC10 = () => {
             );
           })}
           {/* no reason to panic */}
-          <Appear at={W("ikut panik") - m.sec(0.15)} style={{ left: CX - 130, top: TOOL.y + TOOL.h + 50 }}>
-            <Chip icon={SITUATION[0].icon} text={SITUATION[0].label} tone={theme.color.alarmRed} p={1} />
+          <Appear
+            at={W("ikut panik") - m.sec(0.15)}
+            style={{ left: CX - 130, top: TOOL.y + TOOL.h + 50 }}
+          >
+            <Chip
+              icon={SITUATION[0].icon}
+              text={SITUATION[0].label}
+              tone={theme.color.alarmRed}
+              p={1}
+            />
           </Appear>
-          <Mark kind="cross" p={ease(f, W("ikut panik"), m.pop)} x={CX + 20} y={TOOL.y + TOOL.h + 50} />
+          <Mark
+            kind="cross"
+            p={ease(f, W("ikut panik"), m.pop)}
+            x={CX + 20}
+            y={TOOL.y + TOOL.h + 50}
+          />
         </div>
       ) : null}
 
@@ -381,18 +1041,45 @@ export const SC10 = () => {
       {dOut < 0.999 && f >= bankAt - m.sec(0.2) ? (
         <div style={{ position: "absolute", inset: 0, opacity: 1 - dOut }}>
           {/* D1 — the jar (and, in D2, steps back up from its top) */}
-          <div style={{ position: "absolute", inset: 0, transformOrigin: `${CX}px ${JAR.chipY}px`, transform: `scale(${(1 - (1 - SHRINK) * shrink).toFixed(4)})` }}>
-            <Appear at={bankAt - m.sec(0.1)} style={{ left: 0, top: JAR.chipY, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              transformOrigin: `${CX}px ${JAR.chipY}px`,
+              transform: `scale(${(1 - (1 - SHRINK) * shrink).toFixed(4)})`,
+            }}
+          >
+            <Appear
+              at={bankAt - m.sec(0.1)}
+              style={{
+                left: 0,
+                top: JAR.chipY,
+                width: theme.canvas.width,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Pill text="Dana jangka panjang" h={JAR.chipH} />
             </Appear>
             <Appear at={bankAt} style={{ left: 0, top: 0 }}>
               <Jar sprout={ease(f, sproutAt, m.reveal)} />
             </Appear>
-            <Appear at={stepAt - m.sec(0.15)} style={{ left: 0, top: STACK.chipY, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
+            <Appear
+              at={stepAt - m.sec(0.15)}
+              style={{
+                left: 0,
+                top: STACK.chipY,
+                width: theme.canvas.width,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
               <Pill text="Bertahap" h={JAR.chipH} />
             </Appear>
             {/* the steps: a little more each time — gone once the jar steps back */}
-            <div style={{ position: "absolute", inset: 0, opacity: 1 - shrink }}>
+            <div
+              style={{ position: "absolute", inset: 0, opacity: 1 - shrink }}
+            >
               <Steps f={f} at={stepAt} />
             </div>
           </div>
@@ -401,9 +1088,25 @@ export const SC10 = () => {
             const at = W(n.at);
             const cx = CX + (i - 1) * EX.gap;
             return (
-              <Appear key={n.text} at={at - m.sec(0.15)} style={{ left: cx - EX.gap / 2, top: EX.y, width: EX.gap, display: "flex", flexDirection: "column", alignItems: "center", gap: 20 }}>
+              <Appear
+                key={n.text}
+                at={at - m.sec(0.15)}
+                style={{
+                  left: cx - EX.gap / 2,
+                  top: EX.y,
+                  width: EX.gap,
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  gap: 20,
+                }}
+              >
                 <Pill text={n.text} h={EX.chipH} size={30} />
-                <NoSign icon={n.icon} d={EX.d} p={ease(f, at + m.sec(0.1), m.sec(0.4))} />
+                <NoSign
+                  icon={n.icon}
+                  d={EX.d}
+                  p={ease(f, at + m.sec(0.1), m.sec(0.4))}
+                />
               </Appear>
             );
           })}
@@ -414,11 +1117,24 @@ export const SC10 = () => {
       {f >= endAt - m.sec(0.1) ? (
         <div style={{ position: "absolute", inset: 0 }}>
           {[0, 1].map((i) => (
-            <Appear key={i} at={endAt - m.sec(0.1) + i * m.sec(0.2)} style={{ left: endX(i), top: END.y }}>
+            <Appear
+              key={i}
+              at={endAt - m.sec(0.1) + i * m.sec(0.2)}
+              style={{ left: endX(i), top: END.y }}
+            >
               <DropCard i={i} />
             </Appear>
           ))}
-          <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+          <svg
+            width={theme.canvas.width}
+            height={theme.canvas.height}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              overflow: "visible",
+            }}
+          >
             <path
               d={`M ${endX(0) + END.w / 2} ${END.braceY} v ${END.braceH / 2} H ${endX(1) + END.w / 2} v ${-END.braceH / 2} M ${CX} ${END.braceY + END.braceH / 2} V ${END.lineY}`}
               fill="none"
@@ -431,9 +1147,35 @@ export const SC10 = () => {
               strokeDashoffset={1 - ease(f, lineAt - m.sec(0.45), m.sec(0.5))}
             />
           </svg>
-          <Appear at={lineAt - m.sec(0.05)} style={{ left: 0, top: END.lineY, width: theme.canvas.width, display: "flex", justifyContent: "center" }}>
-            <div style={{ height: END.lineH, padding: "0 56px", borderRadius: 999, background: c.cardBg, boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`, display: "flex", alignItems: "center", fontFamily: theme.text.family, fontSize: 52, fontWeight: 500, letterSpacing: -0.5, color: c.ink, whiteSpace: "nowrap" }}>
-              Sama-sama turun,&nbsp;<span style={{ color: c.indigo }}>konteksnya berbeda</span>.
+          <Appear
+            at={lineAt - m.sec(0.05)}
+            style={{
+              left: 0,
+              top: END.lineY,
+              width: theme.canvas.width,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                height: END.lineH,
+                padding: "0 56px",
+                borderRadius: 999,
+                background: c.cardBg,
+                boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`,
+                display: "flex",
+                alignItems: "center",
+                fontFamily: theme.text.family,
+                fontSize: 52,
+                fontWeight: 500,
+                letterSpacing: -0.5,
+                color: c.ink,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Sama-sama turun,&nbsp;
+              <span style={{ color: c.indigo }}>konteksnya berbeda</span>.
             </div>
           </Appear>
         </div>

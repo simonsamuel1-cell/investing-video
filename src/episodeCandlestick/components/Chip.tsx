@@ -3,6 +3,7 @@
  * Variants indigo / cyan / neutral / muted. Pop entrance allowed (UI element).
  * Cross-fade between labels: render two Chips and drive `opacity`.
  */
+import { useNudge } from "../../core/nudge";
 import { useCurrentFrame, interpolate } from "remotion";
 import { theme } from "../theme";
 
@@ -32,6 +33,7 @@ export const Chip = ({
   opacity?: number;
   anchor?: "center" | "left" | "right";
 }) => {
+  const nd = useNudge();
   const f = useCurrentFrame();
   if (f < startFrame) return null;
   const pop = interpolate(f, [startFrame, startFrame + 9], [0.82, 1], {
@@ -46,7 +48,7 @@ export const Chip = ({
   const v = VARIANT[variant];
   const tx = anchor === "center" ? "-50%" : anchor === "right" ? "-100%" : "0%";
   return (
-    <div
+    <div ref={nd.ref}
       style={{
         position: "absolute",
         left: x,
@@ -61,7 +63,7 @@ export const Chip = ({
         fontWeight: theme.type.label.weight,
         color: v.text,
         whiteSpace: "nowrap",
-        opacity: opacity * inOp,
+        opacity: opacity * inOp, ...nd.style,
       }}
     >
       {label}

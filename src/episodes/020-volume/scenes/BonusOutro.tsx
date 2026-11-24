@@ -22,10 +22,21 @@
  * in the row would have said it was a fifth chapter, and the board leaving
  * before it arrives is what says it is not.
  */
-import { AbsoluteFill, Freeze, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Freeze, useCurrentFrame, Interactive } from "remotion";
 import {
-  GridGround, RoadmapCards, ROADMAP_CARD, ROADMAP_SLOTS, shrinkClip, VolumeBars,
-  gridOf, useMotion, usePalette, useShadow, progress, progressInOut, theme,
+  GridGround,
+  RoadmapCards,
+  ROADMAP_CARD,
+  ROADMAP_SLOTS,
+  shrinkClip,
+  VolumeBars,
+  gridOf,
+  useMotion,
+  usePalette,
+  useShadow,
+  progress,
+  progressInOut,
+  theme,
 } from "../../../core";
 import { BLOCK, BONUS, MAP_LABELS, SPIKES } from "../data/timing";
 import { SC17 } from "./SC17";
@@ -119,7 +130,13 @@ export const BonusOutro = () => {
       <GridGround f={f} opacity={1} />
 
       {/* ── the cards, and only the cards, leaving upward ────────────────── */}
-      <div style={{ position: "absolute", inset: 0, transform: `translateY(${(-lift).toFixed(1)}px)` }}>
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${(-lift).toFixed(1)}px)`,
+        }}
+      >
         <RoadmapCards
           labels={MAP_LABELS}
           /* ⚠ ALREADY COMPLETE ON THE FIRST FRAME — see BONUS in timing.ts. The
@@ -150,7 +167,13 @@ export const BonusOutro = () => {
 
         {/* ⚠ CLIP OUTSIDE, SCALE INSIDE — a clip-path on the scaling wrapper
             scales with it and never matches the card it is clipping into. */}
-        <div style={{ position: "absolute", inset: 0, clipPath: shrinkClip(map, BONUS.landing) }}>
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            clipPath: shrinkClip(map, BONUS.landing),
+          }}
+        >
           <div
             style={{
               position: "absolute",
@@ -179,7 +202,8 @@ export const BonusOutro = () => {
             transformOrigin: `${(REST.x + ROADMAP_CARD.w / 2).toFixed(1)}px ${(REST.y + (ROADMAP_CARD.h + LABEL_H) / 2).toFixed(1)}px`,
           }}
         >
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: REST.x,
@@ -204,7 +228,12 @@ export const BonusOutro = () => {
           {/* ⚠ `warn`, THE ONE RED ALLOWED OUTSIDE A CANDLE, and only for naming
               a mistake — which is exactly what this names. */}
           <svg
-            style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}
+            style={{
+              position: "absolute",
+              left: 0,
+              top: 0,
+              overflow: "visible",
+            }}
             width={theme.canvas.width}
             height={theme.canvas.height}
           >
@@ -228,7 +257,8 @@ export const BonusOutro = () => {
           </svg>
           {/* ⚠ UNDER THE CARD, in the roadmap's own label slot and type — see
               BONUS.card in timing.ts. */}
-          <div
+          <Interactive.Div
+            name="Objek"
             style={{
               position: "absolute",
               left: REST.x,
@@ -244,7 +274,7 @@ export const BonusOutro = () => {
             }}
           >
             {BONUS.card.title}
-          </div>
+          </Interactive.Div>
         </div>
       )}
     </AbsoluteFill>

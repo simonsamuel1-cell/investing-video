@@ -15,10 +15,11 @@
  *  D  "Sebelum menentukan investasinya, kita perlu kenali diri kita dulu": the cards go and the camera dives onto
  *     Kamu while the line is said. SC03 opens on this frame.
  */
+import { AppearE as Appear } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import { SoftGround, Stage, theme, useMotion } from "../../../core";
 import { BLOCK } from "../data/timing";
-import { Appear, ease, useWords } from "../components/kit";
+import { ease, useWords } from "../components/kit";
 import { mixFrame } from "../components/Islands";
 import { MAP_FRAME, MapCamera } from "../components/RouteMap";
 import { KenaliLine, QuestionCards } from "./River";
@@ -41,7 +42,15 @@ export const SC02Baru = () => {
   const out = ease(f, W("seberang") - m.sec(0.25), m.sec(1.1));
   const settle = ease(f, askAt + m.sec(0.3), m.move);
   const dive = ease(f, lineAt, m.sec(1.2));
-  const fr = [[MAP_FRAME.goal, pan], [MAP_FRAME.full, out], [MAP_FRAME.low, settle], [MAP_FRAME.dive, dive]].reduce((a, [b, t]) => mixFrame(a, b as typeof a, t as number), MAP_FRAME.near);
+  const fr = [
+    [MAP_FRAME.goal, pan],
+    [MAP_FRAME.full, out],
+    [MAP_FRAME.low, settle],
+    [MAP_FRAME.dive, dive],
+  ].reduce(
+    (a, [b, t]) => mixFrame(a, b as typeof a, t as number),
+    MAP_FRAME.near,
+  );
   const yes = ease(f, W("tujuan", 1), m.pop);
 
   return (
@@ -49,14 +58,39 @@ export const SC02Baru = () => {
       <SoftGround f={g} />
 
       {/* A–D — the map, framed by a camera that never cuts away */}
-      <Appear at={picAt} style={{ left: 0, top: 0, width: theme.canvas.width, height: theme.canvas.height }}>
-        <MapCamera fr={fr} g={g} landAt={picAt} youAt={W("kamu berdiri")} riverAt={W("satu sisi sungai")} goalAt={goalAt} check={yes * (1 - dive)} />
+      <Appear
+        at={picAt}
+        style={{
+          left: 0,
+          top: 0,
+          width: theme.canvas.width,
+          height: theme.canvas.height,
+        }}
+      >
+        <MapCamera
+          fr={fr}
+          g={g}
+          landAt={picAt}
+          youAt={W("kamu berdiri")}
+          riverAt={W("satu sisi sungai")}
+          goalAt={goalAt}
+          check={yes * (1 - dive)}
+        />
       </Appear>
 
-      <QuestionCards W={W} askAt={askAt} notAt={notAt} betterAt={betterAt} lineAt={lineAt} />
+      <QuestionCards
+        W={W}
+        askAt={askAt}
+        notAt={notAt}
+        betterAt={betterAt}
+        lineAt={lineAt}
+      />
 
       {/* D — the line, while the camera dives onto Kamu (SC03 opens on it and lets it go) */}
-      <Appear at={lineAt + m.sec(0.3)} style={{ left: 0, top: 0, width: theme.canvas.width }}>
+      <Appear
+        at={lineAt + m.sec(0.3)}
+        style={{ left: 0, top: 0, width: theme.canvas.width }}
+      >
         <KenaliLine main={ease(f, W("kita perlu"), m.reveal)} />
       </Appear>
     </Stage>

@@ -4,7 +4,7 @@
  */
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { GridGround, theme, useMotion, usePalette, useShadow } from "../../../core";
+import { GridGround, NudgeEnd, theme, useMotion, useNudge, usePalette, useShadow } from "../../../core";
 import { Cutout, OUTSIDE_RESERVES, ease } from "../../in01-passive-income/components/kit";
 
 export { OUTSIDE_RESERVES, ease } from "../../in01-passive-income/components/kit";
@@ -21,8 +21,9 @@ export const useAppear = (at: number, out?: number, over?: number) => {
 /** Anything, easing up a few px into place and fading in; gone on `out`. */
 export const Appear = ({ at, out, rise = 18, style, children }: { at: number; out?: number; rise?: number; style?: React.CSSProperties; children: React.ReactNode }) => {
   const p = useAppear(at, out);
+  const n = useNudge();
   if (p <= 0.001) return null;
-  return <div style={{ position: "absolute", opacity: p, transform: `translateY(${((1 - p) * rise).toFixed(2)}px)`, ...style }}>{children}</div>;
+  return <div ref={n.ref} style={{ position: "absolute", opacity: p, transform: `translateY(${((1 - p) * rise).toFixed(2)}px)`, ...style, ...n.style }}><NudgeEnd>{children}</NudgeEnd></div>;
 };
 
 /** A white rounded card with the soft shadow. */

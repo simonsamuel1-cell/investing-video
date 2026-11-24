@@ -24,7 +24,7 @@
  * revenge trade needs. Drawing up to SEEN_TO and no further is why there is no
  * second mask here.
  */
-import { useCurrentFrame } from "remotion";
+import { useCurrentFrame, Interactive } from "remotion";
 import {
   Candles,
   Chip,
@@ -206,7 +206,14 @@ const Note = () => {
   } as const;
 
   return (
-    <DashedBox x={B.x} y={B.y} w={B.w} h={B.h} at={local(V.note.at)} origin="center">
+    <DashedBox
+      x={B.x}
+      y={B.y}
+      w={B.w}
+      h={B.h}
+      at={local(V.note.at)}
+      origin="center"
+    >
       {/* ⚠ THE TWO ROWS ARE CENTRED AS A BLOCK, not one each in half the box.
           The second line is empty for two seconds before it is written, and a
           per-half layout would leave the first line sitting high in a frame
@@ -314,7 +321,8 @@ export const Revenge = () => {
       >
         {/* ⚠ THE CARD IS THE MASK. Everything the pan carries off its left edge is
           clipped by the thing it is drawn on, which cannot drift away from it. */}
-        <div
+        <Interactive.Div
+          name="Objek"
           style={{
             position: "absolute",
             left: O.x,

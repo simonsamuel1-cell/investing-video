@@ -11,16 +11,8 @@
  * still changes both cuts; re-run the script if a scene's length changes.
  */
 import React, { useContext } from "react";
-import {
-  AbsoluteFill,
-  Audio,
-  Freeze,
-  Img,
-  Sequence,
-  staticFile,
-  useCurrentFrame,
-  interpolate,
-} from "remotion";
+import { LockedSequence as Sequence } from "../core/nudge";
+import { AbsoluteFill, Audio, Freeze, Img, staticFile, useCurrentFrame, interpolate } from "remotion";
 import { theme } from "./theme";
 import { Scene01 } from "./scenes/Scene01";
 import { Scene02 } from "./scenes/Scene02";
@@ -374,7 +366,7 @@ export const CandlestickComposition = ({
           zIndex: 100,
         }}
       >
-        <Img
+        <Img showInTimeline={false}
           src={staticFile("watermark.png")}
           style={{ maxWidth: "100%", maxHeight: "100%" }}
         />

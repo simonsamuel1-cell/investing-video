@@ -14,7 +14,8 @@
  * one leaves none behind: `done` is the seven before it, and the pointer takes
  * the last one that is left.
  */
-import { Sequence } from "remotion";
+import { LockedSequence as Sequence } from "../../../core/nudge";
+
 import { CUT11, ROW8 } from "../data/timing";
 import { SceneTransition, assertTransition } from "./SceneTransition";
 import { AdmrGroup } from "./AdmrGroup";

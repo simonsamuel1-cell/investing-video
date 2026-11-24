@@ -15,10 +15,19 @@
  * of a label: data/series.ts asserts they correlate above 0.9 before the build
  * is allowed to run.
  */
+import { CoreLineE as Line } from "../../../editable";
 import { useCurrentFrame } from "remotion";
 import {
-  Candles, Card, IndicatorLine, Line, Stage,
-  domainOf, gridOf, progress, theme, useMotion, usePalette,
+  Candles,
+  Card,
+  IndicatorLine,
+  Stage,
+  domainOf,
+  gridOf,
+  progress,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { OVERLOAD, local } from "../data/timing";
 import { OVERLOAD_PANES, overloadStack } from "../data/layout";
@@ -66,7 +75,11 @@ export const SC10 = () => {
         weight={theme.text.body.weight}
         color={c.slate}
       />
-      <Card rect={theme.stage.card} opacity={progress(f, local(V.chart.at, FROM), m.fade)} soft />
+      <Card
+        rect={theme.stage.card}
+        opacity={progress(f, local(V.chart.at, FROM), m.fade)}
+        soft
+      />
 
       <Candles
         bars={OVER_TAPE.bars}
@@ -102,7 +115,10 @@ export const SC10 = () => {
                 width: box.w,
                 height: box.h,
                 borderRadius: theme.shape.panelRadius,
-                background: g >= V.lit && same ? theme.color.cyanWash : theme.color.slateWash,
+                background:
+                  g >= V.lit && same
+                    ? theme.color.cyanWash
+                    : theme.color.slateWash,
                 opacity: fold,
               }}
             />

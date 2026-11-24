@@ -32,10 +32,17 @@
  * closing line should be in Bahasa. Every one of them is a single edit in
  * PLANS or in this file; none of them is a rebuild.
  */
+import { CoreLineE as Line, CoreWordsE as Words } from "../../../editable";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import {
-  Chip, DashedBox, Layer, Line, Stage, Words,
-  cutOutStyle, progress, theme, usePalette,
+  Chip,
+  DashedBox,
+  Layer,
+  Stage,
+  cutOutStyle,
+  progress,
+  theme,
+  usePalette,
 } from "../../../core";
 import { CUT15, PLANS, local } from "../data/timing";
 import { PLAN } from "../data/layout";
@@ -127,7 +134,8 @@ export const CopyTrade = () => {
   const g = f + V.at;
 
   /** ⚠ THE WHOLE SCENE GOES TO HALF UNDER THE VERDICT — see B5 below. */
-  const dim = 1 - progress(g, V.verdict.at, V.verdict.over) * (1 - V.verdict.dim);
+  const dim =
+    1 - progress(g, V.verdict.at, V.verdict.over) * (1 - V.verdict.dim);
 
   return (
     <Stage>
@@ -141,110 +149,115 @@ export const CopyTrade = () => {
           zero-height parent is zero. A transform makes the parent the
           containing block either way, so the size has to be real. */}
       <AbsoluteFill style={cutOutStyle(g, CUT15)}>
-      <AbsoluteFill style={{ opacity: dim }}>
-      <Naming g={g} />
+        <AbsoluteFill style={{ opacity: dim }}>
+          <Naming g={g} />
 
-      {/* ⚠ MOUNTED ONCE, AT 12676, AND NEVER AGAIN. Every beat after this is a
+          {/* ⚠ MOUNTED ONCE, AT 12676, AND NEVER AGAIN. Every beat after this is a
           prop change inside one instance — see the header of PlanCompare. */}
-      {g >= V.card.at && <PlanCompare g={g} />}
+          {g >= V.card.at && <PlanCompare g={g} />}
 
-      {/* ⚠ THE ONLY THING B3 ADDS. The columns do not move and the ticker does
+          {/* ⚠ THE ONLY THING B3 ADDS. The columns do not move and the ticker does
           not move; its stillness against two brightening columns is the beat.
 
           ⚠ AND IT IS THE EPISODE'S MARQUEE NOW, NOT A PILL — "text box putus
           putus". The same dashed frame SC06 and SC11 close on, so the three
           closings are one shape. Its content is drawn whole rather than typed:
           this is a conclusion arriving, not a sentence being written. */}
-      <div style={{ opacity: 1 - progress(g, V.ask.away.at, V.ask.away.over) }}>
-      <DashedBox
-        x={P.close.x}
-        y={P.close.y}
-        w={P.close.w}
-        h={P.close.h}
-        at={local(V.close.at, V.at)}
-        block={P.close.block}
-        origin="center"
-      >
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            fontFamily: theme.text.family,
-            fontSize: P.close.size,
-            fontWeight: theme.text.title.weight,
-            color: c.ink,
-            /** ⚠ IT MAY NOT WRAP. The box is measured to the sentence, so a
-             *  second line here means the measurement has gone stale. */
-            whiteSpace: "nowrap",
-          }}
-        >
-          {V.close.text}
-        </div>
-      </DashedBox>
-      </div>
-      {/* ── B4 · the three questions ────────────────────────────────────
+          <div
+            style={{ opacity: 1 - progress(g, V.ask.away.at, V.ask.away.over) }}
+          >
+            <DashedBox
+              x={P.close.x}
+              y={P.close.y}
+              w={P.close.w}
+              h={P.close.h}
+              at={local(V.close.at, V.at)}
+              block={P.close.block}
+              origin="center"
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontFamily: theme.text.family,
+                  fontSize: P.close.size,
+                  fontWeight: theme.text.title.weight,
+                  color: c.ink,
+                  /** ⚠ IT MAY NOT WRAP. The box is measured to the sentence, so a
+                   *  second line here means the measurement has gone stale. */
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {V.close.text}
+              </div>
+            </DashedBox>
+          </div>
+          {/* ── B4 · the three questions ────────────────────────────────────
           In the room the right column leaves behind, level with the person who
           is left. Filled indigo with white type and lifted off the ground —
           "pill design dengan fill indigo, warna textnya putih, kasih shadow". */}
-      {V.ask.rows.map((q, i) => (
-        <Chip
-          key={q.text}
-          label={q.text}
-          x={P.ask.x}
-          y={P.ask.y0 + i * P.ask.pitch}
-          at={local(q.at, V.at)}
-          size={P.ask.size}
-          weight={P.ask.weight}
-          padY={P.ask.padY}
-          anchor="left"
-          pill
-          solid
-          shadow
-        />
-      ))}
-      </AbsoluteFill>
+          {V.ask.rows.map((q, i) => (
+            <Chip
+              key={q.text}
+              label={q.text}
+              x={P.ask.x}
+              y={P.ask.y0 + i * P.ask.pitch}
+              at={local(q.at, V.at)}
+              size={P.ask.size}
+              weight={P.ask.weight}
+              padY={P.ask.padY}
+              anchor="left"
+              pill
+              solid
+              shadow
+            />
+          ))}
+        </AbsoluteFill>
 
-      {g >= V.verdict.at && (
-        <DashedBox
-          x={P.verdict.x}
-          y={P.verdict.y}
-          w={P.verdict.w}
-          h={P.verdict.h}
-          at={local(V.verdict.at, V.at)}
-          block={P.verdict.block}
-          origin="center"
-        >
-          <div
-            style={{
-              position: "absolute",
-              inset: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontFamily: theme.text.family,
-              fontSize: P.verdict.size,
-              fontWeight: theme.text.title.weight,
-              color: c.ink,
-              /* ⚠ `pre`, NOT `nowrap` — the sentence is two spans now, and
+        {g >= V.verdict.at && (
+          <DashedBox
+            x={P.verdict.x}
+            y={P.verdict.y}
+            w={P.verdict.w}
+            h={P.verdict.h}
+            at={local(V.verdict.at, V.at)}
+            block={P.verdict.block}
+            origin="center"
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontFamily: theme.text.family,
+                fontSize: P.verdict.size,
+                fontWeight: theme.text.title.weight,
+                color: c.ink,
+                /* ⚠ `pre`, NOT `nowrap` — the sentence is two spans now, and
                  under `nowrap` the space that separates them is at the end of
                  the first one, where the collapser eats it. Same reason SC03's
                  note uses `pre`. */
-              whiteSpace: "pre",
-            }}
-          >
-            {V.verdict.parts.map((part) => (
-              <span key={part.text} style={part.warn ? { color: theme.color.warn } : undefined}>
-                {part.text}
-              </span>
-            ))}
-          </div>
-        </DashedBox>
-      )}
+                whiteSpace: "pre",
+              }}
+            >
+              {V.verdict.parts.map((part) => (
+                <span
+                  key={part.text}
+                  style={part.warn ? { color: theme.color.warn } : undefined}
+                >
+                  {part.text}
+                </span>
+              ))}
+            </div>
+          </DashedBox>
+        )}
 
-      {/* ── B5 · the verdict ────────────────────────────────────────────
+        {/* ── B5 · the verdict ────────────────────────────────────────────
           ⚠ IT DIMS WHAT IT COVERS RATHER THAN REPLACING IT. Simon: "semua
           visual berkurang transparansinya jadi 50%". The table and the
           questions stay legible underneath, which is the difference between a

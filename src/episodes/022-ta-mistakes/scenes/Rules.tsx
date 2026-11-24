@@ -20,10 +20,17 @@
  * ⚠ 16672 TAKES EVERYTHING BUT THE GROUND, and 16688 puts the episode's last
  * words where the list was.
  */
+import { CoreLineE as Line } from "../../../editable";
 import React from "react";
 import { AbsoluteFill, useCurrentFrame } from "remotion";
 import {
-  GridGround, Line, Stage, cutInStyle, progress, theme, useMotion, usePalette,
+  GridGround,
+  Stage,
+  cutInStyle,
+  progress,
+  theme,
+  useMotion,
+  usePalette,
 } from "../../../core";
 import { CUT17, RULES, local } from "../data/timing";
 import { GROUND_FADE, RULES_SHOT } from "../data/layout";
@@ -54,7 +61,8 @@ export const Rules = () => {
   const gone = progress(g, V.clear, m.fade);
 
   /** Anything the cut delivers is complete on the frame it lands. */
-  const born = (beat: number) => (beat === V.at ? -m.reveal : local(beat, V.at));
+  const born = (beat: number) =>
+    beat === V.at ? -m.reveal : local(beat, V.at);
 
   return (
     <Stage>
@@ -79,7 +87,9 @@ export const Rules = () => {
               /** ⚠ A CELL CENTRES ITS OWN ROWS ON ITS ROW'S LINE, so a two-row
                *  condition and a one-row answer still read across. */
               const cell = (rows: readonly string[], j: number) =>
-                S.rows.y0 + i * S.rows.pitch + (j - (rows.length - 1) / 2) * S.rows.lead;
+                S.rows.y0 +
+                i * S.rows.pitch +
+                (j - (rows.length - 1) / 2) * S.rows.lead;
               return (
                 <React.Fragment key={row.left.text.join(" ")}>
                   {row.left.text.map((t, j) => (
