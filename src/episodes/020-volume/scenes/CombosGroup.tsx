@@ -162,6 +162,7 @@ export const CombosGroup = () => {
           cutting straight to #F5F5F5 on the hand-over frame flipped the whole
           background a shade — the card matched and the page did not. */}
       <AbsoluteFill
+        showInTimeline={false}
         style={{
           backgroundColor: interpolateColors(
             o,

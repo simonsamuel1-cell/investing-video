@@ -111,7 +111,7 @@ export const ScreenClip = ({
   if (f < at) return null;
   const op = progress(f, at, m.fade);
   return (
-    <AbsoluteFill style={{ opacity: op }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: op }}>
       {kind === "video" ? (
         <OffthreadVideo showInTimeline={false}
           src={staticFile(src)}

@@ -12,7 +12,7 @@ import { usePalette } from "../palette";
 export const SafeArea = ({ children, transparent = false }: { children: React.ReactNode; transparent?: boolean }) => {
   const pal = usePalette();
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         backgroundColor: transparent ? undefined : pal.bg,
         fontFamily: theme.type.family,

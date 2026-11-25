@@ -181,7 +181,10 @@ const BuyButton = ({ x, y }: { x: number; y: number }) => {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        ...typeStyle("title"),
+        fontFamily: typeStyle("title").fontFamily,
+        fontWeight: typeStyle("title").fontWeight,
+        letterSpacing: typeStyle("title").letterSpacing,
+        lineHeight: typeStyle("title").lineHeight,
         fontSize: 38,
         color: theme.color.neutralIcon,
       }}

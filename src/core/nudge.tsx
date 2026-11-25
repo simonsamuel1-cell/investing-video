@@ -10,12 +10,47 @@
  * Unedited, the picture is the same to the pixel. EDITABLE = false takes every handle out of the timeline (edits already made stay).
  */
 import React from "react";
-import { Interactive, Internals, Sequence } from "remotion";
+import { Interactive, Internals, Sequence, getRemotionEnvironment } from "remotion";
 
 export const EDITABLE: boolean = true;
 
 /** A scene's bar in the timeline without Studio's handles: its JSX is usually one `.map`, so a drag would shift every scene. */
 export const LockedSequence = ((Internals as unknown as { SequenceWithoutSchema?: typeof Sequence }).SequenceWithoutSchema ?? Sequence) as typeof Sequence;
+
+/**
+ * Where a click on the Studio canvas lands. Studio (4.0.547) outlines an object's outermost elements, and a wrapper of ours often has no
+ * size of its own (its picture is placed inside it) or covers the whole canvas. So: a wrapper without size lends its first drawn child's
+ * outline, and one over the whole canvas only its single child's, or none (it would catch every click). Studio only; if a later Remotion
+ * moves this internal, outlines go back to Studio's own and nothing else changes.
+ */
+(() => {
+  type Outlines = { getNodes: (ref: unknown) => readonly Node[] | null; tuntun?: true };
+  const o = (Internals as unknown as { SequenceOutlineInternals?: Outlines }).SequenceOutlineInternals;
+  if (typeof document === "undefined" || !getRemotionEnvironment().isStudio || !o || o.tuntun) return;
+  const pick = (n: Node): Node | null => {
+    if (n instanceof Text) return n.data.trim() ? n : null;
+    if (!(n instanceof HTMLElement || n instanceof SVGSVGElement)) return n instanceof Element ? n : null;
+    const w = n instanceof HTMLElement ? n.offsetWidth : n.clientWidth;
+    const h = n instanceof HTMLElement ? n.offsetHeight : n.clientHeight;
+    const whole = w >= 1800 && h >= 1000;
+    if (w > 1 && h > 1 && !whole) return n;
+    if (n instanceof SVGSVGElement) return null;
+    const inner = Array.from(n.childNodes).map(pick).filter((x): x is Node => x !== null);
+    return whole && inner.length !== 1 ? null : (inner[0] ?? null);
+  };
+  const shown = new WeakMap<object, readonly Node[]>();
+  const own = o.getNodes;
+  o.getNodes = (ref) => {
+    const nodes = own(ref);
+    if (nodes === null) return null;
+    const next = nodes.map(pick).filter((x): x is Node => x !== null);
+    const last = shown.get(ref as object);
+    if (last && last.length === next.length && last.every((x, i) => x === next[i])) return last;
+    shown.set(ref as object, next);
+    return next;
+  };
+  o.tuntun = true;
+})();
 
 type Hand = { translate?: string; scale?: number | string; rotate?: string };
 type Ctx = { ref: React.RefObject<HTMLDivElement | null>; style: Hand };
@@ -36,11 +71,11 @@ const schema = {
   ...Object.fromEntries(["hidden", "showInTimeline"].filter((k) => k in base).map((k) => [k, base[k]])),
   ...Object.fromEntries(["style.translate", "style.scale", "style.rotate"].filter((k) => k in all).map((k) => [k, all[k]])),
 };
-type Extra = { name?: string; hidden?: boolean; showInTimeline?: boolean; stack?: string; controls?: unknown; style?: React.CSSProperties; text?: unknown; label?: unknown };
+type Extra = { name?: string; hidden?: boolean; showInTimeline?: boolean; controls?: unknown; style?: React.CSSProperties; text?: unknown; label?: unknown };
 
 export const nudgeable = <P extends object>(label: string, Component: React.ComponentType<P>): React.FC<P & { style?: React.CSSProperties; name?: string }> => {
   const Inner = React.forwardRef<unknown, P & Extra>((props, _ref) => {
-    const { stack, controls, hidden, showInTimeline, ...rest } = props as Extra & Record<string, unknown>;
+    const { controls, hidden, showInTimeline, ...rest } = props as Extra & Record<string, unknown>;
     const ref = React.useRef<HTMLDivElement | null>(null);
     const st = (rest.style ?? {}) as React.CSSProperties;
     const { translate, scale, rotate, ...style } = st;
@@ -51,7 +86,7 @@ export const nudgeable = <P extends object>(label: string, Component: React.Comp
     const named = [rest.name, rest.text, rest.label].find((v) => typeof v === "string" && v) as string | undefined;
     const Seq = Sequence as unknown as React.FC<Record<string, unknown>>;
     return (
-      <Seq layout="none" name={named ? named.slice(0, 32) : label} controls={controls} _remotionInternalStack={stack} hidden={hidden} showInTimeline={showInTimeline ?? true} outlineRef={ref}>
+      <Seq layout="none" name={named ? named.slice(0, 32) : label} controls={controls} hidden={hidden} showInTimeline={showInTimeline ?? true}>
         <NudgeContext.Provider value={{ ref, style: hand }}>
           {React.createElement(Component, { ...(rest as unknown as P), ...(rest.style ? { style } : {}) })}
         </NudgeContext.Provider>
@@ -71,8 +106,6 @@ export const nudgeable = <P extends object>(label: string, Component: React.Comp
   }
   const W = (Interactive.withSchema as unknown as (o: object) => React.FC)({ Component: Inner, componentName: `<${label}>`, componentIdentity: null, schema, supportsEffects: false });
   W.displayName = label;
-  // so Studio learns which JSX node a handle belongs to; internal in 4.0.481, and only the handles depend on it
-  (Internals as unknown as { addSequenceStackTraces?: (c: unknown) => void }).addSequenceStackTraces?.(W);
   return W as unknown as React.FC<P & { style?: React.CSSProperties; name?: string }>;
 };
 
@@ -97,25 +130,15 @@ const fullSchema = {
 type KeyedProps = { name: string; style: React.CSSProperties; children?: React.ReactNode; hidden?: boolean; showInTimeline?: boolean };
 /**
  * A positioned box whose entrance and exit are literal keyframes: `opacity: interpolate(frame, [239, 263], [0, 1], …)`, so Studio shows
- * and edits them (Simon, 24 Nov: VI02 like Template-Interactive). Its outline on the canvas is its own box, or its first child's when
- * the box has no size, and nothing when that covers the whole canvas (it would catch every click).
+ * and edits them (Simon, 24 Nov: VI02 like Template-Interactive).
  */
 export const Keyed: React.FC<KeyedProps> = (() => {
   const Inner = React.forwardRef<unknown, KeyedProps & Extra>((props, _ref) => {
-    const { name, style, children, hidden, showInTimeline, stack, controls } = props;
-    const box = React.useRef<HTMLDivElement | null>(null);
-    const outline = React.useRef<HTMLElement | null>(null);
-    React.useLayoutEffect(() => {
-      const el = box.current;
-      const sized = (e: HTMLElement | null) => !!e && e.offsetWidth > 1 && e.offsetHeight > 1;
-      const pick = sized(el) ? el : (Array.from(el?.children ?? []).find((c) => c instanceof HTMLElement && sized(c)) as HTMLElement | undefined) ?? null;
-      const whole = pick !== null && pick.offsetWidth >= 1800 && pick.offsetHeight >= 1000;
-      outline.current = whole ? null : pick;
-    });
+    const { name, style, children, hidden, showInTimeline, controls } = props;
     const Seq = Sequence as unknown as React.FC<Record<string, unknown>>;
     return (
-      <Seq layout="none" name={name} controls={controls} _remotionInternalStack={stack} hidden={hidden} showInTimeline={showInTimeline ?? true} outlineRef={outline}>
-        <div ref={box} style={style}>
+      <Seq layout="none" name={name} controls={controls} hidden={hidden} showInTimeline={showInTimeline ?? true}>
+        <div style={style}>
           <NudgeEnd>{children}</NudgeEnd>
         </div>
       </Seq>
@@ -124,6 +147,5 @@ export const Keyed: React.FC<KeyedProps> = (() => {
   Inner.displayName = "Keyed";
   const W = (Interactive.withSchema as unknown as (o: object) => React.FC<KeyedProps>)({ Component: Inner, componentName: "<Keyed>", componentIdentity: null, schema: fullSchema, supportsEffects: false });
   W.displayName = "Keyed";
-  (Internals as unknown as { addSequenceStackTraces?: (c: unknown) => void }).addSequenceStackTraces?.(W);
   return W;
 })();

@@ -251,6 +251,7 @@ export const CombosGroupV3 = () => {
   return (
     <Stage transparent>
       <AbsoluteFill
+        showInTimeline={false}
         style={{
           backgroundColor: interpolateColors(
             o,

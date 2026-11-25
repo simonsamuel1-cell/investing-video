@@ -66,7 +66,7 @@ const SceneFade: React.FC<{
     [fadeIn ? 0 : 1, 1, 1, 0],
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
-  return <AbsoluteFill style={{ opacity }}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={{ opacity }}>{children}</AbsoluteFill>;
 };
 
 const INDEPENDENT_SCENES: {
@@ -123,7 +123,7 @@ const Film: React.FC = () => {
   const tracks = useContext(FilmTracks);
   const indo = useContext(Cut) === "indo";
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         backgroundColor: theme.colors.bg,
         fontFamily: theme.type.family,
@@ -164,7 +164,7 @@ const Film: React.FC = () => {
         durationInFrames={10386 - 9044}
         showInTimeline={tracks}
       >
-        <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
+        <AbsoluteFill showInTimeline={false} style={{ backgroundColor: theme.colors.bg }}>
           <Scene14Bbri />
         </AbsoluteFill>
       </Sequence>
@@ -307,7 +307,7 @@ export const CandlestickComposition = ({
   );
 
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         backgroundColor: theme.colors.bg,
         fontFamily: theme.type.family,
@@ -358,7 +358,7 @@ export const CandlestickComposition = ({
       {/* Burned-in subtitles — per-composition language track (toggle via showSubtitles). */}
       {showSubtitles && <Subtitles cues={subtitles} />}
       {/* Full-frame brand watermark — always on top; fades in at the start, out at the very end. */}
-      <AbsoluteFill
+      <AbsoluteFill showInTimeline={false}
         style={{
           opacity: watermarkFade,
           alignItems: "center",

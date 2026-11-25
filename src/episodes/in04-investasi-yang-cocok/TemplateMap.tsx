@@ -75,7 +75,7 @@ const MapStill = () => {
   const scaleAt = (p: [number, number], s: number) => `translate(${p[0]} ${p[1]}) scale(${s.toFixed(4)}) translate(${-p[0]} ${-p[1]})`;
   return (
     <Stage>
-      <AbsoluteFill style={{ background: c.bg }} />
+      <AbsoluteFill showInTimeline={false} style={{ background: c.bg }} />
       <HarbourMap x={left} y={top} h={h} hide={HIDE} paint={paint} version={VERSION} />
       <HarbourRoutePaths {...place} />
       <svg width={theme.canvas.width} height={theme.canvas.height} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
@@ -170,7 +170,7 @@ const Body = () => {
 };
 
 export const TemplateMap = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       {SHOW === "map" ? <MapStill /> : <Body />}
     </PaletteProvider>

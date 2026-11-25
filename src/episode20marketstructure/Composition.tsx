@@ -263,7 +263,7 @@ export const MarketStructureComposition = ({
   const f = useCurrentFrame();
   const [t0, x0, rate] = runAt(f);
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{ backgroundColor: theme.color.bg, fontFamily: theme.text.family }}
     >
       {/* ⚠ A SHIFTING SEQUENCE, AND A FREEZE ONLY ON THE HOLDS: a play-on run

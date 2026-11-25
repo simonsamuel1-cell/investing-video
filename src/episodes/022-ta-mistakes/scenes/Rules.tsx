@@ -66,14 +66,14 @@ export const Rules = () => {
 
   return (
     <Stage>
-      <AbsoluteFill style={FENCE}>
+      <AbsoluteFill showInTimeline={false} style={FENCE}>
         {/* ⚠ OUTSIDE THE CUT, ON PURPOSE. This is the one thing in the scene
             that does not travel — see the header. */}
         <div style={GROUND_FADE}>
           <GridGround f={g} paper={c.bg} vignette={false} />
         </div>
 
-        <AbsoluteFill style={cutInStyle(g, CUT17)}>
+        <AbsoluteFill showInTimeline={false} style={cutInStyle(g, CUT17)}>
           <div style={{ opacity: 1 - gone }}>
             <Line
               text={V.head.text}

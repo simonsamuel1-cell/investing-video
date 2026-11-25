@@ -867,6 +867,7 @@ export const UnderstandGroup = () => {
             box around them. `cardBg` rather than a typed #FFFFFF: it is the
             same white every card in the library uses. */}
         <AbsoluteFill
+          showInTimeline={false}
           style={{ backgroundColor: after ? c.cardBg : theme.color.bg }}
         />
         {after ? (
@@ -1389,7 +1390,10 @@ export const UnderstandGroup = () => {
           AND outside the cut, so neither the page nor the ground travels. It
           does NOT fade with the board below: CG-C's page is white too, so the
           two are the same surface and there is nothing to cross-fade. */}
-        <AbsoluteFill style={{ backgroundColor: c.cardBg }} />
+        <AbsoluteFill
+          showInTimeline={false}
+          style={{ backgroundColor: c.cardBg }}
+        />
         {/* ⚠ THE BOARD FADES OFF THE CARD, it is not cut away — see TRANS.fade. */}
         <div
           style={{

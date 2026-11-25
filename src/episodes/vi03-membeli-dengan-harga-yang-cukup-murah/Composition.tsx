@@ -60,7 +60,7 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
   const cin = cutAt(from);
   const cout = cutAt(to);
   const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
-  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={style}>{children}</AbsoluteFill>;
 };
 
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
@@ -73,7 +73,7 @@ const Ground = () => <SoftGround f={useCurrentFrame()} />;
 
 /** `scenes` swaps a scene for another build of it (VI03-Scene03: SC03's v3 next to Simon's own). */
 export const MembeliCukupMurahComposition = ({ scenes = {} }: { scenes?: Record<string, React.FC> }) => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       <Stage>
         <Ground />

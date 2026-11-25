@@ -5,7 +5,7 @@ version: 4.0.546
 ---
 
 > **Tuntun note (24 Nov 2026).** Copied from remotion-dev/skills @ 89c8afa (audited; remotion-maps left out). Do not update with
-> `npx skills`. Written for Remotion 4.0.546, this repo is on 4.0.481: check that an API exists before using it.
+> `npx skills`. Written for Remotion 4.0.546, this repo is on 4.0.547 since 25 Nov 2026.
 > Simon's rules (`tuntun-remotion-episode`) and `src/core` win over anything here. Do not install packages, run
 > `remotion upgrade`, or pass `--license-key` unless Simon asks. Do not restructure existing scenes to fit this skill.
 

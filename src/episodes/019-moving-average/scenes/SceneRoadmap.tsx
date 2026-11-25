@@ -146,6 +146,7 @@ export const SceneRoadmap = () => {
      * sheet for the whole transition. Same trap SC05's overlay hit.
      */
     <AbsoluteFill
+      showInTimeline={false}
       style={{
         fontFamily: theme.type.family,
         color: theme.colors.text,

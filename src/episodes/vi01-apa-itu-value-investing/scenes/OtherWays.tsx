@@ -282,7 +282,9 @@ export const SC06 = () => {
         right: 0,
         top,
         textAlign: "center",
-        ...typeStyle("title"),
+        fontFamily: typeStyle("title").fontFamily,
+        letterSpacing: typeStyle("title").letterSpacing,
+        lineHeight: typeStyle("title").lineHeight,
         fontSize: 36,
         fontWeight: 700,
         color: c.ink,
@@ -300,7 +302,9 @@ export const SC06 = () => {
         right: 0,
         bottom: 26,
         textAlign: "center",
-        ...typeStyle("label"),
+        fontFamily: typeStyle("label").fontFamily,
+        letterSpacing: typeStyle("label").letterSpacing,
+        lineHeight: typeStyle("label").lineHeight,
         fontSize: 22,
         fontWeight: 500,
         color: c.slate,
@@ -352,7 +356,7 @@ export const SC06 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — the question, and four ways to compare */}
-      <Shot from={0} to={D1} block={B} cutIn={false}>
+      <Shot start={0} to={D1} block={B} cutIn={false}>
         <Interactive.Div
           name="Kenapa bisa dipelajari inves"
           style={{
@@ -361,7 +365,9 @@ export const SC06 = () => {
             width: theme.canvas.width,
             top: CY - 130,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: 72,
             fontWeight: 500,
             color: c.ink,
@@ -414,7 +420,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* 1 — Day trading: what it needs, then two studies side by side */}
-      <Shot from={D1} to={Q} block={B}>
+      <Shot start={D1} to={Q} block={B}>
         {head(
           1,
           "Day trading",
@@ -439,7 +445,9 @@ export const SC06 = () => {
               right: 0,
               top: 84,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 26,
               fontWeight: 500,
               color: c.slate,
@@ -546,7 +554,9 @@ export const SC06 = () => {
               right: 0,
               top: 84,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 26,
               fontWeight: 500,
               color: c.slate,
@@ -631,7 +641,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* 2 — Quant trading: what it needs, then you against the servers, in time */}
-      <Shot from={Q} to={BI} block={B}>
+      <Shot start={Q} to={BI} block={B}>
         {head(
           2,
           "Quant trading",
@@ -758,7 +768,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* 3 — Berita & influencer: the price moves while the news travels; you hear it last */}
-      <Shot from={BI} to={VI} block={B}>
+      <Shot start={BI} to={VI} block={B}>
         {head(3, "Berita & influencer", BI, dock3, null, BI)}
         <Card x={FLOW.x} y={FLOW.y} w={FLOW.w} h={FLOW.h} style={rise(flowP)}>
           {cardTitle("Informasi sampai ke kamu")}
@@ -885,7 +895,9 @@ export const SC06 = () => {
                 background: theme.color.crossRed,
                 display: "flex",
                 alignItems: "center",
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: 30,
                 fontWeight: 600,
                 color: c.cardBg,
@@ -902,7 +914,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* 4 — Value investing: since 1934, and what it doesn't need; then Buffett */}
-      <Shot from={VI} to={KP} block={B}>
+      <Shot start={VI} to={KP} block={B}>
         {head(
           4,
           "Value investing",
@@ -912,7 +924,7 @@ export const SC06 = () => {
           W("cara berbeda") - m.sec(0.1),
         )}
       </Shot>
-      <Shot from={VI} to={BF} block={B}>
+      <Shot start={VI} to={BF} block={B}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -947,7 +959,9 @@ export const SC06 = () => {
             width: BOOK.dw,
             top: BOOK.y + (BOOK.dw * BOOK.h) / BOOK.w + 26,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: 44,
             fontWeight: 600,
             color: c.indigo,
@@ -1100,7 +1114,7 @@ export const SC06 = () => {
           })}
         </Card>
       </Shot>
-      <Shot from={BF} to={KP} block={B}>
+      <Shot start={BF} to={KP} block={B}>
         {/* the photo and the chips as one group, centred across the frame (Simon 11 Nov) */}
         <div
           style={{
@@ -1192,7 +1206,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* E — Orang Tuntun: most people can learn it */}
-      <Shot from={KP} to={END} block={B} cutOut={false}>
+      <Shot start={KP} to={END} block={B} cutOut={false}>
         <OrangTuntun at={KP} />
         <Interactive.Div
           name="Bisa dipelajari"

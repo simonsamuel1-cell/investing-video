@@ -78,11 +78,11 @@ export const CombosOutro = () => {
   };
 
   return (
-    <AbsoluteFill style={{ opacity: 1 - clear }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: 1 - clear }}>
       {/* ⚠ WHITE, NOT THE EPISODE'S PAPER — the chapter it is carrying out is
           white to its own edges, so the ground does not change under the
           shrink. */}
-      <AbsoluteFill style={{ backgroundColor: c.cardBg }} />
+      <AbsoluteFill showInTimeline={false} style={{ backgroundColor: c.cardBg }} />
 
       {/* ── the board, and the camera closing on the next chapter ───────── */}
       <div style={{ position: "absolute", inset: 0, ...cardPush(push, TRANS2.next, TRANS2.push.amount) }}>

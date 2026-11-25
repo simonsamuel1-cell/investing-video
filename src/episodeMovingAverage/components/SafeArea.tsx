@@ -16,7 +16,7 @@ import { theme, CAPTION_BAND } from "../theme";
 const SHOW_GUIDES = false;
 
 export const SafeArea = ({ children }: { children: React.ReactNode }) => (
-  <AbsoluteFill
+  <AbsoluteFill showInTimeline={false}
     style={{
       backgroundColor: theme.colors.bg,
       fontFamily: theme.type.family,

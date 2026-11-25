@@ -16,7 +16,7 @@ import { theme } from "../theme";
 import type { Rect } from "../helpers";
 
 export const Stage = ({ children }: { children: React.ReactNode }) => (
-  <AbsoluteFill style={{ backgroundColor: theme.color.bg, fontFamily: theme.text.family, color: theme.color.ink }}>{children}</AbsoluteFill>
+  <AbsoluteFill showInTimeline={false} style={{ backgroundColor: theme.color.bg, fontFamily: theme.text.family, color: theme.color.ink }}>{children}</AbsoluteFill>
 );
 
 export const Card = ({

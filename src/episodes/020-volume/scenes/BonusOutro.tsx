@@ -118,10 +118,13 @@ export const BonusOutro = () => {
   const lift = rise * (theme.canvas.height + 220);
 
   return (
-    <AbsoluteFill style={{ opacity: 1 - clear }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: 1 - clear }}>
       {/* ⚠ THE SAME GROUND SC17 STANDS ON, so the shrink does not change the
           room it is happening in. */}
-      <AbsoluteFill style={{ background: theme.color.glassBg }} />
+      <AbsoluteFill
+        showInTimeline={false}
+        style={{ background: theme.color.glassBg }}
+      />
 
       {/* ⚠ THE GROUND STAYS — Simon's correction. It is not inside the lifted
           group and it does not fade with the cards: the bonus card arrives INTO

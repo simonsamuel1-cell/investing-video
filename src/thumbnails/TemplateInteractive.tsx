@@ -15,7 +15,7 @@ import {
 export const TemplateInteractive: React.FC = () => {
   const frame = useCurrentFrame();
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         backgroundImage: `url(${staticFile("thumbnail/bg/latar.jpg")})`,
         backgroundSize: "cover",

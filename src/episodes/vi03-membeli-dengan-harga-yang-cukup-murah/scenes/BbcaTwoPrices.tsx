@@ -152,7 +152,7 @@ export const SC05 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — BBCA */}
-      <Shot from={-1} to={tuntunAt} block={BLOCK.SC05} cutIn={false}>
+      <Shot start={-1} to={tuntunAt} block={BLOCK.SC05} cutIn={false}>
         <Appear at={-m.reveal} style={{ left: 0, top: 0 }}>
           <WordPill x={CX} y={HEAD.y} text="Kejadian nyata · 2026" size={36} />
         </Appear>
@@ -248,7 +248,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* B — Tuntun's Company Quality: Best, unchanged */}
-      <Shot from={tuntunAt} to={chartAt} block={BLOCK.SC05}>
+      <Shot start={tuntunAt} to={chartAt} block={BLOCK.SC05}>
         <TuntunMark x={CX - CQ.w / 2 - 110} y={CQ.y + 70} height={130} />
         <Appear
           at={W("Company")}
@@ -263,7 +263,9 @@ export const SC05 = () => {
                 width: CQ.w,
                 top: 40,
                 textAlign: "center",
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 46,
                 fontWeight: 500,
                 color: c.slate,
@@ -279,7 +281,9 @@ export const SC05 = () => {
                 width: CQ.w,
                 top: 104,
                 textAlign: "center",
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: 92,
                 fontWeight: 700,
                 color: theme.color.ok,
@@ -319,7 +323,9 @@ export const SC05 = () => {
                 top: 284,
                 display: "flex",
                 justifyContent: "space-between",
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 36,
                 fontWeight: 500,
                 color: c.slate,
@@ -366,7 +372,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* C–E — BBCA's price, 2024–2026 */}
-      <Shot from={chartAt} to={lessonAt} block={BLOCK.SC05}>
+      <Shot start={chartAt} to={lessonAt} block={BLOCK.SC05}>
         <Card x={CHART.x} y={CHART.y} w={CHART.w} h={CHART.h}>
           <Interactive.Div
             name="BBCA"
@@ -374,7 +380,9 @@ export const SC05 = () => {
               position: "absolute",
               left: 40,
               top: 30,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 40,
               fontWeight: 600,
               color: c.ink,
@@ -520,7 +528,9 @@ export const SC05 = () => {
               borderRadius: 999,
               background: theme.color.indigoWashSolid,
               boxShadow: `inset 0 0 0 2px ${c.indigo}`,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 30,
               fontWeight: 600,
               color: c.indigo,
@@ -562,7 +572,8 @@ export const SC05 = () => {
                     position: "absolute",
                     left: 110,
                     top: 30,
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    letterSpacing: typeStyle("label").letterSpacing,
                     fontSize: 30,
                     fontWeight: 600,
                     color: c.ink,
@@ -578,7 +589,9 @@ export const SC05 = () => {
                     left: 28,
                     right: 20,
                     top: 112,
-                    ...typeStyle("title"),
+                    fontFamily: typeStyle("title").fontFamily,
+                    letterSpacing: typeStyle("title").letterSpacing,
+                    lineHeight: typeStyle("title").lineHeight,
                     fontSize: 40,
                     fontWeight: 600,
                     color: c.indigo,
@@ -593,7 +606,9 @@ export const SC05 = () => {
                     position: "absolute",
                     left: 28,
                     top: 164,
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     fontSize: 24,
                     fontWeight: 500,
                     color: c.slate,
@@ -756,7 +771,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* F — however good the company */}
-      <Shot from={lessonAt} to={1e6} block={BLOCK.SC05} cutOut={false}>
+      <Shot start={lessonAt} to={1e6} block={BLOCK.SC05} cutOut={false}>
         <OrangTuntun at={lessonAt} />
         <Appear
           at={lessonAt}

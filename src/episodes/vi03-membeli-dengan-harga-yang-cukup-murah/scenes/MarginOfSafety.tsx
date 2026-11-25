@@ -151,7 +151,7 @@ export const SC04 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — buy right on the fair value? It is only a calculation, and it can be wrong */}
-      <Shot from={-1} to={grahamAt} block={BLOCK.SC04} cutIn={false}>
+      <Shot start={-1} to={grahamAt} block={BLOCK.SC04} cutIn={false}>
         <svg
           width={theme.canvas.width}
           height={theme.canvas.height}
@@ -231,7 +231,9 @@ export const SC04 = () => {
               borderRadius: 999,
               background: band2 > 0.5 ? theme.color.indigoWashSolid : c.cardBg,
               boxShadow: `inset 0 0 0 2px ${band2 > 0.5 ? c.indigo : theme.color.hairlineBrandSolid}`,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 40,
               fontWeight: 600,
               color: c.indigo,
@@ -244,7 +246,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* B — Graham's answer */}
-      <Shot from={grahamAt} to={bridgeAt} block={BLOCK.SC04}>
+      <Shot start={grahamAt} to={bridgeAt} block={BLOCK.SC04}>
         <PhotoTile
           name="graham"
           d={TILE.d}
@@ -258,7 +260,9 @@ export const SC04 = () => {
             width: TILE.d + 80,
             top: TILE.y + TILE_H + 26,
             textAlign: "center",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 36,
             fontWeight: 600,
             color: c.ink,
@@ -332,7 +336,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* C — a bridge for ten tonnes, a truck of three */}
-      <Shot from={bridgeAt} to={numbersAt} block={BLOCK.SC04}>
+      <Shot start={bridgeAt} to={numbersAt} block={BLOCK.SC04}>
         <Drawing
           name="bridge"
           cx={BRIDGE.cx}
@@ -474,7 +478,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* D — 100 bought at 95, 100 bought at 70 */}
-      <Shot from={numbersAt} to={caveatAt} block={BLOCK.SC04}>
+      <Shot start={numbersAt} to={caveatAt} block={BLOCK.SC04}>
         {PAIRS.map((pr, i) => {
           const pv = ease(f, W(pr.valueAt), m.reveal);
           const pb = ease(
@@ -604,7 +608,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* E — not a guarantee; an admission */}
-      <Shot from={caveatAt} to={waitAt} block={BLOCK.SC04}>
+      <Shot start={caveatAt} to={waitAt} block={BLOCK.SC04}>
         <OrangTuntun at={caveatAt} />
         {[
           {
@@ -689,7 +693,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* F — wait: Mr. Market comes every day */}
-      <Shot from={waitAt} to={1e6} block={BLOCK.SC04} cutOut={false}>
+      <Shot start={waitAt} to={1e6} block={BLOCK.SC04} cutOut={false}>
         <Appear at={W("Tunggu")} style={{ left: 0, top: 0 }}>
           <Interactive.Div
             name="Tunggu."
@@ -702,7 +706,9 @@ export const SC04 = () => {
               borderRadius: 999,
               background: c.cardBg,
               boxShadow: `${shadow.glow}, inset 0 0 0 3px ${c.indigo}`,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: WAIT.size,
               fontWeight: 700,
               color: c.indigo,

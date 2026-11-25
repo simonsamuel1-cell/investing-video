@@ -83,7 +83,7 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
   const cin = cutAt(from);
   const cout = cutAt(to);
   const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
-  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={style}>{children}</AbsoluteFill>;
 };
 
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
@@ -128,7 +128,7 @@ const Body = () => (
 );
 
 export const PassiveIncomeComposition = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       <Body />
     </PaletteProvider>

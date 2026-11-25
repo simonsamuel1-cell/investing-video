@@ -37,7 +37,7 @@ export const Watermark = () => {
   );
 
   return (
-    <AbsoluteFill style={{ opacity: fade, zIndex: 100 }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: fade, zIndex: 100 }}>
       {/* Ukurannya pas dengan kanvas, jadi diregangkan penuh - tidak ada
           sisa yang perlu dipusatkan. */}
       <Img showInTimeline={false}

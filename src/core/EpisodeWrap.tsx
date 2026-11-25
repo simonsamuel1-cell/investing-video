@@ -136,7 +136,7 @@ const EndingLogo = ({ frames }: { frames: number }) => {
   const m = useMotion();
   const o = 1 - progressInOut(f, frames - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
   return (
-    <AbsoluteFill style={{ zIndex: 100, opacity: o }}>
+    <AbsoluteFill showInTimeline={false} style={{ zIndex: 100, opacity: o }}>
       <Img showInTimeline={false} src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
     </AbsoluteFill>
   );
@@ -147,7 +147,7 @@ const EpisodeFade = ({ frames, to }: { frames: number; to?: string }) => {
   const m = useMotion();
   const o = progressInOut(f, frames - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
   if (o <= 0.001) return null;
-  return <AbsoluteFill style={{ background: to ?? c.bg, opacity: o }} />;
+  return <AbsoluteFill showInTimeline={false} style={{ background: to ?? c.bg, opacity: o }} />;
 };
 
 export const fullFrames = (
@@ -169,16 +169,16 @@ export const fullFrames = (
  * scene's paper on the move's first frame (Simon, 3 Nov 2026: "dari scene terakhir ke scene 'video selanjutnya' tuh
  * kayak ga smooth"). `at` is local to the enclosing Sequence.
  */
-const FromMidpoint = ({ at, children }: { at: number; children: React.ReactNode }) => <AbsoluteFill style={{ opacity: useCurrentFrame() >= at ? 1 : 0 }}>{children}</AbsoluteFill>;
+const FromMidpoint = ({ at, children }: { at: number; children: React.ReactNode }) => <AbsoluteFill showInTimeline={false} style={{ opacity: useCurrentFrame() >= at ? 1 : 0 }}>{children}</AbsoluteFill>;
 
 /** The paper under the ending's cut, so the frozen frame moving aside never shows the black behind it. */
-const Paper = () => <AbsoluteFill style={{ background: usePalette().bg }} />;
+const Paper = () => <AbsoluteFill showInTimeline={false} style={{ background: usePalette().bg }} />;
 
 const CutLayer = ({ cut, from, dir, children }: { cut: Cut; from: number; dir: "in" | "out"; children: React.ReactNode }) => {
   const g = useCurrentFrame() + from;
   /** No transform at all outside the move: the episode under it renders exactly as it does on its own. */
   const moving = g >= cut.at - cut.over / 2 && g < cut.at + cut.over / 2;
-  return <AbsoluteFill style={moving ? (dir === "in" ? cutInStyle(g, cut) : cutOutStyle(g, cut)) : undefined}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={moving ? (dir === "in" ? cutInStyle(g, cut) : cutOutStyle(g, cut)) : undefined}>{children}</AbsoluteFill>;
 };
 
 /**
@@ -206,7 +206,7 @@ export const EpisodeWrap = ({ title, titleStyle, titleBox, frames, name, bgm = t
   /** The fade ends on what comes next: the Outro's own grey when the Outro follows straight on. */
   const fadeTo = outro && !cta ? theme.color.outroGround : undefined;
   return (
-    <AbsoluteFill>
+    <AbsoluteFill showInTimeline={false}>
       {intro ? (
         <Sequence from={0} durationInFrames={I} name="Intro">
           <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Intro.mp4")} />

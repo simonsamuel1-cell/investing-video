@@ -402,7 +402,7 @@ const Frame = ({ t, children }: { t: Thumb; children: React.ReactNode }) => {
   const margin = theme.stage.active.x;
   const logoK = LOGO.inkHeight / LOGO.ink.h;
   return (
-    <AbsoluteFill>
+    <AbsoluteFill showInTimeline={false}>
       <Img
         showInTimeline={false}
         src={staticFile(bgFile(t.bg))}
@@ -427,7 +427,7 @@ const Frame = ({ t, children }: { t: Thumb; children: React.ReactNode }) => {
 
 /** the fade is on a frame-sized wrapper, so its stops are canvas heights; the shadow is inside it and fades with the figure */
 const FigureFade = ({ children }: { children: React.ReactNode }) => (
-  <AbsoluteFill
+  <AbsoluteFill showInTimeline={false}
     style={{ maskImage: FIGURE.fade, WebkitMaskImage: FIGURE.fade }}
   >
     {children}
@@ -867,7 +867,7 @@ const VIEWS: Record<string, React.FC> = {
 };
 
 export const Thumbnails = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     {THUMBS.map((t, i) => {
       const View = VIEWS[t.id];
       return (

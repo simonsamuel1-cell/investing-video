@@ -144,12 +144,12 @@ const Ground = ({ f }: { f: number }) => {
   const fade = "radial-gradient(ellipse 68% 68% at 50% 50%, black 35%, transparent 100%)";
   const drift = (((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop * PAPER.cell;
   return (
-    <AbsoluteFill style={{ background: pal.cardBg }}>
+    <AbsoluteFill showInTimeline={false} style={{ background: pal.cardBg }}>
       {/* ⚠ 2px RULES, NOT 1px. A one-pixel line averages with its neighbours
           the moment anything scales the frame down — at preview size, at 720p,
           on a phone — and becomes the same colour as the paper. 019 lost this
           exact bug once already. */}
-      <AbsoluteFill
+      <AbsoluteFill showInTimeline={false}
         style={{
           opacity: 0.55,
           /* ⚠ ONE CELL PER TILE, NOT ONE SCREEN PER TILE. A repeating gradient
@@ -511,7 +511,7 @@ export const RoadmapStop = ({ stop, previews }: { stop: Stop; previews: readonly
   const gridY = (theme.canvas.height - GRID.y + 160) * (1 - swap);
 
   return (
-    <AbsoluteFill style={{ opacity: 1 - gone }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: 1 - gone }}>
       <div style={{ position: "absolute", inset: 0, ...cardPush(push, BOXES[stop.into]) }}>
         <Ground f={f} />
 

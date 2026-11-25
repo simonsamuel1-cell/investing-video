@@ -642,6 +642,7 @@ export const MainChartGroup = () => {
          everything anyway, so nothing else changes tone. */
       <Stage transparent>
         <AbsoluteFill
+          showInTimeline={false}
           style={{
             backgroundColor: theme.color.bg,
             opacity: 1 - progress(f, local(FADE.at, FROM), FADE.over),

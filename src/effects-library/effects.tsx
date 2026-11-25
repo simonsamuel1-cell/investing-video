@@ -32,7 +32,7 @@ const Sample = ({ text }: { text: string }) => {
 };
 const CutDemo = ({ cut }: { cut: Cut }) => {
   const f = useCurrentFrame();
-  return f < cut.at ? <AbsoluteFill style={cutOutStyle(f, cut)}><Sample text="Scene A" /></AbsoluteFill> : <AbsoluteFill style={cutInStyle(f, cut)}><Sample text="Scene B" /></AbsoluteFill>;
+  return f < cut.at ? <AbsoluteFill showInTimeline={false} style={cutOutStyle(f, cut)}><Sample text="Scene A" /></AbsoluteFill> : <AbsoluteFill showInTimeline={false} style={cutInStyle(f, cut)}><Sample text="Scene B" /></AbsoluteFill>;
 };
 
 // one made-up tape for every chart entry
@@ -121,9 +121,9 @@ if (ids.size !== EFFECTS.length) throw new Error("effects-library: duplicate cod
 export const EffectStage = ({ C, zoom = 1 }: { C: React.FC; zoom?: number }) => {
   const c = theme.color;
   return (
-    <AbsoluteFill style={{ background: c.bg }}>
+    <AbsoluteFill showInTimeline={false} style={{ background: c.bg }}>
       <PaletteProvider>
-        <AbsoluteFill style={zoom === 1 ? undefined : { transform: `scale(${zoom})` }}>
+        <AbsoluteFill showInTimeline={false} style={zoom === 1 ? undefined : { transform: `scale(${zoom})` }}>
           <C />
         </AbsoluteFill>
       </PaletteProvider>

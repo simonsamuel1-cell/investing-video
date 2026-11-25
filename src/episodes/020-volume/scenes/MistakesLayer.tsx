@@ -46,7 +46,7 @@ export const MistakesLayer = () => {
     .find((t) => t.chars > 0);
 
   return (
-    <AbsoluteFill style={{ background: c.bg }}>
+    <AbsoluteFill showInTimeline={false} style={{ background: c.bg }}>
       {/* ── the drifting blooms ─────────────────────────────────────────── */}
       <div
         style={{

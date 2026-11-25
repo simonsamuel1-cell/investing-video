@@ -154,7 +154,9 @@ const Chip = ({
           right: 20,
           top: h / 2,
           transform: "translateY(-50%)",
-          ...typeStyle("label"),
+          fontFamily: typeStyle("label").fontFamily,
+          letterSpacing: typeStyle("label").letterSpacing,
+          lineHeight: typeStyle("label").lineHeight,
           fontSize: size,
           fontWeight: 600,
           color: c.ink,
@@ -246,7 +248,7 @@ export const SC03 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — the question */}
-      <Shot from={-1} to={sariAt} block={BLOCK.SC03} cutIn={false}>
+      <Shot start={-1} to={sariAt} block={BLOCK.SC03} cutIn={false}>
         <Appear
           at={-m.reveal}
           style={{
@@ -280,7 +282,7 @@ export const SC03 = () => {
       </Shot>
 
       {/* B — Ibu Sari's warung, and what it makes */}
-      <Shot from={sariAt} to={buyAt} block={BLOCK.SC03}>
+      <Shot start={sariAt} to={buyAt} block={BLOCK.SC03}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -334,7 +336,7 @@ export const SC03 = () => {
       </Shot>
 
       {/* C — how many times its profit would you pay? */}
-      <Shot from={buyAt} to={coreAt} block={BLOCK.SC03}>
+      <Shot start={buyAt} to={coreAt} block={BLOCK.SC03}>
         {/* flipped, as in SC01: he looks at the warung */}
         <Pic
           src={staticFile(KAMU_FULL.src)}
@@ -520,7 +522,9 @@ export const SC03 = () => {
               padding: "10px 26px",
               borderRadius: 999,
               background: theme.color.neutralDisc,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 32,
               fontWeight: 600,
               color: c.slate,
@@ -565,7 +569,9 @@ export const SC03 = () => {
               padding: "10px 26px",
               borderRadius: 999,
               background: theme.color.neutralDisc,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 32,
               fontWeight: 600,
               color: c.slate,
@@ -597,7 +603,9 @@ export const SC03 = () => {
               borderRadius: 999,
               background: theme.color.indigoWashSolid,
               boxShadow: `inset 0 0 0 2px ${c.indigo}`,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 32,
               fontWeight: 600,
               color: c.indigo,
@@ -610,7 +618,7 @@ export const SC03 = () => {
       </Shot>
 
       {/* D — the three questions, one word for them */}
-      <Shot from={coreAt} to={whoAt} block={BLOCK.SC03}>
+      <Shot start={coreAt} to={whoAt} block={BLOCK.SC03}>
         {QS.map((q, i) => {
           const at = W(q.at);
           const p = ease(f, at - m.sec(0.2), m.reveal);
@@ -703,7 +711,9 @@ export const SC03 = () => {
               borderRadius: 999,
               background: c.cardBg,
               boxShadow: `${shadow.glow}, inset 0 0 0 3px ${c.indigo}`,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 56,
               fontWeight: 600,
               color: c.indigo,
@@ -716,7 +726,7 @@ export const SC03 = () => {
       </Shot>
 
       {/* E — Buffett, Ibu Sari, Tuntun: one principle, one result */}
-      <Shot from={whoAt} to={1e6} block={BLOCK.SC03} cutOut={false}>
+      <Shot start={whoAt} to={1e6} block={BLOCK.SC03} cutOut={false}>
         <Appear
           at={-m.reveal}
           style={{ left: tX(0), top: T.y, width: T.d, height: T_H }}
@@ -841,7 +851,9 @@ export const SC03 = () => {
               borderRadius: 999,
               background: c.cardBg,
               boxShadow: `${shadow.glow}, inset 0 0 0 3px ${c.indigo}`,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 56,
               fontWeight: 600,
               color: c.indigo,

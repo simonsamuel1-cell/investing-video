@@ -137,7 +137,7 @@ const Body = () => (
 );
 
 export const VisualLab = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       <Body />
     </PaletteProvider>

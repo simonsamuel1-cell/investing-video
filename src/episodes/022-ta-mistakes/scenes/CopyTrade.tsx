@@ -148,8 +148,8 @@ export const CopyTrade = () => {
           scene's dim wrapper is an AbsoluteFill, and `inset: 0` inside a
           zero-height parent is zero. A transform makes the parent the
           containing block either way, so the size has to be real. */}
-      <AbsoluteFill style={cutOutStyle(g, CUT15)}>
-        <AbsoluteFill style={{ opacity: dim }}>
+      <AbsoluteFill showInTimeline={false} style={cutOutStyle(g, CUT15)}>
+        <AbsoluteFill showInTimeline={false} style={{ opacity: dim }}>
           <Naming g={g} />
 
           {/* ⚠ MOUNTED ONCE, AT 12676, AND NEVER AGAIN. Every beat after this is a

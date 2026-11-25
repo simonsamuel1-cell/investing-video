@@ -15,7 +15,7 @@ export const SafeArea = ({
   children: React.ReactNode;
   transparent?: boolean; // overlay stages inside continuity groups
 }) => (
-  <AbsoluteFill
+  <AbsoluteFill showInTimeline={false}
     style={{
       backgroundColor: transparent ? undefined : theme.colors.bg,
       fontFamily: theme.type.family,

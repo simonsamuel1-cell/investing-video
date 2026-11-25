@@ -205,14 +205,15 @@ export const BeforeEntry = () => {
           it out; each is a transform and a filter, so they cannot share a node,
           and nesting is what lets the outgoing move carry the incoming one's
           result rather than fight it. */}
-      <AbsoluteFill style={FENCE}>
-        <AbsoluteFill style={cutOutStyle(g, CUT16)}>
-          <AbsoluteFill style={cutInStyle(g, CUT15)}>
+      <AbsoluteFill showInTimeline={false} style={FENCE}>
+        <AbsoluteFill showInTimeline={false} style={cutOutStyle(g, CUT16)}>
+          <AbsoluteFill showInTimeline={false} style={cutInStyle(g, CUT15)}>
             {/* ⚠ EVERYTHING THE PUSH-IN CARRIES IS IN HERE, AND THE SENTENCE AFTER
             IT IS NOT. The move is a camera, so it takes the whole picture —
             type, screens, mark and question box alike — and leaves only the
             ground behind for what types next. */}
             <AbsoluteFill
+              showInTimeline={false}
               style={{
                 /* ⚠ DOWN, BECAUSE `pan` IS THE CAMERA'S. A camera that rises puts
                its subject lower in the frame — Simon: "preview kameranya yang

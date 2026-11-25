@@ -455,7 +455,7 @@ const Body = () => (
 );
 
 export const TAMistakesComposition = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     {/* ⚠ THE DEFAULT `terang` PALETTE — #F5F5F5, the brand ground. */}
     <PaletteProvider>
       <Body />

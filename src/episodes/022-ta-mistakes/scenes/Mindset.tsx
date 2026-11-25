@@ -131,7 +131,7 @@ export const Mindset = () => {
 
   return (
     <Stage>
-      <AbsoluteFill style={FENCE}>
+      <AbsoluteFill showInTimeline={false} style={FENCE}>
         {/* ⚠ EDGE TO EDGE, WITH THE EPISODE'S OWN GROUND AS ITS PAPER. Simon:
             "background kotak kotaknya jangan cropped ya, full screen". It was
             windowed between the two reserves first, which left a seam across
@@ -150,8 +150,8 @@ export const Mindset = () => {
           <GridGround f={g} paper={c.bg} vignette={false} />
         </div>
 
-        <AbsoluteFill style={cutOutStyle(g, CUT17)}>
-          <AbsoluteFill style={cutInStyle(g, CUT16)}>
+        <AbsoluteFill showInTimeline={false} style={cutOutStyle(g, CUT17)}>
+          <AbsoluteFill showInTimeline={false} style={cutInStyle(g, CUT16)}>
             <Img
               src={staticFile(S.srcs[pose])}
               style={{

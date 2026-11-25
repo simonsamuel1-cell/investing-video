@@ -161,7 +161,7 @@ export const SC02 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — the columns; the second one is this video's */}
-      <Shot from={-1} to={buffettAt} block={BLOCK.SC02} cutIn={false}>
+      <Shot start={-1} to={buffettAt} block={BLOCK.SC02} cutIn={false}>
         <Interactive.Div
           name="Value Investing"
           style={{
@@ -170,7 +170,9 @@ export const SC02 = () => {
             right: 0,
             top: HEADING.y,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: HEADING.size,
             fontWeight: 700,
             color: c.ink,
@@ -243,7 +245,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* B — Buffett's sentence */}
-      <Shot from={buffettAt} to={pairAt} block={BLOCK.SC02}>
+      <Shot start={buffettAt} to={pairAt} block={BLOCK.SC02}>
         <PhotoTile
           name="buffett"
           d={TILE.d}
@@ -257,7 +259,9 @@ export const SC02 = () => {
             width: TILE.d + 80,
             top: TILE.y + TILE_H + 26,
             textAlign: "center",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 36,
             fontWeight: 600,
             color: c.ink,
@@ -320,7 +324,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* C — Harga / Value */}
-      <Shot from={pairAt} to={tagsAt} block={BLOCK.SC02}>
+      <Shot start={pairAt} to={tagsAt} block={BLOCK.SC02}>
         {PAIRS.map((k, i) => {
           const at = W(k.at);
           const p = ease(f, at - m.sec(0.2), m.reveal);
@@ -408,7 +412,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* D — two prices, neither tells you cheap or dear */}
-      <Shot from={tagsAt} to={measureAt} block={BLOCK.SC02}>
+      <Shot start={tagsAt} to={measureAt} block={BLOCK.SC02}>
         {TAGS.map((t, i) => {
           const p = ease(f, W(t.at), m.reveal);
           return p > 0.001 ? (
@@ -454,7 +458,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* E — cheap: the price clearly under the fair value */}
-      <Shot from={measureAt} to={1e6} block={BLOCK.SC02} cutOut={false}>
+      <Shot start={measureAt} to={1e6} block={BLOCK.SC02} cutOut={false}>
         <svg
           width={theme.canvas.width}
           height={theme.canvas.height}
@@ -548,7 +552,8 @@ export const SC02 = () => {
               left: (MEASURE.x0 + MEASURE.x1) / 2 + 50,
               top: dotY - 40,
               opacity: ease(f, dotAt, m.reveal),
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
               fontSize: MEASURE.label,
               fontWeight: 600,
               color: c.indigo,

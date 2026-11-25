@@ -37,7 +37,7 @@ export const ScreenClip = ({
 }) => {
   const width = height * aspect;
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         alignItems: "center",
         justifyContent: "flex-start",

@@ -180,7 +180,7 @@ const Episode = ({
       { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: theme.motion.ease },
     ) * WATERMARK.opacity;
   return (
-  <AbsoluteFill style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>
+  <AbsoluteFill showInTimeline={false} style={{ backgroundColor: pal.bg, fontFamily: theme.type.family }}>
     {INDEPENDENT_SCENES.map(({ from, duration, Component }) => (
       <Sequence key={from} from={from} durationInFrames={duration}>
         <Component />
@@ -205,7 +205,7 @@ const Episode = ({
     {showSubtitles && <Subtitles cues={subtitles} />}
 
     {/* Brand watermark — above everything, present for the whole episode. */}
-    <AbsoluteFill style={{ opacity: watermarkOpacity, zIndex: 100 }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: watermarkOpacity, zIndex: 100 }}>
       <Img showInTimeline={false} src={staticFile("watermark.png")} style={{ width: "100%", height: "100%" }} />
     </AbsoluteFill>
 

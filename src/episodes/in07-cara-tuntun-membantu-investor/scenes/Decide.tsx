@@ -291,7 +291,11 @@ export const SC11 = () => {
                 top: ROW_Y + 100,
                 width: 300,
                 textAlign: "center",
-                ...typeStyle("body"),
+                fontFamily: typeStyle("body").fontFamily,
+                fontSize: typeStyle("body").fontSize,
+                fontWeight: typeStyle("body").fontWeight,
+                letterSpacing: typeStyle("body").letterSpacing,
+                lineHeight: typeStyle("body").lineHeight,
                 color: c.ink,
               }}
             >
@@ -308,7 +312,11 @@ export const SC11 = () => {
                 top: ROW_Y + 110,
                 width: 300,
                 textAlign: "center",
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                fontSize: typeStyle("label").fontSize,
+                fontWeight: typeStyle("label").fontWeight,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 color: theme.color.selfAmberInk,
               }}
             >
@@ -322,7 +330,11 @@ export const SC11 = () => {
                 top: ROW_Y + 160,
                 width: 300,
                 textAlign: "center",
-                ...typeStyle("body"),
+                fontFamily: typeStyle("body").fontFamily,
+                fontSize: typeStyle("body").fontSize,
+                fontWeight: typeStyle("body").fontWeight,
+                letterSpacing: typeStyle("body").letterSpacing,
+                lineHeight: typeStyle("body").lineHeight,
                 color: c.ink,
               }}
             >

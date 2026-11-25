@@ -2605,7 +2605,10 @@ export const Scene01 = () => {
      * have nothing to reveal and CG-A would stay hidden behind a white sheet.
      * The composition's own root is white, so nothing shows through early.
      */
-    <AbsoluteFill style={{ fontFamily: font, color: C.text }}>
+    <AbsoluteFill
+      showInTimeline={false}
+      style={{ fontFamily: font, color: C.text }}
+    >
       {/*
         EVERYTHING below — ground, cards, panel, watchlist — is one unit for
         the push-in AND the dissolve: one transform and one opacity on this

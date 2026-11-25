@@ -149,8 +149,8 @@ const Ground = ({ f }: { f: number }) => {
   const drift =
     ((((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop) * PAPER.cell;
   return (
-    <AbsoluteFill style={{ background: theme.roadmap.paper }}>
-      <AbsoluteFill
+    <AbsoluteFill showInTimeline={false} style={{ background: theme.roadmap.paper }}>
+      <AbsoluteFill showInTimeline={false}
         style={{
           opacity: 0.55,
           backgroundImage:
@@ -389,7 +389,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   const landed = stop.previews[stop.into];
   if (dissolve === 0 && push >= 1 && typeof landed === "number") {
     return (
-      <AbsoluteFill style={{ zIndex: 20 }}>
+      <AbsoluteFill showInTimeline={false} style={{ zIndex: 20 }}>
         <Freeze frame={landed}>
           <Film />
         </Freeze>
@@ -424,7 +424,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
        its own panel chrome, and without a layer of its own the roadmap was
        drawn UNDER it — the ticker floated over the paper for the whole of
        stop 1. Still below the watermark's 100. */
-    <AbsoluteFill style={{ opacity: 1 - gone, zIndex: 20 }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: 1 - gone, zIndex: 20 }}>
       <div
         style={{
           position: "absolute",

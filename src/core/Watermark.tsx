@@ -41,7 +41,7 @@ export const Watermark = ({
     { extrapolateLeft: "clamp", extrapolateRight: "clamp" },
   );
   return (
-    <AbsoluteFill style={{ opacity: op, zIndex: 100 }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: op, zIndex: 100 }}>
       <Img showInTimeline={false}
         src={staticFile(src)}
         style={{

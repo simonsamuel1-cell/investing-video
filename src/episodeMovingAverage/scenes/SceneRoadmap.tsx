@@ -145,7 +145,7 @@ export const SceneRoadmap = () => {
      * nothing to reveal — Bollinger Bands would stay hidden behind a white
      * sheet for the whole transition. Same trap SC05's overlay hit.
      */
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{
         fontFamily: theme.type.family,
         color: theme.colors.text,

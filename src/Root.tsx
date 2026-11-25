@@ -17,7 +17,7 @@
  * across the whole file. Studio lists them in the order they appear here.
  */
 import "./index.css";
-import { Composition, Folder } from "remotion";
+import { Composition } from "remotion";
 
 // ── built on src/core ───────────────────────────────────────────────────────
 import { theme } from "./core";
@@ -50,7 +50,6 @@ import { MarketStructureFull, TA05_FULL_FRAMES } from "./episode20marketstructur
 import { VisualLab, LAB_FRAMES } from "./lab/Lab";
 import { Thumbnails, THUMBNAILS_FRAMES } from "./thumbnails/Thumbnails";
 import { TemplateInteractive } from "./thumbnails/TemplateInteractive";
-import { EFFECT_COMPS, effectFrames } from "./effects-library/effects";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -262,12 +261,6 @@ export const RemotionRoot: React.FC = () => {
         width={theme.canvas.width}
         height={theme.canvas.height}
       />
-      {/* The Effects Library's entries, one composition each — src/effects-library. Picked from its panel. */}
-      <Folder name="Effects-Library">
-        {EFFECT_COMPS.map(({ e, Comp }) => (
-          <Composition key={e.id} id={`FX-${e.id}`} component={Comp} durationInFrames={effectFrames(e)} fps={60} width={theme.canvas.width} height={theme.canvas.height} />
-        ))}
-      </Folder>
       {/* A trial of Remotion's in-Studio editing (24 Nov) — src/thumbnails/TemplateInteractive.tsx. */}
       <Composition id="Template-Interactive" component={TemplateInteractive} durationInFrames={120} fps={60} width={1920} height={1080} />
       {/* ⚠ A BENCH, NOT AN EPISODE — src/lab/Lab.tsx. One visual language at a

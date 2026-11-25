@@ -170,7 +170,7 @@ const RunTitle = () => {
 };
 
 export const MovingAverageComposition = () => (
-  <AbsoluteFill style={{ backgroundColor: theme.colors.bg }}>
+  <AbsoluteFill showInTimeline={false} style={{ backgroundColor: theme.colors.bg }}>
     {[...INDEPENDENT_SCENES, ...CONTINUITY_GROUPS].map(
       ({ from, duration, Component }) => (
         <Sequence

@@ -204,7 +204,7 @@ export const SC07 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — five illusions */}
-      <Shot from={-1} to={at[0]} block={BLOCK.SC07} cutIn={false}>
+      <Shot start={-1} to={at[0]} block={BLOCK.SC07} cutIn={false}>
         <Appear at={-m.reveal} style={{ left: 0, top: 0 }}>
           <Line
             x={160}
@@ -251,7 +251,7 @@ export const SC07 = () => {
       </Shot>
 
       {/* 1–5 — the rail and the card */}
-      <Shot from={at[0]} to={1e6} block={BLOCK.SC07} cutOut={false}>
+      <Shot start={at[0]} to={1e6} block={BLOCK.SC07} cutOut={false}>
         {/* the rail */}
         <svg
           width={theme.canvas.width}
@@ -463,7 +463,9 @@ export const SC07 = () => {
                   padding: "12px 30px",
                   borderRadius: 999,
                   background: theme.color.neutralDisc,
-                  ...typeStyle("label"),
+                  fontFamily: typeStyle("label").fontFamily,
+                  letterSpacing: typeStyle("label").letterSpacing,
+                  lineHeight: typeStyle("label").lineHeight,
                   fontSize: 36,
                   fontWeight: 600,
                   color: c.slate,
@@ -607,7 +609,9 @@ export const SC07 = () => {
                   borderRadius: 999,
                   background: c.cardBg,
                   boxShadow: `${shadow.glow}, inset 0 0 0 3px ${c.indigo}`,
-                  ...typeStyle("title"),
+                  fontFamily: typeStyle("title").fontFamily,
+                  letterSpacing: typeStyle("title").letterSpacing,
+                  lineHeight: typeStyle("title").lineHeight,
                   fontSize: 58,
                   fontWeight: 700,
                   color: c.indigo,
@@ -690,7 +694,9 @@ export const SC07 = () => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  ...typeStyle("title"),
+                  fontFamily: typeStyle("title").fontFamily,
+                  letterSpacing: typeStyle("title").letterSpacing,
+                  lineHeight: typeStyle("title").lineHeight,
                   fontSize: 60,
                   fontWeight: 700,
                   color: c.indigo,
@@ -806,7 +812,9 @@ export const SC07 = () => {
                     position: "absolute",
                     left: 36,
                     top: 30,
-                    ...typeStyle("title"),
+                    fontFamily: typeStyle("title").fontFamily,
+                    letterSpacing: typeStyle("title").letterSpacing,
+                    lineHeight: typeStyle("title").lineHeight,
                     fontSize: 40,
                     fontWeight: 700,
                     color: c.ink,
@@ -820,7 +828,9 @@ export const SC07 = () => {
                     position: "absolute",
                     left: 36,
                     top: 88,
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     fontSize: 30,
                     fontWeight: 500,
                     color: c.slate,
@@ -836,7 +846,9 @@ export const SC07 = () => {
                     right: 40,
                     top: 75,
                     transform: "translateY(-50%)",
-                    ...typeStyle("title"),
+                    fontFamily: typeStyle("title").fontFamily,
+                    letterSpacing: typeStyle("title").letterSpacing,
+                    lineHeight: typeStyle("title").lineHeight,
                     fontSize: 72,
                     fontWeight: 700,
                     color: theme.color.crossRed,

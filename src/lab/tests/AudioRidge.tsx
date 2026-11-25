@@ -66,7 +66,7 @@ export const AudioRidgeTest = () => {
   if (!audioData) {
     return (
       <Stage>
-        <AbsoluteFill />
+        <AbsoluteFill showInTimeline={false} />
       </Stage>
     );
   }
@@ -116,7 +116,7 @@ export const AudioRidgeTest = () => {
 
   return (
     <Stage>
-      <AbsoluteFill>
+      <AbsoluteFill showInTimeline={false}>
         <svg width={theme.canvas.width} height={theme.canvas.height}>
           <defs>
             <linearGradient id="lab-ridge" x1="0" y1="0" x2="1" y2="0">

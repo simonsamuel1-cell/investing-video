@@ -128,7 +128,7 @@ export const SC08 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — three sentences, each with what it recalls */}
-      <Shot from={0} to={TL} block={B} cutIn={false}>
+      <Shot start={0} to={TL} block={B} cutIn={false}>
         {SENTENCES.map((sn, i) => {
           const p = ease(f, W(sn.at) - m.sec(0.1), m.reveal);
           if (p <= 0.001) return null;
@@ -319,7 +319,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* B — the timeline once more */}
-      <Shot from={TL} to={UM} block={B}>
+      <Shot start={TL} to={UM} block={B}>
         <Interactive.Div
           name="Pertumbuhan per tahun"
           style={{
@@ -328,7 +328,9 @@ export const SC08 = () => {
             width: theme.canvas.width,
             top: 330,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: 44,
             fontWeight: 600,
             color: c.ink,
@@ -395,7 +397,7 @@ export const SC08 = () => {
 
       {/* C — "Untuk mulai memahami sebuah perusahaan, kamu juga nggak harus membaca annual report dari halaman pertama sendirian":
           one summary line (Simon 11 Nov: "visual yang sekarang ganti jadi text ringkasan aja"), in two steps on the VO */}
-      <Shot from={UM} to={DT} block={B}>
+      <Shot start={UM} to={DT} block={B}>
         <Interactive.Div
           name="Nggak harus baca annual repo"
           style={{
@@ -428,7 +430,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* D — Deep Research Report: the real screens, what it summarises, free */}
-      <Shot from={DT} to={RI} block={B}>
+      <Shot start={DT} to={RI} block={B}>
         <Interactive.Div
           name="Deep Research Report"
           style={{
@@ -549,7 +551,9 @@ export const SC08 = () => {
               background: c.indigo,
               display: "flex",
               alignItems: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 40,
               fontWeight: 600,
               color: c.cardBg,
@@ -564,7 +568,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* E — door 3 opens on the report; then the list, and you decide */}
-      <Shot from={RI} to={BR} block={B}>
+      <Shot start={RI} to={BR} block={B}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -676,7 +680,9 @@ export const SC08 = () => {
             top: DOOR.y + DOOR.h + 34,
             textAlign: "center",
             whiteSpace: "nowrap",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: 48,
             fontWeight: 600,
             color: c.indigo,
@@ -686,7 +692,7 @@ export const SC08 = () => {
           Memahami perusahaan
         </Interactive.Div>
       </Shot>
-      <Shot from={BR} to={NX} block={B}>
+      <Shot start={BR} to={NX} block={B}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -726,7 +732,9 @@ export const SC08 = () => {
               display: "flex",
               alignItems: "center",
               gap: 16,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 40,
               fontWeight: 600,
               color: c.ink,
@@ -864,7 +872,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* F — the next video */}
-      <Shot from={NX} to={END} block={B} cutOut={false}>
+      <Shot start={NX} to={END} block={B} cutOut={false}>
         <NextVideoHead
           title="Membeli Saham Berarti Membeli Perusahaan"
           chipAt={NX}

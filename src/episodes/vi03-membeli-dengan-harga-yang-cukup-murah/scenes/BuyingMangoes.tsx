@@ -157,7 +157,7 @@ export const SC01 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — at the market: you, the stall, its price */}
-      <Shot from={-1} to={pickAt} block={BLOCK.SC01} cutIn={false}>
+      <Shot start={-1} to={pickAt} block={BLOCK.SC01} cutIn={false}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -211,7 +211,9 @@ export const SC01 = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: TAG.size,
               fontWeight: 600,
               color: c.ink,
@@ -225,7 +227,7 @@ export const SC01 = () => {
       </Shot>
 
       {/* B — the mango in your hand, checked before you pay */}
-      <Shot from={pickAt} to={stockAt} block={BLOCK.SC01}>
+      <Shot start={pickAt} to={stockAt} block={BLOCK.SC01}>
         <Card x={BOARD.x} y={BOARD.y} w={BOARD.w} h={BOARD.h} />
         <Appear
           at={pickAt}
@@ -289,7 +291,7 @@ export const SC01 = () => {
       </Shot>
 
       {/* C — one price on a screen, taken for the company's value; the mango's habit forgotten */}
-      <Shot from={stockAt} to={notAt} block={BLOCK.SC01}>
+      <Shot start={stockAt} to={notAt} block={BLOCK.SC01}>
         <Appear
           at={stockAt}
           rise={24}
@@ -312,7 +314,9 @@ export const SC01 = () => {
                   right: 0,
                   top: 120,
                   textAlign: "center",
-                  ...typeStyle("label"),
+                  fontFamily: typeStyle("label").fontFamily,
+                  letterSpacing: typeStyle("label").letterSpacing,
+                  lineHeight: typeStyle("label").lineHeight,
                   fontSize: 30,
                   fontWeight: 600,
                   color: c.slate,
@@ -495,7 +499,9 @@ export const SC01 = () => {
                 right: 24,
                 top: 430,
                 textAlign: "center",
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 28,
                 fontWeight: 600,
                 color: interpolateColors(
@@ -513,7 +519,7 @@ export const SC01 = () => {
       </Shot>
 
       {/* D — price is not value */}
-      <Shot from={notAt} to={1e6} block={BLOCK.SC01} cutOut={false}>
+      <Shot start={notAt} to={1e6} block={BLOCK.SC01} cutOut={false}>
         <Appear
           at={notAt}
           style={{

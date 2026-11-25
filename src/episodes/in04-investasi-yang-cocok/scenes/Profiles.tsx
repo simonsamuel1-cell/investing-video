@@ -465,7 +465,10 @@ export const SC06 = () => {
               width: theme.canvas.width,
               top: 250,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              fontSize: typeStyle("title").fontSize,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontWeight: 700,
               color: c.indigo,
             }}
@@ -572,7 +575,10 @@ export const SC06 = () => {
             width: theme.canvas.width - 400,
             top: 220,
             textAlign: "center",
-            ...typeStyle("statement"),
+            fontFamily: typeStyle("statement").fontFamily,
+            fontWeight: typeStyle("statement").fontWeight,
+            letterSpacing: typeStyle("statement").letterSpacing,
+            lineHeight: typeStyle("statement").lineHeight,
             fontSize: 64,
             color: c.ink,
           }}

@@ -64,11 +64,11 @@ const EpisodeFade = () => {
   const m = useMotion();
   const o = ease(f, TOTAL_FRAMES - m.sec(FADE_OUT_SECS), m.sec(FADE_OUT_SECS));
   if (o <= 0.001) return null;
-  return <AbsoluteFill style={{ background: c.bg, opacity: o }} />;
+  return <AbsoluteFill showInTimeline={false} style={{ background: c.bg, opacity: o }} />;
 };
 
 export const PassiveIncomeFull = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <Sequence from={0} durationInFrames={INTRO_FRAMES} name="Intro">
       <OffthreadVideo showInTimeline={false} src={staticFile("essentials/Intro.mp4")} />
       <PaletteProvider>

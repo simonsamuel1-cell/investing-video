@@ -162,8 +162,8 @@ export const AdmrGroup = () => {
   const ghostInk = blink * (1 - progress(g, V.ghost.out.at, V.ghost.out.over));
 
   return (
-    <AbsoluteFill style={FENCE}>
-      <AbsoluteFill style={cutInStyle(g, CUT11)}>
+    <AbsoluteFill showInTimeline={false} style={FENCE}>
+      <AbsoluteFill showInTimeline={false} style={cutInStyle(g, CUT11)}>
         <AdmrChart
           shown={drawn(g)}
           tri={tri}

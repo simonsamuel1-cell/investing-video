@@ -147,6 +147,7 @@ export const CombosGroupV2 = () => {
       {/* ⚠ THE PAGE ARRIVES WHITE AND COOLS TO THE EPISODE'S PAPER while the
           card grows — the chapter before this one is white to its edges. */}
       <AbsoluteFill
+        showInTimeline={false}
         style={{
           backgroundColor: interpolateColors(
             o,

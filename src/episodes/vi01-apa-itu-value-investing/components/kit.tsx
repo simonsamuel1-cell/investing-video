@@ -242,11 +242,13 @@ export const LogoTile = ({ name, d, style }: { name: LogoName; d: number; style?
 };
 
 /**
- * One shot of a scene, on screen over [from, to) of the scene's frames, with a camera cut in at `from` and out at `to` —
+ * One shot of a scene, on screen over [start, to) of the scene's frames, with a camera cut in at `start` and out at `to` —
  * IN07's way (Simon 11 Nov: "samain kayak IN07"): one picture at a time, a cut between them. `cutIn`/`cutOut` false where
  * the Composition's own scene cut, or an enclosing shot, already moves it.
+ * ⚠ `start`, not `from`: Studio (4.0.547) takes a `from` around an object as a Sequence's and locks or shifts that object's controls
+ * and keyframes. `from` is still read for the frozen sebelum-interactive-vi02.
  */
-export const Shot = ({ from, to, block, cutIn = true, cutOut = true, children }: { from: number; to: number; block: number; cutIn?: boolean; cutOut?: boolean; children: React.ReactNode }) => {
+export const Shot = ({ start, from = start ?? 0, to, block, cutIn = true, cutOut = true, children }: { start?: number; from?: number; to: number; block: number; cutIn?: boolean; cutOut?: boolean; children: React.ReactNode }) => {
   const f = useCurrentFrame();
   if (f < from || f >= to) return null;
   const g = f + block;

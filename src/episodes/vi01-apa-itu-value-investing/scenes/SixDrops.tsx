@@ -198,7 +198,7 @@ export const SC07 = () => {
       {/* A — one frame: twenty years on top, the six drops as a table under it (Simon 11 Nov: "ganti visual jadi yang lebih
           ber-value") — how far each fell from its peak and how long it took to get back there; the climbs back; a grey person
           at every low */}
-      <Shot from={0} to={Z} block={B} cutIn={false}>
+      <Shot start={0} to={Z} block={B} cutIn={false}>
         <div
           style={{
             position: "absolute",
@@ -214,7 +214,9 @@ export const SC07 = () => {
                 position: "absolute",
                 left: PLOT.x - CH.x,
                 top: 34,
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: 40,
                 fontWeight: 700,
                 color: c.ink,
@@ -345,7 +347,9 @@ export const SC07 = () => {
                 display: "flex",
                 alignItems: "center",
                 gap: 12,
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 24,
                 fontWeight: 600,
                 color: theme.color.cyanInk,
@@ -505,7 +509,7 @@ export const SC07 = () => {
       </Shot>
 
       {/* B — 2026 alone */}
-      <Shot from={Z} to={Q} block={B}>
+      <Shot start={Z} to={Q} block={B}>
         <Card x={CH_Z.x} y={CH_Z.y} w={CH_Z.w} h={CH_Z.h}>
           <Interactive.Div
             name="IHSG 2026"
@@ -513,7 +517,9 @@ export const SC07 = () => {
               position: "absolute",
               left: PLOT_Z.x - CH_Z.x,
               top: 46,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 48,
               fontWeight: 600,
               color: c.ink,
@@ -613,7 +619,7 @@ export const SC07 = () => {
       </Shot>
 
       {/* C — Orang Tuntun: why it matters when the market is bearish */}
-      <Shot from={Q} to={END} block={B} cutOut={false}>
+      <Shot start={Q} to={END} block={B} cutOut={false}>
         <OrangTuntun at={Q} />
         <Interactive.Div
           name="Kenapa penting saat bearish?"

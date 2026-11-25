@@ -148,7 +148,7 @@ export const SC08 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — three questions before buying */}
-      <Shot from={-1} to={sentAt} block={BLOCK.SC08} cutIn={false}>
+      <Shot start={-1} to={sentAt} block={BLOCK.SC08} cutIn={false}>
         <Appear at={-m.reveal} style={{ left: 0, top: 0 }}>
           <Line
             x={160}
@@ -255,7 +255,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* B — three sentences to remember */}
-      <Shot from={sentAt} to={tempAt} block={BLOCK.SC08}>
+      <Shot start={sentAt} to={tempAt} block={BLOCK.SC08}>
         <Appear at={sentAt} style={{ left: 0, top: 0 }}>
           <Line
             x={160}
@@ -330,10 +330,10 @@ export const SC08 = () => {
 
       {/* C–F — Templeton, value investing; then Tuntun's card, Top Undervalued (scenes/TempletonTuntun.tsx; Simon 18 Nov,
           storyboard VI03-SC08-v2) */}
-      <Shot from={tempAt} to={appAt} block={BLOCK.SC08}>
+      <Shot start={tempAt} to={appAt} block={BLOCK.SC08}>
         <TempletonPart />
       </Shot>
-      <Shot from={appAt} to={nextAt} block={BLOCK.SC08}>
+      <Shot start={appAt} to={nextAt} block={BLOCK.SC08}>
         <TuntunPart />
       </Shot>
 
@@ -341,7 +341,7 @@ export const SC08 = () => {
           optimis, tanpa terbawa emosi", in on "cara menghadapi" as one fade (no word-by-word), "takut" and "optimis" in indigo as
           the old line had them; Orang Tuntun (public/art/in01/orang-tuntun.png, whole) in Mr. Market's place ("mr marketnya ganti
           dengan Orang Tuntun"). Pill, card and figure as one block, centred in the free height. */}
-      <Shot from={nextAt} to={1e6} block={BLOCK.SC08} cutOut={false}>
+      <Shot start={nextAt} to={1e6} block={BLOCK.SC08} cutOut={false}>
         <Appear
           at={nextAt + m.sec(0.15)}
           style={{ left: NEXT.x, top: NEXT.pillTop }}
@@ -412,7 +412,8 @@ export const SC08 = () => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
                 fontSize: NEXT.size,
                 fontWeight: 600,
                 lineHeight: 1.25,

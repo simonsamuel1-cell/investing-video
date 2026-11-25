@@ -308,7 +308,9 @@ export const SC04 = () => {
             right: 0,
             top: SIDE_TITLE.top,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: SIDE_TITLE.size,
             fontWeight: SIDE_TITLE.weight,
             color: c.ink,
@@ -381,7 +383,9 @@ export const SC04 = () => {
             left: PLOT.x - CH.x + PLOT.w + 22,
             top: priceEnd[1] - spread - CH.y,
             transform: "translateY(-50%)",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 32,
             fontWeight: 600,
             color: c.indigo,
@@ -397,7 +401,9 @@ export const SC04 = () => {
             left: PLOT.x - CH.x + PLOT.w + 22,
             top: valueEnd[1] + spread - CH.y,
             transform: "translateY(-50%)",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 32,
             fontWeight: 600,
             color: c.slate,
@@ -443,7 +449,9 @@ export const SC04 = () => {
         right: 0,
         top: SIDE_TITLE.top,
         textAlign: "center",
-        ...typeStyle("title"),
+        fontFamily: typeStyle("title").fontFamily,
+        letterSpacing: typeStyle("title").letterSpacing,
+        lineHeight: typeStyle("title").lineHeight,
         fontSize: SIDE_TITLE.size,
         fontWeight: SIDE_TITLE.weight,
         color: c.ink,
@@ -458,7 +466,7 @@ export const SC04 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — the question, and three reasons */}
-      <Shot from={0} to={A1} block={B} cutIn={false}>
+      <Shot start={0} to={A1} block={B} cutIn={false}>
         <Line
           x={0}
           y={CY - 70}
@@ -488,10 +496,10 @@ export const SC04 = () => {
       </Shot>
 
       {/* 1 — the heading stays through its pictures, and leaves for the insight line */}
-      <Shot from={A1} to={V} block={B}>
+      <Shot start={A1} to={V} block={B}>
         <Heading n={1} text="Harga bergerak cepat" />
       </Shot>
-      <Shot from={A1} to={V} block={B}>
+      <Shot start={A1} to={V} block={B}>
         {chart()}
         {/* on "Investor ritel": the bar */}
         <div
@@ -511,7 +519,9 @@ export const SC04 = () => {
                 right: 0,
                 top: SIDE_TITLE.top,
                 textAlign: "center",
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: SIDE_TITLE.size,
                 fontWeight: SIDE_TITLE.weight,
                 color: c.ink,
@@ -602,7 +612,9 @@ export const SC04 = () => {
                 right: 0,
                 top: BAR.y - BARCARD.y + BAR.h + 66,
                 textAlign: "center",
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 22,
                 fontWeight: 500,
                 color: c.slate,
@@ -630,7 +642,9 @@ export const SC04 = () => {
                 right: 0,
                 top: SIDE_TITLE.top,
                 textAlign: "center",
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: SIDE_TITLE.size,
                 fontWeight: SIDE_TITLE.weight,
                 color: c.ink,
@@ -656,7 +670,7 @@ export const SC04 = () => {
           </Card>
         </div>
       </Shot>
-      <Shot from={V} to={K2} block={B}>
+      <Shot start={V} to={K2} block={B}>
         <OrangTuntun at={V} />
         <Interactive.Div
           name="Bagi value investor:"
@@ -710,7 +724,7 @@ export const SC04 = () => {
       </Shot>
 
       {/* 2 — how many, and three that have been there for decades */}
-      <Shot from={K2} to={K3} block={B}>
+      <Shot start={K2} to={K3} block={B}>
         <Heading n={2} text="Bisnis jangka panjang" />
         {/* both cards a size smaller, to make room for the conclusion under them (Simon 11 Nov) */}
         <div
@@ -737,7 +751,7 @@ export const SC04 = () => {
                   right: 0,
                   top: 70,
                   textAlign: "center",
-                  ...typeStyle("title"),
+                  fontFamily: typeStyle("title").fontFamily,
                   fontSize: 150,
                   fontWeight: 600,
                   lineHeight: 1,
@@ -756,7 +770,9 @@ export const SC04 = () => {
                   right: 0,
                   top: 236,
                   textAlign: "center",
-                  ...typeStyle("title"),
+                  fontFamily: typeStyle("title").fontFamily,
+                  letterSpacing: typeStyle("title").letterSpacing,
+                  lineHeight: typeStyle("title").lineHeight,
                   fontSize: 34,
                   fontWeight: 500,
                   color: c.ink,
@@ -791,7 +807,9 @@ export const SC04 = () => {
                   right: 0,
                   bottom: 30,
                   textAlign: "center",
-                  ...typeStyle("label"),
+                  fontFamily: typeStyle("label").fontFamily,
+                  letterSpacing: typeStyle("label").letterSpacing,
+                  lineHeight: typeStyle("label").lineHeight,
                   fontSize: 22,
                   fontWeight: 500,
                   color: c.slate,
@@ -813,7 +831,9 @@ export const SC04 = () => {
                   width: AXIS2.divW,
                   top: AXIS2.rowTop - 44,
                   textAlign: "center",
-                  ...typeStyle("label"),
+                  fontFamily: typeStyle("label").fontFamily,
+                  letterSpacing: typeStyle("label").letterSpacing,
+                  lineHeight: typeStyle("label").lineHeight,
                   fontSize: 22,
                   fontWeight: 500,
                   color: c.slate,
@@ -1078,10 +1098,10 @@ export const SC04 = () => {
       </Shot>
 
       {/* 3 — the screen you don't have to watch; then one day, four reports a year, a note that keeps growing */}
-      <Shot from={K3} to={END} block={B} cutOut={false}>
+      <Shot start={K3} to={END} block={B} cutOut={false}>
         <Heading n={3} text="Tidak harus menatap layar" />
       </Shot>
-      <Shot from={K3} to={KT} block={B}>
+      <Shot start={K3} to={KT} block={B}>
         {[0, 1].map((side) => (
           <Card
             key={side}
@@ -1215,7 +1235,7 @@ export const SC04 = () => {
           </Card>
         ))}
       </Shot>
-      <Shot from={KT} to={END} block={B} cutOut={false}>
+      <Shot start={KT} to={END} block={B} cutOut={false}>
         <Card
           x={SCHED.x}
           y={SCHED.y}
@@ -1229,7 +1249,9 @@ export const SC04 = () => {
               position: "absolute",
               left: ROW.pad,
               top: SIDE_TITLE.top + 6,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: SIDE_TITLE.size,
               fontWeight: SIDE_TITLE.weight,
               color: c.ink,
@@ -1398,7 +1420,9 @@ export const SC04 = () => {
               alignItems: "center",
               justifyContent: "center",
               gap: 10,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 24,
               fontWeight: 500,
               color: c.ink,

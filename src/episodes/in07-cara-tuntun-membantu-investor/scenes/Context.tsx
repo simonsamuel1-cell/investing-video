@@ -667,7 +667,11 @@ export const SC10 = () => {
                     top: MINI.titleTop,
                     width: MINI_W,
                     textAlign: "center",
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    fontSize: typeStyle("label").fontSize,
+                    fontWeight: typeStyle("label").fontWeight,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     color: c.ink,
                   }}
                 >
@@ -704,7 +708,10 @@ export const SC10 = () => {
                     position: "absolute",
                     left: MINI.pad,
                     top: BAR.labelTop,
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    fontWeight: typeStyle("label").fontWeight,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     fontSize: 24,
                     color: c.slate,
                   }}
@@ -717,7 +724,10 @@ export const SC10 = () => {
                     position: "absolute",
                     right: MINI.pad,
                     top: BAR.labelTop,
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    fontWeight: typeStyle("label").fontWeight,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     fontSize: 24,
                     color: c.slate,
                   }}
@@ -741,7 +751,11 @@ export const SC10 = () => {
                     top: MINI.titleTop,
                     width: MINI_W,
                     textAlign: "center",
-                    ...typeStyle("label"),
+                    fontFamily: typeStyle("label").fontFamily,
+                    fontSize: typeStyle("label").fontSize,
+                    fontWeight: typeStyle("label").fontWeight,
+                    letterSpacing: typeStyle("label").letterSpacing,
+                    lineHeight: typeStyle("label").lineHeight,
                     color: c.ink,
                   }}
                 >

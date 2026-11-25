@@ -341,7 +341,7 @@ export const SC06 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — looks cheap, isn't always */}
-      <Shot from={-1} to={backAt} block={BLOCK.SC06} cutIn={false}>
+      <Shot start={-1} to={backAt} block={BLOCK.SC06} cutIn={false}>
         <Appear at={-m.reveal} style={{ left: 0, top: 0 }}>
           <Line
             x={160}
@@ -368,7 +368,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* B — what the warung will make, year after year, against today's price */}
-      <Shot from={backAt} to={easyAt} block={BLOCK.SC06}>
+      <Shot start={backAt} to={easyAt} block={BLOCK.SC06}>
         <Figure
           name="warung"
           cx={B_WARUNG.cx}
@@ -396,7 +396,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* C — the easy ways: both only describe today */}
-      <Shot from={easyAt} to={newAt} block={BLOCK.SC06}>
+      <Shot start={easyAt} to={newAt} block={BLOCK.SC06}>
         {[
           {
             icon: "calculator",
@@ -522,7 +522,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* D — a bigger shop across the street */}
-      <Shot from={newAt} to={meansAt} block={BLOCK.SC06}>
+      <Shot start={newAt} to={meansAt} block={BLOCK.SC06}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -685,7 +685,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* E — tomorrow's profit changed, and the value with it */}
-      <Shot from={meansAt} to={testAt} block={BLOCK.SC06}>
+      <Shot start={meansAt} to={testAt} block={BLOCK.SC06}>
         <Figure
           name="warung"
           cx={B_WARUNG.cx}
@@ -719,7 +719,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* F — the heart of it */}
-      <Shot from={testAt} to={coalAt} block={BLOCK.SC06}>
+      <Shot start={testAt} to={coalAt} block={BLOCK.SC06}>
         <OrangTuntun at={testAt} />
         <Appear
           at={W("Investasi menguji")}
@@ -752,7 +752,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* G — coal, 2022: PTBA */}
-      <Shot from={coalAt} to={tuntunAt} block={BLOCK.SC06}>
+      <Shot start={coalAt} to={tuntunAt} block={BLOCK.SC06}>
         <Card x={COAL.x} y={COAL.y} w={COAL.w} h={COAL.h}>
           <Interactive.Div
             name="PTBA"
@@ -760,7 +760,9 @@ export const SC06 = () => {
               position: "absolute",
               left: 50,
               top: 40,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 64,
               fontWeight: 700,
               color: c.ink,
@@ -774,7 +776,9 @@ export const SC06 = () => {
               position: "absolute",
               left: 50,
               top: 120,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 32,
               fontWeight: 500,
               color: c.slate,
@@ -860,7 +864,9 @@ export const SC06 = () => {
               borderRadius: 999,
               background: theme.color.indigoWashSolid,
               boxShadow: `inset 0 0 0 2px ${c.indigo}`,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 32,
               fontWeight: 600,
               color: c.indigo,
@@ -955,7 +961,9 @@ export const SC06 = () => {
               borderRadius: 999,
               background: c.cardBg,
               boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.crossRed}`,
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 44,
               fontWeight: 700,
               color: theme.color.crossRed,
@@ -968,7 +976,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* H — why Tuntun researches, and keeps following */}
-      <Shot from={tuntunAt} to={1e6} block={BLOCK.SC06} cutOut={false}>
+      <Shot start={tuntunAt} to={1e6} block={BLOCK.SC06} cutOut={false}>
         <TuntunMark x={210} y={THUMB.y + THUMB.h / 2} height={150} />
         <Appear at={tuntunAt} style={{ left: 0, top: 0 }}>
           <Line
@@ -1080,7 +1088,9 @@ export const SC06 = () => {
               padding: "12px 32px",
               borderRadius: 999,
               background: theme.color.neutralDisc,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 36,
               fontWeight: 600,
               color: c.slate,

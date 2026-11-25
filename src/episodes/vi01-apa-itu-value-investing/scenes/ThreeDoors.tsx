@@ -415,7 +415,7 @@ export const SC05 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A + 1 — three doors; door 1 to the middle, its title and summary; the title docks; the growth chart */}
-      <Shot from={0} to={IS} block={B} cutIn={false}>
+      <Shot start={0} to={IS} block={B} cutIn={false}>
         {[1, 2].map((i) => {
           const p =
             ease(f, W("tiga pintu") + i * m.sec(0.15), m.pop) * (1 - othersOut);
@@ -459,7 +459,9 @@ export const SC05 = () => {
               width: theme.canvas.width,
               top: A_TOP + DOOR.h + A_GROUP.below,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 56,
               fontWeight: 500,
               color: c.indigo,
@@ -513,7 +515,9 @@ export const SC05 = () => {
               right: 0,
               top: 28,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 36,
               fontWeight: 700,
               color: c.ink,
@@ -662,7 +666,8 @@ export const SC05 = () => {
               top: PLOT.y - CHART1.y - 10,
               width: 260,
               textAlign: "left",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
               fontSize: 96,
               fontWeight: 600,
               lineHeight: 1,
@@ -676,7 +681,7 @@ export const SC05 = () => {
         </Card>
       </Shot>
       {/* door 1's number and title: opened under the door, then docked top left; held still through the cut to Ibu Sari */}
-      <Shot from={0} to={P2} block={B} cutIn={false}>
+      <Shot start={0} to={P2} block={B} cutIn={false}>
         {door0P > 0.001 ? (
           <Interactive.Div
             name="Objek"
@@ -720,7 +725,7 @@ export const SC05 = () => {
           </Interactive.Div>
         ) : null}
       </Shot>
-      <Shot from={IS} to={P2} block={B}>
+      <Shot start={IS} to={P2} block={B}>
         {/* Ibu Sari as tall as a warung (Simon 11 Nov); "3 warung ngga dalam semalam" over the three; then one stays, the others slide down and go */}
         <Figure
           name="ibu-sari"
@@ -778,7 +783,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* 2 — Independent thinking: door 2, then one frame — the chat, what you type, the cash book under it */}
-      <Shot from={P2} to={P3} block={B}>
+      <Shot start={P2} to={P3} block={B}>
         <DockDoor
           n={2}
           title="Independent thinking"
@@ -787,7 +792,7 @@ export const SC05 = () => {
           dockAt={dock2At}
         />
       </Shot>
-      <Shot from={P2} to={BK} block={B}>
+      <Shot start={P2} to={BK} block={B}>
         <Card
           x={chatX}
           y={CHAT.y}
@@ -992,7 +997,7 @@ export const SC05 = () => {
           />
         ) : null}
       </Shot>
-      <Shot from={BK} to={P3} block={B}>
+      <Shot start={BK} to={P3} block={B}>
         <Card
           x={CX - LEDGER.w / 2}
           y={CY - LEDGER.h / 2 + 20}
@@ -1049,7 +1054,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* 3 — Memahami perusahaan */}
-      <Shot from={P3} to={DJ} block={B}>
+      <Shot start={P3} to={DJ} block={B}>
         <DockDoor
           n={3}
           title="Memahami perusahaan"
@@ -1058,7 +1063,7 @@ export const SC05 = () => {
           dockAt={dock3At}
         />
       </Shot>
-      <Shot from={P3} to={MG} block={B}>
+      <Shot start={P3} to={MG} block={B}>
         {Array.from({ length: MOSAIC.cols * MOSAIC.rows }, (_, k) => {
           const col = k % MOSAIC.cols;
           const row = Math.floor(k / MOSAIC.cols);
@@ -1118,7 +1123,7 @@ export const SC05 = () => {
           );
         })}
       </Shot>
-      <Shot from={MG} to={DJ} block={B}>
+      <Shot start={MG} to={DJ} block={B}>
         <Interactive.Div
           name="Objek"
           style={{
@@ -1153,7 +1158,9 @@ export const SC05 = () => {
             width: 360,
             top: CY + 210,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: 40,
             fontWeight: 600,
             color: c.ink,
@@ -1178,7 +1185,9 @@ export const SC05 = () => {
               right: 0,
               top: 44,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 48,
               fontWeight: 600,
               color: c.indigo,
@@ -1207,7 +1216,7 @@ export const SC05 = () => {
           })}
         </Card>
       </Shot>
-      <Shot from={DJ} to={KB} block={B}>
+      <Shot start={DJ} to={KB} block={B}>
         <OrangTuntun at={DJ} />
         <Interactive.Div
           name="2 jam / minggu"
@@ -1306,7 +1315,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* E — habit, not talent; and the investors who started with one company */}
-      <Shot from={KB} to={TL} block={B}>
+      <Shot start={KB} to={TL} block={B}>
         <Line
           x={0}
           y={250}
@@ -1328,7 +1337,7 @@ export const SC05 = () => {
           />
         ))}
       </Shot>
-      <Shot from={TL} to={END} block={B} cutOut={false}>
+      <Shot start={TL} to={END} block={B} cutOut={false}>
         <Line
           x={0}
           y={300}

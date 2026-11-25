@@ -140,7 +140,7 @@ export const SceneRoadmap2 = () => {
     /* A TRANSPARENT fill, NOT SafeArea — SafeArea paints an opaque ground, and
        the white this scene needs belongs to the wrapper below so that a fade,
        when one is added, has something to reveal. */
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       style={{ fontFamily: theme.type.family, color: theme.colors.text }}
     >
       {/* everything is ONE unit for the push: a single transform here is what

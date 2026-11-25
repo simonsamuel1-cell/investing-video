@@ -48,7 +48,7 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
   const cin = cutAt(from);
   const cout = cutAt(to);
   const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
-  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={style}>{children}</AbsoluteFill>;
 };
 
 const VO_SRC = "vo/in07-cara-tuntun-membantu-investor.mp3";
@@ -77,7 +77,7 @@ const Held = () => {
 };
 
 export const CaraTuntunMembantuComposition = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       <Stage>
         <Ground />

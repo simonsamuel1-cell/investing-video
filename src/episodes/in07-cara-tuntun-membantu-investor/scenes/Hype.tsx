@@ -727,7 +727,11 @@ export const SC06 = () => {
                   right: BAR.w + 28,
                   top: BAR.h / 2,
                   transform: "translateY(-50%)",
-                  ...typeStyle("body"),
+                  fontFamily: typeStyle("body").fontFamily,
+                  fontSize: typeStyle("body").fontSize,
+                  fontWeight: typeStyle("body").fontWeight,
+                  letterSpacing: typeStyle("body").letterSpacing,
+                  lineHeight: typeStyle("body").lineHeight,
                   color: c.ink,
                   whiteSpace: "nowrap",
                 }}
@@ -830,7 +834,11 @@ export const SC06 = () => {
               position: "absolute",
               left: 38,
               top: 28,
-              ...typeStyle("body"),
+              fontFamily: typeStyle("body").fontFamily,
+              fontSize: typeStyle("body").fontSize,
+              fontWeight: typeStyle("body").fontWeight,
+              letterSpacing: typeStyle("body").letterSpacing,
+              lineHeight: typeStyle("body").lineHeight,
               color: c.ink,
             }}
           >
@@ -863,7 +871,11 @@ export const SC06 = () => {
               position: "absolute",
               left: 38,
               top: 28,
-              ...typeStyle("body"),
+              fontFamily: typeStyle("body").fontFamily,
+              fontSize: typeStyle("body").fontSize,
+              fontWeight: typeStyle("body").fontWeight,
+              letterSpacing: typeStyle("body").letterSpacing,
+              lineHeight: typeStyle("body").lineHeight,
               color: c.ink,
             }}
           >

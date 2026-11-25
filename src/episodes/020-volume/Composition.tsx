@@ -275,7 +275,7 @@ const Body = () => (
 );
 
 export const VolumeComposition = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     {/* ⚠ THE DEFAULT `terang` PALETTE — #F5F5F5, the brand ground.
         A white ground was tried here and reverted: on #FFFFFF the white card
         disappears, and that card is what makes a hairline gridline, a 2px band

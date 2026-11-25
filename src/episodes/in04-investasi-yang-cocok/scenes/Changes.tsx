@@ -586,7 +586,11 @@ export const SC07 = () => {
             position: "absolute",
             left: ORANG_TUNTUN_RIGHT + 90,
             top: 330,
-            ...typeStyle("body"),
+            fontFamily: typeStyle("body").fontFamily,
+            fontSize: typeStyle("body").fontSize,
+            fontWeight: typeStyle("body").fontWeight,
+            letterSpacing: typeStyle("body").letterSpacing,
+            lineHeight: typeStyle("body").lineHeight,
             color: c.slate,
             whiteSpace: "nowrap",
           }}

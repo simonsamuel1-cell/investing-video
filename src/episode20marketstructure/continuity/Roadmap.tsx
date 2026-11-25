@@ -135,8 +135,8 @@ const Ground = ({ f }: { f: number }) => {
   const drift =
     ((((f % PAPER.loop) + PAPER.loop) % PAPER.loop) / PAPER.loop) * PAPER.cell;
   return (
-    <AbsoluteFill style={{ background: theme.roadmap.paper }}>
-      <AbsoluteFill
+    <AbsoluteFill showInTimeline={false} style={{ background: theme.roadmap.paper }}>
+      <AbsoluteFill showInTimeline={false}
         style={{
           opacity: 0.55,
           backgroundImage:
@@ -374,7 +374,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   const landed = stop.previews[stop.into];
   if (dissolve === 0 && push >= 1 && typeof landed === "number") {
     return (
-      <AbsoluteFill>
+      <AbsoluteFill showInTimeline={false}>
         <Freeze frame={landed}>
           <Film />
         </Freeze>
@@ -407,7 +407,7 @@ export const RoadmapStop = ({ stop, Film }: { stop: Stop; Film: FilmAt }) => {
   return (
     /* No zIndex: nothing in this film carries one, and the captions, mounted
        after the roadmap, must stay on top of it. */
-    <AbsoluteFill style={{ opacity: 1 - gone }}>
+    <AbsoluteFill showInTimeline={false} style={{ opacity: 1 - gone }}>
       <div
         style={{
           position: "absolute",

@@ -57,7 +57,7 @@ export const Stage = ({
 }) => {
   const c = usePalette();
   return (
-    <AbsoluteFill
+    <AbsoluteFill showInTimeline={false}
       className="tuntun-stage"
       style={{
         backgroundColor: transparent ? undefined : c.bg,

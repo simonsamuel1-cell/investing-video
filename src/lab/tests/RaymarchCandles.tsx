@@ -236,7 +236,7 @@ export const RaymarchCandlesTest = () => {
   }, [f, fps, c]);
 
   return (
-    <AbsoluteFill>
+    <AbsoluteFill showInTimeline={false}>
       <canvas ref={ref} width={theme.canvas.width} height={theme.canvas.height} />
     </AbsoluteFill>
   );
