@@ -3,7 +3,8 @@
  * ONE root <Audio> for the VO. A scene not built yet is an empty row that only marks its block on the Studio timeline.
  */
 import React from "react";
-import { AbsoluteFill, Audio, Sequence, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame } from "remotion";
+import { LockedSequence as Sequence } from "../../core/nudge";
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
@@ -56,7 +57,7 @@ const InCuts = ({ from, to, children }: { from: number; to: number; children: Re
   const cin = cutAt(from);
   const cout = cutAt(to);
   const style = cin && g < from + CUT.over / 2 ? cutInStyle(g, cin) : cout && g >= to - CUT.over / 2 ? cutOutStyle(g, cout) : {};
-  return <AbsoluteFill style={style}>{children}</AbsoluteFill>;
+  return <AbsoluteFill showInTimeline={false} style={style}>{children}</AbsoluteFill>;
 };
 
 /** Captions and watermark off for clean plates: `--props='{"chrome":false}'`. */
@@ -68,7 +69,7 @@ const ROWS = String(random(null));
 const Ground = () => <SoftGround f={useCurrentFrame()} />;
 
 export const MembeliSahamComposition = () => (
-  <AbsoluteFill>
+  <AbsoluteFill showInTimeline={false}>
     <PaletteProvider>
       <Stage>
         <Ground />

@@ -736,8 +736,8 @@
   "file": "FourCards",
   "name": "Jangan mulai dari “Target harg",
   "frames": [
-   20,
-   44
+   18,
+   42
   ],
   "at": "W(\"Jadi ketika\") + m.sec(0.15)",
   "reveal": 24,
@@ -747,8 +747,8 @@
   "file": "FourCards",
   "name": "Belum bisa dijawab? Yang dibel",
   "frames": [
-   3511,
-   3535
+   3236,
+   3260
   ],
   "at": "(W(\"Kalau belum\")) + m.sec(0.15)",
   "reveal": 24,
@@ -769,8 +769,8 @@
   "file": "WhyToPrice",
   "name": "Objek 2",
   "frames": [
-   1149,
-   1173
+   1125,
+   1149
   ],
   "at": "(W(\"Prinsip yang\")) + m.sec(0.1)",
   "reveal": 24,
@@ -780,8 +780,8 @@
   "file": "WhyToPrice",
   "name": "Objek 3",
   "frames": [
-   1155,
-   1179
+   1131,
+   1155
   ],
   "at": "(W(\"Prinsip yang\")) + m.sec(0.2)",
   "reveal": 24,
@@ -789,10 +789,62 @@
  },
  {
   "file": "WhyToPrice",
+  "name": "Geser foto 3 figur",
+  "frames": [
+   2593,
+   2638
+  ],
+  "expr": [
+   "W(\"Investor seperti\")",
+   "m.sec(0.75)"
+  ]
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "John Templeton",
+  "frames": [
+   2637,
+   2661
+  ],
+  "at": "W(\"John Templeton\")",
+  "reveal": 24
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Nick Sleep",
+  "frames": [
+   2705,
+   2729
+  ],
+  "at": "W(\"Nick Sleep\")",
+  "reveal": 24
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Beda gaya investasi",
+  "frames": [
+   2999,
+   3023
+  ],
+  "at": "W(\"Gaya investasi\") + m.sec(0.45)",
+  "reveal": 24
+ },
+ {
+  "file": "WhyToPrice",
+  "name": "Beda beli perusahaan",
+  "frames": [
+   3092,
+   3116
+  ],
+  "at": "W(\"Perusahaan yang mereka\")",
+  "reveal": 24
+ },
+ {
+  "file": "WhyToPrice",
   "name": "factory",
   "frames": [
-   7240,
-   7264
+   6921,
+   6945
   ],
   "at": "(W(\"Namun, setelah\"))",
   "reveal": 24,
@@ -802,8 +854,8 @@
   "file": "WhyToPrice",
   "name": "Objek",
   "frames": [
-   7387,
-   7411
+   7068,
+   7092
   ],
   "at": "(W(\"satu pertanyaan\"))",
   "reveal": 24,
@@ -813,8 +865,8 @@
   "file": "WhyToPrice",
   "name": "Penutup teks Undervalued",
   "frames": [
-   7690,
-   7708
+   7371,
+   7389
   ],
   "expr": [
    "W(\"kalau kita\")",
@@ -825,8 +877,8 @@
   "file": "WhyToPrice",
   "name": "Terlalu mahal",
   "frames": [
-   7749,
-   7773
+   7430,
+   7454
   ],
   "at": "W(\"terlalu mahal\")",
   "reveal": 24,
@@ -836,8 +888,8 @@
   "file": "WhyToPrice",
   "name": "Perusahaan bagus belum tentu i",
   "frames": [
-   7491,
-   7515
+   7172,
+   7196
   ],
   "at": "W(\"Perusahaan yang bagus\")",
   "reveal": 24,
@@ -847,8 +899,8 @@
   "file": "WhyToPrice",
   "name": "Video selanjutnya",
   "frames": [
-   7833,
-   7857
+   7514,
+   7538
   ],
   "at": "(W(\"Karena itu\")) + m.sec(0.15)",
   "reveal": 24,
@@ -858,8 +910,8 @@
   "file": "WhyToPrice",
   "name": "Berapa harga yang",
   "frames": [
-   8066,
-   8090
+   7672,
+   7696
   ],
   "at": "W(\"berapa harga\")",
   "reveal": 24,

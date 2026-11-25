@@ -1,6 +1,6 @@
 // keyframes-refresh.cjs — after a VO revision, move an episode's literal keyframes to the words again.
 //   NODE_PATH=node_modules node scripts/vi/keyframes-refresh.cjs src/episodes/<ep> [--write]
-// data/keyframes.json holds, per Keyed object, the frames written last time and the words they came from. Only an input range that is
+// data/keyframes.json holds, per object with literal keyframes (Keyed, or an Interactive.Div), the frames written last time and the words they came from. Only an input range that is
 // still exactly those frames is moved; one Simon edited by hand is left alone and listed. A scene's number is its order in SCENES.
 const ts = require("typescript"), fs = require("fs");
 const EP = process.argv[2].replace(/\/$/, "") + "/", write = process.argv.includes("--write");
@@ -14,7 +14,7 @@ const M = JSON.parse(fs.readFileSync(EP + "data/keyframes.json", "utf8"));
 let moved = 0, same = 0; const hand = [], lost = [];
 for (const f of new Set(M.map((x) => x.file))) {
   const F = `${EP}scenes/${f}.tsx`; let src = fs.readFileSync(F, "utf8"); const sf = ts.createSourceFile(F, src, 99, true, ts.ScriptKind.TSX), objs = {}, ed = [];
-  const v = (n) => { if (ts.isJsxOpeningElement(n) && n.tagName.getText() === "Keyed") { const nm = n.attributes.properties.find((p) => p.name?.getText() === "name").initializer.getText().replace(/"/g, ""); const rs = []; const g = (x) => { if (ts.isCallExpression(x) && x.expression.getText() === "interpolate" && x.arguments[0].getText() === "frame" && ts.isArrayLiteralExpression(x.arguments[1])) rs.push(x.arguments[1]); ts.forEachChild(x, g); }; g(n.attributes); (objs[nm] ??= []).push(rs); } ts.forEachChild(n, v); }; v(sf);
+  const v = (n) => { if ((ts.isJsxOpeningElement(n) || ts.isJsxSelfClosingElement(n)) && ["Keyed", "Interactive.Div"].includes(n.tagName.getText())) { const nm = (n.attributes.properties.find((p) => p.name?.getText() === "name")?.initializer?.getText() ?? "").replace(/"/g, ""); const rs = []; const g = (x) => { if (ts.isCallExpression(x) && x.expression.getText() === "interpolate" && x.arguments[0].getText() === "frame" && ts.isArrayLiteralExpression(x.arguments[1])) rs.push(x.arguments[1]); ts.forEachChild(x, g); }; g(n.attributes); if (rs.length || n.tagName.getText() === "Keyed") (objs[nm] ??= []).push(rs); } ts.forEachChild(n, v); }; v(sf);
   const seen = {}, n = SCENES[f], W = (p, k, e) => w(n, p, k, e) - block(n), val = (s) => Function("W", "m", `return (${s})`)(W, m);
   for (const x of M.filter((y) => y.file === f)) {
     const k = (seen[x.name] = (seen[x.name] ?? -1) + 1), rs = objs[x.name]?.[k]; if (!rs) { lost.push(`${f}: ${x.name}`); continue; }

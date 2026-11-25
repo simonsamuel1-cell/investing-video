@@ -265,7 +265,7 @@ export const SC02 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A — the columns */}
-      <Shot from={-1} to={grahamAt} block={BLOCK.SC02} cutIn={false}>
+      <Shot start={-1} to={grahamAt} block={BLOCK.SC02} cutIn={false}>
         <Interactive.Div
           name="Value Investing"
           style={{
@@ -274,7 +274,9 @@ export const SC02 = () => {
             right: 0,
             top: HEADING.y,
             textAlign: "center",
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
+            letterSpacing: typeStyle("title").letterSpacing,
+            lineHeight: typeStyle("title").lineHeight,
             fontSize: HEADING.size,
             fontWeight: 700,
             color: c.ink,
@@ -360,7 +362,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* B–C — Graham, his quote, Buffett */}
-      <Shot from={grahamAt} to={ownerAt} block={BLOCK.SC02}>
+      <Shot start={grahamAt} to={ownerAt} block={BLOCK.SC02}>
         <PhotoTile
           name="graham"
           d={TILE.d}
@@ -374,7 +376,9 @@ export const SC02 = () => {
             width: TILE.d + 80,
             top: GRAHAM.y + TILE_H + NAME_GAP,
             textAlign: "center",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 34,
             fontWeight: 600,
             color: c.ink,
@@ -508,7 +512,9 @@ export const SC02 = () => {
               width: TILE.d + 80,
               top: TILE_H + NAME_GAP,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 34,
               fontWeight: 600,
               color: c.ink,
@@ -556,7 +562,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* D — "Kamu", the owner, and what an owner doesn't have to do */}
-      <Shot from={ownerAt} to={runAt} block={BLOCK.SC02}>
+      <Shot start={ownerAt} to={runAt} block={BLOCK.SC02}>
         {/* "Kamu" as the new avatar (Simon 12 Nov: "ganti icon ke icon avatar yang baru") */}
         <AvatarTile x={OWNER.x} y={OWNER.y} d={OWNER.d} />
         <Interactive.Div
@@ -567,7 +573,9 @@ export const SC02 = () => {
             width: 300,
             top: OWNER.y + OWNER.d / 2 + 14,
             textAlign: "center",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 38,
             fontWeight: 600,
             color: c.ink,
@@ -683,7 +691,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* E — the business working on its own: SC01's working factory again, the packs already running (Simon 12 Nov) */}
-      <Shot from={runAt} to={flowAt} block={BLOCK.SC02}>
+      <Shot start={runAt} to={flowAt} block={BLOCK.SC02}>
         <WorkingBusiness f={f} from={runAt - m.sec(4)} />
         {/* you, in the frame's top-right corner, watching it run (Simon 12 Nov: "kasih icon avatar juga") */}
         <KamuAvatar
@@ -696,7 +704,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* F — Penjualan → Laba → Ekspansi, and your part */}
-      <Shot from={flowAt} to={branchAt} block={BLOCK.SC02}>
+      <Shot start={flowAt} to={branchAt} block={BLOCK.SC02}>
         {FLOW_ITEMS.map((it, i) => (
           <Node
             key={it.label}
@@ -808,7 +816,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* G — the profit's two ways */}
-      <Shot from={branchAt} to={askAt} block={BLOCK.SC02}>
+      <Shot start={branchAt} to={askAt} block={BLOCK.SC02}>
         <Node
           x={BRANCH.laba.x}
           y={BRANCH.laba.y - NODE.h / 2}
@@ -931,7 +939,7 @@ export const SC02 = () => {
       </Shot>
 
       {/* H — the question to drop, and the one to ask first */}
-      <Shot from={askAt} to={1e6} block={BLOCK.SC02} cutOut={false}>
+      <Shot start={askAt} to={1e6} block={BLOCK.SC02} cutOut={false}>
         <OrangTuntun at={askAt} />
         {((it: React.ReactNode[]) => (
           <>

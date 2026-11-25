@@ -306,7 +306,7 @@ export const SC06 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A–C: Graham's two machines */}
-      <Shot from={-1} to={buffettAt} block={BLOCK.SC06} cutIn={false}>
+      <Shot start={-1} to={buffettAt} block={BLOCK.SC06} cutIn={false}>
         <Keyed
           name="graham"
           style={{
@@ -330,7 +330,9 @@ export const SC06 = () => {
               width: TILE.d + 80,
               top: TILE_H + NAME_GAP,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 34,
               fontWeight: 600,
               color: c.ink,
@@ -526,7 +528,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* D: Buffett's sentence */}
-      <Shot from={buffettAt} to={askAt} block={BLOCK.SC06}>
+      <Shot start={buffettAt} to={askAt} block={BLOCK.SC06}>
         <Keyed
           name="buffett"
           style={{
@@ -550,7 +552,9 @@ export const SC06 = () => {
               width: TILE.d + 80,
               top: TILE_H + NAME_GAP,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 34,
               fontWeight: 600,
               color: c.ink,
@@ -659,132 +663,135 @@ export const SC06 = () => {
       </Shot>
 
       {/* E: the question to drop, typed as it is said */}
-      <Shot from={askAt} to={timeAt} block={BLOCK.SC06}>
-        {(() => {
-          const p = ease(f, askAt + m.sec(0.1), m.reveal);
-          const doneAt = W("Coba pikirkan");
-          const grey = ease(f, doneAt, m.fade);
-          const ink = interpolateColors(
-            grey,
-            [0, 1],
-            [c.ink, theme.color.mute],
-          );
-          /** the line being typed carries the caret; once both are typed it stays on the second, blinking, until it goes grey */
-          const typed = ASK_LINES.map((l) => {
-            const a = W(l.from);
-            const b = W(l.to);
-            return Math.round(
-              l.text.length *
-                Math.max(
-                  0,
-                  Math.min(1, (f - a) / Math.max(1, b - a - m.sec(0.1))),
-                ),
+      <Shot start={askAt} to={timeAt} block={BLOCK.SC06}>
+        <Keyed
+          name="Kotak pertanyaan"
+          style={{
+            position: "absolute",
+            left: CX - ASK.w / 2,
+            top: ASK.y + (1 - ease(f, askAt + m.sec(0.1), m.reveal)) * 16,
+            width: ASK.w,
+            height: ASK.h,
+            opacity: interpolate(frame, [1664, 1688], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+          }}
+        >
+          {(() => {
+            const doneAt = W("Coba pikirkan");
+            const grey = ease(f, doneAt, m.fade);
+            const ink = interpolateColors(
+              grey,
+              [0, 1],
+              [c.ink, theme.color.mute],
             );
-          });
-          const caretOn = typed[1] > 0 ? 1 : 0;
-          const blink = Math.floor(f / m.sec(0.5)) % 2 === 0;
-          return (
-            <Keyed
-              name="Kotak pertanyaan"
-              style={{
-                position: "absolute",
-                left: CX - ASK.w / 2,
-                top: ASK.y + (1 - p) * 16,
-                width: ASK.w,
-                height: ASK.h,
-                opacity: interpolate(frame, [1664, 1688], [0, 1], {
-                  easing: Easing.bezier(0.65, 0, 0.35, 1),
-                  extrapolateLeft: "clamp",
-                  extrapolateRight: "clamp",
-                }),
-              }}
-            >
-              <Card_
-                x={0}
-                y={0}
-                w={ASK.w}
-                h={ASK.h}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: ASK.gap,
-                  borderRadius: `${R * 2}px ${R * 2}px ${R * 2}px 10px`,
-                  background: interpolateColors(
-                    grey,
-                    [0, 1],
-                    [c.cardBg, theme.color.neutralDisc],
+            /** the line being typed carries the caret; once both are typed it stays on the second, blinking, until it goes grey */
+            const typed = ASK_LINES.map((l) => {
+              const a = W(l.from);
+              const b = W(l.to);
+              return Math.round(
+                l.text.length *
+                  Math.max(
+                    0,
+                    Math.min(1, (f - a) / Math.max(1, b - a - m.sec(0.1))),
                   ),
-                }}
-              >
-                {((it: React.ReactNode[]) => (
-                  <>
-                    <Handle name="Sebelum membeli, jangan cuma b">
-                      {it[0]}
-                    </Handle>
-                    <Handle name="“Besok harganya naik nggak?”">{it[1]}</Handle>
-                  </>
-                ))(
-                  ASK_LINES.map((l, i) => {
-                    const typing = typed[i] > 0 && typed[i] < l.text.length;
-                    const showCaret =
-                      i === caretOn && grey < 0.5 && (typing || blink);
-                    return (
-                      <NDiv
-                        key={l.text}
-                        style={{
-                          position: "relative",
-                          ...typeStyle("title"),
-                          fontSize: l.size,
-                          fontWeight: l.weight,
-                          lineHeight: 1.15,
-                          whiteSpace: "nowrap",
-                        }}
-                      >
-                        <span style={{ visibility: "hidden" }}>{l.text}</span>
-                        <span
+              );
+            });
+            const caretOn = typed[1] > 0 ? 1 : 0;
+            const blink = Math.floor(f / m.sec(0.5)) % 2 === 0;
+            return (
+              <>
+                <Card_
+                  x={0}
+                  y={0}
+                  w={ASK.w}
+                  h={ASK.h}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    gap: ASK.gap,
+                    borderRadius: `${R * 2}px ${R * 2}px ${R * 2}px 10px`,
+                    background: interpolateColors(
+                      grey,
+                      [0, 1],
+                      [c.cardBg, theme.color.neutralDisc],
+                    ),
+                  }}
+                >
+                  {((it: React.ReactNode[]) => (
+                    <>
+                      <Handle name="Sebelum membeli, jangan cuma b">
+                        {it[0]}
+                      </Handle>
+                      <Handle name="“Besok harganya naik nggak?”">
+                        {it[1]}
+                      </Handle>
+                    </>
+                  ))(
+                    ASK_LINES.map((l, i) => {
+                      const typing = typed[i] > 0 && typed[i] < l.text.length;
+                      const showCaret =
+                        i === caretOn && grey < 0.5 && (typing || blink);
+                      return (
+                        <NDiv
+                          key={l.text}
                           style={{
-                            position: "absolute",
-                            left: 0,
-                            top: 0,
-                            color:
-                              i === 0
-                                ? interpolateColors(
-                                    grey,
-                                    [0, 1],
-                                    [c.slate, theme.color.mute],
-                                  )
-                                : ink,
+                            position: "relative",
+                            ...typeStyle("title"),
+                            fontSize: l.size,
+                            fontWeight: l.weight,
+                            lineHeight: 1.15,
+                            whiteSpace: "nowrap",
                           }}
                         >
-                          {l.text.slice(0, typed[i])}
-                          {showCaret ? (
-                            <span
-                              style={{
-                                display: "inline-block",
-                                width: 5,
-                                height: "0.9em",
-                                marginLeft: 4,
-                                verticalAlign: "-0.12em",
-                                borderRadius: 3,
-                                background: c.indigo,
-                              }}
-                            />
-                          ) : null}
-                        </span>
-                      </NDiv>
-                    );
-                  }),
-                )}
-              </Card_>
-            </Keyed>
-          );
-        })()}
+                          <span style={{ visibility: "hidden" }}>{l.text}</span>
+                          <span
+                            style={{
+                              position: "absolute",
+                              left: 0,
+                              top: 0,
+                              color:
+                                i === 0
+                                  ? interpolateColors(
+                                      grey,
+                                      [0, 1],
+                                      [c.slate, theme.color.mute],
+                                    )
+                                  : ink,
+                            }}
+                          >
+                            {l.text.slice(0, typed[i])}
+                            {showCaret ? (
+                              <span
+                                style={{
+                                  display: "inline-block",
+                                  width: 5,
+                                  height: "0.9em",
+                                  marginLeft: 4,
+                                  verticalAlign: "-0.12em",
+                                  borderRadius: 3,
+                                  background: c.indigo,
+                                }}
+                              />
+                            ) : null}
+                          </span>
+                        </NDiv>
+                      );
+                    }),
+                  )}
+                </Card_>
+              </>
+            );
+          })()}
+        </Keyed>
       </Shot>
 
       {/* F: ten minutes, ten years — and what ten years asks of the business */}
-      <Shot from={timeAt} to={sayAt} block={BLOCK.SC06}>
+      <Shot start={timeAt} to={sayAt} block={BLOCK.SC06}>
         <Keyed
           name="factory"
           style={{
@@ -920,7 +927,7 @@ export const SC06 = () => {
       </Shot>
 
       {/* G: Orang Tuntun says it */}
-      <Shot from={sayAt} to={1e6} block={BLOCK.SC06} cutOut={false}>
+      <Shot start={sayAt} to={1e6} block={BLOCK.SC06} cutOut={false}>
         <OrangTuntun at={sayAt} />
         {((it: React.ReactNode[]) => (
           <>

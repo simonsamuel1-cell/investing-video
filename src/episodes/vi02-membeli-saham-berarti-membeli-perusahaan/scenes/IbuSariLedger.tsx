@@ -362,7 +362,7 @@ export const SC03 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A–F: the warung's world, in VI01's frame */}
-      <Shot from={-1} to={twoAt} block={BLOCK.SC03} cutIn={false}>
+      <Shot start={-1} to={twoAt} block={BLOCK.SC03} cutIn={false}>
         <Interactive.Div
           name="Bingkai"
           style={{
@@ -473,7 +473,9 @@ export const SC03 = () => {
               background: c.cardBg,
               boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`,
               textAlign: "center",
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              fontSize: typeStyle("label").fontSize,
+              letterSpacing: typeStyle("label").letterSpacing,
               fontWeight: 600,
               color: c.indigo,
               whiteSpace: "nowrap",
@@ -522,7 +524,9 @@ export const SC03 = () => {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 42,
               fontWeight: 600,
               color: c.indigo,
@@ -533,8 +537,28 @@ export const SC03 = () => {
         </Keyed>
 
         {/* C: the price every five minutes — a running 5-minute chart — crossed */}
-        {priceP > 0.001
-          ? (() => {
+        {priceP > 0.001 ? (
+          <Keyed
+            name="Harga warung"
+            style={{
+              position: "absolute",
+              left: PRICE.x,
+              top: PRICE.y + (1 - priceP) * 12,
+              width: PRICE.w,
+              height: PRICE.h,
+              opacity: interpolate(
+                frame,
+                [848, 872, 1096, 1116],
+                [0, 1, 1, 0],
+                {
+                  easing: Easing.bezier(0.65, 0, 0.35, 1),
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                },
+              ),
+            }}
+          >
+            {(() => {
               const shownBars = RUN_BARS.slice(runEnd - PRICE.n, runEnd);
               const grid = gridOf(
                 shownBars.map((b) => b.c),
@@ -548,26 +572,7 @@ export const SC03 = () => {
                 0.06,
               );
               return (
-                <Keyed
-                  name="Harga warung"
-                  style={{
-                    position: "absolute",
-                    left: PRICE.x,
-                    top: PRICE.y + (1 - priceP) * 12,
-                    width: PRICE.w,
-                    height: PRICE.h,
-                    opacity: interpolate(
-                      frame,
-                      [848, 872, 1096, 1116],
-                      [0, 1, 1, 0],
-                      {
-                        easing: Easing.bezier(0.65, 0, 0.35, 1),
-                        extrapolateLeft: "clamp",
-                        extrapolateRight: "clamp",
-                      },
-                    ),
-                  }}
-                >
+                <>
                   <Card_ x={0} y={0} w={PRICE.w} h={PRICE.h}>
                     <Interactive.Div
                       name="Harga warung"
@@ -614,10 +619,11 @@ export const SC03 = () => {
                       size={56}
                     />
                   </Card_>
-                </Keyed>
+                </>
               );
-            })()
-          : null}
+            })()}
+          </Keyed>
+        ) : null}
 
         {/* D: her book, open */}
         {bookIn > 0.001 ? (
@@ -712,7 +718,9 @@ export const SC03 = () => {
                 [c.cardBg, theme.color.neutralDisc],
               ),
               boxShadow: `inset 0 0 0 2px ${theme.color.hairlineBrandSolid}`,
-              ...typeStyle("label"),
+              fontFamily: typeStyle("label").fontFamily,
+              letterSpacing: typeStyle("label").letterSpacing,
+              lineHeight: typeStyle("label").lineHeight,
               fontSize: 36,
               fontWeight: 600,
               color: interpolateColors(
@@ -779,7 +787,7 @@ export const SC03 = () => {
       </Shot>
 
       {/* G: the difference */}
-      <Shot from={twoAt} to={1e6} block={BLOCK.SC03} cutOut={false}>
+      <Shot start={twoAt} to={1e6} block={BLOCK.SC03} cutOut={false}>
         <OrangTuntun at={twoAt} />
         {((it: React.ReactNode[]) => (
           <>

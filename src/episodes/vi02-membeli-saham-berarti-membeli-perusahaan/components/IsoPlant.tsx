@@ -141,7 +141,7 @@ const Crate = ({ x, y }: { x: number; y: number }) => {
 };
 
 export const IsoPlant = () => (
-  <AbsoluteFill style={{ background: C.plantPaper }}>
+  <AbsoluteFill showInTimeline={false} style={{ background: C.plantPaper }}>
     <svg viewBox={`0 0 ${FRAME.w} ${FRAME.h}`} width={FRAME.w * FRAME.k} height={FRAME.h * FRAME.k} style={{ position: "absolute", left: (theme.canvas.width - FRAME.w * FRAME.k) / 2, top: (theme.canvas.height - FRAME.h * FRAME.k) / 2, overflow: "visible" }}>
       <path d={slab(SLAB.drop)} fill={SHADE} {...LINE} />
       <path d={slab(0)} fill={WHITE} {...LINE} />

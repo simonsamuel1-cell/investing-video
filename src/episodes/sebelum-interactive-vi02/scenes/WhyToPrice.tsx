@@ -5,8 +5,10 @@
  *
  *  A  "Tiga hal yang perlu diingat": "3 hal yang perlu diingat" over three numbered cards, each filling on its sentence with
  *     a small picture recalling its scene and one plain sentence (Simon 16 Nov: no icon strings, no abbreviations).
- *  B  "Prinsip ini digunakan oleh investor…" (a cut): a title, Simon's picture of Schloss, Munger and Lynch whole (16 Nov,
- *     "3 figures.png"), each name and figure (the script's) under its man; "Yang dibeli tetap perusahaan, bukan kode saham".
+ *  B  "Prinsip ini digunakan oleh investor…" (a cut): a title, Simon's picture of Schloss, Buffett and Lynch whole (16 Nov,
+ *     "3 figures.png"), each name and figure (the script's) under its man; on "Investor seperti" the picture slides left and
+ *     Templeton and Nick Sleep come in at its right, each on his name (25 Nov), then a line under their names with "Beda gaya
+ *     investasi" and "Beda beli perusahaan" on those sentences; "Yang dibeli tetap perusahaan, bukan kode saham".
  *  C  "Di Tuntun" (a cut): the mascot, the heading and the three features as pills; Simon's screens (5 Nov) on their words.
  *  D  "Dari empat pertanyaan tadi" (a cut): SC07's four questions at the left, each joined to where the app answers it:
  *     1–2 Revenue Composition, 3 the dividend (SC04's screen), 4 Deep Research.
@@ -38,11 +40,37 @@ const MINI_BOOK = { x: 118, y: 92, w: 264, rowH: 62, gap: 12, head: 64 };
 const RUMOUR = { w: 88, h: 54, xs: [64, 436], ys: [150, 300], bounce: 14 };
 
 // B — three investors (VI01's line-art tiles; the figures are the script's)
-/** Simon's picture whole, one image (16 Nov: "ini 1 gambar, jangan di crop"), each name and figure under its man */
-const GROUP = { w: 1140, y: 232, src: "art/vi02/three-figures.jpg", w0: 2172, h0: 724, cxs: [360, 1080, 1768], name: 26, pct: 78, line: 892, boxW: 1240, boxH: 112 };
+/** Simon's picture whole, one image (16 Nov: "ini 1 gambar, jangan di crop"; 25 Nov: Buffett in Munger's place, as the script says), each name and figure under its man */
+const GROUP = { w: 1140, y: 232, src: "art/vi02/three-figures-buffett.jpg", w0: 2172, h0: 724, cxs: [360, 1080, 1768], name: 26, pct: 78, line: 892, boxW: 1240, boxH: 112 };
 const GROUP_K = GROUP.w / GROUP.w0;
 const GROUP_H = GROUP.h0 * GROUP_K;
 const GROUP_X = CX - GROUP.w / 2;
+/**
+ * "Investor seperti John Templeton dan Nick Sleep" (Simon 25 Nov: "gambar 3 digeser ke kiri, lalu muncul gambar 1 dan gambar 2"):
+ * the picture goes to the left margin at `h`, its top staying where it is, and his two squares whole at its right fill the
+ * row to the right margin. No figures: the script gives none.
+ */
+const ROW = { x: theme.margin.left, h: 336, gap: 24, at: "Investor seperti", sec: 0.75 };
+const ROW_K = ROW.h / GROUP_H;
+const ROW_Y = GROUP.y;
+const ROW_X = (i: number) => ROW.x + GROUP.w * ROW_K + ROW.gap + i * (ROW.h + ROW.gap);
+const MORE = [
+  { name: "John Templeton", src: "art/vi02/john-templeton.jpg", at: "John Templeton" },
+  { name: "Nick Sleep", src: "art/vi02/nick-sleep.jpg", at: "Nick Sleep" },
+] as const;
+/**
+ * "Gaya investasi mereka berbeda. Perusahaan yang mereka beli juga berbeda" (Simon 25 Nov, his drawing): an indigo line of 3 px
+ * under the two names, from the left of "John Templeton" to the right of "Nick Sleep", its ends meeting in the middle; under it
+ * one line per sentence. `h` = the line's depth, `ys` = the texts' centres.
+ */
+const DIFF = { x1: 1172, x2: 1746, y: 654, h: 46, r: 34, stroke: 3, sec: 0.6, size: 32, at: "Gaya investasi" };
+const DIFF_W = DIFF.x2 - DIFF.x1;
+/** half the line: down from one end, round the corner, to the middle */
+const DIFF_HALF = (side: 1 | -1) => `M ${(side * DIFF_W) / 2} 0 V ${DIFF.h - DIFF.r} Q ${(side * DIFF_W) / 2} ${DIFF.h} ${side * (DIFF_W / 2 - DIFF.r)} ${DIFF.h} H 0`;
+const DIFFS = [
+  { text: "Beda gaya investasi", y: 736, at: "Gaya investasi", wait: 0.45 },
+  { text: "Beda beli perusahaan", y: 778, at: "Perusahaan yang mereka", wait: 0 },
+] as const;
 /** the title over the three (Simon 16 Nov: "kasih judul"), from "Prinsip ini digunakan oleh investor dari generasi yang berbeda" */
 const PEOPLE_HEAD = { y: 172, size: 56, text: "Prinsip yang sama, generasi berbeda" };
 /**
@@ -53,7 +81,7 @@ const PEOPLE_HEAD = { y: 172, size: 56, text: "Prinsip yang sama, generasi berbe
  */
 const INVESTORS = [
   { name: "Walter Schloss", pct: "15,3%", years: "45 tahun", at: "Walter Schloss" },
-  { name: "Charlie Munger", pct: "19,8%", years: "14 tahun", at: "Warren Buffett" },
+  { name: "Warren Buffett", pct: "19,7%", years: "60+ tahun", at: "Warren Buffett" },
   { name: "Peter Lynch", pct: "29,2%", years: "13 tahun", at: "Peter Lynch" },
 ] as const;
 
@@ -115,6 +143,8 @@ export const SC08 = () => {
   const g = f + BLOCK.SC08;
 
   const peopleAt = W("Prinsip yang");
+  const slide = ease(f, W(ROW.at), m.sec(ROW.sec));
+  const diffP = ease(f, W(DIFF.at), m.sec(DIFF.sec));
   const appAt = W("Di Tuntun");
   const mapAt = W("Pertanyaan ketiga");
   const twoAt = W("Namun, setelah");
@@ -208,16 +238,19 @@ export const SC08 = () => {
         <Appear at={peopleAt + m.sec(0.1)} style={{ left: 0, top: PEOPLE_HEAD.y, width: theme.canvas.width, textAlign: "center" }}>
           <div style={{ transform: "translateY(-50%)", ...typeStyle("title"), fontSize: PEOPLE_HEAD.size, fontWeight: 600, color: c.ink }}>{PEOPLE_HEAD.text}</div>
         </Appear>
-        <Appear at={peopleAt + m.sec(0.2)} style={{ left: GROUP_X, top: GROUP.y, width: GROUP.w, height: GROUP_H }}>
-          <div style={{ position: "absolute", inset: 0, borderRadius: R, overflow: "hidden", boxShadow: shadow.soft, background: c.ink }}>
-            <Pic src={staticFile(GROUP.src)} style={{ position: "absolute", left: 0, top: 0, width: GROUP.w, height: GROUP_H }} />
-          </div>
-        </Appear>
+        <div style={{ position: "absolute", left: GROUP_X, top: GROUP.y, width: GROUP.w, height: GROUP_H, transformOrigin: "0px 0px", translate: `${(ROW.x - GROUP_X) * slide}px ${(ROW_Y - GROUP.y) * slide}px`, scale: String(1 + (ROW_K - 1) * slide) }}>
+          <Appear at={peopleAt + m.sec(0.2)} style={{ left: 0, top: 0, width: GROUP.w, height: GROUP_H }}>
+            <div style={{ position: "absolute", inset: 0, borderRadius: R, overflow: "hidden", boxShadow: shadow.soft, background: c.ink }}>
+              <Pic src={staticFile(GROUP.src)} style={{ position: "absolute", left: 0, top: 0, width: GROUP.w, height: GROUP_H }} />
+            </div>
+          </Appear>
+        </div>
         {INVESTORS.map((iv, i) => {
           const p = ease(f, peopleAt + m.sec(0.35) + i * m.sec(0.15), m.reveal);
           const said = ease(f, W(iv.at), m.reveal);
-          const x = GROUP_X + GROUP.cxs[i] * GROUP_K;
-          const top = GROUP.y + GROUP_H;
+          const x0 = GROUP_X + GROUP.cxs[i] * GROUP_K;
+          const x = x0 + (ROW.x + GROUP.cxs[i] * GROUP_K * ROW_K - x0) * slide;
+          const top = GROUP.y + GROUP_H + (ROW_Y + ROW.h - GROUP.y - GROUP_H) * slide;
           return (
             <div key={iv.name} style={{ position: "absolute", left: x - 200, width: 400, top, textAlign: "center" }}>
               <div style={{ position: "absolute", left: 0, right: 0, top: GROUP.name, opacity: p, ...typeStyle("label"), fontSize: 34, fontWeight: 600, color: c.ink }}>{iv.name}</div>
@@ -228,6 +261,32 @@ export const SC08 = () => {
             </div>
           );
         })}
+        {MORE.map((iv, i) => {
+          const p = ease(f, W(iv.at), m.reveal);
+          return (
+            <div key={iv.name} style={{ position: "absolute", left: ROW_X(i), top: ROW_Y, width: ROW.h, height: ROW.h, opacity: p, translate: `${((1 - p) * 40).toFixed(2)}px 0px` }}>
+              <div style={{ position: "absolute", inset: 0, borderRadius: R * ROW_K, overflow: "hidden", boxShadow: shadow.soft, background: c.ink }}>
+                <Pic src={staticFile(iv.src)} style={{ position: "absolute", left: 0, top: 0, width: ROW.h, height: ROW.h }} />
+              </div>
+              <div style={{ position: "absolute", left: 0, right: 0, top: ROW.h + GROUP.name, textAlign: "center", ...typeStyle("label"), fontSize: 34, fontWeight: 600, color: c.ink }}>{iv.name}</div>
+            </div>
+          );
+        })}
+        <div style={{ position: "absolute", left: DIFF.x1, top: DIFF.y, width: DIFF_W, height: DIFF.h }}>
+          {diffP > 0.001 ? (
+            <svg width={DIFF_W} height={DIFF.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+              <g transform={`translate(${DIFF_W / 2} 0)`} fill="none" stroke={c.indigo} strokeWidth={DIFF.stroke} strokeLinecap="round">
+                <path d={DIFF_HALF(-1)} pathLength={1} strokeDasharray="1 2" strokeDashoffset={1 - diffP} />
+                <path d={DIFF_HALF(1)} pathLength={1} strokeDasharray="1 2" strokeDashoffset={1 - diffP} />
+              </g>
+            </svg>
+          ) : null}
+        </div>
+        {DIFFS.map((d) => (
+          <Appear key={d.text} at={W(d.at) + m.sec(d.wait)} style={{ left: DIFF.x1, top: d.y, width: DIFF_W, textAlign: "center" }}>
+            <div style={{ transform: "translateY(-50%)", ...typeStyle("label"), fontSize: DIFF.size, fontWeight: 600, color: c.indigo, whiteSpace: "nowrap" }}>{d.text}</div>
+          </Appear>
+        ))}
         {/* in the dashed text box (Simon 16 Nov: "kasih text box garis putus putus") */}
         <DashBox cx={CX} y={GROUP.line - GROUP.boxH / 2} w={GROUP.boxW} h={GROUP.boxH} at={W("Sebuah bisnis")}>
           <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", ...typeStyle("title"), fontSize: 50, fontWeight: 500, color: c.ink, whiteSpace: "nowrap" }}>

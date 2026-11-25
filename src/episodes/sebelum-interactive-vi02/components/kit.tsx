@@ -419,7 +419,7 @@ export const AvatarTile = ({
         <Img
           src={staticFile(KAMU_AVATAR.src)}
           style={{ width: "100%", height: "100%", display: "block" }}
-          from={-4}
+          from={-7}
         />
       </div>
     </div>

@@ -8,7 +8,7 @@ import { theme } from "../../../core";
 const ART = { h: 980 };
 
 export const IsoFactory = () => (
-  <AbsoluteFill style={{ background: theme.color.plantPaper, display: "flex", alignItems: "center", justifyContent: "center" }}>
+  <AbsoluteFill showInTimeline={false} style={{ background: theme.color.plantPaper, display: "flex", alignItems: "center", justifyContent: "center" }}>
     <Img showInTimeline={false} src={staticFile("art/vi02/plant/factory.svg")} style={{ height: ART.h, width: "auto" }} />
   </AbsoluteFill>
 );

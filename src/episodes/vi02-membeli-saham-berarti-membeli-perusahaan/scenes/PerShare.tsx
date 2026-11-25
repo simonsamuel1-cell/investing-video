@@ -899,7 +899,11 @@ export const SC04 = () => {
               top: 44,
               width: BOOK.w,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              fontSize: typeStyle("title").fontSize,
+              fontWeight: typeStyle("title").fontWeight,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               color: c.indigo,
               opacity: interpolate(frame, [4637, 4661], [0, 1], {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),

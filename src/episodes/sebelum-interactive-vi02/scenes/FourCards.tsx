@@ -4,8 +4,8 @@
  *
  *  A  "jangan mulai dari: “Target harganya berapa?”": the sentence in short, nothing else (Simon 16 Nov: no X, no tag).
  *  B  "empat pertanyaan sederhana" (a cut): four tall cards, numbered; each lights on its ordinal ("Pertama" …) with its
- *     question, and its picture comes on the next sentence: SC01's box (what it sells), one bar in three parts (where the money
- *     comes from — a shape, no figures), Laba → Dividen / Reinvestasi, bars rising into dashed ones (the future).
+ *     question, and its picture comes on the next sentence: SC01's box (what it sells), a profit line over the years (a shape, no
+ *     figures; Simon 25 Nov), Laba → Dividen / Reinvestasi, bars rising into dashed ones (the future).
  *  C  "Kalau empat pertanyaan ini bisa dijawab": the cards fold into four ticked tiles at the top; under them SC06's balance
  *     scale with Harga on one pan and Bisnis on the other — now the price has something to be weighed against.
  *  D  "Kalau belum": the scale stays; its point in one line under it (Simon 16 Nov: the lone ABCD was "gabut").
@@ -14,6 +14,7 @@ import { interpolateColors, staticFile, useCurrentFrame } from "remotion";
 import { Connector, SoftGround, Stage, theme, typeStyle, useMotion, usePalette, useShadow } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { Appear, BoardGrid, Card, Drawing, Glyph, Line, Pic, Shot, ease, useWords } from "../components/kit";
+import { ProfitLine } from "../components/ProfitLine";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -33,11 +34,12 @@ const HEADS = ["Mulai dari 4 pertanyaan", "Perusahaan ini ..."] as const;
 const cardX = (i: number) => CX - (4 * CARD.w + 3 * CARD.gap) / 2 + i * (CARD.w + CARD.gap);
 const QUESTIONS = [
   { ask: "Jual apa?", at: "Pertama", artAt: "Produk atau" },
-  { ask: "Uang dari mana?", at: "Kedua", artAt: "Apakah bisnisnya" },
+  { ask: "Menghasilkan laba?", at: "Kedua", artAt: "Apakah bisnisnya" },
   { ask: "Labanya untuk apa?", at: "Ketiga", artAt: "Apakah dibagikan" },
   { ask: "Bisa tumbuh?", at: "Terakhir", artAt: "Apakah laba" },
 ] as const;
-const SPLIT = [0.52, 0.3, 0.18];
+/** card 2's profit line: to `half` on "Apakah bisnisnya", the rest of the years on "perkembangan profitabilitasnya … waktu ke waktu" */
+const PROFIT = { x: 52, y: 260, w: CARD.w - 104, h: 210, half: 0.5 };
 const GROW = [0.32, 0.46, 0.58, 0.74, 0.92];
 
 // C — the tiles and the scale (SC06's parts)
@@ -84,6 +86,8 @@ export const SC07 = () => {
   // B–C
   const lightAt = QUESTIONS.map((q) => W(q.at));
   const lit = QUESTIONS.map((_, i) => ease(f, lightAt[i], m.pop) * (i < 3 ? 1 - ease(f, lightAt[i + 1], m.pop) : 1 - ease(f, doneAt, m.pop)));
+  const growAt = W("perkembangan profitabilitasnya");
+  const profitP = PROFIT.half * ease(f, W("Apakah bisnisnya"), m.sec(0.9)) + (1 - PROFIT.half) * ease(f, growAt, W("ke waktu") - growAt);
   const fold = ease(f, doneAt, m.move);
   const scaleAt = W("barulah kita");
   const scaleIn = ease(f, scaleAt - m.sec(0.2), m.reveal);
@@ -144,13 +148,7 @@ export const SC07 = () => {
                   <div style={{ position: "absolute", inset: 0, opacity: inside }}>
                     <div style={{ position: "absolute", left: 24, right: 24, top: 80, textAlign: "center", ...typeStyle("title"), fontSize: CARD.ask, fontWeight: 600, lineHeight: 1.15, color: c.ink, opacity: asked, textWrap: "balance" }}>{q.ask}</div>
                     {i === 0 ? <Drawing name="box" cx={CARD.w / 2} floor={CARD.art} h={190} style={{ opacity: art }} /> : null}
-                    {i === 1 ? (
-                      <div style={{ position: "absolute", left: 40, top: 330, width: CARD.w - 80, height: 70, display: "flex", gap: 6 }}>
-                        {SPLIT.map((s, k) => (
-                          <div key={k} style={{ width: `${s * 100}%`, height: "100%", borderRadius: 14, background: [c.indigo, theme.color.hairlineBrandSolid, theme.color.skeleton][k], transform: `scaleX(${ease(f, W(q.artAt) + k * m.sec(0.2), m.reveal).toFixed(3)})`, transformOrigin: "0 50%" }} />
-                        ))}
-                      </div>
-                    ) : null}
+                    {i === 1 ? <ProfitLine x={PROFIT.x} y={PROFIT.y} w={PROFIT.w} h={PROFIT.h} on={art} p={profitP} /> : null}
                     {i === 2 ? (
                       <div style={{ position: "absolute", inset: 0, opacity: art }}>
                         <Connector a={{ x: CARD.w / 2, y: 300 }} b={{ x: 96, y: 410 }} p={ease(f, W("dividen"), m.sec(0.4))} shape="elbow" axis="y" width={3} />

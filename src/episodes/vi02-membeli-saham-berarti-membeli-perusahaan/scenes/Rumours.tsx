@@ -605,7 +605,11 @@ export const SC05 = () => {
                 position: "absolute",
                 left: 44,
                 top: 46,
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                fontSize: typeStyle("title").fontSize,
+                fontWeight: typeStyle("title").fontWeight,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 color: c.ink,
               }}
             >
@@ -649,7 +653,9 @@ export const SC05 = () => {
                 borderRadius: 16,
                 background: c.cardBg,
                 boxShadow: `inset 0 0 0 5px ${theme.color.calendarRed}`,
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
+                lineHeight: typeStyle("title").lineHeight,
                 fontSize: 46,
                 fontWeight: 700,
                 color: theme.color.calendarRed,

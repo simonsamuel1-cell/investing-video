@@ -262,29 +262,207 @@
       "silence": 0.5
     },
     {
-      "_": "24 Nov: SC07 and SC08 re-recorded whole, with new wording (one take, cut between 'kode saham' and 'Ada tiga hal')",
+      "_": "25 Nov, SC07: 'Jadi ketika melihat sebuah saham, jangan mulai dari pertanyaan: “Target harganya berapa?”'",
+      "src": "Revisi VO/MiniMax_2026-11-25_13_41_04_Compelling_Storyteller.mp3",
+      "to": 4.8,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1800113
+    },
+    {
       "src": "Scene 7 & 8_New.mp3",
-      "from": 0,
-      "to": 63.59,
+      "from": 5.68,
+      "to": 8.3,
       "match": "original 310.45-350.0",
       "level": [
         0,
         202.36
       ]
+    },
+    {
+      "_": "25 Nov, SC07: 'Pertama, perusahaan ini menjual apa?' (cut before the −27 dB noise at 2.22 s of the clip)",
+      "src": "Revisi VO/MiniMax_2026-11-25_13_43_10_Compelling_Storyteller.mp3",
+      "to": 2.21,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1733447
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 12.35,
+      "to": 27.6,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "silence": 0.0600113
+    },
+    {
+      "_": "25 Nov, SC07: 'Ketiga, laba yang dihasilkan digunakan untuk apa?'",
+      "src": "Revisi VO/MiniMax_2026-11-25_13_43_54_Compelling_Storyteller.mp3",
+      "to": 2.96,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.0733447
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 31.06,
+      "to": 45.58,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "_": "25 Nov, SC07: 'Apakah ke depannya akan menjadi lebih baik atau justru lebih buruk?'",
+      "src": "Revisi VO/MiniMax_2026-11-25_13_59_20_Compelling_Storyteller.mp3",
+      "from": 0.14,
+      "to": 4.4,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1600113
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 51.85,
+      "to": 58.13,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "silence": 0.0900113
+    },
+    {
+      "_": "25 Nov, SC07: 'Kalau belum, mungkin yang kita beli masih sekadar kode saham.'",
+      "src": "Revisi VO/MiniMax_2026-11-25_13_58_30_Compelling_Storyteller.mp3",
+      "to": 3.88,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.106678
     },
     {
       "_": "24 Nov, end of scene: +30f after 'sekadar kode saham.'",
       "silence": 0.5
     },
     {
+      "silence": 0.0500113
+    },
+    {
+      "_": "25 Nov, SC08: 'Ada tiga hal yang perlu diingat.'",
+      "src": "Revisi VO/Scene 08__01.mp3",
+      "to": 2.14,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1400113
+    },
+    {
       "src": "Scene 7 & 8_New.mp3",
-      "from": 63.59,
-      "to": 202.36,
+      "from": 66.32,
+      "to": 86.48,
       "match": "original 310.45-350.0",
       "level": [
         0,
         202.36
       ]
+    },
+    {
+      "silence": 0.0700113
+    },
+    {
+      "_": "25 Nov, SC08: 'Walter Schloss … 45 tahun. Warren Buffett … enam dekade. Sementara Peter Lynch … 13 tahun.'",
+      "src": "Revisi VO/Scene 08__02.mp3",
+      "to": 20.36,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.056678
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 109.8,
+      "to": 120.88,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "silence": 0.0800113
+    },
+    {
+      "_": "25 Nov, SC08: 'Namun, hal pertama yang mereka beli tetap sama. Sebuah bisnis, bukan sekadar kode saham.' (08__03; its 'Di Tuntun' line is left out)",
+      "src": "Revisi VO/Scene 08__03.mp3",
+      "to": 6.32,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.0900113
+    },
+    {
+      "_": "25 Nov, SC08: 'Di Tuntun, kamu bisa mulai membaca “buku bisnis” …' from 08__04, as Simon asked",
+      "src": "Revisi VO/Scene 08__04.mp3",
+      "from": 7.22,
+      "to": 12.08,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1833447
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 132.43,
+      "to": 147.92,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "silence": 0.0700113
+    },
+    {
+      "_": "25 Nov, SC08: 'Pertanyaan ketiga … di dalam perusahaan.'",
+      "src": "Revisi VO/Scene 08__05.mp3",
+      "to": 10.52,
+      "match": "original 310.45-350.0"
+    },
+    {
+      "silence": 0.1033447
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 160.68,
+      "to": 193.78,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "silence": 0.0800113
+    },
+    {
+      "_": "25 Nov, SC08: 'Karena itu, di video berikutnya … sebuah perusahaan?'",
+      "src": "Revisi VO/Scene 08__06.mp3",
+      "to": 7.46,
+      "match": "original 310.45-350.0"
     }
   ]
 }

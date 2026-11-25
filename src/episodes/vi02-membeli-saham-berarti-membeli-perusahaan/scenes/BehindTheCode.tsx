@@ -446,7 +446,11 @@ export const SC01 = () => {
                     position: "absolute",
                     left: 44,
                     top: 32,
-                    ...typeStyle("title"),
+                    fontFamily: typeStyle("title").fontFamily,
+                    fontSize: typeStyle("title").fontSize,
+                    fontWeight: typeStyle("title").fontWeight,
+                    letterSpacing: typeStyle("title").letterSpacing,
+                    lineHeight: typeStyle("title").lineHeight,
                     color: c.ink,
                   }}
                 >
@@ -645,7 +649,9 @@ export const SC01 = () => {
             top: KAMU.y + (OWNERS.d * OWNERS.grow) / 2 + OWNERS.labelGap,
             width: 200,
             textAlign: "center",
-            ...typeStyle("label"),
+            fontFamily: typeStyle("label").fontFamily,
+            letterSpacing: typeStyle("label").letterSpacing,
+            lineHeight: typeStyle("label").lineHeight,
             fontSize: 32,
             fontWeight: 600,
             color: c.ink,

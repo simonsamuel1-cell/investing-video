@@ -207,7 +207,7 @@ export const SC01 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A–D: one shot, the cards opening into the story frame */}
-      <Shot from={-1} to={appAt} block={BLOCK.SC01} cutIn={false}>
+      <Shot start={-1} to={appAt} block={BLOCK.SC01} cutIn={false}>
         <Keyed
           name="Value Investing = melihat saha"
           style={{
@@ -462,7 +462,9 @@ export const SC01 = () => {
               top: 40,
               width: BISNIS.w,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 46,
               fontWeight: 600,
               color: c.ink,
@@ -656,7 +658,7 @@ export const SC01 = () => {
       </Shot>
 
       {/* E: the app, a camera cut */}
-      <Shot from={appAt} to={codeAt} block={BLOCK.SC01}>
+      <Shot start={appAt} to={codeAt} block={BLOCK.SC01}>
         <Card name="Saham" x={APP.x} y={APP.y} w={APP.w} h={APP.h}>
           <Interactive.Div
             name="Saham"
@@ -666,7 +668,9 @@ export const SC01 = () => {
               top: 50,
               width: APP.w,
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
+              lineHeight: typeStyle("title").lineHeight,
               fontSize: 48,
               fontWeight: 600,
               color: c.ink,
@@ -772,7 +776,7 @@ export const SC01 = () => {
       </Shot>
 
       {/* F–G: the four letters, their summary, then the fraction they stand for */}
-      <Shot from={codeAt} to={1e6} block={BLOCK.SC01} cutOut={false}>
+      <Shot start={codeAt} to={1e6} block={BLOCK.SC01} cutOut={false}>
         <Keyed
           name="ICBP"
           style={{
@@ -787,7 +791,7 @@ export const SC01 = () => {
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
-            ...typeStyle("title"),
+            fontFamily: typeStyle("title").fontFamily,
             fontSize: mix(CODE.size, TITLE.size, toTitle),
             fontWeight: 600,
             letterSpacing: mix(8, 3, toTitle),
@@ -1012,36 +1016,36 @@ export const SC01 = () => {
                       </div>
                     </div>
                   ) : null}
-                  <Keyed
-                    name="1%"
-                    style={{
-                      position: "absolute",
-                      left: to.x,
-                      top: to.y + PIECE / 2 + LAND.label,
-                      transform: "translate(-50%, -50%)",
-                      opacity: interpolate(frame, [2359, 2383], [0, 1], {
-                        easing: Easing.bezier(0.65, 0, 0.35, 1),
-                        extrapolateLeft: "clamp",
-                        extrapolateRight: "clamp",
-                      }),
-                    }}
-                  >
-                    <div
-                      style={{
-                        ...typeStyle("title"),
-                        fontSize: 48,
-                        fontWeight: 600,
-                        color: c.indigo,
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      1%
-                    </div>
-                  </Keyed>
                 </>
               );
             })()
           : null}
+        <Keyed
+          name="1%"
+          style={{
+            position: "absolute",
+            left: PERSON.x + PERSON.d / 2 + LAND.gap + PIECE / 2,
+            top: PERSON.y + PIECE / 2 + LAND.label,
+            transform: "translate(-50%, -50%)",
+            opacity: interpolate(frame, [2359, 2383], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+          }}
+        >
+          <div
+            style={{
+              ...typeStyle("title"),
+              fontSize: 48,
+              fontWeight: 600,
+              color: c.indigo,
+              whiteSpace: "nowrap",
+            }}
+          >
+            1%
+          </div>
+        </Keyed>
       </Shot>
     </Stage>
   );

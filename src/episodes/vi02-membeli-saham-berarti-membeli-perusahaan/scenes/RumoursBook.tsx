@@ -525,7 +525,7 @@ export const SC05 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A–B: the investor, his code, the messages */}
-      <Shot from={-1} to={lineAt} block={BLOCK.SC05} cutIn={false}>
+      <Shot start={-1} to={lineAt} block={BLOCK.SC05} cutIn={false}>
         {poseOf.map((k, i) => {
           const next = poseOf[i + 1]?.at ?? 1e6;
           const p =
@@ -777,7 +777,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* C: the three again — any of them may be true */}
-      <Shot from={lineAt} to={noBasisAt} block={BLOCK.SC05}>
+      <Shot start={lineAt} to={noBasisAt} block={BLOCK.SC05}>
         {((it: React.ReactNode[]) => (
           <>
             <Handle name="senang">{it[0]}</Handle>
@@ -860,7 +860,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* D: what he can't check — an empty book */}
-      <Shot from={noBasisAt} to={sariAt} block={BLOCK.SC05}>
+      <Shot start={noBasisAt} to={sariAt} block={BLOCK.SC05}>
         <Keyed
           name="Masalahnya:"
           style={{
@@ -883,7 +883,8 @@ export const SC05 = () => {
                 position: "absolute",
                 left: BOOK.pad,
                 top: 30,
-                ...typeStyle("title"),
+                fontFamily: typeStyle("title").fontFamily,
+                letterSpacing: typeStyle("title").letterSpacing,
                 fontSize: 44,
                 fontWeight: 600,
                 lineHeight: 1.25,
@@ -928,7 +929,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* E: Ibu Sari can check */}
-      <Shot from={sariAt} to={endAt} block={BLOCK.SC05}>
+      <Shot start={sariAt} to={endAt} block={BLOCK.SC05}>
         <Interactive.Div
           name="Bingkai"
           style={{
@@ -1202,7 +1203,7 @@ export const SC05 = () => {
       </Shot>
 
       {/* F: what understanding does — the messages come out sorted */}
-      <Shot from={endAt} to={1e6} block={BLOCK.SC05} cutOut={false}>
+      <Shot start={endAt} to={1e6} block={BLOCK.SC05} cutOut={false}>
         {Array.from({ length: 9 }, (_, i) => {
           const at = endAt + m.sec(0.3) + i * m.sec(0.42);
           const t = ease(f, at, m.sec(1));
@@ -1440,7 +1441,8 @@ export const SC05 = () => {
               alignItems: "center",
               justifyContent: "center",
               textAlign: "center",
-              ...typeStyle("title"),
+              fontFamily: typeStyle("title").fontFamily,
+              letterSpacing: typeStyle("title").letterSpacing,
               fontSize: 38,
               fontWeight: 500,
               lineHeight: 1.2,

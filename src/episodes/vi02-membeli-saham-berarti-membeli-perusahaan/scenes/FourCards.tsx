@@ -4,8 +4,8 @@
  *
  *  A  "jangan mulai dari: “Target harganya berapa?”": the sentence in short, nothing else (Simon 16 Nov: no X, no tag).
  *  B  "empat pertanyaan sederhana" (a cut): four tall cards, numbered; each lights on its ordinal ("Pertama" …) with its
- *     question, and its picture comes on the next sentence: SC01's box (what it sells), one bar in three parts (where the money
- *     comes from — a shape, no figures), Laba → Dividen / Reinvestasi, bars rising into dashed ones (the future).
+ *     question, and its picture comes on the next sentence: SC01's box (what it sells), a profit line over the years (a shape, no
+ *     figures; Simon 25 Nov), Laba → Dividen / Reinvestasi, bars rising into dashed ones (the future).
  *  C  "Kalau empat pertanyaan ini bisa dijawab": the cards fold into four ticked tiles at the top; under them SC06's balance
  *     scale with Harga on one pan and Bisnis on the other — now the price has something to be weighed against.
  *  D  "Kalau belum": the scale stays; its point in one line under it (Simon 16 Nov: the lone ABCD was "gabut").
@@ -39,6 +39,7 @@ import {
 } from "../../../core";
 import { BLOCK } from "../data/timing";
 import { BoardGrid, Glyph, Shot, ease, useWords } from "../components/kit";
+import { ProfitLine } from "../components/ProfitLine";
 
 const CX = theme.canvas.width / 2;
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
@@ -59,11 +60,12 @@ const cardX = (i: number) =>
   CX - (4 * CARD.w + 3 * CARD.gap) / 2 + i * (CARD.w + CARD.gap);
 const QUESTIONS = [
   { ask: "Jual apa?", at: "Pertama", artAt: "Produk atau" },
-  { ask: "Uang dari mana?", at: "Kedua", artAt: "Apakah bisnisnya" },
+  { ask: "Menghasilkan laba?", at: "Kedua", artAt: "Apakah bisnisnya" },
   { ask: "Labanya untuk apa?", at: "Ketiga", artAt: "Apakah dibagikan" },
   { ask: "Bisa tumbuh?", at: "Terakhir", artAt: "Apakah laba" },
 ] as const;
-const SPLIT = [0.52, 0.3, 0.18];
+/** card 2's profit line: to `half` on "Apakah bisnisnya", the rest of the years on "perkembangan profitabilitasnya … waktu ke waktu" */
+const PROFIT = { x: 52, y: 260, w: CARD.w - 104, h: 210, half: 0.5 };
 const GROW = [0.32, 0.46, 0.58, 0.74, 0.92];
 
 // C — the tiles and the scale (SC06's parts)
@@ -181,6 +183,10 @@ export const SC07 = () => {
       ease(f, lightAt[i], m.pop) *
       (i < 3 ? 1 - ease(f, lightAt[i + 1], m.pop) : 1 - ease(f, doneAt, m.pop)),
   );
+  const growAt = W("perkembangan profitabilitasnya");
+  const profitP =
+    PROFIT.half * ease(f, W("Apakah bisnisnya"), m.sec(0.9)) +
+    (1 - PROFIT.half) * ease(f, growAt, W("ke waktu") - growAt);
   const fold = ease(f, doneAt, m.move);
   const scaleAt = W("barulah kita");
   const scaleIn = ease(f, scaleAt - m.sec(0.2), m.reveal);
@@ -202,7 +208,7 @@ export const SC07 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A: the question to skip */}
-      <Shot from={-1} to={cardsAt} block={BLOCK.SC07} cutIn={false}>
+      <Shot start={-1} to={cardsAt} block={BLOCK.SC07} cutIn={false}>
         <Keyed
           name="Jangan mulai dari “Target harg"
           style={{
@@ -210,12 +216,12 @@ export const SC07 = () => {
             left: 0,
             top: 0,
             width: theme.canvas.width,
-            opacity: interpolate(frame, [20, 44], [0, 1], {
+            opacity: interpolate(frame, [18, 42], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
-            translate: interpolate(frame, [20, 44], ["0px 18px", "0px 0px"], {
+            translate: interpolate(frame, [18, 42], ["0px 18px", "0px 0px"], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
@@ -236,7 +242,7 @@ export const SC07 = () => {
       </Shot>
 
       {/* B–C: four questions, then what they make possible */}
-      <Shot from={cardsAt} to={1e6} block={BLOCK.SC07} cutOut={false}>
+      <Shot start={cardsAt} to={1e6} block={BLOCK.SC07} cutOut={false}>
         {/* B: the heading over the cards, turning over once */}
         {(() => {
           const swap = ease(f, W("Pertama"), m.move);
@@ -274,7 +280,7 @@ export const SC07 = () => {
         {((it: React.ReactNode[]) => (
           <>
             <Handle name="Jual apa?">{it[0]}</Handle>
-            <Handle name="Uang dari mana?">{it[1]}</Handle>
+            <Handle name="Menghasilkan laba?">{it[1]}</Handle>
             <Handle name="Labanya untuk apa?">{it[2]}</Handle>
             <Handle name="Bisa tumbuh?">{it[3]}</Handle>
           </>
@@ -392,35 +398,14 @@ export const SC07 = () => {
                         />
                       ) : null}
                       {i === 1 ? (
-                        <div
-                          style={{
-                            position: "absolute",
-                            left: 40,
-                            top: 330,
-                            width: CARD.w - 80,
-                            height: 70,
-                            display: "flex",
-                            gap: 6,
-                          }}
-                        >
-                          {SPLIT.map((s, k) => (
-                            <div
-                              key={k}
-                              style={{
-                                width: `${s * 100}%`,
-                                height: "100%",
-                                borderRadius: 14,
-                                background: [
-                                  c.indigo,
-                                  theme.color.hairlineBrandSolid,
-                                  theme.color.skeleton,
-                                ][k],
-                                transform: `scaleX(${ease(f, W(q.artAt) + k * m.sec(0.2), m.reveal).toFixed(3)})`,
-                                transformOrigin: "0 50%",
-                              }}
-                            />
-                          ))}
-                        </div>
+                        <ProfitLine
+                          x={PROFIT.x}
+                          y={PROFIT.y}
+                          w={PROFIT.w}
+                          h={PROFIT.h}
+                          on={art}
+                          p={profitP}
+                        />
                       ) : null}
                       {i === 2 ? (
                         <div
@@ -659,12 +644,12 @@ export const SC07 = () => {
           left: 0,
           top: 0,
           width: theme.canvas.width,
-          opacity: interpolate(frame, [3511, 3535], [0, 1], {
+          opacity: interpolate(frame, [3236, 3260], [0, 1], {
             easing: Easing.bezier(0.65, 0, 0.35, 1),
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",
           }),
-          translate: interpolate(frame, [3511, 3535], ["0px 18px", "0px 0px"], {
+          translate: interpolate(frame, [3236, 3260], ["0px 18px", "0px 0px"], {
             easing: Easing.bezier(0.65, 0, 0.35, 1),
             extrapolateLeft: "clamp",
             extrapolateRight: "clamp",

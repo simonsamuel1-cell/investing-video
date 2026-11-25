@@ -5,8 +5,10 @@
  *
  *  A  "Tiga hal yang perlu diingat": "3 hal yang perlu diingat" over three numbered cards, each filling on its sentence with
  *     a small picture recalling its scene and one plain sentence (Simon 16 Nov: no icon strings, no abbreviations).
- *  B  "Prinsip ini digunakan oleh investor…" (a cut): a title, Simon's picture of Schloss, Munger and Lynch whole (16 Nov,
- *     "3 figures.png"), each name and figure (the script's) under its man; "Yang dibeli tetap perusahaan, bukan kode saham".
+ *  B  "Prinsip ini digunakan oleh investor…" (a cut): a title, Simon's picture of Schloss, Buffett and Lynch whole (16 Nov,
+ *     "3 figures.png"), each name and figure (the script's) under its man; on "Investor seperti" the picture slides left and
+ *     Templeton and Nick Sleep come in at its right, each on his name (25 Nov), then a line under their names with "Beda gaya
+ *     investasi" and "Beda beli perusahaan" on those sentences; "Yang dibeli tetap perusahaan, bukan kode saham".
  *  C  "Di Tuntun" (a cut): the mascot, the heading and the three features as pills; Simon's screens (5 Nov) on their words.
  *  D  "Dari empat pertanyaan tadi" (a cut): SC07's four questions at the left, each joined to where the app answers it:
  *     1–2 Revenue Composition, 3 the dividend (SC04's screen), 4 Deep Research.
@@ -16,6 +18,7 @@
  *     boxed in red, its pointer into the red, "Terlalu mahal" on it; "Perusahaan bagus belum tentu investasi bagus" under all.
  *  F  "Jadi di video selanjutnya" (a cut): the next video's question.
  */
+import { curves } from "@remotion/effects/curves";
 import { Line as Line_ } from "../components/kit";
 import type React from "react";
 import { Handle, NDiv, Keyed } from "../../../core/nudge";
@@ -33,6 +36,7 @@ import {
   Easing,
   interpolate,
   Interactive,
+  HtmlInCanvas,
 } from "remotion";
 import {
   Connector,
@@ -87,11 +91,11 @@ const MINI_BOOK = { x: 118, y: 92, w: 264, rowH: 62, gap: 12, head: 64 };
 const RUMOUR = { w: 88, h: 54, xs: [64, 436], ys: [150, 300], bounce: 14 };
 
 // B — three investors (VI01's line-art tiles; the figures are the script's)
-/** Simon's picture whole, one image (16 Nov: "ini 1 gambar, jangan di crop"), each name and figure under its man */
+/** Simon's picture whole, one image (16 Nov: "ini 1 gambar, jangan di crop"; 25 Nov: Buffett in Munger's place, as the script says), each name and figure under its man */
 const GROUP = {
   w: 1140,
   y: 232,
-  src: "art/vi02/three-figures.jpg",
+  src: "art/vi02/three-figures-buffett.jpg",
   w0: 2172,
   h0: 724,
   cxs: [360, 1080, 1768],
@@ -104,6 +108,32 @@ const GROUP = {
 const GROUP_K = GROUP.w / GROUP.w0;
 const GROUP_H = GROUP.h0 * GROUP_K;
 const GROUP_X = CX - GROUP.w / 2;
+/**
+ * "Investor seperti John Templeton dan Nick Sleep" (Simon 25 Nov: "gambar 3 digeser ke kiri, lalu muncul gambar 1 dan gambar 2"):
+ * the picture goes to the left margin at `h`, its top staying where it is, and his two squares whole at its right fill the
+ * row to the right margin. No figures: the script gives none.
+ */
+const ROW = { x: theme.margin.left, h: 336, gap: 24, at: "Investor seperti", sec: 0.75 };
+const ROW_K = ROW.h / GROUP_H;
+const ROW_Y = GROUP.y;
+const ROW_X = (i: number) => ROW.x + GROUP.w * ROW_K + ROW.gap + i * (ROW.h + ROW.gap);
+const MORE = [
+  { name: "John Templeton", src: "art/vi02/john-templeton.jpg" },
+  { name: "Nick Sleep", src: "art/vi02/nick-sleep.jpg" },
+] as const;
+/**
+ * "Gaya investasi mereka berbeda. Perusahaan yang mereka beli juga berbeda" (Simon 25 Nov, his drawing): an indigo line of 3 px
+ * under the two names, from the left of "John Templeton" to the right of "Nick Sleep", its ends meeting in the middle; under it
+ * one line per sentence. `h` = the line's depth, `ys` = the texts' centres.
+ */
+const DIFF = { x1: 1172, x2: 1746, y: 654, h: 46, r: 34, stroke: 3, sec: 0.6, size: 32, at: "Gaya investasi" };
+const DIFF_W = DIFF.x2 - DIFF.x1;
+/** half the line: down from one end, round the corner, to the middle */
+const DIFF_HALF = (side: 1 | -1) => `M ${(side * DIFF_W) / 2} 0 V ${DIFF.h - DIFF.r} Q ${(side * DIFF_W) / 2} ${DIFF.h} ${side * (DIFF_W / 2 - DIFF.r)} ${DIFF.h} H 0`;
+const DIFFS = [
+  { text: "Beda gaya investasi", y: 736 },
+  { text: "Beda beli perusahaan", y: 778 },
+] as const;
 /** the title over the three (Simon 16 Nov: "kasih judul"), from "Prinsip ini digunakan oleh investor dari generasi yang berbeda" */
 const PEOPLE_HEAD = {
   y: 172,
@@ -124,9 +154,9 @@ const INVESTORS = [
     at: "Walter Schloss",
   },
   {
-    name: "Charlie Munger",
-    pct: "19,8%",
-    years: "14 tahun",
+    name: "Warren Buffett",
+    pct: "19,7%",
+    years: "60+ tahun",
     at: "Warren Buffett",
   },
   { name: "Peter Lynch", pct: "29,2%", years: "13 tahun", at: "Peter Lynch" },
@@ -254,6 +284,8 @@ export const SC08 = () => {
   const g = f + BLOCK.SC08;
 
   const peopleAt = W("Prinsip yang");
+  const slide = ease(f, W(ROW.at), m.sec(ROW.sec));
+  const diffP = ease(f, W(DIFF.at), m.sec(DIFF.sec));
   const appAt = W("Di Tuntun");
   const mapAt = W("Pertanyaan ketiga");
   const twoAt = W("Namun, setelah");
@@ -271,7 +303,7 @@ export const SC08 = () => {
       <BoardGrid g={g} on={1} />
 
       {/* A: three things to remember — each card a picture from its scene and one sentence */}
-      <Shot from={-1} to={peopleAt} block={BLOCK.SC08} cutIn={false}>
+      <Shot start={-1} to={peopleAt} block={BLOCK.SC08} cutIn={false}>
         <Keyed
           name="3 hal yang perlu diingat"
           style={{
@@ -618,7 +650,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* B: three investors, one principle */}
-      <Shot from={peopleAt} to={appAt} block={BLOCK.SC08}>
+      <Shot start={peopleAt} to={appAt} block={BLOCK.SC08}>
         <Keyed
           name="Objek 2"
           style={{
@@ -627,14 +659,14 @@ export const SC08 = () => {
             top: PEOPLE_HEAD.y,
             width: theme.canvas.width,
             textAlign: "center",
-            opacity: interpolate(frame, [1149, 1173], [0, 1], {
+            opacity: interpolate(frame, [1125, 1149], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [1149, 1173],
+              [1125, 1149],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -657,22 +689,28 @@ export const SC08 = () => {
           </div>
         </Keyed>
         <Keyed
-          name="Objek 3"
+          name="Geser foto 3 figur"
           style={{
             position: "absolute",
             left: GROUP_X,
             top: GROUP.y,
             width: GROUP.w,
             height: GROUP_H,
-            opacity: interpolate(frame, [1155, 1179], [0, 1], {
-              easing: Easing.bezier(0.65, 0, 0.35, 1),
-              extrapolateLeft: "clamp",
-              extrapolateRight: "clamp",
-            }),
+            transformOrigin: "0px 0px",
             translate: interpolate(
               frame,
-              [1155, 1179],
-              ["0px 18px", "0px 0px"],
+              [2593, 2638],
+              ["0px 0px", "-294px 0px"],
+              {
+                easing: Easing.bezier(0.65, 0, 0.35, 1),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            ),
+            scale: interpolate(
+              frame,
+              [2593, 2638],
+              [1, 0.8842],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
                 extrapolateLeft: "clamp",
@@ -681,32 +719,66 @@ export const SC08 = () => {
             ),
           }}
         >
-          <div
+          <HtmlInCanvas
+            durationInFrames={8409}
+            width={1140}
+            height={380}
             style={{
               position: "absolute",
-              inset: 0,
-              borderRadius: R,
-              overflow: "hidden",
-              boxShadow: shadow.soft,
-              background: c.ink,
+              left: 0,
+              top: 0
             }}
           >
-            <Pic
-              src={staticFile(GROUP.src)}
+            <Keyed
+              name="Objek 3"
               style={{
-                position: "absolute",
-                left: 0,
-                top: 0,
                 width: GROUP.w,
                 height: GROUP_H,
+                opacity: interpolate(frame, [1131, 1155], [0, 1], {
+                  easing: Easing.bezier(0.65, 0, 0.35, 1),
+                  extrapolateLeft: "clamp",
+                  extrapolateRight: "clamp",
+                }),
+                translate: interpolate(
+                  frame,
+                  [1131, 1155],
+                  ["0px 18px", "0px 0px"],
+                  {
+                    easing: Easing.bezier(0.65, 0, 0.35, 1),
+                    extrapolateLeft: "clamp",
+                    extrapolateRight: "clamp",
+                  },
+                ),
               }}
-            />
-          </div>
+            >
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  borderRadius: R,
+                  overflow: "hidden",
+                  boxShadow: shadow.soft,
+                  background: c.ink,
+                }}
+              >
+                <Pic
+                  src={staticFile(GROUP.src)}
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    width: GROUP.w,
+                    height: GROUP_H,
+                  }}
+                />
+              </div>
+            </Keyed>
+          </HtmlInCanvas>
         </Keyed>
         {((it: React.ReactNode[]) => (
           <>
             <Handle name="Walter Schloss">{it[0]}</Handle>
-            <Handle name="Charlie Munger">{it[1]}</Handle>
+            <Handle name="Warren Buffett">{it[1]}</Handle>
             <Handle name="Peter Lynch">{it[2]}</Handle>
           </>
         ))(
@@ -717,8 +789,13 @@ export const SC08 = () => {
               m.reveal,
             );
             const said = ease(f, W(iv.at), m.reveal);
-            const x = GROUP_X + GROUP.cxs[i] * GROUP_K;
-            const top = GROUP.y + GROUP_H;
+            const x0 = GROUP_X + GROUP.cxs[i] * GROUP_K;
+            const x =
+              x0 + (ROW.x + GROUP.cxs[i] * GROUP_K * ROW_K - x0) * slide;
+            const top =
+              GROUP.y +
+              GROUP_H +
+              (ROW_Y + ROW.h - GROUP.y - GROUP_H) * slide;
             return (
               <NDiv
                 key={iv.name}
@@ -783,6 +860,225 @@ export const SC08 = () => {
             );
           }),
         )}
+        <Keyed
+          name="John Templeton"
+          style={{
+            position: "absolute",
+            left: ROW_X(0),
+            top: ROW_Y,
+            width: ROW.h,
+            height: ROW.h,
+            opacity: interpolate(frame, [2637, 2661], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+            translate: interpolate(
+              frame,
+              [2637, 2661],
+              ["40px 0px", "0px 0px"],
+              {
+                easing: Easing.bezier(0.65, 0, 0.35, 1),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            ),
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: R * ROW_K,
+              overflow: "hidden",
+              boxShadow: shadow.soft,
+              background: c.ink,
+            }}
+          >
+            <Pic
+              src={staticFile(MORE[0].src)}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: ROW.h,
+                height: ROW.h,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: ROW.h + GROUP.name,
+              textAlign: "center",
+              ...typeStyle("label"),
+              fontSize: 34,
+              fontWeight: 600,
+              color: c.ink,
+            }}
+          >
+            {MORE[0].name}
+          </div>
+        </Keyed>
+        <Keyed
+          name="Nick Sleep"
+          style={{
+            position: "absolute",
+            left: ROW_X(1),
+            top: ROW_Y,
+            width: ROW.h,
+            height: ROW.h,
+            opacity: interpolate(frame, [2705, 2729], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+            translate: interpolate(
+              frame,
+              [2705, 2729],
+              ["40px 0px", "0px 0px"],
+              {
+                easing: Easing.bezier(0.65, 0, 0.35, 1),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            ),
+          }}
+        >
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              borderRadius: R * ROW_K,
+              overflow: "hidden",
+              boxShadow: shadow.soft,
+              background: c.ink,
+            }}
+          >
+            <Pic
+              src={staticFile(MORE[1].src)}
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 0,
+                width: ROW.h,
+                height: ROW.h,
+              }}
+            />
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              top: ROW.h + GROUP.name,
+              textAlign: "center",
+              ...typeStyle("label"),
+              fontSize: 34,
+              fontWeight: 600,
+              color: c.ink,
+            }}
+          >
+            {MORE[1].name}
+          </div>
+        </Keyed>
+        <Keyed
+          name="Garis Templeton–Sleep"
+          style={{
+            position: "absolute",
+            left: DIFF.x1,
+            top: DIFF.y,
+            width: DIFF_W,
+            height: DIFF.h,
+          }}
+        >
+          {diffP > 0.001 ? (
+            <svg width={DIFF_W} height={DIFF.h} style={{ position: "absolute", left: 0, top: 0, overflow: "visible" }}>
+              <g transform={`translate(${DIFF_W / 2} 0)`} fill="none" stroke={c.indigo} strokeWidth={DIFF.stroke} strokeLinecap="round">
+                <path d={DIFF_HALF(-1)} pathLength={1} strokeDasharray="1 2" strokeDashoffset={1 - diffP} />
+                <path d={DIFF_HALF(1)} pathLength={1} strokeDasharray="1 2" strokeDashoffset={1 - diffP} />
+              </g>
+            </svg>
+          ) : null}
+        </Keyed>
+        <Keyed
+          name="Beda gaya investasi"
+          style={{
+            position: "absolute",
+            left: DIFF.x1,
+            top: DIFFS[0].y,
+            width: DIFF_W,
+            textAlign: "center",
+            opacity: interpolate(frame, [2999, 3023], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+            translate: interpolate(
+              frame,
+              [2999, 3023],
+              ["0px 18px", "0px 0px"],
+              {
+                easing: Easing.bezier(0.65, 0, 0.35, 1),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            ),
+          }}
+        >
+          <div
+            style={{
+              transform: "translateY(-50%)",
+              ...typeStyle("label"),
+              fontSize: DIFF.size,
+              fontWeight: 600,
+              color: c.indigo,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {DIFFS[0].text}
+          </div>
+        </Keyed>
+        <Keyed
+          name="Beda beli perusahaan"
+          style={{
+            position: "absolute",
+            left: DIFF.x1,
+            top: DIFFS[1].y,
+            width: DIFF_W,
+            textAlign: "center",
+            opacity: interpolate(frame, [3092, 3116], [0, 1], {
+              easing: Easing.bezier(0.65, 0, 0.35, 1),
+              extrapolateLeft: "clamp",
+              extrapolateRight: "clamp",
+            }),
+            translate: interpolate(
+              frame,
+              [3092, 3116],
+              ["0px 18px", "0px 0px"],
+              {
+                easing: Easing.bezier(0.65, 0, 0.35, 1),
+                extrapolateLeft: "clamp",
+                extrapolateRight: "clamp",
+              },
+            ),
+          }}
+        >
+          <div
+            style={{
+              transform: "translateY(-50%)",
+              ...typeStyle("label"),
+              fontSize: DIFF.size,
+              fontWeight: 600,
+              color: c.indigo,
+              whiteSpace: "nowrap",
+            }}
+          >
+            {DIFFS[1].text}
+          </div>
+        </Keyed>
         {/* in the dashed text box (Simon 16 Nov: "kasih text box garis putus putus") */}
         <DashBox
           cx={CX}
@@ -815,7 +1111,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* C: the app — the heading, a pill per feature, the screens on their words */}
-      <Shot from={appAt} to={mapAt} block={BLOCK.SC08}>
+      <Shot start={appAt} to={mapAt} block={BLOCK.SC08}>
         <TuntunMark
           x={APP.headX + APP.mascot / 2}
           y={
@@ -949,7 +1245,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* D: the four questions, and where the app answers each */}
-      <Shot from={mapAt} to={twoAt} block={BLOCK.SC08}>
+      <Shot start={mapAt} to={twoAt} block={BLOCK.SC08}>
         {((it: React.ReactNode[]) => (
           <>
             <Handle name="Jual apa?">{it[0]}</Handle>
@@ -1114,7 +1410,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* E: a good company — at what price? Tuntun's own card says both */}
-      <Shot from={twoAt} to={nextAt} block={BLOCK.SC08}>
+      <Shot start={twoAt} to={nextAt} block={BLOCK.SC08}>
         <Keyed
           name="factory"
           style={{
@@ -1123,14 +1419,14 @@ export const SC08 = () => {
             top: GOOD.y,
             width: GOOD.w,
             height: GOOD.h,
-            opacity: interpolate(frame, [7240, 7264], [0, 1], {
+            opacity: interpolate(frame, [6921, 6945], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7240, 7264],
+              [6921, 6945],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1202,14 +1498,14 @@ export const SC08 = () => {
             top: 0,
             width: theme.canvas.width,
             height: theme.canvas.height,
-            opacity: interpolate(frame, [7387, 7411], [0, 1], {
+            opacity: interpolate(frame, [7068, 7092], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7387, 7411],
+              [7068, 7092],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1276,7 +1572,7 @@ export const SC08 = () => {
                 width: (BUMI.fvNote.x2 - BUMI.fvNote.x1) * UI_K,
                 height: (BUMI.fvNote.y2 - BUMI.fvNote.y1) * UI_K,
                 background: c.cardBg,
-                opacity: interpolate(frame, [7690, 7708], [0, 1], {
+                opacity: interpolate(frame, [7371, 7389], [0, 1], {
                   easing: Easing.bezier(0.65, 0, 0.35, 1),
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
@@ -1333,14 +1629,14 @@ export const SC08 = () => {
               position: "absolute",
               left: 0,
               top: 0,
-              opacity: interpolate(frame, [7749, 7773], [0, 1], {
+              opacity: interpolate(frame, [7430, 7454], [0, 1], {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
               }),
               translate: interpolate(
                 frame,
-                [7749, 7773],
+                [7430, 7454],
                 ["0px 18px", "0px 0px"],
                 {
                   easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1361,7 +1657,9 @@ export const SC08 = () => {
                 borderRadius: 999,
                 background: c.cardBg,
                 boxShadow: `${shadow.soft}, inset 0 0 0 3px ${theme.color.crossRed}`,
-                ...typeStyle("label"),
+                fontFamily: typeStyle("label").fontFamily,
+                letterSpacing: typeStyle("label").letterSpacing,
+                lineHeight: typeStyle("label").lineHeight,
                 fontSize: 32,
                 fontWeight: 600,
                 color: theme.color.crossRed,
@@ -1379,14 +1677,14 @@ export const SC08 = () => {
             left: 0,
             top: 0,
             width: theme.canvas.width,
-            opacity: interpolate(frame, [7491, 7515], [0, 1], {
+            opacity: interpolate(frame, [7172, 7196], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7491, 7515],
+              [7172, 7196],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1410,7 +1708,7 @@ export const SC08 = () => {
       </Shot>
 
       {/* F: the next video's question */}
-      <Shot from={nextAt} to={1e6} block={BLOCK.SC08} cutOut={false}>
+      <Shot start={nextAt} to={1e6} block={BLOCK.SC08} cutOut={false}>
         <Keyed
           name="Video selanjutnya"
           style={{
@@ -1420,14 +1718,14 @@ export const SC08 = () => {
             width: theme.canvas.width,
             display: "flex",
             justifyContent: "center",
-            opacity: interpolate(frame, [7833, 7857], [0, 1], {
+            opacity: interpolate(frame, [7514, 7538], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7833, 7857],
+              [7514, 7538],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1488,14 +1786,14 @@ export const SC08 = () => {
             left: CX - 640,
             top: 380,
             width: 1280,
-            opacity: interpolate(frame, [8066, 8090], [0, 1], {
+            opacity: interpolate(frame, [7672, 7696], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [8066, 8090],
+              [7672, 7696],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
