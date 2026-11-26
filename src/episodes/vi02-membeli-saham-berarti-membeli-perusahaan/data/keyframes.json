@@ -843,10 +843,10 @@
   "file": "WhyToPrice",
   "name": "factory",
   "frames": [
-   6921,
-   6945
+   7262,
+   7286
   ],
-  "at": "(W(\"Namun, setelah\"))",
+  "at": "W(\"Perusahaan yang bagus\")",
   "reveal": 24,
   "fade": 20
  },
@@ -854,10 +854,10 @@
   "file": "WhyToPrice",
   "name": "Objek",
   "frames": [
-   7068,
-   7092
+   7280,
+   7304
   ],
-  "at": "(W(\"satu pertanyaan\"))",
+  "at": "W(\"Perusahaan yang bagus\") + m.sec(0.3)",
   "reveal": 24,
   "fade": 20
  },
@@ -865,8 +865,8 @@
   "file": "WhyToPrice",
   "name": "Penutup teks Undervalued",
   "frames": [
-   7371,
-   7389
+   7461,
+   7479
   ],
   "expr": [
    "W(\"kalau kita\")",
@@ -877,8 +877,8 @@
   "file": "WhyToPrice",
   "name": "Terlalu mahal",
   "frames": [
-   7430,
-   7454
+   7520,
+   7544
   ],
   "at": "W(\"terlalu mahal\")",
   "reveal": 24,
@@ -888,10 +888,10 @@
   "file": "WhyToPrice",
   "name": "Perusahaan bagus belum tentu i",
   "frames": [
-   7172,
-   7196
+   7312,
+   7336
   ],
-  "at": "W(\"Perusahaan yang bagus\")",
+  "at": "W(\"belum tentu\")",
   "reveal": 24,
   "fade": 20
  },
@@ -899,8 +899,8 @@
   "file": "WhyToPrice",
   "name": "Video selanjutnya",
   "frames": [
-   7514,
-   7538
+   7604,
+   7628
   ],
   "at": "(W(\"Karena itu\")) + m.sec(0.15)",
   "reveal": 24,
@@ -910,8 +910,8 @@
   "file": "WhyToPrice",
   "name": "Berapa harga yang",
   "frames": [
-   7672,
-   7696
+   7762,
+   7786
   ],
   "at": "W(\"berapa harga\")",
   "reveal": 24,

@@ -37,7 +37,7 @@ import { loadFont } from "@remotion/google-fonts/PlusJakartaSans";
 import { loadFont as loadMono } from "@remotion/google-fonts/JetBrainsMono";
 
 
-loadFont("normal", { weights: ["400", "500", "600", "700", "800"] });
+loadFont("normal", { weights: ["300", "400", "500", "600", "700", "800"], ignoreTooManyRequestsWarning: true }); // 300: VI02 SC08's light type (Simon 26 Nov)
 /**
  * ⚠ THE MONO IS A LABEL FACE, NOT A SECOND BODY FACE. It is for short lines
  * that name a thing — a combination, a state, a key — where the fixed pitch and

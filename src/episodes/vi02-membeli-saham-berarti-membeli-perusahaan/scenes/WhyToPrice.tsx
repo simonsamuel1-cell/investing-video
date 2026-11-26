@@ -9,14 +9,24 @@
  *     "3 figures.png"), each name and figure (the script's) under its man; on "Investor seperti" the picture slides left and
  *     Templeton and Nick Sleep come in at its right, each on his name (25 Nov), then a line under their names with "Beda gaya
  *     investasi" and "Beda beli perusahaan" on those sentences; "Yang dibeli tetap perusahaan, bukan kode saham".
- *  C  "Di Tuntun" (a cut): the mascot, the heading and the three features as pills; Simon's screens (5 Nov) on their words.
- *  D  "Dari empat pertanyaan tadi" (a cut): SC07's four questions at the left, each joined to where the app answers it:
- *     1–2 Revenue Composition, 3 the dividend (SC04's screen), 4 Deep Research.
+ *  C–D "Di Tuntun" to "…di masa depan" (a cut in, then one take; positions after Simon's wireframe, the scene's own
+ *     style — his 26 Nov directions): over the first sentence, its summary in the middle of the screen (his words), gone
+ *     on "Melalui Revenue Breakdown"; the mascot over a column of numbers 1–4, muted (light grey, dark grey number, no
+ *     border); on its question each number lights (white, indigo border and number), then an indigo highlight comes to it
+ *     (on 1 it fades in and stretches right into a pill; on 2–4 it slides straight down from the one before; one length
+ *     for all, the longest question's), the label stretches under it, and the question shows white on it — one step after the other; a label the highlight has left stays white, indigo ring and words. At the right
+ *     two screens at most, each with its term right above it and a short summary under it: Revenue Breakdown and
+ *     Profitability together, then (on "Pertanyaan ketiga") Dividend and Payout Ratio. Each tag, screen and summary is
+ *     one group; the mascot and the four questions are another; all share one top (Simon 26 Nov; the screens' page
+ *     120 px right, his Studio move, locked). On "pertanyaan keempat" the dividend page goes and question 4 itself comes
+ *     on the page, then "Sulit dijawab"; on "Deep Research Report" the report's first page with its term.
  *  E  "Tapi setelah memahami perusahaannya" (a cut; Simon 16 Nov: not the two static cards, not a scale — Tuntun's own UI):
  *     "Perusahaan bagus" ✓ with SC01's factory on top; "satu pertanyaan": Tuntun's Company Quality / Reference Fair Value /
  *     Bullish Signals card under it; Company Quality boxed on "perusahaan bagus", then on "membayar terlalu mahal" Fair Value
  *     boxed in red, its pointer into the red, "Terlalu mahal" on it; "Perusahaan bagus belum tentu investasi bagus" under all.
- *  F  "Jadi di video selanjutnya" (a cut): the next video's question.
+ *     (Simon 26 Nov: first only the summary "Setelah paham perusahaannya, masih ada pertanyaan penting"; both cards on
+ *     "Perusahaan yang bagus", the verdict line on "belum tentu".)
+ *  F  "Jadi di video selanjutnya" (a cut): the next video's question, set big and light with "layak" bold and selected.
  */
 import { curves } from "@remotion/effects/curves";
 import { Line as Line_ } from "../components/kit";
@@ -25,21 +35,19 @@ import { Handle, NDiv, Keyed } from "../../../core/nudge";
 import { Card as Card_, Drawing as Drawing_ } from "../components/kit";
 import {
   DrawingVI02E as Drawing,
-  LineE as Line,
   PicE as Pic,
 } from "../../../editable";
 import {
   Img,
-  interpolateColors,
   staticFile,
   useCurrentFrame,
   Easing,
   interpolate,
   Interactive,
   HtmlInCanvas,
+  interpolateColors,
 } from "remotion";
 import {
-  Connector,
   HighlightBox,
   SoftGround,
   Stage,
@@ -74,15 +82,15 @@ const THREE = {
   headY: 172,
   headSize: 56,
   textY: 440,
-  textSize: 36,
+  textSize: 32, // Simon 26 Nov: 36 → 32
 };
 const threeX = (i: number) =>
   CX - (3 * THREE.w + 2 * THREE.gap) / 2 + i * (THREE.w + THREE.gap);
 const POINTS = [
-  { text: "Di balik kode saham, ada bisnis nyata.", at: "Di balik" },
-  { text: "Rumor ga berguna bagi yang paham buku bisnisnya", at: "Bagi orang" },
+  { text: "Di balik kode saham,\nada pabrik, pelanggan, laba", at: "Di balik" },
+  { text: "Rumor tidak bisa\nmenggantikan analisis", at: "Bagi orang" },
   {
-    text: "Sebelum beli untuk 10 menit, pikirkan bisnisnya 10 tahun.",
+    text: "Sebelum beli untuk 10\u00a0menit,\npikirkan bisnisnya 10\u00a0tahun",
     at: "sebelum membeli",
   },
 ] as const;
@@ -162,74 +170,105 @@ const INVESTORS = [
   { name: "Peter Lynch", pct: "29,2%", years: "13 tahun", at: "Peter Lynch" },
 ] as const;
 
-// C — the app (Simon's screens, 5 Nov): 1080 × 1700 from y 300, the report's first page to the same shape
-const APP = {
-  headX: theme.margin.left,
-  mascot: 84,
-  mascotGap: 22,
-  bob: 3,
-  bobFor: 1.6,
-  y: 190,
-  size: 56,
-  pillX: 506,
-  pillH: 64,
-  pillGap: 22,
-  pillSize: 34,
-  tick: 34,
-  top: 258,
-  gap: 80,
-  ratio: 0.6353,
-};
-const APP_H = theme.captionBand.top - 12 - APP.top;
-const APP_W = APP_H * APP.ratio;
-const FEATURES = [
-  {
-    text: "Revenue Composition",
-    src: "art/vi02/app/sc08-revenue-breakdown.jpg",
-    at: "Revenue Breakdown",
-    nth: 0,
-  },
-  {
-    text: "Profit Chart",
-    src: "art/vi02/app/sc08-perkembangan-laba.jpg",
-    at: "Profitability Chart",
-    nth: 0,
-  },
-] as const; // Deep Research is not said in this shot, so it has no pill here (Simon 16 Nov); it comes in D
-
-// D — the four questions, and where each is answered
+// C–D — one take (Simon 26 Nov). Left: the mascot over numbers 1–4. A number is muted until its question (its word below),
+// then lights, stretches into a pill and shows the question — in that order; on the next one's word it goes back to muted,
+// pill and question kept. Right: a page of at most two screens (Simon's, 1080 × 1700 from y 300), each with its term right above it and a
+// summary of the VO under it; the first page goes on "Pertanyaan ketiga". Screens: the app's tab bar and Key Stats row cut off (Simon
+// 26 Nov: "potong aja"), each from its title to its last table (36 px either side) out of his 1080 × 2340 originals — no
+// Financial Health, no bottom bar, no white space (the -body files); SHOT_H is the room, not a screen's height. Each tag + screen + summary is one
+// group (Simon 26 Nov: "group … lalu buat align-top terhadap pertanyaan 1"); then the mascot and the four questions became
+// one group too, moved down till its top is level with the tags' ("align-top terhadap tag"); tag and summary
+// centred on the screen.
+const COL = { x: theme.margin.left, d: 60, step: 100, num: 32, mascot: 72, mascotGap: 16, bob: 3, bobFor: 1.6, askSize: 32, askGap: 4, askPadR: 26 };
+/** Simon 26 Nov: the first sentence's summary, his words, in the middle of the screen until the first screen comes — set as
+ *  a title ("design dong jadi judul"): the series' heading type (SC02's "Value Investing", 64/700), two lines, the key term
+ *  in indigo */
+/** E opens on the summary of "Namun, setelah memahami perusahaannya, masih ada satu pertanyaan penting" (Simon 26 Nov, his
+ *  words), set as the opening title is; the good-company card and Tuntun's card come on "Perusahaan yang bagus" instead */
+const E_LINE = { lines: ["Setelah paham perusahaannya,", "masih ada pertanyaan penting"], mark: "pertanyaan penting", size: 64, until: "Perusahaan yang bagus" };
+/** F's question set like Simon's type reference (26 Nov, "biar estetik"): big, tight, light against bold, the key word
+ *  bold and SELECTED — a text selection dragged over it on its word, with its two handles */
+const NEXT_Q = { size: 132, tracking: "-0.045em", lead: 1.04, light: 300, bold: 700, pad: 8, bar: 4, knob: 22 };
+const OPEN_LINE = { lines: ["Di Tuntun bisa baca", "“buku bisnis” di halaman sahamnya"], mark: "“buku bisnis”", size: 64, until: "Melalui Revenue" };
 const ASKS = [
-  "Jual apa?",
-  "Uang dari mana?",
-  "Labanya untuk apa?",
-  "Bisa tumbuh?",
-];
-const QCOL = { x: 200, w: 470, h: 104, ys: [270, 400, 560, 720] };
-const ANSWER = { x: 1060, w: 620, h: 150, thumb: 120 };
-const TARGETS = [
-  {
-    text: "Revenue Composition",
-    src: "art/vi02/app/sc08-revenue-breakdown.jpg",
-    y: 335,
-    from: [0, 1],
-    at: "bisa mulai dipahami",
-  },
-  {
-    text: "Dividen",
-    src: "art/vi02/app/sc04-dividend.jpg",
-    y: 560,
-    from: [2],
-    at: "berapa besar dividen",
-  },
-  {
-    text: "Deep Research",
-    src: "art/vi02/app/sc08-deep-research.jpg",
-    y: 720,
-    from: [3],
-    at: "Deep Research",
-    askAt: "pertanyaan keempat",
-  },
+  { text: "Jual apa?", at: "Revenue Breakdown" },
+  { text: "Menghasilkan laba?", at: "Profitability Chart" },
+  { text: "Labanya untuk apa?", at: "Pertanyaan ketiga" },
+  { text: "Bisa tumbuh?", at: "pertanyaan keempat" },
+] as const; // SC07's four cards
+/** each question's text width at 32/600, measured off a still; the pill grows by gap + this + its right padding */
+const ASK_TEXT_W = [140, 304, 307, 209];
+const PAGE = { tagY: 156, tagH: 56, tagGap: 16, tagPadX: 26, tagSize: 28, x: 688, gap: 36, sumGap: 20, sumSize: 28, sumLines: 2, ratio: 0.6353 };
+const Q_TOP = PAGE.tagY; // every group's top: the tags', and the mascot's
+const ASK_TOP = COL.mascot + COL.mascotGap; // number 1's circle's top, inside the mascot + questions group
+const askTop = (i: number) => ASK_TOP + i * COL.step;
+/** one pill length for every question and the highlight (Simon 26 Nov: "sama panjang" with the longest, 2 or 3) */
+const ASK_PILL_W = COL.d + COL.askGap + Math.max(...ASK_TEXT_W) + COL.askPadR;
+const SHOT_Y = PAGE.tagY + PAGE.tagH + PAGE.tagGap; // a screen's top, under its tag
+const SUM_H = Math.ceil(PAGE.sumSize * 1.3 * PAGE.sumLines);
+const SHOT_H = theme.captionBand.top - 12 - SUM_H - PAGE.sumGap - Q_TOP; // the screens' size, as before the groups moved
+/** the summary under each screen as TA07's closing quote card (Simon 26 Nov, "seperti … TA07, frame 9182"): white, a dark
+ *  border, a solid indigo block offset down-right behind it, “ and ” in opposite corners, the words bold and centred —
+ *  sized down to the room under the screens, two lines for every summary */
+const QUOTE = { gap: 16, size: 26, lead: 1.3, padY: 20, padX: 56, border: 3, drop: 10, mark: 48, markX: 1, markTop: 5, markBot: 33 };
+const QUOTE_H = Math.ceil(2 * QUOTE.size * QUOTE.lead) + 2 * QUOTE.padY;
+const SHOT_W = SHOT_H * PAGE.ratio;
+const shotX = (slot: number) => PAGE.x + slot * (SHOT_W + PAGE.gap);
+const MASCOT_W = (COL.mascot * 257.97) / 250.9; // TuntunMark's own viewBox
+const SCREENS = [
+  { tag: "Revenue Breakdown", src: "art/vi02/app/sc08-revenue-breakdown-body.jpg", h: 1195, page: 0, slot: 0, at: "Revenue Breakdown", sum: "Sumber pendapatan\nperusahaan", sumAt: "menjual", until: "Pertanyaan ketiga" },
+  { tag: "Profitability Chart", src: "art/vi02/app/sc08-perkembangan-laba-body.jpg", h: 1396, page: 0, slot: 1, at: "Profitability Chart", sum: "Perkembangan laba\ntiap tahun", sumAt: "menghasilkan", until: "Pertanyaan ketiga" },
+  { tag: "Dividend", src: "art/vi02/app/sc08-dividend-body.jpg", h: 1361, page: 1, slot: 0, at: "berapa besar dividen", sum: "Dividen yang dibagikan\nkepada pemegang saham", sumAt: "dibagikan", until: "pertanyaan keempat" },
+  { tag: "Payout Ratio", src: "art/vi02/app/sc08-payout-ratio-body.jpg", h: 1361, page: 1, slot: 1, at: "berapa besar laba", sum: "Laba yang disimpan dan\nditanam kembali", sumAt: "disimpan", until: "pertanyaan keempat" },
 ] as const;
+/** a screen's own height at SHOT_W (Simon 26 Nov: the white space and the app's bottom bar cut, so the four differ); a page's
+ *  summaries sit level, under its taller screen */
+const shotH = (h: number) => (SHOT_W * h) / 1080;
+const pageH = (page: number) => Math.max(...SCREENS.filter((o) => o.page === page).map((o) => shotH(o.h)));
+/** C–D, question 4 (Simon 26 Nov): the dividend page goes on "pertanyaan keempat"; the question itself comes on the page,
+ *  each half on its words, then the tag "Sulit dijawab" (his words) above it; on "Deep Research Report" both go and the
+ *  report's first page (his screen, 5 Nov) comes in with its term above it. Both centred on the page, tops on the tags' row. */
+const Q4 = {
+  lines: [
+    { text: "Apakah laba perusahaan bisa\nterus berkelanjutan?", at: "Apakah laba perusahaan" },
+    { text: "Apakah ke depannya akan menjadi\nlebih baik atau lebih buruk?", at: "Apakah ke depannya" },
+  ],
+  size: 48,
+  lead: 1.25,
+  gap: 24,
+  tag: { text: "Sulit dijawab", at: "paling sulit dijawab" },
+  until: "Deep Research Report",
+} as const;
+const DEEP = { tag: "Deep Research Report", src: "art/vi02/app/sc08-deep-research.jpg", at: "Deep Research Report", w: 978, h: 1540 };
+/** the Deep Research magnifier (Simon 26 Nov): on "memberikan analisis" the report slides to the far right; a lens (indigo
+ *  border, its fill indigo at 15 %, his numbers) comes onto it and goes to each thing the VO lists, and the empty middle
+ *  shows what is under the lens, enlarged, the sentence that says it boxed in orange (a border, no fill); every piece fades
+ *  in and out. The VO got 30 frames after each of the first three points for it ("tiap poin kamu kasih jeda 30 frame").
+ *  Where each point is on THIS screenshot (sc08-deep-research.jpg, page 1 — read 26 Nov), in its own 978 × 1540 px:
+ *    prospek industri       Valuation Summary, "The market is Indonesian credit and payments …" (its first two sentences)
+ *    kekuatan perusahaan    Company Quality, third paragraph: 45.67 % of revenue kept as profit, 21.46 % ROE, grade Best
+ *    keunggulan kompetitif  Company Quality, first paragraph: the brand makes its funding cheap; a rival cannot price its way in
+ *    berbagai risiko        Valuation Summary, "Net profit margin settles at 33.78 % and 36.03 % … against 45.67 % today" */
+const DEEP_S = SHOT_W / DEEP.w; // the report's scale on screen
+const DEEP_RIGHT_X = theme.canvas.width - theme.margin.right - SHOT_W;
+const LENS = { x: -10, w: 620, h: 310, border: 3, radius: 10, fill: 0.15, hl: 3 };
+const ZOOM = { w: 800, x: (COL.x + ASK_PILL_W + DEEP_RIGHT_X) / 2 - 400 };
+const ZOOM_K = ZOOM.w / LENS.w; // how much the middle enlarges what is under the lens
+const LENS_POINTS = [
+  { at: "prospek industri", top: 701, box: [820, 893] },
+  { at: "kekuatan perusahaan", top: 510, box: [611, 718] },
+  { at: "keunggulan kompetitif", top: 235, box: [311, 468] },
+  { at: "berbagai risiko", top: 858, box: [966, 1060] },
+] as const;
+const PAGE_CX = PAGE.x + SHOT_W + PAGE.gap / 2; // the page's centre, between its two screens
+/** question 4 designed (Simon 26 Nov, "ini di design dong"): the VO quotes it, so it sits in the TA07 quote card the summaries
+ *  use, at full size — white, a dark border, the indigo block behind, “ and ” in its corners; each half's second line indigo
+ *  (his rule for the three cards in A); "Sulit dijawab" a filled indigo pill under it ("di bawah"); card and pill one group,
+ *  centred on the page and centred VERTICALLY on the screen (Simon: "center vertikal aja") */
+const Q4CARD = { w: 2 * SHOT_W + PAGE.gap - 40, size: 44, padTop: 58, padBot: 58, border: 4, drop: 14, mark: 76, markX: 9, markY: 17, markBot: 62, tagGap: 24 };
+const Q4CARD_H = Q4CARD.padTop + 4 * Math.round(Q4CARD.size * Q4.lead) + Q4.gap + Q4CARD.padBot;
+const Q4_Y = theme.canvas.height / 2 - (Q4CARD_H + Q4CARD.drop + Q4CARD.tagGap + PAGE.tagH) / 2; // the group's top
+const Q4_TAG_Y = Q4_Y + Q4CARD_H + Q4CARD.drop + Q4CARD.tagGap;
 
 // E — good company, but the price?
 /**
@@ -287,12 +326,28 @@ export const SC08 = () => {
   const slide = ease(f, W(ROW.at), m.sec(ROW.sec));
   const diffP = ease(f, W(DIFF.at), m.sec(DIFF.sec));
   const appAt = W("Di Tuntun");
-  const mapAt = W("Pertanyaan ketiga");
   const twoAt = W("Namun, setelah");
+  // C–D's questions (Simon 26 Nov): each one lights on its word (a: white, indigo ring and number); then the indigo highlight
+  // comes — on 1 it fades in and stretches into the pill, on 2–4 it slides straight down from the one before ("langsung geser
+  // aja"), one length for all ("sama panjang", the longest question's) — and only once it is there does the label stretch,
+  // hidden under it ("pemanjangan label fill putihnya tidak terlihat"); the question shows, white on the highlight, as it
+  // arrives. A label the highlight has left stays white with an indigo ring and indigo words.
+  const askT = ASKS.map((a) => {
+    const lit = W(a.at);
+    const come = lit + m.sec(0.3);
+    const there = come + m.sec(0.5);
+    return { lit, come, open: there, say: there };
+  });
+  const hi = askT.reduce((k, t, i) => (f >= t.come ? i : k), -1);
+  const hiSlide = hi > 0 ? ease(f, askT[hi].come, m.sec(0.5)) : 1;
+  const hiY = hi > 0 ? askTop(hi - 1) + (askTop(hi) - askTop(hi - 1)) * hiSlide : askTop(0);
+  const hiW = hi === 0 ? COL.d + (ASK_PILL_W - COL.d) * ease(f, askT[0].come, m.sec(0.5)) : ASK_PILL_W;
+  const hiO = hi >= 0 ? ease(f, askT[0].come, m.sec(0.2)) : 0;
   const nextAt = W("Karena itu");
+  const goodAt = W("Perusahaan yang bagus"); // the cards (Simon 26 Nov: no longer on "Namun, setelah")
 
   // E
-  const cqOn = ease(f, W("Perusahaan yang bagus"), m.reveal);
+  const cqOn = ease(f, goodAt + m.sec(0.6), m.reveal);
   const fvOn = ease(f, W("kalau kita"), m.reveal);
   const toRed = ease(f, W("kalau kita") + m.sec(0.15), m.sec(0.9));
   const pointerAt = BUMI.gauge.at + (BUMI.gauge.red - BUMI.gauge.at) * toRed;
@@ -338,8 +393,8 @@ export const SC08 = () => {
         </Keyed>
         {((it: React.ReactNode[]) => (
           <>
-            <Handle name="Di balik kode saham, ada bisni">{it[0]}</Handle>
-            <Handle name="Rumor ga berguna bagi yang pah">{it[1]}</Handle>
+            <Handle name="Di balik kode saham, ada pabri">{it[0]}</Handle>
+            <Handle name="Rumor tidak bisa menggantikan">{it[1]}</Handle>
             <Handle name="Sebelum beli untuk 10 menit, p">{it[2]}</Handle>
           </>
         ))(
@@ -637,9 +692,14 @@ export const SC08 = () => {
                         lineHeight: 1.25,
                         color: c.ink,
                         textWrap: "balance",
+                        whiteSpace: "pre-line",
                       }}
                     >
-                      {pt.text}
+                      {pt.text.split("\n").map((line, k) => (
+                        <div key={k} style={{ color: k > 0 ? c.indigo : c.ink }}>
+                          {line}
+                        </div>
+                      ))}
                     </div>
                   </div>
                 </Card_>
@@ -1110,307 +1170,681 @@ export const SC08 = () => {
         </DashBox>
       </Shot>
 
-      {/* C: the app — the heading, a pill per feature, the screens on their words */}
-      <Shot start={appAt} to={mapAt} block={BLOCK.SC08}>
-        <TuntunMark
-          x={APP.headX + APP.mascot / 2}
-          y={
-            APP.y -
-            APP.mascot / 2 +
-            APP.bob * Math.sin(((f - appAt) / m.sec(APP.bobFor)) * Math.PI * 2)
-          }
-          height={APP.mascot}
-        />
-        <Line
-          x={APP.headX + APP.mascot + APP.mascotGap}
-          y={APP.y}
-          w={300}
-          size={APP.size}
-          weight={500}
-          text="Di Tuntun"
-        />
+      {/* C–D: the mascot over numbers 1–4, each lit and stretched into its question in turn; at the right a page of two
+          screens, the term above each and a summary under it */}
+      <Shot start={appAt} to={twoAt} block={BLOCK.SC08}>
         <Interactive.Div
-          name="Pill fitur"
+          name="Aplikasi"
           style={{
             position: "absolute",
-            left: APP.pillX,
-            top: APP.y - APP.pillH / 2,
-            height: APP.pillH,
-            display: "flex",
-            alignItems: "center",
-            gap: APP.pillGap,
+            inset: 0,
           }}
         >
-          {((it: React.ReactNode[]) => (
-            <>
-              <Handle name="Revenue Composition">{it[0]}</Handle>
-              <Handle name="Profit Chart">{it[1]}</Handle>
-            </>
-          ))(
-            FEATURES.map((k, i) => {
-              const shown = ease(
-                f,
-                appAt + m.sec(0.3) + i * m.sec(0.12),
-                m.reveal,
-              );
-              const ok = ease(f, W(k.at, k.nth), m.pop);
-              return (
+          {(() => {
+            const q = ease(f, appAt + m.sec(0.3), m.reveal) * (1 - ease(f, W(OPEN_LINE.until), m.sec(0.3)));
+            return (
+              <Handle name="Di Tuntun bisa baca">
                 <NDiv
-                  key={k.text}
                   style={{
-                    height: APP.pillH,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 10 * ok,
-                    padding: "0 26px",
-                    borderRadius: 999,
-                    background: interpolateColors(
-                      ok,
-                      [0, 1],
-                      [c.cardBg, theme.color.ok],
-                    ),
-                    boxShadow: `${shadow.soft}, inset 0 0 0 2px ${interpolateColors(ok, [0, 1], [theme.color.connector, theme.color.ok])}`,
-                    ...typeStyle("label"),
-                    fontSize: APP.pillSize,
-                    fontWeight: 600,
-                    color: interpolateColors(ok, [0, 1], [c.indigo, c.cardBg]),
-                    whiteSpace: "nowrap",
-                    opacity: shown,
+                    position: "absolute",
+                    left: 0,
+                    top: (1 - ease(f, appAt + m.sec(0.3), m.reveal)) * 12,
+                    width: theme.canvas.width,
+                    height: theme.canvas.height,
+                    opacity: q,
                   }}
                 >
-                  <div
-                    style={{
-                      width: APP.tick * ok,
-                      height: APP.tick,
-                      borderRadius: 999,
-                      background: c.cardBg,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      overflow: "hidden",
-                      fontSize: 22,
-                      fontWeight: 700,
-                      color: theme.color.ok,
-                      opacity: ok,
-                    }}
-                  >
-                    ✓
-                  </div>
-                  {k.text}
-                </NDiv>
-              );
-            }),
-          )}
-        </Interactive.Div>
-        {((it: React.ReactNode[]) => (
-          <>
-            <Handle name="Revenue Composition">{it[0]}</Handle>
-            <Handle name="Profit Chart">{it[1]}</Handle>
-          </>
-        ))(
-          FEATURES.map((k, i) => {
-            const p = ease(f, W(k.at, k.nth), m.reveal);
-            if (p <= 0.001) return null;
-            const rowW = 2 * APP_W + APP.gap;
-            return (
-              <NDiv
-                key={k.src}
-                style={{
-                  position: "absolute",
-                  left: CX - rowW / 2 + i * (APP_W + APP.gap),
-                  top: APP.top + (1 - p) * 24,
-                  width: APP_W,
-                  height: APP_H,
-                  borderRadius: R,
-                  overflow: "hidden",
-                  background: c.cardBg,
-                  boxShadow: shadow.soft,
-                  opacity: p,
-                }}
-              >
-                <Img
-                  showInTimeline={false}
-                  src={staticFile(k.src)}
-                  style={{
-                    width: APP_W,
-                    height: APP_H,
-                    display: "block",
-                    maxWidth: "none",
-                  }}
-                />
-              </NDiv>
-            );
-          }),
-        )}
-      </Shot>
-
-      {/* D: the four questions, and where the app answers each */}
-      <Shot start={mapAt} to={twoAt} block={BLOCK.SC08}>
-        {((it: React.ReactNode[]) => (
-          <>
-            <Handle name="Jual apa?">{it[0]}</Handle>
-            <Handle name="Uang dari mana?">{it[1]}</Handle>
-            <Handle name="Labanya untuk apa?">{it[2]}</Handle>
-            <Handle name="Bisa tumbuh?">{it[3]}</Handle>
-          </>
-        ))(
-          ASKS.map((a, i) => {
-            const p = ease(f, mapAt + m.sec(0.2) + i * m.sec(0.1), m.reveal);
-            const t = TARGETS.find((k) =>
-              (k.from as readonly number[]).includes(i),
-            )!;
-            const on = ease(f, W("askAt" in t ? t.askAt : t.at), m.pop);
-            return (
-              <NDiv
-                key={a}
-                style={{
-                  position: "absolute",
-                  left: QCOL.x,
-                  top: QCOL.ys[i] - QCOL.h / 2 + (1 - p) * 12,
-                  width: QCOL.w,
-                  height: QCOL.h,
-                  opacity: p,
-                }}
-              >
-                <Card_
-                  x={0}
-                  y={0}
-                  w={QCOL.w}
-                  h={QCOL.h}
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 20,
-                    padding: "0 22px",
-                    boxShadow: `${shadow.soft}, inset 0 0 0 ${on > 0.5 ? 3 : 0}px ${c.indigo}`,
-                  }}
-                >
-                  <div
-                    style={{
-                      width: 60,
-                      height: 60,
-                      borderRadius: 999,
-                      flex: "none",
-                      background: on > 0.5 ? c.indigo : c.cardBg,
-                      boxShadow: `inset 0 0 0 3px ${on > 0.5 ? c.indigo : c.ink}`,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      ...typeStyle("title"),
-                      fontSize: 32,
-                      fontWeight: 600,
-                      color: on > 0.5 ? c.cardBg : c.ink,
-                    }}
-                  >
-                    {i + 1}
-                  </div>
-                  <div
-                    style={{
-                      ...typeStyle("label"),
-                      fontSize: 36,
-                      fontWeight: 600,
-                      color: c.ink,
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    {a}
-                  </div>
-                </Card_>
-              </NDiv>
-            );
-          }),
-        )}
-        {((it: React.ReactNode[]) => (
-          <>
-            <Handle name="Revenue Composition">{it[0]}</Handle>
-            <Handle name="Dividen">{it[1]}</Handle>
-            <Handle name="Deep Research">{it[2]}</Handle>
-          </>
-        ))(
-          TARGETS.map((t) => {
-            const at = W(t.at);
-            const p = ease(f, at, m.reveal);
-            return (
-              <NDiv key={t.text} style={{ position: "absolute", inset: 0 }}>
-                {t.from.map((q) => (
-                  <Connector
-                    key={q}
-                    a={{ x: QCOL.x + QCOL.w + 8, y: QCOL.ys[q] }}
-                    b={{ x: ANSWER.x - 10, y: t.y }}
-                    p={ease(f, at, m.sec(0.5))}
-                    shape="elbow"
-                    width={3}
-                  />
-                ))}
-                {p > 0.001 ? (
                   <div
                     style={{
                       position: "absolute",
-                      left: ANSWER.x,
-                      top: t.y - ANSWER.h / 2 + (1 - p) * 12,
-                      width: ANSWER.w,
-                      height: ANSWER.h,
-                      opacity: p,
+                      left: 0,
+                      top: theme.canvas.height / 2,
+                      width: theme.canvas.width,
+                      transform: "translateY(-50%)",
+                      textAlign: "center",
+                      ...typeStyle("title"),
+                      fontSize: OPEN_LINE.size,
+                      lineHeight: 1.2,
+                      fontWeight: 700,
+                      color: c.ink,
                     }}
                   >
-                    <Card_
-                      x={0}
-                      y={0}
-                      w={ANSWER.w}
-                      h={ANSWER.h}
+                    {OPEN_LINE.lines.map((l) => {
+                      const i = l.indexOf(OPEN_LINE.mark);
+                      return (
+                        <div key={l}>
+                          {i < 0 ? l : (
+                            <>
+                              {l.slice(0, i)}
+                              <span style={{ color: c.indigo }}>{OPEN_LINE.mark}</span>
+                              {l.slice(i + OPEN_LINE.mark.length)}
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </NDiv>
+              </Handle>
+            );
+          })()}
+          {/* the mascot and the four questions: one group, its top level with the tags' (Simon 26 Nov) */}
+          <Handle name="Maskot dan pertanyaan">
+            <NDiv
+              style={{
+                position: "absolute",
+                left: COL.x,
+                top: Q_TOP,
+                width: COL.d + COL.askGap + Math.max(...ASK_TEXT_W) + COL.askPadR,
+                height: ASK_TOP + (ASKS.length - 1) * COL.step + COL.d,
+              }}
+            >
+              <Handle name="Maskot">
+                <NDiv
+                  style={{
+                    position: "absolute",
+                    left: COL.d / 2 - MASCOT_W / 2,
+                    top: 0,
+                    width: MASCOT_W,
+                    height: COL.mascot,
+                  }}
+                >
+                  <TuntunMark
+                    x={MASCOT_W / 2}
+                    y={COL.bob * Math.sin(((f - appAt) / m.sec(COL.bobFor)) * Math.PI * 2)}
+                    height={COL.mascot}
+                  />
+                </NDiv>
+              </Handle>
+              {((it: React.ReactNode[]) => (
+                <>
+                  <Handle name="Ikon 1">{it[0]}</Handle>
+                  <Handle name="Ikon 2">{it[1]}</Handle>
+                  <Handle name="Ikon 3">{it[2]}</Handle>
+                  <Handle name="Ikon 4">{it[3]}</Handle>
+                </>
+              ))(
+                ASKS.map((a, i) => {
+                  const p = ease(f, appAt + m.sec(0.3) + i * m.sec(0.1), m.reveal);
+                  const hl = ease(f, askT[i].lit, m.sec(0.3)); // stays lit (Simon 26 Nov)
+                  const grow = ease(f, askT[i].open, m.sec(0.3)); // under the highlight
+                  const txt = ease(f, askT[i].say, m.sec(0.35));
+                  return (
+                    <NDiv
+                      key={a.text}
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: 28,
-                        padding: "0 16px",
+                        position: "absolute",
+                        left: 0,
+                        top: ASK_TOP + i * COL.step + (1 - p) * 12,
+                        width: COL.d + grow * (ASK_PILL_W - COL.d),
+                        height: COL.d,
+                        borderRadius: 999,
                         overflow: "hidden",
+                        background: interpolateColors(hl, [0, 1], [theme.color.greyWash, c.cardBg]),
+                        boxShadow: `inset 0 0 0 ${(3 * hl).toFixed(2)}px ${c.indigo}`,
+                        opacity: p,
                       }}
                     >
                       <div
                         style={{
-                          width: ANSWER.thumb,
-                          height: ANSWER.h - 32,
-                          borderRadius: 14,
-                          overflow: "hidden",
-                          flex: "none",
-                          boxShadow: `inset 0 0 0 2px ${theme.color.skeleton}`,
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          width: COL.d,
+                          height: COL.d,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          ...typeStyle("title"),
+                          fontSize: COL.num,
+                          fontWeight: 600,
+                          color: interpolateColors(hl, [0, 1], [c.slate, c.indigo]),
                         }}
                       >
-                        <Img
-                          showInTimeline={false}
-                          src={staticFile(t.src)}
-                          style={{
-                            width: "100%",
-                            height: "100%",
-                            objectFit: "cover",
-                            objectPosition: "50% 0%",
-                            display: "block",
-                            maxWidth: "none",
-                          }}
-                        />
+                        {i + 1}
                       </div>
                       <div
                         style={{
+                          position: "absolute",
+                          left: COL.d + COL.askGap,
+                          top: 0,
+                          height: COL.d,
+                          display: "flex",
+                          alignItems: "center",
+                          ...typeStyle("label"),
+                          fontSize: COL.askSize,
+                          fontWeight: 600,
+                          color: c.indigo,
+                          whiteSpace: "nowrap",
+                          opacity: txt,
+                          transform: `translateX(${((1 - txt) * -8).toFixed(1)}px)`,
+                        }}
+                      >
+                        {a.text}
+                      </div>
+                    </NDiv>
+                  );
+                }),
+              )}
+              {hiO > 0.001 && (
+                <Handle name="Highlight">
+                  <NDiv
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: hiY,
+                      width: hiW,
+                      height: COL.d,
+                      borderRadius: 999,
+                      overflow: "hidden",
+                      background: c.indigo,
+                      opacity: hiO,
+                    }}
+                  >
+                    {ASKS.map((a, i) => {
+                      const txt = ease(f, askT[i].say, m.sec(0.35));
+                      return (
+                        <div key={a.text} style={{ position: "absolute", left: 0, top: askTop(i) - hiY, width: ASK_PILL_W, height: COL.d }}>
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: 0,
+                              top: 0,
+                              width: COL.d,
+                              height: COL.d,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              ...typeStyle("title"),
+                              fontSize: COL.num,
+                              fontWeight: 600,
+                              color: c.cardBg,
+                            }}
+                          >
+                            {i + 1}
+                          </div>
+                          <div
+                            style={{
+                              position: "absolute",
+                              left: COL.d + COL.askGap,
+                              top: 0,
+                              height: COL.d,
+                              display: "flex",
+                              alignItems: "center",
+                              ...typeStyle("label"),
+                              fontSize: COL.askSize,
+                              fontWeight: 600,
+                              color: c.cardBg,
+                              whiteSpace: "nowrap",
+                              opacity: txt,
+                              transform: `translateX(${((1 - txt) * -8).toFixed(1)}px)`,
+                            }}
+                          >
+                            {a.text}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </NDiv>
+                </Handle>
+              )}
+            </NDiv>
+          </Handle>
+          {((it: React.ReactNode[]) => (
+            <>
+              <Handle name="Revenue Breakdown">{it[0]}</Handle>
+              <Handle name="Profitability">{it[1]}</Handle>
+              <Handle name="Dividend">{it[2]}</Handle>
+              <Handle name="Payout Ratio">{it[3]}</Handle>
+            </>
+          ))(
+            SCREENS.map((k) => {
+              const p = ease(f, W(k.at), m.reveal);
+              const out = k.until ? ease(f, W(k.until), m.sec(0.3)) : 0;
+              if (p * (1 - out) <= 0.001) return null;
+              const sp = ease(f, W(k.sumAt), m.reveal);
+              return (
+                <NDiv
+                  key={k.src}
+                  style={{
+                    position: "absolute",
+                    left: shotX(k.slot),
+                    top: PAGE.tagY + (1 - p) * 24,
+                    width: SHOT_W,
+                    height: SHOT_Y - PAGE.tagY + pageH(k.page) + QUOTE.gap + QUOTE_H + QUOTE.drop,
+                    opacity: 1 - out,
+                  }}
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: SHOT_W / 2, // centred on its screen (Simon 26 Nov)
+                      top: 0,
+                      transform: "translateX(-50%)",
+                      height: PAGE.tagH,
+                      display: "flex",
+                      alignItems: "center",
+                      padding: `0 ${PAGE.tagPadX}px`,
+                      borderRadius: 999,
+                      background: c.cardBg,
+                      boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connector}`,
+                      ...typeStyle("label"),
+                      fontSize: PAGE.tagSize,
+                      fontWeight: 600,
+                      color: c.indigo,
+                      whiteSpace: "nowrap",
+                      opacity: p,
+                    }}
+                  >
+                    {k.tag}
+                  </div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: SHOT_Y - PAGE.tagY,
+                      width: SHOT_W,
+                      height: shotH(k.h),
+                      borderRadius: R,
+                      overflow: "hidden",
+                      background: c.cardBg,
+                      boxShadow: shadow.soft,
+                      opacity: p,
+                    }}
+                  >
+                    <Img
+                      showInTimeline={false}
+                      src={staticFile(k.src)}
+                      style={{
+                        width: SHOT_W,
+                        height: shotH(k.h),
+                        display: "block",
+                        maxWidth: "none",
+                      }}
+                    />
+                  </div>
+                  <div
+                    style={{
+                      position: "absolute",
+                      left: 0,
+                      top: SHOT_Y - PAGE.tagY + pageH(k.page) + QUOTE.gap + (1 - sp) * 8,
+                      width: SHOT_W,
+                      height: QUOTE_H,
+                      opacity: sp,
+                    }}
+                  >
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: QUOTE.drop,
+                        top: QUOTE.drop,
+                        width: SHOT_W,
+                        height: QUOTE_H,
+                        borderRadius: R,
+                        background: c.indigo,
+                      }}
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        width: SHOT_W,
+                        height: QUOTE_H,
+                        boxSizing: "border-box",
+                        borderRadius: R,
+                        background: c.cardBg,
+                        border: `${QUOTE.border}px solid ${c.ink}`,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: `0 ${QUOTE.padX}px`,
+                        textAlign: "center", // centred on its screen (Simon 26 Nov)
+                        ...typeStyle("label"),
+                        fontSize: QUOTE.size,
+                        fontWeight: 700,
+                        lineHeight: QUOTE.lead,
+                        color: c.ink,
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {k.sum}
+                    </div>
+                    {["\u201C", "\u201D"].map((ch, j) => (
+                      <div
+                        key={ch}
+                        style={{
+                          position: "absolute",
+                          left: j === 0 ? QUOTE.markX : SHOT_W - QUOTE.markX - QUOTE.mark,
+                          top: j === 0 ? QUOTE.markTop : QUOTE_H - QUOTE.markBot,
+                          width: QUOTE.mark,
+                          textAlign: "center",
+                          fontFamily: typeStyle("title").fontFamily,
+                          fontSize: QUOTE.mark,
+                          fontWeight: 700,
+                          lineHeight: 1,
+                          color: c.ink,
+                        }}
+                      >
+                        {ch}
+                      </div>
+                    ))}
+                  </div>
+                </NDiv>
+              );
+            }),
+          )}
+          {/* question 4: the question, then "Sulit dijawab"; then the Deep Research report */}
+          {(() => {
+            const out = ease(f, W(Q4.until), m.sec(0.3));
+            const tp = ease(f, W(Q4.tag.at), m.reveal) * (1 - out);
+            const dp = ease(f, W(DEEP.at) + m.sec(0.3), m.reveal);
+            const slide = ease(f, W("memberikan analisis"), m.sec(0.6));
+            const lensO = ease(f, W("memberikan analisis") + m.sec(0.6), m.sec(0.4));
+            const lensY = LENS_POINTS.reduce((y, q, i) => (i === 0 ? q.top : y + (q.top - LENS_POINTS[i - 1].top) * ease(f, W(q.at), m.sec(0.5))), 0);
+            const lit = (i: number) =>
+              ease(f, W(LENS_POINTS[i].at) + (i > 0 ? m.sec(0.5) : 0), m.sec(0.3)) * (1 - (i + 1 < LENS_POINTS.length ? ease(f, W(LENS_POINTS[i + 1].at), m.sec(0.25)) : 0));
+            return (
+              <>
+                {out < 0.999 && (
+                  <Handle
+                    name="Pertanyaan 4"
+                    style={{
+                      translate: "0px -60.2px"
+                    }}
+                  >
+                    <NDiv
+                      style={{
+                        position: "absolute",
+                        left: PAGE_CX - Q4CARD.w / 2,
+                        top: Q4_Y + (1 - ease(f, W(Q4.lines[0].at), m.reveal)) * 12,
+                        width: Q4CARD.w,
+                        height: Q4CARD_H,
+                        opacity: ease(f, W(Q4.lines[0].at), m.reveal) * (1 - out),
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: Q4CARD.drop,
+                          top: Q4CARD.drop,
+                          width: Q4CARD.w,
+                          height: Q4CARD_H,
+                          borderRadius: R,
+                          background: c.indigo,
+                        }}
+                      />
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          top: 0,
+                          width: Q4CARD.w,
+                          height: Q4CARD_H,
+                          boxSizing: "border-box",
+                          borderRadius: R,
+                          background: c.cardBg,
+                          border: `${Q4CARD.border}px solid ${c.ink}`,
+                          paddingTop: Q4CARD.padTop - Q4CARD.border,
+                          textAlign: "center",
                           ...typeStyle("title"),
-                          fontSize: 40,
+                          fontSize: Q4CARD.size,
+                          fontWeight: 700,
+                          lineHeight: `${Math.round(Q4CARD.size * Q4.lead)}px`,
+                          color: c.ink,
+                        }}
+                      >
+                        {Q4.lines.map((l, i) => {
+                          const p = ease(f, W(l.at), m.reveal);
+                          return (
+                            <div
+                              key={l.at}
+                              style={{
+                                marginTop: i > 0 ? Q4.gap : 0,
+                                opacity: p,
+                                transform: `translateY(${((1 - p) * 12).toFixed(1)}px)`,
+                              }}
+                            >
+                              {l.text.split("\n").map((t, k) => (
+                                <div key={t} style={{ color: k > 0 ? c.indigo : c.ink }}>
+                                  {t}
+                                </div>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                      {["\u201C", "\u201D"].map((ch, j) => (
+                        <div
+                          key={ch}
+                          style={{
+                            position: "absolute",
+                            left: j === 0 ? Q4CARD.markX : Q4CARD.w - Q4CARD.markX - Q4CARD.mark,
+                            top: j === 0 ? Q4CARD.markY : Q4CARD_H - Q4CARD.markBot,
+                            width: Q4CARD.mark,
+                            textAlign: "center",
+                            fontFamily: typeStyle("title").fontFamily,
+                            fontSize: Q4CARD.mark,
+                            fontWeight: 700,
+                            lineHeight: 1,
+                            color: c.ink,
+                          }}
+                        >
+                          {ch}
+                        </div>
+                      ))}
+                    </NDiv>
+                  </Handle>
+                )}
+                {tp > 0.001 && (
+                  <Handle
+                    name="Sulit dijawab"
+                    style={{
+                      translate: "0px -129.2px"
+                    }}
+                  >
+                    <NDiv
+                      style={{
+                        position: "absolute",
+                        left: PAGE_CX,
+                        top: Q4_TAG_Y + (1 - tp) * 10,
+                        transform: "translateX(-50%)",
+                        height: PAGE.tagH,
+                        display: "flex",
+                        alignItems: "center",
+                        padding: `0 ${PAGE.tagPadX}px`,
+                        borderRadius: 999,
+                        background: c.indigo,
+                        ...typeStyle("label"),
+                        fontSize: PAGE.tagSize,
+                        fontWeight: 600,
+                        color: c.cardBg,
+                        whiteSpace: "nowrap",
+                        opacity: tp,
+                      }}
+                    >
+                      {Q4.tag.text}
+                    </NDiv>
+                  </Handle>
+                )}
+                {dp > 0.001 && (
+                  <Handle name="Deep Research">
+                    <NDiv
+                      style={{
+                        position: "absolute",
+                        left: PAGE_CX - SHOT_W / 2 + (DEEP_RIGHT_X - (PAGE_CX - SHOT_W / 2)) * slide,
+                        top: PAGE.tagY + (1 - dp) * 24,
+                        width: SHOT_W,
+                        height: SHOT_Y - PAGE.tagY + shotH(DEEP.h * (1080 / DEEP.w)),
+                        opacity: dp,
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: SHOT_W / 2,
+                          top: 0,
+                          transform: "translateX(-50%)",
+                          height: PAGE.tagH,
+                          display: "flex",
+                          alignItems: "center",
+                          padding: `0 ${PAGE.tagPadX}px`,
+                          borderRadius: 999,
+                          background: c.cardBg,
+                          boxShadow: `${shadow.soft}, inset 0 0 0 2px ${theme.color.connector}`,
+                          ...typeStyle("label"),
+                          fontSize: PAGE.tagSize,
                           fontWeight: 600,
                           color: c.indigo,
                           whiteSpace: "nowrap",
                         }}
                       >
-                        {t.text}
+                        {DEEP.tag}
                       </div>
-                    </Card_>
-                  </div>
-                ) : null}
-              </NDiv>
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: 0,
+                          top: SHOT_Y - PAGE.tagY,
+                          width: SHOT_W,
+                          height: shotH(DEEP.h * (1080 / DEEP.w)),
+                          borderRadius: R,
+                          overflow: "hidden",
+                          background: c.cardBg,
+                          boxShadow: shadow.soft,
+                        }}
+                      >
+                        <Img
+                          showInTimeline={false}
+                          src={staticFile(DEEP.src)}
+                          style={{
+                            width: SHOT_W,
+                            height: shotH(DEEP.h * (1080 / DEEP.w)),
+                            display: "block",
+                            maxWidth: "none",
+                          }}
+                        />
+                      </div>
+                      {lensO > 0.001 && (
+                        <div
+                          style={{
+                            position: "absolute",
+                            left: LENS.x * DEEP_S,
+                            top: SHOT_Y - PAGE.tagY + lensY * DEEP_S,
+                            width: LENS.w * DEEP_S,
+                            height: LENS.h * DEEP_S,
+                            opacity: lensO,
+                          }}
+                        >
+                          <div style={{ position: "absolute", inset: 0, borderRadius: LENS.radius, background: c.indigo, opacity: LENS.fill }} />
+                          <div style={{ position: "absolute", inset: 0, borderRadius: LENS.radius, boxShadow: `inset 0 0 0 ${LENS.border}px ${c.indigo}` }} />
+                        </div>
+                      )}
+                    </NDiv>
+                  </Handle>
+                )}
+                {lensO > 0.001 && (
+                  <Handle name="Zoom Deep Research">
+                    <NDiv
+                      style={{
+                        position: "absolute",
+                        left: ZOOM.x,
+                        top: SHOT_Y,
+                        width: ZOOM.w,
+                        height: LENS.h * ZOOM_K,
+                        borderRadius: R,
+                        overflow: "hidden",
+                        background: c.cardBg,
+                        boxShadow: `${shadow.soft}, inset 0 0 0 ${LENS.border}px ${c.indigo}`,
+                        opacity: lensO,
+                      }}
+                    >
+                      <div
+                        style={{
+                          position: "absolute",
+                          left: -LENS.x * ZOOM_K,
+                          top: -lensY * ZOOM_K,
+                          width: DEEP.w * ZOOM_K,
+                          height: DEEP.h * ZOOM_K,
+                        }}
+                      >
+                        <Img
+                          showInTimeline={false}
+                          src={staticFile(DEEP.src)}
+                          style={{
+                            width: DEEP.w * ZOOM_K,
+                            height: DEEP.h * ZOOM_K,
+                            display: "block",
+                            maxWidth: "none",
+                          }}
+                        />
+                        {LENS_POINTS.map((q, i) => (
+                          <div
+                            key={q.at}
+                            style={{
+                              position: "absolute",
+                              left: (LENS.x + 14) * ZOOM_K,
+                              top: q.box[0] * ZOOM_K,
+                              width: (LENS.w - 28) * ZOOM_K,
+                              height: (q.box[1] - q.box[0]) * ZOOM_K,
+                              borderRadius: LENS.radius,
+                              boxShadow: `inset 0 0 0 ${LENS.hl}px ${theme.color.orange}`,
+                              opacity: lit(i),
+                            }}
+                          />
+                        ))}
+                      </div>
+                      <div style={{ position: "absolute", inset: 0, borderRadius: R, boxShadow: `inset 0 0 0 ${LENS.border}px ${c.indigo}` }} />
+                    </NDiv>
+                  </Handle>
+                )}
+              </>
             );
-          }),
-        )}
+          })()}
+        </Interactive.Div>
       </Shot>
 
       {/* E: a good company — at what price? Tuntun's own card says both */}
       <Shot start={twoAt} to={nextAt} block={BLOCK.SC08}>
+        {(() => {
+          const q = ease(f, twoAt + m.sec(0.15), m.reveal) * (1 - ease(f, W(E_LINE.until), m.sec(0.3)));
+          if (q <= 0.001) return null;
+          return (
+            <Handle name="Setelah paham perusahaannya">
+              <NDiv
+                style={{
+                  position: "absolute",
+                  left: 0,
+                  top: theme.canvas.height / 2 + (1 - ease(f, twoAt + m.sec(0.15), m.reveal)) * 12,
+                  width: theme.canvas.width,
+                  transform: "translateY(-50%)",
+                  textAlign: "center",
+                  ...typeStyle("title"),
+                  fontSize: E_LINE.size,
+                  lineHeight: 1.2,
+                  fontWeight: 700,
+                  color: c.ink,
+                  opacity: q,
+                }}
+              >
+                {E_LINE.lines.map((l) => {
+                  const i = l.indexOf(E_LINE.mark);
+                  return (
+                    <div key={l}>
+                      {i < 0 ? l : (
+                        <>
+                          {l.slice(0, i)}
+                          <span style={{ color: c.indigo }}>{E_LINE.mark}</span>
+                          {l.slice(i + E_LINE.mark.length)}
+                        </>
+                      )}
+                    </div>
+                  );
+                })}
+              </NDiv>
+            </Handle>
+          );
+        })()}
         <Keyed
           name="factory"
           style={{
@@ -1419,14 +1853,14 @@ export const SC08 = () => {
             top: GOOD.y,
             width: GOOD.w,
             height: GOOD.h,
-            opacity: interpolate(frame, [6921, 6945], [0, 1], {
+            opacity: interpolate(frame, [7262, 7286], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [6921, 6945],
+              [7262, 7286],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1483,7 +1917,7 @@ export const SC08 = () => {
                 fontSize: 36,
                 color: c.cardBg,
                 flex: "none",
-                transform: `scale(${(0.7 + 0.3 * ease(f, twoAt + m.sec(0.4), m.pop)).toFixed(3)})`,
+                transform: `scale(${(0.7 + 0.3 * ease(f, goodAt + m.sec(0.4), m.pop)).toFixed(3)})`,
               }}
             >
               ✓
@@ -1498,14 +1932,14 @@ export const SC08 = () => {
             top: 0,
             width: theme.canvas.width,
             height: theme.canvas.height,
-            opacity: interpolate(frame, [7068, 7092], [0, 1], {
+            opacity: interpolate(frame, [7280, 7304], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7068, 7092],
+              [7280, 7304],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1572,7 +2006,7 @@ export const SC08 = () => {
                 width: (BUMI.fvNote.x2 - BUMI.fvNote.x1) * UI_K,
                 height: (BUMI.fvNote.y2 - BUMI.fvNote.y1) * UI_K,
                 background: c.cardBg,
-                opacity: interpolate(frame, [7371, 7389], [0, 1], {
+                opacity: interpolate(frame, [7461, 7479], [0, 1], {
                   easing: Easing.bezier(0.65, 0, 0.35, 1),
                   extrapolateLeft: "clamp",
                   extrapolateRight: "clamp",
@@ -1629,14 +2063,14 @@ export const SC08 = () => {
               position: "absolute",
               left: 0,
               top: 0,
-              opacity: interpolate(frame, [7430, 7454], [0, 1], {
+              opacity: interpolate(frame, [7520, 7544], [0, 1], {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
                 extrapolateLeft: "clamp",
                 extrapolateRight: "clamp",
               }),
               translate: interpolate(
                 frame,
-                [7430, 7454],
+                [7520, 7544],
                 ["0px 18px", "0px 0px"],
                 {
                   easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1677,14 +2111,14 @@ export const SC08 = () => {
             left: 0,
             top: 0,
             width: theme.canvas.width,
-            opacity: interpolate(frame, [7172, 7196], [0, 1], {
+            opacity: interpolate(frame, [7312, 7336], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7172, 7196],
+              [7312, 7336],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1718,14 +2152,14 @@ export const SC08 = () => {
             width: theme.canvas.width,
             display: "flex",
             justifyContent: "center",
-            opacity: interpolate(frame, [7514, 7538], [0, 1], {
+            opacity: interpolate(frame, [7604, 7628], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7514, 7538],
+              [7604, 7628],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1786,14 +2220,14 @@ export const SC08 = () => {
             left: CX - 640,
             top: 380,
             width: 1280,
-            opacity: interpolate(frame, [7672, 7696], [0, 1], {
+            opacity: interpolate(frame, [7762, 7786], [0, 1], {
               easing: Easing.bezier(0.65, 0, 0.35, 1),
               extrapolateLeft: "clamp",
               extrapolateRight: "clamp",
             }),
             translate: interpolate(
               frame,
-              [7672, 7696],
+              [7762, 7786],
               ["0px 18px", "0px 0px"],
               {
                 easing: Easing.bezier(0.65, 0, 0.35, 1),
@@ -1803,30 +2237,30 @@ export const SC08 = () => {
             ),
           }}
         >
-          <Card_
-            x={0}
-            y={0}
-            w={1280}
-            h={300}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              boxShadow: `${shadow.soft}, inset 0 0 0 4px ${c.indigo}`,
-            }}
-          >
-            <div
-              style={{
-                ...typeStyle("title"),
-                fontSize: 96,
-                fontWeight: 600,
-                color: c.ink,
-                whiteSpace: "nowrap",
-              }}
-            >
-              Berapa harga yang <span style={{ color: c.indigo }}>layak</span>?
-            </div>
-          </Card_>
+          {(() => {
+            const sel = ease(f, W("layak kita bayar"), m.sec(0.45));
+            return (
+              <div style={{ textAlign: "center", ...typeStyle("title"), fontSize: NEXT_Q.size, letterSpacing: NEXT_Q.tracking, lineHeight: NEXT_Q.lead, fontWeight: NEXT_Q.light, color: c.ink, whiteSpace: "nowrap" }}>
+                <div>Berapa harga</div>
+                <div>
+                  yang{" "}
+                  <span style={{ position: "relative", display: "inline-block", fontWeight: NEXT_Q.bold }}>
+                    <span style={{ position: "absolute", left: -NEXT_Q.pad, top: "6%", height: "96%", width: `calc(${(sel * 100).toFixed(2)}% + ${(2 * NEXT_Q.pad * sel).toFixed(1)}px)`, background: theme.color.indigoWashDeepSolid }} />
+                    {sel > 0.001 && (
+                      <>
+                        <span style={{ position: "absolute", left: -NEXT_Q.pad - NEXT_Q.bar / 2, top: "6%", width: NEXT_Q.bar, height: "96%", borderRadius: NEXT_Q.bar, background: c.indigo }} />
+                        <span style={{ position: "absolute", left: -NEXT_Q.pad - NEXT_Q.knob / 2, top: `calc(102% - ${NEXT_Q.knob / 2}px)`, width: NEXT_Q.knob, height: NEXT_Q.knob, borderRadius: 999, background: c.indigo }} />
+                        <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(2 * NEXT_Q.pad * sel - NEXT_Q.pad - NEXT_Q.bar / 2).toFixed(1)}px)`, top: "6%", width: NEXT_Q.bar, height: "96%", borderRadius: NEXT_Q.bar, background: c.indigo }} />
+                        <span style={{ position: "absolute", left: `calc(${(sel * 100).toFixed(2)}% + ${(2 * NEXT_Q.pad * sel - NEXT_Q.pad - NEXT_Q.knob / 2).toFixed(1)}px)`, top: `calc(6% - ${NEXT_Q.knob / 2}px)`, width: NEXT_Q.knob, height: NEXT_Q.knob, borderRadius: 999, background: c.indigo }} />
+                      </>
+                    )}
+                    <span style={{ position: "relative" }}>layak</span>
+                  </span>
+                  ?
+                </div>
+              </div>
+            );
+          })()}
         </Keyed>
       </Shot>
     </Stage>

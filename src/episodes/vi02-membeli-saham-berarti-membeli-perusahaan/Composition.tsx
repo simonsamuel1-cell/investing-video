@@ -8,6 +8,11 @@ import { AbsoluteFill, Audio, getInputProps, random, staticFile, useCurrentFrame
 import { Captions, PaletteProvider, SoftGround, Stage, Watermark, cutInStyle, cutOutStyle, type Cut } from "../../core";
 import { BLOCK, CUT, CUTS, VO_LAST } from "./data/timing";
 import { CUES } from "./subtitles";
+import { CUES_ZH } from "./subtitles-zh";
+import { loadFont as loadSC } from "@remotion/google-fonts/NotoSansSC";
+
+/** The Mandarin line's face (Simon 26 Nov: Indonesian and Mandarin subtitles in one video); Plus Jakarta has no CJK. */
+const { fontFamily: SC } = loadSC("normal", { weights: ["500"], subsets: ["chinese-simplified", "latin"], ignoreTooManyRequestsWarning: true });
 import { SC01 as SC01_OLD } from "./scenes/BehindTheCode";
 import { SC02 as SC02_OLD } from "./scenes/Owner";
 import { SC03 as SC03_OLD } from "./scenes/IbuSariBusiness";
@@ -82,7 +87,7 @@ export const MembeliSahamComposition = () => (
             ) : null}
           </Sequence>
         ))}
-        <Captions cues={CUES} show={chrome} />
+        <Captions cues={CUES} second={CUES_ZH} secondFamily={SC} secondOnTop sizes={[30, 40]} lift={16} show={chrome} />
         {chrome && <Watermark totalFrames={VI02_FRAMES} />}
         <Audio key={ROWS} src={staticFile("vo/vi02-membeli-saham-berarti-membeli-perusahaan.mp3")} />
       </Stage>

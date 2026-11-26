@@ -448,6 +448,48 @@
     {
       "src": "Scene 7 & 8_New.mp3",
       "from": 160.68,
+      "to": 176.65,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "_": "26 Nov, SC08 (Simon: \"tiap poin kamu kasih jeda 30 frame\", for the Deep Research magnifier): +30f after 'prospek industri,'",
+      "silence": 0.5
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 176.65,
+      "to": 177.99,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "_": "26 Nov, SC08 (Simon: \"tiap poin kamu kasih jeda 30 frame\", for the Deep Research magnifier): +30f after 'kekuatan perusahaan,'",
+      "silence": 0.5
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 177.99,
+      "to": 179.38,
+      "match": "original 310.45-350.0",
+      "level": [
+        0,
+        202.36
+      ]
+    },
+    {
+      "_": "26 Nov, SC08 (Simon: \"tiap poin kamu kasih jeda 30 frame\", for the Deep Research magnifier): +30f after 'keunggulan kompetitif,'",
+      "silence": 0.5
+    },
+    {
+      "src": "Scene 7 & 8_New.mp3",
+      "from": 179.38,
       "to": 193.78,
       "match": "original 310.45-350.0",
       "level": [

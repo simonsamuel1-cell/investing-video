@@ -170,14 +170,14 @@ export const CUES: Cue[] = [
   { start: 31794, end: 31938, text: "adalah pertanyaan yang paling sulit dijawab." },
   { start: 31956, end: 32141, text: "Di sinilah Deep Research Report membantu memberikan" },
   { start: 32141, end: 32309, text: "analisis awal yang lebih lengkap mengenai prospek industri," },
-  { start: 32325, end: 32466, text: "kekuatan perusahaan, keunggulan kompetitif," },
-  { start: 32497, end: 32746, text: "serta berbagai risiko yang dapat memengaruhi laba perusahaan di masa depan." },
-  { start: 32773, end: 33001, text: "Namun, setelah memahami perusahaannya, masih ada satu pertanyaan penting." },
-  { start: 33024, end: 33186, text: "Perusahaan yang bagus belum tentu menjadi investasi" },
-  { start: 33186, end: 33339, text: "yang bagus kalau kita membelinya terlalu mahal." },
-  { start: 33357, end: 33523, text: "Karena itu, di video berikutnya kita akan membahas:" },
-  { start: 33524, end: 33791, text: "berapa harga yang sebenarnya layak kita bayar untuk memiliki sebuah perusahaan?" },
+  { start: 32355, end: 32526, text: "kekuatan perusahaan, keunggulan kompetitif," },
+  { start: 32587, end: 32836, text: "serta berbagai risiko yang dapat memengaruhi laba perusahaan di masa depan." },
+  { start: 32863, end: 33091, text: "Namun, setelah memahami perusahaannya, masih ada satu pertanyaan penting." },
+  { start: 33114, end: 33276, text: "Perusahaan yang bagus belum tentu menjadi investasi" },
+  { start: 33276, end: 33429, text: "yang bagus kalau kita membelinya terlalu mahal." },
+  { start: 33447, end: 33613, text: "Karena itu, di video berikutnya kita akan membahas:" },
+  { start: 33614, end: 33881, text: "berapa harga yang sebenarnya layak kita bayar untuk memiliki sebuah perusahaan?" },
 ];
 
 /** Last cue out — the floor for the Composition's durationInFrames. */
-export const VO_END = 33791;
+export const VO_END = 33881;
